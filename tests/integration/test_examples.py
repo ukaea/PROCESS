@@ -2,6 +2,7 @@
 
 examples.py is created by exporting examples.ipynb as a Python script.
 """
+
 import runpy
 import os
 from pathlib import Path
@@ -92,11 +93,7 @@ def test_scan(scan_cleanup):
 
 @pytest.fixture
 def csv_cleanup(examples_as_cwd):
-    """Delete any files produced by csv_output.py.
-
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: None
-    """
+    """Delete any files produced by csv_output.py."""
     yield
 
     # Teardown: delete produced files
@@ -135,3 +132,12 @@ def test_csv(csv_cleanup):
     if check_positive_count == len(value_array):
         check_positive = True
     assert check_positive
+
+
+def test_plot_solutions(examples_as_cwd):
+    """Run the plot_solutions.py script and check no exceptions are raised.
+
+    :param examples_as_cwd: fixture to set examples dir as cwd
+    :type examples_as_cwd: NoneType
+    """
+    runpy.run_path("plot_solutions.py")
