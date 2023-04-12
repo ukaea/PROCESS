@@ -137,3 +137,12 @@ def test_csv(csv_cleanup):
     if check_positive_count == len(value_array):
         check_positive = True
     assert check_positive
+
+
+def test_plot_solutions(examples_as_cwd):
+    """Run the plot_solutions.py script and check no exceptions are raised.
+
+    :param examples_as_cwd: fixture to set examples dir as cwd
+    :type examples_as_cwd: NoneType
+    """
+    runpy.run_path("plot_solutions.py")
