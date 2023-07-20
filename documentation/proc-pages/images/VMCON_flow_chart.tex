@@ -1,0 +1,202 @@
+\documentclass[tikz]{standalone}
+\usepackage{epsfig,colordvi,latexsym}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{tikz}  %  for VMCON flowchart in Appendix A
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{framed}
+\usetikzlibrary{trees}
+
+
+\setcounter{secnumdepth}{3}
+\newcommand{\indat}{\mbox{\texttt{IN.DAT}}}
+\newcommand{\mfile}{\mbox{\texttt{MFILE.DAT}}}
+\newcommand{\outdat}{\mbox{\texttt{OUT.DAT}}}
+\newcommand{\plotdat}{\mbox{\texttt{PLOT.DAT}}}
+\newcommand{\process}{\mbox{\texttt{PROCESS}}}
+\newcommand{\vmcon}{\mbox{\texttt{VMCON}}}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+
+
+\newcommand{\setheader}[1]
+ {\markright{\rlap{\lower0.8ex\hbox to\textwidth{\hrulefill}}{\bf#1}}}
+\newcommand{\mychapter}[1]{\small\normalsize
+ \setcounter{footnote}{0}
+ \chapter{#1}
+ \pagestyle{myheadings}
+ \setheader{Chapter \thechapter\hspace{0.8em}#1}}
+\newcommand{\myappendix}[1]{\small\normalsize
+ \setcounter{footnote}{0}
+ \chapter{#1}
+ \pagestyle{myheadings}
+ \setheader{Appendix \thechapter\hspace{0.8em}#1}}
+
+\begin{document}
+
+
+\newcommand{\ifail}{\mbox{\texttt{ifail}}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%for tikz flow chart 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetikzlibrary{arrows}
+% Define the layers to draw the diagram
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+% Define block styles  
+\tikzstyle{boxes} = [draw, fill=blue!20, text centered,
+   text width=8em, minimum width=10em, minimum height=3em, rounded corners]
+\tikzstyle{texto} = [above, text width=8em, text centered]
+\tikzstyle{linepart} = [draw, thick, color=black!50, -latex', dashed]
+\tikzstyle{line} = [draw, thick, color=black!50, -latex']
+\tikzstyle{urred}=[draw, text centered, minimum height=0.01em,fill=red!20]
+\tikzstyle{urgreen}=[draw, text centered, minimum height=0.01em, fill=green!20]
+
+\tikzstyle{every node}=[]
+\tikzstyle{selected}=[]
+\tikzstyle{optional}=[]
+ 
+\newcommand{\boxes}[2]{node (p#1) [boxes] {#2}}
+\newcommand{\boxwsubs}[3]{node(p#1) [boxes]{#2:  {\scriptsize \begin{itemize}\item #3 \end{itemize}}}}
+
+% Draw background
+\newcommand{\mybackground}[5]{%
+  \begin{pgfonlayer}{background}
+    % Left-top corner of the background rectangle
+    \path (#1.west |- #2.north)+(-0.5,0.5) node (a1) {};
+    % Right-bottom corner of the background rectanle
+    \path (#3.east |- #4.south)+(+0.5,-0.25) node (a2) {};
+    % Draw the background
+    \path[fill=yellow!20,rounded corners, draw=black!50, dashed]
+      (a1) rectangle (a2);
+    \path (a1.east |- a1.south)+(0.8,-0.3) node (u1)[texto]
+          {\scriptsize{\bf #5}};
+  \end{pgfonlayer}}
+
+\newcommand{\outerbackground}[5]{%
+  \begin{pgfonlayer}{background}
+    % Left-top corner of the background rectangle
+    \path (#1.west |- #2.north)+(-2.0,0.5) node (a1) {};
+    % Right-bottom corner of the background rectanle
+    \path (#3.east |- #4.south)+(+1.0,-0.5) node (a2) {};
+    % Draw the background
+    \path[fill=white!20,rounded corners, draw=black!50, dashed]
+      (a1) rectangle (a2);
+    \path (a1.east |- a1.south)+(1.3,-0.5) node (u1)[texto]
+          { {\bf #5}};
+  \end{pgfonlayer}}
+
+\newcommand{\exit}[2]{%
+  \path (#1.east)+(+5.0,0.0) node (urtmp)[urred] {\texttt{ifail} = #2};
+  \path [line] (#1.east) -- node [above]
+    {} (urtmp);}
+
+\newcommand{\exitsucc}[2]{%
+  \path (#1.east)+(+5.0,0.0) node (urtmp)[urgreen] {\texttt{ifail} = #2};
+  \path [line] (#1.east) -- node [above]
+    {} (urtmp);}
+
+\newcommand{\exitleft}[2]{%
+  \path (#1.east)+(+7.5,0.0) node (urtmp)[urred] {\texttt{ifail} = #2};
+  \path [line] (#1.east) -- node [above]
+    {} (urtmp);}
+
+\newcommand{\exitright}[2]{%
+  \path (#1.east)+(+2.5,0.0) node (urtmp)[urred] {\texttt{ifail} = #2};
+  \path [line] (#1.east) -- node [above]
+    {} (urtmp);}
+
+\newcommand{\exitlower}[2]{%
+  \path (#1.east)+(+5.,-0.25) node (urtmp)[urred] {\texttt{ifail} = #2};
+  \path [line] (#1.east)+(0.0,-0.25) -- node [above]
+    {} (urtmp);}
+
+\newcommand{\exithigher}[2]{%
+  \path (#1.east)+(+5.,0.25) node (urtmp)[urred] {i\texttt{fail} = #2};
+  \path [line] (#1.east)+(0.0,0.25) -- node [above]
+    {} (urtmp);}
+
+
+% flow diagram of VMCON
+
+\begin{figure}
+\begin{tikzpicture}[scale=1.00,transform shape]
+ 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Draw diagram elements
+
+  %setup
+  \path \boxwsubs {1}{Setup}{initialise $\mat{B}$\item evaluate $f$, $\vec{c}$, $\nabla_x f$, $\nabla_x \vec{c}$ \item j=0, \texttt{nfev}=1};
+
+  %beginning of j-Iteration
+  \path (p1.south)+(0.0,-1.5) \boxes{2}{Solve QSP, $j=j+1$};
+  \path (p2.south)+(0.0,-1.) \boxes{3}{calculate $\vec{\lambda}^j$, $\nabla_x L$, $\vec{\mu}^j$, l = 1};
+  \path (p3.south)+(0.0,-1.) \boxes{4}{test convergence};
+ 
+  % Line search
+  \path (p4.south)+(0.0,-1.5) \boxes{5}{Evaluate $\Phi(f,\vec{c})$};
+  \path (p5.south)+(2.5,-1.5) \boxwsubs{6}{l == 1}{calculate $\Delta$ \item set $\alpha=1$};
+  \path (p5.south)+(-2.5,-3.0) \boxwsubs{7}{l $>=$ 1}{test convergence \item calculate $\alpha$};
+  \path (p7.south)+(2.5,-1.75) \boxes{8}{update $\vec{x}^j$, evaluate $f$, $\vec{c}$, \texttt{nfev} += 1, l += 1};
+
+  %end of j-Iteration
+  \path (p8.south)+(0.0,-1.25) \boxes{9}{evaluate $f$, $\vec{c}$, $\nabla_x f$, $\nabla_x \vec{c}$, calculate $\nabla_x L$ };
+  \path (p9.south)+(0.0,-1.0) \boxes{10}{BFGS update};
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Draw arrows between elements
+
+  %setup
+  \path [line] (p1.south) -- node [above] {} (p2);
+  \exit{p1}{0}
+
+  %beginning of j-Iteration
+  \path [line] (p2.south) -- node [above] {} (p3);
+  \exithigher{p2}{5}
+  \exitlower{p2}{6}
+  \path [line] (p3.south) -- node [above] {} (p4);
+  \path [line] (p4.south) -- node [above] {} (p5);
+  \exitsucc{p4}{1}
+
+  %Line search
+  \path [line] (p5.south) -- +(0.0,-0.25) -- +(+2.5,-0.25)
+  -- node [above, midway] {} (p6);
+  \exitright{p6}{4}
+  \path [line] (p5.south) -- +(0.0,-0.25) -- +(-2.5,-0.25)
+  -- node [above, midway] {} (p7);
+  \exitleft{p7}{3}
+  \path [line] (p7.west)  |- +(-1.,-0.25)
+  |- node [above, midway] {} (p9.west);
+
+  %fix
+  \path [linepart] (p7.west)  |- +(-1.,0.25)
+  |- node [right, pos=0.4] {adhoc fix} (p2.west);
+
+  \path [line] (p6.south) -- +(0.0,-0.5) |- +(-2.5,-1.9)
+  -- node [above, midway] {} (p8);
+  \path [line] (p7.south) -- +(0.0,-0.25) -- +(+2.5,-0.25)
+  -- node [above, midway] {} (p8);
+  \exit{p8}{2}
+  \path [line] (p8.west)  |- +(-2.75,0.0)
+  |- node [above, midway] {} (p5.west);
+
+   %end of j-Iteration
+  \path [line] (p9.south) -- node [above] {} (p10);
+  \path [line] (p10.west)  |- +(-4.0,0.0)
+  |- node [above, midway] {} (p2.west);
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Draw background boxes
+ 
+  \outerbackground{p7}{p2}{p6}{p10}{SQP iteration}
+  \mybackground{p7}{p5}{p6}{p8}{Line search}
+  
+\end{tikzpicture}
+\end{figure}
+\end{document}

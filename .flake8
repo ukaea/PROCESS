@@ -1,0 +1,15 @@
+[flake8]
+# this option is broken in Python 3.8 https://github.com/pycqa/flake8/issues/725
+output-file = flake8.txt
+# black has a different default line length to flake8
+max-line-length = 88
+statistics = True
+# E203 is disabled as per black docs
+extend-ignore = E203,
+                # Black formats code therefore only comments/strings are flagged by the E501 error code which is unnecessary
+                E501
+exclude =
+    .venv # Do not use flake8 on virtual environmet- will cause it to be incredibly slow
+    build # Do not use flake8 on build directory- these files are in git ignore anyway
+    env # Do not use flake8 on virtual environmet- will cause it to be incredibly slow
+    .env # Do not use flake8 on virtual environmet- will cause it to be incredibly slow

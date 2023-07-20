@@ -1,0 +1,23 @@
+---
+exclude: ^.*.DAT|.*.dat|.*.tex|.*.PPF|.*.FLD|.*.ps|ref_dicts.json|.*.md$
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.2.0
+      hooks:
+          - id: end-of-file-fixer
+          - id: trailing-whitespace
+          - id: check-docstring-first
+          - id: check-merge-conflict
+          - id: debug-statements
+    - repo: https://github.com/psf/black
+      rev: 22.3.0
+      hooks:
+          - id: black
+    - repo: https://github.com/PyCQA/flake8
+      rev: 4.0.1
+      hooks:
+          - id: flake8
+    - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+      rev: 0.1.1
+      hooks:
+          - id: yamlfmt

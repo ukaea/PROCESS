@@ -1,0 +1,11 @@
+#myheader {
+    position: fixed;
+    background-color: #fff;
+    top: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    z-index: 10;
+    width: 900px;
+    font-size:80%;
+    border-bottom-style: solid;
+}

@@ -1,0 +1,171 @@
+---
+site_name: PROCESS
+docs_dir: documentation/proc-pages/
+nav:
+
+    - Home: 
+        - About: index.md
+        - Installation:
+            - Introduction: installation/introduction.md
+            - Installation on Ubuntu/WSL: installation/installation-ubuntu.md
+            - Installation using Docker: installation/installation-docker.md
+            - Installation using Singularity: installation/installation-singularity.md
+            - Visual Studio Code: installation/vs-code.md
+        - Usage:
+            - Running PROCESS: usage/running-process.md
+            - Examples: usage/examples.md
+            - Troubleshooting: usage/troubleshooting.md
+            - Plotting: usage/plotting.md
+            - Tracking: tracking.html
+        - I/O:
+            - Input: io/input-guide.md
+            - Output: io/output-guide.md
+            - Python Libraries: io/python-lib-guide.md
+            - Utilities: io/utilities.md
+            - Variable Descriptions: vardes.md
+    - Development:
+        - Git:
+            - Usage: development/git-usage.md
+            - Pre-commit: development/pre-commit.md
+            - Continuous Integration: development/ci-guide.md
+        - Maintenance:
+            - Testing: development/testing.md
+            - Debugging: development/debugging.md
+            - Tools: development/tools.md
+        - Code modification:
+            - Adding Variables & Constraints: development/add-vars.md
+            - Adding Physics and Engineering Variables to Python: development/annotated-variable.md
+            - Python Optimisation and Numba: development/numba.md
+        - Style:
+            - Standards: development/standards.md
+            - F2Py Standards: development/f2py-standards.md
+        # - Versioning: development/versioning.md
+    - Reference:
+        - Physics Models:
+            - Plasma: physics-models/plasma.md
+            - Pulsed Plant Operation: physics-models/pulsed-plant.md
+        - Engineering Models:
+            - Machine Build: eng-models/machine-build.md
+            - Structural Components: eng-models/structural-components.md
+            - Buildings: eng-models/buildings.md
+            - First Wall/Blanket: eng-models/fw-blanket.md
+            - TF Coil: eng-models/tf-coil.md
+            - PF Coil: eng-models/pf-coil.md
+            - Central Solenoid: eng-models/central-solenoid.md
+            - Shield: eng-models/shield.md
+            - Divertor: eng-models/divertor.md
+            - Heat transport: eng-models/power-conversion-and-heat-dissipation-systems.md
+            - Auxiliary Power Systems: eng-models/heating-and-current-drive.md
+            - Cryostat and vacuum system: eng-models/cryostat-and-vacuum-system.md
+            - Plant Availability: eng-models/plant.md
+            - Power Requirements: eng-models/power-requirements.md
+        - Unique Models:
+            - Water Use: unique-models/water_use.md
+            - Power Plant Building Sizes: unique-models/buildings_sizes.md
+            - Cost Models: cost-models/cost-models.md
+        - Solver:
+            - Solver Guide: solver/solver-guide.md
+            - VMCON Optimisation Solver Explained: solver/optsolverdoc.md
+            - Equation Solvers: solver/equation-solver.md
+        - Fusion Devices:
+            - Spherical Tokamak: fusion-devices/spherical-tokamak.md
+            - Stellarator Model: fusion-devices/stellarator.md
+            - Inertial Fusion Energy Model: fusion-devices/inertial.md
+    - Publications: publications.md
+    - Source Documentation:
+        - FORD Documentation: ford_site
+        - process: python/process.md
+        - process.io: python/process.io.md
+        - process.utilities: python/process.utilities.md
+        - process.fortran: python/process.fortran.md
+
+# repo_url: https://git.ccfe.ac.uk/process/process.git
+
+repo_url: https://github.com/UKAEA/PROCESS
+repo_name: UKAEA/PROCESS
+
+copyright: Copyright &copy; 2023 United Kingdom Atomic Energy Authority
+
+theme:
+    # name: readthedocs
+    name: material
+    font:
+        text: Roboto
+    features:
+        - navigation.tabs
+        - navigation.footer
+        - navigation.top
+        # - navigation.sections
+        - search.suggest
+        - search.highlight
+        - navigation.instant
+        - navigation.indexes
+    palette:
+        primary: indigo
+        accent: indigo
+
+    icon:
+        repo: fontawesome/brands/git-alt
+        admonition:
+            note: octicons/tag-16
+            abstract: octicons/checklist-16
+            info: octicons/info-16
+            tip: octicons/squirrel-16
+            success: octicons/check-16
+            question: octicons/question-16
+            warning: octicons/alert-16
+            failure: octicons/x-circle-16
+            danger: octicons/zap-16
+            bug: octicons/bug-16
+            example: octicons/beaker-16
+            quote: octicons/quote-16
+
+
+extra_javascript:
+    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
+
+markdown_extensions:
+    - footnotes
+    - admonition
+    - codehilite
+    - pymdownx.arithmatex
+    - pymdownx.betterem:
+          smart_enable: all
+    - pymdownx.caret
+    - pymdownx.critic
+    - pymdownx.details
+    - pymdownx.inlinehilite
+    - pymdownx.magiclink
+    - pymdownx.mark
+    - pymdownx.smartsymbols
+    - pymdownx.superfences
+    - pymdownx.tabbed:
+          alternate_style: true 
+    - pymdownx.tasklist:
+          custom_checkbox: true
+    - pymdownx.tilde
+    - attr_list
+    - pymdownx.emoji:
+    - md_in_html
+
+plugins:
+    - autorefs
+    - search
+    - glightbox:
+        touchNavigation: true
+        effect: zoom
+        zoomable: true
+        auto_caption: true
+        caption_position: bottom
+    - git-revision-date-localized:
+        enable_creation_date: true
+#     - mkdocstrings:
+#           handlers:
+#               python:
+#                   selection:
+#                       docstring_style: restructured-text
+#                   rendering:
+#                       show_source: false
+#                       show_root_heading: true
+
+extra_css: [stylesheets/vardes.css]

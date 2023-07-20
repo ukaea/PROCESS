@@ -1,0 +1,1419 @@
+{
+  "version": [
+    "PROCESS version 2.1.1"
+  ],
+  "comment1": [
+    "List of error messages used via error_handling.f90"
+  ],
+  "comment2": [
+    "Increment n_errortypes if an error is added to this list"
+  ],
+  "n_errortypes": 281,
+  "errors": [
+    {
+      "no": 1,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 7 if ignite=1"
+    },
+    {
+      "no": 2,
+      "level": 3,
+      "message": "CONSTRAINTS: Constraint equation 15 is redundant"
+    },
+    {
+      "no": 3,
+      "level": 3,
+      "message": "CONSTRAINTS: Constraint equation 23 is redundant; use 33 and/or 35 instead"
+    },
+    {
+      "no": 4,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 28 if ignite=1"
+    },
+    {
+      "no": 5,
+      "level": 3,
+      "message": "CONSTRAINTS: tpeak = 0 ==> lpulse=0; do not use constraint 39 if lpulse=0"
+    },
+    {
+      "no": 6,
+      "level": 3,
+      "message": "CONSTRAINTS: tcycmn = 0 ==> lpulse=0; do not use constraint 42 if lpulse=0"
+    },
+    {
+      "no": 7,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 43 if itart=0"
+    },
+    {
+      "no": 8,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 44 if itart=0"
+    },
+    {
+      "no": 9,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 45 if itart=0"
+    },
+    {
+      "no": 10,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 46 if itart=0"
+    },
+    {
+      "no": 11,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 47 if irfp=0"
+    },
+    {
+      "no": 12,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 50 if ife=0"
+    },
+    {
+      "no": 13,
+      "level": 3,
+      "message": "CONSTRAINTS: No such constraint equation number..."
+    },
+    {
+      "no": 14,
+      "level": 3,
+      "message": "CONSTRAINTS: NaN/infty error for constraint equation..."
+    },
+    {
+      "no": 15,
+      "level": 3,
+      "message": "ITERNB: Imminent negative square root argument; NBI will miss plasma completely"
+    },
+    {
+      "no": 16,
+      "level": 2,
+      "message": "LHRAD: LH penetration radius not found after lapno iterations, using 0.8*rminor"
+    },
+    {
+      "no": 17,
+      "level": 3,
+      "message": "ECCDEF: Negative normalised current drive efficiency"
+    },
+    {
+      "no": 18,
+      "level": 3,
+      "message": "LEGEND: Invalid argument"
+    },
+    {
+      "no": 19,
+      "level": 3,
+      "message": "LEGEND: Solution has not converged"
+    },
+    {
+      "no": 20,
+      "level": 3,
+      "message": "CULNBI: Imminent negative square root argument; NBI will miss plasma completely"
+    },
+    {
+      "no": 21,
+      "level": 3,
+      "message": "ETANB2: Imminent negative square root argument; NBI will miss plasma completely"
+    },
+    {
+      "no": 22,
+      "level": 3,
+      "message": "DIVCALL: Non-positive vgap"
+    },
+    {
+      "no": 23,
+      "level": 3,
+      "message": "FUNFOM: Figure of merit cfactr requires iavail=1"
+    },
+    {
+      "no": 24,
+      "level": 3,
+      "message": "FUNFOM: No such figure of merit"
+    },
+    {
+      "no": 25,
+      "level": 3,
+      "message": "FUNFOM: NaN error in figure of merit calculation"
+    },
+    {
+      "no": 26,
+      "level": 3,
+      "message": "IFEFBS: Illegal fbreed value"
+    },
+    {
+      "no": 27,
+      "level": 3,
+      "message": "INIT_IMP_ELEMENT: Illegal impurity number"
+    },
+    {
+      "no": 28,
+      "level": 3,
+      "message": "INIT_IMP_ELEMENT: Allocation problem"
+    },
+    {
+      "no": 29,
+      "level": 2,
+      "message": "INIT_IMP_ELEMENT: Impurity datafiles missing; switching to original model"
+    },
+    {
+      "no": 30,
+      "level": 3,
+      "message": "IMPORT_IMPDATA: Problem opening impurity data file"
+    },
+    {
+      "no": 31,
+      "level": 3,
+      "message": "IMPORT_IMPDATA: Problem reading impurity data file header"
+    },
+    {
+      "no": 32,
+      "level": 3,
+      "message": "IMPORT_IMPDATA: Problem reading impurity data file contents"
+    },
+    {
+      "no": 33,
+      "level": 3,
+      "message": "Z2INDEX: Element with the given charge is not in the impurity array"
+    },
+    {
+      "no": 34,
+      "level": 3,
+      "message": "ELEMENT2INDEX: Element with given label not found in impurity array"
+    },
+    {
+      "no": 35,
+      "level": 2,
+      "message": "PIMPDEN: Impurity radiation model is inaccurate at such low temperatures"
+    },
+    {
+      "no": 36,
+      "level": 3,
+      "message": "CHECK: Fuel ion fractions do not sum to 1.0; check fdeut, ftrit, fhe3 values"
+    },
+    {
+      "no": 37,
+      "level": 2,
+      "message": "CHECK: Usual current scaling for TARTs (icurr=2 or 9) is not being used"
+    },
+    {
+      "no": 38,
+      "level": 3,
+      "message": "CHECK: Invalid boostrap current law for ST, do not use ibss = 1"
+    },
+    {
+      "no": 39,
+      "level": 1,
+      "message": "CHECK: Operating with a single null in a double null machine"
+    },
+    {
+      "no": 40,
+      "level": 2,
+      "message": "CHECK: icurr=2 is not a valid option for a non-TART device"
+    },
+    {
+      "no": 41,
+      "level": 3,
+      "message": "CHECK: ncls(i) .ne. 2 is not a valid option except for (ipfloc = 2)"
+    },
+    {
+      "no": 42,
+      "level": 3,
+      "message": "CHECK: Only 1 divertor coil (ipfloc = 2) is not a valid configuration"
+    },
+    {
+      "no": 43,
+      "level": 3,
+      "message": "CHECK: More than 2 divertor coils (ipfloc = 2) is not a valid configuration"
+    },
+    {
+      "no": 44,
+      "level": 3,
+      "message": "CHECK: If snull=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
+    },
+    {
+      "no": 45,
+      "level": 3,
+      "message": "CHECK: itart=1 is not a valid option for the RFP model"
+    },
+    {
+      "no": 46,
+      "level": 3,
+      "message": "LOADXC: Do not use tfcth as an iteration variable if istell=1"
+    },
+    {
+      "no": 47,
+      "level": 3,
+      "message": "LOADXC: Do not use cdtfleg as an iteration variable if itfsup=1 or irfp=1"
+    },
+    {
+      "no": 48,
+      "level": 3,
+      "message": "LOADXC: Do not use thkcas as an iteration variable if tfc_model=0 or istell=1"
+    },
+    {
+      "no": 49,
+      "level": 3,
+      "message": "LOADXC: Do not use cpttf as an iteration variable if itfsup=0 or istell=1"
+    },
+    {
+      "no": 50,
+      "level": 3,
+      "message": "LOADXC: Do not use tohs as an iteration variable if lpulse /= 1"
+    },
+    {
+      "no": 51,
+      "level": 3,
+      "message": "LOADXC: Do not use tftort as an iteration variable if irfp=0"
+    },
+    {
+      "no": 52,
+      "level": 3,
+      "message": "LOADXC: Do not use helecmw as an iteration variable if ihplant is not 1,2 or 3"
+    },
+    {
+      "no": 53,
+      "level": 3,
+      "message": "LOADXC: Do not use hthermmw as an iteration variable if ihplant < 4"
+    },
+    {
+      "no": 54,
+      "level": 3,
+      "message": "LOADXC: Illegal iteration variable number"
+    },
+    {
+      "no": 55,
+      "level": 3,
+      "message": "LOADXC: Iteration variable is zero; change its initial value or lower bound"
+    },
+    {
+      "no": 56,
+      "level": 3,
+      "message": "LOADXC: NaN error for iteration variable"
+    },
+    {
+      "no": 57,
+      "level": 3,
+      "message": "CONVXC: Illegal iteration variable number"
+    },
+    {
+      "no": 58,
+      "level": 3,
+      "message": "CONVXC: Iteration variable is zero; change its initial value or lower bound"
+    },
+    {
+      "no": 59,
+      "level": 3,
+      "message": "CONVXC: NaN error for iteration variable"
+    },
+    {
+      "no": 60,
+      "level": 3,
+      "message": "CONVXC: scale(i) = 0 for iteration variable"
+    },
+    {
+      "no": 61,
+      "level": 3,
+      "message": "RADIALB: fhole+fdiv+fhcd is too high for a credible outboard wall area"
+    },
+    {
+      "no": 62,
+      "level": 1,
+      "message": "RADIALB: Ripple result may be inaccurate, as the fit has been extrapolated"
+    },
+    {
+      "no": 63,
+      "level": 2,
+      "message": "PORTSZ: Max beam tangency radius set =0 temporarily; change beamwd"
+    },
+    {
+      "no": 64,
+      "level": 3,
+      "message": "PFCOIL: ngrp is larger than ngrpmx"
+    },
+    {
+      "no": 65,
+      "level": 3,
+      "message": "PFCOIL: Too many coils in a PF coil group"
+    },
+    {
+      "no": 66,
+      "level": 3,
+      "message": "PFCOIL: Too many filaments nfxf repesenting the OH coil"
+    },
+    {
+      "no": 67,
+      "level": 3,
+      "message": "PFCOIL: Illegal ipfloc value"
+    },
+    {
+      "no": 68,
+      "level": 3,
+      "message": "PFCOIL: Too many test points npts across plasma midplane"
+    },
+    {
+      "no": 69,
+      "level": 3,
+      "message": "PFCOIL: ipfloc(i) should not be 1 if itart=1"
+    },
+    {
+      "no": 70,
+      "level": 3,
+      "message": "PFCOIL: Illegal value of ipfloc(i)"
+    },
+    {
+      "no": 71,
+      "level": 2,
+      "message": "PFCOIL: OH coil not present; check volt-second calculations..."
+    },
+    {
+      "no": 72,
+      "level": 3,
+      "message": "PEAKB: Illegal value of it; possible rounding error"
+    },
+    {
+      "no": 73,
+      "level": 2,
+      "message": "INDUCT: Max no. of segments noh for OH coil > nohmax; increase ohcth lower bound"
+    },
+    {
+      "no": 74,
+      "level": 3,
+      "message": "INDUCT: Negative square root imminent; raise ohcth or its upper limit"
+    },
+    {
+      "no": 75,
+      "level": 3,
+      "message": "PHYSICS: Illegal value of ibss"
+    },
+    {
+      "no": 76,
+      "level": 3,
+      "message": "BOOTSTRAP_FRACTION_WILSON: Illegal profile value found"
+    },
+    {
+      "no": 77,
+      "level": 3,
+      "message": "CULCUR: Illegal value for icurr"
+    },
+    {
+      "no": 78,
+      "level": 2,
+      "message": "PLASMA_COMPOSITION: Fuel ion density is zero or negative; forced to be positive"
+    },
+    {
+      "no": 79,
+      "level": 3,
+      "message": "CULDLM: Illegal value for idensl"
+    },
+    {
+      "no": 80,
+      "level": 2,
+      "message": "CULDLM: qcyl < 4/3; dlimit(4) set to zero; model 5 will be enforced instead"
+    },
+    {
+      "no": 81,
+      "level": 3,
+      "message": "PCOND: Illegal value for isc"
+    },
+    {
+      "no": 82,
+      "level": 3,
+      "message": "RADPWR: Illegal value for imprad_model"
+    },
+    {
+      "no": 83,
+      "level": 2,
+      "message": "POHM: Negative plasma resistance rplas"
+    },
+    {
+      "no": 84,
+      "level": 3,
+      "message": "SGVHOT: Illegal value for iabm"
+    },
+    {
+      "no": 85,
+      "level": 3,
+      "message": "OUTPLAS: Illegal value of idivrt"
+    },
+    {
+      "no": 86,
+      "level": 3,
+      "message": "OUTPLAS: Illegal value of ishape"
+    },
+    {
+      "no": 87,
+      "level": 2,
+      "message": "OUTPLAS: Possible problem with high radiation power, forcing pdivt to odd values"
+    },
+    {
+      "no": 88,
+      "level": 2,
+      "message": "ITERATE_FW: Optimisation has failed within 100 iterations; possible NaN problems"
+    },
+    {
+      "no": 89,
+      "level": 3,
+      "message": "ITERATE_FW: Inner pipe radius afw >= outer pipe radius bfw"
+    },
+    {
+      "no": 90,
+      "level": 2,
+      "message": "THRMAL: Swelling limit exceeded; optimisation failing to find a FW thickness"
+    },
+    {
+      "no": 91,
+      "level": 3,
+      "message": "SMT: No reliable data for SMT stress for temperatures > 600 degrees Celsius"
+    },
+    {
+      "no": 92,
+      "level": 2,
+      "message": "CYCLES: Fatigue data unreliable for T > 649 degrees Celsius"
+    },
+    {
+      "no": 93,
+      "level": 2,
+      "message": "BURN: Negative burn time available; reduce theat or raise PF coil V-s capability"
+    },
+    {
+      "no": 94,
+      "level": 3,
+      "message": "SCAN: Illegal value of isweep"
+    },
+    {
+      "no": 95,
+      "level": 3,
+      "message": "SCAN: Do not scan cfactr if iavail=1"
+    },
+    {
+      "no": 96,
+      "level": 3,
+      "message": "SCAN: Illegal scan variable number nsweep"
+    },
+    {
+      "no": 97,
+      "level": 2,
+      "message": "SCTFCOIL: Negative TF coil current; ritfc forced to be positive..."
+    },
+    {
+      "no": 98,
+      "level": 2,
+      "message": "SCTFCOIL: Negative winding pack thickness; increase tfcth or its lower bound"
+    },
+    {
+      "no": 99,
+      "level": 2,
+      "message": "SCTFCOIL: Winding pack cross-section problem..."
+    },
+    {
+      "no": 100,
+      "level": 2,
+      "message": "SCTFCOIL: Negative cable space dimension; reduce conduit thicknesses or raise cpttf"
+    },
+    {
+      "no": 101,
+      "level": 2,
+      "message": "SCTFCOIL: Negative cable space dimension"
+    },
+    {
+      "no": 102,
+      "level": 2,
+      "message": "SCTFCOIL: Cable space area problem; artificially set rounded corner radius to 0"
+    },
+    {
+      "no": 103,
+      "level": 2,
+      "message": "SCTFCOIL: Inconsistent TF leg toroidal thickness; should never happen!"
+    },
+    {
+      "no": 104,
+      "level": 3,
+      "message": "STRESSCL: Illegal value for tfc_model"
+    },
+    {
+      "no": 105,
+      "level": 3,
+      "message": "SUPERCON: Illegal value for i_tf_sc_mat"
+    },
+    {
+      "no": 106,
+      "level": 2,
+      "message": "BI2212: Fit extrapolated outside of range of validity"
+    },
+    {
+      "no": 107,
+      "level": 3,
+      "message": "STHEAT: Illegal value for isthtr"
+    },
+    {
+      "no": 108,
+      "level": 3,
+      "message": "STDLIM: Negative square root imminent"
+    },
+    {
+      "no": 109,
+      "level": 3,
+      "message": "STCOIL: Illegal value for nbticool"
+    },
+    {
+      "no": 110,
+      "level": 3,
+      "message": "STCOIL: Use i_tf_sc_mat = 1 or 3 with the stellarator model"
+    },
+    {
+      "no": 111,
+      "level": 2,
+      "message": "INTERSECT: X ranges not overlapping"
+    },
+    {
+      "no": 112,
+      "level": 2,
+      "message": "INTERSECT: X has dropped below Xmin; X has been set equal to Xmin"
+    },
+    {
+      "no": 113,
+      "level": 2,
+      "message": "INTERSECT: X has risen above Xmax; X has been set equal to Xmax"
+    },
+    {
+      "no": 114,
+      "level": 2,
+      "message": "INTERSECT: Convergence too slow; X may be wrong..."
+    },
+    {
+      "no": 115,
+      "level": 3,
+      "message": "CPOST: Illegal value for rtop"
+    },
+    {
+      "no": 116,
+      "level": 3,
+      "message": "CPOST: Illegal value for ztop"
+    },
+    {
+      "no": 117,
+      "level": 3,
+      "message": "CPOST: Illegal value for rmid"
+    },
+    {
+      "no": 118,
+      "level": 3,
+      "message": "CPOST: Illegal value for hmax"
+    },
+    {
+      "no": 119,
+      "level": 3,
+      "message": "CPOST: Illegal value for fcool"
+    },
+    {
+      "no": 120,
+      "level": 3,
+      "message": "CPOST: rtop < rmid"
+    },
+    {
+      "no": 121,
+      "level": 3,
+      "message": "CPOST: hmax < ztop"
+    },
+    {
+      "no": 122,
+      "level": 2,
+      "message": "CPOST: Silly answers because fcool=1.0..."
+    },
+    {
+      "no": 123,
+      "level": 3,
+      "message": "CPOST: R(Z) is negative"
+    },
+    {
+      "no": 124,
+      "level": 2,
+      "message": "VACUUM: Newton's method not converging; check fusion power, te"
+    },
+    {
+      "no": 125,
+      "level": 3,
+      "message": "ACC2253: Illegal value for istore"
+    },
+    {
+      "no": 126,
+      "level": 3,
+      "message": "CUDRIV: Illegal value for iefrf"
+    },
+    {
+      "no": 127,
+      "level": 3,
+      "message": "IFE: Illegal value for ifedrv"
+    },
+    {
+      "no": 128,
+      "level": 3,
+      "message": "TBR_BREED: Unknown tritium breeder specified"
+    },
+    {
+      "no": 129,
+      "level": 3,
+      "message": "CULLHY: Normalised LH efficiency < 0; use a different value of iefrf"
+    },
+    {
+      "no": 130,
+      "level": 3,
+      "message": "REPORT_INPUT_ERROR: Error detected in input file - see OUT.DAT for more details"
+    },
+    {
+      "no": 131,
+      "level": 2,
+      "message": "EQSLV: Non-optimisation solver HYBRD returns with ifail /= 1"
+    },
+    {
+      "no": 132,
+      "level": 2,
+      "message": "DOOPT: Optimisation solver VMCON returns with ifail /= 1"
+    },
+    {
+      "no": 133,
+      "level": 2,
+      "message": "EQSLV: High final HYBRD constraint residues"
+    },
+    {
+      "no": 134,
+      "level": 2,
+      "message": "DOOPT: High final VMCON constraint residues"
+    },
+    {
+      "no": 135,
+      "level": 1,
+      "message": "OUTPF: CS not using max current density: further optimisation may be possible"
+    },
+    {
+      "no": 136,
+      "level": 2,
+      "message": "BETCOM: Low density... carbon impurity fraction forced to be no more than 0.05"
+    },
+    {
+      "no": 137,
+      "level": 3,
+      "message": "CHECK: Insufficient iteration variables to solve the problem! NVAR < NEQNS"
+    },
+    {
+      "no": 138,
+      "level": 2,
+      "message": "CHECK: Beware; ion power balance may not be correct with new radiation model"
+    },
+    {
+      "no": 139,
+      "level": 3,
+      "message": "CHECK: The number of iteration variables specified is smaller than the number stated in ixc"
+    },
+    {
+      "no": 140,
+      "level": 3,
+      "message": "CHECK: The number of constraints specified is smaller than the number stated in neqns+nineqns"
+    },
+    {
+      "no": 141,
+      "level": 1,
+      "message": "RADIALB: (TF coil ripple calculation) Dimensionless coil width X out of fitted range"
+    },
+    {
+      "no": 142,
+      "level": 1,
+      "message": "RADIALB: (TF coil ripple calculation) No of TF coils not between 16 and 20 inclusive"
+    },
+    {
+      "no": 143,
+      "level": 1,
+      "message": "RADIALB: (TF coil ripple calculation) (R+a)/rtot out of fitted range"
+    },
+    {
+      "no": 144,
+      "level": 1,
+      "message": "OUTTF: (TF coil peak field calculation) Winding pack width out of fitted range"
+    },
+    {
+      "no": 145,
+      "level": 1,
+      "message": "OUTTF: (TF coil peak field calculation) Winding pack radial thickness out of fitted range"
+    },
+    {
+      "no": 146,
+      "level": 3,
+      "message": "CHECK: temperature pedestal is lower than separatrix temperature"
+    },
+    {
+      "no": 147,
+      "level": 2,
+      "message": "CHECK: temperature pedestal is at plasma edge, but teped differs from tesep"
+    },
+    {
+      "no": 148,
+      "level": 2,
+      "message": "TPROFILE: temperature pedestal is higher than core temperature"
+    },
+    {
+      "no": 149,
+      "level": 2,
+      "message": "CHECK: volume-averaged temperature has been forced to exceed input pedestal height"
+    },
+    {
+      "no": 150,
+      "level": 2,
+      "message": "CHECK: Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped"
+    },
+    {
+      "no": 151,
+      "level": 3,
+      "message": "CHECK: density pedestal is lower than separatrix density"
+    },
+    {
+      "no": 152,
+      "level": 2,
+      "message": "CHECK: density pedestal is at plasma edge, but neped differs from nesep"
+    },
+    {
+      "no": 153,
+      "level": 2,
+      "message": "NPROFILE: density pedestal is higher than core density"
+    },
+    {
+      "no": 154,
+      "level": 2,
+      "message": "CHECK: neped set with fgwped without constraint eq 81 (neped<ne0)"
+    },
+    {
+      "no": 155,
+      "level": 2,
+      "message": "CHECK: dene used as iteration variable without constraint 81 (neped<ne0)"
+    },
+    {
+      "no": 156,
+      "level": 3,
+      "message": "SUPERCONPF: Illegal value for isumatpf"
+    },
+    {
+      "no": 157,
+      "level": 2,
+      "message": "SUPERCON: Temperature margin iteration exited prematurely"
+    },
+    {
+      "no": 158,
+      "level": 2,
+      "message": "SUPERCONPF: Temperature margin iteration exited prematurely"
+    },
+    {
+      "no": 159,
+      "level": 2,
+      "message": "ITERSC: Reduced temperature t artificially lowered"
+    },
+    {
+      "no": 160,
+      "level": 2,
+      "message": "ITERSC: Reduced field bzero artificially lowered"
+    },
+    {
+      "no": 161,
+      "level": 2,
+      "message": "ITERSC: Reduced field brad artificially lowered"
+    },
+    {
+      "no": 162,
+      "level": 3,
+      "message": "CHECK: Constraint no.3 (Ion power balance) is not currently available"
+    },
+    {
+      "no": 163,
+      "level": 3,
+      "message": "CHECK: Constraint no.4 (Electron power balance) is not currently available"
+    },
+    {
+      "no": 164,
+      "level": 3,
+      "message": "CHECK: Minimum cycle time constraint 42 not available"
+    },
+    {
+      "no": 165,
+      "level": 3,
+      "message": "CHECK: Blanket material fractions do not sum to 1.0"
+    },
+    {
+      "no": 166,
+      "level": 2,
+      "message": "PLANT_THERMAL_EFFICIENCY: Turbine temperature tturb out of range of validity"
+    },
+    {
+      "no": 167,
+      "level": 2,
+      "message": "PUMPPOWER: Reynolds number outside range 1e4 - 1e7.  Set verbose=1 for more info"
+    },
+    {
+      "no": 168,
+      "level": 2,
+      "message": "INITIALISE_REFPROP: Problem in call to setup(REFPROP)"
+    },
+    {
+      "no": 169,
+      "level": 2,
+      "message": "FLUID_PROPERTIES: Problem in call to tpflsh(REFPROP)"
+    },
+    {
+      "no": 170,
+      "level": 2,
+      "message": "FLUID_PROPERTIES: Problem in call to trnprp(REFPROP)"
+    },
+    {
+      "no": 171,
+      "level": 2,
+      "message": "ENTHALPY_PS: Problem in call to psflsh(REFPROP)"
+    },
+    {
+      "no": 172,
+      "level": 2,
+      "message": "TSAT_REFPROP: Problem in call to satp(REFPROP)"
+    },
+    {
+      "no": 173,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use constraint 55 if iblanket != 2"
+    },
+    {
+      "no": 174,
+      "level": 3,
+      "message": "CONVERT_PLASMOD2PROCESS: PLASMOD Transport model (ipedestal=3) has not converged"
+    },
+    {
+      "no": 175,
+      "level": 3,
+      "message": "SETUPPLASMOD: PLASMOD(ipedestal=2,3) can only be used with ieped = 0 or 1"
+    },
+    {
+      "no": 176,
+      "level": 3,
+      "message": "CHECK: fgwped has to be > 0, if ipedestal = 2 or 3"
+    },
+    {
+      "no": 177,
+      "level": 3,
+      "message": "CHECK: fgwsep has to be > 0, if ipedestal = 2 or 3"
+    },
+    {
+      "no": 178,
+      "level": 3,
+      "message": "CHECK: Cannot use Psep/R and PsepB/qAR limits at the same time"
+    },
+    {
+      "no": 179,
+      "level": 3,
+      "message": "CHECK: You have to use the LH-threshold constraint with PLASMOD(ipedestal=3)"
+    },
+    {
+      "no": 180,
+      "level": 1,
+      "message": "OBSOLETE"
+    },
+    {
+      "no": 181,
+      "level": 3,
+      "message": "CHECK: You have to enforce H-mode with PLASMOD(ipedestal=3)"
+    },
+    {
+      "no": 182,
+      "level": 3,
+      "message": "CHECK: It.vars 4,5,6,9,36,44,102,103,109,110,117 can't be used with PLASMOD:"
+    },
+    {
+      "no": 183,
+      "level": 3,
+      "message": "CHECK: The density limit (icc = 5) cannot be used in conjuctions with PLASMOD(ipedestal=3), use fgwsep or fgwped instead"
+    },
+    {
+      "no": 184,
+      "level": 3,
+      "message": "CHECK: You need to use iradloss=0 with PLASMOD(ipedestal=2,3)"
+    },
+    {
+      "no": 185,
+      "level": 3,
+      "message": "CHECK: You cannot use icc = 2 (global power balance) in combination with PLASMOD(ipedestal=3)"
+    },
+    {
+      "no": 186,
+      "level": 3,
+      "message": "CHECK: Set lower bound of fgwped (it.var 145) to be greater than fgwsep"
+    },
+    {
+      "no": 187,
+      "level": 3,
+      "message": "CHECK: Specify only one variable from contrpovs and contrpovr"
+    },
+    {
+      "no": 188,
+      "level": 3,
+      "message": "CHECK: The beta consistency equation cannot be used in conjunction with PLASMOD (ipedestal=3) as beta is an output"
+    },
+    {
+      "no": 189,
+      "level": 2,
+      "message": "CHECK: plasmod_i_equiltype =2 is a not consistently implemented option!"
+    },
+    {
+      "no": 190,
+      "level": 3,
+      "message": "CHECK: if plasmod_i_equiltype = 2, q95 is an output and plascur an input. Hence, q cannot vary!"
+    },
+    {
+      "no": 191,
+      "level": 3,
+      "message": "CHECK: if plasmod_i_modeltype > 1, beta is calculated and its limit is enforced inside PLASMOD. Therefore no beta limit needs be checked in PROCESS!"
+    },
+    {
+      "no": 192,
+      "level": 3,
+      "message": "CONVERT_PLASMOD2PROCESS: Definitions of dnalp inconsistent between PLASMOD and PROCESS! Flag to developer!"
+    },
+    {
+      "no": 193,
+      "level": 3,
+      "message": "CONVERT_PLASMOD2PROCESS: Definitions of deni inconsistent between PLASMOD and PROCESS! Flag to developer!"
+    },
+    {
+      "no": 194,
+      "level": 3,
+      "message": "CONVERT_PLASMOD2PROCESS: Definitions of dnz inconsistent between PLASMOD and PROCESS! Flag to developer!"
+    },
+    {
+      "no": 195,
+      "level": 3,
+      "message": "CONVERT_PLASMOD2PROCESS: Definitions of zeff inconsistent between PLASMOD and PROCESS! Flag to developer!"
+    },
+    {
+      "no": 196,
+      "level": 3,
+      "message": "CHECK: ishape has to be 4, if ipedestal=2,3, as PLASMOD takes kappa95,triang95 as inputs!"
+    },
+    {
+      "no": 197,
+      "level": 3,
+      "message": "CHECK: PLASMOD (ipedestal=2,3) only uses NBI current drive"
+    },
+    {
+      "no": 198,
+      "level": 3,
+      "message": "CHECK: PLASMOD (ipedestal=2,3) always has to have current drive"
+    },
+    {
+      "no": 199,
+      "level": 2,
+      "message": "CHECK: PLASMOD (ipedestal=2,3) automatically takes both pseprmax and psepbqarmax as input. It uses which ever one leads to the lower Psep value. Not to use one of them set them to a very large number"
+    },
+    {
+      "no": 200,
+      "level": 3,
+      "message": "CONVERT_PLASMOD2PROCESS: PLASMOD output for dnitot is inconsistent"
+    },
+    {
+      "no": 201,
+      "level": 1,
+      "message": "LH THRESHOLD: bt outside Snipes 2000 fitted range"
+    },
+    {
+      "no": 202,
+      "level": 1,
+      "message": "LH THRESHOLD: rminor outside Snipes 2000 fitted range"
+    },
+    {
+      "no": 203,
+      "level": 1,
+      "message": "LH THRESHOLD: rmajor outside Snipes 2000 fitted range"
+    },
+    {
+      "no": 204,
+      "level": 1,
+      "message": "LH THRESHOLD: dnla outside Snipes 2000 fitted range"
+    },
+    {
+      "no": 205,
+      "level": 1,
+      "message": "LH THRESHOLD: kappa outside Snipes 2000 fitted range"
+    },
+    {
+      "no": 206,
+      "level": 1,
+      "message": "LH THRESHOLD: triang outside Snipes 2000 fitted range"
+    },
+    {
+      "no": 207,
+      "level": 1,
+      "message": "LH THRESHOLD: Closed divertor only. Limited data used in Snipes fit"
+    },
+    {
+      "no": 208,
+      "level": 3,
+      "message": "CHECK: icc = 68 (Psep * Bt / qAR upper limit) cannot be used with PLASMOD"
+    },
+    {
+      "no": 209,
+      "level": 3,
+      "message": "CHECK: You cannot use icc = 15 (LH power threshold limit) in combination with PLASMOD(ipedestal=3)"
+    },
+    {
+      "no": 210,
+      "level": 3,
+      "message": "CHECK: You cannot use icc = 62 (ratio of particle and energy confinement times) in combination with PLASMOD(ipedestal=3)"
+    },
+    {
+      "no": 211,
+      "level": 3,
+      "message": "CHECK: You cannot use icc = 24 (Beta upper limit) in combination with PLASMOD(ipedestal=3)"
+    },
+    {
+      "no": 212,
+      "level": 3,
+      "message": "NCORE: Central density is negative"
+    },
+    {
+      "no": 213,
+      "level": 2,
+      "message": "NCORE: Central density is less than pedestal density"
+    },
+    {
+      "no": 214,
+      "level": 2,
+      "message": "CHECK: Values of EPED scaling factor 'eped_sf' greater than 1 are not recommended"
+    },
+    {
+      "no": 215,
+      "level": 3,
+      "message": "STELLARATOR: primary_pumping = 0 or 1 only"
+    },
+    {
+      "no": 216,
+      "level": 3,
+      "message": "CONSTRAINTS: Do not use tritium breeding ratio constraint 52 if iblanket=1"
+    },
+    {
+      "no": 217,
+      "level": 2,
+      "message": "REINKE IMPURITY MODEL: fzmin is greater than or equal to 1.0, this is at least notable"
+    },
+    {
+      "no": 218,
+      "level": 2,
+      "message": "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model"
+    },
+    {
+      "no": 219,
+      "level": 3,
+      "message": "REINKE IMPURITY MODEL: tesep is calculated and cannot be an iteration variable for the Reinke model"
+    },
+    {
+      "no": 220,
+      "level": 1,
+      "message": "CHECK: tauee_in is for use with isc=48 only"
+    },
+    {
+      "no": 221,
+      "level": 2,
+      "message": "CHECK: NSTX scaling is for A<1.7"
+    },
+    {
+      "no": 222,
+      "level": 3,
+      "message": "CHECK: Lang 2012 confinement scaling cannot be used for icurr=2 due to wrong q"
+    },
+    {
+      "no": 223,
+      "level": 2,
+      "message": "[fw.f90][fw_temp] NaN first wall temperature "
+    },
+    {
+      "no": 224,
+      "level": 2,
+      "message": "[fw.f90][fw_temp] First wall temperature (temp_k) out of range : [100-1500] K"
+    },
+    {
+      "no": 225,
+      "level": 2,
+      "message": "[fw.f90][heat_transfer] Reynolds number out of range : [3e3-5000e3]"
+    },
+    {
+      "no": 226,
+      "level": 2,
+      "message": "[fw.f90][heat_transfer] Prandtl number out of range : [0.5-2000]"
+    },
+    {
+      "no": 227,
+      "level": 2,
+      "message": "[fw.f90][heat_transfer] Negative Darcy friction factor (f)"
+    },
+    {
+      "no": 228,
+      "level": 3,
+      "message": "RFP: RFP no longer available."
+    },
+    {
+      "no": 229,
+      "level": 2,
+      "message": "[hcpb.f90][st_centrepost_nuclear_heating] Centrepost shiled thickness out of the neutronics fit range : [0.2-0.35] m"
+    },
+    {
+      "no": 230,
+      "level": 3,
+      "message": "BLD2019: fwdr and v1dr should be zero for 2019 IFE build."
+    },
+    {
+      "no": 231,
+      "level": 3,
+      "message": "BLD2019: fwdzu, v1dzu and v2dzu should be zero for 2019 IFE build."
+    },
+    {
+      "no": 232,
+      "level": 3,
+      "message": "BLD2019: fwdzl, v1dzl and v2dzl should be zero for 2019 IFE build."
+    },
+    {
+      "no": 233,
+      "level": 1,
+      "message": "CHECK: Joints res not cal. for SC (itart = 1) TF (i_tf_sup = 1),"
+    },
+    {
+      "no": 234,
+      "level": 3,
+      "message": "CHECK: Coolant temperature (tcoolin) cannot be < 0 C (273.15 K) for water cooled copper magents."
+    },
+    {
+      "no": 235,
+      "level": 3,
+      "message": "CHECK: Coolant temperature (tcoolin) should be < 40 K for the cryo-al resistivity to be defined."
+    },
+    {
+      "no": 236,
+      "level": 3,
+      "message": "CHECK: The 1/R toroidal B field dependency constraint is being depreciated."
+    },
+    {
+      "no": 237,
+      "level": 2,
+      "message": "CHECK: Using a variable target temperature might lead to a discontinuity, preventing VMCON to converge. Try using fixed ttarget"
+    },
+    {
+      "no": 238,
+      "level": 3,
+      "message": "CHECK: TF legs conductor temperature (tlegav) should be < 40 K for the cryo-al resistivity to be defined."
+    },
+    {
+      "no": 239,
+      "level": 3,
+      "message": "CHECK: TF legs conductor temperature (tlegav) cannot be < 0 C (273.15 K) for water cooled magents."
+    },
+    {
+      "no": 240,
+      "level": 3,
+      "message": "CHECK: Too large CP conductor temperature (tcpav). Upper limit for cryo-al < 50 K"
+    },
+    {
+      "no": 241,
+      "level": 3,
+      "message": "CHECK: Too low CP conductor temperature (tcpav). Lower limit for copper > 273.15 K"
+    },
+    {
+      "no": 242,
+      "level": 2,
+      "message": "PHYSICS: Bootstrap fraction upper limit enforced"
+    },
+    {
+      "no": 243,
+      "level": 2,
+      "message": "PHYSICS: Predicted plasma driven current is more than upper limit on non-inductive fraction."
+    },
+    {
+      "no": 244,
+      "level": 2,
+      "message": "PHYSICS: Diamagnetic fraction is more than 1%, but not calculated. Consider using idia=2 and ips=1."
+    },
+    {
+      "no": 245,
+      "level": 2,
+      "message": "[sctfcoil] Invalid stress model (r_tf_inboard = 0), stress constraint switched off"
+    },
+    {
+      "no": 246,
+      "level": 3,
+      "message": "CHECK: Invalid stress model if bore + gapoh + ohcth = 0. Don't use constraint 31"
+    },
+    {
+      "no": 247,
+      "level": 3,
+      "message": "CHECK: Bucked and wedged TF design not yet implemented"
+    },
+    {
+      "no": 248,
+      "level": 3,
+      "message": "CHECK: TF cryo-plant efficiency `eff_tf_cryo` must be within [0-1]"
+    },
+    {
+      "no": 249,
+      "level": 2,
+      "message": "[tfcoil][cntrpst] Negative conductor average temperature difference, set to 0"
+    },
+    {
+      "no": 250,
+      "level": 2,
+      "message": "[tfcoil][cntrpst] Negative conductor peak temperature difference, set to 0"
+    },
+    {
+      "no": 251,
+      "level": 3,
+      "message": "LOADXC: Beta should not be in ixc if istell>0. Use Constraints 24 and 84 instead."
+    },
+    {
+      "no": 252,
+      "level": 3,
+      "message": "CHECK: No CS precompression structure for bucked and wedged, use iprecomp = 0."
+    },
+    {
+      "no": 253,
+      "level": 3,
+      "message": "CHECK: Use generalized plane strain for resistive magnets (i_tf_stress_model = 0 or 2)."
+    },
+    {
+      "no": 254,
+      "level": 3,
+      "message": "CHECK: integer turns (i_tf_turns_integer = 1) not supported for REBCO (i_tf_sc_mat = 6)"
+    },
+    {
+      "no": 255,
+      "level": 3,
+      "message": "CHECK: The TF coil WP thickness (dr_tf_wp) must be at least"
+    },
+    {
+      "no": 256,
+      "level": 2,
+      "message": "CHECK: Top CP radius larger that its value determined with plasma shape"
+    },
+    {
+      "no": 257,
+      "level": 2,
+      "message": "[tfcoil] : Helium temperature out of helium property fiting range [4-50] K"
+    },
+    {
+      "no": 258,
+      "level": 2,
+      "message": "[tfcoil] : Aluminium temperature out of the th conductivity fit range [15-60] K"
+    },
+    {
+      "no": 259,
+      "level": 3,
+      "message": "CHECK: Constraint equation 10 (CP lifetime) to used with ST desing (itart=1)"
+    },
+    {
+      "no": 260,
+      "level": 3,
+      "message": "CHECK: Al TF coil fluence not calculated properly for Al CP, do not use constraint 85"
+    },
+    {
+      "no": 261,
+      "level": 2,
+      "message": "[tfcoil]: TF strain was outside the region of applicability. Used lower strain"
+    },
+    {
+      "no": 262,
+      "level": 2,
+      "message": "REBCO : Non physical strain used in CS. Use superconductor strain < +/- 0.7% "
+    },
+    {
+      "no": 263,
+      "level": 2,
+      "message": "REBCO : Non physical strain used in PF. Use superconductor strain < +/- 0.7% "
+    },
+    {
+      "no": 264,
+      "level": 3,
+      "message": "REBCO : turn off CS temperature margin constraint icc = 60 when using REBCO"
+    },
+    {
+      "no": 265,
+      "level": 3,
+      "message": "REBCO : turn off TF temperature margin constraint icc = 36 when using REBCO"
+    },
+    {
+      "no": 266,
+      "level": 2,
+      "message": "REBCO : Field on superconductor > 14 T (outside of interpolation range)"
+    },
+    {
+      "no": 267,
+      "level": 3,
+      "message": "CHECK: To set the TF CP top value, you must use i_r_cp_top = 1"
+    },
+    {
+      "no": 268,
+      "level": 2,
+      "message": "[radialb]: TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue"
+    },
+    {
+      "no": 269,
+      "level": 3,
+      "message": "CHECK: Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1) "
+    },
+    {
+      "no": 270,
+      "level": 3,
+      "message": "CHECK: The LTS conductor temperature (tftmp) has to be lower than 10"
+    },
+    {
+      "no": 271,
+      "level": 3,
+      "message": "CHECK: Impossible to set the TF coil turn and cable size simultaneously"
+    },
+    {
+      "no": 272,
+      "level": 2,
+      "message": "Double-null: Upper vertical build forced to match lower"
+    },
+    {
+      "no": 273,
+      "level": 3,
+      "message": "[tfcoil]: tmpcry should be lower than tftmp"
+    },
+    {
+      "no": 274,
+      "level": 2,
+      "message": "[HCPB]: Blanket heating is <1 MW or NaN. Is something wrong?"
+    },
+    {
+      "no": 275,
+      "level": 3,
+      "message": "CONSTRAINTS: Can't use constraint 88 if i_strain_tf == 0"
+    },
+    {
+      "no": 276,
+      "level": 2,
+      "message": "CHECK: One of the areas or fractions is negative in the internal SC TF coil geometry"
+    },
+    {
+      "no": 277,
+      "level": 2,
+      "message": "CHECK: One or more collision between TF and PF coils. Check PF placement."
+    },
+    {
+      "no": 278,
+      "level": 2,
+      "message": "CHECK: Your blanket modules are too small for the Liquid Metal pipes."
+    },
+    {
+      "no": 279,
+      "level": 3,
+      "message": "CHECK: Pressure drops in coolant are too large to be feasable."
+    },
+    {
+      "no": 280,
+      "level": 2,
+      "message": "CHECK: Outside temperature limit for one or more liquid metal breeder properties."
+    },
+    {
+      "no": 281,
+      "level": 3,
+      "message": "CHECK: Cannot have i_tf_bucking >= 2 when tf_in_cs = 1"
+    }
+  ]
+}

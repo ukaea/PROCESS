@@ -1,0 +1,266 @@
+"""Unit tests for the impurity_radiation.f90.py module."""
+import pytest
+import numpy as np
+from typing import NamedTuple
+from process.fortran import impurity_radiation_module
+import process.impurity_radiation as impurity_radiation
+
+
+@pytest.fixture(autouse=True)
+def initialise_impurity_radiation():
+    impurity_radiation_module.init_impurity_radiation_module()
+    impurity_radiation.initialise_imprad()
+
+
+class PbremdenParam(NamedTuple):
+    imp_element_index: int = 0
+    ne: np.array = np.array
+    te: np.array = np.array
+    expected_pbremden: np.array = np.array
+
+
+def test_pbremden():
+    """Tests `pbremden` function.
+
+    :param imp_element_index: impurity element
+    :type imp_element_index: float
+
+    :param ne:  electron density (/m3).
+    :type ne: np.array
+
+    :param te: electron temperature (keV)
+    :type te: np.array
+
+    :param expected_pbremden: Bremsstrahlung radiation density (W/m3)
+    :type expected_pbremden: np.array
+    """
+    pbrem_parameters = PbremdenParam(
+        imp_element_index=0,
+        ne=np.array(
+            [
+                9.42593370e19,
+                9.37237672e19,
+                9.21170577e19,
+                8.94392086e19,
+                8.56902197e19,
+                8.08700913e19,
+                7.49788231e19,
+                6.80164153e19,
+                5.99828678e19,
+                3.28986749e19,
+            ]
+        ),
+        te=np.array(
+            [
+                27.73451868,
+                27.25167194,
+                25.82164396,
+                23.50149071,
+                20.39190536,
+                16.64794796,
+                12.50116941,
+                8.31182764,
+                4.74643357,
+                0.1,
+            ]
+        ),
+        expected_pbremden=np.array(
+            [
+                25056.39306004834,
+                24555.88124974145,
+                23090.40418076286,
+                20766.488978621197,
+                17756.23528821658,
+                14289.456043405115,
+                10644.175682502506,
+                7142.2528057621585,
+                4197.5669332439475,
+                183.28051080066396,
+            ]
+        ),
+    )
+    assert (
+        pytest.approx(
+            impurity_radiation.pbremden(
+                pbrem_parameters.imp_element_index,
+                pbrem_parameters.ne,
+                pbrem_parameters.te,
+            )
+        )
+        == pbrem_parameters.expected_pbremden
+    )
+
+
+class PimpdenParam(NamedTuple):
+    imp_element_index: int = 0
+    ne: np.array = np.array
+    te: np.array = np.array
+    expected_pimpden: np.array = np.array
+
+
+def test_pimpden():
+    """Tests `pimpden` function.
+
+    :param imp_element_index: impurity element
+    :type imp_element_index: float
+
+    :param ne:  electron density (/m3).
+    :type ne: float
+
+    :param te: electron temperature (keV)
+    :type te: float
+
+    :param expected_pimpden: Total impurity radiation density (W/m3)
+    :type expected_pimpden: float
+    """
+    pimden_parameters = PimpdenParam(
+        imp_element_index=0,
+        ne=np.array(
+            [
+                9.42593370e19,
+                9.37237672e19,
+                9.21170577e19,
+                8.94392086e19,
+                8.56902197e19,
+                8.08700913e19,
+                7.49788231e19,
+                6.80164153e19,
+                5.99828678e19,
+                3.28986749e19,
+            ]
+        ),
+        te=np.array(
+            [
+                27.73451868,
+                27.25167194,
+                25.82164396,
+                23.50149071,
+                20.39190536,
+                16.64794796,
+                12.50116941,
+                8.31182764,
+                4.74643357,
+                0.1,
+            ]
+        ),
+        expected_pimpden=np.array(
+            [
+                25483.040634309407,
+                24983.364799017138,
+                23519.36229676814,
+                21187.36013272842,
+                18173.71029818293,
+                14685.542994819023,
+                11005.497709894435,
+                7448.7783515380615,
+                4440.090318064716,
+                294.54192663787137,
+            ]
+        ),
+    )
+
+    pimpden = impurity_radiation.pimpden(
+        pimden_parameters.imp_element_index, pimden_parameters.ne, pimden_parameters.te
+    )
+    assert pytest.approx(pimpden) == pimden_parameters.expected_pimpden
+
+
+class FradcoreParam(NamedTuple):
+    rho: np.array = np.array
+    coreradius: float = 0.0
+    coreradiationfraction: float = 0.0
+    expected_fradcore: np.array = np.array
+
+
+def test_fradcore():
+    """Tests `fradcore` function.
+
+    :param rho: normalised minor radius
+    :type rho: np.array
+
+    :param coreradius:  normalised core radius
+    :type coreradius: float
+
+    :param coreradiationfraction: fraction of core radiation
+    :type coreradiationfraction: float
+    :param expected_fradcore: Function to calculate core radiation fraction
+    """
+    fradcoreparam = FradcoreParam(
+        rho=np.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]),
+        coreradius=0.75000000000000011,
+        coreradiationfraction=0.60000000000000009,
+        expected_fradcore=np.array(
+            [
+                0.6,
+                0.6,
+                0.6,
+                0.6,
+                0.6,
+                0.6,
+                0.6,
+                0.6,
+                0.0,
+                0.0,
+            ]
+        ),
+    )
+    fradcore = impurity_radiation.fradcore(
+        fradcoreparam.rho, fradcoreparam.coreradius, fradcoreparam.coreradiationfraction
+    )
+    assert pytest.approx(fradcore) == fradcoreparam.expected_fradcore
+
+
+class ZavofteParam(NamedTuple):
+    imp_element_index: int = 0
+    te: np.array = np.array
+    expected_zav_of_te: np.array = np.array
+
+
+def test_zav_of_te():
+    """Tests `Zav_of_te` function.
+
+    :param imp_element_index: impurity element
+    :type imp_element_index: float
+
+    :param te:  electron temperature (keV)
+    :type te: np.array
+
+    :param expected_zav_of_te: Electron temperature dependent average atomic number
+    :type expected_zav_of_te: np.array
+    """
+    zavofteparam = ZavofteParam(
+        imp_element_index=0,
+        te=np.array(
+            [
+                27.73451868,
+                27.25167194,
+                25.82164396,
+                23.50149071,
+                20.39190536,
+                16.64794796,
+                12.50116941,
+                8.31182764,
+                4.74643357,
+                0.1,
+            ]
+        ),
+        expected_zav_of_te=np.array(
+            [
+                1.00000000000001,
+                1.00000000000001,
+                1.00000000000001,
+                1.00000000000001,
+                1.00000000000001,
+                1.00000000000001,
+                1.00000000000001,
+                1.00000000000001,
+                1.00000000000001,
+                1.00000000000001,
+            ]
+        ),
+    )
+    zav_of_te = impurity_radiation.zav_of_te(
+        zavofteparam.imp_element_index, zavofteparam.te
+    )
+
+    assert pytest.approx(zav_of_te) == zavofteparam.expected_zav_of_te

@@ -1,0 +1,115 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{epsfig,colordvi,latexsym}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{tikz}  %  for VMCON flowchart in Appendix A
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{color}
+\usepackage{mdframed}
+
+\definecolor{codeColour}{HTML}{F7F9FA}
+\definecolor{codeLine}{HTML}{E6E8EB}
+\mdfsetup{backgroundcolor=codeColour,  linecolor=codeLine,
+linewidth=3pt, topline=false, bottomline=false, rightline=false,
+innertopmargin=15pt, innerbottommargin=5pt}
+
+\usetikzlibrary{trees}
+
+\pretolerance=10000
+\topmargin=0mm
+\headheight=0mm
+\headsep=8mm
+\textwidth=170mm
+\textheight=240mm
+\footskip=10mm
+\oddsidemargin=0mm
+\evensidemargin=-12mm
+\parskip=2mm
+\parindent=0mm
+
+\setcounter{secnumdepth}{3}
+\newcommand{\indat}{\mbox{\texttt{IN.DAT}}}
+\newcommand{\mfile}{\mbox{\texttt{MFILE.DAT}}}
+\newcommand{\outdat}{\mbox{\texttt{OUT.DAT}}}
+\newcommand{\plotdat}{\mbox{\texttt{PLOT.DAT}}}
+\newcommand{\process}{\mbox{\texttt{PROCESS}}}
+\newcommand{\vmcon}{\mbox{\texttt{VMCON}}}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add here the date of the latest change and the code revision number
+\newcommand{\version}{
+15 July 2019
+\hfill
+PROCESS version: 1.0.16
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\setheader}[1]
+ {\markright{\rlap{\lower0.8ex\hbox to\textwidth{\hrulefill}}{\bf#1}}}
+\newcommand{\mychapter}[1]{\small\normalsize
+ \setcounter{footnote}{0}
+ \chapter{#1}
+ \pagestyle{myheadings}
+ \setheader{Chapter \thechapter\hspace{0.8em}#1}}
+\newcommand{\myappendix}[1]{\small\normalsize
+ \setcounter{footnote}{0}
+ \chapter{#1}
+ \pagestyle{myheadings}
+ \setheader{Appendix \thechapter\hspace{0.8em}#1}}
+
+\begin{document}
+
+\tikzstyle{every node}=[draw=black,thick,anchor=west]
+\tikzstyle{selected}=[draw=red,fill=red!30]
+\tikzstyle{optional}=[dashed,fill=gray!50]
+
+\begin{figure}[!hb]
+\centering
+\begin{tikzpicture}[%
+  grow via three points={one child at (0.5,-0.7) and
+  two children at (0.5,-0.7) and (0.5,-1.4)},
+  edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+  \node {process}
+    child { node [selected] {test\_suite}
+      child { node {test\_suite.py}}
+      child { node {test\_files}
+        child { node {Example Test case}
+          child { node {README.txt}}
+          child { node {IN.DAT}}
+          child { node {ref.IN.DAT}}
+          child { node {ref.MFILE.DAT}}
+          child { node {ref.OUT.DAT}}
+          }
+        }
+      child {}
+      child {}
+      child {}
+      child {}
+      child {}
+      child {}
+      child { node {test\_area}
+        child { node {summary.log}}
+        child { node {Example Test case}
+          child { node {README.txt}}
+          child { node {run.log}}
+          child { node {diff.log}}
+          child { node {IN.DAT}}
+          child { node {ref.IN.DAT}}
+          child { node {ref.MFILE.DAT}}
+          child { node {ref.OUT.DAT}}
+          child { node {new.MFILE.DAT}}
+          child { node {new.OUT.DAT}}
+          }
+        }
+     };
+\end{tikzpicture}
+\end{figure}
+
+
+\end{document}
