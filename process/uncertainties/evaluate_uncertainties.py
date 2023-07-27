@@ -25,6 +25,7 @@ sobol.txt             - contains the dictionary of the Sobol
 """
 
 import argparse
+from cgi import test
 
 from SALib.analyze import sobol
 from SALib.analyze import morris as morris_method
@@ -42,8 +43,8 @@ from process.io.process_funcs import (
     check_input_error,
     process_stopped,
     no_unfeasible_mfile,
-    set_variable_in_indat,
     vary_iteration_variables,
+    set_variable_in_indat,
 )
 
 
@@ -91,35 +92,35 @@ def run_monte_carlo(args):
 
     NEQNS, itervars = get_neqns_itervars()
 
-    config.factor = 1.0
-
     LBS, UBS = get_variable_range(itervars, config.factor)
-
+    param_values = []
     config.checks_before_run()
+    test_dict = {}
     config.set_sample_values()
+    for u_dict in config.uncertainties:
+        test_dict[u_dict["varname"]] = u_dict["samples"]
+    for var in test_dict:
+        param_values.append(test_dict[var])
+
+    df = pd.DataFrame.from_dict(test_dict)
+    df.to_hdf("param_values.h5", key="df", mode="w")
+
     RUN_ID = 0
-    MFileDataSet = []
-    indexDataSet = []
-    outputDataSet = []
-
+    mfile_df_list = []
     for j in range(config.no_samples):
-
         print("sample point", j, ":")
         config.go2newsamplepoint(j)
+        output_data_set = []
 
         for i in range(config.niter):
-
             print("  ", i, end=" ")
-
             # Define path for the input file to run
             input_path = Path(config.wdir) / "IN.DAT"
             config.run_process(input_path)
-
             # Check for produced MFILE.DAT in working dir
             check_input_error(wdir=config.wdir)
 
             if not process_stopped():
-
                 no_unfeasible = no_unfeasible_mfile()
 
                 if no_unfeasible <= config.no_allowed_unfeasible:
@@ -131,24 +132,22 @@ def run_monte_carlo(args):
                             % config.no_allowed_unfeasible,
                         )
 
-                    # this might need to be depraitedd
-                    # CONFIG.add_results2netcdf(RUN_ID)
-
-                    # add run to index list
-                    indexDataSet.append("run{}".format(RUN_ID))
-
-                    # collect the process solution
+                    # Collect the process solution
                     mfilepath = Path(config.wdir) / "MFILE.DAT"
                     m_file = mf.MFile(mfilepath)
+                    # Collect the mfile data.
                     for item in m_file.data.keys():
-                        outputDataSet.append(m_file.data[item].get_scan(-1))
-
-                    # Append process data to list of all mfile data
-                    MFileDataSet.append(outputDataSet)
-                    outputDataSet = []
-
+                        output_data_set.append(m_file.data[item].get_scan(-1))
+                    # Collect column names for the dataframe.
+                    columnDataSet = column_data_list(config.wdir)
+                    # Create DataFrame for the run.
+                    run_data_df = pd.DataFrame(
+                        data=[output_data_set], columns=columnDataSet
+                    )
+                    # Store DF in list of DFs for the UQ run.
+                    mfile_df_list.append(run_data_df)
+                    config.write_error_summary(j)
                     RUN_ID += 1
-
                 else:
                     print(
                         "WARNING: %i non feasible point(s) in sweep!\
@@ -157,16 +156,12 @@ def run_monte_carlo(args):
                     )
             else:
                 print("PROCESS has stopped without finishing!")
+    # Merge list of DFs into one DF.
+    mc_run_df = pd.concat(mfile_df_list)
+    # Write UQ run DF to h5 file.
+    mc_run_df.to_hdf("uncertainties_data.h5", key="df", mode="w")
 
-            if config.vary_iteration_variables is True:
-                vary_iteration_variables(itervars, LBS, UBS)
-
-        config.write_error_summary(j)
-
-    # create list of variables used in MFILE
-    columnDataSet = column_data_list(config.wdir)
-
-    return MFileDataSet, indexDataSet, columnDataSet
+    # vary_iteration_variables(itervars, LBS, UBS)
 
 
 def write_Morris_Method_Output(X, S):
@@ -178,7 +173,7 @@ def write_Morris_Method_Output(X, S):
     """
 
     with open("morris_method.txt", "w") as f:
-        # create sensistivity indices header
+        # create sensistivity  indices header
         f.write("Parameter mu mu_star sigma mu_star_conf\n")
         # print the sensistivity indices
         for i in range(X["num_vars"]):
@@ -231,7 +226,6 @@ def column_data_list(working_dir):
     # find path to MFILE data
     mfilepath = Path(working_dir) / "MFILE.DAT"
     m_file = mf.MFile(mfilepath)
-
     # read data in MFILE
     columnDataSet = []
     for item in m_file.data.keys():
@@ -255,7 +249,7 @@ def run_morris_method(args):
     fail = np.array([])
     MFileDataSet = []
     indexDataSet = []
-    outputDataSet = []
+    output_data_set = []
 
     # Set up the sample needed using latin hypercube scaling
     params_values = morris.sample(
@@ -265,7 +259,6 @@ def run_morris_method(args):
     )
 
     np.savetxt("param_values.txt", params_values)
-
     in_dat = InDat()
 
     run_max = int((config.morris_uncertainties["num_vars"] + 1.0) * config.no_samples)
@@ -288,11 +281,11 @@ def run_morris_method(args):
         mfilepath = Path(config.wdir) / "MFILE.DAT"
         m_file = mf.MFile(mfilepath)
         for item in m_file.data.keys():
-            outputDataSet.append(m_file.data[item].get_scan(-1))
+            output_data_set.append(m_file.data[item].get_scan(-1))
 
         # Append process data to list of all mfile data
-        MFileDataSet.append(outputDataSet)
-        outputDataSet = []
+        MFileDataSet.append(output_data_set)
+        output_data_set = []
 
         # add run to index list
         indexDataSet.append("run{}".format(run_id))
@@ -323,7 +316,6 @@ def run_morris_method(args):
 
     # create list of variables used in MFILE
     columnDataSet = column_data_list(config.wdir)
-
     return MFileDataSet, indexDataSet, columnDataSet
 
 
@@ -342,7 +334,7 @@ def run_sobol_method(args):
     fail = np.array([])
     MFileDataSet = []
     indexDataSet = []
-    outputDataSet = []
+    output_data_set = []
 
     # Generate samples
     params_values = saltelli.sample(
@@ -371,11 +363,11 @@ def run_sobol_method(args):
         mfilepath = Path(config.wdir) / "MFILE.DAT"
         m_file = mf.MFile(mfilepath)
         for item in m_file.data.keys():
-            outputDataSet.append(m_file.data[item].get_scan(-1))
+            output_data_set.append(m_file.data[item].get_scan(-1))
 
         # Append process data to list of all mfile data
-        MFileDataSet.append(outputDataSet)
-        outputDataSet = []
+        MFileDataSet.append(output_data_set)
+        output_data_set = []
 
         # add run to index list
         indexDataSet.append("run{}".format(run_id))
@@ -409,19 +401,15 @@ def main(args=None):
     args = parse_args(args)
 
     if args.method == "monte_carlo":
-        MFileDataSet, indexDataSet, columnDataSet = run_monte_carlo(args)
+        run_monte_carlo(args)
     elif args.method == "morris_method":
         MFileDataSet, indexDataSet, columnDataSet = run_morris_method(args)
     elif args.method == "sobol_method":
         MFileDataSet, indexDataSet, columnDataSet = run_sobol_method(args)
     else:
         print("Uncertainty method not recognised!")
-
     # create list of variables used in MFILE
     # columnDataSet = column_data_list(args)
-
-    df = pd.DataFrame(data=MFileDataSet, columns=columnDataSet, index=indexDataSet)
-    df.to_hdf("uncertainties_data.h5", key="df", mode="w")
     print("UQ finished!")
 
 
