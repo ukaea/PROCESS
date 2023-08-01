@@ -1,25 +1,26 @@
+---
 name: PROCESS main/develop testing
 
 on: push
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+    contents: read
+    pages: write
+    id-token: write
 
 jobs:
-  docker:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Check for changed files effecting the container
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            build_container:
-              - 'docker/ci/Dockerfile'
-              - 'requirements.txt'
+    docker:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Check for changed files effecting the container
+              uses: dorny/paths-filter@v2
+              id: changes
+              with:
+                  filters: |
+                      build_container:
+                        - 'docker/ci/Dockerfile'
+                        - 'requirements.txt'
       # DISABLED BECAUSE PRIVATE REPO STORAGE NOT ENOUGH, USING
       # ghcr.io/timothy-nunn/process-ci:latest TO TEST
       # - name: Login to GitHub Container Registry
@@ -37,70 +38,65 @@ jobs:
       #     docker build . -t ghcr.io/jonmaddock/process-ci:latest
       #     docker push ghcr.io/jonmaddock/process-ci:latest
 
-  make-py38:
-    runs-on: ubuntu-latest
-    needs: docker
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build PROCESS
-        run: |
-          git config --global --add safe.directory '*'
-          cmake -S. -Bbuild
-          cmake --build build
-      - name: Archive build artifacts in process
-        uses: actions/upload-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: |
-            process/**/*.so
-            process/io/python_fortran_dicts.json
-      - name: Archive coverage data
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-artifacts
-          path: |
-            build/CMakeFiles/process.dir/source/fortran/*.gcno
-            lcov_results
-      - name: Archive ford artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ford-artifact
-          path: build/ford_project.pickle
+    make-py38:
+        runs-on: ubuntu-latest
+        needs: docker
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Build PROCESS
+              run: |
+                  git config --global --add safe.directory '*'
+                  cmake -S. -Bbuild
+                  cmake --build build
+            - name: Archive build artifacts in process
+              uses: actions/upload-artifact@v3
+              with:
+                  name: process-build-artifacts
+                  path: |
+                      process/**/*.so
+                      process/io/python_fortran_dicts.json
+            - name: Archive coverage data
+              uses: actions/upload-artifact@v3
+              with:
+                  name: coverage-artifacts
+                  path: |
+                      build/CMakeFiles/process.dir/source/fortran/*.gcno
+                      lcov_results
+            - name: Archive ford artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: ford-artifact
+                  path: build/ford_project.pickle
 
-  unit-py38:
-    runs-on: ubuntu-latest
-    needs: make-py38
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install .
-      - name: Run unit tests
-        run: pytest --cov=process tests/unit -v | tee tests/unit/pytest.log
-      - name: Archive unit test coverage data
-        uses: actions/upload-artifact@v3
-        with:
-          name: unit-coverage-artifacts
-          path: .coverage
-      - name: Archive unit test log
-        uses: actions/upload-artifact@v3
-        with:
-          name: unit-test-log
-          path: tests/unit/pytest.log
+    unit-py38:
+        runs-on: ubuntu-latest
+        needs: make-py38
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Download build artifacts
+              uses: actions/download-artifact@v3
+              with:
+                  name: process-build-artifacts
+                  path: process/
+            - name: Install PROCESS
+              run: pip install .
+            - name: Run unit tests
+              run: pytest --cov=process tests/unit -v
+            - name: Archive unit test coverage data
+              uses: actions/upload-artifact@v3
+              with:
+                  name: unit-coverage-artifacts
+                  path: .coverage
 
   # integration-py38:
   #   runs-on: ubuntu-latest
@@ -120,243 +116,228 @@ jobs:
   #     - name: Install PROCESS
   #       run: pip install .
   #     - name: Run integration tests
-  #       run: pytest tests/integration/ -n auto -v | tee tests/integration/pytest.log
-  #     - name: Archive integration test log
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: integration-test-log
-  #         path: tests/integration/pytest.log
+  #       run: pytest tests/integration/ -n auto -v
 
   # TODO: lcov?
-  regression-py38:
-    runs-on: ubuntu-latest
-    needs: make-py38
-    continue-on-error: true
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install .
-      - name: Run regression tests
-        run: pytest tests/regression -v --reg-tolerance=0 | tee tests/regression/pytest.log || echo "::warning ::Some of the PyTest jobs have failed"
-      - name: Archive regression test log
-        uses: actions/upload-artifact@v3
-        with:
-          name: regression-test-log
-          path: tests/regression/pytest.log
+    regression-py38:
+        runs-on: ubuntu-latest
+        needs: make-py38
+        continue-on-error: true
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Download build artifacts
+              uses: actions/download-artifact@v3
+              with:
+                  name: process-build-artifacts
+                  path: process/
+            - name: Install PROCESS
+              run: pip install .
+            - name: Run regression tests
+              run: pytest tests/regression -v --reg-tolerance=0
 
-  regression-5-percent-py38:
-    runs-on: ubuntu-latest
-    needs: make-py38
-    continue-on-error: true
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install .
-      - name: Run regression tests
-        run: pytest tests/regression | tee tests/regression/pytest.log || echo "::warning ::Some of the PyTest jobs have failed"
-      - name: Archive regression 5% test log
-        uses: actions/upload-artifact@v3
-        with:
-          name: regression-5-percent-test-log
-          path: tests/regression/pytest.log
+    regression-5-percent-py38:
+        runs-on: ubuntu-latest
+        needs: make-py38
+        continue-on-error: true
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Download build artifacts
+              uses: actions/download-artifact@v3
+              with:
+                  name: process-build-artifacts
+                  path: process/
+            - name: Install PROCESS
+              run: pip install .
+            - name: Run regression tests
+              run: pytest tests/regression
 
-  baseline_2018-py38:
-    runs-on: ubuntu-latest
-    needs: make-py38
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install .
-      - name: Run baseline 2018
-        run: process -i tracking/baseline_2018/baseline_2018_IN.DAT
-      - name: Archive baseline 2018 MFILE
-        uses: actions/upload-artifact@v3
-        with:
-          name: baseline-2018-mfile
-          path: tracking/baseline_2018/baseline_2018_MFILE.DAT
+    baseline_2018-py38:
+        runs-on: ubuntu-latest
+        needs: make-py38
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        if: github.ref == 'refs/heads/develop'
+        steps:
+            - uses: actions/checkout@v3
+            - name: Download build artifacts
+              uses: actions/download-artifact@v3
+              with:
+                  name: process-build-artifacts
+                  path: process/
+            - name: Install PROCESS
+              run: pip install .
+            - name: Run baseline 2018
+              run: process -i tracking/baseline_2018/baseline_2018_IN.DAT
+            - name: Archive baseline 2018 MFILE
+              uses: actions/upload-artifact@v3
+              with:
+                  name: baseline-2018-mfile
+                  path: tracking/baseline_2018/baseline_2018_MFILE.DAT
 
-  starfire-py38:
-    runs-on: ubuntu-latest
-    needs: make-py38
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install .
-      - name: Run starfire
-        run: |
-          process -i tests/regression/scenarios/starfire/IN.DAT
-          mv tests/regression/scenarios/starfire/MFILE.DAT tracking/starfire_MFILE.DAT
-      - name: Archive starfire MFILE
-        uses: actions/upload-artifact@v3
-        with:
-          name: starfire-mfile
-          path: tracking/starfire_MFILE.DAT
+    starfire-py38:
+        runs-on: ubuntu-latest
+        needs: make-py38
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        if: github.ref == 'refs/heads/develop'
+        steps:
+            - uses: actions/checkout@v3
+            - name: Download build artifacts
+              uses: actions/download-artifact@v3
+              with:
+                  name: process-build-artifacts
+                  path: process/
+            - name: Install PROCESS
+              run: pip install .
+            - name: Run starfire
+              run: |
+                  process -i tests/regression/scenarios/starfire/IN.DAT
+                  mv tests/regression/scenarios/starfire/MFILE.DAT tracking/starfire_MFILE.DAT
+            - name: Archive starfire MFILE
+              uses: actions/upload-artifact@v3
+              with:
+                  name: starfire-mfile
+                  path: tracking/starfire_MFILE.DAT
 
-  flake8:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run Flake8 linter
-        run: python -m flake8 --tee .
+    flake8:
+        runs-on: ubuntu-latest
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Run Flake8 linter
+              run: python -m flake8 --tee .
 
-  black:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run Black
-        run: python -m black --check .
-  
-  tracking:
-    concurrency:
-      group:  tracking-jobs
-      cancel-in-progress: false
-    runs-on: ubuntu-latest
-    needs: [baseline_2018-py38, starfire-py38]
-    if: github.ref == 'refs/heads/develop'
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install .
-      - name: Setup SSH identity
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Download tracking data
-        run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
-      - name: Download baseline 2018 MFILE
-        uses: actions/download-artifact@v3
-        with:
-          name: baseline-2018-mfile
-          path: tracking/
-      - name: Download Starfire MFILE
-        uses: actions/download-artifact@v3
-        with:
-          name: starfire-mfile
-          path: tracking/
-      - name: Create new tracking entries
-        run: |
-          python tracking/tracking_data.py track process-tracking-data --mfile tracking/baseline_2018_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
-          python tracking/tracking_data.py track process-tracking-data --mfile tracking/starfire_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
-      - name: Create the tracking dashboard
-        run:  python tracking/tracking_data.py plot process-tracking-data --out tracking.html
-      - name: Archive tracking dashboard
-        uses: actions/upload-artifact@v3
-        with:
-          name: tracking-html
-          path: tracking.html
-      - name: Setup Git identity
-        run: |
-          git config --global user.email "${{ github.triggering_actor }}@github.runner"
-          git config --global user.name "${{ github.job }}"
-      - name: Commit and push tracking data
-        run: |
-          cd process-tracking-data
-          git add .
-          git commit -m "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"
-          git push
-      
-  docs:
-    concurrency:
-      group:  docs-jobs
-      cancel-in-progress: false
-    runs-on: ubuntu-latest
-    needs: tracking
-    if: github.ref == 'refs/heads/develop'
-    container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install -e .
-      - run: ford documentation/ford/index.md
-      - name: Download ford project
-        uses: actions/download-artifact@v3
-        with:
-          name: ford-artifact
-          path: build/
-      - run: python scripts/document_fortran_interface.py
-      - run: python scripts/vardes.py
-      - run: mkdocs build
-      - run: mv ford_site site
-      - name: Download tracking html
-        uses: actions/download-artifact@v3
-        with:
-          name: tracking-html
-      - run: mv tracking.html site || cp site/404.html site/tracking.html
-      - name: Upload documentation page
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: "site/"
-      - name: Deploy GitHub pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+    black:
+        runs-on: ubuntu-latest
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Run Black
+              run: python -m black --check .
+
+    tracking:
+        concurrency:
+            group: tracking-jobs
+            cancel-in-progress: false
+        runs-on: ubuntu-latest
+        needs: [baseline_2018-py38, starfire-py38]
+        if: github.ref == 'refs/heads/develop'
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Download build artifacts
+              uses: actions/download-artifact@v3
+              with:
+                  name: process-build-artifacts
+                  path: process/
+            - name: Install PROCESS
+              run: pip install .
+            - name: Setup SSH identity
+              uses: webfactory/ssh-agent@v0.7.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+            - name: Download tracking data
+              run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
+            - name: Download baseline 2018 MFILE
+              uses: actions/download-artifact@v3
+              with:
+                  name: baseline-2018-mfile
+                  path: tracking/
+            - name: Download Starfire MFILE
+              uses: actions/download-artifact@v3
+              with:
+                  name: starfire-mfile
+                  path: tracking/
+            - name: Create new tracking entries
+              run: |
+                  python tracking/tracking_data.py track process-tracking-data --mfile tracking/baseline_2018_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+                  python tracking/tracking_data.py track process-tracking-data --mfile tracking/starfire_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+            - name: Create the tracking dashboard
+              run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
+            - name: Archive tracking dashboard
+              uses: actions/upload-artifact@v3
+              with:
+                  name: tracking-html
+                  path: tracking.html
+            - name: Setup Git identity
+              run: |
+                  git config --global user.email "${{ github.triggering_actor }}@github.runner"
+                  git config --global user.name "${{ github.job }}"
+            - name: Commit and push tracking data
+              run: |
+                  cd process-tracking-data
+                  git add .
+                  git commit -m "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"
+                  git push
+
+    docs:
+        concurrency:
+            group: docs-jobs
+            cancel-in-progress: false
+        runs-on: ubuntu-latest
+        needs: tracking
+        if: github.ref == 'refs/heads/develop'
+        container:
+            image: ghcr.io/timothy-nunn/process-ci:latest
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Download build artifacts
+              uses: actions/download-artifact@v3
+              with:
+                  name: process-build-artifacts
+                  path: process/
+            - name: Install PROCESS
+              run: pip install -e .
+            - run: ford documentation/ford/index.md
+            - name: Download ford project
+              uses: actions/download-artifact@v3
+              with:
+                  name: ford-artifact
+                  path: build/
+            - run: python scripts/document_fortran_interface.py
+            - run: python scripts/vardes.py
+            - run: mkdocs build
+            - run: mv ford_site site
+            - name: Download tracking html
+              uses: actions/download-artifact@v3
+              with:
+                  name: tracking-html
+            - run: mv tracking.html site || cp site/404.html site/tracking.html
+            - name: Upload documentation page
+              uses: actions/upload-pages-artifact@v1
+              with:
+                  path: site/
+            - name: Deploy GitHub pages
+              id: deployment
+              uses: actions/deploy-pages@v2
