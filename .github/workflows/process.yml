@@ -161,7 +161,7 @@ jobs:
             - name: Run regression tests
               run: pytest tests/regression
 
-    baseline_2018-py38:
+    large-tokamak-py38:
         runs-on: ubuntu-latest
         needs: make-py38
         container:
@@ -169,7 +169,7 @@ jobs:
             credentials:
                 username: ${{ github.actor }}
                 password: ${{ secrets.GITHUB_TOKEN }}
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/main'
         steps:
             - uses: actions/checkout@v3
             - name: Download build artifacts
@@ -179,41 +179,15 @@ jobs:
                   path: process/
             - name: Install PROCESS
               run: pip install .
-            - name: Run baseline 2018
-              run: process -i tracking/baseline_2018/baseline_2018_IN.DAT
-            - name: Archive baseline 2018 MFILE
-              uses: actions/upload-artifact@v3
-              with:
-                  name: baseline-2018-mfile
-                  path: tracking/baseline_2018/baseline_2018_MFILE.DAT
-
-    starfire-py38:
-        runs-on: ubuntu-latest
-        needs: make-py38
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        if: github.ref == 'refs/heads/develop'
-        steps:
-            - uses: actions/checkout@v3
-            - name: Download build artifacts
-              uses: actions/download-artifact@v3
-              with:
-                  name: process-build-artifacts
-                  path: process/
-            - name: Install PROCESS
-              run: pip install .
-            - name: Run starfire
+            - name: Run large tokamak
               run: |
-                  process -i tests/regression/scenarios/starfire/IN.DAT
-                  mv tests/regression/scenarios/starfire/MFILE.DAT tracking/starfire_MFILE.DAT
-            - name: Archive starfire MFILE
+                  process -i tests/regression/scenarios/large-tokamak/IN.DAT
+                  mv tests/regression/scenarios/large-tokamak/MFILE.DAT tracking/large_tokamak_MFILE.DAT
+            - name: Archive large-tokamak MFILE
               uses: actions/upload-artifact@v3
               with:
-                  name: starfire-mfile
-                  path: tracking/starfire_MFILE.DAT
+                  name: large-tokamak-mfile
+                  path: tracking/large-_tokamak_MFILE.DAT
 
     flake8:
         runs-on: ubuntu-latest
@@ -244,8 +218,8 @@ jobs:
             group: tracking-jobs
             cancel-in-progress: false
         runs-on: ubuntu-latest
-        needs: [baseline_2018-py38, starfire-py38]
-        if: github.ref == 'refs/heads/develop'
+        needs: large-tokamak-py38
+        if: github.ref == 'refs/heads/main'
         container:
             image: ghcr.io/timothy-nunn/process-ci:latest
             credentials:
@@ -266,20 +240,14 @@ jobs:
                   ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
             - name: Download tracking data
               run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
-            - name: Download baseline 2018 MFILE
+            - name: Download large tokamak MFILE
               uses: actions/download-artifact@v3
               with:
-                  name: baseline-2018-mfile
-                  path: tracking/
-            - name: Download Starfire MFILE
-              uses: actions/download-artifact@v3
-              with:
-                  name: starfire-mfile
+                  name: large-tokamak-mfile
                   path: tracking/
             - name: Create new tracking entries
               run: |
-                  python tracking/tracking_data.py track process-tracking-data --mfile tracking/baseline_2018_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
-                  python tracking/tracking_data.py track process-tracking-data --mfile tracking/starfire_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+                  python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
             - name: Create the tracking dashboard
               run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
             - name: Archive tracking dashboard
@@ -304,7 +272,7 @@ jobs:
             cancel-in-progress: false
         runs-on: ubuntu-latest
         needs: tracking
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/main'
         container:
             image: ghcr.io/timothy-nunn/process-ci:latest
             credentials:
