@@ -189,7 +189,7 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                   name: large-tokamak-mfile
-                  path: tracking/large-_tokamak_MFILE.DAT
+                  path: tracking/large_tokamak_MFILE.DAT
 
     flake8:
         runs-on: ubuntu-latest
