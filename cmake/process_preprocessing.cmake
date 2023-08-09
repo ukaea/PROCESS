@@ -13,7 +13,6 @@ MACRO(FindPreprocessingVars)
         OUTPUT_VARIABLE COMMIT_MSG
     )
     STRING(STRIP ${COMMIT_MSG} COMMIT_MSG)
-    STRING(REPLACE "#" "[hash]" ${COMMIT_MSG} COMMIT_MSG)
     EXECUTE_PROCESS(
         COMMAND bash -c "echo \"$(git -C ${CMAKE_SOURCE_DIR} diff | wc -l)\"|tr '\n' ' '"
         OUTPUT_VARIABLE GIT_DIFF
@@ -21,6 +20,7 @@ MACRO(FindPreprocessingVars)
     STRING(STRIP ${GIT_DIFF} GIT_DIFF)
     STRING(REPLACE "'" "|" COMMIT_MSG ${COMMIT_MSG})
     STRING(REPLACE "\"" "|" COMMIT_MSG ${COMMIT_MSG})
+    STRING(REPLACE "#" "[hash]" COMMIT_MSG ${COMMIT_MSG})
 
     EXECUTE_PROCESS(
         COMMAND bash -c "echo \"$(git -C ${CMAKE_SOURCE_DIR} describe --tags)\"|tr '\n' ' '"
