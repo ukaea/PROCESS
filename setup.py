@@ -42,7 +42,7 @@ setup_kwargs = {
         "tables",
         "SALib",
         "numba>=0.55.2",
-        "PyVMCON @ git+https://github.com/ukaea/PyVMCON.git",
+        "PyVMCON>=1.0.0",
         "CoolProp>=6.4",
     ],
     "extras_require": {"test": ["pytest"]},
