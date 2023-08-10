@@ -6,8 +6,6 @@ import pytest
 from system_check import system_compatible
 import warnings
 from _pytest.fixtures import SubRequest
-
-
 from process.fortran import error_handling as eh
 
 
@@ -126,7 +124,7 @@ def precondition(request):
         warnings.warn(basic_error_message, UserWarning)
 
 
-@pytest.fixture(scope="session", autouse="True")
+@pytest.fixture(scope="session", autouse=True)
 def initialise_error_module():
     """pytest fixture to initialise the error module before tests run.
 

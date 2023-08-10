@@ -109,9 +109,9 @@ def table_line(items, form):
     item_line = "|"
     item_format = "{0:" + "{0}".format(form) + "}"
     for item in items:
-        if type(item) == float:
+        if isinstance(item, float):
             item_line += item_format.format(item) + " |"
-        elif type(item) == int:
+        elif isinstance(item, int):
             item_line += " {0} |".format(item)
         else:
             try:
@@ -315,9 +315,9 @@ def output_constraints(k):
                 con_lim = "-"
 
             if con_f_val != "-" and con_lim != "-" and con_lim != bold("calculated"):
-                if type(con_lim) == str:
+                if isinstance(str):
                     con_lim = unbold(con_lim)
-                if type(con_f_val) == str:
+                if isinstance(con_f_val, str):
                     con_f_val = unbold(con_f_val)
                 actual_value = "{0:.2e}".format(float(con_lim) * float(con_f_val))
                 con_lim = "{0:.2e}".format(float(con_lim))
@@ -483,7 +483,7 @@ def output_inputs(k):
                 if "fimp(" in item:
                     i_des = DES_FIMP[item]
 
-                if type(item_value) == list:
+                if isinstance(item_value, list):
                     table_line([code(item), bold("array"), item_des], ".4g")
                     for i in range(len(item_value)):
                         if "fimp(" in item:

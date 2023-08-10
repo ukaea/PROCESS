@@ -615,7 +615,7 @@ def change_array(data, name, array_id, array_val):
     """
 
     data[name].value[array_id] = array_val
-    if type(data[name].value[array_id]) == str:
+    if isinstance(data[name].value[array_id], str):
         tmp = list(data[name].value.split(","))
         tmp[array_id] = array_val
         new_val = str(tmp).strip("[").strip("]").replace("'", "")
