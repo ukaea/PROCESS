@@ -109,7 +109,7 @@ def test_run_mode(process_obj, monkeypatch):
     # VaryRun
     monkeypatch.setattr(VaryRun, "__init__", mock_init)
     process_obj.run_mode()
-    assert type(process_obj.run) == VaryRun
+    assert isinstance(process_obj.run, VaryRun)
 
     # Similarly, assert SingleRun when an input file arg is provided
     monkeypatch.setattr(process_obj.args, "varyiterparams", False)
@@ -117,7 +117,7 @@ def test_run_mode(process_obj, monkeypatch):
     monkeypatch.setattr(SingleRun, "__init__", mock_init)
     monkeypatch.setattr(SingleRun, "run", mock_run)
     process_obj.run_mode()
-    assert type(process_obj.run) == SingleRun
+    assert isinstance(process_obj.run, SingleRun)
 
 
 @pytest.fixture
