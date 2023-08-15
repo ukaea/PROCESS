@@ -25,6 +25,6 @@ pandas>=1.1.5
 bokeh==2.4.0
 mkdocstrings==0.18.0
 flinter==0.3.0
-PyVMCON>=1.0.0
+PyVMCON>=2.0.0,<3.0.0
 CoolProp>=6.4
 Jinja2>=3.0
