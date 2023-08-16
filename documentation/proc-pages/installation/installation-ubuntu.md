@@ -1,27 +1,26 @@
-# Installation on Ubuntu/WSL
+# Installation on Ubuntu/Windows
+PROCESS is developed and testing using Ubuntu 20. We cannot guarantee any other operating system will be able to compile PROCESS or reproduce results. We do unofficially support MacOS however PROCESS is **not** currently tested on this OS by the CI system. 
 
+!!! Info "Windows User"
+    Windows users should run PROCESS using WSL.
 
-Using the Windows Subsystem for Linux (on Windows) or a containerised environment is the recommended 
-way to build, test, and run PROCESS on any OS other than Ubuntu 20. Documentation on Ubuntu for WSL 
-can be found [here](https://ubuntu.com/wsl) for a deeper description of how they function together 
-and the advantages of use.
+    To install Windows Subsystem for Linux (WSL) follow the 'Manual Installation Steps' 
+    [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Choose WSL 2 and Ubuntu 20 (if 
+    installing from the Microsoft store then Ubuntu 20 is installed by default). 
 
-!!! Info "OS"
-    This section is for users on a Windows system, if you are a MacOS or privileged machine user 
-    please go [here](https://ukaea.github.io/PROCESS/installation/installation-docker/), or if you are a using a shared resource, please 
-    go [here](https://ukaea.github.io/PROCESS/installation/installation-singularity/).
+    The following command is used to install WSL (**you need admin privileges to perform this command**):
 
-To install Windows Subsystem for Linux (WSL) follow the 'Manual Installation Steps' 
-[here](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Choose WSL 2 and Ubuntu 20 (if 
-installing from the Microsoft store then Ubuntu 20 is installed by default). 
+    ```bash
+    wsl --install
+    ```
 
-The following command is used to install WSL (**you need admin privileges to perform this command**):
+    If the above procedure fails to work, there is a [Microsoft help page](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-```bash
-wsl --install
-```
+!!! Info "Users on unsupported OS'"
+    Other users may find benefit in our [Docker installation guide](https://ukaea.github.io/PROCESS/installation/installation-docker/) if they are on a machine which they have admin privledges.
+    
+    Users of shared resources should see our [Singularity/Apptainer installation guide](https://ukaea.github.io/PROCESS/installation/installation-singularity/).
 
-If the above procedure fails to work, there is a [Microsoft help page](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 GFortran version 9 or above is needed for successful installation and execution of PROCESS. Versions 
 below GFortran-9 will be rejected by CMake by default since, while PROCESS might compile 
@@ -66,12 +65,6 @@ source env/bin/activate
     dependencies of those specific projects within itself, preventing crossover. This is the reason 
     we recommend installing one so your other projects don't influence the dependencies of PROCESS 
     and visa versa.
-
-!!! Warning "Python version"
-    Only Python3.8 versions are supported in PROCESS. If you have installed a recent version of 
-    Ubuntu such as v22, Python 3.10 may have been installed. If this is the case it is recommended 
-    that you install Ubuntu20.04 which will have Python3.8 as its default. If not, this may lead 
-    to build issues down the line.
 
 Now compile the Fortran and create the Python interface. This is done using `cmake` to configure the 
 build and then `make` to build it. Finally start the build process:
