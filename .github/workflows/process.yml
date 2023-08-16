@@ -33,14 +33,14 @@ jobs:
         run: |
           cp requirements.txt docker/ci/
           cd docker/ci
-          docker build . -t ghcr.io/timothy-nunn/process-ci:latest
-          docker push ghcr.io/timothy-nunn/process-ci:latest
+          docker build . -t ghcr.io/ukaea/process-ci:latest
+          docker push ghcr.io/ukaea/process-ci:latest
 
   make-py38:
     runs-on: ubuntu-latest
     needs: docker
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: make-py38
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -100,7 +100,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   needs: make-py38
   #   container:
-  #     image: ghcr.io/timothy-nunn/process-ci:latest
+  #     image: ghcr.io/ukaea/process-ci:latest
   #     credentials:
   #       username: ${{ github.actor }}
   #       password: ${{ secrets.GITHUB_TOKEN }}
@@ -121,7 +121,7 @@ jobs:
     needs: make-py38
     continue-on-error: true
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -142,7 +142,7 @@ jobs:
     needs: make-py38
     continue-on-error: true
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -162,7 +162,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: make-py38
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -189,7 +189,7 @@ jobs:
   flake8:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -201,7 +201,7 @@ jobs:
   black:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -218,7 +218,7 @@ jobs:
     needs: large-tokamak-py38
     if: github.ref == 'refs/heads/main'
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -271,7 +271,7 @@ jobs:
     needs: tracking
     if: github.ref == 'refs/heads/main'
     container:
-      image: ghcr.io/timothy-nunn/process-ci:latest
+      image: ghcr.io/ukaea/process-ci:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
