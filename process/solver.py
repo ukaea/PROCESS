@@ -168,6 +168,9 @@ class Vmcon(_Solver):
         if self.b is not None:
             B = np.identity(numerics.nvar) * self.b
 
+        def _solver_callback(i: int, _x, _result, convergence_param: float):
+            print(f"{i+1} | Convergence Parameter: {convergence_param}")
+
         try:
             x, _, _, res = solve(
                 problem,
@@ -178,6 +181,7 @@ class Vmcon(_Solver):
                 epsilon=self.tolerance,
                 qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
                 initial_B=B,
+                callback=_solver_callback,
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
