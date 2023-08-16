@@ -1,6 +1,6 @@
 
 
-# Installation using Singularity container
+# Installation using Singularity/Apptainer container
 
 Singularity is a container environment similar to Docker. This means a user can run PROCESS with 
 all required dependencies installed. Singularity, however, is designed to work with user-level 
@@ -11,7 +11,7 @@ Singularity can convert OCI compliant containers into the Singularity Image Form
 the Docker container above. Download, and convert the Docker container by running: 
 
 ```bash
-singularity pull --docker-login process.sif docker://git.ccfe.ac.uk:4567/process/process/dev:latest
+apptainer pull process.sif docker://ghcr.io/ukaea/process-ci:latest
 ```
 
 Singularity will then ask for a username and password, your CCFE GitLab short username and 
@@ -20,7 +20,7 @@ copied like any file. Running the following command will load a Singularity shel
 dependencies for PROCESS installed:
 
 ```bash
-singularity shell process.sif
+apptainer shell process.sif
 ``` 
 
 Singularity will automatically mount your home (`$HOME`) directory into the container. Therefore, 
@@ -45,13 +45,13 @@ module load singularity/3.7.1
 Pull the Singularity image and enter your git username and password when prompted:
 
 ```bash
-singularity pull --docker-login process.sif docker://git.ccfe.ac.uk:4567/process/process/dev:latest 
+apptainer pull process.sif docker://ghcr.io/ukaea/process-ci:latest
 ```
 
 Make sure you have created [ssh keys](https://docs.gitlab.com/ee/ssh/) and open the Singularity shell:
 
 ```bash
-singularity shell process.sif
+apptainer shell process.sif
 ```
 
 Singularity is an environment which allows you to use dependencies not available on Freia, like 
@@ -68,4 +68,4 @@ cmake --build build
 ```
 
 Now you can run commands within the shell like `process -i tests/regression/scenarios/large-tokamak/IN.DAT` 
-to verify installation and create [batch jobs](http://process.gitpages.ccfe.ac.uk/process/io/utilities-guide/).
+to verify installation and create [batch jobs](https://ukaea.github.io/PROCESS/io/utilities/).

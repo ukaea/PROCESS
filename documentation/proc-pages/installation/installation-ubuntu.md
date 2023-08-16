@@ -8,8 +8,8 @@ and the advantages of use.
 
 !!! Info "OS"
     This section is for users on a Windows system, if you are a MacOS or privileged machine user 
-    please go [here](#docker-container), or if you are a using a shared resource, please 
-    go [here](#singularity-container).
+    please go [here](https://ukaea.github.io/PROCESS/installation/installation-docker/), or if you are a using a shared resource, please 
+    go [here](https://ukaea.github.io/PROCESS/installation/installation-singularity/).
 
 To install Windows Subsystem for Linux (WSL) follow the 'Manual Installation Steps' 
 [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Choose WSL 2 and Ubuntu 20 (if 
@@ -109,12 +109,12 @@ pytest
 
 which runs unit, integration, and regression tests.
 
-A more in-depth discussion of testing can be found [here](http://process.gitpages.ccfe.ac.uk/process/development/testing/).
+A more in-depth discussion of testing can be found [here](https://ukaea.github.io/PROCESS/development/testing/).
 
 If everything passes, this indicates a successful installation. If anything fails, this indicates 
 that your environment produces different results to what is expected. You might consider 
 creating an issue in GitHub, or trying out the 
-[Docker container](http://process.gitpages.ccfe.ac.uk/process/installation/installation-docker) instead.
+[Docker container](https://ukaea.github.io/PROCESS/installation/installation-docker/) instead.
 
 !!! Question "Installation troubleshooting"
 
