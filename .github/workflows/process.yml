@@ -4,97 +4,97 @@ name: PROCESS main/develop testing
 on: push
 
 permissions:
-    contents: read
-    pages: write
-    id-token: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-    docker:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - name: Check for changed files affecting the container
-              uses: dorny/paths-filter@v2
-              id: changes
-              with:
-                  filters: |
-                      build_container:
-                        - 'docker/ci/Dockerfile'
-                        - 'requirements.txt'
-            - name: Login to GitHub Container Registry
-              if: steps.changes.outputs.build_container == 'true' && github.ref == 'refs/heads/main'
-              uses: docker/login-action@v1
-              with:
-                  registry: ghcr.io
-                  username: timothy-nunn
-                  password: ${{ secrets.PROCESS_CI_PAT }}
-            - name: Build the PROCESS Docker image
-              if: steps.changes.outputs.build_container == 'true' && github.ref == 'refs/heads/main'
-              run: |
-                  cp requirements.txt docker/ci/
-                  cd docker/ci
-                  docker build . -t ghcr.io/timothy-nunn/process-ci:latest
-                  docker push ghcr.io/timothy-nunn/process-ci:latest
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check for changed files affecting the container
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            build_container:
+              - 'docker/ci/Dockerfile'
+              - 'requirements.txt'
+      - name: Login to GitHub Container Registry
+        if: steps.changes.outputs.build_container == 'true' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: timothy-nunn
+          password: ${{ secrets.PROCESS_CI_PAT }}
+      - name: Build the PROCESS Docker image
+        if: steps.changes.outputs.build_container == 'true' && github.ref == 'refs/heads/main'
+        run: |
+          cp requirements.txt docker/ci/
+          cd docker/ci
+          docker build . -t ghcr.io/timothy-nunn/process-ci:latest
+          docker push ghcr.io/timothy-nunn/process-ci:latest
 
-    make-py38:
-        runs-on: ubuntu-latest
-        needs: docker
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/checkout@v3
-            - name: Build PROCESS
-              run: |
-                  git config --global --add safe.directory '*'
-                  cmake -S. -Bbuild
-                  cmake --build build
-            - name: Archive build artifacts in process
-              uses: actions/upload-artifact@v3
-              with:
-                  name: process-build-artifacts
-                  path: |
-                      process/**/*.so
-                      process/io/python_fortran_dicts.json
-            - name: Archive coverage data
-              uses: actions/upload-artifact@v3
-              with:
-                  name: coverage-artifacts
-                  path: |
-                      build/CMakeFiles/process.dir/source/fortran/*.gcno
-                      lcov_results
-            - name: Archive ford artifacts
-              uses: actions/upload-artifact@v3
-              with:
-                  name: ford-artifact
-                  path: build/ford_project.pickle
+  make-py38:
+    runs-on: ubuntu-latest
+    needs: docker
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build PROCESS
+        run: |
+          git config --global --add safe.directory '*'
+          cmake -S. -Bbuild
+          cmake --build build
+      - name: Archive build artifacts in process
+        uses: actions/upload-artifact@v3
+        with:
+          name: process-build-artifacts
+          path: |
+            process/**/*.so
+            process/io/python_fortran_dicts.json
+      - name: Archive coverage data
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-artifacts
+          path: |
+            build/CMakeFiles/process.dir/source/fortran/*.gcno
+            lcov_results
+      - name: Archive ford artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ford-artifact
+          path: build/ford_project.pickle
 
-    unit-py38:
-        runs-on: ubuntu-latest
-        needs: make-py38
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/checkout@v3
-            - name: Download build artifacts
-              uses: actions/download-artifact@v3
-              with:
-                  name: process-build-artifacts
-                  path: process/
-            - name: Install PROCESS
-              run: pip install .
-            - name: Run unit tests
-              run: pytest --cov=process tests/unit -v
-            - name: Archive unit test coverage data
-              uses: actions/upload-artifact@v3
-              with:
-                  name: unit-coverage-artifacts
-                  path: .coverage
+  unit-py38:
+    runs-on: ubuntu-latest
+    needs: make-py38
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: process-build-artifacts
+          path: process/
+      - name: Install PROCESS
+        run: pip install .
+      - name: Run unit tests
+        run: pytest --cov=process tests/unit -v
+      - name: Archive unit test coverage data
+        uses: actions/upload-artifact@v3
+        with:
+          name: unit-coverage-artifacts
+          path: .coverage
 
   # integration-py38:
   #   runs-on: ubuntu-latest
@@ -116,194 +116,194 @@ jobs:
   #     - name: Run integration tests
   #       run: pytest tests/integration/ -n auto -v
 
-    regression-py38:
-        runs-on: ubuntu-latest
-        needs: make-py38
-        continue-on-error: true
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/checkout@v3
-            - name: Download build artifacts
-              uses: actions/download-artifact@v3
-              with:
-                  name: process-build-artifacts
-                  path: process/
-            - name: Install PROCESS
-              run: pip install .
-            - name: Run regression tests
-              run: pytest tests/regression -v --reg-tolerance=0
+  regression-py38:
+    runs-on: ubuntu-latest
+    needs: make-py38
+    continue-on-error: true
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: process-build-artifacts
+          path: process/
+      - name: Install PROCESS
+        run: pip install .
+      - name: Run regression tests
+        run: pytest tests/regression -v --reg-tolerance=0
 
-    regression-5-percent-py38:
-        runs-on: ubuntu-latest
-        needs: make-py38
-        continue-on-error: true
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/checkout@v3
-            - name: Download build artifacts
-              uses: actions/download-artifact@v3
-              with:
-                  name: process-build-artifacts
-                  path: process/
-            - name: Install PROCESS
-              run: pip install .
-            - name: Run regression tests
-              run: pytest tests/regression
+  regression-5-percent-py38:
+    runs-on: ubuntu-latest
+    needs: make-py38
+    continue-on-error: true
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: process-build-artifacts
+          path: process/
+      - name: Install PROCESS
+        run: pip install .
+      - name: Run regression tests
+        run: pytest tests/regression
 
-    large-tokamak-py38:
-        runs-on: ubuntu-latest
-        needs: make-py38
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        if: github.ref == 'refs/heads/main'
-        steps:
-            - uses: actions/checkout@v3
-            - name: Download build artifacts
-              uses: actions/download-artifact@v3
-              with:
-                  name: process-build-artifacts
-                  path: process/
-            - name: Install PROCESS
-              run: pip install .
-            - name: Run large tokamak
-              run: |
-                  process -i tests/regression/scenarios/large-tokamak/IN.DAT
-                  mv tests/regression/scenarios/large-tokamak/MFILE.DAT tracking/large_tokamak_MFILE.DAT
-            - name: Archive large-tokamak MFILE
-              uses: actions/upload-artifact@v3
-              with:
-                  name: large-tokamak-mfile
-                  path: tracking/large_tokamak_MFILE.DAT
+  large-tokamak-py38:
+    runs-on: ubuntu-latest
+    needs: make-py38
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: process-build-artifacts
+          path: process/
+      - name: Install PROCESS
+        run: pip install .
+      - name: Run large tokamak
+        run: |
+          process -i tests/regression/scenarios/large-tokamak/IN.DAT
+          mv tests/regression/scenarios/large-tokamak/MFILE.DAT tracking/large_tokamak_MFILE.DAT
+      - name: Archive large-tokamak MFILE
+        uses: actions/upload-artifact@v3
+        with:
+          name: large-tokamak-mfile
+          path: tracking/large_tokamak_MFILE.DAT
 
-    flake8:
-        runs-on: ubuntu-latest
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/checkout@v3
-            - name: Run Flake8 linter
-              run: python -m flake8 --tee .
+  flake8:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Flake8 linter
+        run: python -m flake8 --tee .
 
-    black:
-        runs-on: ubuntu-latest
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/checkout@v3
-            - name: Run Black
-              run: python -m black --check .
+  black:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Black
+        run: python -m black --check .
 
-    tracking:
-        concurrency:
-            group: tracking-jobs
-            cancel-in-progress: false
-        runs-on: ubuntu-latest
-        needs: large-tokamak-py38
-        if: github.ref == 'refs/heads/main'
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/checkout@v3
-            - name: Download build artifacts
-              uses: actions/download-artifact@v3
-              with:
-                  name: process-build-artifacts
-                  path: process/
-            - name: Install PROCESS
-              run: pip install .
-            - name: Setup SSH identity
-              uses: webfactory/ssh-agent@v0.7.0
-              with:
-                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-            - name: Download tracking data
-              run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
-            - name: Download large tokamak MFILE
-              uses: actions/download-artifact@v3
-              with:
-                  name: large-tokamak-mfile
-                  path: tracking/
-            - name: Create new tracking entries
-              run: |
-                  python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
-            - name: Create the tracking dashboard
-              run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
-            - name: Archive tracking dashboard
-              uses: actions/upload-artifact@v3
-              with:
-                  name: tracking-html
-                  path: tracking.html
-            - name: Setup Git identity
-              run: |
-                  git config --global user.email "${{ github.triggering_actor }}@github.runner"
-                  git config --global user.name "${{ github.job }}"
-            - name: Commit and push tracking data
-              run: |
-                  cd process-tracking-data
-                  git add .
-                  git commit -m "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"
-                  git push
+  tracking:
+    concurrency:
+      group: tracking-jobs
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    needs: large-tokamak-py38
+    if: github.ref == 'refs/heads/main'
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: process-build-artifacts
+          path: process/
+      - name: Install PROCESS
+        run: pip install .
+      - name: Setup SSH identity
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Download tracking data
+        run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
+      - name: Download large tokamak MFILE
+        uses: actions/download-artifact@v3
+        with:
+          name: large-tokamak-mfile
+          path: tracking/
+      - name: Create new tracking entries
+        run: |
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+      - name: Create the tracking dashboard
+        run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
+      - name: Archive tracking dashboard
+        uses: actions/upload-artifact@v3
+        with:
+          name: tracking-html
+          path: tracking.html
+      - name: Setup Git identity
+        run: |
+          git config --global user.email "${{ github.triggering_actor }}@github.runner"
+          git config --global user.name "${{ github.job }}"
+      - name: Commit and push tracking data
+        run: |
+          cd process-tracking-data
+          git add .
+          git commit -m "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"
+          git push
 
-    docs:
-        concurrency:
-            group: docs-jobs
-            cancel-in-progress: false
-        runs-on: ubuntu-latest
-        needs: tracking
-        if: github.ref == 'refs/heads/main'
-        container:
-            image: ghcr.io/timothy-nunn/process-ci:latest
-            credentials:
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/checkout@v3
-            - name: Download build artifacts
-              uses: actions/download-artifact@v3
-              with:
-                  name: process-build-artifacts
-                  path: process/
-            - name: Install PROCESS
-              run: pip install -e .
-            - run: ford documentation/ford/index.md
-            - name: Download ford project
-              uses: actions/download-artifact@v3
-              with:
-                  name: ford-artifact
-                  path: build/
-            - run: python scripts/document_fortran_interface.py
-            - run: python scripts/vardes.py
-            - run: git config --global --add safe.directory '*'
-            - run: mkdocs build
-            - run: mv ford_site site
-            - name: Download tracking html
-              uses: actions/download-artifact@v3
-              with:
-                  name: tracking-html
-            - run: mv tracking.html site || cp site/404.html site/tracking.html
-            - name: Upload documentation page
-              uses: actions/upload-pages-artifact@v1
-              with:
-                  path: site/
-            - name: Deploy GitHub pages
-              id: deployment
-              uses: actions/deploy-pages@v2
+  docs:
+    concurrency:
+      group: docs-jobs
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    needs: tracking
+    if: github.ref == 'refs/heads/main'
+    container:
+      image: ghcr.io/timothy-nunn/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: process-build-artifacts
+          path: process/
+      - name: Install PROCESS
+        run: pip install -e .
+      - run: ford documentation/ford/index.md
+      - name: Download ford project
+        uses: actions/download-artifact@v3
+        with:
+          name: ford-artifact
+          path: build/
+      - run: python scripts/document_fortran_interface.py
+      - run: python scripts/vardes.py
+      - run: git config --global --add safe.directory '*'
+      - run: mkdocs build
+      - run: mv ford_site site
+      - name: Download tracking html
+        uses: actions/download-artifact@v3
+        with:
+          name: tracking-html
+      - run: mv tracking.html site || cp site/404.html site/tracking.html
+      - name: Upload documentation page
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: site/
+      - name: Deploy GitHub pages
+        id: deployment
+        uses: actions/deploy-pages@v2
