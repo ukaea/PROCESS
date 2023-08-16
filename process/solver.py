@@ -176,7 +176,7 @@ class Vmcon(_Solver):
                 self.bndu,
                 max_iter=global_variables.maxcal,
                 epsilon=self.tolerance,
-                qsp_options={"eps_rel": 1e-1, "adaptive_rho": False},
+                qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
                 initial_B=B,
             )
         except VMCONConvergenceException as e:
