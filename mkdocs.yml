@@ -2,11 +2,11 @@
 site_name: PROCESS
 docs_dir: documentation/proc-pages/
 nav:
-  - Home:
+  - Getting Started:
       - About: index.md
       - Installation:
           - Introduction: installation/introduction.md
-          - Installation on Ubuntu/WSL: installation/installation-ubuntu.md
+          - Installation on Ubuntu/Windows: installation/installation-ubuntu.md
           - Installation using Docker: installation/installation-docker.md
           - Installation using Singularity: installation/installation-singularity.md
           - Visual Studio Code: installation/vs-code.md
