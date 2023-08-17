@@ -37,6 +37,13 @@ class Caller:
         # Convert variables
         ft.define_iteration_variables.convxc(xc, nvars)
 
+        # Perform the various function calls
+        # Stellarator caller
+        if ft.stellarator_variables.istell != 0:
+            self.models.stellarator.run(output=False)
+            # TODO Is this return safe?
+            return
+
         # Inertial Fusion Energy calls
         if ft.ife_variables.ife != 0:
             self.models.ife.run(output=False)
