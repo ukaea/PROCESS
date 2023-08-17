@@ -34,6 +34,8 @@ contains
       use read_radiation, only: init_read_radiation
       use scan_module, only: init_scan_module
       use sctfcoil_module, only: init_sctfcoil_module
+      use stellarator_module, only: init_stellarator_module
+      use stellarator_variables, only: init_stellarator_variables
       use tfcoil_variables, only: init_tfcoil_variables
       use times_variables, only: init_times_variables
       use constants, only: init_constants
@@ -77,6 +79,8 @@ contains
       call init_read_radiation
       call init_scan_module
       call init_sctfcoil_module
+      call init_stellarator_module
+      call init_stellarator_variables
       call init_tfcoil_variables
       call init_times_variables
       call init_constants
@@ -122,6 +126,7 @@ contains
       use error_handling, only: initialise_error_list
       use numerics, only: ixc , lablxc, nvar
       use process_input, only: nin, input
+      use stellarator_module, only: stinit
       implicit none
 
       !  Arguments
@@ -154,6 +159,10 @@ contains
 
       !  Input any desired new initial values
       call input
+
+      !  Initialise stellarator parameters if necessary
+      !  This overrides some of the bounds of the tokamak parameters
+      call stinit
 
       !  Check input data for errors/ambiguities
       call check
