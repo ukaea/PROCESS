@@ -1,21 +1,22 @@
 # CMake file for Pythonic PROCESS
-# Author  :   K. Zarebski (UKAEA)
-# Date    :   last modified 2020-11-09
+# Author  :   PROCESS Team (UKAEA)
+# Date    :   last modified 2023-07-24
 
 # Specify the minimum version for CMake
 # 3.12 is required due to use of list TRANSFORM commands
-CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
+# 3.15 for cmake policy CMP0094
+CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
 
 # Set project name
 PROJECT(process LANGUAGES Fortran)
+
+cmake_policy(SET CMP0094 NEW)
 
 # Ensure python3 interpreter is used
 if(CMAKE_HOST_APPLE)
     SET(CMAKE_FIND_FRAMEWORK NEVER)
     set(CMAKE_MACOSX_RPATH ON)
 endif()
-
-SET(Python3_FIND_VIRTUALENV FIRST)
 
 # Python 3.8 or greater
 find_package(Python3 3.8 COMPONENTS Interpreter Development)
