@@ -23,6 +23,7 @@ jobs:
             build_container:
               - 'docker/ci/Dockerfile'
               - 'requirements.txt'
+              - 'requirements_dev.txt'
       - name: Login to GitHub Container Registry
         if: steps.changes.outputs.build_container == 'true' && github.ref == 'refs/heads/main'
         uses: docker/login-action@v1
@@ -34,6 +35,7 @@ jobs:
         if: steps.changes.outputs.build_container == 'true' && github.ref == 'refs/heads/main'
         run: |
           cp requirements.txt docker/ci/
+          cp requirements_dev.txt docker/ci/
           cd docker/ci
           docker build . -t ghcr.io/ukaea/process-ci:latest
           docker push ghcr.io/ukaea/process-ci:latest
