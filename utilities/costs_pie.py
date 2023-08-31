@@ -288,7 +288,6 @@ def step_cost_model():
 
 # Main code
 if __name__ == "__main__":
-
     # Setup command line arguments
     parser = argparse.ArgumentParser(
         description="Displays the cost breakdown as a pie chart.  "
