@@ -249,6 +249,7 @@ jobs:
       - name: Create new tracking entries
         run: |
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          cp tracking/large_tokamak_MFILE.DAT process-tracking-data/large_tokamak_MFILE_$(git rev-parse HEAD).DAT
       - name: Create the tracking dashboard
         run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
