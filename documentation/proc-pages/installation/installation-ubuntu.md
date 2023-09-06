@@ -40,7 +40,7 @@ Clone the PROCESS repository from GitHub, and navigate into the resulting direct
 
 ```bash
 git clone https://github.com/ukaea/PROCESS
-cd process
+cd PROCESS
 ```
 
 Create and activate a virtual environment:
@@ -91,7 +91,7 @@ the tests can then be used to verify changes you make have not affected the wide
 Firstly, ensure you are in the PROCESS root directory.
 
 ```BASH
-cd process
+cd PROCESS
 ```
 
 The test suite uses PyTest and can be fully run using:
