@@ -1,54 +1,38 @@
-# Contributing
-To contribute to Process, please follow this procedure.
+# Contributing to `PROCESS`
+There are many valuable contributions that can be made to PROCESS:
+* Reporting bugs.
+* Requesting/ recommending features.
+* Implementing features or bugs raised as issues.
+* Updating and improving documentation.
 
-## Quick Summary
-- Push code to branch
-- Unit and integration tests must pass
-- Regression tests are allowed to fail
-- Reviewer checks source changes and regression differences
-- If they pass review, changes are merged to develop
+When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
 
-## Contributing Guide
-1. Raise an issue and describe the problem to be solved or the change to be made.
-1. On that issue, create a branch and merge request.
-1. Pull the branch and implement the solution, adding tests if appropriate.
-1. Build the code, run it and check your solution works.
-1. Run the tests using `pytest`; this runs the unit, integration and regression tests.
-    - Unit and integration tests must pass. Any that fail require source or test modification.
-    - Regression tests may fail; their purpose is to make you aware of significant changes to results as a result of your source changes. A 5% tolerance is applied by default to the regression tests: if any values differ by >5% from the reference, the regression test will fail for that scenario. This new value may be the desired result of the changes, however. Optionally, a 0% tolerance regression test can be run using `pytest --reg-tolerance=0`.
-    - It is incumbent on the author to check the test results created by their code changes, and modify source or tests if required. Are the regression changes expected and acceptable?
-1. Once everything passes (apart from the regression tests, which are allowed to fail), commit and push the changes. This triggers the CI system, which will run the test suite again, including 5% and 0% tolerance regression jobs. The purpose of this is so that the reviewer of the merge request can see from the pipeline's regression job traces what changes >5% and >0% (if any) your code changes create.
-1. If the changes are notable and it would benefit other users to be aware, [create a changelog entry](documentation/proc-pages/development/versioning.md).
-1. The reviewer reviews the source changes and the results of the regression jobs to see how they change the regression results. Once the changes are approved by the reviewer, the branch can then be merged.
+Please remember that all contributions and communication regarding PROCESS are subject to our [Code of Concut](https://github.com/ukaea/PROCESS/blob/main/CODE_OF_CONDUCT.md).
 
-### Contributing Workflow
-```mermaid
-flowchart TB
-createbranch(Branch created from develop\nwith up-to-date regression\nreferences)
-push(Push changes to branch)
-ci(CI runs)
-ci0("0% tolerance regression test\n(allowed to fail)")
-ci5("5% tolerance regression test\n(allowed to fail)")
-ciunitint(Unit and integration\ntests)
-review("Review regression failures\n(differences)")
-furtherchanges(Further changes required)
-merge(Merge to develop)
-overwrite(Regression references\noverwritten on develop\nby CI)
-createbranch --> push
-push --> ci
-ci --> ci5
-ci --> ci0
-ci5 --> |Pass/Fail|review
-ci0 --> |Pass/Fail|review
-review --> |Pass review|merge
-review --> |Fail review|furtherchanges
-furtherchanges --> push
-ci --> ciunitint
-ciunitint --> |Pass|review
-ciunitint --> |Fail|furtherchanges
-merge --> overwrite
-overwrite --> |Repeat:\nnext issue|createbranch
-```
+## Creating an issue
+Issues can be used to report bugs or request features and improvements. We ask you help us manage our issues by:
+* Verifying your issue is not a duplicate of another issue; in this case, we welcome your contribution as a reply to the issue.
+* Ensure you completely describe the bug/feature/problem and complete the given templates with appropriate detail.
 
-### Explanation
-For an explanation of the reasoning behind this approach, please read the [testing documentation](http://process.gitpages.ccfe.ac.uk/process/development/testing).
+## Submitting a pull request
+Please discuss any feature ideas you have with the developers before submitting them, as you may not be aware of parallel development work taking place, or implementation decisions / subtleties which are relevant. The ideal workflow for submitting a pull request is as follows:
+
+* Discuss the feature with a core PROCESS developer.
+* Submit an issue (if one does not exist for this feature/ bug) that documents the proposed change.
+* Fork our repository.
+* Create a branch of `main` with an appropriate name (e.g. `feature-abc`).
+* Make the relevant changes for the repository (ensuring the changes do not creep away from the scope of the issue).
+* Discuss any problems or development choices in the issue and keep everyone updated on the progress of your development.
+* If the changes are notable and it would benefit other users to be aware, [create a changelog entry](https://ukaea.github.io/PROCESS/development/versioning/).
+* Finally, submit a pull request onto the `main` branch:
+    * Link the relevant issue to the pull request.
+    * Assign the pull request to a maintainer of the code that will have the correct expertise to review the change.
+
+When making code contributions, we strongly recommend using pre-commit to verify your changes conform to our style requirements, otherwise the pull request will fail the 'quality' section of our GitHub actions. We document how this project uses pre-commit [here](https://ukaea.github.io/PROCESS/development/pre-commit/).
+
+Please remember that all contributions are made under the [MIT license](https://github.com/ukaea/PROCESS/blob/main/LICENSE.txt).
+
+### Testing
+PROCESS has unit, integration, and regression tests. Any new functionality must be appropriately tested. Sometimes, changes may require other tests to be changed. These changes should be justified in the pull request description. Tests can be run locally by follow [our testing documentation](https://ukaea.github.io/PROCESS/development/testing/). All pull requests will also be run against our GitHub actions which will run all of the tests and report back to the reviewer any failures. **The unit and integration tests must pass on the CI for the changes to be accepted**.
+
+Regression tests, due to the nature of PROCESS, can change as model changes affect the optima which PROCESS converges to. A reviewer will review these changes to ensure they are minor and justified. We recommend justifying how a regression test is changing in the pull request discussion, a reviewer will likely request this anyway. For convenience, the CI system runs a 0% tolerance job that will highlight all differences between the current version of PROCESS on the `main` branch and your modified version of PROCESS; the 5% job excludes all differences under 5% differences between the two versions.
