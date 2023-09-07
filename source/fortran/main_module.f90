@@ -684,7 +684,6 @@ subroutine runtests
   use maths_library, only: nearly_equal, binomial, test_secant_solve
   use process_output, only: ocmmnt, ovarre
 !   use pfcoil_module, only: brookscoil
-  use superconductors, only: test_quench
 !   use reinke_module, only: test_reinke
   implicit none
   real(dp) :: fshift, xf, enpa,ftherm,fpp,cdeff, ampperwatt
@@ -696,7 +695,6 @@ subroutine runtests
   call ovarre(nout,'Binomial coefficients C(5,4): 5', '(binomial(5,4))', binomial(5,4))
   call ovarre(nout,'Binomial coefficients C(5,5): 1', '(binomial(5,5))', binomial(5,5))
 
-  call test_quench()
    !   call brookscoil(nout) Moved to pytest
   call test_secant_solve()
   ! Disabled for ease of #1542 - Tim
