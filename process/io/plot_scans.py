@@ -144,6 +144,7 @@ def parse_args(args):
         action="store_true",
         help=(
             "Option to plot multiple 1D plots in a column of sub0plots \n  "
+            "Variables will be plotted in order of input"
         ),
         
     )
@@ -604,7 +605,9 @@ def main(args=None):
                     )
         # Plot section
         # -----------
-
+        if stack_plots:
+                fig, axs = plt.subplots(len(output_names), 1, sharex=True, figsize=(8.0, 4.8))
+                fig.subplots_adjust(hspace=0.065)
         for output_name in output_names:
             # reset counter for label_name
             kk = 0
@@ -614,9 +617,6 @@ def main(args=None):
                 continue
 
             # Loop over inputs
-            if stack_plots:
-                fig, axs = plt.subplots(len(output_names), 1, sharex=True, figsize=(8.0, 4.8))
-                fig.subplots_adjust(hspace=0.055)
             for input_file in input_files:
                 # Legend label formating
                 if label_name == []:
@@ -631,7 +631,7 @@ def main(args=None):
                     kk = kk + 1
 
                 # Plot the graph
-                if output_names2 != []:
+                if output_names2 != [] and not stack_plots:
                     fig, ax = plt.subplots()
                     ax.plot(
                         scan_var_array[input_file],
@@ -641,15 +641,24 @@ def main(args=None):
                         label=labl,
                     )
                 else:
-                    plt.plot(
-                        scan_var_array[input_file],
-                        output_arrays[input_file][output_name],
-                        "--o",
-                        color="blue" if output_names2 != [] else None,
-                        label=labl,
+                    if stack_plots:
+                            axs[output_names.index(output_name)].plot(
+                            scan_var_array[input_file],
+                            output_arrays[input_file][output_name],
+                            "--o",
+                            color="blue" if output_names2 != [] else None,
+                            label=labl,
                     )
-                    plt.xticks(size=axis_tick_size)
-                    plt.yticks(size=axis_tick_size)
+                    else:
+                        plt.plot(
+                            scan_var_array[input_file],
+                            output_arrays[input_file][output_name],
+                            "--o",
+                            color="blue" if output_names2 != [] else None,
+                            label=labl,
+                        )
+                        plt.xticks(size=axis_tick_size)
+                        plt.yticks(size=axis_tick_size)
                 if output_names2 != []:
                     ax2 = ax.twinx()
                     ax2.plot(
@@ -671,7 +680,16 @@ def main(args=None):
                     labels[output_name], fontsize=axis_font_size, color="blue"
                 )
                 ax.set_xlabel(labels[scan_var_name], fontsize=axis_font_size)
-            else:
+            elif stack_plots:
+                axs[output_names.index(output_name)].grid(True)
+                axs[output_names.index(output_name)].set_ylabel(
+                    labels[output_name],
+                    fontsize=axis_font_size,
+                )
+                plt.grid(True)
+                plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                
+            else:    
                 plt.grid(True)
                 plt.ylabel(
                     labels[output_name],
@@ -679,9 +697,9 @@ def main(args=None):
                     color="red" if output_names2 != [] else "black",
                 )
                 plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
-            if len(input_files) != 1:
-                plt.legend(loc="best", fontsize=legend_size)
-            plt.tight_layout()
+                if len(input_files) != 1:
+                    plt.legend(loc="best", fontsize=legend_size)
+                    plt.tight_layout()
 
             # Output file naming
             if output_name == "plascur/1d6":
@@ -699,7 +717,16 @@ def main(args=None):
                     if output_names2 != []
                     else "" + f".{save_format}"
                 )
-            else:
+            elif stack_plots and output_names[-1] == output_name:
+                plt.savefig(
+                    f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                    + f"_vs_{output_name2}"
+                    if output_names2 != []
+                    else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_names}"
+                    + f".{save_format}"
+                )
+                
+            else:    
                 plt.savefig(
                     f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
                     + f"_vs_{output_name2}"
@@ -708,9 +735,9 @@ def main(args=None):
                     + f".{save_format}"
                 )
 
-            # Display plot (used in Jupyter notebooks)
-            plt.show()
-            plt.clf()
+            if not stack_plots:# Display plot (used in Jupyter notebooks)
+                plt.show()
+                plt.clf()
         # ------------
 
     # In case of a 2D scan
