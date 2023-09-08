@@ -30,7 +30,7 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 from pathlib import Path
-
+from numba import njit
 # PROCESS libraries
 import process.io.mfile as mf
 
@@ -754,15 +754,14 @@ def main(args=None):
                 output_contour_z = np.zeros((n_scan_1, n_scan_2))
                 x_contour = []
                 y_contour = []
-                print(contour_conv_ij)
                 for i in range(n_scan_2): #nscan2 = 13
                     x_contour.append(m_file.data[scan_2_var_name].get_scan(i+1))
                 for i in range(1,n_scan_1*n_scan_2,n_scan_2):    
                     y_contour.append(m_file.data[scan_var_name].get_scan(i+1))  #is the separte lists in the list 
                 for i in contour_conv_ij:
-                    print(((i-1)%n_scan_2))
+                   # print(((i-1)%n_scan_2))
                     output_contour_z[((i-1)//n_scan_2)][((i-1)%n_scan_2) if ((i-1)//n_scan_2)%2==0 else (-((i-1)%n_scan_2)-1)] = m_file.data[output_name].get_scan(i)
-                    print(output_contour_z)
+                   #print(output_contour_z)
                 
                 flat_output_z = output_contour_z.flatten()
                 flat_output_z.sort()
@@ -773,13 +772,16 @@ def main(args=None):
                 output_contour_z,
                 levels=np.linspace(flat_output_z[1], output_contour_z.max(), 50),
             )    
-                plt.colorbar()
-                plt.ylabel(labels[output_name], fontsize=axis_font_size)
+                plt.colorbar(label =labels[output_name])
+                plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
                 plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
                 plt.tight_layout()
                 plt.savefig(
                 f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
             )
+                plt.show()
+                plt.clf()
+            
             else:
             # Converged indexes, for normal 2D line plot
                 for conv_j in conv_ij:  # conv_j is an array element containing the converged scan numbers
