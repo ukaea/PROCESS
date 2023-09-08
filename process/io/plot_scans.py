@@ -606,8 +606,9 @@ def main(args=None):
         # Plot section
         # -----------
         if stack_plots:
-                fig, axs = plt.subplots(len(output_names), 1, sharex=True, figsize=(8.0, 4.8))
-                fig.subplots_adjust(hspace=0.065)
+            fig, axs = plt.subplots(len(output_names), 1, sharex=True, figsize=(8.0, 4.8))
+            fig.subplots_adjust(hspace=0.075)
+            #fig.tight_layout()
         for output_name in output_names:
             # reset counter for label_name
             kk = 0
@@ -684,11 +685,21 @@ def main(args=None):
                 axs[output_names.index(output_name)].grid(True)
                 axs[output_names.index(output_name)].set_ylabel(
                     labels[output_name],
-                    fontsize=axis_font_size,
                 )
                 plt.grid(True)
                 plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
-                
+                plt.legend(
+                loc="lower center",
+                fontsize=legend_size,
+                bbox_to_anchor=(0.5, -1.7),
+                fancybox=True,
+                shadow=False,
+                ncol=len(input_files),
+                columnspacing=0.8,
+            )
+                plt.tight_layout()
+                #axs[output_names.index(output_name)].get_ylim()[0])
+                axs[output_names.index(output_name)].set_ylim(axs[output_names.index(output_name)].get_ylim()[0]*0.925,axs[output_names.index(output_name)].get_ylim()[1]*1.075)
             else:    
                 plt.grid(True)
                 plt.ylabel(
