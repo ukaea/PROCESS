@@ -137,6 +137,16 @@ def parse_args(args):
         ),
         
     )
+    
+    parser.add_argument(
+        "-stc",
+        "--stack_plots",
+        action="store_true",
+        help=(
+            "Option to plot multiple 1D plots in a column of sub0plots \n  "
+        ),
+        
+    )
 
     return parser.parse_args(args)
 
@@ -158,6 +168,7 @@ def main(args=None):
     term_output = args.term_output
     label_name = str(args.label_name)
     two_dimensional_contour = args.two_dimensional_contour
+    stack_plots = args.stack_plots
     # ---------------------------------------
 
     # Input checks
@@ -603,6 +614,9 @@ def main(args=None):
                 continue
 
             # Loop over inputs
+            if stack_plots:
+                fig, axs = plt.subplots(len(output_names), 1, sharex=True, figsize=(8.0, 4.8))
+                fig.subplots_adjust(hspace=0.055)
             for input_file in input_files:
                 # Legend label formating
                 if label_name == []:
