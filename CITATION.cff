@@ -123,7 +123,7 @@ keywords:
   - systems codes
   - power plant
 license: MIT
-version: 2.4.0
+version: 2.5.0
 references:
   - title: >-
       "PROCESS": A systems code for fusion power plants—Part 1 Physics
