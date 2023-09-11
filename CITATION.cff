@@ -110,6 +110,17 @@ authors:
   - given-names: Peter
     family-names: Lloyd
     affiliation: United Kingdom Atomic Energy Authority
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.8335292
+    description: >-
+      This is the archived snapshot of version v2.5.0 of
+      PROCESS.
+  - type: doi
+    value: 10.5281/zenodo.8335291
+    description: >-
+      This is the collection of archived snapshots of all
+      versions of PROCESS.
 repository-code: "https://github.com/ukaea/PROCESS"
 url: "https://ukaea.github.io/PROCESS/"
 abstract: >-
@@ -124,9 +135,9 @@ keywords:
   - power plant
 license: MIT
 version: 2.5.0
+date-released: "2023-09-11"
 references:
-  - title: >-
-      "PROCESS": A systems code for fusion power plants—Part 1 Physics
+  - title: '"PROCESS": A systems code for fusion power plants—Part 1 Physics'
     type: article
     authors:
       - family-names: Kovari
@@ -144,12 +155,11 @@ references:
     journal: Fusion Engineering and Design
     volume: 89
     number: 12
-    pages: "3054-3069"
+    pages: 3054-3069
     year: 2014
-    issn: "0920-3796"
+    issn: 0920-3796
     doi: 10.1016/j.fusengdes.2014.09.018
-  - title: >-
-      "PROCESS": A systems code for fusion power plants – Part 2: Engineering
+  - title: '"PROCESS": A systems code for fusion power plants – Part 2: Engineering'
     type: article
     authors:
       - family-names: Kovari
@@ -168,7 +178,7 @@ references:
         given-names: J
     journal: Fusion Engineering and Design
     volume: 104
-    pages: "9-20"
+    pages: 9-20
     year: 2016
-    issn: "0920-3796"
+    issn: 0920-3796
     doi: 10.1016/j.fusengdes.2016.01.007
