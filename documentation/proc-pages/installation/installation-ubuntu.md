@@ -1,5 +1,5 @@
 # Installation on Ubuntu/Windows
-PROCESS is developed and testing using Ubuntu 20. We cannot guarantee any other operating system will be able to compile PROCESS or reproduce results. We do unofficially support MacOS however PROCESS is **not** currently tested on this OS by the CI system. 
+PROCESS is developed using Ubuntu 22 and tested using Ubuntu 20. We cannot guarantee any other operating system will be able to compile PROCESS or reproduce results. We do unofficially support MacOS however PROCESS is **not** currently tested on this OS by the CI system. 
 
 !!! Info "Windows User"
     Windows users should run PROCESS using WSL.
