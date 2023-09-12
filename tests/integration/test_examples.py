@@ -76,7 +76,6 @@ def scan_cleanup(examples_as_cwd):
             os.remove(file)
 
 
-@pytest.mark.skip("Needs a new input file to scan.")
 def test_scan(scan_cleanup):
     """Run the scan.py script and check no exceptions are raised.
 
