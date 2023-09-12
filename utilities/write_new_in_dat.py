@@ -114,7 +114,6 @@ def replace_iteration_variables(iteration_vars, in_data):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description="Creates a new IN.DAT using "
         "iteration variable values "

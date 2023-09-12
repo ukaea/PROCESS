@@ -168,6 +168,9 @@ class Vmcon(_Solver):
         if self.b is not None:
             B = np.identity(numerics.nvar) * self.b
 
+        def _solver_callback(i: int, _x, _result, convergence_param: float):
+            print(f"{i+1} | Convergence Parameter: {convergence_param:.3E}", end="\r")
+
         try:
             x, _, _, res = solve(
                 problem,
@@ -176,8 +179,9 @@ class Vmcon(_Solver):
                 self.bndu,
                 max_iter=global_variables.maxcal,
                 epsilon=self.tolerance,
-                qsp_tolerence=1e-1,
+                qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
                 initial_B=B,
+                callback=_solver_callback,
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
@@ -200,6 +204,10 @@ class Vmcon(_Solver):
 
         else:
             self.info = 1
+
+        # print a blank line because of the carridge return
+        # in the callback
+        print()
 
         self.x = x
         self.objf = res.f

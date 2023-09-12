@@ -6,19 +6,25 @@ table {
 table.vardes {
     table-layout: fixed;
     width: 100%;
-    overflow-wrap: anywhere;
     border-collapse: collapse;
+    border: 1px solid;
 }
 
-th, td {
+th {
+    font-weight: bold;
+}
+
+th,
+td {
     padding: 10px;
+    border: 1px solid;
 }
 
 html {
     font-size: 1.3rem;
 }
 
-.md-typeset h1{
+.md-typeset h1 {
     font-weight: bold;
     color: var(--md-default-fg-color) !important;
 }
@@ -63,22 +69,22 @@ html {
 /*-------------------- IMAGES --------------------*/
 
 .logo {
-    width:200px;
+    width: 200px;
 }
 
 @media only screen and (max-width: 767px) {
     .logo {
-        width:35%;
+        width: 35%;
     }
-  }
+}
 
-  .image {
-    width:75%;
+.image {
+    width: 75%;
 }
 
 @media only screen and (max-width: 767px) {
     .image {
-        width:100%;
+        width: 100%;
     }
 }
 
@@ -89,46 +95,46 @@ div.doc-contents:not(.first) {
     margin-bottom: 60px;
 }
 
-div.doc-class > .doc-heading {
+div.doc-class>.doc-heading {
     background-color: #e7f2fa;
     border-top: 3px solid #e0301c;
     padding: 10px;
 }
 
-div.doc-class > .doc-heading::before {
+div.doc-class>.doc-heading::before {
     content: "class";
     color: dimgray;
     font-style: italic;
     font-size: 1rem;
 }
 
-div.doc-method > h4::before {
+div.doc-method>h4::before {
     content: "method";
     color: dimgray;
     font-style: italic;
     font-size: 0.8rem;
 }
 
-div.doc-function > .doc-heading {
+div.doc-function>.doc-heading {
     background-color: #e7f2fa;
     border-top: 3px solid #e0301c;
     padding: 10px;
 }
 
-div.doc-function > .doc-heading::before {
+div.doc-function>.doc-heading::before {
     content: "function";
     color: dimgray;
     font-style: italic;
     font-size: 1rem;
 }
 
-div.doc-module > .doc-heading {
+div.doc-module>.doc-heading {
     background-color: #e7f2fa;
     border-top: 6px solid #e0301c;
     padding: 10px;
 }
 
-div.doc-module > .doc-heading::before {
+div.doc-module>.doc-heading::before {
     content: "module";
     color: dimgray;
     font-style: italic;

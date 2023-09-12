@@ -1,13 +1,18 @@
 # Check all Pip modules exist
-# Author  :   K. Zarebski
-# Date    : last modified 2020-11-05
+# Author  :   PROCESS Team (UKAEA)
+# Date    : last modified 2023-07-24
 #
 # Checks to see if all Python module requirements are satisfied else
 # runs python pip on the requirements file
 
 MACRO(PIP_INSTALL)
     SET(PIP_NAME "pip_installs")
-
+    if ( RELEASE )
+        SET(RELEASE TRUE)
+    else()
+        SET(RELEASE FALSE)
+    endif()
+    
     EXECUTE_PROCESS(
         COMMAND bash -c "${Python3_EXECUTABLE} -c \"import ford\""
         OUTPUT_VARIABLE FORD_CHECK
@@ -35,6 +40,7 @@ MACRO(PIP_INSTALL)
     ENDIF()
 
     SET(MODULE_REQUIREMENTS_FILE ${CMAKE_SOURCE_DIR}/requirements.txt)
+    SET(DEVELOP_REQUIREMENTS_FILE ${CMAKE_SOURCE_DIR}/requirements_dev.txt)
     STRING(REPLACE "/" "_" PIP_OUT_PREFIX ${Python3_EXECUTABLE})
     SET(PIP_COMPLETE_FILE ${CMAKE_BINARY_DIR}/${PIP_OUT_PREFIX}.touch)
     ADD_CUSTOM_TARGET(
@@ -44,12 +50,22 @@ MACRO(PIP_INSTALL)
 
     # Manually install numpy as including it in requirements doesnt install it
     # It is a pre-requisite to f90wrap install
-    ADD_CUSTOM_COMMAND(
-        OUTPUT ${PIP_COMPLETE_FILE}
-        COMMAND ${Python3_EXECUTABLE} -m pip install numpy
-        COMMAND ${Python3_EXECUTABLE} -m pip install -r ${MODULE_REQUIREMENTS_FILE}
-        COMMAND touch ${PIP_COMPLETE_FILE}
-    )
+    if (${RELEASE})
+        ADD_CUSTOM_COMMAND(
+            OUTPUT ${PIP_COMPLETE_FILE}
+            COMMAND ${Python3_EXECUTABLE} -m pip install numpy
+            COMMAND ${Python3_EXECUTABLE} -m pip install -r ${MODULE_REQUIREMENTS_FILE}
+            COMMAND touch ${PIP_COMPLETE_FILE}
+        )
+    else()
+        ADD_CUSTOM_COMMAND(
+            OUTPUT ${PIP_COMPLETE_FILE}
+            COMMAND ${Python3_EXECUTABLE} -m pip install numpy
+            COMMAND ${Python3_EXECUTABLE} -m pip install -r ${MODULE_REQUIREMENTS_FILE}
+            COMMAND ${Python3_EXECUTABLE} -m pip install -r ${DEVELOP_REQUIREMENTS_FILE}
+            COMMAND touch ${PIP_COMPLETE_FILE}
+        )
+    endif()
 
     ADD_DEPENDENCIES(${PIP_NAME} ford_git)
 ENDMACRO()

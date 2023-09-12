@@ -3,14 +3,14 @@
  # PROCESS #
  # Power Reactor Optimisation Code #
  PROCESS_version_number__________________________________________________ (procver)_____________________     "2.4.0   R"
- Date_of_run_____________________________________________________________ (date)________________________     "19/07/2023"
- Time_of_run_____________________________________________________________ (time)________________________     "16:37"
- User____________________________________________________________________ (username)____________________     "root"    
+ Date_of_run_____________________________________________________________ (date)________________________     "15/08/2023"
+ Time_of_run_____________________________________________________________ (time)________________________     "11:53"
+ User____________________________________________________________________ (username)____________________     "timothyn"
  PROCESS_run_title_______________________________________________________ (runtitle)____________________     "Generic large tokamak                                                                              
- PROCESS_tag_number______________________________________________________ (tagno)_______________________     "v2.4.0-1300-gcfc61d574"                                                                            
- PROCESS_git_branch_name_________________________________________________ (branch_name)_________________     "HEAD"                                                                                              
- PROCESS_last_commit_message_____________________________________________ (commsg)______________________     "Update VMCON package location"                                                                     
- Input_filename__________________________________________________________ (fileprefix)__________________     "/tmp/pytest-of-root/pytest-0/test_scenario_large_tokamak_0/IN.DAT                                                                                                                                       "
+ PROCESS_tag_number______________________________________________________ (tagno)_______________________     ""                                                                                                  
+ PROCESS_git_branch_name_________________________________________________ (branch_name)_________________     "main"                                                                                              
+ PROCESS_last_commit_message_____________________________________________ (commsg)______________________     "Install PyVMCON from PyPI, not source ([hash]2851)"                                                
+ Input_filename__________________________________________________________ (fileprefix)__________________     "/private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-108/test_scenario_large_tokamak_0/IN.DAT                                                                          "
  # Numerics #
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #

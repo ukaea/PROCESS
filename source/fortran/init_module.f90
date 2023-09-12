@@ -30,8 +30,6 @@ contains
       use pfcoil_module, only: init_pfcoil_module
       use physics_module, only: init_physics_module
       use physics_variables, only: init_physics_variables
-      use read_and_get_atomic_data, only: init_read_and_get_atomic_data
-      use read_radiation, only: init_read_radiation
       use scan_module, only: init_scan_module
       use sctfcoil_module, only: init_sctfcoil_module
       use tfcoil_variables, only: init_tfcoil_variables
@@ -73,8 +71,6 @@ contains
       call init_pfcoil_module
       call init_physics_module
       call init_physics_variables
-      call init_read_and_get_atomic_data
-      call init_read_radiation
       call init_scan_module
       call init_sctfcoil_module
       call init_tfcoil_variables

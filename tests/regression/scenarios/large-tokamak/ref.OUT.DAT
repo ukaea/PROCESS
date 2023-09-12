@@ -26,14 +26,14 @@
  
    Program :
    Version : 2.4.0   Release Date :: 2022-05-18
-   Tag No. : v2.4.0-1300-gcfc61d574
-    Branch : HEAD
-   Git log : Update VMCON package location
- Date/time : 19 Jul 2023 16:37:05 +00:00(hh:mm) UTC
-      User : root
-  Computer : runner-ueya2eyb-project-20-concurrent-0
- Directory : /builds/process/process
-     Input : /tmp/pytest-of-root/pytest-0/test_scenario_large_tokamak_0/IN.DAT
+   Tag No. :
+    Branch : main
+   Git log : Install PyVMCON from PyPI, not source ([hash]2851)
+ Date/time : 15 Aug 2023 11:53:24 +01:00(hh:mm) UTC
+      User : timothynunn
+  Computer : L0268-iMac
+ Directory : /Users/timothynunn/process
+     Input : /private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-108/test_scenario_large_tokamak_0/IN.DAT
  Run title : Generic large tokamak
   Run type : Reactor concept design: Pulsed tokamak model, (c) CCFE
  
@@ -818,14 +818,14 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Materal stress of the point of maximum shear stress (Tresca criterion) for each layer
  Please use utilities/plot_stress_tf.py for radial plots plots summary
    Layers 				 Steel case 		 WP 		 Outer case
-   Radial stress 			 (MPa) 		 4.884866930978646e-14		-143.7323237384323		6.204164059946834
-   Toroidal stress 			 (MPa) 		 -489.923826394178		-377.93666293737385		-366.94183555290704
-   Vertical stress 			 (MPa) 		 258.8633902666334		258.8633902666334		144.31111821876868
-   Von-Mises stress 			 (MPa) 		 658.6797045316081		554.6894102888571		456.53674127103466
-   Shear (Tresca) 			 (MPa) 		 748.7872166608114		636.8000532040072		511.25295377167566
+   Radial stress 			 (MPa) 		 4.884866930978646e-14		-143.73232373861893		6.204164059945074
+   Toroidal stress 			 (MPa) 		 -489.9238263941959		-377.9366629374062		-366.9418355528041
+   Vertical stress 			 (MPa) 		 258.86339026661796		258.86339026661796		144.31111821875967
+   Von-Mises stress 			 (MPa) 		 658.6797045316131		554.6894102888741		456.5367412709292
+   Shear (Tresca) 			 (MPa) 		 748.7872166608139		636.8000532040242		511.25295377156374
  
-   Toroidal modulus 			 (GPa) 		 205.0		48.968055664720644		205.0
-   Vertical modulus 			 (GPa) 		 205.0		126.43000655577883		367.7263100699757
+   Toroidal modulus 			 (GPa) 		 205.0		48.96805566472091		205.0
+   Vertical modulus 			 (GPa) 		 205.0		126.43000655578726		367.7263100699767
  
  WP transverse modulus (GPa)                                              (eyoung_wp_trans*1.0d-9)  4.452E+01  OP 
  WP vertical modulus (GPa)                                                (eyoung_wp_axial*1.0d-9)  1.161E+02  OP 
@@ -862,9 +862,9 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  by a straight segment and elliptical arcs between the following points:
  
    point              x(m)              y(m)
-   0              3.625333336675998              4.550600000000001
-   1              7.466666666666667              7.584333333333335
-   2              14.536141174280466              0.0
+   0              3.625333336675998              4.5506
+   1              7.466666666666667              7.584333333333334
+   2              14.53614117428001              0.0
    3              7.466666666666667              -8.818217164127494
    4              3.625333336675998              -5.290930298476496
  
@@ -1160,7 +1160,7 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  3			0.000e+00	0.000e+00	-7.154e+06	-7.154e+06	-7.154e+06	0.0e0
  4			0.000e+00	0.000e+00	-4.852e+06	-4.852e+06	-4.852e+06	0.0e0
  5			0.000e+00	0.000e+00	-4.852e+06	-4.852e+06	-4.852e+06	0.0e0
- 6			0.000e+00	0.000e+00	0.000e+00	0.000e+00	0.000e+00	0.0e0
+ 6			0.000e+00	0.000e+00	4.096e-09	4.096e-09	0.000e+00	0.0e0
  
  Ratio of central solenoid current at beginning of Pulse / end of flat-to (fcohbop)                 9.687E-01  ITV
  Ratio of central solenoid current at beginning of Flat-top / end of flat (fcohbof)                -1.701E-01  OP 
@@ -1519,16 +1519,16 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  htpmw_blkt                                                                     0.00                     0.00
  
  Shield:
- 1.3935888986974025 0.0 1.3935888986974025
+ 1.3935888986974982 0.0 1.3935888986974982
  0.0e0 0.0e0 0.0e0
  0.0e0 0.0e0 0.0e0
- 0.006967944493487013 0.0 0.006967944493487013
+ 0.0069679444934874915 0.0 0.0069679444934874915
  
  Divertor:
- 146.93029804055834 0.0 146.93029804055834
- 157.0955893399247 0.0 157.0955893399247
- 25.675194656522144 0.0 25.675194656522144
- 1.6485054101850258 0.0 1.6485054101850258
+ 146.93029804056846 0.0 146.93029804056846
+ 157.09558934002595 0.0 157.09558934002595
+ 25.675194656516506 0.0 25.675194656516506
+ 1.6485054101855547 0.0 1.6485054101855547
  
  TF coil:
  ptfnuc                                                                         0.00                     0.02
@@ -1542,7 +1542,7 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  pradhcd                                                                        0.00                     0.00
  0.0e0 0.0e0 0.0e0
  
- 1978.7927750047745 0.024103348232488195 1978.816878353007
+ 1978.7927750049373 0.024103348232513956 1978.8168783531698
  
  Total power leaving reactor (across vacuum vessel boundary) (MW)                                    1978.841  OP 
  
@@ -1636,39 +1636,39 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  
  tramp tohs theat tburn tqnch tdwell
  ----- ---- ----- ----- ----- ------
- Duration 500.0 166.16203759464662 10.0 7210.408167852064 166.16203759464662 1800.0
+ Duration 500.0 166.16203759462505 10.0 7210.408167852351 166.16203759462505 1800.0
  ------ ----- ---- ----- ----- ----- ------
  
  Continous power usage [MWe]:
  
  System tramp tohs theat tburn tqnch tdwell
  ------ ----- ---- ----- ----- ----- ------
- Primary cooling 187.79843019034894 187.79843019034894 187.79843019034894 187.79843019034894 187.79843019034894 187.79843019034894
- Cryoplant 35.61576869883077 35.61576869883077 35.61576869883077 35.61576869883077 35.61576869883077 35.61576869883077
+ Primary cooling 187.7984301903559 187.7984301903559 187.7984301903559 187.7984301903559 187.7984301903559 187.7984301903559
+ Cryoplant 35.615768698828035 35.615768698828035 35.615768698828035 35.615768698828035 35.615768698828035 35.615768698828035
  Vacuum 0.5 0.5 0.5 0.5 0.5 0.5
  Tritium 15.0 15.0 15.0 15.0 15.0 15.0
- TF 9.854833388902454 9.854833388902454 9.854833388902454 9.854833388902454 9.854833388902454 9.854833388902454
- Facilities 55.405448398308444 55.405448398308444 55.405448398308444 55.405448398308444 55.405448398308444 55.405448398308444
+ TF 9.854833388897118 9.854833388897118 9.854833388897118 9.854833388897118 9.854833388897118 9.854833388897118
+ Facilities 55.405448398312224 55.405448398312224 55.405448398312224 55.405448398312224 55.405448398312224 55.405448398312224
  ------ ----- ---- ----- ----- ----- ------
- Total 304.17448067639066 304.17448067639066 304.17448067639066 304.17448067639066 304.17448067639066 304.17448067639066
+ Total 304.1744806763933 304.1744806763933 304.1744806763933 304.1744806763933 304.1744806763933 304.1744806763933
  ------ ----- ---- ----- ----- ----- ------
  
  Intermittent power usage [MWe]:
  
  System tramp tohs theat tburn tqnch tdwell
  ------ ----- ---- ----- ----- ----- ------
- H & CD 0.0 240.0 240.0 150.79557756167657 240.0 0.0
- PF 46.51235286846377 -57.49675203043404 0.0 2.015020863845942 -169.90584559591701 0.0
+ H & CD 0.0 240.0 240.0 150.79557756173983 240.0 0.0
+ PF 46.51235286843421 -57.496752030386375 0.0 2.015020863847534 -169.905845595978 0.0
  ------ ----- ---- ----- ----- ----- ------
- Total 46.51235286846377 182.50324796956596 240.0 152.8105984255225 70.09415440408299 0.0
+ Total 46.51235286843421 182.50324796961362 240.0 152.81059842558736 70.09415440402199 0.0
  ------ ----- ---- ----- ----- ----- ------
  
  Power production [MWe]:
  
   tramp tohs theat tburn tqnch tdwell avg
   ----- ---- ----- ----- ----- ------ ---
- Gross power 0.0 0.0 0.0 856.2087743662801 0.0 0.0
- Net power -350.68683354485444 -486.6777286459566 -544.1744806763907 399.2236952643669 -374.26863508047364 -304.17448067639066
+ Gross power 0.0 0.0 0.0 856.2087743663474 0.0 0.0
+ Net power -350.6868335448275 -486.6777286460069 -544.1744806763933 399.2236952643667 -374.26863508041527 -304.1744806763933
  ------ ----- ---- ----- ----- ----- ------
  
  

@@ -11,7 +11,7 @@ if platform.system() == "Darwin":
 
 setup_kwargs = {
     "name": MODULE_NAME,
-    "version": "2.4.0",
+    "version": "2.5.0",
     "description": (
         "Power Reactor Optimisation Code for Environmental and Safety Studies"
     ),
@@ -42,7 +42,7 @@ setup_kwargs = {
         "tables",
         "SALib",
         "numba>=0.55.2",
-        "PyVMCON @ git+https://github.com/ukaea/PyVMCON.git",
+        "PyVMCON>=2.1.0,<3.0.0",
         "CoolProp>=6.4",
     ],
     "extras_require": {"test": ["pytest"]},
