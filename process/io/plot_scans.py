@@ -254,6 +254,7 @@ def main(args=None):
     labels["zeff"] = r"$Z_{\mathrm{eff}}$"
     labels["tburn"] = r"$t_{\mathrm{burn}}$[$s$]"
     labels["vburn"] = r"$V_{\mathrm{loop}}$ [$V$]"
+    labels["sig_tf_wp_max"] = r"$\sigma_{TP,wp}^{max}$"
     labels["rli"] = r"$l_i$"
     labels["n_cycle_min"] = r"$MinCycles_{\mathrm{Stress.min}}^{\mathrm{CS}}$"
     labels["n_cycle"] = r"$Cycles_{\mathrm{Stress}}^{\mathrm{CS}}$"

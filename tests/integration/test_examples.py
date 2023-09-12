@@ -49,7 +49,6 @@ def delete_plot_procs():
     plot_proc_2.unlink(missing_ok=True)
 
 
-@pytest.mark.skip("Needs a new input file to scan.")
 def test_examples(examples_as_cwd, delete_plot_procs):
     """Run the examples.py script and check no exceptions are raised.
 
