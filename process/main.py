@@ -343,8 +343,10 @@ class SingleRun:
         :type solver: str, optional
         """
         self.input_file = input_file
+
         self.validate_input()
         self.init_module_vars()
+        self.set_filenames()
         self.models = Models()
         self.solver = solver
 
