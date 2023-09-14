@@ -92,7 +92,7 @@ def run_monte_carlo(args):
 
     NEQNS, itervars = get_neqns_itervars()
 
-    LBS, UBS = get_variable_range(itervars, config.factor)
+    # LBS, UBS = get_variable_range(itervars, config.factor)
     param_values = []
     config.checks_before_run()
     test_dict = {}
@@ -132,7 +132,7 @@ def run_monte_carlo(args):
                             % config.no_allowed_unfeasible,
                         )
 
-                    # Collect the process solution
+                    # collect the process solution
                     mfilepath = Path(config.wdir) / "MFILE.DAT"
                     m_file = mf.MFile(mfilepath)
                     # Collect the mfile data.
@@ -146,7 +146,7 @@ def run_monte_carlo(args):
                     )
                     # Store DF in list of DFs for the UQ run.
                     mfile_df_list.append(run_data_df)
-                    config.write_error_summary(j)
+                    # config.write_error_summary(j)
                     RUN_ID += 1
                 else:
                     print(
@@ -160,8 +160,6 @@ def run_monte_carlo(args):
     mc_run_df = pd.concat(mfile_df_list)
     # Write UQ run DF to h5 file.
     mc_run_df.to_hdf("uncertainties_data.h5", key="df", mode="w")
-
-    # vary_iteration_variables(itervars, LBS, UBS)
 
 
 def write_Morris_Method_Output(X, S):
