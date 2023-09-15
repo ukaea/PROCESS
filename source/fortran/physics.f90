@@ -3190,7 +3190,7 @@ module physics_module
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use constraint_variables, only: maxradwallload, peakradwallload, fbetatry, &
-      taulimit, peakfactrad
+      taulimit, peakfactrad, psepbqarmax, walalw
     use current_drive_variables, only: bscf_nevins, bscfmax, cboot, &
       bscf_wilson, bscf_sauter, pinjmw, bscf_iter89, bootipf, pinjimw, pinjemw, &
       psipf, pscf_scene, diacf_hender, diacf_scene, diaipf
@@ -3212,7 +3212,7 @@ module physics_module
       taup, sarea, ti0, plhthresh, bp, dnitot, pradmw, pradsolmw, csawth, rndfuel, q95, &
       rhopedt, tauratio, pperim, tesep, vsind, ibss, alphaj, dnz, q, ssync, &
       psolradmw, tauei, ishape, plinepv, palpmw, palpfwmw, icurr, pdivt, &
-      gammaft, powfmw
+      gammaft, powfmw, wallmw
     use physics_variables, only: betaft, tauscl, fgwsep, rmajor, falpha, &
       nesep, facoh, kappa, dlimit, beta, dlimit, eps, pthrmw, dnla, bt, &
       pthrmw, pthrmw, pthrmw, idivrt, ips, idia
@@ -3276,6 +3276,8 @@ module physics_module
    call ovarrf(outfile,'Major radius (m)','(rmajor)',rmajor)
    call ovarrf(outfile,'Minor radius (m)','(rminor)',rminor, 'OP ')
    call ovarrf(outfile,'Aspect ratio','(aspect)',aspect)
+   call ovarrf(outfile,'Max ratio psep bt qar','(psepbqarmax)',psepbqarmax)
+   call ovarrf(outfile,'Maximum neutron wall load','(walalw)',walalw)
 
    select case (ishape)
    case (0,6,8)
