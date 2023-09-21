@@ -405,7 +405,9 @@ class SingleRun:
 
         # Set the input file in the Fortran
         fortran.global_variables.fileprefix = string_to_f2py_compatible(
-            fortran.global_variables.fileprefix, str(self.input_path.resolve())
+            fortran.global_variables.fileprefix,
+            str(self.input_path.resolve()),
+            except_length=True,
         )
 
     def set_output(self):
