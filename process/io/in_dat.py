@@ -324,7 +324,8 @@ def get_parameters(data, use_string_values=True):
     # dict of all module-level variables in source, grouped by module
     parameters = {}
     # dict of all parameters set in input file, grouped by module
-    exclusions = ["neqns", "nvar", "icc", "ixc"]
+    # Include neqns to allow eq and ineq constraints to be defined in produced IN.DAT
+    exclusions = ["nvar", "icc", "ixc"]
     # Parameters to exclude
 
     # Change module keys from DICT_MODULE: replace spaces with underscores and
@@ -344,7 +345,6 @@ def get_parameters(data, use_string_values=True):
             # Store a variable in parameters dict if it's in the IN.DAT file
             # (and not in the exclusion list). Store parameter name and value
             if item not in exclusions and item in data.keys():
-
                 if item == "fimp":
                     for k in range(len(data["fimp"].get_value)):
                         name = "fimp({0})".format(str(k + 1).zfill(1))
@@ -396,7 +396,6 @@ def get_parameters(data, use_string_values=True):
                         try:
                             float(split_line[0])
                             if len(split_line) > 1:
-
                                 line_value = ", ".join([entry for entry in split_line])
                         except Exception:
                             pass
@@ -434,7 +433,6 @@ def write_parameters(data, out_file):
 
         # Write out parameters for this module
         for parameter, info in parameters[module].items():
-
             if any(var_name in parameter for var_name in filter_list):
                 # No justification formatting if parameter is in filter list
                 parameter_line = "{0} = {1}\n".format(parameter, info)
@@ -447,7 +445,6 @@ def write_parameters(data, out_file):
                     and "value" in info
                     and (type(info.get("comment")) is str)
                 ):
-
                     parameter_line = "{0} = {1} * {2}\n".format(
                         parameter.ljust(8), info["value"], info["comment"]
                     )
@@ -553,7 +550,6 @@ def add_parameter(data, parameter_name, parameter_value):
 
     # Check that the parameter is not already in the dictionary
     if parameter_name not in data.keys():
-
         parameter_group = find_parameter_group(parameter_name)
         if "fimp" in parameter_name:
             comment = dicts["DICT_DESCRIPTIONS"]["fimp"]
@@ -718,7 +714,6 @@ def parameter_type(name, value):
 
     # Check if parameter is a string
     elif isinstance(value, str):
-
         # If a real variable just convert to float
         if "real_variable" in param_type:
             # Prepare so float conversion succeeds
@@ -767,7 +762,6 @@ def variable_constraint_type_check(item_number, var_type):
 
     # Check if item is in string format
     if isinstance(item_number, str):
-
         # Try evaluate and convert to an integer. Warning if number is rounded
         try:
             # eval should produce int of float otherwise raise the ValueError
@@ -799,7 +793,6 @@ def variable_constraint_type_check(item_number, var_type):
 
     # Check if item is in float format
     elif isinstance(item_number, float):
-
         # If integer convert to float and return
         if item_number.is_integer():
             return int(item_number)
@@ -949,7 +942,6 @@ class InDat(object):
         self.in_dat_lines = remove_empty_lines(self.in_dat_lines)
 
         for line in self.in_dat_lines:
-
             # Put everything in lower case
             if "vmec" not in line.split("=")[0].lower():
                 l_line = line.lower()
@@ -962,7 +954,6 @@ class InDat(object):
 
             # Ignore title, header and commented lines
             if line_type != "Title" and line_type != "Comment":
-
                 try:
                     # for non-title lines process line and store data.
                     self.process_line(line_type, l_line)
@@ -1011,7 +1002,6 @@ class InDat(object):
 
         # Arrays
         elif line_type == "Array":
-
             # Create geneneric array variable class using INVariable class,
             # if it does not yet exist
             line_commentless = line.split("*")[0]
@@ -1158,7 +1148,9 @@ class InDat(object):
                 else:
                     # Duplicate constraint equation number
                     self.add_duplicate_variable("icc = {0}".format(item))
-            self.data["icc"].value.sort()
+            # Don't sort the constraints! Preserves what's eq, what's ineq;
+            # first neqns are eqs, rest are ineqs
+            # self.data["icc"].value.sort()
 
     def process_iteration_variables(self, line):
         """Function to process iteration variables entry in IN.DAT
