@@ -30,7 +30,7 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 from pathlib import Path
-from numba import njit
+
 # PROCESS libraries
 import process.io.mfile as mf
 
@@ -124,9 +124,8 @@ def parse_args(args):
             "list the same number of label names eg: -nl 'leg1 leg2'\n"
             "(default = MFile file name) "
         ),
-        
     )
-    
+
     parser.add_argument(
         "-2DC",
         "--two_dimensional_contour",
@@ -134,10 +133,10 @@ def parse_args(args):
         help=(
             "Option to plot 2D scans as a coloured contour plot instead of a line plot \n  "
             "Note: Non convergent points will show up with a value of zero \n "
+            "Note: The scan paramters must both be in increasing orderl \n "
         ),
-        
     )
-    
+
     parser.add_argument(
         "-stc",
         "--stack_plots",
@@ -146,7 +145,6 @@ def parse_args(args):
             "Option to plot multiple 1D plots in a column of sub0plots \n  "
             "Variables will be plotted in order of input"
         ),
-        
     )
 
     return parser.parse_args(args)
@@ -401,7 +399,6 @@ def main(args=None):
     m_file = mf.MFile(filename=input_files[-1])
     nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
     scan_var_name = nsweep_dict[nsweep_ref]
-
     # Get the eventual second scan variable
     nsweep_2_ref = int(0)
     is_2D_scan = False
@@ -522,7 +519,6 @@ def main(args=None):
                 scan_var_array[input_file][ii] = m_file.data[scan_var_name].get_scan(
                     conv_i[ii]
                 )
-
             # output list declaration
             output_arrays[input_file] = dict()
             output_arrays2[input_file] = dict()
@@ -553,7 +549,6 @@ def main(args=None):
                 for ii in range(n_scan):
                     ouput_array[ii] = m_file.data[output_name].get_scan(conv_i[ii])
                 output_arrays[input_file][output_name] = ouput_array
-
             # Second variable scan
             if output_names2 != []:
                 for output_name2 in output_names2:
@@ -607,9 +602,9 @@ def main(args=None):
         # Plot section
         # -----------
         if stack_plots:
-            fig, axs = plt.subplots(len(output_names), 1, sharex=True, figsize=(8.0, 4.8))
-            fig.subplots_adjust(hspace=0.075)
-            #fig.tight_layout()
+            fig, axs = plt.subplots(len(output_names), 1, figsize=(8.0, 12.8))
+            fig.subplots_adjust(hspace=0.0)
+            # fig.tight_layout()
         for output_name in output_names:
             # reset counter for label_name
             kk = 0
@@ -644,13 +639,13 @@ def main(args=None):
                     )
                 else:
                     if stack_plots:
-                            axs[output_names.index(output_name)].plot(
+                        axs[output_names.index(output_name)].plot(
                             scan_var_array[input_file],
                             output_arrays[input_file][output_name],
                             "--o",
                             color="blue" if output_names2 != [] else None,
                             label=labl,
-                    )
+                        )
                     else:
                         plt.plot(
                             scan_var_array[input_file],
@@ -690,18 +685,21 @@ def main(args=None):
                 plt.grid(True)
                 plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
                 plt.legend(
-                loc="lower center",
-                fontsize=legend_size,
-                bbox_to_anchor=(0.5, -1.7),
-                fancybox=True,
-                shadow=False,
-                ncol=len(input_files),
-                columnspacing=0.8,
-            )
+                    loc="lower center",
+                    fontsize=legend_size,
+                    bbox_to_anchor=(0.5, -1.4),
+                    fancybox=True,
+                    shadow=False,
+                    ncol=len(input_files),
+                    columnspacing=0.8,
+                )
                 plt.tight_layout()
-                #axs[output_names.index(output_name)].get_ylim()[0])
-                axs[output_names.index(output_name)].set_ylim(axs[output_names.index(output_name)].get_ylim()[0]*0.925,axs[output_names.index(output_name)].get_ylim()[1]*1.075)
-            else:    
+                # axs[output_names.index(output_name)].get_ylim()[0])
+                axs[output_names.index(output_name)].set_ylim(
+                    axs[output_names.index(output_name)].get_ylim()[0] * 0.6,
+                    axs[output_names.index(output_name)].get_ylim()[1] * 1.2,
+                )
+            else:
                 plt.grid(True)
                 plt.ylabel(
                     labels[output_name],
@@ -735,19 +733,21 @@ def main(args=None):
                     + f"_vs_{output_name2}"
                     if output_names2 != []
                     else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_names}"
-                    + f".{save_format}"
+                    + f".{save_format}",
+                    dpi=300,
                 )
-                
-            else:    
+
+            else:
                 plt.savefig(
                     f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
                     + f"_vs_{output_name2}"
                     if output_names2 != []
                     else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f".{save_format}"
+                    + f".{save_format}",
+                    dpi=300,
                 )
 
-            if not stack_plots:# Display plot (used in Jupyter notebooks)
+            if not stack_plots:  # Display plot (used in Jupyter notebooks)
                 plt.show()
                 plt.clf()
         # ------------
@@ -761,18 +761,21 @@ def main(args=None):
         # Number of scan points
         n_scan_1 = int(m_file.data["isweep"].get_scan(-1))
         n_scan_2 = int(m_file.data["isweep_2"].get_scan(-1))
-
         # Selecting the converged runs only
-        contour_conv_ij = []    #List of non-converged scan point numbers
-        conv_ij = list()        # 2D array of converged scan point numbers (sweep = rows, sweep_2 = columns)
+        contour_conv_ij = []  # List of non-converged scan point numbers
+        conv_ij = (
+            list()
+        )  # 2D array of converged scan point numbers (sweep = rows, sweep_2 = columns)
         ii_jj = 0
         for ii in range(n_scan_1):
             conv_ij.append(list())
             for jj in range(n_scan_2):
-                ii_jj += 1    #Represents the scan point number in the MFILE
+                ii_jj += 1  # Represents the scan point number in the MFILE
                 ifail = m_file.data["ifail"].get_scan(ii_jj)
                 if ifail == 1:
-                    conv_ij[ii].append(ii_jj) # Only appends scan number if scan converged
+                    conv_ij[ii].append(
+                        ii_jj
+                    )  # Only appends scan number if scan converged
                     contour_conv_ij.append(ii_jj)
                 else:
                     failed_value_1 = m_file.data[scan_var_name].get_scan(ii_jj)
@@ -786,9 +789,7 @@ def main(args=None):
         for output_name in output_names:
             # Check if the output variable exists in the MFILE
             if output_name not in m_file.data.keys():
-                print(
-                    f"Warning : `{output_name}` does not exist in PROCESS dicts"
-                )
+                print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
                 print(f"Warning : `{output_name}` will not be output")
                 continue
 
@@ -807,37 +808,54 @@ def main(args=None):
                 output_contour_z = np.zeros((n_scan_1, n_scan_2))
                 x_contour = []
                 y_contour = []
-                for i in range(n_scan_2): #nscan2 = 13
-                    x_contour.append(m_file.data[scan_2_var_name].get_scan(i+1))
-                for i in range(1,n_scan_1*n_scan_2,n_scan_2):    
-                    y_contour.append(m_file.data[scan_var_name].get_scan(i+1))  #is the separte lists in the list 
+                for i in range(n_scan_2):  # nscan2 = 13
+                    x_contour.append(m_file.data[scan_2_var_name].get_scan(i + 1))
+                for i in range(1, n_scan_1 * n_scan_2, n_scan_2):
+                    y_contour.append(
+                        m_file.data[scan_var_name].get_scan(i + 1)
+                    )  # is the separte lists in the list
                 for i in contour_conv_ij:
-                   # print(((i-1)%n_scan_2))
-                    output_contour_z[((i-1)//n_scan_2)][((i-1)%n_scan_2) if ((i-1)//n_scan_2)%2==0 else (-((i-1)%n_scan_2)-1)] = m_file.data[output_name].get_scan(i)
-                   #print(output_contour_z)
-                
+                    # if (x_contour[1]>x_contour[0]) and y_contour[1]>y_contour[0]
+                    # print(((i-1)%n_scan_2))
+                    output_contour_z[((i - 1) // n_scan_2)][
+                        ((i - 1) % n_scan_2)
+                        if ((i - 1) // n_scan_2) % 2 == 0
+                        else (-((i - 1) % n_scan_2) - 1)
+                    ] = m_file.data[output_name].get_scan(i)
+                # print(output_contour_z)
+
                 flat_output_z = output_contour_z.flatten()
                 flat_output_z.sort()
-                
+                print(x_contour)
+                print(y_contour)
+                print(output_contour_z)
                 plt.contourf(
-                x_contour,
-                y_contour,
-                output_contour_z,
-                levels=np.linspace(flat_output_z[1], output_contour_z.max(), 50),
-            )    
-                plt.colorbar(label =labels[output_name])
+                    x_contour,
+                    y_contour,
+                    output_contour_z,
+                    levels=np.linspace(
+                        list(filter(lambda i: i > 0.0, flat_output_z))[0],
+                        flat_output_z.max(),
+                        50,
+                    ),
+                )
+                plt.colorbar(label=labels[output_name])
                 plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
                 plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
                 plt.tight_layout()
                 plt.savefig(
-                f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
-            )
+                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                )
                 plt.show()
                 plt.clf()
-            
+
             else:
-            # Converged indexes, for normal 2D line plot
-                for conv_j in conv_ij:  # conv_j is an array element containing the converged scan numbers
+                # Converged indexes, for normal 2D line plot
+                for (
+                    conv_j
+                ) in (
+                    conv_ij
+                ):  # conv_j is an array element containing the converged scan numbers
                     # Scanned variables
                     print(conv_j)
                     scan_1_var_array = np.zeros(len(conv_j))
