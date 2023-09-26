@@ -602,7 +602,9 @@ def main(args=None):
         # Plot section
         # -----------
         if stack_plots:
-            fig, axs = plt.subplots(len(output_names), 1, figsize=(8.0, 12.8))
+            fig, axs = plt.subplots(
+                len(output_names), 1, figsize=(8.0, (3.8 + (1 * len(output_names))))
+            )
             fig.subplots_adjust(hspace=0.0)
             # fig.tight_layout()
         for output_name in output_names:
@@ -696,7 +698,7 @@ def main(args=None):
                 plt.tight_layout()
                 # axs[output_names.index(output_name)].get_ylim()[0])
                 axs[output_names.index(output_name)].set_ylim(
-                    axs[output_names.index(output_name)].get_ylim()[0] * 0.6,
+                    axs[output_names.index(output_name)].get_ylim()[0] * 0.8,
                     axs[output_names.index(output_name)].get_ylim()[1] * 1.2,
                 )
             else:
