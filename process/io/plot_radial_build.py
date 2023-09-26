@@ -302,7 +302,7 @@ def main(args=None):
     nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
     try:
         scan_var_name = nsweep_dict[nsweep_ref]
-    except:
+    except NameError:
         scan_var_name = "Null"
 
     radial_labels = [
