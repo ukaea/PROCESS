@@ -302,6 +302,7 @@ def main(args=None):
     labels["fkind"] = r"N$^\mathrm{th}$ of a kind factor"
     labels["startupratio"] = r"Gyrotron Redundancy"
     labels["etaech"] = r"ECH wall plug to injector efficiency"
+    labels["tauee"] = r"$\tau_E$"
 
     # ------------
 
@@ -603,7 +604,10 @@ def main(args=None):
         # -----------
         if stack_plots:
             fig, axs = plt.subplots(
-                len(output_names), 1, figsize=(8.0, (3.8 + (1 * len(output_names))))
+                len(output_names),
+                1,
+                figsize=(8.0, (3.5 + (1 * len(output_names)))),
+                sharex=True,
             )
             fig.subplots_adjust(hspace=0.0)
             # fig.tight_layout()
@@ -689,7 +693,8 @@ def main(args=None):
                 plt.legend(
                     loc="lower center",
                     fontsize=legend_size,
-                    bbox_to_anchor=(0.5, -1.4),
+                    bbox_to_anchor=(0.5, -0.5 - (0.1 * len(output_names))),
+                    # bbox_to_anchor=(0.5, -1.4),
                     fancybox=True,
                     shadow=False,
                     ncol=len(input_files),
