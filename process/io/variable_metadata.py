@@ -9,8 +9,13 @@ class VariableMetadata:
 
 
 var_dicts = {
+    "shldith": VariableMetadata(
+        latex=r"$\Delta R_\mathrm{sh}$ [$m$]",
+        description="Inboard shield thickness",
+        units="m",
+    ),
     "rmajor": VariableMetadata(
-        latex=r"$R_\mathrm{maj}$ [$m$]", description="Major radius", units="m"
+        latex=r"$R_\mathrm{major}$ [$m$]", description="Major radius", units="m"
     ),
     "crypmw": VariableMetadata(
         latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
@@ -344,7 +349,7 @@ var_dicts = {
     "coe": VariableMetadata(
         latex=r"$\mathrm{LCOE}$ [$m\$/kWh$]",
         description="Levelized Cost of Electricity",
-        units="m\$/kWh",
+        units="m$/kWh",
     ),
     "beta": VariableMetadata(
         latex=r"$\beta$", description="Beta (plasma confinement parameter)", units=""
