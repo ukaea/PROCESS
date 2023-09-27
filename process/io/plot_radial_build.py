@@ -65,7 +65,10 @@ def parse_args(args):
 
 def get_radial_build(m_file):
     isweep = int(m_file.data["isweep"].get_scan(-1))
-
+    if isweep == 0:
+        isweep = 1
+    else:
+        pass
     # Find out the number of converged solutions
     ifail = []
     for kk in range(isweep):
@@ -299,10 +302,10 @@ def main(args=None):
 
     # Getting the scanned variable name
     m_file = mf.MFile(filename=input_file)
-    nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
     try:
+        nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
         scan_var_name = nsweep_dict[nsweep_ref]
-    except NameError:
+    except Exception:
         scan_var_name = "Null"
 
     radial_labels = [
@@ -374,15 +377,17 @@ def main(args=None):
     radial_build, num_converged_sol = get_radial_build(m_file)
 
     # Get scan variable data
-    nn = 0
-    isweep = int(m_file.data["isweep"].get_scan(-1))
-    scan_points = np.zeros(num_converged_sol)
-    for ii in range(isweep):
-        ifail = m_file.data["ifail"].get_scan(ii + 1)
-        if ifail == 1:
-            scan_points[nn] = m_file.data[scan_var_name].get_scan(ii + 1)
-            nn += 1
-
+    if scan_var_name != "Null":
+        nn = 0
+        isweep = int(m_file.data["isweep"].get_scan(-1))
+        scan_points = np.zeros(num_converged_sol)
+        for ii in range(isweep):
+            ifail = m_file.data["ifail"].get_scan(ii + 1)
+            if ifail == 1:
+                scan_points[nn] = m_file.data[scan_var_name].get_scan(ii + 1)
+                nn += 1
+    else:
+        scan_points = 1
     index = []
     # need a set of checks - remove build parts equal to zero
     for ll in range(len(radial_build[:, 0])):
@@ -396,8 +401,10 @@ def main(args=None):
     axis_tick_size = 12
     legend_size = 8
     axis_font_size = 16
-
-    ind = [y for y, _ in enumerate(scan_points)]
+    if scan_var_name != "Null":
+        ind = [y for y, _ in enumerate(scan_points)]
+    else:
+        pass
     if args.inboard:
         end_scan = radial_labels.index("Plasma")
     else:
@@ -409,7 +416,7 @@ def main(args=None):
         else:
             lower = lower + radial_build[kk - 1, :]
         plt.barh(
-            ind,
+            ind if scan_var_name != "Null" else 0,
             radial_build[kk, :],
             left=lower,
             height=0.8,
@@ -419,8 +426,12 @@ def main(args=None):
             linewidth=0.05,
         )
 
-    plt.yticks(ind, scan_points, fontsize=axis_tick_size)
-    plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
+    if scan_var_name != "Null":
+        plt.yticks(ind, scan_points, fontsize=axis_tick_size)
+        plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
+    else:
+        plt.yticks([])
+
     plt.legend(
         bbox_to_anchor=(0.5, -0.15), loc="upper center", fontsize=legend_size, ncol=4
     )
