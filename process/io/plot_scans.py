@@ -734,7 +734,8 @@ def main(args=None):
                     f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
                     + f"_vs_{output_name2}"
                     if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_names}"
+                    else f"{args.outputdir}/scan_{scan_var_name}_vs_"
+                    + "_vs_".join(output_names)
                     + f".{save_format}",
                     dpi=300,
                 )
@@ -748,7 +749,6 @@ def main(args=None):
                     + f".{save_format}",
                     dpi=300,
                 )
-
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
                 plt.show()
                 plt.clf()
