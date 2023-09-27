@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 from argparse import RawTextHelpFormatter
+from pathlib import Path
 
 # PROCESS libraries
 import process.io.mfile as mf
@@ -43,6 +44,13 @@ def parse_args(args):
         "--output",
         default="radial_build_plot",
         help="name out outputted file (default=radial_build_plot)",
+    )
+
+    parser.add_argument(
+        "-o",
+        "--outputdir",
+        default=Path.cwd(),
+        help="Output directory for plot, defaults to current working directory.",
     )
 
     parser.add_argument(
@@ -438,10 +446,7 @@ def main(args=None):
     plt.xlabel("Radius [m]")
     plt.tight_layout()
     plt.savefig(
-        "{}.{}".format(
-            output_name,
-            save_format,
-        ),
+        f"{args.outputdir}/{output_name}.{save_format}",
         bbox_inches="tight",
     )
 
