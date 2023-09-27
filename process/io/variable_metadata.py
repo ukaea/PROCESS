@@ -52,7 +52,7 @@ var_dicts = {
     "te": VariableMetadata(
         latex=r"$\left< T_\mathrm{e} \right>$",
         description="Average electron temperature",
-        units="",
+        units="keV",
     ),
     "taulimit": VariableMetadata(
         latex=r"$max : \frac{\tau_\mathrm{\alpha}}{\tau_\mathrm{E}}$",
@@ -61,27 +61,27 @@ var_dicts = {
     ),
     "scrapli": VariableMetadata(
         latex=r"$\Delta R_\mathrm{FW-sep}$ [$m$]",
-        description="Scrape-off layer width",
+        description="Inner FW to plasma gap",
         units="m",
     ),
     "scraplo": VariableMetadata(
         latex=r"$\Delta R_\mathrm{FW-sep}^\mathrm{out}$ [$m$]",
-        description="Outer scrape-off layer width",
+        description="Outer FW to plasma gap",
         units="m",
     ),
     "vforce": VariableMetadata(
         latex=r"$F_\mathrm{z}^\mathrm{in}$ [$N$]",
-        description="Vertical force",
+        description="TF coil vertical force",
         units="N",
     ),
     "thkcas": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}^\mathrm{buck}$ [$m$]",
-        description="Bucking mode TF coil thickness",
+        description="Inboard TF coil case outer (non-plasma side) thickness",
         units="m",
     ),
     "bmaxtf": VariableMetadata(
         latex=r"$B_\mathrm{TF}^\mathrm{max}$ [$T$]",
-        description="Maximum TF magnetic field",
+        description="Mean peak field at TF coil",
         units="T",
     ),
     "ritfc": VariableMetadata(
@@ -103,7 +103,7 @@ var_dicts = {
     ),
     "r_tf_outboard_mid": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}^\mathrm{out\ mid}$ [$m$]",
-        description="Outboard midplane TF coil thickness",
+        description="Mid-plane outboard TF coil leg radius at the middle of the coil",
         units="m",
     ),
     "pgrossmw": VariableMetadata(
@@ -123,7 +123,7 @@ var_dicts = {
     ),
     "hmax": VariableMetadata(
         latex=r"$z_\mathrm{TF}^\mathrm{pl\ side}$ [$m$]",
-        description="Height of TF poloidal field side",
+        description="maximum (half-)height of TF coil (inside edge)",
         units="m",
     ),
     "thicndut": VariableMetadata(
@@ -138,7 +138,7 @@ var_dicts = {
     ),
     "boundl(2)": VariableMetadata(
         latex=r"$B_\mathrm{T}^\mathrm{min}$ [$A$]",
-        description="Minimum toroidal field",
+        description="Toroidal field lower bound",
         units="A",
     ),
     "pinjmw": VariableMetadata(
@@ -153,7 +153,7 @@ var_dicts = {
         latex=r"$f_\mathrm{H}$", description="H-factor", units=""
     ),
     "kappa": VariableMetadata(
-        latex=r"$\kappa_\mathrm{sep}$", description="Separation factor", units=""
+        latex=r"$\kappa_\mathrm{sep}$", description="Elongation", units=""
     ),
     "triang": VariableMetadata(
         latex=r"$\delta_\mathrm{sep}$", description="Triangularity", units=""
@@ -214,11 +214,13 @@ var_dicts = {
         units="",
     ),
     "coheof": VariableMetadata(
-        latex=r"$J [A M^{-2}]$", description="Current density", units="A M^{-2}"
+        latex=r"$J [A m^{-2}]$",
+        description="central solenoid overall current density at end of flat-top",
+        units="A m^{-2}",
     ),
     "ohhghf": VariableMetadata(
         latex=r"$Thickness_{\mathrm{CS}}[m]$",
-        description="High field CS coil thickness",
+        description="Central solenoid height / TF coil internal height",
         units="m",
     ),
     "pheat": VariableMetadata(
@@ -227,7 +229,7 @@ var_dicts = {
     "effcd": VariableMetadata(
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
-    "bigq": VariableMetadata(latex=r"$Q$", description="Quality factor", units=""),
+    "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
     "faccd": VariableMetadata(
         latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
     ),
@@ -238,14 +240,14 @@ var_dicts = {
         latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units=""
     ),
     "pdivt": VariableMetadata(
-        latex=r"$P_{\mathrm{sep}}$ [$MW$]", description="Separation power", units="MW"
+        latex=r"$P_{\mathrm{sep}}$ [$MW$]", description="Power to divertor", units="MW"
     ),
     "pradmw": VariableMetadata(
         latex=r"$P_{\mathrm{rad}}$ [$MW$]", description="Radiation power", units="MW"
     ),
     "pdivtbt/qar": VariableMetadata(
         latex=r"$\frac{P_{\mathrm{sep}}B_T}{q_{95}AR_{\mathrm{maj}}}$ [$MWTm^{-1}$]",
-        description="Normalized separation power",
+        description="",
         units="MWTm^{-1}",
     ),
     "iooic": VariableMetadata(
@@ -268,7 +270,9 @@ var_dicts = {
         latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s"
     ),
     "vburn": VariableMetadata(
-        latex=r"$V_{\mathrm{loop}}$ [$V$]", description="Loop voltage", units="V"
+        latex=r"$V_{\mathrm{loop}}$ [$V$]",
+        description="Loop voltage during burn",
+        units="V",
     ),
     "sig_tf_wp_max": VariableMetadata(
         latex=r"$\sigma_{TP,wp}^{max}$",
@@ -352,7 +356,7 @@ var_dicts = {
         units="m$/kWh",
     ),
     "beta": VariableMetadata(
-        latex=r"$\beta$", description="Beta (plasma confinement parameter)", units=""
+        latex=r"$\beta$", description="Total plasma beta", units=""
     ),
     "fimp(13)": VariableMetadata(
         latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
@@ -369,7 +373,7 @@ var_dicts = {
     ),
     "fkind": VariableMetadata(
         latex=r"N$^\mathrm{th}$ of a kind factor",
-        description="Factor representing the number of distinct scenarios",
+        description="Multiplier for Nth of a kind costs",
         units="",
     ),
     "startupratio": VariableMetadata(
