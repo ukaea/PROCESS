@@ -690,16 +690,17 @@ def main(args=None):
                 )
                 plt.grid(True)
                 plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
-                plt.legend(
-                    loc="lower center",
-                    fontsize=legend_size,
-                    bbox_to_anchor=(0.5, -0.5 - (0.1 * len(output_names))),
-                    # bbox_to_anchor=(0.5, -1.4),
-                    fancybox=True,
-                    shadow=False,
-                    ncol=len(input_files),
-                    columnspacing=0.8,
-                )
+                if len(input_files) > 1:
+                    plt.legend(
+                        loc="lower center",
+                        fontsize=legend_size,
+                        bbox_to_anchor=(0.5, -0.5 - (0.1 * len(output_names))),
+                        # bbox_to_anchor=(0.5, -1.4),
+                        fancybox=True,
+                        shadow=False,
+                        ncol=len(input_files),
+                        columnspacing=0.8,
+                    )
                 plt.tight_layout()
                 # axs[output_names.index(output_name)].get_ylim()[0])
                 axs[output_names.index(output_name)].set_ylim(
