@@ -610,7 +610,6 @@ def main(args=None):
                 sharex=True,
             )
             fig.subplots_adjust(hspace=0.0)
-            # fig.tight_layout()
         for output_name in output_names:
             # reset counter for label_name
             kk = 0
@@ -703,9 +702,9 @@ def main(args=None):
                         columnspacing=0.8,
                     )
                 plt.tight_layout()
-                # axs[output_names.index(output_name)].get_ylim()[0])
                 axs[output_names.index(output_name)].set_ylim(
-                    axs[output_names.index(output_name)].get_ylim()[0] * 0.9,
+                    axs[output_names.index(output_name)].get_ylim()[0]
+                    * 0.9,  # Adds some spacing around the plots
                     axs[output_names.index(output_name)].get_ylim()[1] * 1.1,
                 )
             else:
@@ -822,21 +821,18 @@ def main(args=None):
                 output_contour_z = np.zeros((n_scan_1, n_scan_2))
                 x_contour = []
                 y_contour = []
-                for i in range(n_scan_2):  # nscan2 = 13
+                for i in range(n_scan_2):
                     x_contour.append(m_file.data[scan_2_var_name].get_scan(i + 1))
                 for i in range(1, n_scan_1 * n_scan_2, n_scan_2):
                     y_contour.append(
                         m_file.data[scan_var_name].get_scan(i + 1)
                     )  # is the separte lists in the list
                 for i in contour_conv_ij:
-                    # if (x_contour[1]>x_contour[0]) and y_contour[1]>y_contour[0]
-                    # print(((i-1)%n_scan_2))
                     output_contour_z[((i - 1) // n_scan_2)][
                         ((i - 1) % n_scan_2)
                         if ((i - 1) // n_scan_2) % 2 == 0
                         else (-((i - 1) % n_scan_2) - 1)
                     ] = m_file.data[output_name].get_scan(i)
-                # print(output_contour_z)
 
                 flat_output_z = output_contour_z.flatten()
                 flat_output_z.sort()
