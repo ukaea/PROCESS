@@ -714,6 +714,11 @@ def main(args=None):
                     color="red" if output_names2 != [] else "black",
                 )
                 plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                plt.title(
+                    f"{labels[output_name]} vs {labels[scan_var_name]}",
+                    fontsize=axis_font_size,
+                )
+                plt.tight_layout()
                 if len(input_files) != 1:
                     plt.legend(loc="best", fontsize=legend_size)
                     plt.tight_layout()
