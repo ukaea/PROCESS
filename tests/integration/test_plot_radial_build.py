@@ -2,7 +2,7 @@
 from process.io import plot_radial_build
 
 
-def test_plot_radial_build(temp_data, scan_mfile_name):
+def test_plot_radial_build(temp_data, mfile_name):
     """Run plot_scans script on a scan MFILE.DAT and check for a PDF output.
 
     :param temp_data: temporary data dir
@@ -10,8 +10,8 @@ def test_plot_radial_build(temp_data, scan_mfile_name):
     :param scan_mfile_name: name of the mfile in the data dir
     :type scan_mfile_name: str
     """
-    mfile = temp_data / scan_mfile_name
+    mfile = temp_data / mfile_name
 
-    plot_radial_build.main(args=["-f", str(mfile)])
+    plot_radial_build.main(args=["-f", str(mfile), "--outputdir", str(temp_data)])
 
     assert len(list(temp_data.glob("*.pdf")))

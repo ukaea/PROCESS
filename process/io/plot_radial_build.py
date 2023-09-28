@@ -47,7 +47,7 @@ def parse_args(args):
     )
 
     parser.add_argument(
-        "-o",
+        "-op",
         "--outputdir",
         default=Path.cwd(),
         help="Output directory for plot, defaults to current working directory.",
