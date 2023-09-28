@@ -684,11 +684,12 @@ def main(args=None):
                 )
                 ax.set_xlabel(labels[scan_var_name], fontsize=axis_font_size)
             elif stack_plots:
+                axs[output_names.index(output_name)].minorticks_on()
                 axs[output_names.index(output_name)].grid(True)
                 axs[output_names.index(output_name)].set_ylabel(
                     labels[output_name],
                 )
-                plt.grid(True)
+
                 plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
                 if len(input_files) > 1:
                     plt.legend(
@@ -704,8 +705,8 @@ def main(args=None):
                 plt.tight_layout()
                 # axs[output_names.index(output_name)].get_ylim()[0])
                 axs[output_names.index(output_name)].set_ylim(
-                    axs[output_names.index(output_name)].get_ylim()[0] * 0.8,
-                    axs[output_names.index(output_name)].get_ylim()[1] * 1.2,
+                    axs[output_names.index(output_name)].get_ylim()[0] * 0.9,
+                    axs[output_names.index(output_name)].get_ylim()[1] * 1.1,
                 )
             else:
                 plt.grid(True)
