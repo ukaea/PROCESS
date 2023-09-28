@@ -218,7 +218,7 @@ def main(args=None):
     labels["pnetelmw"] = r"$P_\mathrm{Net\ elec}$ [$MW$]"
     labels["taueff"] = r"$\tau_\mathrm{E}$ [s]"
     labels["ralpne"] = r"$f_\mathrm{\alpha}$"
-    labels["te"] = r"$\left< T_\mathrm{e} \right>$"
+    labels["te"] = r"$\left< T_\mathrm{e} \right> \ [keV]$"
     labels["taulimit"] = r"$max : \frac{\tau_\mathrm{\alpha}}{\tau_\mathrm{E}}$"
     labels["scrapli"] = r"$\Delta R_\mathrm{FW-sep}$ [$m$]"
     labels["scraplo"] = r"$\Delta R_\mathrm{FW-sep}^\mathrm{out}$ [$m$]"
@@ -303,6 +303,7 @@ def main(args=None):
     labels["startupratio"] = r"Gyrotron Redundancy"
     labels["etaech"] = r"ECH wall plug to injector efficiency"
     labels["tauee"] = r"$\tau_E$"
+    labels["dene"] = r"$n_e$"
 
     # ------------
 
@@ -849,13 +850,15 @@ def main(args=None):
                         50,
                     ),
                 )
-                plt.colorbar(label=labels[output_name])
+
+                plt.colorbar().set_label(label=labels[output_name], size=axis_font_size)
                 plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
                 plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
                 plt.tight_layout()
                 plt.savefig(
                     f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
                 )
+                plt.grid(True)
                 plt.show()
                 plt.clf()
 
