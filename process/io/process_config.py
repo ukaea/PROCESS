@@ -701,6 +701,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
     figure_of_merit = "rmajor"
     latin_hypercube_level = 4
     vary_iteration_variables = False
+    required_converged_samples = 0
 
     def __init__(self, configfilename="config_evaluate_uncertainties.json"):
         """
@@ -742,6 +743,9 @@ class UncertaintiesConfig(ProcessConfig, Config):
         )
         self.vary_iteration_variables = self.get(
             "vary_iteration_variables", default=self.vary_iteration_variables
+        )
+        self.required_converged_samples = self.get(
+            "required_converged_samples", default=self.required_converged_samples
         )
         # setup the output_vars
         for u_dict in self.uncertainties:
@@ -796,6 +800,8 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
         print("No scans            %i" % self.no_scans)
         print("No samples          %i" % self.no_samples)
+        print("Required no samples %i" % self.required_converged_samples)
+
         if self.uncertainties != []:
             print("uncertainties:")
             for item in self.uncertainties:
@@ -1144,8 +1150,8 @@ class UncertaintiesConfig(ProcessConfig, Config):
         # always try to choose a uniform case?
         arr = self.uncertainties[0]["samples"]
         sorted_index = argsort(arr)
-        for u_dict in self.uncertainties:
-            u_dict["samples"] = u_dict["samples"][sorted_index]
+        # for u_dict in self.uncertainties:
+        #     u_dict["samples"] = u_dict["samples"][sorted_index]
 
     def go2newsamplepoint(self, sample_index):
         """create a new sample point from uncertainty distributions"""

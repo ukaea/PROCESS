@@ -107,7 +107,14 @@ def run_monte_carlo(args):
 
     RUN_ID = 0
     mfile_df_list = []
+    converged_runs = 0
+    if config.required_converged_samples != 0:
+        required_converged_samples = config.required_converged_samples
+    else:
+        required_converged_samples = config.no_samples
     for j in range(config.no_samples):
+        if converged_runs == required_converged_samples:
+            break
         print("sample point", j, ":")
         config.go2newsamplepoint(j)
         output_data_set = []
@@ -147,7 +154,12 @@ def run_monte_carlo(args):
                     # Store DF in list of DFs for the UQ run.
                     mfile_df_list.append(run_data_df)
                     # config.write_error_summary(j)
-                    RUN_ID += 1
+                    if no_unfeasible <= config.no_allowed_unfeasible:
+                        RUN_ID += 1
+                if no_unfeasible == 0:
+                    converged_runs += 1
+                    print("Converged runs: ", converged_runs)
+
                 else:
                     print(
                         "WARNING: %i non feasible point(s) in sweep!\
