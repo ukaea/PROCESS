@@ -472,8 +472,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Produce a comparison "
         "between two PROCESS "
-        "MFILEs. User Can speicify "
-        "level of differences to show"
+        "MFILEs. User Can specify "
+        "level of differences to show. "
         "For info contact "
         "james.morris2@ccfe.ac.uk"
     )
