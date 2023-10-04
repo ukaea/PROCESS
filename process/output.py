@@ -17,6 +17,11 @@ def write(models, outfile):
     # during the solution process)
     ft.error_handling.errors_on = True
 
+    # Call stellarator output routine instead if relevant
+    if ft.stellarator_variables.istell != 0:
+        models.stellarator.run(output=True)
+        return
+
     #  Call IFE output routine instead if relevant
     if ft.ife_variables.ife != 0:
         models.ife.run(output=True)

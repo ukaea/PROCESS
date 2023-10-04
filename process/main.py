@@ -49,6 +49,7 @@ from process.plasma_geometry import PlasmaGeom
 from process.pulse import Pulse
 from process.scan import Scan
 from process import final
+from process.stellarator import Stellarator
 from process.structure import Structure
 from process.build import Build
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
@@ -343,8 +344,10 @@ class SingleRun:
         :type solver: str, optional
         """
         self.input_file = input_file
+
         self.validate_input()
         self.init_module_vars()
+        self.set_filenames()
         self.models = Models()
         self.solver = solver
 
@@ -578,11 +581,20 @@ class Models:
         self.costs = Costs()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
-        self.costs_2015 = Costs2015()
-        self.physics = Physics(plasma_profile=self.plasma_profile)
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
+        self.stellarator = Stellarator(
+            availability=self.availability,
+            buildings=self.buildings,
+            vacuum=self.vacuum,
+            costs=self.costs,
+            power=self.power,
+            plasma_profile=self.plasma_profile,
+            hcpb=self.ccfe_hcpb,
+        )
+        self.costs_2015 = Costs2015()
+        self.physics = Physics(plasma_profile=self.plasma_profile)
         self.dcll = DCLL(blanket_library=self.blanket_library)
 
 

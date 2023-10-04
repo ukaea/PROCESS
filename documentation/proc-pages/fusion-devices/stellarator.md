@@ -1,8 +1,5 @@
 # Stellarator Model
 
-!!! danger inline end "Stellarator removed" 
-    The Stellarator model was removed in issue #1853 because of concerns around licensing issues with a number of sections of code used in the model. Issue #1854 aims to reintroduce the model after these licensing issues are addressed.
-
 The code has the ability to perform calculations based on the physics and engineering of a stellarator, which, although being a toroidal device, is radically different in a number of ways from a tokamak.
 
 The model is largely based on W7-X and the HELIAS 5-B stellarator power plant design[^1] (Figure 1) and related modelling that has been performed by IPP Greifswald[^2] [^3] [^4] [^5]

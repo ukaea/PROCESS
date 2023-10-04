@@ -4,6 +4,7 @@ from process.fortran import constraints
 from process.fortran import cost_variables as cv
 from process.fortran import numerics
 from process.fortran import physics_variables as pv
+from process.fortran import stellarator_variables as sv
 from process.fortran import times_variables as tv
 from process.fortran import function_evaluator
 import numpy as np
@@ -56,22 +57,22 @@ class Evaluators:
         self.caller.call_models(xv)
 
         # Convergence loop to ensure burn time consistency
+        if sv.istell == 0:
+            loop = 0
+            while (loop < 10) and (
+                abs((tv.tburn - tv.tburn0) / max(tv.tburn, 0.01)) > 0.001
+            ):
+                loop += 1
+                self.caller.call_models(xv)
+                if gv.verbose == 1:
+                    print("Internal tburn consistency check: ", tv.tburn, tv.tburn0)
 
-        loop = 0
-        while (loop < 10) and (
-            abs((tv.tburn - tv.tburn0) / max(tv.tburn, 0.01)) > 0.001
-        ):
-            loop += 1
-            self.caller.call_models(xv)
-            if gv.verbose == 1:
-                print("Internal tburn consistency check: ", tv.tburn, tv.tburn0)
-
-        if loop >= 10:
-            print(
-                "Burn time values are not consistent in iteration: ",
-                numerics.nviter,
-            )
-            print("tburn, tburn0: ", tv.tburn, tv.tburn0)
+            if loop >= 10:
+                print(
+                    "Burn time values are not consistent in iteration: ",
+                    numerics.nviter,
+                )
+                print("tburn, tburn0: ", tv.tburn, tv.tburn0)
 
         # Evaluate figure of merit (objective function)
         objf = function_evaluator.funfom()
