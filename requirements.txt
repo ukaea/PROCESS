@@ -4,8 +4,8 @@ mkdocs-material>=4.6.3
 mkdocs-git-revision-date-localized-plugin >= 1.2
 mkdocs-glightbox >= 0.3.4
 pymdown-extensions>=6.3
-numpy>=1.19.0,<=1.21.5
-scipy>=0.19.1
+numpy>=1.19.0,!=1.22,!=1.24,>=1.23.0
+scipy>=0.19.1,<1.11
 matplotlib>=2.1.1
 pillow>=5.1.0
 Markdown>=3.2.2,<3.4

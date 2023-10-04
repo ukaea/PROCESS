@@ -35,8 +35,8 @@ setup_kwargs = {
     },
     "test_suite": "pytest",
     "install_requires": [
-        "numpy>=1.19.0,<1.22.1",
-        "scipy>=0.19.1",
+        "numpy>=1.19.0,!=1.22,!=1.24,>=1.23.0",
+        "scipy>=0.19.1,<1.11",
         "importlib-resources ; python_version<'3.9'",
         "pandas",
         "tables",
