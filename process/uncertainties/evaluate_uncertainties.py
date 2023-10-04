@@ -158,6 +158,13 @@ def run_monte_carlo(args):
                         RUN_ID += 1
                 if no_unfeasible == 0:
                     converged_runs += 1
+                    # Write a "scoping" hdf file you can use with uq_analysis to evaluate
+                    # the design space from few samples (20)
+                    if converged_runs == 1:
+                        scoping_run_df = pd.concat(mfile_df_list)
+                        # Write UQ run DF to h5 file.
+                        scoping_run_df.to_hdf("scoping_data.h5", key="df", mode="w")
+
                     print("Converged runs: ", converged_runs)
 
                 else:
