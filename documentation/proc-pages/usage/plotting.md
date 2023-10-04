@@ -29,7 +29,7 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 `plot_radial_build` is to plot the radial build of the machine in terms of bar segments. It can be run as follows:
 
 ```bash
-python process/io/plot_radial_build.py -f path/to/MFILE.DAT
+python process/io/plot_radial_build.py -f path/to/MFILE.DAT -o output_filename
 ```
 <figure markdown>
 ![radial_build_plot](../../images/radial_build_plot.png){ width="100%"}
