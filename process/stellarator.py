@@ -31,6 +31,7 @@ from process.fortran import (
     neoclassics_module,
     impurity_radiation_module,
     current_drive_module,
+    sctfcoil_module,
 )
 import process.physics_functions as physics_funcs
 from process.coolprop_interface import FluidProperties
@@ -54,7 +55,15 @@ class Stellarator:
     """
 
     def __init__(
-        self, availability, vacuum, buildings, costs, power, plasma_profile, hcpb
+        self,
+        availability,
+        vacuum,
+        buildings,
+        costs,
+        power,
+        plasma_profile,
+        hcpb,
+        sctfcoil,
     ) -> None:
         """Initialises the Stellarator model's variables
 
@@ -82,6 +91,7 @@ class Stellarator:
         self.power = power
         self.plasma_profile = plasma_profile
         self.hcpb = hcpb
+        self.sctfcoil = sctfcoil
 
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
@@ -95,6 +105,8 @@ class Stellarator:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
+
+        self.plasma_profile.run()
 
         if output:
             self.costs.costs(output=True)
@@ -131,8 +143,8 @@ class Stellarator:
         self.stgeom()
         self.stphys(False)
         self.stopt(False)
-        self.stcoil(False)
         self.stbild(False)
+        self.stcoil(False)
         self.ststrc(False)
         self.stfwbs(False)
         self.stdiv(False)
@@ -490,6 +502,29 @@ class Stellarator:
                 + build_variables.d_vv_out
                 + build_variables.gapsto
             )
+        )
+
+        build_variables.r_tf_inboard_in = (
+            build_variables.bore
+            + build_variables.ohcth
+            + build_variables.precomp
+            + build_variables.gapoh
+        )
+
+        build_variables.r_tf_inboard_mid = (
+            build_variables.r_tf_inboard_in + 0.5e0 * build_variables.tfcth
+        )
+
+        build_variables.r_tf_inboard_out = (
+            build_variables.r_tf_inboard_in + build_variables.tfcth
+        )
+
+        build_variables.r_vv_inboard_out = (
+            build_variables.r_tf_inboard_out
+            + build_variables.tftsgap
+            + build_variables.thshield_ib
+            + build_variables.gapds
+            + build_variables.d_vv_in
         )
 
         #  Outer divertor strike point radius, set equal to major radius
@@ -2837,6 +2872,42 @@ class Stellarator:
         )
         #
         ####################################
+        ###
+
+        # VV stress due to quench
+
+        # The 'new' model in https://github.com/ukaea/PROCESS/issues/1867
+        # assumes planar coils and was originally designed for JA-DEMO.
+        # It is unclear how well this model applies to other Tokamak's,
+        # given some of the modelling assumptions we make in SCTF coil,
+        # let alone Stellarators. Please take the output stress, and
+        # associated constraint 65, with a heavy pinch of salt. Tim
+
+        sctfcoil_module.tfc_current = coilcurrent * 1e6
+        # Note that sctfcoil_module.a_case_nose remains 0
+        # so the area of the case becomes below (which it should be)
+        sctfcoil_module.a_case_front = (
+            tfcoil_variables.dr_tf_wp + 2 * tfcoil_variables.thkcas
+        ) * (tfcoil_variables.wwp1 + 2 * tfcoil_variables.thkcas) - (
+            tfcoil_variables.dr_tf_wp * tfcoil_variables.wwp1
+        )
+        # Area of steel is equal to the area of conduit in the WP
+        sctfcoil_module.a_tf_steel = tfcoil_variables.acndttf
+
+        # Make a reasonable estimate as to what R_c1 in the 'new' model will be
+        # Given my cautionary note above, this estimate will be a minor contributor
+        # to any uncertainty in this model given the non-planar coils.
+
+        # Assume R_c1 occur 40% of the distance between the ib and ob side of the coil
+        tfcoil_variables.tfa[0] = build_variables.r_tf_inboard_out + (
+            (
+                (build_variables.r_tf_outboard_mid - (0.5e0 * build_variables.tfthko))
+                - build_variables.r_tf_inboard_out
+            )
+            / 2.5
+        )
+
+        self.sctfcoil.vv_stress_on_quench()
 
         if output:
             self.stcoil_output(
