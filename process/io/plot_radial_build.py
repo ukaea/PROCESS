@@ -65,6 +65,7 @@ def parse_args(args):
         "-ib",
         "--inboard",
         action="store_true",
+        default=False,
         help="Show inboard build only, default = No ",
     )
 
