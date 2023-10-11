@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8338226.svg)](https://doi.org/10.5281/zenodo.8338226)
+
 # PROCESS
 PROCESS is the reactor systems code at the [UK Atomic Energy Authority](https://ccfe.ukaea.uk/). More information on PROCESS can be found on the PROCESS [webpage](https://ccfe.ukaea.uk/resources/process/).
 
@@ -18,9 +20,11 @@ Process uses a mixture of tracking and testing to ensure code reliability. Tests
 ## Development
 Please see the CONTRIBUTING.md for guidance on how to contribute to PROCESS. Further information is found in the development section of the [documentation](https://ukaea.github.io/PROCESS/).
 
-
 ## Publications
 A list of publications using PROCESS is given [here](https://ukaea.github.io/PROCESS/publications), including two papers outlining the physics and engineering models in PROCESS.
+
+## Citing PROCESS
+If you use PROCESS in your work, please cite it using the "Cite this repository" link in the "About" section of the repository.
 
 ## Contacts
 [James Morris](james.morris2@ukaea.uk)

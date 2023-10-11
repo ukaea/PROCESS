@@ -5,7 +5,7 @@
 #
 # ## Scan details
 #
-# The input file is a scan-enabled version of the baseline 2018 `IN.DAT`, as found in the `tracking` directory. The scan-relevant values are:
+# The input file is a scan-enabled version of the large tokamak `IN.DAT`, as found in the `tests` directory. The scan-relevant values are:
 # ```
 # nsweep = 17 * bmxlim, maximum peak toroidal field (T) (`constraint equation 25`)
 # isweep = 11
@@ -21,12 +21,12 @@ from process.main import SingleRun
 from pathlib import Path
 from process.io import plot_scans
 
-prefix = "a_scan_input_file"
+prefix = "a_scan_input_file_"
 input_name = Path(prefix + "IN.DAT")
 
 # Perform a SingleRun on a scan-enabled input file
 single_run = SingleRun(str(input_name))
-
+single_run.run()
 
 # %% [markdown]
 # ## Plot scan results

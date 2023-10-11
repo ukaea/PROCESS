@@ -169,7 +169,11 @@ class Vmcon(_Solver):
             B = np.identity(numerics.nvar) * self.b
 
         def _solver_callback(i: int, _x, _result, convergence_param: float):
-            print(f"{i+1} | Convergence Parameter: {convergence_param:.3E}", end="\r")
+            print(
+                f"{i+1} | Convergence Parameter: {convergence_param:.3E}",
+                end="\r",
+                flush=True,
+            )
 
         try:
             x, _, _, res = solve(

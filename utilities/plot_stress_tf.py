@@ -22,7 +22,6 @@ matplotlib.use("Agg")
 
 
 if __name__ == "__main__":
-
     # PARSING USER PARAMETERS
     # please execute 'python plot_stress_tf.py -h' for input information
     # Option definition
@@ -133,7 +132,6 @@ if __name__ == "__main__":
     n_points = len(sig_file_data["Radius (m)"])
     n_layers = int(n_points / n_radial_array_layer)
     for ii in range(n_layers):
-
         # Full vector
         radius.append(list())
         radial_stress.append(list())
@@ -458,7 +456,6 @@ if __name__ == "__main__":
     # PLOT 1 : Stress summary
     # ------------------------
     if plot_sig:
-
         for ii in range(0, n_layers):
             plt.plot(
                 radius[ii],
@@ -573,7 +570,6 @@ if __name__ == "__main__":
     # PLOT 2 : Smeared stress summary
     # ------------------------
     if plot_sm_sig:
-
         for ii in range(n_layers):
             plt.plot(
                 radius[ii],
@@ -680,7 +676,6 @@ if __name__ == "__main__":
     # PLOT 3 : Strain summary
     # ------------------------
     if plot_strain and len(sig_file_data) > 15:
-
         for ii in range(n_layers):
             plt.plot(
                 radius[ii],

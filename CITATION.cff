@@ -1,0 +1,184 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: PROCESS
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - affiliation: United Kingdom Atomic Energy Authority
+    given-names: James
+    family-names: Morris
+  - given-names: Stuart
+    family-names: Muldrew
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Peter
+    family-names: Knight
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Michael
+    family-names: Kovari
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Alexander
+    family-names: Pearce
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Sebastien
+    family-names: Kahn
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Jonathan
+    family-names: Maddock
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Timothy
+    family-names: Nunn
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Rhian
+    family-names: Chapman
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Charles
+    family-names: Swanson
+    affiliation: Princeton Plasma Physics Laboratory
+  - given-names: Hanni
+    family-names: Lux
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Jack
+    family-names: Foster
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Katy
+    family-names: Ellis
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Manoj
+    family-names: Kumar
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Graeme
+    family-names: Turkington
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Jorrit
+    family-names: Lion
+    affiliation: Max Planck Institute for Plasma Physics
+  - given-names: Simon
+    family-names: Chislett-McDonald
+    affiliation: University of Durham
+  - given-names: Adam
+    family-names: Brown
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: James
+    family-names: Edwards
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Christopher
+    family-names: Ashe
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Emiliano
+    family-names: Fable
+    affiliation: Max Planck Institute for Plasma Physics
+  - given-names: Kristian
+    family-names: Zarebski
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Charles
+    family-names: Griesel
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Richard
+    family-names: Kemp
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Sam
+    family-names: Gubbins
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Steven
+    family-names: Pickering
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Jonathan
+    family-names: Matthews
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Georgina
+    family-names: Graham
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Clair
+    family-names: Mould
+    affiliation: University of Southampton
+  - given-names: Thomas
+    family-names: Miller
+    affiliation: University of Oxford
+  - given-names: Sanket
+    family-names: Gadgil
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Dan
+    family-names: Short
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: James
+    family-names: Cook
+    affiliation: United Kingdom Atomic Energy Authority
+  - given-names: Peter
+    family-names: Lloyd
+    affiliation: United Kingdom Atomic Energy Authority
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.8338226
+    description: >-
+      This is the archived snapshot of version v3.0.0 of
+      PROCESS.
+  - type: doi
+    value: 10.5281/zenodo.8335291
+    description: >-
+      This is the collection of archived snapshots of all
+      versions of PROCESS.
+repository-code: "https://github.com/ukaea/PROCESS"
+url: "https://ukaea.github.io/PROCESS/"
+abstract: >-
+  PROCESS is a systems code at UKAEA that calculates in a
+  self-consistent manner the parameters of a fusion power
+  plant with a specified performance, ensuring that its
+  operating limits are not violated, and with the option to
+  optimise to a given function of these parameters.
+keywords:
+  - fusion
+  - systems codes
+  - power plant
+license: MIT
+version: 3.0.0
+date-released: "2023-09-12"
+references:
+  - title: '"PROCESS": A systems code for fusion power plants—Part 1 Physics'
+    type: article
+    authors:
+      - family-names: Kovari
+        given-names: M
+      - family-names: Kemp
+        given-names: R
+      - family-names: Lux
+        given-names: H
+      - family-names: Knight
+        given-names: P
+      - family-names: Morris
+        given-names: J
+      - family-names: Ward
+        given-names: D J
+    journal: Fusion Engineering and Design
+    volume: 89
+    number: 12
+    pages: 3054-3069
+    year: 2014
+    issn: 0920-3796
+    doi: 10.1016/j.fusengdes.2014.09.018
+  - title: '"PROCESS": A systems code for fusion power plants – Part 2: Engineering'
+    type: article
+    authors:
+      - family-names: Kovari
+        given-names: M
+      - family-names: Fox
+        given-names: F
+      - family-names: Harrington
+        given-names: C
+      - family-names: Kembleton
+        given-names: R
+      - family-names: Knight
+        given-names: P
+      - family-names: Lux
+        given-names: H
+      - family-names: Morris
+        given-names: J
+    journal: Fusion Engineering and Design
+    volume: 104
+    pages: 9-20
+    year: 2016
+    issn: 0920-3796
+    doi: 10.1016/j.fusengdes.2016.01.007
