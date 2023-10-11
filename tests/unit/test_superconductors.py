@@ -1,6 +1,7 @@
 import pytest
 from typing import NamedTuple, Any
 
+from process.fortran import superconductors as scf90
 import process.superconductors as superconductors
 
 
@@ -114,7 +115,7 @@ class JcritNbtiParam(NamedTuple):
         ),
     ),
 )
-def test_jcrit_nbti(jcritnbtiparam, monkeypatch):
+def test_jcrit_nbti(jcritnbtiparam):
     """
     Automatically generated Regression Unit Test for jcrit_nbti.
 
@@ -138,3 +139,53 @@ def test_jcrit_nbti(jcritnbtiparam, monkeypatch):
     assert jcrit == pytest.approx(jcritnbtiparam.expected_jcrit)
 
     assert tcrit == pytest.approx(jcritnbtiparam.expected_tcrit)
+
+
+def test_jcrit_rebco():
+    jcrit_rebco, validity = scf90.jcrit_rebco(4.75, 7.0, 0)
+
+    assert jcrit_rebco == pytest.approx(55870234414.171684)
+    assert validity
+
+
+def test_current_sharing_rebco():
+    assert scf90.current_sharing_rebco(7.0, 2e7) == pytest.approx(75.76286550648135)
+
+
+def test_bi2212():
+    jcrit, tmarg = scf90.bi2212(7.0, 2e7, 4.75, 0.2)
+
+    assert jcrit == pytest.approx(174017403.16041547)
+    assert tmarg == pytest.approx(13.750991122745397)
+
+
+def test_gl_nbti():
+    jcrit, tcrit, bcrit = scf90.gl_nbti(4.75, 7.0, 2, 9.5, 13.75)
+
+    assert jcrit == pytest.approx(2551683055.6511745)
+    assert tcrit == pytest.approx(7.277374792835339)
+    assert bcrit == pytest.approx(13.662161361675887)
+
+
+def test_wstsc():
+    jcrit, bcrit, tcrit = scf90.wstsc(4.75, 27.0, 0.001, 30.0, 25.0)
+
+    assert jcrit == pytest.approx(195513.0673058944)
+    assert bcrit == pytest.approx(27.329369840368482)
+    assert tcrit == pytest.approx(5.170678992915718)
+
+
+def test_gl_rebco():
+    jcrit, bcrit, tcrit = scf90.gl_rebco(4.75, 7.0, 2, 30.0, 25.0)
+
+    assert jcrit == pytest.approx(14527.765708690296)
+    assert bcrit == pytest.approx(9.439350824747793)
+    assert tcrit == pytest.approx(24.66989137698065)
+
+
+def test_hijc_rebco():
+    jcrit, bcrit, tcrit = scf90.hijc_rebco(4.75, 7.0, 2, 30.0, 25.0)
+
+    assert jcrit == pytest.approx(44418407.919617616)
+    assert bcrit == pytest.approx(22.335736687814954)
+    assert tcrit == pytest.approx(24.999125)
