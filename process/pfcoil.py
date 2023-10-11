@@ -17,6 +17,7 @@ from process.fortran import constraint_variables as ctv
 from process import maths_library as pml
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process import fortran as ft
+import process.superconductors as superconductors
 import math
 import numpy as np
 import numba
@@ -175,7 +176,6 @@ class PFCoil:
 
         # N.B. Problems here if k=ncls(group) is greater than 2.
         for j in range(pfv.ngrp):
-
             if pfv.ipfloc[j] == 1:
                 # PF coil is stacked on top of the Central Solenoid
                 for k in pfv.ncls[j]:
@@ -333,7 +333,6 @@ class PFCoil:
                 )
 
             else:
-
                 # Conventional aspect ratio scaling
                 nfxf0 = 0
                 ngrp0 = 0
@@ -554,7 +553,6 @@ class PFCoil:
 
         for ii in range(pfv.ngrp):
             for ij in range(pfv.ncls[ii]):
-
                 if pfv.ipfloc[ii] == 1:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * bv.ohcth
@@ -588,7 +586,6 @@ class PFCoil:
                         pfv.zh[i] = pfv.zpf[i] - dz
 
                 else:
-
                     # Other coils. N.B. Current density RJCONPF[i] is defined in
                     # routine INITIAL for these coils.
                     area = abs(pfv.ric[i] * 1.0e6 / pfv.rjconpf[i])
@@ -624,7 +621,6 @@ class PFCoil:
         for ii in range(pfv.ngrp):
             iii = ii
             for ij in range(pfv.ncls[ii]):
-
                 # Peak field
 
                 if ij == 0:
@@ -1023,7 +1019,6 @@ class PFCoil:
             sgn = 1.0e0
             pfv.ric[pfv.nohc - 1] = sgn * 1.0e-6 * pfv.cohbop * pfv.areaoh
         else:
-
             sgn = -1.0e0
             pfv.ric[pfv.nohc - 1] = sgn * 1.0e-6 * pfv.coheof * pfv.areaoh
 
@@ -1104,7 +1099,6 @@ class PFCoil:
 
         # Stress ==> cross-sectional area of supporting steel to use
         if pfv.ipfres == 0:
-
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
@@ -1192,7 +1186,6 @@ class PFCoil:
             )
 
         if pfv.ipfres == 0:
-
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
@@ -1306,7 +1299,6 @@ class PFCoil:
         jj = 0
         for iii in range(pfv.ngrp):
             for jjj in range(pfv.ncls[iii]):
-
                 jj = jj + 1
                 # Radius, z-coordinate and current for each coil
                 if iii == ii - 1:
@@ -1419,32 +1411,27 @@ class PFCoil:
         )
 
         if beta > 3.0:
-
             b1 = constants.rmu0 * rj * (b - a)
             f = (3.0 / beta) ** 2
             bfmax = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
 
         elif beta > 2.0:
-
             rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
                 0.01 - (beta - 2.0) * 0.0045
             )
             bfmax = rat * b0
 
         elif beta > 1.0:
-
             rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
             bfmax = rat * b0
 
         elif beta > 0.75:
-
             rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
                 0.2 * (beta - 0.75) - 0.05
             )
             bfmax = rat * b0
 
         else:
-
             rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
                 0.6 * (beta - 0.5) - 0.20
             )
@@ -1769,7 +1756,6 @@ class PFCoil:
                 ]
 
         if bv.iohcl != 0:
-
             # Central Solenoid self inductance
             a = pfv.rohc  # mean radius of coil
             b = 2.0e0 * pfv.zh[pfv.nohc - 1]  # length of coil
@@ -2704,7 +2690,6 @@ class PFCoil:
             pfv.waves[nplas - 1, it] = 1.0e0
 
         for ic in range(pfv.nohc):
-
             # Find where the peak current occurs
             # Beginning of pulse, t = tramp
             if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfb[ic])) and (
@@ -2870,7 +2855,7 @@ class PFCoil:
             # jcritsc returned by superconductors.itersc is the critical current density in the
             # superconductor - not the whole strand, which contains copper
 
-            jcritsc, bcrit, tcrit = sc.itersc(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
         elif isumat == 2:
