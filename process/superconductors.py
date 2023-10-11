@@ -101,3 +101,43 @@ def itersc(thelium, bmax, strain, bc20max, tc0max):
     jcrit = jc1 * jc2 * jc3 / scalefac
 
     return jcrit, bcrit, tcrit
+
+
+def jcrit_nbti(temperature, bmax, c0, bc20max, tc0max):
+    """Critical current density in a NbTi superconductor strand
+    author: P J Knight, CCFE, Culham Science Centre
+    temperature : input real : SC temperature (K)
+    bmax : input real : Magnetic field at conductor (T)
+    c0   : input real : Scaling constant (A/m2)
+    bc20max : input real : Upper critical field (T) for superconductor
+    at zero temperature and strain
+    tc0max : input real : Critical temperature (K) at zero field and strain
+    jcrit : output real : Critical current density in superconductor (A/m2)
+    tcrit : output real : Critical temperature (K)
+    This routine calculates the critical current density and
+    temperature in superconducting TF coils using NbTi
+    as the superconductor.
+    """
+
+    bratio = bmax / bc20max
+
+    if bmax < bc20max:
+        #  Critical temperature (K)
+        tcrit = tc0max * (1.0 - bratio) ** 0.59
+    else:
+        # Allow bmax > bc20max but set error flag
+        # Fudge to give real (negative) value if bratio < 1
+        tcrit = tc0max * (1.0 - bratio)
+
+    # Allow tbar to be negative but set error flag
+    tbar = 1.0 - temperature / tcrit
+
+    #  Critical current density (A/m2)
+    jcrit = c0 * (1.0 - bratio) * tbar
+
+    # if ((temperature > tcrit).or.(bmax > bc20max))then
+    #     write(*,*)'jcrit_nbti: out of range: ', 'bmax =', bmax, ' bc20max =', bc20max, &
+    #               ' temperature =',temperature, ' tcrit =',tcrit
+    # end if
+
+    return jcrit, tcrit

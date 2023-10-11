@@ -1,7 +1,6 @@
 import pytest
 from typing import NamedTuple, Any
 
-from process.fortran import superconductors as superconductorsf90
 import process.superconductors as superconductors
 
 
@@ -128,7 +127,7 @@ def test_jcrit_nbti(jcritnbtiparam, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    jcrit, tcrit = superconductorsf90.jcrit_nbti(
+    jcrit, tcrit = superconductors.jcrit_nbti(
         temperature=jcritnbtiparam.temperature,
         bmax=jcritnbtiparam.bmax,
         c0=jcritnbtiparam.c0,

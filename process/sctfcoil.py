@@ -671,9 +671,7 @@ class Sctfcoil:
             bc20m = 15.0e0
             tc0m = 9.3e0
             c0 = 1.0e10
-            jcritsc, tcrit = superconductorsf90.jcrit_nbti(
-                thelium, bmax, c0, bc20m, tc0m
-            )
+            jcritsc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
@@ -823,31 +821,27 @@ class Sctfcoil:
 
                 # Issue #483 to be on the safe side, check the fractional as well as the absolute error
                 if isumat in (1, 4):
-                    jcrit0, b, t = superconductorsf90.itersc(
+                    jcrit0, _, _ = superconductors.itersc(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, b, t = superconductorsf90.itersc(
+                    jcritm, _, _ = superconductors.itersc(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, b, t = superconductorsf90.itersc(
+                    jcritp, _, _ = superconductors.itersc(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 3:
-                    jcrit0, t = superconductorsf90.jcrit_nbti(
-                        ttest, bmax, c0, bc20m, tc0m
-                    )
+                    jcrit0, _ = superconductors.jcrit_nbti(ttest, bmax, c0, bc20m, tc0m)
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, t = superconductorsf90.jcrit_nbti(
-                        ttestm, bmax, c0, bc20m, tc0m
-                    )
-                    jcritp, t = superconductorsf90.jcrit_nbti(
+                    jcritm, _ = super.jcrit_nbti(ttestm, bmax, c0, bc20m, tc0m)
+                    jcritp, _ = superconductors.jcrit_nbti(
                         ttestp, bmax, c0, bc20m, tc0m
                     )
                 elif isumat == 5:
