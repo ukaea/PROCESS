@@ -78,12 +78,6 @@ def get_radial_build(m_file):
         isweep = 1
     else:
         pass
-    # Find out the number of converged solutions
-    ifail = []
-    for kk in range(isweep):
-        ifail = np.append(ifail, m_file.data["ifail"].get_scan(kk + 1))
-    num_converged_sol = np.count_nonzero(ifail == 1)
-    radial_build = np.zeros((25, num_converged_sol))
 
     radial_labels = [
         "bore",
@@ -119,19 +113,23 @@ def get_radial_build(m_file):
         radial_labels[4] = "precomp"
         radial_labels[5] = "tftsgap"
 
-    ll = 0
+    radial_build = []
+
     for ii in range(isweep):
-        if ifail[ii] == 1:
-            for jj in range(len(radial_labels)):
-                radial_build[jj, ll] = m_file.data[radial_labels[jj]].get_scan(ii + 1)
-            ll += 1
+        if m_file.data["ifail"].get_scan(ii + 1) == 1:
+            radial_build.append(
+                [m_file.data[rl].get_scan(ii + 1) for rl in radial_labels]
+            )
+
+    radial_build = np.array(radial_build)
 
     # plasma is 2*rminor
     # Therefore we must count it again
-    for kk in range(num_converged_sol):
-        radial_build[14, kk] = 2.0 * radial_build[14, kk]
 
-    return radial_build, num_converged_sol
+    for kk in range(radial_build.shape[0]):
+        radial_build[kk, 14] = 2.0 * radial_build[kk, 14]
+
+    return radial_build.T, radial_build.shape[0]
 
 
 def main(args=None):
