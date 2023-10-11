@@ -1,8 +1,8 @@
 import pytest
 from typing import NamedTuple, Any
 
-
-from process.fortran import superconductors
+from process.fortran import superconductors as superconductorsf90
+import process.superconductors as superconductors
 
 
 class IterscParam(NamedTuple):
@@ -48,7 +48,7 @@ class IterscParam(NamedTuple):
         ),
     ),
 )
-def test_itersc(iterscparam, monkeypatch):
+def test_itersc(iterscparam):
     """
     Automatically generated Regression Unit Test for itersc.
 
@@ -128,7 +128,7 @@ def test_jcrit_nbti(jcritnbtiparam, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    jcrit, tcrit = superconductors.jcrit_nbti(
+    jcrit, tcrit = superconductorsf90.jcrit_nbti(
         temperature=jcritnbtiparam.temperature,
         bmax=jcritnbtiparam.bmax,
         c0=jcritnbtiparam.c0,
