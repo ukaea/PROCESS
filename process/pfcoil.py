@@ -2779,7 +2779,7 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, t = sc.jcrit_nbti(temperature, bmax, c0, bc20m, tc0m)
+            jcrit0, _ = superconductors.jcrit_nbti(temperature, bmax, c0, bc20m, tc0m)
             if ml.variable_error(jcrit0):  # superconductors.jcrit_nbti has failed.
                 print(f"superconductors.jcrit_nbti: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2879,14 +2879,14 @@ class PFCoil:
             bc20m = 15.0e0
             tc0m = 9.3e0
             c0 = 1.0e10
-            jcritsc, tcrit = sc.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
+            jcritsc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
         elif isumat == 4:
             # As (1), but user-defined parameters
             bc20m = bcritsc
             tc0m = tcritsc
-            jcritsc, bcrit, tcrit = sc.itersc(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
         elif isumat == 5:
@@ -2980,14 +2980,20 @@ class PFCoil:
                 ttestp = ttest + delt
 
                 if isumat in [1, 4]:
-                    jcrit0, b, t = sc.itersc(ttest, bmax, strain, bc20m, tc0m)
+                    jcrit0, _, _ = superconductors.itersc(
+                        ttest, bmax, strain, bc20m, tc0m
+                    )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
 
-                    jcritm, b, t = sc.itersc(ttestm, bmax, strain, bc20m, tc0m)
-                    jcritp, b, t = sc.itersc(ttestp, bmax, strain, bc20m, tc0m)
+                    jcritm, _, _ = superconductors.itersc(
+                        ttestm, bmax, strain, bc20m, tc0m
+                    )
+                    jcritp, _, _ = superconductors.itersc(
+                        ttestp, bmax, strain, bc20m, tc0m
+                    )
 
                 # Kludge to avoid divide by 0
                 if jcritm == jcritp:
@@ -3006,7 +3012,9 @@ class PFCoil:
                 deltaj_nbti, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, t = sc.jcrit_nbti(current_sharing_t, bmax, c0, bc20m, tc0m)
+            jcrit0, _ = superconductors.jcrit_nbti(
+                current_sharing_t, bmax, c0, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.
