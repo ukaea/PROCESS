@@ -233,85 +233,97 @@ def main(args=None):
     # This needs to be kept in sync automatically; this will break frequently
     # otherwise
     # Rem : Some variables are not in the MFILE, making the defintion rather tricky...
-    nsweep_dict = dict()
-    nsweep_dict[1] = "aspect"
-    nsweep_dict[2] = "hldivlim"
-    nsweep_dict[3] = "pnetelmw"
-    nsweep_dict[4] = "hfact"
-    nsweep_dict[5] = "oacdcp"
-    nsweep_dict[6] = "walalw"
-    nsweep_dict[7] = "beamfus0"
-    nsweep_dict[8] = "fqval"
-    nsweep_dict[9] = "te"
-    nsweep_dict[10] = "boundu(15)"
-    nsweep_dict[11] = "dnbeta"
-    nsweep_dict[12] = "bscfmax"
-    nsweep_dict[13] = "boundu(10)"
-    nsweep_dict[14] = "fiooic"
-    nsweep_dict[15] = "fjprot"
-    nsweep_dict[16] = "rmajor"
-    nsweep_dict[
-        17
-    ] = "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
-    nsweep_dict[18] = "gammax"
-    nsweep_dict[19] = "boundl(16)"
-    nsweep_dict[20] = "cnstv.tbrnmn"
-    nsweep_dict[21] = ""
-    nsweep_dict[22] = "cfactr"
-    nsweep_dict[23] = "boundu(72)"
-    nsweep_dict[24] = "powfmax"
-    nsweep_dict[25] = "kappa"
-    nsweep_dict[26] = "triang"
-    nsweep_dict[27] = "tbrmin"
-    nsweep_dict[28] = "bt"
-    nsweep_dict[29] = "coreradius"
-    nsweep_dict[30] = "fimpvar"
-    nsweep_dict[31] = "taulimit"
-    nsweep_dict[32] = "epsvmc"
-    nsweep_dict[33] = "ttarget"
-    nsweep_dict[34] = "qtargettotal"
-    nsweep_dict[35] = "lambda_q_omp"
-    nsweep_dict[36] = "lambda_target"
-    nsweep_dict[37] = "lcon_factor"
-    nsweep_dict[38] = "boundu(129)"
-    nsweep_dict[39] = "boundu(131)"
-    nsweep_dict[40] = "boundu(135)"
-    nsweep_dict[41] = "blnkoth"
-    nsweep_dict[42] = "fimp(9)"
-    nsweep_dict[43] = "rho_ecrh"
-    nsweep_dict[44] = "alstrtf"
-    nsweep_dict[45] = "tmargmin_tf"
-    nsweep_dict[46] = "boundu(152)"
-    nsweep_dict[47] = "impurity_enrichment(9)"
-    nsweep_dict[48] = "n_pancake"
-    nsweep_dict[49] = "n_layer"
-    nsweep_dict[50] = "fimp(13)"
-    nsweep_dict[51] = "ftar"
-    nsweep_dict[52] = "rad_fraction_sol"
-    nsweep_dict[54] = "b_crit_upper_nbti"
-    nsweep_dict[55] = "shldith"
-    nsweep_dict[56] = "crypmw_max"
-    nsweep_dict[57] = "bt"  # Genuinly bt lower bound
-    nsweep_dict[58] = "scrapli"
-    nsweep_dict[59] = "scraplo"
-    nsweep_dict[60] = "sig_tf_wp_max"
-    nsweep_dict[61] = "copperaoh_m2_max"
-    nsweep_dict[62] = "coheof"
-    nsweep_dict[63] = "ohcth"
-    nsweep_dict[64] = "ohhghf"
-    nsweep_dict[65] = "csfv.n_cycle_min"
-    nsweep_dict[66] = "pfv.oh_steel_frac"
-    nsweep_dict[67] = "csfv.t_crack_vertical"
-    nsweep_dict[77] = "fvs"  # actaully lower bound fvs
-    nsweep_dict[78] = "vburn"
-    nsweep_dict[79] = "rplas"  # "plasma_res_factor"
+
+    nsweep_list = [
+        "aspect",
+        "hldivlim",
+        "pnetelmw",
+        "hfact",
+        "oacdcp",
+        "walalw",
+        "beamfus0",
+        "fqval",
+        "te",
+        "boundu(15)",
+        "dnbeta",
+        "bscfmax",
+        "boundu(10)",
+        "fiooic",
+        "fjprot",
+        "rmajor",
+        "bmaxtf",  # bmxlim the maximum T field upper limit is the scan variable
+        "gammax",
+        "boundl(16)",
+        "cnstv.tbrnmn",
+        "",
+        "cfactr",
+        "boundu(72)",
+        "powfmax",
+        "kappa",
+        "triang",
+        "tbrmin",
+        "bt",
+        "coreradius",
+        "fimpvar",
+        "taulimit",
+        "epsvmc",
+        "ttarget",
+        "qtargettotal",
+        "lambda_q_omp",
+        "lambda_target",
+        "lcon_factor",
+        "boundu(129)",
+        "boundu(131)",
+        "boundu(135)",
+        "blnkoth",
+        "fimp(9)",
+        "rho_ecrh",
+        "alstrtf",
+        "tmargmin_tf",
+        "boundu(152)",
+        "impurity_enrichment(9)",
+        "n_pancake",
+        "n_layer",
+        "fimp(13)",
+        "ftar",
+        "rad_fraction_sol",
+        "",
+        "b_crit_upper_nbti",
+        "shldith",
+        "crypmw_max",
+        "bt",  # Genuinly bt lower bound
+        "scrapli",
+        "scraplo",
+        "sig_tf_wp_max",
+        "copperaoh_m2_max",
+        "coheof",
+        "ohcth",
+        "ohhghf",
+        "csfv.n_cycle_min",
+        "pfv.oh_steel_frac",
+        "csfv.t_crack_vertical",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "fvs",  # actaully lower bound fvs
+        "vburn",
+        "rplas",
+    ]
+
+    # "plasma_res_factor"
     # -------------------
 
     # Getting the scanned variable name
     m_file = mf.MFile(filename=input_file)
     try:
         nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
-        scan_var_name = nsweep_dict[nsweep_ref]
+        scan_var_name = nsweep_list[nsweep_ref - 1]
     except Exception:
         scan_var_name = "Null"
 
