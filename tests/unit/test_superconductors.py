@@ -160,7 +160,7 @@ def test_bi2212():
 
 
 def test_gl_nbti():
-    jcrit, tcrit, bcrit = scf90.gl_nbti(4.75, 7.0, 2, 9.5, 13.75)
+    jcrit, tcrit, bcrit = superconductors.gl_nbti(4.75, 7.0, 2, 9.5, 13.75)
 
     assert jcrit == pytest.approx(2551683055.6511745)
     assert tcrit == pytest.approx(7.277374792835339)

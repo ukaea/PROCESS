@@ -2809,7 +2809,9 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, b, t = sc.gl_nbti(temperature, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.gl_nbti(
+                temperature, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(jcrit0):  # GL_Nbti has failed.
                 print(f"deltaj_GL_nbti: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2916,7 +2918,7 @@ class PFCoil:
             # Durham Ginzburg-Landau critical surface model for Nb-Ti
             bc20m = tfv.b_crit_upper_nbti
             tc0m = tfv.t_crit_nbti
-            jcritsc, bcrit, tcrit = sc.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
             # The CS coil current at EOF
@@ -3056,7 +3058,9 @@ class PFCoil:
                 deltaj_gl_nbti, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, b, t = sc.gl_nbti(current_sharing_t, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.gl_nbti(
+                current_sharing_t, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.
