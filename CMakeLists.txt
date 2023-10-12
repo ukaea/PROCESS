@@ -123,6 +123,10 @@ LIST(APPEND PROCESS_SRCS
     reinke_variables.f90
     neoclassics_module.f90
     blanket_library.f90
+    stellarator_variables.f90
+    stellarator.f90
+    stellarator_configuration.f90
+    stellarator_fwbs.f90
 )
 
 PREPROCESS()
