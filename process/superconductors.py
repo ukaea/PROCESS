@@ -196,3 +196,79 @@ def bi2212(bmax, jstrand, tsc, fhts):
         eh.report_error(106)
 
     return jcrit, tmarg
+
+
+def gl_nbti(thelium, bmax, strain, bc20max, t_c0):
+    """Author: S B L Chislett-McDonald Durham University
+    Category: subroutine
+
+    Critical current density of the superconductor in an ITER
+    Nb-Ti strand based on the Ginzburg-Landau theory of superconductivity
+
+    \\begin{equation}
+    J_{c,TS}(B,T,\\epsilon_{I}) = A(\\epsilon_{I}) \\left[T_{c}(\\epsilon_{I})*(1-t^2)\\right]^2\\left
+    [B_{c2}(\\epsilon_I)*(1-t^\\nu)\\right]^{n-3}b^{p-1}(1-b)^q~.
+    \\end{equation}
+
+    - \\( \\thelium \\) -- Coolant/SC temperature [K]
+    - \\( \\bmax \\) -- Magnetic field at conductor [T]
+    - \\( \\epsilon_{I} \\) -- Intrinsic strain in superconductor [\\%]
+    - \\( \\B_{c2}(\\epsilon_I) \\) -- Strain dependent upper critical field [T]
+    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_I)*(1-t^\\nu) [unitless]
+    - \\( \\T_{c}(\\epsilon_{I}) \\) -- Strain dependent critical temperature (K)
+    - \\( \\t \\) -- Reduced temperature = thelium / \\T_{c}(\\epsilon_{I}) [unitless]
+    - \\( \\A(\\epsilon_{I}) \\) -- Strain dependent Prefactor [A / ( m\\(^2\\) K\\(^-2) T\\(^n-3))]
+    - \\( \\J_{c,TS} \\) --  Critical current density in superconductor [A / m\\(^-2\\)]
+    """
+
+    A_0 = 1102e6
+    p = 0.49
+    q = 0.56
+    n = 1.83
+    v = 1.42
+    c2 = -0.0025
+    c3 = -0.0003
+    c4 = -0.0001
+    em = -0.002e-2
+    u = 0.0
+    w = 2.2
+
+    epsilon_I = strain - em
+
+    strain_func = (
+        1 + c2 * (epsilon_I) ** 2 + c3 * (epsilon_I) ** 3 + c4 * (epsilon_I) ** 4
+    )
+
+    T_e = t_c0 * strain_func ** (1 / w)
+
+    t_reduced = thelium / T_e
+
+    A_e = A_0 * strain_func ** (u / w)
+
+    # Critical Field
+    bcrit = bc20max * (1 - t_reduced**v) * strain_func
+
+    b_reduced = bmax / bcrit
+
+    # Critical temperature (K)
+    tcrit = T_e
+
+    # Critical current density (A/m2)
+    if b_reduced <= 1.0:
+        jcrit = (
+            A_e
+            * (T_e * (1 - t_reduced**2)) ** 2
+            * bcrit ** (n - 3)
+            * b_reduced ** (p - 1)
+            * (1 - b_reduced) ** q
+        )
+    else:  # Fudge to yield negative single valued function of Jc for fields above Bc2
+        jcrit = (
+            A_e
+            * (T_e * (1 - t_reduced**2)) ** 2
+            * bcrit ** (n - 3)
+            * b_reduced ** (p - 1)
+            * (1 - b_reduced) ** 1.0
+        )
+
+    return jcrit, bcrit, tcrit

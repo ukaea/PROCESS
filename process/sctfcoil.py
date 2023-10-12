@@ -718,9 +718,7 @@ class Sctfcoil:
         elif isumat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = tfcoil_variables.b_crit_upper_nbti
             tc0m = tfcoil_variables.t_crit_nbti
-            jcritsc, bcrit, tcrit = superconductorsf90.gl_nbti(
-                thelium, bmax, strain, bc20m, tc0m
-            )
+            jcritsc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
@@ -859,17 +857,17 @@ class Sctfcoil:
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 7:
-                    jcrit0, b, t = superconductorsf90.gl_nbti(
+                    jcrit0, _, _ = superconductors.gl_nbti(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, b, t = superconductorsf90.gl_nbti(
+                    jcritm, _, _ = superconductors.gl_nbti(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, b, t = superconductorsf90.gl_nbti(
+                    jcritp, _, _ = superconductors.gl_nbti(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 8:
