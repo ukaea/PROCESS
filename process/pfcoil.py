@@ -2826,7 +2826,9 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, b, t = sc.gl_rebco(temperature, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.gl_rebco(
+                temperature, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(jcrit0):  # superconductors.GL_REBCO has failed.
                 print(f"deltaj_gl_REBCO: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2928,7 +2930,7 @@ class PFCoil:
             # Durham Ginzburg-Landau critical surface model for REBCO
             bc20m = 429e0
             tc0m = 185e0
-            jcritsc, bcrit, tcrit = sc.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
             # A0 calculated for tape cross section already
             jcritstr = jcritsc * (1.0e0 - fcu)
 
@@ -3078,7 +3080,9 @@ class PFCoil:
                 deltaj_gl_rebco, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, b, t = sc.gl_rebco(current_sharing_t, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.gl_rebco(
+                current_sharing_t, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.
