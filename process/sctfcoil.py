@@ -6,7 +6,6 @@ import numba
 
 from process.fortran import rebco_variables
 from process.fortran import global_variables
-from process.fortran import superconductors as superconductorsf90
 from process.fortran import tfcoil_variables
 from process.fortran import physics_variables
 from process.fortran import build_variables
@@ -144,8 +143,7 @@ class Sctfcoil:
         sctfcoil_module.conductor_jacket_fraction = (
             sctfcoil_module.conductor_jacket_area / sctfcoil_module.conductor_area
         )
-        superconductorsf90.croco(
-            jcritsc,
+        (
             sctfcoil_module.croco_strand_area,
             sctfcoil_module.croco_strand_critical_current,
             sctfcoil_module.conductor_copper_area,
@@ -160,10 +158,13 @@ class Sctfcoil:
             sctfcoil_module.conductor_rebco_area,
             sctfcoil_module.conductor_rebco_fraction,
             sctfcoil_module.conductor_critical_current,
+        ) = superconductors.croco(
+            jcritsc,
             sctfcoil_module.conductor_area,
             rebco_variables.croco_od,
             rebco_variables.croco_thick,
         )
+
         rebco_variables.coppera_m2 = iop / sctfcoil_module.conductor_copper_area
 
         icrit = sctfcoil_module.conductor_critical_current
@@ -663,7 +664,6 @@ class Sctfcoil:
 
             jcritstr, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
             jcritsc = jcritstr / (1.0e0 - fcu)
-            tcrit = thelium + tmarg
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
 
@@ -685,9 +685,7 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.5e-2
 
-            jcritsc, bcrit, tcrit = superconductorsf90.itersc(
-                thelium, bmax, strain, bc20m, tc0m
-            )
+            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
@@ -839,17 +837,17 @@ class Sctfcoil:
                         ttestp, bmax, c0, bc20m, tc0m
                     )
                 elif isumat == 5:
-                    jcrit0, _, _ = superconductorsf90.wstsc(
+                    jcrit0, _, _ = superconductors.wstsc(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, _, _ = superconductorsf90.wstsc(
+                    jcritm, _, _ = superconductors.wstsc(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, _, _ = superconductorsf90.wstsc(
+                    jcritp, _, _ = superconductors.wstsc(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 7:
