@@ -11,7 +11,6 @@ from process.fortran import cs_fatigue_variables as csfv
 from process.fortran import maths_library as ml
 from process.fortran import process_output as op
 from process.fortran import numerics
-from process.fortran import superconductors as sc
 from process.fortran import rebco_variables as rcv
 from process.fortran import constraint_variables as ctv
 from process import maths_library as pml
@@ -2843,7 +2842,9 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, b, t = sc.hijc_rebco(temperature, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.hijc_rebco(
+                temperature, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(jcrit0):  # superconductors.GL_REBCO has failed.
                 print(f"deltaj_hijc_REBCO: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2876,7 +2877,6 @@ class PFCoil:
 
             jcritstr, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
             jcritsc = jcritstr / (1.0e0 - fcu)
-            tcrit = thelium + tmarg
 
         elif isumat == 3:
             # NbTi data
@@ -2943,7 +2943,9 @@ class PFCoil:
             # Hazelton experimental data + Zhai conceptual model for REBCO
             bc20m = 138
             tc0m = 92
-            jcritsc, bcrit, tcrit = sc.hijc_rebco(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.hijc_rebco(
+                thelium, bmax, strain, bc20m, tc0m
+            )
             # A0 calculated for tape cross section already
             jcritstr = jcritsc * (1.0e0 - fcu)
 
@@ -3101,7 +3103,9 @@ class PFCoil:
                 deltaj_hijc_rebco, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, b, t = sc.hijc_rebco(current_sharing_t, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.hijc_rebco(
+                current_sharing_t, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.
