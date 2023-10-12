@@ -2906,7 +2906,7 @@ class PFCoil:
 
         elif isumat == 6:
             # "REBCO" 2nd generation HTS superconductor in CrCo strand
-            jcritsc, validity = sc.jcrit_rebco(thelium, bmax, 0)
+            jcritsc, _ = superconductors.jcrit_rebco(thelium, bmax)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
             # The CS coil current at EOF
@@ -3046,7 +3046,7 @@ class PFCoil:
 
         # Temperature margin: An alternative method using secant solver
         elif isumat == 6:
-            current_sharing_t = sc.current_sharing_rebco(bmax, jsc)
+            current_sharing_t = superconductors.current_sharing_rebco(bmax, jsc)
             tmarg = current_sharing_t - thelium
             tfv.temp_margin = tmarg
 

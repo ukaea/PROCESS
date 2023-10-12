@@ -120,7 +120,7 @@ class Sctfcoil:
 
         jcritsc: float = 0.0
         #  Find critical current density in superconducting strand, jcritstr
-        jcritsc, _ = superconductorsf90.jcrit_rebco(thelium, bmax, int(output))
+        jcritsc, _ = superconductors.jcrit_rebco(thelium, bmax)
         # tfcoil_variables.acstf : Cable space - inside area (m2)
         # Set new rebco_variables.croco_od
         # allowing for scaling of rebco_variables.croco_od
@@ -186,7 +186,7 @@ class Sctfcoil:
         jsc = iooic * jcritsc
 
         # Temperature margin using secant solver
-        current_sharing_t = superconductorsf90.current_sharing_rebco(bmax, jsc)
+        current_sharing_t = superconductors.current_sharing_rebco(bmax, jsc)
         tmarg = current_sharing_t - thelium
         tfcoil_variables.temp_margin = (
             tmarg  # Only used in the availabilty routine - see comment to Issue #526
