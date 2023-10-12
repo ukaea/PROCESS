@@ -142,14 +142,16 @@ def test_jcrit_nbti(jcritnbtiparam):
 
 
 def test_jcrit_rebco():
-    jcrit_rebco, validity = scf90.jcrit_rebco(4.75, 7.0, 0)
+    jcrit_rebco, validity = superconductors.jcrit_rebco(4.75, 7.0)
 
     assert jcrit_rebco == pytest.approx(55870234414.171684)
     assert validity
 
 
 def test_current_sharing_rebco():
-    assert scf90.current_sharing_rebco(7.0, 2e7) == pytest.approx(75.76286550648135)
+    assert superconductors.current_sharing_rebco(7.0, 2e7) == pytest.approx(
+        75.76286550648135
+    )
 
 
 def test_bi2212():
