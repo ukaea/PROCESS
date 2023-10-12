@@ -504,7 +504,6 @@ class SingleRun:
         """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
         within obsolete_variables.py.
         Then will print out what the used obsolete variables are (if any) before continuing the proces run.
-        #TODO: add a feature to stop 1 and force the variable to be updated if it is now obsolete.
         """
 
         obsolete_variables = ov.OBS_VARS
@@ -522,18 +521,20 @@ class SingleRun:
                     variables = line.strip().split(sep, 1)[0]
                     variables_in_in_dat.append(variables)
 
-        obs_vars_keys = []
-        for k in obsolete_variables:
-            obs_vars_keys.append(k)
+        obs_vars = []
+        replace_hints = []
+        for var in variables_in_in_dat:
+            new_var = obsolete_variables.get(var)
+            if new_var:
+                obs_vars.append(var)
+                replace_hints.append(new_var)
 
-        variable_check = any(i in variables_in_in_dat for i in obs_vars_keys)
-
-        if variable_check:
+        if len(replace_hints) > 0:
             print(
                 "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary."
             )
             print(
-                f"The obsolete variables in your IN.DAT file are: {set(obs_vars_keys) & set(variables_in_in_dat)}. Please change them to the corresponding new variable(s) before continuing."
+                f"The obsolete variables in your IN.DAT file are: {obs_vars}. Please change them to the following corresponding new variable(s) before continuing: {replace_hints}."
             )
         else:
             print("The IN.DAT file does not contain any obsolete variables.")
