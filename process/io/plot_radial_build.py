@@ -62,6 +62,14 @@ def parse_args(args):
         help="Show inboard build only, default = False ",
     )
 
+    parser.add_argument(
+        "-nm",
+        "--numbers",
+        action="store_true",
+        default=False,
+        help="Show widths of components in the legend",
+    )
+
     return parser.parse_args(args)
 
 
@@ -431,7 +439,7 @@ def main(args=None):
             radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=f"{radial_labels[kk]}\n {radial_build[kk][0]}",
+            label=f"{radial_labels[kk]}" + f"\n {radial_build[kk][0]} m" * args.numbers,
             color=radial_color[kk],
             edgecolor="black",
             linewidth=0.05,
