@@ -2870,7 +2870,7 @@ class PFCoil:
 
             jstrand = jwp / (1.0e0 - fhe)
 
-            jcritstr, tmarg = sc.bi2212(bmax, jstrand, thelium, fhts)
+            jcritstr, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
             jcritsc = jcritstr / (1.0e0 - fcu)
             tcrit = thelium + tmarg
 

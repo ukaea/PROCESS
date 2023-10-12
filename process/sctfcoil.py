@@ -661,7 +661,7 @@ class Sctfcoil:
             #  so this is irrelevant in this model
             jstrand = jwp * aturn / (acs * fcond)
 
-            jcritstr, tmarg = superconductorsf90.bi2212(bmax, jstrand, thelium, fhts)
+            jcritstr, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
             jcritsc = jcritstr / (1.0e0 - fcu)
             tcrit = thelium + tmarg
             #  Critical current in cable

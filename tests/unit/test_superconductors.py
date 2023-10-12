@@ -153,7 +153,7 @@ def test_current_sharing_rebco():
 
 
 def test_bi2212():
-    jcrit, tmarg = scf90.bi2212(7.0, 2e7, 4.75, 0.2)
+    jcrit, tmarg = superconductors.bi2212(7.0, 2e7, 4.75, 0.2)
 
     assert jcrit == pytest.approx(174017403.16041547)
     assert tmarg == pytest.approx(13.750991122745397)
