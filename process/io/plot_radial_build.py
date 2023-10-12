@@ -67,7 +67,7 @@ def parse_args(args):
         "--numbers",
         action="store_true",
         default=False,
-        help="Show widths of components in the legend",
+        help="Show widths of components in the legend. Only use non-scan MFILE's as will only show last values",
     )
 
     return parser.parse_args(args)
@@ -439,7 +439,9 @@ def main(args=None):
             radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=f"{radial_labels[kk]}" + f"\n {radial_build[kk][0]} m" * args.numbers,
+            label=f"{radial_labels[kk]}" + f"\n {radial_build[kk][0]} m" * args.numbers
+            & scan_var_name
+            == "Null",
             color=radial_color[kk],
             edgecolor="black",
             linewidth=0.05,
