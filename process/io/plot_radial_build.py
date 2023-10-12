@@ -439,9 +439,7 @@ def main(args=None):
             radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=f"{radial_labels[kk]}" + f"\n {radial_build[kk][0]} m" * args.numbers
-            & scan_var_name
-            == "Null",
+            label=f"{radial_labels[kk]}" + f"\n {radial_build[kk][0]} m" * args.numbers,
             color=radial_color[kk],
             edgecolor="black",
             linewidth=0.05,
