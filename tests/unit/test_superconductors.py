@@ -176,7 +176,7 @@ def test_wstsc():
 
 
 def test_gl_rebco():
-    jcrit, bcrit, tcrit = scf90.gl_rebco(4.75, 7.0, 2, 30.0, 25.0)
+    jcrit, bcrit, tcrit = superconductors.gl_rebco(4.75, 7.0, 2, 30.0, 25.0)
 
     assert jcrit == pytest.approx(14527.765708690296)
     assert bcrit == pytest.approx(9.439350824747793)

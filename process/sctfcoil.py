@@ -732,9 +732,7 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.7e-2
 
-            jcritsc, bcrit, tcrit = superconductorsf90.gl_rebco(
-                thelium, bmax, strain, bc20m, tc0m
-            )
+            jcritsc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
             # A0 calculated for tape cross section already
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable (copper added at this stage in HTS cables)
@@ -871,17 +869,17 @@ class Sctfcoil:
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 8:
-                    jcrit0, b, t = superconductorsf90.gl_rebco(
+                    jcrit0, _, _ = superconductors.gl_rebco(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, b, t = superconductorsf90.gl_rebco(
+                    jcritm, _, _ = superconductors.gl_rebco(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, b, t = superconductorsf90.gl_rebco(
+                    jcritp, _, _ = superconductors.gl_rebco(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 9:
