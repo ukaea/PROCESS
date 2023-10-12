@@ -2794,7 +2794,7 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, b, t = sc.wstsc(temperature, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.wstsc(temperature, bmax, strain, bc20m, tc0m)
             if ml.variable_error(jcrit0):  # superconductors.wstsc has failed.
                 print(f"deltaj_wst: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2901,7 +2901,7 @@ class PFCoil:
             # jcritsc returned by superconductors.itersc is the critical current density in the
             # superconductor - not the whole strand, which contains copper
 
-            jcritsc, bcrit, tcrit = sc.wstsc(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.wstsc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
         elif isumat == 6:
@@ -3036,7 +3036,9 @@ class PFCoil:
                 deltaj_wst, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, b, t = sc.wstsc(current_sharing_t, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.wstsc(
+                current_sharing_t, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.

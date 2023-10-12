@@ -1,7 +1,6 @@
 import pytest
 from typing import NamedTuple, Any
 
-from process.fortran import superconductors as scf90
 import process.superconductors as superconductors
 
 
@@ -170,7 +169,7 @@ def test_gl_nbti():
 
 
 def test_wstsc():
-    jcrit, bcrit, tcrit = scf90.wstsc(4.75, 27.0, 0.001, 30.0, 25.0)
+    jcrit, bcrit, tcrit = superconductors.wstsc(4.75, 27.0, 0.001, 30.0, 25.0)
 
     assert jcrit == pytest.approx(195513.0673058944)
     assert bcrit == pytest.approx(27.329369840368482)
