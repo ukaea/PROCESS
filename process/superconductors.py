@@ -1,6 +1,6 @@
 import numpy as np
 
-from process.fortran import error_handling as eh
+from process.fortran import error_handling as eh, rebco_variables
 
 
 def itersc(thelium, bmax, strain, bc20max, tc0max):
@@ -344,6 +344,77 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
         * bcrit ** (n - 3)
         * b_reduced ** (p - 1)
         * (1 - b_reduced) ** q
+    )
+
+    return jcrit, bcrit, tcrit
+
+
+def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
+    """Implementation of High Current Density REBCO tape
+    author: R Chapman, UKAEA
+    thelium : input real : SC temperature (K)
+    bmax : input real : Magnetic field at conductor (T)
+    strain : input real : Strain in superconductor
+    bc20max : input real : Upper critical field (T) for superconductor
+    at zero temperature and strain
+    t_c0 : input real : Critical temperature (K) at zero field and strain
+    jcrit : output real : Critical current density in superconductor (A/m2)
+    bcrit : output real : Critical field (T)
+    tcrit : output real : Critical temperature (K)
+
+    Returns the critical current of a REBCO tape based on a critical surface
+    (field, temperature) parameterization. Based in part on the parameterization
+    described in: M. J. Wolf, N. Bagrets, W. H. Fietz, C. Lange and K. Weiss,
+    "Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,"
+    in IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1-4,
+    June 2018, Art no. 4802404, doi: 10.1109/TASC.2018.2815767. And on the experimental
+    data presented here: "2G HTS Wire Development at SuperPower", Drew W. Hazelton,
+    February 16, 2017 https://indico.cern.ch/event/588810/contributions/2473740/
+    The high Ic parameterization is a result of modifications based on Ic values
+    observed in: "Conceptual design of HTS magnets for fusion nuclear science facility",
+    Yuhu Zhai, Danko van der Laan, Patrick Connolly, Charles Kessel, 2021,
+    https://doi.org/10.1016/j.fusengdes.2021.112611
+    The parameter A is transformed into a function A(T) based on a Newton polynomial fit
+    considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8. These values were
+    selected manually. A good fit to the pubished data can be seen in the 4-10 T range
+    but the fit deviates at very low or very high field.
+    """
+
+    a = 1.4
+    b = 2.005
+    # critical current density prefactor
+    A_0 = 2.2e8
+    # flux pinning field scaling parameters
+    p = 0.39
+    q = 0.9
+    # strain conversion parameters
+    u = 33450.0
+    v = -176577.0
+
+    # Critical Field (T)
+    # B_crit(T) calculated using temperature and critical temperature
+    bcrit = bc20max * (1.0 - thelium / t_c0) ** a
+
+    # Critical temperature (K)
+    # scaled to match behaviour in GL_REBCO routine,
+    # ONLY TO BE USED until a better suggestion is received
+    tcrit = 0.999965 * t_c0
+
+    # finding A(T); constants based on a Newton polynomial fit to pubished data
+    A_t = A_0 + (u * thelium**2) + (v * thelium)
+
+    # Critical current density (A/m2)
+
+    jcrit = (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
+
+    # Jc times HTS area: default area is width 4mm times HTS layer thickness 1 um,
+    # divided by the tape area to provide engineering Jc per tape, then multiplied by fraction 0.4
+    # to reach the level of current density expected in the space where the tapes are wound in A/m^2!
+    jcrit = (
+        jcrit
+        * (rebco_variables.tape_width * rebco_variables.rebco_thickness)
+        / (rebco_variables.tape_width * rebco_variables.tape_thickness)
+        * 0.4
     )
 
     return jcrit, bcrit, tcrit
