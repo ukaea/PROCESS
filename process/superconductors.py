@@ -496,3 +496,133 @@ def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
     )
 
     return jcrit, bcrit, tcrit
+
+
+def wstsc(temperature, bmax, strain, bc20max, tc0max):
+    """Implementation of WST Nb3Sn critical surface implementation
+    author: J Morris, CCFE, Culham Science Centre
+    temperature : input real : SC temperature (K)
+    bmax : input real : Magnetic field at conductor (T)
+    strain : input real : Strain in superconductor
+    bc20max : input real : Upper critical field (T) for superconductor
+    at zero temperature and strain
+    tc0max : input real : Critical temperature (K) at zero field and strain
+    jcrit : output real : Critical current density in superconductor (A/m2)
+    bcrit : output real : Critical field (T)
+    tcrit : output real : Critical temperature (K)
+    This routine calculates the critical current density and
+    temperature in the superconducting TF coils using the
+    WST Nb3Sn critical surface model.
+    V. Corato et al, "Common operating values for DEMO magnets design for 2016",
+    https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
+    """
+
+    # Scaling constant C [AT/mm2]
+    csc = 83075.0
+    # Low field exponent p
+    p = 0.593
+    # High field exponent q
+    q = 2.156
+    # Strain fitting constant C_{a1}
+    ca1 = 50.06
+    # Strain fitting constant C_{a2}
+    ca2 = 0.0
+    # epsilon_{0,a}
+    eps0a = 0.00312
+
+    #  $\epsilon_{sh}$
+    epssh = (ca2 * eps0a) / (np.sqrt(ca1**2 - ca2**2))
+
+    #  Strain function $s(\epsilon)$
+    #  0.83 < s < 1.0, for -0.005 < strain < 0.005
+    strfun = np.sqrt(epssh**2 + eps0a**2) - np.sqrt(
+        (strain - epssh) ** 2 + eps0a**2
+    )
+    strfun = strfun * ca1 - ca2 * strain
+    strfun = 1.0 + (1.0 / (1.0 - ca1 * eps0a)) * strfun
+    if strfun < 0:
+        logger.warning(f"Strain function < 0: {strfun} for {strain = }")
+
+    # $B^*_{C2} (0,\epsilon)$
+    bc20eps = bc20max * strfun
+
+    #  $T^*_C (0,\epsilon)$
+    tc0eps = tc0max * strfun ** (1.0 / 3.0)
+
+    #  Reduced temperature
+    #  Should remain < 1 for temperature < 0.94*tc0max (i.e. 15 kelvin for i_tf_sc_mat=1)
+
+    if temperature / tc0eps >= 1.0:
+        eh.fdiags[0] = temperature
+        eh.fdiags[1] = tc0eps
+        eh.report_error(159)
+
+    # t = min(thelium/tc0eps, 0.9999D0)
+    t = temperature / tc0eps
+
+    #  Reduced magnetic field at zero temperature
+    #  Should remain < 1 for bmax < 0.83*bc20max (i.e. 27 tesla for i_tf_sc_mat=1)
+
+    if bmax / bc20eps >= 1.0:
+        eh.fdiags[0] = bmax
+        eh.fdiags[1] = bc20eps
+        eh.report_error(160)
+
+    # bzero = min(bmax/bc20eps, 0.9999D0)
+    bzero = bmax / bc20eps
+
+    if bzero < 1.0:
+        #  Critical temperature (K)
+        tcrit = tc0eps * (1.0 - bzero) ** (1.0 / 1.52)
+    else:
+        # Allow bzero > 1, fudge to give real (negative) value of tcrit
+        # This generates a real (negative) and continuous (but not differentiable)
+        # function of bzero.
+        tcrit = tc0eps
+
+    #  Critical field (T). Negative if normalised temperature t>1
+    if t > 0.0:
+        bcrit = bc20eps * (1.0 - t**1.52)
+    else:
+        # Allow t<0, fudge to give real value of bcrit
+        bcrit = bc20eps * (1.0 - t)
+
+    #  Reduced magnetic field, restricted to be < 1
+    if bmax / bcrit >= 1.0:
+        eh.fdiags[0] = bmax
+        eh.fdiags[1] = bcrit
+        eh.report_error(161)
+
+    # bred = min(bmax/bcrit, 0.9999D0)
+    bred = bmax / bcrit
+
+    if (bred > 0.0) and (bred < 1.0):
+        jc3 = bred**p * (1.0 - bred) ** q  # bred must be < 1 to avoid NaNs
+    else:
+        # Allow bred > 1 or <0, fudge to give real (negative) value of jc3
+        # This generates a real (negative) and continuous (but not differentiable)
+        # function of bred.
+        jc3 = bred * (1.0 - bred)
+        if not np.isfinite(jc3):
+            raise RuntimeError("jc3 jcrit is NaN.")
+
+    #  Critical current density in superconductor (A/m2)
+    jc1 = (csc / bmax) * strfun
+
+    if t > 0.0:
+        jc2 = (1.0 - t**1.52) * (1.0 - t**2)
+    else:
+        # Allow t<0, fudge to give real value of jc2
+        # This generates a real and continuous (but not differentiable) function of t.
+        jc2 = (1.0 - t) * (1.0 - t**2)
+
+    # jc3 = bred**p * (1.0D0-bred)**q  !  bred must be < 1 to avoid NaNs
+
+    # scale from mm2 to m2
+    scalefac = 1.0e6
+
+    jcrit = jc1 * jc2 * jc3 * scalefac
+    if not np.isfinite(jcrit):
+        raise RuntimeError("jcrit is NaN.")
+
+    return jcrit, bcrit, tcrit
