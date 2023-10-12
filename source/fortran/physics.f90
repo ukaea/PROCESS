@@ -3221,7 +3221,8 @@ module physics_module
     use numerics, only: active_constraints, boundu, icc, &
         boundl, ioptimz
     use reinke_variables, only: fzactual, impvardiv, fzmin
-		use constants, only: rmu0, mproton, mfile, echarge, pi, epsilon0
+	 use constants, only: rmu0, mproton, mfile, echarge, pi, epsilon0
+    use stellarator_variables, only: iotabar, istell
     implicit none
 
     !  Arguments
@@ -3249,8 +3250,9 @@ module physics_module
 
    beta_mcdonald = 4.d0/3.d0 *rmu0 * total_plasma_internal_energy / (vol * bt**2)
 
-    call oheadr(outfile,'Plasma')
+   call oheadr(outfile,'Plasma')
 
+   if (istell == 0) then
       select case (idivrt)
       case (0)
          call ocmmnt(outfile,'Plasma configuration = limiter')
@@ -3261,15 +3263,18 @@ module physics_module
       case default
          idiags(1) = idivrt ; call report_error(85)
       end select
+   else
+      call ocmmnt(outfile,'Plasma configuration = stellarator')
+   end if
 
-
-
-   if (itart == 0) then
-      itart_r = itart
-      call ovarrf(outfile,'Tokamak aspect ratio = Conventional, itart = 0','(itart)',itart_r)
-   else if (itart == 1) then
-      itart_r = itart
-      call ovarrf(outfile,'Tokamak aspect ratio = Spherical, itart = 1','(itart)',itart_r)
+   if (istell == 0) then
+      if (itart == 0) then
+         itart_r = itart
+         call ovarrf(outfile,'Tokamak aspect ratio = Conventional, itart = 0','(itart)',itart_r)
+      else if (itart == 1) then
+         itart_r = itart
+         call ovarrf(outfile,'Tokamak aspect ratio = Spherical, itart = 1','(itart)',itart_r)
+      end if
    end if
 
    call osubhd(outfile,'Plasma Geometry :')
@@ -3277,63 +3282,65 @@ module physics_module
    call ovarrf(outfile,'Minor radius (m)','(rminor)',rminor, 'OP ')
    call ovarrf(outfile,'Aspect ratio','(aspect)',aspect)
 
-   select case (ishape)
-   case (0,6,8)
-      call ovarrf(outfile,'Elongation, X-point (input value used)', '(kappa)',kappa, 'IP ')
-   case (1)
-      call ovarrf(outfile,'Elongation, X-point (TART scaling)', '(kappa)',kappa, 'OP ')
-   case (2,3)
-      call ovarrf(outfile,'Elongation, X-point (Zohm scaling)', '(kappa)',kappa, 'OP ')
-      call ovarrf(outfile,'Zohm scaling adjustment factor', '(fkzohm)',fkzohm)
-   case (4,5,7)
-      call ovarrf(outfile,'Elongation, X-point (calculated from kappa95)', '(kappa)',kappa, 'OP ')
-   case (9)
-      call ovarrf(outfile,'Elongation, X-point (calculated from aspect ratio and li(3))', &
+   if (istell == 0) then
+
+       select case (ishape)
+       case (0,6,8)
+          call ovarrf(outfile,'Elongation, X-point (input value used)', '(kappa)',kappa, 'IP ')
+       case (1)
+          call ovarrf(outfile,'Elongation, X-point (TART scaling)', '(kappa)',kappa, 'OP ')
+       case (2,3)
+          call ovarrf(outfile,'Elongation, X-point (Zohm scaling)', '(kappa)',kappa, 'OP ')
+          call ovarrf(outfile,'Zohm scaling adjustment factor', '(fkzohm)',fkzohm)
+       case (4,5,7)
+          call ovarrf(outfile,'Elongation, X-point (calculated from kappa95)', '(kappa)',kappa, 'OP ')
+       case (9)
+          call ovarrf(outfile,'Elongation, X-point (calculated from aspect ratio and li(3))', &
+               '(kappa)',kappa, 'OP ')
+       case (10)
+         call ovarrf(outfile,'Elongation, X-point (calculated from aspect ratio and stability margin)', &
          '(kappa)',kappa, 'OP ')
-   case (10)
-   call ovarrf(outfile,'Elongation, X-point (calculated from aspect ratio and stability margin)', &
-   '(kappa)',kappa, 'OP ')
-   case (11)
-   call ovarrf(outfile,'Elongation, X-point (calculated from aspect ratio via Menard 2016)', &
-   '(kappa)',kappa, 'OP ')
-   case default
-      idiags(1) = ishape ; call report_error(86)
-   end select
+       case (11)
+         call ovarrf(outfile,'Elongation, X-point (calculated from aspect ratio via Menard 2016)', &
+         '(kappa)',kappa, 'OP ')
+       case default
+          idiags(1) = ishape ; call report_error(86)
+       end select
 
-   select case (ishape)
-   case (4,5,7)
-      call ovarrf(outfile,'Elongation, 95% surface (input value used)', &
-         '(kappa95)',kappa95, 'IP ')
-   case default
-      call ovarrf(outfile,'Elongation, 95% surface (calculated from kappa)', &
-         '(kappa95)',kappa95, 'OP ')
-   end select
+       select case (ishape)
+       case (4,5,7)
+          call ovarrf(outfile,'Elongation, 95% surface (input value used)', &
+               '(kappa95)',kappa95, 'IP ')
+       case default
+          call ovarrf(outfile,'Elongation, 95% surface (calculated from kappa)', &
+               '(kappa95)',kappa95, 'OP ')
+       end select
 
-   call ovarrf(outfile,'Elongation, area ratio calc.','(kappaa)',kappaa, 'OP ')
+       call ovarrf(outfile,'Elongation, area ratio calc.','(kappaa)',kappaa, 'OP ')
 
-   select case (ishape)
-   case (0,2,6,8,9,10,11)
-      call ovarrf(outfile,'Triangularity, X-point (input value used)', &
-         '(triang)',triang, 'IP ')
-   case (1)
-      call ovarrf(outfile,'Triangularity, X-point (TART scaling)', &
-         '(triang)',triang, 'OP ')
-   case (3,4,5,7)
-      call ovarrf(outfile,'Triangularity, X-point (calculated from triang95)', &
-         '(triang)',triang, 'OP ')
-   end select
+       select case (ishape)
+       case (0,2,6,8,9,10,11)
+          call ovarrf(outfile,'Triangularity, X-point (input value used)', &
+               '(triang)',triang, 'IP ')
+       case (1)
+          call ovarrf(outfile,'Triangularity, X-point (TART scaling)', &
+               '(triang)',triang, 'OP ')
+       case (3,4,5,7)
+          call ovarrf(outfile,'Triangularity, X-point (calculated from triang95)', &
+               '(triang)',triang, 'OP ')
+       end select
 
-   select case (ishape)
-   case (3,4,5,7)
-      call ovarrf(outfile,'Triangularity, 95% surface (input value used)', &
-         '(triang95)',triang95, 'IP ')
-   case default
-      call ovarrf(outfile,'Triangularity, 95% surface (calculated from triang)', &
-         '(triang95)',triang95, 'OP ')
-   end select
+       select case (ishape)
+       case (3,4,5,7)
+          call ovarrf(outfile,'Triangularity, 95% surface (input value used)', &
+               '(triang95)',triang95, 'IP ')
+       case default
+          call ovarrf(outfile,'Triangularity, 95% surface (calculated from triang)', &
+               '(triang95)',triang95, 'OP ')
+       end select
 
-   call ovarrf(outfile,'Plasma poloidal perimeter (m)','(pperim)',pperim, 'OP ')
-
+       call ovarrf(outfile,'Plasma poloidal perimeter (m)','(pperim)',pperim, 'OP ')
+    end if
 
     call ovarrf(outfile,'Plasma cross-sectional area (m2)','(xarea)',xarea, 'OP ')
     call ovarre(outfile,'Plasma surface area (m2)','(sarea)',sarea, 'OP ')
@@ -3342,29 +3349,29 @@ module physics_module
     call osubhd(outfile,'Current and Field :')
 
 
-      if (iprofile == 0) then
-         call ocmmnt(outfile, &
-            'Consistency between q0,q,alphaj,rli,dnbeta is not enforced')
-      else
-         call ocmmnt(outfile, &
-            'Consistency between q0,q,alphaj,rli,dnbeta is enforced')
+      if (istell == 0) then
+         if (iprofile == 0) then
+            call ocmmnt(outfile, &
+               'Consistency between q0,q,alphaj,rli,dnbeta is not enforced')
+         else
+            call ocmmnt(outfile, &
+               'Consistency between q0,q,alphaj,rli,dnbeta is enforced')
+         end if
+         call oblnkl(outfile)
+         call ovarin(outfile,'Plasma current scaling law used','(icurr)',icurr)
+
+
+         call ovarrf(outfile,'Plasma current (MA)','(plascur/1D6)',plascur/1.0D6, 'OP ')
+         !call ovarrf(outfile,'Plasma current (A)','(plascur)',plascur, 'OP ')
+         if (iprofile == 1) then
+            call ovarrf(outfile,'Current density profile factor','(alphaj)',alphaj, 'OP ')
+         else
+            call ovarrf(outfile,'Current density profile factor','(alphaj)',alphaj)
+         end if
+
+         call ovarrf(outfile,'Plasma internal inductance, li','(rli)',rli, 'OP ')
+         call ovarrf(outfile,'Vertical field at plasma (T)','(bvert)',bvert, 'OP ')
       end if
-      call oblnkl(outfile)
-      call ovarin(outfile,'Plasma current scaling law used','(icurr)',icurr)
-
-
-
-      call ovarrf(outfile,'Plasma current (MA)','(plascur/1D6)',plascur/1.0D6, 'OP ')
-      !call ovarrf(outfile,'Plasma current (A)','(plascur)',plascur, 'OP ')
-      if (iprofile == 1) then
-         call ovarrf(outfile,'Current density profile factor','(alphaj)',alphaj, 'OP ')
-      else
-         call ovarrf(outfile,'Current density profile factor','(alphaj)',alphaj)
-      end if
-
-      call ovarrf(outfile,'Plasma internal inductance, li','(rli)',rli, 'OP ')
-      call ovarrf(outfile,'Vertical field at plasma (T)','(bvert)',bvert, 'OP ')
-
 
     call ovarrf(outfile,'Vacuum toroidal field at R (T)','(bt)',bt)
     call ovarrf(outfile,'Average poloidal field (T)','(bp)',bp, 'OP ')
@@ -3372,20 +3379,23 @@ module physics_module
     call ovarrf(outfile,'Total field (sqrt(bp^2 + bt^2)) (T)','(btot)',btot, 'OP ')
 
 
-   call ovarrf(outfile,'Safety factor on axis','(q0)',q0)
+   if (istell == 0) then
+       call ovarrf(outfile,'Safety factor on axis','(q0)',q0)
 
-   if (icurr == 2) then
-      call ovarrf(outfile,'Mean edge safety factor','(q)',q)
-   end if
+       if (icurr == 2) then
+          call ovarrf(outfile,'Mean edge safety factor','(q)',q)
+       end if
 
-   call ovarrf(outfile,'Safety factor at 95% flux surface','(q95)',q95)
+       call ovarrf(outfile,'Safety factor at 95% flux surface','(q95)',q95)
 
-   call ovarrf(outfile,'Cylindrical safety factor (qcyl)','(qstar)',qstar, 'OP ')
+       call ovarrf(outfile,'Cylindrical safety factor (qcyl)','(qstar)',qstar, 'OP ')
 
-   if (ishape == 1) then
-      call ovarrf(outfile,'Lower limit for edge safety factor q', '(qlim)',qlim, 'OP ')
-   end if
-
+       if (ishape == 1) then
+          call ovarrf(outfile,'Lower limit for edge safety factor q', '(qlim)',qlim, 'OP ')
+       end if
+    else
+       call ovarrf(outfile,'Rotational transform','(iotabar)',iotabar)
+    end if
 
     call osubhd(outfile,'Beta Information :')
 
@@ -3407,18 +3417,20 @@ module physics_module
     call ovarrf(outfile,'2nd stability beta upper limit','(epbetmax)', epbetmax)
 
 
-   if (iprofile == 1) then
-      call ovarrf(outfile,'Beta g coefficient','(dnbeta)',dnbeta, 'OP ')
-   else
-      call ovarrf(outfile,'Beta g coefficient','(dnbeta)',dnbeta)
-   end if
+    if (istell == 0) then
+       if (iprofile == 1) then
+            call ovarrf(outfile,'Beta g coefficient','(dnbeta)',dnbeta, 'OP ')
+       else
+            call ovarrf(outfile,'Beta g coefficient','(dnbeta)',dnbeta)
+       end if
 
-   call ovarrf(outfile,'Normalised thermal beta',' ',1.0D8*betath*rminor*bt/plascur, 'OP ')
-   !call ovarrf(outfile,'Normalised total beta',' ',1.0D8*beta*rminor*bt/plascur, 'OP ')
-   call ovarrf(outfile,'Normalised total beta',' ',normalised_total_beta, 'OP ')
-   !call ovarrf(outfile,'Normalised toroidal beta',' ',normalised_total_beta*(btot/bt)**2, 'OP ')
-   normalised_toroidal_beta=normalised_total_beta*(btot/bt)**2
-   call ovarrf(outfile,'Normalised toroidal beta','(normalised_toroidal_beta)',normalised_toroidal_beta, 'OP ')
+       call ovarrf(outfile,'Normalised thermal beta',' ',1.0D8*betath*rminor*bt/plascur, 'OP ')
+       !call ovarrf(outfile,'Normalised total beta',' ',1.0D8*beta*rminor*bt/plascur, 'OP ')
+       call ovarrf(outfile,'Normalised total beta',' ',normalised_total_beta, 'OP ')
+       !call ovarrf(outfile,'Normalised toroidal beta',' ',normalised_total_beta*(btot/bt)**2, 'OP ')
+       normalised_toroidal_beta=normalised_total_beta*(btot/bt)**2
+       call ovarrf(outfile,'Normalised toroidal beta','(normalised_toroidal_beta)',normalised_toroidal_beta, 'OP ')
+    end if
 
 
     if (iculbl == 0) then
@@ -3443,8 +3455,10 @@ module physics_module
     call ovarre(outfile,'Electron density on axis (/m3)','(ne0)',ne0, 'OP ')
     call ovarre(outfile,'Line-averaged electron density (/m3)','(dnla)',dnla, 'OP ')
 
-    call ovarre(outfile,'Line-averaged electron density / Greenwald density', &
-      '(dnla_gw)',dnla/dlimit(7), 'OP ')
+    if (istell == 0) then
+     call ovarre(outfile,'Line-averaged electron density / Greenwald density', &
+         '(dnla_gw)',dnla/dlimit(7), 'OP ')
+    end if
 
 
     call ovarre(outfile,'Ion density (/m3)','(dnitot)',dnitot, 'OP ')
@@ -3555,14 +3569,16 @@ module physics_module
     call ovarrf(outfile,'Temperature profile index','(alphat)',alphat)
     call ovarrf(outfile,'Temperature profile index beta','(tbeta)',tbeta)
 
-   call osubhd(outfile,'Density Limit using different models :')
-   call ovarre(outfile,'Old ASDEX model','(dlimit(1))',dlimit(1), 'OP ')
-   call ovarre(outfile,'Borrass ITER model I','(dlimit(2))',dlimit(2), 'OP ')
-   call ovarre(outfile,'Borrass ITER model II','(dlimit(3))',dlimit(3), 'OP ')
-   call ovarre(outfile,'JET edge radiation model','(dlimit(4))',dlimit(4), 'OP ')
-   call ovarre(outfile,'JET simplified model','(dlimit(5))',dlimit(5), 'OP ')
-   call ovarre(outfile,'Hugill-Murakami Mq model','(dlimit(6))',dlimit(6), 'OP ')
-   call ovarre(outfile,'Greenwald model','(dlimit(7))',dlimit(7), 'OP ')
+   if (istell == 0) then
+      call osubhd(outfile,'Density Limit using different models :')
+      call ovarre(outfile,'Old ASDEX model','(dlimit(1))',dlimit(1), 'OP ')
+      call ovarre(outfile,'Borrass ITER model I','(dlimit(2))',dlimit(2), 'OP ')
+      call ovarre(outfile,'Borrass ITER model II','(dlimit(3))',dlimit(3), 'OP ')
+      call ovarre(outfile,'JET edge radiation model','(dlimit(4))',dlimit(4), 'OP ')
+      call ovarre(outfile,'JET simplified model','(dlimit(5))',dlimit(5), 'OP ')
+      call ovarre(outfile,'Hugill-Murakami Mq model','(dlimit(6))',dlimit(6), 'OP ')
+      call ovarre(outfile,'Greenwald model','(dlimit(7))',dlimit(7), 'OP ')
+   end if
 
     call osubhd(outfile,'Fuel Constituents :')
     call ovarrf(outfile,'Deuterium fuel fraction','(fdeut)',fdeut)
@@ -3593,7 +3609,9 @@ module physics_module
     call ovarre(outfile,'Radiation power from inner zone (MW)', '(pinnerzoneradmw)',pinnerzoneradmw, 'OP ')
     call ovarre(outfile,'Radiation power from outer zone (MW)','(pouterzoneradmw)', pouterzoneradmw, 'OP ')
 
-    call ovarre(outfile,'SOL radiation power as imposed by f_rad (MW)','(psolradmw)', psolradmw, 'OP ')
+    if (istell/=0) then
+      call ovarre(outfile,'SOL radiation power as imposed by f_rad (MW)','(psolradmw)', psolradmw, 'OP ')
+    end if
 
     call ovarre(outfile,'Total radiation power from inside LCFS (MW)','(pradmw)',pradmw, 'OP ')
     call ovarre(outfile,'LCFS radiation fraction = total radiation in LCFS / total power deposited in plasma', &
@@ -3610,40 +3628,43 @@ module physics_module
         '(palpfwmw)', palpfwmw, 'OP ')
     call ovarre(outfile,'Nominal mean neutron load on inside surface of reactor (MW/m2)', &
         '(wallmw)', wallmw, 'OP ')
-    call oblnkl(outfile)
 
-    call ovarre(outfile,'Power incident on the divertor targets (MW)', &
-        '(ptarmw)',ptarmw, 'OP ')
-    call ovarre(outfile, 'Fraction of power to the lower divertor', &
-        '(ftar)', ftar, 'IP ')
-    call ovarre(outfile,'Outboard side heat flux decay length (m)', &
-        '(lambdaio)',lambdaio, 'OP ')
-    if (idivrt == 2) then
-      call ovarre(outfile,'Midplane seperation of the two magnetic closed flux surfaces (m)', &
-           '(drsep)',drsep, 'OP ')
+    if (istell == 0) then
+      call oblnkl(outfile)
+      call ovarre(outfile,'Power incident on the divertor targets (MW)', &
+         '(ptarmw)',ptarmw, 'OP ')
+      call ovarre(outfile, 'Fraction of power to the lower divertor', &
+         '(ftar)', ftar, 'IP ')
+      call ovarre(outfile,'Outboard side heat flux decay length (m)', &
+         '(lambdaio)',lambdaio, 'OP ')
+      if (idivrt == 2) then
+         call ovarre(outfile,'Midplane seperation of the two magnetic closed flux surfaces (m)', &
+            '(drsep)',drsep, 'OP ')
+      end if
+      call ovarre(outfile,'Fraction of power on the inner targets', &
+         '(fio)',fio, 'OP ')
+      call ovarre(outfile,'Fraction of power incident on the lower inner target', &
+         '(fLI)',fLI, 'OP ')
+      call ovarre(outfile,'Fraction of power incident on the lower outer target', &
+         '(fLO)',fLO, 'OP ')
+      if (idivrt == 2 ) then
+         call ovarre(outfile,'Fraction of power incident on the upper inner target', &
+         '(fUI)',fUI, 'OP ')
+         call ovarre(outfile,'Fraction of power incident on the upper outer target', &
+         '(fUO)',fUO, 'OP ')
+      end if
+      call ovarre(outfile,'Power incident on the lower inner target (MW)', &
+         '(pLImw)',pLImw, 'OP ')
+      call ovarre(outfile,'Power incident on the lower outer target (MW)', &
+         '(pLOmw)',pLOmw, 'OP ')
+      if (idivrt == 2) then
+         call ovarre(outfile,'Power incident on the upper innner target (MW)', &
+            '(pUImw)',pUImw, 'OP ')
+         call ovarre(outfile,'Power incident on the upper outer target (MW)', &
+            '(pUOmw)',pUOmw, 'OP ')
+      end if
     end if
-    call ovarre(outfile,'Fraction of power on the inner targets', &
-        '(fio)',fio, 'OP ')
-    call ovarre(outfile,'Fraction of power incident on the lower inner target', &
-        '(fLI)',fLI, 'OP ')
-    call ovarre(outfile,'Fraction of power incident on the lower outer target', &
-        '(fLO)',fLO, 'OP ')
-    if (idivrt == 2 ) then
-      call ovarre(outfile,'Fraction of power incident on the upper inner target', &
-       '(fUI)',fUI, 'OP ')
-      call ovarre(outfile,'Fraction of power incident on the upper outer target', &
-       '(fUO)',fUO, 'OP ')
-    end if
-    call ovarre(outfile,'Power incident on the lower inner target (MW)', &
-        '(pLImw)',pLImw, 'OP ')
-    call ovarre(outfile,'Power incident on the lower outer target (MW)', &
-        '(pLOmw)',pLOmw, 'OP ')
-    if (idivrt == 2) then
-      call ovarre(outfile,'Power incident on the upper innner target (MW)', &
-           '(pUImw)',pUImw, 'OP ')
-      call ovarre(outfile,'Power incident on the upper outer target (MW)', &
-           '(pUOmw)',pUOmw, 'OP ')
-    end if
+
     call oblnkl(outfile)
     call ovarre(outfile,'Ohmic heating power (MW)','(pohmmw)',pohmmw, 'OP ')
     call ovarrf(outfile,'Fraction of alpha power deposited in plasma','(falpha)',falpha, 'OP ')
@@ -3681,68 +3702,69 @@ module physics_module
       call ovarre(outfile,'Psep Bt / qAR ratio (MWT/m)','(pdivtbt/qar)', ((pdivt*bt)/(q95*aspect*rmajor)), 'OP ')
     end if
 
+      if (istell == 0) then
+         call osubhd(outfile,'H-mode Power Threshold Scalings :')
 
-      call osubhd(outfile,'H-mode Power Threshold Scalings :')
-
-      call ovarre(outfile,'ITER 1996 scaling: nominal (MW)','(pthrmw(1))', pthrmw(1), 'OP ')
-      call ovarre(outfile,'ITER 1996 scaling: upper bound (MW)','(pthrmw(2))', pthrmw(2), 'OP ')
-      call ovarre(outfile,'ITER 1996 scaling: lower bound (MW)','(pthrmw(3))', pthrmw(3), 'OP ')
-      call ovarre(outfile,'ITER 1997 scaling (1) (MW)','(pthrmw(4))',pthrmw(4), 'OP ')
-      call ovarre(outfile,'ITER 1997 scaling (2) (MW)','(pthrmw(5))',pthrmw(5), 'OP ')
-      call ovarre(outfile,'Martin 2008 scaling: nominal (MW)', '(pthrmw(6))',pthrmw(6), 'OP ')
-      call ovarre(outfile,'Martin 2008 scaling: 95% upper bound (MW)', '(pthrmw(7))',pthrmw(7), 'OP ')
-      call ovarre(outfile,'Martin 2008 scaling: 95% lower bound (MW)', '(pthrmw(8))',pthrmw(8), 'OP ')
-      call ovarre(outfile,'Snipes 2000 scaling: nominal (MW)', '(pthrmw(9))',pthrmw(9), 'OP ')
-      call ovarre(outfile,'Snipes 2000 scaling: upper bound (MW)', '(pthrmw(10))',pthrmw(10), 'OP ')
-      call ovarre(outfile,'Snipes 2000 scaling: lower bound (MW)', '(pthrmw(11))',pthrmw(11), 'OP ')
-      call ovarre(outfile,'Snipes 2000 scaling (closed divertor): nominal (MW)', '(pthrmw(12))',pthrmw(12), 'OP ')
-      call ovarre(outfile,'Snipes 2000 scaling (closed divertor): upper bound (MW)', '(pthrmw(13))',pthrmw(13), 'OP ')
-      call ovarre(outfile,'Snipes 2000 scaling (closed divertor): lower bound (MW)', '(pthrmw(14))',pthrmw(14), 'OP ')
-      call ovarre(outfile,'Hubbard 2012 L-I threshold - nominal (MW)', '(pthrmw(15))',pthrmw(15), 'OP ')
-      call ovarre(outfile,'Hubbard 2012 L-I threshold - lower bound (MW)', '(pthrmw(16))',pthrmw(16), 'OP ')
-      call ovarre(outfile,'Hubbard 2012 L-I threshold - upper bound (MW)', '(pthrmw(17))',pthrmw(17), 'OP ')
-      call ovarre(outfile,'Hubbard 2017 L-I threshold', '(pthrmw(18))',pthrmw(18), 'OP ')
-      call ovarre(outfile,'Martin 2008 aspect ratio corrected scaling: nominal (MW)', '(pthrmw(19))',pthrmw(19), 'OP ')
-      call ovarre(outfile,'Martin 2008 aspect ratio corrected scaling: 95% upper bound (MW)', '(pthrmw(20))',pthrmw(20), 'OP ')
-      call ovarre(outfile,'Martin 2008 aspect ratio corrected scaling: 95% lower bound (MW)', '(pthrmw(21))',pthrmw(21), 'OP ')
-      call oblnkl(outfile)
-      if ((ilhthresh.eq.9).or.(ilhthresh.eq.10).or.(ilhthresh.eq.11)) then
-         if ((bt < 0.78D0).or.(bt > 7.94D0)) then
-            call ocmmnt(outfile,'(bt outside Snipes 2000 fitted range)')
-            call report_error(201)
-         end if
-         if ((rminor < 0.15D0).or.(rminor > 1.15D0)) then
-            call ocmmnt(outfile,'(rminor outside Snipes 2000 fitted range)')
-            call report_error(202)
-         end if
-         if ((rmajor < 0.55D0).or.(rmajor > 3.37D0)) then
-            call ocmmnt(outfile,'(rmajor outside Snipes 2000 fitted range)')
-            call report_error(203)
-         end if
-         if ((dnla < 0.09D20).or.(dnla > 3.16D20)) then
-            call ocmmnt(outfile,'(dnla outside Snipes 2000 fitted range)')
-            call report_error(204)
-         end if
-         if ((kappa < 1.0D0).or.(kappa > 2.04D0)) then
-            call ocmmnt(outfile,'(kappa outside Snipes 2000 fitted range)')
-            call report_error(205)
-         end if
-         if ((triang < 0.07D0).or.(triang > 0.74D0)) then
-            call ocmmnt(outfile,'(triang outside Snipes 2000 fitted range)')
-            call report_error(206)
-         end if
-      call oblnkl(outfile)
-      end if
-      if ((ilhthresh.eq.12).or.(ilhthresh.eq.13).or.(ilhthresh.eq.14)) then
-         call ocmmnt(outfile,'(L-H threshold for closed divertor only. Limited data used in Snipes fit)')
+         call ovarre(outfile,'ITER 1996 scaling: nominal (MW)','(pthrmw(1))', pthrmw(1), 'OP ')
+         call ovarre(outfile,'ITER 1996 scaling: upper bound (MW)','(pthrmw(2))', pthrmw(2), 'OP ')
+         call ovarre(outfile,'ITER 1996 scaling: lower bound (MW)','(pthrmw(3))', pthrmw(3), 'OP ')
+         call ovarre(outfile,'ITER 1997 scaling (1) (MW)','(pthrmw(4))',pthrmw(4), 'OP ')
+         call ovarre(outfile,'ITER 1997 scaling (2) (MW)','(pthrmw(5))',pthrmw(5), 'OP ')
+         call ovarre(outfile,'Martin 2008 scaling: nominal (MW)', '(pthrmw(6))',pthrmw(6), 'OP ')
+         call ovarre(outfile,'Martin 2008 scaling: 95% upper bound (MW)', '(pthrmw(7))',pthrmw(7), 'OP ')
+         call ovarre(outfile,'Martin 2008 scaling: 95% lower bound (MW)', '(pthrmw(8))',pthrmw(8), 'OP ')
+         call ovarre(outfile,'Snipes 2000 scaling: nominal (MW)', '(pthrmw(9))',pthrmw(9), 'OP ')
+         call ovarre(outfile,'Snipes 2000 scaling: upper bound (MW)', '(pthrmw(10))',pthrmw(10), 'OP ')
+         call ovarre(outfile,'Snipes 2000 scaling: lower bound (MW)', '(pthrmw(11))',pthrmw(11), 'OP ')
+         call ovarre(outfile,'Snipes 2000 scaling (closed divertor): nominal (MW)', '(pthrmw(12))',pthrmw(12), 'OP ')
+         call ovarre(outfile,'Snipes 2000 scaling (closed divertor): upper bound (MW)', '(pthrmw(13))',pthrmw(13), 'OP ')
+         call ovarre(outfile,'Snipes 2000 scaling (closed divertor): lower bound (MW)', '(pthrmw(14))',pthrmw(14), 'OP ')
+         call ovarre(outfile,'Hubbard 2012 L-I threshold - nominal (MW)', '(pthrmw(15))',pthrmw(15), 'OP ')
+         call ovarre(outfile,'Hubbard 2012 L-I threshold - lower bound (MW)', '(pthrmw(16))',pthrmw(16), 'OP ')
+         call ovarre(outfile,'Hubbard 2012 L-I threshold - upper bound (MW)', '(pthrmw(17))',pthrmw(17), 'OP ')
+         call ovarre(outfile,'Hubbard 2017 L-I threshold', '(pthrmw(18))',pthrmw(18), 'OP ')
+         call ovarre(outfile,'Martin 2008 aspect ratio corrected scaling: nominal (MW)', '(pthrmw(19))',pthrmw(19), 'OP ')
+         call ovarre(outfile,'Martin 2008 aspect ratio corrected scaling: 95% upper bound (MW)', '(pthrmw(20))',pthrmw(20), 'OP ')
+         call ovarre(outfile,'Martin 2008 aspect ratio corrected scaling: 95% lower bound (MW)', '(pthrmw(21))',pthrmw(21), 'OP ')
          call oblnkl(outfile)
-         call report_error(207)
-      end if
-      if ((ioptimz > 0).and.(active_constraints(15))) then
-         call ovarre(outfile,'L-H threshold power (enforced) (MW)', '(boundl(103)*plhthresh)',boundl(103)*plhthresh, 'OP ')
-         call ovarre(outfile,'L-H threshold power (MW)', '(plhthresh)',plhthresh, 'OP ')
-      else
-         call ovarre(outfile,'L-H threshold power (NOT enforced) (MW)', '(plhthresh)',plhthresh, 'OP ')
+         if ((ilhthresh.eq.9).or.(ilhthresh.eq.10).or.(ilhthresh.eq.11)) then
+            if ((bt < 0.78D0).or.(bt > 7.94D0)) then
+               call ocmmnt(outfile,'(bt outside Snipes 2000 fitted range)')
+               call report_error(201)
+            end if
+            if ((rminor < 0.15D0).or.(rminor > 1.15D0)) then
+               call ocmmnt(outfile,'(rminor outside Snipes 2000 fitted range)')
+               call report_error(202)
+            end if
+            if ((rmajor < 0.55D0).or.(rmajor > 3.37D0)) then
+               call ocmmnt(outfile,'(rmajor outside Snipes 2000 fitted range)')
+               call report_error(203)
+            end if
+            if ((dnla < 0.09D20).or.(dnla > 3.16D20)) then
+               call ocmmnt(outfile,'(dnla outside Snipes 2000 fitted range)')
+               call report_error(204)
+            end if
+            if ((kappa < 1.0D0).or.(kappa > 2.04D0)) then
+               call ocmmnt(outfile,'(kappa outside Snipes 2000 fitted range)')
+               call report_error(205)
+            end if
+            if ((triang < 0.07D0).or.(triang > 0.74D0)) then
+               call ocmmnt(outfile,'(triang outside Snipes 2000 fitted range)')
+               call report_error(206)
+            end if
+         call oblnkl(outfile)
+         end if
+         if ((ilhthresh.eq.12).or.(ilhthresh.eq.13).or.(ilhthresh.eq.14)) then
+            call ocmmnt(outfile,'(L-H threshold for closed divertor only. Limited data used in Snipes fit)')
+            call oblnkl(outfile)
+            call report_error(207)
+         end if
+         if ((ioptimz > 0).and.(active_constraints(15))) then
+            call ovarre(outfile,'L-H threshold power (enforced) (MW)', '(boundl(103)*plhthresh)',boundl(103)*plhthresh, 'OP ')
+            call ovarre(outfile,'L-H threshold power (MW)', '(plhthresh)',plhthresh, 'OP ')
+         else
+            call ovarre(outfile,'L-H threshold power (NOT enforced) (MW)', '(plhthresh)',plhthresh, 'OP ')
+         end if
       end if
 
     call osubhd(outfile,'Confinement :')
@@ -3792,16 +3814,16 @@ module physics_module
          '(total_energy_conf_time)', total_energy_conf_time, 'OP ')
     call ocmmnt(outfile,'  (= stored energy including fast particles / loss power including radiation')
 
-
-    ! Issues 363 Output dimensionless plasma parameters MDK
-    call osubhd(outfile,'Dimensionless plasma parameters')
-    call ocmmnt(outfile,'For definitions see')
-    call ocmmnt(outfile,'Recent progress on the development and analysis of the ITPA global H-mode confinement database')
-    call ocmmnt(outfile,'D.C. McDonald et al, 2007 Nuclear Fusion v47, 147. (nu_star missing 1/mu0)')
-    call ovarre(outfile,'Normalized plasma pressure beta as defined by McDonald et al', '(beta_mcdonald)',beta_mcdonald,'OP ')
-    call ovarre(outfile,'Normalized ion Larmor radius', '(rho_star)', rho_star,'OP ')
-    call ovarre(outfile,'Normalized collisionality', '(nu_star)',nu_star,'OP ')
-    call ovarre(outfile,'Volume measure of elongation','(kappaa_IPB)',kappaa_IPB,'OP ')
+   if (istell == 0) then
+      ! Issues 363 Output dimensionless plasma parameters MDK
+      call osubhd(outfile,'Dimensionless plasma parameters')
+      call ocmmnt(outfile,'For definitions see')
+      call ocmmnt(outfile,'Recent progress on the development and analysis of the ITPA global H-mode confinement database')
+      call ocmmnt(outfile,'D.C. McDonald et al, 2007 Nuclear Fusion v47, 147. (nu_star missing 1/mu0)')
+      call ovarre(outfile,'Normalized plasma pressure beta as defined by McDonald et al', '(beta_mcdonald)',beta_mcdonald,'OP ')
+      call ovarre(outfile,'Normalized ion Larmor radius', '(rho_star)', rho_star,'OP ')
+      call ovarre(outfile,'Normalized collisionality', '(nu_star)',nu_star,'OP ')
+      call ovarre(outfile,'Volume measure of elongation','(kappaa_IPB)',kappaa_IPB,'OP ')
 
 
       call osubhd(outfile,'Plasma Volt-second Requirements :')
@@ -3818,42 +3840,42 @@ module physics_module
       call ovarrf(outfile,'Bootstrap fraction (Sauter et al)', '(bscf_sauter)',bscf_sauter, 'OP ')
 
 
-         call ovarrf(outfile,'Bootstrap fraction (Nevins et al)', '(bscf_nevins)',bscf_nevins, 'OP ')
-         call ovarrf(outfile,'Bootstrap fraction (Wilson)', '(bscf_wilson)',bscf_wilson, 'OP ')
-         call ovarrf(outfile,'Diamagnetic fraction (Hender)', '(diacf_hender)',diacf_hender, 'OP ')
-         call ovarrf(outfile,'Diamagnetic fraction (SCENE)', '(diacf_scene)',diacf_scene, 'OP ')
-         call ovarrf(outfile,'Pfirsch-Schlueter fraction (SCENE)', '(pscf_scene)',pscf_scene, 'OP ')
-         ! Error to catch if bootstap fraction limit has been enforced
-         if (err242==1)then
-            call report_error(242)
-         end if
-         ! Error to catch if self-driven current fraction limit has been enforced
-         if (err243==1)then
-            call report_error(243)
-         end if
+      call ovarrf(outfile,'Bootstrap fraction (Nevins et al)', '(bscf_nevins)',bscf_nevins, 'OP ')
+      call ovarrf(outfile,'Bootstrap fraction (Wilson)', '(bscf_wilson)',bscf_wilson, 'OP ')
+      call ovarrf(outfile,'Diamagnetic fraction (Hender)', '(diacf_hender)',diacf_hender, 'OP ')
+      call ovarrf(outfile,'Diamagnetic fraction (SCENE)', '(diacf_scene)',diacf_scene, 'OP ')
+      call ovarrf(outfile,'Pfirsch-Schlueter fraction (SCENE)', '(pscf_scene)',pscf_scene, 'OP ')
+      ! Error to catch if bootstap fraction limit has been enforced
+      if (err242==1)then
+         call report_error(242)
+      end if
+      ! Error to catch if self-driven current fraction limit has been enforced
+      if (err243==1)then
+         call report_error(243)
+      end if
 
-         if (bscfmax < 0.0D0) then
-            call ocmmnt(outfile,'  (User-specified bootstrap current fraction used)')
-         else if (ibss == 1) then
-            call ocmmnt(outfile,'  (ITER 1989 bootstrap current fraction model used)')
-         else if (ibss == 2) then
-            call ocmmnt(outfile,'  (Nevins et al bootstrap current fraction model used)')
-         else if (ibss == 3) then
-            call ocmmnt(outfile,'  (Wilson bootstrap current fraction model used)')
-         else if (ibss == 4) then
-            call ocmmnt(outfile,'  (Sauter et al bootstrap current fraction model used)')
-         end if
+      if (bscfmax < 0.0D0) then
+         call ocmmnt(outfile,'  (User-specified bootstrap current fraction used)')
+      else if (ibss == 1) then
+         call ocmmnt(outfile,'  (ITER 1989 bootstrap current fraction model used)')
+      else if (ibss == 2) then
+         call ocmmnt(outfile,'  (Nevins et al bootstrap current fraction model used)')
+      else if (ibss == 3) then
+         call ocmmnt(outfile,'  (Wilson bootstrap current fraction model used)')
+      else if (ibss == 4) then
+         call ocmmnt(outfile,'  (Sauter et al bootstrap current fraction model used)')
+      end if
 
-         if (idia == 0) then
-            call ocmmnt(outfile,'  (Diamagnetic current fraction not calculated)')
-            ! Error to show if diamagnetic current is above 1% but not used
-            if (diacf_scene.gt.0.01D0) then
-            call report_error(244)
-            end if
-         else if (idia == 1) then
-            call ocmmnt(outfile,'  (Hender diamagnetic current fraction scaling used)')
-         else if (idia == 2) then
-            call ocmmnt(outfile,'  (SCENE diamagnetic current fraction scaling used)')
+      if (idia == 0) then
+         call ocmmnt(outfile,'  (Diamagnetic current fraction not calculated)')
+         ! Error to show if diamagnetic current is above 1% but not used
+         if (diacf_scene.gt.0.01D0) then
+         call report_error(244)
+         end if
+      else if (idia == 1) then
+         call ocmmnt(outfile,'  (Hender diamagnetic current fraction scaling used)')
+      else if (idia == 2) then
+         call ocmmnt(outfile,'  (SCENE diamagnetic current fraction scaling used)')
 
       if (ips == 0) then
             call ocmmnt(outfile,'  (Pfirsch-Schlüter current fraction not calculated)')
@@ -3873,7 +3895,7 @@ module physics_module
       call ovarre(outfile,'Resistive diffusion time (s)','(res_time)',res_time, 'OP ')
       call ovarre(outfile,'Plasma inductance (H)','(rlp)',rlp, 'OP ')
       call ovarrf(outfile,'Coefficient for sawtooth effects on burn V-s requirement','(csawth)',csawth)
-
+   end if
 
     call osubhd(outfile,'Fuelling :')
     call ovarre(outfile,'Ratio of He and pellet particle confinement times','(tauratio)',tauratio)
