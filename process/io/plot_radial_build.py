@@ -40,13 +40,6 @@ def parse_args(args):
     )
 
     parser.add_argument(
-        "-o",
-        "--output",
-        default="radial_build_plot",
-        help="name out outputted file (default=radial_build_plot)",
-    )
-
-    parser.add_argument(
         "-op",
         "--outputdir",
         default=Path.cwd(),
@@ -136,7 +129,6 @@ def main(args=None):
     args = parse_args(args)
 
     input_file = str(args.input)
-    output_name = str(args.output)
     save_format = str(args.save_format)
 
     # LaTeX labels
@@ -457,7 +449,7 @@ def main(args=None):
     plt.xlabel("Radius [m]")
     plt.tight_layout()
     plt.savefig(
-        f"{args.outputdir}/{output_name}.{save_format}",
+        f"{args.outputdir}/{args.input[:-10]}_radial_build.{save_format}",
         bbox_inches="tight",
     )
 
