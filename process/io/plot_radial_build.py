@@ -62,6 +62,14 @@ def parse_args(args):
         help="Show inboard build only, default = False ",
     )
 
+    parser.add_argument(
+        "-nm",
+        "--numbers",
+        action="store_true",
+        default=False,
+        help="Show widths of components in the legend. Only use non-scan MFILE's as will only show last values",
+    )
+
     return parser.parse_args(args)
 
 
@@ -313,11 +321,11 @@ def main(args=None):
 
     # Getting the scanned variable name
     m_file = mf.MFile(filename=input_file)
-    try:
-        nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
-        scan_var_name = nsweep_list[nsweep_ref - 1]
-    except Exception:
+    nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
+    if nsweep_ref == 0:
         scan_var_name = "Null"
+    else:
+        scan_var_name = nsweep_list[nsweep_ref - 1]
 
     radial_labels = [
         "Machine Bore",
@@ -420,7 +428,7 @@ def main(args=None):
         end_scan = radial_labels.index("Plasma")
     else:
         end_scan = len(radial_build)
-
+    plt.figure(figsize=(8, 6))
     for kk in range((len(radial_build[:end_scan, 0]))):
         if kk == 0:
             lower = np.zeros(len(radial_build[kk, :]))
@@ -431,7 +439,7 @@ def main(args=None):
             radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=radial_labels[kk],
+            label=f"{radial_labels[kk]}" + f"\n {radial_build[kk][0]} m" * args.numbers,
             color=radial_color[kk],
             edgecolor="black",
             linewidth=0.05,
@@ -444,7 +452,10 @@ def main(args=None):
         plt.yticks([])
 
     plt.legend(
-        bbox_to_anchor=(0.5, -0.15), loc="upper center", fontsize=legend_size, ncol=4
+        bbox_to_anchor=(0.5, -0.15),
+        loc="upper center",
+        fontsize=legend_size,
+        ncol=4,
     )
     plt.xlabel("Radius [m]")
     plt.tight_layout()
