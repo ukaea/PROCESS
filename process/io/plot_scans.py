@@ -142,7 +142,7 @@ def parse_args(args):
         "--stack_plots",
         action="store_true",
         help=(
-            "Option to plot multiple 1D plots in a column of sub0plots \n  "
+            "Option to plot multiple 1D plots in a column of subplots \n  "
             "Variables will be plotted in order of input"
         ),
     )
