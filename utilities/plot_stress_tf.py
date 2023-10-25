@@ -35,7 +35,7 @@ if __name__ == "__main__":
         "--plot_selec",
         nargs="?",
         default="all",
-        help="Plot selection string :\n - If it containts 'sig'      -> Stress radial dependency \n - If it containts 'strain'   -> Strain \n - If it containts 'disp'     -> Displacement \n - If it containts 'all'      -> all the mentionned plots (default value)",
+        help="Plot selection string :\n - If it containts 'sig'      -> Stress radial dependency \n - If it containts 'strain'   -> Strain \n - If it containts 'disp'     -> Displacement \n - If it containts 'all'      -> all the mentioned plots (default value)",
     )
     parser.add_argument(
         "-sf",

@@ -353,9 +353,7 @@ if __name__ == "__main__":
         "-f", metavar="f", type=str, nargs="+", help="specify the MFILE(s) to plot"
     )
 
-    parser.add_argument(
-        "-s", "--save", help="save as well as displaying figure", action="store_true"
-    )
+    parser.add_argument("-s", "--save", help="save figure", action="store_true")
 
     parser.add_argument("-inf", type=float, help="Inflation Factor (multiplies costs)")
 
