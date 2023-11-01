@@ -70,6 +70,7 @@ from process.hcpb import CCFE_HCPB
 from process.dcll import DCLL
 from process.blanket_library import BlanketLibrary
 from process.fw import Fw
+from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 
 from pathlib import Path
@@ -595,7 +596,10 @@ class Models:
             hcpb=self.ccfe_hcpb,
         )
         self.costs_2015 = Costs2015()
-        self.physics = Physics(plasma_profile=self.plasma_profile)
+        self.current_drive = CurrentDrive()
+        self.physics = Physics(
+            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+        )
         self.dcll = DCLL(blanket_library=self.blanket_library)
 
 
