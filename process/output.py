@@ -56,7 +56,7 @@ def write(models, outfile):
     ft.physics_module.igmarcal(outfile)
 
     # TODO what is this? Not in caller.f90?
-    ft.current_drive_module.cudriv(outfile, 1)
+    models.current_drive.cudriv(output=True)
 
     # Pulsed reactor model
     models.pulse.run(output=True)
