@@ -779,11 +779,9 @@ contains
     effnbss = frbeam * &
          etanb(abeam,alphan,alphat,aspect,dene,enbeam,rmajor,ten,zeff)
 
-  contains
+  end subroutine iternb
 
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function etanb(abeam,alphan,alphat,aspect,dene,ebeam,rmajor,ten,zeff)
+  function etanb(abeam,alphan,alphat,aspect,dene,ebeam,rmajor,ten,zeff)
 
       !! Routine to find neutral beam current drive efficiency
       !! using the ITER 1990 formulation
@@ -853,8 +851,6 @@ contains
 
     end function etanb
 
-  end subroutine iternb
-
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine cfnbi(afast,efast,te,ne,nd,nt,zeffai,xlmbda,fpion)
@@ -922,11 +918,9 @@ contains
     ans = (t1 + t2) / (3.0D0 * x*x)
     fpion = ans
 
-  contains
+  end subroutine cfnbi
 
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function xlmbdabi(mb,mth,eb,t,nelec)
+  function xlmbdabi(mb,mth,eb,t,nelec)
 
       !! Calculates the Coulomb logarithm for ion-ion collisions
       !! author: P J Knight, CCFE, Culham Science Centre
@@ -963,8 +957,6 @@ contains
       xlmbdabi = ans
 
     end function xlmbdabi
-
-  end subroutine cfnbi
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1126,11 +1118,9 @@ contains
 
     effrfss = gamlh / ((0.1D0*dlocal)*rmajor)
 
-  contains
+  end subroutine cullhy
 
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    subroutine lhrad(rratio)
+  subroutine lhrad(rratio)
 
       !! Routine to calculate Lower Hybrid wave absorption radius
       !! author: P J Knight, CCFE, Culham Science Centre
@@ -1141,6 +1131,9 @@ contains
       !! AEA FUS 172: Physics Assessment for the European Reactor Study
       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      use physics_variables, only: te0
+      use error_handling, only: idiags, report_error
 
       implicit none
 
@@ -1239,6 +1232,9 @@ contains
       !! AEA FUS 172: Physics Assessment for the European Reactor Study
       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      use profiles_module, only: nprofile, tprofile
+      use physics_variables, only: rminor, rhopedn, ne0, neped, nesep, alphan, &
+         rhopedt, te0, tesep, teped, alphat, tbeta, bt, rmajor
 
       implicit none
 
@@ -1287,8 +1283,6 @@ contains
       ediff = e1-e2
 
     end subroutine lheval
-
-  end subroutine cullhy
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1354,11 +1348,9 @@ contains
     !  Current drive efficiency (A/W)
     effrfss = ecgam/(dlocal*rmajor)
 
-  contains
+  end subroutine culecd
 
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    subroutine eccdef(tlocal,epsloc,zlocal,cosang,coulog,ecgam)
+  subroutine eccdef(tlocal,epsloc,zlocal,cosang,coulog,ecgam)
 
       !! Routine to calculate Electron Cyclotron current drive efficiency
       !! author: M R O'Brien, CCFE, Culham Science Centre
@@ -1528,8 +1520,6 @@ contains
 
     end subroutine legend
 
-  end subroutine culecd
-
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine culnbi(effnbss,fpion,fshine)
@@ -1602,11 +1592,9 @@ contains
     effnbss = etanb2(abeam,alphan,alphat,aspect,dene,dnla,enbeam, &
          frbeam,fshine,rmajor,rminor,ten,zeff)
 
-  contains
+  end subroutine culnbi
 
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function etanb2(abeam,alphan,alphat,aspect,dene,dnla,enbeam,frbeam, &
+  function etanb2(abeam,alphan,alphat,aspect,dene,dnla,enbeam,frbeam, &
       fshine,rmajor,rminor,ten,zeff)
       !! Routine to find neutral beam current drive efficiency
       !! using the ITER 1990 formulation, plus correction terms
@@ -1636,6 +1624,7 @@ contains
       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+      use error_handling, only: fdiags, idiags, report_error
       implicit none
 
       real(dp) :: etanb2
@@ -1732,7 +1721,5 @@ contains
       etanb2 = gamnb / (dene20*rmajor)
 
     end function etanb2
-
-  end subroutine culnbi
 
 end module current_drive_module
