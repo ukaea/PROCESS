@@ -404,7 +404,7 @@ class Vacuum:
             while True:
                 d[i] = 1.0e0
 
-                for _ in range(99):
+                for _ in range(100):
                     a1 = (
                         0.25e0 * math.pi * d[i] * d[i]
                     )  # Area of aperture and duct (m^2)
