@@ -460,7 +460,9 @@ class Vacuum:
                 #  Area between adjacent TF coils available for pump ducts
                 #  ritf = outer radius of inboard leg of TF coil (m)
 
-                a1max = (r0 + aw - ritf - thcsh / math.tan(theta)) ** 2 * math.tan(theta)
+                a1max = (r0 + aw - ritf - thcsh / math.tan(theta)) ** 2 * math.tan(
+                    theta
+                )
                 d1max = math.sqrt(4.0e0 * a1max / math.pi)  # Equivalent diameter
                 if a1 < a1max:
                     break
