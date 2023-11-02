@@ -121,10 +121,8 @@ class CsFatigue:
             * (  # f
                 (
                     m1
-                    + (0.05e0 / (0.11e0 + a_c**1.5e0))  # m2
-                    * a_t**2.0e0
-                    + (0.29e0 / (0.23e0 + a_c**1.5e0))  # m3
-                    * a_t**4.0e0
+                    + (0.05e0 / (0.11e0 + a_c**1.5e0)) * a_t**2.0e0  # m2 *a_t^2
+                    + (0.29e0 / (0.23e0 + a_c**1.5e0)) * a_t**4.0e0  # m3 *a_t^4
                 )
                 * (  # g
                     1.0e0
@@ -207,17 +205,14 @@ class CsFatigue:
             H2 = (
                 1.0e0
                 + (-2.11e0 + 0.77e0 * c_a) * a_t  # G21 * a / t
-                + (0.55e0 - 0.72e0 * c_a * 0.75e0 + 0.14e0 * c_a * 1.5e0)  # G22
-                * a_t_2
+                + (0.55e0 - 0.72e0 * c_a * 0.75e0 + 0.14e0 * c_a * 1.5e0) * a_t_2  # G22
             )
 
         # compute the unitless geometric correction
         # compute the stress intensity factor
         return (
-            (
-                hoop_stress
-                + (H1 + (H2 - H1) * sin_phi**p)  # Hs
-                * bending_stress
+            (  # hoop_stress + Hs * bending_stress
+                hoop_stress + (H1 + (H2 - H1) * sin_phi**p) * bending_stress
             )
             * (  # f
                 (m1 + m2 * a_t_2 + m3 * a_t**4.0e0)
