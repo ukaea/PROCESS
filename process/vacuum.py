@@ -404,7 +404,7 @@ class Vacuum:
             while True:
                 d[i] = 1.0e0
 
-                for _ in range(100):
+                for _ in range(99):
                     a1 = (
                         0.25e0 * math.pi * d[i] * d[i]
                     )  # Area of aperture and duct (m^2)
@@ -446,8 +446,9 @@ class Vacuum:
                         )
                     )
                     dnew = d[i] - y / dy
+                    dd = abs((d[i] - dnew) / d[i])
                     d[i] = dnew
-                    if abs((d[i] - dnew) / d[i]) <= 0.01e0:
+                    if dd <= 0.01e0:
                         break
 
                 else:
