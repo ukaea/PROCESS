@@ -401,12 +401,10 @@ class Vacuum:
             ceff[i] = 1.0e0 / (nduct / s[i] - 1.0e0 / (sp[i] * pumpn))
 
             #  Newton's method solution for duct diameter
-
             while True:
                 d[i] = 1.0e0
 
-                lap = 0
-                while True:
+                for _ in range(100):
                     a1 = (
                         0.25e0 * math.pi * d[i] * d[i]
                     )  # Area of aperture and duct (m^2)
@@ -448,34 +446,27 @@ class Vacuum:
                         )
                     )
                     dnew = d[i] - y / dy
-                    dd = abs((d[i] - dnew) / d[i])
                     d[i] = dnew
-                    if dd <= 0.01e0:
+                    if abs((d[i] - dnew) / d[i]) <= 0.01e0:
                         break
 
-                    lap = lap + 1
-                    if lap > 99:
-                        eh.fdiags[0] = pv.powfmw
-                        eh.fdiags[1] = pv.te
-                        eh.report_error(124)
-                        break
+                else:
+                    eh.fdiags[0] = pv.powfmw
+                    eh.fdiags[1] = pv.te
+                    eh.report_error(124)
 
                 theta = math.pi / ntf
 
                 #  Area between adjacent TF coils available for pump ducts
                 #  ritf = outer radius of inboard leg of TF coil (m)
 
-                a1max = (r0 + aw - ritf - thcsh / math.tan(theta)) ** 2 * math.tan(
-                    theta
-                )
+                a1max = (r0 + aw - ritf - thcsh / math.tan(theta)) ** 2 * math.tan(theta)
                 d1max = math.sqrt(4.0e0 * a1max / math.pi)  # Equivalent diameter
                 if a1 < a1max:
                     break
 
                 ceff[i] = 0.9e0 * ceff[i]
-                if ceff[i] > (1.1e0 * s[i]):
-                    continue
-                else:
+                if ceff[i] <= (1.1e0 * s[i]):
                     #  Ducts are not big enough. Flag and continue.
                     nflag = 1
                     break
