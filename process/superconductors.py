@@ -457,9 +457,10 @@ def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
     selected manually. A good fit to the pubished data can be seen in the 4-10 T range
     but the fit deviates at very low or very high field.
 
+    C. Ashe 2/11/23
     A scaling factor of 0.4 was originally applied to jcrit to accomodate the models
     original purpose of being used with CORC cables, which PROCESS did not model as it
-    assumed a stacked tape block design
+    assumed a stacked tape block design.
     """
 
     a = 1.4
