@@ -315,7 +315,7 @@ class BlanketLibrary:
                     blanket_library.blwidto * fwbs_variables.w_f_liq_ob
                 ) / fwbs_variables.nopipes
                 # Poloidal
-                if fwbs_variables.bllengo < (fwbs_variables.b_bz_liq * 3):
+                if blanket_library.bllengo < (fwbs_variables.b_bz_liq * 3):
                     eh.report_error(278)
 
         # Calculate total flow lengths, used for pressure drop calculation
@@ -405,7 +405,12 @@ class BlanketLibrary:
                 pnucblkti_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
                     fwbs_variables.volblkti / fwbs_variables.volblkt
                 )
-
+            pnucblkti_struct = (
+                fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
+            ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
+            pnucblkti_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
+                fwbs_variables.volblkti / fwbs_variables.volblkt
+            )
             pnucblkto_struct = (
                 fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.volblkto / fwbs_variables.volblkt)
@@ -466,7 +471,12 @@ class BlanketLibrary:
         # First wall flow is just along the first wall, with no allowance for radial
         # pipes, manifolds etc. The outputs are mid quantities of inlet and outlet.
         # This subroutine recalculates cp and rhof.
-        (blanket_library.tpeakfwi, cf, rhof, blanket_library.mffwpi,) = self.fw.fw_temp(
+        (
+            blanket_library.tpeakfwi,
+            cf,
+            rhof,
+            blanket_library.mffwpi,
+        ) = self.fw.fw_temp(
             output,
             fwbs_variables.afw,
             build_variables.fwith,
@@ -758,7 +768,7 @@ class BlanketLibrary:
             blanket_library.mfblktpo_liq = blanket_library.mfblkto_liq / npblkto_liq
             velblkto_liq = blanket_library.flow_velocity(
                 i_channel_shape=2,
-                mass_flow_rate=mfblktpo_liq,
+                mass_flow_rate=blanket_library.mfblktpo_liq,
                 flow_density=fwbs_variables.den_liq,
             )
 

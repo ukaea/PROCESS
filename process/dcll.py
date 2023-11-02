@@ -566,7 +566,7 @@ class DCLL:
                 * (1 - fwbs_variables.r_f_liq_ob)
                 / build_variables.blnkoth
             )
-            if build_variables.icooldual > 0:
+            if fwbs_variables.icooldual > 0:
                 fwbs_variables.vfblkt = (
                     (1 - dcll_module.f_vol_stl_bz_struct) * dcll_module.vol_bz_struct
                 ) / fwbs_variables.volblkt
