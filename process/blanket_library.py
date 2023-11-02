@@ -397,14 +397,7 @@ class BlanketLibrary:
         if fwbs_variables.icooldual == 2:
             f_nuc_pow_bz_liq = 1 - fwbs_variables.f_nuc_pow_bz_struct
 
-            # If there is an IB blanket...
-            if fwbs_variables.iblnkith == 1:
-                pnucblkti_struct = (
-                    fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
-                ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
-                pnucblkti_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
-                    fwbs_variables.volblkti / fwbs_variables.volblkt
-                )
+            # Inboard blanket calc. Will return 0 if no inboard shldith thickness
             pnucblkti_struct = (
                 fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
@@ -677,7 +670,6 @@ class BlanketLibrary:
             # Mass flow rate per coolant pipe
             blanket_library.mfblktpo = blanket_library.mfblkto / blanket_library.npblkto
             mfblktpo_liq = blanket_library.mfblkto_liq / npblkto_liq
-
             # Coolant velocites in blanket (m/s)
             # Assume BZ structure has same channel width as FW
             blanket_library.velblkto = blanket_library.flow_velocity(
@@ -958,7 +950,6 @@ class BlanketLibrary:
                 nopolchan=npoltoto,
                 label="Outboard blanket breeder liquid",
             )
-
             if fwbs_variables.iblnkith == 1:
                 deltap_bli_liq = self.deltap_tot(
                     output,
@@ -976,7 +967,7 @@ class BlanketLibrary:
                     label="Inboard blanket breeder liquid",
                 )
 
-        # Pumping Power ##################
+        # Pumping Power
 
         # If FW and BB have the same coolant...
         if fwbs_variables.ipump == 0:
