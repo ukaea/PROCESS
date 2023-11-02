@@ -486,13 +486,13 @@ def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
     jcrit = (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
 
     # Jc times HTS area: default area is width 4mm times HTS layer thickness 1 um,
-    # divided by the tape area to provide engineering Jc per tape, then multiplied by fraction 0.4
-    # to reach the level of current density expected in the space where the tapes are wound in A/m^2!
+    # divided by the tape area to provide engineering Jc per tape,!
+    # A scaling factor of 0.4 used to be applied below to assume the difference
+    # between tape stacks and CORC cable layouts.
     jcrit = (
         jcrit
         * (rebco_variables.tape_width * rebco_variables.rebco_thickness)
         / (rebco_variables.tape_width * rebco_variables.tape_thickness)
-        * 0.4
     )
 
     return jcrit, bcrit, tcrit
