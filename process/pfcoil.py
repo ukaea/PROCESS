@@ -2973,10 +2973,8 @@ class PFCoil:
 
             # Actual current density in superconductor, which should be equal to jcrit(thelium+tmarg)
             # when we have found the desired value of tmarg
-            lap = 0
-            while True:
-                lap = lap + 1
-                if (ttest <= 0.0) or (lap > 100):
+            for lap in range(100):
+                if ttest <= 0.0:
                     eh.idiags[0] = lap
                     eh.fdiags[0] = ttest
                     eh.report_error(158)
@@ -3006,6 +3004,10 @@ class PFCoil:
                     jcritp = jcritp + (jcritp * 1e-6)
 
                 ttest = ttest - 2.0e0 * delt * (jcrit0 - jsc) / (jcritp - jcritm)
+            else:
+                eh.idiags[0] = lap
+                eh.fdiags[0] = ttest
+                eh.report_error(158)
 
             tmarg = ttest - thelium
 

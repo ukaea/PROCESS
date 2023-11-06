@@ -456,6 +456,11 @@ def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
     considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8. These values were
     selected manually. A good fit to the pubished data can be seen in the 4-10 T range
     but the fit deviates at very low or very high field.
+
+    C. Ashe 2/11/23
+    A scaling factor of 0.4 was originally applied to jcrit to accomodate the models
+    original purpose of being used with CORC cables, which PROCESS did not model as it
+    assumed a stacked tape block design.
     """
 
     a = 1.4
@@ -486,13 +491,13 @@ def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
     jcrit = (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
 
     # Jc times HTS area: default area is width 4mm times HTS layer thickness 1 um,
-    # divided by the tape area to provide engineering Jc per tape, then multiplied by fraction 0.4
-    # to reach the level of current density expected in the space where the tapes are wound in A/m^2!
+    # divided by the tape area to provide engineering Jc per tape,!
+    # A scaling factor of 0.4 used to be applied below to assume the difference
+    # between tape stacks and CORC cable layouts.
     jcrit = (
         jcrit
         * (rebco_variables.tape_width * rebco_variables.rebco_thickness)
         / (rebco_variables.tape_width * rebco_variables.tape_thickness)
-        * 0.4
     )
 
     return jcrit, bcrit, tcrit

@@ -65,3 +65,13 @@ def scan_mfile_name():
     :rtype: str
     """
     return "scan_MFILE.DAT"
+
+
+@pytest.fixture
+def scan_2D_mfile_name():
+    """Return the name of a 2D scan mfile to test.
+
+    :return: name of the mfile
+    :rtype: str
+    """
+    return "scan_2D_MFILE.DAT"

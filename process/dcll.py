@@ -566,12 +566,18 @@ class DCLL:
                 * (1 - fwbs_variables.r_f_liq_ob)
                 / build_variables.blnkoth
             )
-            if build_variables.icooldual > 0:
+            if fwbs_variables.icooldual > 0:
                 fwbs_variables.vfblkt = (
                     (1 - dcll_module.f_vol_stl_bz_struct) * dcll_module.vol_bz_struct
                 ) / fwbs_variables.volblkt
 
             dcll_module.vol_bz_liq = (
+                fwbs_variables.volblkto
+                * dcll_module.bz_r_ob
+                * fwbs_variables.r_f_liq_ob
+                / build_variables.blnkoth
+            )
+            dcll_module.vol_bz_liq_ob = (
                 fwbs_variables.volblkto
                 * dcll_module.bz_r_ob
                 * fwbs_variables.r_f_liq_ob
@@ -614,7 +620,6 @@ class DCLL:
         dcll_module.wht_liq_ib = fwbs_variables.den_liq * dcll_module.vol_bz_liq_ib
         dcll_module.wht_liq_ob = fwbs_variables.den_liq * dcll_module.vol_bz_liq_ob
         dcll_module.wht_cer = fwbs_variables.den_ceramic * dcll_module.vol_fci
-
         # Back Wall
         dcll_module.wht_bw_stl = (
             fwbs_variables.denstl * dcll_module.f_vol_stl_back_wall * dcll_module.vol_bw

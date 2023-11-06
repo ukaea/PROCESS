@@ -24,15 +24,35 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 <figcaption>Figure 2: plot_proc plasma profiles and cross-sections page </figcaption>
 </figure>
 
+<h3>Scan files</h3>
+
+`plot_scans` is a tool to show the change in variables as a scan variable is varied.
+Scans can be done in one or two dimensions.
+
+```bash
+python process/io/plot_scans.py -f path/to/MFILE.DAT
+```
+<figure markdown>
+![2D_contour_plot](../../images/2D_contour_plot_example.png){figures-side, width="100%"}  
+<figcaption>Figure 3: 2D scan contour plot </figcaption>
+</figure>
+
+<figure markdown>
+![2D_stack_plot](../../images/stack_scan_plot_example.png){figures-side, width="100%"}  
+<figcaption>Figure 3: 1D scan plot </figcaption>
+</figure>
+
+
+
 <h3>Radial build</h3>
 
 `plot_radial_build` is to plot the radial build of the machine in terms of bar segments. It can be run as follows:
 
 ```bash
-python process/io/plot_radial_build.py -f path/to/MFILE.DAT -o output_filename
+python process/io/plot_radial_build.py -f path/to/MFILE.DAT
 ```
 <figure markdown>
 ![radial_build_plot](../../images/radial_build_plot.png){ width="100%"}
-<figcaption>Figure 3: Simple radial build plot </figcaption>
+<figcaption>Figure 5: Simple radial build plot </figcaption>
 </figure>
 
