@@ -1452,7 +1452,7 @@ class CurrentDrive:
 
         #  Current drive efficiency
 
-        effnbss = current_drive_module.etanb2(
+        effnbss = self.etanb2(
             physics_variables.abeam,
             physics_variables.alphan,
             physics_variables.alphat,
@@ -1526,3 +1526,189 @@ class CurrentDrive:
             rat0 = 0.8e0
 
         return rat0
+
+    def etanb2(
+        self,
+        abeam,
+        alphan,
+        alphat,
+        aspect,
+        dene,
+        dnla,
+        enbeam,
+        frbeam,
+        fshine,
+        rmajor,
+        rminor,
+        ten,
+        zeff,
+    ):
+        """Routine to find neutral beam current drive efficiency
+        using the ITER 1990 formulation, plus correction terms
+        outlined in Culham Report AEA FUS 172
+        author: P J Knight, CCFE, Culham Science Centre
+        abeam   : input real : beam ion mass (amu)
+        alphan  : input real : density profile factor
+        alphat  : input real : temperature profile factor
+        aspect  : input real : aspect ratio
+        dene    : input real : volume averaged electron density (m**-3)
+        dnla    : input real : line averaged electron density (m**-3)
+        enbeam  : input real : neutral beam energy (keV)
+        frbeam  : input real : R_tangent / R_major for neutral beam injection
+        fshine  : input real : shine-through fraction of beam
+        rmajor  : input real : plasma major radius (m)
+        rminor  : input real : plasma minor radius (m)
+        ten     : input real : density weighted average electron temperature (keV)
+        zeff    : input real : plasma effective charge
+        This routine calculates the current drive efficiency in A/W of
+        a neutral beam system, based on the 1990 ITER model,
+        plus correction terms outlined in Culham Report AEA FUS 172.
+        <P>The formulae are from AEA FUS 172, unless denoted by IPDG89.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        #  Charge of beam ions
+        zbeam = 1.0
+
+        #  Fitting factor (IPDG89)
+        bbd = 1.0
+
+        #  Volume averaged electron density (10**20 m**-3)
+        dene20 = dene / 1e20
+
+        #  Line averaged electron density (10**20 m**-3)
+        dnla20 = dnla / 1e20
+
+        #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
+        #  N.B. ten is in keV
+        ecrit = 0.01 * abeam * ten
+
+        #  Beam energy in MeV
+        ebmev = enbeam / 1e3
+
+        #  x and y coefficients of function J0(x,y) (IPDG89)
+        xjs = ebmev / (bbd * ecrit)
+        xj = np.sqrt(xjs)
+
+        yj = 0.8 * zeff / abeam
+
+        #  Fitting function J0(x,y)
+        j0 = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
+
+        #  Effective inverse aspect ratio, with a limit on its maximum value
+        epseff = min(0.2, (0.5 / aspect))
+
+        #  Reduction in the reverse electron current
+        #  due to neoclassical effects
+        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
+
+        # Reduction in the net beam driven current
+        #  due to the reverse electron current
+        ffac = 1.0 - (zbeam / zeff) * (1.0 - gfac)
+
+        #  Normalisation to allow results to be valid for
+        #  non-ITER plasma size and density:
+
+        #  Line averaged electron density (10**20 m**-3) normalised to ITER
+        nnorm = 1.0
+
+        #  Distance along beam to plasma centre
+        r = max(rmajor, rmajor * frbeam)
+        eps1 = rminor / r
+
+        if (1.0 + eps1) < frbeam:
+            eh.fdiags[0] = eps1
+            eh.fdiags[1] = frbeam
+            eh.report_error(21)
+
+        d = rmajor * np.sqrt((1.0 + eps1) ** 2 - frbeam**2)
+
+        # Distance along beam to plasma centre for ITER
+        # assuming a tangency radius equal to the major radius
+        epsitr = 2.15 / 6.0
+        dnorm = 6.0 * np.sqrt(2.0 * epsitr + epsitr**2)
+
+        #  Normalisation to beam energy (assumes a simplified formula for
+        #  the beam stopping cross-section)
+        ebnorm = ebmev * ((nnorm * dnorm) / (dnla20 * d)) ** (1.0 / 0.78)
+
+        #  A_bd fitting coefficient, after normalisation with ebnorm
+        abd = (
+            0.107
+            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
+            * (1.0 - 0.21 * alphat)
+            * (1.0 - 0.2 * ebnorm + 0.09 * ebnorm**2)
+        )
+
+        #  Normalised current drive efficiency (A/W m**-2) (IPDG89)
+        gamnb = 5.0 * abd * 0.1 * ten * (1.0 - fshine) * frbeam * j0 / 0.2 * ffac
+
+        #  Current drive efficiency (A/W)
+        return gamnb / (dene20 * rmajor)
+
+    def lheval(self, drfind, rratio):
+        """Routine to evaluate the difference between electron energy
+        expressions required to find the Lower Hybrid absorption radius
+        author: P J Knight, CCFE, Culham Science Centre
+        drfind  : input real : correction to parallel refractive index
+        rratio  : input real : guess for radius of penetration / rminor
+        ediff   : output real : difference between the E values (keV)
+        This routine evaluates the difference between the values calculated
+        from the two equations for the electron energy E, given in
+        AEA FUS 172, p.58. This difference is used to locate the Lower Hybrid
+        wave absorption radius via a Newton-Raphson method, in calling
+        routine <A HREF="lhrad.html">lhrad</A>.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        dlocal = 1.0e-19 * profiles_module.nprofile(
+            rratio,
+            physics_variables.rhopedn,
+            physics_variables.ne0,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.alphan,
+        )
+
+        #  Local electron temperature
+
+        tlocal = profiles_module.tprofile(
+            rratio,
+            physics_variables.rhopedt,
+            physics_variables.te0,
+            physics_variables.teped,
+            physics_variables.tesep,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+        )
+
+        #  Local toroidal field (evaluated at the inboard region of the flux surface)
+
+        blocal = (
+            physics_variables.bt
+            * physics_variables.rmajor
+            / (physics_variables.rmajor - rratio * physics_variables.rminor)
+        )
+
+        #  Parallel refractive index needed for plasma access
+
+        frac = np.sqrt(dlocal) / blocal
+        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
+
+        #  Total parallel refractive index
+
+        refind = nplacc + drfind
+
+        #  First equation for electron energy E
+
+        e1 = 511.0e0 * (np.sqrt(1.0e0 + 1.0e0 / (refind * refind)) - 1.0e0)
+
+        #  Second equation for E
+
+        e2 = 7.0e0 * tlocal
+
+        #  Difference
+
+        return e1 - e2
