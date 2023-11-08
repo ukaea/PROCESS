@@ -576,3 +576,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     )
 
     assert current_drive_variables.bigq == pytest.approx(cudrivparam.expected_bigq)
+
+
+def test_sigbeam(current_drive):
+    assert current_drive.sigbeam(
+        1e3, 13.07, 8.0e-1, 0.1, 1e-4, 1e-4, 1e-4
+    ) == pytest.approx(2.013589662302492e-11)
