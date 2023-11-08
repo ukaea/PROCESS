@@ -889,7 +889,7 @@ def main(args=None):
                 plt.ylabel(labels[output_name], fontsize=axis_font_size)
                 plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
                 plt.legend(loc="best", fontsize=legend_size)
-                plt.xticks(size=10)
+                plt.xticks(size=axis_tick_size)
                 plt.yticks(size=axis_tick_size)
                 plt.tight_layout()
                 plt.savefig(
