@@ -837,9 +837,6 @@ def main(args=None):
 
                 flat_output_z = output_contour_z.flatten()
                 flat_output_z.sort()
-                print(x_contour)
-                print(y_contour)
-                print(output_contour_z)
                 plt.contourf(
                     x_contour,
                     y_contour,
@@ -870,7 +867,6 @@ def main(args=None):
                     conv_ij
                 ):  # conv_j is an array element containing the converged scan numbers
                     # Scanned variables
-                    print(conv_j)
                     scan_1_var_array = np.zeros(len(conv_j))
                     scan_2_var_array = np.zeros(len(conv_j))
                     output_array = np.zeros(len(conv_j))
@@ -889,20 +885,20 @@ def main(args=None):
                     # Plot the graph
                     plt.plot(scan_2_var_array, output_array, "--o", label=labl)
 
-                    plt.grid(True)
-                    plt.ylabel(labels[output_name], fontsize=axis_font_size)
-                    plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
-                    plt.legend(loc="best", fontsize=legend_size)
-                    plt.xticks(size=axis_tick_size)
-                    plt.yticks(size=axis_tick_size)
-                    plt.tight_layout()
-                    plt.savefig(
-                        f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
-                    )
+                plt.grid(True)
+                plt.ylabel(labels[output_name], fontsize=axis_font_size)
+                plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
+                plt.legend(loc="best", fontsize=legend_size)
+                plt.xticks(size=axis_tick_size)
+                plt.yticks(size=axis_tick_size)
+                plt.tight_layout()
+                plt.savefig(
+                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                )
 
-                    # Display plot (used in Jupyter notebooks)
-                    plt.show()
-                    plt.clf()
+                # Display plot (used in Jupyter notebooks)
+                plt.show()
+                plt.clf()
 
 
 if __name__ == "__main__":
