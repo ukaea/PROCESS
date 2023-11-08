@@ -850,8 +850,8 @@ def main(args=None):
                 )
 
                 plt.colorbar().set_label(label=labels[output_name], size=axis_font_size)
-                plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
-                plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
+                plt.ylabel(metadata[scan_var_name].labels, fontsize=axis_font_size)
+                plt.xlabel(metadata[scan_2_var_name].labels, fontsize=axis_font_size)
                 plt.tight_layout()
                 plt.savefig(
                     f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
@@ -880,8 +880,8 @@ def main(args=None):
                         )
                         output_array[jj] = m_file.data[output_name].get_scan(conv_j[jj])
 
-                    # Label formating
-                    labl = f"{labels[scan_var_name]} = {scan_1_var_array[0]}"
+                    # Label formating for the legend
+                    labl = f"{metadata[scan_var_name].latex} = {scan_1_var_array[0]}"
 
                     # Plot the graph
                     plt.plot(scan_2_var_array, output_array, "--o", label=labl)
