@@ -5,7 +5,6 @@ from process.fortran import (
     current_drive_variables,
     physics_variables,
     cost_variables,
-    current_drive_module,
     constants,
     profiles_module,
     process_output as po,
@@ -1141,7 +1140,7 @@ class CurrentDrive:
         )
 
         # Calculate beam stopping cross-section
-        sigstop = current_drive_module.sigbeam(
+        sigstop = self.sigbeam(
             current_drive_variables.enbeam / physics_variables.abeam,
             physics_variables.te,
             physics_variables.dene,
@@ -1163,7 +1162,7 @@ class CurrentDrive:
         dent = physics_variables.deni * current_drive_variables.ftritbm
 
         # Power split to ions / electrons
-        fpion = current_drive_module.cfnbi(
+        fpion = self.cfnbi(
             physics_variables.abeam,
             current_drive_variables.enbeam,
             physics_variables.ten,
@@ -1413,7 +1412,7 @@ class CurrentDrive:
 
         #  Calculate beam stopping cross-section
 
-        sigstop = current_drive_module.sigbeam(
+        sigstop = self.sigbeam(
             current_drive_variables.enbeam / physics_variables.abeam,
             physics_variables.te,
             physics_variables.dene,
@@ -1439,9 +1438,9 @@ class CurrentDrive:
 
         #  Power split to ions / electrons
 
-        fpion = current_drive_module.cfnbi(
+        fpion = self.cfnbi(
             physics_variables.abeam,
-            current_drive_module.enbeam,
+            current_drive_variables.enbeam,
             physics_variables.ten,
             physics_variables.dene,
             dend,
@@ -1500,9 +1499,9 @@ class CurrentDrive:
 
             #  Evaluate g at rat0, r1, r2
 
-            g0 = current_drive_module.lheval(drfind, rat0)
-            g1 = current_drive_module.lheval(drfind, r1)
-            g2 = current_drive_module.lheval(drfind, r2)
+            g0 = self.lheval(drfind, rat0)
+            g1 = self.lheval(drfind, r1)
+            g2 = self.lheval(drfind, r2)
 
             #  Calculate gradient of g with respect to minor radius ratio
 
@@ -1892,3 +1891,98 @@ class CurrentDrive:
             palphap = palphap - n * pterm / (1.0e0 - arg2)
         else:
             eh.report_error(19)
+
+    def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
+        """Calculates the stopping cross-section for a hydrogen
+        beam in a fusion plasma
+        author: P J Knight, CCFE, Culham Science Centre
+        eb     : input real : beam energy (kev/amu)
+        te     : input real : electron temperature (keV)
+        ne     : input real : electron density (10^20m-3)
+        rnhe   : input real : alpha density / ne
+        rnc    : input real : carbon density /ne
+        rno    : input real : oxygen density /ne
+        rnfe   : input real : iron density /ne
+        This function calculates the stopping cross-section (m^-2)
+        for a hydrogen beam in a fusion plasma.
+        Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
+        """
+        a = np.array(
+            [
+                [
+                    [4.4, -2.49e-2],
+                    [7.46e-2, 2.27e-3],
+                    [3.16e-3, -2.78e-5],
+                ],
+                [
+                    [2.3e-1, -1.15e-2],
+                    [-2.55e-3, -6.2e-4],
+                    [1.32e-3, 3.38e-5],
+                ],
+            ]
+        )
+
+        b = np.array(
+            [
+                [
+                    [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
+                    [
+                        [-0.25, -0.119, -0.108, -0.0558],
+                        [-0.0381, -0.015, -0.0138, -3.72e-3],
+                    ],
+                ],
+                [
+                    [
+                        [0.849, 0.518, 0.477, 0.322],
+                        [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
+                    ],
+                    [
+                        [0.0677, 0.0292, 0.0259, 0.0124],
+                        [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
+                    ],
+                ],
+                [
+                    [
+                        [-0.0588, -0.0336, -0.0305, -0.0187],
+                        [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
+                    ],
+                    [
+                        [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
+                        [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
+                    ],
+                ],
+            ]
+        )
+
+        z = np.array([2.0, 6.0, 8.0, 26.0])
+        nn = np.array([rnhe, rnc, rno, rnfe])
+
+        nen = ne * 1e-19
+
+        s1 = 0.0
+        for k in range(2):
+            for j in range(3):
+                for i in range(2):
+                    s1 += (
+                        a[i, j, k]
+                        * (np.log(eb)) ** i
+                        * (np.log(nen)) ** j
+                        * (np.log(te)) ** k
+                    )
+
+        sz = 0.0
+        for l in range(4):  # noqa: E741
+            for k in range(2):
+                for j in range(2):
+                    for i in range(3):
+                        sz += (
+                            b[i, j, k, l]
+                            * (np.log(eb)) ** i
+                            * (np.log(nen)) ** j
+                            * (np.log(te)) ** k
+                            * nn[l]
+                            * z[l]
+                            * (z[l] - 1.0)
+                        )
+
+        return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)

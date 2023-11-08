@@ -75,7 +75,6 @@ LIST(APPEND PROCESS_SRCS
     numerics.f90
     scan.f90
     fw.f90
-    current_drive.f90
     hcpb.f90
     pfcoil.f90
     reinke_module.f90
