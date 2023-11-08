@@ -260,7 +260,7 @@ def plot_plasma(axis, mfile_data, scan):
 
 
 def plot_wp(axis, mfile_data, scan):
-    """Plots the plasma boundary arcs.
+    """Plots inboard TF coil and winding pack.
 
     Arguments:
         axis --> axis object to plot to
