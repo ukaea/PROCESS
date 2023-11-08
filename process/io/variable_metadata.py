@@ -8,7 +8,7 @@ class VariableMetadata:
     units: str
 
 
-var_dicts = {
+metadata = {
     "shldith": VariableMetadata(
         latex=r"$\Delta R_\mathrm{sh}$ [$m$]",
         description="Inboard shield thickness",
