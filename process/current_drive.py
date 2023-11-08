@@ -138,7 +138,7 @@ class CurrentDrive:
                     effnbss,
                     current_drive_variables.fpion,
                     current_drive_variables.nbshinef,
-                ) = current_drive_module.culnbi()
+                ) = self.culnbi()
                 effnbssfix = effnbss * current_drive_variables.feffcd
                 effcdfix = effnbssfix
             # ECRH user input gamma
@@ -377,7 +377,7 @@ class CurrentDrive:
                     effnbss,
                     current_drive_variables.fpion,
                     current_drive_variables.nbshinef,
-                ) = current_drive_module.culnbi()
+                ) = self.culnbi()
                 effnbss = effnbss * current_drive_variables.feffcd
                 current_drive_variables.effcd = effnbss
             # ECRH user input gamma
@@ -1198,7 +1198,7 @@ class CurrentDrive:
         AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
-        rratio = current_drive_module.lhrad()
+        rratio = self.lhrad()
         rpenet = rratio * physics_variables.rminor
 
         # Local density, temperature, toroidal field at this minor radius
@@ -1386,3 +1386,143 @@ class CurrentDrive:
         if ecgam < 0.0e0:
             eh.report_error(17)
         return ecgam
+
+    def culnbi(self):
+        """Routine to calculate Neutral Beam current drive parameters
+        author: P J Knight, CCFE, Culham Science Centre
+        effnbss : output real : neutral beam current drive efficiency (A/W)
+        fpion   : output real : fraction of NB power given to ions
+        fshine  : output real : shine-through fraction of beam
+        This routine calculates Neutral Beam current drive parameters
+        using the corrections outlined in AEA FUS 172 to the ITER method.
+        <P>The result cannot be guaranteed for devices with aspect ratios far
+        from that of ITER (approx. 2.8).
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
+            eh.fdiags[0] = physics_variables.eps
+            eh.fdiags[1] = current_drive_variables.frbeam
+            eh.report_error(20)
+
+        #  Calculate beam path length to centre
+
+        dpath = physics_variables.rmajor * np.sqrt(
+            (1.0e0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
+        )
+
+        #  Calculate beam stopping cross-section
+
+        sigstop = current_drive_module.sigbeam(
+            current_drive_variables.enbeam / physics_variables.abeam,
+            physics_variables.te,
+            physics_variables.dene,
+            physics_variables.ralpne,
+            physics_variables.rncne,
+            physics_variables.rnone,
+            physics_variables.rnfene,
+        )
+
+        #  Calculate number of decay lengths to centre
+
+        current_drive_variables.taubeam = dpath * physics_variables.dnla * sigstop
+
+        #  Shine-through fraction of beam
+
+        fshine = np.exp(-2.0e0 * dpath * physics_variables.dnla * sigstop)
+        fshine = max(fshine, 1.0e-20)
+
+        #  Deuterium and tritium beam densities
+
+        dend = physics_variables.deni * (1.0e0 - current_drive_variables.ftritbm)
+        dent = physics_variables.deni * current_drive_variables.ftritbm
+
+        #  Power split to ions / electrons
+
+        fpion = current_drive_module.cfnbi(
+            physics_variables.abeam,
+            current_drive_module.enbeam,
+            physics_variables.ten,
+            physics_variables.dene,
+            dend,
+            dent,
+            physics_variables.zeffai,
+            physics_variables.dlamie,
+        )
+
+        #  Current drive efficiency
+
+        effnbss = current_drive_module.etanb2(
+            physics_variables.abeam,
+            physics_variables.alphan,
+            physics_variables.alphat,
+            physics_variables.aspect,
+            physics_variables.dene,
+            physics_variables.dnla,
+            current_drive_variables.enbeam,
+            current_drive_variables.frbeam,
+            fshine,
+            physics_variables.rmajor,
+            physics_variables.rminor,
+            physics_variables.ten,
+            physics_variables.zeff,
+        )
+
+        return effnbss, fpion, fshine
+
+    def lhrad(self):
+        """Routine to calculate Lower Hybrid wave absorption radius
+        author: P J Knight, CCFE, Culham Science Centre
+        rratio  : output real : minor radius of penetration / rminor
+        This routine determines numerically the minor radius at which the
+        damping of Lower Hybrid waves occurs, using a Newton-Raphson method.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        #  Correction to refractive index (kept within valid bounds)
+        drfind = min(0.7e0, max(0.1e0, 12.5e0 / physics_variables.te0))
+
+        #  Use Newton-Raphson method to establish the correct minor radius
+        #  ratio. g is calculated as a function of r / r_minor, where g is
+        #  the difference between the results of the two formulae for the
+        #  energy E given in AEA FUS 172, p.58. The required minor radius
+        #  ratio has been found when g is sufficiently close to zero.
+
+        #  Initial guess for the minor radius ratio
+
+        rat0 = 0.8e0
+
+        for _ in range(100):
+            #  Minor radius ratios either side of the latest guess
+
+            r1 = rat0 - 1.0e-3 * rat0
+            r2 = rat0 + 1.0e-3 * rat0
+
+            #  Evaluate g at rat0, r1, r2
+
+            g0 = current_drive_module.lheval(drfind, rat0)
+            g1 = current_drive_module.lheval(drfind, r1)
+            g2 = current_drive_module.lheval(drfind, r2)
+
+            #  Calculate gradient of g with respect to minor radius ratio
+
+            dgdr = (g2 - g1) / (r2 - r1)
+
+            #  New approximation
+
+            rat1 = rat0 - g0 / dgdr
+
+            #  Force this approximation to lie within bounds
+
+            rat1 = max(0.0001e0, rat1)
+            rat1 = min(0.9999e0, rat1)
+
+            if abs(g0) <= 0.01e0:
+                break
+            rat0 = rat1
+
+        else:
+            eh.report_error(16)
+            rat0 = 0.8e0
+
+        return rat0
