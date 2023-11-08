@@ -129,7 +129,7 @@ class CurrentDrive:
                 effcdfix = effrfssfix
             # Culham ECCD model
             elif current_drive_variables.iefrffix == 7:
-                effrfss = current_drive_module.culecd()
+                effrfss = self.culecd()
                 effrfssfix = effrfss * current_drive_variables.feffcd
                 effcdfix = effrfssfix
             # Culham Neutral Beam model
@@ -368,7 +368,7 @@ class CurrentDrive:
                 current_drive_variables.effcd = effrfss
             # Culham ECCD model
             elif current_drive_variables.iefrf == 7:
-                effrfss = current_drive_module.culecd()
+                effrfss = self.culecd()
                 effrfss = effrfss * current_drive_variables.feffcd
                 current_drive_variables.effcd = effrfss
             # Culham Neutral Beam model
@@ -1254,3 +1254,135 @@ class CurrentDrive:
         # Current drive efficiency (A/W)
 
         return gamlh / ((0.1e0 * dlocal) * physics_variables.rmajor)
+
+    def culecd(self):
+        """Routine to calculate Electron Cyclotron current drive efficiency
+        author: M R O'Brien, CCFE, Culham Science Centre
+        author: P J Knight, CCFE, Culham Science Centre
+        effrfss : output real : electron cyclotron current drive efficiency (A/W)
+        This routine calculates the current drive parameters for a
+        electron cyclotron system, based on the AEA FUS 172 model.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        rrr = 1.0e0 / 3.0e0
+
+        #  Temperature
+        tlocal = profiles_module.tprofile(
+            rrr,
+            physics_variables.rhopedt,
+            physics_variables.te0,
+            physics_variables.teped,
+            physics_variables.tesep,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+        )
+
+        #  Density (10**20 m**-3)
+        dlocal = 1.0e-20 * profiles_module.nprofile(
+            rrr,
+            physics_variables.rhopedn,
+            physics_variables.ne0,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.alphan,
+        )
+
+        #  Inverse aspect ratio
+        epsloc = rrr * physics_variables.rminor / physics_variables.rmajor
+
+        #  Effective charge (use average value)
+        zlocal = physics_variables.zeff
+
+        #  Coulomb logarithm for ion-electron collisions
+        #  (From J. A. Wesson, 'Tokamaks', Clarendon Press, Oxford, p.293)
+        coulog = 15.2e0 - 0.5e0 * np.log(dlocal) + np.log(tlocal)
+
+        #  Calculate normalised current drive efficiency at four different
+        #  poloidal angles, and average.
+        #  cosang = cosine of the poloidal angle at which ECCD takes place
+        #         = +1 outside, -1 inside.
+        cosang = 1.0e0
+        ecgam1 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
+        cosang = 0.5e0
+        ecgam2 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
+        cosang = -0.5e0
+        ecgam3 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
+        cosang = -1.0e0
+        ecgam4 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
+
+        #  Normalised current drive efficiency (A/W m**-2)
+        ecgam = 0.25e0 * (ecgam1 + ecgam2 + ecgam3 + ecgam4)
+
+        #  Current drive efficiency (A/W)
+        return ecgam / (dlocal * physics_variables.rmajor)
+
+    def eccdef(self, tlocal, epsloc, zlocal, cosang, coulog):
+        """Routine to calculate Electron Cyclotron current drive efficiency
+        author: M R O'Brien, CCFE, Culham Science Centre
+        author: P J Knight, CCFE, Culham Science Centre
+        tlocal : input real : local electron temperature (keV)
+        epsloc : input real : local inverse aspect ratio
+        zlocal : input real : local plasma effective charge
+        cosang : input real : cosine of the poloidal angle at which ECCD takes
+        place (+1 outside, -1 inside)
+        coulog : input real : local coulomb logarithm for ion-electron collisions
+        ecgam  : output real : normalised current drive efficiency (A/W m**-2)
+        This routine calculates the current drive parameters for a
+        electron cyclotron system, based on the AEA FUS 172 model.
+        It works out the ECCD efficiency using the formula due to Cohen
+        quoted in the ITER Physics Design Guidelines : 1989
+        (but including division by the Coulomb Logarithm omitted from
+        IPDG89). We have assumed gamma**2-1 << 1, where gamma is the
+        relativistic factor. The notation follows that in IPDG89.
+        <P>The answer ECGAM is the normalised efficiency nIR/P with n the
+        local density in 10**20 /m**3, I the driven current in MAmps,
+        R the major radius in metres, and P the absorbed power in MWatts.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        mcsq = 9.1095e-31 * 2.9979e8**2 / (1.0e3 * 1.6022e-19)  # keV
+        f = 16.0e0 * (tlocal / mcsq) ** 2
+
+        #  fp is the derivative of f with respect to gamma, the relativistic
+        #  factor, taken equal to 1 + 2T/(m c**2)
+
+        fp = 16.0e0 * tlocal / mcsq
+
+        #  lam is IPDG89's lambda. LEGEND calculates the Legendre function of
+        #  order alpha and argument lam, palpha, and its derivative, palphap.
+        #  Here alpha satisfies alpha(alpha+1) = -8/(1+zlocal). alpha is of the
+        #  form  (-1/2 + ix), with x a real number and i = sqrt(-1).
+
+        lam = 1.0e0
+        palpha, palphap = current_drive_module.legend(zlocal, lam)
+
+        lams = np.sqrt(2.0e0 * epsloc / (1.0e0 + epsloc))
+        palphas, _ = current_drive_module.legend(zlocal, lams)
+
+        #  hp is the derivative of IPDG89's h function with respect to lam
+
+        h = -4.0e0 * lam / (zlocal + 5.0e0) * (1.0e0 - lams * palpha / (lam * palphas))
+        hp = -4.0e0 / (zlocal + 5.0e0) * (1.0e0 - lams * palphap / palphas)
+
+        #  facm is IPDG89's momentum conserving factor
+
+        facm = 1.5e0
+        y = mcsq / (2.0e0 * tlocal) * (1.0e0 + epsloc * cosang)
+
+        #  We take the negative of the IPDG89 expression to get a positive
+        #  number
+
+        ecgam = (
+            -7.8e0
+            * facm
+            * np.sqrt((1.0e0 + epsloc) / (1.0e0 - epsloc))
+            / coulog
+            * (h * fp - 0.5e0 * y * f * hp)
+        )
+
+        if ecgam < 0.0e0:
+            eh.report_error(17)
+        return ecgam
