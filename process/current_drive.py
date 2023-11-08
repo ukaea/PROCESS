@@ -1357,10 +1357,10 @@ class CurrentDrive:
         #  form  (-1/2 + ix), with x a real number and i = sqrt(-1).
 
         lam = 1.0e0
-        palpha, palphap = current_drive_module.legend(zlocal, lam)
+        palpha, palphap = self.legend(zlocal, lam)
 
         lams = np.sqrt(2.0e0 * epsloc / (1.0e0 + epsloc))
-        palphas, _ = current_drive_module.legend(zlocal, lams)
+        palphas, _ = self.legend(zlocal, lams)
 
         #  hp is the derivative of IPDG89's h function with respect to lam
 
@@ -1784,13 +1784,13 @@ class CurrentDrive:
         # zd = 1.0
         # zt = 1.0
 
-        # xlbd = current_drive_module.xlmbdabi(afast, atmd, efast, te, ne)
-        # xlbt = current_drive_module.xlmbdabi(afast, atmt, efast, te, ne)
+        # xlbd = self.xlmbdabi(afast, atmd, efast, te, ne)
+        # xlbt = self.xlmbdabi(afast, atmt, efast, te, ne)
 
         # sum = nd * zd * zd * xlbd / atmd + nt * zt * zt * xlbt / atmt
         # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
 
-        xlmbdai = current_drive_module.xlmbdabi(afast, atmdt, efast, te, ne)
+        xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
         sumln = zeffai * xlmbdai / xlmbda
         xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.mproton * sumln) ** (
             2.0e0 / 3.0e0
@@ -1812,3 +1812,83 @@ class CurrentDrive:
         t2 = 2.0e0 * np.sqrt(3.0e0) * (np.atan(thx) + np.pi / 6.0e0)
 
         return (t1 + t2) / (3.0e0 * x * x)
+
+    def xlmbdabi(self, mb, mth, eb, t, nelec):
+        """Calculates the Coulomb logarithm for ion-ion collisions
+        author: P J Knight, CCFE, Culham Science Centre
+        mb     : input real : mass of fast particle (units of proton mass)
+        mth    : input real : mass of background ions (units of proton mass)
+        eb     : input real : energy of fast particle (keV)
+        t      : input real : density weighted average electron temp. (keV)
+        nelec  : input real : volume averaged electron density (m**-3)
+        This function calculates the Coulomb logarithm for ion-ion
+        collisions where the relative velocity may be large compared
+        with the background ('mt') thermal velocity.
+        Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
+        """
+
+        x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
+        x2 = mth / (mth + mb)
+
+        return 23.7 + np.log(x2 * np.sqrt(x1))
+
+    def legend(self, zlocal, arg):
+        """Routine to calculate Legendre function and its derivative
+        author: M R O'Brien, CCFE, Culham Science Centre
+        author: P J Knight, CCFE, Culham Science Centre
+        zlocal  : input real : local plasma effective charge
+        arg     : input real : argument of Legendre function
+        palpha  : output real : value of Legendre function
+        palphap : output real : derivative of Legendre function
+        This routine calculates the Legendre function <CODE>palpha</CODE>
+        of argument <CODE>arg</CODE> and order
+        <CODE>alpha = -0.5 + i sqrt(xisq)</CODE>,
+        and its derivative <CODE>palphap</CODE>.
+        <P>This Legendre function is a conical function and we use the series
+        in <CODE>xisq</CODE> given in Abramowitz and Stegun. The
+        derivative is calculated from the derivative of this series.
+        <P>The derivatives were checked by calculating <CODE>palpha</CODE> for
+        neighbouring arguments. The calculation of <CODE>palpha</CODE> for zero
+        argument was checked by comparison with the expression
+        <CODE>palpha(0) = 1/sqrt(pi) * cos(pi*alpha/2) * gam1 / gam2</CODE>
+        (Abramowitz and Stegun, eqn 8.6.1). Here <CODE>gam1</CODE> and
+        <CODE>gam2</CODE> are the Gamma functions of arguments
+        <CODE>0.5*(1+alpha)</CODE> and <CODE>0.5*(2+alpha)</CODE> respectively.
+        Abramowitz and Stegun, equation 8.12.1
+        """
+        if abs(arg) > (1.0e0 + 1.0e-10):
+            eh.fdiags[0] = arg
+            eh.report_error(18)
+
+        arg2 = min(arg, (1.0e0 - 1.0e-10))
+        sinsq = 0.5e0 * (1.0e0 - arg2)
+        xisq = 0.25e0 * (32.0e0 * zlocal / (zlocal + 1.0e0) - 1.0e0)
+        palpha = 1.0e0
+        pold = 1.0e0
+        pterm = 1.0e0
+        palphap = 0.0e0
+        poldp = 0.0e0
+
+        for n in range(10000):
+            #  Check for convergence every 20 iterations
+
+            if (n > 1) and ((n % 20) == 1):
+                term1 = 1.0e-10 * max(abs(pold), abs(palpha))
+                term2 = 1.0e-10 * max(abs(poldp), abs(palphap))
+
+                if (abs(pold - palpha) < term1) and (abs(poldp - palphap) < term2):
+                    return palpha, palphap
+
+                pold = palpha
+                poldp = palphap
+
+            pterm = (
+                pterm
+                * (4.0e0 * xisq + (2.0e0 * n - 1.0e0) ** 2)
+                / (2.0e0 * n) ** 2
+                * sinsq
+            )
+            palpha = palpha + pterm
+            palphap = palphap - n * pterm / (1.0e0 - arg2)
+        else:
+            eh.report_error(19)
