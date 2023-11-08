@@ -7,7 +7,9 @@ from process.fortran import (
     cost_variables,
     current_drive_module,
     constants,
+    profiles_module,
     process_output as po,
+    error_handling as eh,
 )
 
 
@@ -94,7 +96,7 @@ class CurrentDrive:
                     * current_drive_variables.feffcd
                 )
                 effcdfix = effrfssfix
-            #  Ehst Lower Hybrid / Fast Wave current drive
+            # Ehst Lower Hybrid / Fast Wave current drive
             elif current_drive_variables.iefrffix == 4:
                 effrfssfix = (
                     physics_variables.te**0.77e0
@@ -117,12 +119,12 @@ class CurrentDrive:
                     effnbss,
                     current_drive_variables.fpion,
                     current_drive_variables.nbshinef,
-                ) = current_drive_module.iternb()
+                ) = self.iternb()
                 effnbssfix = effnbss * current_drive_variables.feffcd
                 effcdfix = effnbssfix
             # Culham Lower Hybrid current drive model
             elif current_drive_variables.iefrffix == 6:
-                effrfss = current_drive_module.cullhy()
+                effrfss = self.cullhy()
                 effrfssfix = effrfss * current_drive_variables.feffcd
                 effcdfix = effrfssfix
             # Culham ECCD model
@@ -141,7 +143,7 @@ class CurrentDrive:
                 effcdfix = effnbssfix
             # ECRH user input gamma
             elif current_drive_variables.iefrffix == 10:
-                #  Normalised current drive efficiency gamma
+                # Normalised current drive efficiency gamma
                 current_drive_variables.gamcd = current_drive_variables.gamma_ecrh
 
                 # Absolute current drive efficiency
@@ -153,7 +155,7 @@ class CurrentDrive:
             elif current_drive_variables.iefrffix == 12:
                 # Scaling author Simon Freethy
                 # Ref : PROCESS issue 1262
-                #  Normalised current drive efficiency gamma
+                # Normalised current drive efficiency gamma
                 current_drive_variables.gamcd = (
                     current_drive_variables.xi_ebw / 32.7e0
                 ) * physics_variables.te
@@ -165,7 +167,7 @@ class CurrentDrive:
                 effcdfix = effrfssfix
 
                 # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
-                #  this behaviour is captured in the following function (ref issue #1262):
+                # this behaviour is captured in the following function (ref issue #1262):
                 # current_drive_variables.harnum = cyclotron harmonic number (fundamental used as default)
                 # constant 'a' controls sharpness of transition
                 a = 0.1e0
@@ -201,18 +203,18 @@ class CurrentDrive:
                 )
 
             if current_drive_variables.iefrffix in [1, 2, 4, 6]:
-                #  Injected power
+                # Injected power
                 pinjemwfix = current_drive_variables.pinjfixmw
 
-                #  Wall plug power
+                # Wall plug power
                 heat_transport_variables.pinjwpfix = (
                     current_drive_variables.pinjfixmw / current_drive_variables.etalh
                 )
 
-                #  Wall plug to injector efficiency
+                # Wall plug to injector efficiency
                 current_drive_variables.etacdfix = current_drive_variables.etalh
 
-                #  Normalised current drive efficiency gamma
+                # Normalised current drive efficiency gamma
                 gamcdfix = effrfssfix * (dene20 * physics_variables.rmajor)
 
                 # the fixed auxiliary current
@@ -226,15 +228,15 @@ class CurrentDrive:
                 )
                 faccdfix = auxiliary_cdfix / physics_variables.plascur
             elif current_drive_variables.iefrffix in [3, 7, 10, 11, 12]:
-                #  Injected power
+                # Injected power
                 pinjemwfix = current_drive_variables.pinjfixmw
 
-                #  Wall plug power
+                # Wall plug power
                 heat_transport_variables.pinjwpfix = (
                     current_drive_variables.pinjfixmw / current_drive_variables.etaech
                 )
 
-                #  Wall plug to injector efficiency
+                # Wall plug to injector efficiency
                 current_drive_variables.etacdfix = current_drive_variables.etaech
 
                 # the fixed auxiliary current
@@ -356,12 +358,12 @@ class CurrentDrive:
                     effnbss,
                     current_drive_variables.fpion,
                     current_drive_variables.nbshinef,
-                ) = current_drive_module.iternb()
+                ) = self.iternb()
                 effnbss = effnbss * current_drive_variables.feffcd
                 current_drive_variables.effcd = effnbss
             # Culham Lower Hybrid current drive model
             elif current_drive_variables.iefrf == 6:
-                effrfss = current_drive_module.cullhy()
+                effrfss = self.cullhy()
                 effrfss = effrfss * current_drive_variables.feffcd
                 current_drive_variables.effcd = effrfss
             # Culham ECCD model
@@ -392,7 +394,7 @@ class CurrentDrive:
                 # Scaling author Simon Freethy
                 # Ref : PROCESS issue 1262
 
-                #  Normalised current drive efficiency gamma
+                # Normalised current drive efficiency gamma
                 current_drive_variables.gamcd = (
                     current_drive_variables.xi_ebw / 32.7e0
                 ) * physics_variables.te
@@ -404,7 +406,7 @@ class CurrentDrive:
                 current_drive_variables.effcd = effrfss
 
                 # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
-                #  this behaviour is captured in the following function (ref issue #1262):
+                # this behaviour is captured in the following function (ref issue #1262):
                 # current_drive_variables.harnum = cyclotron harmonic number (fundamental used as default)
                 # contant 'a' controls sharpness of transition
             else:
@@ -417,7 +419,7 @@ class CurrentDrive:
 
             # LHCD or ICCD
             if current_drive_variables.iefrf in [1, 2, 4, 6]:
-                #  Injected power
+                # Injected power
                 current_drive_variables.plhybd = (
                     1.0e-6
                     * (physics_variables.faccd - faccdfix)
@@ -428,21 +430,21 @@ class CurrentDrive:
                 pinjimw1 = 0.0e0
                 pinjemw1 = current_drive_variables.plhybd
 
-                #  Wall plug power
+                # Wall plug power
                 current_drive_variables.pwplh = (
                     current_drive_variables.plhybd / current_drive_variables.etalh
                 )
                 pinjwp1 = current_drive_variables.pwplh
 
-                #  Wall plug to injector efficiency
+                # Wall plug to injector efficiency
                 current_drive_variables.etacd = current_drive_variables.etalh
 
-                #  Normalised current drive efficiency gamma
+                # Normalised current drive efficiency gamma
                 gamrf = effrfss * (dene20 * physics_variables.rmajor)
                 current_drive_variables.gamcd = gamrf
             # ECCD
             elif current_drive_variables.iefrf in [3, 7, 10, 11, 12]:
-                #  Injected power (set to close to close the Steady-state current equilibrium)
+                # Injected power (set to close to close the Steady-state current equilibrium)
                 current_drive_variables.echpwr = (
                     1.0e-6
                     * (physics_variables.faccd - faccdfix)
@@ -452,12 +454,12 @@ class CurrentDrive:
                 )
                 pinjemw1 = current_drive_variables.echpwr
 
-                #  Wall plug power
+                # Wall plug power
                 current_drive_variables.echwpow = (
                     current_drive_variables.echpwr / current_drive_variables.etaech
                 )
 
-                #  Wall plug to injector efficiency
+                # Wall plug to injector efficiency
                 pinjwp1 = current_drive_variables.echwpow
                 current_drive_variables.etacd = current_drive_variables.etaech
             elif current_drive_variables.iefrf in [5, 8]:
@@ -1114,3 +1116,141 @@ class CurrentDrive:
                 current_drive_variables.pinjwpfix,
                 "OP ",
             )
+
+    def iternb(self):
+        """Routine to calculate ITER Neutral Beam current drive parameters
+        author: P J Knight, CCFE, Culham Science Centre
+        effnbss : output real : neutral beam current drive efficiency (A/W)
+        fpion   : output real : fraction of NB power given to ions
+        fshine  : output real : shine-through fraction of beam
+        This routine calculates the current drive parameters for a
+        neutral beam system, based on the 1990 ITER model.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        # Check argument sanity
+        if (1 + physics_variables.eps) < current_drive_variables.frbeam:
+            eh.fdiags[0] = physics_variables.eps
+            eh.fdiags[1] = current_drive_variables.frbeam
+            eh.report_error(15)
+
+        # Calculate beam path length to centre
+        dpath = physics_variables.rmajor * np.sqrt(
+            (1.0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
+        )
+
+        # Calculate beam stopping cross-section
+        sigstop = current_drive_module.sigbeam(
+            current_drive_variables.enbeam / physics_variables.abeam,
+            physics_variables.te,
+            physics_variables.dene,
+            physics_variables.ralpne,
+            physics_variables.rncne,
+            physics_variables.rnone,
+            physics_variables.rnfene,
+        )
+
+        # Calculate number of decay lengths to centre
+        current_drive_variables.taubeam = dpath * physics_variables.dene * sigstop
+
+        # Shine-through fraction of beam
+        fshine = np.exp(-2.0 * dpath * physics_variables.dene * sigstop)
+        fshine = max(fshine, 1e-20)
+
+        # Deuterium and tritium beam densities
+        dend = physics_variables.deni * (1.0 - current_drive_variables.ftritbm)
+        dent = physics_variables.deni * current_drive_variables.ftritbm
+
+        # Power split to ions / electrons
+        fpion = current_drive_module.cfnbi(
+            physics_variables.abeam,
+            current_drive_variables.enbeam,
+            physics_variables.ten,
+            physics_variables.dene,
+            dend,
+            dent,
+            physics_variables.zeffai,
+            physics_variables.dlamie,
+        )
+
+        # Current drive efficiency
+        effnbss = current_drive_variables.frbeam * current_drive_module.etanb(
+            physics_variables.abeam,
+            physics_variables.alphan,
+            physics_variables.alphat,
+            physics_variables.aspect,
+            physics_variables.dene,
+            current_drive_variables.enbeam,
+            physics_variables.rmajor,
+            physics_variables.ten,
+            physics_variables.zeff,
+        )
+
+        return effnbss, fpion, fshine
+
+    def cullhy(self):
+        """Routine to calculate Lower Hybrid current drive efficiency
+        author: P J Knight, CCFE, Culham Science Centre
+        effrfss : output real : lower hybrid current drive efficiency (A/W)
+        This routine calculates the current drive parameters for a
+        lower hybrid system, based on the AEA FUS 172 model.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        rratio = current_drive_module.lhrad()
+        rpenet = rratio * physics_variables.rminor
+
+        # Local density, temperature, toroidal field at this minor radius
+
+        dlocal = 1.0e-19 * profiles_module.nprofile(
+            rratio,
+            physics_variables.rhopedn,
+            physics_variables.ne0,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.alphan,
+        )
+        tlocal = profiles_module.tprofile(
+            rratio,
+            physics_variables.rhopedt,
+            physics_variables.te0,
+            physics_variables.teped,
+            physics_variables.tesep,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+        )
+        blocal = (
+            physics_variables.bt
+            * physics_variables.rmajor
+            / (physics_variables.rmajor - rpenet)
+        )  # Calculated on inboard side
+
+        # Parallel refractive index needed for plasma access
+
+        frac = np.sqrt(dlocal) / blocal
+        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
+
+        # Local inverse aspect ratio
+
+        epslh = rpenet / physics_variables.rmajor
+
+        # LH normalised efficiency (A/W m**-2)
+
+        x = 24.0e0 / (nplacc * np.sqrt(tlocal))
+
+        term01 = 6.1e0 / (nplacc * nplacc * (physics_variables.zeff + 5.0e0))
+        term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
+        term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
+        term04 = 3.5e0 * epslh**0.77e0 + x
+
+        if term03 > term04:
+            eh.fdiags[0] = term03
+            eh.fdiags[1] = term04
+            eh.report_error(129)
+
+        gamlh = term01 * term02 * (1.0e0 - term03 / term04)
+
+        # Current drive efficiency (A/W)
+
+        return gamlh / ((0.1e0 * dlocal) * physics_variables.rmajor)
