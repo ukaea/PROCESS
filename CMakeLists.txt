@@ -81,7 +81,6 @@ LIST(APPEND PROCESS_SRCS
     reinke_module.f90
     sctfcoil.f90
     plasma_profiles.f90
-    superconductors.f90
     final_module.f90
     cost_variables.f90
     divertor_variables.f90
@@ -123,6 +122,10 @@ LIST(APPEND PROCESS_SRCS
     reinke_variables.f90
     neoclassics_module.f90
     blanket_library.f90
+    stellarator_variables.f90
+    stellarator.f90
+    stellarator_configuration.f90
+    stellarator_fwbs.f90
 )
 
 PREPROCESS()

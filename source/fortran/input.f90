@@ -154,10 +154,13 @@ contains
     !! Set icase description based on device type
     use global_variables, only: icase
     use ife_variables, only: ife
+    use stellarator_variables, only: istell
     implicit none
 
     if (ife == 1) then
         icase = 'Inertial Fusion model'
+    else if (istell /= 0) then
+        icase = 'Stellarator model'
     end if
   end subroutine devtyp
 
@@ -317,6 +320,9 @@ contains
 
     use scan_module, only: isweep_2, nsweep, isweep, scan_dim, nsweep_2, &
       sweep_2, sweep, ipnscns, ipnscnv
+    use stellarator_variables, only: f_asym, isthtr, n_res, iotabar, fdivwet, &
+      f_w, bmn, shear, m_res, f_rad, flpitch, istell, max_gyrotron_frequency, &
+      te0_ecrh_achievable
     use tfcoil_variables, only: fcoolcp, tfinsgap, vftf, &
       quench_detection_ef, fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, farc4tf, &
@@ -3412,117 +3418,47 @@ contains
           !  Stellarator settings
 
        case ('istell')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_int_variable('istell', istell, 0, 6, &
+               'Stellarator machine specification (1=Helias5, 2=Helias4, 3=Helias3, 4=W7X50, 5=W7X30, 6=jsoninput)')
        case ('bmn')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('bmn', bmn, 1.0D-4, 1.0D-2, &
+               'Relative radial field perturbation')
        case ('max_gyrotron_frequency')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('max_gyrotron_frequency', max_gyrotron_frequency, 1.0d9, 1.0d14, &
+                'Maximum avail. gyrotron frequency')
        case ('te0_ecrh_achievable')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('te0_ecrh_achievable', te0_ecrh_achievable, 1.0d0, 1.0d3, &
+                  'Maximum achievable ecrh temperature (peak value)')
        case ('f_asym')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('f_asym', f_asym, 0.9D0, 2.0D0, &
+               'Heat load peaking factor')
        case ('f_rad')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('f_rad', f_rad, 0.0D0, 1.0D0, &
+               'Radiated power fraction in SOL')
        case ('f_w')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('f_w', f_w, 0.1D0, 1.0D0, &
+               'Island size fraction factor')
        case ('fdivwet')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('fdivwet', fdivwet, 0.01D0, 1.0D0, &
+               'Wetted area fraction of divertor plates')
        case ('flpitch')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('flpitch', flpitch, 1.0D-4, 1.0D-2, &
+               'Field line pitch (rad)')
        case ('iotabar')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('iotabar', iotabar, 0.1D0, 10.0D0, &
+               'Stellarator rotational transform (at s=2/3)')
        case ('isthtr')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_int_variable('isthtr', isthtr, 1, 3, &
+               'Stellarator method of auxiliary heating')
        case ('m_res')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_int_variable('m_res', m_res, 1, 10, &
+               'Poloidal resonance number')
        case ('n_res')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_int_variable('n_res', n_res, 3, 6, &
+               'Toroidal resonance number')
        case ('shear')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+          call parse_real_variable('shear', shear, 0.1D0, 10.0D0, &
+               'Magnetic shear')
 
        !  Inertial Fusion Energy plant settings
 

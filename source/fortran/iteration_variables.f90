@@ -323,8 +323,12 @@ contains
   real(kind(1.d0)) function itv_13()
     use build_variables, only: tfcth
     use error_handling, only: report_error
+    use stellarator_variables, only: istell
     implicit none
     itv_13 = tfcth
+    if (istell /= 0) then
+        call report_error(46)
+    end if
   end function itv_13
 
   subroutine set_itv_13(ratio)
@@ -1315,9 +1319,13 @@ contains
 
   real(kind(1.d0)) function itv_57()
     use error_handling, only: report_error
+    use stellarator_variables, only: istell
     use tfcoil_variables, only: thkcas
     implicit none
     itv_57 = thkcas
+    if (istell /= 0) then
+        call report_error(48)
+    end if
   end function itv_57
 
   subroutine set_itv_57(ratio)
@@ -1388,9 +1396,13 @@ contains
 
   real(kind(1.d0)) function itv_60()
     use error_handling, only: report_error
+    use stellarator_variables, only: istell
     use tfcoil_variables, only: i_tf_sup, cpttf
     implicit none
     itv_60 = cpttf
+    if ((istell /= 0).or.(i_tf_sup /= 1)) then
+        call report_error(49)
+    end if
   end function itv_60
 
   subroutine set_itv_60(ratio)
@@ -3798,14 +3810,16 @@ contains
   end subroutine init_itv_169
 
   real(kind(1.d0)) function itv_169()
-    ! Iteration variable 169 reserved for when Stellarator is added back to PROCESS
+    use stellarator_variables, only: te0_ecrh_achievable
+    implicit none
+    itv_169 = te0_ecrh_achievable
   end function itv_169
 
   subroutine set_itv_169(ratio)
+    use stellarator_variables, only: te0_ecrh_achievable
     implicit none
     real(kind(1.d0)) :: ratio
-
-    ! Iteration variable 169 reserved for when Stellarator is added back to PROCESS
+    te0_ecrh_achievable = ratio
   end subroutine set_itv_169
 
   subroutine init_itv_170

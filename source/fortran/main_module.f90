@@ -48,7 +48,7 @@ subroutine inform(progid)
   character(len=10) :: progname
   character(len=98) :: executable
   character(len=*), parameter :: progver = &  !  Beware: keep exactly same format...
-       '3.0.0   Release Date :: 2023-09-12'
+       '3.0.1   Release Date :: 2023-11-01'
   character(len = 50) :: dt_time
   character(len=72), dimension(10) :: id
 
@@ -684,7 +684,6 @@ subroutine runtests
   use maths_library, only: nearly_equal, binomial, test_secant_solve
   use process_output, only: ocmmnt, ovarre
 !   use pfcoil_module, only: brookscoil
-  use superconductors, only: test_quench
 !   use reinke_module, only: test_reinke
   implicit none
   real(dp) :: fshift, xf, enpa,ftherm,fpp,cdeff, ampperwatt
@@ -696,7 +695,6 @@ subroutine runtests
   call ovarre(nout,'Binomial coefficients C(5,4): 5', '(binomial(5,4))', binomial(5,4))
   call ovarre(nout,'Binomial coefficients C(5,5): 1', '(binomial(5,5))', binomial(5,5))
 
-  call test_quench()
    !   call brookscoil(nout) Moved to pytest
   call test_secant_solve()
   ! Disabled for ease of #1542 - Tim

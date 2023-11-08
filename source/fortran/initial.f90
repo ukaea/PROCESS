@@ -273,6 +273,7 @@ subroutine check
         t_turn_tf, tftmp, t_cable_tf, t_cable_tf_is_input, tftmp, tmpcry, &
         i_tf_cond_eyoung_axial, eyoung_cond_axial, eyoung_cond_trans, &
         i_tf_cond_eyoung_trans, i_str_wp
+    use stellarator_variables, only: istell
     use sctfcoil_module, only: initialise_cables
     use vacuum_variables, only: vacuum_model
     use, intrinsic :: iso_fortran_env, only: dp=>real64
@@ -897,19 +898,19 @@ subroutine check
     !  Ensure that blanket material fractions allow non-zero space for steel
     !  CCFE HCPB Model
 
-
-    if ((iblanket == 1).or.(iblanket == 3)) then
-        fsum = breeder_multiplier + vfcblkt + vfpblkt
-        if (fsum >= 1.0D0) then
-            idiags(1) = iblanket
-            fdiags(2) = breeder_multiplier
-            fdiags(3) = vfcblkt
-            fdiags(4) = vfpblkt
-            fdiags(5) = fsum
-            call report_error(165)
+    if (istell == 0) then
+        if ((iblanket == 1).or.(iblanket == 3)) then
+            fsum = breeder_multiplier + vfcblkt + vfpblkt
+            if (fsum >= 1.0D0) then
+                idiags(1) = iblanket
+                fdiags(2) = breeder_multiplier
+                fdiags(3) = vfcblkt
+                fdiags(4) = vfpblkt
+                fdiags(5) = fsum
+                call report_error(165)
+            end if
         end if
     end if
-
 
     ! Initialise superconductor cable parameters
     if(i_tf_sup==1)then

@@ -247,10 +247,6 @@ module fwbs_variables
   real(dp) :: tritprate
   !! tritium production rate [g day^-1] (`iblanket=2` (KIT HCPB))
 
-  real(dp) :: vvhemax
-  !! maximum helium concentration in vacuum vessel at end of plant life (appm)
-  !! (`iblanket=2` (KIT HCPB))
-
   real(dp) :: wallpf
   !! neutron wall load peaking factor (`iblanket=2` (KIT HCPB))
 
@@ -731,7 +727,6 @@ module fwbs_variables
     nphcdout = 2
     tbr = 0.0D0
     tritprate = 0.0D0
-    vvhemax = 0.0D0
     wallpf = 1.21D0
     whtblbreed = 0.0D0
     whtblbe = 0.0D0

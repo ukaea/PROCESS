@@ -1,3 +1,4 @@
+from numba import njit
 from process.fortran import constants
 from process.fortran import cs_fatigue_variables as csfv
 import numpy
@@ -47,45 +48,42 @@ class CsFatigue:
         delta = 1.0e-4
 
         # Initialise number of cycles
-        n_cycle = 0.0
         N_pulse = 0.0
         Kmax = 0.0
 
         # factor 2 taken as saftey factors in the crack sizes
         # Default CS steel undergoes fast fracture when SIF > 200 MPa, under a saftey factor 1.5 we use 133MPa
+        pi_2_arr = numpy.array([numpy.pi / 2.0e0, 0])
         while (
             (a <= t_structural_vertical / csfv.sf_vertical_crack)
             and (c <= t_structural_radial / csfv.sf_radial_crack)
             and (Kmax <= csfv.fracture_toughness / csfv.sf_fast_fracture)
         ):
             # find SIF max from SIF_a and SIF_c
-            Ka = self.surface_stress_intensity_factor(
+            Ka, Kc = self.surface_stress_intensity_factor(
                 hoop_stress_MPa,
                 t_structural_vertical,
                 t_structural_radial,
                 a,
                 c,
-                numpy.pi / 2.0e0,
-            )
-            Kc = self.surface_stress_intensity_factor(
-                hoop_stress_MPa, t_structural_vertical, t_structural_radial, a, c, 0.0e0
+                pi_2_arr,
             )
             Kmax = max(Ka, Kc)
 
             # run euler_method and find number of cycles needed to give crack increase
             deltaN = delta / (CR * (Kmax**csfv.paris_power_law))
 
-            # update a and c, N
+            # update a and c, N (+= doesnt work for fortran (?) reasons)
             a = a + delta * (Ka / Kmax) ** csfv.paris_power_law
             c = c + delta * (Kc / Kmax) ** csfv.paris_power_law
             N_pulse = N_pulse + deltaN
 
         # two pulses - ramp to Vsmax and ramp down per cycle
-        n_cycle = N_pulse / 2.0e0
+        return N_pulse / 2.0e0, t_crack_radial
 
-        return n_cycle, t_crack_radial
-
-    def embedded_stress_intensity_factor(self, hoop_stress, t, w, a, c, phi):
+    @staticmethod
+    @njit(cache=True)
+    def embedded_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
         # ! Assumes an embedded elliptical efect geometry
         # ! geometric quantities
         # ! hoop_stress - change in hoop stress over cycle
@@ -99,47 +97,53 @@ class CsFatigue:
         # ! Ref: C. Jong, Magnet Structural Design
         # ! Criteria Part 1: Main Structural Components and Welds 2012
 
+        # reuse of calc
+        a_c = a / c
+        a_t = a / t
+        cos_phi = numpy.cos(phi)
+        cos_phi_2 = cos_phi**2.0e0
+        sin_phi_2 = numpy.sin(phi) ** 2.0e0
+
         if a <= c:
-            Q = 1.0e0 + 1.464e0 * (a / c) ** 1.65e0
+            Q = 1.0e0 + 1.464e0 * a_c**1.65e0
             m1 = 1.0e0
-            m2 = 0.05e0 / (0.11e0 + (a / c) ** (3.0e0 / 2.0e0))
-            m3 = 0.29e0 / (0.23e0 + (a / c) ** (3.0e0 / 2.0e0))
-            g = 1.0e0 - (
-                (a / t) ** 4.0e0
-                * numpy.sqrt(2.6e0 - (2.0e0 * a / t))
-                / (1.0e0 + 4.0e0 * (a / c))
-            ) * abs(numpy.cos(phi))
-            f_phi = (
-                (a / c) ** 2.0e0 * (numpy.cos(phi)) ** 2.0e0 + (numpy.sin(phi) ** 2.0)
-            ) ** (1.0e0 / 4.0e0)
-            f_w = numpy.sqrt(
-                1.0e0 / numpy.cos(numpy.sqrt(a / t) * numpy.pi * c / (2.0e0 * w))
-            )
-        elif a > c:
-            Q = 1.0e0 + 1.464e0 * (c / a) ** 1.65e0
-            m1 = numpy.sqrt(c / a)
-            m2 = 0.05e0 / (0.11e0 + (a / c) ** (3.0e0 / 2.0e0))
-            m3 = 0.29e0 / (0.23e0 + (a / c) ** (3.0e0 / 2.0e0))
-            g = 1.0e0 - (
-                (a / t) ** 4.0e0
-                * numpy.sqrt(2.6e0 - (2.0e0 * a / t))
-                / (1.0e0 + 4.0e0 * (a / c))
-            ) * abs(numpy.cos(phi))
-            f_phi = (
-                (c / a) ** 2.0e0 * (numpy.sin(phi)) ** 2.0e0 + (numpy.cos(phi) ** 2.0e0)
-            ) ** (1.0e0 / 4.0e0)
-            f_w = numpy.sqrt(
-                1.0e0 / numpy.cos(numpy.sqrt(a / t) * numpy.pi * c / (2.0e0 * w))
-            )
+            f_phi = (a_c**2.0e0 * cos_phi_2 + sin_phi_2) ** 0.25e0
+        else:  # elif a > c:
+            c_a = c / a
+            Q = 1.0e0 + 1.464e0 * c_a**1.65e0
+            m1 = numpy.sqrt(c_a)
+            f_phi = (c_a**2.0e0 * sin_phi_2 + cos_phi_2) ** 0.25e0
 
         # compute the unitless geometric correction
-        f = (m1 + m2 * (a / t) ** 2.0e0 + m3 * (a / t) ** 4.0e0) * g * f_phi * f_w
-
         # compute the stress intensity factor
-        k = hoop_stress * f * numpy.sqrt(numpy.pi * a / Q)
-        return k
+        return (
+            hoop_stress
+            * (  # f
+                (
+                    m1
+                    + (0.05e0 / (0.11e0 + a_c**1.5e0)) * a_t**2.0e0  # m2 *a_t^2
+                    + (0.29e0 / (0.23e0 + a_c**1.5e0)) * a_t**4.0e0  # m3 *a_t^4
+                )
+                * (  # g
+                    1.0e0
+                    - (
+                        a_t**4.0e0
+                        * numpy.sqrt(2.6e0 - (2.0e0 * a_t))
+                        / (1.0e0 + 4.0e0 * a_c)
+                    )
+                    * abs(cos_phi)
+                )
+                * f_phi
+                * numpy.sqrt(  # f_w
+                    1.0e0 / numpy.cos(numpy.sqrt(a_t) * numpy.pi * c / (2.0e0 * w))
+                )
+            )
+            * numpy.sqrt(numpy.pi * a / Q)
+        )
 
-    def surface_stress_intensity_factor(self, hoop_stress, t, w, a, c, phi):
+    @staticmethod
+    @njit(cache=True)
+    def surface_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
         # ! Assumes an surface semi elliptical defect geometry
         # ! geometric quantities
         # ! hoop_stress - change in hoop stress over cycle
@@ -155,56 +159,68 @@ class CsFatigue:
 
         bending_stress = 0.0e0  # * 3.0 * M / (w*d**2.0)
 
+        # reuse of calc
+        a_t = a / t
+        a_t_2 = a_t**2.0e0
+        sin_phi = numpy.sin(phi)
+        cos_phi_2 = numpy.cos(phi) ** 2.0e0
+
         if a <= c:
-            Q = 1.0e0 + 1.464e0 * (a / c) ** 1.65e0
-            m1 = 1.13e0 - 0.09e0 * a / c
-            m2 = -0.54e0 + 0.89e0 / (0.2e0 + a / c)
-            m3 = 0.5e0 - 1.0e0 / (0.65e0 + a / c) + 14.0e0 * (1 - a / c) ** 24.0e0
-            g = (
+            # reuse of calc
+            a_c = a / c
+
+            Q = 1.0e0 + 1.464e0 * a_c**1.65e0
+            m1 = 1.13e0 - 0.09e0 * a_c
+            m2 = -0.54e0 + 0.89e0 / (0.2e0 + a_c)
+            m3 = 0.5e0 - 1.0e0 / (0.65e0 + a_c) + 14.0e0 * (1 - a_c) ** 24.0e0
+            g = 1.0e0 + (0.1e0 + 0.35e0 * a_c**2.0e0) * (1.0e0 - sin_phi) ** 2.0e0
+            f_phi = (a_c**2.0e0 * cos_phi_2 + sin_phi**2.0e0) ** 0.25e0
+            p = 0.2e0 + a_c + 0.6e0 * a_t
+            H1 = 1.0e0 - 0.34e0 * a_t - 0.11e0 * a * a / (c * t)
+            H2 = (
+                1.0
+                + (-1.22e0 - 0.12e0 * a_c) * a_t  # G21 * a / t
+                + (0.55e0 - 1.05e0 * a_c**0.75e0 + 0.47e0 * a_c**1.5e0)  # G22
+                * a_t_2
+            )
+        else:  # elif a > c:
+            c_a = c / a
+            c_a_4 = c_a**4.0e0
+
+            Q = 1.0e0 + 1.464e0 * c_a**1.65e0
+            m1 = numpy.sqrt(c_a) * (1.0e0 + 0.04e0 * c_a)
+
+            m2 = 0.2e0 * c_a_4
+            m3 = -0.11e0 * c_a_4
+
+            g = 1.0e0 + (0.1e0 + 0.35e0 * c_a * a_t_2) * (1.0e0 - sin_phi) ** 2.0e0
+            f_phi = (c_a**2.0e0 * sin_phi**2.0e0 + cos_phi_2) ** 0.25e0
+            p = 0.2e0 + c_a + 0.6e0 * a_t
+            H1 = (
                 1.0e0
-                + (0.1e0 + 0.35e0 * (a / c) ** 2.0e0)
-                * (1.0e0 - numpy.sin(phi)) ** 2.0e0
+                + (-0.04e0 - 0.41e0 * c_a) * a_t  # G11 * a / t
+                + (0.55e0 - 1.93e0 * c_a**0.75e0 + 1.38e0 * c_a**1.5e0)  # G12
+                * a_t_2
             )
-            f_phi = (
-                (a / c) ** 2.0e0 * (numpy.cos(phi)) ** 2.0e0 + (numpy.sin(phi)) ** 2.0e0
-            ) ** (1.0e0 / 4.0e0)
-            f_w = numpy.sqrt(
-                1.0e0 / numpy.cos(numpy.sqrt(a / t) * numpy.pi * c / (2.0e0 * w))
-            )
-            p = 0.2e0 + a / c + 0.6e0 * a / t
-            G21 = -1.22e0 - 0.12e0 * a / c
-            G22 = 0.55e0 - 1.05e0 * (a / c) ** 0.75e0 + 0.47e0 * (a / c) ** 1.5e0
-            H1 = 1.0e0 - 0.34e0 * a / t - 0.11e0 * a * a / (c * t)
-            H2 = 1.0e0 + G21 * a / t + G22 * (a / t) ** 2.0e0
-        elif a > c:
-            Q = 1.0e0 + 1.464e0 * (c / a) ** 1.65e0
-            m1 = numpy.sqrt(c / a) * (1.0e0 + 0.04e0 * c / a)
-            m2 = 0.2e0 * (c / a) ** 4.0e0
-            m3 = -0.11e0 * (c / a) ** 4.0e0
-            g = (
+            H2 = (
                 1.0e0
-                + (0.1e0 + 0.35e0 * (c / a) * (a / t) ** 2.0e0)
-                * (1.0e0 - numpy.sin(phi)) ** 2.0e0
+                + (-2.11e0 + 0.77e0 * c_a) * a_t  # G21 * a / t
+                + (0.55e0 - 0.72e0 * c_a * 0.75e0 + 0.14e0 * c_a * 1.5e0) * a_t_2  # G22
             )
-            f_phi = (
-                (c / a) ** 2.0e0 * (numpy.sin(phi)) ** 2.0e0 + (numpy.cos(phi)) ** 2.0e0
-            ) ** (1.0e0 / 4.0e0)
-            f_w = numpy.sqrt(
-                1.0e0 / numpy.cos(numpy.sqrt(a / t) * numpy.pi * c / (2.0e0 * w))
-            )
-            p = 0.2e0 + c / a + 0.6e0 * a / t
-            G11 = -0.04e0 - 0.41e0 * c / a
-            G12 = 0.55e0 - 1.93e0 * (c / a) ** 0.75e0 + 1.38e0 * (c / a) ** 1.5e0
-            G21 = -2.11e0 + 0.77e0 * c / a
-            G22 = 0.55e0 - 0.72e0 * (c / a) * 0.75e0 + 0.14e0 * (c / a) * 1.5e0
-            H1 = 1.0e0 + G11 * a / t + G12 * (a / t) ** 2.0e0
-            H2 = 1.0e0 + G21 * a / t + G22 * (a / t) ** 2.0e0
 
         # compute the unitless geometric correction
-        Hs = H1 + (H2 - H1) * (numpy.sin(phi)) ** p
-        f = (m1 + m2 * (a / t) ** 2.0e0 + m3 * (a / t) ** 4.0e0) * g * f_phi * f_w
-
         # compute the stress intensity factor
-        k = (hoop_stress + Hs * bending_stress) * f * numpy.sqrt(numpy.pi * a / Q)
-
-        return k
+        return (
+            (  # hoop_stress + Hs * bending_stress
+                hoop_stress + (H1 + (H2 - H1) * sin_phi**p) * bending_stress
+            )
+            * (  # f
+                (m1 + m2 * a_t_2 + m3 * a_t**4.0e0)
+                * g
+                * f_phi
+                * numpy.sqrt(  # f_w
+                    1.0e0 / numpy.cos(numpy.sqrt(a_t) * numpy.pi * c / (2.0e0 * w))
+                )
+            )
+            * numpy.sqrt(numpy.pi * a / Q)
+        )

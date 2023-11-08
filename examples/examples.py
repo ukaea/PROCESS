@@ -20,6 +20,8 @@ from pdf2image import convert_from_path
 from process.main import VaryRun
 import os
 from process.io import plot_scans
+from PIL import Image
+from IPython.display import display
 
 # Define project root dir; when running a notebook, the cwd is the dir the notebook is in
 PROJ_DIR = Path.cwd().parent
@@ -92,9 +94,12 @@ for page_no, page_image in enumerate(pages):
 
 # %% [markdown]
 # `plot_proc`'s PDF output.
-#
-# <img src="plot_proc_1.png" width="1000">
-# <img src="plot_proc_2.png" width="1000">
+
+# %%
+img1 = Image.open("plot_proc_1.png")
+display(img1)
+img2 = Image.open("plot_proc_2.png")
+display(img2)
 
 # %%
 # Delete temp dir

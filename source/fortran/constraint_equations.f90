@@ -1276,6 +1276,7 @@ contains
       !! bt : input real : toroidal field
       !! btot : input real : total field
       use physics_variables, only: iculbl, betalim, beta, betanb, betaft, bt, btot
+      use stellarator_variables, only: istell
       use constraint_variables, only: fbetatry
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1285,7 +1286,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! Include all beta components: relevant for both tokamaks and stellarators
-      if (iculbl == 0) then
+      if ((iculbl == 0).or.(istell /= 0)) then
          tmp_cc =  1.0D0 - fbetatry * betalim/beta
          tmp_con = betalim
          tmp_err = betalim - beta / fbetatry
@@ -2271,47 +2272,16 @@ contains
    end subroutine constraint_eqn_054
 
    subroutine constraint_eqn_055(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for helium concentration in vacuum vessel upper limit
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for helium concentration in vacuum vessel upper limit
-      !! #=# fwbs
-      !! #=#=# fvvhe, vvhemax
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fvvhe : input real : f-value for vacuum vessel He concentration limit
-      !! vvhealw : input real :  allowed maximum helium concentration in vacuum vessel at end of plant life (appm) (iblanket =2)
-      !! vvhemax : ivvhemaxnput real :  maximum helium concentration in vacuum vessel at end of plant life (appm) (iblanket=2 (KIT HCPB))
-      !! iblanket : input integer : switch for blanket model: <UL>
-      !! <LI> = 1 CCFE HCPB model;
-      !! <LI> = 2 KIT HCPB model;
-      !! <LI> = 3 CCFE HCPB model with Tritium Breeding Ratio calculation;
-      !! <LI> = 4 KIT HCLL model</UL>
-      use constraint_variables, only: fvvhe, vvhealw
-      use fwbs_variables, only: vvhemax, iblanket
+      !! vvhemax is no longer calculated in PROCESS and this constraint is disabled
       implicit none
-            real(dp), intent(out) :: tmp_cc
+
+      real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
       real(dp), intent(out) :: tmp_err
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      if (iblanket == 2) then
-         tmp_cc = 1.0D0 - fvvhe * vvhealw/vvhemax
-         tmp_con = vvhealw * (1.0D0 - tmp_cc)
-         tmp_err = vvhemax * tmp_cc
-         tmp_symbol = '<'
-         tmp_units = 'appm'
-      else ! iblanket /= 2
-         tmp_cc = 0
-        tmp_con = 0
-        tmp_err = 0
-        tmp_symbol = ''
-        tmp_units = ''
-         call report_error(173)
-      end if
-
+      call report_error(173)
    end subroutine constraint_eqn_055
 
    subroutine constraint_eqn_056(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
@@ -3391,6 +3361,10 @@ contains
       !! fecrh_ignition : input real : f-value for constraint powerht_local > powerscaling
       !! max_gyrotron_frequency : input real :  Max. av. gyrotron frequency
       !! te0_ecrh_achievable : input real : Max. achievable electron temperature at ignition point
+      use constraint_variables, only: fecrh_ignition
+      use stellarator_variables, only: max_gyrotron_frequency, te0_ecrh_achievable, powerscaling_constraint, powerht_constraint
+      use physics_variables, only: ignite
+      use current_drive_variables, only: pheat
       implicit none
       real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3398,8 +3372,17 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      ! Constraint equation 91 is reserved for when Stellarator is added back to PROCESS
+      ! Achievable ECRH te needs to be larger than needed te for igntion
+      if(ignite==0) then
+         tmp_cc = 1.0D0 - fecrh_ignition* (powerht_constraint+pheat)/powerscaling_constraint
+      else
+         tmp_cc = 1.0D0 - fecrh_ignition* powerht_constraint/powerscaling_constraint
+      endif
 
+      tmp_con = powerscaling_constraint * (1.0D0 - tmp_cc)
+      tmp_err = powerht_constraint * tmp_cc
+      tmp_symbol = '<'
+      tmp_units = 'MW'
    end subroutine constraint_eqn_091
 
 

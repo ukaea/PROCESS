@@ -17,7 +17,6 @@ from process.io.mfile import MFile
 def plot_full_sankey(
     mfilename="MFILE.DAT",
 ):  # Plots the power flow from PROCESS as a Sankey Diagram
-
     # ------------------------------- Pulling values from the MFILE -------------------------------
 
     m_file = MFile(mfilename)
@@ -98,7 +97,6 @@ def plot_full_sankey(
 
     # Loop 1 to get 'Plasma Heating' branch tip coords; loop 2 to match 'PLASMA' branch
     for _ in range(2):
-
         # The visual settings of the Sankey Plot
         plt.rcParams.update({"font.size": 9})
         fig = plt.figure()
@@ -451,7 +449,6 @@ def plot_full_sankey(
 
 
 def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Diagram
-
     # ------------------------------- Pulling values from the MFILE -------------------------------
 
     m_file = MFile(mfilename)
@@ -522,7 +519,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
         -1
     )  # Heat for electricity (MW)
-    htpmw_fw_blkt = m_file.data["htpmw_blkt_tot"].get_scan(
+    htpmw_fw_blkt = m_file.data["htpmw_fw_blkt"].get_scan(
         -1
     )  # 1st wall & blanket pumping (MW)
     pthermmw_p = pthermfw_blkt - htpmw_fw_blkt  # Heat - pumping power (MW)
@@ -563,7 +560,6 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
 
     # Loop 1 to get 'Plasma Heating' branch tip coords; loop 2 to match 'PLASMA' branch
     for _ in range(2):
-
         # ------------------------------------ Visual Settings ------------------------------------
 
         plt.rcParams.update({"font.size": 9})  # Setting font size to 9
