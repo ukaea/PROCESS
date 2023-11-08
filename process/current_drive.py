@@ -1175,7 +1175,7 @@ class CurrentDrive:
         )
 
         # Current drive efficiency
-        effnbss = current_drive_variables.frbeam * current_drive_module.etanb(
+        effnbss = current_drive_variables.frbeam * self.etanb(
             physics_variables.abeam,
             physics_variables.alphan,
             physics_variables.alphat,
@@ -1712,3 +1712,103 @@ class CurrentDrive:
         #  Difference
 
         return e1 - e2
+
+    def etanb(self, abeam, alphan, alphat, aspect, dene, ebeam, rmajor, ten, zeff):
+        """Routine to find neutral beam current drive efficiency
+        using the ITER 1990 formulation
+        author: P J Knight, CCFE, Culham Science Centre
+        abeam   : input real : beam ion mass (amu)
+        alphan  : input real : density profile factor
+        alphat  : input real : temperature profile factor
+        aspect  : input real : aspect ratio
+        dene    : input real : volume averaged electron density (m**-3)
+        enbeam  : input real : neutral beam energy (keV)
+        rmajor  : input real : plasma major radius (m)
+        ten     : input real : density weighted average electron temp. (keV)
+        zeff    : input real : plasma effective charge
+        This routine calculates the current drive efficiency of
+        a neutral beam system, based on the 1990 ITER model.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+
+        zbeam = 1.0
+        bbd = 1.0
+
+        dene20 = 1e-20 * dene
+
+        # Ratio of E_beam/E_crit
+        xjs = ebeam / (bbd * 10.0 * abeam * ten)
+        xj = np.sqrt(xjs)
+
+        yj = 0.8 * zeff / abeam
+
+        rjfunc = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
+
+        epseff = 0.5 / aspect
+        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
+        ffac = 1.0 / zbeam - (1.0 - gfac) / zeff
+
+        abd = (
+            0.107
+            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
+            * (1.0 - 0.21 * alphat)
+            * (1.0 - 0.2e-3 * ebeam + 0.09e-6 * ebeam**2)
+        )
+
+        return abd * (5.0 / rmajor) * (0.1 * ten / dene20) * rjfunc / 0.2 * ffac
+
+    def cfnbi(self, afast, efast, te, ne, nd, nt, zeffai, xlmbda):
+        """Routine to calculate the fraction of the fast particle energy
+        coupled to the ions
+        author: P J Knight, CCFE, Culham Science Centre
+        afast   : input real : mass of fast particle (units of proton mass)
+        efast   : input real : energy of fast particle (keV)
+        te      : input real : density weighted average electron temp. (keV)
+        ne      : input real : volume averaged electron density (m**-3)
+        nd      : input real : deuterium beam density (m**-3)
+        nt      : input real : tritium beam density (m**-3)
+        zeffai  : input real : mass weighted plasma effective charge
+        xlmbda  : input real : ion-electron coulomb logarithm
+        fpion   : output real : fraction of fast particle energy coupled to ions
+        This routine calculates the fast particle energy coupled to
+        the ions in the neutral beam system.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        """
+        # atmd = 2.0
+        atmdt = 2.5
+        # atmt = 3.0
+        c = 3.0e8
+        me = 9.1e-31
+        # zd = 1.0
+        # zt = 1.0
+
+        # xlbd = current_drive_module.xlmbdabi(afast, atmd, efast, te, ne)
+        # xlbt = current_drive_module.xlmbdabi(afast, atmt, efast, te, ne)
+
+        # sum = nd * zd * zd * xlbd / atmd + nt * zt * zt * xlbt / atmt
+        # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
+
+        xlmbdai = current_drive_module.xlmbdabi(afast, atmdt, efast, te, ne)
+        sumln = zeffai * xlmbdai / xlmbda
+        xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.mproton * sumln) ** (
+            2.0e0 / 3.0e0
+        )
+        ve = c * np.sqrt(2.0e0 * te / 511.0e0)
+
+        ecritfi = (
+            afast
+            * constants.mproton
+            * ve
+            * ve
+            * xlnrat
+            / (2.0e0 * constants.echarge * 1.0e3)
+        )
+
+        x = np.sqrt(efast / ecritfi)
+        t1 = np.log((x * x - x + 1.0e0) / ((x + 1.0e0) ** 2))
+        thx = (2.0e0 * x - 1.0e0) / np.sqrt(3.0e0)
+        t2 = 2.0e0 * np.sqrt(3.0e0) * (np.atan(thx) + np.pi / 6.0e0)
+
+        return (t1 + t2) / (3.0e0 * x * x)
