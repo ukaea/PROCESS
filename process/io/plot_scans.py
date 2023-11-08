@@ -673,7 +673,7 @@ def main(args=None):
                         label=labl,
                     )
                     ax2.set_ylabel(
-                        labels[output_name2],
+                        metadata[output_name2].latex,
                         fontsize=axis_font_size,
                         color="red",
                     )
@@ -681,17 +681,17 @@ def main(args=None):
                 ax2.yaxis.grid(True)
                 ax.xaxis.grid(True)
                 ax.set_ylabel(
-                    labels[output_name], fontsize=axis_font_size, color="blue"
+                    metadata[output_name].latex, fontsize=axis_font_size, color="blue"
                 )
-                ax.set_xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                ax.set_xlabel(metadata[scan_var_name].latex, fontsize=axis_font_size)
             elif stack_plots:
                 axs[output_names.index(output_name)].minorticks_on()
                 axs[output_names.index(output_name)].grid(True)
                 axs[output_names.index(output_name)].set_ylabel(
-                    labels[output_name],
+                    metadata[output_name].latex,
                 )
 
-                plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                plt.xlabel(metadata[scan_var_name].latex, fontsize=axis_font_size)
                 if len(input_files) > 1:
                     plt.legend(
                         loc="lower center",
@@ -712,13 +712,13 @@ def main(args=None):
             else:
                 plt.grid(True)
                 plt.ylabel(
-                    labels[output_name],
+                    metadata[output_name].latex,
                     fontsize=axis_font_size,
                     color="red" if output_names2 != [] else "black",
                 )
-                plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                plt.xlabel(metadata[scan_var_name].latex, fontsize=axis_font_size)
                 plt.title(
-                    f"{labels[output_name]} vs {labels[scan_var_name]}",
+                    f"{metadata[output_name].latex} vs {metadata[scan_var_name].latex}",
                     fontsize=axis_font_size,
                 )
                 plt.tight_layout()
@@ -849,9 +849,11 @@ def main(args=None):
                     ),
                 )
 
-                plt.colorbar().set_label(label=labels[output_name], size=axis_font_size)
-                plt.ylabel(metadata[scan_var_name].labels, fontsize=axis_font_size)
-                plt.xlabel(metadata[scan_2_var_name].labels, fontsize=axis_font_size)
+                plt.colorbar().set_label(
+                    label=metadata[output_name].latex, size=axis_font_size
+                )
+                plt.ylabel(metadata[scan_var_name].latex, fontsize=axis_font_size)
+                plt.xlabel(metadata[scan_2_var_name].latex, fontsize=axis_font_size)
                 plt.tight_layout()
                 plt.savefig(
                     f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
@@ -887,8 +889,8 @@ def main(args=None):
                     plt.plot(scan_2_var_array, output_array, "--o", label=labl)
 
                 plt.grid(True)
-                plt.ylabel(metadata[output_name].labels, fontsize=axis_font_size)
-                plt.xlabel(metadata[scan_2_var_name].labels, fontsize=axis_font_size)
+                plt.ylabel(metadata[output_name].latex, fontsize=axis_font_size)
+                plt.xlabel(metadata[scan_2_var_name].latex, fontsize=axis_font_size)
                 plt.legend(loc="best", fontsize=legend_size)
                 plt.xticks(size=axis_tick_size)
                 plt.yticks(size=axis_tick_size)
