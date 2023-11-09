@@ -31,15 +31,11 @@ class BlanketLibrary:
         References: see pumppower function description
         """
 
-        coolant = 0
-        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "helium":
-            coolant = 1
-        elif f2py_compatible_to_string(fwbs_variables.fwcoolant) == "water":
-            coolant = 2
-
-        if (fwbs_variables.coolwh == 0 and coolant == 1) or (
-            fwbs_variables.coolwh == 1 and coolant == 0
-        ):
+        # Make sure that, if the inputs for the FW and blanket inputs are different,
+        # the ipump variable is appropriately set for seperate coolants 
+        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Helium" and fwbs_variables.coolwh == 2:
+            fwbs_variables.ipump = 1
+        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Water" and fwbs_variables.coolwh == 1:
             fwbs_variables.ipump = 1
 
         # If FW and BB have same coolant...
@@ -79,7 +75,7 @@ class BlanketLibrary:
             # BB
             mid_temp_bl = (fwbs_variables.inlet_temp + fwbs_variables.outlet_temp) * 0.5
             bb_fluid_properties = FluidProperties.of(
-                f2py_compatible_to_string(fwbs_variables.fwcoolant),
+                "Helium" if fwbs_variables.coolwh == 1 else "Water",
                 temperature=mid_temp_bl,
                 pressure=fwbs_variables.blpressure,
             )
@@ -146,13 +142,23 @@ class BlanketLibrary:
                 fwbs_variables.fwinlet,
                 "OP ",
             )
-            po.ovarre(
-                self.outfile,
-                "Outlet Temperature (Celcius)",
-                "(fwoutlet)",
-                fwbs_variables.fwoutlet,
-                "OP ",
-            )
+
+            if fwbs_variables.ipump == 0:
+                po.ovarre(
+                    self.outfile,
+                    "Outlet Temperature (Celcius)",
+                    "(outlet_temp)",
+                    fwbs_variables.outlet_temp,
+                    "OP ",
+                )
+            else: 
+                po.ovarre(
+                    self.outfile,
+                    "Outlet Temperature (Celcius)",
+                    "(fwoutlet)",
+                    fwbs_variables.fwoutlet,
+                    "OP ",
+                )
 
             # BB !!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if fwbs_variables.ipump == 1:
@@ -412,11 +418,13 @@ class BlanketLibrary:
             )
 
         # FW and BB Mass Flow ###########
-        coolant = 0
-        if fwbs_variables.fwcoolant == "helium":
-            coolant = 1
-        if fwbs_variables.fwcoolant == "water":
-            coolant = 2
+
+        # Make sure that, if the inputs for the FW and blanket inputs are different,
+        # the ipump variable is appropriately set for seperate coolants 
+        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Helium" and fwbs_variables.coolwh == 2:
+            fwbs_variables.ipump = 1
+        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Water" and fwbs_variables.coolwh == 1:
+            fwbs_variables.ipump = 1
 
         # If FW and BB have the same coolant...
         if fwbs_variables.ipump == 0:
@@ -857,7 +865,7 @@ class BlanketLibrary:
                     i_channel_shape=1,
                     mass_flow_rate=blanket_library.mfblktpi,
                     flow_density=fwbs_variables.rhof_bl,
-                )
+                )    
 
         # FW Presure Drops ###############
 
@@ -870,7 +878,6 @@ class BlanketLibrary:
             no180=no180fw,
             coolant_density=fwbs_variables.rhof_fw,
             coolant_dynamic_viscosity=fwbs_variables.visc_fw,
-            primary_coolant_switch=coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengi,
             nopolchan=npoltoti,
@@ -886,7 +893,6 @@ class BlanketLibrary:
             no180=no180fw,
             coolant_density=fwbs_variables.rhof_fw,
             coolant_dynamic_viscosity=fwbs_variables.visc_fw,
-            primary_coolant_switch=coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
             nopolchan=npoltoto,
@@ -909,7 +915,6 @@ class BlanketLibrary:
             no180=no180bz,
             coolant_density=fwbs_variables.rhof_bl,
             coolant_dynamic_viscosity=fwbs_variables.visc_bl,
-            primary_coolant_switch=fwbs_variables.coolwh,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
             nopolchan=npoltoto,
@@ -926,7 +931,6 @@ class BlanketLibrary:
                 no180=no180bz,
                 coolant_density=fwbs_variables.rhof_bl,
                 coolant_dynamic_viscosity=fwbs_variables.visc_bl,
-                primary_coolant_switch=fwbs_variables.coolwh,
                 coolant_electrical_conductivity=0.0e0,
                 pol_channel_length=pollengi,
                 nopolchan=npoltoti,
@@ -944,7 +948,6 @@ class BlanketLibrary:
                 no180=no180bz_liq,
                 coolant_density=fwbs_variables.den_liq,
                 coolant_dynamic_viscosity=fwbs_variables.dynamic_viscosity_liq,
-                primary_coolant_switch=fwbs_variables.coolwh,
                 coolant_electrical_conductivity=fwbs_variables.electrical_conductivity_liq,
                 pol_channel_length=pollengo,
                 nopolchan=npoltoto,
@@ -960,7 +963,6 @@ class BlanketLibrary:
                     no180=no180bz_liq,
                     coolant_density=fwbs_variables.den_liq,
                     coolant_dynamic_viscosity=fwbs_variables.dynamic_viscosity_liq,
-                    primary_coolant_switch=fwbs_variables.coolwh,
                     coolant_electrical_conductivity=fwbs_variables.electrical_conductivity_liq,
                     pol_channel_length=pollengi,
                     nopolchan=npoltoti,
@@ -989,7 +991,7 @@ class BlanketLibrary:
                 pressure=fwbs_variables.fwpressure.item(),
                 pdrop=deltap_fw_blkt,
                 mf=blanket_library.mftotal,
-                primary_coolant_switch=coolant,
+                primary_coolant_switch=f2py_compatible_to_string(fwbs_variables.fwcoolant),
                 coolant_density=fwbs_variables.rhof_fw,
                 label="First Wall and Blanket",
             )
@@ -1019,7 +1021,7 @@ class BlanketLibrary:
                 pressure=fwbs_variables.fwpressure.item(),
                 pdrop=deltap_fw.item(),
                 mf=blanket_library.mffw,
-                primary_coolant_switch=coolant,
+                primary_coolant_switch=f2py_compatible_to_string(fwbs_variables.fwcoolant),
                 coolant_density=fwbs_variables.rhof_fw,
                 label="First Wall",
             )
@@ -1033,7 +1035,7 @@ class BlanketLibrary:
                 pressure=fwbs_variables.blpressure.item(),
                 pdrop=deltap_blkt.item(),
                 mf=blanket_library.mfblkt,
-                primary_coolant_switch=blanket_library.coolwh,
+                primary_coolant_switch="Helium" if fwbs_variables.coolwh == 1 else "Water",
                 coolant_density=blanket_library.rhof_bl,
                 label="Blanket",
             )
@@ -1065,7 +1067,7 @@ class BlanketLibrary:
                 pressure=fwbs_variables.blpressure_liq.item(),
                 pdrop=deltap_bl_liq,
                 mf=fwbs_variables.mfblkt_liq,
-                primary_coolant_switch=fwbs_variables.coolwh,
+                primary_coolant_switch="Helium" if fwbs_variables.coolwh == 1 else "Water",
                 coolant_density=fwbs_variables.den_liq,
                 label="Liquid Metal Breeder/Coolant",
             )
@@ -1305,7 +1307,6 @@ class BlanketLibrary:
         no180,
         coolant_density,
         coolant_dynamic_viscosity,
-        primary_coolant_switch,
         coolant_electrical_conductivity,
         pol_channel_length,
         nopolchan,
@@ -1418,7 +1419,7 @@ class BlanketLibrary:
             # using enthalpies before and after the pump.
 
             fluid_properties = FluidProperties.of(
-                "Helium" if primary_coolant_switch == 1 else "Water",
+                fluid_name=primary_coolant_switch,
                 temperature=temp_in,
                 pressure=coolpin,
             )
@@ -1428,7 +1429,7 @@ class BlanketLibrary:
 
             # Get specific enthalpy at the outlet (J/kg) before pump using pressure and entropy s1
             outlet_fluid_properties = FluidProperties.of(
-                "Helium" if primary_coolant_switch == 1 else "Water",
+                fluid_name=primary_coolant_switch,
                 pressure=pressure,
                 entropy=s1,
             )
@@ -1457,7 +1458,7 @@ class BlanketLibrary:
             fp = (
                 temp_in
                 * (1 - (coolpin / pressure) ** -0.4)
-                / (fwbs_variables.etaiso * (temp_out - temp_in))
+                / (fwbs_variables.etaiso_liq * (temp_out - temp_in))
             )
             pumppower = (1e-6 * mf * spec_vol * pdrop / fwbs_variables.etaiso_liq) / (
                 1 - fp
