@@ -2826,9 +2826,7 @@ def parse_args(args):
         help="specify PLASMOD profile file",
     )
 
-    parser.add_argument(
-        "-s", "--show", help="show plot as well as saving figure", action="store_true"
-    )
+    parser.add_argument("-s", "--show", help="show plot", action="store_true")
 
     parser.add_argument("-n", type=int, help="Which scan to plot?")
 
@@ -3117,8 +3115,7 @@ def main(args=None):
 
     # show fig if option used
     if args.show:
-        plt.show(page1)
-        plt.show(page2)
+        plt.show(block=True)
 
     # This bit doesn't work - the argument is not recognised for some reason.:
     # if args.svg:

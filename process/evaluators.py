@@ -58,16 +58,14 @@ class Evaluators:
 
         # Convergence loop to ensure burn time consistency
         if sv.istell == 0:
-            loop = 0
-            while (loop < 10) and (
-                abs((tv.tburn - tv.tburn0) / max(tv.tburn, 0.01)) > 0.001
-            ):
-                loop += 1
+            for _ in range(10):
+                if abs((tv.tburn - tv.tburn0) / max(tv.tburn, 0.01)) <= 0.001:
+                    break
+
                 self.caller.call_models(xv)
                 if gv.verbose == 1:
                     print("Internal tburn consistency check: ", tv.tburn, tv.tburn0)
-
-            if loop >= 10:
+            else:
                 print(
                     "Burn time values are not consistent in iteration: ",
                     numerics.nviter,

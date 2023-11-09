@@ -302,9 +302,7 @@ if __name__ == "__main__":
         help="specify the MFILE (default=MFILE.DAT)",
     )
 
-    parser.add_argument(
-        "-s", "--save", help="save as well as displaying figure", action="store_true"
-    )
+    parser.add_argument("-s", "--save", help="save figure", action="store_true")
 
     args = parser.parse_args()
 

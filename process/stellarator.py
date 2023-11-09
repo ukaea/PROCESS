@@ -25,13 +25,13 @@ from process.fortran import (
     constraint_variables,
     rebco_variables,
     maths_library,
-    superconductors,
     profiles_module,
     physics_functions_module,
     neoclassics_module,
     impurity_radiation_module,
     current_drive_module,
 )
+import process.superconductors as superconductors
 import process.physics_functions as physics_funcs
 from process.coolprop_interface import FluidProperties
 
