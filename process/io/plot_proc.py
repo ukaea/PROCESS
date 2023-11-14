@@ -19,6 +19,7 @@ import sys
 import argparse
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 import matplotlib.backends.backend_pdf as bpdf
 import math
 from matplotlib.path import Path
