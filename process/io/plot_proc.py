@@ -2441,6 +2441,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
 def main_plot(
     fig1,
     fig2,
+    fig3,
     m_file_data,
     scan,
     plasmod=False,
@@ -2539,6 +2540,10 @@ def main_plot(
     plot_6 = fig1.add_subplot(236)
     plot_current_drive_info(plot_6, m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25)
+
+    # TF coil with WP
+    plot_7 = fig3.add_subplot(321, aspect="equal")
+    plot_wp(plot_7, m_file_data, scan)
 
 
 def save_plots(m_file_data, scan):
@@ -2774,9 +2779,10 @@ def test(f):
         # create main plot
         page1 = plt.figure(figsize=(12, 9), dpi=80)
         page2 = plt.figure(figsize=(12, 9), dpi=80)
+        page3 = plt.figure(figsize=(12, 9), dpi=80)
 
         # run main_plot
-        main_plot(page1, page2, m_file, scan=scan)
+        main_plot(page1, page2, page3, m_file, scan=scan)
 
         # with bpdf.PdfPages(args.o) as pdf:
         # with bpdf.PdfPages("ref.SUMMARY.pdf") as pdf:
@@ -3102,16 +3108,24 @@ def main(args=None):
     # create main plot
     page1 = plt.figure(figsize=(12, 9), dpi=80)
     page2 = plt.figure(figsize=(12, 9), dpi=80)
+    page3 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
-        page1, page2, m_file, scan=scan, plasmod=pmod_switch, demo_ranges=demo_ranges
+        page1,
+        page2,
+        page3,
+        m_file,
+        scan=scan,
+        plasmod=pmod_switch,
+        demo_ranges=demo_ranges,
     )
 
     # with bpdf.PdfPages(args.o) as pdf:
     with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
         pdf.savefig(page1)
         pdf.savefig(page2)
+        pdf.savefig(page3)
 
     # show fig if option used
     if args.show:
@@ -3122,6 +3136,7 @@ def main(args=None):
     #    save_plots(m_file)
     plt.close(page1)
     plt.close(page2)
+    plt.close(page3)
 
 
 if __name__ == "__main__":
