@@ -1656,13 +1656,26 @@ def plot_tf_coils(axis, mfile_data, scan):
         axis.add_patch(rect)
 
 
-def plot_wp(axis, mfile_data, scan):
-    """Plots inboard TF coil and winding pack.
-    Arguments:
-        axis --> axis object to plot to
-        mfile_data --> MFILE data object
-        scan --> scan number to use
+def plot_wp(axis, mfile_data, scan: int) -> None:
     """
+    Plots inboard TF coil and winding pack.
+    Author: C. Ashe
+
+    Parameters
+    ----------
+    axis : matplotlib.axes._axes.Axes
+        Axis object to plot to.
+    mfile_data : MFILE data object
+        Object containing data for the plot.
+    scan : int
+        Scan number to use.
+
+    Returns
+    -------
+    None
+    """
+
+    # Import the bulk variables
     r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
     r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
     wp_toridal_dxbig = mfile_data.data["wwp1"].get_scan(scan)
