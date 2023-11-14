@@ -1655,6 +1655,205 @@ def plot_tf_coils(axis, mfile_data, scan):
         axis.add_patch(rect)
 
 
+def plot_wp(axis, mfile_data, scan):
+    """Plots inboard TF coil and winding pack.
+    Arguments:
+        axis --> axis object to plot to
+        mfile_data --> MFILE data object
+        scan --> scan number to use
+    """
+    r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
+    r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
+    wp_toridal_dxbig = mfile_data.data["wwp1"].get_scan(scan)
+    wp_toridal_dxsmall = mfile_data.data["wwp2"].get_scan(scan)
+    dr_tf_wp = mfile_data.data["dr_tf_wp"].get_scan(scan)
+    side_case_dx = mfile_data.data["casths"].get_scan(scan)
+    wp_inner = mfile_data.data["r_wp_inner"].get_scan(scan)
+    tinstf = mfile_data.data["tinstf"].get_scan(scan)
+    wp_outer = mfile_data.data["r_wp_outer"].get_scan(scan)
+    turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
+    wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
+    casthi = round(mfile_data.data["casthi"].get_scan(scan))
+
+    # Equations for plotting the TF case
+    half_case_angle = np.arctan((side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner)
+    print(half_case_angle)
+    x11 = r_tf_inboard_in * np.cos(
+        np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+    )
+    y11 = r_tf_inboard_in * np.sin(
+        np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+    )
+    x12 = r_tf_inboard_out * np.cos(
+        np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+    )
+    y12 = r_tf_inboard_out * np.sin(
+        np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+    )
+    y13 = [y11[0], y12[0]]
+    x13 = [x11[0], x12[0]]
+    y14 = [y11[-1], y12[-1]]
+    x14 = [x11[-1], x12[-1]]
+    axis.plot(x11, y11, color="black")
+    axis.plot(x12, y12, color="black")
+    axis.plot(x13, y13, color="black")
+    axis.plot(x14, y14, color="black")
+
+    axis.fill_between(
+        [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
+        y13,
+        color="grey",
+        alpha=0.25,
+    )
+    axis.fill_between(
+        [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
+        y14,
+        color="grey",
+        alpha=0.25,
+    )
+    axis.fill_between(
+        [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
+        [y12[-1], y11[-1]],
+        color="grey",
+        alpha=0.25,
+    )
+    # Upper arc shaded section
+    axis.fill_between(
+        [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
+        [-y12[-1], -y11[-1]],
+        color="grey",
+        alpha=0.25,
+    )
+
+    axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)
+
+    # Plot the rectangular WP
+    if wp_shape == 0:
+        wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
+            wwp1 - (2 * tinstf)
+        )  # row to height
+        print(wp_side_ratio)
+        print(turns)
+        side_unit = turns / wp_side_ratio
+        root_turns = round(np.sqrt(side_unit), 1)
+        long_turns = round(root_turns * wp_side_ratio)
+        short_turns = round(root_turns)
+
+        print(long_turns)
+        print(short_turns)
+
+        # Plots the surrounding insualtion
+        axis.add_patch(
+            Rectangle(
+                (wp_inner, -(0.5 * wp_toridal_dxbig)),
+                dr_tf_wp,
+                wp_toridal_dxbig,
+                color="gray",
+            ),
+        )
+        # Plots the WP inside the insulation
+        axis.add_patch(
+            Rectangle(
+                (wp_inner + tinstf, -(0.5 * wp_toridal_dxbig) + tinstf),
+                (dr_tf_wp - (2 * tinstf)),
+                (wp_toridal_dxbig - (2 * tinstf)),
+                color="blue",
+            )
+        )
+        for i in range(1, long_turns):
+            axis.plot(
+                [
+                    (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
+                    (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
+                ],
+                [
+                    -0.5 * (wp_toridal_dxbig - 2 * tinstf),
+                    0.5 * (wp_toridal_dxbig - 2 * tinstf),
+                ],
+                color="white",
+                linewidth="0.25",
+                linestyle="dashed",
+            )
+
+        for i in range(1, short_turns):
+            axis.plot(
+                [(wp_inner + tinstf), (wp_inner - tinstf + dr_tf_wp)],
+                [
+                    (-0.5 * wp_toridal_dxbig) + (i * wp_toridal_dxbig / short_turns),
+                    (-0.5 * wp_toridal_dxbig) + (i * wp_toridal_dxbig / short_turns),
+                ],
+                color="white",
+                linewidth="0.25",
+                linestyle="dashed",
+            )
+
+    # plot the double rectangle winding pack
+    if wp_shape == 1:
+        wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
+            wp_toridal_dxbig - (2 * tinstf)
+        )  # row to height
+        print(wp_side_ratio)
+        print(turns)
+        side_unit = turns / wp_side_ratio
+        root_turns = round(np.sqrt(side_unit), 1)
+        long_turns = round(root_turns * wp_side_ratio)
+        short_turns = round(root_turns)
+
+        # Inner WP insulation
+        axis.add_patch(
+            Rectangle(
+                (wp_inner, -(0.5 * wp_toridal_dxsmall)),
+                dr_tf_wp / 2,
+                wp_toridal_dxsmall,
+                color="gray",
+            ),
+        )
+        # Outer WP insulation
+        axis.add_patch(
+            Rectangle(
+                (
+                    wp_inner + (0.5 * dr_tf_wp) - tinstf,
+                    -(0.5 * wp_toridal_dxbig) - tinstf,
+                ),
+                dr_tf_wp / 2,
+                wp_toridal_dxbig,
+                color="gray",
+            ),
+        )
+        # Outer WP
+        axis.add_patch(
+            Rectangle(
+                (wp_inner + (0.5 * dr_tf_wp), -(0.5 * wp_toridal_dxbig)),
+                (dr_tf_wp / 2) - (2 * tinstf),
+                wp_toridal_dxbig - (2 * tinstf),
+                color="blue",
+            ),
+        )
+        # Inner WP
+        axis.add_patch(
+            Rectangle(
+                (
+                    wp_inner - tinstf,
+                    -(0.5 * wp_toridal_dxsmall) - tinstf,
+                ),
+                (dr_tf_wp / 2) - (2 * tinstf),
+                wp_toridal_dxsmall - (2 * tinstf),
+                color="blue",
+            ),
+        )
+        # Trapezium WP
+    if wp_shape == 2:
+        # WP insulation
+        x = [wp_inner, wp_inner, (wp_inner + dr_tf_wp), (wp_inner + dr_tf_wp)]
+        y = [
+            (-0.5 * wp_toridal_dxsmall),
+            (0.5 * wp_toridal_dxsmall),
+            (0.5 * wp_toridal_dxbig),
+            (-0.5 * wp_toridal_dxbig),
+        ]
+        axis.add_patch(patches.Polygon(xy=list(zip(x, y)), color="grey"))
+
+
 def plot_pf_coils(axis, mfile_data, scan):
     """Function to plot PF coils
 
