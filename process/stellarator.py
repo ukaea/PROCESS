@@ -30,6 +30,7 @@ from process.fortran import (
     neoclassics_module,
     impurity_radiation_module,
     current_drive_module,
+    sctfcoil_module,
 )
 import process.superconductors as superconductors
 import process.physics_functions as physics_funcs
@@ -2722,6 +2723,7 @@ class Stellarator:
         # NOTE: original implementation used taucq which used a EUROfusion
         # constant in the calculation. This was the minimum allowed quench time.
         # Replacing with the actual quench time.
+        # MN/m^3
         f_vv_actual = (
             2.54e6
             * (3e0 * 1.3e0 * 50e0 * 0.92e0**2e0)
@@ -2738,6 +2740,15 @@ class Stellarator:
                 )
             )
             ** (-1)
+        )
+
+        # N/m^2
+        # is the vv width the correct length to multiply by to turn the
+        # force density into a stress?
+        sctfcoil_module.vv_stress_quench = (
+            f_vv_actual
+            * 1e6
+            * ((build_variables.d_vv_in + build_variables.d_vv_out) / 2)
         )
 
         # the conductor fraction is meant of the cable space#
