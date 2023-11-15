@@ -1929,8 +1929,9 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             [0, 0],
             turn_width,
             turn_width,
-            color="red",
+            facecolor="red",
             label=f"Inter-turn insulation\n {insulation_thickness} m",
+            edgecolor="black",
         ),
     )
     # Plot the steel conduit
@@ -1939,8 +1940,9 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             [insulation_thickness, insulation_thickness],
             (turn_width - 2 * insulation_thickness),
             (turn_width - 2 * insulation_thickness),
-            color="blue",
+            facecolor="blue",
             label=f"Steel Conduit\n {steel_thickness} m",
+            edgecolor="black",
         ),
     )
 
@@ -1953,16 +1955,18 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             ],
             (turn_width - 2 * (insulation_thickness + steel_thickness)),
             (turn_width - 2 * (insulation_thickness + steel_thickness)),
-            color="grey",
+            facecolor="grey",
             label="Cable space",
+            edgecolor="black",
         ),
     )
     axis.add_patch(
         Circle(
             [(turn_width / 2), (turn_width / 2)],
             he_pipe_diameter / 2,
-            color="white",
+            facecolor="white",
             label=f"Cooling pipe\n {he_pipe_diameter} m",
+            edgecolor="black",
         ),
     )
 
@@ -1972,7 +1976,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     plt.title("WP Turn Structure")
     plt.xlabel("X [m]")
     plt.ylabel("Y [m]")
-    plt.legend()
+    plt.legend(bbox_to_anchor=(1.2, 1.0), loc="upper left")
 
 
 def plot_pf_coils(axis, mfile_data, scan):
