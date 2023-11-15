@@ -1656,14 +1656,14 @@ def plot_tf_coils(axis, mfile_data, scan):
         axis.add_patch(rect)
 
 
-def plot_wp(axis, mfile_data, scan: int) -> None:
+def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     """
     Plots inboard TF coil and winding pack.
     Author: C. Ashe
 
     Parameters
     ----------
-    axis : matplotlib.axes._axes.Axes
+    axis : matplotlib.axes object
         Axis object to plot to.
     mfile_data : MFILE data object
         Object containing data for the plot.
@@ -1675,7 +1675,7 @@ def plot_wp(axis, mfile_data, scan: int) -> None:
     None
     """
 
-    # Import the bulk variables
+    # Import the TF variables
     r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
     r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
     wp_toridal_dxbig = mfile_data.data["wwp1"].get_scan(scan)
@@ -1691,7 +1691,7 @@ def plot_wp(axis, mfile_data, scan: int) -> None:
 
     # Equations for plotting the TF case
     half_case_angle = np.arctan((side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner)
-    print(half_case_angle)
+
     # X points for inboard case curve
     x11 = r_tf_inboard_in * np.cos(
         np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
@@ -1784,6 +1784,7 @@ def plot_wp(axis, mfile_data, scan: int) -> None:
                 color="blue",
             )
         )
+        # Dvides the WP up into the turn segments
         for i in range(1, long_turns):
             axis.plot(
                 [
@@ -1811,7 +1812,7 @@ def plot_wp(axis, mfile_data, scan: int) -> None:
                 linestyle="dashed",
             )
 
-    # plot the double rectangle winding pack
+    # Plot the double rectangle winding pack
     if wp_shape == 1:
         wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
             wp_toridal_dxbig - (2 * tinstf)
@@ -1865,7 +1866,8 @@ def plot_wp(axis, mfile_data, scan: int) -> None:
                 color="blue",
             ),
         )
-        # Trapezium WP
+
+    # Trapezium WP
     if wp_shape == 2:
         # WP insulation
         x = [wp_inner, wp_inner, (wp_inner + dr_tf_wp), (wp_inner + dr_tf_wp)]
@@ -1876,6 +1878,14 @@ def plot_wp(axis, mfile_data, scan: int) -> None:
             (-0.5 * wp_toridal_dxbig),
         ]
         axis.add_patch(patches.Polygon(xy=list(zip(x, y)), color="grey"))
+
+    plt.minorticks_on()
+    plt.xlim(
+        0.0,
+    )
+    plt.title("Top-down view of inboard TF coil at midplane")
+    plt.xlabel("Radial distance [m]")
+    plt.ylabel("Toroidal distance [m]")
 
 
 def plot_pf_coils(axis, mfile_data, scan):
@@ -2766,7 +2776,7 @@ def main_plot(
 
     # TF coil with WP
     plot_7 = fig3.add_subplot(321, aspect="equal")
-    plot_wp(plot_7, m_file_data, scan)
+    plot_tf_wp(plot_7, m_file_data, scan)
 
 
 def save_plots(m_file_data, scan):
