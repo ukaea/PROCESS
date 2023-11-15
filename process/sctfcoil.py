@@ -4628,9 +4628,23 @@ class Sctfcoil:
         )
         po.ovarre(
             constants.mfile,
+            "Inboard leg outer radius (m)",
+            "(r_tf_inboard_out)",
+            build_variables.r_tf_inboard_out,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
             "WP shape selection switch",
             "(i_tf_wp_geom)",
             tfcoil_variables.i_tf_wp_geom,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Radial position of inner edge and centre of winding pack (m)",
+            "(r_wp_inner)",
+            sctfcoil_module.r_wp_inner,
             "OP ",
         )
 

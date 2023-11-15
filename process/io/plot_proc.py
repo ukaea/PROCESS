@@ -1692,27 +1692,36 @@ def plot_wp(axis, mfile_data, scan: int) -> None:
     # Equations for plotting the TF case
     half_case_angle = np.arctan((side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner)
     print(half_case_angle)
+    # X points for inboard case curve
     x11 = r_tf_inboard_in * np.cos(
         np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
     )
+    # Y points for inboard case curve
     y11 = r_tf_inboard_in * np.sin(
         np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
     )
+    # X points for outboard case curve
     x12 = r_tf_inboard_out * np.cos(
         np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
     )
+    # Y points for outboard case curve
     y12 = r_tf_inboard_out * np.sin(
         np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
     )
+    # Cordinates of the top and bottom of case curves,
+    # used to plot the lines connecting the inside and outside of the case
     y13 = [y11[0], y12[0]]
     x13 = [x11[0], x12[0]]
     y14 = [y11[-1], y12[-1]]
     x14 = [x11[-1], x12[-1]]
+
+    # Plot the case outline
     axis.plot(x11, y11, color="black")
     axis.plot(x12, y12, color="black")
     axis.plot(x13, y13, color="black")
     axis.plot(x14, y14, color="black")
 
+    # Fill in the case segemnts
     axis.fill_between(
         [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
         y13,
@@ -1739,6 +1748,7 @@ def plot_wp(axis, mfile_data, scan: int) -> None:
         alpha=0.25,
     )
 
+    # Centre line for relative reference
     axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)
 
     # Plot the rectangular WP
