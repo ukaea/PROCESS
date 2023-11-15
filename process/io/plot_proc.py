@@ -1773,6 +1773,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 dr_tf_wp,
                 wp_toridal_dxbig,
                 color="gray",
+                label="Insulation",
             ),
         )
         # Plots the WP inside the insulation
@@ -1782,6 +1783,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 (dr_tf_wp - (2 * tinstf)),
                 (wp_toridal_dxbig - (2 * tinstf)),
                 color="blue",
+                label="Winding pack",
             )
         )
         # Dvides the WP up into the turn segments
@@ -1831,6 +1833,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 dr_tf_wp / 2,
                 wp_toridal_dxsmall,
                 color="gray",
+                label="Insulation",
             ),
         )
         # Outer WP insulation
@@ -1852,6 +1855,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 (dr_tf_wp / 2) - (2 * tinstf),
                 wp_toridal_dxbig - (2 * tinstf),
                 color="blue",
+                label="Winding pack",
             ),
         )
         # Inner WP
@@ -1877,7 +1881,9 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             (0.5 * wp_toridal_dxbig),
             (-0.5 * wp_toridal_dxbig),
         ]
-        axis.add_patch(patches.Polygon(xy=list(zip(x, y)), color="grey"))
+        axis.add_patch(
+            patches.Polygon(xy=list(zip(x, y)), color="grey", label="Insulation")
+        )
 
     plt.minorticks_on()
     plt.xlim(
@@ -1886,6 +1892,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     plt.title("Top-down view of inboard TF coil at midplane")
     plt.xlabel("Radial distance [m]")
     plt.ylabel("Toroidal distance [m]")
+    plt.legend()
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
@@ -1910,6 +1917,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     # Import the TF turn variables
     he_pipe_diameter = mfile_data.data["dhecoil"].get_scan(scan)
     steel_thickness = mfile_data.data["thwcndut"].get_scan(scan)
+    steel_thickness = 0.003
     insulation_thickness = mfile_data.data["thicndut"].get_scan(scan)
     turn_width = mfile_data.data["t_turn_tf"].get_scan(scan)
     cable_area = mfile_data.data["acstf"].get_scan(scan)
@@ -1921,7 +1929,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             turn_width,
             turn_width,
             color="red",
-            edgecolor="black",
+            label=f"Inter-turn insulation\n {insulation_thickness}",
         ),
     )
     # Plot the steel conduit
@@ -1931,15 +1939,31 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             (turn_width - 2 * insulation_thickness),
             (turn_width - 2 * insulation_thickness),
             color="blue",
-            edgecolor="black",
+            label=f"Steel Conduit\n {steel_thickness}",
         ),
     )
+
+    # Plot the cable space
+    axis.add_patch(
+        Rectangle(
+            [
+                insulation_thickness + steel_thickness,
+                insulation_thickness + steel_thickness,
+            ],
+            (turn_width - 2 * (insulation_thickness + steel_thickness)),
+            (turn_width - 2 * (insulation_thickness + steel_thickness)),
+            color="grey",
+            label="Cable space",
+        ),
+    )
+
     plt.minorticks_on()
     plt.xlim(-turn_width * 0.05, turn_width * 1.05)
     plt.ylim(-turn_width * 0.05, turn_width * 1.05)
-    plt.title("Top-down view of inboard TF coil at midplane")
-    plt.xlabel("Radial distance [m]")
-    plt.ylabel("Toroidal distance [m]")
+    plt.title("WP Turn Structure")
+    plt.xlabel("X [m]")
+    plt.ylabel("Y [m]")
+    plt.legend()
 
 
 def plot_pf_coils(axis, mfile_data, scan):
