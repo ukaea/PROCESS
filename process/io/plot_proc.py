@@ -1888,6 +1888,60 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     plt.ylabel("Toroidal distance [m]")
 
 
+def plot_tf_turn(axis, mfile_data, scan: int) -> None:
+    """
+    Plots inboard TF coil individual turn structure.
+    Author: C. Ashe
+
+    Parameters
+    ----------
+    axis : matplotlib.axes object
+        Axis object to plot to.
+    mfile_data : MFILE data object
+        Object containing data for the plot.
+    scan : int
+        Scan number to use.
+
+    Returns
+    -------
+    None
+    """
+
+    # Import the TF turn variables
+    he_pipe_diameter = mfile_data.data["dhecoil"].get_scan(scan)
+    steel_thickness = mfile_data.data["thwcndut"].get_scan(scan)
+    insulation_thickness = mfile_data.data["thicndut"].get_scan(scan)
+    turn_width = mfile_data.data["t_turn_tf"].get_scan(scan)
+    cable_area = mfile_data.data["acstf"].get_scan(scan)
+
+    # Plot the total turn shape
+    axis.add_patch(
+        Rectangle(
+            [0, 0],
+            turn_width,
+            turn_width,
+            color="red",
+            edgecolor="black",
+        ),
+    )
+    # Plot the steel conduit
+    axis.add_patch(
+        Rectangle(
+            [insulation_thickness, insulation_thickness],
+            (turn_width - 2 * insulation_thickness),
+            (turn_width - 2 * insulation_thickness),
+            color="blue",
+            edgecolor="black",
+        ),
+    )
+    plt.minorticks_on()
+    plt.xlim(-turn_width * 0.05, turn_width * 1.05)
+    plt.ylim(-turn_width * 0.05, turn_width * 1.05)
+    plt.title("Top-down view of inboard TF coil at midplane")
+    plt.xlabel("Radial distance [m]")
+    plt.ylabel("Toroidal distance [m]")
+
+
 def plot_pf_coils(axis, mfile_data, scan):
     """Function to plot PF coils
 
@@ -2743,9 +2797,6 @@ def main_plot(
         if os.path.isdir(imp):
             plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
 
-    # plot_7 =
-    # plot_radprofile(plot_7)
-
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
 
@@ -2777,6 +2828,10 @@ def main_plot(
     # TF coil with WP
     plot_7 = fig3.add_subplot(321, aspect="equal")
     plot_tf_wp(plot_7, m_file_data, scan)
+
+    # TF coil with WP
+    plot_8 = fig3.add_subplot(322, aspect="equal")
+    plot_tf_turn(plot_8, m_file_data, scan)
 
 
 def save_plots(m_file_data, scan):
