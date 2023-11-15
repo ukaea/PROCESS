@@ -20,6 +20,7 @@ import argparse
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+from matplotlib.patches import Circle
 import matplotlib.backends.backend_pdf as bpdf
 import math
 from matplotlib.path import Path
@@ -1746,6 +1747,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         [-y12[-1], -y11[-1]],
         color="grey",
         alpha=0.25,
+        label="Case",
     )
 
     # Centre line for relative reference
@@ -1772,7 +1774,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 (wp_inner, -(0.5 * wp_toridal_dxbig)),
                 dr_tf_wp,
                 wp_toridal_dxbig,
-                color="gray",
+                color="darkgreen",
                 label="Insulation",
             ),
         )
@@ -1832,7 +1834,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 (wp_inner, -(0.5 * wp_toridal_dxsmall)),
                 dr_tf_wp / 2,
                 wp_toridal_dxsmall,
-                color="gray",
+                color="darkgreen",
                 label="Insulation",
             ),
         )
@@ -1882,7 +1884,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             (-0.5 * wp_toridal_dxbig),
         ]
         axis.add_patch(
-            patches.Polygon(xy=list(zip(x, y)), color="grey", label="Insulation")
+            patches.Polygon(xy=list(zip(x, y)), color="darkgreen", label="Insulation")
         )
 
     plt.minorticks_on()
@@ -1917,7 +1919,6 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     # Import the TF turn variables
     he_pipe_diameter = mfile_data.data["dhecoil"].get_scan(scan)
     steel_thickness = mfile_data.data["thwcndut"].get_scan(scan)
-    steel_thickness = 0.003
     insulation_thickness = mfile_data.data["thicndut"].get_scan(scan)
     turn_width = mfile_data.data["t_turn_tf"].get_scan(scan)
     cable_area = mfile_data.data["acstf"].get_scan(scan)
@@ -1929,7 +1930,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             turn_width,
             turn_width,
             color="red",
-            label=f"Inter-turn insulation\n {insulation_thickness}",
+            label=f"Inter-turn insulation\n {insulation_thickness} m",
         ),
     )
     # Plot the steel conduit
@@ -1939,7 +1940,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             (turn_width - 2 * insulation_thickness),
             (turn_width - 2 * insulation_thickness),
             color="blue",
-            label=f"Steel Conduit\n {steel_thickness}",
+            label=f"Steel Conduit\n {steel_thickness} m",
         ),
     )
 
@@ -1954,6 +1955,14 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             (turn_width - 2 * (insulation_thickness + steel_thickness)),
             color="grey",
             label="Cable space",
+        ),
+    )
+    axis.add_patch(
+        Circle(
+            [(turn_width / 2), (turn_width / 2)],
+            he_pipe_diameter / 2,
+            color="white",
+            label=f"Cooling pipe\n {he_pipe_diameter} m",
         ),
     )
 
