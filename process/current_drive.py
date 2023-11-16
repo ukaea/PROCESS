@@ -946,7 +946,7 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Total",
-            "(current_drive_variables.plasipf+physics_variables.faccd+physics_variables.facoh)",
+            "(plasipf+faccd+facoh)",
             current_drive_variables.plasipf
             + physics_variables.faccd
             + physics_variables.facoh,

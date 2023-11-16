@@ -25,15 +25,15 @@
  **************************************************************************************************************
  
    Program :
-   Version : 2.4.0   Release Date :: 2022-05-18
-   Tag No. :
-    Branch : main
-   Git log : Install PyVMCON from PyPI, not source ([hash]2851)
- Date/time : 15 Aug 2023 11:53:24 +01:00(hh:mm) UTC
+   Version : 3.0.1   Release Date :: 2023-11-01
+   Tag No. : v3.0.1-41-gc698cd140
+    Branch : convert-physics-to-python
+   Git log : Convert Physics.f90 to Python
+ Date/time : 31 Jan 2024 13:28:34 +00:00(hh:mm) UTC
       User : timothynunn
   Computer : L0268-iMac
  Directory : /Users/timothynunn/process
-     Input : /private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-108/test_scenario_large_tokamak_0/IN.DAT
+     Input : /private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-45/test_scenario_large_tokamak_0/IN.DAT
  Run title : Generic large tokamak
   Run type : Reactor concept design: Pulsed tokamak model, (c) CCFE
  
@@ -417,12 +417,12 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Total toroidal beta                                                                                3.506E-02  OP 
  Fast alpha beta                                                          (betaft)                  4.247E-03  OP 
  Beam ion beta                                                            (betanb)                  0.000E+00  OP 
- (Fast alpha + beam beta)/(thermal beta)                                  (gammaft)                 1.421E-01  OP 
+ (Fast alpha + beam physics_variables.beta)/(thermal physics_variables.be (gammaft)                 1.421E-01  OP 
  Thermal beta                                                                                       2.987E-02  OP 
  Thermal poloidal beta                                                                              1.120E+00  OP 
- Thermal toroidal beta (= beta-exp)                                                                 3.069E-02  OP 
- 2nd stability beta : beta_p / (R/a)                                      (eps*betap)                   0.426  OP 
- 2nd stability beta upper limit                                           (epbetmax)                    1.380     
+ Thermal toroidal physics_variables.beta (= beta-exp)                                               3.069E-02  OP 
+ 2nd stability physics_variables.beta : beta_p / (R/a)                    (eps*betap)                   0.426  OP 
+ 2nd stability physics_variables.beta upper limit                         (epbetmax)                    1.380     
  Beta g coefficient                                                       (dnbeta)                      4.879  OP 
  Normalised thermal beta                                                                                2.511  OP 
  Normalised total beta                                                                                  2.868  OP 
@@ -467,7 +467,7 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Fe concentration                                                         (fimp(10))                0.000E+00     
  Ni concentration                                                         (fimp(11))                0.000E+00     
  Kr concentration                                                         (fimp(12))                0.000E+00     
- Xe concentration                                                         (fimp(13))                5.634E-04     
+ Xe concentration                                                         (fimp(13))                5.634E-04  ITV
  W_ concentration                                                         (fimp(14))                5.000E-06     
  Average mass of all ions (amu)                                           (aion)                    2.727E+00  OP 
  
@@ -524,7 +524,6 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Fraction of core radiation subtracted from P_L                           (coreradiationfraction)   6.000E-01     
  Radiation power from inner zone (MW)                                     (pinnerzoneradmw)         9.017E+01  OP 
  Radiation power from outer zone (MW)                                     (pouterzoneradmw)         1.331E+02  OP 
- SOL radiation power as imposed by f_rad (MW)                             (psolradmw)               0.000E+00  OP 
  Total radiation power from inside LCFS (MW)                              (pradmw)                  2.233E+02  OP 
  LCFS radiation fraction = total radiation in LCFS / total power deposite (rad_fraction_LCFS)       5.870E-01  OP 
  Nominal mean radiation load on inside surface of reactor (MW/m2)         (photon_wall)             1.750E-01  OP 
@@ -581,18 +580,19 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Martin 2008 aspect ratio corrected scaling: 95% upper bound (MW)         (pthrmw(20))              1.264E+02  OP 
  Martin 2008 aspect ratio corrected scaling: 95% lower bound (MW)         (pthrmw(21))              6.652E+01  OP 
  
+ 
  L-H threshold power (enforced) (MW)                                      (boundl(103)*plhthresh)   9.647E+01  OP 
  L-H threshold power (MW)                                                 (plhthresh)               9.647E+01  OP 
  
  Confinement :
  
- Confinement scaling law                    IPB98(y,2)           (H)
+ Confinement scaling law: b'IPB98(y,2)           (H)'
  Confinement H factor                                                     (hfact)                       1.195  ITV
  Global thermal energy confinement time (s)                               (taueff)                      3.269  OP 
  Ion energy confinement time (s)                                          (tauei)                       3.269  OP 
  Electron energy confinement time (s)                                     (tauee)                       3.269  OP 
  n.tau = Volume-average electron density x Energy confinement time (s/m3) (dntau)                   2.635E+20  OP 
- Triple product = Vol-average electron density x Vol-average electron temperature x Energy confinement time:
+ Triple product = Vol-average electron density x Vol-average         & electron temperature x Energy confinement time:
  Triple product  (keV s/m3)                                               (dntau*te)                3.277E+21  OP 
  Transport loss power assumed in scaling law (MW)                         (powerht)                 2.902E+02  OP 
  Switch for radiation loss term usage in power balance                    (iradloss)                        1     
@@ -624,13 +624,14 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  bootstrap current fraction multiplier                                    (cboot)                       1.000     
  Bootstrap fraction (ITER 1989)                                           (bscf_iter89)                 0.370  OP 
  Bootstrap fraction (Sauter et al)                                        (bscf_sauter)                 0.419  OP 
- Bootstrap fraction (Nevins et al)                                        (bscf_nevins)                 0.349  OP 
+ Bootstrap fraction (Nevins et al)                                        (bscf_nevins)                 0.350  OP 
  Bootstrap fraction (Wilson)                                              (bscf_wilson)                 0.433  OP 
  Diamagnetic fraction (Hender)                                            (diacf_hender)                0.012  OP 
  Diamagnetic fraction (SCENE)                                             (diacf_scene)                 0.011  OP 
  Pfirsch-Schlueter fraction (SCENE)                                       (pscf_scene)                 -0.003  OP 
    (Sauter et al bootstrap current fraction model used)
    (Diamagnetic current fraction not calculated)
+   Pfirsch-Schluter current fraction not calculated
  Bootstrap fraction (enforced)                                            (bootipf.)                    0.419  OP 
  Diamagnetic fraction (enforced)                                          (diaipf.)                     0.000  OP 
  Pfirsch-Schlueter fraction (enforced)                                    (psipf.)                      0.000  OP 
@@ -649,30 +650,30 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  
  ***************************** Energy confinement times, and required H-factors : *****************************
  
-    scaling law              confinement time (s)     H-factor for
-                                 for H = 1           power balance
- 
- IPB98(y)             (H)          3.418                   0.956
- IPB98(y,1)           (H)          3.398                   0.962
- IPB98(y,2)           (H)          2.737                   1.195
- IPB98(y,3)           (H)          2.809                   1.164
- IPB98(y,4)           (H)          2.818                   1.160
- ISS95            (stell)          1.885                   1.734
- ISS04            (stell)          3.293                   0.992
- DS03                 (H)          4.013                   0.814
- Murari et al NPL     (H)          2.033                   1.608
- Petty 2008           (H)          4.870                   0.672
- Lang et al. 2012     (H)          1.717                   1.905
- Hubbard 2017 - nom   (I)          0.065                  50.097
- Hubbard 2017 - lower (I)          0.037                  87.868
- Hubbard 2017 - upper (I)          0.114                  28.562
- NSTX (Spherical)     (H)          6.677                   0.489
- NSTX-Petty08 Hybrid  (H)          4.870                   0.672
+      scaling law              confinement time (s)     H-factor for
+                                   for H = 1           power balance
+   IPB98(y)             (H)        3.418                     0.956
+   IPB98(y,1)           (H)        3.398                     0.962
+   IPB98(y,2)           (H)        2.737                     1.195
+   IPB98(y,3)           (H)        2.809                     1.164
+   IPB98(y,4)           (H)        2.818                     1.160
+   ISS95            (stell)        1.885                     1.734
+   ISS04            (stell)        3.293                     0.992
+   DS03                 (H)        4.013                     0.814
+   Murari et al NPL     (H)        2.033                     1.608
+   Petty 2008           (H)        4.870                     0.672
+   Lang et al. 2012     (H)        1.717                     1.905
+   Hubbard 2017 - nom   (I)        0.065                     50.097
+   Hubbard 2017 - lower (I)        0.037                     87.868
+   Hubbard 2017 - upper (I)        0.114                     28.562
+   NSTX (Spherical)     (H)        6.677                     0.489
+   NSTX-Petty08 Hybrid  (H)        4.870                     0.672
  
  ******************************************** Current Drive System ********************************************
  
  Electron Cyclotron Current Drive (user input gamma_CD)
  Current drive efficiency model                                           (iefrf)                          10     
+ Secondary current drive efficiency model                                 (iefrffix)                        0     
  
  Current is driven by both inductive
  and non-inductive means.
@@ -818,14 +819,14 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Materal stress of the point of maximum shear stress (Tresca criterion) for each layer
  Please use utilities/plot_stress_tf.py for radial plots plots summary
    Layers 				 Steel case 		 WP 		 Outer case
-   Radial stress 			 (MPa) 		 4.884866930978646e-14		-143.73232373861893		6.204164059945074
-   Toroidal stress 			 (MPa) 		 -489.9238263941959		-377.9366629374062		-366.9418355528041
-   Vertical stress 			 (MPa) 		 258.86339026661796		258.86339026661796		144.31111821875967
-   Von-Mises stress 			 (MPa) 		 658.6797045316131		554.6894102888741		456.5367412709292
-   Shear (Tresca) 			 (MPa) 		 748.7872166608139		636.8000532040242		511.25295377156374
+   Radial stress 			 (MPa) 		 4.884866930978646e-14		-143.73232374130475		6.2041640597974785
+   Toroidal stress 			 (MPa) 		 -489.9238264011406		-377.93666294106964		-366.9418355440757
+   Vertical stress 			 (MPa) 		 258.86339026316233		258.86339026316233		144.3111182168326
+   Von-Mises stress 			 (MPa) 		 658.6797045355		554.6894102894352		456.5367412611505
+   Shear (Tresca) 			 (MPa) 		 748.787216664303		636.800053204232		511.2529537609082
  
-   Toroidal modulus 			 (GPa) 		 205.0		48.96805566472091		205.0
-   Vertical modulus 			 (GPa) 		 205.0		126.43000655578726		367.7263100699767
+   Toroidal modulus 			 (GPa) 		 205.0		48.968055666373715		205.0
+   Vertical modulus 			 (GPa) 		 205.0		126.43000655926919		367.7263100699783
  
  WP transverse modulus (GPa)                                              (eyoung_wp_trans*1.0d-9)  4.452E+01  OP 
  WP vertical modulus (GPa)                                                (eyoung_wp_axial*1.0d-9)  1.161E+02  OP 
@@ -862,11 +863,11 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  by a straight segment and elliptical arcs between the following points:
  
    point              x(m)              y(m)
-   0              3.625333336675998              4.5506
+   0              3.6253333366759968              4.5506
    1              7.466666666666667              7.584333333333334
-   2              14.53614117428001              0.0
+   2              14.53614117423021              0.0
    3              7.466666666666667              -8.818217164127494
-   4              3.625333336675998              -5.290930298476496
+   4              3.6253333366759968              -5.290930298476496
  
  Global material area/fractions:
  
@@ -964,7 +965,7 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Quench information :
  
  Actual quench time (or time constant) (s)                                (tdmptf)                  1.753E+01  ITV
- Vacuum Vassel stress on quench (Pa)                                      (vv_stress_quench)        6.272E+07  OP 
+ Vacuum Vessel stress on quench (Pa)                                      (vv_stress_quench)        6.272E+07  OP 
  Maximum allowed voltage during quench due to insulation (kV)             (vdalw)                   9.985E+00  ITV
  Actual quench voltage (kV)                                               (vtfskv)                  9.970E+00  OP 
  Maximum allowed temp rise during a quench (K)                            (tmaxpro)                 1.500E+02     
@@ -1160,7 +1161,7 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  3			0.000e+00	0.000e+00	-7.154e+06	-7.154e+06	-7.154e+06	0.0e0
  4			0.000e+00	0.000e+00	-4.852e+06	-4.852e+06	-4.852e+06	0.0e0
  5			0.000e+00	0.000e+00	-4.852e+06	-4.852e+06	-4.852e+06	0.0e0
- 6			0.000e+00	0.000e+00	4.096e-09	4.096e-09	0.000e+00	0.0e0
+ 6			0.000e+00	0.000e+00	0.000e+00	0.000e+00	0.000e+00	0.0e0
  
  Ratio of central solenoid current at beginning of Pulse / end of flat-to (fcohbop)                 9.687E-01  ITV
  Ratio of central solenoid current at beginning of Flat-top / end of flat (fcohbof)                -1.701E-01  OP 
@@ -1519,16 +1520,16 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  htpmw_blkt                                                                     0.00                     0.00
  
  Shield:
- 1.3935888986974982 0.0 1.3935888986974982
+ 1.3935888984449547 0.0 1.3935888984449547
  0.0e0 0.0e0 0.0e0
  0.0e0 0.0e0 0.0e0
- 0.0069679444934874915 0.0 0.0069679444934874915
+ 0.006967944492224773 0.0 0.006967944492224773
  
  Divertor:
- 146.93029804056846 0.0 146.93029804056846
- 157.09558934002595 0.0 157.09558934002595
- 25.675194656516506 0.0 25.675194656516506
- 1.6485054101855547 0.0 1.6485054101855547
+ 146.93029801393774 0.0 146.93029801393774
+ 157.09558926414797 0.0 157.09558926414797
+ 25.675194651036445 0.0 25.675194651036445
+ 1.648505409645611 0.0 1.648505409645611
  
  TF coil:
  ptfnuc                                                                         0.00                     0.02
@@ -1542,7 +1543,7 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  pradhcd                                                                        0.00                     0.00
  0.0e0 0.0e0 0.0e0
  
- 1978.7927750049373 0.024103348232513956 1978.8168783531698
+ 1978.792774591497 0.024103348230210837 1978.8168779397272
  
  Total power leaving reactor (across vacuum vessel boundary) (MW)                                    1978.841  OP 
  
@@ -1636,39 +1637,39 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  
  tramp tohs theat tburn tqnch tdwell
  ----- ---- ----- ----- ----- ------
- Duration 500.0 166.16203759462505 10.0 7210.408167852351 166.16203759462505 1800.0
+ Duration 500.0 166.16203759180593 10.0 7210.408167573202 166.16203759180593 1800.0
  ------ ----- ---- ----- ----- ----- ------
  
  Continous power usage [MWe]:
  
  System tramp tohs theat tburn tqnch tdwell
  ------ ----- ---- ----- ----- ----- ------
- Primary cooling 187.7984301903559 187.7984301903559 187.7984301903559 187.7984301903559 187.7984301903559 187.7984301903559
- Cryoplant 35.615768698828035 35.615768698828035 35.615768698828035 35.615768698828035 35.615768698828035 35.615768698828035
+ Primary cooling 187.7984301553273 187.7984301553273 187.7984301553273 187.7984301553273 187.7984301553273 187.7984301553273
+ Cryoplant 35.61576869500067 35.61576869500067 35.61576869500067 35.61576869500067 35.61576869500067 35.61576869500067
  Vacuum 0.5 0.5 0.5 0.5 0.5 0.5
  Tritium 15.0 15.0 15.0 15.0 15.0 15.0
- TF 9.854833388897118 9.854833388897118 9.854833388897118 9.854833388897118 9.854833388897118 9.854833388897118
- Facilities 55.405448398312224 55.405448398312224 55.405448398312224 55.405448398312224 55.405448398312224 55.405448398312224
+ TF 9.854833386636704 9.854833386636704 9.854833386636704 9.854833386636704 9.854833386636704 9.854833386636704
+ Facilities 55.405448398646456 55.405448398646456 55.405448398646456 55.405448398646456 55.405448398646456 55.405448398646456
  ------ ----- ---- ----- ----- ----- ------
- Total 304.1744806763933 304.1744806763933 304.1744806763933 304.1744806763933 304.1744806763933 304.1744806763933
+ Total 304.17448063561113 304.17448063561113 304.17448063561113 304.17448063561113 304.17448063561113 304.17448063561113
  ------ ----- ---- ----- ----- ----- ------
  
  Intermittent power usage [MWe]:
  
  System tramp tohs theat tburn tqnch tdwell
  ------ ----- ---- ----- ----- ----- ------
- H & CD 0.0 240.0 240.0 150.79557756173983 240.0 0.0
- PF 46.51235286843421 -57.496752030386375 0.0 2.015020863847534 -169.905845595978 0.0
+ H & CD 0.0 240.0 240.0 150.7955774255487 240.0 0.0
+ PF 46.51235285967593 -57.496752020712144 0.0 2.0150208625789845 -169.90584552472362 0.0
  ------ ----- ---- ----- ----- ----- ------
- Total 46.51235286843421 182.50324796961362 240.0 152.81059842558736 70.09415440402199 0.0
+ Total 46.51235285967593 182.50324797928786 240.0 152.81059828812766 70.09415447527638 0.0
  ------ ----- ---- ----- ----- ----- ------
  
  Power production [MWe]:
  
   tramp tohs theat tburn tqnch tdwell avg
   ----- ---- ----- ----- ----- ------ ---
- Gross power 0.0 0.0 0.0 856.2087743663474 0.0 0.0
- Net power -350.6868335448275 -486.6777286460069 -544.1744806763933 399.2236952643667 -374.26863508041527 -304.1744806763933
+ Gross power 0.0 0.0 0.0 856.2087741889977 0.0 0.0
+ Net power -350.68683349528703 -486.677728614899 -544.1744806356112 399.2236952652589 -374.26863511088754 -304.17448063561113
  ------ ----- ---- ----- ----- ----- ------
  
  
