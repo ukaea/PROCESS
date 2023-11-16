@@ -1884,6 +1884,19 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         axis.add_patch(
             patches.Polygon(xy=list(zip(x, y)), color="darkgreen", label="Insulation")
         )
+        
+        # WP insulation
+        tinstf = 0.01
+        x = [wp_inner+tinstf, wp_inner+tinstf, (wp_inner + dr_tf_wp-tinstf), (wp_inner + dr_tf_wp-tinstf)]
+        y = [
+            (-0.5 * wp_toridal_dxsmall+tinstf),
+            (0.5 * wp_toridal_dxsmall-tinstf),
+            (0.5 * wp_toridal_dxbig-tinstf),
+            (-0.5 * wp_toridal_dxbig+tinstf),
+        ]
+        axis.add_patch(
+            patches.Polygon(xy=list(zip(x, y)), color="blue", label="WP")
+        )
 
     plt.minorticks_on()
     plt.xlim(
