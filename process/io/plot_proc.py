@@ -1929,11 +1929,11 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     None
     """
 
-    # Import the TF turn variables
-    he_pipe_diameter = mfile_data.data["dhecoil"].get_scan(scan)
-    steel_thickness = mfile_data.data["thwcndut"].get_scan(scan)
-    insulation_thickness = mfile_data.data["thicndut"].get_scan(scan)
-    turn_width = mfile_data.data["t_turn_tf"].get_scan(scan)
+    # Import the TF turn variables then multiply into mm
+    he_pipe_diameter = mfile_data.data["dhecoil"].get_scan(scan)*1e3
+    steel_thickness = mfile_data.data["thwcndut"].get_scan(scan)*1e3
+    insulation_thickness = mfile_data.data["thicndut"].get_scan(scan)*1e3
+    turn_width = mfile_data.data["t_turn_tf"].get_scan(scan)*1e3
 
     # Plot the total turn shape
     axis.add_patch(
@@ -1942,7 +1942,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             turn_width,
             turn_width,
             facecolor="red",
-            label=f"Inter-turn insulation\n {insulation_thickness} m",
+            label=f"Inter-turn insulation\n {insulation_thickness} mm",
             edgecolor="black",
         ),
     )
@@ -1953,7 +1953,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             (turn_width - 2 * insulation_thickness),
             (turn_width - 2 * insulation_thickness),
             facecolor="blue",
-            label=f"Steel Conduit\n {steel_thickness} m",
+            label=f"Steel Conduit\n {steel_thickness} mm",
             edgecolor="black",
         ),
     )
@@ -1977,7 +1977,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             [(turn_width / 2), (turn_width / 2)],
             he_pipe_diameter / 2,
             facecolor="white",
-            label=f"Cooling pipe\n {he_pipe_diameter} m",
+            label=f"Cooling pipe\n {he_pipe_diameter} mm",
             edgecolor="black",
         ),
     )
@@ -1986,8 +1986,8 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     plt.xlim(-turn_width * 0.05, turn_width * 1.05)
     plt.ylim(-turn_width * 0.05, turn_width * 1.05)
     plt.title("WP Turn Structure")
-    plt.xlabel("X [m]")
-    plt.ylabel("Y [m]")
+    plt.xlabel("X [mm]")
+    plt.ylabel("Y [mm]")
     plt.legend(bbox_to_anchor=(1.2, 1.0), loc="upper left")
 
 
