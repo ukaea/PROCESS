@@ -1688,8 +1688,31 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
+    nose_r = mfile_data.data["thkcas"].get_scan(scan)
+    coil_location = mfile_data.data["tf_in_cs"].get_scan(scan)
+
     # Superconducting coil check
     if cond_type == 1:
+        # TF inside CS check, will plot dashed arcs
+        if coil_location == 1:
+            axis.add_patch(
+                Circle(
+                    [0 , 0],
+                    r_tf_inboard_in,
+                    facecolor="none",
+                    edgecolor="black",
+                    linestyle="--",
+                        ),
+                    )
+            axis.add_patch(
+                Circle(
+                    [0 , 0],
+                    r_tf_inboard_out,
+                    facecolor="none",
+                    edgecolor="black",
+                    linestyle="--",
+                    ),
+                )
         # Equations for plotting the TF case
         half_case_angle = np.arctan((side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner)
 
@@ -1903,7 +1926,11 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         plt.xlim(
             0.0,
         )
-        plt.annotate("fsdfsdfsdfdsf", xy=(0, 0.05), xytext=(0.1, 0.1), arrowprops=dict(arrowstyle='<->'))
+        plt.ylim((y14[-1]*1.25), (-y14[-1]*1.25))
+        plt.annotate("", xy=(r_tf_inboard_in, y14[-1]), xytext=(nose_r+r_tf_inboard_in, y14[-1]), arrowprops=dict(arrowstyle='<->'))
+        plt.annotate("", xy=(r_tf_inboard_in, y14[-1]), xytext=(nose_r+r_tf_inboard_in, y14[-1]), arrowprops=dict(arrowstyle='|-|'))
+        bbox = dict(fc="white", ec="none")
+        plt.text((nose_r+(r_tf_inboard_in/2)), y14[-1], f"Nose case thickness\n{nose_r} m", ha="center", va="center", bbox=bbox)
         plt.title("Top-down view of inboard TF coil at midplane")
         plt.xlabel("Radial distance [m]")
         plt.ylabel("Toroidal distance [m]")
