@@ -1687,225 +1687,228 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     tinstf = mfile_data.data["tinstf"].get_scan(scan)
     turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
+    cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
+    
+    # Superconducting coil check
+    if cond_type == 1:
+        # Equations for plotting the TF case
+        half_case_angle = np.arctan((side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner)
 
-    # Equations for plotting the TF case
-    half_case_angle = np.arctan((side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner)
-
-    # X points for inboard case curve
-    x11 = r_tf_inboard_in * np.cos(
-        np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
-    )
-    # Y points for inboard case curve
-    y11 = r_tf_inboard_in * np.sin(
-        np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
-    )
-    # X points for outboard case curve
-    x12 = r_tf_inboard_out * np.cos(
-        np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
-    )
-    # Y points for outboard case curve
-    y12 = r_tf_inboard_out * np.sin(
-        np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
-    )
-    # Cordinates of the top and bottom of case curves,
-    # used to plot the lines connecting the inside and outside of the case
-    y13 = [y11[0], y12[0]]
-    x13 = [x11[0], x12[0]]
-    y14 = [y11[-1], y12[-1]]
-    x14 = [x11[-1], x12[-1]]
-
-    # Plot the case outline
-    axis.plot(x11, y11, color="black")
-    axis.plot(x12, y12, color="black")
-    axis.plot(x13, y13, color="black")
-    axis.plot(x14, y14, color="black")
-
-    # Fill in the case segemnts
-    axis.fill_between(
-        [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
-        y13,
-        color="grey",
-        alpha=0.25,
-    )
-    axis.fill_between(
-        [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
-        y14,
-        color="grey",
-        alpha=0.25,
-    )
-    axis.fill_between(
-        [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
-        [y12[-1], y11[-1]],
-        color="grey",
-        alpha=0.25,
-    )
-    # Upper arc shaded section
-    axis.fill_between(
-        [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
-        [-y12[-1], -y11[-1]],
-        color="grey",
-        alpha=0.25,
-        label="Case",
-    )
-
-    # Centre line for relative reference
-    axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)
-
-    # Plot the rectangular WP
-    if wp_shape == 0:
-        wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
-            wwp1 - (2 * tinstf)
-        )  # row to height
-        print(wp_side_ratio)
-        print(turns)
-        side_unit = turns / wp_side_ratio
-        root_turns = round(np.sqrt(side_unit), 1)
-        long_turns = round(root_turns * wp_side_ratio)
-        short_turns = round(root_turns)
-
-        print(long_turns)
-        print(short_turns)
-
-        # Plots the surrounding insualtion
-        axis.add_patch(
-            Rectangle(
-                (wp_inner, -(0.5 * wp_toridal_dxbig)),
-                dr_tf_wp,
-                wp_toridal_dxbig,
-                color="darkgreen",
-                label="Insulation",
-            ),
+        # X points for inboard case curve
+        x11 = r_tf_inboard_in * np.cos(
+            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
         )
-        # Plots the WP inside the insulation
-        axis.add_patch(
-            Rectangle(
-                (wp_inner + tinstf, -(0.5 * wp_toridal_dxbig) + tinstf),
-                (dr_tf_wp - (2 * tinstf)),
-                (wp_toridal_dxbig - (2 * tinstf)),
-                color="blue",
-                label="Winding pack",
-            )
+        # Y points for inboard case curve
+        y11 = r_tf_inboard_in * np.sin(
+            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
         )
-        # Dvides the WP up into the turn segments
-        for i in range(1, long_turns):
-            axis.plot(
-                [
-                    (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
-                    (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
-                ],
-                [
-                    -0.5 * (wp_toridal_dxbig - 2 * tinstf),
-                    0.5 * (wp_toridal_dxbig - 2 * tinstf),
-                ],
-                color="white",
-                linewidth="0.25",
-                linestyle="dashed",
-            )
-
-        for i in range(1, short_turns):
-            axis.plot(
-                [(wp_inner + tinstf), (wp_inner - tinstf + dr_tf_wp)],
-                [
-                    (-0.5 * wp_toridal_dxbig) + (i * wp_toridal_dxbig / short_turns),
-                    (-0.5 * wp_toridal_dxbig) + (i * wp_toridal_dxbig / short_turns),
-                ],
-                color="white",
-                linewidth="0.25",
-                linestyle="dashed",
-            )
-
-    # Plot the double rectangle winding pack
-    if wp_shape == 1:
-        wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
-            wp_toridal_dxbig - (2 * tinstf)
-        )  # row to height
-        print(wp_side_ratio)
-        print(turns)
-        side_unit = turns / wp_side_ratio
-        root_turns = round(np.sqrt(side_unit), 1)
-        long_turns = round(root_turns * wp_side_ratio)
-        short_turns = round(root_turns)
-
-        # Inner WP insulation
-        axis.add_patch(
-            Rectangle(
-                (wp_inner, -(0.5 * wp_toridal_dxsmall)),
-                dr_tf_wp / 2,
-                wp_toridal_dxsmall,
-                color="darkgreen",
-                label="Insulation",
-            ),
+        # X points for outboard case curve
+        x12 = r_tf_inboard_out * np.cos(
+            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
         )
-        # Outer WP insulation
-        axis.add_patch(
-            Rectangle(
-                (
-                    wp_inner + (0.5 * dr_tf_wp) - tinstf,
-                    -(0.5 * wp_toridal_dxbig) - tinstf,
+        # Y points for outboard case curve
+        y12 = r_tf_inboard_out * np.sin(
+            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+        )
+        # Cordinates of the top and bottom of case curves,
+        # used to plot the lines connecting the inside and outside of the case
+        y13 = [y11[0], y12[0]]
+        x13 = [x11[0], x12[0]]
+        y14 = [y11[-1], y12[-1]]
+        x14 = [x11[-1], x12[-1]]
+
+        # Plot the case outline
+        axis.plot(x11, y11, color="black")
+        axis.plot(x12, y12, color="black")
+        axis.plot(x13, y13, color="black")
+        axis.plot(x14, y14, color="black")
+
+        # Fill in the case segemnts
+        axis.fill_between(
+            [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
+            y13,
+            color="grey",
+            alpha=0.25,
+        )
+        axis.fill_between(
+            [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
+            y14,
+            color="grey",
+            alpha=0.25,
+        )
+        axis.fill_between(
+            [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
+            [y12[-1], y11[-1]],
+            color="grey",
+            alpha=0.25,
+        )
+        # Upper arc shaded section
+        axis.fill_between(
+            [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
+            [-y12[-1], -y11[-1]],
+            color="grey",
+            alpha=0.25,
+            label="Case",
+        )
+
+        # Centre line for relative reference
+        axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)
+
+        # Plot the rectangular WP
+        if wp_shape == 0:
+            wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
+                wwp1 - (2 * tinstf)
+            )  # row to height
+            print(wp_side_ratio)
+            print(turns)
+            side_unit = turns / wp_side_ratio
+            root_turns = round(np.sqrt(side_unit), 1)
+            long_turns = round(root_turns * wp_side_ratio)
+            short_turns = round(root_turns)
+
+            print(long_turns)
+            print(short_turns)
+
+            # Plots the surrounding insualtion
+            axis.add_patch(
+                Rectangle(
+                    (wp_inner, -(0.5 * wp_toridal_dxbig)),
+                    dr_tf_wp,
+                    wp_toridal_dxbig,
+                    color="darkgreen",
+                    label="Insulation",
                 ),
-                dr_tf_wp / 2,
-                wp_toridal_dxbig,
-                color="gray",
-            ),
-        )
-        # Outer WP
-        axis.add_patch(
-            Rectangle(
-                (wp_inner + (0.5 * dr_tf_wp), -(0.5 * wp_toridal_dxbig)),
-                (dr_tf_wp / 2) - (2 * tinstf),
-                wp_toridal_dxbig - (2 * tinstf),
-                color="blue",
-                label="Winding pack",
-            ),
-        )
-        # Inner WP
-        axis.add_patch(
-            Rectangle(
-                (
-                    wp_inner - tinstf,
-                    -(0.5 * wp_toridal_dxsmall) - tinstf,
+            )
+            # Plots the WP inside the insulation
+            axis.add_patch(
+                Rectangle(
+                    (wp_inner + tinstf, -(0.5 * wp_toridal_dxbig) + tinstf),
+                    (dr_tf_wp - (2 * tinstf)),
+                    (wp_toridal_dxbig - (2 * tinstf)),
+                    color="blue",
+                    label="Winding pack",
+                )
+            )
+            # Dvides the WP up into the turn segments
+            for i in range(1, long_turns):
+                axis.plot(
+                    [
+                        (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
+                        (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
+                    ],
+                    [
+                        -0.5 * (wp_toridal_dxbig - 2 * tinstf),
+                        0.5 * (wp_toridal_dxbig - 2 * tinstf),
+                    ],
+                    color="white",
+                    linewidth="0.25",
+                    linestyle="dashed",
+                )
+
+            for i in range(1, short_turns):
+                axis.plot(
+                    [(wp_inner + tinstf), (wp_inner - tinstf + dr_tf_wp)],
+                    [
+                        (-0.5 * wp_toridal_dxbig) + (i * wp_toridal_dxbig / short_turns),
+                        (-0.5 * wp_toridal_dxbig) + (i * wp_toridal_dxbig / short_turns),
+                    ],
+                    color="white",
+                    linewidth="0.25",
+                    linestyle="dashed",
+                )
+
+        # Plot the double rectangle winding pack
+        if wp_shape == 1:
+            wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
+                wp_toridal_dxbig - (2 * tinstf)
+            )  # row to height
+            print(wp_side_ratio)
+            print(turns)
+            side_unit = turns / wp_side_ratio
+            root_turns = round(np.sqrt(side_unit), 1)
+            long_turns = round(root_turns * wp_side_ratio)
+            short_turns = round(root_turns)
+
+            # Inner WP insulation
+            axis.add_patch(
+                Rectangle(
+                    (wp_inner, -(0.5 * wp_toridal_dxsmall)),
+                    dr_tf_wp / 2,
+                    wp_toridal_dxsmall,
+                    color="darkgreen",
+                    label="Insulation",
                 ),
-                (dr_tf_wp / 2) - (2 * tinstf),
-                wp_toridal_dxsmall - (2 * tinstf),
-                color="blue",
-            ),
-        )
+            )
+            # Outer WP insulation
+            axis.add_patch(
+                Rectangle(
+                    (
+                        wp_inner + (0.5 * dr_tf_wp) - tinstf,
+                        -(0.5 * wp_toridal_dxbig) - tinstf,
+                    ),
+                    dr_tf_wp / 2,
+                    wp_toridal_dxbig,
+                    color="gray",
+                ),
+            )
+            # Outer WP
+            axis.add_patch(
+                Rectangle(
+                    (wp_inner + (0.5 * dr_tf_wp), -(0.5 * wp_toridal_dxbig)),
+                    (dr_tf_wp / 2) - (2 * tinstf),
+                    wp_toridal_dxbig - (2 * tinstf),
+                    color="blue",
+                    label="Winding pack",
+                ),
+            )
+            # Inner WP
+            axis.add_patch(
+                Rectangle(
+                    (
+                        wp_inner - tinstf,
+                        -(0.5 * wp_toridal_dxsmall) - tinstf,
+                    ),
+                    (dr_tf_wp / 2) - (2 * tinstf),
+                    wp_toridal_dxsmall - (2 * tinstf),
+                    color="blue",
+                ),
+            )
 
-    # Trapezium WP
-    if wp_shape == 2:
-        # WP insulation
-        x = [wp_inner, wp_inner, (wp_inner + dr_tf_wp), (wp_inner + dr_tf_wp)]
-        y = [
-            (-0.5 * wp_toridal_dxsmall),
-            (0.5 * wp_toridal_dxsmall),
-            (0.5 * wp_toridal_dxbig),
-            (-0.5 * wp_toridal_dxbig),
-        ]
-        axis.add_patch(
-            patches.Polygon(xy=list(zip(x, y)), color="darkgreen", label="Insulation")
-        )
-        
-        # WP insulation
-        tinstf = 0.01
-        x = [wp_inner+tinstf, wp_inner+tinstf, (wp_inner + dr_tf_wp-tinstf), (wp_inner + dr_tf_wp-tinstf)]
-        y = [
-            (-0.5 * wp_toridal_dxsmall+tinstf),
-            (0.5 * wp_toridal_dxsmall-tinstf),
-            (0.5 * wp_toridal_dxbig-tinstf),
-            (-0.5 * wp_toridal_dxbig+tinstf),
-        ]
-        axis.add_patch(
-            patches.Polygon(xy=list(zip(x, y)), color="blue", label="WP")
-        )
+        # Trapezium WP
+        if wp_shape == 2:
+            # WP insulation
+            x = [wp_inner, wp_inner, (wp_inner + dr_tf_wp), (wp_inner + dr_tf_wp)]
+            y = [
+                (-0.5 * wp_toridal_dxsmall),
+                (0.5 * wp_toridal_dxsmall),
+                (0.5 * wp_toridal_dxbig),
+                (-0.5 * wp_toridal_dxbig),
+            ]
+            axis.add_patch(
+                patches.Polygon(xy=list(zip(x, y)), color="darkgreen", label="Insulation")
+            )
+            
+            # WP insulation
+            tinstf = 0.01
+            x = [wp_inner+tinstf, wp_inner+tinstf, (wp_inner + dr_tf_wp-tinstf), (wp_inner + dr_tf_wp-tinstf)]
+            y = [
+                (-0.5 * wp_toridal_dxsmall+tinstf),
+                (0.5 * wp_toridal_dxsmall-tinstf),
+                (0.5 * wp_toridal_dxbig-tinstf),
+                (-0.5 * wp_toridal_dxbig+tinstf),
+            ]
+            axis.add_patch(
+                patches.Polygon(xy=list(zip(x, y)), color="blue", label="WP")
+            )
 
-    plt.minorticks_on()
-    plt.xlim(
-        0.0,
-    )
-    plt.title("Top-down view of inboard TF coil at midplane")
-    plt.xlabel("Radial distance [m]")
-    plt.ylabel("Toroidal distance [m]")
-    plt.legend()
+        plt.minorticks_on()
+        plt.xlim(
+            0.0,
+        )
+        plt.title("Top-down view of inboard TF coil at midplane")
+        plt.xlabel("Radial distance [m]")
+        plt.ylabel("Toroidal distance [m]")
+        plt.legend()
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
