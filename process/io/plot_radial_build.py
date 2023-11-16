@@ -115,15 +115,15 @@ def get_radial_build(m_file):
         radial_labels[5] = "tftsgap"
 
     radial_build = []
-
-    for ii in range(isweep):
+    isweep = [30, 38, 43, 48, 68, 75]
+    for ii in isweep:
         if m_file.data["ifail"].get_scan(ii + 1) == 1:
             radial_build.append(
                 [m_file.data[rl].get_scan(ii + 1) for rl in radial_labels]
             )
 
     radial_build = np.array(radial_build)
-
+    # print(radial_build)
     # plasma is 2*rminor
     # Therefore we must count it again
 
@@ -399,15 +399,19 @@ def main(args=None):
     if scan_var_name != "Null":
         nn = 0
         isweep = int(m_file.data["isweep"].get_scan(-1))
+        isweep = [30, 38, 43, 48, 68, 75]
         scan_points = np.zeros(num_converged_sol)
-        for ii in range(isweep):
+        for ii in isweep:
             ifail = m_file.data["ifail"].get_scan(ii + 1)
             if ifail == 1:
                 scan_points[nn] = m_file.data[scan_var_name].get_scan(ii + 1)
                 nn += 1
+
     else:
         scan_points = 1
     index = []
+    print(scan_points)
+    # scan_points = [3.9, 3.98, 4.03, 4.08, 4.23, 4.35]
     # need a set of checks - remove build parts equal to zero
     for ll in range(len(radial_build[:, 0])):
         if radial_build[ll, 0] == 0.0:
@@ -424,6 +428,7 @@ def main(args=None):
         ind = [y for y, _ in enumerate(scan_points)]
     else:
         pass
+    # ind = [0, 1]
     if args.inboard:
         end_scan = radial_labels.index("Plasma")
     else:
@@ -444,7 +449,7 @@ def main(args=None):
             edgecolor="black",
             linewidth=0.05,
         )
-
+    plt.minorticks_on()
     if scan_var_name != "Null":
         plt.yticks(ind, scan_points, fontsize=axis_tick_size)
         plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)

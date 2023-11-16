@@ -80,7 +80,6 @@ class Build:
         g = np.sqrt(e * e + f * f - 2.0e0 * e * f * np.cos(phi))  # cosine rule
 
         if g > c:
-
             h = np.sqrt(g * g - c * c)
 
             alpha = np.arctan(h / c)
@@ -91,7 +90,6 @@ class Build:
             current_drive_variables.rtanmax = f * np.cos(eps) - 0.5e0 * c
 
         else:  # coil separation is too narrow for beam...
-
             error_handling.fdiags[0] = g
             error_handling.fdiags[1] = c
             error_handling.report_error(63)
@@ -863,7 +861,6 @@ class Build:
         """
         n = float(tfcoil_variables.n_tf)
         if tfcoil_variables.i_tf_sup == 1:
-
             # Minimal inboard WP radius [m]
             r_wp_min = build_variables.r_tf_inboard_in + tfcoil_variables.thkcas
 
@@ -920,7 +917,6 @@ class Build:
                 physics_variables.rmajor + physics_variables.rminor
             ) / ((0.01e0 * ripmax) ** (1.0e0 / n))
         else:
-
             # Winding pack to iter-coil at plasma centre toroidal lenth ratio
             x = t_wp_max * n / physics_variables.rmajor
 
@@ -1054,7 +1050,6 @@ class Build:
         # Issue #514 Radial dimensions of inboard leg
         # Calculate build_variables.tfcth if tfcoil_variables.dr_tf_wp is an iteration variable (140)
         if any(numerics.ixc[0 : numerics.nvar] == 140):
-
             # SC TF coil thickness defined using its maximum (diagonal)
             if tfcoil_variables.i_tf_sup == 1:
                 build_variables.tfcth = (
@@ -1087,7 +1082,6 @@ class Build:
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
         if not any(numerics.ixc[0 : numerics.nvar] == 140):
-
             # SC magnets
             if tfcoil_variables.i_tf_sup == 1:
                 tfcoil_variables.dr_tf_wp = (
@@ -1108,7 +1102,6 @@ class Build:
 
         # Radius of the centrepost at the top of the machine
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
-
             # build_variables.r_cp_top is set using the plasma shape
             if build_variables.i_r_cp_top == 0:
                 build_variables.r_cp_top = (
@@ -1142,7 +1135,6 @@ class Build:
 
             # User defined build_variables.r_cp_top
             elif build_variables.i_r_cp_top == 1:
-
                 # Notify user that build_variables.r_cp_top has been set to 1.01*build_variables.r_tf_inboard_out (lvl 2 error)
                 if build_variables.r_cp_top < 1.01e0 * build_variables.r_tf_inboard_out:
                     error_handling.fdiags[0] = build_variables.r_cp_top
@@ -1181,7 +1173,6 @@ class Build:
             )
             + tfcoil_variables.drtop
         ):
-
             error_handling.fdiags[0] = build_variables.r_cp_top
             error_handling.report_error(256)
         if build_variables.tf_in_cs == 1:
@@ -1327,7 +1318,6 @@ class Build:
         if (physics_variables.itart == 1) or (
             fwbs_variables.fwbsshape == 1
         ):  # D-shaped
-
             #  Major radius to outer edge of inboard section
             r1 = (
                 physics_variables.rmajor
@@ -1355,7 +1345,6 @@ class Build:
             ) = maths_library.dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
-
             #  Major radius to centre of inboard and outboard ellipses
             #  (coincident in radius with top of plasma)
 
@@ -1421,7 +1410,6 @@ class Build:
         #
 
         if output:
-
             #  Print out device build
 
             po.oheadr(self.outfile, "Radial Build")
@@ -1752,6 +1740,13 @@ class Build:
             )
 
             radius = radius + build_variables.scrapli
+            inboard_build_size = radius
+            po.ovarre(
+                self.mfile,
+                "Inboard build(includes wall gap)",
+                "(inboard_build)",
+                inboard_build_size,
+            )
             po.obuild(
                 self.outfile,
                 "Inboard scrape-off",

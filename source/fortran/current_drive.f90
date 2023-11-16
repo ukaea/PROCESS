@@ -68,7 +68,7 @@ contains
     real(dp) :: dens_at_rho, te_at_rho
     logical :: Temperature_capped
     real(dp) :: auxiliary_cd
-    real(dp) :: a, fc, fp, density_factor
+    real(dp) :: a, fc, fp, density_factor, cutoff_factor, f_cutoff, xi_CD
 
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -172,11 +172,21 @@ contains
        case (10)  ! ECRH user input gamma
 
           !  Normalised current drive efficiency gamma
-          gamcd = gamma_ecrh
+          !gamcd = gamma_ecrh
 
           ! Absolute current drive efficiency
-          effrfssfix = gamcd / (dene20 * rmajor)
-          effcdfix = effrfssfix
+          !effrfssfix = gamcd / (dene20 * rmajor)
+          !effcdfix = effrfssfix
+         fc = 1/(2*pi) * echarge*bt/emass
+         fp = 1/(2*pi) * sqrt(((dene/1.0D19)*echarge**2/(emass*epsilon0)))
+
+         xi_CD   = 0.18 *(4.8/(2+zeff))                
+         effrfss = xi_CD *te  / (3.27 *rmajor *(dene/1.0D19))   
+          ! Absolute current drive efficiency
+          !effrfss = gamcd / (dene20 * rmajor)
+         f_cutoff = fp
+         cutoff_factor = 0.5*(1+tanh((2/(0.1))*((2*fc-f_cutoff)/fp - 0.1))) 
+         effcd = effrfss * cutoff_factor
 
        case (11)  ! ECRH Poli model "HARE", removed in issue #1811
 
@@ -347,11 +357,18 @@ contains
 
        case (10)  ! ECRH user input gamma
 
-          gamcd = gamma_ecrh
+         !gamcd = gamma_ecrh
 
+         fc = 1/(2*pi) * echarge*bt/emass
+         fp = 1/(2*pi) * sqrt(((dene/1.0D19)*echarge**2/(emass*epsilon0)))
+
+         xi_CD   = 0.18 *(4.8/(2+zeff))                
+         effrfss = xi_CD *te  / (3.27 *rmajor *(dene/1.0D19))   
           ! Absolute current drive efficiency
-          effrfss = gamcd / (dene20 * rmajor)
-          effcd = effrfss
+          !effrfss = gamcd / (dene20 * rmajor)
+         f_cutoff = fp
+         cutoff_factor = 0.5*(1+tanh((2/(0.1))*((2*fc-f_cutoff)/fp - 0.1))) 
+         effcd = effrfss * cutoff_factor
 
        case (11)  ! ECRH Poli model "HARE", removed in issue #1811
 

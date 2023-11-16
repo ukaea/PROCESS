@@ -25,6 +25,7 @@ variable is set. Otherwise the sad and gloomy PROCESS name is used
 """
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as tkr
 import numpy as np
 import os
 import argparse
@@ -304,6 +305,7 @@ def main(args=None):
     labels["etaech"] = r"ECH wall plug to injector efficiency"
     labels["tauee"] = r"$\tau_E$"
     labels["dene"] = r"$n_e$"
+    labels["inboard_build"] = r"$\Delta R_{\mathrm{inboard}}$[$m$]"
 
     # ------------
 
@@ -635,7 +637,7 @@ def main(args=None):
 
                 # Plot the graph
                 if output_names2 != [] and not stack_plots:
-                    fig, ax = plt.subplots()
+                    fig, ax = plt.subplots(figsize=(8, 8))
                     ax.plot(
                         scan_var_array[input_file],
                         output_arrays[input_file][output_name],
@@ -643,6 +645,8 @@ def main(args=None):
                         color="blue",
                         label=labl,
                     )
+                # plt.tight_layout()
+
                 else:
                     if stack_plots:
                         axs[output_names.index(output_name)].plot(
@@ -664,20 +668,68 @@ def main(args=None):
                         plt.yticks(size=axis_tick_size)
                 if output_names2 != []:
                     ax2 = ax.twinx()
+                    # ax3 = ax.twinx()
+                    # fig.subplots_adjust(right=0.75)
                     ax2.plot(
                         scan_var_array[input_file],
                         output_arrays2[input_file][output_name2],
                         "--o",
                         color="red",
-                        label=labl,
+                        # label=labl,
+                        label="_nolegend_",
                     )
+                    # ax3.spines.right.set_position(("axes", 1.2))
+                    # ax3.plot(
+                    #     scan_var_array[input_file],
+                    #     output_arrays2[input_file]["r_tf_outboard_mid"],
+                    #     "--o",
+                    #     color="black",
+                    #     # label=labl,
+                    #     label="_nolegend_",
+                    # )
+                    #  0.426,
+                    #     0.522,
+                    #     0.545,
+                    #     0.559,
+                    #     0.582,
+                    #     0.648,
+                    #     0.671,
+                    # ax2.axhline(y=0.522, color="red", label="1 fpy")
+                    # ax2.axvline(3.9, ymax=0.35, color="red")
+
+                    # ax2.axhline(
+                    #     y=0.545, color="orange", label="1.5 fpy (Minimum requirement)"
+                    # )
+                    # ax2.axvline(3.975, ymax=0.418, color="orange")
+
+                    # ax2.axhline(y=0.559, color="yellow", label="2 fpy")
+                    # ax2.axvline(4.02, ymax=0.46, color="yellow")
+
+                    # ax2.axhline(y=0.582, color="blue", label="3 fpy")
+                    # ax2.axvline(4.075, ymax=0.53, color="blue")
+
+                    # ax2.axhline(y=0.648, color="green", label="10 fpy")
+                    # ax2.axvline(4.28, ymax=0.74, color="green")
+
+                    # ax2.axhline(y=0.671, color="lime", label="15 fpy (Full plant life)")
+                    # ax2.axvline(4.35, ymax=0.81, color="lime")
+                    ax2.legend()
                     ax2.set_ylabel(
                         labels[output_name2],
                         fontsize=axis_font_size,
                         color="red",
                     )
+                    # ax3.set_ylabel(
+                    #     labels["r_tf_outboard_mid"],
+                    #     fontsize=axis_font_size,
+                    #     color="black",
+                    # )
+
+                    # ax3.tight_layout()
             if output_names2 != []:
                 ax2.yaxis.grid(True)
+                ax2.minorticks_on()
+                ax.minorticks_on()
                 ax.xaxis.grid(True)
                 ax.set_ylabel(
                     labels[output_name], fontsize=axis_font_size, color="blue"
@@ -837,21 +889,66 @@ def main(args=None):
 
                 flat_output_z = output_contour_z.flatten()
                 flat_output_z.sort()
-                print(x_contour)
-                print(y_contour)
-                print(output_contour_z)
-                plt.contourf(
+                # print(x_contour)
+                # print(y_contour)
+                # print(output_contour_z)
+                contourf_plot = plt.contourf(
                     x_contour,
                     y_contour,
                     output_contour_z,
                     levels=np.linspace(
-                        list(filter(lambda i: i > 0.0, flat_output_z))[0],
+                        flat_output_z.min(),
                         flat_output_z.max(),
                         50,
                     ),
+                    # levels=np.linspace(
+                    #      list(filter(lambda i: i > 0.0, flat_output_z))[0],
+                    #      flat_output_z.max(),
+                    #      50,
+                    #  ),
                 )
-
-                plt.colorbar().set_label(label=labels[output_name], size=axis_font_size)
+                format = tkr.FormatStrFormatter("%.2f")
+                plt.colorbar().set_label(
+                    label=labels[output_name],
+                    size=axis_font_size,
+                )
+                # limits = plt.contour(
+                #     contourf_plot,
+                #     levels=[
+                #         0.426,
+                #         0.522,
+                #         0.545,
+                #         0.559,
+                #         0.582,
+                #         0.648,
+                #         0.671,
+                #     ],
+                #     colors="r",
+                #     label="hello",
+                # )
+                # fmt = {}
+                # strs = [
+                #     "0.34 fpy (CML5)",
+                #     "1.0 fpy",
+                #     "1.5 fpy (Minimum required)",
+                #     "2 fpy",
+                #     "3 fpy",
+                #     "10 fpy",
+                #     "15 fpy (Full plant life)",
+                # ]
+                # for l, s in zip(limits.levels, strs):
+                #     fmt[l] = s
+                # plt.plot()
+                # plt.clabel(
+                #     limits,
+                #     limits.levels,
+                #     fmt=fmt,
+                #     inline=True,
+                #     fontsize=7,
+                # )
+                # plt.plot(3.6, 1.8, marker="x", markersize=15)
+                # plt.annotate("SPP", [3.6, 1.8], color="white")
+                # plt.colorbar().set_label(label=labels[output_name], size=axis_font_size)
                 plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
                 plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
                 plt.tight_layout()
@@ -870,7 +967,7 @@ def main(args=None):
                     conv_ij
                 ):  # conv_j is an array element containing the converged scan numbers
                     # Scanned variables
-                    print(conv_j)
+                    # print(conv_j)
                     scan_1_var_array = np.zeros(len(conv_j))
                     scan_2_var_array = np.zeros(len(conv_j))
                     output_array = np.zeros(len(conv_j))
@@ -889,20 +986,20 @@ def main(args=None):
                     # Plot the graph
                     plt.plot(scan_2_var_array, output_array, "--o", label=labl)
 
-                    plt.grid(True)
-                    plt.ylabel(labels[output_name], fontsize=axis_font_size)
-                    plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
-                    plt.legend(loc="best", fontsize=legend_size)
-                    plt.xticks(size=axis_tick_size)
-                    plt.yticks(size=axis_tick_size)
-                    plt.tight_layout()
-                    plt.savefig(
-                        f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
-                    )
+                plt.grid(True)
+                plt.ylabel(labels[output_name], fontsize=axis_font_size)
+                plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
+                plt.legend(loc="best", fontsize=legend_size)
+                plt.xticks(size=axis_tick_size)
+                plt.yticks(size=axis_tick_size)
+                plt.tight_layout()
+                plt.savefig(
+                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                )
 
-                    # Display plot (used in Jupyter notebooks)
-                    plt.show()
-                    plt.clf()
+                # Display plot (used in Jupyter notebooks)
+                plt.show()
+                plt.clf()
 
 
 if __name__ == "__main__":

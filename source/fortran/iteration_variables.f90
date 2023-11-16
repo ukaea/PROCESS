@@ -3852,20 +3852,22 @@ contains
     !! <LI> (171) DUMMY : Description
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(171) = 'DUMMY         '
-    boundl(171) = 1.0d-99
-    boundu(171) = 1.0d99
+    lablxc(171) = 'casths_fraction'
+    boundl(171) = 0.01
+    boundu(171) = 0.95
   end subroutine init_itv_171
 
   real(kind(1.d0)) function itv_171()
+    use tfcoil_variables, only: casths_fraction
     implicit none
-    itv_171 = DUMMY
+    itv_171 = casths_fraction
   end function itv_171
 
   subroutine set_itv_171(ratio)
+    use tfcoil_variables, only: casths_fraction
     implicit none
     real(kind(1.d0)) :: ratio
-    DUMMY = ratio
+    casths_fraction = ratio
   end subroutine set_itv_171
 
   !---------------------------------
