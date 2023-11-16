@@ -1688,7 +1688,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
-    
     # Superconducting coil check
     if cond_type == 1:
         # Equations for plotting the TF case
@@ -1887,7 +1886,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 patches.Polygon(xy=list(zip(x, y)), color="darkgreen", label="Insulation")
             )
-            
             # WP insulation
             tinstf = 0.01
             x = [wp_inner+tinstf, wp_inner+tinstf, (wp_inner + dr_tf_wp-tinstf), (wp_inner + dr_tf_wp-tinstf)]
@@ -1905,6 +1903,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         plt.xlim(
             0.0,
         )
+        plt.annotate("fsdfsdfsdfdsf", xy=(0, 0.05), xytext=(0.1, 0.1), arrowprops=dict(arrowstyle='<->'))
         plt.title("Top-down view of inboard TF coil at midplane")
         plt.xlabel("Radial distance [m]")
         plt.ylabel("Toroidal distance [m]")
