@@ -1685,10 +1685,8 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     side_case_dx = mfile_data.data["casths"].get_scan(scan)
     wp_inner = mfile_data.data["r_wp_inner"].get_scan(scan)
     tinstf = mfile_data.data["tinstf"].get_scan(scan)
-    wp_outer = mfile_data.data["r_wp_outer"].get_scan(scan)
     turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
-    casthi = round(mfile_data.data["casthi"].get_scan(scan))
 
     # Equations for plotting the TF case
     half_case_angle = np.arctan((side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner)
@@ -1921,7 +1919,6 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     steel_thickness = mfile_data.data["thwcndut"].get_scan(scan)
     insulation_thickness = mfile_data.data["thicndut"].get_scan(scan)
     turn_width = mfile_data.data["t_turn_tf"].get_scan(scan)
-    cable_area = mfile_data.data["acstf"].get_scan(scan)
 
     # Plot the total turn shape
     axis.add_patch(
