@@ -46,7 +46,7 @@ def write(models, outfile):
     models.availability.run(output=True)
 
     # Writing the output from physics.f90 into OUT.DAT + MFILE.DAT
-    ft.physics_module.outplas(outfile)
+    models.physics.outplas()
 
     # Writing
     if ft.physics_variables.ipedestal == 2 or ft.physics_variables.ipedestal == 3:
@@ -60,7 +60,7 @@ def write(models, outfile):
 
     # Pulsed reactor model
     models.pulse.run(output=True)
-    ft.physics_module.outtim(outfile)
+    models.physics.outtim()
 
     models.divertor.run(output=True)
 
