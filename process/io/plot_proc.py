@@ -801,7 +801,7 @@ def plot_nprofile(prof, demo_ranges):
     prof.set_xlim([0, 1])
     if demo_ranges:
         prof.set_ylim([0, 20])
-    
+
     # Adapatative ranges
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
