@@ -1927,10 +1927,13 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             0.0,
         )
         plt.ylim((y14[-1]*1.25), (-y14[-1]*1.25))
+
+        # Plot nose case thickness labels
         plt.annotate("", xy=(r_tf_inboard_in, y14[-1]), xytext=(nose_r+r_tf_inboard_in, y14[-1]), arrowprops=dict(arrowstyle='<->'))
         plt.annotate("", xy=(r_tf_inboard_in, y14[-1]), xytext=(nose_r+r_tf_inboard_in, y14[-1]), arrowprops=dict(arrowstyle='|-|'))
         bbox = dict(fc="white", ec="none")
-        plt.text((nose_r+(r_tf_inboard_in/2)), y14[-1], f"Nose case thickness\n{nose_r} m", ha="center", va="center", bbox=bbox)
+        plt.text((nose_r+(r_tf_inboard_in/4)), y14[-1], f"{nose_r} m", ha="center", va="center", bbox=bbox)
+
         plt.title("Top-down view of inboard TF coil at midplane")
         plt.xlabel("Radial distance [m]")
         plt.ylabel("Toroidal distance [m]")
