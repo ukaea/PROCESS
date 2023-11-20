@@ -1918,7 +1918,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 (-0.5 * wp_toridal_dxbig),
             ]
             axis.add_patch(
-                patches.Polygon(xy=list(zip(x, y)), color="darkgreen", label="Insulation")
+                patches.Polygon(xy=list(zip(x, y)), color="darkgreen", label=" WP Insulation")
             )
             # WP insulation
             tinstf = 0.01
