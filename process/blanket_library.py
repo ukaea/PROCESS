@@ -470,12 +470,7 @@ class BlanketLibrary:
         # First wall flow is just along the first wall, with no allowance for radial
         # pipes, manifolds etc. The outputs are mid quantities of inlet and outlet.
         # This subroutine recalculates cp and rhof.
-        (
-            blanket_library.tpeakfwi,
-            cf,
-            rhof,
-            blanket_library.mffwpi,
-        ) = self.fw.fw_temp(
+        (blanket_library.tpeakfwi, cf, rhof, blanket_library.mffwpi,) = self.fw.fw_temp(
             output,
             fwbs_variables.afw_outboard,
             build_variables.fwith,
