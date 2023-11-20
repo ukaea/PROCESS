@@ -2071,7 +2071,7 @@
         "fvssu": 1.0,
         "fvvhe": 1.0,
         "fw_armour_mass": 0.0,
-        "fw_armour_thickness": 0.005,
+        "fw_armour_thickness_outboard": 0.005,
         "fw_armour_u_nuc_heating": 0.0,
         "fw_armour_vol": 0.0,
         "fw_channel_length_outboard": 4.0,
@@ -9784,7 +9784,7 @@
         "fvssu": "F-value for `constraint equation 51`",
         "fvvhe": "f-value for vacuum vessel He concentration limit (`iblanket = 2`)\n (`constraint equation 55`, `iteration variable 96`)",
         "fw_armour_mass": "first wall armour mass (kg)",
-        "fw_armour_thickness": "first wall armour thickness (m)",
+        "fw_armour_thickness_outboard": "first wall armour thickness (m)",
         "fw_armour_u_nuc_heating": "Unit heating of FW and armour in FW armour (W/kg per W of fusion power)",
         "fw_armour_vol": "first wall armour volume (m3)",
         "fw_channel_length_outboard": "Length of a single first wall channel (all in parallel) (m)\n (`iteration variable 114`, useful for `constraint equation 39`)",
@@ -13259,7 +13259,7 @@
             "lb": 0.001,
             "ub": 10.0
         },
-        "fw_armour_thickness": {
+        "fw_armour_thickness_outboard": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -18578,7 +18578,7 @@
             "fwlife",
             "fwmass",
             "fw_armour_mass",
-            "fw_armour_thickness",
+            "fw_armour_thickness_outboard",
             "fw_armour_vol",
             "iblanket",
             "iblnkith",
@@ -21005,7 +21005,7 @@
         "fvsbrnni": "real_variable",
         "fvssu": "real_variable",
         "fvvhe": "real_variable",
-        "fw_armour_thickness": "real_variable",
+        "fw_armour_thickness_outboard": "real_variable",
         "fw_channel_length_outboard": "real_variable",
         "fw_th_conductivity": "real_variable",
         "fw_wall_outboard": "real_variable",

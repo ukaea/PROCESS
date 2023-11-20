@@ -269,7 +269,8 @@ class CCFE_HCPB:
         # Exponents (tonne/m2)
         # Blanket exponent (/1000 for kg -> tonnes)
         ccfe_hcpb_module.x_blanket = (
-            ccfe_hcpb_module.armour_density * fwbs_variables.fw_armour_thickness
+            ccfe_hcpb_module.armour_density
+            * fwbs_variables.fw_armour_thickness_outboard
             + ccfe_hcpb_module.fw_density
             * (build_variables.fwith + build_variables.fwoth)
             / 2.0
@@ -1027,8 +1028,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "For consistency, first wall armour thickness should be 0.003 (m)",
-                "(fw_armour_thickness)",
-                fwbs_variables.fw_armour_thickness,
+                "(fw_armour_thickness_outboard)",
+                fwbs_variables.fw_armour_thickness_outboard,
             )
 
         return tbr

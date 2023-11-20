@@ -63,7 +63,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     vdewin: Any = None
 
-    fw_armour_thickness: Any = None
+    fw_armour_thickness_outboard: Any = None
 
     ptfnuc: Any = None
 
@@ -147,7 +147,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             volshld=735.53647857295027,
             vvmass=9043937.8018644415,
             vdewin=1159.4792053672361,
-            fw_armour_thickness=0.0050000000000000001,
+            fw_armour_thickness_outboard=0.0050000000000000001,
             ptfnuc=0,
             denw=19250,
             vffwi=0,
@@ -197,7 +197,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             volshld=736.47704920432227,
             vvmass=9056931.558219457,
             vdewin=1161.1450715665972,
-            fw_armour_thickness=0.0050000000000000001,
+            fw_armour_thickness_outboard=0.0050000000000000001,
             ptfnuc=0.044184461825198453,
             denw=19250,
             vffwi=0.31415926535897931,
@@ -286,8 +286,8 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(
         fwbs_variables,
-        "fw_armour_thickness",
-        nuclearheatingmagnetsparam.fw_armour_thickness,
+        "fw_armour_thickness_outboard",
+        nuclearheatingmagnetsparam.fw_armour_thickness_outboard,
     )
 
     monkeypatch.setattr(fwbs_variables, "ptfnuc", nuclearheatingmagnetsparam.ptfnuc)
@@ -1281,7 +1281,7 @@ class TbrShimwellParam(NamedTuple):
 
     tbrmin: Any = None
 
-    fw_armour_thickness: Any = None
+    fw_armour_thickness_outboard: Any = None
 
     ip: Any = None
 
@@ -1305,7 +1305,7 @@ class TbrShimwellParam(NamedTuple):
             fwith=0.018000000000000002,
             fwoth=0.018000000000000002,
             tbrmin=1.1499999999999999,
-            fw_armour_thickness=0.0030000000000000001,
+            fw_armour_thickness_outboard=0.0030000000000000001,
             ip=0,
             iprint=0,
             outfile=11,
@@ -1336,7 +1336,9 @@ def test_tbr_shimwell(tbrshimwellparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(constraint_variables, "tbrmin", tbrshimwellparam.tbrmin)
 
     monkeypatch.setattr(
-        fwbs_variables, "fw_armour_thickness", tbrshimwellparam.fw_armour_thickness
+        fwbs_variables,
+        "fw_armour_thickness_outboard",
+        tbrshimwellparam.fw_armour_thickness_outboard,
     )
 
     monkeypatch.setattr(ccfe_hcpb_module, "ip", tbrshimwellparam.ip)

@@ -538,7 +538,7 @@ contains
         volshld, vfshld, coolmass, fwclfr, & !! CCFE HCPB only -------------------
         breeder_f, breeder_multiplier, whtbltibe12, whtblli4sio4, wtblli2o, &
         vfcblkt, vfpblkt, whtshld, wpenshld, fwmass, fw_armour_vol, &
-        fw_armour_thickness, fw_armour_mass, armour_fw_bl_mass, &
+        fw_armour_thickness_outboard, fw_armour_mass, armour_fw_bl_mass, &
         volblkti, volblkto, iblnkith, fblhebmi, & !! KIT HCPB only ---------------
         fblhebpi,fblhebmo, fblhebpo, fblss, fblbe, &
         whtblbreed, densbreed, fblbreed, &
@@ -610,7 +610,7 @@ contains
             fwmass = denstl * volfw
 
             ! First wall armour volume (m^3)
-            fw_armour_vol = sarea*fw_armour_thickness
+            fw_armour_vol = sarea*fw_armour_thickness_outboard
 
             ! First wall armour mass (kg)
             fw_armour_mass = fw_armour_vol*denw

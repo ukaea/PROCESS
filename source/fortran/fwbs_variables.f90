@@ -74,7 +74,7 @@ module fwbs_variables
   real(dp) :: fw_armour_mass
   !! first wall armour mass [kg]
 
-  real(dp) :: fw_armour_thickness
+  real(dp) :: fw_armour_thickness_outboard
   !! first wall armour thickness [m]
 
   real(dp) :: fw_armour_vol
@@ -680,7 +680,7 @@ module fwbs_variables
     fwlife = 0.0D0
     fwmass = 0.0D0
     fw_armour_mass = 0.0D0
-    fw_armour_thickness = 0.005D0
+    fw_armour_thickness_outboard = 0.005D0
     fw_armour_vol = 0.0D0
     iblanket = 1
     iblnkith = 1

@@ -307,7 +307,7 @@ class DcllMassesParam(NamedTuple):
 
     fw_armour_vol: Any = None
 
-    fw_armour_thickness: Any = None
+    fw_armour_thickness_outboard: Any = None
 
     fw_armour_mass: Any = None
 
@@ -529,7 +529,7 @@ class DcllMassesParam(NamedTuple):
             whtblkt=0,
             fwmass=0,
             fw_armour_vol=0,
-            fw_armour_thickness=0.0050000000000000001,
+            fw_armour_thickness_outboard=0.0050000000000000001,
             fw_armour_mass=0,
             volfw=0,
             armour_fw_bl_mass=0,
@@ -649,7 +649,7 @@ class DcllMassesParam(NamedTuple):
             whtblkt=10654509.24412049,
             fwmass=193353.16636179245,
             fw_armour_vol=7.0163598878346534,
-            fw_armour_thickness=0.0050000000000000001,
+            fw_armour_thickness_outboard=0.0050000000000000001,
             fw_armour_mass=135064.92784081708,
             volfw=28.820872142117942,
             armour_fw_bl_mass=10982927.3383231,
@@ -803,7 +803,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
     monkeypatch.setattr(fwbs_variables, "fw_armour_vol", dcllmassesparam.fw_armour_vol)
 
     monkeypatch.setattr(
-        fwbs_variables, "fw_armour_thickness", dcllmassesparam.fw_armour_thickness
+        fwbs_variables,
+        "fw_armour_thickness_outboard",
+        dcllmassesparam.fw_armour_thickness_outboard,
     )
 
     monkeypatch.setattr(
