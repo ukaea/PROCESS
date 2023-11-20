@@ -320,7 +320,7 @@ module fwbs_variables
   real(dp) :: fw_wall_outboard
   !! wall thickness of first wall coolant channels [m]
 
-  real(dp) :: afw
+  real(dp) :: afw_outboard
   !! radius of first wall cooling channels [m]
 
   real(dp) :: pitch
@@ -740,7 +740,7 @@ module fwbs_variables
     afwo = 0.008D0
     fwcoolant_outboard = 'helium'
     fw_wall_outboard = 0.003D0
-    afw = 0.006D0
+    afw_outboard = 0.006D0
     pitch = 0.02D0
     fwinlet = 573.0D0
     fwoutlet = 823.0D0

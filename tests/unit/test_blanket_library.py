@@ -244,7 +244,7 @@ def test_primary_coolant_properties(
 
 
 def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library):
-    monkeypatch.setattr(fwbs_variables, "afw", 0.006)
+    monkeypatch.setattr(fwbs_variables, "afw_outboard", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
 
     data = dict(
@@ -266,7 +266,7 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library):
 
 
 def test_deltap_tot_outboard_blanket_breeder_liquid(monkeypatch, blanket_library):
-    monkeypatch.setattr(fwbs_variables, "afw", 0.006)
+    monkeypatch.setattr(fwbs_variables, "afw_outboard", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
     monkeypatch.setattr(fwbs_variables, "ifci", 1)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", 0.11625)

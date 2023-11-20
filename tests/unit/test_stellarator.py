@@ -247,7 +247,7 @@ class StbildParam(NamedTuple):
 
     required_radial_space: Any = None
 
-    afw: Any = None
+    afw_outboard: Any = None
 
     blktmodel: Any = None
 
@@ -352,7 +352,7 @@ class StbildParam(NamedTuple):
             available_radial_space=0,
             f_avspace=1,
             required_radial_space=0,
-            afw=0.0060000000000000001,
+            afw_outboard=0.0060000000000000001,
             blktmodel=0,
             fdiv=0.115,
             fhcd=0,
@@ -422,7 +422,7 @@ class StbildParam(NamedTuple):
             available_radial_space=1.8828828828828827,
             f_avspace=1,
             required_radial_space=2.0332922403587861,
-            afw=0.0060000000000000001,
+            afw_outboard=0.0060000000000000001,
             blktmodel=0,
             fdiv=0.021924555536480182,
             fhcd=0,
@@ -548,7 +548,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "required_radial_space", stbildparam.required_radial_space
     )
 
-    monkeypatch.setattr(fwbs_variables, "afw", stbildparam.afw)
+    monkeypatch.setattr(fwbs_variables, "afw_outboard", stbildparam.afw_outboard)
 
     monkeypatch.setattr(fwbs_variables, "blktmodel", stbildparam.blktmodel)
 

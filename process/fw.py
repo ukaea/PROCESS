@@ -18,7 +18,7 @@ class Fw:
     def fw_temp(
         self,
         output: bool,
-        afw,
+        afw_outboard,
         thickness,
         area,
         prad_incident,
@@ -27,7 +27,7 @@ class Fw:
     ):
         """Thermo-hydraulic calculations for the first wall
         author: P J Knight, CCFE, Culham Science Centre
-        afw : input real : first wall coolant channel radius (m)
+        afw_outboard : input real : first wall coolant channel radius (m)
         thickness : first wall thickness (fwith or fwoth) (m)
         area : input real : area of first wall section under consideration (m2)
         (i.e. area of inboard wall or outboard wall)
@@ -57,7 +57,7 @@ class Fw:
         fwvol = area * thickness
 
         # First wall channel area (m2)
-        channel_area = np.pi * afw**2
+        channel_area = np.pi * afw_outboard**2
 
         # Heat generation in the first wall due to neutron flux deposited in the material (W/m3)
         qppp = 1e6 * pnuc_deposited / fwvol
@@ -133,7 +133,7 @@ class Fw:
         hcoeff = fw_module.heat_transfer(
             masflx,
             ob_fluid_properties.density,
-            afw,
+            afw_outboard,
             ob_fluid_properties.specific_heat_const_p,
             ob_fluid_properties.viscosity,
             ob_fluid_properties.thermal_conductivity,
@@ -155,10 +155,10 @@ class Fw:
         # Calculate peak temperature - occurs at (r,theta) = (bfw,0)
         # bfw = thickness/2.0d0
 
-        # po.cosine_term(afw, bfw, 0.0D0, bfw, qpp, hcoeff, tkfw, tmthet)
+        # po.cosine_term(afw_outboard, bfw, 0.0D0, bfw, qpp, hcoeff, tkfw, tmthet)
 
-        # deltat_solid = bfw/tkfw * (qpp/pi + qppp*bfw/2.0D0) * log(bfw/afw) &
-        #             - qppp/4.0D0/tkfw*(bfw**2-afw**2)
+        # deltat_solid = bfw/tkfw * (qpp/pi + qppp*bfw/2.0D0) * log(bfw/afw_outboard) &
+        #             - qppp/4.0D0/tkfw*(bfw**2-afw_outboard**2)
 
         # tpeakfw = fwoutlet + deltat_solid + deltat_coolant + tmthet  # in K
 
@@ -183,7 +183,7 @@ class Fw:
 
         # Note I do NOT assume that the channel covers the full width of the first wall:
         # Effective area for heat transfer (m2)
-        effective_area_for_heat_transfer = 2 * afw
+        effective_area_for_heat_transfer = 2 * afw_outboard
 
         # Temperature drop in first-wall material (K)
         deltat_solid_1D = (
@@ -198,8 +198,8 @@ class Fw:
         # Calculate maximum distance travelled by surface heat load (m)
         # fw_wall_outboard | Minimum distance travelled by surface heat load (m)
         diagonal = np.sqrt(
-            (fwbs_variables.pitch / 2 - afw) ** 2
-            + (afw + fwbs_variables.fw_wall_outboard) ** 2
+            (fwbs_variables.pitch / 2 - afw_outboard) ** 2
+            + (afw_outboard + fwbs_variables.fw_wall_outboard) ** 2
         )
 
         # Mean distance travelled by surface heat (m)
@@ -208,14 +208,14 @@ class Fw:
         # This heat starts off spread over width = 'pitch'.
         # It ends up spread over one half the circumference.
         # Use the mean of these values.
-        mean_width = (fwbs_variables.pitch + np.pi * afw) / 2  # (m)
+        mean_width = (fwbs_variables.pitch + np.pi * afw_outboard) / 2  # (m)
 
         # As before, use a combined load 'onedload'
         # Temperature drop in first-wall material (K)
         deltat_solid = onedload * mean_distance / (tkfw * mean_width)
 
         # Temperature drop between channel inner wall and bulk coolant (K)
-        deltat_coolant = load / (2 * np.pi * afw * hcoeff)
+        deltat_coolant = load / (2 * np.pi * afw_outboard * hcoeff)
 
         # Peak first wall temperature (K)
         tpeakfw = fwbs_variables.fwoutlet + deltat_solid + deltat_coolant
@@ -224,7 +224,12 @@ class Fw:
             po.oheadr(
                 self.outfile, "Heat transfer parameters at the coolant outlet: " + label
             )
-            po.ovarre(self.outfile, "Radius of coolant channel (m)", "(afw)", afw)
+            po.ovarre(
+                self.outfile,
+                "Radius of coolant channel (m)",
+                "(afw_outboard)",
+                afw_outboard,
+            )
             po.ovarre(
                 self.outfile,
                 "Mean surface heat flux on first wall (W/m2) ",

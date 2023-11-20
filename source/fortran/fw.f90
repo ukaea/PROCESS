@@ -31,7 +31,7 @@ contains
     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    use fwbs_variables, only: roughness, afw
+    use fwbs_variables, only: roughness, afw_outboard
 
     implicit none
 
@@ -46,7 +46,7 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     ! Bracketed term in Haaland equation
-    bracket = (roughness/afw/3.7)**1.11d0 + 6.9/reynolds
+    bracket = (roughness/afw_outboard/3.7)**1.11d0 + 6.9/reynolds
 
     ! Calculate Darcy friction factor
     darcy_friction = (1.8d0 * log10(bracket))**(-2)

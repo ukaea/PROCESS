@@ -832,11 +832,11 @@ contains
     function flow_velocity(i_channel_shape, mass_flow_rate, flow_density)
 
         !! Calculate the coolant flow velocity (m/s) for given pipe mass flow rate and pipe size/shape.
-        !! N.B. Assumed that primary BB and FW coolants have same pipe radius (= afw).
+        !! N.B. Assumed that primary BB and FW coolants have same pipe radius (= afw_outboard).
         !! author: G. Graham, CCFE
         !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        use fwbs_variables, only: afw, a_bz_liq, b_bz_liq
+        use fwbs_variables, only: afw_outboard, a_bz_liq, b_bz_liq
         use constants, only: pi
 
         implicit none
@@ -862,7 +862,7 @@ contains
         !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         !! If primary coolant then circular channels assumed
-        if (i_channel_shape==1) flow_velocity = mass_flow_rate / (flow_density*pi*afw*afw)
+        if (i_channel_shape==1) flow_velocity = mass_flow_rate / (flow_density*pi*afw_outboard*afw_outboard)
 
         !! If secondary coolant then rectangular channels assumed
         if (i_channel_shape==2) flow_velocity = mass_flow_rate / (flow_density * a_bz_liq * b_bz_liq)
@@ -1088,7 +1088,7 @@ contains
         !!
         !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        use fwbs_variables, only: afw, a_bz_liq, b_bz_liq
+        use fwbs_variables, only: afw_outboard, a_bz_liq, b_bz_liq
         use fw_module, only: friction
 
         implicit none
@@ -1167,13 +1167,13 @@ contains
         !! In preveious version of pumppower:
         !! - elbow radius assumed = 0.018m for 90 degree elbow, from WCLL
         !! - elbow radius assumed half that of 90 deg case for 180 deg elbow
-        !! Intialised value for afw is 0.006m, so elbow radius = 3 * afw,
+        !! Intialised value for afw_outboard is 0.006m, so elbow radius = 3 * afw_outboard,
         !! aka 1.5 * pipe diameter, which seems to be engineering standard for
-        !! a steel pipe long-radius elbow (short-radius elbow = 2 * afw).
+        !! a steel pipe long-radius elbow (short-radius elbow = 2 * afw_outboard).
 
         !! If primary coolant...
         if (i_ps==1) then
-            elbow_radius = 3 * afw
+            elbow_radius = 3 * afw_outboard
         !! If secondary coolant...
         else
             !! See DCLL
@@ -1239,7 +1239,7 @@ contains
         !! author: G. Graham
         !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        use fwbs_variables, only: afw, a_bz_liq, b_bz_liq
+        use fwbs_variables, only: afw_outboard, a_bz_liq, b_bz_liq
 
         implicit none
 
@@ -1258,7 +1258,7 @@ contains
         !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         !! If primary coolant then circular channels assumed
-        if (i_channel_shape==1) hydraulic_diameter = 2.0D0*afw
+        if (i_channel_shape==1) hydraulic_diameter = 2.0D0*afw_outboard
 
         !! If secondary coolant then rectangular channels assumed
         if (i_channel_shape==2) hydraulic_diameter = 2*a_bz_liq*b_bz_liq/(a_bz_liq+b_bz_liq)

@@ -10,12 +10,12 @@ def test_hydraulic_diameter(monkeypatch):
     Test for hydraulic_diameter function.
     """
     # Set var values
-    monkeypatch.setattr(fwbs, "afw", 1.0)
+    monkeypatch.setattr(fwbs, "afw_outboard", 1.0)
     monkeypatch.setattr(fwbs, "a_bz_liq", 1.0)
     monkeypatch.setattr(fwbs, "b_bz_liq", 1.0)
 
     # hydraulic_diameter input = i_channel_shape: 1 = circle, 2 = rectangle
-    assert bl.hydraulic_diameter(1) == 2.0  # 2.0D0*afw
+    assert bl.hydraulic_diameter(1) == 2.0  # 2.0D0*afw_outboard
     assert bl.hydraulic_diameter(2) == 1.0  # 2*a_bz_liq*b_bz_liq/(a_bz_liq+b_bz_liq)
 
 
@@ -37,7 +37,7 @@ def test_flow_velocity(monkeypatch):
     Test for flow_velocity function.
     """
     # Set var values
-    monkeypatch.setattr(fwbs, "afw", 1.0)
+    monkeypatch.setattr(fwbs, "afw_outboard", 1.0)
     monkeypatch.setattr(fwbs, "a_bz_liq", 1.0)
     monkeypatch.setattr(fwbs, "b_bz_liq", 1.0)
 
@@ -150,7 +150,7 @@ def test_pressure_drop(monkeypatch):
     """
 
     # Set var values
-    monkeypatch.setattr(fwbs, "afw", 1.0)
+    monkeypatch.setattr(fwbs, "afw_outboard", 1.0)
     monkeypatch.setattr(fwbs, "a_bz_liq", 1.0)
     monkeypatch.setattr(fwbs, "b_bz_liq", 1.0)
     monkeypatch.setattr(fwbs, "roughness", 1.0e-6)

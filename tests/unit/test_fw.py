@@ -38,7 +38,7 @@ class FwTempParam(NamedTuple):
 
     pnuc_deposited: Any = None
 
-    afw: Any = None
+    afw_outboard: Any = None
 
     thickness: Any = None
 
@@ -72,7 +72,7 @@ class FwTempParam(NamedTuple):
             peaking_factor=1,
             fw_wall_outboard=0.0030000000000000001,
             pnuc_deposited=75.219932653459054,
-            afw=0.0060000000000000001,
+            afw_outboard=0.0060000000000000001,
             thickness=0.018000000000000002,
             area=612.23369764444396,
             prad_incident=97.271629070225231,
@@ -94,7 +94,7 @@ class FwTempParam(NamedTuple):
             peaking_factor=1,
             fw_wall_outboard=0.0030000000000000001,
             pnuc_deposited=121.50088652655793,
-            afw=0.0060000000000000001,
+            afw_outboard=0.0060000000000000001,
             thickness=0.018000000000000002,
             area=988.92586580655245,
             prad_incident=176.95628839065773,
@@ -149,7 +149,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     tpeakfw, cfmean, rhofmean, massrate = fw.fw_temp(
         False,
         pnuc_deposited=fwtempparam.pnuc_deposited,
-        afw=fwtempparam.afw,
+        afw_outboard=fwtempparam.afw_outboard,
         thickness=fwtempparam.thickness,
         area=fwtempparam.area,
         prad_incident=fwtempparam.prad_incident,

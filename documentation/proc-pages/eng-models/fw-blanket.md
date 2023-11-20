@@ -178,7 +178,7 @@ Summary of key variables and switches:
 | :---------------:        | :-----------:           | ------------------------ | -------------------------- |
 | Coolant Channels         | :-----------:           | ------------------------ | -------------------------- |
 | length (m)               | `fw_channel_length`     | ---                      | ---                        | 
-| width (m)                | `afw` (radius, cicular) | `afw`                    |`a_bz_liq`, `b_bz_liq` (rectangular) |
+| width (m)                | `afw_outboard` (radius, cicular) | `afw_outboard`                    |`a_bz_liq`, `b_bz_liq` (rectangular) |
 | wall thickness (m)       | `fw_wall_outboard`               | fw_wall_outboard                  |`th_wall_secondary` |                
 | pitch (m)                | `pitch`                 | ---                      | ---                        |           
 | roughness epsilon        | `roughness`             | ---                      | ---                        |             
@@ -211,7 +211,7 @@ Minimum distance travelled by surface heat load = $\texttt{fw} {\textunderscore}
 Maximum distance travelled by surface heat load = $\texttt{diagonal}  $
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{afw}+\\texttt{fw} {\textunderscore} \texttt{wall})^2 + (\frac{\texttt{pitch}}{2}-\texttt{afw})^2 }
+\texttt{diagonal}=\sqrt{(\texttt{afw_outboard}+\\texttt{fw} {\textunderscore} \texttt{wall})^2 + (\frac{\texttt{pitch}}{2}-\texttt{afw_outboard})^2 }
 $$
 
 Typical distance travelled by surface heat load:
@@ -222,7 +222,7 @@ $$
 
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{afw}+\\texttt{fw} {\textunderscore} \texttt{wall})^2 + (\frac{\texttt{pitch}}{2}-\texttt{afw})^2 }
+\texttt{diagonal}=\sqrt{(\texttt{afw_outboard}+\\texttt{fw} {\textunderscore} \texttt{wall})^2 + (\frac{\texttt{pitch}}{2}-\texttt{afw_outboard})^2 }
 $$
 
 The energy travels over a cross-section which is initially = \texttt{pitch}
@@ -230,7 +230,7 @@ It spreads out, arriving at the coolant pipe over an area of half the circumfere
 We use the mean of these values:
 
 $$ 
-\texttt{mean}{\textunderscore}\texttt{width} = \frac{\texttt{pitch} + \pi \times \texttt{afw}}{2}
+\texttt{mean}{\textunderscore}\texttt{width} = \frac{\texttt{pitch} + \pi \times \texttt{afw_outboard}}{2}
 $$
 
 The temperature difference between the plasma-facing surface and the coolant is then:

@@ -218,7 +218,7 @@ class BlanketLibrary:
             Coolant Channels            FW                      BB primary          BB Liquid Breeder/Coolant
 
             length (m)                  fw_channel_length
-            width (m)                   afw (radius, cicular)   afw                 a_bz_liq, b_bz_liq (rectangular)
+            width (m)                   afw_outboard (radius, cicular)   afw_outboard                 a_bz_liq, b_bz_liq (rectangular)
             wall thickness (m)          fw_wall_outboard                 fw_wall_outboard             th_wall_secondary
             pitch (m)                   pitch
             roughness epsilon           roughness
@@ -473,7 +473,7 @@ class BlanketLibrary:
             blanket_library.mffwpi,
         ) = self.fw.fw_temp(
             output,
-            fwbs_variables.afw,
+            fwbs_variables.afw_outboard,
             build_variables.fwith,
             build_variables.fwareaib,
             fwbs_variables.psurffwi,
@@ -488,7 +488,7 @@ class BlanketLibrary:
         # ) = fw_module.fw_temp(
         #     int(output),
         #     self.outfile,
-        #     fwbs_variables.afw,
+        #     fwbs_variables.afw_outboard,
         #     build_variables.fwith,
         #     build_variables.fwareaib,
         #     fwbs_variables.psurffwi,
@@ -497,7 +497,7 @@ class BlanketLibrary:
         # )
         (fwbs_variables.tpeakfwo, cf, rhof, fwbs_variables.mffwpo) = self.fw.fw_temp(
             output,
-            fwbs_variables.afw,
+            fwbs_variables.afw_outboard,
             build_variables.fwoth,
             build_variables.fwareaob,
             fwbs_variables.psurffwo,
@@ -507,7 +507,7 @@ class BlanketLibrary:
         # (fwbs_variables.tpeakfwo, cf, rhof, fwbs_variables.mffwpo) = fw_module.fw_temp(
         #     int(output),
         #     self.outfile,
-        #     fwbs_variables.afw,
+        #     fwbs_variables.afw_outboard,
         #     build_variables.fwoth,
         #     build_variables.fwareaob,
         #     fwbs_variables.psurffwo,
@@ -659,8 +659,8 @@ class BlanketLibrary:
                 fwbs_variables.vfblkt * fwbs_variables.volblkto
             ) / (
                 np.pi
-                * fwbs_variables.afw
-                * fwbs_variables.afw
+                * fwbs_variables.afw_outboard
+                * fwbs_variables.afw_outboard
                 * blanket_library.bzfllengo
             )
             npblkto_liq = (
@@ -694,8 +694,8 @@ class BlanketLibrary:
                     fwbs_variables.vfblkt * fwbs_variables.volblkti
                 ) / (
                     np.pi
-                    * fwbs_variables.afw
-                    * fwbs_variables.afw
+                    * fwbs_variables.afw_outboard
+                    * fwbs_variables.afw_outboard
                     * blanket_library.bzfllengi
                 )
                 # Have DEMO DCLL set here for now
@@ -733,8 +733,8 @@ class BlanketLibrary:
                 fwbs_variables.vfblkt * fwbs_variables.volblkto
             ) / (
                 np.pi
-                * fwbs_variables.afw
-                * fwbs_variables.afw
+                * fwbs_variables.afw_outboard
+                * fwbs_variables.afw_outboard
                 * blanket_library.bzfllengo
             )
             npblkto_liq = (
@@ -775,8 +775,8 @@ class BlanketLibrary:
                     fwbs_variables.vfblkt * fwbs_variables.volblkti
                 ) / (
                     np.pi
-                    * fwbs_variables.afw
-                    * fwbs_variables.afw
+                    * fwbs_variables.afw_outboard
+                    * fwbs_variables.afw_outboard
                     * blanket_library.bzfllengi
                 )
                 # Have DEMO DCLL set here for now
@@ -820,8 +820,8 @@ class BlanketLibrary:
                 fwbs_variables.vfblkt * fwbs_variables.volblkto
             ) / (
                 np.pi
-                * fwbs_variables.afw
-                * fwbs_variables.afw
+                * fwbs_variables.afw_outboard
+                * fwbs_variables.afw_outboard
                 * blanket_library.bzfllengo
             )
 
@@ -844,8 +844,8 @@ class BlanketLibrary:
                     fwbs_variables.vfblkt * fwbs_variables.volblkti
                 ) / (
                     np.pi
-                    * fwbs_variables.afw
-                    * fwbs_variables.afw
+                    * fwbs_variables.afw_outboard
+                    * fwbs_variables.afw_outboard
                     * blanket_library.bzfllengi
                 )
 
@@ -1102,8 +1102,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Radius of first wall cooling channels (m)",
-                "(afw)",
-                fwbs_variables.afw,
+                "(afw_outboard)",
+                fwbs_variables.afw_outboard,
             )
             po.ovarre(
                 self.outfile,
