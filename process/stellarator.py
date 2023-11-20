@@ -382,7 +382,7 @@ class Stellarator:
 
         # First Wall
         build_variables.fwith = (
-            2.0e0 * fwbs_variables.afw + 2.0e0 * fwbs_variables.fw_wall
+            2.0e0 * fwbs_variables.afw + 2.0e0 * fwbs_variables.fw_wall_outboard
         )
         build_variables.fwoth = build_variables.fwith
 

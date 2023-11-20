@@ -219,7 +219,7 @@ class BlanketLibrary:
 
             length (m)                  fw_channel_length
             width (m)                   afw (radius, cicular)   afw                 a_bz_liq, b_bz_liq (rectangular)
-            wall thickness (m)          fw_wall                 fw_wall             th_wall_secondary
+            wall thickness (m)          fw_wall_outboard                 fw_wall_outboard             th_wall_secondary
             pitch (m)                   pitch
             roughness epsilon           roughness
             peak FW temp (K)            tpeak
@@ -1096,8 +1096,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Wall thickness of first wall cooling channels (m)",
-                "(fw_wall)",
-                fwbs_variables.fw_wall,
+                "(fw_wall_outboard)",
+                fwbs_variables.fw_wall_outboard,
             )
             po.ovarre(
                 self.outfile,

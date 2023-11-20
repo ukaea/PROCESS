@@ -42,7 +42,9 @@ class CCFE_HCPB:
         ccfe_hcpb_module.ofile = self.outfile
 
         # MDK (27/11/2015)
-        build_variables.fwith = 2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall
+        build_variables.fwith = (
+            2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall_outboard
+        )
         build_variables.fwoth = build_variables.fwith
 
         # Coolant type
