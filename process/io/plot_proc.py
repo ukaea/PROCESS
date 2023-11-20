@@ -359,6 +359,7 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges):
     axis.set_xlabel("R / m")
     axis.set_ylabel("Z / m")
     axis.set_title("Poloidal cross-section")
+    axis.minorticks_on()
 
     plot_vacuum_vessel(axis, mfile_data, scan)
     plot_shield(axis, mfile_data, scan)
@@ -475,6 +476,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
     axis.set_xlabel("x / m")
     axis.set_ylabel("y / m")
     axis.set_title("Toroidal cross-section")
+    axis.minorticks_on()
 
     arc(axis, rmajor, style="dashed")
 
@@ -781,6 +783,10 @@ def plot_nprofile(prof, demo_ranges):
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(ncore, nsep)
+        # Print pedestal lines
+        prof.axhline(y=neped/1e19, xmax=rhopedn, color='r', linestyle='-', alpha=0.4)
+        prof.vlines(x=rhopedn, ymin=0.0, ymax=neped/1e19, color='r', linestyle='-', alpha=0.4)
+        prof.minorticks_on()
     else:
         rho1 = np.linspace(0, 0.95)
         rho2 = np.linspace(0.95, 1)
@@ -795,7 +801,7 @@ def plot_nprofile(prof, demo_ranges):
     prof.set_xlim([0, 1])
     if demo_ranges:
         prof.set_ylim([0, 20])
-
+    
     # Adapatative ranges
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
@@ -851,6 +857,10 @@ def plot_tprofile(prof, demo_ranges):
 
         rho = np.append(rhocore, rhosep)
         te = np.append(tcore, tsep)
+        # Plot pedestal lines
+        prof.axhline(y=teped, xmax=rhopedt, color='r', linestyle='-', alpha=0.4)
+        prof.vlines(x=rhopedt, ymin=0.0, ymax=teped, color='r', linestyle='-', alpha=0.4)
+        prof.minorticks_on()
     else:
         rho1 = np.linspace(0, 0.95)
         rho2 = np.linspace(0.95, 1)
@@ -1206,6 +1216,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     if imp_frac[13] > 1.0e-30:
         prof.plot(rho, pimpden[13] * 2.0e-6, label="W")
     prof.legend()
+    prof.minorticks_on()
 
     # Ranges
     # ---
