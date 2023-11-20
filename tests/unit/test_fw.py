@@ -20,7 +20,7 @@ class FwTempParam(NamedTuple):
 
     fwcoolant_outboard: Any = None
 
-    fwinlet: Any = None
+    fwinlet_outboard: Any = None
 
     fwpressure: Any = None
 
@@ -63,7 +63,7 @@ class FwTempParam(NamedTuple):
         FwTempParam(
             fw_th_conductivity=28.34,
             fwcoolant_outboard="helium",
-            fwinlet=573,
+            fwinlet_outboard=573,
             fwpressure=8000000,
             fwoutlet=773,
             pitch_outboard=0.005000000000000001,
@@ -85,7 +85,7 @@ class FwTempParam(NamedTuple):
         FwTempParam(
             fw_th_conductivity=28.34,
             fwcoolant_outboard="helium",
-            fwinlet=573,
+            fwinlet_outboard=573,
             fwpressure=8000000,
             fwoutlet=773,
             pitch_outboard=0.005000000000000001,
@@ -126,7 +126,9 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     # but helium is the default
     # monkeypatch.setattr(fwbs_variables, "fwcoolant_outboard", fwtempparam.fwcoolant_outboard)
 
-    monkeypatch.setattr(fwbs_variables, "fwinlet", fwtempparam.fwinlet)
+    monkeypatch.setattr(
+        fwbs_variables, "fwinlet_outboard", fwtempparam.fwinlet_outboard
+    )
 
     monkeypatch.setattr(fwbs_variables, "fwpressure", fwtempparam.fwpressure)
 

@@ -276,7 +276,7 @@ contains
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, afw_outboard, inuclear, declshld, hcdportsize, &
       npdiv, peaking_factor, primary_pumping, rpf2dewar, secondary_cycle, secondary_cycle_liq, &
-      denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet, wallpf, fblbe, &
+      denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet_outboard, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims
@@ -2116,8 +2116,8 @@ contains
        case ('pitch_outboard')
           call parse_real_variable('pitch_outboard', pitch_outboard, 0.5D-3, 0.1D0, &
                'pitch_outboard of first wall cooling channels (m)')
-       case ('fwinlet')
-          call parse_real_variable('fwinlet', fwinlet, 300.0d0, 1500.0D0, &
+       case ('fwinlet_outboard')
+          call parse_real_variable('fwinlet_outboard', fwinlet_outboard, 300.0d0, 1500.0D0, &
                'inlet temperature of first wall coolant (K)')
        case ('fwoutlet')
           call parse_real_variable('fwoutlet', fwoutlet, 300.0d0, 1500.0D0, &

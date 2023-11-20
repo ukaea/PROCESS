@@ -72,7 +72,7 @@ class Fw:
         # Calculate inlet coolant fluid properties (fixed pressure)
         ib_fluid_properties = FluidProperties.of(
             f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard),
-            temperature=fwbs_variables.fwinlet.item(),
+            temperature=fwbs_variables.fwinlet_outboard.item(),
             pressure=fwbs_variables.fwpressure.item(),
         )
 
@@ -102,7 +102,7 @@ class Fw:
             fwbs_variables.fw_channel_length
             * load
             / cfmean
-            / (fwbs_variables.fwoutlet - fwbs_variables.fwinlet)
+            / (fwbs_variables.fwoutlet - fwbs_variables.fwinlet_outboard)
         )
 
         # Coolant mass flux in a single channel (kg/m2/s)
