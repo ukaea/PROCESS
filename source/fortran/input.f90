@@ -277,7 +277,7 @@ contains
       declblkt, fblhebmo, blkttype, afw_outboard, inuclear, declshld, hcdportsize, &
       npdiv, peaking_factor, primary_pumping, rpf2dewar, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet_outboard, wallpf, fblbe, &
-      fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
+      fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length_outboard, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
@@ -2131,8 +2131,8 @@ contains
        case ('roughness_outboard')
           call parse_real_variable('roughness_outboard', roughness_outboard, 0.0d0, 1.0D-2, &
                'first wall channel roughness_outboard epsilon')
-       case ('fw_channel_length')
-          call parse_real_variable('fw_channel_length', fw_channel_length, 1.0D-3, 1.0D3, &
+       case ('fw_channel_length_outboard')
+          call parse_real_variable('fw_channel_length_outboard', fw_channel_length_outboard, 1.0D-3, 1.0D3, &
                'first wall channel length')
        case ('peaking_factor')
           call parse_real_variable('peaking_factor', peaking_factor, 1.0d0, 100.0D0, &

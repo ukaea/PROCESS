@@ -49,7 +49,7 @@ for the primary coolant.
       the coolant channel diameter, and the segmentation of the blanket are used. The peak temperature 
       in the first wall material (underneath the armour) is derived. The user can apply an upper limit 
       to this temperature, and if this constraint is used then it is strongly recommended to set the 
-      length of the first wall pipe (`fw_channel_length`) as an iteration variable. The Gnielinski 
+      length of the first wall pipe (`fw_channel_length_outboard`) as an iteration variable. The Gnielinski 
       correlation is used to determine the heat transfer in the channel. The stresses in the first 
       wall are currently taken into account.
     - The mechanical pumping power required for the first wall and breeder zone is calculated using 

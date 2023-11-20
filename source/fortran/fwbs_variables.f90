@@ -341,7 +341,7 @@ module fwbs_variables
   real(dp) :: roughness_outboard
   !! first wall channel roughness_outboard epsilon [m]
 
-  real(dp) :: fw_channel_length
+  real(dp) :: fw_channel_length_outboard
   !! Length of a single first wall channel (all in parallel) [m]
   !! (`iteration variable 114`, useful for `constraint equation 39`)
 
@@ -747,7 +747,7 @@ module fwbs_variables
     fwpressure_outboard = 15.5D6
     tpeak = 873.0D0
     roughness_outboard = 1.0D-6
-    fw_channel_length = 4.0D0
+    fw_channel_length_outboard = 4.0D0
     peaking_factor = 1.0D0
     blpressure = 15.50D6
     inlet_temp = 573.0D0

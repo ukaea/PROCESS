@@ -2525,25 +2525,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_114
-    !! <LI> (114) fw_channel_length: Length of a single first wall channel
+    !! <LI> (114) fw_channel_length_outboard: Length of a single first wall channel
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(114) = 'fw_channel_length  '
+    lablxc(114) = 'fw_channel_length_outboard  '
     boundl(114) = 0.001D0
     boundu(114) = 1.000D3
   end subroutine init_itv_114
 
   real(kind(1.d0)) function itv_114()
-    use fwbs_variables, only: fw_channel_length
+    use fwbs_variables, only: fw_channel_length_outboard
     implicit none
-    itv_114 = fw_channel_length
+    itv_114 = fw_channel_length_outboard
   end function itv_114
 
   subroutine set_itv_114(ratio)
-    use fwbs_variables, only: fw_channel_length
+    use fwbs_variables, only: fw_channel_length_outboard
     implicit none
     real(kind(1.d0)) :: ratio
-    fw_channel_length = ratio
+    fw_channel_length_outboard = ratio
   end subroutine set_itv_114
 
   !---------------------------------

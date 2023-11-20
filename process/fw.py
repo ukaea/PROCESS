@@ -99,7 +99,7 @@ class Fw:
 
         # Coolant mass flow rate (kg/s) (use mean properties)
         massrate = (
-            fwbs_variables.fw_channel_length
+            fwbs_variables.fw_channel_length_outboard
             * load
             / cfmean
             / (fwbs_variables.fwoutlet_outboard - fwbs_variables.fwinlet_outboard)
@@ -254,8 +254,8 @@ class Fw:
             po.ovarre(
                 self.outfile,
                 "Length of a single coolant channel (all in parallel) (m)",
-                "(fw_channel_length)",
-                fwbs_variables.fw_channel_length,
+                "(fw_channel_length_outboard)",
+                fwbs_variables.fw_channel_length_outboard,
             )
             po.ovarre(
                 self.outfile,
