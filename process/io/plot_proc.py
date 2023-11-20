@@ -1934,7 +1934,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         plt.title("Top-down view of inboard TF coil at midplane")
         plt.xlabel("Radial distance [m]")
         plt.ylabel("Toroidal distance [m]")
-        plt.legend()
+        plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
