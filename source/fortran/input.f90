@@ -271,7 +271,7 @@ contains
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       denw, f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall_outboard, afwo, &
-      fvolsi, etahtp, nblktmodpo, fwpressure, emult, fwoutlet_outboard, nblktmodpi, &
+      fvolsi, etahtp, nblktmodpo, fwpressure_outboard, emult, fwoutlet_outboard, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, afw_outboard, inuclear, declshld, hcdportsize, &
@@ -2122,8 +2122,8 @@ contains
        case ('fwoutlet_outboard')
           call parse_real_variable('fwoutlet_outboard', fwoutlet_outboard, 300.0d0, 1500.0D0, &
                'outlet temperature of first wall coolant (K)')
-       case ('fwpressure')
-          call parse_real_variable('fwpressure', fwpressure, 1.0d5, 1.0D8, &
+       case ('fwpressure_outboard')
+          call parse_real_variable('fwpressure_outboard', fwpressure_outboard, 1.0d5, 1.0D8, &
                'first wall coolant pressure (Pa)')
        case ('fwcoolant_outboard')
           call parse_string_variable('fwcoolant_outboard', fwcoolant_outboard, 'first wall coolant')

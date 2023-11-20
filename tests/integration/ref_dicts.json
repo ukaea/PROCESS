@@ -2164,7 +2164,7 @@
         "fwomzp": 0.0,
         "fwoth": 0.0,
         "fwoutlet_outboard": 823.0,
-        "fwpressure": 15500000.0,
+        "fwpressure_outboard": 15500000.0,
         "fwtemp": 0.0,
         "fwvol": [
             0.0,
@@ -9825,7 +9825,7 @@
         "fwomzp": "outboard first wall mean zone power density/neutron",
         "fwoth": "outboard first wall thickness, initial estimate as calculated (m)",
         "fwoutlet_outboard": "outlet temperature of first wall coolant (K)",
-        "fwpressure": "first wall coolant pressure (Pa) (`secondary_cycle>1`)",
+        "fwpressure_outboard": "first wall coolant pressure (Pa) (`secondary_cycle>1`)",
         "fwtemp": "outboard first wall temperature after a LOCA (K)",
         "fwvol": "IFE first wall volume (m3)",
         "fzactual": "Actual impurity fraction of divertor impurity (impvardiv) in the SoL (taking\n impurity_enrichment into account) (`iteration variable 148`)",
@@ -13331,7 +13331,7 @@
             "lb": 300.0,
             "ub": 1500.0
         },
-        "fwpressure": {
+        "fwpressure_outboard": {
             "lb": 100000.0,
             "ub": 100000000.0
         },
@@ -18638,7 +18638,7 @@
             "pitch_outboard",
             "fwinlet_outboard",
             "fwoutlet_outboard",
-            "fwpressure",
+            "fwpressure_outboard",
             "tpeak",
             "roughness",
             "fw_channel_length",
@@ -21024,7 +21024,7 @@
         "fwmatf": "real_array",
         "fwoth": "real_variable",
         "fwoutlet_outboard": "real_variable",
-        "fwpressure": "real_variable",
+        "fwpressure_outboard": "real_variable",
         "fzactual": "real_variable",
         "fzeffmax": "real_variable",
         "gainve": "real_array",

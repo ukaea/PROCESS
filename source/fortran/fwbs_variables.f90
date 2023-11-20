@@ -332,7 +332,7 @@ module fwbs_variables
   real(dp) :: fwoutlet_outboard
   !! outlet temperature of first wall coolant [K]
 
-  real(dp) :: fwpressure
+  real(dp) :: fwpressure_outboard
   !! first wall coolant pressure [Pa] (`secondary_cycle>1`)
 
   real(dp) :: tpeak
@@ -744,7 +744,7 @@ module fwbs_variables
     pitch_outboard = 0.02D0
     fwinlet_outboard = 573.0D0
     fwoutlet_outboard = 823.0D0
-    fwpressure = 15.5D6
+    fwpressure_outboard = 15.5D6
     tpeak = 873.0D0
     roughness = 1.0D-6
     fw_channel_length = 4.0D0
