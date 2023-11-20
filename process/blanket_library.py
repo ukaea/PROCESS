@@ -68,7 +68,7 @@ class BlanketLibrary:
         else:
             # FW
             mid_temp_fw = (
-                fwbs_variables.fwinlet_outboard + fwbs_variables.fwoutlet
+                fwbs_variables.fwinlet_outboard + fwbs_variables.fwoutlet_outboard
             ) * 0.5
             fw_fluid_properties = FluidProperties.of(
                 f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard),
@@ -153,8 +153,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Outlet Temperature (Celcius)",
-                "(fwoutlet)",
-                fwbs_variables.fwoutlet,
+                "(fwoutlet_outboard)",
+                fwbs_variables.fwoutlet_outboard,
                 "OP ",
             )
 
@@ -235,7 +235,7 @@ class BlanketLibrary:
             primary coolant switch      fwcoolant_outboard               coolwh              ---
             secondary coolant switch    ---                     ---                 i_bb_liq
             inlet temp (K)              fwinlet_outboard                 inlet_temp          inlet_temp_liq
-            outlet temp (K)             fwoutlet                outlet_temp         outlet_temp_liq
+            outlet temp (K)             fwoutlet_outboard                outlet_temp         outlet_temp_liq
             pressure (Pa)               fwpressure              blpressure          blpressure_liq
         """
         npoltoti = 0
@@ -448,22 +448,22 @@ class BlanketLibrary:
 
             # Outlet FW/inlet BB temp (mass flow FW = mass flow BB)
             if fwbs_variables.iblnkith == 1:
-                fwoutleti = (f_nuc_fwi * fwbs_variables.outlet_temp) + (
+                fwoutlet_outboardi = (f_nuc_fwi * fwbs_variables.outlet_temp) + (
                     1 - f_nuc_fwi
                 ) * fwbs_variables.fwinlet_outboard
-                inlet_tempi = fwoutleti
+                inlet_tempi = fwoutlet_outboardi
             else:
-                fwoutleti = fwbs_variables.fwoutlet
+                fwoutlet_outboardi = fwbs_variables.fwoutlet_outboard
 
-            fwoutleto = (f_nuc_fwo * fwbs_variables.outlet_temp) + (
+            fwoutlet_outboardo = (f_nuc_fwo * fwbs_variables.outlet_temp) + (
                 1 - f_nuc_fwo
             ) * fwbs_variables.fwinlet_outboard
-            inlet_tempo = fwoutleto
+            inlet_tempo = fwoutlet_outboardo
 
         elif fwbs_variables.ipump == 1:
-            fwoutleti = fwbs_variables.fwoutlet
+            fwoutlet_outboardi = fwbs_variables.fwoutlet_outboard
             inlet_tempi = fwbs_variables.inlet_temp
-            fwoutleto = fwbs_variables.fwoutlet
+            fwoutlet_outboardo = fwbs_variables.fwoutlet_outboard
             inlet_tempo = fwbs_variables.inlet_temp
 
         # Maximum FW temperature. (27/11/2015) Issue #348
@@ -526,13 +526,19 @@ class BlanketLibrary:
         blanket_library.mffwi = (
             1.0e6
             * (blanket_library.pnucfwi + fwbs_variables.psurffwi)
-            / (fwbs_variables.cp_fw * (fwoutleti - fwbs_variables.fwinlet_outboard))
+            / (
+                fwbs_variables.cp_fw
+                * (fwoutlet_outboardi - fwbs_variables.fwinlet_outboard)
+            )
         )
         # Total mass flow rate to remove outboard FW power (kg/s)
         blanket_library.mffwo = (
             1.0e6
             * (blanket_library.pnucfwo + fwbs_variables.psurffwo)
-            / (fwbs_variables.cp_fw * (fwoutleto - fwbs_variables.fwinlet_outboard))
+            / (
+                fwbs_variables.cp_fw
+                * (fwoutlet_outboardo - fwbs_variables.fwinlet_outboard)
+            )
         )
 
         # If the blanket is dual-coolant...
@@ -1023,7 +1029,7 @@ class BlanketLibrary:
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.fwinlet_outboard.item(),
-                temp_out=fwbs_variables.fwoutlet.item(),
+                temp_out=fwbs_variables.fwoutlet_outboard.item(),
                 pressure=fwbs_variables.fwpressure.item(),
                 pdrop=deltap_fw.item(),
                 mf=blanket_library.mffw,
@@ -1124,8 +1130,8 @@ class BlanketLibrary:
             po.ovarrf(
                 self.outfile,
                 "Outlet temperature of first wall coolant (K)",
-                "(fwoutlet)",
-                fwbs_variables.fwoutlet,
+                "(fwoutlet_outboard)",
+                fwbs_variables.fwoutlet_outboard,
             )
             po.ovarre(
                 self.outfile,
