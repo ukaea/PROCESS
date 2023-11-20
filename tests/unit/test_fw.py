@@ -32,7 +32,7 @@ class FwTempParam(NamedTuple):
 
     tpeak: Any = None
 
-    peaking_factor: Any = None
+    peaking_factor_outboard: Any = None
 
     fw_wall_outboard: Any = None
 
@@ -69,7 +69,7 @@ class FwTempParam(NamedTuple):
             pitch_outboard=0.005000000000000001,
             fw_channel_length_outboard=4,
             tpeak=873,
-            peaking_factor=1,
+            peaking_factor_outboard=1,
             fw_wall_outboard=0.0030000000000000001,
             pnuc_deposited=75.219932653459054,
             afw_outboard=0.0060000000000000001,
@@ -91,7 +91,7 @@ class FwTempParam(NamedTuple):
             pitch_outboard=0.005000000000000001,
             fw_channel_length_outboard=4,
             tpeak=873,
-            peaking_factor=1,
+            peaking_factor_outboard=1,
             fw_wall_outboard=0.0030000000000000001,
             pnuc_deposited=121.50088652655793,
             afw_outboard=0.0060000000000000001,
@@ -148,7 +148,9 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
 
     monkeypatch.setattr(fwbs_variables, "tpeak", fwtempparam.tpeak)
 
-    monkeypatch.setattr(fwbs_variables, "peaking_factor", fwtempparam.peaking_factor)
+    monkeypatch.setattr(
+        fwbs_variables, "peaking_factor_outboard", fwtempparam.peaking_factor_outboard
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "fw_wall_outboard", fwtempparam.fw_wall_outboard
