@@ -323,8 +323,8 @@ module fwbs_variables
   real(dp) :: afw_outboard
   !! radius of first wall cooling channels [m]
 
-  real(dp) :: pitch
-  !! pitch of first wall cooling channels [m]
+  real(dp) :: pitch_outboard
+  !! pitch_outboard of first wall cooling channels [m]
 
   real(dp) :: fwinlet
   !! inlet temperature of first wall coolant [K]
@@ -741,7 +741,7 @@ module fwbs_variables
     fwcoolant_outboard = 'helium'
     fw_wall_outboard = 0.003D0
     afw_outboard = 0.006D0
-    pitch = 0.02D0
+    pitch_outboard = 0.02D0
     fwinlet = 573.0D0
     fwoutlet = 823.0D0
     fwpressure = 15.5D6

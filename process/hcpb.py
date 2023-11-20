@@ -222,7 +222,7 @@ class CCFE_HCPB:
         fwbs_variables.vffwi = (
             np.pi
             * fwbs_variables.afw_outboard**2
-            / (fwbs_variables.pitch * build_variables.fwith)
+            / (fwbs_variables.pitch_outboard * build_variables.fwith)
         )
 
         # outboard FW coolant void fraction

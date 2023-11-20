@@ -267,7 +267,7 @@ contains
       zeffdiv, hldivlim, rlenmax, divfix, c3div, divleg_profile_inner, &
       divleg_profile_outer, hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant_outboard, &
-      pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
+      pitch_outboard, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       denw, f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall_outboard, afwo, &
@@ -2113,9 +2113,9 @@ contains
        case ('fw_wall_outboard')
           call parse_real_variable('fw_wall_outboard', fw_wall_outboard, 0.5D-3, 0.1D0, &
                'wall thickness of first wall coolant channels (m)')
-       case ('pitch')
-          call parse_real_variable('pitch', pitch, 0.5D-3, 0.1D0, &
-               'pitch of first wall cooling channels (m)')
+       case ('pitch_outboard')
+          call parse_real_variable('pitch_outboard', pitch_outboard, 0.5D-3, 0.1D0, &
+               'pitch_outboard of first wall cooling channels (m)')
        case ('fwinlet')
           call parse_real_variable('fwinlet', fwinlet, 300.0d0, 1500.0D0, &
                'inlet temperature of first wall coolant (K)')
@@ -3443,7 +3443,7 @@ contains
                'Wetted area fraction of divertor plates')
        case ('flpitch')
          call parse_real_variable('flpitch', flpitch, 1.0D-4, 1.0D-2, &
-               'Field line pitch (rad)')
+               'Field line pitch_outboard (rad)')
        case ('iotabar')
          call parse_real_variable('iotabar', iotabar, 0.1D0, 10.0D0, &
                'Stellarator rotational transform (at s=2/3)')

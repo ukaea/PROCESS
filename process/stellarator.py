@@ -853,7 +853,7 @@ class Stellarator:
         Stellarator Divertor Model for the Systems
         Code PROCESS, F. Warmer, 21/06/2013
         """
-        Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
+        Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch_outboard
         R = physics_variables.rmajor
         P_div = physics_variables.pdivt
         alpha = divertor_variables.anginc
@@ -989,7 +989,7 @@ class Stellarator:
             )
             po.ovarre(
                 self.outfile,
-                "Field line pitch (rad)",
+                "Field line pitch_outboard (rad)",
                 "(flpitch)",
                 stellarator_variables.flpitch,
             )

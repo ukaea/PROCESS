@@ -95,7 +95,7 @@ class Fw:
         ) / 2  # coolant specific heat capacity (J/K)
 
         # Heat load per unit length of one first wall pipe (W/m)
-        load = (nuclear_heat_per_area + qpp) * fwbs_variables.pitch
+        load = (nuclear_heat_per_area + qpp) * fwbs_variables.pitch_outboard
 
         # Coolant mass flow rate (kg/s) (use mean properties)
         massrate = (
@@ -178,7 +178,8 @@ class Fw:
 
         # Worst case load (as above) per unit length in 1-D calculation (W/m)
         onedload = fwbs_variables.peaking_factor * (
-            qppp * fwbs_variables.pitch * thickness / 4 + qpp * fwbs_variables.pitch
+            qppp * fwbs_variables.pitch_outboard * thickness / 4
+            + qpp * fwbs_variables.pitch_outboard
         )
 
         # Note I do NOT assume that the channel covers the full width of the first wall:
@@ -198,17 +199,17 @@ class Fw:
         # Calculate maximum distance travelled by surface heat load (m)
         # fw_wall_outboard | Minimum distance travelled by surface heat load (m)
         diagonal = np.sqrt(
-            (fwbs_variables.pitch / 2 - afw_outboard) ** 2
+            (fwbs_variables.pitch_outboard / 2 - afw_outboard) ** 2
             + (afw_outboard + fwbs_variables.fw_wall_outboard) ** 2
         )
 
         # Mean distance travelled by surface heat (m)
         mean_distance = (fwbs_variables.fw_wall_outboard + diagonal) / 2
 
-        # This heat starts off spread over width = 'pitch'.
+        # This heat starts off spread over width = 'pitch_outboard'.
         # It ends up spread over one half the circumference.
         # Use the mean of these values.
-        mean_width = (fwbs_variables.pitch + np.pi * afw_outboard) / 2  # (m)
+        mean_width = (fwbs_variables.pitch_outboard + np.pi * afw_outboard) / 2  # (m)
 
         # As before, use a combined load 'onedload'
         # Temperature drop in first-wall material (K)
@@ -258,9 +259,9 @@ class Fw:
             )
             po.ovarre(
                 self.outfile,
-                "Pitch of coolant channels (m)",
-                "(pitch)",
-                fwbs_variables.pitch,
+                "pitch_outboard of coolant channels (m)",
+                "(pitch_outboard)",
+                fwbs_variables.pitch_outboard,
             )
             po.ovarre(
                 self.outfile,

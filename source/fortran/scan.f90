@@ -111,7 +111,7 @@ module scan_module
   !!         <LI> 72 `bz_channel_conduct_liq' : Conductance of liquid metal breeder duct walls (A V-1 m-1)
   !!         <LI> 73 `pnuc_fw_ratio_dcll' : Ratio of FW nuclear power as fraction of total (FW+BB)
   !!         <LI> 74 `f_nuc_pow_bz_struct' : Fraction of BZ power cooled by primary coolant for dual-coolant balnket
-  !!         <LI> 75 pitch : pitch of first wall cooling channels (m)
+  !!         <LI> 75 pitch_outboard : pitch_outboard of first wall cooling channels (m)
   !!         <LI> 76 etath : Thermal conversion eff.
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
@@ -624,7 +624,7 @@ contains
 	use divertor_variables, only: hldivlim
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
-        n_liq_recirc, bz_channel_conduct_liq, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, pitch
+        n_liq_recirc, bz_channel_conduct_liq, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, pitch_outboard
 	use impurity_radiation_module, only: fimp, fimpvar, coreradius, impurity_arr_frac
     use physics_variables, only: kappa, dnbeta, te, aspect, ftar, bt, &
         rad_fraction_sol, triang, rmajor, beamfus0, hfact
@@ -859,8 +859,8 @@ contains
             f_nuc_pow_bz_struct = swp(iscn)
             vlab = 'f_nuc_pow_bz_struct' ; xlab = 'Fraction of BZ power cooled by primary coolant for dual-coolant balnket'
         case(75)
-            pitch = swp(iscn)
-            vlab = 'pitch' ; xlab = 'pitch of first wall cooling channels (m)'
+            pitch_outboard = swp(iscn)
+            vlab = 'pitch_outboard' ; xlab = 'pitch_outboard of first wall cooling channels (m)'
         case (76)
             etath = swp(iscn)
               vlab = 'etath' ; xlab = 'Thermal conversion eff.'

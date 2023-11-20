@@ -3553,7 +3553,7 @@
         "pinjwp": 0.0,
         "pinjwpfix": 0.0,
         "pinnerzoneradmw": 0.0,
-        "pitch": 0.02,
+        "pitch_outboard": 0.02,
         "plascur": 0.0,
         "plasipf": 0.0,
         "plasma_res_factor": 1.0,
@@ -9690,7 +9690,7 @@
         "fkzohm": "Zohm elongation scaling adjustment factor (`ishape=2, 3`)",
         "flhthresh": "f-value for L-H power threshold (`constraint equation 15`, `iteration variable 103`)",
         "flirad": "radius of FLiBe/lithium inlet (m) (`ifetyp=3,4`)",
-        "flpitch": "field line pitch (rad)",
+        "flpitch": "field line pitch_outboard (rad)",
         "fls": "",
         "flsa": "",
         "fluxdens_to_pa": "",
@@ -10438,7 +10438,7 @@
         "pinjwp": "injector wall plug power (MW)",
         "pinjwpfix": "secondary injector wall plug power (MW)",
         "pinnerzoneradmw": "radiation power from inner zone (MW)",
-        "pitch": "pitch of first wall cooling channels (m)",
+        "pitch_outboard": "pitch_outboard of first wall cooling channels (m)",
         "plascur": "plasma current (A)",
         "plasipf": "plasma driven current fraction (Bootstrap + Diamagnetic + PS)",
         "plasma_res_factor": "plasma resistivity pre-factor",
@@ -14203,7 +14203,7 @@
             "lb": 0.0,
             "ub": 1000.0
         },
-        "pitch": {
+        "pitch_outboard": {
             "lb": 0.0005,
             "ub": 0.1
         },
@@ -18635,7 +18635,7 @@
             "fwcoolant_outboard",
             "fw_wall_outboard",
             "afw_outboard",
-            "pitch",
+            "pitch_outboard",
             "fwinlet",
             "fwoutlet",
             "fwpressure",
@@ -21260,7 +21260,7 @@
         "pinjalw": "real_variable",
         "pinjfixmw": "real_variable",
         "pinjmax": "real_variable",
-        "pitch": "real_variable",
+        "pitch_outboard": "real_variable",
         "plasma_res_factor": "real_variable",
         "plasmod_Ainc": "real_variable",
         "plasmod_capA": "real_variable",

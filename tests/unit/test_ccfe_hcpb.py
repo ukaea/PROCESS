@@ -47,7 +47,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     afw_outboard: Any = None
 
-    pitch: Any = None
+    pitch_outboard: Any = None
 
     denstl: Any = None
 
@@ -139,7 +139,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             shldith=0.30000000000000004,
             shldoth=0.80000000000000004,
             afw_outboard=0.0060000000000000001,
-            pitch=0.02,
+            pitch_outboard=0.02,
             denstl=7800,
             whtblkt=3501027.3252278985,
             volblkt=1397.9003011502937,
@@ -189,7 +189,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             shldith=0.30000000000000004,
             shldoth=0.80000000000000004,
             afw_outboard=0.0060000000000000001,
-            pitch=0.02,
+            pitch_outboard=0.02,
             denstl=7800,
             whtblkt=3507503.3737008357,
             volblkt=1400.4860764869636,
@@ -266,7 +266,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         fwbs_variables, "afw_outboard", nuclearheatingmagnetsparam.afw_outboard
     )
 
-    monkeypatch.setattr(fwbs_variables, "pitch", nuclearheatingmagnetsparam.pitch)
+    monkeypatch.setattr(
+        fwbs_variables, "pitch_outboard", nuclearheatingmagnetsparam.pitch_outboard
+    )
 
     monkeypatch.setattr(fwbs_variables, "denstl", nuclearheatingmagnetsparam.denstl)
 
