@@ -338,8 +338,8 @@ module fwbs_variables
   real(dp) :: tpeak
   !! peak first wall temperature [K]
 
-  real(dp) :: roughness
-  !! first wall channel roughness epsilon [m]
+  real(dp) :: roughness_outboard
+  !! first wall channel roughness_outboard epsilon [m]
 
   real(dp) :: fw_channel_length
   !! Length of a single first wall channel (all in parallel) [m]
@@ -746,7 +746,7 @@ module fwbs_variables
     fwoutlet_outboard = 823.0D0
     fwpressure_outboard = 15.5D6
     tpeak = 873.0D0
-    roughness = 1.0D-6
+    roughness_outboard = 1.0D-6
     fw_channel_length = 4.0D0
     peaking_factor = 1.0D0
     blpressure = 15.50D6

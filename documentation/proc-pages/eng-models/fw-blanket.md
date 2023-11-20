@@ -181,7 +181,7 @@ Summary of key variables and switches:
 | width (m)                | `afw_outboard` (radius, cicular) | `afw_outboard`                    |`a_bz_liq`, `b_bz_liq` (rectangular) |
 | wall thickness (m)       | `fw_wall_outboard`               | fw_wall_outboard                  |`th_wall_secondary` |                
 | pitch_outboard (m)                | `pitch_outboard`                 | ---                      | ---                        |           
-| roughness epsilon        | `roughness`             | ---                      | ---                        |             
+| roughness epsilon        | `roughness_outboard`             | ---                      | ---                        |             
 | peak FW temp (K)         | `tpeak`                 | ---                      | ---                        |              
 | maximum temp (K)         | `tfwmatmax`             | ---                      | ---                        |              
 | FCI switch               | ---                     | ---                      | `ifci` |  

@@ -153,7 +153,7 @@ def test_pressure_drop(monkeypatch):
     monkeypatch.setattr(fwbs, "afw_outboard", 1.0)
     monkeypatch.setattr(fwbs, "a_bz_liq", 1.0)
     monkeypatch.setattr(fwbs, "b_bz_liq", 1.0)
-    monkeypatch.setattr(fwbs, "roughness", 1.0e-6)
+    monkeypatch.setattr(fwbs, "roughness_outboard", 1.0e-6)
 
     # input = ip, ofile, i_ps, num_90, num_180, l_pipe, den, vsc, vv, label
     assert bl.pressure_drop(

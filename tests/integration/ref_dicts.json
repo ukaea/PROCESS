@@ -4357,7 +4357,7 @@
         "robotics_l": 50.0,
         "robotics_w": 30.0,
         "rohc": 0.0,
-        "roughness": 1e-06,
+        "roughness_outboard": 1e-06,
         "routr": 1.5,
         "row": 4.0,
         "rpf": 0.0,
@@ -10758,7 +10758,7 @@
         "robotics_l": "robotics buildings length, width, height (m)",
         "robotics_w": "robotics buildings length, width, height (m)",
         "rohc": "radius to the centre of the central solenoid (m)",
-        "roughness": "first wall channel roughness epsilon (m)",
+        "roughness_outboard": "first wall channel roughness_outboard epsilon (m)",
         "routr": "radial distance (m) from outboard TF coil leg to centre of `ipfloc=3` PF coils",
         "row": "clearance to building wall for crane operation (m)",
         "rpf": "radius of PF coil i (m)",
@@ -14643,7 +14643,7 @@
             "lb": 10.0,
             "ub": 1000.0
         },
-        "roughness": {
+        "roughness_outboard": {
             "lb": 0.0,
             "ub": 0.01
         },
@@ -18640,7 +18640,7 @@
             "fwoutlet_outboard",
             "fwpressure_outboard",
             "tpeak",
-            "roughness",
+            "roughness_outboard",
             "fw_channel_length",
             "peaking_factor",
             "blpressure",
@@ -21381,7 +21381,7 @@
         "robotics_h": "real_variable",
         "robotics_l": "real_variable",
         "robotics_w": "real_variable",
-        "roughness": "real_variable",
+        "roughness_outboard": "real_variable",
         "routr": "real_variable",
         "row": "real_variable",
         "rpf1": "real_variable",

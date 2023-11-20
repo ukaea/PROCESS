@@ -268,7 +268,7 @@ contains
       divleg_profile_outer, hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant_outboard, &
       pitch_outboard, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
-      fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
+      fw_armour_thickness, roughness_outboard, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       denw, f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall_outboard, afwo, &
       fvolsi, etahtp, nblktmodpo, fwpressure_outboard, emult, fwoutlet_outboard, nblktmodpi, &
@@ -2128,9 +2128,9 @@ contains
        case ('fwcoolant_outboard')
           call parse_string_variable('fwcoolant_outboard', fwcoolant_outboard, 'first wall coolant')
           call lower_case(fwcoolant_outboard)
-       case ('roughness')
-          call parse_real_variable('roughness', roughness, 0.0d0, 1.0D-2, &
-               'first wall channel roughness epsilon')
+       case ('roughness_outboard')
+          call parse_real_variable('roughness_outboard', roughness_outboard, 0.0d0, 1.0D-2, &
+               'first wall channel roughness_outboard epsilon')
        case ('fw_channel_length')
           call parse_real_variable('fw_channel_length', fw_channel_length, 1.0D-3, 1.0D3, &
                'first wall channel length')
