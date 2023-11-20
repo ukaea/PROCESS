@@ -32,9 +32,9 @@ class BlanketLibrary:
         """
 
         coolant = 0
-        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "helium":
+        if f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard) == "helium":
             coolant = 1
-        elif f2py_compatible_to_string(fwbs_variables.fwcoolant) == "water":
+        elif f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard) == "water":
             coolant = 2
 
         if (fwbs_variables.coolwh == 0 and coolant == 1) or (
@@ -48,7 +48,7 @@ class BlanketLibrary:
             mid_temp = (fwbs_variables.fwinlet + fwbs_variables.outlet_temp) * 0.5
             # FW/BB
             fw_bb_fluid_properties = FluidProperties.of(
-                f2py_compatible_to_string(fwbs_variables.fwcoolant),
+                f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard),
                 temperature=mid_temp,
                 pressure=fwbs_variables.fwpressure.item(),
             )
@@ -67,7 +67,7 @@ class BlanketLibrary:
             # FW
             mid_temp_fw = (fwbs_variables.fwinlet + fwbs_variables.fwoutlet) * 0.5
             fw_fluid_properties = FluidProperties.of(
-                f2py_compatible_to_string(fwbs_variables.fwcoolant),
+                f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard),
                 temperature=mid_temp_fw,
                 pressure=fwbs_variables.fwpressure,
             )
@@ -79,7 +79,7 @@ class BlanketLibrary:
             # BB
             mid_temp_bl = (fwbs_variables.inlet_temp + fwbs_variables.outlet_temp) * 0.5
             bb_fluid_properties = FluidProperties.of(
-                f2py_compatible_to_string(fwbs_variables.fwcoolant),
+                f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard),
                 temperature=mid_temp_bl,
                 pressure=fwbs_variables.blpressure,
             )
@@ -121,8 +121,8 @@ class BlanketLibrary:
             po.ovarst(
                 self.outfile,
                 "Coolant type",
-                "(fwcoolant)",
-                f'"{fwbs_variables.fwcoolant}"',
+                "(fwcoolant_outboard)",
+                f'"{fwbs_variables.fwcoolant_outboard}"',
             )
             po.ovarrf(
                 self.outfile,
@@ -228,7 +228,7 @@ class BlanketLibrary:
 
             Coolant                     FW                      BB primary          BB secondary
 
-            primary coolant switch      fwcoolant               coolwh              ---
+            primary coolant switch      fwcoolant_outboard               coolwh              ---
             secondary coolant switch    ---                     ---                 i_bb_liq
             inlet temp (K)              fwinlet                 inlet_temp          inlet_temp_liq
             outlet temp (K)             fwoutlet                outlet_temp         outlet_temp_liq
@@ -415,9 +415,9 @@ class BlanketLibrary:
 
         # FW and BB Mass Flow ###########
         coolant = 0
-        if fwbs_variables.fwcoolant == "helium":
+        if fwbs_variables.fwcoolant_outboard == "helium":
             coolant = 1
-        if fwbs_variables.fwcoolant == "water":
+        if fwbs_variables.fwcoolant_outboard == "water":
             coolant = 2
 
         # If FW and BB have the same coolant...
@@ -466,7 +466,12 @@ class BlanketLibrary:
         # First wall flow is just along the first wall, with no allowance for radial
         # pipes, manifolds etc. The outputs are mid quantities of inlet and outlet.
         # This subroutine recalculates cp and rhof.
-        (blanket_library.tpeakfwi, cf, rhof, blanket_library.mffwpi,) = self.fw.fw_temp(
+        (
+            blanket_library.tpeakfwi,
+            cf,
+            rhof,
+            blanket_library.mffwpi,
+        ) = self.fw.fw_temp(
             output,
             fwbs_variables.afw,
             build_variables.fwith,
@@ -1085,8 +1090,8 @@ class BlanketLibrary:
             po.ovarst(
                 self.outfile,
                 "First wall coolant type",
-                "(fwcoolant)",
-                f'"{fwbs_variables. fwcoolant}"',
+                "(fwcoolant_outboard)",
+                f'"{fwbs_variables. fwcoolant_outboard}"',
             )
             po.ovarre(
                 self.outfile,

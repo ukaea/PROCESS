@@ -71,14 +71,14 @@ class Fw:
 
         # Calculate inlet coolant fluid properties (fixed pressure)
         ib_fluid_properties = FluidProperties.of(
-            f2py_compatible_to_string(fwbs_variables.fwcoolant),
+            f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard),
             temperature=fwbs_variables.fwinlet.item(),
             pressure=fwbs_variables.fwpressure.item(),
         )
 
         # Calculate outlet coolant fluid properties (fixed pressure)
         ob_fluid_properties = FluidProperties.of(
-            f2py_compatible_to_string(fwbs_variables.fwcoolant),
+            f2py_compatible_to_string(fwbs_variables.fwcoolant_outboard),
             temperature=fwbs_variables.fwoutlet.item(),
             pressure=fwbs_variables.fwpressure.item(),
         )

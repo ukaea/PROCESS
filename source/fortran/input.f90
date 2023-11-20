@@ -266,7 +266,7 @@ contains
       omegan, prn1, fgamp, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
       zeffdiv, hldivlim, rlenmax, divfix, c3div, divleg_profile_inner, &
       divleg_profile_outer, hldiv, i_hldiv
-    use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant, &
+    use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant_outboard, &
       pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
@@ -2125,9 +2125,9 @@ contains
        case ('fwpressure')
           call parse_real_variable('fwpressure', fwpressure, 1.0d5, 1.0D8, &
                'first wall coolant pressure (Pa)')
-       case ('fwcoolant')
-          call parse_string_variable('fwcoolant', fwcoolant, 'first wall coolant')
-          call lower_case(fwcoolant)
+       case ('fwcoolant_outboard')
+          call parse_string_variable('fwcoolant_outboard', fwcoolant_outboard, 'first wall coolant')
+          call lower_case(fwcoolant_outboard)
        case ('roughness')
           call parse_real_variable('roughness', roughness, 0.0d0, 1.0D-2, &
                'first wall channel roughness epsilon')

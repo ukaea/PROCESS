@@ -311,7 +311,7 @@ module fwbs_variables
   !! inner radius of outboard first wall/blanket coolant channels (stellarator only) [m]
   !#TODO move to stellarator?
 
-  character(len=6) :: fwcoolant
+  character(len=6) :: fwcoolant_outboard
   !! switch for first wall coolant (can be different from blanket coolant):
   !!
   !! - 'helium'
@@ -738,7 +738,7 @@ module fwbs_variables
     coolwh = 1
     afwi = 0.008D0
     afwo = 0.008D0
-    fwcoolant = 'helium'
+    fwcoolant_outboard = 'helium'
     fw_wall = 0.003D0
     afw = 0.006D0
     pitch = 0.02D0
