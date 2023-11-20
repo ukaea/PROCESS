@@ -172,27 +172,17 @@ contains
        case (10)  ! ECRH user input gamma
 
           !  Normalised current drive efficiency gamma
-          !gamcd = gamma_ecrh
+          gamcd = gamma_ecrh
 
           ! Absolute current drive efficiency
-          !effrfssfix = gamcd / (dene20 * rmajor)
-          !effcdfix = effrfssfix
-         fc = 1/(2*pi) * echarge*bt/emass
-         fp = 1/(2*pi) * sqrt(((dene/1.0D19)*echarge**2/(emass*epsilon0)))
-
-         xi_CD   = 0.18 *(4.8/(2+zeff))                
-         effrfss = xi_CD *te  / (3.27 *rmajor *(dene/1.0D19))   
-          ! Absolute current drive efficiency
-          !effrfss = gamcd / (dene20 * rmajor)
-         f_cutoff = fp
-         cutoff_factor = 0.5*(1+tanh((2/(0.1))*((2*fc-f_cutoff)/fp - 0.1))) 
-         effcd = effrfss * cutoff_factor
+          effrfssfix = gamcd / (dene20 * rmajor)
+          effcdfix = effrfssfix
 
        case (11)  ! ECRH Poli model "HARE", removed in issue #1811
 
        case (12)
        ! EBW scaling
-       ! Scaling author Simon Freethy
+       ! Scaling author: Simon Freethy
        ! Ref : PROCESS issue 1262
 
           !  Normalised current drive efficiency gamma
@@ -203,7 +193,7 @@ contains
           effcdfix = effrfssfix
 
           ! EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
-          !  this behaviour is captured in the following function (ref issue #1262):
+          ! this behaviour is captured in the following function (ref issue #1262):
           ! harnum = cyclotron harmonic number (fundamental used as default)
           ! constant 'a' controls sharpness of transition
           a = 0.1D0
@@ -217,7 +207,21 @@ contains
 
           effrfssfix = effrfssfix * density_factor
 
+      case (13) 
+      ! ECCD model for O-mode cut-off with added Te and Zeff dependance 
+      ! Scaling author: Simon Freethy
+      ! Ref : PROCESS issue #2994 
 
+         fc = 1/(2*pi) * echarge*bt/emass
+         fp = 1/(2*pi) * sqrt(((dene/1.0D19)*echarge**2/(emass*epsilon0)))
+
+         xi_CD   = 0.18 *(4.8/(2+zeff))                
+         effrfssfix = xi_CD *te  / (3.27 *rmajor *(dene/1.0D19))   
+         
+         f_cutoff = fp
+         cutoff_factor = 0.5*(1+tanh((2/(0.1))*((2*fc-f_cutoff)/fp - 0.1))) 
+         effcdfix = effrfssfix * cutoff_factor 
+       
        case default
           idiags(1) = iefrffix
           call report_error(126)
@@ -247,7 +251,7 @@ contains
           auxiliary_cdfix = effrfssfix * ( pinjfixmw - pheatfix) * 1.0d6
           faccdfix = auxiliary_cdfix / plascur
 
-       case (3,7,10,11,12)  ! ECCD
+       case (3,7,10,11,12,13)  ! ECCD
 
           !  Injected power
           pinjemwfix = pinjfixmw
@@ -357,18 +361,11 @@ contains
 
        case (10)  ! ECRH user input gamma
 
-         !gamcd = gamma_ecrh
+          gamcd = gamma_ecrh
 
-         fc = 1/(2*pi) * echarge*bt/emass
-         fp = 1/(2*pi) * sqrt(((dene/1.0D19)*echarge**2/(emass*epsilon0)))
-
-         xi_CD   = 0.18 *(4.8/(2+zeff))                
-         effrfss = xi_CD *te  / (3.27 *rmajor *(dene/1.0D19))   
           ! Absolute current drive efficiency
-          !effrfss = gamcd / (dene20 * rmajor)
-         f_cutoff = fp
-         cutoff_factor = 0.5*(1+tanh((2/(0.1))*((2*fc-f_cutoff)/fp - 0.1))) 
-         effcd = effrfss * cutoff_factor
+          effrfss = gamcd / (dene20 * rmajor)
+          effcd = effrfss
 
        case (11)  ! ECRH Poli model "HARE", removed in issue #1811
 
@@ -385,23 +382,36 @@ contains
           effcd = effrfss
 
           ! EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
-          !  this behaviour is captured in the following function (ref issue #1262):
+          ! this behaviour is captured in the following function (ref issue #1262):
           ! harnum = cyclotron harmonic number (fundamental used as default)
           ! contant 'a' controls sharpness of transition
 
-          !TODO is the below needed?
-         !  a = 0.1D0
+         a = 0.1D0
 
-         !  fc = 1.0D0/(2.0D0*pi) * harnum * echarge * bt / emass
-         !  fp = 1.0D0/(2.0D0*pi) * sqrt( dene * echarge**2 / ( emass * epsilon0 ) )
+         fc = 1.0D0/(2.0D0*pi) * harnum * echarge * bt / emass
+         fp = 1.0D0/(2.0D0*pi) * sqrt( dene * echarge**2 / ( emass * epsilon0 ) )
 
-         !  density_factor = 0.5D0 * ( 1.0D0 + tanh( (2.0D0/a) * ( ( fp - fc )/fp - a) ) )
+         density_factor = 0.5D0 * ( 1.0D0 + tanh( (2.0D0/a) * ( ( fp - fc )/fp - a) ) )
 
-         !  effcd = effcd * density_factor
+         effcd = effcd * density_factor
 
-         !  effrfss = effrfss * density_factor
+         effrfss = effrfss * density_factor
+      
+      case (13) 
+      ! ECCD model for O-mode cut-off with added Te and Zeff dependance 
+      ! Scaling author: Simon Freethy
+      ! Ref : PROCESS issue #2994   
 
+         fc = 1/(2*pi) * echarge*bt/emass
+         fp = 1/(2*pi) * sqrt(((dene/1.0D19)*echarge**2/(emass*epsilon0)))
 
+         xi_CD   = 0.18 *(4.8/(2+zeff))                
+         effrfss = xi_CD *te  / (3.27 *rmajor *(dene/1.0D19))   
+         
+         f_cutoff = fp
+         cutoff_factor = 0.5*(1+tanh((2/(0.1))*((2*fc-f_cutoff)/fp - 0.1))) 
+         effcd = effrfss * cutoff_factor 
+       
        case default
           idiags(1) = iefrf
           call report_error(126)
@@ -430,7 +440,7 @@ contains
           gamrf = effrfss * (dene20 * rmajor)
           gamcd = gamrf
 
-       case (3,7,10,11,12)  ! ECCD
+       case (3,7,10,11,12,13)  ! ECCD
 
           !  Injected power (set to close to close the Steady-state current equilibrium)
           echpwr = 1.0D-6 * (faccd - faccdfix) * plascur / effrfss + pheat
@@ -538,6 +548,8 @@ contains
        call ocmmnt(outfile,'Electron Cyclotron Current Drive (HARE). No longer implemented.')
     case (12)
        call ocmmnt(outfile,'EBW current drive')
+    case (13)
+       call ocmmnt(outfile,'Electron Cyclotron Current Drive (O mode cutoff with Te and Zeff)')    
     end select
 
     call ovarin(outfile,'Current drive efficiency model','(iefrf)',iefrf)
@@ -561,6 +573,8 @@ contains
           call ocmmnt(outfile,'Electron Cyclotron Current Drive (HARE). No longer implemented.')
       case (12)
           call ocmmnt(outfile,'EBW current drive')
+      case (13)
+          call ocmmnt(outfile,'Electron Cyclotron Current Drive (O mode cutoff with Te and Zeff)')     
       end select
 
       call ovarin(outfile,'Secondary current drive efficiency model','(iefrffix)',iefrffix)
@@ -603,7 +617,7 @@ contains
 
     case(5,8) !NBI  case(5) and Case(8) NBI is covered elsewhere
 
-    case(6,7,9,11)
+    case(6,7,9,11,13)
 
     case(10) !ECRH/ECCD Heating of Plasma
 
