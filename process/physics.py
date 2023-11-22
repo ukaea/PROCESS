@@ -217,7 +217,7 @@ class Physics:
         ) * (physics_variables.btot / physics_variables.bp) ** 2
         current_drive_variables.bscf_wilson = (
             current_drive_variables.cboot
-            * physics_module.bootstrap_fraction_wilson(
+            * self.bootstrap_fraction_wilson(
                 physics_variables.alphaj,
                 physics_variables.alphap,
                 physics_variables.alphat,
@@ -961,6 +961,100 @@ class Physics:
         pratio = (betat - betae) / betae
 
         return (q / q95) * (al1 * (a1 + pratio * (a1 + alphai * a2)) + al2 * a2)
+
+    def bootstrap_fraction_wilson(
+        self, alphaj, alphap, alphat, betpth, q0, qpsi, rmajor, rminor
+    ):
+        """Bootstrap current fraction from Wilson et al scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        alphaj  : input real :  current profile index
+        alphap  : input real :  pressure profile index
+        alphat  : input real :  temperature profile index
+        beta    : input real :  total beta
+        betpth  : input real :  thermal component of poloidal beta
+        q0      : input real :  safety factor on axis
+        qpsi    : input real :  edge safety factor
+        rmajor  : input real :  major radius (m)
+        rminor  : input real :  minor radius (m)
+        This function calculates the bootstrap current fraction
+        using the numerically fitted algorithm written by Howard Wilson.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        H. R. Wilson, Nuclear Fusion <B>32</B> (1992) 257
+        """
+        term1 = numpy.log(0.5)
+        term2 = numpy.log(q0 / qpsi)
+
+        termp = 1.0 - 0.5 ** (1.0 / alphap)
+        termt = 1.0 - 0.5 ** (1.0 / alphat)
+        termj = 1.0 - 0.5 ** (1.0 / alphaj)
+
+        alfpnw = term1 / numpy.log(numpy.log((q0 + (qpsi - q0) * termp) / qpsi) / term2)
+        alftnw = term1 / numpy.log(numpy.log((q0 + (qpsi - q0) * termt) / qpsi) / term2)
+        aj = term1 / numpy.log(numpy.log((q0 + (qpsi - q0) * termj) / qpsi) / term2)
+
+        #  Crude check for NaN errors or other illegal values...
+
+        if numpy.isnan(aj) or numpy.isnan(alfpnw) or numpy.isnan(alftnw) or aj < 0:
+            error_handling.fdiags[0] = aj
+            error_handling.fdiags[1] = alfpnw
+            error_handling.fdiags[2] = alftnw
+            error_handling.fdiags[3] = aj
+
+            error_handling.report_error(76)
+
+        #  Ratio of ionic charge to electron charge
+
+        z = 1.0
+
+        #  Inverse aspect ratio: r2 = maximum plasma radius, r1 = minimum
+
+        r2 = rmajor + rminor
+        r1 = rmajor - rminor
+        eps1 = (r2 - r1) / (r2 + r1)
+
+        #  Coefficients fitted using least squares techniques
+
+        saj = numpy.sqrt(aj)
+
+        a = numpy.array(
+            [
+                1.41 * (1.0 - 0.28 * saj) * (1.0 + 0.12 / z),
+                0.36 * (1.0 - 0.59 * saj) * (1.0 + 0.8 / z),
+                -0.27 * (1.0 - 0.47 * saj) * (1.0 + 3.0 / z),
+                0.0053 * (1.0 + 5.0 / z),
+                -0.93 * (1.0 - 0.34 * saj) * (1.0 + 0.15 / z),
+                -0.26 * (1.0 - 0.57 * saj) * (1.0 - 0.27 * z),
+                0.064 * (1.0 - 0.6 * aj + 0.15 * aj * aj) * (1.0 + 7.6 / z),
+                -0.0011 * (1.0 + 9.0 / z),
+                -0.33 * (1.0 - aj + 0.33 * aj * aj),
+                -0.26 * (1.0 - 0.87 / saj - 0.16 * aj),
+                -0.14 * (1.0 - 1.14 / saj - 0.45 * saj),
+                -0.0069,
+            ]
+        )
+
+        seps1 = numpy.sqrt(eps1)
+
+        b = numpy.array(
+            [
+                1.0,
+                alfpnw,
+                alftnw,
+                alfpnw * alftnw,
+                seps1,
+                alfpnw * seps1,
+                alftnw * seps1,
+                alfpnw * alftnw * seps1,
+                eps1,
+                alfpnw * eps1,
+                alftnw * eps1,
+                alfpnw * alftnw * eps1,
+            ]
+        )
+
+        #  Empirical bootstrap current fraction
+
+        return seps1 * betpth * (a * b).sum()
 
     def eped_warning(self):
         eped_warning = ""

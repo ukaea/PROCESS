@@ -242,7 +242,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
         ),
     ),
 )
-def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, monkeypatch):
+def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
     """
     Automatically generated Regression Unit Test for bootstrap_fraction_wilson.
 
@@ -255,7 +255,7 @@ def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    bfw = pm.bootstrap_fraction_wilson(
+    bfw = physics.bootstrap_fraction_wilson(
         alphaj=bootstrapfractionwilsonparam.alphaj,
         alphap=bootstrapfractionwilsonparam.alphap,
         alphat=bootstrapfractionwilsonparam.alphat,
