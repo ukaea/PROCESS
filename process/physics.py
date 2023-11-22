@@ -1,4 +1,5 @@
 import numpy
+import scipy.integrate as integrate
 import math
 import process.physics_functions as physics_funcs
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -174,7 +175,7 @@ class Physics:
         )
 
         #  Calculate bootstrap current fraction using various models
-        current_drive_variables.bscf_iter89 = physics_module.bootstrap_fraction_iter89(
+        current_drive_variables.bscf_iter89 = self.bootstrap_fraction_iter89(
             physics_variables.aspect,
             physics_variables.beta,
             physics_variables.btot,
@@ -194,7 +195,7 @@ class Physics:
         )
         current_drive_variables.bscf_nevins = (
             current_drive_variables.cboot
-            * physics_module.bootstrap_fraction_nevins(
+            * self.bootstrap_fraction_nevins(
                 physics_variables.alphan,
                 physics_variables.alphat,
                 betat,
@@ -854,6 +855,112 @@ class Physics:
         if betapbs <= 0.0:  # only possible if beta <= 0.0
             return 0.0
         return cbs * (betapbs / numpy.sqrt(aspect)) ** 1.3
+
+    def bootstrap_fraction_nevins(
+        self,
+        alphan,
+        alphat,
+        betat,
+        bt,
+        dene,
+        plascur,
+        q95,
+        q0,
+        rmajor,
+        rminor,
+        ten,
+        zeff,
+    ):
+        """Bootstrap current fraction from Nevins et al scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        alphan : input real :  density profile index
+        alphat : input real :  temperature profile index
+        betat  : input real :  total plasma beta (with respect to the toroidal
+        field)
+        bt     : input real :  toroidal field on axis (T)
+        dene   : input real :  electron density (/m3)
+        plascur: input real :  plasma current (A)
+        q0     : input real :  central safety factor
+        q95    : input real :  safety factor at 95% surface
+        rmajor : input real :  plasma major radius (m)
+        rminor : input real :  plasma minor radius (m)
+        ten    : input real :  density weighted average plasma temperature (keV)
+        zeff   : input real :  plasma effective charge
+        This function calculates the bootstrap current fraction,
+        using the Nevins et al method, 4/11/90.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        """
+        # Calculate peak electron beta
+
+        betae0 = (
+            physics_variables.ne0
+            * physics_variables.te0
+            * 1.0e3
+            * constants.echarge
+            / (bt**2 / (2.0 * constants.rmu0))
+        )
+
+        # Call integration routine
+
+        ainteg, _ = integrate.quad(
+            lambda y: self.bsinteg(
+                y, dene, ten, bt, rminor, rmajor, zeff, alphat, alphan, q0, q95, betat
+            ),
+            0,
+            0.999,
+            epsabs=0.001,
+            epsrel=0.001,
+        )
+
+        # Calculate bootstrap current and fraction
+
+        aibs = 2.5 * betae0 * rmajor * bt * q95 * ainteg
+        return 1.0e6 * aibs / plascur
+
+    def bsinteg(
+        self, y, dene, ten, bt, rminor, rmajor, zeff, alphat, alphan, q0, q95, betat
+    ):
+        """Integrand function for Nevins et al bootstrap current scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        y : input real : abscissa of integration, = normalised minor radius
+        This function calculates the integrand function for the
+        Nevins et al bootstrap current scaling, 4/11/90.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        """
+        #  Constants for fit to q-profile
+
+        c1 = 1.0
+        c2 = 1.0
+        c3 = 1.0
+
+        #  Compute average electron beta
+
+        betae = (
+            dene * ten * 1.0e3 * constants.echarge / (bt**2 / (2.0 * constants.rmu0))
+        )
+
+        nabla = rminor * numpy.sqrt(y) / rmajor
+        x = (1.46 * numpy.sqrt(nabla) + 2.4 * nabla) / (1.0 - nabla) ** 1.5
+        z = zeff
+        d = (
+            1.414 * z
+            + z * z
+            + x * (0.754 + 2.657 * z + 2.0 * z * z)
+            + x * x * (0.348 + 1.243 * z + z * z)
+        )
+        al2 = -x * (0.884 + 2.074 * z) / d
+        a2 = alphat * (1.0 - y) ** (alphan + alphat - 1.0)
+        alphai = -1.172 / (1.0 + 0.462 * x)
+        a1 = (alphan + alphat) * (1.0 - y) ** (alphan + alphat - 1.0)
+        al1 = x * (0.754 + 2.21 * z + z * z + x * (0.348 + 1.243 * z + z * z)) / d
+
+        #  q-profile
+
+        q = q0 + (q95 - q0) * (c1 * y + c2 * y * y + c3 * y**3) / (c1 + c2 + c3)
+
+        pratio = (betat - betae) / betae
+
+        return (q / q95) * (al1 * (a1 + pratio * (a1 + alphai * a2)) + al2 * a2)
 
     def eped_warning(self):
         eped_warning = ""

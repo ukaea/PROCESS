@@ -156,11 +156,11 @@ class BootstrapFractionNevinsParam(NamedTuple):
             rminor=2.6666666666666665,
             ten=12.626131115905864,
             zeff=2.0909945616489103,
-            expected_fibs=886436144167.0579,
+            expected_fibs=889258771342.7881,
         ),
     ),
 )
-def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch):
+def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, physics):
     """
     Automatically generated Regression Unit Test for bootstrap_fraction_nevins.
 
@@ -177,7 +177,7 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "ne0", bootstrapfractionnevinsparam.ne0)
 
-    fibs = pm.bootstrap_fraction_nevins(
+    fibs = physics.bootstrap_fraction_nevins(
         alphan=bootstrapfractionnevinsparam.alphan,
         alphat=bootstrapfractionnevinsparam.alphat,
         betat=bootstrapfractionnevinsparam.betat,
