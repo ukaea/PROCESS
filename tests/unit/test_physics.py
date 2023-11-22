@@ -2,6 +2,18 @@
 from typing import Any, NamedTuple
 from process.fortran import physics_module as pm, physics_variables
 import pytest
+from process.physics import Physics
+from process.plasma_profiles import PlasmaProfile
+
+
+@pytest.fixture
+def physics():
+    """Provides Physics object for testing.
+
+    :returns: initialised Physics object
+    :rtype: process.physics.Physics
+    """
+    return Physics(PlasmaProfile())
 
 
 def test_diamagnetic_fraction_hender():
@@ -66,7 +78,7 @@ class BootstrapFractionIter89Param(NamedTuple):
         ),
     ),
 )
-def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, monkeypatch):
+def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     """
     Automatically generated Regression Unit Test for bootstrap_fraction_iter89.
 
@@ -79,7 +91,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    bootipf = pm.bootstrap_fraction_iter89(
+    bootipf = physics.bootstrap_fraction_iter89(
         aspect=bootstrapfractioniter89param.aspect,
         beta=bootstrapfractioniter89param.beta,
         bt=bootstrapfractioniter89param.bt,

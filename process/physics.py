@@ -822,6 +822,39 @@ class Physics:
                 ),
             )
 
+    def bootstrap_fraction_iter89(
+        self, aspect, beta, bt, cboot, plascur, q95, q0, rmajor, vol
+    ):
+        """Original ITER calculation of bootstrap-driven fraction
+        of the plasma current.
+        author: P J Knight, CCFE, Culham Science Centre
+        aspect  : input real : plasma aspect ratio
+        beta    : input real : plasma total beta
+        bt      : input real : toroidal field on axis (T)
+        cboot   : input real : bootstrap current fraction multiplier
+        plascur : input real : plasma current (A)
+        q95     : input real : safety factor at 95% surface
+        q0      : input real : central safety factor
+        rmajor  : input real : plasma major radius (m)
+        vol     : input real : plasma volume (m3)
+        This routine performs the original ITER calculation of the
+        plasma current bootstrap fraction.
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        xbs = min(10, q95 / q0)
+        cbs = cboot * (1.32 - 0.235 * xbs + 0.0185 * xbs**2)
+        bpbs = (
+            constants.rmu0
+            * plascur
+            / (2 * numpy.pi * numpy.sqrt(vol / (2 * numpy.pi**2 * rmajor)))
+        )
+        betapbs = beta * bt**2 / bpbs**2
+
+        if betapbs <= 0.0:  # only possible if beta <= 0.0
+            return 0.0
+        return cbs * (betapbs / numpy.sqrt(aspect)) ** 1.3
+
     def eped_warning(self):
         eped_warning = ""
 

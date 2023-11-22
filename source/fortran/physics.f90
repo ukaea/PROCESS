@@ -66,61 +66,6 @@ module physics_module
     itart_r = 0.0D0
   end subroutine init_physics_module
 
- ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  function bootstrap_fraction_iter89(aspect,beta,bt,cboot,plascur,q95,q0,rmajor,vol)
-
-    !! Original ITER calculation of bootstrap-driven fraction
-    !! of the plasma current.
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! aspect  : input real : plasma aspect ratio
-    !! beta    : input real : plasma total beta
-    !! bt      : input real : toroidal field on axis (T)
-    !! cboot   : input real : bootstrap current fraction multiplier
-    !! plascur : input real : plasma current (A)
-    !! q95     : input real : safety factor at 95% surface
-    !! q0      : input real : central safety factor
-    !! rmajor  : input real : plasma major radius (m)
-    !! vol     : input real : plasma volume (m3)
-    !! This routine performs the original ITER calculation of the
-    !! plasma current bootstrap fraction.
-    !! ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-    !! ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-    use constants, only: pi, rmu0
-    implicit none
-
-    real(dp) :: bootstrap_fraction_iter89
-
-    !  Arguments
-
-    real(dp), intent(in) :: aspect, beta, bt, cboot, &
-         plascur, q95, q0, rmajor, vol
-
-    !  Local variables
-
-    real(dp) :: betapbs, bpbs, cbs, xbs, bootipf
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    xbs = min(10.0D0, q95/q0)
-    cbs = cboot * (1.32D0 - 0.235D0*xbs + 0.0185D0*xbs**2)
-    bpbs = rmu0*plascur/(2.0D0*pi*sqrt(vol/(2.0D0* pi**2 *rmajor)) )
-    betapbs = beta*bt**2 / bpbs**2
-
-    if (betapbs <= 0.0D0) then  !  only possible if beta <= 0.0
-       bootipf = 0.0D0
-    else
-       bootipf = cbs * ( betapbs/sqrt(aspect) )**1.3D0
-    end if
-
-    bootstrap_fraction_iter89 = bootipf
-
-  end function bootstrap_fraction_iter89
-
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   function bootstrap_fraction_nevins(alphan,alphat,betat,bt,dene,plascur, &
