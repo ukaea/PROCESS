@@ -603,7 +603,7 @@ contains
                'Zohm elongation scaling multiplier')
        case ('fnesep')
           call parse_real_variable('fnesep', fnesep, 0.1D0, 2.0D1, &
-               'Eich critical separatrix density')
+               'f-value for Eich critical separatrix density')
        case ('fradmin')
           write(outfile,*) ' '
           write(outfile,*) '**********'
