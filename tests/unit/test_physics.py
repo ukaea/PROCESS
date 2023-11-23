@@ -1,6 +1,6 @@
 """Unit tests for physics.f90."""
 from typing import Any, NamedTuple
-from process.fortran import physics_module as pm, physics_variables
+from process.fortran import physics_module as physics_variables
 import pytest
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile
@@ -359,7 +359,7 @@ class BootstrapFractionSauterParam(NamedTuple):
         ),
     ),
 )
-def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch):
+def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, physics):
     """
     Automatically generated Regression Unit Test for bootstrap_fraction_sauter.
 
@@ -442,7 +442,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch):
         physics_variables, "alphat", bootstrapfractionsauterparam.alphat
     )
 
-    bfs = pm.bootstrap_fraction_sauter()
+    bfs = physics.bootstrap_fraction_sauter()
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 

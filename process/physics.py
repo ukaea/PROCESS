@@ -23,6 +23,7 @@ from process.fortran import (
     numerics,
     stellarator_variables,
     process_output as po,
+    profiles_module,
 )
 
 
@@ -245,7 +246,7 @@ class Physics:
         )
 
         current_drive_variables.bscf_sauter = (
-            current_drive_variables.cboot * physics_module.bootstrap_fraction_sauter()
+            current_drive_variables.cboot * self.bootstrap_fraction_sauter()
         )
 
         if current_drive_variables.bscfmax < 0.0e0:
@@ -1076,6 +1077,152 @@ class Physics:
         See Issue #992
         """
         return -9e-2 * beta
+
+    def bootstrap_fraction_sauter(self):
+        """Bootstrap current fraction from Sauter et al scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        None
+        This function calculates the bootstrap current fraction
+        using the Sauter, Angioni and Lin-Liu scaling.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        O. Sauter, C. Angioni and Y. R. Lin-Liu,
+        Physics of Plasmas <B>6</B> (1999) 2834
+        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+        Physics of Plasmas <B>9</B> (2002) 5140
+        """
+        NR = 200
+
+        roa = numpy.arange(1, NR + 1, step=1) / NR
+
+        rho = numpy.sqrt(physics_variables.xarea / numpy.pi) * roa
+        sqeps = numpy.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
+
+        ne = 1e-19 * numpy.vectorize(
+            lambda r: profiles_module.nprofile(
+                r,
+                physics_variables.rhopedn,
+                physics_variables.ne0,
+                physics_variables.neped,
+                physics_variables.nesep,
+                physics_variables.alphan,
+            )
+        )(roa)
+        ni = (physics_variables.dnitot / physics_variables.dene) * ne
+        tempe = numpy.vectorize(
+            lambda r: profiles_module.tprofile(
+                r,
+                physics_variables.rhopedt,
+                physics_variables.te0,
+                physics_variables.teped,
+                physics_variables.tesep,
+                physics_variables.alphat,
+                physics_variables.tbeta,
+            )
+        )(roa)
+        tempi = (physics_variables.ti / physics_variables.te) * tempe
+
+        zef = numpy.full_like(
+            tempi, physics_variables.zeff
+        )  # Flat Zeff profile assumed
+
+        # mu = 1/safety factor
+        # Parabolic q profile assumed
+        mu = 1 / (
+            physics_variables.q0
+            + (physics_variables.q - physics_variables.q0) * roa**2
+        )
+        amain = numpy.full_like(mu, physics_variables.afuel)
+        zmain = numpy.full_like(mu, 1.0 + physics_variables.fhe3)
+
+        if ne[NR - 1] == 0.0:
+            ne[NR - 1] = 1e-4 * ne[NR - 2]
+            ni[NR - 1] = 1e-4 * ni[NR - 2]
+
+        if tempe[NR - 1] == 0.0:
+            tempe[NR - 1] = 1e-4 * tempe[NR - 2]
+            tempi[NR - 1] = 1e-4 * tempi[NR - 2]
+
+        # Calculate total bootstrap current (MA) by summing along profiles
+        iboot = 0.0
+        for ir in range(0, NR):
+            if ir + 1 == NR:
+                jboot = 0.0
+                da = 0.0
+            else:
+                drho = rho[ir + 1] - rho[ir]
+                da = 2 * numpy.pi * rho[ir] * drho  # area of annulus
+
+                dlogte_drho = (numpy.log(tempe[ir + 1]) - numpy.log(tempe[ir])) / drho
+                dlogti_drho = (numpy.log(tempi[ir + 1]) - numpy.log(tempi[ir])) / drho
+                dlogne_drho = (numpy.log(ne[ir + 1]) - numpy.log(ne[ir])) / drho
+
+                # The factor of 0.5 below arises because in ASTRA the logarithms
+                # are coded as (e.g.):  (Te(j+1)-Te(j))/(Te(j+1)+Te(j)), which
+                # actually corresponds to grad(log(Te))/2. So the factors dcsa etc.
+                # are a factor two larger than one might otherwise expect.
+                jboot = 0.5 * (
+                    physics_module.dcsa(
+                        ir + 1,
+                        NR,
+                        physics_variables.rmajor,
+                        physics_variables.bt,
+                        physics_variables.triang,
+                        ne,
+                        ni,
+                        tempe,
+                        tempi,
+                        mu,
+                        rho,
+                        zef,
+                        sqeps,
+                    )
+                    * dlogne_drho
+                    + physics_module.hcsa(
+                        ir + 1,
+                        NR,
+                        physics_variables.rmajor,
+                        physics_variables.bt,
+                        physics_variables.triang,
+                        ne,
+                        ni,
+                        tempe,
+                        tempi,
+                        mu,
+                        rho,
+                        zef,
+                        sqeps,
+                    )
+                    * dlogte_drho
+                    + physics_module.xcsa(
+                        ir + 1,
+                        NR,
+                        physics_variables.rmajor,
+                        physics_variables.bt,
+                        physics_variables.triang,
+                        mu,
+                        sqeps,
+                        tempi,
+                        tempe,
+                        amain,
+                        zmain,
+                        ni,
+                        ne,
+                        rho,
+                        zef,
+                    )
+                    * dlogti_drho
+                )
+                jboot = (
+                    -physics_variables.bt
+                    / (0.2 * numpy.pi * physics_variables.rmajor)
+                    * rho[ir]
+                    * mu[ir]
+                    * jboot
+                )  # MA/m2
+
+            iboot += da * jboot
+        return 1.0e6 * iboot / physics_variables.plascur
 
     def eped_warning(self):
         eped_warning = ""
