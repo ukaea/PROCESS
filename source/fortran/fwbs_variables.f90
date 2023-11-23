@@ -84,9 +84,9 @@ module fwbs_variables
   !! switch for blanket model:
   !!
   !! - =1 CCFE HCPB model
-  !! - =2 KIT HCPB model
+  !! - =2 KIT HCPB model  # REMOVED, no longer usable
   !! - =3 CCFE HCPB model with Tritium Breeding Ratio calculation
-  !! - =4 KIT HCLL model
+  !! - =4 KIT HCLL model  # REMOVED, no longer usable
   !! - =5 DCLL model -  no nutronics model included (in development) please check/choose values for
   !!                      'dual-coolant blanket' fractions (provided in this file).
   !!                 -  please use primary_pumping = 0 or 1.
