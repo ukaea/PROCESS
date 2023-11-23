@@ -2386,11 +2386,11 @@ contains
    end subroutine constraint_eqn_059
 
    subroutine constraint_eqn_060(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for Central Solenoid s/c temperature margin lower limi
+      !! Equation for Central Solenoid s/c temperature margin lower limit
       !! author: P B Lloyd, CCFE, Culham Science Centre
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !! Equation for Central Solenoid s/c temperature margin lower limi
+      !! Equation for Central Solenoid s/c temperature margin lower limit
       !! #=# tfcoil
       !! #=#=# ftmargoh, tmargmin_cs
       !! and hence also optional here.
