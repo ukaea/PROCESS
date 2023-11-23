@@ -1667,14 +1667,6 @@ contains
           call parse_real_variable('sig_tf_wp_max', sig_tf_wp_max, 1.0D6, 1.0D11, &
                'Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)')
 
-       case ('alstroh')
-          call parse_real_variable('alstroh', alstroh, 1.0D6, 1.0D11, &
-               'Allowable hoop stress in Central Solenoid structural material (Pa)')
-
-       case ('i_cs_stress')
-          call parse_int_variable('i_cs_stress', i_cs_stress, 0, 1, &
-               'Switch for CS stress calculation')
-
        case ('dcase')
           call parse_real_variable('dcase', dcase, 1.0D3, 1.0D5, &
                'Density of TF coil case (kg/m3)')
@@ -2006,7 +1998,12 @@ contains
        case ('fbmaxcs')
          call parse_real_variable('fbmaxcs', fbmaxcs, 0.01D0, 1.0D0, &
                'F-value for max peak CS field (con. 79, itvar 149)')
-
+       case ('alstroh')
+               call parse_real_variable('alstroh', alstroh, 1.0D6, 1.0D11, &
+                    'Allowable hoop stress in Central Solenoid structural material (Pa)')
+       case ('i_cs_stress')
+               call parse_int_variable('i_cs_stress', i_cs_stress, 0, 1, &
+                    'Switch for CS stress calculation')
        case ('alfapf')
           call parse_real_variable('alfapf', alfapf, 1.0D-12, 1.0D0, &
                'PF coil current smoothing parameter')
