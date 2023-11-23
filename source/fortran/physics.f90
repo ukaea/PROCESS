@@ -68,6 +68,528 @@ module physics_module
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  function beta_poloidal_local(j,nr,rmajor,bt,ne,tempe,mu,rho)
+
+      !! Local beta poloidal calculation
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! nr : input integer : maximum value of j
+      !! This function calculates the local beta poloidal.
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! <P>beta poloidal = 4*pi*ne*Te/Bpo**2
+      !! Pereverzev, 25th April 1989 (?)
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      use constants, only: pi
+
+      implicit none
+
+      real(dp) :: beta_poloidal_local
+
+      !  Arguments
+
+      integer, intent(in) :: j, nr
+      real(dp), intent(in) :: rmajor, bt
+      real(dp), dimension(:), intent(in) :: ne, tempe, mu, rho
+
+      !  Local variables
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      if (j /= nr)  then
+         beta_poloidal_local = 1.6D-4*pi * (ne(j+1)+ne(j)) * (tempe(j+1)+tempe(j))
+      else
+         beta_poloidal_local = 6.4D-4*pi * ne(j)*tempe(j)
+      end if
+
+      beta_poloidal_local = beta_poloidal_local * &
+           ( rmajor/(bt*rho(j)*abs(mu(j)+1.0D-4)) )**2
+
+    end function beta_poloidal_local
+
+    function beta_poloidal_local_total(j,nr,rmajor,bt,ne,ni,tempe,tempi,mu,rho)
+
+      !! Local beta poloidal calculation, including ion pressure
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! nr : input integer : maximum value of j
+      !! This function calculates the local total beta poloidal.
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! <P>beta poloidal = 4*pi*(ne*Te+ni*Ti)/Bpo**2
+      !! where ni is the sum of all ion densities (thermal)
+      !! Pereverzev, 25th April 1989 (?)
+      !! E Fable, private communication, 15th May 2014
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      use constants, only: pi
+
+      implicit none
+
+      real(dp) :: beta_poloidal_local_total
+
+      !  Arguments
+
+      integer, intent(in) :: j, nr
+      real(dp), intent(in) :: rmajor, bt
+      real(dp), dimension(:), intent(in) :: ne, ni, tempe, tempi, mu, rho
+
+      !  Local variables
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      if (j /= nr)  then
+         beta_poloidal_local_total = 1.6D-4*pi * ( &
+              ( (ne(j+1)+ne(j)) * (tempe(j+1)+tempe(j)) ) + &
+              ( (ni(j+1)+ni(j)) * (tempi(j+1)+tempi(j)) ) )
+      else
+         beta_poloidal_local_total = 6.4D-4*pi * (ne(j)*tempe(j) + ni(j)*tempi(j))
+      end if
+
+      beta_poloidal_local_total = beta_poloidal_local_total * &
+           ( rmajor/(bt*rho(j)*abs(mu(j)+1.0D-4)) )**2
+
+    end function beta_poloidal_local_total
+
+    function nues(j,rmajor,zef,mu,sqeps,tempe,ne)
+
+      !! Relative frequency of electron collisions
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! This function calculates the relative frequency of electron
+      !! collisions: <I>NU* = Nuei*q*Rt/eps**1.5/Vte</I>
+      !! The electron-ion collision frequency NUEI=NUEE*1.4*ZEF is
+      !! used.
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! Yushmanov, 30th April 1987 (?)
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      implicit none
+
+      real(dp) :: nues
+
+      !  Arguments
+
+      integer, intent(in) :: j
+      real(dp), intent(in) :: rmajor
+      real(dp), dimension(:), intent(in) :: zef, mu, sqeps, tempe, ne
+
+      !  Local variables
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      nues = nuee(j,tempe,ne) * 1.4D0*zef(j)*rmajor / &
+           abs(mu(j)*(sqeps(j)**3)*sqrt(tempe(j))*1.875D7)
+
+    end function nues
+
+    function nuee(j,tempe,ne)
+
+      !! Frequency of electron-electron collisions
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! This function calculates the frequency of electron-electron
+      !! collisions (Hz): <I>NUEE = 4*SQRT(pi)/3*Ne*e**4*lambd/
+      !! SQRT(Me)/Te**1.5</I>
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! Yushmanov, 25th April 1987 (?),
+      !! updated by Pereverzev, 9th November 1994 (?)
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      implicit none
+
+      real(dp) :: nuee
+
+      !  Arguments
+
+      integer, intent(in) :: j
+      real(dp), dimension(:), intent(in) :: tempe, ne
+
+      !  Local variables
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      nuee = 670.0D0 * coulg(j,tempe,ne) * ne(j) / ( tempe(j)*sqrt(tempe(j)) )
+
+    end function nuee
+
+    function coulg(j,tempe,ne)
+
+      !! Coulomb logarithm
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! This function calculates the Coulomb logarithm, valid
+      !! for e-e collisions (T_e > 0.01 keV), and for
+      !! e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! C. A. Ordonez and M. I. Molina, Phys. Plasmas <B>1</B> (1994) 2515
+      !! Rev. Mod. Phys., V.48, Part 1 (1976) 275
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      implicit none
+
+      real(dp) :: coulg
+
+      !  Arguments
+
+      integer, intent(in) :: j
+      real(dp), dimension(:), intent(in) :: tempe, ne
+
+      !  Local variables
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      coulg = 15.9D0 - 0.5D0*log(ne(j)) + log(tempe(j))
+
+    end function coulg
+
+    function nuis(j,rmajor,mu,sqeps,tempi,amain,zmain,ni)
+
+      !! Relative frequency of ion collisions
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! This function calculates the relative frequency of ion
+      !! collisions: <I>NU* = Nui*q*Rt/eps**1.5/Vti</I>
+      !! The full ion collision frequency NUI is used.
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! Yushmanov, 30th April 1987 (?)
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      implicit none
+
+      real(dp) :: nuis
+
+      !  Arguments
+
+      integer, intent(in) :: j
+      real(dp), intent(in) :: rmajor
+      real(dp), dimension(:), intent(in) :: mu, sqeps, tempi, amain, zmain, ni
+
+      !  Local variables
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      nuis = 3.2D-6 * nui(j,zmain,ni,tempi,amain)*rmajor / ( abs(mu(j)+1.0D-4) * &
+           sqeps(j)**3 * sqrt(tempi(j)/amain(j)) )
+
+    end function nuis
+
+    function nui(j,zmain,ni,tempi,amain)
+
+      !! Full frequency of ion collisions
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! This function calculates the full frequency of ion
+      !! collisions (Hz).
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! None
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      real(dp) :: nui
+
+      !  Arguments
+
+      integer, intent(in) :: j
+      real(dp), dimension(:), intent(in) :: zmain, ni, tempi, amain
+
+      !  Local variables
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      !	Coulomb logarithm = 15 is used
+
+      nui = zmain(j)**4 * ni(j) * 322.0D0 / ( tempi(j)*sqrt(tempi(j)*amain(j)) )
+
+    end function nui
+
+    function tpf(j,triang,sqeps)
+
+      !! Trapped particle fraction
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! This function calculates the trapped particle fraction at
+      !! a given radius.
+      !! <P>A number of different fits are provided, but the one
+      !! to be used is hardwired prior to run-time.
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! O. Sauter et al, Plasma Phys. Contr. Fusion <B>44</B> (2002) 1999
+      !! O. Sauter, 2013:
+      !! http://infoscience.epfl.ch/record/187521/files/lrp_012013.pdf
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      implicit none
+
+      real(dp) :: tpf
+
+      !  Arguments
+
+      integer, intent(in) :: j
+      real(dp), intent(in) :: triang
+      real(dp), dimension(:), intent(in) :: sqeps
+
+      !  Local variables
+
+      integer, parameter :: ASTRA=1, SAUTER2002=2, SAUTER2013=3
+
+      real(dp) :: eps,epseff,g,s,zz
+
+      integer, parameter :: fit = ASTRA
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      s = sqeps(j)
+      eps = s*s
+
+      select case (fit)
+
+      case (ASTRA)
+
+         !  ASTRA method, from Emiliano Fable, private communication
+         !  (Excluding h term which dominates for inverse aspect ratios < 0.5,
+         !  and tends to take the trapped particle fraction to 1)
+
+         zz = 1.0D0 - eps
+
+         g = 1.0D0 - zz*sqrt(zz) / (1.0D0 + 1.46D0*s)
+
+         !  Advised by Emiliano to ignore ASTRA's h below
+         !
+         !h = 0.209D0 * (sqrt(tempi(j)*amain(j))/zmain(j)*mu(j)*rmajor*bt)**0.3333D0
+         !tpf = min(1.0D0, max(g, h))
+
+         tpf = g
+
+      case (SAUTER2002)
+
+         !  Equation 4 of Sauter 2002
+         !  Similar to, but not quite identical to g above
+
+         tpf = 1.0D0 - (1.0D0-eps)**2 / (1.0D0 + 1.46D0*s) / sqrt(1.0D0 - eps*eps)
+
+      case (SAUTER2013)
+
+         !  Includes correction for triangularity
+
+         epseff = 0.67D0*(1.0D0 - 1.4D0*triang*abs(triang)) * eps
+
+         tpf = 1.0D0 - sqrt( (1.0D0-eps)/(1.0D0+eps) ) * &
+              (1.0D0 - epseff) / (1.0D0 + 2.0D0*sqrt(epseff))
+
+      end select
+
+    end function tpf
+
+    function dcsa(j,nr,rmajor,bt,triang,ne,ni,tempe,tempi,mu,rho,zef,sqeps)
+
+      !! Grad(ln(ne)) coefficient in the Sauter bootstrap scaling
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! nr : input integer : maximum value of j
+      !! This function calculates the coefficient scaling grad(ln(ne))
+      !! in the Sauter bootstrap current scaling.
+      !! Code by Angioni, 29th May 2002.
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! O. Sauter, C. Angioni and Y. R. Lin-Liu,
+      !! Physics of Plasmas <B>6</B> (1999) 2834
+      !! O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+      !! Physics of Plasmas <B>9</B> (2002) 5140
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      !  DCSA $\equiv \mathcal{L}_{31}$, Eq.14a, Sauter et al, 1999
+
+      implicit none
+
+      real(dp) :: dcsa
+
+      !  Arguments
+
+      integer, intent(in) :: j, nr
+      real(dp), intent(in) :: rmajor, bt, triang
+      real(dp), dimension(:), intent(in) :: ne, ni, tempe, tempi, mu, rho, zef, sqeps
+
+      !  Local variables
+
+      real(dp) :: zz,zft,zdf
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      if (j == 1) then
+         dcsa = 0.0D0
+      else
+         zz = zef(j)
+         zft = tpf(j,triang,sqeps)
+         zdf = 1.0D0 + (1.0D0 - 0.1D0*zft)*sqrt(nues(j,rmajor,zef,mu,sqeps,tempe,ne))
+         zdf = zdf + 0.5D0*(1.0D0-zft)*nues(j,rmajor,zef,mu,sqeps,tempe,ne)/zz
+         zft = zft/zdf  !  $f^{31}_{teff}(\nu_{e*})$, Eq.14b
+         dcsa = (1.0D0 + 1.4D0/(zz+1.0D0))*zft - 1.9D0/(zz+1.0D0)*zft*zft
+         dcsa = dcsa + (0.3D0*zft*zft + 0.2D0*zft*zft*zft)*zft / (zz+1.0D0)
+
+         !  Corrections suggested by Fable, 15/05/2015
+         !dcsa = dcsa*beta_poloidal_local(j,nr) * (1.0D0+tempi(j)/(zz*tempe(j)))
+         dcsa = dcsa*beta_poloidal_local_total(j,nr,rmajor,bt,ne,ni,tempe,tempi,mu,rho)
+      end if
+
+    end function dcsa
+
+    function hcsa(j,nr,rmajor,bt,triang,ne,ni,tempe,tempi,mu,rho,zef,sqeps)
+
+      !! Grad(ln(Te)) coefficient in the Sauter bootstrap scaling
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! nr : input integer : maximum value of j
+      !! This function calculates the coefficient scaling grad(ln(Te))
+      !! in the Sauter bootstrap current scaling.
+      !! Code by Angioni, 29th May 2002.
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! O. Sauter, C. Angioni and Y. R. Lin-Liu,
+      !! Physics of Plasmas <B>6</B> (1999) 2834
+      !! O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+      !! Physics of Plasmas <B>9</B> (2002) 5140
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      !  HCSA $\equiv ?$, Sauter et al, 1999
+
+      implicit none
+
+      real(dp) :: hcsa
+
+      !  Arguments
+
+      integer, intent(in) :: j,nr
+      real(dp), intent(in) :: rmajor, bt, triang
+      real(dp), dimension(:), intent(in) :: ne, ni, tempe, tempi, mu, rho, zef, sqeps
+
+      !  Local variables
+
+      real(dp) :: zz,zft,zdf,zfte,zfte2,zfte3,zfte4
+      real(dp) :: zfti,zfti2,zfti3,zfti4,hcee,hcei
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      if (j == 1) then
+         hcsa = 0.0D0
+      else
+         zz = zef(j)
+         zft = tpf(j,triang,sqeps)
+         zdf = 1.0D0 + 0.26D0*(1.0D0-zft)*sqrt(nues(j,rmajor,zef,mu,sqeps,tempe,ne))
+         zdf = zdf + 0.18D0*(1.0D0-0.37D0*zft)*nues(j,rmajor,zef,mu,sqeps,tempe,ne)/sqrt(zz)
+         zfte = zft/zdf  !  $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
+         zfte2 = zfte*zfte
+         zfte3 = zfte*zfte2
+         zfte4 = zfte2*zfte2
+
+         zdf = 1.0D0 + (1.0D0 + 0.6D0*zft)*sqrt(nues(j,rmajor,zef,mu,sqeps,tempe,ne))
+         zdf = zdf + 0.85D0*(1.0D0 - 0.37D0*zft)*nues(j,rmajor,zef,mu,sqeps,tempe,ne)*(1.0D0+zz)
+         zfti = zft/zdf  !  $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
+         zfti2 = zfti*zfti
+         zfti3 = zfti*zfti2
+         zfti4 = zfti2*zfti2
+
+         hcee = (0.05D0 + 0.62D0*zz) / zz / (1.0D0 + 0.44D0*zz) * (zfte-zfte4)
+         hcee = hcee + (zfte2 - zfte4 - 1.2D0*(zfte3-zfte4)) / (1.0D0 + 0.22D0*zz)
+         hcee = hcee + 1.2D0/(1.0D0 + 0.5D0*zz)*zfte4  !  $F_{32\_ee}(X)$, Eq.15b
+
+         hcei = -(0.56D0 + 1.93D0*zz) / zz / (1.0D0 + 0.44*zz) * (zfti-zfti4)
+         hcei = hcei + 4.95D0/(1.0D0 + 2.48D0*zz) * &
+              (zfti2 - zfti4 - 0.55D0*(zfti3-zfti4))
+         hcei = hcei - 1.2D0/(1.0D0 + 0.5D0*zz)*zfti4  !  $F_{32\_ei}(Y)$, Eq.15c
+
+         !  Corrections suggested by Fable, 15/05/2015
+         !hcsa = beta_poloidal_local(j,nr)*(hcee + hcei) + dcsa(j,nr) &
+         !     / (1.0D0 + tempi(j)/(zz*tempe(j)))
+         hcsa = beta_poloidal_local(j,nr,rmajor,bt,ne,tempe,mu,rho)*(hcee + hcei) + dcsa(j,nr,rmajor,bt,triang,ne,ni,tempe,tempi,mu,rho,zef,sqeps) &
+              * beta_poloidal_local(j,nr,rmajor,bt,ne,tempe,mu,rho)/beta_poloidal_local_total(j,nr,rmajor,bt,ne,ni,tempe,tempi,mu,rho)
+      end if
+
+    end function hcsa
+
+    function xcsa(j,nr,rmajor,bt,triang,mu,sqeps,tempi,tempe,amain,zmain,ni,ne,rho,zef)
+
+      !! Grad(ln(Ti)) coefficient in the Sauter bootstrap scaling
+      !! author: P J Knight, CCFE, Culham Science Centre
+      !! j  : input integer : radial element index in range 1 to nr
+      !! nr : input integer : maximum value of j
+      !! This function calculates the coefficient scaling grad(ln(Ti))
+      !! in the Sauter bootstrap current scaling.
+      !! Code by Angioni, 29th May 2002.
+      !! <P>The code was supplied by Emiliano Fable, IPP Garching
+      !! (private communication).
+      !! O. Sauter, C. Angioni and Y. R. Lin-Liu,
+      !! Physics of Plasmas <B>6</B> (1999) 2834
+      !! O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+      !! Physics of Plasmas <B>9</B> (2002) 5140
+      !
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      implicit none
+
+      real(dp) :: xcsa
+
+      !  Arguments
+
+      integer, intent(in) :: j,nr
+      real(dp), intent(in) :: rmajor, bt, triang
+      real(dp), dimension(:), intent(in) :: mu, sqeps, tempi, tempe, amain, zmain, ni, ne, rho, zef
+
+      !  Local variables
+
+      real(dp) :: zz,zft,zdf,a0,alp,a1,zfte
+
+      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      if (j == 1) then
+         xcsa = 0.0D0
+      else
+         zz = zef(j)
+         zft = tpf(j,triang,sqeps)
+         zdf = 1.0D0 + (1.0D0 - 0.1D0*zft)*sqrt(nues(j,rmajor,zef,mu,sqeps,tempe,ne))
+         zdf = zdf + 0.5D0*(1.0D0 - 0.5D0*zft)*nues(j,rmajor,zef,mu,sqeps,tempe,ne)/zz
+         zfte = zft/zdf  !  $f^{34}_{teff}(\nu_{e*})$, Eq.16b
+
+         xcsa = (1.0D0 + 1.4D0/(zz+1.0D0))*zfte - 1.9D0/(zz+1.0D0)*zfte*zfte
+         xcsa = xcsa + (0.3D0*zfte*zfte + 0.2D0*zfte*zfte*zfte)*zfte &
+              / (zz+1.0D0)  !  Eq.16a
+
+         a0 = -1.17D0*(1.0D0-zft)
+         a0 = a0 / (1.0D0 - 0.22D0*zft - 0.19D0*zft*zft)  !  $\alpha_0$, Eq.17a
+
+         alp = (a0 + 0.25D0*(1.0D0 - zft*zft)*sqrt(nuis(j,rmajor,mu,sqeps,tempi,amain,zmain,ni))) / &
+              (1.0D0 + 0.5*sqrt(nuis(j,rmajor,mu,sqeps,tempi,amain,zmain,ni)))
+         a1 = nuis(j,rmajor,mu,sqeps,tempi,amain,zmain,ni)*nuis(j,rmajor,mu,sqeps,tempi,amain,zmain,ni) * zft**6
+         alp = (alp + 0.315D0*a1) / (1.0D0 + 0.15D0*a1)  !  $\alpha(\nu_{i*})$, Eq.17b
+
+         !  Corrections suggested by Fable, 15/05/2015
+         !xcsa = beta_poloidal_local(j,nr) * (xcsa*alp)*tempi(j)/zz/tempe(j)
+         !xcsa = xcsa + dcsa(j,nr) / (1.0D0 + zz*tempe(j)/tempi(j))
+
+         xcsa = (beta_poloidal_local_total(j,nr,rmajor,bt,ne,ni,tempe,tempi,mu,rho)-beta_poloidal_local(j,nr,rmajor,bt,ne,tempe,mu,rho)) &
+              * (xcsa*alp)
+         xcsa = xcsa + dcsa(j,nr,rmajor,bt,triang,ne,ni,tempe,tempi,mu,rho,zef,sqeps) * &
+              (1.0D0 - beta_poloidal_local(j,nr,rmajor,bt,ne,tempe,mu,rho)/beta_poloidal_local_total(j,nr,rmajor,bt,ne,ni,tempe,tempi,mu,rho))
+      end if
+
+    end function xcsa
+
+
   function bootstrap_fraction_sauter()
 
     !! Bootstrap current fraction from Sauter et al scaling
@@ -160,9 +682,9 @@ module physics_module
           !  actually corresponds to grad(log(Te))/2. So the factors dcsa etc.
           !  are a factor two larger than one might otherwise expect.
 
-          jboot = 0.5D0 * ( dcsa(ir,nr) * dlogne_drho &
-               + hcsa(ir,nr) * dlogte_drho &
-               + xcsa(ir,nr) * dlogti_drho )
+          jboot = 0.5D0 * ( dcsa(ir,nr,rmajor,bt,triang,ne,ni,tempe,tempi,mu,rho,zef,sqeps) * dlogne_drho &
+               + hcsa(ir,nr,rmajor,bt,triang,ne,ni,tempe,tempi,mu,rho,zef,sqeps) * dlogte_drho &
+               + xcsa(ir,nr,rmajor,bt,triang,mu,sqeps,tempi,tempe,amain,zmain,ni,ne,rho,zef) * dlogti_drho )
           jboot = -bt/(0.2D0*pi*rmajor) * rho(ir)*mu(ir) * jboot  !  MA/m2
        end if
 
@@ -171,605 +693,6 @@ module physics_module
     end do
 
     bootstrap_fraction_sauter = 1.0D6 * iboot/plascur
-
-  contains
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function beta_poloidal_local(j,nr)
-
-      !! Local beta poloidal calculation
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! nr : input integer : maximum value of j
-      !! This function calculates the local beta poloidal.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! <P>beta poloidal = 4*pi*ne*Te/Bpo**2
-      !! Pereverzev, 25th April 1989 (?)
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      implicit none
-
-      real(dp) :: beta_poloidal_local
-
-      !  Arguments
-
-      integer, intent(in) :: j, nr
-
-      !  Local variables
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if (j /= nr)  then
-         beta_poloidal_local = 1.6D-4*pi * (ne(j+1)+ne(j)) * (tempe(j+1)+tempe(j))
-      else
-         beta_poloidal_local = 6.4D-4*pi * ne(j)*tempe(j)
-      end if
-
-      beta_poloidal_local = beta_poloidal_local * &
-           ( rmajor/(bt*rho(j)*abs(mu(j)+1.0D-4)) )**2
-
-    end function beta_poloidal_local
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function beta_poloidal_local_total(j,nr)
-
-      !! Local beta poloidal calculation, including ion pressure
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! nr : input integer : maximum value of j
-      !! This function calculates the local total beta poloidal.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! <P>beta poloidal = 4*pi*(ne*Te+ni*Ti)/Bpo**2
-      !! where ni is the sum of all ion densities (thermal)
-      !! Pereverzev, 25th April 1989 (?)
-      !! E Fable, private communication, 15th May 2014
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      implicit none
-
-      real(dp) :: beta_poloidal_local_total
-
-      !  Arguments
-
-      integer, intent(in) :: j, nr
-
-      !  Local variables
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if (j /= nr)  then
-         beta_poloidal_local_total = 1.6D-4*pi * ( &
-              ( (ne(j+1)+ne(j)) * (tempe(j+1)+tempe(j)) ) + &
-              ( (ni(j+1)+ni(j)) * (tempi(j+1)+tempi(j)) ) )
-      else
-         beta_poloidal_local_total = 6.4D-4*pi * (ne(j)*tempe(j) + ni(j)*tempi(j))
-      end if
-
-      beta_poloidal_local_total = beta_poloidal_local_total * &
-           ( rmajor/(bt*rho(j)*abs(mu(j)+1.0D-4)) )**2
-
-    end function beta_poloidal_local_total
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function nues(j)
-
-      !! Relative frequency of electron collisions
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! This function calculates the relative frequency of electron
-      !! collisions: <I>NU* = Nuei*q*Rt/eps**1.5/Vte</I>
-      !! The electron-ion collision frequency NUEI=NUEE*1.4*ZEF is
-      !! used.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! Yushmanov, 30th April 1987 (?)
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      implicit none
-
-      real(dp) :: nues
-
-      !  Arguments
-
-      integer, intent(in) :: j
-
-      !  Local variables
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      nues = nuee(j) * 1.4D0*zef(j)*rmajor / &
-           abs(mu(j)*(sqeps(j)**3)*sqrt(tempe(j))*1.875D7)
-
-    end function nues
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function nuee(j)
-
-      !! Frequency of electron-electron collisions
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! This function calculates the frequency of electron-electron
-      !! collisions (Hz): <I>NUEE = 4*SQRT(pi)/3*Ne*e**4*lambd/
-      !! SQRT(Me)/Te**1.5</I>
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! Yushmanov, 25th April 1987 (?),
-      !! updated by Pereverzev, 9th November 1994 (?)
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      implicit none
-
-      real(dp) :: nuee
-
-      !  Arguments
-
-      integer, intent(in) :: j
-
-      !  Local variables
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      nuee = 670.0D0 * coulg(j) * ne(j) / ( tempe(j)*sqrt(tempe(j)) )
-
-    end function nuee
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function coulg(j)
-
-      !! Coulomb logarithm
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! This function calculates the Coulomb logarithm, valid
-      !! for e-e collisions (T_e > 0.01 keV), and for
-      !! e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! C. A. Ordonez and M. I. Molina, Phys. Plasmas <B>1</B> (1994) 2515
-      !! Rev. Mod. Phys., V.48, Part 1 (1976) 275
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      implicit none
-
-      real(dp) :: coulg
-
-      !  Arguments
-
-      integer, intent(in) :: j
-
-      !  Local variables
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      coulg = 15.9D0 - 0.5D0*log(ne(j)) + log(tempe(j))
-
-    end function coulg
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function nuis(j)
-
-      !! Relative frequency of ion collisions
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! This function calculates the relative frequency of ion
-      !! collisions: <I>NU* = Nui*q*Rt/eps**1.5/Vti</I>
-      !! The full ion collision frequency NUI is used.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! Yushmanov, 30th April 1987 (?)
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      implicit none
-
-      real(dp) :: nuis
-
-      !  Arguments
-
-      integer, intent(in) :: j
-
-      !  Local variables
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      nuis = 3.2D-6 * nui(j)*rmajor / ( abs(mu(j)+1.0D-4) * &
-           sqeps(j)**3 * sqrt(tempi(j)/amain(j)) )
-
-    end function nuis
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function nui(j)
-
-      !! Full frequency of ion collisions
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! This function calculates the full frequency of ion
-      !! collisions (Hz).
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! None
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      real(dp) :: nui
-
-      !  Arguments
-
-      integer, intent(in) :: j
-
-      !  Local variables
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      !	Coulomb logarithm = 15 is used
-
-      nui = zmain(j)**4 * ni(j) * 322.0D0 / ( tempi(j)*sqrt(tempi(j)*amain(j)) )
-
-    end function nui
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function dcsa(j,nr)
-
-      !! Grad(ln(ne)) coefficient in the Sauter bootstrap scaling
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! nr : input integer : maximum value of j
-      !! This function calculates the coefficient scaling grad(ln(ne))
-      !! in the Sauter bootstrap current scaling.
-      !! Code by Angioni, 29th May 2002.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! O. Sauter, C. Angioni and Y. R. Lin-Liu,
-      !! Physics of Plasmas <B>6</B> (1999) 2834
-      !! O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-      !! Physics of Plasmas <B>9</B> (2002) 5140
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      !  DCSA $\equiv \mathcal{L}_{31}$, Eq.14a, Sauter et al, 1999
-
-      implicit none
-
-      real(dp) :: dcsa
-
-      !  Arguments
-
-      integer, intent(in) :: j,nr
-
-      !  Local variables
-
-      real(dp) :: zz,zft,zdf
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if (j == 1) then
-         dcsa = 0.0D0
-      else
-         zz = zef(j)
-         zft = tpf(j)
-         zdf = 1.0D0 + (1.0D0 - 0.1D0*zft)*sqrt(nues(j))
-         zdf = zdf + 0.5D0*(1.0D0-zft)*nues(j)/zz
-         zft = zft/zdf  !  $f^{31}_{teff}(\nu_{e*})$, Eq.14b
-         dcsa = (1.0D0 + 1.4D0/(zz+1.0D0))*zft - 1.9D0/(zz+1.0D0)*zft*zft
-         dcsa = dcsa + (0.3D0*zft*zft + 0.2D0*zft*zft*zft)*zft / (zz+1.0D0)
-
-         !  Corrections suggested by Fable, 15/05/2015
-         !dcsa = dcsa*beta_poloidal_local(j,nr) * (1.0D0+tempi(j)/(zz*tempe(j)))
-         dcsa = dcsa*beta_poloidal_local_total(j,nr)
-      end if
-
-    end function dcsa
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function hcsa(j,nr)
-
-      !! Grad(ln(Te)) coefficient in the Sauter bootstrap scaling
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! nr : input integer : maximum value of j
-      !! This function calculates the coefficient scaling grad(ln(Te))
-      !! in the Sauter bootstrap current scaling.
-      !! Code by Angioni, 29th May 2002.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! O. Sauter, C. Angioni and Y. R. Lin-Liu,
-      !! Physics of Plasmas <B>6</B> (1999) 2834
-      !! O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-      !! Physics of Plasmas <B>9</B> (2002) 5140
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      !  HCSA $\equiv ?$, Sauter et al, 1999
-
-      implicit none
-
-      real(dp) :: hcsa
-
-      !  Arguments
-
-      integer, intent(in) :: j,nr
-
-      !  Local variables
-
-      real(dp) :: zz,zft,zdf,zfte,zfte2,zfte3,zfte4
-      real(dp) :: zfti,zfti2,zfti3,zfti4,hcee,hcei
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if (j == 1) then
-         hcsa = 0.0D0
-      else
-         zz = zef(j)
-         zft = tpf(j)
-         zdf = 1.0D0 + 0.26D0*(1.0D0-zft)*sqrt(nues(j))
-         zdf = zdf + 0.18D0*(1.0D0-0.37D0*zft)*nues(j)/sqrt(zz)
-         zfte = zft/zdf  !  $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
-         zfte2 = zfte*zfte
-         zfte3 = zfte*zfte2
-         zfte4 = zfte2*zfte2
-
-         zdf = 1.0D0 + (1.0D0 + 0.6D0*zft)*sqrt(nues(j))
-         zdf = zdf + 0.85D0*(1.0D0 - 0.37D0*zft)*nues(j)*(1.0D0+zz)
-         zfti = zft/zdf  !  $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
-         zfti2 = zfti*zfti
-         zfti3 = zfti*zfti2
-         zfti4 = zfti2*zfti2
-
-         hcee = (0.05D0 + 0.62D0*zz) / zz / (1.0D0 + 0.44D0*zz) * (zfte-zfte4)
-         hcee = hcee + (zfte2 - zfte4 - 1.2D0*(zfte3-zfte4)) / (1.0D0 + 0.22D0*zz)
-         hcee = hcee + 1.2D0/(1.0D0 + 0.5D0*zz)*zfte4  !  $F_{32\_ee}(X)$, Eq.15b
-
-         hcei = -(0.56D0 + 1.93D0*zz) / zz / (1.0D0 + 0.44*zz) * (zfti-zfti4)
-         hcei = hcei + 4.95D0/(1.0D0 + 2.48D0*zz) * &
-              (zfti2 - zfti4 - 0.55D0*(zfti3-zfti4))
-         hcei = hcei - 1.2D0/(1.0D0 + 0.5D0*zz)*zfti4  !  $F_{32\_ei}(Y)$, Eq.15c
-
-         !  Corrections suggested by Fable, 15/05/2015
-         !hcsa = beta_poloidal_local(j,nr)*(hcee + hcei) + dcsa(j,nr) &
-         !     / (1.0D0 + tempi(j)/(zz*tempe(j)))
-         hcsa = beta_poloidal_local(j,nr)*(hcee + hcei) + dcsa(j,nr) &
-              * beta_poloidal_local(j,nr)/beta_poloidal_local_total(j,nr)
-      end if
-
-    end function hcsa
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function xcsa(j,nr)
-
-      !! Grad(ln(Ti)) coefficient in the Sauter bootstrap scaling
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! nr : input integer : maximum value of j
-      !! This function calculates the coefficient scaling grad(ln(Ti))
-      !! in the Sauter bootstrap current scaling.
-      !! Code by Angioni, 29th May 2002.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! O. Sauter, C. Angioni and Y. R. Lin-Liu,
-      !! Physics of Plasmas <B>6</B> (1999) 2834
-      !! O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-      !! Physics of Plasmas <B>9</B> (2002) 5140
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      implicit none
-
-      real(dp) :: xcsa
-
-      !  Arguments
-
-      integer, intent(in) :: j,nr
-
-      !  Local variables
-
-      real(dp) :: zz,zft,zdf,a0,alp,a1,zfte
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if (j == 1) then
-         xcsa = 0.0D0
-      else
-         zz = zef(j)
-         zft = tpf(j)
-         zdf = 1.0D0 + (1.0D0 - 0.1D0*zft)*sqrt(nues(j))
-         zdf = zdf + 0.5D0*(1.0D0 - 0.5D0*zft)*nues(j)/zz
-         zfte = zft/zdf  !  $f^{34}_{teff}(\nu_{e*})$, Eq.16b
-
-         xcsa = (1.0D0 + 1.4D0/(zz+1.0D0))*zfte - 1.9D0/(zz+1.0D0)*zfte*zfte
-         xcsa = xcsa + (0.3D0*zfte*zfte + 0.2D0*zfte*zfte*zfte)*zfte &
-              / (zz+1.0D0)  !  Eq.16a
-
-         a0 = -1.17D0*(1.0D0-zft)
-         a0 = a0 / (1.0D0 - 0.22D0*zft - 0.19D0*zft*zft)  !  $\alpha_0$, Eq.17a
-
-         alp = (a0 + 0.25D0*(1.0D0 - zft*zft)*sqrt(nuis(j))) / &
-              (1.0D0 + 0.5*sqrt(nuis(j)))
-         a1 = nuis(j)*nuis(j) * zft**6
-         alp = (alp + 0.315D0*a1) / (1.0D0 + 0.15D0*a1)  !  $\alpha(\nu_{i*})$, Eq.17b
-
-         !  Corrections suggested by Fable, 15/05/2015
-         !xcsa = beta_poloidal_local(j,nr) * (xcsa*alp)*tempi(j)/zz/tempe(j)
-         !xcsa = xcsa + dcsa(j,nr) / (1.0D0 + zz*tempe(j)/tempi(j))
-
-         xcsa = (beta_poloidal_local_total(j,nr)-beta_poloidal_local(j,nr)) &
-              * (xcsa*alp)
-         xcsa = xcsa + dcsa(j,nr) * &
-              (1.0D0 - beta_poloidal_local(j,nr)/beta_poloidal_local_total(j,nr))
-      end if
-
-    end function xcsa
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    function tpf(j)
-
-      !! Trapped particle fraction
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! This function calculates the trapped particle fraction at
-      !! a given radius.
-      !! <P>A number of different fits are provided, but the one
-      !! to be used is hardwired prior to run-time.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! O. Sauter et al, Plasma Phys. Contr. Fusion <B>44</B> (2002) 1999
-      !! O. Sauter, 2013:
-      !! http://infoscience.epfl.ch/record/187521/files/lrp_012013.pdf
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      implicit none
-
-      real(dp) :: tpf
-
-      !  Arguments
-
-      integer, intent(in) :: j
-
-      !  Local variables
-
-      integer, parameter :: ASTRA=1, SAUTER2002=2, SAUTER2013=3
-
-      real(dp) :: eps,epseff,g,s,zz
-
-      integer, parameter :: fit = ASTRA
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      s = sqeps(j)
-      eps = s*s
-
-      select case (fit)
-
-      case (ASTRA)
-
-         !  ASTRA method, from Emiliano Fable, private communication
-         !  (Excluding h term which dominates for inverse aspect ratios < 0.5,
-         !  and tends to take the trapped particle fraction to 1)
-
-         zz = 1.0D0 - eps
-
-         g = 1.0D0 - zz*sqrt(zz) / (1.0D0 + 1.46D0*s)
-
-         !  Advised by Emiliano to ignore ASTRA's h below
-         !
-         !h = 0.209D0 * (sqrt(tempi(j)*amain(j))/zmain(j)*mu(j)*rmajor*bt)**0.3333D0
-         !tpf = min(1.0D0, max(g, h))
-
-         tpf = g
-
-      case (SAUTER2002)
-
-         !  Equation 4 of Sauter 2002
-         !  Similar to, but not quite identical to g above
-
-         tpf = 1.0D0 - (1.0D0-eps)**2 / (1.0D0 + 1.46D0*s) / sqrt(1.0D0 - eps*eps)
-
-      case (SAUTER2013)
-
-         !  Includes correction for triangularity
-
-         epseff = 0.67D0*(1.0D0 - 1.4D0*triang*abs(triang)) * eps
-
-         tpf = 1.0D0 - sqrt( (1.0D0-eps)/(1.0D0+eps) ) * &
-              (1.0D0 - epseff) / (1.0D0 + 2.0D0*sqrt(epseff))
-
-      end select
-
-    end function tpf
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    !subroutine fast_alpha_bs()
-
-      !  BSALP (local per index J) is in MA/m^2
-
-      !  Required... before we can use this routine:
-      !  fast alpha pressure profile
-      !  poloidal flux profile vs local minor radius  (and grad(psi))
-      !  Shafranov shift vs local minor radius
-
-      !  all lengths in meters,
-      !  temperatures in keV where j is the radial index,
-      !  IPOL is R*Bphi / (R0*Bphi0)  (i.e. the normalized poloidal current integral)
-      !  PFAST is the alpha pressure
-      !  TE is the electron temperature
-      !  SHIF is the Shafranov shift (defined with respect to the geom. major radius)
-      !  AMETR is the minor radius
-      !  RTOR = R0
-      !  ZEF = Z effective
-      !  FP = PSI (magnetic flux, poloidal) defined such that
-      !    B_pol = grad(PSI) / (2*PI*R)
-
-      ! ZBIRTH = 1.
-
-      ! !MeV already included in PFAST ,convert PFAST from keV*1e19 to J
-      ! ZDPDPSI = 3./2.*1.60218*1.e3* &
-      !      (PFAST(J)-PFAST(J-1))/((FP(J)-FP(J-1))/GP2)
-      ! ZSB=(0.027*ZEF(J-1)*(TE(J-1)/20.)**(3./2.))**(1./3.)
-      ! ZSB1=(0.027*ZEF(J)*(TE(J)/20.)**(3./2.))**(1./3.)
-      ! ZSC=(5./3.)**(1./3.)*ZSB
-      ! ZSC1=(5./3.)**(1./3.)*ZSB1
-      ! ZDSC3DPSI = 3./2.*1.60218*1.e3*PFAST(J)* &
-      !      (ZSC1**3.-ZSC**3.)/((FP(J)-FP(J-1))/GP2)
-      ! ZEPS=AMETR(J)/RTOR
-      ! ZFP=1.-1.46*(1.+0.67/ZEF(J))*ZEPS**0.5+ 0.46*(1.+2.1/ZEF(J))*ZEPS
-
-      ! ZDR0DR=(SHIF(J)-SHIF(J-1))/(AMETR(J)-AMETR(J-1))
-
-      ! ZY=(1.-ZDR0DR/ZEPS*(1.-(1.-ZEPS**2.)**0.5)) &
-      !      /(1.+ZEPS*ZDR0DR/2.)/(1.-ZEPS**2.)**.5
-
-      ! ZA11=-ZSB**(3./2.)*(0.12+2.24*ZSB**(3./2.)-0.9*ZSB**3.) &
-      !      /(0.7+18.4*ZSB**(3./2.)+ &
-      !      23.5*ZSB**3.+101.*ZSB**(9./2.))*ZY
-
-      ! ZA12=-2./3.*(0.5+0.8*ZSC**(3./2.)+0.4*ZSC**3.) &
-      !      /(1.+2.3*ZSC**(3./2.)+4.*ZSC**3.)
-
-      ! ZA21=(7.e-4+0.02*ZSB**(3./2.)+0.4*ZSB**3.)/ &
-      !      (0.01-0.61*ZSB**(3./2.)+ &
-      !      24.8*ZSB**3.-53.4*ZSB**(9./2.)+118.*ZSB**6.)*ZY
-
-      ! ZA22=2./3.*(0.1+3.25*ZSC**(3./2.)-1.1*ZSC**3.)/ &
-      !      (1.e-3+0.6*ZSC**(3./2.)+ &
-      !      8.6*ZSC**3.+3.1*ZSC**(9./2.)+15.1*ZSC**6.)
-
-      ! ZB1=(0.155+3.9*ZSB**(3./2.)-3.1*ZSB**3.+0.3*ZSB**6.) &
-      !      /(0.1+3.*ZSB**(3./2.)-2.1*ZSB**3.)*ZY
-
-      ! ZB2=(1.3-0.5*ZSB**(3./2.)+5.9*ZSB**3.)/ &
-      !      (1.-0.34*ZSB**(3./2.)+4.9*ZSB**3.)*ZY
-
-      ! ZA1 = -ZA11+(2.*ZA11+(2.*ZB1-3.)*ZA12)*ZEPS**.5 &
-      !      -(ZA11+2.*(ZB1-1.)*ZA12)*ZEPS
-
-      ! ZA2 = -ZA21+(2.*ZA21+(2.*ZB2-3.)*ZA22)*ZEPS**.5 &
-      !      -(ZA21+2.*(ZB2-1.)*ZA22)*ZEPS
-
-      ! !bootstrap current by alphas
-      ! BSALP=-ZEPS**.5*(1.-2./ZEF(J)*ZFP)*IPOL(J)* &
-      !      RTOR*ZBIRTH*(ZA1*ZDPDPSI+ZA2*ZDSC3DPSI)
-      ! BSALP=BSALP/1.e6
-
-    !end subroutine fast_alpha_bs
-
   end function bootstrap_fraction_sauter
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1297,16 +1220,16 @@ module physics_module
     !! betalim : output real : beta limit as defined below
     !! This subroutine calculates the beta limit, using
     !! the algorithm documented in AEA FUS 172.
-    !! <P>The limit applies to beta defined with respect to the total B-field.
-    !! Switch ICULBL determines which components of beta to include (see
-    !! routine <A HREF="constraints.html">constraints</A> for coding):
-    !! <UL>
-    !! <P><LI>If ICULBL = 0, then the limit is applied to the total beta
-    !! <P><LI>If ICULBL = 1, then the limit is applied to the thermal beta only
-    !! <P><LI>If ICULBL = 2, then the limit is applied to the thermal +
-    !! neutral beam beta components
-    !! </UL>
-    !! The default value for the g coefficient is DNBETA = 3.5
+    !! The limit applies to beta defined with respect to the total B-field.
+    !! Switch iculbl determines which components of beta to include.
+    !!
+    !! If iculbl = 0, then the limit is applied to the total beta
+    !! If iculbl = 1, then the limit is applied to the thermal beta only
+    !! If iculbl = 2, then the limit is applied to the thermal +
+    !!                neutral beam beta components
+    !! If iculbl = 3, then the limit is applied to the toroidal beta
+    !!
+    !! The default value for the g coefficient is dnbeta = 3.5
     !! AEA FUS 172: Physics Assessment for the European Reactor Study
     !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
     !
