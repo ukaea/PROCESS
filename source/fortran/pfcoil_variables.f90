@@ -124,7 +124,7 @@ module pfcoil_variables
   !! - =4 PF coil, general location (equilibrium coil)
 
   integer :: ipfres
-  !! switch for PF coil type:
+  !! switch for PF & CS coil conductor type:
   !!
   !! - =0 superconducting PF coils
   !! - =1 resistive PF coils

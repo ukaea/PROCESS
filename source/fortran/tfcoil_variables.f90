@@ -354,7 +354,7 @@ module tfcoil_variables
   !! Aluminium young modulus.  Default value taken from wikipedia
 
   real(dp) :: poisson_steel
-  !! Steel Poisson's ratio
+  !! Steel Poisson's ratio, Source : https://www.engineeringtoolbox.com/metals-poissons-ratio-d_1268.html
 
   real(dp):: poisson_copper
   !! Copper Poisson's ratio. Source : https://www.engineeringtoolbox.com/poissons-ratio-d_1224.html
