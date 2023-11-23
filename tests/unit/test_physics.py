@@ -16,26 +16,26 @@ def physics():
     return Physics(PlasmaProfile())
 
 
-def test_diamagnetic_fraction_hender():
+def test_diamagnetic_fraction_hender(physics):
     """Test diamagnetic_fraction_hender()."""
     beta = 0.14
-    diacf = pm.diamagnetic_fraction_hender(beta)
+    diacf = physics.diamagnetic_fraction_hender(beta)
     assert diacf == pytest.approx(0.05, abs=0.0001)
 
 
-def test_diamagnetic_fraction_scene():
+def test_diamagnetic_fraction_scene(physics):
     """Test diamagnetic_fraction_scene."""
     beta = 0.15
     q95 = 3.0
     q0 = 1.0
-    diacf = pm.diamagnetic_fraction_scene(beta, q95, q0)
+    diacf = physics.diamagnetic_fraction_scene(beta, q95, q0)
     assert diacf == pytest.approx(0.0460, abs=0.0001)
 
 
-def test_ps_fraction_scene():
+def test_ps_fraction_scene(physics):
     """Test ps_fraction_scene."""
     beta = 0.15
-    pscf = pm.ps_fraction_scene(beta)
+    pscf = physics.ps_fraction_scene(beta)
     assert pscf == pytest.approx(-0.0135, abs=0.0001)
 
 

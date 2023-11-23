@@ -230,17 +230,17 @@ class Physics:
         )
 
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
-        current_drive_variables.diacf_hender = (
-            physics_module.diamagnetic_fraction_hender(physics_variables.beta)
+        current_drive_variables.diacf_hender = self.diamagnetic_fraction_hender(
+            physics_variables.beta
         )
 
         # SCENE scaling for diamagnetic current
-        current_drive_variables.diacf_scene = physics_module.diamagnetic_fraction_scene(
+        current_drive_variables.diacf_scene = self.diamagnetic_fraction_scene(
             physics_variables.beta, physics_variables.q95, physics_variables.q0
         )
 
         # Pfirsch-Schlüter scaling for diamagnetic current
-        current_drive_variables.pscf_scene = physics_module.ps_fraction_scene(
+        current_drive_variables.pscf_scene = self.ps_fraction_scene(
             physics_variables.beta
         )
 
@@ -1055,6 +1055,27 @@ class Physics:
         #  Empirical bootstrap current fraction
 
         return seps1 * betpth * (a * b).sum()
+
+    def diamagnetic_fraction_hender(self, beta):
+        """author: S.I. Muldrew, CCFE, Culham Science Centre
+        Diamagnetic contribution at tight aspect ratio.
+        Tim Hender fit
+        """
+        return beta / 2.8
+
+    def diamagnetic_fraction_scene(self, beta, q95, q0):
+        """author: S.I. Muldrew, CCFE, Culham Science Centre
+        Diamagnetic fraction based on SCENE fit by Tim Hender
+        See Issue #992
+        """
+        return beta * (0.1 * q95 / q0 + 0.44) * 4.14e-1
+
+    def ps_fraction_scene(self, beta):
+        """author: S.I. Muldrew, CCFE, Culham Science Centre
+        Pfirsch-Schlüter fraction based on SCENE fit by Tim Hender
+        See Issue #992
+        """
+        return -9e-2 * beta
 
     def eped_warning(self):
         eped_warning = ""

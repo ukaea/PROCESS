@@ -695,77 +695,7 @@ module physics_module
     bootstrap_fraction_sauter = 1.0D6 * iboot/plascur
   end function bootstrap_fraction_sauter
 
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine diamagnetic_fraction_hender(beta,diacf)
-
-    !! author: S.I. Muldrew, CCFE, Culham Science Centre
-    !! Diamagnetic contribution at tight aspect ratio.
-    !! Tim Hender fit
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-   implicit none
-
-   !  Arguments
-
-   real(dp), intent(in) ::  beta
-   real(dp), intent(out) :: diacf
-
-   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-   diacf = beta / 2.8D0
-
-
-  end subroutine diamagnetic_fraction_hender
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine diamagnetic_fraction_scene(beta,q95,q0,diacf)
-
-    !! author: S.I. Muldrew, CCFE, Culham Science Centre
-    !! Diamagnetic fraction based on SCENE fit by Tim Hender
-    !! See Issue #992
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    implicit none
-
-    !  Arguments
-
-    real(dp), intent(in) ::  beta, q95, q0
-    real(dp), intent(out) :: diacf
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    diacf = beta * (0.1D0*q95/q0+0.44D0) * 4.14D-1
-
-  end subroutine diamagnetic_fraction_scene
-
    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine ps_fraction_scene(beta,pscf)
-
-    !! author: S.I. Muldrew, CCFE, Culham Science Centre
-    !! Pfirsch-Schlüter fraction based on SCENE fit by Tim Hender
-    !! See Issue #992
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    implicit none
-
-    !  Arguments
-
-    real(dp), intent(in) ::  beta
-    real(dp), intent(out) :: pscf
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    pscf = -9.0D-2 * beta
-
-  end subroutine ps_fraction_scene
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine culcur(alphaj,alphap,bt,eps,icurr,iprofile,kappa,kappa95, &
        p0,pperim,q0,qpsi,rli,rmajor,rminor,sf,triang,triang95,bp,qstar,plascur)
