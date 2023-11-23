@@ -488,7 +488,7 @@ module fwbs_variables
   !! mass of blanket - lithium part [kg]
 
   real(dp) :: vfblkt
-  !! coolant void fraction in blanket (`blktmodel=0`), (calculated if `blktmodel > 0`)
+  !! coolant void fraction in blanket.
 
   integer :: blktmodel
   !! switch for blanket/tritium breeding model (see iblanket):
