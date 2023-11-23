@@ -3218,7 +3218,10 @@ contains
       !! Author : S Kahn
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units;
-      !!
+      !! Equation constraining the turn edge length in the TF winding pack
+      !! t_turn_tf : input real : TF coil turn edge length including turn insulation [m]
+      !! f_t_turn_tf : input real : f-value for TF turn edge length constraint
+      !! t_turn_tf_max : input real : TF turn edge length including turn insulation upper limit [m]
       use tfcoil_variables, only : t_turn_tf, f_t_turn_tf, t_turn_tf_max
 
       implicit none
@@ -3244,6 +3247,9 @@ contains
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
       !! Equation for TF coil cryogenic power upper limit
+      !! crypmw : input real : cryogenic plant power (MW)
+      !! f_crypmw : input real : f-value for maximum cryogenic plant power
+      !! crypmw_max : input real : Maximum cryogenic plant power (MW)
 
       use heat_transport_variables, only: crypmw, crypmw_max, f_crypmw
       implicit none
