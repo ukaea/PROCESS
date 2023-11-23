@@ -714,7 +714,7 @@ contains
                'Switch for Pfirsch-Schlüter scaling')
        case ('iradloss')
           call parse_int_variable('iradloss', iradloss, 0, 2, &
-               'Switch for radiation loss term inclusion in pwr balance')
+               'Switch for radiation loss term inclusion in power balance')
        case ('ires')
           write(outfile,*) ' '
           write(outfile,*) '**********'
