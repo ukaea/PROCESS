@@ -1068,7 +1068,7 @@ contains
       !! #=#=# fhldiv, hldivlim
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fhldiv : input real : peak resistive TF coil inboard leg power (MW)
+      !! fhldiv : input real : f-value for divertor heat load
       !! hldivlim : input real : heat load limit (MW/m2)
       !! hldiv : input real : divertor heat load (MW/m2)
       use constraint_variables, only: fhldiv
