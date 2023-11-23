@@ -25,6 +25,16 @@ class Evaluators:
         :param x: optimisation parameters
         :type x: np.ndarray
         """
+        # NOTE: at some point this should be replaced with a consistency
+        # check that runs the models until convergence (or we exceed some
+        # maximum number of repeats)
+        self.calls_per_model_evaluation = 6
+        """Everytime PROCESS wants to evaluate the outputs for some
+        input vector, it will run the models this many times before
+        capturing the output to allow the answer to converge. This
+        is because a PROCESS run depends on 'leaked state' from previous
+        evaluations.
+        """
         self.caller = Caller(models, x)
 
     def fcnvmc1(self, n, m, xv, ifail):
@@ -54,7 +64,8 @@ class Evaluators:
         conf = np.zeros(m, dtype=np.float64, order="F")
 
         # Evaluate machine parameters at xv
-        self.caller.call_models(xv)
+        for _ in range(self.calls_per_model_evaluation):
+            self.caller.call_models(xv)
 
         # Convergence loop to ensure burn time consistency
         if sv.istell == 0:
@@ -62,6 +73,8 @@ class Evaluators:
                 if abs((tv.tburn - tv.tburn0) / max(tv.tburn, 0.01)) <= 0.001:
                     break
 
+                # dont need to loop calls_per_model_evaluation times here because
+                # this is already checking for consistency.
                 self.caller.call_models(xv)
                 if gv.verbose == 1:
                     print("Internal tburn consistency check: ", tv.tburn, tv.tburn0)
@@ -143,12 +156,14 @@ class Evaluators:
                     xbac[i] = xv[j] * (1.0 - numerics.epsfcn)
 
             # Evaluate at (x+dx)
-            self.caller.call_models(xfor)
+            for _ in range(self.calls_per_model_evaluation):
+                self.caller.call_models(xfor)
             ffor = function_evaluator.funfom()
             cfor, _, _, _, _ = constraints.constraint_eqns(m, -1)
 
             # Evaluate at (x-dx)
-            self.caller.call_models(xbac)
+            for _ in range(self.calls_per_model_evaluation):
+                self.caller.call_models(xbac)
             fbac = function_evaluator.funfom()
             cbac, _, _, _, _ = constraints.constraint_eqns(m, -1)
 
@@ -164,6 +179,7 @@ class Evaluators:
         # variable in the solution vector is inconsistent with its value
         # shown elsewhere in the output file, which is a factor (1-epsfcn)
         # smaller (i.e. its xbac value above).
-        self.caller.call_models(xv)
+        for _ in range(self.calls_per_model_evaluation):
+            self.caller.call_models(xv)
 
         return fgrd, cnorm

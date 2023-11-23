@@ -30,6 +30,7 @@ from process.fortran import (
     neoclassics_module,
     impurity_radiation_module,
     current_drive_module,
+    sctfcoil_module,
 )
 import process.superconductors as superconductors
 import process.physics_functions as physics_funcs
@@ -54,7 +55,15 @@ class Stellarator:
     """
 
     def __init__(
-        self, availability, vacuum, buildings, costs, power, plasma_profile, hcpb
+        self,
+        availability,
+        vacuum,
+        buildings,
+        costs,
+        power,
+        plasma_profile,
+        hcpb,
+        sctfcoil,
     ) -> None:
         """Initialises the Stellarator model's variables
 
@@ -82,6 +91,7 @@ class Stellarator:
         self.power = power
         self.plasma_profile = plasma_profile
         self.hcpb = hcpb
+        self.sctfcoil = sctfcoil
 
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
@@ -95,6 +105,8 @@ class Stellarator:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
+
+        self.plasma_profile.run()
 
         if output:
             self.costs.costs(output=True)
@@ -131,8 +143,8 @@ class Stellarator:
         self.stgeom()
         self.stphys(False)
         self.stopt(False)
-        self.stcoil(False)
         self.stbild(False)
+        self.stcoil(False)
         self.ststrc(False)
         self.stfwbs(False)
         self.stdiv(False)
@@ -1178,12 +1190,6 @@ class Stellarator:
         volshldo = build_variables.shareaob * build_variables.shldoth
         fwbs_variables.volshld = volshldi + volshldo
 
-        fwbs_variables.whtshld = (
-            fwbs_variables.volshld
-            * fwbs_variables.denstl
-            * (1.0e0 - fwbs_variables.vfshld)
-        )
-
         #  Neutron power lost through holes in first wall (eventually absorbed by
         #  shield)
 
@@ -1718,6 +1724,14 @@ class Stellarator:
 
         if fwbs_variables.blktmodel == 0:
             coolvol = coolvol + fwbs_variables.volblkt * fwbs_variables.vfblkt
+
+        #  Shield mass
+
+        fwbs_variables.whtshld = (
+            fwbs_variables.volshld
+            * fwbs_variables.denstl
+            * (1.0e0 - fwbs_variables.vfshld)
+        )
 
         coolvol = coolvol + fwbs_variables.volshld * fwbs_variables.vfshld
 
@@ -2709,6 +2723,7 @@ class Stellarator:
         # NOTE: original implementation used taucq which used a EUROfusion
         # constant in the calculation. This was the minimum allowed quench time.
         # Replacing with the actual quench time.
+        # MN/m^3
         f_vv_actual = (
             2.54e6
             * (3e0 * 1.3e0 * 50e0 * 0.92e0**2e0)
@@ -2725,6 +2740,15 @@ class Stellarator:
                 )
             )
             ** (-1)
+        )
+
+        # N/m^2
+        # is the vv width the correct length to multiply by to turn the
+        # force density into a stress?
+        sctfcoil_module.vv_stress_quench = (
+            f_vv_actual
+            * 1e6
+            * ((build_variables.d_vv_in + build_variables.d_vv_out) / 2)
         )
 
         # the conductor fraction is meant of the cable space#
@@ -2837,6 +2861,7 @@ class Stellarator:
         )
         #
         ####################################
+        ###
 
         if output:
             self.stcoil_output(
