@@ -1963,7 +1963,8 @@ contains
                'Maximum temp rise during quench (K)')
 
        case ('quench_model')
-          call parse_string_variable('quench_model', quench_model, 'quench_model')
+          call parse_string_variable('quench_model', quench_model, &
+          'Switch for TF coil quench model (Only applies to REBCO magnet at present)')
        case ('quench_detection_ef')
           call parse_real_variable('quench_detection_ef', quench_detection_ef, 0.0D0, 1.0D1, &
                'Electric field at which TF quench is detected and discharge begins (V/m)')
