@@ -54,11 +54,20 @@ nav:
           - Shield: eng-models/shield.md
           - Divertor: eng-models/divertor.md
           - Heat transport: eng-models/power-conversion-and-heat-dissipation-systems.md
-          - Auxiliary Power Systems: 
+          - Auxiliary Heating & Current Drive Systems: 
              - Overview: eng-models/heating_and_current_drive/heating-and-current-drive.md
-             - RF:
+             - Radio Frequency:
                 - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
-             - NBI:
+                - Lower Hybrid:
+                   - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                   - Fenstermacher Model: eng-models/heating_and_current_drive/RF/fenstermacher_lower_hybrid.md
+                - Electron Cyclotron:
+                   - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                - Ion Cyclotron:
+                   - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                - Electron Bernstein Wave:
+                   - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+             - Neutral Beam Injection:
                 - Overview: eng-models/heating_and_current_drive/NBI/nbi_overview.md   
           - Cryostat and vacuum system: eng-models/cryostat-and-vacuum-system.md
           - Plant Availability: eng-models/plant.md
