@@ -5475,7 +5475,7 @@ class Sctfcoil:
             )
             po.ovarre(
                 self.outfile,
-                "Vacuum Vassel stress on quench (Pa)",
+                "Vacuum Vessel stress on quench (Pa)",
                 "(vv_stress_quench)",
                 sctfcoil_module.vv_stress_quench,
                 "OP ",
