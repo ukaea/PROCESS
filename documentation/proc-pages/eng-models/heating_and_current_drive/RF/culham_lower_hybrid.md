@@ -2,18 +2,11 @@
 
 - `iefrf` = 6: Culham Lower Hybrid model[^2]
 
+This routine calculates the current drive parameters for a
+lower hybrid system, based on the AEA FUS 172 model.
+AEA FUS 251: A User's Guide to the PROCESS Systems Code
+AEA FUS 172: Physics Assessment for the European Reactor Study
 
-
-
-def cullhy(self):
-        """Routine to calculate Lower Hybrid current drive efficiency
-        author: P J Knight, CCFE, Culham Science Centre
-        effrfss : output real : lower hybrid current drive efficiency (A/W)
-        This routine calculates the current drive parameters for a
-        lower hybrid system, based on the AEA FUS 172 model.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        """
         rratio = self.lhrad()
         rpenet = rratio * physics_variables.rminor
 
