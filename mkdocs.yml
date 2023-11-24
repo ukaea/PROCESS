@@ -54,7 +54,12 @@ nav:
           - Shield: eng-models/shield.md
           - Divertor: eng-models/divertor.md
           - Heat transport: eng-models/power-conversion-and-heat-dissipation-systems.md
-          - Auxiliary Power Systems: eng-models/heating-and-current-drive.md
+          - Auxiliary Power Systems: 
+             - Overview: eng-models/heating_and_current_drive/heating-and-current-drive.md
+             - RF:
+                - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+             - NBI:
+                - Overview: eng-models/heating_and_current_drive/NBI/nbi_overview.md   
           - Cryostat and vacuum system: eng-models/cryostat-and-vacuum-system.md
           - Plant Availability: eng-models/plant.md
           - Power Requirements: eng-models/power-requirements.md
