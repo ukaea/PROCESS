@@ -194,8 +194,54 @@ class CurrentDrive:
                 )
 
                 effcdfix = effcdfix * density_factor
-
                 effrfssfix = effrfssfix * density_factor
+            elif current_drive_variables.iefrffix == 13:
+                # ECCD model for O-mode cut-off with added Te and Zeff dependance
+                # Scaling author: Simon Freethy
+                # Ref : PROCESS issue #2994
+
+                fc = (
+                    1
+                    / (2 * np.pi)
+                    * constants.echarge
+                    * physics_variables.bt
+                    / constants.emass
+                )
+                fp = (
+                    1
+                    / (2 * np.pi)
+                    * np.sqrt(
+                        (
+                            (physics_variables.dene / 1.0e19)
+                            * constants.echarge**2
+                            / (constants.emass * constants.epsilon0)
+                        )
+                    )
+                )
+
+                xi_CD = 0.18e0  # This is tuned to the results of a GRAY study
+                xi_CD = xi_CD * (
+                    4.8e0 / (2 + physics_variables.zeff)
+                )  # Zeff correction
+                effrfssfix = (
+                    xi_CD
+                    * physics_variables.te
+                    / (
+                        3.27e0
+                        * physics_variables.rmajor
+                        * (physics_variables.dene / 1.0e19)
+                    )
+                )
+
+                # O-mode case
+                f_cutoff = fp
+
+                # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
+                a = 0.1  # This controls how sharply the transition is reached
+                cutoff_factor = 0.5 * (
+                    1 + np.tanh((2 / (a)) * ((2 * fc - f_cutoff) / fp - a))
+                )
+                effcdfix = effrfssfix * cutoff_factor
             elif current_drive_variables.iefrffix != 0:
                 raise RuntimeError(
                     f"Current drive switch is invalid: {current_drive_variables.iefrffix = }"
@@ -435,6 +481,54 @@ class CurrentDrive:
                     current_drive_variables.effcd * density_factor
                 )
                 effrfss = effrfss * density_factor
+
+            elif current_drive_variables.iefrf == 13:
+                # ECCD model for O-mode cut-off with added Te and Zeff dependance
+                # Scaling author: Simon Freethy
+                # Ref : PROCESS issue #2994
+
+                fc = (
+                    1
+                    / (2 * np.pi)
+                    * constants.echarge
+                    * physics_variables.bt
+                    / constants.emass
+                )
+                fp = (
+                    1
+                    / (2 * np.pi)
+                    * np.sqrt(
+                        (
+                            (physics_variables.dene / 1.0e19)
+                            * constants.echarge**2
+                            / (constants.emass * constants.epsilon0)
+                        )
+                    )
+                )
+
+                xi_CD = 0.18e0  # This is tuned to the results of a GRAY study
+                xi_CD = xi_CD * (
+                    4.8e0 / (2 + physics_variables.zeff)
+                )  # Zeff correction
+                effrfss = (
+                    xi_CD
+                    * physics_variables.te
+                    / (
+                        3.27e0
+                        * physics_variables.rmajor
+                        * (physics_variables.dene / 1.0e19)
+                    )
+                )
+
+                # O-mode case
+                f_cutoff = fp
+
+                # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
+                a = 0.1  # This controls how sharply the transition is reached
+                cutoff_factor = 0.5 * (
+                    1 + np.tanh((2 / (a)) * ((2 * fc - f_cutoff) / fp - a))
+                )
+                current_drive_variables.effcd = effrfss * cutoff_factor
 
             else:
                 raise RuntimeError(
