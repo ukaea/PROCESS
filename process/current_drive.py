@@ -403,11 +403,39 @@ class CurrentDrive:
                     dene20 * physics_variables.rmajor
                 )
                 current_drive_variables.effcd = effrfss
-
                 # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
                 # this behaviour is captured in the following function (ref issue #1262):
                 # current_drive_variables.harnum = cyclotron harmonic number (fundamental used as default)
                 # contant 'a' controls sharpness of transition
+                a = 0.1e0
+
+                fc = (
+                    1.0e0
+                    / (2.0e0 * np.pi)
+                    * current_drive_variables.harnum
+                    * constants.echarge
+                    * physics_variables.bt
+                    / constants.emass
+                )
+                fp = (
+                    1.0e0
+                    / (2.0e0 * np.pi)
+                    * np.sqrt(
+                        physics_variables.dene
+                        * constants.echarge**2
+                        / (constants.emass * constants.epsilon0)
+                    )
+                )
+
+                density_factor = 0.5e0 * (
+                    1.0e0 + np.tanh((2.0e0 / a) * ((fp - fc) / fp - a))
+                )
+
+                current_drive_variables.effcd = (
+                    current_drive_variables.effcd * density_factor
+                )
+                effrfss = effrfss * density_factor
+
             else:
                 raise RuntimeError(
                     f"Current drive switch is invalid: {current_drive_variables.iefrf = }"
