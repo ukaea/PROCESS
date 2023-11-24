@@ -61,6 +61,8 @@ nav:
                 - Lower Hybrid:
                    - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
                    - Fenstermacher Model: eng-models/heating_and_current_drive/RF/fenstermacher_lower_hybrid.md
+                   - Ehst Model: eng-models/heating_and_current_drive/RF/ehst_lower_hybrid.md
+                   - Culham Model: eng-models/heating_and_current_drive/RF/culham_lower_hybrid.md
                 - Electron Cyclotron:
                    - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
                 - Ion Cyclotron:
