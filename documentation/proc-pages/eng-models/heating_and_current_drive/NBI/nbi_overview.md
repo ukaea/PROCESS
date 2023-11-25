@@ -29,3 +29,38 @@ The power in the beam atoms that are not ionised as they pass through the plasma
 - Alternatively, constraint equation no. 59 with iteration variable no. 105 (`fnbshineef`) may be used to ensure that the beam power fraction emerging from the plasma is no more than the value given by input parameter `nbshinefmax`.
 
 It is recommended that <b>only one</b> of these two constraint equations is used during a run.
+
+## Beam stopping cross-section
+
+Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `sigbeam` method to calculate the stopping cross section[^1]. It finds a suitable analytic epressing for $\sigma_s^{(Z)}(E,n_e,T_e,Z_{\text{eff}})$ for fitting $\sigma_s$ data for a single impurity $(\text{Z)}$ plasma:
+
+
+
+$$
+\sigma_s^{(Z)}(E,n_e,T_e,Z_\text{eff}) = \frac{e^{[S_{1} (E,n_e, T_e)]}}{E} \times\left [1 +(Z_\text{eff}-1) S_z(E, n_e, T_e)\right] \  (\times 10^{-16} \text{cm}^2)
+$$
+
+where
+
+$$
+S_{1} = \sum_{i=1}^2 \sum_{j=1}^3 \sum_{k=1}^2 \ \{A_{ijk} \times (\ln E)^{i-1} \ [\ln(n/n_{0})]^{j-1} \ (\ln T_e)^{k-1} \}
+$$
+
+$$
+S_{Z} = \sum_{i=1}^3 \sum_{j=1}^2 \sum_{k=1}^2 \ \{B_{ijk}^{(z)} \times (\ln E)^{i-1} \ [\ln(n/n_{0})]^{j-1} \ (\ln T_e)^{k-1} \}
+$$
+
+with $E, n_e, T$ expressed in units of keV/u, $\text{cm}^3$ and keV, respectively, and $n_0 = 10^{13} \text{cm}^3$. The function $S_1 (E, n_e, T_e)$ together with the $E^{-1}$ factor describes the beam stopping in a pure hydrogenic plasma, while the function $(Z_{\text{eff}}- 1)\  S_z (E, n_e, T_e)$ describes the effect of the impurity $Z$ on the beam stopping.
+
+!!! info "Info" 
+    For the full table of values for $A_{ijk}$ & $B_{ijk}^{(z)}$\  please see the accompanying paper[^1] or `current_drive.py`
+
+For a plasma having an arbitrary mix of $N$ different types of impurities with densities $n$, and charges $Z_q (q = 1, ..., N)$, the beam stopping cross-section can be represented as the weighted sum of the stopping cross- sections for $N$ reference single-impurity plasmas. In each of these reference plasmas, the electron density and the proton density (including that of deuterium and tritium ions) are the same as in a true plasma. The impurity density, however, is increased in order to satisfy quasi-neutrality. The weighting function is the electron density $n_qZ_q$ associated with the aum impurity (in the true plasma), divided by the sum of these densities. The result is: 
+
+$$
+\sigma_s^{(N)}=\frac{ e^{S_{1}(E, n_e, T_e)}}{E} \times\left[1+\frac{1}{n_e} \sum_q n_q Z_q(Z_q-1) S_{Z_q}(E, n_e, T_e)\right] 
+(\times 10^{-16} \mathrm{~cm}^2)
+$$
+
+
+[^1]:Janev, R. K., Boley, C. D., & Post, D. E. (1989). *"Penetration of energetic neutral beams into fusion plasmas."* Nuclear Fusion, 29(12), 006. https://doi.org/10.1088/0029-5515/29/12/006
