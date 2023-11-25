@@ -10,14 +10,14 @@ The fraction of the required plasma current to be produced by non-inductive mean
 - `iefrf` = 2: [Ion cyclotron model](RF/ic_model.md)[^1],
 - `iefrf` = 3: [Fenstermacher electron cyclotron resonance model](RF/fenstermacher_electron_cyclotron_resonance.md)
 - `iefrf` = 4: [Ehst Lower Hybrid model](RF/ehst_lower_hybrid.md)
-- `iefrf` = 5: ITER neutral beam model[^1],[^2],
+- `iefrf` = 5: [ITER neutral beam model](NBI/iter_nb.md)[^1],[^2],
 - `iefrf` = 6: [Culham Lower Hybrid model](RF/culham_lower_hybrid.md)[^2],
 - `iefrf` = 7: [Culham electron cyclotron model](RF/culham_electron_cyclotron.md)[^2],
-- `iefrf` = 8: Culham neutral beam model[^2],
+- `iefrf` = 8: [Culham neutral beam model](NBI/culham_nb.md)[^2],
 - `iefrf` = 9: Oscillating Field current drive (RFPs only - OBSOLETE-REMOVED),
 - `iefrf` = 10: [ECRH user input gamma](RF/echr_gamma.md),
 - `iefrf` = 11: [ECRH "HARE" model](RF/ecrh_hare.md) [^3],
-- `iefrf` = 12: EBW user scaling input. Scaling (S. Freethy)
+- `iefrf` = 12: [EBW user scaling input. Scaling](RF/ebw_freethy.md) (S. Freethy)
 
 !!! Warning "Warning" 
     At present, the neutral beam models do not include the effect of an edge transport barrier (pedestal) in the plasma profile.

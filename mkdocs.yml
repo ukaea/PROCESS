@@ -72,8 +72,11 @@ nav:
                    - Ion cyclotron model: eng-models/heating_and_current_drive/RF/ic_model.md
                 - Electron Bernstein Wave:
                    - Overview: eng-models/heating_and_current_drive/RF/ebw_overview.md
+                   - EBW Model: eng-models/heating_and_current_drive/RF/ebw_freethy.md
              - Neutral Beam Injection:
                 - Overview: eng-models/heating_and_current_drive/NBI/nbi_overview.md   
+                - ITER Model: eng-models/heating_and_current_drive/NBI/iter_nb.md 
+                - Culham Model: eng-models/heating_and_current_drive/NBI/culham_nb.md
           - Cryostat and vacuum system: eng-models/cryostat-and-vacuum-system.md
           - Plant Availability: eng-models/plant.md
           - Power Requirements: eng-models/power-requirements.md

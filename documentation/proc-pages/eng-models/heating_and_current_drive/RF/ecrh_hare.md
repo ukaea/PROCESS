@@ -1,1 +1,1 @@
-# ERH HARE Model
+# ECRH HARE Model
