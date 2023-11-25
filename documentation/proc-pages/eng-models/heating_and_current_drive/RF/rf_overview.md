@@ -1,24 +1,5 @@
 # Radio Frequency Heating
 
 
-## Lower Hybrid Current Drive
-Lower hybrid heating is that produced by a lower hybrid wave; a plasma wave of frequency between the ion and electron cyclotron frequencies. It has a component of electric field parallel to the magnetic field, so it can accelerate electrons moving along the field lines.
 
-Lower hybrid resonance heating utilizes electromagnetic power in the frequency range 1-8 GHz. At 3 GHz the vacuum wavelength is 0 1 m thus allowing the energy to be transmitted and launched by means of wave guides operating in their fundamental mode. This is one of the principle advantages of this scheme
 
-The lower hybrid range of frequencies satisfies wa«« wce Propagation in this frequency range is again well described by eqn 5 6 1 where the dielectric tensor elements are approximately
-The use of lower hybrid waves was originally proposed with the object of heating the ions. For this purpose it is essential to choose conditions such that the lower hybrid resonance occurs in the plasma The condition for this is, from eqn 5 7 2,
-
-## Electron Cyclotron Heating
-
-Electron cyclotron resonance heating is the simplest of the radio frequency heating methods. In contrast to ion cyclotron and lower hybrid heating, there is no evanescent region between the antenna and the plasma,although cut-offs can exist within the plasma. 
-As a result, the antenna can be retracted into a less hostile environment than for the other schemes. Electron cyclotron heating has been made possible by the invention of the gyrotron millimetre wave source. This and related devices have only emerged since the mid-1970s. Gyrotron tubes capable of 0.5-1 MW out- put and with frequencies in the range 100-200 GHz are now under intense development. The frequency required for a reactor would be in the range 100-200 GHz which corresponds to vacuum wavelengths of 1-2 mm.
-Since $\omega_{ce}\le \omega_{pe}$ only the electrons respond to electron cyclotron waves and only the electrons are heated directly. However, under reactor- like conditions the ions will be heated collisionally by the electrons. As the density is increased, a limit is encountered above which electron cyclotron waves cannot penetrate to the central regions of a tokamak. Propagation is again described below
-
-$$
-n_{\perp}^2 = 1 - \frac{\omega_{pe}^2}{\omega^2} \ \  (\text{O-mode})
-$$
-
-$$
-n_{\perp}^2=\frac{(1-\frac{\omega_{pe}^2}{\omega^2}-\frac{\omega_{ce}}{\omega})(1-\frac{\omega_{pe}^2}{\omega^2}+\frac{\omega_{ce}}{\omega})}{(1-\frac{\omega_{pe}^2}{\omega^2}-\frac{\omega_{ce}^2}{\omega^2})} \ \ \text{(X-mode)}
-$$
