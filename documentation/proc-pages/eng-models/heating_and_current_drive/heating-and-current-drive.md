@@ -16,7 +16,7 @@ The fraction of the required plasma current to be produced by non-inductive mean
 - `iefrf` = 8: [Culham neutral beam model](NBI/culham_nb.md)[^2],
 - `iefrf` = 9: Oscillating Field current drive (RFPs only - OBSOLETE-REMOVED),
 - `iefrf` = 10: [ECRH user input gamma](RF/echr_gamma.md),
-- `iefrf` = 11: [ECRH "HARE" model](RF/ecrh_hare.md) [^3],
+- `iefrf` = 11: [ECRH "HARE" model](RF/ecrh_hare.md) [^3], (RFPs only - OBSOLETE-REMOVED)
 - `iefrf` = 12: [EBW user scaling input. Scaling](RF/ebw_freethy.md) (S. Freethy)
 
 !!! Warning "Warning" 
@@ -43,7 +43,7 @@ Like for a current drive and heating system a fixed amount of heating power that
 
 ## Ignited plasma
 
-Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining without the need for any injected auxiliary power during the burn. If `ignite` = 1, the calculated injected power does not contribute to the plasma power balance, although the cost of the auxiliary power system is taken into account (the system is then assumed to be required to provide heating etc during the plasma start-up phase only - use `pheat` to indicate the power requirement). If `ignite` = 0, the plasma is not ignited, and the auxiliary power is taken into account in the plasma power balance during the burn phase. Also, constraint equation no. 28 can be turned on to enforce the fusion gain *Q* to be at least `bigqmin`.
+Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining without the need for any injected auxiliary power during the burn. If `ignite` = 1, the calculated injected power does not contribute to the plasma power balance, although the cost of the auxiliary power system is taken into account (the system is then assumed to be required to provide heating etc during the plasma start-up phase only - use `pheat` to indicate the power requirement). If `ignite` = 0, the plasma is not ignited, and the auxiliary power is taken into account in the plasma power balance during the burn phase. Also, constraint equation 28 (`icc = 28`) can be turned on to enforce the fusion gain *Q* to be at least `bigqmin`.
 
 [^1]: N. A. Uckan and ITER Physics Group, *"ITER Physics Design Guidelines: 1989"*, ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
 

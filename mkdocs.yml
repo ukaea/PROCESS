@@ -67,6 +67,7 @@ nav:
                    - Overview: eng-models/heating_and_current_drive/RF/ec_overview.md
                    - Fenstermacher Resonnance Model: eng-models/heating_and_current_drive/RF/fenstermacher_electron_cyclotron_resonance.md
                    - Culham Model: eng-models/heating_and_current_drive/RF/culham_electron_cyclotron.md
+                   - User INput Gamma Model: eng-models/heating_and_current_drive/RF/ecrh_gamma.md
                 - Ion Cyclotron:
                    - Overview: eng-models/heating_and_current_drive/RF/ic_overview.md
                    - Ion cyclotron model: eng-models/heating_and_current_drive/RF/ic_model.md

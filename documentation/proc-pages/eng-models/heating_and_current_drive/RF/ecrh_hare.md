@@ -1,1 +1,0 @@
-# ECRH HARE Model
