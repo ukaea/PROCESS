@@ -7,16 +7,16 @@ The use of inductive current drive leads to pulsed plant operation because of th
 The fraction of the required plasma current to be produced by non-inductive means, `fvsbrnni`, should be set, and flag `irfcd` should be set to 0 for purely inductive scenarios, or 1 otherwise. The current drive efficiency model to be used in this latter case is defined by the value of switch `iefrf`:
 
 - `iefrf` = 1: [Fenstermacher Lower Hybrid model](RF/fenstermacher_lower_hybrid.md)
-- `iefrf` = 2: Ion cyclotron model[^1],
-- `iefrf` = 3: Fernstermacher electron cyclotron resonance model
+- `iefrf` = 2: [Ion cyclotron model](RF/ic_model.md)[^1],
+- `iefrf` = 3: [Fenstermacher electron cyclotron resonance model](RF/fenstermacher_electron_cyclotron_resonance.md)
 - `iefrf` = 4: [Ehst Lower Hybrid model](RF/ehst_lower_hybrid.md)
 - `iefrf` = 5: ITER neutral beam model[^1],[^2],
 - `iefrf` = 6: [Culham Lower Hybrid model](RF/culham_lower_hybrid.md)[^2],
-- `iefrf` = 7: Culham electron cyclotron model[^2],
+- `iefrf` = 7: [Culham electron cyclotron model](RF/culham_electron_cyclotron.md)[^2],
 - `iefrf` = 8: Culham neutral beam model[^2],
 - `iefrf` = 9: Oscillating Field current drive (RFPs only - OBSOLETE-REMOVED),
-- `iefrf` = 10: ECRH user input gamma,
-- `iefrf` = 11: ECRH "HARE" model [^3],
+- `iefrf` = 10: [ECRH user input gamma](RF/echr_gamma.md),
+- `iefrf` = 11: [ECRH "HARE" model](RF/ecrh_hare.md) [^3],
 - `iefrf` = 12: EBW user scaling input. Scaling (S. Freethy)
 
 !!! Warning "Warning" 

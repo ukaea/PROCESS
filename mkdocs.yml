@@ -65,8 +65,11 @@ nav:
                    - Culham Model: eng-models/heating_and_current_drive/RF/culham_lower_hybrid.md
                 - Electron Cyclotron:
                    - Overview: eng-models/heating_and_current_drive/RF/ec_overview.md
+                   - Fenstermacher Resonnance Model: eng-models/heating_and_current_drive/RF/fenstermacher_electron_cyclotron_resonance.md
+                   - Culham Model: eng-models/heating_and_current_drive/RF/culham_electron_cyclotron.md
                 - Ion Cyclotron:
                    - Overview: eng-models/heating_and_current_drive/RF/ic_overview.md
+                   - Ion cyclotron model: eng-models/heating_and_current_drive/RF/ic_model.md
                 - Electron Bernstein Wave:
                    - Overview: eng-models/heating_and_current_drive/RF/ebw_overview.md
              - Neutral Beam Injection:

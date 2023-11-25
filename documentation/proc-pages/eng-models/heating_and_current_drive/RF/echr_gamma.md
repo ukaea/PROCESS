@@ -1,0 +1,1 @@
+# ECRH Uer Input Gamma Model
