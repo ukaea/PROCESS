@@ -14,9 +14,9 @@ The fraction of the required plasma current to be produced by non-inductive mean
 - `iefrf` = 6: [Culham Lower Hybrid model](RF/culham_lower_hybrid.md)[^2],
 - `iefrf` = 7: [Culham electron cyclotron model](RF/culham_electron_cyclotron.md)[^2],
 - `iefrf` = 8: [Culham neutral beam model](NBI/culham_nb.md)[^2],
-- `iefrf` = 9: Oscillating Field current drive (RFPs only - OBSOLETE-REMOVED),
-- `iefrf` = 10: [ECRH user input gamma](RF/echr_gamma.md),
-- `iefrf` = 11: [ECRH "HARE" model](RF/ecrh_hare.md) [^3], (RFPs only - OBSOLETE-REMOVED)
+- `iefrf` = 9: Oscillating Field current drive :warning: (OBSOLETE-REMOVED),
+- `iefrf` = 10: [ECRH user input gamma](RF/ecrh_gamma.md),
+- `iefrf` = 11: ECRH "HARE" model [^3] :warning: (OBSOLETE-REMOVED),
 - `iefrf` = 12: [EBW user scaling input. Scaling](RF/ebw_freethy.md) (S. Freethy)
 
 !!! Warning "Warning" 
