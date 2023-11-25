@@ -59,16 +59,16 @@ nav:
              - Radio Frequency:
                 - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
                 - Lower Hybrid:
-                   - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                   - Overview: eng-models/heating_and_current_drive/RF/lhcd_overview.md
                    - Fenstermacher Model: eng-models/heating_and_current_drive/RF/fenstermacher_lower_hybrid.md
                    - Ehst Model: eng-models/heating_and_current_drive/RF/ehst_lower_hybrid.md
                    - Culham Model: eng-models/heating_and_current_drive/RF/culham_lower_hybrid.md
                 - Electron Cyclotron:
-                   - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                   - Overview: eng-models/heating_and_current_drive/RF/ec_overview.md
                 - Ion Cyclotron:
-                   - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                   - Overview: eng-models/heating_and_current_drive/RF/ic_overview.md
                 - Electron Bernstein Wave:
-                   - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                   - Overview: eng-models/heating_and_current_drive/RF/ebw_overview.md
              - Neutral Beam Injection:
                 - Overview: eng-models/heating_and_current_drive/NBI/nbi_overview.md   
           - Cryostat and vacuum system: eng-models/cryostat-and-vacuum-system.md
