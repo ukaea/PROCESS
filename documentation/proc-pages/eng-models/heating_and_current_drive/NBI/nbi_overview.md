@@ -64,60 +64,65 @@ $$
 
 
 ## Ion coupled power
-Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `cfnbi` method to calculate the fraction of the fast particle energy coupled to the ions
+Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `cfnbi` method to calculate the fraction of the fast particle energy coupled to the ions.
 
-def cfnbi(self, afast, efast, te, ne, nd, nt, zeffai, xlmbda):
-        """Routine to calculate the fraction of the fast particle energy
-        coupled to the ions
-        author: P J Knight, CCFE, Culham Science Centre
-        afast   : input real : mass of fast particle (units of proton mass)
-        efast   : input real : energy of fast particle (keV)
-        te      : input real : density weighted average electron temp. (keV)
-        ne      : input real : volume averaged electron density (m**-3)
-        nd      : input real : deuterium beam density (m**-3)
-        nt      : input real : tritium beam density (m**-3)
-        zeffai  : input real : mass weighted plasma effective charge
-        xlmbda  : input real : ion-electron coulomb logarithm
-        fpion   : output real : fraction of fast particle energy coupled to ions
-        This routine calculates the fast particle energy coupled to
-        the ions in the neutral beam system.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
-        """
-        # atmd = 2.0
-        atmdt = 2.5
-        # atmt = 3.0
-        c = 3.0e8
-        me = 9.1e-31
-        # zd = 1.0
-        # zt = 1.0
+### Coloumb logarithm
+Firstly the Coloumb logarithm for the ion-ion collisions ($\ln \Lambda$) is calculated where the relative velocity may be large compared with the background thermal velocity using the `xlmbdabi` method [^2], which follows as:
 
-        # xlbd = self.xlmbdabi(afast, atmd, efast, te, ne)
-        # xlbt = self.xlmbdabi(afast, atmt, efast, te, ne)
+$$
+x_{1} = \frac{T_e}{10} E_{\text{fast}} \frac{m_{\text{u,fast}}}{n_e} 
+$$
 
-        # sum = nd * zd * zd * xlbd / atmd + nt * zt * zt * xlbt / atmt
-        # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
+$$
+x_2 =  \frac{m_{\text{u,ion}}}{(m_{\text{u,ion}} + m_{\text{u,fast}})}
+$$
 
-        xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
-        sumln = zeffai * xlmbdai / xlmbda
-        xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.mproton * sumln) ** (
-            2.0e0 / 3.0e0
-        )
-        ve = c * np.sqrt(2.0e0 * te / 511.0e0)
+$$
+\ln \Lambda  = 23.7 + \log(x2 \sqrt{x1})
+$$
 
-        ecritfi = (
-            afast
-            * constants.mproton
-            * ve
-            * ve
-            * xlnrat
-            / (2.0e0 * constants.echarge * 1.0e3)
-        )
+Where $T_e$ is the density weighted average electron temp (keV), $E_{\text{fast}}$ is the energy of the fast particle (MeV), $m_{\text{u,fast}}$ is the mass of the fast particle (units of proton mass),$n_e$ is the volume averaged electron density (1e20), $m_{\text{u,ion}}$ is the mass of background ions (units of proton mass).
 
-        x = np.sqrt(efast / ecritfi)
-        t1 = np.log((x * x - x + 1.0e0) / ((x + 1.0e0) ** 2))
-        thx = (2.0e0 * x - 1.0e0) / np.sqrt(3.0e0)
-        t2 = 2.0e0 * np.sqrt(3.0e0) * (np.atan(thx) + np.pi / 6.0e0)
+----------------------------------------------
 
-        return (t1 + t2) / (3.0e0 * x * x)
+$$
+sum\ln = Z_{\text{eff} = \frac{\ln\Lambda}{\ln \Lambda_{\text{i-e}}}
+$$
+
+$Z_{\text{eff}}$ is the mass weighted plasma effective charge and $\ln\Lambda_{\text{i-e}}$  is the ion-electron coulomb logarithm
+
+$$
+xlnrat = 3 \left(\frac{\sqrt \pi}{4}\frac{m_e}{m_p sum\ln}\right)^{\frac{2}{3}}
+$$
+
+$$
+v_e = c \sqrt{\left(\frac{2T_e}{511}\right)}
+$$
+
+$$
+ecritfi = \frac{m_{\text{u,fast}} m_p v_e^2 xlnrat} {(2 echarge 1000)}
+$$
+
+$$
+x = \sqrt{\frac{efast}{ecritfi}}
+$$
+
+$$
+ti = \log{\frac{x^2-x+1}{(x+1)^2}}
+$$
+
+$$
+thx = \frac{(2x-1)}{\sqrt{3}}
+$$
+
+$$
+t2 = 2 \sqrt{3} \frac{\arctan{thx}+\pi}{6}
+$$
+
+$$
+couple fraction = \frac{(t1+t2)}{3x^2}
+$$
 
 [^1]:Janev, R. K., Boley, C. D., & Post, D. E. (1989). *"Penetration of energetic neutral beams into fusion plasmas."* Nuclear Fusion, 29(12), 006. https://doi.org/10.1088/0029-5515/29/12/006
+
+[^2]: David R. Mikkelsen & Clifford E. Singer (1983) *"Optimization of Steady-State Beam-Driven Tokamak Reactors"*, Nuclear Technology - Fusion, 4:2P1, 237-252, DOI: 10.13182/FST83-A22816
