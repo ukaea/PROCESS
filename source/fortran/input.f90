@@ -260,7 +260,7 @@ contains
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
       ftritbm, gamma_ecrh, pheat, rho_ecrh, beamwd, enbeam, pheatfix, bscfmax, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
-      etalh, frbeam, harnum, xi_ebw
+      etalh, frbeam, harnum, xi_ebw, wave_mode
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
       c5div, ksic, fififi, flux_exp, divplt, delld, c2div, beta_div, betao, divdum, tdiv, c6div, &
       omegan, prn1, fgamp, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
@@ -1158,7 +1158,10 @@ contains
                'User input ECRH gamma_CD')
        case ('harnum')
           call parse_real_variable('harnum', harnum, 1.0D0, 10.0D0, &
-               'cyclotron harmonic frequency number')
+               'Cyclotron harmonic frequency number')
+      case ('wave_mode')
+         call parse_int_variable('wave_mode', wave_mode, 0, 1, &
+               'Cyclotron wave mode switch')        
        case ('rho_ecrh')
           call parse_real_variable('rho_ecrh', rho_ecrh, 0.0D0, 1.0D0, &
                'normalised minor radius at which electron cyclotron current drive is maximum')
