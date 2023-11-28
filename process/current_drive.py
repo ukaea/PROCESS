@@ -710,6 +710,11 @@ class CurrentDrive:
             )
         elif current_drive_variables.iefrf == 12:
             po.ocmmnt(self.outfile, "EBW current drive")
+        elif current_drive_variables.iefrf == 13:
+            po.ocmmnt(
+                self.outfile,
+                "Electron Cyclotron Current Drive (O-mode cutoff with Zeff & Te)",
+            )
 
         po.ovarin(
             self.outfile,
@@ -732,6 +737,11 @@ class CurrentDrive:
             )
         elif current_drive_variables.iefrffix == 12:
             po.ocmmnt(self.outfile, "EBW current drive")
+        elif current_drive_variables.iefrffix == 13:
+            po.ocmmnt(
+                self.outfile,
+                "Electron Cyclotron Current Drive (O-mode cutoff with Zeff & Te)",
+            )
 
         po.ovarin(
             self.outfile,
