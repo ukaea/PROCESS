@@ -234,7 +234,17 @@ class CurrentDrive:
                 )
 
                 # O-mode case
-                f_cutoff = fp
+                if current_drive_variables.wave_mode == 0:
+                    f_cutoff = fp
+
+                # X-mode case
+                elif current_drive_variables.wave_mode == 1:
+                    f_cutoff = 0.5 * (
+                        fc
+                        + np.sqrt(
+                            current_drive_variables.harnum * fc**2 + 4 * fp**2
+                        )
+                    )
 
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
                 a = 0.1  # This controls how sharply the transition is reached
@@ -525,7 +535,17 @@ class CurrentDrive:
                 )
 
                 # O-mode case
-                f_cutoff = fp
+                if current_drive_variables.wave_mode == 0:
+                    f_cutoff = fp
+
+                # X-mode case
+                elif current_drive_variables.wave_mode == 1:
+                    f_cutoff = 0.5 * (
+                        fc
+                        + np.sqrt(
+                            current_drive_variables.harnum * fc**2 + 4 * fp**2
+                        )
+                    )
 
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
                 a = 0.1  # This controls how sharply the transition is reached
