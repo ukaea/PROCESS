@@ -246,7 +246,7 @@ module current_drive_variables
     echpwr = 0.0D0
     echwpow = 0.0D0
     effcd = 0.0D0
-    harnum = 1.0D0
+    harnum = 2.0
     enbeam = 1.0D3
     etacd = 0.0D0
     etacdfix = 0.0D0

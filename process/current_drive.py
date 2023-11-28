@@ -239,7 +239,11 @@ class CurrentDrive:
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
                 a = 0.1  # This controls how sharply the transition is reached
                 cutoff_factor = 0.5 * (
-                    1 + np.tanh((2 / (a)) * ((2 * fc - f_cutoff) / fp - a))
+                    1
+                    + np.tanh(
+                        (2 / (a))
+                        * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a)
+                    )
                 )
                 effcdfix = effrfssfix * cutoff_factor
             elif current_drive_variables.iefrffix != 0:
@@ -526,7 +530,11 @@ class CurrentDrive:
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
                 a = 0.1  # This controls how sharply the transition is reached
                 cutoff_factor = 0.5 * (
-                    1 + np.tanh((2 / (a)) * ((2 * fc - f_cutoff) / fp - a))
+                    1
+                    + np.tanh(
+                        (2 / (a))
+                        * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a)
+                    )
                 )
                 current_drive_variables.effcd = effrfss * cutoff_factor
 
