@@ -1,22 +1,15 @@
 # Neutral Beam Injection Heating
 
-!!! Warning "Warning" 
+!!! Warning "NBI Models" 
     At present, the neutral beam models do not include the effect of an edge transport barrier (pedestal) in the plasma profile.
 
 ## Neutral beam access
 
 If present, a neutral beam injection system needs sufficient space between the TF coils to be able to intercept the plasma tangentially. The major radius `rtanbeam` at which the centre-line of the beam is tangential to the toroidal direction is user-defined using input parameter `frbeam`, which is the ratio of `rtanbeam` to the plasma major radius `rmajor`. The maximum possible tangency radius `rtanmax` is determined by the geometry of the TF coils - see Figure 1, and this can be enforced using constraint equation no. 20 with iteration variable no. 33 (`fportsz`). The thickness of the beam duct walls may be set using input parameter `nbshield`.
 
-<figure>
-    <center>
-    <img src="../images/portsize.png" alt="NBI port" 
-    title="Neutral beam access geometry" 
-    width="550" height="100" />
-    <br><br>
-    <figcaption><i>Figure 1: Top-down schematic of the neutral beam access geometry. The beam with the maximum possible tangency radius is shown here.
-    </i></figcaption>
-    <br>
-    </center>
+<figure markdown>
+![NBI Port Size](../images/portsize.png){ width = "300"}
+<figcaption>Figure 1: Top-down schematic of the neutral beam access geometry. The beam with the maximum possible tangency radius is shown here.</figcaption>
 </figure>
 
 ## Neutral beam losses

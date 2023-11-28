@@ -11,3 +11,148 @@ $$
 $$
 n_{\perp}^2=\frac{(1-\frac{\omega_{pe}^2}{\omega^2}-\frac{\omega_{ce}}{\omega})(1-\frac{\omega_{pe}^2}{\omega^2}+\frac{\omega_{ce}}{\omega})}{(1-\frac{\omega_{pe}^2}{\omega^2}-\frac{\omega_{ce}^2}{\omega^2})} \ \ \text{(X-mode)}
 $$
+
+## Normalised current drive efficiency `eccdef`
+
+One of the methods for calculating the normalised current drive efficiency is the `eccdef` method found below.
+
+| Input       | Description                          |
+| :---------- | :----------------------------------- |
+| $\mathtt{tlocal}$       |      Local electron temperature (keV)  |
+| $\mathtt{epsloc}$       |  Local inverse aspect ratio |
+| $\mathtt{zlocal}$    |     Local plasma effective charge |
+| $\mathtt{cosang}$       |  Cosine of the poloidal angle at which ECCD takes place (+1 outside, -1 inside) 
+| $\mathtt{coulog}$       | Local coulomb logarithm for ion-electron collisions |
+
+This routine calculates the current drive parameters for a electron cyclotron system, based on the AEA FUS 172 model.
+It works out the ECCD efficiency using the formula due to Cohen quoted in the ITER Physics Design Guidelines : 1989 (but including division by the Coulomb Logarithm omitted from IPDG89). 
+We have assumed gamma**2-1 << 1, where gamma is the relativistic factor. 
+The notation follows that in IPDG89.
+The answer ECGAM is the normalised efficiency nIR/P with n the local density in 10**20 /m**3, I the driven current in MAmps,R the major radius in metres, and P the absorbed power in MWatts.
+        
+
+$$
+\mathtt{mcsq} = 9.1095e-31 \frac{c^2}{(1E3\text{e})}
+$$
+
+$$
+\mathtt{f} = 16\left(\frac{\mathtt{tlocal}}{\mathtt{mcsq}}\right)^2
+$$
+
+$\mathtt{fp}$ is the derivative of $\mathtt{f}$ with respect to gamma, the relativistic factor, taken equal to $1 + \frac{2T_e}{(m_ec^2)}$
+
+$$
+\mathtt{fp} = 16.0 \frac{\mathtt{tlocal}}{\mathtt{mcsq}}
+$$
+        
+lam is IPDG89's lambda. `legend` calculates the Legendre function of order alpha and argument `lam`, `palpha`, and its derivative, palphap.
+Here `alpha` satisfies $alpha(alpha+1) = \frac{-8}{(1+zlocal)}$. alpha is of the form  $(-1/2 + ix)$, with x a real number and $i = sqrt(-1)$.
+
+lam = 1.0e0
+
+----------------------------------------------------------------------------------
+### Legendre function and its derivative `legend`
+
+
+| Input       | Description                          |
+| :---------- | :----------------------------------- |
+| $\mathtt{zlocal}$       |  Local plasma effective charge  |
+| $\mathtt{arg}$       |  Argument of Legendre function |
+
+``` py
+def legend(self, zlocal, arg):
+        """Routine to calculate Legendre function and its derivative
+        author: M R O'Brien, CCFE, Culham Science Centre
+        author: P J Knight, CCFE, Culham Science Centre
+        zlocal  : input real : local plasma effective charge
+        arg     : input real : argument of Legendre function
+        palpha  : output real : value of Legendre function
+        palphap : output real : derivative of Legendre function
+        This routine calculates the Legendre function `palpha`
+        of argument `arg` and order
+        `alpha = -0.5 + i sqrt(xisq)``,
+        and its derivative `palphap`.
+        This Legendre function is a conical function and we use the series
+        in `xisq`` given in Abramowitz and Stegun. The
+        derivative is calculated from the derivative of this series.
+        The derivatives were checked by calculating `palpha` for
+        neighboring arguments. The calculation of `palpha` for zero
+        argument was checked by comparison with the expression
+        `palpha(0) = 1/sqrt(pi) * cos(pi*alpha/2) * gam1 / gam2`
+        (Abramowitz and Stegun, eqn 8.6.1). Here `gam1`` and
+        `gam2`` are the Gamma functions of arguments
+        `0.5*(1+alpha)`` and `0.5*(2+alpha)` respectively.
+        Abramowitz and Stegun, equation 8.12.1
+        """
+        if abs(arg) > (1.0e0 + 1.0e-10):
+            eh.fdiags[0] = arg
+            eh.report_error(18)
+
+        arg2 = min(arg, (1.0e0 - 1.0e-10))
+        sinsq = 0.5e0 * (1.0e0 - arg2)
+        xisq = 0.25e0 * (32.0e0 * zlocal / (zlocal + 1.0e0) - 1.0e0)
+        palpha = 1.0e0
+        pold = 1.0e0
+        pterm = 1.0e0
+        palphap = 0.0e0
+        poldp = 0.0e0
+
+        for n in range(10000):
+            #  Check for convergence every 20 iterations
+
+            if (n > 1) and ((n % 20) == 1):
+                term1 = 1.0e-10 * max(abs(pold), abs(palpha))
+                term2 = 1.0e-10 * max(abs(poldp), abs(palphap))
+
+                if (abs(pold - palpha) < term1) and (abs(poldp - palphap) < term2):
+                    return palpha, palphap
+
+                pold = palpha
+                poldp = palphap
+
+            pterm = (
+                pterm
+                * (4.0e0 * xisq + (2.0e0 * n - 1.0e0) ** 2)
+                / (2.0e0 * n) ** 2
+                * sinsq
+            )
+            palpha = palpha + pterm
+            palphap = palphap - n * pterm / (1.0e0 - arg2)
+        else:
+            eh.report_error(19)
+        
+```
+
+
+palpha, palphap = self.legend(zlocal, lam)
+
+lams = np.sqrt(2.0e0 * epsloc / (1.0e0 + epsloc))
+palphas, _ = self.legend(zlocal, lams)
+
+#  hp is the derivative of IPDG89's h function with respect to lam
+
+h = -4.0e0 * lam / (zlocal + 5.0e0) * (1.0e0 - lams * palpha / (lam * palphas))
+hp = -4.0e0 / (zlocal + 5.0e0) * (1.0e0 - lams * palphap / palphas)
+
+#  facm is IPDG89's momentum conserving factor
+
+facm = 1.5e0
+y = mcsq / (2.0e0 * tlocal) * (1.0e0 + epsloc * cosang)
+
+#  We take the negative of the IPDG89 expression to get a positive
+#  number
+
+ecgam = (
+    -7.8e0
+    * facm
+    * np.sqrt((1.0e0 + epsloc) / (1.0e0 - epsloc))
+    / coulog
+    * (h * fp - 0.5e0 * y * f * hp)
+)
+
+if ecgam < 0.0e0:
+    eh.report_error(17)
+return ecgam
+
+
+[^1]: Abramowitz, Milton. *"Abramowitz and stegun: Handbook of mathematical functions."* US Department of Commerce 10 (1972).        
