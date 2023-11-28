@@ -557,7 +557,6 @@ class CurrentDrive:
                     )
                 )
                 current_drive_variables.effcd = effrfss * cutoff_factor
-
             else:
                 raise RuntimeError(
                     f"Current drive switch is invalid: {current_drive_variables.iefrf = }"
@@ -881,12 +880,26 @@ class CurrentDrive:
                 "(gamma_ecrh)",
                 current_drive_variables.gamma_ecrh,
             )
-        elif current_drive_variables.iefrf == 12:
+        if current_drive_variables.iefrf == 12:
             po.ovarre(
                 self.outfile,
                 "EBW plasma heating efficiency",
                 "(xi_ebw)",
                 current_drive_variables.xi_ebw,
+            )
+        if current_drive_variables.iefrf in [12, 13]:
+            po.ovarre(
+                self.outfile,
+                "EC harmonic number",
+                "(harnum)",
+                current_drive_variables.harnum,
+            )
+        if current_drive_variables.iefrf == 13:
+            po.ovarin(
+                self.outfile,
+                "EC cutoff wave mode switch",
+                "(wave_mode)",
+                current_drive_variables.wave_mode,
             )
 
         if current_drive_variables.iefrffix != 0:
