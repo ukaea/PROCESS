@@ -1166,10 +1166,10 @@ contains
 	  call parse_real_variable('xi_ebw', xi_ebw, 0.0D0, 1.0D0, &
                'User input EBW scaling for Plasma Heating')
        case ('iefrf')
-          call parse_int_variable('iefrf', iefrf, 1, 12, &
+          call parse_int_variable('iefrf', iefrf, 1, 13, &
                'Switch for curr drive efficiency model')
        case ('iefrffix')
-          call parse_int_variable('iefrffix', iefrffix, 0, 12, &
+          call parse_int_variable('iefrffix', iefrffix, 0, 13, &
                'Switch for 2nd curr drive efficiency model')
        case ('irfcd')
           call parse_int_variable('irfcd', irfcd, 0, 1, &
