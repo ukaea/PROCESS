@@ -272,7 +272,7 @@ class CurrentDrive:
                     * 1.0e6
                 )
                 faccdfix = auxiliary_cdfix / physics_variables.plascur
-            elif current_drive_variables.iefrffix in [3, 7, 10, 11, 12]:
+            elif current_drive_variables.iefrffix in [3, 7, 10, 11, 12, 13]:
                 # Injected power
                 pinjemwfix = current_drive_variables.pinjfixmw
 
@@ -564,7 +564,7 @@ class CurrentDrive:
                 gamrf = effrfss * (dene20 * physics_variables.rmajor)
                 current_drive_variables.gamcd = gamrf
             # ECCD
-            elif current_drive_variables.iefrf in [3, 7, 10, 11, 12]:
+            elif current_drive_variables.iefrf in [3, 7, 10, 11, 12, 13]:
                 # Injected power (set to close to close the Steady-state current equilibrium)
                 current_drive_variables.echpwr = (
                     1.0e-6
