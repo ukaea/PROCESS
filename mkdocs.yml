@@ -42,7 +42,7 @@ nav:
   - Reference:
       - Physics Models:
           - Plasma: 
-            - Overview: physics-models/plasma.md
+            - Overview: physics-models/plasma_overview.md
             - Geometry: physics-models/plasma_geometry.md
             - Profiles: physics-models/plasma_profiles.md
             - Beta Limit: physics-models/plasma_beta.md
