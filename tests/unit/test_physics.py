@@ -1,6 +1,6 @@
 """Unit tests for physics.f90."""
 from typing import Any, NamedTuple
-from process.fortran import physics_module as physics_variables
+from process.fortran import physics_variables
 import pytest
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile

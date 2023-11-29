@@ -1178,7 +1178,7 @@ class Physics:
                         sqeps,
                     )
                     * dlogne_drho
-                    + physics_module.hcsa(
+                    + self.hcsa(
                         ir + 1,
                         NR,
                         physics_variables.rmajor,
@@ -1223,6 +1223,167 @@ class Physics:
 
             iboot += da * jboot
         return 1.0e6 * iboot / physics_variables.plascur
+
+    def hcsa(
+        self, j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
+    ):
+        """Grad(ln(Te)) coefficient in the Sauter bootstrap scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        nr : input integer : maximum value of j
+        This function calculates the coefficient scaling grad(ln(Te))
+        in the Sauter bootstrap current scaling.
+        Code by Angioni, 29th May 2002.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        O. Sauter, C. Angioni and Y. R. Lin-Liu,
+        Physics of Plasmas <B>6</B> (1999) 2834
+        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+        Physics of Plasmas <B>9</B> (2002) 5140
+        """
+
+        if j == 1:
+            return 0.0
+
+        zz = zef[j - 1]
+        zft = physics_module.tpf(j, triang, sqeps)
+        zdf = 1.0 + 0.26 * (1.0 - zft) * numpy.sqrt(
+            physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+        )
+        zdf = zdf + 0.18 * (1.0 - 0.37 * zft) * physics_module.nues(
+            j, rmajor, zef, mu, sqeps, tempe, ne
+        ) / numpy.sqrt(zz)
+        zfte = zft / zdf  # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
+        zfte2 = zfte * zfte
+        zfte3 = zfte * zfte2
+        zfte4 = zfte2 * zfte2
+
+        zdf = 1.0 + (1.0 + 0.6 * zft) * numpy.sqrt(
+            physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+        )
+        zdf = zdf + 0.85 * (1.0 - 0.37 * zft) * physics_module.nues(
+            j, rmajor, zef, mu, sqeps, tempe, ne
+        ) * (1.0 + zz)
+        zfti = zft / zdf  # $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
+        zfti2 = zfti * zfti
+        zfti3 = zfti * zfti2
+        zfti4 = zfti2 * zfti2
+
+        hcee = (0.05 + 0.62 * zz) / zz / (1.0 + 0.44 * zz) * (zfte - zfte4)
+        hcee = hcee + (zfte2 - zfte4 - 1.2 * (zfte3 - zfte4)) / (1.0 + 0.22 * zz)
+        hcee = hcee + 1.2 / (1.0 + 0.5 * zz) * zfte4  # $F_{32\_ee}(X)$, Eq.15b
+
+        hcei = -(0.56 + 1.93 * zz) / zz / (1.0 + 0.44 * zz) * (zfti - zfti4)
+        hcei = hcei + 4.95 / (1.0 + 2.48 * zz) * (
+            zfti2 - zfti4 - 0.55 * (zfti3 - zfti4)
+        )
+        hcei = hcei - 1.2 / (1.0 + 0.5 * zz) * zfti4  # $F_{32\_ei}(Y)$, Eq.15c
+
+        #  Corrections suggested by Fable, 15/05/2015
+        return physics_module.beta_poloidal_local(
+            j, nr, rmajor, bt, ne, tempe, mu, rho
+        ) * (hcee + hcei) + physics_module.dcsa(
+            j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
+        ) * physics_module.beta_poloidal_local(
+            j, nr, rmajor, bt, ne, tempe, mu, rho
+        ) / physics_module.beta_poloidal_local_total(
+            j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
+        )
+
+    def xcsa(
+        self,
+        j,
+        nr,
+        rmajor,
+        bt,
+        triang,
+        mu,
+        sqeps,
+        tempi,
+        tempe,
+        amain,
+        zmain,
+        ni,
+        ne,
+        rho,
+        zef,
+    ):
+        """Grad(ln(Ti)) coefficient in the Sauter bootstrap scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        nr : input integer : maximum value of j
+        This function calculates the coefficient scaling grad(ln(Ti))
+        in the Sauter bootstrap current scaling.
+        Code by Angioni, 29th May 2002.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        O. Sauter, C. Angioni and Y. R. Lin-Liu,
+        Physics of Plasmas <B>6</B> (1999) 2834
+        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+        Physics of Plasmas <B>9</B> (2002) 5140
+        """
+        if j == 1:
+            return 0.0
+
+        zz = zef[j - 1]
+        zft = physics_module.tpf(j, triang, sqeps)
+        zdf = 1.0 + (1.0 - 0.1 * zft) * numpy.sqrt(
+            physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+        )
+        zdf = (
+            zdf
+            + 0.5
+            * (1.0 - 0.5 * zft)
+            * physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+            / zz
+        )
+        zfte = zft / zdf  # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
+
+        xcsa = (1.0 + 1.4 / (zz + 1.0)) * zfte - 1.9 / (zz + 1.0) * zfte * zfte
+        xcsa = xcsa + (0.3 * zfte * zfte + 0.2 * zfte * zfte * zfte) * zfte / (
+            zz + 1.0
+        )  # Eq.16a
+
+        a0 = -1.17 * (1.0 - zft)
+        a0 = a0 / (1.0 - 0.22 * zft - 0.19 * zft * zft)  # $\alpha_0$, Eq.17a
+
+        alp = (
+            a0
+            + 0.25
+            * (1.0 - zft * zft)
+            * numpy.sqrt(
+                physics_module.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
+            )
+        ) / (
+            1.0
+            + 0.5
+            * numpy.sqrt(
+                physics_module.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
+            )
+        )
+        a1 = (
+            physics_module.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
+            * physics_module.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
+            * zft**6
+        )
+        alp = (alp + 0.315 * a1) / (1.0 + 0.15 * a1)  # $\alpha(\nu_{i*})$, Eq.17b
+
+        # Corrections suggested by Fable, 15/05/2015
+
+        return (
+            physics_module.beta_poloidal_local_total(
+                j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
+            )
+            - physics_module.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
+        ) * (xcsa * alp) + physics_module.dcsa(
+            j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
+        ) * (
+            1.0
+            - physics_module.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
+            / physics_module.beta_poloidal_local_total(
+                j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
+            )
+        )
 
     def eped_warning(self):
         eped_warning = ""
