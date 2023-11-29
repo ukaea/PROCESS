@@ -1162,7 +1162,7 @@ class Physics:
                 # actually corresponds to grad(log(Te))/2. So the factors dcsa etc.
                 # are a factor two larger than one might otherwise expect.
                 jboot = 0.5 * (
-                    physics_module.dcsa(
+                    self.dcsa(
                         ir + 1,
                         NR,
                         physics_variables.rmajor,
@@ -1194,7 +1194,7 @@ class Physics:
                         sqeps,
                     )
                     * dlogte_drho
-                    + physics_module.xcsa(
+                    + self.xcsa(
                         ir + 1,
                         NR,
                         physics_variables.rmajor,
@@ -1282,7 +1282,7 @@ class Physics:
         #  Corrections suggested by Fable, 15/05/2015
         return physics_module.beta_poloidal_local(
             j, nr, rmajor, bt, ne, tempe, mu, rho
-        ) * (hcee + hcei) + physics_module.dcsa(
+        ) * (hcee + hcei) + self.dcsa(
             j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
         ) * physics_module.beta_poloidal_local(
             j, nr, rmajor, bt, ne, tempe, mu, rho
@@ -1375,7 +1375,7 @@ class Physics:
                 j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
             )
             - physics_module.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
-        ) * (xcsa * alp) + physics_module.dcsa(
+        ) * (xcsa * alp) + self.dcsa(
             j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
         ) * (
             1.0
@@ -1383,6 +1383,53 @@ class Physics:
             / physics_module.beta_poloidal_local_total(
                 j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
             )
+        )
+
+    def dcsa(
+        self, j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
+    ):
+        """Grad(ln(ne)) coefficient in the Sauter bootstrap scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        nr : input integer : maximum value of j
+        This function calculates the coefficient scaling grad(ln(ne))
+        in the Sauter bootstrap current scaling.
+        Code by Angioni, 29th May 2002.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        O. Sauter, C. Angioni and Y. R. Lin-Liu,
+        Physics of Plasmas <B>6</B> (1999) 2834
+        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+        Physics of Plasmas <B>9</B> (2002) 5140
+
+        DCSA $\\equiv \\mathcal{L}_{31}$, Eq.14a, Sauter et al, 1999
+        """
+
+        if j == 1:
+            return 0.0
+
+        zz = zef[j - 1]
+        zft = physics_module.tpf(j, triang, sqeps)
+        zdf = 1.0 + (1.0 - 0.1 * zft) * numpy.sqrt(
+            physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+        )
+        zdf = (
+            zdf
+            + 0.5
+            * (1.0 - zft)
+            * physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+            / zz
+        )
+        zft = zft / zdf  # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
+        dcsa = (
+            (1.0 + 1.4 / (zz + 1.0)) * zft
+            - 1.9 / (zz + 1.0) * zft * zft
+            + (0.3 * zft * zft + 0.2 * zft * zft * zft) * zft / (zz + 1.0)
+        )
+
+        # Corrections suggested by Fable, 15/05/2015
+        return dcsa * physics_module.beta_poloidal_local_total(
+            j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
         )
 
     def eped_warning(self):

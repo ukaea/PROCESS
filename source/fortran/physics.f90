@@ -394,60 +394,6 @@ module physics_module
 
     end function tpf
 
-    function dcsa(j,nr,rmajor,bt,triang,ne,ni,tempe,tempi,mu,rho,zef,sqeps)
-
-      !! Grad(ln(ne)) coefficient in the Sauter bootstrap scaling
-      !! author: P J Knight, CCFE, Culham Science Centre
-      !! j  : input integer : radial element index in range 1 to nr
-      !! nr : input integer : maximum value of j
-      !! This function calculates the coefficient scaling grad(ln(ne))
-      !! in the Sauter bootstrap current scaling.
-      !! Code by Angioni, 29th May 2002.
-      !! <P>The code was supplied by Emiliano Fable, IPP Garching
-      !! (private communication).
-      !! O. Sauter, C. Angioni and Y. R. Lin-Liu,
-      !! Physics of Plasmas <B>6</B> (1999) 2834
-      !! O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-      !! Physics of Plasmas <B>9</B> (2002) 5140
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      !  DCSA $\equiv \mathcal{L}_{31}$, Eq.14a, Sauter et al, 1999
-
-      implicit none
-
-      real(dp) :: dcsa
-
-      !  Arguments
-
-      integer, intent(in) :: j, nr
-      real(dp), intent(in) :: rmajor, bt, triang
-      real(dp), dimension(:), intent(in) :: ne, ni, tempe, tempi, mu, rho, zef, sqeps
-
-      !  Local variables
-
-      real(dp) :: zz,zft,zdf
-
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if (j == 1) then
-         dcsa = 0.0D0
-      else
-         zz = zef(j)
-         zft = tpf(j,triang,sqeps)
-         zdf = 1.0D0 + (1.0D0 - 0.1D0*zft)*sqrt(nues(j,rmajor,zef,mu,sqeps,tempe,ne))
-         zdf = zdf + 0.5D0*(1.0D0-zft)*nues(j,rmajor,zef,mu,sqeps,tempe,ne)/zz
-         zft = zft/zdf  !  $f^{31}_{teff}(\nu_{e*})$, Eq.14b
-         dcsa = (1.0D0 + 1.4D0/(zz+1.0D0))*zft - 1.9D0/(zz+1.0D0)*zft*zft
-         dcsa = dcsa + (0.3D0*zft*zft + 0.2D0*zft*zft*zft)*zft / (zz+1.0D0)
-
-         !  Corrections suggested by Fable, 15/05/2015
-         !dcsa = dcsa*beta_poloidal_local(j,nr) * (1.0D0+tempi(j)/(zz*tempe(j)))
-         dcsa = dcsa*beta_poloidal_local_total(j,nr,rmajor,bt,ne,ni,tempe,tempi,mu,rho)
-      end if
-
-    end function dcsa
-
    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine culcur(alphaj,alphap,bt,eps,icurr,iprofile,kappa,kappa95, &
