@@ -1246,7 +1246,7 @@ class Physics:
             return 0.0
 
         zz = zef[j - 1]
-        zft = physics_module.tpf(j, triang, sqeps)
+        zft = self.tpf(j, triang, sqeps)
         zdf = 1.0 + 0.26 * (1.0 - zft) * numpy.sqrt(
             physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
         )
@@ -1326,7 +1326,7 @@ class Physics:
             return 0.0
 
         zz = zef[j - 1]
-        zft = physics_module.tpf(j, triang, sqeps)
+        zft = self.tpf(j, triang, sqeps)
         zdf = 1.0 + (1.0 - 0.1 * zft) * numpy.sqrt(
             physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
         )
@@ -1409,7 +1409,7 @@ class Physics:
             return 0.0
 
         zz = zef[j - 1]
-        zft = physics_module.tpf(j, triang, sqeps)
+        zft = self.tpf(j, triang, sqeps)
         zdf = 1.0 + (1.0 - 0.1 * zft) * numpy.sqrt(
             physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
         )
@@ -1431,6 +1431,49 @@ class Physics:
         return dcsa * physics_module.beta_poloidal_local_total(
             j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
         )
+
+    def tpf(self, j, triang, sqeps, fit=1):
+        """Trapped particle fraction
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        fit : input integer : (1)=ASTRA method, 2=Equation from Sauter2002, 3=Equation from Sauter2013
+        This function calculates the trapped particle fraction at
+        a given radius.
+        <P>A number of different fits are provided, but the one
+        to be used is hardwired prior to run-time.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        O. Sauter et al, Plasma Phys. Contr. Fusion <B>44</B> (2002) 1999
+        O. Sauter, 2013:
+        http://infoscience.epfl.ch/record/187521/files/lrp_012013.pdf
+        """
+        s = sqeps[j - 1]
+        eps = s * s
+
+        if fit == 1:
+            # ASTRA method, from Emiliano Fable, private communication
+            # (Excluding h term which dominates for inverse aspect ratios < 0.5,
+            # and tends to take the trapped particle fraction to 1)
+
+            zz = 1.0 - eps
+            return 1.0 - zz * numpy.sqrt(zz) / (1.0 + 1.46 * s)
+        elif fit == 2:
+            # Equation 4 of Sauter 2002
+            # Similar to, but not quite identical to g above
+
+            return 1.0 - (1.0 - eps) ** 2 / (1.0 + 1.46 * s) / numpy.sqrt(
+                1.0 - eps * eps
+            )
+        elif fit == 3:
+            # Includes correction for triangularity
+
+            epseff = 0.67 * (1.0 - 1.4 * triang * abs(triang)) * eps
+
+            return 1.0 - numpy.sqrt((1.0 - eps) / (1.0 + eps)) * (1.0 - epseff) / (
+                1.0 + 2.0 * numpy.sqrt(epseff)
+            )
+
+        raise RuntimeError(f"{fit=} is not valid. Must be 1, 2, or 3")
 
     def eped_warning(self):
         eped_warning = ""
