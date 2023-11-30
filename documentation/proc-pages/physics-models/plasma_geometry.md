@@ -170,6 +170,32 @@ will be inaccurate for single-null plasmas, `snull = 1`).
  
 ## Geometrical properties
 
+<figure markdown>
+![Geometrical properties](images/plasma%20geometry.PNG){ width="100%"}
+<figcaption>Figure 1: Geometrical dimensions used to determine plasma shape parameters</figcaption>
+</figure>
+
+$$
+ x_i^2 = a^2\kappa^2 + (ay + a +\delta a)^2 \\
+= a^2\kappa^2 + a^2L^2, \ \ \ \text{where} \ \ L= 1+\delta+y
+$$
+
+$$
+x_i = (a+\delta a +ay)+a-\delta a \\
+= aL+a(1-\delta) \\
+= a(L+T), \ \ \ \text{where}\ \ T=1-\delta
+$$
+
+$$
+\therefore a^2\kappa^2 + a^2L^2 = a^2(L+T)^2 \\
+\kappa^2+L^2 = L^2 +2LT +T^2 \\
+\therefore L = \frac{\kappa^2-T^2}{2T}
+$$
+
+$$
+\fbox{$ \theta_i = \arctan({\frac{\kappa}{L}}) \\
+x_i = a(L+1-\delta)$}
+$$
 ## Volume
 
 ## Surface Area
