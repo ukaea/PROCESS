@@ -167,9 +167,19 @@ formulations that approximate the LCFS as a revolution of two arcs which
 intersect the plasma X-points and the plasma midplane outer and inner
 radii. (This is a reasonable assumption for double-null diverted plasmas, but
 will be inaccurate for single-null plasmas, `snull = 1`).
+ 
+## Geometrical properties
 
-[^1]: T. C. Hender et al., *'Physics Assessment for the European Reactor Study'*,
-AEA Fusion Report AEA FUS 172 (1992)
+## Volume
+
+## Surface Area
+
+## Perimeter
+
+## Cross-section
+
+[^1]: N.A. Uckan and ITER Physics Group, *ITER Physics Design Guidelines: 1989*, 
+ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
 [^2]: J.D. Galambos, *'STAR Code : Spherical Tokamak Analysis and Reactor Code'*,
 Unpublished internal Oak Ridge document.
 [^3]: H. Zohm et al, *'On the Physics Guidelines for a Tokamak DEMO'*,
@@ -177,6 +187,5 @@ FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
 [^4]: Menard, J.E. & Brown, T. & El-Guebaly, L. & Boyer, M. & Canik, J. & Colling, Bethany & Raman, Roger & Wang, Z. & Zhai, Yunbo & Buxton, Peter & Covele, B. & D’Angelo, C. & Davis, Andrew & Gerhardt, S. & Gryaznevich, M. & Harb, Moataz & Hender, T.C. & Kaye, S. & Kingham, David & Woolley, R.. (2016). *Fusion nuclear science facilities and pilot plants based on the spherical tokamak.* Nuclear Fusion. 56. 106023. 10.1088/0029-5515/56/10/106023. 
 [^5]: H.S. Bosch and G.M. Hale, *Improved Formulas for Fusion Cross-sections* 
 and Thermal Reactivities', Nuclear Fusion 32 (1992) 611
-[^7]: N.A. Uckan and ITER Physics Group, *ITER Physics Design Guidelines: 1989*,
-ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
+
 
