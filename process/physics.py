@@ -1248,9 +1248,9 @@ class Physics:
         zz = zef[j - 1]
         zft = self.tpf(j, triang, sqeps)
         zdf = 1.0 + 0.26 * (1.0 - zft) * numpy.sqrt(
-            physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+            self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
         )
-        zdf = zdf + 0.18 * (1.0 - 0.37 * zft) * physics_module.nues(
+        zdf = zdf + 0.18 * (1.0 - 0.37 * zft) * self.nues(
             j, rmajor, zef, mu, sqeps, tempe, ne
         ) / numpy.sqrt(zz)
         zfte = zft / zdf  # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
@@ -1259,9 +1259,9 @@ class Physics:
         zfte4 = zfte2 * zfte2
 
         zdf = 1.0 + (1.0 + 0.6 * zft) * numpy.sqrt(
-            physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+            self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
         )
-        zdf = zdf + 0.85 * (1.0 - 0.37 * zft) * physics_module.nues(
+        zdf = zdf + 0.85 * (1.0 - 0.37 * zft) * self.nues(
             j, rmajor, zef, mu, sqeps, tempe, ne
         ) * (1.0 + zz)
         zfti = zft / zdf  # $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
@@ -1328,13 +1328,13 @@ class Physics:
         zz = zef[j - 1]
         zft = self.tpf(j, triang, sqeps)
         zdf = 1.0 + (1.0 - 0.1 * zft) * numpy.sqrt(
-            physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+            self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
         )
         zdf = (
             zdf
             + 0.5
             * (1.0 - 0.5 * zft)
-            * physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+            * self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
             / zz
         )
         zfte = zft / zdf  # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
@@ -1351,19 +1351,14 @@ class Physics:
             a0
             + 0.25
             * (1.0 - zft * zft)
-            * numpy.sqrt(
-                physics_module.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
-            )
+            * numpy.sqrt(self.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni))
         ) / (
             1.0
-            + 0.5
-            * numpy.sqrt(
-                physics_module.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
-            )
+            + 0.5 * numpy.sqrt(self.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni))
         )
         a1 = (
-            physics_module.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
-            * physics_module.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
+            self.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
+            * self.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
             * zft**6
         )
         alp = (alp + 0.315 * a1) / (1.0 + 0.15 * a1)  # $\alpha(\nu_{i*})$, Eq.17b
@@ -1383,6 +1378,46 @@ class Physics:
             / self.beta_poloidal_local_total(
                 j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
             )
+        )
+
+    def nuis(self, j, rmajor, mu, sqeps, tempi, amain, zmain, ni):
+        """Relative frequency of ion collisions
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        This function calculates the relative frequency of ion
+        collisions: <I>NU* = Nui*q*Rt/eps**1.5/Vti</I>
+        The full ion collision frequency NUI is used.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        Yushmanov, 30th April 1987 (?)
+        """
+        return (
+            3.2e-6
+            * self.nui(j, zmain, ni, tempi, amain)
+            * rmajor
+            / (
+                abs(mu[j - 1] + 1.0e-4)
+                * sqeps[j - 1] ** 3
+                * numpy.sqrt(tempi[j - 1] / amain[j - 1])
+            )
+        )
+
+    def nui(self, j, zmain, ni, tempi, amain):
+        """Full frequency of ion collisions
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        This function calculates the full frequency of ion
+        collisions (Hz).
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        None
+        """
+        # Coulomb logarithm = 15 is used
+        return (
+            zmain[j - 1] ** 4
+            * ni[j - 1]
+            * 322.0
+            / (tempi[j - 1] * numpy.sqrt(tempi[j - 1] * amain[j - 1]))
         )
 
     def dcsa(
@@ -1411,14 +1446,11 @@ class Physics:
         zz = zef[j - 1]
         zft = self.tpf(j, triang, sqeps)
         zdf = 1.0 + (1.0 - 0.1 * zft) * numpy.sqrt(
-            physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+            self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
         )
         zdf = (
             zdf
-            + 0.5
-            * (1.0 - zft)
-            * physics_module.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
-            / zz
+            + 0.5 * (1.0 - zft) * self.nues(j, rmajor, zef, mu, sqeps, tempe, ne) / zz
         )
         zft = zft / zdf  # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
         dcsa = (
@@ -1431,6 +1463,59 @@ class Physics:
         return dcsa * self.beta_poloidal_local_total(
             j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
         )
+
+    def nues(self, j, rmajor, zef, mu, sqeps, tempe, ne):
+        """Relative frequency of electron collisions
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        This function calculates the relative frequency of electron
+        collisions: <I>NU* = Nuei*q*Rt/eps**1.5/Vte</I>
+        The electron-ion collision frequency NUEI=NUEE*1.4*ZEF is
+        used.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        Yushmanov, 30th April 1987 (?)
+        """
+        return (
+            self.nuee(j, tempe, ne)
+            * 1.4
+            * zef[j - 1]
+            * rmajor
+            / abs(mu[j - 1] * (sqeps[j - 1] ** 3) * numpy.sqrt(tempe[j - 1]) * 1.875e7)
+        )
+
+    def nuee(self, j, tempe, ne):
+        """Frequency of electron-electron collisions
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        This function calculates the frequency of electron-electron
+        collisions (Hz): <I>NUEE = 4*SQRT(pi)/3*Ne*e**4*lambd/
+        SQRT(Me)/Te**1.5</I>
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        Yushmanov, 25th April 1987 (?),
+        updated by Pereverzev, 9th November 1994 (?)
+        """
+        return (
+            670.0
+            * self.coulg(j, tempe, ne)
+            * ne[j - 1]
+            / (tempe[j - 1] * numpy.sqrt(tempe[j - 1]))
+        )
+
+    def coulg(self, j, tempe, ne):
+        """Coulomb logarithm
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        This function calculates the Coulomb logarithm, valid
+        for e-e collisions (T_e > 0.01 keV), and for
+        e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        C. A. Ordonez and M. I. Molina, Phys. Plasmas <B>1</B> (1994) 2515
+        Rev. Mod. Phys., V.48, Part 1 (1976) 275
+        """
+        return 15.9 - 0.5 * numpy.log(ne[j - 1]) + numpy.log(tempe[j - 1])
 
     def beta_poloidal_local(self, j, nr, rmajor, bt, ne, tempe, mu, rho):
         """Local beta poloidal calculation
