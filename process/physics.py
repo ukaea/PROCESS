@@ -1280,13 +1280,13 @@ class Physics:
         hcei = hcei - 1.2 / (1.0 + 0.5 * zz) * zfti4  # $F_{32\_ei}(Y)$, Eq.15c
 
         #  Corrections suggested by Fable, 15/05/2015
-        return physics_module.beta_poloidal_local(
-            j, nr, rmajor, bt, ne, tempe, mu, rho
-        ) * (hcee + hcei) + self.dcsa(
+        return self.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho) * (
+            hcee + hcei
+        ) + self.dcsa(
             j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
-        ) * physics_module.beta_poloidal_local(
+        ) * self.beta_poloidal_local(
             j, nr, rmajor, bt, ne, tempe, mu, rho
-        ) / physics_module.beta_poloidal_local_total(
+        ) / self.beta_poloidal_local_total(
             j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
         )
 
@@ -1371,16 +1371,16 @@ class Physics:
         # Corrections suggested by Fable, 15/05/2015
 
         return (
-            physics_module.beta_poloidal_local_total(
+            self.beta_poloidal_local_total(
                 j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
             )
-            - physics_module.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
+            - self.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
         ) * (xcsa * alp) + self.dcsa(
             j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
         ) * (
             1.0
-            - physics_module.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
-            / physics_module.beta_poloidal_local_total(
+            - self.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
+            / self.beta_poloidal_local_total(
                 j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
             )
         )
@@ -1428,8 +1428,68 @@ class Physics:
         )
 
         # Corrections suggested by Fable, 15/05/2015
-        return dcsa * physics_module.beta_poloidal_local_total(
+        return dcsa * self.beta_poloidal_local_total(
             j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
+        )
+
+    def beta_poloidal_local(self, j, nr, rmajor, bt, ne, tempe, mu, rho):
+        """Local beta poloidal calculation
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        nr : input integer : maximum value of j
+        This function calculates the local beta poloidal.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        <P>beta poloidal = 4*pi*ne*Te/Bpo**2
+        Pereverzev, 25th April 1989 (?)
+        """
+        if j != nr:
+            beta_poloidal_local = (
+                1.6e-4 * numpy.pi * (ne[j] + ne[j - 1]) * (tempe[j] + tempe[j - 1])
+            )
+        else:
+            beta_poloidal_local = 6.4e-4 * numpy.pi * ne[j - 1] * tempe[j - 1]
+
+        return (
+            beta_poloidal_local
+            * (rmajor / (bt * rho[j - 1] * abs(mu[j - 1] + 1.0e-4))) ** 2
+        )
+
+    def beta_poloidal_local_total(
+        self, j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
+    ):
+        """Local beta poloidal calculation, including ion pressure
+        author: P J Knight, CCFE, Culham Science Centre
+        j  : input integer : radial element index in range 1 to nr
+        nr : input integer : maximum value of j
+        This function calculates the local total beta poloidal.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        <P>beta poloidal = 4*pi*(ne*Te+ni*Ti)/Bpo**2
+        where ni is the sum of all ion densities (thermal)
+        Pereverzev, 25th April 1989 (?)
+        E Fable, private communication, 15th May 2014
+        """
+
+        if j != nr:
+            beta_poloidal_local_total = (
+                1.6e-4
+                * numpy.pi
+                * (
+                    ((ne[j] + ne[j - 1]) * (tempe[j] + tempe[j - 1]))
+                    + ((ni[j] + ni[j - 1]) * (tempi[j] + tempi[j - 1]))
+                )
+            )
+        else:
+            beta_poloidal_local_total = (
+                6.4e-4
+                * numpy.pi
+                * (ne[j - 1] * tempe[j - 1] + ni[j - 1] * tempi[j - 1])
+            )
+
+        return (
+            beta_poloidal_local_total
+            * (rmajor / (bt * rho[j - 1] * abs(mu[j - 1] + 1.0e-4))) ** 2
         )
 
     def tpf(self, j, triang, sqeps, fit=1):
