@@ -168,8 +168,9 @@ intersect the plasma X-points and the plasma midplane outer and inner
 radii. (This is a reasonable assumption for double-null diverted plasmas, but
 will be inaccurate for single-null plasmas, `snull = 1`).
  
-## Geometrical properties
+## Geometrical properties `xparam`
 
+This method calculates the radius and half angle of the arc describing the inboard and outboard plasma surfaces. This calculation is appropriate for plasmas with a separatrix. It requires the plasma minor radius (`rminor`), elongation (`kappa`) and triangularity (`triang`)
 <figure markdown>
 ![Geometrical properties](images/plasma%20geometry.PNG){ width="100%"}
 <figcaption>Figure 1: Geometrical dimensions used to determine plasma shape parameters</figcaption>
@@ -193,12 +194,46 @@ $$
 $$
 
 $$
-\fbox{$ \theta_i = \arctan({\frac{\kappa}{L}}) \\
-x_i = a(L+1-\delta)$}
+\fbox{$ \mathtt{thetai} = \theta_i = \arctan \left({\frac{\kappa}{L}}\right) \\
+\mathtt{xi} = x_i = a(L+1-\delta)$}
 $$
-## Volume
 
-## Surface Area
+Similarly for the inboard side:
+
+$$
+ x_o^2 = a^2\kappa^2 + (aw + a -\delta a)^2 \\
+= a^2\kappa^2 + a^2M^2, \ \ \ \text{where} \ \ M= 1-\delta+w
+$$
+
+$$
+x_o = aM +\delta a + a \\
+= aM+a(1+\delta) \\
+= a(M+N), \ \ \ \text{where}\ \ N=1+\delta
+$$
+
+$$
+\therefore a^2\kappa^2 + a^2M^2 = a^2(M+N)^2 \\
+\kappa^2+M^2 = M^2 +2MN +N^2 \\
+\therefore M = \frac{\kappa^2-N^2}{2N}
+$$
+
+$$
+\fbox{$\mathtt{thetao}= \theta_o = \arctan \left({\frac{\kappa}{M}}\right) \\
+\mathtt{xo}=x_o = a(M+1+\delta)$}
+$$
+
+## Surface Area `xsurf`
+This function finds the plasma surface area, using the
+revolution of two intersecting arcs around the device centreline.
+This calculation is appropriate for plasmas with a separatrix.
+
+$$
+\mathtt{rc} 
+$$
+
+### STAR Code version `surfa`
+It was the original method in PROCESS[^6].
+## Volume
 
 ## Perimeter
 
@@ -213,5 +248,7 @@ FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
 [^4]: Menard, J.E. & Brown, T. & El-Guebaly, L. & Boyer, M. & Canik, J. & Colling, Bethany & Raman, Roger & Wang, Z. & Zhai, Yunbo & Buxton, Peter & Covele, B. & D’Angelo, C. & Davis, Andrew & Gerhardt, S. & Gryaznevich, M. & Harb, Moataz & Hender, T.C. & Kaye, S. & Kingham, David & Woolley, R.. (2016). *Fusion nuclear science facilities and pilot plants based on the spherical tokamak.* Nuclear Fusion. 56. 106023. 10.1088/0029-5515/56/10/106023. 
 [^5]: H.S. Bosch and G.M. Hale, *Improved Formulas for Fusion Cross-sections* 
 and Thermal Reactivities', Nuclear Fusion 32 (1992) 611
+[^6]: J D Galambos, *STAR Code : Spherical Tokamak Analysis and Reactor Code*,
+unpublished internal Oak Ridge document
 
 
