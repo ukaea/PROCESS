@@ -168,9 +168,10 @@ intersect the plasma X-points and the plasma midplane outer and inner
 radii. (This is a reasonable assumption for double-null diverted plasmas, but
 will be inaccurate for single-null plasmas, `snull = 1`).
  
-## Geometrical properties `xparam`
+## Geometrical properties (`xparam`)
 
 This method calculates the radius and half angle of the arc describing the inboard and outboard plasma surfaces. This calculation is appropriate for plasmas with a separatrix. It requires the plasma minor radius (`rminor`), elongation (`kappa`) and triangularity (`triang`)
+THE NOTATION USED BY PETER KNIGHT SEEMS TO BE WRONG
 <figure markdown>
 ![Geometrical properties](images/plasma%20geometry.PNG){ width="100%"}
 <figcaption>Figure 1: Geometrical dimensions used to determine plasma shape parameters</figcaption>
@@ -222,17 +223,51 @@ $$
 \mathtt{xo}=x_o = a(M+1+\delta)$}
 $$
 
-## Surface Area `xsurf`
+## Surface Area (`xsurf`)
 This function finds the plasma surface area, using the
 revolution of two intersecting arcs around the device centreline.
 This calculation is appropriate for plasmas with a separatrix.
+It uses the geometrical properties derived in `xparam`
+
+<figure markdown>
+![Outboard surface area](images/plasma_inboard_surface_area.PNG){ width="100%"}
+<figcaption>Figure 2: Inboard surface area calculation parameters</figcaption>
+</figure>
 
 $$
-\mathtt{rc} 
+\mathtt{rc}  = R_0-a + \mathtt{xi} \\ 
+\mathtt{xsi} = 4\pi \times \mathtt{xi} (\mathtt{rc} \times (\mathtt{thetai - xi}) \times \sin({\mathtt{thetai})})
 $$
 
-### STAR Code version `surfa`
+For the outboard side:
+<figure markdown>
+![Outboard surface area](images/plasma_outboard_surface_area.PNG){ width="100%"}
+<figcaption>Figure 3: Outboard surface area calculation parameters</figcaption>
+</figure>
+$$
+\mathtt{rc}  = R_0+a - \mathtt{xo} \\ 
+\mathtt{xso} = 4\pi \times \mathtt{xo} (\mathtt{rc} \times (\mathtt{thetao + xi}) \times \sin({\mathtt{thetao})})
+$$
+
+### STAR Code version (`surfa`) 
 It was the original method in PROCESS[^6].
+
+$$
+\mathtt{radco} = \frac{a(1+(\kappa^2+\delta^2-1))}{2(1+\delta)} \\
+\mathtt{thto}=\arcsin{\frac{\kappa a}{\mathtt{radco}}} \\
+\underbrace{\mathtt{so}}_{\text{Outboard surface area}} = 4\pi \times \mathtt{radco}((R_0+a-\mathtt{radco})\mathtt{thto}+\kappa a)
+$$
+
+For the inboard edge:
+
+$$
+\mathtt{radci} = \frac{a(1+(\kappa^2+\delta^2-1))}{2(1-\delta)} \\
+\mathtt{thti}=\arcsin{\frac{\kappa a}{\mathtt{radci}}} \\
+\underbrace{\mathtt{si}}_{\text{Inboard surface area}} = 4\pi \times \mathtt{radci}((R_0-a+\mathtt{radci})\mathtt{thti}-\kappa a)
+$$
+
+
+
 ## Volume
 
 ## Perimeter
