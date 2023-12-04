@@ -190,7 +190,6 @@ be described as 1/2-D.  The relevant profile index variables are
 
 If `ipedestal` = 1, 2 or 3 the density and temperature profiles include a pedestal.  
 If `ipedestal` = 1 the density and temperature profiles use the forms given below [^6].  
-If `ipedestal` = 2 or 3 the profiles are determined by the transport code PLASMOD.
 
 $$\begin{aligned}
 \mbox{density:} \qquad n(\rho) = \left\{ 
