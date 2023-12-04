@@ -660,7 +660,6 @@ contains
 	! 	use global_variables, only: icase, verbose, vlabel
   !   use constants, only: mfile, nout
   !   use maths_library, only: HYBRD
-  !   use plasmod_variables, only: geom, power_losses, i_flag
   !   implicit none
 
   !   ! Interface for the external fcnhyb subroutine argument

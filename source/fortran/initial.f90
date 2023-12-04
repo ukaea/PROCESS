@@ -375,7 +375,7 @@ subroutine check
 
     !  Plasma profile consistency checks
     if (ife /= 1) then
-        if (ipedestal == 1 .or. ipedestal == 2) then
+        if (ipedestal == 1) then
 
             !  Temperature checks
             if (teped < tesep) then
