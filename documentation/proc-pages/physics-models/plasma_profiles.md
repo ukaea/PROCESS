@@ -1,5 +1,19 @@
 # Plasma Profiles
 
+???+ Note
+
+    Profile sizes are set to 501 point by default. this can be varied in the `__init__` of `PlasmaProfile` 
+All is calculated from `plasma_profiles.py` and `profiles.py`
+if physics_variables.tratio > 0.0e0:
+            physics_variables.ti = physics_variables.tratio * physics_variables.te    
+
+## No pedestal, `(ipedestal = 0)`
+
+if physics_variables.ipedestal == 0:
+            self.parabolic_paramterisation()
+            self.calculate_profile_factors()
+            self.calculate_parabolic_profile_factors()
+## Pedestal, `(ipedestal = 1)`
 If switch `ipedestal = 0`, no pedestal is present.  The plasma profiles are assumed to be of the form
 
 $$\begin{aligned}
@@ -17,9 +31,8 @@ theory-based or empirical scalings. Thus, the plasma model in PROCESS may
 be described as 1/2-D.  The relevant profile index variables are
 `alphan`, `alphat` and `alphaj`, respectively.
 
-If `ipedestal` = 1, 2 or 3 the density and temperature profiles include a pedestal.  
+If `ipedestal` = 1 the density and temperature profiles include a pedestal.  
 If `ipedestal` = 1 the density and temperature profiles use the forms given below [^1].  
-If `ipedestal` = 2 or 3 the profiles are determined by the transport code PLASMOD.
 
 $$\begin{aligned}
 \mbox{density:} \qquad n(\rho) = \left\{ 
