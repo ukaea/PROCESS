@@ -269,11 +269,24 @@ $$
 
 
 ## Volume `(xvol)`
-The plasma volume is calculated using the `xvol` method with the inputted $R_0 & a$ along with the outputs of `xparam`.
+The plasma volume is calculated using the `xvol` method with the inputted $R_0$ & $a$ along with the outputs of `xparam`.
+The `cvol` iteration variable can be used to scale this output
 
+$$
+\mathtt{rc} = R_0 - a + \mathtt{xi} \\
+\mathtt{vin} = (2\pi \mathtt{xi}) \times(\mathtt{rc}^2 \times \sin{\mathtt{thetai}} - (\mathtt{rc}\times \mathtt{xi} \times \mathtt{thetai})-(0.5\mathtt{rc} \mathtt{xi} \times \sin{2\mathtt{thetai}})+(\mathtt{xi}^2\times \sin{\mathtt{thetai}})-(\frac{1}{3}\times \mathtt{xi}^2 \times (\sin{\mathtt{thetai}})^3)
 $$
 
 $$
+\mathtt{rc} = R_0 + a - \mathtt{xo} \\
+\mathtt{vout} = (2\pi \mathtt{xo}) \times(\mathtt{rc}^2 \times \sin{\mathtt{thetao}} + (\mathtt{rc}\times \mathtt{xo} \times \mathtt{thetao})+(0.5\mathtt{rc} \mathtt{xo} \times \sin{2\mathtt{thetao}})+(\mathtt{xo}^2\times \sin{\mathtt{thetao}})-(\frac{1}{3}\times \mathtt{xo}^2 \times (\sin{\mathtt{thetao}})^3)
+$$
+
+$$
+\mathtt{xvol} = \mathtt{vout}-\mathtt{vin}
+$$
+
+### Old `fvol` volume method
 
 ##  Poloidal Perimeter 
 The polidal perimeter is given by simply using the variables outputted from `xpram`
