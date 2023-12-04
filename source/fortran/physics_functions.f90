@@ -4,7 +4,7 @@ module physics_functions_module
   !! author: K Ellis, CCFE, Culham Science Centre
   !! N/A
   !! This module contains physics routines which can be called by physics or
-  !! other modules (e.g. PLASMOD).
+  !! other modules
   !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

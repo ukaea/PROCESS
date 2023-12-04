@@ -340,8 +340,7 @@ module physics_variables
   !! switch for scaling pedestal-top temperature with plasma parameters (issue #730):
   !!
   !! - =0 set pedestal-top temperature manually using teped
-  !! - =1 set pedestal-top temperature using EPED scaling (PLASMOD implementation
-  !!   of scaling within PLASMOD, `ipedestal =2,3 (ttps://idm.euro-fusion.org/?uid=2MSZ4T)
+  !! - =1 set pedestal-top temperature using EPED scaling
 
   real(dp) :: eped_sf
   !! Adjustment factor for EPED scaling to reduce pedestal temperature or pressure
