@@ -44,7 +44,7 @@ no tritium needs to be produced for fuel.
 
 The contributions from all four of the above fusion reactions are included in
 the total fusion power production calculation. The fusion reaction rates are
-calculated using the parameterizations in [^4], integrated over the plasma 
+calculated using the parameterizations in [^1], integrated over the plasma 
 profiles (correctly, with or without pedestals).
 
 The fractional composition of the 'fuel' ions (D, T and \(^3\)He) is
@@ -57,7 +57,9 @@ n_T  & = \mathtt{ftrit} \, n_{\mbox{fuel}} \\
 n_{\mathrm{^{3}He}} & = \mathtt{fhe3} \, n_{\mbox{fuel}}
 \end{aligned}$$
 
-PROCESS checks that $fdeut + ftrit + fhe3 = 1.0$, and stops with an error message otherwise.
+PROCESS checks that $f_D + f_T + f_{He3} = 1.0$, and stops with an error message otherwise.
 
 Constraint equation no. 28 can be turned on to enforce the fusion gain *Q* to be at 
 least equal to `bigqmin`.
+
+[^1]:Bosch, H.-S. and Hale, G. M. (1992) *‘Improved formulas for fusion cross-sections and thermal reactivities’*, Nuclear Fusion, 32(4), p. 611. doi: 10.1088/0029-5515/32/4/I07.
