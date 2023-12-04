@@ -268,9 +268,48 @@ $$
 
 
 
-## Volume
+## Volume `(xvol)`
+The plasma volume is calculated using the `xvol` method with the inputted $R_0 & a$ along with the outputs of `xparam`.
 
-## Perimeter
+$$
+
+$$
+
+##  Poloidal Perimeter 
+The polidal perimeter is given by simply using the variables outputted from `xpram`
+
+$$
+\underbrace{\mathtt{pperim}}_{\text{Poloidal perimiter}} = 2 \times(\mathtt{xo} \times \mathtt{thetao} \times \mathtt{xi} \times \mathtt{thetai}) 
+$$
+
+$$
+\underbrace{\mathtt{sf}}_{\text{Shape factor}} = \frac{\mathtt{pperim}}{(
+            2.0\pi \times a
+        )}
+$$
+
+$\mathtt{sf}$ is a variable used in the calculation of plasma current, used in some scalings.
+
+### `perim` method
+Inboard arc
+
+$$
+\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta)) + \delta} \\
+\mathtt{thetai} = \arctan(\frac{\kappa}{\mathtt{denomi}}) \\
+\mathtt{xli} = a \times (\mathtt{denomi} + 1.0 - \delta)
+$$
+
+Outboard arc
+
+$$
+\mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta)) - \delta} \\
+\mathtt{thetao} = \arctan(\frac{{\kappa}}{\mathtt{denomo}}) \\
+\mathtt{xlo} = a \times (\mathtt{denomo} + 1.0 + \delta)
+$$
+
+$$
+\mathtt{perim} = 2.0 \times (\mathtt{xlo} \times \mathtt{thetao} + \mathtt{xli} \times \mathtt{thetai})
+$$
 
 ## Cross-section
 
