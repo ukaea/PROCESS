@@ -45,6 +45,7 @@ nav:
             - Overview: physics-models/plasma_overview.md
             - Geometry: physics-models/plasma_geometry.md
             - Profiles: physics-models/plasma_profiles.md
+            -  Fusion Reactions: physics-models/plasma_reactions.md
             - Beta Limit: physics-models/plasma_beta.md
             - Fast Alpha: physics-models/plasma_alpha.md
             - Density Limit: physics-models/plasma_density.md
