@@ -3498,11 +3498,6 @@ module physics_module
    end do
 
     call ovarre(outfile,'Average mass of all ions (amu)','(aion)',aion, 'OP ')
-    ! MDK Say which impurity is varied, if iteration variable fimpvar (102) is turned on
-    !if (any(ixc == 102)) then
-    !    call ovarst(outfile,'Impurity used as an iteration variable' , '', '"' // %label // '"')
-    !    call ovarre(outfile,'Fractional density of variable impurity (ion / electron density)','(fimpvar)',fimpvar)
-    !end if
     call oblnkl(outfile)
     call ovarrf(outfile,'Effective charge','(zeff)',zeff, 'OP ')
 

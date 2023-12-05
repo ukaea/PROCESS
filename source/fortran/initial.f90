@@ -24,7 +24,7 @@ subroutine initial
         init_itv_74, init_itv_75, init_itv_79, init_itv_81, init_itv_82, init_itv_83, &
         init_itv_84, init_itv_85, init_itv_86, init_itv_89, init_itv_90, init_itv_91, &
         init_itv_92, init_itv_93, init_itv_94, init_itv_95, init_itv_96, init_itv_97, &
-        init_itv_98, init_itv_102, init_itv_103, init_itv_104, init_itv_105, &
+        init_itv_98, init_itv_103, init_itv_104, init_itv_105, &
         init_itv_106, init_itv_107, init_itv_108, init_itv_109, init_itv_110, &
         init_itv_111, init_itv_112, init_itv_113, init_itv_114, init_itv_115, &
         init_itv_116, init_itv_117, init_itv_118, init_itv_119, init_itv_120, &
@@ -155,7 +155,6 @@ subroutine initial
     call init_itv_97
     call init_itv_98
     !Not used
-    call init_itv_102
     call init_itv_103
     call init_itv_104
     call init_itv_105

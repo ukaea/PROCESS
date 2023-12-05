@@ -62,11 +62,6 @@ module impurity_radiation_module
   !! <LI> (13)  Xenon
   !! <LI> (14)  Tungsten</UL>
 
-  !! fimpvar /1.0e-3/ : impurity fraction to be used as fimp(impvar)
-  !!                    (iteration variable 102)
-  ! Deprecated
-  real(dp), public :: fimpvar
-
   !  Declare impurity data type
 
 !   type :: imp_dat
@@ -137,7 +132,6 @@ contains
       'Kr', &
       'Xe', &
       'W_'/)
-      fimpvar = 1.0D-3
       toolow = .false.
       impurity_arr_Label = "  "
       impurity_arr_Z = 0

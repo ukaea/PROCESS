@@ -292,7 +292,7 @@ contains
       fburn, fwdzu, etave, v3dr, uctarg, shdzl, ucflib, v3dzl, v1dzu, v2dzl, &
       chdzl, chrad, cdriv1, tgain, somtdr, v2matf, rrmax, bldr, frrmax, &
       blmatf, ife
-    use impurity_radiation_module, only: coreradius, nimp, fimpvar, &
+    use impurity_radiation_module, only: coreradius, nimp, &
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
@@ -595,9 +595,6 @@ contains
        case ('fimp')
           call parse_real_array('fimp', fimp, isub1, nimp, &
                'Impurity density fraction', icode)
-       case ('fimpvar')
-          call parse_real_variable('fimpvar', fimpvar, 1.0D-6, 0.5D0, &
-               'Impurity fraction to be varied')
        case ('fkzohm')
           call parse_real_variable('fkzohm', fkzohm, 0.5D0, 2.0D0, &
                'Zohm elongation scaling multiplier')

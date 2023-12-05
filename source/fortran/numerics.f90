@@ -303,7 +303,7 @@ module numerics
   !! <LI> (99) NOT USED
   !! <LI> (100) NOT USED
   !! <LI> (101) NOT USED
-  !! <LI> (102) fimpvar
+  !! <LI> (102) fimpvar # OBSOLETE
   !! <LI> (103) flhthresh (f-value for equation 15)
   !! <LI> (104) fcwr (f-value for equation 23)
   !! <LI> (105) fnbshinef (f-value for equation 59)

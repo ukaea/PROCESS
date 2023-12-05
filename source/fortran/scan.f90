@@ -67,7 +67,7 @@ module scan_module
   !!         <LI> 27 tbrmin (for blktmodel > 0 only)
   !!         <LI> 28 bt
   !!         <LI> 29 coreradius
-  !!         <LI> 30 fimpvar
+  !!         <LI> 30 fimpvar # OBSOLETE
   !!         <LI> 31 taulimit
   !!         <LI> 32 epsvmc
   !!         <LI> 33 ttarget
@@ -267,7 +267,7 @@ contains
         outvar(49,iscan) = 0.0D0
     end if
     outvar(50,iscan) = pdivt/rmajor
-    !outvar(51,iscan) = fimpvar
+    !outvar(51,iscan) = fimpvar #OBSOLETE
     outvar(51,iscan) = 0.0d0
     outvar(52,iscan) = pradmw
     outvar(53,iscan) = tpeak
@@ -625,7 +625,7 @@ contains
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
         n_liq_recirc, bz_channel_conduct_liq, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, pitch
-	use impurity_radiation_module, only: fimp, fimpvar, coreradius, impurity_arr_frac
+	use impurity_radiation_module, only: fimp, coreradius, impurity_arr_frac
     use physics_variables, only: kappa, dnbeta, te, aspect, ftar, bt, &
         rad_fraction_sol, triang, rmajor, beamfus0, hfact
     use numerics, only: epsvmc, boundu, boundl
@@ -736,9 +736,8 @@ contains
             coreradius = swp(iscn)
             vlab = 'coreradius' ; xlab = 'Core_radius'
         case (30)
-            fimpvar = swp(iscn)
-            ! impurity_arr()%frac = fimpvar
-            vlab = 'fimpvar' ; xlab = 'Impurity_fraction'
+            !fimpvar = swp(iscn)
+            vlab = 'OBSOLETE' ; xlab = 'OBSOLETE'
         case (31)
             taulimit = swp(iscn)
             vlab = 'taulimit' ; xlab = 'Taup/taueff_lower_limit'
