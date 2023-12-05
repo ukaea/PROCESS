@@ -263,7 +263,7 @@ contains
       etalh, frbeam, harnum, xi_ebw
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
       c5div, ksic, fififi, flux_exp, divplt, delld, c2div, beta_div, betao, divdum, tdiv, c6div, &
-      omegan, prn1, fgamp, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
+      omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
       zeffdiv, hldivlim, rlenmax, divfix, c3div, divleg_profile_inner, &
       divleg_profile_outer, hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant, &
@@ -1305,9 +1305,6 @@ contains
        case ('fdiva')
           call parse_real_variable('fdiva', fdiva, 0.1D0, 2.0D0, &
                'Divertor area fiddle factor')
-       case ('fgamp')
-          call parse_real_variable('fgamp', fgamp, -100.0D0, 100.0D0, &
-               'Sheath potential factor')
        case ('fififi')
           call parse_real_variable('fififi', fififi, 1.0D-6, 1.0D0, &
                'Coefficient for gamdiv')

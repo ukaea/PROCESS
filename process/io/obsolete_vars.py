@@ -74,4 +74,5 @@ OBS_VARS = {
     "rad_fraction_core": "rad_fraction_LCFS",
     "thshield": ["thshield_ib", "thshield_ob", "thshield_vb"],
     "igeom": None,
+    "fgamp": None,
 }

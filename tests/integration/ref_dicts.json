@@ -1932,7 +1932,6 @@
         "ffuspow": 1.0,
         "ffwal": 0.92,
         "fgamcd": 1.0,
-        "fgamp": 1.0,
         "fgrd": null,
         "fgrosbop": 0.0,
         "fgwped": 0.85,
@@ -9660,7 +9659,6 @@
         "ffuspow": "f-value for maximum fusion power (`constraint equation 9`, `iteration variable 26`)",
         "ffwal": "factor to convert plasma surface area to first wall area in neutron wall\n load calculation (`iwalld=1`)",
         "fgamcd": "f-value for current drive gamma (`constraint equation 37`, `iteration variable 40`)",
-        "fgamp": "sheath potential factor (not used)",
         "fgrd": "",
         "fgrosbop": "scaled fraction of gross power to balance-of-plant",
         "fgwped": "fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top\n density set manually using neped (`ipedestal>=1`). Needs to be `>0` if `ipedestal = 3`.\n (`iteration variable 145`)",
@@ -12898,10 +12896,6 @@
         "fgamcd": {
             "lb": 0.001,
             "ub": 10.0
-        },
-        "fgamp": {
-            "lb": -100.0,
-            "ub": 100.0
         },
         "fgwped": {
             "lb": -1.0,
@@ -18462,7 +18456,6 @@
             "divsur",
             "fdfs",
             "fdiva",
-            "fgamp",
             "fhout",
             "fififi",
             "frrp",
@@ -20914,7 +20907,6 @@
         "ffuspow": "real_variable",
         "ffwal": "real_variable",
         "fgamcd": "real_variable",
-        "fgamp": "real_variable",
         "fgwped": "real_variable",
         "fgwsep": "real_variable",
         "fhcd": "real_variable",
