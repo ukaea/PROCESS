@@ -23,7 +23,6 @@ def vacuum_vessel_geometry_single_null(
     radx_inner: float,
     rminx_inner: float,
 ) -> VacuumVesselGeometry:
-    # TODO improve names about cumulative_upper etc - ask Jon
     temp_array = []
 
     kapx = cumulative_upper["d_vv_top"] / rminx_outer
@@ -60,7 +59,6 @@ def vacuum_vessel_geometry(
     radx_inner: float,
     rminx_inner: float,
 ):
-    # TODO improve names about cumulative_upper etc - ask Jon
     temp_array = []
 
     kapx = cumulative_lower["d_vv_bot"] / rminx_outer

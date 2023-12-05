@@ -4,7 +4,6 @@ import math
 import numpy as np
 
 
-# TODO documentation
 @dataclass
 class PlasmaGeometry:
     xs1: List[float]

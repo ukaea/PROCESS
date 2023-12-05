@@ -41,7 +41,6 @@ def tfcoil_geometry_rectangular_shape(
     return return_rects
 
 
-# TODO ask Jon about fn name
 def tfcoil_geometry_d_shape(
     x1: float,
     x2: float,
