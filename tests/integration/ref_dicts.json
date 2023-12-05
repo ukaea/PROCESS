@@ -4309,7 +4309,6 @@
             0.0,
             0.0
         ],
-        "rho_ecrh": 0.1,
         "rho_max_dn": null,
         "rho_max_dt": null,
         "rho_star": 0.0,
@@ -10706,7 +10705,6 @@
         "resdl": "",
         "residual_sig_hoop": "residual hoop stress in strucutal material (Pa)",
         "rfxf": "",
-        "rho_ecrh": "normalised minor radius at which electron cyclotron current drive is maximum",
         "rho_max_dn": "r/a where the density gradient is largest (`ipedestal==0`)",
         "rho_max_dt": "r/a where the temperature gradient is largest (`ipedestal==0`)",
         "rho_star": "",
@@ -14563,10 +14561,6 @@
             "lb": 0.0,
             "ub": 1000000000.0
         },
-        "rho_ecrh": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
         "rho_tf_joints": {
             "lb": 0.0,
             "ub": 0.01
@@ -18324,7 +18318,6 @@
             "ftritbm",
             "gamcd",
             "gamma_ecrh",
-            "rho_ecrh",
             "xi_ebw",
             "iefrf",
             "iefrffix",
@@ -20530,7 +20523,6 @@
         "40": "boundu(135)",
         "41": "blnkoth",
         "42": "fimp(9)",
-        "43": "rho_ecrh",
         "44": "sig_tf_case_max",
         "5": "oacdcp",
         "6": "walalw",
@@ -21334,7 +21326,6 @@
         "reinke_mode": "int_variable",
         "relerr_sol": "real_variable",
         "residual_sig_hoop": "real_variable",
-        "rho_ecrh": "real_variable",
         "rho_tf_joints": "real_variable",
         "rhopedn": "real_variable",
         "rhopedt": "real_variable",

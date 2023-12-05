@@ -258,7 +258,7 @@ contains
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
       startupratio
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
-      ftritbm, gamma_ecrh, pheat, rho_ecrh, beamwd, enbeam, pheatfix, bscfmax, &
+      ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
       etalh, frbeam, harnum, xi_ebw
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
@@ -1159,9 +1159,6 @@ contains
        case ('harnum')
           call parse_real_variable('harnum', harnum, 1.0D0, 10.0D0, &
                'cyclotron harmonic frequency number')
-       case ('rho_ecrh')
-          call parse_real_variable('rho_ecrh', rho_ecrh, 0.0D0, 1.0D0, &
-               'normalised minor radius at which electron cyclotron current drive is maximum')
        case ('xi_ebw')
 	  call parse_real_variable('xi_ebw', xi_ebw, 0.0D0, 1.0D0, &
                'User input EBW scaling for Plasma Heating')

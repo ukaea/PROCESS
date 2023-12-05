@@ -620,7 +620,7 @@ contains
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
         gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
-	use current_drive_variables, only: rho_ecrh, bscfmax, etaech
+	use current_drive_variables, only: bscfmax, etaech
 	use divertor_variables, only: hldivlim
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
@@ -765,8 +765,8 @@ contains
             impurity_arr_frac(9) = fimp(9)
             vlab = 'fimp(9)' ; xlab = 'Argon fraction'
         case (43)
-            rho_ecrh = swp(iscn)
-            vlab = 'rho_ecrh' ; xlab = 'rho at which ECCD is max'
+            ! rho_ecrh = swp(iscn)
+            vlab = 'obsolete' ; xlab = 'obsolete'
         case (44)
             sig_tf_case_max = swp(iscn)
             vlab = 'sig_tf_case_max' ; xlab = 'Allowable_stress_in_tf_coil_case_Tresca_(pa)'
