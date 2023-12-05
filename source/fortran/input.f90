@@ -310,7 +310,7 @@ contains
       ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, fhe3, iwalld, gamma, falpha, fgwped, gtscale, tbeta, ibss, &
-      iradloss, te, alphan, rmajor, kappa, ifispact, iinvqd, fkzohm, beamfus0, &
+      iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, ieped, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       idia, ips, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
@@ -679,9 +679,6 @@ contains
        case ('ifalphap')
           call parse_int_variable('ifalphap', ifalphap, 0, 1, &
                'Switch for fast alpha pressure fit')
-       case ('ifispact')
-          call parse_int_variable('ifispact', ifispact, 0, 0, &
-               'Switch for neutronics calculations')
        case ('ignite')
           call parse_int_variable('ignite', ignite, 0, 1, &
                'Switch for ignited plasma assumption')

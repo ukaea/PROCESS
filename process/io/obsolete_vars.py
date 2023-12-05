@@ -79,4 +79,5 @@ OBS_VARS = {
     "divleg_profile_outer": None,
     "iprimnloss": None,
     "rho_ecrh": None,
+    "ifispact": None,
 }

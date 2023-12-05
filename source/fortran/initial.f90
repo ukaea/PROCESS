@@ -261,7 +261,7 @@ subroutine check
     use physics_variables, only: aspect, eped_sf, fdeut, fgwped, fhe3, &
         fgwsep, ftrit, ibss, i_single_null, icurr, ieped, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
-        rnbeam, ifispact, neped, te, tauee_in, tesep, teped, itartpf, ftar
+        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar
     use pulse_variables, only: lpulse
     use reinke_variables, only: fzactual, impvardiv
     use tfcoil_variables, only: casthi, casthi_is_fraction, casths, i_tf_sup, &
@@ -345,7 +345,6 @@ subroutine check
 
     if (ftrit < 1.0D-3) then  !  tritium fraction is negligible
         triv = 0.0D0
-        ifispact = 0
         trithtmw = 0.0D0
     end if
 

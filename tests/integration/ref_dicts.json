@@ -2462,7 +2462,6 @@
         "ife": 0.0,
         "ifedrv": 2.0,
         "ifetyp": 0.0,
-        "ifispact": 0.0,
         "ifueltyp": 0.0,
         "ignite": 0.0,
         "iinvqd": 1.0,
@@ -9954,7 +9953,6 @@
         "ife": "Switch for IFE option:\n<ul>\n<li>=0 use tokamak, RFP or stellarator model</li>\n<li>=1 use IFE model</li>\n</ul>",
         "ifedrv": "Switch for type of IFE driver:\n<ul>\n<li>=-1 use gainve, etave for gain and driver efficiency</li>\n<li>=0 use tgain, drveff for gain and driver efficiency</li>\n<li>=1 use laser driver based on SOMBRERO design</li>\n<li>=2 use heavy ion beam driver based on OSIRIS</li>\n<li>=3 Input pfusife, rrin and drveff</li>\n</ul>",
         "ifetyp": "Switch for type of IFE device build:\n<ul>\n<li>=0 generic (cylindrical) build</li>\n<li>=1 OSIRIS-like build</li>\n<li>=2 SOMBRERO-like build</li>\n<li>=3 HYLIFE-II-like build</li>\n<li>=4 2019 build</li>\n</ul>",
-        "ifispact": "switch for neutronics calculations:\n<ul>\n<li>=0 neutronics calculations turned off</li>\n<li>=1 neutronics calculations turned on</li>\n</ul>",
         "ifueltyp": "Switch for fuel type:\n<ul>\n<li>=2 treat initial blanket, divertor, first wall\n   as capital costs. Treat all later items and\n   fraction fcdfuel of CD equipment as fuel costs</li>\n<li>=1 treat blanket divertor, first wall and\n   fraction fcdfuel of CD equipment as fuel cost</li>\n<li>=0 treat these as capital cost</li>\n</ul>",
         "igeom": "switch for plasma geometry calculation:\n<ul>\n<li>=0 original method (possibly based on Peng ST modelling)</li>\n<li>=1 improved (and traceable) method</li>\n</ul>",
         "ignite": "switch for ignition assumption. Obviously, ignite must be zero if current drive\n is required. If ignite is 1, any auxiliary power is assumed to be used only during\n plasma start-up, and is excluded from all steady-state power balance calculations.\n<ul>\n<li>=0 do not assume plasma ignition</li>\n<li>=1 assume ignited (but include auxiliary power in costs)</UL</li>\n</ul>",
@@ -13620,10 +13618,6 @@
         "ifetyp": {
             "lb": 0,
             "ub": 4
-        },
-        "ifispact": {
-            "lb": 0,
-            "ub": 0
         },
         "ifueltyp": {
             "lb": 0,
@@ -19643,7 +19637,6 @@
             "idensl",
             "idivrt",
             "ifalphap",
-            "ifispact",
             "igeom",
             "ignite",
             "iinvqd",
@@ -21065,7 +21058,6 @@
         "ife": "int_variable",
         "ifedrv": "int_variable",
         "ifetyp": "int_variable",
-        "ifispact": "int_variable",
         "ifueltyp": "int_variable",
         "igeom": "int_variable",
         "ignite": "int_variable",
