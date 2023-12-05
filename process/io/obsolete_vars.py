@@ -76,4 +76,5 @@ OBS_VARS = {
     "igeom": None,
     "fgamp": None,
     "divleg_profile_inner": None,
+    "divleg_profile_outer": None,
 }

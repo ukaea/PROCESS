@@ -76,10 +76,6 @@ module divertor_variables
   real(dp) :: divfix
   !! divertor structure vertical thickness (m)
 
-  real(dp) :: divleg_profile_outer
-  !! length of 2D profile of outer leg surface (m)
-  !! default value = estimated from side-view strawperson diagram, August 2021
-
   real(dp) :: divmas
   !! divertor plate mass (kg)
 
@@ -200,7 +196,6 @@ module divertor_variables
     divdens = 1.0D4
     divdum = 0
     divfix = 0.2D0
-    divleg_profile_outer = 2.596D0
     divmas = 0.0D0
     divplt = 0.035D0
     divsur = 0.0D0

@@ -265,7 +265,7 @@ contains
       c5div, ksic, fififi, flux_exp, divplt, delld, c2div, beta_div, betao, divdum, tdiv, c6div, &
       omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
       zeffdiv, hldivlim, rlenmax, divfix, c3div, &
-      divleg_profile_outer, hldiv, i_hldiv
+      hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant, &
       pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
@@ -1290,9 +1290,6 @@ contains
        case ('divfix')
           call parse_real_variable('divfix', divfix, 0.1D0, 5.0D0, &
                'Divertor structure vertical extent (m)')
-       case('divleg_profile_outer')
-          call parse_real_variable('divleg_profile_outer', divleg_profile_outer, 0.0D0, 50.0D0, &
-               'Divertor outer leg surface, 2D profile (m)')
        case ('divplt')
           call parse_real_variable('divplt', divplt, 0.01D0, 1.0D0, &
                'Divertor plate thickness (m)')
