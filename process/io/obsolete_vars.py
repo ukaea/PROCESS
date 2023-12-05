@@ -75,4 +75,5 @@ OBS_VARS = {
     "thshield": ["thshield_ib", "thshield_ob", "thshield_vb"],
     "igeom": None,
     "fgamp": None,
+    "divleg_profile_inner": None,
 }

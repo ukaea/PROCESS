@@ -1643,7 +1643,6 @@
         "divdens": 10000.0,
         "divdum": 0.0,
         "divfix": 0.2,
-        "divleg_profile_inner": 0.563,
         "divleg_profile_outer": 2.596,
         "divlife": 0.0,
         "divmas": 0.0,
@@ -9415,7 +9414,6 @@
         "divdens": "divertor structure density (kg/m3)",
         "divdum": "switch for divertor Zeff model:\n<ul>\n<li>=0 calc</li>\n<li>=1 input</li>\n</ul>",
         "divfix": "divertor structure vertical thickness (m)",
-        "divleg_profile_inner": "length of 2D profile of inner leg surface (m)\n default value = estimated from side-view strawperson diagram, August 2021",
         "divleg_profile_outer": "length of 2D profile of outer leg surface (m)\n default value = estimated from side-view strawperson diagram, August 2021",
         "divlife": "Full power lifetime of divertor (y)",
         "divmas": "divertor plate mass (kg)",
@@ -12452,10 +12450,6 @@
         "divfix": {
             "lb": 0.1,
             "ub": 5.0
-        },
-        "divleg_profile_inner": {
-            "lb": 0.0,
-            "ub": 10.0
         },
         "divleg_profile_outer": {
             "lb": 0.0,
@@ -18449,7 +18443,6 @@
             "divdens",
             "divdum",
             "divfix",
-            "divleg_profile_inner",
             "divleg_profile_outer",
             "divmas",
             "divplt",
@@ -20795,7 +20788,6 @@
         "divdens": "real_variable",
         "divdum": "int_variable",
         "divfix": "real_variable",
-        "divleg_profile_inner": "real_variable",
         "divleg_profile_outer": "real_variable",
         "divplt": "real_variable",
         "dnbeta": "real_variable",
