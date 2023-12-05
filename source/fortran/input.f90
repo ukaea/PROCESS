@@ -283,7 +283,7 @@ contains
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
-      iprimnloss, fpumpfw, crypmw_max, f_crypmw
+      fpumpfw, crypmw_max, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
       bldrc, fauxbop, pfusife, dcdrv0, fwdr, pdrive, mcdriv, ucconc, shdr, &
       v3dzu, bldzl, rrin, maxmat, shmatf, fwmatf, drveff, flirad, shdzu, v2dzu, &
@@ -2500,9 +2500,6 @@ contains
        case ('ipowerflow')
           call parse_int_variable('ipowerflow', ipowerflow, 0, 1, &
                'Switch for power flow model')
-       case ('iprimnloss')
-          call parse_int_variable('iprimnloss', iprimnloss, 0, 1, &
-               'Switch for lost neutron power destiny')
        case ('iprimshld')
           call parse_int_variable('iprimshld', iprimshld, 0, 1, &
                'Switch for shield thermal power destiny')

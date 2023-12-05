@@ -2661,7 +2661,6 @@
         "ipowerflow": 1.0,
         "iprecomp": 1.0,
         "iprimdiv": 0.0,
-        "iprimnloss": 0.0,
         "iprimshld": 1.0,
         "iprofile": 1.0,
         "ips": 0.0,
@@ -10019,7 +10018,6 @@
         "ipowerflow": "switch for power flow model:\n<ul>\n<li>=0 pre-2014 version</li>\n<li>=1 comprehensive 2014 model</li>\n</ul>",
         "iprecomp": "Switch for existence of central solenoid pre-compression structure:\n<ul>\n<li>=0 no pre-compression structure</li>\n<li>=1 calculated pre-compression structure</li>\n</ul>",
         "iprimdiv": "",
-        "iprimnloss": "switch for lost neutron power through holes destiny (ipowerflow=0):\n<ul>\n<li>=0 does not contribute to energy generation cycle</li>\n<li>=1 contributes to energy generation cycle</li>\n</ul>",
         "iprimshld": "Switch for shield thermal power destiny:\n<ul>\n<li>=0 does not contribute to energy generation cycle</li>\n<li>=1 contributes to energy generation cycle</li>\n</ul>",
         "iprofile": "switch for current profile consistency:\n<ul>\n<li>=0 use input values for alphaj, rli, dnbeta (but see gtscale option)</li>\n<li>=1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)</li>\n</ul>",
         "ips": "switch for Pfirsch-Schl\u00fcter current scaling (issue #413):\n<ul>\n<li>=0 Do not calculate</li>\n<li>=1 Use SCENE scaling</li>\n</ul>",
@@ -13718,10 +13716,6 @@
             "ub": 1
         },
         "iprecomp": {
-            "lb": 0,
-            "ub": 1
-        },
-        "iprimnloss": {
             "lb": 0,
             "ub": 1
         },
@@ -18734,7 +18728,6 @@
             "htpmw_shld",
             "htpsecmw",
             "ipowerflow",
-            "iprimnloss",
             "iprimshld",
             "nphx",
             "pacpmw",
@@ -21107,7 +21100,6 @@
         "ipnet": "int_variable",
         "ipowerflow": "int_variable",
         "iprecomp": "int_variable",
-        "iprimnloss": "int_variable",
         "iprimshld": "int_variable",
         "iprofile": "int_variable",
         "ips": "int_variable",
