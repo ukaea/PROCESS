@@ -42,7 +42,7 @@ module impurity_radiation_module
 
   !! fimp(nimp) /1.0,0.1,0.02,0.0,0.0,0.0,0.0,0.0,0.0016,0.0,0.0,0.0,0.0,0.0/ :
   !!        impurity number density fractions relative to electron density
-  !!        (iteration variable 102 is fimp(impvar))
+  !!        
   real(dp), public, dimension(nimp) :: fimp
 
   character*2, public, dimension(nimp) :: imp_label
@@ -66,10 +66,6 @@ module impurity_radiation_module
   !!                    (iteration variable 102)
   ! Deprecated
   real(dp), public :: fimpvar
-
-  !! impvar : impurity to be iterated (deprecated)
-  !!                      variable number 102 is turned on
-  integer, public :: impvar
 
   !  Declare impurity data type
 
@@ -142,7 +138,6 @@ contains
       'Xe', &
       'W_'/)
       fimpvar = 1.0D-3
-      impvar = 9
       toolow = .false.
       impurity_arr_Label = "  "
       impurity_arr_Z = 0

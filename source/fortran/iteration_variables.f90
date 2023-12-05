@@ -2241,19 +2241,17 @@ contains
 
   real(kind(1.d0)) function itv_102()
     use impurity_radiation_module, only: impurity_arr_frac
-    use impurity_radiation_module, only: impvar
     implicit none
-    itv_102 =  impurity_arr_frac(impvar)
+    itv_102 =  impurity_arr_frac(2)
   end function itv_102
 
   subroutine set_itv_102(ratio)
     use impurity_radiation_module, only: impurity_arr_frac
-    use impurity_radiation_module, only: impvar
     use impurity_radiation_module, only: fimpvar
     implicit none
     real(kind(1.d0)) :: ratio
     fimpvar = ratio
-    impurity_arr_frac(impvar) = fimpvar
+    impurity_arr_frac(2) = fimpvar
   end subroutine set_itv_102
 
   !---------------------------------

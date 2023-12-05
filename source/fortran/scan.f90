@@ -737,7 +737,7 @@ contains
             vlab = 'coreradius' ; xlab = 'Core_radius'
         case (30)
             fimpvar = swp(iscn)
-            ! impurity_arr(impvar)%frac = fimpvar
+            ! impurity_arr()%frac = fimpvar
             vlab = 'fimpvar' ; xlab = 'Impurity_fraction'
         case (31)
             taulimit = swp(iscn)

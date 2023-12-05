@@ -90,4 +90,5 @@ OBS_VARS = {
     "fmstf": None,
     "quench_detection_ef": None,
     "farc4tf": None,
+    "impvar": None,
 }

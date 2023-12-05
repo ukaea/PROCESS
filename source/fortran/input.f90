@@ -292,7 +292,7 @@ contains
       fburn, fwdzu, etave, v3dr, uctarg, shdzl, ucflib, v3dzl, v1dzu, v2dzl, &
       chdzl, chrad, cdriv1, tgain, somtdr, v2matf, rrmax, bldr, frrmax, &
       blmatf, ife
-    use impurity_radiation_module, only: coreradius, nimp, impvar, fimpvar, &
+    use impurity_radiation_module, only: coreradius, nimp, fimpvar, &
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
@@ -696,9 +696,6 @@ contains
        case ('ilhthresh')
           call parse_int_variable('ilhthresh', ilhthresh, 1, 21, &
                'Switch for L-H power threshold to enforce')
-       case ('impvar')
-          call parse_int_variable('impvar', impvar, 3, nimp, &
-               'Index for impurity fraction iteration variable')
           write(outfile,*) 'impvar is now deprecated - use iteration variables 125-136 instead.'
        case ('ipedestal')
           call parse_int_variable('ipedestal', ipedestal, 0, 1, &
