@@ -80,4 +80,12 @@ OBS_VARS = {
     "iprimnloss": None,
     "rho_ecrh": None,
     "ifispact": None,
+    "fmsbc": None,
+    "fmsbl": None,
+    "fmsdwe": None,
+    "fmsdwi": None,
+    "fmsfw": None,
+    "fmsoh": None,
+    "fmssh": None,
+    "fmstf": None,
 }

@@ -192,13 +192,13 @@ contains
 
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
-    use build_variables, only: tf_in_cs, fmsfw, blbmoth, blbuith, fmsbc, shldoth, &
-      fmsdwi, shldtth, shldlth, vgap2, plleni, fwoth, vvblgap, fmsbl, &
+    use build_variables, only: tf_in_cs, blbmoth, blbuith, shldoth, &
+      shldtth, shldlth, vgap2, plleni, fwoth, vvblgap, &
       thshield_ib, thshield_ob, thshield_vb, iprecomp, &
-      blbpith, aplasmin, blbuoth, tfcth, fmsdwe, &
+      blbpith, aplasmin, blbuoth, tfcth, &
       iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, ddwex, &
-      rinboard, fmstf, blnkoth, fseppc, plsepo, fmssh, blnkith, &
-      ohcth, plsepi, fmsoh, blbmith, gapoh, fcspc, scraplo, vgaptop, &
+      rinboard, blnkoth, fseppc, plsepo, blnkith, &
+      ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
@@ -1432,30 +1432,6 @@ contains
        case ('fcspc')
           call parse_real_variable('fcspc', fcspc, 0.0D0, 1.0D0, &
                'Fraction of space occupied by CS pre-comp structure')
-       case ('fmsbc')
-          call parse_real_variable('fmsbc', fmsbc, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in buck cyl')
-       case ('fmsbl')
-          call parse_real_variable('fmsbl', fmsbl, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in blanket')
-       case ('fmsdwe')
-          call parse_real_variable('fmsdwe', fmsdwe, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in cryostat')
-       case ('fmsdwi')
-          call parse_real_variable('fmsdwi', fmsdwi, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in vacuum vessel')
-       case ('fmsfw')
-          call parse_real_variable('fmsfw', fmsfw, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in first wall')
-       case ('fmsoh')
-          call parse_real_variable('fmsoh', fmsoh, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in Central Solenoid')
-       case ('fmssh')
-          call parse_real_variable('fmssh', fmssh, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in shield')
-       case ('fmstf')
-          call parse_real_variable('fmstf', fmstf, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in TF coil')
        case ('fseppc')
           call parse_real_variable('fseppc', fseppc, 1.0D6, 1.0D9, &
                'CS separation force held by CS pre-comp structure')

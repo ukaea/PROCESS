@@ -1980,14 +1980,6 @@
         "fluxdens_to_pa": "1.0D0/1.55e23",
         "fmgdmw": 0.0,
         "fmom": null,
-        "fmsbc": 0.0,
-        "fmsbl": 0.0,
-        "fmsdwe": 0.0,
-        "fmsdwi": 0.0,
-        "fmsfw": 0.0,
-        "fmsoh": 0.0,
-        "fmssh": 0.0,
-        "fmstf": 0.0,
         "fmt_str": "\"(a,1pe10.3)\"",
         "fmva": 1.0,
         "fnbshinef": 1.0,
@@ -9687,14 +9679,6 @@
         "fluxdens_to_pa": "",
         "fmgdmw": "power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)",
         "fmom": "momentum factor [-]",
-        "fmsbc": "Martensitic fraction of steel in (non-existent!) bucking cylinder",
-        "fmsbl": "Martensitic fraction of steel in blanket",
-        "fmsdwe": "Martensitic fraction of steel in cryostat",
-        "fmsdwi": "Martensitic fraction of steel in vacuum vessel",
-        "fmsfw": "Martensitic fraction of steel in first wall",
-        "fmsoh": "Martensitic fraction of steel in central solenoid",
-        "fmssh": "Martensitic fraction of steel in shield",
-        "fmstf": "Martensitic fraction of steel in TF coil",
         "fmt_str": "",
         "fmva": "f-value for maximum MVA (`constraint equation 19`, `iteration variable 30`)",
         "fnbshinef": "f-value for maximum neutral beam shine-through fraction\n (`constraint equation 59`, `iteration variable 105`)",
@@ -12958,38 +12942,6 @@
         "fmgdmw": {
             "lb": 0.0,
             "ub": 100.0
-        },
-        "fmsbc": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsbl": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsdwe": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsdwi": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsfw": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsoh": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmssh": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmstf": {
-            "lb": 0.0,
-            "ub": 1.0
         },
         "fmva": {
             "lb": 0.001,
@@ -17502,14 +17454,6 @@
             "d_vv_bot",
             "f_avspace",
             "fcspc",
-            "fmsbc",
-            "fmsbl",
-            "fmsdwe",
-            "fmsdwi",
-            "fmsfw",
-            "fmsoh",
-            "fmssh",
-            "fmstf",
             "fseppc",
             "fwarea",
             "fwareaib",
@@ -20890,15 +20834,6 @@
         "flirad": "real_variable",
         "flpitch": "real_variable",
         "fmgdmw": "real_variable",
-        "fmsbc": "real_variable",
-        "fmsbl": "real_variable",
-        "fmsdwe": "real_variable",
-        "fmsdwi": "real_variable",
-        "fmsfw": "real_variable",
-        "fmsoh": "real_variable",
-        "fmssh": "real_variable",
-        "fmstf": "real_variable",
-        "fmva": "real_variable",
         "fnbshinef": "real_variable",
         "fndt": "real_variable",
         "fne0": "real_variable",
