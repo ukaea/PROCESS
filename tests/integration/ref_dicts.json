@@ -1858,7 +1858,6 @@
         "falpe": 0.0,
         "falpha": 0.95,
         "falpi": 0.0,
-        "farc4tf": 0.7,
         "fauxbop": 0.06,
         "fauxmn": 1.0,
         "favail": 1.0,
@@ -9580,7 +9579,6 @@
         "falpe": "fraction of alpha energy to electrons",
         "falpha": "fraction of alpha power deposited in plasma (Physics of Energetic Ions, p.2489)",
         "falpi": "fraction of alpha power to ions",
-        "farc4tf": "factor to size height of point 4 on TF coil",
         "fauxbop": "fraction of gross electric power to balance-of-plant (IFE)",
         "fauxmn": "f-value for minimum auxiliary power (`constraint equation 40`, `iteration variable 64`)",
         "favail": "F-value for minimum availability (`constraint equation 61`)",
@@ -12650,10 +12648,6 @@
             "ub": 10.0
         },
         "falpha": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "farc4tf": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -20073,7 +20067,6 @@
             "dcondins",
             "dhecoil",
             "estotftgj",
-            "farc4tf",
             "b_crit_upper_nbti",
             "t_crit_nbti",
             "max_force_density",
@@ -20754,7 +20747,6 @@
         "f_w": "real_variable",
         "factor": "real_variable",
         "falpha": "real_variable",
-        "farc4tf": "real_variable",
         "fauxbop": "real_variable",
         "fauxmn": "real_variable",
         "favail": "real_variable",

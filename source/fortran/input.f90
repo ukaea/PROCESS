@@ -325,7 +325,7 @@ contains
       te0_ecrh_achievable
     use tfcoil_variables, only: fcoolcp, tfinsgap, vftf, &
       fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
-      casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, farc4tf, &
+      casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
       thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
       i_tf_tresca, dhecoil, tmaxpro, n_tf, tcpav, fcutfsu, jbus, &
@@ -1673,9 +1673,6 @@ contains
        case ('eyoung_res_tf_buck')
           call parse_real_variable('eyoung_res_tf_buck', eyoung_res_tf_buck, 1.0D-10, 1.0D12, &
                'Reinforced aluminium Young modulus for TF stress calc.')
-       case ('farc4tf')
-          call parse_real_variable('farc4tf', farc4tf, 0.0D0, 1.0D0, &
-               'TF coil shape parameter')
        case ('t_crit_nbti')
           call parse_real_variable('t_crit_nbti ', t_crit_nbti , 0.0D0, 15.0D0, &
                'Critical temperature of GL_nbti ')
