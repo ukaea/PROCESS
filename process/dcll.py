@@ -725,7 +725,9 @@ class DCLL:
             + dcll_module.wht_mfbss_cool
         )
         # Total Liquid Breeder/Coolant Mass
-        dcll_module.mass_liq_blanket = fwbs_variables.wht_liq + dcll_module.wht_mfbss_pbli
+        dcll_module.mass_liq_blanket = (
+            fwbs_variables.wht_liq + dcll_module.wht_mfbss_pbli
+        )
         # Total Steel Mass
         dcll_module.mass_stl_blanket = (
             dcll_module.fwmass_stl

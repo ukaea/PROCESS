@@ -32,10 +32,16 @@ class BlanketLibrary:
         """
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the ipump variable is appropriately set for seperate coolants 
-        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Helium" and fwbs_variables.coolwh == 2:
+        # the ipump variable is appropriately set for seperate coolants
+        if (
+            f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Helium"
+            and fwbs_variables.coolwh == 2
+        ):
             fwbs_variables.ipump = 1
-        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Water" and fwbs_variables.coolwh == 1:
+        if (
+            f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Water"
+            and fwbs_variables.coolwh == 1
+        ):
             fwbs_variables.ipump = 1
 
         # If FW and BB have same coolant...
@@ -151,7 +157,7 @@ class BlanketLibrary:
                     fwbs_variables.outlet_temp,
                     "OP ",
                 )
-            else: 
+            else:
                 po.ovarre(
                     self.outfile,
                     "Outlet Temperature (Celcius)",
@@ -420,10 +426,16 @@ class BlanketLibrary:
         # FW and BB Mass Flow ###########
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the ipump variable is appropriately set for seperate coolants 
-        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Helium" and fwbs_variables.coolwh == 2:
+        # the ipump variable is appropriately set for seperate coolants
+        if (
+            f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Helium"
+            and fwbs_variables.coolwh == 2
+        ):
             fwbs_variables.ipump = 1
-        if f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Water" and fwbs_variables.coolwh == 1:
+        if (
+            f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Water"
+            and fwbs_variables.coolwh == 1
+        ):
             fwbs_variables.ipump = 1
 
         # If FW and BB have the same coolant...
@@ -472,12 +484,7 @@ class BlanketLibrary:
         # First wall flow is just along the first wall, with no allowance for radial
         # pipes, manifolds etc. The outputs are mid quantities of inlet and outlet.
         # This subroutine recalculates cp and rhof.
-        (
-            blanket_library.tpeakfwi,
-            cf,
-            rhof,
-            blanket_library.mffwpi,
-        ) = self.fw.fw_temp(
+        (blanket_library.tpeakfwi, cf, rhof, blanket_library.mffwpi,) = self.fw.fw_temp(
             output,
             fwbs_variables.afw,
             build_variables.fwith,
@@ -865,7 +872,7 @@ class BlanketLibrary:
                     i_channel_shape=1,
                     mass_flow_rate=blanket_library.mfblktpi,
                     flow_density=fwbs_variables.rhof_bl,
-                )    
+                )
 
         # FW Presure Drops ###############
 
@@ -991,7 +998,9 @@ class BlanketLibrary:
                 pressure=fwbs_variables.fwpressure.item(),
                 pdrop=deltap_fw_blkt,
                 mf=blanket_library.mftotal,
-                primary_coolant_switch=f2py_compatible_to_string(fwbs_variables.fwcoolant),
+                primary_coolant_switch=f2py_compatible_to_string(
+                    fwbs_variables.fwcoolant
+                ),
                 coolant_density=fwbs_variables.rhof_fw,
                 label="First Wall and Blanket",
             )
@@ -1021,7 +1030,9 @@ class BlanketLibrary:
                 pressure=fwbs_variables.fwpressure.item(),
                 pdrop=deltap_fw.item(),
                 mf=blanket_library.mffw,
-                primary_coolant_switch=f2py_compatible_to_string(fwbs_variables.fwcoolant),
+                primary_coolant_switch=f2py_compatible_to_string(
+                    fwbs_variables.fwcoolant
+                ),
                 coolant_density=fwbs_variables.rhof_fw,
                 label="First Wall",
             )
@@ -1035,7 +1046,9 @@ class BlanketLibrary:
                 pressure=fwbs_variables.blpressure.item(),
                 pdrop=deltap_blkt.item(),
                 mf=blanket_library.mfblkt,
-                primary_coolant_switch="Helium" if fwbs_variables.coolwh == 1 else "Water",
+                primary_coolant_switch="Helium"
+                if fwbs_variables.coolwh == 1
+                else "Water",
                 coolant_density=blanket_library.rhof_bl,
                 label="Blanket",
             )
@@ -1067,7 +1080,9 @@ class BlanketLibrary:
                 pressure=fwbs_variables.blpressure_liq.item(),
                 pdrop=deltap_bl_liq,
                 mf=fwbs_variables.mfblkt_liq,
-                primary_coolant_switch="Helium" if fwbs_variables.coolwh == 1 else "Water",
+                primary_coolant_switch="Helium"
+                if fwbs_variables.coolwh == 1
+                else "Water",
                 coolant_density=fwbs_variables.den_liq,
                 label="Liquid Metal Breeder/Coolant",
             )
