@@ -3807,7 +3807,6 @@
         "qstar": 0.0,
         "qtargettotal": 5000000.0,
         "qtaue": 0.0,
-        "quench_detection_ef": 0.0,
         "quench_model": "'exponential'",
         "r1": 0.0,
         "r2": 0.0,
@@ -10616,7 +10615,6 @@
         "qstar": "cylindrical safety factor",
         "qtargettotal": "Power density on target including surface recombination [W/m2] (`iteration variable 124`)",
         "qtaue": "exponent for temperature term in energy confinement time formula",
-        "quench_detection_ef": "Electric field at which TF quench is detected and discharge begins (V/m)",
         "quench_model": "switch for TF coil quench model (Only applies to REBCO magnet at present, issue #522):\n<ul>\n<li>='exponential' exponential quench with constant discharge resistor</li>\n<li>='linear' quench with constant voltage</li>\n</ul>",
         "r1": "IFE device radial build (m)",
         "r2": "IFE device radial build (m)",
@@ -14422,10 +14420,6 @@
         "qtargettotal": {
             "lb": 0.001,
             "ub": 100000000.0
-        },
-        "quench_detection_ef": {
-            "lb": 0.0,
-            "ub": 10.0
         },
         "r_cp_top": {
             "lb": 0.001,
@@ -20147,7 +20141,6 @@
             "str_wp_max",
             "i_str_wp",
             "quench_model",
-            "quench_detection_ef",
             "time1",
             "taucq",
             "tcritsc",
@@ -21232,7 +21225,6 @@
         "qnty_sfty_fac": "real_variable",
         "qnuc": "real_variable",
         "qtargettotal": "real_variable",
-        "quench_detection_ef": "real_variable",
         "r_cp_top": "real_variable",
         "rad_fraction_sol": "real_variable",
         "ralpne": "real_variable",

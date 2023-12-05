@@ -324,7 +324,7 @@ contains
       f_w, bmn, shear, m_res, f_rad, flpitch, istell, max_gyrotron_frequency, &
       te0_ecrh_achievable
     use tfcoil_variables, only: fcoolcp, tfinsgap, vftf, &
-      quench_detection_ef, fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
+      fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, farc4tf, &
       thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
@@ -1926,9 +1926,6 @@ contains
        case ('quench_model')
           call parse_string_variable('quench_model', quench_model, &
           'Switch for TF coil quench model (Only applies to REBCO magnet at present)')
-       case ('quench_detection_ef')
-          call parse_real_variable('quench_detection_ef', quench_detection_ef, 0.0D0, 1.0D1, &
-               'Electric field at which TF quench is detected and discharge begins (V/m)')
 
        case ('tmax_croco')
           call parse_real_variable('tmax_croco', tmax_croco, 4.0D0, 1.0D3, &

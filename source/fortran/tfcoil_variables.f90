@@ -480,9 +480,6 @@ module tfcoil_variables
   !! - ='exponential' exponential quench with constant discharge resistor
   !! - ='linear' quench with constant voltage
 
-  real(dp) :: quench_detection_ef
-  !! Electric field at which TF quench is detected and discharge begins (V/m)
-
   real(dp) :: time1
   !! Time at which TF quench is detected (s)
 
@@ -950,7 +947,6 @@ module tfcoil_variables
     str_wp_max = 0.7D-2
     i_str_wp = 1
     quench_model = 'exponential'
-    quench_detection_ef = 0D0
     time1 = 0D0
     tcritsc = 16.0D0
     tdmptf = 10.0D0
