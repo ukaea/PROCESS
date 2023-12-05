@@ -362,7 +362,7 @@ contains
         plabel(48) = 'Net_electric_Pwr_(MW)____'
         plabel(49) = 'Recirculating_Fraction___'
         plabel(50) = 'Psep/R___________________'
-        plabel(51) = 'fimpvar__________________'
+        plabel(51) = '' !OBSOLETE
         plabel(52) = 'Tot._radiation_power_(MW)'
         plabel(53) = 'First_wall_peak_temp_(K)_'
         plabel(54) = 'Cu_frac_TFC_conductor____'
@@ -560,7 +560,7 @@ contains
     plabel(48) = 'Net_electric_Pwr_(MW)____'
     plabel(49) = 'Recirculating_Fraction___'
     plabel(50) = 'Psep/R___________________'
-    plabel(51) = 'fimpvar__________________'
+    plabel(51) = '' !OBSOLETE
     plabel(52) = 'Tot._radiation_power_(MW)'
     plabel(53) = 'First_wall_peak_temp_(K)_'
     plabel(54) = 'Cu_frac_TFC_conductor____'

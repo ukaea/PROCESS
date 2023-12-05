@@ -156,7 +156,7 @@ module numerics
   !!  <LI> (53) Neutron fluence on TF coil upper limit (itv 92,93,94)
   !!  <LI> (54) Peak TF coil nuclear heating upper limit (itv 95,93,94)
   !!  <LI> (55) Vacuum vessel helium concentration upper limit iblanket =2 (itv 96,93,94)
-  !!  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3,102)
+  !!  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3)
   !!  <LI> (57) NOT USED
   !!  <LI> (58) NOT USED
   !!  <LI> (59) Neutral beam shine-through fraction upper limit (NBI) (itv 105,6,19,4 )
@@ -168,7 +168,7 @@ module numerics
   !!  <LI> (65) Dump time set by VV loads (itv 56, 113)
   !!  <LI> (66) Limit on rate of change of energy in poloidal field
   !!            (Use iteration variable 65(tohs), 115)
-  !!  <LI> (67) Simple Radiation Wall load limit (itv 116, 102, 4,6)
+  !!  <LI> (67) Simple Radiation Wall load limit (itv 116, 4,6)
   !!  <LI> (68) Psep * Bt / qAR upper limit (itv 117)
   !!  <LI> (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)
   !!  <LI> (70) ensure that teomp = separatrix temperature in the pedestal profile,

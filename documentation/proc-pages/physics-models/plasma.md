@@ -378,10 +378,7 @@ plasma quasi-neutrality taking into account the fuel ratios
 be input by the user or selected as an iteration variable.
 
 The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 
-isotopes and helium) may be used as an iteration variable. The element to use is specified using 
-input parameter `impvar`, which may be set to a value between 3 and `nimp`, and the initial 
-estimate to use for the element's impurity fraction must be set using iteration 
-variable no. 102 (`fimpvar`).
+isotopes and helium) may be used as an iteration variable.
 
 The synchrotron radiation power[^11] [^12] is assumed to originate from the 
 plasma core. The wall reflection factor `ssync` may be set by the user.

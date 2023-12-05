@@ -264,7 +264,6 @@ def main(args=None):
         "tbrmin",
         "bt",
         "coreradius",
-        "fimpvar",
         "taulimit",
         "epsvmc",
         "ttarget",
