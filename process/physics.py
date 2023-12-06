@@ -70,10 +70,12 @@ class Physics:
 
         #  Calculate plasma current
         (
+            physics_variables.alphaj,
+            physics_variables.rli,
             physics_variables.bp,
             physics_variables.qstar,
             physics_variables.plascur,
-        ) = physics_module.culcur(
+        ) = self.culcur(
             physics_variables.alphaj,
             physics_variables.alphap,
             physics_variables.bt,
@@ -823,6 +825,178 @@ class Physics:
                     f" 'fzactual, frac, reinke_variables.impvardiv = {reinke_variables.fzactual}, {impurity_radiation_module.impurity_arr_frac(reinke_variables.impvardiv)}, {reinke_variables.impvardiv}"
                 ),
             )
+
+    def culcur(
+        self,
+        alphaj,
+        alphap,
+        bt,
+        eps,
+        icurr,
+        iprofile,
+        kappa,
+        kappa95,
+        p0,
+        pperim,
+        q0,
+        qpsi,
+        rli,
+        rmajor,
+        rminor,
+        sf,
+        triang,
+        triang95,
+    ):
+        """Routine to calculate the plasma current
+        author: P J Knight, CCFE, Culham Science Centre
+        alphaj   : input/output real : current profile index
+        alphap   : input real :  pressure profile index
+        bt       : input real :  toroidal field on axis (T)
+        eps      : input real :  inverse aspect ratio
+        icurr    : input integer : current scaling model to use
+        1 = Peng analytic fit
+        2 = Peng divertor scaling (TART)
+        3 = simple ITER scaling
+        4 = revised ITER scaling
+        5 = Todd empirical scaling I
+        6 = Todd empirical scaling II
+        7 = Connor-Hastie model
+        iprofile : input integer : switch for current profile consistency
+        0 = use input alphaj, rli
+        1 = make these consistent with q, q0
+        kappa    : input real :  plasma elongation
+        kappa95  : input real :  plasma elongation at 95% surface
+        p0       : input real :  central plasma pressure (Pa)
+        pperim   : input real :  plasma perimeter length (m)
+        q0       : input real :  plasma safety factor on axis
+        qpsi     : input real :  plasma edge safety factor (= q-bar for icurr=2)
+        rli      : input/output real : plasma normalised internal inductance
+        rmajor   : input real :  major radius (m)
+        rminor   : input real :  minor radius (m)
+        sf       : input real :  shape factor for icurr=1 (=A/pi in documentation)
+        triang   : input real :  plasma triangularity
+        triang95 : input real :  plasma triangularity at 95% surface
+        bp       : output real : poloidal field (T)
+        qstar    : output real : equivalent cylindrical safety factor (shaped)
+        plascur  : output real : plasma current (A)
+        This routine performs the calculation of the
+        plasma current, with a choice of formula for the edge
+        safety factor. It will also make the current profile parameters
+        consistent with the q-profile if required.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
+        Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
+        Fusion Technology, 21, 1729
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants -
+        Part 1: Physics https://www.sciencedirect.com/science/article/pii/S0920379614005961
+        H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
+        https://iopscience.iop.org/article/10.1088/0029-5515/53/7/073019
+        T. Hartmann, 2013, Development of a modular systems code to analyse the
+        implications of physics assumptions on the design of a demonstration fusion power plant
+        https://inis.iaea.org/search/search.aspx?orig_q=RN:45031642
+        Sauter, Geometric formulas for systems codes..., FED 2016
+        """
+        #  Aspect ratio
+
+        asp = 1.0 / eps
+
+        #  Calculate the function Fq that scales the edge q from the
+        #  circular cross-section cylindrical case
+
+        #  First check for negative triangularity using unsuitable current scaling
+
+        if icurr != 8 and triang < 0.0:
+            raise ValueError(
+                f"Triangularity is negative without icurr = 8: {triang=}, {icurr=}"
+            )
+
+        if icurr == 1:  # Peng analytical fit
+            fq = (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
+        elif icurr == 2:  # Peng scaling for double null divertor; TARTs [STAR Code]
+            curhat = (
+                1.0e6 * physics_module.plasc(qpsi, asp, rminor, bt, kappa, triang) / bt
+            )
+        elif icurr == 3:  # Simple ITER scaling (simply the cylindrical case)
+            fq = 1.0
+        elif icurr == 4:  # ITER formula (IPDG89)
+            fq = (
+                0.5
+                * (1.17 - 0.65 * eps)
+                / ((1.0 - eps * eps) ** 2)
+                * (
+                    1.0
+                    + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3)
+                )
+            )
+        elif icurr in [5, 6]:  # Todd empirical scalings
+            fq = (
+                (1.0 + 2.0 * eps * eps)
+                * 0.5
+                * (1.0 + kappa95**2)
+                * (
+                    1.24
+                    - 0.54 * kappa95
+                    + 0.3 * (kappa95**2 + triang95**2)
+                    + 0.125 * triang95
+                )
+            )
+
+            fq *= 1 if icurr == 7 else (1.0 + (abs(kappa95 - 1.2)) ** 3)
+        elif icurr == 7:  # Connor-Hastie asymptotically-correct expression
+            # N.B. If iprofile=1, alphaj will be wrong during the first call (only)
+            fq = physics_module.conhas(alphaj, alphap, bt, triang95, eps, kappa95, p0)
+        elif (
+            icurr == 8
+        ):  # Sauter scaling allowing negative triangularity [FED May 2016]
+            # Assumes zero squareness, note takes kappa, delta at separatrix not _95
+
+            w07 = 1.0  # zero squareness - can be modified later if required
+
+            fq = (
+                (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
+                * (1.0 + 0.09 * triang + 0.16 * triang**2)
+                * (1.0 + 0.45 * triang * eps)
+                / (1.0 - 0.74 * eps)
+                * (1.0 + 0.55 * (w07 - 1.0))
+            )
+        elif icurr == 9:
+            fq = 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
+        else:
+            raise ValueError(f"Invalid value {icurr=}")
+
+        if icurr == 8:
+            curhat = 4.1e6 * rminor**2 / (rmajor * qpsi) * fq
+        elif icurr != 2:
+            curhat = 5.0e6 * rminor**2 / (rmajor * qpsi) * fq
+        # == 2 case covered above
+
+        qstar = (
+            5.0e6
+            * rminor**2
+            / (rmajor * curhat)
+            * 0.5
+            * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+        )
+
+        plascur = curhat * bt
+        physics_variables.normalised_total_beta = (
+            1.0e8 * physics_variables.beta * rminor * bt / plascur
+        )
+        bp = physics_module.bpol(icurr, plascur, qpsi, asp, bt, kappa, triang, pperim)
+
+        # Ensure current profile consistency, if required
+        # This is as described in Hartmann and Zohm only if icurr = 4 as well...
+
+        if iprofile == 1:
+            alphaj = qstar / q0 - 1.0
+            rli = numpy.log(
+                1.65 + 0.89 * alphaj
+            )  # Tokamaks 4th Edition, Wesson, page 116
+
+        return alphaj, rli, bp, qstar, plascur
 
     def bootstrap_fraction_iter89(
         self, aspect, beta, bt, cboot, plascur, q95, q0, rmajor, vol

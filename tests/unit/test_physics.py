@@ -447,13 +447,167 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 
 
-class PsFractionSceneParam(NamedTuple):
+class CulcurParam(NamedTuple):
+    normalised_total_beta: Any = None
+
     beta: Any = None
 
-    expected_pscf: Any = None
+    icurr: Any = None
+
+    iprofile: Any = None
+
+    alphaj: Any = None
+
+    rli: Any = None
+
+    alphap: Any = None
+
+    bt: Any = None
+
+    eps: Any = None
+
+    kappa: Any = None
+
+    kappa95: Any = None
+
+    p0: Any = None
+
+    pperim: Any = None
+
+    q0: Any = None
+
+    qpsi: Any = None
+
+    rmajor: Any = None
+
+    rminor: Any = None
+
+    sf: Any = None
+
+    triang: Any = None
+
+    triang95: Any = None
+
+    expected_normalised_total_beta: Any = None
+
+    expected_alphaj: Any = None
+
+    expected_rli: Any = None
+
+    expected_bp: Any = None
+
+    expected_qstar: Any = None
+
+    expected_plascur: Any = None
 
 
-class DiamagneticFractionHenderParam(NamedTuple):
-    beta: Any = None
+@pytest.mark.parametrize(
+    "culcurparam",
+    (
+        CulcurParam(
+            normalised_total_beta=0,
+            beta=0.030000000000000006,
+            icurr=4,
+            iprofile=1,
+            alphaj=1,
+            rli=0.90000000000000002,
+            alphap=0,
+            bt=5.7000000000000002,
+            eps=0.33333333333333331,
+            kappa=1.8500000000000001,
+            kappa95=1.6517857142857142,
+            p0=0,
+            pperim=24.081367139525412,
+            q0=1,
+            qpsi=3.5,
+            rmajor=8,
+            rminor=2.6666666666666665,
+            sf=1.4372507312498271,
+            triang=0.5,
+            triang95=0.33333333333333331,
+            expected_normalised_total_beta=2.4784688886891844,
+            expected_alphaj=1.9008029008029004,
+            expected_rli=1.2064840230894305,
+            expected_bp=0.96008591022564971,
+            expected_qstar=2.9008029008029004,
+            expected_plascur=18398455.678867526,
+        ),
+        CulcurParam(
+            normalised_total_beta=2.4784688886891844,
+            beta=0.030000000000000006,
+            icurr=4,
+            iprofile=1,
+            alphaj=1.9008029008029004,
+            rli=1.2064840230894305,
+            alphap=2.4500000000000002,
+            bt=5.7000000000000002,
+            eps=0.33333333333333331,
+            kappa=1.8500000000000001,
+            kappa95=1.6517857142857142,
+            p0=626431.90482713911,
+            pperim=24.081367139525412,
+            q0=1,
+            qpsi=3.5,
+            rmajor=8,
+            rminor=2.6666666666666665,
+            sf=1.4372507312498271,
+            triang=0.5,
+            triang95=0.33333333333333331,
+            expected_normalised_total_beta=2.4784688886891844,
+            expected_alphaj=1.9008029008029004,
+            expected_rli=1.2064840230894305,
+            expected_bp=0.96008591022564971,
+            expected_qstar=2.9008029008029004,
+            expected_plascur=18398455.678867526,
+        ),
+    ),
+)
+def test_culcur(culcurparam, monkeypatch, physics):
+    """
+    Automatically generated Regression Unit Test for culcur.
 
-    expected_diacf: Any = None
+    This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
+
+    :param culcurparam: the data used to mock and assert in this test.
+    :type culcurparam: culcurparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+
+    monkeypatch.setattr(
+        physics_variables, "normalised_total_beta", culcurparam.normalised_total_beta
+    )
+
+    monkeypatch.setattr(physics_variables, "beta", culcurparam.beta)
+
+    _, _, bp, qstar, plascur = physics.culcur(
+        icurr=culcurparam.icurr,
+        iprofile=culcurparam.iprofile,
+        alphaj=culcurparam.alphaj,
+        rli=culcurparam.rli,
+        alphap=culcurparam.alphap,
+        bt=culcurparam.bt,
+        eps=culcurparam.eps,
+        kappa=culcurparam.kappa,
+        kappa95=culcurparam.kappa95,
+        p0=culcurparam.p0,
+        pperim=culcurparam.pperim,
+        q0=culcurparam.q0,
+        qpsi=culcurparam.qpsi,
+        rmajor=culcurparam.rmajor,
+        rminor=culcurparam.rminor,
+        sf=culcurparam.sf,
+        triang=culcurparam.triang,
+        triang95=culcurparam.triang95,
+    )
+
+    assert physics_variables.normalised_total_beta == pytest.approx(
+        culcurparam.expected_normalised_total_beta
+    )
+
+    assert bp == pytest.approx(culcurparam.expected_bp)
+
+    assert qstar == pytest.approx(culcurparam.expected_qstar)
+
+    assert plascur == pytest.approx(culcurparam.expected_plascur)
