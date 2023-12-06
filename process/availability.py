@@ -115,17 +115,7 @@ class Availability:
 
             # Centrepost lifetime (years) (ST machines only)
             if pv.itart == 1:
-                # SC magnets CP lifetime
-                # Rem : only the TF maximum fluence is considered for now
-                if tfv.i_tf_sup == 1:
-                    cv.cplife = min(
-                        ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife
-                    )
-
-                # Aluminium/Copper magnets CP lifetime
-                # For now, we keep the original def, developped for GLIDCOP magnets ...
-                else:
-                    cv.cplife = min(cv.cpstflnc / pv.wallmw, cv.tlife)
+                cv.cplife = self.cp_lifetime()
 
         # Plant Availability (iavail=0,1)
 
@@ -450,17 +440,7 @@ class Availability:
 
         # Centrepost lifetime (years) (ST only)
         if pv.itart == 1:
-            # SC magnets CP lifetime
-            # Rem : only the TF maximum fluence is considered for now
-            if tfv.i_tf_sup == 1:
-                cv.cplife = min(
-                    ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife
-                )
-
-            # Aluminium/Copper magnets CP lifetime
-            # For now, we keep the original def, developped for GLIDCOP magnets ...
-            else:
-                cv.cplife = min(cv.cpstflnc / pv.wallmw, cv.tlife)
+            cv.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
         cv.cdrlife = fwbsv.bktlife
@@ -994,3 +974,22 @@ class Availability:
             po.oblnkl(self.outfile)
 
         return u_unplanned_vacuum
+    def cp_lifetime(self):
+        """Calculates Centrepost Lifetime
+
+        This routine calculates the lifetime of the centrepost, either for superconducting or aluminium/resistive magnets.
+
+        :returns: CP lifetime
+        :rtype: float
+        """
+        # SC magnets CP lifetime
+        # Rem : only the TF maximum fluence is considered for now
+        if tfv.i_tf_sup == 1:
+            cplife = min(ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife)
+
+        # Aluminium/Copper magnets CP lifetime
+        # For now, we keep the original def, developped for GLIDCOP magnets ...
+        else:
+            cplife = min(cv.cpstflnc / pv.wallmw, cv.tlife)
+
+        return cplife
