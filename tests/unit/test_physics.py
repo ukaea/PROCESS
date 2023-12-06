@@ -642,3 +642,51 @@ def test_culcur(culcurparam, monkeypatch, physics):
 )
 def test_plasc(arguments, expected, physics):
     assert physics.plasc(**arguments) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    ("arguments", "expected"),
+    (
+        (
+            {
+                "icurr": 2,
+                "ip": 1.6e7,
+                "qbar": 2.5,
+                "aspect": 2.7,
+                "bt": 12,
+                "kappa": 1.85,
+                "delta": 0.5,
+                "perim": 24,
+            },
+            3.4726549397470703,
+        ),
+        (
+            {
+                "icurr": 2,
+                "ip": 1.6e7,
+                "qbar": 2.5,
+                "aspect": 3.0,
+                "bt": 12,
+                "kappa": 1.85,
+                "delta": 0.5,
+                "perim": 24,
+            },
+            2.958739919272374,
+        ),
+        (
+            {
+                "icurr": 3,
+                "ip": 1.6e7,
+                "qbar": 2.5,
+                "aspect": 3.0,
+                "bt": 12,
+                "kappa": 1.85,
+                "delta": 0.5,
+                "perim": 24,
+            },
+            0.8377580413333333,
+        ),
+    ),
+)
+def test_bpol(arguments, expected, physics):
+    assert physics.bpol(**arguments) == pytest.approx(expected)
