@@ -998,6 +998,73 @@ class Physics:
 
         return alphaj, rli, bp, qstar, plascur
 
+    def plasc(self, qbar, aspect, rminor, bt, kappa, delta):
+        """Function to calculate plasma current (Peng scaling)
+        author: J Galambos, FEDC/ORNL
+        author: P J Knight, CCFE, Culham Science Centre
+        aspect : input real :  plasma aspect ratio
+        bt     : input real :  toroidal field on axis (T)
+        delta  : input real :  plasma triangularity
+        kappa  : input real :  plasma elongation
+        qbar   : input real :  edge q-bar
+        rminor : input real :  plasma minor radius (m)
+        This function calculates the plasma current in MA,
+        using a scaling from Peng, Galambos and Shipe (1992).
+        It is primarily used for Tight Aspect Ratio Tokamaks and is
+        selected via <CODE>icurr=2</CODE>.
+        J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
+        Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
+        Fusion Technology, 21, 1729
+        """
+
+        eps = 1.0 / aspect
+
+        c1 = kappa**2 / (1.0 + delta) + delta
+        c2 = kappa**2 / (1.0 - delta) - delta
+
+        d1 = (kappa / (1.0 + delta)) ** 2 + 1.0
+        d2 = (kappa / (1.0 - delta)) ** 2 + 1.0
+
+        if aspect < c1:
+            y1 = numpy.sqrt((c1 * eps - 1.0) / (1.0 + eps)) * (1.0 + delta) / kappa
+        else:
+            y1 = numpy.sqrt((1.0 - c1 * eps) / (1.0 + eps)) * (1.0 + delta) / kappa
+
+        y2 = numpy.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * (1.0 - delta) / kappa
+
+        e1 = 2.0 * kappa / (d1 * (1.0 + delta))
+        e2 = 2.0 * kappa / (d2 * (1.0 - delta))
+
+        h2 = (1.0 + (c2 - 1.0) * eps / 2.0) / numpy.sqrt((1.0 - eps) * (c2 * eps + 1.0))
+        f2 = (d2 * (1.0 - delta) * eps) / ((1.0 - eps) * (c2 * eps + 1.0))
+        g = eps * kappa / (1.0 - eps * delta)
+        ff2 = f2 * (g + 2.0 * h2 * numpy.arctan(y2))
+
+        if aspect < c1:
+            h1 = (1.0 + (1.0 - c1) * eps / 2.0) / numpy.sqrt(
+                (1.0 + eps) * (c1 * eps - 1.0)
+            )
+            f1 = (d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
+            ff1 = f1 * (g - h1 * numpy.log((1.0 + y1) / (1.0 - y1)))
+        else:
+            h1 = (1.0 + (1.0 - c1) * eps / 2.0) / numpy.sqrt(
+                (1.0 + eps) * (1.0 - c1 * eps)
+            )
+            f1 = -(d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
+            ff1 = f1 * (-g + 2.0 * h1 * numpy.arctan(y1))
+
+        return (
+            rminor
+            * bt
+            / qbar
+            * 5.0
+            * kappa
+            / (2.0 * numpy.pi**2)
+            * (numpy.arcsin(e1) / e1 + numpy.arcsin(e2) / e2)
+            * (ff1 + ff2)
+        )
+
     def bootstrap_fraction_iter89(
         self, aspect, beta, bt, cboot, plascur, q95, q0, rmajor, vol
     ):

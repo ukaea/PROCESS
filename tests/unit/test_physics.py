@@ -611,3 +611,34 @@ def test_culcur(culcurparam, monkeypatch, physics):
     assert qstar == pytest.approx(culcurparam.expected_qstar)
 
     assert plascur == pytest.approx(culcurparam.expected_plascur)
+
+
+@pytest.mark.parametrize(
+    ("arguments", "expected"),
+    (
+        (
+            {
+                "qbar": 2.5,
+                "aspect": 2.7,
+                "rminor": 1.5,
+                "bt": 12,
+                "kappa": 1.85,
+                "delta": 0.5,
+            },
+            37.43306888647351,
+        ),
+        (
+            {
+                "qbar": 2.5,
+                "aspect": 3.0,
+                "rminor": 1.5,
+                "bt": 12,
+                "kappa": 1.85,
+                "delta": 0.5,
+            },
+            31.893383344142052,
+        ),
+    ),
+)
+def test_plasc(arguments, expected, physics):
+    assert physics.plasc(**arguments) == pytest.approx(expected)
