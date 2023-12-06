@@ -127,7 +127,6 @@ module physics_module
 
 		use error_handling, only: idiags, report_error
 		use physics_variables, only: normalised_total_beta, beta
-		use global_variables, only: run_tests
 		use constants, only: pi, rmu0
     implicit none
 
@@ -244,11 +243,10 @@ module physics_module
        rli = log(1.65D0 + 0.89D0*alphaj)  !  Tokamaks 4th Edition, Wesson, page 116
     end if
 
-  contains
+   end subroutine culcur
 
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    function plasc(qbar,aspect,rminor,bt,kappa,delta)
+   function plasc(qbar,aspect,rminor,bt,kappa,delta)
 
       !! Function to calculate plasma current (Peng scaling)
       !! author: J Galambos, FEDC/ORNL
@@ -269,6 +267,8 @@ module physics_module
       !! Fusion Technology, 21, 1729
       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      use constants, only: pi
 
       implicit none
 
@@ -327,7 +327,7 @@ module physics_module
 
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    subroutine conhas(alphaj,alphap,bt,delta95,eps,kappa95,p0,fq)
+   subroutine conhas(alphaj,alphap,bt,delta95,eps,kappa95,p0,fq)
 
       !! Routine to calculate the F coefficient used for scaling the
       !! plasma current
@@ -348,6 +348,8 @@ module physics_module
       !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      use constants, only: rmu0
 
       implicit none
 
@@ -416,8 +418,6 @@ module physics_module
            0.5D0*(tprime**2 + 4.0D0*tr**2) )
 
     end subroutine conhas
-
-  end subroutine culcur
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
