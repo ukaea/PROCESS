@@ -264,6 +264,7 @@ def main(args=None):
         "tbrmin",
         "bt",
         "coreradius",
+        "Obsolete"  # Removed
         "taulimit",
         "epsvmc",
         "ttarget",
