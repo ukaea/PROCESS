@@ -690,3 +690,13 @@ def test_plasc(arguments, expected, physics):
 )
 def test_bpol(arguments, expected, physics):
     assert physics.bpol(**arguments) == pytest.approx(expected)
+
+
+def test_culblm(physics):
+    assert physics.culblm(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
+
+
+def test_conhas(physics):
+    assert physics.conhas(5, 5, 12, 0.5, 0.33, 1.85, 2e3) == pytest.approx(
+        2.518876726889116
+    )

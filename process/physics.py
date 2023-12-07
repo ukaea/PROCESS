@@ -826,6 +826,31 @@ class Physics:
                 ),
             )
 
+    def culblm(self, bt, dnbeta, plascur, rminor):
+        """Beta scaling limit
+        author: P J Knight, CCFE, Culham Science Centre
+        bt      : input real :  toroidal B-field on plasma axis (T)
+        dnbeta  : input real :  Troyon-like g coefficient
+        plascur : input real :  plasma current (A)
+        rminor  : input real :  plasma minor axis (m)
+        betalim : output real : beta limit as defined below
+        This subroutine calculates the beta limit, using
+        the algorithm documented in AEA FUS 172.
+        The limit applies to beta defined with respect to the total B-field.
+        Switch iculbl determines which components of beta to include.
+
+        If iculbl = 0, then the limit is applied to the total beta
+        If iculbl = 1, then the limit is applied to the thermal beta only
+        If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components
+        If iculbl = 3, then the limit is applied to the toroidal beta
+
+        The default value for the g coefficient is dnbeta = 3.5
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        """
+
+        return 0.01 * dnbeta * (plascur / 1.0e6) / (rminor * bt)
+
     def culcur(
         self,
         alphaj,
@@ -985,7 +1010,7 @@ class Physics:
         physics_variables.normalised_total_beta = (
             1.0e8 * physics_variables.beta * rminor * bt / plascur
         )
-        bp = physics_module.bpol(icurr, plascur, qpsi, asp, bt, kappa, triang, pperim)
+        bp = self.bpol(icurr, plascur, qpsi, asp, bt, kappa, triang, pperim)
 
         # Ensure current profile consistency, if required
         # This is as described in Hartmann and Zohm only if icurr = 4 as well...
@@ -997,6 +1022,84 @@ class Physics:
             )  # Tokamaks 4th Edition, Wesson, page 116
 
         return alphaj, rli, bp, qstar, plascur
+
+    def conhas(self, alphaj, alphap, bt, delta95, eps, kappa95, p0):
+        """Routine to calculate the F coefficient used for scaling the
+        plasma current
+        author: P J Knight, CCFE, Culham Science Centre
+        alphaj   : input real :  current profile index
+        alphap   : input real :  pressure profile index
+        bt       : input real :  toroidal field on axis (T)
+        delta95  : input real :  plasma triangularity 95%
+        eps      : input real :  inverse aspect ratio
+        kappa95  : input real :  plasma elongation 95%
+        p0       : input real :  central plasma pressure (Pa)
+        fq       : output real : scaling for edge q from circular
+        cross-section cylindrical case
+        This routine calculates the F coefficient used for scaling the
+        plasma current, using the Connor-Hastie scaling given in
+        AEA FUS 172.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        """
+
+        #  Exponent in Connor-Hastie current profile - matching total
+        #  current gives the following trivial relation
+
+        lamda = alphaj
+
+        #  Exponent in Connor-Hastie pressure profile
+
+        nu = alphap
+
+        #  Central plasma beta
+
+        beta0 = 2.0 * constants.rmu0 * p0 / (bt**2)
+
+        #  Plasma internal inductance
+
+        lamp1 = 1.0 + lamda
+        li = lamp1 / lamda * (lamp1 / lamda * numpy.log(lamp1) - 1.0)
+
+        #  T/r in AEA FUS 172
+
+        kap1 = kappa95 + 1.0
+        tr = kappa95 * delta95 / kap1**2
+
+        #  E/r in AEA FUS 172
+
+        er = (kappa95 - 1.0) / kap1
+
+        #  T primed in AEA FUS 172
+
+        tprime = 2.0 * tr * lamp1 / (1.0 + 0.5 * lamda)
+
+        #  E primed in AEA FUS 172
+
+        eprime = er * lamp1 / (1.0 + lamda / 3.0)
+
+        #  Delta primed in AEA FUS 172
+
+        deltap = 0.5 * kap1 * eps * 0.5 * li + beta0 / (
+            0.5 * kap1 * eps
+        ) * lamp1**2 / (1.0 + nu)
+
+        #  Delta/R0 in AEA FUS 172
+
+        deltar = beta0 / 6.0 * (1.0 + 5.0 * lamda / 6.0 + 0.25 * lamda**2) + (
+            0.5 * kap1 * eps
+        ) ** 2 * 0.125 * (1.0 - (lamda**2) / 3.0)
+
+        #  F coefficient
+
+        return (0.5 * kap1) ** 2 * (
+            1.0
+            + eps**2 * (0.5 * kap1) ** 2
+            + 0.5 * deltap**2
+            + 2.0 * deltar
+            + 0.5 * (eprime**2 + er**2)
+            + 0.5 * (tprime**2 + 4.0 * tr**2)
+        )
 
     def plasc(self, qbar, aspect, rminor, bt, kappa, delta):
         """Function to calculate plasma current (Peng scaling)
