@@ -379,6 +379,7 @@ be input by the user or selected as an iteration variable.
 
 The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 
 isotopes and helium) may be used as an iteration variable.
+The impurity fraction to be varied can be set simply with `fimp(i) = <value>`, where `i` is the corresponding number value for the desired impurity in the table above.
 
 The synchrotron radiation power[^11] [^12] is assumed to originate from the 
 plasma core. The wall reflection factor `ssync` may be set by the user.
