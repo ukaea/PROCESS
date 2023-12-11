@@ -2283,7 +2283,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if (iefrf == 5) or (iefrf == 8):
         nbi = True
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if (iefrf == 3) or (iefrf == 7) or (iefrf == 10) or (iefrf == 11):
+    if (iefrf == 3) or (iefrf == 7) or (iefrf == 10) or (iefrf == 11) or (iefrf == 13):
         ecrh = True
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
     if iefrf == 12:
@@ -2301,7 +2301,13 @@ def plot_current_drive_info(axis, mfile_data, scan):
 
         if (iefrffix == 5) or (iefrffix == 8):
             secondary_heating = "NBI"
-        if (iefrffix == 3) or (iefrffix == 7) or (iefrffix == 10) or (iefrffix == 11):
+        if (
+            (iefrffix == 3)
+            or (iefrffix == 7)
+            or (iefrffix == 10)
+            or (iefrffix == 11)
+            or (iefrffix == 13)
+        ):
             secondary_heating = "ECH"
         if iefrffix == 12:
             secondary_heating = "EBW"
