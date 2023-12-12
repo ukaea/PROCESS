@@ -75,13 +75,11 @@ LIST(APPEND PROCESS_SRCS
     numerics.f90
     scan.f90
     fw.f90
-    current_drive.f90
     hcpb.f90
     pfcoil.f90
     reinke_module.f90
     sctfcoil.f90
     plasma_profiles.f90
-    superconductors.f90
     final_module.f90
     cost_variables.f90
     divertor_variables.f90

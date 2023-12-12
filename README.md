@@ -5,6 +5,12 @@ PROCESS is the reactor systems code at the [UK Atomic Energy Authority](https://
 
 PROCESS was originally a Fortran code, but is currently a mixture of Python and Python-wrapped Fortran; the eventual aim is to have an entirely Python code base. In order to use PROCESS, the Fortran must be compiled and a Python-Fortran interface generated for the Python to import. Once built, it can be installed and run as a Python package.
 
+
+
+![BlenderImage](<documentation/proc-pages/images/blender images/initial_collage.png>)
+<center>Split view of DEMO-like reactor (generated using fusrr-pipeline).</center>
+
+
 ## Getting Started
 Please see the [installation guide](https://ukaea.github.io/PROCESS/installation/introduction/) and the [usage guide](https://ukaea.github.io/PROCESS/usage/running-process/). Once installed, the `examples` directory provides Jupyter notebooks for interactively demonstrating usage of PROCESS, which is a good place to start. The `examples/README.md` provides more help.
 

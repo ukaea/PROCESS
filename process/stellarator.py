@@ -25,13 +25,12 @@ from process.fortran import (
     constraint_variables,
     rebco_variables,
     maths_library,
-    superconductors,
     profiles_module,
     physics_functions_module,
     neoclassics_module,
     impurity_radiation_module,
-    current_drive_module,
 )
+import process.superconductors as superconductors
 import process.physics_functions as physics_funcs
 from process.coolprop_interface import FluidProperties
 
@@ -54,7 +53,15 @@ class Stellarator:
     """
 
     def __init__(
-        self, availability, vacuum, buildings, costs, power, plasma_profile, hcpb
+        self,
+        availability,
+        vacuum,
+        buildings,
+        costs,
+        power,
+        plasma_profile,
+        hcpb,
+        current_drive,
     ) -> None:
         """Initialises the Stellarator model's variables
 
@@ -70,6 +77,8 @@ class Stellarator:
         :type plasma_profile: process.plasma_profile.PlasmaProfile
         :param hcpb: a pointer to the ccfe_hcpb model, allowing use of ccfe_hcpb's variables/methods
         :type hcpb: process.hcpb.CCFE_HCPB
+        :param current_drive: a pointer to the CurrentDrive model, allowing use of CurrentDrives's variables/methods
+        :type current_drive: process.current_drive.CurrentDrive
         """
 
         self.outfile: int = constants.nout
@@ -82,6 +91,7 @@ class Stellarator:
         self.power = power
         self.plasma_profile = plasma_profile
         self.hcpb = hcpb
+        self.current_drive = current_drive
 
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
@@ -4637,7 +4647,7 @@ class Stellarator:
                 effnbss,
                 fpion,
                 current_drive_variables.nbshinef,
-            ) = current_drive_module.culnbi()
+            ) = self.current_drive.culnbi()
             current_drive_variables.pnbeam = current_drive_variables.pheat * (
                 1 - current_drive_variables.forbitloss
             )

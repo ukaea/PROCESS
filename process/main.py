@@ -70,6 +70,7 @@ from process.hcpb import CCFE_HCPB
 from process.dcll import DCLL
 from process.blanket_library import BlanketLibrary
 from process.fw import Fw
+from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 
 from pathlib import Path
@@ -504,7 +505,6 @@ class SingleRun:
         """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
         within obsolete_variables.py.
         Then will print out what the used obsolete variables are (if any) before continuing the proces run.
-        #TODO: add a feature to stop 1 and force the variable to be updated if it is now obsolete.
         """
 
         obsolete_variables = ov.OBS_VARS
@@ -522,18 +522,20 @@ class SingleRun:
                     variables = line.strip().split(sep, 1)[0]
                     variables_in_in_dat.append(variables)
 
-        obs_vars_keys = []
-        for k in obsolete_variables:
-            obs_vars_keys.append(k)
+        obs_vars = []
+        replace_hints = []
+        for var in variables_in_in_dat:
+            new_var = obsolete_variables.get(var)
+            if new_var:
+                obs_vars.append(var)
+                replace_hints.append(new_var)
 
-        variable_check = any(i in variables_in_in_dat for i in obs_vars_keys)
-
-        if variable_check:
+        if len(replace_hints) > 0:
             print(
                 "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary."
             )
             print(
-                f"The obsolete variables in your IN.DAT file are: {set(obs_vars_keys) & set(variables_in_in_dat)}. Please change them to the corresponding new variable(s) before continuing."
+                f"The obsolete variables in your IN.DAT file are: {obs_vars}. Please change them to the following corresponding new variable(s) before continuing: {replace_hints}."
             )
         else:
             print("The IN.DAT file does not contain any obsolete variables.")
@@ -584,6 +586,7 @@ class Models:
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
+        self.current_drive = CurrentDrive()
         self.stellarator = Stellarator(
             availability=self.availability,
             buildings=self.buildings,
@@ -592,9 +595,12 @@ class Models:
             power=self.power,
             plasma_profile=self.plasma_profile,
             hcpb=self.ccfe_hcpb,
+            current_drive=self.current_drive,
         )
         self.costs_2015 = Costs2015()
-        self.physics = Physics(plasma_profile=self.plasma_profile)
+        self.physics = Physics(
+            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+        )
         self.dcll = DCLL(blanket_library=self.blanket_library)
 
 

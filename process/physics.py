@@ -1,7 +1,6 @@
 import numpy
 import math
 import process.physics_functions as physics_funcs
-from process.fortran import current_drive_module
 from process.fortran import constraint_variables
 from process.fortran import reinke_variables
 from process.fortran import reinke_module
@@ -22,9 +21,10 @@ from process.fortran import process_output as po
 
 
 class Physics:
-    def __init__(self, plasma_profile):
+    def __init__(self, plasma_profile, current_drive):
         self.outfile = constants.nout
         self.plasma_profile = plasma_profile
+        self.current_drive = current_drive
 
     def physics(self):
         """
@@ -302,7 +302,7 @@ class Physics:
         #  Auxiliary current drive power calculations
 
         if current_drive_variables.irfcd != 0:
-            current_drive_module.cudriv(constants.nout, 0)
+            self.current_drive.cudriv(False)
 
         # Calculate fusion power + components
 
