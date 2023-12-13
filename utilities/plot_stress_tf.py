@@ -7,7 +7,7 @@ The whole radial distribution is displayed
 Author: S. Kahn (sebastien.kahn@ukaea.uk)
 
 Input file:
-SIG_TF.DAT
+SIG_TF.json
 """
 
 import json
@@ -61,8 +61,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-f",
         "--input_file",
-        default="SIG_TF.DAT",
-        help="specify input file path (default = SIG_TF.DAT)",
+        default="SIG_TF.json",
+        help="specify input file path (default = SIG_TF.json)",
     )
 
     # Option argument extraction
