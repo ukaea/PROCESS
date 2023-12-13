@@ -4,10 +4,129 @@
 
     Profile sizes are set to 501 point by default. this can be varied in the `__init__` of `PlasmaProfile` 
 All is calculated from `plasma_profiles.py` and `profiles.py`
+
 if physics_variables.tratio > 0.0e0:
             physics_variables.ti = physics_variables.tratio * physics_variables.te    
+## Initialization
+Plasma profile class is `PlasmaProfile`. Initialization sets profile class size and `neprofile` and `teprofile` to `NProfile` & `TProfile` from `profiles`
+
+| Profile parameter     | Density   |                | Temperature |                |
+|-----------------------|-----------|----------------|-------------|----------------|
+| Pedestal radius (r/a) | `rhopedn` | $\rho_{ped,n}$ | `rhopedt`   | $\rho_{ped,T}$ |
+| Plasma centre value   | `ne0`     | $n_0$          | `te0`       | $T_0$          |
+| Pedestal value        | `neped`   | $n_{ped}$      | `teped`     | $T_{ped}$      |
+| Separatrix value      | `nesep`   | $n_{sep}$      | `tesep`     | $T_{sep}$      |
+| Profile index         | `alphan`  | $\alpha_n$     | `alphat`    | $\alpha_T$     |
+| Profile index $\beta$ |           |                | `tbeta`     | $\beta_T$      |
+
+
+### `NProfile`
+
+def run(self):
+        """_summary_
+        Subroutine which calls functions and stores nprofile data.
+        """
+        self.normalise_profile_x()
+        self.calculate_profile_dx()
+        self.`set_physics_variables`()
+        self.calculate_profile_y(
+            self.profile_x,
+            physics_variables.rhopedn,
+            physics_variables.ne0,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.alphan,
+        )
+        self.integrate_profile_y()
+
+
+Firstly the profile x-dimension is normalised in `normalise_profile_x` by simply dividing the profile size by its max value
+
+The steps between the normalized points is then done by `calculate_profile_dx` which divided the max x-dimension by the number of points.
+
+`set_physics_variables` is then ran which performs `ncore`
+
+ physics_variables.ne0 = self.ncore(
+            physics_variables.rhopedn,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.dene,
+            physics_variables.alphan,
+        )
+        physics_variables.ni0 = (
+            physics_variables.dnitot / physics_variables.dene * physics_variables.ne0
+        )
+
+$$
+ncore=\frac{1}{3{rhopedn}^2} \left(3nav \left(1+alphan\right)+nsep \left(1+alphan\right) \left(-2+rhopedn+{rhopedn}^2\right)-nped \left(\left(1+alphan\right) \left(1+rhopedn\right)+\left(alphan-2\right) {rhopedn}^2\right)\right)
+$$
+
+$$
+physics_variables.ni0 = (
+            physics_variables.dnitot / physics_variables.dene * physics_variables.ne0
+        )
+$$
+
+The y profile is then calculated using `calculate_profile_y`
+
+calculate_profile_y(self, rho, rhopedn, n0, nped, nsep, alphan):
+        """This routine calculates the density at each normalised minor radius position
+        rho for a ELIOS-type density pedestal profile (nprofile).
+        Authors:
+            R Kemp, CCFE, Culham Science Centre
+            H Lux, CCFE, Culham Science Centre
+            P J Knight, CCFE, Culham Science Centre
+        References:
+            J.Johner, Fusion Science and Technology 59 (2011), pp 308-349
+
+        :param rho: normalised minor radius vector
+        :type rho: float
+        :param rhopedn: normalised minor radius pedestal position
+        :type rhopedn: float
+        :param n0: central density (/m3)
+        :type n0: float
+        :param nped: oedestal desnity (/m3)
+        :type nped: float
+        :param nsep: separatrix density (/m3)
+        :type nsep: float
+        :param alphan: density peaking parameter
+        :type alphan: float
+        """
+
+        if physics_variables.ipedestal == 0:
+            self.profile_y = n0 * (1 - rho**2) ** alphan
+
+        #  Error trap; shouldn't happen unless volume-averaged density has
+        #  been allowed to drop below nped. This may happen during a HYBRD case,
+        #  but should have been prevented for optimisation runs.
+
+        #  Input checks
+
+        if n0 < nped:
+            logger.info(
+                f"NPROFILE: density pedestal is higher than core density. {nped = }, {n0 = }"
+            )
+        rho_index = rho <= rhopedn
+        self.profile_y[rho_index] = (
+            nped + (n0 - nped) * (1 - (rho[rho_index] / rhopedn) ** 2) ** alphan
+        )
+        # Invert the rho_index
+        self.profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
+            1 - rhopedn
+        )
+
+Profile is then integrated with `integrate_profile_y` using simpsons integration
+
+"""
+        Integrate profile_y values using scipy.integrate.simpson() function.
+        """
+        self.profile_integ = integrate.simpson(
+            self.profile_y, x=self.profile_x, dx=self.profile_dx
+        )
 
 ## No pedestal, `(ipedestal = 0)`
+
+
 
 if physics_variables.ipedestal == 0:
             self.parabolic_paramterisation()
