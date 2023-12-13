@@ -10,119 +10,164 @@ if physics_variables.tratio > 0.0e0:
 ## Initialization
 Plasma profile class is `PlasmaProfile`. Initialization sets profile class size and `neprofile` and `teprofile` to `NProfile` & `TProfile` from `profiles`
 
-| Profile parameter     | Density   |                | Temperature |                |
-|-----------------------|-----------|----------------|-------------|----------------|
-| Pedestal radius (r/a) | `rhopedn` | $\rho_{ped,n}$ | `rhopedt`   | $\rho_{ped,T}$ |
-| Plasma centre value   | `ne0`     | $n_0$          | `te0`       | $T_0$          |
-| Pedestal value        | `neped`   | $n_{ped}$      | `teped`     | $T_{ped}$      |
-| Separatrix value      | `nesep`   | $n_{sep}$      | `tesep`     | $T_{sep}$      |
-| Profile index         | `alphan`  | $\alpha_n$     | `alphat`    | $\alpha_T$     |
-| Profile index $\beta$ |           |                | `tbeta`     | $\beta_T$      |
+| Profile parameter                | Density   |                | Temperature |                |
+|----------------------------------|-----------|----------------|-------------|----------------|
+| Pedestal radius (r/a)            | `rhopedn` | $\rho_{ped,n}$ | `rhopedt`   | $\rho_{ped,T}$ |
+| Plasma centre value              | `ne0`     | $n_0$          | `te0`       | $T_0$          |
+| Pedestal value                   | `neped`   | $n_{ped}$      | `teped`     | $T_{ped}$      |
+| Separatrix value                 | `nesep`   | $n_{sep}$      | `tesep`     | $T_{sep}$      |
+| Profile index/ peaking parameter | `alphan`  | $\alpha_n$     | `alphat`    | $\alpha_T$     |
+| Profile index `\beta`            |           |                | `tbeta`     | $\beta_T$      |
 
 
-### `NProfile`
+### Density `NProfile()`
 
-def run(self):
-        """_summary_
-        Subroutine which calls functions and stores nprofile data.
-        """
-        self.normalise_profile_x()
-        self.calculate_profile_dx()
-        self.`set_physics_variables`()
-        self.calculate_profile_y(
-            self.profile_x,
-            physics_variables.rhopedn,
-            physics_variables.ne0,
-            physics_variables.neped,
-            physics_variables.nesep,
-            physics_variables.alphan,
-        )
-        self.integrate_profile_y()
+1. Firstly the profile x-dimension is normalised in `normalise_profile_x()` by simply dividing the profile size by its max value
 
+2. The steps between the normalized points is then done by `calculate_profile_dx()` which divided the max x-dimension by the number of points.
 
-Firstly the profile x-dimension is normalised in `normalise_profile_x` by simply dividing the profile size by its max value
+3. `set_physics_variables()` is then ran which performs `ncore()` which calculates the central electron density. The ion central density is then calculated by the ratio from this scaling.
 
-The steps between the normalized points is then done by `calculate_profile_dx` which divided the max x-dimension by the number of points.
+-------------------------------------
 
-`set_physics_variables` is then ran which performs `ncore`
+#### `ncore`
 
- physics_variables.ne0 = self.ncore(
-            physics_variables.rhopedn,
-            physics_variables.neped,
-            physics_variables.nesep,
-            physics_variables.dene,
-            physics_variables.alphan,
-        )
-        physics_variables.ni0 = (
-            physics_variables.dnitot / physics_variables.dene * physics_variables.ne0
-        )
+$$\begin{aligned}
+  \nonumber
+  n_0 & = & \frac{1}{3\rho_{ped,n}^2} \left[3\langle n\rangle (1+\alpha_n)
+    + n_{sep} (1+\alpha_n) (-2 + \rho_{ped,n} + \rho_{ped,n}^2) \right.\\
+   & & \left. - n_{ped}\left( (1 + \alpha_n)(1+ \rho_{ped,n}) + (\alpha_n -2)
+    \rho_{ped,n}^2 \right) \right]
+\end{aligned}$$
+
+where $\rho = r/a$, and $a$ is the plasma minor radius. This gives
+volume-averaged values $\langle n \rangle = n_0 / (1+\alpha_n)$, and
+line-averaged values $\bar{n} \sim n_0 / \sqrt{(1+\alpha_n)}$, etc.  These
+volume- and line-averages are used throughout the code along with the profile
+indices $\alpha$, in the various physics models, many of which are fits to
+theory-based or empirical scalings. Thus, the plasma model in PROCESS may
+be described as 1/2-D.  The relevant profile index variables are
+`alphan`, `alphat` and `alphaj`, respectively.
+
+-------------------------------------------------
+
 
 $$
-ncore=\frac{1}{3{rhopedn}^2} \left(3nav \left(1+alphan\right)+nsep \left(1+alphan\right) \left(-2+rhopedn+{rhopedn}^2\right)-nped \left(\left(1+alphan\right) \left(1+rhopedn\right)+\left(alphan-2\right) {rhopedn}^2\right)\right)
-$$
-
-$$
-physics_variables.ni0 = (
-            physics_variables.dnitot / physics_variables.dene * physics_variables.ne0
+ni_0 = (
+            \frac{n_{i,tot}}{n_e} n_{e0}
         )
 $$
 
-The y profile is then calculated using `calculate_profile_y`
+4. The y profile is then calculated using `calculate_profile_y()`. This routine calculates the density at each normalised minor radius position $\rho$ for a HELIOS-type density pedestal profile (nprofile)[^3]
 
-calculate_profile_y(self, rho, rhopedn, n0, nped, nsep, alphan):
-        """This routine calculates the density at each normalised minor radius position
-        rho for a ELIOS-type density pedestal profile (nprofile).
-        Authors:
-            R Kemp, CCFE, Culham Science Centre
-            H Lux, CCFE, Culham Science Centre
-            P J Knight, CCFE, Culham Science Centre
-        References:
-            J.Johner, Fusion Science and Technology 59 (2011), pp 308-349
+If `ipedestal == 0` then the original parabolic profile form is used
 
-        :param rho: normalised minor radius vector
-        :type rho: float
-        :param rhopedn: normalised minor radius pedestal position
-        :type rhopedn: float
-        :param n0: central density (/m3)
-        :type n0: float
-        :param nped: oedestal desnity (/m3)
-        :type nped: float
-        :param nsep: separatrix density (/m3)
-        :type nsep: float
-        :param alphan: density peaking parameter
-        :type alphan: float
-        """
+$$
+n(\rho) = n_0(1 - \rho^2)^{\alpha_n} 
+$$
 
-        if physics_variables.ipedestal == 0:
-            self.profile_y = n0 * (1 - rho**2) ** alphan
+The central density ($n_0$) is then checked to make sure it is not less than the pedestal density, $n_{ped}$    
 
-        #  Error trap; shouldn't happen unless volume-averaged density has
-        #  been allowed to drop below nped. This may happen during a HYBRD case,
-        #  but should have been prevented for optimisation runs.
+$$\begin{aligned}
+\mbox{density:} \qquad n(\rho) = \left\{ 
+\begin{aligned}
+    & n_{ped} + (n_0 - n_{ped}) \left( 1 -
+    \frac{\rho^2}{\rho_{ped,n}^2}\right)^{\alpha_n}
+   & \qquad 0 \leq \rho \leq \rho_{ped,n} \\
+   & n_{sep} + (n_{ped} - n_{sep})\left( \frac{1- \rho}{1-\rho_{ped,n}}\right)
+   & \qquad \rho_{ped,n} < \rho \leq 1
+\end{aligned}
+\right.
+\end{aligned}$$
+        
 
-        #  Input checks
+5. Profile is then integrated with `integrate_profile_y()` using simpsons integration
 
-        if n0 < nped:
-            logger.info(
-                f"NPROFILE: density pedestal is higher than core density. {nped = }, {n0 = }"
-            )
-        rho_index = rho <= rhopedn
-        self.profile_y[rho_index] = (
-            nped + (n0 - nped) * (1 - (rho[rho_index] / rhopedn) ** 2) ** alphan
-        )
-        # Invert the rho_index
-        self.profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
-            1 - rhopedn
-        )
 
-Profile is then integrated with `integrate_profile_y` using simpsons integration
-
+Integrate profile_y values using scipy.integrate.simpson() function.
 """
-        Integrate profile_y values using scipy.integrate.simpson() function.
-        """
-        self.profile_integ = integrate.simpson(
-            self.profile_y, x=self.profile_x, dx=self.profile_dx
+self.profile_integ = integrate.simpson(
+    self.profile_y, x=self.profile_x, dx=self.profile_dx
+)
+
+### Temperature `TProfle()`
+
+1. Firstly the profile x-dimension is normalised in `normalise_profile_x()` by simply dividing the profile size by its max value
+
+2. The steps between the normalized points is then done by `calculate_profile_dx()` which divided the max x-dimension by the number of points.
+
+
+3. `set_physics_variables()` is then ran which performs `tcore()` which calculates the central electron density. The ion central density is then calculated by the ratio from this scaling.
+
+-------------------------------------
+
+#### `tcore`
+
+$$\begin{aligned}
+T_0 = T_{ped} + \gamma \left[ T_{ped}\, \rho_{ped,T}^2 - \langle T \rangle +
+  \frac{1}{3}(1 - \rho_{ped,T}) \left[ \, (1 + 2\rho_{ped,T}) \, T_{ped} + ( 2 +
+    \rho_{ped,T}) \, T_{sep} \, \right] \right]
+\end{aligned}$$
+
+with
+
+$$\begin{aligned}
+\gamma = \left\{
+\begin{aligned}
+  & \frac{ -\Gamma(1+\alpha_T+2/\beta_T)}
+  {\rho_{ped,T}^2 \, \Gamma(1+\alpha_T) \, \Gamma((2+\beta_T)/\beta_T)}
+  \qquad \text{for integer} \, \alpha_T \\
+  &\frac{\Gamma(-\alpha_T)\sin(\pi\alpha)\, \Gamma(1+\alpha_T+2/\beta_T)}
+  {\pi\rho_{ped,T}^2 \, \Gamma((2+\beta_T)/\beta_T)}
+  \qquad \text{for non-integer} \, \alpha_T
+\end{aligned}
+\right.
+\end{aligned}$$
+
+
+ where $\Gamma$ is the gamma function.
+
+
+-------------------------------------------------
+
+
+$$
+physics_variables.ti0 = (
+            physics_variables.ti / physics_variables.te * physics_variables.te0
         )
+$$
+
+4. The y profile is then calculated using `calculate_profile_y()`. This routine calculates the temperature at each normalised minor radius position $\rho$ for a HELIOS-type density pedestal profile (tprofile)[^3]
+
+If `ipedestal == 0` then the original parabolic profile form is used.
+
+$$
+T(\rho) = T_0 \left( 1 - \rho^2 \right)^{\alpha_T}  
+$$
+
+The central temperature ($T_0$) is then checked to make sure it is not less than the pedestal temperature, $n_{ped}$    
+
+
+$$\begin{aligned}
+\mbox{temperature:} \qquad T(\rho) = \left\{ 
+\begin{aligned}
+   & T_{ped} + (T_0 - T_{ped}) \left( 1 - \frac{\rho^{\beta_T}}
+    {\rho_{ped,T}^{\beta_T}}\right)^{\alpha_T}  & \qquad 0 \leq \rho \leq \rho_{ped,T} \\
+   & T_{sep} + (T_{ped} - T_{sep})\left( \frac{1- \rho}{1-\rho_{ped,T}}\right)
+   & \qquad \rho_{ped,T} < \rho \leq 1
+\end{aligned}
+\right.
+\end{aligned}$$        
+
+5. Profile is then integrated with `integrate_profile_y()` using simpsons integration
+
+
+
+
+## Plasma Parameterization
+
+
+
 
 ## No pedestal, `(ipedestal = 0)`
 
@@ -231,3 +276,4 @@ Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0
 
 [^1]: M. Bernert et al. Plasma Phys. Control. Fus. **57** (2015) 014038
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+[^3]: Johner Jean (2011) HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies, Fusion Science and Technology, 59:2, 308-349, DOI: 10.13182/FST11-A11650
