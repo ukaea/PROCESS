@@ -37,8 +37,8 @@ from process.geometry.vacuum_vessel_geometry import (
 )
 from process.geometry.blanket_geometry import (
     blanket_geometry_single_null,
-    blanket_geometry,
     blanket_geometry_double_null,
+    blanket_geometry,
 )
 from process.geometry.cryostat_geometry import cryostat_geometry
 from process.geometry.tfcoil_geometry import (
@@ -46,7 +46,11 @@ from process.geometry.tfcoil_geometry import (
     tfcoil_geometry_d_shape,
 )
 from process.geometry.pfcoil_geometry import pfcoil_geometry
-from process.geometry.utils import plotdh, plotdhgap
+from process.geometry.firstwall_geometry import (
+    first_wall_geometry_single_null,
+    first_wall_geometry_double_null,
+    first_wall_geometry,
+)
 from process.impurity_radiation import read_impurity_file
 from process.io.python_fortran_dicts import get_dicts
 
@@ -1258,8 +1262,6 @@ def plot_blanket(axis, mfile_data, scan: int) -> None:
     # Double null: Reflect bottom half to top
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
-
-    # Lower blanket
     blnktth = mfile_data.data["blnktth"].get_scan(scan)
     c_shldith = cumulative_radial_build("shldith", mfile_data, scan)
     c_blnkoth = cumulative_radial_build("blnkoth", mfile_data, scan)
@@ -1375,115 +1377,113 @@ def plot_firstwall(axis, mfile_data, scan):
       scan --> scan number to use
 
     """
+    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
+    triang_95 = mfile_data.data["triang95"].get_scan(scan)
     blnktth = mfile_data.data["blnktth"].get_scan(scan)
     tfwvt = mfile_data.data["fwtth"].get_scan(scan)
-    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
-    point_array = ()
+    c_blnkith = cumulative_radial_build("blnkith", mfile_data, scan)
+    c_fwoth = cumulative_radial_build("fwoth", mfile_data, scan)
 
-    # Single null: Draw top half from output
-    # Double null: Reflect bottom half to top
     if i_single_null == 1:
         # Upper first wall: outer surface
-        radx = (
+        radx_outer = (
             cumulative_radial_build("fwoth", mfile_data, scan)
             + cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
-        rminx = (
+        rminx_outer = (
             cumulative_radial_build("fwoth", mfile_data, scan)
             - cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
 
-        kapx = cumulative_upper["fwtth"] / rminx
-        (rs, zs) = plotdh(radx, rminx, triang, kapx)
-        axis.plot(rs, zs, color="black", lw=thin)
-        point_array = point_array + ((rs, zs))
-
         # Upper first wall: inner surface
-        radx = (
+        radx_inner = (
             cumulative_radial_build("scraplo", mfile_data, scan)
             + cumulative_radial_build("fwith", mfile_data, scan)
         ) / 2.0
-        rminx = (
+        rminx_inner = (
             cumulative_radial_build("scraplo", mfile_data, scan)
             - cumulative_radial_build("fwith", mfile_data, scan)
         ) / 2.0
 
-        (rs, zs) = plotdh(radx, rminx, triang, kapx)
-        axis.plot(rs, zs, color="black", lw=thin)
-        point_array = point_array + ((rs, zs))
+        fwg = first_wall_geometry_single_null(
+            radx_outer=radx_outer,
+            rminx_outer=rminx_outer,
+            radx_inner=radx_inner,
+            rminx_inner=rminx_inner,
+            cumulative_upper=cumulative_upper,
+            triang=triang_95,
+        )
 
         # Plot upper first wall
-        rs = np.concatenate([point_array[0], point_array[2][::-1]])
-        zs = np.concatenate([point_array[1], point_array[3][::-1]])
-        axis.fill(rs, zs, color=firstwall)
+        axis.plot(fwg.rs[0], fwg.zs[0], color="black", lw=thin)
+        axis.plot(fwg.rs[1], fwg.zs[1], color="black", lw=thin)
+        axis.fill(fwg.rs[2], fwg.zs[2], color=firstwall)
 
-    # Lower first wall
-    c_blnkith = cumulative_radial_build("blnkith", mfile_data, scan)
-    c_fwoth = cumulative_radial_build("fwoth", mfile_data, scan)
-    divgap = cumulative_lower["divfix"]
-
-    rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = plotdhgap(
-        c_blnkith,
-        c_fwoth,
-        fwith,
-        fwoth,
-        divgap + blnktth,
-        -tfwvt,
-        triang,
+    fwg = first_wall_geometry(
+        cumulative_lower=cumulative_lower,
+        triang=triang,
+        blnktth=blnktth,
+        c_blnkith=c_blnkith,
+        c_fwoth=c_fwoth,
+        fwith=fwith,
+        fwoth=fwoth,
+        tfwvt=tfwvt,
     )
     axis.plot(
-        np.concatenate([rs1, rs2[::-1]]),
-        np.concatenate([zs1, zs2[::-1]]),
+        fwg.rs[0],
+        fwg.zs[0],
         color="black",
         lw=thin,
     )
     axis.plot(
-        np.concatenate([rs3, rs4[::-1]]),
-        -np.concatenate([zs3, zs4[::-1]]),
+        fwg.rs[1],
+        fwg.zs[1],
         color="black",
         lw=thin,
     )
     axis.fill(
-        np.concatenate([rs1, rs2[::-1]]),
-        np.concatenate([zs1, zs2[::-1]]),
+        fwg.rs[0],
+        fwg.zs[0],
         color=firstwall,
     )
     axis.fill(
-        np.concatenate([rs3, rs4[::-1]]),
-        -np.concatenate([zs3, zs4[::-1]]),
+        fwg.rs[1],
+        fwg.zs[1],
         color=firstwall,
     )
 
     if i_single_null == 0:
-        rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = plotdhgap(
-            c_blnkith,
-            c_fwoth,
-            fwith,
-            fwoth,
-            -(divgap + blnktth),
-            -tfwvt,
-            triang,
+        fwg = first_wall_geometry_double_null(
+            cumulative_lower=cumulative_lower,
+            triang=triang,
+            blnktth=blnktth,
+            c_blnkith=c_blnkith,
+            c_fwoth=c_fwoth,
+            fwith=fwith,
+            fwoth=fwoth,
+            tfwvt=tfwvt,
         )
+
         axis.plot(
-            np.concatenate([rs1, rs2[::-1]]),
-            np.concatenate([zs1, zs2[::-1]]),
+            fwg.rs[0],
+            fwg.zs[0],
             color="black",
             lw=thin,
         )
         axis.plot(
-            np.concatenate([rs3, rs4[::-1]]),
-            -np.concatenate([zs3, zs4[::-1]]),
+            fwg.rs[1],
+            fwg.zs[1],
             color="black",
             lw=thin,
         )
         axis.fill(
-            np.concatenate([rs1, rs2[::-1]]),
-            np.concatenate([zs1, zs2[::-1]]),
+            fwg.rs[0],
+            fwg.zs[0],
             color=firstwall,
         )
         axis.fill(
-            np.concatenate([rs3, rs4[::-1]]),
-            -np.concatenate([zs3, zs4[::-1]]),
+            fwg.rs[1],
+            fwg.zs[1],
             color=firstwall,
         )
 

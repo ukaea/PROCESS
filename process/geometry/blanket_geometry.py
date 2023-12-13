@@ -87,7 +87,7 @@ def blanket_geometry(
     :type blnkith: float
     :param blnkoth: outboard blanket radial thickness
     :type blnkoth: float
-    :return: BlanketGeometry - dataclass returning blanket radial and vertical thicknesses
+    :return: BlanketGeometry - dataclass returning blanket radial and vertical coordinates
     :rtype: DataClass
     """
     # Lower blanket
@@ -130,7 +130,7 @@ def blanket_geometry_double_null(
     :type blnkith: float
     :param blnkoth: outboard blanket radial thickness
     :type blnkoth: float
-    :return: BlanketGeometry - dataclass returning blanket radial and vertical thicknesses
+    :return: BlanketGeometry - dataclass returning blanket radial and vertical coordinates
     :rtype: DataClass
     """
     divgap = cumulative_lower["divfix"]
