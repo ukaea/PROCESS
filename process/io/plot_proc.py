@@ -164,18 +164,20 @@ def plot_plasma(axis, mfile_data, scan):
         i_single_null=i_single_null,
     )
 
-    axis.plot(pg.xs1, pg.ys1, color="black")
-    axis.plot(pg.xs2, pg.ys2, color="black")
+    axis.plot(pg.rs[0], pg.zs[0], color="black")
+    axis.plot(pg.rs[1], pg.zs[1], color="black")
     axis.fill_betweenx(
-        pg.ys1,
-        pg.xs1,
-        pg.xs2,
-        where=(pg.xs2 < pg.xs1)
-        & (pg.ys1 > (-a * pg.kappa))
-        & (pg.ys1 < (a * pg.kappa)),
+        pg.zs[0],
+        pg.rs[0],
+        pg.rs[1],
+        where=(pg.rs[1] < pg.rs[0])
+        & (pg.zs[0] > (-a * pg.kappa))
+        & (pg.zs[0] < (a * pg.kappa)),
         color=plasma,
     )
-    axis.fill_betweenx(pg.ys1, pg.xs1, pg.xs2, where=(pg.xs2 > pg.xs1), color="none")
+    axis.fill_betweenx(
+        pg.zs[0], pg.rs[0], pg.rs[1], where=(pg.rs[1] > pg.rs[0]), color="none"
+    )
 
 
 def plot_centre_cross(axis, mfile_data, scan):
@@ -311,7 +313,7 @@ def plot_cryostat(axis, mfile_data, scan):
     for rec in rects:
         axis.add_patch(
             patches.Rectangle(
-                xy=[rec.center_x, rec.center_z],
+                xy=(rec.center_x, rec.center_z),
                 width=rec.width,
                 height=rec.height,
                 facecolor=cryostat,
@@ -1242,7 +1244,7 @@ def plot_shield(axis, mfile_data, scan):
         axis.fill(sg.rs, -1 * sg.zs, color=shield)
 
 
-def plot_blanket(axis, mfile_data, scan):
+def plot_blanket(axis, mfile_data, scan: int) -> None:
     """Function to plot blanket
 
     Arguments:
@@ -1256,6 +1258,11 @@ def plot_blanket(axis, mfile_data, scan):
     # Double null: Reflect bottom half to top
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
+
+    # Lower blanket
+    blnktth = mfile_data.data["blnktth"].get_scan(scan)
+    c_shldith = cumulative_radial_build("shldith", mfile_data, scan)
+    c_blnkoth = cumulative_radial_build("blnkoth", mfile_data, scan)
 
     if i_single_null == 1:
         # Upper blanket: outer surface
@@ -1277,13 +1284,6 @@ def plot_blanket(axis, mfile_data, scan):
             cumulative_radial_build("fwoth", mfile_data, scan)
             - cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
-
-    # Lower blanket
-    blnktth = mfile_data.data["blnktth"].get_scan(scan)
-    c_shldith = cumulative_radial_build("shldith", mfile_data, scan)
-    c_blnkoth = cumulative_radial_build("blnkoth", mfile_data, scan)
-
-    if i_single_null == 1:
         bg = blanket_geometry_single_null(
             radx_outer=radx_outer,
             rminx_outer=rminx_outer,
@@ -1309,27 +1309,28 @@ def plot_blanket(axis, mfile_data, scan):
     )
 
     axis.plot(
-        np.concatenate([bg.rs1, bg.rs2[::-1]]),
-        np.concatenate([bg.zs1, bg.zs2[::-1]]),
+        bg.rs[0],
+        bg.zs[0],
         color="black",
         lw=thin,
     )
     axis.plot(
-        np.concatenate([bg.rs3, bg.rs4[::-1]]),
-        -np.concatenate([bg.zs3, bg.zs4[::-1]]),
+        bg.rs[1],
+        bg.zs[1],
         color="black",
         lw=thin,
     )
     axis.fill(
-        np.concatenate([bg.rs1, bg.rs2[::-1]]),
-        np.concatenate([bg.zs1, bg.zs2[::-1]]),
+        bg.rs[0],
+        bg.zs[0],
         color=blanket,
     )
     axis.fill(
-        np.concatenate([bg.rs3, bg.rs4[::-1]]),
-        -np.concatenate([bg.zs3, bg.zs4[::-1]]),
+        bg.rs[1],
+        bg.zs[1],
         color=blanket,
     )
+
     if i_single_null == 0:
         bg = blanket_geometry_double_null(
             cumulative_lower=cumulative_lower,
@@ -1340,26 +1341,27 @@ def plot_blanket(axis, mfile_data, scan):
             blnkith=blnkith,
             blnkoth=blnkoth,
         )
+
         axis.plot(
-            np.concatenate([bg.rs1, bg.rs2[::-1]]),
-            np.concatenate([bg.zs1, bg.zs2[::-1]]),
+            bg.rs[0],
+            bg.zs[0],
             color="black",
             lw=thin,
         )
         axis.plot(
-            np.concatenate([bg.rs3, bg.rs4[::-1]]),
-            -np.concatenate([bg.zs3, bg.zs4[::-1]]),
+            bg.rs[1],
+            bg.zs[1],
             color="black",
             lw=thin,
         )
         axis.fill(
-            np.concatenate([bg.rs1, bg.rs2[::-1]]),
-            np.concatenate([bg.zs1, bg.zs2[::-1]]),
+            bg.rs[0],
+            bg.zs[0],
             color=blanket,
         )
         axis.fill(
-            np.concatenate([bg.rs3, bg.rs4[::-1]]),
-            -np.concatenate([bg.zs3, bg.zs4[::-1]]),
+            bg.rs[1],
+            bg.zs[1],
             color=blanket,
         )
 
@@ -1545,7 +1547,7 @@ def plot_tf_coils(axis, mfile_data, scan):
         for rec in rects:
             axis.add_patch(
                 patches.Rectangle(
-                    xy=[rec.center_x, rec.center_z],
+                    xy=(rec.center_x, rec.center_z),
                     width=rec.width,
                     height=rec.height,
                     facecolor=tfc,
@@ -1576,7 +1578,7 @@ def plot_tf_coils(axis, mfile_data, scan):
         for rec in rects:
             axis.add_patch(
                 patches.Rectangle(
-                    xy=[rec.center_x, rec.center_z],
+                    xy=(rec.center_x, rec.center_z),
                     width=rec.width,
                     height=rec.height,
                     facecolor=tfc,
@@ -1651,7 +1653,7 @@ def plot_pf_coils(axis, mfile_data, scan):
         )
     axis.add_patch(
         patches.Rectangle(
-            xy=[central_coil.center_x, central_coil.center_z],
+            xy=(central_coil.center_x, central_coil.center_z),
             width=central_coil.width,
             height=central_coil.height,
             facecolor="pink",

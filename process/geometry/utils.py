@@ -1,38 +1,56 @@
+"""
+Module to hold plotting functions, used in plot_proc.py, which are common to multiple reactor components
+"""
 import numpy as np
 
 
-def plotdh(r0, a, delta, kap) -> tuple:
-    """Plots half a thin D-section, centred on z = 0.
+def plotdh(r0: float, a: float, triang: float, kap: float) -> tuple:
+    """Plots half a thin D-section, centred on z = 0
 
-    Arguments:
-        r0 --> major radius of centre
-        a --> horizontal radius
-        delta --> triangularity
-        kap --> elongation
-
-    Returns:
-        rs --> radial coordinates of D-section
-        zs --> vertical coordinates of D-section
+    :param r0: major radius of centre
+    :type r0: float
+    :param a: horizontal radius
+    :type a: float
+    :param triang: plasma triangularity
+    :type triang: float
+    :param kap: plasma elongation
+    :type kap: float
+    :return: radial and vertical coordinates of D-section
+    :rtype: tuple
     """
     angs = np.linspace(0, np.pi, 50, endpoint=True)
-    rs = r0 + a * np.cos(angs + delta * np.sin(1.0 * angs))
+    rs = r0 + a * np.cos(angs + triang * np.sin(1.0 * angs))
     zs = kap * a * np.sin(angs)
     return rs, zs
 
 
-def plotdhgap(inpt, outpt, inthk, outthk, toppt, topthk, delta) -> tuple:
-    """Plots half a thick D-section with a gap.
+def plotdhgap(
+    inpt: float,
+    outpt: float,
+    inthk: float,
+    outthk: float,
+    toppt: float,
+    topthk: float,
+    triang: float,
+) -> tuple:
+    """Plots a half thick D-section with a gap
 
-    Arguments:
-        inpt --> inner points
-        outpt --> outer points
-        inthk --> inner thickness
-        outthk --> outer thickness
-        toppt --> top points
-        topthk --> top thickness
-        delta --> triangularity
-        col --> color for fill
-
+    :param inpt: inner point
+    :type inpt: float
+    :param outpt: outer point
+    :type outpt: float
+    :param inthk: inner thickness
+    :type inthk: float
+    :param outthk: outer thickness
+    :type outthk: float
+    :param toppt: top point
+    :type toppt: float
+    :param topthk: top thickness
+    :type topthk: float
+    :param triang: plasma triangularity
+    :type triang: float
+    :return: radial and vertical coordinates of D-section
+    :rtype: tuple
     """
     arc = np.pi / 4.0
     r01 = (inpt + outpt) / 2.0
@@ -41,17 +59,15 @@ def plotdhgap(inpt, outpt, inthk, outthk, toppt, topthk, delta) -> tuple:
     a2 = r02 - inpt - inthk
     kap1 = toppt / a1
     kap2 = (toppt - topthk) / a2
-    # angs = ((np.pi/2.) - arc/2.) * findgen(50)/49.
     angs = np.linspace(0.0, (np.pi / 2.0) - arc / 2.0, 50, endpoint=True)
-    rs1 = r01 + a1 * np.cos(angs + delta * np.sin(angs))
+    rs1 = r01 + a1 * np.cos(angs + triang * np.sin(angs))
     zs1 = kap1 * a1 * np.sin(angs)
-    rs2 = r02 + a2 * np.cos(angs + delta * np.sin(angs))
+    rs2 = r02 + a2 * np.cos(angs + triang * np.sin(angs))
     zs2 = kap2 * a2 * np.sin(angs)
-    # angs = !pi + ((!pi/2.) - arc) * findgen(50)/49.
     angs = np.linspace(np.pi, np.pi + ((np.pi / 2.0) - arc), 50, endpoint=True)
-    rs3 = r01 + a1 * np.cos(angs + delta * np.sin(angs))
+    rs3 = r01 + a1 * np.cos(angs + triang * np.sin(angs))
     zs3 = kap1 * a1 * np.sin(angs)
-    rs4 = r02 + a2 * np.cos(angs + delta * np.sin(angs))
+    rs4 = r02 + a2 * np.cos(angs + triang * np.sin(angs))
     zs4 = kap2 * a2 * np.sin(angs)
 
     return rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4
@@ -67,14 +83,26 @@ def ellips_fill(
     ang1: float = 0,
     ang2: float = np.pi / 2,
 ) -> list:
-    """Fills the space between two concentric ellipse sectors.
+    """Fills the space between two concentric ellipse sectors
 
-    Arguments
-    ---------
-    a1, a2, b1, b2 horizontal and vertical radii to be filled
-    x0, y0 coordinates of centre of the ellipses
-    ang1, ang2 are the polar angles of the start and end
-
+    :param a1: horizontal radius to be filled, defaults to 0
+    :type a1: float, optional
+    :param a2: horizontal radius to be filled, defaults to 0
+    :type a2: float, optional
+    :param b1: vertical radius to be filled, defaults to 0
+    :type b1: float, optional
+    :param b2: vertical radius to be filled, defaults to 0
+    :type b2: float, optional
+    :param x0: x coordinate of centre of ellipses, defaults to 0
+    :type x0: float, optional
+    :param y0: y coordinate of centre of ellipses, defaults to 0
+    :type y0: float, optional
+    :param ang1: polar angle at start, defaults to 0
+    :type ang1: float, optional
+    :param ang2: polar angle at end, defaults to np.pi/2
+    :type ang2: float, optional
+    :return: coordinates which fill space between ellipses
+    :rtype: list
     """
     angs = np.linspace(ang1, ang2, endpoint=True)
     r1 = ((np.cos(angs) / a1) ** 2 + (np.sin(angs) / b1) ** 2) ** (-0.5)

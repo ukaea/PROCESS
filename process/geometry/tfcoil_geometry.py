@@ -1,3 +1,6 @@
+"""
+Calculate radial and vertical coordinates for the geometry of the tf coils
+"""
 from typing import List, Tuple
 from process.geometry.geometry_parameterisations import RectangleGeometry
 from process.geometry.utils import ellips_fill
@@ -14,6 +17,29 @@ def tfcoil_geometry_rectangular_shape(
     y5: float,
     tfcth: float,
 ) -> List[RectangleGeometry]:
+    """Calculates rectangular geometries for tf coils in a picture frame/rectangular shape parametrization
+
+    :param x1: radial location of arc point 1
+    :type x1: float
+    :param x2: radial location of arc point 2
+    :type x2: float
+    :param x4: radial location of arc point 4
+    :type x4: float
+    :param x5: radial location of arc point 5
+    :type x5: float
+    :param y1: vertical location of arc point 1
+    :type y1: float
+    :param y2: vertical location of arc point 2
+    :type y2: float
+    :param y4: vertical location of arc point 4
+    :type y4: float
+    :param y5: vertical location of arc point 5
+    :type y5: float
+    :param tfcth: inboard tf coil thickness
+    :type tfcth: float
+    :return: list of RectangleGeometry - dataclass returning rectangular geometry parameters
+    :rtype: List[RectangleGeometry]
+    """
     return_rects = []
     return_rects.append(
         RectangleGeometry(
@@ -55,6 +81,35 @@ def tfcoil_geometry_d_shape(
     rtangle: float,
     rtangle2: float,
 ) -> Tuple[List[RectangleGeometry], list]:
+    """Calculates radial and vertical distances for the geometry of the tf coils in a D-shape parametrization
+
+    :param x1: radial location of arc point 1
+    :type x1: float
+    :param x2: radial location of arc point 2
+    :type x2: float
+    :param x3: radial location of arc point 3
+    :type x3: float
+    :param x4: radial location of arc point 4
+    :type x4: float
+    :param x5: radial location of arc point 5
+    :type x5: float
+    :param y1: vertical location of arc point 1
+    :type y1: float
+    :param y2: vertical location of arc point 2
+    :type y2: float
+    :param y4: vertical location of arc point 4
+    :type y4: float
+    :param y5: vertical location of arc point 5
+    :type y5: float
+    :param tfcth: inboard tf coil thickness
+    :type tfcth: float
+    :param rtangle: angle used in tf coil parametrization
+    :type rtangle: float
+    :param rtangle2: angle used in tf coil parametrization
+    :type rtangle2: float
+    :return: radial and vertical coordinates for tf coils
+    :rtype: Tuple[List[RectangleGeometry], list]
+    """
     return_rects = []
     return_verts = []
     # Inboard upper arc
@@ -126,7 +181,6 @@ def tfcoil_geometry_d_shape(
         ang2=-rtangle,
     )
     # Vertical leg
-    # Bottom left corner
     return_rects.append(
         RectangleGeometry(
             center_x=x5 - tfcth, center_z=y5, width=tfcth, height=(y1 - y5)

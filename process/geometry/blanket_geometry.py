@@ -1,14 +1,20 @@
+"""
+Calculate radial and vertical coordinates for the geometry of the blanket
+"""
 from dataclasses import dataclass
 from typing import List
 import numpy as np
 from process.geometry.utils import plotdh, plotdhgap
 
 
-# TODO documentation
 @dataclass
-class BlanketGeometrySingleNull:
-    rs: List[float]
-    zs: List[float]
+class BlanketGeometry:
+    """Holds radial and vertical coordinates for the geometry of a blanket"""
+
+    rs: List[List[float]]
+    """radial blanket coordinates"""
+    zs: List[List[float]]
+    """vertical blanket coordinates"""
 
 
 def blanket_geometry_single_null(
@@ -18,45 +24,42 @@ def blanket_geometry_single_null(
     rminx_inner: float,
     cumulative_upper: dict,
     triang: float,
-) -> BlanketGeometrySingleNull:
-    point_array = []
-    # Upper blanket
+) -> BlanketGeometry:
+    """Calculates radial and vertical distances for the geometry of section of blanket above the midplane in a single null configuration
+
+    :param radx_outer: outboard radius of outer surface of blanket
+    :type radx_outer: float
+    :param rminx_outer: inboard radius of outer surface of blanket
+    :type rminx_outer: float
+    :param radx_inner: outboard radius of inner surface of blanket
+    :type radx_inner: float
+    :param rminx_inner: inboard radius of inner surface of blanket
+    :type rminx_inner: float
+    :param cumulative_upper: cumulative vertical thicknesses of components above the midplane
+    :type cumulative_upper: dict
+    :param triang: plasma triangularity
+    :type triang: float
+    :return: BlanketGeometry - dataclass returning blanket radial and vertical coordinates
+    :rtype: DataClass
+    """
+
     # upper blanket outer surface
     kapx = cumulative_upper["blnktth"] / rminx_outer
-    (rs_1, zs_1) = plotdh(radx_outer, rminx_outer, triang, kapx)
-    # axis.plot(rs_1, zs_1, color="black", lw=thin)
-    point_array.append(rs_1)
-    point_array.append(zs_1)
+    rs_1, zs_1 = plotdh(radx_outer, rminx_outer, triang, kapx)
 
     # upper blanket inner surface
     kapx = cumulative_upper["fwtth"] / rminx_inner
-    (rs_2, zs_2) = plotdh(radx_inner, rminx_inner, triang, kapx)
-    point_array.append(rs_2)
-    point_array.append(zs_2)
+    rs_2, zs_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
 
-    # Plot upper blanket
-    rs_3 = np.concatenate([point_array[0], point_array[2][::-1]])
-    zs_3 = np.concatenate([point_array[1], point_array[3][::-1]])
+    rs_3 = np.concatenate([rs_1, rs_2[::-1]])
+    zs_3 = np.concatenate([zs_1, zs_2[::-1]])
 
     rs = [rs_1, rs_2, rs_3]
     zs = [zs_1, zs_2, zs_3]
-
-    return BlanketGeometrySingleNull(
+    return BlanketGeometry(
         rs=rs,
         zs=zs,
     )
-
-
-@dataclass
-class BlanketGeometry:
-    rs1: List[float]
-    rs2: List[float]
-    rs3: List[float]
-    rs4: List[float]
-    zs1: List[float]
-    zs2: List[float]
-    zs3: List[float]
-    zs4: List[float]
 
 
 def blanket_geometry(
@@ -68,37 +71,40 @@ def blanket_geometry(
     blnkith: float,
     blnkoth: float,
 ) -> BlanketGeometry:
+    """Calculates radial and vertical distances for the geometry of section of blanket below the midplane
+
+    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
+    :type cumulative_lower: dict
+    :param triang: plasma triangularity
+    :type triang: float
+    :param blnktth: top blanket vertical thickness
+    :type blnktth: float
+    :param c_shldith: inboard shield thickness
+    :type c_shldith: float
+    :param c_blnkoth: outboard blanket radial thickness
+    :type c_blnkoth: float
+    :param blnkith: inboard blanket radial thickness
+    :type blnkith: float
+    :param blnkoth: outboard blanket radial thickness
+    :type blnkoth: float
+    :return: BlanketGeometry - dataclass returning blanket radial and vertical thicknesses
+    :rtype: DataClass
+    """
     # Lower blanket
     divgap = cumulative_lower["divfix"]
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = plotdhgap(
         c_shldith, c_blnkoth, blnkith, blnkoth, divgap, -blnktth, triang
     )
+    rs_1 = np.concatenate([rs1, rs2[::-1]])
+    zs_1 = np.concatenate([zs1, zs2[::-1]])
+    rs_2 = np.concatenate([rs3, rs4[::-1]])
+    zs_2 = -np.concatenate([zs3, zs4[::-1]])
+    rs = [rs_1, rs_2]
+    zs = [zs_1, zs_2]
 
-    return BlanketGeometry(
-        rs1=rs1,
-        rs2=rs2,
-        rs3=rs3,
-        rs4=rs4,
-        zs1=zs1,
-        zs2=zs2,
-        zs3=zs3,
-        zs4=zs4,
-    )
+    return BlanketGeometry(rs=rs, zs=zs)
 
 
-@dataclass
-class BlanketGeometryDoubleNull:
-    rs1: list
-    rs2: list
-    rs3: list
-    rs4: list
-    zs1: list
-    zs2: list
-    zs3: list
-    zs4: list
-
-
-# i_single_null == 0 part
 def blanket_geometry_double_null(
     cumulative_lower: dict,
     triang: float,
@@ -107,7 +113,26 @@ def blanket_geometry_double_null(
     c_blnkoth: float,
     blnkith: float,
     blnkoth: float,
-) -> BlanketGeometryDoubleNull:
+) -> BlanketGeometry:
+    """Calculates radial and vertical distances for the geometry of section of blanket above the midplane in a double null configuration
+
+    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
+    :type cumulative_lower: dict
+    :param triang: plasma triangularity
+    :type triang: float
+    :param blnktth: top blanket vertical thickness
+    :type blnktth: float
+    :param c_shldith: inboard shield thickness
+    :type c_shldith: float
+    :param c_blnkoth: outboard blanket radial thickness
+    :type c_blnkoth: float
+    :param blnkith: inboard blanket radial thickness
+    :type blnkith: float
+    :param blnkoth: outboard blanket radial thickness
+    :type blnkoth: float
+    :return: BlanketGeometry - dataclass returning blanket radial and vertical thicknesses
+    :rtype: DataClass
+    """
     divgap = cumulative_lower["divfix"]
 
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = plotdhgap(
@@ -119,13 +144,11 @@ def blanket_geometry_double_null(
         -blnktth,
         triang,
     )
-    return BlanketGeometryDoubleNull(
-        rs1=rs1,
-        rs2=rs2,
-        rs3=rs3,
-        rs4=rs4,
-        zs1=zs1,
-        zs2=zs2,
-        zs3=zs3,
-        zs4=zs4,
-    )
+    rs_1 = np.concatenate([rs1, rs2[::-1]])
+    zs_1 = np.concatenate([zs1, zs2[::-1]])
+    rs_2 = np.concatenate([rs3, rs4[::-1]])
+    zs_2 = -np.concatenate([zs3, zs4[::-1]])
+    rs = [rs_1, rs_2]
+    zs = [zs_1, zs_2]
+
+    return BlanketGeometry(rs=rs, zs=zs)

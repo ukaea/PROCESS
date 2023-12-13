@@ -1,3 +1,6 @@
+"""
+Calculate radial and vertical coordinates for the geometry of the pf coils and central coil
+"""
 from typing import List
 
 from process.geometry.geometry_parameterisations import RectangleGeometry
@@ -12,6 +15,25 @@ def pfcoil_geometry(
     ohcth: float,
     ohdz: float,
 ) -> tuple:
+    """Calculates radial and vertical distances for the geometry of the pf coils and central coil
+
+    :param coils_r: list of pf coil radii
+    :type coils_r: List[float]
+    :param coils_z: list of pf coil vertical positions
+    :type coils_z: List[float]
+    :param coils_dr: list of pf coil radial thicknesses
+    :type coils_dr: List[float]
+    :param coils_dz: list of pf coil vertical thicknesses
+    :type coils_dz: List[float]
+    :param bore: central solenoid inboard radius
+    :type bore: float
+    :param ohcth: central solenoid thickness
+    :type ohcth: float
+    :param ohdz: central solenoid vertical thickness
+    :type ohdz: float
+    :return: radial and vertical coordinates for pf coils and central coil
+    :rtype: tuple
+    """
     r_points = []
     z_points = []
     for i in range(len(coils_r)):
