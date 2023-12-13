@@ -324,7 +324,17 @@ $$
 \mathtt{perim} = 2.0 \times (\mathtt{xlo} \times \mathtt{thetao} + \mathtt{xli} \times \mathtt{thetai})
 $$
 
-## Cross-section
+## Cross-section (`xsecta`)
+
+$$
+\mathtt{xsecta} = \mathtt{xo}^2 \times (\mathtt{thetao} - \cos{(\mathtt{thetao})} \times \sin{(\mathtt{thetao})}) + \mathtt{xi}^2 \times (\mathtt{thetai} - \cos{(\mathtt{thetai})} \times \sin{(\mathtt{thetai})})
+$$
+
+### Peng version (`xsect0`)
+
+$$
+
+$$
 
 [^1]: N.A. Uckan and ITER Physics Group, *ITER Physics Design Guidelines: 1989*, 
 ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
