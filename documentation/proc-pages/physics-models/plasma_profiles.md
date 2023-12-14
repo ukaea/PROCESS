@@ -165,7 +165,111 @@ $$\begin{aligned}
 
 
 ## Plasma Parameterization
+Ion temperature is set with `tratio` which just takes $T_i = \mathtt{tratio}\times T_e$
 
+### ipedestal = 0
+
+#### `parabolic_paramterisation()`
+`parabolic_paramterisation()` is ran
+ Pedestal values resent to agree with original parabolinc profiles.
+
+ `Nprofile()` and `TProfile()` is re-ran
+
+
+profile factor is calculated:
+
+$$
+\mathtt{pcoef} = \frac{(1+\alpha_n)(1+\alpha_T)}{(1+\alpha_T + \alpha_n)}
+$$
+
+line avergaed electron density is calculated
+
+$$
+\mathtt{dnla} = n_e \times (1+\alpha_n) \times 0.886227 \times \mathtt{gamfun}(\alpha_n+1) / \mathtt{gamfun}(\alpha_n+1.5)
+$$
+
+where $\mathtt{gamfun}$ is a gamma function calculator from `maths_library.f90` and is found below.
+
+```fortran
+recursive function gamfun(x) result(gamma)
+
+    !! Calculates the gamma function for arbitrary real x
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! x : input real : gamma function argument
+    !! This routine evaluates the gamma function, using an
+    !! asymptotic expansion based on Stirling's approximation.
+    !! http://en.wikipedia.org/wiki/Gamma_function
+    !! T&amp;M/PKNIGHT/LOGBOOK24, p.5
+    !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    implicit none
+
+    !  Arguments
+
+    real(dp), intent(in) :: x
+    real(dp) :: gamma
+
+    !  Local variables
+
+    real(dp), parameter :: sqtwopi = 2.5066282746310005D0
+    real(dp), parameter :: c1 = 8.3333333333333333D-2  !  1/12
+    real(dp), parameter :: c2 = 3.4722222222222222D-3  !  1/288
+    real(dp), parameter :: c3 = 2.6813271604938272D-3  !  139/51840
+    real(dp), parameter :: c4 = 2.2947209362139918D-4  !  571/2488320
+    real(dp) :: summ, denom
+    integer :: i,n
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    if (x > 1.0D0) then
+
+       summ = 1.0D0 + c1/x + c2/x**2 - c3/x**3 - c4/x**4
+       gamma = exp(-x) * x**(x-0.5D0) * sqtwopi * summ
+
+    else
+
+       !  Use recurrence formula to shift the argument to >1
+       !  gamma(x) = gamma(x+n) / (x*(x+1)*(x+2)*...*(x+n-1))
+       !  where n is chosen to make x+n > 1
+
+       n = int(-x) + 2
+       denom = x
+       do i = 1,n-1
+          denom = denom*(x+i)
+       end do
+       gamma = gamfun(x+n)/denom
+
+    end if
+
+  end function gamfun
+```
+Set the density weighted temperatures
+
+$$\begin{aligned}
+\mathtt{ten} = \mathtt{pcoef}T_e \\
+\mathtt{tin} = \mathtt{pcoef}T_i
+\end{aligned}$$
+
+Calculate central values for temperature and density
+
+$$\begin{aligned}
+\mathtt{te0} = T_e \times (1+\alpha_T) \\
+\mathtt{ti0} = T_i \times (1+\alpha_T)
+\end{aligned}$$
+
+$$\begin{aligned}
+\mathtt{ne0} = n_e \times (1+\alpha_n) \\
+\mathtt{ni0} = \mathtt{dnitot} \times (1+\alpha_n)
+\end{aligned}$$
+
+
+#### `calculate_profile_factors()`
+
+#### `calculate_parabolic_profile_factor()`            
+          
+
+### ipedestal = 1
 
 
 
