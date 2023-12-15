@@ -266,8 +266,113 @@ $$\begin{aligned}
 
 #### `calculate_profile_factors()`
 
-#### `calculate_parabolic_profile_factor()`            
-          
+The central plasma pressure is calculated from the ideal gas law.
+
+$$
+p_0 = (\mathtt{ne0} \times \mathtt{te0}+\mathtt{ni0}\times \mathtt{ti0})\times 1000 \times e
+$$
+
+Pressure profile index (N.B. no pedestal effects included here)
+N.B. p0 is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)
+and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
+density-weighted temperature
+
+$$
+\alpha_p = \alpha_n + \alpha_T
+$$
+
+#### `calculate_parabolic_profile_factor()`
+
+$$dtdrho_{max}=\left(-2^{alphat} \left(-1+alphat\right)^{-1+alphat} alphat\times-1+2alphat\right)^{0.5\times{10}^0-alphat} te0$$
+
+```python
+def calculate_parabolic_profile_factors():
+        """The gradient information for ipedestal = 0:
+        All formulas can be obtained from the analytical parametric form of the ipedestal profiles
+        rho_max is obtained by equalling the second derivative to zero e.g.
+        """
+        if physics_variables.ipedestal == 0:
+            if physics_variables.alphat > 1.0:
+                # Rho (normalized radius), where temperature derivative is largest
+                rho_te_max = 1.0 / np.sqrt(-1.0 + 2.0 * physics_variables.alphat)
+                dtdrho_max = (
+                    -(2.0**physics_variables.alphat)
+                    * (-1.0 + physics_variables.alphat)
+                    ** (-1.0 + physics_variables.alphat)
+                    * physics_variables.alphat
+                    * (-1.0 + 2.0 * physics_variables.alphat)
+                    ** (0.5e0 - physics_variables.alphat)
+                    * physics_variables.te0
+                )
+                te_max = (
+                    physics_variables.te0
+                    * (1 - rho_te_max**2) ** physics_variables.alphat
+                )
+
+            elif physics_variables.alphat <= 1.0 and physics_variables.alphat > 0.0:
+                # This makes the profiles very 'boxy'
+                # The gradient diverges here at the edge so define some 'wrong' value of 0.9
+                # to approximate the gradient
+                rho_te_max = 0.9
+                dtdrho_max = (
+                    -2.0
+                    * physics_variables.alphat
+                    * rho_te_max
+                    * (1 - rho_te_max**2) ** (-1.0 + physics_variables.alphat)
+                    * physics_variables.te0
+                )
+                te_max = (
+                    physics_variables.te0
+                    * (1 - rho_te_max**2) ** physics_variables.alphat
+                )
+            else:
+                raise ValueError(f"alphat is negative: { physics_variables.alphat}")
+
+            # Same for density
+            if physics_variables.alphan > 1.0:
+                rho_ne_max = 1.0 / np.sqrt(-1.0 + 2.0 * physics_variables.alphan)
+                dndrho_max = (
+                    -(2.0**physics_variables.alphan)
+                    * (-1.0 + physics_variables.alphan)
+                    ** (-1.0 + physics_variables.alphan)
+                    * physics_variables.alphan
+                    * (-1.0 + 2.0 * physics_variables.alphan)
+                    ** (0.5 - physics_variables.alphan)
+                    * physics_variables.ne0
+                )
+                ne_max = (
+                    physics_variables.ne0
+                    * (1e0 - rho_ne_max**2) ** physics_variables.alphan
+                )
+            elif physics_variables.alphan <= 1.0 and physics_variables.alphan > 0.0:
+                # This makes the profiles very 'boxy'
+                # The gradient diverges here at the edge so define some 'wrong' value of 0.9
+                # to approximate the gradient
+                rho_ne_max = 0.9
+                dndrho_max = (
+                    -2.0
+                    * physics_variables.alphan
+                    * rho_ne_max
+                    * (1 - rho_ne_max**2) ** (-1.0 + physics_variables.alphan)
+                    * physics_variables.ne0
+                )
+                ne_max = (
+                    physics_variables.ne0
+                    * (1 - rho_ne_max**2) ** physics_variables.alphan
+                )
+            else:
+                raise ValueError(f"alphan is negative: { physics_variables.alphan}")
+
+            # set normalized gradient length
+            # te at rho_te_max
+            physics_variables.gradient_length_te = (
+                -dtdrho_max * physics_variables.rminor * rho_te_max / te_max
+            )
+            # same for density:
+            physics_variables.gradient_length_ne = (
+                -dndrho_max * physics_variables.rminor * rho_ne_max / ne_max
+            )
+```
 
 ### ipedestal = 1
 
