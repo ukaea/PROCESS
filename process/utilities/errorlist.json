@@ -876,64 +876,9 @@
       "message": "CONSTRAINTS: Do not use constraint 55 if iblanket != 2"
     },
     {
-      "no": 174,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 175,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 176,
-      "level": 3,
-      "message": "CHECK: fgwped has to be > 0, if ipedestal = 2 or 3"
-    },
-    {
-      "no": 177,
-      "level": 3,
-      "message": "CHECK: fgwsep has to be > 0, if ipedestal = 2 or 3"
-    },
-    {
       "no": 178,
       "level": 3,
       "message": "CHECK: Cannot use Psep/R and PsepB/qAR limits at the same time"
-    },
-    {
-      "no": 179,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 180,
-      "level": 1,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 181,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 182,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 183,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 184,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 185,
-      "level": 3,
-      "message": "OBSOLETE"
     },
     {
       "no": 186,
@@ -944,71 +889,6 @@
       "no": 187,
       "level": 3,
       "message": "CHECK: Specify only one variable from contrpovs and contrpovr"
-    },
-    {
-      "no": 188,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 189,
-      "level": 2,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 190,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 191,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 192,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 193,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 194,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 195,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 196,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 197,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 198,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 199,
-      "level": 2,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 200,
-      "level": 3,
-      "message": "OBSOLETE"
     },
     {
       "no": 201,
@@ -1044,26 +924,6 @@
       "no": 207,
       "level": 1,
       "message": "LH THRESHOLD: Closed divertor only. Limited data used in Snipes fit"
-    },
-    {
-      "no": 208,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 209,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 210,
-      "level": 3,
-      "message": "OBSOLETE"
-    },
-    {
-      "no": 211,
-      "level": 3,
-      "message": "OBSOLETE"
     },
     {
       "no": 212,
