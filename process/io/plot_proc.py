@@ -2716,7 +2716,7 @@ def parse_args(args):
     # Setup command line arguments
     parser = argparse.ArgumentParser(
         description="Produces a two page summary of the PROCESS MFILE output, using the MFILE.  "
-        "For info contact michael.kovari@ukaea.uk or james.morris2@ukaea.uk."
+        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts "
     )
 
     parser.add_argument(
