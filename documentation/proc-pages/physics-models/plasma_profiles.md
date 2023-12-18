@@ -376,6 +376,51 @@ def calculate_parabolic_profile_factors():
 
 ### ipedestal = 1
 
+#### `pedestal_parameterisation()`
+
+ `Nprofile()` and `TProfile()` is re-ran
+
+ Perform integrations to calculate ratio of density-weighted to volume-averaged temperature, etc. Density-weighted temperature = $\frac{\int{nT \ dV}}{\int{n \ dV}}$,  which is approximately equal to the ratio $\frac{\int{\rho \ n(\rho) T(\rho) \ d\rho}}{\int{\rho \ n(\rho) \ d\rho}}$
+ 
+ Density weighted temperatures are thus set as such
+
+$$
+\mathtt{ten} = \frac{\int{\rho \ n(\rho) T(\rho) \  d\rho}}{\int{\rho \ n(\rho) \ d\rho}} \\
+\mathtt{tin} = \mathtt{ten}\frac{T_i}{T_e}
+$$
+
+Set profile factor:
+
+$$
+\mathtt{pcoef} = \frac{\mathtt{ten}}{T_e}
+$$
+
+Caclulate the line avaerged electron density:
+
+$$
+\mathtt{dnla} = \int{n(\rho) \ d\rho}
+$$
+
+#### `calculate_profile_factors()`
+
+The central plasma pressure is calculated from the ideal gas law.
+
+$$
+p_0 = (\mathtt{ne0} \times \mathtt{te0}+\mathtt{ni0}\times \mathtt{ti0})\times 1000 \times e
+$$
+
+Pressure profile index (N.B. no pedestal effects included here)
+N.B. p0 is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)
+and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
+density-weighted temperature
+
+$$
+\alpha_p = \alpha_n + \alpha_T
+$$
+
+
+
+
 
 
 ## No pedestal, `(ipedestal = 0)`
