@@ -68,9 +68,6 @@ def blanket_geometry_single_null(
     kapx = cumulative_upper["fwtth"] / rminx_inner
     rs_2, zs_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
 
-    rs_upper = np.concatenate([rs_1, rs_2[::-1]])
-    zs_upper = np.concatenate([zs_1, zs_2[::-1]])
-
     # Lower blanket
     divgap = cumulative_lower["divfix"]
 
@@ -84,8 +81,8 @@ def blanket_geometry_single_null(
         divgap=divgap,
     )
 
-    rs = [rs_upper, rs_lower_1, rs_lower_2]
-    zs = [zs_upper, zs_lower_1, zs_lower_2]
+    rs = np.concatenate([rs_1, rs_lower_2, rs_2[::-1], rs_lower_1[::-1]])
+    zs = np.concatenate([zs_1, zs_lower_2, zs_2[::-1], zs_lower_1[::-1]])
 
     return BlanketGeometry(rs=rs, zs=zs)
 
@@ -184,8 +181,11 @@ def blanket_geometry_double_null(
         blnkoth=blnkoth,
         divgap=divgap,
     )
-
-    rs = [rs_upper_1, rs_upper_2, rs_lower_1, rs_lower_2]
-    zs = [zs_upper_1, zs_upper_2, zs_lower_1, zs_lower_2]
+    rs_1 = np.concatenate([rs_upper_1, rs_lower_1[::-1]])
+    rs_2 = np.concatenate([rs_upper_2, rs_lower_2[::-1]])
+    zs_1 = np.concatenate([zs_upper_1, zs_lower_1[::-1]])
+    zs_2 = np.concatenate([zs_upper_2, zs_lower_2[::-1]])
+    rs = [rs_1, rs_2]
+    zs = [zs_1, zs_2]
 
     return BlanketGeometry(rs=rs, zs=zs)

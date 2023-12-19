@@ -1255,7 +1255,6 @@ def plot_blanket(axis, mfile_data, scan) -> None:
       scan --> scan number to use
 
     """
-
     # Single null: Draw top half from output
     # Double null: Reflect bottom half to top
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
@@ -1299,39 +1298,15 @@ def plot_blanket(axis, mfile_data, scan) -> None:
             blnkoth=blnkoth,
         )
 
-        # Plot upper blanket
+        # Plot blanket
         axis.plot(
-            bg_single_null.rs[0],
-            bg_single_null.zs[0],
+            bg_single_null.rs,
+            bg_single_null.zs,
             color="black",
             lw=thin,
         )
 
-        axis.fill(bg_single_null.rs[0], bg_single_null.zs[0], color=blanket)
-
-        # Plot lower blanket
-        axis.plot(
-            bg_single_null.rs[1],
-            bg_single_null.zs[1],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            bg_single_null.rs[2],
-            bg_single_null.zs[2],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            bg_single_null.rs[1],
-            bg_single_null.zs[1],
-            color=blanket,
-        )
-        axis.fill(
-            bg_single_null.rs[2],
-            bg_single_null.zs[2],
-            color=blanket,
-        )
+        axis.fill(bg_single_null.rs, bg_single_null.zs, color=blanket)
 
     if i_single_null == 0:
         bg_double_null = blanket_geometry_double_null(
@@ -1343,53 +1318,11 @@ def plot_blanket(axis, mfile_data, scan) -> None:
             blnkith=blnkith,
             blnkoth=blnkoth,
         )
-        # Plot upper blanket
-        axis.plot(
-            bg_double_null.rs[0],
-            bg_double_null.zs[0],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            bg_double_null.rs[1],
-            bg_double_null.zs[1],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            bg_double_null.rs[0],
-            bg_double_null.zs[0],
-            color=blanket,
-        )
-        axis.fill(
-            bg_double_null.rs[1],
-            bg_double_null.zs[1],
-            color=blanket,
-        )
-
-        # Plot lower blanket
-        axis.plot(
-            bg_double_null.rs[2],
-            bg_double_null.zs[2],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            bg_double_null.rs[3],
-            bg_double_null.zs[3],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            bg_double_null.rs[2],
-            bg_double_null.zs[2],
-            color=blanket,
-        )
-        axis.fill(
-            bg_double_null.rs[3],
-            bg_double_null.zs[3],
-            color=blanket,
-        )
+        # Plot blanket
+        axis.plot(bg_double_null.rs[0], bg_double_null.zs[0], color="black", lw=thin)
+        axis.plot(bg_double_null.rs[1], bg_double_null.zs[1], color="black", lw=thin)
+        axis.fill(bg_double_null.rs[0], bg_double_null.zs[0], color=blanket)
+        axis.fill(bg_double_null.rs[1], bg_double_null.zs[1], color=blanket)
 
 
 def plot_firstwall(axis, mfile_data, scan):
@@ -1445,33 +1378,9 @@ def plot_firstwall(axis, mfile_data, scan):
             tfwvt=tfwvt,
         )
 
-        # Plot upper first wall
-        axis.plot(fwg_single_null.rs[0], fwg_single_null.zs[0], color="black", lw=thin)
-        axis.fill(fwg_single_null.rs[0], fwg_single_null.zs[0], color=firstwall)
-
-        # Plot lower first wall
-        axis.plot(
-            fwg_single_null.rs[1],
-            fwg_single_null.zs[1],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            fwg_single_null.rs[2],
-            fwg_single_null.zs[2],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            fwg_single_null.rs[1],
-            fwg_single_null.zs[1],
-            color=firstwall,
-        )
-        axis.fill(
-            fwg_single_null.rs[2],
-            fwg_single_null.zs[2],
-            color=firstwall,
-        )
+        # Plot first wall
+        axis.plot(fwg_single_null.rs, fwg_single_null.zs, color="black", lw=thin)
+        axis.fill(fwg_single_null.rs, fwg_single_null.zs, color=firstwall)
 
     if i_single_null == 0:
         fwg_double_null = first_wall_geometry_double_null(
@@ -1484,53 +1393,11 @@ def plot_firstwall(axis, mfile_data, scan):
             fwoth=fwoth,
             tfwvt=tfwvt,
         )
-        # Plot upper blanket
-        axis.plot(
-            fwg_double_null.rs[0],
-            fwg_double_null.zs[0],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            fwg_double_null.rs[1],
-            fwg_double_null.zs[1],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            fwg_double_null.rs[0],
-            fwg_double_null.zs[0],
-            color=firstwall,
-        )
-        axis.fill(
-            fwg_double_null.rs[1],
-            fwg_double_null.zs[1],
-            color=firstwall,
-        )
-
-        # Plot lower blanket
-        axis.plot(
-            fwg_double_null.rs[2],
-            fwg_double_null.zs[2],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            fwg_double_null.rs[3],
-            fwg_double_null.zs[3],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            fwg_double_null.rs[2],
-            fwg_double_null.zs[2],
-            color=firstwall,
-        )
-        axis.fill(
-            fwg_double_null.rs[3],
-            fwg_double_null.zs[3],
-            color=firstwall,
-        )
+        # Plot blanket
+        axis.plot(fwg_double_null.rs[0], fwg_double_null.zs[0], color="black", lw=thin)
+        axis.plot(fwg_double_null.rs[1], fwg_double_null.zs[1], color="black", lw=thin)
+        axis.fill(fwg_double_null.rs[0], fwg_double_null.zs[0], color=blanket)
+        axis.fill(fwg_double_null.rs[1], fwg_double_null.zs[1], color=blanket)
 
 
 def angle_check(angle1, angle2):

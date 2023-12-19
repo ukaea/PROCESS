@@ -71,15 +71,11 @@ def first_wall_geometry_single_null(
     # Upper first wall: inner surface
     rs_2, zs_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
 
-    rs_upper = np.concatenate([rs_1, rs_2[::-1]])
-    zs_upper = np.concatenate([zs_1, zs_2[::-1]])
-
     # Lower first wall
     divgap = cumulative_lower["divfix"]
     top_point = divgap + blnktth
     rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = first_wall_geometry_lower(
         triang=triang,
-        blnktth=blnktth,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
         fwith=fwith,
@@ -88,15 +84,14 @@ def first_wall_geometry_single_null(
         top_point=top_point,
     )
 
-    rs = [rs_upper, rs_lower_1, rs_lower_2]
-    zs = [zs_upper, zs_lower_1, zs_lower_2]
+    rs = np.concatenate([rs_1, rs_lower_2, rs_2[::-1], rs_lower_1[::-1]])
+    zs = np.concatenate([zs_1, zs_lower_2, zs_2[::-1], zs_lower_1[::-1]])
 
     return FirstWallGeometry(rs=rs, zs=zs)
 
 
 def first_wall_geometry_lower(
     triang: float,
-    blnktth: float,
     c_blnkith: float,
     c_fwoth: float,
     fwith: float,
@@ -108,8 +103,6 @@ def first_wall_geometry_lower(
 
     :param triang: plasma triangularity
     :type triang: float
-    :param blnktth: top blanket vertical thickness
-    :type blnktth: float
     :param c_blnkith: inboard blanket vertical thickness
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
@@ -180,7 +173,6 @@ def first_wall_geometry_double_null(
     top_point = divgap + blnktth
     rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = first_wall_geometry_lower(
         triang=triang,
-        blnktth=blnktth,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
         fwith=fwith,
@@ -193,7 +185,6 @@ def first_wall_geometry_double_null(
     top_point = -1 * top_point
     rs_upper_1, zs_upper_1, rs_upper_2, zs_upper_2 = first_wall_geometry_lower(
         triang=triang,
-        blnktth=blnktth,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
         fwith=fwith,
@@ -202,7 +193,11 @@ def first_wall_geometry_double_null(
         top_point=top_point,
     )
 
-    rs = [rs_upper_1, rs_upper_2, rs_lower_1, rs_lower_2]
-    zs = [zs_upper_1, zs_upper_2, zs_lower_1, zs_lower_2]
+    rs_1 = np.concatenate([rs_upper_1, rs_lower_1[::-1]])
+    rs_2 = np.concatenate([rs_upper_2, rs_lower_2[::-1]])
+    zs_1 = np.concatenate([zs_upper_1, zs_lower_1[::-1]])
+    zs_2 = np.concatenate([zs_upper_2, zs_lower_2[::-1]])
+    rs = [rs_1, rs_2]
+    zs = [zs_1, zs_2]
 
     return FirstWallGeometry(rs=rs, zs=zs)
