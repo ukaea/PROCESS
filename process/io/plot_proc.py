@@ -38,7 +38,6 @@ from process.geometry.vacuum_vessel_geometry import (
 from process.geometry.blanket_geometry import (
     blanket_geometry_single_null,
     blanket_geometry_double_null,
-    blanket_geometry,
 )
 from process.geometry.cryostat_geometry import cryostat_geometry
 from process.geometry.tfcoil_geometry import (
@@ -49,7 +48,6 @@ from process.geometry.pfcoil_geometry import pfcoil_geometry
 from process.geometry.firstwall_geometry import (
     first_wall_geometry_single_null,
     first_wall_geometry_double_null,
-    first_wall_geometry,
 )
 from process.impurity_radiation import read_impurity_file
 from process.io.python_fortran_dicts import get_dicts
@@ -77,7 +75,7 @@ firstwall = "darkblue"
 winding = "blue"
 nbshield_colour = "gray"
 
-thin = 0
+thin = 0.0
 
 RADIAL_BUILD = [
     "bore",
@@ -1145,7 +1143,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan):
     ) / 2.0
 
     if i_single_null == 1:
-        vvg = vacuum_vessel_geometry_single_null(
+        vvg_single_null = vacuum_vessel_geometry_single_null(
             cumulative_upper=cumulative_upper,
             upper=upper,
             triang=triang_95,
@@ -1155,15 +1153,15 @@ def plot_vacuum_vessel(axis, mfile_data, scan):
             rminx_inner=rminx_inner,
         )
         axis.plot(
-            vvg.rs_1,
-            vvg.zs_1,
+            vvg_single_null.rs_1,
+            vvg_single_null.zs_1,
             color="black",
             lw=thin,
         )
-        axis.plot(vvg.rs_2, vvg.zs_2, color="black", lw=thin)
+        axis.plot(vvg_single_null.rs_2, vvg_single_null.zs_2, color="black", lw=thin)
         axis.fill(
-            vvg.rs,
-            vvg.zs,
+            vvg_single_null.rs,
+            vvg_single_null.zs,
             color=vessel,
         )
 
@@ -1218,7 +1216,7 @@ def plot_shield(axis, mfile_data, scan):
     ) / 2.0
 
     if i_single_null == 1:
-        sg = shield_geometry_single_null(
+        sg_single_null = shield_geometry_single_null(
             cumulative_upper=cumulative_upper,
             radx_far=radx_far,
             rminx_far=rminx_far,
@@ -1226,9 +1224,9 @@ def plot_shield(axis, mfile_data, scan):
             rminx_near=rminx_near,
             triang=triang_95,
         )
-        axis.plot(sg.rs_1, sg.zs_1, color="black", lw=thin)
-        axis.plot(sg.rs_2, sg.zs_2, color="black", lw=thin)
-        axis.fill(sg.rs, sg.zs, color=shield)
+        axis.plot(sg_single_null.rs_1, sg_single_null.zs_1, color="black", lw=thin)
+        axis.plot(sg_single_null.rs_2, sg_single_null.zs_2, color="black", lw=thin)
+        axis.fill(sg_single_null.rs, sg_single_null.zs, color=shield)
 
     sg = shield_geometry(
         cumulative_lower=cumulative_lower,
@@ -1248,7 +1246,7 @@ def plot_shield(axis, mfile_data, scan):
         axis.fill(sg.rs, -1 * sg.zs, color=shield)
 
 
-def plot_blanket(axis, mfile_data, scan: int) -> None:
+def plot_blanket(axis, mfile_data, scan) -> None:
     """Function to plot blanket
 
     Arguments:
@@ -1286,55 +1284,57 @@ def plot_blanket(axis, mfile_data, scan: int) -> None:
             cumulative_radial_build("fwoth", mfile_data, scan)
             - cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
-        bg = blanket_geometry_single_null(
+        bg_single_null = blanket_geometry_single_null(
             radx_outer=radx_outer,
             rminx_outer=rminx_outer,
             radx_inner=radx_inner,
             rminx_inner=rminx_inner,
             cumulative_upper=cumulative_upper,
             triang=triang_95,
+            cumulative_lower=cumulative_lower,
+            blnktth=blnktth,
+            c_shldith=c_shldith,
+            c_blnkoth=c_blnkoth,
+            blnkith=blnkith,
+            blnkoth=blnkoth,
         )
 
-        axis.plot(bg.rs[0], bg.zs[0], color="black", lw=thin)
-        axis.plot(bg.rs[1], bg.zs[1], color="black", lw=thin)
         # Plot upper blanket
-        axis.fill(bg.rs[2], bg.zs[2], color=blanket)
+        axis.plot(
+            bg_single_null.rs[0],
+            bg_single_null.zs[0],
+            color="black",
+            lw=thin,
+        )
 
-    bg = blanket_geometry(
-        cumulative_lower=cumulative_lower,
-        triang=triang_95,
-        blnktth=blnktth,
-        c_shldith=c_shldith,
-        c_blnkoth=c_blnkoth,
-        blnkith=blnkith,
-        blnkoth=blnkoth,
-    )
+        axis.fill(bg_single_null.rs[0], bg_single_null.zs[0], color=blanket)
 
-    axis.plot(
-        bg.rs[0],
-        bg.zs[0],
-        color="black",
-        lw=thin,
-    )
-    axis.plot(
-        bg.rs[1],
-        bg.zs[1],
-        color="black",
-        lw=thin,
-    )
-    axis.fill(
-        bg.rs[0],
-        bg.zs[0],
-        color=blanket,
-    )
-    axis.fill(
-        bg.rs[1],
-        bg.zs[1],
-        color=blanket,
-    )
+        # Plot lower blanket
+        axis.plot(
+            bg_single_null.rs[1],
+            bg_single_null.zs[1],
+            color="black",
+            lw=thin,
+        )
+        axis.plot(
+            bg_single_null.rs[2],
+            bg_single_null.zs[2],
+            color="black",
+            lw=thin,
+        )
+        axis.fill(
+            bg_single_null.rs[1],
+            bg_single_null.zs[1],
+            color=blanket,
+        )
+        axis.fill(
+            bg_single_null.rs[2],
+            bg_single_null.zs[2],
+            color=blanket,
+        )
 
     if i_single_null == 0:
-        bg = blanket_geometry_double_null(
+        bg_double_null = blanket_geometry_double_null(
             cumulative_lower=cumulative_lower,
             triang=triang_95,
             blnktth=blnktth,
@@ -1343,27 +1343,51 @@ def plot_blanket(axis, mfile_data, scan: int) -> None:
             blnkith=blnkith,
             blnkoth=blnkoth,
         )
-
+        # Plot upper blanket
         axis.plot(
-            bg.rs[0],
-            bg.zs[0],
+            bg_double_null.rs[0],
+            bg_double_null.zs[0],
             color="black",
             lw=thin,
         )
         axis.plot(
-            bg.rs[1],
-            bg.zs[1],
+            bg_double_null.rs[1],
+            bg_double_null.zs[1],
             color="black",
             lw=thin,
         )
         axis.fill(
-            bg.rs[0],
-            bg.zs[0],
+            bg_double_null.rs[0],
+            bg_double_null.zs[0],
             color=blanket,
         )
         axis.fill(
-            bg.rs[1],
-            bg.zs[1],
+            bg_double_null.rs[1],
+            bg_double_null.zs[1],
+            color=blanket,
+        )
+
+        # Plot lower blanket
+        axis.plot(
+            bg_double_null.rs[2],
+            bg_double_null.zs[2],
+            color="black",
+            lw=thin,
+        )
+        axis.plot(
+            bg_double_null.rs[3],
+            bg_double_null.zs[3],
+            color="black",
+            lw=thin,
+        )
+        axis.fill(
+            bg_double_null.rs[2],
+            bg_double_null.zs[2],
+            color=blanket,
+        )
+        axis.fill(
+            bg_double_null.rs[3],
+            bg_double_null.zs[3],
             color=blanket,
         )
 
@@ -1405,57 +1429,14 @@ def plot_firstwall(axis, mfile_data, scan):
             - cumulative_radial_build("fwith", mfile_data, scan)
         ) / 2.0
 
-        fwg = first_wall_geometry_single_null(
+        fwg_single_null = first_wall_geometry_single_null(
             radx_outer=radx_outer,
             rminx_outer=rminx_outer,
             radx_inner=radx_inner,
             rminx_inner=rminx_inner,
             cumulative_upper=cumulative_upper,
             triang=triang_95,
-        )
-
-        # Plot upper first wall
-        axis.plot(fwg.rs[0], fwg.zs[0], color="black", lw=thin)
-        axis.plot(fwg.rs[1], fwg.zs[1], color="black", lw=thin)
-        axis.fill(fwg.rs[2], fwg.zs[2], color=firstwall)
-
-    fwg = first_wall_geometry(
-        cumulative_lower=cumulative_lower,
-        triang=triang,
-        blnktth=blnktth,
-        c_blnkith=c_blnkith,
-        c_fwoth=c_fwoth,
-        fwith=fwith,
-        fwoth=fwoth,
-        tfwvt=tfwvt,
-    )
-    axis.plot(
-        fwg.rs[0],
-        fwg.zs[0],
-        color="black",
-        lw=thin,
-    )
-    axis.plot(
-        fwg.rs[1],
-        fwg.zs[1],
-        color="black",
-        lw=thin,
-    )
-    axis.fill(
-        fwg.rs[0],
-        fwg.zs[0],
-        color=firstwall,
-    )
-    axis.fill(
-        fwg.rs[1],
-        fwg.zs[1],
-        color=firstwall,
-    )
-
-    if i_single_null == 0:
-        fwg = first_wall_geometry_double_null(
             cumulative_lower=cumulative_lower,
-            triang=triang,
             blnktth=blnktth,
             c_blnkith=c_blnkith,
             c_fwoth=c_fwoth,
@@ -1464,26 +1445,90 @@ def plot_firstwall(axis, mfile_data, scan):
             tfwvt=tfwvt,
         )
 
+        # Plot upper first wall
+        axis.plot(fwg_single_null.rs[0], fwg_single_null.zs[0], color="black", lw=thin)
+        axis.fill(fwg_single_null.rs[0], fwg_single_null.zs[0], color=firstwall)
+
+        # Plot lower first wall
         axis.plot(
-            fwg.rs[0],
-            fwg.zs[0],
+            fwg_single_null.rs[1],
+            fwg_single_null.zs[1],
             color="black",
             lw=thin,
         )
         axis.plot(
-            fwg.rs[1],
-            fwg.zs[1],
+            fwg_single_null.rs[2],
+            fwg_single_null.zs[2],
             color="black",
             lw=thin,
         )
         axis.fill(
-            fwg.rs[0],
-            fwg.zs[0],
+            fwg_single_null.rs[1],
+            fwg_single_null.zs[1],
             color=firstwall,
         )
         axis.fill(
-            fwg.rs[1],
-            fwg.zs[1],
+            fwg_single_null.rs[2],
+            fwg_single_null.zs[2],
+            color=firstwall,
+        )
+
+    if i_single_null == 0:
+        fwg_double_null = first_wall_geometry_double_null(
+            cumulative_lower=cumulative_lower,
+            triang=triang_95,
+            blnktth=blnktth,
+            c_blnkith=c_blnkith,
+            c_fwoth=c_fwoth,
+            fwith=fwith,
+            fwoth=fwoth,
+            tfwvt=tfwvt,
+        )
+        # Plot upper blanket
+        axis.plot(
+            fwg_double_null.rs[0],
+            fwg_double_null.zs[0],
+            color="black",
+            lw=thin,
+        )
+        axis.plot(
+            fwg_double_null.rs[1],
+            fwg_double_null.zs[1],
+            color="black",
+            lw=thin,
+        )
+        axis.fill(
+            fwg_double_null.rs[0],
+            fwg_double_null.zs[0],
+            color=firstwall,
+        )
+        axis.fill(
+            fwg_double_null.rs[1],
+            fwg_double_null.zs[1],
+            color=firstwall,
+        )
+
+        # Plot lower blanket
+        axis.plot(
+            fwg_double_null.rs[2],
+            fwg_double_null.zs[2],
+            color="black",
+            lw=thin,
+        )
+        axis.plot(
+            fwg_double_null.rs[3],
+            fwg_double_null.zs[3],
+            color="black",
+            lw=thin,
+        )
+        axis.fill(
+            fwg_double_null.rs[2],
+            fwg_double_null.zs[2],
+            color=firstwall,
+        )
+        axis.fill(
+            fwg_double_null.rs[3],
+            fwg_double_null.zs[3],
             color=firstwall,
         )
 
