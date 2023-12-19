@@ -66,10 +66,10 @@ def first_wall_geometry_single_null(
     """
     # Upper first wall: outer surface
     kapx = cumulative_upper["fwtth"] / rminx_outer
-    rs_1, zs_1 = plotdh(radx_outer, rminx_outer, triang, kapx)
+    rs_upper_1, zs_upper_1 = plotdh(radx_outer, rminx_outer, triang, kapx)
 
     # Upper first wall: inner surface
-    rs_2, zs_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
+    rs_upper_2, zs_upper_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
 
     # Lower first wall
     divgap = cumulative_lower["divfix"]
@@ -84,8 +84,8 @@ def first_wall_geometry_single_null(
         top_point=top_point,
     )
 
-    rs = np.concatenate([rs_1, rs_lower_2, rs_2[::-1], rs_lower_1[::-1]])
-    zs = np.concatenate([zs_1, zs_lower_2, zs_2[::-1], zs_lower_1[::-1]])
+    rs = np.concatenate([rs_upper_1, rs_lower_2, rs_upper_2[::-1], rs_lower_1[::-1]])
+    zs = np.concatenate([zs_upper_1, zs_lower_2, zs_upper_2[::-1], zs_lower_1[::-1]])
 
     return FirstWallGeometry(rs=rs, zs=zs)
 
@@ -128,12 +128,12 @@ def first_wall_geometry_lower(
         -tfwvt,
         triang,
     )
-    rs_1 = np.concatenate([rs1, rs2[::-1]])
-    zs_1 = np.concatenate([zs1, zs2[::-1]])
-    rs_2 = np.concatenate([rs3, rs4[::-1]])
-    zs_2 = -np.concatenate([zs3, zs4[::-1]])
+    rs_lower_1 = np.concatenate([rs1, rs2[::-1]])
+    zs_lower_1 = np.concatenate([zs1, zs2[::-1]])
+    rs_lower_2 = np.concatenate([rs3, rs4[::-1]])
+    zs_lower_2 = -np.concatenate([zs3, zs4[::-1]])
 
-    return rs_1, zs_1, rs_2, zs_2
+    return rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2
 
 
 def first_wall_geometry_double_null(
