@@ -60,11 +60,11 @@ def blanket_geometry_single_null(
     :return: BlanketGeometry - dataclass returning blanket radial and vertical coordinates
     :rtype: DataClass
     """
-    # upper blanket outer surface
+    # Upper blanket outer surface
     kapx = cumulative_upper["blnktth"] / rminx_outer
     rs_upper_1, zs_upper_1 = plotdh(radx_outer, rminx_outer, triang, kapx)
 
-    # upper blanket inner surface
+    # Upper blanket inner surface
     kapx = cumulative_upper["fwtth"] / rminx_inner
     rs_upper_2, zs_upper_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
 

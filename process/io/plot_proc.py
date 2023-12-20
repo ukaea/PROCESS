@@ -28,12 +28,12 @@ import process.io.mfile as mf
 
 from process.geometry.shield_geometry import (
     shield_geometry_single_null,
-    shield_geometry,
+    shield_geometry_double_null,
 )
 from process.geometry.plasma_geometry import plasma_geometry
 from process.geometry.vacuum_vessel_geometry import (
     vacuum_vessel_geometry_single_null,
-    vacuum_vessel_geometry,
+    vacuum_vessel_geometry_double_null,
 )
 from process.geometry.blanket_geometry import (
     blanket_geometry_single_null,
@@ -1151,37 +1151,40 @@ def plot_vacuum_vessel(axis, mfile_data, scan):
             rminx_outer=rminx_outer,
             radx_inner=radx_inner,
             rminx_inner=rminx_inner,
+            cumulative_lower=cumulative_lower,
+            lower=lower,
         )
+
         axis.plot(
-            vvg_single_null.rs_1,
-            vvg_single_null.zs_1,
+            vvg_single_null.rs,
+            vvg_single_null.zs,
             color="black",
             lw=thin,
         )
-        axis.plot(vvg_single_null.rs_2, vvg_single_null.zs_2, color="black", lw=thin)
+
         axis.fill(
             vvg_single_null.rs,
             vvg_single_null.zs,
             color=vessel,
         )
 
-    vvg = vacuum_vessel_geometry(
-        cumulative_lower=cumulative_lower,
-        lower=lower,
-        triang=triang_95,
-        radx_outer=radx_outer,
-        rminx_outer=rminx_outer,
-        radx_inner=radx_inner,
-        rminx_inner=rminx_inner,
-    )
-
-    axis.plot(vvg.rs_1, vvg.zs_1, color="black", lw=thin)
-    axis.plot(vvg.rs_2, vvg.zs_2, color="black", lw=thin)
-    axis.fill(vvg.rs, vvg.zs, color=vessel)
-
-    # For double null, reflect shape of lower half to top instead
     if i_single_null == 0:
-        axis.fill(vvg.rs, -1 * vvg.zs, color=vessel)
+        vvg_double_null = vacuum_vessel_geometry_double_null(
+            cumulative_lower=cumulative_lower,
+            lower=lower,
+            radx_inner=radx_inner,
+            radx_outer=radx_outer,
+            rminx_inner=rminx_inner,
+            rminx_outer=rminx_outer,
+            triang=triang_95,
+        )
+        axis.plot(vvg_double_null.rs, vvg_double_null.zs, color="black", lw=thin)
+
+        axis.fill(
+            vvg_double_null.rs,
+            vvg_double_null.zs,
+            color=vessel,
+        )
 
 
 def plot_shield(axis, mfile_data, scan):
@@ -1223,27 +1226,22 @@ def plot_shield(axis, mfile_data, scan):
             radx_near=radx_near,
             rminx_near=rminx_near,
             triang=triang_95,
+            cumulative_lower=cumulative_lower,
         )
-        axis.plot(sg_single_null.rs_1, sg_single_null.zs_1, color="black", lw=thin)
-        axis.plot(sg_single_null.rs_2, sg_single_null.zs_2, color="black", lw=thin)
+        axis.plot(sg_single_null.rs, sg_single_null.zs, color="black", lw=thin)
         axis.fill(sg_single_null.rs, sg_single_null.zs, color=shield)
 
-    sg = shield_geometry(
-        cumulative_lower=cumulative_lower,
-        radx_far=radx_far,
-        rminx_far=rminx_far,
-        radx_near=radx_near,
-        rminx_near=rminx_near,
-        triang=triang_95,
-    )
-
-    axis.plot(sg.rs_1, sg.zs_1, color="black", lw=thin)
-    axis.plot(sg.rs_2, sg.zs_2, color="black", lw=thin)
-    axis.fill(sg.rs, sg.zs, color=shield)
-
-    # For double null, reflect shape of lower half to top instead
     if i_single_null == 0:
-        axis.fill(sg.rs, -1 * sg.zs, color=shield)
+        sg_double_null = shield_geometry_double_null(
+            cumulative_lower=cumulative_lower,
+            radx_far=radx_far,
+            radx_near=radx_near,
+            rminx_far=rminx_far,
+            rminx_near=rminx_near,
+            triang=triang_95,
+        )
+        axis.plot(sg_double_null.rs, sg_double_null.zs, color="black", lw=thin)
+        axis.fill(sg_double_null.rs, sg_double_null.zs, color=shield)
 
 
 def plot_blanket(axis, mfile_data, scan) -> None:
