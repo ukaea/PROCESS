@@ -22,7 +22,6 @@ Will produce output files named:
 
 - `my_file_name_OUT.DAT`
 - `my_file_name_MFILE.DAT`
-- `my_file_name_OPT.DAT`
 
 If no input file name is given as the first argument to the code, it assumes an 
 `IN.DAT` file is present in the current directory.
