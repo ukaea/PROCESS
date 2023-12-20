@@ -1153,9 +1153,6 @@ contains
       case ('wave_mode')
          call parse_int_variable('wave_mode', wave_mode, 0, 1, &
                'Cyclotron wave mode switch')        
-       case ('rho_ecrh')
-          call parse_real_variable('rho_ecrh', rho_ecrh, 0.0D0, 1.0D0, &
-               'normalised minor radius at which electron cyclotron current drive is maximum')
        case ('xi_ebw')
 	  call parse_real_variable('xi_ebw', xi_ebw, 0.0D0, 1.0D0, &
                'User input EBW scaling for Plasma Heating')
