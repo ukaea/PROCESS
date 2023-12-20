@@ -316,21 +316,12 @@ class CurrentDrive:
                     0.999, current_drive_variables.forbitloss
                 )  # Should never be needed
 
-                if physics_variables.ipedestal != 3:  # When not using PLASMOD
-                    pnbitotfix = current_drive_variables.pinjfixmw / (
-                        1.0e0
-                        - current_drive_variables.forbitloss
-                        + current_drive_variables.forbitloss
-                        * current_drive_variables.nbshinef
-                    )
-                else:
-                    # Netural beam power calculated by PLASMOD
-                    pnbitotfix = current_drive_variables.pinjmw / (
-                        1.0e0
-                        - current_drive_variables.forbitloss
-                        + current_drive_variables.forbitloss
-                        * current_drive_variables.nbshinef
-                    )
+                pnbitotfix = current_drive_variables.pinjfixmw / (
+                    1.0e0
+                    - current_drive_variables.forbitloss
+                    + current_drive_variables.forbitloss
+                    * current_drive_variables.nbshinef
+                )
 
                 # Shinethrough power (atoms that are not ionised) [MW]:
                 nbshinemwfix = pnbitotfix * current_drive_variables.nbshinef
@@ -627,21 +618,12 @@ class CurrentDrive:
                     0.999, current_drive_variables.forbitloss
                 )  # Should never be needed
 
-                if physics_variables.ipedestal != 3:  # When not using PLASMOD
-                    current_drive_variables.pnbitot = power1 / (
-                        1.0e0
-                        - current_drive_variables.forbitloss
-                        + current_drive_variables.forbitloss
-                        * current_drive_variables.nbshinef
-                    )
-                else:
-                    # Neutral beam power calculated by PLASMOD
-                    current_drive_variables.pnbitot = current_drive_variables.pinjmw / (
-                        1.0e0
-                        - current_drive_variables.forbitloss
-                        + current_drive_variables.forbitloss
-                        * current_drive_variables.nbshinef
-                    )
+                current_drive_variables.pnbitot = power1 / (
+                    1.0e0
+                    - current_drive_variables.forbitloss
+                    + current_drive_variables.forbitloss
+                    * current_drive_variables.nbshinef
+                )
 
                 # Shinethrough power (atoms that are not ionised) [MW]:
                 current_drive_variables.nbshinemw = (

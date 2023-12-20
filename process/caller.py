@@ -64,15 +64,6 @@ class Caller:
 
         self.models.physics.physics()
 
-        # call build subroutines again if PLASMOD used, issue #650
-        if ft.physics_variables.ipedestal == 3:
-            # Radial build
-            self.models.build.radialb(output=False)
-
-            # TODO: is the vertical build needed again?
-            # Vertical build
-            self.models.build.vbuild(output=False)
-
         # startup model (not used)
         # call startup(ft.constants.nout,0)  !  commented-out for speed reasons
 

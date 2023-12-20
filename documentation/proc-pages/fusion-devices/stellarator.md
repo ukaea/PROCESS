@@ -154,7 +154,7 @@ Here $\bar{\iota}$ is the rotational transform, which is equivalent to the recip
 
 ### Gradient informed neoclassical transport checks
 
-As no 1D solver options are available for stellarators yet (the PLASMOD module can not be called yet for stellarator-PROCESS), PROCESS prints several neoclassics parameters as obtained from the 1/$\nu$ regime.
+As no 1D solver options are available for stellarators yet, PROCESS prints several neoclassics parameters as obtained from the 1/$\nu$ regime.
 The two most important parameters are `q_PROCESS` and `total_q_neo_e`.
 `q_PROCESS` is the heat flux that PROCESS obtaines from the 0D confinement time scalings.
 `total_q_neo_e` is the estimated total neoclassical flux as obtained from the 1/$\nu$ electron transport regime, multiplied by a factor of 4 (2 for the ion contribution and another factor of 2 for the radial electrical field influence).
