@@ -264,7 +264,7 @@ def main(args=None):
         "tbrmin",
         "bt",
         "coreradius",
-        "fimpvar",
+        "Obsolete",  # Removed
         "taulimit",
         "epsvmc",
         "ttarget",
@@ -277,7 +277,7 @@ def main(args=None):
         "boundu(135)",
         "blnkoth",
         "fimp(9)",
-        "rho_ecrh",
+        "Obsolete",  # Removed
         "alstrtf",
         "tmargmin_tf",
         "boundu(152)",

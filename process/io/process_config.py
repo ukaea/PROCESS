@@ -769,7 +769,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             if "bound" in varname:
                 del_list += [varname]
                 add_bounds = True
-            elif "fimp(" in varname:  # fimpvar also exists!
+            elif "fimp(" in varname:
                 # has different format in MFILE!!
                 fimpno = int(varname.split("(")[1].split(")")[0])
                 self.output_vars[i] = "fimp({:02}".format(fimpno)

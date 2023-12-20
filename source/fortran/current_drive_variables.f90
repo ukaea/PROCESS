@@ -125,9 +125,6 @@ module current_drive_variables
   real(dp) :: gamma_ecrh
   !! User input ECRH gamma (1.0e20 A/(W m^2))
 
-  real(dp) :: rho_ecrh
-  !! normalised minor radius at which electron cyclotron current drive is maximum
-
   real(dp) :: xi_ebw
   !! User scaling input for EBW plasma heating. Default 0.43
 
@@ -270,7 +267,6 @@ module current_drive_variables
     ftritbm = 1.0D-6
     gamcd = 0.0D0
     gamma_ecrh = 0.35D0
-    rho_ecrh = 0.1D0
     xi_ebw = 0.8D0
     iefrf = 5
     iefrffix = 0
