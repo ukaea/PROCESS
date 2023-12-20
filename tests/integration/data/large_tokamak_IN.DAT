@@ -310,7 +310,7 @@ d_vv_top = 0.3
 * Underside vacuum vessel radial thickness [m]
 d_vv_bot = 0.3
 
-* Inboard vacuum vessel thickness [m]
+* Inboard radiation shield radial thickness [m]
 shldith = 0.3
 
 * Gap between vacuum vessel and blanket [m]
