@@ -800,34 +800,6 @@ def plot_nprofile(prof, demo_ranges):
     # ---
 
 
-def plot_plasmod_nprofile(prof, demo_ranges):
-    """Function to plot plasmod density profile
-    Arguments:
-      prof --> axis object to add plot to
-    """
-
-    prof.set_xlabel("r/a")
-    prof.set_ylabel(r"$n_{e}\cdot 10^{19} \mathrm{m}^{-3}$")
-    prof.set_title("Density profile")
-    prof.plot(pmod_r, pmod_ne, label="plasmod $n_e$")
-    prof.plot(pmod_r, pmod_ni, label="plasmod $n_i$")
-    prof.plot(pmod_r, pmod_nt, label="plasmod $n_T$")
-    prof.plot(pmod_r, pmod_nd, label="plasmod $n_D$")
-    prof.legend()
-
-    # Ranges
-    # ---
-    # DEMO : Fixed ranges for comparison
-    prof.set_xlim([0, 1])
-    if demo_ranges:
-        prof.set_ylim([0, 20])
-
-    # Adapatative ranges
-    else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
-    # ---
-
-
 def plot_tprofile(prof, demo_ranges):
     """Function to plot temperature profile
     Arguments:
@@ -869,32 +841,6 @@ def plot_tprofile(prof, demo_ranges):
     # ---
 
 
-def plot_plasmod_tprofile(prof, demo_ranges):
-    """Function to plot plasmod temperature profile
-    Arguments:
-      prof --> axis object to add plot to
-    """
-
-    prof.set_xlabel("r/a")
-    prof.set_ylabel("$T_{e}$ [keV]")
-    prof.set_title("Temperature profile")
-    prof.plot(pmod_r, pmod_te, label="plasmod $T_e$")
-    prof.plot(pmod_r, pmod_ti, label="plasmod $T_i$")
-    prof.legend()
-
-    # Ranges
-    # ---
-    prof.set_xlim([0, 1])
-    # DEMO : Fixed ranges for comparison
-    if demo_ranges:
-        prof.set_ylim([0, 50])
-
-    # Adapatative ranges
-    else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
-    # ---
-
-
 def plot_qprofile(prof, demo_ranges):
     """Function to plot q profile, formula taken from Nevins bootstrap model.
 
@@ -912,31 +858,6 @@ def plot_qprofile(prof, demo_ranges):
 
     prof.plot(rho, q_r_nevin, label="Nevins")
     prof.plot(rho, q_r_sauter, label="Sauter")
-    prof.legend()
-
-    # Ranges
-    # ---
-    prof.set_xlim([0, 1])
-    # DEMO : Fixed ranges for comparison
-    if demo_ranges:
-        prof.set_ylim([0, 10])
-
-    # Adapatative ranges
-    else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
-    # ---
-
-
-def plot_plasmod_qprofile(prof, demo_ranges):
-    """Function to plot plasmod q profile
-    Arguments:
-      prof --> axis object to add plot to
-    """
-
-    prof.set_xlabel("r/a")
-    prof.set_ylabel("-")
-    prof.set_title("q profile")
-    prof.plot(pmod_r, pmod_q, label="plasmod $q(r/a)$")
     prof.legend()
 
     # Ranges
@@ -2283,7 +2204,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if (iefrf == 5) or (iefrf == 8):
         nbi = True
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if (iefrf == 3) or (iefrf == 7) or (iefrf == 10) or (iefrf == 11):
+    if (iefrf == 3) or (iefrf == 7) or (iefrf == 10) or (iefrf == 11) or (iefrf == 13):
         ecrh = True
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
     if iefrf == 12:
@@ -2301,7 +2222,13 @@ def plot_current_drive_info(axis, mfile_data, scan):
 
         if (iefrffix == 5) or (iefrffix == 8):
             secondary_heating = "NBI"
-        if (iefrffix == 3) or (iefrffix == 7) or (iefrffix == 10) or (iefrffix == 11):
+        if (
+            (iefrffix == 3)
+            or (iefrffix == 7)
+            or (iefrffix == 10)
+            or (iefrffix == 11)
+            or (iefrffix == 13)
+        ):
             secondary_heating = "ECH"
         if iefrffix == 12:
             secondary_heating = "EBW"
@@ -2443,7 +2370,6 @@ def main_plot(
     fig2,
     m_file_data,
     scan,
-    plasmod=False,
     imp="../data/lz_non_corona_14_elements/",
     demo_ranges=False,
 ):
@@ -2454,7 +2380,6 @@ def main_plot(
       fig2 --> figure object to add plot to.
       m_file_data --> MFILE.DAT data to read
       scan --> scan to read from MFILE.DAT
-      plasmod --> plasmod data or not
       imp --> path to impurity data
     """
 
@@ -2488,26 +2413,16 @@ def main_plot(
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
-    if plasmod:
-        plot_plasmod_nprofile(plot_4, demo_ranges)
-    else:
-        plot_nprofile(plot_4, demo_ranges)
+    plot_nprofile(plot_4, demo_ranges)
 
     # Plot temperature profiles
     plot_5 = fig2.add_subplot(235)  # , aspect= 1/35)
-    if plasmod:
-        plot_plasmod_tprofile(plot_5, demo_ranges)
-    else:
-        plot_tprofile(plot_5, demo_ranges)
+    plot_tprofile(plot_5, demo_ranges)
 
-    if plasmod:
-        plot_6 = fig2.add_subplot(236)  # , aspect=1/10)
-        plot_plasmod_qprofile(plot_6, demo_ranges)
-    else:
-        # plot_qprofile(plot_6)
-        plot_6 = fig2.add_subplot(236)  # , aspect=2)
-        if os.path.isdir(imp):
-            plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
+    # plot_qprofile(plot_6)
+    plot_6 = fig2.add_subplot(236)  # , aspect=2)
+    if os.path.isdir(imp):
+        plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
 
     # plot_7 =
     # plot_radprofile(plot_7)
@@ -2807,8 +2722,7 @@ def parse_args(args):
     # Setup command line arguments
     parser = argparse.ArgumentParser(
         description="Produces a two page summary of the PROCESS MFILE output, using the MFILE.  "
-        "For info contact michael.kovari@ukaea.uk or james.morris2@ukaea.uk.  "
-        "If using PLASMOD you must specify the profile file using -m."
+        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts "
     )
 
     parser.add_argument(
@@ -2818,14 +2732,6 @@ def parse_args(args):
         default="",
         help="specify input/output file path",
     )
-    parser.add_argument(
-        "-m",
-        metavar="PLASMODFILE",
-        type=str,
-        default="",
-        help="specify PLASMOD profile file",
-    )
-
     parser.add_argument("-s", "--show", help="show plot", action="store_true")
 
     parser.add_argument("-n", type=int, help="Which scan to plot?")
@@ -3005,32 +2911,6 @@ def main(args=None):
     # Alpha press(keV*10^10 m^-3) -- 14
     # Ion dens(10^19 m^-3) -- 15
     # Poloidal flux (Wb) -- 16
-    if args.m != "":
-        global pmod_r
-        global pmod_ne
-        global pmod_te
-        global pmod_ti
-        global pmod_nd
-        global pmod_nt
-        global pmod_q
-        global pmod_ni
-
-        plasmod_profiles = np.loadtxt(args.m).transpose()
-        pmod_r = plasmod_profiles[0]
-        pmod_ne = plasmod_profiles[1]
-        pmod_te = plasmod_profiles[2]
-        pmod_ti = plasmod_profiles[3]
-        pmod_nd = plasmod_profiles[4]
-        pmod_nt = plasmod_profiles[5]
-        pmod_q = plasmod_profiles[10]
-        pmod_ni = plasmod_profiles[15]
-        pmod_switch = True
-        print("plasmod!")
-    else:
-        if ipedestal == 2 or ipedestal == 3:
-            print("\n ERROR: Specify the PLASMOD profile file using -m \n")
-            exit()
-        pmod_switch = False
     # rad profile
     global ssync
     global bt
@@ -3104,9 +2984,7 @@ def main(args=None):
     page2 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
-    main_plot(
-        page1, page2, m_file, scan=scan, plasmod=pmod_switch, demo_ranges=demo_ranges
-    )
+    main_plot(page1, page2, m_file, scan=scan, demo_ranges=demo_ranges)
 
     # with bpdf.PdfPages(args.o) as pdf:
     with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:

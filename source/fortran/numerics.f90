@@ -351,8 +351,8 @@ module numerics
   !! <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
   !! <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
   !! <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)
-  !! <LI> (150) plasmod_fcdp : (P_CD - Pheat)/(Pmax-Pheat)
-  !! <LI> (151) plasmod_fradc : Pline_Xe / (Palpha + Paux - PlineAr - Psync - Pbrad)
+  !! <LI> (150) REMOVED
+  !! <LI> (151) REMOVED
   !! <LI> (152) fbmaxcs : Ratio of separatrix density to Greenwald density
   !! <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)
   !! <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
@@ -660,7 +660,6 @@ contains
 	! 	use global_variables, only: icase, verbose, vlabel
   !   use constants, only: mfile, nout
   !   use maths_library, only: HYBRD
-  !   use plasmod_variables, only: geom, power_losses, i_flag
   !   implicit none
 
   !   ! Interface for the external fcnhyb subroutine argument

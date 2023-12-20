@@ -260,7 +260,7 @@ contains
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
       ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
-      etalh, frbeam, harnum, xi_ebw
+      etalh, frbeam, harnum, xi_ebw, wave_mode
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
       c5div, ksic, fififi, flux_exp, divplt, delld, c2div, beta_div, betao, divdum, tdiv, c6div, &
       omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
@@ -1149,15 +1149,21 @@ contains
                'User input ECRH gamma_CD')
        case ('harnum')
           call parse_real_variable('harnum', harnum, 1.0D0, 10.0D0, &
-               'cyclotron harmonic frequency number')
+               'Cyclotron harmonic frequency number')
+      case ('wave_mode')
+         call parse_int_variable('wave_mode', wave_mode, 0, 1, &
+               'Cyclotron wave mode switch')        
+       case ('rho_ecrh')
+          call parse_real_variable('rho_ecrh', rho_ecrh, 0.0D0, 1.0D0, &
+               'normalised minor radius at which electron cyclotron current drive is maximum')
        case ('xi_ebw')
 	  call parse_real_variable('xi_ebw', xi_ebw, 0.0D0, 1.0D0, &
                'User input EBW scaling for Plasma Heating')
        case ('iefrf')
-          call parse_int_variable('iefrf', iefrf, 1, 12, &
+          call parse_int_variable('iefrf', iefrf, 1, 13, &
                'Switch for curr drive efficiency model')
        case ('iefrffix')
-          call parse_int_variable('iefrffix', iefrffix, 0, 12, &
+          call parse_int_variable('iefrffix', iefrffix, 0, 13, &
                'Switch for 2nd curr drive efficiency model')
        case ('irfcd')
           call parse_int_variable('irfcd', irfcd, 0, 1, &
