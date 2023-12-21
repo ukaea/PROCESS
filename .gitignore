@@ -39,7 +39,6 @@ gui_dicts.py_prev
 rootdir.py
 VFILE.DAT
 MFILE.DAT
-PLOT.DAT
 OUT.DAT
 SIG_TF.DAT
 SIG_TF.json
