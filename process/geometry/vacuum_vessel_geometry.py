@@ -1,20 +1,20 @@
 """
 Calculate radial and vertical coordinates for the geometry of the vacuum vessel
 """
-from typing import List
+from typing import Tuple
 from dataclasses import dataclass
 import numpy as np
-from process.geometry.utils import plotdh
+from process.geometry.utils import dh_vertices
 
 
 @dataclass
 class VacuumVesselGeometry:
     """Holds radial and vertical coordinates for the geometry of a vacuum vessel"""
 
-    rs: List[List[float]]
-    """outer and inner radial coordinates of vacuum vessel"""
-    zs: List[List[float]]
-    """outer and inner vertical coordinates of vacuum vessel"""
+    rs: np.ndarray
+    """outboard and inboard radial coordinates of vacuum vessel"""
+    zs: np.ndarray
+    """outboard and inboard vertical coordinates of vacuum vessel"""
 
 
 def vacuum_vessel_geometry_single_null(
@@ -48,20 +48,29 @@ def vacuum_vessel_geometry_single_null(
     :type cumulative_lower: dict
     :param lower: vertical thicknesses of components below the midplane
     :type lower: dict
-    :return: VacuumVesselGeometry - dataclass returning vacuum vessel radial and vertical coordinates
-    :rtype: DataClass
+    :return: dataclass returning vacuum vessel radial and vertical coordinates
+    :rtype: VacuumVesselGeometry
     """
     # Upper vacuum vessel
     kapx = cumulative_upper["d_vv_top"] / rminx_outer
-    rs_upper_1, zs_upper_1 = plotdh(radx_outer, rminx_outer, triang, kapx)
+    rs_upper_outboard, zs_upper_outboard = dh_vertices(
+        radx_outer, rminx_outer, triang, kapx
+    )
 
     kapx = (
         float(cumulative_upper["d_vv_top"]) - float(upper["d_vv_top"])
     ) / rminx_inner
-    rs_upper_2, zs_upper_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
+    rs_upper_inboard, zs_upper_inboard = dh_vertices(
+        radx_inner, rminx_inner, triang, kapx
+    )
 
     # Lower vacuum vessel
-    rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = vacuum_vessel_geometry_lower(
+    (
+        rs_lower_outboard,
+        zs_lower_outboard,
+        rs_lower_inboard,
+        zs_lower_inboard,
+    ) = vacuum_vessel_geometry_lower(
         cumulative_lower=cumulative_lower,
         lower=lower,
         radx_inner=radx_inner,
@@ -71,8 +80,22 @@ def vacuum_vessel_geometry_single_null(
         triang=triang,
     )
 
-    rs = np.concatenate([rs_lower_2, rs_lower_1[::-1], rs_upper_1, rs_upper_2[::-1]])
-    zs = np.concatenate([zs_lower_2, zs_lower_1[::-1], zs_upper_1, zs_upper_2[::-1]])
+    rs = np.concatenate(
+        [
+            rs_lower_inboard,
+            rs_lower_outboard[::-1],
+            rs_upper_outboard,
+            rs_upper_inboard[::-1],
+        ]
+    )
+    zs = np.concatenate(
+        [
+            zs_lower_inboard,
+            zs_lower_outboard[::-1],
+            zs_upper_outboard,
+            zs_upper_inboard[::-1],
+        ]
+    )
     return VacuumVesselGeometry(
         rs=rs,
         zs=zs,
@@ -87,7 +110,7 @@ def vacuum_vessel_geometry_lower(
     rminx_outer: float,
     radx_inner: float,
     rminx_inner: float,
-) -> tuple:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of vacuum vessel below the midplane
 
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
@@ -104,18 +127,22 @@ def vacuum_vessel_geometry_lower(
     :type radx_inner: float
     :param rminx_inner: inboard radius of inner surface of vacuum vessel
     :type rminx_inner: float
-    :return: radial and vertical coordinates for vacuum vessel geometry below the midplane
-    :rtype: tuple
+    :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the vacuum vessel geometry below the midplane
+    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
     """
     kapx = cumulative_lower["d_vv_bot"] / rminx_outer
-    rs_lower_1, zs_lower_1 = plotdh(radx_outer, rminx_outer, triang, kapx)
+    rs_lower_outboard, zs_lower_outboard = dh_vertices(
+        radx_outer, rminx_outer, triang, kapx
+    )
 
     kapx = (
         float(cumulative_lower["d_vv_bot"]) + float(lower["d_vv_bot"])
     ) / rminx_inner
-    rs_lower_2, zs_lower_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
+    rs_lower_inboard, zs_lower_inboard = dh_vertices(
+        radx_inner, rminx_inner, triang, kapx
+    )
 
-    return rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2
+    return rs_lower_outboard, zs_lower_outboard, rs_lower_inboard, zs_lower_inboard
 
 
 def vacuum_vessel_geometry_double_null(
@@ -144,11 +171,16 @@ def vacuum_vessel_geometry_double_null(
     :type radx_inner: float
     :param rminx_inner: inboard radius of inner surface of vacuum vessel
     :type rminx_inner: float
-    :return: VacuumVesselGeometry - dataclass returning vacuum vessel radial and vertical coordinates
-    :rtype: DataClass
+    :return: dataclass returning vacuum vessel radial and vertical coordinates
+    :rtype: VacuumVesselGeometry
     """
     # Lower vacuum vessel
-    rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = vacuum_vessel_geometry_lower(
+    (
+        rs_lower_outboard,
+        zs_lower_outboard,
+        rs_lower_inboard,
+        zs_lower_inboard,
+    ) = vacuum_vessel_geometry_lower(
         cumulative_lower=cumulative_lower,
         lower=lower,
         radx_inner=radx_inner,
@@ -157,8 +189,8 @@ def vacuum_vessel_geometry_double_null(
         rminx_outer=rminx_outer,
         triang=triang,
     )
-    rs_lower = np.concatenate([rs_lower_1, rs_lower_2[::-1]])
-    zs_lower = np.concatenate([zs_lower_1, zs_lower_2[::-1]])
+    rs_lower = np.concatenate([rs_lower_outboard, rs_lower_inboard[::-1]])
+    zs_lower = np.concatenate([zs_lower_outboard, zs_lower_inboard[::-1]])
 
     # Upper vacuum vessel
     rs_upper = rs_lower

@@ -3,7 +3,7 @@ Calculate radial and vertical coordinates for the geometry of the tf coils
 """
 from typing import List, Tuple
 from process.geometry.geometry_parameterisations import RectangleGeometry
-from process.geometry.utils import ellips_fill
+from process.geometry.utils import ellips_fill_vertices
 
 
 def tfcoil_geometry_rectangular_shape(
@@ -119,7 +119,7 @@ def tfcoil_geometry_d_shape(
     b1 = y2 - y1
     a2 = a1 + tfcth
     b2 = b1 + tfcth
-    verts1 = ellips_fill(
+    verts1 = ellips_fill_vertices(
         a1=a1,
         a2=a2,
         b1=b1,
@@ -136,7 +136,7 @@ def tfcoil_geometry_d_shape(
     b1 = y2
     a2 = a1 + tfcth
     b2 = b1 + tfcth
-    verts2 = ellips_fill(
+    verts2 = ellips_fill_vertices(
         a1=a1,
         a2=a2,
         b1=b1,
@@ -153,7 +153,7 @@ def tfcoil_geometry_d_shape(
     b1 = y5 - y4
     a2 = a1 + tfcth
     b2 = b1 + tfcth
-    verts3 = ellips_fill(
+    verts3 = ellips_fill_vertices(
         a1=a1,
         a2=a2,
         b1=b1,
@@ -170,7 +170,7 @@ def tfcoil_geometry_d_shape(
     b1 = -y4
     a2 = a1 + tfcth
     b2 = b1 + tfcth
-    verts4 = ellips_fill(
+    verts4 = ellips_fill_vertices(
         a1=a1,
         a2=a2,
         b1=b1,

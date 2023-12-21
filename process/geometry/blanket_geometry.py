@@ -1,20 +1,20 @@
 """
 Calculate radial and vertical coordinates for the geometry of the blanket
 """
+from typing import Tuple
 from dataclasses import dataclass
-from typing import List
 import numpy as np
-from process.geometry.utils import plotdh, plotdhgap
+from process.geometry.utils import dh_vertices, dhgap_vertices
 
 
 @dataclass
 class BlanketGeometry:
     """Holds radial and vertical coordinates for the geometry of a blanket"""
 
-    rs: List[List[float]]
-    """radial blanket coordinates"""
-    zs: List[List[float]]
-    """vertical blanket coordinates"""
+    rs: np.ndarray
+    """outboard and inboard radial coordinates of blanket"""
+    zs: np.ndarray
+    """outboard and inboard vertical coordinates of blanket"""
 
 
 def blanket_geometry_single_null(
@@ -57,21 +57,30 @@ def blanket_geometry_single_null(
     :type blnkith: float
     :param blnkoth: outboard blanket radial thickness
     :type blnkoth: float
-    :return: BlanketGeometry - dataclass returning blanket radial and vertical coordinates
-    :rtype: DataClass
+    :return: dataclass returning blanket radial and vertical coordinates
+    :rtype: BlanketGeometry
     """
     # Upper blanket outer surface
     kapx = cumulative_upper["blnktth"] / rminx_outer
-    rs_upper_1, zs_upper_1 = plotdh(radx_outer, rminx_outer, triang, kapx)
+    rs_upper_outboard, zs_upper_outboard = dh_vertices(
+        radx_outer, rminx_outer, triang, kapx
+    )
 
     # Upper blanket inner surface
     kapx = cumulative_upper["fwtth"] / rminx_inner
-    rs_upper_2, zs_upper_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
+    rs_upper_inboard, zs_upper_inboard = dh_vertices(
+        radx_inner, rminx_inner, triang, kapx
+    )
 
     # Lower blanket
     divgap = cumulative_lower["divfix"]
 
-    rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = blanket_geometry_lower(
+    (
+        rs_lower_outboard,
+        zs_lower_outboard,
+        rs_lower_inboard,
+        zs_lower_inboard,
+    ) = blanket_geometry_lower(
         triang=triang,
         blnktth=blnktth,
         c_shldith=c_shldith,
@@ -81,8 +90,22 @@ def blanket_geometry_single_null(
         divgap=divgap,
     )
 
-    rs = np.concatenate([rs_upper_1, rs_lower_2, rs_upper_2[::-1], rs_lower_1[::-1]])
-    zs = np.concatenate([zs_upper_1, zs_lower_2, zs_upper_2[::-1], zs_lower_1[::-1]])
+    rs = np.concatenate(
+        [
+            rs_upper_outboard,
+            rs_lower_inboard,
+            rs_upper_inboard[::-1],
+            rs_lower_outboard[::-1],
+        ]
+    )
+    zs = np.concatenate(
+        [
+            zs_upper_outboard,
+            zs_lower_inboard,
+            zs_upper_inboard[::-1],
+            zs_lower_outboard[::-1],
+        ]
+    )
 
     return BlanketGeometry(rs=rs, zs=zs)
 
@@ -95,7 +118,7 @@ def blanket_geometry_lower(
     blnkith: float,
     blnkoth: float,
     divgap: float,
-) -> tuple:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of blanket below the midplane
 
     :param triang: plasma triangularity
@@ -112,19 +135,21 @@ def blanket_geometry_lower(
     :type blnkoth: float
     :param divgap: divertor structure vertical thickness
     :type divgap: float
-    :return: radial and vertical coordinates for blanket geometry below the midplane
-    :rtype: tuple
+    :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the blanket geometry below the midplane
+    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
     """
     # Lower blanket
-    rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = plotdhgap(
+    rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
         c_shldith, c_blnkoth, blnkith, blnkoth, divgap, -blnktth, triang
     )
-    rs_lower_1 = np.concatenate([rs1, rs2[::-1]])
-    zs_lower_1 = np.concatenate([zs1, zs2[::-1]])
-    rs_lower_2 = np.concatenate([rs3, rs4[::-1]])
-    zs_lower_2 = -np.concatenate([zs3, zs4[::-1]])
+    # outboard radial and vertical coordinates
+    rs_lower_outboard = np.concatenate([rs1, rs2[::-1]])
+    zs_lower_outboard = np.concatenate([zs1, zs2[::-1]])
+    # inboard radial and vertical coordinates
+    rs_lower_inboard = np.concatenate([rs3, rs4[::-1]])
+    zs_lower_inboard = -np.concatenate([zs3, zs4[::-1]])
 
-    return rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2
+    return rs_lower_outboard, zs_lower_outboard, rs_lower_inboard, zs_lower_inboard
 
 
 def blanket_geometry_double_null(
@@ -153,13 +178,18 @@ def blanket_geometry_double_null(
     :type blnkith: float
     :param blnkoth: outboard blanket radial thickness
     :type blnkoth: float
-    :return: BlanketGeometry - dataclass returning blanket radial and vertical coordinates
-    :rtype: DataClass
+    :return: dataclass returning blanket radial and vertical coordinates
+    :rtype: BlanketGeometry
     """
     # Lower blanket
     divgap = cumulative_lower["divfix"]
 
-    rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = blanket_geometry_lower(
+    (
+        rs_lower_outboard,
+        zs_lower_outboard,
+        rs_lower_inboard,
+        zs_lower_inboard,
+    ) = blanket_geometry_lower(
         triang=triang,
         blnktth=blnktth,
         c_shldith=c_shldith,
@@ -172,7 +202,12 @@ def blanket_geometry_double_null(
     # Upper blanket
     divgap = -1 * divgap
 
-    rs_upper_1, zs_upper_1, rs_upper_2, zs_upper_2 = blanket_geometry_lower(
+    (
+        rs_upper_outboard,
+        zs_upper_outboard,
+        rs_upper_inboard,
+        zs_upper_inboard,
+    ) = blanket_geometry_lower(
         triang=triang,
         blnktth=blnktth,
         c_shldith=c_shldith,
@@ -181,10 +216,10 @@ def blanket_geometry_double_null(
         blnkoth=blnkoth,
         divgap=divgap,
     )
-    rs_1 = np.concatenate([rs_upper_1, rs_lower_1[::-1]])
-    rs_2 = np.concatenate([rs_upper_2, rs_lower_2[::-1]])
-    zs_1 = np.concatenate([zs_upper_1, zs_lower_1[::-1]])
-    zs_2 = np.concatenate([zs_upper_2, zs_lower_2[::-1]])
+    rs_1 = np.concatenate([rs_upper_outboard, rs_lower_outboard[::-1]])
+    rs_2 = np.concatenate([rs_upper_inboard, rs_lower_inboard[::-1]])
+    zs_1 = np.concatenate([zs_upper_outboard, zs_lower_outboard[::-1]])
+    zs_2 = np.concatenate([zs_upper_inboard, zs_lower_inboard[::-1]])
     rs = [rs_1, rs_2]
     zs = [zs_1, zs_2]
 

@@ -1,20 +1,20 @@
 """
 Calculate radial and vertical coordinates for the geometry of the shield
 """
+from typing import Tuple
 from dataclasses import dataclass
-from typing import List
 import numpy as np
-from process.geometry.utils import plotdh
+from process.geometry.utils import dh_vertices
 
 
 @dataclass
 class ShieldGeometry:
     """Holds radial and vertical coordinates for the geometry of a shield"""
 
-    rs: List[List[float]]
-    """outer and inner radial coordinates of shield"""
-    zs: List[List[float]]
-    """outer and inner vertical coordinates of shield"""
+    rs: np.ndarray
+    """outboard and inboard radial coordinates of shield"""
+    zs: np.ndarray
+    """outboard and inboard vertical coordinates of shield"""
 
 
 def shield_geometry_single_null(
@@ -42,20 +42,29 @@ def shield_geometry_single_null(
     :type triang: float
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
     :type cumulative_lower: dict
-    :return: ShieldGeometry - dataclass returning shield radial and vertical coordinates
-    :rtype: DataClass
+    :return: dataclass returning shield radial and vertical coordinates
+    :rtype: ShieldGeometry
     """
     # Upper shield
     # Side furthest from plasma
     kapx = cumulative_upper["shldtth"] / rminx_far
-    rs_upper_1, zs_upper_1 = plotdh(radx_far, rminx_far, triang, kapx)
+    rs_upper_outboard, zs_upper_outboard = dh_vertices(
+        radx_far, rminx_far, triang, kapx
+    )
 
     # Side nearest to plasma
     kapx = (cumulative_upper["vvblgap"]) / rminx_near
-    rs_upper_2, zs_upper_2 = plotdh(radx_near, rminx_near, triang, kapx)
+    rs_upper_inboard, zs_upper_inboard = dh_vertices(
+        radx_near, rminx_near, triang, kapx
+    )
 
     # Lower shield
-    rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = shield_geometry_lower(
+    (
+        rs_lower_outboard,
+        zs_lower_outboard,
+        rs_lower_inboard,
+        zs_lower_inboard,
+    ) = shield_geometry_lower(
         cumulative_lower=cumulative_lower,
         radx_far=radx_far,
         radx_near=radx_near,
@@ -64,8 +73,22 @@ def shield_geometry_single_null(
         triang=triang,
     )
 
-    rs = np.concatenate([rs_lower_2, rs_lower_1[::-1], rs_upper_1, rs_upper_2[::-1]])
-    zs = np.concatenate([zs_lower_2, zs_lower_1[::-1], zs_upper_1, zs_upper_2[::-1]])
+    rs = np.concatenate(
+        [
+            rs_lower_inboard,
+            rs_lower_outboard[::-1],
+            rs_upper_outboard,
+            rs_upper_inboard[::-1],
+        ]
+    )
+    zs = np.concatenate(
+        [
+            zs_lower_inboard,
+            zs_lower_outboard[::-1],
+            zs_upper_outboard,
+            zs_upper_inboard[::-1],
+        ]
+    )
     return ShieldGeometry(
         rs=rs,
         zs=zs,
@@ -79,7 +102,7 @@ def shield_geometry_lower(
     radx_near: float,
     rminx_near: float,
     triang: float,
-) -> tuple:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of shield below the midplane
 
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
@@ -94,18 +117,22 @@ def shield_geometry_lower(
     :type rminx_near: float
     :param triang: plasma triangularity
     :type triang: float
-    :return: radial and vertical coordinates for shield geometry below the midplane
-    :rtype: tuple
+    :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the shield geometry below the midplane
+    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
     """
     # Side furthest from plasma
     kapx = cumulative_lower["shldlth"] / rminx_far
-    rs_lower_1, zs_lower_1 = plotdh(radx_far, rminx_far, triang, kapx)
+    rs_lower_outboard, zs_lower_outboard = dh_vertices(
+        radx_far, rminx_far, triang, kapx
+    )
 
     # Side nearest to plasma
     kapx = (cumulative_lower["divfix"]) / rminx_near
-    rs_lower_2, zs_lower_2 = plotdh(radx_near, rminx_near, triang, kapx)
+    rs_lower_inboard, zs_lower_inboard = dh_vertices(
+        radx_near, rminx_near, triang, kapx
+    )
 
-    return rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2
+    return rs_lower_outboard, zs_lower_outboard, rs_lower_inboard, zs_lower_inboard
 
 
 def shield_geometry_double_null(
@@ -131,11 +158,16 @@ def shield_geometry_double_null(
     :type rminx_near: float
     :param triang: plasma triangularity
     :type triang: float
-    :return: ShieldGeometry - dataclass returning shield radial and vertical coordinates
-    :rtype: DataClass
+    :return: dataclass returning shield radial and vertical coordinates
+    :rtype: ShieldGeometry
     """
     # Lower shield
-    rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = shield_geometry_lower(
+    (
+        rs_lower_outboard,
+        zs_lower_outboard,
+        rs_lower_inboard,
+        zs_lower_inboard,
+    ) = shield_geometry_lower(
         cumulative_lower=cumulative_lower,
         radx_far=radx_far,
         radx_near=radx_near,
@@ -144,8 +176,8 @@ def shield_geometry_double_null(
         triang=triang,
     )
 
-    rs_lower = np.concatenate([rs_lower_1, rs_lower_2[::-1]])
-    zs_lower = np.concatenate([zs_lower_1, zs_lower_2[::-1]])
+    rs_lower = np.concatenate([rs_lower_outboard, rs_lower_inboard[::-1]])
+    zs_lower = np.concatenate([zs_lower_outboard, zs_lower_inboard[::-1]])
 
     # Upper shield
     rs_upper = rs_lower

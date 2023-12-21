@@ -1,7 +1,6 @@
 """
 Calculate plasma elongation and radial and vertical coordinates for the geometry of the plasma
 """
-from typing import List
 from dataclasses import dataclass
 import math
 import numpy as np
@@ -11,9 +10,9 @@ import numpy as np
 class PlasmaGeometry:
     """Holds radial and vertical coordinates for the geometry of a plasma"""
 
-    rs: List[List[float]]
+    rs: np.ndarray
     """radial plasma coordinates"""
-    zs: List[List[float]]
+    zs: np.ndarray
     """vertical plasma coordinates"""
     kappa: float
     """plasma separatrix elongation"""
@@ -34,8 +33,8 @@ def plasma_geometry(
     :type kappa_95: float
     :param i_single_null: switch for single null / double null plasma
     :type i_single_null: bool
-    :return: PlasmaGeometry - dataclass returning plasma elongation and radial and vertical coordinates of the plasma
-    :rtype: DataClass
+    :return: dataclass returning plasma elongation and radial and vertical coordinates of the plasma
+    :rtype: PlasmaGeometry
     """
     delta = 1.5 * triang_95
     kappa = (1.1 * kappa_95) + 0.04

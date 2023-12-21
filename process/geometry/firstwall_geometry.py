@@ -1,21 +1,20 @@
 """
 Calculate radial and vertical coordinates for the geometry of the first wall
 """
+from typing import Tuple
 from dataclasses import dataclass
-from typing import List
 import numpy as np
-from process.geometry.utils import plotdh, plotdhgap
+from process.geometry.utils import dh_vertices, dhgap_vertices
 
 
-#
 @dataclass
 class FirstWallGeometry:
     """Holds radial and vertical coordinates for the geometry of a first wall"""
 
-    rs: List[List[float]]
-    """radial first wall coordinates"""
-    zs: List[List[float]]
-    """vertical first wall coordinates"""
+    rs: np.ndarray
+    """outboard and inboard radial coordinates of first wall"""
+    zs: np.ndarray
+    """outboard and inboard vertical coordinates of first wall"""
 
 
 def first_wall_geometry_single_null(
@@ -61,20 +60,29 @@ def first_wall_geometry_single_null(
     :type fwoth: float
     :param tfwvt: top first wall vertical thickness
     :type tfwvt: float
-    :return: FirstWallGeometry - dataclass returning first wall radial and vertical coordinates
-    :rtype: DataClass
+    :return: dataclass returning first wall radial and vertical coordinates
+    :rtype: FirstWallGeometry
     """
     # Upper first wall: outer surface
     kapx = cumulative_upper["fwtth"] / rminx_outer
-    rs_upper_1, zs_upper_1 = plotdh(radx_outer, rminx_outer, triang, kapx)
+    rs_upper_outboard, zs_upper_outboard = dh_vertices(
+        radx_outer, rminx_outer, triang, kapx
+    )
 
     # Upper first wall: inner surface
-    rs_upper_2, zs_upper_2 = plotdh(radx_inner, rminx_inner, triang, kapx)
+    rs_upper_inboard, zs_upper_inboard = dh_vertices(
+        radx_inner, rminx_inner, triang, kapx
+    )
 
     # Lower first wall
     divgap = cumulative_lower["divfix"]
     top_point = divgap + blnktth
-    rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = first_wall_geometry_lower(
+    (
+        rs_lower_outboard,
+        zs_lower_outboard,
+        rs_lower_inboard,
+        zs_lower_inboard,
+    ) = first_wall_geometry_lower(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
@@ -84,8 +92,22 @@ def first_wall_geometry_single_null(
         top_point=top_point,
     )
 
-    rs = np.concatenate([rs_upper_1, rs_lower_2, rs_upper_2[::-1], rs_lower_1[::-1]])
-    zs = np.concatenate([zs_upper_1, zs_lower_2, zs_upper_2[::-1], zs_lower_1[::-1]])
+    rs = np.concatenate(
+        [
+            rs_upper_outboard,
+            rs_lower_inboard,
+            rs_upper_inboard[::-1],
+            rs_lower_outboard[::-1],
+        ]
+    )
+    zs = np.concatenate(
+        [
+            zs_upper_outboard,
+            zs_lower_inboard,
+            zs_upper_inboard[::-1],
+            zs_lower_outboard[::-1],
+        ]
+    )
 
     return FirstWallGeometry(rs=rs, zs=zs)
 
@@ -98,7 +120,7 @@ def first_wall_geometry_lower(
     fwoth: float,
     tfwvt: float,
     top_point: float,
-) -> tuple:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of first wall below the midplane
 
     :param triang: plasma triangularity
@@ -115,11 +137,11 @@ def first_wall_geometry_lower(
     :type tfwvt: float
     :param top_point: top point for plotdhgap, equal to
     :type top_point: float
-    :return: radial and vertical coordinates for first wall geometry below the midplane
-    :rtype: tuple
+    :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the first wall geometry below the midplane
+    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
     """
     # Lower first wall
-    rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = plotdhgap(
+    rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
         c_blnkith,
         c_fwoth,
         fwith,
@@ -128,12 +150,14 @@ def first_wall_geometry_lower(
         -tfwvt,
         triang,
     )
-    rs_lower_1 = np.concatenate([rs1, rs2[::-1]])
-    zs_lower_1 = np.concatenate([zs1, zs2[::-1]])
-    rs_lower_2 = np.concatenate([rs3, rs4[::-1]])
-    zs_lower_2 = -np.concatenate([zs3, zs4[::-1]])
+    # outboard radial and vertical coordinates
+    rs_lower_outboard = np.concatenate([rs1, rs2[::-1]])
+    zs_lower_outboard = np.concatenate([zs1, zs2[::-1]])
+    # inboard radial and vertical coordinates
+    rs_lower_inboard = np.concatenate([rs3, rs4[::-1]])
+    zs_lower_inboard = -np.concatenate([zs3, zs4[::-1]])
 
-    return rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2
+    return rs_lower_outboard, zs_lower_outboard, rs_lower_inboard, zs_lower_inboard
 
 
 def first_wall_geometry_double_null(
@@ -165,13 +189,18 @@ def first_wall_geometry_double_null(
     :type fwoth: float
     :param tfwvt: top first wall vertical thickness
     :type tfwvt: float
-    :return: FirstWallGeometry - dataclass returning first wall radial and vertical coordinates
-    :rtype: DataClass
+    :return: dataclass returning first wall radial and vertical coordinates
+    :rtype: FirstWallGeometry
     """
     # Lower first wall
     divgap = cumulative_lower["divfix"]
     top_point = divgap + blnktth
-    rs_lower_1, zs_lower_1, rs_lower_2, zs_lower_2 = first_wall_geometry_lower(
+    (
+        rs_lower_outboard,
+        zs_lower_outboard,
+        rs_lower_inboard,
+        zs_lower_inboard,
+    ) = first_wall_geometry_lower(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
@@ -183,7 +212,12 @@ def first_wall_geometry_double_null(
 
     # Upper first wall
     top_point = -1 * top_point
-    rs_upper_1, zs_upper_1, rs_upper_2, zs_upper_2 = first_wall_geometry_lower(
+    (
+        rs_upper_outboard,
+        zs_upper_outboard,
+        rs_upper_inboard,
+        zs_upper_inboard,
+    ) = first_wall_geometry_lower(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
@@ -193,10 +227,10 @@ def first_wall_geometry_double_null(
         top_point=top_point,
     )
 
-    rs_1 = np.concatenate([rs_upper_1, rs_lower_1[::-1]])
-    rs_2 = np.concatenate([rs_upper_2, rs_lower_2[::-1]])
-    zs_1 = np.concatenate([zs_upper_1, zs_lower_1[::-1]])
-    zs_2 = np.concatenate([zs_upper_2, zs_lower_2[::-1]])
+    rs_1 = np.concatenate([rs_upper_outboard, rs_lower_outboard[::-1]])
+    rs_2 = np.concatenate([rs_upper_inboard, rs_lower_inboard[::-1]])
+    zs_1 = np.concatenate([zs_upper_outboard, zs_lower_outboard[::-1]])
+    zs_2 = np.concatenate([zs_upper_inboard, zs_lower_inboard[::-1]])
     rs = [rs_1, rs_2]
     zs = [zs_1, zs_2]
 

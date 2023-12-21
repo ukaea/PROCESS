@@ -1,11 +1,14 @@
 """
 Module to hold plotting functions, used in plot_proc.py, which are common to multiple reactor components
 """
+from typing import List, Tuple
 import numpy as np
 
 
-def plotdh(r0: float, a: float, triang: float, kap: float) -> tuple:
-    """Plots half a thin D-section, centred on z = 0
+def dh_vertices(
+    r0: float, a: float, triang: float, kap: float
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Returns the radial and vertical coordinates which, when plotted, plots half a thin D-section, centred on z = 0
 
     :param r0: major radius of centre
     :type r0: float
@@ -15,8 +18,8 @@ def plotdh(r0: float, a: float, triang: float, kap: float) -> tuple:
     :type triang: float
     :param kap: plasma elongation
     :type kap: float
-    :return: radial and vertical coordinates of D-section
-    :rtype: tuple
+    :return: tuple containing radial and vertical coordinates which, when plotted, plots a half thin D-section with a gap
+    :rtype: Tuple[np.ndarray, np.ndarray]
     """
     angs = np.linspace(0, np.pi, 50, endpoint=True)
     rs = r0 + a * np.cos(angs + triang * np.sin(1.0 * angs))
@@ -24,7 +27,7 @@ def plotdh(r0: float, a: float, triang: float, kap: float) -> tuple:
     return rs, zs
 
 
-def plotdhgap(
+def dhgap_vertices(
     inpt: float,
     outpt: float,
     inthk: float,
@@ -32,8 +35,17 @@ def plotdhgap(
     toppt: float,
     topthk: float,
     triang: float,
-) -> tuple:
-    """Plots a half thick D-section with a gap
+) -> Tuple[
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+]:
+    """Returns the radial and vertical coordinates which, when plotted, plots a half thick D-section with a gap
 
     :param inpt: inner point
     :type inpt: float
@@ -49,7 +61,7 @@ def plotdhgap(
     :type topthk: float
     :param triang: plasma triangularity
     :type triang: float
-    :return: radial and vertical coordinates of D-section
+    :return: tuple containing radial and vertical coordinates which, when plotted, plots a half thick D-section with a gap
     :rtype: tuple
     """
     arc = np.pi / 4.0
@@ -73,7 +85,7 @@ def plotdhgap(
     return rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4
 
 
-def ellips_fill(
+def ellips_fill_vertices(
     a1: float = 0,
     a2: float = 0,
     b1: float = 0,
@@ -82,8 +94,8 @@ def ellips_fill(
     y0: float = 0,
     ang1: float = 0,
     ang2: float = np.pi / 2,
-) -> list:
-    """Fills the space between two concentric ellipse sectors
+) -> List[Tuple[float, float]]:
+    """Returns the vertices of a shape which, when filled, fills the space between two concentric ellipse sectors
 
     :param a1: horizontal radius to be filled, defaults to 0
     :type a1: float, optional
@@ -101,8 +113,8 @@ def ellips_fill(
     :type ang1: float, optional
     :param ang2: polar angle at end, defaults to np.pi/2
     :type ang2: float, optional
-    :return: coordinates which fill space between ellipses
-    :rtype: list
+    :return: list containing (R,Z) coordinates which, when plotted, fill space between ellipses
+    :rtype: List[Tuple[float, float]]
     """
     angs = np.linspace(ang1, ang2, endpoint=True)
     r1 = ((np.cos(angs) / a1) ** 2 + (np.sin(angs) / b1) ** 2) ** (-0.5)
