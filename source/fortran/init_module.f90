@@ -150,7 +150,6 @@ contains
       open(unit=nout     ,file=trim(output_prefix)//'OUT.DAT'   ,status='unknown')
       open(unit=nplot    ,file=trim(output_prefix)//'PLOT.DAT'  ,status='unknown')
       open(unit=mfile    ,file=trim(output_prefix)//'MFILE.DAT' ,status='unknown')
-      open(unit=opt_file ,file=trim(output_prefix)//'OPT.DAT'   ,status='unknown')
       open(unit=sig_file ,file=trim(output_prefix)//'SIG_TF.DAT',status='unknown')
 
       !  Input any desired new initial values

@@ -95,7 +95,6 @@ LIST(APPEND PROCESS_SRCS
     buildings_variables.f90
     maths_library.f90
     iteration_variables.f90
-    optimiz_module.f90
     evaluators.f90
     water_usage_variables.f90
     constraint_equations.f90
