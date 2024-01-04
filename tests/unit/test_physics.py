@@ -1265,3 +1265,119 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     assert physics_module.first_call == pytest.approx(
         plasmacompositionparam.expected_first_call
     )
+
+
+class VscalcParam(NamedTuple):
+    csawth: Any = None
+
+    eps: Any = None
+
+    facoh: Any = None
+
+    gamma: Any = None
+
+    kappa: Any = None
+
+    plascur: Any = None
+
+    rli: Any = None
+
+    rmajor: Any = None
+
+    rplas: Any = None
+
+    tburn: Any = None
+
+    theat: Any = None
+
+    expected_phiint: Any = None
+
+    expected_rlp: Any = None
+
+    expected_vsbrn: Any = None
+
+    expected_vsind: Any = None
+
+    expected_vsres: Any = None
+
+    expected_vsstt: Any = None
+
+
+@pytest.mark.parametrize(
+    "vscalcparam",
+    (
+        VscalcParam(
+            csawth=1,
+            eps=0.33333333333333331,
+            facoh=0.59999999999999998,
+            gamma=0.30000000000000004,
+            kappa=1.8500000000000001,
+            plascur=18398455.678867526,
+            rli=1.2064840230894305,
+            rmajor=8,
+            rplas=3.7767895536275952e-09,
+            tburn=1000,
+            theat=10,
+            expected_phiint=111.57651734747576,
+            expected_rlp=1.4075705307248088e-05,
+            expected_vsbrn=42.109179697761263,
+            expected_vsind=258.97124024420435,
+            expected_vsres=55.488435095110333,
+            expected_vsstt=356.56885503707593,
+        ),
+        VscalcParam(
+            csawth=1,
+            eps=0.33333333333333331,
+            facoh=0.59999999999999998,
+            gamma=0.30000000000000004,
+            kappa=1.8500000000000001,
+            plascur=18398455.678867526,
+            rli=1.2064840230894305,
+            rmajor=8,
+            rplas=3.7767895536275952e-09,
+            tburn=0,
+            theat=10,
+            expected_phiint=111.57651734747576,
+            expected_rlp=1.4075705307248088e-05,
+            expected_vsbrn=0.41692257126496302,
+            expected_vsind=258.97124024420435,
+            expected_vsres=55.488435095110333,
+            expected_vsstt=314.87659791057968,
+        ),
+    ),
+)
+def test_vscalc(vscalcparam, physics):
+    """
+    Automatically generated Regression Unit Test for vscalc.
+
+    This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
+
+    :param vscalcparam: the data used to mock and assert in this test.
+    :type vscalcparam: vscalcparam
+    """
+
+    phiint, rlp, vsbrn, vsind, vsres, vsstt = physics.vscalc(
+        csawth=vscalcparam.csawth,
+        eps=vscalcparam.eps,
+        facoh=vscalcparam.facoh,
+        gamma=vscalcparam.gamma,
+        kappa=vscalcparam.kappa,
+        plascur=vscalcparam.plascur,
+        rli=vscalcparam.rli,
+        rmajor=vscalcparam.rmajor,
+        rplas=vscalcparam.rplas,
+        tburn=vscalcparam.tburn,
+        theat=vscalcparam.theat,
+    )
+
+    assert phiint == pytest.approx(vscalcparam.expected_phiint)
+
+    assert rlp == pytest.approx(vscalcparam.expected_rlp)
+
+    assert vsbrn == pytest.approx(vscalcparam.expected_vsbrn)
+
+    assert vsind == pytest.approx(vscalcparam.expected_vsind)
+
+    assert vsres == pytest.approx(vscalcparam.expected_vsres)
+
+    assert vsstt == pytest.approx(vscalcparam.expected_vsstt)

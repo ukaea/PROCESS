@@ -598,7 +598,7 @@ class Physics:
             physics_variables.vsind,
             physics_variables.vsres,
             physics_variables.vsstt,
-        ) = physics_module.vscalc(
+        ) = self.vscalc(
             physics_variables.csawth,
             physics_variables.eps,
             physics_variables.facoh,
@@ -1035,6 +1035,90 @@ class Physics:
                     ** 2
                     / impurity_radiation_module.impurity_arr_amass[imp]
                 )
+
+    def vscalc(
+        self,
+        csawth,
+        eps,
+        facoh,
+        gamma,
+        kappa,
+        rmajor,
+        rplas,
+        plascur,
+        theat,
+        tburn,
+        rli,
+    ):
+        """Volt-second requirements
+        author: P J Knight, CCFE, Culham Science Centre
+        csawth : input real :  coefficient for sawteeth effects
+        eps    : input real :  inverse aspect ratio
+        facoh  : input real :  fraction of plasma current produced inductively
+        gamma  : input real :  Ejima coeff for resistive start-up V-s component
+        kappa  : input real :  plasma elongation
+        plascur: input real :  plasma current (A)
+        rli    : input real :  plasma normalised inductivity
+        rmajor : input real :  plasma major radius (m)
+        rplas  : input real :  plasma resistance (ohm)
+        theat  : input real :  heating time (s)
+        tburn  : input real :  burn time (s)
+        phiint : output real : internal plasma volt-seconds (Wb)
+        rlp    : output real : plasma inductance (H)
+        vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
+        vsind  : output real : internal and external plasma inductance V-s (Wb)
+        vsres  : output real : resistive losses in start-up volt-seconds (Wb)
+        vsstt  : output real : total volt-seconds needed (Wb)
+        This subroutine calculates the volt-second requirements and some
+        other related items.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        """
+        # Internal inductance
+
+        rlpint = constants.rmu0 * rmajor * rli / 2.0
+        phiint = rlpint * plascur
+
+        # Start-up resistive component
+        # Uses ITER formula without the 10 V-s add-on
+
+        vsres = gamma * constants.rmu0 * plascur * rmajor
+
+        # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
+        # fit for external inductance
+
+        aeps = (1.0 + 1.81 * numpy.sqrt(eps) + 2.05 * eps) * numpy.log(8.0 / eps) - (
+            2.0 + 9.25 * numpy.sqrt(eps) - 1.21 * eps
+        )
+        beps = (
+            0.73
+            * numpy.sqrt(eps)
+            * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
+        )
+        rlpext = (
+            rmajor * constants.rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+        )
+
+        rlp = rlpext + rlpint
+
+        # Inductive V-s component
+
+        vsind = rlp * plascur
+        vsstt = vsres + vsind
+
+        # Loop voltage during flat-top
+        # Include enhancement factor in flattop V-s requirement
+        # to account for MHD sawtooth effects.
+
+        vburn = plascur * rplas * facoh * csawth
+
+        # N.B. tburn on first iteration will not be correct
+        # if the pulsed reactor option is used, but the value
+        # will be correct on subsequent calls.
+
+        vsbrn = vburn * (theat + tburn)
+        vsstt = vsstt + vsbrn
+
+        return phiint, rlp, vsbrn, vsind, vsres, vsstt
 
     def culblm(self, bt, dnbeta, plascur, rminor):
         """Beta scaling limit
