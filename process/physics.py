@@ -66,7 +66,7 @@ class Physics:
 
         # Calculate plasma composition
         # Issue #261 Remove old radiation model (imprad_model=0)
-        physics_module.plasma_composition()
+        self.plasma_composition()
 
         #  Calculate plasma current
         (
@@ -665,7 +665,7 @@ class Physics:
             #  Hartmann and Zohm
             physics_variables.dnbeta = 4.0e0 * physics_variables.rli
 
-        physics_variables.betalim = physics_module.culblm(
+        physics_variables.betalim = self.culblm(
             physics_variables.bt,
             physics_variables.dnbeta,
             physics_variables.plascur,
@@ -825,6 +825,216 @@ class Physics:
                     f" 'fzactual, frac, reinke_variables.impvardiv = {reinke_variables.fzactual}, {impurity_radiation_module.impurity_arr_frac(reinke_variables.impvardiv)}, {reinke_variables.impvardiv}"
                 ),
             )
+
+    def plasma_composition(self):
+        """Calculates various plasma component fractional makeups
+        author: P J Knight, CCFE, Culham Science Centre
+
+        This subroutine determines the various plasma component
+        fractional makeups. It is the replacement for the original
+        It is the replacement for the original routine <CODE>betcom</CODE>,
+        and is used in conjunction with the new impurity radiation model
+        """
+        # Alpha ash portion
+        physics_variables.dnalp = physics_variables.dene * physics_variables.ralpne
+
+        # Protons
+        # This calculation will be wrong on the first call as the particle
+        # production rates are evaluated later in the calling sequence
+        # Issue #557 Allow protium impurity to be specified: 'protium'
+        # This will override the calculated value which is a minimum.
+        if physics_variables.alpharate < 1.0e-6:  # not calculated yet...
+            physics_variables.dnprot = max(
+                physics_variables.protium * physics_variables.dene,
+                physics_variables.dnalp * (physics_variables.fhe3 + 1.0e-3),
+            )  # rough estimate
+        else:
+            physics_variables.dnprot = max(
+                physics_variables.protium * physics_variables.dene,
+                physics_variables.dnalp
+                * physics_variables.protonrate
+                / physics_variables.alpharate,
+            )
+
+        # Beam hot ion component
+        # If ignited, prevent beam fusion effects
+        if physics_variables.ignite == 0:
+            physics_variables.dnbeam = physics_variables.dene * physics_variables.rnbeam
+        else:
+            physics_variables.dnbeam = 0.0
+
+        # Sum of Zi.ni for all impurity ions (those with charge > helium)
+        znimp = 0.0
+        for imp in range(impurity_radiation_module.nimp):
+            if impurity_radiation_module.impurity_arr_z[imp] > 2:
+                znimp += impurity_radiation_module.zav_of_te(
+                    imp + 1, physics_variables.te
+                ) * (
+                    impurity_radiation_module.impurity_arr_frac[imp]
+                    * physics_variables.dene
+                )
+
+        # Fuel portion - conserve charge neutrality
+        # znfuel is the sum of Zi.ni for the three fuel ions
+        znfuel = (
+            physics_variables.dene
+            - 2.0 * physics_variables.dnalp
+            - physics_variables.dnprot
+            - physics_variables.dnbeam
+            - znimp
+        )
+
+        # Fuel ion density, deni
+        # For D-T-He3 mix, deni = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
+        # So deni = znfuel - nHe3 = znfuel - fhe3*deni
+        physics_variables.deni = znfuel / (1.0 + physics_variables.fhe3)
+
+        # Set hydrogen and helium impurity fractions for
+        # radiation calculations
+        impurity_radiation_module.impurity_arr_frac[
+            impurity_radiation_module.element2index("H_") - 1
+        ] = (
+            physics_variables.dnprot
+            + (physics_variables.fdeut + physics_variables.ftrit)
+            * physics_variables.deni
+            + physics_variables.dnbeam
+        ) / physics_variables.dene
+
+        impurity_radiation_module.impurity_arr_frac[
+            impurity_radiation_module.element2index("He") - 1
+        ] = (
+            physics_variables.fhe3 * physics_variables.deni / physics_variables.dene
+            + physics_variables.ralpne
+        )
+
+        # Total impurity density
+        physics_variables.dnz = 0.0
+        for imp in range(impurity_radiation_module.nimp):
+            if impurity_radiation_module.impurity_arr_z[imp] > 2:
+                physics_variables.dnz += (
+                    impurity_radiation_module.impurity_arr_frac[imp]
+                    * physics_variables.dene
+                )
+
+        # Total ion density
+        physics_variables.dnitot = (
+            physics_variables.deni
+            + physics_variables.dnalp
+            + physics_variables.dnprot
+            + physics_variables.dnbeam
+            + physics_variables.dnz
+        )
+
+        # Set some (obsolescent) impurity fraction variables
+        # for the benefit of other routines
+        physics_variables.rncne = impurity_radiation_module.impurity_arr_frac[
+            impurity_radiation_module.element2index("C_")
+        ]
+        physics_variables.rnone = impurity_radiation_module.impurity_arr_frac[
+            impurity_radiation_module.element2index("O_")
+        ]
+        physics_variables.rnfene = (
+            impurity_radiation_module.impurity_arr_frac[
+                impurity_radiation_module.element2index("Fe")
+            ]
+            + impurity_radiation_module.impurity_arr_frac[
+                impurity_radiation_module.element2index("Ar")
+            ]
+        )
+
+        # Effective charge
+        # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
+        # but ne = sum(ni.Zi) through quasineutrality
+        physics_variables.zeff = 0.0
+        for imp in range(impurity_radiation_module.nimp):
+            physics_variables.zeff += (
+                impurity_radiation_module.impurity_arr_frac[imp]
+                * impurity_radiation_module.zav_of_te(imp + 1, physics_variables.te)
+                ** 2
+            )
+
+        # Define coulomb logarithm
+        # (collisions: ion-electron, electron-electron)
+        physics_variables.dlamee = (
+            31.0
+            - (numpy.log(physics_variables.dene) / 2.0)
+            + numpy.log(physics_variables.te * 1000.0)
+        )
+        physics_variables.dlamie = (
+            31.3
+            - (numpy.log(physics_variables.dene) / 2.0)
+            + numpy.log(physics_variables.te * 1000.0)
+        )
+
+        # Fraction of alpha energy to ions and electrons
+        # From Max Fenstermacher
+        # (used with electron and ion power balance equations only)
+        # No consideration of pchargepv here...
+
+        # pcoef now calculated in plasma_profiles, after the very first
+        # call of plasma_composition; use old parabolic profile estimate
+        # in this case
+        if physics_module.first_call == 1:
+            pc = (
+                (1.0 + physics_variables.alphan)
+                * (1.0 + physics_variables.alphat)
+                / (1.0 + physics_variables.alphan + physics_variables.alphat)
+            )
+            physics_module.first_call = 0
+        else:
+            pc = physics_variables.pcoef
+
+        physics_variables.falpe = 0.88155 * numpy.exp(
+            -physics_variables.te * pc / 67.4036
+        )
+        physics_variables.falpi = 1.0 - physics_variables.falpe
+
+        # Average atomic masses
+        physics_variables.afuel = (
+            2.0 * physics_variables.fdeut
+            + 3.0 * physics_variables.ftrit
+            + 3.0 * physics_variables.fhe3
+        )
+        physics_variables.abeam = (
+            2.0 * (1.0 - current_drive_variables.ftritbm)
+            + 3.0 * current_drive_variables.ftritbm
+        )
+
+        # Density weighted mass
+        physics_variables.aion = (
+            physics_variables.afuel * physics_variables.deni
+            + 4.0 * physics_variables.dnalp
+            + physics_variables.dnprot
+            + physics_variables.abeam * physics_variables.dnbeam
+        )
+        for imp in range(impurity_radiation_module.nimp):
+            if impurity_radiation_module.impurity_arr_z[imp] > 2:
+                physics_variables.aion += (
+                    physics_variables.dene
+                    * impurity_radiation_module.impurity_arr_frac[imp]
+                    * impurity_radiation_module.impurity_arr_amass[imp]
+                )
+
+        physics_variables.aion = physics_variables.aion / physics_variables.dnitot
+
+        # Mass weighted plasma effective charge
+        physics_variables.zeffai = (
+            physics_variables.fdeut * physics_variables.deni / 2.0
+            + physics_variables.ftrit * physics_variables.deni / 3.0
+            + 4.0 * physics_variables.fhe3 * physics_variables.deni / 3.0
+            + physics_variables.dnalp
+            + physics_variables.dnprot
+            + (1.0 - current_drive_variables.ftritbm) * physics_variables.dnbeam / 2.0
+            + current_drive_variables.ftritbm * physics_variables.dnbeam / 3.0
+        ) / physics_variables.dene
+        for imp in range(impurity_radiation_module.nimp):
+            if impurity_radiation_module.impurity_arr_z[imp] > 2:
+                physics_variables.zeffai += (
+                    impurity_radiation_module.impurity_arr_frac[imp]
+                    * impurity_radiation_module.zav_of_te(imp + 1, physics_variables.te)
+                    ** 2
+                    / impurity_radiation_module.impurity_arr_amass[imp]
+                )
 
     def culblm(self, bt, dnbeta, plascur, rminor):
         """Beta scaling limit

@@ -1,9 +1,16 @@
 """Unit tests for physics.f90."""
 from typing import Any, NamedTuple
-from process.fortran import physics_variables
+from process.fortran import (
+    physics_variables,
+    physics_module,
+    current_drive_variables,
+    impurity_radiation_module,
+)
+import numpy
 import pytest
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile
+from process.impurity_radiation import initialise_imprad
 
 
 @pytest.fixture
@@ -699,4 +706,562 @@ def test_culblm(physics):
 def test_conhas(physics):
     assert physics.conhas(5, 5, 12, 0.5, 0.33, 1.85, 2e3) == pytest.approx(
         2.518876726889116
+    )
+
+
+class PlasmaCompositionParam(NamedTuple):
+    ftritbm: Any = None
+
+    impurity_arr_frac: Any = None
+
+    impurity_arr_z: Any = None
+
+    impurity_arr_amass: Any = None
+
+    alphat: Any = None
+
+    ignite: Any = None
+
+    falpe: Any = None
+
+    afuel: Any = None
+
+    ftrit: Any = None
+
+    deni: Any = None
+
+    aion: Any = None
+
+    dnitot: Any = None
+
+    protium: Any = None
+
+    zeffai: Any = None
+
+    rncne: Any = None
+
+    rnone: Any = None
+
+    falpi: Any = None
+
+    ralpne: Any = None
+
+    dlamee: Any = None
+
+    rnbeam: Any = None
+
+    zeff: Any = None
+
+    dnz: Any = None
+
+    pcoef: Any = None
+
+    alpharate: Any = None
+
+    rnfene: Any = None
+
+    abeam: Any = None
+
+    dlamie: Any = None
+
+    te: Any = None
+
+    protonrate: Any = None
+
+    fdeut: Any = None
+
+    alphan: Any = None
+
+    dnbeam: Any = None
+
+    fhe3: Any = None
+
+    dnalp: Any = None
+
+    dene: Any = None
+
+    dnprot: Any = None
+
+    iscz: Any = None
+
+    err242: Any = None
+
+    err243: Any = None
+
+    ptarmw: Any = None
+
+    lambdaio: Any = None
+
+    drsep: Any = None
+
+    fio: Any = None
+
+    rho_star: Any = None
+
+    nu_star: Any = None
+
+    beta_mcdonald: Any = None
+
+    itart_r: Any = None
+
+    first_call: Any = None
+
+    expected_impurity_arr_frac: Any = None
+
+    expected_falpe: Any = None
+
+    expected_afuel: Any = None
+
+    expected_deni: Any = None
+
+    expected_aion: Any = None
+
+    expected_dnitot: Any = None
+
+    expected_zeffai: Any = None
+
+    expected_falpi: Any = None
+
+    expected_dlamee: Any = None
+
+    expected_zeff: Any = None
+
+    expected_dnz: Any = None
+
+    expected_abeam: Any = None
+
+    expected_dlamie: Any = None
+
+    expected_dnalp: Any = None
+
+    expected_dnprot: Any = None
+
+    expected_first_call: Any = None
+
+
+@pytest.mark.parametrize(
+    "plasmacompositionparam",
+    (
+        PlasmaCompositionParam(
+            ftritbm=9.9999999999999995e-07,
+            impurity_arr_frac=[
+                0.90000000000000002,
+                0.10000000000000001,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.00038000000000000008,
+                5.0000000000000021e-06,
+            ],
+            impurity_arr_z=[1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74],
+            impurity_arr_amass=[
+                1.01,
+                4.0030000000000001,
+                9.0099999999999998,
+                12.01,
+                14.01,
+                15.999000000000001,
+                20.18,
+                28.09,
+                39.950000000000003,
+                55.850000000000001,
+                58.700000000000003,
+                83.799999999999997,
+                131.30000000000001,
+                183.84999999999999,
+            ],
+            alphat=1.45,
+            ignite=0,
+            falpe=0,
+            afuel=0,
+            ftrit=0.5,
+            deni=0,
+            aion=0,
+            dnitot=0,
+            protium=0,
+            zeffai=0,
+            rncne=0,
+            rnone=0,
+            falpi=0,
+            ralpne=0.10000000000000001,
+            dlamee=0,
+            rnbeam=0,
+            zeff=0,
+            dnz=0,
+            pcoef=0,
+            alpharate=0,
+            rnfene=0,
+            abeam=0,
+            dlamie=0,
+            te=12,
+            protonrate=0,
+            fdeut=0.5,
+            alphan=1,
+            dnbeam=0,
+            fhe3=0,
+            dnalp=0,
+            dene=7.5e19,
+            dnprot=0,
+            iscz=0,
+            err242=0,
+            err243=0,
+            ptarmw=0,
+            lambdaio=0,
+            drsep=0,
+            fio=0,
+            rho_star=0,
+            nu_star=0,
+            beta_mcdonald=0,
+            itart_r=0,
+            first_call=1,
+            expected_impurity_arr_frac=[
+                0.78128900936605694,
+                0.10000000000000001,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.00038000000000000008,
+                5.0000000000000021e-06,
+            ],
+            expected_falpe=0.6845930883190634,
+            expected_afuel=2.5,
+            expected_deni=5.8589175702454272e19,
+            expected_aion=2.7265017998473029,
+            expected_dnitot=6.6125550702454276e19,
+            expected_zeffai=0.43248858851447464,
+            expected_falpi=0.3154069116809366,
+            expected_dlamee=17.510652035055571,
+            expected_zeff=2.0909945616489103,
+            expected_dnz=28875000000000004,
+            expected_abeam=2.0000010000000001,
+            expected_dlamie=17.810652035055568,
+            expected_dnalp=7.5e18,
+            expected_dnprot=7500000000000000,
+            expected_first_call=0,
+        ),
+        PlasmaCompositionParam(
+            ftritbm=9.9999999999999995e-07,
+            impurity_arr_frac=(
+                0.78128900936605694,
+                0.10000000000000001,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.00038000000000000008,
+                5.0000000000000021e-06,
+            ),
+            impurity_arr_z=numpy.array(
+                numpy.array(
+                    (1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74), order="F"
+                ),
+                order="F",
+            ).transpose(),
+            impurity_arr_amass=numpy.array(
+                numpy.array(
+                    (
+                        1.01,
+                        4.0030000000000001,
+                        9.0099999999999998,
+                        12.01,
+                        14.01,
+                        15.999000000000001,
+                        20.18,
+                        28.09,
+                        39.950000000000003,
+                        55.850000000000001,
+                        58.700000000000003,
+                        83.799999999999997,
+                        131.30000000000001,
+                        183.84999999999999,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            alphat=1.45,
+            ignite=0,
+            falpe=0.6845930883190634,
+            afuel=2.5,
+            ftrit=0.5,
+            deni=5.8589175702454272e19,
+            aion=2.7265017998473029,
+            dnitot=6.6125550702454276e19,
+            protium=0,
+            zeffai=0.43248858851447464,
+            rncne=0,
+            rnone=0,
+            falpi=0.3154069116809366,
+            ralpne=0.10000000000000001,
+            dlamee=17.510652035055571,
+            rnbeam=0,
+            zeff=2.0909945616489103,
+            dnz=28875000000000004,
+            pcoef=1.0521775929921553,
+            alpharate=1.973996644759543e17,
+            rnfene=0,
+            abeam=2.0000010000000001,
+            dlamie=17.810652035055568,
+            te=12,
+            protonrate=540072280299564.38,
+            fdeut=0.5,
+            alphan=1,
+            dnbeam=0,
+            fhe3=0,
+            dnalp=7.5e18,
+            dene=7.5e19,
+            dnprot=7500000000000000,
+            iscz=0,
+            err242=0,
+            err243=0,
+            ptarmw=33.990985729118783,
+            lambdaio=0.00157,
+            drsep=-0.014999999999999999,
+            fio=0.40999999999999998,
+            rho_star=0,
+            nu_star=0,
+            beta_mcdonald=0,
+            itart_r=0,
+            first_call=0,
+            expected_impurity_arr_frac=(
+                0.78128900936605694,
+                0.10000000000000001,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.00038000000000000008,
+                5.0000000000000021e-06,
+            ),
+            expected_falpe=0.73096121787894142,
+            expected_afuel=2.5,
+            expected_deni=5.8576156204039725e19,
+            expected_aion=2.7262064639685937,
+            expected_dnitot=6.6125550702454276e19,
+            expected_zeffai=0.43258985127992111,
+            expected_falpi=0.26903878212105858,
+            expected_dlamee=17.510652035055571,
+            expected_zeff=2.0909945616489103,
+            expected_dnz=28875000000000004,
+            expected_abeam=2.0000010000000001,
+            expected_dlamie=17.810652035055568,
+            expected_dnalp=7.5e18,
+            expected_dnprot=20519498414548412,
+            expected_first_call=0,
+        ),
+    ),
+)
+def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
+    """
+    Automatically generated Regression Unit Test for plasma_composition.
+
+    This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
+
+    :param plasmacompositionparam: the data used to mock and assert in this test.
+    :type plasmacompositionparam: plasmacompositionparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+    impurity_radiation_module.init_impurity_radiation_module()
+    initialise_imprad()
+
+    monkeypatch.setattr(
+        current_drive_variables, "ftritbm", plasmacompositionparam.ftritbm
+    )
+
+    monkeypatch.setattr(
+        impurity_radiation_module,
+        "impurity_arr_frac",
+        plasmacompositionparam.impurity_arr_frac,
+    )
+
+    monkeypatch.setattr(
+        impurity_radiation_module,
+        "impurity_arr_z",
+        plasmacompositionparam.impurity_arr_z,
+    )
+
+    monkeypatch.setattr(
+        impurity_radiation_module,
+        "impurity_arr_amass",
+        plasmacompositionparam.impurity_arr_amass,
+    )
+
+    monkeypatch.setattr(physics_variables, "alphat", plasmacompositionparam.alphat)
+
+    monkeypatch.setattr(physics_variables, "ignite", plasmacompositionparam.ignite)
+
+    monkeypatch.setattr(physics_variables, "falpe", plasmacompositionparam.falpe)
+
+    monkeypatch.setattr(physics_variables, "afuel", plasmacompositionparam.afuel)
+
+    monkeypatch.setattr(physics_variables, "ftrit", plasmacompositionparam.ftrit)
+
+    monkeypatch.setattr(physics_variables, "deni", plasmacompositionparam.deni)
+
+    monkeypatch.setattr(physics_variables, "aion", plasmacompositionparam.aion)
+
+    monkeypatch.setattr(physics_variables, "dnitot", plasmacompositionparam.dnitot)
+
+    monkeypatch.setattr(physics_variables, "protium", plasmacompositionparam.protium)
+
+    monkeypatch.setattr(physics_variables, "zeffai", plasmacompositionparam.zeffai)
+
+    monkeypatch.setattr(physics_variables, "rncne", plasmacompositionparam.rncne)
+
+    monkeypatch.setattr(physics_variables, "rnone", plasmacompositionparam.rnone)
+
+    monkeypatch.setattr(physics_variables, "falpi", plasmacompositionparam.falpi)
+
+    monkeypatch.setattr(physics_variables, "ralpne", plasmacompositionparam.ralpne)
+
+    monkeypatch.setattr(physics_variables, "dlamee", plasmacompositionparam.dlamee)
+
+    monkeypatch.setattr(physics_variables, "rnbeam", plasmacompositionparam.rnbeam)
+
+    monkeypatch.setattr(physics_variables, "zeff", plasmacompositionparam.zeff)
+
+    monkeypatch.setattr(physics_variables, "dnz", plasmacompositionparam.dnz)
+
+    monkeypatch.setattr(physics_variables, "pcoef", plasmacompositionparam.pcoef)
+
+    monkeypatch.setattr(
+        physics_variables, "alpharate", plasmacompositionparam.alpharate
+    )
+
+    monkeypatch.setattr(physics_variables, "rnfene", plasmacompositionparam.rnfene)
+
+    monkeypatch.setattr(physics_variables, "abeam", plasmacompositionparam.abeam)
+
+    monkeypatch.setattr(physics_variables, "dlamie", plasmacompositionparam.dlamie)
+
+    monkeypatch.setattr(physics_variables, "te", plasmacompositionparam.te)
+
+    monkeypatch.setattr(
+        physics_variables, "protonrate", plasmacompositionparam.protonrate
+    )
+
+    monkeypatch.setattr(physics_variables, "fdeut", plasmacompositionparam.fdeut)
+
+    monkeypatch.setattr(physics_variables, "alphan", plasmacompositionparam.alphan)
+
+    monkeypatch.setattr(physics_variables, "dnbeam", plasmacompositionparam.dnbeam)
+
+    monkeypatch.setattr(physics_variables, "fhe3", plasmacompositionparam.fhe3)
+
+    monkeypatch.setattr(physics_variables, "dnalp", plasmacompositionparam.dnalp)
+
+    monkeypatch.setattr(physics_variables, "dene", plasmacompositionparam.dene)
+
+    monkeypatch.setattr(physics_variables, "dnprot", plasmacompositionparam.dnprot)
+
+    monkeypatch.setattr(physics_module, "iscz", plasmacompositionparam.iscz)
+
+    monkeypatch.setattr(physics_module, "err242", plasmacompositionparam.err242)
+
+    monkeypatch.setattr(physics_module, "err243", plasmacompositionparam.err243)
+
+    monkeypatch.setattr(physics_module, "ptarmw", plasmacompositionparam.ptarmw)
+
+    monkeypatch.setattr(physics_module, "lambdaio", plasmacompositionparam.lambdaio)
+
+    monkeypatch.setattr(physics_module, "drsep", plasmacompositionparam.drsep)
+
+    monkeypatch.setattr(physics_module, "fio", plasmacompositionparam.fio)
+
+    monkeypatch.setattr(physics_module, "rho_star", plasmacompositionparam.rho_star)
+
+    monkeypatch.setattr(physics_module, "nu_star", plasmacompositionparam.nu_star)
+
+    monkeypatch.setattr(
+        physics_module, "beta_mcdonald", plasmacompositionparam.beta_mcdonald
+    )
+
+    monkeypatch.setattr(physics_module, "itart_r", plasmacompositionparam.itart_r)
+
+    monkeypatch.setattr(physics_module, "first_call", plasmacompositionparam.first_call)
+
+    physics.plasma_composition()
+
+    assert impurity_radiation_module.impurity_arr_frac == pytest.approx(
+        plasmacompositionparam.expected_impurity_arr_frac
+    )
+
+    assert physics_variables.falpe == pytest.approx(
+        plasmacompositionparam.expected_falpe
+    )
+
+    assert physics_variables.afuel == pytest.approx(
+        plasmacompositionparam.expected_afuel
+    )
+
+    assert physics_variables.deni == pytest.approx(plasmacompositionparam.expected_deni)
+
+    assert physics_variables.aion == pytest.approx(plasmacompositionparam.expected_aion)
+
+    assert physics_variables.dnitot == pytest.approx(
+        plasmacompositionparam.expected_dnitot
+    )
+
+    assert physics_variables.zeffai == pytest.approx(
+        plasmacompositionparam.expected_zeffai
+    )
+
+    assert physics_variables.falpi == pytest.approx(
+        plasmacompositionparam.expected_falpi
+    )
+
+    assert physics_variables.dlamee == pytest.approx(
+        plasmacompositionparam.expected_dlamee
+    )
+
+    assert physics_variables.zeff == pytest.approx(plasmacompositionparam.expected_zeff)
+
+    assert physics_variables.dnz == pytest.approx(plasmacompositionparam.expected_dnz)
+
+    assert physics_variables.abeam == pytest.approx(
+        plasmacompositionparam.expected_abeam
+    )
+
+    assert physics_variables.dlamie == pytest.approx(
+        plasmacompositionparam.expected_dlamie
+    )
+
+    assert physics_variables.dnalp == pytest.approx(
+        plasmacompositionparam.expected_dnalp
+    )
+
+    assert physics_variables.dnprot == pytest.approx(
+        plasmacompositionparam.expected_dnprot
+    )
+
+    assert physics_module.first_call == pytest.approx(
+        plasmacompositionparam.expected_first_call
     )
