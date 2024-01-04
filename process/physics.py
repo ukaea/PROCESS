@@ -425,7 +425,7 @@ class Physics:
 
         #  Calculate ion/electron equilibration power
 
-        physics_variables.piepv = physics_module.rether(
+        physics_variables.piepv = self.rether(
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.dene,
@@ -459,7 +459,7 @@ class Physics:
             physics_variables.pohmmw,
             physics_variables.rpfac,
             physics_variables.rplas,
-        ) = physics_module.pohm(
+        ) = self.pohm(
             physics_variables.facoh,
             physics_variables.kappa95,
             physics_variables.plascur,
@@ -622,7 +622,7 @@ class Physics:
             physics_variables.qfuel,
             physics_variables.rndfuel,
             physics_variables.taup,
-        ) = physics_module.phyaux(
+        ) = self.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
             physics_variables.deni,
@@ -1035,6 +1035,149 @@ class Physics:
                     ** 2
                     / impurity_radiation_module.impurity_arr_amass[imp]
                 )
+
+    def phyaux(
+        self,
+        aspect,
+        dene,
+        deni,
+        fusionrate,
+        alpharate,
+        plascur,
+        sbar,
+        dnalp,
+        taueff,
+        vol,
+    ):
+        """Auxiliary physics quantities
+        author: P J Knight, CCFE, Culham Science Centre
+        aspect : input real :  plasma aspect ratio
+        dene   : input real :  electron density (/m3)
+        deni   : input real :  fuel ion density (/m3)
+        dnalp  : input real :  alpha ash density (/m3)
+        fusionrate : input real :  fusion reaction rate (/m3/s)
+        alpharate  : input real :  alpha particle production rate (/m3/s)
+        plascur: input real :  plasma current (A)
+        sbar   : input real :  exponent for aspect ratio (normally 1)
+        taueff : input real :  global energy confinement time (s)
+        vol    : input real :  plasma volume (m3)
+        burnup : output real : fractional plasma burnup
+        dntau  : output real : plasma average n-tau (s/m3)
+        figmer : output real : physics figure of merit
+        fusrat : output real : number of fusion reactions per second
+        qfuel  : output real : fuelling rate for D-T (nucleus-pairs/sec)
+        rndfuel: output real : fuel burnup rate (reactions/s)
+        taup   : output real : (alpha) particle confinement time (s)
+        This subroutine calculates extra physics related items
+        needed by other parts of the code
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        """
+
+        figmer = 1e-6 * plascur * aspect**sbar
+
+        dntau = taueff * dene
+
+        # Fusion reactions per second
+
+        fusrat = fusionrate * vol
+
+        # Alpha particle confinement time (s)
+        # Number of alphas / alpha production rate
+
+        if alpharate != 0.0:
+            taup = dnalp / alpharate
+        else:  # only likely if DD is only active fusion reaction
+            taup = 0.0
+
+        # Fractional burnup
+
+        # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
+        # Fusion Science and Technology, vol.64, no.1, July 2013, pp.8-12)
+
+        # The ratio of ash to fuel particle confinement times is given by
+        # tauratio
+        # Possible logic...
+        # burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
+        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and D-He3 reactions)
+        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
+        # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
+        if physics_variables.burnup_in <= 1.0e-9:
+            burnup = dnalp / (dnalp + 0.5 * deni) / physics_variables.tauratio
+        else:
+            burnup = physics_variables.burnup_in
+        # Fuel burnup rate (reactions/second) (previously Amps)
+
+        rndfuel = fusrat
+
+        # Required fuelling rate (fuel ion pairs/second) (previously Amps)
+
+        qfuel = rndfuel / burnup
+
+        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
+
+    def rether(self, alphan, alphat, dene, dlamie, te, ti, zeffai):
+        """Routine to find the equilibration power between the
+        ions and electrons
+        author: P J Knight, CCFE, Culham Science Centre
+        alphan : input real :  density profile index
+        alphat : input real :  temperature profile index
+        dene   : input real :  electron density (/m3)
+        dlamie : input real :  ion-electron coulomb logarithm
+        te     : input real :  electron temperature (keV)
+        ti     : input real :  ion temperature (keV)
+        zeffai : input real :  mass weighted plasma effective charge
+        piepv  : output real : ion/electron equilibration power (MW/m3)
+        This routine calculates the equilibration power between the
+        ions and electrons.
+        Unknown origin
+        """
+        profie = (1.0 + alphan) ** 2 / (
+            (2.0 * alphan - 0.5 * alphat + 1.0) * numpy.sqrt(1.0 + alphat)
+        )
+        conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
+
+        return conie * (ti - te) / (te**1.5)
+
+    def pohm(self, facoh, kappa95, plascur, rmajor, rminor, ten, vol, zeff):
+        # Density weighted electron temperature in 10 keV units
+
+        t10 = ten / 10.0
+
+        # Plasma resistance, from loop voltage calculation in IPDG89
+
+        rplas = (
+            physics_variables.plasma_res_factor
+            * 2.15e-9
+            * zeff
+            * rmajor
+            / (kappa95 * rminor**2 * t10**1.5)
+        )
+
+        # Neo-classical resistivity enhancement factor
+        # Taken from  N. A. Uckan et al, Fusion Technology 13 (1988) p.411.
+        # The expression is valid for aspect ratios in the range 2.5--4.
+
+        rpfac = 4.3 - 0.6 * rmajor / rminor
+        rplas = rplas * rpfac
+
+        # Check to see if plasma resistance is negative
+        # (possible if aspect ratio is too high)
+
+        if rplas <= 0.0:
+            error_handling.fdiags[0] = rplas
+            error_handling.fdiags[1] = physics_variables.aspect
+            error_handling.report_error(83)
+
+        #  Ohmic heating power per unit volume
+        #  Corrected from: pohmpv = (facoh*plascur)**2 * ...
+
+        pohmpv = facoh * plascur**2 * rplas * 1.0e-6 / vol
+
+        #  Total ohmic heating power
+
+        pohmmw = pohmpv * vol
+
+        return pohmpv, pohmmw, rpfac, rplas
 
     def vscalc(
         self,

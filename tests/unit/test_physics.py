@@ -1381,3 +1381,231 @@ def test_vscalc(vscalcparam, physics):
     assert vsres == pytest.approx(vscalcparam.expected_vsres)
 
     assert vsstt == pytest.approx(vscalcparam.expected_vsstt)
+
+
+class PhyauxParam(NamedTuple):
+    tauratio: Any = None
+
+    burnup_in: Any = None
+
+    aspect: Any = None
+
+    dene: Any = None
+
+    deni: Any = None
+
+    dnalp: Any = None
+
+    fusionrate: Any = None
+
+    alpharate: Any = None
+
+    plascur: Any = None
+
+    sbar: Any = None
+
+    taueff: Any = None
+
+    vol: Any = None
+
+    expected_burnup: Any = None
+
+    expected_dntau: Any = None
+
+    expected_figmer: Any = None
+
+    expected_fusrat: Any = None
+
+    expected_qfuel: Any = None
+
+    expected_rndfuel: Any = None
+
+    expected_taup: Any = None
+
+
+@pytest.mark.parametrize(
+    "phyauxparam",
+    (
+        PhyauxParam(
+            tauratio=1,
+            burnup_in=0,
+            aspect=3,
+            dene=7.5e19,
+            deni=5.8589175702454272e19,
+            dnalp=7.5e18,
+            fusionrate=1.9852091609123786e17,
+            alpharate=1.973996644759543e17,
+            plascur=18398455.678867526,
+            sbar=1,
+            taueff=3.401323521525641,
+            vol=1888.1711539956691,
+            expected_burnup=0.20383432558954095,
+            expected_dntau=2.5509926411442307e20,
+            expected_figmer=55.195367036602576,
+            expected_fusrat=3.7484146722826997e20,
+            expected_qfuel=1.8389516394951276e21,
+            expected_rndfuel=3.7484146722826997e20,
+            expected_taup=37.993985551650177,
+        ),
+        PhyauxParam(
+            tauratio=1,
+            burnup_in=0,
+            aspect=3,
+            dene=7.5e19,
+            deni=5.8576156204039725e19,
+            dnalp=7.5e18,
+            fusionrate=1.9843269653375773e17,
+            alpharate=1.9731194318497056e17,
+            plascur=18398455.678867526,
+            sbar=1,
+            taueff=3.402116961408892,
+            vol=1888.1711539956691,
+            expected_burnup=0.20387039462081086,
+            expected_dntau=2.5515877210566689e20,
+            expected_figmer=55.195367036602576,
+            expected_fusrat=3.7467489360461772e20,
+            expected_qfuel=1.8378092331723546e21,
+            expected_rndfuel=3.7467489360461772e20,
+            expected_taup=38.010876984618747,
+        ),
+    ),
+)
+def test_phyaux(phyauxparam, monkeypatch, physics):
+    """
+    Automatically generated Regression Unit Test for phyaux.
+
+    This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
+
+    :param phyauxparam: the data used to mock and assert in this test.
+    :type phyauxparam: phyauxparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+
+    monkeypatch.setattr(physics_variables, "tauratio", phyauxparam.tauratio)
+
+    monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
+
+    burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup = physics.phyaux(
+        aspect=phyauxparam.aspect,
+        dene=phyauxparam.dene,
+        deni=phyauxparam.deni,
+        dnalp=phyauxparam.dnalp,
+        fusionrate=phyauxparam.fusionrate,
+        alpharate=phyauxparam.alpharate,
+        plascur=phyauxparam.plascur,
+        sbar=phyauxparam.sbar,
+        taueff=phyauxparam.taueff,
+        vol=phyauxparam.vol,
+    )
+
+    assert burnup == pytest.approx(phyauxparam.expected_burnup)
+
+    assert dntau == pytest.approx(phyauxparam.expected_dntau)
+
+    assert figmer == pytest.approx(phyauxparam.expected_figmer)
+
+    assert fusrat == pytest.approx(phyauxparam.expected_fusrat)
+
+    assert qfuel == pytest.approx(phyauxparam.expected_qfuel)
+
+    assert rndfuel == pytest.approx(phyauxparam.expected_rndfuel)
+
+    assert taup == pytest.approx(phyauxparam.expected_taup)
+
+
+def test_rether(physics):
+    assert physics.rether(
+        1.0, 1.45, 7.5e19, 17.81065204, 12.0, 13.0, 0.43258985
+    ) == pytest.approx(0.028360489673597476)
+
+
+class PohmParam(NamedTuple):
+    aspect: Any = None
+
+    plasma_res_factor: Any = None
+
+    facoh: Any = None
+
+    kappa95: Any = None
+
+    plascur: Any = None
+
+    rmajor: Any = None
+
+    rminor: Any = None
+
+    ten: Any = None
+
+    vol: Any = None
+
+    zeff: Any = None
+
+    expected_pohmpv: Any = None
+
+    expected_pohmmw: Any = None
+
+    expected_rpfac: Any = None
+
+    expected_rplas: Any = None
+
+
+@pytest.mark.parametrize(
+    "pohmparam",
+    (
+        PohmParam(
+            aspect=3,
+            plasma_res_factor=0.70000000000000007,
+            facoh=0.59999999999999998,
+            kappa95=1.6517857142857142,
+            plascur=18398455.678867526,
+            rmajor=8,
+            rminor=2.6666666666666665,
+            ten=12.626131115905864,
+            vol=1888.1711539956691,
+            zeff=2.0909945616489103,
+            expected_pohmpv=0.0004062519138005805,
+            expected_pohmmw=0.7670731448937912,
+            expected_rpfac=2.5,
+            expected_rplas=3.7767895536275952e-09,
+        ),
+    ),
+)
+def test_pohm(pohmparam, monkeypatch, physics):
+    """
+    Automatically generated Regression Unit Test for pohm.
+
+    This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
+
+    :param pohmparam: the data used to mock and assert in this test.
+    :type pohmparam: pohmparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+
+    monkeypatch.setattr(physics_variables, "aspect", pohmparam.aspect)
+
+    monkeypatch.setattr(
+        physics_variables, "plasma_res_factor", pohmparam.plasma_res_factor
+    )
+
+    pohmpv, pohmmw, rpfac, rplas = physics.pohm(
+        facoh=pohmparam.facoh,
+        kappa95=pohmparam.kappa95,
+        plascur=pohmparam.plascur,
+        rmajor=pohmparam.rmajor,
+        rminor=pohmparam.rminor,
+        ten=pohmparam.ten,
+        vol=pohmparam.vol,
+        zeff=pohmparam.zeff,
+    )
+
+    assert pohmpv == pytest.approx(pohmparam.expected_pohmpv)
+
+    assert pohmmw == pytest.approx(pohmparam.expected_pohmmw)
+
+    assert rpfac == pytest.approx(pohmparam.expected_rpfac)
+
+    assert rplas == pytest.approx(pohmparam.expected_rplas)
