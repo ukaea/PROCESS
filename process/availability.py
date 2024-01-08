@@ -54,6 +54,10 @@ class Availability:
         """
 
         if cv.iavail == 3:
+            if pv.itart != 1:
+                raise ValueError(
+                    f"{cv.iavail=} is for a Spherical Tokamak. Please set itart=1 to use this model."
+                )
             self.avail_st(output)  # ST model (2023)
         elif cv.iavail == 2:
             self.avail_2(output)  # Morris model (2015)
