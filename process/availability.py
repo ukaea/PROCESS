@@ -1013,19 +1013,42 @@ class Availability:
 
         if output:
             po.oheadr(self.outfile, "Plant Availability")
+            if tfv.i_tf_sup == 1:
+                po.ovarre(
+                    self.outfile,
+                    "Max fast neutron fluence on TF coil (n/m2)",
+                    "(nflutfmax)",
+                    ctv.nflutfmax,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Centrepost TF fast neutron flux (E > 0.1 MeV) (m^(-2).^(-1))",
+                    "(neut_flux_cp)",
+                    fwbsv.neut_flux_cp,
+                    "OP ",
+                )
+            else:
+                po.ovarre(
+                    self.outfile,
+                    "Allowable ST centrepost neutron fluence (MW-yr/m2)",
+                    "(cpstflnc)",
+                    cv.cpstflnc,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Average neutron wall load (MW/m2)",
+                    "(wallmw)",
+                    pv.wallmw,
+                    "OP ",
+                )
             po.ovarre(
                 self.outfile,
-                "Total planned unavailability",
-                "(u_planned)",
-                u_planned,
+                "Centrepost lifetime (years)",
+                "(cplife)",
+                cv.cplife,
                 "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total unplanned unavailability",
-                "(u_unplanned)",
-                cv.u_unplanned,
-                "IP ",
             )
             po.oblnkl(self.outfile)
             po.ovarre(
@@ -1050,6 +1073,20 @@ class Availability:
                 "OP ",
             )
             po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Total planned unavailability",
+                "(u_planned)",
+                u_planned,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Total unplanned unavailability",
+                "(u_unplanned)",
+                cv.u_unplanned,
+                "IP ",
+            )
             po.ovarre(
                 self.outfile,
                 "Total plant availability fraction",
