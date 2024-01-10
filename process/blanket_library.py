@@ -34,12 +34,12 @@ class BlanketLibrary:
         # Make sure that, if the inputs for the FW and blanket inputs are different,
         # the ipump variable is appropriately set for seperate coolants
         if (
-            f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Helium"
+            f2py_compatible_to_string(fwbs_variables.fwcoolant.title()) == "Helium"
             and fwbs_variables.coolwh == 2
         ):
             fwbs_variables.ipump = 1
         if (
-            f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Water"
+            f2py_compatible_to_string(fwbs_variables.fwcoolant.title()) == "Water"
             and fwbs_variables.coolwh == 1
         ):
             fwbs_variables.ipump = 1
@@ -428,12 +428,12 @@ class BlanketLibrary:
         # Make sure that, if the inputs for the FW and blanket inputs are different,
         # the ipump variable is appropriately set for seperate coolants
         if (
-            f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Helium"
+            f2py_compatible_to_string(fwbs_variables.fwcoolant.title()) == "Helium"
             and fwbs_variables.coolwh == 2
         ):
             fwbs_variables.ipump = 1
         if (
-            f2py_compatible_to_string(fwbs_variables.fwcoolant) == "Water"
+            f2py_compatible_to_string(fwbs_variables.fwcoolant.title()) == "Water"
             and fwbs_variables.coolwh == 1
         ):
             fwbs_variables.ipump = 1
