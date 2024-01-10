@@ -255,7 +255,6 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library):
         no180=0,
         coolant_density=5.6,
         coolant_dynamic_viscosity=3.5e-5,
-        primary_coolant_switch=1,
         coolant_electrical_conductivity=0.0,
         pol_channel_length=1.89,
         nopolchan=0,
@@ -282,7 +281,6 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(monkeypatch, blanket_library
         no180=1,
         coolant_density=9753.2,
         coolant_dynamic_viscosity=0.0017,
-        primary_coolant_switch=1,
         coolant_electrical_conductivity=861800.8,
         pol_channel_length=1.89,
         nopolchan=0,
@@ -310,7 +308,7 @@ def test_pumppower_primary_helium(monkeypatch, blanket_library):
         "label": "Liquid Metal Breeder/Coolant",
     }
 
-    assert pytest.approx(blanket_library.pumppower(False, **data)) == 1.7857163755598664
+    assert pytest.approx(blanket_library.pumppower(False, **data)) == 1.8251284651310427
 
 
 def test_pumppower_secondary_pb_li(monkeypatch, blanket_library):
@@ -324,7 +322,7 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library):
         "pressure": 8000000,
         "pdrop": 20088.23,
         "mf": 956.3,
-        "primary_coolant_switch": 1,
+        "primary_coolant_switch": "Helium",
         "coolant_density": 5.64,
         "label": "First Wall and Blanket",
     }
