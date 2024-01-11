@@ -239,7 +239,7 @@ boundl(29) = 0.1
 bore = 2.0
 
 * fvsbrnni
-* ixc = 44
+ixc = 44
 fvsbrnni = 0.4
 
 * tdmptf [s]
@@ -613,12 +613,6 @@ i_tf_sc_mat = 1
 
 * Scan Variables
 
-*scan_dim = 2
-
 nsweep = 17 * bmxlim, maximum peak toroidal field 
 isweep = 11
 sweep = 11., 11.2, 11.4, 11.6, 11.8, 12., 12.2, 12.4, 12.6, 12.8, 13.
-
-*nsweep_2 = 57 * bt
-*isweep_2 = 4
-*sweep_2 = 4., 4.2, 4.4, 4.6
