@@ -2,19 +2,9 @@
 Calculate radial and vertical coordinates for the geometry of the shield
 """
 from typing import Tuple
-from dataclasses import dataclass
 import numpy as np
 from process.geometry.utils import dh_vertices
-
-
-@dataclass
-class ShieldGeometry:
-    """Holds radial and vertical coordinates for the geometry of a shield"""
-
-    rs: np.ndarray
-    """outboard and inboard radial coordinates of shield"""
-    zs: np.ndarray
-    """outboard and inboard vertical coordinates of shield"""
+from process.geometry.geometry_parameterisations import ArbitraryGeometry
 
 
 def shield_geometry_single_null(
@@ -25,7 +15,7 @@ def shield_geometry_single_null(
     rminx_near: float,
     triang: float,
     cumulative_lower: dict,
-) -> ShieldGeometry:
+) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of shield in a single null configuration
 
     :param cumulative_upper: cumulative vertical thicknesses of components above the midplane
@@ -42,8 +32,8 @@ def shield_geometry_single_null(
     :type triang: float
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
     :type cumulative_lower: dict
-    :return: dataclass returning shield radial and vertical coordinates
-    :rtype: ShieldGeometry
+    :return: dataclass returning radial and vertical coordinates
+    :rtype: ArbitraryGeometry
     """
     # Upper shield
     # Side furthest from plasma
@@ -89,7 +79,7 @@ def shield_geometry_single_null(
             zs_upper_inboard[::-1],
         ]
     )
-    return ShieldGeometry(
+    return ArbitraryGeometry(
         rs=rs,
         zs=zs,
     )
@@ -142,7 +132,7 @@ def shield_geometry_double_null(
     radx_near: float,
     rminx_near: float,
     triang: float,
-) -> ShieldGeometry:
+) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of shield in a double null configuration
     In a double null configuration, the geometry of the lower shield is reflected across the midplane to create the section of shield above the midplane
 
@@ -158,8 +148,8 @@ def shield_geometry_double_null(
     :type rminx_near: float
     :param triang: plasma triangularity
     :type triang: float
-    :return: dataclass returning shield radial and vertical coordinates
-    :rtype: ShieldGeometry
+    :return: dataclass returning radial and vertical coordinates
+    :rtype: ArbitraryGeometry
     """
     # Lower shield
     (
@@ -186,4 +176,4 @@ def shield_geometry_double_null(
     rs = np.concatenate([rs_lower[::-1], rs_upper])
     zs = np.concatenate([zs_lower[::-1], zs_upper])
 
-    return ShieldGeometry(rs=rs, zs=zs)
+    return ArbitraryGeometry(rs=rs, zs=zs)

@@ -2,19 +2,9 @@
 Calculate radial and vertical coordinates for the geometry of the blanket
 """
 from typing import Tuple
-from dataclasses import dataclass
 import numpy as np
 from process.geometry.utils import dh_vertices, dhgap_vertices
-
-
-@dataclass
-class BlanketGeometry:
-    """Holds radial and vertical coordinates for the geometry of a blanket"""
-
-    rs: np.ndarray
-    """outboard and inboard radial coordinates of blanket"""
-    zs: np.ndarray
-    """outboard and inboard vertical coordinates of blanket"""
+from process.geometry.geometry_parameterisations import ArbitraryGeometry
 
 
 def blanket_geometry_single_null(
@@ -30,7 +20,7 @@ def blanket_geometry_single_null(
     c_blnkoth: float,
     blnkith: float,
     blnkoth: float,
-) -> BlanketGeometry:
+) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of blanket in a single null configuration
 
     :param radx_outer: outboard radius of outer surface of blanket
@@ -57,8 +47,8 @@ def blanket_geometry_single_null(
     :type blnkith: float
     :param blnkoth: outboard blanket radial thickness
     :type blnkoth: float
-    :return: dataclass returning blanket radial and vertical coordinates
-    :rtype: BlanketGeometry
+    :return: dataclass returning radial and vertical coordinates
+    :rtype: ArbitraryGeometry
     """
     # Upper blanket outer surface
     kapx = cumulative_upper["blnktth"] / rminx_outer
@@ -107,7 +97,7 @@ def blanket_geometry_single_null(
         ]
     )
 
-    return BlanketGeometry(rs=rs, zs=zs)
+    return ArbitraryGeometry(rs=rs, zs=zs)
 
 
 def blanket_geometry_lower(
@@ -160,7 +150,7 @@ def blanket_geometry_double_null(
     c_blnkoth: float,
     blnkith: float,
     blnkoth: float,
-) -> BlanketGeometry:
+) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of blanket in a double null configuration
     In a double null configuration, the geometry of the lower blanket is reflected across the midplane to create the section of blanket above the midplane
 
@@ -178,8 +168,8 @@ def blanket_geometry_double_null(
     :type blnkith: float
     :param blnkoth: outboard blanket radial thickness
     :type blnkoth: float
-    :return: dataclass returning blanket radial and vertical coordinates
-    :rtype: BlanketGeometry
+    :return: dataclass returning radial and vertical coordinates
+    :rtype: ArbitraryGeometry
     """
     # Lower blanket
     divgap = cumulative_lower["divfix"]
@@ -223,4 +213,4 @@ def blanket_geometry_double_null(
     rs = [rs_1, rs_2]
     zs = [zs_1, zs_2]
 
-    return BlanketGeometry(rs=rs, zs=zs)
+    return ArbitraryGeometry(rs=rs, zs=zs)

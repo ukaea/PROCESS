@@ -315,7 +315,7 @@ def plot_cryostat(axis, mfile_data, scan):
     for rec in rects:
         axis.add_patch(
             patches.Rectangle(
-                xy=(rec.center_x, rec.center_z),
+                xy=(rec.anchor_x, rec.anchor_z),
                 width=rec.width,
                 height=rec.height,
                 facecolor=cryostat,
@@ -1457,7 +1457,7 @@ def plot_tf_coils(axis, mfile_data, scan):
         for rec in rects:
             axis.add_patch(
                 patches.Rectangle(
-                    xy=(rec.center_x, rec.center_z),
+                    xy=(rec.anchor_x, rec.anchor_z),
                     width=rec.width,
                     height=rec.height,
                     facecolor=tfc,
@@ -1488,7 +1488,7 @@ def plot_tf_coils(axis, mfile_data, scan):
         for rec in rects:
             axis.add_patch(
                 patches.Rectangle(
-                    xy=(rec.center_x, rec.center_z),
+                    xy=(rec.anchor_x, rec.anchor_z),
                     width=rec.width,
                     height=rec.height,
                     facecolor=tfc,
@@ -1563,7 +1563,7 @@ def plot_pf_coils(axis, mfile_data, scan):
         )
     axis.add_patch(
         patches.Rectangle(
-            xy=(central_coil.center_x, central_coil.center_z),
+            xy=(central_coil.anchor_x, central_coil.anchor_z),
             width=central_coil.width,
             height=central_coil.height,
             facecolor="pink",

@@ -62,7 +62,7 @@ def dhgap_vertices(
     :param triang: plasma triangularity
     :type triang: float
     :return: tuple containing radial and vertical coordinates which, when plotted, plots a half thick D-section with a gap
-    :rtype: tuple
+    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray,]
     """
     arc = np.pi / 4.0
     r01 = (inpt + outpt) / 2.0

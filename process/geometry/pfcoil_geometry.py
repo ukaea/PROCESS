@@ -45,7 +45,7 @@ def pfcoil_geometry(
         z_points.append([z_1, z_2, z_2, z_1, z_1])
 
     central_coil = RectangleGeometry(
-        center_x=bore, center_z=(-ohdz / 2), width=ohcth, height=ohdz
+        anchor_x=bore, anchor_z=(-ohdz / 2), width=ohcth, height=ohdz
     )
 
     return r_points, z_points, central_coil

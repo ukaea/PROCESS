@@ -2,19 +2,9 @@
 Calculate radial and vertical coordinates for the geometry of the first wall
 """
 from typing import Tuple
-from dataclasses import dataclass
 import numpy as np
 from process.geometry.utils import dh_vertices, dhgap_vertices
-
-
-@dataclass
-class FirstWallGeometry:
-    """Holds radial and vertical coordinates for the geometry of a first wall"""
-
-    rs: np.ndarray
-    """outboard and inboard radial coordinates of first wall"""
-    zs: np.ndarray
-    """outboard and inboard vertical coordinates of first wall"""
+from process.geometry.geometry_parameterisations import ArbitraryGeometry
 
 
 def first_wall_geometry_single_null(
@@ -31,7 +21,7 @@ def first_wall_geometry_single_null(
     fwith: float,
     fwoth: float,
     tfwvt: float,
-) -> FirstWallGeometry:
+) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of first wall in a single null configuration
 
     :param radx_outer: outboard radius of outer surface of first wall
@@ -60,8 +50,8 @@ def first_wall_geometry_single_null(
     :type fwoth: float
     :param tfwvt: top first wall vertical thickness
     :type tfwvt: float
-    :return: dataclass returning first wall radial and vertical coordinates
-    :rtype: FirstWallGeometry
+    :return: dataclass returning radial and vertical coordinates
+    :rtype: ArbitraryGeometry
     """
     # Upper first wall: outer surface
     kapx = cumulative_upper["fwtth"] / rminx_outer
@@ -109,7 +99,7 @@ def first_wall_geometry_single_null(
         ]
     )
 
-    return FirstWallGeometry(rs=rs, zs=zs)
+    return ArbitraryGeometry(rs=rs, zs=zs)
 
 
 def first_wall_geometry_lower(
@@ -169,7 +159,7 @@ def first_wall_geometry_double_null(
     fwith: float,
     fwoth: float,
     tfwvt: float,
-) -> FirstWallGeometry:
+) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of first wall in a double null configuration
     In a double null configuration, the geometry of the lower first wall is reflected across the midplane to create the section of first wall above the midplane
 
@@ -189,8 +179,8 @@ def first_wall_geometry_double_null(
     :type fwoth: float
     :param tfwvt: top first wall vertical thickness
     :type tfwvt: float
-    :return: dataclass returning first wall radial and vertical coordinates
-    :rtype: FirstWallGeometry
+    :return: dataclass returning radial and vertical coordinates
+    :rtype: ArbitraryGeometry
     """
     # Lower first wall
     divgap = cumulative_lower["divfix"]
@@ -234,4 +224,4 @@ def first_wall_geometry_double_null(
     rs = [rs_1, rs_2]
     zs = [zs_1, zs_2]
 
-    return FirstWallGeometry(rs=rs, zs=zs)
+    return ArbitraryGeometry(rs=rs, zs=zs)

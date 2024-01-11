@@ -2,19 +2,9 @@
 Calculate radial and vertical coordinates for the geometry of the vacuum vessel
 """
 from typing import Tuple
-from dataclasses import dataclass
 import numpy as np
 from process.geometry.utils import dh_vertices
-
-
-@dataclass
-class VacuumVesselGeometry:
-    """Holds radial and vertical coordinates for the geometry of a vacuum vessel"""
-
-    rs: np.ndarray
-    """outboard and inboard radial coordinates of vacuum vessel"""
-    zs: np.ndarray
-    """outboard and inboard vertical coordinates of vacuum vessel"""
+from process.geometry.geometry_parameterisations import ArbitraryGeometry
 
 
 def vacuum_vessel_geometry_single_null(
@@ -27,7 +17,7 @@ def vacuum_vessel_geometry_single_null(
     rminx_inner: float,
     cumulative_lower: dict,
     lower: dict,
-) -> VacuumVesselGeometry:
+) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of vacuum vessel in a single null configuration
 
     :param cumulative_upper: cumulative vertical thicknesses of components above the midplane
@@ -48,8 +38,8 @@ def vacuum_vessel_geometry_single_null(
     :type cumulative_lower: dict
     :param lower: vertical thicknesses of components below the midplane
     :type lower: dict
-    :return: dataclass returning vacuum vessel radial and vertical coordinates
-    :rtype: VacuumVesselGeometry
+    :return: dataclass returning radial and vertical coordinates
+    :rtype: ArbitraryGeometry
     """
     # Upper vacuum vessel
     kapx = cumulative_upper["d_vv_top"] / rminx_outer
@@ -96,7 +86,7 @@ def vacuum_vessel_geometry_single_null(
             zs_upper_inboard[::-1],
         ]
     )
-    return VacuumVesselGeometry(
+    return ArbitraryGeometry(
         rs=rs,
         zs=zs,
     )
@@ -153,7 +143,7 @@ def vacuum_vessel_geometry_double_null(
     rminx_outer: float,
     radx_inner: float,
     rminx_inner: float,
-) -> VacuumVesselGeometry:
+) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of vacuum vessel in a double null configuration
     In a double null configuration, the geometry of the lower vacuum vessel is reflected across the midplane to create the section of vacuum vessel above the midplane
 
@@ -171,8 +161,8 @@ def vacuum_vessel_geometry_double_null(
     :type radx_inner: float
     :param rminx_inner: inboard radius of inner surface of vacuum vessel
     :type rminx_inner: float
-    :return: dataclass returning vacuum vessel radial and vertical coordinates
-    :rtype: VacuumVesselGeometry
+    :return: dataclass returning radial and vertical coordinates
+    :rtype: ArbitraryGeometry
     """
     # Lower vacuum vessel
     (
@@ -199,4 +189,4 @@ def vacuum_vessel_geometry_double_null(
     rs = np.concatenate([rs_lower[::-1], rs_upper])
     zs = np.concatenate([zs_lower[::-1], zs_upper])
 
-    return VacuumVesselGeometry(rs=rs, zs=zs)
+    return ArbitraryGeometry(rs=rs, zs=zs)

@@ -41,27 +41,33 @@ def tfcoil_geometry_rectangular_shape(
     :rtype: List[RectangleGeometry]
     """
     return_rects = []
+    # In this geometry, the tf coil is represented by 4 rectangular sections as follows:
+
+    # rectangle representing the inboard part of the tf coil
     return_rects.append(
         RectangleGeometry(
-            center_x=x5 - tfcth,
-            center_z=y5 - tfcth,
+            anchor_x=x5 - tfcth,
+            anchor_z=y5 - tfcth,
             width=tfcth,
             height=(y1 - y5 + 2.0 * tfcth),
         )
     )
+    # rectangle representing the outboard part of the tf coil
     return_rects.append(
         RectangleGeometry(
-            center_x=x4,
-            center_z=y4 - tfcth,
+            anchor_x=x4,
+            anchor_z=y4 - tfcth,
             width=tfcth,
             height=(y2 - y4 + 2.0 * tfcth),
         )
     )
+    # rectangle representing the lower horizontal part of the tf coil
     return_rects.append(
-        RectangleGeometry(center_x=x5, center_z=y5 - tfcth, width=x4 - x5, height=tfcth)
+        RectangleGeometry(anchor_x=x5, anchor_z=y5 - tfcth, width=x4 - x5, height=tfcth)
     )
+    # rectangle representing the upper horizontal part of the tf coil
     return_rects.append(
-        RectangleGeometry(center_x=x1, center_z=y1, width=(x2 - x1), height=tfcth)
+        RectangleGeometry(anchor_x=x1, anchor_z=y1, width=(x2 - x1), height=tfcth)
     )
 
     return return_rects
@@ -80,7 +86,7 @@ def tfcoil_geometry_d_shape(
     tfcth: float,
     rtangle: float,
     rtangle2: float,
-) -> Tuple[List[RectangleGeometry], list]:
+) -> Tuple[List[RectangleGeometry], List[List[Tuple[float, float]]]]:
     """Calculates radial and vertical distances for the geometry of the tf coils in a D-shape parametrization
 
     :param x1: radial location of arc point 1
@@ -108,7 +114,7 @@ def tfcoil_geometry_d_shape(
     :param rtangle2: angle used in tf coil parametrization
     :type rtangle2: float
     :return: radial and vertical coordinates for tf coils
-    :rtype: Tuple[List[RectangleGeometry], list]
+    :rtype: Tuple[List[RectangleGeometry], List[List[Tuple[float, float]]]]
     """
     return_rects = []
     return_verts = []
@@ -183,7 +189,7 @@ def tfcoil_geometry_d_shape(
     # Vertical leg
     return_rects.append(
         RectangleGeometry(
-            center_x=x5 - tfcth, center_z=y5, width=tfcth, height=(y1 - y5)
+            anchor_x=x5 - tfcth, anchor_z=y5, width=tfcth, height=(y1 - y5)
         )
     )
     return_verts = [verts1, verts2, verts3, verts4]

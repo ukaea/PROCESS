@@ -60,11 +60,6 @@ def plasma_geometry(
             -(inang + theta1) + np.pi, (inang + theta1) + np.pi, 256, endpoint=True
         )
         angs2 = np.linspace(-(outang + theta2), (outang + theta2), 256, endpoint=True)
-    elif i_single_null < 0:
-        angs1 = np.linspace(
-            -(inang + theta1) + np.pi, theta1 + np.pi, 256, endpoint=True
-        )
-        angs2 = np.linspace(-theta2, (outang + theta2), 256, endpoint=True)
     else:
         angs1 = np.linspace(
             -theta1 + np.pi, (inang + theta1) + np.pi, 256, endpoint=True
