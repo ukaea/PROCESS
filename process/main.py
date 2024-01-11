@@ -49,7 +49,6 @@ from process.plasma_geometry import PlasmaGeom
 from process.pulse import Pulse
 from process.scan import Scan
 from process import final
-from process.stellarator import Stellarator
 from process.structure import Structure
 from process.build import Build
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
@@ -70,12 +69,13 @@ from process.hcpb import CCFE_HCPB
 from process.dcll import DCLL
 from process.blanket_library import BlanketLibrary
 from process.fw import Fw
-from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 
 from pathlib import Path
 import os
 import logging
+import numpy as np
+import json
 
 # For VaryRun
 from process.io.process_config import RunProcessConfig
@@ -345,10 +345,8 @@ class SingleRun:
         :type solver: str, optional
         """
         self.input_file = input_file
-
         self.validate_input()
         self.init_module_vars()
-        self.set_filenames()
         self.models = Models()
         self.solver = solver
 
@@ -406,7 +404,9 @@ class SingleRun:
 
         # Set the input file in the Fortran
         fortran.global_variables.fileprefix = string_to_f2py_compatible(
-            fortran.global_variables.fileprefix, str(self.input_path.resolve())
+            fortran.global_variables.fileprefix,
+            str(self.input_path.resolve()),
+            except_length=True,
         )
 
     def set_output(self):
@@ -472,7 +472,56 @@ class SingleRun:
                 caller.call_models(x)
                 self.ifail = 6
 
+                # Output responses for UQ
+                self.output_responses()
+
             final.finalise(self.models, self.ifail)
+
+    def output_responses(self):
+        """Calculate responses for UQ and output to JSON."""
+        responses = {}
+
+        # Objective function
+        obj_func = fortran.function_evaluator.funfom()
+        responses["obj_func"] = obj_func
+
+        # Collect constraints
+        neqns = fortran.numerics.neqns
+        nineqns = fortran.numerics.nineqns
+        m = neqns + nineqns
+        constrs, _, _, _, _ = fortran.constraints.constraint_eqns(m, -1)
+
+        # Calculate RMS constraint residuals for violated constraints only
+        eq_constrs = constrs[:neqns]
+        ineq_constrs = constrs[neqns:]
+        # Make feasible constraints (> 0) = 0
+        ineq_constrs[ineq_constrs > 0] = 0.0
+        vio_constrs = np.concatenate([eq_constrs, ineq_constrs])
+        rms_vio_constr_res = np.sqrt(np.mean(vio_constrs**2))
+        responses["rms_vio_constr_res"] = rms_vio_constr_res
+
+        # Add individual constraint values
+        # Numbers of the constraints active for this problem
+        constr_nums = fortran.numerics.icc
+        for i, constr_val in enumerate(constrs):
+            if i < neqns:
+                constr_prefix = "eq"
+            else:
+                constr_prefix = "ineq"
+                # TODO Not sure if we want to mask non-violated constraint
+                # values at this stage
+                # Only want violated constraint values
+                # Make feasible inequality constraints (> 0) = 0.0
+                if constr_val > 0:
+                    constr_val = 0.0
+
+            constr_num = constr_nums[i]
+            responses[f"{constr_prefix}_{constr_num}"] = constr_val
+
+        # Dump responses to JSON
+        responses_file = Path("responses.json")
+        with open(responses_file, "w+") as file:
+            json.dump(responses, file, indent=4)
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
@@ -505,6 +554,7 @@ class SingleRun:
         """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
         within obsolete_variables.py.
         Then will print out what the used obsolete variables are (if any) before continuing the proces run.
+        #TODO: add a feature to stop 1 and force the variable to be updated if it is now obsolete.
         """
 
         obsolete_variables = ov.OBS_VARS
@@ -522,20 +572,18 @@ class SingleRun:
                     variables = line.strip().split(sep, 1)[0]
                     variables_in_in_dat.append(variables)
 
-        obs_vars = []
-        replace_hints = []
-        for var in variables_in_in_dat:
-            new_var = obsolete_variables.get(var)
-            if new_var:
-                obs_vars.append(var)
-                replace_hints.append(new_var)
+        obs_vars_keys = []
+        for k in obsolete_variables:
+            obs_vars_keys.append(k)
 
-        if len(replace_hints) > 0:
+        variable_check = any(i in variables_in_in_dat for i in obs_vars_keys)
+
+        if variable_check:
             print(
                 "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary."
             )
             print(
-                f"The obsolete variables in your IN.DAT file are: {obs_vars}. Please change them to the following corresponding new variable(s) before continuing: {replace_hints}."
+                f"The obsolete variables in your IN.DAT file are: {set(obs_vars_keys) & set(variables_in_in_dat)}. Please change them to the corresponding new variable(s) before continuing."
             )
         else:
             print("The IN.DAT file does not contain any obsolete variables.")
@@ -583,24 +631,11 @@ class Models:
         self.costs = Costs()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
+        self.costs_2015 = Costs2015()
+        self.physics = Physics(plasma_profile=self.plasma_profile)
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
-        self.current_drive = CurrentDrive()
-        self.stellarator = Stellarator(
-            availability=self.availability,
-            buildings=self.buildings,
-            vacuum=self.vacuum,
-            costs=self.costs,
-            power=self.power,
-            plasma_profile=self.plasma_profile,
-            hcpb=self.ccfe_hcpb,
-            current_drive=self.current_drive,
-        )
-        self.costs_2015 = Costs2015()
-        self.physics = Physics(
-            plasma_profile=self.plasma_profile, current_drive=self.current_drive
-        )
         self.dcll = DCLL(blanket_library=self.blanket_library)
 
 
