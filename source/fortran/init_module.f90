@@ -149,7 +149,6 @@ contains
 
       open(unit=nout     ,file=trim(output_prefix)//'OUT.DAT'   ,status='unknown')
       open(unit=mfile    ,file=trim(output_prefix)//'MFILE.DAT' ,status='unknown')
-      open(unit=sig_file ,file=trim(output_prefix)//'SIG_TF.DAT',status='unknown')
 
       !  Input any desired new initial values
       call input
