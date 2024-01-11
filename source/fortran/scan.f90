@@ -212,7 +212,7 @@ contains
     ! Turn off error reporting (until next output)
     errors_on = .false.
 
-    ! Store values for PLOT.DAT output
+    ! Store values for MFILE.DAT output
     outvar( 1,iscan) = dble(ifail)
     outvar( 2,iscan) = sqsumsq
     outvar( 3,iscan) = coe
@@ -402,16 +402,6 @@ contains
         first_call_1d = .false.
      end if
 
-    ! Finally, write data to PLOT.DAT
-    write(nplot,'(i8)') isweep
-    write(nplot,'(a48)') tlabel
-    write(nplot,'(a25, 1p, 200e11.4)') xlabel,(sweep(iscan),iscan=1,isweep)
-
-    do ivar = 1,noutvars
-       !write(nplot,'(a25,20e11.4)') plabel(ivar), (outvar(ivar,iscan), iscan=1,isweep)
-       write(nplot,'(a25, 1p, 200e11.4)') plabel(ivar), (outvar(ivar,iscan), iscan=1,isweep)
-    end do
-
   end subroutine scan_1d_write_plot
 
   subroutine scan_2d_init
@@ -597,18 +587,6 @@ contains
 
     tlabel = icase
 
-    ! Finally, write data to PLOT.DAT
-    write(nplot,'(i8)') isweep*isweep_2
-    write(nplot,'(a48)') tlabel
-    write(nplot,'(a25, 1p, 200e11.4)') xlabel, (sweep_1_vals(iscan), iscan=1, &
-          isweep*isweep_2)
-    write(nplot,'(a25, 1p, 200e11.4)') xlabel_2, (sweep_2_vals(iscan), &
-          iscan=1, isweep*isweep_2)
-
-    do ivar = 1, noutvars
-        write(nplot,'(a25, 1p, 200e11.4)') plabel(ivar), (outvar(ivar,iscan), &
-            iscan=1,isweep*isweep_2)
-    end do
   end subroutine scan_2d_write_plot
 
   subroutine scan_select(nwp, swp, iscn, vlab, xlab)
