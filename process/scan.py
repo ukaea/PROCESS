@@ -26,7 +26,7 @@ class Scan:
 
         This method calls the optimisation routine VMCON a number of times, by
         performing a sweep over a range of values of a particular variable. A
-        number of output variable values are written to the PLOT.DAT file at
+        number of output variable values are written to the MFILE.DAT file at
         each scan point, for plotting or other post-processing purposes.
         """
         # Turn off error reporting (until next output)

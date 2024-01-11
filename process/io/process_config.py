@@ -117,7 +117,7 @@ class ProcessConfig(object):
         os.chdir(self.wdir)
         subprocess.call(
             [
-                "rm -f OUT.DAT MFILE.DAT PLOT.DAT README.txt\
+                "rm -f OUT.DAT MFILE.DAT README.txt\
         SolverTest.out process.log *.pdf  uncertainties.nc time.info"
             ],
             shell=True,

@@ -39,9 +39,7 @@ gui_dicts.py_prev
 rootdir.py
 VFILE.DAT
 MFILE.DAT
-PLOT.DAT
 OUT.DAT
-OPT.DAT
 SIG_TF.json
 tag.num
 tests.x
@@ -57,12 +55,6 @@ KatyTest/*
 *.gz
 ford_site/
 lib/ford
-test_suite/test_files/*/new.OUT.DAT
-test_suite/_divertor01.txt
-test_suite/FZMIN_TEST.DAT
-test_suite/REBCO_JC.DAT
-test_suite/quench_data.DAT
-test_suite/OPT.DAT
 *.egg-info
 fortran.py
 .coverage
