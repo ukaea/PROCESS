@@ -601,27 +601,9 @@ contains
        case ('fnesep')
           call parse_real_variable('fnesep', fnesep, 0.1D0, 2.0D1, &
                'f-value for Eich critical separatrix density')
-       case ('fradmin')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FRADMIN is now obsolete -'
-          write(outfile,*) 'please remove it from the input file.'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('ftaulimit')
           call parse_real_variable('ftaulimit', ftaulimit, 0.001D0, 1.0D0, &
                'f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement times')
-
-       case ('ftr')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FTR is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '(use FTRIT instead).'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('ftrit')
           call parse_real_variable('ftrit', ftrit, 0.0D0, 1.0D0, &
                'Tritium fuel fraction')
@@ -646,30 +628,12 @@ contains
        case ('iculbl')
           call parse_int_variable('iculbl', iculbl, 0, 3, &
                'Switch for beta limit scaling')
-       case ('iculdl')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'ICULDL is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '(use IDENSL=3 for equivalent model to ICULDL=0).'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('icurr')
           call parse_int_variable('icurr', icurr, 1, 9, &
                'Switch for plasma current scaling')
        case ('idensl')
           call parse_int_variable('idensl', idensl, 1, 7, &
                'Switch for enforced density limit')
-       case ('idhe3')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'IDHE3 is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '(use fhe3 to adjust 3He fuel fraction).'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('idia')
           call parse_int_variable('idia', idia, 0, 2, &
                 'Switch for diamagnetic scaling')
@@ -682,14 +646,6 @@ contains
        case ('iinvqd')
           call parse_int_variable('iinvqd', iinvqd, 0, 1, &
                'Switch for inverse quadrature')
-       case ('iiter')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'IITER is now obsolete -'
-          write(outfile,*) 'please remove it from the input file.'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('ilhthresh')
           call parse_int_variable('ilhthresh', ilhthresh, 1, 21, &
                'Switch for L-H power threshold to enforce')
@@ -706,14 +662,6 @@ contains
        case ('iradloss')
           call parse_int_variable('iradloss', iradloss, 0, 2, &
                'Switch for radiation loss term inclusion in power balance')
-       case ('ires')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'IRES is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('isc')
           call parse_int_variable('isc', isc, 1, ipnlaws, &
                'Switch for confinement scaling law')
@@ -886,14 +834,6 @@ contains
        case ('fjohc0')
           call parse_real_variable('fjohc0', fjohc0, 0.001D0, 10.0D0, &
                'F-value for Central Solenoid current at BOP')
-       case ('fjtfc')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FJTFC is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('fhldiv')
           call parse_real_variable('fhldiv', fhldiv, 0.001D0, 10.0D0, &
                'F-value for divertor heat load')
@@ -984,14 +924,6 @@ contains
        case ('fstr_wp')
           call parse_real_variable('fstr_wp', fstr_wp, 1.0D-9, 10.0D0, &
                'F-value for TF coil strain absolute value')
-       case ('ftaucq')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'ftaucq is now obsolete - (use fmaxvvstress)'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('fmaxvvstress')
           call parse_real_variable('fmaxvvstress', fmaxvvstress, 0.001D0, 1.0D0, &
                'F-value for maximum permitted stress of the VV')
@@ -1152,7 +1084,7 @@ contains
                'Cyclotron harmonic frequency number')
       case ('wave_mode')
          call parse_int_variable('wave_mode', wave_mode, 0, 1, &
-               'Cyclotron wave mode switch')        
+               'Cyclotron wave mode switch')
        case ('xi_ebw')
 	  call parse_real_variable('xi_ebw', xi_ebw, 0.0D0, 1.0D0, &
                'User input EBW scaling for Plasma Heating')
@@ -1213,18 +1145,6 @@ contains
 
        ! Divertor settings: 2016 Kallenbach model (2016/07/04)
 
-       case ('target_spread', 'lambda_q_omp', 'lcon_factor', 'netau_sol', 'kallenbach_switch', &
-         'kallenbach_tests', 'kallenbach_test_option', 'kallenbach_scan_switch', 'kallenbach_scan_var', &
-         'kallenbach_scan_start', 'kallenbach_scan_end', 'kallenbach_scan_num', 'targetangle', 'ttarget', &
-         'qtargettotal', 'impurity_enrichment', 'fractionwidesol', 'abserr_sol', 'relerr_sol', 'mach0', &
-         'neratio')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
 
        ! See HTS coil module for PROCESS.docx
        !case ('cable_helium_fraction')
@@ -1389,22 +1309,6 @@ contains
             call parse_real_variable('blnkoth', blnkoth, 0.0D0, 10.0D0, &
                 'Outboard blanket thickness (m)')
           end if
-       case ('blnktth')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'WARNING. BLNKTTH is now always calculated rather than input -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
-       case ('bcylth')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'ERROR. BCYLTH is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('bore')
           call parse_real_variable('bore', bore, 0.0D0, 50.0D0, &
                'Machine bore (m)')
@@ -1742,15 +1646,6 @@ contains
              write(outfile,*) '**********'
              write(outfile,*) ' '
           end if
-       case ('itfmod')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'ITFMOD is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          ! write(outfile,*) 'and replace it with TFC_MODEL'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('i_tf_sup')
           call parse_int_variable('i_tf_sup', i_tf_sup, 0, 2, &
                'Switch for TF coil type')
@@ -1769,22 +1664,6 @@ contains
        case ('jbus')
           call parse_real_variable('jbus', jbus, 1.0D4, 1.0D8, &
                'TF coil bus current density (A/m2)')
-       case ('jcrit_model')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'JCRIT_MODEL is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
-       case ('jcritsc')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'JCRITSC is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('n_pancake')
           call parse_int_variable('n_pancake', n_pancake, 1, 100, &
                'Number of pancakes in TF coil (i_tf_turns_integer=1)')
@@ -1818,14 +1697,7 @@ contains
        case ('ripmax')
           call parse_real_variable('ripmax', ripmax, 0.1D0, 100.0D0, &
                'Max allowed ripple ampl. at plasma edge (%)')
-       case ('sigvvall')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'sigvvall is now obsolete - (use max_vv_stress)'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
+
        case ('theta1_coil')
           call parse_real_variable('theta1_coil', theta1_coil, 1.0D-1, 6.0D1, &
                'The angle of the outboard arc forming the TF coil current center line (deg)')
@@ -1969,14 +1841,6 @@ contains
        case ('etapsu')
           call parse_real_variable('etapsu', etapsu, 0.0D0, 1.0D0, &
                'Efficiency of ohmic heating')
-       case ('fcohbof')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FCOHBOF is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('fcohbop')
           call parse_real_variable('fcohbop', fcohbop, 0.0D0, 1.0D0, &
                'Central Solenoid J ratio : BOP/EOF')
@@ -2293,30 +2157,6 @@ contains
        case ('fhole')
           call parse_real_variable('fhole', fhole, 0.0D0, 1.0D0, &
                'Hole area fraction')
-       case ('fvolbi')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FVOLBI is now obsolete - (use FHOLE)'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
-       case ('fvolbo')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FVOLBO is now obsolete - (use FHOLE)'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
-       case ('fvolcry')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FVOLCRY is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('fvoldw')
           call parse_real_variable('fvoldw', fvoldw, 0.0D0, 10.0D0, &
                'Fudge factor for vacuum vessel volume')
@@ -3682,6 +3522,7 @@ contains
           write(*,*) error_message
           write(*,*) 'Error occurred at this line in the IN.DAT file: ', lineno
           write(*,*) line
+          obsolete_var = .false.
           error = .True.
        end if
 
