@@ -521,21 +521,44 @@ class SingleRun:
                     variables = line.strip().split(sep, 1)[0]
                     variables_in_in_dat.append(variables)
 
-        obs_vars = []
-        replace_hints = []
+        obs_vars_in_in_dat = []
+        replace_hints = {}
         for var in variables_in_in_dat:
-            new_var = obsolete_variables.get(var)
-            if new_var:
-                obs_vars.append(var)
-                replace_hints.append(new_var)
+            if var in obsolete_variables:
+                obs_vars_in_in_dat.append(var)
+                new_var = obsolete_variables.get(var)
+                replace_hints[var] = new_var
 
-        if len(replace_hints) > 0:
-            print(
-                "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary."
+        if len(obs_vars_in_in_dat) > 0:
+            message = (
+                "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary. The obsolete variables in your IN.DAT file are: "
+                f"{obs_vars_in_in_dat}. "
+                "Either remove these or replace them with their updated variable names. "
             )
-            print(
-                f"The obsolete variables in your IN.DAT file are: {obs_vars}. Please change them to the following corresponding new variable(s) before continuing: {replace_hints}."
-            )
+            for var in obs_vars_in_in_dat:
+                if replace_hints[var][0] is None:
+                    message = (
+                        message
+                        + "\n \n "
+                        + var
+                        + " is an obsolete variable and does not have a replacement. "
+                    )
+                    if len(replace_hints[var]) == 2:
+                        message = message + str(replace_hints[var][1])
+                if replace_hints[var][0] is not None:
+                    message = (
+                        message
+                        + "\n \n "
+                        + var
+                        + " is an obsolete variable and needs to be replaced by "
+                        + str(replace_hints[var][0])
+                        + ". "
+                    )
+                    if len(replace_hints[var]) == 2:
+                        message = message + str(replace_hints[var][1])
+
+            raise ValueError(message)
+
         else:
             print("The IN.DAT file does not contain any obsolete variables.")
 
