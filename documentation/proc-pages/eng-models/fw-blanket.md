@@ -212,7 +212,7 @@ Minimum distance travelled by surface heat load = $\texttt{fw} \_ \texttt{wall}$
 Maximum distance travelled by surface heat load = $\texttt{diagonal}$
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{afw}+\texttt{fw} \_ \texttt{wall})^2 + (\frac{\texttt{pitch}}{2}-\texttt{afw})^2 }
+\texttt{diagonal}=\sqrt{(\texttt{afw}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{pitch}}{2}-\texttt{afw}\right)^2 }
 $$
 
 Typical distance travelled by surface heat load:
@@ -223,7 +223,7 @@ $$
 
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{afw}+\texttt{fw} \_ \texttt{wall})^2 + (\frac{\texttt{pitch}}{2}-\texttt{afw})^2 }
+\texttt{diagonal}=\sqrt{(\texttt{afw}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{pitch}}{2}-\texttt{afw}\right)^2 }
 $$
 
 The energy travels over a cross-section which is initially $= \texttt{pitch}$
