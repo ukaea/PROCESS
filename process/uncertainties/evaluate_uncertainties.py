@@ -13,7 +13,6 @@ An IN.DAT file as specified in the config file
 
 Output files:
 OUT.DAT               - PROCESS output
-PLOT.DAT              - PROCESS output
 MFILE.DAT             - PROCESS output
 uncertainties_data.h5 - Dataframe of all PROCESS MFILE Outputs
 morris_method.txt     - contains the dictorany of the mean and

@@ -163,8 +163,6 @@ module tfcoil_variables
   real(dp) :: estotftgj
   !! total stored energy in the toroidal field (GJ)
 
-  real(dp) :: farc4tf
-  !! factor to size height of point 4 on TF coil
   real(dp) :: b_crit_upper_nbti
   !! upper critical field of GL_nbti
   real(dp) :: t_crit_nbti
@@ -354,7 +352,7 @@ module tfcoil_variables
   !! Aluminium young modulus.  Default value taken from wikipedia
 
   real(dp) :: poisson_steel
-  !! Steel Poisson's ratio
+  !! Steel Poisson's ratio, Source : https://www.engineeringtoolbox.com/metals-poissons-ratio-d_1268.html
 
   real(dp):: poisson_copper
   !! Copper Poisson's ratio. Source : https://www.engineeringtoolbox.com/poissons-ratio-d_1224.html
@@ -479,9 +477,6 @@ module tfcoil_variables
   !!
   !! - ='exponential' exponential quench with constant discharge resistor
   !! - ='linear' quench with constant voltage
-
-  real(dp) :: quench_detection_ef
-  !! Electric field at which TF quench is detected and discharge begins (V/m)
 
   real(dp) :: time1
   !! Time at which TF quench is detected (s)
@@ -721,7 +716,7 @@ module tfcoil_variables
   real(dp) :: wwp2
   !! width of second step of winding pack (m)
 
-  ! Superconducting TF coil shape parameters</B> (see also farc4tf);
+  ! Superconducting TF coil shape parameters;
   ! the TF inner surface top half is approximated by four circular arcs.
   ! Arc 1 goes through points 1 and 2 on the inner surface. Arc 2
   ! goes through points 2 and 3, etc.
@@ -884,7 +879,6 @@ module tfcoil_variables
     dcondins = 1800.0D0
     dhecoil = 0.005D0
     estotftgj = 0.0D0
-    farc4tf = 0.7D0
     b_crit_upper_nbti = 14.86D0
     t_crit_nbti = 9.04D0
     max_force_density = 0.0D0
@@ -950,7 +944,6 @@ module tfcoil_variables
     str_wp_max = 0.7D-2
     i_str_wp = 1
     quench_model = 'exponential'
-    quench_detection_ef = 0D0
     time1 = 0D0
     tcritsc = 16.0D0
     tdmptf = 10.0D0

@@ -5,7 +5,6 @@ import math
 import process.physics_functions as physics_funcs
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process.fortran import (
-    current_drive_module,
     constraint_variables,
     reinke_variables,
     reinke_module,
@@ -30,9 +29,10 @@ from process.fortran import (
 
 
 class Physics:
-    def __init__(self, plasma_profile):
+    def __init__(self, plasma_profile, current_drive):
         self.outfile = constants.nout
         self.plasma_profile = plasma_profile
+        self.current_drive = current_drive
 
     def physics(self):
         """
@@ -192,7 +192,6 @@ class Physics:
             physics_variables.vol,
         )
 
-        # Profile parameters are meaningless with ipedestal=3
         betat = (
             physics_variables.beta
             * physics_variables.btot**2
@@ -312,7 +311,7 @@ class Physics:
         # Auxiliary current drive power calculations
 
         if current_drive_variables.irfcd != 0:
-            current_drive_module.cudriv(constants.nout, 0)
+            self.current_drive.cudriv(False)
 
         # Calculate fusion power + components
 
@@ -3317,11 +3316,6 @@ class Physics:
             physics_variables.aion,
             "OP ",
         )
-        # MDK Say which impurity is varied, if iteration variable fimpvar (102) is turned on
-        # if (any(ixc == 102)) :
-        #   call ovarst(self.outfile,'Impurity used as an iteration variable' , '', '"' // impurity_arr(impvar)%label // '"')
-        #   po.ovarre(self.outfile,'Fractional density of variable impurity (ion / electron density)','(fimpvar)',fimpvar)
-        #
         po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "

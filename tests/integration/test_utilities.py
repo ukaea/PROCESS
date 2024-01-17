@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 logger.info("Running utilities integration tests")
 
 # TODO More utilities tests to be implemented
-# test_make_plot_dat
 # test_convert_in_dat
 
 

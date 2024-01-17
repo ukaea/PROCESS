@@ -877,23 +877,23 @@
     },
     {
       "no": 174,
-      "level": 3,
-      "message": "CONVERT_PLASMOD2PROCESS: PLASMOD Transport model (ipedestal=3) has not converged"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 175,
-      "level": 3,
-      "message": "SETUPPLASMOD: PLASMOD(ipedestal=2,3) can only be used with ieped = 0 or 1"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 176,
-      "level": 3,
-      "message": "CHECK: fgwped has to be > 0, if ipedestal = 2 or 3"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 177,
-      "level": 3,
-      "message": "CHECK: fgwsep has to be > 0, if ipedestal = 2 or 3"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 178,
@@ -902,38 +902,38 @@
     },
     {
       "no": 179,
-      "level": 3,
-      "message": "CHECK: You have to use the LH-threshold constraint with PLASMOD(ipedestal=3)"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 180,
-      "level": 1,
+      "level": 0,
       "message": "OBSOLETE"
     },
     {
       "no": 181,
-      "level": 3,
-      "message": "CHECK: You have to enforce H-mode with PLASMOD(ipedestal=3)"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 182,
-      "level": 3,
-      "message": "CHECK: It.vars 4,5,6,9,36,44,102,103,109,110,117 can't be used with PLASMOD:"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 183,
-      "level": 3,
-      "message": "CHECK: The density limit (icc = 5) cannot be used in conjuctions with PLASMOD(ipedestal=3), use fgwsep or fgwped instead"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 184,
-      "level": 3,
-      "message": "CHECK: You need to use iradloss=0 with PLASMOD(ipedestal=2,3)"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 185,
-      "level": 3,
-      "message": "CHECK: You cannot use icc = 2 (global power balance) in combination with PLASMOD(ipedestal=3)"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 186,
@@ -947,68 +947,68 @@
     },
     {
       "no": 188,
-      "level": 3,
-      "message": "CHECK: The beta consistency equation cannot be used in conjunction with PLASMOD (ipedestal=3) as beta is an output"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 189,
-      "level": 2,
-      "message": "CHECK: plasmod_i_equiltype =2 is a not consistently implemented option!"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 190,
-      "level": 3,
-      "message": "CHECK: if plasmod_i_equiltype = 2, q95 is an output and plascur an input. Hence, q cannot vary!"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 191,
-      "level": 3,
-      "message": "CHECK: if plasmod_i_modeltype > 1, beta is calculated and its limit is enforced inside PLASMOD. Therefore no beta limit needs be checked in PROCESS!"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 192,
-      "level": 3,
-      "message": "CONVERT_PLASMOD2PROCESS: Definitions of dnalp inconsistent between PLASMOD and PROCESS! Flag to developer!"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 193,
-      "level": 3,
-      "message": "CONVERT_PLASMOD2PROCESS: Definitions of deni inconsistent between PLASMOD and PROCESS! Flag to developer!"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 194,
-      "level": 3,
-      "message": "CONVERT_PLASMOD2PROCESS: Definitions of dnz inconsistent between PLASMOD and PROCESS! Flag to developer!"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 195,
-      "level": 3,
-      "message": "CONVERT_PLASMOD2PROCESS: Definitions of zeff inconsistent between PLASMOD and PROCESS! Flag to developer!"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 196,
-      "level": 3,
-      "message": "CHECK: ishape has to be 4, if ipedestal=2,3, as PLASMOD takes kappa95,triang95 as inputs!"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 197,
-      "level": 3,
-      "message": "CHECK: PLASMOD (ipedestal=2,3) only uses NBI current drive"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 198,
-      "level": 3,
-      "message": "CHECK: PLASMOD (ipedestal=2,3) always has to have current drive"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 199,
-      "level": 2,
-      "message": "CHECK: PLASMOD (ipedestal=2,3) automatically takes both pseprmax and psepbqarmax as input. It uses which ever one leads to the lower Psep value. Not to use one of them set them to a very large number"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 200,
-      "level": 3,
-      "message": "CONVERT_PLASMOD2PROCESS: PLASMOD output for dnitot is inconsistent"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 201,
@@ -1047,23 +1047,23 @@
     },
     {
       "no": 208,
-      "level": 3,
-      "message": "CHECK: icc = 68 (Psep * Bt / qAR upper limit) cannot be used with PLASMOD"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 209,
-      "level": 3,
-      "message": "CHECK: You cannot use icc = 15 (LH power threshold limit) in combination with PLASMOD(ipedestal=3)"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 210,
-      "level": 3,
-      "message": "CHECK: You cannot use icc = 62 (ratio of particle and energy confinement times) in combination with PLASMOD(ipedestal=3)"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 211,
-      "level": 3,
-      "message": "CHECK: You cannot use icc = 24 (Beta upper limit) in combination with PLASMOD(ipedestal=3)"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 212,

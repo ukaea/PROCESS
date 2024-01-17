@@ -142,7 +142,7 @@ class Costs2015:
         self.mean_electric_output = (
             heat_transport_variables.pnetelmw * cost_variables.cpfact
         )
-        self.annual_electric_output = self.mean_electric_output * 24.0e0 * 265.25e0
+        self.annual_electric_output = self.mean_electric_output * 24.0e0 * 365.25e0
 
         # Annual maintenance cost.
         self.maintenance = (

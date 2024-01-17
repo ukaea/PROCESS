@@ -84,9 +84,9 @@ module fwbs_variables
   !! switch for blanket model:
   !!
   !! - =1 CCFE HCPB model
-  !! - =2 KIT HCPB model
+  !! - =2 KIT HCPB model  # REMOVED, no longer usable
   !! - =3 CCFE HCPB model with Tritium Breeding Ratio calculation
-  !! - =4 KIT HCLL model
+  !! - =4 KIT HCLL model  # REMOVED, no longer usable
   !! - =5 DCLL model -  no nutronics model included (in development) please check/choose values for
   !!                      'dual-coolant blanket' fractions (provided in this file).
   !!                 -  please use primary_pumping = 0 or 1.
@@ -488,7 +488,7 @@ module fwbs_variables
   !! mass of blanket - lithium part [kg]
 
   real(dp) :: vfblkt
-  !! coolant void fraction in blanket (`blktmodel=0`), (calculated if `blktmodel > 0`)
+  !! coolant void fraction in blanket.
 
   integer :: blktmodel
   !! switch for blanket/tritium breeding model (see iblanket):
@@ -532,130 +532,130 @@ module fwbs_variables
   !! Thermodynamic Model for primary_pumping == 2
   !! -----------------------------------------------------
 
+  integer :: ipump
   !! Switch for whether the FW and BB are on the same pump system
   !! i.e. do they have the same primary coolant or not
   !!  - =0    FW and BB have the same primary coolant, flow = FWin->FWout->BBin->BBout
   !!  - =1    FW and BB have the different primary coolant and are on different pump systems
-  integer :: ipump
 
+  integer :: i_bb_liq
   !! Switch for Liquid Metal Breeder Material
   !!  - =0   PbLi
   !!  - =1   Li
-  integer :: i_bb_liq
 
+  integer :: icooldual
   !! Switch to specify whether breeding blanket is single-cooled or dual-coolant.
   !!  - =0    Single coolant used for FW and Blanket (H2O or He). Solid Breeder.
   !!  - =1    Single coolant used for FW and Blanket (H2O or He). Liquid metal breeder
   !!          circulted for tritium extraction.
   !!  - =2    Dual coolant: primary coolant (H2O or He) for FW and blanket structure;
   !!          secondary coolant is self-cooled liquid metal breeder.
-  integer :: icooldual
 
+  integer :: ifci
   !! Switch for Flow Channel Insert (FCI) type if liquid metal breeder blanket.
   !!  - =0    Thin conducting walls, default electrical conductivity (bz_channel_conduct_liq) is Eurofer
   !!  - =1    Insulating Material, assumed perfect electrical insulator, default density (den_ceramic) is for SiC
   !!  - =2    Insulating Material, electrical conductivity (bz_channel_conduct_liq) is input (default Eurofer), default density (den_ceramic) is for SiC
-  integer :: ifci
 
+  integer :: ims
   !! Switch for Multi Module Segment (MMS) or Single Modle Segment (SMS)
   !!  - =0    MMS
   !!  - =1    SMS
-  integer :: ims
 
-  !! Number of liquid metal breeder recirculations per day, for use with icooldual=1
   integer :: n_liq_recirc
+  !! Number of liquid metal breeder recirculations per day, for use with icooldual=1
 
-  !! Radial fraction of BZ liquid channels
   real(dp) :: r_f_liq_ib, r_f_liq_ob
+  !! Radial fraction of BZ liquid channels
 
-  !! Toroidal fraction of BZ liquid channels
   real(dp) :: w_f_liq_ib, w_f_liq_ob
+  !! Toroidal fraction of BZ liquid channels
 
-  !! FCI material density
   real(dp) :: den_ceramic
+  !! FCI material density
 
-  !! Liquid metal coolant/breeder wall thickness thin conductor or FCI [m]
   real(dp) :: th_wall_secondary
+  !! Liquid metal coolant/breeder wall thickness thin conductor or FCI [m]
 
-  !! Liquid metal coolant/breeder thin conductor or FCI wall conductance [A V^-1 m^-1]
   real(dp) :: bz_channel_conduct_liq
+  !! Liquid metal coolant/breeder thin conductor or FCI wall conductance [A V^-1 m^-1]
 
-  !! Toroidal width of the rectangular cooling channel [m] for long poloidal sections of blanket breeding zone
   real(dp) :: a_bz_liq
+  !! Toroidal width of the rectangular cooling channel [m] for long poloidal sections of blanket breeding zone
 
-  !! Radial width of the rectangular cooling channel [m] for long poloidal sections of blanket breeding zone
   real(dp) :: b_bz_liq
+  !! Radial width of the rectangular cooling channel [m] for long poloidal sections of blanket breeding zone
 
-  !! Number of poloidal sections in a liquid metal breeder/coolant channel for module/segment
   integer :: nopol
+  !! Number of poloidal sections in a liquid metal breeder/coolant channel for module/segment
 
-  !! Number of Liquid metal breeder/coolant channels per module/segment
   integer :: nopipes
+  !! Number of Liquid metal breeder/coolant channels per module/segment
 
-  !! Liquid metal breeder/coolant density [kg m^-3]
   real(dp) :: den_liq
+  !! Liquid metal breeder/coolant density [kg m^-3]
 
-  !! Liquid metal
   real(dp) ::wht_liq, wht_liq_ib, wht_liq_ob
+  !! Liquid metal
 
-  !! Liquid metal breeder/coolant specific heat [J kg^-1 K^-1]
   real(dp) :: specific_heat_liq
+  !! Liquid metal breeder/coolant specific heat [J kg^-1 K^-1]
 
-  !! Liquid metal breeder/coolant thermal conductivity [W m^-1 K^-1]
   real(dp) :: thermal_conductivity_liq
+  !! Liquid metal breeder/coolant thermal conductivity [W m^-1 K^-1]
 
-  !! Liquid metal breeder/coolant dynamic viscosity [Pa s]
   real(dp) :: dynamic_viscosity_liq
+  !! Liquid metal breeder/coolant dynamic viscosity [Pa s]
 
-  !! Liquid metal breeder/coolant electrical conductivity [Ohm m]
   real(dp) :: electrical_conductivity_liq
+  !! Liquid metal breeder/coolant electrical conductivity [Ohm m]
 
-  !! Hartmann number
   real(dp) :: hartmann_liq(2)
+  !! Hartmann number
 
-  !! Toroidal Magnetic feild strength for IB/OB blanket [T]
   real(dp) :: b_mag_blkt(2)
+  !! Toroidal Magnetic feild strength for IB/OB blanket [T]
 
-  !! Isentropic efficiency of blanket liquid breeder/coolant pumps
   real(dp) :: etaiso_liq
+  !! Isentropic efficiency of blanket liquid breeder/coolant pumps
 
-  !! blanket liquid metal breeder/coolant pressure [Pa]
   real(dp) :: blpressure_liq
+  !! blanket liquid metal breeder/coolant pressure [Pa]
 
-  !! Inlet (scan var 68) and Outlet (scan var 69) temperature of the liquid breeder/coolant [K]
   real(dp) :: inlet_temp_liq, outlet_temp_liq
+  !! Inlet (scan var 68) and Outlet (scan var 69) temperature of the liquid breeder/coolant [K]
 
-  !! Density of the FW primary coolant
   real(dp) :: rhof_fw
+  !! Density of the FW primary coolant
 
-  !! Viscosity of the FW primary coolant
   real(dp) :: visc_fw
+  !! Viscosity of the FW primary coolant
 
-  !! Density of the blanket primary coolant
   real(dp) :: rhof_bl
+  !! Density of the blanket primary coolant
 
-  !! Viscosity of the blanket primary coolant
   real(dp) :: visc_bl
+  !! Viscosity of the blanket primary coolant
 
-  !! Spesific heat for FW and blanket primary coolant(s)
   real(dp) :: cp_fw, cv_fw, cp_bl, cv_bl
+  !! Spesific heat for FW and blanket primary coolant(s)
 
-  !! For a dual-coolant blanket, fraction of BZ power cooled by primary coolant
   real(dp) :: f_nuc_pow_bz_struct
+  !! For a dual-coolant blanket, fraction of BZ power cooled by primary coolant
 
-  !! For a dual-coolant blanket, fraction of BZ self-cooled power (secondary coolant)
   real(dp) :: f_nuc_pow_bz_liq
+  !! For a dual-coolant blanket, fraction of BZ self-cooled power (secondary coolant)
 
-  !! For a dual-coolant blanket, ratio of FW/Blanket nuclear power as fraction of total
   real(dp) :: pnuc_fw_ratio_dcll, pnuc_blkt_ratio_dcll
+  !! For a dual-coolant blanket, ratio of FW/Blanket nuclear power as fraction of total
 
+  integer :: bzfllengi_n_rad, bzfllengi_n_pol, bzfllengo_n_rad, bzfllengo_n_pol
   !! Number of radial and poloidal sections that make up the total primary coolant flow
   !! length in a blanket module (IB and OB)
-  integer :: bzfllengi_n_rad, bzfllengi_n_pol, bzfllengo_n_rad, bzfllengo_n_pol
 
+  integer :: bzfllengi_n_rad_liq, bzfllengi_n_pol_liq, bzfllengo_n_rad_liq, bzfllengo_n_pol_liq
   !! Number of radial and poloidal sections that make up the total secondary coolant/breeder
   !! flow length in a blanket module (IB and OB)
-  integer :: bzfllengi_n_rad_liq, bzfllengi_n_pol_liq, bzfllengo_n_rad_liq, bzfllengo_n_pol_liq
 
   contains
 

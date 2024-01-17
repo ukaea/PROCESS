@@ -85,30 +85,6 @@ module build_variables
   real(dp) :: fcspc
   !! Fraction of space occupied by CS pre-compression structure
 
-  real(dp) :: fmsbc
-  !! Martensitic fraction of steel in (non-existent!) bucking cylinder
-
-  real(dp) :: fmsbl
-  !! Martensitic fraction of steel in blanket
-
-  real(dp) :: fmsdwe
-  !! Martensitic fraction of steel in cryostat
-
-  real(dp) :: fmsdwi
-  !! Martensitic fraction of steel in vacuum vessel
-
-  real(dp) :: fmsfw
-  !! Martensitic fraction of steel in first wall
-
-  real(dp) :: fmsoh
-  !! Martensitic fraction of steel in central solenoid
-
-  real(dp) :: fmssh
-  !! Martensitic fraction of steel in shield
-
-  real(dp) :: fmstf
-  !! Martensitic fraction of steel in TF coil
-
   real(dp) :: fseppc
   !! Separation force in CS coil pre-compression structure
 
@@ -348,14 +324,6 @@ module build_variables
     d_vv_bot = 0.07D0
     f_avspace = 1.0D0
     fcspc = 0.6D0
-    fmsbc = 0.0D0
-    fmsbl = 0.0D0
-    fmsdwe = 0.0D0
-    fmsdwi = 0.0D0
-    fmsfw = 0.0D0
-    fmsoh = 0.0D0
-    fmssh = 0.0D0
-    fmstf = 0.0D0
     fseppc = 3.5D8
     fwarea = 0.0D0
     fwareaib = 0.0D0

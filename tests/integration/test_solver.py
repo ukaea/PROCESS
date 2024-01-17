@@ -42,7 +42,6 @@ def test_solver(temp_data):
     - Output files -
     Saved to temporary test dir
     OUT.DAT     - PROCESS output of last run
-    PLOT.DAT    - PROCESS output of last run
     MFILE.DAT   - PROCESS output of last run
     process.log - logfile of PROCESS output to stdout
     time.info   - stores the run time of the inner loop

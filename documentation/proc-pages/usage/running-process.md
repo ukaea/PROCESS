@@ -59,7 +59,7 @@ ORIGINAL_IN_DAT = ref_IN.DAT
 * PROCESS= ../../../process.exe
 
 * ONE line comment to be put into README.txt
-COMMENT = ipedestal = 1, with other variables appropriate for running PLASMOD
+COMMENT = 
 
 * Max no. iterations
 NITER = 1000

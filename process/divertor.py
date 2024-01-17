@@ -338,7 +338,6 @@ class Divertor:
         tpts = tptsges
 
         for i in range(15):
-
             #  Find derivatives for Newton's method
 
             tptsp = tpts * (1.0e0 + epsilon)
@@ -455,8 +454,6 @@ class Divertor:
             tdiv = tdiv + deltdiv
             tpts = tpts + deltpts
             delta = abs(deltdiv / tdiv + deltpts / tpts)
-
-            #  Satisfied yet?
 
             if delta < relerr:
                 break

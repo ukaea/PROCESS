@@ -264,7 +264,7 @@ def main(args=None):
         "tbrmin",
         "bt",
         "coreradius",
-        "fimpvar",
+        "Obsolete",  # Removed
         "taulimit",
         "epsvmc",
         "ttarget",
@@ -277,7 +277,7 @@ def main(args=None):
         "boundu(135)",
         "blnkoth",
         "fimp(9)",
-        "rho_ecrh",
+        "Obsolete",  # Removed
         "alstrtf",
         "tmargmin_tf",
         "boundu(152)",
@@ -460,7 +460,7 @@ def main(args=None):
     plt.xlabel("Radius [m]")
     plt.tight_layout()
     plt.savefig(
-        f"{args.outputdir}/{args.input[:-10]}_radial_build.{save_format}",
+        f"{args.outputdir}/{Path(args.input).stem}_radial_build.{save_format}",
         bbox_inches="tight",
     )
 

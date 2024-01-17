@@ -71,7 +71,6 @@ ixc = 58 * thwcndut
 boundl(58) = 8.0d-3
 ixc = 61 * gapds
 boundl(61) = 0.02
-ixc = 102 * fimpvar
 ixc = 103 * flhthresh
 boundu(103) = 10.0
 ixc = 117 *fpsepbqar
@@ -218,8 +217,6 @@ fimp(11) = 0.0
 fimp(12) = 0.0
 fimp(13) = 0.00044
 fimp(14) = 5e-05
-fimpvar  = 0.0003891 * Impurity fraction to be used as fimp(impvar)
-impvar   = 13 * Fimp element value to be varied if iteration
 
 *---------------------Numerics---------------------*
 
@@ -370,7 +367,6 @@ tburn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      thkcas         =  5.2465E-01
                      thwcndut       =  8.0000E-03
                      gapds          =  2.0000E-02
-                     fimpvar        =  3.7786E-04
                      flhthresh      =  1.4972E+00
                      fpsepbqar      =  1.0000E+00
                      ftaucq         =  9.1874E-01
