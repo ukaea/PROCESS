@@ -1645,20 +1645,21 @@ module physics_module
     !! betalim : output real : beta limit as defined below
     !! This subroutine calculates the beta limit, using
     !! the algorithm documented in AEA FUS 172.
-    !! <P>The limit applies to beta defined with respect to the total B-field.
-    !! Switch ICULBL determines which components of beta to include (see
-    !! routine <A HREF="constraints.html">constraints</A> for coding):
-    !! <UL>
-    !! <P><LI>If ICULBL = 0, then the limit is applied to the total beta
-    !! <P><LI>If ICULBL = 1, then the limit is applied to the thermal beta only
-    !! <P><LI>If ICULBL = 2, then the limit is applied to the thermal +
-    !! neutral beam beta components
-    !! </UL>
-    !! The default value for the g coefficient is DNBETA = 3.5
+    !! The limit applies to beta defined with respect to the total B-field.
+    !! Switch iculbl determines which components of beta to include.
+    !! 
+    !! If iculbl = 0, then the limit is applied to the total beta
+    !! If iculbl = 1, then the limit is applied to the thermal beta only
+    !! If iculbl = 2, then the limit is applied to the thermal +
+    !!                neutral beam beta components
+    !! If iculbl = 3, then the limit is applied to the toroidal beta
+    !! 
+    !! The default value for the g coefficient is dnbeta = 3.5
     !! AEA FUS 172: Physics Assessment for the European Reactor Study
     !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !! switch for beta limit scaling (`constraint equation 24`)
 
     implicit none
 
@@ -3497,11 +3498,6 @@ module physics_module
    end do
 
     call ovarre(outfile,'Average mass of all ions (amu)','(aion)',aion, 'OP ')
-    ! MDK Say which impurity is varied, if iteration variable fimpvar (102) is turned on
-    !if (any(ixc == 102)) then
-    !    call ovarst(outfile,'Impurity used as an iteration variable' , '', '"' // impurity_arr(impvar)%label // '"')
-    !    call ovarre(outfile,'Fractional density of variable impurity (ion / electron density)','(fimpvar)',fimpvar)
-    !end if
     call oblnkl(outfile)
     call ovarrf(outfile,'Effective charge','(zeff)',zeff, 'OP ')
 

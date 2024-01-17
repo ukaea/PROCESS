@@ -1643,8 +1643,6 @@
         "divdens": 10000.0,
         "divdum": 0.0,
         "divfix": 0.2,
-        "divleg_profile_inner": 0.563,
-        "divleg_profile_outer": 2.596,
         "divlife": 0.0,
         "divmas": 0.0,
         "divplt": 0.035,
@@ -1860,7 +1858,6 @@
         "falpe": 0.0,
         "falpha": 0.95,
         "falpi": 0.0,
-        "farc4tf": 0.7,
         "fauxbop": 0.06,
         "fauxmn": 1.0,
         "favail": 1.0,
@@ -1932,7 +1929,6 @@
         "ffuspow": 1.0,
         "ffwal": 0.92,
         "fgamcd": 1.0,
-        "fgamp": 1.0,
         "fgrd": null,
         "fgrosbop": 0.0,
         "fgwped": 0.85,
@@ -1962,7 +1958,6 @@
             0.0,
             0.0
         ],
-        "fimpvar": 0.001,
         "fio": 0.0,
         "fiooic": 0.5,
         "fipir": 1.0,
@@ -1983,14 +1978,6 @@
         "fluxdens_to_pa": "1.0D0/1.55e23",
         "fmgdmw": 0.0,
         "fmom": null,
-        "fmsbc": 0.0,
-        "fmsbl": 0.0,
-        "fmsdwe": 0.0,
-        "fmsdwi": 0.0,
-        "fmsfw": 0.0,
-        "fmsoh": 0.0,
-        "fmssh": 0.0,
-        "fmstf": 0.0,
         "fmt_str": "\"(a,1pe10.3)\"",
         "fmva": 1.0,
         "fnbshinef": 1.0,
@@ -2465,7 +2452,6 @@
         "ife": 0.0,
         "ifedrv": 2.0,
         "ifetyp": 0.0,
-        "ifispact": 0.0,
         "ifueltyp": 0.0,
         "ignite": 0.0,
         "iinvqd": 1.0,
@@ -2614,7 +2600,6 @@
             5.0
         ],
         "impuritypowerlost": null,
-        "impvar": 9.0,
         "impvardiv": 9.0,
         "infile": 0.0,
         "info": null,
@@ -2664,7 +2649,6 @@
         "ipowerflow": 1.0,
         "iprecomp": 1.0,
         "iprimdiv": 0.0,
-        "iprimnloss": 0.0,
         "iprimshld": 1.0,
         "iprofile": 1.0,
         "ips": 0.0,
@@ -3557,94 +3541,6 @@
         "plascur": 0.0,
         "plasipf": 0.0,
         "plasma_res_factor": 1.0,
-        "plasmod_Ainc": 1.1,
-        "plasmod_capA": 0.1,
-        "plasmod_car_qdivt": 0.0001,
-        "plasmod_chisaw": 0.0,
-        "plasmod_chisawpos": -1.0,
-        "plasmod_contrpovr": 0.0,
-        "plasmod_contrpovs": 0.0,
-        "plasmod_cxe_psepfac": 0.0001,
-        "plasmod_dgy": 1e-05,
-        "plasmod_dt": 0.01,
-        "plasmod_dtinc": 2.0,
-        "plasmod_dtmax": 0.1,
-        "plasmod_dtmaxmax": 0.0,
-        "plasmod_dtmaxmin": 0.15,
-        "plasmod_dtmin": 0.05,
-        "plasmod_dx_cd": [
-            0.2,
-            0.03
-        ],
-        "plasmod_dx_control": [
-            0.2,
-            0.03
-        ],
-        "plasmod_dx_fus": [
-            0.2,
-            0.03
-        ],
-        "plasmod_dx_heat": [
-            0.2,
-            0.03
-        ],
-        "plasmod_eccdeff": 0.3,
-        "plasmod_eopt": 0.15,
-        "plasmod_fcdp": -1.0,
-        "plasmod_fpellet": 0.5,
-        "plasmod_fradc": -1.0,
-        "plasmod_gamcdothers": 1.0,
-        "plasmod_globtau": [
-            5.0,
-            5.0,
-            7.0,
-            5.0,
-            1.0
-        ],
-        "plasmod_i_equiltype": 1.0,
-        "plasmod_i_impmodel": 1.0,
-        "plasmod_i_modeltype": 1.0,
-        "plasmod_imptype": [
-            14.0,
-            13.0,
-            9.0
-        ],
-        "plasmod_iprocess": 1.0,
-        "plasmod_isawt": 1.0,
-        "plasmod_maxA": 0.0,
-        "plasmod_maxpauxor": 20.0,
-        "plasmod_nbi_energy": 1000.0,
-        "plasmod_nchannels": 3.0,
-        "plasmod_nx": 41.0,
-        "plasmod_nxt": 7.0,
-        "plasmod_pech": 0.0,
-        "plasmod_pedscal": 1.0,
-        "plasmod_pfus": 0.0,
-        "plasmod_psepplh_sup": 12000.0,
-        "plasmod_qdivt": 0.0,
-        "plasmod_qnbi_psepfac": 50.0,
-        "plasmod_sawpertau": 1e-06,
-        "plasmod_spellet": 0.0,
-        "plasmod_test": 1000000.0,
-        "plasmod_tol": 1e-10,
-        "plasmod_tolmin": 10.1,
-        "plasmod_v_loop": -1e-06,
-        "plasmod_x_cd": [
-            0.0,
-            0.0
-        ],
-        "plasmod_x_control": [
-            0.0,
-            0.0
-        ],
-        "plasmod_x_fus": [
-            0.0,
-            0.0
-        ],
-        "plasmod_x_heat": [
-            0.0,
-            0.0
-        ],
         "plhthresh": 0.0,
         "plhybd": 0.0,
         "plinepv": 0.0,
@@ -3820,7 +3716,6 @@
         "qstar": 0.0,
         "qtargettotal": 5000000.0,
         "qtaue": 0.0,
-        "quench_detection_ef": 0.0,
         "quench_model": "'exponential'",
         "r1": 0.0,
         "r2": 0.0,
@@ -4313,7 +4208,6 @@
             0.0,
             0.0
         ],
-        "rho_ecrh": 0.1,
         "rho_max_dn": null,
         "rho_max_dt": null,
         "rho_star": 0.0,
@@ -9245,7 +9139,6 @@
         "cohbop": "Central solenoid overall current density at beginning of pulse (A/m2)",
         "coheof": "Central solenoid overall current density at end of flat-top (A/m2) (`iteration variable 37`) (`sweep variable 62`)",
         "coldmass": "total mass of components at cryogenic temperatures (kg)",
-        "comp": "Derived type containing all composition information for PLASMOD",
         "comp_eps": "",
         "comp_eps2": "",
         "comp_huge": "",
@@ -9292,7 +9185,7 @@
         "coppera_m2_max": "Maximum TF coil current / copper area (A/m2)",
         "copperaoh_m2": "CS coil current / copper area (A/m2) (`sweep variable 61`)",
         "copperaoh_m2_max": "Maximum CS coil current / copper area (A/m2)",
-        "coreradiationfraction": "coreradiationfraction /1.0/ : fraction of radiation from 'core' region that is subtracted from the loss power\nfimp(nimp) /1.0,0.1,0.02,0.0,0.0,0.0,0.0,0.0,0.0016,0.0,0.0,0.0,0.0,0.0/ :\n        impurity number density fractions relative to electron density\n        (iteration variable 102 is fimp(impvar))",
+        "coreradiationfraction": "coreradiationfraction /1.0/ : fraction of radiation from 'core' region that is subtracted from the loss power\nfimp(nimp) /1.0,0.1,0.02,0.0,0.0,0.0,0.0,0.0,0.0016,0.0,0.0,0.0,0.0,0.0/ :\n        impurity number density fractions relative to electron density\n)",
         "coreradius": "coreradius /0.6/ : normalised radius defining the 'core' region",
         "cost_factor_bop": "cost scaling factor for energy conversion system",
         "cost_factor_buildings": "cost scaling factor for buildings",
@@ -9416,8 +9309,6 @@
         "divdens": "divertor structure density (kg/m3)",
         "divdum": "switch for divertor Zeff model:\n<ul>\n<li>=0 calc</li>\n<li>=1 input</li>\n</ul>",
         "divfix": "divertor structure vertical thickness (m)",
-        "divleg_profile_inner": "length of 2D profile of inner leg surface (m)\n default value = estimated from side-view strawperson diagram, August 2021",
-        "divleg_profile_outer": "length of 2D profile of outer leg surface (m)\n default value = estimated from side-view strawperson diagram, August 2021",
         "divlife": "Full power lifetime of divertor (y)",
         "divmas": "divertor plate mass (kg)",
         "divplt": "divertor plate thickness (m) (from Spears, Sept 1990)",
@@ -9597,7 +9488,6 @@
         "falpe": "fraction of alpha energy to electrons",
         "falpha": "fraction of alpha power deposited in plasma (Physics of Energetic Ions, p.2489)",
         "falpi": "fraction of alpha power to ions",
-        "farc4tf": "factor to size height of point 4 on TF coil",
         "fauxbop": "fraction of gross electric power to balance-of-plant (IFE)",
         "fauxmn": "f-value for minimum auxiliary power (`constraint equation 40`, `iteration variable 64`)",
         "favail": "F-value for minimum availability (`constraint equation 61`)",
@@ -9660,7 +9550,6 @@
         "ffuspow": "f-value for maximum fusion power (`constraint equation 9`, `iteration variable 26`)",
         "ffwal": "factor to convert plasma surface area to first wall area in neutron wall\n load calculation (`iwalld=1`)",
         "fgamcd": "f-value for current drive gamma (`constraint equation 37`, `iteration variable 40`)",
-        "fgamp": "sheath potential factor (not used)",
         "fgrd": "",
         "fgrosbop": "scaled fraction of gross power to balance-of-plant",
         "fgwped": "fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top\n density set manually using neped (`ipedestal>=1`). Needs to be `>0` if `ipedestal = 3`.\n (`iteration variable 145`)",
@@ -9675,7 +9564,6 @@
         "figmer": "physics figure of merit (= plascur<em>aspect</em>*sbar, where `sbar=1`)",
         "fileprefix": "input file prefix",
         "fimp": "",
-        "fimpvar": "impvar : impurity to be iterated (deprecated)\n                      variable number 102 is turned on",
         "fio": "",
         "fiooic": "f-value for TF coil operating current / critical current ratio\n (`constraint equation 33`, `iteration variable 50`)",
         "fipir": "f-value for Ip/Irod upper limit\n constraint equation icc = 46\n iteration variable ixc = 72",
@@ -9696,14 +9584,6 @@
         "fluxdens_to_pa": "",
         "fmgdmw": "power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)",
         "fmom": "momentum factor [-]",
-        "fmsbc": "Martensitic fraction of steel in (non-existent!) bucking cylinder",
-        "fmsbl": "Martensitic fraction of steel in blanket",
-        "fmsdwe": "Martensitic fraction of steel in cryostat",
-        "fmsdwi": "Martensitic fraction of steel in vacuum vessel",
-        "fmsfw": "Martensitic fraction of steel in first wall",
-        "fmsoh": "Martensitic fraction of steel in central solenoid",
-        "fmssh": "Martensitic fraction of steel in shield",
-        "fmstf": "Martensitic fraction of steel in TF coil",
         "fmt_str": "",
         "fmva": "f-value for maximum MVA (`constraint equation 19`, `iteration variable 30`)",
         "fnbshinef": "f-value for maximum neutral beam shine-through fraction\n (`constraint equation 59`, `iteration variable 105`)",
@@ -9846,7 +9726,6 @@
         "gas_buildings_h": "air &amp; gas supply (amalgamated) buildings length, width, height (m)",
         "gas_buildings_l": "air &amp; gas supply (amalgamated) buildings length, width, height (m)",
         "gas_buildings_w": "air &amp; gas supply (amalgamated) buildings length, width, height (m)",
-        "geom": "Derived type containing all geometry information for PLASMOD",
         "glag": "",
         "glaga": "",
         "gm": "",
@@ -9879,7 +9758,7 @@
         "helpow": "Heat removal at cryogenic temperature tmpcry (W)",
         "helpow_cryal": "Heat removal at cryogenic temperature tcoolin (W)",
         "hfac": "H factors for an ignited plasma for each energy confinement time scaling law",
-        "hfact": "H factor on energy confinement times, radiation corrected (`iteration variable 10`). If\n `ipedestal=2,3` and `hfact=0`, not used in PLASMOD (see also `plasmod_i_modeltype`) issue #219",
+        "hfact": "H factor on energy confinement times, radiation corrected (`iteration variable 10`)",
         "hldiv": "divertor heat load (MW/m2)",
         "hldivlim": "heat load limit (MW/m2)",
         "hmax": "maximum (half-)height of TF coil (inside edge) (m)",
@@ -9921,7 +9800,6 @@
         "i_cp_joints": "Switch for CP demoutable joints type\n  -= 0 : Clampled joints\n  -= 1 : Sliding joints\n Default value (-1) choses :\n   Sliding joints for resistive magnets (i_tf_sup = 0, 2)\n   Clampled joints for superconducting magents (i_tf_sup = 1)",
         "i_cp_lifetime": "Switch for the centrepost lifetime constraint\n  0 : The CP full power year lifetime is set by the user via cplife_input\n  1 : The CP lifetime is equal to the divertor lifetime\n  2 : The CP lifetime is equal to the breeding blankets lifetime\n  3 : The CP lifetime is equal to the plant lifetime",
         "i_cs_stress": "Switch for CS stress calculation:\n<ul>\n<li>=0 Hoop stress only</li>\n<li>=1 Hoop + Axial stress</li>\n</ul>",
-        "i_flag": "Error flag for PLASMOD",
         "i_pf_current": "Switch for controlling the current of the PF coils:\n<ul>\n<li>=0 Input via the variables curpfb, curpff, curpfs</li>\n<li>=1 SVD targets zero field across midplane (flux swing\n   coils) and the correct vertical field at the plasma\n   center (equilibrium coils)</li>\n</ul>",
         "i_r_cp_top": "Switch selecting the he parametrization of the outer radius of the top of the CP part of the TF coil\n  0 : `r_cp_top` is set by the plasma shape\n  1 : `r_cp_top` is a user input\n  2 : `r_cp_top` is set using the CP top and midplane CP radius ratio",
         "i_shield_mat": "Switch for shield material - <em>currently only applied in costing routines</em> `cost_model = 2`\n<ul>\n<li>=0 Tungsten (default)</li>\n<li>=1 Tungsten carbide</li>\n</ul>",
@@ -9957,12 +9835,11 @@
         "idivrt": "number of divertors (calculated from `i_single_null`)",
         "iefrf": "Switch for current drive efficiency model:\n<ul>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
         "iefrffix": "Switch for 2nd current drive efficiency model:\n<ul>\n<li>=0 No fixed current drive</li>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
-        "ieped": "switch for scaling pedestal-top temperature with plasma parameters (issue #730):\n<ul>\n<li>=0 set pedestal-top temperature manually using teped</li>\n<li>=1 set pedestal-top temperature using EPED scaling (PLASMOD implementation\n   of scaling within PLASMOD, `ipedestal =2,3 (ttps://idm.euro-fusion.org/?uid=2MSZ4T) </li>\n</ul>",
+        "ieped": "switch for scaling pedestal-top temperature with plasma parameters (issue #730):\n<ul>\n<li>=0 set pedestal-top temperature manually using teped</li>\n<li>=1 set pedestal-top temperature using EPED scaling",
         "ifalphap": "switch for fast alpha pressure calculation\n<ul>\n<li>=0 ITER physics rules (Uckan) fit</li>\n<li>=1 Modified fit (D. Ward) - better at high temperature</li>\n</ul>",
         "ife": "Switch for IFE option:\n<ul>\n<li>=0 use tokamak, RFP or stellarator model</li>\n<li>=1 use IFE model</li>\n</ul>",
         "ifedrv": "Switch for type of IFE driver:\n<ul>\n<li>=-1 use gainve, etave for gain and driver efficiency</li>\n<li>=0 use tgain, drveff for gain and driver efficiency</li>\n<li>=1 use laser driver based on SOMBRERO design</li>\n<li>=2 use heavy ion beam driver based on OSIRIS</li>\n<li>=3 Input pfusife, rrin and drveff</li>\n</ul>",
         "ifetyp": "Switch for type of IFE device build:\n<ul>\n<li>=0 generic (cylindrical) build</li>\n<li>=1 OSIRIS-like build</li>\n<li>=2 SOMBRERO-like build</li>\n<li>=3 HYLIFE-II-like build</li>\n<li>=4 2019 build</li>\n</ul>",
-        "ifispact": "switch for neutronics calculations:\n<ul>\n<li>=0 neutronics calculations turned off</li>\n<li>=1 neutronics calculations turned on</li>\n</ul>",
         "ifueltyp": "Switch for fuel type:\n<ul>\n<li>=2 treat initial blanket, divertor, first wall\n   as capital costs. Treat all later items and\n   fraction fcdfuel of CD equipment as fuel costs</li>\n<li>=1 treat blanket divertor, first wall and\n   fraction fcdfuel of CD equipment as fuel cost</li>\n<li>=0 treat these as capital cost</li>\n</ul>",
         "igeom": "switch for plasma geometry calculation:\n<ul>\n<li>=0 original method (possibly based on Peng ST modelling)</li>\n<li>=1 improved (and traceable) method</li>\n</ul>",
         "ignite": "switch for ignition assumption. Obviously, ignite must be zero if current drive\n is required. If ignite is 1, any auxiliary power is assumed to be used only during\n plasma start-up, and is excluded from all steady-state power balance calculations.\n<ul>\n<li>=0 do not assume plasma ignition</li>\n<li>=1 assume ignited (but include auxiliary power in costs)</UL</li>\n</ul>",
@@ -9978,7 +9855,7 @@
         "ilw_storage_w": "ILW waste storage building length, width, height (m)",
         "im": "",
         "imod": "",
-        "imp_label": "imp_label(nimp) : impurity ion species names:<UL>\n \n<LI> ( 1)  Hydrogen  (fraction calculated by code)\n <LI> ( 2)  Helium\n <LI> ( 3)  Beryllium\n <LI> ( 4)  Carbon\n <LI> ( 5)  Nitrogen\n <LI> ( 6)  Oxygen\n <LI> ( 7)  Neon\n <LI> ( 8)  Silicon\n <LI> ( 9)  Argon\n <LI> (10)  Iron\n <LI> (11)  Nickel\n <LI> (12)  Krypton\n <LI> (13)  Xenon\n <LI> (14)  Tungsten</UL>\n\n fimpvar /1.0e-3/ : impurity fraction to be used as fimp(impvar)\n                    (iteration variable 102)\n\n\n",
+        "imp_label": "imp_label(nimp) : impurity ion species names:<UL>\n \n<LI> ( 1)  Hydrogen  (fraction calculated by code)\n <LI> ( 2)  Helium\n <LI> ( 3)  Beryllium\n <LI> ( 4)  Carbon\n <LI> ( 5)  Nitrogen\n <LI> ( 6)  Oxygen\n <LI> ( 7)  Neon\n <LI> ( 8)  Silicon\n <LI> ( 9)  Argon\n <LI> (10)  Iron\n <LI> (11)  Nickel\n <LI> (12)  Krypton\n <LI> (13)  Xenon\n <LI> (14)  Tungsten</UL>\n\n\n",
         "impurities_present": "",
         "impurity_arr_Label": "",
         "impurity_arr_Lz_Wm3": "",
@@ -9990,15 +9867,13 @@
         "impurity_arr_len_tab": "",
         "impurity_concs": "",
         "impurity_data": "",
-        "impurity_enrichment": "Ratio of each impurity concentration in SOL to confined plasma + the enrichment for Argon\n is also propagated for PLASMOD (`ipedestal=3`)",
+        "impurity_enrichment": "Ratio of each impurity concentration in SOL to confined plasma + the enrichment for Argon\n",
         "impuritypowerlost": "Power lost due to impurity radiation [W]",
-        "impvar": "",
         "impvardiv": "Index of impurity to be iterated for Reinke divertor detachment criterion",
         "infile": "",
         "info": "",
         "initialpressure": "initial neutral pressure at the beginning of the dwell phase (Pa)",
         "inlet_temp": "inlet temperature of blanket coolant  (K) (`secondary_cycle>1`)",
-        "inp0": "Derived type containing miscellaneous input information for PLASMOD",
         "insstrain": "Radial strain in insulator",
         "insulation_area": "single turn insulation area (m2)",
         "int_def": "",
@@ -10012,7 +9887,7 @@
         "iotabar": "rotational transform (reciprocal of tokamak q) for stellarator confinement time scaling laws",
         "iotty": "Standard output unit identifier",
         "ip": "",
-        "ipedestal": "switch for pedestal profiles:\n<ul>\n<li>=0 use original parabolic profiles</li>\n<li>=1 use pedestal profile</li>\n<li>=2 use pedestal profiles and run PLASMOD on final output</li>\n<li>=3 use PLASMOD transport model only to calculate pedestal profiles</li>\n</ul>",
+        "ipedestal": "switch for pedestal profiles:\n<ul>\n<li>=0 use original parabolic profiles</li>\n<li>=1 use pedestal profile</li>",
         "ipeqns": "ipeqns  FIX : number of constraint equations available",
         "ipfloc": "Switch for location of PF coil group i:\n<ul>\n<li>=1 PF coil on top of central solenoid (flux ramp only)</li>\n<li>=2 PF coil on top of TF coil (flux ramp only)</li>\n<li>=3 PF coil outside of TF coil (equilibrium coil)</li>\n<li>=4 PF coil, general location (equilibrium coil)</li>\n</ul>",
         "ipfres": "switch for PF coil type:\n<ul>\n<li>=0 superconducting PF coils</li>\n<li>=1 resistive PF coils</li>\n</ul>",
@@ -10025,7 +9900,6 @@
         "ipowerflow": "switch for power flow model:\n<ul>\n<li>=0 pre-2014 version</li>\n<li>=1 comprehensive 2014 model</li>\n</ul>",
         "iprecomp": "Switch for existence of central solenoid pre-compression structure:\n<ul>\n<li>=0 no pre-compression structure</li>\n<li>=1 calculated pre-compression structure</li>\n</ul>",
         "iprimdiv": "",
-        "iprimnloss": "switch for lost neutron power through holes destiny (ipowerflow=0):\n<ul>\n<li>=0 does not contribute to energy generation cycle</li>\n<li>=1 contributes to energy generation cycle</li>\n</ul>",
         "iprimshld": "Switch for shield thermal power destiny:\n<ul>\n<li>=0 does not contribute to energy generation cycle</li>\n<li>=1 contributes to energy generation cycle</li>\n</ul>",
         "iprofile": "switch for current profile consistency:\n<ul>\n<li>=0 use input values for alphaj, rli, dnbeta (but see gtscale option)</li>\n<li>=1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)</li>\n</ul>",
         "ips": "switch for Pfirsch-Schl\u00fcter current scaling (issue #413):\n<ul>\n<li>=0 Do not calculate</li>\n<li>=1 Use SCENE scaling</li>\n</ul>",
@@ -10093,9 +9967,9 @@
         "ki": "",
         "kron": "",
         "ksic": "power fraction for outboard double-null scrape-off plasma",
-        "lablcc": "lablcc(ipeqns) : labels describing constraint equations (corresponding itvs)<UL>\n<br>\n<LI> ( 1) Beta (consistency equation) (itv 5)\n  <LI> ( 2) Global power balance (consistency equation) (itv 10,1,2,3,4,6,11)\n  <LI> ( 3) Ion power balance DEPRECATED (itv 10,1,2,3,4,6,11)\n  <LI> ( 4) Electron power balance DEPRECATED (itv 10,1,2,3,4,6,11)\n  <LI> ( 5) Density upper limit (itv 9,1,2,3,4,5,6)\n  <LI> ( 6) (Epsilon x beta poloidal) upper limit (itv 8,1,2,3,4,6)\n  <LI> ( 7) Beam ion density (NBI) (consistency equation) (itv 7)\n  <LI> ( 8) Neutron wall load upper limit (itv 14,1,2,3,4,6)\n  <LI> ( 9) Fusion power upper limit (itv 26,1,2,3,4,6)\n  <LI> (10) Toroidal field 1/R (consistency equation) (itv 12,1,2,3,13 )\n  <LI> (11) Radial build (consistency equation) (itv 3,1,13,16,29,42,61)\n  <LI> (12) Volt second lower limit (STEADY STATE) (itv 15,1,2,3)\n  <LI> (13) Burn time lower limit (PULSE) (itv 21,1,16,17,29,42,44,61)\n            (itv 19,1,2,3,6)\n  <LI> (14) Neutral beam decay lengths to plasma centre (NBI) (consistency equation)\n  <LI> (15) LH power threshold limit (itv 103)\n  <LI> (16) Net electric power lower limit (itv 25,1,2,3)\n  <LI> (17) Radiation fraction upper limit (itv 28)\n  <LI> (18) Divertor heat load upper limit (itv 27)\n  <LI> (19) MVA upper limit (itv 30)\n  <LI> (20) Neutral beam tangency radius upper limit (NBI) (itv 33,31,3,13)\n  <LI> (21) Plasma minor radius lower limit (itv 32)\n  <LI> (22) Divertor collisionality upper limit (itv 34,43)\n  <LI> (23) Conducting shell to plasma minor radius ratio upper limit\n            (itv 104,1,74)\n  <LI> (24) Beta upper limit (itv 36,1,2,3,4,6,18)\n  <LI> (25) Peak toroidal field upper limit (itv 35,3,13,29)\n  <LI> (26) Central solenoid EOF current density upper limit (ipfres=0)\n            (itv 38,37,41,12)\n  <LI> (27) Central solenoid BOP current density upper limit (ipfres=0)\n            (itv 39,37,41,12)\n  <LI> (28) Fusion gain Q lower limit (itv 45,47,40)\n  <LI> (29) Inboard radial build consistency (itv 3,1,13,16,29,42,61)\n  <LI> (30) Injection power upper limit (itv 46,47,11)\n  <LI> (31) TF coil case stress upper limit (SCTF) (itv 48,56,57,58,59,60,24)\n  <LI> (32) TF coil conduit stress upper limit (SCTF) (itv 49,56,57,58,59,60,24)\n  <LI> (33) I_op / I_critical (TF coil) (SCTF) (itv 50,56,57,58,59,60,24)\n  <LI> (34) Dump voltage upper limit (SCTF) (itv 51,52,56,57,58,59,60,24)\n  <LI> (35) J_winding pack/J_protection upper limit (SCTF) (itv 53,56,57,58,59,60,24)\n  <LI> (36) TF coil temperature margin lower limit (SCTF) (itv 54,55,56,57,58,59,60,24)\n  <LI> (37) Current drive gamma upper limit (itv 40,47)\n  <LI> (38) First wall coolant temperature rise upper limit (itv 62)\n  <LI> (39) First wall peak temperature upper limit (itv 63)\n  <LI> (40) Start-up injection power lower limit (PULSE) (itv 64)\n  <LI> (41) Plasma current ramp-up time lower limit (PULSE) (itv  66,65)\n  <LI> (42) Cycle time lower limit (PULSE) (itv 17,67,65)\n  <LI> (43) Average centrepost temperature\n            (TART) (consistency equation) (itv 13,20,69,70)\n  <LI> (44) Peak centrepost temperature upper limit (TART) (itv 68,69,70)\n  <LI> (45) Edge safety factor lower limit (TART) (itv 71,1,2,3)\n  <LI> (46) Equation for Ip/Irod upper limit (TART) (itv 72,2,60)\n  <LI> (47) NOT USED\n  <LI> (48) Poloidal beta upper limit (itv 79,2,3,18)\n  <LI> (49) NOT USED\n  <LI> (50) IFE repetition rate upper limit (IFE)\n  <LI> (51) Startup volt-seconds consistency (PULSE) (itv 16,29,3,1)\n  <LI> (52) Tritium breeding ratio lower limit (itv 89,90,91)\n  <LI> (53) Neutron fluence on TF coil upper limit (itv 92,93,94)\n  <LI> (54) Peak TF coil nuclear heating upper limit (itv 95,93,94)\n  <LI> (55) Vacuum vessel helium concentration upper limit iblanket =2 (itv 96,93,94)\n  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3,102)\n  <LI> (57) NOT USED\n  <LI> (58) NOT USED\n  <LI> (59) Neutral beam shine-through fraction upper limit (NBI) (itv 105,6,19,4 )\n  <LI> (60) Central solenoid temperature margin lower limit (SCTF) (itv 106)\n  <LI> (61) Minimum availability value (itv 107)\n  <LI> (62) taup/taueff the ratio of particle to energy confinement times (itv 110)\n  <LI> (63) The number of ITER-like vacuum pumps niterpump < tfno (itv 111)\n  <LI> (64) Zeff less than or equal to zeffmax (itv 112)\n  <LI> (65) Dump time set by VV loads (itv 56, 113)\n  <LI> (66) Limit on rate of change of energy in poloidal field\n            (Use iteration variable 65(tohs), 115)\n  <LI> (67) Simple Radiation Wall load limit (itv 116, 102, 4,6)\n  <LI> (68) Psep * Bt / qAR upper limit (itv 117)\n  <LI> (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)\n  <LI> (70) ensure that teomp = separatrix temperature in the pedestal profile,\n            (itv 119 (tesep))\n  <LI> (71) ensure that neomp = separatrix density (nesep) x neratio\n  <LI> (72) central solenoid shear stress limit (Tresca yield criterion) (itv 123 foh_stress)\n  <LI> (73) Psep >= Plh + Paux (itv 137 (fplhsep))\n  <LI> (74) TFC quench < tmax_croco (itv 141 (fcqt))\n  <LI> (75) TFC current/copper area < Maximum (itv 143 f_coppera_m2)\n  <LI> (76) Eich critical separatrix density\n  <LI> (77) TF coil current per turn upper limit\n  <LI> (78) Reinke criterion impurity fraction lower limit (itv  147 freinke)\n  <LI> (79) Peak CS field upper limit (itv  149 fbmaxcs)\n  <LI> (80) Divertor power lower limit pdivt (itv  153 fpdivlim)\n  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)\n  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)\n  <LI> (83) Radial build consistency for stellarators (itv 172 f_avspace)\n  <LI> (84) Lower limit for beta (itv 173 fbetatry_lower)\n  <LI> (85) Constraint for CP lifetime\n  <LI> (86) Constraint for TF coil turn dimension\n  <LI> (87) Constraint for cryogenic power\n  <LI> (88) Constraint for TF coil strain absolute value\n  <LI> (89) Constraint for CS coil quench protection\n  <LI> (90) Checking if the design point is ECRH ignitable (itv 164 fecrh_ignition)</UL>\n\n\n\n",
+        "lablcc": "lablcc(ipeqns) : labels describing constraint equations (corresponding itvs)<UL>\n<br>\n<LI> ( 1) Beta (consistency equation) (itv 5)\n  <LI> ( 2) Global power balance (consistency equation) (itv 10,1,2,3,4,6,11)\n  <LI> ( 3) Ion power balance DEPRECATED (itv 10,1,2,3,4,6,11)\n  <LI> ( 4) Electron power balance DEPRECATED (itv 10,1,2,3,4,6,11)\n  <LI> ( 5) Density upper limit (itv 9,1,2,3,4,5,6)\n  <LI> ( 6) (Epsilon x beta poloidal) upper limit (itv 8,1,2,3,4,6)\n  <LI> ( 7) Beam ion density (NBI) (consistency equation) (itv 7)\n  <LI> ( 8) Neutron wall load upper limit (itv 14,1,2,3,4,6)\n  <LI> ( 9) Fusion power upper limit (itv 26,1,2,3,4,6)\n  <LI> (10) Toroidal field 1/R (consistency equation) (itv 12,1,2,3,13 )\n  <LI> (11) Radial build (consistency equation) (itv 3,1,13,16,29,42,61)\n  <LI> (12) Volt second lower limit (STEADY STATE) (itv 15,1,2,3)\n  <LI> (13) Burn time lower limit (PULSE) (itv 21,1,16,17,29,42,44,61)\n            (itv 19,1,2,3,6)\n  <LI> (14) Neutral beam decay lengths to plasma centre (NBI) (consistency equation)\n  <LI> (15) LH power threshold limit (itv 103)\n  <LI> (16) Net electric power lower limit (itv 25,1,2,3)\n  <LI> (17) Radiation fraction upper limit (itv 28)\n  <LI> (18) Divertor heat load upper limit (itv 27)\n  <LI> (19) MVA upper limit (itv 30)\n  <LI> (20) Neutral beam tangency radius upper limit (NBI) (itv 33,31,3,13)\n  <LI> (21) Plasma minor radius lower limit (itv 32)\n  <LI> (22) Divertor collisionality upper limit (itv 34,43)\n  <LI> (23) Conducting shell to plasma minor radius ratio upper limit\n            (itv 104,1,74)\n  <LI> (24) Beta upper limit (itv 36,1,2,3,4,6,18)\n  <LI> (25) Peak toroidal field upper limit (itv 35,3,13,29)\n  <LI> (26) Central solenoid EOF current density upper limit (ipfres=0)\n            (itv 38,37,41,12)\n  <LI> (27) Central solenoid BOP current density upper limit (ipfres=0)\n            (itv 39,37,41,12)\n  <LI> (28) Fusion gain Q lower limit (itv 45,47,40)\n  <LI> (29) Inboard radial build consistency (itv 3,1,13,16,29,42,61)\n  <LI> (30) Injection power upper limit (itv 46,47,11)\n  <LI> (31) TF coil case stress upper limit (SCTF) (itv 48,56,57,58,59,60,24)\n  <LI> (32) TF coil conduit stress upper limit (SCTF) (itv 49,56,57,58,59,60,24)\n  <LI> (33) I_op / I_critical (TF coil) (SCTF) (itv 50,56,57,58,59,60,24)\n  <LI> (34) Dump voltage upper limit (SCTF) (itv 51,52,56,57,58,59,60,24)\n  <LI> (35) J_winding pack/J_protection upper limit (SCTF) (itv 53,56,57,58,59,60,24)\n  <LI> (36) TF coil temperature margin lower limit (SCTF) (itv 54,55,56,57,58,59,60,24)\n  <LI> (37) Current drive gamma upper limit (itv 40,47)\n  <LI> (38) First wall coolant temperature rise upper limit (itv 62)\n  <LI> (39) First wall peak temperature upper limit (itv 63)\n  <LI> (40) Start-up injection power lower limit (PULSE) (itv 64)\n  <LI> (41) Plasma current ramp-up time lower limit (PULSE) (itv  66,65)\n  <LI> (42) Cycle time lower limit (PULSE) (itv 17,67,65)\n  <LI> (43) Average centrepost temperature\n            (TART) (consistency equation) (itv 13,20,69,70)\n  <LI> (44) Peak centrepost temperature upper limit (TART) (itv 68,69,70)\n  <LI> (45) Edge safety factor lower limit (TART) (itv 71,1,2,3)\n  <LI> (46) Equation for Ip/Irod upper limit (TART) (itv 72,2,60)\n  <LI> (47) NOT USED\n  <LI> (48) Poloidal beta upper limit (itv 79,2,3,18)\n  <LI> (49) NOT USED\n  <LI> (50) IFE repetition rate upper limit (IFE)\n  <LI> (51) Startup volt-seconds consistency (PULSE) (itv 16,29,3,1)\n  <LI> (52) Tritium breeding ratio lower limit (itv 89,90,91)\n  <LI> (53) Neutron fluence on TF coil upper limit (itv 92,93,94)\n  <LI> (54) Peak TF coil nuclear heating upper limit (itv 95,93,94)\n  <LI> (55) Vacuum vessel helium concentration upper limit iblanket =2 (itv 96,93,94)\n  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3)\n  <LI> (57) NOT USED\n  <LI> (58) NOT USED\n  <LI> (59) Neutral beam shine-through fraction upper limit (NBI) (itv 105,6,19,4 )\n  <LI> (60) Central solenoid temperature margin lower limit (SCTF) (itv 106)\n  <LI> (61) Minimum availability value (itv 107)\n  <LI> (62) taup/taueff the ratio of particle to energy confinement times (itv 110)\n  <LI> (63) The number of ITER-like vacuum pumps niterpump < tfno (itv 111)\n  <LI> (64) Zeff less than or equal to zeffmax (itv 112)\n  <LI> (65) Dump time set by VV loads (itv 56, 113)\n  <LI> (66) Limit on rate of change of energy in poloidal field\n            (Use iteration variable 65(tohs), 115)\n  <LI> (67) Simple Radiation Wall load limit (itv 116, 4,6)\n  <LI> (68) Psep * Bt / qAR upper limit (itv 117)\n  <LI> (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)\n  <LI> (70) ensure that teomp = separatrix temperature in the pedestal profile,\n            (itv 119 (tesep))\n  <LI> (71) ensure that neomp = separatrix density (nesep) x neratio\n  <LI> (72) central solenoid shear stress limit (Tresca yield criterion) (itv 123 foh_stress)\n  <LI> (73) Psep >= Plh + Paux (itv 137 (fplhsep))\n  <LI> (74) TFC quench < tmax_croco (itv 141 (fcqt))\n  <LI> (75) TFC current/copper area < Maximum (itv 143 f_coppera_m2)\n  <LI> (76) Eich critical separatrix density\n  <LI> (77) TF coil current per turn upper limit\n  <LI> (78) Reinke criterion impurity fraction lower limit (itv  147 freinke)\n  <LI> (79) Peak CS field upper limit (itv  149 fbmaxcs)\n  <LI> (80) Divertor power lower limit pdivt (itv  153 fpdivlim)\n  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)\n  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)\n  <LI> (83) Radial build consistency for stellarators (itv 172 f_avspace)\n  <LI> (84) Lower limit for beta (itv 173 fbetatry_lower)\n  <LI> (85) Constraint for CP lifetime\n  <LI> (86) Constraint for TF coil turn dimension\n  <LI> (87) Constraint for cryogenic power\n  <LI> (88) Constraint for TF coil strain absolute value\n  <LI> (89) Constraint for CS coil quench protection\n  <LI> (90) Checking if the design point is ECRH ignitable (itv 164 fecrh_ignition)</UL>\n\n\n\n",
         "lablmm": "lablmm(ipnfoms) : labels describing figures of merit:<UL>\n<br>\n<LI> ( 1) major radius\n  <LI> ( 2) not used\n  <LI> ( 3) neutron wall load\n  <LI> ( 4) P_tf + P_pf\n  <LI> ( 5) fusion gain Q\n  <LI> ( 6) cost of electricity\n  <LI> ( 7) capital cost (direct cost if ireactor=0,\n                          constructed cost otherwise)\n  <LI> ( 8) aspect ratio\n  <LI> ( 9) divertor heat load\n  <LI> (10) toroidal field\n  <LI> (11) total injected power\n  <LI> (12) hydrogen plant capital cost OBSOLETE\n  <LI> (13) hydrogen production rate OBSOLETE\n  <LI> (14) pulse length\n  <LI> (15) plant availability factor (N.B. requires\n            iavail=1 to be set)\n  <LI> (16) linear combination of major radius (minimised) and pulse length (maximised)\n              note: FoM should be minimised only!\n  <LI> (17) net electrical output\n  <LI> (18) Null Figure of Merit\n  <LI> (19) linear combination of big Q and pulse length (maximised)\n              note: FoM should be minimised only!</UL>\n\n\n",
-        "lablxc": "lablxc(ipnvars) : labels describing iteration variables<UL>\n<br>\n<LI> ( 1) aspect\n  <LI> ( 2) bt\n  <LI> ( 3) rmajor\n <LI> ( 4) te\n <LI> ( 5) beta\n <LI> ( 6) dene\n <LI> ( 7) rnbeam\n <LI> ( 8) fbeta (f-value for equation 6)\n <LI> ( 9) fdene (f-value for equation 5)\n <LI> (10) hfact\n <LI> (11) pheat\n <LI> (12) oacdcp\n <LI> (13) tfcth (NOT RECOMMENDED)\n <LI> (14) fwalld (f-value for equation 8)\n <LI> (15) fvs (f-value for equation 12)\n <LI> (16) ohcth\n <LI> (17) tdwell\n <LI> (18) q\n <LI> (19) enbeam\n <LI> (20) tcpav\n <LI> (21) ftburn (f-value for equation 13)\n <LI> (22) NOT USED\n <LI> (23) fcoolcp\n <LI> (24) NOT USED\n <LI> (25) fpnetel (f-value for equation 16)\n <LI> (26) ffuspow (f-value for equation 9)\n <LI> (27) fhldiv (f-value for equation 18)\n <LI> (28) fradpwr (f-value for equation 17), total radiation fraction\n <LI> (29) bore\n <LI> (30) fmva (f-value for equation 19)\n <LI> (31) gapomin\n <LI> (32) frminor (f-value for equation 21)\n <LI> (33) fportsz (f-value for equation 20)\n <LI> (34) fdivcol (f-value for equation 22)\n <LI> (35) fpeakb (f-value for equation 25)\n <LI> (36) fbetatry (f-value for equation 24)\n <LI> (37) coheof\n <LI> (38) fjohc (f-value for equation 26)\n <LI> (39) fjohc0 (f-value for equation 27)\n <LI> (40) fgamcd (f-value for equation 37)\n <LI> (41) fcohbop\n <LI> (42) gapoh\n <LI> (43) NOT USED\n <LI> (44) fvsbrnni\n <LI> (45) fqval (f-value for equation 28)\n <LI> (46) fpinj (f-value for equation 30)\n <LI> (47) feffcd\n <LI> (48) fstrcase (f-value for equation 31)\n <LI> (49) fstrcond (f-value for equation 32)\n <LI> (50) fiooic (f-value for equation 33)\n <LI> (51) fvdump (f-value for equation 34)\n <LI> (52) vdalw\n <LI> (53) fjprot (f-value for equation 35)\n <LI> (54) ftmargtf (f-value for equation 36)\n <LI> (55) NOT USED\n <LI> (56) tdmptf\n <LI> (57) thkcas\n <LI> (58) thwcndut\n <LI> (59) fcutfsu\n <LI> (60) cpttf\n <LI> (61) gapds\n <LI> (62) fdtmp (f-value for equation 38)\n <LI> (63) ftpeak (f-value for equation 39)\n <LI> (64) fauxmn (f-value for equation 40)\n <LI> (65) tohs\n <LI> (66) ftohs (f-value for equation 41)\n <LI> (67) ftcycl (f-value for equation 42)\n <LI> (68) fptemp (f-value for equation 44)\n <LI> (69) rcool\n <LI> (70) vcool\n <LI> (71) fq (f-value for equation 45)\n <LI> (72) fipir (f-value for equation 46)\n <LI> (73) scrapli\n <LI> (74) scraplo\n <LI> (75) tfootfi\n <LI> (76) NOT USED\n <LI> (77) NOT USED\n <LI> (78) NOT USED\n <LI> (79) fbetap (f-value for equation 48)\n <LI> (80) NOT USED\n <LI> (81) edrive\n <LI> (82) drveff\n <LI> (83) tgain\n <LI> (84) chrad\n <LI> (85) pdrive\n <LI> (86) frrmax (f-value for equation 50)\n <LI> (87) NOT USED\n <LI> (88) NOT USED\n <LI> (89) ftbr (f-value for equation 52)\n <LI> (90) blbuith\n <LI> (91) blbuoth\n <LI> (92) fflutf (f-value for equation 53)\n <LI> (93) shldith\n <LI> (94) shldoth\n <LI> (95) fptfnuc (f-value for equation 54)\n <LI> (96) fvvhe (f-value for equation 55)\n <LI> (97) fpsepr (f-value for equation 56)\n <LI> (98) li6enrich\n <LI> (99) NOT USED\n <LI> (100) NOT USED\n <LI> (101) NOT USED\n <LI> (102) fimpvar\n <LI> (103) flhthresh (f-value for equation 15)\n <LI> (104) fcwr (f-value for equation 23)\n <LI> (105) fnbshinef (f-value for equation 59)\n <LI> (106) ftmargoh (f-value for equation 60)\n <LI> (107) favail (f-value for equation 61)\n <LI> (108) breeder_f: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)\n <LI> (109) ralpne: thermal alpha density / electron density\n <LI> (110) ftaulimit: Lower limit on taup/taueff the ratio of alpha\n <LI> (111) fniterpump: f-value for constraint that number\n <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)\n <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)\n <LI> (114) fw_channel_length: Length of a single first wall channel\n <LI> (115) fpoloidalpower: f-value for max rate of change of\n <LI> (116) fradwall: f-value for radiation wall load limit (eq. 67)\n <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)\n <LI> (118) fpsep: f-value to ensure separatrix power is less than\n <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model\n <LI> (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]\n <LI> (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP\n <LI> (122) oh_steel_frac : streel fraction of Central Solenoid\n <LI> (123) foh_stress : f-value for CS coil Tresca yield criterion (f-value for eq. 72)\n <LI> (124) qtargettotal : Power density on target including surface recombination [W/m2]\n <LI> (125) fimp(3) :  Beryllium density fraction relative to electron density\n <LI> (126) fimp(4) :  Carbon density fraction relative to electron density\n <LI> (127) fimp(5) :  Nitrogen fraction relative to electron density\n <LI> (128) fimp(6) :  Oxygen density fraction relative to electron density\n <LI> (129) fimp(7) :  Neon density fraction relative to electron density\n <LI> (130) fimp(8) :  Silicon density fraction relative to electron density\n <LI> (131) fimp(9) :  Argon density fraction relative to electron density\n <LI> (132) fimp(10) :  Iron density fraction relative to electron density\n <LI> (133) fimp(11) :  Nickel density fraction relative to electron density\n <LI> (134) fimp(12) :  Krypton density fraction relative to electron density\n <LI> (135) fimp(13) :  Xenon density fraction relative to electron density\n <LI> (136) fimp(14) :  Tungsten density fraction relative to electron density\n <LI> (137) fplhsep (f-value for equation 73)\n <LI> (138) rebco_thickness : thickness of REBCO layer in tape (m)\n <LI> (139) copper_thick : thickness of copper layer in tape (m)\n <LI> (140) dr_tf_wp : radial thickness of TFC winding pack (m)\n <LI> (141) fcqt : TF coil quench temperature < tmax_croco (f-value for equation 74)\n <LI> (142) nesep : electron density at separatrix [m-3]\n <LI> (143) f_copperA_m2 : TF coil current / copper area < Maximum value\n <LI> (144) fnesep : Eich critical electron density at separatrix\n <LI> (145) fgwped :  fraction of Greenwald density to set as pedestal-top density\n <LI> (146) fcpttf : F-value for TF coil current per turn limit (constraint equation 77)\n <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)\n <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion\n <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)\n <LI> (150) plasmod_fcdp : (P_CD - Pheat)/(Pmax-Pheat)\n <LI> (151) plasmod_fradc : Pline_Xe / (Palpha + Paux - PlineAr - Psync - Pbrad)\n <LI> (152) fbmaxcs : Ratio of separatrix density to Greenwald density\n <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)\n <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)\n <LI> (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)\n <LI> (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)\n <LI> (157) fvssu : F-value for available to required start up flux (con. 51)\n <LI> (158) croco_thick : Thickness of CroCo copper tube (m)\n <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)\n <LI> (160) f_avspace (f-value for equation 83)\n <LI> (161) fbetatry_lower (f-value for equation 84)\n <LI> (162) r_cp_top : Top outer radius of the centropost (ST only) (m)\n <LI> (163) f_t_turn_tf : f-value for TF coils WP trurn squared dimension constraint\n <LI> (164) f_crypmw : f-value for cryogenic plant power\n <LI> (165) fstr_wp : f-value for TF coil strain absolute value\n <LI> (166) f_copperaoh_m2 : CS coil current /copper area < Maximum value\n <LI> (167) fecrh_ignition: f-value for equation 90\n <LI> (168) EMPTY : Description\n <LI> (169) EMPTY : Description\n <LI> (170) EMPTY : Description\n <LI> (171) EMPTY : Description\n <LI> (172) EMPTY : Description\n <LI> (173) EMPTY : Description\n <LI> (174) EMPTY : Description\n <LI> (175) EMPTY : Description\n\n\n\n",
+        "lablxc": "lablxc(ipnvars) : labels describing iteration variables<UL>\n<br>\n<LI> ( 1) aspect\n  <LI> ( 2) bt\n  <LI> ( 3) rmajor\n <LI> ( 4) te\n <LI> ( 5) beta\n <LI> ( 6) dene\n <LI> ( 7) rnbeam\n <LI> ( 8) fbeta (f-value for equation 6)\n <LI> ( 9) fdene (f-value for equation 5)\n <LI> (10) hfact\n <LI> (11) pheat\n <LI> (12) oacdcp\n <LI> (13) tfcth (NOT RECOMMENDED)\n <LI> (14) fwalld (f-value for equation 8)\n <LI> (15) fvs (f-value for equation 12)\n <LI> (16) ohcth\n <LI> (17) tdwell\n <LI> (18) q\n <LI> (19) enbeam\n <LI> (20) tcpav\n <LI> (21) ftburn (f-value for equation 13)\n <LI> (22) NOT USED\n <LI> (23) fcoolcp\n <LI> (24) NOT USED\n <LI> (25) fpnetel (f-value for equation 16)\n <LI> (26) ffuspow (f-value for equation 9)\n <LI> (27) fhldiv (f-value for equation 18)\n <LI> (28) fradpwr (f-value for equation 17), total radiation fraction\n <LI> (29) bore\n <LI> (30) fmva (f-value for equation 19)\n <LI> (31) gapomin\n <LI> (32) frminor (f-value for equation 21)\n <LI> (33) fportsz (f-value for equation 20)\n <LI> (34) fdivcol (f-value for equation 22)\n <LI> (35) fpeakb (f-value for equation 25)\n <LI> (36) fbetatry (f-value for equation 24)\n <LI> (37) coheof\n <LI> (38) fjohc (f-value for equation 26)\n <LI> (39) fjohc0 (f-value for equation 27)\n <LI> (40) fgamcd (f-value for equation 37)\n <LI> (41) fcohbop\n <LI> (42) gapoh\n <LI> (43) NOT USED\n <LI> (44) fvsbrnni\n <LI> (45) fqval (f-value for equation 28)\n <LI> (46) fpinj (f-value for equation 30)\n <LI> (47) feffcd\n <LI> (48) fstrcase (f-value for equation 31)\n <LI> (49) fstrcond (f-value for equation 32)\n <LI> (50) fiooic (f-value for equation 33)\n <LI> (51) fvdump (f-value for equation 34)\n <LI> (52) vdalw\n <LI> (53) fjprot (f-value for equation 35)\n <LI> (54) ftmargtf (f-value for equation 36)\n <LI> (55) NOT USED\n <LI> (56) tdmptf\n <LI> (57) thkcas\n <LI> (58) thwcndut\n <LI> (59) fcutfsu\n <LI> (60) cpttf\n <LI> (61) gapds\n <LI> (62) fdtmp (f-value for equation 38)\n <LI> (63) ftpeak (f-value for equation 39)\n <LI> (64) fauxmn (f-value for equation 40)\n <LI> (65) tohs\n <LI> (66) ftohs (f-value for equation 41)\n <LI> (67) ftcycl (f-value for equation 42)\n <LI> (68) fptemp (f-value for equation 44)\n <LI> (69) rcool\n <LI> (70) vcool\n <LI> (71) fq (f-value for equation 45)\n <LI> (72) fipir (f-value for equation 46)\n <LI> (73) scrapli\n <LI> (74) scraplo\n <LI> (75) tfootfi\n <LI> (76) NOT USED\n <LI> (77) NOT USED\n <LI> (78) NOT USED\n <LI> (79) fbetap (f-value for equation 48)\n <LI> (80) NOT USED\n <LI> (81) edrive\n <LI> (82) drveff\n <LI> (83) tgain\n <LI> (84) chrad\n <LI> (85) pdrive\n <LI> (86) frrmax (f-value for equation 50)\n <LI> (87) NOT USED\n <LI> (88) NOT USED\n <LI> (89) ftbr (f-value for equation 52)\n <LI> (90) blbuith\n <LI> (91) blbuoth\n <LI> (92) fflutf (f-value for equation 53)\n <LI> (93) shldith\n <LI> (94) shldoth\n <LI> (95) fptfnuc (f-value for equation 54)\n <LI> (96) fvvhe (f-value for equation 55)\n <LI> (97) fpsepr (f-value for equation 56)\n <LI> (98) li6enrich\n <LI> (99) NOT USED\n <LI> (100) NOT USED\n <LI> (101) NOT USED\n <LI> (102) fimpvar\n <LI> (103) flhthresh (f-value for equation 15)\n <LI> (104) fcwr (f-value for equation 23)\n <LI> (105) fnbshinef (f-value for equation 59)\n <LI> (106) ftmargoh (f-value for equation 60)\n <LI> (107) favail (f-value for equation 61)\n <LI> (108) breeder_f: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)\n <LI> (109) ralpne: thermal alpha density / electron density\n <LI> (110) ftaulimit: Lower limit on taup/taueff the ratio of alpha\n <LI> (111) fniterpump: f-value for constraint that number\n <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)\n <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)\n <LI> (114) fw_channel_length: Length of a single first wall channel\n <LI> (115) fpoloidalpower: f-value for max rate of change of\n <LI> (116) fradwall: f-value for radiation wall load limit (eq. 67)\n <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)\n <LI> (118) fpsep: f-value to ensure separatrix power is less than\n <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model\n <LI> (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]\n <LI> (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP\n <LI> (122) oh_steel_frac : streel fraction of Central Solenoid\n <LI> (123) foh_stress : f-value for CS coil Tresca yield criterion (f-value for eq. 72)\n <LI> (124) qtargettotal : Power density on target including surface recombination [W/m2]\n <LI> (125) fimp(3) :  Beryllium density fraction relative to electron density\n <LI> (126) fimp(4) :  Carbon density fraction relative to electron density\n <LI> (127) fimp(5) :  Nitrogen fraction relative to electron density\n <LI> (128) fimp(6) :  Oxygen density fraction relative to electron density\n <LI> (129) fimp(7) :  Neon density fraction relative to electron density\n <LI> (130) fimp(8) :  Silicon density fraction relative to electron density\n <LI> (131) fimp(9) :  Argon density fraction relative to electron density\n <LI> (132) fimp(10) :  Iron density fraction relative to electron density\n <LI> (133) fimp(11) :  Nickel density fraction relative to electron density\n <LI> (134) fimp(12) :  Krypton density fraction relative to electron density\n <LI> (135) fimp(13) :  Xenon density fraction relative to electron density\n <LI> (136) fimp(14) :  Tungsten density fraction relative to electron density\n <LI> (137) fplhsep (f-value for equation 73)\n <LI> (138) rebco_thickness : thickness of REBCO layer in tape (m)\n <LI> (139) copper_thick : thickness of copper layer in tape (m)\n <LI> (140) dr_tf_wp : radial thickness of TFC winding pack (m)\n <LI> (141) fcqt : TF coil quench temperature < tmax_croco (f-value for equation 74)\n <LI> (142) nesep : electron density at separatrix [m-3]\n <LI> (143) f_copperA_m2 : TF coil current / copper area < Maximum value\n <LI> (144) fnesep : Eich critical electron density at separatrix\n <LI> (145) fgwped :  fraction of Greenwald density to set as pedestal-top density\n <LI> (146) fcpttf : F-value for TF coil current per turn limit (constraint equation 77)\n <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)\n <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion\n <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)\n <LI> (152) fbmaxcs : Ratio of separatrix density to Greenwald density\n <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)\n <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)\n <LI> (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)\n <LI> (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)\n <LI> (157) fvssu : F-value for available to required start up flux (con. 51)\n <LI> (158) croco_thick : Thickness of CroCo copper tube (m)\n <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)\n <LI> (160) f_avspace (f-value for equation 83)\n <LI> (161) fbetatry_lower (f-value for equation 84)\n <LI> (162) r_cp_top : Top outer radius of the centropost (ST only) (m)\n <LI> (163) f_t_turn_tf : f-value for TF coils WP trurn squared dimension constraint\n <LI> (164) f_crypmw : f-value for cryogenic plant power\n <LI> (165) fstr_wp : f-value for TF coil strain absolute value\n <LI> (166) f_copperaoh_m2 : CS coil current /copper area < Maximum value\n <LI> (167) fecrh_ignition: f-value for equation 90\n <LI> (168) EMPTY : Description\n <LI> (169) EMPTY : Description\n <LI> (170) EMPTY : Description\n <LI> (171) EMPTY : Description\n <LI> (172) EMPTY : Description\n <LI> (173) EMPTY : Description\n <LI> (174) EMPTY : Description\n <LI> (175) EMPTY : Description\n\n\n\n",
         "lambda_EU": "Decay length in EUROFER [cm]",
         "lambda_He_VV": "Decay length [cm]",
         "lambda_n_BZ_IB": "Decay length in IB BZ [cm]",
@@ -10150,7 +10024,6 @@
         "logT_qz": "",
         "logT_z": "",
         "logical_def": "",
-        "loss": "Derived type containing all power loss information for PLASMOD",
         "lowest_valid_fom": "",
         "lpulse": "Switch for reactor model:\n<ul>\n<li>=0 continuous operation</li>\n<li>=1 pulsed operation</li>\n</ul>",
         "lsa": "Level of safety assurance switch (generally, use 3 or 4):\n<ul>\n<li>=1 truly passively safe plant</li>\n<li>=2,3 in-between</li>\n<li>=4 like current fission plant</li>\n</ul>",
@@ -10219,7 +10092,6 @@
         "mfile": "Machine-optimised output file unit",
         "mflibe": "total mass of FLiBe (kg)",
         "mftotal": "Total mass flow rate for coolant (kg/s)",
-        "mhd": "Derived type containing all mhd information for PLASMOD",
         "mi": "",
         "minmax": "",
         "minstang": "minimum strike angle for heat flux calculation",
@@ -10333,13 +10205,12 @@
         "nre": "",
         "nsix": "",
         "nsixi": "",
-        "nsweep": "Switch denoting quantity to scan:<UL>\n         <LI> 1  aspect\n         <LI> 2  hldivlim\n         <LI> 3  pnetelin\n         <LI> 4  hfact\n         <LI> 5  oacdcp\n         <LI> 6  walalw\n         <LI> 7  beamfus0\n         <LI> 8  fqval\n         <LI> 9  te\n         <LI> 10 boundu(15: fvs)\n         <LI> 11 dnbeta\n         <LI> 12 bscfmax (use negative values only)\n         <LI> 13 boundu(10: hfact)\n         <LI> 14 fiooic\n         <LI> 15 fjprot\n         <LI> 16 rmajor\n         <LI> 17 bmxlim\n         <LI> 18 gammax\n         <LI> 19 boundl(16: ohcth)\n         <LI> 20 tbrnmn\n         <LI> 21 not used\n         <LI> 22 cfactr (N.B. requires iavail=0)\n         <LI> 23 boundu(72: fipir)\n         <LI> 24 powfmax\n         <LI> 25 kappa\n         <LI> 26 triang\n         <LI> 27 tbrmin (for blktmodel > 0 only)\n         <LI> 28 bt\n         <LI> 29 coreradius\n         <LI> 30 fimpvar\n         <LI> 31 taulimit\n         <LI> 32 epsvmc\n         <LI> 33 ttarget\n         <LI> 34 qtargettotal\n         <LI> 35 lambda_q_omp\n         <LI> 36 lambda_target\n         <LI> 37 lcon_factor\n         <LI> 38 Neon upper limit\n         <LI> 39 Argon upper limit\n         <LI> 40 Xenon upper limit\n         <LI> 41 blnkoth\n         <LI> 42 Argon fraction fimp(9)\n         <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum\n         <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material\n         <LI> 45 Minimum allowable temperature margin ; tf coils\n         <LI> 46 boundu(150) fgwsep\n         <LI> 47 impurity_enrichment(9) Argon impurity enrichment\n         <LI> 48 TF coil - n_pancake (integer turn winding pack)\n         <LI> 49 TF coil - n_layer (integer turn winding pack)\n         <LI> 50 Xenon fraction fimp(13)\n         <LI> 51 Power fraction to lower DN Divertor ftar\n         <LI> 52 SoL radiation fraction\n         <LI> 54 GL_nbti upper critical field at 0 Kelvin\n         <LI> 55 `shldith` : Inboard neutron shield thickness\n         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)\n         <LI> 57 `bt` lower boundary\n         <LI> 58 `scrapli` : Inboard plasma-first wall gap\n         <LI> 59 `scraplo` : Outboard plasma-first wall gap\n         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)\n         <LI> 61 copperaoh_m2_max : CS coil current / copper area\n         <LI> 62 coheof : CS coil current density at EOF\n         <LI> 63 ohcth : CS thickness (m)\n         <LI> 64 ohhghf : CS height (m) </UL>",
+        "nsweep": "Switch denoting quantity to scan:<UL>\n         <LI> 1  aspect\n         <LI> 2  hldivlim\n         <LI> 3  pnetelin\n         <LI> 4  hfact\n         <LI> 5  oacdcp\n         <LI> 6  walalw\n         <LI> 7  beamfus0\n         <LI> 8  fqval\n         <LI> 9  te\n         <LI> 10 boundu(15: fvs)\n         <LI> 11 dnbeta\n         <LI> 12 bscfmax (use negative values only)\n         <LI> 13 boundu(10: hfact)\n         <LI> 14 fiooic\n         <LI> 15 fjprot\n         <LI> 16 rmajor\n         <LI> 17 bmxlim\n         <LI> 18 gammax\n         <LI> 19 boundl(16: ohcth)\n         <LI> 20 tbrnmn\n         <LI> 21 not used\n         <LI> 22 cfactr (N.B. requires iavail=0)\n         <LI> 23 boundu(72: fipir)\n         <LI> 24 powfmax\n         <LI> 25 kappa\n         <LI> 26 triang\n         <LI> 27 tbrmin (for blktmodel > 0 only)\n         <LI> 28 bt\n         <LI> 29 coreradius\n       <LI> 31 taulimit\n         <LI> 32 epsvmc\n         <LI> 33 ttarget\n         <LI> 34 qtargettotal\n         <LI> 35 lambda_q_omp\n         <LI> 36 lambda_target\n         <LI> 37 lcon_factor\n         <LI> 38 Neon upper limit\n         <LI> 39 Argon upper limit\n         <LI> 40 Xenon upper limit\n         <LI> 41 blnkoth\n         <LI> 42 Argon fraction fimp(9)\n         <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum\n         <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material\n         <LI> 45 Minimum allowable temperature margin ; tf coils\n         <LI> 46 boundu(150) fgwsep\n         <LI> 47 impurity_enrichment(9) Argon impurity enrichment\n         <LI> 48 TF coil - n_pancake (integer turn winding pack)\n         <LI> 49 TF coil - n_layer (integer turn winding pack)\n         <LI> 50 Xenon fraction fimp(13)\n         <LI> 51 Power fraction to lower DN Divertor ftar\n         <LI> 52 SoL radiation fraction\n         <LI> 54 GL_nbti upper critical field at 0 Kelvin\n         <LI> 55 `shldith` : Inboard neutron shield thickness\n         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)\n         <LI> 57 `bt` lower boundary\n         <LI> 58 `scrapli` : Inboard plasma-first wall gap\n         <LI> 59 `scraplo` : Outboard plasma-first wall gap\n         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)\n         <LI> 61 copperaoh_m2_max : CS coil current / copper area\n         <LI> 62 coheof : CS coil current density at EOF\n         <LI> 63 ohcth : CS thickness (m)\n         <LI> 64 ohhghf : CS height (m) </UL>",
         "nsweep_2": "nsweep_2 /3/ : switch denoting quantity to scan for 2D scan:",
         "nt": "",
         "ntype": "switch for vacuum pump type:\n<ul>\n<li>=0 - for turbomolecular pump (magnetic bearing) with speed of 2.0 m3/s\n   (1.95 for N2, 1.8 for He, 1.8 for DT)</li>\n<li>=1 - for compound cryopump with nominal speed of 10.0 m3/s\n   (9.0 for N2, 5.0 for He and 25.0 for DT)</li>\n</ul>",
         "nu_": "",
         "nu_star": "",
-        "num": "Derived type containing all numerics information for PLASMOD",
         "num_rh_systems": "Number of remote handling systems (1-10)",
         "nvar": "nvar /16/ : number of iteration variables to use",
         "nvduct": "number of ducts (torus to pumps)",
@@ -10400,7 +10271,6 @@
         "peakmva": "peak MVA requirement",
         "peakpoloidalpower": "Peak absolute rate of change of stored energy in poloidal field (MW)",
         "peakradwallload": "Peak radiation wall load (MW/m^2) (`constraint equation 67`)",
-        "ped": "Derived type containing all pedestal information for PLASMOD",
         "pedgeradpv": "edge radiation power per volume (MW/m3)",
         "pfbldgm3": "volume of PF coil power supply building (m3)",
         "pfcaseth": "steel case thickness for PF coil i (m)",
@@ -10442,60 +10312,6 @@
         "plascur": "plasma current (A)",
         "plasipf": "plasma driven current fraction (Bootstrap + Diamagnetic + PS)",
         "plasma_res_factor": "plasma resistivity pre-factor",
-        "plasmod_Ainc": "increase of dt",
-        "plasmod_capA": "first radial grid point",
-        "plasmod_car_qdivt": "dcar/d(qdivt)",
-        "plasmod_chisaw": "artificial diffusivity in m^2/s",
-        "plasmod_chisawpos": "position where artificial sawtooth diffusivity is added, -1 - uses q=1 position",
-        "plasmod_contrpovr": "control power in Paux/R (MW/m)",
-        "plasmod_contrpovs": "control power in Paux/lateral_area (MW/m2)",
-        "plasmod_cxe_psepfac": "dcxe/d(1-Psep/PLH)",
-        "plasmod_dgy": "Newton differential",
-        "plasmod_dt": "plasmod time step",
-        "plasmod_dtinc": "decrease of dt",
-        "plasmod_dtmax": "plasmod max time step",
-        "plasmod_dtmaxmax": "stabilizing coefficient",
-        "plasmod_dtmaxmin": "exponent of jipperdo2",
-        "plasmod_dtmin": "plasmod min time step",
-        "plasmod_dx_cd": "plasmod change in auxiliary current drive array:\n<ul>\n<li>[1] - nbi</li>\n<li>[2] - ech</li>\n</ul>",
-        "plasmod_dx_control": "plasmod change in control array:\n<ul>\n<li>[1] - nbi</li>\n<li>[2] - ech</li>\n</ul>",
-        "plasmod_dx_fus": "plasmod change in fusion power array:\n<ul>\n<li>[1] - nbi</li>\n<li>[2] - ech</li>\n</ul>",
-        "plasmod_dx_heat": "plasmod change in auxiliary heating array:\n<ul>\n<li>[1] - nbi</li>\n<li>[2] - ech</li>\n</ul>",
-        "plasmod_eccdeff": "current drive multiplier: CD = eccdeff<em>PCD</em>TE/NE (not in use yet)",
-        "plasmod_eopt": "exponent of jipperdo",
-        "plasmod_fcdp": "(P_CD - Pheat)/(Pmax-Pheat),i.e. ratio of CD power over available power (`iteration variable 150`)",
-        "plasmod_fpellet": "pellet frequency [Hz]",
-        "plasmod_fradc": "Pline_Xe / (Palpha + Paux - PlineAr - Psync - Pbrad) (`iteration variable 151`)",
-        "plasmod_gamcdothers": "efficiency multiplier for non-CD heating. If 0.0 pheat treated as if had no CD associated",
-        "plasmod_globtau": "tauparticle/tauE for D, T, He, Xe, Ar (<strong>not used for Xe</strong>)",
-        "plasmod_i_equiltype": "switch for EMEQ setting to use either q95 or Ip as input:\n<ul>\n<li>=1 EMEQ, solve with sawteeth and inputted q95.</li>\n<li>=2 EMEQ, solve with sawteeth and inputted Ip (not recommended!).</li>\n</ul>",
-        "plasmod_i_impmodel": "switch for plasma inpurity concentration setting:\n<ul>\n<li>=0 fixed concentration</li>\n<li>=1 fixed concentration at pedestal top, then fixed density</li>\n</ul>",
-        "plasmod_i_modeltype": "switch for the transport model:\n<ul>\n<li>=1 Simple gyrobohm scaling with imposed H factor > 1. Other values give H factor as output</li>\n<li>=111 roughly calibrated to give H=1 for DEMO, but not fixed H</li>\n</ul>",
-        "plasmod_imptype": "Impurities array:\n<ul>\n<li>[1] - intrinsic impurity</li>\n<li>[2] - Psep control</li>\n<li>[3] - seeding for SOL (defaults: W, Xe, Ar)</li>\n</ul>",
-        "plasmod_iprocess": "switch for determining which functions to use:\n<ul>\n<li>=0 use PLASMOD functions</li>\n<li>=1 use PROCESS functions</li>\n</ul>",
-        "plasmod_isawt": "switch to determine if plasmod solves with sawteeth:\n<ul>\n<li>=0 no sawteeth</li>\n<li>=1 solve with sawteeth</li>\n</ul>",
-        "plasmod_maxA": "diagz 0 or 1",
-        "plasmod_maxpauxor": "max allowed auxiliary power / R",
-        "plasmod_nbi_energy": "NBI energy [keV]",
-        "plasmod_nchannels": "leave this at 3",
-        "plasmod_nx": "number of interpolated grid points",
-        "plasmod_nxt": "number of solved grid points",
-        "plasmod_pech": "ech power (not in use yet) #TODO: units?",
-        "plasmod_pedscal": "multiplication factor of the pedestal scaling in PLASMOD can be used to scan the pedestal height.",
-        "plasmod_pfus": "plasmod fusion power. If 0. not used (otherwise controlled with Pauxheat).",
-        "plasmod_psepplh_sup": "Psep/PLH if above this, use Xe",
-        "plasmod_qdivt": "divertor heat flux in MW/m^2, if 0, dont use SOL model",
-        "plasmod_qnbi_psepfac": "dqnbi/d(1-Psep/PLH)",
-        "plasmod_sawpertau": "ratio between sawtooth period and confinement time",
-        "plasmod_spellet": "pellet mass in units of D in 10^19",
-        "plasmod_test": "max number of plasmod iterations",
-        "plasmod_tol": "tolerance to be reached at each time step (%)",
-        "plasmod_tolmin": "multiplier of etolm which can not be exceeded",
-        "plasmod_v_loop": "target loop voltage. If lower than -1.e5 do not use.",
-        "plasmod_x_cd": "plasmod auxiliary current drive array:\n<ul>\n<li>[1] - nbi</li>\n<li>[2] - ech</li>\n</ul>",
-        "plasmod_x_control": "plasmod control array:\n<ul>\n<li>[1] - nbi</li>\n<li>[2] - ech</li>\n</ul>",
-        "plasmod_x_fus": "plasmod fusion power array:\n<ul>\n<li>[1] - nbi</li>\n<li>[2] - ech</li>\n</ul>",
-        "plasmod_x_heat": "plasmod auxiliary heating array:\n<ul>\n<li>[1] - nbi</li>\n<li>[2] - ech</li>\n</ul>",
         "plhthresh": "L-H mode power threshold (MW) (chosen via ilhthresh, and enforced if\n constraint equation 15 is on)",
         "plhybd": "lower hybrid injection power (MW)",
         "plinepv": "line radiation power per volume (MW/m3)",
@@ -10643,7 +10459,6 @@
         "qstar": "cylindrical safety factor",
         "qtargettotal": "Power density on target including surface recombination [W/m2] (`iteration variable 124`)",
         "qtaue": "exponent for temperature term in energy confinement time formula",
-        "quench_detection_ef": "Electric field at which TF quench is detected and discharge begins (V/m)",
         "quench_model": "switch for TF coil quench model (Only applies to REBCO magnet at present, issue #522):\n<ul>\n<li>='exponential' exponential quench with constant discharge resistor</li>\n<li>='linear' quench with constant voltage</li>\n</ul>",
         "r1": "IFE device radial build (m)",
         "r2": "IFE device radial build (m)",
@@ -10677,7 +10492,6 @@
         "rad_ob": "",
         "radctf": "radius of arc i (m)",
         "radial_array": "Array refining the radii of the stress calculations arrays",
-        "radp": "Derived type containing all radial profile information for PLASMOD",
         "ralpne": "thermal alpha density/electron density (`iteration variable 109`) (calculated if `ipedestal=3`)",
         "rat": "plasma chamber wall outgassing rate (Pa-m/s)",
         "rb": "outer radius of coil i (m)",
@@ -10714,7 +10528,6 @@
         "resdl": "",
         "residual_sig_hoop": "residual hoop stress in strucutal material (Pa)",
         "rfxf": "",
-        "rho_ecrh": "normalised minor radius at which electron cyclotron current drive is maximum",
         "rho_max_dn": "r/a where the density gradient is largest (`ipedestal==0`)",
         "rho_max_dt": "r/a where the temperature gradient is largest (`ipedestal==0`)",
         "rho_star": "",
@@ -12455,14 +12268,6 @@
             "lb": 0.1,
             "ub": 5.0
         },
-        "divleg_profile_inner": {
-            "lb": 0.0,
-            "ub": 10.0
-        },
-        "divleg_profile_outer": {
-            "lb": 0.0,
-            "ub": 50.0
-        },
         "divplt": {
             "lb": 0.01,
             "ub": 1.0
@@ -12691,10 +12496,6 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "farc4tf": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
         "fauxbop": {
             "lb": 0.0,
             "ub": 1.0
@@ -12899,10 +12700,6 @@
             "lb": 0.001,
             "ub": 10.0
         },
-        "fgamp": {
-            "lb": -100.0,
-            "ub": 100.0
-        },
         "fgwped": {
             "lb": -1.0,
             "ub": 5.0
@@ -12934,10 +12731,6 @@
         "fififi": {
             "lb": 1e-06,
             "ub": 1.0
-        },
-        "fimpvar": {
-            "lb": 1e-06,
-            "ub": 0.5
         },
         "fiooic": {
             "lb": 0.001,
@@ -12982,38 +12775,6 @@
         "fmgdmw": {
             "lb": 0.0,
             "ub": 100.0
-        },
-        "fmsbc": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsbl": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsdwe": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsdwi": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsfw": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmsoh": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmssh": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "fmstf": {
-            "lb": 0.0,
-            "ub": 1.0
         },
         "fmva": {
             "lb": 0.001,
@@ -13643,10 +13404,6 @@
             "lb": 0,
             "ub": 4
         },
-        "ifispact": {
-            "lb": 0,
-            "ub": 0
-        },
         "ifueltyp": {
             "lb": 0,
             "ub": 2
@@ -13736,10 +13493,6 @@
             "ub": 1
         },
         "iprecomp": {
-            "lb": 0,
-            "ub": 1
-        },
-        "iprimnloss": {
             "lb": 0,
             "ub": 1
         },
@@ -14211,182 +13964,6 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "plasmod_Ainc": {
-            "lb": 0.0,
-            "ub": 20000.0
-        },
-        "plasmod_capA": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_car_qdivt": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_chisaw": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_chisawpos": {
-            "lb": -10.0,
-            "ub": 10.0
-        },
-        "plasmod_contrpovr": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_contrpovs": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_cxe_psepfac": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_dgy": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_dt": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_dtinc": {
-            "lb": 0.0,
-            "ub": 100000.0
-        },
-        "plasmod_dtmax": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_dtmaxmax": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_dtmaxmin": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_dtmin": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_eccdeff": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "plasmod_eopt": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_fcdp": {
-            "lb": -1.0,
-            "ub": 1.0
-        },
-        "plasmod_fpellet": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_fradc": {
-            "lb": -1.0,
-            "ub": 1.0
-        },
-        "plasmod_gamcdothers": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "plasmod_i_equiltype": {
-            "lb": 1,
-            "ub": 20000
-        },
-        "plasmod_i_impmodel": {
-            "lb": 0,
-            "ub": 10000
-        },
-        "plasmod_i_modeltype": {
-            "lb": 0,
-            "ub": 10000
-        },
-        "plasmod_iprocess": {
-            "lb": 0,
-            "ub": 1
-        },
-        "plasmod_isawt": {
-            "lb": 0,
-            "ub": 2
-        },
-        "plasmod_maxA": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_maxpauxor": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_nbi_energy": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_nchannels": {
-            "lb": 3,
-            "ub": 3
-        },
-        "plasmod_nx": {
-            "lb": 0,
-            "ub": 10000
-        },
-        "plasmod_nxt": {
-            "lb": 0,
-            "ub": 10000
-        },
-        "plasmod_pech": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_pedscal": {
-            "lb": 0.0,
-            "ub": 10.0
-        },
-        "plasmod_pfus": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_psepplh_sup": {
-            "lb": 0.0,
-            "ub": 20000.0
-        },
-        "plasmod_qdivt": {
-            "lb": 0.0,
-            "ub": 1000000.0
-        },
-        "plasmod_qnbi_psepfac": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_sawpertau": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "plasmod_spellet": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_test": {
-            "lb": 0.0,
-            "ub": 1000000.0
-        },
-        "plasmod_tol": {
-            "lb": 0.0,
-            "ub": 10000.0
-        },
-        "plasmod_tolmin": {
-            "lb": 0.0,
-            "ub": 200000.0
-        },
-        "plasmod_v_loop": {
-            "lb": -10000.0,
-            "ub": 10000.0
-        },
         "plleni": {
             "lb": 0.1,
             "ub": 10.0
@@ -14503,10 +14080,6 @@
             "lb": 0.001,
             "ub": 100000000.0
         },
-        "quench_detection_ef": {
-            "lb": 0.0,
-            "ub": 10.0
-        },
         "r_cp_top": {
             "lb": 0.001,
             "ub": 10.0
@@ -14586,10 +14159,6 @@
         "residual_sig_hoop": {
             "lb": 0.0,
             "ub": 1000000000.0
-        },
-        "rho_ecrh": {
-            "lb": 0.0,
-            "ub": 1.0
         },
         "rho_tf_joints": {
             "lb": 0.0,
@@ -15567,7 +15136,6 @@
     "DICT_IXC2NSWEEP": {
         "1": "1",
         "10": "4",
-        "102": "30",
         "12": "5",
         "120": "33",
         "124": "34",
@@ -15819,10 +15387,6 @@
         },
         "fimp(14)": {
             "lb": 1e-08,
-            "ub": 0.01
-        },
-        "fimpvar": {
-            "lb": 1e-06,
             "ub": 0.01
         },
         "fiooic": {
@@ -16089,14 +15653,6 @@
             "lb": 0.001,
             "ub": 1000.0
         },
-        "plasmod_fcdp": {
-            "lb": 0.0,
-            "ub": 1.0
-        },
-        "plasmod_fradc": {
-            "lb": 0.001,
-            "ub": 1.0
-        },
         "q": {
             "lb": 2.0,
             "ub": 50.0
@@ -16258,7 +15814,6 @@
         "fgwped": 0.85,
         "fgwsep": 0.5,
         "fhldiv": 1.0,
-        "fimpvar": 0.001,
         "fiooic": 0.5,
         "fipir": 1.0,
         "fjohc": 1.0,
@@ -16325,8 +15880,6 @@
         "pdrive": 23000000.0,
         "pfusife": 1000.0,
         "pheat": 0.0,
-        "plasmod_fcdp": -1.0,
-        "plasmod_fradc": -1.0,
         "q": 3.0,
         "qtargettotal": 5000000.0,
         "r_cp_top": 0.0,
@@ -16366,11 +15919,6 @@
             "lb": 0.1,
             "name": "hfact",
             "ub": 3.0
-        },
-        "102": {
-            "lb": 1e-06,
-            "name": "fimpvar",
-            "ub": 0.01
         },
         "103": {
             "lb": 1.0,
@@ -16630,16 +16178,6 @@
         "15": {
             "lb": 0.001,
             "name": "fvs",
-            "ub": 1.0
-        },
-        "150": {
-            "lb": 0.0,
-            "name": "plasmod_fcdp",
-            "ub": 1.0
-        },
-        "151": {
-            "lb": 0.001,
-            "name": "plasmod_fradc",
             "ub": 1.0
         },
         "152": {
@@ -17171,7 +16709,6 @@
     "DICT_IXC_SIMPLE": {
         "1": "aspect",
         "10": "hfact",
-        "102": "fimpvar",
         "103": "flhthresh",
         "104": "fcwr",
         "105": "fnbshinef",
@@ -17224,8 +16761,6 @@
         "148": "fzactual",
         "149": "fbmaxcs",
         "15": "fvs",
-        "150": "plasmod_fcdp",
-        "151": "plasmod_fradc",
         "152": "fgwsep",
         "153": "fpdivlim",
         "154": "fne0",
@@ -17392,7 +16927,6 @@
         "fimp(12)": "134",
         "fimp(13)": "135",
         "fimp(14)": "136",
-        "fimpvar": "102",
         "fiooic": "50",
         "fipir": "72",
         "fjohc": "38",
@@ -17459,8 +16993,6 @@
         "pdrive": "85",
         "pfusife": "155",
         "pheat": "11",
-        "plasmod_fcdp": "150",
-        "plasmod_fradc": "151",
         "q": "18",
         "qtargettotal": "124",
         "r_cp_top": "162",
@@ -17538,14 +17070,6 @@
             "d_vv_bot",
             "f_avspace",
             "fcspc",
-            "fmsbc",
-            "fmsbl",
-            "fmsdwe",
-            "fmsdwi",
-            "fmsfw",
-            "fmsoh",
-            "fmssh",
-            "fmstf",
             "fseppc",
             "fwarea",
             "fwareaib",
@@ -18348,7 +17872,6 @@
             "ftritbm",
             "gamcd",
             "gamma_ecrh",
-            "rho_ecrh",
             "xi_ebw",
             "iefrf",
             "iefrffix",
@@ -18455,14 +17978,11 @@
             "divdens",
             "divdum",
             "divfix",
-            "divleg_profile_inner",
-            "divleg_profile_outer",
             "divmas",
             "divplt",
             "divsur",
             "fdfs",
             "fdiva",
-            "fgamp",
             "fhout",
             "fififi",
             "frrp",
@@ -18755,7 +18275,6 @@
             "htpmw_shld",
             "htpsecmw",
             "ipowerflow",
-            "iprimnloss",
             "iprimshld",
             "nphx",
             "pacpmw",
@@ -18906,8 +18425,6 @@
             "coreradiationfraction",
             "fimp",
             "imp_label",
-            "fimpvar",
-            "impvar",
             "all_array_hotfix_len",
             "impurity_arr_Label",
             "impurity_arr_Z",
@@ -19430,7 +18947,6 @@
             "vlam"
         ],
         "ode_mod": [],
-        "optimiz_module": [],
         "param": [
             "pi",
             "c"
@@ -19678,7 +19194,6 @@
             "idensl",
             "idivrt",
             "ifalphap",
-            "ifispact",
             "igeom",
             "ignite",
             "iinvqd",
@@ -19818,72 +19333,6 @@
             "zeffai"
         ],
         "plasma_geometry_module": [],
-        "plasmod_module": [],
-        "plasmod_variables": [
-            "plasmod_tol",
-            "plasmod_dtmin",
-            "plasmod_dtmax",
-            "plasmod_dt",
-            "plasmod_dtinc",
-            "plasmod_Ainc",
-            "plasmod_test",
-            "plasmod_tolmin",
-            "plasmod_eopt",
-            "plasmod_dtmaxmin",
-            "plasmod_dtmaxmax",
-            "plasmod_capA",
-            "plasmod_maxA",
-            "plasmod_dgy",
-            "plasmod_iprocess",
-            "plasmod_i_modeltype",
-            "plasmod_i_equiltype",
-            "plasmod_isawt",
-            "plasmod_nx",
-            "plasmod_nxt",
-            "plasmod_nchannels",
-            "plasmod_i_impmodel",
-            "plasmod_globtau",
-            "plasmod_psepplh_sup",
-            "plasmod_qdivt",
-            "plasmod_imptype",
-            "plasmod_qnbi_psepfac",
-            "plasmod_cxe_psepfac",
-            "plasmod_car_qdivt",
-            "plasmod_maxpauxor",
-            "plasmod_x_heat",
-            "plasmod_x_cd",
-            "plasmod_x_fus",
-            "plasmod_x_control",
-            "plasmod_dx_heat",
-            "plasmod_dx_cd",
-            "plasmod_dx_fus",
-            "plasmod_dx_control",
-            "plasmod_contrpovs",
-            "plasmod_contrpovr",
-            "plasmod_nbi_energy",
-            "plasmod_v_loop",
-            "plasmod_pfus",
-            "plasmod_eccdeff",
-            "plasmod_fcdp",
-            "plasmod_fradc",
-            "plasmod_pech",
-            "plasmod_gamcdothers",
-            "plasmod_chisawpos",
-            "plasmod_chisaw",
-            "plasmod_sawpertau",
-            "plasmod_spellet",
-            "plasmod_fpellet",
-            "plasmod_pedscal",
-            "geom",
-            "comp",
-            "ped",
-            "inp0",
-            "radp",
-            "mhd",
-            "loss",
-            "num",
-            "i_flag"
-        ],
         "power_module": [
             "double",
             "htpmwe_shld",
@@ -20177,7 +19626,6 @@
             "dcondins",
             "dhecoil",
             "estotftgj",
-            "farc4tf",
             "b_crit_upper_nbti",
             "t_crit_nbti",
             "max_force_density",
@@ -20245,7 +19693,6 @@
             "str_wp_max",
             "i_str_wp",
             "quench_model",
-            "quench_detection_ef",
             "time1",
             "taucq",
             "tcritsc",
@@ -20506,7 +19953,6 @@
         "15": "53",
         "16": "3",
         "28": "2",
-        "30": "102",
         "33": "120",
         "34": "124",
         "4": "10",
@@ -20544,7 +19990,6 @@
         "28": "bt",
         "29": "coreradius",
         "3": "pnetelin",
-        "30": "fimpvar",
         "31": "taulimit",
         "32": "epsvmc",
         "33": "ttarget",
@@ -20558,7 +20003,6 @@
         "40": "boundu(135)",
         "41": "blnkoth",
         "42": "fimp(9)",
-        "43": "rho_ecrh",
         "44": "sig_tf_case_max",
         "5": "oacdcp",
         "6": "walalw",
@@ -20802,8 +20246,6 @@
         "divdens": "real_variable",
         "divdum": "int_variable",
         "divfix": "real_variable",
-        "divleg_profile_inner": "real_variable",
-        "divleg_profile_outer": "real_variable",
         "divplt": "real_variable",
         "dnbeta": "real_variable",
         "dp_he": "real_variable",
@@ -20862,7 +20304,6 @@
         "f_w": "real_variable",
         "factor": "real_variable",
         "falpha": "real_variable",
-        "farc4tf": "real_variable",
         "fauxbop": "real_variable",
         "fauxmn": "real_variable",
         "favail": "real_variable",
@@ -20914,7 +20355,6 @@
         "ffuspow": "real_variable",
         "ffwal": "real_variable",
         "fgamcd": "real_variable",
-        "fgamp": "real_variable",
         "fgwped": "real_variable",
         "fgwsep": "real_variable",
         "fhcd": "real_variable",
@@ -20924,7 +20364,6 @@
         "fhts": "real_variable",
         "fififi": "real_variable",
         "fimp": "real_array",
-        "fimpvar": "real_variable",
         "fiooic": "real_variable",
         "fipir": "real_variable",
         "fjohc": "real_variable",
@@ -20936,15 +20375,6 @@
         "flirad": "real_variable",
         "flpitch": "real_variable",
         "fmgdmw": "real_variable",
-        "fmsbc": "real_variable",
-        "fmsbl": "real_variable",
-        "fmsdwe": "real_variable",
-        "fmsdwi": "real_variable",
-        "fmsfw": "real_variable",
-        "fmsoh": "real_variable",
-        "fmssh": "real_variable",
-        "fmstf": "real_variable",
-        "fmva": "real_variable",
         "fnbshinef": "real_variable",
         "fndt": "real_variable",
         "fne0": "real_variable",
@@ -21104,7 +20534,6 @@
         "ife": "int_variable",
         "ifedrv": "int_variable",
         "ifetyp": "int_variable",
-        "ifispact": "int_variable",
         "ifueltyp": "int_variable",
         "igeom": "int_variable",
         "ignite": "int_variable",
@@ -21117,7 +20546,6 @@
         "ilw_storage_l": "real_variable",
         "ilw_storage_w": "real_variable",
         "impurity_enrichment": "real_array",
-        "impvar": "int_variable",
         "impvardiv": "int_variable",
         "initialpressure": "real_variable",
         "inlet_temp": "real_variable",
@@ -21131,7 +20559,6 @@
         "ipnet": "int_variable",
         "ipowerflow": "int_variable",
         "iprecomp": "int_variable",
-        "iprimnloss": "int_variable",
         "iprimshld": "int_variable",
         "iprofile": "int_variable",
         "ips": "int_variable",
@@ -21262,60 +20689,6 @@
         "pinjmax": "real_variable",
         "pitch": "real_variable",
         "plasma_res_factor": "real_variable",
-        "plasmod_Ainc": "real_variable",
-        "plasmod_capA": "real_variable",
-        "plasmod_car_qdivt": "real_variable",
-        "plasmod_chisaw": "real_variable",
-        "plasmod_chisawpos": "real_variable",
-        "plasmod_contrpovr": "real_variable",
-        "plasmod_contrpovs": "real_variable",
-        "plasmod_cxe_psepfac": "real_variable",
-        "plasmod_dgy": "real_variable",
-        "plasmod_dt": "real_variable",
-        "plasmod_dtinc": "real_variable",
-        "plasmod_dtmax": "real_variable",
-        "plasmod_dtmaxmax": "real_variable",
-        "plasmod_dtmaxmin": "real_variable",
-        "plasmod_dtmin": "real_variable",
-        "plasmod_dx_cd": "real_array",
-        "plasmod_dx_control": "real_array",
-        "plasmod_dx_fus": "real_array",
-        "plasmod_dx_heat": "real_array",
-        "plasmod_eccdeff": "real_variable",
-        "plasmod_eopt": "real_variable",
-        "plasmod_fcdp": "real_variable",
-        "plasmod_fpellet": "real_variable",
-        "plasmod_fradc": "real_variable",
-        "plasmod_gamcdothers": "real_variable",
-        "plasmod_globtau": "real_array",
-        "plasmod_i_equiltype": "int_variable",
-        "plasmod_i_impmodel": "int_variable",
-        "plasmod_i_modeltype": "int_variable",
-        "plasmod_imptype": "int_array",
-        "plasmod_iprocess": "int_variable",
-        "plasmod_isawt": "int_variable",
-        "plasmod_maxA": "real_variable",
-        "plasmod_maxpauxor": "real_variable",
-        "plasmod_nbi_energy": "real_variable",
-        "plasmod_nchannels": "int_variable",
-        "plasmod_nx": "int_variable",
-        "plasmod_nxt": "int_variable",
-        "plasmod_pech": "real_variable",
-        "plasmod_pedscal": "real_variable",
-        "plasmod_pfus": "real_variable",
-        "plasmod_psepplh_sup": "real_variable",
-        "plasmod_qdivt": "real_variable",
-        "plasmod_qnbi_psepfac": "real_variable",
-        "plasmod_sawpertau": "real_variable",
-        "plasmod_spellet": "real_variable",
-        "plasmod_test": "real_variable",
-        "plasmod_tol": "real_variable",
-        "plasmod_tolmin": "real_variable",
-        "plasmod_v_loop": "real_variable",
-        "plasmod_x_cd": "real_array",
-        "plasmod_x_control": "real_array",
-        "plasmod_x_fus": "real_array",
-        "plasmod_x_heat": "real_array",
         "plleni": "real_variable",
         "plleno": "real_variable",
         "plsepi": "real_variable",
@@ -21345,7 +20718,6 @@
         "qnty_sfty_fac": "real_variable",
         "qnuc": "real_variable",
         "qtargettotal": "real_variable",
-        "quench_detection_ef": "real_variable",
         "r_cp_top": "real_variable",
         "rad_fraction_sol": "real_variable",
         "ralpne": "real_variable",
@@ -21366,7 +20738,6 @@
         "reinke_mode": "int_variable",
         "relerr_sol": "real_variable",
         "residual_sig_hoop": "real_variable",
-        "rho_ecrh": "real_variable",
         "rho_tf_joints": "real_variable",
         "rhopedn": "real_variable",
         "rhopedt": "real_variable",
@@ -21630,8 +21001,7 @@
         "fcohbop",
         "fvsbrnni",
         "feffcd",
-        "fcutfsu",
-        "fimpvar"
+        "fcutfsu"
     ],
     "PARAMETER_DEFAULTS": [
         "rmajor",

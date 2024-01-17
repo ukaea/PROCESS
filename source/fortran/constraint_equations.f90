@@ -1068,7 +1068,7 @@ contains
       !! #=#=# fhldiv, hldivlim
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fhldiv : input real : peak resistive TF coil inboard leg power (MW)
+      !! fhldiv : input real : f-value for divertor heat load
       !! hldivlim : input real : heat load limit (MW/m2)
       !! hldiv : input real : divertor heat load (MW/m2)
       use constraint_variables, only: fhldiv
@@ -2386,11 +2386,11 @@ contains
    end subroutine constraint_eqn_059
 
    subroutine constraint_eqn_060(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for Central Solenoid s/c temperature margin lower limi
+      !! Equation for Central Solenoid s/c temperature margin lower limit
       !! author: P B Lloyd, CCFE, Culham Science Centre
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !! Equation for Central Solenoid s/c temperature margin lower limi
+      !! Equation for Central Solenoid s/c temperature margin lower limit
       !! #=# tfcoil
       !! #=#=# ftmargoh, tmargmin_cs
       !! and hence also optional here.
@@ -2859,9 +2859,9 @@ contains
       !! #=#=# f_coppera_m2, copperA_m2_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! copperA_m2 : input real :
-      !! copperA_m2_max : input real :
-      !! f_coppera_m2 : input real :
+      !! copperA_m2 : input real : TF coil current / copper area (A/m2) 
+      !! copperA_m2_max : input real : Maximum TF coil current / copper area (A/m2)
+      !! f_coppera_m2 : input real : f-value for TF coil current / copper area < copperA_m2_max
       use rebco_variables, only: copperA_m2, copperA_m2_max, f_coppera_m2
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -3218,7 +3218,10 @@ contains
       !! Author : S Kahn
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units;
-      !!
+      !! Equation constraining the turn edge length in the TF winding pack
+      !! t_turn_tf : input real : TF coil turn edge length including turn insulation [m]
+      !! f_t_turn_tf : input real : f-value for TF turn edge length constraint
+      !! t_turn_tf_max : input real : TF turn edge length including turn insulation upper limit [m]
       use tfcoil_variables, only : t_turn_tf, f_t_turn_tf, t_turn_tf_max
 
       implicit none
@@ -3244,6 +3247,9 @@ contains
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
       !! Equation for TF coil cryogenic power upper limit
+      !! crypmw : input real : cryogenic plant power (MW)
+      !! f_crypmw : input real : f-value for maximum cryogenic plant power
+      !! crypmw_max : input real : Maximum cryogenic plant power (MW)
 
       use heat_transport_variables, only: crypmw, crypmw_max, f_crypmw
       implicit none

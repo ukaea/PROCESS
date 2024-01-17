@@ -112,7 +112,7 @@ class Structure:
         :param itfsup: switch denoting whether TF coils are superconducting
         :type itfsup: integer
 
-        :param ipfres: switch denoting whether PF coils are resistive
+        :param ipfres: switch denoting whether PF & CS coils are resistive
         :type ipfres: integer
 
         :param tf_h_width: TF coil horizontal bore (m)
@@ -206,7 +206,6 @@ class Structure:
         #  Output section
 
         if output:
-
             po.oheadr(self.outfile, "Support Structure")
             po.ovarre(
                 self.outfile,

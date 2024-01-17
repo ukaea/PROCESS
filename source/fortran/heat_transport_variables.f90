@@ -107,12 +107,6 @@ module heat_transport_variables
     !! - =0 pre-2014 version
     !! - =1 comprehensive 2014 model
 
-    integer :: iprimnloss
-    !! switch for lost neutron power through holes destiny (ipowerflow=0):
-    !!
-    !! - =0 does not contribute to energy generation cycle
-    !! - =1 contributes to energy generation cycle
-
     integer :: iprimshld
     !! Switch for shield thermal power destiny:
     !!
@@ -224,7 +218,6 @@ module heat_transport_variables
       htpmw_shld = 0.0D0
       htpsecmw = 0.0D0
       ipowerflow = 1
-      iprimnloss = 0
       iprimshld = 1
       nphx = 0
       pacpmw = 0.0D0

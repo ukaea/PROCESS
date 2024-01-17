@@ -70,6 +70,7 @@ from process.hcpb import CCFE_HCPB
 from process.dcll import DCLL
 from process.blanket_library import BlanketLibrary
 from process.fw import Fw
+from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 
 from pathlib import Path
@@ -235,7 +236,6 @@ class VaryRun:
     Output files:
     All of them in the work directory specified in the config file
     OUT.DAT     -  PROCESS output
-    PLOT.DAT    -  PROCESS output
     MFILE.DAT   -  PROCESS output
     process.log - logfile of PROCESS output to stdout
     README.txt  - contains comments from config file
@@ -585,6 +585,7 @@ class Models:
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
+        self.current_drive = CurrentDrive()
         self.stellarator = Stellarator(
             availability=self.availability,
             buildings=self.buildings,
@@ -594,9 +595,12 @@ class Models:
             plasma_profile=self.plasma_profile,
             hcpb=self.ccfe_hcpb,
             sctfcoil=self.sctfcoil,
+            current_drive=self.current_drive,
         )
         self.costs_2015 = Costs2015()
-        self.physics = Physics(plasma_profile=self.plasma_profile)
+        self.physics = Physics(
+            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+        )
         self.dcll = DCLL(blanket_library=self.blanket_library)
 
 

@@ -75,7 +75,6 @@ LIST(APPEND PROCESS_SRCS
     numerics.f90
     scan.f90
     fw.f90
-    current_drive.f90
     hcpb.f90
     pfcoil.f90
     reinke_module.f90
@@ -96,7 +95,6 @@ LIST(APPEND PROCESS_SRCS
     buildings_variables.f90
     maths_library.f90
     iteration_variables.f90
-    optimiz_module.f90
     evaluators.f90
     water_usage_variables.f90
     constraint_equations.f90
