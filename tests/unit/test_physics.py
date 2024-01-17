@@ -11,6 +11,7 @@ import numpy
 import pytest
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile
+from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 
 
@@ -21,7 +22,7 @@ def physics():
     :returns: initialised Physics object
     :rtype: process.physics.Physics
     """
-    return Physics(PlasmaProfile())
+    return Physics(PlasmaProfile(), CurrentDrive())
 
 
 def test_diamagnetic_fraction_hender(physics):
