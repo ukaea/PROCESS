@@ -62,7 +62,6 @@ class Stellarator:
         power,
         plasma_profile,
         hcpb,
-        sctfcoil,
         current_drive,
     ) -> None:
         """Initialises the Stellarator model's variables
@@ -93,7 +92,6 @@ class Stellarator:
         self.power = power
         self.plasma_profile = plasma_profile
         self.hcpb = hcpb
-        self.sctfcoil = sctfcoil
         self.current_drive = current_drive
 
     def run(self, output: bool):
