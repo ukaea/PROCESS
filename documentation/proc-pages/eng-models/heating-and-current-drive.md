@@ -17,7 +17,8 @@ The fraction of the required plasma current to be produced by non-inductive mean
 - `iefrf` = 9: Oscillating Field current drive (RFPs only - OBSOLETE-REMOVED),
 - `iefrf` = 10: ECRH user input gamma,
 - `iefrf` = 11: ECRH "HARE" model [^3],
-- `iefrf` = 12: EBW user scaling input. Scaling (S. Freethy)
+- `iefrf` = 12: EBW user scaling input[^4],
+- `iefrf` = 13: ECRH O-mode cutoff with Zeff and Te [^4], 
 
 
 (Note that, at present, the neutral beam models do not include the effect of an edge transport barrier (pedestal) in the plasma profile.)
@@ -64,3 +65,5 @@ Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully 
 [^2]: T. C. Hender, M. K. Bevir, M. Cox, R. J. Hastie, P. J. Knight, C. N. Lashmore-Davies, B. Lloyd, G. P. Maddison, A. W. Morris, M. R. O'Brien, M.F. Turner abd H. R. Wilson, *"Physics Assessment for the European Reactor Study"*, AEA Fusion Report AEA FUS 172 (1992)
 
 [^3]: E. Poli, M. Müller, H. Zohm, M. Kovari, *"Fast evaluation of the current driven by electron cyclotron waves for reactor studies"*, Physics of Plasmas 1 December 2018; 25 (12): 122501
+
+[^4]: Laqua, H & Maassberg, H & Marushchenko, Nikolai & Volpe, Francesco & Weller, A & Kasparek, W. (2003). *"Electron-Bernstein-Wave Current Drive in an Overdense Plasma at the Wendelstein 7-AS Stellarator"*, Physical review letters. 90. 075003. 10.1103/PhysRevLett.90.075003. 

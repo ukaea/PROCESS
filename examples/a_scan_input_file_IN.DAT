@@ -611,6 +611,8 @@ vftf = 0.3
 * Conductor type switch (ITER Nb3Sn)
 i_tf_sc_mat = 1
 
+* Scan Variables
+
 nsweep = 17 * bmxlim, maximum peak toroidal field 
 isweep = 11
 sweep = 11., 11.2, 11.4, 11.6, 11.8, 12., 12.2, 12.4, 12.6, 12.8, 13.

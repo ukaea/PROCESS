@@ -504,11 +504,7 @@ account the fuel ratios \texttt{fdeut}, \texttt{ftrit} and
 be input by the user.
 
 The impurity fraction of one of the elements listed in array
-\texttt{fimp} may be used as an iteration variable. The element to use
-is specified using input parameter \texttt{impvar}, which may be set to
-a value between 3 and \texttt{nimp}, and the initial estimate to use for
-the element's impurity fraction must be set using iteration variable no.
-102 (\texttt{fimpvar}).
+\texttt{fimp} may be used as an iteration variable.
 
 The synchrotron radiation power\footnote{Albajar, Nuclear Fusion
   \textbf{41} (2001) 665} \footnote{Fidone, Giruzzi and Granata, Nuclear

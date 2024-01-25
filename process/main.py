@@ -238,7 +238,6 @@ class VaryRun:
     Output files:
     All of them in the work directory specified in the config file
     OUT.DAT     -  PROCESS output
-    PLOT.DAT    -  PROCESS output
     MFILE.DAT   -  PROCESS output
     process.log - logfile of PROCESS output to stdout
     README.txt  - contains comments from config file

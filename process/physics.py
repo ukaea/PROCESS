@@ -182,7 +182,6 @@ class Physics:
             physics_variables.vol,
         )
 
-        # Profile parameters are meaningless with ipedestal=3
         betat = (
             physics_variables.beta
             * physics_variables.btot**2

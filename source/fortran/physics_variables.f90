@@ -49,7 +49,7 @@ module physics_variables
   !! multiplier for beam-background fusion calculation
 
   real(dp) :: beta
-  !! total plasma beta (`iteration variable 5`) (calculated if `ipedestal=3` or stellarator)
+  !! total plasma beta (`iteration variable 5`) (calculated if stellarator)
 
   real(dp) :: betaft
   !! fast alpha beta component
@@ -101,7 +101,7 @@ module physics_variables
   !! vertical stability (`constraint equation 23`)
 
   real(dp) :: dene
-  !! electron density (/m3) (`iteration variable 6`) (calculated if `ipedestal=3`)
+  !! electron density (/m3) (`iteration variable 6`)
 
   real(dp) :: deni
   !! fuel ion density (/m3)
@@ -147,10 +147,10 @@ module physics_variables
   !! high Z ion density (/m3)
 
   real(dp) :: gradient_length_ne
-  !! Max. normalized gradient length in el. density (ipedestal==0 only) (1)
+  !! Max. normalized gradient length in el. density (ipedestal==0 only) 
 
   real(dp) :: gradient_length_te
-  !! Max. normalized gradient length in el. temperature (ipedestal==0 only) (1)
+  !! Max. normalized gradient length in el. temperature (ipedestal==0 only)
 
   real(dp), parameter :: ealphadt = 3520.0D0
   !! alpha birth energy in D-T reaction (keV)
@@ -190,12 +190,12 @@ module physics_variables
 
   real(dp) :: fgwped
   !! fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top
-  !! density set manually using neped (`ipedestal>=1`). Needs to be `>0` if `ipedestal = 3`.
+  !! density set manually using neped (`ipedestal==1`).
   !! (`iteration variable 145`)
 
   real(dp) :: fgwsep
   !! fraction of Greenwald density to set as separatrix density. If `<0`, separatrix
-  !! density set manually using nesep (`ipedestal>=1`). Needs to be `>0` if `ipedestal = 3`.
+  !! density set manually using nesep (`ipedestal==1`).
   !! (`iteration variable 152`)
 
   real(dp) :: fhe3
@@ -243,8 +243,7 @@ module physics_variables
   !! H factors for an ignited plasma for each energy confinement time scaling law
 
   real(dp) :: hfact
-  !! H factor on energy confinement times, radiation corrected (`iteration variable 10`). If
-  !! `ipedestal=2,3` and `hfact=0`, not used in PLASMOD (see also `plasmod_i_modeltype`) issue #219
+  !! H factor on energy confinement times, radiation corrected (`iteration variable 10`).
 
   real(dp) :: taumax
   !! Maximum allowed energy confinement time (s)
@@ -305,12 +304,6 @@ module physics_variables
   !! - =0 ITER physics rules (Uckan) fit
   !! - =1 Modified fit (D. Ward) - better at high temperature
 
-  integer :: ifispact
-  !! switch for neutronics calculations:
-  !!
-  !! - =0 neutronics calculations turned off
-  !! - =1 neutronics calculations turned on
-
   integer :: ignite
   !! switch for ignition assumption. Obviously, ignite must be zero if current drive
   !! is required. If ignite is 1, any auxiliary power is assumed to be used only during
@@ -330,8 +323,6 @@ module physics_variables
   !!
   !! - =0 use original parabolic profiles
   !! - =1 use pedestal profile
-  !! - =2 use pedestal profiles and run PLASMOD on final output
-  !! - =3 use PLASMOD transport model only to calculate pedestal profiles
 
   integer :: ips
   !! switch for Pfirsch-Schlüter current scaling (issue #413):
@@ -343,18 +334,17 @@ module physics_variables
   !! switch for scaling pedestal-top temperature with plasma parameters (issue #730):
   !!
   !! - =0 set pedestal-top temperature manually using teped
-  !! - =1 set pedestal-top temperature using EPED scaling (PLASMOD implementation
-  !!   of scaling within PLASMOD, `ipedestal =2,3 (ttps://idm.euro-fusion.org/?uid=2MSZ4T)
+  !! - =1 set pedestal-top temperature using EPED scaling
 
   real(dp) :: eped_sf
   !! Adjustment factor for EPED scaling to reduce pedestal temperature or pressure
   !! to mitigate or prevent ELMs
 
   real(dp) :: neped
-  !! electron density of pedestal [m-3] (`ipedestal=1,2, calculated if 3`)
+  !! electron density of pedestal [m-3] (`ipedestal==1)
 
   real(dp) :: nesep
-  !! electron density at separatrix [m-3] (`ipedestal=1,2, calculated if 3`)
+  !! electron density at separatrix [m-3] (`ipedestal==1)
 
   real(dp) :: alpha_crit
   !! critical ballooning parameter value
@@ -366,10 +356,10 @@ module physics_variables
   !! plasma resistivity pre-factor
 
   real(dp) :: rhopedn
-  !! r/a of density pedestal (`ipedestal>=1`)
+  !! r/a of density pedestal (`ipedestal==1`)
 
   real(dp) :: rhopedt
-  !! r/a of temperature pedestal (`ipedestal>=1`)
+  !! r/a of temperature pedestal (`ipedestal==1`)
 
   real(dp) :: rho_te_max
   !! r/a where the temperature gradient is largest (`ipedestal==0`)
@@ -378,13 +368,13 @@ module physics_variables
   !! r/a where the density gradient is largest (`ipedestal==0`)
 
   real(dp) :: tbeta
-  !! temperature profile index beta  (`ipedestal=1,2`)
+  !! temperature profile index beta  (`ipedestal==1)
 
   real(dp) :: teped
-  !! electron temperature of pedestal (keV) (`ipedestal>=1, ieped=0, calculated for ieped=1`)
+  !! electron temperature of pedestal (keV) (`ipedestal==1, ieped=0, calculated for ieped=1`)
 
   real(dp) :: tesep
-  !! electron temperature at separatrix (keV) (`ipedestal>=1`) calculated if reinke
+  !! electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
   !! criterion is used (`icc=78`)
 
   integer :: iprofile
@@ -396,7 +386,7 @@ module physics_variables
   integer :: iradloss
   !! switch for radiation loss term usage in power balance (see User Guide):
   !!
-  !! - =0 total power lost is scaling power plus radiation (needed for `ipedestal=2,3`)
+  !! - =0 total power lost is scaling power plus radiation 
   !! - =1 total power lost is scaling power plus core radiation only
   !! - =2 total power lost is scaling power only, with no additional
   !!   allowance for radiation. This is not recommended for power plant models.
@@ -765,7 +755,7 @@ module physics_variables
   !! Radiation fraction total = SoL + LCFS radiation / total power deposited in plasma
 
   real(dp) :: ralpne
-  !! thermal alpha density/electron density (`iteration variable 109`) (calculated if `ipedestal=3`)
+  !! thermal alpha density/electron density (`iteration variable 109`)
 
   real(dp) :: protium
   !! Seeded protium density / electron density.
@@ -841,7 +831,6 @@ module physics_variables
 
   real(dp) :: te
   !! volume averaged electron temperature (keV) (`iteration variable 4`)
-  !! (`calculated if ipedestal=3`)
 
   real(dp) :: te0
   !! central electron temperature (keV)
@@ -982,7 +971,6 @@ module physics_variables
     idensl = 7
     idivrt = 2
     ifalphap = 1
-    ifispact = 0
     ignite = 0
     iinvqd = 1
     ipedestal = 1

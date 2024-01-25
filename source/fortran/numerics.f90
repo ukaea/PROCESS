@@ -156,7 +156,7 @@ module numerics
   !!  <LI> (53) Neutron fluence on TF coil upper limit (itv 92,93,94)
   !!  <LI> (54) Peak TF coil nuclear heating upper limit (itv 95,93,94)
   !!  <LI> (55) Vacuum vessel helium concentration upper limit iblanket =2 (itv 96,93,94)
-  !!  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3,102)
+  !!  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3)
   !!  <LI> (57) NOT USED
   !!  <LI> (58) NOT USED
   !!  <LI> (59) Neutral beam shine-through fraction upper limit (NBI) (itv 105,6,19,4 )
@@ -168,7 +168,7 @@ module numerics
   !!  <LI> (65) Dump time set by VV loads (itv 56, 113)
   !!  <LI> (66) Limit on rate of change of energy in poloidal field
   !!            (Use iteration variable 65(tohs), 115)
-  !!  <LI> (67) Simple Radiation Wall load limit (itv 116, 102, 4,6)
+  !!  <LI> (67) Simple Radiation Wall load limit (itv 116, 4,6)
   !!  <LI> (68) Psep * Bt / qAR upper limit (itv 117)
   !!  <LI> (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)
   !!  <LI> (70) ensure that teomp = separatrix temperature in the pedestal profile,
@@ -303,7 +303,7 @@ module numerics
   !! <LI> (99) NOT USED
   !! <LI> (100) NOT USED
   !! <LI> (101) NOT USED
-  !! <LI> (102) fimpvar
+  !! <LI> (102) fimpvar # OBSOLETE
   !! <LI> (103) flhthresh (f-value for equation 15)
   !! <LI> (104) fcwr (f-value for equation 23)
   !! <LI> (105) fnbshinef (f-value for equation 59)
@@ -351,8 +351,8 @@ module numerics
   !! <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
   !! <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
   !! <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)
-  !! <LI> (150) plasmod_fcdp : (P_CD - Pheat)/(Pmax-Pheat)
-  !! <LI> (151) plasmod_fradc : Pline_Xe / (Palpha + Paux - PlineAr - Psync - Pbrad)
+  !! <LI> (150) REMOVED
+  !! <LI> (151) REMOVED
   !! <LI> (152) fbmaxcs : Ratio of separatrix density to Greenwald density
   !! <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)
   !! <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
@@ -660,7 +660,6 @@ contains
 	! 	use global_variables, only: icase, verbose, vlabel
   !   use constants, only: mfile, nout
   !   use maths_library, only: HYBRD
-  !   use plasmod_variables, only: geom, power_losses, i_flag
   !   implicit none
 
   !   ! Interface for the external fcnhyb subroutine argument
