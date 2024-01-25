@@ -283,7 +283,6 @@ class MFile(object):
                 self.mfile_modules[self.current_module] = list()
 
         else:
-
             var_des = line[0]
             extracted_var_name = sort_brackets(line[1])
 
@@ -362,6 +361,7 @@ class MFile(object):
                 dict_to_write[f"scan-{i+1}"] = sub_dict
         else:
             for item in keys_to_write:
+                dat_key = 1
                 data = self.data[item].get_scan(dat_key)
                 des = self.data[item].var_description.replace("_", " ")
                 if verbose:
