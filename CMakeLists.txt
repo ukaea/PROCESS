@@ -177,7 +177,7 @@ ADD_CUSTOM_TARGET(coverage_cleanup
 
 # Run the Pip Install
 ADD_CUSTOM_TARGET(install_process ALL
-    COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir ${CMAKE_SOURCE_DIR}
+    COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir -e ${CMAKE_SOURCE_DIR}
 )
 
 ADD_DEPENDENCIES(install_process ${PIP_NAME} f2py ${FORD_NAME} ${GFORTLIB_NAME} ${DICTS_NAME} coverage_cleanup)
