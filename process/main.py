@@ -45,6 +45,7 @@ from process import fortran
 from process.buildings import Buildings
 from process.costs import Costs
 from process.io import plot_proc
+from process.io import mfile
 from process.plasma_geometry import PlasmaGeom
 from process.pulse import Pulse
 from process.scan import Scan
@@ -186,6 +187,12 @@ class Process:
             default="MFILE.DAT",
             help="mfile for post-processing/plotting",
         )
+        parser.add_argument(
+            "-mj",
+            "--mfilejson",
+            action="store_true",
+            help="produce a json containing mfile data",
+        )
 
         # If args is not None, then parse the supplied arguments. This is likely
         # to come from the test suite when testing command-line arguments; the
@@ -211,7 +218,7 @@ class Process:
         # run, for example.
         if self.args.plot:
             # Check mfile exists, then plot
-            mfile = Path(self.args.mfile)
+            mfile_path = Path(self.args.mfile)
             mfile_str = str(mfile.resolve())
             if mfile.exists():
                 # TODO Get --show arg to work: actually show the plot, don't
@@ -219,6 +226,12 @@ class Process:
                 plot_proc.main(args=["-f", mfile_str])
             else:
                 logger.error("mfile to be used for plotting doesn't exist")
+        if self.args.mfilejson:
+            # Produce a json file containing mfile output, useful for VVUQ work.
+            mfile_path = Path(self.args.mfile)
+            mfile_data = mfile.MFile(filename=mfile_path)
+            mfile_data.open_mfile()
+            mfile_data.write_to_json()
 
 
 class VaryRun:
@@ -474,8 +487,10 @@ class SingleRun:
                 # a second evaluation call here
                 caller.call_models(x)
                 self.ifail = 6
+
                 # Output responses for UQ
                 self.output_responses()
+
             final.finalise(self.models, self.ifail)
 
     def output_responses(self):
