@@ -11,7 +11,7 @@ if platform.system() == "Darwin":
 
 setup_kwargs = {
     "name": MODULE_NAME,
-    "version": "3.0.1",
+    "version": "3.0.2",
     "description": (
         "Power Reactor Optimisation Code for Environmental and Safety Studies"
     ),
