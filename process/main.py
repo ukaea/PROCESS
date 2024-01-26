@@ -509,6 +509,7 @@ class SingleRun:
         """
 
         obsolete_variables = ov.OBS_VARS
+        obsolete_vars_help_message = ov.OBS_VARS_HELP
 
         filename = self.input_file
 
@@ -528,8 +529,7 @@ class SingleRun:
         for var in variables_in_in_dat:
             if var in obsolete_variables:
                 obs_vars_in_in_dat.append(var)
-                new_var = obsolete_variables.get(var)
-                replace_hints[var] = new_var
+                replace_hints[var] = obsolete_variables.get(var)
 
         if len(obs_vars_in_in_dat) > 0:
             message = (
@@ -537,27 +537,12 @@ class SingleRun:
                 f"{obs_vars_in_in_dat}. "
                 "Either remove these or replace them with their updated variable names. "
             )
-            for var in obs_vars_in_in_dat:
-                if replace_hints[var][0] is None:
-                    message = (
-                        message
-                        + "\n \n "
-                        + var
-                        + " is an obsolete variable and does not have a replacement. "
-                    )
-                    if len(replace_hints[var]) == 2:
-                        message = message + str(replace_hints[var][1])
-                if replace_hints[var][0] is not None:
-                    message = (
-                        message
-                        + "\n \n "
-                        + var
-                        + " is an obsolete variable and needs to be replaced by "
-                        + str(replace_hints[var][0])
-                        + ". "
-                    )
-                    if len(replace_hints[var]) == 2:
-                        message = message + str(replace_hints[var][1])
+            for obs_var in obs_vars_in_in_dat:
+                if replace_hints[obs_var] is None:
+                    message += f"\n\n {obs_var} is an obsolete variable and needs to be removed. "
+                else:
+                    message += f"\n \n {obs_var} is an obsolete variable and needs to be replaced by {str(replace_hints[obs_var])}. "
+                message += f"{obsolete_vars_help_message.get(obs_var, '')}"
 
             raise ValueError(message)
 
