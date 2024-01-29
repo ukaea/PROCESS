@@ -3964,7 +3964,7 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Psep / R ratio (MW/m)",
-                "(pdivt/physics_variables.rmajor)",
+                "(pdivt/rmajor)",
                 physics_variables.pdivt / physics_variables.rmajor,
                 "OP ",
             )

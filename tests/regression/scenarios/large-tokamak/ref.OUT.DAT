@@ -26,14 +26,14 @@
  
    Program :
    Version : 3.0.1   Release Date :: 2023-11-01
-   Tag No. : v3.0.1-42-g2a5f26689
+   Tag No. : v3.0.1-44-g9f42ad645
     Branch : convert-physics-to-python
-   Git log : Merge branch |main| into convert-physics-to-python
- Date/time : 17 Jan 2024 13:34:32 +00:00(hh:mm) UTC
+   Git log : Overwrite large-tokamak due to small change in bscf_nevins caused by integration routine change
+ Date/time : 29 Jan 2024 10:27:52 +00:00(hh:mm) UTC
       User : timothynunn
   Computer : L0268-iMac
  Directory : /Users/timothynunn/process
-     Input : /private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-36/test_scenario_large_tokamak_0/IN.DAT
+     Input : /private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-39/test_scenario_large_tokamak_0/IN.DAT
  Run title : Generic large tokamak
   Run type : Reactor concept design: Pulsed tokamak model, (c) CCFE
  
@@ -553,7 +553,7 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Ignited plasma switch (0=not ignited, 1=ignited)                         (ignite)                          0     
  
  Power into divertor zone via charged particles (MW)                      (pdivt)                   1.571E+02  OP 
- Psep / R ratio (MW/m)                                                    (pdivt/physics_variables. 1.964E+01  OP 
+ Psep / R ratio (MW/m)                                                    (pdivt/rmajor)            1.964E+01  OP 
  Psep Bt / qAR ratio (MWT/m)                                              (pdivtbt/qar)             9.627E+00  OP 
  
  H-mode Power Threshold Scalings :
@@ -695,7 +695,7 @@ PROCESS has successfully optimised the iteration variables to minimise the figur
  Pfirsch-Schlueter fraction                                               (psipf)                       0.000  OP 
  Auxiliary current drive fraction                                         (faccd)                       0.001  OP 
  Inductive fraction                                                       (facoh)                       0.580  OP 
- Total                                                                    (current_drive_varia          1.000     
+ Total                                                                    (plasipf+faccd+facoh          1.000     
  Fraction of the plasma current produced by non-inductive means           (fvsbrnni)                    0.420  ITV
  
  Electron cyclotron injected power (MW)                                   (echpwr)                  7.540E+01  OP 

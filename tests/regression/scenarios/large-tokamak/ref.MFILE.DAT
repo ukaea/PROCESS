@@ -3,14 +3,14 @@
  # PROCESS #
  # Power Reactor Optimisation Code #
  PROCESS_version_number__________________________________________________ (procver)_____________________     "3.0.1   R"
- Date_of_run_____________________________________________________________ (date)________________________     "17/01/2024"
- Time_of_run_____________________________________________________________ (time)________________________     "13:34"
+ Date_of_run_____________________________________________________________ (date)________________________     "29/01/2024"
+ Time_of_run_____________________________________________________________ (time)________________________     "10:27"
  User____________________________________________________________________ (username)____________________     "timothyn"
  PROCESS_run_title_______________________________________________________ (runtitle)____________________     "Generic large tokamak                                                                              
- PROCESS_tag_number______________________________________________________ (tagno)_______________________     "v3.0.1-42-g2a5f26689"                                                                              
+ PROCESS_tag_number______________________________________________________ (tagno)_______________________     "v3.0.1-44-g9f42ad645"                                                                              
  PROCESS_git_branch_name_________________________________________________ (branch_name)_________________     "convert-physics-to-python"                                                                         
- PROCESS_last_commit_message_____________________________________________ (commsg)______________________     "Merge branch |main| into convert-physics-to-python"                                                
- Input_filename__________________________________________________________ (fileprefix)__________________     "/private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-36/test_scenario_large_tokamak_0/IN.DAT                                                                           "
+ PROCESS_last_commit_message_____________________________________________ (commsg)______________________     "Overwrite large-tokamak due to small change in bscf_nevins caused by integration routine change"   
+ Input_filename__________________________________________________________ (fileprefix)__________________     "/private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-39/test_scenario_large_tokamak_0/IN.DAT                                                                           "
  # Numerics #
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
@@ -459,7 +459,7 @@
  Injection_power_to_electrons_(MW)_______________________________________ (pinjemw)_____________________      7.5398E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.5710E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/physics_variables.rmajo      1.9637E+01 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.9637E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.6274E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (pthrmw(1))___________________      1.2831E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (pthrmw(2))___________________      2.8272E+02 OP 
@@ -545,7 +545,7 @@
  Pfirsch-Schlueter_fraction______________________________________________ (psipf)_______________________      0.0000E+00    
  Auxiliary_current_drive_fraction________________________________________ (faccd)_______________________      1.1139E-03    
  Inductive_fraction______________________________________________________ (facoh)_______________________      5.8003E-01    
- Total___________________________________________________________________ (current_drive_variables.plasi      1.0000E+00    
+ Total___________________________________________________________________ (plasipf+faccd+facoh)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.1997E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      7.5398E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      2.0000E+02    
