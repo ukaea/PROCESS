@@ -213,8 +213,8 @@ module pfcoil_variables
   real(dp) :: oh_steel_frac
   !! central solenoid steel fraction (`iteration variable 122`)
 
-  real(dp) :: pf_current_safety_factor 
-  !! Ratio of permissible PF coil conductor current density to critical conductor 
+  real(dp) :: pf_current_safety_factor
+  !! Ratio of permissible PF coil conductor current density to critical conductor
   !! current density based on short-sample DC measurements
 
   real(dp), dimension(ngc2) :: pfcaseth

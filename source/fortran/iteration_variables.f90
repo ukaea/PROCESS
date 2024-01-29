@@ -221,7 +221,7 @@ contains
     implicit none
     lablxc(9) = 'fdene         '
     boundl(9) = 0.001D0
-    boundu(9) = 10.000D0
+    boundu(9) = 1.000D0
   end subroutine init_itv_9
 
   real(kind(1.d0)) function itv_9()
@@ -2230,7 +2230,7 @@ contains
 
   !---------------------------------
 
-  
+
 
   !---------------------------------
 
@@ -4060,7 +4060,7 @@ contains
            case (99);
            case (100);
            case (101);
-           case (102); 
+           case (102);
            case (103);  xcm(i) = itv_103()
            case (104);  xcm(i) = itv_104()
            case (105);  xcm(i) = itv_105()
@@ -4327,7 +4327,7 @@ contains
            case (99);
            case (100);
            case (101);
-           case (102);  
+           case (102);
            case (103);  call set_itv_103(ratio)
            case (104);  call set_itv_104(ratio)
            case (105);  call set_itv_105(ratio)
