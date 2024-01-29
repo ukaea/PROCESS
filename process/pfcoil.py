@@ -576,7 +576,10 @@ class PFCoil:
                 else:
                     # Other coils. N.B. Current density RJCONPF[i] is defined in
                     # routine INITIAL for these coils.
-                    area = abs(pfv.ric[i] * 1.0e6 / pfv.rjconpf[i]) * pfv.pf_current_safety_factor
+                    area = (
+                        abs(pfv.ric[i] * 1.0e6 / pfv.rjconpf[i])
+                        * pfv.pf_current_safety_factor
+                    )
 
                     pfv.turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
                     aturn[i] = area / pfv.turns[i]

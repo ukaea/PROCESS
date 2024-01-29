@@ -213,7 +213,7 @@ module pfcoil_variables
   real(dp) :: oh_steel_frac
   !! central solenoid steel fraction (`iteration variable 122`)
 
-  real(dp) :: pf_current_safety_factor
+  real(dp) :: pf_current_safety_factor 
   !! Safety factor for current within the PF coil winding pack
 
   real(dp), dimension(ngc2) :: pfcaseth

@@ -221,7 +221,7 @@ contains
     implicit none
     lablxc(9) = 'fdene         '
     boundl(9) = 0.001D0
-    boundu(9) = 1.000D0
+    boundu(9) = 10.000D0
   end subroutine init_itv_9
 
   real(kind(1.d0)) function itv_9()
