@@ -214,7 +214,8 @@ module pfcoil_variables
   !! central solenoid steel fraction (`iteration variable 122`)
 
   real(dp) :: pf_current_safety_factor 
-  !! Safety factor for current within the PF coil winding pack
+  !! Ratio of permissible PF coil conductor current density to critical conductor 
+  !! current density based on short-sample DC measurements
 
   real(dp), dimension(ngc2) :: pfcaseth
   !! steel case thickness for PF coil i (m)
