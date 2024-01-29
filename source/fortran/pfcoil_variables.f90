@@ -447,7 +447,7 @@ module pfcoil_variables
     nohc = 0
     ohhghf = 0.71D0
     oh_steel_frac = 0.5D0
-    pf_current_safety_factor = 2.0D0
+    pf_current_safety_factor = 1.0D0
     pfcaseth = 0.0D0
     pfclres = 2.5D-8
     pfmmax = 0.0D0
