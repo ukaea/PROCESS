@@ -108,9 +108,7 @@ class Stellarator:
 
         if output:
             self.costs.costs(output=True)
-            # TODO: should availability.run be called
-            # rather than availability.avail?
-            self.availability.avail(output=True)
+            self.availability.run(output=True)
             ph.outplas(self.outfile)
             self.stigma()
             self.stheat(True)
