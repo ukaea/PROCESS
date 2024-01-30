@@ -198,7 +198,7 @@ module cost_variables
   !! - =0 use input value for cfactr
   !! - =1 calculate cfactr using Taylor and Ward 1999 model
   !! - =2 calculate cfactr using new (2015) model
-  !! - =3 calculate cfactr using ST model 
+  !! - =3 calculate cfactr using ST model
 
   integer :: ibkt_life
   !! Switch for fw/blanket lifetime calculation in availability module:
