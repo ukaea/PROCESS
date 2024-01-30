@@ -51,7 +51,7 @@ module final_module
       write(nout,140) inn,lablcc(icc(inn)),sym(inn),con2(inn), &
       lab(inn),err(inn),lab(inn),con1(inn)
       call ovarre(mfile,lablcc(icc(inn))//' normalised residue', &
-      '(normres'//int_to_string3(inn)//')',con1(inn))
+      '(eq_con'//int_to_string3(icc(inn))//')',con1(inn))
     end do
 
     140 format(t2,i4,t8,a33,t46,a1,t47,1pe12.4,t60,a10,t71,1pe12.4,t84,a10,t98,1pe12.4)
@@ -63,7 +63,7 @@ module final_module
       do inn = neqns+1,neqns+nineqns
         write(nout,140) inn,lablcc(icc(inn)),sym(inn),con2(inn), &
         lab(inn), err(inn), lab(inn)
-        call ovarre(mfile,lablcc(icc(inn)),'(constr'//int_to_string3(inn)//')',rcm(inn))
+        call ovarre(mfile,lablcc(icc(inn)),'(ineq_con'//int_to_string3(icc(inn))//')',rcm(inn))
       end do
     end if
   end subroutine no_optimisation
