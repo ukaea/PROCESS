@@ -48,8 +48,6 @@ class IFE:
             self.costs.costs(output=True)
 
             # Plant availability
-            # TODO: should availability.run be called
-            # rather than availability.avail?
             self.availability.avail(output=True)
 
             # IFE physics
