@@ -980,7 +980,8 @@ class Availability:
         return u_unplanned_vacuum
 
     def avail_st(self, output: bool):
-        """Routine to calculate availability for plant with an ST
+        """Routine to calculate availability for plant with a Spherical Tokamak
+
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
@@ -1113,9 +1114,10 @@ class Availability:
             )
 
     def cp_lifetime(self):
-        """Calculates Centrepost Lifetime
+        """Calculate Centrepost Lifetime
 
-        This routine calculates the lifetime of the centrepost, either for superconducting or aluminium/resistive magnets.
+        This routine calculates the lifetime of the centrepost,
+        either for superconducting or aluminium/resistive magnets.
 
         :returns: CP lifetime
         :rtype: float
