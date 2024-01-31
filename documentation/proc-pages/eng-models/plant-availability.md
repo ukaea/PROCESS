@@ -6,8 +6,8 @@ If `iavail = 0`, the input value of `cfactr` is used.
 
 If `iavail = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which `cfactr` is calculated taking into account the time taken to replace certain components of the fusion power core, and various unplanned unavailability fractions which may be set by the user, as summerised in Table 1.
 
-| Input parameter | description |
-| --- | --- | --- |
+| Input parameter | Description |
+| :-: | - |
 | `tbktrepl` | time needed to replace blanket (years) |
 | `tdivrepl` | time needed to replace divertor (years) |
 | `tcomrepl` | time  needed to replace both blanket and divertor (years) |
