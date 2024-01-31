@@ -36,7 +36,7 @@ It is assumed that the vacuum system can be maintained in parallel with blanket 
 If `iavail = 3`, the availability model for Spherical Tokamaks (ST) is implemented. 
 
 !!! Warning "Warning"
-		Currently, this model only uses the centrepost to calculate the availability of a ST plant. Other systems/components will be added in the future.
+		Currently, this model only uses the centrepost to calculate the availability of an ST plant. Other systems/components will be added in the future.
 
 This model takes the user-specified time to replace a centrepost `tmain` and the centrepost lifetime `cplife` (calculated, see below) and calculates the number of maintenance cycles
 
@@ -72,20 +72,20 @@ where $t_{\text{burn}}$ is the burn time and $t_{\text{cycle}}$ is the full cycl
 
 All availability models in PROCESS require the calculation of the centerpost lifetime, which is detailed here.
 
-!!! Note ""Note" 
+!!! Note "Note" 
 		The centrepost lifetime is calculated in full-power years (FPY).
 
 For superconducting magnets (`i_tf_sup = 1`), the centrepost lifetime is calculated as
 
 $$ t_{\text{CP,life}} = min(f_{\text{TF,max}}/(\phi_{\text{CP,max}}t_{\text{year}}),t_{\text{life}}) $$
 
-where $f_{\text{TF,max}}$ is the max fast neutron fluence on the TF coil ($m^{-2}$ s), $\phi_{\text{CP,max}}$ is the centrepost TF fast neutron flux ($m^{-2}$ $s^{-1}$) and $t_{\text{year}}$ is the number of seconds in a year. 
+where $f_{\text{TF,max}}$ is the max fast neutron fluence on the TF coil ($\mathrm{m}^{-2} \mathrm{s}$), $\phi_{\text{CP,max}}$ is the centrepost TF fast neutron flux ($\mathrm{m}^{-2}$ $\mathrm{s}^{-1}$) and $t_{\text{year}}$ is the number of seconds in a year. 
 
 For copper or cryogenic aluminium magnets (`i_tf_sup = 0 or 2`), the centrepost lifetime is
 
 $$ t_{\text{CP,life}} = min(f_{\text{CP, allowable}}/P_{\text{wall}}, t_{\text{life}}) $$
 
-where $f_{\text{CP, allowable}}$ is the allowable centrepost neutron fluence and $P_{\text{wall}}$ is the average neutron wall load (MW $m^{-2}$).
+where $f_{\text{CP, allowable}}$ is the allowable centrepost neutron fluence and $P_{\text{wall}}$ is the average neutron wall load ($\mathrm{MW} \mathrm{m}^{-2}$).
 
 [^1]: P. J. Knight, *"PROCESS 3020: Plant Availability Model"*, Work File Note
 F/PL/PJK/PROCESS/CODE/<br>
