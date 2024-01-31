@@ -1508,9 +1508,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - pinjmw / (fpinj * pinjalw)
+      tmp_cc =  1.0D0 - fpinj*pinjalw/pinjmw
       tmp_con = pinjalw
-      tmp_err = pinjalw  - pinjmw * fpinj
+      tmp_err = pinjalw  - pinjmw / fpinj
       tmp_symbol = '<'
       tmp_units = 'MW'
 
@@ -2859,7 +2859,7 @@ contains
       !! #=#=# f_coppera_m2, copperA_m2_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! copperA_m2 : input real : TF coil current / copper area (A/m2) 
+      !! copperA_m2 : input real : TF coil current / copper area (A/m2)
       !! copperA_m2_max : input real : Maximum TF coil current / copper area (A/m2)
       !! f_coppera_m2 : input real : f-value for TF coil current / copper area < copperA_m2_max
       use rebco_variables, only: copperA_m2, copperA_m2_max, f_coppera_m2
