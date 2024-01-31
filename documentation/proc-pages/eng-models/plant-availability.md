@@ -33,6 +33,57 @@ The unplanned downtime for the blanket is based on the number of cycles it exper
 
 It is assumed that the vacuum system can be maintained in parallel with blanket replacement, so it does not contribute to the planned downtime. The unplanned downtime is baed on an assumed failure rate for a cryo-pump, and a specified total number pumps, with some of them being redundant. The resulting downtime can be reduced to a negligible level if there are several redundant pumps, but in addition, there is a fixed unavailability to allow for common mode failures affecting several pumps.
 
+If `iavail = 3`, the availability model for Spherical Tokamaks (ST) is implemented. 
+
+!!! Warning "Warning"
+		Currently, this model only uses the centrepost to calculate the availability of a ST plant. Other systems/components will be added in the future.
+
+This model takes the user-specified time to replace a centrepost `tmain` and the centrepost lifetime `cplife` (calculated, see below) and calculates the number of maintenance cycles
+
+$$ t_{main} + t_{CP,life} = t_{maint\text{ }cycle}. $$
+
+The number of maintenance cycles over the lifetime of the plant is calculated and then the ceiling of this value is taken as the number of centreposts required over the lifetime of the plant
+
+$$ n_{cycles} = t_{life} / t_{maint\text{ }cycle}, $$
+
+$$ n_{CP} = \lceil n_{cycles} \rceil. $$
+
+The planned unavailability is then what percent of a maintenance cycle is taken up by the user-specified maintenance time
+
+$$ U_{planned} = t_{main} / t_{maint\text{ }cycle} $$
+
+and the total operational time is given by
+
+$$ t_{op} = t_{life} (1 - U_{planned}). $$
+
+The total availability of the plant is then given by
+
+$$ A_{tot} = 1 - (U_{planned} + U_{unplanned} + U_{planned}U_{unplanned}) $$
+
+where $U_{unplanned}$ is unplanned unavailability which is provided by the user i.e. how often do you expect the centrepost to break over its lifetime. The cross term takes account of overlap between planned and unplanned unavailability.
+
+Finally, the capcity factor is given by
+
+$$ C = A_{tot} (t_{burn} / t_{cycle}) $$
+
+where $t_burn$ is the burn time and $t_{cycle}$ is the full cycle time.
+
+## Centrepost Lifetime
+
+All availability models in PROCESS require the calculation of the centerpost lifetime, which is detailed here.
+
+For superconducting magnets (`i_tf_sup = 1`), the centrepost lifetime is calculated as
+
+$$ t_{CP,life} = min(f_{TF,max}/(\phi_{CP,max}t_{year}),t_{life}) $$
+
+where $f_{TF,max}$ is the max fast neutron fluence on the TF coil ($m^{-2}$ s), $\phi_{CP,max}$ is the centrepost TF fast neutron flux ($m^{-2}$ $s^{-1}$) and $t_{year}$ is the number of seconds in a year.
+
+For copper or cryogenic aluminium magnets (`i_tf_sup = 0 or 2`), the centrepost lifetime is
+
+$$ t_{CP,life} = min(f_{CP, allowable}/P_{wall}, t_{life}) $$
+
+where $f_{CP, allowable}$ is the allowable centrepost neutron fluence and $P_{wall}$ is the average neutron wall load (MW $m^{-2}$).
+
 [^1]: P. J. Knight, *"PROCESS 3020: Plant Availability Model"*, Work File Note
 F/PL/PJK/PROCESS/CODE/<br>
 [^2]: M. Kovari, F. Fox, C. Harrington, R. Kembleton, P. Knight, H. Lux, J. Morris *"PROCESS: a systems code for fusion power plants - Part 2: Engineering"*, Fus. Eng. & Des. 104, 9-20 (2016)
