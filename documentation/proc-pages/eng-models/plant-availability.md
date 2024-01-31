@@ -40,49 +40,52 @@ If `iavail = 3`, the availability model for Spherical Tokamaks (ST) is implement
 
 This model takes the user-specified time to replace a centrepost `tmain` and the centrepost lifetime `cplife` (calculated, see below) and calculates the number of maintenance cycles
 
-$$ t_{main} + t_{CP,life} = t_{maint\text{ }cycle}. $$
+$$ t_{\text{main}} + t_{\text{CP,life}} = t_{\text{maint cycle}}. $$
 
 The number of maintenance cycles over the lifetime of the plant is calculated and then the ceiling of this value is taken as the number of centreposts required over the lifetime of the plant
 
-$$ n_{cycles} = t_{life} / t_{maint\text{ }cycle}, $$
+$$ n_{\text{cycles}} = t_{\text{life}} / t_{\text{maint cycle}}, $$
 
-$$ n_{CP} = \lceil n_{cycles} \rceil. $$
+$$ n_{\text{CP}} = \lceil n_{\text{cycles}} \rceil. $$
 
 The planned unavailability is then what percent of a maintenance cycle is taken up by the user-specified maintenance time
 
-$$ U_{planned} = t_{main} / t_{maint\text{ }cycle} $$
+$$ U_{\text{planned}} = t_{\text{main}} / t_{\text{maint cycle}} $$
 
 and the total operational time is given by
 
-$$ t_{op} = t_{life} (1 - U_{planned}). $$
+$$ t_{\text{op}} = t_{\text{life}} (1 - U_{\text{planned}}). $$
 
 The total availability of the plant is then given by
 
-$$ A_{tot} = 1 - (U_{planned} + U_{unplanned} + U_{planned}U_{unplanned}) $$
+$$ A_{\text{tot}} = 1 - (U_{\text{planned}} + U_{\text{unplanned}} + U_{\text{planned}}U_{\text{unplanned}}) $$
 
 where $U_{unplanned}$ is unplanned unavailability which is provided by the user i.e. how often do you expect the centrepost to break over its lifetime. The cross term takes account of overlap between planned and unplanned unavailability.
 
 Finally, the capcity factor is given by
 
-$$ C = A_{tot} (t_{burn} / t_{cycle}) $$
+$$ C = A_{\text{tot}} (t_{\text{burn}} / t_{\text{cycle}}) $$
 
-where $t_burn$ is the burn time and $t_{cycle}$ is the full cycle time.
+where $t_{\text{burn}}$ is the burn time and $t_{\text{cycle}}$ is the full cycle time.
 
 ## Centrepost Lifetime
 
 All availability models in PROCESS require the calculation of the centerpost lifetime, which is detailed here.
 
+!!! Note ""Note" 
+		The centrepost lifetime is calculated in full-power years (FPY).
+
 For superconducting magnets (`i_tf_sup = 1`), the centrepost lifetime is calculated as
 
-$$ t_{CP,life} = min(f_{TF,max}/(\phi_{CP,max}t_{year}),t_{life}) $$
+$$ t_{\text{CP,life}} = min(f_{\text{TF,max}}/(\phi_{\text{CP,max}}t_{\text{year}}),t_{\text{life}}) $$
 
-where $f_{TF,max}$ is the max fast neutron fluence on the TF coil ($m^{-2}$ s), $\phi_{CP,max}$ is the centrepost TF fast neutron flux ($m^{-2}$ $s^{-1}$) and $t_{year}$ is the number of seconds in a year.
+where $f_{\text{TF,max}}$ is the max fast neutron fluence on the TF coil ($m^{-2}$ s), $\phi_{\text{CP,max}}$ is the centrepost TF fast neutron flux ($m^{-2}$ $s^{-1}$) and $t_{\text{year}}$ is the number of seconds in a year. 
 
 For copper or cryogenic aluminium magnets (`i_tf_sup = 0 or 2`), the centrepost lifetime is
 
-$$ t_{CP,life} = min(f_{CP, allowable}/P_{wall}, t_{life}) $$
+$$ t_{\text{CP,life}} = min(f_{\text{CP, allowable}}/P_{\text{wall}}, t_{\text{life}}) $$
 
-where $f_{CP, allowable}$ is the allowable centrepost neutron fluence and $P_{wall}$ is the average neutron wall load (MW $m^{-2}$).
+where $f_{\text{CP, allowable}}$ is the allowable centrepost neutron fluence and $P_{\text{wall}}$ is the average neutron wall load (MW $m^{-2}$).
 
 [^1]: P. J. Knight, *"PROCESS 3020: Plant Availability Model"*, Work File Note
 F/PL/PJK/PROCESS/CODE/<br>
