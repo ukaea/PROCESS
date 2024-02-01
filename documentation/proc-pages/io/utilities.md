@@ -29,13 +29,13 @@ Tool for comparing two MFILEs and outputting significant differences in numerica
 python process/io/mfile_comparison.py [-f path/to/first_MFILE.DAT path/to/second_MFILE.DAT] [-s] [--acc] [--verbose]
 ```
 ### Options
-| Argument | Description |
-| ---- | --- |
-| `-h, --help` | show help message and exit |
-| `-f` | Files to compare |
-| `-s` | Save output to file called comp.txt |
-| `--acc` | Percentage difference threshold for reporting |
-| `--verbose` | Additional output |
+| Argument     | Description                                   |
+| ------------ | --------------------------------------------- |
+| `-h, --help` | show help message and exit                    |
+| `-f`         | Files to compare                              |
+| `-s`         | Save output to file called comp.txt           |
+| `--acc`      | Percentage difference threshold for reporting |
+| `--verbose`  | Additional output                             |
 
 ### Output
 Outputs variables and their values which differ significantly between the two MFILEs.
@@ -54,11 +54,11 @@ This script reads from a PROCESS MFILE and writes values into a CSV file. The va
 python process/io/mfile_to_csv.py [-h] [-f path/to/MFILE] [-v path/to/variable_list.json]
 ```
 ### Options
-| Argument | Description |
-| - | - |
-| `-h, --help`    | show help message and exit |
-| `-f, [filename]` | specify MFILE file path |
-| `-v, VARFILE` | specify variable .json list file path |
+| Argument         | Description                           |
+| ---------------- | ------------------------------------- |
+| `-h, --help`     | show help message and exit            |
+| `-f, [filename]` | specify MFILE file path               |
+| `-v, VARFILE`    | specify variable .json list file path |
 
 ### Output
 A `.csv` file will be saved to the directory of the input file.
@@ -80,11 +80,11 @@ python process/io/plot_proc.py [-h] [-f path/to/MFILE.DAT] [-s]
 If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the current directory.
 
 ### Options
-| Argument | Description | 
-| - | - |
-| `-h --help`   | show help message and exit
-| `-f path/to/MFILE.DAT` | specify input/output file prefix
-| `-s, --show`  | show plot
+| Argument               | Description                      |
+| ---------------------- | -------------------------------- |
+| `-h --help`            | show help message and exit       |
+| `-f path/to/MFILE.DAT` | specify input/output file prefix |
+| `-s, --show`           | show plot                        |
 
 ### Output
 Produces a two-page PDF file in the same directory as the input MFILE. The PDF file name has the same prefix as the input MFILE but ending in `SUMMARY.pdf` 
@@ -111,65 +111,65 @@ used for startup and total available in $Wb$. Total burn time `tburn` in hrs.
 `Cost of electricity` - This is the cost of electricity in $/MWh$. Check the respective cost model 
 for the reference year of the inflation used.
 
-| Geometry |
-| :-------- |
-| major radius $R_0$ |
-| minor radius $a$ |
-| aspect ratio $A$ |
-| elongation at the 95% flux surface $\kappa_{95}$ |
+| Geometry                                                   |
+| :--------------------------------------------------------- |
+| major radius $R_0$                                         |
+| minor radius $a$                                           |
+| aspect ratio $A$                                           |
+| elongation at the 95% flux surface $\kappa_{95}$           |
 | plasma triangularity at the 95% flux surface $\delta_{95}$ |
-| plasma surface area | 
-| plasma volume | 
-| number of TF coils |
-| inboard/outboard blanket thickness |
-| inboard/outboard shield thickness |
-| total fusion power |
+| plasma surface area                                        |
+| plasma volume                                              |
+| number of TF coils                                         |
+| inboard/outboard blanket thickness                         |
+| inboard/outboard shield thickness                          |
+| total fusion power                                         |
 
-| Power flows |
-| :---------- |
-| average neutron wall load $W_{all}=\frac{P_{neutrons}}{S_{plasma,surface}f_{user}}$[^2]
-| normalised radius of the 'core' region $\rho_{core}$ used in the radiation correction of the 
-confinement scaling[^3] [^4] | 
-| the electron density at the pedestal top $n_{e,ped}[m^{-3}]$ |
-| the normalised radius $\rho=r/a$ at the pedestal top |
-| the helium fraction relative to the electron density | 
-| the core radiation $P_{rad} (\rho<\rho_{core})$ subtracted from $P_{heat}$ in confinement scaling |
-| $W_{th}$, the total radiation inside the separatrix | 
+| Power flows                                                                                                 |
+| :---------------------------------------------------------------------------------------------------------- |
+| average neutron wall load $W_{all}=\frac{P_{neutrons}}{S_{plasma,surface}f_{user}}$[^2]                     |
+| normalised radius of the 'core' region $\rho_{core}$ used in the radiation correction of the                |
+| confinement scaling[^3] [^4]                                                                                |
+| the electron density at the pedestal top $n_{e,ped}[m^{-3}]$                                                |
+| the normalised radius $\rho=r/a$ at the pedestal top                                                        |
+| the helium fraction relative to the electron density                                                        |
+| the core radiation $P_{rad} (\rho<\rho_{core})$ subtracted from $P_{heat}$ in confinement scaling           |
+| $W_{th}$, the total radiation inside the separatrix                                                         |
 | nuclear heating power to blanket $P_{nuc,blkt}= P_{neutr} (1-e^{-\frac{\Delta x_{blkt}}{\lambda_{decay}}})$ |
-| nuclear heating power to the shield $P_{nuc,shld}=P_{neutr}-P_{nuc,blkt}$ |
-| power crossing the separatrix into the SoL/Divertor $P_{sep}$ | 
-| L-H threshold power $P_{LH}$ | 
-| divertor lifetime in years |
-| high grade heat for electricity production $P_{therm}$ |
-| gross cycle efficiency $P_{e,gross}/P_{therm}$ |
-| net cycle efficiency $\frac{P_{e,gross}-P_{heat,pump}}{P_{therm}-P_{heat,pump}}$ | 
-| net electric power $P_{e,net}=P_{e,gross}-P_{recirc}$ |
-| plant efficiency $P_{e,net}/P_{fus}$ |
+| nuclear heating power to the shield $P_{nuc,shld}=P_{neutr}-P_{nuc,blkt}$                                   |
+| power crossing the separatrix into the SoL/Divertor $P_{sep}$                                               |
+| L-H threshold power $P_{LH}$                                                                                |
+| divertor lifetime in years                                                                                  |
+| high grade heat for electricity production $P_{therm}$                                                      |
+| gross cycle efficiency $P_{e,gross}/P_{therm}$                                                              |
+| net cycle efficiency $\frac{P_{e,gross}-P_{heat,pump}}{P_{therm}-P_{heat,pump}}$                            |
+| net electric power $P_{e,net}=P_{e,gross}-P_{recirc}$                                                       |
+| plant efficiency $P_{e,net}/P_{fus}$                                                                        |
 
-| Physics |
-| :------ |
-| plasma current $I_P[MA]$ |
-| vaccuum magnetic field at in the plasma centre $B_T(R_0)$ |
-| safety factor at the 95\% flux surface $q_{95}$ |
-| definitions of $\beta$ as given in [^1] |
-| volume averaged electron temperature $\langle T_e\rangle$ and density $\langle n_e\rangle$ | 
-| fraction of the line averaged electron density over the Greenwald density $\langle n_{e,line}\rangle / n_{GW}$ | 
+| Physics                                                                                                         |
+| :-------------------------------------------------------------------------------------------------------------- |
+| plasma current $I_P[MA]$                                                                                        |
+| vaccuum magnetic field at in the plasma centre $B_T(R_0)$                                                       |
+| safety factor at the 95\% flux surface $q_{95}$                                                                 |
+| definitions of $\beta$ as given in [^1]                                                                         |
+| volume averaged electron temperature $\langle T_e\rangle$ and density $\langle n_e\rangle$                      |
+| fraction of the line averaged electron density over the Greenwald density $\langle n_{e,line}\rangle / n_{GW}$  |
 | peaking of the electron temperature $T_{e,0}/\langle T_e\rangle$ and density $n_{e,0}/\langle n_{e,vol}\rangle$ |
-| core and SoL effective charge $Z_{eff}=\sum_i f_iZ_i^2$ |
-| impurity fraction $f_Z=n_Z/\langle n_e\rangle$ |
-| H-factor and confinement time are calculated using a radiation corrected confinement scaling[^3] [^4]. |
+| core and SoL effective charge $Z_{eff}=\sum_i f_iZ_i^2$                                                         |
+| impurity fraction $f_Z=n_Z/\langle n_e\rangle$                                                                  |
+| H-factor and confinement time are calculated using a radiation corrected confinement scaling[^3] [^4].          |
 
-| Neutral Beam Current Drive |
-| :------------------------- |
+| Neutral Beam Current Drive                                                                                                                                           |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | the steady state auxiliary power used for heating and current drive during the flat top phase (NOT to be confused with the start up or ramp down power requirements) |
-| part of the auxiliary power that is used for heating only, but not current drive |
-| current drive fractions for the inductive, auxiliary and bootstrap current |
-| the neutral beam current drive efficiency $\gamma_{NB}$ |
-| the neutral beam energy |
-| the plasma heating used in the calculation of the confinement scaling/H-factor $P_{aux} + P_\alpha - P_{rad,core}$ |
-| the divertor figure of merit $P_{sep}/R$, $P_{sep}/(\langle n_e\rangle R)$ |
-| fraction of the power crossing the separatrix with respect to the LH-threshold power $P_{sep}/P_{LH}$ |
-| non-radiation corrected H-factor (calculated for info only) |
+| part of the auxiliary power that is used for heating only, but not current drive                                                                                     |
+| current drive fractions for the inductive, auxiliary and bootstrap current                                                                                           |
+| the neutral beam current drive efficiency $\gamma_{NB}$                                                                                                              |
+| the neutral beam energy                                                                                                                                              |
+| the plasma heating used in the calculation of the confinement scaling/H-factor $P_{aux} + P_\alpha - P_{rad,core}$                                                   |
+| the divertor figure of merit $P_{sep}/R$, $P_{sep}/(\langle n_e\rangle R)$                                                                                           |
+| fraction of the power crossing the separatrix with respect to the LH-threshold power $P_{sep}/P_{LH}$                                                                |
+| non-radiation corrected H-factor (calculated for info only)                                                                                                          |
 
 ## Sankey Diagram
 
@@ -189,11 +189,11 @@ If no `-m` argument is provided it assumes a file named `MFILE.DAT` is in the cu
 
 ### Options
 
-| Argument | Description |
-| - | - |
-| `-h --help`       | show help message and exit      |
-| `-e --end`        | file format, default = pdf      |
-| `-m --mfile`      | mfile name, default = MFILE.DAT |
+| Argument     | Description                     |
+| ------------ | ------------------------------- |
+| `-h --help`  | show help message and exit      |
+| `-e --end`   | file format, default = pdf      |
+| `-m --mfile` | mfile name, default = MFILE.DAT |
 
 
 ### Output
@@ -234,17 +234,17 @@ python utilities/plot_stress_tf.py [-h] [-f path/to/SIG_TF.json] [-p [PLOT_SELEC
 
 ### Option
 
-| Argument | Description |
-| - | - |
-| `-h, --help`    | show help message and exit                           |
-| `-f, --input-file`    | `SIG_TF.json` input file
-| `-p, --plot_selec [PLOT_SELEC]`   | Plot selection string :                 |
-| - |   - if the string contains `sig`, plot the stress distributions |
-| - |   - if the string contains `strain`, plot the strain distributions |
-| - |   - if the string contains `disp`, plot the radial displacement distribution |
-| - |   - if the string contains `all`, plot stress and displacement distributions |
-| `-sf, --save_format [SAVE_FORMAT]` | output format (default='pdf')  |
-| `-as, --axis_font_size [AXIS_FONT_SIZE]` | Axis label font size selection (default=18) |
+| Argument                                 | Description                                                                |
+| ---------------------------------------- | -------------------------------------------------------------------------- |
+| `-h, --help`                             | show help message and exit                                                 |
+| `-f, --input-file`                       | `SIG_TF.json` input file                                                   |
+| `-p, --plot_selec [PLOT_SELEC]`          | Plot selection string :                                                    |
+| -                                        | - if the string contains `sig`, plot the stress distributions              |
+| -                                        | - if the string contains `strain`, plot the strain distributions           |
+| -                                        | - if the string contains `disp`, plot the radial displacement distribution |
+| -                                        | - if the string contains `all`, plot stress and displacement distributions |
+| `-sf, --save_format [SAVE_FORMAT]`       | output format (default='pdf')                                              |
+| `-as, --axis_font_size [AXIS_FONT_SIZE]` | Axis label font size selection (default=18)                                |
 
 
 
@@ -269,14 +269,14 @@ python utilities/write_new_in_dat.py [-h] [-f path/to/MFILE.DAT] [-i path/to/IN.
 
 ### Options
 
-| Argument | Description |
-| - | - |
-| `-h, --help`    | show help message and exit                           |
-| `-f`    | file to read as MFILE.DAT                           |
-| `-i`    | file to read as IN.DAT                           |
-| `-o`    | file to write as new IN.DAT                           |
-| `-lfp`   | use the last feasible point from a scan (default)                |
-| `-ffp` | use the first feasible point from a scan |
+| Argument     | Description                                       |
+| ------------ | ------------------------------------------------- |
+| `-h, --help` | show help message and exit                        |
+| `-f`         | file to read as MFILE.DAT                         |
+| `-i`         | file to read as IN.DAT                            |
+| `-o`         | file to write as new IN.DAT                       |
+| `-lfp`       | use the last feasible point from a scan (default) |
+| `-ffp`       | use the first feasible point from a scan          |
 
 
 
@@ -299,16 +299,16 @@ python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv 'output vars'] [
 
 ### Options
 
-| Argument | Description |
-| - | - |
-| `-h, --help`    | show help message and exit                           |
-| `-f`    | file(s) to read as MFILE.DAT                           |
-| `-yv`    | select the output variables                           |
-| `-yv2`    | select the 2nd axis output variable                           |
-| `-o`   |  Output directory for plots, defaults to current working directory.  |
-| `-sf` | output format (default='pdf') |
-| `-as` | Axis label font size selection (default=18) |
-| `-ln` | Label names for plot legend. If multiple input files used then list the same number of label names eg: -nl 'leg1 leg2', (default = MFile file name)  |
+| Argument     | Description                                                                                                                                         |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-h, --help` | show help message and exit                                                                                                                          |
+| `-f`         | file(s) to read as MFILE.DAT                                                                                                                        |
+| `-yv`        | select the output variables                                                                                                                         |
+| `-yv2`       | select the 2nd axis output variable                                                                                                                 |
+| `-o`         | Output directory for plots, defaults to current working directory.                                                                                  |
+| `-sf`        | output format (default='pdf')                                                                                                                       |
+| `-as`        | Axis label font size selection (default=18)                                                                                                         |
+| `-ln`        | Label names for plot legend. If multiple input files used then list the same number of label names eg: -nl 'leg1 leg2', (default = MFile file name) |
 
 
 
@@ -330,11 +330,11 @@ If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the cu
 
 ### Options
 
-| Argument | Description |
-| - | - |
-| `-h, --help`    | show help message and exit                           |
-| `-f MFILE`    | specify the MFILE                           |
-| `-s, --save`    | save figure                          |
+| Argument     | Description                |
+| ------------ | -------------------------- |
+| `-h, --help` | show help message and exit |
+| `-f MFILE`   | specify the MFILE          |
+| `-s, --save` | save figure                |
 
 
 ## Plot a bar chart of the cost breakdown
@@ -354,12 +354,12 @@ python utilities/costs_bar.py [-h] [-f f [f ...]] [-s] [-inf INF]
 
 ### Options
 
-| Argument | Description |
-| - | - |
-| `-h, --help`    | show help message and exit                           |
-| `-f MFILE`    | specify the MFILE(s) to plot                           |
-| `-s, --save`    | save figure                          |
-| `-inf INF`    | Inflation Factor (multiplies costs)                      |
+| Argument     | Description                         |
+| ------------ | ----------------------------------- |
+| `-h, --help` | show help message and exit          |
+| `-f MFILE`   | specify the MFILE(s) to plot        |
+| `-s, --save` | save figure                         |
+| `-inf INF`   | Inflation Factor (multiplies costs) |
 
 
 
@@ -462,7 +462,9 @@ By convention, we have designated metadata about the PROCESS runs as having a pr
 
 - `uncertainties_data.h5`: This file contains the output variables of each successfully converged PROCESS run generated by the `evaluate_uncertainties.py` script. PROCESS output variables can be plotted using using the `hdf_to_scatter_plot.py` script. This file uses the [HDF format](https://www.hdfgroup.org/solutions/hdf5/) and requires [software](https://www.hdfgroup.org/downloads/hdfview/) to view its contents in a human legible format.
 
-- `README.txt`, `process.log`, `MFILE.DAT`, `OUT.DAT`, `SIG_TF.DAT`, `SIG_TF.json`, `OPT.DAT`, `PLOT.DAT`: Typical PROCESS output generated by the last run.
+
+- `README.txt`, `process.log`, `MFILE.DAT`, `OUT.DAT`, `SIG_TF.json`: Typical PROCESS output generated by the last run.
+
 
 ### Usage
 
@@ -474,11 +476,11 @@ python process/uncertainties/evaluate_uncertainties.py -f path/to/config_evaluat
 
 ### Options
 
-| Argument | Description |
-| - | - |
-| `-h, --help`    | show help message and exit                           |
-| `-f CONFIGFILE`    | specify the path to the config file                           |
-| `-m METHOD`    |  type of uncertainty analysis performed, default = monte_carlo, other options = sobol_method, morris_method  |
+| Argument        | Description                                                                                                |
+| --------------- | ---------------------------------------------------------------------------------------------------------- |
+| `-h, --help`    | show help message and exit                                                                                 |
+| `-f CONFIGFILE` | specify the path to the config file                                                                        |
+| `-m METHOD`     | type of uncertainty analysis performed, default = monte_carlo, other options = sobol_method, morris_method |
 
 The uncertainty analysis technique used can be specified using '`-m monte_carlo/sobol_method/morris_method`' but the default is Monte Carlo. Use `-h` or `--help` for help.
 
@@ -500,10 +502,10 @@ If no `-f` argument is provided it assumes a file named `sobol.txt` is in the cu
 
 ### Options
 
-| Argument | Description |
-| - | - |
-| `-h, --help`    | show help message and exit                           |
-| `-f DATAFILE`   | path to datafile for plotting, default = sobol.txt                |
+| Argument        | Description                                               |
+| --------------- | --------------------------------------------------------- |
+| `-h, --help`    | show help message and exit                                |
+| `-f DATAFILE`   | path to datafile for plotting, default = sobol.txt        |
 | `-o OUTPUTFILE` | filename of outputed pdf file, default = sobol_output.pdf |
 
 ### Configuration File

@@ -20,12 +20,35 @@ import argparse
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_pdf as bpdf
-import math
 from matplotlib.path import Path
 import matplotlib.patches as patches
 import numpy as np
 
 import process.io.mfile as mf
+
+from process.geometry.shield_geometry import (
+    shield_geometry_single_null,
+    shield_geometry_double_null,
+)
+from process.geometry.plasma_geometry import plasma_geometry
+from process.geometry.vacuum_vessel_geometry import (
+    vacuum_vessel_geometry_single_null,
+    vacuum_vessel_geometry_double_null,
+)
+from process.geometry.blanket_geometry import (
+    blanket_geometry_single_null,
+    blanket_geometry_double_null,
+)
+from process.geometry.cryostat_geometry import cryostat_geometry
+from process.geometry.tfcoil_geometry import (
+    tfcoil_geometry_rectangular_shape,
+    tfcoil_geometry_d_shape,
+)
+from process.geometry.pfcoil_geometry import pfcoil_geometry
+from process.geometry.firstwall_geometry import (
+    first_wall_geometry_single_null,
+    first_wall_geometry_double_null,
+)
 from process.impurity_radiation import read_impurity_file
 from process.io.python_fortran_dicts import get_dicts
 
@@ -52,7 +75,7 @@ firstwall = "darkblue"
 winding = "blue"
 nbshield_colour = "gray"
 
-thin = 0
+thin = 0.0
 
 RADIAL_BUILD = [
     "bore",
@@ -116,82 +139,7 @@ ANIMATION_INFO = [
 ]
 
 rtangle = np.pi / 2
-
-
-def plotdh(axis, r0, a, delta, kap):
-    """Plots half a thin D-section, centred on z = 0.
-
-    Arguments:
-        axis --> axis object to plot to
-        r0 --> major radius of centre
-        a --> horizontal radius
-        delta --> triangularity
-        kap --> elongation
-
-    Returns:
-        rs --> radial coordinates of D-section
-        zs --> vertical coordinates of D-section
-    """
-    angs = np.linspace(0, np.pi, 50, endpoint=True)
-    rs = r0 + a * np.cos(angs + delta * np.sin(1.0 * angs))
-    zs = kap * a * np.sin(angs)
-    axis.plot(rs, zs, color="black", lw=thin)
-    return rs, zs
-
-
-def plotdhgap(axis, inpt, outpt, inthk, outthk, toppt, topthk, delta, col):
-    """Plots half a thick D-section with a gap.
-
-    Arguments:
-        axis --> axis object to plot to
-        inpt --> inner points
-        outpt --> outer points
-        inthk --> inner thickness
-        outthk --> outer thickness
-        toppt --> top points
-        topthk --> top thickness
-        delta --> triangularity
-        col --> color for fill
-
-    """
-    arc = np.pi / 4.0
-    r01 = (inpt + outpt) / 2.0
-    r02 = (inpt + inthk + outpt - outthk) / 2.0
-    a1 = r01 - inpt
-    a2 = r02 - inpt - inthk
-    kap1 = toppt / a1
-    kap2 = (toppt - topthk) / a2
-    # angs = ((np.pi/2.) - arc/2.) * findgen(50)/49.
-    angs = np.linspace(0.0, (np.pi / 2.0) - arc / 2.0, 50, endpoint=True)
-    rs1 = r01 + a1 * np.cos(angs + delta * np.sin(angs))
-    zs1 = kap1 * a1 * np.sin(angs)
-    rs2 = r02 + a2 * np.cos(angs + delta * np.sin(angs))
-    zs2 = kap2 * a2 * np.sin(angs)
-    # angs = !pi + ((!pi/2.) - arc) * findgen(50)/49.
-    angs = np.linspace(np.pi, np.pi + ((np.pi / 2.0) - arc), 50, endpoint=True)
-    rs3 = r01 + a1 * np.cos(angs + delta * np.sin(angs))
-    zs3 = kap1 * a1 * np.sin(angs)
-    rs4 = r02 + a2 * np.cos(angs + delta * np.sin(angs))
-    zs4 = kap2 * a2 * np.sin(angs)
-
-    axis.plot(
-        np.concatenate([rs1, rs2[::-1]]),
-        np.concatenate([zs1, zs2[::-1]]),
-        color="black",
-        lw=thin,
-    )
-    axis.plot(
-        np.concatenate([rs3, rs4[::-1]]),
-        -np.concatenate([zs3, zs4[::-1]]),
-        color="black",
-        lw=thin,
-    )
-    axis.fill(
-        np.concatenate([rs1, rs2[::-1]]), np.concatenate([zs1, zs2[::-1]]), color=col
-    )
-    axis.fill(
-        np.concatenate([rs3, rs4[::-1]]), -np.concatenate([zs3, zs4[::-1]]), color=col
-    )
+rtangle2 = 2 * rtangle
 
 
 def plot_plasma(axis, mfile_data, scan):
@@ -204,58 +152,34 @@ def plot_plasma(axis, mfile_data, scan):
 
     """
 
-    r0 = mfile_data.data["rmajor"].get_scan(scan)
+    r_0 = mfile_data.data["rmajor"].get_scan(scan)
     a = mfile_data.data["rminor"].get_scan(scan)
-    delta = 1.5 * mfile_data.data["triang95"].get_scan(scan)
-    kappa = (1.1 * mfile_data.data["kappa95"].get_scan(scan)) + 0.04
+    triang_95 = mfile_data.data["triang95"].get_scan(scan)
+    kappa_95 = mfile_data.data["kappa95"].get_scan(scan)
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
 
-    x1 = (2.0 * r0 * (1.0 + delta) - a * (delta**2 + kappa**2 - 1.0)) / (
-        2.0 * (1.0 + delta)
+    pg = plasma_geometry(
+        r_0=r_0,
+        a=a,
+        triang_95=triang_95,
+        kappa_95=kappa_95,
+        i_single_null=i_single_null,
     )
-    x2 = (2.0 * r0 * (delta - 1.0) - a * (delta**2 + kappa**2 - 1.0)) / (
-        2.0 * (delta - 1.0)
-    )
-    r1 = 0.5 * math.sqrt(
-        (a**2 * ((delta + 1.0) ** 2 + kappa**2) ** 2) / ((delta + 1.0) ** 2)
-    )
-    r2 = 0.5 * math.sqrt(
-        (a**2 * ((delta - 1.0) ** 2 + kappa**2) ** 2) / ((delta - 1.0) ** 2)
-    )
-    theta1 = np.arcsin((kappa * a) / r1)
-    theta2 = np.arcsin((kappa * a) / r2)
-    inang = 1.0 / r1
-    outang = 1.5 / r2
-    if i_single_null == 0:
-        angs1 = np.linspace(
-            -(inang + theta1) + np.pi, (inang + theta1) + np.pi, 256, endpoint=True
-        )
-        angs2 = np.linspace(-(outang + theta2), (outang + theta2), 256, endpoint=True)
-    elif i_single_null < 0:
-        angs1 = np.linspace(
-            -(inang + theta1) + np.pi, theta1 + np.pi, 256, endpoint=True
-        )
-        angs2 = np.linspace(-theta2, (outang + theta2), 256, endpoint=True)
-    else:
-        angs1 = np.linspace(
-            -theta1 + np.pi, (inang + theta1) + np.pi, 256, endpoint=True
-        )
-        angs2 = np.linspace(-(outang + theta2), theta2, 256, endpoint=True)
 
-    xs1 = -(r1 * np.cos(angs1) - x1)
-    ys1 = r1 * np.sin(angs1)
-    xs2 = -(r2 * np.cos(angs2) - x2)
-    ys2 = r2 * np.sin(angs2)
-    axis.plot(xs1, ys1, color="black")
-    axis.plot(xs2, ys2, color="black")
+    axis.plot(pg.rs[0], pg.zs[0], color="black")
+    axis.plot(pg.rs[1], pg.zs[1], color="black")
     axis.fill_betweenx(
-        ys1,
-        xs1,
-        xs2,
-        where=(xs2 < xs1) & (ys1 > (-a * kappa)) & (ys1 < (a * kappa)),
+        pg.zs[0],
+        pg.rs[0],
+        pg.rs[1],
+        where=(pg.rs[1] < pg.rs[0])
+        & (pg.zs[0] > (-a * pg.kappa))
+        & (pg.zs[0] < (a * pg.kappa)),
         color=plasma,
     )
-    axis.fill_betweenx(ys1, xs1, xs2, where=(xs2 > xs1), color="none")
+    axis.fill_betweenx(
+        pg.zs[0], pg.rs[0], pg.rs[1], where=(pg.rs[1] > pg.rs[0]), color="none"
+    )
 
 
 def plot_centre_cross(axis, mfile_data, scan):
@@ -385,19 +309,18 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges):
 
 def plot_cryostat(axis, mfile_data, scan):
     """Function to plot cryostat in poloidal cross-section"""
-    rect = patches.Rectangle(
-        [rdewex, 0], ddwex, zdewex + ddwex, lw=0, facecolor=cryostat
-    )
-    axis.add_patch(rect)
-    rect = patches.Rectangle(
-        [rdewex, 0], ddwex, -(zdewex + ddwex), lw=0, facecolor=cryostat
-    )
-    axis.add_patch(rect)
 
-    rect = patches.Rectangle([0, zdewex], rdewex, ddwex, lw=0, facecolor=cryostat)
-    axis.add_patch(rect)
-    rect = patches.Rectangle([0, -zdewex], rdewex, -ddwex, lw=0, facecolor=cryostat)
-    axis.add_patch(rect)
+    rects = cryostat_geometry(rdewex=rdewex, ddwex=ddwex, zdewex=zdewex)
+
+    for rec in rects:
+        axis.add_patch(
+            patches.Rectangle(
+                xy=(rec.anchor_x, rec.anchor_z),
+                width=rec.width,
+                height=rec.height,
+                facecolor=cryostat,
+            )
+        )
 
 
 def color_key(axis):
@@ -728,36 +651,6 @@ def arc_fill(axis, r1, r2, color="pink"):
     axis.add_patch(patch)
 
 
-def ellips_fill(
-    axis, a1=0, a2=0, b1=0, b2=0, x0=0, y0=0, ang1=0, ang2=rtangle, color="pink"
-):
-    """Fills the space between two concentric ellipse sectors.
-
-    Arguments
-
-    axis: plot object
-    a1, a2, b1, b2 horizontal and vertical radii to be filled
-    x0, y0 coordinates of centre of the ellipses
-    ang1, ang2 are the polar angles of the start and end
-
-    """
-    angs = np.linspace(ang1, ang2, endpoint=True)
-    r1 = ((np.cos(angs) / a1) ** 2 + (np.sin(angs) / b1) ** 2) ** (-0.5)
-    xs1 = r1 * np.cos(angs) + x0
-    ys1 = r1 * np.sin(angs) + y0
-    angs = np.linspace(ang2, ang1, endpoint=True)
-    r2 = ((np.cos(angs) / a2) ** 2 + (np.sin(angs) / b2) ** 2) ** (-0.5)
-    xs2 = r2 * np.cos(angs) + x0
-    ys2 = r2 * np.sin(angs) + y0
-    verts = list(zip(xs1, ys1))
-    verts.extend(list(zip(xs2, ys2)))
-    endpoint = verts[-1:]
-    verts.extend(endpoint)
-    path = Path(verts, closed=True)
-    patch = patches.PathPatch(path, facecolor=color, lw=0)
-    axis.add_patch(patch)
-
-
 def plot_nprofile(prof, demo_ranges):
     """Function to plot density profile
     Arguments:
@@ -786,34 +679,6 @@ def plot_nprofile(prof, demo_ranges):
         ne = ne0 * (1 - rho**2) ** alphan
     ne = ne / 1e19
     prof.plot(rho, ne)
-
-    # Ranges
-    # ---
-    # DEMO : Fixed ranges for comparison
-    prof.set_xlim([0, 1])
-    if demo_ranges:
-        prof.set_ylim([0, 20])
-
-    # Adapatative ranges
-    else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
-    # ---
-
-
-def plot_plasmod_nprofile(prof, demo_ranges):
-    """Function to plot plasmod density profile
-    Arguments:
-      prof --> axis object to add plot to
-    """
-
-    prof.set_xlabel("r/a")
-    prof.set_ylabel(r"$n_{e}\cdot 10^{19} \mathrm{m}^{-3}$")
-    prof.set_title("Density profile")
-    prof.plot(pmod_r, pmod_ne, label="plasmod $n_e$")
-    prof.plot(pmod_r, pmod_ni, label="plasmod $n_i$")
-    prof.plot(pmod_r, pmod_nt, label="plasmod $n_T$")
-    prof.plot(pmod_r, pmod_nd, label="plasmod $n_D$")
-    prof.legend()
 
     # Ranges
     # ---
@@ -869,32 +734,6 @@ def plot_tprofile(prof, demo_ranges):
     # ---
 
 
-def plot_plasmod_tprofile(prof, demo_ranges):
-    """Function to plot plasmod temperature profile
-    Arguments:
-      prof --> axis object to add plot to
-    """
-
-    prof.set_xlabel("r/a")
-    prof.set_ylabel("$T_{e}$ [keV]")
-    prof.set_title("Temperature profile")
-    prof.plot(pmod_r, pmod_te, label="plasmod $T_e$")
-    prof.plot(pmod_r, pmod_ti, label="plasmod $T_i$")
-    prof.legend()
-
-    # Ranges
-    # ---
-    prof.set_xlim([0, 1])
-    # DEMO : Fixed ranges for comparison
-    if demo_ranges:
-        prof.set_ylim([0, 50])
-
-    # Adapatative ranges
-    else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
-    # ---
-
-
 def plot_qprofile(prof, demo_ranges):
     """Function to plot q profile, formula taken from Nevins bootstrap model.
 
@@ -912,31 +751,6 @@ def plot_qprofile(prof, demo_ranges):
 
     prof.plot(rho, q_r_nevin, label="Nevins")
     prof.plot(rho, q_r_sauter, label="Sauter")
-    prof.legend()
-
-    # Ranges
-    # ---
-    prof.set_xlim([0, 1])
-    # DEMO : Fixed ranges for comparison
-    if demo_ranges:
-        prof.set_ylim([0, 10])
-
-    # Adapatative ranges
-    else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
-    # ---
-
-
-def plot_plasmod_qprofile(prof, demo_ranges):
-    """Function to plot plasmod q profile
-    Arguments:
-      prof --> axis object to add plot to
-    """
-
-    prof.set_xlabel("r/a")
-    prof.set_ylabel("-")
-    prof.set_title("q profile")
-    prof.plot(pmod_r, pmod_q, label="plasmod $q(r/a)$")
     prof.legend()
 
     # Ranges
@@ -1227,62 +1041,71 @@ def plot_vacuum_vessel(axis, mfile_data, scan):
         scan --> scan number to use
     """
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
-    triang = mfile_data.data["triang95"].get_scan(scan)
-    temp_array_1 = ()
-    temp_array_2 = ()
+    triang_95 = mfile_data.data["triang95"].get_scan(scan)
 
     # Outer side (furthest from plasma)
-    radx = (
+    radx_outer = (
         cumulative_radial_build("d_vv_out", mfile_data, scan)
         + cumulative_radial_build("gapds", mfile_data, scan)
     ) / 2.0
-    rminx = (
+    rminx_outer = (
         cumulative_radial_build("d_vv_out", mfile_data, scan)
         - cumulative_radial_build("gapds", mfile_data, scan)
     ) / 2.0
 
-    kapx = cumulative_upper["d_vv_top"] / rminx
-
-    if i_single_null == 1:
-        (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-        temp_array_1 = temp_array_1 + ((rs, zs))
-
-    kapx = cumulative_lower["d_vv_bot"] / rminx
-    (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-    temp_array_2 = temp_array_2 + ((rs, zs))
-
     # Inner side (nearest to the plasma)
-    radx = (
+    radx_inner = (
         cumulative_radial_build("shldoth", mfile_data, scan)
         + cumulative_radial_build("d_vv_in", mfile_data, scan)
     ) / 2.0
-    rminx = (
+    rminx_inner = (
         cumulative_radial_build("shldoth", mfile_data, scan)
         - cumulative_radial_build("d_vv_in", mfile_data, scan)
     ) / 2.0
 
     if i_single_null == 1:
-        kapx = (cumulative_upper["d_vv_top"] - upper["d_vv_top"]) / rminx
-        (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-        temp_array_1 = temp_array_1 + ((rs, zs))
+        vvg_single_null = vacuum_vessel_geometry_single_null(
+            cumulative_upper=cumulative_upper,
+            upper=upper,
+            triang=triang_95,
+            radx_outer=radx_outer,
+            rminx_outer=rminx_outer,
+            radx_inner=radx_inner,
+            rminx_inner=rminx_inner,
+            cumulative_lower=cumulative_lower,
+            lower=lower,
+        )
 
-    kapx = (cumulative_lower["d_vv_bot"] + lower["d_vv_bot"]) / rminx
-    (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-    temp_array_2 = temp_array_2 + ((rs, zs))
+        axis.plot(
+            vvg_single_null.rs,
+            vvg_single_null.zs,
+            color="black",
+            lw=thin,
+        )
 
-    # Single null: Draw top half from output
-    # Double null: Reflect bottom half to top
-    if i_single_null == 1:
-        rs = np.concatenate([temp_array_1[0], temp_array_1[2][::-1]])
-        zs = np.concatenate([temp_array_1[1], temp_array_1[3][::-1]])
-        axis.fill(rs, zs, color=vessel)
+        axis.fill(
+            vvg_single_null.rs,
+            vvg_single_null.zs,
+            color=vessel,
+        )
 
-    rs = np.concatenate([temp_array_2[0], temp_array_2[2][::-1]])
-    zs = np.concatenate([temp_array_2[1], temp_array_2[3][::-1]])
-    axis.fill(rs, zs, color=vessel)
-    # For double null, reflect shape of lower half to top instead
     if i_single_null == 0:
-        axis.fill(rs, -zs, color=vessel)
+        vvg_double_null = vacuum_vessel_geometry_double_null(
+            cumulative_lower=cumulative_lower,
+            lower=lower,
+            radx_inner=radx_inner,
+            radx_outer=radx_outer,
+            rminx_inner=rminx_inner,
+            rminx_outer=rminx_outer,
+            triang=triang_95,
+        )
+        axis.plot(vvg_double_null.rs, vvg_double_null.zs, color="black", lw=thin)
+
+        axis.fill(
+            vvg_double_null.rs,
+            vvg_double_null.zs,
+            color=vessel,
+        )
 
 
 def plot_shield(axis, mfile_data, scan):
@@ -1294,63 +1117,55 @@ def plot_shield(axis, mfile_data, scan):
         scan --> scan number to use
     """
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
-    triang = mfile_data.data["triang95"].get_scan(scan)
-    temp_array_1 = ()
-    temp_array_2 = ()
+    triang_95 = mfile_data.data["triang95"].get_scan(scan)
 
     # Side furthest from plasma
-    radx = (
+    radx_far = (
         cumulative_radial_build("shldoth", mfile_data, scan)
         + cumulative_radial_build("d_vv_in", mfile_data, scan)
     ) / 2.0
-    rminx = (
+    rminx_far = (
         cumulative_radial_build("shldoth", mfile_data, scan)
         - cumulative_radial_build("d_vv_in", mfile_data, scan)
     ) / 2.0
 
-    if i_single_null == 1:
-        kapx = cumulative_upper["shldtth"] / rminx
-        (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-        temp_array_1 = temp_array_1 + ((rs, zs))
-
-    kapx = cumulative_lower["shldlth"] / rminx
-    (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-    temp_array_2 = temp_array_2 + ((rs, zs))
-
     # Side nearest to the plasma
-    radx = (
+    radx_near = (
         cumulative_radial_build("vvblgapo", mfile_data, scan)
         + cumulative_radial_build("shldith", mfile_data, scan)
     ) / 2.0
-    rminx = (
+    rminx_near = (
         cumulative_radial_build("vvblgapo", mfile_data, scan)
         - cumulative_radial_build("shldith", mfile_data, scan)
     ) / 2.0
 
     if i_single_null == 1:
-        kapx = (cumulative_upper["vvblgap"]) / rminx
-        (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-        temp_array_1 = temp_array_1 + ((rs, zs))
+        sg_single_null = shield_geometry_single_null(
+            cumulative_upper=cumulative_upper,
+            radx_far=radx_far,
+            rminx_far=rminx_far,
+            radx_near=radx_near,
+            rminx_near=rminx_near,
+            triang=triang_95,
+            cumulative_lower=cumulative_lower,
+        )
+        axis.plot(sg_single_null.rs, sg_single_null.zs, color="black", lw=thin)
+        axis.fill(sg_single_null.rs, sg_single_null.zs, color=shield)
 
-    kapx = (cumulative_lower["divfix"]) / rminx
-    (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-    temp_array_2 = temp_array_2 + ((rs, zs))
-
-    # Single null: Draw top half from output
-    # Double null: Reflect bottom half to top
-    if i_single_null == 1:
-        rs = np.concatenate([temp_array_1[0], temp_array_1[2][::-1]])
-        zs = np.concatenate([temp_array_1[1], temp_array_1[3][::-1]])
-        axis.fill(rs, zs, color=shield)
-
-    rs = np.concatenate([temp_array_2[0], temp_array_2[2][::-1]])
-    zs = np.concatenate([temp_array_2[1], temp_array_2[3][::-1]])
-    axis.fill(rs, zs, color=shield)
     if i_single_null == 0:
-        axis.fill(rs, -zs, color=shield)
+        sg_double_null = shield_geometry_double_null(
+            cumulative_lower=cumulative_lower,
+            radx_far=radx_far,
+            radx_near=radx_near,
+            rminx_far=rminx_far,
+            rminx_near=rminx_near,
+            triang=triang_95,
+        )
+        axis.plot(sg_double_null.rs, sg_double_null.zs, color="black", lw=thin)
+        axis.fill(sg_double_null.rs, sg_double_null.zs, color=shield)
 
 
-def plot_blanket(axis, mfile_data, scan):
+def plot_blanket(axis, mfile_data, scan) -> None:
     """Function to plot blanket
 
     Arguments:
@@ -1359,65 +1174,74 @@ def plot_blanket(axis, mfile_data, scan):
       scan --> scan number to use
 
     """
-    point_array = ()
-
     # Single null: Draw top half from output
     # Double null: Reflect bottom half to top
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
+    triang_95 = mfile_data.data["triang95"].get_scan(scan)
+    blnktth = mfile_data.data["blnktth"].get_scan(scan)
+    c_shldith = cumulative_radial_build("shldith", mfile_data, scan)
+    c_blnkoth = cumulative_radial_build("blnkoth", mfile_data, scan)
+
     if i_single_null == 1:
         # Upper blanket: outer surface
-        radx = (
+        radx_outer = (
             cumulative_radial_build("blnkoth", mfile_data, scan)
             + cumulative_radial_build("vvblgapi", mfile_data, scan)
         ) / 2.0
-        rminx = (
+        rminx_outer = (
             cumulative_radial_build("blnkoth", mfile_data, scan)
             - cumulative_radial_build("vvblgapi", mfile_data, scan)
         ) / 2.0
 
-        kapx = cumulative_upper["blnktth"] / rminx
-        (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-        point_array = point_array + ((rs, zs))
-
         # Upper blanket: inner surface
-        radx = (
+        radx_inner = (
             cumulative_radial_build("fwoth", mfile_data, scan)
             + cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
-        rminx = (
+        rminx_inner = (
             cumulative_radial_build("fwoth", mfile_data, scan)
             - cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
-
-        kapx = cumulative_upper["fwtth"] / rminx
-        (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-        point_array = point_array + ((rs, zs))
-
-        # Plot upper blanket
-        rs = np.concatenate([point_array[0], point_array[2][::-1]])
-        zs = np.concatenate([point_array[1], point_array[3][::-1]])
-        axis.fill(rs, zs, color=blanket)
-
-    # Lower blanket
-    blnktth = mfile_data.data["blnktth"].get_scan(scan)
-    c_shldith = cumulative_radial_build("shldith", mfile_data, scan)
-    c_blnkoth = cumulative_radial_build("blnkoth", mfile_data, scan)
-    divgap = cumulative_lower["divfix"]
-    plotdhgap(
-        axis, c_shldith, c_blnkoth, blnkith, blnkoth, divgap, -blnktth, triang, blanket
-    )
-    if i_single_null == 0:
-        plotdhgap(
-            axis,
-            c_shldith,
-            c_blnkoth,
-            blnkith,
-            blnkoth,
-            -divgap,
-            -blnktth,
-            triang,
-            blanket,
+        bg_single_null = blanket_geometry_single_null(
+            radx_outer=radx_outer,
+            rminx_outer=rminx_outer,
+            radx_inner=radx_inner,
+            rminx_inner=rminx_inner,
+            cumulative_upper=cumulative_upper,
+            triang=triang_95,
+            cumulative_lower=cumulative_lower,
+            blnktth=blnktth,
+            c_shldith=c_shldith,
+            c_blnkoth=c_blnkoth,
+            blnkith=blnkith,
+            blnkoth=blnkoth,
         )
+
+        # Plot blanket
+        axis.plot(
+            bg_single_null.rs,
+            bg_single_null.zs,
+            color="black",
+            lw=thin,
+        )
+
+        axis.fill(bg_single_null.rs, bg_single_null.zs, color=blanket)
+
+    if i_single_null == 0:
+        bg_double_null = blanket_geometry_double_null(
+            cumulative_lower=cumulative_lower,
+            triang=triang_95,
+            blnktth=blnktth,
+            c_shldith=c_shldith,
+            c_blnkoth=c_blnkoth,
+            blnkith=blnkith,
+            blnkoth=blnkoth,
+        )
+        # Plot blanket
+        axis.plot(bg_double_null.rs[0], bg_double_null.zs[0], color="black", lw=thin)
+        axis.plot(bg_double_null.rs[1], bg_double_null.zs[1], color="black", lw=thin)
+        axis.fill(bg_double_null.rs[0], bg_double_null.zs[0], color=blanket)
+        axis.fill(bg_double_null.rs[1], bg_double_null.zs[1], color=blanket)
 
 
 def plot_firstwall(axis, mfile_data, scan):
@@ -1429,75 +1253,70 @@ def plot_firstwall(axis, mfile_data, scan):
       scan --> scan number to use
 
     """
+    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
+    triang_95 = mfile_data.data["triang95"].get_scan(scan)
     blnktth = mfile_data.data["blnktth"].get_scan(scan)
     tfwvt = mfile_data.data["fwtth"].get_scan(scan)
-    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
-    point_array = ()
+    c_blnkith = cumulative_radial_build("blnkith", mfile_data, scan)
+    c_fwoth = cumulative_radial_build("fwoth", mfile_data, scan)
 
-    # Single null: Draw top half from output
-    # Double null: Reflect bottom half to top
     if i_single_null == 1:
         # Upper first wall: outer surface
-        radx = (
+        radx_outer = (
             cumulative_radial_build("fwoth", mfile_data, scan)
             + cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
-        rminx = (
+        rminx_outer = (
             cumulative_radial_build("fwoth", mfile_data, scan)
             - cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
 
-        kapx = cumulative_upper["fwtth"] / rminx
-        (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-        point_array = point_array + ((rs, zs))
-
         # Upper first wall: inner surface
-        radx = (
+        radx_inner = (
             cumulative_radial_build("scraplo", mfile_data, scan)
             + cumulative_radial_build("fwith", mfile_data, scan)
         ) / 2.0
-        rminx = (
+        rminx_inner = (
             cumulative_radial_build("scraplo", mfile_data, scan)
             - cumulative_radial_build("fwith", mfile_data, scan)
         ) / 2.0
 
-        (rs, zs) = plotdh(axis, radx, rminx, triang, kapx)
-        point_array = point_array + ((rs, zs))
+        fwg_single_null = first_wall_geometry_single_null(
+            radx_outer=radx_outer,
+            rminx_outer=rminx_outer,
+            radx_inner=radx_inner,
+            rminx_inner=rminx_inner,
+            cumulative_upper=cumulative_upper,
+            triang=triang_95,
+            cumulative_lower=cumulative_lower,
+            blnktth=blnktth,
+            c_blnkith=c_blnkith,
+            c_fwoth=c_fwoth,
+            fwith=fwith,
+            fwoth=fwoth,
+            tfwvt=tfwvt,
+        )
 
-        # Plot upper first wall
-        rs = np.concatenate([point_array[0], point_array[2][::-1]])
-        zs = np.concatenate([point_array[1], point_array[3][::-1]])
-        axis.fill(rs, zs, color=firstwall)
-
-    # Lower first wall
-    c_blnkith = cumulative_radial_build("blnkith", mfile_data, scan)
-    c_fwoth = cumulative_radial_build("fwoth", mfile_data, scan)
-    divgap = cumulative_lower["divfix"]
-
-    plotdhgap(
-        axis,
-        c_blnkith,
-        c_fwoth,
-        fwith,
-        fwoth,
-        divgap + blnktth,
-        -tfwvt,
-        triang,
-        firstwall,
-    )
+        # Plot first wall
+        axis.plot(fwg_single_null.rs, fwg_single_null.zs, color="black", lw=thin)
+        axis.fill(fwg_single_null.rs, fwg_single_null.zs, color=firstwall)
 
     if i_single_null == 0:
-        plotdhgap(
-            axis,
-            c_blnkith,
-            c_fwoth,
-            fwith,
-            fwoth,
-            -(divgap + blnktth),
-            -tfwvt,
-            triang,
-            firstwall,
+        fwg_double_null = first_wall_geometry_double_null(
+            cumulative_lower=cumulative_lower,
+            triang=triang_95,
+            blnktth=blnktth,
+            c_blnkith=c_blnkith,
+            c_fwoth=c_fwoth,
+            fwith=fwith,
+            fwoth=fwoth,
+            tfwvt=tfwvt,
         )
+        # Plot blanket
+        axis.plot(fwg_double_null.rs[0], fwg_double_null.zs[0], color="black", lw=thin)
+        axis.plot(fwg_double_null.rs[1], fwg_double_null.zs[1], color="black", lw=thin)
+        axis.fill(fwg_double_null.rs[0], fwg_double_null.zs[0], color=blanket)
+        axis.fill(fwg_double_null.rs[1], fwg_double_null.zs[1], color=blanket)
 
 
 def angle_check(angle1, angle2):
@@ -1543,116 +1362,59 @@ def plot_tf_coils(axis, mfile_data, scan):
     else:
         i_tf_shape = int(1)
 
-    #  D-shaped (i_tf_shape=1), Picture frame (i_tf_shape=2)
     if i_tf_shape == 2:
-        # Inboard leg
-        rect1 = patches.Rectangle(
-            [x5 - tfcth, y5 - tfcth],
-            tfcth,
-            (y1 - y5 + 2.0 * tfcth),
-            lw=0,
-            facecolor="cyan",
+        rects = tfcoil_geometry_rectangular_shape(
+            x1=x1,
+            x2=x2,
+            x4=x4,
+            x5=x5,
+            y1=y1,
+            y2=y2,
+            y4=y4,
+            y5=y5,
+            tfcth=tfcth,
         )
-        # Outboard leg vertical
-        rect2 = patches.Rectangle(
-            [x4, y4 - tfcth], tfcth, (y2 - y4 + 2.0 * tfcth), lw=0, facecolor="cyan"
-        )
-        # Outboard leg horizontal bottom
-        rect3 = patches.Rectangle(
-            [x5, y5 - tfcth], x4 - x5, tfcth, lw=0, facecolor="cyan"
-        )
-        # Outboard leg horizontal top
-        rect4 = patches.Rectangle([x1, y1], x2 - x1, tfcth, lw=0, facecolor="cyan")
 
-        # Plot it all
-        axis.add_patch(rect1)
-        axis.add_patch(rect2)
-        axis.add_patch(rect3)
-        axis.add_patch(rect4)
+        for rec in rects:
+            axis.add_patch(
+                patches.Rectangle(
+                    xy=(rec.anchor_x, rec.anchor_z),
+                    width=rec.width,
+                    height=rec.height,
+                    facecolor=tfc,
+                )
+            )
 
     else:
-        # Inboard upper arc
-        x0 = x2
-        y0 = y1
-        a1 = x2 - x1
-        b1 = y2 - y1
-        a2 = a1 + tfcth
-        b2 = b1 + tfcth
-        ellips_fill(
-            axis,
-            a1=a1,
-            a2=a2,
-            b1=b1,
-            b2=b2,
-            x0=x0,
-            y0=y0,
-            ang1=rtangle,
-            ang2=2 * rtangle,
-            color="cyan",
+        rects, verts = tfcoil_geometry_d_shape(
+            x1=x1,
+            x2=x2,
+            x3=x3,
+            x4=x4,
+            x5=x5,
+            y1=y1,
+            y2=y2,
+            y4=y4,
+            y5=y5,
+            tfcth=tfcth,
+            rtangle=rtangle,
+            rtangle2=rtangle2,
         )
-        # Outboard upper arc
-        x0 = x2
-        y0 = 0
-        a1 = x3 - x2
-        b1 = y2
-        a2 = a1 + tfcth
-        b2 = b1 + tfcth
-        ellips_fill(
-            axis,
-            a1=a1,
-            a2=a2,
-            b1=b1,
-            b2=b2,
-            x0=x0,
-            y0=y0,
-            ang1=0,
-            ang2=rtangle,
-            color="cyan",
-        )
-        # Inboard lower arc
-        x0 = x4
-        y0 = y5
-        a1 = x4 - x5
-        b1 = y5 - y4
-        a2 = a1 + tfcth
-        b2 = b1 + tfcth
-        ellips_fill(
-            axis,
-            a1=a1,
-            a2=a2,
-            b1=b1,
-            b2=b2,
-            x0=x0,
-            y0=y0,
-            ang1=-rtangle,
-            ang2=-2 * rtangle,
-            color="cyan",
-        )
-        # Outboard lower arc
-        x0 = x4
-        y0 = 0
-        a1 = x3 - x2
-        b1 = -y4
-        a2 = a1 + tfcth
-        b2 = b1 + tfcth
-        ellips_fill(
-            axis,
-            a1=a1,
-            a2=a2,
-            b1=b1,
-            b2=b2,
-            x0=x0,
-            y0=y0,
-            ang1=0,
-            ang2=-rtangle,
-            color="cyan",
-        )
-        # Vertical leg
-        # Bottom left corner
-        rect = patches.Rectangle(
-            [x5 - tfcth, y5], tfcth, (y1 - y5), lw=0, facecolor="cyan"
-        )
-        axis.add_patch(rect)
+
+        for vert in verts:
+            path = Path(vert, closed=True)
+            patch = patches.PathPatch(path, facecolor=tfc, lw=0)
+            axis.add_patch(patch)
+
+        for rec in rects:
+            axis.add_patch(
+                patches.Rectangle(
+                    xy=(rec.anchor_x, rec.anchor_z),
+                    width=rec.width,
+                    height=rec.height,
+                    facecolor=tfc,
+                )
+            )
 
 
 def plot_pf_coils(axis, mfile_data, scan):
@@ -1670,15 +1432,15 @@ def plot_pf_coils(axis, mfile_data, scan):
     coils_dz = []
     coil_text = []
 
+    bore = mfile_data.data["bore"].get_scan(scan)
+    ohcth = mfile_data.data["ohcth"].get_scan(scan)
+    ohdz = mfile_data.data["ohdz"].get_scan(scan)
+
     # Number of coils (1 is OH coil)
     number_of_coils = 0
     for item in mfile_data.data.keys():
         if "rpf[" in item:
             number_of_coils += 1
-
-    bore = mfile_data.data["bore"].get_scan(scan)
-    ohcth = mfile_data.data["ohcth"].get_scan(scan)
-    ohdz = mfile_data.data["ohdz"].get_scan(scan)
 
     # Check for Central Solenoid
     if "iohcl" in mfile_data.data.keys():
@@ -1700,23 +1462,18 @@ def plot_pf_coils(axis, mfile_data, scan):
         coils_dz.append(mfile_data.data["pfdz({:01})".format(coil)].get_scan(scan))
         coil_text.append(str(coil + 1))
 
-    for i in range(len(coils_r)):
-        r_1 = coils_r[i] - 0.5 * coils_dr[i]
-        z_1 = coils_z[i] - 0.5 * coils_dz[i]
-        r_2 = coils_r[i] - 0.5 * coils_dr[i]
-        z_2 = coils_z[i] + 0.5 * coils_dz[i]
-        r_3 = coils_r[i] + 0.5 * coils_dr[i]
-        z_3 = coils_z[i] + 0.5 * coils_dz[i]
-        r_4 = coils_r[i] + 0.5 * coils_dr[i]
-        z_4 = coils_z[i] - 0.5 * coils_dz[i]
-        r_5 = coils_r[i] - 0.5 * coils_dr[i]
-        z_5 = coils_z[i] - 0.5 * coils_dz[i]
+    r_points, z_points, central_coil = pfcoil_geometry(
+        coils_r=coils_r,
+        coils_z=coils_z,
+        coils_dr=coils_dr,
+        coils_dz=coils_dz,
+        bore=bore,
+        ohcth=ohcth,
+        ohdz=ohdz,
+    )
 
-        r_points = [r_1, r_2, r_3, r_4, r_5]
-        z_points = [z_1, z_2, z_3, z_4, z_5]
-        axis.plot(r_points, z_points, color="black")
-        rect = patches.Rectangle([bore, -ohdz / 2], ohcth, ohdz, lw=0, facecolor="pink")
-        axis.add_patch(rect)
+    for i in range(len(coils_r)):
+        axis.plot(r_points[i], z_points[i], color="black")
         axis.text(
             coils_r[i],
             coils_z[i],
@@ -1725,6 +1482,14 @@ def plot_pf_coils(axis, mfile_data, scan):
             va="center",
             fontsize=5 * abs((coils_dr[i] * coils_dz[i])),
         )
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(central_coil.anchor_x, central_coil.anchor_z),
+            width=central_coil.width,
+            height=central_coil.height,
+            facecolor="pink",
+        )
+    )
 
 
 def plot_info(axis, data, mfile_data, scan):
@@ -2283,7 +2048,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if (iefrf == 5) or (iefrf == 8):
         nbi = True
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if (iefrf == 3) or (iefrf == 7) or (iefrf == 10) or (iefrf == 11):
+    if (iefrf == 3) or (iefrf == 7) or (iefrf == 10) or (iefrf == 11) or (iefrf == 13):
         ecrh = True
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
     if iefrf == 12:
@@ -2301,7 +2066,13 @@ def plot_current_drive_info(axis, mfile_data, scan):
 
         if (iefrffix == 5) or (iefrffix == 8):
             secondary_heating = "NBI"
-        if (iefrffix == 3) or (iefrffix == 7) or (iefrffix == 10) or (iefrffix == 11):
+        if (
+            (iefrffix == 3)
+            or (iefrffix == 7)
+            or (iefrffix == 10)
+            or (iefrffix == 11)
+            or (iefrffix == 13)
+        ):
             secondary_heating = "ECH"
         if iefrffix == 12:
             secondary_heating = "EBW"
@@ -2443,7 +2214,6 @@ def main_plot(
     fig2,
     m_file_data,
     scan,
-    plasmod=False,
     imp="../data/lz_non_corona_14_elements/",
     demo_ranges=False,
 ):
@@ -2454,7 +2224,6 @@ def main_plot(
       fig2 --> figure object to add plot to.
       m_file_data --> MFILE.DAT data to read
       scan --> scan to read from MFILE.DAT
-      plasmod --> plasmod data or not
       imp --> path to impurity data
     """
 
@@ -2488,26 +2257,16 @@ def main_plot(
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
-    if plasmod:
-        plot_plasmod_nprofile(plot_4, demo_ranges)
-    else:
-        plot_nprofile(plot_4, demo_ranges)
+    plot_nprofile(plot_4, demo_ranges)
 
     # Plot temperature profiles
     plot_5 = fig2.add_subplot(235)  # , aspect= 1/35)
-    if plasmod:
-        plot_plasmod_tprofile(plot_5, demo_ranges)
-    else:
-        plot_tprofile(plot_5, demo_ranges)
+    plot_tprofile(plot_5, demo_ranges)
 
-    if plasmod:
-        plot_6 = fig2.add_subplot(236)  # , aspect=1/10)
-        plot_plasmod_qprofile(plot_6, demo_ranges)
-    else:
-        # plot_qprofile(plot_6)
-        plot_6 = fig2.add_subplot(236)  # , aspect=2)
-        if os.path.isdir(imp):
-            plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
+    # plot_qprofile(plot_6)
+    plot_6 = fig2.add_subplot(236)  # , aspect=2)
+    if os.path.isdir(imp):
+        plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
 
     # plot_7 =
     # plot_radprofile(plot_7)
@@ -2807,8 +2566,7 @@ def parse_args(args):
     # Setup command line arguments
     parser = argparse.ArgumentParser(
         description="Produces a two page summary of the PROCESS MFILE output, using the MFILE.  "
-        "For info contact michael.kovari@ukaea.uk or james.morris2@ukaea.uk.  "
-        "If using PLASMOD you must specify the profile file using -m."
+        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts "
     )
 
     parser.add_argument(
@@ -2818,14 +2576,6 @@ def parse_args(args):
         default="",
         help="specify input/output file path",
     )
-    parser.add_argument(
-        "-m",
-        metavar="PLASMODFILE",
-        type=str,
-        default="",
-        help="specify PLASMOD profile file",
-    )
-
     parser.add_argument("-s", "--show", help="show plot", action="store_true")
 
     parser.add_argument("-n", type=int, help="Which scan to plot?")
@@ -3005,32 +2755,6 @@ def main(args=None):
     # Alpha press(keV*10^10 m^-3) -- 14
     # Ion dens(10^19 m^-3) -- 15
     # Poloidal flux (Wb) -- 16
-    if args.m != "":
-        global pmod_r
-        global pmod_ne
-        global pmod_te
-        global pmod_ti
-        global pmod_nd
-        global pmod_nt
-        global pmod_q
-        global pmod_ni
-
-        plasmod_profiles = np.loadtxt(args.m).transpose()
-        pmod_r = plasmod_profiles[0]
-        pmod_ne = plasmod_profiles[1]
-        pmod_te = plasmod_profiles[2]
-        pmod_ti = plasmod_profiles[3]
-        pmod_nd = plasmod_profiles[4]
-        pmod_nt = plasmod_profiles[5]
-        pmod_q = plasmod_profiles[10]
-        pmod_ni = plasmod_profiles[15]
-        pmod_switch = True
-        print("plasmod!")
-    else:
-        if ipedestal == 2 or ipedestal == 3:
-            print("\n ERROR: Specify the PLASMOD profile file using -m \n")
-            exit()
-        pmod_switch = False
     # rad profile
     global ssync
     global bt
@@ -3104,9 +2828,7 @@ def main(args=None):
     page2 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
-    main_plot(
-        page1, page2, m_file, scan=scan, plasmod=pmod_switch, demo_ranges=demo_ranges
-    )
+    main_plot(page1, page2, m_file, scan=scan, demo_ranges=demo_ranges)
 
     # with bpdf.PdfPages(args.o) as pdf:
     with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:

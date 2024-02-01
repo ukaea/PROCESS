@@ -2,15 +2,15 @@
  # Power Reactor Optimisation Code #
  # PROCESS #
  # Power Reactor Optimisation Code #
- PROCESS_version_number__________________________________________________ (procver)_____________________     "2.4.0   R"
- Date_of_run_____________________________________________________________ (date)________________________     "15/08/2023"
- Time_of_run_____________________________________________________________ (time)________________________     "11:53"
+ PROCESS_version_number__________________________________________________ (procver)_____________________     "3.0.1   R"
+ Date_of_run_____________________________________________________________ (date)________________________     "31/01/2024"
+ Time_of_run_____________________________________________________________ (time)________________________     "13:28"
  User____________________________________________________________________ (username)____________________     "timothyn"
  PROCESS_run_title_______________________________________________________ (runtitle)____________________     "Generic large tokamak                                                                              
- PROCESS_tag_number______________________________________________________ (tagno)_______________________     ""                                                                                                  
- PROCESS_git_branch_name_________________________________________________ (branch_name)_________________     "main"                                                                                              
- PROCESS_last_commit_message_____________________________________________ (commsg)______________________     "Install PyVMCON from PyPI, not source ([hash]2851)"                                                
- Input_filename__________________________________________________________ (fileprefix)__________________     "/private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-108/test_scenario_large_tokamak_0/IN.DAT                                                                          "
+ PROCESS_tag_number______________________________________________________ (tagno)_______________________     "v3.0.1-41-gc698cd140"                                                                              
+ PROCESS_git_branch_name_________________________________________________ (branch_name)_________________     "convert-physics-to-python"                                                                         
+ PROCESS_last_commit_message_____________________________________________ (commsg)______________________     "Convert Physics.f90 to Python"                                                                     
+ Input_filename__________________________________________________________ (fileprefix)__________________     "/private/var/folders/2c/5k4t0wm94jxdmnqwdvn_h59r0000gq/T/pytest-of-timothynunn/pytest-45/test_scenario_large_tokamak_0/IN.DAT                                                                           "
  # Numerics #
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
@@ -347,12 +347,12 @@
  Total_toroidal_beta_____________________________________________________ ______________________________      3.5056E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.2465E-03 OP 
  Beam_ion_beta___________________________________________________________ (betanb)______________________      0.0000E+00 OP 
- (Fast_alpha_+_beam_beta)/(thermal_beta)_________________________________ (gammaft)_____________________      1.4215E-01 OP 
+ (Fast_alpha_+_beam_physics_variables.beta)/(thermal_physics_variables.be (gammaft)_____________________      1.4215E-01 OP 
  Thermal_beta____________________________________________________________ ______________________________      2.9874E-02 OP 
  Thermal_poloidal_beta___________________________________________________ ______________________________      1.1199E+00 OP 
- Thermal_toroidal_beta_(=_beta-exp)______________________________________ ______________________________      3.0693E-02 OP 
- 2nd_stability_beta_:_beta_p_/_(R/a)_____________________________________ (eps*betap)___________________      4.2636E-01    
- 2nd_stability_beta_upper_limit__________________________________________ (epbetmax)____________________      1.3800E+00    
+ Thermal_toroidal_physics_variables.beta_(=_beta-exp)____________________ ______________________________      3.0693E-02 OP 
+ 2nd_stability_physics_variables.beta_:_beta_p_/_(R/a)___________________ (eps*betap)___________________      4.2636E-01    
+ 2nd_stability_physics_variables.beta_upper_limit________________________ (epbetmax)____________________      1.3800E+00    
  Beta_g_coefficient______________________________________________________ (dnbeta)______________________      4.8794E+00    
  Normalised_thermal_beta_________________________________________________ ______________________________      2.5111E+00    
  Normalised_total_beta___________________________________________________ ______________________________      2.8680E+00    
@@ -390,7 +390,7 @@
  Fe_concentration________________________________________________________ (fimp(10))____________________      0.0000E+00    
  Ni_concentration________________________________________________________ (fimp(11))____________________      0.0000E+00    
  Kr_concentration________________________________________________________ (fimp(12))____________________      0.0000E+00    
- Xe_concentration________________________________________________________ (fimp(13))____________________      5.6341E-04    
+ Xe_concentration________________________________________________________ (fimp(13))____________________      5.6341E-04 ITV
  W__concentration________________________________________________________ (fimp(14))____________________      5.0000E-06    
  Average_mass_of_all_ions_(amu)__________________________________________ (aion)________________________      2.7265E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.4987E+00    
@@ -433,7 +433,6 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      9.0174E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3309E+02 OP 
- SOL_radiation_power_as_imposed_by_f_rad_(MW)____________________________ (psolradmw)___________________      0.0000E+00 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (pradmw)______________________      2.2326E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.8698E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (photon_wall)_________________      1.7498E-01 OP 
@@ -485,7 +484,6 @@
  Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (pthrmw(21))__________________      6.6515E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      9.6473E+01 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.6473E+01 OP 
- Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1947E+00 ITV
  Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.2694E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (tauei)_______________________      3.2694E+00    
@@ -511,7 +509,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (bscf_iter89)_________________      3.7036E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      4.1885E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.4880E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5014E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.3324E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2186E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1246E-02    
@@ -531,6 +529,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Secondary_current_drive_efficiency_model________________________________ (iefrffix)____________________              0    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      3.9779E-01    
@@ -746,7 +745,7 @@
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripmax)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.7534E+01 ITV
- Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.2719E+07 OP 
+ Vacuum_Vessel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.2719E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9851E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9703E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    

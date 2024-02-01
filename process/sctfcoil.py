@@ -5475,7 +5475,7 @@ class Sctfcoil:
             )
             po.ovarre(
                 self.outfile,
-                "Vacuum Vassel stress on quench (Pa)",
+                "Vacuum Vessel stress on quench (Pa)",
                 "(vv_stress_quench)",
                 sctfcoil_module.vv_stress_quench,
                 "OP ",
@@ -5818,7 +5818,7 @@ class Sctfcoil:
         sig_tf_wp_av_z,
     ):
         """Subroutine showing the writing the TF midplane stress analysis
-        in the output file and the stress distribution in the SIG_TF.DAT
+        in the output file and the stress distribution in the SIG_TF.json
         file used to plot stress distributions
         Author : S. Kahn
         """
@@ -6021,7 +6021,7 @@ class Sctfcoil:
                     sig_tf_tresca_max[ii],
                 )
 
-        # SIG_TF.DAT storage
+        # SIG_TF.json storage
         sig_file_data = {
             "Points per layers": n_radial_array,
             "Radius (m)": radial_array,

@@ -95,7 +95,6 @@ LIST(APPEND PROCESS_SRCS
     buildings_variables.f90
     maths_library.f90
     iteration_variables.f90
-    optimiz_module.f90
     evaluators.f90
     water_usage_variables.f90
     constraint_equations.f90
@@ -125,6 +124,7 @@ LIST(APPEND PROCESS_SRCS
     stellarator.f90
     stellarator_configuration.f90
     stellarator_fwbs.f90
+    startup_variables.f90
 )
 
 PREPROCESS()
@@ -178,7 +178,7 @@ ADD_CUSTOM_TARGET(coverage_cleanup
 
 # Run the Pip Install
 ADD_CUSTOM_TARGET(install_process ALL
-    COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir ${CMAKE_SOURCE_DIR}
+    COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir -e ${CMAKE_SOURCE_DIR}
 )
 
 ADD_DEPENDENCIES(install_process ${PIP_NAME} f2py ${FORD_NAME} ${GFORTLIB_NAME} ${DICTS_NAME} coverage_cleanup)

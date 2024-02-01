@@ -117,7 +117,7 @@ class ProcessConfig(object):
         os.chdir(self.wdir)
         subprocess.call(
             [
-                "rm -f OUT.DAT MFILE.DAT PLOT.DAT README.txt\
+                "rm -f OUT.DAT MFILE.DAT README.txt\
         SolverTest.out process.log *.pdf  uncertainties.nc time.info"
             ],
             shell=True,
@@ -769,7 +769,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             if "bound" in varname:
                 del_list += [varname]
                 add_bounds = True
-            elif "fimp(" in varname:  # fimpvar also exists!
+            elif "fimp(" in varname:
                 # has different format in MFILE!!
                 fimpno = int(varname.split("(")[1].split(")")[0])
                 self.output_vars[i] = "fimp({:02}".format(fimpno)

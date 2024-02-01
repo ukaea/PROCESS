@@ -83,7 +83,15 @@ the PROCESS Python package is then automatically installed using `pip` and shoul
 on Linux. If the installation was successful the command `process` should be available on the command line.
 
 To rebuild, for example after making a change to the Fortran source, run `cmake --build build` again. 
-Python-only changes can be installed using `pip install .` when in the PROCESS root directory.
+Python-only changes are reflected immediately, as the `cmake` build script performs a development (editable) installation by default.
+
+!!! warning "Users of multiple branches"
+    For users of PROCESS that run on multiple branches, it is recommended that each time you switch branches you **fully rebuild** PROCESS:
+    ```bash
+    rm -r build
+    cmake -S . -B build
+    cmake --build build
+    ```
 
 The PROCESS test suite provides through tests that can be used to confirm a successful installation; 
 the tests can then be used to verify changes you make have not affected the wider codebase.
