@@ -256,7 +256,7 @@ contains
       ucblli, ucpfcb, tlife, ipnet, fcdfuel, ucbus, ucpfb, uchts, &
       maintenance_fwbs, fwbs_prob_fail, uclh, ucblss, ucblvd, ucsc, ucturb, &
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
-      startupratio
+      startupratio, tmain, u_unplanned
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
       ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
@@ -2563,6 +2563,12 @@ contains
        case ('startupratio')
           call parse_real_variable('startupratio', startupratio, 0.0D0, 10.0D0, &
                'Ratio (additional HCD power for start-up) / (flat-top operational requirements)')
+       case ('tmain')
+          call parse_real_variable('tmain', tmain, 0.0D0, 100.0D0, &
+                  'Maintenance time for replacing CP (years) (iavail = 3)')
+       case ('u_unplanned')
+          call parse_real_variable('u_unplanned', u_unplanned, 0.0D0, 1.0D0, &
+                  'User-input CP unplanned unavailability (iavail = 3)')
 
           !  Unit cost settings
 
@@ -2781,7 +2787,7 @@ contains
           !  Availability settings
 
        case ('iavail')
-          call parse_int_variable('iavail', iavail, 0, 2, &
+          call parse_int_variable('iavail', iavail, 0, 3, &
                'Switch for plant availability model')
        case ('ibkt_life')
           call parse_int_variable('ibkt_life', ibkt_life, 0, 2, &
