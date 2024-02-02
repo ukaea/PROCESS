@@ -1,4 +1,5 @@
 """Unit tests for costs_2015.f90."""
+
 import pytest
 import numpy
 from typing import NamedTuple, Any
@@ -26,7 +27,6 @@ def costs2015():
 
 
 class CalcBuildingCostsParam(NamedTuple):
-
     pwpnb: Any = None
 
     pfrmax: Any = None
@@ -2359,7 +2359,6 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
 
 
 class CalcLandCostsParam(NamedTuple):
-
     dr_tf_inner_bore: Any = None
 
     dh_tf_inner_bore: Any = None
@@ -4631,7 +4630,6 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
 
 
 class CalcTfCoilCostsParam(NamedTuple):
-
     n_tf: Any = None
 
     tfleng: Any = None
@@ -6907,7 +6905,6 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
 
 
 class CalcRemoteHandlingCostsParam(NamedTuple):
-
     armour_fw_bl_mass: Any = None
 
     cost_factor_rh: Any = None
@@ -6915,8 +6912,6 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
     costexp: Any = None
 
     num_rh_systems: Any = None
-
-    ip: Any = None
 
     s_kref: Any = None
 
@@ -6947,7 +6942,6 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
             cost_factor_rh=1,
             costexp=0.80000000000000004,
             num_rh_systems=4,
-            ip=0,
             s_kref=numpy.array(
                 numpy.array(
                     (
@@ -8034,7 +8028,6 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
             cost_factor_rh=1,
             costexp=0.80000000000000004,
             num_rh_systems=4,
-            ip=0,
             s_kref=numpy.array(
                 numpy.array(
                     (
@@ -9149,8 +9142,6 @@ def test_calc_remote_handling_costs(
         cost_variables, "num_rh_systems", calcremotehandlingcostsparam.num_rh_systems
     )
 
-    monkeypatch.setattr(costs2015, "ip", calcremotehandlingcostsparam.ip)
-
     monkeypatch.setattr(costs2015, "s_kref", calcremotehandlingcostsparam.s_kref)
 
     monkeypatch.setattr(costs2015, "s_k", calcremotehandlingcostsparam.s_k)
@@ -9185,7 +9176,6 @@ def test_calc_remote_handling_costs(
 
 
 class CalcNPlantAndVvCostsParam(NamedTuple):
-
     rsldo: Any = None
 
     d_vv_out: Any = None
@@ -11451,7 +11441,6 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
 
 
 class CalcEnergyConversionSystemParam(NamedTuple):
-
     pgrossmw: Any = None
 
     cost_factor_bop: Any = None
@@ -13719,7 +13708,6 @@ def test_calc_energy_conversion_system(
 
 
 class CalcRemainingSubsystemsParam(NamedTuple):
-
     pinjmw: Any = None
 
     pdivt: Any = None
@@ -13747,8 +13735,6 @@ class CalcRemainingSubsystemsParam(NamedTuple):
     cost_factor_misc: Any = None
 
     costexp: Any = None
-
-    ip: Any = None
 
     s_kref: Any = None
 
@@ -13789,7 +13775,6 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             zdewex=15.118436894660423,
             cost_factor_misc=1,
             costexp=0.80000000000000004,
-            ip=0,
             s_kref=numpy.array(
                 numpy.array(
                     (
@@ -14886,7 +14871,6 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             zdewex=15.165858901796364,
             cost_factor_misc=1,
             costexp=0.80000000000000004,
-            ip=0,
             s_kref=numpy.array(
                 numpy.array(
                     (
@@ -16033,8 +16017,6 @@ def test_calc_remaining_subsystems(
 
     monkeypatch.setattr(cost_variables, "costexp", calcremainingsubsystemsparam.costexp)
 
-    monkeypatch.setattr(costs2015, "ip", calcremainingsubsystemsparam.ip)
-
     monkeypatch.setattr(costs2015, "s_kref", calcremainingsubsystemsparam.s_kref)
 
     monkeypatch.setattr(costs2015, "s_k", calcremainingsubsystemsparam.s_k)
@@ -16069,7 +16051,6 @@ def test_calc_remaining_subsystems(
 
 
 class ValueFunctionParam(NamedTuple):
-
     x: Any = None
 
     expected_v: Any = None
