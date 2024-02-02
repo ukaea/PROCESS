@@ -33,14 +33,8 @@ def write(models, outfile):
     # ---- | ------
     # 0    |  1990 costs model
     # 1    |  2015 Kovari model
-    # 2    |  2019 STEP model
-
-    if ft.cost_variables.cost_model == 0:
-        models.costs.run(output=True)
-    elif ft.cost_variables.cost_model == 1:
-        models.costs_2015.run(output=True)
-    elif ft.cost_variables.cost_model == 2:
-        models.costs_step.output()
+    # 2    |  Custom model
+    models.costs.output()
 
     # Availability model
     models.availability.run(output=True)

@@ -46,111 +46,30 @@ class Costs:
             float, 0.0, docstring="ccont account cost", units="M$"
         )
 
-        # Account 226 - Heat transport system
-        self.c226 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2261 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2262 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2263 = AnnotatedVariable(float, 0.0, docstring="", units="")
+        for names in (
+            (f"c226{no}" for no in ("", 1, 2, 3)),  # Accnt 226: Heat transport system
+            (f"c227{no}" for no in ("", 1, 2, 3, 4)),  # Accnt 227: Fuel handling
+            (f"c24{no}" for no in ("", 1, 2, 3, 4, 5)),  # Accnt 24: elec equipment
+            (f"c21{no}" for no in ("", 1, 2, 3, 4, 41, 42, 5, 6, 7, 71, 72, 73, 74)),
+            ("c22",),
+            (f"c221{no}" for no in (1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 31, 32, 4, 5)),
+            (f"c222{no}" for no in (1, 11, 12, 13, 14, 15, 2, 21, 22, 23, 24, 3)),
+            (f"c223{no}" for no in ("", 1, 2, 3, 4)),
+            (f"c224{no}" for no in ("", 1, 2, 3, 4, 5, 6)),
+            (
+                f"c225{no}"
+                for no in ("", 1, 11, 12, 13, 14, 15, 2, 21, 22, 23, 24, 25, 26, 27, 3)
+            ),
+            ("chx", "cpp", "cppa", "c22128"),
+        ):
+            for i in names:
+                setattr(self, i, AnnotatedVariable(float, 0.0, docstring="", units=""))
 
-        # Account 227 - Fuel handling
-        self.c227 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2271 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2272 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2273 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2274 = AnnotatedVariable(float, 0.0, docstring="", units="")
-
-        # Account 24 - electrical plant equipment
-        self.c24 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c241 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c242 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c243 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c244 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c245 = AnnotatedVariable(float, 0.0, docstring="", units="")
-
-        # Module Variables
-        self.c21 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c211 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c212 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c213 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c214 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2141 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2142 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c215 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c216 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c217 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2171 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2172 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2173 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2174 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2211 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2212 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22121 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22122 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22123 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22124 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22125 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22126 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22127 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2213 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22131 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22132 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2214 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2215 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2221 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22211 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22212 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22213 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22214 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22215 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2222 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22221 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22222 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22223 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22224 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2223 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c223 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2231 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2232 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2233 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2234 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c224 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2241 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2242 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2243 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2244 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2245 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2246 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c225 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2251 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22511 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22512 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22513 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22514 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22515 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2252 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22521 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22522 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22523 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22524 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22525 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22526 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22527 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c2253 = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.chx = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.cpp = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.cppa = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.c22128 = AnnotatedVariable(float, 0.0, docstring="", units="")
-
-    def run(self, output: bool = False):
-        self.costs(output)
-
-    def costs(self, output: bool):
+    def run(self):
         """
         Cost accounting for a fusion power plant
         author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+
         This routine performs the cost accounting for a fusion power plant.
         The direct costs are calculated based on parameters input
         from other sections of the code.
@@ -196,114 +115,189 @@ class Costs:
 
         #  Cost of electricity
         if (cost_variables.ireactor == 1) and (cost_variables.ipnet == 0):
-            self.coelc(output)
+            self.coelc()
 
-        if output and cost_variables.output_costs == 1:
+    def output(self):
+        if cost_variables.output_costs == 0:
+            return
 
-            po.oheadr(self.outfile, "Detailed Costings (1990 US$)")
-            po.ovarre(
-                self.outfile,
-                "Acc.22 multiplier for Nth of a kind",
-                "(fkind)",
-                cost_variables.fkind,
-            )
-            po.ovarin(
-                self.outfile, "Level of Safety Assurance", "(lsa)", cost_variables.lsa
-            )
-            po.oblnkl(self.outfile)
-            po.oshead(self.outfile, "Structures and Site Facilities")
-            po.ocosts(
-                self.outfile,
-                "(c211)",
-                "Site improvements, facilities, land (M$)",
-                self.c211,
-            )
-            po.ocosts(self.outfile, "(c212)", "Reactor building cost (M$)", self.c212)
-            po.ocosts(self.outfile, "(c213)", "Turbine building cost (M$)", self.c213)
-            po.ocosts(
-                self.outfile,
-                "(c2141)",
-                "Reactor maintenance building cost (M$)",
-                self.c2141,
-            )
-            po.ocosts(self.outfile, "(c2142)", "Warm shop cost (M$)", self.c2142)
-            po.ocosts(self.outfile, "(c215)", "Tritium building cost (M$)", self.c215)
-            po.ocosts(
-                self.outfile,
-                "(c216)",
-                "Electrical equipment building cost (M$)",
-                self.c216,
-            )
-            po.ocosts(
-                self.outfile,
-                "(c2171)",
-                "Additional buildings cost (M$)",
-                self.c2171,
-            )
-            po.ocosts(
-                self.outfile,
-                "(c2172)",
-                "Control room buildings cost (M$)",
-                self.c2172,
-            )
-            po.ocosts(
-                self.outfile,
-                "(c2173)",
-                "Shop and warehouses cost (M$)",
-                self.c2173,
-            )
-            po.ocosts(
-                self.outfile,
-                "(c2174)",
-                "Cryogenic building cost (M$)",
-                self.c2174,
-            )
-            po.oblnkl(self.outfile)
-            po.ocosts(self.outfile, "(c21)", "Total account 21 cost (M$)", self.c21)
+        po.oheadr(self.outfile, "Power Reactor Costs (1990 US$)")
 
-            po.oshead(self.outfile, "Reactor Systems")
-            po.ocosts(self.outfile, "(c2211)", "First wall cost (M$)", self.c2211)
+        po.ovarrf(
+            self.outfile,
+            "First wall / blanket life (years)",
+            "(fwbllife)",
+            fwbs_variables.bktlife,
+        )
+
+        if ife_variables.ife != 1:
+            po.ovarrf(
+                self.outfile,
+                "Divertor life (years)",
+                "(divlife.)",
+                cost_variables.divlife,
+            )
+            if physics_variables.itart == 1:
+                po.ovarrf(
+                    self.outfile,
+                    "Centrepost life (years)",
+                    "(cplife.)",
+                    cost_variables.cplife,
+                )
+
+        po.ovarrf(
+            self.outfile, "Cost of electricity (m$/kWh)", "(coe)", cost_variables.coe
+        )
+
+        po.osubhd(self.outfile, "Power Generation Costs :")
+        # TODO: Convert fortran format to Python
+        # if ((annfwbl != annfwbl) or (annfwbl > 1.0e10) or (annfwbl < 0.0e0)) :
+        #     write(outfile,*)'Problem with annfwbl'
+        #     write(outfile,*)'fwallcst=', fwallcst, '  blkcst=', cost_variables.blkcst
+        #     write(outfile,*)'crffwbl=', crffwbl,   '  fcap0cp=', cost_variables.fcap0cp
+        #     write(outfile,*)'feffwbl=', feffwbl,   '  fwbllife=', fwbllife
+
+        #       write(outfile,200) #          anncap,coecap, #          annoam,coeoam, #          anndecom,coedecom, #          annfwbl,coefwbl, #          anndiv,coediv, #          anncp,coecp, #          anncdr,coecdr, #          annfuel,coefuel, #          annwst,coewst, #          annfuelt,coefuelt, #          anntot,coe
+
+        # 200   format( #          t76,'Annual Costs, M$       COE, m$/kWh'// #          1x,'Capital Investment',t80,f10.2,10x,f10.2/ #          1x,'Operation & Maintenance',t80,f10.2,10x,f10.2/ #          1x,'Decommissioning Fund',t80,f10.2,10x,f10.2/ #          1x,'Fuel Charge Breakdown'// #          5x,'Blanket & first wall',t72,f10.2,10x,f10.2/ #          5x,'Divertors',t72,f10.2,10x,f10.2/ #          5x,'Centrepost (TART only)',t72,f10.2,10x,f10.2/ #          5x,'Auxiliary Heating',t72,f10.2,10x,f10.2/ #          5x,'Actual Fuel',t72,f10.2,10x,f10.2/ #          5x,'Waste Disposal',t72,f10.2,10x,f10.2/ #          1x,'Total Fuel Cost',t80,f10.2,10x,f10.2// #          1x,'Total Cost',t80,f10.2,10x,f10.2 )
+
+        if cost_variables.ifueltyp == 1:
+            po.oshead(self.outfile, "Replaceable Components Direct Capital Cost")
+            po.ovarrf(
+                self.outfile,
+                "First wall direct capital cost (M$)",
+                "(fwallcst)",
+                cost_variables.fwallcst,
+            )
+            po.ovarrf(
+                self.outfile,
+                "Blanket direct capital cost (M$)",
+                "(blkcst)",
+                cost_variables.blkcst,
+            )
             if ife_variables.ife != 1:
-                if fwbs_variables.iblanket == 4:
-                    po.ocosts(
+                po.ovarrf(
+                    self.outfile,
+                    "Divertor direct capital cost (M$)",
+                    "(divcst)",
+                    cost_variables.divcst,
+                )
+                if physics_variables.itart == 1:
+                    po.ovarrf(
                         self.outfile,
-                        "(c22121)",
-                        "Blanket lithium-lead cost (M$)",
-                        self.c22121,
-                    )
-                    po.ocosts(
-                        self.outfile,
-                        "(c22122)",
-                        "Blanket lithium cost (M$)",
-                        self.c22122,
-                    )
-                else:
-                    po.ocosts(
-                        self.outfile,
-                        "(c22121)",
-                        "Blanket beryllium cost (M$)",
-                        self.c22121,
-                    )
-                    po.ocosts(
-                        self.outfile,
-                        "(c22122)",
-                        "Blanket breeder material cost (M$)",
-                        self.c22122,
+                        "Centrepost direct capital cost (M$)",
+                        "(cpstcst)",
+                        cost_variables.cpstcst,
                     )
 
+                po.ovarrf(
+                    self.outfile,
+                    "Plasma heating/CD system cap cost (M$)",
+                    "",
+                    cost_variables.cdcost
+                    * cost_variables.fcdfuel
+                    / (1.0e0 - cost_variables.fcdfuel),
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Fraction of CD cost --> fuel cost",
+                    "(fcdfuel)",
+                    cost_variables.fcdfuel,
+                )
+            else:
+                po.ovarrf(
+                    self.outfile,
+                    "IFE driver system direct cap cost (M$)",
+                    "",
+                    cost_variables.cdcost
+                    * cost_variables.fcdfuel
+                    / (1.0e0 - cost_variables.fcdfuel),
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Fraction of driver cost --> fuel cost",
+                    "(fcdfuel)",
+                    cost_variables.fcdfuel,
+                )
+
+        po.oheadr(self.outfile, "Detailed Costings (1990 US$)")
+        po.ovarre(
+            self.outfile,
+            "Acc.22 multiplier for Nth of a kind",
+            "(fkind)",
+            cost_variables.fkind,
+        )
+        po.ovarin(
+            self.outfile, "Level of Safety Assurance", "(lsa)", cost_variables.lsa
+        )
+        po.oblnkl(self.outfile)
+        po.oshead(self.outfile, "Structures and Site Facilities")
+        po.ocosts(
+            self.outfile,
+            "(c211)",
+            "Site improvements, facilities, land (M$)",
+            self.c211,
+        )
+        po.ocosts(self.outfile, "(c212)", "Reactor building cost (M$)", self.c212)
+        po.ocosts(self.outfile, "(c213)", "Turbine building cost (M$)", self.c213)
+        po.ocosts(
+            self.outfile,
+            "(c2141)",
+            "Reactor maintenance building cost (M$)",
+            self.c2141,
+        )
+        po.ocosts(self.outfile, "(c2142)", "Warm shop cost (M$)", self.c2142)
+        po.ocosts(self.outfile, "(c215)", "Tritium building cost (M$)", self.c215)
+        po.ocosts(
+            self.outfile,
+            "(c216)",
+            "Electrical equipment building cost (M$)",
+            self.c216,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c2171)",
+            "Additional buildings cost (M$)",
+            self.c2171,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c2172)",
+            "Control room buildings cost (M$)",
+            self.c2172,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c2173)",
+            "Shop and warehouses cost (M$)",
+            self.c2173,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c2174)",
+            "Cryogenic building cost (M$)",
+            self.c2174,
+        )
+        po.oblnkl(self.outfile)
+        po.ocosts(self.outfile, "(c21)", "Total account 21 cost (M$)", self.c21)
+
+        po.oshead(self.outfile, "Reactor Systems")
+        po.ocosts(self.outfile, "(c2211)", "First wall cost (M$)", self.c2211)
+        if ife_variables.ife != 1:
+            if fwbs_variables.iblanket == 4:
                 po.ocosts(
                     self.outfile,
-                    "(c22123)",
-                    "Blanket stainless steel cost (M$)",
-                    self.c22123,
+                    "(c22121)",
+                    "Blanket lithium-lead cost (M$)",
+                    self.c22121,
                 )
                 po.ocosts(
                     self.outfile,
-                    "(c22124)",
-                    "Blanket vanadium cost (M$)",
-                    self.c22124,
+                    "(c22122)",
+                    "Blanket lithium cost (M$)",
+                    self.c22122,
                 )
-            else:  # IFE
+            else:
                 po.ocosts(
                     self.outfile,
                     "(c22121)",
@@ -313,519 +307,544 @@ class Costs:
                 po.ocosts(
                     self.outfile,
                     "(c22122)",
-                    "Blanket lithium oxide cost (M$)",
+                    "Blanket breeder material cost (M$)",
                     self.c22122,
                 )
-                po.ocosts(
-                    self.outfile,
-                    "(c22123)",
-                    "Blanket stainless steel cost (M$)",
-                    self.c22123,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22124)",
-                    "Blanket vanadium cost (M$)",
-                    self.c22124,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22125)",
-                    "Blanket carbon cloth cost (M$)",
-                    self.c22125,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22126)",
-                    "Blanket concrete cost (M$)",
-                    self.c22126,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22127)",
-                    "Blanket FLiBe cost (M$)",
-                    self.c22127,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22128)",
-                    "Blanket lithium cost (M$)",
-                    self.c22128,
-                )
 
-            po.ocosts(self.outfile, "(c2212)", "Blanket total cost (M$)", self.c2212)
-            po.ocosts(self.outfile, "(c22131)", "Bulk shield cost (M$)", self.c22131)
             po.ocosts(
                 self.outfile,
-                "(c22132)",
-                "Penetration shielding cost (M$)",
-                self.c22132,
+                "(c22123)",
+                "Blanket stainless steel cost (M$)",
+                self.c22123,
             )
-            po.ocosts(self.outfile, "(c2213)", "Total shield cost (M$)", self.c2213)
             po.ocosts(
                 self.outfile,
-                "(c2214)",
-                "Total support structure cost (M$)",
-                self.c2214,
+                "(c22124)",
+                "Blanket vanadium cost (M$)",
+                self.c22124,
             )
-            po.ocosts(self.outfile, "(c2215)", "Divertor cost (M$)", self.c2215)
-            # TODO: Convert fortran format to Python
-            #     if (cost_variables.ifueltyp == 1) :
-            #         po.oblnkl(self.outfile)
-            #         write(self.outfile,20)
-            #     20     format(t2,             'First wall, total blanket and divertor direct costs',/,             t2,'are zero as they are assumed to be fuel costs.')
-            #     elif  (cost_variables.ifueltyp == 2) :
-            #         po.oblnkl(self.outfile)
-            #         write(self.outfile,31)
-            # 21     format(t2,             'Initial First wall, total blanket and divertor direct costs',/,             t2,'are in capital and replacemnet are in cost of electricity')
-
-            po.oblnkl(self.outfile)
+        else:  # IFE
             po.ocosts(
                 self.outfile,
-                "(c221)",
-                "Total account 221 cost (M$)",
-                cost_variables.c221,
+                "(c22121)",
+                "Blanket beryllium cost (M$)",
+                self.c22121,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22122)",
+                "Blanket lithium oxide cost (M$)",
+                self.c22122,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22123)",
+                "Blanket stainless steel cost (M$)",
+                self.c22123,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22124)",
+                "Blanket vanadium cost (M$)",
+                self.c22124,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22125)",
+                "Blanket carbon cloth cost (M$)",
+                self.c22125,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22126)",
+                "Blanket concrete cost (M$)",
+                self.c22126,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22127)",
+                "Blanket FLiBe cost (M$)",
+                self.c22127,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22128)",
+                "Blanket lithium cost (M$)",
+                self.c22128,
             )
 
-            if ife_variables.ife != 1:
+        po.ocosts(self.outfile, "(c2212)", "Blanket total cost (M$)", self.c2212)
+        po.ocosts(self.outfile, "(c22131)", "Bulk shield cost (M$)", self.c22131)
+        po.ocosts(
+            self.outfile,
+            "(c22132)",
+            "Penetration shielding cost (M$)",
+            self.c22132,
+        )
+        po.ocosts(self.outfile, "(c2213)", "Total shield cost (M$)", self.c2213)
+        po.ocosts(
+            self.outfile,
+            "(c2214)",
+            "Total support structure cost (M$)",
+            self.c2214,
+        )
+        po.ocosts(self.outfile, "(c2215)", "Divertor cost (M$)", self.c2215)
+        # TODO: Convert fortran format to Python
+        #     if (cost_variables.ifueltyp == 1) :
+        #         po.oblnkl(self.outfile)
+        #         write(self.outfile,20)
+        #     20     format(t2,             'First wall, total blanket and divertor direct costs',/,             t2,'are zero as they are assumed to be fuel costs.')
+        #     elif  (cost_variables.ifueltyp == 2) :
+        #         po.oblnkl(self.outfile)
+        #         write(self.outfile,31)
+        # 21     format(t2,             'Initial First wall, total blanket and divertor direct costs',/,             t2,'are in capital and replacemnet are in cost of electricity')
 
-                po.oshead(self.outfile, "Magnets")
+        po.oblnkl(self.outfile)
+        po.ocosts(
+            self.outfile,
+            "(c221)",
+            "Total account 221 cost (M$)",
+            cost_variables.c221,
+        )
 
-                if tfcoil_variables.i_tf_sup != 1:  # Resistive TF coils
-                    if physics_variables.itart == 1:
-                        po.ocosts(
-                            self.outfile,
-                            "(c22211)",
-                            "Centrepost costs (M$)",
-                            self.c22211,
-                        )
-                    else:
-                        po.ocosts(
-                            self.outfile,
-                            "(c22211)",
-                            "Inboard leg cost (M$)",
-                            self.c22211,
-                        )
+        if ife_variables.ife != 1:
+            po.oshead(self.outfile, "Magnets")
 
-                    po.ocosts(
-                        self.outfile,
-                        "(c22212)",
-                        "Outboard leg cost (M$)",
-                        self.c22212,
-                    )
-                    po.ocosts(
-                        self.outfile,
-                        "(c2221)",
-                        "TF magnet assemblies cost (M$)",
-                        self.c2221,
-                    )
-                else:  # Superconducting TF coils
+            if tfcoil_variables.i_tf_sup != 1:  # Resistive TF coils
+                if physics_variables.itart == 1:
                     po.ocosts(
                         self.outfile,
                         "(c22211)",
-                        "TF coil conductor cost (M$)",
+                        "Centrepost costs (M$)",
                         self.c22211,
                     )
+                else:
                     po.ocosts(
                         self.outfile,
-                        "(c22212)",
-                        "TF coil winding cost (M$)",
-                        self.c22212,
-                    )
-                    po.ocosts(
-                        self.outfile,
-                        "(c22213)",
-                        "TF coil case cost (M$)",
-                        self.c22213,
-                    )
-                    po.ocosts(
-                        self.outfile,
-                        "(c22214)",
-                        "TF intercoil structure cost (M$)",
-                        self.c22214,
-                    )
-                    po.ocosts(
-                        self.outfile,
-                        "(c22215)",
-                        "TF coil gravity support structure (M$)",
-                        self.c22215,
-                    )
-                    po.ocosts(
-                        self.outfile,
-                        "(c2221)",
-                        "TF magnet assemblies cost (M$)",
-                        self.c2221,
+                        "(c22211)",
+                        "Inboard leg cost (M$)",
+                        self.c22211,
                     )
 
                 po.ocosts(
                     self.outfile,
-                    "(c22221)",
-                    "PF coil conductor cost (M$)",
-                    self.c22221,
+                    "(c22212)",
+                    "Outboard leg cost (M$)",
+                    self.c22212,
                 )
                 po.ocosts(
                     self.outfile,
-                    "(c22222)",
-                    "PF coil winding cost (M$)",
-                    self.c22222,
+                    "(c2221)",
+                    "TF magnet assemblies cost (M$)",
+                    self.c2221,
+                )
+            else:  # Superconducting TF coils
+                po.ocosts(
+                    self.outfile,
+                    "(c22211)",
+                    "TF coil conductor cost (M$)",
+                    self.c22211,
                 )
                 po.ocosts(
                     self.outfile,
-                    "(c22223)",
-                    "PF coil case cost (M$)",
-                    self.c22223,
+                    "(c22212)",
+                    "TF coil winding cost (M$)",
+                    self.c22212,
                 )
                 po.ocosts(
                     self.outfile,
-                    "(c22224)",
-                    "PF coil support structure cost (M$)",
-                    self.c22224,
+                    "(c22213)",
+                    "TF coil case cost (M$)",
+                    self.c22213,
                 )
                 po.ocosts(
                     self.outfile,
-                    "(c2222)",
-                    "PF magnet assemblies cost (M$)",
-                    self.c2222,
+                    "(c22214)",
+                    "TF intercoil structure cost (M$)",
+                    self.c22214,
                 )
                 po.ocosts(
                     self.outfile,
-                    "(c2223)",
-                    "Vacuum vessel assembly cost (M$)",
-                    self.c2223,
+                    "(c22215)",
+                    "TF coil gravity support structure (M$)",
+                    self.c22215,
                 )
-                # TODO: Convert fortran format to Python
-                #     if ((physics_variables.itart == 1)and(cost_variables.ifueltyp == 1)) :
-                #         po.oblnkl(self.outfile)
-                #         write(self.outfile,30)
-                # 30        format(t2,                'Centrepost direct cost is zero, as it ',                'is assumed to be a fuel cost.')
-                #     elif  ((physics_variables.itart == 1)and(cost_variables.ifueltyp == 2)) :
-                #         po.oblnkl(self.outfile)
-                #         write(self.outfile,31)
-                # 31        format(t2,                'Initial centrepost direct cost in included in capital ',                'cost and replacements are assumed to be a fuel cost.')
-
-                po.oblnkl(self.outfile)
                 po.ocosts(
                     self.outfile,
-                    "(c222)",
-                    "Total account 222 cost (M$)",
-                    cost_variables.c222,
+                    "(c2221)",
+                    "TF magnet assemblies cost (M$)",
+                    self.c2221,
                 )
 
-            po.oshead(self.outfile, "Power Injection")
-
-            if ife_variables.ife == 1:
-                po.ocosts(
-                    self.outfile,
-                    "(c2231)",
-                    "IFE driver system cost (M$)",
-                    self.c2231,
-                )
-            else:
-                po.ocosts(self.outfile, "(c2231)", "ECH system cost (M$)", self.c2231)
-                po.ocosts(
-                    self.outfile,
-                    "(c2232)",
-                    "Lower hybrid system cost (M$)",
-                    self.c2232,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c2233)",
-                    "Neutral beam system cost (M$)",
-                    self.c2233,
-                )
+            po.ocosts(
+                self.outfile,
+                "(c22221)",
+                "PF coil conductor cost (M$)",
+                self.c22221,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22222)",
+                "PF coil winding cost (M$)",
+                self.c22222,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22223)",
+                "PF coil case cost (M$)",
+                self.c22223,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22224)",
+                "PF coil support structure cost (M$)",
+                self.c22224,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c2222)",
+                "PF magnet assemblies cost (M$)",
+                self.c2222,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c2223)",
+                "Vacuum vessel assembly cost (M$)",
+                self.c2223,
+            )
+            # TODO: Convert fortran format to Python
+            #     if ((physics_variables.itart == 1)and(cost_variables.ifueltyp == 1)) :
+            #         po.oblnkl(self.outfile)
+            #         write(self.outfile,30)
+            # 30        format(t2,                'Centrepost direct cost is zero, as it ',                'is assumed to be a fuel cost.')
+            #     elif  ((physics_variables.itart == 1)and(cost_variables.ifueltyp == 2)) :
+            #         po.oblnkl(self.outfile)
+            #         write(self.outfile,31)
+            # 31        format(t2,                'Initial centrepost direct cost in included in capital ',                'cost and replacements are assumed to be a fuel cost.')
 
             po.oblnkl(self.outfile)
-            po.ocosts(self.outfile, "(c223)", "Total account 223 cost (M$)", self.c223)
+            po.ocosts(
+                self.outfile,
+                "(c222)",
+                "Total account 222 cost (M$)",
+                cost_variables.c222,
+            )
 
-            po.oshead(self.outfile, "Vacuum Systems")
-            po.ocosts(
-                self.outfile,
-                "(c2241)",
-                "High vacuum pumps cost (M$)",
-                self.c2241,
-            )
-            po.ocosts(self.outfile, "(c2242)", "Backing pumps cost (M$)", self.c2242)
-            po.ocosts(self.outfile, "(c2243)", "Vacuum duct cost (M$)", self.c2243)
-            po.ocosts(self.outfile, "(c2244)", "Valves cost (M$)", self.c2244)
-            po.ocosts(self.outfile, "(c2245)", "Duct shielding cost (M$)", self.c2245)
-            po.ocosts(self.outfile, "(c2246)", "Instrumentation cost (M$)", self.c2246)
-            po.oblnkl(self.outfile)
-            po.ocosts(self.outfile, "(c224)", "Total account 224 cost (M$)", self.c224)
+        po.oshead(self.outfile, "Power Injection")
 
-            if ife_variables.ife != 1:
-                po.oshead(self.outfile, "Power Conditioning")
-                po.ocosts(
-                    self.outfile,
-                    "(c22511)",
-                    "TF coil power supplies cost (M$)",
-                    self.c22511,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22512)",
-                    "TF coil breakers cost (M$)",
-                    self.c22512,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22513)",
-                    "TF coil dump resistors cost (M$)",
-                    self.c22513,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22514)",
-                    "TF coil instrumentation and control (M$)",
-                    self.c22514,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22515)",
-                    "TF coil bussing cost (M$)",
-                    self.c22515,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c2251)",
-                    "Total, TF coil power costs (M$)",
-                    self.c2251,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22521)",
-                    "PF coil power supplies cost (M$)",
-                    self.c22521,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22522)",
-                    "PF coil instrumentation and control (M$)",
-                    self.c22522,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22523)",
-                    "PF coil bussing cost (M$)",
-                    self.c22523,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22524)",
-                    "PF coil burn power supplies cost (M$)",
-                    self.c22524,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22525)",
-                    "PF coil breakers cost (M$)",
-                    self.c22525,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22526)",
-                    "PF coil dump resistors cost (M$)",
-                    self.c22526,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22527)",
-                    "PF coil ac breakers cost (M$)",
-                    self.c22527,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c2252)",
-                    "Total, PF coil power costs (M$)",
-                    self.c2252,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c2253)",
-                    "Total, energy storage cost (M$)",
-                    self.c2253,
-                )
-                po.oblnkl(self.outfile)
-                po.ocosts(
-                    self.outfile,
-                    "(c225)",
-                    "Total account 225 cost (M$)",
-                    self.c225,
-                )
+        if ife_variables.ife == 1:
+            po.ocosts(
+                self.outfile,
+                "(c2231)",
+                "IFE driver system cost (M$)",
+                self.c2231,
+            )
+        else:
+            po.ocosts(self.outfile, "(c2231)", "ECH system cost (M$)", self.c2231)
+            po.ocosts(
+                self.outfile,
+                "(c2232)",
+                "Lower hybrid system cost (M$)",
+                self.c2232,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c2233)",
+                "Neutral beam system cost (M$)",
+                self.c2233,
+            )
 
-            po.oshead(self.outfile, "Heat Transport System")
+        po.oblnkl(self.outfile)
+        po.ocosts(self.outfile, "(c223)", "Total account 223 cost (M$)", self.c223)
+
+        po.oshead(self.outfile, "Vacuum Systems")
+        po.ocosts(
+            self.outfile,
+            "(c2241)",
+            "High vacuum pumps cost (M$)",
+            self.c2241,
+        )
+        po.ocosts(self.outfile, "(c2242)", "Backing pumps cost (M$)", self.c2242)
+        po.ocosts(self.outfile, "(c2243)", "Vacuum duct cost (M$)", self.c2243)
+        po.ocosts(self.outfile, "(c2244)", "Valves cost (M$)", self.c2244)
+        po.ocosts(self.outfile, "(c2245)", "Duct shielding cost (M$)", self.c2245)
+        po.ocosts(self.outfile, "(c2246)", "Instrumentation cost (M$)", self.c2246)
+        po.oblnkl(self.outfile)
+        po.ocosts(self.outfile, "(c224)", "Total account 224 cost (M$)", self.c224)
+
+        if ife_variables.ife != 1:
+            po.oshead(self.outfile, "Power Conditioning")
             po.ocosts(
                 self.outfile,
-                "(cpp)",
-                "Pumps and piping system cost (M$)",
-                self.cpp,
+                "(c22511)",
+                "TF coil power supplies cost (M$)",
+                self.c22511,
             )
             po.ocosts(
                 self.outfile,
-                "(chx)",
-                "Primary heat exchanger cost (M$)",
-                self.chx,
+                "(c22512)",
+                "TF coil breakers cost (M$)",
+                self.c22512,
             )
             po.ocosts(
                 self.outfile,
-                "(c2261)",
-                "Total, reactor cooling system cost (M$)",
-                self.c2261,
-            )
-            po.ocosts(self.outfile, "(cppa)", "Pumps, piping cost (M$)", self.cppa)
-            po.ocosts(
-                self.outfile,
-                "(c2262)",
-                "Total, auxiliary cooling system cost (M$)",
-                self.c2262,
+                "(c22513)",
+                "TF coil dump resistors cost (M$)",
+                self.c22513,
             )
             po.ocosts(
                 self.outfile,
-                "(c2263)",
-                "Total, cryogenic system cost (M$)",
-                self.c2263,
+                "(c22514)",
+                "TF coil instrumentation and control (M$)",
+                self.c22514,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22515)",
+                "TF coil bussing cost (M$)",
+                self.c22515,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c2251)",
+                "Total, TF coil power costs (M$)",
+                self.c2251,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22521)",
+                "PF coil power supplies cost (M$)",
+                self.c22521,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22522)",
+                "PF coil instrumentation and control (M$)",
+                self.c22522,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22523)",
+                "PF coil bussing cost (M$)",
+                self.c22523,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22524)",
+                "PF coil burn power supplies cost (M$)",
+                self.c22524,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22525)",
+                "PF coil breakers cost (M$)",
+                self.c22525,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22526)",
+                "PF coil dump resistors cost (M$)",
+                self.c22526,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22527)",
+                "PF coil ac breakers cost (M$)",
+                self.c22527,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c2252)",
+                "Total, PF coil power costs (M$)",
+                self.c2252,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c2253)",
+                "Total, energy storage cost (M$)",
+                self.c2253,
             )
             po.oblnkl(self.outfile)
-            po.ocosts(self.outfile, "(c226)", "Total account 226 cost (M$)", self.c226)
-
-            po.oshead(self.outfile, "Fuel Handling System")
-            po.ocosts(self.outfile, "(c2271)", "Fuelling system cost (M$)", self.c2271)
             po.ocosts(
                 self.outfile,
-                "(c2272)",
-                "Fuel processing and purification cost (M$)",
-                self.c2272,
+                "(c225)",
+                "Total account 225 cost (M$)",
+                self.c225,
             )
+
+        po.oshead(self.outfile, "Heat Transport System")
+        po.ocosts(
+            self.outfile,
+            "(cpp)",
+            "Pumps and piping system cost (M$)",
+            self.cpp,
+        )
+        po.ocosts(
+            self.outfile,
+            "(chx)",
+            "Primary heat exchanger cost (M$)",
+            self.chx,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c2261)",
+            "Total, reactor cooling system cost (M$)",
+            self.c2261,
+        )
+        po.ocosts(self.outfile, "(cppa)", "Pumps, piping cost (M$)", self.cppa)
+        po.ocosts(
+            self.outfile,
+            "(c2262)",
+            "Total, auxiliary cooling system cost (M$)",
+            self.c2262,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c2263)",
+            "Total, cryogenic system cost (M$)",
+            self.c2263,
+        )
+        po.oblnkl(self.outfile)
+        po.ocosts(self.outfile, "(c226)", "Total account 226 cost (M$)", self.c226)
+
+        po.oshead(self.outfile, "Fuel Handling System")
+        po.ocosts(self.outfile, "(c2271)", "Fuelling system cost (M$)", self.c2271)
+        po.ocosts(
+            self.outfile,
+            "(c2272)",
+            "Fuel processing and purification cost (M$)",
+            self.c2272,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c2273)",
+            "Atmospheric recovery systems cost (M$)",
+            self.c2273,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c2274)",
+            "Nuclear building ventilation cost (M$)",
+            self.c2274,
+        )
+        po.oblnkl(self.outfile)
+        po.ocosts(self.outfile, "(c227)", "Total account 227 cost (M$)", self.c227)
+
+        po.oshead(self.outfile, "Instrumentation and Control")
+        po.ocosts(
+            self.outfile,
+            "(c228)",
+            "Instrumentation and control cost (M$)",
+            self.c228,
+        )
+
+        po.oshead(self.outfile, "Maintenance Equipment")
+        po.ocosts(
+            self.outfile,
+            "(c229)",
+            "Maintenance equipment cost (M$)",
+            self.c229,
+        )
+
+        po.oshead(self.outfile, "Total Account 22 Cost")
+        po.ocosts(self.outfile, "(c22)", "Total account 22 cost (M$)", self.c22)
+
+        po.oshead(self.outfile, "Turbine Plant Equipment")
+        po.ocosts(
+            self.outfile,
+            "(c23)",
+            "Turbine plant equipment cost (M$)",
+            self.c23,
+        )
+
+        po.oshead(self.outfile, "Electric Plant Equipment")
+        po.ocosts(
+            self.outfile,
+            "(c241)",
+            "Switchyard equipment cost (M$)",
+            self.c241,
+        )
+        po.ocosts(self.outfile, "(c242)", "Transformers cost (M$)", self.c242)
+        po.ocosts(
+            self.outfile,
+            "(c243)",
+            "Low voltage equipment cost (M$)",
+            self.c243,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c244)",
+            "Diesel backup equipment cost (M$)",
+            self.c244,
+        )
+        po.ocosts(
+            self.outfile,
+            "(c245)",
+            "Auxiliary facilities cost (M$)",
+            self.c245,
+        )
+        po.oblnkl(self.outfile)
+        po.ocosts(self.outfile, "(c24)", "Total account 24 cost (M$)", self.c24)
+
+        po.oshead(self.outfile, "Miscellaneous Plant Equipment")
+        po.ocosts(
+            self.outfile,
+            "(c25)",
+            "Miscellaneous plant equipment cost (M$)",
+            self.c25,
+        )
+
+        po.oshead(self.outfile, "Heat Rejection System")
+        po.ocosts(
+            self.outfile,
+            "(c26)",
+            "Heat rejection system cost (M$)",
+            self.c26,
+        )
+
+        po.oshead(self.outfile, "Plant Direct Cost")
+        po.ocosts(
+            self.outfile, "(cdirt)", "Plant direct cost (M$)", cost_variables.cdirt
+        )
+
+        po.oshead(self.outfile, "Reactor Core Cost")
+        po.ocosts(
+            self.outfile,
+            "(crctcore)",
+            "Reactor core cost (M$)",
+            cost_variables.crctcore,
+        )
+
+        po.oshead(self.outfile, "Indirect Cost")
+        po.ocosts(self.outfile, "(c9)", "Indirect cost (M$)", self.cindrt)
+
+        po.oshead(self.outfile, "Total Contingency")
+        po.ocosts(self.outfile, "(ccont)", "Total contingency (M$)", self.ccont)
+
+        po.oshead(self.outfile, "Constructed Cost")
+        po.ocosts(
+            self.outfile,
+            "(concost)",
+            "Constructed cost (M$)",
+            cost_variables.concost,
+        )
+
+        if cost_variables.ireactor == 1:
+            po.oshead(self.outfile, "Interest during Construction")
             po.ocosts(
                 self.outfile,
-                "(c2273)",
-                "Atmospheric recovery systems cost (M$)",
-                self.c2273,
+                "(moneyint)",
+                "Interest during construction (M$)",
+                cost_variables.moneyint,
             )
+
+            po.oshead(self.outfile, "Total Capital Investment")
             po.ocosts(
                 self.outfile,
-                "(c2274)",
-                "Nuclear building ventilation cost (M$)",
-                self.c2274,
+                "(capcost)",
+                "Total capital investment (M$)",
+                cost_variables.capcost,
             )
-            po.oblnkl(self.outfile)
-            po.ocosts(self.outfile, "(c227)", "Total account 227 cost (M$)", self.c227)
-
-            po.oshead(self.outfile, "Instrumentation and Control")
-            po.ocosts(
-                self.outfile,
-                "(c228)",
-                "Instrumentation and control cost (M$)",
-                self.c228,
-            )
-
-            po.oshead(self.outfile, "Maintenance Equipment")
-            po.ocosts(
-                self.outfile,
-                "(c229)",
-                "Maintenance equipment cost (M$)",
-                self.c229,
-            )
-
-            po.oshead(self.outfile, "Total Account 22 Cost")
-            po.ocosts(self.outfile, "(c22)", "Total account 22 cost (M$)", self.c22)
-
-            po.oshead(self.outfile, "Turbine Plant Equipment")
-            po.ocosts(
-                self.outfile,
-                "(c23)",
-                "Turbine plant equipment cost (M$)",
-                self.c23,
-            )
-
-            po.oshead(self.outfile, "Electric Plant Equipment")
-            po.ocosts(
-                self.outfile,
-                "(c241)",
-                "Switchyard equipment cost (M$)",
-                self.c241,
-            )
-            po.ocosts(self.outfile, "(c242)", "Transformers cost (M$)", self.c242)
-            po.ocosts(
-                self.outfile,
-                "(c243)",
-                "Low voltage equipment cost (M$)",
-                self.c243,
-            )
-            po.ocosts(
-                self.outfile,
-                "(c244)",
-                "Diesel backup equipment cost (M$)",
-                self.c244,
-            )
-            po.ocosts(
-                self.outfile,
-                "(c245)",
-                "Auxiliary facilities cost (M$)",
-                self.c245,
-            )
-            po.oblnkl(self.outfile)
-            po.ocosts(self.outfile, "(c24)", "Total account 24 cost (M$)", self.c24)
-
-            po.oshead(self.outfile, "Miscellaneous Plant Equipment")
-            po.ocosts(
-                self.outfile,
-                "(c25)",
-                "Miscellaneous plant equipment cost (M$)",
-                self.c25,
-            )
-
-            po.oshead(self.outfile, "Heat Rejection System")
-            po.ocosts(
-                self.outfile,
-                "(c26)",
-                "Heat rejection system cost (M$)",
-                self.c26,
-            )
-
-            po.oshead(self.outfile, "Plant Direct Cost")
-            po.ocosts(
-                self.outfile, "(cdirt)", "Plant direct cost (M$)", cost_variables.cdirt
-            )
-
-            po.oshead(self.outfile, "Reactor Core Cost")
-            po.ocosts(
-                self.outfile,
-                "(crctcore)",
-                "Reactor core cost (M$)",
-                cost_variables.crctcore,
-            )
-
-            po.oshead(self.outfile, "Indirect Cost")
-            po.ocosts(self.outfile, "(c9)", "Indirect cost (M$)", self.cindrt)
-
-            po.oshead(self.outfile, "Total Contingency")
-            po.ocosts(self.outfile, "(ccont)", "Total contingency (M$)", self.ccont)
-
-            po.oshead(self.outfile, "Constructed Cost")
-            po.ocosts(
-                self.outfile,
-                "(concost)",
-                "Constructed cost (M$)",
-                cost_variables.concost,
-            )
-
-            if cost_variables.ireactor == 1:
-                po.oshead(self.outfile, "Interest during Construction")
-                po.ocosts(
-                    self.outfile,
-                    "(moneyint)",
-                    "Interest during construction (M$)",
-                    cost_variables.moneyint,
-                )
-
-                po.oshead(self.outfile, "Total Capital Investment")
-                po.ocosts(
-                    self.outfile,
-                    "(capcost)",
-                    "Total capital investment (M$)",
-                    cost_variables.capcost,
-                )
 
     def acc22(self):
         """
@@ -963,7 +982,6 @@ class Costs:
         if ife_variables.ife == 1:
             self.c225 = 0.0e0
         else:
-
             #  Account 225.1 : TF coil power conditioning
 
             self.acc2251()
@@ -1179,7 +1197,6 @@ class Costs:
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
         if ife_variables.ife != 1:
-
             # iblanket=4 is used for KIT HCLL model. iblanket<4 are all
             # HCPB (CCFE, KIT and CCFE + Shimwell TBR calculation).
 
@@ -1208,7 +1225,6 @@ class Costs:
             self.c22127 = 0.0e0
 
         else:
-
             #  IFE blanket; materials present are Li2O, steel, carbon, concrete,
             #  FLiBe and lithium
 
@@ -1398,7 +1414,6 @@ class Costs:
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
         if tfcoil_variables.i_tf_sup != 1:  # Resistive TF coils
-
             #  Account 222.1.1 : Inboard TF coil legs
 
             self.c22211 = (
@@ -1431,7 +1446,6 @@ class Costs:
             self.c2221 = self.c22211 + self.c22212
 
         else:  # Superconducting TF coils
-
             #  Account 222.1.1 : Conductor
 
             #  Superconductor ($/m)
@@ -1563,7 +1577,6 @@ class Costs:
         self.c22221 = 0.0e0
 
         for i in range(0, npf):
-
             #  Superconductor ($/m)
             if pfcoil_variables.ipfres == 0:
                 costpfsc = (
@@ -1620,7 +1633,6 @@ class Costs:
         #  Central Solenoid
 
         if build_variables.iohcl == 1:
-
             #  Superconductor ($/m)
             #  Issue #328  Use CS conductor cross-sectional area (m2)
             if pfcoil_variables.ipfres == 0:
@@ -1727,7 +1739,6 @@ class Costs:
 
         exprf = 1.0e0
         if ife_variables.ife != 1:
-
             #  Account 223.1 : ECH
 
             self.c2231 = (
@@ -1775,7 +1786,6 @@ class Costs:
                 self.c2233 = cost_variables.fkind * self.c2233
 
         else:
-
             #  IFE driver costs (depends on driver type)
             #  Assume offset linear form for generic and SOMBRERO types,
             #  or one of two offset linear forms for OSIRIS type
@@ -2477,9 +2487,7 @@ class Costs:
         #  See F/MPE/MOD/CAG/PROCESS/PULSE/0008 and 0014
 
         if pulse_variables.lpulse == 1:
-
             if pulse_variables.istore == 1:
-
                 #  Option 1 from ELECTROWATT report
                 #  Pulsed Fusion Reactor Study : AEA FUS 205
 
@@ -2502,7 +2510,6 @@ class Costs:
                 self.c2253 = self.c2253 + 29.0e0
 
             elif pulse_variables.istore == 2:
-
                 #  Option 2 from ELECTROWATT report
                 #  Pulsed Fusion Reactor Study : AEA FUS 205
 
@@ -2532,7 +2539,6 @@ class Costs:
                 self.c2253 = self.c2253 + 18.0e0
 
             elif pulse_variables.istore == 3:
-
                 #  Simplistic approach that assumes that a large stainless steel
                 #  block acts as the thermal storage medium. No account is taken
                 #  of the cost of the piping within the block, etc.
@@ -2555,7 +2561,6 @@ class Costs:
                 error_handling.report_error(125)
 
         if pulse_variables.istore < 3:
-
             #  Scale self.c2253 with net electric power
 
             self.c2253 = self.c2253 * heat_transport_variables.pnetelmw / 1200.0e0
@@ -2568,12 +2573,12 @@ class Costs:
 
         self.c2253 = cost_variables.fkind * self.c2253
 
-    def coelc(self, iprint):
+    def coelc(self):
         """
         Routine to calculate the cost of electricity for a fusion power plant
         author: P J Knight, CCFE, Culham Science Centre
         outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+
         This routine performs the calculation of the cost of electricity
         for a fusion power plant.
         <P>Annual costs are in megadollars/year, electricity costs are in
@@ -2663,7 +2668,6 @@ class Costs:
             anndiv = 0.0e0
             coediv = 0.0e0
         else:
-
             #  Compound interest factor
 
             fefdiv = (1.0e0 + cost_variables.discount_rate) ** cost_variables.divlife
@@ -2694,7 +2698,6 @@ class Costs:
         #  ===============================
 
         if (physics_variables.itart == 1) and (ife_variables.ife != 1):
-
             #  Compound interest factor
 
             fefcp = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cplife
@@ -2880,104 +2883,3 @@ class Costs:
             + cost_variables.coeoam
             + coedecom
         )
-
-        if (iprint == 0) or (cost_variables.output_costs == 0):
-            return
-
-        #  Output section
-
-        po.oheadr(self.outfile, "Power Reactor Costs (1990 US$)")
-
-        po.ovarrf(
-            self.outfile, "First wall / blanket life (years)", "(fwbllife)", fwbllife
-        )
-
-        if ife_variables.ife != 1:
-            po.ovarrf(
-                self.outfile,
-                "Divertor life (years)",
-                "(divlife.)",
-                cost_variables.divlife,
-            )
-            if physics_variables.itart == 1:
-                po.ovarrf(
-                    self.outfile,
-                    "Centrepost life (years)",
-                    "(cplife.)",
-                    cost_variables.cplife,
-                )
-
-        po.ovarrf(
-            self.outfile, "Cost of electricity (m$/kWh)", "(coe)", cost_variables.coe
-        )
-
-        po.osubhd(self.outfile, "Power Generation Costs :")
-        # TODO: Convert fortran format to Python
-        # if ((annfwbl != annfwbl) or (annfwbl > 1.0e10) or (annfwbl < 0.0e0)) :
-        #     write(outfile,*)'Problem with annfwbl'
-        #     write(outfile,*)'fwallcst=', fwallcst, '  blkcst=', cost_variables.blkcst
-        #     write(outfile,*)'crffwbl=', crffwbl,   '  fcap0cp=', cost_variables.fcap0cp
-        #     write(outfile,*)'feffwbl=', feffwbl,   '  fwbllife=', fwbllife
-
-        #       write(outfile,200) #          anncap,coecap, #          annoam,coeoam, #          anndecom,coedecom, #          annfwbl,coefwbl, #          anndiv,coediv, #          anncp,coecp, #          anncdr,coecdr, #          annfuel,coefuel, #          annwst,coewst, #          annfuelt,coefuelt, #          anntot,coe
-
-        # 200   format( #          t76,'Annual Costs, M$       COE, m$/kWh'// #          1x,'Capital Investment',t80,f10.2,10x,f10.2/ #          1x,'Operation & Maintenance',t80,f10.2,10x,f10.2/ #          1x,'Decommissioning Fund',t80,f10.2,10x,f10.2/ #          1x,'Fuel Charge Breakdown'// #          5x,'Blanket & first wall',t72,f10.2,10x,f10.2/ #          5x,'Divertors',t72,f10.2,10x,f10.2/ #          5x,'Centrepost (TART only)',t72,f10.2,10x,f10.2/ #          5x,'Auxiliary Heating',t72,f10.2,10x,f10.2/ #          5x,'Actual Fuel',t72,f10.2,10x,f10.2/ #          5x,'Waste Disposal',t72,f10.2,10x,f10.2/ #          1x,'Total Fuel Cost',t80,f10.2,10x,f10.2// #          1x,'Total Cost',t80,f10.2,10x,f10.2 )
-
-        if cost_variables.ifueltyp == 1:
-            po.oshead(self.outfile, "Replaceable Components Direct Capital Cost")
-            po.ovarrf(
-                self.outfile,
-                "First wall direct capital cost (M$)",
-                "(fwallcst)",
-                cost_variables.fwallcst,
-            )
-            po.ovarrf(
-                self.outfile,
-                "Blanket direct capital cost (M$)",
-                "(blkcst)",
-                cost_variables.blkcst,
-            )
-            if ife_variables.ife != 1:
-                po.ovarrf(
-                    self.outfile,
-                    "Divertor direct capital cost (M$)",
-                    "(divcst)",
-                    cost_variables.divcst,
-                )
-                if physics_variables.itart == 1:
-                    po.ovarrf(
-                        self.outfile,
-                        "Centrepost direct capital cost (M$)",
-                        "(cpstcst)",
-                        cost_variables.cpstcst,
-                    )
-
-                po.ovarrf(
-                    self.outfile,
-                    "Plasma heating/CD system cap cost (M$)",
-                    "",
-                    cost_variables.cdcost
-                    * cost_variables.fcdfuel
-                    / (1.0e0 - cost_variables.fcdfuel),
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Fraction of CD cost --> fuel cost",
-                    "(fcdfuel)",
-                    cost_variables.fcdfuel,
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "IFE driver system direct cap cost (M$)",
-                    "",
-                    cost_variables.cdcost
-                    * cost_variables.fcdfuel
-                    / (1.0e0 - cost_variables.fcdfuel),
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Fraction of driver cost --> fuel cost",
-                    "(fcdfuel)",
-                    cost_variables.fcdfuel,
-                )
