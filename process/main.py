@@ -583,6 +583,8 @@ class Models:
         This also initialises module variables in the Fortran for that module.
         """
         self._costs_custom = None
+        self._costs_old = Costs()
+        self._costs_2015 = Costs2015()
         self.cs_fatigue = CsFatigue()
         self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
         self.power = Power()
@@ -597,7 +599,6 @@ class Models:
         self.vacuum = Vacuum()
         self.water_use = WaterUse()
         self.pulse = Pulse()
-        self._costs_old = Costs()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
         self.fw = Fw()
@@ -614,7 +615,6 @@ class Models:
             hcpb=self.ccfe_hcpb,
             current_drive=self.current_drive,
         )
-        self._costs_2015 = Costs2015()
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )
