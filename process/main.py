@@ -41,6 +41,8 @@ Box file F/RS/CIRE5523/PWF (up to 15/01/96)
 Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
+
+from typing import Protocol
 from process import fortran
 from process.buildings import Buildings
 from process.costs import Costs
@@ -92,7 +94,6 @@ from process.vacuum import Vacuum
 from process.water_use import WaterUse
 from process.sctfcoil import Sctfcoil
 
-from process.fortran import cost_variables
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -545,11 +546,18 @@ class SingleRun:
         Ensures that the corresponding model variable in Models is defined
         and that any relevant switches are set correctly.
         """
+        # try and get costs model
+        self.models.costs
 
-        if cost_variables.cost_model == 2 and self.models.costs_step is None:
-            raise NotImplementedError(
-                f"cost_model = {cost_variables.cost_model} and costs_step = {self.models.costs_step}. Please provide cost model or change switch value."
-            )
+
+class CostsProtocol(Protocol):
+    """Protocol layout for costs models"""
+
+    def run(self):
+        """Run the model"""
+
+    def output(self):
+        """write model output"""
 
 
 class Models:
@@ -564,7 +572,7 @@ class Models:
 
         This also initialises module variables in the Fortran for that module.
         """
-        self.costs_step = None
+        self._costs_custom = None
         self.cs_fatigue = CsFatigue()
         self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
         self.power = Power()
@@ -579,7 +587,7 @@ class Models:
         self.vacuum = Vacuum()
         self.water_use = WaterUse()
         self.pulse = Pulse()
-        self.costs = Costs()
+        self._costs_old = Costs()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
         self.fw = Fw()
@@ -596,11 +604,28 @@ class Models:
             hcpb=self.ccfe_hcpb,
             current_drive=self.current_drive,
         )
-        self.costs_2015 = Costs2015()
+        self._costs_2015 = Costs2015()
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )
         self.dcll = DCLL(blanket_library=self.blanket_library)
+
+    @property
+    def costs(self) -> CostsProtocol:
+        if fortran.cost_variables.cost_model == 0:
+            return self._costs_old
+        if fortran.cost_variables.cost_model == 1:
+            return self._costs_2015
+        if fortran.cost_variables.cost_model == 2:
+            if self._costs_custom is not None:
+                return self._costs_custom
+            raise ValueError("Custom costs model not initialised")
+        # Probably overkill but makes typing happy
+        raise ValueError("Unknown costs model")
+
+    @costs.setter
+    def costs(self, value: CostsProtocol):
+        self._costs_custom = value
 
 
 def main(args=None):

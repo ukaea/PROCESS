@@ -107,7 +107,8 @@ class Stellarator:
         """
 
         if output:
-            self.costs.costs(output=True)
+            self.costs.run()
+            self.costs.output()
             self.availability.run(output=True)
             ph.outplas(self.outfile)
             self.stigma()
@@ -154,7 +155,7 @@ class Stellarator:
         # TODO: should availability.run be called
         # rather than availability.avail?
         self.availability.avail(output=False)
-        self.costs.costs(output=False)
+        self.costs.run()
 
         if any(numerics.icc == 91):
             # This call is comparably time consuming..
