@@ -22,10 +22,11 @@ module final_module
 
   subroutine no_optimisation()
     use constants, only: mfile, nout
-    use numerics, only: neqns, nineqns, ipeqns, icc, lablcc, rcm
+    use numerics, only: neqns, nineqns, ipeqns, icc, lablcc, rcm, norm_objf
     use process_output, only: int_to_string3, ovarre, ocmmnt, oblnkl, osubhd, &
       oheadr
     use constraints, only: constraint_eqns
+    use function_evaluator, only: funfom
 
     implicit none
 
@@ -34,11 +35,14 @@ module final_module
     character(len=1), dimension(ipeqns) :: sym
     character(len=10), dimension(ipeqns) :: lab
 
-    !call funfom(objfun)
 
     call oheadr(nout,'Numerics')
     call ocmmnt(nout,'PROCESS has performed a run witout optimisation.')
     call oblnkl(nout)
+
+    ! Evaluate objective function
+    call funfom(norm_objf)
+    call ovarre(mfile,'Normalised objective function','(norm_objf)',norm_objf)
 
     ! Print the residuals of the constraint equations
     call constraint_eqns(neqns+nineqns,-1,con1,con2,err,sym,lab)
