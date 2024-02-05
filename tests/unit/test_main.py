@@ -108,6 +108,7 @@ def test_run_mode(process_obj, monkeypatch):
     # Mock VaryRun() (don't want it to actually run), then assert run type is
     # VaryRun
     monkeypatch.setattr(VaryRun, "__init__", mock_init)
+    monkeypatch.setattr(VaryRun, "run", mock_run)
     process_obj.run_mode()
     assert isinstance(process_obj.run, VaryRun)
 
