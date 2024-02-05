@@ -201,7 +201,7 @@ class Process:
             self.run = VaryRun(self.args.varyiterparamsconfig, self.args.solver)
         else:
             self.run = SingleRun(self.args.input, self.args.solver)
-            self.run.run()
+        self.run.run()
 
     def post_process(self):
         """Perform post-run actions, like plotting the mfile."""
@@ -253,13 +253,11 @@ class VaryRun:
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
         self.config_file = Path(config_file).resolve()
-        self.run(solver)
+        self.solver = solver
 
-    def run(self, solver):
+    def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
 
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str
         :raises FileNotFoundError: if input file doesn't exist
         """
         # The input path for the varied input file
@@ -301,7 +299,7 @@ class VaryRun:
             # TODO Don't do this; remove stop statements from Fortran and
             # handle error codes
             # Run process on an IN.DAT file
-            config.run_process(input_path, solver)
+            config.run_process(input_path, self.solver)
 
             check_input_error(wdir=wdir)
 
