@@ -173,7 +173,7 @@ class Costs2015:
         if (abs(cost_variables.concost) > 9.99e99) or (
             cost_variables.concost != cost_variables.concost
         ):
-            self.write_costs_to_output()
+            self.output()
 
             for i in range(100):
                 # noqa: E741

@@ -583,7 +583,7 @@ class Models:
         This also initialises module variables in the Fortran for that module.
         """
         self._costs_custom = None
-        self._costs_old = Costs()
+        self._costs_1990 = Costs()
         self._costs_2015 = Costs2015()
         self.cs_fatigue = CsFatigue()
         self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
@@ -623,7 +623,7 @@ class Models:
     @property
     def costs(self) -> CostsProtocol:
         if fortran.cost_variables.cost_model == 0:
-            return self._costs_old
+            return self._costs_1990
         if fortran.cost_variables.cost_model == 1:
             return self._costs_2015
         if fortran.cost_variables.cost_model == 2:
