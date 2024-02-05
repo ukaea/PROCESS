@@ -34,6 +34,7 @@ def write(models, outfile):
     # 0    |  1990 costs model
     # 1    |  2015 Kovari model
     # 2    |  Custom model
+    models.costs.run()
     models.costs.output()
 
     # Availability model
