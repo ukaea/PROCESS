@@ -1,0 +1,11 @@
+## Cost Model Config File ##
+
+# Example cost model config file
+# Used to update cost variable values before run
+
+# Set cost model - please choose 2 or 3.
+cost_model = 2
+
+# Cost Variables
+site_permits = 100.0e6
+plant_licensing = 200.0e6
