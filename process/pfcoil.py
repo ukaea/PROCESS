@@ -547,7 +547,7 @@ class PFCoil:
                     dz = 0.5e0 * (
                         bv.hmax * (1.0e0 - pfv.ohhghf) + bv.tfcth + 0.1e0
                     )  # ???
-                    area = 4.0e0 * dx * dz
+                    area = 4.0e0 * dx * dz * pfv.pf_current_safety_factor
 
                     # Number of turns
                     # CPTDIN[i] is the current per turn (input)
@@ -576,7 +576,10 @@ class PFCoil:
                 else:
                     # Other coils. N.B. Current density RJCONPF[i] is defined in
                     # routine INITIAL for these coils.
-                    area = abs(pfv.ric[i] * 1.0e6 / pfv.rjconpf[i])
+                    area = (
+                        abs(pfv.ric[i] * 1.0e6 / pfv.rjconpf[i])
+                        * pfv.pf_current_safety_factor
+                    )
 
                     pfv.turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
                     aturn[i] = area / pfv.turns[i]
@@ -675,12 +678,15 @@ class PFCoil:
 
                 if pfv.ipfres == 0:
                     # Superconducting coil
-                    # Previous assumptions: 500 MPa stress limit with 2/3 of the force
-                    # supported in the outer (steel) case.
-                    # Now, 500 MPa replaced by sigpfcalw, 2/3 factor replaced by sigpfcf
+                    # Updated assumptions: 500 MPa stress limit with all of the force
+                    # supported in the conduit (steel) case.
+                    # Now, 500 MPa replaced by sigpfcalw, sigpfcf now defaultly set to 1
 
                     areaspf = pfv.sigpfcf * forcepf / (pfv.sigpfcalw * 1.0e6)
 
+                    # Thickness of hypothetical steel casing assumed to encase the PF
+                    # winding pack; in reality, the steel is distributed
+                    # throughout the conductor. Issue #152
                     # Assume a case of uniform thickness around coil cross-section
                     # Thickness found via a simple quadratic equation
 
@@ -2314,7 +2320,7 @@ class PFCoil:
         op.osubhd(self.outfile, "Geometry of PF coils, central solenoid and plasma:")
         op.write(
             self.outfile,
-            "coil\t\t\tR(m)\t\tZ(m)\t\tdR(m)\t\tdZ(m)\t\tturns\t\tsteel thickness(m)",
+            "coil\t\t\tR(m)\t\tZ(m)\t\tdR(m)\t\tdZ(m)\t\tturns",
         )
         op.oblnkl(self.outfile)
 
@@ -2322,7 +2328,7 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k]-pfv.ra[k]:.2e}\t{abs(pfv.zh[k]-pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}\t{pfv.pfcaseth[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k]-pfv.ra[k]:.2e}\t{abs(pfv.zh[k]-pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
