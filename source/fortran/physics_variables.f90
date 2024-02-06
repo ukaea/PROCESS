@@ -147,7 +147,7 @@ module physics_variables
   !! high Z ion density (/m3)
 
   real(dp) :: gradient_length_ne
-  !! Max. normalized gradient length in el. density (ipedestal==0 only) 
+  !! Max. normalized gradient length in el. density (ipedestal==0 only)
 
   real(dp) :: gradient_length_te
   !! Max. normalized gradient length in el. temperature (ipedestal==0 only)
@@ -386,7 +386,7 @@ module physics_variables
   integer :: iradloss
   !! switch for radiation loss term usage in power balance (see User Guide):
   !!
-  !! - =0 total power lost is scaling power plus radiation 
+  !! - =0 total power lost is scaling power plus radiation
   !! - =1 total power lost is scaling power plus core radiation only
   !! - =2 total power lost is scaling power only, with no additional
   !!   allowance for radiation. This is not recommended for power plant models.
@@ -513,7 +513,7 @@ module physics_variables
   !! - =6 use input kappa, triang to calculate 95% values based on MAST scaling (ST)
   !! - =7 use input kappa95, triang95 to calculate separatrix values based on fit to FIESTA (ST)
   !! - =8 use input kappa, triang to calculate 95% values based on fit to FIESTA (ST)
-  !! - =9 set kappa to the natural elongation value (PROCESS-STEP issue #70), triang input
+  !! - =9 set kappa to the natural elongation value, triang input
   !! - =10 set kappa to maximum stable value at a given aspect ratio (2.6<A<3.6)), triang input (#1399)
   !! - =11 set kappa Menard 2016 aspect-ratio-dependent scaling, triang input (#1439)
 
