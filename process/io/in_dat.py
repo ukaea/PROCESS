@@ -1013,7 +1013,7 @@ class InDat(object):
             # empty_array will be None. This is a side-effect of the need to
             # re-initialise Fortran arrays in a separate subroutine.
 
-            if empty_array is None:
+            if not isinstance(empty_array, list):
                 # Array is declared but not initialised at the same time;
                 # convert it to an empty list because this better reflects
                 # what it is, and allows further list operations
