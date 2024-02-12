@@ -2613,7 +2613,7 @@
         "intervallabel": [
             "tramp",
             "tohs",
-            "theat",
+            "t_fusion_ramp",
             "tburn",
             "tqnch"
         ],
@@ -7562,7 +7562,7 @@
         "tgain": 85.0,
         "th_joint_contact": 0.03,
         "thcomp": null,
-        "theat": 10.0,
+        "t_fusion_ramp": 10.0,
         "theta": null,
         "theta_coil": 0.0,
         "thick_bp_ib": 0.0,
@@ -10807,7 +10807,7 @@
         "tgain": "IFE target gain (if `ifedrv = 0`) (`iteration variable 83`)",
         "th_joint_contact": "TF sliding joints contact pad width [m]",
         "thcomp": "",
-        "theat": "heating time, after current ramp up (s)",
+        "t_fusion_ramp": "heating time, after current ramp up (s)",
         "theta": "",
         "theta_coil": "Half toroidal angular extent of a single TF coil inboard leg",
         "thick_bp_ib": "",
@@ -10862,7 +10862,7 @@
         "tpeak": "peak first wall temperature (K)",
         "tpeakfwi": "Inboard/outboard first wall peak temperature (K)",
         "tpeakfwo": "Inboard/outboard first wall peak temperature (K)",
-        "tpulse": "pulse length = tohs + theat + tburn + tqnch",
+        "tpulse": "pulse length = tohs + t_fusion_ramp + tburn + tqnch",
         "tqnch": "shut down time for PF coils (s); if pulsed, = tohs",
         "tramp": "initial PF coil charge time (s); if pulsed, = tohs",
         "transp_clrnc": "transportation clearance between components (m)",
@@ -14554,7 +14554,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "theat": {
+        "t_fusion_ramp": {
             "lb": 0.0,
             "ub": 10000.0
         },
@@ -19743,7 +19743,7 @@
             "tcycle",
             "tdown",
             "tdwell",
-            "theat",
+            "t_fusion_ramp",
             "tim",
             "timelabel",
             "intervallabel",
@@ -20788,7 +20788,7 @@
         "tfwmatmax": "real_variable",
         "tgain": "real_variable",
         "th_joint_contact": "real_variable",
-        "theat": "real_variable",
+        "t_fusion_ramp": "real_variable",
         "thicndut": "real_variable",
         "thkcas": "real_variable",
         "thshield": "real_variable",

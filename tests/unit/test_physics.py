@@ -1,4 +1,5 @@
 """Unit tests for physics.f90."""
+
 from typing import Any, NamedTuple
 from process.fortran import (
     physics_variables,
@@ -1290,7 +1291,7 @@ class VscalcParam(NamedTuple):
 
     tburn: Any = None
 
-    theat: Any = None
+    t_fusion_ramp: Any = None
 
     expected_phiint: Any = None
 
@@ -1319,7 +1320,7 @@ class VscalcParam(NamedTuple):
             rmajor=8,
             rplas=3.7767895536275952e-09,
             tburn=1000,
-            theat=10,
+            t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
             expected_vsbrn=42.109179697761263,
@@ -1338,7 +1339,7 @@ class VscalcParam(NamedTuple):
             rmajor=8,
             rplas=3.7767895536275952e-09,
             tburn=0,
-            theat=10,
+            t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
             expected_vsbrn=0.41692257126496302,
@@ -1369,7 +1370,7 @@ def test_vscalc(vscalcparam, physics):
         rmajor=vscalcparam.rmajor,
         rplas=vscalcparam.rplas,
         tburn=vscalcparam.tburn,
-        theat=vscalcparam.theat,
+        t_fusion_ramp=vscalcparam.t_fusion_ramp,
     )
 
     assert phiint == pytest.approx(vscalcparam.expected_phiint)

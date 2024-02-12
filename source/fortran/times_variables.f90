@@ -36,7 +36,7 @@ module times_variables
   real(dp) :: tdwell
   !! time between pulses in a pulsed reactor (s) (`iteration variable 17`)
 
-  real(dp) :: theat
+  real(dp) :: t_fusion_ramp
   !! heating time, after current ramp up (s)
 
   real(dp), dimension(6) :: tim
@@ -59,7 +59,7 @@ module times_variables
   !! - <>0, tohs = tohsin; tramp, tqnch are input
 
   real(dp) :: tpulse
-  !! pulse length = tohs + theat + tburn + tqnch
+  !! pulse length = tohs + t_fusion_ramp + tburn + tqnch
 
   real(dp) :: tqnch
   !! shut down time for PF coils (s); if pulsed, = tohs
@@ -79,7 +79,7 @@ module times_variables
     tcycle = 0.0D0
     tdown = 0.0D0
     tdwell = 1800.0D0
-    theat = 10.0D0
+    t_fusion_ramp = 10.0D0
     tim = 0.0D0
     timelabel = (/ 'Start', &
       'BOP  ', &
@@ -87,11 +87,11 @@ module times_variables
       'BOF  ', &
       'EOF  ', &
       'EOP  ' /)
-    intervallabel = (/ 'tramp', &
-      'tohs ', &
-      'theat', &
-      'tburn', &
-      'tqnch' /)
+    intervallabel = (/ 'tramp        ', &
+      'tohs         ', &
+      't_fusion_ramp', &
+      'tburn        ', &
+      'tqnch        ' /)
     tohs = 30.0D0
     tohsin = 0.0D0
     tpulse = 0.0D0
