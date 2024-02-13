@@ -677,9 +677,22 @@ def plot_nprofile(prof, demo_ranges):
         rho = np.append(rhocore, rhosep)
         ne = np.append(ncore, nsep)
         # Print pedestal lines
-        prof.axhline(y=neped / 1e19, xmax=rhopedn, color="r", linestyle="-", alpha=0.4)
+        prof.axhline(
+            y=neped / 1e19,
+            xmax=rhopedn,
+            color="r",
+            linestyle="-",
+            linewidth=0.4,
+            alpha=0.4,
+        )
         prof.vlines(
-            x=rhopedn, ymin=0.0, ymax=neped / 1e19, color="r", linestyle="-", alpha=0.4
+            x=rhopedn,
+            ymin=0.0,
+            ymax=neped / 1e19,
+            color="r",
+            linestyle="-",
+            linewidth=0.4,
+            alpha=0.4,
         )
         prof.minorticks_on()
     else:
@@ -725,9 +738,17 @@ def plot_tprofile(prof, demo_ranges):
         rho = np.append(rhocore, rhosep)
         te = np.append(tcore, tsep)
         # Plot pedestal lines
-        prof.axhline(y=teped, xmax=rhopedt, color="r", linestyle="-", alpha=0.4)
+        prof.axhline(
+            y=teped, xmax=rhopedt, color="r", linestyle="-", linewidth=0.4, alpha=0.4
+        )
         prof.vlines(
-            x=rhopedt, ymin=0.0, ymax=teped, color="r", linestyle="-", alpha=0.4
+            x=rhopedt,
+            ymin=0.0,
+            ymax=teped,
+            color="r",
+            linestyle="-",
+            linewidth=0.4,
+            alpha=0.4,
         )
         prof.minorticks_on()
     else:
@@ -1465,6 +1486,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
     nose_r = mfile_data.data["thkcas"].get_scan(scan)
     coil_location = mfile_data.data["tf_in_cs"].get_scan(scan)
+    case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
 
     # Superconducting coil check
     if cond_type == 1:
@@ -1479,15 +1501,16 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     linestyle="--",
                 ),
             )
-            axis.add_patch(
-                Circle(
-                    [0, 0],
-                    r_tf_inboard_out,
-                    facecolor="none",
-                    edgecolor="black",
-                    linestyle="--",
-                ),
-            )
+            if case_plasma == 0:
+                axis.add_patch(
+                    Circle(
+                        [0, 0],
+                        r_tf_inboard_out,
+                        facecolor="none",
+                        edgecolor="black",
+                        linestyle="--",
+                    ),
+                )
         # Equations for plotting the TF case
         half_case_angle = np.arctan(
             (side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner
@@ -1501,14 +1524,29 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         y11 = r_tf_inboard_in * np.sin(
             np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
         )
-        # X points for outboard case curve
-        x12 = r_tf_inboard_out * np.cos(
-            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
-        )
-        # Y points for outboard case curve
-        y12 = r_tf_inboard_out * np.sin(
-            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
-        )
+        # Check for plasma side case type
+        if case_plasma == 0:
+            # Rounded case
+
+            # X points for outboard case curve
+            x12 = r_tf_inboard_out * np.cos(
+                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            )
+            # Y points for outboard case curve
+            y12 = r_tf_inboard_out * np.sin(
+                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            )
+        elif case_plasma == 1:
+            # Flat case
+
+            # X points for outboard case
+            x12 = r_tf_inboard_out * np.linspace(1, 1, 256, endpoint=True)
+
+            # Y points for outboard case
+            y12 = r_tf_inboard_out * np.sin(
+                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            )
+
         # Cordinates of the top and bottom of case curves,
         # used to plot the lines connecting the inside and outside of the case
         y13 = [y11[0], y12[0]]
@@ -1523,32 +1561,48 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         axis.plot(x14, y14, color="black")
 
         # Fill in the case segemnts
-        axis.fill_between(
-            [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
-            y13,
-            color="grey",
-            alpha=0.25,
-        )
-        axis.fill_between(
-            [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
-            y14,
-            color="grey",
-            alpha=0.25,
-        )
-        axis.fill_between(
-            [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
-            [y12[-1], y11[-1]],
-            color="grey",
-            alpha=0.25,
-        )
-        # Upper arc shaded section
-        axis.fill_between(
-            [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
-            [-y12[-1], -y11[-1]],
-            color="grey",
-            alpha=0.25,
-            label="Case",
-        )
+        if case_plasma == 0:
+            axis.fill_between(
+                [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
+                y13,
+                color="grey",
+                alpha=0.25,
+            )
+            axis.fill_between(
+                [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
+                y14,
+                color="grey",
+                alpha=0.25,
+            )
+            axis.fill_between(
+                [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
+                [y12[-1], y11[-1]],
+                color="grey",
+                alpha=0.25,
+            )
+            # Upper arc shaded section
+            axis.fill_between(
+                [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
+                [-y12[-1], -y11[-1]],
+                color="grey",
+                alpha=0.25,
+                label="Case",
+            )
+        elif case_plasma == 1:
+            # Upper shaded segment
+            axis.fill_between(
+                [r_tf_inboard_in, r_tf_inboard_out],
+                y13,
+                color="grey",
+                alpha=0.25,
+            )
+            # Lower shaded segment
+            axis.fill_between(
+                [r_tf_inboard_in, r_tf_inboard_out],
+                y14,
+                color="grey",
+                alpha=0.25,
+            )
 
         # Centre line for relative reference
         axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)

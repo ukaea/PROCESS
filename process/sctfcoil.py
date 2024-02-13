@@ -1526,8 +1526,7 @@ class Sctfcoil:
         if tfcoil_variables.i_tf_case_geom == 0:
             # Circular front case
             tfcoil_variables.tfareain = numpy.pi * (
-                build_variables.r_tf_inboard_out**2
-                - build_variables.r_tf_inboard_in**2
+                build_variables.r_tf_inboard_out**2 - build_variables.r_tf_inboard_in**2
             )
         else:
             # Straight front case
@@ -3164,10 +3163,7 @@ class Sctfcoil:
         # -------------------
         # Central helium channel down the conductor core [m2]
         tfcoil_variables.awphec = (
-            0.25e0
-            * tfcoil_variables.n_tf_turn
-            * numpy.pi
-            * tfcoil_variables.dhecoil**2
+            0.25e0 * tfcoil_variables.n_tf_turn * numpy.pi * tfcoil_variables.dhecoil**2
         )
 
         # Total conductor cross-sectional area, taking account of void area
@@ -4657,6 +4653,12 @@ class Sctfcoil:
         )
         po.ovarre(
             self.outfile,
+            "Outboard leg nose case type",
+            "(i_tf_case_geom)",
+            tfcoil_variables.i_tf_case_geom,
+        )
+        po.ovarre(
+            self.outfile,
             "Total inboard leg radial thickness (m)",
             "(tfcth)",
             build_variables.tfcth,
@@ -6093,9 +6095,11 @@ class Sctfcoil:
             "Toroidal smear stress (MPa)": sig_tf_smeared_t * 1e-6,
             "Vertical smear stress (MPa)": sig_tf_smeared_z * 1e-6,
             "Von-Mises stress (MPa)": sig_tf_vmises * 1e-6,
-            "CEA Tresca stress (MPa)": s_tresca_cond_cea * 1e-6
-            if tfcoil_variables.i_tf_sup == 1
-            else sig_tf_tresca * 1e-6,
+            "CEA Tresca stress (MPa)": (
+                s_tresca_cond_cea * 1e-6
+                if tfcoil_variables.i_tf_sup == 1
+                else sig_tf_tresca * 1e-6
+            ),
             "rad. displacement (mm)": deflect * 1e3,
         }
         if tfcoil_variables.i_tf_stress_model != 1:
