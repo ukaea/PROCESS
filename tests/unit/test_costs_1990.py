@@ -1,4 +1,5 @@
 """Unit tests for costs.f90."""
+
 from process.fortran import cost_variables
 from process.fortran import fwbs_variables as fv
 from process.fortran import heat_transport_variables as htv
@@ -706,7 +707,6 @@ def test_acc9(monkeypatch, costs):
 
 
 class Acc21Param(NamedTuple):
-
     shovol: Any = None
 
     triv: Any = None
@@ -992,7 +992,6 @@ def test_acc21(acc21param, monkeypatch, costs):
 
 
 class Acc2211Param(NamedTuple):
-
     fwarea: Any = None
 
     ucblss: Any = None
@@ -1130,7 +1129,6 @@ def test_acc2211(acc2211param, monkeypatch, costs):
 
 
 class Acc2212Param(NamedTuple):
-
     ucblss: Any = None
 
     ucblbreed: Any = None
@@ -1418,7 +1416,6 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
 
 class Acc2213Param(NamedTuple):
-
     ucpens: Any = None
 
     ucshld: Any = None
@@ -1580,7 +1577,6 @@ def test_acc2213(acc2213param, monkeypatch, costs):
 
 
 class Acc2214Param(NamedTuple):
-
     fkind: Any = None
 
     lsa: Any = None
@@ -1644,7 +1640,6 @@ def test_acc2214(acc2214param, monkeypatch, costs):
 
 
 class Acc2215Param(NamedTuple):
-
     ifueltyp: Any = None
 
     divcst: Any = None
@@ -1726,7 +1721,6 @@ def test_acc2215(acc2215param, monkeypatch, costs):
 
 
 class Acc2221Param(NamedTuple):
-
     uccpclb: Any = None
 
     uccase: Any = None
@@ -1964,7 +1958,6 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
 
 class Acc2222Param(NamedTuple):
-
     iohcl: Any = None
 
     uccase: Any = None
@@ -2522,7 +2515,6 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
 
 class Acc2223Param(NamedTuple):
-
     uccryo: Any = None
 
     lsa: Any = None
@@ -2592,7 +2584,6 @@ def test_acc2223(acc2223param, monkeypatch, costs):
 
 
 class Acc223Param(NamedTuple):
-
     ucich: Any = None
 
     fkind: Any = None
@@ -2818,7 +2809,6 @@ def test_acc223(acc223param, monkeypatch, costs):
 
 
 class Acc224Param(NamedTuple):
-
     fkind: Any = None
 
     dlscal: Any = None
@@ -2972,7 +2962,6 @@ def test_acc224(acc224param, monkeypatch, costs):
 
 
 class Acc2251Param(NamedTuple):
-
     uctfsw: Any = None
 
     fkind: Any = None
@@ -3174,7 +3163,6 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
 
 class Acc2252Param(NamedTuple):
-
     ucpfcb: Any = None
 
     ucpfbk: Any = None
@@ -3376,7 +3364,6 @@ def test_acc2252(acc2252param, monkeypatch, costs):
 
 
 class Acc2253Param(NamedTuple):
-
     ucblss: Any = None
 
     fkind: Any = None
@@ -3476,7 +3463,6 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
 
 class Acc226Param(NamedTuple):
-
     c226: Any = None
 
     c2261: Any = None
@@ -3540,7 +3526,6 @@ def test_acc226(acc226param, monkeypatch, costs):
 
 
 class Acc2261Param(NamedTuple):
-
     uchts: Any = None
 
     lsa: Any = None
@@ -3676,7 +3661,6 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
 
 
 class Acc2262Param(NamedTuple):
-
     lsa: Any = None
 
     fkind: Any = None
@@ -3806,7 +3790,6 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
 
 
 class Acc2263Param(NamedTuple):
-
     uccry: Any = None
 
     lsa: Any = None
@@ -3888,7 +3871,6 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
 
 
 class Acc227Param(NamedTuple):
-
     c227: Any = None
 
     c2271: Any = None
@@ -3958,7 +3940,6 @@ def test_acc227(acc227param, monkeypatch, costs):
 
 
 class Acc2271Param(NamedTuple):
-
     ucf1: Any = None
 
     fkind: Any = None
@@ -4022,7 +4003,6 @@ def test_acc2271_rut(acc2271param, monkeypatch, costs):
 
 
 class Acc2272Param(NamedTuple):
-
     fkind: Any = None
 
     fburn: Any = None
@@ -4134,7 +4114,6 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 
 
 class Acc2273Param(NamedTuple):
-
     wsvol: Any = None
 
     volrci: Any = None
@@ -4210,7 +4189,6 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
 
 
 class Acc2274Param(NamedTuple):
-
     wsvol: Any = None
 
     volrci: Any = None
@@ -4280,7 +4258,6 @@ def test_acc2274_rut(acc2274param, monkeypatch, costs):
 
 
 class Acc228Param(NamedTuple):
-
     uciac: Any = None
 
     fkind: Any = None
@@ -4338,7 +4315,6 @@ def test_acc228_rut(acc228param, monkeypatch, costs):
 
 
 class Acc229Param(NamedTuple):
-
     ucme: Any = None
 
     fkind: Any = None
@@ -4396,7 +4372,6 @@ def test_acc229_rut(acc229param, monkeypatch, costs):
 
 
 class Acc23Param(NamedTuple):
-
     ucturb: Any = None
 
     ireactor: Any = None
@@ -4464,7 +4439,6 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
 
 
 class Acc24Param(NamedTuple):
-
     c24: Any = None
 
     c241: Any = None
@@ -4534,7 +4508,6 @@ def test_acc24(acc24param, monkeypatch, costs):
 
 
 class Acc241Param(NamedTuple):
-
     lsa: Any = None
 
     c24: Any = None
@@ -4586,7 +4559,6 @@ def test_acc241_rut(acc241param, monkeypatch, costs):
 
 
 class Acc242Param(NamedTuple):
-
     lsa: Any = None
 
     pacpmw: Any = None
@@ -4656,7 +4628,6 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
 
 
 class Acc243Param(NamedTuple):
-
     lsa: Any = None
 
     tlvpmw: Any = None
@@ -4714,7 +4685,6 @@ def test_acc243_rut(acc243param, monkeypatch, costs):
 
 
 class Acc244Param(NamedTuple):
-
     lsa: Any = None
 
     c24: Any = None
@@ -4766,7 +4736,6 @@ def test_acc244_rut(acc244param, monkeypatch, costs):
 
 
 class Acc245Param(NamedTuple):
-
     lsa: Any = None
 
     c24: Any = None
@@ -4818,7 +4787,6 @@ def test_acc245_rut(acc245param, monkeypatch, costs):
 
 
 class Acc25Param(NamedTuple):
-
     ucmisc: Any = None
 
     lsa: Any = None
@@ -4870,7 +4838,6 @@ def test_acc25_rut(acc25param, monkeypatch, costs):
 
 
 class Acc26Param(NamedTuple):
-
     ireactor: Any = None
 
     uchrs: Any = None
@@ -4958,7 +4925,6 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
 
 class Acc9Param(NamedTuple):
-
     fcontng: Any = None
 
     lsa: Any = None
@@ -5062,7 +5028,6 @@ def test_acc9_rut(acc9param, monkeypatch, costs):
 
 
 class Acc2253Param(NamedTuple):
-
     ucblss: Any = None
 
     fkind: Any = None
@@ -5162,7 +5127,6 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
 
 
 class CoelcParam(NamedTuple):
-
     fcdfuel: Any = None
 
     uche3: Any = None
@@ -5248,8 +5212,6 @@ class CoelcParam(NamedTuple):
     tcycle: Any = None
 
     tburn: Any = None
-
-    iprint: Any = None
 
     outfile: Any = None
 
@@ -5341,7 +5303,6 @@ class CoelcParam(NamedTuple):
             fhe3=0,
             tcycle=10864.426139387357,
             tburn=0,
-            iprint=0,
             outfile=11,
             expected_coeoam=4.4099029328740929e20,
             expected_coecap=4.9891775218979061e21,
@@ -5422,7 +5383,6 @@ class CoelcParam(NamedTuple):
             fhe3=0,
             tcycle=864.42613938735622,
             tburn=10230.533336387549,
-            iprint=0,
             outfile=11,
             expected_coeoam=1.2419424614419636,
             expected_coecap=15.547404530833255,
@@ -5532,7 +5492,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(times_variables, "tburn", coelcparam.tburn)
 
-    costs.coelc(iprint=coelcparam.iprint)
+    costs.coelc()
 
     assert cost_variables.coeoam == pytest.approx(coelcparam.expected_coeoam)
 

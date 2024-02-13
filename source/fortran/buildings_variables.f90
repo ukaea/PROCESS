@@ -123,7 +123,7 @@ module buildings_variables
     !! hazardous waste storage building length, width, height (m)
 
     integer :: i_bldgs_size
-    !! switch between routines estimating building sizes (0 = default; 1 = STEP-derived)
+    !! switch between routines estimating building sizes (0 = default; 1 = updated)
 
     integer :: i_bldgs_v
     !! switch to select verbose output for buildings (1 = verbose)
@@ -272,43 +272,43 @@ module buildings_variables
 
 
     real(dp) :: a_reactor_bldg
-    !! Floor area of reactor building in m^2, used as GIFA in costs_step
+    !! Floor area of reactor building in m^2
 
     real(dp) :: a_ee_ps_bldg
-    !! Floor area of electrical equipment and power supply building in m^2, used as GIFA in costs_step
+    !! Floor area of electrical equipment and power supply building in m^2
 
     real(dp) :: a_aux_services_bldg
-    !! Floor area of auxiliary services building in m^2, used as GIFA in costs_step
+    !! Floor area of auxiliary services building in m^2
 
     real(dp) :: a_hot_cell_bldg
-    !! Floor area of hot cell building in m^2, used as GIFA in costs_step
+    !! Floor area of hot cell building in m^2
 
     real(dp) :: a_reactor_service_bldg
-    !! Floor area of reactor service building in m^2, used as GIFA in costs_step
+    !! Floor area of reactor service building in m^2
 
     real(dp) :: a_service_water_bldg
-    !! Floor area of service water building in m^2, used as GIFA in costs_step
+    !! Floor area of service water building in m^2
 
     real(dp) :: a_fuel_handling_bldg
-    !! Floor area of fuel handling and storage building in m^2, used as GIFA in costs_step
+    !! Floor area of fuel handling and storage building in m^2
 
     real(dp) :: a_control_room_bldg
-    !! Floor area of controlroom building in m^2, used as GIFA in costs_step
+    !! Floor area of controlroom building in m^2
 
     real(dp) :: a_ac_ps_bldg
-    !! Floor area of AC power supply building in m^2, used as GIFA in costs_step
+    !! Floor area of AC power supply building in m^2
 
     real(dp) :: a_admin_bldg
-    !! Floor area of admin building in m^2, used as GIFA in costs_step
+    !! Floor area of admin building in m^2
 
     real(dp) :: a_site_service_bldg
-    !! Floor area of site service building in m^2, used as GIFA in costs_step
+    !! Floor area of site service building in m^2
 
     real(dp) :: a_cryo_inert_gas_bldg
-    !! Floor area of cryogenics and inert gas storage building in m^2, used as GIFA in costs_step
+    !! Floor area of cryogenics and inert gas storage building in m^2
 
     real(dp) :: a_security_bldg
-    !! Floor area of security building in m^2, used as GIFA in costs_step
+    !! Floor area of security building in m^2
 
 
     contains

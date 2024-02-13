@@ -112,9 +112,9 @@ authors:
     affiliation: United Kingdom Atomic Energy Authority
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.8338226
+    value: 10.5281/zenodo.10572029
     description: >-
-      This is the archived snapshot of version v3.0.0 of
+      This is the archived snapshot of version v3.0.2 of
       PROCESS.
   - type: doi
     value: 10.5281/zenodo.8335291
@@ -134,8 +134,8 @@ keywords:
   - systems codes
   - power plant
 license: MIT
-version: 3.0.0
-date-released: "2023-09-12"
+version: 3.0.2
+date-released: "2024-01-26"
 references:
   - title: '"PROCESS": A systems code for fusion power plants—Part 1 Physics'
     type: article

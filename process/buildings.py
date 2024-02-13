@@ -51,7 +51,7 @@ class Buildings:
         # Calculate building areas and volumes
 
         if buildings_variables.i_bldgs_size == 1:
-            # STEP building estimates
+            # Updated building estimates
             self.bldgs_sizes(output, tf_radial_dim, tf_vertical_dim)
 
         else:
@@ -831,7 +831,7 @@ class Buildings:
         # As proposed by R. Gowland, based on assessment of 18 existing fission power plants:
         # turbine hall size is largely independent of plant output power.
         # The default footprint used here represents a weighted mean of those plants
-        # and the design of a Steam Rankine cycle turbine building suitable for STEP,
+        # and the design of a Steam Rankine cycle turbine building,
         # produced by Morsons as part of the Year 1 work.
         turbine_hall_area = (
             buildings_variables.turbine_hall_l * buildings_variables.turbine_hall_w

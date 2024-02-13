@@ -85,11 +85,11 @@ thicknesses (inboard and outboard, respectively) `fwith + blbuith`,
 breeder material (`fblbreed`), steel (`fblss`) and helium coolant. Three 
 forms of breeder material are available: 
   
-| `breedmat` | Description |
-| :-: | - |
-| 1 | lithium orthosilicate (Li$_4$SiO$_4$) |
-| 2 | lithium metatitanate (Li$_2$TiO$_3$) |
-| 3 | lithium zirconate (Li$_2$ZrO$_3$) |
+| `breedmat` | Description                           |
+| :--------: | ------------------------------------- |
+|     1      | lithium orthosilicate (Li$_4$SiO$_4$) |
+|     2      | lithium metatitanate (Li$_2$TiO$_3$)  |
+|     3      | lithium zirconate (Li$_2$ZrO$_3$)     |
 
 The $^6$Li enrichment percentage may be modified from the default 30% using 
 input parameter `li6enrich`.
@@ -124,48 +124,48 @@ its cost is not calculated, for example).
 
 A few other input parameters are useful for tuning purposes, as follows:
 
-| Parameter | Description |
-|:-: | -|
-| `fvolsi/fvolso` | area (and volume) coverage factors for the inboard and outboard shields, respectively. |
-| `fvoldw` | multiplier for volume of vacuum vessel, used in mass calculations to account for ports, etc. |
-| `npdiv` | number of divertor ports, used in the calculation of the tritium breeding ratio. |
+|     Parameter      | Description                                                                                                                                                                                                                    |
+| :----------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|  `fvolsi/fvolso`   | area (and volume) coverage factors for the inboard and outboard shields, respectively.                                                                                                                                         |
+|      `fvoldw`      | multiplier for volume of vacuum vessel, used in mass calculations to account for ports, etc.                                                                                                                                   |
+|      `npdiv`       | number of divertor ports, used in the calculation of the tritium breeding ratio.                                                                                                                                               |
 | `nphcdin/nphcdout` | number of heating/current drive ports on the inboard and outboard sides, respectively, used in the calculation of the tritium breeding ratio. These may be either 'small'  (`hcdportsize = 1`) or 'large' (`hcdportsize = 2`). |
-| `wallpf` | neutron wall load peaking factor (maximum/mean), used in the calculation of the blanket lifetime. |
-| `ucblbreed` | unit cost (\$/kg) of the breeder material |
+|      `wallpf`      | neutron wall load peaking factor (maximum/mean), used in the calculation of the blanket lifetime.                                                                                                                              |
+|    `ucblbreed`     | unit cost (\$/kg) of the breeder material                                                                                                                                                                                      |
 
 #### KIT model outputs and available constraints
 
 The KIT blanket model has the following available constraints
 
-| Constraint No. | F-value   | F-value No. | Limit       | Description |
-| :------------: | :-------: | :---------: | :---------: | ----------- | 
-| 52             | `ftbr`    | 89          | `tbrmin`    | Min required `tbr` |
-| 53             | `fflutf`  | 92          | `nflutfmax` | Max allowed TF fluence |
-| 54             | `fptfnuc` | 95          | `ptfnucmax` | Max allowed heating of TF coils |
-| 55             | `fvvhe`   | 96          | `vvhealw`   | Max allowed He concentration in VV |
+| Constraint No. |  F-value  | F-value No. |    Limit    | Description                        |
+| :------------: | :-------: | :---------: | :---------: | ---------------------------------- |
+|       52       |  `ftbr`   |     89      |  `tbrmin`   | Min required `tbr`                 |
+|       53       | `fflutf`  |     92      | `nflutfmax` | Max allowed TF fluence             |
+|       54       | `fptfnuc` |     95      | `ptfnucmax` | Max allowed heating of TF coils    |
+|       55       |  `fvvhe`  |     96      |  `vvhealw`  | Max allowed He concentration in VV |
 
 The KIT blanket neutronics model provides the following outputs:
 
-| Output      | Units    | Itvar. | Description |
-| :---------: | :------: | ------ | ----------- |
-| `pnucblkt`  | MW       | -      | Total nuclear power deposited in blanket |
-| `pnucshld`  | MW       | -      | Total nuclear power deposited in shield | 
-| `emult`     | -        | -      | The energy multiplication factor in the blanket |
-| `tbr`       | -        | -      | Tritium breeding ratio |
-| `blbuith`   | m        | 90     | Inboard blanket thickness |
-| `blbuoth`   | m        | 91     | Outboard blanket thickness |
-| `tritprate` | -        | -      | The tritium production rate in grammes/day is calculated. |
-| `nflutfi`   | n/m$^2$  | -      | The fast neutron fluence on the inboard TF coils |
-| `nflutfo`   | n/m$^2$  | -      | The fast neutron fluence on the inboard TF coils |
-| `shldith`   | m        | 93     | Inboard shield thickness |
-| `shldoth`   | m        | 94     | Outboard shield thickness |
-| `pnuctfi`   | MW/m$^3$ | -      | Nuclear heating power on inboard TF coil |
-| `pnuctfo`   | MW/m$^3$ | -      | Nuclear heating power on outboard TF coil |
-| `vvhemini`  | appm     | -      | Min He concentration in the inboard VV at the end of the plant lifetime |
-| `vvhemaxi`  | appm     | -      | Max He concentration in the inboard VV at the end of the plant lifetime |
-| `vvhemino`  | appm     | -      | Min He concentration in the outboard VV at the end of the plant lifetime |
-| `vvhemaxo`  | appm     | -      | Max He concentration in the outboard VV at the end of the plant lifetime |
-| `bktlife`   | fp-yrs   | -      | Blanket lifetime in full power years assuming max damage ~60 dpa|
+|   Output    |  Units   | Itvar. | Description                                                              |
+| :---------: | :------: | ------ | ------------------------------------------------------------------------ |
+| `pnucblkt`  |    MW    | -      | Total nuclear power deposited in blanket                                 |
+| `pnucshld`  |    MW    | -      | Total nuclear power deposited in shield                                  |
+|   `emult`   |    -     | -      | The energy multiplication factor in the blanket                          |
+|    `tbr`    |    -     | -      | Tritium breeding ratio                                                   |
+|  `blbuith`  |    m     | 90     | Inboard blanket thickness                                                |
+|  `blbuoth`  |    m     | 91     | Outboard blanket thickness                                               |
+| `tritprate` |    -     | -      | The tritium production rate in grammes/day is calculated.                |
+|  `nflutfi`  | n/m$^2$  | -      | The fast neutron fluence on the inboard TF coils                         |
+|  `nflutfo`  | n/m$^2$  | -      | The fast neutron fluence on the inboard TF coils                         |
+|  `shldith`  |    m     | 93     | Inboard shield thickness                                                 |
+|  `shldoth`  |    m     | 94     | Outboard shield thickness                                                |
+|  `pnuctfi`  | MW/m$^3$ | -      | Nuclear heating power on inboard TF coil                                 |
+|  `pnuctfo`  | MW/m$^3$ | -      | Nuclear heating power on outboard TF coil                                |
+| `vvhemini`  |   appm   | -      | Min He concentration in the inboard VV at the end of the plant lifetime  |
+| `vvhemaxi`  |   appm   | -      | Max He concentration in the inboard VV at the end of the plant lifetime  |
+| `vvhemino`  |   appm   | -      | Min He concentration in the outboard VV at the end of the plant lifetime |
+| `vvhemaxo`  |   appm   | -      | Max He concentration in the outboard VV at the end of the plant lifetime |
+|  `bktlife`  |  fp-yrs  | -      | Blanket lifetime in full power years assuming max damage ~60 dpa         |
 
 ## Thermo-hydraulic model for first wall and blanket
 
@@ -174,23 +174,23 @@ The KIT blanket neutronics model provides the following outputs:
 
 Summary of key variables and switches:  
 
-|                          | First Wall              | Breeding Blanket Primary | Liquid Breeder/Coolant     |
-| :---------------:        | :-----------:           | ------------------------ | -------------------------- |
-| Coolant Channels         | :-----------:           | ------------------------ | -------------------------- |
-| length (m)               | `fw_channel_length`     | ---                      | ---                        | 
-| width (m)                | `afw` (radius, cicular) | `afw`                    |`a_bz_liq`, `b_bz_liq` (rectangular) |
-| wall thickness (m)       | `fw_wall`               | fw_wall                  |`th_wall_secondary` |                
-| pitch (m)                | `pitch`                 | ---                      | ---                        |           
-| roughness epsilon        | `roughness`             | ---                      | ---                        |             
-| peak FW temp (K)         | `tpeak`                 | ---                      | ---                        |              
-| maximum temp (K)         | `tfwmatmax`             | ---                      | ---                        |              
-| FCI switch               | ---                     | ---                      | `ifci` |  
-| Coolant                  | :-----------:           | ------------------------ | -------------------------- |
-| primary coolant switch   | `fwcoolant`             |  `coolwh`                | ---                        |
-| secondary coolant switch | ---                     |  ---                     | `i_bb_liq` |
-| inlet temp (K)           | `fwinlet`               |  `inlet_temp`            | `inlet_temp_liq` |
-| outlet temp (K)          | `fwoutlet`              |  `outlet_temp`           | `outlet_temp_liq` |
-| pressure (Pa)            | `fwpressure`            |  `blpressure`            | `blpressure_liq` |
+|                          |       First Wall        | Breeding Blanket Primary | Liquid Breeder/Coolant               |
+| :----------------------: | :---------------------: | ------------------------ | ------------------------------------ |
+|     Coolant Channels     |      :-----------:      | ------------------------ | --------------------------           |
+|        length (m)        |   `fw_channel_length`   | ---                      | ---                                  |
+|        width (m)         | `afw` (radius, cicular) | `afw`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
+|    wall thickness (m)    |        `fw_wall`        | fw_wall                  | `th_wall_secondary`                  |
+|        pitch (m)         |         `pitch`         | ---                      | ---                                  |
+|    roughness epsilon     |       `roughness`       | ---                      | ---                                  |
+|     peak FW temp (K)     |         `tpeak`         | ---                      | ---                                  |
+|     maximum temp (K)     |       `tfwmatmax`       | ---                      | ---                                  |
+|        FCI switch        |           ---           | ---                      | `ifci`                               |
+|         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
+|  primary coolant switch  |       `fwcoolant`       | `coolwh`                 | ---                                  |
+| secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
+|      inlet temp (K)      |        `fwinlet`        | `inlet_temp`             | `inlet_temp_liq`                     |
+|     outlet temp (K)      |       `fwoutlet`        | `outlet_temp`            | `outlet_temp_liq`                    |
+|      pressure (Pa)       |      `fwpressure`       | `blpressure`             | `blpressure_liq`                     |
 
 The default thermo-hydraulic model assumes that a solid breeder is in use, with both the first wall and the breeding blanket using helium as a coolant.
 This can be changed using the switches detailed in the following subsection. 
@@ -207,36 +207,37 @@ Figure 1: *First wall concept with coolant channels*
 
 The first wall is assumed to be thermally separate from the blanket (Figure 1).  No separation has been made between the structural part of the first wall and the armour.  A simple heuristic model has been used to estimate the peak temperature, as follows.
 
-Minimum distance travelled by surface heat load = $\texttt{fw} {\textunderscore} \texttt{wall}  $  
-Maximum distance travelled by surface heat load = $\texttt{diagonal}  $
+Minimum distance travelled by surface heat load = $\texttt{fw} \_ \texttt{wall}$
+
+Maximum distance travelled by surface heat load = $\texttt{diagonal}$
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{afw}+\\texttt{fw} {\textunderscore} \texttt{wall})^2 + (\frac{\texttt{pitch}}{2}-\texttt{afw})^2 }
+\texttt{diagonal}=\sqrt{(\texttt{afw}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{pitch}}{2}-\texttt{afw}\right)^2 }
 $$
 
 Typical distance travelled by surface heat load:
 
 $$
-\texttt{mean} {\textunderscore} \texttt{distance}=\frac{\texttt{fw} {\textunderscore} \texttt{wall}+\texttt{diagonal}}{2}
+\texttt{mean} \_ \texttt{distance}=\frac{\texttt{fw} \_ \texttt{wall}+\texttt{diagonal}}{2}
 $$
 
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{afw}+\\texttt{fw} {\textunderscore} \texttt{wall})^2 + (\frac{\texttt{pitch}}{2}-\texttt{afw})^2 }
+\texttt{diagonal}=\sqrt{(\texttt{afw}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{pitch}}{2}-\texttt{afw}\right)^2 }
 $$
 
-The energy travels over a cross-section which is initially = \texttt{pitch}
+The energy travels over a cross-section which is initially $= \texttt{pitch}$
 It spreads out, arriving at the coolant pipe over an area of half the circumference.
 We use the mean of these values:
 
 $$ 
-\texttt{mean}{\textunderscore}\texttt{width} = \frac{\texttt{pitch} + \pi \times \texttt{afw}}{2}
+\texttt{mean} \_ \texttt{width} = \frac{\texttt{pitch} + \pi \times \texttt{afw}}{2}
 $$
 
 The temperature difference between the plasma-facing surface and the coolant is then:
 
 $$ 
-\texttt{deltat}{\textunderscore}\texttt{solid} = \frac{\texttt{onedload} \times \texttt{mean} {\textunderscore} \texttt{distance}}{\texttt{tkfw} \times \texttt{mean}{\textunderscore}\texttt{width}}
+\texttt{deltat} \_ \texttt{solid} = \frac{\texttt{onedload} \times \texttt{mean} \_ \texttt{distance}}{\texttt{tkfw} \times \texttt{mean} \_ \texttt{width}}
 $$
 
 where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and $\texttt{onedload}$ is the heat load per unit length.
@@ -268,12 +269,12 @@ The user can select the number poloidal and toroidal modules for the IB and OB B
     0. Multi-module segment 
     1. Single-module-segment
 
-| Variable        | Units     | Itvar. | Default |  Description |
-| :---------:     | :------:  | ------ | -----   | -----------  |
-| `nblktmodpi`    | ---       |        | 7       | Number of inboard blanket modules in poloidal direction  |
-| `nblktmodpo`    | ---       |        | 8       | Number of outboard blanket modules in poloidal direction  |
-| `nblktmodti`    | ---       |        | 32      | Number of inboard blanket modules in toroidal direction  |
-| `nblktmodto`    | ---       |        | 48      | Number of outboard blanket modules in toroidal direction  |
+|   Variable   | Units | Itvar. | Default | Description                                              |
+| :----------: | :---: | ------ | ------- | -------------------------------------------------------- |
+| `nblktmodpi` |  ---  |        | 7       | Number of inboard blanket modules in poloidal direction  |
+| `nblktmodpo` |  ---  |        | 8       | Number of outboard blanket modules in poloidal direction |
+| `nblktmodti` |  ---  |        | 32      | Number of inboard blanket modules in toroidal direction  |
+| `nblktmodto` |  ---  |        | 48      | Number of outboard blanket modules in toroidal direction |
 
 #### Liquid Breeder or Dual Coolant
 
@@ -283,14 +284,14 @@ There are two material options for the liquid breeder/coolant, chosen by the use
 Both options use the mid-temperature of the metal to find the following properties: density, specific heat, thermal conductivity, dynamic viscosity and electrical conductivity. 
 The Hartmann number is also calculated (using the magnetic feild strength in the centre of the inboard or outboard blanket module). 
 
-| Variable              | Units     | Scanvar. | Usage         | Default | Description |
-| :---------:           | :------:  | -------- | -----         | ------- | ----------- |
-| `blpressure_liq`      | Pa        | 70       | idualcool=1,2 | 1.7D6   | liquid metal breeder/coolant pressure |
-| `inlet_temp_liq`      | K         | 68       | idualcool=1,2 | 570     | Inlet temperatute of liquid metal breeder/coolant |
-| `outlet_temp_liq`     | K         | 69       | idualcool=1,2 | 720     | Outlet temperatute of liquid metal breeder/coolant |
-| `n_liq_recirc`        | ---       | 71       | idualcool=1   | 10      | Number of liquid metal breeder recirculations per day |
-| `f_nuc_pow_bz_struct` | ---       | 73       | iblanket=5    | 0.34    | FW nuclear power as fraction of total |
-| `f_nuc_pow_bz_liq`    | ---       | 74       | iblanket=5    | 0.66    | Fraction of BZ power cooled by primary coolant |
+|       Variable        | Units | Scanvar. | Usage         | Default | Description                                           |
+| :-------------------: | :---: | -------- | ------------- | ------- | ----------------------------------------------------- |
+|   `blpressure_liq`    |  Pa   | 70       | idualcool=1,2 | 1.7D6   | liquid metal breeder/coolant pressure                 |
+|   `inlet_temp_liq`    |   K   | 68       | idualcool=1,2 | 570     | Inlet temperatute of liquid metal breeder/coolant     |
+|   `outlet_temp_liq`   |   K   | 69       | idualcool=1,2 | 720     | Outlet temperatute of liquid metal breeder/coolant    |
+|    `n_liq_recirc`     |  ---  | 71       | idualcool=1   | 10      | Number of liquid metal breeder recirculations per day |
+| `f_nuc_pow_bz_struct` |  ---  | 73       | iblanket=5    | 0.34    | FW nuclear power as fraction of total                 |
+|  `f_nuc_pow_bz_liq`   |  ---  | 74       | iblanket=5    | 0.66    | Fraction of BZ power cooled by primary coolant        |
 
 #### Flow Channel Inserts for Liquid Metal Breeder
 
@@ -299,6 +300,6 @@ There are three model options, chosen by the user to match their selected blanke
     1.   FCIs used, assumed to be perfectly electrically insulating.  
     2.   FCIs used, with conductivity chosen by the user (`bz_channel_conduct_liq`).
 
-| Variable                  | Units     | Itvar. | Usage       | Default | Description |
-| :---------:               | :------:  | ------ | ----------- | -----   | -------     |
-| `bz_channel_conduct_liq`  | A V-1 m-1 | 72     | ifci = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |
+|         Variable         |   Units   | Itvar. | Usage       | Default | Description                                                         |
+| :----------------------: | :-------: | ------ | ----------- | ------- | ------------------------------------------------------------------- |
+| `bz_channel_conduct_liq` | A V-1 m-1 | 72     | ifci = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |

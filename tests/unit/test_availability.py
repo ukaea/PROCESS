@@ -2,7 +2,11 @@
 from process import fortran
 from process.availability import Availability
 from process.fortran import cost_variables as cv
+from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
+from process.fortran import constraint_variables as ctv
+from process.fortran import fwbs_variables as fwbsv
+from process.fortran import times_variables as tv
 import pytest
 from pytest import approx
 
@@ -385,3 +389,49 @@ def test_calc_u_unplanned_fwbs(calc_u_unplanned_fwbs_fix, availability):
     # then assert the result is the expected one
     result = availability.calc_u_unplanned_fwbs(output=False)
     assert result == calc_u_unplanned_fwbs_fix
+
+
+def test_avail_st(monkeypatch, availability):
+    """Test avail_st routine
+
+    :param monkeypatch: Mock fixture
+    :type monkeypatch: object
+
+    :param availability: fixture containing an initialised `Availability` object
+    :type availability: tests.unit.test_availability.availability (functional fixture)
+    """
+
+    monkeypatch.setattr(cv, "tmain", 1.0)
+    monkeypatch.setattr(cv, "tlife", 30.0)
+    monkeypatch.setattr(cv, "u_unplanned", 0.1)
+    monkeypatch.setattr(tv, "tburn", 5.0)
+    monkeypatch.setattr(tv, "tcycle", 10.0)
+
+    availability.avail_st(output=False)
+
+    assert pytest.approx(cv.t_operation) == 29.03225806
+    assert pytest.approx(cv.cfactr) == 0.86451613
+    assert pytest.approx(cv.cpfact) == 0.43225806
+
+
+@pytest.mark.parametrize("i_tf_sup, exp", ((1, 6.337618), (0, 4)))
+def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
+    """Test cp_lifetime routine
+
+    :param monkeypatch: Mock fixture
+    :type monkeypatch: object
+
+    :param availability: fixture containing an initialised `Availability` object
+    :type availability: tests.unit.test_availability.availability (functional fixture)
+    """
+
+    monkeypatch.setattr(tfv, "i_tf_sup", i_tf_sup)
+    monkeypatch.setattr(ctv, "nflutfmax", 1.0e23)
+    monkeypatch.setattr(fwbsv, "neut_flux_cp", 5.0e14)
+    monkeypatch.setattr(cv, "cpstflnc", 20.0)
+    monkeypatch.setattr(pv, "wallmw", 5.0)
+    monkeypatch.setattr(cv, "tlife", 30.0)
+
+    cplife = availability.cp_lifetime()
+
+    assert pytest.approx(cplife) == exp

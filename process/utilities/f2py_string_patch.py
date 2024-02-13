@@ -46,7 +46,6 @@ def string_to_f2py_compatible(
             )
         elif len(string) > target_size:
             warnings.warn(
-                RuntimeWarning,
                 f"String string of length {len(string)} is trying to initiate as {target} with length \
                 {target_size}. String string will be truncated!",
             )

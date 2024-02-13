@@ -127,13 +127,7 @@ runs just the regression tests on all available cores.
 ## Test coverage
 
 Test coverage (in Python only) is provided in a badge on the repository homepage. A report can 
-also be generated locally. First, ensure a development install is being used:
-
-```bash
-pip install -e .
-```
-
-This ensures that `pytest` and `pytest-cov` will use the same installed location of Process. Then:
+also be generated locally. A development (editable) pip installation (which is run by default by the `cmake` build script) ensures that `pytest` and `pytest-cov` will use the same installed location of Process. Then:
 
 ```bash
 pytest --cov=process tests/unit/

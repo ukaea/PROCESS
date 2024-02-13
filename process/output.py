@@ -33,34 +33,25 @@ def write(models, outfile):
     # ---- | ------
     # 0    |  1990 costs model
     # 1    |  2015 Kovari model
-    # 2    |  2019 STEP model
-
-    if ft.cost_variables.cost_model == 0:
-        models.costs.run(output=True)
-    elif ft.cost_variables.cost_model == 1:
-        models.costs_2015.run(output=True)
-    elif ft.cost_variables.cost_model == 2:
-        models.costs_step.output()
+    # 2    |  Custom model
+    models.costs.run()
+    models.costs.output()
 
     # Availability model
     models.availability.run(output=True)
 
     # Writing the output from physics.f90 into OUT.DAT + MFILE.DAT
-    ft.physics_module.outplas(outfile)
-
-    # Writing
-    if ft.physics_variables.ipedestal == 2 or ft.physics_variables.ipedestal == 3:
-        ft.plasmod_module.outputplasmod(outfile)
+    models.physics.outplas()
 
     # TODO what is this? not in caller.f90
-    ft.physics_module.igmarcal(outfile)
+    models.physics.igmarcal()
 
     # TODO what is this? Not in caller.f90?
-    ft.current_drive_module.cudriv(outfile, 1)
+    models.current_drive.cudriv(output=True)
 
     # Pulsed reactor model
     models.pulse.run(output=True)
-    ft.physics_module.outtim(outfile)
+    models.physics.outtim()
 
     models.divertor.run(output=True)
 
