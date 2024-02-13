@@ -119,7 +119,7 @@ class PFCoil:
         tv.tim[0] = 0.0e0
         tv.tim[1] = tv.tramp
         tv.tim[2] = tv.tim[1] + tv.tohs
-        tv.tim[3] = tv.tim[2] + tv.theat
+        tv.tim[3] = tv.tim[2] + tv.t_fusion_ramp
         tv.tim[4] = tv.tim[3] + tv.tburn
         tv.tim[5] = tv.tim[4] + tv.tqnch
 
@@ -514,7 +514,7 @@ class PFCoil:
                     pf.ccls[nng] - (pf.ccl0[nng] * pfv.fcohbof / pfv.fcohbop)
                 )
 
-                # End of flat-top: t = tv.tramp+tv.tohs+tv.theat+tv.tburn
+                # End of flat-top: t = tv.tramp+tv.tohs+tv.t_fusion_ramp+tv.tburn
                 pfv.curpfb[ncl] = 1.0e-6 * (
                     pf.ccls[nng] - (pf.ccl0[nng] * (1.0e0 / pfv.fcohbop))
                 )
@@ -2697,7 +2697,7 @@ class PFCoil:
             ):
                 pfv.ric[ic] = pfv.curpff[ic]
 
-            # End of flat-top, t = tramp + tohs + theat + tburn
+            # End of flat-top, t = tramp + tohs + t_fusion_ramp + tburn
             if (abs(pfv.curpfb[ic]) >= abs(pfv.curpfs[ic])) and (
                 abs(pfv.curpfb[ic]) >= abs(pfv.curpff[ic])
             ):

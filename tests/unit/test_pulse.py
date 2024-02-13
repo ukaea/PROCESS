@@ -91,7 +91,7 @@ class BurnParam(NamedTuple):
 
     tburn: Any = None
 
-    theat: Any = None
+    t_fusion_ramp: Any = None
 
     outfile: Any = None
 
@@ -1281,7 +1281,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             csawth=1,
             lpulse=1,
             tburn=0,
-            theat=10,
+            t_fusion_ramp=10,
             outfile=11,
             iprint=0,
             expected_tburn=0,
@@ -1297,7 +1297,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             csawth=1,
             lpulse=1,
             tburn=10234.092022756307,
-            theat=10,
+            t_fusion_ramp=10,
             outfile=11,
             iprint=0,
             expected_tburn=10230.533336387545,
@@ -1337,7 +1337,7 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(times_variables, "tburn", burnparam.tburn)
 
-    monkeypatch.setattr(times_variables, "theat", burnparam.theat)
+    monkeypatch.setattr(times_variables, "t_fusion_ramp", burnparam.t_fusion_ramp)
 
     pulse.burn(output=True)
 

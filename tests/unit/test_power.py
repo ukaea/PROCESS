@@ -971,7 +971,7 @@ class PfpwrParam(NamedTuple):
             intervallabel=(
                 "tramp      ",
                 "tohs       ",
-                "theat      ",
+                "t_fusion_ramp      ",
                 "tburn      ",
                 "tqnch      ",
             ),
@@ -1713,7 +1713,7 @@ class PfpwrParam(NamedTuple):
             intervallabel=(
                 "tramp      ",
                 "tohs       ",
-                "theat      ",
+                "t_fusion_ramp      ",
                 "tburn      ",
                 "tqnch      ",
             ),
@@ -2669,7 +2669,7 @@ class Power3Param(NamedTuple):
 
     tburn: Any = None
 
-    theat: Any = None
+    t_fusion_ramp: Any = None
 
     tdwell: Any = None
 
@@ -2705,7 +2705,7 @@ class Power3Param(NamedTuple):
             ).transpose(),
             tramp=500,
             tburn=0,
-            theat=10,
+            t_fusion_ramp=10,
             tdwell=0,
             tqnch=177.21306969367816,
             tohs=177.21306969367816,
@@ -2738,7 +2738,7 @@ class Power3Param(NamedTuple):
             ).transpose(),
             tramp=500,
             tburn=10230.533336387543,
-            theat=10,
+            t_fusion_ramp=10,
             tdwell=0,
             tqnch=177.21306969367816,
             tohs=177.21306969367816,
@@ -2786,7 +2786,7 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(times_variables, "tburn", power3param.tburn)
 
-    monkeypatch.setattr(times_variables, "theat", power3param.theat)
+    monkeypatch.setattr(times_variables, "t_fusion_ramp", power3param.t_fusion_ramp)
 
     monkeypatch.setattr(times_variables, "tdwell", power3param.tdwell)
 

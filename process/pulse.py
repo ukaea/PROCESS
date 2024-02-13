@@ -158,12 +158,12 @@ class Pulse:
 
         #  Burn time (s)
 
-        tb = vsmax / vburn - times_variables.theat
+        tb = vsmax / vburn - times_variables.t_fusion_ramp
         if tb < 0.0e0:
             error_handling.fdiags[0] = tb
             error_handling.fdiags[1] = vsmax
             error_handling.fdiags[2] = vburn
-            error_handling.fdiags[3] = times_variables.theat
+            error_handling.fdiags[3] = times_variables.t_fusion_ramp
             error_handling.report_error(93)
 
         times_variables.tburn = max(0.0e0, tb)
