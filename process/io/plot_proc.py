@@ -2665,6 +2665,7 @@ def main_plot(
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
+    fig2.subplots_adjust(wspace=0.3)
     plot_nprofile(plot_4, demo_ranges)
 
     # Plot temperature profiles
@@ -3243,7 +3244,7 @@ def main(args=None):
     page3 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
-    main_plot(page1, page2, m_file, scan=scan, demo_ranges=demo_ranges)
+    main_plot(page1, page2, page3, m_file, scan=scan, demo_ranges=demo_ranges)
 
     # with bpdf.PdfPages(args.o) as pdf:
     with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
