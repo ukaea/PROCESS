@@ -347,6 +347,7 @@ class SingleRun:
         self.validate_input()
         self.init_module_vars()
         self.set_filenames()
+        self.initialise()
         self.models = Models()
         self.solver = solver
 
@@ -355,8 +356,6 @@ class SingleRun:
 
         This is separate from init to allow model instances to be modified before a run.
         """
-        self.set_filenames()
-        self.initialise()
         self.validate_user_model()
         self.run_tests()
         self.call_solver()
@@ -603,6 +602,9 @@ class Models:
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
         self.current_drive = CurrentDrive()
+        self.physics = Physics(
+            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+        )
         self.stellarator = Stellarator(
             availability=self.availability,
             buildings=self.buildings,
@@ -612,9 +614,7 @@ class Models:
             plasma_profile=self.plasma_profile,
             hcpb=self.ccfe_hcpb,
             current_drive=self.current_drive,
-        )
-        self.physics = Physics(
-            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+            physics=self.physics,
         )
         self.dcll = DCLL(blanket_library=self.blanket_library)
 

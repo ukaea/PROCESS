@@ -4,7 +4,6 @@ import numpy as np
 
 from process.fortran import (
     constants,
-    physics_module as ph,
     stellarator_module as st,
     process_output as po,
     physics_variables,
@@ -29,6 +28,7 @@ from process.fortran import (
     physics_functions_module,
     neoclassics_module,
     impurity_radiation_module,
+    sctfcoil_module,
 )
 import process.superconductors as superconductors
 import process.physics_functions as physics_funcs
@@ -62,6 +62,7 @@ class Stellarator:
         plasma_profile,
         hcpb,
         current_drive,
+        physics,
     ) -> None:
         """Initialises the Stellarator model's variables
 
@@ -79,6 +80,8 @@ class Stellarator:
         :type hcpb: process.hcpb.CCFE_HCPB
         :param current_drive: a pointer to the CurrentDrive model, allowing use of CurrentDrives's variables/methods
         :type current_drive: process.current_drive.CurrentDrive
+        :param physics: a pointer to the Physics model, allowing use of Physics's variables/methods
+        :type physics: process.physics.Physics
         """
 
         self.outfile: int = constants.nout
@@ -92,6 +95,7 @@ class Stellarator:
         self.plasma_profile = plasma_profile
         self.hcpb = hcpb
         self.current_drive = current_drive
+        self.physics = physics
 
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
@@ -110,7 +114,7 @@ class Stellarator:
             self.costs.run()
             self.costs.output()
             self.availability.run(output=True)
-            ph.outplas(self.outfile)
+            self.physics.outplas()
             self.stigma()
             self.stheat(True)
             self.stphys(True)
@@ -203,7 +207,7 @@ class Stellarator:
                 physics_variables.tauei,
                 physics_variables.taueff,
                 physics_variables.powerht,
-            ) = physics_module.pcond(
+            ) = self.physics.pcond(
                 physics_variables.afuel,
                 physics_variables.palpmw,
                 physics_variables.aspect,
@@ -234,7 +238,7 @@ class Stellarator:
                 physics_variables.zeff,
             )
 
-            physics_variables.hfac[iisc] = physics_module.fhfac(i)
+            physics_variables.hfac[iisc] = self.physics.fhfac(i)
 
     def stnewconfig(self):
         """author: J Lion, IPP Greifswald
@@ -1187,12 +1191,6 @@ class Stellarator:
         volshldo = build_variables.shareaob * build_variables.shldoth
         fwbs_variables.volshld = volshldi + volshldo
 
-        fwbs_variables.whtshld = (
-            fwbs_variables.volshld
-            * fwbs_variables.denstl
-            * (1.0e0 - fwbs_variables.vfshld)
-        )
-
         #  Neutron power lost through holes in first wall (eventually absorbed by
         #  shield)
 
@@ -1727,6 +1725,13 @@ class Stellarator:
 
         if fwbs_variables.blktmodel == 0:
             coolvol = coolvol + fwbs_variables.volblkt * fwbs_variables.vfblkt
+
+        # Shield mass
+        fwbs_variables.whtshld = (
+            fwbs_variables.volshld
+            * fwbs_variables.denstl
+            * (1.0e0 - fwbs_variables.vfshld)
+        )
 
         coolvol = coolvol + fwbs_variables.volshld * fwbs_variables.vfshld
 
@@ -2718,6 +2723,7 @@ class Stellarator:
         # NOTE: original implementation used taucq which used a EUROfusion
         # constant in the calculation. This was the minimum allowed quench time.
         # Replacing with the actual quench time.
+        # MN/m^3
         f_vv_actual = (
             2.54e6
             * (3e0 * 1.3e0 * 50e0 * 0.92e0**2e0)
@@ -2734,6 +2740,15 @@ class Stellarator:
                 )
             )
             ** (-1)
+        )
+
+        # N/m^2
+        # is the vv width the correct length to multiply by to turn the
+        # force density into a stress?
+        sctfcoil_module.vv_stress_quench = (
+            f_vv_actual
+            * 1e6
+            * ((build_variables.d_vv_in + build_variables.d_vv_out) / 2)
         )
 
         # the conductor fraction is meant of the cable space#
@@ -3849,7 +3864,7 @@ class Stellarator:
         #  Calculate plasma composition
         # Issue #261 Remove old radiation model
 
-        physics_module.plasma_composition()
+        self.physics.plasma_composition()
 
         # Calculate density and temperature profile quantities
         profiles_module.plasma_profiles()
@@ -4048,7 +4063,7 @@ class Stellarator:
 
         #  Calculate ion/electron equilibration power
 
-        physics_variables.piepv = physics_module.rether(
+        physics_variables.piepv = self.physics.rether(
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.dene,
@@ -4174,7 +4189,7 @@ class Stellarator:
             physics_variables.tauei,
             physics_variables.taueff,
             physics_variables.powerht,
-        ) = physics_module.pcond(
+        ) = self.physics.pcond(
             physics_variables.afuel,
             physics_variables.palpmw,
             physics_variables.aspect,
@@ -4224,7 +4239,7 @@ class Stellarator:
             physics_variables.qfuel,
             physics_variables.rndfuel,
             physics_variables.taup,
-        ) = physics_module.phyaux(
+        ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
             physics_variables.deni,
