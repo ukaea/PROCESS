@@ -349,7 +349,8 @@ subroutine check
 
     if (fimp(2) .ne. 0.1D0) then
         write(*,*)'The thermal alpha/electron density ratio should be controlled using ralpne (itv 109) and not fimp(2).'
-        write(*,*)'fimp(2) will be ignored.'
+        write(*,*)'fimp(2) should be removed from the input file, or set to the default value 0.1D0.'
+        stop 1
     end if
 
     !  Impurity fractions
