@@ -347,6 +347,11 @@ subroutine check
         trithtmw = 0.0D0
     end if
 
+    if (fimp(2) .ne. 0.1D0) then
+        write(*,*)'The thermal alpha/electron density ratio should be controlled using ralpne (itv 109) and not fimp(2).'
+        write(*,*)'fimp(2) will be ignored.'
+    end if
+
     !  Impurity fractions
     do imp = 1,nimp
         impurity_arr_frac(imp) = fimp(imp)
