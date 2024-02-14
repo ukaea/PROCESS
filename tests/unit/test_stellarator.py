@@ -24,6 +24,7 @@ from process.hcpb import CCFE_HCPB
 from process.blanket_library import BlanketLibrary
 from process.fw import Fw
 from process.current_drive import CurrentDrive
+from process.physics import Physics
 
 
 @pytest.fixture
@@ -42,6 +43,7 @@ def stellarator():
         PlasmaProfile(),
         CCFE_HCPB(BlanketLibrary(Fw())),
         CurrentDrive(),
+        Physics(PlasmaProfile(), CurrentDrive()),
     )
 
 
