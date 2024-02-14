@@ -4236,7 +4236,7 @@ class Physics:
 
         po.ocmmnt(
             self.outfile,
-            f"Confinement scaling law: { physics_variables.tauscl[physics_variables.isc-1]}",
+            f"Confinement scaling law: {f2py_compatible_to_string(physics_variables.tauscl[physics_variables.isc-1])}",
         )
 
         po.ovarrf(

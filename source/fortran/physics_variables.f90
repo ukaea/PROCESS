@@ -394,7 +394,7 @@ module physics_variables
   integer :: isc
   !! switch for energy confinement time scaling law (see description in `tauscl`)
 
-  character(len=24), parameter, dimension(ipnlaws) :: tauscl = (/ &
+  character*24, parameter, dimension(ipnlaws) :: tauscl = (/ &
     'Neo-Alcator      (ohmic)', &
     'Mirnov               (H)', &
     'Merezkhin-Muhkovatov (L)', &
