@@ -2087,11 +2087,6 @@ contains
       !  Net electric power
       pnetelmw = pgrossmw - precircmw
 
-      !  Scaling to prevent negative pnetelmw
-      if ( (pnetelmw < 1.0D0).and.(ipnet == 0) ) then
-        pnetelmw = 1.0D0 / ( 1.0D0 + abs(pnetelmw-1.0D0))
-      end if
-
     end if
 
     if (iprint == 0) return

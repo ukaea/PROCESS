@@ -922,17 +922,6 @@ class Power:
                 heat_transport_variables.pgrossmw - heat_transport_variables.precircmw
             )
 
-            #  Scaling to prevent negative heat_transport_variables.pnetelmw
-            # Do NOT rescale if this is the last run through.
-            if (
-                (heat_transport_variables.pnetelmw < 1.0e0)
-                and (cost_variables.ipnet == 0)
-                and (not output)
-            ):
-                heat_transport_variables.pnetelmw = 1.0e0 / (
-                    1.0e0 + abs(heat_transport_variables.pnetelmw - 1.0e0)
-                )
-
             #  Recirculating power fraction
             cirpowfr = (
                 heat_transport_variables.pgrossmw - heat_transport_variables.pnetelmw

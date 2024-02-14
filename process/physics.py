@@ -4731,7 +4731,7 @@ class Physics:
         """
         physics_module.iscz = is_
 
-        return root_scalar(self.fhz, bracket=(0.01, 100), xtol=0.003).root
+        return root_scalar(self.fhz, bracket=(0.01, 150), xtol=0.003).root
 
     def fhz(self, hhh):
         """Function used to find power balance
