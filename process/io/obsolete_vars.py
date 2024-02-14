@@ -11,6 +11,7 @@ var is deprecated.
 
 Note: this is now relied upon by Blueprint, pending implementing a proper API.
 """
+
 OBS_VARS = {
     "snull": "i_single_null",
     "tfno": "n_tf",
@@ -110,6 +111,7 @@ OBS_VARS = {
     "fvolcry": None,
     "idhe3": "fhe3",
     "blnktth": None,
+    "theat": "t_fusion_ramp",
 }
 
 OBS_VARS_HELP = {

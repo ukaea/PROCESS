@@ -8,6 +8,7 @@ dependencies. As a result, many mocks are required to isolate the tests. There
 are also many variables that could be asserted, so a few key variables central
 to the testing of the subroutine have been chosen.
 """
+
 import numpy as np
 from numpy.testing import assert_array_almost_equal
 import pytest
@@ -139,7 +140,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(tv, "tburn", 7.1263e-1)
     monkeypatch.setattr(tv, "tohs", 1.82538e2)
     monkeypatch.setattr(tv, "tqnch", 1.82538e2)
-    monkeypatch.setattr(tv, "theat", 1.0e1)
+    monkeypatch.setattr(tv, "t_fusion_ramp", 1.0e1)
     monkeypatch.setattr(constants, "dcopper", 8.9e3)
     monkeypatch.setattr(pf, "first_call", True)
 

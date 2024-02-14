@@ -343,7 +343,7 @@ contains
       sig_tf_wp_max, eyoung_cond_trans, i_tf_cond_eyoung_axial, i_tf_cond_eyoung_trans, &
       str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv
 
-    use times_variables, only: tohs, pulsetimings, tqnch, theat, tramp, tburn, &
+    use times_variables, only: tohs, pulsetimings, tqnch, t_fusion_ramp, tramp, tburn, &
       tdwell, tohsin
     use vacuum_variables, only: dwell_pump, pbase, tn, pumpspeedfactor, &
       initialpressure, outgasfactor, prdiv, pumpspeedmax, rat, outgasindex, &
@@ -1124,8 +1124,8 @@ contains
        case ('tdwell')
           call parse_real_variable('tdwell', tdwell, 0.0D0, 1.0D8, &
                'Time between burns (s)')
-       case ('theat')
-          call parse_real_variable('theat', theat, 0.0D0, 1.0D4, &
+       case ('t_fusion_ramp')
+          call parse_real_variable('t_fusion_ramp', t_fusion_ramp, 0.0D0, 1.0D4, &
                'Heating time after current ramp (s)')
        case ('tohs')
           call parse_real_variable('tohs', tohs, 0.0D0, 1.0D4, &

@@ -158,7 +158,7 @@ class Physics:
         # The pulse length is the duration of non-zero plasma current
         times_variables.tpulse = (
             times_variables.tohs
-            + times_variables.theat
+            + times_variables.t_fusion_ramp
             + times_variables.tburn
             + times_variables.tqnch
         )
@@ -173,7 +173,7 @@ class Physics:
         times_variables.tcycle = (
             times_variables.tramp
             + times_variables.tohs
-            + times_variables.theat
+            + times_variables.t_fusion_ramp
             + times_variables.tburn
             + times_variables.tqnch
             + times_variables.tdwell
@@ -608,7 +608,7 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.rplas,
             physics_variables.plascur,
-            times_variables.theat,
+            times_variables.t_fusion_ramp,
             times_variables.tburn,
             physics_variables.rli,
         )
@@ -1284,7 +1284,7 @@ class Physics:
         rmajor,
         rplas,
         plascur,
-        theat,
+        t_fusion_ramp,
         tburn,
         rli,
     ):
@@ -1299,7 +1299,7 @@ class Physics:
         rli    : input real :  plasma normalised inductivity
         rmajor : input real :  plasma major radius (m)
         rplas  : input real :  plasma resistance (ohm)
-        theat  : input real :  heating time (s)
+        t_fusion_ramp  : input real :  heating time (s)
         tburn  : input real :  burn time (s)
         phiint : output real : internal plasma volt-seconds (Wb)
         rlp    : output real : plasma inductance (H)
@@ -1353,7 +1353,7 @@ class Physics:
         # if the pulsed reactor option is used, but the value
         # will be correct on subsequent calls.
 
-        vsbrn = vburn * (theat + tburn)
+        vsbrn = vburn * (t_fusion_ramp + tburn)
         vsstt = vsstt + vsbrn
 
         return phiint, rlp, vsbrn, vsind, vsres, vsstt
@@ -2594,7 +2594,12 @@ class Physics:
             "(tohs)",
             times_variables.tohs,
         )
-        po.ovarrf(self.outfile, "Heating time (s)", "(theat)", times_variables.theat)
+        po.ovarrf(
+            self.outfile,
+            "Heating time (s)",
+            "(t_fusion_ramp)",
+            times_variables.t_fusion_ramp,
+        )
         po.ovarre(
             self.outfile, "Burn time (s)", "(tburn)", times_variables.tburn, "OP "
         )

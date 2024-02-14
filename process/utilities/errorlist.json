@@ -473,7 +473,7 @@
     {
       "no": 93,
       "level": 2,
-      "message": "BURN: Negative burn time available; reduce theat or raise PF coil V-s capability"
+      "message": "BURN: Negative burn time available; reduce t_fusion_ramp or raise PF coil V-s capability"
     },
     {
       "no": 94,
