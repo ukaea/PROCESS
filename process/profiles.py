@@ -124,7 +124,9 @@ class NProfile(Profile):
         )
 
     @staticmethod
-    def ncore(rhopedn, nped, nsep, nav, alphan):
+    def ncore(
+        rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
+    ) -> float:
         """This routine calculates the core denesity of a pedestalised profile.
 
         :param rhopedn: normalised minor radius pedestal position
@@ -156,8 +158,9 @@ class NProfile(Profile):
             # Prevent ncore from going negative (and terminating the optimisation) by
             # kludging to small positive value. Allows solver to continue and
             # hopefully be constrained away from this point (e.g. constraint 81, ne0 > neped)
-            print("hello")
             error_handling.report_error(282)
+
+        return ncore
 
     def set_physics_variables(self):
         """_summary_
