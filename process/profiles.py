@@ -3,10 +3,7 @@ import logging
 from scipy import integrate
 from abc import ABC, abstractmethod
 
-from process.fortran import (
-    maths_library,
-    physics_variables,
-)
+from process.fortran import maths_library, physics_variables, error_handling
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -159,12 +156,9 @@ class NProfile(Profile):
             # Prevent ncore from going negative (and terminating the optimisation) by
             # kludging to small positive value. Allows solver to continue and
             # hopefully be constrained away from this point (e.g. constraint 81, ne0 > neped)
-            logger.exception("ncore is negative. Kludging to 1e-6.")
-            ncore = 1.0e-6
-            # raise ValueError(
-            #     f"Core density is negative: {ncore}. {nped = }, {nsep = }, {nav = }"
-            # )
-        return ncore
+            print("hello")
+            error_handling.report_error(252)
+        return
 
     def set_physics_variables(self):
         """_summary_
