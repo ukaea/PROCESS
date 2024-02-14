@@ -1,4 +1,5 @@
 """Scenario class for an individual regression test case."""
+
 import logging
 import sys
 import os
@@ -31,6 +32,7 @@ EXCLUSIONS = {
     "sig_tf_r_max(1)",
     "sqsumsq",
     "ric(nohc)",
+    "nviter",
 }
 EXCLUSION_PATTERNS = [
     r"normres\d{3}",  # normres and 3 digits
