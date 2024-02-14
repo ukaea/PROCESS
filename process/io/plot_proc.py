@@ -1687,13 +1687,17 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             # Inner WP insulation
             axis.add_patch(
                 Rectangle(
-                    (wp_inner, -(0.5 * wp_toridal_dxsmall)),
-                    dr_tf_wp / 2,
-                    wp_toridal_dxsmall,
+                    (
+                        wp_inner - 2 * tinstf,
+                        -(0.5 * wp_toridal_dxsmall) - 2 * tinstf,
+                    ),
+                    (dr_tf_wp / 2) + (tinstf),
+                    wp_toridal_dxsmall + (tinstf),
                     color="darkgreen",
                     label="Insulation",
                 ),
             )
+            print(-(0.5 * wp_toridal_dxsmall))
             # Outer WP insulation
             axis.add_patch(
                 Rectangle(
@@ -1701,9 +1705,9 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                         wp_inner + (0.5 * dr_tf_wp) - tinstf,
                         -(0.5 * wp_toridal_dxbig) - tinstf,
                     ),
-                    dr_tf_wp / 2,
-                    wp_toridal_dxbig,
-                    color="gray",
+                    (dr_tf_wp / 2) + (tinstf),
+                    wp_toridal_dxbig + (tinstf),
+                    color="darkgreen",
                 ),
             )
             # Outer WP
@@ -2760,10 +2764,10 @@ def main_plot(
     fig1.subplots_adjust(wspace=0.25)
 
     # TF coil with WP
-    plot_7 = fig3.add_subplot(321, aspect="equal")
+    plot_7 = fig3.add_subplot(321)
     plot_tf_wp(plot_7, m_file_data, scan)
 
-    # TF coil with WP
+    # TF coil turn structure
     plot_8 = fig3.add_subplot(322, aspect="equal")
     plot_tf_turn(plot_8, m_file_data, scan)
 
