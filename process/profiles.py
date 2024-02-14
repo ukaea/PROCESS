@@ -152,13 +152,12 @@ class NProfile(Profile):
             )
         )
 
-        if ncore < 0:
+        if ncore < 0.0:
             # Prevent ncore from going negative (and terminating the optimisation) by
             # kludging to small positive value. Allows solver to continue and
             # hopefully be constrained away from this point (e.g. constraint 81, ne0 > neped)
             print("hello")
-            error_handling.report_error(252)
-        return
+            error_handling.report_error(282)
 
     def set_physics_variables(self):
         """_summary_
