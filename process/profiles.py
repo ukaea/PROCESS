@@ -154,9 +154,8 @@ class NProfile(Profile):
         )
 
         if ncore < 0.0:
-            # Prevent ncore from going negative (and terminating the optimisation) by
-            # kludging to small positive value. Allows solver to continue and
-            # hopefully be constrained away from this point (e.g. constraint 81, ne0 > neped)
+            # Allows solver to continue and
+            # warns the user to raise the lower bound on dene if the run did not converge
             error_handling.report_error(282)
         return ncore
 
