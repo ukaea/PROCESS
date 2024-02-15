@@ -137,11 +137,10 @@ class NProfile(Profile):
         :type nsep: float
         :param nav: electron density (/m3)
         :type nav: float
-        :param alphan: _description_
         :param alphan: density peaking parameter
         :type alphan: float
         :return: Core density
-        :rtype: numpy.array
+        :type: float
         """
 
         ncore = (
@@ -159,7 +158,6 @@ class NProfile(Profile):
             # kludging to small positive value. Allows solver to continue and
             # hopefully be constrained away from this point (e.g. constraint 81, ne0 > neped)
             error_handling.report_error(282)
-
         return ncore
 
     def set_physics_variables(self):
