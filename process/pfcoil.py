@@ -603,12 +603,12 @@ class PFCoil:
                 i = i + 1
 
         # Calculate peak field, allowable current density, resistive
-        # power losses and volumes and weights for each PF coil
+        # power losses and volumes and weights for each PF coil, index i
         i = 0
         it = 0
         pfv.powpfres = 0.0e0
         pfv.pfmmax = 0.0e0
-
+      
         for ii in range(pfv.ngrp):
             iii = ii
             for ij in range(pfv.ncls[ii]):
@@ -620,8 +620,8 @@ class PFCoil:
                         i + 1, iii + 1, it
                     )  # returns bpf, bpf2
 
-                # Allowable current density (for superconducting coils)
-
+                #Issue 871.  MDK
+                # Allowable current density (for superconducting coils) for each coil, index i
                 if pfv.ipfres == 0:
                     bmax = max(abs(pfv.bpf[i]), abs(pf.bpf2[i]))
                     pfv.rjpfalw[i], jstrand, jsc, tmarg = self.superconpf(
@@ -2904,12 +2904,12 @@ class PFCoil:
             jcritsc, _ = superconductors.jcrit_rebco(thelium, bmax)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
-            # The CS coil current at EOF
-            ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
-            # The CS coil current/copper area calculation for quench protection
-            # Copper area = (area of coil - area of steel)*(1- void fraction)*
-            # (fraction of copper in strands)
-            rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # # The CS coil current at EOF
+            # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+            # # The CS coil current/copper area calculation for quench protection
+            # # Copper area = (area of coil - area of steel)*(1- void fraction)*
+            # # (fraction of copper in strands)
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
         elif isumat == 7:
             # Durham Ginzburg-Landau critical surface model for Nb-Ti
@@ -2918,8 +2918,8 @@ class PFCoil:
             jcritsc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
-            # The CS coil current at EOF
-            ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+            # # The CS coil current at EOF
+            # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
 
         elif isumat == 8:
             # Durham Ginzburg-Landau critical surface model for REBCO
@@ -2929,10 +2929,10 @@ class PFCoil:
             # A0 calculated for tape cross section already
             jcritstr = jcritsc * (1.0e0 - fcu)
 
-            # The CS coil current at EOF
-            ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
-            # The CS coil current/copper area calculation for quench protection
-            rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # # The CS coil current at EOF
+            # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+            # # The CS coil current/copper area calculation for quench protection
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
         elif isumat == 9:
             # Hazelton experimental data + Zhai conceptual model for REBCO
@@ -2944,15 +2944,23 @@ class PFCoil:
             # A0 calculated for tape cross section already
             jcritstr = jcritsc * (1.0e0 - fcu)
 
-            # The CS coil current at EOF
-            ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
-            # The CS coil current/copper area calculation for quench protection
-            rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # # The CS coil current at EOF
+            # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+            # # The CS coil current/copper area calculation for quench protection
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
         else:
             # Error condition
             eh.idiag[0] = isumat
             eh.report_error(156)
+
+        # Issue 1871 MDK. The CS calculation has been removed from the isumat option list,
+        # and only calculated if the CS properties are needed.           
+            if bv.iohcl != 0:
+                # CS coil current at EOF   
+                ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+                # CS coil current/copper area calculation for quench protection
+                rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
         # Critical current density in winding pack
         jcritwp = jcritstr * (1.0e0 - fhe)
