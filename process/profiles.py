@@ -157,6 +157,7 @@ class NProfile(Profile):
             # Allows solver to continue and
             # warns the user to raise the lower bound on dene if the run did not converge
             error_handling.report_error(282)
+            ncore = 1.0e-6
         return ncore
 
     def set_physics_variables(self):
