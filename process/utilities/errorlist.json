@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 281,
+  "n_errortypes": 282,
   "errors": [
     {
       "no": 1,
@@ -1414,6 +1414,11 @@
       "no": 281,
       "level": 3,
       "message": "CHECK: Cannot have i_tf_bucking >= 2 when tf_in_cs = 1"
+    },
+    {
+      "no": 282,
+      "level": 2,
+      "message": "CHECK: ncore is going negative when solving. Please raise the value of dene and or its lower limit."
     }
   ]
 }
