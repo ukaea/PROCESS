@@ -148,7 +148,7 @@ contains
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(6) = 'dene          '
-    boundl(6) = 1.00D19
+    boundl(6) = 2.00D19
     boundu(6) = 1.00D21
   end subroutine init_itv_6
 
@@ -3244,8 +3244,8 @@ contains
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(145) = 'fgwped        '
-    boundl(145) = 0.500D0
-    boundu(145) = 1.000D0
+    boundl(145) = 0.100D0
+    boundu(145) = 0.75D0
   end subroutine init_itv_145
 
   real(kind(1.d0)) function itv_145()
@@ -3377,7 +3377,7 @@ contains
     implicit none
     lablxc(152) = 'fgwsep        '
     boundl(152) = 0.001D0
-    boundu(152) = 1.000D0
+    boundu(152) = 0.1D0
   end subroutine init_itv_152
 
   real(kind(1.d0)) function itv_152()
