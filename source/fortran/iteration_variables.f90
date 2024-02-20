@@ -3245,7 +3245,7 @@ contains
     implicit none
     lablxc(145) = 'fgwped        '
     boundl(145) = 0.100D0
-    boundu(145) = 0.75D0
+    boundu(145) = 0.9D0
   end subroutine init_itv_145
 
   real(kind(1.d0)) function itv_145()
@@ -3377,7 +3377,7 @@ contains
     implicit none
     lablxc(152) = 'fgwsep        '
     boundl(152) = 0.001D0
-    boundu(152) = 0.1D0
+    boundu(152) = 0.5D0
   end subroutine init_itv_152
 
   real(kind(1.d0)) function itv_152()
