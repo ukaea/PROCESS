@@ -4082,7 +4082,7 @@ contains
 
     !  Local variables
 
-    real(dp) :: valbdp,valadp,xfact
+    real(dp) :: valbdp,valadp,xexp
     integer :: iptr,izero,iexpon
     logical :: negatm,negate
 
@@ -4142,7 +4142,7 @@ contains
     ! *** Parse the mantissa - before the decimal point
 
     valbdp = 0.0D0
-    xfact = 0.1D0
+    xexp = -1.0D0
 20  continue
     if ((string(iptr:iptr) >= '0').and.(string(iptr:iptr) <= '9')) then
        valbdp = (valbdp * 10.0D0) + dble(ichar(string(iptr:iptr))-izero)
@@ -4163,8 +4163,8 @@ contains
     valadp = 0.0D0
 30  continue
     if ((string(iptr:iptr) >= '0').and.(string(iptr:iptr) <= '9')) then
-       valadp = valadp + (dble(ichar(string(iptr:iptr))-izero)*xfact)
-       xfact = xfact * 0.1D0
+       valadp = valadp + (dble(ichar(string(iptr:iptr))-izero)*(10.0D0 ** xexp))
+       xexp = xexp - 1.0D0
        iptr = iptr + 1
        if (iptr > length) goto 50
        goto 30
