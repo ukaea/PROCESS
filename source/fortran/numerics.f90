@@ -353,7 +353,7 @@ module numerics
   !! <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)
   !! <LI> (150) REMOVED
   !! <LI> (151) REMOVED
-  !! <LI> (152) fbmaxcs : Ratio of separatrix density to Greenwald density
+  !! <LI> (152) fgwsep : Ratio of separatrix density to Greenwald density
   !! <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)
   !! <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
   !! <LI> (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)

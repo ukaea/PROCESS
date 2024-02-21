@@ -3372,7 +3372,7 @@ contains
   !---------------------------------
 
   subroutine init_itv_152
-    !! <LI> (152) fbmaxcs : Ratio of separatrix density to Greenwald density
+    !! <LI> (152) fgwsep : Ratio of separatrix density to Greenwald density
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(152) = 'fgwsep        '
