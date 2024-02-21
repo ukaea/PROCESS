@@ -2230,7 +2230,7 @@ contains
 
   !---------------------------------
 
-  
+
 
   !---------------------------------
 
@@ -3372,7 +3372,7 @@ contains
   !---------------------------------
 
   subroutine init_itv_152
-    !! <LI> (152) fbmaxcs : Ratio of separatrix density to Greenwald density
+    !! <LI> (152) fgwsep : Ratio of separatrix density to Greenwald density
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(152) = 'fgwsep        '
@@ -4060,7 +4060,7 @@ contains
            case (99);
            case (100);
            case (101);
-           case (102); 
+           case (102);
            case (103);  xcm(i) = itv_103()
            case (104);  xcm(i) = itv_104()
            case (105);  xcm(i) = itv_105()
@@ -4327,7 +4327,7 @@ contains
            case (99);
            case (100);
            case (101);
-           case (102);  
+           case (102);
            case (103);  call set_itv_103(ratio)
            case (104);  call set_itv_104(ratio)
            case (105);  call set_itv_105(ratio)
