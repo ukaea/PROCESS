@@ -1963,7 +1963,7 @@ class CurrentDrive:
         x = np.sqrt(efast / ecritfi)
         t1 = np.log((x * x - x + 1.0e0) / ((x + 1.0e0) ** 2))
         thx = (2.0e0 * x - 1.0e0) / np.sqrt(3.0e0)
-        t2 = 2.0e0 * np.sqrt(3.0e0) * (np.atan(thx) + np.pi / 6.0e0)
+        t2 = 2.0e0 * np.sqrt(3.0e0) * (np.arctan(thx) + np.pi / 6.0e0)
 
         return (t1 + t2) / (3.0e0 * x * x)
 
