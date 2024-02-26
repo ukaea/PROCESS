@@ -41,7 +41,6 @@ from process.io.ndscan_funcs import (
 from process.io.in_dat import InDat
 from process.io.mfile import MFile
 from process.io.configuration import Config
-from process.io.process_netcdf import NetCDFWriter
 from process.io.python_fortran_dicts import get_dicts
 import logging
 
@@ -1159,28 +1158,6 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
         in_dat.write_in_dat(output_filename="IN.DAT")
 
-    def add_results2netcdf(self, run_id):
-        """reads current MFILE and IN.DAT and adds specified output variables
-        of last scan point to summary netCDF file"""
-
-        m_file = MFile(filename="MFILE.DAT")
-        in_dat = InDat()
-
-        with NetCDFWriter(
-            self.wdir + "/uncertainties.nc", append=True, overwrite=False
-        ) as ncdf_writer:
-            # try:
-            ncdf_writer.write_data(
-                m_file, in_dat, run_id, save_vars=self.output_vars, ignore_unknowns=True
-            )
-            # except KeyError as err:
-            #    print('Error: You have specified an output variable that'
-            #          ' does not exist in MFILE. If this is a valid PROCESS'
-            #          ' variable, request it being  added to the MFILE output,'
-            #          ' else check your spelling!', file=stderr)
-            #    print(err, file=stderr)
-            #    exit()
-
     def write_error_summary(self, sample_index):
         """reads current MFILE and IN.DAT and adds specified output variables
         to error summary file"""
@@ -1272,7 +1249,7 @@ class NdScanConfig(Config, RunProcessConfig):
         "remove_scanvars_from_ixc": True,
         # Removes all scanning variables from the iteration variables
         #  of the IN.DAT file.
-        "smooth_itervars": False
+        "smooth_itervars": False,
         # Activates data smoothing, which increases run time but reduces errors
     }
 
