@@ -119,7 +119,7 @@ jobs:
       - name: Install PROCESS
         run: pip install -e .
       - name: Run integration tests
-        run: pytest tests/integration
+        run: pytest tests/integration -n auto -v
   
 
   regression-py38:
