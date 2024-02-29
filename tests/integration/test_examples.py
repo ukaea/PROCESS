@@ -56,6 +56,8 @@ def test_examples(delete_plot_procs):
     """Run examples.ipynb and check no exceptions are raised.
 
     examples.ipynb uses temp dirs to clean up any produced files itself.
+    :param examples_as_cwd: fixture to set examples dir as cwd
+    :type examples_as_cwd: None
     """
     with testbook("examples.ipynb", execute=True, timeout=600):
         pass
