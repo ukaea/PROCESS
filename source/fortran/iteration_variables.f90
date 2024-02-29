@@ -1202,29 +1202,13 @@ contains
     fvdump = ratio
   end subroutine set_itv_51
 
+  !! <LI> (52) NOT USED
   !---------------------------------
 
-  subroutine init_itv_52
-    !! <LI> (52) vdalw
-    use numerics, only: lablxc, boundl, boundu
-    implicit none
-    lablxc(52) = 'vdalw         '
-    boundl(52) = 0.001D0
-    boundu(52) = 1.000D6
-  end subroutine init_itv_52
-
   real(kind(1.d0)) function itv_52()
-    use tfcoil_variables, only: vdalw
     implicit none
-    itv_52 =  vdalw
+    write(*,*) 'Iteration variable 52 is no longer in use.'
   end function itv_52
-
-  subroutine set_itv_52(ratio)
-    use tfcoil_variables, only: vdalw
-    implicit none
-    real(kind(1.d0)) :: ratio
-    vdalw = ratio
-  end subroutine set_itv_52
 
   !---------------------------------
 
@@ -4277,7 +4261,7 @@ contains
            case (49);  call set_itv_49(ratio)
            case (50);  call set_itv_50(ratio)
            case (51);  call set_itv_51(ratio)
-           case (52);  call set_itv_52(ratio)
+           case (52);  
            case (53);  call set_itv_53(ratio)
            case (54);  call set_itv_54(ratio)
            case (55);

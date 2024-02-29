@@ -253,7 +253,7 @@ module numerics
   !! <LI> (49) fstrcond (f-value for equation 32)
   !! <LI> (50) fiooic (f-value for equation 33)
   !! <LI> (51) fvdump (f-value for equation 34)
-  !! <LI> (52) vdalw
+  !! <LI> (52) NOT USED
   !! <LI> (53) fjprot (f-value for equation 35)
   !! <LI> (54) ftmargtf (f-value for equation 36)
   !! <LI> (55) NOT USED
