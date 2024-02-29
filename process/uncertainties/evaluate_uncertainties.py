@@ -102,12 +102,10 @@ def run_monte_carlo(args):
     outputDataSet = []
 
     for j in range(config.no_samples):
-
         print("sample point", j, ":")
         config.go2newsamplepoint(j)
 
         for i in range(config.niter):
-
             print("  ", i, end=" ")
 
             # Define path for the input file to run
@@ -118,7 +116,6 @@ def run_monte_carlo(args):
             check_input_error(wdir=config.wdir)
 
             if not process_stopped():
-
                 no_unfeasible = no_unfeasible_mfile()
 
                 if no_unfeasible <= config.no_allowed_unfeasible:
@@ -129,9 +126,6 @@ def run_monte_carlo(args):
                             "but finished anyway! Allowed  %i. "
                             % config.no_allowed_unfeasible,
                         )
-
-                    # this might need to be depraitedd
-                    # CONFIG.add_results2netcdf(RUN_ID)
 
                     # add run to index list
                     indexDataSet.append("run{}".format(RUN_ID))
