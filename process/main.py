@@ -347,6 +347,7 @@ class SingleRun:
         self.validate_input()
         self.init_module_vars()
         self.set_filenames()
+        self.initialise()
         self.models = Models()
         self.solver = solver
 
@@ -355,8 +356,6 @@ class SingleRun:
 
         This is separate from init to allow model instances to be modified before a run.
         """
-        self.set_filenames()
-        self.initialise()
         self.validate_user_model()
         self.run_tests()
         self.call_solver()
@@ -568,6 +567,34 @@ class CostsProtocol(Protocol):
         """write model output"""
 
 
+class CostManager(CostsProtocol):
+    def __init__(self, models):
+        """
+        :param models: a reference to the PROCESS Models
+        :type models: Models
+        """
+        self._models = models
+
+    @property
+    def cost_model(self) -> CostsProtocol:
+        if fortran.cost_variables.cost_model == 0:
+            return self._models._costs_1990
+        if fortran.cost_variables.cost_model == 1:
+            return self._models._costs_2015
+        if fortran.cost_variables.cost_model == 2:
+            if self._models._costs_custom is not None:
+                return self._models._costs_custom
+            raise ValueError("Custom costs model not initialised")
+        # Probably overkill but makes typing happy
+        raise ValueError("Unknown costs model")
+
+    def run(self):
+        return self.cost_model.run()
+
+    def output(self):
+        return self.cost_model.output()
+
+
 class Models:
     """Creates instances of physics and engineering model classes.
 
@@ -583,6 +610,7 @@ class Models:
         self._costs_custom = None
         self._costs_1990 = Costs()
         self._costs_2015 = Costs2015()
+        self._costs = CostManager(self)
         self.cs_fatigue = CsFatigue()
         self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
         self.power = Power()
@@ -620,16 +648,7 @@ class Models:
 
     @property
     def costs(self) -> CostsProtocol:
-        if fortran.cost_variables.cost_model == 0:
-            return self._costs_1990
-        if fortran.cost_variables.cost_model == 1:
-            return self._costs_2015
-        if fortran.cost_variables.cost_model == 2:
-            if self._costs_custom is not None:
-                return self._costs_custom
-            raise ValueError("Custom costs model not initialised")
-        # Probably overkill but makes typing happy
-        raise ValueError("Unknown costs model")
+        return self._costs
 
     @costs.setter
     def costs(self, value: CostsProtocol):
