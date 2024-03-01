@@ -69,24 +69,23 @@ cmake --build build
 pytest -k baseline_jan
 ```
 
-Your run script will need to activate the conda env as before:
-
-``` bash
-conda activate my_process
-python my_uncert_tool.py
-```
-
 ## Submitting jobs
 
 CSD3 uses a SLURM queuing system to manage job submission. Follow the instructions in the user guide for further details [here](https://docs.hpc.cam.ac.uk/hpc/user-guide/batch.html).
-In brief, you should create a script which contains the commands you'd like to execute. As an example, create a file `job_example.sh` which contains commands to perform a run with the 2018 baseline:
+
+Modfify one of the SLURM job submission scripts, which are found in `/usr/local/Cluster-Docs/SLURM/` with your account information. You can add some commands for the job script to execute. For example, the job script can contain instructions to activate your environment:
+
+``` bash
+conda activate my_process
+```
+
+and then execute a command, such as a single run of PROCESS:
 
 ```bash
 #!/bin/sh
 process -i ~/process/tracking/baseline_2018/baseline_2018_IN.DAT
 ```
 
-Modfify one of the SLURM submission scripts, which are found in `/usr/local/Cluster-Docs/SLURM/`, so that it points towards `job_example.sh`.
 Note that you must use the correct project code for you work: UKAEA-AP002-CPU for non-STEP work and UKAEA-AP001-CPU for STEP work.
 
-Use the `sbatch` command to submit your script.
+Use the `sbatch` command to submit your script. You will recieve an email notifying you that the job has begun, and one to notify you when it has ended successfully or failed.
