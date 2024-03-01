@@ -8,6 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 
 COPY requirements.txt /tmp/requirements.txt
+COPY requirements_dev.txt /tmp/requirements_dev.txt
 
 
 # Install apt packages
@@ -67,6 +68,7 @@ RUN pyenv install 3.8.12 && \
 
 RUN python -m pip install --upgrade pip && \
     python -m pip install -r /tmp/requirements.txt && \
+    python -m pip install -r /tmp/requirements_dev.txt && \
     python -m pip install git+https://github.com/jonmaddock/ford
 
 RUN git clone https://github.com/jmorris-uk/anybadge.git /root/anybadge/ && pip install anybadge

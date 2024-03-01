@@ -49,9 +49,6 @@ class CCFE_HCPB:
         fwbs_variables.coolwh = 1
         # Note that the first wall coolant is now input separately.
 
-        # Energy multiplication
-        fwbs_variables.emult = 1.269
-
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
         blanket_library.component_volumes()
 

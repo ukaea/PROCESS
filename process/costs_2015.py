@@ -23,7 +23,6 @@ class Costs2015:
         self.outfile = constants.nout
 
         # Initialise module variables
-        self.ip = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.ofile = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.total_costs = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.mean_electric_output = AnnotatedVariable(
@@ -33,7 +32,6 @@ class Costs2015:
             float, 0.0, docstring="", units=""
         )
         self.maintenance = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.ip = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.ofile = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.total_costs = AnnotatedVariable(float, 0.0, docstring="", units="")
 
@@ -85,7 +83,7 @@ class Costs2015:
             units="",
         )
 
-    def run(self, output: bool):
+    def run(self):
         """
         Cost accounting for a fusion power plant
         author: J Morris, CCFE, Culham Science Centre
@@ -94,7 +92,6 @@ class Costs2015:
         This routine performs the cost accounting for a fusion power plant.
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
-        self.ip = int(output)
         self.outfile = self.outfile
 
         # ###############################################
@@ -142,7 +139,7 @@ class Costs2015:
         self.mean_electric_output = (
             heat_transport_variables.pnetelmw * cost_variables.cpfact
         )
-        self.annual_electric_output = self.mean_electric_output * 24.0e0 * 265.25e0
+        self.annual_electric_output = self.mean_electric_output * 24.0e0 * 365.25e0
 
         # Annual maintenance cost.
         self.maintenance = (
@@ -176,7 +173,7 @@ class Costs2015:
         if (abs(cost_variables.concost) > 9.99e99) or (
             cost_variables.concost != cost_variables.concost
         ):
-            self.write_costs_to_output()
+            self.output()
 
             for i in range(100):
                 # noqa: E741
@@ -195,14 +192,6 @@ class Costs2015:
                 po.ocmmnt(self.outfile, nan_diags_str)
 
             return
-
-        # Output costs #
-        # ###############
-
-        if (self.ip == 0) or (cost_variables.output_costs == 0):
-            return
-
-        self.write_costs_to_output()
 
     def calc_fwbs_costs(self):
         """
@@ -232,7 +221,7 @@ class Costs2015:
         tail_li6 = feed_li6 * 0.75e0
 
         # Built-in test
-        if (self.ip == 1) and (global_variables.run_tests == 1):
+        if global_variables.run_tests == 1:
             product_li6 = 0.3
             feed_to_product_mass_ratio = (product_li6 - tail_li6) / (
                 feed_li6 - tail_li6
@@ -383,7 +372,7 @@ class Costs2015:
         for j in range(21, 26):
             self.s_cost[26] = self.s_cost[26] + self.s_cost[j]
 
-    def write_costs_to_output(self):
+    def output(self):
         """
         Function to output the costs calculations
         author: J Morris, CCFE, Culham Science Centre

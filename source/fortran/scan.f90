@@ -67,7 +67,7 @@ module scan_module
   !!         <LI> 27 tbrmin (for blktmodel > 0 only)
   !!         <LI> 28 bt
   !!         <LI> 29 coreradius
-  !!         <LI> 30 fimpvar
+  !!         <LI> 30 fimpvar # OBSOLETE
   !!         <LI> 31 taulimit
   !!         <LI> 32 epsvmc
   !!         <LI> 33 ttarget
@@ -212,7 +212,7 @@ contains
     ! Turn off error reporting (until next output)
     errors_on = .false.
 
-    ! Store values for PLOT.DAT output
+    ! Store values for MFILE.DAT output
     outvar( 1,iscan) = dble(ifail)
     outvar( 2,iscan) = sqsumsq
     outvar( 3,iscan) = coe
@@ -267,7 +267,7 @@ contains
         outvar(49,iscan) = 0.0D0
     end if
     outvar(50,iscan) = pdivt/rmajor
-    !outvar(51,iscan) = fimpvar
+    !outvar(51,iscan) = fimpvar #OBSOLETE
     outvar(51,iscan) = 0.0d0
     outvar(52,iscan) = pradmw
     outvar(53,iscan) = tpeak
@@ -362,7 +362,7 @@ contains
         plabel(48) = 'Net_electric_Pwr_(MW)____'
         plabel(49) = 'Recirculating_Fraction___'
         plabel(50) = 'Psep/R___________________'
-        plabel(51) = 'fimpvar__________________'
+        plabel(51) = '' !OBSOLETE
         plabel(52) = 'Tot._radiation_power_(MW)'
         plabel(53) = 'First_wall_peak_temp_(K)_'
         plabel(54) = 'Cu_frac_TFC_conductor____'
@@ -401,16 +401,6 @@ contains
 
         first_call_1d = .false.
      end if
-
-    ! Finally, write data to PLOT.DAT
-    write(nplot,'(i8)') isweep
-    write(nplot,'(a48)') tlabel
-    write(nplot,'(a25, 1p, 200e11.4)') xlabel,(sweep(iscan),iscan=1,isweep)
-
-    do ivar = 1,noutvars
-       !write(nplot,'(a25,20e11.4)') plabel(ivar), (outvar(ivar,iscan), iscan=1,isweep)
-       write(nplot,'(a25, 1p, 200e11.4)') plabel(ivar), (outvar(ivar,iscan), iscan=1,isweep)
-    end do
 
   end subroutine scan_1d_write_plot
 
@@ -560,7 +550,7 @@ contains
     plabel(48) = 'Net_electric_Pwr_(MW)____'
     plabel(49) = 'Recirculating_Fraction___'
     plabel(50) = 'Psep/R___________________'
-    plabel(51) = 'fimpvar__________________'
+    plabel(51) = '' !OBSOLETE
     plabel(52) = 'Tot._radiation_power_(MW)'
     plabel(53) = 'First_wall_peak_temp_(K)_'
     plabel(54) = 'Cu_frac_TFC_conductor____'
@@ -597,18 +587,6 @@ contains
 
     tlabel = icase
 
-    ! Finally, write data to PLOT.DAT
-    write(nplot,'(i8)') isweep*isweep_2
-    write(nplot,'(a48)') tlabel
-    write(nplot,'(a25, 1p, 200e11.4)') xlabel, (sweep_1_vals(iscan), iscan=1, &
-          isweep*isweep_2)
-    write(nplot,'(a25, 1p, 200e11.4)') xlabel_2, (sweep_2_vals(iscan), &
-          iscan=1, isweep*isweep_2)
-
-    do ivar = 1, noutvars
-        write(nplot,'(a25, 1p, 200e11.4)') plabel(ivar), (outvar(ivar,iscan), &
-            iscan=1,isweep*isweep_2)
-    end do
   end subroutine scan_2d_write_plot
 
   subroutine scan_select(nwp, swp, iscn, vlab, xlab)
@@ -620,12 +598,12 @@ contains
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
         gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
-	use current_drive_variables, only: rho_ecrh, bscfmax, etaech
+	use current_drive_variables, only: bscfmax, etaech
 	use divertor_variables, only: hldivlim
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
         n_liq_recirc, bz_channel_conduct_liq, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, pitch
-	use impurity_radiation_module, only: fimp, fimpvar, coreradius, impurity_arr_frac
+	use impurity_radiation_module, only: fimp, coreradius, impurity_arr_frac
     use physics_variables, only: kappa, dnbeta, te, aspect, ftar, bt, &
         rad_fraction_sol, triang, rmajor, beamfus0, hfact
     use numerics, only: epsvmc, boundu, boundl
@@ -736,9 +714,8 @@ contains
             coreradius = swp(iscn)
             vlab = 'coreradius' ; xlab = 'Core_radius'
         case (30)
-            fimpvar = swp(iscn)
-            ! impurity_arr(impvar)%frac = fimpvar
-            vlab = 'fimpvar' ; xlab = 'Impurity_fraction'
+            !fimpvar = swp(iscn)
+            vlab = 'OBSOLETE' ; xlab = 'OBSOLETE'
         case (31)
             taulimit = swp(iscn)
             vlab = 'taulimit' ; xlab = 'Taup/taueff_lower_limit'
@@ -765,8 +742,8 @@ contains
             impurity_arr_frac(9) = fimp(9)
             vlab = 'fimp(9)' ; xlab = 'Argon fraction'
         case (43)
-            rho_ecrh = swp(iscn)
-            vlab = 'rho_ecrh' ; xlab = 'rho at which ECCD is max'
+            ! rho_ecrh = swp(iscn)
+            vlab = 'obsolete' ; xlab = 'obsolete'
         case (44)
             sig_tf_case_max = swp(iscn)
             vlab = 'sig_tf_case_max' ; xlab = 'Allowable_stress_in_tf_coil_case_Tresca_(pa)'
@@ -1109,7 +1086,7 @@ contains
      write(nout,110) inn,lablcc(icc(inn)),sym(inn),con2(inn), &
           lab(inn),err(inn),lab(inn),con1(inn)
      call ovarre(mfile,lablcc(icc(inn))//' normalised residue', &
-          '(normres'//int_to_string3(inn)//')',con1(inn))
+          '(eq_con'//int_to_string3(icc(inn))//')',con1(inn))
   end do
 110 format(t2,i4,t8,a33,t46,a1,t47,1pe12.4,t60,a10,t71,1pe12.4,t84,a10,t98,1pe12.4)
 
@@ -1121,7 +1098,7 @@ contains
         !write(nout,120) inn,lablcc(icc(inn)),rcm(inn),vlam(inn)
         write(nout,110) inn,lablcc(icc(inn)),sym(inn),con2(inn), &
                         lab(inn), err(inn), lab(inn)
-        call ovarre(mfile,lablcc(icc(inn)),'(constr'//int_to_string3(inn)//')',rcm(inn))
+        call ovarre(mfile,lablcc(icc(inn)),'(ineq_con'//int_to_string3(icc(inn))//')',rcm(inn))
      end do
   end if
 

@@ -124,7 +124,7 @@ module pfcoil_variables
   !! - =4 PF coil, general location (equilibrium coil)
 
   integer :: ipfres
-  !! switch for PF coil type:
+  !! switch for PF & CS coil conductor type:
   !!
   !! - =0 superconducting PF coils
   !! - =1 resistive PF coils
@@ -212,6 +212,10 @@ module pfcoil_variables
 
   real(dp) :: oh_steel_frac
   !! central solenoid steel fraction (`iteration variable 122`)
+
+  real(dp) :: pf_current_safety_factor
+  !! Ratio of permissible PF coil conductor current density to critical conductor
+  !! current density based on short-sample DC measurements
 
   real(dp), dimension(ngc2) :: pfcaseth
   !! steel case thickness for PF coil i (m)
@@ -443,6 +447,7 @@ module pfcoil_variables
     nohc = 0
     ohhghf = 0.71D0
     oh_steel_frac = 0.5D0
+    pf_current_safety_factor = 1.0D0
     pfcaseth = 0.0D0
     pfclres = 2.5D-8
     pfmmax = 0.0D0
@@ -466,7 +471,7 @@ module pfcoil_variables
       7.0D0, 7.0D0, 7.0D0, 7.0D0, 7.0D0, 7.0D0, 7.0D0/)
     s_tresca_oh = 0.0D0
     sigpfcalw = 500.0D0
-    sigpfcf = 0.666D0
+    sigpfcf = 1.0D0
     sxlg = 0.0D0
     tmargoh = 0.0D0
     turns = 0.0D0

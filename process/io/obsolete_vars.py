@@ -1,4 +1,4 @@
-"""Dict of obsolete vars and their new names for the input validator.
+"""Dict of obsolete vars and their new names for the input validator, and dict of help messages for certain obsolete vars.
 
 This is used by the input_validator module to find any obsolete variables in the
 input file (which have since been renamed in the current version of the source).
@@ -11,6 +11,7 @@ var is deprecated.
 
 Note: this is now relied upon by Blueprint, pending implementing a proper API.
 """
+
 OBS_VARS = {
     "snull": "i_single_null",
     "tfno": "n_tf",
@@ -74,4 +75,73 @@ OBS_VARS = {
     "rad_fraction_core": "rad_fraction_LCFS",
     "thshield": ["thshield_ib", "thshield_ob", "thshield_vb"],
     "igeom": None,
+    "fgamp": None,
+    "divleg_profile_inner": None,
+    "divleg_profile_outer": None,
+    "iprimnloss": None,
+    "rho_ecrh": None,
+    "ifispact": None,
+    "fmsbc": None,
+    "fmsbl": None,
+    "fmsdwe": None,
+    "fmsdwi": None,
+    "fmsfw": None,
+    "fmsoh": None,
+    "fmssh": None,
+    "fmstf": None,
+    "quench_detection_ef": None,
+    "farc4tf": None,
+    "impvar": None,
+    "fimpvar": None,
+    "sigvvall": "max_vv_stress",
+    "ftaucq": "fmaxvvstress",
+    "fradmin": None,
+    "ftr": "ftrit",
+    "iculdl": "idensl",
+    "iiter": None,
+    "ires": None,
+    "fjtfc": None,
+    "bcylth": None,
+    "itfmod": None,
+    "jcrit_model": None,
+    "jcritsc": None,
+    "fcohbof": None,
+    "fvolbi": "fhole",
+    "fvolbo": "fhole",
+    "fvolcry": None,
+    "idhe3": "fhe3",
+    "blnktth": None,
+    "theat": "t_fusion_ramp",
 }
+
+OBS_VARS_HELP = {
+    "iculdl": "(use IDENSL=3 for equivalent model to ICULDL=0). ",
+    "blnktth": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
+}
+
+kallenbach_list = [
+    "target_spread",
+    "lambda_q_omp",
+    "lcon_factor",
+    "netau_sol",
+    "kallenbach_switch",
+    "kallenbach_tests",
+    "kallenbach_test_option",
+    "kallenbach_scan_switch",
+    "kallenbach_scan_var",
+    "kallenbach_scan_start",
+    "kallenbach_scan_end",
+    "kallenbach_scan_num",
+    "targetangle",
+    "ttarget",
+    "qtargettotal",
+    "impurity_enrichment",
+    "fractionwidesol",
+    "abserr_sol",
+    "relerr_sol",
+    "mach0",
+    "neratio",
+]
+kallenbach_message = "The Kallenbach model is currently not included in PROCESS. See issue #1886 for more information on the use of the Kallenbach model. "
+OBS_VARS.update(dict.fromkeys(kallenbach_list, None))
+OBS_VARS_HELP.update(dict.fromkeys(kallenbach_list, kallenbach_message))

@@ -47,12 +47,19 @@ class Availability:
         0    |  Input value for cfactr
         1    |  Ward and Taylor model (1999)
         2    |  Morris model (2015)
+        3    |  ST model (2023)
 
         :param output: indicate whether output should be written to the output file, or not (default = False)
         :type output: boolean
         """
 
-        if cv.iavail > 1:
+        if cv.iavail == 3:
+            if pv.itart != 1:
+                raise ValueError(
+                    f"{cv.iavail=} is for a Spherical Tokamak. Please set itart=1 to use this model."
+                )
+            self.avail_st(output)  # ST model (2023)
+        elif cv.iavail == 2:
             self.avail_2(output)  # Morris model (2015)
         else:
             self.avail(output)  # Taylor and Ward model (1999)
@@ -115,17 +122,7 @@ class Availability:
 
             # Centrepost lifetime (years) (ST machines only)
             if pv.itart == 1:
-                # SC magnets CP lifetime
-                # Rem : only the TF maximum fluence is considered for now
-                if tfv.i_tf_sup == 1:
-                    cv.cplife = min(
-                        ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife
-                    )
-
-                # Aluminium/Copper magnets CP lifetime
-                # For now, we keep the original def, developped for GLIDCOP magnets ...
-                else:
-                    cv.cplife = min(cv.cpstflnc / pv.wallmw, cv.tlife)
+                cv.cplife = self.cp_lifetime()
 
         # Plant Availability (iavail=0,1)
 
@@ -450,17 +447,7 @@ class Availability:
 
         # Centrepost lifetime (years) (ST only)
         if pv.itart == 1:
-            # SC magnets CP lifetime
-            # Rem : only the TF maximum fluence is considered for now
-            if tfv.i_tf_sup == 1:
-                cv.cplife = min(
-                    ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife
-                )
-
-            # Aluminium/Copper magnets CP lifetime
-            # For now, we keep the original def, developped for GLIDCOP magnets ...
-            else:
-                cv.cplife = min(cv.cpstflnc / pv.wallmw, cv.tlife)
+            cv.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
         cv.cdrlife = fwbsv.bktlife
@@ -499,7 +486,6 @@ class Availability:
 
         # Output
         if output:
-
             po.oheadr(self.outfile, "Plant Availability (2014 Model)")
 
             po.ocmmnt(self.outfile, "Planned unavailability:")
@@ -610,7 +596,6 @@ class Availability:
         # !!!!!!!!!
 
         if output:
-
             po.ocmmnt(self.outfile, "Magnets:")
             po.oblnkl(self.outfile)
             po.ovarre(
@@ -944,7 +929,6 @@ class Availability:
         sum_prob = 0.0e0
 
         for n in range(cv.redun_vac + 1, total_pumps + 1):
-
             # Probability for n failures in the operational period, n > number of redundant pumps
             # vac_fail_p.append(maths_library.binomial(total_pumps,n) * (cryo_nfailure_rate**(total_pumps-n)) *(cryo_failure_rate**n))
 
@@ -994,3 +978,158 @@ class Availability:
             po.oblnkl(self.outfile)
 
         return u_unplanned_vacuum
+
+    def avail_st(self, output: bool):
+        """Routine to calculate availability for plant with a Spherical Tokamak
+
+        :param output: indicate whether output should be written to the output file, or not
+        :type output: boolean
+        """
+        # CP lifetime
+        cv.cplife = self.cp_lifetime()
+
+        # Time for a maintenance cycle (years)
+        # Lifetime of CP + time to replace
+        maint_cycle = cv.cplife + cv.tmain
+
+        # Number of maintenance cycles over plant lifetime
+        n_cycles_main = cv.tlife / maint_cycle
+
+        # Number of centre columns over plant lifetime
+        n_centre_cols = math.ceil(n_cycles_main)
+
+        # Planned unavailability
+        u_planned = cv.tmain / maint_cycle
+
+        # Operational time (years)
+        cv.t_operation = cv.tlife * (1.0e0 - u_planned)
+
+        # Total availability
+        cv.cfactr = max(
+            1.0e0 - (u_planned + cv.u_unplanned + u_planned * cv.u_unplanned), 0.0e0
+        )
+
+        # Capacity factor
+        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+
+        if output:
+            po.oheadr(self.outfile, "Plant Availability")
+            if tfv.i_tf_sup == 1:
+                po.ovarre(
+                    self.outfile,
+                    "Max fast neutron fluence on TF coil (n/m2)",
+                    "(nflutfmax)",
+                    ctv.nflutfmax,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Centrepost TF fast neutron flux (E > 0.1 MeV) (m^(-2).^(-1))",
+                    "(neut_flux_cp)",
+                    fwbsv.neut_flux_cp,
+                    "OP ",
+                )
+            else:
+                po.ovarre(
+                    self.outfile,
+                    "Allowable ST centrepost neutron fluence (MW-yr/m2)",
+                    "(cpstflnc)",
+                    cv.cpstflnc,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Average neutron wall load (MW/m2)",
+                    "(wallmw)",
+                    pv.wallmw,
+                    "OP ",
+                )
+            po.ovarre(
+                self.outfile,
+                "Centrepost lifetime (years)",
+                "(cplife)",
+                cv.cplife,
+                "OP ",
+            )
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Length of maintenance cycle (years)",
+                "(maint_cycle)",
+                maint_cycle,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Number of maintenance cycles over lifetime",
+                "(n_cycles_main)",
+                n_cycles_main,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Number of centre columns over lifetime",
+                "(n_centre_cols)",
+                n_centre_cols,
+                "OP ",
+            )
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Total planned unavailability",
+                "(u_planned)",
+                u_planned,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Total unplanned unavailability",
+                "(u_unplanned)",
+                cv.u_unplanned,
+                "IP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Total plant availability fraction",
+                "(cfactr)",
+                cv.cfactr,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Capacity factor: total lifetime elec. energy output / output power",
+                "(cpfact)",
+                cv.cpfact,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Total DT operational time (years)",
+                "(t_operation)",
+                cv.t_operation,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife, "OP"
+            )
+
+    def cp_lifetime(self):
+        """Calculate Centrepost Lifetime
+
+        This routine calculates the lifetime of the centrepost,
+        either for superconducting or aluminium/resistive magnets.
+
+        :returns: CP lifetime
+        :rtype: float
+        """
+        # SC magnets CP lifetime
+        # Rem : only the TF maximum fluence is considered for now
+        if tfv.i_tf_sup == 1:
+            cplife = min(ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife)
+
+        # Aluminium/Copper magnets CP lifetime
+        # For now, we keep the original def, developped for GLIDCOP magnets ...
+        else:
+            cplife = min(cv.cpstflnc / pv.wallmw, cv.tlife)
+
+        return cplife

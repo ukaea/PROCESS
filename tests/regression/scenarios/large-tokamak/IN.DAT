@@ -581,6 +581,9 @@ fcuohsu = 0.70
 * ITER Nb3Sn parameterisation
 isumatoh = 1
 
+* Fraction of JxB force supported by PF coil case
+sigpfcf = 0.666
+
 * TF Coil *
 ***********
 

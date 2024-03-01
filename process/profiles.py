@@ -3,10 +3,7 @@ import logging
 from scipy import integrate
 from abc import ABC, abstractmethod
 
-from process.fortran import (
-    maths_library,
-    physics_variables,
-)
+from process.fortran import maths_library, physics_variables, error_handling
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -127,7 +124,9 @@ class NProfile(Profile):
         )
 
     @staticmethod
-    def ncore(rhopedn, nped, nsep, nav, alphan):
+    def ncore(
+        rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
+    ) -> float:
         """This routine calculates the core denesity of a pedestalised profile.
 
         :param rhopedn: normalised minor radius pedestal position
@@ -138,11 +137,10 @@ class NProfile(Profile):
         :type nsep: float
         :param nav: electron density (/m3)
         :type nav: float
-        :param alphan: _description_
         :param alphan: density peaking parameter
         :type alphan: float
         :return: Core density
-        :rtype: numpy.array
+        :type: float
         """
 
         ncore = (
@@ -155,15 +153,11 @@ class NProfile(Profile):
             )
         )
 
-        if ncore < 0:
-            # Prevent ncore from going negative (and terminating the optimisation) by
-            # kludging to small positive value. Allows solver to continue and
-            # hopefully be constrained away from this point (e.g. constraint 81, ne0 > neped)
-            logger.exception("ncore is negative. Kludging to 1e-6.")
+        if ncore < 0.0:
+            # Allows solver to continue and
+            # warns the user to raise the lower bound on dene if the run did not converge
+            error_handling.report_error(282)
             ncore = 1.0e-6
-            # raise ValueError(
-            #     f"Core density is negative: {ncore}. {nped = }, {nsep = }, {nav = }"
-            # )
         return ncore
 
     def set_physics_variables(self):

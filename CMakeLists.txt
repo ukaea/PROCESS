@@ -1,21 +1,22 @@
 # CMake file for Pythonic PROCESS
-# Author  :   K. Zarebski (UKAEA)
-# Date    :   last modified 2020-11-09
+# Author  :   PROCESS Team (UKAEA)
+# Date    :   last modified 2023-07-24
 
 # Specify the minimum version for CMake
 # 3.12 is required due to use of list TRANSFORM commands
-CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
+# 3.15 for cmake policy CMP0094
+CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
 
 # Set project name
 PROJECT(process LANGUAGES Fortran)
+
+cmake_policy(SET CMP0094 NEW)
 
 # Ensure python3 interpreter is used
 if(CMAKE_HOST_APPLE)
     SET(CMAKE_FIND_FRAMEWORK NEVER)
     set(CMAKE_MACOSX_RPATH ON)
 endif()
-
-SET(Python3_FIND_VIRTUALENV FIRST)
 
 # Python 3.8 or greater
 find_package(Python3 3.8 COMPONENTS Interpreter Development)
@@ -74,13 +75,11 @@ LIST(APPEND PROCESS_SRCS
     numerics.f90
     scan.f90
     fw.f90
-    current_drive.f90
     hcpb.f90
     pfcoil.f90
     reinke_module.f90
     sctfcoil.f90
     plasma_profiles.f90
-    superconductors.f90
     final_module.f90
     cost_variables.f90
     divertor_variables.f90
@@ -96,7 +95,6 @@ LIST(APPEND PROCESS_SRCS
     buildings_variables.f90
     maths_library.f90
     iteration_variables.f90
-    optimiz_module.f90
     evaluators.f90
     water_usage_variables.f90
     constraint_equations.f90
@@ -117,14 +115,16 @@ LIST(APPEND PROCESS_SRCS
     pulse_variables.f90
     pf_power_variables.f90
     dcll.f90
-    read_and_get_atomic_data.f90
-    plot_radiation.f90
     rebco_variables.f90
-    read_radiation.f90
     primary_pumping_variables.f90
     reinke_variables.f90
     neoclassics_module.f90
     blanket_library.f90
+    stellarator_variables.f90
+    stellarator.f90
+    stellarator_configuration.f90
+    stellarator_fwbs.f90
+    startup_variables.f90
 )
 
 PREPROCESS()
@@ -178,7 +178,7 @@ ADD_CUSTOM_TARGET(coverage_cleanup
 
 # Run the Pip Install
 ADD_CUSTOM_TARGET(install_process ALL
-    COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir ${CMAKE_SOURCE_DIR}
+    COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir -e ${CMAKE_SOURCE_DIR}
 )
 
 ADD_DEPENDENCIES(install_process ${PIP_NAME} f2py ${FORD_NAME} ${GFORTLIB_NAME} ${DICTS_NAME} coverage_cleanup)

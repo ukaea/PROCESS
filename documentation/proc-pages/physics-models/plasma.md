@@ -190,7 +190,6 @@ be described as 1/2-D.  The relevant profile index variables are
 
 If `ipedestal` = 1, 2 or 3 the density and temperature profiles include a pedestal.  
 If `ipedestal` = 1 the density and temperature profiles use the forms given below [^6].  
-If `ipedestal` = 2 or 3 the profiles are determined by the transport code PLASMOD.
 
 $$\begin{aligned}
 \mbox{density:} \qquad n(\rho) = \left\{ 
@@ -267,6 +266,11 @@ simulations.
 
 If `ipedestal` = 1 or 2 then the pedestal density `neped` is set as a fraction `fgwped` of the 
 Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^7]. 
+
+!!! warning " Un-realistic profiles"
+
+    If `ipedestal >= 1` it is highly recommended to use constraint equation 81 (icc=81). This enforces solutions in which $n_0$ has to be greater than $n_{ped}$. 
+    Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_e (\mathtt{dene})$ is set.
 
 ## Beta Limit
 
@@ -378,10 +382,8 @@ plasma quasi-neutrality taking into account the fuel ratios
 be input by the user or selected as an iteration variable.
 
 The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 
-isotopes and helium) may be used as an iteration variable. The element to use is specified using 
-input parameter `impvar`, which may be set to a value between 3 and `nimp`, and the initial 
-estimate to use for the element's impurity fraction must be set using iteration 
-variable no. 102 (`fimpvar`).
+isotopes and helium) may be used as an iteration variable.
+The impurity fraction to be varied can be set simply with `fimp(i) = <value>`, where `i` is the corresponding number value for the desired impurity in the table above.
 
 The synchrotron radiation power[^11] [^12] is assumed to originate from the 
 plasma core. The wall reflection factor `ssync` may be set by the user.

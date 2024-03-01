@@ -37,6 +37,13 @@ class Caller:
         # Convert variables
         ft.define_iteration_variables.convxc(xc, nvars)
 
+        # Perform the various function calls
+        # Stellarator caller
+        if ft.stellarator_variables.istell != 0:
+            self.models.stellarator.run(output=False)
+            # TODO Is this return safe?
+            return
+
         # Inertial Fusion Energy calls
         if ft.ife_variables.ife != 0:
             self.models.ife.run(output=False)
@@ -56,15 +63,6 @@ class Caller:
         self.models.build.vbuild(output=False)
 
         self.models.physics.physics()
-
-        # call build subroutines again if PLASMOD used, issue #650
-        if ft.physics_variables.ipedestal == 3:
-            # Radial build
-            self.models.build.radialb(output=False)
-
-            # TODO: is the vertical build needed again?
-            # Vertical build
-            self.models.build.vbuild(output=False)
 
         # startup model (not used)
         # call startup(ft.constants.nout,0)  !  commented-out for speed reasons
@@ -155,13 +153,8 @@ class Caller:
         ---- | ------
         0    |  1990 costs model
         1    |  2015 Kovari model
-        2    |  2019 STEP model
+        2    |  Custom model
         """
-        if ft.cost_variables.cost_model == 0:
-            self.models.costs.run(output=False)
-        elif ft.cost_variables.cost_model == 1:
-            self.models.costs_2015.run(output=False)
-        elif ft.cost_variables.cost_model == 2:
-            self.models.costs_step.run()
+        self.models.costs.run()
 
         # FISPACT and LOCA model (not used)- removed

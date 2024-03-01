@@ -922,17 +922,6 @@ class Power:
                 heat_transport_variables.pgrossmw - heat_transport_variables.precircmw
             )
 
-            #  Scaling to prevent negative heat_transport_variables.pnetelmw
-            # Do NOT rescale if this is the last run through.
-            if (
-                (heat_transport_variables.pnetelmw < 1.0e0)
-                and (cost_variables.ipnet == 0)
-                and (not output)
-            ):
-                heat_transport_variables.pnetelmw = 1.0e0 / (
-                    1.0e0 + abs(heat_transport_variables.pnetelmw - 1.0e0)
-                )
-
             #  Recirculating power fraction
             cirpowfr = (
                 heat_transport_variables.pgrossmw - heat_transport_variables.pnetelmw
@@ -2069,7 +2058,7 @@ class Power:
         t_ip_up = times_variables.tohs
 
         # Plasma heating phase (s)
-        t_heat = times_variables.theat
+        t_heat = times_variables.t_fusion_ramp
 
         # Flat-top phase (s)
         t_flat_top = times_variables.tburn
@@ -2152,7 +2141,7 @@ class Power:
 
         po.write(self.outfile, "Pulse timings [s]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "tramp tohs theat tburn tqnch tdwell")
+        po.write(self.outfile, "tramp tohs t_fusion_ramp tburn tqnch tdwell")
         po.write(self.outfile, "----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2163,7 +2152,7 @@ class Power:
 
         po.write(self.outfile, "Continous power usage [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "System tramp tohs theat tburn tqnch tdwell")
+        po.write(self.outfile, "System tramp tohs t_fusion_ramp tburn tqnch tdwell")
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2212,7 +2201,7 @@ class Power:
 
         po.write(self.outfile, "Intermittent power usage [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "System tramp tohs theat tburn tqnch tdwell")
+        po.write(self.outfile, "System tramp tohs t_fusion_ramp tburn tqnch tdwell")
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2238,7 +2227,7 @@ class Power:
 
         po.write(self.outfile, "Power production [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, " tramp tohs theat tburn tqnch tdwell avg")
+        po.write(self.outfile, " tramp tohs t_fusion_ramp tburn tqnch tdwell avg")
         po.write(self.outfile, " ----- ---- ----- ----- ----- ------ ---")
         po.write(
             self.outfile,

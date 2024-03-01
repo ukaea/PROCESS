@@ -1,7 +1,7 @@
 # Installation using Docker
 
 !!! Note "Note"
-    This section is for users of a privileged machine of the wrong OS e.g MacOS. If you are a using a shared resource e.g. computing cluster, please go [here](#singularity-container).*
+    This section is for users of a privileged machine of the wrong OS e.g MacOS. If you are a using a shared resource e.g. computing cluster, please go [here](https://ukaea.github.io/PROCESS/installation/installation-singularity/).*
 
 PROCESS can be run on Mac or in other environments inside a Docker container. The PROCESS 
 repository, including source and build directories, remain in the host filesystem, but the 
@@ -22,23 +22,17 @@ using `homebrew`:
 brew --cask install docker
 ```
 
-Then login to the Gitlab container registry:
-
-```
-docker login git.ccfe.ac.uk:4567
-```
-
 Then download the Docker image from the Process Gitlab container registry:
 
 ```
-docker pull git.ccfe.ac.uk:4567/process/process/dev
+docker pull ghcr.io/ukaea/process-ci:latest
 ```
 
 Running `docker image ls` should show the image in your local Docker image repository. Optionally, 
 you can change the image name to something more manageable:
 
 ```
-docker tag git.ccfe.ac.uk:4567/process/process/dev process-dev
+docker tag ghcr.io/ukaea/process-ci:latest process-dev
 ```
 
 to rename the image to "process-dev" with the "latest" tag: "process:latest".

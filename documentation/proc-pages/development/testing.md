@@ -28,7 +28,7 @@ Regression tests detect changes in the entire program's behaviour by checking th
 input, it produces exactly the same output as before those changes. It detects changes in the 
 program's output. Therefore if your code changes the program's output, it will fail the regression 
 test. In this case that output difference will need to be reviewed and if accepted, the expected (or 
-reference) result will need to be updated in the test suite.
+reference) will be updated.
 
 ## pytest
 
@@ -127,13 +127,7 @@ runs just the regression tests on all available cores.
 ## Test coverage
 
 Test coverage (in Python only) is provided in a badge on the repository homepage. A report can 
-also be generated locally. First, ensure a development install is being used:
-
-```bash
-pip install -e .
-```
-
-This ensures that `pytest` and `pytest-cov` will use the same installed location of Process. Then:
+also be generated locally. A development (editable) pip installation (which is run by default by the `cmake` build script) ensures that `pytest` and `pytest-cov` will use the same installed location of Process. Then:
 
 ```bash
 pytest --cov=process tests/unit/
@@ -159,15 +153,6 @@ using a Docker/Singularity container.
 
 It is suggested that PROCESS is run, built, and tested via a container when not using Ubuntu 20.
 
-On older OS's that are detected to have this issue, test over-writing is disabled and pytest will 
-exit with an error message:
-
-```
-Test overwriting is NOT allowed on outdated systems.
-```
-
-In this case, the `pytest --overwrite` command must be run within an Ubuntu 20 container/ subsystem.
-
 ## Reasoning behind the CONTRIBUTING.md method
 
 The method in the CONTRIBUTING.md is standard apart from how regression tests are handled; this is 
@@ -180,11 +165,6 @@ are the results when the branch was first created. Comparing the observed and re
 important when assessing the magnitude of intended changes to the output in certain scenarios, as 
 well as detecting large unintended changes or failures to solve. The impact of the code changes on 
 the regression results needs to be visible to the author and reviewer of the merge request.
-
-In order to see the effect a branch's code changes have on the regression results, the regression 
-references must be kept up-to-date on the develop branch. This means that the regression references 
-need to be overwritten on the develop branch only; if the references were overwritten on each 
-branch, there would be merge conflicts in the references when merging the branches into develop.
 
 Typically the solver will arrive at a very slightly different solution when any change is made, 
 and so there are typically large numbers of very small changes with a few more significant changes 
@@ -206,26 +186,12 @@ When those local changes are committed and pushed, the CI system for the branch 
 and 0% tolerance regression jobs, which are allowed to fail. This shows the author and reviewer 
 what the changes to the regression results are as a result of the code changes on that branch.
 
-### Running the CI on the develop branch
-
-When merging into the develop branch, the CI system builds and tests the code as before, but 
-doesn't run any regression tests; it only overwrites the references with the results. The keeps the 
-regression references up-to-date on the develop branch, so that any branch created from develop will 
-pass a 0% tolerance regression run before any code changes are made. The CI will commit the reference 
-changes to the develop branch after running the overwrite job. There's little point in performing 
-regression tests on develop, as the regression tests will have already been run on the branch and 
-accepted by the reviewer before the merge to develop.
-
 ## Drawbacks to this approach
 
-- A problem can arise if a branch is created immediately after another has been merged, before the 
-  overwrite commit has been pushed to develop by the CI. This new branch will therefore not have 
-  the updated regression references on it, and can therefore fail or provide misleading regression 
-  test results. In this unlikely case, a manual regression regression test overwrite could be 
-  performed (`pytest --overwrite`) and committed, or a new branch created once the regression 
-  overwrite has been committed on develop.
-- In time, it may be better to use a data repository for the regression references, removing the 
-  need for the CI to commit to develop when updating the references.
+!!! note
+  
+
+- In time, it may be better to use a data repository for the regression references.
 - It's possible that two regression-acceptable branches can be merged to make a regression-unacceptable 
   develop branch, but as regression tests aren't run on develop, only overwritten, this wouldn't produce 
   a failure. Perhaps checking for regression failures to solve or significant changes in certain key 

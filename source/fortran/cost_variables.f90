@@ -198,6 +198,7 @@ module cost_variables
   !! - =0 use input value for cfactr
   !! - =1 calculate cfactr using Taylor and Ward 1999 model
   !! - =2 calculate cfactr using new (2015) model
+  !! - =3 calculate cfactr using ST model
 
   integer :: ibkt_life
   !! Switch for fw/blanket lifetime calculation in availability module:
@@ -341,6 +342,12 @@ module cost_variables
 
   real(dp) :: tlife
   !! Full power year plant lifetime (years)
+
+  real(dp) :: tmain
+  !! Maintenance time for replacing CP (years) (iavail = 3)
+
+  real(dp) :: u_unplanned
+  !! User-input CP unplanned unavailability (iavail = 3)
 
   real(dp), parameter :: ucad = 180.0D0
   !! unit cost for administration buildings (M$/m3)

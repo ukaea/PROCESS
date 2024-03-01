@@ -2,10 +2,12 @@
 
 import logging
 from process.fortran import numerics, global_variables
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 import numpy as np
 from process.evaluators import Evaluators
 from abc import ABC, abstractmethod
 from typing import Optional, Union
+import importlib
 from pyvmcon import (
     AbstractProblem,
     Result,
@@ -168,6 +170,15 @@ class Vmcon(_Solver):
         if self.b is not None:
             B = np.identity(numerics.nvar) * self.b
 
+        def _solver_callback(i: int, _result, _x, convergence_param: float):
+            numerics.nviter = i + 1
+            global_variables.convergence_parameter = convergence_param
+            print(
+                f"{i+1} | Convergence Parameter: {convergence_param:.3E}",
+                end="\r",
+                flush=True,
+            )
+
         try:
             x, _, _, res = solve(
                 problem,
@@ -176,8 +187,9 @@ class Vmcon(_Solver):
                 self.bndu,
                 max_iter=global_variables.maxcal,
                 epsilon=self.tolerance,
-                qsp_tolerence=1e-1,
+                qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
                 initial_B=B,
+                callback=_solver_callback,
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
@@ -193,13 +205,20 @@ class Vmcon(_Solver):
             res = e.result
 
         except ValueError as e:
-            logger.warning(
-                f"Active iteration variables are : {list(enumerate(numerics.ixc[:numerics.nvar]))}"
-            )
+            itervar_name_list = ""
+            for count, iter_var in enumerate(numerics.ixc[: numerics.nvar]):
+                itervar_name = f2py_compatible_to_string(numerics.lablxc[iter_var - 1])
+                itervar_name_list += f"{count}: {itervar_name} \n"
+
+            logger.warning(f"Active iteration variables are : \n{itervar_name_list}")
             raise e
 
         else:
             self.info = 1
+
+        # print a blank line because of the carridge return
+        # in the callback
+        print()
 
         self.x = x
         self.objf = res.f
@@ -221,6 +240,28 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
     if solver_name == "vmcon":
         solver = Vmcon()
     else:
-        raise ValueError(f'Unrecognised solver name argument "{solver_name}"')
+        try:
+            solver = load_external_solver(solver_name)
+        except Exception as e:
+            raise ValueError(
+                f'Solver name is not an inbuilt PROCESS solver or recognised package "{solver_name}"'
+            ) from e
 
     return solver
+
+
+def load_external_solver(package: str):
+    """Attempts to load a package of name `package`.
+
+    If a package of the name is available, return the `__process_solver__`
+    attribute of that package or raise an `AttributeError`."""
+    module = importlib.import_module(package)
+
+    solver = getattr(module, "__process_solver__", None)
+
+    if solver is None:
+        raise AttributeError(
+            f"Module {module.__name__} does not have a '__process_solver__' attribute."
+        )
+
+    return solver()

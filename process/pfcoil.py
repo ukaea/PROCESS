@@ -11,12 +11,12 @@ from process.fortran import cs_fatigue_variables as csfv
 from process.fortran import maths_library as ml
 from process.fortran import process_output as op
 from process.fortran import numerics
-from process.fortran import superconductors as sc
 from process.fortran import rebco_variables as rcv
 from process.fortran import constraint_variables as ctv
 from process import maths_library as pml
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process import fortran as ft
+import process.superconductors as superconductors
 import math
 import numpy as np
 import numba
@@ -72,24 +72,13 @@ class PFCoil:
         pcls0 = np.zeros(pfv.ngrpmx, dtype=int)
         ncls0 = np.zeros(pfv.ngrpmx + 2, dtype=int)
 
-        pf.rcls0 = np.zeros((pfv.ngrpmx, pfv.nclsmx), order="F")
-        pf.zcls0 = np.zeros((pfv.ngrpmx, pfv.nclsmx), order="F")
+        pf.rcls0, pf.zcls0 = np.zeros((2, pfv.ngrpmx, pfv.nclsmx), order="F")
         pf.ccls0 = np.zeros(int(pfv.ngrpmx / 2))
-        sigma = np.zeros(pfv.ngrpmx)
-        work2 = np.zeros(pfv.ngrpmx)
-        rc = np.zeros(pfv.nclsmx)
-        zc = np.zeros(pfv.nclsmx)
-        cc = np.zeros(pfv.nclsmx)
-        xc = np.zeros(pfv.nclsmx)
-        brin = np.zeros(pfv.nptsmx)
-        bzin = np.zeros(pfv.nptsmx)
-        rpts = np.zeros(pfv.nptsmx)
-        zpts = np.zeros(pfv.nptsmx)
-        bfix = np.zeros(lrow1)
-        bvec = np.zeros(lrow1)
-        gmat = np.zeros((lrow1, lcol1), order="F")
-        umat = np.zeros((lrow1, lcol1), order="F")
-        vmat = np.zeros((lrow1, lcol1), order="F")
+        sigma, work2 = np.zeros((2, pfv.ngrpmx))
+        rc, zc, cc, xc = np.zeros((4, pfv.nclsmx))
+        brin, bzin, rpts, zpts = np.zeros((4, pfv.nptsmx))
+        bfix, bvec = np.zeros((2, lrow1))
+        gmat, umat, vmat = np.zeros((3, lrow1, lcol1), order="F")
         signn = np.zeros(2)
         aturn = np.zeros(pfv.ngc2)
 
@@ -130,7 +119,7 @@ class PFCoil:
         tv.tim[0] = 0.0e0
         tv.tim[1] = tv.tramp
         tv.tim[2] = tv.tim[1] + tv.tohs
-        tv.tim[3] = tv.tim[2] + tv.theat
+        tv.tim[3] = tv.tim[2] + tv.t_fusion_ramp
         tv.tim[4] = tv.tim[3] + tv.tburn
         tv.tim[5] = tv.tim[4] + tv.tqnch
 
@@ -175,7 +164,6 @@ class PFCoil:
 
         # N.B. Problems here if k=ncls(group) is greater than 2.
         for j in range(pfv.ngrp):
-
             if pfv.ipfloc[j] == 1:
                 # PF coil is stacked on top of the Central Solenoid
                 for k in pfv.ncls[j]:
@@ -333,7 +321,6 @@ class PFCoil:
                 )
 
             else:
-
                 # Conventional aspect ratio scaling
                 nfxf0 = 0
                 ngrp0 = 0
@@ -527,7 +514,7 @@ class PFCoil:
                     pf.ccls[nng] - (pf.ccl0[nng] * pfv.fcohbof / pfv.fcohbop)
                 )
 
-                # End of flat-top: t = tv.tramp+tv.tohs+tv.theat+tv.tburn
+                # End of flat-top: t = tv.tramp+tv.tohs+tv.t_fusion_ramp+tv.tburn
                 pfv.curpfb[ncl] = 1.0e-6 * (
                     pf.ccls[nng] - (pf.ccl0[nng] * (1.0e0 / pfv.fcohbop))
                 )
@@ -554,14 +541,13 @@ class PFCoil:
 
         for ii in range(pfv.ngrp):
             for ij in range(pfv.ncls[ii]):
-
                 if pfv.ipfloc[ii] == 1:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * bv.ohcth
                     dz = 0.5e0 * (
                         bv.hmax * (1.0e0 - pfv.ohhghf) + bv.tfcth + 0.1e0
                     )  # ???
-                    area = 4.0e0 * dx * dz
+                    area = 4.0e0 * dx * dz * pfv.pf_current_safety_factor
 
                     # Number of turns
                     # CPTDIN[i] is the current per turn (input)
@@ -588,10 +574,12 @@ class PFCoil:
                         pfv.zh[i] = pfv.zpf[i] - dz
 
                 else:
-
                     # Other coils. N.B. Current density RJCONPF[i] is defined in
                     # routine INITIAL for these coils.
-                    area = abs(pfv.ric[i] * 1.0e6 / pfv.rjconpf[i])
+                    area = (
+                        abs(pfv.ric[i] * 1.0e6 / pfv.rjconpf[i])
+                        * pfv.pf_current_safety_factor
+                    )
 
                     pfv.turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
                     aturn[i] = area / pfv.turns[i]
@@ -615,7 +603,7 @@ class PFCoil:
                 i = i + 1
 
         # Calculate peak field, allowable current density, resistive
-        # power losses and volumes and weights for each PF coil
+        # power losses and volumes and weights for each PF coil, index i
         i = 0
         it = 0
         pfv.powpfres = 0.0e0
@@ -624,7 +612,6 @@ class PFCoil:
         for ii in range(pfv.ngrp):
             iii = ii
             for ij in range(pfv.ncls[ii]):
-
                 # Peak field
 
                 if ij == 0:
@@ -633,8 +620,8 @@ class PFCoil:
                         i + 1, iii + 1, it
                     )  # returns bpf, bpf2
 
-                # Allowable current density (for superconducting coils)
-
+                # Issue 1871.  MDK
+                # Allowable current density (for superconducting coils) for each coil, index i
                 if pfv.ipfres == 0:
                     bmax = max(abs(pfv.bpf[i]), abs(pf.bpf2[i]))
                     pfv.rjpfalw[i], jstrand, jsc, tmarg = self.superconpf(
@@ -691,12 +678,15 @@ class PFCoil:
 
                 if pfv.ipfres == 0:
                     # Superconducting coil
-                    # Previous assumptions: 500 MPa stress limit with 2/3 of the force
-                    # supported in the outer (steel) case.
-                    # Now, 500 MPa replaced by sigpfcalw, 2/3 factor replaced by sigpfcf
+                    # Updated assumptions: 500 MPa stress limit with all of the force
+                    # supported in the conduit (steel) case.
+                    # Now, 500 MPa replaced by sigpfcalw, sigpfcf now defaultly set to 1
 
                     areaspf = pfv.sigpfcf * forcepf / (pfv.sigpfcalw * 1.0e6)
 
+                    # Thickness of hypothetical steel casing assumed to encase the PF
+                    # winding pack; in reality, the steel is distributed
+                    # throughout the conductor. Issue #152
                     # Assume a case of uniform thickness around coil cross-section
                     # Thickness found via a simple quadratic equation
 
@@ -1023,7 +1013,6 @@ class PFCoil:
             sgn = 1.0e0
             pfv.ric[pfv.nohc - 1] = sgn * 1.0e-6 * pfv.cohbop * pfv.areaoh
         else:
-
             sgn = -1.0e0
             pfv.ric[pfv.nohc - 1] = sgn * 1.0e-6 * pfv.coheof * pfv.areaoh
 
@@ -1104,7 +1093,6 @@ class PFCoil:
 
         # Stress ==> cross-sectional area of supporting steel to use
         if pfv.ipfres == 0:
-
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
@@ -1192,7 +1180,6 @@ class PFCoil:
             )
 
         if pfv.ipfres == 0:
-
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
@@ -1306,7 +1293,6 @@ class PFCoil:
         jj = 0
         for iii in range(pfv.ngrp):
             for jjj in range(pfv.ncls[iii]):
-
                 jj = jj + 1
                 # Radius, z-coordinate and current for each coil
                 if iii == ii - 1:
@@ -1419,32 +1405,27 @@ class PFCoil:
         )
 
         if beta > 3.0:
-
             b1 = constants.rmu0 * rj * (b - a)
             f = (3.0 / beta) ** 2
             bfmax = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
 
         elif beta > 2.0:
-
             rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
                 0.01 - (beta - 2.0) * 0.0045
             )
             bfmax = rat * b0
 
         elif beta > 1.0:
-
             rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
             bfmax = rat * b0
 
         elif beta > 0.75:
-
             rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
                 0.2 * (beta - 0.75) - 0.05
             )
             bfmax = rat * b0
 
         else:
-
             rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
                 0.6 * (beta - 0.5) - 0.20
             )
@@ -1769,7 +1750,6 @@ class PFCoil:
                 ]
 
         if bv.iohcl != 0:
-
             # Central Solenoid self inductance
             a = pfv.rohc  # mean radius of coil
             b = 2.0e0 * pfv.zh[pfv.nohc - 1]  # length of coil
@@ -2340,7 +2320,7 @@ class PFCoil:
         op.osubhd(self.outfile, "Geometry of PF coils, central solenoid and plasma:")
         op.write(
             self.outfile,
-            "coil\t\t\tR(m)\t\tZ(m)\t\tdR(m)\t\tdZ(m)\t\tturns\t\tsteel thickness(m)",
+            "coil\t\t\tR(m)\t\tZ(m)\t\tdR(m)\t\tdZ(m)\t\tturns",
         )
         op.oblnkl(self.outfile)
 
@@ -2348,7 +2328,7 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k]-pfv.ra[k]:.2e}\t{abs(pfv.zh[k]-pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}\t{pfv.pfcaseth[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k]-pfv.ra[k]:.2e}\t{abs(pfv.zh[k]-pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
@@ -2704,7 +2684,6 @@ class PFCoil:
             pfv.waves[nplas - 1, it] = 1.0e0
 
         for ic in range(pfv.nohc):
-
             # Find where the peak current occurs
             # Beginning of pulse, t = tramp
             if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfb[ic])) and (
@@ -2718,7 +2697,7 @@ class PFCoil:
             ):
                 pfv.ric[ic] = pfv.curpff[ic]
 
-            # End of flat-top, t = tramp + tohs + theat + tburn
+            # End of flat-top, t = tramp + tohs + t_fusion_ramp + tburn
             if (abs(pfv.curpfb[ic]) >= abs(pfv.curpfs[ic])) and (
                 abs(pfv.curpfb[ic]) >= abs(pfv.curpff[ic])
             ):
@@ -2794,7 +2773,7 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, t = sc.jcrit_nbti(temperature, bmax, c0, bc20m, tc0m)
+            jcrit0, _ = superconductors.jcrit_nbti(temperature, bmax, c0, bc20m, tc0m)
             if ml.variable_error(jcrit0):  # superconductors.jcrit_nbti has failed.
                 print(f"superconductors.jcrit_nbti: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2809,7 +2788,7 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, b, t = sc.wstsc(temperature, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.wstsc(temperature, bmax, strain, bc20m, tc0m)
             if ml.variable_error(jcrit0):  # superconductors.wstsc has failed.
                 print(f"deltaj_wst: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2824,7 +2803,9 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, b, t = sc.gl_nbti(temperature, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.gl_nbti(
+                temperature, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(jcrit0):  # GL_Nbti has failed.
                 print(f"deltaj_GL_nbti: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2839,7 +2820,9 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, b, t = sc.gl_rebco(temperature, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.gl_rebco(
+                temperature, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(jcrit0):  # superconductors.GL_REBCO has failed.
                 print(f"deltaj_gl_REBCO: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2854,7 +2837,9 @@ class PFCoil:
             :return: difference in current density
             :rtype: float
             """
-            jcrit0, b, t = sc.hijc_rebco(temperature, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.hijc_rebco(
+                temperature, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(jcrit0):  # superconductors.GL_REBCO has failed.
                 print(f"deltaj_hijc_REBCO: {bmax=} {temperature=} {jcrit0=}")
 
@@ -2870,7 +2855,7 @@ class PFCoil:
             # jcritsc returned by superconductors.itersc is the critical current density in the
             # superconductor - not the whole strand, which contains copper
 
-            jcritsc, bcrit, tcrit = sc.itersc(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
         elif isumat == 2:
@@ -2885,23 +2870,22 @@ class PFCoil:
 
             jstrand = jwp / (1.0e0 - fhe)
 
-            jcritstr, tmarg = sc.bi2212(bmax, jstrand, thelium, fhts)
+            jcritstr, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
             jcritsc = jcritstr / (1.0e0 - fcu)
-            tcrit = thelium + tmarg
 
         elif isumat == 3:
             # NbTi data
             bc20m = 15.0e0
             tc0m = 9.3e0
             c0 = 1.0e10
-            jcritsc, tcrit = sc.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
+            jcritsc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
         elif isumat == 4:
             # As (1), but user-defined parameters
             bc20m = bcritsc
             tc0m = tcritsc
-            jcritsc, bcrit, tcrit = sc.itersc(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
         elif isumat == 5:
@@ -2912,61 +2896,73 @@ class PFCoil:
             # jcritsc returned by superconductors.itersc is the critical current density in the
             # superconductor - not the whole strand, which contains copper
 
-            jcritsc, bcrit, tcrit = sc.wstsc(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.wstsc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
         elif isumat == 6:
             # "REBCO" 2nd generation HTS superconductor in CrCo strand
-            jcritsc, validity = sc.jcrit_rebco(thelium, bmax, 0)
+            jcritsc, _ = superconductors.jcrit_rebco(thelium, bmax)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
             # The CS coil current at EOF
-            ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+            # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
             # The CS coil current/copper area calculation for quench protection
             # Copper area = (area of coil - area of steel)*(1- void fraction)*
             # (fraction of copper in strands)
-            rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
         elif isumat == 7:
             # Durham Ginzburg-Landau critical surface model for Nb-Ti
             bc20m = tfv.b_crit_upper_nbti
             tc0m = tfv.t_crit_nbti
-            jcritsc, bcrit, tcrit = sc.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
 
             # The CS coil current at EOF
-            ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+            # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
 
         elif isumat == 8:
             # Durham Ginzburg-Landau critical surface model for REBCO
             bc20m = 429e0
             tc0m = 185e0
-            jcritsc, bcrit, tcrit = sc.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
             # A0 calculated for tape cross section already
             jcritstr = jcritsc * (1.0e0 - fcu)
 
             # The CS coil current at EOF
-            ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+            # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
             # The CS coil current/copper area calculation for quench protection
-            rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
         elif isumat == 9:
             # Hazelton experimental data + Zhai conceptual model for REBCO
             bc20m = 138
             tc0m = 92
-            jcritsc, bcrit, tcrit = sc.hijc_rebco(thelium, bmax, strain, bc20m, tc0m)
+            jcritsc, _, _ = superconductors.hijc_rebco(
+                thelium, bmax, strain, bc20m, tc0m
+            )
             # A0 calculated for tape cross section already
             jcritstr = jcritsc * (1.0e0 - fcu)
 
             # The CS coil current at EOF
-            ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+            # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
             # The CS coil current/copper area calculation for quench protection
-            rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
         else:
             # Error condition
             eh.idiag[0] = isumat
             eh.report_error(156)
+
+            # Issue 1871 MDK. The CS calculation has been removed from the isumat option list,
+            # and only calculated if the CS properties are needed.
+            if bv.iohcl != 0:
+                # CS coil current at EOF
+                ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
+                # CS coil current/copper area calculation for quench protection
+                rcv.copperaoh_m2 = ioheof / (
+                    pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu
+                )
 
         # Critical current density in winding pack
         jcritwp = jcritstr * (1.0e0 - fhe)
@@ -2982,10 +2978,8 @@ class PFCoil:
 
             # Actual current density in superconductor, which should be equal to jcrit(thelium+tmarg)
             # when we have found the desired value of tmarg
-            lap = 0
-            while True:
-                lap = lap + 1
-                if (ttest <= 0.0) or (lap > 100):
+            for lap in range(100):
+                if ttest <= 0.0:
                     eh.idiags[0] = lap
                     eh.fdiags[0] = ttest
                     eh.report_error(158)
@@ -2995,20 +2989,30 @@ class PFCoil:
                 ttestp = ttest + delt
 
                 if isumat in [1, 4]:
-                    jcrit0, b, t = sc.itersc(ttest, bmax, strain, bc20m, tc0m)
+                    jcrit0, _, _ = superconductors.itersc(
+                        ttest, bmax, strain, bc20m, tc0m
+                    )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
 
-                    jcritm, b, t = sc.itersc(ttestm, bmax, strain, bc20m, tc0m)
-                    jcritp, b, t = sc.itersc(ttestp, bmax, strain, bc20m, tc0m)
+                    jcritm, _, _ = superconductors.itersc(
+                        ttestm, bmax, strain, bc20m, tc0m
+                    )
+                    jcritp, _, _ = superconductors.itersc(
+                        ttestp, bmax, strain, bc20m, tc0m
+                    )
 
                 # Kludge to avoid divide by 0
                 if jcritm == jcritp:
                     jcritp = jcritp + (jcritp * 1e-6)
 
                 ttest = ttest - 2.0e0 * delt * (jcrit0 - jsc) / (jcritp - jcritm)
+            else:
+                eh.idiags[0] = lap
+                eh.fdiags[0] = ttest
+                eh.report_error(158)
 
             tmarg = ttest - thelium
 
@@ -3021,7 +3025,9 @@ class PFCoil:
                 deltaj_nbti, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, t = sc.jcrit_nbti(current_sharing_t, bmax, c0, bc20m, tc0m)
+            jcrit0, _ = superconductors.jcrit_nbti(
+                current_sharing_t, bmax, c0, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.
@@ -3039,7 +3045,9 @@ class PFCoil:
                 deltaj_wst, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, b, t = sc.wstsc(current_sharing_t, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.wstsc(
+                current_sharing_t, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.
@@ -3049,7 +3057,7 @@ class PFCoil:
 
         # Temperature margin: An alternative method using secant solver
         elif isumat == 6:
-            current_sharing_t = sc.current_sharing_rebco(bmax, jsc)
+            current_sharing_t = superconductors.current_sharing_rebco(bmax, jsc)
             tmarg = current_sharing_t - thelium
             tfv.temp_margin = tmarg
 
@@ -3063,7 +3071,9 @@ class PFCoil:
                 deltaj_gl_nbti, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, b, t = sc.gl_nbti(current_sharing_t, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.gl_nbti(
+                current_sharing_t, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.
@@ -3081,7 +3091,9 @@ class PFCoil:
                 deltaj_gl_rebco, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, b, t = sc.gl_rebco(current_sharing_t, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.gl_rebco(
+                current_sharing_t, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.
@@ -3098,7 +3110,9 @@ class PFCoil:
                 deltaj_hijc_rebco, x1, x2, 100e0
             )
             tmarg = current_sharing_t - thelium
-            jcrit0, b, t = sc.hijc_rebco(current_sharing_t, bmax, strain, bc20m, tc0m)
+            jcrit0, _, _ = superconductors.hijc_rebco(
+                current_sharing_t, bmax, strain, bc20m, tc0m
+            )
             if ml.variable_error(
                 current_sharing_t
             ):  # current sharing secant solver has failed.

@@ -45,11 +45,10 @@ class IFE:
         # write to output file
         if output:
             # Costs
-            self.costs.costs(output=True)
+            self.costs.run()
+            self.costs.output()
 
             # Plant availability
-            # TODO: should availability.run be called
-            # rather than availability.avail?
             self.availability.avail(output=True)
 
             # IFE physics
@@ -120,4 +119,4 @@ class IFE:
         self.availability.avail(output=False)
 
         # Costs
-        self.costs.costs(output=False)
+        self.costs.run()

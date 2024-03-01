@@ -154,10 +154,13 @@ contains
     !! Set icase description based on device type
     use global_variables, only: icase
     use ife_variables, only: ife
+    use stellarator_variables, only: istell
     implicit none
 
     if (ife == 1) then
         icase = 'Inertial Fusion model'
+    else if (istell /= 0) then
+        icase = 'Stellarator model'
     end if
   end subroutine devtyp
 
@@ -189,13 +192,13 @@ contains
 
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
-    use build_variables, only: tf_in_cs, fmsfw, blbmoth, blbuith, fmsbc, shldoth, &
-      fmsdwi, shldtth, shldlth, vgap2, plleni, fwoth, vvblgap, fmsbl, &
+    use build_variables, only: tf_in_cs, blbmoth, blbuith, shldoth, &
+      shldtth, shldlth, vgap2, plleni, fwoth, vvblgap, &
       thshield_ib, thshield_ob, thshield_vb, iprecomp, &
-      blbpith, aplasmin, blbuoth, tfcth, fmsdwe, &
+      blbpith, aplasmin, blbuoth, tfcth, &
       iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, ddwex, &
-      rinboard, fmstf, blnkoth, fseppc, plsepo, fmssh, blnkith, &
-      ohcth, plsepi, fmsoh, blbmith, gapoh, fcspc, scraplo, vgaptop, &
+      rinboard, blnkoth, fseppc, plsepo, blnkith, &
+      ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
@@ -253,16 +256,16 @@ contains
       ucblli, ucpfcb, tlife, ipnet, fcdfuel, ucbus, ucpfb, uchts, &
       maintenance_fwbs, fwbs_prob_fail, uclh, ucblss, ucblvd, ucsc, ucturb, &
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
-      startupratio
+      startupratio, tmain, u_unplanned
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
-      ftritbm, gamma_ecrh, pheat, rho_ecrh, beamwd, enbeam, pheatfix, bscfmax, &
+      ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
-      etalh, frbeam, harnum, xi_ebw
+      etalh, frbeam, harnum, xi_ebw, wave_mode
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
       c5div, ksic, fififi, flux_exp, divplt, delld, c2div, beta_div, betao, divdum, tdiv, c6div, &
-      omegan, prn1, fgamp, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
-      zeffdiv, hldivlim, rlenmax, divfix, c3div, divleg_profile_inner, &
-      divleg_profile_outer, hldiv, i_hldiv
+      omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
+      zeffdiv, hldivlim, rlenmax, divfix, c3div, &
+      hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant, &
       pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
@@ -280,7 +283,7 @@ contains
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
-      iprimnloss, fpumpfw, crypmw_max, f_crypmw
+      fpumpfw, crypmw_max, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
       bldrc, fauxbop, pfusife, dcdrv0, fwdr, pdrive, mcdriv, ucconc, shdr, &
       v3dzu, bldzl, rrin, maxmat, shmatf, fwmatf, drveff, flirad, shdzu, v2dzu, &
@@ -289,7 +292,7 @@ contains
       fburn, fwdzu, etave, v3dr, uctarg, shdzl, ucflib, v3dzl, v1dzu, v2dzl, &
       chdzl, chrad, cdriv1, tgain, somtdr, v2matf, rrmax, bldr, frrmax, &
       blmatf, ife
-    use impurity_radiation_module, only: coreradius, nimp, impvar, fimpvar, &
+    use impurity_radiation_module, only: coreradius, nimp, &
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
@@ -307,7 +310,7 @@ contains
       ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, fhe3, iwalld, gamma, falpha, fgwped, gtscale, tbeta, ibss, &
-      iradloss, te, alphan, rmajor, kappa, ifispact, iinvqd, fkzohm, beamfus0, &
+      iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, ieped, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       idia, ips, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
@@ -317,9 +320,12 @@ contains
 
     use scan_module, only: isweep_2, nsweep, isweep, scan_dim, nsweep_2, &
       sweep_2, sweep, ipnscns, ipnscnv
+    use stellarator_variables, only: f_asym, isthtr, n_res, iotabar, fdivwet, &
+      f_w, bmn, shear, m_res, f_rad, flpitch, istell, max_gyrotron_frequency, &
+      te0_ecrh_achievable
     use tfcoil_variables, only: fcoolcp, tfinsgap, vftf, &
-      quench_detection_ef, fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
-      casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, farc4tf, &
+      fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
+      casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
       thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
       i_tf_tresca, dhecoil, tmaxpro, n_tf, tcpav, fcutfsu, jbus, &
@@ -337,7 +343,7 @@ contains
       sig_tf_wp_max, eyoung_cond_trans, i_tf_cond_eyoung_axial, i_tf_cond_eyoung_trans, &
       str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv
 
-    use times_variables, only: tohs, pulsetimings, tqnch, theat, tramp, tburn, &
+    use times_variables, only: tohs, pulsetimings, tqnch, t_fusion_ramp, tramp, tburn, &
       tdwell, tohsin
     use vacuum_variables, only: dwell_pump, pbase, tn, pumpspeedfactor, &
       initialpressure, outgasfactor, prdiv, pumpspeedmax, rat, outgasindex, &
@@ -589,36 +595,15 @@ contains
        case ('fimp')
           call parse_real_array('fimp', fimp, isub1, nimp, &
                'Impurity density fraction', icode)
-       case ('fimpvar')
-          call parse_real_variable('fimpvar', fimpvar, 1.0D-6, 0.5D0, &
-               'Impurity fraction to be varied')
        case ('fkzohm')
           call parse_real_variable('fkzohm', fkzohm, 0.5D0, 2.0D0, &
                'Zohm elongation scaling multiplier')
        case ('fnesep')
           call parse_real_variable('fnesep', fnesep, 0.1D0, 2.0D1, &
-               'Eich critical separatrix density')
-       case ('fradmin')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FRADMIN is now obsolete -'
-          write(outfile,*) 'please remove it from the input file.'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
+               'f-value for Eich critical separatrix density')
        case ('ftaulimit')
           call parse_real_variable('ftaulimit', ftaulimit, 0.001D0, 1.0D0, &
                'f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement times')
-
-       case ('ftr')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FTR is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '(use FTRIT instead).'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('ftrit')
           call parse_real_variable('ftrit', ftrit, 0.0D0, 1.0D0, &
                'Tritium fuel fraction')
@@ -643,59 +628,27 @@ contains
        case ('iculbl')
           call parse_int_variable('iculbl', iculbl, 0, 3, &
                'Switch for beta limit scaling')
-       case ('iculdl')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'ICULDL is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '(use IDENSL=3 for equivalent model to ICULDL=0).'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('icurr')
           call parse_int_variable('icurr', icurr, 1, 9, &
                'Switch for plasma current scaling')
        case ('idensl')
           call parse_int_variable('idensl', idensl, 1, 7, &
                'Switch for enforced density limit')
-       case ('idhe3')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'IDHE3 is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '(use fhe3 to adjust 3He fuel fraction).'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('idia')
           call parse_int_variable('idia', idia, 0, 2, &
                 'Switch for diamagnetic scaling')
        case ('ifalphap')
           call parse_int_variable('ifalphap', ifalphap, 0, 1, &
                'Switch for fast alpha pressure fit')
-       case ('ifispact')
-          call parse_int_variable('ifispact', ifispact, 0, 0, &
-               'Switch for neutronics calculations')
        case ('ignite')
           call parse_int_variable('ignite', ignite, 0, 1, &
                'Switch for ignited plasma assumption')
        case ('iinvqd')
           call parse_int_variable('iinvqd', iinvqd, 0, 1, &
                'Switch for inverse quadrature')
-       case ('iiter')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'IITER is now obsolete -'
-          write(outfile,*) 'please remove it from the input file.'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('ilhthresh')
           call parse_int_variable('ilhthresh', ilhthresh, 1, 21, &
                'Switch for L-H power threshold to enforce')
-       case ('impvar')
-          call parse_int_variable('impvar', impvar, 3, nimp, &
-               'Index for impurity fraction iteration variable')
           write(outfile,*) 'impvar is now deprecated - use iteration variables 125-136 instead.'
        case ('ipedestal')
           call parse_int_variable('ipedestal', ipedestal, 0, 1, &
@@ -708,15 +661,7 @@ contains
                'Switch for Pfirsch-Schlüter scaling')
        case ('iradloss')
           call parse_int_variable('iradloss', iradloss, 0, 2, &
-               'Switch for radiation loss term inclusion in pwr balance')
-       case ('ires')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'IRES is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
+               'Switch for radiation loss term inclusion in power balance')
        case ('isc')
           call parse_int_variable('isc', isc, 1, ipnlaws, &
                'Switch for confinement scaling law')
@@ -889,14 +834,6 @@ contains
        case ('fjohc0')
           call parse_real_variable('fjohc0', fjohc0, 0.001D0, 10.0D0, &
                'F-value for Central Solenoid current at BOP')
-       case ('fjtfc')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FJTFC is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('fhldiv')
           call parse_real_variable('fhldiv', fhldiv, 0.001D0, 10.0D0, &
                'F-value for divertor heat load')
@@ -987,14 +924,6 @@ contains
        case ('fstr_wp')
           call parse_real_variable('fstr_wp', fstr_wp, 1.0D-9, 10.0D0, &
                'F-value for TF coil strain absolute value')
-       case ('ftaucq')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'ftaucq is now obsolete - (use fmaxvvstress)'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('fmaxvvstress')
           call parse_real_variable('fmaxvvstress', fmaxvvstress, 0.001D0, 1.0D0, &
                'F-value for maximum permitted stress of the VV')
@@ -1152,18 +1081,18 @@ contains
                'User input ECRH gamma_CD')
        case ('harnum')
           call parse_real_variable('harnum', harnum, 1.0D0, 10.0D0, &
-               'cyclotron harmonic frequency number')
-       case ('rho_ecrh')
-          call parse_real_variable('rho_ecrh', rho_ecrh, 0.0D0, 1.0D0, &
-               'normalised minor radius at which electron cyclotron current drive is maximum')
+               'Cyclotron harmonic frequency number')
+      case ('wave_mode')
+         call parse_int_variable('wave_mode', wave_mode, 0, 1, &
+               'Cyclotron wave mode switch')
        case ('xi_ebw')
 	  call parse_real_variable('xi_ebw', xi_ebw, 0.0D0, 1.0D0, &
                'User input EBW scaling for Plasma Heating')
        case ('iefrf')
-          call parse_int_variable('iefrf', iefrf, 1, 12, &
+          call parse_int_variable('iefrf', iefrf, 1, 13, &
                'Switch for curr drive efficiency model')
        case ('iefrffix')
-          call parse_int_variable('iefrffix', iefrffix, 0, 12, &
+          call parse_int_variable('iefrffix', iefrffix, 0, 13, &
                'Switch for 2nd curr drive efficiency model')
        case ('irfcd')
           call parse_int_variable('irfcd', irfcd, 0, 1, &
@@ -1195,8 +1124,8 @@ contains
        case ('tdwell')
           call parse_real_variable('tdwell', tdwell, 0.0D0, 1.0D8, &
                'Time between burns (s)')
-       case ('theat')
-          call parse_real_variable('theat', theat, 0.0D0, 1.0D4, &
+       case ('t_fusion_ramp')
+          call parse_real_variable('t_fusion_ramp', t_fusion_ramp, 0.0D0, 1.0D4, &
                'Heating time after current ramp (s)')
        case ('tohs')
           call parse_real_variable('tohs', tohs, 0.0D0, 1.0D4, &
@@ -1216,18 +1145,6 @@ contains
 
        ! Divertor settings: 2016 Kallenbach model (2016/07/04)
 
-       case ('target_spread', 'lambda_q_omp', 'lcon_factor', 'netau_sol', 'kallenbach_switch', &
-         'kallenbach_tests', 'kallenbach_test_option', 'kallenbach_scan_switch', 'kallenbach_scan_var', &
-         'kallenbach_scan_start', 'kallenbach_scan_end', 'kallenbach_scan_num', 'targetangle', 'ttarget', &
-         'qtargettotal', 'impurity_enrichment', 'fractionwidesol', 'abserr_sol', 'relerr_sol', 'mach0', &
-         'neratio')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
 
        ! See HTS coil module for PROCESS.docx
        !case ('cable_helium_fraction')
@@ -1284,12 +1201,6 @@ contains
        case ('divfix')
           call parse_real_variable('divfix', divfix, 0.1D0, 5.0D0, &
                'Divertor structure vertical extent (m)')
-       case('divleg_profile_inner')
-         call parse_real_variable('divleg_profile_inner', divleg_profile_inner, 0.0D0, 10.0D0, &
-               'Divertor inner leg surface, 2D profile (m)')
-       case('divleg_profile_outer')
-          call parse_real_variable('divleg_profile_outer', divleg_profile_outer, 0.0D0, 50.0D0, &
-               'Divertor outer leg surface, 2D profile (m)')
        case ('divplt')
           call parse_real_variable('divplt', divplt, 0.01D0, 1.0D0, &
                'Divertor plate thickness (m)')
@@ -1299,9 +1210,6 @@ contains
        case ('fdiva')
           call parse_real_variable('fdiva', fdiva, 0.1D0, 2.0D0, &
                'Divertor area fiddle factor')
-       case ('fgamp')
-          call parse_real_variable('fgamp', fgamp, -100.0D0, 100.0D0, &
-               'Sheath potential factor')
        case ('fififi')
           call parse_real_variable('fififi', fififi, 1.0D-6, 1.0D0, &
                'Coefficient for gamdiv')
@@ -1401,22 +1309,6 @@ contains
             call parse_real_variable('blnkoth', blnkoth, 0.0D0, 10.0D0, &
                 'Outboard blanket thickness (m)')
           end if
-       case ('blnktth')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'WARNING. BLNKTTH is now always calculated rather than input -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
-       case ('bcylth')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'ERROR. BCYLTH is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('bore')
           call parse_real_variable('bore', bore, 0.0D0, 50.0D0, &
                'Machine bore (m)')
@@ -1441,30 +1333,6 @@ contains
        case ('fcspc')
           call parse_real_variable('fcspc', fcspc, 0.0D0, 1.0D0, &
                'Fraction of space occupied by CS pre-comp structure')
-       case ('fmsbc')
-          call parse_real_variable('fmsbc', fmsbc, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in buck cyl')
-       case ('fmsbl')
-          call parse_real_variable('fmsbl', fmsbl, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in blanket')
-       case ('fmsdwe')
-          call parse_real_variable('fmsdwe', fmsdwe, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in cryostat')
-       case ('fmsdwi')
-          call parse_real_variable('fmsdwi', fmsdwi, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in vacuum vessel')
-       case ('fmsfw')
-          call parse_real_variable('fmsfw', fmsfw, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in first wall')
-       case ('fmsoh')
-          call parse_real_variable('fmsoh', fmsoh, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in Central Solenoid')
-       case ('fmssh')
-          call parse_real_variable('fmssh', fmssh, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in shield')
-       case ('fmstf')
-          call parse_real_variable('fmstf', fmstf, 0.0D0, 1.0D0, &
-               'Martensitic frac of steel in TF coil')
        case ('fseppc')
           call parse_real_variable('fseppc', fseppc, 1.0D6, 1.0D9, &
                'CS separation force held by CS pre-comp structure')
@@ -1661,14 +1529,6 @@ contains
           call parse_real_variable('sig_tf_wp_max', sig_tf_wp_max, 1.0D6, 1.0D11, &
                'Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)')
 
-       case ('alstroh')
-          call parse_real_variable('alstroh', alstroh, 1.0D6, 1.0D11, &
-               'Allowable hoop stress in Central Solenoid structural material (Pa)')
-
-       case ('i_cs_stress')
-          call parse_int_variable('i_cs_stress', i_cs_stress, 0, 1, &
-               'Switch for CS stress calculation')
-
        case ('dcase')
           call parse_real_variable('dcase', dcase, 1.0D3, 1.0D5, &
                'Density of TF coil case (kg/m3)')
@@ -1714,9 +1574,6 @@ contains
        case ('eyoung_res_tf_buck')
           call parse_real_variable('eyoung_res_tf_buck', eyoung_res_tf_buck, 1.0D-10, 1.0D12, &
                'Reinforced aluminium Young modulus for TF stress calc.')
-       case ('farc4tf')
-          call parse_real_variable('farc4tf', farc4tf, 0.0D0, 1.0D0, &
-               'TF coil shape parameter')
        case ('t_crit_nbti')
           call parse_real_variable('t_crit_nbti ', t_crit_nbti , 0.0D0, 15.0D0, &
                'Critical temperature of GL_nbti ')
@@ -1789,15 +1646,6 @@ contains
              write(outfile,*) '**********'
              write(outfile,*) ' '
           end if
-       case ('itfmod')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'ITFMOD is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          ! write(outfile,*) 'and replace it with TFC_MODEL'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('i_tf_sup')
           call parse_int_variable('i_tf_sup', i_tf_sup, 0, 2, &
                'Switch for TF coil type')
@@ -1816,22 +1664,6 @@ contains
        case ('jbus')
           call parse_real_variable('jbus', jbus, 1.0D4, 1.0D8, &
                'TF coil bus current density (A/m2)')
-       case ('jcrit_model')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'JCRIT_MODEL is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
-       case ('jcritsc')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'JCRITSC is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('n_pancake')
           call parse_int_variable('n_pancake', n_pancake, 1, 100, &
                'Number of pancakes in TF coil (i_tf_turns_integer=1)')
@@ -1865,14 +1697,7 @@ contains
        case ('ripmax')
           call parse_real_variable('ripmax', ripmax, 0.1D0, 100.0D0, &
                'Max allowed ripple ampl. at plasma edge (%)')
-       case ('sigvvall')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'sigvvall is now obsolete - (use max_vv_stress)'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
+
        case ('theta1_coil')
           call parse_real_variable('theta1_coil', theta1_coil, 1.0D-1, 6.0D1, &
                'The angle of the outboard arc forming the TF coil current center line (deg)')
@@ -1965,10 +1790,8 @@ contains
                'Maximum temp rise during quench (K)')
 
        case ('quench_model')
-          call parse_string_variable('quench_model', quench_model, 'quench_model')
-       case ('quench_detection_ef')
-          call parse_real_variable('quench_detection_ef', quench_detection_ef, 0.0D0, 1.0D1, &
-               'Electric field at which TF quench is detected and discharge begins (V/m)')
+          call parse_string_variable('quench_model', quench_model, &
+          'Switch for TF coil quench model (Only applies to REBCO magnet at present)')
 
        case ('tmax_croco')
           call parse_real_variable('tmax_croco', tmax_croco, 4.0D0, 1.0D3, &
@@ -2000,7 +1823,12 @@ contains
        case ('fbmaxcs')
          call parse_real_variable('fbmaxcs', fbmaxcs, 0.01D0, 1.0D0, &
                'F-value for max peak CS field (con. 79, itvar 149)')
-
+       case ('alstroh')
+               call parse_real_variable('alstroh', alstroh, 1.0D6, 1.0D11, &
+                    'Allowable hoop stress in Central Solenoid structural material (Pa)')
+       case ('i_cs_stress')
+               call parse_int_variable('i_cs_stress', i_cs_stress, 0, 1, &
+                    'Switch for CS stress calculation')
        case ('alfapf')
           call parse_real_variable('alfapf', alfapf, 1.0D-12, 1.0D0, &
                'PF coil current smoothing parameter')
@@ -2013,14 +1841,6 @@ contains
        case ('etapsu')
           call parse_real_variable('etapsu', etapsu, 0.0D0, 1.0D0, &
                'Efficiency of ohmic heating')
-       case ('fcohbof')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FCOHBOF is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('fcohbop')
           call parse_real_variable('fcohbop', fcohbop, 0.0D0, 1.0D0, &
                'Central Solenoid J ratio : BOP/EOF')
@@ -2337,30 +2157,6 @@ contains
        case ('fhole')
           call parse_real_variable('fhole', fhole, 0.0D0, 1.0D0, &
                'Hole area fraction')
-       case ('fvolbi')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FVOLBI is now obsolete - (use FHOLE)'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
-       case ('fvolbo')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FVOLBO is now obsolete - (use FHOLE)'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
-       case ('fvolcry')
-          write(outfile,*) ' '
-          write(outfile,*) '**********'
-          write(outfile,*) 'FVOLCRY is now obsolete -'
-          write(outfile,*) 'please remove it from the input file'
-          write(outfile,*) '**********'
-          write(outfile,*) ' '
-          obsolete_var = .true.
        case ('fvoldw')
           call parse_real_variable('fvoldw', fvoldw, 0.0D0, 10.0D0, &
                'Fudge factor for vacuum vessel volume')
@@ -2505,9 +2301,6 @@ contains
        case ('ipowerflow')
           call parse_int_variable('ipowerflow', ipowerflow, 0, 1, &
                'Switch for power flow model')
-       case ('iprimnloss')
-          call parse_int_variable('iprimnloss', iprimnloss, 0, 1, &
-               'Switch for lost neutron power destiny')
        case ('iprimshld')
           call parse_int_variable('iprimshld', iprimshld, 0, 1, &
                'Switch for shield thermal power destiny')
@@ -2610,6 +2403,12 @@ contains
        case ('startupratio')
           call parse_real_variable('startupratio', startupratio, 0.0D0, 10.0D0, &
                'Ratio (additional HCD power for start-up) / (flat-top operational requirements)')
+       case ('tmain')
+          call parse_real_variable('tmain', tmain, 0.0D0, 100.0D0, &
+                  'Maintenance time for replacing CP (years) (iavail = 3)')
+       case ('u_unplanned')
+          call parse_real_variable('u_unplanned', u_unplanned, 0.0D0, 1.0D0, &
+                  'User-input CP unplanned unavailability (iavail = 3)')
 
           !  Unit cost settings
 
@@ -2828,7 +2627,7 @@ contains
           !  Availability settings
 
        case ('iavail')
-          call parse_int_variable('iavail', iavail, 0, 2, &
+          call parse_int_variable('iavail', iavail, 0, 3, &
                'Switch for plant availability model')
        case ('ibkt_life')
           call parse_int_variable('ibkt_life', ibkt_life, 0, 2, &
@@ -3412,117 +3211,47 @@ contains
           !  Stellarator settings
 
        case ('istell')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_int_variable('istell', istell, 0, 6, &
+               'Stellarator machine specification (1=Helias5, 2=Helias4, 3=Helias3, 4=W7X50, 5=W7X30, 6=jsoninput)')
        case ('bmn')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('bmn', bmn, 1.0D-4, 1.0D-2, &
+               'Relative radial field perturbation')
        case ('max_gyrotron_frequency')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('max_gyrotron_frequency', max_gyrotron_frequency, 1.0d9, 1.0d14, &
+                'Maximum avail. gyrotron frequency')
        case ('te0_ecrh_achievable')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('te0_ecrh_achievable', te0_ecrh_achievable, 1.0d0, 1.0d3, &
+                  'Maximum achievable ecrh temperature (peak value)')
        case ('f_asym')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('f_asym', f_asym, 0.9D0, 2.0D0, &
+               'Heat load peaking factor')
        case ('f_rad')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('f_rad', f_rad, 0.0D0, 1.0D0, &
+               'Radiated power fraction in SOL')
        case ('f_w')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('f_w', f_w, 0.1D0, 1.0D0, &
+               'Island size fraction factor')
        case ('fdivwet')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('fdivwet', fdivwet, 0.01D0, 1.0D0, &
+               'Wetted area fraction of divertor plates')
        case ('flpitch')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('flpitch', flpitch, 1.0D-4, 1.0D-2, &
+               'Field line pitch (rad)')
        case ('iotabar')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_real_variable('iotabar', iotabar, 0.1D0, 10.0D0, &
+               'Stellarator rotational transform (at s=2/3)')
        case ('isthtr')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_int_variable('isthtr', isthtr, 1, 3, &
+               'Stellarator method of auxiliary heating')
        case ('m_res')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_int_variable('m_res', m_res, 1, 10, &
+               'Poloidal resonance number')
        case ('n_res')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+         call parse_int_variable('n_res', n_res, 3, 6, &
+               'Toroidal resonance number')
        case ('shear')
-         write(outfile,*) ' '
-         write(outfile,*) '**********'
-         write(outfile,*) 'The Stellarator model is currently not included in PROCESS.'
-         write(outfile,*) 'See issue #1853 for more information on the use of Stellarators.'
-         write(outfile,*) '**********'
-         write(outfile,*) ' '
-         obsolete_var = .true.
+          call parse_real_variable('shear', shear, 0.1D0, 10.0D0, &
+               'Magnetic shear')
 
        !  Inertial Fusion Energy plant settings
 
@@ -3793,6 +3522,7 @@ contains
           write(*,*) error_message
           write(*,*) 'Error occurred at this line in the IN.DAT file: ', lineno
           write(*,*) line
+          obsolete_var = .false.
           error = .True.
        end if
 
@@ -4352,7 +4082,7 @@ contains
 
     !  Local variables
 
-    real(dp) :: valbdp,valadp,xfact
+    real(dp) :: valbdp,valadp,xexp
     integer :: iptr,izero,iexpon
     logical :: negatm,negate
 
@@ -4412,7 +4142,7 @@ contains
     ! *** Parse the mantissa - before the decimal point
 
     valbdp = 0.0D0
-    xfact = 0.1D0
+    xexp = -1.0D0
 20  continue
     if ((string(iptr:iptr) >= '0').and.(string(iptr:iptr) <= '9')) then
        valbdp = (valbdp * 10.0D0) + dble(ichar(string(iptr:iptr))-izero)
@@ -4433,8 +4163,8 @@ contains
     valadp = 0.0D0
 30  continue
     if ((string(iptr:iptr) >= '0').and.(string(iptr:iptr) <= '9')) then
-       valadp = valadp + (dble(ichar(string(iptr:iptr))-izero)*xfact)
-       xfact = xfact * 0.1D0
+       valadp = valadp + (dble(ichar(string(iptr:iptr))-izero)*(10.0D0 ** xexp))
+       xexp = xexp - 1.0D0
        iptr = iptr + 1
        if (iptr > length) goto 50
        goto 30

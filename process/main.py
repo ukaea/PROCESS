@@ -41,6 +41,8 @@ Box file F/RS/CIRE5523/PWF (up to 15/01/96)
 Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
+
+from typing import Protocol
 from process import fortran
 from process.buildings import Buildings
 from process.costs import Costs
@@ -49,6 +51,7 @@ from process.plasma_geometry import PlasmaGeom
 from process.pulse import Pulse
 from process.scan import Scan
 from process import final
+from process.stellarator import Stellarator
 from process.structure import Structure
 from process.build import Build
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
@@ -69,6 +72,7 @@ from process.hcpb import CCFE_HCPB
 from process.dcll import DCLL
 from process.blanket_library import BlanketLibrary
 from process.fw import Fw
+from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 
 from pathlib import Path
@@ -90,7 +94,6 @@ from process.vacuum import Vacuum
 from process.water_use import WaterUse
 from process.sctfcoil import Sctfcoil
 
-from process.fortran import cost_variables
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -198,7 +201,7 @@ class Process:
             self.run = VaryRun(self.args.varyiterparamsconfig, self.args.solver)
         else:
             self.run = SingleRun(self.args.input, self.args.solver)
-            self.run.run()
+        self.run.run()
 
     def post_process(self):
         """Perform post-run actions, like plotting the mfile."""
@@ -234,7 +237,6 @@ class VaryRun:
     Output files:
     All of them in the work directory specified in the config file
     OUT.DAT     -  PROCESS output
-    PLOT.DAT    -  PROCESS output
     MFILE.DAT   -  PROCESS output
     process.log - logfile of PROCESS output to stdout
     README.txt  - contains comments from config file
@@ -251,13 +253,11 @@ class VaryRun:
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
         self.config_file = Path(config_file).resolve()
-        self.run(solver)
+        self.solver = solver
 
-    def run(self, solver):
+    def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
 
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str
         :raises FileNotFoundError: if input file doesn't exist
         """
         # The input path for the varied input file
@@ -299,7 +299,7 @@ class VaryRun:
             # TODO Don't do this; remove stop statements from Fortran and
             # handle error codes
             # Run process on an IN.DAT file
-            config.run_process(input_path, solver)
+            config.run_process(input_path, self.solver)
 
             check_input_error(wdir=wdir)
 
@@ -343,8 +343,10 @@ class SingleRun:
         :type solver: str, optional
         """
         self.input_file = input_file
+
         self.validate_input()
         self.init_module_vars()
+        self.set_filenames()
         self.models = Models()
         self.solver = solver
 
@@ -402,7 +404,9 @@ class SingleRun:
 
         # Set the input file in the Fortran
         fortran.global_variables.fileprefix = string_to_f2py_compatible(
-            fortran.global_variables.fileprefix, str(self.input_path.resolve())
+            fortran.global_variables.fileprefix,
+            str(self.input_path.resolve()),
+            except_length=True,
         )
 
     def set_output(self):
@@ -501,10 +505,10 @@ class SingleRun:
         """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
         within obsolete_variables.py.
         Then will print out what the used obsolete variables are (if any) before continuing the proces run.
-        #TODO: add a feature to stop 1 and force the variable to be updated if it is now obsolete.
         """
 
         obsolete_variables = ov.OBS_VARS
+        obsolete_vars_help_message = ov.OBS_VARS_HELP
 
         filename = self.input_file
 
@@ -519,19 +523,28 @@ class SingleRun:
                     variables = line.strip().split(sep, 1)[0]
                     variables_in_in_dat.append(variables)
 
-        obs_vars_keys = []
-        for k in obsolete_variables:
-            obs_vars_keys.append(k)
+        obs_vars_in_in_dat = []
+        replace_hints = {}
+        for var in variables_in_in_dat:
+            if var in obsolete_variables:
+                obs_vars_in_in_dat.append(var)
+                replace_hints[var] = obsolete_variables.get(var)
 
-        variable_check = any(i in variables_in_in_dat for i in obs_vars_keys)
+        if len(obs_vars_in_in_dat) > 0:
+            message = (
+                "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary. The obsolete variables in your IN.DAT file are: "
+                f"{obs_vars_in_in_dat}. "
+                "Either remove these or replace them with their updated variable names. "
+            )
+            for obs_var in obs_vars_in_in_dat:
+                if replace_hints[obs_var] is None:
+                    message += f"\n\n {obs_var} is an obsolete variable and needs to be removed. "
+                else:
+                    message += f"\n \n {obs_var} is an obsolete variable and needs to be replaced by {str(replace_hints[obs_var])}. "
+                message += f"{obsolete_vars_help_message.get(obs_var, '')}"
 
-        if variable_check:
-            print(
-                "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary."
-            )
-            print(
-                f"The obsolete variables in your IN.DAT file are: {set(obs_vars_keys) & set(variables_in_in_dat)}. Please change them to the corresponding new variable(s) before continuing."
-            )
+            raise ValueError(message)
+
         else:
             print("The IN.DAT file does not contain any obsolete variables.")
 
@@ -541,11 +554,18 @@ class SingleRun:
         Ensures that the corresponding model variable in Models is defined
         and that any relevant switches are set correctly.
         """
+        # try and get costs model
+        self.models.costs
 
-        if cost_variables.cost_model == 2 and self.models.costs_step is None:
-            raise NotImplementedError(
-                f"cost_model = {cost_variables.cost_model} and costs_step = {self.models.costs_step}. Please provide cost model or change switch value."
-            )
+
+class CostsProtocol(Protocol):
+    """Protocol layout for costs models"""
+
+    def run(self):
+        """Run the model"""
+
+    def output(self):
+        """write model output"""
 
 
 class Models:
@@ -560,7 +580,9 @@ class Models:
 
         This also initialises module variables in the Fortran for that module.
         """
-        self.costs_step = None
+        self._costs_custom = None
+        self._costs_1990 = Costs()
+        self._costs_2015 = Costs2015()
         self.cs_fatigue = CsFatigue()
         self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
         self.power = Power()
@@ -575,15 +597,43 @@ class Models:
         self.vacuum = Vacuum()
         self.water_use = WaterUse()
         self.pulse = Pulse()
-        self.costs = Costs()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
-        self.costs_2015 = Costs2015()
-        self.physics = Physics(plasma_profile=self.plasma_profile)
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
+        self.current_drive = CurrentDrive()
+        self.stellarator = Stellarator(
+            availability=self.availability,
+            buildings=self.buildings,
+            vacuum=self.vacuum,
+            costs=self.costs,
+            power=self.power,
+            plasma_profile=self.plasma_profile,
+            hcpb=self.ccfe_hcpb,
+            current_drive=self.current_drive,
+        )
+        self.physics = Physics(
+            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+        )
         self.dcll = DCLL(blanket_library=self.blanket_library)
+
+    @property
+    def costs(self) -> CostsProtocol:
+        if fortran.cost_variables.cost_model == 0:
+            return self._costs_1990
+        if fortran.cost_variables.cost_model == 1:
+            return self._costs_2015
+        if fortran.cost_variables.cost_model == 2:
+            if self._costs_custom is not None:
+                return self._costs_custom
+            raise ValueError("Custom costs model not initialised")
+        # Probably overkill but makes typing happy
+        raise ValueError("Unknown costs model")
+
+    @costs.setter
+    def costs(self, value: CostsProtocol):
+        self._costs_custom = value
 
 
 def main(args=None):

@@ -6,7 +6,6 @@ import numba
 
 from process.fortran import rebco_variables
 from process.fortran import global_variables
-from process.fortran import superconductors
 from process.fortran import tfcoil_variables
 from process.fortran import physics_variables
 from process.fortran import build_variables
@@ -18,6 +17,8 @@ from process.fortran import fwbs_variables
 from process.fortran import pfcoil_variables
 from process.fortran import numerics
 from process.fortran import divertor_variables
+
+import process.superconductors as superconductors
 
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -118,7 +119,7 @@ class Sctfcoil:
 
         jcritsc: float = 0.0
         #  Find critical current density in superconducting strand, jcritstr
-        jcritsc, _ = superconductors.jcrit_rebco(thelium, bmax, int(output))
+        jcritsc, _ = superconductors.jcrit_rebco(thelium, bmax)
         # tfcoil_variables.acstf : Cable space - inside area (m2)
         # Set new rebco_variables.croco_od
         # allowing for scaling of rebco_variables.croco_od
@@ -142,8 +143,7 @@ class Sctfcoil:
         sctfcoil_module.conductor_jacket_fraction = (
             sctfcoil_module.conductor_jacket_area / sctfcoil_module.conductor_area
         )
-        superconductors.croco(
-            jcritsc,
+        (
             sctfcoil_module.croco_strand_area,
             sctfcoil_module.croco_strand_critical_current,
             sctfcoil_module.conductor_copper_area,
@@ -158,10 +158,13 @@ class Sctfcoil:
             sctfcoil_module.conductor_rebco_area,
             sctfcoil_module.conductor_rebco_fraction,
             sctfcoil_module.conductor_critical_current,
+        ) = superconductors.croco(
+            jcritsc,
             sctfcoil_module.conductor_area,
             rebco_variables.croco_od,
             rebco_variables.croco_thick,
         )
+
         rebco_variables.coppera_m2 = iop / sctfcoil_module.conductor_copper_area
 
         icrit = sctfcoil_module.conductor_critical_current
@@ -645,9 +648,7 @@ class Sctfcoil:
 
             #  jcritsc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
-            jcritsc, bcrit, tcrit = superconductors.itersc(
-                thelium, bmax, strain, bc20m, tc0m
-            )
+            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
@@ -663,7 +664,6 @@ class Sctfcoil:
 
             jcritstr, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
             jcritsc = jcritstr / (1.0e0 - fcu)
-            tcrit = thelium + tmarg
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
 
@@ -671,7 +671,7 @@ class Sctfcoil:
             bc20m = 15.0e0
             tc0m = 9.3e0
             c0 = 1.0e10
-            jcritsc, tcrit = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
+            jcritsc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
@@ -685,9 +685,7 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.5e-2
 
-            jcritsc, bcrit, tcrit = superconductors.itersc(
-                thelium, bmax, strain, bc20m, tc0m
-            )
+            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
@@ -703,9 +701,7 @@ class Sctfcoil:
 
             #  jcritsc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
-            jcritsc, bcrit, tcrit = superconductors.wstsc(
-                thelium, bmax, strain, bc20m, tc0m
-            )
+            jcritsc, _, _ = superconductors.wstsc(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
@@ -718,9 +714,7 @@ class Sctfcoil:
         elif isumat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = tfcoil_variables.b_crit_upper_nbti
             tc0m = tfcoil_variables.t_crit_nbti
-            jcritsc, bcrit, tcrit = superconductors.gl_nbti(
-                thelium, bmax, strain, bc20m, tc0m
-            )
+            jcritsc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable
             icrit = jcritstr * acs * fcond
@@ -734,9 +728,7 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.7e-2
 
-            jcritsc, bcrit, tcrit = superconductors.gl_rebco(
-                thelium, bmax, strain, bc20m, tc0m
-            )
+            jcritsc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
             # A0 calculated for tape cross section already
             jcritstr = jcritsc * (1.0e0 - fcu)
             #  Critical current in cable (copper added at this stage in HTS cables)
@@ -756,7 +748,7 @@ class Sctfcoil:
             # 'high current density' as per parameterisation described in Wolf,
             #  and based on Hazelton experimental data and Zhai conceptual model;
             #  see subroutine for full references
-            jcritsc, bcrit, tcrit = superconductors.hijc_rebco(
+            jcritsc, _, _ = superconductors.hijc_rebco(
                 thelium, bmax, strain, bc20m, tc0m
             )
 
@@ -821,85 +813,83 @@ class Sctfcoil:
 
                 # Issue #483 to be on the safe side, check the fractional as well as the absolute error
                 if isumat in (1, 4):
-                    jcrit0, b, t = superconductors.itersc(
+                    jcrit0, _, _ = superconductors.itersc(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, b, t = superconductors.itersc(
+                    jcritm, _, _ = superconductors.itersc(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, b, t = superconductors.itersc(
+                    jcritp, _, _ = superconductors.itersc(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 3:
-                    jcrit0, t = superconductors.jcrit_nbti(ttest, bmax, c0, bc20m, tc0m)
+                    jcrit0, _ = superconductors.jcrit_nbti(ttest, bmax, c0, bc20m, tc0m)
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, t = superconductors.jcrit_nbti(
-                        ttestm, bmax, c0, bc20m, tc0m
-                    )
-                    jcritp, t = superconductors.jcrit_nbti(
+                    jcritm, _ = super.jcrit_nbti(ttestm, bmax, c0, bc20m, tc0m)
+                    jcritp, _ = superconductors.jcrit_nbti(
                         ttestp, bmax, c0, bc20m, tc0m
                     )
                 elif isumat == 5:
-                    jcrit0, b, t = superconductors.wstsc(
+                    jcrit0, _, _ = superconductors.wstsc(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, b, t = superconductors.wstsc(
+                    jcritm, _, _ = superconductors.wstsc(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, b, t = superconductors.wstsc(
+                    jcritp, _, _ = superconductors.wstsc(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 7:
-                    jcrit0, b, t = superconductors.gl_nbti(
+                    jcrit0, _, _ = superconductors.gl_nbti(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, b, t = superconductors.gl_nbti(
+                    jcritm, _, _ = superconductors.gl_nbti(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, b, t = superconductors.gl_nbti(
+                    jcritp, _, _ = superconductors.gl_nbti(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 8:
-                    jcrit0, b, t = superconductors.gl_rebco(
+                    jcrit0, _, _ = superconductors.gl_rebco(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, b, t = superconductors.gl_rebco(
+                    jcritm, _, _ = superconductors.gl_rebco(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, b, t = superconductors.gl_rebco(
+                    jcritp, _, _ = superconductors.gl_rebco(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
                 elif isumat == 9:
-                    jcrit0, b, t = superconductors.hijc_rebco(
+                    jcrit0, _, _ = superconductors.hijc_rebco(
                         ttest, bmax, strain, bc20m, tc0m
                     )
                     if (abs(jsc - jcrit0) <= jtol) and (
                         abs((jsc - jcrit0) / jsc) <= 0.01
                     ):
                         break
-                    jcritm, b, t = superconductors.hijc_rebco(
+                    jcritm, _, _ = superconductors.hijc_rebco(
                         ttestm, bmax, strain, bc20m, tc0m
                     )
-                    jcritp, b, t = superconductors.hijc_rebco(
+                    jcritp, _, _ = superconductors.hijc_rebco(
                         ttestp, bmax, strain, bc20m, tc0m
                     )
 
@@ -5485,7 +5475,7 @@ class Sctfcoil:
             )
             po.ovarre(
                 self.outfile,
-                "Vacuum Vassel stress on quench (Pa)",
+                "Vacuum Vessel stress on quench (Pa)",
                 "(vv_stress_quench)",
                 sctfcoil_module.vv_stress_quench,
                 "OP ",
@@ -5828,7 +5818,7 @@ class Sctfcoil:
         sig_tf_wp_av_z,
     ):
         """Subroutine showing the writing the TF midplane stress analysis
-        in the output file and the stress distribution in the SIG_TF.DAT
+        in the output file and the stress distribution in the SIG_TF.json
         file used to plot stress distributions
         Author : S. Kahn
         """
@@ -6031,7 +6021,7 @@ class Sctfcoil:
                     sig_tf_tresca_max[ii],
                 )
 
-        # SIG_TF.DAT storage
+        # SIG_TF.json storage
         sig_file_data = {
             "Points per layers": n_radial_array,
             "Radius (m)": radial_array,

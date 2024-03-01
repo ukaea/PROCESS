@@ -20,6 +20,8 @@ from pdf2image import convert_from_path
 from process.main import VaryRun
 import os
 from process.io import plot_scans
+from PIL import Image
+from IPython.display import display
 
 # Define project root dir; when running a notebook, the cwd is the dir the notebook is in
 PROJ_DIR = Path.cwd().parent
@@ -63,21 +65,21 @@ def copy_to_temp_dir(input_rel):
 
 # %%
 
+
 # Define input file name relative to project dir, then copy to temp dir
-input_rel = "tracking/baseline_2018/baseline_2018_IN.DAT"
+input_rel = "tests/integration/data/large_tokamak_IN.DAT"
 temp_dir, temp_input_path = copy_to_temp_dir(input_rel)
 
 # Run process on an input file in a temporary directory
 single_run = SingleRun(str(temp_input_path))
-
 single_run.run()
-
 
 # %% [markdown]
 # ## Plot summary
 # Create a summary PDF of the generated `MFILE.DAT` using `plot_proc`.
 
 # %%
+
 
 # Create a summary PDF
 plot_proc.main(args=["-f", str(single_run.mfile_path)])
@@ -92,9 +94,12 @@ for page_no, page_image in enumerate(pages):
 
 # %% [markdown]
 # `plot_proc`'s PDF output.
-#
-# <img src="plot_proc_1.png" width="1000">
-# <img src="plot_proc_2.png" width="1000">
+
+# %%
+img1 = Image.open("plot_proc_1.png")
+display(img1)
+img2 = Image.open("plot_proc_2.png")
+display(img2)
 
 # %%
 # Delete temp dir
@@ -103,21 +108,21 @@ temp_dir.cleanup()
 
 # %% [markdown]
 # ## View key output variables
-# Run the Starfire scenario using `SingleRun` to set some values on the `CostModel2` instance and then print them.
+# Run the large tokamak scenario using `SingleRun` to set some values on the `CostModel` instance and then print them.
 
 # %%
 # Define input file name relative to project dir
-input_rel = "tests/regression/scenarios/starfire/IN.DAT"
+input_rel = "tests/integration/data/large_tokamak_IN.DAT"
 temp_dir, temp_input_path = copy_to_temp_dir(input_rel)
 
 # Run process on an input file
 single_run = SingleRun(str(temp_input_path))
-
+single_run.run()
 
 # %%
-# Print some values on the Costs instance
-print(f"Electrical Plant Equipment: {single_run.models.costs.c24:.3e} M$")
-print(f"Divertor: {single_run.models.costs.c2215:.3e} M$")
+# Print some values on the CostModel instance
+print(f"Heat transport system: {single_run.models.costs.c226:.3e} M$")
+print(f"Electrical plant equipment: {single_run.models.costs.c24:.3e} M$")
 
 
 # %%
@@ -137,7 +142,7 @@ temp_dir, temp_input_path = copy_to_temp_dir(input_rel)
 
 # .conf file relies on a separate input file too; copy this as well
 # TODO This double input file requirement needs to be removed
-input_rel_2 = "tests/integration/data/ref_IN.DAT"
+input_rel_2 = "tests/integration/data/large_tokamak_IN.DAT"
 copy(PROJ_DIR / input_rel_2, temp_dir.name)
 
 # VaryRun uses process_config.py, which changes the current working directory
@@ -147,6 +152,7 @@ copy(PROJ_DIR / input_rel_2, temp_dir.name)
 # needs to be set back after VaryRun()
 # TODO Remove the os.chdir() from VaryRun
 cwd = Path.cwd()
+
 vary_run = VaryRun(str(temp_input_path))
 os.chdir(cwd)
 
