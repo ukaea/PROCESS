@@ -886,7 +886,6 @@ contains
   real(dp), dimension(ipeqns) :: con1, con2, err
   character(len=1), dimension(ipeqns) :: sym
   character(len=10), dimension(ipeqns) :: lab
-  character(len=30) :: strfom
   character(len=60) :: string1, string2
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -955,9 +954,12 @@ contains
 !      call ovarin(nout,'VMCON error flag','(ifail)',ifail)
 !   end if
 
+  objf_name = '"'//trim(lablmm(abs(minmax)))//'"'
+  ! Quotes required for string parsing in MFILE
+  call ovarst(nout,'Objective function name','(objf_name)',objf_name)
+  call ovarre(nout,'Normalised objective function','(norm_objf)',norm_objf, 'OP ')
   call ovarre(nout,'Square root of the sum of squares of the constraint residuals','(sqsumsq)',sqsumsq, 'OP ')
   call ovarre(nout,'VMCON convergence parameter','(convergence_parameter)',convergence_parameter, 'OP ')
-  call ovarre(nout,'Normalised objective function','(norm_objf)',norm_objf, 'OP ')
   call ovarin(nout,'Number of VMCON iterations','(nviter)',nviter, 'OP ')
   call oblnkl(nout)
 
@@ -973,9 +975,8 @@ contains
      string2 = ' to maximise the figure of merit: '
   end if
 
-  strfom = lablmm(abs(minmax))
-  call upper_case(strfom)
-  write(nout,10) trim(string1) // trim(string2),  trim(strfom)
+  call upper_case(objf_name)
+  write(nout,10) trim(string1) // trim(string2),  trim(objf_name)
 10 format(a90, t92, a22)
 
   call oblnkl(nout)
