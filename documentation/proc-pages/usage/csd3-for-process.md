@@ -83,7 +83,7 @@ and then execute a command, such as a single run of PROCESS:
 
 ```bash
 #!/bin/sh
-process -i ~/process/tracking/baseline_2018/baseline_2018_IN.DAT
+process -i ~/process/tests/scenarios/regression/large-tokamak/IN.DAT
 ```
 
 Note that you must use the correct project code for you work: UKAEA-AP002-CPU for non-STEP work and UKAEA-AP001-CPU for STEP work.
