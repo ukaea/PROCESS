@@ -6,7 +6,7 @@ This facilty can be used to run batch jobs with PROCESS. This section shall expl
 
 ## Register to use CSD3
 
-- Register for a [SAFE Account](https://dirac-safe.readthedocs.io/en/latest/safe-guide-users.html#how-to-request-a-dirac-system-account)
+- Register for a [SAFE Account](https://epcced.github.io/safe-docs/safe-for-users/)
 - Once your account is created request to join the UKAEA project - ap001  (STEP) or ap002 (non-STEP) - this will ultimately go to Shaun De Witt, Andrew Davis, Andrew Lahiff or Aleks Dubas for approval
 - Once you have recieved approval confirmation via email your account will be active.
 - Now you can ssh into CSD3. Note that you must register for two-factor authentication upon your first login request.
@@ -17,7 +17,7 @@ This facilty can be used to run batch jobs with PROCESS. This section shall expl
 
 ## Install PROCESS on CSD3
 
-PROCESS can be involved using miniconda, a lightweight version of Anaconda which is a distribution of Python and R for scientific computing that simplifies package management.
+PROCESS can be installed using miniconda, a lightweight version of Anaconda which is a distribution of Python and R for scientific computing that simplifies package management.
 
 ### Install conda and set up the environment
 
