@@ -19,9 +19,6 @@ module pulse_variables
   real(dp) :: bctmp
   !! first wall bulk coolant temperature (C)
 
-  real(dp) :: bfw
-  !! outer radius of each first wall structural tube (m) (0.5 * average of fwith and fwoth)
-
   real(dp) :: dtstor
   !! maximum allowable temperature change in stainless steel thermal storage block (K) (`istore=3`)
 
@@ -52,7 +49,6 @@ module pulse_variables
     implicit none
 
     bctmp = 320.0D0
-    bfw = 0.0D0
     dtstor = 300.0D0
     istore = 1
     itcycl = 1
