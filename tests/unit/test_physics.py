@@ -2,6 +2,7 @@
 
 from typing import Any, NamedTuple
 from process.fortran import (
+    constants,
     physics_variables,
     physics_module,
     current_drive_variables,
@@ -10,7 +11,18 @@ from process.fortran import (
 )
 import numpy
 import pytest
-from process.physics import Physics
+from process.physics import (
+    Physics,
+    bpol,
+    diamagnetic_fraction_scene,
+    diamagnetic_fraction_hender,
+    ps_fraction_scene,
+    plasc,
+    culblm,
+    conhas,
+    vscalc,
+    rether,
+)
 from process.plasma_profiles import PlasmaProfile
 from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
@@ -26,26 +38,26 @@ def physics():
     return Physics(PlasmaProfile(), CurrentDrive())
 
 
-def test_diamagnetic_fraction_hender(physics):
+def test_diamagnetic_fraction_hender():
     """Test diamagnetic_fraction_hender()."""
     beta = 0.14
-    diacf = physics.diamagnetic_fraction_hender(beta)
+    diacf = diamagnetic_fraction_hender(beta)
     assert diacf == pytest.approx(0.05, abs=0.0001)
 
 
-def test_diamagnetic_fraction_scene(physics):
+def test_diamagnetic_fraction_scene():
     """Test diamagnetic_fraction_scene."""
     beta = 0.15
     q95 = 3.0
     q0 = 1.0
-    diacf = physics.diamagnetic_fraction_scene(beta, q95, q0)
+    diacf = diamagnetic_fraction_scene(beta, q95, q0)
     assert diacf == pytest.approx(0.0460, abs=0.0001)
 
 
-def test_ps_fraction_scene(physics):
+def test_ps_fraction_scene():
     """Test ps_fraction_scene."""
     beta = 0.15
-    pscf = physics.ps_fraction_scene(beta)
+    pscf = ps_fraction_scene(beta)
     assert pscf == pytest.approx(-0.0135, abs=0.0001)
 
 
@@ -650,8 +662,8 @@ def test_culcur(culcurparam, monkeypatch, physics):
         ),
     ),
 )
-def test_plasc(arguments, expected, physics):
-    assert physics.plasc(**arguments) == pytest.approx(expected)
+def test_plasc(arguments, expected):
+    assert plasc(**arguments) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -667,6 +679,7 @@ def test_plasc(arguments, expected, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
+                "rmu0": constants.rmu0,
             },
             3.4726549397470703,
         ),
@@ -680,6 +693,7 @@ def test_plasc(arguments, expected, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
+                "rmu0": constants.rmu0,
             },
             2.958739919272374,
         ),
@@ -693,21 +707,22 @@ def test_plasc(arguments, expected, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
+                "rmu0": constants.rmu0,
             },
             0.8377580413333333,
         ),
     ),
 )
-def test_bpol(arguments, expected, physics):
-    assert physics.bpol(**arguments) == pytest.approx(expected)
+def test_bpol(arguments, expected):
+    assert bpol(**arguments) == pytest.approx(expected)
 
 
-def test_culblm(physics):
-    assert physics.culblm(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
+def test_culblm():
+    assert culblm(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
 
 
-def test_conhas(physics):
-    assert physics.conhas(5, 5, 12, 0.5, 0.33, 1.85, 2e3) == pytest.approx(
+def test_conhas():
+    assert conhas(5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0) == pytest.approx(
         2.518876726889116
     )
 
@@ -1349,7 +1364,7 @@ class VscalcParam(NamedTuple):
         ),
     ),
 )
-def test_vscalc(vscalcparam, physics):
+def test_vscalc(vscalcparam):
     """
     Automatically generated Regression Unit Test for vscalc.
 
@@ -1359,7 +1374,7 @@ def test_vscalc(vscalcparam, physics):
     :type vscalcparam: vscalcparam
     """
 
-    phiint, rlp, vsbrn, vsind, vsres, vsstt = physics.vscalc(
+    phiint, rlp, vsbrn, vsind, vsres, vsstt = vscalc(
         csawth=vscalcparam.csawth,
         eps=vscalcparam.eps,
         facoh=vscalcparam.facoh,
@@ -1371,6 +1386,7 @@ def test_vscalc(vscalcparam, physics):
         rplas=vscalcparam.rplas,
         tburn=vscalcparam.tburn,
         t_fusion_ramp=vscalcparam.t_fusion_ramp,
+        rmu0=constants.rmu0,
     )
 
     assert phiint == pytest.approx(vscalcparam.expected_phiint)
@@ -1518,8 +1534,8 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     assert taup == pytest.approx(phyauxparam.expected_taup)
 
 
-def test_rether(physics):
-    assert physics.rether(
+def test_rether():
+    assert rether(
         1.0, 1.45, 7.5e19, 17.81065204, 12.0, 13.0, 0.43258985
     ) == pytest.approx(0.028360489673597476)
 
