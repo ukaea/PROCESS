@@ -1,4 +1,5 @@
 import numpy as np
+import numba as nb
 import scipy.integrate as integrate
 from scipy.optimize import root_scalar
 import math
@@ -26,6 +27,753 @@ from process.fortran import (
     profiles_module,
     startup_variables,
 )
+
+
+@nb.jit(nopython=True, cache=True)
+def coulg(j, tempe, ne):
+    """Coulomb logarithm
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 1 to nr
+    This function calculates the Coulomb logarithm, valid
+    for e-e collisions (T_e > 0.01 keV), and for
+    e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    C. A. Ordonez and M. I. Molina, Phys. Plasmas <B>1</B> (1994) 2515
+    Rev. Mod. Phys., V.48, Part 1 (1976) 275
+    """
+    return 15.9 - 0.5 * np.log(ne[j - 1]) + np.log(tempe[j - 1])
+
+
+@nb.jit(nopython=True, cache=True)
+def nuee(j, tempe, ne):
+    """Frequency of electron-electron collisions
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 1 to nr
+    This function calculates the frequency of electron-electron
+    collisions (Hz): <I>NUEE = 4*SQRT(pi)/3*Ne*e**4*lambd/
+    SQRT(Me)/Te**1.5</I>
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    Yushmanov, 25th April 1987 (?),
+    updated by Pereverzev, 9th November 1994 (?)
+    """
+    return (
+        670.0 * coulg(j, tempe, ne) * ne[j - 1] / (tempe[j - 1] * np.sqrt(tempe[j - 1]))
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def nui(j, zmain, ni, tempi, amain):
+    """Full frequency of ion collisions
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 1 to nr
+    This function calculates the full frequency of ion
+    collisions (Hz).
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    None
+    """
+    # Coulomb logarithm = 15 is used
+    return (
+        zmain[j - 1] ** 4
+        * ni[j - 1]
+        * 322.0
+        / (tempi[j - 1] * np.sqrt(tempi[j - 1] * amain[j - 1]))
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def _plascar_bpol(aspect, kappa, delta):
+    # Original coding, only suitable for TARTs [STAR Code]
+
+    eps = 1.0 / aspect
+
+    c1 = kappa**2 / (1.0 + delta) + delta
+    c2 = kappa**2 / (1.0 - delta) - delta
+
+    d1 = (kappa / (1.0 + delta)) ** 2 + 1.0
+    d2 = (kappa / (1.0 - delta)) ** 2 + 1.0
+
+    c1_aspect = (c1 * eps - 1.0) if aspect < c1 else (1.0 - c1 * eps)
+
+    y1 = np.sqrt(c1_aspect / (1.0 + eps)) * (1.0 + delta) / kappa
+    y2 = np.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * (1.0 - delta) / kappa
+
+    h2 = (1.0 + (c2 - 1.0) * eps / 2.0) / np.sqrt((1.0 - eps) * (c2 * eps + 1.0))
+    f2 = (d2 * (1.0 - delta) * eps) / ((1.0 - eps) * (c2 * eps + 1.0))
+    g = eps * kappa / (1.0 - eps * delta)
+    ff2 = f2 * (g + 2.0 * h2 * np.arctan(y2))
+
+    h1 = (1.0 + (1.0 - c1) * eps / 2.0) / np.sqrt((1.0 + eps) * c1_aspect)
+    f1 = (d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
+
+    if aspect < c1:
+        ff1 = f1 * (g - h1 * np.log((1.0 + y1) / (1.0 - y1)))
+    else:
+        ff1 = -f1 * (-g + 2.0 * h1 * np.arctan(y1))
+
+    return ff1, ff2, d1, d2
+
+
+@nb.jit(nopython=True, cache=True)
+def bpol(icurr, ip, qbar, aspect, bt, kappa, delta, perim, rmu0):
+    """Function to calculate poloidal field
+    author: J Galambos, FEDC/ORNL
+    author: P J Knight, CCFE, Culham Science Centre
+    icurr  : input integer : current scaling model to use
+    ip     : input real :  plasma current (A)
+    qbar   : input real :  edge q-bar
+    aspect : input real :  plasma aspect ratio
+    bt     : input real :  toroidal field on axis (T)
+    kappa  : input real :  plasma elongation
+    delta  : input real :  plasma triangularity
+    perim  : input real :  plasma perimeter (m)
+    This function calculates the poloidal field in Tesla,
+    using a simple calculation using Stoke's Law for conventional
+    tokamaks, or for TARTs, a scaling from Peng, Galambos and
+    Shipe (1992).
+    J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+    unpublished internal Oak Ridge document
+    Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
+    Fusion Technology, 21, 1729
+    """
+    if icurr != 2:
+        return rmu0 * ip / perim
+
+    ff1, ff2, _, _ = _plascar_bpol(aspect, kappa, delta)
+
+    return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
+
+
+@nb.jit(nopython=True, cache=True)
+def plasc(qbar, aspect, rminor, bt, kappa, delta):
+    """Function to calculate plasma current (Peng scaling)
+    author: J Galambos, FEDC/ORNL
+    author: P J Knight, CCFE, Culham Science Centre
+    aspect : input real :  plasma aspect ratio
+    bt     : input real :  toroidal field on axis (T)
+    delta  : input real :  plasma triangularity
+    kappa  : input real :  plasma elongation
+    qbar   : input real :  edge q-bar
+    rminor : input real :  plasma minor radius (m)
+    This function calculates the plasma current in MA,
+    using a scaling from Peng, Galambos and Shipe (1992).
+    It is primarily used for Tight Aspect Ratio Tokamaks and is
+    selected via <CODE>icurr=2</CODE>.
+    J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+    unpublished internal Oak Ridge document
+    Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
+    Fusion Technology, 21, 1729
+    """
+
+    ff1, ff2, d1, d2 = _plascar_bpol(aspect, kappa, delta)
+
+    e1 = 2.0 * kappa / (d1 * (1.0 + delta))
+    e2 = 2.0 * kappa / (d2 * (1.0 - delta))
+
+    return (
+        rminor
+        * bt
+        / qbar
+        * 5.0
+        * kappa
+        / (2.0 * np.pi**2)
+        * (np.arcsin(e1) / e1 + np.arcsin(e2) / e2)
+        * (ff1 + ff2)
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
+    """Routine to find the equilibration power between the
+    ions and electrons
+    author: P J Knight, CCFE, Culham Science Centre
+    alphan : input real :  density profile index
+    alphat : input real :  temperature profile index
+    dene   : input real :  electron density (/m3)
+    dlamie : input real :  ion-electron coulomb logarithm
+    te     : input real :  electron temperature (keV)
+    ti     : input real :  ion temperature (keV)
+    zeffai : input real :  mass weighted plasma effective charge
+    piepv  : output real : ion/electron equilibration power (MW/m3)
+    This routine calculates the equilibration power between the
+    ions and electrons.
+    Unknown origin
+    """
+    profie = (1.0 + alphan) ** 2 / (
+        (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
+    )
+    conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
+
+    return conie * (ti - te) / (te**1.5)
+
+
+@nb.jit(nopython=True, cache=True)
+def vscalc(
+    csawth,
+    eps,
+    facoh,
+    gamma,
+    kappa,
+    rmajor,
+    rplas,
+    plascur,
+    t_fusion_ramp,
+    tburn,
+    rli,
+    rmu0,
+):
+    """Volt-second requirements
+    author: P J Knight, CCFE, Culham Science Centre
+    csawth : input real :  coefficient for sawteeth effects
+    eps    : input real :  inverse aspect ratio
+    facoh  : input real :  fraction of plasma current produced inductively
+    gamma  : input real :  Ejima coeff for resistive start-up V-s component
+    kappa  : input real :  plasma elongation
+    plascur: input real :  plasma current (A)
+    rli    : input real :  plasma normalised inductivity
+    rmajor : input real :  plasma major radius (m)
+    rplas  : input real :  plasma resistance (ohm)
+    t_fusion_ramp  : input real :  heating time (s)
+    tburn  : input real :  burn time (s)
+    phiint : output real : internal plasma volt-seconds (Wb)
+    rlp    : output real : plasma inductance (H)
+    vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
+    vsind  : output real : internal and external plasma inductance V-s (Wb)
+    vsres  : output real : resistive losses in start-up volt-seconds (Wb)
+    vsstt  : output real : total volt-seconds needed (Wb)
+    This subroutine calculates the volt-second requirements and some
+    other related items.
+    AEA FUS 251: A User's Guide to the PROCESS Systems Code
+    """
+    # Internal inductance
+
+    rlpint = rmu0 * rmajor * rli / 2.0
+    phiint = rlpint * plascur
+
+    # Start-up resistive component
+    # Uses ITER formula without the 10 V-s add-on
+
+    vsres = gamma * rmu0 * plascur * rmajor
+
+    # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
+    # fit for external inductance
+
+    aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
+        2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
+    )
+    beps = (
+        0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
+    )
+    rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+
+    rlp = rlpext + rlpint
+
+    # Inductive V-s component
+
+    vsind = rlp * plascur
+    vsstt = vsres + vsind
+
+    # Loop voltage during flat-top
+    # Include enhancement factor in flattop V-s requirement
+    # to account for MHD sawtooth effects.
+
+    vburn = plascur * rplas * facoh * csawth
+
+    # N.B. tburn on first iteration will not be correct
+    # if the pulsed reactor option is used, but the value
+    # will be correct on subsequent calls.
+
+    vsbrn = vburn * (t_fusion_ramp + tburn)
+    vsstt = vsstt + vsbrn
+
+    return phiint, rlp, vsbrn, vsind, vsres, vsstt
+
+
+@nb.jit(nopython=True, cache=True)
+def culblm(bt, dnbeta, plascur, rminor):
+    """Beta scaling limit
+    author: P J Knight, CCFE, Culham Science Centre
+    bt      : input real :  toroidal B-field on plasma axis (T)
+    dnbeta  : input real :  Troyon-like g coefficient
+    plascur : input real :  plasma current (A)
+    rminor  : input real :  plasma minor axis (m)
+    betalim : output real : beta limit as defined below
+    This subroutine calculates the beta limit, using
+    the algorithm documented in AEA FUS 172.
+    The limit applies to beta defined with respect to the total B-field.
+    Switch iculbl determines which components of beta to include.
+
+    If iculbl = 0, then the limit is applied to the total beta
+    If iculbl = 1, then the limit is applied to the thermal beta only
+    If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components
+    If iculbl = 3, then the limit is applied to the toroidal beta
+
+    The default value for the g coefficient is dnbeta = 3.5
+    AEA FUS 172: Physics Assessment for the European Reactor Study
+    AEA FUS 251: A User's Guide to the PROCESS Systems Code
+    """
+
+    return 0.01 * dnbeta * (plascur / 1.0e6) / (rminor * bt)
+
+
+@nb.jit(nopython=True, cache=True)
+def conhas(alphaj, alphap, bt, delta95, eps, kappa95, p0, rmu0):
+    """Routine to calculate the F coefficient used for scaling the
+    plasma current
+    author: P J Knight, CCFE, Culham Science Centre
+    alphaj   : input real :  current profile index
+    alphap   : input real :  pressure profile index
+    bt       : input real :  toroidal field on axis (T)
+    delta95  : input real :  plasma triangularity 95%
+    eps      : input real :  inverse aspect ratio
+    kappa95  : input real :  plasma elongation 95%
+    p0       : input real :  central plasma pressure (Pa)
+    fq       : output real : scaling for edge q from circular
+    cross-section cylindrical case
+    This routine calculates the F coefficient used for scaling the
+    plasma current, using the Connor-Hastie scaling given in
+    AEA FUS 172.
+    AEA FUS 172: Physics Assessment for the European Reactor Study
+    AEA FUS 251: A User's Guide to the PROCESS Systems Code
+    """
+
+    # Exponent in Connor-Hastie current profile - matching total
+    # current gives the following trivial relation
+    lamda = alphaj
+
+    # Exponent in Connor-Hastie pressure profile
+    nu = alphap
+
+    # Central plasma beta
+    beta0 = 2.0 * rmu0 * p0 / (bt**2)
+
+    # Plasma internal inductance
+    lamp1 = 1.0 + lamda
+    li = lamp1 / lamda * (lamp1 / lamda * np.log(lamp1) - 1.0)
+
+    # T/r in AEA FUS 172
+    kap1 = kappa95 + 1.0
+    tr = kappa95 * delta95 / kap1**2
+
+    # E/r in AEA FUS 172
+    er = (kappa95 - 1.0) / kap1
+
+    # T primed in AEA FUS 172
+    tprime = 2.0 * tr * lamp1 / (1.0 + 0.5 * lamda)
+
+    # E primed in AEA FUS 172
+    eprime = er * lamp1 / (1.0 + lamda / 3.0)
+
+    # Delta primed in AEA FUS 172
+    deltap = (0.5 * kap1 * eps * 0.5 * li) + (
+        beta0 / (0.5 * kap1 * eps)
+    ) * lamp1**2 / (1.0 + nu)
+
+    # Delta/R0 in AEA FUS 172
+    deltar = beta0 / 6.0 * (1.0 + 5.0 * lamda / 6.0 + 0.25 * lamda**2) + (
+        0.5 * kap1 * eps
+    ) ** 2 * 0.125 * (1.0 - (lamda**2) / 3.0)
+
+    # F coefficient
+    return (0.5 * kap1) ** 2 * (
+        1.0
+        + eps**2 * (0.5 * kap1) ** 2
+        + 0.5 * deltap**2
+        + 2.0 * deltar
+        + 0.5 * (eprime**2 + er**2)
+        + 0.5 * (tprime**2 + 4.0 * tr**2)
+    )
+
+
+def bsinteg(
+    y,
+    dene,
+    ten,
+    bt,
+    rminor,
+    rmajor,
+    zeff,
+    alphat,
+    alphan,
+    q0,
+    q95,
+    betat,
+    echarge,
+    rmu0,
+):
+    """Integrand function for Nevins et al bootstrap current scaling
+    author: P J Knight, CCFE, Culham Science Centre
+    y : input real : abscissa of integration, = normalised minor radius
+    This function calculates the integrand function for the
+    Nevins et al bootstrap current scaling, 4/11/90.
+    AEA FUS 251: A User's Guide to the PROCESS Systems Code
+    """
+    # Constants for fit to q-profile
+    c1 = 1.0
+    c2 = 1.0
+    c3 = 1.0
+
+    # Compute average electron beta
+    betae = dene * ten * 1.0e3 * echarge / (bt**2 / (2.0 * rmu0))
+
+    nabla = rminor * np.sqrt(y) / rmajor
+    x = (1.46 * np.sqrt(nabla) + 2.4 * nabla) / (1.0 - nabla) ** 1.5
+    z = zeff
+    d = (
+        1.414 * z
+        + z * z
+        + x * (0.754 + 2.657 * z + 2.0 * z * z)
+        + x * x * (0.348 + 1.243 * z + z * z)
+    )
+    al2 = -x * (0.884 + 2.074 * z) / d
+    a2 = alphat * (1.0 - y) ** (alphan + alphat - 1.0)
+    alphai = -1.172 / (1.0 + 0.462 * x)
+    a1 = (alphan + alphat) * (1.0 - y) ** (alphan + alphat - 1.0)
+    al1 = x * (0.754 + 2.21 * z + z * z + x * (0.348 + 1.243 * z + z * z)) / d
+
+    # q-profile
+    q = q0 + (q95 - q0) * (c1 * y + c2 * y * y + c3 * y**3) / (c1 + c2 + c3)
+
+    pratio = (betat - betae) / betae
+
+    return (q / q95) * (al1 * (a1 + pratio * (a1 + alphai * a2)) + al2 * a2)
+
+
+def diamagnetic_fraction_hender(beta):
+    """author: S.I. Muldrew, CCFE, Culham Science Centre
+    Diamagnetic contribution at tight aspect ratio.
+    Tim Hender fit
+    """
+    return beta / 2.8
+
+
+def diamagnetic_fraction_scene(beta, q95, q0):
+    """author: S.I. Muldrew, CCFE, Culham Science Centre
+    Diamagnetic fraction based on SCENE fit by Tim Hender
+    See Issue #992
+    """
+    return beta * (0.1 * q95 / q0 + 0.44) * 4.14e-1
+
+
+def ps_fraction_scene(beta):
+    """author: S.I. Muldrew, CCFE, Culham Science Centre
+    Pfirsch-Schlüter fraction based on SCENE fit by Tim Hender
+    See Issue #992
+    """
+    return -9e-2 * beta
+
+
+@nb.jit(nopython=True, cache=True)
+def nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni):
+    """Relative frequency of ion collisions
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 1 to nr
+    This function calculates the relative frequency of ion
+    collisions: <I>NU* = Nui*q*Rt/eps**1.5/Vti</I>
+    The full ion collision frequency NUI is used.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    Yushmanov, 30th April 1987 (?)
+    """
+    return (
+        3.2e-6
+        * nui(j, zmain, ni, tempi, amain)
+        * rmajor
+        / (
+            np.abs(mu[j - 1] + 1.0e-4)
+            * sqeps[j - 1] ** 3
+            * np.sqrt(tempi[j - 1] / amain[j - 1])
+        )
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def dcsa(j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps):
+    """Grad(ln(ne)) coefficient in the Sauter bootstrap scaling
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 2 to nr
+    nr : input integer : maximum value of j
+    This function calculates the coefficient scaling grad(ln(ne))
+    in the Sauter bootstrap current scaling.
+    Code by Angioni, 29th May 2002.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    O. Sauter, C. Angioni and Y. R. Lin-Liu,
+    Physics of Plasmas <B>6</B> (1999) 2834
+    O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+    Physics of Plasmas <B>9</B> (2002) 5140
+
+    DCSA $\\equiv \\mathcal{L}_{31}$, Eq.14a, Sauter et al, 1999
+    """
+    zz = zef[j - 1]
+    zft = tpf(j, triang, sqeps)
+    _nues = nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+    zdf = (1.0 + (1.0 - 0.1 * zft) * np.sqrt(_nues)) + (0.5 * (1.0 - zft) * _nues) / zz
+    zft /= zdf  # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
+    zft2 = zft**2
+    zft3 = zft2 * zft
+    dcsa = (
+        ((1.0 + 1.4 / (zz + 1.0)) * zft)
+        - (1.9 / (zz + 1.0) * zft2)
+        + ((0.3 * zft3 + 0.2 * zft3 * zft) / (zz + 1.0))
+    )
+
+    # Corrections suggested by Fable, 15/05/2015
+    return dcsa * beta_poloidal_local_total(
+        j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def hcsa(j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps):
+    """Grad(ln(Te)) coefficient in the Sauter bootstrap scaling
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 2 to nr
+    nr : input integer : maximum value of j
+    This function calculates the coefficient scaling grad(ln(Te))
+    in the Sauter bootstrap current scaling.
+    Code by Angioni, 29th May 2002.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    O. Sauter, C. Angioni and Y. R. Lin-Liu,
+    Physics of Plasmas <B>6</B> (1999) 2834
+    O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+    Physics of Plasmas <B>9</B> (2002) 5140
+    """
+    zz = zef[j - 1]
+    zft = tpf(j, triang, sqeps)
+    _nues = nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+    _nues_sqrt = np.sqrt(_nues)
+    zdf = (1.0 + 0.26 * (1.0 - zft) * _nues_sqrt) + (
+        0.18 * (1.0 - 0.37 * zft) * _nues / np.sqrt(zz)
+    )
+    zfte = zft / zdf  # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
+    zfte2 = zfte * zfte
+    zfte3 = zfte * zfte2
+    zfte4 = zfte2 * zfte2
+
+    zdf = (1.0 + (1.0 + 0.6 * zft) * _nues_sqrt) + (
+        0.85 * (1.0 - 0.37 * zft) * _nues * (1.0 + zz)
+    )
+    zfti = zft / zdf  # $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
+    zfti2 = zfti * zfti
+    zfti3 = zfti * zfti2
+    zfti4 = zfti2 * zfti2
+
+    # $F_{32\_ee}(X)$, Eq.15b
+    hcee = (
+        ((0.05 + 0.62 * zz) / zz / (1.0 + 0.44 * zz) * (zfte - zfte4))
+        + ((zfte2 - zfte4 - 1.2 * (zfte3 - zfte4)) / (1.0 + 0.22 * zz))
+        + (1.2 / (1.0 + 0.5 * zz) * zfte4)
+    )
+
+    # $F_{32\_ei}(Y)$, Eq.15c
+    hcei = (
+        (-(0.56 + 1.93 * zz) / zz / (1.0 + 0.44 * zz) * (zfti - zfti4))
+        + (4.95 / (1.0 + 2.48 * zz) * (zfti2 - zfti4 - 0.55 * (zfti3 - zfti4)))
+        - (1.2 / (1.0 + 0.5 * zz) * zfti4)
+    )
+
+    # Corrections suggested by Fable, 15/05/2015
+    return beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho) * (
+        hcee + hcei
+    ) + dcsa(
+        j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
+    ) * beta_poloidal_local(
+        j, nr, rmajor, bt, ne, tempe, mu, rho
+    ) / beta_poloidal_local_total(
+        j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def xcsa(
+    j,
+    nr,
+    rmajor,
+    bt,
+    triang,
+    mu,
+    sqeps,
+    tempi,
+    tempe,
+    amain,
+    zmain,
+    ni,
+    ne,
+    rho,
+    zef,
+):
+    """Grad(ln(Ti)) coefficient in the Sauter bootstrap scaling
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 2 to nr
+    nr : input integer : maximum value of j
+    This function calculates the coefficient scaling grad(ln(Ti))
+    in the Sauter bootstrap current scaling.
+    Code by Angioni, 29th May 2002.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    O. Sauter, C. Angioni and Y. R. Lin-Liu,
+    Physics of Plasmas <B>6</B> (1999) 2834
+    O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+    Physics of Plasmas <B>9</B> (2002) 5140
+    """
+    zz = zef[j - 1]
+    zft = tpf(j, triang, sqeps)
+    _nues = nues(j, rmajor, zef, mu, sqeps, tempe, ne)
+    zdf = (1.0 + (1.0 - 0.1 * zft) * np.sqrt(_nues)) + 0.5 * (
+        1.0 - 0.5 * zft
+    ) * _nues / zz
+    zfte = zft / zdf  # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
+
+    # Eq.16a
+    xcsa = ((1.0 + 1.4 / (zz + 1.0)) * zfte - 1.9 / (zz + 1.0) * zfte * zfte) + (
+        0.3 * zfte * zfte + 0.2 * zfte * zfte * zfte
+    ) * zfte / (zz + 1.0)
+
+    # $\alpha_0$, Eq.17a
+    a0 = (-1.17 * (1.0 - zft)) / (1.0 - 0.22 * zft - 0.19 * zft * zft)
+
+    _nuis = nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
+    _nuis_sqrt = np.sqrt(_nuis)
+    a1 = _nuis**2 * zft**6
+
+    # $\alpha(\nu_{i*})$, Eq.17b
+    alp = (
+        (a0 + 0.25 * (1.0 - zft * zft) * _nuis_sqrt) / (1.0 + 0.5 * _nuis_sqrt)
+        + 0.315 * a1
+    ) / (1.0 + 0.15 * a1)
+
+    # Corrections suggested by Fable, 15/05/2015
+    return (
+        beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho)
+        - beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
+    ) * (xcsa * alp) + dcsa(
+        j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
+    ) * (
+        1.0
+        - beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
+        / beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho)
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def nues(j, rmajor, zef, mu, sqeps, tempe, ne):
+    """Relative frequency of electron collisions
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 1 to nr
+    This function calculates the relative frequency of electron
+    collisions: <I>NU* = Nuei*q*Rt/eps**1.5/Vte</I>
+    The electron-ion collision frequency NUEI=NUEE*1.4*ZEF is
+    used.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    Yushmanov, 30th April 1987 (?)
+    """
+    return (
+        nuee(j, tempe, ne)
+        * 1.4
+        * zef[j - 1]
+        * rmajor
+        / np.abs(mu[j - 1] * (sqeps[j - 1] ** 3) * np.sqrt(tempe[j - 1]) * 1.875e7)
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho):
+    """Local beta poloidal calculation
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 1 to nr
+    nr : input integer : maximum value of j
+    This function calculates the local beta poloidal.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    <P>beta poloidal = 4*pi*ne*Te/Bpo**2
+    Pereverzev, 25th April 1989 (?)
+    """
+    return (
+        np.where(
+            j != nr,
+            1.6e-4 * np.pi * (ne[j] + ne[j - 1]) * (tempe[j] + tempe[j - 1]),
+            6.4e-4 * np.pi * ne[j - 1] * tempe[j - 1],
+        )
+        * (rmajor / (bt * rho[j - 1] * np.abs(mu[j - 1] + 1.0e-4))) ** 2
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho):
+    """Local beta poloidal calculation, including ion pressure
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 1 to nr
+    nr : input integer : maximum value of j
+    This function calculates the local total beta poloidal.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    <P>beta poloidal = 4*pi*(ne*Te+ni*Ti)/Bpo**2
+    where ni is the sum of all ion densities (thermal)
+    Pereverzev, 25th April 1989 (?)
+    E Fable, private communication, 15th May 2014
+    """
+
+    return (
+        np.where(
+            j != nr,
+            1.6e-4
+            * np.pi
+            * (
+                ((ne[j] + ne[j - 1]) * (tempe[j] + tempe[j - 1]))
+                + ((ni[j] + ni[j - 1]) * (tempi[j] + tempi[j - 1]))
+            ),
+            6.4e-4 * np.pi * (ne[j - 1] * tempe[j - 1] + ni[j - 1] * tempi[j - 1]),
+        )
+        * (rmajor / (bt * rho[j - 1] * np.abs(mu[j - 1] + 1.0e-4))) ** 2
+    )
+
+
+@nb.jit(nopython=True, cache=True)
+def tpf(j, triang, sqeps, fit=1):
+    """Trapped particle fraction
+    author: P J Knight, CCFE, Culham Science Centre
+    j  : input integer : radial element index in range 1 to nr
+    fit : input integer : (1)=ASTRA method, 2=Equation from Sauter2002, 3=Equation from Sauter2013
+    This function calculates the trapped particle fraction at
+    a given radius.
+    <P>A number of different fits are provided, but the one
+    to be used is hardwired prior to run-time.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    O. Sauter et al, Plasma Phys. Contr. Fusion <B>44</B> (2002) 1999
+    O. Sauter, 2013:
+    http://infoscience.epfl.ch/record/187521/files/lrp_012013.pdf
+    """
+    s = sqeps[j - 1]
+    eps = s * s
+
+    if fit == 1:
+        # ASTRA method, from Emiliano Fable, private communication
+        # (Excluding h term which dominates for inverse aspect ratios < 0.5,
+        # and tends to take the trapped particle fraction to 1)
+
+        zz = 1.0 - eps
+        return 1.0 - zz * np.sqrt(zz) / (1.0 + 1.46 * s)
+    elif fit == 2:
+        # Equation 4 of Sauter 2002
+        # Similar to, but not quite identical to g above
+
+        return 1.0 - (1.0 - eps) ** 2 / (1.0 + 1.46 * s) / np.sqrt(1.0 - eps * eps)
+    elif fit == 3:
+        # Includes correction for triangularity
+
+        epseff = 0.67 * (1.0 - 1.4 * triang * np.abs(triang)) * eps
+
+        return 1.0 - np.sqrt((1.0 - eps) / (1.0 + eps)) * (1.0 - epseff) / (
+            1.0 + 2.0 * np.sqrt(epseff)
+        )
+
+    raise RuntimeError(f"fit={fit} is not valid. Must be 1, 2, or 3")
 
 
 class Physics:
@@ -234,19 +982,17 @@ class Physics:
         )
 
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
-        current_drive_variables.diacf_hender = self.diamagnetic_fraction_hender(
+        current_drive_variables.diacf_hender = diamagnetic_fraction_hender(
             physics_variables.beta
         )
 
         # SCENE scaling for diamagnetic current
-        current_drive_variables.diacf_scene = self.diamagnetic_fraction_scene(
+        current_drive_variables.diacf_scene = diamagnetic_fraction_scene(
             physics_variables.beta, physics_variables.q95, physics_variables.q0
         )
 
         # Pfirsch-Schlüter scaling for diamagnetic current
-        current_drive_variables.pscf_scene = self.ps_fraction_scene(
-            physics_variables.beta
-        )
+        current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
         current_drive_variables.bscf_sauter = (
             current_drive_variables.cboot * self.bootstrap_fraction_sauter()
@@ -426,7 +1172,7 @@ class Physics:
 
         # Calculate ion/electron equilibration power
 
-        physics_variables.piepv = self.rether(
+        physics_variables.piepv = rether(
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.dene,
@@ -599,7 +1345,7 @@ class Physics:
             physics_variables.vsind,
             physics_variables.vsres,
             physics_variables.vsstt,
-        ) = self.vscalc(
+        ) = vscalc(
             physics_variables.csawth,
             physics_variables.eps,
             physics_variables.facoh,
@@ -611,6 +1357,7 @@ class Physics:
             times_variables.t_fusion_ramp,
             times_variables.tburn,
             physics_variables.rli,
+            constants.rmu0,
         )
 
         # Calculate auxiliary physics related information
@@ -666,7 +1413,7 @@ class Physics:
             # Hartmann and Zohm
             physics_variables.dnbeta = 4.0e0 * physics_variables.rli
 
-        physics_variables.betalim = self.culblm(
+        physics_variables.betalim = culblm(
             physics_variables.bt,
             physics_variables.dnbeta,
             physics_variables.plascur,
@@ -821,12 +1568,15 @@ class Physics:
             po.write(
                 self.outfile,
                 (
-                    f" 'fzactual, frac, reinke_variables.impvardiv = {reinke_variables.fzactual}, {impurity_radiation_module.impurity_arr_frac(reinke_variables.impvardiv)}, {reinke_variables.impvardiv}"
+                    f" 'fzactual, frac, reinke_variables.impvardiv = {reinke_variables.fzactual},"
+                    f" {impurity_radiation_module.impurity_arr_frac(reinke_variables.impvardiv)},"
+                    f" {reinke_variables.impvardiv}"
                 ),
             )
 
+    @staticmethod
     def culdlm(
-        self, bt, idensl, pdivt, plascur, prn1, qcyl, q95, rmajor, rminor, sarea, zeff
+        bt, idensl, pdivt, plascur, prn1, qcyl, q95, rmajor, rminor, sarea, zeff
     ):
         """Density limit calculation
         author: P J Knight, CCFE, Culham Science Centre
@@ -865,16 +1615,18 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlim = 1.54e20 * qperp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
-        dlimit[0] = dlim / prn1
+        dlimit[0] = (
+            1.54e20 * qperp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
+        ) / prn1
 
         # Borrass density limit model for ITER (I)
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
-        dlim = 1.8e20 * qperp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
-        dlimit[1] = dlim / prn1
+        dlimit[1] = (
+            1.8e20 * qperp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
+        ) / prn1
 
         # Borrass density limit model for ITER (II)
         # This applies to the density at the plasma edge, so must be scaled
@@ -882,8 +1634,9 @@ class Physics:
         # This formula is (almost) identical to that in the original routine
         # denlim (now deleted).
 
-        dlim = 0.5e20 * qperp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
-        dlimit[2] = dlim / prn1
+        dlimit[2] = (
+            0.5e20 * qperp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
+        ) / prn1
 
         # JET edge radiation density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -900,15 +1653,13 @@ class Physics:
 
             dlimit[3] = 0.0
         else:
-            dlim = 1.0e20 * np.sqrt(pdivt / denom)
-            dlimit[3] = dlim / prn1
+            dlimit[3] = (1.0e20 * np.sqrt(pdivt / denom)) / prn1
 
         # JET simplified density limit model
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlim = 0.237e20 * bt * np.sqrt(pdivt) / rmajor
-        dlimit[4] = dlim / prn1
+        dlimit[4] = (0.237e20 * bt * np.sqrt(pdivt) / rmajor) / prn1
 
         # Hugill-Murakami M.q limit
         # qcyl=qstar here, which is okay according to the literature
@@ -923,7 +1674,8 @@ class Physics:
 
         return dlimit, dlimit[idensl - 1]
 
-    def plasma_composition(self):
+    @staticmethod
+    def plasma_composition():
         """Calculates various plasma component fractional makeups
         author: P J Knight, CCFE, Culham Science Centre
 
@@ -1131,8 +1883,8 @@ class Physics:
                     / impurity_radiation_module.impurity_arr_amass[imp]
                 )
 
+    @staticmethod
     def phyaux(
-        self,
         aspect,
         dene,
         deni,
@@ -1210,30 +1962,8 @@ class Physics:
 
         return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
 
-    def rether(self, alphan, alphat, dene, dlamie, te, ti, zeffai):
-        """Routine to find the equilibration power between the
-        ions and electrons
-        author: P J Knight, CCFE, Culham Science Centre
-        alphan : input real :  density profile index
-        alphat : input real :  temperature profile index
-        dene   : input real :  electron density (/m3)
-        dlamie : input real :  ion-electron coulomb logarithm
-        te     : input real :  electron temperature (keV)
-        ti     : input real :  ion temperature (keV)
-        zeffai : input real :  mass weighted plasma effective charge
-        piepv  : output real : ion/electron equilibration power (MW/m3)
-        This routine calculates the equilibration power between the
-        ions and electrons.
-        Unknown origin
-        """
-        profie = (1.0 + alphan) ** 2 / (
-            (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
-        )
-        conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
-
-        return conie * (ti - te) / (te**1.5)
-
-    def pohm(self, facoh, kappa95, plascur, rmajor, rminor, ten, vol, zeff):
+    @staticmethod
+    def pohm(facoh, kappa95, plascur, rmajor, rminor, ten, vol, zeff):
         # Density weighted electron temperature in 10 keV units
 
         t10 = ten / 10.0
@@ -1274,117 +2004,8 @@ class Physics:
 
         return pohmpv, pohmmw, rpfac, rplas
 
-    def vscalc(
-        self,
-        csawth,
-        eps,
-        facoh,
-        gamma,
-        kappa,
-        rmajor,
-        rplas,
-        plascur,
-        t_fusion_ramp,
-        tburn,
-        rli,
-    ):
-        """Volt-second requirements
-        author: P J Knight, CCFE, Culham Science Centre
-        csawth : input real :  coefficient for sawteeth effects
-        eps    : input real :  inverse aspect ratio
-        facoh  : input real :  fraction of plasma current produced inductively
-        gamma  : input real :  Ejima coeff for resistive start-up V-s component
-        kappa  : input real :  plasma elongation
-        plascur: input real :  plasma current (A)
-        rli    : input real :  plasma normalised inductivity
-        rmajor : input real :  plasma major radius (m)
-        rplas  : input real :  plasma resistance (ohm)
-        t_fusion_ramp  : input real :  heating time (s)
-        tburn  : input real :  burn time (s)
-        phiint : output real : internal plasma volt-seconds (Wb)
-        rlp    : output real : plasma inductance (H)
-        vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
-        vsind  : output real : internal and external plasma inductance V-s (Wb)
-        vsres  : output real : resistive losses in start-up volt-seconds (Wb)
-        vsstt  : output real : total volt-seconds needed (Wb)
-        This subroutine calculates the volt-second requirements and some
-        other related items.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
-        """
-        # Internal inductance
-
-        rlpint = constants.rmu0 * rmajor * rli / 2.0
-        phiint = rlpint * plascur
-
-        # Start-up resistive component
-        # Uses ITER formula without the 10 V-s add-on
-
-        vsres = gamma * constants.rmu0 * plascur * rmajor
-
-        # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
-        # fit for external inductance
-
-        aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
-            2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
-        )
-        beps = (
-            0.73
-            * np.sqrt(eps)
-            * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-        )
-        rlpext = (
-            rmajor * constants.rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
-        )
-
-        rlp = rlpext + rlpint
-
-        # Inductive V-s component
-
-        vsind = rlp * plascur
-        vsstt = vsres + vsind
-
-        # Loop voltage during flat-top
-        # Include enhancement factor in flattop V-s requirement
-        # to account for MHD sawtooth effects.
-
-        vburn = plascur * rplas * facoh * csawth
-
-        # N.B. tburn on first iteration will not be correct
-        # if the pulsed reactor option is used, but the value
-        # will be correct on subsequent calls.
-
-        vsbrn = vburn * (t_fusion_ramp + tburn)
-        vsstt = vsstt + vsbrn
-
-        return phiint, rlp, vsbrn, vsind, vsres, vsstt
-
-    def culblm(self, bt, dnbeta, plascur, rminor):
-        """Beta scaling limit
-        author: P J Knight, CCFE, Culham Science Centre
-        bt      : input real :  toroidal B-field on plasma axis (T)
-        dnbeta  : input real :  Troyon-like g coefficient
-        plascur : input real :  plasma current (A)
-        rminor  : input real :  plasma minor axis (m)
-        betalim : output real : beta limit as defined below
-        This subroutine calculates the beta limit, using
-        the algorithm documented in AEA FUS 172.
-        The limit applies to beta defined with respect to the total B-field.
-        Switch iculbl determines which components of beta to include.
-
-        If iculbl = 0, then the limit is applied to the total beta
-        If iculbl = 1, then the limit is applied to the thermal beta only
-        If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components
-        If iculbl = 3, then the limit is applied to the toroidal beta
-
-        The default value for the g coefficient is dnbeta = 3.5
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
-        """
-
-        return 0.01 * dnbeta * (plascur / 1.0e6) / (rminor * bt)
-
+    @staticmethod
     def culcur(
-        self,
         alphaj,
         alphap,
         bt,
@@ -1473,9 +2094,7 @@ class Physics:
         if icurr == 1:  # Peng analytical fit
             fq = (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
         elif icurr == 2:  # Peng scaling for double null divertor; TARTs [STAR Code]
-            curhat = (
-                1.0e6 * physics_module.plasc(qpsi, asp, rminor, bt, kappa, triang) / bt
-            )
+            curhat = 1.0e6 * plasc(qpsi, asp, rminor, bt, kappa, triang) / bt
         elif icurr == 3:  # Simple ITER scaling (simply the cylindrical case)
             fq = 1.0
         elif icurr == 4:  # ITER formula (IPDG89)
@@ -1504,7 +2123,7 @@ class Physics:
             fq *= 1 if icurr == 7 else (1.0 + (abs(kappa95 - 1.2)) ** 3)
         elif icurr == 7:  # Connor-Hastie asymptotically-correct expression
             # N.B. If iprofile=1, alphaj will be wrong during the first call (only)
-            fq = physics_module.conhas(alphaj, alphap, bt, triang95, eps, kappa95, p0)
+            fq = conhas(alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0)
         elif (
             icurr == 8
         ):  # Sauter scaling allowing negative triangularity [FED May 2016]
@@ -1542,7 +2161,7 @@ class Physics:
         physics_variables.normalised_total_beta = (
             1.0e8 * physics_variables.beta * rminor * bt / plascur
         )
-        bp = self.bpol(icurr, plascur, qpsi, asp, bt, kappa, triang, pperim)
+        bp = bpol(icurr, plascur, qpsi, asp, bt, kappa, triang, pperim, constants.rmu0)
 
         # Ensure current profile consistency, if required
         # This is as described in Hartmann and Zohm only if icurr = 4 as well...
@@ -1553,1003 +2172,8 @@ class Physics:
 
         return alphaj, rli, bp, qstar, plascur
 
-    def conhas(self, alphaj, alphap, bt, delta95, eps, kappa95, p0):
-        """Routine to calculate the F coefficient used for scaling the
-        plasma current
-        author: P J Knight, CCFE, Culham Science Centre
-        alphaj   : input real :  current profile index
-        alphap   : input real :  pressure profile index
-        bt       : input real :  toroidal field on axis (T)
-        delta95  : input real :  plasma triangularity 95%
-        eps      : input real :  inverse aspect ratio
-        kappa95  : input real :  plasma elongation 95%
-        p0       : input real :  central plasma pressure (Pa)
-        fq       : output real : scaling for edge q from circular
-        cross-section cylindrical case
-        This routine calculates the F coefficient used for scaling the
-        plasma current, using the Connor-Hastie scaling given in
-        AEA FUS 172.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
-        """
-
-        # Exponent in Connor-Hastie current profile - matching total
-        # current gives the following trivial relation
-
-        lamda = alphaj
-
-        # Exponent in Connor-Hastie pressure profile
-
-        nu = alphap
-
-        # Central plasma beta
-
-        beta0 = 2.0 * constants.rmu0 * p0 / (bt**2)
-
-        # Plasma internal inductance
-
-        lamp1 = 1.0 + lamda
-        li = lamp1 / lamda * (lamp1 / lamda * np.log(lamp1) - 1.0)
-
-        # T/r in AEA FUS 172
-
-        kap1 = kappa95 + 1.0
-        tr = kappa95 * delta95 / kap1**2
-
-        # E/r in AEA FUS 172
-
-        er = (kappa95 - 1.0) / kap1
-
-        # T primed in AEA FUS 172
-
-        tprime = 2.0 * tr * lamp1 / (1.0 + 0.5 * lamda)
-
-        # E primed in AEA FUS 172
-
-        eprime = er * lamp1 / (1.0 + lamda / 3.0)
-
-        # Delta primed in AEA FUS 172
-
-        deltap = 0.5 * kap1 * eps * 0.5 * li + beta0 / (
-            0.5 * kap1 * eps
-        ) * lamp1**2 / (1.0 + nu)
-
-        # Delta/R0 in AEA FUS 172
-
-        deltar = beta0 / 6.0 * (1.0 + 5.0 * lamda / 6.0 + 0.25 * lamda**2) + (
-            0.5 * kap1 * eps
-        ) ** 2 * 0.125 * (1.0 - (lamda**2) / 3.0)
-
-        # F coefficient
-
-        return (0.5 * kap1) ** 2 * (
-            1.0
-            + eps**2 * (0.5 * kap1) ** 2
-            + 0.5 * deltap**2
-            + 2.0 * deltar
-            + 0.5 * (eprime**2 + er**2)
-            + 0.5 * (tprime**2 + 4.0 * tr**2)
-        )
-
-    def plasc(self, qbar, aspect, rminor, bt, kappa, delta):
-        """Function to calculate plasma current (Peng scaling)
-        author: J Galambos, FEDC/ORNL
-        author: P J Knight, CCFE, Culham Science Centre
-        aspect : input real :  plasma aspect ratio
-        bt     : input real :  toroidal field on axis (T)
-        delta  : input real :  plasma triangularity
-        kappa  : input real :  plasma elongation
-        qbar   : input real :  edge q-bar
-        rminor : input real :  plasma minor radius (m)
-        This function calculates the plasma current in MA,
-        using a scaling from Peng, Galambos and Shipe (1992).
-        It is primarily used for Tight Aspect Ratio Tokamaks and is
-        selected via <CODE>icurr=2</CODE>.
-        J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-        unpublished internal Oak Ridge document
-        Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
-        Fusion Technology, 21, 1729
-        """
-
-        eps = 1.0 / aspect
-
-        c1 = kappa**2 / (1.0 + delta) + delta
-        c2 = kappa**2 / (1.0 - delta) - delta
-
-        d1 = (kappa / (1.0 + delta)) ** 2 + 1.0
-        d2 = (kappa / (1.0 - delta)) ** 2 + 1.0
-
-        if aspect < c1:
-            y1 = np.sqrt((c1 * eps - 1.0) / (1.0 + eps)) * (1.0 + delta) / kappa
-        else:
-            y1 = np.sqrt((1.0 - c1 * eps) / (1.0 + eps)) * (1.0 + delta) / kappa
-
-        y2 = np.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * (1.0 - delta) / kappa
-
-        e1 = 2.0 * kappa / (d1 * (1.0 + delta))
-        e2 = 2.0 * kappa / (d2 * (1.0 - delta))
-
-        h2 = (1.0 + (c2 - 1.0) * eps / 2.0) / np.sqrt((1.0 - eps) * (c2 * eps + 1.0))
-        f2 = (d2 * (1.0 - delta) * eps) / ((1.0 - eps) * (c2 * eps + 1.0))
-        g = eps * kappa / (1.0 - eps * delta)
-        ff2 = f2 * (g + 2.0 * h2 * np.arctan(y2))
-
-        if aspect < c1:
-            h1 = (1.0 + (1.0 - c1) * eps / 2.0) / np.sqrt(
-                (1.0 + eps) * (c1 * eps - 1.0)
-            )
-            f1 = (d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
-            ff1 = f1 * (g - h1 * np.log((1.0 + y1) / (1.0 - y1)))
-        else:
-            h1 = (1.0 + (1.0 - c1) * eps / 2.0) / np.sqrt(
-                (1.0 + eps) * (1.0 - c1 * eps)
-            )
-            f1 = -(d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
-            ff1 = f1 * (-g + 2.0 * h1 * np.arctan(y1))
-
-        return (
-            rminor
-            * bt
-            / qbar
-            * 5.0
-            * kappa
-            / (2.0 * np.pi**2)
-            * (np.arcsin(e1) / e1 + np.arcsin(e2) / e2)
-            * (ff1 + ff2)
-        )
-
-    def bpol(self, icurr, ip, qbar, aspect, bt, kappa, delta, perim):
-        """Function to calculate poloidal field
-        author: J Galambos, FEDC/ORNL
-        author: P J Knight, CCFE, Culham Science Centre
-        icurr  : input integer : current scaling model to use
-        ip     : input real :  plasma current (A)
-        qbar   : input real :  edge q-bar
-        aspect : input real :  plasma aspect ratio
-        bt     : input real :  toroidal field on axis (T)
-        kappa  : input real :  plasma elongation
-        delta  : input real :  plasma triangularity
-        perim  : input real :  plasma perimeter (m)
-        This function calculates the poloidal field in Tesla,
-        using a simple calculation using Stoke's Law for conventional
-        tokamaks, or for TARTs, a scaling from Peng, Galambos and
-        Shipe (1992).
-        J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-        unpublished internal Oak Ridge document
-        Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
-        Fusion Technology, 21, 1729
-        """
-        if icurr != 2:
-            return constants.rmu0 * ip / perim
-
-        # Original coding, only suitable for TARTs [STAR Code]
-
-        eps = 1.0 / aspect
-
-        c1 = kappa**2 / (1.0 + delta) + delta
-        c2 = kappa**2 / (1.0 - delta) - delta
-
-        d1 = (kappa / (1.0 + delta)) ** 2 + 1.0
-        d2 = (kappa / (1.0 - delta)) ** 2 + 1.0
-
-        if aspect < c1:
-            y1 = np.sqrt((c1 * eps - 1.0) / (1.0 + eps)) * (1.0 + delta) / kappa
-        else:
-            y1 = np.sqrt((1.0 - c1 * eps) / (1.0 + eps)) * (1.0 + delta) / kappa
-
-        y2 = np.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * (1.0 - delta) / kappa
-
-        h2 = (1.0 + (c2 - 1.0) * eps / 2.0) / np.sqrt((1.0 - eps) * (c2 * eps + 1.0))
-        f2 = (d2 * (1.0 - delta) * eps) / ((1.0 - eps) * (c2 * eps + 1.0))
-        g = eps * kappa / (1.0 - eps * delta)
-        ff2 = f2 * (g + 2.0 * h2 * np.arctan(y2))
-
-        if aspect < c1:
-            h1 = (1.0 + (1.0 - c1) * eps / 2.0) / np.sqrt(
-                (1.0 + eps) * (c1 * eps - 1.0)
-            )
-            f1 = (d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
-            ff1 = f1 * (g - h1 * np.log((1.0 + y1) / (1.0 - y1)))
-        else:
-            h1 = (1.0 + (1.0 - c1) * eps / 2.0) / np.sqrt(
-                (1.0 + eps) * (1.0 - c1 * eps)
-            )
-            f1 = -(d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
-            ff1 = f1 * (-g + 2.0 * h1 * np.arctan(y1))
-
-        return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
-
-    def bootstrap_fraction_iter89(
-        self, aspect, beta, bt, cboot, plascur, q95, q0, rmajor, vol
-    ):
-        """Original ITER calculation of bootstrap-driven fraction
-        of the plasma current.
-        author: P J Knight, CCFE, Culham Science Centre
-        aspect  : input real : plasma aspect ratio
-        beta    : input real : plasma total beta
-        bt      : input real : toroidal field on axis (T)
-        cboot   : input real : bootstrap current fraction multiplier
-        plascur : input real : plasma current (A)
-        q95     : input real : safety factor at 95% surface
-        q0      : input real : central safety factor
-        rmajor  : input real : plasma major radius (m)
-        vol     : input real : plasma volume (m3)
-        This routine performs the original ITER calculation of the
-        plasma current bootstrap fraction.
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-        """
-        xbs = min(10, q95 / q0)
-        cbs = cboot * (1.32 - 0.235 * xbs + 0.0185 * xbs**2)
-        bpbs = (
-            constants.rmu0
-            * plascur
-            / (2 * np.pi * np.sqrt(vol / (2 * np.pi**2 * rmajor)))
-        )
-        betapbs = beta * bt**2 / bpbs**2
-
-        if betapbs <= 0.0:  # only possible if beta <= 0.0
-            return 0.0
-        return cbs * (betapbs / np.sqrt(aspect)) ** 1.3
-
-    def bootstrap_fraction_nevins(
-        self,
-        alphan,
-        alphat,
-        betat,
-        bt,
-        dene,
-        plascur,
-        q95,
-        q0,
-        rmajor,
-        rminor,
-        ten,
-        zeff,
-    ):
-        """Bootstrap current fraction from Nevins et al scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        alphan : input real :  density profile index
-        alphat : input real :  temperature profile index
-        betat  : input real :  total plasma beta (with respect to the toroidal
-        field)
-        bt     : input real :  toroidal field on axis (T)
-        dene   : input real :  electron density (/m3)
-        plascur: input real :  plasma current (A)
-        q0     : input real :  central safety factor
-        q95    : input real :  safety factor at 95% surface
-        rmajor : input real :  plasma major radius (m)
-        rminor : input real :  plasma minor radius (m)
-        ten    : input real :  density weighted average plasma temperature (keV)
-        zeff   : input real :  plasma effective charge
-        This function calculates the bootstrap current fraction,
-        using the Nevins et al method, 4/11/90.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
-        """
-        # Calculate peak electron beta
-
-        betae0 = (
-            physics_variables.ne0
-            * physics_variables.te0
-            * 1.0e3
-            * constants.echarge
-            / (bt**2 / (2.0 * constants.rmu0))
-        )
-
-        # Call integration routine
-
-        ainteg, _ = integrate.quad(
-            lambda y: self.bsinteg(
-                y, dene, ten, bt, rminor, rmajor, zeff, alphat, alphan, q0, q95, betat
-            ),
-            0,
-            0.999,
-            epsabs=0.001,
-            epsrel=0.001,
-        )
-
-        # Calculate bootstrap current and fraction
-
-        aibs = 2.5 * betae0 * rmajor * bt * q95 * ainteg
-        return 1.0e6 * aibs / plascur
-
-    def bsinteg(
-        self, y, dene, ten, bt, rminor, rmajor, zeff, alphat, alphan, q0, q95, betat
-    ):
-        """Integrand function for Nevins et al bootstrap current scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        y : input real : abscissa of integration, = normalised minor radius
-        This function calculates the integrand function for the
-        Nevins et al bootstrap current scaling, 4/11/90.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
-        """
-        # Constants for fit to q-profile
-
-        c1 = 1.0
-        c2 = 1.0
-        c3 = 1.0
-
-        # Compute average electron beta
-
-        betae = (
-            dene * ten * 1.0e3 * constants.echarge / (bt**2 / (2.0 * constants.rmu0))
-        )
-
-        nabla = rminor * np.sqrt(y) / rmajor
-        x = (1.46 * np.sqrt(nabla) + 2.4 * nabla) / (1.0 - nabla) ** 1.5
-        z = zeff
-        d = (
-            1.414 * z
-            + z * z
-            + x * (0.754 + 2.657 * z + 2.0 * z * z)
-            + x * x * (0.348 + 1.243 * z + z * z)
-        )
-        al2 = -x * (0.884 + 2.074 * z) / d
-        a2 = alphat * (1.0 - y) ** (alphan + alphat - 1.0)
-        alphai = -1.172 / (1.0 + 0.462 * x)
-        a1 = (alphan + alphat) * (1.0 - y) ** (alphan + alphat - 1.0)
-        al1 = x * (0.754 + 2.21 * z + z * z + x * (0.348 + 1.243 * z + z * z)) / d
-
-        # q-profile
-
-        q = q0 + (q95 - q0) * (c1 * y + c2 * y * y + c3 * y**3) / (c1 + c2 + c3)
-
-        pratio = (betat - betae) / betae
-
-        return (q / q95) * (al1 * (a1 + pratio * (a1 + alphai * a2)) + al2 * a2)
-
-    def bootstrap_fraction_wilson(
-        self, alphaj, alphap, alphat, betpth, q0, qpsi, rmajor, rminor
-    ):
-        """Bootstrap current fraction from Wilson et al scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        alphaj  : input real :  current profile index
-        alphap  : input real :  pressure profile index
-        alphat  : input real :  temperature profile index
-        beta    : input real :  total beta
-        betpth  : input real :  thermal component of poloidal beta
-        q0      : input real :  safety factor on axis
-        qpsi    : input real :  edge safety factor
-        rmajor  : input real :  major radius (m)
-        rminor  : input real :  minor radius (m)
-        This function calculates the bootstrap current fraction
-        using the numerically fitted algorithm written by Howard Wilson.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        H. R. Wilson, Nuclear Fusion <B>32</B> (1992) 257
-        """
-        term1 = np.log(0.5)
-        term2 = np.log(q0 / qpsi)
-
-        termp = 1.0 - 0.5 ** (1.0 / alphap)
-        termt = 1.0 - 0.5 ** (1.0 / alphat)
-        termj = 1.0 - 0.5 ** (1.0 / alphaj)
-
-        alfpnw = term1 / np.log(np.log((q0 + (qpsi - q0) * termp) / qpsi) / term2)
-        alftnw = term1 / np.log(np.log((q0 + (qpsi - q0) * termt) / qpsi) / term2)
-        aj = term1 / np.log(np.log((q0 + (qpsi - q0) * termj) / qpsi) / term2)
-
-        # Crude check for NaN errors or other illegal values...
-
-        if np.isnan(aj) or np.isnan(alfpnw) or np.isnan(alftnw) or aj < 0:
-            error_handling.fdiags[0] = aj
-            error_handling.fdiags[1] = alfpnw
-            error_handling.fdiags[2] = alftnw
-            error_handling.fdiags[3] = aj
-
-            error_handling.report_error(76)
-
-        # Ratio of ionic charge to electron charge
-
-        z = 1.0
-
-        # Inverse aspect ratio: r2 = maximum plasma radius, r1 = minimum
-
-        r2 = rmajor + rminor
-        r1 = rmajor - rminor
-        eps1 = (r2 - r1) / (r2 + r1)
-
-        # Coefficients fitted using least squares techniques
-
-        saj = np.sqrt(aj)
-
-        a = np.array(
-            [
-                1.41 * (1.0 - 0.28 * saj) * (1.0 + 0.12 / z),
-                0.36 * (1.0 - 0.59 * saj) * (1.0 + 0.8 / z),
-                -0.27 * (1.0 - 0.47 * saj) * (1.0 + 3.0 / z),
-                0.0053 * (1.0 + 5.0 / z),
-                -0.93 * (1.0 - 0.34 * saj) * (1.0 + 0.15 / z),
-                -0.26 * (1.0 - 0.57 * saj) * (1.0 - 0.27 * z),
-                0.064 * (1.0 - 0.6 * aj + 0.15 * aj * aj) * (1.0 + 7.6 / z),
-                -0.0011 * (1.0 + 9.0 / z),
-                -0.33 * (1.0 - aj + 0.33 * aj * aj),
-                -0.26 * (1.0 - 0.87 / saj - 0.16 * aj),
-                -0.14 * (1.0 - 1.14 / saj - 0.45 * saj),
-                -0.0069,
-            ]
-        )
-
-        seps1 = np.sqrt(eps1)
-
-        b = np.array(
-            [
-                1.0,
-                alfpnw,
-                alftnw,
-                alfpnw * alftnw,
-                seps1,
-                alfpnw * seps1,
-                alftnw * seps1,
-                alfpnw * alftnw * seps1,
-                eps1,
-                alfpnw * eps1,
-                alftnw * eps1,
-                alfpnw * alftnw * eps1,
-            ]
-        )
-
-        # Empirical bootstrap current fraction
-
-        return seps1 * betpth * (a * b).sum()
-
-    def diamagnetic_fraction_hender(self, beta):
-        """author: S.I. Muldrew, CCFE, Culham Science Centre
-        Diamagnetic contribution at tight aspect ratio.
-        Tim Hender fit
-        """
-        return beta / 2.8
-
-    def diamagnetic_fraction_scene(self, beta, q95, q0):
-        """author: S.I. Muldrew, CCFE, Culham Science Centre
-        Diamagnetic fraction based on SCENE fit by Tim Hender
-        See Issue #992
-        """
-        return beta * (0.1 * q95 / q0 + 0.44) * 4.14e-1
-
-    def ps_fraction_scene(self, beta):
-        """author: S.I. Muldrew, CCFE, Culham Science Centre
-        Pfirsch-Schlüter fraction based on SCENE fit by Tim Hender
-        See Issue #992
-        """
-        return -9e-2 * beta
-
-    def bootstrap_fraction_sauter(self):
-        """Bootstrap current fraction from Sauter et al scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        None
-        This function calculates the bootstrap current fraction
-        using the Sauter, Angioni and Lin-Liu scaling.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        O. Sauter, C. Angioni and Y. R. Lin-Liu,
-        Physics of Plasmas <B>6</B> (1999) 2834
-        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-        Physics of Plasmas <B>9</B> (2002) 5140
-        """
-        NR = 200
-
-        roa = np.arange(1, NR + 1, step=1) / NR
-
-        rho = np.sqrt(physics_variables.xarea / np.pi) * roa
-        sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
-
-        ne = 1e-19 * np.vectorize(
-            lambda r: profiles_module.nprofile(
-                r,
-                physics_variables.rhopedn,
-                physics_variables.ne0,
-                physics_variables.neped,
-                physics_variables.nesep,
-                physics_variables.alphan,
-            )
-        )(roa)
-        ni = (physics_variables.dnitot / physics_variables.dene) * ne
-        tempe = np.vectorize(
-            lambda r: profiles_module.tprofile(
-                r,
-                physics_variables.rhopedt,
-                physics_variables.te0,
-                physics_variables.teped,
-                physics_variables.tesep,
-                physics_variables.alphat,
-                physics_variables.tbeta,
-            )
-        )(roa)
-        tempi = (physics_variables.ti / physics_variables.te) * tempe
-
-        zef = np.full_like(tempi, physics_variables.zeff)  # Flat Zeff profile assumed
-
-        # mu = 1/safety factor
-        # Parabolic q profile assumed
-        mu = 1 / (
-            physics_variables.q0
-            + (physics_variables.q - physics_variables.q0) * roa**2
-        )
-        amain = np.full_like(mu, physics_variables.afuel)
-        zmain = np.full_like(mu, 1.0 + physics_variables.fhe3)
-
-        if ne[NR - 1] == 0.0:
-            ne[NR - 1] = 1e-4 * ne[NR - 2]
-            ni[NR - 1] = 1e-4 * ni[NR - 2]
-
-        if tempe[NR - 1] == 0.0:
-            tempe[NR - 1] = 1e-4 * tempe[NR - 2]
-            tempi[NR - 1] = 1e-4 * tempi[NR - 2]
-
-        # Calculate total bootstrap current (MA) by summing along profiles
-        iboot = 0.0
-        for ir in range(0, NR):
-            if ir + 1 == NR:
-                jboot = 0.0
-                da = 0.0
-            else:
-                drho = rho[ir + 1] - rho[ir]
-                da = 2 * np.pi * rho[ir] * drho  # area of annulus
-
-                dlogte_drho = (np.log(tempe[ir + 1]) - np.log(tempe[ir])) / drho
-                dlogti_drho = (np.log(tempi[ir + 1]) - np.log(tempi[ir])) / drho
-                dlogne_drho = (np.log(ne[ir + 1]) - np.log(ne[ir])) / drho
-
-                # The factor of 0.5 below arises because in ASTRA the logarithms
-                # are coded as (e.g.):  (Te(j+1)-Te(j))/(Te(j+1)+Te(j)), which
-                # actually corresponds to grad(log(Te))/2. So the factors dcsa etc.
-                # are a factor two larger than one might otherwise expect.
-                jboot = 0.5 * (
-                    self.dcsa(
-                        ir + 1,
-                        NR,
-                        physics_variables.rmajor,
-                        physics_variables.bt,
-                        physics_variables.triang,
-                        ne,
-                        ni,
-                        tempe,
-                        tempi,
-                        mu,
-                        rho,
-                        zef,
-                        sqeps,
-                    )
-                    * dlogne_drho
-                    + self.hcsa(
-                        ir + 1,
-                        NR,
-                        physics_variables.rmajor,
-                        physics_variables.bt,
-                        physics_variables.triang,
-                        ne,
-                        ni,
-                        tempe,
-                        tempi,
-                        mu,
-                        rho,
-                        zef,
-                        sqeps,
-                    )
-                    * dlogte_drho
-                    + self.xcsa(
-                        ir + 1,
-                        NR,
-                        physics_variables.rmajor,
-                        physics_variables.bt,
-                        physics_variables.triang,
-                        mu,
-                        sqeps,
-                        tempi,
-                        tempe,
-                        amain,
-                        zmain,
-                        ni,
-                        ne,
-                        rho,
-                        zef,
-                    )
-                    * dlogti_drho
-                )
-                jboot = (
-                    -physics_variables.bt
-                    / (0.2 * np.pi * physics_variables.rmajor)
-                    * rho[ir]
-                    * mu[ir]
-                    * jboot
-                )  # MA/m2
-
-            iboot += da * jboot
-        return 1.0e6 * iboot / physics_variables.plascur
-
-    def hcsa(
-        self, j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
-    ):
-        """Grad(ln(Te)) coefficient in the Sauter bootstrap scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        nr : input integer : maximum value of j
-        This function calculates the coefficient scaling grad(ln(Te))
-        in the Sauter bootstrap current scaling.
-        Code by Angioni, 29th May 2002.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        O. Sauter, C. Angioni and Y. R. Lin-Liu,
-        Physics of Plasmas <B>6</B> (1999) 2834
-        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-        Physics of Plasmas <B>9</B> (2002) 5140
-        """
-
-        if j == 1:
-            return 0.0
-
-        zz = zef[j - 1]
-        zft = self.tpf(j, triang, sqeps)
-        zdf = 1.0 + 0.26 * (1.0 - zft) * np.sqrt(
-            self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
-        )
-        zdf = zdf + 0.18 * (1.0 - 0.37 * zft) * self.nues(
-            j, rmajor, zef, mu, sqeps, tempe, ne
-        ) / np.sqrt(zz)
-        zfte = zft / zdf  # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
-        zfte2 = zfte * zfte
-        zfte3 = zfte * zfte2
-        zfte4 = zfte2 * zfte2
-
-        zdf = 1.0 + (1.0 + 0.6 * zft) * np.sqrt(
-            self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
-        )
-        zdf = zdf + 0.85 * (1.0 - 0.37 * zft) * self.nues(
-            j, rmajor, zef, mu, sqeps, tempe, ne
-        ) * (1.0 + zz)
-        zfti = zft / zdf  # $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
-        zfti2 = zfti * zfti
-        zfti3 = zfti * zfti2
-        zfti4 = zfti2 * zfti2
-
-        hcee = (0.05 + 0.62 * zz) / zz / (1.0 + 0.44 * zz) * (zfte - zfte4)
-        hcee = hcee + (zfte2 - zfte4 - 1.2 * (zfte3 - zfte4)) / (1.0 + 0.22 * zz)
-        hcee = hcee + 1.2 / (1.0 + 0.5 * zz) * zfte4  # $F_{32\_ee}(X)$, Eq.15b
-
-        hcei = -(0.56 + 1.93 * zz) / zz / (1.0 + 0.44 * zz) * (zfti - zfti4)
-        hcei = hcei + 4.95 / (1.0 + 2.48 * zz) * (
-            zfti2 - zfti4 - 0.55 * (zfti3 - zfti4)
-        )
-        hcei = hcei - 1.2 / (1.0 + 0.5 * zz) * zfti4  # $F_{32\_ei}(Y)$, Eq.15c
-
-        # Corrections suggested by Fable, 15/05/2015
-        return self.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho) * (
-            hcee + hcei
-        ) + self.dcsa(
-            j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
-        ) * self.beta_poloidal_local(
-            j, nr, rmajor, bt, ne, tempe, mu, rho
-        ) / self.beta_poloidal_local_total(
-            j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
-        )
-
-    def xcsa(
-        self,
-        j,
-        nr,
-        rmajor,
-        bt,
-        triang,
-        mu,
-        sqeps,
-        tempi,
-        tempe,
-        amain,
-        zmain,
-        ni,
-        ne,
-        rho,
-        zef,
-    ):
-        """Grad(ln(Ti)) coefficient in the Sauter bootstrap scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        nr : input integer : maximum value of j
-        This function calculates the coefficient scaling grad(ln(Ti))
-        in the Sauter bootstrap current scaling.
-        Code by Angioni, 29th May 2002.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        O. Sauter, C. Angioni and Y. R. Lin-Liu,
-        Physics of Plasmas <B>6</B> (1999) 2834
-        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-        Physics of Plasmas <B>9</B> (2002) 5140
-        """
-        if j == 1:
-            return 0.0
-
-        zz = zef[j - 1]
-        zft = self.tpf(j, triang, sqeps)
-        zdf = 1.0 + (1.0 - 0.1 * zft) * np.sqrt(
-            self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
-        )
-        zdf = (
-            zdf
-            + 0.5
-            * (1.0 - 0.5 * zft)
-            * self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
-            / zz
-        )
-        zfte = zft / zdf  # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
-
-        xcsa = (1.0 + 1.4 / (zz + 1.0)) * zfte - 1.9 / (zz + 1.0) * zfte * zfte
-        xcsa = xcsa + (0.3 * zfte * zfte + 0.2 * zfte * zfte * zfte) * zfte / (
-            zz + 1.0
-        )  # Eq.16a
-
-        a0 = -1.17 * (1.0 - zft)
-        a0 = a0 / (1.0 - 0.22 * zft - 0.19 * zft * zft)  # $\alpha_0$, Eq.17a
-
-        alp = (
-            a0
-            + 0.25
-            * (1.0 - zft * zft)
-            * np.sqrt(self.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni))
-        ) / (
-            1.0
-            + 0.5 * np.sqrt(self.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni))
-        )
-        a1 = (
-            self.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
-            * self.nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
-            * zft**6
-        )
-        alp = (alp + 0.315 * a1) / (1.0 + 0.15 * a1)  # $\alpha(\nu_{i*})$, Eq.17b
-
-        # Corrections suggested by Fable, 15/05/2015
-
-        return (
-            self.beta_poloidal_local_total(
-                j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
-            )
-            - self.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
-        ) * (xcsa * alp) + self.dcsa(
-            j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
-        ) * (
-            1.0
-            - self.beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
-            / self.beta_poloidal_local_total(
-                j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
-            )
-        )
-
-    def nuis(self, j, rmajor, mu, sqeps, tempi, amain, zmain, ni):
-        """Relative frequency of ion collisions
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        This function calculates the relative frequency of ion
-        collisions: <I>NU* = Nui*q*Rt/eps**1.5/Vti</I>
-        The full ion collision frequency NUI is used.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        Yushmanov, 30th April 1987 (?)
-        """
-        return (
-            3.2e-6
-            * self.nui(j, zmain, ni, tempi, amain)
-            * rmajor
-            / (
-                abs(mu[j - 1] + 1.0e-4)
-                * sqeps[j - 1] ** 3
-                * np.sqrt(tempi[j - 1] / amain[j - 1])
-            )
-        )
-
-    def nui(self, j, zmain, ni, tempi, amain):
-        """Full frequency of ion collisions
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        This function calculates the full frequency of ion
-        collisions (Hz).
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        None
-        """
-        # Coulomb logarithm = 15 is used
-        return (
-            zmain[j - 1] ** 4
-            * ni[j - 1]
-            * 322.0
-            / (tempi[j - 1] * np.sqrt(tempi[j - 1] * amain[j - 1]))
-        )
-
-    def dcsa(
-        self, j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
-    ):
-        """Grad(ln(ne)) coefficient in the Sauter bootstrap scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        nr : input integer : maximum value of j
-        This function calculates the coefficient scaling grad(ln(ne))
-        in the Sauter bootstrap current scaling.
-        Code by Angioni, 29th May 2002.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        O. Sauter, C. Angioni and Y. R. Lin-Liu,
-        Physics of Plasmas <B>6</B> (1999) 2834
-        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-        Physics of Plasmas <B>9</B> (2002) 5140
-
-        DCSA $\\equiv \\mathcal{L}_{31}$, Eq.14a, Sauter et al, 1999
-        """
-
-        if j == 1:
-            return 0.0
-
-        zz = zef[j - 1]
-        zft = self.tpf(j, triang, sqeps)
-        zdf = 1.0 + (1.0 - 0.1 * zft) * np.sqrt(
-            self.nues(j, rmajor, zef, mu, sqeps, tempe, ne)
-        )
-        zdf = (
-            zdf
-            + 0.5 * (1.0 - zft) * self.nues(j, rmajor, zef, mu, sqeps, tempe, ne) / zz
-        )
-        zft = zft / zdf  # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
-        dcsa = (
-            (1.0 + 1.4 / (zz + 1.0)) * zft
-            - 1.9 / (zz + 1.0) * zft * zft
-            + (0.3 * zft * zft + 0.2 * zft * zft * zft) * zft / (zz + 1.0)
-        )
-
-        # Corrections suggested by Fable, 15/05/2015
-        return dcsa * self.beta_poloidal_local_total(
-            j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
-        )
-
-    def nues(self, j, rmajor, zef, mu, sqeps, tempe, ne):
-        """Relative frequency of electron collisions
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        This function calculates the relative frequency of electron
-        collisions: <I>NU* = Nuei*q*Rt/eps**1.5/Vte</I>
-        The electron-ion collision frequency NUEI=NUEE*1.4*ZEF is
-        used.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        Yushmanov, 30th April 1987 (?)
-        """
-        return (
-            self.nuee(j, tempe, ne)
-            * 1.4
-            * zef[j - 1]
-            * rmajor
-            / abs(mu[j - 1] * (sqeps[j - 1] ** 3) * np.sqrt(tempe[j - 1]) * 1.875e7)
-        )
-
-    def nuee(self, j, tempe, ne):
-        """Frequency of electron-electron collisions
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        This function calculates the frequency of electron-electron
-        collisions (Hz): <I>NUEE = 4*SQRT(pi)/3*Ne*e**4*lambd/
-        SQRT(Me)/Te**1.5</I>
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        Yushmanov, 25th April 1987 (?),
-        updated by Pereverzev, 9th November 1994 (?)
-        """
-        return (
-            670.0
-            * self.coulg(j, tempe, ne)
-            * ne[j - 1]
-            / (tempe[j - 1] * np.sqrt(tempe[j - 1]))
-        )
-
-    def coulg(self, j, tempe, ne):
-        """Coulomb logarithm
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        This function calculates the Coulomb logarithm, valid
-        for e-e collisions (T_e > 0.01 keV), and for
-        e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        C. A. Ordonez and M. I. Molina, Phys. Plasmas <B>1</B> (1994) 2515
-        Rev. Mod. Phys., V.48, Part 1 (1976) 275
-        """
-        return 15.9 - 0.5 * np.log(ne[j - 1]) + np.log(tempe[j - 1])
-
-    def beta_poloidal_local(self, j, nr, rmajor, bt, ne, tempe, mu, rho):
-        """Local beta poloidal calculation
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        nr : input integer : maximum value of j
-        This function calculates the local beta poloidal.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        <P>beta poloidal = 4*pi*ne*Te/Bpo**2
-        Pereverzev, 25th April 1989 (?)
-        """
-        if j != nr:
-            beta_poloidal_local = (
-                1.6e-4 * np.pi * (ne[j] + ne[j - 1]) * (tempe[j] + tempe[j - 1])
-            )
-        else:
-            beta_poloidal_local = 6.4e-4 * np.pi * ne[j - 1] * tempe[j - 1]
-
-        return (
-            beta_poloidal_local
-            * (rmajor / (bt * rho[j - 1] * abs(mu[j - 1] + 1.0e-4))) ** 2
-        )
-
-    def beta_poloidal_local_total(
-        self, j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
-    ):
-        """Local beta poloidal calculation, including ion pressure
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        nr : input integer : maximum value of j
-        This function calculates the local total beta poloidal.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        <P>beta poloidal = 4*pi*(ne*Te+ni*Ti)/Bpo**2
-        where ni is the sum of all ion densities (thermal)
-        Pereverzev, 25th April 1989 (?)
-        E Fable, private communication, 15th May 2014
-        """
-
-        if j != nr:
-            beta_poloidal_local_total = (
-                1.6e-4
-                * np.pi
-                * (
-                    ((ne[j] + ne[j - 1]) * (tempe[j] + tempe[j - 1]))
-                    + ((ni[j] + ni[j - 1]) * (tempi[j] + tempi[j - 1]))
-                )
-            )
-        else:
-            beta_poloidal_local_total = (
-                6.4e-4 * np.pi * (ne[j - 1] * tempe[j - 1] + ni[j - 1] * tempi[j - 1])
-            )
-
-        return (
-            beta_poloidal_local_total
-            * (rmajor / (bt * rho[j - 1] * abs(mu[j - 1] + 1.0e-4))) ** 2
-        )
-
-    def tpf(self, j, triang, sqeps, fit=1):
-        """Trapped particle fraction
-        author: P J Knight, CCFE, Culham Science Centre
-        j  : input integer : radial element index in range 1 to nr
-        fit : input integer : (1)=ASTRA method, 2=Equation from Sauter2002, 3=Equation from Sauter2013
-        This function calculates the trapped particle fraction at
-        a given radius.
-        <P>A number of different fits are provided, but the one
-        to be used is hardwired prior to run-time.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        O. Sauter et al, Plasma Phys. Contr. Fusion <B>44</B> (2002) 1999
-        O. Sauter, 2013:
-        http://infoscience.epfl.ch/record/187521/files/lrp_012013.pdf
-        """
-        s = sqeps[j - 1]
-        eps = s * s
-
-        if fit == 1:
-            # ASTRA method, from Emiliano Fable, private communication
-            # (Excluding h term which dominates for inverse aspect ratios < 0.5,
-            # and tends to take the trapped particle fraction to 1)
-
-            zz = 1.0 - eps
-            return 1.0 - zz * np.sqrt(zz) / (1.0 + 1.46 * s)
-        elif fit == 2:
-            # Equation 4 of Sauter 2002
-            # Similar to, but not quite identical to g above
-
-            return 1.0 - (1.0 - eps) ** 2 / (1.0 + 1.46 * s) / np.sqrt(1.0 - eps * eps)
-        elif fit == 3:
-            # Includes correction for triangularity
-
-            epseff = 0.67 * (1.0 - 1.4 * triang * abs(triang)) * eps
-
-            return 1.0 - np.sqrt((1.0 - eps) / (1.0 + eps)) * (1.0 - epseff) / (
-                1.0 + 2.0 * np.sqrt(epseff)
-            )
-
-        raise RuntimeError(f"{fit=} is not valid. Must be 1, 2, or 3")
-
-    def eped_warning(self):
+    @staticmethod
+    def eped_warning():
         eped_warning = ""
 
         if (physics_variables.triang < 0.399e0) or (physics_variables.triang > 0.601e0):
@@ -3305,7 +2929,7 @@ class Physics:
                 )
                 + " concentration"
             )
-            str2 = f"(fimp({imp+1:02}))"
+            str2 = f"(fimp({imp + 1:02}))"
             # MDK Add output flag for H which is calculated.
             if imp == 0:
                 po.ovarre(
@@ -4236,7 +3860,7 @@ class Physics:
 
         po.ocmmnt(
             self.outfile,
-            f"Confinement scaling law: {f2py_compatible_to_string(physics_variables.tauscl[physics_variables.isc-1])}",
+            f"Confinement scaling law: {f2py_compatible_to_string(physics_variables.tauscl[physics_variables.isc - 1])}",
         )
 
         po.ovarrf(
@@ -4717,9 +4341,350 @@ class Physics:
 
             po.ocmmnt(
                 self.outfile,
-                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc-1]):<32}"
+                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc - 1]):<32}"
                 f"{taueez:<26.3f}{physics_variables.hfac[iisc - 1]:.3f}",
             )
+
+    @staticmethod
+    def bootstrap_fraction_iter89(
+        aspect, beta, bt, cboot, plascur, q95, q0, rmajor, vol
+    ):
+        """Original ITER calculation of bootstrap-driven fraction
+        of the plasma current.
+        author: P J Knight, CCFE, Culham Science Centre
+        aspect  : input real : plasma aspect ratio
+        beta    : input real : plasma total beta
+        bt      : input real : toroidal field on axis (T)
+        cboot   : input real : bootstrap current fraction multiplier
+        plascur : input real : plasma current (A)
+        q95     : input real : safety factor at 95% surface
+        q0      : input real : central safety factor
+        rmajor  : input real : plasma major radius (m)
+        vol     : input real : plasma volume (m3)
+        This routine performs the original ITER calculation of the
+        plasma current bootstrap fraction.
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        xbs = min(10, q95 / q0)
+        cbs = cboot * (1.32 - 0.235 * xbs + 0.0185 * xbs**2)
+        bpbs = (
+            constants.rmu0
+            * plascur
+            / (2 * np.pi * np.sqrt(vol / (2 * np.pi**2 * rmajor)))
+        )
+        betapbs = beta * bt**2 / bpbs**2
+
+        if betapbs <= 0.0:  # only possible if beta <= 0.0
+            return 0.0
+        return cbs * (betapbs / np.sqrt(aspect)) ** 1.3
+
+    @staticmethod
+    def bootstrap_fraction_wilson(
+        alphaj, alphap, alphat, betpth, q0, qpsi, rmajor, rminor
+    ):
+        """Bootstrap current fraction from Wilson et al scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        alphaj  : input real :  current profile index
+        alphap  : input real :  pressure profile index
+        alphat  : input real :  temperature profile index
+        beta    : input real :  total beta
+        betpth  : input real :  thermal component of poloidal beta
+        q0      : input real :  safety factor on axis
+        qpsi    : input real :  edge safety factor
+        rmajor  : input real :  major radius (m)
+        rminor  : input real :  minor radius (m)
+        This function calculates the bootstrap current fraction
+        using the numerically fitted algorithm written by Howard Wilson.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        H. R. Wilson, Nuclear Fusion <B>32</B> (1992) 257
+        """
+        term1 = np.log(0.5)
+        term2 = np.log(q0 / qpsi)
+
+        termp = 1.0 - 0.5 ** (1.0 / alphap)
+        termt = 1.0 - 0.5 ** (1.0 / alphat)
+        termj = 1.0 - 0.5 ** (1.0 / alphaj)
+
+        alfpnw = term1 / np.log(np.log((q0 + (qpsi - q0) * termp) / qpsi) / term2)
+        alftnw = term1 / np.log(np.log((q0 + (qpsi - q0) * termt) / qpsi) / term2)
+        aj = term1 / np.log(np.log((q0 + (qpsi - q0) * termj) / qpsi) / term2)
+
+        # Crude check for NaN errors or other illegal values...
+
+        if np.isnan(aj) or np.isnan(alfpnw) or np.isnan(alftnw) or aj < 0:
+            error_handling.fdiags[0] = aj
+            error_handling.fdiags[1] = alfpnw
+            error_handling.fdiags[2] = alftnw
+            error_handling.fdiags[3] = aj
+
+            error_handling.report_error(76)
+
+        # Ratio of ionic charge to electron charge
+
+        z = 1.0
+
+        # Inverse aspect ratio: r2 = maximum plasma radius, r1 = minimum
+
+        r2 = rmajor + rminor
+        r1 = rmajor - rminor
+        eps1 = (r2 - r1) / (r2 + r1)
+
+        # Coefficients fitted using least squares techniques
+        saj = np.sqrt(aj)
+
+        a = np.array(
+            [
+                1.41 * (1.0 - 0.28 * saj) * (1.0 + 0.12 / z),
+                0.36 * (1.0 - 0.59 * saj) * (1.0 + 0.8 / z),
+                -0.27 * (1.0 - 0.47 * saj) * (1.0 + 3.0 / z),
+                0.0053 * (1.0 + 5.0 / z),
+                -0.93 * (1.0 - 0.34 * saj) * (1.0 + 0.15 / z),
+                -0.26 * (1.0 - 0.57 * saj) * (1.0 - 0.27 * z),
+                0.064 * (1.0 - 0.6 * aj + 0.15 * aj * aj) * (1.0 + 7.6 / z),
+                -0.0011 * (1.0 + 9.0 / z),
+                -0.33 * (1.0 - aj + 0.33 * aj * aj),
+                -0.26 * (1.0 - 0.87 / saj - 0.16 * aj),
+                -0.14 * (1.0 - 1.14 / saj - 0.45 * saj),
+                -0.0069,
+            ]
+        )
+
+        seps1 = np.sqrt(eps1)
+
+        b = np.array(
+            [
+                1.0,
+                alfpnw,
+                alftnw,
+                alfpnw * alftnw,
+                seps1,
+                alfpnw * seps1,
+                alftnw * seps1,
+                alfpnw * alftnw * seps1,
+                eps1,
+                alfpnw * eps1,
+                alftnw * eps1,
+                alfpnw * alftnw * eps1,
+            ]
+        )
+
+        # Empirical bootstrap current fraction
+        return seps1 * betpth * (a * b).sum()
+
+    @staticmethod
+    def bootstrap_fraction_nevins(
+        alphan,
+        alphat,
+        betat,
+        bt,
+        dene,
+        plascur,
+        q95,
+        q0,
+        rmajor,
+        rminor,
+        ten,
+        zeff,
+    ):
+        """Bootstrap current fraction from Nevins et al scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        alphan : input real :  density profile index
+        alphat : input real :  temperature profile index
+        betat  : input real :  total plasma beta (with respect to the toroidal
+        field)
+        bt     : input real :  toroidal field on axis (T)
+        dene   : input real :  electron density (/m3)
+        plascur: input real :  plasma current (A)
+        q0     : input real :  central safety factor
+        q95    : input real :  safety factor at 95% surface
+        rmajor : input real :  plasma major radius (m)
+        rminor : input real :  plasma minor radius (m)
+        ten    : input real :  density weighted average plasma temperature (keV)
+        zeff   : input real :  plasma effective charge
+        This function calculates the bootstrap current fraction,
+        using the Nevins et al method, 4/11/90.
+        AEA FUS 251: A User's Guide to the PROCESS Systems Code
+        """
+        # Calculate peak electron beta
+
+        betae0 = (
+            physics_variables.ne0
+            * physics_variables.te0
+            * 1.0e3
+            * constants.echarge
+            / (bt**2 / (2.0 * constants.rmu0))
+        )
+
+        # Call integration routine
+
+        ainteg, _ = integrate.quad(
+            lambda y: bsinteg(
+                y,
+                dene,
+                ten,
+                bt,
+                rminor,
+                rmajor,
+                zeff,
+                alphat,
+                alphan,
+                q0,
+                q95,
+                betat,
+                constants.echarge,
+                constants.rmu0,
+            ),
+            0,
+            0.999,
+            epsabs=0.001,
+            epsrel=0.001,
+        )
+
+        # Calculate bootstrap current and fraction
+
+        aibs = 2.5 * betae0 * rmajor * bt * q95 * ainteg
+        return 1.0e6 * aibs / plascur
+
+    @staticmethod
+    def bootstrap_fraction_sauter():
+        """Bootstrap current fraction from Sauter et al scaling
+        author: P J Knight, CCFE, Culham Science Centre
+        None
+        This function calculates the bootstrap current fraction
+        using the Sauter, Angioni and Lin-Liu scaling.
+        <P>The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
+        O. Sauter, C. Angioni and Y. R. Lin-Liu,
+        Physics of Plasmas <B>6</B> (1999) 2834
+        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+        Physics of Plasmas <B>9</B> (2002) 5140
+        """
+        NR = 200
+
+        roa = np.arange(1, NR + 1, step=1) / NR
+
+        rho = np.sqrt(physics_variables.xarea / np.pi) * roa
+        sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
+
+        ne = 1e-19 * np.vectorize(
+            lambda r: profiles_module.nprofile(
+                r,
+                physics_variables.rhopedn,
+                physics_variables.ne0,
+                physics_variables.neped,
+                physics_variables.nesep,
+                physics_variables.alphan,
+            )
+        )(roa)
+        ni = (physics_variables.dnitot / physics_variables.dene) * ne
+        tempe = np.vectorize(
+            lambda r: profiles_module.tprofile(
+                r,
+                physics_variables.rhopedt,
+                physics_variables.te0,
+                physics_variables.teped,
+                physics_variables.tesep,
+                physics_variables.alphat,
+                physics_variables.tbeta,
+            )
+        )(roa)
+        tempi = (physics_variables.ti / physics_variables.te) * tempe
+
+        zef = np.full_like(tempi, physics_variables.zeff)  # Flat Zeff profile assumed
+
+        # mu = 1/safety factor
+        # Parabolic q profile assumed
+        mu = 1 / (
+            physics_variables.q0
+            + (physics_variables.q - physics_variables.q0) * roa**2
+        )
+        amain = np.full_like(mu, physics_variables.afuel)
+        zmain = np.full_like(mu, 1.0 + physics_variables.fhe3)
+
+        if ne[NR - 1] == 0.0:
+            ne[NR - 1] = 1e-4 * ne[NR - 2]
+            ni[NR - 1] = 1e-4 * ni[NR - 2]
+
+        if tempe[NR - 1] == 0.0:
+            tempe[NR - 1] = 1e-4 * tempe[NR - 2]
+            tempi[NR - 1] = 1e-4 * tempi[NR - 2]
+
+        # Calculate total bootstrap current (MA) by summing along profiles
+        # Looping from 2 because dcsa etc should return 0 @ j == 1
+        nr_rng = np.arange(2, NR)
+        nr_rng_1 = nr_rng - 1
+
+        drho = rho[nr_rng] - rho[nr_rng_1]
+        da = 2 * np.pi * rho[nr_rng_1] * drho  # area of annulus
+        dlogte_drho = (np.log(tempe[nr_rng]) - np.log(tempe[nr_rng_1])) / drho
+        dlogti_drho = (np.log(tempi[nr_rng]) - np.log(tempi[nr_rng_1])) / drho
+        dlogne_drho = (np.log(ne[nr_rng]) - np.log(ne[nr_rng_1])) / drho
+
+        jboot = (
+            0.5
+            * (
+                dcsa(
+                    nr_rng,
+                    NR,
+                    physics_variables.rmajor,
+                    physics_variables.bt,
+                    physics_variables.triang,
+                    ne,
+                    ni,
+                    tempe,
+                    tempi,
+                    mu,
+                    rho,
+                    zef,
+                    sqeps,
+                )
+                * dlogne_drho
+                + hcsa(
+                    nr_rng,
+                    NR,
+                    physics_variables.rmajor,
+                    physics_variables.bt,
+                    physics_variables.triang,
+                    ne,
+                    ni,
+                    tempe,
+                    tempi,
+                    mu,
+                    rho,
+                    zef,
+                    sqeps,
+                )
+                * dlogte_drho
+                + xcsa(
+                    nr_rng,
+                    NR,
+                    physics_variables.rmajor,
+                    physics_variables.bt,
+                    physics_variables.triang,
+                    mu,
+                    sqeps,
+                    tempi,
+                    tempe,
+                    amain,
+                    zmain,
+                    ni,
+                    ne,
+                    rho,
+                    zef,
+                )
+                * dlogti_drho
+            )
+            * 1.0e6
+            * (
+                -physics_variables.bt
+                / (0.2 * np.pi * physics_variables.rmajor)
+                * rho[nr_rng_1]
+                * mu[nr_rng_1]
+            )
+        )  # A/m2
+
+        return np.sum(da * jboot, axis=0) / physics_variables.plascur
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance
@@ -4729,6 +4694,7 @@ class Physics:
         using the given energy confinement scaling law.
         AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
+
         physics_module.iscz = is_
 
         return root_scalar(self.fhz, bracket=(0.01, 150), xtol=0.003).root
@@ -4743,6 +4709,7 @@ class Physics:
         value of <CODE>hhh</CODE>, the confinement time H-factor.
         AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
+
         (
             physics_variables.kappaa,
             ptrez,
@@ -4796,19 +4763,19 @@ class Physics:
         # calculation (i.e. whether device is ignited)
 
         if physics_variables.ignite == 0:
-            fhz = fhz - current_drive_variables.pinjmw / physics_variables.vol
+            fhz -= current_drive_variables.pinjmw / physics_variables.vol
 
         # Include the radiation power if requested
 
         if physics_variables.iradloss == 0:
-            fhz = fhz + physics_variables.pradpv
+            fhz += physics_variables.pradpv
         elif physics_variables.iradloss == 1:
-            fhz = fhz + physics_variables.pcoreradpv
+            fhz += physics_variables.pcoreradpv
 
         return fhz
 
+    @staticmethod
     def pcond(
-        self,
         afuel,
         palpmw,
         aspect,
@@ -4893,6 +4860,7 @@ class Physics:
         Menard 2019, Phil. Trans. R. Soc. A 377:20170440
         Kaye et al. 2006, Nucl. Fusion 46 848
         """
+
         eps2 = eps / 2.0e0
         str5 = 2.0e0 / (1.0e0 + (kappa**2))
         ck2 = (0.66e0 + (1.88e0 * (np.sqrt(eps2))) - (1.54e0 * eps2)) * (
