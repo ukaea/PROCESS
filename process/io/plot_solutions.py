@@ -12,6 +12,7 @@ from process.io.mfile import MFile
 from pathlib import Path
 import pandas as pd
 
+import numpy as np
 import matplotlib.pyplot as plt
 import logging
 import seaborn as sns
@@ -49,6 +50,7 @@ def plot_mfile_solutions(
     plot_title: str,
     normalise: Optional[bool] = False,
     normalising_tag: Optional[str] = None,
+    rmse: Optional[bool] = False,
 ) -> pd.DataFrame:
     """Plot multiple solutions, optionally normalised by a given solution.
 
@@ -60,6 +62,8 @@ def plot_mfile_solutions(
     :type normalise: Optional[bool], optional
     :param normalising_tag: tag for solution to normalise with, defaults to None
     :type normalising_tag: str, optional
+    :param rmse: plot RMS errors relative to reference solution, defaults to False
+    :type rmse: bool, optional
     """
     # TODO Should return ax too?
     # Create dataframe from runs metadata: mfile data with a tag for each run
@@ -74,13 +78,21 @@ def plot_mfile_solutions(
             filtered_results_df, normalising_tag=normalising_tag
         )
     else:
-        # Don't perform any processing of results
+        # Don't perform any processing of optimisation parameters
         plot_results_df = filtered_results_df
+
+    if rmse:
+        # Calcualte RMS errors relative to normalising tag solution
+        rmse_df = _rms_errors(results_df=results_df, normalising_tag=normalising_tag)
+    else:
+        # Don't plot RMS errors
+        rmse_df = None
 
     _plot_solutions(
         plot_results_df,
         plot_title=plot_title,
         normalise=normalise,
+        rmse_df=rmse_df,
         normalising_tag=normalising_tag,
     )
 
@@ -244,7 +256,11 @@ def _filter_vars_of_interest(
 
 
 def _plot_solutions(
-    diffs_df: pd.DataFrame, plot_title: str, normalise: bool, normalising_tag: str
+    diffs_df: pd.DataFrame,
+    plot_title: str,
+    normalise: bool,
+    normalising_tag: str,
+    rmse_df: pd.DataFrame,
 ):
     """Plot multiple solutions, optionally normalised by a given solution.
 
@@ -256,6 +272,8 @@ def _plot_solutions(
     :type normalise: bool
     :param normalising_tag: tag for normalising solution
     :type normalising_tag: str
+    :param rmse_df: RMS errors relative to reference solution
+    :type rmse_df: pd.DataFrame
     """
     # Separate optimisation parameters and objective dfs
     opt_params_df = diffs_df.filter(
@@ -296,7 +314,12 @@ def _plot_solutions(
     )
 
     # Separate optimisation parameters and objective function subplots
-    fig, ax = plt.subplots(ncols=2, width_ratios=[7, 1])
+    # Include space for RMS errors or not
+    if rmse_df is not None:
+        fig, ax = plt.subplots(ncols=3, width_ratios=[8, 1, 1])
+    else:
+        fig, ax = plt.subplots(ncols=2, width_ratios=[8, 1])
+    fig.set_size_inches(10, 6)
     fig.suptitle(plot_title)
 
     # Strip plot for optimisation parameters
@@ -344,5 +367,55 @@ def _plot_solutions(
 
     ax[1].set_xlabel("Objective\nfunction")
 
+    if rmse_df is not None:
+        rmse_df_melt = rmse_df.melt(id_vars=TAG)
+        sns.stripplot(
+            data=rmse_df_melt,
+            x="variable",
+            y="value",
+            hue=TAG,
+            jitter=True,
+            ax=ax[2],
+        )
+        ax[2].set_ylabel("")
+        ax[2].set_xlabel("RMS error")
+        ax[2].get_legend().remove()
+        # TODO Make colours consistent
+
     # Ensure title doesn't overlap plots
     fig.tight_layout()
+
+
+def _rms_errors(
+    results_df: pd.DataFrame, normalising_tag: Optional[str] = None
+) -> pd.DataFrame:
+    """Calculate RMS errors between different solutions.
+
+    Summarise solution differences in single number.
+    :param results_df: df containing multiple solutions
+    :type results_df: pandas.DataFrame
+    :param normalising_tag: tag to calculate percentage changes against, defaults to None
+    :type normalising_tag: str, optional
+    :return: RMS errors for each solution
+    :rtype: pandas.DataFrame
+    """
+    normalising_soln, non_normalising_solns = _separate_norm_solution(
+        results_df, normalising_tag
+    )
+    # Reference solution to calculate RMS errors against
+    ref_soln_opt_params = _filter_opt_params(normalising_soln)
+    # Solutions that need RMS errors calculating
+    solns_opt_params_to_rms = _filter_opt_params(non_normalising_solns)
+
+    ref_soln_opt_params_np = ref_soln_opt_params.to_numpy()
+    solns_opt_params_to_rms_np = solns_opt_params_to_rms.to_numpy()
+
+    rmses = np.sqrt(
+        np.mean((solns_opt_params_to_rms_np - ref_soln_opt_params_np) ** 2, axis=1)
+    )
+
+    # Create df of tags and rmses
+    tag_series = non_normalising_solns["tag"].reset_index(drop=True)
+    rmse_series = pd.Series(rmses, name="rmse")
+    rmse_df = pd.concat([tag_series, rmse_series], axis=1)
+    return rmse_df
