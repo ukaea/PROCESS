@@ -86,6 +86,6 @@ and then execute a command, such as a single run of PROCESS:
 process -i ~/process/tests/scenarios/regression/large-tokamak/IN.DAT
 ```
 
-Note that you must use the correct project code for you work: UKAEA-AP002-CPU for non-STEP work and UKAEA-AP001-CPU for STEP work.
+Note that you must use the correct project code for you work.
 
 Use the `sbatch` command to submit your script. You will recieve an email notifying you that the job has begun, and one to notify you when it has ended successfully or failed.
