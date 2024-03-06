@@ -777,7 +777,8 @@ class Sctfcoil:
             jsc: {jsc}
             iooic: {iooic}
             jcritsc: {jcritsc}
-            Check conductor dimensions. fcond likely gone negative. fcond: {fcond}
+            acs: {acs}
+            Check conductor dimensions. Cable space area acs likely gone negative. acs: {acs}
             """
             )
 
@@ -6702,8 +6703,8 @@ def extended_plane_strain(
 
         M_ext[1, 0, kk] = rad[kk] ** 2 * (1 - M_ext[0, 0, kk])
         M_ext[1, 1, kk] = 1 - rad[kk] ** 2 * M_ext[0, 1, kk]
-        M_ext[1, 2, kk] = -rad[kk] ** 2 * M_ext[0, 2, kk]
-        M_ext[1, 4, kk] = -rad[kk] ** 2 * M_ext[0, 4, kk]
+        M_ext[1, 2, kk] = -(rad[kk] ** 2) * M_ext[0, 2, kk]
+        M_ext[1, 4, kk] = -(rad[kk] ** 2) * M_ext[0, 4, kk]
         M_ext[2, 2, kk] = 1.0e0
         M_ext[3, 3, kk] = 1.0e0
         M_ext[4, 4, kk] = 1.0e0
