@@ -7,8 +7,8 @@ This facilty can be used to run batch jobs with PROCESS. This section shall expl
 ## Register to use CSD3
 
 - Register for a [SAFE Account](https://epcced.github.io/safe-docs/safe-for-users/)
-- Once your account is created request to join the UKAEA project - ap001  (STEP) or ap002 (non-STEP) - this will ultimately go to Shaun De Witt, Andrew Davis, Andrew Lahiff or Aleks Dubas for approval
-- Once you have recieved approval confirmation via email your account will be active.
+- Once your account is created request to the relevant project and wait for approval.
+- When you have recieved an approval confirmation via email your account will be active.
 - Now you can ssh into CSD3. Note that you must register for two-factor authentication upon your first login request.
 
     ```bash
