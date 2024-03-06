@@ -50,18 +50,8 @@ will only run unit tests.
 Furthermore, the `-k` can be used to match tests within a test collection, e.g.
 
 ```BASH
-pytest tests/regression/ -k "IFE or HARE"
+pytest tests/regression/ -k "large_tokamak"
 ```
-
-will run only benchmarks that have `IFE` or `HARE` in their name; in practice, this will run only 
-the `IFE` and `HARE` regression tests. However,
-
-```BASH
-pytest tests/regression/ -k "mode"
-```
-
-will run all 5 benchmarks containing `mode` in their name:
-`Hybrid_mode`, `L_mode`, `QH_mode`, `i_mode` and `vacuum_model`.
 
 The Continuous Integration (CI) system also runs the `pytest` test suite in the `testing` stage of 
 the pipeline. Unit, integration and regression tests are run as separate jobs to make it easier to see where failures lie.

@@ -12,10 +12,6 @@
 *.dylib
 *.13
 fort.*
-/test_suite/*.xunit
-/test_suite/bindir.py
-/test_suite/test_area/*
-/test_suite/test_area/
 /build/
 /bin/
 site/*
@@ -65,6 +61,7 @@ lcov_results/
 env/
 .venv
 !scenario_examples/*/*.DAT
+!tests/regression/input_files/*.IN.DAT
 !scenario_examples/*/*.pdf
 */.ipynb_checkpoints/
 REBCO_JC.DAT

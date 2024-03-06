@@ -9,8 +9,7 @@ Our GitHub actions Continuous Integration (CI) pipeline serves to ensure each br
 | make-py38 | Builds and archives the PROCESS build artefacts |
 | unit-py38 | Installs PROCESS and runs the unit tests. The job will fail if any of the unit tests fail. |
 | integration-py38 | Installs PROCESS and runs the integration tests. The job will fail if any of the integration tests fail. |
-| regression-py38 | Installs PROCESS and runs the regression tests with a 0% tolerance. The job will fail if any of the regression tests fail. |
-| regression-5-percent-py38 | Installs PROCESS and runs the regression tests with a 5% tolerance. The job will fail if any of the regression tests fail. |
+| regression-py38 | Installs PROCESS and runs the regression tests with a 0% and 5% tolerance, respectively. The job will fail if any of the regression tests fail. |
 | large-tokamak-py38 | Installs PROCESS and runs the `large-tokamak` input file, archiving the output MFILE. Only runs on the **main** branch. |
 | flake8 | Runs the flake8 Python linter and fails if any lint errors occur. |
 | black | Runs the black Python formatter and fails if any formatting issues are detected. |
