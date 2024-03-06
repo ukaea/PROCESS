@@ -368,9 +368,16 @@ def _plot_solutions(
     ax[1].set_xlabel("Objective\nfunction")
 
     if rmse_df is not None:
-        rmse_df_melt = rmse_df.melt(id_vars=TAG)
+        # Ensure solution legend colours are the same: tags match between opt
+        # params and RMS error plot. This can happen if not normalising opt
+        # params, but request RMS error plot
+        rmse_df_matched = rmse_df[
+            rmse_df["tag"].isin(opt_params_values_with_names_df["tag"])
+        ]
+
+        rmse_df_matched_melt = rmse_df_matched.melt(id_vars=TAG)
         sns.stripplot(
-            data=rmse_df_melt,
+            data=rmse_df_matched_melt,
             x="variable",
             y="value",
             hue=TAG,
@@ -378,9 +385,8 @@ def _plot_solutions(
             ax=ax[2],
         )
         ax[2].set_ylabel("")
-        ax[2].set_xlabel("RMS error")
+        ax[2].set_xlabel(f"RMS error\nrelative to\n{normalising_tag}")
         ax[2].get_legend().remove()
-        # TODO Make colours consistent
 
     # Ensure title doesn't overlap plots
     fig.tight_layout()
@@ -399,23 +405,24 @@ def _rms_errors(
     :return: RMS errors for each solution
     :rtype: pandas.DataFrame
     """
-    normalising_soln, non_normalising_solns = _separate_norm_solution(
-        results_df, normalising_tag
-    )
+    normalising_soln, _ = _separate_norm_solution(results_df, normalising_tag)
     # Reference solution to calculate RMS errors against
     ref_soln_opt_params = _filter_opt_params(normalising_soln)
     # Solutions that need RMS errors calculating
-    solns_opt_params_to_rms = _filter_opt_params(non_normalising_solns)
+    # Include reference solution here, so that its RMS error is calculated (as 0)
+    # This is so that the colours in the RMSE plot match those in the main
+    # optimisation parameter plot's legend
+    all_solns_opt_params = _filter_opt_params(results_df)
 
     ref_soln_opt_params_np = ref_soln_opt_params.to_numpy()
-    solns_opt_params_to_rms_np = solns_opt_params_to_rms.to_numpy()
+    solns_opt_params_to_rms_np = all_solns_opt_params.to_numpy()
 
     rmses = np.sqrt(
         np.mean((solns_opt_params_to_rms_np - ref_soln_opt_params_np) ** 2, axis=1)
     )
 
     # Create df of tags and rmses
-    tag_series = non_normalising_solns["tag"].reset_index(drop=True)
+    tag_series = results_df["tag"]
     rmse_series = pd.Series(rmses, name="rmse")
     rmse_df = pd.concat([tag_series, rmse_series], axis=1)
     return rmse_df
