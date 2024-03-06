@@ -66,7 +66,7 @@ cmake -S . -B build
 
 cmake --build build
 
-pytest -k baseline_jan
+pytest tests/regression
 ```
 
 ## Submitting jobs
