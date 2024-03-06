@@ -9,6 +9,7 @@ nav:
           - Installation on Ubuntu/Windows: installation/installation-ubuntu.md
           - Installation using Docker: installation/installation-docker.md
           - Installation using Singularity: installation/installation-singularity.md
+          - Installation on CSD3: installation/csd3-for-process.md
           - Visual Studio Code: installation/vs-code.md
       - Usage:
           - Running PROCESS: usage/running-process.md
