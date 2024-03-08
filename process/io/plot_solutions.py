@@ -362,10 +362,10 @@ def _plot_solutions(
     # Separate optimisation parameters and objective function subplots
     # Include space for RMS errors or not
     if rmse_df is not None:
-        fig, ax = plt.subplots(ncols=3, width_ratios=[8, 1, 1])
+        fig, ax = plt.subplots(nrows=3, height_ratios=[16, 1, 1])
     else:
-        fig, ax = plt.subplots(ncols=2, width_ratios=[8, 1])
-    fig.set_size_inches(10, 6)
+        fig, ax = plt.subplots(nrows=2, height_ratios=[17, 1])
+    fig.set_size_inches(7, 8)
     fig.suptitle(plot_title)
 
     # Strip plot for optimisation parameters
@@ -375,38 +375,35 @@ def _plot_solutions(
     )
     sns.stripplot(
         data=opt_params_values_with_names_df_melt,
-        x="variable",
-        y="value",
+        x="value",
+        y="variable",
         hue=TAG,
         jitter=True,
         ax=ax[0],
-        formatter=lambda label: label.lstrip("xcm0"),
     )
-    # TODO Still require this formatter?
 
     # Adapt y axis label for normalisation type
-    y_axis_label = ""
+    x_axis_label = ""
     if normalisation_type in ["init", None]:
-        y_axis_label += "Value normalised by initial value"
+        x_axis_label += "Value normalised by initial value"
     elif normalisation_type == "range":
-        y_axis_label += "Value normalised by parameter range"
+        x_axis_label += "Value normalised by parameter range"
 
     if normalise:
-        y_axis_label += f", normalised to {normalising_tag}"
+        x_axis_label += f", normalised to {normalising_tag}"
 
-    ax[0].set_ylabel(f"{y_axis_label}")
-    ax[0].set_xlabel("Optimisation parameter")
+    ax[0].set_xlabel(f"{x_axis_label}")
+    ax[0].set_ylabel("Optimisation parameter")
     ax[0].legend()
-    ax[0].tick_params("x", labelrotation=90)
-    ax[0].grid(axis="x")
+    ax[0].grid()
 
     # Plot objf change separately
     # Melt for seaborn stripplot
     norm_objf_values_df_melt = norm_objf_values_df.melt(id_vars=TAG)
     sns.stripplot(
         data=norm_objf_values_df_melt,
-        x="variable",
-        y="value",
+        x="value",
+        y="variable",
         hue=TAG,
         jitter=True,
         ax=ax[1],
@@ -415,9 +412,8 @@ def _plot_solutions(
 
     ax[1].get_legend().remove()
     # Objective function values are not normalised (no initial value): be explicit
-    ax[1].set_ylabel("Value")
-
-    ax[1].set_xlabel("Objective\nfunction")
+    ax[1].set_xlabel("Objective function value")
+    ax[1].set_ylabel("")
 
     if rmse_df is not None:
         # Ensure solution legend colours are the same: tags match between opt
@@ -430,14 +426,15 @@ def _plot_solutions(
         rmse_df_matched_melt = rmse_df_matched.melt(id_vars=TAG)
         sns.stripplot(
             data=rmse_df_matched_melt,
-            x="variable",
-            y="value",
+            x="value",
+            y="variable",
             hue=TAG,
             jitter=True,
             ax=ax[2],
+            formatter=lambda label: f"Relative to\n{normalising_tag}",
         )
+        ax[2].set_xlabel("RMS error")
         ax[2].set_ylabel("")
-        ax[2].set_xlabel(f"RMS error\nrelative to\n{normalising_tag}")
         ax[2].get_legend().remove()
 
     # Ensure title doesn't overlap plots
