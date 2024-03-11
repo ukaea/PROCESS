@@ -24,6 +24,7 @@ from typing import Optional, Sequence, List, Dict
 # Be specific about exact names, patterns and regex
 INITIAL_NORM_OPT_PARAM_VALUE_PATTERN = "xcm"
 RANGE_NORM_OPT_PARAM_VALUE_PATTERN = "nitvar"
+OPT_PARAM_VALUE_REGEX = r"^itvar\d{3}$"
 NORM_OPT_PARAM_NAME_REGEX = r"itvar\d{3}_name"
 NORM_OBJF_PATTERN = "objf"
 NORM_OBJF_VALUE = "norm_objf"
@@ -52,7 +53,7 @@ def plot_mfile_solutions(
     normalise: Optional[bool] = False,
     normalising_tag: Optional[str] = None,
     rmse: Optional[bool] = False,
-    normalisation_type: Optional[str] = None,
+    normalisation_type: Optional[str] = "init",
 ) -> pd.DataFrame:
     """Plot multiple solutions, optionally normalised by a given solution.
 
@@ -66,14 +67,16 @@ def plot_mfile_solutions(
     :type normalising_tag: str, optional
     :param rmse: plot RMS errors relative to reference solution, defaults to False
     :type rmse: bool, optional
-    :param normalisation_type: opt param normalisation to use: one of ["init", "range"]
+    :param normalisation_type: opt param normalisation to use: one of ["init", "range", None], defaults to "init"
     :type normalisation_type: str, optional
     """
     # Determine type of normalised opt params to plot (i.e. itvar, xcm or nitvar)
-    if normalisation_type in ["init", None]:
+    if normalisation_type == "init":
         opt_param_value_pattern = INITIAL_NORM_OPT_PARAM_VALUE_PATTERN
     elif normalisation_type == "range":
         opt_param_value_pattern = RANGE_NORM_OPT_PARAM_VALUE_PATTERN
+    else:
+        opt_param_value_pattern = OPT_PARAM_VALUE_REGEX
 
     # Create dataframe from runs metadata: mfile data with a tag for each run
     results_df = _create_df_from_run_metadata(runs_metadata)
@@ -205,7 +208,7 @@ def _filter_opt_params(
     :return: multiple solutions with opt params filtered in or out
     :rtype: pd.DataFrame
     """
-    is_opt_param = results.columns.str.contains(f"{opt_param_value_pattern}")
+    is_opt_param = results.columns.str.contains(opt_param_value_pattern)
     if filter_in:
         # TODO Check this loc can't be removed
         filtered_results = results.loc[:, is_opt_param]
@@ -354,50 +357,134 @@ def _plot_solutions(
     opt_params_names = opt_params_names_df_reset.loc[0].values.tolist()
 
     # Need to include tag column as first column header
-    opt_params_names.insert(0, TAG)
+    opt_params_names_with_tag = opt_params_names.copy()
+    opt_params_names_with_tag.insert(0, TAG)
     opt_params_values_with_names_df = opt_params_values_df.set_axis(
-        opt_params_names, axis=1
+        opt_params_names_with_tag, axis=1
     )
 
-    # Separate optimisation parameters and objective function subplots
-    # Include space for RMS errors or not
-    if rmse_df is not None:
-        fig, ax = plt.subplots(nrows=3, height_ratios=[16, 1, 1])
+    # Define subfig and subplot layout
+    # Matplotlib usually fits the subplots to the figure. However, as there are
+    # varying numbers of opt params and various plot options, it is necessary
+    # to fit the figure to the subplots, i.e. have different figure sizes
+    # based on what's being plotted
+    # Strategy: 2 subfigures (opt params and obj func/rmse), varying numbers of
+    # subplots in each
+
+    # Define optimisation parameter plot
+    opt_param_count = len(opt_params_names)
+    if normalisation_type is None:
+        # Separate axes for each opt param: more space per param
+        inches_per_opt_param = 0.7
+        # Add extra subplot for legend
+        nrows_opt_param_subplot = opt_param_count + 1
+        inches_per_legend_entry = 0.5
+        tag_count = diffs_df[TAG].count()
+        external_legend_height = tag_count * inches_per_legend_entry
     else:
-        fig, ax = plt.subplots(nrows=2, height_ratios=[17, 1])
-    fig.set_size_inches(7, 8)
+        # Single axis for all opt params: less space per param
+        inches_per_opt_param = 0.20
+        nrows_opt_param_subplot = 1
+        external_legend_height = 0.0
+
+    final_subfig_height_opt_params = (
+        opt_param_count * inches_per_opt_param
+    ) + external_legend_height
+    figsize = [7, final_subfig_height_opt_params]
+
+    # Add obj func/RMSE subfig
+    base_subfig_height_obj_func = 0.75
+    if rmse_df is not None:
+        nrows_obj_func_rmse_subplot = 2
+        final_subfig_height_obj_func = (
+            nrows_obj_func_rmse_subplot * base_subfig_height_obj_func
+        )
+    else:
+        nrows_obj_func_rmse_subplot = 1
+        final_subfig_height_obj_func = base_subfig_height_obj_func
+
+    figsize[1] += final_subfig_height_obj_func
+
+    fig = plt.figure(layout="constrained", figsize=figsize)
     fig.suptitle(plot_title)
-
-    # Strip plot for optimisation parameters
-    # Melt df (wide to long-form) for seaborn plotting with jitter
-    opt_params_values_with_names_df_melt = opt_params_values_with_names_df.melt(
-        id_vars=TAG
+    # 2 subfig rows: 1 for opt params, 1 for objective function and optional RMSE
+    # Use actual calculated height to define height ratios
+    subfigs = fig.subfigures(
+        nrows=2,
+        ncols=1,
+        height_ratios=[final_subfig_height_opt_params, final_subfig_height_obj_func],
     )
-    sns.stripplot(
-        data=opt_params_values_with_names_df_melt,
-        x="value",
-        y="variable",
-        hue=TAG,
-        jitter=True,
-        ax=ax[0],
-    )
+    axs_opt_params = subfigs[0].subplots(nrows=nrows_opt_param_subplot)
 
-    # Adapt y axis label for normalisation type
-    x_axis_label = ""
-    if normalisation_type in ["init", None]:
-        x_axis_label += "Value normalised by initial value"
+    # Adapt x axis label for normalisation type
+    if normalisation_type == "init":
+        x_axis_label = "Value normalised by initial value"
     elif normalisation_type == "range":
-        x_axis_label += "Value normalised by parameter range"
+        x_axis_label = "Value normalised by parameter range"
+    else:
+        x_axis_label = "Value"
 
     if normalise:
         x_axis_label += f", normalised to {normalising_tag}"
 
-    ax[0].set_xlabel(f"{x_axis_label}")
-    ax[0].set_ylabel("Optimisation parameter")
-    ax[0].legend()
-    ax[0].grid()
+    # Plot optimisation parameters
+    # Melt df (wide to long-form) for seaborn plotting with jitter
+    opt_params_values_with_names_df_melt = opt_params_values_with_names_df.melt(
+        id_vars=TAG
+    )
+
+    # If normalisation_type is None (no normalisation of original opt param
+    # values), plot strip plot with different axis for each opt param.
+    # Otherwise plot all params on single axis
+    if normalisation_type is None:
+        # axs_opt_params[0] reserved for legend
+        for i, opt_param_name in enumerate(opt_params_names):
+            sns.stripplot(
+                data=opt_params_values_with_names_df_melt[
+                    opt_params_values_with_names_df_melt["variable"] == opt_param_name
+                ],
+                x="value",
+                y="variable",
+                hue=TAG,
+                jitter=True,
+                ax=axs_opt_params[i + 1],
+            )
+            axs_opt_params[i + 1].set_xlabel("")
+            axs_opt_params[i + 1].set_ylabel("")
+            axs_opt_params[i + 1].get_legend().remove()
+            axs_opt_params[i + 1].ticklabel_format(
+                axis="x", style="scientific", scilimits=(-1, 1)
+            )
+        # Set legend for all subplots: plot in own subplot
+        axs_opt_params[0].axis("off")
+        handles, labels = axs_opt_params[1].get_legend_handles_labels()
+        axs_opt_params[0].legend(handles=handles, labels=labels, ncols=3, loc="center")
+
+        subfigs[0].supxlabel(x_axis_label)
+        subfigs[0].supylabel("Optimisation parameter")
+    else:
+        sns.stripplot(
+            data=opt_params_values_with_names_df_melt,
+            x="value",
+            y="variable",
+            hue=TAG,
+            jitter=True,
+            ax=axs_opt_params,
+        )
+
+        axs_opt_params.set_xlabel(x_axis_label)
+        axs_opt_params.set_ylabel("Optimisation parameter")
+        axs_opt_params.legend()
+        axs_opt_params.grid()
 
     # Plot objf change separately
+    axs_opt_params = subfigs[1].subplots(nrows=nrows_obj_func_rmse_subplot)
+    if nrows_obj_func_rmse_subplot > 1:
+        ax_obj_func = axs_opt_params[0]
+        ax_rmse = axs_opt_params[1]
+    else:
+        ax_obj_func = axs_opt_params
+
     # Melt for seaborn stripplot
     norm_objf_values_df_melt = norm_objf_values_df.melt(id_vars=TAG)
     sns.stripplot(
@@ -406,19 +493,19 @@ def _plot_solutions(
         y="variable",
         hue=TAG,
         jitter=True,
-        ax=ax[1],
+        ax=ax_obj_func,
         formatter=lambda label: objf_name,
     )
 
-    ax[1].get_legend().remove()
+    ax_obj_func.get_legend().remove()
     # Objective function values are not normalised (no initial value): be explicit
-    ax[1].set_xlabel("Objective function value")
-    ax[1].set_ylabel("")
+    ax_obj_func.set_xlabel("Objective function value")
+    ax_obj_func.set_ylabel("")
 
     if rmse_df is not None:
         # Ensure solution legend colours are the same: tags match between opt
         # params and RMS error plot. This can happen if not normalising opt
-        # params, but request RMS error plot
+        # params, but RMS error plot requested
         rmse_df_matched = rmse_df[
             rmse_df["tag"].isin(opt_params_values_with_names_df["tag"])
         ]
@@ -430,15 +517,12 @@ def _plot_solutions(
             y="variable",
             hue=TAG,
             jitter=True,
-            ax=ax[2],
+            ax=ax_rmse,
             formatter=lambda label: f"Relative to\n{normalising_tag}",
         )
-        ax[2].set_xlabel("RMS error")
-        ax[2].set_ylabel("")
-        ax[2].get_legend().remove()
-
-    # Ensure title doesn't overlap plots
-    fig.tight_layout()
+        ax_rmse.set_xlabel("RMS error")
+        ax_rmse.set_ylabel("")
+        ax_rmse.get_legend().remove()
 
 
 def _rms_errors(
