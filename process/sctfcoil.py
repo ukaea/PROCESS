@@ -779,6 +779,9 @@ class Sctfcoil:
             jcritsc: {jcritsc}
             acs: {acs}
             Check conductor dimensions. Cable space area acs likely gone negative. acs: {acs}
+            This is likely because t_cable_radial or t_cable_toroidal has gone negative:
+            t_cable_radial: {sctfcoil_module.t_cable_radial}
+            t_cable_toroidal: {sctfcoil_module.t_cable_toroidal}
             """
             )
 
