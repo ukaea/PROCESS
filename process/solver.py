@@ -187,9 +187,10 @@ class Vmcon(_Solver):
                 self.bndu,
                 max_iter=global_variables.maxcal,
                 epsilon=self.tolerance,
-                qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
+                qsp_options={"adaptive_rho_interval": 25},
                 initial_B=B,
                 callback=_solver_callback,
+                relaxation_bounds=[0.1, 1],
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
