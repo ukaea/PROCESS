@@ -226,7 +226,7 @@ ixc = 16
 boundl(16) = 0.3
 ohcth = 0.5
 
-* q
+* Safety factor near plasma edge
 ixc = 18
 boundl(18) = 3.0
 q = 3.5
