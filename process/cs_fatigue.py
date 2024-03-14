@@ -205,7 +205,8 @@ class CsFatigue:
             H2 = (
                 1.0e0
                 + (-2.11e0 + 0.77e0 * c_a) * a_t  # G21 * a / t
-                + (0.55e0 - 0.72e0 * c_a ** 0.75e0 + 0.14e0 * c_a * 1.5e0) * a_t_2  # G22
+                + (0.55e0 - 0.72e0 * c_a**0.75e0 + 0.14e0 * c_a * 1.5e0)
+                * a_t_2  # G22
             )
 
         # compute the unitless geometric correction
