@@ -704,7 +704,7 @@ contains
                'Plasma resistivity pre-factor')
        case ('q')
           call parse_real_variable('q', q, 1.00D0, 50.0D0, &
-               'Edge safety factor')
+               'Safety factor near plasma edge')
        case ('q0')
           call parse_real_variable('q0', q0, 0.01D0, 20.0D0, &
                'Safety factor on axis')
