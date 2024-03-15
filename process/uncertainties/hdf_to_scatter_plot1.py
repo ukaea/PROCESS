@@ -88,7 +88,7 @@ def main(args=None):
     figure(figsize=figsize)
     Axes = pd.plotting.scatter_matrix(
         data_set_converge[output_names], alpha=0.19, diagonal="hs")
-# kde or hist (hs) in the diagonal above
+    # kde or hist (hs) in the diagonal above
 
     # y ticklabels
     [plt.setp(item.yaxis.get_majorticklabels(), 'size', 6) for item in Axes.ravel()]
@@ -98,7 +98,6 @@ def main(args=None):
     [plt.setp(item.yaxis.get_label(), 'size', 6) for item in Axes.ravel()]
     # x labels
     [plt.setp(item.xaxis.get_label(), 'size', 6) for item in Axes.ravel()]
-
 
     savefig("uncertainties." + args.save_format)
 
