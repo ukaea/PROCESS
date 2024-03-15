@@ -86,9 +86,9 @@ def main(args=None):
 
     figsize = (8, 8)
     figure(figsize=figsize)
+    # kde or hist (hs) in the diagonal below
     Axes = pd.plotting.scatter_matrix(
         data_set_converge[output_names], alpha=0.19, diagonal="hs")
-    # kde or hist (hs) in the diagonal above
 
     # y ticklabels
     [plt.setp(item.yaxis.get_majorticklabels(), 'size', 6) for item in Axes.ravel()]
