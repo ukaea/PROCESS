@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 281,
+  "n_errortypes": 286,
   "errors": [
     {
       "no": 1,
@@ -1353,7 +1353,7 @@
     {
       "no": 269,
       "level": 3,
-      "message": "CHECK: Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1) "
+      "message": "CHECK: Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1)"
     },
     {
       "no": 270,
@@ -1414,6 +1414,31 @@
       "no": 281,
       "level": 3,
       "message": "CHECK: Cannot have i_tf_bucking >= 2 when tf_in_cs = 1"
+    },
+    {
+      "no": 282,
+      "level": 3,
+      "message": "CONSTRAINTS: Cannot have constraint icc == 77 fcpttf with iteration value ixc == 60 cpttf"
+    },
+    {
+      "no": 283,
+      "level": 3,
+      "message": "CHECK: Cannot have iterated itv ixc == 60 cpttf with i_tf_turns_integer == 1"
+    },
+    {
+      "no": 284,
+      "level": 3,
+      "message": "CHECK: Cannot have iterated itv ixc == 60 cpttf with t_turn_tf input or t_cable_tf is input"
+    },
+    {
+      "no": 285,
+      "level": 2,
+      "message": "WARNING: cpttf is calculated when t_turn_tf or t_cable_tf is input when i_tf_turns_integer == 0"
+    },
+    {
+      "no": 286,
+      "level": 2,
+      "message": "WARNING: default value of cpttf used which is 70000.0 (A) "
     }
   ]
 }

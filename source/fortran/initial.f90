@@ -271,8 +271,9 @@ subroutine check
         tfinsgap, rcool, dhecoil, thicndut, i_cp_joints, t_turn_tf_is_input, &
         t_turn_tf, tftmp, t_cable_tf, t_cable_tf_is_input, tftmp, tmpcry, &
         i_tf_cond_eyoung_axial, eyoung_cond_axial, eyoung_cond_trans, &
-        i_tf_cond_eyoung_trans, i_str_wp
+        i_tf_cond_eyoung_trans, i_str_wp, cpttf_max, cpttf,cpttf_max_is_input
     use stellarator_variables, only: istell
+    use constraint_variables, only: fcpttf
     use sctfcoil_module, only: initialise_cables
     use vacuum_variables, only: vacuum_model
     use, intrinsic :: iso_fortran_env, only: dp=>real64
@@ -437,6 +438,59 @@ subroutine check
          end if
      end if
      ! ---------------
+
+
+      ! exclusions for constraint O77 fcpttf 
+     if (any(icc == 77)) then
+         ! If constraint O77 fcpttf has been selected it cannot be an iteration value as well
+         if (any(ixc == 60)) then
+            ! ITV == 60 iteration value cpttf TF coil leg current per turn (A)
+            call report_error(282)
+         endif
+     endif
+
+      ! exclusions for iteration itv 66 cpttf
+     if (any(ixc == 60)) then
+         ! cpttf is calculated if i_tf_turns_integer == 1 so cannot be iterated.
+         ! any value of cpttf will be overwritten by the calculated value.
+         if (i_tf_turns_integer == 1) then
+            call report_error(283)
+         endif
+         ! if cpttf is being iterated then t_turn_tf or t_cable_tf can not be selected
+         if (t_turn_tf_is_input .eqv. .true. .or. t_cable_tf_is_input .eqv. .true. ) then
+            call report_error(284)
+         endif
+     endif
+     
+      !
+     if (i_tf_turns_integer == 0) then
+        ! if cpttf has been input then t_turn_tf or t_cable_tf cannot be used as cpttf is 
+        ! calculated with these options which will just overwrite cpttf. Warn that this has happened.
+        if ( cpttf >0 .and. ((t_turn_tf_is_input .eqv. .true.) .or. (t_cable_tf_is_input .eqv. .true.))) then
+              call report_error(285)
+
+        ! cpttf = 70000 is the default value and warn that the default value has been used for cpttf
+        ! a default variable might be better to be use i.e. cpttf_default = 70000.0
+        else if (cpttf == 70000.0 .and. ((t_turn_tf_is_input .eqv. .false.) .or. (t_cable_tf_is_input .eqv. .false.))) then
+           call report_error(286)
+        endif
+     end if
+
+
+      ! Impossible to set the turn size of integer turn option
+     if ( t_turn_tf_is_input .and. i_tf_turns_integer == 1 ) then
+         call report_error(269)
+     end if
+
+      ! Impossible to set the cable size of integer turn option
+     if ( t_cable_tf_is_input .and. i_tf_turns_integer == 1 ) then
+         call report_error(269)
+     end if
+
+      ! Impossible to set both the TF coil turn and the cable dimension
+     if ( t_turn_tf_is_input .and. t_cable_tf_is_input ) then
+         call report_error(271)
+     end if
 
 
      ! Cannot use Psep/R and PsepB/qAR limits at the same time
@@ -820,34 +874,7 @@ subroutine check
         end if
     end if
 
-    ! Setting t_turn_tf_is_input to true if t_turn_tf is an input
-    if ( abs(t_turn_tf) < epsilon(t_turn_tf) ) then
-        t_turn_tf_is_input = .false.
-    else
-        t_turn_tf_is_input = .true.
-    end if
 
-    ! Impossible to set the turn size of integer turn option
-    if ( t_turn_tf_is_input .and. i_tf_turns_integer == 1 ) then
-        call report_error(269)
-    end if
-
-    ! Setting t_cable_tf_is_input to true if t_cable_tf is an input
-    if ( abs(t_cable_tf) < epsilon(t_cable_tf) ) then
-        t_cable_tf_is_input = .false.
-    else
-        t_cable_tf_is_input = .true.
-    end if
-
-    ! Impossible to set the cable size of integer turn option
-    if ( t_cable_tf_is_input .and. i_tf_turns_integer == 1 ) then
-        call report_error(269)
-    end if
-
-    ! Impossible to set both the TF coil turn and the cable dimension
-    if ( t_turn_tf_is_input .and. t_cable_tf_is_input ) then
-        call report_error(271)
-    end if
 
     ! Checking the SC temperature for LTS
     if ( ( i_tf_sc_mat == 1 .or. &

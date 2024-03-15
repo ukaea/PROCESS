@@ -102,7 +102,7 @@ module tfcoil_variables
   !!   If the t_turn_tf is non zero, cpttf is calculated
 
   logical :: t_turn_tf_is_input
-  !! Boolean switch to activated when the user set the TF coil turn dimensions
+  !! Boolean switch to be activated when the user set the TF coil turn dimensions
   !! Not an input
 
   real(dp) :: f_t_turn_tf
@@ -125,7 +125,7 @@ module tfcoil_variables
   !!   If the t_cable_tf is non zero, cpttf is calculated
 
   logical :: t_cable_tf_is_input
-  !! Boolean switch to activated when the user set the TF coil cable dimensions
+  !! Boolean switch is activated when the user set the TF coil cable dimensions
   !! Not an input
 
   real(dp) :: acs
@@ -147,6 +147,10 @@ module tfcoil_variables
   real(dp) :: cpttf_max
   !! Max TF coil current per turn [A]. (for stellarators and `i_tf_turns_integer=1`)
   !! (`constraint equation 77`)
+  
+  logical :: cpttf_max_is_input
+  !! Boolean switch is activated when the user sets the max value of cpttf_max
+  !! Not an input
 
   real(dp) :: dcase
   !! density of coil case (kg/m3)

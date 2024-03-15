@@ -534,7 +534,7 @@ class Sctfcoil:
             po.ovarre(self.outfile, "Critical current (A)", "(icrit)", icrit, "OP ")
             po.ovarre(
                 self.outfile,
-                "Actual current (A)",
+                "TF coil leg current per turn (A)",
                 "(cpttf)",
                 tfcoil_variables.cpttf,
                 "OP ",
@@ -3932,7 +3932,7 @@ class Sctfcoil:
 
             # WP effective insulation thickness (SC only) [m]
             # include groundwall insulation + insertion gap in tfcoil_variables.thicndut
-            # inertion gap is tfcoil_variables.tfinsgap on 4 sides
+            # insertion gap is tfcoil_variables.tfinsgap on 4 sides
             t_ins_eff = thicndut + (tfinsgap + tinstf) / n_tf_turn
 
             # Effective WP young modulus in the toroidal direction [Pa]
@@ -4793,15 +4793,21 @@ class Sctfcoil:
             po.osubhd(self.outfile, "TF winding pack (WP) geometry:")
             po.ovarre(
                 self.outfile,
-                "WP cross section area with insulation and insertion (per coil) (m2)",
+                "WP cross section area with insulation and insertion gap (m2)",
                 "(awpc)",
                 sctfcoil_module.awpc,
             )
             po.ovarre(
                 self.outfile,
-                "WP cross section area (per coil) (m2)",
-                "(aswp)",
+                "WP cross section area without insulation and insertion gap (m2)",
+                "(awptf)",
                 sctfcoil_module.awptf,
+            )
+            po.ovarre(
+                self.outfile,
+                "WP structure area (m2)",
+                "(aswp)",
+                tfcoil_variables.aswp,
             )
             po.ovarre(
                 self.outfile,
@@ -4860,12 +4866,6 @@ class Sctfcoil:
                 "Steel WP fraction",
                 "(aswp/awpc)",
                 tfcoil_variables.aswp / sctfcoil_module.awpc,
-            )
-            po.ovarre(
-                self.outfile,
-                "Insulation WP fraction",
-                "(aiwp/awpc)",
-                tfcoil_variables.aiwp / sctfcoil_module.awpc,
             )
             po.ovarre(
                 self.outfile,

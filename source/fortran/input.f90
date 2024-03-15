@@ -341,7 +341,8 @@ contains
       i_tf_turns_integer, n_rad_per_layer, b_crit_upper_nbti, t_crit_nbti, &
       i_cp_joints, n_tf_turn, f_t_turn_tf, t_turn_tf_max, t_cable_tf, &
       sig_tf_wp_max, eyoung_cond_trans, i_tf_cond_eyoung_axial, i_tf_cond_eyoung_trans, &
-      str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv
+      str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv, &
+      t_turn_tf_is_input, t_cable_tf_is_input, cpttf_max_is_input
 
     use times_variables, only: tohs, pulsetimings, tqnch, t_fusion_ramp, tramp, tburn, &
       tdwell, tohsin
@@ -1520,6 +1521,11 @@ contains
        case ('cpttf_max')
           call parse_real_variable('cpttf_max', cpttf_max, 1.0D0, 1.0D6, &
                     'Maximum allowable TF coil leg current per turn (A) (constraint equation 77)')
+          if (cpttf_max == 0.0D0) then
+              cpttf_max_is_input = .false.
+          else if (cpttf_max > 0.0D0) then
+              cpttf_max_is_input = .true.
+          end if
 
        case ('sig_tf_case_max')
           call parse_real_variable('sig_tf_case_max', sig_tf_case_max, 1.0D6, 1.0D11, &
@@ -1752,6 +1758,11 @@ contains
        case ('t_turn_tf')
           call parse_real_variable('t_turn_tf', t_turn_tf, 0.0D0, 0.1D0, &
                'TF turn square dimensions (m)')
+          if (t_turn_tf == 0.0D0) then
+              t_turn_tf_is_input = .false.
+          else if (t_turn_tf > 0.0D0) then
+              t_turn_tf_is_input = .true.
+          end if
        case ('f_t_turn_tf')
           call parse_real_variable('f_t_turn_tf', f_t_turn_tf, 0.0D0, 1.D0, &
                 'f-value for TF coils WP trurn squared dimension constraint')
@@ -1761,6 +1772,11 @@ contains
        case ('t_cable_tf')
           call parse_real_variable('t_cable_tf', t_cable_tf, 0.0D0, 0.1D0, &
                'TF coil cable square/rounded dimensions (m)')
+          if (t_cable_tf == 0.0D0) then
+              t_cable_tf_is_input = .false.
+          else if (t_cable_tf > 0.0D0) then
+              t_cable_tf_is_input = .true.
+          end if
        case ('thicndut')
           call parse_real_variable('thicndut', thicndut, 0.0D0, 0.1D0, &
                'Conduit insulation thickness (m)')

@@ -260,7 +260,7 @@ contains
         case (76); call constraint_eqn_076(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
         ! Equation for maximum TF current per turn upper limit
         case (77); call constraint_eqn_077(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-	  	  ! Equation for Reinke criterion, divertor impurity fraction lower limit
+	! Equation for Reinke criterion, divertor impurity fraction lower limit
         case (78); call constraint_eqn_078(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
         ! Equation for maximum CS field
         case (79); call constraint_eqn_079(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
