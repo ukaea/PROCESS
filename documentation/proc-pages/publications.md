@@ -7,6 +7,10 @@ Below is a list of publications using or citing PROCESS by year:
 
 ## 2024
 
+[Flat-top plasma operational space of the STEP power plant](https://arxiv.org/abs/2403.09460)   
+E. Tholerus, F.J. Casson, S.P. Marsden, T. Wilson, D. Brunetti, P. Fox, S.J. Freethy, T.C. Hender, S.S. Henderson, A. Hudoba, K.K. Kirov, F. Koechl, H. Meyer, S.I. Muldrew, C. Olde, B.S. Patel, C.M. Roach, S. Saarelma, G. Xia   
+Nuclear Fusion (Submitted) arXiv:2403.09460
+
 [Using Bayesian Networks as Metamodels for Predicting Uncertain Fusion Economics in Spherical Tokamaks](https://ieeexplore.ieee.org/abstract/document/10453409)   
 T. Griffiths, Z. Xuereb Conti, J. Hidalgo-Salaverri, M. Bluck   
 IEEE Transactions on Plasma Science (Early Access)   
