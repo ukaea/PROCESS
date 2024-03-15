@@ -173,7 +173,7 @@ class CsFatigue:
             m1 = 1.13e0 - 0.09e0 * a_c
             m2 = -0.54e0 + 0.89e0 / (0.2e0 + a_c)
             m3 = 0.5e0 - 1.0e0 / (0.65e0 + a_c) + 14.0e0 * (1 - a_c) ** 24.0e0
-            g = 1.0e0 + (0.1e0 + 0.35e0 * a_c**2.0e0) * (1.0e0 - sin_phi) ** 2.0e0
+            g = 1.0e0 + (0.1e0 + 0.35e0 * a_t**2.0e0) * (1.0e0 - sin_phi) ** 2.0e0
             f_phi = (a_c**2.0e0 * cos_phi_2 + sin_phi**2.0e0) ** 0.25e0
             p = 0.2e0 + a_c + 0.6e0 * a_t
             H1 = 1.0e0 - 0.34e0 * a_t - 0.11e0 * a * a / (c * t)
@@ -205,7 +205,8 @@ class CsFatigue:
             H2 = (
                 1.0e0
                 + (-2.11e0 + 0.77e0 * c_a) * a_t  # G21 * a / t
-                + (0.55e0 - 0.72e0 * c_a * 0.75e0 + 0.14e0 * c_a * 1.5e0) * a_t_2  # G22
+                + (0.55e0 - 0.72e0 * c_a**0.75e0 + 0.14e0 * c_a * 1.5e0)
+                * a_t_2  # G22
             )
 
         # compute the unitless geometric correction
