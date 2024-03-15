@@ -88,7 +88,7 @@ def main(args=None):
     figure(figsize=figsize)
     # kde or hist (hs) in the diagonal below
     Axes = pd.plotting.scatter_matrix(
-        data_set_converge[output_names], alpha=0.19, diagonal="hs"
+        data_set_converge[output_names], alpha=0.19, diagonal="kde"
     )
 
     # y ticklabels
