@@ -10,7 +10,6 @@ CCFE
 import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
-#import numpy as Axes
 from pylab import figure, savefig
 
 
@@ -88,16 +87,16 @@ def main(args=None):
     figsize = (8, 8)
     figure(figsize=figsize)
     Axes = pd.plotting.scatter_matrix(
-        data_set_converge[output_names], alpha=0.19, diagonal="hs") 
+        data_set_converge[output_names], alpha=0.19, diagonal="hs")
 # kde or hist (hs) in the diagonal above
 
-    #y ticklabels
+    # y ticklabels
     [plt.setp(item.yaxis.get_majorticklabels(), 'size', 6) for item in Axes.ravel()]
-    #x ticklabels
+    # x ticklabels
     [plt.setp(item.xaxis.get_majorticklabels(), 'size', 6) for item in Axes.ravel()]
-    #y labels
+    # y labels
     [plt.setp(item.yaxis.get_label(), 'size', 6) for item in Axes.ravel()]
-    #x labels
+    # x labels
     [plt.setp(item.xaxis.get_label(), 'size', 6) for item in Axes.ravel()]
 
 
