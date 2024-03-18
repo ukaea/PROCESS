@@ -567,7 +567,7 @@ class CostsProtocol(Protocol):
         """write model output"""
 
 
-class CostManager(CostsProtocol):
+class CostManager:
     def __init__(self, models):
         """
         :param models: a reference to the PROCESS Models
