@@ -1,4 +1,5 @@
 """Tests for the Process solver."""
+
 import time
 from numpy import histogram
 from process.io.mfile import MFile
@@ -37,7 +38,7 @@ def test_solver(temp_data):
         April 2015 - Code modified by Sarah Medley to also calculate Q - see above
 
     - Input files -
-    test_process.conf: in integration/data dir
+    test_solver.conf: in integration/data dir
 
     - Output files -
     Saved to temporary test dir
