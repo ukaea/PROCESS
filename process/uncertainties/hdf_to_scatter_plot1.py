@@ -52,7 +52,7 @@ def parse_args(args):
         "-p",
         "--print",
         action="store_true",
-        help="(print the PROCESS data to comannd line. default=False)",
+        help="(print the PROCESS data to comannd line. default=False) ",
     )
 
     return parser.parse_args(args)
