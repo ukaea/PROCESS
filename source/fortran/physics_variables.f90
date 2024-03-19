@@ -729,14 +729,14 @@ module physics_variables
   !! ion transport power per volume (MW/m3)
 
   real(dp) :: q
-  !! Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
-  !! (unless `i_plasma_current=2` (ST current scaling), in which case q = mean edge safety factor qbar)
+  !! For backwards compatibility only, q95 can be entered using the symbol q.
 
   real(dp) :: q0
-  !! safety factor on axis
+  !! Safety factor on axis
 
   real(dp) :: q95
-  !! safety factor at 95% surface
+  !! Safety factor at 95% flux surface (iteration variable 18) (unless icurr=2 (ST current scaling),
+  !! in which case q95 = mean edge safety factor qbar)
 
   real(dp) :: qfuel
   !! plasma fuelling rate (nucleus-pairs/s)
