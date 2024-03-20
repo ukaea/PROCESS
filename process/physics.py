@@ -3977,6 +3977,14 @@ class Physics:
                 ** 0.31,
                 "OP",
             )
+        elif physics_variables.iradloss == 2:
+            po.ovarrf(
+                self.outfile,
+                "H* non-radiation corrected",
+                "(hstar)",
+                physics_variables.hfact,
+                "OP",
+            )
         po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
         po.ovarrf(
             self.outfile,
