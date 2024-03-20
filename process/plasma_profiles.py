@@ -58,14 +58,30 @@ class PlasmaProfile:
 
     def parabolic_paramterisation(self):
         """Parameterise plasma profiles in the case where ipedestal=0"""
-        #  Reset pedestal values to agree with original parabolic profiles
-        physics_variables.rhopedt = 1.0e0
-        physics_variables.rhopedn = 1.0e0
-        physics_variables.teped = 0.0e0
-        physics_variables.tesep = 0.0e0
-        physics_variables.neped = 0.0e0
-        physics_variables.nesep = 0.0e0
-        physics_variables.tbeta = 2.0e0
+        # Reset pedestal values to agree with original parabolic profiles
+        if (
+            physics_variables.rhopedt != 1.0
+            or physics_variables.rhopedn != 1.0
+            or physics_variables.teped != 0.0
+            or physics_variables.tesep != 0.0
+            or physics_variables.neped != 0.0
+            or physics_variables.nesep != 0.0
+            or physics_variables.tbeta != 2.0
+        ):
+            logger.warning(
+                "Parabolic plasma profiles is used for an L-Mode plasma, "
+                "but the physics variables do not describe an L-Mode plasma. "
+                "'rhopedt', 'rhopedn', 'teped', 'tesep', 'neped', 'nesep', "
+                "and 'tbeta' have all been reset to L-Mode appropriate values"
+            )
+
+            physics_variables.rhopedt = 1.0e0
+            physics_variables.rhopedn = 1.0e0
+            physics_variables.teped = 0.0e0
+            physics_variables.tesep = 0.0e0
+            physics_variables.neped = 0.0e0
+            physics_variables.nesep = 0.0e0
+            physics_variables.tbeta = 2.0e0
 
         self.teprofile.run()
         self.neprofile.run()
