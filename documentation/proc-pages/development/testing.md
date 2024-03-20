@@ -30,6 +30,10 @@ program's output. Therefore if your code changes the program's output, it will f
 test. In this case that output difference will need to be reviewed and if accepted, the expected (or 
 reference) will be updated.
 
+Regression tests compare the output of PROCESS locally when running an input file to a reference output stored on a 
+[repository](https://github.com/timothy-nunn/process-tracking-data). The test suite will recurse back through your git
+history until it finds the latest commit in your branches history that has a reference MFile; this means **each branch is accountable for only its changes since it branched off main**. 
+
 ## pytest
 
 Process uses the `pytest` testing framework in its test suite. `pytest` tests are modular, quick to 
