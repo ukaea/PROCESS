@@ -3944,7 +3944,40 @@ class Physics:
                 0.0e0,
             )
             po.ocmmnt(self.outfile, "  (No radiation correction applied)")
-
+        if physics_variables.iradloss == 1:
+            po.ovarrf(
+                self.outfile,
+                "H* non-radiation corrected",
+                "(hstar)",
+                physics_variables.hfact
+                * (
+                    physics_variables.powerht
+                    / (
+                        physics_variables.powerht
+                        + physics_variables.psyncpv
+                        + physics_variables.pinnerzoneradmw
+                    )
+                )
+                ** 0.31,
+                "OP",
+            )
+        elif physics_variables.iradloss == 0:
+            po.ovarrf(
+                self.outfile,
+                "H* non-radiation corrected",
+                "(hstar)",
+                physics_variables.hfact
+                * (
+                    physics_variables.powerht
+                    / (
+                        physics_variables.powerht
+                        + physics_variables.pradpv * physics_variables.vol
+                    )
+                )
+                ** 0.31,
+                "OP",
+            )
+        po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
         po.ovarrf(
             self.outfile,
             "Alpha particle confinement time (s)",
