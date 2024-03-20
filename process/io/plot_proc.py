@@ -2119,11 +2119,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
         pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
     flh = pdivt / pthresh
 
-    powerht = mfile_data.data["powerht"].get_scan(scan)
-    psync = mfile_data.data["psyncpv*vol"].get_scan(scan)
-    pbrem = mfile_data.data["pinnerzoneradmw"].get_scan(scan)
-    hfact = mfile_data.data["hfact"].get_scan(scan)
-    hstar = hfact * (powerht / (powerht + psync + pbrem)) ** 0.31
+    hstar = mfile_data.data["hstar"].get_scan(scan)
 
     if ecrh:
         data = [
