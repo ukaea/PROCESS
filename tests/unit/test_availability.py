@@ -64,6 +64,9 @@ def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param
 
 
 def test_avail_1(monkeypatch, availability):
+
+    # Initialise fortran variables to keep test isolated from others
+    fortran.init_module.init_all_module_vars()
     monkeypatch.setattr(cv, "iavail", 1)
     monkeypatch.setattr(cv, "divlife", 1.0)
     monkeypatch.setattr(fwbsv, "bktlife", 7.0)
@@ -82,6 +85,9 @@ def test_avail_1(monkeypatch, availability):
     cfactr_obs = cv.cfactr
     cfactr_exp = 0.0006344554455445239
     assert pytest.approx(cfactr_exp) == cfactr_obs
+
+    # Initialise fortran variables again to reset for other tests
+    fortran.init_module.init_all_module_vars()
 
 
 def test_calc_u_unplanned_hcd(availability):
