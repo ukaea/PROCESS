@@ -45,6 +45,7 @@ setup_kwargs = {
         "numba>=0.57",
         "PyVMCON>=2.1.0,<3.0.0",
         "CoolProp>=6.4",
+        "seaborn>=0.12.2",
     ],
     "extras_require": {"test": ["pytest"]},
     "entry_points": {

@@ -383,6 +383,8 @@ module numerics
 
   real(dp) :: sqsumsq
   !!  sqsumsq : sqrt of the sum of the square of the constraint residuals
+  character(len=40) :: objf_name
+  !! Description of the objective function
   real(dp) :: norm_objf
   !! Normalised objective function (figure of merit)
   real(dp) :: epsfcn
@@ -421,25 +423,25 @@ contains
     ioptimz = 1
     minmax = 7
     lablmm = (/ &
-      'major radius.         ', &
-      'not used.             ', &
-      'neutron wall load.    ', &
-      'P_tf + P_pf.          ', &
-      'fusion gain.          ', &
-      'cost of electricity.  ', &
-      'capital cost.         ', &
-      'aspect ratio.         ', &
-      'divertor heat load.   ', &
-      'toroidal field.       ', &
-      'total injected power. ', &
-      'H plant capital cost. ', &
-      'H production rate.    ', &
-      'pulse length.         ', &
-      'plant availability.   ', &
-      'min R0, max tau_burn. ', &
-      'net electrical output.', &
-      'Null figure of merit. ', &
-      'max Q, max t_burn.    '  &
+      'major radius          ', &
+      'not used              ', &
+      'neutron wall load     ', &
+      'P_tf + P_pf           ', &
+      'fusion gain           ', &
+      'cost of electricity   ', &
+      'capital cost          ', &
+      'aspect ratio          ', &
+      'divertor heat load    ', &
+      'toroidal field        ', &
+      'total injected power  ', &
+      'H plant capital cost  ', &
+      'H production rate     ', &
+      'pulse length          ', &
+      'plant availability    ', &
+      'min R0, max tau_burn  ', &
+      'net electrical output ', &
+      'Null figure of merit  ', &
+      'max Q, max t_burn     '  &
       /)
 
     ncalls = 0
@@ -558,6 +560,7 @@ contains
     lablxc = ''
     ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
     sqsumsq = 0.0D0
+    objf_name = ""
     norm_objf = 0.0D0
     epsfcn = 1.0D-3
     epsvmc = 1.0D-6
