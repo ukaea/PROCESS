@@ -29,6 +29,15 @@ def availability():
     ((0.0000001, 0, 0.5), (0.0000001, 1, 2.5), (1.0, 0, 0.5), (1.0, 1, 1.25)),
 )
 def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param):
+    """Test avail for iavail = 0
+
+    :param monkeypatch: mocking fixture
+    :type monkeypatch: MonkeyPatch
+    :param availability: fixture containing an initialised `Availability` object
+    :type availability: tests.unit.test_availability.availability (functional fixture)
+    """
+
+    # Mock module vars
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "powfmw", 4.0e3)
     monkeypatch.setattr(fwbsv, "fwlife", fwlife)
@@ -64,9 +73,17 @@ def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param
 
 
 def test_avail_1(monkeypatch, availability):
+    """Test avail for iavail = 1
 
+    :param monkeypatch: mocking fixture
+    :type monkeypatch: MonkeyPatch
+    :param availability: fixture containing an initialised `Availability` object
+    :type availability: tests.unit.test_availability.availability (functional fixture)
+    """
     # Initialise fortran variables to keep test isolated from others
     fortran.init_module.init_all_module_vars()
+
+    # Mock module vars
     monkeypatch.setattr(cv, "iavail", 1)
     monkeypatch.setattr(cv, "divlife", 1.0)
     monkeypatch.setattr(fwbsv, "bktlife", 7.0)
