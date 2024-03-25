@@ -917,9 +917,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = (
-                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
-                )
+                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -2045,6 +2043,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
     nbi = False
     ecrh = False
     ebw = False
+    lhcd = False
+    iccd = False
+
     if (iefrf == 5) or (iefrf == 8):
         nbi = True
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
@@ -2054,11 +2055,18 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if iefrf == 12:
         ebw = True
         axis.text(-0.05, 1, "Electron Bernstein Wave Drive:", ha="left", va="center")
-    if (iefrf == 1) or (iefrf == 2) or (iefrf == 4) or (iefrf == 6) or (iefrf == 9):
-        print(
-            "Options 1, 2, 4, 6 and 9 not implemented yet in this python script plot_proc.py\n"
+    if iefrf in [1, 4, 6]:
+        lhcd = True
+        axis.text(
+            -0.05,
+            1,
+            "Lower Hybrid Current Drive:",
+            ha="left",
+            va="center",
         )
-        print("NEEDS TO BE IMPLEMENTED in plot_current_drive_info subroutine!!\n")
+    if iefrf == 2:
+        iccd = True
+        axis.text(-0.05, 1, "Ion Cyclotron Current Drive:", ha="left", va="center")
 
     if "iefrffix" in mfile_data.data.keys():
         secondary_heating = ""
@@ -2076,17 +2084,10 @@ def plot_current_drive_info(axis, mfile_data, scan):
             secondary_heating = "ECH"
         if iefrffix == 12:
             secondary_heating = "EBW"
-        if (
-            (iefrffix == 1)
-            or (iefrffix == 2)
-            or (iefrffix == 4)
-            or (iefrffix == 6)
-            or (iefrffix == 9)
-        ):
-            print(
-                "Options 1, 2, 4, 6 and 9 not implemented yet in this python script plot_proc.py\n"
-            )
-            print("NEEDS TO BE IMPLEMENTED in plot_current_drive_info subroutine!!\n")
+        if iefrffix in [1, 4, 6]:
+            secondary_heating = "LHCD"
+        if iefrffix == 2:
+            secondary_heating = "ICCD"
 
     axis.set_ylim([ymin, ymax])
     axis.set_xlim([xmin, xmax])
@@ -2173,6 +2174,54 @@ def plot_current_drive_info(axis, mfile_data, scan):
             data.insert(2, (pinjie, "Total auxillary power", "MW"))
 
     if ebw:
+        data = [
+            (pinjie, "Steady state auxiliary power", "MW"),
+            ("pheat", "Power for heating only", "MW"),
+            ("bootipf", "Bootstrap fraction", ""),
+            ("faccd", "Auxiliary fraction", ""),
+            ("facoh", "Inductive fraction", ""),
+            ("powerht", "Plasma heating used for H factor", "MW"),
+            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
+            (
+                pdivnr,
+                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\times 10^{-20}$ MW m$^{2}$",
+            ),
+            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
+            (hstar, "H* (non-rad. corr.)", ""),
+        ]
+        if "iefrffix" in mfile_data.data.keys():
+            data.insert(
+                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
+            )
+            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
+            data.insert(2, (pinjie, "Total auxillary power", "MW"))
+
+    if lhcd:
+        data = [
+            (pinjie, "Steady state auxiliary power", "MW"),
+            ("pheat", "Power for heating only", "MW"),
+            ("bootipf", "Bootstrap fraction", ""),
+            ("faccd", "Auxiliary fraction", ""),
+            ("facoh", "Inductive fraction", ""),
+            ("powerht", "Plasma heating used for H factor", "MW"),
+            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
+            (
+                pdivnr,
+                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\times 10^{-20}$ MW m$^{2}$",
+            ),
+            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
+            (hstar, "H* (non-rad. corr.)", ""),
+        ]
+        if "iefrffix" in mfile_data.data.keys():
+            data.insert(
+                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
+            )
+            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
+            data.insert(2, (pinjie, "Total auxillary power", "MW"))
+
+    if iccd:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
