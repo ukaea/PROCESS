@@ -527,8 +527,8 @@
     },
     {
       "no": 104,
-      "level": 3,
-      "message": "STRESSCL: Illegal value for tfc_model"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 105,
