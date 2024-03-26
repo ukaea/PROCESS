@@ -1731,9 +1731,6 @@ contains
        case ('tdmptf')
           call parse_real_variable('tdmptf', tdmptf, 0.1D0, 100.0D0, &
                'Dump time for TF coil (s)')
-      !  case ('tfc_model')
-      !     call parse_int_variable('tfc_model', tfc_model, 0, 1, &
-      !          'Switch for TF coil model')
        case ('tfinsgap')
           call parse_real_variable('tfinsgap', tfinsgap, 1.0D-10, 1.0D-1, &
                'TF coil WP insertion gap (m)')

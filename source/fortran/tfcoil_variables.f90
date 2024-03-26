@@ -504,12 +504,6 @@ module tfcoil_variables
   real(dp) :: tfckw
   !! available DC power for charging the TF coils (kW)
 
-  !#TODO: issue #781
-  ! integer :: tfc_model
-  ! !! tfc_model /1/ : switch for TF coil magnet stress model:<UL>
-  ! !!                 <LI> = 0 simple model (solid copper coil)
-  ! !!                 <LI> = 1 CCFE two-layer stress model; superconductor</UL>
-
   real(dp) :: tfcmw
   !! Peak power per TF power supply (MW)
 
