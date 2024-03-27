@@ -248,7 +248,7 @@
     {
       "no": 48,
       "level": 3,
-      "message": "LOADXC: Do not use thkcas as an iteration variable if tfc_model=0 or istell=1"
+      "message": "LOADXC: Do not use thkcas as an iteration variable if istell=1"
     },
     {
       "no": 49,
@@ -527,8 +527,8 @@
     },
     {
       "no": 104,
-      "level": 3,
-      "message": "STRESSCL: Illegal value for tfc_model"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 105,
