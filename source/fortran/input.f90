@@ -307,7 +307,7 @@ contains
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
-      ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
+      ifalphap, tauee_in, alphaj, alphat, icurr, q, q95, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, fhe3, iwalld, gamma, falpha, fgwped, gtscale, tbeta, ibss, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
@@ -704,7 +704,10 @@ contains
                'Plasma resistivity pre-factor')
        case ('q')
           call parse_real_variable('q', q, 1.00D0, 50.0D0, &
-               'Safety factor near plasma edge')
+               'For backwards compatibility only, q95 can be entered using the symbol q.')
+      case ('q95')
+         call parse_real_variable('q', q, 1.00D0, 50.0D0, &
+               'Safety factor at 95% flux surface')        
        case ('q0')
           call parse_real_variable('q0', q0, 0.01D0, 20.0D0, &
                'Safety factor on axis')
