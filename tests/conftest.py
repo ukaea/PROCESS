@@ -2,6 +2,7 @@
 
 Defines fixtures that will be shared across all test modules.
 """
+
 import pytest
 from system_check import system_compatible
 import warnings
@@ -21,12 +22,6 @@ def pytest_addoption(parser):
         default=5.0,
         type=float,
         help="Percentage tolerance for regression tests",
-    )
-    parser.addoption(
-        "--overwrite",
-        action="store_true",
-        default=False,
-        help="Overwrite test references",
     )
     parser.addoption(
         "--solver",
@@ -108,20 +103,18 @@ def precondition(request):
     :type request: SubRequest
     """
     compatible = system_compatible()
-    basic_error_message = """
+    if compatible:
+        return
+    warnings.warn(
+        """
         \u001b[33m\033[1mYou are running the PROCESS test suite on an outdated system.\033[0m
         This can cause floating point rounding errors in regression tests.
 
         Please see documentation for information on running PROCESS (and tests)
         using a Docker/Singularity container.
-        """
-    if request.config.getoption("--overwrite") and not compatible:
-        pytest.exit(
-            basic_error_message
-            + "\n \u001b[31m\033[1mTest overwriting is NOT allowed on outdated systems.\033[0m"
-        )
-    elif not compatible:
-        warnings.warn(basic_error_message, UserWarning)
+        """,
+        UserWarning,
+    )
 
 
 @pytest.fixture(scope="session", autouse=True)

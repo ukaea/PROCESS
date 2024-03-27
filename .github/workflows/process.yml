@@ -131,6 +131,9 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      matrix:
+        tolerance: [0, 5]
     steps:
       - uses: actions/checkout@v3
       - name: Download build artifacts
@@ -140,29 +143,10 @@ jobs:
           path: process/
       - name: Install PROCESS
         run: pip install -e .
+      - name: Allow git commands to be run
+        run: git config --system --add safe.directory '*'
       - name: Run regression tests
-        run: pytest tests/regression -v --reg-tolerance=0
-
-  regression-5-percent-py38:
-    runs-on: ubuntu-latest
-    needs: make-py38
-    continue-on-error: true
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install -e .
-      - name: Run regression tests
-        run: pytest tests/regression
+        run: pytest tests/regression -v --reg-tolerance=${{ matrix.tolerance }}
 
   large-tokamak-py38:
     runs-on: ubuntu-latest
