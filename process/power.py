@@ -1612,7 +1612,7 @@ class Power:
         elif physics_variables.iradloss == 2:
             po.ocmmnt(
                 self.outfile,
-                "Total power loss is scaling power only (physics_variables.iradloss = 1).",
+                "Total power loss is scaling power only (physics_variables.iradloss = 2).",
             )
             po.ocmmnt(self.outfile, "This is not recommended for power plant models.")
             po.ovarrf(
