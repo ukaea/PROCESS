@@ -20,7 +20,7 @@ module blanket_library
     !!      LT          Low Temperature
     !!      HT          High Temperature
     !!      MMS         Multi Module Segment
-    !!      SMS         Single Modle Segment
+    !!      SMS         Single Module Segment
     !!      IB          Inboard
     !!      OB          Outboard
     !!      HCD         Heating & Current Drive
@@ -537,12 +537,12 @@ contains
         whtblbe, whtblss, denstl, whtblkt, &
         volshld, vfshld, coolmass, fwclfr, & !! CCFE HCPB only -------------------
         breeder_f, breeder_multiplier, whtbltibe12, whtblli4sio4, wtblli2o, &
-        vfcblkt, vfpblkt, whtshld, wpenshld, fwmass, fw_armour_vol, &
-        fw_armour_thickness, fw_armour_mass, armour_fw_bl_mass, &
-        volblkti, volblkto, iblnkith, fblhebmi, & !! KIT HCPB only ---------------
+        vfcblkt, vfpblkt, whtshld, wpenshld, fwmass, fwmassi, fwmasso, fw_armour_voli, fw_armour_volo, &
+        fw_armour_vol, fw_armour_thicknessi, fw_armour_thicknesso, fw_armour_mass, fw_armour_massi, &
+        fw_armour_masso, armour_fw_bl_mass, volblkti, volblkto, iblnkith, fblhebmi, & !! KIT HCPB only ---------------
         fblhebpi,fblhebmo, fblhebpo, fblss, fblbe, &
         whtblbreed, densbreed, fblbreed, &
-        iblanket, denw, vffwi, vffwo, volfw, & !! added --------------------
+        iblanket, denw, vffwi, vffwo, volfw, volfwi, volfwo, & !! added --------------------
         fblss_ccfe, fblli2sio4, fbltibe12
 
         implicit none
@@ -603,17 +603,41 @@ contains
             ! Penetration shield mass (set = internal shield) (kg)
             wpenshld = whtshld
 
-            ! First wall volume (m^3)
-            volfw = (fwareaib*fwith*(1.0D0-vffwi) + fwareaob*fwoth*(1.0D0-vffwo))
+            ! Inboard First wall volume (m^3)
+            volfwi = (fwareaib*fwith*(1.0D0-vffwi))
 
-            ! First wall mass, excluding armour (kg)
-            fwmass = denstl * volfw
+            ! Outboard First wall volume (m^3)
+            volfwo = (fwareaob*fwoth*(1.0D0-vffwo))
 
-            ! First wall armour volume (m^3)
-            fw_armour_vol = sarea*fw_armour_thickness
+            ! Inboard and Outboard First wall volume (m^3)
+            volfw = volfwi + volfwo
 
-            ! First wall armour mass (kg)
-            fw_armour_mass = fw_armour_vol*denw
+            ! Inboard First wall mass, excluding armour (kg)
+            fwmassi = denstl * volfwi
+
+            ! Outboard First wall mass, excluding armour (kg)
+            fwmasso = denstl * volfwo
+
+            ! First walls Inboard and Outboard mass, excluding armour (kg)
+            fwmass = fwmassi + fwmasso
+
+            ! Inboard First wall armour volume (m^3)
+            fw_armour_voli = sarea*fw_armour_thicknessi ! sarea plasma surface area?
+
+            ! Outboard First wall armour volume (m^3)
+            fw_armour_volo = sarea*fw_armour_thicknesso
+
+            ! Inboard and Outboard First wall armour volume (m^3)
+            fw_armour_vol = fw_armour_voli + fw_armour_volo
+
+            ! Inboard First wall armour mass (kg)
+            fw_armour_massi = fw_armour_voli*denw
+
+            ! Outboard First wall armour mass (kg)
+            fw_armour_masso = fw_armour_volo*denw
+
+            ! Inboard and Outboard First wall total armour mass (kg)
+            fw_armour_mass = fw_armour_massi + fw_armour_masso
 
         endif
 
@@ -649,8 +673,9 @@ contains
             ! Total blanket mass (kg)
             whtblkt = whtbltibe12 + whtblli4sio4 + whtblss
 
-            ! Total mass of first wall and blanket
-            armour_fw_bl_mass = fw_armour_mass + fwmass + whtblkt
+
+            ! Total mass of first wall, armour and blanket
+            armour_fw_bl_mass = fw_armour_mass + fwmass + whtblkt ! inboard and outboard blanket ?????
 
         endif
 

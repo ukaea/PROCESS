@@ -264,7 +264,9 @@ class CCFE_HCPB:
         # Exponents (tonne/m2)
         # Blanket exponent (/1000 for kg -> tonnes)
         ccfe_hcpb_module.x_blanket = (
-            ccfe_hcpb_module.armour_density * fwbs_variables.fw_armour_thickness
+            ccfe_hcpb_module.armour_density * 
+            (fwbs_variables.fw_armour_thicknessi + fwbs_variables.fw_armour_thicknesso)
+            / 2.0
             + ccfe_hcpb_module.fw_density
             * (build_variables.fwith + build_variables.fwoth)
             / 2.0
@@ -1021,9 +1023,15 @@ class CCFE_HCPB:
             )
             po.ovarre(
                 self.outfile,
-                "For consistency, first wall armour thickness should be 0.003 (m)",
-                "(fw_armour_thickness)",
-                fwbs_variables.fw_armour_thickness,
+                "For consistency, Inboard first wall armour thickness should be 0.003 (m)",
+                "(fw_armour_thicknessi)",
+                fwbs_variables.fw_armour_thicknessi,
+            )
+            po.ovarre(
+                self.outfile,
+                "For consistency, Outboard first wall armour thickness should be 0.003 (m)",
+                "(fw_armour_thicknesso)",
+                fwbs_variables.fw_armour_thicknesso,
             )
 
         return tbr
@@ -1062,21 +1070,63 @@ class CCFE_HCPB:
 
         po.ovarrf(
             self.outfile,
-            "First Wall Armour Volume (m3)",
+            "Inboard First Wall Armour Volume (m3)",
+            "(fw_armour_voli)",
+            fwbs_variables.fw_armour_voli,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Outboard First Wall Armour Volume (m3)",
+            "(fw_armour_volo)",
+            fwbs_variables.fw_armour_volo,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Inboard and Outboard First Wall Armour Volume (m3)",
             "(fw_armour_vol)",
             fwbs_variables.fw_armour_vol,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "First Wall Volume (m3)",
+            "Inboard First Wall Volume (m3)",
+            "(volfwi)",
+            fwbs_variables.volfwi,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Outboard First Wall Volume (m3)",
+            "(volfwo)",
+            fwbs_variables.volfwo,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Inboard and Outboard First Wall Volume (m3)",
             "(volfw)",
             fwbs_variables.volfw,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Blanket Volume (m3)",
+            "Inboard Blanket Volume (m3)",
+            "(volblkti)",
+            fwbs_variables.volblkti,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Outboard Blanket Volume (m3)",
+            "(volblkto)",
+            fwbs_variables.volblkto,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Inboard and Outboard Blanket Volume (m3)",
             "(volblkt)",
             fwbs_variables.volblkt,
             "OP ",
@@ -1100,7 +1150,21 @@ class CCFE_HCPB:
 
         po.ovarre(
             self.outfile,
-            "First Wall Armour Mass (kg)",
+            "Inboard First Wall Armour Mass (kg)",
+            "(fw_armour_massi)",
+            fwbs_variables.fw_armour_massi,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Outboard First Wall Armour Mass (kg)",
+            "(fw_armour_masso)",
+            fwbs_variables.fw_armour_masso,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard and Outboard First Wall Armour Mass (kg)",
             "(fw_armour_mass)",
             fwbs_variables.fw_armour_mass,
             "OP ",
