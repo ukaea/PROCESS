@@ -134,7 +134,7 @@ class Build:
         build_variables.dh_tf_inner_bore = 2.0e0 * (
             physics_variables.rminor * physics_variables.kappa
             + build_variables.vgaptop
-            + build_variables.fwith
+            + build_variables.fwith # is this relevant for vertical build ??
             + build_variables.blnktth
             + build_variables.vvblgap
             + build_variables.shldtth
@@ -158,7 +158,7 @@ class Build:
                 + build_variables.shldtth
                 + build_variables.vvblgap
                 + build_variables.blnktth
-                + 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                + 0.5e0 * (build_variables.fwith + build_variables.fwoth) # is this relavent for a vertical build ?
                 + build_variables.vgaptop
                 + physics_variables.rminor * physics_variables.kappa
             )
@@ -1121,7 +1121,7 @@ class Build:
                         + build_variables.shldith
                         + build_variables.vvblgap
                         + build_variables.blnkith
-                        + build_variables.fwith
+                        + build_variables.fwith # is this relavent for a vertical build
                         + 3.0e0 * build_variables.scrapli
                     )
                     + tfcoil_variables.drtop
@@ -1177,7 +1177,7 @@ class Build:
                 + build_variables.shldith
                 + build_variables.vvblgap
                 + build_variables.blnkith
-                + build_variables.fwith
+                + build_variables.fwith # is this relavent for the top ? check this ??
                 + 3.0e0 * build_variables.scrapli
             )
             + tfcoil_variables.drtop
@@ -1313,7 +1313,7 @@ class Build:
             + build_variables.vgap
             + divertor_variables.divfix
             - build_variables.blnktth
-            - 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+            - 0.5e0 * (build_variables.fwith + build_variables.fwoth) # fw_armour_thicknessi/o ??
         )
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
@@ -1740,16 +1740,31 @@ class Build:
             radius = radius + build_variables.fwith
             po.obuild(
                 self.outfile,
-                "Inboard first wall",
+                "Inboard first wall thickness (m)",
                 build_variables.fwith,
                 radius,
                 "(fwith)",
             )
+            radius = radius + fwbs_variables.fw_armour_thicknessi
+            po.obuild(
+                self.outfile,
+                "Inboard armour_thickness (m)",
+                fwbs_variables.fw_armour_thicknessi,
+                radius,
+                "(fw_armour_thicknessi)",
+            )
+
             po.ovarre(
                 self.mfile,
                 "Inboard first wall radial thickness (m)",
                 "(fwith)",
                 build_variables.fwith,
+            )
+            po.ovarre(
+                self.mfile,
+                "Inboard armour_thickness (m)",
+                "(fw_armour_thicknessi)",
+                fwbs_variables.fw_armour_thicknessi
             )
 
             radius = radius + build_variables.scrapli
@@ -1770,7 +1785,7 @@ class Build:
             radius = radius + physics_variables.rminor
             po.obuild(
                 self.outfile,
-                "Plasma geometric centre",
+                "Plasma geometric centre (Rmajor)",
                 physics_variables.rminor,
                 radius,
                 "(rminor)",
@@ -1799,11 +1814,24 @@ class Build:
                 "(scraplo)",
                 build_variables.scraplo,
             )
-
+            radius = radius + fwbs_variables.fw_armour_thicknesso
+            po.obuild(
+                self.outfile,
+                "Outboard armour_thickness (m)",
+                fwbs_variables.fw_armour_thicknesso,
+                radius,
+                "(fw_armour_thicknesso)",
+            )
+            po.ovarre(
+                self.mfile,
+                "Outboard armour_thickness (m)",
+                "(fw_armour_thicknesso)",
+                fwbs_variables.fw_armour_thicknesso,
+            )
             radius = radius + build_variables.fwoth
             po.obuild(
                 self.outfile,
-                "Outboard first wall",
+                "Outboard first wall (m)",
                 build_variables.fwoth,
                 radius,
                 "(fwoth)",
@@ -1818,7 +1846,7 @@ class Build:
             radius = radius + build_variables.blnkoth
             po.obuild(
                 self.outfile,
-                "Outboard blanket",
+                "Outboard blanket radial thickness (m)",
                 build_variables.blnkoth,
                 radius,
                 "(blnkoth)",
@@ -2210,7 +2238,7 @@ class Build:
                     + build_variables.vvblgap
                     + build_variables.shldtth
                     + build_variables.blnktth
-                    + 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                    + 0.5e0 * (build_variables.fwith + build_variables.fwoth) # fw_armour_thicknessi ??
                     + build_variables.vgaptop
                     + physics_variables.rminor * physics_variables.kappa
                 )
@@ -2320,7 +2348,7 @@ class Build:
                 )
                 vbuild = vbuild - build_variables.blnktth
 
-                fwtth = 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                fwtth = 0.5e0 * (build_variables.fwith + build_variables.fwoth) # fw_armour_thicknessi ?
                 po.obuild(self.outfile, "Top first wall", fwtth, vbuild, "(fwtth)")
                 po.ovarre(
                     self.mfile,

@@ -689,8 +689,8 @@ contains
 
     !  Local variables
 
-    character(len=30) :: dum30
-    character(len=20) :: dum20
+    character(len=33) :: dum33
+    character(len=22) :: dum22
 
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -698,14 +698,14 @@ contains
     !  This counters problems that would occur if the original string
     !  was the wrong length.
 
-    dum30 = descr
+    dum33 = descr
     if (present(variable_name)) then
-        dum20 = variable_name
+        dum22 = variable_name
     else
-        dum20 = ''
+        dum22 = ''
     end if
 
-    write(file,10) dum30, thick, total, dum20
+    write(file,10) dum33, thick, total, dum22
 10  format(1x,a,t42,f10.3,t58,f10.3,t71,a)
 
   end subroutine obuild

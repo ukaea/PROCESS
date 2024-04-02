@@ -268,7 +268,7 @@ contains
       hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant, &
       pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
-      fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
+      fw_armour_thicknessi, fw_armour_thicknesso, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       denw, f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
       fvolsi, etahtp, nblktmodpo, fwpressure, emult, fwoutlet, nblktmodpi, &
@@ -2171,9 +2171,12 @@ contains
        case ('fwbsshape')
           call parse_int_variable('fwbsshape', fwbsshape, 1, 2, &
                'Switch for fw/blanket/shield/vv shape')
-       case ('fw_armour_thickness')
-          call parse_real_variable('fw_armour_thickness', fw_armour_thickness, 0.0D0, 1.0D0, &
-               'First wall W coating thickness (m)')
+       case ('fw_armour_thicknessi')
+          call parse_real_variable('fw_armour_thicknessi', fw_armour_thicknessi, 0.0D0, 1.0D0, &
+               'Inboard First wall W coating thickness (m)')
+       case ('fw_armour_thicknesso')
+          call parse_real_variable('fw_armour_thicknesso', fw_armour_thicknesso, 0.0D0, 1.0D0, &
+               'Outboard First wall W coating thickness (m)')
        case ('hcdportsize')
           call parse_int_variable('hcdportsize', hcdportsize, 1, 2, &
                'H/CD port size')
@@ -2192,7 +2195,8 @@ contains
           if (iblanket == 3) then
               fwith = 0.03D0
               fwoth = 0.03D0
-              fw_armour_thickness = 0.003D0
+              fw_armour_thicknessi = 0.003D0
+              fw_armour_thicknesso = 0.003D0
           end if
        case ('iblnkith')
           call parse_int_variable('iblnkith', iblnkith, 0, 1, 'Switch for inboard blanket')

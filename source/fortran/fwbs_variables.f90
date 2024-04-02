@@ -69,16 +69,37 @@ module fwbs_variables
   !! first wall full-power year lifetime (y)
 
   real(dp) :: fwmass
-  !! first wall mass [kg]
+  !! Inboard and Outboard first wall mass [kg]
+  
+  real(dp) :: fwmassi
+  !! Inboard first wall mass [kg]
+  
+  real(dp) :: fwmasso
+  !! Outboard first wall mass [kg]  
 
   real(dp) :: fw_armour_mass
-  !! first wall armour mass [kg]
+  !! Inboard and outboard first wall armour mass [kg]
+  
+  real(dp) :: fw_armour_massi
+  !! Inboard first wall armour mass [kg]
+  
+  real(dp) :: fw_armour_masso
+  !! Outboard first wall armour mass [kg]  
 
-  real(dp) :: fw_armour_thickness
-  !! first wall armour thickness [m]
+  real(dp) :: fw_armour_thicknessi
+  !! Inboard first wall armour thickness [m]
+  
+  real(dp) :: fw_armour_thicknesso
+  !! Outboard first wall armour thickness [m]  
 
   real(dp) :: fw_armour_vol
-  !! first wall armour volume [m^3]
+  !! Inboard and outboard first wall armour volume [m^3]
+
+  real(dp) :: fw_armour_voli
+  !! Inboard first wall armour volume [m^3]
+
+  real(dp) :: fw_armour_volo
+  !! Outboard first wall armour volume [m^3]
 
   integer :: iblanket
   !! switch for blanket model:
@@ -184,9 +205,15 @@ module fwbs_variables
 
   real(dp) :: psurffwi, psurffwo
   !! Surface heat flux on first wall [MW] (sum = pradfw)
-
+  
+  real(dp) :: volfwi
+  !! Inboard First wall volume [m3]
+  
+  real(dp) :: volfwo
+  !! Outboard First wall volume [m3]
+  
   real(dp) :: volfw
-  !! First wall volume [m3]
+  !! Inboard and Outboard First wall volume [m3]
 
   real(dp) :: fblss_ccfe, fblli2sio4, fbltibe12
   !! Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide
@@ -680,8 +707,13 @@ module fwbs_variables
     fwlife = 0.0D0
     fwmass = 0.0D0
     fw_armour_mass = 0.0D0
-    fw_armour_thickness = 0.005D0
-    fw_armour_vol = 0.0D0
+    fw_armour_massi = 0.0D0
+    fw_armour_masso = 0.0D0
+    fw_armour_thicknessi = 0.0D0
+    fw_armour_thicknesso = 0.0D0
+    fw_armour_vol = 0.0D0   
+    fw_armour_voli = 0.0D0
+    fw_armour_volo = 0.0D0
     iblanket = 1
     iblnkith = 1
     inuclear = 0
@@ -709,6 +741,8 @@ module fwbs_variables
     psurffwi = 0.0D0
     psurffwo = 0.0D0
     volfw = 0.0D0
+    volfwi = 0.0D0
+    volfwo = 0.0D0
     fblss_ccfe = 0.0D0
     fblli2sio4 = 0.0D0
     fbltibe12 = 0.0D0
