@@ -33,6 +33,7 @@ from process.fortran import (
 import process.superconductors as superconductors
 import process.physics_functions as physics_funcs
 from process.coolprop_interface import FluidProperties
+from process.physics import rether
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -4063,7 +4064,7 @@ class Stellarator:
 
         #  Calculate ion/electron equilibration power
 
-        physics_variables.piepv = self.physics.rether(
+        physics_variables.piepv = rether(
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.dene,
