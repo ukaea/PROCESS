@@ -134,7 +134,7 @@ class Build:
         build_variables.dh_tf_inner_bore = 2.0e0 * (
             physics_variables.rminor * physics_variables.kappa
             + build_variables.vgaptop
-            + build_variables.fwith # is this relevant for vertical build ??
+            + build_variables.fwith  # is this relevant for vertical build ??
             + build_variables.blnktth
             + build_variables.vvblgap
             + build_variables.shldtth
@@ -158,7 +158,10 @@ class Build:
                 + build_variables.shldtth
                 + build_variables.vvblgap
                 + build_variables.blnktth
-                + 0.5e0 * (build_variables.fwith + build_variables.fwoth) # is this relavent for a vertical build ?
+                + 0.5e0
+                * (
+                    build_variables.fwith + build_variables.fwoth
+                )  # is this relavent for a vertical build ?
                 + build_variables.vgaptop
                 + physics_variables.rminor * physics_variables.kappa
             )
@@ -1121,7 +1124,7 @@ class Build:
                         + build_variables.shldith
                         + build_variables.vvblgap
                         + build_variables.blnkith
-                        + build_variables.fwith # is this relavent for a vertical build
+                        + build_variables.fwith  # is this relavent for a vertical build
                         + 3.0e0 * build_variables.scrapli
                     )
                     + tfcoil_variables.drtop
@@ -1177,7 +1180,7 @@ class Build:
                 + build_variables.shldith
                 + build_variables.vvblgap
                 + build_variables.blnkith
-                + build_variables.fwith # is this relavent for the top ? check this ??
+                + build_variables.fwith  # is this relavent for the top ? check this ??
                 + 3.0e0 * build_variables.scrapli
             )
             + tfcoil_variables.drtop
@@ -1303,7 +1306,7 @@ class Build:
             build_variables.r_tf_outboard_mid,
         )
 
-        #  Calculate first wall area
+        #  Calculate first wall area  (and armour?? No)
         #  Old calculation... includes a mysterious factor 0.875
         # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.scrapli+build_variables.scraplo)) )
 
@@ -1313,7 +1316,10 @@ class Build:
             + build_variables.vgap
             + divertor_variables.divfix
             - build_variables.blnktth
-            - 0.5e0 * (build_variables.fwith + build_variables.fwoth) # fw_armour_thicknessi/o ??
+            - 0.5e0
+            * (
+                build_variables.fwith + build_variables.fwoth
+            )  # fw_armour_thickness i/o ??
         )
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
@@ -1764,7 +1770,7 @@ class Build:
                 self.mfile,
                 "Inboard armour_thickness (m)",
                 "(fw_armour_thicknessi)",
-                fwbs_variables.fw_armour_thicknessi
+                fwbs_variables.fw_armour_thicknessi,
             )
 
             radius = radius + build_variables.scrapli
@@ -2238,7 +2244,10 @@ class Build:
                     + build_variables.vvblgap
                     + build_variables.shldtth
                     + build_variables.blnktth
-                    + 0.5e0 * (build_variables.fwith + build_variables.fwoth) # fw_armour_thicknessi ??
+                    + 0.5e0
+                    * (
+                        build_variables.fwith + build_variables.fwoth
+                    )  # fw_armour_thicknessi ??
                     + build_variables.vgaptop
                     + physics_variables.rminor * physics_variables.kappa
                 )
@@ -2348,7 +2357,9 @@ class Build:
                 )
                 vbuild = vbuild - build_variables.blnktth
 
-                fwtth = 0.5e0 * (build_variables.fwith + build_variables.fwoth) # fw_armour_thicknessi ?
+                fwtth = 0.5e0 * (
+                    build_variables.fwith + build_variables.fwoth
+                )  # fw_armour_thicknessi ?
                 po.obuild(self.outfile, "Top first wall", fwtth, vbuild, "(fwtth)")
                 po.ovarre(
                     self.mfile,

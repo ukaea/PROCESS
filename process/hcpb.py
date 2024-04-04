@@ -264,8 +264,11 @@ class CCFE_HCPB:
         # Exponents (tonne/m2)
         # Blanket exponent (/1000 for kg -> tonnes)
         ccfe_hcpb_module.x_blanket = (
-            ccfe_hcpb_module.armour_density * 
-            (fwbs_variables.fw_armour_thicknessi + fwbs_variables.fw_armour_thicknesso)
+            ccfe_hcpb_module.armour_density
+            * (
+                fwbs_variables.fw_armour_thicknessi
+                + fwbs_variables.fw_armour_thicknesso
+            )
             / 2.0
             + ccfe_hcpb_module.fw_density
             * (build_variables.fwith + build_variables.fwoth)
