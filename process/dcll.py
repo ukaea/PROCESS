@@ -645,13 +645,15 @@ class DCLL:
 
         # Inboard First wall volume (m^3)
         fwbs_variables.volfwi = (
-            build_variables.fwareaib *  # Inboard first wall surface area (m2)
-            build_variables.fwith)       # Inboard first wall radial thickness (m2)
+            build_variables.fwareaib
+            * build_variables.fwith  # Inboard first wall surface area (m2)
+        )  # Inboard first wall radial thickness (m2)
 
         # Outboard First wall volume (m^3)
         fwbs_variables.volfwo = (
-            build_variables.fwareaob *  # Outboard first wall surface area (m2)
-            build_variables.fwoth)       # Outboard first wall radial thickness (m2)
+            build_variables.fwareaob
+            * build_variables.fwoth  # Outboard first wall surface area (m2)
+        )  # Outboard first wall radial thickness (m2)
 
         # Inboard and Outboard Total First wall volume (m^3)
         fwbs_variables.volfw = fwbs_variables.volfwi + fwbs_variables.volfwo
@@ -678,7 +680,9 @@ class DCLL:
         )
 
         # Inboard and Outboard Total armour volume (m^3)
-        fwbs_variables.fw_armour_vol = fwbs_variables.fw_armour_voli + fwbs_variables.fw_armour_volo
+        fwbs_variables.fw_armour_vol = (
+            fwbs_variables.fw_armour_voli + fwbs_variables.fw_armour_volo
+        )
 
         # Inboard First wall armour mass (kg)
         fwbs_variables.fw_armour_massi = (
@@ -691,8 +695,9 @@ class DCLL:
         )
 
         # Inboard and Outboard Total armour mass (kg)
-        fwbs_variables.fw_armour_mass = fwbs_variables.fw_armour_massi + fwbs_variables.fw_armour_masso
-
+        fwbs_variables.fw_armour_mass = (
+            fwbs_variables.fw_armour_massi + fwbs_variables.fw_armour_masso
+        )
 
         # Total mass of blanket
         fwbs_variables.whtblkt = (
@@ -709,46 +714,48 @@ class DCLL:
 
         # Total mass of inboard and outboard first wall, armour and blanket
         fwbs_variables.armour_fw_bl_mass = (
-            fwbs_variables.fw_armour_mass    # Inboard and Outboard Total armour mass (m^3)
-            + fwbs_variables.fwmass          # Inboard and Outboard First wall total mass, excluding armour (kg)
-            + fwbs_variables.whtblkt         # Total mass of blanket
+            fwbs_variables.fw_armour_mass  # Inboard and Outboard Total armour mass (m^3)
+            + fwbs_variables.fwmass  # Inboard and Outboard First wall total mass, excluding armour (kg)
+            + fwbs_variables.whtblkt  # Total mass of blanket
         )
 
-        #Mass of Inboard and Outboard Segments
+        # Mass of Inboard and Outboard Segments
         if fwbs_variables.iblnkith == 1:
             # Mass of Inboard segment
-            dcll_module.mass_segm_ib = (     # Total mass for an inboard reactor segment [kg]
-                fwbs_variables.whtblkt       # Total mass of blanket inboard and outboard ???
+            dcll_module.mass_segm_ib = (  # Total mass for an inboard reactor segment [kg]
+                fwbs_variables.whtblkt  # Total mass of blanket inboard and outboard ???
                 * (fwbs_variables.volblkti / fwbs_variables.volblkt)
-                + fwbs_variables.fwmassi      # Inboard First wall mass, excluding armour (kg) ?
+                + fwbs_variables.fwmassi  # Inboard First wall mass, excluding armour (kg) ?
                 * (
-                    build_variables.fwareaib # inboard first wall surface area (m2)
+                    build_variables.fwareaib  # inboard first wall surface area (m2)
                     * build_variables.fwith  # inboard first wall thickness
-                    / fwbs_variables.volfwi   # Inboard First wall volume
+                    / fwbs_variables.volfwi  # Inboard First wall volume
                 )
                 + fwbs_variables.fw_armour_massi  # Inboard armour mass (kg)
                 * (
                     (physics_variables.sarea - physics_variables.sareao)
-                    * fwbs_variables.fw_armour_thicknessi # Inboard armour thickness
-                    / fwbs_variables.fw_armour_voli       # Inboard armour volume
+                    * fwbs_variables.fw_armour_thicknessi  # Inboard armour thickness
+                    / fwbs_variables.fw_armour_voli  # Inboard armour volume
                 )
-            ) / fwbs_variables.nblktmodti                 # No of inboard blanket modules in toroidal direction
+            ) / fwbs_variables.nblktmodti  # No of inboard blanket modules in toroidal direction
 
-        dcll_module.mass_segm_ob = (          # Total mass for an outboard reactor segment [kg]
+        dcll_module.mass_segm_ob = (  # Total mass for an outboard reactor segment [kg]
             # Mass of Outboard segment
-            fwbs_variables.whtblkt            # Total mass of blanket inboard and outboard ???
+            fwbs_variables.whtblkt  # Total mass of blanket inboard and outboard ???
             * (fwbs_variables.volblkto / fwbs_variables.volblkt)
-            + fwbs_variables.fwmasso          # Outboard First wall mass, excluding armour (kg)
-            * (build_variables.fwareaob       # Outboard first wall surface area (m2)
-            * build_variables.fwoth           # Outboard first wall thickness
-            / fwbs_variables.volfwo)          # Outboard First wall volume
+            + fwbs_variables.fwmasso  # Outboard First wall mass, excluding armour (kg)
+            * (
+                build_variables.fwareaob  # Outboard first wall surface area (m2)
+                * build_variables.fwoth  # Outboard first wall thickness
+                / fwbs_variables.volfwo
+            )  # Outboard First wall volume
             + fwbs_variables.fw_armour_masso  # Outboard armour mass (kg)
             * (
                 physics_variables.sareao
-                * fwbs_variables.fw_armour_thicknesso # Outboard armour thickness
-                / fwbs_variables.fw_armour_volo       # Outboard armour volume
+                * fwbs_variables.fw_armour_thicknesso  # Outboard armour thickness
+                / fwbs_variables.fw_armour_volo  # Outboard armour volume
             )
-        ) / fwbs_variables.nblktmodto                 # No of outboard blanket modules in toroidal direction
+        ) / fwbs_variables.nblktmodto  # No of outboard blanket modules in toroidal direction
 
         # Total FW/Structure Coolant Mass
         dcll_module.mass_cool_blanket = (
