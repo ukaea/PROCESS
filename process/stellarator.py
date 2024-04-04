@@ -2344,6 +2344,7 @@ class Stellarator:
                 tfcoil_variables.t_crit_nbti,
                 tfcoil_variables.tcritsc,
                 tfcoil_variables.vftf,
+                tfcoil_variables.jwptf,
             )  # Get here a temperature margin of 1.5K.
 
         # The operation current density weighted with the global iop/icrit fraction
@@ -2955,9 +2956,10 @@ class Stellarator:
         t_crit_nbti,
         tcritsc,
         vftf,
+        jwp,
     ):
         strain = -0.005  # for now a small value
-        # fhe = vftf  # this is helium fraction in the superconductor (set it to the fixed global variable here)
+        fhe = vftf  # this is helium fraction in the superconductor (set it to the fixed global variable here)
 
         fcu = fcutfsu  # fcutfsu is a global variable. Is the copper fraction
         # of a cable conductor.
@@ -2966,22 +2968,23 @@ class Stellarator:
             bc20m = 32.97  # these are values taken from sctfcoil.f90
             tc0m = 16.06
 
-            #  jcritsc returned by itersc is the critical current density in the
+            #  j_crit_sc returned by itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
             if bmax > bc20m:
-                jcritsc = 1.0e-9  # Set to a small nonzero value
+                j_crit_sc = 1.0e-9  # Set to a small nonzero value
             else:
                 (
-                    jcritsc,
+                    j_crit_sc,
                     bcrit,
                     tcrit,
                 ) = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
 
-            jcritstr = jcritsc * (1.0 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0 - fcu) * (1.0e0 - fhe)
 
             # This is needed right now. Can we change it later?
-            jcritsc = max(1.0e-9, jcritsc)
-            jcritstr = max(1.0e-9, jcritstr)
+            j_crit_sc = max(1.0e-9, j_crit_sc)
+            j_crit_cable = max(1.0e-9, j_crit_cable)
 
         elif (
             i_tf_sc_mat == 2
@@ -2989,18 +2992,18 @@ class Stellarator:
             #  Current density in a strand of Bi-2212 conductor
             #  N.B. jcrit returned by bi2212 is the critical current density
             #  in the strand, not just the superconducting portion.
-            #  The parameterization for jcritstr assumes a particular strand
+            #  The parameterization for j_crit_cable assumes a particular strand
             #  composition that does not require a user-defined copper fraction,
             #  so this is irrelevant in this model
 
-            # jstrand = jwp / (1 - fhe)
-            jstrand = 0  # as far as I can tell this will always be 0
+            jstrand = jwp / (1 - fhe)
+            #jstrand = 0  # as far as I can tell this will always be 0
             # because jwp was never set in fortran (so 0)
 
-            jcritstr, tmarg = superconductors.bi2212(
+            j_crit_cable, tmarg = superconductors.bi2212(
                 bmax, jstrand, thelium, fhts
-            )  # bi2212 outputs jcritstr
-            jcritsc = jcritstr / (1 - fcu)
+            )  # bi2212 outputs j_crit_cable
+            j_crit_sc = j_crit_cable / (1 - fcu)
             tcrit = thelium + tmarg
         elif i_tf_sc_mat == 3:  # NbTi data
             bc20m = 15.0
@@ -3008,9 +3011,9 @@ class Stellarator:
             c0 = 1.0
 
             if bmax > bc20m:
-                jcritsc = 1.0e-9  # Set to a small nonzero value
+                j_crit_sc = 1.0e-9  # Set to a small nonzero value
             else:
-                jcritsc, tcrit = superconductors.jcrit_nbti(
+                j_crit_sc, tcrit = superconductors.jcrit_nbti(
                     thelium,
                     bmax,
                     c0,
@@ -3019,60 +3022,66 @@ class Stellarator:
                 )
                 # I dont need tcrit here so dont use it.
 
-            jcritstr = jcritsc * (1 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
 
             # This is needed right now. Can we change it later?
-            jcritsc = max(1.0e-9, jcritsc)
-            jcritstr = max(1.0e-9, jcritstr)
+            j_crit_sc = max(1.0e-9, j_crit_sc)
+            j_crit_cable = max(1.0e-9, j_crit_cable)
         elif i_tf_sc_mat == 4:  # As (1), but user-defined parameters
             bc20m = bcritsc
             tc0m = tcritsc
-            jcritsc, bcrit, tcrit = superconductors.itersc(
+            j_crit_sc, bcrit, tcrit = superconductors.itersc(
                 thelium, bmax, strain, bc20m, tc0m
             )
-            jcritstr = jcritsc * (1 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
         elif i_tf_sc_mat == 5:  # WST Nb3Sn parameterisation
             bc20m = 32.97
             tc0m = 16.06
 
-            #  jcritsc returned by itersc is the critical current density in the
+            #  j_crit_sc returned by itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
 
-            jcritsc, bcrit, tcrit = superconductors.wstsc(
+            j_crit_sc, bcrit, tcrit = superconductors.wstsc(
                 thelium,
                 bmax,
                 strain,
                 bc20m,
                 tc0m,
             )
-            jcritstr = jcritsc * (1 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
         elif (
             i_tf_sc_mat == 6
         ):  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
-            jcritsc, validity = superconductors.jcrit_rebco(thelium, bmax, 0)
-            jcritsc = max(1.0e-9, jcritsc)
-            jcritstr = jcritsc * (1 - fcu)
+            j_crit_sc, validity = superconductors.jcrit_rebco(thelium, bmax, 0)
+            j_crit_sc = max(1.0e-9, j_crit_sc)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
 
         elif i_tf_sc_mat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = b_crit_upper_nbti
             tc0m = t_crit_nbti
-            jcritsc, bcrit, tcrit = superconductors.gl_nbti(
+            j_crit_sc, bcrit, tcrit = superconductors.gl_nbti(
                 thelium, bmax, strain, bc20m, tc0m
             )
-            jcritstr = jcritsc * (1 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
         elif i_tf_sc_mat == 8:
             bc20m = 429
             tc0m = 185
-            jcritsc, bcrit, tcrit = superconductors.gl_rebco(
+            j_crit_sc, bcrit, tcrit = superconductors.gl_rebco(
                 thelium, bmax, strain, bc20m, tc0m
             )
             # A0 calculated for tape cross section already
-            jcritstr = jcritsc * (1 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
         else:
             error_handling.idiags[0] = i_tf_sc_mat
             error_handling.report_error(156)
 
-        return jcritsc * 1e-6
+        return j_crit_sc * 1e-6
 
     def bmax_from_awp(self, wp_width_radial, current, n_tf, r_coil_major, r_coil_minor):
         """Returns a fitted function for bmax for stellarators

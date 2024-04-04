@@ -118,9 +118,9 @@ class Sctfcoil:
         tmarg : output real : Temperature margin (K)
         """
 
-        jcritsc: float = 0.0
-        #  Find critical current density in superconducting strand, jcritstr
-        jcritsc, _ = superconductors.jcrit_rebco(thelium, bmax)
+        j_crit_sc: float = 0.0
+        #  Find critical current density in superconducting cable, j_crit_cable
+        j_crit_sc, _ = superconductors.jcrit_rebco(thelium, bmax)
         # tfcoil_variables.acstf : Cable space - inside area (m2)
         # Set new rebco_variables.croco_od
         # allowing for scaling of rebco_variables.croco_od
@@ -160,7 +160,7 @@ class Sctfcoil:
             sctfcoil_module.conductor_rebco_fraction,
             sctfcoil_module.conductor_critical_current,
         ) = superconductors.croco(
-            jcritsc,
+            j_crit_sc,
             sctfcoil_module.conductor_area,
             rebco_variables.croco_od,
             rebco_variables.croco_thick,
@@ -169,7 +169,7 @@ class Sctfcoil:
         rebco_variables.coppera_m2 = iop / sctfcoil_module.conductor_copper_area
 
         icrit = sctfcoil_module.conductor_critical_current
-        jcritstr = (
+        j_crit_cable = (
             sctfcoil_module.croco_strand_critical_current
             / sctfcoil_module.croco_strand_area
         )
@@ -185,7 +185,7 @@ class Sctfcoil:
         # which should be equal to jcrit(thelium+tmarg)
 
         #  when we have found the desired value of tmarg
-        jsc = iooic * jcritsc
+        jsc = iooic * j_crit_sc
 
         # Temperature margin
         current_sharing_t = superconductors.current_sharing_rebco(bmax, jsc)
@@ -485,15 +485,15 @@ class Sctfcoil:
             po.ovarre(
                 self.outfile,
                 "Critical current density in superconductor (A/m2)",
-                "(jcritsc)",
-                jcritsc,
+                "(j_crit_sc)",
+                j_crit_sc,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Critical current density in strand (A/m2)",
-                "(jcritstr)",
-                jcritstr,
+                "Critical current density in cable (A/m2)",
+                "(j_crit_cable)",
+                j_crit_cable,
                 "OP ",
             )
             po.ovarre(
@@ -612,6 +612,14 @@ class Sctfcoil:
         <P>The routine calculates the critical current density (winding pack)
         and also the protection information (for a quench).
         NOT used for the Croco conductor
+
+        N.B. critical current density for a super conductor (j_crit_sc) 
+        is for the superconducting strands/tape, not including copper. 
+        Critical current density for a cable (j_crit_cable) acounts for 
+        both the fraction of the cable taken up by helium coolant channels, 
+        and the cable conductor copper fraction - i.e., the copper in the 
+        superconducting strands AND any addtional copper, such as REBCO 
+        tape support.
         """
         tdump = tdmptf
 
@@ -638,8 +646,8 @@ class Sctfcoil:
         else:
             strain = tfcoil_variables.str_wp
 
-        #  Find critical current density in superconducting strand, jcritstr
-
+        # Find critical current density in the superconducter (j_crit_sc) 
+        # and the superconducting cable (j_crit_cable)
         if isumat == 1:  # ITER Nb3Sn critical surface parameterization
             bc20m = 32.97e0
             tc0m = 16.06e0
@@ -649,35 +657,37 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.5e-2
 
-            #  jcritsc returned by superconductors.itersc is the critical current density in the
+            #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
-            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
-            icrit = jcritstr * acs * fcond
+            icrit = j_crit_cable * acs
 
         elif isumat == 2:  # Bi-2212 high temperature superconductor parameterization
             #  Current density in a strand of Bi-2212 conductor
             #  N.B. jcrit returned by superconductors.bi2212 is the critical current density
             #  in the strand, not just the superconducting portion.
-            #  The parameterization for jcritstr assumes a particular strand
+            #  The parameterization for j_crit_cable assumes a particular strand
             #  composition that does not require a user-defined copper fraction,
             #  so this is irrelevant in this model
             jstrand = jwp * aturn / (acs * fcond)
 
-            jcritstr, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
-            jcritsc = jcritstr / (1.0e0 - fcu)
+            j_crit_cable, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
+            j_crit_sc = j_crit_cable / (1.0e0 - fcu)
             #  Critical current in cable
-            icrit = jcritstr * acs * fcond
+            icrit = j_crit_cable * acs * fcond
 
         elif isumat == 3:  # NbTi data
             bc20m = 15.0e0
             tc0m = 9.3e0
             c0 = 1.0e10
-            jcritsc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
-            icrit = jcritstr * acs * fcond
+            icrit = j_crit_cable * acs
 
         elif isumat == 4:  # ITER Nb3Sn parameterization, but user-defined parameters
             bc20m = bcritsc
@@ -688,10 +698,11 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.5e-2
 
-            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
-            icrit = jcritstr * acs * fcond
+            icrit = j_crit_cable * acs
 
         elif isumat == 5:  # WST Nb3Sn parameterisation
             bc20m = 32.97e0
@@ -702,12 +713,13 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.5e-2
 
-            #  jcritsc returned by superconductors.itersc is the critical current density in the
+            #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
-            jcritsc, _, _ = superconductors.wstsc(thelium, bmax, strain, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _, _ = superconductors.wstsc(thelium, bmax, strain, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
-            icrit = jcritstr * acs * fcond
+            icrit = j_crit_cable * acs
 
         elif isumat == 6:  # "REBCO" 2nd generation HTS superconductor in CrCo strand
             raise ValueError(
@@ -717,10 +729,11 @@ class Sctfcoil:
         elif isumat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = tfcoil_variables.b_crit_upper_nbti
             tc0m = tfcoil_variables.t_crit_nbti
-            jcritsc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
-            icrit = jcritstr * acs * fcond
+            icrit = j_crit_cable * acs
 
         elif isumat == 8:  # Durham Ginzburg-Landau critical surface model for REBCO
             bc20m = 430
@@ -731,11 +744,12 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.7e-2
 
-            jcritsc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
+            j_crit_sc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
             # A0 calculated for tape cross section already
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable (copper added at this stage in HTS cables)
-            icrit = jcritstr * acs * fcond
+            icrit = j_crit_cable * acs
 
         elif (
             isumat == 9
@@ -751,13 +765,13 @@ class Sctfcoil:
             # 'high current density' as per parameterisation described in Wolf,
             #  and based on Hazelton experimental data and Zhai conceptual model;
             #  see subroutine for full references
-            jcritsc, _, _ = superconductors.hijc_rebco(
+            j_crit_sc, _, _ = superconductors.hijc_rebco(
                 thelium, bmax, strain, bc20m, tc0m
             )
-
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable (copper added at this stage in HTS cables)
-            icrit = jcritstr * acs * fcond
+            icrit = j_crit_cable * acs
 
         else:
             error_handling.idiags[0] = isumat
@@ -772,14 +786,14 @@ class Sctfcoil:
         jwdgop = iop / aturn
         #  Actual current density in superconductor, which should be equal to jcrit(thelium+tmarg)
         #  when we have found the desired value of tmarg
-        jsc = iooic * jcritsc
+        jsc = iooic * j_crit_sc
 
         if iooic <= 0e0:
             logger.warning(
                 f"""Negative Iop/Icrit for TF coil
             jsc: {jsc}
             iooic: {iooic}
-            jcritsc: {jcritsc}
+            j_crit_sc: {j_crit_sc}
             Check conductor dimensions. Cable space area acs likely gone negative. acs: {acs}
             This is likely because t_cable_radial or t_cable_toroidal has gone negative:
             t_cable_radial: {sctfcoil_module.t_cable_radial}
@@ -1022,15 +1036,15 @@ class Sctfcoil:
             po.ovarre(
                 self.outfile,
                 "Critical current density in superconductor (A/m2)",
-                "(jcritsc)",
-                jcritsc,
+                "(j_crit_sc)",
+                j_crit_sc,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Critical current density in strand (A/m2)",
-                "(jcritstr)",
-                jcritstr,
+                "Critical current density in cable (A/m2)",
+                "(j_crit_cable)",
+                j_crit_cable,
                 "OP ",
             )
             po.ovarre(

@@ -1182,7 +1182,7 @@ class PFCoil:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
-            (jcritwp, pfv.jstrandoh_eof, pfv.jscoh_eof, tmarg1,) = self.superconpf(
+            (jcritwp, pfv.jcableoh_eof, pfv.jscoh_eof, tmarg1,) = self.superconpf(
                 pfv.bmaxoh,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1199,7 +1199,7 @@ class PFCoil:
 
             # Allowable coil overall current density at BOP
 
-            (jcritwp, pfv.jstrandoh_bop, pfv.jscoh_bop, tmarg2,) = self.superconpf(
+            (jcritwp, pfv.jcableoh_bop, pfv.jscoh_bop, tmarg2,) = self.superconpf(
                 pfv.bmaxoh0,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1916,9 +1916,9 @@ class PFCoil:
                 )
                 op.ovarre(
                     self.outfile,
-                    "Critical strand current density at BOP (A/m2)",
-                    "(jstrandoh_bop)",
-                    pfv.jstrandoh_bop,
+                    "Critical cable current density at BOP (A/m2)",
+                    "(jcableoh_bop)",
+                    pfv.jcableoh_bop,
                     "OP ",
                 )
                 op.ovarre(
@@ -1952,9 +1952,9 @@ class PFCoil:
                 )
                 op.ovarre(
                     self.outfile,
-                    "Critical strand current density at EOF (A/m2)",
-                    "(jstrandoh_eof)",
-                    pfv.jstrandoh_eof,
+                    "Critical cable current density at EOF (A/m2)",
+                    "(jcableoh_eof)",
+                    pfv.jcableoh_eof,
                     "OP ",
                 )
                 op.ovarre(
@@ -2720,11 +2720,19 @@ class PFCoil:
         It is based on the TF coil version, supercon.
         author: P J Knight, CCFE, Culham Science Centre
 
+        N.B. critical current density for a super conductor (j_crit_sc) 
+        is for the superconducting strands/tape, not including copper. 
+        Critical current density for a cable (j_crit_cable) acounts for 
+        both the fraction of the cable taken up by helium coolant channels, 
+        and the cable conductor copper fraction - i.e., the copper in the 
+        superconducting strands AND any addtional copper, such as REBCO 
+        tape support.
+
         :param bmax: peak field at conductor (T)
         :type bmax: float
         :param fhe: fraction of cable space that is for He cooling
         :type fhe: float
-        :param fcu: fraction of strand that is copper
+        :param fcu: fraction of cable conductor that is copper
         :type fcu: float
         :param jwp: actual winding pack current density (A/m2)
         :type jwp: float
@@ -2747,9 +2755,9 @@ class PFCoil:
         :type bcritsc: float
         :param tcritsc: Critical temperature at zero field and strain (K) (isumat=4 only)
         :type tcritsc: float
-        :return: Critical winding pack current density (A/m2) (jcritwp),
-        Critical strand current density (A/m2) (jcritstr)
-        Critical superconductor current density (A/m2) (jcritsc)
+        :return: Critical winding pack current density (A/m2) (j_crit_wp),
+        Critical cable current density (A/m2) (j_crit_cable)
+        Superconducting strand non-copper critical current density (A/m2) (j_crit_sc)
         Temperature margin (K) (tmarg)
         :rtype: tuple[float, float, float, float]
         """
@@ -2760,11 +2768,12 @@ class PFCoil:
             bc20m = 32.97e0
             tc0m = 16.06e0
 
-            # jcritsc returned by superconductors.itersc is the critical current density in the
+            # j_crit_sc returned by superconductors.itersc is the critical current density in the
             # superconductor - not the whole strand, which contains copper
 
-            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
         elif isumat == 2:
             # Bi-2212 high temperature superconductor parameterization
@@ -2772,45 +2781,48 @@ class PFCoil:
             # Current density in a strand of Bi-2212 conductor
             # N.B. jcrit returned by superconductors.bi2212 is the critical current density
             # in the strand, not just the superconducting portion.
-            # The parameterization for jcritstr assumes a particular strand
+            # The parameterization for j_crit_cable assumes a particular strand
             # composition that does not require a user-defined copper fraction,
             # so this is irrelevant in this model
 
-            jstrand = jwp / (1.0e0 - fhe)
-
-            jcritstr, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
-            jcritsc = jcritstr / (1.0e0 - fcu)
+            jstrand = jwp / (1.0e0 - fhe) # jwp / conductor fraction of cable
+            j_crit_cable, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
+            j_crit_sc = j_crit_cable / (1.0e0 - fcu) # j_crit_cable / non-copper fraction of conductor
 
         elif isumat == 3:
             # NbTi data
             bc20m = 15.0e0
             tc0m = 9.3e0
             c0 = 1.0e10
-            jcritsc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
         elif isumat == 4:
             # As (1), but user-defined parameters
             bc20m = bcritsc
             tc0m = tcritsc
-            jcritsc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
         elif isumat == 5:
             # WST Nb3Sn parameterisation
             bc20m = 32.97e0
             tc0m = 16.06e0
 
-            # jcritsc returned by superconductors.itersc is the critical current density in the
+            # j_crit_sc returned by superconductors.itersc is the critical current density in the
             # superconductor - not the whole strand, which contains copper
 
-            jcritsc, _, _ = superconductors.wstsc(thelium, bmax, strain, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _, _ = superconductors.wstsc(thelium, bmax, strain, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
         elif isumat == 6:
             # "REBCO" 2nd generation HTS superconductor in CrCo strand
-            jcritsc, _ = superconductors.jcrit_rebco(thelium, bmax)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _ = superconductors.jcrit_rebco(thelium, bmax)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
             # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
@@ -2823,8 +2835,9 @@ class PFCoil:
             # Durham Ginzburg-Landau critical surface model for Nb-Ti
             bc20m = tfv.b_crit_upper_nbti
             tc0m = tfv.t_crit_nbti
-            jcritsc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            j_crit_sc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
             # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
@@ -2833,9 +2846,10 @@ class PFCoil:
             # Durham Ginzburg-Landau critical surface model for REBCO
             bc20m = 429e0
             tc0m = 185e0
-            jcritsc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
+            j_crit_sc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
             # A0 calculated for tape cross section already
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
             # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
@@ -2846,11 +2860,12 @@ class PFCoil:
             # Hazelton experimental data + Zhai conceptual model for REBCO
             bc20m = 138
             tc0m = 92
-            jcritsc, _, _ = superconductors.hijc_rebco(
+            j_crit_sc, _, _ = superconductors.hijc_rebco(
                 thelium, bmax, strain, bc20m, tc0m
             )
             # A0 calculated for tape cross section already
-            jcritstr = jcritsc * (1.0e0 - fcu)
+            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
             # ioheof = bv.hmax * pfv.ohhghf * bv.ohcth * 2.0 * pfv.coheof
@@ -2873,9 +2888,9 @@ class PFCoil:
                 )
 
         # Critical current density in winding pack
-        jcritwp = jcritstr * (1.0e0 - fhe)
-        jstrand = jwp / (1.0e0 - fhe)
-        jsc = jstrand / (1.0e0 - fcu)
+        jcritwp = j_crit_cable 
+        jstrand = jwp / (1.0e0 - fhe) # jwp / conductor fraction of cable
+        jsc = jstrand / (1.0e0 - fcu) # jstrand / non-copper fraction of conductor
 
         # Temperature margin (already calculated in superconductors.bi2212 for isumat=2)
 
@@ -2910,7 +2925,7 @@ class PFCoil:
             )
             tmarg = t_zero_margin - thelium
 
-        return jcritwp, jcritstr, jcritsc, tmarg
+        return jcritwp, j_crit_cable, j_crit_sc, tmarg
 
 
 @numba.njit(cache=True)
