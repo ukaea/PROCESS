@@ -47,9 +47,11 @@ def get_variables_and_modules(ford_project: Path):
                     var.name.lower(),
                     mod.name.lower(),
                     var.doc,
-                    VariableTypes.PARAMETER
-                    if var.parameter
-                    else VariableTypes.VARIABLE,
+                    (
+                        VariableTypes.PARAMETER
+                        if var.parameter
+                        else VariableTypes.VARIABLE
+                    ),
                     var.vartype,
                     var.initial,
                     permission == "private",
@@ -122,6 +124,7 @@ if __name__ == "__main__":
     vardes_template = env.get_template("vardes.jinja2")
 
     with open(
-        Path(__file__).resolve().parent / "../documentation/proc-pages/vardes.md", "w"
+        Path(__file__).resolve().parent / "../documentation/proc-pages/io/vardes.md",
+        "w",
     ) as f:
         f.write(vardes_template.render(mods=mods))

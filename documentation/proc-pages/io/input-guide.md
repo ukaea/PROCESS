@@ -51,7 +51,7 @@ which are discussed below.
 !!! Info "Constraints"  
     A full list of constraints is given on the variable description page in the row labelled 
     `lablcc` [here](../vardes/#numerics).  
-    See [solver](../solver/solver-guide) page for more info
+    See [solver](../../solver/solver-guide) page for more info
 
 ## Iteration Variables
 
@@ -84,7 +84,7 @@ the default, if no value is specified), will be used as the starting value.
 !!! Note "Iteration Variables"  
     A full list of iteration variables is given on the variable description page in the row labelled 
     `lablxc` [here](../vardes/#numerics).  
-    (See [solver](../solver/solver-guide) page for more info)
+    (See [solver](../../solver/solver-guide) page for more info)
 
 ## Bounds
 

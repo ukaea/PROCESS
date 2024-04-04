@@ -22,7 +22,7 @@ nav:
           - Output: io/output-guide.md
           - Python Libraries: io/python-lib-guide.md
           - Utilities: io/utilities.md
-          - Variable Descriptions: vardes.md
+          - Variable Descriptions: io/vardes.md
   - Development:
       - Git:
           - Usage: development/git-usage.md
