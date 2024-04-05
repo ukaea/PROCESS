@@ -2015,7 +2015,7 @@ class Physics:
         p0,
         pperim,
         q0,
-        qpsi,
+        q95,
         rli,
         rmajor,
         rminor,
@@ -2037,6 +2037,8 @@ class Physics:
         5 = Todd empirical scaling I
         6 = Todd empirical scaling II
         7 = Connor-Hastie model
+        8 = Sauter scaling (allowing negative triangularity) Issue #392
+            'Geometric formulas for system codes including the effect of negative triangularity'
         iprofile : input integer : switch for current profile consistency
         0 = use input alphaj, rli
         1 = make these consistent with q, q0
@@ -2045,7 +2047,7 @@ class Physics:
         p0       : input real :  central plasma pressure (Pa)
         pperim   : input real :  plasma perimeter length (m)
         q0       : input real :  plasma safety factor on axis
-        qpsi     : input real :  plasma edge safety factor (= q-bar for icurr=2)
+        q95      : input real :  plasma safety factor at 95% flux (= q-bar for icurr=2)
         rli      : input/output real : plasma normalised internal inductance
         rmajor   : input real :  major radius (m)
         rminor   : input real :  minor radius (m)
@@ -2055,11 +2057,9 @@ class Physics:
         bp       : output real : poloidal field (T)
         qstar    : output real : equivalent cylindrical safety factor (shaped)
         plascur  : output real : plasma current (A)
-        This routine performs the calculation of the
-        plasma current, with a choice of formula for the edge
-        safety factor. It will also make the current profile parameters
+        This routine calculates the plasma current based on the edge
+        safety factor q95. It will also make the current profile parameters
         consistent with the q-profile if required.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
         unpublished internal Oak Ridge document
         Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
@@ -2082,7 +2082,7 @@ class Physics:
         # Calculate the function Fq that scales the edge q from the
         # circular cross-section cylindrical case
 
-        # First check for negative triangularity using unsuitable current scaling
+        # Only the Sauter scaling (icurr=8) is suitable for negative triangularity:
 
         if icurr != 8 and triang < 0.0:
             raise ValueError(
@@ -2092,7 +2092,7 @@ class Physics:
         if icurr == 1:  # Peng analytical fit
             fq = (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
         elif icurr == 2:  # Peng scaling for double null divertor; TARTs [STAR Code]
-            curhat = 1.0e6 * plasc(qpsi, asp, eps, rminor, bt, kappa, triang) / bt
+            plascur = 1.0e6 * plasc(q95, asp, eps, rminor, bt, kappa, triang)
         elif icurr == 3:  # Simple ITER scaling (simply the cylindrical case)
             fq = 1.0
         elif icurr == 4:  # ITER formula (IPDG89)
@@ -2130,7 +2130,8 @@ class Physics:
             w07 = 1.0  # zero squareness - can be modified later if required
 
             fq = (
-                (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
+                (4.1e6 / 5.0e6)
+                * (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
                 * (1.0 + 0.09 * triang + 0.16 * triang**2)
                 * (1.0 + 0.45 * triang * eps)
                 / (1.0 - 0.74 * eps)
@@ -2141,26 +2142,23 @@ class Physics:
         else:
             raise ValueError(f"Invalid value {icurr=}")
 
-        if icurr == 8:
-            curhat = 4.1e6 * rminor**2 / (rmajor * qpsi) * fq
-        elif icurr != 2:
-            curhat = 5.0e6 * rminor**2 / (rmajor * qpsi) * fq
+        if icurr != 2:
+            plascur = 5.0e6 * rminor**2 / (rmajor * q95) * fq * bt
         # == 2 case covered above
 
         qstar = (
             5.0e6
             * rminor**2
-            / (rmajor * curhat)
+            / (rmajor * plascur / bt)
             * 0.5
             * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
         )
 
-        plascur = curhat * bt
         physics_variables.normalised_total_beta = (
             1.0e8 * physics_variables.beta * rminor * bt / plascur
         )
         bp = bpol(
-            icurr, plascur, qpsi, asp, eps, bt, kappa, triang, pperim, constants.rmu0
+            icurr, plascur, q95, asp, eps, bt, kappa, triang, pperim, constants.rmu0
         )
 
         # Ensure current profile consistency, if required
