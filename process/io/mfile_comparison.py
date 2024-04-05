@@ -325,7 +325,6 @@ def main(arg):
 
         values = numpy.zeros(n)
 
-
         if v not in get_dicts()["DICT_VAR_TYPE"].keys():
             try:
                 eval(mfile_list[0].data[v].get_scan(-1))
