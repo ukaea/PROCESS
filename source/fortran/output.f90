@@ -485,7 +485,11 @@ contains
     call underscore(dum20)
     write(mfile,10) dum72, dum20, value, flag
 
-10  format(1x,a,t75,a,t110,1pe11.4," ",a,t10)
+  ! MFILE.DAT format
+  ! Machine epsilon for double ~2.22e-16, hence require 17 sig figs in significand
+  ! for full precision of a double float
+10  format(1x,a,t75,a,t110,ES23.16e2," ",a,t10)
+  ! OUT.DAT format
 20  format(1x,a,t75,a,t100,1pe10.3, t112, a)
 
   end subroutine ovarre
