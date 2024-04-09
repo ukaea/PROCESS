@@ -129,8 +129,6 @@ fiooic = 0.65
 *--------------------------*
 icc = 34
 ixc = 51 * fvdump
-ixc = 52 * vdalw [kV]
-boundu(52) = 10.0
 fvdump = 1.0
 vdalw = 10.0
 

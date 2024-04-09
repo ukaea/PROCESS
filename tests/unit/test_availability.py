@@ -1,4 +1,5 @@
 """Unit tests for availability.f90."""
+
 from process import fortran
 from process.availability import Availability
 from process.fortran import cost_variables as cv
@@ -7,6 +8,8 @@ from process.fortran import tfcoil_variables as tfv
 from process.fortran import constraint_variables as ctv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import times_variables as tv
+from process.fortran import ife_variables as ifev
+from process.fortran import divertor_variables as dv
 import pytest
 from pytest import approx
 
@@ -19,6 +22,89 @@ def availability():
     :type availability: process.availability.Availability
     """
     return Availability()
+
+
+@pytest.mark.parametrize(
+    "fwlife, ibkt_life, bktlife_exp_param",
+    ((0.0000001, 0, 0.5), (0.0000001, 1, 2.5), (1.0, 0, 0.5), (1.0, 1, 1.25)),
+)
+def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param):
+    """Test avail for iavail = 0
+
+    :param monkeypatch: mocking fixture
+    :type monkeypatch: MonkeyPatch
+    :param availability: fixture containing an initialised `Availability` object
+    :type availability: tests.unit.test_availability.availability (functional fixture)
+    """
+
+    # Mock module vars
+    monkeypatch.setattr(ifev, "ife", 0)
+    monkeypatch.setattr(pv, "powfmw", 4.0e3)
+    monkeypatch.setattr(fwbsv, "fwlife", fwlife)
+    monkeypatch.setattr(cv, "ibkt_life", ibkt_life)
+    monkeypatch.setattr(cv, "abktflnc", 4.0)
+    monkeypatch.setattr(pv, "wallmw", 10.0)
+    monkeypatch.setattr(cv, "tlife", 30.0)
+    monkeypatch.setattr(cv, "life_dpa", 40.0)
+    monkeypatch.setattr(cv, "adivflnc", 8.0)
+    monkeypatch.setattr(dv, "hldiv", 10.0)
+    monkeypatch.setattr(tv, "tcycle", 5.0)
+    monkeypatch.setattr(cv, "iavail", 0)
+    monkeypatch.setattr(cv, "cfactr", 0.8)
+    monkeypatch.setattr(tv, "tburn", 500.0)
+    monkeypatch.setattr(pv, "itart", 1)
+
+    availability.avail(output=False)
+    cpfact_obs = cv.cpfact
+    cpfact_exp = 80.0
+    assert pytest.approx(cpfact_obs) == cpfact_exp
+
+    bktlife_obs = fwbsv.bktlife
+    bktlife_exp = bktlife_exp_param
+    assert pytest.approx(bktlife_obs) == bktlife_exp
+
+    divlife_obs = cv.divlife
+    divlife_exp = 1.0
+    assert pytest.approx(divlife_obs) == divlife_exp
+
+    cplife_obs = cv.cplife
+    cplife_exp = 30.0
+    assert pytest.approx(cplife_obs) == cplife_exp
+
+
+def test_avail_1(monkeypatch, availability):
+    """Test avail for iavail = 1
+
+    :param monkeypatch: mocking fixture
+    :type monkeypatch: MonkeyPatch
+    :param availability: fixture containing an initialised `Availability` object
+    :type availability: tests.unit.test_availability.availability (functional fixture)
+    """
+    # Initialise fortran variables to keep test isolated from others
+    fortran.init_module.init_all_module_vars()
+
+    # Mock module vars
+    monkeypatch.setattr(cv, "iavail", 1)
+    monkeypatch.setattr(cv, "divlife", 1.0)
+    monkeypatch.setattr(fwbsv, "bktlife", 7.0)
+    monkeypatch.setattr(cv, "tdivrepl", 0.1)
+    monkeypatch.setattr(cv, "tbktrepl", 0.2)
+    monkeypatch.setattr(cv, "tcomrepl", 0.3)
+    monkeypatch.setattr(cv, "uubop", 0.4)
+    monkeypatch.setattr(cv, "uucd", 0.5)
+    monkeypatch.setattr(cv, "uudiv", 0.6)
+    monkeypatch.setattr(cv, "uufuel", 0.7)
+    monkeypatch.setattr(cv, "uufw", 0.8)
+    monkeypatch.setattr(cv, "uumag", 0.9)
+    monkeypatch.setattr(cv, "uuves", 0.11)
+
+    availability.avail(output=False)
+    cfactr_obs = cv.cfactr
+    cfactr_exp = 0.0006344554455445239
+    assert pytest.approx(cfactr_exp) == cfactr_obs
+
+    # Initialise fortran variables again to reset for other tests
+    fortran.init_module.init_all_module_vars()
 
 
 def test_calc_u_unplanned_hcd(availability):

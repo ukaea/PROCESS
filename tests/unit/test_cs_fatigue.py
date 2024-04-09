@@ -46,7 +46,7 @@ class NcycleParam(NamedTuple):
             t_structural_vertical=0.0063104538380405924,
             t_structural_radial=0.0063104538380405924,
             t_crack_radial=0.0026699999999999996,
-            expected_n_cycle=985.2543993462306,
+            expected_n_cycle=1113.5875631615095,
             expected_t_crack_radial=0.0026699999999999996,
         ),
     ),

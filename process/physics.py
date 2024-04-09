@@ -84,10 +84,8 @@ def nui(j, zmain, ni, tempi, amain):
 
 
 @nb.jit(nopython=True, cache=True)
-def _plascar_bpol(aspect, kappa, delta):
+def _plascar_bpol(aspect, eps, kappa, delta):
     # Original coding, only suitable for TARTs [STAR Code]
-
-    eps = 1.0 / aspect
 
     c1 = kappa**2 / (1.0 + delta) + delta
     c2 = kappa**2 / (1.0 - delta) - delta
@@ -117,7 +115,7 @@ def _plascar_bpol(aspect, kappa, delta):
 
 
 @nb.jit(nopython=True, cache=True)
-def bpol(icurr, ip, qbar, aspect, bt, kappa, delta, perim, rmu0):
+def bpol(icurr, ip, qbar, aspect, eps, bt, kappa, delta, perim, rmu0):
     """Function to calculate poloidal field
     author: J Galambos, FEDC/ORNL
     author: P J Knight, CCFE, Culham Science Centre
@@ -141,13 +139,13 @@ def bpol(icurr, ip, qbar, aspect, bt, kappa, delta, perim, rmu0):
     if icurr != 2:
         return rmu0 * ip / perim
 
-    ff1, ff2, _, _ = _plascar_bpol(aspect, kappa, delta)
+    ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
 
     return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
 @nb.jit(nopython=True, cache=True)
-def plasc(qbar, aspect, rminor, bt, kappa, delta):
+def plasc(qbar, aspect, eps, rminor, bt, kappa, delta):
     """Function to calculate plasma current (Peng scaling)
     author: J Galambos, FEDC/ORNL
     author: P J Knight, CCFE, Culham Science Centre
@@ -167,7 +165,7 @@ def plasc(qbar, aspect, rminor, bt, kappa, delta):
     Fusion Technology, 21, 1729
     """
 
-    ff1, ff2, d1, d2 = _plascar_bpol(aspect, kappa, delta)
+    ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
 
     e1 = 2.0 * kappa / (d1 * (1.0 + delta))
     e2 = 2.0 * kappa / (d2 * (1.0 - delta))
@@ -2094,7 +2092,7 @@ class Physics:
         if icurr == 1:  # Peng analytical fit
             fq = (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
         elif icurr == 2:  # Peng scaling for double null divertor; TARTs [STAR Code]
-            curhat = 1.0e6 * plasc(qpsi, asp, rminor, bt, kappa, triang) / bt
+            curhat = 1.0e6 * plasc(qpsi, asp, eps, rminor, bt, kappa, triang) / bt
         elif icurr == 3:  # Simple ITER scaling (simply the cylindrical case)
             fq = 1.0
         elif icurr == 4:  # ITER formula (IPDG89)
@@ -2161,7 +2159,9 @@ class Physics:
         physics_variables.normalised_total_beta = (
             1.0e8 * physics_variables.beta * rminor * bt / plascur
         )
-        bp = bpol(icurr, plascur, qpsi, asp, bt, kappa, triang, pperim, constants.rmu0)
+        bp = bpol(
+            icurr, plascur, qpsi, asp, eps, bt, kappa, triang, pperim, constants.rmu0
+        )
 
         # Ensure current profile consistency, if required
         # This is as described in Hartmann and Zohm only if icurr = 4 as well...
@@ -3944,7 +3944,48 @@ class Physics:
                 0.0e0,
             )
             po.ocmmnt(self.outfile, "  (No radiation correction applied)")
-
+        if physics_variables.iradloss == 1:
+            po.ovarrf(
+                self.outfile,
+                "H* non-radiation corrected",
+                "(hstar)",
+                physics_variables.hfact
+                * (
+                    physics_variables.powerht
+                    / (
+                        physics_variables.powerht
+                        + physics_variables.psyncpv
+                        + physics_variables.pinnerzoneradmw
+                    )
+                )
+                ** 0.31,
+                "OP",
+            )
+        elif physics_variables.iradloss == 0:
+            po.ovarrf(
+                self.outfile,
+                "H* non-radiation corrected",
+                "(hstar)",
+                physics_variables.hfact
+                * (
+                    physics_variables.powerht
+                    / (
+                        physics_variables.powerht
+                        + physics_variables.pradpv * physics_variables.vol
+                    )
+                )
+                ** 0.31,
+                "OP",
+            )
+        elif physics_variables.iradloss == 2:
+            po.ovarrf(
+                self.outfile,
+                "H* non-radiation corrected",
+                "(hstar)",
+                physics_variables.hfact,
+                "OP",
+            )
+        po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
         po.ovarrf(
             self.outfile,
             "Alpha particle confinement time (s)",
