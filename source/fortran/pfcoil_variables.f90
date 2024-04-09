@@ -419,7 +419,10 @@ module pfcoil_variables
     cohbop = 0.0D0
     coheof = 1.85D7
     cpt = 0.0D0
-    cptdin = 4.0D4
+    cptdin = (/4.0D4, 4.0D4, 4.0D4, &
+    4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
+    4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
+    4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4/)
     curpfb = 0.0D0
     curpff = 0.0D0
     curpfs = 0.0D0
@@ -458,7 +461,10 @@ module pfcoil_variables
     ra = 0.0D0
     rb = 0.0D0
     ric = 0.0D0
-    rjconpf = 3.0D7
+    rjconpf = (/3.0D7, 3.0D7, 3.0D7, &
+      3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
+      3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
+      3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7/)
     rjohc = 0.0D0
     rjohc0 = 0.0D0
     rjpfalw = 0.0D0
