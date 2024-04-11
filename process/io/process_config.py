@@ -20,7 +20,7 @@ import sys
 from sys import stderr
 from time import sleep
 import collections as col
-from numpy.random import seed, uniform, normal
+from numpy.random import seed, uniform, normal, triangular
 from numpy import argsort, ndarray, argwhere, logical_or
 from pathlib import Path
 from process.io.process_funcs import (
@@ -48,7 +48,6 @@ logger = logging.getLogger(__name__)
 
 
 class ProcessConfig(object):
-
     """
     Configuration parameters for PROCESS runs
 
@@ -328,7 +327,6 @@ class ProcessConfig(object):
 
 
 class TestProcessConfig(ProcessConfig):
-
     """
     Configuration parameter of the test_process.py program
 
@@ -413,7 +411,6 @@ class TestProcessConfig(ProcessConfig):
 
 
 class RunProcessConfig(ProcessConfig):
-
     """
     Configuration parameters of the run_process.py program
 
@@ -682,7 +679,6 @@ class RunProcessConfig(ProcessConfig):
 
 
 class UncertaintiesConfig(ProcessConfig, Config):
-
     """
     Configuration parameters for evaluate_uncertainties.py program
     """
@@ -1134,6 +1130,11 @@ class UncertaintiesConfig(ProcessConfig, Config):
                     while len(args) > 0:
                         values[args] = normal(mean, std, args.shape)
                         args = argwhere(values < mean)
+            elif u_dict["errortype"].lower() == "triangular":
+                lbound = u_dict["lowerbound"]
+                ubound = u_dict["upperbound"]
+                mode = u_dict["mode"]
+                values = triangular(lbound, mode, ubound, self.no_samples)
 
             u_dict["samples"] = values
 
@@ -1216,7 +1217,6 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
 
 class NdScanConfig(Config, RunProcessConfig):
-
     """
     # Author: Steven Torrisi (storrisi@u.rochester.edu)
     # University of Rochester, IPP Greifswald

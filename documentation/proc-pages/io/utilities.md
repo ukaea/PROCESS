@@ -445,6 +445,7 @@ By convention, we have designated metadata about the PROCESS runs as having a pr
     - `UpperHalfGaussian` (`Mean` and `Std`)
     - `Uniform` (`Lowerbound` and `Upperbound`)
     - `Relative` (`Mean` and `Percentage`)
+    - `Triangular` (`Lowerbound`, `Mode`, and `Upperbound`)
 
 
     Please note that *all distributions are cut off at the boundaries for the input values for PROCESS*! At least one uncertain parameter has to be specified for the program to run and there is no upper limit to how many uncertain parameters can be used. However, for large numbers of uncertain parameters it is recommended to increase the number of sampling points.

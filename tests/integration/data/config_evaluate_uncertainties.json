@@ -38,6 +38,13 @@
             "Errortype": "Gaussian",
             "Mean": 1.0e-4,
             "Std": 5.0e-5
+        },
+        {
+            "Varname": "fimp(13)",
+            "Errortype": "Triangular",
+            "Lowerbound": 1.0,
+            "Upperbound": 2.0,
+            "Mode": 0.5
         }
     ],
     "output_vars": [
