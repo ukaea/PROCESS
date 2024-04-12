@@ -427,7 +427,14 @@ class SingleRun:
     def initialise():
         """Run the init module to call all initialisation routines."""
         initialise_imprad()
+        # Reads in input file
         fortran.init_module.init()
+
+        # Order optimisation parameters (arbitrary order in input file)
+        # Ensures consistency and makes output comparisons more straightforward
+        n = int(fortran.numerics.nvar)
+        # [:n] as array always at max size: contains 0s
+        fortran.numerics.ixc[:n].sort()
 
     def run_tests(self):
         """Run tests if required to by input file."""
