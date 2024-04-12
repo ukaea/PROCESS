@@ -2,7 +2,8 @@ import logging
 import numpy as np
 
 from process.fortran import error_handling as eh, rebco_variables
-from process.maths_library import secant_solve
+
+from scipy import optimize
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +78,29 @@ def current_sharing_rebco(bfield, j):
         jcritical, _ = jcrit_rebco(temperature, bfield)
         return jcritical - j
 
-    current_sharing_t, _, _ = secant_solve(deltaj_rebco, 4, 20, 1e7)
+    # Replace secant_solve by scipy.optimize.brentq.
+    # Find temperature at which current density margin = 0
+    # Temperature range ("bracketing interval") (K)
+    # For brentq to work, the current density margin must be
+    # negative at the upper temperature of the interval.
+
+    a = 4  # Bottom of temperature interval
+    b = 90  # Top of temperature interval
+
+    # No additional arguments are required for deltaj_rebco since it only has one argument.
+    current_sharing_t, root_result = optimize.brentq(
+        deltaj_rebco,
+        a,
+        b,
+        xtol=1e-4,
+        rtol=1e-4,
+        maxiter=100,
+        full_output=True,
+        disp=True,
+    )
+
+    print(root_result)
+
     return current_sharing_t
 
 
@@ -126,45 +149,43 @@ def itersc(thelium, bmax, strain, bc20max, tc0max):
     strfun = strfun * ca1 - ca2 * strain
     strfun = 1.0 + (1 / (1.0 - ca1 * eps0a)) * strfun
 
-    # $B^*_{C2} (0,\epsilon)$
+    # Critical field at zero temperature and current, corrected for strain
     bc20eps = bc20max * strfun
 
-    # $T^*_C (0,\epsilon)$
+    # Critical temperature at zero field and current, corrected for strain
     tc0eps = tc0max * strfun ** (1 / 3)
-
-    # Reduced temperature, restricted to be < 1
-    # Should remain < 1 for thelium < 0.94*tc0max (i.e. 15 kelvin for i_tf_sc_mat=1)
 
     if thelium / tc0eps >= 1.0:
         eh.fdiags[0] = thelium
         eh.fdiags[1] = tc0eps
         eh.report_error(159)
 
-    t = min(thelium / tc0eps, 0.9999)
-
-    # Reduced magnetic field at zero temperature
-    # Should remain < 1 for bmax < 0.83*bc20max (i.e. 27 tesla for i_tf_sc_mat=1)
+    # Reduced temperature at zero field, corrected for strain
+    # I think t > 0 unless something has gone badly wrong.
+    t = thelium / tc0eps
 
     if bmax / bc20eps >= 1.0:
         eh.fdiags[0] = bmax
         eh.fdiags[1] = bc20eps
         eh.report_error(160)
 
-    bzero = min(bmax / bc20eps, 0.9999)
+    # Reduced field at zero temperature, taking account of strain
+    bzero = bmax / bc20eps
 
-    # Critical temperature (K)
-    tcrit = tc0eps * (1.0 - bzero) ** (1 / 1.52)  # bzero must be < 1 to avoid NaNs
+    # Critical temperature at given strain and field
+    # tcrit is not used in the calculation of jcrit.
+    if bzero < 1.0:
+        tcrit = tc0eps * (1.0 - bzero) ** (1 / 1.52)
+    else:
+        tcrit = -tc0eps * abs(1.0 - bzero) ** (
+            1 / 1.52
+        )  # Prevents NaNs. Sets tcrit negative
 
-    # Critical field (T)
+    # Critical field (T) at given strain and temperature
     bcrit = bc20eps * (1.0 - t**1.52)
 
-    # Reduced magnetic field, restricted to be < 1
-    if bmax / bcrit >= 1.0:
-        eh.fdiags[0] = bmax
-        eh.fdiags[1] = bcrit
-        eh.report_error(161)
-
-    bred = min(bmax / bcrit, 0.9999)
+    # Reduced field at given strain and temperature
+    bred = bmax / bcrit
 
     #  Critical current density in superconductor (A/m2)
     #  ITER parameterization is for the current in a single strand,
@@ -173,10 +194,14 @@ def itersc(thelium, bmax, strain, bc20max, tc0max):
     scalefac = np.pi * (0.5 * diter) ** 2 * (1.0 - cuiter)
 
     jc1 = (csc / bmax) * strfun
-    jc2 = (1.0 - t**1.52) * (1.0 - t**2)  # t must be < 1 to avoid NaNs
-    jc3 = bred**p * (1.0 - bred) ** q  # bred must be < 1 to avoid NaNs
+    jc2 = (1.0 - t**1.52) * (1.0 - t**2)
 
-    jcrit = jc1 * jc2 * jc3 / scalefac
+    if (bred > 0) and (bred < 1):  # Normal case
+        jc3 = bred**p * (1.0 - bred) ** q
+        jcrit = jc1 * jc2 * jc3 / scalefac
+    else:
+        jc3 = abs(bred) ** p * abs(1.0 - bred) ** q  # Prevents NaNs
+        jcrit = -abs(jc1 * jc2 * jc3 / scalefac)  # Sets jcrit negative
 
     return jcrit, bcrit, tcrit
 
@@ -192,31 +217,25 @@ def jcrit_nbti(temperature, bmax, c0, bc20max, tc0max):
     tc0max : input real : Critical temperature (K) at zero field and strain
     jcrit : output real : Critical current density in superconductor (A/m2)
     tcrit : output real : Critical temperature (K)
-    This routine calculates the critical current density and
-    temperature in superconducting TF coils using NbTi
-    as the superconductor.
+    This routine calculates the critical current density and temperature in
+    superconducting TF coils using NbTi superconductor.
     """
 
     bratio = bmax / bc20max
 
-    if bmax < bc20max:
-        #  Critical temperature (K)
+    if bratio < 1:
+        #  Critical temperature (K) at field
         tcrit = tc0max * (1.0 - bratio) ** 0.59
     else:
-        # Allow bmax > bc20max but set error flag
-        # Fudge to give real (negative) value if bratio < 1
+        # Allow bmax > bc20max
+        # Fudge to give real (negative) value if bratio > 1
         tcrit = tc0max * (1.0 - bratio)
 
-    # Allow tbar to be negative but set error flag
+    # If temperature > tcrit then the critical surface has been exceeded and tbar is negative
     tbar = 1.0 - temperature / tcrit
 
     #  Critical current density (A/m2)
     jcrit = c0 * (1.0 - bratio) * tbar
-
-    # if ((temperature > tcrit).or.(bmax > bc20max))then
-    #     write(*,*)'jcrit_nbti: out of range: ', 'bmax =', bmax, ' bc20max =', bc20max, &
-    #               ' temperature =',temperature, ' tcrit =',tcrit
-    # end if
 
     return jcrit, tcrit
 
@@ -445,13 +464,16 @@ def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
     described in: M. J. Wolf, N. Bagrets, W. H. Fietz, C. Lange and K. Weiss,
     "Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,"
     in IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1-4,
-    June 2018, Art no. 4802404, doi: 10.1109/TASC.2018.2815767. And on the experimental
+    June 2018, Art no. 4802404, doi: 10.1109/TASC.2018.2815767.
+
+    And on the experimental
     data presented here: "2G HTS Wire Development at SuperPower", Drew W. Hazelton,
     February 16, 2017 https://indico.cern.ch/event/588810/contributions/2473740/
     The high Ic parameterization is a result of modifications based on Ic values
     observed in: "Conceptual design of HTS magnets for fusion nuclear science facility",
     Yuhu Zhai, Danko van der Laan, Patrick Connolly, Charles Kessel, 2021,
     https://doi.org/10.1016/j.fusengdes.2021.112611
+
     The parameter A is transformed into a function A(T) based on a Newton polynomial fit
     considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8. These values were
     selected manually. A good fit to the pubished data can be seen in the 4-10 T range
@@ -487,8 +509,21 @@ def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
     A_t = A_0 + (u * thelium**2) + (v * thelium)
 
     # Critical current density (A/m2)
+    # In the original formula bcrit must be > bmax to prevent NaNs.
+    # However, negative jcrit is permissible (I think).
+    # So when bcrit < bmax, I reverse the sign of the bracket,
+    # giving a negative but real value of jcrit.
 
-    jcrit = (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
+    if bcrit > bmax:
+        jcrit = (
+            (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
+        )
+    else:
+        jcrit = (
+            (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (bmax / bcrit - 1) ** q
+        )
+
+    # print("thelium = ", thelium, "   bcrit = ", bcrit, "   bmax = ", bmax, "   1 - bmax / bcrit = ", 1 - bmax / bcrit)
 
     # Jc times HTS area: default area is width 4mm times HTS layer thickness 1 um,
     # divided by the tape area to provide engineering Jc per tape,!
@@ -710,3 +745,35 @@ def croco(jcritsc, conductor_area, croco_od, croco_thick):
         conductor_rebco_fraction,
         conductor_critical_current,
     )
+
+
+def current_density_margin(ttest, isumat, jsc, bmax, strain, bc20m, tc0m, c0=None):
+    """Current density margin is the difference between the operating current density and
+    the critical current density of a superconductor, at a given temperature and field.
+    It is zero at the current-sharing temperature.
+    ttest : input real :    Temperature
+    isumat : input real :   Switch for superconductor material
+                            (This has different global names depending on which coil is referred to.)
+    jsc : input real : actual current density
+    bmax : input real : magnetic field (T)
+    strain : input real : superconductor strain
+    bc20m, tc0m : input real : superconductor parameters
+    """
+
+    # Critical current density jcrit
+    if isumat == 1:
+        jcrit, _, _ = itersc(ttest, bmax, strain, bc20m, tc0m)
+    elif isumat == 3:
+        jcrit, _ = jcrit_nbti(ttest, bmax, c0, bc20m, tc0m)
+    if isumat == 4:
+        jcrit, _, _ = itersc(ttest, bmax, strain, bc20m, tc0m)
+    elif isumat == 5:
+        jcrit, _, _ = wstsc(ttest, bmax, strain, bc20m, tc0m)
+    elif isumat == 7:
+        jcrit, _, _ = gl_nbti(ttest, bmax, strain, bc20m, tc0m)
+    elif isumat == 8:
+        jcrit, _, _ = gl_rebco(ttest, bmax, strain, bc20m, tc0m)
+    elif isumat == 9:
+        jcrit, _, _ = hijc_rebco(ttest, bmax, strain, bc20m, tc0m)
+
+    return jcrit - jsc

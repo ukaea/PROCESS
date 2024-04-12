@@ -21,6 +21,7 @@ from process.fortran import divertor_variables
 import process.superconductors as superconductors
 
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from scipy import optimize
 
 
 logger = logging.getLogger(__name__)
@@ -186,7 +187,7 @@ class Sctfcoil:
         #  when we have found the desired value of tmarg
         jsc = iooic * jcritsc
 
-        # Temperature margin using secant solver
+        # Temperature margin
         current_sharing_t = superconductors.current_sharing_rebco(bmax, jsc)
         tmarg = current_sharing_t - thelium
         tfcoil_variables.temp_margin = (
@@ -588,6 +589,8 @@ class Sctfcoil:
         4 = ITER Nb3Sn, user-defined parameters
         5 = WST Nb3Sn parameterisation
         7 = Durham Ginzburg-Landau Nb-Ti parameterisation
+        8 = Durham Ginzburg-Landau critical surface model for REBCO
+        9 = Hazelton experimental data + Zhai conceptual model for REBCO
         fhts    : input real : Adjustment factor (<= 1) to account for strain,
         radiation damage, fatigue or AC losses
         tdmptf : input real : Dump time (sec)
@@ -789,6 +792,7 @@ class Sctfcoil:
             error_handling.report_error(266)
 
         #  Temperature margin (already calculated in superconductors.bi2212 for isumat=2)
+
         if (
             (isumat == 1)
             or (isumat == 3)
@@ -797,112 +801,32 @@ class Sctfcoil:
             or (isumat == 7)
             or (isumat == 8)
             or (isumat == 9)
-        ):
-            #  Newton-Raphson method; start approx at requested minimum temperature margin
-            ttest = thelium + tfcoil_variables.tmargmin_tf + 0.001e0
-            delt = 0.01e0
-            jtol = 1.0e4
+        ):  # Find temperature at which current density margin = 0
+            # Temperature range ("bracketing interval") (K)
+            # Setting the upper limit of the interval slightly lower than tc0m ensures
+            # the reduced temperature < 1 after strain is taken into accoun
+            a = 4
+            b = (
+                0.94 * tc0m
+            )  # tc0m = critical temperature (K) for superconductor at zero field and strain
 
-            for lap in range(100):
-                if ttest <= delt:
-                    error_handling.idiags[0] = lap
-                    error_handling.fdiags[0] = ttest
-                    error_handling.report_error(157)
-                    break
-
-                # Calculate derivative numerically
-                ttestm = ttest - delt
-                ttestp = ttest + delt
-
-                # Issue #483 to be on the safe side, check the fractional as well as the absolute error
-                if isumat in (1, 4):
-                    jcrit0, _, _ = superconductors.itersc(
-                        ttest, bmax, strain, bc20m, tc0m
-                    )
-                    if (abs(jsc - jcrit0) <= jtol) and (
-                        abs((jsc - jcrit0) / jsc) <= 0.01
-                    ):
-                        break
-                    jcritm, _, _ = superconductors.itersc(
-                        ttestm, bmax, strain, bc20m, tc0m
-                    )
-                    jcritp, _, _ = superconductors.itersc(
-                        ttestp, bmax, strain, bc20m, tc0m
-                    )
-                elif isumat == 3:
-                    jcrit0, _ = superconductors.jcrit_nbti(ttest, bmax, c0, bc20m, tc0m)
-                    if (abs(jsc - jcrit0) <= jtol) and (
-                        abs((jsc - jcrit0) / jsc) <= 0.01
-                    ):
-                        break
-                    jcritm, _ = super.jcrit_nbti(ttestm, bmax, c0, bc20m, tc0m)
-                    jcritp, _ = superconductors.jcrit_nbti(
-                        ttestp, bmax, c0, bc20m, tc0m
-                    )
-                elif isumat == 5:
-                    jcrit0, _, _ = superconductors.wstsc(
-                        ttest, bmax, strain, bc20m, tc0m
-                    )
-                    if (abs(jsc - jcrit0) <= jtol) and (
-                        abs((jsc - jcrit0) / jsc) <= 0.01
-                    ):
-                        break
-                    jcritm, _, _ = superconductors.wstsc(
-                        ttestm, bmax, strain, bc20m, tc0m
-                    )
-                    jcritp, _, _ = superconductors.wstsc(
-                        ttestp, bmax, strain, bc20m, tc0m
-                    )
-                elif isumat == 7:
-                    jcrit0, _, _ = superconductors.gl_nbti(
-                        ttest, bmax, strain, bc20m, tc0m
-                    )
-                    if (abs(jsc - jcrit0) <= jtol) and (
-                        abs((jsc - jcrit0) / jsc) <= 0.01
-                    ):
-                        break
-                    jcritm, _, _ = superconductors.gl_nbti(
-                        ttestm, bmax, strain, bc20m, tc0m
-                    )
-                    jcritp, _, _ = superconductors.gl_nbti(
-                        ttestp, bmax, strain, bc20m, tc0m
-                    )
-                elif isumat == 8:
-                    jcrit0, _, _ = superconductors.gl_rebco(
-                        ttest, bmax, strain, bc20m, tc0m
-                    )
-                    if (abs(jsc - jcrit0) <= jtol) and (
-                        abs((jsc - jcrit0) / jsc) <= 0.01
-                    ):
-                        break
-                    jcritm, _, _ = superconductors.gl_rebco(
-                        ttestm, bmax, strain, bc20m, tc0m
-                    )
-                    jcritp, _, _ = superconductors.gl_rebco(
-                        ttestp, bmax, strain, bc20m, tc0m
-                    )
-                elif isumat == 9:
-                    jcrit0, _, _ = superconductors.hijc_rebco(
-                        ttest, bmax, strain, bc20m, tc0m
-                    )
-                    if (abs(jsc - jcrit0) <= jtol) and (
-                        abs((jsc - jcrit0) / jsc) <= 0.01
-                    ):
-                        break
-                    jcritm, _, _ = superconductors.hijc_rebco(
-                        ttestm, bmax, strain, bc20m, tc0m
-                    )
-                    jcritp, _, _ = superconductors.hijc_rebco(
-                        ttestp, bmax, strain, bc20m, tc0m
-                    )
-
-                ttest = ttest - 2.0e0 * delt * (jcrit0 - jsc) / (jcritp - jcritm)
+            if isumat == 3:
+                args = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
             else:
-                error_handling.idiags[0] = lap
-                error_handling.fdiags[0] = ttest
-                error_handling.report_error(157)
+                args = (isumat, jsc, bmax, strain, bc20m, tc0m)
 
-            tmarg = ttest - thelium
+            t_zero_margin, root_result = optimize.brentq(
+                superconductors.current_density_margin,
+                a,
+                b,
+                args,
+                xtol=1e-4,
+                rtol=1e-4,
+                maxiter=100,
+                full_output=True,
+                disp=True,
+            )
+            tmarg = t_zero_margin - thelium
             tfcoil_variables.temp_margin = tmarg
 
         #  Find the current density limited by the protection limit
@@ -914,17 +838,13 @@ class Sctfcoil:
         )
 
         if output:  # Output --------------------------
-            if ttest <= 0.0e0:
+            if tmarg <= 0.0e0:
                 logger.warning(
                     """Negative TFC temperature margin
-                ttest: {ttest}
+                tmarg: {tmarg}
                 bmax: {bmax}
                 jcrit0: {jcrit0}
                 jsc: {jsc}
-                ttestp: {ttestp}
-                ttestm: {ttestm}
-                jcritp: {jcritp}
-                jcritm: {jcritm}
                 """
                 )
 
