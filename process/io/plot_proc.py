@@ -676,6 +676,26 @@ def plot_nprofile(prof, demo_ranges):
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(ncore, nsep)
+    else:
+        rho1 = np.linspace(0, 0.95)
+        rho2 = np.linspace(0.95, 1)
+        rho = np.append(rho1, rho2)
+        ne = ne0 * (1 - rho**2) ** alphan
+    ne = ne / 1e19
+    prof.plot(rho, ne)
+
+    # Ranges
+    # ---
+    # DEMO : Fixed ranges for comparison
+    prof.set_xlim([0, 1])
+    if demo_ranges:
+        prof.set_ylim([0, 20])
+
+    # Adapatative ranges
+    else:
+        prof.set_ylim([0, prof.get_ylim()[1]])
+
+    if ipedestal != 0:
         # Print pedestal lines
         prof.axhline(
             y=neped / 1e19,
@@ -695,24 +715,6 @@ def plot_nprofile(prof, demo_ranges):
             alpha=0.4,
         )
         prof.minorticks_on()
-    else:
-        rho1 = np.linspace(0, 0.95)
-        rho2 = np.linspace(0.95, 1)
-        rho = np.append(rho1, rho2)
-        ne = ne0 * (1 - rho**2) ** alphan
-    ne = ne / 1e19
-    prof.plot(rho, ne)
-
-    # Ranges
-    # ---
-    # DEMO : Fixed ranges for comparison
-    prof.set_xlim([0, 1])
-    if demo_ranges:
-        prof.set_ylim([0, 20])
-
-    # Adapatative ranges
-    else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
     # ---
 
 
