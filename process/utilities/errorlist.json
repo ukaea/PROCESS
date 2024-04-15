@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 281,
+  "n_errortypes": 282,
   "errors": [
     {
       "no": 1,
@@ -248,7 +248,7 @@
     {
       "no": 48,
       "level": 3,
-      "message": "LOADXC: Do not use thkcas as an iteration variable if tfc_model=0 or istell=1"
+      "message": "LOADXC: Do not use thkcas as an iteration variable if istell=1"
     },
     {
       "no": 49,
@@ -473,7 +473,7 @@
     {
       "no": 93,
       "level": 2,
-      "message": "BURN: Negative burn time available; reduce theat or raise PF coil V-s capability"
+      "message": "BURN: Negative burn time available; reduce t_fusion_ramp or raise PF coil V-s capability"
     },
     {
       "no": 94,
@@ -527,8 +527,8 @@
     },
     {
       "no": 104,
-      "level": 3,
-      "message": "STRESSCL: Illegal value for tfc_model"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 105,
@@ -1414,6 +1414,11 @@
       "no": 281,
       "level": 3,
       "message": "CHECK: Cannot have i_tf_bucking >= 2 when tf_in_cs = 1"
+    },
+    {
+      "no": 282,
+      "level": 2,
+      "message": "CHECK: ncore is going negative when solving. Please raise the value of dene and or its lower limit."
     }
   ]
 }

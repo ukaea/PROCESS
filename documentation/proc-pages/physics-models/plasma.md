@@ -267,6 +267,11 @@ simulations.
 If `ipedestal` = 1 or 2 then the pedestal density `neped` is set as a fraction `fgwped` of the 
 Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^7]. 
 
+!!! warning " Un-realistic profiles"
+
+    If `ipedestal >= 1` it is highly recommended to use constraint equation 81 (icc=81). This enforces solutions in which $n_0$ has to be greater than $n_{ped}$. 
+    Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_e (\mathtt{dene})$ is set.
+
 ## Beta Limit
 
 The plasma beta limit[^7] is given by 

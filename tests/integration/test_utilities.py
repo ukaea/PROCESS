@@ -3,9 +3,9 @@
 These tests check the utilities that PROCESS uses, mainly for file IO. They run
 on each of the regression test scenarios.
 """
+
 import pytest
 import logging
-from pathlib import Path
 import process.io.mfile as mf
 import process.io.in_dat as indat
 import process.io.plot_proc as pp
@@ -18,65 +18,31 @@ logger.info("Running utilities integration tests")
 # test_convert_in_dat
 
 
-def get_scenario_paths():
-    """Get the paths to the regression scenario directories.
-
-    The regression scenario IN.DATs and MFILE.DATs are used for these
-    integration tests.
-    :return: Path objects for the scenario dirs
-    :rtype: list
-    """
-    scenarios_path = Path(__file__).parent.parent / "regression" / "scenarios"
-    scenarios_paths = [path for path in scenarios_path.iterdir()]
-    return scenarios_paths
-
-
-@pytest.fixture(params=get_scenario_paths())
-def scenario_path(request):
-    """Get the path to a regression scenario directory.
-
-    Parameterised with all scenario directories, this will return paths for
-    all scenario directories.
-    :return: Path to a regression scenario dir
-    :rtype: Path
-    """
-    scenario_path = request.param
-    return scenario_path
-
-
 @pytest.fixture
-def mfile_path(scenario_path):
+def mfile_path(temp_data, mfile_name):
     """Create a path to a scenario's MFile.
 
-    :param scenario_path: Path to a scenario dir
-    :type scenario_path: Path
+    :param temp_data: temporary path containing data files
+    :type temp_data: Path
+    :param mfile_name: name of the reference MFile
+    :type mfile_name: str
     :return: Path to that scenario's MFile
     :rtype: Path
     """
-    mfile_path = scenario_path / "ref.MFILE.DAT"
+    mfile_path = temp_data / mfile_name
     return mfile_path
 
 
 @pytest.fixture
-def input_file_path(scenario_path):
+def input_file_path(temp_data):
     """Create a path to a scenario's input file.
 
-    :param scenario_path: Path to a scenario dir
-    :type scenario_path: Path
+    :param temp_data: temporary path containing data files
+    :type temp_data: Path
     :return: Path to that scenario's IN.DAT
     :rtype: Path
     """
-    input_file_path = scenario_path / "IN.DAT"
-    if not input_file_path.exists():
-        # VaryRun input files are called ref_IN.DAT; can't be called IN.DAT as
-        # intermediate input files are IN.DAT. Try this instead
-        input_file_path = scenario_path / "ref_IN.DAT"
-        if not input_file_path.exists():
-            raise FileNotFoundError(
-                "Scenario directory doesn't contain an " "input file"
-            )
-
-    return input_file_path
+    return temp_data / "large_tokamak_IN.DAT"
 
 
 def test_mfile_lib(mfile_path):
@@ -120,24 +86,6 @@ def test_plot_proc(mfile_path):
     :param mfile_path: Path to the scenario's MFile
     :type mfile_path: Path
     """
-    EXCLUSIONS = [
-        "stellarator",
-        "stellarator_config",
-        "IFE",
-        "starfire",
-        "QH_mode",
-        "steady_state",
-        "Hybrid_mode",
-        "L_mode",
-    ]
-    # Don't run plot_proc tests for some scenarios
-    # plot_proc is not intended for stellarator or IFE
-    # ZeroDivisionErrors in starfire, QH_mode, steady_state, Hybrid_mode
-    # L_mode
-
-    if mfile_path.parent.name in EXCLUSIONS:
-        return
-
     logger.info("Testing plot_proc.py")
 
     # Test plot_proc on an MFile

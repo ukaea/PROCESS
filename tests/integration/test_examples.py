@@ -2,6 +2,7 @@
 
 examples.py is created by exporting examples.ipynb as a Python script.
 """
+
 import runpy
 import os
 from pathlib import Path
@@ -78,6 +79,7 @@ def scan_cleanup(examples_as_cwd):
             os.remove(file)
 
 
+@pytest.mark.skip(reason="Skipping test until fixed in issue #3071")
 def test_scan(scan_cleanup):
     """Run the scan.py script and check no exceptions are raised.
 

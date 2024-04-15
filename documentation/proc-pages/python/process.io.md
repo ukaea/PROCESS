@@ -20,6 +20,4 @@
 
 ::: process.io.process_funcs
 
-::: process.io.process_netcdf
-
 ::: process.io.python_fortran_dicts

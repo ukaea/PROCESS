@@ -5,6 +5,38 @@ The [physics](http://www.sciencedirect.com/science/article/pii/S0920379614005961
 
 Below is a list of publications using or citing PROCESS by year:
 
+## 2024
+
+[Flat-top plasma operational space of the STEP power plant](https://arxiv.org/abs/2403.09460)   
+E. Tholerus, F.J. Casson, S.P. Marsden, T. Wilson, D. Brunetti, P. Fox, S.J. Freethy, T.C. Hender, S.S. Henderson, A. Hudoba, K.K. Kirov, F. Koechl, H. Meyer, S.I. Muldrew, C. Olde, B.S. Patel, C.M. Roach, S. Saarelma, G. Xia   
+Nuclear Fusion (Submitted) arXiv:2403.09460
+
+[Using Bayesian Networks as Metamodels for Predicting Uncertain Fusion Economics in Spherical Tokamaks](https://ieeexplore.ieee.org/abstract/document/10453409)   
+T. Griffiths, Z. Xuereb Conti, J. Hidalgo-Salaverri, M. Bluck   
+IEEE Transactions on Plasma Science (Early Access)   
+
+[Extrapolating Costs to Commercial Fusion Power Plants](https://ieeexplore.ieee.org/abstract/document/10452156)   
+J. Foster, H. Lux, S. Knight, D. Wolff, S.I. Muldrew   
+IEEE Transactions on Plasma Science (Early Access)   
+
+[Conceptual design workflow for the STEP Prototype Powerplant](https://www.sciencedirect.com/science/article/pii/S0920379624000917)   
+S.I. Muldrew, C. Harrington, J. Keep, C. Waldon, C. Ashe, R. Chapman, C. Griesel, A.J. Pearce, F. Casson, S.P. Marsden, E. Tholerus   
+Fusion Engineering and Design 201 (2024) 114238    
+
+## 2023
+
+[Architectural development of an ST fusion device](https://www.sciencedirect.com/science/article/pii/S0920379623001679)   
+T.G. Brown, J.E. Menard   
+Fusion Engineering and Design 192 (2023) 113583   
+
+[Virtual prototyping of liquid metal blanket performance in fusion pilot plant](https://www.sciencedirect.com/science/article/pii/S0920379623002752)   
+A. Khodak, A. Brooks, T. Brown, J. Klabacha, B. Linn, T. Looby, J. Menard, C. Swanson, P. Titus, H. Zhang   
+Fusion Engineering and Design 191 (2023) 113692   
+
+[Technological features of a commercial fusion power plant, and the gap from DEMO](https://www.sciencedirect.com/science/article/pii/S092037962300128X)   
+R. Kembleton   
+Fusion Engineering and Design 190 (2023) 113544   
+
 ## 2022
 
 [Toward DEMO power plant concept selection under epistemic uncertainty](https://ieeexplore.ieee.org/document/9794814)   

@@ -61,7 +61,7 @@ contains
     use numerics, only: boundl, boundu
     use stellarator_variables, only: istell
     use tfcoil_variables, only: n_tf
-    use times_variables, only: tburn, tcycle, tdown, tdwell, theat, tohs, &
+    use times_variables, only: tburn, tcycle, tdown, tdwell, t_fusion_ramp, tohs, &
       tpulse, tqnch, tramp
 		use global_variables, only: icase
 		use constants, only: pi, rmu0, nout
@@ -115,9 +115,9 @@ contains
     tohs = 0.0D0
     tburn = 3.15576D7  !  one year
     tqnch = 0.0D0
-    tpulse = tohs + theat + tburn + tqnch
+    tpulse = tohs + t_fusion_ramp + tburn + tqnch
     tdown  = tramp + tohs + tqnch + tdwell
-    tcycle = tramp + tohs + theat + tburn + tqnch + tdwell
+    tcycle = tramp + tohs + t_fusion_ramp + tburn + tqnch + tdwell
 
   end subroutine stinit
 end module stellarator_module

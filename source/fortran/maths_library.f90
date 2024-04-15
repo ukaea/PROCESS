@@ -436,42 +436,6 @@ contains
 
   end function binarysearch
 
-  real(dp) function interpolate(x_len, x_array, y_len, y_array, f, x, y)
-    ! This function uses bilinear interpolation to estimate the value
-    ! of a function f at point (x,y)
-    ! f is assumed to be sampled on a regular grid, with the grid x values specified
-    ! by x_array and the grid y values specified by y_array
-    ! Reference: http://en.wikipedia.org/wiki/Bilinear_interpolation
-    implicit none
-    integer, intent(in) :: x_len, y_len
-    real(dp), dimension(x_len), intent(in) :: x_array
-    real(dp), dimension(y_len), intent(in) :: y_array
-    real(dp), dimension(x_len, y_len), intent(in) :: f
-    real(dp), intent(in) :: x,y
-    real(dp) :: denom, x1, x2, y1, y2
-    integer :: i,j
-
-    i = binarysearch(x_len, x_array, x)
-    j = binarysearch(y_len, y_array, y)
-
-    if (i  >= x_len) then
-       i = x_len -1
-    end if
-    if (j >= y_len) then
-       j = y_len-1
-    end if
-    x1 = x_array(i)
-    x2 = x_array(i+1)
-
-    y1 = y_array(j)
-    y2 = y_array(j+1)
-
-    denom = (x2 - x1)*(y2 - y1)
-
-    interpolate = (f(i,j)*(x2-x)*(y2-y) + f(i+1,j)*(x-x1)*(y2-y) + &
-      f(i,j+1)*(x2-x)*(y-y1) + f(i+1, j+1)*(x-x1)*(y-y1))/denom
-
-  end function interpolate
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

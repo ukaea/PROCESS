@@ -144,23 +144,7 @@ class Fw:
 
         # Model B is given for comparison
         # Model C is used
-        # Model A is not used.
-
-        # Model A: LeClaire formula for circular pipes (NOT USED) !
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        # This gives a very small temperature differential, as the wall thickness is
-        # the same all the way round, but the surface area is bigger than that of a flat wall.
-
-        # Calculate peak temperature - occurs at (r,theta) = (bfw,0)
-        # bfw = thickness/2.0d0
-
-        # po.cosine_term(afw, bfw, 0.0D0, bfw, qpp, hcoeff, tkfw, tmthet)
-
-        # deltat_solid = bfw/tkfw * (qpp/pi + qppp*bfw/2.0D0) * log(bfw/afw) &
-        #             - qppp/4.0D0/tkfw*(bfw**2-afw**2)
-
-        # tpeakfw = fwoutlet + deltat_solid + deltat_coolant + tmthet  # in K
+        # Model A LeClaire formula for circular pipes (removed GitHub #389).
 
         # Model B: Simple 1-dimensional calculation !
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

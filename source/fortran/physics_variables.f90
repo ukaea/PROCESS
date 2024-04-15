@@ -394,7 +394,7 @@ module physics_variables
   integer :: isc
   !! switch for energy confinement time scaling law (see description in `tauscl`)
 
-  character(len=24), parameter, dimension(ipnlaws) :: tauscl = (/ &
+  character*24, parameter, dimension(ipnlaws) :: tauscl = (/ &
     'Neo-Alcator      (ohmic)', &
     'Mirnov               (H)', &
     'Merezkhin-Muhkovatov (L)', &
@@ -727,7 +727,7 @@ module physics_variables
   !! ion transport power per volume (MW/m3)
 
   real(dp) :: q
-  !! safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
+  !! Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
   !! (unless `icurr=2` (ST current scaling), in which case q = mean edge safety factor qbar)
 
   real(dp) :: q0

@@ -148,7 +148,7 @@ contains
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(6) = 'dene          '
-    boundl(6) = 1.00D19
+    boundl(6) = 2.00D19
     boundu(6) = 1.00D21
   end subroutine init_itv_6
 
@@ -1202,29 +1202,13 @@ contains
     fvdump = ratio
   end subroutine set_itv_51
 
+  !! <LI> (52) NOT USED
   !---------------------------------
 
-  subroutine init_itv_52
-    !! <LI> (52) vdalw
-    use numerics, only: lablxc, boundl, boundu
-    implicit none
-    lablxc(52) = 'vdalw         '
-    boundl(52) = 0.001D0
-    boundu(52) = 1.000D6
-  end subroutine init_itv_52
-
   real(kind(1.d0)) function itv_52()
-    use tfcoil_variables, only: vdalw
     implicit none
-    itv_52 =  vdalw
+    write(*,*) 'Iteration variable 52 is no longer in use.'
   end function itv_52
-
-  subroutine set_itv_52(ratio)
-    use tfcoil_variables, only: vdalw
-    implicit none
-    real(kind(1.d0)) :: ratio
-    vdalw = ratio
-  end subroutine set_itv_52
 
   !---------------------------------
 
@@ -3244,8 +3228,8 @@ contains
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(145) = 'fgwped        '
-    boundl(145) = 0.500D0
-    boundu(145) = 1.000D0
+    boundl(145) = 0.100D0
+    boundu(145) = 0.9D0
   end subroutine init_itv_145
 
   real(kind(1.d0)) function itv_145()
@@ -3372,12 +3356,12 @@ contains
   !---------------------------------
 
   subroutine init_itv_152
-    !! <LI> (152) fbmaxcs : Ratio of separatrix density to Greenwald density
+    !! <LI> (152) fgwsep : Ratio of separatrix density to Greenwald density
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(152) = 'fgwsep        '
     boundl(152) = 0.001D0
-    boundu(152) = 1.000D0
+    boundu(152) = 0.5D0
   end subroutine init_itv_152
 
   real(kind(1.d0)) function itv_152()
@@ -4277,7 +4261,7 @@ contains
            case (49);  call set_itv_49(ratio)
            case (50);  call set_itv_50(ratio)
            case (51);  call set_itv_51(ratio)
-           case (52);  call set_itv_52(ratio)
+           case (52);  
            case (53);  call set_itv_53(ratio)
            case (54);  call set_itv_54(ratio)
            case (55);

@@ -17,7 +17,7 @@ subroutine initial
         init_itv_30, init_itv_31, init_itv_32, init_itv_33, init_itv_34, init_itv_35, &
         init_itv_36, init_itv_37, init_itv_38, init_itv_39, init_itv_40, init_itv_41, &
         init_itv_42, init_itv_44, init_itv_45, init_itv_46, init_itv_47, init_itv_48, &
-        init_itv_49, init_itv_50, init_itv_51, init_itv_52, init_itv_53, init_itv_54, &
+        init_itv_49, init_itv_50, init_itv_51, init_itv_53, init_itv_54, &
         init_itv_56, init_itv_57, init_itv_58, init_itv_59, init_itv_60, init_itv_61, &
         init_itv_62, init_itv_63, init_itv_64, init_itv_65, init_itv_66, init_itv_67, &
         init_itv_68, init_itv_69, init_itv_70, init_itv_71, init_itv_72, init_itv_73, &
@@ -106,7 +106,7 @@ subroutine initial
     call init_itv_49
     call init_itv_50
     call init_itv_51
-    call init_itv_52
+    
     call init_itv_53
     call init_itv_54
 
@@ -345,6 +345,12 @@ subroutine check
     if (ftrit < 1.0D-3) then  !  tritium fraction is negligible
         triv = 0.0D0
         trithtmw = 0.0D0
+    end if
+
+    if (fimp(2) .ne. 0.1D0) then
+        write(*,*)'The thermal alpha/electron density ratio should be controlled using ralpne (itv 109) and not fimp(2).'
+        write(*,*)'fimp(2) should be removed from the input file, or set to the default value 0.1D0.'
+        stop 1
     end if
 
     !  Impurity fractions

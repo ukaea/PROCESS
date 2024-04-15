@@ -2,6 +2,7 @@
 
 import logging
 from process.fortran import numerics, global_variables
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 import numpy as np
 from process.evaluators import Evaluators
 from abc import ABC, abstractmethod
@@ -169,7 +170,9 @@ class Vmcon(_Solver):
         if self.b is not None:
             B = np.identity(numerics.nvar) * self.b
 
-        def _solver_callback(i: int, _x, _result, convergence_param: float):
+        def _solver_callback(i: int, _result, _x, convergence_param: float):
+            numerics.nviter = i + 1
+            global_variables.convergence_parameter = convergence_param
             print(
                 f"{i+1} | Convergence Parameter: {convergence_param:.3E}",
                 end="\r",
@@ -202,9 +205,12 @@ class Vmcon(_Solver):
             res = e.result
 
         except ValueError as e:
-            logger.warning(
-                f"Active iteration variables are : {list(enumerate(numerics.ixc[:numerics.nvar]))}"
-            )
+            itervar_name_list = ""
+            for count, iter_var in enumerate(numerics.ixc[: numerics.nvar]):
+                itervar_name = f2py_compatible_to_string(numerics.lablxc[iter_var - 1])
+                itervar_name_list += f"{count}: {itervar_name} \n"
+
+            logger.warning(f"Active iteration variables are : \n{itervar_name_list}")
             raise e
 
         else:
