@@ -120,7 +120,7 @@ jobs:
         run: pip install -e .
       - name: Run integration tests
         run: pytest tests/integration -n auto -v
-  
+
 
   regression-py38:
     runs-on: ubuntu-latest
@@ -168,8 +168,8 @@ jobs:
         run: pip install -e .
       - name: Run large tokamak
         run: |
-          process -i tests/regression/scenarios/large-tokamak/IN.DAT
-          mv tests/regression/scenarios/large-tokamak/MFILE.DAT tracking/large_tokamak_MFILE.DAT
+          process -i tests/regression/input_files/large_tokamak.IN.DAT
+          mv tests/regression/input_files/large_tokamak.MFILE.DAT tracking/large_tokamak_MFILE.DAT
       - name: Archive large-tokamak MFILE
         uses: actions/upload-artifact@v3
         with:
