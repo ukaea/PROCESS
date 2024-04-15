@@ -739,20 +739,6 @@ def plot_tprofile(prof, demo_ranges):
 
         rho = np.append(rhocore, rhosep)
         te = np.append(tcore, tsep)
-        # Plot pedestal lines
-        prof.axhline(
-            y=teped, xmax=rhopedt, color="r", linestyle="-", linewidth=0.4, alpha=0.4
-        )
-        prof.vlines(
-            x=rhopedt,
-            ymin=0.0,
-            ymax=teped,
-            color="r",
-            linestyle="-",
-            linewidth=0.4,
-            alpha=0.4,
-        )
-        prof.minorticks_on()
     else:
         rho1 = np.linspace(0, 0.95)
         rho2 = np.linspace(0.95, 1)
@@ -770,6 +756,22 @@ def plot_tprofile(prof, demo_ranges):
     # Adapatative ranges
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
+
+    if ipedestal != 0:
+        # Plot pedestal lines
+        prof.axhline(
+            y=teped, xmax=rhopedt, color="r", linestyle="-", linewidth=0.4, alpha=0.4
+        )
+        prof.vlines(
+            x=rhopedt,
+            ymin=0.0,
+            ymax=teped,
+            color="r",
+            linestyle="-",
+            linewidth=0.4,
+            alpha=0.4,
+        )
+        prof.minorticks_on()
     # ---
 
 
