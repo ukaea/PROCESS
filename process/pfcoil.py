@@ -14,7 +14,6 @@ from process.fortran import numerics
 from process.fortran import rebco_variables as rcv
 from process.fortran import constraint_variables as ctv
 
-# from process import maths_library as pml
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process import fortran as ft
 import process.superconductors as superconductors
@@ -23,9 +22,6 @@ import numpy as np
 import numba
 import logging
 from scipy import optimize
-
-# from process.sctfcoil import current_density_margin
-
 
 logger = logging.getLogger(__name__)
 
@@ -629,7 +625,7 @@ class PFCoil:
                 # Allowable current density (for superconducting coils) for each coil, index i
                 if pfv.ipfres == 0:
                     bmax = max(abs(pfv.bpf[i]), abs(pf.bpf2[i]))
-                    print("bmax at line 632 =", bmax)
+
                     pfv.rjpfalw[i], jstrand, jsc, tmarg = self.superconpf(
                         bmax,
                         pfv.vf[i],
@@ -1007,19 +1003,6 @@ class PFCoil:
 
         # Radius of inner edge
         pfv.ra[pfv.nohc - 1] = pfv.rb[pfv.nohc - 1] - bv.ohcth
-        print(
-            "bv.bore = ",
-            bv.bore,
-            "pfv.rohc = ",
-            pfv.rohc,
-            "   pfv.ra[pfv.nohc - 1] = ",
-            pfv.ra[pfv.nohc - 1],
-            pfv.rohc,
-            "pfv.rb[pfv.nohc - 1] = ",
-            pfv.rb[pfv.nohc - 1],
-            "bv.ohcth = ",
-            bv.ohcth,
-        )
 
         # Total cross-sectional area
         pfv.areaoh = 2.0e0 * hohc * bv.ohcth
@@ -1077,16 +1060,6 @@ class PFCoil:
             pfv.coheof,
             pfv.ra[pfv.nohc - 1],
             pfv.rb[pfv.nohc - 1],
-            hohc,
-        )
-        print(
-            "pfv.coheof",
-            pfv.coheof,
-            "pfv.ra[pfv.nohc - 1]",
-            pfv.ra[pfv.nohc - 1],
-            "pfv.rb[pfv.nohc - 1]",
-            pfv.rb[pfv.nohc - 1],
-            "hohc",
             hohc,
         )
 
@@ -1208,7 +1181,7 @@ class PFCoil:
         if pfv.ipfres == 0:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
-            print("bmaxoh at line 1192 =", pfv.bmaxoh)
+
             (jcritwp, pfv.jstrandoh_eof, pfv.jscoh_eof, tmarg1,) = self.superconpf(
                 pfv.bmaxoh,
                 pfv.vfohc,
@@ -1225,7 +1198,6 @@ class PFCoil:
             pfv.rjohc = jcritwp * pfv.awpoh / pfv.areaoh
 
             # Allowable coil overall current density at BOP
-            print("bmaxoh0 at line 1208 =", pfv.bmaxoh0)
 
             (jcritwp, pfv.jstrandoh_bop, pfv.jscoh_bop, tmarg2,) = self.superconpf(
                 pfv.bmaxoh0,
@@ -2916,25 +2888,25 @@ class PFCoil:
             or (isumat == 8)
             or (isumat == 9)
         ):  # Find temperature at which current density margin = 0
-            # Temperature range ("bracketing interval") (K)
-            a = 4
-            b = tc0m  # tc0m = critical temperature (K) for superconductor at zero field and strain
 
             if isumat == 3:
-                args = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
+                arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
             else:
-                args = (isumat, jsc, bmax, strain, bc20m, tc0m)
+                arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
 
-            t_zero_margin, root_result = optimize.brentq(
+            another_estimate = 2 * thelium
+            t_zero_margin, root_result = optimize.newton(
                 superconductors.current_density_margin,
-                a,
-                b,
-                args,
-                xtol=1e-4,
-                rtol=1e-4,
-                maxiter=100,
+                thelium,
+                fprime=None,
+                args=arguments,
+                tol=1.0e-06,
+                maxiter=50,
+                fprime2=None,
+                x1=another_estimate,
+                rtol=1.0e-6,
                 full_output=True,
-                disp=True,
+                disp=False,
             )
             tmarg = t_zero_margin - thelium
 

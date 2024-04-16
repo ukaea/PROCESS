@@ -802,30 +802,28 @@ class Sctfcoil:
             or (isumat == 8)
             or (isumat == 9)
         ):  # Find temperature at which current density margin = 0
-            # Temperature range ("bracketing interval") (K)
-            # Setting the upper limit of the interval slightly lower than tc0m ensures
-            # the reduced temperature < 1 after strain is taken into accoun
-            a = 4
-            b = (
-                0.94 * tc0m
-            )  # tc0m = critical temperature (K) for superconductor at zero field and strain
 
             if isumat == 3:
-                args = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
+                arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
             else:
-                args = (isumat, jsc, bmax, strain, bc20m, tc0m)
+                arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
 
-            t_zero_margin, root_result = optimize.brentq(
+            another_estimate = 2 * thelium
+            t_zero_margin, root_result = optimize.newton(
                 superconductors.current_density_margin,
-                a,
-                b,
-                args,
-                xtol=1e-4,
-                rtol=1e-4,
-                maxiter=100,
+                thelium,
+                fprime=None,
+                args=arguments,
+                # args=(isumat, jsc, bmax, strain, bc20m, tc0m,),
+                tol=1.0e-06,
+                maxiter=50,
+                fprime2=None,
+                x1=another_estimate,
+                rtol=1.0e-6,
                 full_output=True,
                 disp=True,
             )
+            # print(root_result)  # Diagnostic for newton method
             tmarg = t_zero_margin - thelium
             tfcoil_variables.temp_margin = tmarg
 
