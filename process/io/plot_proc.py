@@ -958,9 +958,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = (
-                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
-                )
+                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -1813,12 +1811,12 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     """
 
     # Import the TF turn variables then multiply into mm
-    he_pipe_diameter = mfile_data.data["dhecoil"].get_scan(scan) * 1e3
-    steel_thickness = mfile_data.data["thwcndut"].get_scan(scan) * 1e3
-    insulation_thickness = mfile_data.data["thicndut"].get_scan(scan) * 1e3
-    turn_width = mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3
-    internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6)
-    cable_space_width = mfile_data.data["t_cable"].get_scan(scan) * 1e3
+    he_pipe_diameter = round(mfile_data.data["dhecoil"].get_scan(scan) * 1e3, 5)
+    steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
+    insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
+    turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
+    internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6, 5)
+    cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
 
     # Plot the total turn shape
     axis.add_patch(
