@@ -1491,30 +1491,32 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     nose_r = mfile_data.data["thkcas"].get_scan(scan)
     coil_location = mfile_data.data["tf_in_cs"].get_scan(scan)
     case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
+    jwptf = mfile_data.data["jwptf"].get_scan(scan) / 1e6
 
     # Superconducting coil check
     if cond_type == 1:
-        # TF inside CS check, will plot dashed arcs
-        if coil_location == 1:
+
+        axis.add_patch(
+            Circle(
+                [0, 0],
+                r_tf_inboard_in,
+                facecolor="none",
+                edgecolor="black",
+                linestyle="--",
+            ),
+        )
+
+        if case_plasma == 0:
             axis.add_patch(
                 Circle(
                     [0, 0],
-                    r_tf_inboard_in,
+                    r_tf_inboard_out,
                     facecolor="none",
                     edgecolor="black",
                     linestyle="--",
                 ),
             )
-            if case_plasma == 0:
-                axis.add_patch(
-                    Circle(
-                        [0, 0],
-                        r_tf_inboard_out,
-                        facecolor="none",
-                        edgecolor="black",
-                        linestyle="--",
-                    ),
-                )
+
         # Equations for plotting the TF case
         half_case_angle = np.arctan(
             (side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner
@@ -1566,14 +1568,22 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
 
         # Fill in the case segemnts
         if case_plasma == 0:
+            # Upper main
             axis.fill_between(
-                [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
+                [
+                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_out * np.cos(half_case_angle)),
+                ],
                 y13,
                 color="grey",
                 alpha=0.25,
             )
+            # Lower main
             axis.fill_between(
-                [r_tf_inboard_in, (r_tf_inboard_out * np.cos(half_case_angle))],
+                [
+                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_out * np.cos(half_case_angle)),
+                ],
                 y14,
                 color="grey",
                 alpha=0.25,
@@ -1616,15 +1626,10 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
                 wwp1 - (2 * tinstf)
             )  # row to height
-            print(wp_side_ratio)
-            print(turns)
             side_unit = turns / wp_side_ratio
             root_turns = round(np.sqrt(side_unit), 1)
             long_turns = round(root_turns * wp_side_ratio)
             short_turns = round(root_turns)
-
-            print(long_turns)
-            print(short_turns)
 
             # Plots the surrounding insualtion
             axis.add_patch(
@@ -1678,21 +1683,12 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
 
         # Plot the double rectangle winding pack
         if wp_shape == 1:
-            wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
-                wp_toridal_dxbig - (2 * tinstf)
-            )  # row to height
-            print(wp_side_ratio)
-            print(turns)
-            side_unit = turns / wp_side_ratio
-            root_turns = round(np.sqrt(side_unit), 1)
-            long_turns = round(root_turns * wp_side_ratio)
-            short_turns = round(root_turns)
 
             # Inner WP insulation
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner - 2 * tinstf,
+                        wp_inner - tinstf,
                         -(0.5 * wp_toridal_dxsmall) - 2 * tinstf,
                     ),
                     (dr_tf_wp / 2) + (tinstf),
@@ -1701,7 +1697,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     label="Insulation",
                 ),
             )
-            print(-(0.5 * wp_toridal_dxsmall))
+
             # Outer WP insulation
             axis.add_patch(
                 Rectangle(
@@ -1714,6 +1710,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     color="darkgreen",
                 ),
             )
+
             # Outer WP
             axis.add_patch(
                 Rectangle(
@@ -1728,7 +1725,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner - tinstf,
+                        wp_inner + tinstf,
                         -(0.5 * wp_toridal_dxsmall) - tinstf,
                     ),
                     (dr_tf_wp / 2) - (2 * tinstf),
@@ -1752,8 +1749,8 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     xy=list(zip(x, y)), color="darkgreen", label=" WP Insulation"
                 )
             )
-            # WP insulation
-            tinstf = 0.01
+
+            # WP
             x = [
                 wp_inner + tinstf,
                 wp_inner + tinstf,
@@ -1767,37 +1764,39 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 (-0.5 * wp_toridal_dxbig + tinstf),
             ]
             axis.add_patch(
-                patches.Polygon(xy=list(zip(x, y)), color="blue", label="WP")
+                patches.Polygon(
+                    xy=list(zip(x, y)),
+                    color="blue",
+                    label=f"WP \n{turns} turns \n{jwptf} MA/m$^2$ ",
+                )
             )
 
         plt.minorticks_on()
-        plt.xlim(
-            0.0,
-        )
+        plt.xlim(2.0, r_tf_inboard_out * 1.1)
         plt.ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
 
         # Plot nose case thickness labels
-        plt.annotate(
-            "",
-            xy=(r_tf_inboard_in, y14[-1]),
-            xytext=(nose_r + r_tf_inboard_in, y14[-1]),
-            arrowprops=dict(arrowstyle="<->"),
-        )
-        plt.annotate(
-            "",
-            xy=(r_tf_inboard_in, y14[-1]),
-            xytext=(nose_r + r_tf_inboard_in, y14[-1]),
-            arrowprops=dict(arrowstyle="|-|"),
-        )
-        bbox = dict(fc="white", ec="none")
-        plt.text(
-            (nose_r + (r_tf_inboard_in / 4)),
-            y14[-1],
-            f"{nose_r} m",
-            ha="center",
-            va="center",
-            bbox=bbox,
-        )
+        # plt.annotate(
+        #     "",
+        #     xy=(r_tf_inboard_in, y14[-1]),
+        #     xytext=(nose_r + r_tf_inboard_in, y14[-1]),
+        #     arrowprops=dict(arrowstyle="<->"),
+        # )
+        # plt.annotate(
+        #     "",
+        #     xy=(r_tf_inboard_in, y14[-1]),
+        #     xytext=(nose_r + r_tf_inboard_in, y14[-1]),
+        #     arrowprops=dict(arrowstyle="|-|"),
+        # )
+        # bbox = dict(fc="white", ec="none")
+        # plt.text(
+        #     (nose_r + (r_tf_inboard_in / 4)),
+        #     y14[-1],
+        #     f"{nose_r} m",
+        #     ha="center",
+        #     va="center",
+        #     bbox=bbox,
+        # )
 
         plt.title("Top-down view of inboard TF coil at midplane")
         plt.xlabel("Radial distance [m]")
@@ -1829,6 +1828,8 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     steel_thickness = mfile_data.data["thwcndut"].get_scan(scan) * 1e3
     insulation_thickness = mfile_data.data["thicndut"].get_scan(scan) * 1e3
     turn_width = mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3
+    internal_cable_space = mfile_data.data["acstf"].get_scan(scan) * 1e6
+    cable_space_width = mfile_data.data["t_cable"].get_scan(scan) * 1e3
 
     # Plot the total turn shape
     axis.add_patch(
@@ -1837,7 +1838,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             turn_width,
             turn_width,
             facecolor="red",
-            label=f"Inter-turn insulation\n {insulation_thickness} mm",
+            label=f"Inter-turn insulation\n {insulation_thickness} mm thickness",
             edgecolor="black",
         ),
     )
@@ -1847,8 +1848,8 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             [insulation_thickness, insulation_thickness],
             (turn_width - 2 * insulation_thickness),
             (turn_width - 2 * insulation_thickness),
-            facecolor="blue",
-            label=f"Steel Conduit\n {steel_thickness} mm",
+            facecolor="royalblue",
+            label=f"Steel Conduit\n {steel_thickness} mm thickness",
             edgecolor="black",
         ),
     )
@@ -1863,7 +1864,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             (turn_width - 2 * (insulation_thickness + steel_thickness)),
             (turn_width - 2 * (insulation_thickness + steel_thickness)),
             facecolor="grey",
-            label="Cable space",
+            label=f"Cable space\n {cable_space_width} mm width \n {internal_cable_space} mm$^2$",
             edgecolor="black",
         ),
     )
@@ -1872,7 +1873,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             [(turn_width / 2), (turn_width / 2)],
             he_pipe_diameter / 2,
             facecolor="white",
-            label=f"Cooling pipe\n {he_pipe_diameter} mm",
+            label=f"Cooling pipe\n {he_pipe_diameter} mm diameter",
             edgecolor="black",
         ),
     )
