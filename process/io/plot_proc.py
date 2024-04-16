@@ -1567,8 +1567,9 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         axis.plot(x14, y14, color="black")
 
         # Fill in the case segemnts
+
+        # Upper main
         if case_plasma == 0:
-            # Upper main
             axis.fill_between(
                 [
                     (r_tf_inboard_in * np.cos(half_case_angle)),
@@ -1577,6 +1578,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
+                label="Case",
             )
             # Lower main
             axis.fill_between(
@@ -1589,34 +1591,40 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 alpha=0.25,
             )
             axis.fill_between(
-                [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
-                [y12[-1], y11[-1]],
+                x12,
+                y12,
                 color="grey",
                 alpha=0.25,
             )
-            # Upper arc shaded section
+        elif case_plasma == 1:
             axis.fill_between(
-                [(r_tf_inboard_out * np.cos(half_case_angle)), r_tf_inboard_out],
-                [-y12[-1], -y11[-1]],
+                [
+                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_out),
+                ],
+                y13,
                 color="grey",
                 alpha=0.25,
                 label="Case",
             )
-        elif case_plasma == 1:
-            # Upper shaded segment
+            # Lower main
             axis.fill_between(
-                [r_tf_inboard_in, r_tf_inboard_out],
-                y13,
-                color="grey",
-                alpha=0.25,
-            )
-            # Lower shaded segment
-            axis.fill_between(
-                [r_tf_inboard_in, r_tf_inboard_out],
+                [
+                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_out),
+                ],
                 y14,
                 color="grey",
                 alpha=0.25,
             )
+
+        # Removes ovelapping colours on inner nose case
+        axis.fill_between(
+            x11,
+            y11,
+            color="white",
+            alpha=1.0,
+        )
 
         # Centre line for relative reference
         axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)
@@ -1772,7 +1780,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             )
 
         plt.minorticks_on()
-        plt.xlim(2.0, r_tf_inboard_out * 1.1)
+        plt.xlim(0.0, r_tf_inboard_out * 1.1)
         plt.ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
 
         # Plot nose case thickness labels
