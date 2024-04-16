@@ -958,9 +958,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = (
-                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
-                )
+                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -1813,63 +1811,123 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     """
 
     # Import the TF turn variables then multiply into mm
+    integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
+    # If integer turns switch is on then the turns can have non square dimensions
+    if integer_turns == 1:
+        turn_width = round(mfile_data.data["t_turn_radial"].get_scan(scan) * 1e3, 5)
+        turn_height = round(mfile_data.data["t_turn_toroidal"].get_scan(scan) * 1e3, 5)
+    elif integer_turns == 0:
+        turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
+        cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
+
     he_pipe_diameter = round(mfile_data.data["dhecoil"].get_scan(scan) * 1e3, 5)
     steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
     insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
-    turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
     internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6, 5)
-    cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
 
     # Plot the total turn shape
-    axis.add_patch(
-        Rectangle(
-            [0, 0],
-            turn_width,
-            turn_width,
-            facecolor="red",
-            label=f"Inter-turn insulation: \n{insulation_thickness} mm thickness",
-            edgecolor="black",
-        ),
-    )
-    # Plot the steel conduit
-    axis.add_patch(
-        Rectangle(
-            [insulation_thickness, insulation_thickness],
-            (turn_width - 2 * insulation_thickness),
-            (turn_width - 2 * insulation_thickness),
-            facecolor="grey",
-            label=f"Steel Conduit: \n{steel_thickness} mm thickness",
-            edgecolor="black",
-        ),
-    )
+    if integer_turns == 0:
+        axis.add_patch(
+            Rectangle(
+                [0, 0],
+                turn_width,
+                turn_width,
+                facecolor="red",
+                label=f"Inter-turn insulation: \n{insulation_thickness} mm thickness",
+                edgecolor="black",
+            ),
+        )
+        # Plot the steel conduit
+        axis.add_patch(
+            Rectangle(
+                [insulation_thickness, insulation_thickness],
+                (turn_width - 2 * insulation_thickness),
+                (turn_width - 2 * insulation_thickness),
+                facecolor="grey",
+                label=f"Steel Conduit: \n{steel_thickness} mm thickness",
+                edgecolor="black",
+            ),
+        )
 
-    # Plot the cable space
-    axis.add_patch(
-        Rectangle(
-            [
-                insulation_thickness + steel_thickness,
-                insulation_thickness + steel_thickness,
-            ],
-            (turn_width - 2 * (insulation_thickness + steel_thickness)),
-            (turn_width - 2 * (insulation_thickness + steel_thickness)),
-            facecolor="royalblue",
-            label=f"Cable space: \n{cable_space_width} mm width \n{internal_cable_space} mm$^2$",
-            edgecolor="black",
-        ),
-    )
-    axis.add_patch(
-        Circle(
-            [(turn_width / 2), (turn_width / 2)],
-            he_pipe_diameter / 2,
-            facecolor="white",
-            label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
-            edgecolor="black",
-        ),
-    )
+        # Plot the cable space
+        axis.add_patch(
+            Rectangle(
+                [
+                    insulation_thickness + steel_thickness,
+                    insulation_thickness + steel_thickness,
+                ],
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                facecolor="royalblue",
+                label=f"Cable space: \n{cable_space_width} mm width \n{internal_cable_space} mm$^2$",
+                edgecolor="black",
+            ),
+        )
+        axis.add_patch(
+            Circle(
+                [(turn_width / 2), (turn_width / 2)],
+                he_pipe_diameter / 2,
+                facecolor="white",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
+                edgecolor="black",
+            ),
+        )
+        plt.xlim(-turn_width * 0.05, turn_width * 1.05)
+        plt.ylim(-turn_width * 0.05, turn_width * 1.05)
+
+    # Non square turns
+    elif integer_turns == 1:
+        axis.add_patch(
+            Rectangle(
+                [0, 0],
+                turn_width,
+                turn_height,
+                facecolor="red",
+                label=f"Inter-turn insulation: \n{insulation_thickness} mm thickness",
+                edgecolor="black",
+            ),
+        )
+
+        # Plot the steel conduit
+        axis.add_patch(
+            Rectangle(
+                [insulation_thickness, insulation_thickness],
+                (turn_width - 2 * insulation_thickness),
+                (turn_height - 2 * insulation_thickness),
+                facecolor="grey",
+                label=f"Steel Conduit: \n{steel_thickness} mm thickness",
+                edgecolor="black",
+            ),
+        )
+
+        # Plot the cable space
+        axis.add_patch(
+            Rectangle(
+                [
+                    insulation_thickness + steel_thickness,
+                    insulation_thickness + steel_thickness,
+                ],
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                (turn_height - 2 * (insulation_thickness + steel_thickness)),
+                facecolor="royalblue",
+                label=f"Cable space: \n{cable_space_width} mm width \n{internal_cable_space} mm$^2$",
+                edgecolor="black",
+            ),
+        )
+        axis.add_patch(
+            Circle(
+                [(turn_width / 2), (turn_height / 2)],
+                he_pipe_diameter / 2,
+                facecolor="white",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
+                edgecolor="black",
+            ),
+        )
+
+        plt.xlim(-turn_width * 0.05, turn_width * 1.05)
+        plt.ylim(-turn_height * 0.05, turn_height * 1.05)
 
     plt.minorticks_on()
-    plt.xlim(-turn_width * 0.05, turn_width * 1.05)
-    plt.ylim(-turn_width * 0.05, turn_width * 1.05)
     plt.title("WP Turn Structure")
     plt.xlabel("X [mm]")
     plt.ylabel("Y [mm]")
