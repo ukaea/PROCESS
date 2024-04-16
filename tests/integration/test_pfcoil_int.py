@@ -17,8 +17,10 @@ from process.fortran import build_variables as bv
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
 from process.fortran import error_handling as eh
+
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
+
 from process.fortran import times_variables as tv
 from process.fortran import constants
 from process.pfcoil import PFCoil, mtrx, fixb
@@ -63,7 +65,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "fcohbop", 1.0)
     monkeypatch.setattr(pfv, "rjconpf", np.full(22, 1.1e7))
     monkeypatch.setattr(pfv, "ngrp", 4)
-    monkeypatch.setattr(pfv, "rohc", 0.0)
+    monkeypatch.setattr(pfv, "rohc", 3.0)
     monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(pfv, "zpf", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "cptdin", np.full(22, 4.22e4))
@@ -194,7 +196,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "bmaxoh", 1.4e1)
     monkeypatch.setattr(pfv, "i_cs_stress", 0)
     monkeypatch.setattr(pfv, "coheof", 1.693e7)
-    monkeypatch.setattr(pfv, "rohc", 0.0)
+    monkeypatch.setattr(pfv, "rohc", 3.0)
     monkeypatch.setattr(pfv, "vfohc", 3.0e-1)
     monkeypatch.setattr(pfv, "jstrandoh_bop", 1.069e8)
     monkeypatch.setattr(pfv, "fcuohsu", 7.000e-1)
@@ -265,11 +267,11 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
 
     pfcoil.ohcalc()
 
-    assert pytest.approx(pfv.bpf[4]) == 9.299805e2
-    assert pytest.approx(pfv.rjohc) == -7.728453e9
+    assert pytest.approx(pfv.bpf[4]) == 13.073958753751993
+    assert pytest.approx(pfv.rjohc) == 54101481.7685945
 
 
-def test_efc(pfcoil, monkeypatch):
+def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     """Test efc subroutine.
 
     efc() requires specific arguments in order to work; these were discovered
@@ -459,7 +461,7 @@ def test_efc(pfcoil, monkeypatch):
     )
 
 
-def test_mtrx(pfcoil):
+def test_mtrx(pfcoil: PFCoil):
     """Test mtrx subroutine.
 
     mtrx() requires specific arguments in order to work; these were discovered
@@ -1640,7 +1642,7 @@ def test_mtrx(pfcoil):
     assert_array_almost_equal(bvec, bvec_exp)
 
 
-def test_solv(pfcoil):
+def test_solv(pfcoil: PFCoil):
     """Test solv() with simple arguments.
 
     Running baseline_2019 results in 2D array args with 740 elements: unfeasible
@@ -1686,7 +1688,7 @@ def test_solv(pfcoil):
     )
 
 
-def test_fixb(pfcoil):
+def test_fixb(pfcoil: PFCoil):
     """Test fixb subroutine.
 
     fixb() requires specific arguments in order to work; these were discovered
@@ -2026,7 +2028,7 @@ def test_fixb(pfcoil):
     assert_array_almost_equal(bfix, bfix_exp)
 
 
-def test_peakb(monkeypatch, pfcoil):
+def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     """Test peakb subroutine.
 
     peakb() requires specific arguments in order to work; these were discovered
@@ -2626,7 +2628,7 @@ def test_peakb(monkeypatch, pfcoil):
     assert pytest.approx(bzo) == bzo_exp
 
 
-def test_superconpf(monkeypatch, pfcoil):
+def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     """Test superconpf subroutine.
 
     superconpf() requires specific arguments in order to work; these were
@@ -2672,7 +2674,7 @@ def test_superconpf(monkeypatch, pfcoil):
     assert pytest.approx(tmarg) == tmarg_exp
 
 
-def test_axial_stress(pfcoil, monkeypatch):
+def test_axial_stress(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     """Test axial_stress subroutine.
 
     axial_stress() requires specific mocked vars in order to work; these were
@@ -2815,7 +2817,7 @@ def test_axial_stress(pfcoil, monkeypatch):
     assert pytest.approx(axial_force) == axial_force_exp
 
 
-def test_induct(pfcoil, monkeypatch):
+def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     """Test induct subroutine.
 
     induct() requires specific mocked vars in order to work; these were

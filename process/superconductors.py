@@ -78,37 +78,29 @@ def current_sharing_rebco(bfield, j):
         jcritical, _ = jcrit_rebco(temperature, bfield)
         return jcritical - j
 
-    # Replace secant_solve by scipy.optimize.brentq.
-    # Find temperature at which current density margin = 0
-    # Temperature range ("bracketing interval") (K)
-    # For brentq to work, the current density margin must be
-    # negative at the upper temperature of the interval.
-
-    a = 4  # Bottom of temperature interval
-    b = 90  # Top of temperature interval
-
     # No additional arguments are required for deltaj_rebco since it only has one argument.
-    current_sharing_t, root_result = optimize.brentq(
+
+    estimate = 10.0
+    another_estimate = 20.0
+    current_sharing_t, root_result = optimize.newton(
         deltaj_rebco,
-        a,
-        b,
-        xtol=1e-4,
-        rtol=1e-4,
-        maxiter=100,
+        estimate,
+        tol=1e-6,
+        rtol=1e-6,
+        maxiter=50,
+        x1=another_estimate,
         full_output=True,
         disp=True,
     )
 
-    print(root_result)
-
     return current_sharing_t
 
 
-def itersc(thelium, bmax, strain, bc20max, tc0max):
+def itersc(temperature, bmax, strain, bc20max, tc0max):
     """Implementation of ITER Nb3Sn critical surface implementation
     author: R Kemp, CCFE, Culham Science Centre
     author: P J Knight, CCFE, Culham Science Centre
-    thelium : input real : Coolant/SC temperature (K)
+    temperature : input real : superconductor temperature (K)
     bmax : input real : Magnetic field at conductor (T)
     strain : input real : Strain in superconductor
     bc20max : input real : Upper critical field (T) for superconductor
@@ -117,19 +109,23 @@ def itersc(thelium, bmax, strain, bc20max, tc0max):
     jcrit : output real : Critical current density in superconductor (A/m2)
     bcrit : output real : Critical field (T)
     tcrit : output real : Critical temperature (K)
-    This routine calculates the critical current density and
+    Critical current density and
     temperature in the superconducting TF coils using the
     ITER Nb3Sn critical surface model.
     $J_C(B,T,\\epsilon)$ Parameterization for ITER Nb3Sn production,
     L. Bottura, CERN-ITER Collaboration Report, Version 2, April 2nd 2008
-    (distributed by Arnaud Devred, ITER, 10th April 2008)
+    (distributed by Arnaud Devred, ITER, 10th April 2008), now published as
+    Jc(B,T,epsilon) Parameterization for the ITER Nb3Sn Production,
+    Luca Bottura and Bernardo Bordini,
+    IEEE TRANSACTIONS ON APPLIED SUPERCONDUCTIVITY, VOL. 19, NO. 3, JUNE 2009.
+
     ITER Nb3Sn critical surface parameterization (2MMF7J) (2008),
     https://user.iter.org/?uid=2MMF7J&action=get_document
     ITER DDD 11-7: Magnets - conductors (2NBKXY) (2009),
     https://user.iter.org/?uid=2NBKXY&action=get_document
     """
 
-    csc = 19922.0e6  # scaling constant C
+    csc = 19922.0  # scaling constant C [AT/mm2]
     p = 0.63  # low field exponent p
     q = 2.1  # high field exponent q
     ca1 = 44.48  # strain fitting constant C_{a1}
@@ -138,70 +134,17 @@ def itersc(thelium, bmax, strain, bc20max, tc0max):
     diter = 0.82  # ITER strand diameter (mm)
     cuiter = 0.5  # ITER strand copper fraction
 
-    #  $\epsilon_{sh}$
-    epssh = (ca2 * eps0a) / (np.sqrt(ca1**2 - ca2**2))
-
-    # Strain function $s(\epsilon)$
-    # 0.83 < s < 1.0, for -0.005 < strain < 0.005
-    strfun = np.sqrt(epssh**2 + eps0a**2) - np.sqrt(
-        (strain - epssh) ** 2 + eps0a**2
+    jscaling, bcrit, tcrit = Bottura_scaling(
+        csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
     )
-    strfun = strfun * ca1 - ca2 * strain
-    strfun = 1.0 + (1 / (1.0 - ca1 * eps0a)) * strfun
-
-    # Critical field at zero temperature and current, corrected for strain
-    bc20eps = bc20max * strfun
-
-    # Critical temperature at zero field and current, corrected for strain
-    tc0eps = tc0max * strfun ** (1 / 3)
-
-    if thelium / tc0eps >= 1.0:
-        eh.fdiags[0] = thelium
-        eh.fdiags[1] = tc0eps
-        eh.report_error(159)
-
-    # Reduced temperature at zero field, corrected for strain
-    # I think t > 0 unless something has gone badly wrong.
-    t = thelium / tc0eps
-
-    if bmax / bc20eps >= 1.0:
-        eh.fdiags[0] = bmax
-        eh.fdiags[1] = bc20eps
-        eh.report_error(160)
-
-    # Reduced field at zero temperature, taking account of strain
-    bzero = bmax / bc20eps
-
-    # Critical temperature at given strain and field
-    # tcrit is not used in the calculation of jcrit.
-    if bzero < 1.0:
-        tcrit = tc0eps * (1.0 - bzero) ** (1 / 1.52)
-    else:
-        tcrit = -tc0eps * abs(1.0 - bzero) ** (
-            1 / 1.52
-        )  # Prevents NaNs. Sets tcrit negative
-
-    # Critical field (T) at given strain and temperature
-    bcrit = bc20eps * (1.0 - t**1.52)
-
-    # Reduced field at given strain and temperature
-    bred = bmax / bcrit
 
     #  Critical current density in superconductor (A/m2)
-    #  ITER parameterization is for the current in a single strand,
+    #  ITER parameters are for the current in a single strand,
     #  not per unit area, so scalefac converts to current density
+    #  Convert from mm2 to m2.
+    scalefac = np.pi * (0.5 * diter) ** 2 * (1.0 - cuiter) / 1.0e6
 
-    scalefac = np.pi * (0.5 * diter) ** 2 * (1.0 - cuiter)
-
-    jc1 = (csc / bmax) * strfun
-    jc2 = (1.0 - t**1.52) * (1.0 - t**2)
-
-    if (bred > 0) and (bred < 1):  # Normal case
-        jc3 = bred**p * (1.0 - bred) ** q
-        jcrit = jc1 * jc2 * jc3 / scalefac
-    else:
-        jc3 = abs(bred) ** p * abs(1.0 - bred) ** q  # Prevents NaNs
-        jcrit = -abs(jc1 * jc2 * jc3 / scalefac)  # Sets jcrit negative
+    jcrit = jscaling / scalefac
 
     return jcrit, bcrit, tcrit
 
@@ -570,102 +513,93 @@ def wstsc(temperature, bmax, strain, bc20max, tc0max):
     # epsilon_{0,a}
     eps0a = 0.00312
 
-    #  $\epsilon_{sh}$
+    jscaling, bcrit, tcrit = Bottura_scaling(
+        csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
+    )
+
+    # scale from mm2 to m2
+    scalefac = 1.0e6
+    jcrit = jscaling * scalefac
+    return jcrit, bcrit, tcrit
+
+
+def Bottura_scaling(
+    csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
+):
+    """
+    This implements the scaling from
+    Jc(B,T,epsilon) Parameterization for the ITER Nb3Sn Production,
+    Luca Bottura and Bernardo Bordini,
+    IEEE TRANSACTIONS ON APPLIED SUPERCONDUCTIVITY, VOL. 19, NO. 3, JUNE 2009.
+
+    The parameters and scale factors vary from one wire type to another.
+    """
+
     epssh = (ca2 * eps0a) / (np.sqrt(ca1**2 - ca2**2))
 
-    #  Strain function $s(\epsilon)$
-    #  0.83 < s < 1.0, for -0.005 < strain < 0.005
+    # Strain function
+    # 0.83 < s < 1.0, for -0.005 < strain < 0.005
     strfun = np.sqrt(epssh**2 + eps0a**2) - np.sqrt(
         (strain - epssh) ** 2 + eps0a**2
     )
     strfun = strfun * ca1 - ca2 * strain
-    strfun = 1.0 + (1.0 / (1.0 - ca1 * eps0a)) * strfun
-    if strfun < 0:
-        logger.warning(f"Strain function < 0: {strfun} for {strain = }")
+    strfun = 1.0 + (1 / (1.0 - ca1 * eps0a)) * strfun
 
-    # $B^*_{C2} (0,\epsilon)$
+    # Critical field at zero temperature and current, corrected for strain
     bc20eps = bc20max * strfun
 
-    #  $T^*_C (0,\epsilon)$
-    tc0eps = tc0max * strfun ** (1.0 / 3.0)
-
-    #  Reduced temperature
-    #  Should remain < 1 for temperature < 0.94*tc0max (i.e. 15 kelvin for i_tf_sc_mat=1)
+    # Critical temperature at zero field and current, corrected for strain
+    tc0eps = tc0max * strfun ** (1 / 3)
 
     if temperature / tc0eps >= 1.0:
         eh.fdiags[0] = temperature
         eh.fdiags[1] = tc0eps
         eh.report_error(159)
 
-    # t = min(thelium/tc0eps, 0.9999D0)
+    # Reduced temperature at zero field, corrected for strain
+    # t > 1 is permitted, indicating the temperature is above the critical value at zero field.
     t = temperature / tc0eps
-
-    #  Reduced magnetic field at zero temperature
-    #  Should remain < 1 for bmax < 0.83*bc20max (i.e. 27 tesla for i_tf_sc_mat=1)
 
     if bmax / bc20eps >= 1.0:
         eh.fdiags[0] = bmax
         eh.fdiags[1] = bc20eps
         eh.report_error(160)
 
-    # bzero = min(bmax/bc20eps, 0.9999D0)
+    # Reduced field at zero temperature, taking account of strain
     bzero = bmax / bc20eps
 
-    if bzero < 1.0:
-        #  Critical temperature (K)
-        tcrit = tc0eps * (1.0 - bzero) ** (1.0 / 1.52)
-    else:
-        # Allow bzero > 1, fudge to give real (negative) value of tcrit
-        # This generates a real (negative) and continuous (but not differentiable)
-        # function of bzero.
-        tcrit = tc0eps
+    # Critical temperature at given strain and field
+    # tcrit is not used in the calculation of jcrit.
+    if bzero < 1.0:  # Normal case, field is within critical surface
+        tcrit = tc0eps * (1.0 - bzero) ** (1 / 1.52)
+    else:  # Abnormal case, field is too high.
+        tcrit = -tc0eps * abs(1.0 - bzero) ** (
+            1 / 1.52
+        )  # Prevents NaNs. Sets tcrit negative
 
-    #  Critical field (T). Negative if normalised temperature t>1
-    if t > 0.0:
-        bcrit = bc20eps * (1.0 - t**1.52)
-    else:
-        # Allow t<0, fudge to give real value of bcrit
-        bcrit = bc20eps * (1.0 - t)
+    # Critical field (T) at given strain and temperature
+    bcrit = bc20eps * (1.0 - t**1.52)
 
-    #  Reduced magnetic field, restricted to be < 1
-    if bmax / bcrit >= 1.0:
-        eh.fdiags[0] = bmax
-        eh.fdiags[1] = bcrit
-        eh.report_error(161)
-
-    # bred = min(bmax/bcrit, 0.9999D0)
-    bred = bmax / bcrit
-
-    if (bred > 0.0) and (bred < 1.0):
-        jc3 = bred**p * (1.0 - bred) ** q  # bred must be < 1 to avoid NaNs
-    else:
-        # Allow bred > 1 or <0, fudge to give real (negative) value of jc3
-        # This generates a real (negative) and continuous (but not differentiable)
-        # function of bred.
-        jc3 = bred * (1.0 - bred)
-        if not np.isfinite(jc3):
-            raise RuntimeError("jc3 jcrit is NaN.")
-
-    #  Critical current density in superconductor (A/m2)
     jc1 = (csc / bmax) * strfun
 
-    if t > 0.0:
+    # Check if we are inside the critical surface
+    if (t > 0) and (t < 1) and (bmax > 0) and (bmax < bcrit) and (bcrit > 0):
+        # Reduced field at given strain and temperature
+        bred = bmax / bcrit
+
         jc2 = (1.0 - t**1.52) * (1.0 - t**2)
+        jc3 = bred**p * (1.0 - bred) ** q
+        jscaling = jc1 * jc2 * jc3
+
     else:
-        # Allow t<0, fudge to give real value of jc2
-        # This generates a real and continuous (but not differentiable) function of t.
-        jc2 = (1.0 - t) * (1.0 - t**2)
+        # Outside the critical surface.
+        # We construct a simple function that is always negative and
+        # becomes more negative as field and temperature increase.
+        jc2 = t
+        jc3 = bmax / max(bcrit, 1.0e-8)
+        jscaling = -abs(jc1 * jc2 * jc3)
 
-    # jc3 = bred**p * (1.0D0-bred)**q  !  bred must be < 1 to avoid NaNs
-
-    # scale from mm2 to m2
-    scalefac = 1.0e6
-
-    jcrit = jc1 * jc2 * jc3 * scalefac
-    if not np.isfinite(jcrit):
-        raise RuntimeError("jcrit is NaN.")
-
-    return jcrit, bcrit, tcrit
+    return jscaling, bcrit, tcrit
 
 
 def croco(jcritsc, conductor_area, croco_od, croco_thick):
