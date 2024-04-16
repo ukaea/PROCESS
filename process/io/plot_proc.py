@@ -958,9 +958,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = (
-                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
-                )
+                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -1580,7 +1578,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",
+                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",  # noqa: W605
             )
             # Lower main
             axis.fill_between(
@@ -1607,7 +1605,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",
+                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",  # noqa: W605
             )
             # Lower main
             axis.fill_between(
@@ -1658,7 +1656,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp - (2 * tinstf)),
                     (wp_toridal_dxbig - (2 * tinstf)),
                     color="blue",
-                    label=f"Winding pack:  \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",
+                    label=f"Winding pack:  \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
                 )
             )
             # Dvides the WP up into the turn segments
@@ -1728,7 +1726,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp / 2) - (2 * tinstf),
                     wp_toridal_dxbig - (2 * tinstf),
                     color="blue",
-                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",
+                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
                 ),
             )
             # Inner WP
@@ -1779,7 +1777,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y)),
                     color="blue",
-                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",
+                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
                 )
             )
 
