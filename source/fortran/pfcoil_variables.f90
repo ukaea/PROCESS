@@ -223,6 +223,10 @@ module pfcoil_variables
   real(dp) :: pfclres
   !! PF coil resistivity (if ipfres=1) (Ohm-m)
 
+  real(dp) :: rhopfbus
+  !! Resistivity of the PF coil bus bars (irrespective of
+  !! whether the coils themselves are superconducting or resistive) (Ohm-m)
+
   real(dp) :: pfmmax
   !! mass of heaviest PF coil (tonnes)
 
@@ -450,6 +454,7 @@ module pfcoil_variables
     pf_current_safety_factor = 1.0D0
     pfcaseth = 0.0D0
     pfclres = 2.5D-8
+    rhopfbus = 2.5D-8
     pfmmax = 0.0D0
     pfrmax = 0.0D0
     pfwpmw = 0.0D0

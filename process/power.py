@@ -103,9 +103,9 @@ class Power:
             albusa[ig] = abs(pfcoil_variables.cptdin[ic]) / 100.0e0
 
             #  Resistance of bussing for circuit (ohm)
-            #  Include 50% enhancement for welds, joints etc, (G. Gorker, ORNL)
             #  pfbusl : bus length for each PF circuit (m)
-            pfbusr[ig] = 1.5e0 * 2.62e-4 * pfbusl / albusa[ig]
+            #  pfbusr[ig] = 1.5e0 * 2.62e-4 * pfbusl / albusa[ig]
+            pfbusr[ig] = pfcoil_variables.rhopfbus * pfbusl / (albusa[ig] / 10000)
 
             #  Total PF coil resistance (during burn)
             #  pfcoil_variables.ric : maximum current in coil (A)
@@ -2712,7 +2712,8 @@ class Power:
         albuswt = 2.7e0 * albusa * tfbusl / 1.0e4
 
         #  Total resistance of TF bus, ohms
-        rtfbus = 2.62e-4 * tfbusl / albusa
+        # rtfbus = 2.62e-4 * tfbusl / albusa
+        rtfbus = tfcoil_variables.rhotfbus * tfbusl / (albusa / 10000)
 
         #  Total voltage drop across TF bus, volts
         vtfbus = 1000.0e0 * itfka * rtfbus
