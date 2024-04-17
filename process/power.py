@@ -2474,14 +2474,7 @@ class Power:
             abus = tfcoil_variables.cpttf / tfcoil_variables.jbus
 
             # Bus resistance [ohm]
-            # Bus resistivity (tfcoil_variables.rhotfbus) default value : -1.0e0
-            # If this value is chosen, the bus resistivity is the same as the leg one
-            if (
-                abs(tfcoil_variables.rhotfbus + 1.0e0)
-                < numpy.finfo(float(tfcoil_variables.rhotfbus)).eps
-            ):
-                tfcoil_variables.rhotfbus = tfcoil_variables.rhotfleg
-
+            # Bus resistivity (tfcoil_variables.rhotfbus)
             tfbusres = tfcoil_variables.rhotfbus * tfcoil_variables.tfbusl / abus
 
             #  Bus mass (kg)
