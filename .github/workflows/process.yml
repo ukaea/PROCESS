@@ -178,6 +178,34 @@ jobs:
           name: large-tokamak-mfile
           path: tracking/large_tokamak_MFILE.DAT
 
+  spherical-tokamak-py38:
+    runs-on: ubuntu-latest
+    needs: make-py38
+    container:
+      image: ghcr.io/ukaea/process-ci:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: process-build-artifacts
+          path: process/
+      - name: Install PROCESS
+        run: pip install -e .
+      - name: Run spherical tokamak
+        run: |
+          process -i tests/regression/input_files/spherical_tokamak.IN.DAT
+          mv tests/regression/input_files/spherical_tokamak.MFILE.DAT tracking/spherical_tokamak_MFILE.DAT
+      - name: Archive spherical-tokamak MFILE
+        uses: actions/upload-artifact@v3
+        with:
+          name: spherical-tokamak-mfile
+          path: tracking/spherical_tokamak_MFILE.DAT
+
   flake8:
     runs-on: ubuntu-latest
     container:
@@ -207,7 +235,9 @@ jobs:
       group: tracking-jobs
       cancel-in-progress: false
     runs-on: ubuntu-latest
-    needs: large-tokamak-py38
+    needs:
+      - large-tokamak-py38
+      - spherical-tokamak-py38
     if: github.ref == 'refs/heads/main'
     container:
       image: ghcr.io/ukaea/process-ci:latest
@@ -234,11 +264,18 @@ jobs:
         with:
           name: large-tokamak-mfile
           path: tracking/
+      - name: Download spherical tokamak MFILE
+        uses: actions/download-artifact@v3
+        with:
+          name: spherical-tokamak-mfile
+          path: tracking/
       - name: Create new tracking entries
         run: |
           git config --global --add safe.directory '*'
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/spherical_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
           cp tracking/large_tokamak_MFILE.DAT process-tracking-data/large_tokamak_MFILE_$(git rev-parse HEAD).DAT
+          cp tracking/spherical_tokamak_MFILE.DAT process-tracking-data/spherical_tokamak_MFILE_$(git rev-parse HEAD).DAT
       - name: Create the tracking dashboard
         run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
