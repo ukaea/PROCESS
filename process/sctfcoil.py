@@ -804,7 +804,7 @@ class Sctfcoil:
             jtol = 1.0e4
 
             for lap in range(100):
-                if ttest <= 0.0e0:
+                if ttest <= delt:
                     error_handling.idiags[0] = lap
                     error_handling.fdiags[0] = ttest
                     error_handling.report_error(157)

@@ -498,7 +498,7 @@ class CulcurParam(NamedTuple):
 
     q0: Any = None
 
-    qpsi: Any = None
+    q95: Any = None
 
     rmajor: Any = None
 
@@ -541,7 +541,7 @@ class CulcurParam(NamedTuple):
             p0=0,
             pperim=24.081367139525412,
             q0=1,
-            qpsi=3.5,
+            q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             sf=1.4372507312498271,
@@ -569,7 +569,7 @@ class CulcurParam(NamedTuple):
             p0=626431.90482713911,
             pperim=24.081367139525412,
             q0=1,
-            qpsi=3.5,
+            q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             sf=1.4372507312498271,
@@ -616,7 +616,7 @@ def test_culcur(culcurparam, monkeypatch, physics):
         p0=culcurparam.p0,
         pperim=culcurparam.pperim,
         q0=culcurparam.q0,
-        qpsi=culcurparam.qpsi,
+        q95=culcurparam.q95,
         rmajor=culcurparam.rmajor,
         rminor=culcurparam.rminor,
         sf=culcurparam.sf,
