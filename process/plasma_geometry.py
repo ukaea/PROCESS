@@ -222,24 +222,8 @@ class PlasmaGeom:
             physics_variables.kappa,
             physics_variables.triang,
         )
-
-        #  Poloidal perimeter
-        physics_variables.pperim = 2.0e0 * (xo * thetao + xi * thetai)
-        physics_variables.sf = physics_variables.pperim / (
-            2.0e0 * numpy.pi * physics_variables.rminor
-        )
-
-        #  Volume
-        physics_variables.vol = physics_variables.cvol * self.xvol(
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            xi,
-            thetai,
-            xo,
-            thetao,
-        )
-
-        #  Surface area
+        #  Surface area - inboard and outboard.  These are not given by Sauter but
+        #  the outboard area is required by DCLL and divertor
         xsi, xso = self.xsurf(
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -249,10 +233,45 @@ class PlasmaGeom:
             thetao,
         )
         physics_variables.sareao = xso
-        physics_variables.sarea = xsi + xso
 
-        #  Cross-sectional area
-        physics_variables.xarea = self.xsecta(xi, thetai, xo, thetao)
+        # icurr = 8 specifies use of the Sauter geometry as well as plasma current.
+        if physics_variables.icurr == 8:
+            (
+                physics_variables.pperim,
+                physics_variables.sf,
+                physics_variables.sarea,
+                physics_variables.xarea,
+                physics_variables.vol,
+            ) = self.Sauter_geometry(
+                physics_variables.rminor,
+                physics_variables.rmajor,
+                physics_variables.kappa,
+                physics_variables.triang,
+            )
+
+        else:
+
+            #  Poloidal perimeter
+            physics_variables.pperim = 2.0e0 * (xo * thetao + xi * thetai)
+            physics_variables.sf = physics_variables.pperim / (
+                2.0e0 * numpy.pi * physics_variables.rminor
+            )
+
+            #  Volume
+            physics_variables.vol = physics_variables.cvol * self.xvol(
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                xi,
+                thetai,
+                xo,
+                thetao,
+            )
+
+            #  Cross-sectional area
+            physics_variables.xarea = self.xsecta(xi, thetai, xo, thetao)
+
+            #  Surface area - sum of inboard and outboard.
+            physics_variables.sarea = xsi + xso
 
     def xparam(self, a, kap, tri):
         """
@@ -534,3 +553,40 @@ class PlasmaGeom:
         xsect0 = xlo**2 * (thetao - cto * sto) + xli**2 * (thetai - cti * sti)
 
         return xsect0
+
+    def sauter_geometry(self, a, r0, kap, tri):
+        """
+        Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Design 112 (2016) 633–645
+        'Geometric formulas for system codes including the effect of negative triangularity'
+        Author: Michael Kovari, issue #392
+        a      : input real :  plasma minor radius (m)
+        r0     : input real :  plasma major radius (m)
+        kap    : input real :  plasma separatrix elongation
+        tri    : input real :  plasma separatrix triangularity
+        """
+        w07 = 1
+        eps = a / r0
+
+        # Poloidal perimeter (named Lp in Sauter)
+        pperim = (
+            2.0e0
+            * numpy.pi
+            * a
+            * (1 + 0.55 * (kap - 1))
+            * (1 + 0.08 * tri**2)
+            * (1 + 0.2 * (w07 - 1))
+        )
+
+        # A geometric factor
+        sf = pperim / (2.0e0 * numpy.pi * a)
+
+        # Surface area (named Ap in Sauter)
+        sarea = 2.0e0 * numpy.pi * r0 * (1 - 0.32 * tri * eps) * pperim
+
+        # Cross-section area (named S_phi in Sauter)
+        xarea = numpy.pi * a**2 * kap * (1 + 0.52 * (w07 - 1))
+
+        # Volume
+        vol = 2.0e0 * numpy.pi * r0 * (1 - 0.25 * tri * eps) * xarea
+
+        return pperim, sf, sarea, xarea, vol
