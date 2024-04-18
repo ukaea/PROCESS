@@ -227,6 +227,29 @@ class Vmcon(_Solver):
         return self.info
 
 
+# TODO add VmconBounded here
+class VmconBounded(Vmcon):
+    """A solver that uses VMCON but checks x is in bounds before running"""
+
+    def set_opt_params(self, x_0: np.ndarray) -> None:
+        # check x_0 is within bounds and reset out-of-bounds
+        # values to be within bounds
+        lower_bounds = numerics.boundl[: x_0.shape[0]]
+        upper_bounds = numerics.boundu[: x_0.shape[0]]
+
+        lower_violated = np.less(x_0, lower_bounds)
+        upper_violated = np.greater(x_0, upper_bounds)
+
+        for index, entry in enumerate(lower_violated):
+            if entry:
+                x_0[index] = lower_bounds[index]
+        for index, entry in enumerate(upper_violated):
+            if entry:
+                x_0[index] = upper_bounds[index]
+
+        self.x_0 = x_0
+
+
 def get_solver(solver_name: str = "vmcon") -> _Solver:
     """Return a solver instance.
 
@@ -239,6 +262,8 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
 
     if solver_name == "vmcon":
         solver = Vmcon()
+    elif solver_name == "vmcon_bounded":
+        solver = VmconBounded()
     else:
         try:
             solver = load_external_solver(solver_name)
