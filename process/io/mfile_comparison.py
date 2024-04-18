@@ -323,7 +323,7 @@ def main(arg):
         if "normres" in v:
             continue
 
-        values = numpy.zeros(n) #  replaced scipy with numpy
+        values = numpy.zeros(n)  # replaced scipy with numpy
 
         if v not in get_dicts()["DICT_VAR_TYPE"].keys():
             try:
