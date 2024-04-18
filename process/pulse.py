@@ -73,7 +73,9 @@ class Pulse:
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
         albusa = abs(pfcoil_variables.cptdin[pfcoil_variables.nohc - 1]) / 100.0e0
 
-        rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
+        # rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
+        #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
+        rho = pfcoil_variables.rhopfbus * pfbusl / (albusa / 10000)
 
         #  Central Solenoid power source emf (volts)
 

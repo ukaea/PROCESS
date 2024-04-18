@@ -105,6 +105,7 @@ class Power:
             #  Resistance of bussing for circuit (ohm)
             #  pfbusl : bus length for each PF circuit (m)
             #  pfbusr[ig] = 1.5e0 * 2.62e-4 * pfbusl / albusa[ig]
+            #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
             pfbusr[ig] = pfcoil_variables.rhopfbus * pfbusl / (albusa[ig] / 10000)
 
             #  Total PF coil resistance (during burn)
@@ -2475,6 +2476,8 @@ class Power:
 
             # Bus resistance [ohm]
             # Bus resistivity (tfcoil_variables.rhotfbus)
+            # Issue #1253: there was a fudge here to set the bus bar resistivity equal
+            # to the TF conductor resistivity. I have removed this.
             tfbusres = tfcoil_variables.rhotfbus * tfcoil_variables.tfbusl / abus
 
             #  Bus mass (kg)
