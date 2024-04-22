@@ -33,7 +33,7 @@ Most nuclear power stations in the UK today are on the coast and use seawater fo
 
 ## Caveats and Limitations
 
-- For simplicity, the properties of water in these calculations are those at 21$\degree$C.  
+- For simplicity, the properties of water in these calculations are those at 21$^{\circ}$C.  
 - Any water used for the rejection of low grade heat is neglected.
 
 (Updated 12/4/23)
