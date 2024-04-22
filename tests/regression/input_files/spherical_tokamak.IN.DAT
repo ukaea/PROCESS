@@ -148,7 +148,6 @@ powfmax = 2500.0
 * DESCRIPTION:   Minimum fusion gain Q 
 * JUSTIFICATION: Turned off, dont care about lower Q value
 
-
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Shaping ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
@@ -257,7 +256,6 @@ boundu(9) = 1.0
 * DESCRIPTION:   f-value for density limit
 * JUSTIFICATION: Used with icc=5 to enforce density limit
                
-
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ixc = 109
@@ -466,7 +464,6 @@ taulimit = 5.0
 * DESCRIPTION:   Ratio of Alpha Particle to Energy Confinement times (icc=62)
 * JUSTIFICATION: Default based on JET
 
-
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pedestal & Profiles ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
@@ -587,7 +584,6 @@ tesep = 0.125
 alphaj = 0.1
 * DESCRIPTION:   Current Profile Index
 * JUSTIFICATION: ST current profile is flattish, value assumed
-
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Radiation,Fuelling & Impurities ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -1239,7 +1235,6 @@ i_tf_turns_integer = 0
 *                This depends at least on the maximum dump voltage and prpbably
 *                on the CS magnet maximum current
 
-
 *dcondins = 
 * DESCRIPTION: Density of TF coil insulation (kg/m3)
 * JUSTIFICATION: Not set, assuming default
@@ -1356,7 +1351,7 @@ i_tf_stress_model = 0
 *= 0 : Generalized plane strain formulation, Issues #977 and #991, O(n^3)
 *= 1 : Old plane stress model (only for SC)
 *= 2 : Axisymmetric extended plane strain, Issues #1414 and #998, O(n)
-* JUSTIFICATION: The generalized plane strain hypothesis are perfectly verified for the STEP CP
+* JUSTIFICATION: 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1403,7 +1398,7 @@ boundu(49) = 1.0
 *     in the stress calculation. This corresponds to the case that the
 *     conductor is much less stiff than the conduit, or the case that the
 *     conductor is prevented (isolated) from taking axial loads.
-* =1  Elastic properties are set by user input, using the variable                MAY BE OBSOLETE
+* =1  Elastic properties are set by user input, using the variable                
 *     `eyoung_cond_axial`
 * =2  Elastic properties are set to reasonable defaults taking into
 *     account the superconducting material `i_tf_sc_mat`
@@ -1414,7 +1409,7 @@ boundu(49) = 1.0
 *  Only active if i_tf_cond_eyoung_axial == 2
 * =0  Cable not potted in solder. Transverse Young's modulus set to zero.
 * =1  Cable potted in solder. If i_tf_cond_eyoung_axial == 2, the
-*     transverse Young's modulus of the conductor is equal to the axial,       MAY BE OBSOLETE
+*     transverse Young's modulus of the conductor is equal to the axial,       
 *     which is set to a sensible material-dependent default.`
 * JUSTIFICATION: Not yet set, assuming default
 
@@ -1645,7 +1640,7 @@ itartpf  = 1
 
 ipfres = 0 
 * DESCRIPTION:   Switch for PF coil type  (default = 0)
-* =0 superconducting PF coils                              DOES THIS SET THE PF AND CS?
+* =0 superconducting PF coils                              
 * =1 resistive PF coils
 * JUSTIFICATION: Design choice, superconducting PF coils
 
@@ -1871,7 +1866,6 @@ isumatpf = 9
 * Stress *
 *--------*
 
-
 *str_pf_con_res = 
 * DESCRIPTION:   Residual manufacturing strain in PF superconductor material
 * JUSTIFICATION: Not set, assuming default
@@ -1885,7 +1879,6 @@ isumatpf = 9
 * DESCRIPTION: fraction of JxB hoop force supported by steel case for superconducting PF 
 *coils (`ipfres=0`) (default = 0.66)
 * JUSTIFICATION: Not yet set
-
 
 *------------------------*
 * Current & Field Limits *
@@ -1975,7 +1968,6 @@ zref(4) = 5.2
 *rjconpf: Current per turn for PF coil resistivity (ohm-m)
 *rref: Radius of ipfloc = 4 coil groups. Number of minor radii from major radius
 *zref: Height of ipfloc 3/4 coil groups. Units of minor radius
-
 
 *______________________________________________________________________________________________________________________________________________________________________________________________________________________*
 *-------------------------Radial & Vertical build----------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -2069,7 +2061,6 @@ boundu(93) = 1.0
 vvblgap = 0.01 
 * DESCRIPTION:   Gap Between Vacuum Vessel and Blanket (m)
 * JUSTIFICATION: No inboard vacuum vessel or blanket
-
 
 *---------*
 * Blanket *
@@ -2479,6 +2470,7 @@ inuclear = 0
 * JUSTIFICATION: Not yet set. 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 *-----------*
 * CCFE HCPB *   * Set iblanket = 1 *
 *-----------*
@@ -2526,48 +2518,6 @@ inuclear = 0
 *p_he = 
 * DESCRIPTION:   Pressure in FW and blanket coolant at pump exit (Default value in code 8D6)
 * JUSTIFICATION: Not yet set
-
-*----------*
-* KIT HCPB *   * Set iblanket = 2 *
-*----------*
-
-*hcdportsize = 
-* DESCRIPTION:   switch for size of heating/current drive ports (`iblanket=2` (KIT HCPB)):
-* =1 'small'
-* =2 'large'
-* JUSTIFICATION: Not using iblanket = 2 
-
-*fblbe = 
-* DESCRIPTION:   Beryllium fraction of blanket by volume (if `iblanket=2`, is Be fraction of breeding zone)
-* JUSTIFICATION: Not set. Not using iblanket = 2
-
-*fblhebmi = 
-* DESCRIPTION:   Helium fraction of inboard blanket box manifold by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
-
-*fblhebmi = 
-* DESCRIPTION:   Helium fraction of inboard blanket box manifold by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
-
-*fblhebmo = 
-* DESCRIPTION:   Helium fraction of outboard blanket box manifold by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
-
-*fblhebpi = 
-* DESCRIPTION:   Helium fraction of inboard blanket back plate by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
-
-*fblhebpo = 
-* DESCRIPTION:   Helium fraction of outboard blanket back plate by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
-
-*fblbreed = 
-* DESCRIPTION:   Breeder fraction of blanket breeding zone by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not used as iblanket is not 2
-
-*fblss = 
-* DESCRIPTION:   KIT blanket model: steel fraction of breeding zone
-* JUSTIFICATION: Not using kit blanket, not set
 
 *------*
 * DCLL *   * Set iblanket = 5 *
@@ -2735,6 +2685,7 @@ irfcd = 1
 * JUSTIFICATION: Turned off, not using icc = 40
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 *icc = 37
 * DESCRIPTION:   Constraint equation for current drive gamma upper limit
 * JUSTIFICATION: Turned off, do not care about maximum current drive gamma
@@ -2765,6 +2716,7 @@ iefrf = 13
 * JUSTIFICATION: Design choice
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 icc = 30
 * DESCRIPTION:   Injection Power Upper Limit
 * JUSTIFICATION: Limit for plasma stability
@@ -2933,7 +2885,6 @@ etaech = 0.45
 * DESCRIPTION:   User Input EBW Gamma
 * JUSTIFICATION: user input for current drive efficiency. Default xi_ebw = 0.43
 
-
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Plasma Current ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
@@ -2998,6 +2949,7 @@ rli = 0.3
 * JUSTIFICATION: Matched to JETTO li(3).
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 *csawth
 * DESCRIPTION:   Coefficient for sawteeth effects
 * JUSTIFICATION: Do not need for Vs calculation
@@ -3037,7 +2989,7 @@ secondary_cycle = 2
 
 etath = 0.40
 * DESCRIPTION:   Thermal-to-Electric Conversion Efficiency
-* JUSTIFICATION: STEP-Net Power MOE Tracker
+* JUSTIFICATION: 
 
 *etatf = 
 * DESCRIPTION:   AC to resistive power conversion for TF coils (default = 0.9)
@@ -3308,7 +3260,6 @@ tdwell = 100.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 *________________________________________________________________________*
 *-------------------------------Availability-----------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
@@ -3421,7 +3372,6 @@ iavail = 0
 *uuves = 
 * DESCRIPTION: Unplanned unavailability for vessel
 * JUSTIFICATION: testing
-
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3561,16 +3511,3 @@ iavail = 0
 * DESCRIPTION:   Constraint equation for inboard major radius: This is a consistency equation 
 * JUSTIFICATION: Turned off, build consistency covered by icc = 11  
 * VARIABLES:     rinboard calculated in-situ
-
-*icc = 69-71
-* DESCRIPTION:   Ensure separatrix power is less than value from Kallenbach divertor
-* JUSTIFICATION: Turned off, not using Kallenbach model as removed?
-* VARIABLES: 
-
-*ifispact = 
-* DESCRIPTION:   Swiusing Kallenbach model as removed?
-* VARIABLES: 
-
-*ifispact = 
-* DESCRIPTION:   Switch for neutronics calculations
-* JUSTIFICATION: Not worried about neutronics, default =0, POSSIBLEY REMOVE, MAY BE DEPRECATED
