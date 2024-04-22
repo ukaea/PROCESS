@@ -832,6 +832,10 @@ subroutine check
         call report_error(269)
     end if
 
+    if ( i_tf_wp_geom /= 0  .and. i_tf_turns_integer == 1 ) then
+        call report_error(283)
+    end if
+
     ! Setting t_cable_tf_is_input to true if t_cable_tf is an input
     if ( abs(t_cable_tf) < epsilon(t_cable_tf) ) then
         t_cable_tf_is_input = .false.
