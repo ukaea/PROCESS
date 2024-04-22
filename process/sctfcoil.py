@@ -45,10 +45,7 @@ class Sctfcoil:
         )
 
         if tfcoil_variables.i_tf_sc_mat == 6:
-            (
-                tfcoil_variables.jwdgcrt,
-                tfcoil_variables.tmargtf,
-            ) = self.supercon_croco(
+            (tfcoil_variables.jwdgcrt, tfcoil_variables.tmargtf,) = self.supercon_croco(
                 aturn,
                 tfcoil_variables.bmaxtfrp,
                 tfcoil_variables.cpttf,
@@ -1529,7 +1526,8 @@ class Sctfcoil:
         if tfcoil_variables.i_tf_case_geom == 0:
             # Circular front case
             tfcoil_variables.tfareain = numpy.pi * (
-                build_variables.r_tf_inboard_out**2 - build_variables.r_tf_inboard_in**2
+                build_variables.r_tf_inboard_out**2
+                - build_variables.r_tf_inboard_in**2
             )
         else:
             # Straight front case
@@ -3166,7 +3164,10 @@ class Sctfcoil:
         # -------------------
         # Central helium channel down the conductor core [m2]
         tfcoil_variables.awphec = (
-            0.25e0 * tfcoil_variables.n_tf_turn * numpy.pi * tfcoil_variables.dhecoil**2
+            0.25e0
+            * tfcoil_variables.n_tf_turn
+            * numpy.pi
+            * tfcoil_variables.dhecoil**2
         )
 
         # Total conductor cross-sectional area, taking account of void area
@@ -3826,11 +3827,7 @@ class Sctfcoil:
                 # [EDIT: eyoung_cond is for the TF coil, not the CS coil]
 
                 # Get transverse properties
-                (
-                    eyoung_trans[0],
-                    a_working,
-                    poisson_trans[0],
-                ) = eyoung_parallel(
+                (eyoung_trans[0], a_working, poisson_trans[0],) = eyoung_parallel(
                     eyoung_steel,
                     oh_steel_frac,
                     poisson_steel,
@@ -3996,11 +3993,7 @@ class Sctfcoil:
             )
 
             # Lateral casing correction (series-composition)
-            (
-                eyoung_wp_trans_eff,
-                a_working,
-                poisson_wp_trans_eff,
-            ) = eyoung_series(
+            (eyoung_wp_trans_eff, a_working, poisson_wp_trans_eff,) = eyoung_series(
                 eyoung_wp_trans,
                 numpy.double(t_wp_toroidal_av),
                 poisson_wp_trans,
@@ -4035,11 +4028,7 @@ class Sctfcoil:
             poisson_member_array[4] = poisson_steel
             l_member_array[4] = awpc - acond - a_tf_ins - aswp
             # Compute the composite / smeared properties:
-            (
-                eyoung_wp_axial,
-                a_working,
-                poisson_wp_axial,
-            ) = eyoung_parallel_array(
+            (eyoung_wp_axial, a_working, poisson_wp_axial,) = eyoung_parallel_array(
                 5,
                 eyoung_member_array,
                 l_member_array,
@@ -4048,11 +4037,7 @@ class Sctfcoil:
 
             # Average WP Young's modulus in the vertical direction, now including the lateral case
             # Parallel-composite the steel and insulation, now including the lateral case (sidewalls)
-            (
-                eyoung_wp_axial_eff,
-                a_working,
-                poisson_wp_axial_eff,
-            ) = eyoung_parallel(
+            (eyoung_wp_axial_eff, a_working, poisson_wp_axial_eff,) = eyoung_parallel(
                 eyoung_steel,
                 a_wp_steel_eff - aswp,
                 poisson_steel,
@@ -4084,11 +4069,7 @@ class Sctfcoil:
 
             # Effective conductor region young modulus in the vertical direction [Pa]
             # Parallel-composite conductor and insulator
-            (
-                eyoung_wp_axial,
-                a_working,
-                poisson_wp_axial,
-            ) = eyoung_parallel(
+            (eyoung_wp_axial, a_working, poisson_wp_axial,) = eyoung_parallel(
                 eyoung_cond,
                 (a_wp_eff - a_tf_ins) * (1.0e0 - fcoolcp),
                 poisson_cond,
@@ -4097,11 +4078,7 @@ class Sctfcoil:
                 poisson_ins,
             )
             # Parallel-composite cooling pipes into that
-            (
-                eyoung_wp_axial,
-                a_working,
-                poisson_wp_axial,
-            ) = eyoung_parallel(
+            (eyoung_wp_axial, a_working, poisson_wp_axial,) = eyoung_parallel(
                 0e0,
                 (a_wp_eff - a_tf_ins) * fcoolcp,
                 poisson_cond,
@@ -4197,12 +4174,7 @@ class Sctfcoil:
         if i_tf_stress_model == 1:
             # Plane stress calculation (SC) [Pa]
 
-            (
-                sig_tf_r,
-                sig_tf_t,
-                deflect,
-                radial_array,
-            ) = plane_stress(
+            (sig_tf_r, sig_tf_t, deflect, radial_array,) = plane_stress(
                 nu=poisson_trans,
                 rad=radtf,
                 ey=eyoung_trans,

@@ -958,7 +958,9 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
+                ne[q] = (
+                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
+                )
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -1493,6 +1495,9 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
     jwptf = round(mfile_data.data["jwptf"].get_scan(scan)) / 1e6
     tf_thickness = mfile_data.data["tfcth"].get_scan(scan)
+    integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
+    turn_layers = mfile_data.data["n_layer"].get_scan(scan)
+    turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
 
     # Superconducting coil check
     if cond_type == 1:
@@ -1631,13 +1636,17 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
 
         # Plot the rectangular WP
         if wp_shape == 0:
-            wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
-                wwp1 - (2 * tinstf)
-            )  # row to height
-            side_unit = turns / wp_side_ratio
-            root_turns = round(np.sqrt(side_unit), 1)
-            long_turns = round(root_turns * wp_side_ratio)
-            short_turns = round(root_turns)
+            if integer_turns == 1:
+                long_turns = round(turn_layers)
+                short_turns = round(turn_pancakes)
+            else:
+                wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
+                    wwp1 - (2 * tinstf)
+                )  # row to height
+                side_unit = turns / wp_side_ratio
+                root_turns = round(np.sqrt(side_unit), 1)
+                long_turns = round(root_turns * wp_side_ratio)
+                short_turns = round(root_turns)
 
             # Plots the surrounding insualtion
             axis.add_patch(
