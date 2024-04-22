@@ -1423,7 +1423,7 @@
     {
       "no": 283,
       "level": 3,
-      "message": "[tfcoil]: Can only have i_tf_wp_geom = 0 (Rectangular WP) with i_tf_turns_integer = 1"
+      "message": "[tfcoil]: Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
     }
   ]
 }
