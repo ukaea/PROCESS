@@ -4591,11 +4591,46 @@ class Sctfcoil:
             "OP ",
         )
         po.ovarre(
+            constants.mfile,
+            "Inboard leg inner radius (m)",
+            "(r_tf_inboard_in)",
+            build_variables.r_tf_inboard_in,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Inboard leg outer radius (m)",
+            "(r_tf_inboard_out)",
+            build_variables.r_tf_inboard_out,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "WP shape selection switch",
+            "(i_tf_wp_geom)",
+            tfcoil_variables.i_tf_wp_geom,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Radial position of inner edge and centre of winding pack (m)",
+            "(r_wp_inner)",
+            sctfcoil_module.r_wp_inner,
+            "OP ",
+        )
+
+        po.ovarre(
             self.outfile,
             "Outboard leg centre radius (m)",
             "(r_tf_outboard_mid)",
             build_variables.r_tf_outboard_mid,
             "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Outboard leg nose case type",
+            "(i_tf_case_geom)",
+            tfcoil_variables.i_tf_case_geom,
         )
         po.ovarre(
             self.outfile,
@@ -4930,7 +4965,7 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "Radial width of conductor (m)",
-                    "(elonductor_radial)",
+                    "(t_conductor_radial)",
                     sctfcoil_module.t_conductor_radial,
                     "OP ",
                 )
@@ -6035,9 +6070,11 @@ class Sctfcoil:
             "Toroidal smear stress (MPa)": sig_tf_smeared_t * 1e-6,
             "Vertical smear stress (MPa)": sig_tf_smeared_z * 1e-6,
             "Von-Mises stress (MPa)": sig_tf_vmises * 1e-6,
-            "CEA Tresca stress (MPa)": s_tresca_cond_cea * 1e-6
-            if tfcoil_variables.i_tf_sup == 1
-            else sig_tf_tresca * 1e-6,
+            "CEA Tresca stress (MPa)": (
+                s_tresca_cond_cea * 1e-6
+                if tfcoil_variables.i_tf_sup == 1
+                else sig_tf_tresca * 1e-6
+            ),
             "rad. displacement (mm)": deflect * 1e3,
         }
         if tfcoil_variables.i_tf_stress_model != 1:

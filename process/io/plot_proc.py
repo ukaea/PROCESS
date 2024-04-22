@@ -19,6 +19,8 @@ import sys
 import argparse
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+from matplotlib.patches import Circle
 import matplotlib.backends.backend_pdf as bpdf
 from matplotlib.path import Path
 import matplotlib.patches as patches
@@ -281,6 +283,7 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges):
     axis.set_xlabel("R / m")
     axis.set_ylabel("Z / m")
     axis.set_title("Poloidal cross-section")
+    axis.minorticks_on()
 
     plot_vacuum_vessel(axis, mfile_data, scan)
     plot_shield(axis, mfile_data, scan)
@@ -396,6 +399,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
     axis.set_xlabel("x / m")
     axis.set_ylabel("y / m")
     axis.set_title("Toroidal cross-section")
+    axis.minorticks_on()
 
     arc(axis, rmajor, style="dashed")
 
@@ -690,6 +694,27 @@ def plot_nprofile(prof, demo_ranges):
     # Adapatative ranges
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
+
+    if ipedestal != 0:
+        # Print pedestal lines
+        prof.axhline(
+            y=neped / 1e19,
+            xmax=rhopedn,
+            color="r",
+            linestyle="-",
+            linewidth=0.4,
+            alpha=0.4,
+        )
+        prof.vlines(
+            x=rhopedn,
+            ymin=0.0,
+            ymax=neped / 1e19,
+            color="r",
+            linestyle="-",
+            linewidth=0.4,
+            alpha=0.4,
+        )
+        prof.minorticks_on()
     # ---
 
 
@@ -731,6 +756,22 @@ def plot_tprofile(prof, demo_ranges):
     # Adapatative ranges
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
+
+    if ipedestal != 0:
+        # Plot pedestal lines
+        prof.axhline(
+            y=teped, xmax=rhopedt, color="r", linestyle="-", linewidth=0.4, alpha=0.4
+        )
+        prof.vlines(
+            x=rhopedt,
+            ymin=0.0,
+            ymax=teped,
+            color="r",
+            linestyle="-",
+            linewidth=0.4,
+            alpha=0.4,
+        )
+        prof.minorticks_on()
     # ---
 
 
@@ -1018,6 +1059,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     if imp_frac[13] > 1.0e-30:
         prof.plot(rho, pimpden[13] * 2.0e-6, label="W")
     prof.legend()
+    prof.minorticks_on()
 
     # Ranges
     # ---
@@ -1415,6 +1457,490 @@ def plot_tf_coils(axis, mfile_data, scan):
                     facecolor=tfc,
                 )
             )
+
+
+def plot_tf_wp(axis, mfile_data, scan: int) -> None:
+    """
+    Plots inboard TF coil and winding pack.
+    Author: C. Ashe
+
+    Parameters
+    ----------
+    axis : matplotlib.axes object
+        Axis object to plot to.
+    mfile_data : MFILE data object
+        Object containing data for the plot.
+    scan : int
+        Scan number to use.
+
+    Returns
+    -------
+    None
+    """
+
+    # Import the TF variables
+    r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
+    r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
+    wp_toridal_dxbig = mfile_data.data["wwp1"].get_scan(scan)
+    wp_toridal_dxsmall = mfile_data.data["wwp2"].get_scan(scan)
+    dr_tf_wp = mfile_data.data["dr_tf_wp"].get_scan(scan)
+    side_case_dx = mfile_data.data["casths"].get_scan(scan)
+    wp_inner = mfile_data.data["r_wp_inner"].get_scan(scan)
+    tinstf = mfile_data.data["tinstf"].get_scan(scan)
+    turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
+    wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
+    cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
+    nose_thickness = mfile_data.data["thkcas"].get_scan(scan)
+    side_thickness = mfile_data.data["casths"].get_scan(scan)
+    case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
+    jwptf = round(mfile_data.data["jwptf"].get_scan(scan)) / 1e6
+    tf_thickness = mfile_data.data["tfcth"].get_scan(scan)
+    integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
+    turn_layers = mfile_data.data["n_layer"].get_scan(scan)
+    turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
+
+    # Superconducting coil check
+    if cond_type == 1:
+        axis.add_patch(
+            Circle(
+                [0, 0],
+                r_tf_inboard_in,
+                facecolor="none",
+                edgecolor="black",
+                linestyle="--",
+            ),
+        )
+
+        if case_plasma == 0:
+            axis.add_patch(
+                Circle(
+                    [0, 0],
+                    r_tf_inboard_out,
+                    facecolor="none",
+                    edgecolor="black",
+                    linestyle="--",
+                ),
+            )
+
+        # Equations for plotting the TF case
+        half_case_angle = np.arctan(
+            (side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner
+        )
+
+        # X points for inboard case curve
+        x11 = r_tf_inboard_in * np.cos(
+            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+        )
+        # Y points for inboard case curve
+        y11 = r_tf_inboard_in * np.sin(
+            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+        )
+        # Check for plasma side case type
+        if case_plasma == 0:
+            # Rounded case
+
+            # X points for outboard case curve
+            x12 = r_tf_inboard_out * np.cos(
+                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            )
+            # Y points for outboard case curve
+            y12 = r_tf_inboard_out * np.sin(
+                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            )
+        elif case_plasma == 1:
+            # Flat case
+
+            # X points for outboard case
+            x12 = r_tf_inboard_out * np.linspace(1, 1, 256, endpoint=True)
+
+            # Y points for outboard case
+            y12 = r_tf_inboard_out * np.sin(
+                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            )
+
+        # Cordinates of the top and bottom of case curves,
+        # used to plot the lines connecting the inside and outside of the case
+        y13 = [y11[0], y12[0]]
+        x13 = [x11[0], x12[0]]
+        y14 = [y11[-1], y12[-1]]
+        x14 = [x11[-1], x12[-1]]
+
+        # Plot the case outline
+        axis.plot(x11, y11, color="black")
+        axis.plot(x12, y12, color="black")
+        axis.plot(x13, y13, color="black")
+        axis.plot(x14, y14, color="black")
+
+        # Fill in the case segemnts
+
+        # Upper main
+        if case_plasma == 0:
+            axis.fill_between(
+                [
+                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_out * np.cos(half_case_angle)),
+                ],
+                y13,
+                color="grey",
+                alpha=0.25,
+                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",  # noqa: W605
+            )
+            # Lower main
+            axis.fill_between(
+                [
+                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_out * np.cos(half_case_angle)),
+                ],
+                y14,
+                color="grey",
+                alpha=0.25,
+            )
+            axis.fill_between(
+                x12,
+                y12,
+                color="grey",
+                alpha=0.25,
+            )
+        elif case_plasma == 1:
+            axis.fill_between(
+                [
+                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_out),
+                ],
+                y13,
+                color="grey",
+                alpha=0.25,
+                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",  # noqa: W605
+            )
+            # Lower main
+            axis.fill_between(
+                [
+                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_out),
+                ],
+                y14,
+                color="grey",
+                alpha=0.25,
+            )
+
+        # Removes ovelapping colours on inner nose case
+        axis.fill_between(
+            x11,
+            y11,
+            color="white",
+            alpha=1.0,
+        )
+
+        # Centre line for relative reference
+        axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)
+
+        # Plot the rectangular WP
+        if wp_shape == 0:
+            if integer_turns == 1:
+                long_turns = round(turn_layers)
+                short_turns = round(turn_pancakes)
+            else:
+                wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
+                    wwp1 - (2 * tinstf)
+                )  # row to height
+                side_unit = turns / wp_side_ratio
+                root_turns = round(np.sqrt(side_unit), 1)
+                long_turns = round(root_turns * wp_side_ratio)
+                short_turns = round(root_turns)
+
+            # Plots the surrounding insualtion
+            axis.add_patch(
+                Rectangle(
+                    (wp_inner, -(0.5 * wp_toridal_dxbig)),
+                    dr_tf_wp,
+                    wp_toridal_dxbig,
+                    color="darkgreen",
+                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                ),
+            )
+            # Plots the WP inside the insulation
+            axis.add_patch(
+                Rectangle(
+                    (wp_inner + tinstf, -(0.5 * wp_toridal_dxbig) + tinstf),
+                    (dr_tf_wp - (2 * tinstf)),
+                    (wp_toridal_dxbig - (2 * tinstf)),
+                    color="blue",
+                    label=f"Winding pack:  \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                )
+            )
+            # Dvides the WP up into the turn segments
+            for i in range(1, long_turns):
+                axis.plot(
+                    [
+                        (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
+                        (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
+                    ],
+                    [
+                        -0.5 * (wp_toridal_dxbig - 2 * tinstf),
+                        0.5 * (wp_toridal_dxbig - 2 * tinstf),
+                    ],
+                    color="white",
+                    linewidth="0.25",
+                    linestyle="dashed",
+                )
+
+            for i in range(1, short_turns):
+                axis.plot(
+                    [(wp_inner + tinstf), (wp_inner - tinstf + dr_tf_wp)],
+                    [
+                        (-0.5 * wp_toridal_dxbig)
+                        + (i * wp_toridal_dxbig / short_turns),
+                        (-0.5 * wp_toridal_dxbig)
+                        + (i * wp_toridal_dxbig / short_turns),
+                    ],
+                    color="white",
+                    linewidth="0.25",
+                    linestyle="dashed",
+                )
+
+        # Plot the double rectangle winding pack
+        if wp_shape == 1:
+
+            # Inner WP insulation
+            axis.add_patch(
+                Rectangle(
+                    (
+                        wp_inner - tinstf,
+                        -(0.5 * wp_toridal_dxsmall) - 2 * tinstf,
+                    ),
+                    (dr_tf_wp / 2) + (tinstf),
+                    wp_toridal_dxsmall + (tinstf),
+                    color="darkgreen",
+                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                ),
+            )
+
+            # Outer WP insulation
+            axis.add_patch(
+                Rectangle(
+                    (
+                        wp_inner + (0.5 * dr_tf_wp) - tinstf,
+                        -(0.5 * wp_toridal_dxbig) - tinstf,
+                    ),
+                    (dr_tf_wp / 2) + (tinstf),
+                    wp_toridal_dxbig + (tinstf),
+                    color="darkgreen",
+                ),
+            )
+
+            # Outer WP
+            axis.add_patch(
+                Rectangle(
+                    (wp_inner + (0.5 * dr_tf_wp), -(0.5 * wp_toridal_dxbig)),
+                    (dr_tf_wp / 2) - (2 * tinstf),
+                    wp_toridal_dxbig - (2 * tinstf),
+                    color="blue",
+                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                ),
+            )
+            # Inner WP
+            axis.add_patch(
+                Rectangle(
+                    (
+                        wp_inner + tinstf,
+                        -(0.5 * wp_toridal_dxsmall) - tinstf,
+                    ),
+                    (dr_tf_wp / 2) - (2 * tinstf),
+                    wp_toridal_dxsmall - (2 * tinstf),
+                    color="blue",
+                ),
+            )
+
+        # Trapezium WP
+        if wp_shape == 2:
+            # WP insulation
+            x = [wp_inner, wp_inner, (wp_inner + dr_tf_wp), (wp_inner + dr_tf_wp)]
+            y = [
+                (-0.5 * wp_toridal_dxsmall),
+                (0.5 * wp_toridal_dxsmall),
+                (0.5 * wp_toridal_dxbig),
+                (-0.5 * wp_toridal_dxbig),
+            ]
+            axis.add_patch(
+                patches.Polygon(
+                    xy=list(zip(x, y)),
+                    color="darkgreen",
+                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                )
+            )
+
+            # WP
+            x = [
+                wp_inner + tinstf,
+                wp_inner + tinstf,
+                (wp_inner + dr_tf_wp - tinstf),
+                (wp_inner + dr_tf_wp - tinstf),
+            ]
+            y = [
+                (-0.5 * wp_toridal_dxsmall + tinstf),
+                (0.5 * wp_toridal_dxsmall - tinstf),
+                (0.5 * wp_toridal_dxbig - tinstf),
+                (-0.5 * wp_toridal_dxbig + tinstf),
+            ]
+            axis.add_patch(
+                patches.Polygon(
+                    xy=list(zip(x, y)),
+                    color="blue",
+                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                )
+            )
+
+        plt.minorticks_on()
+        plt.xlim(0.0, r_tf_inboard_out * 1.1)
+        plt.ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
+
+        plt.title("Top-down view of inboard TF coil at midplane")
+        plt.xlabel("Radial distance [m]")
+        plt.ylabel("Toroidal distance [m]")
+        plt.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
+
+
+def plot_tf_turn(axis, mfile_data, scan: int) -> None:
+    """
+    Plots inboard TF coil individual turn structure.
+    Author: C. Ashe
+
+    Parameters
+    ----------
+    axis : matplotlib.axes object
+        Axis object to plot to.
+    mfile_data : MFILE data object
+        Object containing data for the plot.
+    scan : int
+        Scan number to use.
+
+    Returns
+    -------
+    None
+    """
+
+    # Import the TF turn variables then multiply into mm
+    integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
+    # If integer turns switch is on then the turns can have non square dimensions
+    if integer_turns == 1:
+        turn_width = round(mfile_data.data["t_turn_radial"].get_scan(scan) * 1e3, 5)
+        turn_height = round(mfile_data.data["t_turn_toroidal"].get_scan(scan) * 1e3, 5)
+    elif integer_turns == 0:
+        turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
+
+    cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
+    he_pipe_diameter = round(mfile_data.data["dhecoil"].get_scan(scan) * 1e3, 5)
+    steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
+    insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
+    internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6, 5)
+
+    # Plot the total turn shape
+    if integer_turns == 0:
+        axis.add_patch(
+            Rectangle(
+                [0, 0],
+                turn_width,
+                turn_width,
+                facecolor="red",
+                label=f"Inter-turn insulation: \n{insulation_thickness} mm thickness",
+                edgecolor="black",
+            ),
+        )
+        # Plot the steel conduit
+        axis.add_patch(
+            Rectangle(
+                [insulation_thickness, insulation_thickness],
+                (turn_width - 2 * insulation_thickness),
+                (turn_width - 2 * insulation_thickness),
+                facecolor="grey",
+                label=f"Steel Conduit: \n{steel_thickness} mm thickness",
+                edgecolor="black",
+            ),
+        )
+
+        # Plot the cable space
+        axis.add_patch(
+            Rectangle(
+                [
+                    insulation_thickness + steel_thickness,
+                    insulation_thickness + steel_thickness,
+                ],
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                facecolor="royalblue",
+                label=f"Cable space: \n{cable_space_width} mm width \n{internal_cable_space} mm$^2$",
+                edgecolor="black",
+            ),
+        )
+        axis.add_patch(
+            Circle(
+                [(turn_width / 2), (turn_width / 2)],
+                he_pipe_diameter / 2,
+                facecolor="white",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
+                edgecolor="black",
+            ),
+        )
+        plt.xlim(-turn_width * 0.05, turn_width * 1.05)
+        plt.ylim(-turn_width * 0.05, turn_width * 1.05)
+
+    # Non square turns
+    elif integer_turns == 1:
+        axis.add_patch(
+            Rectangle(
+                [0, 0],
+                turn_width,
+                turn_height,
+                facecolor="red",
+                label=f"Inter-turn insulation: \n{insulation_thickness} mm thickness",
+                edgecolor="black",
+            ),
+        )
+
+        # Plot the steel conduit
+        axis.add_patch(
+            Rectangle(
+                [insulation_thickness, insulation_thickness],
+                (turn_width - 2 * insulation_thickness),
+                (turn_height - 2 * insulation_thickness),
+                facecolor="grey",
+                label=f"Steel Conduit: \n{steel_thickness} mm thickness",
+                edgecolor="black",
+            ),
+        )
+
+        # Plot the cable space
+        axis.add_patch(
+            Rectangle(
+                [
+                    insulation_thickness + steel_thickness,
+                    insulation_thickness + steel_thickness,
+                ],
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                (turn_height - 2 * (insulation_thickness + steel_thickness)),
+                facecolor="royalblue",
+                label=f"Cable space: \n{cable_space_width} mm width \n{internal_cable_space} mm$^2$",
+                edgecolor="black",
+            ),
+        )
+        axis.add_patch(
+            Circle(
+                [(turn_width / 2), (turn_height / 2)],
+                he_pipe_diameter / 2,
+                facecolor="white",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
+                edgecolor="black",
+            ),
+        )
+
+        plt.xlim(-turn_width * 0.05, turn_width * 1.05)
+        plt.ylim(-turn_height * 0.05, turn_height * 1.05)
+
+    plt.minorticks_on()
+    plt.title("WP Turn Structure")
+    plt.xlabel("X [mm]")
+    plt.ylabel("Y [mm]")
+    plt.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
 
 
 def plot_pf_coils(axis, mfile_data, scan):
@@ -2279,6 +2805,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
 def main_plot(
     fig1,
     fig2,
+    fig3,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -2324,6 +2851,7 @@ def main_plot(
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
+    fig2.subplots_adjust(wspace=0.3)
     plot_nprofile(plot_4, demo_ranges)
 
     # Plot temperature profiles
@@ -2334,9 +2862,6 @@ def main_plot(
     plot_6 = fig2.add_subplot(236)  # , aspect=2)
     if os.path.isdir(imp):
         plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
-
-    # plot_7 =
-    # plot_radprofile(plot_7)
 
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
@@ -2365,6 +2890,14 @@ def main_plot(
     plot_6 = fig1.add_subplot(236)
     plot_current_drive_info(plot_6, m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25)
+
+    # TF coil with WP
+    plot_7 = fig3.add_subplot(321)
+    plot_tf_wp(plot_7, m_file_data, scan)
+
+    # TF coil turn structure
+    plot_8 = fig3.add_subplot(322, aspect="equal")
+    plot_tf_turn(plot_8, m_file_data, scan)
 
 
 def save_plots(m_file_data, scan):
@@ -2600,9 +3133,10 @@ def test(f):
         # create main plot
         page1 = plt.figure(figsize=(12, 9), dpi=80)
         page2 = plt.figure(figsize=(12, 9), dpi=80)
+        page3 = plt.figure(figsize=(12, 9), dpi=80)
 
         # run main_plot
-        main_plot(page1, page2, m_file, scan=scan)
+        main_plot(page1, page2, page3, m_file, scan=scan)
 
         # with bpdf.PdfPages(args.o) as pdf:
         # with bpdf.PdfPages("ref.SUMMARY.pdf") as pdf:
@@ -2893,14 +3427,16 @@ def main(args=None):
     # create main plot
     page1 = plt.figure(figsize=(12, 9), dpi=80)
     page2 = plt.figure(figsize=(12, 9), dpi=80)
+    page3 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
-    main_plot(page1, page2, m_file, scan=scan, demo_ranges=demo_ranges)
+    main_plot(page1, page2, page3, m_file, scan=scan, demo_ranges=demo_ranges)
 
     # with bpdf.PdfPages(args.o) as pdf:
     with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
         pdf.savefig(page1)
         pdf.savefig(page2)
+        pdf.savefig(page3)
 
     # show fig if option used
     if args.show:
@@ -2911,6 +3447,7 @@ def main(args=None):
     #    save_plots(m_file)
     plt.close(page1)
     plt.close(page2)
+    plt.close(page3)
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 282,
+  "n_errortypes": 283,
   "errors": [
     {
       "no": 1,
@@ -1419,6 +1419,11 @@
       "no": 282,
       "level": 2,
       "message": "CHECK: ncore is going negative when solving. Please raise the value of dene and or its lower limit."
+    },
+    {
+      "no": 283,
+      "level": 3,
+      "message": "[tfcoil]: Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
     }
   ]
 }

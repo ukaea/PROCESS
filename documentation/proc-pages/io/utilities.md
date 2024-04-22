@@ -65,11 +65,11 @@ A `.csv` file will be saved to the directory of the input file.
 
 
 
-## PROCESS 2-Page PDF Summary
+## PROCESS 3-Page PDF Summary
 
 > `process/io/plot_proc.py`
 
-A utility to produce a two-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, and temperature and density profiles.
+A utility to produce a three-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles and TF coil layout and turn strucuture.
 
 ### Usage
 
@@ -87,7 +87,7 @@ If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the cu
 | `-s, --show`           | show plot                        |
 
 ### Output
-Produces a two-page PDF file in the same directory as the input MFILE. The PDF file name has the same prefix as the input MFILE but ending in `SUMMARY.pdf` 
+Produces a three-page PDF file in the same directory as the input MFILE. The PDF file name has the same prefix as the input MFILE but ending in `SUMMARY.pdf` 
 
 ### Parameters Displayed
 
