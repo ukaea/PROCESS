@@ -94,7 +94,7 @@ For the purposes of this model, the following are inputs:
   available as an iteration variable (170)  
 - SOL radiative fraction, $f_{rad,div}$ (`rad_fraction_sol`).
 
-## 1D SOL model
+<!--## 1D SOL model
 
 The relevant variables are described in div_kal_vars in Variable Descriptions. A utility to plot the 
 outputs is available: `kallenbach_plotting.py` (see Utilities). 
@@ -293,7 +293,7 @@ The outputs are as shown in this example:
  Total power lost due to radiation, ionisation and recombination [W]      (totalpowerlost)          4.814E+07  OP 
  Power balance error [W]                                                  (balance)                -1.892E+07  OP 
 ```
-
+-->
 [^1]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
 
@@ -302,7 +302,8 @@ ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
 [^3]: T. Eich et al, 'Scaling of the tokamak near the scrape-off layer H-mode power width and implications for ITER', Nucl. Fusion 53 093031 (2013)
 
 [^4]: A. Scarabosio et al, 'Scaling of the divertor power spreading (S-factor) in open and closed divertor operation in JET and ASDEX Upgrade, Journal of Nuclear Materials, Vol. 463, 49-54 (2015)
-
+<!--
 [^5]: A. Kallenbach, M. Bernert, R. Dux, F. Reimold and M. Wischmeier, "Analytical calculations for impurity seeded partially detached divertor conditions", Plasma Phys. Control. Fusion, vol. 58, no. 4, Apr. 2016.
 
 [^6]: J. Morris, N. Asakura, Y. Homma, K. Hoshino, M. Kovari, 'Comparison of the Process Systems Code With the SONIC Divertor Code', IEEE Transactions on Plasma Science (Volume: 48, Issue: 6, June 2020) 
+-->
