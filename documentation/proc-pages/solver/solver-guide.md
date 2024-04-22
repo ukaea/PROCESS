@@ -140,7 +140,7 @@ Running `PROCESS` in non-optimisation mode requires few changes to be made to th
 
 As before, the user must decide which constraint equations and iteration variables to activate.
 
-## Kallenback Model
+<!--## Kallenback Model
 
 ### Testing
 
@@ -264,4 +264,4 @@ kallenbach_scan_end = 12.0
 kallenbach_scan_num = 10
 ```
 
-After the following inputs the user should populate the IN.DAT with the same inputs described in the in the previous section for `kallenbach_test_option = 0`.
+After the following inputs the user should populate the IN.DAT with the same inputs described in the in the previous section for `kallenbach_test_option = 0`.-->
