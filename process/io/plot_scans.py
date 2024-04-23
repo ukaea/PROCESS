@@ -30,6 +30,7 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 from pathlib import Path
+from variable_metadata import var_dicts as meta
 
 # PROCESS libraries
 import process.io.mfile as mf
@@ -174,11 +175,7 @@ def main(args=None):
 
         # Check for the existence of the MFILE
         if not os.path.isfile(input_files[ii]):
-            print(
-                "ERROR : The {} MFILE does not exist, skipping it".format(
-                    input_files[ii]
-                )
-            )
+            print(f"ERROR : The {input_files[ii]} MFILE does not exist, skipping it")
             input_files.remove(input_files[ii])
 
     # LaTeX labels
@@ -390,38 +387,34 @@ def main(args=None):
     # ------
     # Check if the nsweep dict has been updated
     if nsweep_ref > len(nsweep_dict) + 1:
-        print("ERROR : nsweep = {} not supported by the utility".format(nsweep_ref))
+        print(f"ERROR : nsweep = {nsweep_ref} not supported by the utility")
         print("ERROR : Please update the 'nsweep_dict' dict")
         exit()
 
     # Check if the scan variable is present in the
     if scan_var_name not in m_file.data.keys():
-        print("ERROR : `{}` does not exist in PROCESS dicts".format(scan_var_name))
+        print(f"ERROR : `{scan_var_name}` does not exist in PROCESS dicts")
         print("ERROR : The scan variable is probably an upper/lower boundary")
         print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
         exit()
 
     # Check if the (first) scan variable LaTeX label is set
     if scan_var_name not in labels:
-        print(
-            "WARNING: The {} variable LaTeX label is not defined".format(scan_var_name)
-        )
+        print(f"WARNING: The {scan_var_name} variable LaTeX label is not defined")
         print("WARNING: Please update the 'label' dict")
         labels[scan_var_name] = scan_var_name
 
     if is_2D_scan:
         # Check if the second scan variable is present in the
         if scan_2_var_name not in m_file.data.keys():
-            print(
-                "ERROR : `{}` does not exist in PROCESS dicts".format(scan_2_var_name)
-            )
+            print(f"ERROR : `{scan_2_var_name}` does not exist in PROCESS dicts")
             print("ERROR : The scan variable is probably an upper/lower boundary")
             print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
             exit()
 
         # Check if the second scan variable LaTeX label is set
         if scan_2_var_name not in labels:
-            print("The {} variable LaTeX label is not defined".format(scan_2_var_name))
+            print(f"The {scan_2_var_name} variable LaTeX label is not defined")
             print("Please update the 'label' dict")
             labels[scan_var_name] = scan_var_name
 
@@ -481,9 +474,7 @@ def main(args=None):
                 else:
                     failed_value = m_file.data[scan_var_name].get_scan(ii + 1)
                     print(
-                        "Warning : Non-convergent scan point : {} = {}".format(
-                            scan_var_name, failed_value
-                        )
+                        f"Warning : Non-convergent scan point : {scan_var_name} = {failed_value}"
                     )
                     print("Warning : This point will not be shown.")
 
@@ -507,20 +498,14 @@ def main(args=None):
 
                 # Check if the output variable exists in the MFILE
                 if output_name not in m_file.data.keys():
-                    print(
-                        "Warning : `{}` does not exist in PROCESS dicts".format(
-                            output_name
-                        )
-                    )
-                    print("Warning : `{}` will not be output".format(output_name))
+                    print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
+                    print(f"Warning : `{output_name}` will not be output")
                     continue
 
                 # Check if the output LaTeX variable label exist
                 if output_name not in labels:
                     print(
-                        "Warning : The {} variable LaTeX label is not defined".format(
-                            output_name
-                        )
+                        f"Warning : The {output_name} variable LaTeX label is not defined"
                     )
                     print("Warning : Please update the 'label' dict")
                     labels[output_name] = output_name
@@ -537,19 +522,15 @@ def main(args=None):
                     # Check if the output variable exists in the MFILE
                     if output_name2 not in m_file.data.keys():
                         print(
-                            "Warning : `{}` does not exist in PROCESS dicts".format(
-                                output_name2
-                            )
+                            f"Warning : `{output_name2}` does not exist in PROCESS dicts"
                         )
-                        print("Warning : `{}` will not be output".format(output_name2))
+                        print(f"Warning : `{output_name2}` will not be output")
                         continue
 
                     # Check if the output LaTeX variable label exist
                     if output_name2 not in labels:
                         print(
-                            "Warning : The {} variable LaTeX label is not defined".format(
-                                output_name2
-                            )
+                            f"Warning : The {output_name2} variable LaTeX label is not defined"
                         )
                         print("Warning : Please update the 'label' dict")
                         labels[output_name2] = output_name2
@@ -687,7 +668,7 @@ def main(args=None):
             plt.clf()
         # ------------
 
-    # I case of a 2D scan
+    # In case of a 2D scan
     # ----------------------------------------------------------------------------------------------
     else:
         # Opening the MFILE.DAT
@@ -711,12 +692,7 @@ def main(args=None):
                     failed_value_1 = m_file.data[scan_var_name].get_scan(ii_jj)
                     failed_value_2 = m_file.data[scan_2_var_name].get_scan(ii_jj)
                     print(
-                        "Warning : Non-convergent scan point : ({},{}) = ({},{})".format(
-                            scan_var_name,
-                            scan_2_var_name,
-                            failed_value_1,
-                            failed_value_2,
-                        )
+                        f"Warning : Non-convergent scan point : ({scan_var_name},{scan_2_var_name}) = ({failed_value_1},{failed_value_2})"
                     )
                     print("Warning : This point will not be shown.")
 
@@ -724,18 +700,14 @@ def main(args=None):
         for output_name in output_names:
             # Check if the output variable exists in the MFILE
             if output_name not in m_file.data.keys():
-                print(
-                    "Warning : `{}` does not exist in PROCESS dicts".format(output_name)
-                )
-                print("Warning : `{}` will not be output".format(output_name))
+                print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
+                print(f"Warning : `{output_name}` will not be output")
                 continue
 
             # Check if the output LaTeX variable label exist
             if output_name not in labels:
                 print(
-                    "Warning : The {} variable LaTeX label is not defined".format(
-                        output_name
-                    )
+                    f"Warning : The {output_name} variable LaTeX label is not defined"
                 )
                 print("Warning : Please update the 'label' dict")
                 labels[output_name] = output_name
@@ -759,7 +731,7 @@ def main(args=None):
                     output_array[jj] = m_file.data[output_name].get_scan(conv_j[jj])
 
                 # Label formating
-                labl = "{} = {}".format(labels[scan_var_name], scan_1_var_array[0])
+                labl = f"{meta[scan_var_name].latex} = {scan_1_var_array[0]}"
 
                 # Plot the graph
                 plt.plot(scan_2_var_array, output_array, "--o", label=labl)
@@ -772,13 +744,7 @@ def main(args=None):
             plt.yticks(size=axis_tick_size)
             plt.tight_layout()
             plt.savefig(
-                "{}/scan_{}_vs_{}_{}.{}".format(
-                    args.outputdir,
-                    output_name,
-                    scan_var_name,
-                    scan_2_var_name,
-                    save_format,
-                )
+                f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
             )
 
             # Display plot (used in Jupyter notebooks)
