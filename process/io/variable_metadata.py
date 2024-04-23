@@ -386,4 +386,14 @@ var_dicts = {
         description="Efficiency of electron cyclotron heating",
         units="",
     ),
+    "tauee": VariableMetadata(
+        latex=r"$\tau_E$",
+        description="Electron energy confinement time (sec)",
+        units="s",
+    ),
+    "dene": VariableMetadata(
+        latex=r"$n_e$",
+        description="Volume-averaged electron density (/m3)",
+        units="m-3",
+    ),
 }
