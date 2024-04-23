@@ -615,7 +615,7 @@ def main(args=None):
                         label=labl,
                     )
                     ax2.set_ylabel(
-                        labels[output_name2],
+                        meta[output_name2].latex if output_name2 in meta else f"{output_name2}",
                         fontsize=axis_font_size,
                         color="red",
                     )
@@ -623,17 +623,17 @@ def main(args=None):
                 ax2.yaxis.grid(True)
                 ax.xaxis.grid(True)
                 ax.set_ylabel(
-                    labels[output_name], fontsize=axis_font_size, color="blue"
+                    meta[output_name].latex if output_name in meta else f"{output_name}" , fontsize=axis_font_size, color="blue"
                 )
-                ax.set_xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                ax.set_xlabel(meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}" , fontsize=axis_font_size)
             else:
                 plt.grid(True)
                 plt.ylabel(
-                    labels[output_name],
+                    meta[output_name].latex if output_name in meta else f"{output_name}",
                     fontsize=axis_font_size,
                     color="red" if output_names2 != [] else "black",
                 )
-                plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                plt.xlabel(meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}" , fontsize=axis_font_size)
             if len(input_files) != 1:
                 plt.legend(loc="best", fontsize=legend_size)
             plt.tight_layout()
@@ -731,7 +731,7 @@ def main(args=None):
                     output_array[jj] = m_file.data[output_name].get_scan(conv_j[jj])
 
                 # Label formating
-                labl = f"{meta[scan_var_name].latex} = {scan_1_var_array[0]}"
+                labl = meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}"
 
                 # Plot the graph
                 plt.plot(scan_2_var_array, output_array, "--o", label=labl)
