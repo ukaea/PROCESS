@@ -3266,7 +3266,6 @@ class Stellarator:
         Assumes current peak temperature (which is inaccurate as the cordey pass should be calculated)
         Maybe use this: https://doi.org/10.1088/0029-5515/49/8/085026
         """
-
         te_old = copy(physics_variables.te)
         # Volume averaged physics_variables.te from te0_achievable
         physics_variables.te = te0_available / (1.0e0 + physics_variables.alphat)
@@ -3868,7 +3867,7 @@ class Stellarator:
         self.physics.plasma_composition()
 
         # Calculate density and temperature profile quantities
-        profiles_module.plasma_profiles()
+        self.plasma_profile.run()
 
         #  Total field
         physics_variables.btot = np.sqrt(
