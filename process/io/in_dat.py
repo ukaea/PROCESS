@@ -863,9 +863,8 @@ def variable_bound_check(bound_number, bound_type):
         else:
             bound_number = int(bound_number)
             print(
-                "Bound number {0} not an integer. " "Value rounded to {1}".format(
-                    bound_number, int(bound_number)
-                )
+                "Bound number {0} not an integer. "
+                "Value rounded to {1}".format(bound_number, int(bound_number))
             )
             return bound_number, bound_type
 
