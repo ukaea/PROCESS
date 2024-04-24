@@ -40,7 +40,7 @@ jobs:
           docker build . -t ghcr.io/ukaea/process-ci:latest
           docker push ghcr.io/ukaea/process-ci:latest
 
-  make-py38:
+  make:
     runs-on: ubuntu-latest
     needs: docker
     container:
@@ -75,9 +75,9 @@ jobs:
           name: ford-artifact
           path: build/ford_project.pickle
 
-  unit-py38:
+  unit:
     runs-on: ubuntu-latest
-    needs: make-py38
+    needs: make
     container:
       image: ghcr.io/ukaea/process-ci:latest
       credentials:
@@ -101,9 +101,9 @@ jobs:
           name: unit-coverage-artifacts
           path: .coverage
 
-  integration-py38:
+  integration:
     runs-on: ubuntu-latest
-    needs: make-py38
+    needs: make
     container:
       image: ghcr.io/ukaea/process-ci:latest
       credentials:
@@ -122,12 +122,12 @@ jobs:
         run: pytest tests/integration -n auto -v
 
 
-  regression-py38:
+  regression:
     runs-on: ubuntu-latest
-    needs: [make-py38, tracking]
+    needs: [make, tracking]
     # depend on make and tracking job, check make job was successful
     # but dont skip if tracking was skipped
-    if: always() && needs.make-py38.result == 'success'
+    if: always() && needs.make.result == 'success'
     continue-on-error: true
     container:
       image: ghcr.io/ukaea/process-ci:latest
@@ -155,7 +155,7 @@ jobs:
 
   run-tracking-inputs:
     runs-on: ubuntu-latest
-    needs: make-py38
+    needs: make
     container:
       image: ghcr.io/ukaea/process-ci:latest
       credentials:
