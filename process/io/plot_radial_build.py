@@ -14,7 +14,7 @@ import numpy as np
 import argparse
 from argparse import RawTextHelpFormatter
 from pathlib import Path
-from variable_metadata import var_dicts as meta
+from process.io.variable_metadata import var_dicts as meta
 
 # PROCESS libraries
 import process.io.mfile as mf
@@ -361,7 +361,10 @@ def main(args=None):
 
     if scan_var_name != "Null":
         plt.yticks(ind, scan_points, fontsize=axis_tick_size)
-        plt.ylabel(meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}", fontsize=axis_font_size)
+        plt.ylabel(
+            meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}",
+            fontsize=axis_font_size,
+        )
     else:
         plt.yticks([])
 

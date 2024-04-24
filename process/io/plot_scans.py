@@ -28,7 +28,7 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 from pathlib import Path
-from variable_metadata import var_dicts as meta
+from process.io.variable_metadata import var_dicts as meta
 
 # PROCESS libraries
 import process.io.mfile as mf
@@ -196,9 +196,7 @@ def main(args=None):
 
         # Check for the existence of the MFILE
         if not os.path.isfile(input_files[ii]):
-            print(
-                f"ERROR : The {input_files[ii]} MFILE does not exist, skipping it"
-            )
+            print(f"ERROR : The {input_files[ii]} MFILE does not exist, skipping it")
             input_files.remove(input_files[ii])
 
     # nsweep varible dict
@@ -320,20 +318,24 @@ def main(args=None):
         exit()
 
     # Set the (first) scan variable LaTeX label
-    scan1_label = meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}"
+    scan1_label = (
+        meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}"
+    )
 
     if is_2D_scan:
         # Check if the second scan variable is present in the
         if scan_2_var_name not in m_file.data.keys():
-            print(
-                f"ERROR : `{scan_2_var_name}` does not exist in PROCESS dicts"
-            )
+            print(f"ERROR : `{scan_2_var_name}` does not exist in PROCESS dicts")
             print("ERROR : The scan variable is probably an upper/lower boundary")
             print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
             exit()
 
         # Set the (second) scan variable LaTeX label
-        scan2_label = meta[scan_2_var_name].latex if scan_2_var_name in meta else f"{scan_2_var_name}"
+        scan2_label = (
+            meta[scan_2_var_name].latex
+            if scan_2_var_name in meta
+            else f"{scan_2_var_name}"
+        )
 
     # Only one imput must be used for a 2D scan
     if is_2D_scan and len(input_files) > 1:
@@ -414,14 +416,14 @@ def main(args=None):
 
                 # Check if the output variable exists in the MFILE
                 if output_name not in m_file.data.keys():
-                    print(
-                        f"Warning : `{output_name}` does not exist in PROCESS dicts"
-                    )
+                    print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
                     print(f"Warning : `{output_name}` will not be output")
                     continue
 
                 # Set the output variable LaTeX label
-                output_label = meta[output_name].latex if output_name in meta else f"{output_name}"
+                output_label = (
+                    meta[output_name].latex if output_name in meta else f"{output_name}"
+                )
 
                 for ii in range(n_scan):
                     ouput_array[ii] = m_file.data[output_name].get_scan(conv_i[ii])
@@ -440,7 +442,11 @@ def main(args=None):
                         continue
 
                     # Set the second output variable LaTeX label
-                    output2_label = meta[output_name2].latex if output_name2 in meta else f"{output_name2}"
+                    output2_label = (
+                        meta[output_name2].latex
+                        if output_name2 in meta
+                        else f"{output_name2}"
+                    )
 
                     for ii in range(n_scan):
                         ouput_array2[ii] = m_file.data[output_name2].get_scan(
@@ -545,9 +551,7 @@ def main(args=None):
             if output_names2 != []:
                 ax2.yaxis.grid(True)
                 ax.xaxis.grid(True)
-                ax.set_ylabel(
-                    output_label, fontsize=axis_font_size, color="blue"
-                )
+                ax.set_ylabel(output_label, fontsize=axis_font_size, color="blue")
                 ax.set_xlabel(scan1_label, fontsize=axis_font_size)
             elif stack_plots:
                 axs[output_names.index(output_name)].minorticks_on()
@@ -674,7 +678,9 @@ def main(args=None):
                 continue
 
             # Set the output variable LaTeX label
-            output_label = meta[output_name].latex if output_name in meta else f"{output_name}"
+            output_label = (
+                meta[output_name].latex if output_name in meta else f"{output_name}"
+            )
 
             # Declaring the outputs
             output_arrays = list()
