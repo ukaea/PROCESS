@@ -24,7 +24,6 @@ from process.fortran import (
     constraint_variables,
     rebco_variables,
     maths_library,
-    profiles_module,
     physics_functions_module,
     neoclassics_module,
     impurity_radiation_module,
