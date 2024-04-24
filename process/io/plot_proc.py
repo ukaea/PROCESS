@@ -338,43 +338,47 @@ def color_key(axis):
     axis.set_autoscalex_on(False)
 
     axis.text(-5, 10, "CS coil", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.6, 9.7], 1, 0.4, lw=0, facecolor=solenoid))
+    axis.add_patch(patches.Rectangle([0.65, 9.7], 1, 0.4, lw=0, facecolor=solenoid))
 
     axis.text(-5, 9, "CS comp", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.6, 8.7], 1, 0.4, lw=0, facecolor=cscompression))
+    axis.add_patch(
+        patches.Rectangle([0.65, 8.7], 1, 0.4, lw=0, facecolor=cscompression)
+    )
 
     axis.text(-5, 8, "TF coil", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.6, 7.7], 1, 0.4, lw=0, facecolor=tfc))
+    axis.add_patch(patches.Rectangle([0.65, 7.7], 1, 0.4, lw=0, facecolor=tfc))
 
     axis.text(-5, 7, "Th shield", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.6, 6.7], 1, 0.4, lw=0, facecolor=thermal_shield)
+        patches.Rectangle([0.65, 6.7], 1, 0.4, lw=0, facecolor=thermal_shield)
     )
 
     axis.text(-5, 6, "VV & shield", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.6, 5.7], 1, 0.4, lw=0, facecolor=vessel))
+    axis.add_patch(patches.Rectangle([0.65, 5.7], 1, 0.4, lw=0, facecolor=vessel))
 
     axis.text(-5, 5, "Blanket", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.6, 4.7], 1, 0.4, lw=0, facecolor=blanket))
+    axis.add_patch(patches.Rectangle([0.65, 4.7], 1, 0.4, lw=0, facecolor=blanket))
 
     axis.text(-5, 4, "First wall", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.6, 3.7], 1, 0.4, lw=0, facecolor=firstwall))
+    axis.add_patch(patches.Rectangle([0.65, 3.7], 1, 0.4, lw=0, facecolor=firstwall))
 
     axis.text(-5, 3, "Plasma", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.6, 2.7], 1, 0.4, lw=0, facecolor=plasma))
+    axis.add_patch(patches.Rectangle([0.65, 2.7], 1, 0.4, lw=0, facecolor=plasma))
 
     axis.text(-5, 2, "PF coils", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.6, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black")
+        patches.Rectangle(
+            [0.65, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black"
+        )
     )
 
     axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.6, 0.7], 1, 0.4, lw=0, facecolor=nbshield_colour)
+        patches.Rectangle([0.65, 0.7], 1, 0.4, lw=0, facecolor=nbshield_colour)
     )
 
     axis.text(-5, 0.1, "Cryostat", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.6, -0.3], 1, 0.4, lw=0, facecolor=cryostat))
+    axis.add_patch(patches.Rectangle([0.65, -0.3], 1, 0.4, lw=0, facecolor=cryostat))
 
 
 def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
@@ -384,17 +388,6 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
       mfile_data --> MFILE data object
       scan --> scan number to use
     """
-
-    # Check for Copper magnets
-    if "i_tf_sup" in mfile_data.data.keys():
-        i_tf_sup = int(mfile_data.data["i_tf_sup"].get_scan(scan))
-    else:
-        i_tf_sup = int(1)
-
-    if "i_tf_turns_integer" in mfile_data.data.keys():
-        i_tf_turns_integer = int(mfile_data.data["i_tf_turns_integer"].get_scan(scan))
-    else:
-        i_tf_turns_integer = int(0)
 
     axis.set_xlabel("x / m")
     axis.set_ylabel("y / m")
@@ -486,57 +479,6 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
         )
         # Overlay TF coil segments
         TF_outboard(axis, item, n_tf=n_tf, r3=r3, r4=r4, w=w, facecolor="cyan")
-
-    # Winding pack : inboard (superconducor only)
-    if i_tf_sup == 1:
-        # Inboard
-        if i_tf_turns_integer == 1:
-            rect = patches.Rectangle(
-                [r1 + thkcas + tinstf, 0], dr_tf_wp, wwp1 / 2, lw=0, facecolor=winding
-            )
-            axis.add_patch(rect)
-        else:
-            rect = patches.Rectangle(
-                [r1 + thkcas + tinstf, 0],
-                dr_tf_wp / 2,
-                wwp2 / 2,
-                lw=0,
-                facecolor=winding,
-            )
-            axis.add_patch(rect)
-
-            rect = patches.Rectangle(
-                [r1 + thkcas + tinstf + dr_tf_wp / 2, 0],
-                dr_tf_wp / 2,
-                wwp1 / 2,
-                lw=0,
-                facecolor=winding,
-            )
-            axis.add_patch(rect)
-
-        # Outboard
-        if i_tf_turns_integer == 1:
-            rect = patches.Rectangle(
-                [r3 + casthi + tinstf, 0], dr_tf_wp, wwp1 / 2, lw=0, facecolor=winding
-            )
-            axis.add_patch(rect)
-        else:
-            rect = patches.Rectangle(
-                [r3 + casthi + tinstf, 0],
-                dr_tf_wp / 2,
-                wwp1 / 2,
-                lw=0,
-                facecolor=winding,
-            )
-            axis.add_patch(rect)
-            rect = patches.Rectangle(
-                [r3 + casthi + tinstf + dr_tf_wp / 2, 0],
-                dr_tf_wp / 2,
-                wwp2 / 2,
-                lw=0,
-                facecolor=winding,
-            )
-            axis.add_patch(rect)
 
     iefrf = mfile_data.data["iefrf"].get_scan(scan)
     if (iefrf == 5) or (iefrf == 8):
