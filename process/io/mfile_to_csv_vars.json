@@ -1,23 +1,23 @@
 {
-  "vars": [
-   "minmax",
-   "pinjalw",
-   "pnetelin",
-   "ripmax",
-   "tbrnmn",
-   "alstroh",
-   "sig_tf_wp_max",
-   "thwcndut",
-   "fcohbop",
-   "alstroh",
-   "rmajor",
-   "tfcth",
-   "ohcth",
-   "cpttf",
-   "dr_tf_wp",
-   "ddwex",
-   "shldoth",
-   "divfix",
-   "rmajor"
-  ]
+    "vars": [
+        "minmax",
+        "pinjalw",
+        "pnetelin",
+        "ripmax",
+        "tbrnmn",
+        "alstroh",
+        "sig_tf_wp_max",
+        "thwcndut",
+        "fcohbop",
+        "alstroh",
+        "rmajor",
+        "tfcth",
+        "ohcth",
+        "cpttf",
+        "dr_tf_wp",
+        "ddwex",
+        "shldoth",
+        "divfix",
+        "rmajor"
+    ]
 }
