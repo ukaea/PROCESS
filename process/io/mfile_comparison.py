@@ -16,7 +16,7 @@
 """
 
 import sys
-import scipy
+import numpy
 import argparse
 import process.io.mfile as mf
 from numpy import isfinite
@@ -323,7 +323,7 @@ def main(arg):
         if "normres" in v:
             continue
 
-        values = scipy.zeros(n)
+        values = numpy.zeros(n)  # replaced scipy with numpy
 
         if v not in get_dicts()["DICT_VAR_TYPE"].keys():
             try:

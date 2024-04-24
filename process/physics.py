@@ -3489,7 +3489,7 @@ class Physics:
             "Fraction of alpha power deposited in plasma",
             "(falpha)",
             physics_variables.falpha,
-            "OP ",
+            "IP",
         )
         po.ovarrf(
             self.outfile,
@@ -3856,9 +3856,20 @@ class Physics:
             )
             po.oblnkl(self.outfile)
 
+        tauelaw = f2py_compatible_to_string(
+            physics_variables.tauscl[physics_variables.isc - 1]
+        )
+
         po.ocmmnt(
             self.outfile,
-            f"Confinement scaling law: {f2py_compatible_to_string(physics_variables.tauscl[physics_variables.isc - 1])}",
+            f"Confinement scaling law: {tauelaw}",
+        )
+
+        po.ovarst(
+            self.outfile,
+            "Confinement scaling law",
+            "(tauelaw)",
+            f'"{tauelaw.strip().split(" ")[0]}"',
         )
 
         po.ovarrf(
@@ -4093,7 +4104,7 @@ class Physics:
 
             po.ovarrf(
                 self.outfile,
-                "bootstrap current fraction multiplier",
+                "Bootstrap current fraction multiplier",
                 "(cboot)",
                 current_drive_variables.cboot,
             )
