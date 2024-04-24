@@ -3151,7 +3151,7 @@ def parse_args(args):
     """
     # Setup command line arguments
     parser = argparse.ArgumentParser(
-        description="Produces a two page summary of the PROCESS MFILE output, using the MFILE.  "
+        description="Produces a three page summary of the PROCESS MFILE output, using the MFILE.  "
         "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts "
     )
 
@@ -3203,11 +3203,11 @@ def main(args=None):
     else:
         i_tf_sup = int(1)
 
-    # Check integer turns
-    if "i_tf_turns_integer" in m_file.data.keys():
-        i_tf_turns_integer = int(m_file.data["i_tf_turns_integer"].get_scan(scan))
+    # Check WP configuration
+    if "i_tf_wp_geom" in m_file.data.keys():
+        i_tf_wp_geom = int(m_file.data["i_tf_wp_geom"].get_scan(scan))
     else:
-        i_tf_turns_integer = int(0)
+        i_tf_wp_geom = int(0)    
 
     global bore
     global ohcth
@@ -3265,7 +3265,7 @@ def main(args=None):
     n_tf = m_file.data["n_tf"].get_scan(scan)
     if i_tf_sup == 1:  # If superconducting magnets
         wwp1 = m_file.data["wwp1"].get_scan(scan)
-        if i_tf_turns_integer == 0:
+        if i_tf_wp_geom == 1:
             wwp2 = m_file.data["wwp2"].get_scan(scan)
         dr_tf_wp = m_file.data["dr_tf_wp"].get_scan(scan)
         tinstf = m_file.data["tinstf"].get_scan(scan)
@@ -3316,13 +3316,11 @@ def main(args=None):
     global alphaj
     global q0
     global q95
-    global kallenbach_switch
 
     triang = m_file.data["triang95"].get_scan(scan)
     alphaj = m_file.data["alphaj"].get_scan(scan)
     q0 = m_file.data["q0"].get_scan(scan)
     q95 = m_file.data["q95"].get_scan(scan)
-    kallenbach_switch = m_file.data["kallenbach_switch"].get_scan(scan)
 
     # Radial position  -- 0
     # Electron density -- 1
