@@ -338,43 +338,43 @@ def color_key(axis):
     axis.set_autoscalex_on(False)
 
     axis.text(-5, 10, "CS coil", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 9.7], 1, 0.4, lw=0, facecolor=solenoid))
+    axis.add_patch(patches.Rectangle([0.6, 9.7], 1, 0.4, lw=0, facecolor=solenoid))
 
     axis.text(-5, 9, "CS comp", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 8.7], 1, 0.4, lw=0, facecolor=cscompression))
+    axis.add_patch(patches.Rectangle([0.6, 8.7], 1, 0.4, lw=0, facecolor=cscompression))
 
     axis.text(-5, 8, "TF coil", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 7.7], 1, 0.4, lw=0, facecolor=tfc))
+    axis.add_patch(patches.Rectangle([0.6, 7.7], 1, 0.4, lw=0, facecolor=tfc))
 
     axis.text(-5, 7, "Th shield", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.2, 6.7], 1, 0.4, lw=0, facecolor=thermal_shield)
+        patches.Rectangle([0.6, 6.7], 1, 0.4, lw=0, facecolor=thermal_shield)
     )
 
     axis.text(-5, 6, "VV & shield", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 5.7], 1, 0.4, lw=0, facecolor=vessel))
+    axis.add_patch(patches.Rectangle([0.6, 5.7], 1, 0.4, lw=0, facecolor=vessel))
 
     axis.text(-5, 5, "Blanket", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 4.7], 1, 0.4, lw=0, facecolor=blanket))
+    axis.add_patch(patches.Rectangle([0.6, 4.7], 1, 0.4, lw=0, facecolor=blanket))
 
     axis.text(-5, 4, "First wall", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 3.7], 1, 0.4, lw=0, facecolor=firstwall))
+    axis.add_patch(patches.Rectangle([0.6, 3.7], 1, 0.4, lw=0, facecolor=firstwall))
 
     axis.text(-5, 3, "Plasma", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 2.7], 1, 0.4, lw=0, facecolor=plasma))
+    axis.add_patch(patches.Rectangle([0.6, 2.7], 1, 0.4, lw=0, facecolor=plasma))
 
     axis.text(-5, 2, "PF coils", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.2, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black")
+        patches.Rectangle([0.6, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black")
     )
 
     axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.2, 0.7], 1, 0.4, lw=0, facecolor=nbshield_colour)
+        patches.Rectangle([0.6, 0.7], 1, 0.4, lw=0, facecolor=nbshield_colour)
     )
 
-    axis.text(-5, 0.1, "cryostat", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, -0.3], 1, 0.4, lw=0, facecolor=cryostat))
+    axis.text(-5, 0.1, "Cryostat", ha="left", va="top", size="medium")
+    axis.add_patch(patches.Rectangle([0.6, -0.3], 1, 0.4, lw=0, facecolor=cryostat))
 
 
 def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
@@ -472,23 +472,6 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
     xo = r2 * np.cos(angu)
     yo = r2 * np.sin(angu)
     axis.plot((xi, xo), (yi, yo), color="black")
-    # Annotate plot.
-    axis.text(
-        rmajor * np.cos(0.3),
-        rmajor * np.sin(0.3),
-        "plasma",
-        fontsize=(12),
-        ha="center",
-        va="center",
-    )
-    axis.text(
-        (rdewex + ddwex) / 1.41,
-        (rdewex + ddwex) / 1.41,
-        "cryostat",
-        fontsize=(10),
-        ha="left",
-        va="bottom",
-    )
 
     for item in i:
         # Neutral beam shielding
@@ -2002,11 +1985,11 @@ def plot_pf_coils(axis, mfile_data, scan):
         axis.plot(r_points[i], z_points[i], color="black")
         axis.text(
             coils_r[i],
-            coils_z[i],
+            coils_z[i] - 0.1,
             coil_text[i],
             ha="center",
             va="center",
-            fontsize=5 * abs((coils_dr[i] * coils_dz[i])),
+            fontsize=4.85 * abs((coils_dr[i] * coils_dz[i])),
         )
     axis.add_patch(
         patches.Rectangle(
@@ -2028,7 +2011,7 @@ def plot_info(axis, data, mfile_data, scan):
         scan --> scan number to use
 
     """
-    eqpos = 0.7
+    eqpos = 0.75
     for i in range(len(data)):
         colorflag = "black"
         if mfile_data.data[data[i][0]].exists:
@@ -2137,6 +2120,12 @@ def plot_header(axis, mfile_data, scan):
         ),
     ]
 
+    axis.text(-0.05, 4.0, "Colour Legend:", ha="left", va="center")
+    axis.text(
+        0.0, 3.0, "ITR --> Iteration variable", color="red", ha="left", va="center"
+    )
+    axis.text(0.0, 2.0, "OP  --> Output variable", color="blue", ha="left", va="center")
+
     H = mfile_data.data["fimp(01)"].get_scan(scan)
     He = mfile_data.data["fimp(02)"].get_scan(scan)
     Be = mfile_data.data["fimp(03)"].get_scan(scan)
@@ -2210,10 +2199,6 @@ def plot_header(axis, mfile_data, scan):
         )
     data2 = data2 + data
 
-    axis.text(-0.05, -12.6, "Colour Legend:", ha="left", va="center")
-    axis.text(0.0, -13.4, "ITR", color="red", ha="left", va="center")
-    axis.text(0.0, -14.2, "OP", color="blue", ha="left", va="center")
-
     plot_info(axis, data2, mfile_data, scan)
 
 
@@ -2254,8 +2239,8 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("sarea", "Surface area", "m$^2$"),
         ("vol", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
-        (in_blanket_thk, "inboard blanket+shield", "m"),
-        (out_blanket_thk, "ouboard blanket+shield", "m"),
+        (in_blanket_thk, "Inboard blanket+shield", "m"),
+        (out_blanket_thk, "Outboard blanket+shield", "m"),
         ("powfmw", "Fusion power", "MW"),
         ("bigq", "$Q$", ""),
         ("", "", ""),
@@ -2530,7 +2515,7 @@ def plot_power_info(axis, mfile_data, scan):
         ped_height,
         ped_pos,
         ("ralpne", "Helium fraction", ""),
-        ("pinnerzoneradmw", "inner zone radiation", "MW"),
+        ("pinnerzoneradmw", "Inner zone radiation", "MW"),
         ("pradmw", "Total radiation in LCFS", "MW"),
         ("pnucblkt", "Nuclear heating in blanket", "MW"),
         ("pnucshld", "Nuclear heating in shield", "MW"),
