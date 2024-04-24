@@ -1479,8 +1479,10 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     jwptf = round(mfile_data.data["jwptf"].get_scan(scan)) / 1e6
     tf_thickness = mfile_data.data["tfcth"].get_scan(scan)
     integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
-    turn_layers = mfile_data.data["n_layer"].get_scan(scan)
-    turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
+
+    if integer_turns == 1:
+        turn_layers = mfile_data.data["n_layer"].get_scan(scan)
+        turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
 
     # Superconducting coil check
     if cond_type == 1:
@@ -1945,7 +1947,7 @@ def plot_pf_coils(axis, mfile_data, scan):
     ohcth = mfile_data.data["ohcth"].get_scan(scan)
     ohdz = mfile_data.data["ohdz"].get_scan(scan)
 
-    # Number of coils (1 is OH coil)
+    # Number of coils, both PF and CS
     number_of_coils = 0
     for item in mfile_data.data.keys():
         if "rpf[" in item:
@@ -1960,9 +1962,9 @@ def plot_pf_coils(axis, mfile_data, scan):
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
     if iohcl == 0:
-        noc = number_of_coils + 1
-    else:
         noc = number_of_coils
+    else:
+        noc = number_of_coils - 1
 
     for coil in range(0, noc):
         coils_r.append(mfile_data.data["rpf[{:01}]".format(coil)].get_scan(scan))
@@ -2400,7 +2402,6 @@ def plot_magnetics_info(axis, mfile_data, scan):
     sig_cond = 1.0e-6 * mfile_data.data[
         "sig_tf_tresca_max({})".format(i_tf_bucking + 1)
     ].get_scan(scan)
-    alstrtf = 1.0e-6 * mfile_data.data["alstrtf"].get_scan(scan)
 
     if i_tf_sup == 1:
         data = [
@@ -2418,7 +2419,6 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("tmargoh", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
-            (alstrtf, "Allowable stress", "Pa"),
             ("whttf/n_tf", "Mass per TF coil", "kg"),
         ]
 
@@ -2444,7 +2444,6 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("#TF coil forces/stresses", "", ""),
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
-            (alstrtf, "conductor Allowable stress", "Pa"),
             (fcoolcp, "CP cooling fraction", "%"),
             ("vcool", "Maximum coolant flow speed", "m.s$^{-1}$"),
             (prescp, "CP Resisitive heating", "MW"),
@@ -2609,9 +2608,11 @@ def plot_current_drive_info(axis, mfile_data, scan):
     axis.set_autoscalex_on(False)
 
     pinjie = mfile_data.data["pinjmw"].get_scan(scan)
-    pinjmwfix = mfile_data.data["pinjmwfix"].get_scan(scan)
     pdivt = mfile_data.data["pdivt"].get_scan(scan)
     pdivr = pdivt / mfile_data.data["rmajor"].get_scan(scan)
+
+    if mfile_data.data["iefrffix"].get_scan(scan) != 0:
+        pinjmwfix = mfile_data.data["pinjmwfix"].get_scan(scan)
 
     pdivnr = (
         1.0e20
@@ -2654,7 +2655,8 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data.keys():
+        # iefrffix is now always in the MFILE with = 0 meaning no fixed heating
+        if mfile_data.data["iefrffix"].get_scan(scan) != 0:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3207,7 +3209,7 @@ def main(args=None):
     if "i_tf_wp_geom" in m_file.data.keys():
         i_tf_wp_geom = int(m_file.data["i_tf_wp_geom"].get_scan(scan))
     else:
-        i_tf_wp_geom = int(0)    
+        i_tf_wp_geom = int(0)
 
     global bore
     global ohcth
@@ -3279,10 +3281,17 @@ def main(args=None):
     global rtanmax
     global beamwd
 
-    nbshield = m_file.data["nbshield"].get_scan(scan)
-    rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
-    rtanmax = m_file.data["rtanmax"].get_scan(scan)
-    beamwd = m_file.data["beamwd"].get_scan(scan)
+    iefrf = int(m_file.data["iefrf"].get_scan(scan))
+    iefrffix = int(m_file.data["iefrffix"].get_scan(scan))
+
+    if (iefrf in [5, 8]) or (iefrffix in [5, 8]):
+
+        nbshield = m_file.data["nbshield"].get_scan(scan)
+        rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
+        rtanmax = m_file.data["rtanmax"].get_scan(scan)
+        beamwd = m_file.data["beamwd"].get_scan(scan)
+    else:
+        nbshield = rtanbeam = rtanmax = beamwd = 0.0
 
     # Pedestal profile parameters
     global ipedestal
