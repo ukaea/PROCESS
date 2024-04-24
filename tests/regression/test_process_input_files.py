@@ -167,11 +167,8 @@ class RegressionTestScenario:
             if re.match(exclusions, key) is not None:
                 continue
 
-            # no need to carry on if the variables are exactly the same
-            if (ref_value := ref.data[key].get_scan(-1)) == (
-                new_value := new.data[key].get_scan(-1)
-            ):
-                continue
+            ref_value = ref.data[key].get_scan(-1)
+            new_value = new.data[key].get_scan(-1)
 
             try:
                 ref_value = float(ref_value)
@@ -180,28 +177,37 @@ class RegressionTestScenario:
                 # only compare float-able values
                 continue
 
-            # NOTE: the percentage change for a value that was
-            # originally 0 is 100% NOT 0% because this allows it
-            # to get picked up by various checks below
-            percentage_change = (
-                100.0 * (new_value - ref_value) / abs(ref_value)
-                if ref_value != 0
-                else 100.0
-            )
+            # Define relative tolerance
+            if tolerance == 0:
+                # Use pytest's default relative tolerance (1e-6)
+                # 0 tolerance causes floating-point discrepancies
+                # between local and CI runs
+                rel_tolerance = None
+            else:
+                # tolerance is a percentage, rel arg takes a fraction
+                rel_tolerance = tolerance / 100
 
-            # ignore the difference between the variables if its below
-            # tolerance
-            if percentage_change <= tolerance:
-                continue
-
-            diffs.append(
-                MFileVariableDifference(
-                    key,
-                    ref_value,
-                    new_value,
-                    percentage_change,
+            try:
+                # Use pytest.approx for relative and absolute comparisons:
+                # handles values close to 0
+                assert new_value == pytest.approx(ref_value, rel=rel_tolerance)
+            except AssertionError:
+                # NOTE: the percentage change for a value that was originally 0
+                # is 100% NOT 0% because this indicates the change better
+                percentage_change = (
+                    100.0 * (new_value - ref_value) / abs(ref_value)
+                    if ref_value != 0
+                    else 100.0
                 )
-            )
+
+                diffs.append(
+                    MFileVariableDifference(
+                        key,
+                        ref_value,
+                        new_value,
+                        percentage_change,
+                    )
+                )
 
         return diffs
 
