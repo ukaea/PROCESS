@@ -1,16 +1,16 @@
 """
 
-    File for reading IN.DATs
-    Version 2 (mainly for use with IN.DAT created from UI)
+File for reading IN.DATs
+Version 2 (mainly for use with IN.DAT created from UI)
 
-    James Morris
-    CCFE
-    11/12/14
+James Morris
+CCFE
+11/12/14
 
-    Notes:
-        + 24/11/2021: Global dictionary variables moved within the functions
-                    to avoid cyclic dependencies. This is because the dicts
-                    generation script imports, and inspects, process.
+Notes:
+    + 24/11/2021: Global dictionary variables moved within the functions
+                to avoid cyclic dependencies. This is because the dicts
+                generation script imports, and inspects, process.
 """
 
 from re import sub
@@ -42,7 +42,7 @@ def remove_empty_lines(lines):
     :param lines: list of lines (type=list)
     :return: list of lines with empty lines removed (type=list)
     """
-    return [line for line in lines if line != "\n"]
+    return [line for line in lines if line.strip(" ") != "\n"]
 
 
 def is_title(line):
