@@ -3856,9 +3856,20 @@ class Physics:
             )
             po.oblnkl(self.outfile)
 
+        tauelaw = f2py_compatible_to_string(
+            physics_variables.tauscl[physics_variables.isc - 1]
+        )
+
         po.ocmmnt(
             self.outfile,
-            f"Confinement scaling law: {f2py_compatible_to_string(physics_variables.tauscl[physics_variables.isc - 1])}",
+            f"Confinement scaling law: {tauelaw}",
+        )
+
+        po.ovarst(
+            self.outfile,
+            "Confinement scaling law",
+            "(tauelaw)",
+            f'"{tauelaw.strip().split(" ")[0]}"',
         )
 
         po.ovarrf(
