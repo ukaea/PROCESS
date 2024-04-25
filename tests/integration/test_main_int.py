@@ -1,6 +1,8 @@
 """Integration tests for the main.py module."""
+
 from process import main
 from shutil import copy
+import os
 
 
 def test_single_run(temp_data):
@@ -38,13 +40,20 @@ def test_vary_run(temp_data):
     :param temp_data: temporary dir containing data files
     :type temp_data: Path
     """
+    cwd = os.getcwd()
     # Set run_process.conf path in temp dir
     # Chosen because it's the only VaryRun in the test suite, and is fast
     conf_path = temp_data / "run_process.conf"
     conf_file = str(conf_path.resolve())
 
     # Run a VaryRun with an explicit conf file name
-    main.main(args=["--varyiterparams", "--varyiterparamsconfig", conf_file])
+    try:
+        main.main(args=["--varyiterparams", "--varyiterparamsconfig", conf_file])
+    finally:
+        # quick fix for vary run changing the directory and not changing back at the end
+        # finally block ensures that even if the test fails, the directory is changed back
+        # to where we were before.
+        os.chdir(cwd)
 
 
 def test_vary_run_cwd(temp_data_cwd):
