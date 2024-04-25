@@ -17,6 +17,7 @@
 import os
 import sys
 import argparse
+from argparse import RawTextHelpFormatter
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -63,18 +64,85 @@ if sys.version_info >= (3, 7):
 else:
     import importlib_resources as resources
 
-# Colours are taken from the BLUEMIRA colour scheme
-solenoid = "#1764ab"
-cscompression = "red"
-tfc = "#084a91"
-thermal_shield = "#e3eef9"
-vessel = "#b7d4ea"
-shield = "#94c4df"
-blanket = "#4a98c9"
-plasma = "#cc8acc"
-cryostat = "#2e7ebc"
-firstwall = "darkblue"
-nbshield_colour = "black"
+
+def parse_args(args):
+    """Parse supplied arguments.
+
+    :param args: arguments to parse
+    :type args: list, None
+    :return: parsed arguments
+    :rtype: Namespace
+    """
+    # Setup command line arguments
+    parser = argparse.ArgumentParser(
+        description="Produces a three page summary of the PROCESS MFILE output, using the MFILE.  "
+        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts ",
+        formatter_class=RawTextHelpFormatter,
+    )
+
+    parser.add_argument(
+        "-f",
+        metavar="FILENAME",
+        type=str,
+        default="",
+        help="specify input/output file path",
+    )
+    parser.add_argument("-s", "--show", help="show plot", action="store_true")
+
+    parser.add_argument("-n", type=int, help="Which scan to plot?")
+
+    parser.add_argument(
+        "-d",
+        "--DEMO_ranges",
+        help="Uses the DEMO dimensions as ranges for all graphics",
+        action="store_true",
+    )
+
+    parser.add_argument(
+        "-c",
+        "--colour",
+        type=int,
+        help=(
+            "Which colour scheme to use for cross-section plots\n"
+            "1: Original PROCESS (default)\n"
+            "2: BLUEMIRA"
+        ),
+        default=1,
+    )
+
+    return parser.parse_args(args)
+
+
+args = parse_args(None)
+colour_scheme = int(args.colour)
+
+if colour_scheme == 2:
+    # BLUEMIRA colour scheme (colour_scheme = 2)
+    print("yes")
+    solenoid = "#1764ab"
+    cscompression = "red"
+    tfc = "#084a91"
+    thermal_shield = "#e3eef9"
+    vessel = "#b7d4ea"
+    shield = "#94c4df"
+    blanket = "#4a98c9"
+    plasma = "#cc8acc"
+    cryostat = "#2e7ebc"
+    firstwall = "darkblue"
+    nbshield_colour = "black"
+else:
+    # Original PROCESS colours (default, colourscheme = 1)
+    solenoid = "pink"
+    cscompression = "red"
+    tfc = "cyan"
+    thermal_shield = "gray"
+    vessel = "green"
+    shield = "green"
+    blanket = "magenta"
+    plasma = "khaki"
+    cryostat = "red"
+    firstwall = "darkblue"
+    nbshield_colour = "black"
 
 thin = 0.0
 
@@ -171,19 +239,18 @@ def plot_plasma(axis, mfile_data, scan):
     axis.plot(pg.rs[1], pg.zs[1], color="black")
 
     # Colour in right side of plasma
-    print(pg.rs[0])
     axis.fill_between(
         x=pg.rs[0],
         y1=pg.zs[0],
-        where=(pg.rs[0] > r_0-(triang_95*a*1.5)),
-        color=plasma
+        where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
+        color=plasma,
     )
     # Colour in left side of plasma
     axis.fill_between(
         x=pg.rs[1],
         y1=pg.zs[1],
-        where=(pg.rs[1] < r_0-(triang_95*a*1.5)),
-        color=plasma
+        where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
+        color=plasma,
     )
 
 
@@ -3103,41 +3170,6 @@ def test(f):
     except Exception:
         print("FTest failure for file : {}".format(f))
         return False
-
-
-def parse_args(args):
-    """Parse supplied arguments.
-
-    :param args: arguments to parse
-    :type args: list, None
-    :return: parsed arguments
-    :rtype: Namespace
-    """
-    # Setup command line arguments
-    parser = argparse.ArgumentParser(
-        description="Produces a three page summary of the PROCESS MFILE output, using the MFILE.  "
-        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts "
-    )
-
-    parser.add_argument(
-        "-f",
-        metavar="FILENAME",
-        type=str,
-        default="",
-        help="specify input/output file path",
-    )
-    parser.add_argument("-s", "--show", help="show plot", action="store_true")
-
-    parser.add_argument("-n", type=int, help="Which scan to plot?")
-
-    parser.add_argument(
-        "-d",
-        "--DEMO_ranges",
-        help="Uses the DEMO dimensions as ranges for all graphics",
-        action="store_true",
-    )
-
-    return parser.parse_args(args)
 
 
 def main(args=None):
