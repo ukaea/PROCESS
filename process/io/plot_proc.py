@@ -63,19 +63,18 @@ if sys.version_info >= (3, 7):
 else:
     import importlib_resources as resources
 
-
-solenoid = "pink"
+# Colours are taken from the BLUEMIRA colour scheme
+solenoid = "#1764ab"
 cscompression = "red"
-tfc = "cyan"
-thermal_shield = "gray"
-vessel = "green"
-shield = "green"
-blanket = "magenta"
-plasma = "khaki"
-cryostat = "red"
+tfc = "#084a91"
+thermal_shield = "#e3eef9"
+vessel = "#b7d4ea"
+shield = "#94c4df"
+blanket = "#4a98c9"
+plasma = "#cc8acc"
+cryostat = "#2e7ebc"
 firstwall = "darkblue"
-winding = "blue"
-nbshield_colour = "gray"
+nbshield_colour = "black"
 
 thin = 0.0
 
@@ -342,7 +341,7 @@ def color_key(axis, mfile_data, scan):
     axis.text(
         -5,
         12,
-        "*The CS comp and themral shield are not show in the poloidal cross-section",
+        "*The CS comp and thermal shield are not shown in the poloidal cross-section",
         ha="left",
         va="top",
         size="medium",
@@ -495,7 +494,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
             facecolor=nbshield_colour,
         )
         # Overlay TF coil segments
-        TF_outboard(axis, item, n_tf=n_tf, r3=r3, r4=r4, w=w, facecolor="cyan")
+        TF_outboard(axis, item, n_tf=n_tf, r3=r3, r4=r4, w=w, facecolor=tfc)
 
     iefrf = mfile_data.data["iefrf"].get_scan(scan)
     if (iefrf == 5) or (iefrf == 8):
@@ -1957,7 +1956,7 @@ def plot_pf_coils(axis, mfile_data, scan):
             xy=(central_coil.anchor_x, central_coil.anchor_z),
             width=central_coil.width,
             height=central_coil.height,
-            facecolor="pink",
+            facecolor=solenoid,
         )
     )
 
