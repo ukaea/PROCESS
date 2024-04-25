@@ -296,7 +296,7 @@ contains
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
-    use pfcoil_variables, only: rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
+    use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       coheof, sigpfcalw, alstroh, ipfres, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, isumatoh, ngrpmx, ngc2, rpf1, &
       ngrp, isumatpf, nfxfh, alfapf, routr, sigpfcf, pfclres, bmaxcs_lim, &
@@ -1814,6 +1814,9 @@ contains
 
        !  PF coil settings
 
+       case ('rhopfbus')
+          call parse_real_variable('rhopfbus', rhopfbus, 0.0D0, 1.0D-5, &
+               'CS and PF coil bus (feeders) resistivity (ohm-m)')
        case ('bmaxcs_lim')
          call parse_real_variable('bmaxcs_lim', bmaxcs_lim, 0.01D0, 100.0D0, &
                'Maximum allowed peak field on central solenoid')

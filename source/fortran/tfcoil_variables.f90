@@ -955,7 +955,7 @@ module tfcoil_variables
     tflegmw = 0.0D0
     rhocp = 0.0D0
     rhotfleg = 0.0D0
-    rhotfbus = -1.0D0 ! 2.5D-8
+    rhotfbus = 2.62D-8    !-1.0D0 ! 2.5D-8
     frhocp = 1.0D0
     frholeg = 1.0D0
     rho_tf_joints = 2.5D-10
