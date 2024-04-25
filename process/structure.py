@@ -22,7 +22,6 @@ class Structure:
     This class contains routines for calculating the
     parameters of the support structure for a
     fusion power plant.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
 
     def __init__(self) -> None:

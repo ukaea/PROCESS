@@ -24,7 +24,6 @@ class CurrentDrive:
         This routine calculates the power requirements of the current
         drive system, using a choice of models for the current drive
         efficiency.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         current_drive_variables.echpwr = 0.0e0
@@ -1279,7 +1278,6 @@ class CurrentDrive:
         fshine  : output real : shine-through fraction of beam
         This routine calculates the current drive parameters for a
         neutral beam system, based on the 1990 ITER model.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
@@ -1349,7 +1347,6 @@ class CurrentDrive:
         effrfss : output real : lower hybrid current drive efficiency (A/W)
         This routine calculates the current drive parameters for a
         lower hybrid system, based on the AEA FUS 172 model.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         rratio = self.lhrad()
@@ -1416,7 +1413,6 @@ class CurrentDrive:
         effrfss : output real : electron cyclotron current drive efficiency (A/W)
         This routine calculates the current drive parameters for a
         electron cyclotron system, based on the AEA FUS 172 model.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         rrr = 1.0e0 / 3.0e0
@@ -1492,7 +1488,6 @@ class CurrentDrive:
         <P>The answer ECGAM is the normalised efficiency nIR/P with n the
         local density in 10**20 /m**3, I the driven current in MAmps,
         R the major radius in metres, and P the absorbed power in MWatts.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
@@ -1551,7 +1546,6 @@ class CurrentDrive:
         using the corrections outlined in AEA FUS 172 to the ITER method.
         <P>The result cannot be guaranteed for devices with aspect ratios far
         from that of ITER (approx. 2.8).
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
@@ -1630,7 +1624,6 @@ class CurrentDrive:
         rratio  : output real : minor radius of penetration / rminor
         This routine determines numerically the minor radius at which the
         damping of Lower Hybrid waves occurs, using a Newton-Raphson method.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         #  Correction to refractive index (kept within valid bounds)
@@ -1718,7 +1711,6 @@ class CurrentDrive:
         a neutral beam system, based on the 1990 ITER model,
         plus correction terms outlined in Culham Report AEA FUS 172.
         <P>The formulae are from AEA FUS 172, unless denoted by IPDG89.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
@@ -1814,7 +1806,6 @@ class CurrentDrive:
         AEA FUS 172, p.58. This difference is used to locate the Lower Hybrid
         wave absorption radius via a Newton-Raphson method, in calling
         routine <A HREF="lhrad.html">lhrad</A>.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         dlocal = 1.0e-19 * profiles_module.nprofile(
@@ -1882,7 +1873,6 @@ class CurrentDrive:
         zeff    : input real : plasma effective charge
         This routine calculates the current drive efficiency of
         a neutral beam system, based on the 1990 ITER model.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
@@ -1928,7 +1918,6 @@ class CurrentDrive:
         fpion   : output real : fraction of fast particle energy coupled to ions
         This routine calculates the fast particle energy coupled to
         the ions in the neutral beam system.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         # atmd = 2.0
         atmdt = 2.5

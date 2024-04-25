@@ -12,7 +12,6 @@ class Optimiser:
         developed by Argonne National Laboratory.
         On exit, the (normalised) value of the variable being maximised
         or minimised (i.e. the figure of merit) is returned in argument f.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code.
 
         This represents the old optimiz subroutine in the numerics module.
 

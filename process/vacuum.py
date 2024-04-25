@@ -22,7 +22,6 @@ class Vacuum:
 
     This module contains routines for calculating the
     parameters of the vacuum system for a fusion power plant.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
 
     def __init__(self) -> None:
@@ -33,7 +32,6 @@ class Vacuum:
         author: P J Knight, CCFE, Culham Science Centre
 
         This routine calls the main vacuum package.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -203,7 +201,6 @@ class Vacuum:
         author: P C Shipe, ORNL
 
         This routine calculates the parameters of the vacuum system.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param pfusmw: Fusion power (MW)
         :type pfusmw: float

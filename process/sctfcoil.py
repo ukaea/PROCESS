@@ -1445,7 +1445,6 @@ class Sctfcoil:
         limits the peak temperature in the winding to a given limit (tmax).
         It also finds the dump voltage.
         <P>These calculations are based on Miller's formulations.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         # Integration coefficients p1,p2,p3
         p1 = (
@@ -2004,7 +2003,6 @@ class Sctfcoil:
         26/11/19 SK added the coolant area, the conuctor/isulator/outer casing volume
         30/11/20 SK added the ground outer ground insulation volume
         F/MI/PJK/LOGBOOK12, pp.33,34
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         yy_ins = numpy.zeros((101,))  # Exact conductor area (to be integrated)
         yy_cond = numpy.zeros((101,))  # Turn insulation area (to be integrated)
@@ -6421,7 +6419,6 @@ def sigvm(sx: float, sy: float, sz: float, txy: float, txz: float, tyz: float) -
     author: B Reimer, FEDC
     This routine calculates the Von Mises combination of
     stresses (Pa) in a TF coil.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
     :param sx: In-plane stress in X direction [Pa]
     :param sy: In-plane stress in Y direction [Pa]

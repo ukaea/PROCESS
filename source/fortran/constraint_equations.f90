@@ -45,8 +45,7 @@ contains
     !!
     !! **References**
     !!
-    !! 1. AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+    !! 1.
     use numerics, only: icc
     use maths_library, only: variable_error
 
@@ -1660,7 +1659,7 @@ contains
 
       tmp_cc =  1.0D0 - fjprot * jwdgpro/jwptf
       tmp_con = jwdgpro
-      tmp_err = jwptf - jwptf
+      tmp_err =  jwptf - jwdgpro
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 

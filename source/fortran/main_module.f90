@@ -34,8 +34,7 @@ subroutine inform(progid)
   !! This subroutine uses system calls to identify the user, date,
   !! machine etc. for the present run, and stores the information
   !! in a character string array.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout
@@ -321,8 +320,7 @@ end subroutine run_summary
 !   !! author: P J Knight, CCFE, Culham Science Centre
 !   !! ifail   : output integer : error flag
 !   !! This routine calls the non-optimising equation solver.
-!   !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-!   !
+!   !! !   !
 !   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !   use constants, only: nout, mfile, iotty
 !   use constraints, only: constraint_eqns
@@ -473,8 +471,7 @@ subroutine herror(ifail)
   !! by default the output file and screen, respectively.
   !! <P>If <CODE>IFAIL=1</CODE> then a feasible solution has been
   !! found and therefore no error message is required.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout, iotty
@@ -563,8 +560,7 @@ subroutine verror(ifail)
   !! by default the output file and screen, respectively.
   !! <P>If <CODE>IFAIL=1</CODE> then a feasible solution has been
   !! found and therefore no error message is required.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout, iotty

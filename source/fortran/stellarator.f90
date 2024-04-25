@@ -7,8 +7,7 @@ module stellarator_module
   !! parameters of the first wall, blanket and shield components
   !! of a fusion power plant.
 
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifndef dp
    use, intrinsic :: iso_fortran_env, only: dp=>real64
@@ -49,8 +48,7 @@ contains
     !! This routine initialises the variables relevant to stellarators.
     !! Many of these may override the values set in routine
     !! <A HREF="initial.html">initial</A>.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use build_variables, only: gapoh, iohcl, ohcth, tfootfi

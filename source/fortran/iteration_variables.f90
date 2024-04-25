@@ -4264,7 +4264,7 @@ contains
            case (49);  call set_itv_49(ratio)
            case (50);  call set_itv_50(ratio)
            case (51);  call set_itv_51(ratio)
-           case (52);  
+           case (52);
            case (53);  call set_itv_53(ratio)
            case (54);  call set_itv_54(ratio)
            case (55);
@@ -4429,8 +4429,7 @@ contains
     !! None
     !! This subroutine converts the scaled iteration variable bounds
     !! back to their real values.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: nvar, bondl, bondu, scale, ixc, boundl, boundu

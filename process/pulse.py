@@ -21,7 +21,6 @@ class Pulse:
 
         This calls the routines relevant to a pulsed reactor scenario.
         Work File Notes F/MPE/MOD/CAG/PROCESS/PULSE
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -41,7 +40,6 @@ class Pulse:
         for a pulsed reactor.
         Work File Note F/MPE/MOD/CAG/PROCESS/PULSE/0013
         Work File Note F/PL/PJK/PROCESS/CODE/050
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -129,7 +127,6 @@ class Pulse:
 
         This routine calculates the burn time for a pulsed reactor.
         Work File Note F/MPE/MOD/CAG/PROCESS/PULSE/0012
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean

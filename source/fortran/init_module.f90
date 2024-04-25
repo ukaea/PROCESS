@@ -111,7 +111,7 @@ contains
       !! the input file, and checks the run parameters for consistency.
 
 
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Codefile:///home/mkumar/process/source/fortran/divertor_ode.f90
+      !! file:///home/mkumar/process/source/fortran/divertor_ode.f90
 
       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!file:///home/mkumar/process/source/fortran/input.f90

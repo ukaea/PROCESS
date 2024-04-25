@@ -5,8 +5,7 @@ module physics_functions_module
   !! N/A
   !! This module contains physics routines which can be called by physics or
   !! other modules
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
@@ -51,8 +50,7 @@ contains
     !! 123 (2008) 012033
     !! J A Snipes and the International H-mode Threshold Database
     !! Working Group, 2000, Plasma Phys. Control. Fusion, 42, A299
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use physics_variables, only: rminor, plascur
@@ -311,8 +309,7 @@ contains
       !! in routine <A HREF="palph.html">PALPH</A>.
       !! The fusion reaction assumed is controlled by flag
       !! <CODE>ireaction</CODE> set in <CODE>PALPH</CODE>.
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       use physics_variables, only: te, rhopedt, te0, teped, tesep, tbeta, &
         dene, rhopedn, ne0, neped, nesep
@@ -605,8 +602,7 @@ contains
     !! dnbeam2: output real : hot beam ion density (/m3)
     !! palpnb : output real : alpha power from hot neutral beam ions (MW)
     !! This routine calculates the beam slowing down properties.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -684,8 +680,7 @@ contains
     !! palfdb : output real : alpha power from deut. beam-background fusion (MW)
     !! palftb : output real : alpha power from trit. beam-background fusion (MW)
     !! This routine calculates the neutral beam alpha power and ion energy.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         use constants, only: echarge, mproton
@@ -767,8 +762,7 @@ contains
             !! ec : input real :  critical energy for electron/ion slowing down of
             !! the beam ion (keV)
             !! This routine calculates something to do with the hot ion energy...
-            !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-            !
+            !!             !
             ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             implicit none
@@ -812,8 +806,7 @@ contains
       !! vol    : input real :  plasma volume (m3)
       !! This routine calculates the alpha power from
       !! beam-background fusion.
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       implicit none
@@ -847,8 +840,7 @@ contains
       !! vcrx   : input real :  critical velocity for electron/ion slowing down of
       !! the beam ion (m/s)
       !! This routine calculates the hot beam fusion reaction rate in m3/s.
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       use error_handling, only: idiags, report_error
@@ -910,8 +902,7 @@ contains
     !! u : input real : abscissa of integration, = ratio of beam velocity
     !! to the critical velocity
     !! This is the integrand function for the hot beam fusion reaction rate.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use constants, only: mproton, echarge
@@ -954,8 +945,7 @@ contains
       !! The functional form of the cross-section is in terms of the equivalent
       !! deuterium energy, i.e. for a tritium beam at 500 keV the energy
       !! used in the cross-section function is 333 keV.
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       implicit none

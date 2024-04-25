@@ -49,7 +49,6 @@ class Stellarator:
     parameters of the first wall, blanket and shield components
     of a fusion power plant.
 
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
 
     def __init__(
@@ -104,7 +103,6 @@ class Stellarator:
         author: F Warmer, IPP Greifswald
 
         This routine is the caller for the stellarator models.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -181,7 +179,6 @@ class Stellarator:
         outfile : input integer : output file unit
         This routine calculates the ignition margin at the final
         point with different stellarator confinement time scaling laws
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         po.osubhd(self.outfile, "Confinement times, and required H-factors :")
 
@@ -370,7 +367,6 @@ class Stellarator:
         The values calculated are based on the mean minor radius, etc.,
         as the actual radial and vertical build thicknesses vary with
         toroidal angle.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if fwbs_variables.blktmodel > 0:
             build_variables.blnkith = (
@@ -772,7 +768,6 @@ class Stellarator:
         <A HREF="struct.html">STRUCT</A>. In practice, many of the masses
         are simply set to zero to avoid double-counting of structural
         components that are specified differently for tokamaks.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         structure_variables.fncmass = 0.0e0
 
@@ -1128,7 +1123,6 @@ class Stellarator:
         <A HREF="fwbs.html">fwbs</A>), except for the volume calculations,
         which scale the surface area of the components from that
         of the plasma.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         fwbs_variables.fwlife = min(
             cost_variables.abktflnc / physics_variables.wallmw, cost_variables.tlife
@@ -3315,7 +3309,6 @@ class Stellarator:
         S.Sudo, Y.Takeiri, H.Zushi et al., Scalings of Energy Confinement
         and Density Limit in Stellarator/Heliotron Devices, Nuclear Fusion
         vol.30, 11 (1990).
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         arg = powht * bt / (rmajor * rminor * rminor)
 
@@ -3856,7 +3849,6 @@ class Stellarator:
         None
         This routine calculates the physics quantities relevant to
         a stellarator device.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         # ###############################################
@@ -4636,7 +4628,6 @@ class Stellarator:
         iprint : input integer : switch for writing to output file (1=yes)
         This routine calculates the auxiliary heating power for
         a stellarator device.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if stellarator_variables.isthtr == 1:

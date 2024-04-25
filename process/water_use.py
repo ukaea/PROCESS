@@ -18,7 +18,6 @@ class WaterUse:
         author: R Chapman, UKAEA
 
         This routine calls the different water usage routines.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean

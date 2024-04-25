@@ -5,7 +5,6 @@ module tfcoil_variables
   !!
   !!### References
   !!
-  !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
   !! - ITER Magnets design description document DDD11-2 v2 2 (2009)
 
 #ifndef dp
