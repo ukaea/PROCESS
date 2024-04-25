@@ -14,10 +14,11 @@ import pandas as pd
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import logging
 import seaborn as sns
 from dataclasses import dataclass, asdict
-from typing import Optional, Sequence, List, Dict
+from typing import Optional, Sequence, List, Dict, Tuple
 
 
 # Variables of interest in mfiles and subsequent dataframes
@@ -54,7 +55,7 @@ def plot_mfile_solutions(
     normalising_tag: Optional[str] = None,
     rmse: Optional[bool] = False,
     normalisation_type: Optional[str] = "init",
-) -> pd.DataFrame:
+) -> Tuple[mpl.figure.Figure, pd.DataFrame]:
     """Plot multiple solutions, optionally normalised by a given solution.
 
     :param runs_metadata: list of RunMetadata objects
@@ -69,6 +70,8 @@ def plot_mfile_solutions(
     :type rmse: bool, optional
     :param normalisation_type: opt param normalisation to use: one of ["init", "range", None], defaults to "init"
     :type normalisation_type: str, optional
+    :return: figure and dataframe of solutions
+    :rtype: Tuple[mpl.figure.Figure, pd.DataFrame]
     """
     # Determine type of normalised opt params to plot (i.e. itvar, xcm or nitvar)
     if normalisation_type == "init":
@@ -108,7 +111,7 @@ def plot_mfile_solutions(
         # Don't plot RMS errors
         rmse_df = None
 
-    _plot_solutions(
+    fig = _plot_solutions(
         plot_results_df,
         opt_param_value_pattern=opt_param_value_pattern,
         plot_title=plot_title,
@@ -118,8 +121,9 @@ def plot_mfile_solutions(
         normalisation_type=normalisation_type,
     )
 
-    # TODO Should return ax too?
-    return filtered_results_df
+    # Return fig for optional further customisation
+    # fig as varying numbers of axes depending on plot type
+    return fig, filtered_results_df
 
 
 def _extract_mfile_data(mfile_path: Path) -> Dict:
@@ -306,7 +310,7 @@ def _plot_solutions(
     normalise: bool,
     normalising_tag: str,
     rmse_df: pd.DataFrame,
-):
+) -> mpl.figure.Figure:
     """Plot multiple solutions, optionally normalised by a given solution.
 
     :param diffs_df: normalised diffs for optimisation parameters and objective function
@@ -323,6 +327,8 @@ def _plot_solutions(
     :type normalising_tag: str
     :param rmse_df: RMS errors relative to reference solution
     :type rmse_df: pd.DataFrame
+    :return: figure containing varying numbers of axes
+    :rtype: mpl.figure.Figure
     """
     # Separate optimisation parameters and objective dfs
     opt_params_df = diffs_df.filter(
@@ -523,6 +529,8 @@ def _plot_solutions(
         ax_rmse.set_xlabel("RMS error")
         ax_rmse.set_ylabel("")
         ax_rmse.get_legend().remove()
+
+    return fig
 
 
 def _rms_errors(
