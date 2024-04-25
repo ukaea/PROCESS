@@ -30,7 +30,7 @@ def test_plot_mfile_solutions(run_metadata: Sequence[RunMetadata]):
     :type run_metadata: Sequence[RunMetadata]
     """
 
-    results_df = plot_mfile_solutions(
+    _, results_df = plot_mfile_solutions(
         runs_metadata=run_metadata, plot_title="3 large tokamak solutions"
     )
 
