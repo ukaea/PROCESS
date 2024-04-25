@@ -326,16 +326,27 @@ def plot_cryostat(axis, mfile_data, scan):
         )
 
 
-def color_key(axis):
+def color_key(axis, mfile_data, scan):
+
     """Function to plot the colour key
     Arguments:
       axis --> object to add plot to
     """
+
     axis.set_ylim([0, 10])
     axis.set_xlim([0, 10])
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
+
+    axis.text(
+        -5,
+        12,
+        "*The CS comp and themral shield are not show in the poloidal cross-section",
+        ha="left",
+        va="top",
+        size="medium",
+    )
 
     axis.text(-5, 10, "CS coil", ha="left", va="top", size="medium")
     axis.add_patch(patches.Rectangle([0.65, 9.7], 1, 0.4, lw=0, facecolor=solenoid))
@@ -348,7 +359,7 @@ def color_key(axis):
     axis.text(-5, 8, "TF coil", ha="left", va="top", size="medium")
     axis.add_patch(patches.Rectangle([0.65, 7.7], 1, 0.4, lw=0, facecolor=tfc))
 
-    axis.text(-5, 7, "Th shield", ha="left", va="top", size="medium")
+    axis.text(-5, 7, "Thermal shield", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle([0.65, 6.7], 1, 0.4, lw=0, facecolor=thermal_shield)
     )
@@ -371,14 +382,20 @@ def color_key(axis):
             [0.65, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black"
         )
     )
+    if (mfile_data.data["iefrf"].get_scan(scan) in [5, 8]) or (
+        mfile_data.data["iefrffix"].get_scan(scan) in [5, 8]
+    ):
+        axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
+        axis.add_patch(
+            patches.Rectangle([0.65, 0.7], 1, 0.4, lw=0, facecolor=nbshield_colour)
+        )
+        axis.text(-5, 0.1, "Cryostat", ha="left", va="top", size="medium")
+        axis.add_patch(
+            patches.Rectangle([0.65, -0.3], 1, 0.4, lw=0, facecolor=cryostat)
+        )
 
-    axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle([0.65, 0.7], 1, 0.4, lw=0, facecolor=nbshield_colour)
-    )
-
-    axis.text(-5, 0.1, "Cryostat", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.65, -0.3], 1, 0.4, lw=0, facecolor=cryostat))
+    axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
+    axis.add_patch(patches.Rectangle([0.65, 0.7], 1, 0.1, lw=0, facecolor=cryostat))
 
 
 def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
@@ -2776,7 +2793,7 @@ def main_plot(
 
     # Plot color key
     plot_3 = fig2.add_subplot(241)
-    color_key(plot_3)
+    color_key(plot_3, m_file_data, scan)
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
