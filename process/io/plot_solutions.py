@@ -1,11 +1,11 @@
 """Plot solution vectors from MFILEs to compare them.
 
 This tool plots multiple solutions, or their differences, to allow comparisons
-of the solution vectors and objective function values.
+of the solution vectors and objective function values. It allows normalisation
+to a given solution as well as plotting RMSEs relative to it.
 
-This tool can:
-1. Plot solutions from any number of arbitrary MFILEs, or their differences
-(plot_mfile_solutions())
+If the MFILE is the result of a parameter scan, only the last point is plotted
+currently.
 """
 
 from process.io.mfile import MFile
