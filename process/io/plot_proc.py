@@ -1301,7 +1301,7 @@ def plot_firstwall(axis, mfile_data, scan):
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
     if int(i_single_null) == 1:
         blnktth = mfile_data.data["blnktth"].get_scan(scan)
-        # tfwvt = mfile_data.data["fwtth"].get_scan(scan)
+        tfwvt = mfile_data.data["fwtth"].get_scan(scan)
     else:
         blnktth = tfwvt = 0.0
 
