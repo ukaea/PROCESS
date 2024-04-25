@@ -5,7 +5,7 @@ power to electricity, from the coolant systems in the plant components to the he
 turbines. Figure 1 shows the power flow. 
 
 <figure markdown>
-![Power flow](../../images/Overall-power-flow.png){ width="100%"}
+![Power flow](../images/Overall-power-flow.png){ width="100%"}
 <figcaption>Figure 1: Power flows</figcaption>
 </figure>
 

@@ -85,7 +85,7 @@ in the case of the CS coils).
     11. A safety factor of 2 is used for the crack size.   
 
 <figure markdown>
-![CS defect](../../images/conductor_coordinates.png){ width="100%"}
+![CS defect](../images/conductor_coordinates.png){ width="100%"}
 <figcaption>Figure 2: Sketch of CS conductor with a planar defect.</figcaption>
 </figure>
 
@@ -153,7 +153,7 @@ using `fcohbop` (iteration variable no. 41). The current density in the CS at al
 calculated by taking into account the flux swing necessary to initiate and maintain plasma current. 
 
 <figure markdown>
-![current-vs-time-plot](../../images/current_vs_time.png){ width="100%"}
+![current-vs-time-plot](../images/current_vs_time.png){ width="100%"}
 <figcaption>Figure 2: Plot showing schematically the current waveforms for the plasma, a typical PF 
 coil, and the central solenoid. Note that the currents in some of the PF coils may be the opposite 
 sign to that shown, and the central solenoid current may remain positive during the I<sub>p</sub> 
