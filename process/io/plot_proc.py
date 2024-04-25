@@ -169,17 +169,21 @@ def plot_plasma(axis, mfile_data, scan):
 
     axis.plot(pg.rs[0], pg.zs[0], color="black")
     axis.plot(pg.rs[1], pg.zs[1], color="black")
-    axis.fill_betweenx(
-        pg.zs[0],
-        pg.rs[0],
-        pg.rs[1],
-        where=(pg.rs[1] < pg.rs[0])
-        & (pg.zs[0] > (-a * pg.kappa))
-        & (pg.zs[0] < (a * pg.kappa)),
-        color=plasma,
+
+    # Colour in right side of plasma
+    print(pg.rs[0])
+    axis.fill_between(
+        x=pg.rs[0],
+        y1=pg.zs[0],
+        where=(pg.rs[0] > r_0-(triang_95*a*1.5)),
+        color=plasma
     )
-    axis.fill_betweenx(
-        pg.zs[0], pg.rs[0], pg.rs[1], where=(pg.rs[1] > pg.rs[0]), color="none"
+    # Colour in left side of plasma
+    axis.fill_between(
+        x=pg.rs[1],
+        y1=pg.zs[1],
+        where=(pg.rs[1] < r_0-(triang_95*a*1.5)),
+        color=plasma
     )
 
 
