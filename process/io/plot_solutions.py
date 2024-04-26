@@ -18,7 +18,7 @@ import matplotlib as mpl
 import logging
 import seaborn as sns
 from dataclasses import dataclass, asdict
-from typing import Optional, Sequence, List, Dict, Tuple
+from typing import Optional, Sequence, List, Dict, Tuple, Union
 
 
 # Variables of interest in mfiles and subsequent dataframes
@@ -51,7 +51,6 @@ class RunMetadata:
 def plot_mfile_solutions(
     runs_metadata: Sequence[RunMetadata],
     plot_title: str,
-    normalise: Optional[bool] = False,
     normalising_tag: Optional[str] = None,
     rmse: Optional[bool] = False,
     normalisation_type: Optional[str] = "init",
@@ -62,9 +61,8 @@ def plot_mfile_solutions(
     :type runs_metadata: Sequence[RunMetadata]
     :param plot_title: title of plot
     :type plot_title: str
-    :param normalise: normalise optimisation parameters to a given solution, defaults to False
-    :type normalise: Optional[bool], optional
-    :param normalising_tag: tag for solution to normalise with, defaults to None
+    :param normalising_tag: tag for solution to normalise with. If provided,
+    normalise, otherwise don't, defaults to None
     :type normalising_tag: str, optional
     :param rmse: plot RMS errors relative to reference solution, defaults to False
     :type rmse: bool, optional
@@ -89,7 +87,7 @@ def plot_mfile_solutions(
         results_df, opt_param_value_pattern=opt_param_value_pattern
     )
 
-    if normalise:
+    if normalising_tag is not None:
         # Calculate the normalised diffs relative to the tagged solution
         plot_results_df = _normalise_diffs(
             filtered_results_df,
@@ -115,7 +113,6 @@ def plot_mfile_solutions(
         plot_results_df,
         opt_param_value_pattern=opt_param_value_pattern,
         plot_title=plot_title,
-        normalise=normalise,
         rmse_df=rmse_df,
         normalising_tag=normalising_tag,
         normalisation_type=normalisation_type,
@@ -174,21 +171,17 @@ def _create_df_from_run_metadata(runs_metadata: Sequence[RunMetadata]) -> pd.Dat
 
 
 def _separate_norm_solution(
-    results_df: pd.DataFrame, normalising_tag: Optional[str] = None
+    results_df: pd.DataFrame, normalising_tag: str
 ) -> tuple[pd.DataFrame]:
     """Separate solutions df into normalising row and rows to be normalised.
 
     :param results_df: multiple solutions dataframe
     :type results_df: pd.DataFrame
-    :param normalising_tag: tag to identify row to normalise with, defaults to None
-    :type normalising_tag: Optional[str], optional
+    :param normalising_tag: tag to identify row to normalise with
+    :type normalising_tag: str
     :return: normalising row, rows to be normalised
     :rtype: tuple[pd.DataFrame]
     """
-    # If no normalising tag specified, use first solution to normalise
-    if normalising_tag is None:
-        normalising_tag = results_df.loc[0][TAG]
-
     # Split results into normalising and non-normalising solutions
     normalising_soln = results_df[results_df[TAG] == normalising_tag]
     non_normalising_solns = results_df[results_df[TAG] != normalising_tag]
@@ -313,8 +306,7 @@ def _plot_solutions(
     normalisation_type: str,
     opt_param_value_pattern: str,
     plot_title: str,
-    normalise: bool,
-    normalising_tag: str,
+    normalising_tag: Union[str, None],
     rmse_df: pd.DataFrame,
 ) -> mpl.figure.Figure:
     """Plot multiple solutions, optionally normalised by a given solution.
@@ -327,10 +319,8 @@ def _plot_solutions(
     :type opt_param_value_pattern: str
     :param plot_title: title of plot
     :type plot_title: str
-    :param normalise: normalise optimisation parameters to a given solution
-    :type normalise: bool
-    :param normalising_tag: tag for normalising solution
-    :type normalising_tag: str
+    :param normalising_tag: tag for normalising solution, if any
+    :type normalising_tag: Union[str, None]
     :param rmse_df: RMS errors relative to reference solution
     :type rmse_df: pd.DataFrame
     :return: figure containing varying numbers of axes
@@ -436,7 +426,7 @@ def _plot_solutions(
     else:
         x_axis_label = "Value"
 
-    if normalise:
+    if normalising_tag is not None:
         x_axis_label += f", normalised to {normalising_tag}"
 
     # Plot optimisation parameters
