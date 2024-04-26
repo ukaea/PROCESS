@@ -179,11 +179,17 @@ for the reference year of the inflation used.
 
 | TF and WP structure                                                                                                 |
 | :---------------------------------------------------------------------------------------------------------- |
-||
-||
-||
-||
-||
+|Inboard TF nose case thickness|
+|Inboard TF minimum distance between side case and WP|
+|Radial width of inboard TF leg|
+|Thickness of insualtion surrounding WP|
+|Number of turns in WP|
+|WP current density|
+|Radial width of WP|
+|Inter-turn insulation thickness|
+|Turn steel conduit thickness|
+|Turn cable space width and surface area|
+|Turn cooling pipe diameter|
 
 ## Sankey Diagram
 
