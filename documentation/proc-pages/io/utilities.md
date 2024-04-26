@@ -74,7 +74,7 @@ A utility to produce a three-page PDF summary of the output from PROCESS, includ
 ### Usage
 
 ```bash
-python process/io/plot_proc.py [-h] [-f path/to/MFILE.DAT] [-s]
+python process/io/plot_proc.py [-h] [-f path/to/MFILE.DAT] [-s] [-n N] [-d] [-c COLOUR]
 ```
 
 If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the current directory.
@@ -82,9 +82,12 @@ If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the cu
 ### Options
 | Argument               | Description                      |
 | ---------------------- | -------------------------------- |
-| `-h --help`            | show help message and exit       |
-| `-f path/to/MFILE.DAT` | specify input/output file prefix |
-| `-s, --show`           | show plot                        |
+| `-h --help`            | Show help message and exit       |
+| `-f FILENAME`          | Specify input/output file path   |
+| `-s, --show`           | Show plot                        |
+| `-n, N`                | Which scan number to plot        |
+| `-d, --DEMO_ranges`    | Uses the DEMO dimensions as ranges for all graphics        |
+| `-c, COLOUR`           | Which colour scheme to use for cross-section plots; 1: Original PROCESS (default), 2: BLUEMIRA        |
 
 ### Output
 Produces a three-page PDF file in the same directory as the input MFILE. The PDF file name has the same prefix as the input MFILE but ending in `SUMMARY.pdf` 
@@ -105,71 +108,82 @@ Produces a three-page PDF file in the same directory as the input MFILE. The PDF
 
 `Plasma Composition` - Number densities of several ion species relative to the electron density.
 
-`Coil Currents etc` - Peak coil currents of the PF coils in $MA$, flux swing of the central solenoid 
-used for startup and total available in $Wb$. Total burn time `tburn` in hrs.
+`Coil Currents etc` - Peak coil currents of the PF coils in $\text{MA}$, flux swing of the central solenoid 
+used for startup and total available in $\text{Wb}$. Total burn time `tburn` in hrs.
 
-`Cost of electricity` - This is the cost of electricity in $/MWh$. Check the respective cost model 
+`Cost of electricity` - This is the cost of electricity in $/\text{MWh}$. Check the respective cost model 
 for the reference year of the inflation used.
 
 | Geometry                                                   |
 | :--------------------------------------------------------- |
-| major radius $R_0$                                         |
-| minor radius $a$                                           |
-| aspect ratio $A$                                           |
-| elongation at the 95% flux surface $\kappa_{95}$           |
-| plasma triangularity at the 95% flux surface $\delta_{95}$ |
-| plasma surface area                                        |
-| plasma volume                                              |
-| number of TF coils                                         |
-| inboard/outboard blanket thickness                         |
-| inboard/outboard shield thickness                          |
-| total fusion power                                         |
+| Major radius, $R_0$                                         |
+| Minor radius, $a$                                           |
+| Aspect ratio, $A$                                           |
+| Elongation at the 95% flux surface, $\kappa_{95}$          |
+| Plasma triangularity at the 95% flux surface, $\delta_{95}$|
+| Plasma surface area                                        |
+| Plasma volume                                              |
+| Number of TF coils                                         |
+| Inboard blanket + shield                                   |
+| Outboard blanket + shield                                  |
+| Total fusion power                                         |
+| $Q_{\text{p}}$                                             |
 
 | Power flows                                                                                                 |
 | :---------------------------------------------------------------------------------------------------------- |
-| average neutron wall load $W_{all}=\frac{P_{neutrons}}{S_{plasma,surface}f_{user}}$[^2]                     |
-| normalised radius of the 'core' region $\rho_{core}$ used in the radiation correction of the                |
-| confinement scaling[^3] [^4]                                                                                |
-| the electron density at the pedestal top $n_{e,ped}[m^{-3}]$                                                |
-| the normalised radius $\rho=r/a$ at the pedestal top                                                        |
-| the helium fraction relative to the electron density                                                        |
-| the core radiation $P_{rad} (\rho<\rho_{core})$ subtracted from $P_{heat}$ in confinement scaling           |
-| $W_{th}$, the total radiation inside the separatrix                                                         |
-| nuclear heating power to blanket $P_{nuc,blkt}= P_{neutr} (1-e^{-\frac{\Delta x_{blkt}}{\lambda_{decay}}})$ |
-| nuclear heating power to the shield $P_{nuc,shld}=P_{neutr}-P_{nuc,blkt}$                                   |
-| power crossing the separatrix into the SoL/Divertor $P_{sep}$                                               |
-| L-H threshold power $P_{LH}$                                                                                |
-| divertor lifetime in years                                                                                  |
-| high grade heat for electricity production $P_{therm}$                                                      |
-| gross cycle efficiency $P_{e,gross}/P_{therm}$                                                              |
-| net cycle efficiency $\frac{P_{e,gross}-P_{heat,pump}}{P_{therm}-P_{heat,pump}}$                            |
-| net electric power $P_{e,net}=P_{e,gross}-P_{recirc}$                                                       |
-| plant efficiency $P_{e,net}/P_{fus}$                                                                        |
+| Nominal neutron wall load[^2]                     |
+| Normalised radius of the 'core' region $\rho_{core}$ used in the radiation correction of the onfinement scaling[^3] [^4]               |
+| The electron density at the pedestal top, $n_{\text{e,ped}}[\text{m}^{-3}]$                                               |
+| The normalised radius $\rho=r/a$ at the pedestal top                                                        |
+| The helium fraction relative to the electron density                                                        |
+| The core radiation $P_{\text{rad}} (\rho<\rho_{\text{core}})$ subtracted from $P_{\text{heat}}$ in confinement scaling           |
+|  The total radiation inside the separatrix (LCFS), $W_{\text{th}}$                                                         |
+| Nuclear heating power to blanket $P_{\text{nuc,blkt}}= P_{\text{neutr}} \left(1-e^{-\frac{\Delta x_{\text{blkt}}}{\lambda_{\text{decay}}}}\right)$ |
+| Nuclear heating power to the shield $P_{\text{nuc,shld}}=P_{\text{neutr}}-P_{\text{nuc,blkt}}$                                   |
+| TF cryogenic power                                                                                   |
+| Power to the divertor                                                                                   |
+| Divertor lifetime in years                                                                                  |
+| Primary high grade heat for electricity production, $P_{\text{therm}}$                                                      |
+| Gross cycle efficiency, $P_{\text{e,gross}}/P_{\text{therm}}$                                                              |
+| Net cycle efficiency, $\frac{P_{\text{e,gross}}-P_{\text{heat,pump}}}{P_{\text{therm}}-P_{\text{heat,pump}}}$                            |
+| Net electric power, $P_{\text{e,net}}=P_{\text{e,gross}}-P_{\text{recirc}}$                                                       |
+| Fusion-to-electric efficiency, $P_{\text{e,net}}/P_{\text{fus}}$                                                                        |
 
 | Physics                                                                                                         |
 | :-------------------------------------------------------------------------------------------------------------- |
-| plasma current $I_P[MA]$                                                                                        |
-| vaccuum magnetic field at in the plasma centre $B_T(R_0)$                                                       |
-| safety factor at the 95\% flux surface $q_{95}$                                                                 |
-| definitions of $\beta$ as given in [^1]                                                                         |
-| volume averaged electron temperature $\langle T_e\rangle$ and density $\langle n_e\rangle$                      |
-| fraction of the line averaged electron density over the Greenwald density $\langle n_{e,line}\rangle / n_{GW}$  |
-| peaking of the electron temperature $T_{e,0}/\langle T_e\rangle$ and density $n_{e,0}/\langle n_{e,vol}\rangle$ |
-| core and SoL effective charge $Z_{eff}=\sum_i f_iZ_i^2$                                                         |
-| impurity fraction $f_Z=n_Z/\langle n_e\rangle$                                                                  |
-| H-factor and confinement time are calculated using a radiation corrected confinement scaling[^3] [^4].          |
+| Plasma current, $I_{\text{P}}[\text{MA}]$                                                                                        |
+| Vaccuum magnetic field at in the plasma centre, $B_{\text{T}}(R_0)$                                                       |
+| Safety factor at the 95% flux surface, $q_{95}$                                                                 |
+| Definitions of $\beta$ as given in [^1]                                                                         |
+| Volume averaged electron temperature $\langle T_e\rangle$ and density $\langle n_e\rangle$                      |
+| Fraction of the line averaged electron density over the Greenwald density, $\langle n_{\text{e,line}}\rangle / n_{\text{GW}}$  |
+| Peaking of the electron temperature $T_{\text{e,0}}/\langle T_{\text{e}}\rangle$ and density $n_{\text{e,0}}/\langle n_{\text{e,vol}}\rangle$ |
+| Plasma effective charge, $Z_{\text{eff}}=\sum_i f_iZ_i^2$                                                         |
+| Impurity fraction, $f_Z=n_Z/\langle n_e\rangle$                                                                  |
+| H-factor and confinement time calculated from a radiation corrected confinement scaling[^3] [^4].          |
+| L-H threshold power, $P_{\text{LH}}$                                                                                |
+| The confinement time scaling law used                            |
 
-| Neutral Beam Current Drive                                                                                                                                           |
+| Heating & Current Drive   |
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| the steady state auxiliary power used for heating and current drive during the flat top phase (NOT to be confused with the start up or ramp down power requirements) |
-| part of the auxiliary power that is used for heating only, but not current drive                                                                                     |
-| current drive fractions for the inductive, auxiliary and bootstrap current                                                                                           |
-| the neutral beam current drive efficiency $\gamma_{NB}$                                                                                                              |
-| the neutral beam energy                                                                                                                                              |
-| the plasma heating used in the calculation of the confinement scaling/H-factor $P_{aux} + P_\alpha - P_{rad,core}$                                                   |
-| the divertor figure of merit $P_{sep}/R$, $P_{sep}/(\langle n_e\rangle R)$                                                                                           |
-| fraction of the power crossing the separatrix with respect to the LH-threshold power $P_{sep}/P_{LH}$                                                                |
-| non-radiation corrected H-factor (calculated for info only)                                                                                                          |
+| The steady state auxiliary power used for heating and current drive during the flat top phase (NOT to be confused with the start up or ramp down power requirements) |
+| Part of the auxiliary power that is used for heating only, but not current drive                                                                                     |
+| Current drive fractions for the bootstrap auxiliary and inductive current                                                                                           |
+| The neutral beam current drive efficiency, $\gamma_{NB}$ (If NBI used)                                                                                                             |
+| The neutral beam energy (If NBI used)                                                                                                                                             |
+| The plasma heating used in the calculation of the confinement scaling / H-factor, $P_{\text{aux}} + P_\alpha - P_{\text{rad,core}}$                                                   |
+|The normalised current drive efficiency, [$\text{A/W}\text{m}^2$]|
+| The divertor figures of merit, $\frac{P_{\text{sep}}}{R}$  &  $\frac{P_{\text{sep}}}{\langle n_e\rangle R}$                                                                                           |
+| Fraction of the power crossing the separatrix with respect to the LH-threshold power $P_{\text{sep}}/P_{\text{LH}}$                                                                |
+| Non-radiation corrected H-factor, $\text{H*}$ (Calculated for info only)                                                                                                          |
+
+| TF and WP structure                                                                                                 |
+| :---------------------------------------------------------------------------------------------------------- |
+||
+||
+||
+||
+||
 
 ## Sankey Diagram
 
