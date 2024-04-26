@@ -1994,6 +1994,7 @@ class Build:
                     vbuild,
                     "(thshield_vb)",
                 )
+
                 po.ovarre(
                     self.mfile,
                     "Thermal shield, vertical (m)",
@@ -2258,6 +2259,12 @@ class Build:
                     vbuild,
                     "(thshield_vb)",
                 )
+                po.ovarre(
+                    self.mfile,
+                    "Thermal shield, vertical (m)",
+                    "(thshield_vb)",
+                    build_variables.thshield_vb,
+                )
                 vbuild = vbuild - build_variables.thshield_vb
 
                 po.obuild(
@@ -2497,9 +2504,12 @@ class Build:
                 "(ohhghf)",
                 pfcoil_variables.ohhghf,
             )
-            po.ovarre(
-                self.mfile,
-                "Width of neutral beam duct where it passes between the TF coils (m)",
-                "(beamwd)",
-                current_drive_variables.beamwd,
-            )
+            if (current_drive_variables.iefrf in [5, 8]) or (
+                current_drive_variables.iefrffix in [5, 8]
+            ):
+                po.ovarre(
+                    self.mfile,
+                    "Width of neutral beam duct where it passes between the TF coils (m)",
+                    "(beamwd)",
+                    current_drive_variables.beamwd,
+                )

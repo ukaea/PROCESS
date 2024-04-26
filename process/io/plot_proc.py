@@ -17,6 +17,7 @@
 import os
 import sys
 import argparse
+from argparse import RawTextHelpFormatter
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -64,18 +65,66 @@ else:
     import importlib_resources as resources
 
 
-solenoid = "pink"
-cscompression = "red"
-tfc = "cyan"
-thermal_shield = "gray"
-vessel = "green"
-shield = "green"
-blanket = "magenta"
-plasma = "khaki"
-cryostat = "red"
-firstwall = "darkblue"
-winding = "blue"
-nbshield_colour = "gray"
+def parse_args(args):
+    """Parse supplied arguments.
+
+    :param args: arguments to parse
+    :type args: list, None
+    :return: parsed arguments
+    :rtype: Namespace
+    """
+    # Setup command line arguments
+    parser = argparse.ArgumentParser(
+        description="Produces a three page summary of the PROCESS MFILE output, using the MFILE.  "
+        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts ",
+        formatter_class=RawTextHelpFormatter,
+    )
+
+    parser.add_argument(
+        "-f",
+        metavar="FILENAME",
+        type=str,
+        default="",
+        help="specify input/output file path",
+    )
+    parser.add_argument("-s", "--show", help="show plot", action="store_true")
+
+    parser.add_argument("-n", type=int, help="Which scan to plot?")
+
+    parser.add_argument(
+        "-d",
+        "--DEMO_ranges",
+        help="Uses the DEMO dimensions as ranges for all graphics",
+        action="store_true",
+    )
+
+    parser.add_argument(
+        "-c",
+        "--colour",
+        type=int,
+        help=(
+            "Which colour scheme to use for cross-section plots\n"
+            "1: Original PROCESS (default)\n"
+            "2: BLUEMIRA"
+        ),
+        default=1,
+    )
+
+    return parser.parse_args(args)
+
+
+# Colours are PROCESS defualt, BLUEMIRA
+SOLENOID_COLOUR = ["pink", "#1764ab"]
+CSCOMPRESSION_COLOUR = ["red", "#33CCCC"]
+TFC_COLOUR = ["cyan", "#084a91"]
+THERMAL_SHIELD_COLOUR = ["gray", "#e3eef9"]
+VESSEL_COLOUR = ["green", "#b7d4ea"]
+SHIELD_COLOUR = ["green", "#94c4df"]
+BLANKET_COLOUR = ["magenta", "#4a98c9"]
+PLASMA_COLOUR = ["khaki", "#cc8acc"]
+CRYOSTAT_COLOUR = ["red", "#2e7ebc"]
+FIRSTWALL_COLOUR = ["darkblue", "darkblue"]
+NBSHIELD_COLOUR = ["black", "black"]
 
 thin = 0.0
 
@@ -106,20 +155,6 @@ RADIAL_BUILD = [
     "thshield_ob",
     "tftsgap",
     "tfthko",
-]
-
-vertical_upper = [
-    "rminor*kappa",
-    "vgaptop",
-    "fwtth",
-    "blnktth",
-    "vvblgap",
-    "shldtth",
-    "d_vv_top",
-    "vgap2",
-    "thshield_vb",
-    "tftsgap",
-    "tfcth",
 ]
 
 vertical_lower = [
@@ -153,6 +188,8 @@ def plot_plasma(axis, mfile_data, scan):
         scan --> scan number to use
 
     """
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
 
     r_0 = mfile_data.data["rmajor"].get_scan(scan)
     a = mfile_data.data["rminor"].get_scan(scan)
@@ -170,17 +207,20 @@ def plot_plasma(axis, mfile_data, scan):
 
     axis.plot(pg.rs[0], pg.zs[0], color="black")
     axis.plot(pg.rs[1], pg.zs[1], color="black")
-    axis.fill_betweenx(
-        pg.zs[0],
-        pg.rs[0],
-        pg.rs[1],
-        where=(pg.rs[1] < pg.rs[0])
-        & (pg.zs[0] > (-a * pg.kappa))
-        & (pg.zs[0] < (a * pg.kappa)),
-        color=plasma,
+
+    # Colour in right side of plasma
+    axis.fill_between(
+        x=pg.rs[0],
+        y1=pg.zs[0],
+        where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
+        color=PLASMA_COLOUR[colour_scheme - 1],
     )
-    axis.fill_betweenx(
-        pg.zs[0], pg.rs[0], pg.rs[1], where=(pg.rs[1] > pg.rs[0]), color="none"
+    # Colour in left side of plasma
+    axis.fill_between(
+        x=pg.rs[1],
+        y1=pg.zs[1],
+        where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
+        color=PLASMA_COLOUR[colour_scheme - 1],
     )
 
 
@@ -313,6 +353,9 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges):
 def plot_cryostat(axis, mfile_data, scan):
     """Function to plot cryostat in poloidal cross-section"""
 
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
+
     rects = cryostat_geometry(rdewex=rdewex, ddwex=ddwex, zdewex=zdewex)
 
     for rec in rects:
@@ -321,60 +364,122 @@ def plot_cryostat(axis, mfile_data, scan):
                 xy=(rec.anchor_x, rec.anchor_z),
                 width=rec.width,
                 height=rec.height,
-                facecolor=cryostat,
+                facecolor=CRYOSTAT_COLOUR[colour_scheme - 1],
             )
         )
 
 
-def color_key(axis):
+def color_key(axis, mfile_data, scan):
+
     """Function to plot the colour key
     Arguments:
       axis --> object to add plot to
     """
+
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
+
     axis.set_ylim([0, 10])
     axis.set_xlim([0, 10])
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
+    axis.text(
+        -5,
+        12,
+        "*The CS comp and thermal shield are not shown in the poloidal cross-section",
+        ha="left",
+        va="top",
+        size="medium",
+    )
+
     axis.text(-5, 10, "CS coil", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 9.7], 1, 0.4, lw=0, facecolor=solenoid))
+    axis.add_patch(
+        patches.Rectangle(
+            [0.7, 9.7], 1, 0.4, lw=0, facecolor=SOLENOID_COLOUR[colour_scheme - 1]
+        )
+    )
 
     axis.text(-5, 9, "CS comp", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 8.7], 1, 0.4, lw=0, facecolor=cscompression))
+    axis.add_patch(
+        patches.Rectangle(
+            [0.7, 8.7], 1, 0.4, lw=0, facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1]
+        )
+    )
 
     axis.text(-5, 8, "TF coil", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 7.7], 1, 0.4, lw=0, facecolor=tfc))
-
-    axis.text(-5, 7, "Th shield", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.2, 6.7], 1, 0.4, lw=0, facecolor=thermal_shield)
+        patches.Rectangle(
+            [0.7, 7.7], 1, 0.4, lw=0, facecolor=TFC_COLOUR[colour_scheme - 1]
+        )
+    )
+
+    axis.text(-5, 7, "Thermal shield", ha="left", va="top", size="medium")
+    axis.add_patch(
+        patches.Rectangle(
+            [0.7, 6.7],
+            1,
+            0.4,
+            lw=0,
+            facecolor=THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+        )
     )
 
     axis.text(-5, 6, "VV & shield", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 5.7], 1, 0.4, lw=0, facecolor=vessel))
+    axis.add_patch(
+        patches.Rectangle(
+            [0.7, 5.7], 1, 0.4, lw=0, facecolor=VESSEL_COLOUR[colour_scheme - 1]
+        )
+    )
 
     axis.text(-5, 5, "Blanket", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 4.7], 1, 0.4, lw=0, facecolor=blanket))
+    axis.add_patch(
+        patches.Rectangle(
+            [0.7, 4.7], 1, 0.4, lw=0, facecolor=BLANKET_COLOUR[colour_scheme - 1]
+        )
+    )
 
     axis.text(-5, 4, "First wall", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 3.7], 1, 0.4, lw=0, facecolor=firstwall))
+    axis.add_patch(
+        patches.Rectangle(
+            [0.7, 3.7], 1, 0.4, lw=0, facecolor=FIRSTWALL_COLOUR[colour_scheme - 1]
+        )
+    )
 
     axis.text(-5, 3, "Plasma", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, 2.7], 1, 0.4, lw=0, facecolor=plasma))
+    axis.add_patch(
+        patches.Rectangle(
+            [0.7, 2.7], 1, 0.4, lw=0, facecolor=PLASMA_COLOUR[colour_scheme - 1]
+        )
+    )
 
     axis.text(-5, 2, "PF coils", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.2, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black")
+        patches.Rectangle([0.7, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black")
     )
+    if (mfile_data.data["iefrf"].get_scan(scan) in [5, 8]) or (
+        mfile_data.data["iefrffix"].get_scan(scan) in [5, 8]
+    ):
+        axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
+        axis.add_patch(
+            patches.Rectangle(
+                [0.7, 0.7], 1, 0.4, lw=0, facecolor=NBSHIELD_COLOUR[colour_scheme - 1]
+            )
+        )
+        axis.text(-5, 0.1, "Cryostat", ha="left", va="top", size="medium")
+        axis.add_patch(
+            patches.Rectangle(
+                [0.7, -0.3], 1, 0.4, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+            )
+        )
 
-    axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
+    axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle([0.2, 0.7], 1, 0.4, lw=0, facecolor=nbshield_colour)
+        patches.Rectangle(
+            [0.7, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+        )
     )
-
-    axis.text(-5, 0.1, "cryostat", ha="left", va="top", size="medium")
-    axis.add_patch(patches.Rectangle([0.2, -0.3], 1, 0.4, lw=0, facecolor=cryostat))
 
 
 def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
@@ -384,17 +489,8 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
       mfile_data --> MFILE data object
       scan --> scan number to use
     """
-
-    # Check for Copper magnets
-    if "i_tf_sup" in mfile_data.data.keys():
-        i_tf_sup = int(mfile_data.data["i_tf_sup"].get_scan(scan))
-    else:
-        i_tf_sup = int(1)
-
-    if "i_tf_turns_integer" in mfile_data.data.keys():
-        i_tf_turns_integer = int(mfile_data.data["i_tf_turns_integer"].get_scan(scan))
-    else:
-        i_tf_turns_integer = int(0)
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
 
     axis.set_xlabel("x / m")
     axis.set_ylabel("y / m")
@@ -405,47 +501,49 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
 
     # Colour in the main components
     r2, r1 = cumulative_radial_build2("ohcth", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=solenoid)
+    arc_fill(axis, r1, r2, color=SOLENOID_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("precomp", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=cscompression)
+    arc_fill(axis, r1, r2, color=CSCOMPRESSION_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("tfcth", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=tfc)
+    arc_fill(axis, r1, r2, color=TFC_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("thshield_ib", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=thermal_shield)
+    arc_fill(axis, r1, r2, color=THERMAL_SHIELD_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("d_vv_in", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=vessel)
+    arc_fill(axis, r1, r2, color=VESSEL_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("shldith", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=vessel)
+    arc_fill(axis, r1, r2, color=VESSEL_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("blnkith", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=blanket)
+    arc_fill(axis, r1, r2, color=BLANKET_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("fwith", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=firstwall)
+    arc_fill(axis, r1, r2, color=FIRSTWALL_COLOUR[colour_scheme - 1])
 
-    arc_fill(axis, rmajor - rminor, rmajor + rminor, color=plasma)
+    arc_fill(
+        axis, rmajor - rminor, rmajor + rminor, color=PLASMA_COLOUR[colour_scheme - 1]
+    )
 
     r2, r1 = cumulative_radial_build2("fwoth", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=firstwall)
+    arc_fill(axis, r1, r2, color=FIRSTWALL_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("blnkoth", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=blanket)
+    arc_fill(axis, r1, r2, color=BLANKET_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("shldoth", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=shield)
+    arc_fill(axis, r1, r2, color=SHIELD_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("d_vv_out", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=vessel)
+    arc_fill(axis, r1, r2, color=VESSEL_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("thshield_ob", mfile_data, scan)
-    arc_fill(axis, r1, r2, color=thermal_shield)
+    arc_fill(axis, r1, r2, color=THERMAL_SHIELD_COLOUR[colour_scheme - 1])
 
-    arc_fill(axis, rdewex, rdewex + ddwex, color=cryostat)
+    arc_fill(axis, rdewex, rdewex + ddwex, color=CRYOSTAT_COLOUR[colour_scheme - 1])
 
     # Segment the TF coil inboard
     # Calculate centrelines
@@ -472,23 +570,6 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
     xo = r2 * np.cos(angu)
     yo = r2 * np.sin(angu)
     axis.plot((xi, xo), (yi, yo), color="black")
-    # Annotate plot.
-    axis.text(
-        rmajor * np.cos(0.3),
-        rmajor * np.sin(0.3),
-        "plasma",
-        fontsize=(12),
-        ha="center",
-        va="center",
-    )
-    axis.text(
-        (rdewex + ddwex) / 1.41,
-        (rdewex + ddwex) / 1.41,
-        "cryostat",
-        fontsize=(10),
-        ha="left",
-        va="bottom",
-    )
 
     for item in i:
         # Neutral beam shielding
@@ -499,61 +580,18 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
             r3=r3,
             r4=r4,
             w=w + nbshield,
-            facecolor=nbshield_colour,
+            facecolor=NBSHIELD_COLOUR[colour_scheme - 1],
         )
         # Overlay TF coil segments
-        TF_outboard(axis, item, n_tf=n_tf, r3=r3, r4=r4, w=w, facecolor="cyan")
-
-    # Winding pack : inboard (superconducor only)
-    if i_tf_sup == 1:
-        # Inboard
-        if i_tf_turns_integer == 1:
-            rect = patches.Rectangle(
-                [r1 + thkcas + tinstf, 0], dr_tf_wp, wwp1 / 2, lw=0, facecolor=winding
-            )
-            axis.add_patch(rect)
-        else:
-            rect = patches.Rectangle(
-                [r1 + thkcas + tinstf, 0],
-                dr_tf_wp / 2,
-                wwp2 / 2,
-                lw=0,
-                facecolor=winding,
-            )
-            axis.add_patch(rect)
-
-            rect = patches.Rectangle(
-                [r1 + thkcas + tinstf + dr_tf_wp / 2, 0],
-                dr_tf_wp / 2,
-                wwp1 / 2,
-                lw=0,
-                facecolor=winding,
-            )
-            axis.add_patch(rect)
-
-        # Outboard
-        if i_tf_turns_integer == 1:
-            rect = patches.Rectangle(
-                [r3 + casthi + tinstf, 0], dr_tf_wp, wwp1 / 2, lw=0, facecolor=winding
-            )
-            axis.add_patch(rect)
-        else:
-            rect = patches.Rectangle(
-                [r3 + casthi + tinstf, 0],
-                dr_tf_wp / 2,
-                wwp1 / 2,
-                lw=0,
-                facecolor=winding,
-            )
-            axis.add_patch(rect)
-            rect = patches.Rectangle(
-                [r3 + casthi + tinstf + dr_tf_wp / 2, 0],
-                dr_tf_wp / 2,
-                wwp2 / 2,
-                lw=0,
-                facecolor=winding,
-            )
-            axis.add_patch(rect)
+        TF_outboard(
+            axis,
+            item,
+            n_tf=n_tf,
+            r3=r3,
+            r4=r4,
+            w=w,
+            facecolor=TFC_COLOUR[colour_scheme - 1],
+        )
 
     iefrf = mfile_data.data["iefrf"].get_scan(scan)
     if (iefrf == 5) or (iefrf == 8):
@@ -1082,6 +1120,9 @@ def plot_vacuum_vessel(axis, mfile_data, scan):
         mfile_data --> MFILE data object
         scan --> scan number to use
     """
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
+
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
 
@@ -1128,7 +1169,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan):
         axis.fill(
             vvg_single_null.rs,
             vvg_single_null.zs,
-            color=vessel,
+            color=VESSEL_COLOUR[colour_scheme - 1],
         )
 
     if i_single_null == 0:
@@ -1146,7 +1187,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan):
         axis.fill(
             vvg_double_null.rs,
             vvg_double_null.zs,
-            color=vessel,
+            color=VESSEL_COLOUR[colour_scheme - 1],
         )
 
 
@@ -1158,6 +1199,9 @@ def plot_shield(axis, mfile_data, scan):
         mfile_data --> MFILE data object
         scan --> scan number to use
     """
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
+
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
 
@@ -1192,7 +1236,9 @@ def plot_shield(axis, mfile_data, scan):
             cumulative_lower=cumulative_lower,
         )
         axis.plot(sg_single_null.rs, sg_single_null.zs, color="black", lw=thin)
-        axis.fill(sg_single_null.rs, sg_single_null.zs, color=shield)
+        axis.fill(
+            sg_single_null.rs, sg_single_null.zs, color=SHIELD_COLOUR[colour_scheme - 1]
+        )
 
     if i_single_null == 0:
         sg_double_null = shield_geometry_double_null(
@@ -1204,7 +1250,9 @@ def plot_shield(axis, mfile_data, scan):
             triang=triang_95,
         )
         axis.plot(sg_double_null.rs, sg_double_null.zs, color="black", lw=thin)
-        axis.fill(sg_double_null.rs, sg_double_null.zs, color=shield)
+        axis.fill(
+            sg_double_null.rs, sg_double_null.zs, color=SHIELD_COLOUR[colour_scheme - 1]
+        )
 
 
 def plot_blanket(axis, mfile_data, scan) -> None:
@@ -1216,11 +1264,19 @@ def plot_blanket(axis, mfile_data, scan) -> None:
       scan --> scan number to use
 
     """
+
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
+
     # Single null: Draw top half from output
     # Double null: Reflect bottom half to top
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
-    blnktth = mfile_data.data["blnktth"].get_scan(scan)
+    if int(i_single_null) == 1:
+        blnktth = mfile_data.data["blnktth"].get_scan(scan)
+    else:
+        blnktth = 0.0
+
     c_shldith = cumulative_radial_build("shldith", mfile_data, scan)
     c_blnkoth = cumulative_radial_build("blnkoth", mfile_data, scan)
 
@@ -1267,7 +1323,11 @@ def plot_blanket(axis, mfile_data, scan) -> None:
             lw=thin,
         )
 
-        axis.fill(bg_single_null.rs, bg_single_null.zs, color=blanket)
+        axis.fill(
+            bg_single_null.rs,
+            bg_single_null.zs,
+            color=BLANKET_COLOUR[colour_scheme - 1],
+        )
 
     if i_single_null == 0:
         bg_double_null = blanket_geometry_double_null(
@@ -1282,8 +1342,16 @@ def plot_blanket(axis, mfile_data, scan) -> None:
         # Plot blanket
         axis.plot(bg_double_null.rs[0], bg_double_null.zs[0], color="black", lw=thin)
         axis.plot(bg_double_null.rs[1], bg_double_null.zs[1], color="black", lw=thin)
-        axis.fill(bg_double_null.rs[0], bg_double_null.zs[0], color=blanket)
-        axis.fill(bg_double_null.rs[1], bg_double_null.zs[1], color=blanket)
+        axis.fill(
+            bg_double_null.rs[0],
+            bg_double_null.zs[0],
+            color=BLANKET_COLOUR[colour_scheme - 1],
+        )
+        axis.fill(
+            bg_double_null.rs[1],
+            bg_double_null.zs[1],
+            color=BLANKET_COLOUR[colour_scheme - 1],
+        )
 
 
 def plot_firstwall(axis, mfile_data, scan):
@@ -1295,10 +1363,17 @@ def plot_firstwall(axis, mfile_data, scan):
       scan --> scan number to use
 
     """
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
+
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
-    blnktth = mfile_data.data["blnktth"].get_scan(scan)
-    tfwvt = mfile_data.data["fwtth"].get_scan(scan)
+    if int(i_single_null) == 1:
+        blnktth = mfile_data.data["blnktth"].get_scan(scan)
+        tfwvt = mfile_data.data["fwtth"].get_scan(scan)
+    else:
+        blnktth = tfwvt = 0.0
+
     c_blnkith = cumulative_radial_build("blnkith", mfile_data, scan)
     c_fwoth = cumulative_radial_build("fwoth", mfile_data, scan)
 
@@ -1341,7 +1416,11 @@ def plot_firstwall(axis, mfile_data, scan):
 
         # Plot first wall
         axis.plot(fwg_single_null.rs, fwg_single_null.zs, color="black", lw=thin)
-        axis.fill(fwg_single_null.rs, fwg_single_null.zs, color=firstwall)
+        axis.fill(
+            fwg_single_null.rs,
+            fwg_single_null.zs,
+            color=FIRSTWALL_COLOUR[colour_scheme - 1],
+        )
 
     if i_single_null == 0:
         fwg_double_null = first_wall_geometry_double_null(
@@ -1357,8 +1436,16 @@ def plot_firstwall(axis, mfile_data, scan):
         # Plot blanket
         axis.plot(fwg_double_null.rs[0], fwg_double_null.zs[0], color="black", lw=thin)
         axis.plot(fwg_double_null.rs[1], fwg_double_null.zs[1], color="black", lw=thin)
-        axis.fill(fwg_double_null.rs[0], fwg_double_null.zs[0], color=blanket)
-        axis.fill(fwg_double_null.rs[1], fwg_double_null.zs[1], color=blanket)
+        axis.fill(
+            fwg_double_null.rs[0],
+            fwg_double_null.zs[0],
+            color=BLANKET_COLOUR[colour_scheme - 1],
+        )
+        axis.fill(
+            fwg_double_null.rs[1],
+            fwg_double_null.zs[1],
+            color=BLANKET_COLOUR[colour_scheme - 1],
+        )
 
 
 def angle_check(angle1, angle2):
@@ -1383,6 +1470,9 @@ def plot_tf_coils(axis, mfile_data, scan):
         scan --> scan number to use
 
     """
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
+
     # Arc points
     # MDK Only 4 points now required for elliptical arcs
     x1 = mfile_data.data["xarc(1)"].get_scan(scan)
@@ -1423,7 +1513,7 @@ def plot_tf_coils(axis, mfile_data, scan):
                     xy=(rec.anchor_x, rec.anchor_z),
                     width=rec.width,
                     height=rec.height,
-                    facecolor=tfc,
+                    facecolor=TFC_COLOUR[colour_scheme - 1],
                 )
             )
 
@@ -1445,7 +1535,9 @@ def plot_tf_coils(axis, mfile_data, scan):
 
         for vert in verts:
             path = Path(vert, closed=True)
-            patch = patches.PathPatch(path, facecolor=tfc, lw=0)
+            patch = patches.PathPatch(
+                path, facecolor=TFC_COLOUR[colour_scheme - 1], lw=0
+            )
             axis.add_patch(patch)
 
         for rec in rects:
@@ -1454,7 +1546,7 @@ def plot_tf_coils(axis, mfile_data, scan):
                     xy=(rec.anchor_x, rec.anchor_z),
                     width=rec.width,
                     height=rec.height,
-                    facecolor=tfc,
+                    facecolor=TFC_COLOUR[colour_scheme - 1],
                 )
             )
 
@@ -1496,8 +1588,10 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     jwptf = round(mfile_data.data["jwptf"].get_scan(scan)) / 1e6
     tf_thickness = mfile_data.data["tfcth"].get_scan(scan)
     integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
-    turn_layers = mfile_data.data["n_layer"].get_scan(scan)
-    turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
+
+    if integer_turns == 1:
+        turn_layers = mfile_data.data["n_layer"].get_scan(scan)
+        turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
 
     # Superconducting coil check
     if cond_type == 1:
@@ -1951,6 +2045,8 @@ def plot_pf_coils(axis, mfile_data, scan):
         mfile_data --> MFILE.DAT object
         scan --> scan number to use
     """
+    args = parse_args(None)
+    colour_scheme = int(args.colour)
 
     coils_r = []
     coils_z = []
@@ -1962,7 +2058,7 @@ def plot_pf_coils(axis, mfile_data, scan):
     ohcth = mfile_data.data["ohcth"].get_scan(scan)
     ohdz = mfile_data.data["ohdz"].get_scan(scan)
 
-    # Number of coils (1 is OH coil)
+    # Number of coils, both PF and CS
     number_of_coils = 0
     for item in mfile_data.data.keys():
         if "rpf[" in item:
@@ -1977,9 +2073,9 @@ def plot_pf_coils(axis, mfile_data, scan):
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
     if iohcl == 0:
-        noc = number_of_coils + 1
-    else:
         noc = number_of_coils
+    else:
+        noc = number_of_coils - 1
 
     for coil in range(0, noc):
         coils_r.append(mfile_data.data["rpf[{:01}]".format(coil)].get_scan(scan))
@@ -2002,18 +2098,18 @@ def plot_pf_coils(axis, mfile_data, scan):
         axis.plot(r_points[i], z_points[i], color="black")
         axis.text(
             coils_r[i],
-            coils_z[i],
+            coils_z[i] - 0.1,
             coil_text[i],
             ha="center",
             va="center",
-            fontsize=5 * abs((coils_dr[i] * coils_dz[i])),
+            fontsize=4.85 * abs((coils_dr[i] * coils_dz[i])),
         )
     axis.add_patch(
         patches.Rectangle(
             xy=(central_coil.anchor_x, central_coil.anchor_z),
             width=central_coil.width,
             height=central_coil.height,
-            facecolor="pink",
+            facecolor=SOLENOID_COLOUR[colour_scheme - 1],
         )
     )
 
@@ -2028,7 +2124,7 @@ def plot_info(axis, data, mfile_data, scan):
         scan --> scan number to use
 
     """
-    eqpos = 0.7
+    eqpos = 0.75
     for i in range(len(data)):
         colorflag = "black"
         if mfile_data.data[data[i][0]].exists:
@@ -2137,6 +2233,12 @@ def plot_header(axis, mfile_data, scan):
         ),
     ]
 
+    axis.text(-0.05, 4.0, "Colour Legend:", ha="left", va="center")
+    axis.text(
+        0.0, 3.0, "ITR --> Iteration variable", color="red", ha="left", va="center"
+    )
+    axis.text(0.0, 2.0, "OP  --> Output variable", color="blue", ha="left", va="center")
+
     H = mfile_data.data["fimp(01)"].get_scan(scan)
     He = mfile_data.data["fimp(02)"].get_scan(scan)
     Be = mfile_data.data["fimp(03)"].get_scan(scan)
@@ -2210,10 +2312,6 @@ def plot_header(axis, mfile_data, scan):
         )
     data2 = data2 + data
 
-    axis.text(-0.05, -12.6, "Colour Legend:", ha="left", va="center")
-    axis.text(0.0, -13.4, "ITR", color="red", ha="left", va="center")
-    axis.text(0.0, -14.2, "OP", color="blue", ha="left", va="center")
-
     plot_info(axis, data2, mfile_data, scan)
 
 
@@ -2254,8 +2352,8 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("sarea", "Surface area", "m$^2$"),
         ("vol", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
-        (in_blanket_thk, "inboard blanket+shield", "m"),
-        (out_blanket_thk, "ouboard blanket+shield", "m"),
+        (in_blanket_thk, "Inboard blanket+shield", "m"),
+        (out_blanket_thk, "Outboard blanket+shield", "m"),
         ("powfmw", "Fusion power", "MW"),
         ("bigq", "$Q$", ""),
         ("", "", ""),
@@ -2415,7 +2513,6 @@ def plot_magnetics_info(axis, mfile_data, scan):
     sig_cond = 1.0e-6 * mfile_data.data[
         "sig_tf_tresca_max({})".format(i_tf_bucking + 1)
     ].get_scan(scan)
-    alstrtf = 1.0e-6 * mfile_data.data["alstrtf"].get_scan(scan)
 
     if i_tf_sup == 1:
         data = [
@@ -2433,7 +2530,6 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("tmargoh", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
-            (alstrtf, "Allowable stress", "Pa"),
             ("whttf/n_tf", "Mass per TF coil", "kg"),
         ]
 
@@ -2459,7 +2555,6 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("#TF coil forces/stresses", "", ""),
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
-            (alstrtf, "conductor Allowable stress", "Pa"),
             (fcoolcp, "CP cooling fraction", "%"),
             ("vcool", "Maximum coolant flow speed", "m.s$^{-1}$"),
             (prescp, "CP Resisitive heating", "MW"),
@@ -2530,7 +2625,7 @@ def plot_power_info(axis, mfile_data, scan):
         ped_height,
         ped_pos,
         ("ralpne", "Helium fraction", ""),
-        ("pinnerzoneradmw", "inner zone radiation", "MW"),
+        ("pinnerzoneradmw", "Inner zone radiation", "MW"),
         ("pradmw", "Total radiation in LCFS", "MW"),
         ("pnucblkt", "Nuclear heating in blanket", "MW"),
         ("pnucshld", "Nuclear heating in shield", "MW"),
@@ -2624,9 +2719,11 @@ def plot_current_drive_info(axis, mfile_data, scan):
     axis.set_autoscalex_on(False)
 
     pinjie = mfile_data.data["pinjmw"].get_scan(scan)
-    pinjmwfix = mfile_data.data["pinjmwfix"].get_scan(scan)
     pdivt = mfile_data.data["pdivt"].get_scan(scan)
     pdivr = pdivt / mfile_data.data["rmajor"].get_scan(scan)
+
+    if mfile_data.data["iefrffix"].get_scan(scan) != 0:
+        pinjmwfix = mfile_data.data["pinjmwfix"].get_scan(scan)
 
     pdivnr = (
         1.0e20
@@ -2658,7 +2755,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (
                 "gamcd",
                 "Normalised current drive efficiency",
-                "(10$^{19}$ A/(Wm$^{2}$))",
+                "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -2669,7 +2766,8 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data.keys():
+        # iefrffix is now always in the MFILE with = 0 meaning no fixed heating
+        if mfile_data.data["iefrffix"].get_scan(scan) != 0:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -2713,7 +2811,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (
                 "gamcd",
                 "Normalised current drive efficiency",
-                "(10$^{19}$ A/(Wm$^{2}$))",
+                "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -2742,7 +2840,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (
                 "gamcd",
                 "Normalised current drive efficiency",
-                "(10$^{19}$ A/(Wm$^{2}$))",
+                "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -2771,7 +2869,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (
                 "gamcd",
                 "Normalised current drive efficiency",
-                "(10$^{19}$ A/(Wm$^{2}$))",
+                "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -2847,7 +2945,7 @@ def main_plot(
 
     # Plot color key
     plot_3 = fig2.add_subplot(241)
-    color_key(plot_3)
+    color_key(plot_3, m_file_data, scan)
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
@@ -2939,6 +3037,282 @@ def save_plots(m_file_data, scan):
     plot = fig.add_subplot(224, aspect=1 / 35)
     plot_tprofile(plot, False)
     fig.savefig("tprofile.svg", format="svg", dpi=1200)
+
+
+def main(args=None):
+    # TODO The use of globals here isn't ideal, but is required to get main()
+    # working with minimal changes. Should be converted to class structure
+    args = parse_args(args)
+
+    # read MFILE
+    if args.f != "":
+        m_file = mf.MFile(args.f)
+    else:
+        m_file = mf.MFile("MFILE.DAT")
+
+    if args.n:
+        scan = args.n
+    else:
+        scan = -1
+
+    if args.DEMO_ranges:
+        demo_ranges = True
+    else:
+        demo_ranges = False
+
+    # Check for Copper magnets
+    if "i_tf_sup" in m_file.data.keys():
+        i_tf_sup = int(m_file.data["i_tf_sup"].get_scan(scan))
+    else:
+        i_tf_sup = int(1)
+
+    # Check WP configuration
+    if "i_tf_wp_geom" in m_file.data.keys():
+        i_tf_wp_geom = int(m_file.data["i_tf_wp_geom"].get_scan(scan))
+    else:
+        i_tf_wp_geom = int(0)
+
+    global bore
+    global ohcth
+    global gapoh
+    global tfcth
+    global gapds
+    global ddwi
+    global shldith
+    global blnkith
+    global fwith
+    global scrapli
+    global rmajor
+    global rminor
+    global scraplo
+    global fwoth
+    global blnkoth
+    global shldoth
+    global ddwi
+    global gapsto
+    global tfthko
+    global rdewex
+    global zdewex
+    global ddwex
+
+    bore = m_file.data["bore"].get_scan(scan)
+    ohcth = m_file.data["ohcth"].get_scan(scan)
+    gapoh = m_file.data["gapoh"].get_scan(scan)
+    tfcth = m_file.data["tfcth"].get_scan(scan)
+    gapds = m_file.data["gapds"].get_scan(scan)
+    shldith = m_file.data["shldith"].get_scan(scan)
+    blnkith = m_file.data["blnkith"].get_scan(scan)
+    fwith = m_file.data["fwith"].get_scan(scan)
+    scrapli = m_file.data["scrapli"].get_scan(scan)
+    rmajor = m_file.data["rmajor"].get_scan(scan)
+    rminor = m_file.data["rminor"].get_scan(scan)
+    scraplo = m_file.data["scraplo"].get_scan(scan)
+    fwoth = m_file.data["fwoth"].get_scan(scan)
+    blnkoth = m_file.data["blnkoth"].get_scan(scan)
+    shldoth = m_file.data["shldoth"].get_scan(scan)
+    gapsto = m_file.data["gapsto"].get_scan(scan)
+    tfthko = m_file.data["tfthko"].get_scan(scan)
+    rdewex = m_file.data["rdewex"].get_scan(scan)
+    zdewex = m_file.data["zdewex"].get_scan(scan)
+    ddwex = m_file.data["ddwex"].get_scan(scan)
+
+    # Magnets related
+    global n_tf
+    global wwp1
+    global wwp2
+    global dr_tf_wp
+    global tinstf
+    global thkcas
+    global casthi
+
+    n_tf = m_file.data["n_tf"].get_scan(scan)
+    if i_tf_sup == 1:  # If superconducting magnets
+        wwp1 = m_file.data["wwp1"].get_scan(scan)
+        if i_tf_wp_geom == 1:
+            wwp2 = m_file.data["wwp2"].get_scan(scan)
+        dr_tf_wp = m_file.data["dr_tf_wp"].get_scan(scan)
+        tinstf = m_file.data["tinstf"].get_scan(scan)
+        thkcas = m_file.data["thkcas"].get_scan(scan)
+
+        # To be re-inergrated to resistives when in-plane stresses is integrated
+        casthi = m_file.data["casthi"].get_scan(scan)
+
+    global nbshield
+    global rtanbeam
+    global rtanmax
+    global beamwd
+
+    iefrf = int(m_file.data["iefrf"].get_scan(scan))
+    iefrffix = int(m_file.data["iefrffix"].get_scan(scan))
+
+    if (iefrf in [5, 8]) or (iefrffix in [5, 8]):
+
+        nbshield = m_file.data["nbshield"].get_scan(scan)
+        rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
+        rtanmax = m_file.data["rtanmax"].get_scan(scan)
+        beamwd = m_file.data["beamwd"].get_scan(scan)
+    else:
+        nbshield = rtanbeam = rtanmax = beamwd = 0.0
+
+    # Pedestal profile parameters
+    global ipedestal
+    global neped
+    global nesep
+    global rhopedn
+    global rhopedt
+    global tbeta
+    global teped
+    global tesep
+    global alphan
+    global alphat
+    global ne0
+    global te0
+
+    ipedestal = m_file.data["ipedestal"].get_scan(scan)
+    neped = m_file.data["neped"].get_scan(scan)
+    nesep = m_file.data["nesep"].get_scan(scan)
+    rhopedn = m_file.data["rhopedn"].get_scan(scan)
+    rhopedt = m_file.data["rhopedt"].get_scan(scan)
+    tbeta = m_file.data["tbeta"].get_scan(scan)
+    teped = m_file.data["teped"].get_scan(scan)
+    tesep = m_file.data["tesep"].get_scan(scan)
+    alphan = m_file.data["alphan"].get_scan(scan)
+    alphat = m_file.data["alphat"].get_scan(scan)
+    ne0 = m_file.data["ne0"].get_scan(scan)
+    te0 = m_file.data["te0"].get_scan(scan)
+
+    # Plasma
+    global triang
+    global alphaj
+    global q0
+    global q95
+
+    triang = m_file.data["triang95"].get_scan(scan)
+    alphaj = m_file.data["alphaj"].get_scan(scan)
+    q0 = m_file.data["q0"].get_scan(scan)
+    q95 = m_file.data["q95"].get_scan(scan)
+
+    # Radial position  -- 0
+    # Electron density -- 1
+    # Electron temperature -- 2
+    # Ion temperature -- 3
+    # Deuterium density -- 4
+    # Tritium density -- 5
+    # BS current density(MA/m^2) -- 6
+    # CD current dens(MA/m^2) -- 7
+    # Total current dens(MA/m^2) -- 8
+    # Poloidal current(R*Bp)(T.m) -- 9
+    # Safety factor q -- 10
+    # Volume (m^3) -- 11
+    # dVolume/dr (m^2) -- 12
+    # Plasma conductivity(MA/(V.m) -- 13
+    # Alpha press(keV*10^10 m^-3) -- 14
+    # Ion dens(10^19 m^-3) -- 15
+    # Poloidal flux (Wb) -- 16
+    # rad profile
+    global ssync
+    global bt
+    global vol
+    ssync = m_file.data["ssync"].get_scan(scan)
+    bt = m_file.data["bt"].get_scan(scan)
+    vol = m_file.data["vol"].get_scan(scan)
+
+    # Build the dictionaries of radial and vertical build values and cumulative values
+    global vertical_upper
+    if int(m_file.data["i_single_null"].get_scan(scan)) == 0:
+        vertical_upper = [
+            "rminor*kappa",
+            "vgaptop",
+            "divfix",
+            "shldtth",
+            "d_vv_top",
+            "vgap2",
+            "thshield_vb",
+            "tftsgap",
+            "tfcth",
+        ]
+    else:
+        vertical_upper = [
+            "rminor*kappa",
+            "vgaptop",
+            "fwtth",
+            "blnktth",
+            "vvblgap",
+            "shldtth",
+            "d_vv_top",
+            "vgap2",
+            "thshield_vb",
+            "tftsgap",
+            "tfcth",
+        ]
+
+    radial = {}
+    cumulative_radial = {}
+    subtotal = 0
+    for item in RADIAL_BUILD:
+        if item == "rminori" or item == "rminoro":
+            build = m_file.data["rminor"].get_scan(scan)
+        elif item == "vvblgapi" or item == "vvblgapo":
+            build = m_file.data["vvblgap"].get_scan(scan)
+        elif "d_vv_in" in item:
+            build = m_file.data["d_vv_in"].get_scan(scan)
+        elif "d_vv_out" in item:
+            build = m_file.data["d_vv_out"].get_scan(scan)
+        else:
+            build = m_file.data[item].get_scan(scan)
+
+    radial[item] = build
+    subtotal += build
+    cumulative_radial[item] = subtotal
+
+    global upper
+    global cumulative_upper
+    upper = {}
+    cumulative_upper = {}
+    subtotal = 0
+    for item in vertical_upper:
+        upper[item] = m_file.data[item].get_scan(scan)
+        subtotal += upper[item]
+        cumulative_upper[item] = subtotal
+
+    global lower
+    global cumulative_lower
+    lower = {}
+    cumulative_lower = {}
+    subtotal = 0
+    for item in vertical_lower:
+        lower[item] = m_file.data[item].get_scan(scan)
+        subtotal -= lower[item]
+        cumulative_lower[item] = subtotal
+
+    # read MFILE
+    # m_file = mf.MFile(args.f)
+    # scan = scan
+
+    # create main plot
+    page1 = plt.figure(figsize=(12, 9), dpi=80)
+    page2 = plt.figure(figsize=(12, 9), dpi=80)
+    page3 = plt.figure(figsize=(12, 9), dpi=80)
+
+    # run main_plot
+    main_plot(page1, page2, page3, m_file, scan=scan, demo_ranges=demo_ranges)
+
+    # with bpdf.PdfPages(args.o) as pdf:
+    with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
+        pdf.savefig(page1)
+        pdf.savefig(page2)
+        pdf.savefig(page3)
+
+    # show fig if option used
+    if args.show:
+        plt.show(block=True)
+
+    # This bit doesn't work - the argument is not recognised for some reason.:
+    # if args.svg:
+    #    save_plots(m_file)
+    plt.close(page1)
+    plt.close(page2)
+    plt.close(page3)
 
 
 def test(f):
@@ -3073,6 +3447,7 @@ def test(f):
 
         # Build the dictionaries of radial and vertical build values and cumulative
         # values
+
         global radial
         radial = dict()
         global cumulative_radial
@@ -3114,22 +3489,6 @@ def test(f):
             subtotal -= lower[item]
             cumulative_lower[item] = subtotal
 
-        colour_dict = {}
-        colour_dict["ohcth"] = solenoid
-        colour_dict["tfcth"] = tfc
-        colour_dict["thshield_ib"] = thermal_shield
-        colour_dict["thshield_ob"] = thermal_shield
-        colour_dict["thshield_vb"] = thermal_shield
-        colour_dict["d_vv_in"] = vessel
-        colour_dict["d_vv_out"] = vessel
-        colour_dict["d_vv_top"] = vessel
-        colour_dict["d_vv_bot"] = vessel
-        colour_dict["shldith"] = shield
-        colour_dict["blnkith"] = blanket
-        colour_dict["rminor"] = plasma
-        colour_dict["fwith"] = firstwall
-        colour_dict["fwoth"] = firstwall
-
         # create main plot
         page1 = plt.figure(figsize=(12, 9), dpi=80)
         page2 = plt.figure(figsize=(12, 9), dpi=80)
@@ -3154,300 +3513,6 @@ def test(f):
     except Exception:
         print("FTest failure for file : {}".format(f))
         return False
-
-
-def parse_args(args):
-    """Parse supplied arguments.
-
-    :param args: arguments to parse
-    :type args: list, None
-    :return: parsed arguments
-    :rtype: Namespace
-    """
-    # Setup command line arguments
-    parser = argparse.ArgumentParser(
-        description="Produces a two page summary of the PROCESS MFILE output, using the MFILE.  "
-        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts "
-    )
-
-    parser.add_argument(
-        "-f",
-        metavar="FILENAME",
-        type=str,
-        default="",
-        help="specify input/output file path",
-    )
-    parser.add_argument("-s", "--show", help="show plot", action="store_true")
-
-    parser.add_argument("-n", type=int, help="Which scan to plot?")
-
-    parser.add_argument(
-        "-d",
-        "--DEMO_ranges",
-        help="Uses the DEMO dimensions as ranges for all graphics",
-        action="store_true",
-    )
-
-    return parser.parse_args(args)
-
-
-def main(args=None):
-    # TODO The use of globals here isn't ideal, but is required to get main()
-    # working with minimal changes. Should be converted to class structure
-    args = parse_args(args)
-
-    # read MFILE
-    if args.f != "":
-        m_file = mf.MFile(args.f)
-    else:
-        m_file = mf.MFile("MFILE.DAT")
-
-    if args.n:
-        scan = args.n
-    else:
-        scan = -1
-
-    if args.DEMO_ranges:
-        demo_ranges = True
-    else:
-        demo_ranges = False
-
-    # Check for Copper magnets
-    if "i_tf_sup" in m_file.data.keys():
-        i_tf_sup = int(m_file.data["i_tf_sup"].get_scan(scan))
-    else:
-        i_tf_sup = int(1)
-
-    # Check integer turns
-    if "i_tf_turns_integer" in m_file.data.keys():
-        i_tf_turns_integer = int(m_file.data["i_tf_turns_integer"].get_scan(scan))
-    else:
-        i_tf_turns_integer = int(0)
-
-    global bore
-    global ohcth
-    global gapoh
-    global tfcth
-    global gapds
-    global ddwi
-    global shldith
-    global blnkith
-    global fwith
-    global scrapli
-    global rmajor
-    global rminor
-    global scraplo
-    global fwoth
-    global blnkoth
-    global shldoth
-    global ddwi
-    global gapsto
-    global tfthko
-    global rdewex
-    global zdewex
-    global ddwex
-
-    bore = m_file.data["bore"].get_scan(scan)
-    ohcth = m_file.data["ohcth"].get_scan(scan)
-    gapoh = m_file.data["gapoh"].get_scan(scan)
-    tfcth = m_file.data["tfcth"].get_scan(scan)
-    gapds = m_file.data["gapds"].get_scan(scan)
-    shldith = m_file.data["shldith"].get_scan(scan)
-    blnkith = m_file.data["blnkith"].get_scan(scan)
-    fwith = m_file.data["fwith"].get_scan(scan)
-    scrapli = m_file.data["scrapli"].get_scan(scan)
-    rmajor = m_file.data["rmajor"].get_scan(scan)
-    rminor = m_file.data["rminor"].get_scan(scan)
-    scraplo = m_file.data["scraplo"].get_scan(scan)
-    fwoth = m_file.data["fwoth"].get_scan(scan)
-    blnkoth = m_file.data["blnkoth"].get_scan(scan)
-    shldoth = m_file.data["shldoth"].get_scan(scan)
-    gapsto = m_file.data["gapsto"].get_scan(scan)
-    tfthko = m_file.data["tfthko"].get_scan(scan)
-    rdewex = m_file.data["rdewex"].get_scan(scan)
-    zdewex = m_file.data["zdewex"].get_scan(scan)
-    ddwex = m_file.data["ddwex"].get_scan(scan)
-
-    # Magnets related
-    global n_tf
-    global wwp1
-    global wwp2
-    global dr_tf_wp
-    global tinstf
-    global thkcas
-    global casthi
-
-    n_tf = m_file.data["n_tf"].get_scan(scan)
-    if i_tf_sup == 1:  # If superconducting magnets
-        wwp1 = m_file.data["wwp1"].get_scan(scan)
-        if i_tf_turns_integer == 0:
-            wwp2 = m_file.data["wwp2"].get_scan(scan)
-        dr_tf_wp = m_file.data["dr_tf_wp"].get_scan(scan)
-        tinstf = m_file.data["tinstf"].get_scan(scan)
-        thkcas = m_file.data["thkcas"].get_scan(scan)
-
-        # To be re-inergrated to resistives when in-plane stresses is integrated
-        casthi = m_file.data["casthi"].get_scan(scan)
-
-    global nbshield
-    global rtanbeam
-    global rtanmax
-    global beamwd
-
-    nbshield = m_file.data["nbshield"].get_scan(scan)
-    rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
-    rtanmax = m_file.data["rtanmax"].get_scan(scan)
-    beamwd = m_file.data["beamwd"].get_scan(scan)
-
-    # Pedestal profile parameters
-    global ipedestal
-    global neped
-    global nesep
-    global rhopedn
-    global rhopedt
-    global tbeta
-    global teped
-    global tesep
-    global alphan
-    global alphat
-    global ne0
-    global te0
-
-    ipedestal = m_file.data["ipedestal"].get_scan(scan)
-    neped = m_file.data["neped"].get_scan(scan)
-    nesep = m_file.data["nesep"].get_scan(scan)
-    rhopedn = m_file.data["rhopedn"].get_scan(scan)
-    rhopedt = m_file.data["rhopedt"].get_scan(scan)
-    tbeta = m_file.data["tbeta"].get_scan(scan)
-    teped = m_file.data["teped"].get_scan(scan)
-    tesep = m_file.data["tesep"].get_scan(scan)
-    alphan = m_file.data["alphan"].get_scan(scan)
-    alphat = m_file.data["alphat"].get_scan(scan)
-    ne0 = m_file.data["ne0"].get_scan(scan)
-    te0 = m_file.data["te0"].get_scan(scan)
-
-    # Plasma
-    global triang
-    global alphaj
-    global q0
-    global q95
-    global kallenbach_switch
-
-    triang = m_file.data["triang95"].get_scan(scan)
-    alphaj = m_file.data["alphaj"].get_scan(scan)
-    q0 = m_file.data["q0"].get_scan(scan)
-    q95 = m_file.data["q95"].get_scan(scan)
-    kallenbach_switch = m_file.data["kallenbach_switch"].get_scan(scan)
-
-    # Radial position  -- 0
-    # Electron density -- 1
-    # Electron temperature -- 2
-    # Ion temperature -- 3
-    # Deuterium density -- 4
-    # Tritium density -- 5
-    # BS current density(MA/m^2) -- 6
-    # CD current dens(MA/m^2) -- 7
-    # Total current dens(MA/m^2) -- 8
-    # Poloidal current(R*Bp)(T.m) -- 9
-    # Safety factor q -- 10
-    # Volume (m^3) -- 11
-    # dVolume/dr (m^2) -- 12
-    # Plasma conductivity(MA/(V.m) -- 13
-    # Alpha press(keV*10^10 m^-3) -- 14
-    # Ion dens(10^19 m^-3) -- 15
-    # Poloidal flux (Wb) -- 16
-    # rad profile
-    global ssync
-    global bt
-    global vol
-    ssync = m_file.data["ssync"].get_scan(scan)
-    bt = m_file.data["bt"].get_scan(scan)
-    vol = m_file.data["vol"].get_scan(scan)
-
-    # Build the dictionaries of radial and vertical build values and cumulative values
-    radial = {}
-    cumulative_radial = {}
-    subtotal = 0
-    for item in RADIAL_BUILD:
-        if item == "rminori" or item == "rminoro":
-            build = m_file.data["rminor"].get_scan(scan)
-        elif item == "vvblgapi" or item == "vvblgapo":
-            build = m_file.data["vvblgap"].get_scan(scan)
-        elif "d_vv_in" in item:
-            build = m_file.data["d_vv_in"].get_scan(scan)
-        elif "d_vv_out" in item:
-            build = m_file.data["d_vv_out"].get_scan(scan)
-        else:
-            build = m_file.data[item].get_scan(scan)
-
-    radial[item] = build
-    subtotal += build
-    cumulative_radial[item] = subtotal
-
-    global upper
-    global cumulative_upper
-    upper = {}
-    cumulative_upper = {}
-    subtotal = 0
-    for item in vertical_upper:
-        upper[item] = m_file.data[item].get_scan(scan)
-        subtotal += upper[item]
-        cumulative_upper[item] = subtotal
-
-    global lower
-    global cumulative_lower
-    lower = {}
-    cumulative_lower = {}
-    subtotal = 0
-    for item in vertical_lower:
-        lower[item] = m_file.data[item].get_scan(scan)
-        subtotal -= lower[item]
-        cumulative_lower[item] = subtotal
-
-    colour_dict = {}
-    colour_dict["ohcth"] = solenoid
-    colour_dict["tfcth"] = tfc
-    colour_dict["thshield_ib"] = thermal_shield
-    colour_dict["thshield_ob"] = thermal_shield
-    colour_dict["thshield_vb"] = thermal_shield
-    colour_dict["d_vv_in"] = vessel
-    colour_dict["d_vv_out"] = vessel
-    colour_dict["d_vv_top"] = vessel
-    colour_dict["d_vv_bot"] = vessel
-    colour_dict["shldith"] = shield
-    colour_dict["blnkith"] = blanket
-    colour_dict["rminor"] = plasma
-    colour_dict["fwith"] = firstwall
-    colour_dict["fwoth"] = firstwall
-
-    # read MFILE
-    # m_file = mf.MFile(args.f)
-    # scan = scan
-
-    # create main plot
-    page1 = plt.figure(figsize=(12, 9), dpi=80)
-    page2 = plt.figure(figsize=(12, 9), dpi=80)
-    page3 = plt.figure(figsize=(12, 9), dpi=80)
-
-    # run main_plot
-    main_plot(page1, page2, page3, m_file, scan=scan, demo_ranges=demo_ranges)
-
-    # with bpdf.PdfPages(args.o) as pdf:
-    with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
-        pdf.savefig(page1)
-        pdf.savefig(page2)
-        pdf.savefig(page3)
-
-    # show fig if option used
-    if args.show:
-        plt.show(block=True)
-
-    # This bit doesn't work - the argument is not recognised for some reason.:
-    # if args.svg:
-    #    save_plots(m_file)
-    plt.close(page1)
-    plt.close(page2)
-    plt.close(page3)
 
 
 if __name__ == "__main__":

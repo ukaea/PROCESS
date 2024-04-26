@@ -4604,12 +4604,11 @@ class Sctfcoil:
             build_variables.r_tf_inboard_out,
             "OP ",
         )
-        po.ovarre(
-            constants.mfile,
+        po.ovarin(
+            self.outfile,
             "WP shape selection switch",
             "(i_tf_wp_geom)",
             tfcoil_variables.i_tf_wp_geom,
-            "OP ",
         )
         po.ovarre(
             constants.mfile,
@@ -4626,7 +4625,7 @@ class Sctfcoil:
             build_variables.r_tf_outboard_mid,
             "OP ",
         )
-        po.ovarre(
+        po.ovarin(
             self.outfile,
             "Outboard leg nose case type",
             "(i_tf_case_geom)",
