@@ -52,7 +52,7 @@ def plot_mfile_solutions(
     runs_metadata: Sequence[RunMetadata],
     plot_title: str,
     normalising_tag: Optional[str] = None,
-    rmse: Optional[bool] = False,
+    rmse: bool = False,
     normalisation_type: Optional[str] = "init",
 ) -> Tuple[mpl.figure.Figure, pd.DataFrame]:
     """Plot multiple solutions, optionally normalised by a given solution.
@@ -99,6 +99,12 @@ def plot_mfile_solutions(
         plot_results_df = filtered_results_df
 
     if rmse:
+        if normalising_tag is None:
+            raise ValueError(
+                "RMSE plot requires normalising_tag to be specified: which "
+                "solution are the errors relative to?"
+            )
+
         # Calcualte RMS errors relative to normalising tag solution
         rmse_df = _rms_errors(
             results_df=results_df,
@@ -172,7 +178,7 @@ def _create_df_from_run_metadata(runs_metadata: Sequence[RunMetadata]) -> pd.Dat
 
 def _separate_norm_solution(
     results_df: pd.DataFrame, normalising_tag: str
-) -> tuple[pd.DataFrame]:
+) -> Tuple[pd.DataFrame]:
     """Separate solutions df into normalising row and rows to be normalised.
 
     :param results_df: multiple solutions dataframe
@@ -180,7 +186,7 @@ def _separate_norm_solution(
     :param normalising_tag: tag to identify row to normalise with
     :type normalising_tag: str
     :return: normalising row, rows to be normalised
-    :rtype: tuple[pd.DataFrame]
+    :rtype: Tuple[pd.DataFrame]
     """
     # Split results into normalising and non-normalising solutions
     normalising_soln = results_df[results_df[TAG] == normalising_tag]
@@ -217,7 +223,7 @@ def _filter_opt_params(
 def _normalise_diffs(
     results_df: pd.DataFrame,
     opt_param_value_pattern: str,
-    normalising_tag: Optional[str] = None,
+    normalising_tag: str,
 ) -> pd.DataFrame:
     """Normalise differences of multiple solutions with a normalising solution.
 
@@ -225,8 +231,8 @@ def _normalise_diffs(
     :type results_df: pandas.DataFrame
     :param opt_param_value_pattern: normalisation type for opt params in mfile
     :type opt_param_value_pattern: str
-    :param normalising_tag: tag to normalise other solutions with, defaults to None
-    :type normalising_tag: str, optional
+    :param normalising_tag: tag to normalise other solutions with
+    :type normalising_tag: str
     :return: normalised differences
     :rtype: pandas.DataFrame
     """
@@ -532,7 +538,7 @@ def _plot_solutions(
 def _rms_errors(
     results_df: pd.DataFrame,
     opt_param_value_pattern: str,
-    normalising_tag: Optional[str] = None,
+    normalising_tag: str,
 ) -> pd.DataFrame:
     """Calculate RMS errors between different solutions.
 
@@ -541,8 +547,8 @@ def _rms_errors(
     :type results_df: pandas.DataFrame
     :param opt_param_value_pattern: normalisation type for opt params in mfile
     :type opt_param_value_pattern: str
-    :param normalising_tag: tag to calculate percentage changes against, defaults to None
-    :type normalising_tag: str, optional
+    :param normalising_tag: tag to calculate RMSEs against
+    :type normalising_tag: str
     :return: RMS errors for each solution
     :rtype: pandas.DataFrame
     """
