@@ -111,7 +111,7 @@ Produces a three-page PDF file in the same directory as the input MFILE. The PDF
 `Coil Currents etc` - Peak coil currents of the PF coils in $\text{MA}$, flux swing of the central solenoid 
 used for startup and total available in $\text{Wb}$. Total burn time `tburn` in hrs.
 
-`Cost of electricity` - This is the cost of electricity in $/\text{MWh}$. Check the respective cost model 
+`Cost of electricity` - This is the cost of electricity in $ $/ \text{MWh}$. Check the respective cost model 
 for the reference year of the inflation used.
 
 | Geometry                                                   |
@@ -127,13 +127,13 @@ for the reference year of the inflation used.
 | Inboard blanket + shield                                   |
 | Outboard blanket + shield                                  |
 | Total fusion power                                         |
-| $Q_{\text{p}}$                                             |
+| Plasma gain factor, $Q_{\text{p}}$                                             |
 
 | Power flows                                                                                                 |
 | :---------------------------------------------------------------------------------------------------------- |
 | Nominal neutron wall load[^2]                     |
 | Normalised radius of the 'core' region $\rho_{core}$ used in the radiation correction of the onfinement scaling[^3] [^4]               |
-| The electron density at the pedestal top, $n_{\text{e,ped}}[\text{m}^{-3}]$                                               |
+| The electron density at the pedestal top, $n_{\text{e,ped}}$                                               |
 | The normalised radius $\rho=r/a$ at the pedestal top                                                        |
 | The helium fraction relative to the electron density                                                        |
 | The core radiation $P_{\text{rad}} (\rho<\rho_{\text{core}})$ subtracted from $P_{\text{heat}}$ in confinement scaling           |
@@ -151,7 +151,7 @@ for the reference year of the inflation used.
 
 | Physics                                                                                                         |
 | :-------------------------------------------------------------------------------------------------------------- |
-| Plasma current, $I_{\text{P}}[\text{MA}]$                                                                                        |
+| Plasma current, $I_{\text{P}}$                                                                                        |
 | Vaccuum magnetic field at in the plasma centre, $B_{\text{T}}(R_0)$                                                       |
 | Safety factor at the 95% flux surface, $q_{95}$                                                                 |
 | Definitions of $\beta$ as given in [^1]                                                                         |
@@ -172,7 +172,7 @@ for the reference year of the inflation used.
 | The neutral beam current drive efficiency, $\gamma_{NB}$ (If NBI used)                                                                                                             |
 | The neutral beam energy (If NBI used)                                                                                                                                             |
 | The plasma heating used in the calculation of the confinement scaling / H-factor, $P_{\text{aux}} + P_\alpha - P_{\text{rad,core}}$                                                   |
-|The normalised current drive efficiency, [$\text{A/W}\text{m}^2$]|
+|The normalised current drive efficiency|
 | The divertor figures of merit, $\frac{P_{\text{sep}}}{R}$  &  $\frac{P_{\text{sep}}}{\langle n_e\rangle R}$                                                                                           |
 | Fraction of the power crossing the separatrix with respect to the LH-threshold power $P_{\text{sep}}/P_{\text{LH}}$                                                                |
 | Non-radiation corrected H-factor, $\text{H*}$ (Calculated for info only)                                                                                                          |
@@ -314,7 +314,7 @@ This utility plots the output of a PROCESS scan. PROCESS must be run on a scan-e
 ### Usage
 
 ```
-python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv 'output vars'] [-yv2 2nd axis output variable] [-o OUTPUTDIR] [-out] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]] [-ln LABEL_NAME] [-2DC] [-stc]
+python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv output vars] [-yv2 2nd axis output variable] [-o [path/to/directory]] [-out] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]] [-ln LABEL_NAME] [-2DC] [-stc]
 ```
 
 ### Options
@@ -322,12 +322,13 @@ python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv 'output vars'] [
 | Argument     | Description                                                                                                                                         |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `-h, --help` | show help message and exit                                                                                                                          |
-| `-f`         | file(s) to read as MFILE.DAT                                                                                                                        |
-| `-yv`        | select the output variables                                                                                                                         |
-| `-yv2`       | select the 2nd axis output variable                                                                                                                 |
-| `-o`         | Output directory for plots, defaults to current working directory.                                                                                  |
-| `-sf`        | output format (default='pdf')                                                                                                                       |
-| `-as`        | Axis label font size selection (default=18)                                                                                                         |
+| `-f, --input_files`         | Specify input file(s) path(s) (default = MFILE.DAT).More than one input file can be used eg: -f 'A_MFILE.DAT B_MFILE.DAT'. You can only specify the folder containing the MFILE. The different files scan will be plotted on the same graph. The scans must use the same scan variation.                                                                                                                       |
+| `-yv, --y_vars`        | Select the output variables. More than one output can be plotted eg: -yv 'var1 var2'. A separate plot will be created for each inputs variables                                                                                                                         |
+| `-yv2, --y_vars2`       | Select the 2nd axis output variable eg: -yv2 'var'. 2nd variable will be plotted on shared figure inputsvariable.                                                                                                                 |
+| `-o, --outputdir`         | Output directory for plots, defaults to current working directory.                                                                                  |
+| `-out, --term_output`         | Option to show scans values on terminal directory.                                                                                  |
+| `-sf, --save_format`        | Output format (default='pdf')                                                                                                                    |
+| `-as, --axis_font_size`        | Axis label font size selection (default=18)                                                                                                         |
 | `-ln, --label_name`        | Label names for plot legend. If multiple input files used then list the same number of label names eg: -nl 'leg1 leg2', (default = MFile file name) |
 | `-2DC, --two_dimensional_contour`        | Option to plot 2D scans as a coloured contour plot instead of a line plot. Note: Non convergent points will show up with a value of zero Note: The scan paramters must both be in increasing orderl |
 | `-stc, --stack_plots`        | Option to plot multiple 1D plots in a column of subplots. Variables will be plotted in order of input |
