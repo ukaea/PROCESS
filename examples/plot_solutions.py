@@ -59,7 +59,6 @@ df2
 fig3, df3 = plot_mfile_solutions(
     runs_metadata=runs_metadata,
     plot_title="Large tokamak 2 solution, relative to large tokamak 1",
-    normalise=True,
     normalising_tag="large tokamak 1",
 )
 df3
@@ -79,7 +78,6 @@ runs_metadata = [
 fig4, df4 = plot_mfile_solutions(
     runs_metadata,
     "2 large tokamak solutions, relative to large tokamak 1",
-    normalise=True,
     normalising_tag="large tokamak 1",
 )
 df4
@@ -100,7 +98,6 @@ runs_metadata = [
 fig5, df5 = plot_mfile_solutions(
     runs_metadata,
     "3 large tokamak solutions with RMS errors normalised to large tokamak 1",
-    normalise=True,
     normalising_tag="large tokamak 1",
     rmse=True,
 )
@@ -122,7 +119,6 @@ runs_metadata = [
 fig6, df6 = plot_mfile_solutions(
     runs_metadata,
     "4 large tokamak solutions normalised to the range of the optimisation parameters",
-    normalise=False,
     normalisation_type="range",
 )
 df6
@@ -141,7 +137,6 @@ runs_metadata = [
 fig7, df7 = plot_mfile_solutions(
     runs_metadata,
     "4 large tokamak solutions normalised to the range of the optimisation parameters",
-    normalise=False,
     normalisation_type=None,
 )
 df7
