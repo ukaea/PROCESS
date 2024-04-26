@@ -115,7 +115,7 @@ def parse_args(args):
 
 # Colours are PROCESS defualt, BLUEMIRA
 SOLENOID_COLOUR = ["pink", "#1764ab"]
-CSCOMPRESSION_COLOUR = ["red", "red"]
+CSCOMPRESSION_COLOUR = ["red", "#33CCCC"]
 TFC_COLOUR = ["cyan", "#084a91"]
 THERMAL_SHIELD_COLOUR = ["gray", "#e3eef9"]
 VESSEL_COLOUR = ["green", "#b7d4ea"]
@@ -397,28 +397,28 @@ def color_key(axis, mfile_data, scan):
     axis.text(-5, 10, "CS coil", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 9.7], 1, 0.4, lw=0, facecolor=SOLENOID_COLOUR[colour_scheme - 1]
+            [0.7, 9.7], 1, 0.4, lw=0, facecolor=SOLENOID_COLOUR[colour_scheme - 1]
         )
     )
 
     axis.text(-5, 9, "CS comp", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 8.7], 1, 0.4, lw=0, facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1]
+            [0.7, 8.7], 1, 0.4, lw=0, facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1]
         )
     )
 
     axis.text(-5, 8, "TF coil", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 7.7], 1, 0.4, lw=0, facecolor=TFC_COLOUR[colour_scheme - 1]
+            [0.7, 7.7], 1, 0.4, lw=0, facecolor=TFC_COLOUR[colour_scheme - 1]
         )
     )
 
     axis.text(-5, 7, "Thermal shield", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 6.7],
+            [0.7, 6.7],
             1,
             0.4,
             lw=0,
@@ -429,36 +429,34 @@ def color_key(axis, mfile_data, scan):
     axis.text(-5, 6, "VV & shield", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 5.7], 1, 0.4, lw=0, facecolor=VESSEL_COLOUR[colour_scheme - 1]
+            [0.7, 5.7], 1, 0.4, lw=0, facecolor=VESSEL_COLOUR[colour_scheme - 1]
         )
     )
 
     axis.text(-5, 5, "Blanket", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 4.7], 1, 0.4, lw=0, facecolor=BLANKET_COLOUR[colour_scheme - 1]
+            [0.7, 4.7], 1, 0.4, lw=0, facecolor=BLANKET_COLOUR[colour_scheme - 1]
         )
     )
 
     axis.text(-5, 4, "First wall", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 3.7], 1, 0.4, lw=0, facecolor=FIRSTWALL_COLOUR[colour_scheme - 1]
+            [0.7, 3.7], 1, 0.4, lw=0, facecolor=FIRSTWALL_COLOUR[colour_scheme - 1]
         )
     )
 
     axis.text(-5, 3, "Plasma", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 2.7], 1, 0.4, lw=0, facecolor=PLASMA_COLOUR[colour_scheme - 1]
+            [0.7, 2.7], 1, 0.4, lw=0, facecolor=PLASMA_COLOUR[colour_scheme - 1]
         )
     )
 
     axis.text(-5, 2, "PF coils", ha="left", va="top", size="medium")
     axis.add_patch(
-        patches.Rectangle(
-            [0.65, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black"
-        )
+        patches.Rectangle([0.7, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black")
     )
     if (mfile_data.data["iefrf"].get_scan(scan) in [5, 8]) or (
         mfile_data.data["iefrffix"].get_scan(scan) in [5, 8]
@@ -466,20 +464,20 @@ def color_key(axis, mfile_data, scan):
         axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
         axis.add_patch(
             patches.Rectangle(
-                [0.65, 0.7], 1, 0.4, lw=0, facecolor=NBSHIELD_COLOUR[colour_scheme - 1]
+                [0.7, 0.7], 1, 0.4, lw=0, facecolor=NBSHIELD_COLOUR[colour_scheme - 1]
             )
         )
         axis.text(-5, 0.1, "Cryostat", ha="left", va="top", size="medium")
         axis.add_patch(
             patches.Rectangle(
-                [0.65, -0.3], 1, 0.4, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+                [0.7, -0.3], 1, 0.4, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
             )
         )
 
     axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
-            [0.65, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+            [0.7, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
         )
     )
 
