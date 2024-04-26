@@ -2811,7 +2811,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (
                 "gamcd",
                 "Normalised current drive efficiency",
-                "(10$^{19}$ A/(Wm$^{2}$))",
+                "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -2840,7 +2840,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (
                 "gamcd",
                 "Normalised current drive efficiency",
-                "(10$^{19}$ A/(Wm$^{2}$))",
+                "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -2869,7 +2869,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (
                 "gamcd",
                 "Normalised current drive efficiency",
-                "(10$^{19}$ A/(Wm$^{2}$))",
+                "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
