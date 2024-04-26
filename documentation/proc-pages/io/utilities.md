@@ -314,7 +314,7 @@ This utility plots the output of a PROCESS scan. PROCESS must be run on a scan-e
 ### Usage
 
 ```
-python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv 'output vars'] [-yv2 2nd axis output variable] 
+python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv 'output vars'] [-yv2 2nd axis output variable] [-o OUTPUTDIR] [-out] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]] [-ln LABEL_NAME] [-2DC] [-stc]
 ```
 
 ### Options
@@ -328,7 +328,9 @@ python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv 'output vars'] [
 | `-o`         | Output directory for plots, defaults to current working directory.                                                                                  |
 | `-sf`        | output format (default='pdf')                                                                                                                       |
 | `-as`        | Axis label font size selection (default=18)                                                                                                         |
-| `-ln`        | Label names for plot legend. If multiple input files used then list the same number of label names eg: -nl 'leg1 leg2', (default = MFile file name) |
+| `-ln, --label_name`        | Label names for plot legend. If multiple input files used then list the same number of label names eg: -nl 'leg1 leg2', (default = MFile file name) |
+| `-2DC, --two_dimensional_contour`        | Option to plot 2D scans as a coloured contour plot instead of a line plot. Note: Non convergent points will show up with a value of zero Note: The scan paramters must both be in increasing orderl |
+| `-stc, --stack_plots`        | Option to plot multiple 1D plots in a column of subplots. Variables will be plotted in order of input |
 
 
 
