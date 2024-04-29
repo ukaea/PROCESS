@@ -544,7 +544,7 @@ allowance for radiation. This is not recommended for power plant models.
 The figure below shows the flow of power as calculated by the code.
 
 <figure markdown>
-![Power balance](../../images/Overall-power-flow.png){ width="100%"}
+![Power balance](../images/Overall-power-flow.png){ width="100%"}
 <figcaption>Figure 1: Machine build for D-shaped major components</figcaption>
 </figure>
 

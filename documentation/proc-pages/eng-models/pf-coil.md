@@ -16,7 +16,7 @@ an element `ipfloc(j)` assigned to it. Input parameter `ngrp` should be set to t
 and `ncls(j)` should be assigned the number of coils in each group - which should be 2 in each case.
 
 <figure markdown>
-![Machine build](../../images/vertical-build.png){ width="100%"}
+![Machine build](../images/vertical-build.png){ width="100%"}
 <figcaption>Figure 1: Machine build for D-shaped major components</figcaption>
 </figure>
 
@@ -48,7 +48,7 @@ each PF coil `i` are inputs. The PF coil currents vary as a function of time dur
 operation as indicated in Figure 2. They contribute part of the flux swing necessary to maintain the plasma current.
 
 <figure markdown>
-![Current waveform for Plasma, PF coil and Central Solenoid](../../images/current_vs_time.png){ width="100%"}
+![Current waveform for Plasma, PF coil and Central Solenoid](../images/current_vs_time.png){ width="100%"}
 <figcaption>Figure 2: Plot showing schematically the current waveforms for the plasma, a typical PF 
 coil, and the central solenoid. Note that the currents in some of the PF coils may be the opposite 
 sign to that shown, and the central solenoid current may remain positive during the I<sub>p</sub> 

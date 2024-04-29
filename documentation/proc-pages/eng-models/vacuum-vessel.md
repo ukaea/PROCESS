@@ -29,7 +29,7 @@ The reference above proceeds as follows.
 1.  An analytical formula is derived for the self-inductance of a TF coil composed of 6 circular arcs:
     
     <figure markdown>
-    ![TF shape Definition](../../images/tf-shape-definition.png)
+    ![TF shape Definition](../images/tf-shape-definition.png)
     <figcaption>Figure 1: Shape definition of current center lines in poloidal cross-section[^1]. This diagram is a representation of the geometry of both the TF coils and the vacuum vessel.</figcaption>
     </figure>
 
