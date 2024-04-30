@@ -509,6 +509,7 @@ most commonly used is the so-called IPB98(y,2) scaling.
 | 47 | NSTX-Petty08 Hybrid (H-mode) | J. Menard 2019, Phil. Trans. R. Soc. A 377:201704401 |
 | 48 | NSTX gyro-Bohm (Buxton) (H-mode; spherical tokamak) | P. Buxton et al. 2019 Plasma Phys. Control. Fusion 61 035006 |
 | 49 | Use input `tauee_in` |  |
+| 50 | ITPA20 (H-mode) | G. Verdoolaege et al 2021 Nucl. Fusion 61 076006 |
 
 ### Effect of radiation on energy confinement
 
