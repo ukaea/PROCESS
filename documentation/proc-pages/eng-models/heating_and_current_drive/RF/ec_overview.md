@@ -26,29 +26,71 @@ One of the methods for calculating the normalised current drive efficiency is th
 
 This routine calculates the current drive parameters for a electron cyclotron system, based on the AEA FUS 172 model.
 It works out the ECCD efficiency using the formula due to Cohen quoted in the ITER Physics Design Guidelines : 1989 (but including division by the Coulomb Logarithm omitted from IPDG89). 
-We have assumed gamma**2-1 << 1, where gamma is the relativistic factor. 
+
+We have assumed $\gamma^2$-1 << 1, where gamma is the relativistic factor. 
 The notation follows that in IPDG89.
-The answer ECGAM is the normalised efficiency nIR/P with n the local density in 10**20 /m**3, I the driven current in MAmps,R the major radius in metres, and P the absorbed power in MWatts.
+The answer ECGAM is the normalised efficiency $n_{\text{e}}IR/P$ with $n_{\text{e}}$ the local density in [$10^{20} / \text{m}^3$], I the driven current in [$\text{MA}$], $R$ the major radius in [$\text{m}$], and $P$ the absorbed power in  [$\text{MW}$].
         
 
 $$
-\mathtt{mcsq} = 9.1095e-31 \frac{c^2}{(1E3\text{e})}
+\mathtt{mcsq} = 9.1095\times10^{-31} \frac{c^2}{1  \text{keV}}
 $$
 
 $$
 \mathtt{f} = 16\left(\frac{\mathtt{tlocal}}{\mathtt{mcsq}}\right)^2
 $$
 
-$\mathtt{fp}$ is the derivative of $\mathtt{f}$ with respect to gamma, the relativistic factor, taken equal to $1 + \frac{2T_e}{(m_ec^2)}$
+$\mathtt{fp}$ is the derivative of $\mathtt{f}$ with respect to gamma, the relativistic factor, taken equal to $1 + \frac{2T_{\text{e}}}{(m_{\text{e}}c^2)}$
 
 $$
-\mathtt{fp} = 16.0 \frac{\mathtt{tlocal}}{\mathtt{mcsq}}
+\mathtt{fp} = 16 \left(\frac{\mathtt{tlocal}}{\mathtt{mcsq}}\right)
 $$
         
-lam is IPDG89's lambda. `legend` calculates the Legendre function of order alpha and argument `lam`, `palpha`, and its derivative, palphap.
-Here `alpha` satisfies $alpha(alpha+1) = \frac{-8}{(1+zlocal)}$. alpha is of the form  $(-1/2 + ix)$, with x a real number and $i = sqrt(-1)$.
+$\mathtt{lam}$ is IPDG89's lambda. `legend` calculates the Legendre function of order $\alpha$ and argument `lam`, `palpha`, and its derivative, `palphap`.
+Here `alpha` satisfies $\alpha(\alpha+1) = \frac{-8}{(1+z_{\text{local}})}$. $\alpha$ is of the form  $(-1/2 + ix)$, with x a real number and $i = \sqrt{-1}$.
 
-lam = 1.0e0
+$$
+\mathtt{lam} = 1.0
+$$
+
+$$
+\mathtt{palpha, palphap} = \text{legend}(\mathtt{zlocal, lam})
+$$
+
+$$
+\mathtt{lams} = \sqrt{\frac{2 \times \mathtt{epsloc}}{1 + \mathtt{epsloc}}}
+$$
+
+$$
+\mathtt{palphas} = \text{legend}(\mathtt{zlocal, lams})
+$$
+
+$\mathtt{hp}$ is the derivative of IPDG89's \mathtt{h} function with respect to $\mathtt{lam}$
+
+$$
+\mathtt{h} = \frac{-4 \times \mathtt{lam}}{\mathtt{zlocal + 5}} \times \frac{1- (\mathtt{lams \times \mathtt{palpha}})}{\mathtt{lam \times \mathtt{palphas}}}
+$$
+
+$$
+\mathtt{hp} = \frac{-4}{\mathtt{zlocal}+5} \times \left(1- \mathtt{lams} \times \frac{\mathtt{palphap}}{\mathtt{palphas}}
+\right)
+$$
+
+$\mathtt{facm}$ is IPDG89's momentum conserving factor
+
+$$
+\mathtt{facm} = 1.5
+$$
+
+$$
+\mathtt{y} = \frac{\mathtt{mcsq}}{2 \times \mathtt{tlocal}} \times (1+ \mathtt{epsloc} \times \mathtt{cosang})
+$$
+
+We take the negative of the IPDG89 expression to get a positive number
+
+$$
+\mathtt{ecgam} = \left(\frac{-7.8 \times \mathtt{facm \times \sqrt{\frac{1 + \mathtt{epsloc}}{1- \mathtt{epsloc}}}}}{\mathtt{coulog}}\right) \times (\mathtt{h} \times \mathtt{fp} -0.5 \times \mathtt{y} \times \mathtt{f} \times \mathtt{hp})
+$$
 
 ----------------------------------------------------------------------------------
 ### Legendre function and its derivative `legend`
@@ -122,37 +164,5 @@ def legend(self, zlocal, arg):
             eh.report_error(19)
         
 ```
-
-
-palpha, palphap = self.legend(zlocal, lam)
-
-lams = np.sqrt(2.0e0 * epsloc / (1.0e0 + epsloc))
-palphas, _ = self.legend(zlocal, lams)
-
-#  hp is the derivative of IPDG89's h function with respect to lam
-
-h = -4.0e0 * lam / (zlocal + 5.0e0) * (1.0e0 - lams * palpha / (lam * palphas))
-hp = -4.0e0 / (zlocal + 5.0e0) * (1.0e0 - lams * palphap / palphas)
-
-#  facm is IPDG89's momentum conserving factor
-
-facm = 1.5e0
-y = mcsq / (2.0e0 * tlocal) * (1.0e0 + epsloc * cosang)
-
-#  We take the negative of the IPDG89 expression to get a positive
-#  number
-
-ecgam = (
-    -7.8e0
-    * facm
-    * np.sqrt((1.0e0 + epsloc) / (1.0e0 - epsloc))
-    / coulog
-    * (h * fp - 0.5e0 * y * f * hp)
-)
-
-if ecgam < 0.0e0:
-    eh.report_error(17)
-return ecgam
-
 
 [^1]: Abramowitz, Milton. *"Abramowitz and stegun: Handbook of mathematical functions."* US Department of Commerce 10 (1972).        

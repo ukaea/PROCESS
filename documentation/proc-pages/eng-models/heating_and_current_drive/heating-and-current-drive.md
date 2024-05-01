@@ -18,7 +18,7 @@ The fraction of the required plasma current to be produced by non-inductive mean
 - `iefrf` = 10: [ECRH user input gamma](RF/ecrh_gamma.md),
 - `iefrf` = 11: ECRH "HARE" model [^3] :warning: (OBSOLETE-REMOVED),
 - `iefrf` = 12: [EBW user scaling input. Scaling](RF/ebw_freethy.md) (S. Freethy)
-- `iefrf` = 13: [ECRH O-mode cutoff with Zeff and Te](RF/cutoff_ecrh.md) (S. Freethy) [^4],
+- `iefrf` = 13: [ECRH O-mode cutoff with $Z_{\text{eff}}$ and $T_{\text{e}}$](RF/cutoff_ecrh.md) (S. Freethy) [^4],
 
 !!! Warning "Warning" 
     At present, the neutral beam models do not include the effect of an edge transport barrier (pedestal) in the plasma profile.

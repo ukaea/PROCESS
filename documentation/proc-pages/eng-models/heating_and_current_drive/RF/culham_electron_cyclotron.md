@@ -22,12 +22,7 @@ cosang = cosine of the poloidal angle at which ECCD takes place = +1 outside, -1
 
 # Normalised current drive efficiency
 
-Uses the `eccdef` model found below
-
-
-
-
-Normalised current drive efficiency (A/W $\text{m^{-2}}$)
+Uses the `eccdef` model found [here](ec_overview.md)
 
 $$
 \mathtt{ecgam} = 0.25(\mathtt{ecgam1} + \mathtt{ecgam2} +\mathtt{ecgam3} + \mathtt{ecgam4})
@@ -41,9 +36,6 @@ $$
         ecgam3 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
         cosang = -1.0e0
         ecgam4 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
-
-
-Current drive efficiency (A/W)
 
 $$
 \text{Current drive efficiency [A/W]} = \frac{\mathtt{ecgam}}{\mathtt{dlocal} \times R_0}
