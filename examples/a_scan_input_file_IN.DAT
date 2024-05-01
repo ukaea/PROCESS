@@ -64,7 +64,6 @@ powfmax = 3000
 *-----------------------*
 icc = 13 
 ixc = 21 * ftburn
-ftburn = 0.9
 * minimum burn time [s]
 tbrnmn = 7200.0
 
@@ -98,7 +97,6 @@ fbetatry = 0.5
 *--------------*
 icc = 25
 ixc = 35 * fpeakb
-fpeakb = 0.9
 * Maximum allowable value for toroidal magnetic field [T]
 bmxlim = 14.0
 
@@ -144,7 +142,6 @@ fjprot = 1.0
 *--------------------------*
 icc = 36
 ixc = 54 * ftmargtf
-ftmargtf = 0.9
 * Minimum allowable temperature margin [K]
 tmargmin = 1.5
 
@@ -152,7 +149,6 @@ tmargmin = 1.5
 *---------------------------------*
 icc = 60
 ixc = 106 * ftmargoh
-ftmargoh = 0.9
 tmargmin_cs = 1.5
 
 * Lower limit on taup/taueff (ratio alpha particle/energy confinement times) *
