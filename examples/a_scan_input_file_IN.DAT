@@ -98,7 +98,7 @@ fbetatry = 0.5
 *--------------*
 icc = 25
 ixc = 35 * fpeakb
-*fpeakb = 0.9
+fpeakb = 0.9
 * Maximum allowable value for toroidal magnetic field [T]
 bmxlim = 14.0
 
