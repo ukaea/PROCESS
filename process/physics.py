@@ -3905,7 +3905,7 @@ class Physics:
         )
         po.ocmmnt(
             self.outfile,
-            "Triple product = Vol-average electron density x Vol-average         & electron temperature x Energy confinement time:",
+            "Triple product = Vol-av electron density x Vol-av electron temp x Energy confinement time:",
         )
         po.ovarre(
             self.outfile,
@@ -4347,7 +4347,9 @@ class Physics:
             f"{'':>34}{'for H = 1':<20}power balance",
         )
 
-        for iisc in range(32, 48):
+        # for iisc in range(32, 48):
+        # Put the ITPA value first
+        for iisc in [50, 34, 37, 38, 39, 46, 47, 48]:
             (
                 physics_variables.kappaa,
                 ptrez,
@@ -4897,10 +4899,8 @@ class Physics:
         This subroutine calculates the energy confinement time
         using one of a large number of scaling laws, and the
         transport power loss terms.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         N. A. Uckan and ITER Physics Group,
         "ITER Physics Design Guidelines: 1989",
-        ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
         ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
         A. Murari et al 2015 Nucl. Fusion, 55, 073009
         C.C. Petty 2008 Phys. Plasmas, 15, 080501
@@ -5963,6 +5963,44 @@ class Physics:
             startup_variables.ptaue = 0.0e0
             startup_variables.qtaue = 0.0e0
             startup_variables.rtaue = 0.0e0
+
+        elif isc == 50:  # ITPA20 Issue #3164
+            # The updated ITPA global H-mode confinement database: description and analysis
+            # G. Verdoolaege et al 2021 Nucl. Fusion 61 076006 DOI 10.1088/1741-4326/abdb91
+
+            # thermal energy confinement time
+            # plasma current Ip (MA),
+            # on-axis vacuum toroidal magnetic field Bt (T)
+            # "central line-averaged electron density" nebar (1019 m−3)
+            # thermal power lost due to transport through the LCFS Pl,th (MW)
+            # major radius Rgeo (m)
+            # elongation of the LCFS, defined as κa = V/(2πRgeo πa2)
+            # (with V (m3) the plasma volume inside the LCFS),
+            # inverse aspect ratio epsilon = a/Rgeo
+            # effective atomic mass Meff of the plasma - NOT defined, but I have taken it equal to
+            # aion = average mass of all ions (amu).
+            # energy confinement time is given by τE,th = Wth/Pl,th, where Wth is the thermal stored energy.
+            # The latter is derived from the total stored energy Wtot by subtracting the energy
+            # content associated to fast particles originating from plasma heating.
+
+            tauee = (
+                hfact
+                * 0.053
+                * pcur**0.98
+                * bt**0.22
+                * dnla19**0.24
+                * powerht ** (-0.669)
+                * rmajor**1.71
+                * (1 + physics_variables.triang) ** 0.36
+                * physics_variables.kappaa_ipb**0.8
+                * eps**0.35
+                * physics_variables.aion**0.2
+            )
+
+            startup_variables.gtaue = 0.0
+            startup_variables.ptaue = 0.0
+            startup_variables.qtaue = 0.0
+            startup_variables.rtaue = 0.0
 
         else:
             error_handling.idiags[0] = isc
