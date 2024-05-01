@@ -1,1 +1,9 @@
 # Electron Bernstein Wave Heating
+
+Crawford et al. initially demonstrated the experimental verification of Electron Bernstein Waves (EBWs) in 1964. Subsequent experiments focused on measuring the transmission and emission of EBWs in linear low-temperature plasma devices, with Crawford providing an overview of these foundational experiments. Among these, two notable examples stand out.
+
+In Landauer's experiments, the strong interaction between EBWs and Electron Cyclotron (EC) waves was showcased. Landauer observed the excitation of EBWs by an unstable electron distribution function, with emission detected even at the 20th harmonic. Furthermore, Landauer confirmed the theoretically anticipated polarization dependence.
+
+In the experiments led by Leuterer, EBW excitation and detection were achieved using small antennas placed at the plasma edge. Leuterer successfully demonstrated both forward and backward wave propagation. By measuring the phase difference between emitter and detector, the dispersion relation of EBWs could be estimated.
+
+These fundamental understandings and experimental validations of EBW physics prompted considerations for utilizing EBWs in fusion plasma heating and temperature diagnostics. The appeal of EBWs lies in their ability to access over-dense plasmas, which is limited in conventional plasma heating methods using electromagnetic EC waves. Additionally, EBWs offer high cyclotron absorption, enabling plasma heating at higher resonant frequencies (>2 harmonics), compared to the limited applicability of electromagnetic EC waves primarily at the first harmonic ordinary and extraordinary mode, and the second harmonic extraordinary mode. Higher harmonic heating with electromagnetic EC waves is only feasible under specific high-temperature conditions.
