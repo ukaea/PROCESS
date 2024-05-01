@@ -65,20 +65,35 @@ module fwbs_variables
   !! - =2 defined by two ellipses
   !#TODO: change to adopt switch naming convention
 
-  real(dp) :: fwlife
-  !! first wall full-power year lifetime (y)
+  real(dp) :: fwlife_inboard
+  !! Inboard first wall full-power year lifetime (y)
 
-  real(dp) :: fwmass
-  !! first wall mass [kg]
+  real(dp) :: fwlife_outboard
+  !! Outboard first wall full-power year lifetime (y)
 
-  real(dp) :: fw_armour_mass
-  !! first wall armour mass [kg]
+  real(dp) :: fwmass_inboard
+  !! Inboard first wall mass [kg]
 
-  real(dp) :: fw_armour_thickness
-  !! first wall armour thickness [m]
+  real(dp) :: fwmass_outboard
+  !! Outboard first wall mass [kg]
 
-  real(dp) :: fw_armour_vol
-  !! first wall armour volume [m^3]
+  real(dp) :: fw_armour_mass_inboard
+  !! Inboard first wall armour mass [kg]
+
+  real(dp) :: fw_armour_mass_outboard
+  !! Outboard first wall armour mass [kg]
+
+  real(dp) :: fw_armour_thickness_inboard
+  !! Inboard first wall armour thickness [m]
+
+  real(dp) :: fw_armour_thickness_outboard
+  !! Outboard first wall armour thickness [m]
+
+  real(dp) :: fw_armour_vol_inboard
+  !! Inboard first wall armour volume [m^3]
+
+  real(dp) :: fw_armour_vol_outboard
+  !! Outboard first wall armour volume [m^3]
 
   integer :: iblanket
   !! switch for blanket model:
@@ -317,33 +332,60 @@ module fwbs_variables
   !! - 'helium'
   !! - 'water'
 
-  real(dp) :: fw_wall
-  !! wall thickness of first wall coolant channels [m]
+  real(dp) :: fw_wall_inboard
+  !! Inboard wall thickness of first wall coolant channels [m]
 
-  real(dp) :: afw
-  !! radius of first wall cooling channels [m]
+  real(dp) :: fw_wall_outboard
+  !! Outboard wall thickness of first wall coolant channels [m]
 
-  real(dp) :: pitch
-  !! pitch of first wall cooling channels [m]
+  real(dp) :: afw_inboard
+  !! Radius of inboard first wall cooling channels [m]
 
-  real(dp) :: fwinlet
-  !! inlet temperature of first wall coolant [K]
+  real(dp) :: afw_outboard
+  !! Radius of outboard first wall cooling channels [m]
 
-  real(dp) :: fwoutlet
-  !! outlet temperature of first wall coolant [K]
+  real(dp) :: pitch_inboard
+  !! Pitch of inboard first wall cooling channels [m]
 
-  real(dp) :: fwpressure
-  !! first wall coolant pressure [Pa] (`secondary_cycle>1`)
+  real(dp) :: pitch_outboard
+  !! Pitch of outboard first wall cooling channels [m]
 
-  real(dp) :: tpeak
-  !! peak first wall temperature [K]
+  real(dp) :: fwinlet_inboard
+  !! Inlet temperature of inboard first wall coolant [K]
 
-  real(dp) :: roughness
-  !! first wall channel roughness epsilon [m]
+  real(dp) :: fwinlet_outboard
+  !! Inlet temperature of outboar first wall coolant [K]
 
-  real(dp) :: fw_channel_length
-  !! Length of a single first wall channel (all in parallel) [m]
+  real(dp) :: fwoutlet_inboard
+  !! Outlet temperature of inboard first wall coolant [K]
+
+  real(dp) :: fwoutlet_outboard
+  !! Outlet temperature of outboard first wall coolant [K]
+
+  real(dp) :: fwpressure_inboard
+  !! Inboard first wall coolant pressure [Pa] (`secondary_cycle>1`)
+
+  real(dp) :: fwpressure_outboard
+  !! Outboard first wall coolant pressure [Pa] (`secondary_cycle>1`)
+
+  real(dp) :: tpeak_inboard
+  !! Peak inboard first wall temperature [K]
+
+  real(dp) :: tpeak_outboard
+  !! Peak outboard first wall temperature [K]
+
+  real(dp) :: roughness_inboard
+  !! Inboard first wall channel roughness epsilon [m]
+
+  real(dp) :: roughness_outboard
+  !! Outboard first wall channel roughness epsilon [m]
+
+  real(dp) :: fw_channel_length_inboard
+  !! Length of a single inboard first wall channel (all in parallel) [m]
   !! (`iteration variable 114`, useful for `constraint equation 39`)
+
+  real(dp) :: fw_channel_length_outboard
+  !! Length of a single outboard first wall channel (all in parallel) [m]
 
   real(dp) :: peaking_factor
   !! peaking factor for first wall heat loads. (Applied separately to inboard and outboard loads.
@@ -377,11 +419,18 @@ module fwbs_variables
   integer :: nblktmodti
   !! number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)
 
-  real(dp) :: tfwmatmax
-  !! maximum temperature of first wall material [K] (`secondary_cycle>1`)
+  real(dp) :: tfwmatmax_inboard
+  !! Maximum temperature of inboard first wall material [K] (`secondary_cycle>1`)
 
-  real(dp) :: fw_th_conductivity
-  !! thermal conductivity of first wall material at 293 K (W/m/K) (Temperature dependence
+  real(dp) :: tfwmatmax_outboard
+  !! Maximum temperature of outboard first wall material [K] (`secondary_cycle>1`)
+
+  real(dp) :: fw_th_conductivity_inboard
+  !! Thermal conductivity of inboard  first wall material at 293 K (W/m/K) (Temperature dependence
+  !! is as for unirradiated Eurofer)
+
+  real(dp) :: fw_th_conductivity_outboard
+  !! Thermal conductivity of outboard first wall material at 293 K (W/m/K) (Temperature dependence
   !! is as for unirradiated Eurofer)
 
   real(dp) :: fvoldw
@@ -399,8 +448,11 @@ module fwbs_variables
   real(dp) :: praddiv
   !! Radiation power incident on the divertor (MW)
 
-  real(dp) :: pradfw
-  !! Radiation power incident on the first wall (MW)
+  real(dp) :: pradfw_inboard
+  !! Radiation power incident on the inboard first wall (MW)
+
+  real(dp) :: pradfw_outboard
+  !! Radiation power incident on the outboard first wall (MW)
 
   real(dp) :: pradhcd
   !! Radiation power incident on the heating and current drive system (MW)
@@ -677,11 +729,16 @@ module fwbs_variables
     fhcd = 0.0D0
     fhole = 0.0D0
     fwbsshape = 2
-    fwlife = 0.0D0
-    fwmass = 0.0D0
-    fw_armour_mass = 0.0D0
-    fw_armour_thickness = 0.005D0
-    fw_armour_vol = 0.0D0
+    fwlife_inboard = 0.0D0
+    fwmass_inboard = 0.0D0
+    fw_armour_mass_inboard = 0.0D0
+    fw_armour_thickness_inboard = 0.005D0
+    fw_armour_vol_inboard = 0.0D0
+    fwlife_inboard = 0.0D0
+    fwmass_outboard = 0.0D0
+    fw_armour_mass_outboard = 0.0D0
+    fw_armour_thickness_outboard = 0.005D0
+    fw_armour_vol_outboard = 0.0D0
     iblanket = 1
     iblnkith = 1
     inuclear = 0
@@ -739,15 +796,24 @@ module fwbs_variables
     afwi = 0.008D0
     afwo = 0.008D0
     fwcoolant = 'helium'
-    fw_wall = 0.003D0
-    afw = 0.006D0
-    pitch = 0.02D0
-    fwinlet = 573.0D0
-    fwoutlet = 823.0D0
-    fwpressure = 15.5D6
-    tpeak = 873.0D0
-    roughness = 1.0D-6
-    fw_channel_length = 4.0D0
+    fw_wall_inboard = 0.003D0
+    afw_inboard = 0.006D0
+    pitch_inboard = 0.02D0
+    fwinlet_inboard = 573.0D0
+    fwoutlet_inboard = 823.0D0
+    fwpressure_inboard = 15.5D6
+    tpeak_inboard = 873.0D0
+    roughness_inboard = 1.0D-6
+    fw_channel_length_inboard = 4.0D0
+    fw_wall_outboard = 0.003D0
+    afw_outboard = 0.006D0
+    pitch_outboard = 0.02D0
+    fwinlet_outboard = 573.0D0
+    fwoutlet_outboard = 823.0D0
+    fwpressure_outboard = 15.5D6
+    tpeak_outboard = 873.0D0
+    roughness_outboard = 1.0D-6
+    fw_channel_length_outboard = 4.0D0
     peaking_factor = 1.0D0
     blpressure = 15.50D6
     inlet_temp = 573.0D0
@@ -757,14 +823,17 @@ module fwbs_variables
     nblktmodpi = 7
     nblktmodto = 48
     nblktmodti = 32
-    tfwmatmax = 823.0D0
-    fw_th_conductivity = 28.34D0
+    tfwmatmax_inboard = 823.0D0
+    tfwmatmax_outboard = 823.0D0
+    fw_th_conductivity_inboard = 28.34D0
+    fw_th_conductivity_outboard = 28.34D0
     fvoldw = 1.74D0
     fvolsi = 1.0D0
     fvolso = 0.64D0
     fwclfr = 0.15D0
     praddiv = 0.0D0
-    pradfw = 0.0D0
+    pradfw_inboard = 0.0D0
+    pradfw_outboard = 0.0D0
     pradhcd = 0.0D0
     pradloss = 0.0D0
     ptfnuc = 0.0D0
