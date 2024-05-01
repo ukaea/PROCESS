@@ -79,7 +79,6 @@ def scan_cleanup(examples_as_cwd):
             os.remove(file)
 
 
-@pytest.mark.skip(reason="Skipping test until fixed in issue #3071")
 def test_scan(scan_cleanup):
     """Run the scan.py script and check no exceptions are raised.
 
