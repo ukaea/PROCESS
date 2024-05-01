@@ -23,7 +23,8 @@ The power in the beam atoms that are not ionised as they pass through the plasma
 
 It is recommended that <b>only one</b> of these two constraint equations is used during a run.
 
-## Beam stopping cross-section
+
+## Beam stopping cross-section (`sigbeam`)
 
 Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `sigbeam` method to calculate the stopping cross section[^1]. It finds a suitable analytic epressing for $\sigma_s^{(Z)}(E,n_e,T_e,Z_{\text{eff}})$ for fitting $\sigma_s$ data for a single impurity $(\text{Z)}$ plasma:
 
@@ -56,10 +57,10 @@ $$
 $$
 
 
-## Ion coupled power
+## Ion coupled power (`cfnbi`)
 Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `cfnbi` method to calculate the fraction of the fast particle energy coupled to the ions.
 
-### Coloumb logarithm
+### Coloumb logarithm (`xlmbdabi`)
 Firstly the Coloumb logarithm for the ion-ion collisions ($\ln \Lambda$) is calculated where the relative velocity may be large compared with the background thermal velocity using the `xlmbdabi` method [^2], which follows as:
 
 $$
@@ -74,46 +75,46 @@ $$
 \ln \Lambda  = 23.7 + \log(x2 \sqrt{x1})
 $$
 
-Where $T_e$ is the density weighted average electron temp (keV), $E_{\text{fast}}$ is the energy of the fast particle (MeV), $m_{\text{u,fast}}$ is the mass of the fast particle (units of proton mass),$n_e$ is the volume averaged electron density (1e20), $m_{\text{u,ion}}$ is the mass of background ions (units of proton mass).
+Where $T_e$ is the density weighted average electron temp ($\text{keV}$), $E_{\text{fast}}$ is the energy of the fast particle ($\text{MeV}$), $m_{\text{u,fast}}$ is the mass of the fast particle (units of proton mass), $n_{\text{e}}$ is the volume averaged electron density ($1\times 10^{20}/ \text{m}^3$), $m_{\text{u,ion}}$ is the mass of background ions (units of proton mass).
 
 ----------------------------------------------
 
 $$
-sum\ln = Z_{\text{eff} = \frac{\ln\Lambda}{\ln \Lambda_{\text{i-e}}}
+\mathtt{sumln} = \mathtt{zeffai} \times \frac{\mathtt{xlmbdai}}{\mathtt{xlmbda}}
 $$
 
 $Z_{\text{eff}}$ is the mass weighted plasma effective charge and $\ln\Lambda_{\text{i-e}}$  is the ion-electron coulomb logarithm
 
 $$
-xlnrat = 3 \left(\frac{\sqrt \pi}{4}\frac{m_e}{m_p sum\ln}\right)^{\frac{2}{3}}
+\mathtt{xlnrat} = 3 \left(\frac{\sqrt \pi}{4}\frac{m_e}{m_p \  \mathtt{sumln}}\right)^{\frac{2}{3}}
 $$
 
 $$
-v_e = c \sqrt{\left(\frac{2T_e}{511}\right)}
+v_e = c \sqrt{\left(\frac{2 \ T_e}{511}\right)}
 $$
 
 $$
-ecritfi = \frac{m_{\text{u,fast}} m_p v_e^2 xlnrat} {(2 echarge 1000)}
+\mathtt{ecritfi} = \frac{m_{\text{u,fast}} m_p v_e^2 \  \mathtt{xlnrat}} {(2000 \times e)}
 $$
 
 $$
-x = \sqrt{\frac{efast}{ecritfi}}
+\mathtt{x} = \sqrt{\frac{\mathtt{efast}}{\mathtt{ecritfi}}}
 $$
 
 $$
-ti = \log{\frac{x^2-x+1}{(x+1)^2}}
+\mathtt{ti} = \log{\frac{x^2-x+1}{(x+1)^2}}
 $$
 
 $$
-thx = \frac{(2x-1)}{\sqrt{3}}
+\mathtt{thx} = \frac{(2x-1)}{\sqrt{3}}
 $$
 
 $$
-t2 = 2 \sqrt{3} \frac{\arctan{thx}+\pi}{6}
+\mathtt{t2} = 2 \sqrt{3} \frac{\arctan({\mathtt{thx}}+\pi)}{6}
 $$
 
 $$
-couple fraction = \frac{(t1+t2)}{3x^2}
+\text{Fraction of past particle energy coupled to ions} = \frac{(\mathtt{t1}+\mathtt{t2})}{3\mathtt{x}^2}
 $$
 
 [^1]:Janev, R. K., Boley, C. D., & Post, D. E. (1989). *"Penetration of energetic neutral beams into fusion plasmas."* Nuclear Fusion, 29(12), 006. https://doi.org/10.1088/0029-5515/29/12/006

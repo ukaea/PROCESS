@@ -41,30 +41,22 @@ $$
 Power split to ions / electrons is calculated via the the `cfnbi` method described [here](nbi_overview.md)
 
 
-## Current drive efficiency
+## Current drive efficiency (`etanb`)
 Uses the `etanb` method.
 
-effnbss = current_drive_variables.frbeam * self.etanb(
-    physics_variables.abeam,
-    physics_variables.alphan,
-    physics_variables.alphat,
-    physics_variables.aspect,
-    physics_variables.dene,
-    current_drive_variables.enbeam,
-    physics_variables.rmajor,
-    physics_variables.ten,
-    physics_variables.zeff,
-)
+$$
+\mathtt{zbeam} = 1.0
+$$
 
-zbeam = 1.0
-        bbd = 1.0
+$$
+\mathtt{bbd} = 1.0
+$$
 
-        dene20 = 1e-20 * dene
 
 Ratio of E_beam/E_crit
 
 $$
-\mathtt{xjs} = \frac{ebeam}{10 m_{\text{u,ion}}T_e} 
+\mathtt{xjs} = \frac{\mathtt{ebeam}}{10 \  m_{\text{u,ion}} \ T_e} 
 $$
 
 $$
@@ -76,7 +68,7 @@ $$
 $$
         
 $$
-rjfunc = \frac{xjs}{((4.0 + 3.0\mathtt{yj} + \mathtt{xjs}(\mathtt{xj} + 1.39 + 0.61\mathtt{yj}^{0.7})))}
+\mathtt{rjfunc} = \frac{\mathtt{xjs}}{((4.0 + 3.0\mathtt{yj} + \mathtt{xjs}(\mathtt{xj} + 1.39 + 0.61\mathtt{yj}^{0.7})))}
 $$
 
 $$
@@ -84,7 +76,7 @@ $$
 $$
 
 $$
-\mathtt{gfac} = \left(1.55 + \frac{0.85}{Z_{\text{eff}}}\right)\left(\sqrt{\mathtt{epseff}}-(0.2+\frac{1.55}{Z_{\text{eff}}})\mathtt{epseff}\right)
+\mathtt{gfac} = \left(1.55 + \frac{0.85}{Z_{\text{eff}}}\right)\left(\sqrt{\mathtt{epseff}}-\left(0.2+\frac{1.55}{Z_{\text{eff}}}\right)\mathtt{epseff}\right)
 $$
 
 $$
@@ -92,11 +84,11 @@ $$
 $$
     
 $$
-\mathtt{abd} = 0.107 (1-0.35\mathtt{alphan}+0.14\mathtt{alphan}^2)(1-0.21\mathtt{alphat})(1-0.2E-3\mathtt{ebeam}+0.09E-6\mathtt{ebeam}^2)
+\mathtt{abd} = 0.107 (1-0.35 \ \mathtt{alphan}+0.14 \ \mathtt{alphan}^2)(1-0.21 \ \mathtt{alphat})(1-0.2\times 10^{-3}\mathtt{ebeam}+0.09\times 10^{-6} \ \mathtt{ebeam}^2)
 $$
 
 $$
-\text{Current drive efficiency [A/W]} = \mathtt{abd}(\frac{5}{R_0})(0.1\frac{\mathtt{ten}}{n_{e,20}})\frac{\mathtt{rjfunc}}{0.2}\mathtt{ffac}
+\text{Current drive efficiency [A/W]} = \mathtt{abd} \times\frac{5}{R_0} \times0.1\frac{\mathtt{ten}}{n_{e,20}} \times \frac{\mathtt{rjfunc}}{0.2}\mathtt{ffac}
 $$
 
         
