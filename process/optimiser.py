@@ -49,8 +49,8 @@ class Optimiser:
         # Configure solver for problem
         self.solver = get_solver(self.solver_name)
         self.solver.set_evaluators(evaluators)
-        self.solver.set_opt_params(x)
         self.solver.set_bounds(bndl, bndu)
+        self.solver.set_opt_params(x)
         self.solver.set_constraints(m, meq)
         ifail = self.solver.solve()
 
