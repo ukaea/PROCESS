@@ -1119,9 +1119,8 @@ casthi_fraction = 1.0E-12
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*ixc = 171
+
 casths_fraction = 0.65
-*boundl(171) = 0.5
 * DESCRIPTION:   Minimal fraction of the TF coil maximum toroidal thickness taken by the side case
 * Fraction of total thickness of coil at start of winding pack
 * JUSTIFICATION: 
