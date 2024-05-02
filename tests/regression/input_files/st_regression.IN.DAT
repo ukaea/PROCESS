@@ -41,7 +41,7 @@ runtitle = ST Regression
 
 epsvmc = 1.0E-11
 * DESCRIPTION:   Error tolerance for VMCON
-* JUSTIFICATION: Same tolerance as used on DEMO
+* JUSTIFICATION: 
 
 *epsfcn = 0.001
 * DESCRIPTION:   HYBRD/VMCON derivative step length
@@ -487,7 +487,7 @@ ipedestal= 1
 
 rhopedn = 0.95  
 * DESCRIPTION:   r/a of Density Pedestal (ipedestal==1)
-* JUSTIFICATION: Same as DEMO-2019
+* JUSTIFICATION: 
 
 alphan = 0.9 
 * DESCRIPTION:   Density Profile Index
@@ -555,7 +555,7 @@ alphat = 1.4
 
 tbeta = 2.0 
 * DESCRIPTION:   Temperature Profile Index Beta
-* JUSTIFICATION: Same as DEMO-2019
+* JUSTIFICATION: 
 
 teped = 4.5
 * DESCRIPTION:   Electron Temperature of Pedestal top (keV)
@@ -594,12 +594,12 @@ alphaj = 0.1
 
 coreradius = 0.75 
 * DESCRIPTION:   Normalised Radius Defining the 'Core' Region
-* JUSTIFICATION: Based on ASTRA/TGLF simulations for DEMO
+* JUSTIFICATION:
 * REFERENCE:     Lux et al. (2016), Plasma Phys. Control. Fusion, 58, 075001
 
 coreradiationfraction = 0.7 
 * DESCRIPTION:   Fraction of Radiation from Core Region Lost
-* JUSTIFICATION: Based on ASTRA/TGLF simulations for DEMO
+* JUSTIFICATION: 
 * REFERENCE:     Lux et al. (2016), Plasma Phys. Control. Fusion, 58, 075001
 
 *rad_fraction_sol =
@@ -662,7 +662,7 @@ fimp(13) = 0.0005
 *boundl(135) = 0.000495
 *boundu(135) = 0.000505
 * DESCRIPTION:   Xenon Impurity Concentration
-* JUSTIFICATION: Xenon impurity used based on DEMO-2018
+* JUSTIFICATION: 
 
 *fimp(1)  = 1.0     *Hydrogen (fraction calculated by code)
 *fimp(2)  = 0.1     *Helium (fraction calculated by code)
@@ -679,7 +679,7 @@ fimp(12) = 0.0      *Krypton
 *fimp(13) = 0.0   *Xenon
 fimp(14) = 5e-05    *Tungsten
 * DESCRIPTION:   Density Fractions Relative to Electron Density
-* JUSTIFICATION: Xenon iteration variable, tungsten same as DEMO-2018
+* JUSTIFICATION: 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1235,7 +1235,7 @@ i_tf_turns_integer = 0
 
 *thicndut =  
 * DESCRIPTION:   Conduit turn insulation thickness (m)
-* JUSTIFICATION: DEMO 2018 PROCESS value.
+* JUSTIFICATION: 
 *                This depends at least on the maximum dump voltage and prpbably
 *                on the CS magnet maximum current
 
@@ -2148,7 +2148,7 @@ thshield_ob = 0.07
 
 d_vv_out = 0.3
 * DESCRIPTION:   Outboard vaccum vessel thickness
-* JUSTIFICATION: DEMO baseline double layer VV thickness
+* JUSTIFICATION: 
 
 gapomin = 0.0
 * DESCRIPTION:   Minimum Gap Between Outboard Vacuum Vessel and TF Coil (m)
@@ -2202,7 +2202,7 @@ d_vv_top = 0.3
 
 d_vv_bot = 0.3
 * DESCRIPTION:   Bottom (and top for double null) vaccum vessel thickness
-* JUSTIFICATION: DEMO baseline double layer VV thickness
+* JUSTIFICATION: 
 
 i_r_cp_top = 2
 * DESCRIPTION:   Switch selecting the TF CP is parametrization 
@@ -2485,11 +2485,11 @@ inuclear = 0
 
 *breeder_multiplier = 
 * DESCRIPTION: combined breeder/multipler fraction of blanket by volume
-* JUSTIFICATION: To match volume fraction from DEMO 2017 HCPB design
+* JUSTIFICATION: 
 
 *breeder_f = 
 * DESCRIPTION: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
-* JUSTIFICATION: To match volume fraction from DEMO 2017 HCPB design
+* JUSTIFICATION: 
 
 *li6enrich = 
 * DESCRIPTION:   Lithium-6 enrichment of breeding material (%) (HCPB)
@@ -3049,7 +3049,7 @@ etath = 0.40
 
 ipowerflow = 0 
 * DESCRIPTION:   Switch for Power Flow Model (0: Pre-2014 Version)
-* JUSTIFICATION: Same as DEMO-2019
+* JUSTIFICATION: 
 
 iprimshld = 1
 * DESCRIPTION:   Switch for shield thermal power destiny:
@@ -3318,7 +3318,7 @@ iavail = 0
 * =0 use input value for cfactr
 * =1 calculate cfactr using Taylor and Ward 1999 model
 * =2 calculate cfactr using new (2015) model
-* JUSTIFICATION: Same model as DEMO-2019
+* JUSTIFICATION: 
 
 *cfactr = 0.9
 * DESCRIPTION:   Total plant availability fraction; input if iavail=0
@@ -3327,11 +3327,11 @@ iavail = 0
 *ibkt_life = 
 * DESCRIPTION: Switch for fw/blanket lifetime calculation in availability module:
 *  =0 use neutron fluence model
-* =1 use fusion power model (DEMO only)
+* =1 use fusion power model 
 * JUSTIFICATION: testing
 
 *life_dpa = 
-* DESCRIPTION: Allowable DPA from DEMO fw/blanket lifetime calculation in availability module
+* DESCRIPTION: Allowable DPA for fw/blanket lifetime calculation in availability module
 * JUSTIFICATION: testing
 
 *num_rh_systems = 
