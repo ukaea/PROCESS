@@ -2335,6 +2335,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("vol", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
+        ("inboard_build", "Inboard build thickness", "m"),
         (out_blanket_thk, "Outboard blanket+shield", "m"),
         ("powfmw", "Fusion power", "MW"),
         ("bigq", "$Q$", ""),

@@ -1444,12 +1444,14 @@ class Build:
                 "(tf_in_cs)",
                 build_variables.tf_in_cs,
             )
-            po.ovarin(
-                self.mfile,
-                "TF coil radial placement switch",
-                "(tf_in_cs)",
-                build_variables.tf_in_cs,
-            )
+            po.ovarrf(
+                    self.outfile,
+                    "Inboard build thickness (m)",
+                    "(inboard_build)",
+                    physics_variables.rmajor-physics_variables.rminor,
+                    "OP ",
+                )
+            
             if build_variables.tf_in_cs == 1:
                 po.ocmmnt(
                     self.outfile,
