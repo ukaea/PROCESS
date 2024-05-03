@@ -2605,7 +2605,6 @@ def plot_power_info(axis, mfile_data, scan):
         coredescription,
         ped_height,
         ped_pos,
-        ("ralpne", "Helium fraction", ""),
         ("pinnerzoneradmw", "Inner zone radiation", "MW"),
         ("pradmw", "Total radiation in LCFS", "MW"),
         ("pnucblkt", "Nuclear heating in blanket", "MW"),
@@ -2734,9 +2733,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("facoh", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
-                "gamcd",
-                "Normalised current drive efficiency",
-                "(10$^{20}$ A/(Wm$^{2}$))",
+                "effcd",
+                "Current drive efficiency",
+                "A W$^{-1}$",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (

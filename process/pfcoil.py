@@ -1848,9 +1848,7 @@ class PFCoil:
         if bv.iohcl == 0:
             op.ocmmnt(self.outfile, "No central solenoid included")
             op.oblnkl(self.outfile)
-            op.ovarin(
-                self.mfile, "Existence_of_central_solenoid", "(iohcl)", bv.iohcl
-            )
+            op.ovarin(self.mfile, "Existence_of_central_solenoid", "(iohcl)", bv.iohcl)
         else:
             if pfv.ipfres == 0:
                 op.ocmmnt(self.outfile, "Superconducting central solenoid")

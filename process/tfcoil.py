@@ -277,7 +277,7 @@ class TFcoil:
             )
             po.ovarre(self.outfile, "Coolant channel length (m)", "(lcool)", lcool)
             po.ovarre(
-                self.outfile, "Inlet coolant flow speed (m/s)", "(tfv.vcool)", tfv.vcool
+                self.outfile, "Inlet coolant flow speed (m/s)", "(vcool)", tfv.vcool
             )
             po.ovarre(
                 self.outfile,
