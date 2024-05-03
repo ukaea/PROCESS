@@ -989,9 +989,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = (
-                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
-                )
+                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -2973,13 +2971,15 @@ def main_plot(
     plot_current_drive_info(plot_6, m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25)
 
-    # TF coil with WP
-    plot_7 = fig3.add_subplot(321)
-    plot_tf_wp(plot_7, m_file_data, scan)
+    # Can only plot WP and turn sturcutre if superconducting coil at the moment
+    if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
+        # TF coil with WP
+        plot_7 = fig3.add_subplot(321)
+        plot_tf_wp(plot_7, m_file_data, scan)
 
-    # TF coil turn structure
-    plot_8 = fig3.add_subplot(322, aspect="equal")
-    plot_tf_turn(plot_8, m_file_data, scan)
+        # TF coil turn structure
+        plot_8 = fig3.add_subplot(322, aspect="equal")
+        plot_tf_turn(plot_8, m_file_data, scan)
 
 
 def main(args=None):
