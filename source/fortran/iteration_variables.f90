@@ -3805,7 +3805,7 @@ contains
   end subroutine set_itv_170
 
   subroutine init_itv_171
-    !! <LI> (171) casths: TF side case fraction of toroidal thickness
+    !! <LI> (171) casths_fraction: TF side case fraction of toroidal thickness
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(171) = 'casths_fraction         '
