@@ -150,7 +150,7 @@ jobs:
       - name: Run regression tests
         run: pytest tests/regression -v --reg-tolerance=${{ matrix.tolerance }}
 
-  large-tokamak-py38:
+  run-tracking-inputs:
     runs-on: ubuntu-latest
     needs: make-py38
     container:
@@ -172,11 +172,19 @@ jobs:
         run: |
           process -i tests/regression/input_files/large_tokamak.IN.DAT
           mv tests/regression/input_files/large_tokamak.MFILE.DAT tracking/large_tokamak_MFILE.DAT
-      - name: Archive large-tokamak MFILE
+          process -i tests/regression/input_files/st_regression.IN.DAT
+          mv tests/regression/input_files/st_regression.MFILE.DAT tracking/st_regression_MFILE.DAT
+          process -i tests/regression/input_files/stellarator.IN.DAT
+          mv tests/regression/input_files/stellarator.MFILE.DAT tracking/stellarator_MFILE.DAT
+          process -i tests/regression/input_files/large_tokamak_nof.IN.DAT
+          mv tests/regression/input_files/large_tokamak_nof.MFILE.DAT tracking/large_tokamak_nof_MFILE.DAT
+          process -i tests/regression/input_files/large_tokamak_once_through.IN.DAT
+          mv tests/regression/input_files/large_tokamak_once_through.MFILE.DAT tracking/large_tokamak_once_through_MFILE.DAT
+      - name: Archive tracked MFILEs
         uses: actions/upload-artifact@v3
         with:
-          name: large-tokamak-mfile
-          path: tracking/large_tokamak_MFILE.DAT
+          name: tracked-mfiles
+          path: tracking/*_MFILE.DAT
 
   flake8:
     runs-on: ubuntu-latest
@@ -207,7 +215,7 @@ jobs:
       group: tracking-jobs
       cancel-in-progress: false
     runs-on: ubuntu-latest
-    needs: large-tokamak-py38
+    needs: run-tracking-inputs
     if: github.ref == 'refs/heads/main'
     container:
       image: ghcr.io/ukaea/process-ci:latest
@@ -232,13 +240,21 @@ jobs:
       - name: Download large tokamak MFILE
         uses: actions/download-artifact@v3
         with:
-          name: large-tokamak-mfile
+          name: tracked-mfiles
           path: tracking/
       - name: Create new tracking entries
         run: |
           git config --global --add safe.directory '*'
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
           cp tracking/large_tokamak_MFILE.DAT process-tracking-data/large_tokamak_MFILE_$(git rev-parse HEAD).DAT
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/st_regression_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          cp tracking/st_regression_MFILE.DAT process-tracking-data/st_regression_MFILE_$(git rev-parse HEAD).DAT
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/stellarator_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          cp tracking/stellarator_MFILE.DAT process-tracking-data/stellarator_MFILE_$(git rev-parse HEAD).DAT
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_nof_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          cp tracking/large_tokamak_nof_MFILE.DAT process-tracking-data/large_tokamak_nof_MFILE_$(git rev-parse HEAD).DAT
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_once_through_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          cp tracking/large_tokamak_once_through_MFILE.DAT process-tracking-data/large_tokamak_once_through_MFILE_$(git rev-parse HEAD).DAT
       - name: Create the tracking dashboard
         run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
