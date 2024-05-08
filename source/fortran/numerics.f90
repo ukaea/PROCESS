@@ -372,8 +372,8 @@ module numerics
   !! <LI> (168) fecrh_ignition: f-value for equation 91
   !! <LI> (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
   !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
-  !! <LI> (171) EMPTY : Description
-  !! <LI> (172) EMPTY : Description
+  !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
+  !! <LI> (172) casths : TF side case thickness [m]
   !! <LI> (173) EMPTY : Description
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description

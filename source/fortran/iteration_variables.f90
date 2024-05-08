@@ -3804,52 +3804,55 @@ contains
     beta_div = ratio
   end subroutine set_itv_170
 
-  !---------------------------------
-  ! DUMMY variables below here
-  !---------------------------------
-
   subroutine init_itv_171
-    !! <LI> (171) DUMMY : Description
+    !! <LI> (171) casths_fraction: TF side case fraction of toroidal thickness
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(171) = 'DUMMY         '
-    boundl(171) = 1.0d-99
-    boundu(171) = 1.0d99
+    lablxc(171) = 'casths_fraction         '
+    boundl(171) = 0.01
+    boundu(171) = 0.99
   end subroutine init_itv_171
 
   real(kind(1.d0)) function itv_171()
+    use tfcoil_variables, only: casths_fraction
     implicit none
-    itv_171 = DUMMY
+    itv_171 = casths_fraction
   end function itv_171
 
   subroutine set_itv_171(ratio)
+    use tfcoil_variables, only: casths_fraction
     implicit none
     real(kind(1.d0)) :: ratio
-    DUMMY = ratio
+    casths_fraction = ratio
   end subroutine set_itv_171
 
   !---------------------------------
 
   subroutine init_itv_172
-    !! <LI> (172) DUMMY : Description
+    !! <LI> (172) casths: TF side case thickness [m]
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(172) = 'DUMMY         '
-    boundl(172) = 1.0d-99
-    boundu(172) = 1.0d99
+    lablxc(172) = 'casths        '
+    boundl(172) = 0.001
+    boundu(172) = 1.0
   end subroutine init_itv_172
 
   real(kind(1.d0)) function itv_172()
+    use tfcoil_variables, only: casths
     implicit none
-    itv_172 = DUMMY
+    itv_172 = casths
   end function itv_172
 
   subroutine set_itv_172(ratio)
+    use tfcoil_variables, only: casths
     implicit none
     real(kind(1.d0)) :: ratio
-    DUMMY = ratio
+    casths = ratio
   end subroutine set_itv_172
-
+  
+  !---------------------------------
+  ! DUMMY variables below here
+  !---------------------------------
   !---------------------------------
 
   subroutine init_itv_173
@@ -4112,10 +4115,10 @@ contains
            case (167);  xcm(i) = itv_167()
            case (168);  xcm(i) = itv_168()
            case (169);  xcm(i) = itv_169()
-            ! DUMMY Cases
            case (170);  xcm(i) = itv_170()
-           case (171);  xcm(i) = itv_171()
-           case (172);  xcm(i) = itv_172()
+           case (171);  xcm(i) = itv_171() 
+           case (172);  xcm(i) = itv_172() 
+            ! DUMMY Cases
            case (173);  xcm(i) = itv_173()
            case (174);  xcm(i) = itv_174()
            case (175);  xcm(i) = itv_175()
@@ -4379,10 +4382,10 @@ contains
            case (167);  call set_itv_167(ratio)
            case (168);  call set_itv_168(ratio)
            case (169);  call set_itv_169(ratio)
-            ! DUMMY Cases
            case (170);  call set_itv_170(ratio)
            case (171);  call set_itv_171(ratio)
-           case (172);  call set_itv_172(ratio)
+           case (172);  call set_itv_172(ratio) 
+            ! DUMMY Cases
            case (173);  call set_itv_173(ratio)
            case (174);  call set_itv_174(ratio)
            case (175);  call set_itv_175(ratio)
