@@ -3,6 +3,7 @@
 Defines fixtures that will be shared across all test modules.
 """
 
+import os
 import pytest
 from system_check import system_compatible
 import warnings
@@ -140,3 +141,14 @@ def reinitialise_error_module():
     # for now for known error-raisers
     yield
     eh.init_error_handling()
+
+
+@pytest.fixture(autouse=True)
+def return_to_root():
+    """Various parts of PROCESS change directories and do not always change back.
+    This fixture ensures that, at the end of each test, the cwd is reset to what it
+    was at the beginning of the test.
+    """
+    cwd = os.getcwd()
+    yield
+    os.chdir(cwd)
