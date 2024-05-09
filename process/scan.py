@@ -35,6 +35,7 @@ class Scan:
         if scan_module.isweep == 0:
             ifail = self.doopt()
             final.finalise(self.models, ifail)
+            error_handling.show_errors()
             return
 
         if scan_module.isweep > scan_module.ipnscns:
@@ -81,6 +82,8 @@ class Scan:
                 scan_module.noutvars,
                 scan_module.ipnscns,
             )
+            error_handling.show_errors()
+            error_handling.init_error_handling()
 
         # outvar now contains results
         scan_module.scan_1d_write_plot(iscan, outvar)
@@ -114,6 +117,8 @@ class Scan:
                     scan_module.noutvars,
                     scan_module.ipnscns,
                 )
+                error_handling.show_errors()
+                error_handling.init_error_handling()
 
                 iscan = iscan + 1
 

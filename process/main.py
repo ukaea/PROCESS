@@ -360,7 +360,6 @@ class SingleRun:
         self.run_tests()
         self.call_solver()
         self.run_scan(self.solver)
-        self.show_errors()
         self.finish()
         self.append_input()
 
@@ -479,10 +478,6 @@ class SingleRun:
                 self.ifail = 6
 
             final.finalise(self.models, self.ifail)
-
-    def show_errors(self):
-        """Report all informational/error messages encountered."""
-        fortran.error_handling.show_errors()
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.
