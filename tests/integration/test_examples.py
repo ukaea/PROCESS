@@ -2,10 +2,53 @@
 
 import os
 from pathlib import Path
+from shutil import copy
 import pytest
 import pandas
 import numpy as np
 from testbook import testbook
+
+
+@pytest.fixture
+def examples_temp_data(tmp_path):
+    """Copy examples dir contents into temp dir for testing.
+
+    Any changes are discarded on fixture teardown.
+    :param tmp_path: temporary path fixture
+    :type tmp_path: Path
+    :return: temporary path containing examples files
+    :rtype: Path
+    """
+    # TODO is there a better way to point it to the examples folder?
+    data_path = Path(__file__).parent.parent.parent / "examples"
+    # in examples/ there is now a data/ dir - this causes errors as it isnt a file to copy
+    for data_file in data_path.glob("*"):
+        dst = tmp_path / data_file.name
+        copy(data_file, dst)
+
+    # Return tmp_path, now containing files copied from examples dir
+    return tmp_path
+
+
+@pytest.fixture
+def examples_temp_data(tmp_path):
+    """Copy examples dir contents into temp dir for testing.
+
+    Any changes are discarded on fixture teardown.
+    :param tmp_path: temporary path fixture
+    :type tmp_path: Path
+    :return: temporary path containing examples files
+    :rtype: Path
+    """
+    # TODO is there a better way to point it to the examples folder?
+    data_path = Path(__file__).parent.parent.parent / "examples"
+    # in examples/ there is now a data/ dir - this causes errors as it isnt a file to copy
+    for data_file in data_path.glob("*"):
+        dst = tmp_path / data_file.name
+        copy(data_file, dst)
+
+    # Return tmp_path, now containing files copied from examples dir
+    return tmp_path
 
 
 @pytest.fixture
