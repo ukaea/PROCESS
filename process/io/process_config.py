@@ -4,7 +4,6 @@ Author: Hanni Lux (Hanni.Lux@ccfe.ac.uk)
 Interfaces for Configuration values for programs
 - run_process.py
 - test_process.py
-- ndscan.py
 - evaluate_uncertainties.py
 
 Compatible with PROCESS version 382
