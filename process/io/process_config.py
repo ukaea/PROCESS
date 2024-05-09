@@ -18,16 +18,10 @@ import subprocess
 import sys
 from sys import stderr
 from time import sleep
-import collections as col
 from numpy.random import seed, uniform, normal
-from numpy import argsort, ndarray, argwhere, logical_or
+from numpy import argsort, argwhere, logical_or
 from pathlib import Path
 from process.io.process_funcs import (
-    get_neqns_itervars,
-    get_variable_range,
-    vary_iteration_variables,
-    check_input_error,
-    process_stopped,
     get_from_indat_or_default,
     set_variable_in_indat,
     check_in_dat,
