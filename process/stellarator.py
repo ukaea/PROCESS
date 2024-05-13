@@ -2988,7 +2988,8 @@ class Stellarator:
 
         elif (
             i_tf_sc_mat == 2
-        ):  # Bi-2212 high temperature superconductor parameterization
+        ):
+            # Bi-2212 high temperature superconductor parameterization
             #  Current density in a strand of Bi-2212 conductor
             #  N.B. jcrit returned by bi2212 is the critical current density
             #  in the strand, not just the superconducting portion.
@@ -2997,8 +2998,8 @@ class Stellarator:
             #  so this is irrelevant in this model
 
             jstrand = jwp / (1 - fhe)
-            #jstrand = 0  # as far as I can tell this will always be 0
-            # because jwp was never set in fortran (so 0)
+            #  jstrand = 0  # as far as I can tell this will always be 0
+            #  because jwp was never set in fortran (so 0)
 
             j_crit_cable, tmarg = superconductors.bi2212(
                 bmax, jstrand, thelium, fhts

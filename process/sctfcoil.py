@@ -613,12 +613,12 @@ class Sctfcoil:
         and also the protection information (for a quench).
         NOT used for the Croco conductor
 
-        N.B. critical current density for a super conductor (j_crit_sc) 
-        is for the superconducting strands/tape, not including copper. 
-        Critical current density for a cable (j_crit_cable) acounts for 
-        both the fraction of the cable taken up by helium coolant channels, 
-        and the cable conductor copper fraction - i.e., the copper in the 
-        superconducting strands AND any addtional copper, such as REBCO 
+        N.B. critical current density for a super conductor (j_crit_sc)
+        is for the superconducting strands/tape, not including copper.
+        Critical current density for a cable (j_crit_cable) acounts for
+        both the fraction of the cable taken up by helium coolant channels,
+        and the cable conductor copper fraction - i.e., the copper in the
+        superconducting strands AND any addtional copper, such as REBCO
         tape support.
         """
         tdump = tdmptf
@@ -646,7 +646,7 @@ class Sctfcoil:
         else:
             strain = tfcoil_variables.str_wp
 
-        # Find critical current density in the superconducter (j_crit_sc) 
+        # Find critical current density in the superconducter (j_crit_sc)
         # and the superconducting cable (j_crit_cable)
         if isumat == 1:  # ITER Nb3Sn critical surface parameterization
             bc20m = 32.97e0

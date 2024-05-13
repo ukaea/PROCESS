@@ -2720,12 +2720,12 @@ class PFCoil:
         It is based on the TF coil version, supercon.
         author: P J Knight, CCFE, Culham Science Centre
 
-        N.B. critical current density for a super conductor (j_crit_sc) 
-        is for the superconducting strands/tape, not including copper. 
-        Critical current density for a cable (j_crit_cable) acounts for 
-        both the fraction of the cable taken up by helium coolant channels, 
-        and the cable conductor copper fraction - i.e., the copper in the 
-        superconducting strands AND any addtional copper, such as REBCO 
+        N.B. critical current density for a super conductor (j_crit_sc)
+        is for the superconducting strands/tape, not including copper.
+        Critical current density for a cable (j_crit_cable) acounts for
+        both the fraction of the cable taken up by helium coolant channels,
+        and the cable conductor copper fraction - i.e., the copper in the
+        superconducting strands AND any addtional copper, such as REBCO
         tape support.
 
         :param bmax: peak field at conductor (T)
@@ -2785,9 +2785,11 @@ class PFCoil:
             # composition that does not require a user-defined copper fraction,
             # so this is irrelevant in this model
 
-            jstrand = jwp / (1.0e0 - fhe) # jwp / conductor fraction of cable
+            #  jwp / conductor fraction of cable
+            jstrand = jwp / (1.0e0 - fhe)
             j_crit_cable, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
-            j_crit_sc = j_crit_cable / (1.0e0 - fcu) # j_crit_cable / non-copper fraction of conductor
+            #  j_crit_cable / non-copper fraction of conductor
+            j_crit_sc = j_crit_cable / (1.0e0 - fcu)
 
         elif isumat == 3:
             # NbTi data
@@ -2887,10 +2889,12 @@ class PFCoil:
                     pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu
                 )
 
-        # Critical current density in winding pack
-        jcritwp = j_crit_cable 
-        jstrand = jwp / (1.0e0 - fhe) # jwp / conductor fraction of cable
-        jsc = jstrand / (1.0e0 - fcu) # jstrand / non-copper fraction of conductor
+        #  Critical current density in winding pack
+        jcritwp = j_crit_cable
+        #  jwp / conductor fraction of cable
+        jstrand = jwp / (1.0e0 - fhe)
+        #  jstrand / non-copper fraction of conductor
+        jsc = jstrand / (1.0e0 - fcu)
 
         # Temperature margin (already calculated in superconductors.bi2212 for isumat=2)
 
