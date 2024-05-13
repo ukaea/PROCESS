@@ -271,7 +271,7 @@ contains
     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     use constants, only: iotty, nout
-    use process_output, only: oblnkl, oheadr, ocmmnt, ovarin
+    use process_output, only: oblnkl, oheadr, ocmmnt, ovarin, ostars
     implicit none
 
     !  Arguments
@@ -340,6 +340,8 @@ contains
 
        ptr => ptr%ptr
     end do output
+    call ostars(iotty, 110)
+    call oblnkl(iotty)
 
     call ovarin(nout,'Final error identifier','(error_id)',error_id)
 
