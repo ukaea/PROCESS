@@ -1,11 +1,19 @@
-# Culham Neutral Beam Model
+# Culham Neutral Beam Model | `culnbi()`
 
 - `iefrf/iefrffix` = 8 
+
+
 
 This routine calculates Neutral Beam current drive parameters
 using the corrections outlined in AEA FUS 172 to the ITER method.
 The result cannot be guaranteed for devices with aspect ratios far
 from that of ITER (approx. 2.8).
+
+| Output | Description |
+|----------|-------------|
+| $\mathtt{effnbss}$  | Neutral beam current drive efficiency in Amperes per Watt |
+| $\mathtt{fpion}$    | Fraction of NB power given to ions |
+| $\mathtt{fshine}$   | Shine-through fraction of the beam |
 
 $$
 \mathtt{frbeam} = \frac{R_{\text{tan}}}{R_0}
@@ -50,7 +58,7 @@ $$
 
 Power split to the ions and electrons is clauclated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{fpion}$
 
-## Current drive efficiency ($\mathtt{etanb2()}$)
+## Current drive efficiency | `etanb2()`
 
 This routine calculates the current drive efficiency in A/W of
 a neutral beam system, based on the 1990 ITER model,
@@ -168,10 +176,6 @@ $$
 \mathtt{eps1} = a / \mathtt{r}
 $$
 
-    if (1.0 + eps1) < frbeam:
-    eh.fdiags[0] = eps1
-    eh.fdiags[1] = frbeam
-    eh.report_error(21)
 
 $$
 \mathtt{d} = R \times \sqrt{((1.0 + \mathtt{eps1})^2 - \mathtt{frbeam}^2)}
@@ -185,7 +189,7 @@ $$
 $$  
   
 $$  
-\mathtt{dnorm} = 6.0 \times \sqrt{(2.0 \times \mathtt{epsitr} + \sqrt{epsitr}^2)}
+\mathtt{dnorm} = 6.0 \times \sqrt{(2.0 \times \mathtt{epsitr} + \mathtt{epsitr}^2)}
 $$
 
 Normalisation to beam energy (assumes a simplified formula for
