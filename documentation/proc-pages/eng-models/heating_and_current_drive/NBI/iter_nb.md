@@ -1,4 +1,12 @@
-# ITER Neutral Beam Model
+# ITER Neutral Beam Model | `iternb()`
+
+- `iefrf/iefrffix` = 5
+
+| Output | Description |
+|----------|-------------|
+| $\mathtt{effnbss}$  | Neutral beam current drive efficiency in Amperes per Watt |
+| $\mathtt{fpion}$    | Fraction of NB power given to ions |
+| $\mathtt{fshine}$   | Shine-through fraction of the beam |
 
 This model calculates the current drive parameters for a neutral beam system, based on the 1990 ITER model.[^1]
 
@@ -41,8 +49,32 @@ $$
 Power split to ions / electrons is calculated via the the `cfnbi` method described [here](nbi_overview.md)
 
 
-## Current drive efficiency (`etanb`)
-Uses the `etanb` method.
+## Current drive efficiency | `etanb()`
+
+This routine calculates the current drive efficiency of
+a neutral beam system, based on the 1990 ITER model.
+AEA FUS 251: A User's Guide to the PROCESS Systems Code
+ITER Physics Design Guidelines: 1989 IPDG89, N. A. Uckan et al,
+ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
+| Input   | Description                                               |
+|---------|-----------------------------------------------------------|
+| $\mathtt{abeam}$   | Beam ion mass ($\text{amu}$)                                       |
+| $\mathtt{alphan}$  | Density profile factor                                    |
+| $\mathtt{alphat}$  | Temperature profile factor                                |
+| $\mathtt{aspect}$, $A$  | Aspect ratio                                              |
+| $\mathtt{dene}$, $n_{\text{e}}$    | Volume averaged electron density ($\text{m}^{-3}$)                  |
+| $\mathtt{ebeam}$   | Neutral beam energy ($\text{keV}$)                                 |
+| $\mathtt{rmajor}$, R  | Plasma major radius ($\text{m}$)                                   |
+| $\mathtt{ten}$     | Density weighted average electron temperature ($\text{keV}$)       |
+| $\mathtt{zeff}$, $Z_{\text{eff}}$    | Plasma effective charge                                   |
+
+| Output  | Description                                               |
+|---------|-----------------------------------------------------------|
+| $\mathtt{etanb}$   | Neutral beam current drive efficiency in Amperes per Watt |
+
+
+
 
 $$
 \mathtt{zbeam} = 1.0
