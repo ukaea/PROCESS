@@ -1,126 +1,50 @@
-# Culham Lower Hybrid 
+# Culham Lower Hybrid | `cullhy()`
 
-- `iefrf` = 6: Culham Lower Hybrid model[^1]
+- `iefrf/iefrffix` = 6
+
+
 
 This routine calculates the current drive parameters for a
 lower hybrid system, based on the AEA FUS 172 model.
 AEA FUS 251: A User's Guide to the PROCESS Systems Code
-AEA FUS 172: Physics Assessment for the European Reactor Study
-
-        rratio = self.lhrad()
-        rpenet = rratio * physics_variables.rminor
-
-        # Local density, temperature, toroidal field at this minor radius
-
-        dlocal = 1.0e-19 * profiles_module.nprofile(
-            rratio,
-            physics_variables.rhopedn,
-            physics_variables.ne0,
-            physics_variables.neped,
-            physics_variables.nesep,
-            physics_variables.alphan,
-        )
-        tlocal = profiles_module.tprofile(
-            rratio,
-            physics_variables.rhopedt,
-            physics_variables.te0,
-            physics_variables.teped,
-            physics_variables.tesep,
-            physics_variables.alphat,
-            physics_variables.tbeta,
-        )
-        blocal = (
-            physics_variables.bt
-            * physics_variables.rmajor
-            / (physics_variables.rmajor - rpenet)
-        )  # Calculated on inboard side
-
-        # Parallel refractive index needed for plasma access
-
-        frac = np.sqrt(dlocal) / blocal
-        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
-
-        # Local inverse aspect ratio
-
-        epslh = rpenet / physics_variables.rmajor
-
-        # LH normalised efficiency (A/W m**-2)
-
-        x = 24.0e0 / (nplacc * np.sqrt(tlocal))
-
-        term01 = 6.1e0 / (nplacc * nplacc * (physics_variables.zeff + 5.0e0))
-        term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
-        term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
-        term04 = 3.5e0 * epslh**0.77e0 + x
-
-        if term03 > term04:
-            eh.fdiags[0] = term03
-            eh.fdiags[1] = term04
-            eh.report_error(129)
-
-        gamlh = term01 * term02 * (1.0e0 - term03 / term04)
-
-        # Current drive efficiency (A/W)
-
-        return gamlh / ((0.1e0 * dlocal) * physics_variables.rmajor)
+AEA FUS 172: Physics Assessment for the European Reactor Study[^1]
 
 
-    def lhrad(self):
+1. Call the [`lhrad()`](#lower-hybrid-wave-absorption-radius--lhrad) method to calculate the lower hybrid wave absorption radius, `rratio`.
+2. Calculate the penetration radius, `rpenet`, by multiplying `rratio` with the minor radius of the plasma.
+3. Calculate the local density, `dlocal`, using the `nprofile()` function from the `profiles_module` module. This function takes into account various plasma parameters such as the density profile, electron density at the edge, pedestal density, separatrix density, and the value of the parameter `alphan`.
+4. Similarly, calculate the local temperature, `tlocal`, using the `tprofile()` function from the `profiles_module` module. This function considers parameters such as the temperature profile, electron temperature at the edge, pedestal temperature, separatrix temperature, `alphat`, and `tbeta`.
+5. Calculate the local toroidal magnetic field, `blocal`, using the formula `bt * rmajor / (rmajor - rpenet)`. Here, `bt` is the toroidal magnetic field at the magnetic axis, and `rmajor` is the major radius of the plasma.
+6. Calculate the parallel refractive index, `nplacc`, which is needed for plasma access. It uses the local density `dlocal` and the local magnetic field `blocal` to calculate a fraction `frac`. `nplacc` is then obtained by adding `frac` to the square root of `1.0 + frac * frac`.
+7. Calculate the local inverse aspect ratio, `epslh`, by dividing `rpenet` by `rmajor`.
+8. Calculate the LH normalized efficiency, `x`, using the formula `24.0 / (nplacc * sqrt(tlocal))`.
+9. Calculate several intermediate terms, `term01`, `term02`, `term03`, and `term04`, using different formulas involving `nplacc`, `physics_variables.zeff`, `tlocal`, `epslh`, and `x`.
+10. Calculate the current drive efficiency, `gamlh`, using the formula `term01 * term02 * (1.0e0 - term03 / term04)`.
+11. Return the current drive efficiency normalized by the product of `0.1e0 * dlocal` and `physics_variables.rmajor`.
 
-    """Routine to calculate Lower Hybrid wave absorption radius
-    author: P J Knight, CCFE, Culham Science Centre
-    rratio  : output real : minor radius of penetration / rminor
-    This routine determines numerically the minor radius at which the
-    damping of Lower Hybrid waves occurs, using a Newton-Raphson method.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    AEA FUS 172: Physics Assessment for the European Reactor Study
-    """
-    #  Correction to refractive index (kept within valid bounds)
-    drfind = min(0.7e0, max(0.1e0, 12.5e0 / physics_variables.te0))
+[^1]: T. C. Hender, M. K. Bevir, M. Cox, R. J. Hastie, P. J. Knight, C. N. Lashmore-Davies, B. Lloyd, G. P. Maddison, A. W. Morris, M. R. O'Brien, M.F. Turner abd H. R. Wilson, *"Physics Assessment for the European Reactor Study"*, AEA Fusion Report AEA FUS 172 (1992)
 
-    #  Use Newton-Raphson method to establish the correct minor radius
-    #  ratio. g is calculated as a function of r / r_minor, where g is
-    #  the difference between the results of the two formulae for the
-    #  energy E given in AEA FUS 172, p.58. The required minor radius
-    #  ratio has been found when g is sufficiently close to zero.
+## Lower Hybrid wave absorption radius | `lhrad`()
 
-    #  Initial guess for the minor radius ratio
+This routine determines numerically the minor radius at which the damping of Lower Hybrid waves occurs, using a Newton-Raphson method to establish the correct minor radius ratio. The required minor radius ratio has been found when the difference between the results of the two formulae for the energy E given in AEA FUS 172, p.58 is sufficiently close to zero.
 
-    rat0 = 0.8e0
+Correction to refractive index (kept within valid bounds)
+  $\mathtt{drfind} = \min\left(0.7, \max\left(0.1, \frac{12.5}{\text{te0}}\right)\right)$
 
-    for _ in range(100):
-        #  Minor radius ratios either side of the latest guess
+Use Newton-Raphson method to establish the correct minor radius ratio. The required minor radius ratio has been found when the difference between the results of the two formulae for the energy E given in AEA FUS 172, p.58 is sufficiently close to zero.
 
-        r1 = rat0 - 1.0e-3 * rat0
-        r2 = rat0 + 1.0e-3 * rat0
+Iterate over the following steps to find the minor radius ratio:
 
-        #  Evaluate g at rat0, r1, r2
-
-        g0 = self.lheval(drfind, rat0)
-        g1 = self.lheval(drfind, r1)
-        g2 = self.lheval(drfind, r2)
-
-        #  Calculate gradient of g with respect to minor radius ratio
-
-        dgdr = (g2 - g1) / (r2 - r1)
-
-        #  New approximation
-
-        rat1 = rat0 - g0 / dgdr
-
-        #  Force this approximation to lie within bounds
-
-        rat1 = max(0.0001e0, rat1)
-        rat1 = min(0.9999e0, rat1)
-
-        if abs(g0) <= 0.01e0:
-            break
-        rat0 = rat1
-
-    else:
-        eh.report_error(16)
-        rat0 = 0.8e0
-
-    return rat0
+1. Set an initial guess for the minor radius ratio, $\mathtt{rat0}$, to 0.8.
+2. Repeat the following steps for a maximum of 100 iterations:
+    - Calculate the minor radius ratios, $r1$ and $r2$, by subtracting and adding 0.1% of $\mathtt{rat0}$, respectively.
+    - Evaluate the function $g$ at $\mathtt{rat0}$, $r1$, and $r2$ using the method `lheval(drfind, rat)`.
+    - Calculate the gradient of $g$ with respect to the minor radius ratio, $\frac{{dg}}{{dr}}$, using the formula $\frac{{g2 - g1}}{{r2 - r1}}$.
+    - Calculate a new approximation for the minor radius ratio, $\mathtt{rat1}$, using the formula $\mathtt{rat0} - \frac{{g0}}{{\frac{{dg}}{{dr}}}}$.
+    - Ensure that $\mathtt{rat1}$ is within the bounds of 0.0001 and 0.9999.
+    - If the absolute value of $g0$ is less than or equal to 0.01, exit the loop.
+    - Update $\mathtt{rat0}$ with the new approximation, $\mathtt{rat1}$.
+3. If the loop completes all 100 iterations without finding a satisfactory solution, report an error and set $\mathtt{rat0}$ to 0.8.
+4. Return the final value of $\mathtt{rat0}$.
 
 [^1]: T. C. Hender, M. K. Bevir, M. Cox, R. J. Hastie, P. J. Knight, C. N. Lashmore-Davies, B. Lloyd, G. P. Maddison, A. W. Morris, M. R. O'Brien, M.F. Turner abd H. R. Wilson, *"Physics Assessment for the European Reactor Study"*, AEA Fusion Report AEA FUS 172 (1992)
