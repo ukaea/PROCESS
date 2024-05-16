@@ -19,7 +19,6 @@ icc = 35 * icc_quench
 icc = 82 * icc_toroidalbuild
 icc = 84 * icc_betalilower
 icc = 24 * icc_betalimupper
-
 icc = 83 * icc_placeforblanket  * radial build consitency for stellarators 
 icc = 32 * icc_maxstress
 icc = 18 * icc_divertor
@@ -91,7 +90,7 @@ ftoroidalgap = 1. * f value for toroidal gap between coils
 fbetatry = 1.    * f value for beta limit
 ffuspow = 1.0
 falpha = 0.95    * fast particle fraction
-ralpne = 0.05    * thermal alpha density / electron density
+ralpne = 0.2    * thermal alpha density / electron density
 fradpwr = 1      * needed to control radiation power
 epsfcn = 0.0001  * convergence important to start with 10^-4, 10^-3 is NOT sufficient to match the constraint resonably well!!
 taulimit = 6     * tau_He/tau_E
