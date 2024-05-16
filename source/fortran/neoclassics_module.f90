@@ -253,29 +253,6 @@ contains
 
     end function neoclassics_calc_D11_plateau
 
-    function neoclassics_interpolate_D11_mono() result(D11_mono)
-        !! Interpolates the D11 coefficients on the Gauss laguerre grid
-        !! (This method is unused as of now, but is needed when taking D11 explicitely as input)
-        !
-        ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        use const_and_precisions, only: pi
-        use maths_library, only: find_y_nonuniform_x
-        ! use grad_func, only: interp1_ef
-
-        real(dp),dimension(4,no_roots) :: D11_mono
-        integer :: ii,jj
-
-        do ii = 1,4
-            do jj = 1,no_roots
-                D11_mono(ii,jj) = find_y_nonuniform_x(nu_star(ii,jj),nu_star_mono_input, &
-                                                      D11_star_mono_input,size(nu_star_mono_input)) * &
-                                  D11_plateau(ii,jj)
-            end do
-        end do
-
-    end function neoclassics_interpolate_D11_mono
-
     function neoclassics_calc_vd()
         !! Calculates the drift velocities
         !
