@@ -1,4 +1,9 @@
 from process import fortran as ft
+import numpy as np
+import logging
+from typing import Union, Tuple
+
+logger = logging.getLogger(__name__)
 
 
 class Caller:
@@ -17,9 +22,76 @@ class Caller:
         :type x: np.ndarray
         """
         self.models = models
-        self.call_models(x)
 
-    def call_models(self, xc):
+    @staticmethod
+    def check_agreement(
+        previous: Union[float, np.ndarray], current: Union[float, np.ndarray]
+    ) -> bool:
+        """Compare previous and current arrays for agreement within a tolerance.
+
+        :param previous: value(s) from previous models evaluation
+        :type previous: float | np.ndarray
+        :param current: value(s) from current models evaluation
+        :type current: float | np.ndarray
+        :return: whether values agree or not
+        :rtype: bool
+        """
+        return np.allclose(previous, current, rtol=1.0e-6)
+
+    def call_models(self, xc: np.ndarray, m: int) -> Tuple[float, np.ndarray]:
+        """Evalutate models until results are idempotent.
+
+        Ensure objective function and constraints are idempotent before returning.
+
+        :param xc: optimisation parameters
+        :type xc: np.ndarray
+        :param m: number of constraints
+        :type m: int
+        :raises RuntimeError: if values are non-idempotent after successive
+        evaluations
+        :return: objective function and constraints
+        :rtype: Tuple[float, np.ndarray]
+        """
+        objf_prev = None
+        conf_prev = None
+
+        # Evaluate models up to 10 times; any more implies non-converging values
+        for i in range(10):
+            self._call_models_once(xc)
+            # Evaluate objective function and constraints
+            objf = ft.function_evaluator.funfom()
+            conf, _, _, _, _ = ft.constraints.constraint_eqns(m, -1)
+
+            if objf_prev is None and conf_prev is None:
+                # First run: run again to check idempotence
+                logger.debug("New optimisation parameter vector being evaluated")
+                objf_prev = objf
+                conf_prev = conf
+                continue
+
+            # Check for idempotence
+            if self.check_agreement(objf_prev, objf) and self.check_agreement(
+                conf_prev, conf
+            ):
+                # Idempotent: no longer changing, so return
+                logger.debug(
+                    "Model evaluations idempotent, returning objective "
+                    "function and constraints"
+                )
+                return objf, conf
+            else:
+                # Not idempotent: still changing, so evaluate models again
+                logger.debug("Model evaluations not idempotent: evaluating again")
+                objf_prev = objf
+                conf_prev = conf
+
+        raise RuntimeError(
+            "Model evaluations at the current optimisation parameter vector "
+            "don't produce idempotent values for the objective function and "
+            "constraints."
+        )
+
+    def _call_models_once(self, xc):
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
