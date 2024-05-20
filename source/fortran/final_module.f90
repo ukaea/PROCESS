@@ -73,7 +73,7 @@ module final_module
   end subroutine no_optimisation
 
   subroutine final_output()
-    use constants, only: iotty
+    use constants, only: iotty, mfile
     use numerics, only: nfev1, ncalls, xcm, ioptimz, nviter, &
       nvar
     use define_iteration_variables, only: loadxc
@@ -117,5 +117,9 @@ module final_module
           t2,'The HYBRD point required ',i5,' iterations',/, &
           t2,'The optimisation required ',i5,' iterations',/, &
           t2,'There were ',i6,' function calls')
+
+    ! Required to ensure mfile fully written before any model evaluation
+    ! idempotence checks
+    flush(mfile)
   end subroutine final_output
 end module final_module

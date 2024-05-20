@@ -2,8 +2,8 @@ from process.fortran import error_handling
 from process.fortran import scan_module
 from process.fortran import numerics
 from process.optimiser import Optimiser
-from process import final
 import numpy as np
+from process.caller import write_idempotent_result
 
 
 class Scan:
@@ -34,7 +34,7 @@ class Scan:
 
         if scan_module.isweep == 0:
             ifail = self.doopt()
-            final.finalise(self.models, ifail)
+            write_idempotent_result(models=self.models, ifail=ifail)
             error_handling.show_errors()
             return
 
@@ -76,7 +76,7 @@ class Scan:
             scan_module.scan_1d_write_point_header(iscan)
             ifail = self.doopt()
             scan_1d_ifail_dict[iscan] = ifail
-            final.finalise(self.models, ifail)
+            write_idempotent_result(models=self.models, ifail=ifail)
 
             # outvar is an intent(out) of scan_1d_store_output()
             outvar = scan_module.scan_1d_store_output(
@@ -146,7 +146,7 @@ class Scan:
                 )
                 ifail = self.doopt()
 
-                final.finalise(self.models, ifail)
+                write_idempotent_result(models=self.models, ifail=ifail)
 
                 outvar, sweep_1_vals, sweep_2_vals = scan_module.scan_2d_store_output(
                     ifail,
