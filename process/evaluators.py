@@ -23,7 +23,7 @@ class Evaluators:
         :param x: optimisation parameters
         :type x: np.ndarray
         """
-        self.caller = Caller(models, x)
+        self.caller = Caller(models)
 
     def fcnvmc1(self, n, m, xv, ifail):
         """Function evaluator for VMCON.

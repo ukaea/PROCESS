@@ -168,6 +168,38 @@ contains
 
    end subroutine init
 
+   subroutine open_idempotence_files
+      ! Open new output file and mfile to write output to
+      ! This is used when checking model evaluation idempotence, to avoid
+      ! polluting the final output file and mfile with intermediate result checks
+      use global_variables, only: output_prefix
+      use constants, only: nout, mfile
+      implicit none
+
+      ! Close existing output file and mfile (could be original out and mfiles
+      ! or idem scratch files)
+      close(unit = nout)
+      close(unit = mfile)
+      ! Open scratch files with same units
+      open(unit=nout, file=trim(output_prefix)//'IDEM_OUT.DAT', action='write', status='replace')
+      open(unit=mfile, file=trim(output_prefix)//'IDEM_MFILE.DAT', action='write', status='replace')
+   end subroutine open_idempotence_files
+
+   subroutine close_idempotence_files
+      ! Revert back to writing to original OUT.DAT and MFILE.DAT, after
+      ! checking model evaluation idempotence
+      use global_variables, only: output_prefix
+      use constants, only: nout, mfile
+      implicit none
+
+      ! Close idempotence files, deleting them in the process
+      close(unit = nout, status="delete")
+      close(unit = mfile, status="delete")
+      ! Re-open original output file and mfile, appending future output to them
+      open(unit=nout, file=trim(output_prefix)//'OUT.DAT', action='write', position='append')
+      open(unit=mfile, file=trim(output_prefix)//'MFILE.DAT', action='write', position='append')
+   end subroutine close_idempotence_files
+
    subroutine finish
       ! Originally at the end of the "program", this subroutine writes some final
       ! lines via the output module and then closes any open files. This is

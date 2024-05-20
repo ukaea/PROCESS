@@ -49,7 +49,6 @@ from process.io import plot_proc
 from process.plasma_geometry import PlasmaGeom
 from process.pulse import Pulse
 from process.scan import Scan
-from process import final
 from process.stellarator import Stellarator
 from process.structure import Structure
 from process.build import Build
@@ -61,7 +60,6 @@ from process.divertor import Divertor
 from process.availability import Availability
 from process.ife import IFE
 from process.costs_2015 import Costs2015
-from process.caller import Caller
 from process.power import Power
 from process.cs_fatigue import CsFatigue
 from process.physics import Physics
@@ -73,6 +71,8 @@ from process.blanket_library import BlanketLibrary
 from process.fw import Fw
 from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
+from process.caller import write_idempotent_result
+
 
 from pathlib import Path
 import os
@@ -459,25 +459,18 @@ class SingleRun:
         :param solver: which solver to use, as specified in solver.py
         :type solver: str
         """
-        if fortran.numerics.ioptimz >= 0:
+        if fortran.numerics.ioptimz == 1:
+            # VMCON optimisation
             self.scan = Scan(self.models, solver)
-        else:
-            # If no optimisation will be done, compute the OP variables now
-            if fortran.numerics.ioptimz == -2:
-                # Get optimisation parameters x, perform first evaluation of models
-                fortran.define_iteration_variables.loadxc()
-                n = fortran.numerics.nvar
-                x = fortran.numerics.xcm[:n]
-                caller = Caller(self.models, x)
-
-                # To ensure that, at the start of a run, all physics/engineering
-                # variables are fully initialised with consistent values, we perform
-                # a second evaluation call here
-                caller.call_models(x)
-                self.ifail = 6
-
-            final.finalise(self.models, self.ifail)
+        elif fortran.numerics.ioptimz == -2:
+            # No optimisation: compute the output variables now
+            # Get optimisation parameters x, evaluate models
+            fortran.define_iteration_variables.loadxc()
+            self.ifail = 6
+            write_idempotent_result(models=self.models, ifail=self.ifail)
             self.show_errors()
+        else:
+            raise ValueError(f"Invalid ioptimz value: {fortran.numerics.ioptimz}")
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
