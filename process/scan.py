@@ -110,7 +110,7 @@ class Scan:
                     f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan-1]} \u001b[31mUNCONVERGED \u001b[0m"
                 )
         converged_percentage = converged_count / scan_module.isweep * 100
-        print(f"Total Converged: {converged_percentage}%")
+        print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
     def scan_2d(self):
         """Run a 2-D scan."""
@@ -182,4 +182,4 @@ class Scan:
         converged_percentage = (
             converged_count / (scan_module.isweep * scan_module.isweep_2) * 100
         )
-        print(f"Total Converged: {converged_percentage}%")
+        print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
