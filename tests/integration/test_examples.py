@@ -80,8 +80,8 @@ def scan_cleanup(examples_as_cwd):
             os.remove(file)
 
 
-def test_scan():
-    with testbook("examples/scan.ipynb", execute=True) as tb:
+def test_scan(examples_as_cwd, scan_cleanup):
+    with testbook("scan.ipynb", execute=True):
         """Run the scan.ipynb notebook and check no exceptions are raised.
 
         scan.ipynb intentionally produces files when running the notebook, but remove
@@ -89,7 +89,8 @@ def test_scan():
         :param scan_cleanup: fixture to delete any produced files
         :type scan_cleanup: None
         """
-        # Run entire scan.ipynb notebook
+        # Run entire scan.ipynb notebook and assert an MFILE is created
+        assert os.path.exists("a_scan_input_file_MFILE.DAT")
 
 
 @pytest.fixture
