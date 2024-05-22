@@ -5,3 +5,4 @@ pre-commit>=2.16.0
 pytest>=5.4.1
 pytest-cov>=3.0.0
 pytest-xdist>=2.5.0
+testbook>=0.4
