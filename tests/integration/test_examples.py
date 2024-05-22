@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from shutil import copy
+from shutil import copy, copytree
 import pytest
 import pandas
 import numpy as np
@@ -19,88 +19,23 @@ def examples_temp_data(tmp_path):
     :return: temporary path containing examples files
     :rtype: Path
     """
-    # TODO is there a better way to point it to the examples folder?
     data_path = Path(__file__).parent.parent.parent / "examples"
-    # in examples/ there is now a data/ dir - this causes errors as it isnt a file to copy
-    for data_file in data_path.glob("*"):
-        dst = tmp_path / data_file.name
-        copy(data_file, dst)
+    copytree(data_path, tmp_path / "examples")
+    csv_json_path = (
+        Path(__file__).parent.parent.parent / "process/io/mfile_to_csv_vars.json"
+    )
+    copy(csv_json_path, tmp_path)
 
-    # Return tmp_path, now containing files copied from examples dir
-    return tmp_path
-
-
-@pytest.fixture
-def examples_temp_data(tmp_path):
-    """Copy examples dir contents into temp dir for testing.
-
-    Any changes are discarded on fixture teardown.
-    :param tmp_path: temporary path fixture
-    :type tmp_path: Path
-    :return: temporary path containing examples files
-    :rtype: Path
-    """
-    # TODO is there a better way to point it to the examples folder?
-    data_path = Path(__file__).parent.parent.parent / "examples"
-    # in examples/ there is now a data/ dir - this causes errors as it isnt a file to copy
-    for data_file in data_path.glob("*"):
-        dst = tmp_path / data_file.name
-        copy(data_file, dst)
-
-    # Return tmp_path, now containing files copied from examples dir
-    return tmp_path
+    # Return tmp_path/examples, now containing files copied from examples dir
+    return tmp_path / "examples"
 
 
-@pytest.fixture
-def examples_as_cwd():
-    """Change the cwd to the examples dir for the duration of the fixture.
-
-    When running a Jupyter notebook, the cwd is set to the notebook's dir. The
-    examples.ipynb notebook relies on relative paths to files in the repository,
-    due to it being difficult to consistently get the location of a notebook
-    from within the notebook itself, so absolute paths can't be used.
-
-    When pytest is used to run the examples.py script (created directly from the
-    notebook), the script uses the actual cwd instead, which is (usually) the
-    project root dir. Therefore the examples.ipynb notebook and pytest-run
-    examples.py script both rely on the cwd being the same, but without
-    intervention it is different in each case.
-
-    Hence the test needs to set the cwd to the notebook's dir before running so
-    that the examples.py script uses the same cwd as the notebook.
-    """
-    # Set up by storing cwd, which is usually the project root dir, then
-    # changing to examples/
-    cwd = Path.cwd()
-    os.chdir("examples")
-    yield
-
-    # Teardown by reverting cwd change
-    os.chdir(cwd)
-
-
-@pytest.fixture
-def delete_plot_procs(examples_as_cwd):
-    """Delete any plot_proc files produced by examples.ipynb.
-
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: None
-    """
-    yield
-    plot_proc_1 = Path("../examples/plot_proc_1.png")
-    plot_proc_2 = Path("../examples/plot_proc_2.png")
-    plot_proc_3 = Path("../examples/plot_proc_3.png")
-    plot_proc_1.unlink(missing_ok=True)
-    plot_proc_2.unlink(missing_ok=True)
-    plot_proc_3.unlink(missing_ok=True)
-
-
-def test_examples(delete_plot_procs):
-    """Run examples.ipynb and check no exceptions are raised.
+def test_examples(examples_temp_data):
+    """Run the examples.ipynb and check no exceptions are raised.
 
     examples.ipynb uses temp dirs to clean up any produced files itself.
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: None
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
     """
     with testbook("examples.ipynb", execute=True, timeout=600):
         pass
@@ -156,8 +91,8 @@ def test_csv(csv_cleanup):
 
     csv_output.ipynb intentionally produces files when running the notebook, but remove
     them when testing.
-    :param csv_cleanup: fixture to delete any produced files
-    :type csv_cleanup: None
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
     """
     with testbook("csv_output.ipynb", execute=True, timeout=600):
         # Check csv file is created
@@ -180,11 +115,11 @@ def test_csv(csv_cleanup):
         assert check_positive
 
 
-def test_plot_solutions(examples_as_cwd):
-    """Run plot_solutions.ipynb and check no exceptions are raised.
+def test_plot_solutions(examples_temp_data):
+    """Run the plot_solutions.ipynb and check no exceptions are raised.
 
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: NoneType
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
     """
     with testbook("plot_solutions.ipynb", execute=True, timeout=600):
         pass
