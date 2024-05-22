@@ -1658,7 +1658,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",  # noqa: W605
+                label=f"Case: \n{nose_thickness:.4f} m nose thickness \n{side_thickness:.4f} m sidewall thickness \n$\Delta$R = {tf_thickness:.4f} m \n ",  # noqa: W605
             )
             # Lower main
             axis.fill_between(
@@ -1685,7 +1685,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",  # noqa: W605
+                label=f"Case: \n{nose_thickness:.4f} m nose thickness \n{side_thickness:.4f} m sidewall thickness \n$\Delta$R = {tf_thickness:.4f} m \n ",  # noqa: W605
             )
             # Lower main
             axis.fill_between(
@@ -1740,7 +1740,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp - (2 * tinstf)),
                     (wp_toridal_dxbig - (2 * tinstf)),
                     color="blue",
-                    label=f"Winding pack:  \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                    label=f"Winding pack:  \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
                 )
             )
             # Dvides the WP up into the turn segments
@@ -1809,7 +1809,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp / 2) - (2 * tinstf),
                     wp_toridal_dxbig - (2 * tinstf),
                     color="blue",
-                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                    label=f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
                 ),
             )
             # Inner WP
@@ -1860,7 +1860,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y)),
                     color="blue",
-                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                    label=f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
                 )
             )
 
@@ -1907,6 +1907,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
     insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
     internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6, 5)
+    cpttf = mfile_data.data["cpttf"].get_scan(scan)
 
     # Plot the total turn shape
     if integer_turns == 0:
@@ -1951,7 +1952,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 [(turn_width / 2), (turn_width / 2)],
                 he_pipe_diameter / 2,
                 facecolor="white",
-                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {cpttf:.2f} A",
                 edgecolor="black",
             ),
         )
