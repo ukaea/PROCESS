@@ -91,7 +91,7 @@ class Scan:
         # outvar now contains results
         scan_module.scan_1d_write_plot(iscan, outvar)
         print(
-            " ****************************************** Scan Convergence Summary ******************************************"
+            " ****************************************** Scan Convergence Summary ****************************************** \n"
         )
         sweep_values = scan_module.sweep[: scan_module.isweep]
         nsweep_var_name, _ = scan_module.scan_select(
@@ -163,7 +163,7 @@ class Scan:
 
         scan_module.scan_2d_write_plot(iscan, outvar, sweep_1_vals, sweep_2_vals)
         print(
-            " ****************************************** Scan Convergence Summary ******************************************"
+            " ****************************************** Scan Convergence Summary ****************************************** \n"
         )
         sweep_1_values = scan_module.sweep[: scan_module.isweep]
         sweep_2_values = scan_module.sweep_2[: scan_module.isweep_2]
