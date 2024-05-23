@@ -13,7 +13,7 @@ plasma parameters such as its current, temperature, density, pressure,
 confinement etc., and also the various limits that define the stable operating 
 domain. 
 
-More detail is given in [^19], but this webpage is more up to date.
+More detail is given in [^1], but this webpage is more up to date.
 
 
 ## Other Plasma Physics Options
@@ -43,4 +43,6 @@ treats the scrape-off layer merely as a gap. Switch `iscrp` determines
 whether the inboard and outboard gaps should be calculated as 10% of the
 plasma minor radius (`iscrp = 0`), or set equal to the input values `scrapli` 
 and `scraplo` (`iscrp = 1`).
+
+[^1]: M. Kovari, R. Kemp, H. Lux, P. Knight, J. Morris, D.J. Ward, '“PROCESS”: A systems code for fusion power plants—Part 1: Physics' Fusion Engineering and Design 89 (2014) 3054–3069
 
