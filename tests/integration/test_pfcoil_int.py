@@ -2660,7 +2660,7 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     tcritsc = 16
 
     jcritwp_exp = -2.6716372e7
-    jcritstr_exp = -3.8166246e7
+    jcritstr_exp = -3.8166246e7 * (1.0 - fhe)
     jcritsc_exp = -1.23116924e8
     tmarg_exp = -2.651537e-1
 
