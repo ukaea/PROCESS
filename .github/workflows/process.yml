@@ -43,7 +43,7 @@ jobs:
           name: ford-artifact
           path: build/ford_project.pickle
 
-  unit:
+  unit-test:
     runs-on: ubuntu-latest
     needs: make
     steps:
@@ -69,7 +69,7 @@ jobs:
           name: unit-coverage-artifacts
           path: .coverage
 
-  integration:
+  integration-test:
     runs-on: ubuntu-latest
     needs: make
     steps:
@@ -91,7 +91,7 @@ jobs:
         run: pytest tests/integration -n auto -v
 
 
-  regression:
+  regression-test:
     runs-on: ubuntu-latest
     needs: make
     continue-on-error: true
@@ -156,29 +156,17 @@ jobs:
           name: tracked-mfiles
           path: tracking/*_MFILE.DAT
 
-  flake8:
+  pre-commit-quality-check:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
-      - name: Run Flake8 linter
-        run: python -m flake8 --tee .
-
-  black:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run Black
-        run: python -m black --check .
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dev dependencies
+        run: pip install -r requirements_dev.txt
+      - name: Run pre-commit
+        run: pre-commit run --all-files
 
   tracking:
     concurrency:
@@ -187,11 +175,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: run-tracking-inputs
     if: github.ref == 'refs/heads/main'
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Download build artifacts
@@ -201,6 +184,8 @@ jobs:
           path: process/
       - name: Install PROCESS
         run: pip install -e .
+      - name: Install dev dependencies
+        run: pip install -r requirements_dev.txt
       - name: Setup SSH identity
         uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -250,11 +235,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: tracking
     if: github.ref == 'refs/heads/main'
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -266,6 +246,8 @@ jobs:
           path: process/
       - name: Install PROCESS
         run: pip install -e .
+      - name: Install dev dependencies
+        run: pip install -r requirements_dev.txt
       - run: ford documentation/ford/index.md
       - name: Download ford project
         uses: actions/download-artifact@v3
