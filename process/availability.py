@@ -1004,16 +1004,54 @@ class Availability:
         # Operational time (years)
         cv.t_operation = cv.tlife * (1.0e0 - u_planned)
 
+        if output:
+            po.oheadr(self.outfile, "Plant Availability")
+
+        # Un-planned unavailability
+
+        # Magnets
+        u_unplanned_magnets = self.calc_u_unplanned_magnets(output)
+
+        # Divertor
+        u_unplanned_div = self.calc_u_unplanned_divertor(output)
+
+        # First wall and blanket
+        u_unplanned_fwbs = self.calc_u_unplanned_fwbs(output)
+
+        # Balance of plant
+        u_unplanned_bop = self.calc_u_unplanned_bop(output)
+
+        # Heating and current drive
+        u_unplanned_hcd = self.calc_u_unplanned_hcd()
+
+        # Vacuum systems
+
+        # Number of redundant pumps
+        cv.redun_vac = math.floor(vacv.vpumpn * cv.redun_vacp / 100.0 + 0.5e0)
+
+        u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
+
+        # Total unplanned unavailability
+        u_unplanned = min(
+            1.0e0,
+            u_unplanned_magnets
+            + u_unplanned_div
+            + u_unplanned_fwbs
+            + u_unplanned_bop
+            + u_unplanned_hcd
+            + u_unplanned_vacuum
+            + cv.u_unplanned_cp,
+        )
+
         # Total availability
         cv.cfactr = max(
-            1.0e0 - (u_planned + cv.u_unplanned + u_planned * cv.u_unplanned), 0.0e0
+            1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
         )
 
         # Capacity factor
         cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
 
         if output:
-            po.oheadr(self.outfile, "Plant Availability")
             if tfv.i_tf_sup == 1:
                 po.ovarre(
                     self.outfile,
@@ -1085,7 +1123,7 @@ class Availability:
                 self.outfile,
                 "Total unplanned unavailability",
                 "(u_unplanned)",
-                cv.u_unplanned,
+                u_unplanned,
                 "IP ",
             )
             po.ovarre(

@@ -346,7 +346,7 @@ module cost_variables
   real(dp) :: tmain
   !! Maintenance time for replacing CP (years) (iavail = 3)
 
-  real(dp) :: u_unplanned
+  real(dp) :: u_unplanned_cp
   !! User-input CP unplanned unavailability (iavail = 3)
 
   real(dp), parameter :: ucad = 180.0D0
@@ -752,6 +752,7 @@ module cost_variables
     ucwindpf = 465.0D0
     ucwindtf = 480.0D0
     ucwst = (/0.0D0, 3.94D0, 5.91D0, 7.88D0/)
+    u_unplanned_cp = 0.0
     i_cp_lifetime = 0
     cplife_input = 2.0D0
 
