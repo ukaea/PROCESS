@@ -158,6 +158,14 @@ creating an issue in GitHub, or trying out the
         source ~/.profile
         ```
 
+        Finally, remove the old build folder and try again:
+
+        ```bash
+        rm build -rf
+        cmake -S . -B build
+        cmake --build build
+        ```
+
     === "CMake version"
 
         CMake version > 3.13.0
