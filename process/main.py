@@ -71,7 +71,7 @@ from process.blanket_library import BlanketLibrary
 from process.fw import Fw
 from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
-from process.caller import write_idempotent_result
+from process.caller import write_output_files
 
 
 from pathlib import Path
@@ -467,10 +467,13 @@ class SingleRun:
             # Get optimisation parameters x, evaluate models
             fortran.define_iteration_variables.loadxc()
             self.ifail = 6
-            write_idempotent_result(models=self.models, ifail=self.ifail)
+            write_output_files(models=self.models, ifail=self.ifail)
             self.show_errors()
         else:
-            raise ValueError(f"Invalid ioptimz value: {fortran.numerics.ioptimz}")
+            raise ValueError(
+                f"Invalid ioptimz value: {fortran.numerics.ioptimz}. Please "
+                "select either 1 (optimise) or -2 (no optimisation)."
+            )
 
     def show_errors(self):
         """Report all informational/error messages encountered."""

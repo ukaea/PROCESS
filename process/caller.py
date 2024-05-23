@@ -2,11 +2,13 @@ from __future__ import annotations
 from process import fortran as ft
 import numpy as np
 import logging
-from typing import Union, Tuple
-import process.main
 from process.final import finalise
 from process.io.mfile import MFile
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from typing import Union, Tuple, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from process.main import Models
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +16,7 @@ logger = logging.getLogger(__name__)
 class Caller:
     """Calls physics and engineering models."""
 
-    def __init__(self, models):
+    def __init__(self, models: Models) -> None:
         """Initialise all physics and engineering models.
 
         To ensure that, at the start of a run, all physics/engineering
@@ -22,7 +24,7 @@ class Caller:
         called with the initial optimisation paramters, x.
 
         :param models: physics and engineering model objects
-        :type models: process.main.Models
+        :type models: Models
         """
         self.models = models
 
@@ -82,24 +84,25 @@ class Caller:
                     "function and constraints"
                 )
                 return objf, conf
-            else:
-                # Not idempotent: still changing, so evaluate models again
-                logger.debug("Model evaluations not idempotent: evaluating again")
-                objf_prev = objf
-                conf_prev = conf
+
+            # Not idempotent: still changing, so evaluate models again
+            logger.debug("Model evaluations not idempotent: evaluating again")
+            objf_prev = objf
+            conf_prev = conf
 
         raise RuntimeError(
-            "Model evaluations at the current optimisation parameter vector "
-            "don't produce idempotent values for the objective function and "
-            "constraints."
+            "After 10 model evaluations at the current optimisation parameter "
+            "vector, values for the objective function and constraints haven't "
+            "converged (don't produce idempotent values)."
         )
 
-    def call_models_full_idempotence(self, xc: np.ndarray, ifail: int) -> None:
-        """Evaluate models until all results are idempotent.
+    def call_models_and_write_output(self, xc: np.ndarray, ifail: int) -> None:
+        """Evaluate models until results are idempotent, then write output files.
 
         Ensure all outputs in mfile are idempotent before returning, by
         evaluating models multiple times. Typically used at the end of an
-        optimisation, or in a non-optimising evaluation.
+        optimisation, or in a non-optimising evaluation. Writes OUT.DAT and
+        MFILE.DAT with final results.
 
         :param xc: optimisation parameter
         :type xc: np.ndarray
@@ -111,7 +114,10 @@ class Caller:
         # TODO The only way to ensure idempotence in all outputs is by comparing
         # mfiles at this stage
         previous_mfile_arr = None
-        file_prefix = ft.global_variables.fileprefix
+        # Path of output file prefix required for writing intermediate idempotence-
+        # checking mfiles in the same directory as input file
+        output_prefix = ft.global_variables.output_prefix
+
         # Evaluate models up to 10 times; any more implies non-converging values
         for _ in range(10):
             # Divert OUT.DAT and MFILE.DAT output to scratch files for
@@ -122,10 +128,7 @@ class Caller:
             finalise(self.models, ifail)
 
             # Extract mfile data
-            mfile_path = (
-                f2py_compatible_to_string(file_prefix).split("IN.DAT")[0]
-                + "IDEM_MFILE.DAT"
-            )
+            mfile_path = f2py_compatible_to_string(output_prefix) + "IDEM_MFILE.DAT"
             mfile = MFile(mfile_path)
             mfile_data = {}
             for var in mfile.data.keys():
@@ -153,17 +156,17 @@ class Caller:
                 # Write final output file and mfile
                 finalise(self.models, ifail)
                 return
-            else:
-                # Mfiles not yet idempotent: re-evaluate models
-                logger.debug("Mfiles not idempotent, evaluating models again")
-                previous_mfile_arr = np.copy(current_mfile_arr)
+
+            # Mfiles not yet idempotent: re-evaluate models
+            logger.debug("Mfiles not idempotent, evaluating models again")
+            previous_mfile_arr = np.copy(current_mfile_arr)
 
         raise RuntimeError(
             "Model evaluations at the current optimisation parameter vector "
             "don't produce idempotent values in the final output."
         )
 
-    def _call_models_once(self, xc):
+    def _call_models_once(self, xc: np.ndarray) -> None:
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
@@ -301,11 +304,11 @@ class Caller:
         # FISPACT and LOCA model (not used)- removed
 
 
-def write_idempotent_result(models: process.main.Models, ifail: int) -> None:
-    """Ensure result idempotence, then write output files.
+def write_output_files(models: Models, ifail: int) -> None:
+    """Evaluate models and write output files (OUT.DAT and MFILE.DAT).
 
     :param models: physics and engineering models
-    :type models: process.main.Models
+    :type models: Models
     :param ifail: solver return code
     :type ifail: int
     """
@@ -313,7 +316,7 @@ def write_idempotent_result(models: process.main.Models, ifail: int) -> None:
     x = ft.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
     caller = Caller(models)
-    caller.call_models_full_idempotence(
+    caller.call_models_and_write_output(
         xc=x,
         ifail=ifail,
     )
