@@ -168,7 +168,7 @@ jobs:
           path: process/
       - name: Install PROCESS
         run: pip install -e .
-      - name: Run large tokamak
+      - name: Run regression input files
         run: |
           process -i tests/regression/input_files/large_tokamak.IN.DAT
           mv tests/regression/input_files/large_tokamak.MFILE.DAT tracking/large_tokamak_MFILE.DAT

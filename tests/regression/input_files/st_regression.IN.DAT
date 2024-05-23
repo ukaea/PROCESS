@@ -261,7 +261,7 @@ boundu(9) = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ixc = 109
-ralpne = 0.05
+ralpne = 0.2
 boundl(109) = 0.001
 boundu(109) = 1.0
 * DESCRIPTION:   Thermal alpha density / electron density
@@ -379,7 +379,7 @@ dnbeta = 5.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 ixc = 18
-q95 = 6.0 
+q = 6.0 
 boundl(18) = 3.0
 boundu(18) = 20.0
 * DESCRIPTION:   Safety factor at 95% flux surface
