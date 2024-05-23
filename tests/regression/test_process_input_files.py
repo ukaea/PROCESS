@@ -268,6 +268,12 @@ def test_input_file(
     new_input_file = tmp_path / input_file.name
     shutil.copy(input_file, new_input_file)
 
+    stellarator_config = (
+        input_file / f"../{input_file.name.replace('IN.DAT', 'stella_conf.json')}"
+    ).resolve()
+    if stellarator_config.exists():
+        shutil.copy(stellarator_config, tmp_path / stellarator_config.name)
+
     scenario = RegressionTestScenario(new_input_file)
 
     reference_mfile = tracked_regression_test_assets.get_reference_mfile(
