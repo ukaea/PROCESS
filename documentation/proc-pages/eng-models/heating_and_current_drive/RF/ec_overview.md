@@ -12,7 +12,7 @@ $$
 n_{\perp}^2=\frac{(1-\frac{\omega_{pe}^2}{\omega^2}-\frac{\omega_{ce}}{\omega})(1-\frac{\omega_{pe}^2}{\omega^2}+\frac{\omega_{ce}}{\omega})}{(1-\frac{\omega_{pe}^2}{\omega^2}-\frac{\omega_{ce}^2}{\omega^2})} \ \ \text{(X-mode)}
 $$
 
-## Normalised current drive efficiency `eccdef`
+## Normalised current drive efficiency | `eccdef()`
 
 One of the methods for calculating the normalised current drive efficiency is the `eccdef` method found below.
 
@@ -93,7 +93,7 @@ $$
 $$
 
 ----------------------------------------------------------------------------------
-### Legendre function and its derivative `legend`
+### Legendre function and its derivative | `legend()`
 
 
 | Input       | Description                          |
@@ -101,68 +101,34 @@ $$
 | $\mathtt{zlocal}$       |  Local plasma effective charge  |
 | $\mathtt{arg}$       |  Argument of Legendre function |
 
-``` py
-def legend(self, zlocal, arg):
-        """Routine to calculate Legendre function and its derivative
-        author: M R O'Brien, CCFE, Culham Science Centre
-        author: P J Knight, CCFE, Culham Science Centre
-        zlocal  : input real : local plasma effective charge
-        arg     : input real : argument of Legendre function
-        palpha  : output real : value of Legendre function
-        palphap : output real : derivative of Legendre function
-        This routine calculates the Legendre function `palpha`
-        of argument `arg` and order
-        `alpha = -0.5 + i sqrt(xisq)``,
-        and its derivative `palphap`.
-        This Legendre function is a conical function and we use the series
-        in `xisq`` given in Abramowitz and Stegun. The
-        derivative is calculated from the derivative of this series.
-        The derivatives were checked by calculating `palpha` for
-        neighboring arguments. The calculation of `palpha` for zero
-        argument was checked by comparison with the expression
-        `palpha(0) = 1/sqrt(pi) * cos(pi*alpha/2) * gam1 / gam2`
-        (Abramowitz and Stegun, eqn 8.6.1). Here `gam1`` and
-        `gam2`` are the Gamma functions of arguments
-        `0.5*(1+alpha)`` and `0.5*(2+alpha)` respectively.
-        Abramowitz and Stegun, equation 8.12.1
-        """
-        if abs(arg) > (1.0e0 + 1.0e-10):
-            eh.fdiags[0] = arg
-            eh.report_error(18)
+The `legend()` function is a routine that calculates the Legendre function and its derivative. It takes two input parameters: `zlocal` (local plasma effective charge) and `arg` (argument of the Legendre function). The function returns two output values: `palpha` (value of the Legendre function) and `palphap` (derivative of the Legendre function).
 
-        arg2 = min(arg, (1.0e0 - 1.0e-10))
-        sinsq = 0.5e0 * (1.0e0 - arg2)
-        xisq = 0.25e0 * (32.0e0 * zlocal / (zlocal + 1.0e0) - 1.0e0)
-        palpha = 1.0e0
-        pold = 1.0e0
-        pterm = 1.0e0
-        palphap = 0.0e0
-        poldp = 0.0e0
+Here is the explanation of the `legend()` function:
 
-        for n in range(10000):
-            #  Check for convergence every 20 iterations
+1. Check if the absolute value of `arg` is greater than `1.0 + 1.0e-10`. If it is, set `eh.fdiags[0]` to `arg` and report an error (error code 18).
 
-            if (n > 1) and ((n % 20) == 1):
-                term1 = 1.0e-10 * max(abs(pold), abs(palpha))
-                term2 = 1.0e-10 * max(abs(poldp), abs(palphap))
+2. Set `arg2` to the minimum value between `arg` and `1.0 - 1.0e-10`.
 
-                if (abs(pold - palpha) < term1) and (abs(poldp - palphap) < term2):
-                    return palpha, palphap
+3. Calculate `sinsq` as `0.5 * (1.0 - arg2)`.
 
-                pold = palpha
-                poldp = palphap
+4. Calculate `xisq` as `0.25 * (32.0 * zlocal / (zlocal + 1.0) - 1.0)`.
 
-            pterm = (
-                pterm
-                * (4.0e0 * xisq + (2.0e0 * n - 1.0e0) ** 2)
-                / (2.0e0 * n) ** 2
-                * sinsq
-            )
-            palpha = palpha + pterm
-            palphap = palphap - n * pterm / (1.0e0 - arg2)
-        else:
-            eh.report_error(19)
-        
-```
+5. Initialize `palpha` to `1.0`, `pold` to `1.0`, `pterm` to `1.0`, `palphap` to `0.0`, and `poldp` to `0.0`.
+
+6. Start a loop that iterates up to 10000 times.
+
+7. Check for convergence every 20 iterations:
+    - If `n > 1` and `(n % 20) == 1`, calculate `term1` as `1.0e-10 * max(abs(pold), abs(palpha))` and `term2` as `1.0e-10 * max(abs(poldp), abs(palphap))`.
+    - If the absolute difference between `pold` and `palpha` is less than `term1` and the absolute difference between `poldp` and `palphap` is less than `term2`, return `palpha` and `palphap`.
+
+8. Update `pold` to `palpha` and `poldp` to `palphap`.
+
+9. Calculate `pterm` as `pterm * (4.0 * xisq + (2.0 * n - 1.0) ** 2) / (2.0 * n) ** 2 * sinsq`.
+
+10. Update `palpha` as `palpha + pterm`.
+
+11. Update `palphap` as `palphap - n * pterm / (1.0 - arg2)`.
+
+12. If the loop completes without returning, report an error (error code 19).
 
 [^1]: Abramowitz, Milton. *"Abramowitz and stegun: Handbook of mathematical functions."* US Department of Commerce 10 (1972).        

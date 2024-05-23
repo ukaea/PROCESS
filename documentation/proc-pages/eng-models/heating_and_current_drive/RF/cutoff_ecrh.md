@@ -1,4 +1,20 @@
-# Cuttoff
+# ECRH with Cutoff
+
+- `iefrf/iefrffix` = 13
+
+| Input | Description |
+|-------|-------------|
+| `dene`, $n_{\text{e}}$ | Avergae electron temperature $\left[10^{19}\text{m}^{-3}\right]$ |
+| `te`, $T_{\text{e}}$ | Avergae electron temperature $\left[\text{keV}\right]$ |
+| `rmajor`, $R_0$ | Major radius $\left[\text{m}\right]$ |
+| `bt`, $B_{\text{T}}$ | Toroidal magnetic field $\left[\text{T}\right]$ |
+| `zeff`, $Z_{\text{eff}}$ | Effective charge |
+| `harnum` | Harmonic number |
+| `mode` | RF mode |
+
+----
+
+
 
 $$
 \mathtt{fc} = \frac{1}{2\pi}eB_{\text{T}}m_{\text{e}}
@@ -40,3 +56,8 @@ $$
 $$
 \text{Current drive efficiency [A/W]} = \mathtt{effrfss} \times \mathtt{cutoff_{factor}}
 $$
+
+<figure markdown>
+![ECRH Cutoff](../images/ecrh_cutoff.png){ width = "100"}
+<figcaption>Figure 1: The variation in current drive efficiency as a function of toroidal magnetic field at different harmonics and modes </figcaption>
+</figure>
