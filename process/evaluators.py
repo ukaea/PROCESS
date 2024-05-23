@@ -3,7 +3,6 @@ from process.fortran import global_variables as gv
 from process.fortran import cost_variables as cv
 from process.fortran import numerics
 from process.fortran import physics_variables as pv
-from process.fortran import stellarator_variables as sv
 from process.fortran import times_variables as tv
 import numpy as np
 import math
@@ -52,24 +51,6 @@ class Evaluators:
 
         # Evaluate machine parameters at xv
         objf, conf = self.caller.call_models(xv, m)
-
-        # Convergence loop to ensure burn time consistency
-        # TODO This can be removed once model evaluations become effectively
-        # idempotent
-        if sv.istell == 0:
-            for _ in range(10):
-                if abs((tv.tburn - tv.tburn0) / max(tv.tburn, 0.01)) <= 0.001:
-                    break
-
-                objf, conf = self.caller.call_models(xv, m)
-                if gv.verbose == 1:
-                    print("Internal tburn consistency check: ", tv.tburn, tv.tburn0)
-            else:
-                print(
-                    "Burn time values are not consistent in iteration: ",
-                    numerics.nviter,
-                )
-                print("tburn, tburn0: ", tv.tburn, tv.tburn0)
 
         # Verbose diagnostics
         if gv.verbose == 1:
