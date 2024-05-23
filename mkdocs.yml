@@ -7,8 +7,6 @@ nav:
       - Installation:
           - Introduction: installation/introduction.md
           - Installation on Ubuntu/Windows: installation/installation-ubuntu.md
-          - Installation using Docker: installation/installation-docker.md
-          - Installation using Singularity: installation/installation-singularity.md
           - Installation on CSD3: installation/csd3-for-process.md
           - Visual Studio Code: installation/vs-code.md
       - Usage:
@@ -42,18 +40,18 @@ nav:
       # - Versioning: development/versioning.md
   - Reference:
       - Physics Models:
-          - Plasma: 
-            - Overview: physics-models/plasma_overview.md
-            - Geometry: physics-models/plasma_geometry.md
-            - Profiles: physics-models/plasma_profiles.md
-            - Fusion Reactions: physics-models/plasma_reactions.md
-            - Beta Limit: physics-models/plasma_beta.md
-            - Fast Alpha: physics-models/plasma_alpha.md
-            - Density Limit: physics-models/plasma_density.md
-            - Impurities & Radiation: physics-models/plasma_radiation_impurities.md
-            - Plasma Current: physics-models/plasma_current.md
-            - Confinement time: physics-models/plasma_confinement.md
-            - Plasma Core Power Balance: physics-models/plasma_power_balance.md
+          - Plasma:
+              - Overview: physics-models/plasma_overview.md
+              - Geometry: physics-models/plasma_geometry.md
+              - Profiles: physics-models/plasma_profiles.md
+              - Fusion Reactions: physics-models/plasma_reactions.md
+              - Beta Limit: physics-models/plasma_beta.md
+              - Fast Alpha: physics-models/plasma_alpha.md
+              - Density Limit: physics-models/plasma_density.md
+              - Impurities & Radiation: physics-models/plasma_radiation_impurities.md
+              - Plasma Current: physics-models/plasma_current.md
+              - Confinement time: physics-models/plasma_confinement.md
+              - Plasma Core Power Balance: physics-models/plasma_power_balance.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md
       - Engineering Models:
           - Machine Build: eng-models/machine-build.md

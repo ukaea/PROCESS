@@ -16,11 +16,6 @@ PROCESS is developed using Ubuntu 22 and tested using Ubuntu 20. We cannot guara
 
     If the above procedure fails to work, there is a [Microsoft help page](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-!!! Info "Users on unsupported OS'"
-    Other users may find benefit in our [Docker installation guide](https://ukaea.github.io/PROCESS/installation/installation-docker/) if they are on a machine which they have admin privledges.
-    
-    Users of shared resources should see our [Singularity/Apptainer installation guide](https://ukaea.github.io/PROCESS/installation/installation-singularity/).
-
 
 GFortran version 9 or above is needed for successful installation and execution of PROCESS. Versions 
 below GFortran-9 will be rejected by CMake by default since, while PROCESS might compile 
@@ -113,9 +108,7 @@ which runs unit, integration, and regression tests.
 A more in-depth discussion of testing can be found [here](https://ukaea.github.io/PROCESS/development/testing/).
 
 If everything passes, this indicates a successful installation. If anything fails, this indicates 
-that your environment produces different results to what is expected. You might consider 
-creating an issue in GitHub, or trying out the 
-[Docker container](https://ukaea.github.io/PROCESS/installation/installation-docker/) instead.
+that your environment produces different results to what is expected.
 
 !!! Question "Installation troubleshooting"
 
