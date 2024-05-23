@@ -3462,6 +3462,35 @@ def test(f):
         subtotal += build
         cumulative_radial[item] = subtotal
 
+        # Build the dictionaries of radial and vertical build values and cumulative values
+        global vertical_upper
+        if int(m_file.data["i_single_null"].get_scan(scan)) == 0:
+            vertical_upper = [
+                "rminor*kappa",
+                "vgaptop",
+                "divfix",
+                "shldtth",
+                "d_vv_top",
+                "vgap2",
+                "thshield_vb",
+                "tftsgap",
+                "tfcth",
+            ]
+        else:
+            vertical_upper = [
+                "rminor*kappa",
+                "vgaptop",
+                "fwtth",
+                "blnktth",
+                "vvblgap",
+                "shldtth",
+                "d_vv_top",
+                "vgap2",
+                "thshield_vb",
+                "tftsgap",
+                "tfcth",
+            ]
+
         global upper
         upper = dict()
         global cumulative_upper
