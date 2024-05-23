@@ -59,11 +59,11 @@ ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
 
 | Input   | Description                                               |
 |---------|-----------------------------------------------------------|
-| $\mathtt{abeam}$   | Beam ion mass ($\text{amu}$)                                       |
+| $\mathtt{abeam}$, $m_{\text{u,ion}}$   | Beam ion mass ($\text{amu}$)                                       |
 | $\mathtt{alphan}$  | Density profile factor                                    |
 | $\mathtt{alphat}$  | Temperature profile factor                                |
 | $\mathtt{aspect}$, $A$  | Aspect ratio                                              |
-| $\mathtt{dene}$, $n_{\text{e}}$    | Volume averaged electron density ($\text{m}^{-3}$)                  |
+| $\mathtt{dene20}$, $n_{\text{e,20}}$    | Volume averaged electron density ($10^{20} \text{m}^{-3}$)                  |
 | $\mathtt{ebeam}$   | Neutral beam energy ($\text{keV}$)                                 |
 | $\mathtt{rmajor}$, R  | Plasma major radius ($\text{m}$)                                   |
 | $\mathtt{ten}$     | Density weighted average electron temperature ($\text{keV}$)       |
@@ -96,7 +96,7 @@ $$
 $$
     
 $$
-\mathtt{yj} = 0.8 \frac{Z_{\text{eff}}}{m_{\text{u,beam}}}
+\mathtt{yj} = 0.8 \frac{Z_{\text{eff}}}{m_{\text{u,ion}}}
 $$
         
 $$
@@ -120,7 +120,7 @@ $$
 $$
 
 $$
-\text{Current drive efficiency [A/W]} = \mathtt{abd} \times\frac{5}{R_0} \times0.1\frac{\mathtt{ten}}{n_{e,20}} \times \frac{\mathtt{rjfunc}}{0.2}\mathtt{ffac}
+\text{Current drive efficiency [A/W]} = \mathtt{abd} \times\frac{5}{R_0} \times0.1\frac{\mathtt{ten}}{n_{\text{e},20}} \times \frac{\mathtt{rjfunc}}{0.2}\mathtt{ffac}
 $$
 
         
