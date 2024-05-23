@@ -87,6 +87,10 @@ jobs:
         run: |
           pip install -e '.[test, examples]'
           pip install -r requirements_dev.txt
+      - name: Install poppler
+        run: |
+          sudo apt update
+          sudo apt install poppler-utils
       - name: Run integration tests
         run: pytest tests/integration -n auto -v
 
