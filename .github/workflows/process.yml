@@ -250,6 +250,8 @@ jobs:
         run: pip install -e .
       - name: Install dev dependencies
         run: pip install -r requirements_dev.txt
+      - name: Install ford
+        run: pip install git+https://github.com/jonmaddock/ford
       - run: ford documentation/ford/index.md
       - name: Download ford project
         uses: actions/download-artifact@v3

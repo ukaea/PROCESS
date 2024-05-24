@@ -69,31 +69,31 @@ nav:
           - Shield: eng-models/shield.md
           - Divertor: eng-models/divertor.md
           - Heat transport: eng-models/power-conversion-and-heat-dissipation-systems.md
-          - Auxiliary Heating & Current Drive Systems: 
-             - Overview: eng-models/heating_and_current_drive/heating-and-current-drive.md
-             - Radio Frequency:
-                - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
-                - Lower Hybrid:
-                   - Overview: eng-models/heating_and_current_drive/RF/lhcd_overview.md
-                   - Fenstermacher Model: eng-models/heating_and_current_drive/RF/fenstermacher_lower_hybrid.md
-                   - Ehst Model: eng-models/heating_and_current_drive/RF/ehst_lower_hybrid.md
-                   - Culham Model: eng-models/heating_and_current_drive/RF/culham_lower_hybrid.md
-                - Electron Cyclotron:
-                   - Overview: eng-models/heating_and_current_drive/RF/ec_overview.md
-                   - Fenstermacher Resonnance Model: eng-models/heating_and_current_drive/RF/fenstermacher_electron_cyclotron_resonance.md
-                   - Culham Model: eng-models/heating_and_current_drive/RF/culham_electron_cyclotron.md
-                   - User Input Gamma Model: eng-models/heating_and_current_drive/RF/ecrh_gamma.md
-                   - Cutoff mode: eng-models/heating_and_current_drive/RF/cutoff_ecrh.md
-                - Ion Cyclotron:
-                   - Overview: eng-models/heating_and_current_drive/RF/ic_overview.md
-                   - Ion cyclotron model: eng-models/heating_and_current_drive/RF/ic_model.md
-                - Electron Bernstein Wave:
-                   - Overview: eng-models/heating_and_current_drive/RF/ebw_overview.md
-                   - EBW Model: eng-models/heating_and_current_drive/RF/ebw_freethy.md
-             - Neutral Beam Injection:
-                - Overview: eng-models/heating_and_current_drive/NBI/nbi_overview.md   
-                - ITER Model: eng-models/heating_and_current_drive/NBI/iter_nb.md 
-                - Culham Model: eng-models/heating_and_current_drive/NBI/culham_nb.md
+          - Auxiliary Heating & Current Drive Systems:
+              - Overview: eng-models/heating_and_current_drive/heating-and-current-drive.md
+              - Radio Frequency:
+                  - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                  - Lower Hybrid:
+                      - Overview: eng-models/heating_and_current_drive/RF/lhcd_overview.md
+                      - Fenstermacher Model: eng-models/heating_and_current_drive/RF/fenstermacher_lower_hybrid.md
+                      - Ehst Model: eng-models/heating_and_current_drive/RF/ehst_lower_hybrid.md
+                      - Culham Model: eng-models/heating_and_current_drive/RF/culham_lower_hybrid.md
+                  - Electron Cyclotron:
+                      - Overview: eng-models/heating_and_current_drive/RF/ec_overview.md
+                      - Fenstermacher Resonnance Model: eng-models/heating_and_current_drive/RF/fenstermacher_electron_cyclotron_resonance.md
+                      - Culham Model: eng-models/heating_and_current_drive/RF/culham_electron_cyclotron.md
+                      - User Input Gamma Model: eng-models/heating_and_current_drive/RF/ecrh_gamma.md
+                      - Cutoff mode: eng-models/heating_and_current_drive/RF/cutoff_ecrh.md
+                  - Ion Cyclotron:
+                      - Overview: eng-models/heating_and_current_drive/RF/ic_overview.md
+                      - Ion cyclotron model: eng-models/heating_and_current_drive/RF/ic_model.md
+                  - Electron Bernstein Wave:
+                      - Overview: eng-models/heating_and_current_drive/RF/ebw_overview.md
+                      - EBW Model: eng-models/heating_and_current_drive/RF/ebw_freethy.md
+              - Neutral Beam Injection:
+                  - Overview: eng-models/heating_and_current_drive/NBI/nbi_overview.md
+                  - ITER Model: eng-models/heating_and_current_drive/NBI/iter_nb.md
+                  - Culham Model: eng-models/heating_and_current_drive/NBI/culham_nb.md
           - Cryostat and vacuum system: eng-models/cryostat-and-vacuum-system.md
           - Plant Availability: eng-models/plant-availability.md
           - Power Requirements: eng-models/power-requirements.md
