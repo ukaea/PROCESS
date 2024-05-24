@@ -148,7 +148,7 @@ jobs:
       - name: Allow git commands to be run
         run: git config --system --add safe.directory '*'
       - name: Run regression tests
-        run: pytest tests/regression -v --reg-tolerance=${{ matrix.tolerance }}
+        run: pytest tests/regression -sv --reg-tolerance=${{ matrix.tolerance }}
 
   run-tracking-inputs:
     runs-on: ubuntu-latest
