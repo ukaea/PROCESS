@@ -2054,7 +2054,7 @@ gapds = 0.01
 * DESCRIPTION:   Gap Between inboard Vacuum Vessel and Thermal Shield (m)
 * JUSTIFICATION: 
 
-d_vv_in = 0.0 
+d_vv_in = 0.2 
 * DESCRIPTION:   Vacuum Vessel Thickness (m)
 * JUSTIFICATION: Removed to avoid temporary problems with cryo plant
 
