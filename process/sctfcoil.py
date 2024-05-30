@@ -2506,7 +2506,6 @@ class Sctfcoil:
         # ---
 
         # Surface areas (for cryo system) [m2]
-        # tfsai, tfcoil_variables.tfsao are retained for the (obsolescent) TF coil nuclear heating calculation
         wbtf = (
             build_variables.r_tf_inboard_out * numpy.sin(sctfcoil_module.theta_coil)
             - build_variables.r_tf_inboard_in * sctfcoil_module.tan_theta_coil
@@ -2515,24 +2514,10 @@ class Sctfcoil:
             build_variables.r_tf_inboard_in * sctfcoil_module.tan_theta_coil
         )
         tfcoil_variables.tficrn = tfcoil_variables.tfocrn + wbtf
-        tfcoil_variables.tfsai = (
-            4.0e0
-            * tfcoil_variables.n_tf
-            * tfcoil_variables.tficrn
-            * build_variables.hr1
-        )
-        tfcoil_variables.tfsao = (
-            2.0e0
-            * tfcoil_variables.n_tf
-            * tfcoil_variables.tficrn
-            * (tfcoil_variables.tfleng - 2.0e0 * build_variables.hr1)
-        )
 
         # Total surface area of two toroidal shells covering the TF coils [m2]
         # (inside and outside surfaces)
         # = 2 * centroid coil length * 2 pi R, where R is average of i/b and o/b centres
-        # (This will possibly be used to replace 2*tfcoil_variables.tfsai in the calculation of qss
-        # in subroutine cryo - not done at present.)
         tfcoil_variables.tfcryoarea = (
             2.0e0
             * tfcoil_variables.tfleng
