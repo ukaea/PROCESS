@@ -762,8 +762,8 @@
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.3704E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0781E-03    
- Critical_current_density_in_superconductor_(A/m2)_______________________ (jcritsc)_____________________      6.9745E+08 OP 
- Critical_current_density_in_strand_(A/m2)_______________________________ (jcritstr)____________________      1.1366E+08 OP 
+ Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      6.9745E+08 OP 
+ Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1366E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5693E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5505E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
@@ -775,12 +775,12 @@
  Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              1    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.4055E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.4872E+08 OP 
- Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.0462E+08 OP 
+ Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0462E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.5137E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (cohbop)______________________      1.9094E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (bmaxoh)______________________      1.3907E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      3.6220E+08 OP 
- Critical_strand_current_density_at_EOF_(A/m2)___________________________ (jstrandoh_eof)_______________      1.0866E+08 OP 
+ Critical_cable_current_density_at_EOF_(A/m2)___________________________ (jcableoh_eof)_______________      1.0866E+08 OP 
  Allowable_overall_current_density_at_EOF_(A/m2)_________________________ (rjohc)_______________________      3.6495E+07 OP 
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      2.0188E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (bore)________________________      1.9704E+00 ITV
