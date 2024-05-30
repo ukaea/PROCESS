@@ -317,6 +317,59 @@ $$
 Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Design 112 (2016) 633–645
 'Geometric formulas for system codes including the effect of negative triangularity'
 
+| Input Variable | Description                          |
+|----------|--------------------------------------|
+| `rminor`, $a$        | Plasma minor radius (m)              |
+| `rmajor`, $R$        | Plasma major radius (m)              |
+| `kappa`, $\kappa$      | Plasma separatrix elongation         |
+| `triang`, $\delta$      | Plasma separatrix triangularity      |
+
+
+| Output Variable | Description                          |
+|----------|--------------------------------------|
+| `pperim`       | Plasma Poloidal perimeter length [m] |
+| `sarea`       | Plasma surface area [m^2] |
+| `xarea`       | Plasma cross-sectional area [m^2] |
+| `vol`       | Plasma volume [m^3] |
+
+$$
+\mathtt{w07} = 1
+$$
+
+$$
+\epsilon = \frac{a}{R}
+$$
+
+Poloidal perimeter (named Lp in Sauter)
+
+$$
+\mathtt{pperim} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\mathtt{w07} - 1))
+$$
+
+A geometric factor
+
+$$
+\mathtt{sf} = \frac{\mathtt{pperim}}{2.0\pi a}
+$$
+
+Surface area (named Ap in Sauter)
+
+$$
+\mathtt{sarea} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{pperim}
+$$
+
+Cross-section area (named S_phi in Sauter)
+$$
+\mathtt{xarea} = \pi a^2 \kappa (1 + 0.52 (\mathtt{w07} - 1))
+$$
+
+Volume
+$$
+\mathtt{vol} = 2.0\pi R (1 - 0.25 \delta \epsilon) \mathtt{xarea}
+$$
+
+
+
 
 ### Poloidal perimeter
 The poloidal plasma perimtere length `pperim` is calculated as follows:
@@ -398,52 +451,91 @@ $$
 ## Legacy claculations
 
 ### STAR Code plasma surface area | `surfa()` 
-### Plasma poloidal perimeter calculation | `perim()`
-### Plasma volume calculation | `fvol()`
-### Plasma cross sectional area calculation | `xsecto()`
+
+This function finds the plasma surface area, using the
+revolution of two intersecting arcs around the device centreline.
+This calculation is appropriate for plasmas with a separatrix.
 It was the original method in PROCESS[^6].
 
-$$
-\mathtt{radco} = \frac{a(1+(\kappa^2+\delta^2-1))}{2(1+\delta)} \\
-\mathtt{thto}=\arcsin{\frac{\kappa a}{\mathtt{radco}}} \\
-\underbrace{\mathtt{so}}_{\text{Outboard surface area}} = 4\pi \times \mathtt{radco}((R_0+a-\mathtt{radco})\mathtt{thto}+\kappa a)
-$$
 
-For the inboard edge:
+| Input Variable | Description                          |
+|----------|--------------------------------------|
+| `rminor`, $a$        | Plasma minor radius (m)              |
+| `rmajor`, $R$        | Plasma major radius (m)              |
+| `kappa`, $\kappa$      | Plasma separatrix elongation         |
+| `triang`, $\delta$      | Plasma separatrix triangularity      |
 
-$$
-\mathtt{radci} = \frac{a(1+(\kappa^2+\delta^2-1))}{2(1-\delta)} \\
-\mathtt{thti}=\arcsin{\frac{\kappa a}{\mathtt{radci}}} \\
-\underbrace{\mathtt{si}}_{\text{Inboard surface area}} = 4\pi \times \mathtt{radci}((R_0-a+\mathtt{radci})\mathtt{thti}-\kappa a)
-$$
-
-
-
-
-
-
-
-##  Poloidal Perimeter 
-The polidal perimeter is given by simply using the variables outputted from `xpram`
+| Output Variable | Description                          |
+|----------|--------------------------------------|
+| `sa`       | Plasma total surface area (m^2) |
+| `so`   | Plasma outboard surface area (m^2) |
 
 $$
-\underbrace{\mathtt{pperim}}_{\text{Poloidal perimiter}} = 2 \times(\mathtt{xo} \times \mathtt{thetao} \times \mathtt{xi} \times \mathtt{thetai}) 
+\mathtt{radco} = a \frac{(1.0 + (\kappa^2 + \delta^2 - 1.0)}{(2.0 \times (1.0 + \delta))}
 $$
 
 $$
-\underbrace{\mathtt{sf}}_{\text{Shape factor}} = \frac{\mathtt{pperim}}{(
-            2.0\pi \times a
-        )}
+\mathtt{b} = \kappa \times a
 $$
 
-$\mathtt{sf}$ is a variable used in the calculation of plasma current, used in some scalings.
+$$
+\mathtt{thto} = \arcsin{(\mathtt{b}/\mathtt{radco})}
+$$
 
-### `perim` method
+$$
+\mathtt{so} = 4.0\pi \times \mathtt{radco} \times ((R + a - \mathtt{radco}) \times \mathtt{thto} + \mathtt{b})
+$$
+
+Inboard side
+
+
+$$
+\mathtt{radci} = a \frac{(1.0 + (\kappa^2 + \delta^2 - 1.0)}{(2.0 \times (1.0 - \delta))}
+$$
+
+$$
+\mathtt{b} = \kappa \times a
+$$
+
+$$
+\mathtt{thti} = \arcsin{(\mathtt{b}/\mathtt{radci})}
+$$
+
+$$
+\mathtt{si} = 4.0\pi \times \mathtt{radci} \times ((R - a + \mathtt{radci}) \times \mathtt{thti} - \mathtt{b})
+$$
+
+$$
+\mathtt{sa} = \mathtt{so} + \mathtt{si}
+$$
+
+### Plasma poloidal perimeter calculation | `perim()`
+
+This function finds the plasma poloidal perimeter, using the
+revolution of two intersecting arcs around the device centreline.
+This calculation is appropriate for plasmas with a separatrix.
+
+| Input Variable | Description                          |
+|----------|--------------------------------------|
+| `rminor`, $a$        | Plasma minor radius (m)              |
+| `kappa`, $\kappa$      | Plasma separatrix elongation         |
+| `triang`, $\delta$      | Plasma separatrix triangularity      |
+
+| Output Variable | Description                          |
+|----------|--------------------------------------|
+| `perim`       | Plasma poloidal perimeter length (m) |
+
 Inboard arc
 
 $$
-\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta)) + \delta} \\
-\mathtt{thetai} = \arctan(\frac{\kappa}{\mathtt{denomi}}) \\
+\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta)) + \delta}
+$$
+
+$$
+\mathtt{thetai} = \arctan\left(\frac{\kappa}{\mathtt{denomi}}\right)
+$$
+
+$$
 \mathtt{xli} = a \times (\mathtt{denomi} + 1.0 - \delta)
 $$
 
@@ -451,24 +543,131 @@ Outboard arc
 
 $$
 \mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta)) - \delta} \\
-\mathtt{thetao} = \arctan(\frac{{\kappa}}{\mathtt{denomo}}) \\
-\mathtt{xlo} = a \times (\mathtt{denomo} + 1.0 + \delta)
+$$
+
+$$
+\mathtt{thetao} = \arctan\left(\frac{\kappa}{\mathtt{denomo}}\right) \\
+$$
+
+$$
+\mathtt{xlo} = a \times (\mathtt{denomo} + 1.0 + \delta) \\
 $$
 
 $$
 \mathtt{perim} = 2.0 \times (\mathtt{xlo} \times \mathtt{thetao} + \mathtt{xli} \times \mathtt{thetai})
 $$
 
-## Cross-section (`xsecta`)
+
+### Plasma volume calculation | `fvol()`
+
+ This function finds the plasma volume, using the
+revolution of two intersecting arcs around the device centreline.
+This calculation is appropriate for plasmas with a separatrix.
+
+| Input Variable | Description                          |
+|----------|--------------------------------------|
+| `rmajor`, $R$        | Plasma major radius (m)              |
+| `rminor`, $a$        | Plasma minor radius (m)              |
+| `kappa`, $\kappa$      | Plasma separatrix elongation         |
+| `triang`, $\delta$      | Plasma separatrix triangularity      |
+
+| Output Variable | Description                          |
+|----------|--------------------------------------|
+| `fvol`       | Plasma volume (m^3) |
+
 
 $$
-\mathtt{xsecta} = \mathtt{xo}^2 \times (\mathtt{thetao} - \cos{(\mathtt{thetao})} \times \sin{(\mathtt{thetao})}) + \mathtt{xi}^2 \times (\mathtt{thetai} - \cos{(\mathtt{thetai})} \times \sin{(\mathtt{thetai})})
+\mathtt{zn} = \kappa \times a
 $$
 
-### Peng version (`xsect0`)
+$$
+\mathtt{c1} = \frac{{(R + a)^2 - (R - \delta \times a)^2 - \mathtt{zn}^2}}{{2 \times (1 + \delta) \times a}}
+$$
 
 $$
+\mathtt{rc1} = R + a - \mathtt{c1}
 $$
+
+$$
+\mathtt{{vout}} = -\frac{2}{3} \pi \times \mathtt{zn}^3 + 2 \pi \times \mathtt{zn} \times (\mathtt{c1}^2 + \mathtt{rc1}^2) + 2 \pi \times \mathtt{c1} \times \left(\mathtt{zn} \times \sqrt{\mathtt{rc1}^2 - \mathtt{zn}^2} + \mathtt{rc1}^2 \times \arcsin{\left(\frac{\mathtt{zn}}{\mathtt{rc1}}\right)}\right)
+$$
+
+$$
+\mathtt{c2} = \frac{-((R - a)^2) + (R - \delta \times a)^2 + \mathtt{zn}^2)}{(2 \times (1 - \delta) \times a)}
+$$
+
+$$
+\mathtt{rc2} = \mathtt{c2} - R + a
+$$
+
+$$
+\mathtt{vin} = -\frac{2}{3} \pi \times \mathtt{zn}^3 + 2 \pi \times \mathtt{zn} \times (\mathtt{rc2}^2 + \mathtt{c2}^2) - 2 \pi \times \mathtt{c2} \times \left(\mathtt{zn} \times \sqrt{\mathtt{rc2}^2 - \mathtt{zn}^2} + \mathtt{rc2}^2 \times \arcsin{\left(\frac{\mathtt{zn}}{\mathtt{rc2}}\right)}\right)
+$$
+
+$$
+\mathtt{fvol} = \mathtt{vout} - \mathtt{vin}
+$$
+
+### Plasma cross sectional area calculation | `xsecto()`
+
+This function finds the plasma cross-sectional area, using the
+revolution of two intersecting arcs around the device centreline.
+This calculation is appropriate for plasmas with a separatrix.
+
+| Input Variable | Description                          |
+|----------|--------------------------------------|
+| `rminor`, $a$        | Plasma minor radius (m)              |
+| `kappa`, $\kappa$      | Plasma separatrix elongation         |
+| `triang`, $\delta$      | Plasma separatrix triangularity      |
+
+| Output Variable | Description                          |
+|----------|--------------------------------------|
+| `xsect0`       | Plasma cross-sectional area (m^2) |
+
+$$
+\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta)) + \delta}
+$$
+
+$$
+\mathtt{thetai} = \arctan\left(\frac{\kappa}{\mathtt{denomi}}\right)
+$$
+
+$$
+\mathtt{xli} = a \times (\mathtt{denomi} + 1.0 - \delta)
+$$
+
+$$
+\mathtt{cti} = \cos(\mathtt{thetai})
+$$
+
+$$
+\mathtt{sti} = \sin(\mathtt{thetai})
+$$
+
+$$
+\mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta)) - \delta}
+$$
+
+$$
+\mathtt{thetao} = \arctan\left(\frac{\kappa}{\mathtt{denomo}}\right)
+$$
+
+$$
+\mathtt{xlo} = a \times (\mathtt{denomo} + 1.0 + \delta)
+$$
+
+$$
+\mathtt{cto} = \cos(\mathtt{thetao})
+$$
+
+$$
+\mathtt{sto} = \sin(\mathtt{thetao})
+$$
+
+$$
+\mathtt{xsect0} = \mathtt{xlo}^2 \times (\mathtt{thetao} - \mathtt{cto} \times \mathtt{sto}) + \mathtt{xli}^2 \times (\mathtt{thetai} - \mathtt{cti} \times \mathtt{sti})
+$$
+
 
 [^1]: N.A. Uckan and ITER Physics Group, *ITER Physics Design Guidelines: 1989*, 
 ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
