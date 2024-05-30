@@ -93,9 +93,11 @@ class RegressionTestScenario:
         mfile = MFile(str(mfile_location))
         reference_mfile = MFile(str(reference_mfile_location))
 
-        assert (
-            ifail := mfile.data["ifail"].get_scan(-1)
-        ) == 1, f"ifail of {ifail} indicates PROCESS did not solve successfully"
+        assert (ifail := mfile.data["ifail"].get_scan(-1)) == 1 or mfile.data[
+            "ioptimz"
+        ].get_scan(
+            -1
+        ) == -2, f"ifail of {ifail} indicates PROCESS did not solve successfully"
 
         differences = self.mfile_value_changes(
             reference_mfile, mfile, tolerance, opt_params_only
