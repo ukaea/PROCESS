@@ -789,7 +789,7 @@ class Power:
             # heat_transport_variables.helpow calculation
             heat_transport_variables.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,
-                tfcoil_variables.tfsai,
+                tfcoil_variables.tfcryoarea,
                 structure_variables.coldmass,
                 fwbs_variables.ptfnuc,
                 pf_power_variables.ensxpfm,
@@ -2251,13 +2251,15 @@ class Power:
     # 30    format(t20,a20,t40,a8,t50,a8,t60,a8,t70,a8,t80,a8,t90,a8,t100,a8)
     # 40    format(t20,a20,t40,f8.2,t50,f8.2,t60,f8.2,t70,f8.2,t80,f8.2,t90,f8.2,t100,f8.2,t110,f8.2)
 
-    def cryo(self, i_tf_sup, tfsai, coldmass, ptfnuc, ensxpfm, tpulse, cpttf, n_tf):
+    def cryo(
+        self, i_tf_sup, tfcryoarea, coldmass, ptfnuc, ensxpfm, tpulse, cpttf, n_tf
+    ):
         """
         Calculates cryogenic loads
         author: P J Knight, CCFE, Culham Science Centre
         itfsup : input integer : Switch denoting whether TF coils are
         superconducting
-        tfsai : input real : Inboard TF coil surface area (m2)
+        tfcryoarea : input real : Surface area of toroidal shells covering TF coils (m2)
         coldmass : input real : Mass of cold (cryogenic) components (kg),
         including TF coils, PF coils, cryostat, and
         intercoil structure
@@ -2272,7 +2274,7 @@ class Power:
         """
         self.qss = 4.3e-4 * coldmass
         if i_tf_sup == 1:
-            self.qss = self.qss + 2.0e0 * tfsai
+            self.qss = self.qss + 2.0e0 * tfcryoarea
 
         #  Nuclear heating of TF coils (W) (zero if resistive)
         if fwbs_variables.inuclear == 0 and i_tf_sup == 1:
