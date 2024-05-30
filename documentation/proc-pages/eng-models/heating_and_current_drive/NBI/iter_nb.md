@@ -4,7 +4,7 @@
 
 | Output | Description |
 |----------|-------------|
-| $\mathtt{effnbss}$  | Neutral beam current drive efficiency in Amperes per Watt |
+| $\mathtt{effnbss}$  | Neutral beam current drive efficiency in $\text{A/W}$ |
 | $\mathtt{fpion}$    | Fraction of NB power given to ions |
 | $\mathtt{fshine}$   | Shine-through fraction of the beam |
 
@@ -71,7 +71,7 @@ ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
 
 | Output  | Description                                               |
 |---------|-----------------------------------------------------------|
-| $\mathtt{etanb}$   | Neutral beam current drive efficiency in Amperes per Watt |
+| $\mathtt{etanb}$   | Neutral beam current drive efficiency in $\text{A/W}$ |
 
 
 

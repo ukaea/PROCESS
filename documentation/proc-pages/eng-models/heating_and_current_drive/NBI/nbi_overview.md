@@ -60,7 +60,7 @@ with $E, n_e, T$ expressed in units of keV/u, $\text{cm}^3$ and keV, respectivel
 !!! info "Info" 
     For the full table of values for $A_{ijk}$ & $B_{ijk}^{(z)}$\  please see the accompanying paper[^1] or `current_drive.py`
 
-For a plasma having an arbitrary mix of $N$ different types of impurities with densities $n$, and charges $Z_q (q = 1, ..., N)$, the beam stopping cross-section can be represented as the weighted sum of the stopping cross- sections for $N$ reference single-impurity plasmas. In each of these reference plasmas, the electron density and the proton density (including that of deuterium and tritium ions) are the same as in a true plasma. The impurity density, however, is increased in order to satisfy quasi-neutrality. The weighting function is the electron density $n_qZ_q$ associated with the aum impurity (in the true plasma), divided by the sum of these densities. The result is: 
+For a plasma having an arbitrary mix of $N$ different types of impurities with densities $n$, and charges $Z_q (q = 1, ..., N)$, the beam stopping cross-section can be represented as the weighted sum of the stopping cross- sections for $N$ reference single-impurity plasmas. In each of these reference plasmas, the electron density and the proton density (including that of deuterium and tritium ions) are the same as in a true plasma. The impurity density, however, is increased in order to satisfy quasi-neutrality. The weighting function is the electron density $n_qZ_q$ associated with the amu impurity (in the true plasma), divided by the sum of these densities. The result is: 
 
 $$
 \sigma_s^{(N)}=\frac{ e^{S_{1}(E, n_{\text{e}}, T_{\text{e}})}}{E} \times\left[1+\frac{1}{n_{\text{e}}} \sum_q n_q Z_q(Z_q-1) S_{Z_q}(E, n_{\text{e}}, T_{\text{e}})\right] 
@@ -74,7 +74,7 @@ Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the
 | Input       | Description                          |
 | :---------- | :----------------------------------- |
 | $\mathtt{afast}$, $m_{\text{u,fast}}$      | Mass of fast particle (units of proton mass)   |
-| $\mathtt{efast}$, $E_{\text{fast}}$     | Energy of fast particle (keV)   |
+| $\mathtt{efast}$, $E_{\text{fast}}$     | Energy of fast particle ($\text{keV}$)   |
 | $\mathtt{te}$, $T_{\text{e}}$       | Density weighted average electron temperature ($\text{keV}$)   |
 | $\mathtt{ne}$, $n_{\text{e}}$       | Volume averaged electron density ($\text{m}^{-3}$)  |
 | $\mathtt{nd}$      | Deuterium beam density ($\text{m}^{-3}$)   |
@@ -152,7 +152,7 @@ Next, the following calculations are performed:
 
 8. Calculate `t2` using the formula:
     $$
-    \mathtt{t2} = 2 \sqrt{3} \frac{\arctan({\mathtt{thx}}+\pi)}{6}
+    \mathtt{t2} = 2 \sqrt{3} \arctan({\mathtt{thx}})+\frac{\pi}{6}
     $$
 
 Finally, the fraction of fast particle energy coupled to ions is calculated using the formula:

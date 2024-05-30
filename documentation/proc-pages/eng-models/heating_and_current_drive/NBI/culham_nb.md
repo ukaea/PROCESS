@@ -70,14 +70,14 @@ plus correction terms outlined in Culham Report AEA FUS 172.
 | $\mathtt{alphan}$, $\alpha_n$       | density profile factor   |
 | $\mathtt{alphat}$, $\alpha_T$       | temperature profile factor  |
 |  $\mathtt{aspect}$, $A$      |   aspect ratio                            |
-|  $\mathtt{dene}$, $n_{\text{e}}$     |    volume averaged electron density (m**-3)                           |
-|  $\mathtt{dnla}$, $n_{\text{e,0}}$      |    line averaged electron density (m**-3)                           |
-|  $\mathtt{enbeam}$      |  neutral beam energy (keV)                             |
+|  $\mathtt{dene}$, $n_{\text{e}}$     |    volume averaged electron density $(\text{m}^{-3})$                           |
+|  $\mathtt{dnla}$, $n_{\text{e,0}}$      |    line averaged electron density $(\text{m}^{-3})$                           |
+|  $\mathtt{enbeam}$      |  neutral beam energy $(\text{keV})$                             |
 |  $\mathtt{frbeam}$      |   R_tangent / R_major for neutral beam injection                            |
 |  $\mathtt{fshine}$      |  shine-through fraction of beam                             |
-|  $\mathtt{rmajor}$, $R$      |  plasma major radius (m)                             |
-|  $\mathtt{rminor}$, $a$      |  plasma minor radius (m)                             |
-|  $\mathtt{ten}$      |    density weighted average electron temperature (keV)                           |
+|  $\mathtt{rmajor}$, $R$      |  plasma major radius $(\text{m})$                              |
+|  $\mathtt{rminor}$, $a$      |  plasma minor radius $(\text{m})$                             |
+|  $\mathtt{ten}$      |    density weighted average electron temperature $(\text{keV})$                             |
 |  $\mathtt{zeff}$, $Z_{\text{eff}}$     |   plasma effective charge                            |
 
 
@@ -95,13 +95,13 @@ $$
 Volume averaged electron density ($10^{20} \text{m}^{-3}$)
 
 $$
-\mathtt{dene20} = n_{\text{e}} / 1^{20}
+\mathtt{dene20} = n_{\text{e,20}}
 $$
 
 Line averaged electron density ($10^{20} \text{m}^{-3}$)
 
 $$    
-\mathtt{dnla20} = n_{\text{e,0}} / 1^{20}
+\mathtt{dnla20} = n_{\text{(e,0) 20}} 
 $$
 
 Critical energy ($\text{MeV}$) (power to electrons = power to ions) (IPDG89)
@@ -114,7 +114,7 @@ $$
 Beam energy in MeV
 
 $$
-\mathtt{ebmev} = \mathtt{enbeam} / 1\times 10^{3}
+\mathtt{ebmev} = \frac{\mathtt{enbeam}}{10^3}
 $$
 
 x and y coefficients of function J0(x,y) (IPDG89)

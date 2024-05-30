@@ -17,7 +17,7 @@
 
 
 $$
-\mathtt{fc} = \frac{1}{2\pi}eB_{\text{T}}m_{\text{e}}
+\mathtt{fc} = \frac{\frac{1}{2\pi}eB_{\text{T}}}{m_{\text{e}}}
 $$
 
 $$
