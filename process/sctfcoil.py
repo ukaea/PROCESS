@@ -729,7 +729,9 @@ class Sctfcoil:
         elif isumat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = tfcoil_variables.b_crit_upper_nbti
             tc0m = tfcoil_variables.t_crit_nbti
-            j_crit_sc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
+            j_crit_sc, _, _ = superconductors.gl_nbti(
+                thelium, bmax, strain, bc20m, tc0m
+            )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
@@ -744,7 +746,9 @@ class Sctfcoil:
                 error_handling.report_error(261)
                 strain = numpy.sign(strain) * 0.7e-2
 
-            j_crit_sc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
+            j_crit_sc, _, _ = superconductors.gl_rebco(
+                thelium, bmax, strain, bc20m, tc0m
+            )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond

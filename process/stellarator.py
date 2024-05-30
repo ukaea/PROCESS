@@ -2986,9 +2986,7 @@ class Stellarator:
             j_crit_sc = max(1.0e-9, j_crit_sc)
             j_crit_cable = max(1.0e-9, j_crit_cable)
 
-        elif (
-            i_tf_sc_mat == 2
-        ):
+        elif i_tf_sc_mat == 2:
             # Bi-2212 high temperature superconductor parameterization
             #  Current density in a strand of Bi-2212 conductor
             #  N.B. jcrit returned by bi2212 is the critical current density
