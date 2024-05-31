@@ -115,56 +115,62 @@ class Caller:
         # mfiles at this stage
         previous_mfile_arr = None
 
-        # Evaluate models up to 10 times; any more implies non-converging values
-        for _ in range(10):
-            # Divert OUT.DAT and MFILE.DAT output to scratch files for
-            # idempotence checking
-            ft.init_module.open_idempotence_files()
-            self._call_models_once(xc)
-            # Write mfile
-            finalise(self.models, ifail)
-
-            # Extract data from intermediate idempotence-checking mfile
-            mfile_path = (
-                f2py_compatible_to_string(ft.global_variables.output_prefix)
-                + "IDEM_MFILE.DAT"
-            )
-            mfile = MFile(mfile_path)
-            mfile_data = {}
-            for var in mfile.data.keys():
-                mfile_data[var] = mfile.data[var].get_scan(-1)
-
-            # Extract floats from mfile dict into array for straightforward
-            # comparison: only compare floats
-            current_mfile_arr = np.array(
-                [val for val in mfile_data.values() if type(val) is float]
-            )
-            if previous_mfile_arr is None:
-                # First run: need another run to compare with
-                logger.debug(
-                    "New mfile created: evaluating models again to check idempotence"
-                )
-                previous_mfile_arr = np.copy(current_mfile_arr)
-                continue
-
-            if self.check_agreement(previous_mfile_arr, current_mfile_arr):
-                # Previous and current mfiles agree (idempotent)
-                logger.debug("Mfiles idempotent, returning")
-                # Divert OUT.DAT and MFILE.DAT output back to original files
-                # now idempotence checking complete
-                ft.init_module.close_idempotence_files()
-                # Write final output file and mfile
+        try:
+            # Evaluate models up to 10 times; any more implies non-converging values
+            for _ in range(10):
+                # Divert OUT.DAT and MFILE.DAT output to scratch files for
+                # idempotence checking
+                ft.init_module.open_idempotence_files()
+                self._call_models_once(xc)
+                # Write mfile
                 finalise(self.models, ifail)
-                return
 
-            # Mfiles not yet idempotent: re-evaluate models
-            logger.debug("Mfiles not idempotent, evaluating models again")
-            previous_mfile_arr = np.copy(current_mfile_arr)
+                # Extract data from intermediate idempotence-checking mfile
+                mfile_path = (
+                    f2py_compatible_to_string(ft.global_variables.output_prefix)
+                    + "IDEM_MFILE.DAT"
+                )
+                mfile = MFile(mfile_path)
+                mfile_data = {}
+                for var in mfile.data.keys():
+                    mfile_data[var] = mfile.data[var].get_scan(-1)
 
-        raise RuntimeError(
-            "Model evaluations at the current optimisation parameter vector "
-            "don't produce idempotent values in the final output."
-        )
+                # Extract floats from mfile dict into array for straightforward
+                # comparison: only compare floats
+                current_mfile_arr = np.array(
+                    [val for val in mfile_data.values() if isinstance(val, float)]
+                )
+                if previous_mfile_arr is None:
+                    # First run: need another run to compare with
+                    logger.debug(
+                        "New mfile created: evaluating models again to check idempotence"
+                    )
+                    previous_mfile_arr = np.copy(current_mfile_arr)
+                    continue
+
+                if self.check_agreement(previous_mfile_arr, current_mfile_arr):
+                    # Previous and current mfiles agree (idempotent)
+                    logger.debug("Mfiles idempotent, returning")
+                    # Divert OUT.DAT and MFILE.DAT output back to original files
+                    # now idempotence checking complete
+                    ft.init_module.close_idempotence_files()
+                    # Write final output file and mfile
+                    finalise(self.models, ifail)
+                    return
+
+                # Mfiles not yet idempotent: re-evaluate models
+                logger.debug("Mfiles not idempotent, evaluating models again")
+                previous_mfile_arr = np.copy(current_mfile_arr)
+
+            raise RuntimeError(
+                "Model evaluations at the current optimisation parameter vector "
+                "don't produce idempotent values in the final output."
+            )
+        except Exception:
+            # If exception in model evaluations or idempotence can't be
+            # achieved, delete intermediate idempotence files to clean up
+            ft.init_module.close_idempotence_files()
+            raise
 
     def _call_models_once(self, xc: np.ndarray) -> None:
         """Call the physics and engineering models.
