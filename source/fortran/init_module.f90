@@ -186,8 +186,9 @@ contains
    end subroutine open_idempotence_files
 
    subroutine close_idempotence_files
-      ! Revert back to writing to original OUT.DAT and MFILE.DAT, after
-      ! checking model evaluation idempotence
+      ! Close the intermediate idempotence-check files, deleting them in the process
+      ! Re-open the original OUT.DAT and MFILE.DAT output files, ready to write
+      ! the final data, now model evaluation idempotence has been checked
       use global_variables, only: output_prefix
       use constants, only: nout, mfile
       implicit none

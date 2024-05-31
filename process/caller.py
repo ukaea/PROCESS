@@ -114,9 +114,6 @@ class Caller:
         # TODO The only way to ensure idempotence in all outputs is by comparing
         # mfiles at this stage
         previous_mfile_arr = None
-        # Path of output file prefix required for writing intermediate idempotence-
-        # checking mfiles in the same directory as input file
-        output_prefix = ft.global_variables.output_prefix
 
         # Evaluate models up to 10 times; any more implies non-converging values
         for _ in range(10):
@@ -127,8 +124,11 @@ class Caller:
             # Write mfile
             finalise(self.models, ifail)
 
-            # Extract mfile data
-            mfile_path = f2py_compatible_to_string(output_prefix) + "IDEM_MFILE.DAT"
+            # Extract data from intermediate idempotence-checking mfile
+            mfile_path = (
+                f2py_compatible_to_string(ft.global_variables.output_prefix)
+                + "IDEM_MFILE.DAT"
+            )
             mfile = MFile(mfile_path)
             mfile_data = {}
             for var in mfile.data.keys():
