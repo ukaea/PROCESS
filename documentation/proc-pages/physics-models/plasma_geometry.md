@@ -208,15 +208,15 @@ This method calculates the radius and half angle of the arc describing the inboa
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `rminor`, $a$        | Plasma minor radius (m)              |
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
 | `kappa`, $\kappa$      | Plasma separatrix elongation         |
 | `triang`, $\delta$      | Plasma separatrix triangularity      |
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `xi`       | Radius of arc describing inboard surface (m) |
+| `xi`       | Radius of arc describing inboard surface [$\text{m}$] |
 | `thetai`   | Half-angle of arc describing inboard surface |
-| `xo`       | Radius of arc describing outboard surface (m) |
+| `xo`       | Radius of arc describing outboard surface [$\text{m}$] |
 | `thetao`   | Half-angle of arc describing outboard surface |
 
 <figure markdown>
@@ -278,18 +278,18 @@ It uses the geometrical properties derived in `xparam()`
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `rmajor`, $R$        | Plasma major radius (m)              |
-| `rminor`, $a$        | Plasma minor radius (m)              |
-| `xi`       | Radius of arc describing inboard surface (m) |
+| `rmajor`, $R$        | Plasma major radius [$\text{m}$]              |
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
+| `xi`       | Radius of arc describing inboard surface [$\text{m}$] |
 | `thetai`   | Half-angle of arc describing inboard surface |
-| `xo`       | Radius of arc describing outboard surface (m) |
+| `xo`       | Radius of arc describing outboard surface [$\text{m}$] |
 | `thetao`   | Half-angle of arc describing outboard surface |
 
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `xsi`       | Inboard surface area [m^2] |
-| `xso`       | Outboard surface area [m^2] |
+| `xsi`       | Inboard surface area [$\text{m}^2$] |
+| `xso`       | Outboard surface area [$\text{m}^2$] |
 
 <figure markdown>
 ![Outboard surface area](../images/plasma_inboard_surface_area.png){ width="80%"}
@@ -298,7 +298,7 @@ It uses the geometrical properties derived in `xparam()`
 
 $$
 \mathtt{rc}  = R_0-a + \mathtt{xi} \\ 
-\mathtt{xsi} = 4\pi \times \mathtt{xi} (\mathtt{rc} \times (\mathtt{thetai - xi}) \times \sin({\mathtt{thetai})})
+\mathtt{xsi} = 4\pi \times \mathtt{xi} (\mathtt{rc} \times \mathtt{thetai} -(\mathtt{xi} \times \sin({\mathtt{thetai}))})
 $$
 
 For the outboard side:
@@ -308,7 +308,7 @@ For the outboard side:
 </figure>
 $$
 \mathtt{rc}  = R_0+a - \mathtt{xo} \\ 
-\mathtt{xso} = 4\pi \times \mathtt{xo} (\mathtt{rc} \times (\mathtt{thetao + xi}) \times \sin({\mathtt{thetao})})
+\mathtt{xso} = 4\pi \times \mathtt{xo} (\mathtt{rc} \times \mathtt{thetao}+ (\mathtt{xo}\times \sin({\mathtt{thetao}))})
 $$
 
 
@@ -319,18 +319,18 @@ Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Des
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `rminor`, $a$        | Plasma minor radius (m)              |
-| `rmajor`, $R$        | Plasma major radius (m)              |
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
+| `rmajor`, $R$        | Plasma major radius [$\text{m}$]              |
 | `kappa`, $\kappa$      | Plasma separatrix elongation         |
 | `triang`, $\delta$      | Plasma separatrix triangularity      |
 
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `pperim`       | Plasma Poloidal perimeter length [m] |
-| `sarea`       | Plasma surface area [m^2] |
-| `xarea`       | Plasma cross-sectional area [m^2] |
-| `vol`       | Plasma volume [m^3] |
+| `pperim`       | Plasma Poloidal perimeter length [$\text{m}$] |
+| `sarea`       | Plasma surface area [$\text{m}^2$] |
+| `xarea`       | Plasma cross-sectional area [$\text{m}^2$] |
+| `vol`       | Plasma volume [$\text{m}^3$] |
 
 $$
 \mathtt{w07} = 1
@@ -390,17 +390,17 @@ The `cvol` iteration variable can be used to scale this output
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `rmajor`, $R$        | Plasma major radius (m)              |
-| `rminor`, $a$        | Plasma minor radius (m)              |
-| `xi`       | Radius of arc describing inboard surface (m) |
+| `rmajor`, $R$        | Plasma major radius [$\text{m}$]              |
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
+| `xi`       | Radius of arc describing inboard surface [$\text{m}$] |
 | `thetai`   | Half-angle of arc describing inboard surface |
-| `xo`       | Radius of arc describing outboard surface (m) |
+| `xo`       | Radius of arc describing outboard surface [$\text{m}$] |
 | `thetao`   | Half-angle of arc describing outboard surface |
 
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `xvol`       | Plasma volume [m^3] |
+| `xvol`       | Plasma volume [$\text{m}^3$] |
 
 Calculate the volume for the inboard plasma side:
 
@@ -430,15 +430,15 @@ This calculation is appropriate for plasmas with a separatrix.
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `xi`       | Radius of arc describing inboard surface (m) |
+| `xi`       | Radius of arc describing inboard surface [$\text{m}$] |
 | `thetai`   | Half-angle of arc describing inboard surface |
-| `xo`       | Radius of arc describing outboard surface (m) |
+| `xo`       | Radius of arc describing outboard surface [$\text{m}$] |
 | `thetao`   | Half-angle of arc describing outboard surface |
 
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `xsecta`       | Plasma cross-sectional area [m^2] |
+| `xsecta`       | Plasma cross-sectional area [$\text{m}^2$] |
 
 
 $$
@@ -460,15 +460,15 @@ It was the original method in PROCESS[^6].
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `rminor`, $a$        | Plasma minor radius (m)              |
-| `rmajor`, $R$        | Plasma major radius (m)              |
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
+| `rmajor`, $R$        | Plasma major radius [$\text{m}$]              |
 | `kappa`, $\kappa$      | Plasma separatrix elongation         |
 | `triang`, $\delta$      | Plasma separatrix triangularity      |
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `sa`       | Plasma total surface area (m^2) |
-| `so`   | Plasma outboard surface area (m^2) |
+| `sa`       | Plasma total surface area [$\text{m}^2$] |
+| `so`   | Plasma outboard surface area [$\text{m}^2$] |
 
 $$
 \mathtt{radco} = a \frac{(1.0 + (\kappa^2 + \delta^2 - 1.0)}{(2.0 \times (1.0 + \delta))}
@@ -517,18 +517,18 @@ This calculation is appropriate for plasmas with a separatrix.
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `rminor`, $a$        | Plasma minor radius (m)              |
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
 | `kappa`, $\kappa$      | Plasma separatrix elongation         |
 | `triang`, $\delta$      | Plasma separatrix triangularity      |
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `perim`       | Plasma poloidal perimeter length (m) |
+| `perim`       | Plasma poloidal perimeter length [$\text{m}$] |
 
 Inboard arc
 
 $$
-\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta)) + \delta}
+\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta))}+ \delta
 $$
 
 $$
@@ -542,7 +542,7 @@ $$
 Outboard arc
 
 $$
-\mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta)) - \delta} \\
+\mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta))} -\delta \\
 $$
 
 $$
@@ -566,14 +566,14 @@ This calculation is appropriate for plasmas with a separatrix.
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `rmajor`, $R$        | Plasma major radius (m)              |
-| `rminor`, $a$        | Plasma minor radius (m)              |
+| `rmajor`, $R$        | Plasma major radius [$\text{m}$]              |
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
 | `kappa`, $\kappa$      | Plasma separatrix elongation         |
 | `triang`, $\delta$      | Plasma separatrix triangularity      |
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `fvol`       | Plasma volume (m^3) |
+| `fvol`       | Plasma volume [$\text{m}^3$] |
 
 
 $$
@@ -616,16 +616,16 @@ This calculation is appropriate for plasmas with a separatrix.
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
-| `rminor`, $a$        | Plasma minor radius (m)              |
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
 | `kappa`, $\kappa$      | Plasma separatrix elongation         |
 | `triang`, $\delta$      | Plasma separatrix triangularity      |
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `xsect0`       | Plasma cross-sectional area (m^2) |
+| `xsect0`       | Plasma cross-sectional area [$\text{m}^2$] |
 
 $$
-\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta)) + \delta}
+\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta))}+ \delta
 $$
 
 $$
@@ -645,7 +645,7 @@ $$
 $$
 
 $$
-\mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta)) - \delta}
+\mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta))}- \delta
 $$
 
 $$
