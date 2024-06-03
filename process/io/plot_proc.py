@@ -1042,13 +1042,10 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
                         # Zav[i][k] = imp_data[i][j][2]
             # The impurity radiation
             pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
-            # The Bremsstrahlung
-            # pbremden[i][k] = imp_frac[i] * ne[k] * ne[k] * Zav[i][k] * Zav[i][k] * 5.355e-37 * np.sqrt(te[k])
 
         for l in range(imp_data.shape[0]):  # noqa: E741
             prad[k] = prad[k] + pimpden[l][k] * 2.0e-6
-            # pbrem[k] = pbrem[k] + pbremden[l][k] * 2.0e-6
-
+            
     # benchmark prad again outfile so mod prad
     # pbremint = (rho[1:] * pbrem[1:]) @ drho
     # pradint = prad[1:] @ drho * 2.0e-5
@@ -1058,7 +1055,6 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     # print('pbrem = ',pbrem)
     # print(1.0e32*lz[12])
     # print('pradpv = ',pradint)
-    # print('pbrempv = ',pbremint)
     # print('pbremmw = ',pbremint*vol)
     # print('pradmw = ', pradint*vol, 'MW') # pimp = pline + pbrem
 

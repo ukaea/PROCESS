@@ -577,9 +577,6 @@ module physics_variables
   real(dp) :: palpnb
   !! alpha power from hot neutral beam ions (MW)
 
-  real(dp) :: pbrempv
-  !! bremsstrahlung power per volume (MW/m3)
-
   real(dp) :: pchargemw
   !! non-alpha charged particle fusion power (MW)
 
@@ -636,9 +633,6 @@ module physics_variables
 
   real(dp) :: plascur
   !! plasma current (A)
-
-  real(dp) :: plinepv
-  !! line radiation power per volume (MW/m3)
 
   real(dp) :: pneutmw
   !! neutron fusion power (MW)
@@ -1009,7 +1003,6 @@ module physics_variables
     palpipv = 0.0D0
     palpmw = 0.0D0
     palpnb = 0.0D0
-    pbrempv = 0.0D0
     pchargemw = 0.0D0
     pchargepv = 0.0D0
     pcoef = 0.0D0
@@ -1029,7 +1022,6 @@ module physics_variables
     photon_wall = 0.0D0
     piepv = 0.0D0
     plascur = 0.0D0
-    plinepv = 0.0D0
     pneutmw = 0.0D0
     pneutpv = 0.0D0
     pohmmw = 0.0D0

@@ -10,16 +10,6 @@ import process.impurity_radiation as impurity_radiation
 def initialise_impurity_radiation():
     impurity_radiation_module.init_impurity_radiation_module()
     impurity_radiation.initialise_imprad()
-
-
-class PbremdenParam(NamedTuple):
-    imp_element_index: int = 0
-    ne: np.array = np.array
-    te: np.array = np.array
-    expected_pbremden: np.array = np.array
-
-
-def test_pbremden():
     """Tests `pbremden` function.
 
     :param imp_element_index: impurity element
