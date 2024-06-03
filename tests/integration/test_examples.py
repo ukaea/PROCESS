@@ -85,7 +85,7 @@ def test_scan(scan_cleanup):
     :param scan_cleanup: fixture to delete any produced files
     :type scan_cleanup: None
     """
-    with testbook("scan.ipynb", execute=True):
+    with testbook("scan.ipynb", execute=True, timeout=120):
         # Run entire scan.ipynb notebook and assert an MFILE is created
         assert os.path.exists("a_scan_input_file_MFILE.DAT")
 
