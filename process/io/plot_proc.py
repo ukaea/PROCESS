@@ -2984,47 +2984,6 @@ def main_plot(
     plot_tf_turn(plot_8, m_file_data, scan)
 
 
-def save_plots(m_file_data, scan):
-    """Function to recreate and save individual plots."""
-
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-
-    # Plot poloidal cross-section
-    pol = fig.add_subplot(111, aspect="equal")
-    poloidal_cross_section(pol, m_file_data, scan)
-
-    # Plot TF coils
-    plot_tf_coils(pol, m_file_data, scan)
-
-    # Plot PF coils
-    plot_pf_coils(pol, m_file_data, scan)
-
-    fig.savefig("psection.svg", format="svg", dpi=1200)
-
-    # Plot toroidal cross-section
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-    tor = fig.add_subplot(222, aspect="equal")
-    toroidal_cross_section(tor)
-    fig.savefig("tsection.svg", format="svg", dpi=1200)
-
-    # Plot color key
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-    plot = fig.add_subplot(241)
-    color_key(plot)
-    fig.savefig("color_key.svg", format="svg", dpi=1200)
-
-    # Plot profiles
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-    plot = fig.add_subplot(223, aspect=0.05)
-    plot_nprofile(plot, False)
-    fig.savefig("nprofile.svg", format="svg", dpi=1200)
-
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-    plot = fig.add_subplot(224, aspect=1 / 35)
-    plot_tprofile(plot, False)
-    fig.savefig("tprofile.svg", format="svg", dpi=1200)
-
-
 def main(args=None):
     # TODO The use of globals here isn't ideal, but is required to get main()
     # working with minimal changes. Should be converted to class structure
@@ -3300,9 +3259,6 @@ def main(args=None):
     if args.show:
         plt.show(block=True)
 
-    # This bit doesn't work - the argument is not recognised for some reason.:
-    # if args.svg:
-    #    save_plots(m_file)
     plt.close(page1)
     plt.close(page2)
     plt.close(page3)
