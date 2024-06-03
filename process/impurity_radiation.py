@@ -326,29 +326,6 @@ def z2index(zimp):
     error_handling.report_error(33)
 
 
-def pbremden(imp_element_index, nprofile, tprofile):
-    """Calculates the Bremsstrahlung power per volume for a given set of profiles.
-
-    :param imp_element_index: Impurity profile index
-    :type imp_element_index: int
-    :param nprofile: density profile
-    :type nprofile: numpy.array
-    :param tprofile: temperature profile
-    :type tprofile: numpy.array
-    :return: pbremden - Bremsstrahlung power array
-    :rtype: numpy.array
-    """
-    pbremden = (
-        impurity_radiation_module.impurity_arr_frac[imp_element_index]
-        * nprofile
-        * nprofile
-        * numpy.square(zav_of_te(imp_element_index, tprofile))
-        * 5.355e-37
-        * numpy.sqrt(tprofile)
-    )
-    return pbremden
-
-
 def fradcore(rho, coreradius, coreradiationfraction):
     """Finds the fraction of radiation from the core that is subtracted in impurity radiation model.
 
@@ -509,8 +486,6 @@ class ImpurityRadiation:
             0
         ]
 
-        self.pline_profile = numpy.zeros(self.plasma_profile.profile_size)
-        self.pbrem_profile = numpy.zeros(self.plasma_profile.profile_size)
         self.pimp_profile = numpy.zeros(self.plasma_profile.profile_size)
         self.radtot_profile = numpy.zeros(self.plasma_profile.profile_size)
         self.radcore_profile = numpy.zeros(self.plasma_profile.profile_size)
@@ -545,33 +520,12 @@ class ImpurityRadiation:
         :type imp_element_index: Int
         """
 
-        pbrem = pbremden(
-            imp_element_index,
-            self.plasma_profile.neprofile.profile_y,
-            self.plasma_profile.teprofile.profile_y,
-        )
-        self.pbrem_profile = numpy.add(self.pbrem_profile, pbrem)
-
         pimp = pimpden(
             imp_element_index,
             self.plasma_profile.neprofile.profile_y,
             self.plasma_profile.teprofile.profile_y,
         )
 
-        pline = numpy.zeros(self.plasma_profile.profile_size)
-
-        # Using a 'mask' to apply logic to the array values in lieu of loops
-        pimp_greater_pbrem_mask = pimp >= pbrem
-        pline[pimp_greater_pbrem_mask] = (
-            pimp[pimp_greater_pbrem_mask] - pbrem[pimp_greater_pbrem_mask]
-        )
-        self.pline_profile = numpy.add(self.pline_profile, pline)
-
-        # There is a model inconsistency where pimp < pbrem, which should never be true.
-        # This fix is okay at high T but should be remedied.
-        pimp[numpy.invert(pimp_greater_pbrem_mask)] = pbrem[
-            numpy.invert(pimp_greater_pbrem_mask)
-        ]
         self.pimp_profile = numpy.add(self.pimp_profile, pimp)
 
     def calculate_radiation_loss_profiles(self):
