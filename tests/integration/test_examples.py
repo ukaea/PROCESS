@@ -44,9 +44,9 @@ def delete_plot_procs(examples_as_cwd):
     :type examples_as_cwd: None
     """
     yield
-    plot_proc_1 = Path("../examples/plot_proc_1")
-    plot_proc_2 = Path("../examples/plot_proc_2")
-    plot_proc_3 = Path("../examples/plot_proc_3")
+    plot_proc_1 = Path("../examples/plot_proc_1.png")
+    plot_proc_2 = Path("../examples/plot_proc_2.png")
+    plot_proc_3 = Path("../examples/plot_proc_3.png")
     plot_proc_1.unlink(missing_ok=True)
     plot_proc_2.unlink(missing_ok=True)
     plot_proc_3.unlink(missing_ok=True)
@@ -116,7 +116,6 @@ def test_csv(csv_cleanup):
     """
     with testbook("csv_output.ipynb", execute=True):
         # Check csv file is created
-        print(os.getcwd())
         assert os.path.exists("csv_output_large_tokamak_MFILE.csv")
 
         # Read in the csv file created by test and check it contains positive floats
