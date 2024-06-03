@@ -255,9 +255,7 @@ def radpwr(plasma_profile):
     #  Total radiation power/volume.
     pradpv = imp_rad.radtot + psyncpv
 
-    return RadpwrData(
-        psyncpv, pcoreradpv, pedgeradpv, pradpv
-    )
+    return RadpwrData(psyncpv, pcoreradpv, pedgeradpv, pradpv)
 
 
 def psync_albajar_fidone():

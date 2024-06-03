@@ -1045,7 +1045,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
         for l in range(imp_data.shape[0]):  # noqa: E741
             prad[k] = prad[k] + pimpden[l][k] * 2.0e-6
-            
+
     # benchmark prad again outfile so mod prad
     # pbremint = (rho[1:] * pbrem[1:]) @ drho
     # pradint = prad[1:] @ drho * 2.0e-5
