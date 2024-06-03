@@ -619,7 +619,7 @@ module physics_variables
   real(dp) :: pedgeradpv
   !! edge radiation power per volume (MW/m3)
 
-  real(dp) :: pfuscmw
+  real(dp) :: pfuscmw 
   !! charged particle fusion power (MW)
 
   real(dp) :: phiint
