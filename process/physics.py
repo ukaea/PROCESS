@@ -1183,8 +1183,6 @@ class Physics:
         # Calculate radiation power
 
         radpwrdata = physics_funcs.radpwr(self.plasma_profile)
-        physics_variables.pbrempv = radpwrdata.pbrempv
-        physics_variables.plinepv = radpwrdata.plinepv
         physics_variables.psyncpv = radpwrdata.psyncpv
         physics_variables.pcoreradpv = radpwrdata.pcoreradpv
         physics_variables.pedgeradpv = radpwrdata.pedgeradpv
@@ -3257,20 +3255,6 @@ class Physics:
         # po.ovarre(self.outfile,'Total power deposited in plasma (MW)','()',falpha*palpmw+pchargemw+pohmmw+pinjmw, 'OP ')
 
         po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
-        po.ovarre(
-            self.outfile,
-            "Bremsstrahlung radiation power (MW)",
-            "(pbrempv*vol)",
-            physics_variables.pbrempv * physics_variables.vol,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Line radiation power (MW)",
-            "(plinepv*vol)",
-            physics_variables.plinepv * physics_variables.vol,
-            "OP ",
-        )
         po.ovarre(
             self.outfile,
             "Synchrotron radiation power (MW)",

@@ -256,7 +256,7 @@ def radpwr(plasma_profile):
     pradpv = imp_rad.radtot + psyncpv
 
     return RadpwrData(
-        imp_rad.radb, imp_rad.radl, psyncpv, pcoreradpv, pedgeradpv, pradpv
+        psyncpv, pcoreradpv, pedgeradpv, pradpv
     )
 
 
@@ -462,8 +462,6 @@ class BoschHaleConstants:
 class RadpwrData:
     """DataClass which holds the output of the function radpwr"""
 
-    pbrempv: float
-    plinepv: float
     psyncpv: float
     pcoreradpv: float
     pedgeradpv: float
