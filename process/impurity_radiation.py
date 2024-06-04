@@ -469,10 +469,9 @@ def pimpden(imp_element_index, nprofile, tprofile):
 
 class ImpurityRadiation:
     """This class calculates the impurity radiation losses for given temperature and density profiles.
-    The considers the Bremsstrahlung (radb), line radiation (radl), total impurity radiation
-    from the core (radcore) and total impurity radiation (radtot) [MW/(m^3)].
-    The class is used to sum the impurity radiation loss from each impurity element to find the
-    total impurity radiation loss."""
+    The considers the  total impurity radiation from the core (radcore) and total impurity radiation
+    (radtot) [MW/(m^3)]. The class is used to sum the impurity radiation loss from each impurity
+    element to find the total impurity radiation loss."""
 
     def __init__(self, plasma_profile):
         """
@@ -489,13 +488,9 @@ class ImpurityRadiation:
         self.pimp_profile = numpy.zeros(self.plasma_profile.profile_size)
         self.radtot_profile = numpy.zeros(self.plasma_profile.profile_size)
         self.radcore_profile = numpy.zeros(self.plasma_profile.profile_size)
-        self.radb_profile = numpy.zeros(self.plasma_profile.profile_size)
-        self.radl_profile = numpy.zeros(self.plasma_profile.profile_size)
 
         self.radtot = 0.0
         self.radcore = 0.0
-        self.radb = 0.0
-        self.radl = 0.0
 
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""
@@ -544,23 +539,12 @@ class ImpurityRadiation:
             )
         )
 
-        radb = self.pbrem_profile * self.rho
-        radl = self.pline_profile * self.rho
-
         self.radtot_profile = numpy.add(self.radtot_profile, radtot)
         self.radcore_profile = numpy.add(self.radcore_profile, radcore)
-        self.radb_profile = numpy.add(self.radb_profile, radb)
-        self.radl_profile = numpy.add(self.radl_profile, radl)
 
     def integrate_radiation_loss_profiles(self):
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss."""
-        self.radb = 2.0e-6 * integrate.simpson(
-            self.radb_profile, x=self.rho, dx=self.rhodx
-        )
-        self.radl = 2.0e-6 * integrate.simpson(
-            self.radl_profile, x=self.rho, dx=self.rhodx
-        )
         self.radtot = 2.0e-6 * integrate.simpson(
             self.radtot_profile, x=self.rho, dx=self.rhodx
         )
