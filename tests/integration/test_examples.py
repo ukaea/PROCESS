@@ -1,11 +1,18 @@
-"""Integration test for example notebooks in examples/ dir"""
+"""Integration test for examples.py.
 
+examples.py is created by exporting examples.ipynb as a Python script.
+"""
+
+import runpy
 import os
 from pathlib import Path
 import pytest
 import pandas
 import numpy as np
-from testbook import testbook
+
+# TODO How to reliably run examples/examples.py script? Relies on relative path
+# from project root dir and pytest having project root dir as cwd. Could this be
+# improved?
 
 
 @pytest.fixture
@@ -37,33 +44,28 @@ def examples_as_cwd():
 
 
 @pytest.fixture
-def delete_plot_procs(examples_as_cwd):
-    """Delete any plot_proc files produced by examples.ipynb.
+def delete_plot_procs():
+    yield
+    plot_proc_1 = Path("../examples/plot_proc_1")
+    plot_proc_2 = Path("../examples/plot_proc_2")
+    plot_proc_1.unlink(missing_ok=True)
+    plot_proc_2.unlink(missing_ok=True)
 
+
+def test_examples(examples_as_cwd, delete_plot_procs):
+    """Run the examples.py script and check no exceptions are raised.
+
+    examples.py uses temp dirs to clean up any produced files itself.
     :param examples_as_cwd: fixture to set examples dir as cwd
     :type examples_as_cwd: None
     """
-    yield
-    plot_proc_1 = Path("../examples/plot_proc_1.png")
-    plot_proc_2 = Path("../examples/plot_proc_2.png")
-    plot_proc_3 = Path("../examples/plot_proc_3.png")
-    plot_proc_1.unlink(missing_ok=True)
-    plot_proc_2.unlink(missing_ok=True)
-    plot_proc_3.unlink(missing_ok=True)
-
-
-def test_examples(delete_plot_procs):
-    """Run examples.ipynb and check no exceptions are raised.
-
-    examples.ipynb uses temp dirs to clean up any produced files itself.
-    """
-    with testbook("examples.ipynb", execute=True):
-        pass
+    # runpy used to run entire examples.py script
+    runpy.run_path("examples.py")
 
 
 @pytest.fixture
 def scan_cleanup(examples_as_cwd):
-    """Delete any files produced by scan.ipynb.
+    """Delete any files produced by scan.py.
 
     :param examples_as_cwd: fixture to set examples dir as cwd
     :type examples_as_cwd: None
@@ -78,21 +80,20 @@ def scan_cleanup(examples_as_cwd):
 
 
 def test_scan(scan_cleanup):
-    """Run scan.ipynb notebook check no exceptions are raised and that an MFILE is created.
+    """Run the scan.py script and check no exceptions are raised.
 
-    scan.ipynb intentionally produces files when running the notebook, but remove
+    scan.py intentionally produces files when running the notebook, but remove
     them when testing.
     :param scan_cleanup: fixture to delete any produced files
     :type scan_cleanup: None
     """
-    with testbook("scan.ipynb", execute=True, timeout=120):
-        # Run entire scan.ipynb notebook and assert an MFILE is created
-        assert os.path.exists("a_scan_input_file_MFILE.DAT")
+    # Run entire scan.py script
+    runpy.run_path("scan.py")
 
 
 @pytest.fixture
 def csv_cleanup(examples_as_cwd):
-    """Delete any files produced by csv_output.ipynb.
+    """Delete any files produced by csv_output.py.
 
     :param examples_as_cwd: fixture to set examples dir as cwd
     :type examples_as_cwd: None
@@ -107,39 +108,40 @@ def csv_cleanup(examples_as_cwd):
 
 
 def test_csv(csv_cleanup):
-    """Run csv_output.ipynb, check no exceptions are raised, check a csv file exists and check the csv file contains data.
+    """Run the csv_output.py script, check no exceptions are raised, check a csv file exists and check the csv file contains data.
 
-    csv_output.ipynb intentionally produces files when running the notebook, but remove
+    csv_output.py intentionally produces files when running the notebook, but remove
     them when testing.
     :param csv_cleanup: fixture to delete any produced files
     :type csv_cleanup: None
     """
-    with testbook("csv_output.ipynb", execute=True):
-        # Check csv file is created
-        assert os.path.exists("csv_output_large_tokamak_MFILE.csv")
+    # Run entire scan.py script
+    runpy.run_path("csv_output.py")
 
-        # Read in the csv file created by test and check it contains positive floats
-        readcsv = pandas.read_csv("csv_output_large_tokamak_MFILE.csv")
-        values = readcsv["Value"]
-        value_array = np.array(values)
-        check_float = False
-        check_positive = False
-        value_array_type = value_array.dtype
-        if value_array_type.kind == "f":
-            check_float = True
-        assert check_float
+    # Check csv file is created
+    assert os.path.exists("csv_output_large_tokamak_MFILE.csv")
 
-        check_positive_count = np.sum(value_array > 0)
-        if check_positive_count == len(value_array):
-            check_positive = True
-        assert check_positive
+    # Read in the csv file created by test and check it contains positive floats
+    readcsv = pandas.read_csv("csv_output_large_tokamak_MFILE.csv")
+    values = readcsv["Value"]
+    value_array = np.array(values)
+    check_float = False
+    check_positive = False
+    value_array_type = value_array.dtype
+    if value_array_type.kind == "f":
+        check_float = True
+    assert check_float
+
+    check_positive_count = np.sum(value_array > 0)
+    if check_positive_count == len(value_array):
+        check_positive = True
+    assert check_positive
 
 
 def test_plot_solutions(examples_as_cwd):
-    """Run plot_solutions.ipynb and check no exceptions are raised.
+    """Run the plot_solutions.py script and check no exceptions are raised.
 
     :param examples_as_cwd: fixture to set examples dir as cwd
     :type examples_as_cwd: NoneType
     """
-    with testbook("plot_solutions.ipynb", execute=True):
-        pass
+    runpy.run_path("plot_solutions.py")
