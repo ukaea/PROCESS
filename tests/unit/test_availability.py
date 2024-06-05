@@ -486,23 +486,18 @@ def test_avail_st(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
-    # Initialise fortran variables to keep test isolated from others
-    fortran.init_module.init_all_module_vars()
 
     monkeypatch.setattr(cv, "tmain", 1.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
-    monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
+    monkeypatch.setattr(cv, "u_unplanned", 0.1)
     monkeypatch.setattr(tv, "tburn", 5.0)
     monkeypatch.setattr(tv, "tcycle", 10.0)
 
     availability.avail_st(output=False)
 
     assert pytest.approx(cv.t_operation) == 29.03225806
-    assert pytest.approx(cv.cfactr) == 0.82579737
-    assert pytest.approx(cv.cpfact) == 0.41289868
-
-    # Initialise fortran variables again to reset for other tests
-    fortran.init_module.init_all_module_vars()
+    assert pytest.approx(cv.cfactr) == 0.86451613
+    assert pytest.approx(cv.cpfact) == 0.43225806
 
 
 @pytest.mark.parametrize("i_tf_sup, exp", ((1, 6.337618), (0, 4)))
