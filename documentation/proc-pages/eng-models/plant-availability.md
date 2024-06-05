@@ -35,9 +35,6 @@ It is assumed that the vacuum system can be maintained in parallel with blanket 
 
 If `iavail = 3`, the availability model for Spherical Tokamaks (ST) is implemented. 
 
-!!! Warning "Warning"
-		Currently, this model only uses the centrepost to calculate the availability of an ST plant. Other systems/components will be added in the future.
-
 This model takes the user-specified time to replace a centrepost `tmain` and the centrepost lifetime `cplife` (calculated, see below) and calculates the number of maintenance cycles
 
 $$ t_{\text{main}} + t_{\text{CP,life}} = t_{\text{maint cycle}}. $$
@@ -50,7 +47,7 @@ $$ n_{\text{CP}} = \lceil n_{\text{cycles}} \rceil. $$
 
 The planned unavailability is then what percent of a maintenance cycle is taken up by the user-specified maintenance time
 
-$$ U_{\text{planned}} = t_{\text{main}} / t_{\text{maint cycle}} $$
+$$ U_{\text{planned,CP}} = t_{\text{main}} / t_{\text{maint cycle}} $$
 
 and the total operational time is given by
 
@@ -60,7 +57,9 @@ The total availability of the plant is then given by
 
 $$ A_{\text{tot}} = 1 - (U_{\text{planned}} + U_{\text{unplanned}} + U_{\text{planned}}U_{\text{unplanned}}) $$
 
-where $U_{unplanned}$ is unplanned unavailability which is provided by the user i.e. how often do you expect the centrepost to break over its lifetime. The cross term takes account of overlap between planned and unplanned unavailability.
+where $U_{unplanned}$ is unplanned unavailability. The cross term takes account of overlap between planned and unplanned unavailability.
+
+This model uses the unplanned unavailability calculations implemented in `iavail = 2` (see above). This includes the magnets, divertor, first wall and blanket, balance of plant, heating and current drive, and vacuum systems. The centrepost unplanned unavailability $U_{\text{unplanned,CP}}$ is provided by the user i.e. how often do you expect the centrepost to break over its lifetime. These unplanned unavailabilities are then added to $U_{\text{unplanned,CP}}$ to give $U_{\text{unplanned}}$.
 
 Finally, the capcity factor is given by
 
