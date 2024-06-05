@@ -1124,7 +1124,7 @@ class Availability:
                 "Total unplanned unavailability",
                 "(u_unplanned)",
                 u_unplanned,
-                "IP ",
+                "OP ",
             )
             po.ovarre(
                 self.outfile,

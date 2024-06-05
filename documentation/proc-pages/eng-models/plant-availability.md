@@ -57,7 +57,7 @@ The total availability of the plant is then given by
 
 $$ A_{\text{tot}} = 1 - (U_{\text{planned}} + U_{\text{unplanned}} + U_{\text{planned}}U_{\text{unplanned}}) $$
 
-where $U_{unplanned}$ is unplanned unavailability. The cross term takes account of overlap between planned and unplanned unavailability.
+where $U_{\text{unplanned}}$ is unplanned unavailability. The cross term takes account of overlap between planned and unplanned unavailability.
 
 This model uses the unplanned unavailability calculations implemented in `iavail = 2` (see above). This includes the magnets, divertor, first wall and blanket, balance of plant, heating and current drive, and vacuum systems. The centrepost unplanned unavailability $U_{\text{unplanned,CP}}$ is provided by the user i.e. how often do you expect the centrepost to break over its lifetime. These unplanned unavailabilities are then added to $U_{\text{unplanned,CP}}$ to give $U_{\text{unplanned}}$.
 
