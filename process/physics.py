@@ -25,7 +25,6 @@ from process.fortran import (
     stellarator_variables,
     process_output as po,
     profiles_module,
-    startup_variables,
 )
 
 
@@ -4971,28 +4970,14 @@ class Physics:
         # Calculate Neo-Alcator confinement time (used in several scalings)
         taueena = 0.07e0 * n20 * rminor * rmajor * rmajor * qstar
 
-        # For reference (see startup.f90):
-        # startup_variables.gtaue = offset term in tauee scaling
-        # startup_variables.ptaue = exponent for density term in tauee scaling
-        # startup_variables.qtaue = exponent for temperature term in tauee scaling
-        # startup_variables.rtaue = exponent for power term in tauee scaling
-
         # Electron energy confinement times
 
         if isc == 1:  # Neo-Alcator scaling (ohmic)
             # tauee = taueena
             tauee = hfact * taueena
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 1.0e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = 0.0e0
 
         elif isc == 2:  # Mirnov scaling (H-mode)
             tauee = hfact * 0.2e0 * rminor * np.sqrt(kappa95) * pcur
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.0e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = 0.0e0
 
         elif isc == 3:  # Merezhkin-Muhkovatov scaling (L-mode)
             tauee = (
@@ -5006,10 +4991,6 @@ class Physics:
                 * np.sqrt(afuel)
                 / np.sqrt(ten / 10.0e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 1.0e0
-            startup_variables.qtaue = -0.5e0
-            startup_variables.rtaue = 0.0e0
 
         elif isc == 4:  # Shimomura scaling (H-mode)
             tauee = (
@@ -5021,10 +5002,6 @@ class Physics:
                 * np.sqrt(kappa95)
                 * np.sqrt(afuel)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.0e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = 0.0e0
 
         elif isc == 5:  # Kaye-Goldston scaling (L-mode)
             tauee = (
@@ -5037,10 +5014,7 @@ class Physics:
                 * np.sqrt(afuel / 1.5e0)
                 / (bt**0.09e0 * rminor**0.49e0 * powerht**0.58e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.26e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.58e0
+
             if iinvqd != 0:
                 tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
 
@@ -5057,10 +5031,6 @@ class Physics:
                 * np.sqrt(afuel)
                 / np.sqrt(powerht)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.1e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.5e0
 
         elif isc == 7:  # ITER Offset linear scaling - ITER 89-O (L-mode)
             term1 = (
@@ -5083,10 +5053,6 @@ class Physics:
                 / powerht
             )
             tauee = hfact * (term1 + term2)
-            startup_variables.gtaue = hfact * term1
-            startup_variables.ptaue = 0.6e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -1.0e0
 
         elif isc == 8:  # Rebut-Lallia offset linear scaling (L-mode)
             rll = (rminor**2 * rmajor * kappa95) ** 0.333e0
@@ -5105,15 +5071,6 @@ class Physics:
                     / powerht
                 )
             )
-            startup_variables.gtaue = (
-                hfact
-                * 1.65e0
-                * np.sqrt(afuel / 2.0e0)
-                * (1.2e-2 * pcur * rll**1.5e0 / np.sqrt(zeff))
-            )
-            startup_variables.ptaue = 0.75e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -1.0e0
 
         elif isc == 9:  # Goldston scaling (L-mode)
             tauee = (
@@ -5126,10 +5083,7 @@ class Physics:
                 * np.sqrt(afuel / 1.5e0)
                 / np.sqrt(powerht)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.0e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.5e0
+
             if iinvqd != 0:
                 tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
 
@@ -5152,10 +5106,6 @@ class Physics:
                 )
                 ** 0.08e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 1.0e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.4e0
 
         elif isc == 11:  # JAERI scaling
             gjaeri = (
@@ -5182,12 +5132,6 @@ class Physics:
                 * kappa95**0.2e0
                 / powerht
             )
-            startup_variables.gtaue = (
-                hfact * 0.085e0 * kappa95 * rminor**2 * np.sqrt(afuel)
-            )
-            startup_variables.ptaue = 0.6e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -1.0e0
 
         elif isc == 12:  # Kaye-Big scaling
             tauee = (
@@ -5202,10 +5146,6 @@ class Physics:
                 * afuel**0.5e0
                 / powerht**0.5e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.1e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.5e0
 
         elif isc == 13:  # ITER H-mode scaling - ITER H90-P
             tauee = (
@@ -5220,10 +5160,6 @@ class Physics:
                 * np.sqrt(afuel)
                 / np.sqrt(powerht)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.09e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.5e0
 
         elif isc == 14:  # Minimum of ITER 89-P (isc=6) and ITER 89-O (isc=7)
             tauit1 = (
@@ -5260,17 +5196,6 @@ class Physics:
             tauit2 = hfact * (term1 + term2)
             tauee = min(tauit1, tauit2)
 
-            if tauit1 < tauit2:
-                startup_variables.gtaue = 0.0e0
-                startup_variables.ptaue = 0.1e0
-                startup_variables.qtaue = 0.0e0
-                startup_variables.rtaue = -0.5e0
-            else:
-                startup_variables.gtaue = hfact * term1
-                startup_variables.ptaue = 0.6e0
-                startup_variables.qtaue = 0.0e0
-                startup_variables.rtaue = -1.0e0
-
         elif isc == 15:  # Riedel scaling (L-mode)
             tauee = (
                 hfact
@@ -5283,10 +5208,6 @@ class Physics:
                 * bt**0.152e0
                 / powerht**0.537e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.078e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.537e0
 
         elif isc == 16:  # Christiansen et al scaling (L-mode)
             tauee = (
@@ -5300,10 +5221,6 @@ class Physics:
                 * bt**0.29e0
                 / (powerht**0.79e0 * afuel**0.02e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.41e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.79e0
 
         elif isc == 17:  # Lackner-Gottardi scaling (L-mode)
             qhat = (1.0e0 + kappa95**2) * rminor**2 * bt / (0.4e0 * pcur * rmajor)
@@ -5319,10 +5236,6 @@ class Physics:
                 * qhat**0.4e0
                 / powerht**0.6e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.6e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.6e0
 
         elif isc == 18:  # Neo-Kaye scaling (L-mode)
             tauee = (
@@ -5337,10 +5250,6 @@ class Physics:
                 * np.sqrt(afuel)
                 / powerht**0.59e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.14e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.59e0
 
         elif isc == 19:  # Riedel scaling (H-mode)
             tauee = (
@@ -5355,10 +5264,6 @@ class Physics:
                 * dnla20**0.105e0
                 / powerht**0.486e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.105e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.486e0
 
         elif isc == 20:  # Amended version of ITER H90-P law
             # Nuclear Fusion 32 (1992) 318
@@ -5371,10 +5276,6 @@ class Physics:
                 * rmajor**1.60e0
                 / (powerht**0.47e0 * kappa**0.19e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.0e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.47e0
 
         elif isc == 21:  # Large Helical Device scaling (stellarators)
             # S.Sudo, Y.Takeiri, H.Zushi et al., Nuclear Fusion 30 (1990) 11
@@ -5387,10 +5288,6 @@ class Physics:
                 * bt**0.84e0
                 * powerht ** (-0.58e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.69e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = 0.58e0
 
         elif isc == 22:  # Gyro-reduced Bohm scaling
             # R.J.Goldston, H.Biglari, G.W.Hammett et al., Bull.Am.Phys.Society,
@@ -5404,10 +5301,6 @@ class Physics:
                 * rminor**2.4e0
                 * rmajor**0.6e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.6e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.6e0
 
         elif isc == 23:  # Lackner-Gottardi stellarator scaling
             # K.Lackner and N.A.O.Gottardi, Nuclear Fusion, 30, p.767 (1990)
@@ -5422,10 +5315,6 @@ class Physics:
                 * powerht ** (-0.6e0)
                 * iotabar**0.4e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.6e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.6e0
 
         elif (
             isc == 24
@@ -5445,10 +5334,6 @@ class Physics:
                 * aspect**0.11e0
                 * kappa**0.66e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.17e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.67e0
 
         # Next two are ITER-97 H-mode scalings
         # J. G. Cordey et al., EPS Berchtesgaden, 1997
@@ -5466,10 +5351,6 @@ class Physics:
                 * kappa**0.63e0
                 * afuel**0.42e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.35e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.67e0
 
         elif isc == 27:  # ELMy: ITERH-97P(y)
             tauee = (
@@ -5484,10 +5365,6 @@ class Physics:
                 * kappa**0.92e0
                 * afuel**0.2e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.4e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.66e0
 
         elif isc == 28:  # ITER-96P (= ITER-97L) L-mode scaling
             # S.M.Kaye and the ITER Confinement Database Working Group,
@@ -5505,10 +5382,6 @@ class Physics:
                 * afuel**0.20e0
                 * powerht ** (-0.73e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.4e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.73e0
 
         elif isc == 29:  # Valovic modified ELMy-H mode scaling
             tauee = (
@@ -5523,10 +5396,6 @@ class Physics:
                 * kappa**0.56e0
                 * powerht ** (-0.68e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.45e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.68e0
 
         elif isc == 30:  # Kaye PPPL Workshop April 1998 L-mode scaling
             tauee = (
@@ -5541,10 +5410,6 @@ class Physics:
                 * afuel**0.25e0
                 * powerht ** (-0.73e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.47e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.73e0
 
         elif isc == 31:  # ITERH-PB98P(y), ELMy H-mode scaling
             tauee = (
@@ -5559,10 +5424,6 @@ class Physics:
                 * aspect ** (-0.66e0)
                 * afuel**0.2e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.4e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.66e0
 
         elif isc == 32:  # IPB98(y), ELMy H-mode scaling
             # Data selection : full ITERH.DB3
@@ -5579,10 +5440,6 @@ class Physics:
                 * aspect ** (-0.23e0)
                 * afuel**0.2e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.41e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.63e0
 
         elif isc == 33:  # IPB98(y,1), ELMy H-mode scaling
             # Data selection : full ITERH.DB3
@@ -5599,10 +5456,6 @@ class Physics:
                 * aspect ** (-0.57e0)
                 * afuel**0.13e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.44e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.65e0
 
         elif isc == 34:  # IPB98(y,2), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only
@@ -5619,10 +5472,6 @@ class Physics:
                 * aspect ** (-0.58e0)
                 * afuel**0.19e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.41e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.69e0
 
         elif isc == 35:  # IPB98(y,3), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only, no C-Mod
@@ -5639,10 +5488,6 @@ class Physics:
                 * aspect ** (-0.64e0)
                 * afuel**0.20e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.4e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.69e0
 
         elif isc == 36:  # IPB98(y,4), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only, ITER like devices
@@ -5659,10 +5504,6 @@ class Physics:
                 * aspect ** (-0.69e0)
                 * afuel**0.17e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.39e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.70e0
 
         elif isc == 37:  # ISS95 stellarator scaling
             # U. Stroth et al., Nuclear Fusion, 36, p.1063 (1996)
@@ -5678,10 +5519,6 @@ class Physics:
                 * powerht ** (-0.59e0)
                 * iotabar**0.4e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.51e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.59e0
 
         elif isc == 38:  # ISS04 stellarator scaling
             # H. Yamada et al., Nuclear Fusion, 45, p.1684 (2005)
@@ -5697,10 +5534,6 @@ class Physics:
                 * powerht ** (-0.61e0)
                 * iotabar**0.41e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.54e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.61e0
 
         elif isc == 39:  # DS03 beta-independent H-mode scaling
             # T. C. Luce, C. C. Petty and J. G. Cordey,
@@ -5717,10 +5550,6 @@ class Physics:
                 * aspect ** (-0.3e0)
                 * afuel**0.14e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.49e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.55e0
 
         elif isc == 40:  # "Non-power law" (NPL) Murari energy confinement scaling
             #  Based on the ITPA database of H-mode discharges
@@ -5742,11 +5571,6 @@ class Physics:
                 * h
             )
 
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.448e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.735e0
-
         elif isc == 41:  # Beta independent dimensionless confinement scaling
             # C.C. Petty 2008 Phys. Plasmas 15, 080501, equation 36
             # Note that there is no dependence on the average fuel mass 'afuel'
@@ -5761,11 +5585,6 @@ class Physics:
                 * kappaa**0.88e0
                 * aspect ** (-0.84e0)
             )
-
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.32e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.47e0
 
         elif isc == 42:  # High density relevant confinement scaling
             # P.T. Lang et al. 2012, IAEA conference proceeding EX/P4-01
@@ -5790,11 +5609,6 @@ class Physics:
                 * nratio ** (-0.22e0 * np.log(nratio))
             )
 
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.032236e0 - 0.22e0 * np.log(nratio)
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.74e0
-
         elif isc == 43:  # Hubbard et al. 2017 I-mode confinement time scaling - nominal
             tauee = (
                 hfact
@@ -5804,10 +5618,6 @@ class Physics:
                 * dnla20**0.02e0
                 * powerht ** (-0.29e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.02e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.29e0
 
         elif isc == 44:  # Hubbard et al. 2017 I-mode confinement time scaling - lower
             tauee = (
@@ -5818,10 +5628,6 @@ class Physics:
                 * dnla20 ** (-0.03e0)
                 * powerht ** (-0.33e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = -0.03e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.33e0
 
         elif isc == 45:  # Hubbard et al. 2017 I-mode confinement time scaling - upper
             tauee = (
@@ -5832,10 +5638,6 @@ class Physics:
                 * dnla20**0.07
                 * powerht ** (-0.25e0)
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.07e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.25e0
 
         elif isc == 46:  # NSTX, ELMy H-mode scaling
             # NSTX scaling with IPB98(y,2) for other variables
@@ -5853,10 +5655,6 @@ class Physics:
                 * aspect ** (-0.58e0)
                 * afuel**0.19e0
             )
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.44e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.73e0
 
         elif isc == 47:  # NSTX-Petty08 Hybrid
             # Linear interpolation between NSTX and Petty08 in eps
@@ -5875,11 +5673,6 @@ class Physics:
                     * aspect ** (-0.84e0)
                 )
 
-                startup_variables.gtaue = 0.0e0
-                startup_variables.ptaue = 0.32e0
-                startup_variables.qtaue = 0.0e0
-                startup_variables.rtaue = -0.47e0
-
             elif (1.0e0 / aspect) >= 0.6e0:
                 # NSTX, i.e.case (46)
                 tauee = (
@@ -5894,11 +5687,6 @@ class Physics:
                     * aspect ** (-0.58e0)
                     * afuel**0.19e0
                 )
-
-                startup_variables.gtaue = 0.0e0
-                startup_variables.ptaue = 0.44e0
-                startup_variables.qtaue = 0.0e0
-                startup_variables.rtaue = -0.73e0
 
             else:
                 taupetty = (
@@ -5928,17 +5716,6 @@ class Physics:
                     + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * taupetty
                 )
 
-                startup_variables.gtaue = 0.0e0
-                startup_variables.ptaue = (
-                    ((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)
-                ) * 0.32e0 + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * 0.44e0
-                startup_variables.qtaue = 0.0e0
-                startup_variables.rtaue = (
-                    ((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)
-                ) * (-0.47e0) + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * (
-                    -0.73e0
-                )
-
         elif isc == 48:  # NSTX gyro-Bohm (Buxton)
             # P F Buxton et al. 2019 Plasma Phys. Control. Fusion 61 035006
             tauee = (
@@ -5951,18 +5728,8 @@ class Physics:
                 * dnla20 ** (-0.05e0)
             )
 
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = -0.05e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = -0.38e0
-
         elif isc == 49:  # tauee is an input
             tauee = hfact * physics_variables.tauee_in
-
-            startup_variables.gtaue = 0.0e0
-            startup_variables.ptaue = 0.0e0
-            startup_variables.qtaue = 0.0e0
-            startup_variables.rtaue = 0.0e0
 
         elif isc == 50:  # ITPA20 Issue #3164
             # The updated ITPA global H-mode confinement database: description and analysis
@@ -5997,11 +5764,6 @@ class Physics:
                 * physics_variables.aion**0.2
             )
 
-            startup_variables.gtaue = 0.0
-            startup_variables.ptaue = 0.0
-            startup_variables.qtaue = 0.0
-            startup_variables.rtaue = 0.0
-
         else:
             error_handling.idiags[0] = isc
             error_handling.report_error(81)
@@ -6023,13 +5785,5 @@ class Physics:
         # Global energy confinement time
 
         taueff = (ratio + 1.0e0) / (ratio / tauei + 1.0e0 / tauee)
-
-        # This is used only in subroutine startup, which is currently (r400)
-        # not used.
-        startup_variables.ftaue = (tauee - startup_variables.gtaue) / (
-            n20**startup_variables.ptaue
-            * (te / 10.0e0) ** startup_variables.qtaue
-            * powerht**startup_variables.rtaue
-        )
 
         return kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht
