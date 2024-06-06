@@ -7,7 +7,6 @@ from process.fortran import (
     physics_module,
     current_drive_variables,
     impurity_radiation_module,
-    startup_variables,
 )
 import numpy
 import pytest
@@ -2687,16 +2686,6 @@ def test_pcond(pcondparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "falpha", pcondparam.falpha)
 
-    monkeypatch.setattr(startup_variables, "ptaue", pcondparam.ptaue)
-
-    monkeypatch.setattr(startup_variables, "gtaue", pcondparam.gtaue)
-
-    monkeypatch.setattr(startup_variables, "ftaue", pcondparam.ftaue)
-
-    monkeypatch.setattr(startup_variables, "rtaue", pcondparam.rtaue)
-
-    monkeypatch.setattr(startup_variables, "qtaue", pcondparam.qtaue)
-
     kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = physics.pcond(
         iinvqd=pcondparam.iinvqd,
         isc=pcondparam.isc,
@@ -2729,12 +2718,6 @@ def test_pcond(pcondparam, monkeypatch, physics):
     )
 
     assert physics_variables.kappaa_ipb == pytest.approx(pcondparam.expected_kappaa_ipb)
-
-    assert startup_variables.ptaue == pytest.approx(pcondparam.expected_ptaue)
-
-    assert startup_variables.ftaue == pytest.approx(pcondparam.expected_ftaue)
-
-    assert startup_variables.rtaue == pytest.approx(pcondparam.expected_rtaue)
 
     assert kappaa == pytest.approx(pcondparam.expected_kappaa)
 
