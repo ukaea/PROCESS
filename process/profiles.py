@@ -13,7 +13,7 @@ logger.addHandler(s_handler)
 
 
 class Profile(ABC):
-    """Abstract base class used to create and hold profiles (temperature, desnity,)
+    """Abstract base class used to create and hold profiles (temperature, density,)
 
     :param ABC: Abstract Base Class
     :type ABC: ABC, optional
