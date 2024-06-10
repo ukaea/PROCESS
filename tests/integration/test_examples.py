@@ -36,6 +36,7 @@ def test_examples(examples_temp_data):
     examples.ipynb uses temp dirs to clean up any produced files itself.
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
+
     """
     with testbook("examples.ipynb", execute=True, timeout=600):
         pass
@@ -91,8 +92,8 @@ def test_csv(csv_cleanup):
 
     csv_output.ipynb intentionally produces files when running the notebook, but remove
     them when testing.
-    :param examples_temp_data: temporary dir containing examples files
-    :type examples_temp_data: Path
+    :param csv_cleanup: fixture to delete any produced files
+    :type csv_cleanup: None
     """
     with testbook("csv_output.ipynb", execute=True, timeout=600):
         # Check csv file is created
@@ -115,11 +116,11 @@ def test_csv(csv_cleanup):
         assert check_positive
 
 
-def test_plot_solutions(examples_temp_data):
-    """Run the plot_solutions.ipynb and check no exceptions are raised.
+def test_plot_solutions(examples_as_cwd):
+    """Run plot_solutions.ipynb and check no exceptions are raised.
 
-    :param examples_temp_data: temporary dir containing examples files
-    :type examples_temp_data: Path
+    :param examples_as_cwd: fixture to set examples dir as cwd
+    :type examples_as_cwd: NoneType
     """
     with testbook("plot_solutions.ipynb", execute=True, timeout=600):
         pass
