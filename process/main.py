@@ -476,8 +476,13 @@ class SingleRun:
                 # a second evaluation call here
                 caller.call_models(x)
                 self.ifail = 6
+                self.show_errors()
 
             final.finalise(self.models, self.ifail)
+
+    def show_errors(self):
+        """Report all informational/error messages encountered."""
+        fortran.error_handling.show_errors()
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.
