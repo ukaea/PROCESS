@@ -38,69 +38,47 @@ def test_examples(examples_temp_data):
     :type examples_temp_data: Path
 
     """
-    with testbook("examples.ipynb", execute=True, timeout=600):
+    os.chdir(examples_temp_data)
+    example_notebook_location = examples_temp_data / "examples.ipynb"
+    with testbook(example_notebook_location, execute=True, timeout=600):
         pass
 
 
-@pytest.fixture
-def scan_cleanup(examples_as_cwd):
-    """Delete any files produced by scan.ipynb.
-
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: None
-    """
-    yield
-
-    # Teardown: delete produced files
-    scan_files = Path.cwd().glob("*scan_*")
-    for file in scan_files:
-        if "IN.DAT" not in file.name:
-            os.remove(file)
-
-
-def test_scan(scan_cleanup):
+def test_scan(examples_temp_data):
     """Run scan.ipynb notebook check no exceptions are raised and that an MFILE is created.
 
     scan.ipynb intentionally produces files when running the notebook, but remove
     them when testing.
-    :param scan_cleanup: fixture to delete any produced files
-    :type scan_cleanup: None
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
     """
-    with testbook("scan.ipynb", execute=True, timeout=600):
+    os.chdir(examples_temp_data)
+    scan_notebook_location = examples_temp_data / "scan.ipynb"
+    with testbook(scan_notebook_location, execute=True, timeout=600):
         # Run entire scan.ipynb notebook and assert an MFILE is created
-        assert os.path.exists("a_scan_input_file_MFILE.DAT")
+        assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
 
 
-@pytest.fixture
-def csv_cleanup(examples_as_cwd):
-    """Delete any files produced by csv_output.ipynb.
-
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: None
-    """
-    yield
-
-    # Teardown: delete produced files
-    csv_files = Path.cwd().glob("*csv_output_*")
-    for file in csv_files:
-        if "_MFILE.DAT" not in file.name:
-            os.remove(file)
-
-
-def test_csv(csv_cleanup):
+def test_csv(examples_temp_data):
     """Run csv_output.ipynb, check no exceptions are raised, check a csv file exists and check the csv file contains data.
 
     csv_output.ipynb intentionally produces files when running the notebook, but remove
     them when testing.
-    :param csv_cleanup: fixture to delete any produced files
-    :type csv_cleanup: None
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
     """
-    with testbook("csv_output.ipynb", execute=True, timeout=600):
+    os.chdir(examples_temp_data)
+    csv_notebook_location = examples_temp_data / "csv_output.ipynb"
+    with testbook(csv_notebook_location, execute=True, timeout=600):
         # Check csv file is created
-        assert os.path.exists("csv_output_large_tokamak_MFILE.csv")
+        assert os.path.exists(
+            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
+        )
 
         # Read in the csv file created by test and check it contains positive floats
-        readcsv = pandas.read_csv("csv_output_large_tokamak_MFILE.csv")
+        readcsv = pandas.read_csv(
+            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
+        )
         values = readcsv["Value"]
         value_array = np.array(values)
         check_float = False
@@ -116,11 +94,13 @@ def test_csv(csv_cleanup):
         assert check_positive
 
 
-def test_plot_solutions(examples_as_cwd):
+def test_plot_solutions(examples_temp_data):
     """Run plot_solutions.ipynb and check no exceptions are raised.
 
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: NoneType
+    :param examples_temp_data: temporary dir containing examples files
+     :type examples_temp_data: Path
     """
-    with testbook("plot_solutions.ipynb", execute=True, timeout=600):
+    os.chdir(examples_temp_data)
+    plot_solutions_notebook_location = examples_temp_data / "plot_solutions.ipynb"
+    with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
         pass
