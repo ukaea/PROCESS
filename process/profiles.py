@@ -191,7 +191,7 @@ class TProfile(Profile):
         self.integrate_profile_y()
 
     def calculate_profile_y(self, rho, rhopedt, t0, teped, tesep, alphat, tbeta):
-        """This routine calculates the temperature at a normalised minor
+        """Calculates the temperature at a normalised minor
         radius position rho for a pedestalised profile (tprofile).
         If ipedestal = 0 the original parabolic profile form is used instead.
         References:
@@ -285,7 +285,7 @@ class TProfile(Profile):
         )
 
     def set_physics_variables(self):
-        """Calculates and sets physics vcariables required for the temperature profile."""
+        """Calculates and sets physics variables required for the temperature profile."""
         physics_variables.te0 = self.tcore(
             physics_variables.rhopedt,
             physics_variables.teped,
