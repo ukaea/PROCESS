@@ -476,9 +476,9 @@ class SingleRun:
                 # a second evaluation call here
                 caller.call_models(x)
                 self.ifail = 6
-                self.show_errors()
 
             final.finalise(self.models, self.ifail)
+            self.show_errors()
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
