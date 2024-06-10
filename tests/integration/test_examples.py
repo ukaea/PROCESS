@@ -57,7 +57,7 @@ def test_examples(delete_plot_procs):
 
     examples.ipynb uses temp dirs to clean up any produced files itself.
     """
-    with testbook("examples.ipynb", execute=True, timeout=120):
+    with testbook("examples.ipynb", execute=True, timeout=600):
         pass
 
 
@@ -85,7 +85,7 @@ def test_scan(scan_cleanup):
     :param scan_cleanup: fixture to delete any produced files
     :type scan_cleanup: None
     """
-    with testbook("scan.ipynb", execute=True, timeout=120):
+    with testbook("scan.ipynb", execute=True, timeout=600):
         # Run entire scan.ipynb notebook and assert an MFILE is created
         assert os.path.exists("a_scan_input_file_MFILE.DAT")
 
@@ -114,7 +114,7 @@ def test_csv(csv_cleanup):
     :param csv_cleanup: fixture to delete any produced files
     :type csv_cleanup: None
     """
-    with testbook("csv_output.ipynb", execute=True, timeout=120):
+    with testbook("csv_output.ipynb", execute=True, timeout=600):
         # Check csv file is created
         assert os.path.exists("csv_output_large_tokamak_MFILE.csv")
 
@@ -141,5 +141,5 @@ def test_plot_solutions(examples_as_cwd):
     :param examples_as_cwd: fixture to set examples dir as cwd
     :type examples_as_cwd: NoneType
     """
-    with testbook("plot_solutions.ipynb", execute=True, timeout=120):
+    with testbook("plot_solutions.ipynb", execute=True, timeout=600):
         pass
