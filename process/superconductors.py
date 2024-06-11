@@ -602,7 +602,7 @@ def Bottura_scaling(
     return jscaling, bcrit, tcrit
 
 
-def croco(jcritsc, conductor_area, croco_od, croco_thick):
+def croco(j_crit_sc, conductor_area, croco_od, croco_thick):
     """'CroCo' (cross-conductor) strand and cable design for
     'REBCO' 2nd generation HTS superconductor
     Updated 13/11/18 using data from Lewandowska et al 2018.
@@ -639,7 +639,7 @@ def croco(jcritsc, conductor_area, croco_od, croco_thick):
 
     rebco_area = rebco_variables.rebco_thickness * tape_width * tapes
     croco_strand_area = np.pi / 4.0 * d**2
-    croco_strand_critical_current = jcritsc * rebco_area
+    croco_strand_critical_current = j_crit_sc * rebco_area
 
     # Conductor properties
     # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)/croco_strand_area

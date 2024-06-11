@@ -198,13 +198,13 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "coheof", 1.693e7)
     monkeypatch.setattr(pfv, "rohc", 3.0)
     monkeypatch.setattr(pfv, "vfohc", 3.0e-1)
-    monkeypatch.setattr(pfv, "jstrandoh_bop", 1.069e8)
+    monkeypatch.setattr(pfv, "jcableoh_bop", 1.069e8)
     monkeypatch.setattr(pfv, "fcuohsu", 7.000e-1)
     monkeypatch.setattr(pfv, "isumatoh", 5)
     monkeypatch.setattr(pfv, "ohhghf", 0.9)
     monkeypatch.setattr(pfv, "areaoh", 1.039e1)
     monkeypatch.setattr(pfv, "powpfres", 0.0)
-    monkeypatch.setattr(pfv, "jstrandoh_eof", 1.427e8)
+    monkeypatch.setattr(pfv, "jcableoh_eof", 1.427e8)
     monkeypatch.setattr(pfv, "powohres", 0.0)
     monkeypatch.setattr(pfv, "rjohc0", 3.048e7)
     monkeypatch.setattr(pfv, "s_tresca_oh", 5.718e8)
@@ -2660,7 +2660,7 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     tcritsc = 16
 
     jcritwp_exp = -2.6716372e7
-    jcritstr_exp = -3.8166246e7
+    jcritstr_exp = -3.8166246e7 * (1.0 - fhe)
     jcritsc_exp = -1.23116924e8
     tmarg_exp = -2.651537e-1
 
