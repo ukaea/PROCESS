@@ -110,12 +110,6 @@ contains
       !! the default values for the global variables, reads in data from
       !! the input file, and checks the run parameters for consistency.
 
-
-      !! file:///home/mkumar/process/source/fortran/divertor_ode.f90
-
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!file:///home/mkumar/process/source/fortran/input.f90
-
       use global_variables, only: verbose, fileprefix, output_prefix
       use main_module, only: run_summary
       use constants, only: opt_file, vfile, nout, nplot, mfile, sig_file
