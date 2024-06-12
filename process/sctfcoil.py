@@ -5646,6 +5646,20 @@ class Sctfcoil:
             )
             po.oblnkl(self.outfile)
 
+        tf_total_height = build_variables.dh_tf_inner_bore + 2 * build_variables.tfcth
+        tf_total_width = (
+            build_variables.dr_tf_inner_bore
+            + build_variables.tfcth
+            + build_variables.tfthko
+        )
+        po.oblnkl(self.outfile)
+        po.obuild(
+            self.outfile,
+            "Total height and width of TFC [m]",
+            tf_total_height,
+            tf_total_width,
+        )
+
         # Top section TF coil radial build (physics_variables.itart = 1 only)
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
             po.osubhd(self.outfile, "Radial build of TF coil at central collumn top :")
