@@ -26,6 +26,9 @@ def examples_temp_data(tmp_path):
     )
     copy(csv_json_path, tmp_path)
 
+    # This change of directory is undone by the return_to_root fixture, hence we do not need to change back directories here
+    os.chdir(tmp_path / "examples")
+
     # Return tmp_path/examples, now containing files copied from examples dir
     return tmp_path / "examples"
 
@@ -38,7 +41,6 @@ def test_examples(examples_temp_data):
     :type examples_temp_data: Path
 
     """
-    os.chdir(examples_temp_data)
     example_notebook_location = examples_temp_data / "examples.ipynb"
     with testbook(example_notebook_location, execute=True, timeout=600):
         pass
@@ -52,7 +54,6 @@ def test_scan(examples_temp_data):
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
     """
-    os.chdir(examples_temp_data)
     scan_notebook_location = examples_temp_data / "scan.ipynb"
     with testbook(scan_notebook_location, execute=True, timeout=600):
         # Run entire scan.ipynb notebook and assert an MFILE is created
@@ -67,7 +68,6 @@ def test_csv(examples_temp_data):
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
     """
-    os.chdir(examples_temp_data)
     csv_notebook_location = examples_temp_data / "csv_output.ipynb"
     with testbook(csv_notebook_location, execute=True, timeout=600):
         # Check csv file is created
@@ -100,7 +100,6 @@ def test_plot_solutions(examples_temp_data):
     :param examples_temp_data: temporary dir containing examples files
      :type examples_temp_data: Path
     """
-    os.chdir(examples_temp_data)
     plot_solutions_notebook_location = examples_temp_data / "plot_solutions.ipynb"
     with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
         pass
