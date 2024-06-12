@@ -10,7 +10,6 @@ class IFE:
     N/A
     This module contains routines for calculating the
     parameters of an Inertial Fusion Energy power plant.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
     NOTE: currently the IFE module is only partially wrapped to unblock the wrapping of availability
     """
@@ -36,7 +35,6 @@ class IFE:
         This routine outputs the physics and engineering information
         relevant to inertial fusion energy power plants.
         F/MI/PJK/LOGBOOK12, p.66
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean

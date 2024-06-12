@@ -88,8 +88,7 @@ contains
     !! point of interest.
     !! <P>Each equation for <CODE>fc<CODE> gives a value of the
     !! order of unity for the sake of the numerics.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		use global_variables, only: xlabel, iscan_global

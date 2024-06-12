@@ -5,8 +5,7 @@ subroutine initial
     !! Routine to initialise
     !! author: P J Knight, CCFE, Culham Science Centre
     !! None
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use define_iteration_variables, only: init_itv_1, init_itv_2, init_itv_3, &
@@ -106,7 +105,7 @@ subroutine initial
     call init_itv_49
     call init_itv_50
     call init_itv_51
-    
+
     call init_itv_53
     call init_itv_54
 
@@ -239,8 +238,7 @@ subroutine check
     !! This routine performs a sanity check of the input variables
     !! and ensures other dependent variables are given suitable values.
 
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use build_variables, only: blnkith, bore, gapoh, ohcth, precomp, iprecomp, &

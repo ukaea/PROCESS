@@ -351,7 +351,6 @@ def fint(plasma_profile, reactionconstants):
         P J Knight, CCFE, Culham Science Centre
         G Turkington (UKAEA)
     References:
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
     :param plasma_profile: Parameterised temperature and density profiles
     :type plasma_profile: PlasmaProfile

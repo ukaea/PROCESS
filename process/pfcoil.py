@@ -65,7 +65,6 @@ class PFCoil:
         This subroutine performs the calculations for the PF and
         Central Solenoid coils, to determine their size, location, current waveforms,
         stresses etc.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         lrow1 = 2 * pfv.nptsmx + pfv.ngrpmx
         lcol1 = pfv.ngrpmx
@@ -1245,7 +1244,6 @@ class PFCoil:
         at the inner and outer edges of a given PF coil.
         The calculation includes the effects from all the coils
         and the plasma.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if bv.iohcl != 0 and i == pfv.nohc:
             # Peak field is to be calculated at the Central Solenoid itself,
@@ -1376,7 +1374,6 @@ class PFCoil:
         inner radius, using fits taken from the figure
         on p.22 of M. Wilson's book Superconducting Magnets,
         Clarendon Press, Oxford, N.Y., 1983
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param rj: overall current density (A/m2)
         :type rj: float
@@ -1845,7 +1842,6 @@ class PFCoil:
 
         author: P J Knight, CCFE, Culham Science Centre
         This routine writes the PF coil information to the output file.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         op.oheadr(self.outfile, "Central Solenoid and PF Coils")
 
@@ -2676,7 +2672,6 @@ class PFCoil:
         This routine sets up the PF coil current waveforms.
         waves[i,j] is the current in coil i, at time j,
         normalized to the peak current in that coil at any time.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         nplas = pfv.nohc + 1
         for it in range(6):

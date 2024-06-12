@@ -242,7 +242,6 @@ def vscalc(
     vsstt  : output real : total volt-seconds needed (Wb)
     This subroutine calculates the volt-second requirements and some
     other related items.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
     # Internal inductance
 
@@ -309,7 +308,6 @@ def culblm(bt, dnbeta, plascur, rminor):
 
     The default value for the g coefficient is dnbeta = 3.5
     AEA FUS 172: Physics Assessment for the European Reactor Study
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
 
     return 0.01 * dnbeta * (plascur / 1.0e6) / (rminor * bt)
@@ -331,9 +329,7 @@ def conhas(alphaj, alphap, bt, delta95, eps, kappa95, p0, rmu0):
     cross-section cylindrical case
     This routine calculates the F coefficient used for scaling the
     plasma current, using the Connor-Hastie scaling given in
-    AEA FUS 172.
     AEA FUS 172: Physics Assessment for the European Reactor Study
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
 
     # Exponent in Connor-Hastie current profile - matching total
@@ -405,7 +401,6 @@ def bsinteg(
     y : input real : abscissa of integration, = normalised minor radius
     This function calculates the integrand function for the
     Nevins et al bootstrap current scaling, 4/11/90.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
     # Constants for fit to q-profile
     c1 = 1.0
@@ -1595,7 +1590,6 @@ class Physics:
         This routine calculates several different formulae for the
         density limit, and enforces the one chosen by the user.
         AEA FUS 172: Physics Assessment for the European Reactor Study
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if idensl < 1 or idensl > 7:
             error_handling.idiags[0] = idensl
@@ -1914,7 +1908,6 @@ class Physics:
         taup   : output real : (alpha) particle confinement time (s)
         This subroutine calculates extra physics related items
         needed by other parts of the code
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         figmer = 1e-6 * plascur * aspect**sbar
@@ -2248,7 +2241,6 @@ class Physics:
         self.outfile : input integer : Fortran output unit identifier
         This routine writes the plasma physics information
         to a file, in a tidy format.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         # ###############################################
@@ -4333,7 +4325,6 @@ class Physics:
         outfile   : input integer : Fortran output unit identifier
         This routine calculates the ignition margin at the final point
         with different scalings.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
@@ -4555,7 +4546,6 @@ class Physics:
         zeff   : input real :  plasma effective charge
         This function calculates the bootstrap current fraction,
         using the Nevins et al method, 4/11/90.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         # Calculate peak electron beta
 
@@ -4743,7 +4733,6 @@ class Physics:
         is : input integer : confinement time scaling law of interest
         This function calculates the H-factor required for power balance,
         using the given energy confinement scaling law.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         physics_module.iscz = is_
@@ -4758,7 +4747,6 @@ class Physics:
         <CODE>FHZ</CODE> is zero at power balance, which is achieved
         using routine <A HREF="zeroin.html">ZEROIN</A> to adjust the
         value of <CODE>hhh</CODE>, the confinement time H-factor.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         (

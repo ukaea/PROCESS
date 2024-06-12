@@ -675,8 +675,7 @@ contains
     !! x(ndim)      : output real array : solution for Ax = b
     !! This routine solves the linear equation Ax = b.
     !! It calls (local copies of) the linpack routines sgefa and sgesl.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -720,8 +719,7 @@ contains
     !! = 1  normal return
     !! = 2  H matrix is singular
     !! This routine inverts the matrix H by use of linpack software.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     use global_variables, only: verbose
     implicit none
@@ -779,8 +777,7 @@ contains
     !! This subroutine computes
     !! total = (plus or minus c) plus or minus the dot product of x and y
     !! by invoking the basic linear algebra routine dot.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -832,8 +829,7 @@ contains
     !! zero on the diagonal.  Technically this indicates singularity
     !! but it is often caused by improper arguments or improper
     !! setting of <CODE>lda</CODE>.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -927,8 +923,7 @@ contains
     !! = 0  normal completion
     !! = k  if  u(k,k) == 0.0
     !! This routine factors a real matrix by Gaussian elimination.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     use global_variables, only: verbose
     implicit none
@@ -1044,8 +1039,7 @@ contains
     !! using the factors computed by (SGECO or) <A HREF="sgefa.html">SGEFA</A>.
     !! <P>A division by zero will occur if the input factor contains
     !! a zero on the diagonal and the inverse is requested.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -1154,8 +1148,7 @@ contains
     !! incx     : input integer : interval in storage between sx array elements
     !! This routine scales a vector by a constant, using
     !! unrolled loops for increments equal to 1.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -1222,8 +1215,7 @@ contains
     !! incy     : input integer : interval in storage between sy array elements
     !! This routine calculates <CODE>sa*sx(:) + sy(:)</CODE>,
     !! using unrolled loops for increments equal to 1.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -1290,8 +1282,7 @@ contains
     !! incy     : input integer : interval in storage between sy array elements
     !! This routine swaps the contents of two vectors,
     !! using unrolled loops for increments equal to 1.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -1367,8 +1358,7 @@ contains
     !! incy     : input integer : interval in storage between sy array elements
     !! This routine performs the dot product of two vectors, i.e.
     !! calculates the sum from i=1 to N, of X(i)*Y(i).
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -1414,8 +1404,7 @@ contains
     !! incx     : input integer : interval in storage between sx array elements
     !! This routine finds the array element with the maximum
     !! absolute value, and returns the element index.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none

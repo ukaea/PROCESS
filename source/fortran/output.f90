@@ -7,8 +7,7 @@ module process_output
   !! N/A
   !! This module contains a number of routines that allow the
   !! program to write output to a file unit in a uniform style.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
@@ -33,8 +32,7 @@ contains
     !! This routine writes out a centred header within a line of asterisks.
     !! It cannot cope with a zero-length string; routine
     !! <A HREF="ostars.html"><CODE>ostars</CODE></A> should be used instead.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: active_constraints, ncalls, ipnvars, ioptimz
@@ -106,8 +104,7 @@ contains
     !! file : input integer : Fortran output unit identifier
     !! width : input integer : Total width of header
     !! This routine writes out a line of asterisks.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use global_variables, only: output_prefix, fileprefix
@@ -142,8 +139,7 @@ contains
     !! string : input character string : Character string to be used
     !! This routine writes out a centred header within a line of
     !! asterisks, and between two blank lines.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: active_constraints, sqsumsq, ioptimz
@@ -179,8 +175,7 @@ contains
     !! string : input character string : Character string to be used
     !! This routine writes out a short, centred header within a line of
     !! asterisks, and between two blank lines.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		use global_variables, only: icase
@@ -212,8 +207,7 @@ contains
     !! author: P J Knight, CCFE, Culham Science Centre
     !! file : input integer : Fortran output unit identifier
     !! This routine writes out a simple blank line.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		use constants, only: pi, nout
@@ -239,8 +233,7 @@ contains
     !! file : input integer : Fortran output unit identifier
     !! string : input character string : Character string to be used
     !! This routine writes out a subheading between two blank lines.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		use constants, only: iotty, nout
@@ -268,8 +261,7 @@ contains
     !! file : input integer : Fortran output unit identifier
     !! string : input character string : Character string to be used
     !! This routine writes out a comment line.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: boundl, boundu, sqsumsq
@@ -354,8 +346,7 @@ contains
     !! This routine writes out the description, name and value of a
     !! double precision variable in F format (e.g.
     !! <CODE>-12345.000</CODE>).
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: name_xc
@@ -426,8 +417,7 @@ contains
     !! This routine writes out the description, name and value of a
     !! double precision variable in E format (e.g.
     !! <CODE>-1.234E+04</CODE>).
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: name_xc
@@ -507,8 +497,7 @@ contains
     !! output_flag : optional character
     !! This routine writes out the description, name and value of an
     !! integer variable.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: name_xc, icc, ioptimz
@@ -627,8 +616,7 @@ contains
     !! value : input real : Value of the cost item
     !! This routine writes out the cost code, description and value
     !! of a cost item.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		use constants, only: pi, mfile, nplot, twopi
@@ -675,8 +663,7 @@ contains
     !! total : input real : Total build, including this component (m)
     !! This routine writes out a description, the thickness and
     !! summed build of a component of the radial or vertical build.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: boundl, boundu

@@ -7,8 +7,7 @@ module scan_module
   !! None
   !! This module contains routines to perform a parameter scan
   !! over a range of values of a particular scanning variable.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #ifndef dp
@@ -861,8 +860,7 @@ contains
   !! Called after calling the optimising equation solver from Python.
   !! author: P J Knight, CCFE, Culham Science Centre
   !! ifail   : input integer : error flag
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+  !!
   use constraints
   use error_handling
   use function_evaluator

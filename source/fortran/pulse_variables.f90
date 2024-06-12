@@ -6,8 +6,7 @@ module pulse_variables
   !!### References
   !!
   !! - Work File Notes in F/MPE/MOD/CAG/PROCESS/PULSE
-  !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+  !! -
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif

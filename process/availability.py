@@ -32,7 +32,6 @@ class Availability:
 
     This module contains routines for calculating the
     plant availability and component lifetimes for a fusion power plant.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
 
     def __init__(self) -> None:

@@ -7,8 +7,7 @@ module physics_module
   !! N/A
   !! This module contains all the primary plasma physics routines
   !! for a tokamak device.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
