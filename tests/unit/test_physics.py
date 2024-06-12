@@ -7,7 +7,6 @@ from process.fortran import (
     physics_module,
     current_drive_variables,
     impurity_radiation_module,
-    startup_variables,
 )
 import numpy
 import pytest
@@ -1736,16 +1735,6 @@ class PcondParam(NamedTuple):
 
     falpha: Any = None
 
-    ptaue: Any = None
-
-    gtaue: Any = None
-
-    ftaue: Any = None
-
-    rtaue: Any = None
-
-    qtaue: Any = None
-
     iinvqd: Any = None
 
     isc: Any = None
@@ -1804,12 +1793,6 @@ class PcondParam(NamedTuple):
 
     expected_kappaa_ipb: Any = None
 
-    expected_ptaue: Any = None
-
-    expected_ftaue: Any = None
-
-    expected_rtaue: Any = None
-
     expected_kappaa: Any = None
 
     expected_powerht: Any = None
@@ -1835,11 +1818,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.40999999999999998,
-            gtaue=0,
-            ftaue=1645.9881192671726,
-            rtaue=-0.63,
-            qtaue=0,
             iinvqd=1,
             isc=32,
             ignite=0,
@@ -1869,9 +1847,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.40999999999999998,
-            expected_ftaue=823.65887428773408,
-            expected_rtaue=-0.63,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.012570664670798823,
             expected_ptripv=0.011156836223364355,
@@ -1887,11 +1862,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.44,
-            gtaue=0,
-            ftaue=146.42448015009589,
-            rtaue=-0.65000000000000002,
-            qtaue=0,
             iinvqd=1,
             isc=33,
             ignite=0,
@@ -1921,9 +1891,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.44,
-            expected_ftaue=143.29591882802001,
-            expected_rtaue=-0.65000000000000002,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.081458458765440875,
             expected_ptripv=0.072296788376262536,
@@ -1939,11 +1906,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.40999999999999998,
-            gtaue=0,
-            ftaue=176.74003304700352,
-            rtaue=-0.68999999999999995,
-            qtaue=0,
             iinvqd=1,
             isc=34,
             ignite=0,
@@ -1973,9 +1935,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.40999999999999998,
-            expected_ftaue=178.90696306034835,
-            expected_rtaue=-0.68999999999999995,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.081327750398391824,
             expected_ptripv=0.072180780839479111,
@@ -1991,11 +1950,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.40000000000000002,
-            gtaue=0,
-            ftaue=238.88549012959402,
-            rtaue=-0.68999999999999995,
-            qtaue=0,
             iinvqd=1,
             isc=35,
             ignite=0,
@@ -2025,9 +1979,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.40000000000000002,
-            expected_ftaue=120.20885852490557,
-            expected_rtaue=-0.68999999999999995,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.12077931279593926,
             expected_ptripv=0.10719520783694242,
@@ -2043,11 +1994,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.39000000000000001,
-            gtaue=0,
-            ftaue=185.98072240082502,
-            rtaue=-0.69999999999999996,
-            qtaue=0,
             iinvqd=1,
             isc=36,
             ignite=0,
@@ -2077,9 +2023,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.39000000000000001,
-            expected_ftaue=188.57285952117329,
-            expected_rtaue=-0.69999999999999996,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.081309182573405442,
             expected_ptripv=0.072164301346324039,
@@ -2095,11 +2038,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.51000000000000001,
-            gtaue=0,
-            ftaue=104.36916202452747,
-            rtaue=-0.58999999999999997,
-            qtaue=0,
             iinvqd=1,
             isc=37,
             ignite=0,
@@ -2129,9 +2067,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.51000000000000001,
-            expected_ftaue=103.56301150501412,
-            expected_rtaue=-0.58999999999999997,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.08142612910014517,
             expected_ptripv=0.072268094843318462,
@@ -2147,11 +2082,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.54000000000000004,
-            gtaue=0,
-            ftaue=92.132683025124891,
-            rtaue=-0.60999999999999999,
-            qtaue=0,
             iinvqd=1,
             isc=38,
             ignite=0,
@@ -2181,9 +2111,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.54000000000000004,
-            expected_ftaue=130.75063341866976,
-            expected_rtaue=-0.60999999999999999,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.072709146314778414,
             expected_ptripv=0.064531515128155068,
@@ -2199,11 +2126,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.48999999999999999,
-            gtaue=0,
-            ftaue=78.856230211754649,
-            rtaue=-0.55000000000000004,
-            qtaue=0,
             iinvqd=1,
             isc=39,
             ignite=0,
@@ -2233,9 +2155,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.48999999999999999,
-            expected_ftaue=85.223040995670956,
-            expected_rtaue=-0.55000000000000004,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.078529089520063822,
             expected_ptripv=0.069696886639614319,
@@ -2251,11 +2170,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.44800000000000001,
-            gtaue=0,
-            ftaue=238.73238207972739,
-            rtaue=-0.73499999999999999,
-            qtaue=0,
             iinvqd=1,
             isc=40,
             ignite=0,
@@ -2285,9 +2199,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.44800000000000001,
-            expected_ftaue=232.72166245933104,
-            expected_rtaue=-0.73499999999999999,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.081359821043062386,
             expected_ptripv=0.072209244483967094,
@@ -2303,11 +2214,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.32000000000000001,
-            gtaue=0,
-            ftaue=52.028076004704893,
-            rtaue=-0.46999999999999997,
-            qtaue=0,
             iinvqd=1,
             isc=41,
             ignite=0,
@@ -2337,9 +2243,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.32000000000000001,
-            expected_ftaue=50.282659177654601,
-            expected_rtaue=-0.46999999999999997,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.081513009259203975,
             expected_ptripv=0.072345203550858064,
@@ -2355,11 +2258,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=-0.0078747350665397467,
-            gtaue=0,
-            ftaue=178.10069717955975,
-            rtaue=-0.73999999999999999,
-            qtaue=0,
             iinvqd=1,
             isc=42,
             ignite=0,
@@ -2389,9 +2287,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=-0.0078747350665397467,
-            expected_ftaue=241.51291454983658,
-            expected_rtaue=-0.73999999999999999,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.073097992274882811,
             expected_ptripv=0.064876627403966491,
@@ -2407,11 +2302,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.02,
-            gtaue=0,
-            ftaue=17.002723443677841,
-            rtaue=-0.28999999999999998,
-            qtaue=0,
             iinvqd=1,
             isc=43,
             ignite=0,
@@ -2441,9 +2331,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.02,
-            expected_ftaue=17.002214349414931,
-            expected_rtaue=-0.28999999999999998,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.081423406537449478,
             expected_ptripv=0.072265678488503571,
@@ -2459,11 +2346,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=-0.029999999999999999,
-            gtaue=0,
-            ftaue=21.102743356890517,
-            rtaue=-0.33000000000000002,
-            qtaue=0,
             iinvqd=1,
             isc=44,
             ignite=0,
@@ -2493,9 +2375,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=-0.029999999999999999,
-            expected_ftaue=21.103103603854958,
-            expected_rtaue=-0.33000000000000002,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.081419881443596701,
             expected_ptripv=0.072262549863580605,
@@ -2511,11 +2390,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.070000000000000007,
-            gtaue=0,
-            ftaue=13.697325239330771,
-            rtaue=-0.25,
-            qtaue=0,
             iinvqd=1,
             isc=45,
             ignite=0,
@@ -2545,9 +2419,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.070000000000000007,
-            expected_ftaue=13.699210029839019,
-            expected_rtaue=-0.25,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.081421142032658531,
             expected_ptripv=0.072263668673609824,
@@ -2563,11 +2434,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.44,
-            gtaue=0,
-            ftaue=251.73181499774617,
-            rtaue=-0.72999999999999998,
-            qtaue=0,
             iinvqd=1,
             isc=46,
             ignite=0,
@@ -2597,9 +2463,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.44,
-            expected_ftaue=230.82001145150934,
-            expected_rtaue=-0.72999999999999998,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.079599509500323962,
             expected_ptripv=0.070646915991500636,
@@ -2615,11 +2478,6 @@ class PcondParam(NamedTuple):
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
             falpha=0.94999999999999996,
-            ptaue=0.32000000000000001,
-            gtaue=0,
-            ftaue=116.17488441727863,
-            rtaue=-0.46999999999999997,
-            qtaue=0,
             iinvqd=1,
             isc=47,
             ignite=0,
@@ -2649,9 +2507,6 @@ class PcondParam(NamedTuple):
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
-            expected_ptaue=0.32000000000000001,
-            expected_ftaue=58.462387646846778,
-            expected_rtaue=-0.46999999999999997,
             expected_kappaa=1.7187938085542791,
             expected_ptrepv=0.070108167457759038,
             expected_ptripv=0.062223069561580698,
@@ -2687,16 +2542,6 @@ def test_pcond(pcondparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "falpha", pcondparam.falpha)
 
-    monkeypatch.setattr(startup_variables, "ptaue", pcondparam.ptaue)
-
-    monkeypatch.setattr(startup_variables, "gtaue", pcondparam.gtaue)
-
-    monkeypatch.setattr(startup_variables, "ftaue", pcondparam.ftaue)
-
-    monkeypatch.setattr(startup_variables, "rtaue", pcondparam.rtaue)
-
-    monkeypatch.setattr(startup_variables, "qtaue", pcondparam.qtaue)
-
     kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = physics.pcond(
         iinvqd=pcondparam.iinvqd,
         isc=pcondparam.isc,
@@ -2729,12 +2574,6 @@ def test_pcond(pcondparam, monkeypatch, physics):
     )
 
     assert physics_variables.kappaa_ipb == pytest.approx(pcondparam.expected_kappaa_ipb)
-
-    assert startup_variables.ptaue == pytest.approx(pcondparam.expected_ptaue)
-
-    assert startup_variables.ftaue == pytest.approx(pcondparam.expected_ftaue)
-
-    assert startup_variables.rtaue == pytest.approx(pcondparam.expected_rtaue)
 
     assert kappaa == pytest.approx(pcondparam.expected_kappaa)
 

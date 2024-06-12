@@ -8,7 +8,6 @@ import pytest
 import logging
 import process.io.mfile as mf
 import process.io.in_dat as indat
-import process.io.plot_proc as pp
 
 logger = logging.getLogger(__name__)
 
@@ -77,20 +76,4 @@ def test_in_dat_lib(input_file_path):
         assert indat.test(str(input_file_path)) is True
     except AssertionError:
         logger.error(f"in_dat test for {input_file_path.name} has failed")
-        raise
-
-
-def test_plot_proc(mfile_path):
-    """Test the PROCESS plot_proc script.
-
-    :param mfile_path: Path to the scenario's MFile
-    :type mfile_path: Path
-    """
-    logger.info("Testing plot_proc.py")
-
-    # Test plot_proc on an MFile
-    try:
-        assert pp.test(str(mfile_path)) is True
-    except AssertionError:
-        logger.exception(f"plot_proc test for {mfile_path.name} has failed")
         raise

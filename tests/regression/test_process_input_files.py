@@ -93,9 +93,11 @@ class RegressionTestScenario:
         mfile = MFile(str(mfile_location))
         reference_mfile = MFile(str(reference_mfile_location))
 
-        assert (
-            ifail := mfile.data["ifail"].get_scan(-1)
-        ) == 1, f"ifail of {ifail} indicates PROCESS did not solve successfully"
+        assert (ifail := mfile.data["ifail"].get_scan(-1)) == 1 or mfile.data[
+            "ioptimz"
+        ].get_scan(
+            -1
+        ) == -2, f"ifail of {ifail} indicates PROCESS did not solve successfully"
 
         differences = self.mfile_value_changes(
             reference_mfile, mfile, tolerance, opt_params_only
@@ -267,6 +269,12 @@ def test_input_file(
     """
     new_input_file = tmp_path / input_file.name
     shutil.copy(input_file, new_input_file)
+
+    stellarator_config = (
+        input_file / f"../{input_file.name.replace('IN.DAT', 'stella_conf.json')}"
+    ).resolve()
+    if stellarator_config.exists():
+        shutil.copy(stellarator_config, tmp_path / stellarator_config.name)
 
     scenario = RegressionTestScenario(new_input_file)
 

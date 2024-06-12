@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 """
 
-  PROCESS plot_proc using process_io_lib functions and MFILE.DAT
+PROCESS plot_proc using process_io_lib functions and MFILE.DAT
 
-  James Morris
-  13/04/2014
-  CCFE
-  Revised by Michael Kovari, 7/1/2016
+James Morris
+13/04/2014
+CCFE
+Revised by Michael Kovari, 7/1/2016
 
-  24/11/2021: Global dictionary variables moved within the functions
-              to avoid cyclic dependencies. This is because the dicts
-              generation script imports, and inspects, process.
+24/11/2021: Global dictionary variables moved within the functions
+            to avoid cyclic dependencies. This is because the dicts
+            generation script imports, and inspects, process.
 
 """
 
@@ -179,17 +179,16 @@ rtangle = np.pi / 2
 rtangle2 = 2 * rtangle
 
 
-def plot_plasma(axis, mfile_data, scan):
+def plot_plasma(axis, mfile_data, scan, colour_scheme):
     """Plots the plasma boundary arcs.
 
     Arguments:
         axis --> axis object to plot to
         mfile_data --> MFILE data object
         scan --> scan number to use
+        colour_scheme --> colour scheme to use for plots
 
     """
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     r_0 = mfile_data.data["rmajor"].get_scan(scan)
     a = mfile_data.data["rminor"].get_scan(scan)
@@ -310,13 +309,14 @@ def cumulative_radial_build2(section, mfile_data, scan):
     return (cumulative_build, previous)
 
 
-def poloidal_cross_section(axis, mfile_data, scan, demo_ranges):
+def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     """Function to plot poloidal cross-section
 
     Arguments:
       axis --> axis object to add plot to
       mfile_data --> MFILE data object
       scan --> scan number to use
+      colour_scheme --> colour scheme to use for plots
 
     """
 
@@ -325,17 +325,17 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges):
     axis.set_title("Poloidal cross-section")
     axis.minorticks_on()
 
-    plot_vacuum_vessel(axis, mfile_data, scan)
-    plot_shield(axis, mfile_data, scan)
-    plot_blanket(axis, mfile_data, scan)
-    plot_firstwall(axis, mfile_data, scan)
+    plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme)
+    plot_shield(axis, mfile_data, scan, colour_scheme)
+    plot_blanket(axis, mfile_data, scan, colour_scheme)
+    plot_firstwall(axis, mfile_data, scan, colour_scheme)
 
-    plot_plasma(axis, mfile_data, scan)
+    plot_plasma(axis, mfile_data, scan, colour_scheme)
     plot_centre_cross(axis, mfile_data, scan)
-    plot_cryostat(axis, mfile_data, scan)
+    plot_cryostat(axis, mfile_data, scan, colour_scheme)
 
-    plot_tf_coils(axis, mfile_data, scan)
-    plot_pf_coils(axis, mfile_data, scan)
+    plot_tf_coils(axis, mfile_data, scan, colour_scheme)
+    plot_pf_coils(axis, mfile_data, scan, colour_scheme)
 
     # Ranges
     # ---
@@ -350,11 +350,8 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges):
     # ---
 
 
-def plot_cryostat(axis, mfile_data, scan):
+def plot_cryostat(axis, mfile_data, scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
-
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     rects = cryostat_geometry(rdewex=rdewex, ddwex=ddwex, zdewex=zdewex)
 
@@ -369,15 +366,12 @@ def plot_cryostat(axis, mfile_data, scan):
         )
 
 
-def color_key(axis, mfile_data, scan):
-
+def color_key(axis, mfile_data, scan, colour_scheme):
     """Function to plot the colour key
     Arguments:
       axis --> object to add plot to
+      colour_scheme --> colour scheme to use for plots
     """
-
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     axis.set_ylim([0, 10])
     axis.set_xlim([0, 10])
@@ -482,15 +476,14 @@ def color_key(axis, mfile_data, scan):
     )
 
 
-def toroidal_cross_section(axis, mfile_data, scan, demo_ranges):
+def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     """Function to plot toroidal cross-section
     Arguments:
       axis --> axis object to add plot to
       mfile_data --> MFILE data object
       scan --> scan number to use
+      colour_scheme --> colour scheme to use for plots
     """
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     axis.set_xlabel("x / m")
     axis.set_ylabel("y / m")
@@ -1112,16 +1105,15 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     # ---
 
 
-def plot_vacuum_vessel(axis, mfile_data, scan):
+def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
     """Function to plot vacuum vessel
 
     Arguments:
         axis --> axis object to plot to
         mfile_data --> MFILE data object
         scan --> scan number to use
+        colour_scheme --> colour scheme to use for plots
     """
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
@@ -1191,16 +1183,15 @@ def plot_vacuum_vessel(axis, mfile_data, scan):
         )
 
 
-def plot_shield(axis, mfile_data, scan):
+def plot_shield(axis, mfile_data, scan, colour_scheme):
     """Function to plot shield
 
     Arguments:
         axis --> axis object to plot to
         mfile_data --> MFILE data object
         scan --> scan number to use
+        colour_scheme --> colour scheme to use for plots
     """
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
@@ -1255,18 +1246,16 @@ def plot_shield(axis, mfile_data, scan):
         )
 
 
-def plot_blanket(axis, mfile_data, scan) -> None:
+def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
     """Function to plot blanket
 
     Arguments:
       axis --> axis object to plot to
       mfile_data --> MFILE.DAT object
       scan --> scan number to use
+      colour_scheme --> colour scheme to use for plots
 
     """
-
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     # Single null: Draw top half from output
     # Double null: Reflect bottom half to top
@@ -1354,17 +1343,16 @@ def plot_blanket(axis, mfile_data, scan) -> None:
         )
 
 
-def plot_firstwall(axis, mfile_data, scan):
+def plot_firstwall(axis, mfile_data, scan, colour_scheme):
     """Function to plot first wall
 
     Arguments:
       axis --> axis object to plot to
       mfile_data --> MFILE.DAT object
       scan --> scan number to use
+      colour_scheme --> colour scheme to use for plots
 
     """
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
@@ -1461,17 +1449,16 @@ def angle_check(angle1, angle2):
     return angle1, angle2
 
 
-def plot_tf_coils(axis, mfile_data, scan):
+def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     """Function to plot TF coils
 
     Arguments:
         axis --> axis object to plot to
         mfile_data --> MFILE.DAT object
         scan --> scan number to use
+        colour_scheme --> colour scheme to use for plots
 
     """
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     # Arc points
     # MDK Only 4 points now required for elliptical arcs
@@ -1794,7 +1781,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
 
         # Plot the double rectangle winding pack
         if wp_shape == 1:
-
             # Inner WP insulation
             axis.add_patch(
                 Rectangle(
@@ -2037,16 +2023,15 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     plt.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
 
 
-def plot_pf_coils(axis, mfile_data, scan):
+def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     """Function to plot PF coils
 
     Arguments:
         axis --> axis object to plot to
         mfile_data --> MFILE.DAT object
         scan --> scan number to use
+        colour_scheme --> colour scheme to use for plots
     """
-    args = parse_args(None)
-    colour_scheme = int(args.colour)
 
     coils_r = []
     coils_z = []
@@ -2908,6 +2893,7 @@ def main_plot(
     scan,
     imp="../data/lz_non_corona_14_elements/",
     demo_ranges=False,
+    colour_scheme=1,
 ):
     """Function to create radial and vertical build plot on given figure.
 
@@ -2937,15 +2923,15 @@ def main_plot(
 
     # Plot poloidal cross-section
     plot_1 = fig2.add_subplot(221, aspect="equal")
-    poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges)
+    poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
     plot_2 = fig2.add_subplot(222, aspect="equal")
-    toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges)
+    toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot color key
     plot_3 = fig2.add_subplot(241)
-    color_key(plot_3, m_file_data, scan)
+    color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
@@ -2998,52 +2984,11 @@ def main_plot(
     plot_tf_turn(plot_8, m_file_data, scan)
 
 
-def save_plots(m_file_data, scan):
-    """Function to recreate and save individual plots."""
-
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-
-    # Plot poloidal cross-section
-    pol = fig.add_subplot(111, aspect="equal")
-    poloidal_cross_section(pol, m_file_data, scan)
-
-    # Plot TF coils
-    plot_tf_coils(pol, m_file_data, scan)
-
-    # Plot PF coils
-    plot_pf_coils(pol, m_file_data, scan)
-
-    fig.savefig("psection.svg", format="svg", dpi=1200)
-
-    # Plot toroidal cross-section
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-    tor = fig.add_subplot(222, aspect="equal")
-    toroidal_cross_section(tor)
-    fig.savefig("tsection.svg", format="svg", dpi=1200)
-
-    # Plot color key
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-    plot = fig.add_subplot(241)
-    color_key(plot)
-    fig.savefig("color_key.svg", format="svg", dpi=1200)
-
-    # Plot profiles
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-    plot = fig.add_subplot(223, aspect=0.05)
-    plot_nprofile(plot, False)
-    fig.savefig("nprofile.svg", format="svg", dpi=1200)
-
-    fig = plt.figure(figsize=(12, 9), dpi=80)
-    plot = fig.add_subplot(224, aspect=1 / 35)
-    plot_tprofile(plot, False)
-    fig.savefig("tprofile.svg", format="svg", dpi=1200)
-
-
 def main(args=None):
     # TODO The use of globals here isn't ideal, but is required to get main()
     # working with minimal changes. Should be converted to class structure
     args = parse_args(args)
-
+    colour_scheme = int(args.colour)
     # read MFILE
     if args.f != "":
         m_file = mf.MFile(args.f)
@@ -3146,7 +3091,6 @@ def main(args=None):
     iefrffix = int(m_file.data["iefrffix"].get_scan(scan))
 
     if (iefrf in [5, 8]) or (iefrffix in [5, 8]):
-
         nbshield = m_file.data["nbshield"].get_scan(scan)
         rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
         rtanmax = m_file.data["rtanmax"].get_scan(scan)
@@ -3295,7 +3239,15 @@ def main(args=None):
     page3 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
-    main_plot(page1, page2, page3, m_file, scan=scan, demo_ranges=demo_ranges)
+    main_plot(
+        page1,
+        page2,
+        page3,
+        m_file,
+        scan=scan,
+        demo_ranges=demo_ranges,
+        colour_scheme=colour_scheme,
+    )
 
     # with bpdf.PdfPages(args.o) as pdf:
     with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
@@ -3307,212 +3259,9 @@ def main(args=None):
     if args.show:
         plt.show(block=True)
 
-    # This bit doesn't work - the argument is not recognised for some reason.:
-    # if args.svg:
-    #    save_plots(m_file)
     plt.close(page1)
     plt.close(page2)
     plt.close(page3)
-
-
-def test(f):
-    """Test Function
-
-    :param f: filename to test
-    """
-
-    try:
-        # read MFILE
-        m_file = mf.MFile(filename=f)
-        scan = -1
-
-        # Check for Copper magnets
-        if "i_tf_sup" in m_file.data.keys():
-            i_tf_sup = int(m_file.data["i_tf_sup"].get_scan(scan))
-        else:
-            i_tf_sup = int(1)
-
-        # Check integer turns
-        if "i_tf_turns_integer" in m_file.data.keys():
-            i_tf_turns_integer = int(m_file.data["i_tf_turns_integer"].get_scan(scan))
-        else:
-            i_tf_turns_integer = int(0)
-
-        global bore
-        bore = m_file.data["bore"].get_scan(scan)
-        global ohcth
-        ohcth = m_file.data["ohcth"].get_scan(scan)
-        global gapoh
-        gapoh = m_file.data["gapoh"].get_scan(scan)
-        global tfcth
-        tfcth = m_file.data["tfcth"].get_scan(scan)
-        global gapds
-        gapds = m_file.data["gapds"].get_scan(scan)
-        global d_vv_in
-        d_vv_in = m_file.data["d_vv_in"].get_scan(scan)
-        global shldith
-        shldith = m_file.data["shldith"].get_scan(scan)
-        global blnkith
-        blnkith = m_file.data["blnkith"].get_scan(scan)
-        global fwith
-        fwith = m_file.data["fwith"].get_scan(scan)
-        global scrapli
-        scrapli = m_file.data["scrapli"].get_scan(scan)
-        global rmajor
-        rmajor = m_file.data["rmajor"].get_scan(scan)
-        global rminor
-        rminor = m_file.data["rminor"].get_scan(scan)
-        global scraplo
-        scraplo = m_file.data["scraplo"].get_scan(scan)
-        global fwoth
-        fwoth = m_file.data["fwoth"].get_scan(scan)
-        global blnkoth
-        blnkoth = m_file.data["blnkoth"].get_scan(scan)
-        global shldoth
-        shldoth = m_file.data["shldoth"].get_scan(scan)
-        global d_vv_out
-        d_vv_out = m_file.data["d_vv_out"].get_scan(scan)
-        global gapsto
-        gapsto = m_file.data["gapsto"].get_scan(scan)
-        global tfthko
-        tfthko = m_file.data["tfthko"].get_scan(scan)
-        global rdewex
-        rdewex = m_file.data["rdewex"].get_scan(scan)
-        global ddwex
-        ddwex = m_file.data["ddwex"].get_scan(scan)
-        global zdewex
-        zdewex = m_file.data["zdewex"].get_scan(scan)
-        global n_tf
-        n_tf = m_file.data["n_tf"].get_scan(scan)
-
-        if i_tf_sup == 1:
-            global wwp1
-            wwp1 = m_file.data["wwp1"].get_scan(scan)
-            if i_tf_turns_integer == 0:
-                global wwp2
-                wwp2 = m_file.data["wwp2"].get_scan(scan)
-            global dr_tf_wp
-            dr_tf_wp = m_file.data["dr_tf_wp"].get_scan(scan)
-            global tinstf
-            tinstf = m_file.data["tinstf"].get_scan(scan)
-            global thkcas
-            thkcas = m_file.data["thkcas"].get_scan(scan)
-
-            # To be re-inergrated to resistives when in-plane stresses is integrated
-            global casthi
-            casthi = m_file.data["casthi"].get_scan(scan)
-
-        global nbshield
-        nbshield = m_file.data["nbshield"].get_scan(scan)
-        global rtanbeam
-        rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
-        global rtanmax
-        rtanmax = m_file.data["rtanmax"].get_scan(scan)
-        global beamwd
-        beamwd = m_file.data["beamwd"].get_scan(scan)
-        # # Pedestal profile parameters
-        global ipedestal
-        ipedestal = m_file.data["ipedestal"].get_scan(scan)
-        global neped
-        neped = m_file.data["neped"].get_scan(scan)
-        global nesep
-        nesep = m_file.data["nesep"].get_scan(scan)
-        global rhopedn
-        rhopedn = m_file.data["rhopedn"].get_scan(scan)
-        global rhopedt
-        rhopedt = m_file.data["rhopedt"].get_scan(scan)
-        global tbeta
-        tbeta = m_file.data["tbeta"].get_scan(scan)
-        global teped
-        teped = m_file.data["teped"].get_scan(scan)
-        global tesep
-        tesep = m_file.data["tesep"].get_scan(scan)
-        global alphan
-        alphan = m_file.data["alphan"].get_scan(scan)
-        global alphat
-        alphat = m_file.data["alphat"].get_scan(scan)
-        global ne0
-        ne0 = m_file.data["ne0"].get_scan(scan)
-        global te0
-        te0 = m_file.data["te0"].get_scan(scan)
-        # # Plasma
-        global triang
-        triang = m_file.data["triang95"].get_scan(scan)
-        global alphaj
-        alphaj = m_file.data["alphaj"].get_scan(scan)
-        global q0
-        q0 = m_file.data["q0"].get_scan(scan)
-        global q95
-        q95 = m_file.data["q95"].get_scan(scan)
-
-        # Build the dictionaries of radial and vertical build values and cumulative
-        # values
-
-        global radial
-        radial = dict()
-        global cumulative_radial
-        cumulative_radial = dict()
-        subtotal = 0
-        for item in RADIAL_BUILD:
-            if item == "rminori" or item == "rminoro":
-                build = m_file.data["rminor"].get_scan(scan)
-            elif item == "vvblgapi" or item == "vvblgapo":
-                build = m_file.data["vvblgap"].get_scan(scan)
-            elif "d_vv_in" in item:
-                build = m_file.data["d_vv_in"].get_scan(scan)
-            elif "d_vv_out" in item:
-                build = m_file.data["d_vv_out"].get_scan(scan)
-            else:
-                build = m_file.data[item].get_scan(scan)
-
-        radial[item] = build
-        subtotal += build
-        cumulative_radial[item] = subtotal
-
-        global upper
-        upper = dict()
-        global cumulative_upper
-        cumulative_upper = dict()
-        subtotal = 0
-        for item in vertical_upper:
-            upper[item] = m_file.data[item].get_scan(scan)
-            subtotal += upper[item]
-            cumulative_upper[item] = subtotal
-
-        global lower
-        lower = dict()
-        global cumulative_lower
-        cumulative_lower = dict()
-        subtotal = 0
-        for item in vertical_lower:
-            lower[item] = m_file.data[item].get_scan(scan)
-            subtotal -= lower[item]
-            cumulative_lower[item] = subtotal
-
-        # create main plot
-        page1 = plt.figure(figsize=(12, 9), dpi=80)
-        page2 = plt.figure(figsize=(12, 9), dpi=80)
-        page3 = plt.figure(figsize=(12, 9), dpi=80)
-
-        # run main_plot
-        main_plot(page1, page2, page3, m_file, scan=scan)
-
-        # with bpdf.PdfPages(args.o) as pdf:
-        # with bpdf.PdfPages("ref.SUMMARY.pdf") as pdf:
-        #    pdf.savefig(page1)
-        #    pdf.savefig(page2)
-        # plt.show()
-
-        # # tidy up to avoid memory issues
-        # del page1
-        # del page2
-        plt.close(page1)
-        plt.close(page2)
-
-        return True
-    except Exception:
-        print("FTest failure for file : {}".format(f))
-        return False
 
 
 if __name__ == "__main__":

@@ -184,11 +184,11 @@ module pfcoil_variables
   real(dp) :: jscoh_eof
   !! central solenoid superconductor critical current density (A/m2) at end-of-flattop
 
-  real(dp) :: jstrandoh_bop
-  !! central solenoid strand critical current density (A/m2) at beginning-of-pulse
+  real(dp) :: jcableoh_bop
+  !! central solenoid cable critical current density (A/m2) at beginning-of-pulse
 
-  real(dp) :: jstrandoh_eof
-  !! central solenoid strand critical current density (A/m2) at end-of-flattop
+  real(dp) :: jcableoh_eof
+  !! central solenoid cable critical current density (A/m2) at end-of-flattop
 
   integer :: ncirt
   !! number of PF circuits (including central solenoid and plasma)
@@ -444,8 +444,8 @@ module pfcoil_variables
     i_sup_pf_shape = 0
     jscoh_bop = 0.0D0
     jscoh_eof = 0.0D0
-    jstrandoh_bop = 0.0D0
-    jstrandoh_eof = 0.0D0
+    jcableoh_bop = 0.0D0
+    jcableoh_eof = 0.0D0
     ncirt = 0
     ncls = (/1,1,2,0,0,0,0,0,0,0,0,0/)
     nfxfh = 7

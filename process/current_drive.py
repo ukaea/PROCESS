@@ -1867,7 +1867,7 @@ class CurrentDrive:
         alphat  : input real : temperature profile factor
         aspect  : input real : aspect ratio
         dene    : input real : volume averaged electron density (m**-3)
-        enbeam  : input real : neutral beam energy (keV)
+        ebeam  : input real : neutral beam energy (keV)
         rmajor  : input real : plasma major radius (m)
         ten     : input real : density weighted average electron temp. (keV)
         zeff    : input real : plasma effective charge

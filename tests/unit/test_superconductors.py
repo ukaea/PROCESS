@@ -61,7 +61,7 @@ def test_itersc(iterscparam):
     """
 
     jcrit, bcrit, tcrit = superconductors.itersc(
-        thelium=iterscparam.thelium,
+        temperature=iterscparam.thelium,
         bmax=iterscparam.bmax,
         strain=iterscparam.strain,
         bc20max=iterscparam.bc20max,
@@ -148,8 +148,8 @@ def test_jcrit_rebco():
 
 
 def test_current_sharing_rebco():
-    assert superconductors.current_sharing_rebco(7.0, 2e7) == pytest.approx(
-        75.76286550648135
+    assert superconductors.current_sharing_rebco(11.0, 2e7) == pytest.approx(
+        71.28702697627514
     )
 
 

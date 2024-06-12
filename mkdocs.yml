@@ -42,7 +42,18 @@ nav:
       # - Versioning: development/versioning.md
   - Reference:
       - Physics Models:
-          - Plasma: physics-models/plasma.md
+          - Plasma: 
+            - Overview: physics-models/plasma_overview.md
+            - Geometry: physics-models/plasma_geometry.md
+            - Profiles: physics-models/plasma_profiles.md
+            - Fusion Reactions: physics-models/plasma_reactions.md
+            - Beta Limit: physics-models/plasma_beta.md
+            - Fast Alpha: physics-models/plasma_alpha.md
+            - Density Limit: physics-models/plasma_density.md
+            - Impurities & Radiation: physics-models/plasma_radiation_impurities.md
+            - Plasma Current: physics-models/plasma_current.md
+            - Confinement time: physics-models/plasma_confinement.md
+            - Plasma Core Power Balance: physics-models/plasma_power_balance.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md
       - Engineering Models:
           - Machine Build: eng-models/machine-build.md
@@ -55,7 +66,31 @@ nav:
           - Shield: eng-models/shield.md
           - Divertor: eng-models/divertor.md
           - Heat transport: eng-models/power-conversion-and-heat-dissipation-systems.md
-          - Auxiliary Power Systems: eng-models/heating-and-current-drive.md
+          - Auxiliary Heating & Current Drive Systems: 
+             - Overview: eng-models/heating_and_current_drive/heating-and-current-drive.md
+             - Radio Frequency:
+                - Overview: eng-models/heating_and_current_drive/RF/rf_overview.md
+                - Lower Hybrid:
+                   - Overview: eng-models/heating_and_current_drive/RF/lhcd_overview.md
+                   - Fenstermacher Model: eng-models/heating_and_current_drive/RF/fenstermacher_lower_hybrid.md
+                   - Ehst Model: eng-models/heating_and_current_drive/RF/ehst_lower_hybrid.md
+                   - Culham Model: eng-models/heating_and_current_drive/RF/culham_lower_hybrid.md
+                - Electron Cyclotron:
+                   - Overview: eng-models/heating_and_current_drive/RF/ec_overview.md
+                   - Fenstermacher Resonnance Model: eng-models/heating_and_current_drive/RF/fenstermacher_electron_cyclotron_resonance.md
+                   - Culham Model: eng-models/heating_and_current_drive/RF/culham_electron_cyclotron.md
+                   - User Input Gamma Model: eng-models/heating_and_current_drive/RF/ecrh_gamma.md
+                   - Cutoff mode: eng-models/heating_and_current_drive/RF/cutoff_ecrh.md
+                - Ion Cyclotron:
+                   - Overview: eng-models/heating_and_current_drive/RF/ic_overview.md
+                   - Ion cyclotron model: eng-models/heating_and_current_drive/RF/ic_model.md
+                - Electron Bernstein Wave:
+                   - Overview: eng-models/heating_and_current_drive/RF/ebw_overview.md
+                   - EBW Model: eng-models/heating_and_current_drive/RF/ebw_freethy.md
+             - Neutral Beam Injection:
+                - Overview: eng-models/heating_and_current_drive/NBI/nbi_overview.md   
+                - ITER Model: eng-models/heating_and_current_drive/NBI/iter_nb.md 
+                - Culham Model: eng-models/heating_and_current_drive/NBI/culham_nb.md
           - Cryostat and vacuum system: eng-models/cryostat-and-vacuum-system.md
           - Plant Availability: eng-models/plant-availability.md
           - Power Requirements: eng-models/power-requirements.md
