@@ -501,7 +501,6 @@ contains
        case ('minmax')
           call parse_int_variable('minmax', minmax, -ipnfoms, ipnfoms, 'Switch for figure of merit')
        case ('neqns')
-           write(*,*)'The total number of constraints is counted automatically and does not need to be stated in IN.DAT.'
            call parse_int_variable('neqns', neqns, 1, ipeqns, 'No of equality constraints')
        case ('nineqns')
           call parse_int_variable('nineqns', nineqns, 1, ipeqns, 'No of inequality constraints')
