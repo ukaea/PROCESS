@@ -7,8 +7,7 @@ module fwbs_module
   !! parameters of the first wall, blanket and shield components
   !! of a fusion power plant.
 
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
@@ -48,8 +47,7 @@ contains
     !! <P><LI><CODE>j = 2</CODE> : tungsten shield (not used)</UL>
     !! Note: Costing and mass calculations elsewhere assume
     !! stainless steel only.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     use build_variables, only: blnkith, blnkoth, fwith, fwoth, shldith, shldoth
     use cost_variables, only: cfactr, tlife

@@ -1,4 +1,5 @@
 """Unit tests for the main.py module."""
+
 from process import main
 from process.main import Process
 from process.main import SingleRun
@@ -262,17 +263,6 @@ def test_set_mfile(single_run, monkeypatch):
     monkeypatch.setattr(single_run, "filename_prefix", prefix, raising=False)
     single_run.set_mfile()
     assert single_run.mfile_path == expected
-
-
-def test_show_errors(single_run, monkeypatch):
-    """Check that the show errors subroutine is called.
-
-    :param single_run: single_run fixture
-    :type single_run: SingleRun
-    :param monkeypatch: monkeypatch fixture
-    :type monkeypatch: object
-    """
-    single_run.show_errors()
 
 
 def test_finish(single_run, monkeypatch):

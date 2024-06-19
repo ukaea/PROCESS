@@ -256,7 +256,7 @@ contains
       ucblli, ucpfcb, tlife, ipnet, fcdfuel, ucbus, ucpfb, uchts, &
       maintenance_fwbs, fwbs_prob_fail, uclh, ucblss, ucblvd, ucsc, ucturb, &
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
-      startupratio, tmain, u_unplanned
+      startupratio, tmain, u_unplanned_cp
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
       ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
@@ -501,7 +501,6 @@ contains
        case ('minmax')
           call parse_int_variable('minmax', minmax, -ipnfoms, ipnfoms, 'Switch for figure of merit')
        case ('neqns')
-           write(*,*)'The total number of constraints is counted automatically and does not need to be stated in IN.DAT.'
            call parse_int_variable('neqns', neqns, 1, ipeqns, 'No of equality constraints')
        case ('nineqns')
           call parse_int_variable('nineqns', nineqns, 1, ipeqns, 'No of inequality constraints')
@@ -2406,8 +2405,8 @@ contains
        case ('tmain')
           call parse_real_variable('tmain', tmain, 0.0D0, 100.0D0, &
                   'Maintenance time for replacing CP (years) (iavail = 3)')
-       case ('u_unplanned')
-          call parse_real_variable('u_unplanned', u_unplanned, 0.0D0, 1.0D0, &
+       case ('u_unplanned_cp')
+          call parse_real_variable('u_unplanned_cp', u_unplanned_cp, 0.0D0, 1.0D0, &
                   'User-input CP unplanned unavailability (iavail = 3)')
 
           !  Unit cost settings

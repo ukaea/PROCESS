@@ -104,7 +104,6 @@ OBS_VARS = {
     "bcylth": None,
     "itfmod": None,
     "jcrit_model": None,
-    "jcritsc": None,
     "fcohbof": None,
     "fvolbi": "fhole",
     "fvolbo": "fhole",

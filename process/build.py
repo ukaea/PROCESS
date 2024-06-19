@@ -129,21 +129,6 @@ class Build:
             + build_variables.tftsgap
         )
 
-        # TF coil vertical bore [m] (Not sure it is entirely consistent #)
-        # Rem SK : not consistend for single null#
-        build_variables.dh_tf_inner_bore = 2.0e0 * (
-            physics_variables.rminor * physics_variables.kappa
-            + build_variables.vgaptop
-            + build_variables.fwith
-            + build_variables.blnktth
-            + build_variables.vvblgap
-            + build_variables.shldtth
-            + build_variables.d_vv_top
-            + build_variables.vgap2
-            + build_variables.thshield_vb
-            + build_variables.tftsgap
-        )
-
         #  Vertical locations of divertor coils
         if physics_variables.i_single_null == 0:
             build_variables.hpfu = build_variables.hmax + build_variables.tfcth
@@ -1453,8 +1438,6 @@ class Build:
                     ) / build_variables.r_tf_outboard_mid
                     error_handling.report_error(143)
 
-            # write(self.outfile,10)
-            # 10  format(t43,'Thickness (m)',t60,'Radius (m)')
             po.ovarin(
                 self.outfile,
                 "TF coil radial placement switch",
@@ -1934,10 +1917,8 @@ class Build:
             if physics_variables.i_single_null == 0:
                 po.ocmmnt(self.outfile, "Double null case")
 
-                # write(self.outfile,20)
-                # 20 format(t43,'Thickness (m)',t60,'Height (m)')
-
                 # Start at the top and work down.
+
                 vbuild = (
                     buildings_variables.clh1
                     + build_variables.tfcth
@@ -1968,6 +1949,9 @@ class Build:
                     buildings_variables.clh1,
                 )
                 vbuild = vbuild - buildings_variables.clh1
+
+                # Top of TF coil
+                tf_top = vbuild
 
                 po.obuild(
                     self.outfile,
@@ -2184,6 +2168,11 @@ class Build:
                     "(tfcth)",
                 )
 
+                # Total height of TF coil
+                tf_height = tf_top - vbuild
+                # Inner vertical dimension of TF coil
+                build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.tfcth
+
                 vbuild = vbuild - buildings_variables.clh1
                 po.obuild(
                     self.outfile,
@@ -2233,6 +2222,9 @@ class Build:
                     buildings_variables.clh1,
                 )
                 vbuild = vbuild - buildings_variables.clh1
+
+                # Top of TF coil
+                tf_top = vbuild
 
                 po.obuild(
                     self.outfile,
@@ -2466,6 +2458,11 @@ class Build:
                     vbuild,
                     "(tfcth)",
                 )
+
+                # Total height of TF coil
+                tf_height = tf_top - vbuild
+                # Inner vertical dimension of TF coil
+                build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.tfcth
 
                 vbuild = vbuild - buildings_variables.clh1
 

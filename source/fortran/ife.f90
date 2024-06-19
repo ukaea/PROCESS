@@ -6,8 +6,7 @@ module ife_module
   !! N/A
   !! This module contains routines for calculating the
   !! parameters of an Inertial Fusion Energy power plant.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
@@ -28,8 +27,7 @@ contains
     !! This routine calculates the physics parameters of an Inertial Fusion
     !! Energy power plant.
     !! F/MI/PJK/LOGBOOK12, pp.68,85
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use constants, only: pi
@@ -203,8 +201,7 @@ contains
     !! Heavy-ion Driver Design and Scaling, R. Bieri et al.,
     !! Fusion Technology, vol.21 (1992) 1583
     !! Meier and Bieri, Fusion Technology, vol.21 (1992) 1547
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use constants, only: echarge, mproton, degrad, pi
@@ -577,8 +574,7 @@ contains
       !! of a heavy ion driver suitable for inertial fusion energy.
       !! Heavy-ion Driver Design and Scaling, R. Bieri et al.,
       !! Fusion Technology, vol.21 (1992) 1583
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       implicit none
@@ -623,8 +619,7 @@ contains
       !! heavy ions in a beam driver suitable for inertial fusion energy.
       !! Heavy-ion Driver Design and Scaling, R. Bieri et al.,
       !! Fusion Technology, vol.21 (1992) 1583
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       implicit none
@@ -663,8 +658,7 @@ contains
     !! Meier and Rosenberg.
     !! Meier and Rosenberg, Fusion Technology vol.21 (1992) p.1552
     !! F/MI/PJK/LOGBOOK12, p.86
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -755,8 +749,7 @@ contains
     !! suitable for inertial fusion energy.
     !! Gain and driver efficiency data are interpolated from input data.
     !! F/MI/PJK/LOGBOOK12, p.85
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     implicit none
@@ -817,8 +810,7 @@ contains
     !! This routine constructs the build of an inertial fusion energy device
     !! and calculates the material volumes for the device core.
     !! F/MI/PJK/LOGBOOK12, p.52
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use process_output, only: oheadr, obuild, ovarre
@@ -1051,8 +1043,7 @@ contains
      !! and top corners and with a lower shield at the centre.  See diagram
      !! attached to Issue #907.
      !! Issue #907
-     !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-     !
+     !!      !
      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     use constants, only: pi
     use build_variables, only: fwarea
@@ -1248,8 +1239,7 @@ contains
       !! device, assumed to be cylindrically-symmetric, and to calculate
       !! the material volumes for the device core.
       !! F/MI/PJK/LOGBOOK12, p.52
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       use constants, only: pi
@@ -1372,8 +1362,7 @@ contains
       !! device, based on the design of the OSIRIS study, and to calculate
       !! the material volumes for the device core.
       !! F/MI/PJK/LOGBOOK12, p.56
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       use constants, only: pi
@@ -1406,8 +1395,7 @@ contains
       !! the material volumes for the device core.
       !! Sviatoslavsky et al, Fusion Technology vol.21 (1992) 1470
       !! F/MI/PJK/LOGBOOK12, p.53
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       use constants, only: pi
@@ -1550,8 +1538,7 @@ contains
       !! the material volumes for the device core.
       !! Moir, Fusion Technology vol.21 (1992) 1475
       !! F/MI/PJK/LOGBOOK12, p.57
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-      !
+      !!       !
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       use constants, only: pi
@@ -1670,8 +1657,7 @@ contains
     !! an Inertial Fusion Energy power plant.
     !! <P>In fact, the output masses are all trivially zero, as they are
     !! magnetic fusion specific. F/MI/PJK/LOGBOOK12, p.87
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use structure_variables, only: aintmass, clgsmass, coldmass, fncmass, gsmass
@@ -1697,8 +1683,7 @@ contains
     !! delivery system and the target factory, for an Inertial
     !! Fusion Energy power plant.
     !! F/MI/PJK/LOGBOOK12, pp.87-88
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use ife_variables, only: tfacmw, ptargf, reprat
@@ -1729,8 +1714,7 @@ contains
     !! masses and other parameters, for an Inertial Fusion Energy device.
     !! F/MI/PJK/LOGBOOK12, p.86
     !! Moir et al., Fusion Technology, vol.25 (1994) p.5
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use build_variables, only: fwarea
@@ -1873,8 +1857,7 @@ contains
     !! and plant power balance constituents, for an IFE power plant.
     !! F/MI/PJK/LOGBOOK12, pp.67,89
     !! Bourque et al., Fusion Technology vol.21 (1992) 1465
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use fwbs_variables, only: emult, fhole, pnucblkt, pnucshld, pnucloss
@@ -1956,8 +1939,7 @@ contains
     !! iprint : input integer : switch for writing to output file (1=yes)
     !! This routine calculates the AC power requirements for an IFE power plant.
     !! F/MI/PJK/LOGBOOK12, p.68
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use buildings_variables, only: efloor
@@ -2046,8 +2028,7 @@ contains
     !! routines <A HREF="ifepw1.html">IFEPW1</A> or
     !! <A HREF="ifeacp.html">IFEACP</A>.
     !! F/MI/PJK/LOGBOOK12, p.67
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use cost_variables, only: ireactor, ipnet
@@ -2132,8 +2113,7 @@ contains
     !! Inertial Fusion Energy power plant.
     !! <P>The calculated values are hard-wired; they are based loosely
     !! on those for a tokamak of 6m major radius. F/MI/PJK/LOGBOOK12, p.87
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use vacuum_variables, only: dlscal, nvduct, vacdshm, vcdimax, vpumpn
@@ -2161,8 +2141,7 @@ contains
     !! closely on that for tokamaks etc. in routine
     !! <A HREF="bldgs.html">BLDGS</A>.
     !! F/MI/PJK/LOGBOOK12, p.87
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use buildings_variables, only: wrbi, rbwt, rbrt, fndt, trcl, hcwt, hccl, &

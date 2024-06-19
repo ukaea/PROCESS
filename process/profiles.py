@@ -13,7 +13,7 @@ logger.addHandler(s_handler)
 
 
 class Profile(ABC):
-    """Abstract base class used to create and hold profiles (temperature, desnity,)
+    """Abstract base class used to create and hold profiles (temperature, density,)
 
     :param ABC: Abstract Base Class
     :type ABC: ABC, optional
@@ -55,15 +55,12 @@ class Profile(ABC):
 
 
 class NProfile(Profile):
-    """Density profile class.
-    Contains a function to calculate the electron density profile and
+    """Electron density profile class. Contains a function to calculate the electron density profile and
     store the data.
     """
 
     def run(self):
-        """_summary_
-        Subroutine which calls functions and stores nprofile data.
-        """
+        """Subroutine which calls profile functions and stores nprofile data."""
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
@@ -93,7 +90,7 @@ class NProfile(Profile):
         :type rhopedn: float
         :param n0: central density (/m3)
         :type n0: float
-        :param nped: oedestal desnity (/m3)
+        :param nped: pedestal desnity (/m3)
         :type nped: float
         :param nsep: separatrix density (/m3)
         :type nsep: float
@@ -127,7 +124,7 @@ class NProfile(Profile):
     def ncore(
         rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
     ) -> float:
-        """This routine calculates the core denesity of a pedestalised profile.
+        """This routine calculates the core density of a pedestalised profile.
 
         :param rhopedn: normalised minor radius pedestal position
         :type rhopedn: numpy.array
@@ -161,12 +158,7 @@ class NProfile(Profile):
         return ncore
 
     def set_physics_variables(self):
-        """_summary_
-        Calculates and sets physics vcariables required for the profile.
-        Returns:
-            physics_variables.ne0 (float) : central electron density (/m3)
-            physics_variables.ni0 (float) : central ion density (/m3)
-        """
+        """Calculates and sets physics variables required for the profile."""
         physics_variables.ne0 = self.ncore(
             physics_variables.rhopedn,
             physics_variables.neped,
@@ -180,10 +172,7 @@ class NProfile(Profile):
 
 
 class TProfile(Profile):
-    """
-    Temperature profile class.
-    Contains a function to calculate the temperature profile and store the data.
-    """
+    """Temperature profile class. Contains a function to calculate the temperature profile and store the data."""
 
     def run(self):
         """Subroutine to initialise nprofile and execute calculations."""
@@ -202,7 +191,7 @@ class TProfile(Profile):
         self.integrate_profile_y()
 
     def calculate_profile_y(self, rho, rhopedt, t0, teped, tesep, alphat, tbeta):
-        """This routine calculates the temperature at a normalised minor
+        """Calculates the temperature at a normalised minor
         radius position rho for a pedestalised profile (tprofile).
         If ipedestal = 0 the original parabolic profile form is used instead.
         References:
@@ -296,7 +285,7 @@ class TProfile(Profile):
         )
 
     def set_physics_variables(self):
-        """Calculates and sets physics vcariables required for the temperature profile."""
+        """Calculates and sets physics variables required for the temperature profile."""
         physics_variables.te0 = self.tcore(
             physics_variables.rhopedt,
             physics_variables.teped,

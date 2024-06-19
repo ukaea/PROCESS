@@ -7,6 +7,14 @@ Below is a list of publications using or citing PROCESS by year:
 
 ## 2024
 
+[The Influence of Confinement Scaling on Spherical Tokamak Power Plant Design and Performance](https://ieeexplore.ieee.org/abstract/document/10522478)   
+C. Ashe, S.I. Muldrew   
+IEEE Transactions on Plasma Science (Early Access)
+
+[Overview of European efforts and advances in Stellarator power plant studies](https://www.sciencedirect.com/science/article/pii/S0920379624002394)   
+F. Warmer, J. Alguacil, D. Biek, T. Bogaarts, G. Bongiovì, V. Bykov, J.P. Catalán, R.K. Duligal, I. Fernández-Berceruelo, S. Giambrone, C. Hume, M. Hrecinuc, R. Kembleton, J. Lion, T. Lyytinen, J.A. Noguerón Valiente, I. Palermo, V. Queral, D. Rapisarda, W.J. Rutten, L. Sanchis, X. Sarasola, K. Sedlak, A. Snicker, D. Sosa, F.R. Urgorri   
+Fusion Engineering and Design 202 (2024) 114386   
+
 [Flat-top plasma operational space of the STEP power plant](https://arxiv.org/abs/2403.09460)   
 E. Tholerus, F.J. Casson, S.P. Marsden, T. Wilson, D. Brunetti, P. Fox, S.J. Freethy, T.C. Hender, S.S. Henderson, A. Hudoba, K.K. Kirov, F. Koechl, H. Meyer, S.I. Muldrew, C. Olde, B.S. Patel, C.M. Roach, S. Saarelma, G. Xia   
 Nuclear Fusion (Submitted) arXiv:2403.09460

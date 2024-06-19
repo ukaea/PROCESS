@@ -34,15 +34,5 @@ laws due to Kaye-Goldston (`isc = 5`) and Goldston (`isc = 9`) should include
 an inverse quadrature scaling with the Neo-Alcator result (`isc = 1`). A value 
 `iinvqd = 1`includes this scaling.
 
-### Plasma-Wall Gap
-
-The region directly outside the last closed flux surface of the core plasma is
-known as the scrape-off layer, and contains no structural material. Plasma
-entering this region is not confined and is removed by the divertor. PROCESS
-treats the scrape-off layer merely as a gap. Switch `iscrp` determines
-whether the inboard and outboard gaps should be calculated as 10% of the
-plasma minor radius (`iscrp = 0`), or set equal to the input values `scrapli` 
-and `scraplo` (`iscrp = 1`).
-
 [^1]: M. Kovari, R. Kemp, H. Lux, P. Knight, J. Morris, D.J. Ward, '“PROCESS”: A systems code for fusion power plants—Part 1: Physics' Fusion Engineering and Design 89 (2014) 3054–3069
 

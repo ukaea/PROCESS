@@ -46,7 +46,6 @@ contains
       use build_variables, only: init_build_variables
       use constraint_variables, only: init_constraint_variables
       use pulse_variables, only: init_pulse_variables
-      use startup_variables, only: init_startup_variables
       use rebco_variables, only: init_rebco_variables
       use reinke_variables, only: init_reinke_variables
       use define_iteration_variables, only: init_define_iteration_variables
@@ -89,7 +88,6 @@ contains
       call init_build_variables
       call init_constraint_variables
       call init_pulse_variables
-      call init_startup_variables
       call init_rebco_variables
       call init_reinke_variables
       call init_define_iteration_variables
@@ -109,12 +107,6 @@ contains
       !! This routine calls the main initialisation routines that set
       !! the default values for the global variables, reads in data from
       !! the input file, and checks the run parameters for consistency.
-
-
-      !! AEA FUS 251: A User's Guide to the PROCESS Systems Codefile:///home/mkumar/process/source/fortran/divertor_ode.f90
-
-      !
-      ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!file:///home/mkumar/process/source/fortran/input.f90
 
       use global_variables, only: verbose, fileprefix, output_prefix
       use main_module, only: run_summary

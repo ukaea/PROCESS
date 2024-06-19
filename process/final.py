@@ -7,7 +7,6 @@ from process import output as op
 def finalise(models, ifail):
     """Routine to print out the final point in the scan.
 
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     :param models: physics and engineering model objects
     :type models: process.main.Models
     :param ifail: error flag

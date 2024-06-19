@@ -243,10 +243,10 @@ class ProcessTracker:
                         f"{var} is a dotted variable and must be in the form OVERRIDINGNAME.VARIABLE"
                     )
 
-            try:
-                # value of the variable extracted from the mfile
-                mfile_var_value = self.mfile.data[var]
-            except Exception:
+            # value of the variable extracted from the mfile
+            mfile_var_value = self.mfile.data[var]
+
+            if isinstance(mfile_var_value, mf.MFileErrorClass):
                 logger.info(f"{var} is not present in the MFile and will be skipped.")
                 continue
 

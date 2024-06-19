@@ -64,9 +64,6 @@ class Caller:
 
         self.models.physics.physics()
 
-        # startup model (not used)
-        # call startup(ft.constants.nout,0)  !  commented-out for speed reasons
-
         # Toroidal field coil model
 
         self.models.tfcoil.run()

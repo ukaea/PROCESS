@@ -36,7 +36,6 @@ to facilitate the restructuring of the code into proper modules
 aid the inclusion of more advanced physics and engineering models under
 development as part of a number of EFDA-sponsored collaborations.
 
-AEA FUS 251: A User's Guide to the PROCESS Systems Code
 Box file F/RS/CIRE5523/PWF (up to 15/01/96)
 Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
@@ -360,7 +359,6 @@ class SingleRun:
         self.run_tests()
         self.call_solver()
         self.run_scan(self.solver)
-        self.show_errors()
         self.finish()
         self.append_input()
 
@@ -479,6 +477,7 @@ class SingleRun:
                 self.ifail = 6
 
             final.finalise(self.models, self.ifail)
+            self.show_errors()
 
     def show_errors(self):
         """Report all informational/error messages encountered."""

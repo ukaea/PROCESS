@@ -40,7 +40,6 @@ class TFcoil:
         This subroutine calculates various parameters for the TF coil set.
         If the TF coils are superconducting the calculations are performed
         in routine <A HREF="sctfcoil.html">sctfcoil</A> instead.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         # TF coil calculations
@@ -58,7 +57,6 @@ class TFcoil:
         This subroutine evaluates the parameters of the centrepost for a
         tight aspect ratio tokamak. The centrepost is assumed to be tapered,
         i.e. narrowest on the midplane (z=0).
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         # Temperature margin used in calculations (K)

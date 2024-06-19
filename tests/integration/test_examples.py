@@ -1,147 +1,105 @@
-"""Integration test for examples.py.
+"""Integration test for example notebooks in examples/ dir"""
 
-examples.py is created by exporting examples.ipynb as a Python script.
-"""
-
-import runpy
 import os
 from pathlib import Path
+from shutil import copy, copytree
 import pytest
 import pandas
 import numpy as np
-
-# TODO How to reliably run examples/examples.py script? Relies on relative path
-# from project root dir and pytest having project root dir as cwd. Could this be
-# improved?
+from testbook import testbook
 
 
 @pytest.fixture
-def examples_as_cwd():
-    """Change the cwd to the examples dir for the duration of the fixture.
+def examples_temp_data(tmp_path):
+    """Copy examples dir contents into temp dir for testing.
 
-    When running a Jupyter notebook, the cwd is set to the notebook's dir. The
-    examples.ipynb notebook relies on relative paths to files in the repository,
-    due to it being difficult to consistently get the location of a notebook
-    from within the notebook itself, so absolute paths can't be used.
-
-    When pytest is used to run the examples.py script (created directly from the
-    notebook), the script uses the actual cwd instead, which is (usually) the
-    project root dir. Therefore the examples.ipynb notebook and pytest-run
-    examples.py script both rely on the cwd being the same, but without
-    intervention it is different in each case.
-
-    Hence the test needs to set the cwd to the notebook's dir before running so
-    that the examples.py script uses the same cwd as the notebook.
+    Any changes are discarded on fixture teardown.
+    :param tmp_path: temporary path fixture
+    :type tmp_path: Path
+    :return: temporary path containing examples files
+    :rtype: Path
     """
-    # Set up by storing cwd, which is usually the project root dir, then
-    # changing to examples/
-    cwd = Path.cwd()
-    os.chdir("examples")
-    yield
+    data_path = Path(__file__).parent.parent.parent / "examples"
+    copytree(data_path, tmp_path / "examples")
+    csv_json_path = (
+        Path(__file__).parent.parent.parent / "process/io/mfile_to_csv_vars.json"
+    )
+    copy(csv_json_path, tmp_path)
 
-    # Teardown by reverting cwd change
-    os.chdir(cwd)
+    # This change of directory is undone by the return_to_root fixture, hence we do not need to change back directories here
+    os.chdir(tmp_path / "examples")
 
-
-@pytest.fixture
-def delete_plot_procs():
-    yield
-    plot_proc_1 = Path("../examples/plot_proc_1")
-    plot_proc_2 = Path("../examples/plot_proc_2")
-    plot_proc_1.unlink(missing_ok=True)
-    plot_proc_2.unlink(missing_ok=True)
+    # Return tmp_path/examples, now containing files copied from examples dir
+    return tmp_path / "examples"
 
 
-def test_examples(examples_as_cwd, delete_plot_procs):
-    """Run the examples.py script and check no exceptions are raised.
+def test_examples(examples_temp_data):
+    """Run the examples.ipynb and check no exceptions are raised.
 
-    examples.py uses temp dirs to clean up any produced files itself.
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: None
+    examples.ipynb uses temp dirs to clean up any produced files itself.
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
+
     """
-    # runpy used to run entire examples.py script
-    runpy.run_path("examples.py")
+    example_notebook_location = examples_temp_data / "examples.ipynb"
+    with testbook(example_notebook_location, execute=True, timeout=600):
+        pass
 
 
-@pytest.fixture
-def scan_cleanup(examples_as_cwd):
-    """Delete any files produced by scan.py.
+def test_scan(examples_temp_data):
+    """Run scan.ipynb notebook check no exceptions are raised and that an MFILE is created.
 
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: None
-    """
-    yield
-
-    # Teardown: delete produced files
-    scan_files = Path.cwd().glob("*scan_*")
-    for file in scan_files:
-        if "IN.DAT" not in file.name:
-            os.remove(file)
-
-
-def test_scan(scan_cleanup):
-    """Run the scan.py script and check no exceptions are raised.
-
-    scan.py intentionally produces files when running the notebook, but remove
+    scan.ipynb intentionally produces files when running the notebook, but remove
     them when testing.
-    :param scan_cleanup: fixture to delete any produced files
-    :type scan_cleanup: None
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
     """
-    # Run entire scan.py script
-    runpy.run_path("scan.py")
+    scan_notebook_location = examples_temp_data / "scan.ipynb"
+    with testbook(scan_notebook_location, execute=True, timeout=600):
+        # Run entire scan.ipynb notebook and assert an MFILE is created
+        assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
 
 
-@pytest.fixture
-def csv_cleanup(examples_as_cwd):
-    """Delete any files produced by csv_output.py.
+def test_csv(examples_temp_data):
+    """Run csv_output.ipynb, check no exceptions are raised, check a csv file exists and check the csv file contains data.
 
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: None
-    """
-    yield
-
-    # Teardown: delete produced files
-    csv_files = Path.cwd().glob("*csv_output_*")
-    for file in csv_files:
-        if "_MFILE.DAT" not in file.name:
-            os.remove(file)
-
-
-def test_csv(csv_cleanup):
-    """Run the csv_output.py script, check no exceptions are raised, check a csv file exists and check the csv file contains data.
-
-    csv_output.py intentionally produces files when running the notebook, but remove
+    csv_output.ipynb intentionally produces files when running the notebook, but remove
     them when testing.
-    :param csv_cleanup: fixture to delete any produced files
-    :type csv_cleanup: None
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
     """
-    # Run entire scan.py script
-    runpy.run_path("csv_output.py")
+    csv_notebook_location = examples_temp_data / "csv_output.ipynb"
+    with testbook(csv_notebook_location, execute=True, timeout=600):
+        # Check csv file is created
+        assert os.path.exists(
+            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
+        )
 
-    # Check csv file is created
-    assert os.path.exists("csv_output_large_tokamak_MFILE.csv")
+        # Read in the csv file created by test and check it contains positive floats
+        readcsv = pandas.read_csv(
+            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
+        )
+        values = readcsv["Value"]
+        value_array = np.array(values)
+        check_float = False
+        check_positive = False
+        value_array_type = value_array.dtype
+        if value_array_type.kind == "f":
+            check_float = True
+        assert check_float
 
-    # Read in the csv file created by test and check it contains positive floats
-    readcsv = pandas.read_csv("csv_output_large_tokamak_MFILE.csv")
-    values = readcsv["Value"]
-    value_array = np.array(values)
-    check_float = False
-    check_positive = False
-    value_array_type = value_array.dtype
-    if value_array_type.kind == "f":
-        check_float = True
-    assert check_float
-
-    check_positive_count = np.sum(value_array > 0)
-    if check_positive_count == len(value_array):
-        check_positive = True
-    assert check_positive
+        check_positive_count = np.sum(value_array > 0)
+        if check_positive_count == len(value_array):
+            check_positive = True
+        assert check_positive
 
 
-def test_plot_solutions(examples_as_cwd):
-    """Run the plot_solutions.py script and check no exceptions are raised.
+def test_plot_solutions(examples_temp_data):
+    """Run plot_solutions.ipynb and check no exceptions are raised.
 
-    :param examples_as_cwd: fixture to set examples dir as cwd
-    :type examples_as_cwd: NoneType
+    :param examples_temp_data: temporary dir containing examples files
+     :type examples_temp_data: Path
     """
-    runpy.run_path("plot_solutions.py")
+    plot_solutions_notebook_location = examples_temp_data / "plot_solutions.ipynb"
+    with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
+        pass

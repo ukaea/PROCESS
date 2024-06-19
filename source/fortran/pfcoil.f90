@@ -7,8 +7,7 @@ module pfcoil_module
   !! N/A
   !! This module contains routines for calculating the
   !! parameters of the PF coil systems for a fusion power plant.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64

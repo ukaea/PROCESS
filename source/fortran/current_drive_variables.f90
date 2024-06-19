@@ -5,8 +5,7 @@ module current_drive_variables
   !!
   !!### References
   !!
-  !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+  !! -
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
@@ -75,7 +74,7 @@ module current_drive_variables
   !!
   !!  - =0 O-mode
   !!  - =1 X-mode
-  
+
   real(dp) :: enbeam
   !! neutral beam energy (keV) (`iteration variable 19`)
 

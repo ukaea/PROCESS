@@ -7,8 +7,7 @@ module scan_module
   !! None
   !! This module contains routines to perform a parameter scan
   !! over a range of values of a particular scanning variable.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #ifndef dp
@@ -174,9 +173,9 @@ contains
     call ovarin(mfile,'Scan point number','(iscan)',iscan)
 
     ! Call the optimization routine VMCON at this scan point
-    write(*,20)'Starting scan point ',iscan, ': ', trim(xlabel),', &
+    write(*,20)'Starting scan point ',iscan,' of ',isweep,': ', trim(xlabel),', &
         ',trim(vlabel),' = ',sweep(iscan)
-20     format(a,i2,a,4a,1pe10.3)
+20     format(a,i2,a,i2,a,4a,1pe10.3)
   end subroutine scan_1d_write_point_header
 
   subroutine scan_1d_store_output(iscan, ifail, noutvars_, ipnscns_, outvar)
@@ -861,8 +860,7 @@ contains
   !! Called after calling the optimising equation solver from Python.
   !! author: P J Knight, CCFE, Culham Science Centre
   !! ifail   : input integer : error flag
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+  !!
   use constraints
   use error_handling
   use function_evaluator

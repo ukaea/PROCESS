@@ -20,7 +20,6 @@ class PlasmaGeom:
         J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
         unpublished internal Oak Ridge document
         F/MI/PJK/LOGBOOK14, pp.41-43
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         H. Zohm et al, On the Physics Guidelines for a Tokamak DEMO,
         FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
         """
@@ -290,7 +289,6 @@ class PlasmaGeom:
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.42
         F/PL/PJK/PROCESS/CODE/047
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         t = 1.0e0 - tri
         denomi = (kap**2 - t**2) / (2.0e0 * t)
@@ -354,7 +352,6 @@ class PlasmaGeom:
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.43
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         fourpi = 4.0e0 * numpy.pi
 
@@ -377,7 +374,6 @@ class PlasmaGeom:
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
         F/PL/PJK/PROCESS/CODE/047
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         #  Inboard arc
@@ -410,7 +406,6 @@ class PlasmaGeom:
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.43
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -459,7 +454,6 @@ class PlasmaGeom:
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.41
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         xsecta = xo**2 * (
@@ -481,7 +475,6 @@ class PlasmaGeom:
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.41
         F/PL/PJK/PROCESS/CODE/047
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         zn = kap * a
@@ -529,7 +522,6 @@ class PlasmaGeom:
         by Peng.
         F/MI/PJK/LOGBOOK14, p.41
         F/PL/PJK/PROCESS/CODE/047
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri

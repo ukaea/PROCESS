@@ -37,7 +37,6 @@ class Evaluators:
         n-dimensional point of interest xv.
         Note that the equality constraints must precede the inequality
         constraints in conf.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         :param n: number of variables
         :type n: int
         :param m: number of constraints
@@ -110,7 +109,6 @@ class Evaluators:
         constraints in conf. The constraint gradients or normals are returned as the
         columns of cnorm.
 
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         :param n: number of variables
         :type n: int
         :param m: number of constraints
