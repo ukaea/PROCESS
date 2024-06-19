@@ -158,7 +158,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
       - name: Download build artifacts
@@ -216,7 +215,6 @@ jobs:
       cancel-in-progress: false
     runs-on: ubuntu-latest
     needs: run-tracking-inputs
-    if: github.ref == 'refs/heads/main'
     container:
       image: ghcr.io/ukaea/process-ci:latest
       credentials:
