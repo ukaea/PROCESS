@@ -317,11 +317,6 @@ def main(args=None):
         print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
         exit()
 
-    # Set the (first) scan variable LaTeX label
-    scan1_label = (
-        meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}"
-    )
-
     if is_2D_scan:
         # Check if the second scan variable is present in the
         if scan_2_var_name not in m_file.data.keys():
@@ -329,13 +324,6 @@ def main(args=None):
             print("ERROR : The scan variable is probably an upper/lower boundary")
             print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
             exit()
-
-        # Set the (second) scan variable LaTeX label
-        scan2_label = (
-            meta[scan_2_var_name].latex
-            if scan_2_var_name in meta
-            else f"{scan_2_var_name}"
-        )
 
     # Only one imput must be used for a 2D scan
     if is_2D_scan and len(input_files) > 1:
@@ -420,11 +408,6 @@ def main(args=None):
                     print(f"Warning : `{output_name}` will not be output")
                     continue
 
-                # Set the output variable LaTeX label
-                output_label = (
-                    meta[output_name].latex if output_name in meta else f"{output_name}"
-                )
-
                 for ii in range(n_scan):
                     ouput_array[ii] = m_file.data[output_name].get_scan(conv_i[ii])
                 output_arrays[input_file][output_name] = ouput_array
@@ -440,13 +423,6 @@ def main(args=None):
                         )
                         print(f"Warning : `{output_name2}` will not be output")
                         continue
-
-                    # Set the second output variable LaTeX label
-                    output2_label = (
-                        meta[output_name2].latex
-                        if output_name2 in meta
-                        else f"{output_name2}"
-                    )
 
                     for ii in range(n_scan):
                         ouput_array2[ii] = m_file.data[output_name2].get_scan(
@@ -544,23 +520,25 @@ def main(args=None):
                         label=labl,
                     )
                     ax2.set_ylabel(
-                        output2_label,
+                        meta[output_name2].latex
+                        if output_name2 in meta
+                        else f"{output_name2}",
                         fontsize=axis_font_size,
                         color="red",
                     )
             if output_names2 != []:
                 ax2.yaxis.grid(True)
                 ax.xaxis.grid(True)
-                ax.set_ylabel(output_label, fontsize=axis_font_size, color="blue")
-                ax.set_xlabel(scan1_label, fontsize=axis_font_size)
+                ax.set_ylabel(meta[output_name].latex if output_name in meta else f"{output_name}", fontsize=axis_font_size, color="blue")
+                ax.set_xlabel(meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}", fontsize=axis_font_size)
             elif stack_plots:
                 axs[output_names.index(output_name)].minorticks_on()
                 axs[output_names.index(output_name)].grid(True)
                 axs[output_names.index(output_name)].set_ylabel(
-                    output_label,
+                    meta[output_name].latex if output_name in meta else f"{output_name}",
                 )
 
-                plt.xlabel(scan1_label, fontsize=axis_font_size)
+                plt.xlabel(meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}", fontsize=axis_font_size)
                 if len(input_files) > 1:
                     plt.legend(
                         loc="lower center",
@@ -581,13 +559,13 @@ def main(args=None):
             else:
                 plt.grid(True)
                 plt.ylabel(
-                    output_label,
+                    meta[output_name].latex if output_name in meta else f"{output_name}",
                     fontsize=axis_font_size,
                     color="red" if output_names2 != [] else "black",
                 )
-                plt.xlabel(scan1_label, fontsize=axis_font_size)
+                plt.xlabel(meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}", fontsize=axis_font_size)
                 plt.title(
-                    f"{output_label} vs {scan1_label}",
+                    f"{meta[output_name].latex if output_name in meta else {output_name}} vs {meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}}",
                     fontsize=axis_font_size,
                 )
                 plt.tight_layout()
@@ -677,11 +655,6 @@ def main(args=None):
                 print(f"Warning : `{output_name}` will not be output")
                 continue
 
-            # Set the output variable LaTeX label
-            output_label = (
-                meta[output_name].latex if output_name in meta else f"{output_name}"
-            )
-
             # Declaring the outputs
             output_arrays = list()
 
@@ -715,9 +688,9 @@ def main(args=None):
                     ),
                 )
 
-                plt.colorbar().set_label(label=output_label, size=axis_font_size)
-                plt.ylabel(scan1_label, fontsize=axis_font_size)
-                plt.xlabel(scan2_label, fontsize=axis_font_size)
+                plt.colorbar().set_label(label=meta[output_name].latex if output_name in meta else f"{output_name}", size=axis_font_size)
+                plt.ylabel(meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}", fontsize=axis_font_size)
+                plt.xlabel(meta[scan_2_var_name].latex if scan_2_var_name in meta else f"{scan_2_var_name}", fontsize=axis_font_size)
                 plt.tight_layout()
                 plt.savefig(
                     f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
@@ -747,14 +720,14 @@ def main(args=None):
                         output_array[jj] = m_file.data[output_name].get_scan(conv_j[jj])
 
                     # Label formating
-                    labl = f"{scan1_label} = {scan_1_var_array[0]}"
+                    labl = f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}} = {scan_1_var_array[0]}"
 
                     # Plot the graph
                     plt.plot(scan_2_var_array, output_array, "--o", label=labl)
 
                 plt.grid(True)
-                plt.ylabel(output_label, fontsize=axis_font_size)
-                plt.xlabel(scan2_label, fontsize=axis_font_size)
+                plt.ylabel(meta[output_name].latex if output_name in meta else f"{output_name}", fontsize=axis_font_size)
+                plt.xlabel(meta[scan_2_var_name].latex if scan_2_var_name in meta else f"{scan_2_var_name}", fontsize=axis_font_size)
                 plt.legend(loc="best", fontsize=legend_size)
                 plt.xticks(size=axis_tick_size)
                 plt.yticks(size=axis_tick_size)
