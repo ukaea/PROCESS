@@ -287,6 +287,8 @@ def main(args=None):
     nsweep_dict[77] = "startupratio"
     nsweep_dict[78] = "fkind"
     nsweep_dict[79] = "etaech"
+    nsweep_dict[80] = "fcoolcp"
+    nsweep_dict[81] = "n_tf_turn"
     # -------------------
 
     # Getting the scanned variable name
@@ -569,11 +571,19 @@ def main(args=None):
                         columnspacing=0.8,
                     )
                 plt.tight_layout()
-                axs[output_names.index(output_name)].set_ylim(
-                    axs[output_names.index(output_name)].get_ylim()[0]
-                    * 0.9,  # Adds some spacing around the plots
-                    axs[output_names.index(output_name)].get_ylim()[1] * 1.1,
-                )
+                ymin, ymax = axs[output_names.index(output_name)].get_ylim()
+                if ymin < 0 and ymax > 0:
+                    axs[output_names.index(output_name)].set_ylim(
+                        ymin * 1.1, ymax * 1.1
+                    )
+                elif ymin >= 0:
+                    axs[output_names.index(output_name)].set_ylim(
+                        ymin * 0.9, ymax * 1.1
+                    )
+                else:
+                    axs[output_names.index(output_name)].set_ylim(
+                        ymin * 1.1, ymax * 0.9
+                    )
             else:
                 plt.grid(True)
                 plt.ylabel(

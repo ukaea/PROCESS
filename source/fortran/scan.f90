@@ -20,7 +20,7 @@ module scan_module
   integer, parameter :: ipnscns = 1000
   !! Maximum number of scan points
 
-  integer, parameter :: ipnscnv = 79
+  integer, parameter :: ipnscnv = 81
   !! Number of available scan variables
 
   integer, parameter :: noutvars = 84
@@ -607,7 +607,7 @@ contains
         rad_fraction_sol, triang, rmajor, beamfus0, hfact
     use numerics, only: epsvmc, boundu, boundl
     use tfcoil_variables, only: tmargmin_tf, sig_tf_case_max, n_pancake, oacdcp, &
-      n_layer, b_crit_upper_nbti, sig_tf_wp_max
+      n_layer, b_crit_upper_nbti, sig_tf_wp_max, fcoolcp, n_tf_turn
     use heat_transport_variables, only: crypmw_max, etath
     use rebco_variables, only: copperaoh_m2_max
     use pfcoil_variables, only: coheof, ohhghf, oh_steel_frac
@@ -849,6 +849,12 @@ contains
         case (79)
             etaech = swp(iscn)
               vlab = 'etaech' ; xlab = 'ECH wall plug to injector efficiency'
+        case (80)
+            fcoolcp = swp(iscn)
+                vlab = 'fcoolcp' ; xlab = 'Coolant fraction of TF'
+        case (81)
+            n_tf_turn = swp(iscn)
+                vlab = 'n_tf_turn' ; xlab = 'Number of turns in TF'
         case default
             idiags(1) = nwp ; call report_error(96)
 
