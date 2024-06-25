@@ -1,6 +1,6 @@
 # CMake file for Pythonic PROCESS
 # Author  :   PROCESS Team (UKAEA)
-# Date    :   last modified 2023-07-24
+# Date    :   last modified 2024-04-24
 
 # Specify the minimum version for CMake
 # 3.12 is required due to use of list TRANSFORM commands
@@ -18,8 +18,8 @@ if(CMAKE_HOST_APPLE)
     set(CMAKE_MACOSX_RPATH ON)
 endif()
 
-# Python 3.8 or greater
-find_package(Python3 3.8 COMPONENTS Interpreter Development)
+# Python 3.10 or greater
+find_package(Python3 3.10 COMPONENTS Interpreter Development)
 
 # Read in external CMake scripts for preprocessing, f2py, ford, etc.
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/pip.cmake)
@@ -176,9 +176,15 @@ ADD_CUSTOM_TARGET(coverage_cleanup
 )
 
 # Run the Pip Install
-ADD_CUSTOM_TARGET(install_process ALL
-    COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir -e ${CMAKE_SOURCE_DIR}
-)
+if(${RELEASE})
+    ADD_CUSTOM_TARGET(install_process ALL
+        COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir -e ${CMAKE_SOURCE_DIR}
+    )
+else()
+    ADD_CUSTOM_TARGET(install_process ALL
+        COMMAND ${Python3_EXECUTABLE} -m pip install --no-cache-dir -e '${CMAKE_SOURCE_DIR}[test,examples]'
+    )
+endif()
 
 ADD_DEPENDENCIES(install_process ${PIP_NAME} f2py ${FORD_NAME} ${GFORTLIB_NAME} ${DICTS_NAME} coverage_cleanup)
 
