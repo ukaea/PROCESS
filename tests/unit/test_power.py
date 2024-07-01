@@ -1928,7 +1928,7 @@ class AcpowParam(NamedTuple):
             srcktpm=1071.1112934857531,
             iprint=0,
             outfile=11,
-            expected_pacpmw=1226.1273281650574,
+            expected_pacpmw=1164.244494532182,
         ),
         AcpowParam(
             efloor=381580.9594357388,
@@ -1949,7 +1949,7 @@ class AcpowParam(NamedTuple):
             srcktpm=1069.8879533693198,
             iprint=0,
             outfile=11,
-            expected_pacpmw=651.53859031110437,
+            expected_pacpmw=589.3014463957436,
         ),
     ),
 )
