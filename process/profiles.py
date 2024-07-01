@@ -15,39 +15,80 @@ logger.addHandler(s_handler)
 class Profile(ABC):
     """Abstract base class used to create and hold profiles (temperature, density,)
 
-    :param ABC: Abstract Base Class
-    :type ABC: ABC, optional
     """
 
-    def __init__(self, profile_size):
-        """
-        :param profile_size: Number of points in the profile
-        :type profile_size: int
-        """
-        self.profile_size = profile_size
-        self.profile_x = np.arange(self.profile_size)
-        self.profile_y = np.zeros(self.profile_size)
-        self.profile_integ = 0
-        self.profile_dx = 0
+    import numpy as np
 
-    def normalise_profile_x(self):
-        """Normalise the profile x-dimension."""
+    class Profiles:
+        def __init__(self, profile_size: int) -> None:
+            """
+            Initialize a Profiles object.
+
+            Parameters:
+            - profile_size (int): The size of the profile.
+
+            Attributes:
+            - profile_size (int): The size of the profile.
+            - profile_x (ndarray): An array of values ranging from 0 to profile_size-1.
+            - profile_y (ndarray): An array of zeros with length profile_size.
+            - profile_integ (int): The integral of the profile_y array.
+            - profile_dx (int): The step size between consecutive values in profile_x.
+
+            """
+            self.profile_size = profile_size
+            self.profile_x = np.arange(self.profile_size)
+            self.profile_y = np.zeros(self.profile_size)
+            self.profile_integ = 0
+            self.profile_dx = 0
+
+    def normalise_profile_x(self) -> None:
+        """
+        Normalizes the x-dimension of the profile.
+
+        This method divides the values in the `profile_x` attribute by the maximum value
+        in the `profile_x` array, resulting in a normalized version of the x-dimension.
+
+        Example:
+            If `profile_x` is [1, 2, 3, 4, 5], after normalization it will become
+            [0.2, 0.4, 0.6, 0.8, 1.0].
+
+        Note:
+            This method modifies the `profile_x` attribute in-place.
+
+        Returns:
+            None
+        """
         self.profile_x = self.profile_x / max(self.profile_x)
 
-    def calculate_profile_dx(self):
-        """Calculates the differential between points in the profile."""
+    def calculate_profile_dx(self) -> None:
+        """Calculates the differential between points in the profile.
+
+        This method calculates the differential between points in the profile by dividing the maximum x value in the profile
+        by the difference in size between the points. The result is stored in the `profile_dx` attribute.
+
+        """
         self.profile_dx = max(self.profile_x) / (self.profile_size - 1)
 
     @abstractmethod
-    def calculate_profile_y(self):
+    def calculate_profile_y(self) -> None:
         """Use a profile function to act on self.profile_x to calculate and set the
         values of self.profile_y.
         """
         pass
 
-    def integrate_profile_y(self):
+    def integrate_profile_y(self) -> None:
         """
         Integrate profile_y values using scipy.integrate.simpson() function.
+
+        This method calculates the integral of the profile_y values using the Simpson's rule
+        provided by the scipy.integrate.simpson() function. The integral is stored in the
+        self.profile_integ attribute.
+
+        Parameters:
+        None
+
+        Returns:
+        None
         """
         self.profile_integ = sp.integrate.simpson(
             self.profile_y, x=self.profile_x, dx=self.profile_dx
