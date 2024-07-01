@@ -989,7 +989,9 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
+                ne[q] = (
+                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
+                )
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -2336,9 +2338,6 @@ def plot_geometry_info(axis, mfile_data, scan):
         (in_blanket_thk, "Inboard blanket+shield", "m"),
         ("inboard_build", "Inboard build thickness", "m"),
         (out_blanket_thk, "Outboard blanket+shield", "m"),
-        ("powfmw", "Fusion power", "MW"),
-        ("bigq", "$Q$", ""),
-        ("", "", ""),
     ]
 
     plot_info(axis, data, mfile_data, scan)
@@ -2387,6 +2386,8 @@ def plot_physics_info(axis, mfile_data, scan):
         pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
 
     data = [
+        ("powfmw", "Fusion power", "MW"),
+        ("bigq", "$Q_{p}$", ""),
         ("plascur/1d6", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
@@ -2394,7 +2395,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("normalised_toroidal_beta", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("thermal_poloidal_beta", r"$\beta_P$, thermal", ""),
         ("betap", r"$\beta_P$, total", ""),
-        ("te", r"$< t_e >$", "keV"),
+        ("te", r"$< T_e >$", "keV"),
         ("dene", r"$< n_e >$", "m$^{-3}$"),
         (nong, r"$< n_{\mathrm{e,line}} >/n_G$", ""),
         (tepeak, r"$T_{e0}/ < T_e >$", ""),
@@ -2483,7 +2484,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             str(int(mfile_data.data["i_tf_sc_mat"].get_scan(scan)))
         ]
     else:
-        tftype = "Resistive"
+        tftype = "Resistive Copper"
 
     vssoft = mfile_data.data["vsres"].get_scan(scan) + mfile_data.data[
         "vsind"
@@ -2538,7 +2539,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
-            ("vcool", "Maximum coolant flow speed", "m.s$^{-1}$"),
+            ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
             (prescp, "CP Resisitive heating", "MW"),
             (presleg * n_tf, "legs Resisitive heating (all legs)", "MW"),
             (pres_joints, "TF joints resisitive heating ", "MW"),
@@ -2969,7 +2970,7 @@ def main_plot(
     # Current drive
     plot_6 = fig1.add_subplot(236)
     plot_current_drive_info(plot_6, m_file_data, scan)
-    fig1.subplots_adjust(wspace=0.25)
+    fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
     # Can only plot WP and turn sturcutre if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
