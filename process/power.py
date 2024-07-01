@@ -450,8 +450,6 @@ class Power:
             + heat_transport_variables.htpmw
             + heat_transport_variables.trithtmw
             + pheatingmw
-            + basemw
-            + buildings_variables.efloor * pkwpm2 / 1000.0e0
         )
 
         #  Add contribution from motor-generator flywheels if these are part of
