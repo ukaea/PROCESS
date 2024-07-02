@@ -160,7 +160,6 @@ class Vmcon(_Solver):
     def solve(self) -> int:
         """Optimise using new VMCON.
 
-        :raises NotImplementedError: not currently implemented
         :return: solver error code
         :rtype: int
         """
@@ -179,6 +178,37 @@ class Vmcon(_Solver):
                 flush=True,
             )
 
+        def _ineq_cons_satisfied(
+            result: Result,
+            _x: np.ndarray,
+            _delta: np.ndarray,
+            _lambda_eq: np.ndarray,
+            _lambda_in: np.ndarray,
+        ) -> bool:
+            """Check that inequality constraints are satisfied.
+
+            This additional convergence criterion ensures that solutions have
+            satisfied inequality constraints.
+
+            :param result: evaluation of current optimisation parameter vector
+            :type result: Result
+            :param _x: current optimisation parameter vector
+            :type _x: np.ndarray
+            :param _delta: search direction for line search
+            :type _delta: np.ndarray
+            :param _lambda_eq: equality Lagrange multipliers
+            :type _lambda_eq: np.ndarray
+            :param _lambda_in: inequality Lagrange multipliers
+            :type _lambda_in: np.ndarray
+            :return: True if inequality constraints satisfied
+            :rtype: bool
+            """
+            # Check all ineqs positive, i.e. satisfied
+            if np.all(result.ie >= 0.0):
+                return True
+            else:
+                return False
+
         try:
             x, _, _, res = solve(
                 problem,
@@ -190,6 +220,7 @@ class Vmcon(_Solver):
                 qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
                 initial_B=B,
                 callback=_solver_callback,
+                additional_convergence=_ineq_cons_satisfied,
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
