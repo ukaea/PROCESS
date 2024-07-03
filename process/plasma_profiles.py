@@ -95,7 +95,7 @@ class PlasmaProfile:
         )
 
         #  Line averaged electron density (IPDG89)
-        
+
         physics_variables.dnla = (
             physics_variables.dene
             * (1.0 + physics_variables.alphan)

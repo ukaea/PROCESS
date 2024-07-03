@@ -271,9 +271,7 @@ class TProfile(Profile):
         if abs(alphat - np.around(alphat)) <= 1e-7:
             gamfac = -gamfac / sp.special.gamma(1 + alphat)
         else:
-            gamfac = (
-                gamfac * sp.special.gamma(-alphat) * np.sin(np.pi * alphat) / np.pi
-            )
+            gamfac = gamfac * sp.special.gamma(-alphat) * np.sin(np.pi * alphat) / np.pi
 
         #  Calculate core temperature
 
