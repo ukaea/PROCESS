@@ -98,6 +98,15 @@ class Profile(ABC):
 class NProfile(Profile):
     """Electron density profile class. Contains a function to calculate the electron density profile and
     store the data.
+
+    Attributes:
+        Inherits attributes from the base class `Profile`.
+
+    Methods:
+        run(): Subroutine which calls functions and stores nprofile data.
+        calculate_profile_y(rho, rhopedn, n0, nped, nsep, alphan): Calculates the density at each normalised minor radius position.
+        ncore(rhopedn, nped, nsep, nav, alphan): Calculates the core density of a pedestalised profile.
+        set_physics_variables(): Calculates and sets physics variables required for the profile.
     """
 
     def run(self):
@@ -115,15 +124,23 @@ class NProfile(Profile):
         )
         self.integrate_profile_y()
 
-    def calculate_profile_y(self, rho, rhopedn, n0, nped, nsep, alphan):
-        """This routine calculates the density at each normalised minor radius position
-        rho for a ELIOS-type density pedestal profile (nprofile).
+    def calculate_profile_y(
+        self,
+        rho: float,
+        rhopedn: float,
+        n0: float,
+        nped: float,
+        nsep: float,
+        alphan: float,
+    ) -> None:
+        """
+        This routine calculates the density at each normalised minor radius position
+        rho for a HELIOS-type density pedestal profile (nprofile).
+
         Authors:
             R Kemp, CCFE, Culham Science Centre
             H Lux, CCFE, Culham Science Centre
             P J Knight, CCFE, Culham Science Centre
-        References:
-            J.Johner, Fusion Science and Technology 59 (2011), pp 308-349
 
         :param rho: normalised minor radius vector
         :type rho: float
@@ -142,11 +159,7 @@ class NProfile(Profile):
         if physics_variables.ipedestal == 0:
             self.profile_y = n0 * (1 - rho**2) ** alphan
 
-        #  Error trap; shouldn't happen unless volume-averaged density has
-        #  been allowed to drop below nped. This may happen during a HYBRD case,
-        #  but should have been prevented for optimisation runs.
-
-        #  Input checks
+        # Input checks
 
         if n0 < nped:
             logger.info(
