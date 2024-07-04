@@ -1901,10 +1901,12 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     if integer_turns == 1:
         turn_width = round(mfile_data.data["t_turn_radial"].get_scan(scan) * 1e3, 5)
         turn_height = round(mfile_data.data["t_turn_toroidal"].get_scan(scan) * 1e3, 5)
+        cable_space_width_radial = round(mfile_data.data["t_cable_radial"].get_scan(scan) * 1e3, 5)
+        cable_space_width_toroidal = round(mfile_data.data["t_cable_toroidal"].get_scan(scan) * 1e3, 5)
     elif integer_turns == 0:
         turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
+        cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
 
-    cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
     he_pipe_diameter = round(mfile_data.data["dhecoil"].get_scan(scan) * 1e3, 5)
     steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
     insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
@@ -1996,7 +1998,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_height - 2 * (insulation_thickness + steel_thickness)),
                 facecolor="royalblue",
-                label=f"Cable space: \n{cable_space_width} mm width \n{internal_cable_space} mm$^2$",
+                label=f"Cable space: \n{cable_space_width_radial} mm radial width \n{cable_space_width_toroidal} mm toroidal width \n{internal_cable_space} mm$^2$",
                 edgecolor="black",
             ),
         )
