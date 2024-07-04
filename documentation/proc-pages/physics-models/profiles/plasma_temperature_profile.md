@@ -55,54 +55,52 @@ The temperature profile class is organised around a central runner function that
 
     where $\Gamma$ is the gamma function.
 
-    If `ncore` is returned as being less that 0, it is forced into a state of `ncore = 1E-6` in order to help convergance. This will also give a warning to the user to raise the lower bound of the average electron density `dene`.
-
-    The core ion density is then set from the output out `dnitot` which is the total ion density such as:
+    The core ion temperature is then set such as:
 
     $$
-    n_{i,0} = \left(\frac{n_i}{n_e}\right)n_{e,0}
+    T_{i,0} = \left(\frac{T_i}{T_e}\right)T_{e,0}
     $$
 
 
-4. The y profile is then calculated using `calculate_profile_y()`. This routine calculates the density at each normalised minor radius position $\rho$ for a HELIOS-type density pedestal profile (nprofile)[^1]
+4. The y profile is then calculated using `calculate_profile_y()`. This routine calculates the temperature at each normalised minor radius position $\rho$ for a HELIOS-type temperature pedestal profile (nprofile)[^1]
 
-    ### Calculate desnity at each radius position | `calculate_profile_y()`
+    ### Calculate temperature at each radius position | `calculate_profile_y()`
 
     Normalized 
 
     | Profile parameter / Input               | Density   |
     |----------------------------------|-----------|
     | Normalized plasma radii            | `profile_x` |
-    | Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,n}}$ |
-    | Core density                | `ne0`, $n_{\text{e0}}$ |
-    | Pedestal value                   | `neped`, $n_{\text{ped}}$ |
-    | Separatrix value                 | `nesep`, $n_{\text{sep}}$ |
-    | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
+    | Pedestal radius (r/a)            | `rhopedt`, $\rho_{\text{ped,T}}$ |
+    | Core density                | `te0`, $T_{\text{e0}}$ |
+    | Pedestal value                   | `teped`, $T_{\text{ped}}$ |
+    | Separatrix value                 | `tesep`, $T_{\text{sep}}$ |
+    | Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
+    | 2nd profile index/ peaking parameter | `tbeta`, $\beta_T$ |
 
     If `ipedestal == 0` then the original parabolic profile form is used
 
     $$
-    n(\rho) = n_0(1 - \rho^2)^{\alpha_n} 
+    T(\rho) = T_0(1 - \rho^2)^{\alpha_T} 
     $$
 
-    The central density ($n_0$) is then checked to make sure it is not less than the pedestal density, $n_{\text{ped}}$.
+    The central tmeprature ($T_0$) is then checked to make sure it is not less than the pedestal temperature, $T_{\text{ped}}$.
     If it is less then a logger warning is pushed to the terminal at runtime.
 
-    Values of the profile density are then assigned based on the desnity function below across bounds from 0 to `rhopedn` and `rhopedn` to 1.  
+    Values of the profile temperature are then assigned based on the desnity function below across bounds from 0 to `rhopedn` and `rhopedn` to 1.  
 
 
 
     $$\begin{aligned}
-    \mbox{Density:} \ n(\rho) = \left\{ 
+    \mbox{Temperature:} \ \ T(\rho) = \left\{ 
     \begin{aligned}
-        & n_{\text{ped}} + (n_0 - n_{\text{ped}}) \left( 1 -
-        \frac{\rho^2}{\rho_{\text{ped,n}}^2}\right)^{\alpha_n}
-    & \ 0 \leq \rho \leq \rho_{\text{ped,n}} \\
-    & n_{\text{sep}} + (n_{\text{ped}} - n_{\text{sep}})\left( \frac{1- \rho}{1-\rho_{\text{ped,n}}}\right)
-    & \ \rho_{\text{ped,n}} < \rho \leq 1
+    & \text{T}_{\text{ped}} + (T_0 - \text{T}_{\text{ped}}) \left( 1 - \frac{\rho^{\beta_T}}
+    {\rho_{\text{ped},T}^{\beta_T}}\right)^{\alpha_T}  &  0 \leq \rho \leq \rho_{\text{ped},T} \\
+    & \text{T}_{\text{sep}} + (\text{T}_{\text{ped}} - \text{T}_{\text{sep}})\left( \frac{1- \rho}{1-\rho_{\text{ped},T}}\right)
+    &  \rho_{\text{ped},T} < \rho \leq 1
     \end{aligned}
     \right.
-    \end{aligned}$$
+    \end{aligned}$$ 
         
 
 5. Profile is then integrated with `integrate_profile_y()` using Simpsons integration from the profile abstract base class

@@ -225,7 +225,7 @@ class NProfile(Profile):
 class TProfile(Profile):
     """Temperature profile class. Contains a function to calculate the temperature profile and store the data."""
 
-    def run(self):
+    def run(self) -> None:
         """Subroutine to initialise nprofile and execute calculations."""
         self.normalise_profile_x()
         self.calculate_profile_dx()
@@ -246,33 +246,23 @@ class TProfile(Profile):
         radius position rho for a pedestalised profile (tprofile).
         If ipedestal = 0 the original parabolic profile form is used instead.
         References:
-            J.Johner, Fusion Science and Technology 59 (2011), pp 308-349
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
         Authors:
             R Kemp, CCFE, Culham Science Centre
             H Lux, CCFE, Culham Science Centre
             P J Knight, CCFE, Culham Science Centre
 
-        :param rho: normalised minor radius
-        :type rho: numpy.array
-        :param rhopedt:  normalised minor radius pedestal position
-        :type rhopedt: numpy.array
-        :param t0: central temperature (keV)
-        :type t0: float
-        :param teped: pedestal temperature (keV)
-        :type teped: float
-        :param tesep: separatrix temperature (keV)
-        :type tesep: float
-        :param alphat:temperature peaking parameter
-        :type alphat: float
-        :param tbeta: second temperature exponent
-        :type tbeta: float
+        Args:
+            rho (numpy.array): Normalised minor radius.
+            rhopedt (numpy.array): Normalised minor radius pedestal position.
+            t0 (float): Central temperature (keV).
+            teped (float): Pedestal temperature (keV).
+            tesep (float): Separatrix temperature (keV).
+            alphat (float): Temperature peaking parameter.
+            tbeta (float): Second temperature exponent.
         """
         if physics_variables.ipedestal == 0:
-            self.profile_y = t0 * (1 - rho**2) ** alphat
-
-        #  Error trap; shouldn't happen unless volume-averaged temperature has
-        #  been allowed to drop below teped. This may happen during a HYBRD case,
-        #  but should have been prevented for optimisation runs.
+            self.profile_y = t0 * (1 - rho ** 2) ** alphat
 
         if t0 < teped:
             logger.info(
@@ -287,30 +277,37 @@ class TProfile(Profile):
         )
 
     @staticmethod
-    def tcore(rhopedt, teped, tesep, tav, alphat, tbeta):
-        """This routine calculates the core temperature (keV)
-        of a pedestalised profile.
+    def tcore(
+        rhopedt: float,
+        teped: float,
+        tesep: float,
+        tav: float,
+        alphat: float,
+        tbeta: float,
+    ) -> float:
+        """
+        This routine calculates the core temperature (keV)
+        of a pedestalised profile. The solution comes from multiplying each term for the HELIOS type profile withing its bounds
+        of applicability by 2*pi*rho and then integrating to get the volume of revolution.
+        This total volume is found for the whole profile and is equal to the average temperature.
+        This function can then be re-arranged to calculate the central plasma temeprature T_0 / tcore
         References:
-            J.Johner, Fusion Science and Technology 59 (2011), pp 308-349
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
         Authors:
             Kemp, CCFE, Culham Science Centre
             H Lux, CCFE, Culham Science Centre
             P J Knight, CCFE, Culham Science Centre
 
-        :param rhopedt: normalised minor radius pedestal position
-        :type rhopedt: numpy.array
-        :param teped: pedestal temperature (keV)
-        :type teped: float
-        :param tesep: separatrix temperature (keV)
-        :type tesep: float
-        :param tav: volume average temperature (keV)
-        :type tav: float
-        :param alphat: temperature peaking parameter
-        :type alphat: float
-        :param tbeta: second temperature exponent
-        :type tbeta: float
-        :return: core temperature
-        :rtype: numpy.array
+        Args:
+            rhopedt (numpy.array): Normalised minor radius pedestal position.
+            teped (float): Pedestal temperature (keV).
+            tesep (float): Separatrix temperature (keV).
+            tav (float): Volume average temperature (keV).
+            alphat (float): Temperature peaking parameter.
+            tbeta (float): Second temperature exponent.
+
+        Returns:
+            numpy.array: Core temperature.
         """
 
         gamfac = (
