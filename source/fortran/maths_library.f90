@@ -336,6 +336,61 @@ contains
   end function binomial
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  recursive function gamfun(x) result(gamma)
+
+    !! Calculates the gamma function for arbitrary real x
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! x : input real : gamma function argument
+    !! This routine evaluates the gamma function, using an
+    !! asymptotic expansion based on Stirling's approximation.
+    !! http://en.wikipedia.org/wiki/Gamma_function
+    !! T&amp;M/PKNIGHT/LOGBOOK24, p.5
+    !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    implicit none
+
+    !  Arguments
+
+    real(dp), intent(in) :: x
+    real(dp) :: gamma
+
+    !  Local variables
+
+    real(dp), parameter :: sqtwopi = 2.5066282746310005D0
+    real(dp), parameter :: c1 = 8.3333333333333333D-2  !  1/12
+    real(dp), parameter :: c2 = 3.4722222222222222D-3  !  1/288
+    real(dp), parameter :: c3 = 2.6813271604938272D-3  !  139/51840
+    real(dp), parameter :: c4 = 2.2947209362139918D-4  !  571/2488320
+    real(dp) :: summ, denom
+    integer :: i,n
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    if (x > 1.0D0) then
+
+       summ = 1.0D0 + c1/x + c2/x**2 - c3/x**3 - c4/x**4
+       gamma = exp(-x) * x**(x-0.5D0) * sqtwopi * summ
+
+    else
+
+       !  Use recurrence formula to shift the argument to >1
+       !  gamma(x) = gamma(x+n) / (x*(x+1)*(x+2)*...*(x+n-1))
+       !  where n is chosen to make x+n > 1
+
+       n = int(-x) + 2
+       denom = x
+       do i = 1,n-1
+          denom = denom*(x+i)
+       end do
+       gamma = gamfun(x+n)/denom
+
+    end if
+
+  end function gamfun
+
+  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   function binarysearch(length, array, value, delta)
     ! Given an array and a value, returns the index of the element that
     ! is closest to, but less than, the given value.
