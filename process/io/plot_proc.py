@@ -2007,7 +2007,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 [(turn_width / 2), (turn_height / 2)],
                 he_pipe_diameter / 2,
                 facecolor="white",
-                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {cpttf:.2f} A",
                 edgecolor="black",
             ),
         )
