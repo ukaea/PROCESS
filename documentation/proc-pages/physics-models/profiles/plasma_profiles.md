@@ -5,14 +5,17 @@
     If `ipedestal >= 1` it is highly recommended to use constraint equation 81 (icc=81). This enforces solutions in which $n_0$ has to be greater than $n_{ped}$. 
     Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_e (\mathtt{dene})$ is set.
 
+## Overview
+
 In `PROCESS` the density, temperature and current profiles of the plasma for electrons and ions can take two forms depending on the switch value for `ipedestal`. Either without a [pedestal](http://fusionwiki.ciemat.es/wiki/Pedestal), `ipedestal = 0` or with a pedestal `ipedestal = 1`. ADD MORE DESCIPTION IN HERE
 
 The files responsible for calculting and storing the profiles are `plasma_profiles.py` and `profiles.py`. A central plasma profile object is created from the `PlasmaProfile` class that contains attributes for the plasma density and temperature. The density and temperature profiles are in themselves objects of the [`Profile`](./plasma_profiles_abstract_class.md) abstract base class. [`Profile`](./plasma_profiles_abstract_class.md), `NProfile` and `TProfile` are all defined in `profiles.py`. `PlasmaProfile` is exclusively in `plasma_profiles.py` 
 
 <figure markdown>
-![UML of profiles](../../images/profiles_uml.png){ width="100%"}
+![UML of profiles](./uml_classes_PlasmaProfile.png){ width="100%" height="150%" }
 <figcaption>Figure 1: UML class breakdown of the plasma profiles</figcaption>
 </figure>
+
 
 
 
@@ -85,8 +88,8 @@ $$\begin{aligned}
 
 
 
-## Initialization
-The parent plasma profile class is `PlasmaProfile`. Initialization sets the profile class size and `neprofile` and `teprofile` to `NProfile` & `TProfile` from `profiles`
+## Initialization | `__init__()`
+The parent plasma profile class is `PlasmaProfile`. Initialization sets the profile class size and `neprofile` and `teprofile` to `NProfile` & `TProfile` objects from `profiles.py`
 
 ???+ Note
 
@@ -104,89 +107,13 @@ The parent plasma profile class is `PlasmaProfile`. Initialization sets the prof
 | Profile index $\beta$            |           |                | `tbeta`     | $\beta_T$      |
 
 
-
-
-### Temperature `TProfle()`
-
-1. Firstly the profile x-dimension is normalised in `normalise_profile_x()` by simply dividing the profile size by its max value
-
-2. The steps between the normalized points is then done by `calculate_profile_dx()` which divided the max x-dimension by the number of points.
-
-
-3. `set_physics_variables()` is then ran which performs `tcore()` which calculates the central electron density. The ion central density is then calculated by the ratio from this scaling.
-
--------------------------------------
-
-#### `tcore`
-
-$$\begin{aligned}
-T_0 = T_{ped} + \gamma \left[ T_{ped}\, \rho_{ped,T}^2 - \langle T \rangle +
-  \frac{1}{3}(1 - \rho_{ped,T}) \left[ \, (1 + 2\rho_{ped,T}) \, T_{ped} + ( 2 +
-    \rho_{ped,T}) \, T_{sep} \, \right] \right]
-\end{aligned}$$
-
-with
-
-$$\begin{aligned}
-\gamma = \left\{
-\begin{aligned}
-  & \frac{ -\Gamma(1+\alpha_T+2/\beta_T)}
-  {\rho_{ped,T}^2 \, \Gamma(1+\alpha_T) \, \Gamma((2+\beta_T)/\beta_T)}
-  \qquad \text{for integer} \, \alpha_T \\
-  &\frac{\Gamma(-\alpha_T)\sin(\pi\alpha)\, \Gamma(1+\alpha_T+2/\beta_T)}
-  {\pi\rho_{ped,T}^2 \, \Gamma((2+\beta_T)/\beta_T)}
-  \qquad \text{for non-integer} \, \alpha_T
-\end{aligned}
-\right.
-\end{aligned}$$
-
-
- where $\Gamma$ is the gamma function.
-
-
--------------------------------------------------
-
-
-$$
-T_{i,0} = \left(
-           \frac{T_i}{T_e}T_{e,0} 
-        \right)
-$$
-
-4. The y profile is then calculated using `calculate_profile_y()`. This routine calculates the temperature at each normalised minor radius position $\rho$ for a HELIOS-type density pedestal profile (tprofile)[^3]
-
-If `ipedestal == 0` then the original parabolic profile form is used.
-
-$$
-T(\rho) = T_0 \left( 1 - \rho^2 \right)^{\alpha_T}  
-$$
-
-The central temperature ($T_0$) is then checked to make sure it is not less than the pedestal temperature, $n_{ped}$    
-
-
-$$\begin{aligned}
-\mbox{temperature:} \qquad T(\rho) = \left\{ 
-\begin{aligned}
-   & T_{ped} + (T_0 - T_{ped}) \left( 1 - \frac{\rho^{\beta_T}}
-    {\rho_{ped,T}^{\beta_T}}\right)^{\alpha_T}  & \qquad 0 \leq \rho \leq \rho_{ped,T} \\
-   & T_{sep} + (T_{ped} - T_{sep})\left( \frac{1- \rho}{1-\rho_{ped,T}}\right)
-   & \qquad \rho_{ped,T} < \rho \leq 1
-\end{aligned}
-\right.
-\end{aligned}$$        
-
-5. Profile is then integrated with `integrate_profile_y()` using simpsons integration
-
-
-
-
-## Plasma Parameterization
+## Plasma Parameterization | `parameterise_plasma()`
 Ion temperature is set with `tratio` which just takes $T_i = \mathtt{tratio}\times T_e$
 
 if physics_variables.tratio > 0.0e0:
             physics_variables.ti = physics_variables.tratio * physics_variables.te 
 
-### ipedestal = 0
+### L-mode/ Parabolic Profile / ipedestal = 0
 
 #### `parabolic_paramterisation()`
 `parabolic_paramterisation()` is ran

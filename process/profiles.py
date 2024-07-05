@@ -17,29 +17,26 @@ class Profile(ABC):
 
     """
 
-    import numpy as np
+    def __init__(self, profile_size: int) -> None:
+        """
+        Initialize a Profiles object.
 
-    class Profiles:
-        def __init__(self, profile_size: int) -> None:
-            """
-            Initialize a Profiles object.
+        Parameters:
+        - profile_size (int): The size of the profile.
 
-            Parameters:
-            - profile_size (int): The size of the profile.
+        Attributes:
+        - profile_size (int): The size of the profile.
+        - profile_x (ndarray): An array of values ranging from 0 to profile_size-1.
+        - profile_y (ndarray): An array of zeros with length profile_size.
+        - profile_integ (int): The integral of the profile_y array.
+        - profile_dx (int): The step size between consecutive values in profile_x.
 
-            Attributes:
-            - profile_size (int): The size of the profile.
-            - profile_x (ndarray): An array of values ranging from 0 to profile_size-1.
-            - profile_y (ndarray): An array of zeros with length profile_size.
-            - profile_integ (int): The integral of the profile_y array.
-            - profile_dx (int): The step size between consecutive values in profile_x.
-
-            """
-            self.profile_size = profile_size
-            self.profile_x = np.arange(self.profile_size)
-            self.profile_y = np.zeros(self.profile_size)
-            self.profile_integ = 0
-            self.profile_dx = 0
+        """
+        self.profile_size = profile_size
+        self.profile_x = np.arange(self.profile_size)
+        self.profile_y = np.zeros(self.profile_size)
+        self.profile_integ = 0
+        self.profile_dx = 0
 
     def normalise_profile_x(self) -> None:
         """
