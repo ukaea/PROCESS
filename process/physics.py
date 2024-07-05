@@ -2469,7 +2469,7 @@ class Physics:
                 "OP ",
             )
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Plasma cross-sectional area (m2)",
                 "(xarea)",

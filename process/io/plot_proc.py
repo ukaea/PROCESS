@@ -1660,7 +1660,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",  # noqa: W605
+                label=f"Case: \n{nose_thickness:.4f} m nose thickness \n{side_thickness:.4f} m sidewall thickness \n$\Delta$R = {tf_thickness:.4f} m \n ",  # noqa: W605
             )
             # Lower main
             axis.fill_between(
@@ -1687,7 +1687,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=f"Case: \n{nose_thickness} m nose thickness \n{side_thickness} m sidewall thickness \n$\Delta$R = {tf_thickness} m \n ",  # noqa: W605
+                label=f"Case: \n{nose_thickness:.4f} m nose thickness \n{side_thickness:.4f} m sidewall thickness \n$\Delta$R = {tf_thickness:.4f} m \n ",  # noqa: W605
             )
             # Lower main
             axis.fill_between(
@@ -1742,7 +1742,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp - (2 * tinstf)),
                     (wp_toridal_dxbig - (2 * tinstf)),
                     color="blue",
-                    label=f"Winding pack:  \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                    label=f"Winding pack:  \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
                 )
             )
             # Dvides the WP up into the turn segments
@@ -1811,7 +1811,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp / 2) - (2 * tinstf),
                     wp_toridal_dxbig - (2 * tinstf),
                     color="blue",
-                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                    label=f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
                 ),
             )
             # Inner WP
@@ -1862,7 +1862,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y)),
                     color="blue",
-                    label=f"Winding pack: \n{turns} turns \n{jwptf} MA/m$^2$ \n$\Delta$R= {dr_tf_wp} m \n  ",  # noqa: W605
+                    label=f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
                 )
             )
 
@@ -1901,14 +1901,21 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     if integer_turns == 1:
         turn_width = round(mfile_data.data["t_turn_radial"].get_scan(scan) * 1e3, 5)
         turn_height = round(mfile_data.data["t_turn_toroidal"].get_scan(scan) * 1e3, 5)
+        cable_space_width_radial = round(
+            mfile_data.data["t_cable_radial"].get_scan(scan) * 1e3, 5
+        )
+        cable_space_width_toroidal = round(
+            mfile_data.data["t_cable_toroidal"].get_scan(scan) * 1e3, 5
+        )
     elif integer_turns == 0:
         turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
+        cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
 
-    cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
     he_pipe_diameter = round(mfile_data.data["dhecoil"].get_scan(scan) * 1e3, 5)
     steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
     insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
     internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6, 5)
+    cpttf = mfile_data.data["cpttf"].get_scan(scan)
 
     # Plot the total turn shape
     if integer_turns == 0:
@@ -1953,7 +1960,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 [(turn_width / 2), (turn_width / 2)],
                 he_pipe_diameter / 2,
                 facecolor="white",
-                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {cpttf:.2f} A",
                 edgecolor="black",
             ),
         )
@@ -1995,7 +2002,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_height - 2 * (insulation_thickness + steel_thickness)),
                 facecolor="royalblue",
-                label=f"Cable space: \n{cable_space_width} mm width \n{internal_cable_space} mm$^2$",
+                label=f"Cable space: \n{cable_space_width_radial} mm radial width \n{cable_space_width_toroidal} mm toroidal width \n{internal_cable_space} mm$^2$",
                 edgecolor="black",
             ),
         )
@@ -2004,7 +2011,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 [(turn_width / 2), (turn_height / 2)],
                 he_pipe_diameter / 2,
                 facecolor="white",
-                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {cpttf:.2f} A",
                 edgecolor="black",
             ),
         )
@@ -2054,9 +2061,9 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
     if iohcl == 0:
-        noc = number_of_coils
-    else:
         noc = number_of_coils - 1
+    else:
+        noc = number_of_coils
 
     for coil in range(0, noc):
         coils_r.append(mfile_data.data["rpf[{:01}]".format(coil)].get_scan(scan))
@@ -2330,14 +2337,13 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("aspect", "A", ""),
         ("kappa95", r"$\kappa_{95}$", ""),
         ("triang95", r"$\delta_{95}$", ""),
-        ("sarea", "Surface area", "m$^2$"),
+        ("sarea", "Plasma surface area", "m$^2$"),
+        ("xarea", "Plasma cross-sectional area", "m$^2$"),
         ("vol", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
+        ("inboard_build", "Inboard build thickness", "m"),
         (out_blanket_thk, "Outboard blanket+shield", "m"),
-        ("powfmw", "Fusion power", "MW"),
-        ("bigq", "$Q$", ""),
-        ("", "", ""),
     ]
 
     plot_info(axis, data, mfile_data, scan)
@@ -2386,6 +2392,8 @@ def plot_physics_info(axis, mfile_data, scan):
         pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
 
     data = [
+        ("powfmw", "Fusion power", "MW"),
+        ("bigq", "$Q_{p}$", ""),
         ("plascur/1d6", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
@@ -2393,7 +2401,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("normalised_toroidal_beta", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("thermal_poloidal_beta", r"$\beta_P$, thermal", ""),
         ("betap", r"$\beta_P$, total", ""),
-        ("te", r"$< t_e >$", "keV"),
+        ("te", r"$< T_e >$", "keV"),
         ("dene", r"$< n_e >$", "m$^{-3}$"),
         (nong, r"$< n_{\mathrm{e,line}} >/n_G$", ""),
         (tepeak, r"$T_{e0}/ < T_e >$", ""),
@@ -2482,7 +2490,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             str(int(mfile_data.data["i_tf_sc_mat"].get_scan(scan)))
         ]
     else:
-        tftype = "Resistive"
+        tftype = "Resistive Copper"
 
     vssoft = mfile_data.data["vsres"].get_scan(scan) + mfile_data.data[
         "vsind"
@@ -2537,7 +2545,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
-            ("vcool", "Maximum coolant flow speed", "m.s$^{-1}$"),
+            ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
             (prescp, "CP Resisitive heating", "MW"),
             (presleg * n_tf, "legs Resisitive heating (all legs)", "MW"),
             (pres_joints, "TF joints resisitive heating ", "MW"),
@@ -2605,7 +2613,6 @@ def plot_power_info(axis, mfile_data, scan):
         coredescription,
         ped_height,
         ped_pos,
-        ("ralpne", "Helium fraction", ""),
         ("pinnerzoneradmw", "Inner zone radiation", "MW"),
         ("pradmw", "Total radiation in LCFS", "MW"),
         ("pnucblkt", "Nuclear heating in blanket", "MW"),
@@ -2734,9 +2741,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("facoh", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
-                "gamcd",
-                "Normalised current drive efficiency",
-                "(10$^{20}$ A/(Wm$^{2}$))",
+                "effcd",
+                "Current drive efficiency",
+                "A W$^{-1}$",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -2969,15 +2976,17 @@ def main_plot(
     # Current drive
     plot_6 = fig1.add_subplot(236)
     plot_current_drive_info(plot_6, m_file_data, scan)
-    fig1.subplots_adjust(wspace=0.25)
+    fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
-    # TF coil with WP
-    plot_7 = fig3.add_subplot(321)
-    plot_tf_wp(plot_7, m_file_data, scan)
+    # Can only plot WP and turn sturcutre if superconducting coil at the moment
+    if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
+        # TF coil with WP
+        plot_7 = fig3.add_subplot(321)
+        plot_tf_wp(plot_7, m_file_data, scan)
 
-    # TF coil turn structure
-    plot_8 = fig3.add_subplot(322, aspect="equal")
-    plot_tf_turn(plot_8, m_file_data, scan)
+        # TF coil turn structure
+        plot_8 = fig3.add_subplot(322, aspect="equal")
+        plot_tf_turn(plot_8, m_file_data, scan)
 
 
 def main(args=None):
