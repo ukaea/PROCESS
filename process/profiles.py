@@ -1,6 +1,5 @@
 import numpy as np
 import logging
-from scipy import integrate
 import scipy as sp
 from abc import ABC, abstractmethod
 
