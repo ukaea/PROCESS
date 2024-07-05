@@ -249,8 +249,6 @@ jobs:
           cp tracking/large_tokamak_MFILE.DAT process-tracking-data/large_tokamak_MFILE_$(git rev-parse HEAD).DAT
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/st_regression_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
           cp tracking/st_regression_MFILE.DAT process-tracking-data/st_regression_MFILE_$(git rev-parse HEAD).DAT
-          python tracking/tracking_data.py track process-tracking-data --mfile tracking/stellarator_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
-          cp tracking/stellarator_MFILE.DAT process-tracking-data/stellarator_MFILE_$(git rev-parse HEAD).DAT
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_nof_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
           cp tracking/large_tokamak_nof_MFILE.DAT process-tracking-data/large_tokamak_nof_MFILE_$(git rev-parse HEAD).DAT
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_once_through_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
