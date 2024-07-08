@@ -49,7 +49,7 @@ class Profile(ABC):
         """
         Integrate profile_y values using scipy.integrate.simpson() function.
         """
-        self.profile_integ = integrate.simpson(
+        self.profile_integ = sp.integrate.simpson(
             self.profile_y, x=self.profile_x, dx=self.profile_dx
         )
 
