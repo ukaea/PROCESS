@@ -1,9 +1,9 @@
 import numpy as np
 import logging
-from scipy import integrate
+import scipy as sp
 from abc import ABC, abstractmethod
 
-from process.fortran import maths_library, physics_variables, error_handling
+from process.fortran import physics_variables, error_handling
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -49,7 +49,7 @@ class Profile(ABC):
         """
         Integrate profile_y values using scipy.integrate.simpson() function.
         """
-        self.profile_integ = integrate.simpson(
+        self.profile_integ = sp.integrate.simpson(
             self.profile_y, x=self.profile_x, dx=self.profile_dx
         )
 
@@ -261,20 +261,16 @@ class TProfile(Profile):
         :return: core temperature
         :rtype: numpy.array
         """
-        #  For integer values of alphat, the limit of
-        #  gamfun(-alphat)*sin(pi*alphat) needs to be calculated directly
 
         gamfac = (
-            maths_library.gamfun(1 + alphat + 2 / tbeta)
-            / maths_library.gamfun((2 + tbeta) / tbeta)
+            sp.special.gamma(1 + alphat + 2 / tbeta)
+            / sp.special.gamma((2 + tbeta) / tbeta)
             / rhopedt**2
         )
         if abs(alphat - np.around(alphat)) <= 1e-7:
-            gamfac = -gamfac / maths_library.gamfun(1 + alphat)
+            gamfac = -gamfac / sp.special.gamma(1 + alphat)
         else:
-            gamfac = (
-                gamfac * maths_library.gamfun(-alphat) * np.sin(np.pi * alphat) / np.pi
-            )
+            gamfac = gamfac * sp.special.gamma(-alphat) * np.sin(np.pi * alphat) / np.pi
 
         #  Calculate core temperature
 

@@ -6,7 +6,6 @@ import process.profiles as profiles
 from process.fortran import (
     constants,
     divertor_variables,
-    maths_library,
     physics_variables,
 )
 
@@ -96,14 +95,13 @@ class PlasmaProfile:
         )
 
         #  Line averaged electron density (IPDG89)
-        #  0.5*gamfun(0.5) = 0.5*sqrt(pi) = 0.886227
 
         physics_variables.dnla = (
             physics_variables.dene
             * (1.0 + physics_variables.alphan)
             * 0.886227
-            * maths_library.gamfun(physics_variables.alphan + 1.0)
-            / maths_library.gamfun(physics_variables.alphan + 1.5e0)
+            * sp.special.gamma(physics_variables.alphan + 1.0)
+            / sp.special.gamma(physics_variables.alphan + 1.5)
         )
 
         #  Density-weighted temperatures
