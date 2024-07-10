@@ -13,9 +13,7 @@ logger.addHandler(s_handler)
 
 
 class Profile(ABC):
-    """Abstract base class used to create and hold profiles (temperature, density,)
-
-    """
+    """Abstract base class used to create and hold profiles (temperature, density,)"""
 
     def __init__(self, profile_size: int) -> None:
         """
@@ -106,7 +104,7 @@ class NProfile(Profile):
         set_physics_variables(): Calculates and sets physics variables required for the profile.
     """
 
-    def run(self):
+    def run(self) -> None:
         """Subroutine which calls profile functions and stores nprofile data."""
         self.normalise_profile_x()
         self.calculate_profile_dx()
@@ -123,7 +121,7 @@ class NProfile(Profile):
 
     def calculate_profile_y(
         self,
-        rho: float,
+        rho: np.array,
         rhopedn: float,
         n0: float,
         nped: float,
@@ -139,18 +137,16 @@ class NProfile(Profile):
             H Lux, CCFE, Culham Science Centre
             P J Knight, CCFE, Culham Science Centre
 
-        :param rho: normalised minor radius vector
-        :type rho: float
-        :param rhopedn: normalised minor radius pedestal position
-        :type rhopedn: float
-        :param n0: central density (/m3)
-        :type n0: float
-        :param nped: pedestal desnity (/m3)
-        :type nped: float
-        :param nsep: separatrix density (/m3)
-        :type nsep: float
-        :param alphan: density peaking parameter
-        :type alphan: float
+        Parameters:
+            - rho (np.array): Normalised minor radius vector.
+            - rhopedn (float): Normalised minor radius pedestal position.
+            - n0 (float): Central density (/m3).
+            - nped (float): Pedestal density (/m3).
+            - nsep (float): Separatrix density (/m3).
+            - alphan (float): Density peaking parameter.
+
+        Returns:
+            None
         """
 
         if physics_variables.ipedestal == 0:
@@ -175,20 +171,19 @@ class NProfile(Profile):
     def ncore(
         rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
     ) -> float:
-        """This routine calculates the core density of a pedestalised profile.
+        """
+        This routine calculates the core density of a pedestalised profile.
 
-        :param rhopedn: normalised minor radius pedestal position
-        :type rhopedn: numpy.array
-        :param nped: pedestal density (/m3)
-        :type nped: float
-        :param nsep: separatrix desnity (/m3)
-        :type nsep: float
-        :param nav: electron density (/m3)
-        :type nav: float
-        :param alphan: density peaking parameter
-        :type alphan: float
-        :return: Core density
-        :type: float
+        Parameters:
+        - rhopedn (float): The normalised minor radius pedestal position.
+        - nped (float): The pedestal density (/m3).
+        - nsep (float): The separatrix density (/m3).
+        - nav (float): The electron density (/m3).
+        - alphan (float): The density peaking parameter.
+
+        Returns:
+        - ncore (float): The core density.
+
         """
 
         ncore = (
@@ -208,7 +203,7 @@ class NProfile(Profile):
             ncore = 1.0e-6
         return ncore
 
-    def set_physics_variables(self):
+    def set_physics_variables(self) -> None:
         """Calculates and sets physics variables required for the profile."""
         physics_variables.ne0 = self.ncore(
             physics_variables.rhopedn,
@@ -241,7 +236,49 @@ class TProfile(Profile):
         )
         self.integrate_profile_y()
 
-    def calculate_profile_y(self, rho, rhopedt, t0, teped, tesep, alphat, tbeta):
+    def calculate_profile_y(
+        self,
+        rho: np.array,
+        rhopedt: np.array,
+        t0: float,
+        teped: float,
+        tesep: float,
+        alphat: float,
+        tbeta: float,
+    ) -> None:
+        """
+        Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (tprofile).
+        If ipedestal = 0 the original parabolic profile form is used instead.
+        References:
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
+        Authors:
+            R Kemp, CCFE, Culham Science Centre
+            H Lux, CCFE, Culham Science Centre
+            P J Knight, CCFE, Culham Science Centre
+
+        Args:
+            rho (np.array): Normalised minor radius.
+            rhopedt (np.array): Normalised minor radius pedestal position.
+            t0 (float): Central temperature (keV).
+            teped (float): Pedestal temperature (keV).
+            tesep (float): Separatrix temperature (keV).
+            alphat (float): Temperature peaking parameter.
+            tbeta (float): Second temperature exponent.
+        """
+        if physics_variables.ipedestal == 0:
+            self.profile_y = t0 * (1 - rho**2) ** alphat
+
+        if t0 < teped:
+            logger.info(
+                f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }"
+            )
+        rho_index = rho <= rhopedt
+        self.profile_y[rho_index] = (
+            teped + (t0 - teped) * (1 - (rho[rho_index] / rhopedt) ** tbeta) ** alphat
+        )
+        self.profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
+            1 - rhopedt
+        )
         """Calculates the temperature at a normalised minor
         radius position rho for a pedestalised profile (tprofile).
         If ipedestal = 0 the original parabolic profile form is used instead.
@@ -262,7 +299,7 @@ class TProfile(Profile):
             tbeta (float): Second temperature exponent.
         """
         if physics_variables.ipedestal == 0:
-            self.profile_y = t0 * (1 - rho ** 2) ** alphat
+            self.profile_y = t0 * (1 - rho**2) ** alphat
 
         if t0 < teped:
             logger.info(
@@ -328,8 +365,16 @@ class TProfile(Profile):
             + (1 - rhopedt) / 3 * ((1 + 2 * rhopedt) * teped + (2 + rhopedt) * tesep)
         )
 
-    def set_physics_variables(self):
-        """Calculates and sets physics variables required for the temperature profile."""
+    def set_physics_variables(self) -> None:
+        """
+        Calculates and sets physics variables required for the temperature profile.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         physics_variables.te0 = self.tcore(
             physics_variables.rhopedt,
             physics_variables.teped,
