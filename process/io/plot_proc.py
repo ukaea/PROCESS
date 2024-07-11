@@ -1417,18 +1417,18 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             fwoth=fwoth,
             tfwvt=tfwvt,
         )
-        # Plot blanket
+        # Plot first wall
         axis.plot(fwg_double_null.rs[0], fwg_double_null.zs[0], color="black", lw=thin)
         axis.plot(fwg_double_null.rs[1], fwg_double_null.zs[1], color="black", lw=thin)
         axis.fill(
             fwg_double_null.rs[0],
             fwg_double_null.zs[0],
-            color=BLANKET_COLOUR[colour_scheme - 1],
+            color=FIRSTWALL_COLOUR[colour_scheme - 1],
         )
         axis.fill(
             fwg_double_null.rs[1],
             fwg_double_null.zs[1],
-            color=BLANKET_COLOUR[colour_scheme - 1],
+            color=FIRSTWALL_COLOUR[colour_scheme - 1],
         )
 
 
