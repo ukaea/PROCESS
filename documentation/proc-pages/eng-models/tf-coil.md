@@ -1366,9 +1366,9 @@ In a TF coil fast discharge a large poloidal current is induced in the vessel.  
 
 [^1]: "PROCESS": A systems code for fusion power plants - Part 2: Engineering M. Kovari, F. Fox, C. Harrington, R. Kembleton, P. Knight, H. Lux, J. Morris Fusion Engineering and Design 104 (2016) 9-20 
 [^2]: Derivation_of_multilayer_generalized_plain_strain.docx in 
-<a href="https://git.ccfe.ac.uk/process/process/-/issues/991">PROCESS issue 991</a>
-[^3]:  <a href = "https://git.ccfe.ac.uk/process/process/-/issues/1048"> issue 1048 </a>
-[^4]: <a href = "https://git.ccfe.ac.uk/process/process/-/issues/1031"> issue 1031 </a>
+<a href="https://github.com/ukaea/PROCESS/issues/992"> PROCESS issue 992</a>
+[^3]:  <a href = "https://github.com/ukaea/PROCESS/issues/1049"> PROCESS issue 1049 </a>
+[^4]: <a href = "https://github.com/ukaea/PROCESS/issues/1032"> PROCESS issue 1032 </a>
 [^5]: $J_c(B,T,\epsilon)$ Parameterizations for the ITER Nb$_3$Sn Production',
 ITER Document 2MMF7J (2008), \texttt{https://user.iter.org/?uid=2MMF7J\&action=get\_document}
 
