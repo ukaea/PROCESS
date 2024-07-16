@@ -1331,7 +1331,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_double_null.zs[0],
             color=BLANKET_COLOUR[colour_scheme - 1],
         )
-        if blnkith > 0:
+        if blnkith > 0.0:
             # only plot inboard blanket if inboard blanket thickness > 0
             axis.plot(
                 bg_double_null.rs[1], bg_double_null.zs[1], color="black", lw=thin
