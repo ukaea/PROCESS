@@ -146,7 +146,7 @@ class PlasmaProfile:
         )
 
         # Line averaged electron density (IPDG89)
-        # Taken by integrating the parabolic profile over rho in the bounds of 0 and 1
+        # Taken by integrating the parabolic profile over rho in the bounds of 0 and 1 and dividng by the width of the integration bounds
 
         physics_variables.dnla = (
             physics_variables.dene
@@ -273,8 +273,11 @@ class PlasmaProfile:
         """
         Calculate the gradient information for ipedestal = 0.
 
-        All formulas can be obtained from the analytical parametric form of the ipedestal profiles.
-        rho_max is obtained by equalling the second derivative to zero.
+        This function calculates the gradient information for the plasma profiles at the pedestal region
+        when the value of ipedestal is 0. It is used by the stellarator routines.
+
+        The function uses analytical parametric formulas to calculate the gradient information.
+        The maximum normalized radius (rho_max) is obtained by equating the second derivative to zero.
 
         Args:
             None

@@ -33,31 +33,80 @@ The desnity profile class is organised around a central runner function that is 
     | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
 
 
-    $$\begin{aligned}
-        \nonumber
-        n_0 & = & \frac{1}{3\rho_{\text{ped,n}}^2} \left[3\langle n\rangle (1+\alpha_n)
-            + n_{\text{sep}} (1+\alpha_n) (-2 + \rho_{\text{ped,n}} + \rho_{\text{ped,n}}^2) \right.\\
-        & & \left. - n_{\text{ped}}\left( (1 + \alpha_n)(1+ \rho_{\text{ped,n}}) + (\alpha_n -2)
-            \rho_{\text{ped,n}}^2 \right) \right]
-    \end{aligned}$$
+    $$
+    n_0  =  \frac{1}{3\rho_{\text{ped,n}}^2}\left[3\langle n\rangle (1+\alpha_n)
+    + n_{\text{sep}} (1+\alpha_n) \left(-2 + \rho_{\text{ped,n}} + \rho_{\text{ped,n}}^2\right) \\
+    - n_{\text{ped}}\left( (1 + \alpha_n)(1+ \rho_{\text{ped,n}}) + (\alpha_n -2)
+    \rho_{\text{ped,n}}^2\right)\right]
+    $$
 
     If `ncore` is returned as being less that 0, it is forced into a state of `ncore = 1E-6` in order to help convergance. This will also give a warning to the user to raise the lower bound of the average electron density `dene`.
 
     ##### Derivation
 
-    Taking the standard model for the density profile and calculating the sums of the [volumes of integration](https://en.wikipedia.org/wiki/Solid_of_revolution) for the main profile and pedestal regions will give us a density equal to the average plasma density, $\langle n \rangle$ (`dene`). Calculating this and then re-arranging to find $n_0$ allows us to find the central density
-    
+    We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle n \rangle$. If we assume the plasma to be a torus of circular cross section then we can use spherical cordinates. We can simplify the problem by representing the torus as a cyclinder of height equal to the circumfrence of the torus equal to $2\pi R$ where $R$ is the major radius of the torus, and $a$ is the plasma minor radius in the poloidal plane.
+
+    The cyclindrical volume element is given by:
+
+    $$
+    V = \int \int \int dV = \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0 r \ dr \ d\theta \ dz
+    $$
+
+    Inserting our density function to be integrated over we get in normalized radial cordinates ($\rho$) we get:
+
+    $$
+    \int^{2\pi R}_0 \int^{2\pi}_0 \int^{1}_0       \rho \ n_{\text{e}}(\rho) \ d\rho \ d\theta \ dz
+    $$
+
+    Since our density function is only a function of $\rho$, and the torus is symmetric around its center, the integration simplifies to integrating over $\rho$ and the $d\theta ,\ dz$ integrals are solved to give values for the full poloidal angle and cyclindrical height / torus length, leading to:
+
+    $$
+    4\pi^2R \int^{1}_0     \rho \ n_{\text{e}}(\rho) \ d\rho  
+    $$
+
+    This is the general form for the full profile width without expansion. Seperating out the density function into its sperate functions for the core and pedestal region we get the fully expanded integration form.
+
+    $$
+    4\pi^2R\left[ \int^{\rho_{\text{ped,n}}}_0     \rho\left(n_{\text{ped}} + (n_0 - n_{\text{ped}}) \left( 1 -
+    \frac{\rho^2}{\rho_{\text{ped},n}^2}\right)^{\alpha_n}\right) \ d\rho \\
+    +\int^1_{\rho_{\text{ped,n}}}     \rho\left(n_{\text{sep}} + (n_{\text{ped}} - n_{\text{sep}})\left( \frac{1- \rho}{1-\rho_{\text{ped},n}}\right)\right)\right] \ d\rho
+    $$
+        
+    Integrating each part within its bounds:
     
     $$
-    \langle n \rangle = \int_{0}^{\rho_{\text{ped},n}}2\pi\rho \left[n_{\text{ped}} + (n_0 - n_{\text{ped}}) \left( 1 -
-    \frac{\rho^2}{\rho_{\text{ped},n}^2}\right)^{\alpha_n}\right] d\rho \\
-    + \int_{\rho_{\text{ped},n}}^{1} 2\pi\rho \left[n_{\text{sep}} + (n_{\text{ped}} - n_{\text{sep}})\left( \frac{1- \rho}{1-\rho_{\text{ped},n}}\right)\right] d\rho
+    4\pi^2R\left[ \frac{\left(n_{\text{ped}} {\alpha}_{n} + n_{0}\right) {\rho}_{\text{ped,n}}^{2}}{2{\alpha}_{n} + 2} \\
+    +\frac{\left(1-{\rho}_{\text{ped,n}}\right) \left(\left(n_{\text{sep}} + 2n_{\text{ped}}\right) {\rho}_{\text{ped,n}} + 2n_{\text{sep}} + n_{\text{ped}}\right)}{6}\right] 
+    $$
+
+    In the form of volume average density where the volume integrated density function has to be divided by the volume of the cyclinder / torus, within the volume bounded by that pedestal position we get:
+
+    $$
+    \langle n \rangle = 4\pi^2R\left[ \frac{\frac{\left(n_{\text{ped}} {\alpha}_{n} + n_{0}\right) {\rho}_{\text{ped,n}}^{2}}{2{\alpha}_{n} + 2}
+    +\frac{\left(1-{\rho}_{\text{ped,n}}\right) \left(\left(n_{\text{sep}} + 2n_{\text{ped}}\right) {\rho}_{\text{ped,n}} + 2n_{\text{sep}} + n_{\text{ped}}\right)}{6}}{2\pi^2 R \rho_{\text{ped,n}}^2}\right] 
+    $$
+
+    In this case the value of $\rho_{\text{ped,n}}$ is equal to 1 as we integrated over the full profile.
+
+    $$
+    \langle n \rangle = 2\left[\frac{\left(n_{\text{ped}} {\alpha}_{n} + n_{0}\right) {\rho}_{\text{ped,n}}^{2}}{2{\alpha}_{n} + 2} \\
+    +\frac{\left(1-{\rho}_{\text{ped,n}}\right) \left(\left(n_{\text{sep}} + 2n_{\text{ped}}\right) {\rho}_{\text{ped,n}} + 2n_{\text{sep}} + n_{\text{ped}}\right)}{6}\right] 
     $$
 
     $$
-    \langle n \rangle = \frac{(n_0+n_{\text{ped}}\alpha_\text{n})\rho_{\text{ped}}^2}{1+\alpha_n}+\frac{1}{3}(1-\rho_{\text{ped}})(n_{\text{ped}}+2n_{\text{ped}}\rho_{\text{ped}}+n_{\text{sep}}(2+\rho_{\text{ped}}))
+    \langle n \rangle = \frac{(n_0+n_{\text{ped}}\alpha_\text{n})\rho_{\text{ped,n}}^2}{1+\alpha_n}+\frac{1}{3}(1-\rho_{\text{ped}})(n_{\text{ped}}+2n_{\text{ped}}\rho_{\text{ped}}+n_{\text{sep}}(2+\rho_{\text{ped,n}}))
     $$
-    
+
+    The above is then rearranged to get a function for $n_0$
+
+    $$
+    n_0  =  \frac{1}{3\rho_{\text{ped,n}}^2}\left[3\langle n\rangle (1+\alpha_n)
+    + n_{\text{sep}} (1+\alpha_n) \left(-2 + \rho_{\text{ped,n}} + \rho_{\text{ped,n}}^2\right) \\
+    - n_{\text{ped}}\left( (1 + \alpha_n)(1+ \rho_{\text{ped,n}}) + (\alpha_n -2)
+    \rho_{\text{ped,n}}^2\right)\right]
+    $$
+
+    ------
 
 4. The y profile is then calculated using `calculate_profile_y()`. This routine calculates the density at each normalised minor radius position $\rho$ for a HELIOS-type density pedestal profile (nprofile)[^1]
 
