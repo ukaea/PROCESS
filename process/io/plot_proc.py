@@ -55,6 +55,8 @@ from process.geometry.firstwall_geometry import (
 from process.impurity_radiation import read_impurity_file
 from process.io.python_fortran_dicts import get_dicts
 
+from process.physics import dcsa, hcsa, xcsa
+
 if os.name == "posix" and "DISPLAY" not in os.environ:
     matplotlib.use("Agg")
 matplotlib.rcParams["figure.max_open_warning"] = 40
@@ -925,43 +927,9 @@ def synchrotron_rad():
 
     return psyncpv
 
-
-def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
-    """Function to plot radiation profile, formula taken from ???.
-
-    Arguments:
-      prof --> axis object to add plot to
-      mfile_data --> MFILE.DAT object
-      scan --> scan number to use
-      impp --> impurity path
+def profiles(ipedestal, alphan, alphat, rhopedn, rhopedt, ne0, neped, nesep, te0, teped, tesep):
     """
-
-    prof.set_xlabel("r/a")
-    prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
-    prof.set_title("Radiation profile")
-
-    # read in the impurity data
-    imp_data = read_imprad_data(2, impp)
-
-    # find impurity densities
-    imp_frac = np.array(
-        [
-            mfile_data.data["fimp(01)"].get_scan(scan),
-            mfile_data.data["fimp(02)"].get_scan(scan),
-            mfile_data.data["fimp(03)"].get_scan(scan),
-            mfile_data.data["fimp(04)"].get_scan(scan),
-            mfile_data.data["fimp(05)"].get_scan(scan),
-            mfile_data.data["fimp(06)"].get_scan(scan),
-            mfile_data.data["fimp(07)"].get_scan(scan),
-            mfile_data.data["fimp(08)"].get_scan(scan),
-            mfile_data.data["fimp(09)"].get_scan(scan),
-            mfile_data.data["fimp(10)"].get_scan(scan),
-            mfile_data.data["fimp(11)"].get_scan(scan),
-            mfile_data.data["fimp(12)"].get_scan(scan),
-            mfile_data.data["fimp(13)"].get_scan(scan),
-            mfile_data.data["fimp(14)"].get_scan(scan),
-        ]
-    )
+    """
 
     if ipedestal == 0:
         # Intialise the radius
@@ -1005,15 +973,50 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
                 te[q] = tesep + (teped - tesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedt)
                 )
+        # process assumes te = ti (is this true is there some factor? tratio)
+        #ti = tratio * te    
 
-        # ncore = neped + (ne0-neped) * (1-rhocore**2/rhopedn**2)**alphan
-        # nsep = nesep + (neped-nesep) * (1-rhosep)/(1-min(0.9999, rhopedn))
-        # ne = np.append(ncore, nsep)
+    return rho, ne, te 
 
-        # The temperatue profile
-        # tcore = teped + (te0-teped) * (1-(rhocore/rhopedt)**tbeta)**alphat
-        # tsep = tesep + (teped-tesep)* (1-rhosep)/(1-min(0.9999,rhopedt))
-        # te = np.append(tcore,tsep)
+def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
+    """Function to plot radiation profile, formula taken from ???.
+
+    Arguments:
+      prof --> axis object to add plot to
+      mfile_data --> MFILE.DAT object
+      scan --> scan number to use
+      impp --> impurity path
+    """
+
+    prof.set_xlabel("r/a")
+    prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
+    prof.set_title("Radiation profile")
+
+    # read in the impurity data
+    imp_data = read_imprad_data(2, impp)
+
+    # find impurity densities
+    imp_frac = np.array(
+        [
+            mfile_data.data["fimp(01)"].get_scan(scan),
+            mfile_data.data["fimp(02)"].get_scan(scan),
+            mfile_data.data["fimp(03)"].get_scan(scan),
+            mfile_data.data["fimp(04)"].get_scan(scan),
+            mfile_data.data["fimp(05)"].get_scan(scan),
+            mfile_data.data["fimp(06)"].get_scan(scan),
+            mfile_data.data["fimp(07)"].get_scan(scan),
+            mfile_data.data["fimp(08)"].get_scan(scan),
+            mfile_data.data["fimp(09)"].get_scan(scan),
+            mfile_data.data["fimp(10)"].get_scan(scan),
+            mfile_data.data["fimp(11)"].get_scan(scan),
+            mfile_data.data["fimp(12)"].get_scan(scan),
+            mfile_data.data["fimp(13)"].get_scan(scan),
+            mfile_data.data["fimp(14)"].get_scan(scan),
+        ]
+    )
+
+    # run the profiles function we are creating 
+    rho, ne, te = profiles(ipedestal, alphan, alphat, rhopedn, rhopedt, ne0, neped, nesep, te0, teped, tesep)
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
@@ -1046,17 +1049,6 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         for l in range(imp_data.shape[0]):  # noqa: E741
             prad[k] = prad[k] + pimpden[l][k] * 2.0e-6
 
-    # benchmark prad again outfile so mod prad
-    # pbremint = (rho[1:] * pbrem[1:]) @ drho
-    # pradint = prad[1:] @ drho * 2.0e-5
-    # pbremint = pbrem[1:] @ drho * 2.0e-5
-
-    # print('prad = ',prad)
-    # print('pbrem = ',pbrem)
-    # print(1.0e32*lz[12])
-    # print('pradpv = ',pradint)
-    # print('pbremmw = ',pbremint*vol)
-    # print('pradmw = ', pradint*vol, 'MW') # pimp = pline + pbrem
 
     prof.plot(rho, prad, label="Total")
     prof.plot(rho, pimpden[0] * 2.0e-6, label="H")
@@ -1100,6 +1092,177 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         prof.set_ylim([0, prof.get_ylim()[1]])
     # ---
 
+def plot_bootstrap_profile(prof, mfile_data, scan):
+    """Bootstrap current fraction from Sauter et al scaling
+    author: P J Knight, CCFE, Culham Science Centre
+    None
+    This function calculates the bootstrap current fraction
+    using the Sauter, Angioni and Lin-Liu scaling.
+    <P>The code was supplied by Emiliano Fable, IPP Garching
+    (private communication).
+    O. Sauter, C. Angioni and Y. R. Lin-Liu,
+    Physics of Plasmas <B>6</B> (1999) 2834
+    O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
+    Physics of Plasmas <B>9</B> (2002) 5140
+    """
+    
+    #Plasma parameters needed for bootstrap calculation
+    dnitot = mfile_data.data["dnitot"].get_scan(scan)
+    dene = mfile_data.data["dene"].get_scan(scan)
+    zeff = mfile_data.data["zeff"].get_scan(scan)
+    afuel = mfile_data.data["afuel"].get_scan(scan)
+    fhe3 = mfile_data.data["fhe3"].get_scan(scan)
+    xarea = mfile_data.data["xarea"].get_scan(scan)
+
+    tratio = 1.0 #Needs to be updated        
+        
+    NR = 50
+
+    #roa = np.arange(1, NR + 1, step=1) / NR
+
+    #rho = np.sqrt(xarea / np.pi) * roa # ??????????????????????/
+    sqeps = np.sqrt(roa * (rminor / rmajor))
+
+    rho, ne, te = profiles(ipedestal, alphan, alphat, rhopedn, rhopedt, ne0, neped, nesep, te0, teped, tesep)
+
+    #We need to fix the units of ne?
+    ne = 1e-19 * ne 
+
+    #    ne = 1e-19 * np.vectorize(
+    #        lambda r: profiles_module.nprofile(
+    #            r,
+    #            rhopedn,
+    #            ne0,
+    #            neped,
+    #            nesep,
+    #            alphan,
+    #        )
+    #    )(roa)
+    ni = (dnitot / dene) * ne
+    #    tempe = np.vectorize(
+    #        lambda r: profiles_module.tprofile(
+    #            r,
+    #            rhopedt,
+    #            te0,
+    #            teped,
+    #            tesep,
+    #            alphat,
+    #            tbeta,
+    #        )
+    #    )(roa)
+    # dnitot dene zeff afuel fhe3 xarea tratio
+    ti = te
+
+    zef = np.full_like(ti, zeff)  # Flat Zeff profile assumed
+
+    # mu = 1/safety factor
+    # Parabolic q profile assumed
+    mu = 1 / (
+        q0 + (q95 - q0) * rho**2 # switch to rho
+    )
+    amain = np.full_like(mu, afuel)
+    zmain = np.full_like(mu, 1.0 + fhe3)
+
+    # Catching zeros for the logs
+    if ne[NR - 1] == 0.0:
+        ne[NR - 1] = 1e-4 * ne[NR - 2]
+        ni[NR - 1] = 1e-4 * ni[NR - 2]
+
+    if te[NR - 1] == 0.0:
+        te[NR - 1] = 1e-4 * te[NR - 2]
+        ti[NR - 1] = 1e-4 * ti[NR - 2]
+
+    # Calculate total bootstrap current (MA) by summing along profiles
+    # Looping from 2 because dcsa etc should return 0 @ j == 1
+    nr_rng = np.arange(2, NR)
+    nr_rng_1 = nr_rng - 1
+
+    drho = rho[nr_rng] - rho[nr_rng_1]
+    da = 2 * np.pi * rho[nr_rng_1] * drho  # area of annulus
+    dlogte_drho = (np.log(te[nr_rng]) - np.log(te[nr_rng_1])) / drho
+    dlogti_drho = (np.log(ti[nr_rng]) - np.log(ti[nr_rng_1])) / drho
+    dlogne_drho = (np.log(ne[nr_rng]) - np.log(ne[nr_rng_1])) / drho
+
+    jboot = (
+        0.5
+        * (
+            dcsa(
+                nr_rng,
+                NR,
+                rmajor,
+                bt,
+                triang,
+                ne,
+                ni,
+                te,
+                ti,
+                mu,
+                rho,
+                zef,
+                sqeps,
+            )
+            * dlogne_drho
+            + hcsa(
+                nr_rng,
+                NR,
+                rmajor,
+                bt,
+                triang,
+                ne,
+                ni,
+                te,
+                ti,
+                mu,
+                rho,
+                zef,
+                sqeps,
+            )
+            * dlogte_drho
+            + xcsa(
+                nr_rng,
+                NR,
+                rmajor,
+                bt,
+                triang,
+                mu,
+                sqeps,
+                ti,
+                te,
+                amain,
+                zmain,
+                ni,
+                ne,
+                rho,
+                zef,
+            )
+            * dlogti_drho
+        )
+        * 1.0e6
+        * (
+            -bt
+            / (0.2 * np.pi * rmajor)
+            * rho[nr_rng_1]
+            * mu[nr_rng_1]
+        )
+    )  # A/m2
+
+
+    #Do some plotting
+    prof.plot(rho, jboot, label="Total")
+    prof.legend()
+    prof.minorticks_on()
+
+    # Ranges
+    # ---
+    prof.set_xlim([0, 1])
+    # DEMO : Fixed ranges for comparison
+    #if demo_ranges:
+    #    prof.set_ylim([0, 0.5])
+
+    # Adapatative ranges
+    #else:
+    #    prof.set_ylim([0, prof.get_ylim()[1]])
+    # ---
 
 def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
     """Function to plot vacuum vessel
@@ -2992,6 +3155,8 @@ def main_plot(
         plot_8 = fig3.add_subplot(322, aspect="equal")
         plot_tf_turn(plot_8, m_file_data, scan)
 
+        #plot_9 = fig3.add_subplot(323)
+        #plot_bootstrap_profile(plot_9, m_file_data, scan)
 
 def main(args=None):
     # TODO The use of globals here isn't ideal, but is required to get main()
