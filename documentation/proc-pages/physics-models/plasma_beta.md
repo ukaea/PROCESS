@@ -20,19 +20,21 @@ By default, $\beta$ is defined with respect to the total equilibrium B-field [^2
 | 2 | Apply the $\beta$ limit to only the thermal plus neutral beam contributions to beta |
 | 3 | Apply the $\beta$ limit to the total beta (including the contribution from fast ions), calculated using only the toroidal field |
 
-### Scaling of beta $g$ coefficient
+### Setting the beta $g$ coefficient
 
-Switch `gtscale` determines how the beta $g$ coefficient `dnbeta` should 
-be calculated, using the inverse aspect ratio $\epsilon = a/R$.
+Switch `iprofile` determines how the beta $g$ coefficient `dnbeta` should 
+be calculated.
 
-| `gtscale` | Description |
+| `iprofile` | Description |
 | :-: | - |
-| 0 | `dnbeta` is an input. |
-| 1 | $g=2.7(1+5\epsilon^{3.5})$ (which gives g = 3.0 for aspect ratio = 3) |
-| 2 | $g=3.12+3.5\epsilon^{1.7}$ (based on Menard et al. "Fusion Nuclear Science Facilities and Pilot Plants Based on the Spherical Tokamak", Nucl. Fusion, 2016, 44)  |
+| 0 | `alphaj`, `rli` and `dnbeta` are inputs. |
+| 1 | `alphaj`, `rli` and `dnbeta` are calulcated consistently. `dnbeta` calculated using $g=4l_i$ [^3]|
+| 2 | `alphaj` and `rli` are inputs. `dnbeta` calculated using $g=2.7(1+5\epsilon^{3.5})$ (which gives g = 3.0 for aspect ratio = 3) |
+| 3 | `alphaj` and `rli` are inputs. `dnbeta` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]|
+| 4 | `alphaj` and `dnbeta` are inputs. `rli` calculated from elongation [^4]|
+| 5 | `alphaj` is an input inputs.  `rli` calculated from elongation and `dnbeta` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]|
 
-!!! Note 
-    `gtscale` is over-ridden if `iprofile` = 1.
+Further details on the calculation of `alphaj` and `rli` is given in [Plasma Current](./plasma_current.md).
 
 ### Limiting $\epsilon\beta_p$
 
@@ -44,3 +46,7 @@ is be set using input parameter `epbetmax`.
 [^1]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 
 [^2]: D.J. Ward, 'PROCESS Fast Alpha Pressure', Work File Note F/PL/PJK/PROCESS/CODE/050
+
+[^3]: Tokamaks 4th Edition, Wesson, page 116
+
+[^4]: Menard et al. (2016), Nuclear Fusion, 56, 106023

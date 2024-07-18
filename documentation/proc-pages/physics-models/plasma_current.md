@@ -1,6 +1,6 @@
 # Plasma Current Scaling Laws
 
-A number of plasma current scaling laws are available in PROCESS $[^1]. These are calculated in 
+A number of plasma current scaling laws are available in PROCESS [^1]. These are calculated in 
 routine `culcur`, which is called by `physics`. The safety factor $q_{95}$ required to prevent 
 disruptive MHD instabilities dictates the plasma current Ip:
 
@@ -39,10 +39,20 @@ $$\begin{aligned}
 l_i = ln(1.65+0.89\alpha_J)
 \end{aligned}$$
 
-The beta $g$ coefficient `dnbeta` also scales with $l_i$, as described above.
+$$\begin{aligned}
+g = 4 l_i
+\end{aligned}$$
 
 It is recommended that current scaling law `icurr = 4` is used if `iprofile = 1`. 
-Switch `gtscale` is over-ridden if `iprofile = 1`.
+This relation is only applicable to large aspect ratio tokamaks.
+
+For spherical tokamaks, the internal inductance can be set from the elongation using `iprofile = 4` or `iprofile = 5`:
+
+$$\begin{aligned}
+l_i = 3.4 - \kappa_x
+\end{aligned}$$
+
+Further desciption of `iprofile` is given in [Beta Limit](./plasma_beta.md).
 
 ## Bootstrap, Diamagnetic and Pfirsch-Schlüter Current Scalings
 
@@ -56,8 +66,8 @@ existence of pedestals, whereas the Sauter et al. scaling
 | :-: | - |
 | 1 | ITER scaling -- To use the ITER scaling method for the bootstrap current fraction.  Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$). This method is valid at high aspect ratio only.
 | 2 | General scaling -- To use a more general scaling method, set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
-| 3 | Numerically fitted scaling [^7] -- To use a numerically fitted scaling method, valid for all aspect ratios, set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
-| 4 | Sauter, Angioni and Lin-Liu scaling [^8] [^9] -- Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
+| 3 | Numerically fitted scaling [^8] -- To use a numerically fitted scaling method, valid for all aspect ratios, set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
+| 4 | Sauter, Angioni and Lin-Liu scaling [^9] [^10] -- Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
 
 !!! Note "Fixed Bootstrap Current"
     Direct input -- To input the bootstrap current fraction directly, set `bscfmax` 
@@ -101,7 +111,7 @@ Unpublished internal Oak Ridge document.
 Current Drive', ITER-TN-PH-8-4, 13--17 June 1988, Garching, FRG
 [^6]: Y. Sakamoto, 'Recent progress in vertical stability analysis in JA',
 Task meeting EU-JA #16, Fusion for Energy, Garching, 24--25 June 2014
-
-[^7]: H.R. Wilson, Nuclear Fusion **32** (1992) 257
-[^8]: O. Sauter, C. Angioni and Y.R. Lin-Liu, Physics of Plasmas **6** (1999) 2834 
-[^9]: O. Sauter, C. Angioni and Y.R. Lin-Liu, Physics of Plasmas **9** (2002) 5140
+[^7] Menard et al. (2016), Nuclear Fusion, 56, 106023
+[^8]: H.R. Wilson, Nuclear Fusion **32** (1992) 257
+[^9]: O. Sauter, C. Angioni and Y.R. Lin-Liu, Physics of Plasmas **6** (1999) 2834 
+[^10]: O. Sauter, C. Angioni and Y.R. Lin-Liu, Physics of Plasmas **9** (2002) 5140
