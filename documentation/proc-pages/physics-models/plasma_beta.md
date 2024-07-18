@@ -20,7 +20,7 @@ By default, $\beta$ is defined with respect to the total equilibrium B-field [^2
 | 2 | Apply the $\beta$ limit to only the thermal plus neutral beam contributions to beta |
 | 3 | Apply the $\beta$ limit to the total beta (including the contribution from fast ions), calculated using only the toroidal field |
 
-### Setting the beta $g$ coefficient
+### Setting the Beta $g$ Coefficient
 
 Switch `iprofile` determines how the beta $g$ coefficient `dnbeta` should 
 be calculated.
@@ -28,11 +28,11 @@ be calculated.
 | `iprofile` | Description |
 | :-: | - |
 | 0 | `alphaj`, `rli` and `dnbeta` are inputs. |
-| 1 | `alphaj`, `rli` and `dnbeta` are calulcated consistently. `dnbeta` calculated using $g=4l_i$ [^3]|
+| 1 | `alphaj`, `rli` and `dnbeta` are calulcated consistently. `dnbeta` calculated using $g=4l_i$ [^3].  This is only recommended for high aspect ratio tokamaks.|
 | 2 | `alphaj` and `rli` are inputs. `dnbeta` calculated using $g=2.7(1+5\epsilon^{3.5})$ (which gives g = 3.0 for aspect ratio = 3) |
 | 3 | `alphaj` and `rli` are inputs. `dnbeta` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]|
-| 4 | `alphaj` and `dnbeta` are inputs. `rli` calculated from elongation [^4]|
-| 5 | `alphaj` is an input inputs.  `rli` calculated from elongation and `dnbeta` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]|
+| 4 | `alphaj` and `dnbeta` are inputs. `rli` calculated from elongation [^4]. This is only recommended for spherical tokamaks.|
+| 5 | `alphaj` is an input.  `rli` calculated from elongation and `dnbeta` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]. This is only recommended for spherical tokamaks.|
 
 Further details on the calculation of `alphaj` and `rli` is given in [Plasma Current](./plasma_current.md).
 
