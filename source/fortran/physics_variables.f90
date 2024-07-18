@@ -27,7 +27,7 @@ module physics_variables
   !! average mass of all ions (amu)
 
   real(dp) :: alphaj
-  !! current profile index (calculated from q_0, q if `iprofile=1`)
+  !! current profile index (calculated from q_0 and q if `iprofile=1`)
 
   real(dp) :: alphan
   !! density profile index
@@ -124,8 +124,7 @@ module physics_variables
   !! hot beam ion density from calculation (/m3)
 
   real(dp) :: dnbeta
-  !! Troyon-like coefficient for beta scaling calculated
-  !! as 4*rli if `iprofile=1` (see also gtscale option)
+  !! Troyon-like coefficient for beta scaling
 
   real(dp) :: dnelimt
   !! density limit (/m3)
@@ -230,13 +229,6 @@ module physics_variables
 
   real(dp) :: gammaft
   !! ratio of (fast alpha + neutral beam beta) to thermal beta
-
-  integer :: gtscale
-  !! switch for a/R scaling of dnbeta (`iprofile=0` only):
-  !!
-  !! - =0 do not scale dnbeta with eps
-  !! - =1 scale dnbeta with eps, original scaling
-  !! - =2 scale dnbeta with eps, Menard scaling
 
   real(dp), dimension(ipnlaws) :: hfac
   !! H factors for an ignited plasma for each energy confinement time scaling law
@@ -379,8 +371,12 @@ module physics_variables
   integer :: iprofile
   !! switch for current profile consistency:
   !!
-  !! - =0 use input values for alphaj, rli, dnbeta (but see gtscale option)
+  !! - =0 use input values for alphaj, rli, dnbeta
   !! - =1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+  !! - =2 use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling)
+  !! - =3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
+  !! - =4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
+  !! - =5 use input value for alphaj.  Set rli and dnbeta from Menard scaling
 
   integer :: iradloss
   !! switch for radiation loss term usage in power balance (see User Guide):
@@ -954,7 +950,6 @@ module physics_variables
     fvsbrnni = 1.0D0
     gamma = 0.4D0
     gammaft = 0.0D0
-    gtscale = 0
     hfac = 0.0D0
     hfact = 1.0D0
     taumax = 10.0D0

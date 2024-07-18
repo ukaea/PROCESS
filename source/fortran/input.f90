@@ -309,7 +309,7 @@ contains
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
       ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
-      teped, fhe3, iwalld, gamma, falpha, fgwped, gtscale, tbeta, ibss, &
+      teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, ibss, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, ieped, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       idia, ips, m_s_limit, burnup_in
@@ -612,9 +612,6 @@ contains
        case ('gamma')
           call parse_real_variable('gamma', gamma, 0.1D0, 1.0D0, &
                'Ejima coefficient for resistive V-s formula')
-       case ('gtscale')
-          call parse_int_variable('gtscale', gtscale, 0, 2, &
-               'Flag to scale beta coefficient with R/a')
        case ('hfact')
           call parse_real_variable('hfact', hfact, 0.01D0, 10.0D0, &
                'Energy confinement time H factor')
@@ -653,7 +650,7 @@ contains
           call parse_int_variable('ipedestal', ipedestal, 0, 1, &
                'Switch for plasma profile type')
        case ('iprofile')
-          call parse_int_variable('iprofile', iprofile, 0, 1, &
+          call parse_int_variable('iprofile', iprofile, 0, 5, &
                'Switch for current profile consistency')
        case ('ips')
           call parse_int_variable('ips', ips, 0, 1, &
