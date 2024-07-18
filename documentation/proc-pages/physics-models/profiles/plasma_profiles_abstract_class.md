@@ -14,6 +14,6 @@ The difference or step size between each concurrent value in `x` is calulated by
 
 This acts as an abstract holder method for the particular profile solving functions to be assigned to.
 
-## Calculate the profile `y` values | `calculate_profile_y()`
+## Calculate the profile integral value | `integrate_profile_y()`
 
 The profile is integrated between its minimum and maximum bounds using the [Simpsons rule integration method](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simpson.html) from `scipy` using the step size from `calculate_profile_dx()`.

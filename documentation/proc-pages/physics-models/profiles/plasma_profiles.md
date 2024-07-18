@@ -12,7 +12,7 @@ In `PROCESS` the density, temperature and current profiles of the plasma for ele
 The files responsible for calculting and storing the profiles are `plasma_profiles.py` and `profiles.py`. A central plasma profile object is created from the [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class that contains attributes for the plasma density and temperature. The density and temperature profiles are in themselves objects of the [`Profile`](./plasma_profiles_abstract_class.md) abstract base class. [`Profile`](./plasma_profiles_abstract_class.md), [`NProfile`](plasma_density_profile.md) and [`TProfile`](./plasma_temperature_profile.md) are all defined in `profiles.py`. [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) is exclusively in `plasma_profiles.py` 
 
 <figure markdown>
-![UML of profiles](./uml_classes_PlasmaProfile.png)
+![UML of profiles](./uml_classes_PlasmaProfile.png){height="1000px"}
 <figcaption>Figure 1: UML class breakdown of the plasma profiles</figcaption>
 </figure>
 
@@ -139,7 +139,7 @@ $$\begin{aligned}
 \end{aligned}$$ 
 
 Subscripts $0$, $\text{ped}$ and $\text{sep}$, denote values at the centre ($\rho = 0$), the
-pedestal ($\rho = \rho_{ped}$) and the separatrix ($\rho=1$),
+pedestal ($\rho = \rho_{\text{ped}}$) and the separatrix ($\rho=1$),
 respectively. The density and temperature peaking parameters $\alpha_n$ and a
 $\alpha_T$ as well as the second exponent $\beta_T$ (input parameter
 `tbeta`, not to be confused with the plasma beta) in the temperature
@@ -239,20 +239,29 @@ The parent plasma profile class is `PlasmaProfile`. Initialization sets the prof
 
     Profile sizes are set to 501 point by default. this can be varied in the `__init__` of `PlasmaProfile`. Changing this will affect the values when doing Simpsons rule integration on the profiles. 
 
+----------
+
+### Runner function | `run()`
+This function is used to run the approiate function relating to the calculation of the PlasmaProfile class. At the moment it only runs the [`pramterise_plasma()`](plasma_profiles.md#plasma-parameterization-parameterise_plasma) function
+
+------------
+
 ### Plasma Parameterization | `parameterise_plasma()`
-The input variable `tratio` can be used to define the ratio between the volume averaged ion and electron temperatures. By default it is set so that the volume averaged ion and electron temperatures are equal.
+The input variable `tratio` can be used to define the ratio between the volume averaged ion and electron temperatures. By default it is set so that the volume averaged ion and electron temperatures are equal. The value of $T_{\text{i}}$ is set such that:
 
 $$
 T_{\text{i}} = \mathtt{tratio}\times T_{\text{e}}
 $$
 
-#### L-mode/ Parabolic Profile / ipedestal = 0
+Depending on the value of `ipedestal` different functions will be ran, the different run cases are given below:
+
+#### Parabolic Profile | `ipedestal == 0`
 
 ##### `parabolic_paramterisation()`
 
 If pedestal profile values are set they are reset to have values that agree with the original form of the parabolic profiles. Such that $\rho_{\text{ped}} = 1$ and that pedestal and separatrix desnities and temepratures are zero. This will then warn the user in the terminal.
 
-The desnity and temperature profile runner function `TProfile/NProfile.run()` is then called to re-calculate the profile and core values. 
+The desnity and temperature profile runner function [`TProfile/NProfile.run()`](plasma_density_profile.md#runner-function-run) is then called to re-calculate the profile and core values. 
 
 
 Ratio of density-weighted to volume-averaged temperature factor is calculated:
@@ -261,20 +270,25 @@ $$
 \mathtt{pcoef} = \frac{(1+\alpha_n)(1+\alpha_T)}{(1+\alpha_T + \alpha_n)}
 $$
 
+--------
+
+The line averaged density is then calculated for the profile paramaters
+
+###### Line averaged density derivation
 Line averageed electron density is calculated by integrating the profile across the normalised width of the profile and then dividing by the width of the integration bounds
 
 $$
-\mathtt{dnla} / \bar{n_{\text{e}}} = \frac{\int^1_0 n_0(1-\rho^2)^{\alpha_n} \ d\rho}{\rho}
+\mathtt{dnla}\  | \ \bar{n_{\text{e}}} = \frac{\int^1_0 n_0(1-\rho^2)^{\alpha_n} \ d\rho}{\rho}
 $$
 
 This can be more easily repsented in radial cordinates and returning $\rho = \frac{r}{a}$
 
 $$
-\mathtt{dnla} / \bar{n_{\text{e}}} = \frac{\int^a_0 n_0(1-r^2/a^2)^{\alpha_n} \ dr}{a}
+\mathtt{dnla} \  | \ \bar{n_{\text{e}}} = \frac{\int^a_0 n_0(1-r^2/a^2)^{\alpha_n} \ dr}{a}
 $$
 
 $$
-\mathtt{dnla} / \bar{n_{\text{e}}} = \frac{\left[\frac{an_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}\right]}{a}
+\mathtt{dnla} \  | \ \bar{n_{\text{e}}} = \frac{\left[\frac{an_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}\right]}{a}
 $$
 
 $\Gamma$ is the [gamma function](https://en.wikipedia.org/wiki/Gamma_function) and is calculated in the code with [scipy.special.gamma()](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.gamma.html)
@@ -286,10 +300,11 @@ $$
 
 This is concurrent with the derivation from the ITER Physics Design 1989 [^2]
 
+$\blacksquare$
 
 ------
 
-Set the density weighted temperatures
+The density weighted temperatures are set:
 
 
 $$\begin{aligned}
@@ -299,7 +314,9 @@ $$\begin{aligned}
 
 ------
 
-Calculate central values for temperature and density.
+The central values for temperature and density is then calculated for the profile paramaters
+
+###### Core temperature & density derivation
 
 We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle n \rangle$. If we assume the plasma to be a torus of circular cross section then we can use spherical cordinates. We can simplify the problem by representing the torus as a cyclinder of height equal to the circumfrence of the torus equal to $2\pi R$ where $R$ is the major radius of the torus.
 
@@ -315,7 +332,7 @@ $$
 \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr \ d\theta \ dz
 $$
 
-Since our density function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$ and the $d\theta ,\ dz$ integrals are solved to give values for the full poloidal angle and cyclindrical height / torus length, leading to:
+Since our density function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$ and the $d\theta ,\ dz$ integrals are solved to give values for the full poloidal angle and cyclindrical height and torus length, leading to:
 
 $$
 4\pi^2R \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr  
@@ -336,11 +353,11 @@ $$
 Integrate:
 
 $$
-\langle n \rangle =  \frac{2}{a^2} \frac{a^2n_0}{2(\alpha+1)}
+\langle n \rangle =  \frac{2}{a^2} \frac{a^2n_0}{2(\alpha_n+1)}
 $$
 
 $$
-\therefore \langle n \rangle =   \frac{n_0}{\alpha+1}
+\therefore \langle n \rangle =   \frac{n_0}{\alpha_n+1}
 $$
 
 This is concurrent with the derivation from the ITER Physics Design 1989. [^2]
@@ -354,19 +371,20 @@ $$
 $$
 
 
+$\blacksquare$
 
 ------
 
 The core values for the temperature and desnity is then calculated for the electrons and ions
 
 $$\begin{aligned}
-\mathtt{te0} = T_\text{e} \times (1+\alpha_T) \\
-\mathtt{ti0} = T_\text{i} \times (1+\alpha_T)
+\mathtt{te0} = T_\text{e} \times (\alpha_T+1) \\
+\mathtt{ti0} = T_\text{i} \times (\alpha_T+1)
 \end{aligned}$$
 
 $$\begin{aligned}
-\mathtt{ne0} = n_{\text{e}} \times (1+\alpha_n) \\
-\mathtt{ni0} = \mathtt{dnitot} \times (1+\alpha_n)
+\mathtt{ne0} = n_{\text{e}} \times (\alpha_n+1) \\
+\mathtt{ni0} = \mathtt{dnitot} \times (\alpha_n+1)
 \end{aligned}$$
 
 -----
@@ -377,69 +395,66 @@ $$\begin{aligned}
 The central plasma pressure is calculated from the ideal gas law.
 
 $$
-p_0 = (\mathtt{ne0} \times \mathtt{te0}+\mathtt{ni0}\times \mathtt{ti0})\times 1000 \times e
+p_0 = (\mathtt{ne0} \times \mathtt{te0}+\mathtt{ni0}\times \mathtt{ti0})\times (1000 \times \text{e})
 $$
 
-Pressure profile index (N.B. no pedestal effects included here)
-N.B. p0 is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)
-and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
-density-weighted temperature
+With the coefficients used to turn the temperature from $\text{keV}$ back to Joules.
 
+Since we multiply the density and temperature profiles together to get the pressure we can find the pressure profile factor by adding the profile factors for temperature and density.
 $$
 \alpha_p = \alpha_n + \alpha_T
 $$
 
-If `ipedestal` = 1 or 2 then the pedestal density `neped` is set as a fraction `fgwped` of the 
-Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^2].
 
-#### calculate_parabolic_profile_factors
 
-This is used by the stellerator module to find temepratue gradiants.
+##### `calculate_parabolic_profile_factors()`
+
+This is used by the stellerator module to find temperatue gradiants.
 We first need to find the normalized position in the plasma where the change in the pressure gradient is at a minima or maxima. This is just when the second derivative of the profile is zero. Using the density profile as an example, though this is true for temperature also.
 
 $$
-n(\rho) = n_{0} \left(1 - {\rho}^{2}\right)^{\alpha_n}
+T(\rho) = n_{0} \left(1 - {\rho}^{2}\right)^{\alpha_T}
 $$
 
 $$
-\frac{{\mathrm{d}n}}{\mathrm{d}\rho} = -2n_{0} {\alpha_n}{\rho} \left(1 - {\rho}^{2}\right)^{{\alpha_n} - 1}
+\frac{{\mathrm{d}T}}{\mathrm{d}\rho} = -2T_{0} {\alpha_T}{\rho} \left(1 - {\rho}^{2}\right)^{{\alpha_T} - 1}
 $$
 
 $$
-\frac{\mathrm{d}^2n}{\mathrm{d}\rho^2} = \frac{2n_{0} {\alpha_n} \left(1 - {\rho}^{2}\right)^{\alpha_n} \left(\left(2{\alpha_n} - 1\right) {\rho}^{2} - 1\right)}{\left({\rho}^{2} - 1\right)^{2}}
+\frac{\mathrm{d}^2T}{\mathrm{d}\rho^2} = \frac{2T_{0} {\alpha_T} \left(1 - {\rho}^{2}\right)^{\alpha_T} \left(\left(2{\alpha_T} - 1\right) {\rho}^{2} - 1\right)}{\left({\rho}^{2} - 1\right)^{2}}
 $$
 
 The posotive root for the 2nd derivative above:
 
 $$
-\mathtt{rho\_te\_max} = \frac{1}{\sqrt{2{\alpha_n} - 1}}
+\mathtt{rho\_te\_max} = \frac{1}{\sqrt{2{\alpha_T} - 1}}
 $$
 
-Substitution the root above into the first derivative as $\rho$ to get the minima or maxima gradient value:
+Substituting the root above into the first derivative as $\rho$ to get the minima or maxima gradient value:
 
 $$
--2n_0\alpha_n\left(\frac{1}{\sqrt{2{\alpha} - 1}}\right)\left(1-\left(\frac{1}{\sqrt{2{\alpha} - 1}}\right)^2\right)^{\alpha_n-1}
+-2T_0\alpha_T\left(\frac{1}{\sqrt{2{\alpha_T} - 1}}\right)\left(1-\left(\frac{1}{\sqrt{2{\alpha_T} - 1}}\right)^2\right)^{\alpha_T-1}
 $$
 
 $$
-\frac{2n_{0} {\alpha_n} \left(1 - \frac{1}{2{\alpha_n} - 1}\right)^{{\alpha_n} - 1}}{\sqrt{2{\alpha_n} - 1}}
+\frac{2T_{0} {\alpha_T} \left(1 - \frac{1}{2{\alpha_T} - 1}\right)^{{\alpha_T} - 1}}{\sqrt{2{\alpha_T} - 1}}
 $$
 
 Simplify fully:
 
 $$
-\mathtt{dtdrho\_max}= -n_0\alpha_n(2^{\alpha_n})(-1+\alpha_n)^{(-1+\alpha_n)} (-1+2\alpha_n)^{(-0.5-\alpha_n)}
+\mathtt{dtdrho\_max}= -T_0\alpha_T(2^{\alpha_T})(-1+\alpha_T)^{(-1+\alpha_T)} (-1+2\alpha_T)^{(-0.5-\alpha_T)}
 $$
 
 Find the temperature on the profile where the gradient change is largest by substituting into the original profile function:
 
 $$
-\mathtt{te\_max} = n_0\left(1-\mathtt{rho\_te\_max}^2\right)^{\alpha_n}
+\mathtt{te\_max} = T_0\left(1-\mathtt{rho\_te\_max}^2\right)^{\alpha_T}
 $$
 
-This solution for the profile gradient only holds true if $\alpha_n \ge 1$.
+This solution for the profile gradient only holds true if $\alpha_T \ge 1$.
 
-In the region $0 \le \alpha_n \le 1$ when subsituting the roots of the second derivative into the first derivative the function diverges into the complex number solution space.
+In the region $0 \le \alpha_T \le 1$ when subsituting the roots of the second derivative into the first derivative the function diverges into the complex number solution space.
 
 To overcome this we can assume the second derivative root to be a value. In this case we assume a value of $\mathtt{rho\_ne\_max}$ = 0.9.
 Then we just substitute this value into the first derivative to 
@@ -457,23 +472,28 @@ $$
 \mathtt{gradient\_length\_ne} = -(\mathtt{dtdrho\_max})a \times \frac{\mathtt{rho\_te\_max}}{\mathtt{te\_max}}
 $$
 
-Calculations are identical for the temperature and density case, just with the substitution of `ne` and `te` in the variable names
+!!! note "Temperature & Density Case"
 
+    Calculations are identical for the temperature and density case, just with the substitution of `ne` and `te` in the variable names
 
-#### ipedestal = 1
+-------
+
+#### H-mode profile | ipedestal == 1
 
 ##### `pedestal_parameterisation()`
 
-The desnity and temperature profile runner function `TProfile/NProfile.run()` is then called to re-calculate the profile and core values. 
+The desnity and temperature profile runner function [`TProfile/NProfile.run()`](plasma_density_profile.md#runner-function-run) is firstly called to re-calculate the profile and core values. 
 
  Perform integrations to calculate ratio of density-weighted to volume-averaged temperature, etc. Density-weighted temperature = $\frac{\int{nT \ dV}}{\int{n \ dV}}$,  which is approximately equal to the ratio $\frac{\int{\rho \ n(\rho) T(\rho) \ d\rho}}{\int{\rho \ n(\rho) \ d\rho}}$
 
  Density weighted temperatures are thus set as such
 
 $$
-\mathtt{ten} = \frac{\int{\rho \ n(\rho) T(\rho) \  d\rho}}{\int{\rho \ n(\rho) \ d\rho}} \\
+\mathtt{ten} = \frac{\int_0^1{\rho \ n(\rho) T(\rho) \  d\rho}}{\int_0^1{\rho \ n(\rho) \ d\rho}} \\
 \mathtt{tin} = \mathtt{ten}\times \frac{T_\text{i}}{T_\text{e}}
 $$
+
+The above is done numerically with [scipy.integrate.simpson](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simpson.html) intgeration
 
 Set profile factor which is the ratio of density-weighted to volume-averaged temperature
 
@@ -481,10 +501,10 @@ $$
 \mathtt{pcoef} = \frac{\mathtt{ten}}{T_\text{e}}
 $$
 
-Caclulate the line avaerged electron density by integrating the normalised profile:
+Calculate the line averaged electron density by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
 
 $$
-\mathtt{dnla} = \int{n(\rho) \ d\rho}
+\mathtt{dnla} = \int_0^1{n(\rho) \ d\rho}
 $$
 
 A divertor variable `prn1` is set to be equal to the separatrix density over the mean density:
@@ -492,6 +512,14 @@ A divertor variable `prn1` is set to be equal to the separatrix density over the
 $$
 \mathtt{prn1} = \frac{n_{\text{e,sep}}}{n_{\text{e}}}
 $$
+
+--------
+
+##### `calculate_profile_factors()`
+
+The same function is ran from the `ipedestal == 0 ` profile case, found [here](plasma_profiles.md#calculate_profile_factors)
+
+-----
 
 [^1]: M. Bernert et al. Plasma Phys. Control. Fus. **57** (2015) 014038
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',

@@ -32,7 +32,7 @@ class PlasmaProfile:
         calculate_parabolic_profile_factors(): The gradient information for ipedestal = 0.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the PlasmaProfile class.
 
@@ -96,7 +96,7 @@ class PlasmaProfile:
 
     def parabolic_paramterisation(self) -> None:
         """
-        Parameterise plasma profiles in the case where ipedestal=0.
+        Parameterise plasma profiles in the case where ipedestal == 0.
 
         This routine calculates the parameterization of plasma profiles in the case where ipedestal=0.
         It sets the necessary physics variables for the parabolic profile case.
