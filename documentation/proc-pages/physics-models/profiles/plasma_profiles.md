@@ -1,10 +1,5 @@
 # Plasma Profiles
 
-!!! warning " Un-realistic profiles"
-
-    If `ipedestal >= 1` it is highly recommended to use constraint equation 81 (icc=81). This enforces solutions in which $n_0$ has to be greater than $n_{ped}$. 
-    Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_e (\mathtt{dene})$ is set.
-
 ## Overview
 
 In `PROCESS` the density, temperature and current profiles of the plasma for electrons and ions can take two forms depending on the switch value for `ipedestal`. Either without a [pedestal](http://fusionwiki.ciemat.es/wiki/Pedestal), `ipedestal == 0` or with a pedestal `ipedestal == 1`.  `ipedestal == 0` is better suited for modeeling L-mode plasmas, while `ipedestal == 1` is better suited for modelling [H-mode](https://en.wikipedia.org/wiki/High-confinement_mode) plasmas.
@@ -38,8 +33,13 @@ be described as 1/2-D.  The relevant profile index variables are
 
 | Profile parameter                | Density   | Temperature | Current  |
 |----------------------------------|-----------|-------------|----------------|
-| Plasma centre value              | `ne0`, $n_0$         | `te0`, $T_0$        |  `plascur`, $J_0$        |
+| Plasma centre value              | `ne0`, $n_0$         | `te0`, $T_0$        |  N/A, $J_0$        |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ | `alphat`, $\alpha_T$    |  `alphaj`, $\alpha_J$    |
+
+???+ note "Plasma current profile"
+
+    While PROCESS assumes a standard parabolic profile to be the shape of the current profile, it does not calculate its values. The profile peaking factor `alphaj` is calculated in the plasma current calculation relating to `iprofile` found [here](../plasma_current.md). Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class. 
+
 
 The graph below is for a standard parabolic profile. You can vary the core value (`n0`) and the profile index (`alphan`) to see how the function behaves
 
@@ -148,8 +148,9 @@ at the separatrix (`neped, nesep` for the electron density, and
 `teped, tesep` for the electron temperature); the ion equivalents are
 scaled from the electron values by the ratio of the volume-averaged values).
 
-If `ipedestal` = 1 or 2 then the pedestal density `neped` is set as a fraction `fgwped` of the 
-Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^2]. 
+!!! warning " Pedestal setting"
+    If `ipedestal == 1` then the pedestal density `neped` is set as a fraction `fgwped` of the 
+    Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^2]. 
 
 A table of the the associated variables can be seen below
 
@@ -228,6 +229,11 @@ The graph below is for a standard parabolic profile. You can vary the core value
 </script>
   </body>
 </html>
+
+!!! warning " Un-realistic profiles"
+
+    If setting `ipedestal == 1` it is highly recommended to make sure constraint equation 81 (icc=81) is active. This enforces solutions in which $n_0$ has to be greater than $n_{\text{ped}}$. 
+    Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_{\text{e}} (\mathtt{dene})$ is set. More info can be found [here](plasma_profiles.md#pedestal-density-upper-limit)
 
 --------
 
@@ -456,12 +462,78 @@ This solution for the profile gradient only holds true if $\alpha_T \ge 1$.
 
 In the region $0 \le \alpha_T \le 1$ when subsituting the roots of the second derivative into the first derivative the function diverges into the complex number solution space.
 
-To overcome this we can assume the second derivative root to be a value. In this case we assume a value of $\mathtt{rho\_ne\_max}$ = 0.9.
+To overcome this we can assume the second derivative root to be a value. In this case we assume a value of $\mathtt{rho\_te\_max}$ = 0.9.
 Then we just substitute this value into the first derivative to 
 
 $$
--2n_0\alpha_n(0.9)(1-(0.9))^{-1+\alpha_n}
+-2T_0\alpha_T(0.9)(1-(0.9)^2)^{-1+\alpha_T}
 $$
+
+You can use the slider in the graph below to experiment with the value of $\mathtt{rho\_te\_max}$ and how this changes the profile solutions.
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bokeh Plot</title>
+    <style>
+      html, body {
+        box-sizing: border-box;
+        display: flow-root;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.5.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.5.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.5.0.min.js"></script>
+    <script type="text/javascript">
+        Bokeh.set_log_level("info");
+    </script>
+  </head>
+  <body>
+    <div id="c2d8216c-5737-4b83-8212-83eb87b9cecf" data-root-id="p1075" style="display: contents;"></div>
+  
+    <script type="application/json" id="e39cfdff-a985-4502-8ac6-7fabfc15f74c">
+      {"251ccf3b-11cd-4d8c-9ce1-ee8ba19b059a":{"version":"3.5.0","title":"Bokeh Application","roots":[{"type":"object","name":"Column","id":"p1075","attributes":{"children":[{"type":"object","name":"Figure","id":"p1004","attributes":{"height":400,"x_range":{"type":"object","name":"Range1d","id":"p1014","attributes":{"end":2}},"y_range":{"type":"object","name":"Range1d","id":"p1015","attributes":{"start":-5,"end":0}},"x_scale":{"type":"object","name":"LinearScale","id":"p1016"},"y_scale":{"type":"object","name":"LinearScale","id":"p1017"},"title":{"type":"object","name":"Title","id":"p1007","attributes":{"text":"Comparison of the profile 1st derivative solution for a fixed 2nd derivative root for \u03b1 &lt; 1 "}},"renderers":[{"type":"object","name":"GlyphRenderer","id":"p1047","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1001","attributes":{"selected":{"type":"object","name":"Selection","id":"p1002","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1003"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"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"},"shape":[500],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAA+H8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/AAAAAAAA+P8AAAAAAAD4/wAAAAAAAPj/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"},"shape":[500],"dtype":"float64","order":"little"}],["y2",{"type":"ndarray","array":{"type":"bytes","data":"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"},"shape":[500],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1048","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1049"}}},"glyph":{"type":"object","name":"Line","id":"p1044","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_alpha":0.6,"line_width":3}},"nonselection_glyph":{"type":"object","name":"Line","id":"p1045","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_alpha":0.1,"line_width":3}},"muted_glyph":{"type":"object","name":"Line","id":"p1046","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_alpha":0.2,"line_width":3}}}},{"type":"object","name":"GlyphRenderer","id":"p1058","attributes":{"data_source":{"id":"p1001"},"view":{"type":"object","name":"CDSView","id":"p1059","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1060"}}},"glyph":{"type":"object","name":"Line","id":"p1055","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y2"},"line_color":"red","line_alpha":0.6,"line_width":3}},"nonselection_glyph":{"type":"object","name":"Line","id":"p1056","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y2"},"line_color":"red","line_alpha":0.1,"line_width":3}},"muted_glyph":{"type":"object","name":"Line","id":"p1057","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y2"},"line_color":"red","line_alpha":0.2,"line_width":3}}}},{"type":"object","name":"GlyphRenderer","id":"p1068","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1062","attributes":{"selected":{"type":"object","name":"Selection","id":"p1063","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1064"},"data":{"type":"map","entries":[["x",[0,1,1,0]],["y",[-5,-5,0,0]]]}}},"view":{"type":"object","name":"CDSView","id":"p1069","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1070"}}},"glyph":{"type":"object","name":"Patch","id":"p1065","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"gray","line_alpha":0.3,"fill_alpha":0.3,"hatch_color":"gray","hatch_alpha":0.3}},"nonselection_glyph":{"type":"object","name":"Patch","id":"p1066","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"gray","line_alpha":0.1,"fill_alpha":0.1,"hatch_color":"gray","hatch_alpha":0.1}},"muted_glyph":{"type":"object","name":"Patch","id":"p1067","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"gray","line_alpha":0.2,"fill_alpha":0.2,"hatch_color":"gray","hatch_alpha":0.2}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1013","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p1028"},{"type":"object","name":"WheelZoomTool","id":"p1029","attributes":{"renderers":"auto"}},{"type":"object","name":"BoxZoomTool","id":"p1030","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1031","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1037","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1036","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}}}},{"type":"object","name":"SaveTool","id":"p1038"},{"type":"object","name":"ResetTool","id":"p1039"},{"type":"object","name":"HelpTool","id":"p1040"}]}},"left":[{"type":"object","name":"LinearAxis","id":"p1023","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1024","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1025"},"axis_label":"Value of the profile 1st derivative","major_label_policy":{"type":"object","name":"AllLabels","id":"p1026"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1018","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1019","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1020"},"axis_label":"$$ \\alpha $$","major_label_policy":{"type":"object","name":"AllLabels","id":"p1021"}}}],"center":[{"type":"object","name":"Grid","id":"p1022","attributes":{"axis":{"id":"p1018"}}},{"type":"object","name":"Grid","id":"p1027","attributes":{"dimension":1,"axis":{"id":"p1023"}}},{"type":"object","name":"Legend","id":"p1050","attributes":{"location":"bottom_right","title":"Legend","items":[{"type":"object","name":"LegendItem","id":"p1051","attributes":{"label":{"type":"value","value":"Profile first derivative solution for \u03b1 &gt;= 1"},"renderers":[{"id":"p1047"}]}},{"type":"object","name":"LegendItem","id":"p1061","attributes":{"label":{"type":"value","value":"Profile first derivative solution for \u03b1 &lt; 1"},"renderers":[{"id":"p1058"}]}},{"type":"object","name":"LegendItem","id":"p1071","attributes":{"label":{"type":"value","value":"Complex number solutions region for \u03b1 &gt;= 1"},"renderers":[{"id":"p1068"}]}}]}}]}},{"type":"object","name":"Row","id":"p1074","attributes":{"sizing_mode":"stretch_width","children":[{"type":"object","name":"Slider","id":"p1072","attributes":{"js_property_callbacks":{"type":"map","entries":[["change:value",[{"type":"object","name":"CustomJS","id":"p1073","attributes":{"args":{"type":"map","entries":[["source",{"id":"p1001"}],["alpha",{"id":"p1072"}]]},"code":"\n    const B = alpha.value\n\n    const x = source.data.x\n    const y2 = Array.from(x, (x) =&gt; -2*x*B*(1-B**2)**(x-1))\n    const y = source.data.y\n    source.data = { x, y, y2 }\n"}}]]]},"title":"Profile 2nd derivative root value","start":0.01,"end":1.0,"value":0.9,"step":0.001}}]}}]}}]}}
+  </script>
+  <script type="text/javascript">
+    (function() {
+      const fn = function() {
+        Bokeh.safely(function() {
+          (function(root) {
+            function embed_document(root) {
+            const docs_json = document.getElementById('e39cfdff-a985-4502-8ac6-7fabfc15f74c').textContent;
+            const render_items = [{"docid":"251ccf3b-11cd-4d8c-9ce1-ee8ba19b059a","roots":{"p1075":"c2d8216c-5737-4b83-8212-83eb87b9cecf"},"root_ids":["p1075"]}];
+            root.Bokeh.embed.embed_items(docs_json, render_items);
+            }
+            if (root.Bokeh !== undefined) {
+              embed_document(root);
+            } else {
+              let attempts = 0;
+              const timer = setInterval(function(root) {
+                if (root.Bokeh !== undefined) {
+                  clearInterval(timer);
+                  embed_document(root);
+                } else {
+                  attempts++;
+                  if (attempts > 100) {
+                    clearInterval(timer);
+                    console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                  }
+                }
+              }, 10, root)
+            }
+          })(window);
+        });
+      };
+      if (document.readyState != "loading") fn();
+      else document.addEventListener("DOMContentLoaded", fn);
+    })();
+  </script>
+  </body>
+</html>
 
 
 
@@ -469,7 +541,7 @@ $$
 We can now set the normalized gradient length:
 
 $$
-\mathtt{gradient\_length\_ne} = -(\mathtt{dtdrho\_max})a \times \frac{\mathtt{rho\_te\_max}}{\mathtt{te\_max}}
+\mathtt{gradient\_length\_te} = -(\mathtt{dtdrho\_max})a \times \frac{\mathtt{rho\_te\_max}}{\mathtt{te\_max}}
 $$
 
 !!! note "Temperature & Density Case"
@@ -521,6 +593,46 @@ The same function is ran from the `ipedestal == 0 ` profile case, found [here](p
 
 -----
 
+## Key Constraints
+
+--------
+
+### Pedestal Density Upper limit
+
+This constraint can be activated by stating `icc = 81` in the input file
+
+To prevent unrealisitc profiles when iterating the values of `ne0, nesep, neped` etc, this constraint ensures that the value of `ne0` is always higher that `neped` to get a converged solution. This can be scaled with `fne0`
+
+-------
+
+### Eich Critical Separatrix Density Model
+
+This constraint can be activated by stating `icc = 76` in the input file
+
+Eich et.al has given a usable formula for the critical separatrix density in terms of fundamental plasma parameters[^4]. A function for the balloning paramater at the separatrix $(\alpha_{\text{sep}}^{\text{crit}})$ is seen to increase about 
+linearly with the separatrix density normalized to Greenwald density. This is seen in JET and ASDEX based on Thomson-scattering measurements, a clear correlation of the density limit of the tokamak H-mode high-confinement regime with 
+the approach to the ideal ballooning instability threshold at the periphery of the plasma. 
+ 
+$$
+\alpha_{\text{sep}}^{\text{crit}} \approx \kappa^{1.2}(1+1.5\delta) \approx 2.5
+$$
+
+$$
+\alpha_{\text{sep}}^{\text{crit}} = \kappa^{1.2}(1+1.5\delta)
+$$
+
+Where $\kappa$ is the plasma elongation and $\delta$ is the plasma triangularity.
+
+$$
+n_{\text{sep}}^{\text{crit}} = 5.9 \times \alpha_{\text{crit}} A^{-\frac{2}{7}}\left(\frac{1+\kappa^2}{2}\right)^{-\frac{6}{7}} P_{\text{sep}}^{-\frac{11}{70}} \times n_{\text{GW}}
+$$
+
+Where $A$ is the plasma aspect ratio, $P_{\text{sep}}$ is the power crossing the separatrix and is the heating power minus the radiated power in this case, $n_{\text{GW}}$ is the Greenwald density limit.
+
+The value of `nesep` is check to make sure that it does not go higher than $n_{\text{sep}}^{\text{crit}}$. This can be scaled with `fnesep`
+
+
 [^1]: M. Bernert et al. Plasma Phys. Control. Fus. **57** (2015) 014038
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 [^3]: Johner Jean (2011) HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies, Fusion Science and Technology, 59:2, 308-349, DOI: 10.13182/FST11-A11650
+[^4]: T. Eich et al 2018 Nucl. Fusion, 'Correlation of the tokamak H-mode density limit with ballooning stability at the separatrix' 58 034001
