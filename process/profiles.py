@@ -324,19 +324,21 @@ class TProfile(Profile):
     ) -> float:
         """
         This routine calculates the core temperature (keV)
-        of a pedestalised profile. The solution comes from multiplying each term for the HELIOS type profile withing its bounds
-        of applicability by 2*pi*rho and then integrating to get the volume of revolution.
-        This total volume is found for the whole profile and is equal to the average temperature.
-        This function can then be re-arranged to calculate the central plasma temeprature T_0 / tcore
+        of a pedestalised profile. The solution comes from integrating and summing the two seprate temperature profiles for the core
+        and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
+        to an added rho term in each part of the profile. When dividing by the volume of integration to get the average temperature
+        the simplification leads to a factor of 2 having to be multiplied on to each of integration results.
+        This function for the average temperature can then be re-arranged to calculate the central plasma temeprature T_0 / tcore.
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
         Authors:
             Kemp, CCFE, Culham Science Centre
             H Lux, CCFE, Culham Science Centre
             P J Knight, CCFE, Culham Science Centre
+            C. Ashe, CCFE, Culham Science Centre
 
         Args:
-            rhopedt (numpy.array): Normalised minor radius pedestal position.
+            rhopedt (float): Normalised minor radius pedestal position.
             teped (float): Pedestal temperature (keV).
             tesep (float): Separatrix temperature (keV).
             tav (float): Volume average temperature (keV).
@@ -346,23 +348,18 @@ class TProfile(Profile):
         Returns:
             float: Core temperature.
         """
-
-        gamfac = (
-            sp.special.gamma(1 + alphat + 2 / tbeta)
-            / sp.special.gamma((2 + tbeta) / tbeta)
-            / rhopedt**2
-        )
-        if abs(alphat - np.around(alphat)) <= 1e-7:
-            gamfac = -gamfac / sp.special.gamma(1 + alphat)
-        else:
-            gamfac = gamfac * sp.special.gamma(-alphat) * np.sin(np.pi * alphat) / np.pi
-
         #  Calculate core temperature
 
-        return teped + gamfac * (
-            teped * rhopedt**2
-            - tav
-            + (1 - rhopedt) / 3 * ((1 + 2 * rhopedt) * teped + (2 + rhopedt) * tesep)
+        return teped + (
+            (
+                tbeta
+                * (
+                    3 * tav
+                    + tesep * (-2.0 + rhopedt + rhopedt**2)
+                    - teped * (1 + rhopedt + rhopedt**2)
+                )
+            )
+            / (6 * rhopedt**2 * sp.special.beta(1 + alphat, 2 / tbeta))
         )
 
     def set_physics_variables(self) -> None:
