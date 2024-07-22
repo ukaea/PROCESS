@@ -344,7 +344,7 @@ class TProfile(Profile):
             tbeta (float): Second temperature exponent.
 
         Returns:
-            numpy.array: Core temperature.
+            float: Core temperature.
         """
 
         gamfac = (

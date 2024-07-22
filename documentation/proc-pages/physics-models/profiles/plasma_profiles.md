@@ -38,7 +38,7 @@ be described as 1/2-D.  The relevant profile index variables are
 
 ???+ note "Plasma current profile"
 
-    While PROCESS assumes a standard parabolic profile to be the shape of the current profile, it does not calculate its values. The profile peaking factor `alphaj` is calculated in the plasma current calculation relating to `iprofile` found [here](../plasma_current.md). Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class. 
+    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its values. The profile peaking factor `alphaj` is calculated in the plasma current calculation relating to `iprofile` found [here](../plasma_current.md). Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class. 
 
 
 The graph below is for a standard parabolic profile. You can vary the core value (`n0`) and the profile index (`alphan`) to see how the function behaves
@@ -411,7 +411,14 @@ $$
 \alpha_p = \alpha_n + \alpha_T
 $$
 
+???+ note "Pressure profile factor"
 
+    The calculation of $\alpha_p$ is only valid assuming a parabolic profile case. The calculatio of $p_0$ is still true as the core values are calculated independantly for each profile type. 
+
+    $p_0$ is NOT equal to $\langle p \rangle \times (1 + \alpha_p)$, but $p(\rho) = n(\rho)T(\rho)$ and $\langle p \rangle = \langle n \rangle$ $T_n$, where $T_n$ is the
+    density-weighted temperature.
+
+------
 
 ##### `calculate_parabolic_profile_factors()`
 
@@ -462,13 +469,14 @@ This solution for the profile gradient only holds true if $\alpha_T \ge 1$.
 
 In the region $0 \le \alpha_T \le 1$ when subsituting the roots of the second derivative into the first derivative the function diverges into the complex number solution space.
 
-To overcome this we can assume the second derivative root to be a value. In this case we assume a value of $\mathtt{rho\_te\_max}$ = 0.9.
+To overcome this we can assume the second derivative root to be a value. In this case we assume a default value of $\mathtt{rho\_te\_max}$ = 0.9.
 Then we just substitute this value into the first derivative to 
 
 $$
 -2T_0\alpha_T(0.9)(1-(0.9)^2)^{-1+\alpha_T}
 $$
 
+The value of $\mathtt{rho\_te\_max}$ can be manually changed in the code depending on the derivative profile required.
 You can use the slider in the graph below to experiment with the value of $\mathtt{rho\_te\_max}$ and how this changes the profile solutions.
 
 <!DOCTYPE html>
@@ -596,6 +604,25 @@ The same function is ran from the `ipedestal == 0 ` profile case, found [here](p
 ## Key Constraints
 
 --------
+
+### Setting pedestal values as fractions of the Greenwald limit 
+
+By default the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ are set as fractions of the [Greenwald](https://wiki.fusion.ciemat.es/wiki/Greenwald_limit) limit such as: 
+
+$$
+n_{\text{ped}} = \mathtt{fgwped} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
+$$
+
+$$
+n_{\text{sep}} = \mathtt{fgwsep} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
+$$
+
+To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\mathtt{fgwped}$ or $\mathtt{fgwsep}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
+
+$\mathtt{fgwped}$ and $\mathtt{fgwsep}$ can be set as iteration variables respectively by using `ixc = 45`
+and `ixc = 152` respectively
+
+------
 
 ### Pedestal Density Upper limit
 

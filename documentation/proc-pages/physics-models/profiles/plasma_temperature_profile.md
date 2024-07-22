@@ -1,6 +1,6 @@
 # Temperature Profile | `TProfile(Profile)`
 
-The temperature profile class is organised around a central runner function that is called each time the plasma is parameterised by the parent `PlasmaProfile()` class. It is called by `pedestal_parameterisation()` and `parabolic parameterisation()`. The sequence of the runner function can be seen below along with explanation of the following calculations.
+The temperature profile class is organised around a central runner function that is called each time the plasma is parameterised by the parent [`PlasmaProfile()`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class. It is called by [`pedestal_parameterisation()`](plasma_profiles.md#pedestal_parameterisation) and [`parabolic parameterisation()`](plasma_profiles.md#parabolic_paramterisation). The sequence of the runner function can be seen below along with explanation of the following calculations.
 
 ## Runner function | `run()`
 
@@ -13,11 +13,13 @@ The temperature profile class is organised around a central runner function that
 
     ### Calculate core values | `set_physics_variables()`
 
-    The core electron temperature is calculated using the `tcore` method.
+    The core electron temperature is calculated using the [`tcore`](plasma_temperature_profile.md#electron-core-density-of-a-pedestalised-profile--tcore) method.
     
     #### Electron core density of a pedestalised profile | `tcore()`
 
     This function calculates the core electron density for a pedestalsied profile in $\text{keV}$. The inclusion of a new $\beta_T$ exponent term allows a more accurate description of temperature profiles with a triangular shape or a strong gradient near the pedestal (characteristic of regimes with an [internal transport barrier](https://wiki.fusion.ciemat.es/wiki/Internal_Transport_Barrier)).
+
+    A list of input parameters for calculating the core plasma temperature can be found below.
 
     | Profile parameter / Input               | Temperature   |
     |----------------------------------|-----------|
@@ -30,7 +32,8 @@ The temperature profile class is organised around a central runner function that
 
 
     $$\begin{aligned}
-    T_0 = T_{\text{ped}} + \gamma \left[ T_{\text{ped}}\, \rho_{\text{ped},T}^2 - \langle T \rangle +
+    T_{\text{e0}} = T_{\text{ped}} + \gamma \left[ T_{\text{ped}}\, \rho_{\text{ped},T}^2 \\
+    - \langle T_{\text{e}} \rangle +
     \frac{1}{3}(1 - \rho_{\text{ped},T}) \left[ \, (1 + 2\rho_{\text{ped},T}) \, T_{\text{ped}} + ( 2 +
         \rho_{\text{ped},T}) \, T_{\text{sep}} \, \right] \right]
     \end{aligned}$$
@@ -51,63 +54,75 @@ The temperature profile class is organised around a central runner function that
     \end{aligned}$$
 
 
-    where $\Gamma$ is the gamma function.
+    where $\Gamma$ is the [gamma function](https://en.wikipedia.org/wiki/Gamma_function).
 
     ##### Derivation
 
-    Taking the standard form of the profile both in the core region and the pedestal region and multipling each function by $2\pi\rho$ and integrating within their bounds of appliability to get their volume of integration. 
+    We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle T_{\text{e}} \rangle$. If we assume the plasma to be a torus of circular cross section then we can use spherical cordinates. We can simplify the problem by representing the torus as a cyclinder of height equal to the circumfrence of the torus equal to $2\pi R$ where $R$ is the major radius of the torus, and $a$ is the plasma minor radius in the poloidal plane.
+
+    The cyclindrical volume element is given by:
+
+    $$
+    V = \int \int \int dV = \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0 r \ dr \ d\theta \ dz
+    $$
+
+    Inserting our temperature function to be integrated over we get in normalized radial cordinates ($\rho$) we get:
+
+    $$
+    \int^{2\pi R}_0 \int^{2\pi}_0 \int^{1}_0       \rho \ T_{\text{e}}(\rho) \ d\rho \ d\theta \ dz
+    $$
+
+    Since our temperature function is only a function of $\rho$, and the torus is symmetric around its center, the integration simplifies to integrating over $\rho$ and the $d\theta ,\ dz$ integrals are solved to give values for the full poloidal angle and cyclindrical height / torus length, leading to:
+
+    $$
+    4\pi^2R \int^{1}_0     \rho \ T_{\text{e}}(\rho) \ d\rho  
+    $$
+
+    This is the general form for the full profile width without expansion. Seperating out the temperature function into its sperate functions for the core and pedestal region we get the fully expanded integration form.
+
+    $$
+    4\pi^2R\left[ \int^{\rho_{\text{ped,T}}}_0     \rho\left(T_{\text{ped}} + (T_0 - T_{\text{ped}}) \left( 1 -
+    \frac{\rho^{\beta_T}}{\rho_{\text{ped},T}^{\beta_T}}\right)^{\alpha_T}\right) \ d\rho \\
+    +\int^1_{\rho_{\text{ped,T}}}     \rho\left(T_{\text{sep}} + (T_{\text{ped}} - T_{\text{sep}})\left( \frac{1- \rho}{1-\rho_{\text{ped},T}}\right)\right)\right] \ d\rho
+    $$
+
+    In the form of volume average temperature where the volume integrated temperature function has to be divided by the volume of the cyclinder / torus, within the volume bounded by that pedestal position we get:
+
+    $$
+    \langle T_{\text{e}} \rangle = 4\pi^2R\left[ \frac{\frac{\left(T_{\text{ped}}\beta_T+(2T_0-2T_{\text{ped}})B\left(\alpha_T+1,\frac{2}{\beta_T}\right)\right)\rho_{\text{ped},T}^2}{2\beta_T}+\frac{(1-\rho_{\text{ped},T})\left((T_{\text{sep}}+2T_{\text{ped}})\rho_\text{ped}+2T_{\text{sep}}+T_{\text{ped}}\right)}{6}}{2\pi^2 R \rho_{\text{ped},T}^2}\right] 
+    $$
+
+    In this case the value of $\rho_{\text{ped,T}}$ is equal to 1 as we integrated over the full profile.
+
+    $$
+    \langle T_{\text{e}} \rangle = 2\left[ \frac{\left(T_{\text{ped}}\beta_T+(2T_0-2T_{\text{ped}})\text{B}\left(\alpha_T+1,\frac{2}{\beta_T}\right)\right)\rho_{\text{ped},T}^2}{2\beta_T} \\
+    +\frac{(1-\rho_{\text{ped},T})\left((T_{\text{sep}}+2T_{\text{ped}})\rho_\text{ped}+2T_{\text{sep}}+T_{\text{ped}}\right)}{6}\right] 
+    $$
+
+    $$
+    \langle T_{\text{e}} \rangle =  \frac{\left(T_{\text{ped}}\beta_T+(2T_0-2T_{\text{ped}})\text{B}\left(\alpha_T+1,\frac{2}{\beta_T}\right)\right)\rho_{\text{ped},T}^2}{\beta_T} \\
+    +\frac{(1-\rho_{\text{ped},T})\left((T_{\text{sep}}+2T_{\text{ped}})\rho_\text{ped}+2T_{\text{sep}}+T_{\text{ped}}\right)}{3} 
+    $$
     
-    $$\begin{aligned}
-	\qquad T(\rho) =  
-    & T_{ped} + (T_0 - T_{ped}) \left( 1 - \frac{\rho^{\beta_T}}
-    {\rho_{ped,T}^{\beta_T}}\right)^{\alpha_T}  & \qquad 0 \leq \rho \leq \rho_{ped,T} \\
-    & T_{sep} + (T_{ped} - T_{sep})\left( \frac{1- \rho}{1-\rho_{ped,T}}\right)
-    & \qquad \rho_{ped,T} < \rho \leq 1
-	\end{aligned}$$
-
-    $$
-    \begin{split}
-        & \int_{0}^{\rho_{ped,T}} 2\pi \rho \left( T_{ped} + (T_0 - T_{ped}) \left( 1 - \frac{\rho^{\beta_T}}{\rho_{ped,T}^{\beta_T}}\right)^{\alpha_T} \right) \, d\rho  \\ 
-        & = \pi  \left(\rho_{ped,T}^2 T_{ped} + \frac{\pi  (-1)^{2/\beta } \csc (\pi  \alpha ) \left(-\rho_{ped,T}^{-\beta }\right)^{-2/\beta } \Gamma \left(\frac{\beta +2}{\beta }\right) (T_{ped}-T_0)}{\Gamma (-\alpha ) \Gamma \left(\alpha +\frac{2}{\beta }+1\right)}+\right)
-    \end{split}
-    $$
-
-    $$
-    \begin{equation}\label{eq:3}
-	\begin{split}
-		& \int_{\rho_{ped,T}}^{1} 2\pi \rho \left( T_{sep} + (T_{ped} - T_{sep})\left( \frac{1- \rho}{1-\rho_{ped,T}}\right) \right) \, d\rho  \\ 
-		& = -\frac{1}{3} \pi  (\rho_{ped,T}-1) (2 \rho_{ped,T} T_{ped}+T_{ped}+(\rho_{ped,T}+2) T_{sep})
-	\end{split}
-    \end{equation}
-    $$
-
-    Summing these two together equates to the volume averaged temperature, $\langle T \rangle$. This can then be substituted back in 
-
-    (2) + (3) $= \langle T \rangle$
-    
-    
-   
-    $$
-    \begin{aligned}
-    \nonumber
-    T_0 = T_{\text{ped}} + \frac{1}{3 \pi  \Gamma \left(\frac{\beta +2}{\beta}\right)}(-1)^{-2/\beta}\sin (\pi  \alpha) \left(-\rho_{ped,T}^{-\beta}\right)\left(\langle T \rangle-\rho_{ped,T}^2 T_{ped}\right)^{2/\beta}
-    & \quad (\rho_{ped,T}-1)(2 \rho_{ped,T} T_{ped}+T_{ped}+(\rho_{ped,T}+2) T_{sep}) -3 \Gamma (-\alpha ) \Gamma \left(\alpha +\frac{2}{\beta }+1\right)
-    \end{aligned} 
-    $$
+    Where $\text{B}$ is the [Beta function](https://en.wikipedia.org/wiki/Beta_function)
     
 
-The core ion temperature is then set such as:
+    $\blacksquare$
+    
+    -----
 
-$$
-T_{i,0} = \left(\frac{T_i}{T_e}\right)T_{e,0}
-$$
+    The core ion temperature is then set such as:
+
+    $$
+    T_{\text{i0}} = \left(\frac{T_{\text{i}}}{T_{\text{e}}}\right)T_{\text{e0}}
+    $$
 
 
-4. The y profile is then calculated using `calculate_profile_y()`. This routine calculates the temperature at each normalised minor radius position $\rho$ for a HELIOS-type temperature pedestal profile (nprofile)[^1]
+4. The y profile is then calculated using [`calculate_profile_y()`](plasma_temperature_profile.md#calculate-temperature-at-each-radius-position-calculate_profile_y). This routine calculates the temperature at each normalised minor radius position $\rho$ for a HELIOS-type temperature pedestal profile[^1]
 
     ### Calculate temperature at each radius position | `calculate_profile_y()`
 
-    Normalized 
+    A table of the input variables can be found below
 
     | Profile parameter / Input               | Density   |
     |----------------------------------|-----------|

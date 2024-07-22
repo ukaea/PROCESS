@@ -1,6 +1,6 @@
 # Density Profile | `NProfile(Profile)`
 
-The desnity profile class is organised around a central runner function that is called each time the plasma is parameterised by the parent [`PlasmaProfile()`](./plasma_profiles.md) class. It is called by `pedestal_parameterisation()` and `parabolic parameterisation()`. The sequence of the runner function can be seen below along with explanation of the following calculations.
+The desnity profile class is organised around a central runner function that is called each time the plasma is parameterised by the parent [`PlasmaProfile()`](./plasma_profiles.md) class. It is called by [`pedestal_parameterisation()`](plasma_profiles.md#pedestal_parameterisation) and [`parabolic parameterisation()`](./plasma_profiles.md#parabolic_paramterisation). The sequence of the runner function can be seen below along with explanation of the following calculations.
 
 ## Runner function | `run()`
 
@@ -13,11 +13,11 @@ The desnity profile class is organised around a central runner function that is 
 
     ### Calculate core values | `set_physics_variables()`
 
-    The core electron density is calculated using the `ncore` method.
-    The core ion density is then set from the output out `dnitot` which is the total ion density such as:
+    The core electron density is calculated using the [`ncore`](plasma_density_profile.md#electron-core-density-of-a-pedestalised-profile--ncore) method.
+    The core ion density is then set from `dnitot` which is the total ion density such as:
 
     $$
-    n_{i,0} = \left(\frac{n_i}{n_e}\right)n_{e,0}
+    n_{\text{i0}} = \left(\frac{n_\text{i}| \mathtt{dnitot}}{n_\text{e}}\right)n_{\text{e0}}
     $$
     
     #### Electron core density of a pedestalised profile | `ncore()`
@@ -44,7 +44,7 @@ The desnity profile class is organised around a central runner function that is 
 
     ##### Derivation
 
-    We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle n \rangle$. If we assume the plasma to be a torus of circular cross section then we can use spherical cordinates. We can simplify the problem by representing the torus as a cyclinder of height equal to the circumfrence of the torus equal to $2\pi R$ where $R$ is the major radius of the torus, and $a$ is the plasma minor radius in the poloidal plane.
+    We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle n_{\text{e}} \rangle$. If we assume the plasma to be a torus of circular cross section then we can use spherical cordinates. We can simplify the problem by representing the torus as a cyclinder of height equal to the circumfrence of the torus equal to $2\pi R$ where $R$ is the major radius of the torus, and $a$ is the plasma minor radius in the poloidal plane.
 
     The cyclindrical volume element is given by:
 
@@ -105,14 +105,16 @@ The desnity profile class is organised around a central runner function that is 
     - n_{\text{ped}}\left( (1 + \alpha_n)(1+ \rho_{\text{ped,n}}) + (\alpha_n -2)
     \rho_{\text{ped,n}}^2\right)\right]
     $$
+    
+    $\blacksquare$
 
     ------
 
-4. The y profile is then calculated using `calculate_profile_y()`. This routine calculates the density at each normalised minor radius position $\rho$ for a HELIOS-type density pedestal profile (nprofile)[^1]
+4. The y profile is then calculated using [`calculate_profile_y()`](plasma_density_profile.md#calculate-desnity-at-each-radius-position-calculate_profile_y). This routine calculates the density at each normalised minor radius position $\rho$ for a HELIOS-type density pedestal profile[^1]
 
     ### Calculate desnity at each radius position | `calculate_profile_y()`
 
-    Normalized 
+    A table of the input variables can be found below 
 
     | Profile parameter / Input               | Density   |
     |----------------------------------|-----------|
