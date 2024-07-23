@@ -1398,9 +1398,7 @@ class Physics:
             # Menard, et al. "Fusion Nuclear Science Facilities
             # and Pilot Plants Based on the Spherical Tokamak."
             # Nucl. Fusion, 2016, 44.
-            physics_variables.dnbeta = (
-                3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
-            )
+            physics_variables.dnbeta = 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
 
         # culblm returns the betalim for beta
         physics_variables.betalim = culblm(
@@ -2155,20 +2153,18 @@ class Physics:
             icurr, plascur, q95, asp, eps, bt, kappa, triang, pperim, constants.rmu0
         )
 
-
-
         if iprofile == 1:
             # Ensure current profile consistency, if required
             # This is as described in Hartmann and Zohm only if icurr = 4 as well...
-            
+
             # Tokamaks 4th Edition, Wesson, page 116
             alphaj = qstar / q0 - 1.0
-            rli = np.log(1.65 + 0.89 * alphaj)  
+            rli = np.log(1.65 + 0.89 * alphaj)
 
         if iprofile == 4 or iprofile == 5:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
-            rli = 3.4 - kappa      
+            rli = 3.4 - kappa
 
         return alphaj, rli, bp, qstar, plascur
 
