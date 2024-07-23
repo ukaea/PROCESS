@@ -36,7 +36,7 @@ $$\begin{aligned}
 \end{aligned}$$
 
 $$\begin{aligned}
-l_i = ln(1.65+0.89\alpha_J)
+l_i = \rm{ln}(1.65+0.89\alpha_J)
 \end{aligned}$$
 
 $$\begin{aligned}
