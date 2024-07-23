@@ -186,11 +186,7 @@ class PlasmaProfile:
             None
         """
         #  Run TProfile and NProfile class methods:
-        #  The following reproduces the above results within sensible
-        #  tolerances if rhopedt = rhopedn = 1.0, teped = tesep = neped
-        #  = nesep = 0.0, and tbeta = 2.0
-
-        # Re-caluclate core and profile values
+        #  Re-caluclate core and profile values
 
         self.teprofile.run()
         self.neprofile.run()
@@ -234,7 +230,7 @@ class PlasmaProfile:
 
         divertor_variables.prn1 = max(
             0.01e0, physics_variables.nesep / physics_variables.dene
-        )  # preventing division by zero later
+        )  # Preventing division by zero later
 
     def calculate_profile_factors(self) -> None:
         """

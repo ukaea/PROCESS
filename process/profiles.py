@@ -13,7 +13,7 @@ logger.addHandler(s_handler)
 
 
 class Profile(ABC):
-    """Abstract base class used to create and hold profiles (temperature, density,)"""
+    """Abstract base class used to create and hold profiles (temperature, density)"""
 
     def __init__(self, profile_size: int) -> None:
         """
@@ -171,8 +171,21 @@ class NProfile(Profile):
     def ncore(
         rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
     ) -> float:
+
         """
         This routine calculates the core density of a pedestalised profile.
+        The solution comes from integrating and summing the two separate density profiles for the core
+        and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
+        to an added rho term in each part of the profile. When dividing by the volume of integration to get the average density
+        the simplification leads to a factor of 2 having to be multiplied on to each of integration results.
+        This function for the average density can then be re-arranged to calculate the central plasma density n_0 / ncore.
+        References:
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
+        Authors:
+            Kemp, CCFE, Culham Science Centre
+            H Lux, CCFE, Culham Science Centre
+            P J Knight, CCFE, Culham Science Centre
+            C. Ashe, CCFE, Culham Science Centre
 
         Parameters:
         - rhopedn (float): The normalised minor radius pedestal position.
@@ -205,13 +218,19 @@ class NProfile(Profile):
 
     def set_physics_variables(self) -> None:
         """Calculates and sets physics variables required for the profile."""
-        physics_variables.ne0 = self.ncore(
-            physics_variables.rhopedn,
-            physics_variables.neped,
-            physics_variables.nesep,
-            physics_variables.dene,
-            physics_variables.alphan,
-        )
+
+        if physics_variables.ipedestal == 0:
+            physics_variables.ne0 = physics_variables.dene * (
+                1.0 + physics_variables.alphan
+            )
+        elif physics_variables.ipedestal == 1:
+            physics_variables.ne0 = self.ncore(
+                physics_variables.rhopedn,
+                physics_variables.neped,
+                physics_variables.nesep,
+                physics_variables.dene,
+                physics_variables.alphan,
+            )
         physics_variables.ni0 = (
             physics_variables.dnitot / physics_variables.dene * physics_variables.ne0
         )
@@ -239,7 +258,7 @@ class TProfile(Profile):
     def calculate_profile_y(
         self,
         rho: np.array,
-        rhopedt: np.array,
+        rhopedt: float,
         t0: float,
         teped: float,
         tesep: float,
@@ -258,40 +277,7 @@ class TProfile(Profile):
 
         Args:
             rho (np.array): Normalised minor radius.
-            rhopedt (np.array): Normalised minor radius pedestal position.
-            t0 (float): Central temperature (keV).
-            teped (float): Pedestal temperature (keV).
-            tesep (float): Separatrix temperature (keV).
-            alphat (float): Temperature peaking parameter.
-            tbeta (float): Second temperature exponent.
-        """
-        if physics_variables.ipedestal == 0:
-            self.profile_y = t0 * (1 - rho**2) ** alphat
-
-        if t0 < teped:
-            logger.info(
-                f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }"
-            )
-        rho_index = rho <= rhopedt
-        self.profile_y[rho_index] = (
-            teped + (t0 - teped) * (1 - (rho[rho_index] / rhopedt) ** tbeta) ** alphat
-        )
-        self.profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
-            1 - rhopedt
-        )
-        """Calculates the temperature at a normalised minor
-        radius position rho for a pedestalised profile (tprofile).
-        If ipedestal = 0 the original parabolic profile form is used instead.
-        References:
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
-        Authors:
-            R Kemp, CCFE, Culham Science Centre
-            H Lux, CCFE, Culham Science Centre
-            P J Knight, CCFE, Culham Science Centre
-
-        Args:
-            rho (numpy.array): Normalised minor radius.
-            rhopedt (numpy.array): Normalised minor radius pedestal position.
+            rhopedt (float): Normalised minor radius pedestal position.
             t0 (float): Central temperature (keV).
             teped (float): Pedestal temperature (keV).
             tesep (float): Separatrix temperature (keV).
@@ -372,14 +358,19 @@ class TProfile(Profile):
         Returns:
             None
         """
-        physics_variables.te0 = self.tcore(
-            physics_variables.rhopedt,
-            physics_variables.teped,
-            physics_variables.tesep,
-            physics_variables.te,
-            physics_variables.alphat,
-            physics_variables.tbeta,
-        )
+        if physics_variables.ipedestal == 0:
+            physics_variables.te0 = physics_variables.te * (
+                1.0 + physics_variables.alphat
+            )
+        elif physics_variables.ipedestal == 1:
+            physics_variables.te0 = self.tcore(
+                physics_variables.rhopedt,
+                physics_variables.teped,
+                physics_variables.tesep,
+                physics_variables.te,
+                physics_variables.alphat,
+                physics_variables.tbeta,
+            )
 
         physics_variables.ti0 = (
             physics_variables.ti / physics_variables.te * physics_variables.te0
