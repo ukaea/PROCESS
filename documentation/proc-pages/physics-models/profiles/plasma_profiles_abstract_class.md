@@ -1,6 +1,6 @@
 # Profile Abstract Base Class | `Profile(ABC)`
 
-The Profile class serves as a template for subclasses that represent different types of profiles. It initializes the profile with a specified size and sets up the basic structure for storing profile data. The profile size attribute is assigned as an integer with the profile `x` and `y` values initliased to empty numpy arrays. 
+The Profile class serves as a template for subclasses that represent different types of profiles. It initialises the profile with a specified size and sets up the basic structure for storing profile data. The profile size attribute is assigned as an integer with the profile `x` and `y` values initialised to empty numpy arrays. 
 
 ## Normalise the profile in `x` | `normalise_profile_x()`
 
@@ -8,7 +8,7 @@ The values of the profiles `x` dimension are normalised to be between 0 and 1 by
 
 ## Calculate the profile steps in `x` | `calculate_profile_dx()`
 
-The difference or step size between each concurrent value in `x` is calulated by dividing the max value in `x` by the profile size minus one.
+The difference or step size between each concurrent value in `x` is calculated by dividing the max value in `x` by the profile size minus one.
 
 ## Calculate the profile `y` values | `calculate_profile_y()`
 

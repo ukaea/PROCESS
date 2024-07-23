@@ -14,10 +14,10 @@ The desnity profile class is organised around a central runner function that is 
     ### Calculate core values | `set_physics_variables()`
 
     The core electron density is calculated using the [`ncore`](plasma_density_profile.md#electron-core-density-of-a-pedestalised-profile--ncore) method.
-    The core ion density is then set from `dnitot` which is the total ion density such as:
+    The core ion density is then set from $n_{\text{i}}$ (`dnitot`) which is the total ion density such as:
 
     $$
-    n_{\text{i0}} = \left(\frac{n_\text{i}| \mathtt{dnitot}}{n_\text{e}}\right)n_{\text{e0}}
+    n_{\text{i0}} = \left(\frac{n_\text{i}}{n_\text{e}}\right)n_{\text{e0}}
     $$
     
     #### Electron core density of a pedestalised profile | `ncore()`
@@ -34,7 +34,7 @@ The desnity profile class is organised around a central runner function that is 
 
 
     $$
-    n_0  =  \frac{1}{3\rho_{\text{ped,n}}^2}\left[3\langle n\rangle (1+\alpha_n)
+    n_0  =  \frac{1}{3\rho_{\text{ped,n}}^2}\left[3\langle n_{\text{e}} \rangle (1+\alpha_n)
     + n_{\text{sep}} (1+\alpha_n) \left(-2 + \rho_{\text{ped,n}} + \rho_{\text{ped,n}}^2\right) \\
     - n_{\text{ped}}\left( (1 + \alpha_n)(1+ \rho_{\text{ped,n}}) + (\alpha_n -2)
     \rho_{\text{ped,n}}^2\right)\right]
@@ -82,25 +82,25 @@ The desnity profile class is organised around a central runner function that is 
     In the form of volume average density where the volume integrated density function has to be divided by the volume of the cylinder / torus, within the volume bounded by that pedestal position we get:
 
     $$
-    \langle n \rangle = 4\pi^2R\left[ \frac{\frac{\left(n_{\text{ped}} {\alpha}_{n} + n_{0}\right) {\rho}_{\text{ped,n}}^{2}}{2{\alpha}_{n} + 2}
+    \langle n_{\text{e}} \rangle = 4\pi^2R\left[ \frac{\frac{\left(n_{\text{ped}} {\alpha}_{n} + n_{0}\right) {\rho}_{\text{ped,n}}^{2}}{2{\alpha}_{n} + 2}
     +\frac{\left(1-{\rho}_{\text{ped,n}}\right) \left(\left(n_{\text{sep}} + 2n_{\text{ped}}\right) {\rho}_{\text{ped,n}} + 2n_{\text{sep}} + n_{\text{ped}}\right)}{6}}{2\pi^2 R \rho^2}\right] 
     $$
 
     In this case, the value of $\rho$ is equal to 1 as we integrated over the full profile.
 
     $$
-    \langle n \rangle = 2\left[\frac{\left(n_{\text{ped}} {\alpha}_{n} + n_{0}\right) {\rho}_{\text{ped,n}}^{2}}{2{\alpha}_{n} + 2} \\
+    \langle n_{\text{e}} \rangle = 2\left[\frac{\left(n_{\text{ped}} {\alpha}_{n} + n_{0}\right) {\rho}_{\text{ped,n}}^{2}}{2{\alpha}_{n} + 2} \\
     +\frac{\left(1-{\rho}_{\text{ped,n}}\right) \left(\left(n_{\text{sep}} + 2n_{\text{ped}}\right) {\rho}_{\text{ped,n}} + 2n_{\text{sep}} + n_{\text{ped}}\right)}{6}\right] 
     $$
 
     $$
-    \langle n \rangle = \frac{(n_0+n_{\text{ped}}\alpha_\text{n})\rho_{\text{ped,n}}^2}{1+\alpha_n}+\frac{1}{3}(1-\rho_{\text{ped}})(n_{\text{ped}}+2n_{\text{ped}}\rho_{\text{ped}}+n_{\text{sep}}(2+\rho_{\text{ped,n}}))
+    \langle n_{\text{e}} \rangle = \frac{(n_0+n_{\text{ped}}\alpha_\text{n})\rho_{\text{ped,n}}^2}{1+\alpha_n}+\frac{1}{3}(1-\rho_{\text{ped}})(n_{\text{ped}}+2n_{\text{ped}}\rho_{\text{ped}}+n_{\text{sep}}(2+\rho_{\text{ped,n}}))
     $$
 
     The above is then rearranged to get a function for $n_0$
 
     $$
-    n_0  =  \frac{1}{3\rho_{\text{ped,n}}^2}\left[3\langle n\rangle (1+\alpha_n)
+    n_0  =  \frac{1}{3\rho_{\text{ped,n}}^2}\left[3\langle n_{\text{e}} \rangle (1+\alpha_n)
     + n_{\text{sep}} (1+\alpha_n) \left(-2 + \rho_{\text{ped,n}} + \rho_{\text{ped,n}}^2\right) \\
     - n_{\text{ped}}\left( (1 + \alpha_n)(1+ \rho_{\text{ped,n}}) + (\alpha_n -2)
     \rho_{\text{ped,n}}^2\right)\right]

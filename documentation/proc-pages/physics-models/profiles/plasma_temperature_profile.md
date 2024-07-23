@@ -41,9 +41,9 @@ The temperature profile class is organised around a central runner function that
 
     ##### Derivation
 
-    We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle T_{\text{e}} \rangle$. If we assume the plasma to be a torus of circular cross section then we can use spherical cordinates. We can simplify the problem by representing the torus as a cyclinder of height equal to the circumfrence of the torus equal to $2\pi R$ where $R$ is the major radius of the torus, and $a$ is the plasma minor radius in the poloidal plane.
+    We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle T_{\text{e}} \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus equal to $2\pi R$ where $R$ is the major radius of the torus, and $a$ is the plasma minor radius in the poloidal plane.
 
-    The cyclindrical volume element is given by:
+    The cylindrical volume element is given by:
 
     $$
     V = \int \int \int dV = \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0 r \ dr \ d\theta \ dz
@@ -55,13 +55,13 @@ The temperature profile class is organised around a central runner function that
     \int^{2\pi R}_0 \int^{2\pi}_0 \int^{1}_0       \rho \ T_{\text{e}}(\rho) \ d\rho \ d\theta \ dz
     $$
 
-    Since our temperature function is only a function of $\rho$, and the torus is symmetric around its center, the integration simplifies to integrating over $\rho$ and the $d\theta ,\ dz$ integrals are solved to give values for the full poloidal angle and cyclindrical height / torus length, leading to:
+    Since our temperature function is only a function of $\rho$, and the torus is symmetric around its center, the integration simplifies to integrating over $\rho$ and the $d\theta ,\ dz$ integrals are solved to give values for the full poloidal angle and cylindrical height / torus length, leading to:
 
     $$
     4\pi^2R \int^{1}_0     \rho \ T_{\text{e}}(\rho) \ d\rho  
     $$
 
-    This is the general form for the full profile width without expansion. Seperating out the temperature function into its sperate functions for the core and pedestal region we get the fully expanded integration form.
+    This is the general form for the full profile width without expansion. Separating out the temperature function into its separate functions for the core and pedestal region we get the fully expanded integration form.
 
     $$
     4\pi^2R\left[ \int^{\rho_{\text{ped,T}}}_0     \rho\left(T_{\text{ped}} + (T_0 - T_{\text{ped}}) \left( 1 -
@@ -69,13 +69,13 @@ The temperature profile class is organised around a central runner function that
     +\int^1_{\rho_{\text{ped,T}}}     \rho\left(T_{\text{sep}} + (T_{\text{ped}} - T_{\text{sep}})\left( \frac{1- \rho}{1-\rho_{\text{ped},T}}\right)\right)\right] \ d\rho
     $$
 
-    In the form of volume average temperature where the volume integrated temperature function has to be divided by the volume of the cyclinder / torus, within the volume bounded by that pedestal position we get:
+    In the form of volume average temperature where the volume integrated temperature function has to be divided by the volume of the cylinder / torus, within the volume bounded by that pedestal position we get:
 
     $$
-    \langle T_{\text{e}} \rangle = 4\pi^2R\left[ \frac{\frac{\left(T_{\text{ped}}\beta_T+(2T_0-2T_{\text{ped}})B\left(\alpha_T+1,\frac{2}{\beta_T}\right)\right)\rho_{\text{ped},T}^2}{2\beta_T}+\frac{(1-\rho_{\text{ped},T})\left((T_{\text{sep}}+2T_{\text{ped}})\rho_\text{ped}+2T_{\text{sep}}+T_{\text{ped}}\right)}{6}}{2\pi^2 R \rho_{\text{ped},T}^2}\right] 
+    \langle T_{\text{e}} \rangle = 4\pi^2R\left[ \frac{\frac{\left(T_{\text{ped}}\beta_T+(2T_0-2T_{\text{ped}})B\left(\alpha_T+1,\frac{2}{\beta_T}\right)\right)\rho_{\text{ped},T}^2}{2\beta_T}+\frac{(1-\rho_{\text{ped},T})\left((T_{\text{sep}}+2T_{\text{ped}})\rho_\text{ped}+2T_{\text{sep}}+T_{\text{ped}}\right)}{6}}{2\pi^2 R \rho^2}\right] 
     $$
 
-    In this case the value of $\rho_{\text{ped,T}}$ is equal to 1 as we integrated over the full profile.
+    In this case, the value of $\rho$ is equal to 1 as we integrated over the full profile.
 
     $$
     \langle T_{\text{e}} \rangle = 2\left[ \frac{\left(T_{\text{ped}}\beta_T+(2T_0-2T_{\text{ped}})\text{B}\left(\alpha_T+1,\frac{2}{\beta_T}\right)\right)\rho_{\text{ped},T}^2}{2\beta_T} \\
@@ -116,7 +116,7 @@ The temperature profile class is organised around a central runner function that
 
     | Profile parameter / Input               | Density   |
     |----------------------------------|-----------|
-    | Normalized plasma radii            | `profile_x` |
+    | Normalised plasma radii            | `profile_x` |
     | Pedestal radius (r/a)            | `rhopedt`, $\rho_{\text{ped,T}}$ |
     | Core density                | `te0`, $T_{\text{e0}}$ |
     | Pedestal value                   | `teped`, $T_{\text{ped}}$ |
@@ -130,10 +130,10 @@ The temperature profile class is organised around a central runner function that
     T(\rho) = T_0(1 - \rho^2)^{\alpha_T} 
     $$
 
-    The central tmeprature ($T_0$) is then checked to make sure it is not less than the pedestal temperature, $T_{\text{ped}}$.
-    If it is less then a logger warning is pushed to the terminal at runtime.
+    The central temperature ($T_0$) is then checked to make sure it is not less than the pedestal temperature, $T_{\text{ped}}$.
+    If it is less than a logger warning is pushed to the terminal at runtime.
 
-    Values of the profile temperature are then assigned based on the desnity function below across bounds from 0 to `rhopedn` and `rhopedn` to 1.  
+    Values of the profile temperature are then assigned based on the density function below across bounds from 0 to `rhopedn` and `rhopedn` to 1.  
 
 
 
