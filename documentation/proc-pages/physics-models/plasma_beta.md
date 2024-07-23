@@ -3,7 +3,7 @@
 The plasma beta limit[^1] is given by 
 
 $$\begin{aligned}
-\beta < g \, \frac{I(\mbox{MA})}{a(\mbox{m}) \, B_0(\mbox{T})}
+\beta < 0.01\, g \, \frac{I(\mbox{MA})}{a(\mbox{m}) \, B_0(\mbox{T})}
 \end{aligned}$$
 
 where $B_0$ is the axial vacuum toroidal field. The beta
