@@ -31,30 +31,13 @@ The temperature profile class is organised around a central runner function that
     | Profile index/ peaking parameter | `tbeta`, $\beta_T$ |
 
 
-    $$\begin{aligned}
-    T_{\text{e0}} = T_{\text{ped}} + \gamma \left[ T_{\text{ped}}\, \rho_{\text{ped},T}^2 \\
-    - \langle T_{\text{e}} \rangle +
-    \frac{1}{3}(1 - \rho_{\text{ped},T}) \left[ \, (1 + 2\rho_{\text{ped},T}) \, T_{\text{ped}} + ( 2 +
-        \rho_{\text{ped},T}) \, T_{\text{sep}} \, \right] \right]
-    \end{aligned}$$
+    $$
+    T_0 = T_{\text{ped}}+\frac{\beta_T(3\langle T_{\text{e}} \rangle +T_{\text{sep}}(-2+\rho_{\text{ped}} +\rho_{\text{ped}}^2)-T_{\text{ped}}(1+\rho_{\text{ped}}+\rho_{\text{ped}}^2))}{6\rho_{\text{ped}}^2\text{B}\left[1+\alpha_T,\frac{2}{\beta_T}\right]}
+    $$
 
-    with
+    Where $\text{B}$ is the [Beta function](https://en.wikipedia.org/wiki/Beta_function)
 
-    $$\begin{aligned}
-    \gamma = \left\{
-    \begin{aligned}
-    & \frac{ -\Gamma(1+\alpha_T+2/\beta_T)}
-    {\rho_{\text{ped},T}^2 \, \Gamma(1+\alpha_T) \, \Gamma((2+\beta_T)/\beta_T)}
-    \qquad \text{for integer} \, \alpha_T \\
-    &\frac{\Gamma(-\alpha_T)\sin(\pi\alpha)\, \Gamma(1+\alpha_T+2/\beta_T)}
-    {\pi\rho_{\text{ped},T}^2 \, \Gamma((2+\beta_T)/\beta_T)}
-    \qquad \text{for non-integer} \, \alpha_T
-    \end{aligned}
-    \right.
-    \end{aligned}$$
-
-
-    where $\Gamma$ is the [gamma function](https://en.wikipedia.org/wiki/Gamma_function).
+    ---------
 
     ##### Derivation
 
@@ -100,15 +83,20 @@ The temperature profile class is organised around a central runner function that
     $$
 
     $$
-    \langle T_{\text{e}} \rangle =  \frac{\left(T_{\text{ped}}\beta_T+(2T_0-2T_{\text{ped}})\text{B}\left(\alpha_T+1,\frac{2}{\beta_T}\right)\right)\rho_{\text{ped},T}^2}{\beta_T} \\
+    \langle T_{\text{e}} \rangle =  \frac{\left(T_{\text{ped}}\beta_T+(2T_0-2T_{\text{ped}})\text{B}\left[\alpha_T+1,\frac{2}{\beta_T}\right]\right)\rho_{\text{ped},T}^2}{\beta_T} \\
     +\frac{(1-\rho_{\text{ped},T})\left((T_{\text{sep}}+2T_{\text{ped}})\rho_\text{ped}+2T_{\text{sep}}+T_{\text{ped}}\right)}{3} 
     $$
     
     Where $\text{B}$ is the [Beta function](https://en.wikipedia.org/wiki/Beta_function)
     
+    Re-arranging to get $T_0$ we get:
+
+    $$
+    T_0 = T_{\text{ped}}+\frac{\beta_T(3\langle T_{\text{e}} \rangle +T_{\text{sep}}(-2+\rho_{\text{ped}} +\rho_{\text{ped}}^2)-T_{\text{ped}}(1+\rho_{\text{ped}}+\rho_{\text{ped}}^2))}{6\rho_{\text{ped}}^2\text{B}\left[1+\alpha_T,\frac{2}{\beta_T}\right]}
+    $$
 
     $\blacksquare$
-    
+
     -----
 
     The core ion temperature is then set such as:
@@ -119,6 +107,8 @@ The temperature profile class is organised around a central runner function that
 
 
 4. The y profile is then calculated using [`calculate_profile_y()`](plasma_temperature_profile.md#calculate-temperature-at-each-radius-position-calculate_profile_y). This routine calculates the temperature at each normalised minor radius position $\rho$ for a HELIOS-type temperature pedestal profile[^1]
+
+    -------
 
     ### Calculate temperature at each radius position | `calculate_profile_y()`
 
@@ -151,9 +141,9 @@ The temperature profile class is organised around a central runner function that
     \mbox{Temperature:} \ \ T(\rho) = \left\{ 
     \begin{aligned}
     & \text{T}_{\text{ped}} + (T_0 - \text{T}_{\text{ped}}) \left( 1 - \frac{\rho^{\beta_T}}
-    {\rho_{\text{ped},T}^{\beta_T}}\right)^{\alpha_T}  &  0 \leq \rho \leq \rho_{\text{ped},T} \\
+    {\rho_{\text{ped},T}^{\beta_T}}\right)^{\alpha_T}  \  0 \leq \rho \leq \rho_{\text{ped},T} \\
     & \text{T}_{\text{sep}} + (\text{T}_{\text{ped}} - \text{T}_{\text{sep}})\left( \frac{1- \rho}{1-\rho_{\text{ped},T}}\right)
-    &  \rho_{\text{ped},T} < \rho \leq 1
+    \ \rho_{\text{ped},T} < \rho \leq 1
     \end{aligned}
     \right.
     \end{aligned}$$ 
