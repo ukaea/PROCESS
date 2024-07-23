@@ -111,7 +111,7 @@ Unpublished internal Oak Ridge document.
 Current Drive', ITER-TN-PH-8-4, 13--17 June 1988, Garching, FRG
 [^6]: Y. Sakamoto, 'Recent progress in vertical stability analysis in JA',
 Task meeting EU-JA #16, Fusion for Energy, Garching, 24--25 June 2014
-[^7] Menard et al. (2016), Nuclear Fusion, 56, 106023
+[^7]: Menard et al. (2016), Nuclear Fusion, 56, 106023
 [^8]: H.R. Wilson, Nuclear Fusion **32** (1992) 257
 [^9]: O. Sauter, C. Angioni and Y.R. Lin-Liu, Physics of Plasmas **6** (1999) 2834 
 [^10]: O. Sauter, C. Angioni and Y.R. Lin-Liu, Physics of Plasmas **9** (2002) 5140
