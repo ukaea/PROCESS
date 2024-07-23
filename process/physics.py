@@ -1402,6 +1402,7 @@ class Physics:
                 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
             )
 
+        # culblm returns the betalim for beta
         physics_variables.betalim = culblm(
             physics_variables.bt,
             physics_variables.dnbeta,
