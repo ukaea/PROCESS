@@ -1381,28 +1381,26 @@ class Physics:
         )
 
         # Calculate physics_variables.beta limit
-        if physics_variables.iprofile == 0:
-            if physics_variables.gtscale == 1:
-                # Original scaling law
-                physics_variables.dnbeta = 2.7e0 * (
-                    1.0e0 + 5.0e0 * physics_variables.eps**3.5e0
-                )
 
-            if physics_variables.gtscale == 2:
-                # See Issue #1439
-                # physics_variables.dnbeta found from physics_variables.aspect ratio scaling on p32 of Menard:
-                # Menard, et al. "Fusion Nuclear Science Facilities
-                # and Pilot Plants Based on the Spherical Tokamak."
-                # Nucl. Fusion, 2016, 44.
-                physics_variables.dnbeta = (
-                    3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
-                )
-
-        else:
+        if physics_variables.iprofile == 1:
             # Relation between physics_variables.beta limit and plasma internal inductance
             # Hartmann and Zohm
             physics_variables.dnbeta = 4.0e0 * physics_variables.rli
 
+        if physics_variables.iprofile == 2:
+            # Original scaling law
+            physics_variables.dnbeta = 2.7e0 * (
+                1.0e0 + 5.0e0 * physics_variables.eps**3.5e0
+            )
+
+        if physics_variables.iprofile == 3 or physics_variables.iprofile == 5:
+            # physics_variables.dnbeta found from physics_variables.aspect ratio scaling on p32 of Menard:
+            # Menard, et al. "Fusion Nuclear Science Facilities
+            # and Pilot Plants Based on the Spherical Tokamak."
+            # Nucl. Fusion, 2016, 44.
+            physics_variables.dnbeta = 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
+
+        # culblm returns the betalim for beta
         physics_variables.betalim = culblm(
             physics_variables.bt,
             physics_variables.dnbeta,
@@ -2030,8 +2028,12 @@ class Physics:
         8 = Sauter scaling (allowing negative triangularity) Issue #392
             'Geometric formulas for system codes including the effect of negative triangularity'
         iprofile : input integer : switch for current profile consistency
-        0 = use input alphaj, rli
-        1 = make these consistent with q, q0
+        0 use input values for alphaj, rli, dnbeta
+        1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+        2 use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling)
+        3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
+        4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
+        5 use input value for alphaj.  Set rli and dnbeta from Menard scaling
         kappa    : input real :  plasma elongation
         kappa95  : input real :  plasma elongation at 95% surface
         p0       : input real :  central plasma pressure (Pa)
@@ -2151,12 +2153,18 @@ class Physics:
             icurr, plascur, q95, asp, eps, bt, kappa, triang, pperim, constants.rmu0
         )
 
-        # Ensure current profile consistency, if required
-        # This is as described in Hartmann and Zohm only if icurr = 4 as well...
-
         if iprofile == 1:
+            # Ensure current profile consistency, if required
+            # This is as described in Hartmann and Zohm only if icurr = 4 as well...
+
+            # Tokamaks 4th Edition, Wesson, page 116
             alphaj = qstar / q0 - 1.0
-            rli = np.log(1.65 + 0.89 * alphaj)  # Tokamaks 4th Edition, Wesson, page 116
+            rli = np.log(1.65 + 0.89 * alphaj)
+
+        if iprofile == 4 or iprofile == 5:
+            # Spherical Tokamak relation for internal inductance
+            # Menard et al. (2016), Nuclear Fusion, 56, 106023
+            rli = 3.4 - kappa
 
         return alphaj, rli, bp, qstar, plascur
 
@@ -2494,15 +2502,15 @@ class Physics:
             po.osubhd(self.outfile, "Current and Field :")
 
             if stellarator_variables.istell == 0:
-                if physics_variables.iprofile == 0:
+                if physics_variables.iprofile == 1:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,dnbeta is not enforced",
+                        "Consistency between q0,q,alphaj,rli,dnbeta is enforced",
                     )
                 else:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,dnbeta is enforced",
+                        "Consistency between q0,q,alphaj,rli,dnbeta is not enforced",
                     )
 
                 po.oblnkl(self.outfile)
