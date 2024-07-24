@@ -1077,8 +1077,8 @@
     },
     {
       "no": 214,
-      "level": 2,
-      "message": "CHECK: Values of EPED scaling factor 'eped_sf' greater than 1 are not recommended"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 215,

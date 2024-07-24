@@ -2168,37 +2168,6 @@ class Physics:
 
         return alphaj, rli, bp, qstar, plascur
 
-    @staticmethod
-    def eped_warning():
-        eped_warning = ""
-
-        if (physics_variables.triang < 0.399e0) or (physics_variables.triang > 0.601e0):
-            eped_warning += f"{physics_variables.triang = }"
-
-        if (physics_variables.kappa < 1.499e0) or (physics_variables.kappa > 2.001e0):
-            eped_warning += f"{physics_variables.kappa = }"
-
-        if (physics_variables.plascur < 9.99e6) or (
-            physics_variables.plascur > 20.01e6
-        ):
-            eped_warning += f"{physics_variables.plascur = }"
-
-        if (physics_variables.rmajor < 6.99e0) or (physics_variables.rmajor > 11.01e0):
-            eped_warning += f"{physics_variables.rmajor = }"
-
-        if (physics_variables.rminor < 1.99e0) or (physics_variables.rminor > 3.501e0):
-            eped_warning += f"{physics_variables.rminor = }"
-
-        if (physics_variables.normalised_total_beta < 1.99e0) or (
-            physics_variables.normalised_total_beta > 3.01e0
-        ):
-            eped_warning += f"{physics_variables.normalised_total_beta = }"
-
-        if physics_variables.tesep > 0.5:
-            eped_warning += f"{physics_variables.tesep = }"
-
-        return eped_warning
-
     def outtim(self):
         po.oheadr(self.outfile, "Times")
 
@@ -3017,42 +2986,6 @@ class Physics:
                 "(rhopedt)",
                 physics_variables.rhopedt,
             )
-            # Issue #413 Pedestal scaling
-            po.ovarin(
-                self.outfile,
-                "Pedestal scaling switch",
-                "(ieped)",
-                physics_variables.ieped,
-            )
-            if physics_variables.ieped == 1:
-                po.ocmmnt(
-                    self.outfile,
-                    "Saarelma 6-parameter pedestal temperature scaling is ON",
-                )
-
-                if self.eped_warning() != "":
-                    po.ocmmnt(
-                        self.outfile,
-                        "WARNING: Pedestal parameters are outside the range of applicability of the scaling:",
-                    )
-                    po.ocmmnt(
-                        self.outfile,
-                        "triang: 0.4 - 0.6; physics_variables.kappa: 1.5 - 2.0;   plascur: 10 - 20 MA, physics_variables.rmajor: 7 - 11 m;",
-                    )
-                    po.ocmmnt(
-                        self.outfile,
-                        "rminor: 2 - 3.5 m; tesep: 0 - 0.5 keV; normalised_total_beta: 2 - 3; ",
-                    )
-                    print(
-                        "WARNING: Pedestal parameters are outside the range of applicability of the scaling:"
-                    )
-                    print(
-                        "triang: 0.4 - 0.6; physics_variables.kappa: 1.5 - 2.0;   plascur: 10 - 20 MA, physics_variables.rmajor: 7 - 11 m;"
-                    )
-                    print(
-                        "rminor: 2 - 3.5 m; tesep: 0 - 0.5 keV; normalised_total_beta: 2 - 3"
-                    )
-                    print(self.eped_warning())
 
             po.ovarrf(
                 self.outfile,
