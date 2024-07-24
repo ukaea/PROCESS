@@ -269,7 +269,6 @@ ifispact = 0 * Switch for neutronics calculations;
 iinvqd   = 1 * Switch for inverse quadrature in l-mode scaling laws 5 and 9;
 ipedestal = 1 * Switch for pedestal profiles;
 fgwped = 0.85 * fraction of Greenwald density to set as pedestal-top density
-ieped = 1 * EPED pedestal temperature scaling
 neped    = 0.678e20 * Electron density of pedestal (/m3) (ipedestal=1) INITIAL VALUE
 nesep    = 0.2e20 * Electron density at separatrix (/m3) (ipedestal=1)
 rhopedn  = 0.94 * R/a of density pedestal (ipedestal=1)

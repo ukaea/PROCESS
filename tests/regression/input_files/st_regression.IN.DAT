@@ -565,17 +565,6 @@ tesep = 0.125
 * DESCRIPTION:   Electron Temperature at Separatrix (keV)
 * JUSTIFICATION: 
 
-*ieped = 
-* DESCRIPTION:   Switch for scaling pedestal-top temperature with plasma parameters(default = 0)
-* =0 set pedestal-top temperature manually using teped
-* =1 set pedestal-top temperature using EPED scaling
-* JUSTIFICATION: Not set, assuming default value
-
-*eped_sf
-* DESCRIPTION:   Adjustment factor for EPED scaling to reduce pedestal temperature or pressure
-*                to mitigate or prevent ELMs
-* JUSTIFICATION: Turned off, not using
-
 *lhat =  
 * DESCRIPTION:   Connection length factor L|| = lhat qstar R for Reinke criterion
 * JUSTIFICATION: Not set, not using Reinke model. 
