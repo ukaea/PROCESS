@@ -255,8 +255,8 @@ subroutine check
     use numerics, only: ixc, icc, ioptimz, neqns, nineqns, nvar, boundl, &
         boundu
     use pfcoil_variables, only: ipfres, ngrp, pfclres, ipfloc, ncls, isumatoh
-    use physics_variables, only: aspect, eped_sf, fdeut, fgwped, fhe3, &
-        fgwsep, ftrit, ibss, i_single_null, icurr, ieped, idivrt, ishape, &
+    use physics_variables, only: aspect, fdeut, fgwped, fhe3, &
+        fgwsep, ftrit, ibss, i_single_null, icurr, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
         rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar
     use pulse_variables, only: lpulse
@@ -440,12 +440,6 @@ subroutine check
      ! Cannot use Psep/R and PsepB/qAR limits at the same time
      if(any(icc == 68) .and. any(icc == 56)) then
         call report_error(178)
-     endif
-
-     if(ieped > 0) then
-        if(eped_sf > 1.0) then
-           call report_error(214)
-        endif
      endif
 
      if ((any(ixc==145)) .and. (boundl(145) < fgwsep)) then  !if lower bound of fgwped < fgwsep

@@ -329,16 +329,6 @@ module physics_variables
   !! - =0 Do not calculate
   !! - =1 Use SCENE scaling
 
-  integer :: ieped
-  !! switch for scaling pedestal-top temperature with plasma parameters (issue #730):
-  !!
-  !! - =0 set pedestal-top temperature manually using teped
-  !! - =1 set pedestal-top temperature using EPED scaling
-
-  real(dp) :: eped_sf
-  !! Adjustment factor for EPED scaling to reduce pedestal temperature or pressure
-  !! to mitigate or prevent ELMs
-
   real(dp) :: neped
   !! electron density of pedestal [m-3] (`ipedestal==1)
 
@@ -370,7 +360,7 @@ module physics_variables
   !! temperature profile index beta  (`ipedestal==1)
 
   real(dp) :: teped
-  !! electron temperature of pedestal (keV) (`ipedestal==1, ieped=0, calculated for ieped=1`)
+  !! electron temperature of pedestal (keV) (`ipedestal==1`)
 
   real(dp) :: tesep
   !! electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
@@ -969,8 +959,6 @@ module physics_variables
     iinvqd = 1
     ipedestal = 1
     ips = 0
-    ieped = 0
-    eped_sf = 1.0D0
     neped = 4.0D19
     nesep = 3.0D19
     alpha_crit = 0.0D0
