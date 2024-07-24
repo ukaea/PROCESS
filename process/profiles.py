@@ -177,7 +177,7 @@ class NProfile(Profile):
         The solution comes from integrating and summing the two separate density profiles for the core
         and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
         to an added rho term in each part of the profile. When dividing by the volume of integration to get the average density
-        the simplification leads to a factor of 2 having to be multiplied on to each of integration results.
+        the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
         This function for the average density can then be re-arranged to calculate the central plasma density n_0 / ncore.
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
@@ -313,7 +313,7 @@ class TProfile(Profile):
         of a pedestalised profile. The solution comes from integrating and summing the two seprate temperature profiles for the core
         and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
         to an added rho term in each part of the profile. When dividing by the volume of integration to get the average temperature
-        the simplification leads to a factor of 2 having to be multiplied on to each of integration results.
+        the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
         This function for the average temperature can then be re-arranged to calculate the central plasma temeprature T_0 / tcore.
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
