@@ -1,4 +1,6 @@
-# Fusion Reactions
+# Fusion Reactions | `FusionReactionRate`
+
+## Overview
 
 The most likely fusion reaction to be utilised in a power plant is the
 deuterium-tritium reaction:
