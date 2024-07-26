@@ -1,4 +1,4 @@
-# Fusion Reactions | `FusionReactionRate`
+# Fusion Reactions 
 
 ## Overview
 
@@ -59,10 +59,21 @@ n_T  & = \mathtt{ftrit} \, n_{\mbox{fuel}} \\
 n_{\mathrm{^{3}He}} & = \mathtt{fhe3} \, n_{\mbox{fuel}}
 \end{aligned}$$
 
-PROCESS checks that $fdeut + ftrit + fhe3 = 1.0$, and stops with an error message otherwise.
+PROCESS checks that $\mathtt{fdeut} + \mathtt{ftrit} + \mathtt{fhe3} = 1.0$, and stops with an error message otherwise. Shouldnt this account for impurities also?
+
+-------------------------
+
+## Fusion Reaction Class | `FusionReactionRate`
+
+
+-----------------------
+
+## Key Constraints
 
 Constraint equation no. 28 can be turned on to enforce the fusion gain *Q* to be at 
 least equal to `bigqmin`.
+
+-----------------------
 
 [^1]: H.S. Bosch and G.M. Hale, 'Improved Formulas for Fusion Cross-sections 
 and Thermal Reactivities', Nuclear Fusion **32** (1992) 611

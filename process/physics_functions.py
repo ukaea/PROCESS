@@ -55,22 +55,22 @@ class FusionReactionRate:
         )
         self.sigvdt = sigmav
         etot = 17.59 * constants.echarge  # MJ
-        fpow = (
-            1.0
-            * sigmav
+        # Fusion power produced [MW] per m^3 of plasma
+        fusion_power_density = (
+            sigmav
             * etot
             * physics_variables.fdeut
             * physics_variables.ftrit
             * physics_variables.deni
             * physics_variables.deni
         )  # MW/m3
-        pa = 0.2 * fpow
+        pa = 0.2 * fusion_power_density
         pc = 0.0
-        pn = 0.8 * fpow
-        frate = fpow / etot  # reactions/m3/second
+        pn = 0.8 * fusion_power_density
+        frate = fusion_power_density / etot  # reactions/m3/second
         arate = frate
         prate = 0.0
-        self.pdtpv = fpow
+        self.pdtpv = fusion_power_density
         self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
 
     def dhe3(self):
@@ -92,22 +92,22 @@ class FusionReactionRate:
             dx=self.plasma_profile.neprofile.profile_dx,
         )
         etot = 18.35 * constants.echarge  # MJ
-        fpow = (
-            1.0
-            * sigmav
+        # Fusion power produced [MW] per m^3 of plasma
+        fusion_power_density = (
+            sigmav
             * etot
             * physics_variables.fdeut
             * physics_variables.fhe3
             * physics_variables.deni
             * physics_variables.deni
         )  # MW/m3
-        pa = 0.2 * fpow
-        pc = 0.8 * fpow
+        pa = 0.2 * fusion_power_density
+        pc = 0.8 * fusion_power_density
         pn = 0.0
-        frate = fpow / etot  # reactions/m3/second
+        frate = fusion_power_density / etot  # reactions/m3/second
         arate = frate
         prate = frate  # proton production /m3/second
-        self.pdhe3pv = fpow
+        self.pdhe3pv = fusion_power_density
         self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
 
     def dd1(self):
@@ -129,9 +129,9 @@ class FusionReactionRate:
             dx=self.plasma_profile.neprofile.profile_dx,
         )
         etot = 3.27 * constants.echarge  # MJ
-        fpow = (
-            1.0
-            * sigmav
+        # Fusion power produced [MW] per m^3 of plasma
+        fusion_power_density = (
+            sigmav
             * etot
             * 0.5
             * physics_variables.fdeut
@@ -140,12 +140,12 @@ class FusionReactionRate:
             * physics_variables.deni
         )  # MW/m3
         pa = 0.0
-        pc = 0.25 * fpow
-        pn = 0.75 * fpow
-        frate = fpow / etot  # reactions/m3/second
+        pc = 0.25 * fusion_power_density
+        pn = 0.75 * fusion_power_density
+        frate = fusion_power_density / etot  # reactions/m3/second
         arate = 0.0
         prate = 0.0
-        self.pddpv = self.pddpv + fpow
+        self.pddpv = self.pddpv + fusion_power_density
         self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
 
     def dd2(self):
@@ -167,9 +167,9 @@ class FusionReactionRate:
             dx=self.plasma_profile.neprofile.profile_dx,
         )
         etot = 4.03 * constants.echarge  # MJ
-        fpow = (
-            1.0
-            * sigmav
+        # Fusion power produced [MW] per m^3 of plasma
+        fusion_power_density = (
+            sigmav
             * etot
             * 0.5
             * physics_variables.fdeut
@@ -178,12 +178,12 @@ class FusionReactionRate:
             * physics_variables.deni
         )  # MW/m3
         pa = 0.0
-        pc = fpow
+        pc = fusion_power_density
         pn = 0.0
-        frate = fpow / etot  # reactions/m3/second
+        frate = fusion_power_density / etot  # reactions/m3/second
         arate = 0.0
         prate = frate  # proton production /m3/second
-        self.pddpv = self.pddpv + fpow
+        self.pddpv = self.pddpv + fusion_power_density
         self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
 
     def sum_fusion_rates(self, pa, pc, pn, frate, arate, prate):
@@ -358,17 +358,18 @@ def fint(plasma_profile, reactionconstants):
     :rtype: numpy.array
     """
 
-    # Local ion temperature (keV) at r/a = rho
+    # Since the electron temperature profile is only calculated directly, we scale the ion temperature
+    # profile by the ratio of the volume averaged ion to electron temperature
+    ion_temperature_profile = (
+        physics_variables.ti / physics_variables.te * plasma_profile.teprofile.profile_y
+    )
+
     sigv = numpy.zeros(
         plasma_profile.teprofile.profile_size,
     )
 
-    tiofr = (
-        physics_variables.ti / physics_variables.te * plasma_profile.teprofile.profile_y
-    )
-
-    # Fusion reaction rate (m3/s)
-    sigv = bosch_hale(tiofr, reactionconstants)
+    # Number of fusion reactions per unit volume per particle volume density (m3/s)
+    sigv = bosch_hale(ion_temperature_profile, reactionconstants)
 
     # Integrand for the volume averaged fusion reaction rate sigmav:
     # sigmav = integral(2 rho (sigv(rho) ni(rho)^2) drho),
@@ -382,11 +383,11 @@ def fint(plasma_profile, reactionconstants):
     return fint
 
 
-def bosch_hale(t, reactionconstants):
+def bosch_hale(temperature_profile, reaction_constants):
     """This routine calculates the volumetric fusion reaction rate
     sigmavgt (m3/s) for one of four nuclear reactions using
     the Bosch-Hale parametrization.
-    The valid range of the fit is 0.2 keV < t < 100 keV
+    The valid range of the fit is 0.2 keV < t < 100 keV except for D-3He where it is 0.5 keV < t < 190 keV.
     1 : D-T reaction
     2 : D-3He reaction
     3 : D-D 1st reaction (50% probability)
@@ -397,42 +398,51 @@ def bosch_hale(t, reactionconstants):
     References:
         Bosch and Hale, Nuclear Fusion 32 (1992) 611-631
 
-    :param t: Plasma temperature profile
-    :type t: numpy.array
+    :param temperature_profile: Plasma temperature profile
+    :type temperature_profile: numpy.array
     :param reactionconstants: BoschHale reaction constants
     :type reactionconstants: BoschHaleConstants
     :return: sigmav Volumetric fusion reaction rate
     :rtype: (numpy.array)
     """
     theta1 = (
-        t
+        temperature_profile
         * (
-            reactionconstants.cc2
-            + t * (reactionconstants.cc4 + t * reactionconstants.cc6)
+            reaction_constants.cc2
+            + temperature_profile
+            * (reaction_constants.cc4 + temperature_profile * reaction_constants.cc6)
         )
         / (
             1.0
-            + t
+            + temperature_profile
             * (
-                reactionconstants.cc3
-                + t * (reactionconstants.cc5 + t * reactionconstants.cc7)
+                reaction_constants.cc3
+                + temperature_profile
+                * (reaction_constants.cc5 + temperature_profile * reaction_constants.cc7)
             )
         )
     )
-    theta = t / (1.0 - theta1)
+    theta = temperature_profile / (1.0 - theta1)
 
-    xi = ((reactionconstants.bg**2) / (4.0 * theta)) ** 0.3333333333
+    xi = ((reaction_constants.bg**2) / (4.0 * theta)) ** (1 / 3)
 
     # Volumetric reaction rate <sigma v> (m3/s)
+    # Original form is in [cm3/s], so multiply by 1.0e-6 to convert to [m3/s]
     sigmav = (
         1.0e-6
-        * reactionconstants.cc1
+        * reaction_constants.cc1
         * theta
-        * numpy.sqrt(xi / (reactionconstants.mrc2 * t**3))
+        * numpy.sqrt(xi / (reaction_constants.mrc2 * temperature_profile**3))
         * numpy.exp(-3.0 * xi)
     )
+    # Bosch-Hale also gives value sof maximum deviation of the fit from the input data
+    # D-T reaction: max sigmav uncertainty = 0.25%
+    # D-3He reaction: max sigmav uncertainty = 2.5%
+    # D-D 1st reaction (50% probability)
+    # D-D 2nd reaction (50% probability)
+
     # if t = 0, sigmav = 0. Use this mask to set sigmav to zero.
-    t_mask = t == 0.0
+    t_mask = temperature_profile == 0.0
     sigmav[t_mask] = 0.0
 
     return sigmav
