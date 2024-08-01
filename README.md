@@ -7,8 +7,8 @@ PROCESS was originally a Fortran code, but is currently a mixture of Python and 
 
 
 
-![BlenderImage](<documentation/proc-pages/images/blender images/initial_collage.png>)
-<center>Split view of DEMO-like reactor (generated using fusrr-pipeline).</center>
+![Blender_and_output](./documentation/proc-pages/images/README_image.PNG)
+<center>Overview of some outputs for a DEMO-like reactor (3D image generated using Fusrr-pipeline).</center>
 
 
 ## Getting Started
