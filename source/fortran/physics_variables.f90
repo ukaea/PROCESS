@@ -90,7 +90,7 @@ module physics_variables
   !! vertical field at plasma (T)
 
   real(dp) :: c_beta
-  !! Destabalisaion parameter for iprofile=6 beta limit
+  !! Destabalisation parameter for iprofile=6 beta limit
 
   real(dp) :: csawth
   !! coeff. for sawteeth effects on burn V-s requirement
