@@ -370,7 +370,7 @@ module physics_variables
   !! - =3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
   !! - =4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
   !! - =5 use input value for alphaj.  Set rli and dnbeta from Menard scaling
-  !! - =6 use input value for alphaj.  Set rli from Menar and dnbeta from Tholerus
+  !! - =6 use input value for alphaj.  Set rli from Menard and dnbeta from Tholerus
 
   integer :: iradloss
   !! switch for radiation loss term usage in power balance (see User Guide):

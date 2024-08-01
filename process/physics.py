@@ -2171,7 +2171,7 @@ class Physics:
             alphaj = qstar / q0 - 1.0
             rli = np.log(1.65 + 0.89 * alphaj)
 
-        if iprofile == 4 or iprofile == 5:
+        if iprofile == 4 or iprofile == 5 or iprofile == 6:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
             rli = 3.4 - kappa
