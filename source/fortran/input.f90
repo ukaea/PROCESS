@@ -304,7 +304,7 @@ contains
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, cvol, fdeut, ffwal, iculbl, itartpf, ilhthresh, &
-      fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, csawth, dene, &
+      fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
       ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
@@ -549,7 +549,10 @@ contains
        case ('coreradiationfraction')
           call parse_real_variable('coreradiationfraction', coreradiationfraction, 0.0D0, 1.0D0, &
                'Fraction of core radiation subtracted from P_L')
-       case ('csawth')
+            case ('c_beta')
+               call parse_real_variable('c_beta', c_beta, 0.0D0, 1.0D0, &
+                    'Destabalisation parameter for iprofile=6')
+            case ('csawth')
           call parse_real_variable('csawth', csawth, 0.0D0, 10.0D0, &
                'Coefficient for sawteeth effects')
        case ('cvol')
@@ -647,7 +650,7 @@ contains
           call parse_int_variable('ipedestal', ipedestal, 0, 1, &
                'Switch for plasma profile type')
        case ('iprofile')
-          call parse_int_variable('iprofile', iprofile, 0, 5, &
+          call parse_int_variable('iprofile', iprofile, 0, 6, &
                'Switch for current profile consistency')
        case ('ips')
           call parse_int_variable('ips', ips, 0, 1, &
