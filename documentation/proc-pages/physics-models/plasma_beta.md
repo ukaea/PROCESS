@@ -28,7 +28,7 @@ be calculated.
 | `iprofile` | Description |
 | :-: | - |
 | 0 | `alphaj`, `rli` and `dnbeta` are inputs. |
-| 1 | `alphaj`, `rli` and `dnbeta` are calulcated consistently. `dnbeta` calculated using $g=4l_i$ [^3].  This is only recommended for high aspect ratio tokamaks.|
+| 1 (default) | `alphaj`, `rli` and `dnbeta` are calulcated consistently. `dnbeta` calculated using $g=4l_i$ [^3].  This is only recommended for high aspect ratio tokamaks.|
 | 2 | `alphaj` and `rli` are inputs. `dnbeta` calculated using $g=2.7(1+5\epsilon^{3.5})$ (which gives g = 3.0 for aspect ratio = 3) |
 | 3 | `alphaj` and `rli` are inputs. `dnbeta` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]|
 | 4 | `alphaj` and `dnbeta` are inputs. `rli` calculated from elongation [^4]. This is only recommended for spherical tokamaks.|
