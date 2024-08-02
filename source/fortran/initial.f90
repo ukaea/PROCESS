@@ -256,7 +256,7 @@ subroutine check
         boundu
     use pfcoil_variables, only: ipfres, ngrp, pfclres, ipfloc, ncls, isumatoh
     use physics_variables, only: aspect, fdeut, fgwped, fhe3, &
-        fgwsep, ftrit, ibss, i_single_null, icurr, idivrt, ishape, &
+        fgwsep, ftrit, ibss, i_single_null, i_plasma_current, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
         rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar
     use pulse_variables, only: lpulse
@@ -510,8 +510,8 @@ subroutine check
         ! Check if the choice of plasma current is addapted for ST
         ! 2 : Peng Ip scaling (See STAR code documentation)
         ! 9 : Fiesta Ip scaling
-        if (icurr /= 2 .and. icurr /= 9) then
-            idiags(1) = icurr ; call report_error(37)
+        if (i_plasma_current /= 2 .and. i_plasma_current /= 9) then
+            idiags(1) = i_plasma_current ; call report_error(37)
         end if
 
         !! If using Peng and Strickler (1986) model (itartpf == 0)
@@ -599,7 +599,7 @@ subroutine check
     ! ------------------------------------
     else
 
-        if (icurr == 2 .or. icurr == 9) call report_error(40)
+        if (i_plasma_current == 2 .or. i_plasma_current == 9) call report_error(40)
 
         ! Set the TF coil shape to PROCESS D-shape (if default value)
         if ( i_tf_shape == 0 ) i_tf_shape = 1
@@ -943,7 +943,7 @@ subroutine check
         call report_error(221)
      end if
 
-    if (icurr.eq.2.and.isc.eq.42) then
+    if (i_plasma_current.eq.2.and.isc.eq.42) then
         call report_error(222)
     end if
 

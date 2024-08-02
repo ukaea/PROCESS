@@ -307,7 +307,7 @@ contains
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
-      ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
+      ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, ibss, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
@@ -624,8 +624,8 @@ contains
        case ('iculbl')
           call parse_int_variable('iculbl', iculbl, 0, 3, &
                'Switch for beta limit scaling')
-       case ('icurr')
-          call parse_int_variable('icurr', icurr, 1, 9, &
+       case ('i_plasma_current')
+          call parse_int_variable('i_plasma_current', i_plasma_current, 1, 9, &
                'Switch for plasma current scaling')
        case ('idensl')
           call parse_int_variable('idensl', idensl, 1, 7, &

@@ -193,7 +193,7 @@
     {
       "no": 37,
       "level": 2,
-      "message": "CHECK: Usual current scaling for TARTs (icurr=2 or 9) is not being used"
+      "message": "CHECK: Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used"
     },
     {
       "no": 38,
@@ -208,7 +208,7 @@
     {
       "no": 40,
       "level": 2,
-      "message": "CHECK: icurr=2 is not a valid option for a non-TART device"
+      "message": "CHECK: i_plasma_current=2 is not a valid option for a non-TART device"
     },
     {
       "no": 41,
@@ -393,7 +393,7 @@
     {
       "no": 77,
       "level": 3,
-      "message": "CALCULATE_PLASMA_CURRENT: Illegal value for icurr"
+      "message": "CALCULATE_PLASMA_CURRENT: Illegal value for i_plasma_current"
     },
     {
       "no": 78,
@@ -1118,7 +1118,7 @@
     {
       "no": 222,
       "level": 3,
-      "message": "CHECK: Lang 2012 confinement scaling cannot be used for icurr=2 due to wrong q"
+      "message": "CHECK: Lang 2012 confinement scaling cannot be used for i_plasma_current=2 due to wrong q"
     },
     {
       "no": 223,

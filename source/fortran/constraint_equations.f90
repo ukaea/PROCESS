@@ -1984,7 +1984,7 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fq : input real : f-value for edge safety factor
       !! q : safety factor 'near' plasma edge: equal to q95
-      !! (unless icurr = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
+      !! (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
       !! qlim : input real :  lower limit for edge safety factor
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;

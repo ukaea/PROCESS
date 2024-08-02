@@ -2428,7 +2428,7 @@
         ],
         "icode": 0.0,
         "iculbl": 0.0,
-        "icurr": 4.0,
+        "i_plasma_current": 4.0,
         "idensl": 7.0,
         "idia": 0.0,
         "idiags": [
@@ -9803,7 +9803,7 @@
         "icc": "",
         "icode": "",
         "iculbl": "switch for beta limit scaling (`constraint equation 24`)\n<ul>\n<li>=0 apply limit to total beta</li>\n<li>=1 apply limit to thermal beta</li>\n<li>=2 apply limit to thermal + neutral beam beta</li>\n<li>=3 apply limit to toroidal beta</li>\n</ul>",
-        "icurr": "switch for plasma current scaling to use\n<ul>\n<li>=1 Peng analytic fit</li>\n<li>=2 Peng double null divertor scaling (ST)</li>\n<li>=3 simple ITER scaling (k = 2.2, d = 0.6)</li>\n<li>=4 later ITER scaling, a la Uckan</li>\n<li>=5 Todd empirical scaling I</li>\n<li>=6 Todd empirical scaling II</li>\n<li>=7 Connor-Hastie model</li>\n<li>=8 Sauter scaling allowing negative triangularity</li>\n<li>=9 FIESTA ST fit</li>\n</ul>",
+        "i_plasma_current": "switch for plasma current scaling to use\n<ul>\n<li>=1 Peng analytic fit</li>\n<li>=2 Peng double null divertor scaling (ST)</li>\n<li>=3 simple ITER scaling (k = 2.2, d = 0.6)</li>\n<li>=4 later ITER scaling, a la Uckan</li>\n<li>=5 Todd empirical scaling I</li>\n<li>=6 Todd empirical scaling II</li>\n<li>=7 Connor-Hastie model</li>\n<li>=8 Sauter scaling allowing negative triangularity</li>\n<li>=9 FIESTA ST fit</li>\n</ul>",
         "idensl": "switch for density limit to enforce (`constraint equation 5`)\n<ul>\n<li>=1 old ASDEX</li>\n<li>=2 Borrass model for ITER (I)</li>\n<li>=3 Borrass model for ITER (II)</li>\n<li>=4 JET edge radiation</li>\n<li>=5 JET simplified</li>\n<li>=6 Hugill-Murakami Mq limit</li>\n<li>=7 Greenwald limit</li>\n</ul>",
         "idia": "switch for diamagnetic current scaling\n<ul>\n<li>=0 Do not calculate</li>\n<li>=1 Use original TART scaling</li>\n<li>=2 Use SCENE scaling</li>\n</ul>",
         "idiags": "",
@@ -9875,7 +9875,7 @@
         "iprecomp": "Switch for existence of central solenoid pre-compression structure:\n<ul>\n<li>=0 no pre-compression structure</li>\n<li>=1 calculated pre-compression structure</li>\n</ul>",
         "iprimdiv": "",
         "iprimshld": "Switch for shield thermal power destiny:\n<ul>\n<li>=0 does not contribute to energy generation cycle</li>\n<li>=1 contributes to energy generation cycle</li>\n</ul>",
-        "iprofile": "switch for current profile consistency:\n<ul>\n<li>=0 use input values for alphaj, rli, dnbeta (but see gtscale option)</li>\n<li>=1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)</li>\n</ul>",
+        "iprofile": "switch for current profile consistency:\n<ul>\n<li>=0 use input values for alphaj, rli, dnbeta (but see gtscale option)</li>\n<li>=1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)</li>\n</ul>",
         "ips": "switch for Pfirsch-Schl\u00fcter current scaling (issue #413):\n<ul>\n<li>=0 Do not calculate</li>\n<li>=1 Use SCENE scaling</li>\n</ul>",
         "iptnt": "",
         "iptr": "",
@@ -10403,7 +10403,7 @@
         "pwplh": "lower hybrid wall plug power (MW)",
         "pwpm2": "base AC power requirement per unit floor area (W/m2)",
         "pwpnb": "neutral beam wall plug power (MW)",
-        "q": "safety factor 'near' plasma edge (`iteration variable 18`) equal to q95\n (unless `icurr=2` (ST current scaling), in which case q = mean edge safety factor qbar)",
+        "q": "safety factor 'near' plasma edge (`iteration variable 18`) equal to q95\n (unless `i_plasma_current=2` (ST current scaling), in which case q = mean edge safety factor qbar)",
         "q0": "safety factor on axis",
         "q2": "",
         "q95": "safety factor at 95% surface",
@@ -13316,7 +13316,7 @@
             "lb": 0,
             "ub": 3
         },
-        "icurr": {
+        "i_plasma_current": {
             "lb": 1,
             "ub": 9
         },
@@ -19104,7 +19104,7 @@
             "taumax",
             "ibss",
             "iculbl",
-            "icurr",
+            "i_plasma_current",
             "idia",
             "idensl",
             "idivrt",
@@ -20427,7 +20427,7 @@
         "ibss": "int_variable",
         "icc": "int_array",
         "iculbl": "int_variable",
-        "icurr": "int_variable",
+        "i_plasma_current": "int_variable",
         "idensl": "int_variable",
         "idia": "int_variable",
         "iefrf": "int_variable",

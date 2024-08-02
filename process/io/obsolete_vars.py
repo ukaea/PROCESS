@@ -113,6 +113,7 @@ OBS_VARS = {
     "theat": "t_fusion_ramp",
     "ieped": None,
     "eped_sf": None,
+    "icurr": "i_plasma_current",
 }
 
 OBS_VARS_HELP = {

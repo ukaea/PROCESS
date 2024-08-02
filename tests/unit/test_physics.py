@@ -473,7 +473,7 @@ class PlasmaCurrentParam(NamedTuple):
 
     beta: Any = None
 
-    icurr: Any = None
+    i_plasma_current: Any = None
 
     iprofile: Any = None
 
@@ -528,7 +528,7 @@ class PlasmaCurrentParam(NamedTuple):
         PlasmaCurrentParam(
             normalised_total_beta=0,
             beta=0.030000000000000006,
-            icurr=4,
+            i_plasma_current=4,
             iprofile=1,
             alphaj=1,
             rli=0.90000000000000002,
@@ -556,7 +556,7 @@ class PlasmaCurrentParam(NamedTuple):
         PlasmaCurrentParam(
             normalised_total_beta=2.4784688886891844,
             beta=0.030000000000000006,
-            icurr=4,
+            i_plasma_current=4,
             iprofile=1,
             alphaj=1.9008029008029004,
             rli=1.2064840230894305,
@@ -603,7 +603,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
 
     _, _, bp, qstar, plascur = physics.calculate_plasma_current(
-        icurr=plasmacurrentparam.icurr,
+        i_plasma_current=plasmacurrentparam.i_plasma_current,
         iprofile=plasmacurrentparam.iprofile,
         alphaj=plasmacurrentparam.alphaj,
         rli=plasmacurrentparam.rli,
@@ -672,7 +672,7 @@ def test_plasc(arguments, expected):
     (
         (
             {
-                "icurr": 2,
+                "i_plasma_current": 2,
                 "ip": 1.6e7,
                 "qbar": 2.5,
                 "aspect": 2.7,
@@ -687,7 +687,7 @@ def test_plasc(arguments, expected):
         ),
         (
             {
-                "icurr": 2,
+                "i_plasma_current": 2,
                 "ip": 1.6e7,
                 "qbar": 2.5,
                 "aspect": 3.0,
@@ -702,7 +702,7 @@ def test_plasc(arguments, expected):
         ),
         (
             {
-                "icurr": 3,
+                "i_plasma_current": 3,
                 "ip": 1.6e7,
                 "qbar": 2.5,
                 "aspect": 3.0,

@@ -258,7 +258,7 @@ module physics_variables
   !! - =2 apply limit to thermal + neutral beam beta
   !! - =3 apply limit to toroidal beta
 
-  integer :: icurr
+  integer :: i_plasma_current
   !! switch for plasma current scaling to use
   !!
   !! - =1 Peng analytic fit
@@ -365,7 +365,7 @@ module physics_variables
   !! switch for current profile consistency:
   !!
   !! - =0 use input values for alphaj, rli, dnbeta
-  !! - =1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+  !! - =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
   !! - =2 use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling)
   !! - =3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
   !! - =4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
@@ -712,7 +712,7 @@ module physics_variables
 
   real(dp) :: q
   !! Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
-  !! (unless `icurr=2` (ST current scaling), in which case q = mean edge safety factor qbar)
+  !! (unless `i_plasma_current=2` (ST current scaling), in which case q = mean edge safety factor qbar)
 
   real(dp) :: q0
   !! safety factor on axis
@@ -950,7 +950,7 @@ module physics_variables
     taumax = 10.0D0
     ibss = 3
     iculbl = 0
-    icurr = 4
+    i_plasma_current = 4
     idia = 0
     idensl = 7
     idivrt = 2

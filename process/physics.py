@@ -117,11 +117,11 @@ def _plascar_bpol(aspect, eps, kappa, delta):
 
 
 @nb.jit(nopython=True, cache=True)
-def bpol(icurr, ip, qbar, aspect, eps, bt, kappa, delta, perim, rmu0):
+def bpol(i_plasma_current, ip, qbar, aspect, eps, bt, kappa, delta, perim, rmu0):
     """Function to calculate poloidal field
     author: J Galambos, FEDC/ORNL
     author: P J Knight, CCFE, Culham Science Centre
-    icurr  : input integer : current scaling model to use
+    i_plasma_current  : input integer : current scaling model to use
     ip     : input real :  plasma current (A)
     qbar   : input real :  edge q-bar
     aspect : input real :  plasma aspect ratio
@@ -138,7 +138,7 @@ def bpol(icurr, ip, qbar, aspect, eps, bt, kappa, delta, perim, rmu0):
     Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
     Fusion Technology, 21, 1729
     """
-    if icurr != 2:
+    if i_plasma_current != 2:
         return rmu0 * ip / perim
 
     ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
@@ -160,7 +160,7 @@ def plasc(qbar, aspect, eps, rminor, bt, kappa, delta):
     This function calculates the plasma current in MA,
     using a scaling from Peng, Galambos and Shipe (1992).
     It is primarily used for Tight Aspect Ratio Tokamaks and is
-    selected via <CODE>icurr=2</CODE>.
+    selected via <CODE>i_plasma_current=2</CODE>.
     J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
     unpublished internal Oak Ridge document
     Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
@@ -800,7 +800,7 @@ class Physics:
         #    * physics_variables.rmajor
         # )
 
-        if physics_variables.icurr == 2:
+        if physics_variables.i_plasma_current == 2:
             physics_variables.q95 = (
                 physics_variables.q * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
             )
@@ -825,7 +825,7 @@ class Physics:
             physics_variables.alphap,
             physics_variables.bt,
             physics_variables.eps,
-            physics_variables.icurr,
+            physics_variables.i_plasma_current,
             physics_variables.iprofile,
             physics_variables.kappa,
             physics_variables.kappa95,
@@ -2009,7 +2009,7 @@ class Physics:
         alphap: float,
         bt: float,
         eps: float,
-        icurr: int,
+        i_plasma_current: int,
         iprofile: int,
         kappa: float,
         kappa95: float,
@@ -2031,7 +2031,7 @@ class Physics:
             alphap (float): Pressure profile index.
             bt (float): Toroidal field on axis (T).
             eps (float): Inverse aspect ratio.
-            icurr (int): Current scaling model to use.
+            i_plasma_current (int): Current scaling model to use.
                 1 = Peng analytic fit
                 2 = Peng divertor scaling (TART)
                 3 = simple ITER scaling
@@ -2052,11 +2052,11 @@ class Physics:
             p0 (float): Central plasma pressure (Pa).
             pperim (float): Plasma perimeter length (m).
             q0 (float): Plasma safety factor on axis.
-            q95 (float): Plasma safety factor at 95% flux (= q-bar for icurr=2).
+            q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
             rli (float): Plasma normalised internal inductance.
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
-            sf (float): Shape factor for icurr=1 (=A/pi in documentation).
+            sf (float): Shape factor for i_plasma_current=1 (=A/pi in documentation).
             triang (float): Plasma triangularity.
             triang95 (float): Plasma triangularity at 95% surface.
 
@@ -2064,7 +2064,7 @@ class Physics:
             Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plascur, alphaj, rli.
 
         Raises:
-            ValueError: If invalid value for icurr is provided.
+            ValueError: If invalid value for i_plasma_current is provided.
 
         Notes:
             This routine calculates the plasma current based on the edge safety factor q95.
@@ -2082,29 +2082,29 @@ class Physics:
         # Aspect ratio
         aspect_ratio = 1.0 / eps
 
-        # Only the Sauter scaling (icurr=8) is suitable for negative triangularity:
-        if icurr != 8 and triang < 0.0:
+        # Only the Sauter scaling (i_plasma_current=8) is suitable for negative triangularity:
+        if i_plasma_current != 8 and triang < 0.0:
             raise ValueError(
-                f"Triangularity is negative without icurr = 8 selected: {triang=}, {icurr=}"
+                f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
             )
 
         # Calculate the function Fq that scales the edge q from the
         # circular cross-section cylindrical case
 
         # Peng analytical fit
-        if icurr == 1:
+        if i_plasma_current == 1:
             fq = (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
 
         # Peng scaling for double null divertor; TARTs [STAR Code]
-        elif icurr == 2:
+        elif i_plasma_current == 2:
             plascur = 1.0e6 * plasc(q95, aspect_ratio, eps, rminor, bt, kappa, triang)
 
         # Simple ITER scaling (simply the cylindrical case)
-        elif icurr == 3:
+        elif i_plasma_current == 3:
             fq = 1.0
 
         # ITER formula (IPDG89)
-        elif icurr == 4:
+        elif i_plasma_current == 4:
             fq = (
                 0.5
                 * (1.17 - 0.65 * eps)
@@ -2116,7 +2116,7 @@ class Physics:
             )
 
         # Todd empirical scalings
-        elif icurr in [5, 6]:
+        elif i_plasma_current in [5, 6]:
             fq = (
                 (1.0 + 2.0 * eps * eps)
                 * 0.5
@@ -2129,15 +2129,15 @@ class Physics:
                 )
             )
 
-            fq *= 1 if icurr == 7 else (1.0 + (abs(kappa95 - 1.2)) ** 3)
+            fq *= 1 if i_plasma_current == 7 else (1.0 + (abs(kappa95 - 1.2)) ** 3)
 
         # Connor-Hastie asymptotically-correct expression
-        elif icurr == 7:
+        elif i_plasma_current == 7:
             # N.B. If iprofile=1, alphaj will be wrong during the first call (only)
             fq = conhas(alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0)
 
         # Sauter scaling allowing negative triangularity [FED May 2016]
-        elif icurr == 8:
+        elif i_plasma_current == 8:
             # Assumes zero squareness, note takes kappa, delta at separatrix not _95
 
             w07 = 1.0  # zero squareness - can be modified later if required
@@ -2151,15 +2151,15 @@ class Physics:
                 * (1.0 + 0.55 * (w07 - 1.0))
             )
 
-        elif icurr == 9:
+        elif i_plasma_current == 9:
             fq = 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
         else:
-            raise ValueError(f"Invalid value {icurr=}")
+            raise ValueError(f"Invalid value {i_plasma_current=}")
 
         # Main plasma current calculation using the fq value from the different settings
-        if icurr != 2:
+        if i_plasma_current != 2:
             plascur = (constants.twopi / constants.rmu0) * rminor**2 / (rmajor * q95) * fq * bt
-        # icurr == 2 case covered above
+        # i_plasma_current == 2 case covered above
 
         # Calculate cyclindrical safety factor
         qstar = (
@@ -2176,12 +2176,12 @@ class Physics:
 
         # Calculate the poloidal field generated by the plasma current
         bp = bpol(
-            icurr, plascur, q95, aspect_ratio, eps, bt, kappa, triang, pperim, constants.rmu0
+            i_plasma_current, plascur, q95, aspect_ratio, eps, bt, kappa, triang, pperim, constants.rmu0
         )
 
         if iprofile == 1:
             # Ensure current profile consistency, if required
-            # This is as described in Hartmann and Zohm only if icurr = 4 as well...
+            # This is as described in Hartmann and Zohm only if i_plasma_current = 4 as well...
 
             # Tokamaks 4th Edition, Wesson, page 116
             alphaj = qstar / q0 - 1.0
@@ -2512,8 +2512,8 @@ class Physics:
                 po.ovarin(
                     self.outfile,
                     "Plasma current scaling law used",
-                    "(icurr)",
-                    physics_variables.icurr,
+                    "(i_plasma_current)",
+                    physics_variables.i_plasma_current,
                 )
 
                 po.ovarrf(
@@ -2582,7 +2582,7 @@ class Physics:
                 self.outfile, "Safety factor on axis", "(q0)", physics_variables.q0
             )
 
-            if physics_variables.icurr == 2:
+            if physics_variables.i_plasma_current == 2:
                 po.ovarrf(
                     self.outfile, "Mean edge safety factor", "(q)", physics_variables.q
                 )
@@ -5527,7 +5527,7 @@ class Physics:
 
         elif isc == 42:  # High density relevant confinement scaling
             # P.T. Lang et al. 2012, IAEA conference proceeding EX/P4-01
-            # q should be q95: incorrect if icurr = 2 (ST current scaling)
+            # q should be q95: incorrect if i_plasma_current = 2 (ST current scaling)
             qratio = q / qstar
             # Greenwald density in m^-3
             nGW = 1.0e14 * plascur / (np.pi * rminor * rminor)
