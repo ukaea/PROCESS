@@ -33,7 +33,7 @@ be calculated.
 | 3 | `alphaj` and `rli` are inputs. `dnbeta` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]|
 | 4 | `alphaj` and `dnbeta` are inputs. `rli` calculated from elongation [^4]. This is only recommended for spherical tokamaks.|
 | 5 | `alphaj` is an input.  `rli` calculated from elongation and `dnbeta` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]. This is only recommended for spherical tokamaks.|
-| 6 | `alphaj` and `c_beta` are inputs.  `rli` calculated from elongation and `dnbeta` calculated using $C_{\beta}=(g-3.7)F_p / 12.5-3.5Fp$, where $F_p$ is the pressure peaking and $C_{\beta}$ is the destabilisation papermeter (default 0.5)[^5]. See Section 2.4 of Tholerus et al. (2024) for a more detailed description.  This is only recommended for spherical tokamaks.|
+| 6 | `alphaj` and `c_beta` are inputs.  `rli` calculated from elongation and `dnbeta` calculated using $C_{\beta}=(g-3.7)F_p / 12.5-3.5F_p$, where $F_p$ is the pressure peaking and $C_{\beta}$ is the destabilisation papermeter (default 0.5)[^5]. See Section 2.4 of Tholerus et al. (2024) for a more detailed description.  <u> This is only recommended for spherical tokamaks <u>.|
 
 Further details on the calculation of `alphaj` and `rli` is given in [Plasma Current](./plasma_current.md).
 
