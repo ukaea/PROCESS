@@ -468,7 +468,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 
 
-class CulcurParam(NamedTuple):
+class PlasmaCurrentParam(NamedTuple):
     normalised_total_beta: Any = None
 
     beta: Any = None
@@ -523,9 +523,9 @@ class CulcurParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "culcurparam",
+    "plasmacurrentparam",
     (
-        CulcurParam(
+        PlasmaCurrentParam(
             normalised_total_beta=0,
             beta=0.030000000000000006,
             icurr=4,
@@ -553,7 +553,7 @@ class CulcurParam(NamedTuple):
             expected_qstar=2.9008029008029004,
             expected_plascur=18398455.678867526,
         ),
-        CulcurParam(
+        PlasmaCurrentParam(
             normalised_total_beta=2.4784688886891844,
             beta=0.030000000000000006,
             icurr=4,
@@ -583,55 +583,55 @@ class CulcurParam(NamedTuple):
         ),
     ),
 )
-def test_culcur(culcurparam, monkeypatch, physics):
+def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for culcur.
+    Automatically generated Regression Unit Test for calculate_plasma_current().
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
-    :param culcurparam: the data used to mock and assert in this test.
-    :type culcurparam: culcurparam
+    :param plasmacurrentparam: the data used to mock and assert in this test.
+    :type plasmacurrentparam: plasmacurrentparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
     monkeypatch.setattr(
-        physics_variables, "normalised_total_beta", culcurparam.normalised_total_beta
+        physics_variables, "normalised_total_beta", plasmacurrentparam.normalised_total_beta
     )
 
-    monkeypatch.setattr(physics_variables, "beta", culcurparam.beta)
+    monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
 
-    _, _, bp, qstar, plascur = physics.culcur(
-        icurr=culcurparam.icurr,
-        iprofile=culcurparam.iprofile,
-        alphaj=culcurparam.alphaj,
-        rli=culcurparam.rli,
-        alphap=culcurparam.alphap,
-        bt=culcurparam.bt,
-        eps=culcurparam.eps,
-        kappa=culcurparam.kappa,
-        kappa95=culcurparam.kappa95,
-        p0=culcurparam.p0,
-        pperim=culcurparam.pperim,
-        q0=culcurparam.q0,
-        q95=culcurparam.q95,
-        rmajor=culcurparam.rmajor,
-        rminor=culcurparam.rminor,
-        sf=culcurparam.sf,
-        triang=culcurparam.triang,
-        triang95=culcurparam.triang95,
+    _, _, bp, qstar, plascur = physics.calculate_plasma_current(
+        icurr=plasmacurrentparam.icurr,
+        iprofile=plasmacurrentparam.iprofile,
+        alphaj=plasmacurrentparam.alphaj,
+        rli=plasmacurrentparam.rli,
+        alphap=plasmacurrentparam.alphap,
+        bt=plasmacurrentparam.bt,
+        eps=plasmacurrentparam.eps,
+        kappa=plasmacurrentparam.kappa,
+        kappa95=plasmacurrentparam.kappa95,
+        p0=plasmacurrentparam.p0,
+        pperim=plasmacurrentparam.pperim,
+        q0=plasmacurrentparam.q0,
+        q95=plasmacurrentparam.q95,
+        rmajor=plasmacurrentparam.rmajor,
+        rminor=plasmacurrentparam.rminor,
+        sf=plasmacurrentparam.sf,
+        triang=plasmacurrentparam.triang,
+        triang95=plasmacurrentparam.triang95,
     )
 
     assert physics_variables.normalised_total_beta == pytest.approx(
-        culcurparam.expected_normalised_total_beta
+        plasmacurrentparam.expected_normalised_total_beta
     )
 
-    assert bp == pytest.approx(culcurparam.expected_bp)
+    assert bp == pytest.approx(plasmacurrentparam.expected_bp)
 
-    assert qstar == pytest.approx(culcurparam.expected_qstar)
+    assert qstar == pytest.approx(plasmacurrentparam.expected_qstar)
 
-    assert plascur == pytest.approx(culcurparam.expected_plascur)
+    assert plascur == pytest.approx(plasmacurrentparam.expected_plascur)
 
 
 @pytest.mark.parametrize(

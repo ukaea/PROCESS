@@ -393,7 +393,7 @@
     {
       "no": 77,
       "level": 3,
-      "message": "CULCUR: Illegal value for icurr"
+      "message": "CALCULATE_PLASMA_CURRENT: Illegal value for icurr"
     },
     {
       "no": 78,

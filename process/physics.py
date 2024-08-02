@@ -817,7 +817,7 @@ class Physics:
             physics_variables.bp,
             physics_variables.qstar,
             physics_variables.plascur,
-        ) = self.culcur(
+        ) = self.calculate_plasma_current(
             physics_variables.alphaj,
             physics_variables.alphap,
             physics_variables.bt,
@@ -1991,7 +1991,7 @@ class Physics:
         return pohmpv, pohmmw, rpfac, rplas
 
     @staticmethod
-    def culcur(
+    def calculate_plasma_current(
         alphaj,
         alphap,
         bt,
