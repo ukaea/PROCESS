@@ -147,7 +147,7 @@ def bpol(i_plasma_current, ip, qbar, aspect, eps, bt, kappa, delta, perim, rmu0)
 
 
 @nb.jit(nopython=True, cache=True)
-def plasc(qbar, aspect, eps, rminor, bt, kappa, delta):
+def calculate_plasma_current_peng(qbar, aspect, eps, rminor, bt, kappa, delta):
     """Function to calculate plasma current (Peng scaling)
     author: J Galambos, FEDC/ORNL
     author: P J Knight, CCFE, Culham Science Centre
@@ -2097,7 +2097,7 @@ class Physics:
 
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:
-            plascur = 1.0e6 * plasc(q95, aspect_ratio, eps, rminor, bt, kappa, triang)
+            plascur = 1.0e6 * calculate_plasma_current_peng(q95, aspect_ratio, eps, rminor, bt, kappa, triang)
 
         # Simple ITER scaling (simply the cylindrical case)
         elif i_plasma_current == 3:

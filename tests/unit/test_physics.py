@@ -16,7 +16,7 @@ from process.physics import (
     diamagnetic_fraction_scene,
     diamagnetic_fraction_hender,
     ps_fraction_scene,
-    plasc,
+    calculate_plasma_current_peng,
     culblm,
     conhas,
     vscalc,
@@ -666,7 +666,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     ),
 )
 def test_plasc(arguments, expected):
-    assert plasc(**arguments) == pytest.approx(expected)
+    assert calculate_plasma_current_peng(**arguments) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
