@@ -18,9 +18,10 @@ import process.io.mfile as mf
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
+from typing import List
 
 
-def comp_orig():
+def comp_orig(args, mfile_list: List[str], inflate: float) -> None:
     """
 
     Plot bar chart for the orginal 1990 cost model.
@@ -128,11 +129,11 @@ def comp_orig():
     if args.save:
         fig.savefig("direct_cost_bar.pdf")
         fig2.savefig("cost_bar.pdf")
+    else:
+        plt.show()
 
-    plt.show()
 
-
-def comp_new():
+def comp_new(args, mfile_list: List[str], inflate: float):
     """
 
     Plot bar chart for the new 2014 cost model.
@@ -216,12 +217,11 @@ def comp_new():
     # Save plots if option selected
     if args.save:
         fig.savefig("cost_bar.pdf")
+    else:
+        plt.show()
 
-    plt.show()
 
-
-# Main code
-if __name__ == "__main__":
+def main(args=None):
     # Setup command line arguments
     parser = argparse.ArgumentParser(
         description="Displays the cost breakdown as a bar chart.  "
@@ -235,13 +235,14 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--save", help="save figure", action="store_true")
 
-    parser.add_argument("-inf", type=float, help="Inflation Factor (multiplies costs)")
+    parser.add_argument(
+        "-inf", type=float, help="Inflation Factor (multiplies costs)", default=1.0
+    )
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     # Get inflation factor if specified
-    if args.inf:
-        inflate = args.inf
+    inflate = args.inf
 
     # Get file names
     mfile_list = list()
@@ -255,7 +256,7 @@ if __name__ == "__main__":
             if "c21" not in item.data.keys():
                 sys.exit("ERROR: Inconsistent cost models used between MFILEs!")
 
-        comp_orig()
+        comp_orig(args=args, mfile_list=mfile_list, inflate=inflate)
 
     elif "s01" in mfile_list[0].data.keys():
         # Check all MFILEs use new cost model
@@ -263,7 +264,11 @@ if __name__ == "__main__":
             if "s01" not in item.data.keys():
                 sys.exit("ERROR: Inconsistent cost models used between MFILEs!")
 
-        comp_new()
+        comp_new(args=args, mfile_list=mfile_list, inflate=inflate)
 
     else:
         print("ERROR: Failed to identify cost data, check MFILE!")
+
+
+if __name__ == "__main__":
+    main()
