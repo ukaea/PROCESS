@@ -1400,6 +1400,16 @@ class Physics:
             # Nucl. Fusion, 2016, 44.
             physics_variables.dnbeta = 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
 
+        if physics_variables.iprofile == 6:
+            # Method used for STEP plasma scoping
+            # Tholerus et al. (2024), arXiv:2403.09460
+            Fp = (physics_variables.ne0 * physics_variables.te0) / (
+                physics_variables.dene * physics_variables.te
+            )
+            physics_variables.dnbeta = 3.7e0 + (
+                (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
+            )
+
         # culblm returns the betalim for beta
         physics_variables.betalim = culblm(
             physics_variables.bt,
@@ -2161,7 +2171,7 @@ class Physics:
             alphaj = qstar / q0 - 1.0
             rli = np.log(1.65 + 0.89 * alphaj)
 
-        if iprofile == 4 or iprofile == 5:
+        if iprofile in [4, 5, 6]:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
             rli = 3.4 - kappa
