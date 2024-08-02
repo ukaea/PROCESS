@@ -1150,8 +1150,7 @@ def plot_bootstrap_profile(prof, mfile_data, scan):
     #            tbeta,
     #        )
     #    )(roa)
-    # dnitot dene zeff afuel fhe3 xarea tratio
-    ti = te
+    ti = tratio * te
 
     zef = np.full_like(ti, zeff)  # Flat Zeff profile assumed
 
@@ -3155,8 +3154,8 @@ def main_plot(
         plot_8 = fig3.add_subplot(322, aspect="equal")
         plot_tf_turn(plot_8, m_file_data, scan)
 
-        #plot_9 = fig3.add_subplot(323)
-        #plot_bootstrap_profile(plot_9, m_file_data, scan)
+        plot_9 = fig3.add_subplot(323)
+        plot_bootstrap_profile(plot_9, m_file_data, scan)
 
 def main(args=None):
     # TODO The use of globals here isn't ideal, but is required to get main()
