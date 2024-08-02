@@ -56,7 +56,12 @@ nav:
             - Density Limit: physics-models/plasma_density.md
             - Composition & Impurities: physics-models/plasma_radiation_impurities.md
             - Radiation: physics-models/plasma_radiation_impurities.md
-            - Plasma Current: physics-models/plasma_current.md
+            - Plasma Current:
+              - Overview: physics-models/plasma_current/plasma_current.md
+              - Bootstrap Current: physics-models/plasma_current/bootstrap_current.md
+              - Diamagnetic Current: physics-models/plasma_current/diamagnetic_current.md
+              - Pfirsch-Schlüter Current: physics-models/plasma_current/pfirsch_schlüter_current_drive.md
+              - External Current Drive: physics-models/plasma_current/external_current_drive.md
             - Confinement time: physics-models/plasma_confinement.md
             - Plasma Core Power Balance: physics-models/plasma_power_balance.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md
