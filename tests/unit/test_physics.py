@@ -597,7 +597,9 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     """
 
     monkeypatch.setattr(
-        physics_variables, "normalised_total_beta", plasmacurrentparam.normalised_total_beta
+        physics_variables,
+        "normalised_total_beta",
+        plasmacurrentparam.normalised_total_beta,
     )
 
     monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
