@@ -1,10 +1,13 @@
+import math
+from typing import Tuple
 import numpy as np
 import numba as nb
-import scipy.integrate as integrate
 from scipy.optimize import root_scalar
-import math
-import process.physics_functions as physics_funcs
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+
+import scipy.integrate as integrate
+
+import process.physics_functions as physics_funcs
 from process.fortran import (
     constraint_variables,
     reinke_variables,
@@ -2002,102 +2005,106 @@ class Physics:
 
     @staticmethod
     def calculate_plasma_current(
-        alphaj,
-        alphap,
-        bt,
-        eps,
-        icurr,
-        iprofile,
-        kappa,
-        kappa95,
-        p0,
-        pperim,
-        q0,
-        q95,
-        rli,
-        rmajor,
-        rminor,
-        sf,
-        triang,
-        triang95,
-    ):
-        """Routine to calculate the plasma current
-        author: P J Knight, CCFE, Culham Science Centre
-        alphaj   : input/output real : current profile index
-        alphap   : input real :  pressure profile index
-        bt       : input real :  toroidal field on axis (T)
-        eps      : input real :  inverse aspect ratio
-        icurr    : input integer : current scaling model to use
-        1 = Peng analytic fit
-        2 = Peng divertor scaling (TART)
-        3 = simple ITER scaling
-        4 = revised ITER scaling
-        5 = Todd empirical scaling I
-        6 = Todd empirical scaling II
-        7 = Connor-Hastie model
-        8 = Sauter scaling (allowing negative triangularity) Issue #392
-            'Geometric formulas for system codes including the effect of negative triangularity'
-        iprofile : input integer : switch for current profile consistency
-        0 use input values for alphaj, rli, dnbeta
-        1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
-        2 use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling)
-        3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
-        4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
-        5 use input value for alphaj.  Set rli and dnbeta from Menard scaling
-        kappa    : input real :  plasma elongation
-        kappa95  : input real :  plasma elongation at 95% surface
-        p0       : input real :  central plasma pressure (Pa)
-        pperim   : input real :  plasma perimeter length (m)
-        q0       : input real :  plasma safety factor on axis
-        q95      : input real :  plasma safety factor at 95% flux (= q-bar for icurr=2)
-        rli      : input/output real : plasma normalised internal inductance
-        rmajor   : input real :  major radius (m)
-        rminor   : input real :  minor radius (m)
-        sf       : input real :  shape factor for icurr=1 (=A/pi in documentation)
-        triang   : input real :  plasma triangularity
-        triang95 : input real :  plasma triangularity at 95% surface
-        bp       : output real : poloidal field (T)
-        qstar    : output real : equivalent cylindrical safety factor (shaped)
-        plascur  : output real : plasma current (A)
-        This routine calculates the plasma current based on the edge
-        safety factor q95. It will also make the current profile parameters
-        consistent with the q-profile if required.
-        J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-        unpublished internal Oak Ridge document
-        Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
-        Fusion Technology, 21, 1729
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-        M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants -
-        Part 1: Physics https://www.sciencedirect.com/science/article/pii/S0920379614005961
-        H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
-        https://iopscience.iop.org/article/10.1088/0029-5515/53/7/073019
-        T. Hartmann, 2013, Development of a modular systems code to analyse the
-        implications of physics assumptions on the design of a demonstration fusion power plant
-        https://inis.iaea.org/search/search.aspx?orig_q=RN:45031642
-        Sauter, Geometric formulas for systems codes..., FED 2016
+        alphaj: float,
+        alphap: float,
+        bt: float,
+        eps: float,
+        icurr: int,
+        iprofile: int,
+        kappa: float,
+        kappa95: float,
+        p0: float,
+        pperim: float,
+        q0: float,
+        q95: float,
+        rli: float,
+        rmajor: float,
+        rminor: float,
+        sf: float,
+        triang: float,
+        triang95: float
+    ) -> Tuple[float, float, float, float, float]:
+        """Calculate the plasma current.
+
+        Args:
+            alphaj (float): Current profile index.
+            alphap (float): Pressure profile index.
+            bt (float): Toroidal field on axis (T).
+            eps (float): Inverse aspect ratio.
+            icurr (int): Current scaling model to use.
+                1 = Peng analytic fit
+                2 = Peng divertor scaling (TART)
+                3 = simple ITER scaling
+                4 = revised ITER scaling
+                5 = Todd empirical scaling I
+                6 = Todd empirical scaling II
+                7 = Connor-Hastie model
+                8 = Sauter scaling (allowing negative triangularity)
+            iprofile (int): Switch for current profile consistency.
+                0: Use input values for alphaj, rli, dnbeta.
+                1: Make these consistent with input q, q_0 values.
+                2: Use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling).
+                3: Use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling).
+                4: Use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling).
+                5: Use input value for alphaj. Set rli and dnbeta from Menard scaling.
+            kappa (float): Plasma elongation.
+            kappa95 (float): Plasma elongation at 95% surface.
+            p0 (float): Central plasma pressure (Pa).
+            pperim (float): Plasma perimeter length (m).
+            q0 (float): Plasma safety factor on axis.
+            q95 (float): Plasma safety factor at 95% flux (= q-bar for icurr=2).
+            rli (float): Plasma normalised internal inductance.
+            rmajor (float): Major radius (m).
+            rminor (float): Minor radius (m).
+            sf (float): Shape factor for icurr=1 (=A/pi in documentation).
+            triang (float): Plasma triangularity.
+            triang95 (float): Plasma triangularity at 95% surface.
+
+        Returns:
+            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plascur, alphaj, rli.
+
+        Raises:
+            ValueError: If invalid value for icurr is provided.
+
+        Notes:
+            This routine calculates the plasma current based on the edge safety factor q95.
+            It will also make the current profile parameters consistent with the q-profile if required.
+
+        References:
+            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
+            - Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992, Fusion Technology, 21, 1729
+            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al, ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+            - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
+            - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
+            - T. Hartmann, 2013, Development of a modular systems code to analyse the implications of physics assumptions on the design of a demonstration fusion power plant
+            - Sauter, Geometric formulas for systems codes..., FED 2016
         """
         # Aspect ratio
+        aspect_ratio = 1.0 / eps
 
-        asp = 1.0 / eps
+        # Only the Sauter scaling (icurr=8) is suitable for negative triangularity:
+        if icurr != 8 and triang < 0.0:
+            raise ValueError(
+                f"Triangularity is negative without icurr = 8 selected: {triang=}, {icurr=}"
+            )
 
         # Calculate the function Fq that scales the edge q from the
         # circular cross-section cylindrical case
 
-        # Only the Sauter scaling (icurr=8) is suitable for negative triangularity:
-
-        if icurr != 8 and triang < 0.0:
-            raise ValueError(
-                f"Triangularity is negative without icurr = 8: {triang=}, {icurr=}"
-            )
-
-        if icurr == 1:  # Peng analytical fit
+        # Peng analytical fit
+        if icurr == 1:
             fq = (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
-        elif icurr == 2:  # Peng scaling for double null divertor; TARTs [STAR Code]
-            plascur = 1.0e6 * plasc(q95, asp, eps, rminor, bt, kappa, triang)
-        elif icurr == 3:  # Simple ITER scaling (simply the cylindrical case)
+
+        # Peng scaling for double null divertor; TARTs [STAR Code]
+        elif icurr == 2:
+            plascur = 1.0e6 * plasc(q95, aspect_ratio, eps, rminor, bt, kappa, triang)
+
+        # Simple ITER scaling (simply the cylindrical case)
+        elif icurr == 3:
             fq = 1.0
-        elif icurr == 4:  # ITER formula (IPDG89)
+
+        # ITER formula (IPDG89)
+        elif icurr == 4:
             fq = (
                 0.5
                 * (1.17 - 0.65 * eps)
@@ -2107,7 +2114,9 @@ class Physics:
                     + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3)
                 )
             )
-        elif icurr in [5, 6]:  # Todd empirical scalings
+
+        # Todd empirical scalings
+        elif icurr in [5, 6]:
             fq = (
                 (1.0 + 2.0 * eps * eps)
                 * 0.5
@@ -2121,12 +2130,14 @@ class Physics:
             )
 
             fq *= 1 if icurr == 7 else (1.0 + (abs(kappa95 - 1.2)) ** 3)
-        elif icurr == 7:  # Connor-Hastie asymptotically-correct expression
+
+        # Connor-Hastie asymptotically-correct expression
+        elif icurr == 7:
             # N.B. If iprofile=1, alphaj will be wrong during the first call (only)
             fq = conhas(alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0)
-        elif (
-            icurr == 8
-        ):  # Sauter scaling allowing negative triangularity [FED May 2016]
+
+        # Sauter scaling allowing negative triangularity [FED May 2016]
+        elif icurr == 8:
             # Assumes zero squareness, note takes kappa, delta at separatrix not _95
 
             w07 = 1.0  # zero squareness - can be modified later if required
@@ -2139,15 +2150,18 @@ class Physics:
                 / (1.0 - 0.74 * eps)
                 * (1.0 + 0.55 * (w07 - 1.0))
             )
+
         elif icurr == 9:
             fq = 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
         else:
             raise ValueError(f"Invalid value {icurr=}")
 
+        # Main plasma current calculation using the fq value from the different settings
         if icurr != 2:
-            plascur = 5.0e6 * rminor**2 / (rmajor * q95) * fq * bt
-        # == 2 case covered above
+            plascur = (constants.twopi / constants.rmu0) * rminor**2 / (rmajor * q95) * fq * bt
+        # icurr == 2 case covered above
 
+        # Calculate cyclindrical safety factor
         qstar = (
             5.0e6
             * rminor**2
@@ -2159,8 +2173,10 @@ class Physics:
         physics_variables.normalised_total_beta = (
             1.0e8 * physics_variables.beta * rminor * bt / plascur
         )
+
+        # Calculate the poloidal field generated by the plasma current
         bp = bpol(
-            icurr, plascur, q95, asp, eps, bt, kappa, triang, pperim, constants.rmu0
+            icurr, plascur, q95, aspect_ratio, eps, bt, kappa, triang, pperim, constants.rmu0
         )
 
         if iprofile == 1:
