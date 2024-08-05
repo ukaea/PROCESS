@@ -4254,11 +4254,8 @@ class Sctfcoil:
         # Tresca / Von Mises yield criteria calculations
         # -----------------------------
         # Array equation
-        sig_tf_tresca_tmp1 = numpy.maximum(
-            numpy.absolute(sig_tf_r), numpy.absolute(sig_tf_r - sig_tf_z)
-        )
         sig_tf_tresca = numpy.maximum(
-            sig_tf_tresca_tmp1, numpy.absolute(sig_tf_z - sig_tf_t)
+            numpy.absolute(sig_tf_r - sig_tf_z), numpy.absolute(sig_tf_z - sig_tf_t)
         )
 
         # Array equation
