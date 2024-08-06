@@ -1002,6 +1002,8 @@ class Physics:
                 current_drive_variables.bootipf = current_drive_variables.bscf_wilson
             elif physics_variables.ibss == 4:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sauter
+            elif physics_variables.ibss == 5:
+                current_drive_variables.bootipf = current_drive_variables.bscf_sakai
             else:
                 error_handling.idiags[0] = physics_variables.ibss
                 error_handling.report_error(75)
@@ -4115,6 +4117,11 @@ class Physics:
                     self.outfile,
                     "  (Sauter et al bootstrap current fraction model used)",
                 )
+            elif physics_variables.ibss == 5:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Sakai et al bootstrap current fraction model used)",
+                )    
 
             if physics_variables.idia == 0:
                 po.ocmmnt(
