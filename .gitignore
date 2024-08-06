@@ -36,7 +36,6 @@ rootdir.py
 VFILE.DAT
 MFILE.DAT
 OUT.DAT
-SIG_TF.json
 tag.num
 tests.x
 *.xml
