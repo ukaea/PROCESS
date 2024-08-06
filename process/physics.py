@@ -991,7 +991,16 @@ class Physics:
         )
 
         current_drive_variables.bscf_sakai = (
-            current_drive_variables.cboot * self.bootstrap_fraction_sakai()
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sakai(
+                betap=physics_variables.betap,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                eps=physics_variables.eps,
+                rli=physics_variables.rli,
+            )
         )
 
         if current_drive_variables.bscfmax < 0.0e0:
@@ -1008,6 +1017,7 @@ class Physics:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sauter
             elif physics_variables.ibss == 5:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sakai
+                print(current_drive_variables.bscf_sakai)
             else:
                 error_handling.idiags[0] = physics_variables.ibss
                 error_handling.report_error(75)
@@ -4070,7 +4080,7 @@ class Physics:
                 current_drive_variables.bscf_wilson,
                 "OP ",
             )
-            
+
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Sakai)",
@@ -4684,7 +4694,6 @@ class Physics:
     @staticmethod
     def bootstrap_fraction_sakai(
         betap: float,
-        cboot: float,
         q95: float,
         q0: float,
         alphan: float,
@@ -4697,12 +4706,10 @@ class Physics:
 
         Parameters:
         betap (float): Plasma beta parameter.
-        cboot (float): Bootstrap current coefficient.
-        plascur (float): Plasma current.
         q95 (float): Safety factor at 95% of the plasma radius.
         q0 (float): Safety factor at the magnetic axis.
-        alphan (float): Neoclassical toroidal viscosity parameter.
-        alphat (float): Neoclassical poloidal viscosity parameter.
+        alphan (float): Density profile index
+        alphat (float): Temperature profile index
         eps (float): Epsilon parameter.
 
         Returns:
@@ -4712,7 +4719,7 @@ class Physics:
         The profile assumed for the alphan anf alpat indexes is only a prabolic profile without a pedestal.
 
         References:
-        Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, 
+        Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
         Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
         https://doi.org/10.1016/j.fusengdes.2019.111322.
         """
