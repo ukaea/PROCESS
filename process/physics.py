@@ -990,6 +990,10 @@ class Physics:
             current_drive_variables.cboot * self.bootstrap_fraction_sauter()
         )
 
+        current_drive_variables.bscf_sakai = (
+            current_drive_variables.cboot * self.bootstrap_fraction_sakai()
+        )
+
         if current_drive_variables.bscfmax < 0.0e0:
             current_drive_variables.bootipf = abs(current_drive_variables.bscfmax)
             current_drive_variables.plasipf = current_drive_variables.bootipf
@@ -4066,6 +4070,14 @@ class Physics:
                 current_drive_variables.bscf_wilson,
                 "OP ",
             )
+            
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Sakai)",
+                "(bscf_sakai)",
+                current_drive_variables.bscf_sakai,
+                "OP ",
+            )
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (Hender)",
@@ -4121,7 +4133,7 @@ class Physics:
                 po.ocmmnt(
                     self.outfile,
                     "  (Sakai et al bootstrap current fraction model used)",
-                )    
+                )
 
             if physics_variables.idia == 0:
                 po.ocmmnt(
@@ -4668,6 +4680,50 @@ class Physics:
         )  # A/m2
 
         return np.sum(da * jboot, axis=0) / physics_variables.plascur
+
+    @staticmethod
+    def bootstrap_fraction_sakai(
+        betap: float,
+        cboot: float,
+        q95: float,
+        q0: float,
+        alphan: float,
+        alphat: float,
+        eps: float,
+        rli: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Sakai formula.
+
+        Parameters:
+        betap (float): Plasma beta parameter.
+        cboot (float): Bootstrap current coefficient.
+        plascur (float): Plasma current.
+        q95 (float): Safety factor at 95% of the plasma radius.
+        q0 (float): Safety factor at the magnetic axis.
+        alphan (float): Neoclassical toroidal viscosity parameter.
+        alphat (float): Neoclassical poloidal viscosity parameter.
+        eps (float): Epsilon parameter.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+        The profile assumed for the alphan anf alpat indexes is only a prabolic profile without a pedestal.
+
+        References:
+        Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, 
+        Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
+        https://doi.org/10.1016/j.fusengdes.2019.111322.
+        """
+        return (
+            10 ** (0.951 * eps - 0.948)
+            * betap ** (1.226 * eps + 1.584)
+            * rli ** (-0.184 - 0.285)
+            * (q95 / q0) ** (-0.042 * eps - 0.02)
+            * alphan ** (0.13 * eps + 0.05)
+            * alphat ** (0.502 * eps - 0.273)
+        )
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance
