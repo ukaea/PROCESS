@@ -4705,18 +4705,24 @@ class Physics:
         Calculate the bootstrap fraction using the Sakai formula.
 
         Parameters:
-        betap (float): Plasma beta parameter.
+        betap (float): Plasma poloidal beta.
         q95 (float): Safety factor at 95% of the plasma radius.
         q0 (float): Safety factor at the magnetic axis.
         alphan (float): Density profile index
         alphat (float): Temperature profile index
-        eps (float): Epsilon parameter.
+        eps (float): Inverse aspect ratio.
 
         Returns:
         float: The calculated bootstrap fraction.
 
         Notes:
-        The profile assumed for the alphan anf alpat indexes is only a prabolic profile without a pedestal.
+        The profile assumed for the alphan anf alpat indexes is only a prabolic profile without a pedestal (L-mode).
+        The Root Mean Squared Error for the fitting database of this formula was 0.025
+        Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
+        conditions with neutral beam (NB) injection only are calculated.
+        The electron temperature and the ion temperature were assumed to be equal
+        This can be used for all apsect ratios.
+        The diamagnetic fraction is included in this formula.
 
         References:
         Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
