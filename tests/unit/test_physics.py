@@ -1378,7 +1378,7 @@ def test_vscalc(vscalcparam):
     :type vscalcparam: vscalcparam
     """
 
-    phiint, rlp, vsbrn, vsind, vsres, vsstt = vscalc(
+    phiint, rlp, vsbrn, vsind, vsres, vsstt, rho_cr = vscalc(
         csawth=vscalcparam.csawth,
         eps=vscalcparam.eps,
         facoh=vscalcparam.facoh,

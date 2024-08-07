@@ -78,7 +78,9 @@ module times_variables
     tcycle = 0.0D0
     tdown = 0.0D0
     tdwell = 1800.0D0
-    t_fusion_ramp = 10.0D0
+    ! Issue #489 Current ramp-up.  700 s taken from 
+    ! Impact of the plasma operation on the technical requirements in EU-DEMO, M. Siccinio
+    t_fusion_ramp = 700.0D0  
     tim = 0.0D0
     timelabel = (/ 'Start', &
       'BOP  ', &

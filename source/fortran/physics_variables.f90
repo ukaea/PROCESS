@@ -230,6 +230,15 @@ module physics_variables
   real(dp) :: gamma
   !! Ejima coefficient for resistive startup V-s formula
 
+  real(dp) :: t_cr_ratio 
+  !! Typical temperature during the current ramp as a fraction of the flat-top value
+
+  real(dp) :: z_eff_cr_ratio 
+  !! Typical (Zeff-1) during the current ramp as a fraction of the flat-top value
+
+  real(dp) :: rho_cr 
+  !! Plasma loop resistance during the current ramp (ohm)
+
   real(dp) :: gammaft
   !! ratio of (fast alpha + neutral beam beta) to thermal beta
 
@@ -944,6 +953,8 @@ module physics_variables
     fusionrate = 0.0D0
     fvsbrnni = 1.0D0
     gamma = 0.4D0
+    t_cr_ratio = 0.25D0
+    z_eff_cr_ratio = 0.25D0
     gammaft = 0.0D0
     hfac = 0.0D0
     hfact = 1.0D0
