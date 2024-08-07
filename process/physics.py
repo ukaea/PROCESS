@@ -1016,8 +1016,11 @@ class Physics:
             elif physics_variables.ibss == 4:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sauter
             elif physics_variables.ibss == 5:
-                current_drive_variables.bootipf = current_drive_variables.bscf_sakai
-                print(current_drive_variables.bscf_sakai)
+                # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+                # So we remove the PROCESS calculated diamagnetic current from the bootstrap current
+                current_drive_variables.bootipf = (
+                    current_drive_variables.bscf_sakai - current_drive_variables.diaipf
+                )
             else:
                 error_handling.idiags[0] = physics_variables.ibss
                 error_handling.report_error(75)
@@ -4729,6 +4732,8 @@ class Physics:
         Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
         https://doi.org/10.1016/j.fusengdes.2019.111322.
         """
+        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+        # So we remove the PROCESS calculated diamagnetic current at the function call point
         return (
             10 ** (0.951 * eps - 0.948)
             * betap ** (1.226 * eps + 1.584)

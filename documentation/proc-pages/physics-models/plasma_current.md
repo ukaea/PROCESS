@@ -68,7 +68,7 @@ existence of pedestals, whereas the Sauter et al. scaling
 | 2 | General scaling -- To use a more general scaling method, set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
 | 3 | Numerically fitted scaling [^8] -- To use a numerically fitted scaling method, valid for all aspect ratios, set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
 | 4 | Sauter, Angioni and Lin-Liu scaling [^9] [^10] -- Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
-| 5 | Sakai, Fujita and Okamoto scaling [^11] -- Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
+| 5 | Sakai, Fujita and Okamoto scaling [^11] -- Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$). The model includes the toroidal diamagnetic current in the calculation due to the dataset, so the PROCESS diamagnetic current fraction is removed from the calculated value for greater self-consistency.
 
 !!! Note "Fixed Bootstrap Current"
     Direct input -- To input the bootstrap current fraction directly, set `bscfmax` 
