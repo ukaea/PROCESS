@@ -1344,8 +1344,8 @@ class VscalcParam(NamedTuple):
             expected_rlp=1.4075705307248088e-05,
             expected_vsbrn=42.109179697761263,
             expected_vsind=258.97124024420435,
-            expected_vsres=55.488435095110333,
-            expected_vsstt=356.56885503707593,
+            expected_vsres=3.8778020459507383,
+            expected_vsstt=304.9582219879163,
         ),
         VscalcParam(
             csawth=1,
@@ -1363,8 +1363,8 @@ class VscalcParam(NamedTuple):
             expected_rlp=1.4075705307248088e-05,
             expected_vsbrn=0.41692257126496302,
             expected_vsind=258.97124024420435,
-            expected_vsres=55.488435095110333,
-            expected_vsstt=314.87659791057968,
+            expected_vsres=3.8778020459507383,
+            expected_vsstt=263.26596486142006,
         ),
     ),
 )
