@@ -2097,7 +2097,9 @@ class Physics:
 
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:
-            plascur = 1.0e6 * calculate_plasma_current_peng(q95, aspect_ratio, eps, rminor, bt, kappa, triang)
+            plascur = 1.0e6 * calculate_plasma_current_peng(
+                q95, aspect_ratio, eps, rminor, bt, kappa, triang
+            )
 
         # Simple ITER scaling (simply the cylindrical case)
         elif i_plasma_current == 3:
@@ -2116,11 +2118,11 @@ class Physics:
             )
 
         # Todd empirical scalings
+        # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
         elif i_plasma_current in [5, 6]:
             fq = (
-                (1.0 + 2.0 * eps * eps)
-                * 0.5
-                * (1.0 + kappa95**2)
+                (1.0 + 2.0 * eps**2)
+                * ((1.0 + kappa95**2) / 0.5)
                 * (
                     1.24
                     - 0.54 * kappa95
@@ -2129,7 +2131,8 @@ class Physics:
                 )
             )
 
-            fq *= 1 if i_plasma_current == 7 else (1.0 + (abs(kappa95 - 1.2)) ** 3)
+            if i_plasma_current == 6:
+                fq *= 1.0 + (abs(kappa95 - 1.2)) ** 3
 
         # Connor-Hastie asymptotically-correct expression
         elif i_plasma_current == 7:
