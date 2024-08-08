@@ -436,20 +436,32 @@ def bsinteg(
     return (q / q95) * (al1 * (a1 + pratio * (a1 + alphai * a2)) + al2 * a2)
 
 
-def diamagnetic_fraction_hender(beta):
-    """author: S.I. Muldrew, CCFE, Culham Science Centre
-    Diamagnetic contribution at tight aspect ratio.
-    Tim Hender fit
+def diamagnetic_fraction_hender(beta: float) -> float:
+    """
+    Calculate the diamagnetic fraction based on the Hender fit.
+
+    Parameters:
+    - beta: float, the plasma beta value
+
+    Returns:
+    - float, the diamagnetic fraction
     """
     return beta / 2.8
 
 
-def diamagnetic_fraction_scene(beta, q95, q0):
-    """author: S.I. Muldrew, CCFE, Culham Science Centre
-    Diamagnetic fraction based on SCENE fit by Tim Hender
-    See Issue #992
+def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
     """
-    return beta * (0.1 * q95 / q0 + 0.44) * 4.14e-1
+    Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
+
+    Parameters:
+    - beta: float, the plasma beta value
+    - q95: float, the normalized safety factor at 95% of the plasma radius
+    - q0: float, the normalized safety factor at the magnetic axis
+
+    Returns:
+    - float, the diamagnetic fraction
+    """
+    return beta * (0.1 * q95 / q0 + 0.44) * 0.414
 
 
 def ps_fraction_scene(beta):
