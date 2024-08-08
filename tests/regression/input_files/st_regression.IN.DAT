@@ -2964,7 +2964,7 @@ icurr = 9
 * JUSTIFICATION: Fit derived from FIESTA for FNSF-like Plasmas
 * REFERENCE:     Muldrew et al. (2020), Fus. Eng. & Des., 154, 111530
 
-idia = 2
+i_diamagnetic_current = 2
 * DESCRIPTION:   Switch for Diamagnetic Current Scaling (2: SCENE Fit)
 * JUSTIFICATION: 
 

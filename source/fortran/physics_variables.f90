@@ -271,7 +271,7 @@ module physics_variables
   !! - =8 Sauter scaling allowing negative triangularity
   !! - =9 FIESTA ST fit
 
-  integer :: idia
+  integer :: i_diamagnetic_current
   !! switch for diamagnetic current scaling
   !!
   !! - =0 Do not calculate
@@ -951,7 +951,7 @@ module physics_variables
     ibss = 3
     iculbl = 0
     i_plasma_current = 4
-    idia = 0
+    i_diamagnetic_current = 0
     idensl = 7
     idivrt = 2
     ifalphap = 1

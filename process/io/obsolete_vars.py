@@ -114,6 +114,7 @@ OBS_VARS = {
     "ieped": None,
     "eped_sf": None,
     "icurr": "i_plasma_current",
+    "idia": "i_diamagnetic_current",
 }
 
 OBS_VARS_HELP = {

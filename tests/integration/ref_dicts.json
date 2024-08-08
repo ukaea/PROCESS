@@ -2430,7 +2430,7 @@
         "iculbl": 0.0,
         "i_plasma_current": 4.0,
         "idensl": 7.0,
-        "idia": 0.0,
+        "i_diamagnetic_current": 0.0,
         "idiags": [
             "INT_DEFAULT",
             "INT_DEFAULT",
@@ -9805,7 +9805,7 @@
         "iculbl": "switch for beta limit scaling (`constraint equation 24`)\n<ul>\n<li>=0 apply limit to total beta</li>\n<li>=1 apply limit to thermal beta</li>\n<li>=2 apply limit to thermal + neutral beam beta</li>\n<li>=3 apply limit to toroidal beta</li>\n</ul>",
         "i_plasma_current": "switch for plasma current scaling to use\n<ul>\n<li>=1 Peng analytic fit</li>\n<li>=2 Peng double null divertor scaling (ST)</li>\n<li>=3 simple ITER scaling (k = 2.2, d = 0.6)</li>\n<li>=4 later ITER scaling, a la Uckan</li>\n<li>=5 Todd empirical scaling I</li>\n<li>=6 Todd empirical scaling II</li>\n<li>=7 Connor-Hastie model</li>\n<li>=8 Sauter scaling allowing negative triangularity</li>\n<li>=9 FIESTA ST fit</li>\n</ul>",
         "idensl": "switch for density limit to enforce (`constraint equation 5`)\n<ul>\n<li>=1 old ASDEX</li>\n<li>=2 Borrass model for ITER (I)</li>\n<li>=3 Borrass model for ITER (II)</li>\n<li>=4 JET edge radiation</li>\n<li>=5 JET simplified</li>\n<li>=6 Hugill-Murakami Mq limit</li>\n<li>=7 Greenwald limit</li>\n</ul>",
-        "idia": "switch for diamagnetic current scaling\n<ul>\n<li>=0 Do not calculate</li>\n<li>=1 Use original TART scaling</li>\n<li>=2 Use SCENE scaling</li>\n</ul>",
+        "i_diamagnetic_current": "switch for diamagnetic current scaling\n<ul>\n<li>=0 Do not calculate</li>\n<li>=1 Use original TART scaling</li>\n<li>=2 Use SCENE scaling</li>\n</ul>",
         "idiags": "",
         "idivrt": "number of divertors (calculated from `i_single_null`)",
         "iefrf": "Switch for current drive efficiency model:\n<ul>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
@@ -13324,7 +13324,7 @@
             "lb": 1,
             "ub": 7
         },
-        "idia": {
+        "i_diamagnetic_current": {
             "lb": 0,
             "ub": 2
         },
@@ -19105,7 +19105,7 @@
             "ibss",
             "iculbl",
             "i_plasma_current",
-            "idia",
+            "i_diamagnetic_current",
             "idensl",
             "idivrt",
             "ifalphap",
@@ -20429,7 +20429,7 @@
         "iculbl": "int_variable",
         "i_plasma_current": "int_variable",
         "idensl": "int_variable",
-        "idia": "int_variable",
+        "i_diamagnetic_current": "int_variable",
         "iefrf": "int_variable",
         "iefrffix": "int_variable",
         "ifalphap": "int_variable",

@@ -312,7 +312,7 @@ contains
       teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, ibss, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
-      idia, ips, m_s_limit, burnup_in
+      i_diamagnetic_current, ips, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
 
@@ -630,8 +630,8 @@ contains
        case ('idensl')
           call parse_int_variable('idensl', idensl, 1, 7, &
                'Switch for enforced density limit')
-       case ('idia')
-          call parse_int_variable('idia', idia, 0, 2, &
+       case ('i_diamagnetic_current')
+          call parse_int_variable('i_diamagnetic_current', i_diamagnetic_current, 0, 2, &
                 'Switch for diamagnetic scaling')
        case ('ifalphap')
           call parse_int_variable('ifalphap', ifalphap, 0, 1, &

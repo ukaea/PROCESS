@@ -1016,9 +1016,9 @@ class Physics:
                 )
                 physics_module.err242 = 1
 
-            if physics_variables.idia == 1:
+            if physics_variables.i_diamagnetic_current == 1:
                 current_drive_variables.diaipf = current_drive_variables.diacf_hender
-            elif physics_variables.idia == 2:
+            elif physics_variables.i_diamagnetic_current == 2:
                 current_drive_variables.diaipf = current_drive_variables.diacf_scene
 
             if physics_variables.ips == 1:
@@ -4150,7 +4150,7 @@ class Physics:
                     "  (Sauter et al bootstrap current fraction model used)",
                 )
 
-            if physics_variables.idia == 0:
+            if physics_variables.i_diamagnetic_current == 0:
                 po.ocmmnt(
                     self.outfile, "  (Diamagnetic current fraction not calculated)"
                 )
@@ -4158,11 +4158,11 @@ class Physics:
                 if current_drive_variables.diacf_scene > 0.01e0:
                     error_handling.report_error(244)
 
-            elif physics_variables.idia == 1:
+            elif physics_variables.i_diamagnetic_current == 1:
                 po.ocmmnt(
                     self.outfile, "  (Hender diamagnetic current fraction scaling used)"
                 )
-            elif physics_variables.idia == 2:
+            elif physics_variables.i_diamagnetic_current == 2:
                 po.ocmmnt(
                     self.outfile, "  (SCENE diamagnetic current fraction scaling used)"
                 )
