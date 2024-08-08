@@ -223,6 +223,8 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
       - uses: actions/checkout@v3
       - name: Download build artifacts
@@ -244,15 +246,17 @@ jobs:
           name: tracked-mfiles
           path: tracking/
       - name: Create new tracking entries
+        shell: bash
         run: |
+          MSG=$(printf "%q" $COMMIT_MESSAGE)
           git config --global --add safe.directory '*'
-          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${MSG}'
           cp tracking/large_tokamak_MFILE.DAT process-tracking-data/large_tokamak_MFILE_$(git rev-parse HEAD).DAT
-          python tracking/tracking_data.py track process-tracking-data --mfile tracking/st_regression_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/st_regression_MFILE.DAT --hash ${{ github.sha }} --commit '${MSG}'
           cp tracking/st_regression_MFILE.DAT process-tracking-data/st_regression_MFILE_$(git rev-parse HEAD).DAT
-          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_nof_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_nof_MFILE.DAT --hash ${{ github.sha }} --commit '${MSG}'
           cp tracking/large_tokamak_nof_MFILE.DAT process-tracking-data/large_tokamak_nof_MFILE_$(git rev-parse HEAD).DAT
-          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_once_through_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_once_through_MFILE.DAT --hash ${{ github.sha }} --commit '${MSG}'
           cp tracking/large_tokamak_once_through_MFILE.DAT process-tracking-data/large_tokamak_once_through_MFILE_$(git rev-parse HEAD).DAT
       - name: Create the tracking dashboard
         run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
