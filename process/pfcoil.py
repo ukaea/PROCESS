@@ -638,6 +638,18 @@ class PFCoil:
                         tfv.tcritsc,
                     )
 
+                    # Strand critical current calculation for costing in $/kAm
+                    # = superconducting filaments jc * (1 - strand copper fraction)
+                    if (
+                        pfv.isumatoh == 2
+                        or pfv.isumatoh == 6
+                        or pfv.isumatoh == 8
+                        or pfv.isumatoh == 9
+                    ):
+                        pfv.j_crit_str_pf = jsc
+                    else:
+                        pfv.j_crit_str_pf = jsc * (1 - pfv.fcupfsu)
+
                 # Length of conductor
 
                 rll = 2.0e0 * constants.pi * pfv.rpf[i] * pfv.turns[i]
@@ -1193,6 +1205,12 @@ class PFCoil:
                 tfv.bcritsc,
                 tfv.tcritsc,
             )
+            # Strand critical current calculation for costing in $/kAm
+            # = superconducting filaments jc * (1 - strand copper fraction)
+            if pfv.isumatoh == 2 or pfv.isumatoh == 6 or pfv.isumatoh == 8:
+                pfv.j_crit_str_cs = pfv.jscoh_eof
+            else:
+                pfv.j_crit_str_cs = pfv.jscoh_eof * (1 - pfv.fcuohsu)
 
             pfv.rjohc = jcritwp * pfv.awpoh / pfv.areaoh
 
