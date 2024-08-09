@@ -1,17 +1,12 @@
 import numpy
 import dataclasses
 import re
-import sys
+from importlib import resources
 from typing import Optional, List
 from pathlib import Path
 from scipy import integrate
 from process.fortran import impurity_radiation_module
 from process.fortran import error_handling
-
-if sys.version_info >= (3, 9):
-    from importlib import resources
-else:
-    import importlib_resources as resources
 
 
 import logging
