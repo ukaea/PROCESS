@@ -4078,9 +4078,6 @@ class Physics:
                 current_drive_variables.pscf_scene,
                 "OP ",
             )
-            # Error to catch if bootstap fraction limit has been enforced
-            if physics_module.err242 == 1:
-                error_handling.report_error(242)
 
             # Error to catch if self-driven current fraction limit has been enforced
             if physics_module.err243 == 1:
