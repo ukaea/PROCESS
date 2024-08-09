@@ -287,6 +287,8 @@ contains
         case (90); call constraint_eqn_090(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
          ! Constraint for indication of ECRH ignitability
         case (91); call constraint_eqn_091(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
+         ! Constraint for bootstrap current fraction
+        case (92); call constraint_eqn_092(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units) 
        case default
 
         idiags(1) = icc(i)
@@ -3390,6 +3392,29 @@ contains
       tmp_units = 'MW'
    end subroutine constraint_eqn_091
 
-
+   subroutine constraint_eqn_092(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
+      !! Equation for bootstrap current fraction upper limit
+      !! author: C Ashe, UKAEA, Culham Campus
+      !! args : output structure : residual error; constraint value;
+      !! residual error in physical units; output string; units string
+      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
+      !! bootipf : input real : Bootstrap current fraction
+      !! fboot_max : input real : Desired maximum bootstrap current fraction
+      !! bscfmax : input real : f-value for constraint bootipf < fboot_max
+      use current_drive_variables, only: bootipf, bscfmax
+      use constraint_variables, only: fboot_max
+      implicit none
+            real(dp), intent(out) :: tmp_cc
+      real(dp), intent(out) :: tmp_con
+      real(dp), intent(out) :: tmp_err
+      character(len=1), intent(out) :: tmp_symbol
+      character(len=10), intent(out) :: tmp_units
+      
+      tmp_cc =  1.0D0 - fboot_max*bscfmax/bootipf
+      tmp_con = bscfmax
+      tmp_err = bscfmax - bootipf / fboot_max
+      tmp_symbol = '<'
+      tmp_units = ''
+   end subroutine constraint_eqn_092
 
 end module constraints
