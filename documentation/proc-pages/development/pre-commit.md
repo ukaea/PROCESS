@@ -39,7 +39,7 @@ pre-commit -h
 If pre-commit is not installed, then it can be installed by:
 
 ```bash
-python3.8 -m pip install pre-commit
+python3 -m pip install pre-commit
 ```
 
 For developers of PROCESS

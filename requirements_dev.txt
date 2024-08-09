@@ -1,3 +1,6 @@
+# requirements_dev.txt includes the dependencies for running scripts on the CI
+# e.g. documentation building and quality assurance (pre-commit).
+
 pre-commit>=2.16.0
 pytest-cov>=3.0.0
 pytest-xdist>=2.5.0

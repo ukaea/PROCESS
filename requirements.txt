@@ -1,3 +1,6 @@
+# requirements.txt includes the dependencies necessary for running the PROCESS build system
+# (cmake --build build).
+
 # numpy is required for some of the install scripts
 numpy>=1.23
 

@@ -40,23 +40,23 @@ nav:
       # - Versioning: development/versioning.md
   - Reference:
       - Physics Models:
-          - Plasma: 
-            - Overview: physics-models/plasma_overview.md
-            - Geometry: physics-models/plasma_geometry.md
-            - Profiles: 
-              - Overview: physics-models/profiles/plasma_profiles.md
-              - Density Profile: physics-models/profiles/plasma_density_profile.md
-              - Temperature Profile: physics-models/profiles/plasma_temperature_profile.md
-              - Profile Base Class: physics-models/profiles/plasma_profiles_abstract_class.md
-            - Fusion Reactions: physics-models/plasma_reactions.md
-            - Beta Limit: physics-models/plasma_beta.md
-            - Fast Alpha: physics-models/plasma_alpha.md
-            - Density Limit: physics-models/plasma_density.md
-            - Composition & Impurities: physics-models/plasma_radiation_impurities.md
-            - Radiation: physics-models/plasma_radiation_impurities.md
-            - Plasma Current: physics-models/plasma_current.md
-            - Confinement time: physics-models/plasma_confinement.md
-            - Plasma Core Power Balance: physics-models/plasma_power_balance.md
+          - Plasma:
+              - Overview: physics-models/plasma_overview.md
+              - Geometry: physics-models/plasma_geometry.md
+              - Profiles:
+                  - Overview: physics-models/profiles/plasma_profiles.md
+                  - Density Profile: physics-models/profiles/plasma_density_profile.md
+                  - Temperature Profile: physics-models/profiles/plasma_temperature_profile.md
+                  - Profile Base Class: physics-models/profiles/plasma_profiles_abstract_class.md
+              - Fusion Reactions: physics-models/plasma_reactions.md
+              - Beta Limit: physics-models/plasma_beta.md
+              - Fast Alpha: physics-models/plasma_alpha.md
+              - Density Limit: physics-models/plasma_density.md
+              - Composition & Impurities: physics-models/plasma_radiation_impurities.md
+              - Radiation: physics-models/plasma_radiation_impurities.md
+              - Plasma Current: physics-models/plasma_current.md
+              - Confinement time: physics-models/plasma_confinement.md
+              - Plasma Core Power Balance: physics-models/plasma_power_balance.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md
       - Engineering Models:
           - Machine Build: eng-models/machine-build.md
