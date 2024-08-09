@@ -3849,32 +3849,34 @@ contains
     real(kind(1.d0)) :: ratio
     casths = ratio
   end subroutine set_itv_172
+
+  !---------------------------------
+
+  subroutine init_itv_173
+    !! <LI> (173) fboot_max : F valie for icc = 92
+    use numerics, only: lablxc, boundl, boundu
+    implicit none
+    lablxc(173) = 'fboot_max         '
+    boundl(173) = 0.001D0
+    boundu(173) = 10.000D0
+  end subroutine init_itv_173
+
+  real(kind(1.d0)) function itv_173()
+    use constraint_variables, only: fboot_max
+    implicit none
+    itv_173 = fboot_max
+  end function itv_173
+
+  subroutine set_itv_173(ratio)
+    use constraint_variables, only: fboot_max
+    implicit none
+    real(kind(1.d0)) :: ratio
+    fboot_max = ratio
+  end subroutine set_itv_173
   
   !---------------------------------
   ! DUMMY variables below here
   !---------------------------------
-  !---------------------------------
-
-  subroutine init_itv_173
-    !! <LI> (173) DUMMY : Description
-    use numerics, only: lablxc, boundl, boundu
-    implicit none
-    lablxc(173) = 'DUMMY         '
-    boundl(173) = 1.0d-99
-    boundu(173) = 1.0d99
-  end subroutine init_itv_173
-
-  real(kind(1.d0)) function itv_173()
-    implicit none
-    itv_173 = DUMMY
-  end function itv_173
-
-  subroutine set_itv_173(ratio)
-    implicit none
-    real(kind(1.d0)) :: ratio
-    DUMMY = ratio
-  end subroutine set_itv_173
-
   !---------------------------------
 
   subroutine init_itv_174
@@ -4118,8 +4120,8 @@ contains
            case (170);  xcm(i) = itv_170()
            case (171);  xcm(i) = itv_171() 
            case (172);  xcm(i) = itv_172() 
+           case (173);  xcm(i) = itv_173() 
             ! DUMMY Cases
-           case (173);  xcm(i) = itv_173()
            case (174);  xcm(i) = itv_174()
            case (175);  xcm(i) = itv_175()
 
@@ -4385,8 +4387,8 @@ contains
            case (170);  call set_itv_170(ratio)
            case (171);  call set_itv_171(ratio)
            case (172);  call set_itv_172(ratio) 
-            ! DUMMY Cases
            case (173);  call set_itv_173(ratio)
+            ! DUMMY Cases
            case (174);  call set_itv_174(ratio)
            case (175);  call set_itv_175(ratio)
 

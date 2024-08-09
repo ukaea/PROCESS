@@ -17,7 +17,7 @@ module physics_module
   !  Module-level variables
 
   integer :: iscz
-  integer :: err242, err243
+  integer :: err243
   real(dp) :: rad_fraction_LCFS
   real(dp) :: total_plasma_internal_energy  ! [J]
   real(dp) :: total_loss_power        ! [W]
@@ -41,7 +41,6 @@ module physics_module
 
     first_call = 1
     iscz = 0
-    err242 = 0
     err243 = 0
     rad_fraction_LCFS = 0.0D0
     total_plasma_internal_energy = 0.0D0

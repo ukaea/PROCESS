@@ -806,8 +806,6 @@ class PlasmaCompositionParam(NamedTuple):
 
     iscz: Any = None
 
-    err242: Any = None
-
     err243: Any = None
 
     ptarmw: Any = None
@@ -932,7 +930,6 @@ class PlasmaCompositionParam(NamedTuple):
             dene=7.5e19,
             dnprot=0,
             iscz=0,
-            err242=0,
             err243=0,
             ptarmw=0,
             lambdaio=0,
@@ -1054,7 +1051,6 @@ class PlasmaCompositionParam(NamedTuple):
             dene=7.5e19,
             dnprot=7500000000000000,
             iscz=0,
-            err242=0,
             err243=0,
             ptarmw=33.990985729118783,
             lambdaio=0.00157,
@@ -1205,8 +1201,6 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "dnprot", plasmacompositionparam.dnprot)
 
     monkeypatch.setattr(physics_module, "iscz", plasmacompositionparam.iscz)
-
-    monkeypatch.setattr(physics_module, "err242", plasmacompositionparam.err242)
 
     monkeypatch.setattr(physics_module, "err243", plasmacompositionparam.err243)
 

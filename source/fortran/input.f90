@@ -230,7 +230,7 @@ contains
       workshop_l, workshop_w, workshop_h
     use constraint_variables, only: flhthresh, fpeakb, fpsep, fdivcol, ftcycl, &
       betpmx, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
-      maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
+      maxradwallload, pseprmax, fdene, fboot_max, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
       fstrcond, fptemp, ftmargoh, fvs, fbetatry, vvhealw, fpnetel, ftburn, &
@@ -808,6 +808,9 @@ contains
        case ('fdene')
           call parse_real_variable('fdene', fdene, 0.001D0, 10.0D0, &
                'F-value for density limit')
+       case ('fboot_max')
+          call parse_real_variable('fboot_max', fboot_max, 0.001D0, 10.0D0, &
+               'F-value for bootstrap current fraction limit')       
        case ('fdivcol')
           call parse_real_variable('fdivcol', fdivcol, 0.001D0, 10.0D0, &
                'F-value for divertor collisionality')

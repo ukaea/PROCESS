@@ -1758,7 +1758,6 @@
         "epsfcn": 0.001,
         "epsilon0": 8.85418781e-12,
         "epsvmc": 1e-06,
-        "err242": 0.0,
         "err243": 0.0,
         "error": ".False.",
         "error_head": "> null()",
@@ -9389,7 +9388,6 @@
         "epsfcn": "epsfcn /1.0e-3/ : finite difference step length for HYBRD/VMCON derivatives",
         "epsilon0": "permittivity of free space [Farad/m]",
         "epsvmc": "epsvmc /1.0e-6/ : error tolerance for VMCON",
-        "err242": "",
         "err243": "",
         "error": "",
         "error_head": "",
@@ -19005,7 +19003,6 @@
         ],
         "physics_module": [
             "iscz",
-            "err242",
             "err243",
             "rad_fraction_LCFS",
             "total_plasma_internal_energy",
