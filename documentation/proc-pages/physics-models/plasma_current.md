@@ -62,6 +62,10 @@ methods, as summarised here. Note that methods `ibss = 1-3` do not take into acc
 existence of pedestals, whereas the Sauter et al. scaling 
 (`ibss = 4`) allows general profiles to be used. 
 
+!!! Warning "Bootstrap Current Enforcement"
+    The constraint equation `icc = 92` is responsible for making sure the calculated plasma current is whithin the users desired bounds. `bscfmax` sets the maximum desired value of the bootstrap fraction. `fboot_max` is the f-value to scale this input for the constraint equation. 
+    It is not uncommon for the intial conditions of an input file to give a bootstrap current fraction greater than one for some of the models. It is recommended to then set initially wide bounds of the associated variables. If this fails, the bootstrap current can be enforced by setting `bscfmax` to the negative of the required fraction
+
 | `ibss` | Description |
 | :-: | - |
 | 1 | ITER scaling -- To use the ITER scaling method for the bootstrap current fraction.  Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$). This method is valid at high aspect ratio only.
