@@ -640,7 +640,7 @@ class PFCoil:
 
                     # Strand critical current calculation for costing in $/kAm
                     # = superconducting filaments jc * (1 - strand copper fraction)
-                    if pfv.isumatoh in {2, 6, 8}:
+                    if pfv.isumatoh.item() in {2, 6, 8}:
                         pfv.j_crit_str_pf = jsc
                     else:
                         pfv.j_crit_str_pf = jsc * (1 - pfv.fcupfsu)
@@ -1202,7 +1202,7 @@ class PFCoil:
             )
             # Strand critical current calculation for costing in $/kAm
             # = superconducting filaments jc * (1 - strand copper fraction)
-            if pfv.isumatoh in {2, 6, 8}:
+            if pfv.isumatoh.item() in {2, 6, 8}:
                 pfv.j_crit_str_cs = pfv.jscoh_eof
             else:
                 pfv.j_crit_str_cs = pfv.jscoh_eof * (1 - pfv.fcuohsu)
