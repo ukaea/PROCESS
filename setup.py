@@ -33,7 +33,7 @@ setup_kwargs = {
     "test_suite": "pytest",
     "python_requires": ">=3.10",
     "install_requires": [
-        "numpy>=1.23",
+        "numpy>=1.23,<2",
         "scipy>=1.10",
         "cvxpy!=1.3.0,!=1.3.1",
         "pandas>=2.0",
