@@ -63,8 +63,8 @@ existence of pedestals, whereas the Sauter et al. scaling
 (`ibss = 4`) allows general profiles to be used. 
 
 !!! Warning "Bootstrap Current Enforcement"
-    The constraint equation `icc = 92` is responsible for making sure the calculated plasma current is whithin the users desired bounds. `bscfmax` sets the maximum desired value of the bootstrap fraction. `fboot_max` is the f-value to scale this input for the constraint equation. 
-    It is not uncommon for the intial conditions of an input file to give a bootstrap current fraction greater than one for some of the models. It is recommended to then set initially wide bounds of the associated variables. If this fails, the bootstrap current can be enforced by setting `bscfmax` to the negative of the required fraction
+    The constraint equation `icc = 92` is responsible for making sure the calculated plasma current is whithin the user's desired bounds. `bscfmax` sets the maximum desired value of the bootstrap fraction. `fboot_max` is the f-value to scale this input for the constraint equation. 
+    It is not uncommon for the intial conditions of an input file to give a bootstrap current fraction greater than one for some of the models. It is recommended to then set initially wide bounds of the associated variables. If this fails, the bootstrap current can be set directly by setting `bscfmax` to the negative value of the required fraction. This will cause the bootstrap fraction models to be ignored in the rest of the optimisation.
 
 | `ibss` | Description |
 | :-: | - |
