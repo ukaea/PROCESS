@@ -258,7 +258,7 @@ subroutine check
     use physics_variables, only: aspect, fdeut, fgwped, fhe3, &
         fgwsep, ftrit, ibss, i_single_null, icurr, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
-        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar
+        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar, idia
     use pulse_variables, only: lpulse
     use reinke_variables, only: fzactual, impvardiv
     use tfcoil_variables, only: casthi, casthi_is_fraction, casths, i_tf_sup, &
@@ -826,6 +826,10 @@ subroutine check
 
     if ( i_tf_wp_geom /= 0  .and. i_tf_turns_integer == 1 ) then
         call report_error(283)
+    end if
+
+    if ( ibss == 5  .and. idia /= 0 ) then
+        call report_error(284)
     end if
 
     ! Setting t_cable_tf_is_input to true if t_cable_tf is an input

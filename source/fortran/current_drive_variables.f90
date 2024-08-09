@@ -42,6 +42,9 @@ module current_drive_variables
   real(dp) :: bscf_wilson
   !! bootstrap current fraction, Wilson et al model
 
+  real(dp) :: bscf_sakai
+  !! Bootstrap current fraction, Sakai et al model
+
   real(dp) :: cboot
   !! bootstrap current fraction multiplier (`ibss=1`)
 

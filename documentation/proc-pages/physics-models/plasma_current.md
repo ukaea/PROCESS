@@ -68,6 +68,7 @@ existence of pedestals, whereas the Sauter et al. scaling
 | 2 | General scaling -- To use a more general scaling method, set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
 | 3 | Numerically fitted scaling [^8] -- To use a numerically fitted scaling method, valid for all aspect ratios, set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
 | 4 | Sauter, Angioni and Lin-Liu scaling [^9] [^10] -- Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).
+| 5 | Sakai, Fujita and Okamoto scaling [^11] -- Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$). The model includes the toroidal diamagnetic current in the calculation due to the dataset, so `idia = 0` can only be used with it
 
 !!! Note "Fixed Bootstrap Current"
     Direct input -- To input the bootstrap current fraction directly, set `bscfmax` 
@@ -115,3 +116,4 @@ Task meeting EU-JA #16, Fusion for Energy, Garching, 24--25 June 2014
 [^8]: H.R. Wilson, Nuclear Fusion **32** (1992) 257
 [^9]: O. Sauter, C. Angioni and Y.R. Lin-Liu, Physics of Plasmas **6** (1999) 2834 
 [^10]: O. Sauter, C. Angioni and Y.R. Lin-Liu, Physics of Plasmas **9** (2002) 5140
+[^11]: Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2019.111322.

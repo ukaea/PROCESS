@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 283,
+  "n_errortypes": 284,
   "errors": [
     {
       "no": 1,
@@ -1424,6 +1424,11 @@
       "no": 283,
       "level": 3,
       "message": "[tfcoil]: Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
+    },
+    {
+      "no": 284,
+      "level": 3,
+      "message": "CHECK: idia = 0 should be used with the Sakai plasma current scaling."
     }
   ]
 }
