@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 """
 
-    Python tool for comparing MFILE and outputting differences
+    Python tool for comparing MFILE and outputting differences.
+    The tool does not work for MFiles that are not the result of
+    a full PROCESS run (ie if an error or exception occured).
 
     James Morris
     14/04/15
@@ -285,7 +287,14 @@ def main(arg):
     n = 2
     mfile_list = list()
     for item in arg.f:
-        mfile_list.append(mf.MFile(filename=item))
+        mfile = mf.MFile(filename=item)
+        if mfile.data["error_status"].get_scan(-1) == 3:
+            raise RuntimeError(
+                f"{item} is an MFile from a PROCESS run that did not converge"
+                " and instead results from an error during the run"
+            )
+
+        mfile_list.append(mfile)
 
     var_list = list()
     missing_vars = list()
