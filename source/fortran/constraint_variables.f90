@@ -54,6 +54,9 @@ module constraint_variables
   !! f-value for density limit (`constraint equation 5`, `iteration variable 9`)
   !! (invalid if `ipedestal=3`)
 
+  real(dp) :: fboot_max
+  !! f-value for bootstrap current fraction limit (`constraint equation 92`, `iteration variable 173`)
+
   real(dp) :: fdivcol
   !! f-value for divertor collisionality (`constraint equation 22`, `iteration variable 34`)
 
