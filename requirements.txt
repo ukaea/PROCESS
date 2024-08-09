@@ -2,7 +2,7 @@
 # (cmake --build build).
 
 # numpy is required for some of the install scripts
-numpy>=1.23
+numpy>=1.23,<2
 
 # Markdown versions for ford compatibility
 Markdown>=3.2.2,<3.4
