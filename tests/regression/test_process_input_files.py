@@ -99,6 +99,25 @@ class RegressionTestScenario:
             -1
         ) == -2, f"ifail of {ifail} indicates PROCESS did not solve successfully"
 
+        mfile_keys = set(mfile.data.keys())
+        reference_mfile_keys = set(reference_mfile.data.keys())
+        key_mfile_not_ref = mfile_keys - reference_mfile_keys
+        key_ref_not_mfile = reference_mfile_keys - mfile_keys
+
+        key_ref_not_mfile_msg = (
+            "\033[35m Reference MFile contains variables that are not present in "
+            f"the MFILE: {key_ref_not_mfile} \033[0m"
+        )
+        if key_ref_not_mfile:
+            logger.warning(key_ref_not_mfile_msg)
+
+        key_mfile_not_ref_msg = (
+            "\033[35m MFile contains variables that are not present in "
+            f"the reference MFILE: {key_mfile_not_ref} \033[0m"
+        )
+        if key_mfile_not_ref:
+            logger.warning(key_mfile_not_ref_msg)
+
         differences = self.mfile_value_changes(
             reference_mfile, mfile, tolerance, opt_params_only
         )
@@ -121,20 +140,8 @@ class RegressionTestScenario:
                 "for some of the variables. See the warnings for a breakdown of the differences."
             )
 
-        mfile_keys = set(mfile.data.keys())
-        reference_mfile_keys = set(reference_mfile.data.keys())
-        key_mfile_not_ref = mfile_keys - reference_mfile_keys
-        key_ref_not_mfile = reference_mfile_keys - mfile_keys
-
-        assert not key_ref_not_mfile, (
-            "Reference MFile contains variables that are not present in "
-            f"the MFILE: {key_ref_not_mfile}"
-        )
-
-        assert not key_mfile_not_ref, (
-            "MFile contains variables that are not present in "
-            f"the reference MFILE: {key_mfile_not_ref}"
-        )
+        assert not key_ref_not_mfile, key_ref_not_mfile_msg
+        assert not key_mfile_not_ref, key_mfile_not_ref_msg
 
     @staticmethod
     def mfile_value_changes(
