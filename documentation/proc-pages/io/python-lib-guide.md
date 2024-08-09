@@ -1,14 +1,6 @@
-# Introduction
-
-The Python library files are in: 
-
-```
-/utilities/process_io_lib/
-```
-
 ## Library for `IN.DAT` Files
 
-> `./utilities/process.io.in_dat.py`
+> `process/io/in_dat.py`
 
 A set of Python classes to read, modify and write an `IN.DAT` file. 
 
@@ -72,7 +64,7 @@ i.write_in_dat(output_filename="new_IN.DAT")
 
 ## Library for `MFILE.DAT` Files
 
-> `./utilities/process.io.mfile.py`
+> `process/io/mfile.py`
 
 
 A set of Python classes to read and extract data from the `MFILE.DAT`.
