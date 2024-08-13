@@ -2341,7 +2341,7 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 f"PF coil {k} radius (m)",
-                f"(rpf[{k}]",
+                f"(rpf[{k}])",
                 pfv.rpf[k],
             )
             op.ovarre(

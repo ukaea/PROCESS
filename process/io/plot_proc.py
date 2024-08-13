@@ -2059,7 +2059,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
 
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
-    if iohcl == 0:
+    if iohcl == 1:
         noc = number_of_coils - 1
     else:
         noc = number_of_coils
