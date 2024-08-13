@@ -123,7 +123,7 @@ jobs:
           pip install -e '.[test, examples]'
           pip install -r requirements_dev.txt
       - name: Allow git commands to be run
-        run: sudo git config --system --add safe.directory '*'
+        run: git config --global --add safe.directory '*'
       - name: Run regression tests
         run: pytest tests/regression -sv --reg-tolerance=${{ matrix.tolerance }}
 
@@ -203,7 +203,7 @@ jobs:
         shell: bash
         run: |
           MSG=$(printf "%q" $COMMIT_MESSAGE)
-          sudo git config --global --add safe.directory '*'
+          git config --global --add safe.directory '*'
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${MSG}'
           cp tracking/large_tokamak_MFILE.DAT process-tracking-data/large_tokamak_MFILE_$(git rev-parse HEAD).DAT
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/st_regression_MFILE.DAT --hash ${{ github.sha }} --commit '${MSG}'
@@ -221,8 +221,8 @@ jobs:
           path: tracking.html
       - name: Setup Git identity
         run: |
-          sudo git config --global user.email "${{ github.triggering_actor }}@github.runner"
-          sudo git config --global user.name "${{ github.job }}"
+          git config --global user.email "${{ github.triggering_actor }}@github.runner"
+          git config --global user.name "${{ github.job }}"
       - name: Commit and push tracking data
         run: |
           cd process-tracking-data
@@ -260,7 +260,7 @@ jobs:
           path: build/
       - run: python scripts/document_fortran_interface.py
       - run: python scripts/vardes.py
-      - run: sudo git config --global --add safe.directory '*'
+      - run: git config --global --add safe.directory '*'
       - run: mkdocs build
       - run: mv ford_site site
       - name: Download tracking html
