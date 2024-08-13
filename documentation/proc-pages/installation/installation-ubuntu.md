@@ -1,5 +1,5 @@
 # Installation on Ubuntu/Windows
-PROCESS is developed using Ubuntu 22 and tested using Ubuntu 20. We cannot guarantee any other operating system will be able to compile PROCESS or reproduce results. We do unofficially support MacOS however PROCESS is **not** currently tested on this OS by the CI system. 
+PROCESS is developed using Ubuntu 22 and tested using Ubuntu 20. We cannot guarantee any other operating system will be able to compile PROCESS or reproduce results. PROCESS is known to build on some versions of MacOS, however, PROCESS is **not** supported or tested on MacOS. 
 
 !!! Info "Windows User"
     Windows users should run PROCESS using WSL.
@@ -16,11 +16,7 @@ PROCESS is developed using Ubuntu 22 and tested using Ubuntu 20. We cannot guara
 
     If the above procedure fails to work, there is a [Microsoft help page](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-!!! Info "Users on unsupported OS'"
-    Other users may find benefit in our [Docker installation guide](https://ukaea.github.io/PROCESS/installation/installation-docker/) if they are on a machine which they have admin privledges.
-    
-    Users of shared resources should see our [Singularity/Apptainer installation guide](https://ukaea.github.io/PROCESS/installation/installation-singularity/).
-
+## Installing PROCESS
 
 GFortran version 9 or above is needed for successful installation and execution of PROCESS. Versions 
 below GFortran-9 will be rejected by CMake by default since, while PROCESS might compile 
@@ -32,6 +28,10 @@ Open the terminal and install `cmake`, `gfortran`, `pip`, etc.:
 sudo apt update
 sudo apt install -y cmake gfortran python3-pip lcov poppler-utils python3-venv
 ```
+
+!!! Note "CMake"
+    CMake can also be installed into your (virtual) Python environment by running `pip install cmake`.
+
 
 Next, the code will need to be downloaded so you can work with it. The PROCESS code is stored in a 
 GitHub repository and as such needs to be 'cloned' - i.e bought to your VSCode window from GitHub. 
@@ -74,16 +74,26 @@ cmake -S . -B build
 cmake --build build
 ```
 
-If you plan on developing code for PROCESS, please see the `pre-commit` documentation for 
-installing this tool required by developers: [development/pre-commit](http://process.gitpages.ccfe.ac.uk/process/development/pre-commit/)
-
 The build step may take some time when run for the first time (~3 mins) as the Fortran code is 
 compiled and then wrapped using `f2py` to create the Python libraries. Once this is completed 
 the PROCESS Python package is then automatically installed using `pip` and should be ready to use 
-on Linux. If the installation was successful the command `process` should be available on the command line.
+on Linux. If the installation was successful the `process` command should be available on the command line.
 
 To rebuild, for example after making a change to the Fortran source, run `cmake --build build` again. 
 Python-only changes are reflected immediately, as the `cmake` build script performs a development (editable) installation by default.
+
+## Examples
+
+If you are new to PROCESS, you may want to run some of the examples in the `examples/` directory. These will introduce you to the basic functionality of reactor design with PROCESS. The examples require additional dependencies that can be installed using:
+```
+pip install '.[examples]'
+```
+
+## PROCESS Development
+
+If you plan on developing code for PROCESS, please see the `pre-commit` documentation for 
+installing this tool required by developers: [development/pre-commit](http://process.gitpages.ccfe.ac.uk/process/development/pre-commit/).
+
 
 !!! warning "Users of multiple branches"
     For users of PROCESS that run on multiple branches, it is recommended that each time you switch branches you **fully rebuild** PROCESS:
@@ -94,12 +104,9 @@ Python-only changes are reflected immediately, as the `cmake` build script perfo
     ```
 
 The PROCESS test suite provides through tests that can be used to confirm a successful installation; 
-the tests can then be used to verify changes you make have not affected the wider codebase.
-
-Firstly, ensure you are in the PROCESS root directory.
-
-```BASH
-cd PROCESS
+the tests can then be used to verify changes you make have not affected the wider codebase. The tests should be run from the PROCESS root directory. The tests require additional requirements installed by running:
+```
+pip install '.[examples, test]'
 ```
 
 The test suite uses PyTest and can be fully run using:
@@ -113,9 +120,7 @@ which runs unit, integration, and regression tests.
 A more in-depth discussion of testing can be found [here](https://ukaea.github.io/PROCESS/development/testing/).
 
 If everything passes, this indicates a successful installation. If anything fails, this indicates 
-that your environment produces different results to what is expected. You might consider 
-creating an issue in GitHub, or trying out the 
-[Docker container](https://ukaea.github.io/PROCESS/installation/installation-docker/) instead.
+that your environment produces different results to what is expected.
 
 !!! Question "Installation troubleshooting"
 
@@ -198,5 +203,5 @@ creating an issue in GitHub, or trying out the
         E.g.
 
         ```bash
-        sudo apt install libpython3.8-dev
+        sudo apt install libpython3.10-dev
         ```

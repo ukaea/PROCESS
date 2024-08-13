@@ -15,11 +15,11 @@ Revised by Michael Kovari, 7/1/2016
 """
 
 import os
-import sys
 import argparse
 from argparse import RawTextHelpFormatter
 import matplotlib
 import matplotlib.pyplot as plt
+from importlib import resources
 from matplotlib.patches import Rectangle
 from matplotlib.patches import Circle
 import matplotlib.backends.backend_pdf as bpdf
@@ -58,11 +58,6 @@ from process.io.python_fortran_dicts import get_dicts
 if os.name == "posix" and "DISPLAY" not in os.environ:
     matplotlib.use("Agg")
 matplotlib.rcParams["figure.max_open_warning"] = 40
-
-if sys.version_info >= (3, 7):
-    from importlib import resources
-else:
-    import importlib_resources as resources
 
 
 def parse_args(args):

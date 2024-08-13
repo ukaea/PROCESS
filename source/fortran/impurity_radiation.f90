@@ -42,7 +42,7 @@ module impurity_radiation_module
 
   !! fimp(nimp) /1.0,0.1,0.02,0.0,0.0,0.0,0.0,0.0,0.0016,0.0,0.0,0.0,0.0,0.0/ :
   !!        impurity number density fractions relative to electron density
-  !!        
+  !!
   real(dp), public, dimension(nimp) :: fimp
 
   character*2, public, dimension(nimp) :: imp_label
