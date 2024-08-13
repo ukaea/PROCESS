@@ -990,6 +990,19 @@ class Physics:
             current_drive_variables.cboot * self.bootstrap_fraction_sauter()
         )
 
+        current_drive_variables.bscf_sakai = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sakai(
+                betap=physics_variables.betap,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                eps=physics_variables.eps,
+                rli=physics_variables.rli,
+            )
+        )
+
         if current_drive_variables.bscfmax < 0.0e0:
             current_drive_variables.bootipf = abs(current_drive_variables.bscfmax)
             current_drive_variables.plasipf = current_drive_variables.bootipf
@@ -1002,6 +1015,10 @@ class Physics:
                 current_drive_variables.bootipf = current_drive_variables.bscf_wilson
             elif physics_variables.ibss == 4:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sauter
+            elif physics_variables.ibss == 5:
+                # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+                # So the diamagnetic current calculation should be turned off when using, (idia = 0).
+                current_drive_variables.bootipf = current_drive_variables.bscf_sakai
             else:
                 error_handling.idiags[0] = physics_variables.ibss
                 error_handling.report_error(75)
@@ -4064,6 +4081,14 @@ class Physics:
                 current_drive_variables.bscf_wilson,
                 "OP ",
             )
+
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Sakai)",
+                "(bscf_sakai)",
+                current_drive_variables.bscf_sakai,
+                "OP ",
+            )
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (Hender)",
@@ -4114,6 +4139,11 @@ class Physics:
                 po.ocmmnt(
                     self.outfile,
                     "  (Sauter et al bootstrap current fraction model used)",
+                )
+            elif physics_variables.ibss == 5:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Sakai et al bootstrap current fraction model used)",
                 )
 
             if physics_variables.idia == 0:
@@ -4661,6 +4691,55 @@ class Physics:
         )  # A/m2
 
         return np.sum(da * jboot, axis=0) / physics_variables.plascur
+
+    @staticmethod
+    def bootstrap_fraction_sakai(
+        betap: float,
+        q95: float,
+        q0: float,
+        alphan: float,
+        alphat: float,
+        eps: float,
+        rli: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Sakai formula.
+
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        q95 (float): Safety factor at 95% of the plasma radius.
+        q0 (float): Safety factor at the magnetic axis.
+        alphan (float): Density profile index
+        alphat (float): Temperature profile index
+        eps (float): Inverse aspect ratio.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+        The profile assumed for the alphan anf alpat indexes is only a prabolic profile without a pedestal (L-mode).
+        The Root Mean Squared Error for the fitting database of this formula was 0.025
+        Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
+        conditions with neutral beam (NB) injection only are calculated.
+        The electron temperature and the ion temperature were assumed to be equal
+        This can be used for all apsect ratios.
+        The diamagnetic fraction is included in this formula.
+
+        References:
+        Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
+        Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
+        https://doi.org/10.1016/j.fusengdes.2019.111322.
+        """
+        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+        # So the diamganetic current should not be calculated with this. idia = 0
+        return (
+            10 ** (0.951 * eps - 0.948)
+            * betap ** (1.226 * eps + 1.584)
+            * rli ** (-0.184 - 0.282)
+            * (q95 / q0) ** (-0.042 * eps - 0.02)
+            * alphan ** (0.13 * eps + 0.05)
+            * alphat ** (0.502 * eps - 0.273)
+        )
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance
