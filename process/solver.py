@@ -16,6 +16,7 @@ from pyvmcon import (
 from scipy.optimize import fsolve
 import nlopt
 import time
+from scipy import optimize
 
 from process.evaluators import Evaluators
 from process.exceptions import ProcessValueError
@@ -387,7 +388,7 @@ class SLSQP(_Solver):
 
     def solve(self) -> int:
         """Try running nlopt."""
-        # global objf, conf, fgrd, cnorm
+        print("Using SLSQP")
         self.eval_count = 0
         self.constr_res = 0.0
 
@@ -509,6 +510,136 @@ class SLSQP(_Solver):
         return info
 
 
+class Scipy_SLSQP(_Solver):
+    """Minimise using scipy's SLSQP."""
+
+    print("Running scipy's SLSQP")
+    SOLVER_TOL = 1e-6
+    EQ_CONSTRAINT_TOL = 1e-8
+
+    def obj_func(self, x):
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        # constr_res = np.sqrt(
+        #     np.sum(np.square(conf[:meq]))
+        # )  # only for equality constraints
+        # logger.debug(f"Constraint residuals: {constr_res:.3e}")
+
+        # print(
+        #     f"Evaluation {eval_count}, objective function = {objf:.5}, "
+        #     f"constraint residuals = {constr_res:.3e}"
+        # )
+        return objf
+
+    def constraint_eq_vec(self, x):
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        # constr_res = np.sqrt(
+        #     np.sum(np.square(conf[:meq]))
+        # )  # only to equality constraints
+
+        return conf[: self.meq]
+
+    def constraint_ineq_vec(self, x):
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        conf_gt_tol = np.sum((conf[self.meq :] < 0.0))
+        logger.info(f"{conf_gt_tol} inequality constraints above 0.0")
+        return conf[self.meq : self.m]
+
+    def convergence_progress(self, x_current):
+        conf = self.constraint_ineq_vec(x_current)
+        ineq_rms = np.sqrt(np.mean(np.square(conf[conf < 0.0])))
+        print(f"{ineq_rms = :.3e}")
+
+    def solve(self):
+        self.n = self.x_0.shape[0]
+
+        # Check bounds are activated for all optimisation parameters (default case)
+        # If not, handle it
+        if not (np.all(self.ilower) and np.all(self.iupper)):
+            # Some bounds are inactive: used e.g. in solver integration tests
+            for i in range(self.ilower.shape[0]):
+                if self.ilower[i] == 0:
+                    # Inactive lower bound: set to -inf
+                    self.bndl[i] = -np.inf
+
+            for i in range(self.iupper.shape[0]):
+                if self.iupper[i] == 0:
+                    # Inactive upper bound: set to +inf
+                    self.bndu[i] = np.inf
+
+        # Kludge initial normalised x into the normalised bounds range if required
+        for i in range(self.n):
+            if self.x_0[i] < self.bndl[i]:
+                self.x_0[i] = self.bndl[i]
+            elif self.x_0[i] > self.bndu[i]:
+                self.x_0[i] = self.bndu[i]
+
+        bounds = optimize.Bounds(lb=self.bndl, ub=self.bndu)
+
+        constraints = []
+        if self.meq > 0:
+            eq_constraints = optimize.NonlinearConstraint(
+                self.constraint_eq_vec, -self.EQ_CONSTRAINT_TOL, self.EQ_CONSTRAINT_TOL
+            )
+            constraints.append(eq_constraints)
+
+        if self.meq < self.m:
+            ineq_constraints = optimize.NonlinearConstraint(
+                self.constraint_ineq_vec,
+                0.0,
+                np.inf,
+            )
+            constraints.append(ineq_constraints)
+
+        start_time = time.time()
+
+        result = optimize.minimize(
+            self.obj_func,
+            self.x_0,
+            method="SLSQP",
+            jac=None,
+            bounds=bounds,
+            constraints=constraints,
+            tol=self.SOLVER_TOL,
+            callback=self.convergence_progress,
+            options={"disp": True, "eps": 1e-3},
+        )
+        end_time = time.time()
+        duration = end_time - start_time
+
+        # Log stuff
+        logger.info(f"{self.SOLVER_TOL=}, {self.EQ_CONSTRAINT_TOL=}")
+        logger.info(f"Iterations: {result.nit}")
+        logger.info(f"Evaluations: {result.nfev}")
+        logger.info(f"Duration: {duration:.3}")
+
+        # Recalculate constraints at optimium x
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, result.x, self.ifail)
+
+        # Check if constraints are all below tolerance
+        conf_gt_tol = np.sum((conf[self.meq :] < 0.0))
+        logger.info(f"{conf_gt_tol} inequality constraints violated")
+        logger.info(f"Constraint residuals: {conf}")
+
+        # constr_res = np.sqrt(
+        #     np.sum(np.square(conf[: self.meq]))
+        # )  # only for equality constraints
+        # logger.info(f"Constraint residuals: {constr_res:.3e}")
+        # logger.info(f"{conf=}")
+
+        if result.success:
+            info = 1
+        else:
+            # Want to write error code to MFILE
+            # raise RuntimeError("scipy failed to converge")
+            info = 2
+
+        self.objf = result.fun
+        self.conf = conf
+        self.x = result.x
+
+        return info
+
+
 def get_solver(solver_name: str = "vmcon") -> _Solver:
     """Return a solver instance.
 
@@ -527,6 +658,8 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
         solver = FSolve()
     elif solver_name == "slsqp":
         solver = SLSQP()
+    elif solver_name == "scipy_slsqp":
+        solver = Scipy_SLSQP()
     else:
         try:
             solver = load_external_solver(solver_name)
