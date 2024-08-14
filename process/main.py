@@ -78,8 +78,6 @@ from process.caller import write_output_files
 from pathlib import Path
 import os
 import logging
-import numpy as np
-import json
 
 # For VaryRun
 from process.io.process_config import RunProcessConfig
