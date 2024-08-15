@@ -464,10 +464,15 @@ def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
     return beta * (0.1 * q95 / q0 + 0.44) * 0.414
 
 
-def ps_fraction_scene(beta):
-    """author: S.I. Muldrew, CCFE, Culham Science Centre
-    Pfirsch-Schlüter fraction based on SCENE fit by Tim Hender
-    See Issue #992
+def ps_fraction_scene(beta: float) -> float:
+    """
+    Calculate the Pfirsch-Schlüter fraction based on the SCENE fit by Tim Hender 2019.
+
+    Parameters:
+    - beta: float, the plasma beta value
+
+    Returns:
+    - float, the Pfirsch-Schlüter current fraction
     """
     return -9e-2 * beta
 
