@@ -258,7 +258,7 @@ subroutine check
     use physics_variables, only: aspect, fdeut, fgwped, fhe3, &
         fgwsep, ftrit, ibss, i_single_null, i_plasma_current, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
-        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar, idia
+        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar, i_diamagnetic_current
     use pulse_variables, only: lpulse
     use reinke_variables, only: fzactual, impvardiv
     use tfcoil_variables, only: casthi, casthi_is_fraction, casths, i_tf_sup, &
@@ -828,7 +828,7 @@ subroutine check
         call report_error(283)
     end if
 
-    if ( ibss == 5  .and. idia /= 0 ) then
+    if ( ibss == 5  .and. i_diamagnetic_current /= 0 ) then
         call report_error(284)
     end if
 
