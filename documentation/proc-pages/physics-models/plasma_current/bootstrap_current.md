@@ -1,10 +1,10 @@
 The fraction of the plasma current provided by the bootstrap effect
 can be either input into the code directly, or calculated using one of four
-methods, as summarised here. Note that methods `ibss = 1-3` do not take into account the 
+methods, as summarised here. Note that methods `i_bootstrap_current = 1-3` do not take into account the 
 existence of pedestals, whereas the Sauter et al. scaling 
-(`ibss = 4`) allows general profiles to be used. 
+(`i_bootstrap_current = 4`) allows general profiles to be used. 
 
-| `ibss` | Description |
+| `i_bootstrap_current` | Description |
 | :-: | - |
 | 1 | ITER scaling -- To use the ITER scaling method for the bootstrap current fraction.  Set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$). This method is valid at high aspect ratio only.
 | 2 | General scaling -- To use a more general scaling method, set `bscfmax` to the maximum required bootstrap current fraction ($\leq 1$).

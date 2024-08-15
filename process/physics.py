@@ -1027,20 +1027,20 @@ class Physics:
             current_drive_variables.bootipf = abs(current_drive_variables.bscfmax)
             current_drive_variables.plasipf = current_drive_variables.bootipf
         else:
-            if physics_variables.ibss == 1:
+            if physics_variables.i_bootstrap_current == 1:
                 current_drive_variables.bootipf = current_drive_variables.bscf_iter89
-            elif physics_variables.ibss == 2:
+            elif physics_variables.i_bootstrap_current == 2:
                 current_drive_variables.bootipf = current_drive_variables.bscf_nevins
-            elif physics_variables.ibss == 3:
+            elif physics_variables.i_bootstrap_current == 3:
                 current_drive_variables.bootipf = current_drive_variables.bscf_wilson
-            elif physics_variables.ibss == 4:
+            elif physics_variables.i_bootstrap_current == 4:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sauter
-            elif physics_variables.ibss == 5:
+            elif physics_variables.i_bootstrap_current == 5:
                 # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
                 # So the diamagnetic current calculation should be turned off when using, (idia = 0).
                 current_drive_variables.bootipf = current_drive_variables.bscf_sakai
             else:
-                error_handling.idiags[0] = physics_variables.ibss
+                error_handling.idiags[0] = physics_variables.i_bootstrap_current
                 error_handling.report_error(75)
 
             physics_module.err242 = 0
@@ -4173,25 +4173,25 @@ class Physics:
                 po.ocmmnt(
                     self.outfile, "  (User-specified bootstrap current fraction used)"
                 )
-            elif physics_variables.ibss == 1:
+            elif physics_variables.i_bootstrap_current == 1:
                 po.ocmmnt(
                     self.outfile, "  (ITER 1989 bootstrap current fraction model used)"
                 )
-            elif physics_variables.ibss == 2:
+            elif physics_variables.i_bootstrap_current == 2:
                 po.ocmmnt(
                     self.outfile,
                     "  (Nevins et al bootstrap current fraction model used)",
                 )
-            elif physics_variables.ibss == 3:
+            elif physics_variables.i_bootstrap_current == 3:
                 po.ocmmnt(
                     self.outfile, "  (Wilson bootstrap current fraction model used)"
                 )
-            elif physics_variables.ibss == 4:
+            elif physics_variables.i_bootstrap_current == 4:
                 po.ocmmnt(
                     self.outfile,
                     "  (Sauter et al bootstrap current fraction model used)",
                 )
-            elif physics_variables.ibss == 5:
+            elif physics_variables.i_bootstrap_current == 5:
                 po.ocmmnt(
                     self.outfile,
                     "  (Sakai et al bootstrap current fraction model used)",

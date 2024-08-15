@@ -242,7 +242,7 @@ module physics_variables
   real(dp) :: taumax
   !! Maximum allowed energy confinement time (s)
 
-  integer :: ibss
+  integer :: i_bootstrap_current
   !! switch for bootstrap current scaling
   !!
   !! - =1 ITER 1989 bootstrap scaling (high R/a only)
@@ -949,7 +949,7 @@ module physics_variables
     hfac = 0.0D0
     hfact = 1.0D0
     taumax = 10.0D0
-    ibss = 3
+    i_bootstrap_current = 3
     iculbl = 0
     i_plasma_current = 4
     i_diamagnetic_current = 0

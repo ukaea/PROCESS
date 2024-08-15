@@ -2934,12 +2934,12 @@ bscfmax = 0.9
 * JUSTIFICATION: upper limit set for plasma stability
 *                
 
-ibss = 4
+i_bootstrap_current = 4
 * DESCRIPTION:   Switch for Bootstrap Current Scaling (4: Sauter scaling)
 * JUSTIFICATION: Wilson model was previously used for STs
 
 *cboot = 
-* DESCRIPTION:   Bootstrap current fraction multiplier (ibss=1)
+* DESCRIPTION:   Bootstrap current fraction multiplier (i_bootstrap_current=1)
 * JUSTIFICATION: Not used, not scaling bootstrap current
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

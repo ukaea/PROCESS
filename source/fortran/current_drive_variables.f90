@@ -24,7 +24,7 @@ module current_drive_variables
   !! Fusion gain; P_fusion / (P_injection + P_ohmic)
 
   real(dp) :: bootipf
-  !! bootstrap current fraction (enforced; see ibss)
+  !! bootstrap current fraction (enforced; see i_bootstrap_current)
 
   real(dp) :: bscfmax
   !! maximum fraction of plasma current from bootstrap; if `bscfmax < 0`,
@@ -46,7 +46,7 @@ module current_drive_variables
   !! Bootstrap current fraction, Sakai et al model
 
   real(dp) :: cboot
-  !! bootstrap current fraction multiplier (`ibss=1`)
+  !! bootstrap current fraction multiplier (`i_bootstrap_current=1`)
 
   real(dp) :: cnbeam
   !! neutral beam current (A)

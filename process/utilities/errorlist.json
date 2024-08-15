@@ -198,7 +198,7 @@
     {
       "no": 38,
       "level": 3,
-      "message": "CHECK: Invalid boostrap current law for ST, do not use ibss = 1"
+      "message": "CHECK: Invalid boostrap current law for ST, do not use i_bootstrap_current = 1"
     },
     {
       "no": 39,
@@ -383,7 +383,7 @@
     {
       "no": 75,
       "level": 3,
-      "message": "PHYSICS: Illegal value of ibss"
+      "message": "PHYSICS: Illegal value of i_bootstrap_current"
     },
     {
       "no": 76,

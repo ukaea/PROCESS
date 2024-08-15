@@ -309,7 +309,7 @@ contains
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
       ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
-      teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, ibss, &
+      teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       i_diamagnetic_current, ips, m_s_limit, burnup_in
@@ -618,8 +618,8 @@ contains
        case ('taumax')
           call parse_real_variable('taumax', taumax, 0.1D0, 100.0D0, &
                'Maximum allowed energy confinement time (s)')
-       case ('ibss')
-          call parse_int_variable('ibss', ibss, 1, 5, &
+       case ('i_bootstrap_current')
+          call parse_int_variable('i_bootstrap_current', i_bootstrap_current, 1, 5, &
                'Switch for bootstrap scaling')
        case ('iculbl')
           call parse_int_variable('iculbl', iculbl, 0, 3, &

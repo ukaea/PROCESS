@@ -372,7 +372,7 @@ fkzohm = 1.02
 gamma = 0.3
 
 * Switch for bootstrap current scaling
-ibss = 4
+i_bootstrap_current = 4
 
 * Switch for beta limit scaling
 iculbl = 1

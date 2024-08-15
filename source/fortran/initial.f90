@@ -256,7 +256,7 @@ subroutine check
         boundu
     use pfcoil_variables, only: ipfres, ngrp, pfclres, ipfloc, ncls, isumatoh
     use physics_variables, only: aspect, fdeut, fgwped, fhe3, &
-        fgwsep, ftrit, ibss, i_single_null, i_plasma_current, idivrt, ishape, &
+        fgwsep, ftrit, i_bootstrap_current, i_single_null, i_plasma_current, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
         rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar, i_diamagnetic_current
     use pulse_variables, only: lpulse
@@ -560,7 +560,7 @@ subroutine check
         end if
 
         ! Check if the boostrap current selection is addapted to ST
-        if (ibss  == 1) call report_error(38)
+        if (i_bootstrap_current  == 1) call report_error(38)
 
         ! Check if a single null divertor is used in double null machine
         if (i_single_null == 0 .and. (ftar == 1.0 .or. ftar == 0.0)) then
@@ -828,7 +828,7 @@ subroutine check
         call report_error(283)
     end if
 
-    if ( ibss == 5  .and. i_diamagnetic_current /= 0 ) then
+    if ( i_bootstrap_current == 5  .and. i_diamagnetic_current /= 0 ) then
         call report_error(284)
     end if
 
