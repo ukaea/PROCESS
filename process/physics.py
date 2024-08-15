@@ -205,8 +205,6 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
 
     return conie * (ti - te) / (te**1.5)
 
-
-# @nb.jit(nopython=True, cache=True)
 def vscalc(
     csawth,
     eps,
