@@ -339,6 +339,12 @@ module cost_variables
   real(dp) :: startuppwr
   !! cost associated with additional HCD system power required on start-up ($)
 
+  integer :: supercond_cost_model
+  !! Switch for superconductor cost model:
+  !!
+  !! - =0 use $/kg
+  !! - =1 use $/kAm
+
   real(dp) :: tlife
   !! Full power year plant lifetime (years)
 
@@ -539,6 +545,9 @@ module cost_variables
 
   real(dp), dimension(9) :: ucsc
   !! cost of superconductor ($/kg)
+
+  real(dp), dimension(9) :: sc_mat_cost_0
+  !!cost of superconductor ($/kA m) at 6.4 T, 4.2 K
 
   real(dp), parameter :: ucsh = 115.0D0
   !! cost of shops and warehouses (M$/m3)
@@ -742,6 +751,9 @@ module cost_variables
     ucsc = &
       (/600.0D0, 600.0D0, 300.0D0, 600.0D0, 600.0D0, 600.0D0, 300.0D0, 1200.0D0, &
       1200.0D0/)
+    sc_mat_cost_0 = &
+      (/4.8D0, 2.0D0, 1.0D0, 4.8D0, 4.8D0, 47.4D0, 1.0D0, 47.4D0, 47.4D0/)
+    supercond_cost_model = 0
     ucshld = 32.0D0
     uctfbr = 1.22D0
     uctfbus = 100.0D0

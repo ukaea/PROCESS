@@ -249,6 +249,7 @@ module physics_variables
   !! - =2 for Nevins et al general scaling
   !! - =3 for Wilson et al numerical scaling
   !! - =4 for Sauter et al scaling
+  !! - =5 for Sakai et al scaling
 
   integer :: iculbl
   !! switch for beta limit scaling (`constraint equation 24`)

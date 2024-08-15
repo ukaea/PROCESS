@@ -2,7 +2,7 @@
 """
 
   Modifies the PROCESS input file IN.DAT so all the iteration variables are
-  given their values from the output file OUT.DAT.
+  given their values from the output file MFILE.DAT.
 
   James Morris 30/04/2014 based on code by Michael Kovari 9/8/13 and
   J C Rivas, 16/7/2013
@@ -113,7 +113,7 @@ def replace_iteration_variables(iteration_vars, in_data):
     return in_data
 
 
-if __name__ == "__main__":
+def main(args=None):
     parser = argparse.ArgumentParser(
         description="Creates a new IN.DAT using "
         "iteration variable values "
@@ -155,7 +155,7 @@ if __name__ == "__main__":
         "-ffp", "--ffp", help="use first feasible point in a scan", action="store_true"
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     if args.ffp:
         # Determine first feasible scan point
@@ -179,3 +179,7 @@ if __name__ == "__main__":
 
     # Write a new IN.DAT
     in_dat_data.write_in_dat(output_filename=args.o)
+
+
+if __name__ == "__main__":
+    main()

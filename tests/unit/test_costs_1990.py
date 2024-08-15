@@ -1765,6 +1765,10 @@ class Acc2221Param(NamedTuple):
 
     i_tf_sup: Any = None
 
+    supercond_cost_model: Any = None
+
+    j_crit_str_tf: Any = None
+
     n_tf_turn: Any = None
 
     tfleng: Any = None
@@ -1819,6 +1823,8 @@ class Acc2221Param(NamedTuple):
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
+            supercond_cost_model=0,
+            j_crit_str_tf=300.0,
             n_tf_turn=200,
             tfleng=50.483843027201402,
             i_tf_sc_mat=5,
@@ -1858,6 +1864,8 @@ class Acc2221Param(NamedTuple):
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
+            supercond_cost_model=0,
+            j_crit_str_tf=300.0,
             n_tf_turn=200,
             tfleng=50.514015976170839,
             i_tf_sc_mat=5,
@@ -1869,6 +1877,47 @@ class Acc2221Param(NamedTuple):
             c22214=172.4182702723208,
             c22215=57.77719854752457,
             expected_c22211=127.87250498362496,
+            expected_c22212=65.563151615791654,
+        ),
+        Acc2221Param(
+            uccpclb=150,
+            uccase=50,
+            uccu=75,
+            fkind=1,
+            cconshtf=75,
+            ucsc=numpy.array(
+                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+                order="F",
+            ).transpose(),
+            ifueltyp=1,
+            uccpcl1=250,
+            ucwindtf=480,
+            cpstcst=0,
+            lsa=2,
+            cconfix=80,
+            itart=0,
+            clgsmass=1951781.4798732549,
+            aintmass=5829865.436088616,
+            whtconcu=58779.575542593491,
+            whtconsc=5806.038092640837,
+            whtcas=1034699.2182961091,
+            n_tf=16,
+            whttflgs=0,
+            whtcp=0,
+            i_tf_sup=1,
+            supercond_cost_model=1,
+            j_crit_str_tf=300.0,
+            n_tf_turn=200,
+            tfleng=50.514015976170839,
+            i_tf_sc_mat=5,
+            c22=3474.7391916096453,
+            c2221=1122.5144544988982,
+            c22211=127.79612438919186,
+            c22212=65.523989541865234,
+            c22213=698.99887174799562,
+            c22214=172.4182702723208,
+            c22215=57.77719854752457,
+            expected_c22211=1462760.833721748,
             expected_c22212=65.563151615791654,
         ),
     ),
@@ -1930,6 +1979,12 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", acc2221param.i_tf_sup)
 
+    monkeypatch.setattr(
+        cost_variables, "supercond_cost_model", acc2221param.supercond_cost_model
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "j_crit_str_tf", acc2221param.j_crit_str_tf)
+
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", acc2221param.n_tf_turn)
 
     monkeypatch.setattr(tfcoil_variables, "tfleng", acc2221param.tfleng)
@@ -1979,6 +2034,12 @@ class Acc2222Param(NamedTuple):
     fkind: Any = None
 
     rjconpf: Any = None
+
+    supercond_cost_model: Any = None
+
+    j_crit_str_cs: Any = None
+
+    j_crit_str_pf: Any = None
 
     ipfres: Any = None
 
@@ -2080,6 +2141,9 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
+            supercond_cost_model=0,
+            j_crit_str_cs=100.0,
+            j_crit_str_pf=200.0,
             ipfres=0,
             vfohc=0.29999999999999999,
             nohc=7,
@@ -2273,6 +2337,9 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
+            supercond_cost_model=0,
+            j_crit_str_cs=100.0,
+            j_crit_str_pf=200.0,
             ipfres=0,
             vfohc=0.29999999999999999,
             nohc=7,
@@ -2422,6 +2489,202 @@ class Acc2222Param(NamedTuple):
             expected_c22223=106.06545230249935,
             expected_c22224=9.1894413521392071,
         ),
+        Acc2222Param(
+            iohcl=1,
+            uccase=50,
+            uccu=75,
+            cconshpf=70,
+            ucfnc=35,
+            cconfix=80,
+            ucsc=numpy.array(
+                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+                order="F",
+            ).transpose(),
+            ucwindpf=465,
+            lsa=2,
+            fkind=1,
+            rjconpf=numpy.array(
+                numpy.array(
+                    (
+                        11000000,
+                        11000000,
+                        6000000,
+                        6000000,
+                        8000000,
+                        8000000,
+                        8000000,
+                        8000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            supercond_cost_model=1,
+            j_crit_str_cs=100.0,
+            j_crit_str_pf=200.0,
+            ipfres=0,
+            vfohc=0.29999999999999999,
+            nohc=7,
+            turns=numpy.array(
+                numpy.array(
+                    (
+                        440.26292595093469,
+                        525.4843415877815,
+                        192.44107218389988,
+                        192.44107218389988,
+                        129.65302435274731,
+                        129.65302435274731,
+                        4348.5468837135222,
+                        1,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            isumatpf=3,
+            whtpfs=2510424.9065680322,
+            ric=numpy.array(
+                numpy.array(
+                    (
+                        18.579095475129446,
+                        22.175439215004378,
+                        -8.1210132461605742,
+                        -8.1210132461605742,
+                        -5.575080047168135,
+                        -5.575080047168135,
+                        -186.98751599968145,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            rpf=numpy.array(
+                numpy.array(
+                    (
+                        6.2732560483870969,
+                        6.2732560483870969,
+                        18.401280308184159,
+                        18.401280308184159,
+                        16.803394770584916,
+                        16.803394770584916,
+                        2.6084100000000001,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            isumatoh=5,
+            fcupfsu=0.68999999999999995,
+            fcuohsu=0.70000000000000007,
+            vf=numpy.array(
+                numpy.array(
+                    (
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            awpoh=3.8004675824985918,
+            fncmass=310716.52923547616,
+            dcond=numpy.array(
+                numpy.array(
+                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            c22=3474.7391916096453,
+            c2222=626.57984594974835,
+            c22221=434.46640986938519,
+            c22222=69.02908267696219,
+            c22223=113.89491205126185,
+            c22224=9.1894413521392071,
+            expected_c2222=2271626.1414324627,
+            expected_c22221=2271439.6839775303,
+            expected_c22222=71.202561277966055,
+            expected_c22223=106.06545230249935,
+            expected_c22224=9.1894413521392071,
+        ),
     ),
 )
 def test_acc2222(acc2222param, monkeypatch, costs):
@@ -2458,6 +2721,14 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "fkind", acc2222param.fkind)
 
     monkeypatch.setattr(pfcoil_variables, "rjconpf", acc2222param.rjconpf)
+
+    monkeypatch.setattr(
+        cost_variables, "supercond_cost_model", acc2222param.supercond_cost_model
+    )
+
+    monkeypatch.setattr(pfcoil_variables, "j_crit_str_cs", acc2222param.j_crit_str_cs)
+
+    monkeypatch.setattr(pfcoil_variables, "j_crit_str_pf", acc2222param.j_crit_str_pf)
 
     monkeypatch.setattr(pfcoil_variables, "ipfres", acc2222param.ipfres)
 
