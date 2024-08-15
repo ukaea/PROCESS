@@ -204,6 +204,7 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
 
     return conie * (ti - te) / (te**1.5)
+    
 
 def vscalc(
     csawth,
