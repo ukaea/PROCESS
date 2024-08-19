@@ -2,7 +2,7 @@
 
 # PROCESS
 
-Here are the [PROCESS docs](https://ukaea.github.io/PROCESS/).
+**Here are the [PROCESS docs](https://ukaea.github.io/PROCESS/).**
 
 PROCESS is the reactor systems code at the [UK Atomic Energy Authority](https://ccfe.ukaea.uk/). More information on PROCESS can be found on the PROCESS [webpage](https://ccfe.ukaea.uk/resources/process/).
 
