@@ -86,26 +86,51 @@ def nui(j, zmain, ni, tempi, amain):
 
 
 @nb.jit(nopython=True, cache=True)
-def _plascar_bpol(aspect, eps, kappa, delta):
+def _plascar_bpol(
+    aspect: float, eps: float, kappa: float, delta: float
+) -> Tuple[float, float, float, float]:
+    """
+    Calculate the poloidal field coefficients for determining the plasma current
+    and poloidal field.
+
+    Parameters:
+    - aspect: float, plasma aspect ratio
+    - eps: float, inverse aspect ratio
+    - kappa: float, plasma elongation
+    - delta: float, plasma triangularity
+
+    Returns:
+    - Tuple[float, float, float, float], coefficients ff1, ff2, d1, d2
+
+    This internal function calculates the poloidal field coefficients,
+    which is used to calculate the poloidal field and the plasma current.
+
+    References:
+    - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+      'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+      1729–1738. https://doi.org/10.13182/FST92-A29971
+    - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+      unpublished internal Oak Ridge document
+    """
     # Original coding, only suitable for TARTs [STAR Code]
 
-    c1 = kappa**2 / (1.0 + delta) + delta
-    c2 = kappa**2 / (1.0 - delta) - delta
+    c1 = (kappa**2 / (1.0 + delta)) + delta
+    c2 = (kappa**2 / (1.0 - delta)) - delta
 
     d1 = (kappa / (1.0 + delta)) ** 2 + 1.0
     d2 = (kappa / (1.0 - delta)) ** 2 + 1.0
 
-    c1_aspect = (c1 * eps - 1.0) if aspect < c1 else (1.0 - c1 * eps)
+    c1_aspect = ((c1 * eps) - 1.0) if aspect < c1 else (1.0 - (c1 * eps))
 
-    y1 = np.sqrt(c1_aspect / (1.0 + eps)) * (1.0 + delta) / kappa
-    y2 = np.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * (1.0 - delta) / kappa
+    y1 = np.sqrt(c1_aspect / (1.0 + eps)) * ((1.0 + delta) / kappa)
+    y2 = np.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * ((1.0 - delta) / kappa)
 
-    h2 = (1.0 + (c2 - 1.0) * eps / 2.0) / np.sqrt((1.0 - eps) * (c2 * eps + 1.0))
-    f2 = (d2 * (1.0 - delta) * eps) / ((1.0 - eps) * (c2 * eps + 1.0))
-    g = eps * kappa / (1.0 - eps * delta)
+    h2 = (1.0 + (c2 - 1.0) * (eps / 2.0)) / np.sqrt((1.0 - eps) * (c2 * eps + 1.0))
+    f2 = (d2 * (1.0 - delta) * eps) / ((1.0 - eps) * ((c2 * eps) + 1.0))
+    g = (eps * kappa) / (1.0 - (eps * delta))
     ff2 = f2 * (g + 2.0 * h2 * np.arctan(y2))
 
-    h1 = (1.0 + (1.0 - c1) * eps / 2.0) / np.sqrt((1.0 + eps) * c1_aspect)
+    h1 = (1.0 + (1.0 - c1) * (eps / 2.0)) / np.sqrt((1.0 + eps) * c1_aspect)
     f1 = (d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
 
     if aspect < c1:
@@ -185,8 +210,8 @@ def calculate_plasma_current_peng(
 
     ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
 
-    e1 = 2.0 * kappa / (d1 * (1.0 + delta))
-    e2 = 2.0 * kappa / (d2 * (1.0 - delta))
+    e1 = (2.0 * kappa) / (d1 * (1.0 + delta))
+    e2 = (2.0 * kappa) / (d2 * (1.0 - delta))
 
     return (
         rminor
