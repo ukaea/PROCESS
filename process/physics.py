@@ -147,24 +147,40 @@ def bpol(i_plasma_current, ip, qbar, aspect, eps, bt, kappa, delta, perim, rmu0)
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_plasma_current_peng(qbar, aspect, eps, rminor, bt, kappa, delta):
-    """Function to calculate plasma current (Peng scaling)
-    author: J Galambos, FEDC/ORNL
-    author: P J Knight, CCFE, Culham Science Centre
-    aspect : input real :  plasma aspect ratio
-    bt     : input real :  toroidal field on axis (T)
-    delta  : input real :  plasma triangularity
-    kappa  : input real :  plasma elongation
-    qbar   : input real :  edge q-bar
-    rminor : input real :  plasma minor radius (m)
+def calculate_plasma_current_peng(
+    qbar: float,
+    aspect: float,
+    eps: float,
+    rminor: float,
+    bt: float,
+    kappa: float,
+    delta: float,
+) -> float:
+    """
+    Function to calculate plasma current (Peng scaling from the STAR code)
+
+    Parameters:
+    - qbar: float, edge q-bar
+    - aspect: float, plasma aspect ratio
+    - eps: float, inverse aspect ratio
+    - rminor: float, plasma minor radius (m)
+    - bt: float, toroidal field on axis (T)
+    - kappa: float, plasma elongation
+    - delta: float, plasma triangularity
+
+    Returns:
+    - float, plasma current in MA
+
     This function calculates the plasma current in MA,
     using a scaling from Peng, Galambos and Shipe (1992).
     It is primarily used for Tight Aspect Ratio Tokamaks and is
-    selected via <CODE>i_plasma_current=2</CODE>.
-    J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-    unpublished internal Oak Ridge document
-    Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
-    Fusion Technology, 21, 1729
+    selected via i_plasma_current=2.
+
+    References:
+    - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+      unpublished internal Oak Ridge document
+    - Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
+      Fusion Technology, 21, 1729
     """
 
     ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
@@ -317,24 +333,36 @@ def culblm(bt, dnbeta, plascur, rminor):
 
 
 @nb.jit(nopython=True, cache=True)
-def conhas(alphaj, alphap, bt, delta95, eps, kappa95, p0, rmu0):
-    """Routine to calculate the F coefficient used for scaling the
-    plasma current
-    author: P J Knight, CCFE, Culham Science Centre
-    alphaj   : input real :  current profile index
-    alphap   : input real :  pressure profile index
-    bt       : input real :  toroidal field on axis (T)
-    delta95  : input real :  plasma triangularity 95%
-    eps      : input real :  inverse aspect ratio
-    kappa95  : input real :  plasma elongation 95%
-    p0       : input real :  central plasma pressure (Pa)
-    fq       : output real : scaling for edge q from circular
-    cross-section cylindrical case
-    This routine calculates the F coefficient used for scaling the
-    plasma current, using the Connor-Hastie scaling given in
-    AEA FUS 172: Physics Assessment for the European Reactor Study
+def conhas(
+    alphaj: float,
+    alphap: float,
+    bt: float,
+    delta95: float,
+    eps: float,
+    kappa95: float,
+    p0: float,
+    rmu0: float,
+) -> float:
     """
+    Routine to calculate the F coefficient used for scaling the plasma current.
 
+    Parameters:
+    - alphaj: float, the current profile index
+    - alphap: float, the pressure profile index
+    - bt: float, the toroidal field on axis (T)
+    - delta95: float, the plasma triangularity 95%
+    - eps: float, the inverse aspect ratio
+    - kappa95: float, the plasma elongation 95%
+    - p0: float, the central plasma pressure (Pa)
+    - rmu0: float, the vacuum permeability (H/m)
+
+    Returns:
+    - float, the F coefficient
+
+    This routine calculates the F coefficient used for scaling the plasma current,
+    using the Connor-Hastie scaling given in AEA FUS 172: Physics Assessment for
+    the European Reactor Study.
+    """
     # Exponent in Connor-Hastie current profile - matching total
     # current gives the following trivial relation
     lamda = alphaj
