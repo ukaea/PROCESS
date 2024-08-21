@@ -1042,11 +1042,10 @@ class Physics:
         # ***************************** #
 
         # Calculate bootstrap current fraction using various models
-        current_drive_variables.bscf_iter89 = self.bootstrap_fraction_iter89(
+        current_drive_variables.bscf_iter89 = current_drive_variables.cboot * self.bootstrap_fraction_iter89(
             physics_variables.aspect,
             physics_variables.beta,
             physics_variables.btot,
-            current_drive_variables.cboot,
             physics_variables.plascur,
             physics_variables.q95,
             physics_variables.q0,
@@ -4490,7 +4489,7 @@ class Physics:
 
     @staticmethod
     def bootstrap_fraction_iter89(
-        aspect, beta, bt, cboot, plascur, q95, q0, rmajor, vol
+        aspect, beta, bt, plascur, q95, q0, rmajor, vol
     ):
         """Original ITER calculation of bootstrap-driven fraction
         of the plasma current.
@@ -4498,7 +4497,6 @@ class Physics:
         aspect  : input real : plasma aspect ratio
         beta    : input real : plasma total beta
         bt      : input real : toroidal field on axis (T)
-        cboot   : input real : bootstrap current fraction multiplier
         plascur : input real : plasma current (A)
         q95     : input real : safety factor at 95% surface
         q0      : input real : central safety factor
@@ -4510,7 +4508,7 @@ class Physics:
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
         xbs = min(10, q95 / q0)
-        cbs = cboot * (1.32 - 0.235 * xbs + 0.0185 * xbs**2)
+        cbs = (1.32 - 0.235 * xbs + 0.0185 * xbs**2)
         bpbs = (
             constants.rmu0
             * plascur
