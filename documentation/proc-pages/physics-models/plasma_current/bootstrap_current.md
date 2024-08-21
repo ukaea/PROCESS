@@ -1,3 +1,10 @@
+## Overview
+
+Bootstrap current in tokamaks originates from the pressure gradients within the plasma and the resulting collisions between particles. As the plasma pressure varies radially, it creates a differential in particle velocities, leading to a net drift of charged particles. This drift generates a toroidal current, known as the bootstrap current, which flows parallel to the magnetic field lines. The phenomenon is a consequence of the neoclassical transport theory, where the collisional processes in a magnetically confined plasma lead to a self-sustaining current. This current is particularly advantageous as it reduces the need for external current drive systems, thereby enhancing the efficiency and stability of the tokamak operation. The bootstrap current is proportional to the pressure gradient and the collisionality of the plasma, making it a critical factor in the design and operation of advanced tokamak reactors aiming for steady-state fusion.
+
+Some more info can be found [here](https://wiki.fusion.ciemat.es/wiki/Bootstrap_current)
+## Selection
+
 The fraction of the plasma current provided by the bootstrap effect
 can be either input into the code directly, or calculated using one of four
 methods, as summarised here. Note that methods `i_bootstrap_current = 1-3` do not take into account the 
