@@ -67,8 +67,6 @@ class BootstrapFractionIter89Param(NamedTuple):
 
     bt: Any = None
 
-    cboot: Any = None
-
     plascur: Any = None
 
     q95: Any = None
@@ -89,7 +87,6 @@ class BootstrapFractionIter89Param(NamedTuple):
             aspect=3,
             beta=0.030000000000000006,
             bt=5.7802910787445487,
-            cboot=1,
             plascur=18398455.678867526,
             q95=3.5,
             q0=1,
@@ -116,7 +113,6 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
         aspect=bootstrapfractioniter89param.aspect,
         beta=bootstrapfractioniter89param.beta,
         bt=bootstrapfractioniter89param.bt,
-        cboot=bootstrapfractioniter89param.cboot,
         plascur=bootstrapfractioniter89param.plascur,
         q95=bootstrapfractioniter89param.q95,
         q0=bootstrapfractioniter89param.q0,
