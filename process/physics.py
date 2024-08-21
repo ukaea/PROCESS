@@ -173,7 +173,7 @@ def calculate_poloidal_field(
     - float, poloidal field in Tesla
 
     This function calculates the poloidal field from the plasma current in Tesla,
-    using a simple calculation using Stoke's Law for conventional
+    using a simple calculation using Ampere's law for conventional
     tokamaks, or for TARTs, a scaling from Peng, Galambos and
     Shipe (1992).
 
@@ -184,12 +184,14 @@ def calculate_poloidal_field(
       'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
       1729–1738. https://doi.org/10.13182/FST92-A29971
     """
+    # Use Ampere's law using the plasma poloidal cross-section
     if i_plasma_current != 2:
         return rmu0 * ip / perim
+    else:
+        # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
+        ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
 
-    ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
-
-    return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
+        return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
 @nb.jit(nopython=True, cache=True)
