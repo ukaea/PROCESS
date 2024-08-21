@@ -12,7 +12,7 @@ import numpy
 import pytest
 from process.physics import (
     Physics,
-    bpol,
+    calculate_poloidal_field,
     diamagnetic_fraction_scene,
     diamagnetic_fraction_hender,
     ps_fraction_scene,
@@ -803,8 +803,8 @@ def test_plasc(arguments, expected):
         ),
     ),
 )
-def test_bpol(arguments, expected):
-    assert bpol(**arguments) == pytest.approx(expected)
+def test_calculate_poloidal_field(arguments, expected):
+    assert calculate_poloidal_field(**arguments) == pytest.approx(expected)
 
 
 def test_culblm():
