@@ -35,7 +35,7 @@ the switch `i_plasma_current`, as follows:
 
 ---------------
 
-### Calculate plasma current shaping function $f_q$
+### 1. Calculate plasma current shaping function $f_q$
 
 ------------
 
@@ -241,10 +241,43 @@ $$
 
 -----------------------------
 
+### 2. Calculate the cylidrical safety factor
 
-## Plasma Current Profile Consistency
+$$
+q^* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa^2(1+2\delta^2-1.2\delta^3))}{2}
+$$
 
-A limited degree of self-consistency between the plasma current profile and other parameters [^11] can be 
+--------------
+
+### 3. Caclulate the normalized beta
+
+The total normlaized beta is calculated as per:
+
+$$
+\beta_N = \beta\frac{1\times10^8  a B_{\text{T}}}{I_{\text{P}}}
+$$
+
+### 4. Plasma Current Poloidal Field
+
+For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can simply be used. In this case the poloidal field is simply returned as:
+
+$$
+B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\mathtt{pperim}}
+$$
+
+Where `pperim` is the plasma poloidal perimieter calculated [here](../plasma_geometry.md#poloidal-perimeter).
+
+In the case of using the Peng double null scaling ([`i_plasma_current = 2`](plasma_current.md#star-peng-double-null-divertor-scaling-st)), the values $F_1$ and $F_2$ are calculated from [_plasc_bpol](plasma_current.md#_plasc_bpol) and used to calculated the poloidal field from the toroidal field as per:
+
+$$
+B_{\text{p}} = B_{\text{T}}\frac{F_1 + F_2}{2\pi \overline{q}}
+$$
+
+------------
+
+### 5. Plasma Current Profile Consistency
+
+A limited degree of self-consistency between the plasma current profile and other parameters can be 
 enforced by setting switch `iprofile = 1`. This sets the current 
 profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`rli`) and beta limit $g$-factor (`dnbeta`) using the 
 safety factor on axis `q0` and the cylindrical safety factor $q*$ (`qstar`):   
@@ -264,15 +297,13 @@ g = 4 l_i
 It is recommended that current scaling law `i_plasma_current = 4` is used if `iprofile = 1`. 
 This relation is only applicable to large aspect ratio tokamaks.
 
-For spherical tokamaks, the normalised internal inductance can be set from the elongation using `iprofile = 4` or `iprofile = 5`:
+For spherical tokamaks, the normalised internal inductance can be set from the elongation using `iprofile = 4` or `iprofile = 5` or `iprofile = 6`[^11]:
 
 $$\begin{aligned}
 l_i = 3.4 - \kappa_x
 \end{aligned}$$
 
-Further desciption of `iprofile` is given in [Beta Limit](./plasma_beta.md).
-
---------------
+Further desciption of `iprofile` is given in [Beta Limit](../plasma_beta.md).
 
 ## _plasc_bpol
 
@@ -349,8 +380,6 @@ $$
 y_2 = \frac{\sqrt{c_2\epsilon+1}}{1-\epsilon}\frac{1-\delta}{\kappa}
 $$
 
-## Plasma Current Poloidal Field
-
 [^3]: Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992). 'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A), 1729–1738. https://doi.org/10.13182/FST92-A29971
 [^4]: J.D. Galambos, 'STAR Code : Spherical Tokamak Analysis and Reactor Code',
 Unpublished internal Oak Ridge document.
@@ -361,7 +390,5 @@ Unpublished internal Oak Ridge document.
 [^9]: O. Sauter, Geometric formulas for system codes including the effect of negative triangularity, Fusion Engineering and Design, Volume 112, 2016, Pages 633-645, ISSN 0920-3796,
 https://doi.org/10.1016/j.fusengdes.2016.04.033.
 [^10]: Stuart I. Muldrew, Hanni Lux, Geof Cunningham, Tim C. Hender, Sebastien Kahn, Peter J. Knight, Bhavin Patel, Garry M. Voss, Howard R. Wilson, “PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design, Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
-[^11]: Y. Sakamoto, 'Recent progress in vertical stability analysis in JA',
-Task meeting EU-JA #16, Fusion for Energy, Garching, 24--25 June 2014
-
+[^11]: J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,” Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016, doi: https://doi.org/10.1088/0029-5515/56/10/106023.
 
