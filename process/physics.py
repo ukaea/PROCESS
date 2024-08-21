@@ -142,26 +142,47 @@ def _plascar_bpol(
 
 
 @nb.jit(nopython=True, cache=True)
-def bpol(i_plasma_current, ip, qbar, aspect, eps, bt, kappa, delta, perim, rmu0):
-    """Function to calculate poloidal field
-    author: J Galambos, FEDC/ORNL
-    author: P J Knight, CCFE, Culham Science Centre
-    i_plasma_current  : input integer : current scaling model to use
-    ip     : input real :  plasma current (A)
-    qbar   : input real :  edge q-bar
-    aspect : input real :  plasma aspect ratio
-    bt     : input real :  toroidal field on axis (T)
-    kappa  : input real :  plasma elongation
-    delta  : input real :  plasma triangularity
-    perim  : input real :  plasma perimeter (m)
-    This function calculates the poloidal field in Tesla,
+def bpol(
+    i_plasma_current: int,
+    ip: float,
+    qbar: float,
+    aspect: float,
+    eps: float,
+    bt: float,
+    kappa: float,
+    delta: float,
+    perim: float,
+    rmu0: float,
+) -> float:
+    """
+    Function to calculate poloidal field from the plasma current
+
+    Parameters:
+    - i_plasma_current: int, current scaling model to use
+    - ip: float, plasma current (A)
+    - qbar: float, edge q-bar
+    - aspect: float, plasma aspect ratio
+    - eps: float, inverse aspect ratio
+    - bt: float, toroidal field on axis (T)
+    - kappa: float, plasma elongation
+    - delta: float, plasma triangularity
+    - perim: float, plasma perimeter (m)
+    - rmu0: float, vacuum permeability (H/m)
+
+    Returns:
+    - float, poloidal field in Tesla
+
+    This function calculates the poloidal field from the plasma current in Tesla,
     using a simple calculation using Stoke's Law for conventional
     tokamaks, or for TARTs, a scaling from Peng, Galambos and
     Shipe (1992).
-    J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-    unpublished internal Oak Ridge document
-    Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
-    Fusion Technology, 21, 1729
+
+    References:
+    - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+      unpublished internal Oak Ridge document
+    - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+      'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+      1729–1738. https://doi.org/10.13182/FST92-A29971
     """
     if i_plasma_current != 2:
         return rmu0 * ip / perim
@@ -204,8 +225,9 @@ def calculate_plasma_current_peng(
     References:
     - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
       unpublished internal Oak Ridge document
-    - Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992,
-      Fusion Technology, 21, 1729
+    - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+      'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+      1729–1738. https://doi.org/10.13182/FST92-A29971
     """
 
     ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
@@ -861,14 +883,6 @@ class Physics:
         implications of physics assumptions on the design of a demonstration fusion power plant
         https://inis.iaea.org/search/search.aspx?orig_q=RN:45031642
         """
-        # kappaa_IPB = physics_variables.vol / (
-        #    2.0e0
-        #    * numpy.pi
-        #    * numpy.pi
-        #    * physics_variables.rminor
-        #    * physics_variables.rminor
-        #    * physics_variables.rmajor
-        # )
 
         if physics_variables.i_plasma_current == 2:
             physics_variables.q95 = (
@@ -2120,13 +2134,14 @@ class Physics:
             eps (float): Inverse aspect ratio.
             i_plasma_current (int): Current scaling model to use.
                 1 = Peng analytic fit
-                2 = Peng divertor scaling (TART)
-                3 = simple ITER scaling
-                4 = revised ITER scaling
+                2 = Peng divertor scaling (TART,STAR)
+                3 = Simple ITER scaling
+                4 = Revised ITER scaling
                 5 = Todd empirical scaling I
                 6 = Todd empirical scaling II
                 7 = Connor-Hastie model
                 8 = Sauter scaling (allowing negative triangularity)
+                9 = FIESTA ST scaling
             iprofile (int): Switch for current profile consistency.
                 0: Use input values for alphaj, rli, dnbeta.
                 1: Make these consistent with input q, q_0 values.
@@ -2159,7 +2174,9 @@ class Physics:
 
         References:
             - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
-            - Y.-K. M. Peng, J. Galambos and P.C. Shipe, 1992, Fusion Technology, 21, 1729
+            - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+              'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+              1729–1738. https://doi.org/10.13182/FST92-A29971
             - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al, ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
             - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
             - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
