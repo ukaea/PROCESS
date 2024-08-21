@@ -1008,6 +1008,39 @@ class Physics:
             + times_variables.tdwell
         )
 
+        # ***************************** #
+        #      DIAMAGNETIC CURRENT      #
+        # ***************************** #
+
+        # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
+        current_drive_variables.diacf_hender = diamagnetic_fraction_hender(
+            physics_variables.beta
+        )
+
+        # SCENE scaling for diamagnetic current
+        current_drive_variables.diacf_scene = diamagnetic_fraction_scene(
+            physics_variables.beta, physics_variables.q95, physics_variables.q0
+        )
+
+        if physics_variables.i_diamagnetic_current == 1:
+            current_drive_variables.diaipf = current_drive_variables.diacf_hender
+        elif physics_variables.i_diamagnetic_current == 2:
+            current_drive_variables.diaipf = current_drive_variables.diacf_scene
+
+        # ***************************** #
+        #    PFIRSCH-SCHLÜTER CURRENT   #
+        # ***************************** #
+
+        # Pfirsch-Schlüter scaling for diamagnetic current
+        current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
+
+        if physics_variables.ips == 1:
+            current_drive_variables.psipf = current_drive_variables.pscf_scene
+
+        # ***************************** #
+        #       BOOTSTRAP CURRENT       #
+        # ***************************** #
+
         # Calculate bootstrap current fraction using various models
         current_drive_variables.bscf_iter89 = self.bootstrap_fraction_iter89(
             physics_variables.aspect,
@@ -1026,6 +1059,7 @@ class Physics:
             * physics_variables.btot**2
             / physics_variables.bt**2
         )
+
         current_drive_variables.bscf_nevins = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_nevins(
@@ -1061,19 +1095,6 @@ class Physics:
                 physics_variables.rminor,
             )
         )
-
-        # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
-        current_drive_variables.diacf_hender = diamagnetic_fraction_hender(
-            physics_variables.beta
-        )
-
-        # SCENE scaling for diamagnetic current
-        current_drive_variables.diacf_scene = diamagnetic_fraction_scene(
-            physics_variables.beta, physics_variables.q95, physics_variables.q0
-        )
-
-        # Pfirsch-Schlüter scaling for diamagnetic current
-        current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
         current_drive_variables.bscf_sauter = (
             current_drive_variables.cboot * self.bootstrap_fraction_sauter()
@@ -1118,14 +1139,6 @@ class Physics:
                     current_drive_variables.bootipf, current_drive_variables.bscfmax
                 )
                 physics_module.err242 = 1
-
-            if physics_variables.i_diamagnetic_current == 1:
-                current_drive_variables.diaipf = current_drive_variables.diacf_hender
-            elif physics_variables.i_diamagnetic_current == 2:
-                current_drive_variables.diaipf = current_drive_variables.diacf_scene
-
-            if physics_variables.ips == 1:
-                current_drive_variables.psipf = current_drive_variables.pscf_scene
 
             current_drive_variables.plasipf = (
                 current_drive_variables.bootipf
