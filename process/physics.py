@@ -1042,15 +1042,18 @@ class Physics:
         # ***************************** #
 
         # Calculate bootstrap current fraction using various models
-        current_drive_variables.bscf_iter89 = current_drive_variables.cboot * self.bootstrap_fraction_iter89(
-            physics_variables.aspect,
-            physics_variables.beta,
-            physics_variables.btot,
-            physics_variables.plascur,
-            physics_variables.q95,
-            physics_variables.q0,
-            physics_variables.rmajor,
-            physics_variables.vol,
+        current_drive_variables.bscf_iter89 = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_iter89(
+                physics_variables.aspect,
+                physics_variables.beta,
+                physics_variables.btot,
+                physics_variables.plascur,
+                physics_variables.q95,
+                physics_variables.q0,
+                physics_variables.rmajor,
+                physics_variables.vol,
+            )
         )
 
         betat = (
@@ -4489,26 +4492,38 @@ class Physics:
 
     @staticmethod
     def bootstrap_fraction_iter89(
-        aspect, beta, bt, plascur, q95, q0, rmajor, vol
-    ):
-        """Original ITER calculation of bootstrap-driven fraction
-        of the plasma current.
-        author: P J Knight, CCFE, Culham Science Centre
-        aspect  : input real : plasma aspect ratio
-        beta    : input real : plasma total beta
-        bt      : input real : toroidal field on axis (T)
-        plascur : input real : plasma current (A)
-        q95     : input real : safety factor at 95% surface
-        q0      : input real : central safety factor
-        rmajor  : input real : plasma major radius (m)
-        vol     : input real : plasma volume (m3)
-        This routine performs the original ITER calculation of the
-        plasma current bootstrap fraction.
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        aspect: float,
+        beta: float,
+        bt: float,
+        plascur: float,
+        q95: float,
+        q0: float,
+        rmajor: float,
+        vol: float,
+    ) -> float:
+        """
+        Calculate the bootstrap-driven fraction of the plasma current.
+
+        Args:
+            aspect (float): Plasma aspect ratio.
+            beta (float): Plasma total beta.
+            bt (float): Toroidal field on axis (T).
+            plascur (float): Plasma current (A).
+            q95 (float): Safety factor at 95% surface.
+            q0 (float): Central safety factor.
+            rmajor (float): Plasma major radius (m).
+            vol (float): Plasma volume (m3).
+
+        Returns:
+            float: The bootstrap-driven fraction of the plasma current.
+
+        This function performs the original ITER calculation of the plasma current bootstrap fraction.
+
+        Reference: ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+                   ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
         xbs = min(10, q95 / q0)
-        cbs = (1.32 - 0.235 * xbs + 0.0185 * xbs**2)
+        cbs = 1.32 - 0.235 * xbs + 0.0185 * xbs**2
         bpbs = (
             constants.rmu0
             * plascur
@@ -4522,23 +4537,34 @@ class Physics:
 
     @staticmethod
     def bootstrap_fraction_wilson(
-        alphaj, alphap, alphat, betpth, q0, qpsi, rmajor, rminor
-    ):
-        """Bootstrap current fraction from Wilson et al scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        alphaj  : input real :  current profile index
-        alphap  : input real :  pressure profile index
-        alphat  : input real :  temperature profile index
-        beta    : input real :  total beta
-        betpth  : input real :  thermal component of poloidal beta
-        q0      : input real :  safety factor on axis
-        qpsi    : input real :  edge safety factor
-        rmajor  : input real :  major radius (m)
-        rminor  : input real :  minor radius (m)
-        This function calculates the bootstrap current fraction
-        using the numerically fitted algorithm written by Howard Wilson.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        H. R. Wilson, Nuclear Fusion <B>32</B> (1992) 257
+        alphaj: float,
+        alphap: float,
+        alphat: float,
+        betpth: float,
+        q0: float,
+        qpsi: float,
+        rmajor: float,
+        rminor: float,
+    ) -> float:
+        """
+        Bootstrap current fraction from Wilson et al scaling
+
+        Args:
+            alphaj (float): Current profile index.
+            alphap (float): Pressure profile index.
+            alphat (float): Temperature profile index.
+            betpth (float): Thermal component of poloidal beta.
+            q0 (float): Safety factor on axis.
+            qpsi (float): Edge safety factor.
+            rmajor (float): Major radius (m).
+            rminor (float): Minor radius (m).
+
+        Returns:
+            float: The bootstrap current fraction.
+
+        This function calculates the bootstrap current fraction using the numerically fitted algorithm written by Howard Wilson.
+
+        Reference: AEA FUS 172: Physics Assessment for the European Reactor Study, H. R. Wilson, Nuclear Fusion 32 (1992) 257
         """
         term1 = np.log(0.5)
         term2 = np.log(q0 / qpsi)
