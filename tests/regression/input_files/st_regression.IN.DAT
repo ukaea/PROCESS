@@ -2959,7 +2959,7 @@ i_bootstrap_current = 4
 * DESCRIPTION:   Non-inductive volt-sec burn fraction, fraction of the plasma current produced by non-inductive means
 * JUSTIFICATION: Not scaling plasma current induction. default = 1.0
 
-icurr = 9
+i_plasma_current = 9
 * DESCRIPTION:   Switch for Plasma Current Scaling to Use (9: Fit from FIESTA (ST))
 * JUSTIFICATION: Fit derived from FIESTA for FNSF-like Plasmas
 * REFERENCE:     Muldrew et al. (2020), Fus. Eng. & Des., 154, 111530
@@ -2977,7 +2977,7 @@ ips = 1
 iprofile = 0
 * DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli dnbeta)
 * =0 use input values for alphaj, rli, dnbeta (but see gtscale option)
-* =1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+* =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
 * JUSTIFICATION: These consistency equations don't hold for STs
 * REFERENCE:     
 

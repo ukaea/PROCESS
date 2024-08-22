@@ -260,9 +260,9 @@ fkzohm   = 1.0245 * Zohm elongation scaling adjustment factor (ishape=2; 3)
 fvsbrnni = 0.4434 * Fraction of the plasma current produced by
 gamma    = 0.3 * Ejima coefficient for resistive startup v-s formula
 hfact    = 1.1 * H factor on energy confinement times (iteration variable 10)
-ibss     = 4 * Switch for bootstrap current scaling;
+i_bootstrap_current     = 4 * Switch for bootstrap current scaling;
 iculbl   = 1 * Switch for beta limit scaling (constraint equation 24);
-icurr    = 4 * Switch for plasma current scaling to use;
+i_plasma_current    = 4 * Switch for plasma current scaling to use;
 idensl   = 7 * Switch for density limit to enforce (constraint equation 5);
 ifalphap = 1 * Switch for fast alpha pressure calculation;
 ifispact = 0 * Switch for neutronics calculations;

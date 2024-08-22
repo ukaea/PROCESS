@@ -360,7 +360,7 @@ i_bootstrap_current = 4
 iculbl = 1
 
 * Switch for plasma current scaling
-icurr    = 4
+i_plasma_current    = 4
 
 * Switch for density limit to enforce
 idensl = 7
