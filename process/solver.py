@@ -545,9 +545,17 @@ class Scipy_SLSQP(_Solver):
         return conf[self.meq : self.m]
 
     def convergence_progress(self, x_current):
-        conf = self.constraint_ineq_vec(x_current)
-        ineq_rms = np.sqrt(np.mean(np.square(conf[conf < 0.0])))
-        print(f"{ineq_rms = :.3e}")
+        eqs = self.constraint_eq_vec(x_current)
+        ineqs = self.constraint_ineq_vec(x_current)
+        cons = np.concatenate((eqs, ineqs))
+        print("\nIteration results:")
+        ineqs_rms = np.sqrt(np.mean(np.square(ineqs[ineqs < 0.0])))
+        print(f"{ineqs_rms = :.3e}")
+
+        # Print constraints sorted by value (most negative (most violated) first)
+        sorted_con_indexes = cons.argsort()
+        for i in sorted_con_indexes:
+            print(f"Constraint {numerics.icc[i]} = {cons[i]:.3e}")
 
     def solve(self):
         self.n = self.x_0.shape[0]
