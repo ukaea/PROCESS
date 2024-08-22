@@ -601,7 +601,7 @@ class Scipy_SLSQP(_Solver):
             constraints=constraints,
             tol=self.SOLVER_TOL,
             callback=self.convergence_progress,
-            options={"disp": True, "eps": 1e-3},
+            options={"disp": True, "eps": numerics.epsfcn},
         )
         end_time = time.time()
         duration = end_time - start_time
