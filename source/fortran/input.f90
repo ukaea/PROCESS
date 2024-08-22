@@ -312,7 +312,7 @@ contains
       teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
-      i_diamagnetic_current, ips, m_s_limit, burnup_in
+      i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
 
@@ -652,8 +652,8 @@ contains
        case ('iprofile')
           call parse_int_variable('iprofile', iprofile, 0, 6, &
                'Switch for current profile consistency')
-       case ('ips')
-          call parse_int_variable('ips', ips, 0, 1, &
+       case ('i_pfirsch_schluter_current')
+          call parse_int_variable('i_pfirsch_schluter_current', i_pfirsch_schluter_current, 0, 1, &
                'Switch for Pfirsch-Schlüter scaling')
        case ('iradloss')
           call parse_int_variable('iradloss', iradloss, 0, 2, &

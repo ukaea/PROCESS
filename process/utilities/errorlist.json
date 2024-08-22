@@ -1228,7 +1228,7 @@
     {
       "no": 244,
       "level": 2,
-      "message": "PHYSICS: Diamagnetic fraction is more than 1%, but not calculated. Consider using i_diamagnetic_current=2 and ips=1."
+      "message": "PHYSICS: Diamagnetic fraction is more than 1%, but not calculated. Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1."
     },
     {
       "no": 245,

@@ -2968,7 +2968,7 @@ i_diamagnetic_current = 2
 * DESCRIPTION:   Switch for Diamagnetic Current Scaling (2: SCENE Fit)
 * JUSTIFICATION: 
 
-ips = 1 
+i_pfirsch_schluter_current = 1 
 * DESCRIPTION:   Switch for Pfirsch-Schlüter Current Scaling (1: SCENE Fit)
 * JUSTIFICATION: 
 

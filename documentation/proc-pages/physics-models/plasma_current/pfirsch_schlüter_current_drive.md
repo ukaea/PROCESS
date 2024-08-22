@@ -11,13 +11,13 @@ and to use the method of fixing the bootstrap current fraction.
 
 ### No Pfirsch-Schlüter current 
 
-To have it so that the Pfirsch-Schlüter current is not calculated you can set `ips = 0`
+To have it so that the Pfirsch-Schlüter current is not calculated you can set `i_pfirsch_schluter_current = 0`
 
 ------------------
 
 ### SCENE Fit:
 
-This model can be used by setting: `ips = 2`
+This model can be used by setting: `i_pfirsch_schluter_current = 2`
 
 This model is based off of 108 equlibria from SCENE.
 Overall the equilibria cover: 

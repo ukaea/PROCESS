@@ -1034,7 +1034,7 @@ class Physics:
         # Pfirsch-Schlüter scaling for diamagnetic current
         current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
-        if physics_variables.ips == 1:
+        if physics_variables.i_pfirsch_schluter_current == 1:
             current_drive_variables.psipf = current_drive_variables.pscf_scene
 
         # ***************************** #
@@ -4301,11 +4301,11 @@ class Physics:
                     self.outfile, "  (SCENE diamagnetic current fraction scaling used)"
                 )
 
-            if physics_variables.ips == 0:
+            if physics_variables.i_pfirsch_schluter_current == 0:
                 po.ocmmnt(
                     self.outfile, "  Pfirsch-Schluter current fraction not calculated"
                 )
-            elif physics_variables.ips == 1:
+            elif physics_variables.i_pfirsch_schluter_current == 1:
                 po.ocmmnt(
                     self.outfile,
                     "  (SCENE Pfirsch-Schluter current fraction scaling used)",

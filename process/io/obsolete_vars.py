@@ -116,6 +116,7 @@ OBS_VARS = {
     "icurr": "i_plasma_current",
     "idia": "i_diamagnetic_current",
     "ibss": "i_bootstrap_current",
+    "ips": "i_pfirsch_schluter_current",
 }
 
 OBS_VARS_HELP = {

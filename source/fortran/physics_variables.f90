@@ -319,7 +319,7 @@ module physics_variables
   !! - =0 use original parabolic profiles
   !! - =1 use pedestal profile
 
-  integer :: ips
+  integer :: i_pfirsch_schluter_current
   !! switch for Pfirsch-Schlüter current scaling (issue #413):
   !!
   !! - =0 Do not calculate
@@ -959,7 +959,7 @@ module physics_variables
     ignite = 0
     iinvqd = 1
     ipedestal = 1
-    ips = 0
+    i_pfirsch_schluter_current = 0
     neped = 4.0D19
     nesep = 3.0D19
     alpha_crit = 0.0D0
