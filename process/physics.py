@@ -1129,7 +1129,7 @@ class Physics:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sauter
             elif physics_variables.i_bootstrap_current == 5:
                 # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
-                # So the diamagnetic current calculation should be turned off when using, (idia = 0).
+                # So the diamagnetic current calculation should be turned off when using, (i_diamagnetic_current = 0).
                 current_drive_variables.bootipf = current_drive_variables.bscf_sakai
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
@@ -4564,7 +4564,8 @@ class Physics:
 
         This function calculates the bootstrap current fraction using the numerically fitted algorithm written by Howard Wilson.
 
-        Reference: AEA FUS 172: Physics Assessment for the European Reactor Study, H. R. Wilson, Nuclear Fusion 32 (1992) 257
+        Reference: AEA FUS 172: Physics Assessment for the European Reactor Study, 1989
+                   H. R. Wilson, Nuclear Fusion 32 (1992) 257
         """
         term1 = np.log(0.5)
         term2 = np.log(q0 / qpsi)
@@ -4592,12 +4593,14 @@ class Physics:
         z = 1.0
 
         # Inverse aspect ratio: r2 = maximum plasma radius, r1 = minimum
-
+        # This is the definition used in the paper
         r2 = rmajor + rminor
         r1 = rmajor - rminor
         eps1 = (r2 - r1) / (r2 + r1)
 
         # Coefficients fitted using least squares techniques
+
+        # Square root of current profile index term
         saj = np.sqrt(aj)
 
         a = np.array(
@@ -4891,7 +4894,7 @@ class Physics:
         https://doi.org/10.1016/j.fusengdes.2019.111322.
         """
         # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
-        # So the diamganetic current should not be calculated with this. idia = 0
+        # So the diamganetic current should not be calculated with this. i_diamagnetic_current = 0
         return (
             10 ** (0.951 * eps - 0.948)
             * betap ** (1.226 * eps + 1.584)

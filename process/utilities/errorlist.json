@@ -1428,7 +1428,7 @@
     {
       "no": 284,
       "level": 3,
-      "message": "CHECK: idia = 0 should be used with the Sakai plasma current scaling."
+      "message": "CHECK: i_diamagnetic_current = 0 should be used with the Sakai plasma current scaling."
     }
   ]
 }
