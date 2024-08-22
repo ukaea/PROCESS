@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 284,
+  "n_errortypes": 287,
   "errors": [
     {
       "no": 1,
@@ -1429,6 +1429,21 @@
       "no": 284,
       "level": 3,
       "message": "CHECK: idia = 0 should be used with the Sakai plasma current scaling."
+    },
+    {
+      "no": 285,
+      "level": 2,
+      "message": "[tfcoil]: fiooic shouldn't be above 0.7 for engineering reliability."
+    },
+    {
+      "no": 286,
+      "level": 2,
+      "message": "[pfcoil][cntrpost]: fjohc shouldn't be above 0.7 for engineering reliability."
+    },
+    {
+      "no": 287,
+      "level": 2,
+      "message": "[pfcoil][cntrpost]: fjohc0 shouldn't be above 0.7 for engineering reliability."
     }
   ]
 }
