@@ -287,6 +287,13 @@ def main(args=None):
     nsweep_dict[77] = "startupratio"
     nsweep_dict[78] = "fkind"
     nsweep_dict[79] = "etaech"
+    nsweep_dict[80] = "adivflnc"
+    nsweep_dict[81] = "abktflnc"
+    nsweep_dict[82] = "cpstflnc"
+    nsweep_dict[83] = "nflutfmax"
+    nsweep_dict[84] = "tmain"
+    nsweep_dict[85] = "maxradwallload"
+
     # -------------------
 
     # Getting the scanned variable name
@@ -360,6 +367,7 @@ def main(args=None):
         output_arrays2 = dict()
         scan_var_array = dict()
         for input_file in input_files:
+            print(input_files)
             # Opening the MFILE.DAT
             m_file = mf.MFile(filename=input_file)
 
@@ -613,22 +621,26 @@ def main(args=None):
                 )
             elif stack_plots and output_names[-1] == output_name:
                 plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_"
-                    + "_vs_".join(output_names)
-                    + f".{save_format}",
+                    (
+                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f"_vs_{output_name2}"
+                        if output_names2 != []
+                        else f"{args.outputdir}/scan_{scan_var_name}_vs_"
+                        + "_vs_".join(output_names)
+                        + f".{save_format}"
+                    ),
                     dpi=300,
                 )
 
             else:
                 plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f".{save_format}",
+                    (
+                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f"_vs_{output_name2}.{save_format}"
+                        if output_names2 != []
+                        else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f".{save_format}"
+                    ),
                     dpi=300,
                 )
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
@@ -697,9 +709,11 @@ def main(args=None):
                     )  # is the separte lists in the list
                 for i in contour_conv_ij:
                     output_contour_z[((i - 1) // n_scan_2)][
-                        ((i - 1) % n_scan_2)
-                        if ((i - 1) // n_scan_2) % 2 == 0
-                        else (-((i - 1) % n_scan_2) - 1)
+                        (
+                            ((i - 1) % n_scan_2)
+                            if ((i - 1) // n_scan_2) % 2 == 0
+                            else (-((i - 1) % n_scan_2) - 1)
+                        )
                     ] = m_file.data[output_name].get_scan(i)
 
                 flat_output_z = output_contour_z.flatten()

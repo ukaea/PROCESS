@@ -839,7 +839,7 @@ class Sctfcoil:
                 x1=another_estimate,
                 rtol=1.0e-6,
                 full_output=True,
-                disp=True,
+                disp=False,
             )
             # print(root_result)  # Diagnostic for newton method
             tmarg = t_zero_margin - thelium

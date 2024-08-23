@@ -1360,6 +1360,20 @@ class CCFE_HCPB:
         po.osubhd(self.outfile, "Other volumes, masses and areas :")
         po.ovarre(
             self.outfile,
+            "Inboard first wall area (m2)",
+            "(fwareaib)",
+            build_variables.fwareaib,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Outboard first wall area (m2)",
+            "(fwareaob)",
+            build_variables.fwareaob,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "First wall area (m2)",
             "(fwarea)",
             build_variables.fwarea,

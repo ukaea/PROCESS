@@ -1009,13 +1009,13 @@ contains
           call parse_real_variable('pnetelin', pnetelin, 1.0D0, 1.0D4, &
                'Required net electric power (MW)')
        case ('powfmax')
-          call parse_real_variable('powfmax', powfmax, 1.0D0, 1.0D4, &
+          call parse_real_variable('powfmax', powfmax, 1.0D0, 1.0D5, &
                'Maximum fusion power (MW)')
        case ('psepbqarmax')
           call parse_real_variable('psepbqarmax', psepbqarmax, 1.0D0, 50.0D0, &
                'Maximum Psep*Bt/q*A*R ratio (MW.T/m)')
        case ('pseprmax')
-          call parse_real_variable('pseprmax', pseprmax, 1.0D0, 60.0D0, &
+          call parse_real_variable('pseprmax', pseprmax, 1.0D0, 80.0D0, &
                'Maximum Psep/R ratio (MW/m)')
        case ('ptfnucmax')
           call parse_real_variable('ptfnucmax', ptfnucmax, 1.0D-6, 1.0D0, &
@@ -2340,7 +2340,7 @@ contains
           call parse_real_variable('abktflnc', abktflnc, 0.1D0, 100.0D0, &
                'Allowable blanket fluence (MW-yr/m2)')
        case ('adivflnc')
-          call parse_real_variable('adivflnc', adivflnc, 0.1D0, 100.0D0, &
+          call parse_real_variable('adivflnc', adivflnc, 0.1D0, 200.0D0, &
                'Allowable divertor fluence (MW-yr/m2)')
        case ('cfactr')
           call parse_real_variable('cfactr', cfactr, 0.0D0, 1.0D0, &

@@ -20,7 +20,7 @@ module scan_module
   integer, parameter :: ipnscns = 1000
   !! Maximum number of scan points
 
-  integer, parameter :: ipnscnv = 79
+  integer, parameter :: ipnscnv = 85
   !! Number of available scan variables
 
   integer, parameter :: noutvars = 84
@@ -115,6 +115,12 @@ module scan_module
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
   !!         <LI> 79 etaech : ECH wall plug to injector efficiency
+  !!         <LI> 80 adivflnc : Allowable divertor heat fluence (MW-yr/m2)
+  !!         <LI> 81 abktflnc : Allowable FW/blanket neutron fluence (MW-yr/m2)
+  !!         <LI> 82 cpstflnc : Allowable centrepost neutron fluence (MW-yr/m2)
+  !!         <LI> 83 nflutfmax : Max fast neutron fluence on TF coil (n/m2)
+  !!         <LI> 84 tmain : Maintenance time for replacing CP (years)
+  !!         <LI> 85 maxradwallload : Maximum permitted radiation wall load (MW/m^2)
 
   integer :: nsweep_2
   !! nsweep_2 /3/ : switch denoting quantity to scan for 2D scan:
@@ -595,8 +601,9 @@ contains
 
 	use build_variables, only: blnkoth, shldith, scrapli, scraplo, ohcth
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
-        gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax
-	use cost_variables, only: cfactr, iavail, fkind, startupratio
+        gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax, nflutfmax, maxradwallload
+	use cost_variables, only: cfactr, iavail, fkind, startupratio, cpstflnc, &
+        abktflnc, adivflnc, tmain
 	use current_drive_variables, only: bscfmax, etaech
 	use divertor_variables, only: hldivlim
 	use error_handling, only: idiags, report_error
@@ -849,6 +856,24 @@ contains
         case (79)
             etaech = swp(iscn)
               vlab = 'etaech' ; xlab = 'ECH wall plug to injector efficiency'
+        case (80)
+            adivflnc = swp(iscn)
+              vlab = 'adivflnc' ; xlab = 'Allowable divertor heat fluence (MW-yr/m2)'
+        case (81)
+            abktflnc = swp(iscn)
+              vlab = 'abktflnc' ; xlab = 'Allowable FW/blanket heat fluence (MW-yr/m2)'
+        case (82)
+            cpstflnc = swp(iscn)
+              vlab = 'cpstflnc' ; xlab = 'Allowable centrepost heat fluence (MW-yr/m2)'
+        case (83)
+            nflutfmax = swp(iscn)
+              vlab = 'nflutfmax' ; xlab = 'Max fast neutron fluence on TF coil (n/m2)'
+        case (84)
+            tmain = swp(iscn)
+              vlab = 'tmain' ; xlab = 'Maintenance time for replacing CP (years)'
+        case (85)
+            maxradwallload = swp(iscn)
+              vlab = 'maxradwallload' ; xlab = 'Maximum permitted radiation wall load (MW/m2)'
         case default
             idiags(1) = nwp ; call report_error(96)
 

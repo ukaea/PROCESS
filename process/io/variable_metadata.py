@@ -396,4 +396,49 @@ var_dicts = {
         description="Volume-averaged electron density (/m3)",
         units="m-3",
     ),
+    "fwbllife": VariableMetadata(
+        latex=r"FW/Blanket lifetime [years]",
+        description="FW/Blanket lifetime",
+        units="years",
+    ),
+    "divlife": VariableMetadata(
+        latex=r"Divertor lifetime [years]",
+        description="Divertor lifetime",
+        units="years",
+    ),
+    "cplife": VariableMetadata(
+        latex=r"Centrepost lifetime [years]",
+        description="Centrepost lifetime",
+        units="years",
+    ),
+    "abktflnc": VariableMetadata(
+        latex=r"Allowable FW/Blanket neutron fluence [MW yr m-2]",
+        description="Allowable FW/Blanket neutron fluence",
+        units="MW yr m-2",
+    ),
+    "adivflnc": VariableMetadata(
+        latex=r"Allowable Divertor heat fluence [MW yr m-2]",
+        description="Allowable Divertor heat fluence",
+        units="MW yr m-2",
+    ),
+    "nflutfmax": VariableMetadata(
+        latex=r"Max fast neutron fluence on TF coil [n m-2]",
+        description="Max fast neutron fluence on TF coil",
+        units="n m-2",
+    ),
+    "tmain": VariableMetadata(
+        latex=r"Maintenance time for replacing CP [years]",
+        description="Maintenance time for replacing CP",
+        units="years",
+    ),
+    "cfactr": VariableMetadata(
+        latex=r"Total plant availability",
+        description="Total plant availability",
+        units="",
+    ),
+    "maxradwallload": VariableMetadata(
+        latex=r"Maximum permitted radiation wall load [MW m-2]",
+        description="Maximum permitted radiation wall load",
+        units="MW m-2",
+    ),
 }
