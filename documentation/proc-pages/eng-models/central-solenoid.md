@@ -175,5 +175,5 @@ no. 106 (`ftmargoh`).
 It is recommended that EITHER the temperature margin constraint (60), OR the current density 
 constraints (26 and 27) are activated.
 
-!!! note
+!!! tip "Recommended maximum current ratio"
     For engineering feasibility, the centrepost currents at end of flat-top and beginning of pulse (`fjohc` and `fjohc0` respectively) shouldn't be set above 0.7.
