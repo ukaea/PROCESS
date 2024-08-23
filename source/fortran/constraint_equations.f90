@@ -1597,6 +1597,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
+      if (fiooic > 0.7D0) call report_error(285)
       tmp_cc =  1.0D0 - fiooic * jwdgcrt/jwptf
       tmp_con = jwdgcrt * (1.0D0 - tmp_cc)
       tmp_err = jwptf * tmp_cc
