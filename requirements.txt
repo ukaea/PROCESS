@@ -1,6 +1,9 @@
 # requirements.txt includes the dependencies necessary for running the PROCESS build system
 # (cmake --build build).
 
+# setuptools <74 required by f2py (at least for some versions of numpy)
+setuptools<74
+
 # numpy is required for some of the install scripts
 numpy>=1.23,<2
 
