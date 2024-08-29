@@ -217,7 +217,7 @@ class Process:
         if self.args.plot:
             # Check mfile exists, then plot
             mfile_path = Path(self.args.mfile)
-            mfile_str = str(mfile.resolve())
+            mfile_str = str(mfile_path.resolve())
             if mfile_path.exists():
                 # TODO Get --show arg to work: actually show the plot, don't
                 # just save it
