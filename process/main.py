@@ -189,7 +189,7 @@ class Process:
             "-mj",
             "--mfilejson",
             action="store_true",
-            help="Produce a filled json named mfile.DAT.json in working dir.",
+            help="Produce a filled json of from --mfile arg in working dir",
         )
 
         # If args is not None, then parse the supplied arguments. This is likely
