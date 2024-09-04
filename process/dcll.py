@@ -296,10 +296,10 @@ class DCLL:
                 + fwbs_variables.praddiv
             )
 
-        elif fwbs_variables.primary_pumping == 2:
+        elif fwbs_variables.primary_pumping in [2, 3]:
+            # elif fwbs_variables.primary_pumping == 2:
             # Mechanical pumping power is calculated for first wall and blanket
             self.blanket_library.thermo_hydraulic_model(output=output)
-
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt
