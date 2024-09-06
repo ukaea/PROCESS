@@ -66,12 +66,12 @@ for the primary coolant.
     The pressures and temperatures are set by the user.
       - When used with the DCLL model a different set of pressure drop variables are used, which are outlined below:
 
-    |   Variable    | Units | Itvar. | Default | Description                                                                      |
-    | :----------:  | :---: | ------ | ------- | -------------------------------------------------------------------------------- |
-    | `dp_fw_blnkt` |  Pa   |        | 1.5D5   | Pressure drop in FW and blanket coolant including heat exchanger and pipes       |
-    | `dp_fw`       |  Pa   |        | 1.5D5   | Pressure drop in FW coolant including heat exchanger and pipes                   |
-    | `dp_blkt`     |  Pa   |        | 3.5D3   | Pressure drop in blanket coolant including heat exchanger and pipes              |
-    | `dp_liq`      |  Pa   |        | 1.0D7   | Pressure drop in liquid metal blanket coolant including heat exchanger and pipes |
+    |   Variable    | Units | Default | Description                                                                      |
+    | :----------:  | :---: | ------- | -------------------------------------------------------------------------------- |
+    | `dp_fw_blnkt` |  Pa   | 1.5D5   | Pressure drop in FW and blanket coolant including heat exchanger and pipes       |
+    | `dp_fw`       |  Pa   | 1.5D5   | Pressure drop in FW coolant including heat exchanger and pipes                   |
+    | `dp_blkt`     |  Pa   | 3.5D3   | Pressure drop in blanket coolant including heat exchanger and pipes              |
+    | `dp_liq`      |  Pa   | 1.0D7   | Pressure drop in liquid metal blanket coolant including heat exchanger and pipes |
 
      - The defaults for these variables are geared towards a WCLL concept, so different values should be used with Helium cooling.
 
