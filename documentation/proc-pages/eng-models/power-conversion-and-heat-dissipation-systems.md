@@ -62,7 +62,18 @@ for the primary coolant.
       mechanical power used) is specified by the parameter `etaiso`. Note that the mechanical pumping 
       power for the shield and divertor are still calculated using the simplified method (a fixed 
       fraction of the heat transported).
-  - If `primary_pumping` = 3, the mechanical pumping power is calculated using specified pressure drop.  The pressures and temperatures are set by the user.  
+  - If `primary_pumping` = 3, the mechanical pumping power is calculated using specified pressure drop. 
+    The pressures and temperatures are set by the user.
+      - When used with the DCLL model a different set of pressure drop variables are used, which are outlined below:
+
+    |   Variable    | Units | Itvar. | Default | Description                                                                      |
+    | :----------:  | :---: | ------ | ------- | -------------------------------------------------------------------------------- |
+    | `dp_fw_blnkt` |  Pa   |        | 1.5D5   | Pressure drop in FW and blanket coolant including heat exchanger and pipes       |
+    | `dp_fw`       |  Pa   |        | 1.5D5   | Pressure drop in FW coolant including heat exchanger and pipes                   |
+    | `dp_blkt`     |  Pa   |        | 3.5D3   | Pressure drop in blanket coolant including heat exchanger and pipes              |
+    | `dp_liq`      |  Pa   |        | 1.0D7   | Pressure drop in liquid metal blanket coolant including heat exchanger and pipes |
+
+     - The defaults for these variables are geared towards a WCLL concept, so different values should be used with Helium cooling.
 
 `secondary_cycle` : This switch controls the calculation of the thermal to electric conversion 
 efficiency in the secondary cycle.
