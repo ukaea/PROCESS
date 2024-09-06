@@ -4644,36 +4644,50 @@ class Physics:
 
     @staticmethod
     def bootstrap_fraction_nevins(
-        alphan,
-        alphat,
-        betat,
-        bt,
-        dene,
-        plascur,
-        q95,
-        q0,
-        rmajor,
-        rminor,
-        ten,
-        zeff,
-    ):
-        """Bootstrap current fraction from Nevins et al scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        alphan : input real :  density profile index
-        alphat : input real :  temperature profile index
-        betat  : input real :  total plasma beta (with respect to the toroidal
-        field)
-        bt     : input real :  toroidal field on axis (T)
-        dene   : input real :  electron density (/m3)
-        plascur: input real :  plasma current (A)
-        q0     : input real :  central safety factor
-        q95    : input real :  safety factor at 95% surface
-        rmajor : input real :  plasma major radius (m)
-        rminor : input real :  plasma minor radius (m)
-        ten    : input real :  density weighted average plasma temperature (keV)
-        zeff   : input real :  plasma effective charge
-        This function calculates the bootstrap current fraction,
-        using the Nevins et al method, 4/11/90.
+        alphan: float,
+        alphat: float,
+        betat: float,
+        bt: float,
+        dene: float,
+        plascur: float,
+        q95: float,
+        q0: float,
+        rmajor: float,
+        rminor: float,
+        ten: float,
+        zeff: float,
+    ) -> float:
+        """
+        Calculate the bootstrap current fraction from Nevins et al scaling.
+
+        Args:
+            alphan (float): Density profile index.
+            alphat (float): Temperature profile index.
+            betat (float): Total plasma beta (with respect to the toroidal field).
+            bt (float): Toroidal field on axis (T).
+            dene (float): Electron density (/m3).
+            plascur (float): Plasma current (A).
+            q0 (float): Central safety factor.
+            q95 (float): Safety factor at 95% surface.
+            rmajor (float): Plasma major radius (m).
+            rminor (float): Plasma minor radius (m).
+            ten (float): Density weighted average plasma temperature (keV).
+            zeff (float): Plasma effective charge.
+
+        Returns:
+            float: The bootstrap current fraction.
+
+        This function calculates the bootstrap current fraction using the Nevins et al method.
+
+        Reference: See appendix of:
+        Keii Gi, Makoto Nakamura, Kenji Tobita, Yasushi Ono,
+        Bootstrap current fraction scaling for a tokamak reactor design study,
+        Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
+        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
+
+        Nevins, W. M. "Summary report: ITER specialists’ meeting on heating and current drive."
+        ITER-TN-PH-8-4, June 1988. 1988.
+
         """
         # Calculate peak electron beta
 
@@ -4685,7 +4699,7 @@ class Physics:
             / (bt**2 / (2.0 * constants.rmu0))
         )
 
-        # Call integration routine
+        # Call integration routine using definite integral routine from scipy
 
         ainteg, _ = integrate.quad(
             lambda y: bsinteg(
@@ -4704,8 +4718,8 @@ class Physics:
                 constants.echarge,
                 constants.rmu0,
             ),
-            0,
-            0.999,
+            0,  # Lower bound
+            1.0,  # Upper bound
             epsabs=0.001,
             epsrel=0.001,
         )
