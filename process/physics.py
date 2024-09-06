@@ -4880,7 +4880,7 @@ class Physics:
         float: The calculated bootstrap fraction.
 
         Notes:
-        The profile assumed for the alphan anf alpat indexes is only a prabolic profile without a pedestal (L-mode).
+        The profile assumed for the alphan and alpat indexes is only a parabolic profile without a pedestal (L-mode).
         The Root Mean Squared Error for the fitting database of this formula was 0.025
         Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
         conditions with neutral beam (NB) injection only are calculated.
@@ -4898,7 +4898,7 @@ class Physics:
         return (
             10 ** (0.951 * eps - 0.948)
             * betap ** (1.226 * eps + 1.584)
-            * rli ** (-0.184 - 0.282)
+            * rli ** (-0.184 * eps - 0.282)
             * (q95 / q0) ** (-0.042 * eps - 0.02)
             * alphan ** (0.13 * eps + 0.05)
             * alphat ** (0.502 * eps - 0.273)
