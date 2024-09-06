@@ -461,26 +461,54 @@ def conhas(
 
 
 def bsinteg(
-    y,
-    dene,
-    ten,
-    bt,
-    rminor,
-    rmajor,
-    zeff,
-    alphat,
-    alphan,
-    q0,
-    q95,
-    betat,
-    echarge,
-    rmu0,
-):
-    """Integrand function for Nevins et al bootstrap current scaling
-    author: P J Knight, CCFE, Culham Science Centre
-    y : input real : abscissa of integration, = normalised minor radius
-    This function calculates the integrand function for the
-    Nevins et al bootstrap current scaling, 4/11/90.
+    y: float,
+    dene: float,
+    ten: float,
+    bt: float,
+    rminor: float,
+    rmajor: float,
+    zeff: float,
+    alphat: float,
+    alphan: float,
+    q0: float,
+    q95: float,
+    betat: float,
+    echarge: float,
+    rmu0: float,
+) -> float:
+    """
+    Integrand function for Nevins et al bootstrap current scaling.
+
+    Parameters:
+    - y: float, abscissa of integration, normalized minor radius
+    - dene: float, electron density (/m^3)
+    - ten: float, electron temperature (keV)
+    - bt: float, toroidal field on axis (T)
+    - rminor: float, plasma minor radius (m)
+    - rmajor: float, plasma major radius (m)
+    - zeff: float, mass weighted plasma effective charge
+    - alphat: float, temperature profile index
+    - alphan: float, density profile index
+    - q0: float, normalized safety factor at the magnetic axis
+    - q95: float, normalized safety factor at 95% of the plasma radius
+    - betat: float, total plasma beta
+    - echarge: float, elementary charge (C)
+    - rmu0: float, vacuum permeability (H/m)
+
+    Returns:
+    - float, the integrand value
+
+    This function calculates the integrand function for the Nevins et al bootstrap current scaling.
+
+    Reference: See appendix of:
+        Keii Gi, Makoto Nakamura, Kenji Tobita, Yasushi Ono,
+        Bootstrap current fraction scaling for a tokamak reactor design study,
+        Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
+        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
+
+        Nevins, W. M. "Summary report: ITER specialists’ meeting on heating and current drive."
+        ITER-TN-PH-8-4, June 1988. 1988.
+
     """
     # Constants for fit to q-profile
     c1 = 1.0
