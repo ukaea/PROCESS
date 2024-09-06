@@ -143,7 +143,7 @@ where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and
 The temperature difference between the channel inner wall (film temperature) and the bulk coolant is calculated using the heat transfer coefficient, which is derived using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation).  The pressure drop is based on the Darcy fraction factor, using the [Haaland equation](https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation), an approximation to the implicit Colebrook–White equation.  The thermal conductivity of Eurofer is used, from "Fusion Demo Interim Structural Design Criteria - Appendix A Material Design Limit Data", F. Tavassoli, TW4-TTMS-005-D01, 2004"
 
 !!! Note "Note" 
-    The pressure drop calculation is only performed for primary_pumping = 2, as for 3 it is used as an input.
+    The pressure drop calculation is only performed for primary_pumping = 2, as for 3 it is used as an input, as explained in the heat transport section.
 
 ### Model Switches
 
