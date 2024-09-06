@@ -460,7 +460,7 @@ def conhas(
     )
 
 
-def bsinteg(
+def nevins_integral(
     y: float,
     dene: float,
     ten: float,
@@ -4730,7 +4730,7 @@ class Physics:
         # Call integration routine using definite integral routine from scipy
 
         ainteg, _ = integrate.quad(
-            lambda y: bsinteg(
+            lambda y: nevins_integral(
                 y,
                 dene,
                 ten,
