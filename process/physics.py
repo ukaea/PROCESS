@@ -24,7 +24,6 @@ from process.fortran import (
     numerics,
     stellarator_variables,
     process_output as po,
-    profiles_module,
 )
 
 
