@@ -463,7 +463,7 @@ def conhas(
 def nevins_integral(
     y: float,
     dene: float,
-    ten: float,
+    te: float,
     bt: float,
     rminor: float,
     rmajor: float,
@@ -473,27 +473,23 @@ def nevins_integral(
     q0: float,
     q95: float,
     betat: float,
-    echarge: float,
-    rmu0: float,
 ) -> float:
     """
     Integrand function for Nevins et al bootstrap current scaling.
 
     Parameters:
     - y: float, abscissa of integration, normalized minor radius
-    - dene: float, electron density (/m^3)
-    - ten: float, electron temperature (keV)
+    - dene: float, volume averaged electron density (/m^3)
+    - te: float, volume averaged electron temperature (keV)
     - bt: float, toroidal field on axis (T)
     - rminor: float, plasma minor radius (m)
     - rmajor: float, plasma major radius (m)
-    - zeff: float, mass weighted plasma effective charge
+    - zeff: float, plasma effective charge
     - alphat: float, temperature profile index
     - alphan: float, density profile index
     - q0: float, normalized safety factor at the magnetic axis
     - q95: float, normalized safety factor at 95% of the plasma radius
-    - betat: float, total plasma beta
-    - echarge: float, elementary charge (C)
-    - rmu0: float, vacuum permeability (H/m)
+    - betat: float, Toroidal plasma beta
 
     Returns:
     - float, the integrand value
@@ -510,35 +506,31 @@ def nevins_integral(
         ITER-TN-PH-8-4, June 1988. 1988.
 
     """
-    # Constants for fit to q-profile
-    c1 = 1.0
-    c2 = 1.0
-    c3 = 1.0
 
     # Compute average electron beta
-    betae = dene * ten * 1.0e3 * echarge / (bt**2 / (2.0 * rmu0))
+    betae = dene * te * 1.0e3 * constants.echarge / (bt**2 / (2.0 * constants.rmu0))
 
     nabla = rminor * np.sqrt(y) / rmajor
     x = (1.46 * np.sqrt(nabla) + 2.4 * nabla) / (1.0 - nabla) ** 1.5
     z = zeff
     d = (
         1.414 * z
-        + z * z
-        + x * (0.754 + 2.657 * z + 2.0 * z * z)
-        + x * x * (0.348 + 1.243 * z + z * z)
+        + z**2
+        + x * (0.754 + 2.657 * z + (2.0 * z**2))
+        + (x**2 * (0.348 + 1.243 * z + z**2))
     )
-    al2 = -x * (0.884 + 2.074 * z) / d
-    a2 = alphat * (1.0 - y) ** (alphan + alphat - 1.0)
-    alphai = -1.172 / (1.0 + 0.462 * x)
     a1 = (alphan + alphat) * (1.0 - y) ** (alphan + alphat - 1.0)
-    al1 = x * (0.754 + 2.21 * z + z * z + x * (0.348 + 1.243 * z + z * z)) / d
+    a2 = alphat * (1.0 - y) ** (alphan + alphat - 1.0)
+    al1 = (x/d) * (0.754 + 2.21 * z + z**2 + x * (0.348 + 1.243 * z + z**2))
+    al2 = -x * ((0.884 + 2.074 * z) / d)
+    alphai = -1.172 / (1.0 + 0.462 * x)
 
     # q-profile
-    q = q0 + (q95 - q0) * (c1 * y + c2 * y * y + c3 * y**3) / (c1 + c2 + c3)
+    q = q0 + (q95 - q0) * ((y + y**2 + y**3) / (3.0))
 
     pratio = (betat - betae) / betae
 
-    return (q / q95) * (al1 * (a1 + pratio * (a1 + alphai * a2)) + al2 * a2)
+    return (q / q95) * (al1 * (a1 + (pratio * (a1 + alphai * a2))) + al2 * a2)
 
 
 def diamagnetic_fraction_hender(beta: float) -> float:
@@ -1083,7 +1075,7 @@ class Physics:
                 physics_variables.vol,
             )
         )
-
+        # Calculate the toroidal beta for the Nevins scaling
         betat = (
             physics_variables.beta
             * physics_variables.btot**2
@@ -1103,7 +1095,7 @@ class Physics:
                 physics_variables.q0,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.ten,
+                physics_variables.te,
                 physics_variables.zeff,
             )
         )
@@ -4682,7 +4674,7 @@ class Physics:
         q0: float,
         rmajor: float,
         rminor: float,
-        ten: float,
+        te: float,
         zeff: float,
     ) -> float:
         """
@@ -4691,7 +4683,7 @@ class Physics:
         Args:
             alphan (float): Density profile index.
             alphat (float): Temperature profile index.
-            betat (float): Total plasma beta (with respect to the toroidal field).
+            betat (float): Toroidal plasma beta.
             bt (float): Toroidal field on axis (T).
             dene (float): Electron density (/m3).
             plascur (float): Plasma current (A).
@@ -4699,7 +4691,7 @@ class Physics:
             q95 (float): Safety factor at 95% surface.
             rmajor (float): Plasma major radius (m).
             rminor (float): Plasma minor radius (m).
-            ten (float): Density weighted average plasma temperature (keV).
+            te (float): Volume averaged plasma temperature (keV).
             zeff (float): Plasma effective charge.
 
         Returns:
@@ -4717,7 +4709,10 @@ class Physics:
         ITER-TN-PH-8-4, June 1988. 1988.
 
         """
-        # Calculate peak electron beta
+        # Calculate peak electron beta at plasma centre, this is not the form used in the paper
+        # The paper assumes parabolic profiles for calculating core values with the profile indexes.
+        # We instead use the directly calculated electron density and temperature values at the core.
+        # So that it is compatible with all profiles
 
         betae0 = (
             physics_variables.ne0
@@ -4733,7 +4728,7 @@ class Physics:
             lambda y: nevins_integral(
                 y,
                 dene,
-                ten,
+                te,
                 bt,
                 rminor,
                 rmajor,
@@ -4743,13 +4738,9 @@ class Physics:
                 q0,
                 q95,
                 betat,
-                constants.echarge,
-                constants.rmu0,
             ),
             0,  # Lower bound
             1.0,  # Upper bound
-            epsabs=0.001,
-            epsrel=0.001,
         )
 
         # Calculate bootstrap current and fraction
