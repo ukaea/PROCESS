@@ -258,7 +258,9 @@ def vscalc(
     aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
         2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
     )
-    beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
+    beps = (
+        0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
+    )
     rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
 
     rlp = rlpext + rlpint
@@ -930,7 +932,9 @@ class Physics:
         )
 
         betat = (
-            physics_variables.beta * physics_variables.btot**2 / physics_variables.bt**2
+            physics_variables.beta
+            * physics_variables.btot**2
+            / physics_variables.bt**2
         )
         current_drive_variables.bscf_nevins = (
             current_drive_variables.cboot
@@ -1625,14 +1629,18 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[0] = (1.54e20 * qperp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45) / prn1
+        dlimit[0] = (
+            1.54e20 * qperp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
+        ) / prn1
 
         # Borrass density limit model for ITER (I)
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
-        dlimit[1] = (1.8e20 * qperp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22) / prn1
+        dlimit[1] = (
+            1.8e20 * qperp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
+        ) / prn1
 
         # Borrass density limit model for ITER (II)
         # This applies to the density at the plasma edge, so must be scaled
@@ -1640,7 +1648,9 @@ class Physics:
         # This formula is (almost) identical to that in the original routine
         # denlim (now deleted).
 
-        dlimit[2] = (0.5e20 * qperp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09) / prn1
+        dlimit[2] = (
+            0.5e20 * qperp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
+        ) / prn1
 
         # JET edge radiation density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -2109,7 +2119,10 @@ class Physics:
                 0.5
                 * (1.17 - 0.65 * eps)
                 / ((1.0 - eps * eps) ** 2)
-                * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+                * (
+                    1.0
+                    + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3)
+                )
             )
         elif icurr in [5, 6]:  # Todd empirical scalings
             fq = (
@@ -2898,9 +2911,9 @@ class Physics:
 
         for imp in range(impurity_radiation_module.nimp):
             # MDK Update fimp, as this will make the ITV output work correctly.
-            impurity_radiation_module.fimp[imp] = (
-                impurity_radiation_module.impurity_arr_frac[imp]
-            )
+            impurity_radiation_module.fimp[
+                imp
+            ] = impurity_radiation_module.impurity_arr_frac[imp]
             str1 = (
                 f2py_compatible_to_string(
                     impurity_radiation_module.impurity_arr_label[imp]
@@ -4571,7 +4584,8 @@ class Physics:
         # mu = 1/safety factor
         # Parabolic q profile assumed
         mu = 1 / (
-            physics_variables.q0 + (physics_variables.q - physics_variables.q0) * roa**2
+            physics_variables.q0
+            + (physics_variables.q - physics_variables.q0) * roa**2
         )
         amain = np.full_like(mu, physics_variables.afuel)
         zmain = np.full_like(mu, 1.0 + physics_variables.fhe3)
@@ -5067,7 +5081,11 @@ class Physics:
                 * np.sqrt(kappa95)
                 * denfac
                 / powerht**0.4e0
-                * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0))
+                * (
+                    zeff**2
+                    * pcur**4
+                    / (rmajor * rminor * qstar**3 * kappa95**1.5e0)
+                )
                 ** 0.08e0
             )
 
@@ -5522,7 +5540,9 @@ class Physics:
             #  Table 4.  (Issue #311)
             # Note that aspect ratio and M (afuel) do not appear, and B (bt) only
             # appears in the "saturation factor" h.
-            h = dnla19**0.448e0 / (1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0))
+            h = dnla19**0.448e0 / (
+                1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0)
+            )
             tauee = (
                 hfact
                 * 0.0367e0
