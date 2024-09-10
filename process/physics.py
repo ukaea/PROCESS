@@ -982,7 +982,8 @@ class Physics:
         current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
         current_drive_variables.bscf_sauter = (
-            current_drive_variables.cboot * self.bootstrap_fraction_sauter()
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sauter(self.plasma_profile)
         )
 
         current_drive_variables.bscf_sakai = (
@@ -4538,7 +4539,8 @@ class Physics:
         aibs = 2.5 * betae0 * rmajor * bt * q95 * ainteg
         return 1.0e6 * aibs / plascur
 
-    def bootstrap_fraction_sauter(self):
+    @staticmethod
+    def bootstrap_fraction_sauter(plasma_profile):
         """Bootstrap current fraction from Sauter et al scaling
         author: P J Knight, CCFE, Culham Science Centre
         None
@@ -4551,17 +4553,17 @@ class Physics:
         O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
         Physics of Plasmas <B>9</B> (2002) 5140
         """
-        NR = self.plasma_profile.profile_size
+        NR = plasma_profile.profile_size
 
-        roa = self.plasma_profile.neprofile.profile_x
+        roa = plasma_profile.neprofile.profile_x
         rho = np.sqrt(physics_variables.xarea / np.pi) * roa
 
         sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
 
-        ne = self.plasma_profile.neprofile.profile_y * 1e-19
+        ne = plasma_profile.neprofile.profile_y * 1e-19
         ni = (physics_variables.dnitot / physics_variables.dene) * ne
 
-        tempe = self.plasma_profile.teprofile.profile_y
+        tempe = plasma_profile.teprofile.profile_y
         tempi = (physics_variables.ti / physics_variables.te) * tempe
         # Flat Zeff profile assumed
         zef = np.full_like(tempi, physics_variables.zeff)
@@ -4653,7 +4655,6 @@ class Physics:
                 * mu[nr_rng_1]
             )
         )  # A/m2
-
         return np.sum(da * jboot, axis=0) / physics_variables.plascur
 
     @staticmethod
