@@ -4655,6 +4655,7 @@ class Physics:
                 * mu[nr_rng_1]
             )
         )  # A/m2
+
         return np.sum(da * jboot, axis=0) / physics_variables.plascur
 
     @staticmethod
