@@ -1,20 +1,20 @@
 # Radial and Vertical Build
 
-Simplified scale diagrams of the vertical and horizontal cross-sections of the machine can be 
+Simplified scale diagrams of the vertical and horizontal cross-sections of the machine can be
 output in the `2-page summary` using the utility `plot_proc.py` (currently stored in `process/process/io`).  
 
-The coordinate system is $(R,Z)$ system, where $R$ is the radial distance from the vertical 
+The coordinate system is $(R,Z)$ system, where $R$ is the radial distance from the vertical
 centreline (axis) of the torus, and $Z$ is the vertical distance from the equatorial midplane.
 
-Components are often referred to as being 'inboard' or 'outboard', which simply 
-means that they lie at a radius $R$ less than or greater than $R_0$, 
-respectively, where $R_0$ is the plasma major radius (`rmajor`). 
+Components are often referred to as being 'inboard' or 'outboard', which simply
+means that they lie at a radius $R$ less than or greater than $R_0$,
+respectively, where $R_0$ is the plasma major radius (`rmajor`).
 
-The radial build is described in detail in the OUT.DAT file as in the example below, which lists 
-the major radius of each component in the midplane.  The machine is axisymmetric, except for the 
-TF coils which are discrete.  The variables marked "IP" below are input variables.  Those marked 
-"ITV" are available as iteration variables (although it is not always advisable to use them as 
-iteration variables).  Those marked with an asterisk (*) may or may not be input variables 
+The radial build is described in detail in the OUT.DAT file as in the example below, which lists
+the major radius of each component in the midplane.  The machine is axisymmetric, except for the
+TF coils which are discrete.  The variables marked "IP" below are input variables.  Those marked
+"ITV" are available as iteration variables (although it is not always advisable to use them as
+iteration variables).  Those marked with an asterisk (*) may or may not be input variables
 depending on the switches used.  
 
 ```text
@@ -52,10 +52,10 @@ The radial build is shown schematically below (click to zoom).
 
 <img title="Radial build" src="../../images/radial-build.png" alt="Radial build">
 
-The vertical build is described in detail in the OUT.DAT as in the following example, which lists 
-the vertical coordinate of each component at the point furthest from the midplane (excluding the 
-CS, the other PF coils and the cryostat).  The midplane is defined to be half way between the top 
-and bottom of the plasma.  A single-null scenario is assumed to have a lower divertor, in which 
+The vertical build is described in detail in the OUT.DAT as in the following example, which lists
+the vertical coordinate of each component at the point furthest from the midplane (excluding the
+CS, the other PF coils and the cryostat).  The midplane is defined to be half way between the top
+and bottom of the plasma.  A single-null scenario is assumed to have a lower divertor, in which
 case the machine is not symmetric about the midplane.  
 
 ```text
@@ -66,7 +66,7 @@ case the machine is not symmetric about the midplane.
  TF coil                                      1.576           9.862   (tfcth)             
  Gap                                          0.050           8.286   (tftsgap)           
  Thermal shield                               0.050           8.236   (thshield)          
- Gap                                          0.050           8.186   (vgap2)             
+ Gap                                          0.050           8.186   (vgap_vv_thermalshield)             
  Vacuum vessel (and shielding)                0.600           8.136   (d_vv_top+shldtth)  
  Gap                                          0.020           7.536   (vvblgap)           
  Top blanket                                  0.869           7.516   (blnktth)           
@@ -78,7 +78,7 @@ case the machine is not symmetric about the midplane.
  Lower scrape-off                             2.002          -8.031   (vgap)              
  Divertor structure                           0.621          -8.652   (divfix)            
  Vacuum vessel (and shielding)                1.000          -9.652   (d_vv_bot+shldlth)  
- Gap                                          0.050          -9.702   (vgap2)             
+ Gap                                          0.050          -9.702   (vgap_vv_thermalshield)             
  Thermal shield                               0.050          -9.752   (thshield)          
  Gap                                          0.050          -9.802   (tftsgap)           
  TF coil                                      1.576         -11.379   (tfcth)    
@@ -89,14 +89,14 @@ The vertical build is shown schematically below (click to zoom).
 
 <img title="Vertical build" src="../../images/vertical-build.png" alt="Vertical build">
 
-Since PROCESS is essentially a 0-D code, the shape of each component is used to estimate its mass 
-and cost, but is not used otherwise.  The first wall, blanket, shield and vacuum vessel may be 
-either D-shaped in cross-section, or each may be defined by two half-ellipses. The choice between 
+Since PROCESS is essentially a 0-D code, the shape of each component is used to estimate its mass
+and cost, but is not used otherwise.  The first wall, blanket, shield and vacuum vessel may be
+either D-shaped in cross-section, or each may be defined by two half-ellipses. The choice between
 these two possibilities is set using input parameter `fwbsshape`, which should be
 
 - 1 for D-shaped,
 - 2 for ellipses.
 
 !!! Info "TF coil placement"
-    The radial build can vary from the figures above dependant on the placement of the inboard TF 
+    The radial build can vary from the figures above dependant on the placement of the inboard TF
     coil leg when using the `tf_in_cs` switch. See [TF coil page](tf-coil.md)**

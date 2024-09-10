@@ -267,14 +267,14 @@ module build_variables
   real(dp) :: thshield_vb
   !! TF-VV thermal shield thickness, vertical build (m)
 
-  real(dp) :: vgap2
+  real(dp) :: vgap_vv_thermalshield
   !! vertical gap between vacuum vessel and thermal shields (m)
 
-  real(dp) :: vgap
+  real(dp) :: vgap_xpoint_divertor
   !! vertical gap between x-point and divertor (m) (if = 0, it is calculated)
 
   real(dp) :: vgaptop
-  !! vertical gap between top of plasma and first wall (m) (= vgap if double-null)
+  !! vertical gap between top of plasma and first wall (m) (= vgap_xpoint_divertor if double-null)
 
   real(dp) :: vvblgap
   !! gap between vacuum vessel and blanket (m)
@@ -376,8 +376,8 @@ module build_variables
     thshield_ib = 0.05D0
     thshield_ob = 0.05D0
     thshield_vb = 0.05D0
-    vgap2 = 0.163D0
-    vgap= 0.0D0
+    vgap_vv_thermalshield = 0.163D0
+    vgap_xpoint_divertor= 0.0D0
     vgaptop = 0.60D0
     vvblgap = 0.05D0
     plleni = 1.0D0

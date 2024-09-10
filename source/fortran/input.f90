@@ -193,13 +193,13 @@ contains
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, shldoth, &
-      shldtth, shldlth, vgap2, plleni, fwoth, vvblgap, &
+      shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
       thshield_ib, thshield_ob, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, tfcth, &
       iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, ddwex, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
-      blbpoth, gapds, fwith, vgap, shldith, sigallpc, tfootfi, f_avspace,&
+      blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
       esbldgm3, fndt, row, wgt2, pibv, clh1, stcl, clh2, &
@@ -1421,11 +1421,11 @@ contains
        case ('thshield_vb')
           call parse_real_variable('thshield_vb', thshield_vb, 0.0D0, 10.0D0, &
                'TF/VV thermal shield thickness, vertical build (m)')
-       case ('vgap')
-          call parse_real_variable('vgap', vgap, 0.0D0, 10.0D0, &
+       case ('vgap_xpoint_divertor')
+          call parse_real_variable('vgap_xpoint_divertor', vgap_xpoint_divertor, 0.0D0, 10.0D0, &
                'Vert gap between x-pnt and divertor (m)')
-       case ('vgap2')
-          call parse_real_variable('vgap2', vgap2, 0.0D0, 10.0D0, &
+       case ('vgap_vv_thermalshield')
+          call parse_real_variable('vgap_vv_thermalshield', vgap_vv_thermalshield, 0.0D0, 10.0D0, &
                'Vert gap between TF coil and shield (m)')
        case ('vgaptop')
           call parse_real_variable('vgaptop', vgaptop, 0.0D0, 10.0D0, &

@@ -111,20 +111,20 @@ class Build:
         """
         divht = self.divgeom(output)
         # Issue #481 Remove build_variables.vgaptf
-        if build_variables.vgap < 0.00001e0:
-            build_variables.vgap = divht
+        if build_variables.vgap_xpoint_divertor < 0.00001e0:
+            build_variables.vgap_xpoint_divertor = divht
 
-        # If build_variables.vgap /= 0 use the value set by the user.
+        # If build_variables.vgap_xpoint_divertor /= 0 use the value set by the user.
 
         # Height to inside edge of TF coil. TF coils are assumed to be symmetrical.
         # Therefore this applies to single and double null cases.
         build_variables.hmax = (
             physics_variables.rminor * physics_variables.kappa
-            + build_variables.vgap
+            + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             + build_variables.shldlth
             + build_variables.d_vv_bot
-            + build_variables.vgap2
+            + build_variables.vgap_vv_thermalshield
             + build_variables.thshield_vb
             + build_variables.tftsgap
         )
@@ -138,7 +138,7 @@ class Build:
                 build_variables.tfcth
                 + build_variables.tftsgap
                 + build_variables.thshield_vb
-                + build_variables.vgap2
+                + build_variables.vgap_vv_thermalshield
                 + build_variables.d_vv_top
                 + build_variables.shldtth
                 + build_variables.vvblgap
@@ -1295,7 +1295,7 @@ class Build:
         #  Half-height of first wall (internal surface)
         hbot = (
             physics_variables.rminor * physics_variables.kappa
-            + build_variables.vgap
+            + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             - build_variables.blnktth
             - 0.5e0 * (build_variables.fwith + build_variables.fwoth)
@@ -1926,7 +1926,7 @@ class Build:
                     + build_variables.tfcth
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
-                    + build_variables.vgap2
+                    + build_variables.vgap_vv_thermalshield
                     + build_variables.d_vv_top
                     + build_variables.shldtth
                     + divertor_variables.divfix
@@ -1992,17 +1992,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap2,
+                    build_variables.vgap_vv_thermalshield,
                     vbuild,
-                    "(vgap2)",
+                    "(vgap_vv_thermalshield)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Vessel - TF coil vertical gap (m)",
-                    "(vgap2)",
-                    build_variables.vgap2,
+                    "(vgap_vv_thermalshield)",
+                    build_variables.vgap_vv_thermalshield,
                 )
-                vbuild = vbuild - build_variables.vgap2
+                vbuild = vbuild - build_variables.vgap_vv_thermalshield
 
                 po.obuild(
                     self.outfile,
@@ -2081,19 +2081,19 @@ class Build:
                     "(rminor*kappa)",
                 )
 
-                vbuild = vbuild - build_variables.vgap
+                vbuild = vbuild - build_variables.vgap_xpoint_divertor
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
-                    build_variables.vgap,
+                    build_variables.vgap_xpoint_divertor,
                     vbuild,
-                    "(vgap)",
+                    "(vgap_xpoint_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Bottom scrape-off vertical thickness (m)",
-                    "(vgap)",
-                    build_variables.vgap,
+                    "(vgap_xpoint_divertor)",
+                    build_variables.vgap_xpoint_divertor,
                 )
 
                 vbuild = vbuild - divertor_variables.divfix
@@ -2134,13 +2134,13 @@ class Build:
                     build_variables.d_vv_bot,
                 )
 
-                vbuild = vbuild - build_variables.vgap2
+                vbuild = vbuild - build_variables.vgap_vv_thermalshield
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap2,
+                    build_variables.vgap_vv_thermalshield,
                     vbuild,
-                    "(vgap2)",
+                    "(vgap_vv_thermalshield)",
                 )
 
                 vbuild = vbuild - build_variables.thshield_vb
@@ -2197,7 +2197,7 @@ class Build:
                     + build_variables.tfcth
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
-                    + build_variables.vgap2
+                    + build_variables.vgap_vv_thermalshield
                     + 0.5e0 * (build_variables.d_vv_top + build_variables.d_vv_bot)
                     + build_variables.vvblgap
                     + build_variables.shldtth
@@ -2264,17 +2264,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap2,
+                    build_variables.vgap_vv_thermalshield,
                     vbuild,
-                    "(vgap2)",
+                    "(vgap_vv_thermalshield)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Vessel - TF coil vertical gap (m)",
-                    "(vgap2)",
-                    build_variables.vgap2,
+                    "(vgap_vv_thermalshield)",
+                    build_variables.vgap_vv_thermalshield,
                 )
-                vbuild = vbuild - build_variables.vgap2
+                vbuild = vbuild - build_variables.vgap_vv_thermalshield
 
                 po.obuild(
                     self.outfile,
@@ -2372,19 +2372,19 @@ class Build:
                     "(rminor*kappa)",
                 )
 
-                vbuild = vbuild - build_variables.vgap
+                vbuild = vbuild - build_variables.vgap_xpoint_divertor
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
-                    build_variables.vgap,
+                    build_variables.vgap_xpoint_divertor,
                     vbuild,
-                    "(vgap)",
+                    "(vgap_xpoint_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Bottom scrape-off vertical thickness (m)",
-                    "(vgap)",
-                    build_variables.vgap,
+                    "(vgap_xpoint_divertor)",
+                    build_variables.vgap_xpoint_divertor,
                 )
 
                 vbuild = vbuild - divertor_variables.divfix
@@ -2425,13 +2425,13 @@ class Build:
                     build_variables.d_vv_bot,
                 )
 
-                vbuild = vbuild - build_variables.vgap2
+                vbuild = vbuild - build_variables.vgap_vv_thermalshield
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap2,
+                    build_variables.vgap_vv_thermalshield,
                     vbuild,
-                    "(vgap2)",
+                    "(vgap_vv_thermalshield)",
                 )
 
                 vbuild = vbuild - build_variables.thshield_vb
