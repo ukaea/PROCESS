@@ -350,33 +350,33 @@ class BootstrapFractionSauterParam(NamedTuple):
     "bootstrapfractionsauterparam",
     (
         BootstrapFractionSauterParam(
-            dnitot=6.6125550702454276e19,
+            dnitot=7.1297522422781575e19,
             rminor=2.6666666666666665,
             tesep=0.10000000000000001,
-            ti=12,
+            ti=12.570861186498382,
             triang=0.5,
             q0=1,
             afuel=2.5,
-            zeff=2.0909945616489103,
-            rhopedn=0.94000000000000006,
-            bt=5.7000000000000002,
-            plascur=18398455.678867526,
+            zeff=2.5211399464385624,
+            rhopedn=0.9400000000000001,
+            bt=5.326133750416047,
+            plascur=16528278.760008096,
             xarea=38.39822223637151,
             fhe3=0,
             teped=5.5,
-            dene=7.5e19,
-            te=12,
+            dene=8.016748468651018e19,
+            te=12.570861186498382,
             rmajor=8,
             q=3.5,
-            nesep=4.1177885154594193e19,
-            te0=24.402321098330372,
-            neped=7.000240476281013e19,
+            nesep=3.6992211545476006e19,
+            te0=25.986118047669795,
+            neped=6.2886759627309195e19,
             tbeta=2,
-            ne0=8.515060981068918e19,
+            ne0=1.054474759840606e20,
             alphan=1,
-            rhopedt=0.94000000000000006,
+            rhopedt=0.9400000000000001,
             alphat=1.45,
-            expected_bfs=0.27635918746616817,
+            expected_bfs=0.4110838247346975,
         ),
     ),
 )
@@ -462,8 +462,8 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(
         physics_variables, "alphat", bootstrapfractionsauterparam.alphat
     )
-
-    bfs = physics.bootstrap_fraction_sauter()
+    physics.plasma_profile.run()
+    bfs = physics.bootstrap_fraction_sauter(physics.plasma_profile)
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 
