@@ -616,7 +616,7 @@ def dcsa(j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps):
     DCSA $\\equiv \\mathcal{L}_{31}$, Eq.14a, Sauter et al, 1999
     """
     zz = zef[j - 1]
-    zft = tpf(j, triang, sqeps)
+    zft = trapped_particle_fraction(j, triang, sqeps)
     _nues = nues(j, rmajor, zef, mu, sqeps, tempe, ne)
     zdf = (1.0 + (1.0 - 0.1 * zft) * np.sqrt(_nues)) + (0.5 * (1.0 - zft) * _nues) / zz
     zft /= zdf  # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
@@ -651,7 +651,7 @@ def hcsa(j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps):
     Physics of Plasmas <B>9</B> (2002) 5140
     """
     zz = zef[j - 1]
-    zft = tpf(j, triang, sqeps)
+    zft = trapped_particle_fraction(j, triang, sqeps)
     _nues = nues(j, rmajor, zef, mu, sqeps, tempe, ne)
     _nues_sqrt = np.sqrt(_nues)
     zdf = (1.0 + 0.26 * (1.0 - zft) * _nues_sqrt) + (
@@ -729,7 +729,7 @@ def xcsa(
     Physics of Plasmas <B>9</B> (2002) 5140
     """
     zz = zef[j - 1]
-    zft = tpf(j, triang, sqeps)
+    zft = trapped_particle_fraction(j, triang, sqeps)
     _nues = nues(j, rmajor, zef, mu, sqeps, tempe, ne)
     zdf = (1.0 + (1.0 - 0.1 * zft) * np.sqrt(_nues)) + 0.5 * (
         1.0 - 0.5 * zft
@@ -842,44 +842,62 @@ def beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho):
 
 
 @nb.jit(nopython=True, cache=True)
-def tpf(j, triang, sqeps, fit=1):
-    """Trapped particle fraction
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 1 to nr
-    fit : input integer : (1)=ASTRA method, 2=Equation from Sauter2002, 3=Equation from Sauter2013
-    This function calculates the trapped particle fraction at
-    a given radius.
-    <P>A number of different fits are provided, but the one
-    to be used is hardwired prior to run-time.
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    O. Sauter et al, Plasma Phys. Contr. Fusion <B>44</B> (2002) 1999
-    O. Sauter, 2013:
-    http://infoscience.epfl.ch/record/187521/files/lrp_012013.pdf
+def trapped_particle_fraction(radial_elements: list, triang: float, sqeps: list, fit: int = 0) -> list:
     """
-    s = sqeps[j - 1]
-    eps = s * s
+    Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
 
-    if fit == 1:
+    Parameters:
+    - j: list, radial element index in range 1 to nr
+    - triang: float, plasma triangularity
+    - sqeps: list, square root of local aspect ratio
+    - fit: int, fit method (1=ASTRA method, 2=Equation from Sauter2002, 3=Equation from Sauter2013)
+
+    Returns:
+    - list, trapped particle fraction
+
+    This function calculates the trapped particle fraction at a given radius.
+
+    References:
+      Used in this paper:
+    - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+      Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+
+    - O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and contributors to the E.-J. Workprogramme,
+      “Marginal  -limit for neoclassical tearing modes in JET H-mode discharges,”
+      Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999–2019, Aug. 2002,
+      doi: https://doi.org/10.1088/0741-3335/44/9/315.
+
+    - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
+      Fusion Engineering and Design, Volume 112, 2016, Pages 633-645, ISSN 0920-3796,
+      https://doi.org/10.1016/j.fusengdes.2016.04.033.
+
+    """
+    # Prevent first element from being zero
+    sqeps_reduced = sqeps[radial_elements - 1]
+    eps = sqeps_reduced**2
+
+    if fit == 0:
         # ASTRA method, from Emiliano Fable, private communication
         # (Excluding h term which dominates for inverse aspect ratios < 0.5,
         # and tends to take the trapped particle fraction to 1)
 
         zz = 1.0 - eps
-        return 1.0 - zz * np.sqrt(zz) / (1.0 + 1.46 * s)
-    elif fit == 2:
-        # Equation 4 of Sauter 2002
-        # Similar to, but not quite identical to g above
+        return 1.0 - zz * np.sqrt(zz) / (1.0 + 1.46 * sqeps_reduced)
 
-        return 1.0 - (1.0 - eps) ** 2 / (1.0 + 1.46 * s) / np.sqrt(1.0 - eps * eps)
-    elif fit == 3:
+    elif fit == 1:
+        # Equation 4 of Sauter 2002; https://doi.org/10.1088/0741-3335/44/9/315.
+        # Similar to, but not quite identical to above
+
+        return 1.0 - (((1.0 - eps) ** 2) / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2)))
+
+    elif fit == 2:
+        # Sauter 2016; https://doi.org/10.1016/j.fusengdes.2016.04.033.
         # Includes correction for triangularity
 
         epseff = 0.67 * (1.0 - 1.4 * triang * np.abs(triang)) * eps
 
-        return 1.0 - np.sqrt((1.0 - eps) / (1.0 + eps)) * (1.0 - epseff) / (
-            1.0 + 2.0 * np.sqrt(epseff)
-        )
+        return 1.0 - (((1.0 - epseff) / (1.0 + 2.0 * np.sqrt(epseff)))*(np.sqrt((1.0 - eps) / (1.0 + eps))))
 
     raise RuntimeError(f"fit={fit} is not valid. Must be 1, 2, or 3")
 
@@ -4761,20 +4779,18 @@ class Physics:
         This function calculates the bootstrap current fraction using the Sauter, Angioni, and Lin-Liu scaling.
 
         Reference:
-
-        O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-        Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
-
-        O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
-        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+          Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+          Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+          Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+          [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
 
         Note:
         The code was supplied by Emiliano Fable, IPP Garching (private communication).
         """
 
-        # Number of radial points along the profile
+        # Number of radial data points along the profile
         NR = plasma_profile.profile_size
 
         # Radial points from 0 to 1 seperated by 1/profile_size
