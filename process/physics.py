@@ -4749,32 +4749,53 @@ class Physics:
         return 1.0e6 * aibs / plascur
 
     @staticmethod
-    def bootstrap_fraction_sauter(plasma_profile):
-        """Bootstrap current fraction from Sauter et al scaling
-        author: P J Knight, CCFE, Culham Science Centre
-        None
-        This function calculates the bootstrap current fraction
-        using the Sauter, Angioni and Lin-Liu scaling.
-        <P>The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
-        O. Sauter, C. Angioni and Y. R. Lin-Liu,
-        Physics of Plasmas <B>6</B> (1999) 2834
-        O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-        Physics of Plasmas <B>9</B> (2002) 5140
+    def bootstrap_fraction_sauter(plasma_profile: PlasmaProfile) -> float:
+        """Calculate the bootstrap current fraction from the Sauter et al scaling.
+
+        Args:
+            plasma_profile (PlasmaProfile): The plasma profile object.
+
+        Returns:
+            float: The bootstrap current fraction.
+
+        This function calculates the bootstrap current fraction using the Sauter, Angioni, and Lin-Liu scaling.
+
+        Reference:
+
+        O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+
+        O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+
+        Note:
+        The code was supplied by Emiliano Fable, IPP Garching (private communication).
         """
+
+        # Number of radial points along the profile
         NR = plasma_profile.profile_size
 
+        # Radial points from 0 to 1 seperated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
+
+        # Local circularised minor radius
         rho = np.sqrt(physics_variables.xarea / np.pi) * roa
 
+        # Square root of local aspect ratio
         sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
 
+        # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
         ni = (physics_variables.dnitot / physics_variables.dene) * ne
 
+        # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
         tempi = (physics_variables.ti / physics_variables.te) * tempe
+
         # Flat Zeff profile assumed
+        # Return tempi like array object filled with zeff
         zef = np.full_like(tempi, physics_variables.zeff)
 
         # mu = 1/safety factor
