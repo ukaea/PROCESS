@@ -598,39 +598,73 @@ def nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni):
 
 
 @nb.jit(nopython=True, cache=True)
-def dcsa(j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps):
-    """Grad(ln(ne)) coefficient in the Sauter bootstrap scaling
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 2 to nr
-    nr : input integer : maximum value of j
-    This function calculates the coefficient scaling grad(ln(ne))
-    in the Sauter bootstrap current scaling.
-    Code by Angioni, 29th May 2002.
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    O. Sauter, C. Angioni and Y. R. Lin-Liu,
-    Physics of Plasmas <B>6</B> (1999) 2834
-    O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-    Physics of Plasmas <B>9</B> (2002) 5140
-
-    DCSA $\\equiv \\mathcal{L}_{31}$, Eq.14a, Sauter et al, 1999
+def calculate_l31_coefficient(
+    radial_elements: np.ndarray,
+    number_of_elements: int,
+    rmajor: float,
+    bt: float,
+    triang: float,
+    ne: np.ndarray,
+    ni: np.ndarray,
+    tempe: np.ndarray,
+    tempi: np.ndarray,
+    magnetic_moment: np.ndarray,
+    rho: np.ndarray,
+    zeff: np.ndarray,
+    sqeps: np.ndarray,
+) -> float:
     """
-    zz = zef[j - 1]
-    zft = trapped_particle_fraction(j, triang, sqeps)
-    _nues = nues(j, rmajor, zef, mu, sqeps, tempe, ne)
-    zdf = (1.0 + (1.0 - 0.1 * zft) * np.sqrt(_nues)) + (0.5 * (1.0 - zft) * _nues) / zz
-    zft /= zdf  # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
-    zft2 = zft**2
-    zft3 = zft2 * zft
-    dcsa = (
-        ((1.0 + 1.4 / (zz + 1.0)) * zft)
-        - (1.9 / (zz + 1.0) * zft2)
-        + ((0.3 * zft3 + 0.2 * zft3 * zft) / (zz + 1.0))
+    L31 coefficient before Grad(ln(ne)) in the Sauter bootstrap scaling.
+
+    Parameters:
+    - radial_elements: int, radial element index in range 2 to nr
+    - number_of_elements: int, maximum value of radial_elements
+    - rmajor: float, plasma major radius (m)
+    - bt: float, toroidal field on axis (T)
+    - triang: float, plasma triangularity
+    - ne: np.ndarray, electron density profile (/m^3)
+    - ni: np.ndarray, ion density profile (/m^3)
+    - tempe: np.ndarray, electron temperature profile (keV)
+    - tempi: np.ndarray, ion temperature profile (keV)
+    - magnetic_moment: np.ndarray, magnetic moment profile
+    - rho: np.ndarray, normalized minor radius profile
+    - zeff: np.ndarray, effective charge profile
+    - sqeps: np.ndarray, square root of inverse aspect ratio profile
+
+    Returns:
+    - float, the coefficient scaling grad(ln(ne)) in the Sauter bootstrap current scaling.
+
+    This function calculates the coefficient scaling grad(ln(ne)) in the Sauter bootstrap current scaling.
+
+    Reference:
+    - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+      Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+    - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+      [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+    """
+    # Prevents first element being 0
+    charge_profile = zeff[radial_elements - 1]
+
+    # Calculate trapped particle fraction
+    f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
+
+    # Calculated electron collisionality; nu_e*
+    electron_collisionality = nues(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
+
+    # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
+    f31_teff = f_trapped / ((1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality)) + (0.5 * (1.0 - f_trapped) * electron_collisionality) / charge_profile)
+
+    l31_coefficient = (
+        ((1.0 + 1.4 / (charge_profile + 1.0)) * f31_teff)
+        - (1.9 / (charge_profile + 1.0) * f31_teff**2)
+        + ((0.3 * f31_teff**3 + 0.2 * f31_teff**4) / (charge_profile + 1.0))
     )
 
     # Corrections suggested by Fable, 15/05/2015
-    return dcsa * beta_poloidal_local_total(
-        j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho
+    return l31_coefficient * beta_poloidal_local_total(
+        radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho
     )
 
 
@@ -687,7 +721,7 @@ def hcsa(j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps):
     # Corrections suggested by Fable, 15/05/2015
     return beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho) * (
         hcee + hcei
-    ) + dcsa(
+    ) + calculate_l31_coefficient(
         j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
     ) * beta_poloidal_local(
         j, nr, rmajor, bt, ne, tempe, mu, rho
@@ -758,7 +792,7 @@ def xcsa(
     return (
         beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho)
         - beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
-    ) * (xcsa * alp) + dcsa(
+    ) * (xcsa * alp) + calculate_l31_coefficient(
         j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
     ) * (
         1.0
@@ -842,7 +876,7 @@ def beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho):
 
 
 @nb.jit(nopython=True, cache=True)
-def trapped_particle_fraction(radial_elements: list, triang: float, sqeps: list, fit: int = 0) -> list:
+def trapped_particle_fraction(radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0) -> np.ndarray:
     """
     Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
 
@@ -850,7 +884,7 @@ def trapped_particle_fraction(radial_elements: list, triang: float, sqeps: list,
     - j: list, radial element index in range 1 to nr
     - triang: float, plasma triangularity
     - sqeps: list, square root of local aspect ratio
-    - fit: int, fit method (1=ASTRA method, 2=Equation from Sauter2002, 3=Equation from Sauter2013)
+    - fit: int, fit method (1 = ASTRA method, 2 = Equation from Sauter 2002, 3 = Equation from Sauter 2016)
 
     Returns:
     - list, trapped particle fraction
@@ -4767,7 +4801,7 @@ class Physics:
         return 1.0e6 * aibs / plascur
 
     @staticmethod
-    def bootstrap_fraction_sauter(plasma_profile: PlasmaProfile) -> float:
+    def bootstrap_fraction_sauter(plasma_profile: float) -> float:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
         Args:
@@ -4832,7 +4866,7 @@ class Physics:
             tempi[NR - 1] = 1e-4 * tempi[NR - 2]
 
         # Calculate total bootstrap current (MA) by summing along profiles
-        # Looping from 2 because dcsa etc should return 0 @ j == 1
+        # Looping from 2 because calculate_l31_coefficient etc should return 0 @ j == 1
         nr_rng = np.arange(2, NR)
         nr_rng_1 = nr_rng - 1
         drho = rho[nr_rng] - rho[nr_rng_1]
@@ -4843,7 +4877,7 @@ class Physics:
         jboot = (
             0.5
             * (
-                dcsa(
+                calculate_l31_coefficient(
                     nr_rng,
                     NR,
                     physics_variables.rmajor,
