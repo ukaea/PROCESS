@@ -63,7 +63,7 @@ jobs:
           pip install -r requirements_dev.txt
       - name: Run unit tests
         run: |
-          pytest --cov=process tests/unit -v
+          pytest --cov=process tests/unit -v \
           --cov-report html:htmlcov_bluemira \
           --cov-report xml \
       - name: Archive unit test coverage data
