@@ -601,7 +601,7 @@ def electron_collisionality_sauter(
     - ne: np.ndarray, the electron density array
 
     Returns:
-    - float, the relative frequency of electron collisions
+    - np.ndarray, the relative frequency of electron collisions
 
     Reference:
     - Yushmanov, 30th April 1987 (?)
@@ -616,22 +616,30 @@ def electron_collisionality_sauter(
 
 
 @nb.jit(nopython=True, cache=True)
-def nui(j, zmain, ni, tempi, amain):
-    """Full frequency of ion collisions
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 1 to nr
-    This function calculates the full frequency of ion
-    collisions (Hz).
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    None
+def ion_collisions_sauter(radial_elements: np.ndarray, zeff: np.ndarray, ni: np.ndarray, tempi: np.ndarray, amain: np.ndarray) -> np.ndarray:
     """
-    # Coulomb logarithm = 15 is used
+    Calculate the full frequency of ion collisions used in the arrays for the Sauter bootstrap current scaling.
+
+    Parameters:
+    - radial_elements: np.ndarray, the radial element indexes in the range 1 to nr
+    - zeff: np.ndarray, the effective charge array
+    - ni: np.ndarray, the ion density array
+    - tempi: np.ndarray, the ion temperature array
+    - amain: np.ndarray, the atomic mass of the main ion species array
+
+    Returns:
+    - np.ndarray, the full frequency of ion collisions (Hz)
+
+    This function calculates the full frequency of ion collisions using the Coulomb logarithm of 15.
+
+    Reference:
+    - None
+    """
     return (
-        zmain[j - 1] ** 4
-        * ni[j - 1]
+        zeff[radial_elements - 1] ** 4
+        * ni[radial_elements - 1]
         * 322.0
-        / (tempi[j - 1] * np.sqrt(tempi[j - 1] * amain[j - 1]))
+        / (tempi[radial_elements - 1] * np.sqrt(tempi[radial_elements - 1] * amain[radial_elements - 1]))
     )
 
 
@@ -649,7 +657,7 @@ def nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni):
     """
     return (
         3.2e-6
-        * nui(j, zmain, ni, tempi, amain)
+        * ion_collisions_sauter(j, zmain, ni, tempi, amain)
         * rmajor
         / (
             np.abs(mu[j - 1] + 1.0e-4)
@@ -4950,7 +4958,6 @@ class Physics:
             physics_variables.q0
             + (physics_variables.q - physics_variables.q0) * roa**2
         )
-        print(mu)
         amain = np.full_like(mu, physics_variables.afuel)
         zmain = np.full_like(mu, 1.0 + physics_variables.fhe3)
 
