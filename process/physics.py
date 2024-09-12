@@ -558,21 +558,24 @@ def coulomb_logarithm_sauter(radial_elements: int, tempe: np.ndarray, ne: np.nda
 
 
 @nb.jit(nopython=True, cache=True)
-def nuee(j, tempe, ne):
-    """Frequency of electron-electron collisions
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 1 to nr
-    This function calculates the frequency of electron-electron
-    collisions (Hz): <I>NUEE = 4*SQRT(pi)/3*Ne*e**4*lambd/
-    SQRT(Me)/Te**1.5</I>
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    Yushmanov, 25th April 1987 (?),
-    updated by Pereverzev, 9th November 1994 (?)
+def electron_collisions_sauter(radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray) -> np.ndarray:
     """
-    return (
-        670.0 * coulomb_logarithm_sauter(j, tempe, ne) * ne[j - 1] / (tempe[j - 1] * np.sqrt(tempe[j - 1]))
-    )
+    Calculate the frequency of electron-electron collisions.
+
+    Parameters:
+    - radial_elements: np.ndarray, the radial element index in the range 1 to nr
+    - tempe: np.ndarray, the electron temperature array
+    - ne: np.ndarray, the electron density array
+
+    Returns:
+    - float, the frequency of electron-electron collisions (Hz)
+
+    This function calculates the frequency of electron-electron collisions
+
+    Reference:
+    - Yushmanov, 25th April 1987 (?), updated by Pereverzev, 9th November 1994 (?)
+    """
+    return 670.0 * coulomb_logarithm_sauter(radial_elements, tempe, ne) * ne[radial_elements - 1] / (tempe[radial_elements - 1] * np.sqrt(tempe[radial_elements - 1]))
 
 
 @nb.jit(nopython=True, cache=True)
@@ -589,7 +592,7 @@ def nues(j, rmajor, zef, mu, sqeps, tempe, ne):
     Yushmanov, 30th April 1987 (?)
     """
     return (
-        nuee(j, tempe, ne)
+        electron_collisions_sauter(j, tempe, ne)
         * 1.4
         * zef[j - 1]
         * rmajor
@@ -4932,6 +4935,7 @@ class Physics:
             physics_variables.q0
             + (physics_variables.q - physics_variables.q0) * roa**2
         )
+        print(mu)
         amain = np.full_like(mu, physics_variables.afuel)
         zmain = np.full_like(mu, 1.0 + physics_variables.fhe3)
 
