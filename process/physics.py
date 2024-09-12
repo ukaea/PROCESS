@@ -764,73 +764,96 @@ def calculate_l31_32_coefficient(
 
 
 @nb.jit(nopython=True, cache=True)
-def xcsa(
-    j,
-    nr,
-    rmajor,
-    bt,
-    triang,
-    mu,
-    sqeps,
-    tempi,
-    tempe,
-    amain,
-    zmain,
-    ni,
-    ne,
-    rho,
-    zef,
-):
-    """Grad(ln(Ti)) coefficient in the Sauter bootstrap scaling
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 2 to nr
-    nr : input integer : maximum value of j
-    This function calculates the coefficient scaling grad(ln(Ti))
-    in the Sauter bootstrap current scaling.
-    Code by Angioni, 29th May 2002.
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    O. Sauter, C. Angioni and Y. R. Lin-Liu,
-    Physics of Plasmas <B>6</B> (1999) 2834
-    O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
-    Physics of Plasmas <B>9</B> (2002) 5140
+def calculate_l34_alpha_31_coefficient(
+    radial_elements: np.ndarray,
+    number_of_elements: int,
+    rmajor: float,
+    bt: float,
+    triang: float,
+    magnetic_moment: np.ndarray,
+    sqeps: np.ndarray,
+    tempi: np.ndarray,
+    tempe: np.ndarray,
+    amain: float,
+    zmain: float,
+    ni: np.ndarray,
+    ne: np.ndarray,
+    rho: np.ndarray,
+    zeff: np.ndarray,
+) -> float:
     """
-    zz = zef[j - 1]
-    zft = trapped_particle_fraction(j, triang, sqeps)
-    _nues = nues(j, rmajor, zef, mu, sqeps, tempe, ne)
-    zdf = (1.0 + (1.0 - 0.1 * zft) * np.sqrt(_nues)) + 0.5 * (
-        1.0 - 0.5 * zft
-    ) * _nues / zz
-    zfte = zft / zdf  # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
+    L34, alpha and L31 coefficient before Grad(ln(Ti)) in the Sauter bootstrap scaling.
+
+    Parameters:
+    - radial_elements: np.ndarray, radial element indexes in range 2 to nr
+    - number_of_elements: int, maximum value of radial_elements
+    - rmajor: float, plasma major radius (m)
+    - bt: float, toroidal field on axis (T)
+    - triang: float, plasma triangularity
+    - magnetic_moment: np.ndarray, magnetic moment profile
+    - sqeps: np.ndarray, square root of inverse aspect ratio profile
+    - tempi: np.ndarray, ion temperature profile (keV)
+    - tempe: np.ndarray, electron temperature profile (keV)
+    - amain: float, atomic mass of the main ion
+    - zmain: float, charge of the main ion
+    - ni: np.ndarray, ion density profile (/m^3)
+    - ne: np.ndarray, electron density profile (/m^3)
+    - rho: np.ndarray, normalized minor radius profile
+    - zeff: np.ndarray, effective charge profile
+
+    Returns:
+    - float, the the L34, alpha and L31 coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
+
+    This function calculates the coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
+
+    Reference:
+    - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+      Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+    - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+      [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+    """
+    # Prevents first element being 0
+    charge_profile = zeff[radial_elements - 1]
+
+    # Calculate trapped particle fraction
+    f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
+
+    # Calculated electron collisionality; nu_e*
+    electron_collisionality = nues(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
+
+    # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
+    f34_teff = f_trapped / ((1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality)) + 0.5 * (
+        1.0 - 0.5 * f_trapped
+    ) * electron_collisionality / charge_profile)
 
     # Eq.16a
-    xcsa = ((1.0 + 1.4 / (zz + 1.0)) * zfte - 1.9 / (zz + 1.0) * zfte * zfte) + (
-        0.3 * zfte * zfte + 0.2 * zfte * zfte * zfte
-    ) * zfte / (zz + 1.0)
+    l34_coefficient = ((1.0 + (1.4 / (charge_profile + 1.0))) * f34_teff) - ((1.9 / (charge_profile + 1.0)) * f34_teff**2) + ((0.3 / (charge_profile + 1.0))*f34_teff**3) + ((0.2 / (charge_profile + 1.0))*f34_teff**4)
 
     # $\alpha_0$, Eq.17a
-    a0 = (-1.17 * (1.0 - zft)) / (1.0 - 0.22 * zft - 0.19 * zft * zft)
+    alpha_0 = (-1.17 * (1.0 - f_trapped)) / (1.0 - (0.22 * f_trapped) - 0.19 * f_trapped**2)
 
-    _nuis = nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni)
-    _nuis_sqrt = np.sqrt(_nuis)
-    a1 = _nuis**2 * zft**6
+    # Calculate the ion collisionality
+    ion_collisionality = nuis(radial_elements, rmajor, magnetic_moment, sqeps, tempi, amain, zmain, ni)
 
     # $\alpha(\nu_{i*})$, Eq.17b
-    alp = (
-        (a0 + 0.25 * (1.0 - zft * zft) * _nuis_sqrt) / (1.0 + 0.5 * _nuis_sqrt)
-        + 0.315 * a1
-    ) / (1.0 + 0.15 * a1)
+    alpha = (
+        ((alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality)) / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
+         + (0.315 * ion_collisionality**2 * f_trapped**6)
+         )) / (1.0 + (0.15 * ion_collisionality**2 * f_trapped**6))
 
     # Corrections suggested by Fable, 15/05/2015
+    # Below calculates the L34 * alpha + L31 coefficient
     return (
-        beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho)
-        - beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
-    ) * (xcsa * alp) + calculate_l31_coefficient(
-        j, nr, rmajor, bt, triang, ne, ni, tempe, tempi, mu, rho, zef, sqeps
+        beta_poloidal_local_total(radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho)
+        - beta_poloidal_local(radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho)
+    ) * (l34_coefficient * alpha) + calculate_l31_coefficient(
+        radial_elements, number_of_elements, rmajor, bt, triang, ne, ni, tempe, tempi, magnetic_moment, rho, zeff, sqeps
     ) * (
         1.0
-        - beta_poloidal_local(j, nr, rmajor, bt, ne, tempe, mu, rho)
-        / beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho)
+        - beta_poloidal_local(radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho)
+        / beta_poloidal_local_total(radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho)
     )
 
 
@@ -4942,7 +4965,7 @@ class Physics:
                     sqeps,
                 )
                 * dlogte_drho
-                + xcsa(
+                + calculate_l34_alpha_31_coefficient(
                     nr_rng,
                     NR,
                     physics_variables.rmajor,
