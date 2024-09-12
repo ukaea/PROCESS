@@ -560,7 +560,7 @@ def coulomb_logarithm_sauter(radial_elements: int, tempe: np.ndarray, ne: np.nda
 @nb.jit(nopython=True, cache=True)
 def electron_collisions_sauter(radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray) -> np.ndarray:
     """
-    Calculate the frequency of electron-electron collisions.
+    Calculate the frequency of electron-electron collisions used in the arrays for the Sauter bootstrap current scaling.
 
     Parameters:
     - radial_elements: np.ndarray, the radial element index in the range 1 to nr
@@ -579,24 +579,39 @@ def electron_collisions_sauter(radial_elements: np.ndarray, tempe: np.ndarray, n
 
 
 @nb.jit(nopython=True, cache=True)
-def nues(j, rmajor, zef, mu, sqeps, tempe, ne):
-    """Relative frequency of electron collisions
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 1 to nr
-    This function calculates the relative frequency of electron
-    collisions: <I>NU* = Nuei*q*Rt/eps**1.5/Vte</I>
-    The electron-ion collision frequency NUEI=NUEE*1.4*ZEF is
-    used.
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    Yushmanov, 30th April 1987 (?)
+def electron_collisionality_sauter(
+    radial_elements: np.ndarray,
+    rmajor: float,
+    zeff: np.ndarray,
+    magnetic_moment: np.ndarray,
+    sqeps: np.ndarray,
+    tempe: np.ndarray,
+    ne: np.ndarray,
+) -> np.ndarray:
+    """
+    Calculate the electron collisionality used in the arrays for the Sauter bootstrap current scaling.
+
+    Parameters:
+    - radial_elements: np.ndarray, the radial element index in the range 1 to nr
+    - rmajor: float, the plasma major radius (m)
+    - zeff: np.ndarray, the effective charge array
+    - mu: np.ndarray, the magnetic moment array
+    - sqeps: np.ndarray, the square root of the inverse aspect ratio array
+    - tempe: np.ndarray, the electron temperature array
+    - ne: np.ndarray, the electron density array
+
+    Returns:
+    - float, the relative frequency of electron collisions
+
+    Reference:
+    - Yushmanov, 30th April 1987 (?)
     """
     return (
-        electron_collisions_sauter(j, tempe, ne)
+        electron_collisions_sauter(radial_elements, tempe, ne)
         * 1.4
-        * zef[j - 1]
+        * zeff[radial_elements - 1]
         * rmajor
-        / np.abs(mu[j - 1] * (sqeps[j - 1] ** 3) * np.sqrt(tempe[j - 1]) * 1.875e7)
+        / np.abs(magnetic_moment[radial_elements - 1] * (sqeps[radial_elements - 1] ** 3) * np.sqrt(tempe[radial_elements - 1]) * 1.875e7)
     )
 
 
@@ -698,7 +713,7 @@ def calculate_l31_coefficient(
     f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = nues(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
+    electron_collisionality = electron_collisionality_sauter(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
 
     # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
     f31_teff = f_trapped / ((1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality)) + (0.5 * (1.0 - f_trapped) * electron_collisionality) / charge_profile)
@@ -770,7 +785,7 @@ def calculate_l31_32_coefficient(
     f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = nues(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
+    electron_collisionality = electron_collisionality_sauter(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
 
     # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
     f32ee_teff = f_trapped / ((1.0 + 0.26 * (1.0 - f_trapped) * np.sqrt(electron_collisionality) + (
@@ -868,7 +883,7 @@ def calculate_l34_alpha_31_coefficient(
     f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = nues(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
+    electron_collisionality = electron_collisionality_sauter(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
 
     # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
     f34_teff = f_trapped / ((1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality)) + 0.5 * (
