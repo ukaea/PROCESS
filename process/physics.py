@@ -532,19 +532,29 @@ def ps_fraction_scene(beta: float) -> float:
 
 
 @nb.jit(nopython=True, cache=True)
-def coulg(j, tempe, ne):
-    """Coulomb logarithm
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 1 to nr
-    This function calculates the Coulomb logarithm, valid
-    for e-e collisions (T_e > 0.01 keV), and for
-    e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    C. A. Ordonez and M. I. Molina, Phys. Plasmas <B>1</B> (1994) 2515
-    Rev. Mod. Phys., V.48, Part 1 (1976) 275
+def coulomb_logarithm_sauter(radial_elements: int, tempe: np.ndarray, ne: np.ndarray) -> np.ndarray:
     """
-    return 15.9 - 0.5 * np.log(ne[j - 1]) + np.log(tempe[j - 1])
+    Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap current scaling.
+
+    Parameters:
+    - radial_elements: np.ndarray, the radial element indexes in the range 1 to nr
+    - tempe: np.ndarray, the electron temperature array
+    - ne: np.ndarray, the electron density array
+
+    Returns:
+    - np.ndarray, the Coulomb logarithm at each array point
+
+    This function calculates the Coulomb logarithm, which is valid for e-e collisions (T_e > 0.01 keV)
+    and for e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
+
+    Reference:
+    - C. A. Ordonez, M. I. Molina;
+      Evaluation of the Coulomb logarithm using cutoff and screened Coulomb interaction potentials.
+      Phys. Plasmas 1 August 1994; 1 (8): 2515–2518. https://doi.org/10.1063/1.870578
+    - Y. R. Shen, “Recent advances in nonlinear optics,” Reviews of Modern Physics, vol. 48, no. 1,
+      pp. 1–32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
+    """
+    return 15.9 - 0.5 * np.log(ne[radial_elements - 1]) + np.log(tempe[radial_elements - 1])
 
 
 @nb.jit(nopython=True, cache=True)
@@ -561,7 +571,7 @@ def nuee(j, tempe, ne):
     updated by Pereverzev, 9th November 1994 (?)
     """
     return (
-        670.0 * coulg(j, tempe, ne) * ne[j - 1] / (tempe[j - 1] * np.sqrt(tempe[j - 1]))
+        670.0 * coulomb_logarithm_sauter(j, tempe, ne) * ne[j - 1] / (tempe[j - 1] * np.sqrt(tempe[j - 1]))
     )
 
 
