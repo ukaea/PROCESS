@@ -644,25 +644,43 @@ def ion_collisions_sauter(radial_elements: np.ndarray, zeff: np.ndarray, ni: np.
 
 
 @nb.jit(nopython=True, cache=True)
-def nuis(j, rmajor, mu, sqeps, tempi, amain, zmain, ni):
-    """Relative frequency of ion collisions
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 1 to nr
-    This function calculates the relative frequency of ion
-    collisions: <I>NU* = Nui*q*Rt/eps**1.5/Vti</I>
-    The full ion collision frequency NUI is used.
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    Yushmanov, 30th April 1987 (?)
+def ion_collisionality_sauter(
+    radial_elements: np.ndarray,
+    rmajor: float,
+    magnetic_moment: np.ndarray,
+    sqeps: np.ndarray,
+    tempi: np.ndarray,
+    amain: np.ndarray,
+    zeff: np.ndarray,
+    ni: np.ndarray,
+) -> float:
+    """
+    Calculate the ion collisionality to be used in the Sauter bootstrap current scaling.
+
+    Parameters:
+    - radial_elements: np.ndarray, the radial element indexes in the range 1 to nr
+    - rmajor: float, the plasma major radius (m)
+    - magnetic_moment: np.ndarray, the magnetic moment profile
+    - sqeps: np.ndarray, the square root of the inverse aspect ratio profile
+    - tempi: np.ndarray, the ion temperature profile (keV)
+    - amain: np.ndarray, the atomic mass of the main ion species profile
+    - zeff: np.ndarray, the effective charge of the main ion species
+    - ni: np.ndarray, the ion density profile (/m^3)
+
+    Returns:
+    - float, the ion collisionality
+
+    Reference:
+    - None
     """
     return (
         3.2e-6
-        * ion_collisions_sauter(j, zmain, ni, tempi, amain)
+        * ion_collisions_sauter(radial_elements, zeff, ni, tempi, amain)
         * rmajor
         / (
-            np.abs(mu[j - 1] + 1.0e-4)
-            * sqeps[j - 1] ** 3
-            * np.sqrt(tempi[j - 1] / amain[j - 1])
+            np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4)
+            * sqeps[radial_elements - 1] ** 3
+            * np.sqrt(tempi[radial_elements - 1] / amain[radial_elements - 1])
         )
     )
 
@@ -905,7 +923,7 @@ def calculate_l34_alpha_31_coefficient(
     alpha_0 = (-1.17 * (1.0 - f_trapped)) / (1.0 - (0.22 * f_trapped) - 0.19 * f_trapped**2)
 
     # Calculate the ion collisionality
-    ion_collisionality = nuis(radial_elements, rmajor, magnetic_moment, sqeps, tempi, amain, zmain, ni)
+    ion_collisionality = ion_collisionality_sauter(radial_elements, rmajor, magnetic_moment, sqeps, tempi, amain, zmain, ni)
 
     # $\alpha(\nu_{i*})$, Eq.17b
     alpha = (
