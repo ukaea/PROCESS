@@ -338,7 +338,7 @@ def nevins_integral(
     )
     a1 = (alphan + alphat) * (1.0 - y) ** (alphan + alphat - 1.0)
     a2 = alphat * (1.0 - y) ** (alphan + alphat - 1.0)
-    al1 = (x/d) * (0.754 + 2.21 * z + z**2 + x * (0.348 + 1.243 * z + z**2))
+    al1 = (x / d) * (0.754 + 2.21 * z + z**2 + x * (0.348 + 1.243 * z + z**2))
     al2 = -x * ((0.884 + 2.074 * z) / d)
     alphai = -1.172 / (1.0 + 0.462 * x)
 
@@ -481,6 +481,7 @@ def culblm(bt, dnbeta, plascur, rminor):
 
     return 0.01 * dnbeta * (plascur / 1.0e6) / (rminor * bt)
 
+
 # -----------------------------------------------------
 # Diamagnetic and Pfirsch-Schlüter Current Calculations
 # -----------------------------------------------------
@@ -526,13 +527,16 @@ def ps_fraction_scene(beta: float) -> float:
     """
     return -9e-2 * beta
 
+
 # --------------------------------------------------
 # Sauter Bootstrap Current Scaling Functions
 # --------------------------------------------------
 
 
 @nb.jit(nopython=True, cache=True)
-def coulomb_logarithm_sauter(radial_elements: int, tempe: np.ndarray, ne: np.ndarray) -> np.ndarray:
+def coulomb_logarithm_sauter(
+    radial_elements: int, tempe: np.ndarray, ne: np.ndarray
+) -> np.ndarray:
     """
     Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap current scaling.
 
@@ -554,11 +558,17 @@ def coulomb_logarithm_sauter(radial_elements: int, tempe: np.ndarray, ne: np.nda
     - Y. R. Shen, “Recent advances in nonlinear optics,” Reviews of Modern Physics, vol. 48, no. 1,
       pp. 1–32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
     """
-    return 15.9 - 0.5 * np.log(ne[radial_elements - 1]) + np.log(tempe[radial_elements - 1])
+    return (
+        15.9
+        - 0.5 * np.log(ne[radial_elements - 1])
+        + np.log(tempe[radial_elements - 1])
+    )
 
 
 @nb.jit(nopython=True, cache=True)
-def electron_collisions_sauter(radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray) -> np.ndarray:
+def electron_collisions_sauter(
+    radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray
+) -> np.ndarray:
     """
     Calculate the frequency of electron-electron collisions used in the arrays for the Sauter bootstrap current scaling.
 
@@ -575,7 +585,12 @@ def electron_collisions_sauter(radial_elements: np.ndarray, tempe: np.ndarray, n
     Reference:
     - Yushmanov, 25th April 1987 (?), updated by Pereverzev, 9th November 1994 (?)
     """
-    return 670.0 * coulomb_logarithm_sauter(radial_elements, tempe, ne) * ne[radial_elements - 1] / (tempe[radial_elements - 1] * np.sqrt(tempe[radial_elements - 1]))
+    return (
+        670.0
+        * coulomb_logarithm_sauter(radial_elements, tempe, ne)
+        * ne[radial_elements - 1]
+        / (tempe[radial_elements - 1] * np.sqrt(tempe[radial_elements - 1]))
+    )
 
 
 @nb.jit(nopython=True, cache=True)
@@ -611,12 +626,23 @@ def electron_collisionality_sauter(
         * 1.4
         * zeff[radial_elements - 1]
         * rmajor
-        / np.abs(magnetic_moment[radial_elements - 1] * (sqeps[radial_elements - 1] ** 3) * np.sqrt(tempe[radial_elements - 1]) * 1.875e7)
+        / np.abs(
+            magnetic_moment[radial_elements - 1]
+            * (sqeps[radial_elements - 1] ** 3)
+            * np.sqrt(tempe[radial_elements - 1])
+            * 1.875e7
+        )
     )
 
 
 @nb.jit(nopython=True, cache=True)
-def ion_collisions_sauter(radial_elements: np.ndarray, zeff: np.ndarray, ni: np.ndarray, tempi: np.ndarray, amain: np.ndarray) -> np.ndarray:
+def ion_collisions_sauter(
+    radial_elements: np.ndarray,
+    zeff: np.ndarray,
+    ni: np.ndarray,
+    tempi: np.ndarray,
+    amain: np.ndarray,
+) -> np.ndarray:
     """
     Calculate the full frequency of ion collisions used in the arrays for the Sauter bootstrap current scaling.
 
@@ -639,7 +665,10 @@ def ion_collisions_sauter(radial_elements: np.ndarray, zeff: np.ndarray, ni: np.
         zeff[radial_elements - 1] ** 4
         * ni[radial_elements - 1]
         * 322.0
-        / (tempi[radial_elements - 1] * np.sqrt(tempi[radial_elements - 1] * amain[radial_elements - 1]))
+        / (
+            tempi[radial_elements - 1]
+            * np.sqrt(tempi[radial_elements - 1] * amain[radial_elements - 1])
+        )
     )
 
 
@@ -739,10 +768,15 @@ def calculate_l31_coefficient(
     f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = electron_collisionality_sauter(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
+    electron_collisionality = electron_collisionality_sauter(
+        radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne
+    )
 
     # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
-    f31_teff = f_trapped / ((1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality)) + (0.5 * (1.0 - f_trapped) * electron_collisionality) / charge_profile)
+    f31_teff = f_trapped / (
+        (1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality))
+        + (0.5 * (1.0 - f_trapped) * electron_collisionality) / charge_profile
+    )
 
     l31_coefficient = (
         ((1.0 + 1.4 / (charge_profile + 1.0)) * f31_teff)
@@ -752,7 +786,16 @@ def calculate_l31_coefficient(
 
     # Corrections suggested by Fable, 15/05/2015
     return l31_coefficient * beta_poloidal_total_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        bt,
+        ne,
+        ni,
+        tempe,
+        tempi,
+        magnetic_moment,
+        rho,
     )
 
 
@@ -811,43 +854,106 @@ def calculate_l31_32_coefficient(
     f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = electron_collisionality_sauter(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
+    electron_collisionality = electron_collisionality_sauter(
+        radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne
+    )
 
     # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
-    f32ee_teff = f_trapped / ((1.0 + 0.26 * (1.0 - f_trapped) * np.sqrt(electron_collisionality) + (
-        0.18 * (1.0 - 0.37 * f_trapped) * electron_collisionality / np.sqrt(charge_profile)
-    )))
+    f32ee_teff = f_trapped / (
+        (
+            1.0
+            + 0.26 * (1.0 - f_trapped) * np.sqrt(electron_collisionality)
+            + (
+                0.18
+                * (1.0 - 0.37 * f_trapped)
+                * electron_collisionality
+                / np.sqrt(charge_profile)
+            )
+        )
+    )
 
     # $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
-    f32ei_teff = f_trapped / ((1.0 + (1.0 + 0.6 * f_trapped) * np.sqrt(electron_collisionality)) + (
-        0.85 * (1.0 - 0.37 * f_trapped) * electron_collisionality * (1.0 + charge_profile)
-    ))
+    f32ei_teff = f_trapped / (
+        (1.0 + (1.0 + 0.6 * f_trapped) * np.sqrt(electron_collisionality))
+        + (
+            0.85
+            * (1.0 - 0.37 * f_trapped)
+            * electron_collisionality
+            * (1.0 + charge_profile)
+        )
+    )
 
     # $F_{32\_ee}(X)$, Eq.15b
     big_f32ee_teff = (
-        ((0.05 + 0.62 * charge_profile) / charge_profile / (1.0 + 0.44 * charge_profile) * (f32ee_teff - f32ee_teff**4))
-        + ((f32ee_teff**2 - f32ee_teff**4 - 1.2 * (f32ee_teff**3 - f32ee_teff**4)) / (1.0 + 0.22 * charge_profile))
+        (
+            (0.05 + 0.62 * charge_profile)
+            / charge_profile
+            / (1.0 + 0.44 * charge_profile)
+            * (f32ee_teff - f32ee_teff**4)
+        )
+        + (
+            (
+                f32ee_teff**2
+                - f32ee_teff**4
+                - 1.2 * (f32ee_teff**3 - f32ee_teff**4)
+            )
+            / (1.0 + 0.22 * charge_profile)
+        )
         + (1.2 / (1.0 + 0.5 * charge_profile) * f32ee_teff**4)
     )
 
     # $F_{32\_ei}(Y)$, Eq.15c
     big_f32ei_teff = (
-        (-(0.56 + 1.93 * charge_profile) / charge_profile / (1.0 + 0.44 * charge_profile) * (f32ei_teff - f32ei_teff**4))
-        + (4.95 / (1.0 + 2.48 * charge_profile) * (f32ei_teff**2 - f32ei_teff**4 - 0.55 * (f32ei_teff**3 - f32ei_teff**4)))
+        (
+            -(0.56 + 1.93 * charge_profile)
+            / charge_profile
+            / (1.0 + 0.44 * charge_profile)
+            * (f32ei_teff - f32ei_teff**4)
+        )
+        + (
+            4.95
+            / (1.0 + 2.48 * charge_profile)
+            * (
+                f32ei_teff**2
+                - f32ei_teff**4
+                - 0.55 * (f32ei_teff**3 - f32ei_teff**4)
+            )
+        )
         - (1.2 / (1.0 + 0.5 * charge_profile) * f32ei_teff**4)
     )
 
     # big_f32ee_teff + big_f32ei_teff = L32 coefficient
 
     # Corrections suggested by Fable, 15/05/2015
-    return beta_poloidal_sauter(radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho) * (
-        big_f32ee_teff + big_f32ei_teff
-    ) + calculate_l31_coefficient(
-        radial_elements, number_of_elements, rmajor, bt, triang, ne, ni, tempe, tempi, magnetic_moment, rho, zeff, sqeps
+    return beta_poloidal_sauter(
+        radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho
+    ) * (big_f32ee_teff + big_f32ei_teff) + calculate_l31_coefficient(
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        bt,
+        triang,
+        ne,
+        ni,
+        tempe,
+        tempi,
+        magnetic_moment,
+        rho,
+        zeff,
+        sqeps,
     ) * beta_poloidal_sauter(
         radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho
     ) / beta_poloidal_total_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        bt,
+        ne,
+        ni,
+        tempe,
+        tempi,
+        magnetic_moment,
+        rho,
     )
 
 
@@ -909,44 +1015,120 @@ def calculate_l34_alpha_31_coefficient(
     f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = electron_collisionality_sauter(radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne)
+    electron_collisionality = electron_collisionality_sauter(
+        radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne
+    )
 
     # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
-    f34_teff = f_trapped / ((1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality)) + 0.5 * (
-        1.0 - 0.5 * f_trapped
-    ) * electron_collisionality / charge_profile)
+    f34_teff = f_trapped / (
+        (1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality))
+        + 0.5 * (1.0 - 0.5 * f_trapped) * electron_collisionality / charge_profile
+    )
 
     # Eq.16a
-    l34_coefficient = ((1.0 + (1.4 / (charge_profile + 1.0))) * f34_teff) - ((1.9 / (charge_profile + 1.0)) * f34_teff**2) + ((0.3 / (charge_profile + 1.0))*f34_teff**3) + ((0.2 / (charge_profile + 1.0))*f34_teff**4)
+    l34_coefficient = (
+        ((1.0 + (1.4 / (charge_profile + 1.0))) * f34_teff)
+        - ((1.9 / (charge_profile + 1.0)) * f34_teff**2)
+        + ((0.3 / (charge_profile + 1.0)) * f34_teff**3)
+        + ((0.2 / (charge_profile + 1.0)) * f34_teff**4)
+    )
 
     # $\alpha_0$, Eq.17a
-    alpha_0 = (-1.17 * (1.0 - f_trapped)) / (1.0 - (0.22 * f_trapped) - 0.19 * f_trapped**2)
+    alpha_0 = (-1.17 * (1.0 - f_trapped)) / (
+        1.0 - (0.22 * f_trapped) - 0.19 * f_trapped**2
+    )
 
     # Calculate the ion collisionality
-    ion_collisionality = ion_collisionality_sauter(radial_elements, rmajor, magnetic_moment, sqeps, tempi, amain, zmain, ni)
+    ion_collisionality = ion_collisionality_sauter(
+        radial_elements, rmajor, magnetic_moment, sqeps, tempi, amain, zmain, ni
+    )
 
     # $\alpha(\nu_{i*})$, Eq.17b
     alpha = (
-        ((alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality)) / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
-         + (0.315 * ion_collisionality**2 * f_trapped**6)
-         )) / (1.0 + (0.15 * ion_collisionality**2 * f_trapped**6))
+        (
+            (alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality))
+            / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
+            + (0.315 * ion_collisionality**2 * f_trapped**6)
+        )
+    ) / (1.0 + (0.15 * ion_collisionality**2 * f_trapped**6))
 
     # Corrections suggested by Fable, 15/05/2015
     # Below calculates the L34 * alpha + L31 coefficient
     return (
-        beta_poloidal_total_sauter(radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho)
-        - beta_poloidal_sauter(radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho)
+        beta_poloidal_total_sauter(
+            radial_elements,
+            number_of_elements,
+            rmajor,
+            bt,
+            ne,
+            ni,
+            tempe,
+            tempi,
+            magnetic_moment,
+            rho,
+        )
+        - beta_poloidal_sauter(
+            radial_elements,
+            number_of_elements,
+            rmajor,
+            bt,
+            ne,
+            tempe,
+            magnetic_moment,
+            rho,
+        )
     ) * (l34_coefficient * alpha) + calculate_l31_coefficient(
-        radial_elements, number_of_elements, rmajor, bt, triang, ne, ni, tempe, tempi, magnetic_moment, rho, zeff, sqeps
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        bt,
+        triang,
+        ne,
+        ni,
+        tempe,
+        tempi,
+        magnetic_moment,
+        rho,
+        zeff,
+        sqeps,
     ) * (
         1.0
-        - beta_poloidal_sauter(radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho)
-        / beta_poloidal_total_sauter(radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho)
+        - beta_poloidal_sauter(
+            radial_elements,
+            number_of_elements,
+            rmajor,
+            bt,
+            ne,
+            tempe,
+            magnetic_moment,
+            rho,
+        )
+        / beta_poloidal_total_sauter(
+            radial_elements,
+            number_of_elements,
+            rmajor,
+            bt,
+            ne,
+            ni,
+            tempe,
+            tempi,
+            magnetic_moment,
+            rho,
+        )
     )
 
 
 @nb.jit(nopython=True, cache=True)
-def beta_poloidal_sauter(radial_elements: np.ndarray, nr: int, rmajor: float, bt: float, ne: np.ndarray, tempe: np.ndarray, magnetic_moment: np.ndarray, rho: np.ndarray) -> np.ndarray:
+def beta_poloidal_sauter(
+    radial_elements: np.ndarray,
+    nr: int,
+    rmajor: float,
+    bt: float,
+    ne: np.ndarray,
+    tempe: np.ndarray,
+    magnetic_moment: np.ndarray,
+    rho: np.ndarray,
+) -> np.ndarray:
     """
     Calculate the local beta poloidal using only electron profiles for the Sauter bootstrap current scaling.
 
@@ -969,15 +1151,37 @@ def beta_poloidal_sauter(radial_elements: np.ndarray, nr: int, rmajor: float, bt
     return (
         np.where(
             radial_elements != nr,
-            1.6e-4 * np.pi * (ne[radial_elements] + ne[radial_elements - 1]) * (tempe[radial_elements] + tempe[radial_elements - 1]),
+            1.6e-4
+            * np.pi
+            * (ne[radial_elements] + ne[radial_elements - 1])
+            * (tempe[radial_elements] + tempe[radial_elements - 1]),
             6.4e-4 * np.pi * ne[radial_elements - 1] * tempe[radial_elements - 1],
         )
-        * (rmajor / (bt * rho[radial_elements - 1] * np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4))) ** 2
+        * (
+            rmajor
+            / (
+                bt
+                * rho[radial_elements - 1]
+                * np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4)
+            )
+        )
+        ** 2
     )
 
 
 @nb.jit(nopython=True, cache=True)
-def beta_poloidal_total_sauter(radial_elements: np.ndarray, nr: int, rmajor: float, bt: float, ne: np.ndarray, ni: np.ndarray, tempe: np.ndarray, tempi: np.ndarray, magnetic_moment: np.ndarray, rho: np.ndarray) -> np.ndarray:
+def beta_poloidal_total_sauter(
+    radial_elements: np.ndarray,
+    nr: int,
+    rmajor: float,
+    bt: float,
+    ne: np.ndarray,
+    ni: np.ndarray,
+    tempe: np.ndarray,
+    tempi: np.ndarray,
+    magnetic_moment: np.ndarray,
+    rho: np.ndarray,
+) -> np.ndarray:
     """
     Calculate the local beta poloidal including ion pressure for the Sauter bootstrap current scaling.
 
@@ -1005,17 +1209,38 @@ def beta_poloidal_total_sauter(radial_elements: np.ndarray, nr: int, rmajor: flo
             1.6e-4
             * np.pi
             * (
-                ((ne[radial_elements] + ne[radial_elements - 1]) * (tempe[radial_elements] + tempe[radial_elements - 1]))
-                + ((ni[radial_elements] + ni[radial_elements - 1]) * (tempi[radial_elements] + tempi[radial_elements - 1]))
+                (
+                    (ne[radial_elements] + ne[radial_elements - 1])
+                    * (tempe[radial_elements] + tempe[radial_elements - 1])
+                )
+                + (
+                    (ni[radial_elements] + ni[radial_elements - 1])
+                    * (tempi[radial_elements] + tempi[radial_elements - 1])
+                )
             ),
-            6.4e-4 * np.pi * (ne[radial_elements - 1] * tempe[radial_elements - 1] + ni[radial_elements - 1] * tempi[radial_elements - 1]),
+            6.4e-4
+            * np.pi
+            * (
+                ne[radial_elements - 1] * tempe[radial_elements - 1]
+                + ni[radial_elements - 1] * tempi[radial_elements - 1]
+            ),
         )
-        * (rmajor / (bt * rho[radial_elements - 1] * np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4))) ** 2
+        * (
+            rmajor
+            / (
+                bt
+                * rho[radial_elements - 1]
+                * np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4)
+            )
+        )
+        ** 2
     )
 
 
 @nb.jit(nopython=True, cache=True)
-def trapped_particle_fraction(radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0) -> np.ndarray:
+def trapped_particle_fraction(
+    radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0
+) -> np.ndarray:
     """
     Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
 
@@ -1062,7 +1287,10 @@ def trapped_particle_fraction(radial_elements: np.ndarray, triang: float, sqeps:
         # Equation 4 of Sauter 2002; https://doi.org/10.1088/0741-3335/44/9/315.
         # Similar to, but not quite identical to above
 
-        return 1.0 - (((1.0 - eps) ** 2) / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2)))
+        return 1.0 - (
+            ((1.0 - eps) ** 2)
+            / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2))
+        )
 
     elif fit == 2:
         # Sauter 2016; https://doi.org/10.1016/j.fusengdes.2016.04.033.
@@ -1070,7 +1298,10 @@ def trapped_particle_fraction(radial_elements: np.ndarray, triang: float, sqeps:
 
         epseff = 0.67 * (1.0 - 1.4 * triang * np.abs(triang)) * eps
 
-        return 1.0 - (((1.0 - epseff) / (1.0 + 2.0 * np.sqrt(epseff)))*(np.sqrt((1.0 - eps) / (1.0 + eps))))
+        return 1.0 - (
+            ((1.0 - epseff) / (1.0 + 2.0 * np.sqrt(epseff)))
+            * (np.sqrt((1.0 - eps) / (1.0 + eps)))
+        )
 
     raise RuntimeError(f"fit={fit} is not valid. Must be 1, 2, or 3")
 
