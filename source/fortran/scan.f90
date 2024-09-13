@@ -182,7 +182,7 @@ contains
     use constraint_variables, only: taulimit
     use cost_variables, only: cdirt, coe, coeoam, coefuelt, c222, ireactor, &
       capcost, coecap, c221
-    use current_drive_variables, only: pheat, pinjmw, bootipf, enbeam, bigq
+    use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, enbeam, bigq
     use divertor_variables, only: hldiv
     use error_handling, only: errors_on
     use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
@@ -243,7 +243,7 @@ contains
     outvar(29,iscan) = pheat
     outvar(30,iscan) = pinjmw - pheat
     outvar(31,iscan) = bigq
-    outvar(32,iscan) = bootipf
+    outvar(32,iscan) = bootstrap_current_fraction
     outvar(33,iscan) = enbeam/1.0D3
     outvar(34,iscan) = hldiv
     outvar(35,iscan) = tfcmw

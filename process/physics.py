@@ -1558,34 +1558,34 @@ class Physics:
         )
 
         if current_drive_variables.bscfmax < 0.0e0:
-            current_drive_variables.bootipf = abs(current_drive_variables.bscfmax)
-            current_drive_variables.plasipf = current_drive_variables.bootipf
+            current_drive_variables.bootstrap_current_fraction = abs(current_drive_variables.bscfmax)
+            current_drive_variables.plasipf = current_drive_variables.bootstrap_current_fraction
         else:
             if physics_variables.i_bootstrap_current == 1:
-                current_drive_variables.bootipf = current_drive_variables.bscf_iter89
+                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_iter89
             elif physics_variables.i_bootstrap_current == 2:
-                current_drive_variables.bootipf = current_drive_variables.bscf_nevins
+                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_nevins
             elif physics_variables.i_bootstrap_current == 3:
-                current_drive_variables.bootipf = current_drive_variables.bscf_wilson
+                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_wilson
             elif physics_variables.i_bootstrap_current == 4:
-                current_drive_variables.bootipf = current_drive_variables.bscf_sauter
+                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_sauter
             elif physics_variables.i_bootstrap_current == 5:
                 # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
                 # So the diamagnetic current calculation should be turned off when using, (i_diamagnetic_current = 0).
-                current_drive_variables.bootipf = current_drive_variables.bscf_sakai
+                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_sakai
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
                 error_handling.report_error(75)
 
             physics_module.err242 = 0
-            if current_drive_variables.bootipf > current_drive_variables.bscfmax:
-                current_drive_variables.bootipf = min(
-                    current_drive_variables.bootipf, current_drive_variables.bscfmax
+            if current_drive_variables.bootstrap_current_fraction > current_drive_variables.bscfmax:
+                current_drive_variables.bootstrap_current_fraction = min(
+                    current_drive_variables.bootstrap_current_fraction, current_drive_variables.bscfmax
                 )
                 physics_module.err242 = 1
 
             current_drive_variables.plasipf = (
-                current_drive_variables.bootipf
+                current_drive_variables.bootstrap_current_fraction
                 + current_drive_variables.diaipf
                 + current_drive_variables.psipf
             )
@@ -4756,8 +4756,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (enforced)",
-                "(bootipf.)",
-                current_drive_variables.bootipf,
+                "(bootstrap_current_fraction.)",
+                current_drive_variables.bootstrap_current_fraction,
                 "OP ",
             )
             po.ovarrf(

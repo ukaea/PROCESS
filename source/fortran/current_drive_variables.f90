@@ -23,7 +23,7 @@ module current_drive_variables
   real(dp) :: bigq
   !! Fusion gain; P_fusion / (P_injection + P_ohmic)
 
-  real(dp) :: bootipf
+  real(dp) :: bootstrap_current_fraction
   !! bootstrap current fraction (enforced; see i_bootstrap_current)
 
   real(dp) :: bscfmax
@@ -237,7 +237,7 @@ module current_drive_variables
 
     beamwd = 0.58D0
     bigq = 0.0D0
-    bootipf = 0.0D0
+    bootstrap_current_fraction = 0.0D0
     bscfmax = 0.9D0
     bscf_iter89 = 0.0D0
     bscf_nevins = 0.0D0

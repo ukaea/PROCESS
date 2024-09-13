@@ -909,8 +909,8 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Bootstrap fraction",
-            "(bootipf)",
-            current_drive_variables.bootipf,
+            "(bootstrap_current_fraction)",
+            current_drive_variables.bootstrap_current_fraction,
             "OP ",
         )
         po.ovarrf(
@@ -970,7 +970,7 @@ class CurrentDrive:
         )
 
         if (
-            abs(current_drive_variables.bootipf - current_drive_variables.bscfmax)
+            abs(current_drive_variables.bootstrap_current_fraction - current_drive_variables.bscfmax)
             < 1.0e-8
         ):
             po.ocmmnt(self.outfile, "Warning : bootstrap current fraction is at")

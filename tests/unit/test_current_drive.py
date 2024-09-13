@@ -92,7 +92,7 @@ class CudrivParam(NamedTuple):
 
     bigq: Any = None
 
-    bootipf: Any = None
+    bootstrap_current_fraction: Any = None
 
     bscfmax: Any = None
 
@@ -238,7 +238,7 @@ class CudrivParam(NamedTuple):
             pinjemw=0,
             pinjimw=0,
             bigq=0,
-            bootipf=0.27635918746616817,
+            bootstrap_current_fraction=0.27635918746616817,
             bscfmax=0.95000000000000007,
             taubeam=0,
             pinjalw=200,
@@ -328,7 +328,7 @@ class CudrivParam(NamedTuple):
             pinjemw=120.49600019005746,
             pinjimw=0,
             bigq=0,
-            bootipf=0.27635918746616817,
+            bootstrap_current_fraction=0.27635918746616817,
             bscfmax=0.95000000000000007,
             taubeam=0,
             pinjalw=200,
@@ -469,7 +469,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "bigq", cudrivparam.bigq)
 
-    monkeypatch.setattr(current_drive_variables, "bootipf", cudrivparam.bootipf)
+    monkeypatch.setattr(current_drive_variables, "bootstrap_current_fraction", cudrivparam.bootstrap_current_fraction)
 
     monkeypatch.setattr(current_drive_variables, "bscfmax", cudrivparam.bscfmax)
 

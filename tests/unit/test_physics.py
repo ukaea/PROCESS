@@ -109,7 +109,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    bootipf = physics.bootstrap_fraction_iter89(
+    bootstrap_current_fraction = physics.bootstrap_fraction_iter89(
         aspect=bootstrapfractioniter89param.aspect,
         beta=bootstrapfractioniter89param.beta,
         bt=bootstrapfractioniter89param.bt,
@@ -120,7 +120,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
         vol=bootstrapfractioniter89param.vol,
     )
 
-    assert bootipf == pytest.approx(bootstrapfractioniter89param.expected_bootipf)
+    assert bootstrap_current_fraction == pytest.approx(bootstrapfractioniter89param.expected_bootipf)
 
 
 class BootstrapFractionNevinsParam(NamedTuple):

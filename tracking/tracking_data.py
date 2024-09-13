@@ -85,7 +85,7 @@ class ProcessTracker:
 
     tracking_variables = {
         "pheat",
-        "bootipf",
+        "bootstrap_current_fraction",
         "pinjmw",
         "shldith",
         "fwith",
