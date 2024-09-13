@@ -22,28 +22,6 @@ python -m notebook
 
 A web browser will open and the notebook can be run from there. If you're using WSL, you'll have to `ctrl + click` the link.
 
-### Notebooks in Docker
-To access the notebooks when running inside of a Docker container the Jupyter server port must be forwarded out.
 
-```bash
-docker run -it -v ~/process/:/root/process -p 8888:8888 process_dev_image
-```
-
-The Jupyter server can then be run similarly to above:
-
-```bash
-python -m notebook --ip=0.0.0.0 --port=8888 --allow-root
-```
-
-Now the Jupyter server can be reached on `http://127.0.0.1:8888/?token=<token>` in a web browser, where `<token>` is a random password generated, and displayed, in the terminal when starting the server.
-
-For some users, they will encounter a `PDFInfoNotInstalledError` inside of the Notebook (specifically noticed when running inside the `dev` image currently). This error can be fixed as such, until the image is updated:
-
-```bash
-apt-get update
-apt-get install poppler-utils
-```
-
-
-## Maintaining notebooks and scripts
-Notebooks (`.ipynb`) and scripts (`.py`) with the same filenames are maintained in the `examples` directory. From within VS Code, a notebook can be exported as a Python script. The reason for this is so that notebooks are always available to run directly, whilst the corresponding Python scripts are much easier to track diffs in when reviewing changes (notebooks are ultimately JSON and so create difficult diffs). The scripts can also be tested by `pytest` to ensure the example notebooks keep working.
+## Maintaining notebooks
+Notebooks are located in the `examples` directory and are tested using `testbook` to ensure they keep working.
