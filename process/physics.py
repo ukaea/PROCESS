@@ -5216,7 +5216,7 @@ class Physics:
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
-        zef = np.full_like(tempi, physics_variables.zeff)
+        zeff = np.full_like(tempi, physics_variables.zeff)
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
@@ -5224,32 +5224,42 @@ class Physics:
             physics_variables.q0
             + (physics_variables.q - physics_variables.q0) * roa**2
         )
-
+        # Create new array of average mass of fuel portion of ions
         amain = np.full_like(inverse_q, physics_variables.afuel)
+
+        # Create new array of average main ion charge
         zmain = np.full_like(inverse_q, 1.0 + physics_variables.fhe3)
 
+        # Prevent division by zero
         if ne[NR - 1] == 0.0:
             ne[NR - 1] = 1e-4 * ne[NR - 2]
             ni[NR - 1] = 1e-4 * ni[NR - 2]
 
+        # Prevent division by zero
         if tempe[NR - 1] == 0.0:
             tempe[NR - 1] = 1e-4 * tempe[NR - 2]
             tempi[NR - 1] = 1e-4 * tempi[NR - 2]
 
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because calculate_l31_coefficient etc should return 0 @ j == 1
-        nr_rng = np.arange(2, NR)
-        nr_rng_1 = nr_rng - 1
-        drho = rho[nr_rng] - rho[nr_rng_1]
-        da = 2 * np.pi * rho[nr_rng_1] * drho  # area of annulus
-        dlogte_drho = (np.log(tempe[nr_rng]) - np.log(tempe[nr_rng_1])) / drho
-        dlogti_drho = (np.log(tempi[nr_rng]) - np.log(tempi[nr_rng_1])) / drho
-        dlogne_drho = (np.log(ne[nr_rng]) - np.log(ne[nr_rng_1])) / drho
+        radial_elements = np.arange(2, NR)
+
+        # Change in localised minor radius to be used as delta term in derivative
+        drho = rho[radial_elements] - rho[radial_elements-1]
+
+        # Area of annulus, assuming circular plasma cross-section
+        da = 2 * np.pi * rho[radial_elements-1] * drho  # area of annulus
+
+        # Create the partial derivatives
+        dlogte_drho = (np.log(tempe[radial_elements]) - np.log(tempe[radial_elements-1])) / drho
+        dlogti_drho = (np.log(tempi[radial_elements]) - np.log(tempi[radial_elements-1])) / drho
+        dlogne_drho = (np.log(ne[radial_elements]) - np.log(ne[radial_elements-1])) / drho
+
         jboot = (
             0.5
             * (
                 calculate_l31_coefficient(
-                    nr_rng,
+                    radial_elements,
                     NR,
                     physics_variables.rmajor,
                     physics_variables.bt,
@@ -5260,12 +5270,12 @@ class Physics:
                     tempi,
                     inverse_q,
                     rho,
-                    zef,
+                    zeff,
                     sqeps,
                 )
                 * dlogne_drho
                 + calculate_l31_32_coefficient(
-                    nr_rng,
+                    radial_elements,
                     NR,
                     physics_variables.rmajor,
                     physics_variables.bt,
@@ -5276,12 +5286,12 @@ class Physics:
                     tempi,
                     inverse_q,
                     rho,
-                    zef,
+                    zeff,
                     sqeps,
                 )
                 * dlogte_drho
                 + calculate_l34_alpha_31_coefficient(
-                    nr_rng,
+                    radial_elements,
                     NR,
                     physics_variables.rmajor,
                     physics_variables.bt,
@@ -5295,7 +5305,7 @@ class Physics:
                     ni,
                     ne,
                     rho,
-                    zef,
+                    zeff,
                 )
                 * dlogti_drho
             )
@@ -5303,8 +5313,8 @@ class Physics:
             * (
                 -physics_variables.bt
                 / (0.2 * np.pi * physics_variables.rmajor)
-                * rho[nr_rng_1]
-                * inverse_q[nr_rng_1]
+                * rho[radial_elements-1]
+                * inverse_q[radial_elements-1]
             )
         )  # A/m2
 
