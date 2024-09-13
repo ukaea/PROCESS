@@ -48,7 +48,7 @@ module scan_module
   !!         <LI> 9  te
   !!         <LI> 10 boundu(15: fvs)
   !!         <LI> 11 dnbeta
-  !!         <LI> 12 bscfmax (use negative values only)
+  !!         <LI> 12 bootstrap_current_fraction_max
   !!         <LI> 13 boundu(10: hfact)
   !!         <LI> 14 fiooic
   !!         <LI> 15 fjprot
@@ -597,7 +597,7 @@ contains
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
         gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
-	use current_drive_variables, only: bscfmax, etaech
+	use current_drive_variables, only: bootstrap_current_fraction_max, etaech
 	use divertor_variables, only: hldivlim
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
@@ -658,8 +658,8 @@ contains
             dnbeta = swp(iscn)
             vlab = 'dnbeta' ; xlab = 'Beta_coefficient'
         case (12)
-            bscfmax = swp(iscn)
-            vlab = 'bscfmax' ; xlab = 'Bootstrap_fraction'
+            bootstrap_current_fraction_max = swp(iscn)
+            vlab = 'bootstrap_current_fraction_max' ; xlab = 'Bootstrap_fraction'
         case (13)
             boundu(10) = swp(iscn)
             vlab = 'boundu(10)' ; xlab = 'H_factor_upper_bound'

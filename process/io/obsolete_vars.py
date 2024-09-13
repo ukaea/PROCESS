@@ -118,6 +118,7 @@ OBS_VARS = {
     "ibss": "i_bootstrap_current",
     "ips": "i_pfirsch_schluter_current",
     "bootipf": "bootstrap_current_fraction",
+    "bscfmax": "bootstrap_current_fraction_max",
 }
 
 OBS_VARS_HELP = {

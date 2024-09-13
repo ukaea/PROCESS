@@ -1557,8 +1557,8 @@ class Physics:
             )
         )
 
-        if current_drive_variables.bscfmax < 0.0e0:
-            current_drive_variables.bootstrap_current_fraction = abs(current_drive_variables.bscfmax)
+        if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
+            current_drive_variables.bootstrap_current_fraction = abs(current_drive_variables.bootstrap_current_fraction_max)
             current_drive_variables.plasma_current_internal_fraction = current_drive_variables.bootstrap_current_fraction
         else:
             if physics_variables.i_bootstrap_current == 1:
@@ -1578,9 +1578,9 @@ class Physics:
                 error_handling.report_error(75)
 
             physics_module.err242 = 0
-            if current_drive_variables.bootstrap_current_fraction > current_drive_variables.bscfmax:
+            if current_drive_variables.bootstrap_current_fraction > current_drive_variables.bootstrap_current_fraction_max:
                 current_drive_variables.bootstrap_current_fraction = min(
-                    current_drive_variables.bootstrap_current_fraction, current_drive_variables.bscfmax
+                    current_drive_variables.bootstrap_current_fraction, current_drive_variables.bootstrap_current_fraction_max
                 )
                 physics_module.err242 = 1
 
@@ -4698,7 +4698,7 @@ class Physics:
             if physics_module.err243 == 1:
                 error_handling.report_error(243)
 
-            if current_drive_variables.bscfmax < 0.0e0:
+            if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
                 po.ocmmnt(
                     self.outfile, "  (User-specified bootstrap current fraction used)"
                 )

@@ -258,7 +258,7 @@ contains
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
       startupratio, tmain, u_unplanned_cp, supercond_cost_model
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
-      ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
+      ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bootstrap_current_fraction_max, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
       etalh, frbeam, harnum, xi_ebw, wave_mode
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
@@ -1038,8 +1038,8 @@ contains
           call parse_real_variable('beamwd', beamwd, 0.001D0, 5.0D0, &
                'Beam width (m)')
 
-       case ('bscfmax')
-          call parse_real_variable('bscfmax', bscfmax, -0.999D0, 0.999D0, &
+       case ('bootstrap_current_fraction_max')
+          call parse_real_variable('bootstrap_current_fraction_max', bootstrap_current_fraction_max, -0.999D0, 0.999D0, &
                '(-fixed)/maximum Bootstrap fraction')
        case ('cboot')
           call parse_real_variable('cboot', cboot, 0.0D0, 10.0D0, &
