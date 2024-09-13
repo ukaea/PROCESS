@@ -64,7 +64,6 @@ jobs:
       - name: Run unit tests
         run: |
           pytest --cov=process tests/unit -v \
-                 --cov-report html:htmlcov_bluemira \
                  --cov-report xml
       - name: Archive unit test coverage data
         uses: actions/upload-artifact@v3
