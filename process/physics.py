@@ -751,7 +751,7 @@ def calculate_l31_coefficient(
     )
 
     # Corrections suggested by Fable, 15/05/2015
-    return l31_coefficient * beta_poloidal_local_total(
+    return l31_coefficient * beta_poloidal_total_sauter(
         radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho
     )
 
@@ -846,7 +846,7 @@ def calculate_l31_32_coefficient(
         radial_elements, number_of_elements, rmajor, bt, triang, ne, ni, tempe, tempi, magnetic_moment, rho, zeff, sqeps
     ) * beta_poloidal_sauter(
         radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho
-    ) / beta_poloidal_local_total(
+    ) / beta_poloidal_total_sauter(
         radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho
     )
 
@@ -934,14 +934,14 @@ def calculate_l34_alpha_31_coefficient(
     # Corrections suggested by Fable, 15/05/2015
     # Below calculates the L34 * alpha + L31 coefficient
     return (
-        beta_poloidal_local_total(radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho)
+        beta_poloidal_total_sauter(radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho)
         - beta_poloidal_sauter(radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho)
     ) * (l34_coefficient * alpha) + calculate_l31_coefficient(
         radial_elements, number_of_elements, rmajor, bt, triang, ne, ni, tempe, tempi, magnetic_moment, rho, zeff, sqeps
     ) * (
         1.0
         - beta_poloidal_sauter(radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho)
-        / beta_poloidal_local_total(radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho)
+        / beta_poloidal_total_sauter(radial_elements, number_of_elements, rmajor, bt, ne, ni, tempe, tempi, magnetic_moment, rho)
     )
 
 
@@ -977,32 +977,40 @@ def beta_poloidal_sauter(radial_elements: np.ndarray, nr: int, rmajor: float, bt
 
 
 @nb.jit(nopython=True, cache=True)
-def beta_poloidal_local_total(j, nr, rmajor, bt, ne, ni, tempe, tempi, mu, rho):
-    """Local beta poloidal calculation, including ion pressure
-    author: P J Knight, CCFE, Culham Science Centre
-    j  : input integer : radial element index in range 1 to nr
-    nr : input integer : maximum value of j
-    This function calculates the local total beta poloidal.
-    <P>The code was supplied by Emiliano Fable, IPP Garching
-    (private communication).
-    <P>beta poloidal = 4*pi*(ne*Te+ni*Ti)/Bpo**2
-    where ni is the sum of all ion densities (thermal)
-    Pereverzev, 25th April 1989 (?)
-    E Fable, private communication, 15th May 2014
+def beta_poloidal_total_sauter(radial_elements: np.ndarray, nr: int, rmajor: float, bt: float, ne: np.ndarray, ni: np.ndarray, tempe: np.ndarray, tempi: np.ndarray, magnetic_moment: np.ndarray, rho: np.ndarray) -> np.ndarray:
     """
+    Calculate the local beta poloidal including ion pressure for the Sauter bootstrap current scaling.
 
+    Parameters:
+    - radial_elements: np.ndarray, radial element indexes in range 1 to nr
+    - nr: int, maximum value of j
+    - rmajor: float, plasma major radius (m)
+    - bt: float, toroidal field on axis (T)
+    - ne: np.ndarray, electron density profile (/m^3)
+    - ni: np.ndarray, ion density profile (/m^3)
+    - tempe: np.ndarray, electron temperature profile (keV)
+    - tempi: np.ndarray, ion temperature profile (keV)
+    - magnetic_moment: np.ndarray, magnetic moment profile
+    - rho: np.ndarray, normalized minor radius profile
+
+    Returns:
+    - np.ndarray, the local total beta poloidal
+
+    Reference:
+    - None
+    """
     return (
         np.where(
-            j != nr,
+            radial_elements != nr,
             1.6e-4
             * np.pi
             * (
-                ((ne[j] + ne[j - 1]) * (tempe[j] + tempe[j - 1]))
-                + ((ni[j] + ni[j - 1]) * (tempi[j] + tempi[j - 1]))
+                ((ne[radial_elements] + ne[radial_elements - 1]) * (tempe[radial_elements] + tempe[radial_elements - 1]))
+                + ((ni[radial_elements] + ni[radial_elements - 1]) * (tempi[radial_elements] + tempi[radial_elements - 1]))
             ),
-            6.4e-4 * np.pi * (ne[j - 1] * tempe[j - 1] + ni[j - 1] * tempi[j - 1]),
+            6.4e-4 * np.pi * (ne[radial_elements - 1] * tempe[radial_elements - 1] + ni[radial_elements - 1] * tempi[radial_elements - 1]),
         )
-        * (rmajor / (bt * rho[j - 1] * np.abs(mu[j - 1] + 1.0e-4))) ** 2
+        * (rmajor / (bt * rho[radial_elements - 1] * np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4))) ** 2
     )
 
 
