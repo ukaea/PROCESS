@@ -1559,7 +1559,7 @@ class Physics:
 
         if current_drive_variables.bscfmax < 0.0e0:
             current_drive_variables.bootstrap_current_fraction = abs(current_drive_variables.bscfmax)
-            current_drive_variables.plasipf = current_drive_variables.bootstrap_current_fraction
+            current_drive_variables.plasma_current_internal_fraction = current_drive_variables.bootstrap_current_fraction
         else:
             if physics_variables.i_bootstrap_current == 1:
                 current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_iter89
@@ -1584,7 +1584,7 @@ class Physics:
                 )
                 physics_module.err242 = 1
 
-            current_drive_variables.plasipf = (
+            current_drive_variables.plasma_current_internal_fraction = (
                 current_drive_variables.bootstrap_current_fraction
                 + current_drive_variables.diaipf
                 + current_drive_variables.psipf
@@ -1596,9 +1596,9 @@ class Physics:
         # produced by non-inductive means (which also includes
         # the current drive proportion)
         physics_module.err243 = 0
-        if current_drive_variables.plasipf > physics_variables.fvsbrnni:
-            current_drive_variables.plasipf = min(
-                current_drive_variables.plasipf, physics_variables.fvsbrnni
+        if current_drive_variables.plasma_current_internal_fraction > physics_variables.fvsbrnni:
+            current_drive_variables.plasma_current_internal_fraction = min(
+                current_drive_variables.plasma_current_internal_fraction, physics_variables.fvsbrnni
             )
             physics_module.err243 = 1
 
@@ -1606,7 +1606,7 @@ class Physics:
         physics_variables.facoh = max(1.0e-10, (1.0e0 - physics_variables.fvsbrnni))
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.faccd = (
-            physics_variables.fvsbrnni - current_drive_variables.plasipf
+            physics_variables.fvsbrnni - current_drive_variables.plasma_current_internal_fraction
         )
 
         # Auxiliary current drive power calculations

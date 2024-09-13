@@ -112,7 +112,7 @@ class CudrivParam(NamedTuple):
 
     psipf: Any = None
 
-    plasipf: Any = None
+    plasma_current_internal_fraction: Any = None
 
     harnum: Any = None
 
@@ -248,7 +248,7 @@ class CudrivParam(NamedTuple):
             rtanmax=0,
             diaipf=0,
             psipf=0,
-            plasipf=0.27635918746616817,
+            plasma_current_internal_fraction=0.27635918746616817,
             harnum=1,
             xi_ebw=0.80000000000000004,
             dene=7.5e19,
@@ -338,7 +338,7 @@ class CudrivParam(NamedTuple):
             rtanmax=13.179564451855533,
             diaipf=0,
             psipf=0,
-            plasipf=0.27635918746616817,
+            plasma_current_internal_fraction=0.27635918746616817,
             harnum=1,
             xi_ebw=0.80000000000000004,
             dene=7.5e19,
@@ -489,7 +489,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "psipf", cudrivparam.psipf)
 
-    monkeypatch.setattr(current_drive_variables, "plasipf", cudrivparam.plasipf)
+    monkeypatch.setattr(current_drive_variables, "plasma_current_internal_fraction", cudrivparam.plasma_current_internal_fraction)
 
     monkeypatch.setattr(current_drive_variables, "harnum", cudrivparam.harnum)
 

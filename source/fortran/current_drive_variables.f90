@@ -196,8 +196,8 @@ module current_drive_variables
   real(dp)  :: pinjfixmw
   !! secondary total fixed auxiliary injected power (MW)
 
-  real(dp) :: plasipf
-  !! plasma driven current fraction (Bootstrap + Diamagnetic + PS)
+  real(dp) :: plasma_current_internal_fraction
+  !! plasma current fraction driven internally (Bootstrap + Diamagnetic + PS)
 
   real(dp) :: plhybd
   !! lower hybrid injection power (MW)
@@ -282,7 +282,7 @@ module current_drive_variables
     pinjimw = 0.0D0
     pinjmw = 0.0D0
     pinjfixmw = 0.0D0
-    plasipf = 0.0D0
+    plasma_current_internal_fraction = 0.0D0
     plhybd = 0.0D0
     pnbeam = 0.0D0
     porbitlossmw = 0.0D0

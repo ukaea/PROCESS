@@ -945,14 +945,14 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Total",
-            "(plasipf+faccd+facoh)",
-            current_drive_variables.plasipf
+            "(plasma_current_internal_fraction+faccd+facoh)",
+            current_drive_variables.plasma_current_internal_fraction
             + physics_variables.faccd
             + physics_variables.facoh,
         )
         if (
             abs(
-                current_drive_variables.plasipf
+                current_drive_variables.plasma_current_internal_fraction
                 + physics_variables.faccd
                 + physics_variables.facoh
                 - 1.0e0
