@@ -598,7 +598,7 @@ def electron_collisionality_sauter(
     radial_elements: np.ndarray,
     rmajor: float,
     zeff: np.ndarray,
-    magnetic_moment: np.ndarray,
+    inverse_q: np.ndarray,
     sqeps: np.ndarray,
     tempe: np.ndarray,
     ne: np.ndarray,
@@ -610,7 +610,7 @@ def electron_collisionality_sauter(
     - radial_elements: np.ndarray, the radial element index in the range 1 to nr
     - rmajor: float, the plasma major radius (m)
     - zeff: np.ndarray, the effective charge array
-    - mu: np.ndarray, the magnetic moment array
+    - inverse_q: np.ndarray, inverse safety factor profile
     - sqeps: np.ndarray, the square root of the inverse aspect ratio array
     - tempe: np.ndarray, the electron temperature array
     - ne: np.ndarray, the electron density array
@@ -627,7 +627,7 @@ def electron_collisionality_sauter(
         * zeff[radial_elements - 1]
         * rmajor
         / np.abs(
-            magnetic_moment[radial_elements - 1]
+            inverse_q[radial_elements - 1]
             * (sqeps[radial_elements - 1] ** 3)
             * np.sqrt(tempe[radial_elements - 1])
             * 1.875e7
@@ -676,7 +676,7 @@ def ion_collisions_sauter(
 def ion_collisionality_sauter(
     radial_elements: np.ndarray,
     rmajor: float,
-    magnetic_moment: np.ndarray,
+    inverse_q: np.ndarray,
     sqeps: np.ndarray,
     tempi: np.ndarray,
     amain: np.ndarray,
@@ -689,7 +689,7 @@ def ion_collisionality_sauter(
     Parameters:
     - radial_elements: np.ndarray, the radial element indexes in the range 1 to nr
     - rmajor: float, the plasma major radius (m)
-    - magnetic_moment: np.ndarray, the magnetic moment profile
+    - inverse_q: np.ndarray, inverse safety factor profile
     - sqeps: np.ndarray, the square root of the inverse aspect ratio profile
     - tempi: np.ndarray, the ion temperature profile (keV)
     - amain: np.ndarray, the atomic mass of the main ion species profile
@@ -707,7 +707,7 @@ def ion_collisionality_sauter(
         * ion_collisions_sauter(radial_elements, zeff, ni, tempi, amain)
         * rmajor
         / (
-            np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4)
+            np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
             * sqeps[radial_elements - 1] ** 3
             * np.sqrt(tempi[radial_elements - 1] / amain[radial_elements - 1])
         )
@@ -725,7 +725,7 @@ def calculate_l31_coefficient(
     ni: np.ndarray,
     tempe: np.ndarray,
     tempi: np.ndarray,
-    magnetic_moment: np.ndarray,
+    inverse_q: np.ndarray,
     rho: np.ndarray,
     zeff: np.ndarray,
     sqeps: np.ndarray,
@@ -743,7 +743,7 @@ def calculate_l31_coefficient(
     - ni: np.ndarray, ion density profile (/m^3)
     - tempe: np.ndarray, electron temperature profile (keV)
     - tempi: np.ndarray, ion temperature profile (keV)
-    - magnetic_moment: np.ndarray, magnetic moment profile
+    - inverse_q: np.ndarray, inverse safety factor profile
     - rho: np.ndarray, normalized minor radius profile
     - zeff: np.ndarray, effective charge profile
     - sqeps: np.ndarray, square root of inverse aspect ratio profile
@@ -769,7 +769,7 @@ def calculate_l31_coefficient(
 
     # Calculated electron collisionality; nu_e*
     electron_collisionality = electron_collisionality_sauter(
-        radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne
+        radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
     )
 
     # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
@@ -794,7 +794,7 @@ def calculate_l31_coefficient(
         ni,
         tempe,
         tempi,
-        magnetic_moment,
+        inverse_q,
         rho,
     )
 
@@ -810,7 +810,7 @@ def calculate_l31_32_coefficient(
     ni: np.ndarray,
     tempe: np.ndarray,
     tempi: np.ndarray,
-    magnetic_moment: np.ndarray,
+    inverse_q: np.ndarray,
     rho: np.ndarray,
     zeff: np.ndarray,
     sqeps: np.ndarray,
@@ -828,7 +828,7 @@ def calculate_l31_32_coefficient(
     - ni: np.ndarray, ion density profile (/m^3)
     - tempe: np.ndarray, electron temperature profile (keV)
     - tempi: np.ndarray, ion temperature profile (keV)
-    - magnetic_moment: np.ndarray, magnetic moment profile
+    - inverse_q: np.ndarray, inverse safety factor profile
     - rho: np.ndarray, normalized minor radius profile
     - zeff: np.ndarray, effective charge profile
     - sqeps: np.ndarray, square root of inverse aspect ratio profile
@@ -855,7 +855,7 @@ def calculate_l31_32_coefficient(
 
     # Calculated electron collisionality; nu_e*
     electron_collisionality = electron_collisionality_sauter(
-        radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne
+        radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
     )
 
     # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
@@ -926,7 +926,7 @@ def calculate_l31_32_coefficient(
 
     # Corrections suggested by Fable, 15/05/2015
     return beta_poloidal_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho
+        radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
     ) * (big_f32ee_teff + big_f32ei_teff) + calculate_l31_coefficient(
         radial_elements,
         number_of_elements,
@@ -937,12 +937,12 @@ def calculate_l31_32_coefficient(
         ni,
         tempe,
         tempi,
-        magnetic_moment,
+        inverse_q,
         rho,
         zeff,
         sqeps,
     ) * beta_poloidal_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, tempe, magnetic_moment, rho
+        radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
     ) / beta_poloidal_total_sauter(
         radial_elements,
         number_of_elements,
@@ -952,7 +952,7 @@ def calculate_l31_32_coefficient(
         ni,
         tempe,
         tempi,
-        magnetic_moment,
+        inverse_q,
         rho,
     )
 
@@ -964,7 +964,7 @@ def calculate_l34_alpha_31_coefficient(
     rmajor: float,
     bt: float,
     triang: float,
-    magnetic_moment: np.ndarray,
+    inverse_q: np.ndarray,
     sqeps: np.ndarray,
     tempi: np.ndarray,
     tempe: np.ndarray,
@@ -984,7 +984,7 @@ def calculate_l34_alpha_31_coefficient(
     - rmajor: float, plasma major radius (m)
     - bt: float, toroidal field on axis (T)
     - triang: float, plasma triangularity
-    - magnetic_moment: np.ndarray, magnetic moment profile
+    - inverse_q: np.ndarray, inverse safety factor profile
     - sqeps: np.ndarray, square root of inverse aspect ratio profile
     - tempi: np.ndarray, ion temperature profile (keV)
     - tempe: np.ndarray, electron temperature profile (keV)
@@ -1016,7 +1016,7 @@ def calculate_l34_alpha_31_coefficient(
 
     # Calculated electron collisionality; nu_e*
     electron_collisionality = electron_collisionality_sauter(
-        radial_elements, rmajor, zeff, magnetic_moment, sqeps, tempe, ne
+        radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
     )
 
     # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
@@ -1040,7 +1040,7 @@ def calculate_l34_alpha_31_coefficient(
 
     # Calculate the ion collisionality
     ion_collisionality = ion_collisionality_sauter(
-        radial_elements, rmajor, magnetic_moment, sqeps, tempi, amain, zmain, ni
+        radial_elements, rmajor, inverse_q, sqeps, tempi, amain, zmain, ni
     )
 
     # $\alpha(\nu_{i*})$, Eq.17b
@@ -1064,7 +1064,7 @@ def calculate_l34_alpha_31_coefficient(
             ni,
             tempe,
             tempi,
-            magnetic_moment,
+            inverse_q,
             rho,
         )
         - beta_poloidal_sauter(
@@ -1074,7 +1074,7 @@ def calculate_l34_alpha_31_coefficient(
             bt,
             ne,
             tempe,
-            magnetic_moment,
+            inverse_q,
             rho,
         )
     ) * (l34_coefficient * alpha) + calculate_l31_coefficient(
@@ -1087,7 +1087,7 @@ def calculate_l34_alpha_31_coefficient(
         ni,
         tempe,
         tempi,
-        magnetic_moment,
+        inverse_q,
         rho,
         zeff,
         sqeps,
@@ -1100,7 +1100,7 @@ def calculate_l34_alpha_31_coefficient(
             bt,
             ne,
             tempe,
-            magnetic_moment,
+            inverse_q,
             rho,
         )
         / beta_poloidal_total_sauter(
@@ -1112,7 +1112,7 @@ def calculate_l34_alpha_31_coefficient(
             ni,
             tempe,
             tempi,
-            magnetic_moment,
+            inverse_q,
             rho,
         )
     )
@@ -1126,7 +1126,7 @@ def beta_poloidal_sauter(
     bt: float,
     ne: np.ndarray,
     tempe: np.ndarray,
-    magnetic_moment: np.ndarray,
+    inverse_q: np.ndarray,
     rho: np.ndarray,
 ) -> np.ndarray:
     """
@@ -1139,7 +1139,7 @@ def beta_poloidal_sauter(
     - bt: float, toroidal field on axis (T)
     - ne: np.ndarray, electron density profile (/m^3)
     - tempe: np.ndarray, electron temperature profile (keV)
-    - magnetic_moment: np.ndarray, magnetic moment profile
+    - inverse_q: np.ndarray, inverse safety factor profile
     - rho: np.ndarray, normalized minor radius profile
 
     Returns:
@@ -1162,7 +1162,7 @@ def beta_poloidal_sauter(
             / (
                 bt
                 * rho[radial_elements - 1]
-                * np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4)
+                * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
             )
         )
         ** 2
@@ -1179,7 +1179,7 @@ def beta_poloidal_total_sauter(
     ni: np.ndarray,
     tempe: np.ndarray,
     tempi: np.ndarray,
-    magnetic_moment: np.ndarray,
+    inverse_q: np.ndarray,
     rho: np.ndarray,
 ) -> np.ndarray:
     """
@@ -1194,7 +1194,7 @@ def beta_poloidal_total_sauter(
     - ni: np.ndarray, ion density profile (/m^3)
     - tempe: np.ndarray, electron temperature profile (keV)
     - tempi: np.ndarray, ion temperature profile (keV)
-    - magnetic_moment: np.ndarray, magnetic moment profile
+    - inverse_q: np.ndarray, inverse safety factor profile
     - rho: np.ndarray, normalized minor radius profile
 
     Returns:
@@ -1230,7 +1230,7 @@ def beta_poloidal_total_sauter(
             / (
                 bt
                 * rho[radial_elements - 1]
-                * np.abs(magnetic_moment[radial_elements - 1] + 1.0e-4)
+                * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
             )
         )
         ** 2
@@ -5218,14 +5218,15 @@ class Physics:
         # Return tempi like array object filled with zeff
         zef = np.full_like(tempi, physics_variables.zeff)
 
-        # mu = 1/safety factor
+        # inverse_q = 1/safety factor
         # Parabolic q profile assumed
-        mu = 1 / (
+        inverse_q = 1 / (
             physics_variables.q0
             + (physics_variables.q - physics_variables.q0) * roa**2
         )
-        amain = np.full_like(mu, physics_variables.afuel)
-        zmain = np.full_like(mu, 1.0 + physics_variables.fhe3)
+
+        amain = np.full_like(inverse_q, physics_variables.afuel)
+        zmain = np.full_like(inverse_q, 1.0 + physics_variables.fhe3)
 
         if ne[NR - 1] == 0.0:
             ne[NR - 1] = 1e-4 * ne[NR - 2]
@@ -5257,7 +5258,7 @@ class Physics:
                     ni,
                     tempe,
                     tempi,
-                    mu,
+                    inverse_q,
                     rho,
                     zef,
                     sqeps,
@@ -5273,7 +5274,7 @@ class Physics:
                     ni,
                     tempe,
                     tempi,
-                    mu,
+                    inverse_q,
                     rho,
                     zef,
                     sqeps,
@@ -5285,7 +5286,7 @@ class Physics:
                     physics_variables.rmajor,
                     physics_variables.bt,
                     physics_variables.triang,
-                    mu,
+                    inverse_q,
                     sqeps,
                     tempi,
                     tempe,
@@ -5303,7 +5304,7 @@ class Physics:
                 -physics_variables.bt
                 / (0.2 * np.pi * physics_variables.rmajor)
                 * rho[nr_rng_1]
-                * mu[nr_rng_1]
+                * inverse_q[nr_rng_1]
             )
         )  # A/m2
 
