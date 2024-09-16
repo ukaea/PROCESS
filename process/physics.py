@@ -24,7 +24,6 @@ from process.fortran import (
     numerics,
     stellarator_variables,
     process_output as po,
-    profiles_module,
 )
 
 
@@ -987,7 +986,8 @@ class Physics:
         current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
         current_drive_variables.bscf_sauter = (
-            current_drive_variables.cboot * self.bootstrap_fraction_sauter()
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sauter(self.plasma_profile)
         )
 
         current_drive_variables.bscf_sakai = (
@@ -4553,7 +4553,7 @@ class Physics:
         return 1.0e6 * aibs / plascur
 
     @staticmethod
-    def bootstrap_fraction_sauter():
+    def bootstrap_fraction_sauter(plasma_profile):
         """Bootstrap current fraction from Sauter et al scaling
         author: P J Knight, CCFE, Culham Science Centre
         None
@@ -4566,38 +4566,20 @@ class Physics:
         O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
         Physics of Plasmas <B>9</B> (2002) 5140
         """
-        NR = 200
+        NR = plasma_profile.profile_size
 
-        roa = np.arange(1, NR + 1, step=1) / NR
-
+        roa = plasma_profile.neprofile.profile_x
         rho = np.sqrt(physics_variables.xarea / np.pi) * roa
+
         sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
 
-        ne = 1e-19 * np.vectorize(
-            lambda r: profiles_module.nprofile(
-                r,
-                physics_variables.rhopedn,
-                physics_variables.ne0,
-                physics_variables.neped,
-                physics_variables.nesep,
-                physics_variables.alphan,
-            )
-        )(roa)
+        ne = plasma_profile.neprofile.profile_y * 1e-19
         ni = (physics_variables.dnitot / physics_variables.dene) * ne
-        tempe = np.vectorize(
-            lambda r: profiles_module.tprofile(
-                r,
-                physics_variables.rhopedt,
-                physics_variables.te0,
-                physics_variables.teped,
-                physics_variables.tesep,
-                physics_variables.alphat,
-                physics_variables.tbeta,
-            )
-        )(roa)
-        tempi = (physics_variables.ti / physics_variables.te) * tempe
 
-        zef = np.full_like(tempi, physics_variables.zeff)  # Flat Zeff profile assumed
+        tempe = plasma_profile.teprofile.profile_y
+        tempi = (physics_variables.ti / physics_variables.te) * tempe
+        # Flat Zeff profile assumed
+        zef = np.full_like(tempi, physics_variables.zeff)
 
         # mu = 1/safety factor
         # Parabolic q profile assumed
@@ -4620,13 +4602,11 @@ class Physics:
         # Looping from 2 because dcsa etc should return 0 @ j == 1
         nr_rng = np.arange(2, NR)
         nr_rng_1 = nr_rng - 1
-
         drho = rho[nr_rng] - rho[nr_rng_1]
         da = 2 * np.pi * rho[nr_rng_1] * drho  # area of annulus
         dlogte_drho = (np.log(tempe[nr_rng]) - np.log(tempe[nr_rng_1])) / drho
         dlogti_drho = (np.log(tempi[nr_rng]) - np.log(tempi[nr_rng_1])) / drho
         dlogne_drho = (np.log(ne[nr_rng]) - np.log(ne[nr_rng_1])) / drho
-
         jboot = (
             0.5
             * (
