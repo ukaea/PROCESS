@@ -99,15 +99,19 @@ class Build:
 
             current_drive_variables.rtanmax = 0.0e0
 
-    def vbuild(self, output: bool):
-        """Vertical build
-        author: P J Knight, CCFE, Culham Science Centre
-        author: R Kemp, CCFE, Culham Science Centre
-        self.outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
-        This subroutine determines the vertical build of the machine
-        inside the TF coil.
-        None
+    def vbuild(self, output: bool) -> None:
+        """
+        This method determines the vertical build of the machine.
+        It calculates various parameters related to the build of the machine,
+        such as thicknesses, radii, and areas.
+        Results can be outputted with the `output` flag.
+
+        Args:
+            output (bool): Flag indicating whether to output results
+
+        Returns:
+            None
+
         """
         divht = self.divgeom(output)
         # Issue #481 Remove build_variables.vgaptf
