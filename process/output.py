@@ -59,7 +59,7 @@ def write(models, outfile):
     models.build.calculate_radial_build(output=True)
 
     # Vertical build
-    models.build.vbuild(output=True)
+    models.build.calculate_vertical_build(output=True)
 
     # Toroidal field coil model
     models.tfcoil.output()

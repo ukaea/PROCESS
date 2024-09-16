@@ -99,7 +99,7 @@ class Build:
 
             current_drive_variables.rtanmax = 0.0e0
 
-    def vbuild(self, output: bool) -> None:
+    def calculate_vertical_build(self, output: bool) -> None:
         """
         This method determines the vertical build of the machine.
         It calculates various parameters related to the build of the machine,

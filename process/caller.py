@@ -213,7 +213,7 @@ class Caller:
         self.models.build.calculate_radial_build(output=False)
 
         # Vertical build
-        self.models.build.vbuild(output=False)
+        self.models.build.calculate_vertical_build(output=False)
 
         self.models.physics.physics()
 
