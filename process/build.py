@@ -688,12 +688,12 @@ class Build:
 
                 # end of Single null case
 
-                po.ovarre(
-                    self.mfile,
-                    "Ratio of Central Solenoid height to TF coil internal height",
-                    "(ohhghf)",
-                    pfcoil_variables.ohhghf,
-                )
+            po.ovarre(
+                self.mfile,
+                "Ratio of Central Solenoid height to TF coil internal height",
+                "(ohhghf)",
+                pfcoil_variables.ohhghf,
+            )
             po.ocmmnt(
                 self.outfile,
                 "\n*Cryostat roof allowance includes uppermost PF coil and outer thermal shield.\n*Cryostat floor allowance includes lowermost PF coil, outer thermal shield and gravity support.",
