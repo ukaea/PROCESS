@@ -971,7 +971,7 @@ class Build:
     def tf_in_cs_bore_calc(self):
         build_variables.bore += build_variables.tfcth + build_variables.gapoh
 
-    def radialb(self, output: bool) -> None:
+    def calculate_radial_build(self, output: bool) -> None:
         """
         This method determines the radial build of the machine.
         It calculates various parameters related to the build of the machine,
@@ -985,10 +985,7 @@ class Build:
             None
 
         """
-        # from process.fortran import build_module
 
-        # build_module.radialb(self.outfile, int(output))
-        # return
         if fwbs_variables.blktmodel > 0:
             build_variables.blnkith = (
                 build_variables.blbuith

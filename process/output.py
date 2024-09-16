@@ -56,7 +56,7 @@ def write(models, outfile):
 
     # Machine Build Model
     # Radial build
-    models.build.radialb(output=True)
+    models.build.calculate_radial_build(output=True)
 
     # Vertical build
     models.build.vbuild(output=True)
