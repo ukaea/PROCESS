@@ -971,15 +971,19 @@ class Build:
     def tf_in_cs_bore_calc(self):
         build_variables.bore += build_variables.tfcth + build_variables.gapoh
 
-    def radialb(self, output: bool):
+    def radialb(self, output: bool) -> None:
         """
-        Radial build
-        author: P J Knight, CCFE, Culham Science Centre
-        author: R Kemp, CCFE, Culham Science Centre
-        self.outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
-        This subroutine determines the radial build of the machine.
-        None
+        This method determines the radial build of the machine.
+        It calculates various parameters related to the build of the machine,
+        such as thicknesses, radii, and areas.
+        Results can be outputted with the `output` flag.
+
+        Args:
+            output (bool): Flag indicating whether to output the results
+
+        Returns:
+            None
+
         """
         # from process.fortran import build_module
 
