@@ -210,10 +210,10 @@ class Caller:
         # Radial build
         if ft.build_variables.tf_in_cs == 1:
             self.models.build.tf_in_cs_bore_calc()
-        self.models.build.radialb(output=False)
+        self.models.build.calculate_radial_build(output=False)
 
         # Vertical build
-        self.models.build.vbuild(output=False)
+        self.models.build.calculate_vertical_build(output=False)
 
         self.models.physics.physics()
 
