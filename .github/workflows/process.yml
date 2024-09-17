@@ -149,19 +149,15 @@ jobs:
       - name: Install PROCESS
         run: pip install -e .
       - name: Run regression input files
-        run: |
-          process -i tests/regression/input_files/large_tokamak.IN.DAT
-          mv tests/regression/input_files/large_tokamak.MFILE.DAT tracking/large_tokamak_MFILE.DAT
-          process -i tests/regression/input_files/st_regression.IN.DAT
-          mv tests/regression/input_files/st_regression.MFILE.DAT tracking/st_regression_MFILE.DAT
-          process -i tests/regression/input_files/large_tokamak_nof.IN.DAT
-          mv tests/regression/input_files/large_tokamak_nof.MFILE.DAT tracking/large_tokamak_nof_MFILE.DAT
-          process -i tests/regression/input_files/large_tokamak_once_through.IN.DAT
-          mv tests/regression/input_files/large_tokamak_once_through.MFILE.DAT tracking/large_tokamak_once_through_MFILE.DAT
-          process -i tests/regression/input_files/stellarator.IN.DAT
-          mv tests/regression/input_files/stellarator.MFILE.DAT tracking/stellarator_MFILE.DAT
-          process -i tests/regression/input_files/IFE.IN.DAT
-          mv tests/regression/input_files/IFE.MFILE.DAT tracking/IFE_MFILE.DAT
+        run: python tracking/run_tracking_inputs.py
+          # process -i tests/regression/input_files/large_tokamak.IN.DAT
+          # mv tests/regression/input_files/large_tokamak.MFILE.DAT tracking/large_tokamak_MFILE.DAT
+          # process -i tests/regression/input_files/st_regression.IN.DAT
+          # mv tests/regression/input_files/st_regression.MFILE.DAT tracking/st_regression_MFILE.DAT
+          # process -i tests/regression/input_files/large_tokamak_nof.IN.DAT
+          # mv tests/regression/input_files/large_tokamak_nof.MFILE.DAT tracking/large_tokamak_nof_MFILE.DAT
+          # process -i tests/regression/input_files/large_tokamak_once_through.IN.DAT
+          # mv tests/regression/input_files/large_tokamak_once_through.MFILE.DAT tracking/large_tokamak_once_through_MFILE.DAT
       - name: Archive tracked MFILEs
         uses: actions/upload-artifact@v3
         with:
