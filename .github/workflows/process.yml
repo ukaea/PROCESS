@@ -62,12 +62,20 @@ jobs:
           pip install -e '.[test, examples]'
           pip install -r requirements_dev.txt
       - name: Run unit tests
-        run: pytest --cov=process tests/unit -v
+        run: |
+          pytest --cov=process tests/unit -v \
+                 --cov-report xml
       - name: Archive unit test coverage data
         uses: actions/upload-artifact@v3
         with:
           name: unit-coverage-artifacts
           path: .coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          fail_ci_if_error: ${{ github.ref_name == 'main' }}
 
   integration-test:
     runs-on: ubuntu-latest
