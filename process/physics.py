@@ -212,6 +212,33 @@ def calculate_plasma_current_peng(
     )
 
 
+def calculate_current_coefficient_ipdg89(eps: float, kappa95: float, triang95: float) -> float:
+    """
+    Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
+
+    Parameters:
+    - eps: float, plasma inverse aspect ratio
+    - kappa95: float, plasma elongation 95%
+    - triang95: float, plasma triangularity 95%
+
+    Returns:
+    - float, the fq plasma current coefficient
+
+    This function calculates the fq coefficient used in the IPDG89 plasma current scaling,
+    based on the given plasma parameters.
+
+    References:
+    - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
+    - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+    """
+    return (
+        0.5
+        * (1.17 - 0.65 * eps)
+        / ((1.0 - eps * eps) ** 2)
+        * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+    )
+
+
 @nb.jit(nopython=True, cache=True)
 def conhas(
     alphaj: float,
@@ -2684,15 +2711,7 @@ class Physics:
 
         # ITER formula (IPDG89)
         elif i_plasma_current == 4:
-            fq = (
-                0.5
-                * (1.17 - 0.65 * eps)
-                / ((1.0 - eps * eps) ** 2)
-                * (
-                    1.0
-                    + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3)
-                )
-            )
+            fq = calculate_current_coefficient_ipdg89(eps, kappa95, triang95)
 
         # Todd empirical scalings
         # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181

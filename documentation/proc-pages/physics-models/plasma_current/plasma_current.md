@@ -93,7 +93,7 @@ f_q = 1
 $$
 
 -----------------
-#### ITER IPDG89 scaling 
+#### ITER IPDG89 scaling | `calculate_current_coefficient_ipdg89()`
 
 Switch value: `i_plasma_current = 4`[^5] [^7]
 
