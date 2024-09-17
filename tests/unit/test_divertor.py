@@ -143,7 +143,9 @@ class TestDivertor:
 
         expected_hldiv = 0.087770426974167357
 
-        hldiv = divertor.divtart(rmajor, rminor, triang, scrapli, vgap_xpoint_divertor, pdivt, False)
+        hldiv = divertor.divtart(
+            rmajor, rminor, triang, scrapli, vgap_xpoint_divertor, pdivt, False
+        )
 
         assert hldiv == pytest.approx(expected_hldiv)
 
