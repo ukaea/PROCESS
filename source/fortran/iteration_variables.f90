@@ -3849,7 +3849,7 @@ contains
     real(kind(1.d0)) :: ratio
     casths = ratio
   end subroutine set_itv_172
-  
+
   !---------------------------------
   ! DUMMY variables below here
   !---------------------------------
@@ -4116,8 +4116,8 @@ contains
            case (168);  xcm(i) = itv_168()
            case (169);  xcm(i) = itv_169()
            case (170);  xcm(i) = itv_170()
-           case (171);  xcm(i) = itv_171() 
-           case (172);  xcm(i) = itv_172() 
+           case (171);  xcm(i) = itv_171()
+           case (172);  xcm(i) = itv_172()
             ! DUMMY Cases
            case (173);  xcm(i) = itv_173()
            case (174);  xcm(i) = itv_174()
@@ -4384,7 +4384,7 @@ contains
            case (169);  call set_itv_169(ratio)
            case (170);  call set_itv_170(ratio)
            case (171);  call set_itv_171(ratio)
-           case (172);  call set_itv_172(ratio) 
+           case (172);  call set_itv_172(ratio)
             ! DUMMY Cases
            case (173);  call set_itv_173(ratio)
            case (174);  call set_itv_174(ratio)

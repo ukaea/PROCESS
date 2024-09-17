@@ -24,7 +24,6 @@ from process.fortran import (
     numerics,
     stellarator_variables,
     process_output as po,
-    profiles_module,
 )
 
 
@@ -987,7 +986,21 @@ class Physics:
         current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
         current_drive_variables.bscf_sauter = (
-            current_drive_variables.cboot * self.bootstrap_fraction_sauter()
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sauter(self.plasma_profile)
+        )
+
+        current_drive_variables.bscf_sakai = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sakai(
+                betap=physics_variables.betap,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                eps=physics_variables.eps,
+                rli=physics_variables.rli,
+            )
         )
 
         if current_drive_variables.bscfmax < 0.0e0:
@@ -1002,6 +1015,10 @@ class Physics:
                 current_drive_variables.bootipf = current_drive_variables.bscf_wilson
             elif physics_variables.ibss == 4:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sauter
+            elif physics_variables.ibss == 5:
+                # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+                # So the diamagnetic current calculation should be turned off when using, (idia = 0).
+                current_drive_variables.bootipf = current_drive_variables.bscf_sakai
             else:
                 error_handling.idiags[0] = physics_variables.ibss
                 error_handling.report_error(75)
@@ -1381,28 +1398,36 @@ class Physics:
         )
 
         # Calculate physics_variables.beta limit
-        if physics_variables.iprofile == 0:
-            if physics_variables.gtscale == 1:
-                # Original scaling law
-                physics_variables.dnbeta = 2.7e0 * (
-                    1.0e0 + 5.0e0 * physics_variables.eps**3.5e0
-                )
 
-            if physics_variables.gtscale == 2:
-                # See Issue #1439
-                # physics_variables.dnbeta found from physics_variables.aspect ratio scaling on p32 of Menard:
-                # Menard, et al. "Fusion Nuclear Science Facilities
-                # and Pilot Plants Based on the Spherical Tokamak."
-                # Nucl. Fusion, 2016, 44.
-                physics_variables.dnbeta = (
-                    3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
-                )
-
-        else:
+        if physics_variables.iprofile == 1:
             # Relation between physics_variables.beta limit and plasma internal inductance
             # Hartmann and Zohm
             physics_variables.dnbeta = 4.0e0 * physics_variables.rli
 
+        if physics_variables.iprofile == 2:
+            # Original scaling law
+            physics_variables.dnbeta = 2.7e0 * (
+                1.0e0 + 5.0e0 * physics_variables.eps**3.5e0
+            )
+
+        if physics_variables.iprofile == 3 or physics_variables.iprofile == 5:
+            # physics_variables.dnbeta found from physics_variables.aspect ratio scaling on p32 of Menard:
+            # Menard, et al. "Fusion Nuclear Science Facilities
+            # and Pilot Plants Based on the Spherical Tokamak."
+            # Nucl. Fusion, 2016, 44.
+            physics_variables.dnbeta = 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
+
+        if physics_variables.iprofile == 6:
+            # Method used for STEP plasma scoping
+            # Tholerus et al. (2024), arXiv:2403.09460
+            Fp = (physics_variables.ne0 * physics_variables.te0) / (
+                physics_variables.dene * physics_variables.te
+            )
+            physics_variables.dnbeta = 3.7e0 + (
+                (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
+            )
+
+        # culblm returns the betalim for beta
         physics_variables.betalim = culblm(
             physics_variables.bt,
             physics_variables.dnbeta,
@@ -2030,8 +2055,12 @@ class Physics:
         8 = Sauter scaling (allowing negative triangularity) Issue #392
             'Geometric formulas for system codes including the effect of negative triangularity'
         iprofile : input integer : switch for current profile consistency
-        0 = use input alphaj, rli
-        1 = make these consistent with q, q0
+        0 use input values for alphaj, rli, dnbeta
+        1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+        2 use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling)
+        3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
+        4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
+        5 use input value for alphaj.  Set rli and dnbeta from Menard scaling
         kappa    : input real :  plasma elongation
         kappa95  : input real :  plasma elongation at 95% surface
         p0       : input real :  central plasma pressure (Pa)
@@ -2151,45 +2180,20 @@ class Physics:
             icurr, plascur, q95, asp, eps, bt, kappa, triang, pperim, constants.rmu0
         )
 
-        # Ensure current profile consistency, if required
-        # This is as described in Hartmann and Zohm only if icurr = 4 as well...
-
         if iprofile == 1:
+            # Ensure current profile consistency, if required
+            # This is as described in Hartmann and Zohm only if icurr = 4 as well...
+
+            # Tokamaks 4th Edition, Wesson, page 116
             alphaj = qstar / q0 - 1.0
-            rli = np.log(1.65 + 0.89 * alphaj)  # Tokamaks 4th Edition, Wesson, page 116
+            rli = np.log(1.65 + 0.89 * alphaj)
+
+        if iprofile in [4, 5, 6]:
+            # Spherical Tokamak relation for internal inductance
+            # Menard et al. (2016), Nuclear Fusion, 56, 106023
+            rli = 3.4 - kappa
 
         return alphaj, rli, bp, qstar, plascur
-
-    @staticmethod
-    def eped_warning():
-        eped_warning = ""
-
-        if (physics_variables.triang < 0.399e0) or (physics_variables.triang > 0.601e0):
-            eped_warning += f"{physics_variables.triang = }"
-
-        if (physics_variables.kappa < 1.499e0) or (physics_variables.kappa > 2.001e0):
-            eped_warning += f"{physics_variables.kappa = }"
-
-        if (physics_variables.plascur < 9.99e6) or (
-            physics_variables.plascur > 20.01e6
-        ):
-            eped_warning += f"{physics_variables.plascur = }"
-
-        if (physics_variables.rmajor < 6.99e0) or (physics_variables.rmajor > 11.01e0):
-            eped_warning += f"{physics_variables.rmajor = }"
-
-        if (physics_variables.rminor < 1.99e0) or (physics_variables.rminor > 3.501e0):
-            eped_warning += f"{physics_variables.rminor = }"
-
-        if (physics_variables.normalised_total_beta < 1.99e0) or (
-            physics_variables.normalised_total_beta > 3.01e0
-        ):
-            eped_warning += f"{physics_variables.normalised_total_beta = }"
-
-        if physics_variables.tesep > 0.5:
-            eped_warning += f"{physics_variables.tesep = }"
-
-        return eped_warning
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -2494,15 +2498,15 @@ class Physics:
             po.osubhd(self.outfile, "Current and Field :")
 
             if stellarator_variables.istell == 0:
-                if physics_variables.iprofile == 0:
+                if physics_variables.iprofile == 1:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,dnbeta is not enforced",
+                        "Consistency between q0,q,alphaj,rli,dnbeta is enforced",
                     )
                 else:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,dnbeta is enforced",
+                        "Consistency between q0,q,alphaj,rli,dnbeta is not enforced",
                     )
 
                 po.oblnkl(self.outfile)
@@ -3009,42 +3013,6 @@ class Physics:
                 "(rhopedt)",
                 physics_variables.rhopedt,
             )
-            # Issue #413 Pedestal scaling
-            po.ovarin(
-                self.outfile,
-                "Pedestal scaling switch",
-                "(ieped)",
-                physics_variables.ieped,
-            )
-            if physics_variables.ieped == 1:
-                po.ocmmnt(
-                    self.outfile,
-                    "Saarelma 6-parameter pedestal temperature scaling is ON",
-                )
-
-                if self.eped_warning() != "":
-                    po.ocmmnt(
-                        self.outfile,
-                        "WARNING: Pedestal parameters are outside the range of applicability of the scaling:",
-                    )
-                    po.ocmmnt(
-                        self.outfile,
-                        "triang: 0.4 - 0.6; physics_variables.kappa: 1.5 - 2.0;   plascur: 10 - 20 MA, physics_variables.rmajor: 7 - 11 m;",
-                    )
-                    po.ocmmnt(
-                        self.outfile,
-                        "rminor: 2 - 3.5 m; tesep: 0 - 0.5 keV; normalised_total_beta: 2 - 3; ",
-                    )
-                    print(
-                        "WARNING: Pedestal parameters are outside the range of applicability of the scaling:"
-                    )
-                    print(
-                        "triang: 0.4 - 0.6; physics_variables.kappa: 1.5 - 2.0;   plascur: 10 - 20 MA, physics_variables.rmajor: 7 - 11 m;"
-                    )
-                    print(
-                        "rminor: 2 - 3.5 m; tesep: 0 - 0.5 keV; normalised_total_beta: 2 - 3"
-                    )
-                    print(self.eped_warning())
 
             po.ovarrf(
                 self.outfile,
@@ -4113,6 +4081,14 @@ class Physics:
                 current_drive_variables.bscf_wilson,
                 "OP ",
             )
+
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Sakai)",
+                "(bscf_sakai)",
+                current_drive_variables.bscf_sakai,
+                "OP ",
+            )
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (Hender)",
@@ -4163,6 +4139,11 @@ class Physics:
                 po.ocmmnt(
                     self.outfile,
                     "  (Sauter et al bootstrap current fraction model used)",
+                )
+            elif physics_variables.ibss == 5:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Sakai et al bootstrap current fraction model used)",
                 )
 
             if physics_variables.idia == 0:
@@ -4572,7 +4553,7 @@ class Physics:
         return 1.0e6 * aibs / plascur
 
     @staticmethod
-    def bootstrap_fraction_sauter():
+    def bootstrap_fraction_sauter(plasma_profile):
         """Bootstrap current fraction from Sauter et al scaling
         author: P J Knight, CCFE, Culham Science Centre
         None
@@ -4585,38 +4566,20 @@ class Physics:
         O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
         Physics of Plasmas <B>9</B> (2002) 5140
         """
-        NR = 200
+        NR = plasma_profile.profile_size
 
-        roa = np.arange(1, NR + 1, step=1) / NR
-
+        roa = plasma_profile.neprofile.profile_x
         rho = np.sqrt(physics_variables.xarea / np.pi) * roa
+
         sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
 
-        ne = 1e-19 * np.vectorize(
-            lambda r: profiles_module.nprofile(
-                r,
-                physics_variables.rhopedn,
-                physics_variables.ne0,
-                physics_variables.neped,
-                physics_variables.nesep,
-                physics_variables.alphan,
-            )
-        )(roa)
+        ne = plasma_profile.neprofile.profile_y * 1e-19
         ni = (physics_variables.dnitot / physics_variables.dene) * ne
-        tempe = np.vectorize(
-            lambda r: profiles_module.tprofile(
-                r,
-                physics_variables.rhopedt,
-                physics_variables.te0,
-                physics_variables.teped,
-                physics_variables.tesep,
-                physics_variables.alphat,
-                physics_variables.tbeta,
-            )
-        )(roa)
-        tempi = (physics_variables.ti / physics_variables.te) * tempe
 
-        zef = np.full_like(tempi, physics_variables.zeff)  # Flat Zeff profile assumed
+        tempe = plasma_profile.teprofile.profile_y
+        tempi = (physics_variables.ti / physics_variables.te) * tempe
+        # Flat Zeff profile assumed
+        zef = np.full_like(tempi, physics_variables.zeff)
 
         # mu = 1/safety factor
         # Parabolic q profile assumed
@@ -4639,13 +4602,11 @@ class Physics:
         # Looping from 2 because dcsa etc should return 0 @ j == 1
         nr_rng = np.arange(2, NR)
         nr_rng_1 = nr_rng - 1
-
         drho = rho[nr_rng] - rho[nr_rng_1]
         da = 2 * np.pi * rho[nr_rng_1] * drho  # area of annulus
         dlogte_drho = (np.log(tempe[nr_rng]) - np.log(tempe[nr_rng_1])) / drho
         dlogti_drho = (np.log(tempi[nr_rng]) - np.log(tempi[nr_rng_1])) / drho
         dlogne_drho = (np.log(ne[nr_rng]) - np.log(ne[nr_rng_1])) / drho
-
         jboot = (
             0.5
             * (
@@ -4710,6 +4671,55 @@ class Physics:
         )  # A/m2
 
         return np.sum(da * jboot, axis=0) / physics_variables.plascur
+
+    @staticmethod
+    def bootstrap_fraction_sakai(
+        betap: float,
+        q95: float,
+        q0: float,
+        alphan: float,
+        alphat: float,
+        eps: float,
+        rli: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Sakai formula.
+
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        q95 (float): Safety factor at 95% of the plasma radius.
+        q0 (float): Safety factor at the magnetic axis.
+        alphan (float): Density profile index
+        alphat (float): Temperature profile index
+        eps (float): Inverse aspect ratio.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+        The profile assumed for the alphan anf alpat indexes is only a prabolic profile without a pedestal (L-mode).
+        The Root Mean Squared Error for the fitting database of this formula was 0.025
+        Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
+        conditions with neutral beam (NB) injection only are calculated.
+        The electron temperature and the ion temperature were assumed to be equal
+        This can be used for all apsect ratios.
+        The diamagnetic fraction is included in this formula.
+
+        References:
+        Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
+        Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
+        https://doi.org/10.1016/j.fusengdes.2019.111322.
+        """
+        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+        # So the diamganetic current should not be calculated with this. idia = 0
+        return (
+            10 ** (0.951 * eps - 0.948)
+            * betap ** (1.226 * eps + 1.584)
+            * rli ** (-0.184 - 0.282)
+            * (q95 / q0) ** (-0.042 * eps - 0.02)
+            * alphan ** (0.13 * eps + 0.05)
+            * alphat ** (0.502 * eps - 0.273)
+        )
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance

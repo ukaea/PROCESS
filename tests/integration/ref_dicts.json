@@ -1753,7 +1753,6 @@
         "energypervol": 0.0,
         "ensxpfm": 0.0,
         "epbetmax": 1.38,
-        "eped_sf": 1.0,
         "eps": 0.34399724802,
         "eps0_": 8.854188e-12,
         "epsfcn": 0.001,
@@ -2445,7 +2444,6 @@
         "idivrt": 2.0,
         "iefrf": 5.0,
         "iefrffix": 0.0,
-        "ieped": 0.0,
         "ifalphap": 1.0,
         "ife": 0.0,
         "ifedrv": 2.0,
@@ -9386,7 +9384,6 @@
         "energypervol": "input waste (heat) energy cooled per evaporated volume (J/m3)",
         "ensxpfm": "maximum stored energy in the PF circuits (MJ)",
         "epbetmax": "maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346\n \"Operation at the tokamak equilibrium poloidal beta-limit in TFTR\", 1992 Nucl. Fusion 32 1468",
-        "eped_sf": "Adjustment factor for EPED scaling to reduce pedestal temperature or pressure\n to mitigate or prevent ELMs",
         "eps": "inverse aspect ratio",
         "eps0_": "",
         "epsfcn": "epsfcn /1.0e-3/ : finite difference step length for HYBRD/VMCON derivatives",
@@ -9813,7 +9810,6 @@
         "idivrt": "number of divertors (calculated from `i_single_null`)",
         "iefrf": "Switch for current drive efficiency model:\n<ul>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
         "iefrffix": "Switch for 2nd current drive efficiency model:\n<ul>\n<li>=0 No fixed current drive</li>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
-        "ieped": "switch for scaling pedestal-top temperature with plasma parameters (issue #730):\n<ul>\n<li>=0 set pedestal-top temperature manually using teped</li>\n<li>=1 set pedestal-top temperature using EPED scaling",
         "ifalphap": "switch for fast alpha pressure calculation\n<ul>\n<li>=0 ITER physics rules (Uckan) fit</li>\n<li>=1 Modified fit (D. Ward) - better at high temperature</li>\n</ul>",
         "ife": "Switch for IFE option:\n<ul>\n<li>=0 use tokamak, RFP or stellarator model</li>\n<li>=1 use IFE model</li>\n</ul>",
         "ifedrv": "Switch for type of IFE driver:\n<ul>\n<li>=-1 use gainve, etave for gain and driver efficiency</li>\n<li>=0 use tgain, drveff for gain and driver efficiency</li>\n<li>=1 use laser driver based on SOMBRERO design</li>\n<li>=2 use heavy ion beam driver based on OSIRIS</li>\n<li>=3 Input pfusife, rrin and drveff</li>\n</ul>",
@@ -10753,7 +10749,7 @@
         "temp_margin": "temperature margin (K)",
         "ten": "density weighted average electron temperature (keV)",
         "teomp": "separatrix temperature calculated by the Kallenbach divertor model [eV] (issue #457)",
-        "teped": "electron temperature of pedestal (keV) (`ipedestal>=1, ieped=0, calculated for ieped=1`)",
+        "teped": "electron temperature of pedestal (keV) (`ipedestal>=1`)",
         "tesep": "electron temperature at separatrix (keV) (`ipedestal>=1`) calculated if reinke\n criterion is used (`icc=78`)",
         "tf_fit_t": "Dimensionless winding pack width",
         "tf_fit_y": "Ratio of peak field with ripple to nominal axisymmetric peak field",
@@ -12324,10 +12320,6 @@
             "lb": 0.01,
             "ub": 10.0
         },
-        "eped_sf": {
-            "lb": 0.0001,
-            "ub": 2.0
-        },
         "epsfcn": {
             "lb": 0.0,
             "ub": 1.0
@@ -13343,10 +13335,6 @@
         "iefrffix": {
             "lb": 0,
             "ub": 12
-        },
-        "ieped": {
-            "lb": 0,
-            "ub": 1
         },
         "ifalphap": {
             "lb": 0,
@@ -19126,8 +19114,6 @@
             "iinvqd",
             "ipedestal",
             "ips",
-            "ieped",
-            "eped_sf",
             "neped",
             "nesep",
             "alpha_crit",
@@ -20188,7 +20174,6 @@
         "emult": "real_variable",
         "enbeam": "real_variable",
         "epbetmax": "real_variable",
-        "eped_sf": "real_variable",
         "epsfcn": "real_variable",
         "epsvmc": "real_variable",
         "esbldgm3": "real_variable",
@@ -20447,7 +20432,6 @@
         "idia": "int_variable",
         "iefrf": "int_variable",
         "iefrffix": "int_variable",
-        "ieped": "int_variable",
         "ifalphap": "int_variable",
         "ife": "int_variable",
         "ifedrv": "int_variable",

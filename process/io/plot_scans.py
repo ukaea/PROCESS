@@ -339,7 +339,7 @@ def main(args=None):
     # Plot cosmetic settings
     axis_tick_size = 16
     legend_size = 12
-    axis_font_size = 18
+    axis_font_size = args.axis_font_size
     # -------------
 
     # Case of a set of 1D scans
@@ -461,6 +461,10 @@ def main(args=None):
                 sharex=True,
             )
             fig.subplots_adjust(hspace=0.0)
+        else:
+            fig, ax = plt.subplots()
+            if output_names2 != []:
+                ax2 = ax.twinx()
         for output_name in output_names:
             # reset counter for label_name
             kk = 0
@@ -485,14 +489,14 @@ def main(args=None):
 
                 # Plot the graph
                 if output_names2 != [] and not stack_plots:
-                    fig, ax = plt.subplots()
                     ax.plot(
                         scan_var_array[input_file],
                         output_arrays[input_file][output_name],
                         "--o",
-                        color="blue",
+                        color="blue" if len(input_files) == 1 else None,
                         label=labl,
                     )
+                    plt.tight_layout()
                 else:
                     if stack_plots:
                         axs[output_names.index(output_name)].plot(
@@ -502,6 +506,7 @@ def main(args=None):
                             color="blue" if output_names2 != [] else None,
                             label=labl,
                         )
+                        plt.tight_layout()
                     else:
                         plt.plot(
                             scan_var_array[input_file],
@@ -512,51 +517,65 @@ def main(args=None):
                         )
                         plt.xticks(size=axis_tick_size)
                         plt.yticks(size=axis_tick_size)
+                        plt.tight_layout()
                 if output_names2 != []:
-                    ax2 = ax.twinx()
                     ax2.plot(
                         scan_var_array[input_file],
                         output_arrays2[input_file][output_name2],
                         "--o",
-                        color="red",
+                        color="red" if len(input_files) == 1 else None,
                         label=labl,
                     )
                     ax2.set_ylabel(
-                        meta[output_name2].latex
-                        if output_name2 in meta
-                        else f"{output_name2}",
+                        (
+                            meta[output_name2].latex
+                            if output_name2 in meta
+                            else f"{output_name2}"
+                        ),
                         fontsize=axis_font_size,
-                        color="red",
+                        color="red" if len(input_files) == 1 else "black",
                     )
+                    plt.tight_layout()
             if output_names2 != []:
                 ax2.yaxis.grid(True)
                 ax.xaxis.grid(True)
                 ax.set_ylabel(
-                    meta[output_name].latex
-                    if output_name in meta
-                    else f"{output_name}",
+                    (
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
                     fontsize=axis_font_size,
-                    color="blue",
+                    color="blue" if len(input_files) == 1 else "black",
                 )
                 ax.set_xlabel(
-                    meta[scan_var_name].latex
-                    if scan_var_name in meta
-                    else f"{scan_var_name}",
+                    (
+                        meta[scan_var_name].latex
+                        if scan_var_name in meta
+                        else f"{scan_var_name}"
+                    ),
                     fontsize=axis_font_size,
                 )
+                if len(input_files) != 1:
+                    plt.legend(loc="best", fontsize=legend_size)
+                plt.tight_layout()
             elif stack_plots:
                 axs[output_names.index(output_name)].minorticks_on()
                 axs[output_names.index(output_name)].grid(True)
                 axs[output_names.index(output_name)].set_ylabel(
-                    meta[output_name].latex
-                    if output_name in meta
-                    else f"{output_name}",
+                    (
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
                 )
 
                 plt.xlabel(
-                    meta[scan_var_name].latex
-                    if scan_var_name in meta
-                    else f"{scan_var_name}",
+                    (
+                        meta[scan_var_name].latex
+                        if scan_var_name in meta
+                        else f"{scan_var_name}"
+                    ),
                     fontsize=axis_font_size,
                 )
                 if len(input_files) > 1:
@@ -587,16 +606,20 @@ def main(args=None):
             else:
                 plt.grid(True)
                 plt.ylabel(
-                    meta[output_name].latex
-                    if output_name in meta
-                    else f"{output_name}",
+                    (
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
                     fontsize=axis_font_size,
                     color="red" if output_names2 != [] else "black",
                 )
                 plt.xlabel(
-                    meta[scan_var_name].latex
-                    if scan_var_name in meta
-                    else f"{scan_var_name}",
+                    (
+                        meta[scan_var_name].latex
+                        if scan_var_name in meta
+                        else f"{scan_var_name}"
+                    ),
                     fontsize=axis_font_size,
                 )
                 plt.title(
@@ -626,22 +649,26 @@ def main(args=None):
                 )
             elif stack_plots and output_names[-1] == output_name:
                 plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_"
-                    + "_vs_".join(output_names)
-                    + f".{save_format}",
+                    (
+                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f"_vs_{output_name2}"
+                        if output_names2 != []
+                        else f"{args.outputdir}/scan_{scan_var_name}_vs_"
+                        + "_vs_".join(output_names)
+                        + f".{save_format}"
+                    ),
                     dpi=300,
                 )
 
             else:
                 plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f".{save_format}",
+                    (
+                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f"_vs_{output_name2}"
+                        if output_names2 != []
+                        else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f".{save_format}"
+                    ),
                     dpi=300,
                 )
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
@@ -705,9 +732,11 @@ def main(args=None):
                     )  # is the separte lists in the list
                 for i in contour_conv_ij:
                     output_contour_z[((i - 1) // n_scan_2)][
-                        ((i - 1) % n_scan_2)
-                        if ((i - 1) // n_scan_2) % 2 == 0
-                        else (-((i - 1) % n_scan_2) - 1)
+                        (
+                            ((i - 1) % n_scan_2)
+                            if ((i - 1) // n_scan_2) % 2 == 0
+                            else (-((i - 1) % n_scan_2) - 1)
+                        )
                     ] = m_file.data[output_name].get_scan(i)
 
                 flat_output_z = output_contour_z.flatten()
@@ -724,21 +753,27 @@ def main(args=None):
                 )
 
                 plt.colorbar().set_label(
-                    label=meta[output_name].latex
-                    if output_name in meta
-                    else f"{output_name}",
+                    label=(
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
                     size=axis_font_size,
                 )
                 plt.ylabel(
-                    meta[scan_var_name].latex
-                    if scan_var_name in meta
-                    else f"{scan_var_name}",
+                    (
+                        meta[scan_var_name].latex
+                        if scan_var_name in meta
+                        else f"{scan_var_name}"
+                    ),
                     fontsize=axis_font_size,
                 )
                 plt.xlabel(
-                    meta[scan_2_var_name].latex
-                    if scan_2_var_name in meta
-                    else f"{scan_2_var_name}",
+                    (
+                        meta[scan_2_var_name].latex
+                        if scan_2_var_name in meta
+                        else f"{scan_2_var_name}"
+                    ),
                     fontsize=axis_font_size,
                 )
                 plt.tight_layout()
@@ -777,15 +812,19 @@ def main(args=None):
 
                 plt.grid(True)
                 plt.ylabel(
-                    meta[output_name].latex
-                    if output_name in meta
-                    else f"{output_name}",
+                    (
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
                     fontsize=axis_font_size,
                 )
                 plt.xlabel(
-                    meta[scan_2_var_name].latex
-                    if scan_2_var_name in meta
-                    else f"{scan_2_var_name}",
+                    (
+                        meta[scan_2_var_name].latex
+                        if scan_2_var_name in meta
+                        else f"{scan_2_var_name}"
+                    ),
                     fontsize=axis_font_size,
                 )
                 plt.legend(loc="best", fontsize=legend_size)

@@ -34,6 +34,9 @@ MACRO(DICTS)
 
     ADD_CUSTOM_COMMAND(OUTPUT ${DICTS_OUTPUT_FILE} ${DICTS_PYTHON_OUT}
 
+        # The dicts import process, install it (it will be installed again later)
+        COMMAND ${Python3_EXECUTABLE} -m pip install ${CMAKE_SOURCE_DIR}
+
         # The create_dicts script needs to know the Fortran source dir, the pickled
         # Ford project object and the dicts.json file to output to
         COMMAND ${Python3_EXECUTABLE} ${CREATE_DICTS_SCRIPT} ${PROCESS_SRC_DIR} ${FORD_OUTPUT}

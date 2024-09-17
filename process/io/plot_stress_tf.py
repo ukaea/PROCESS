@@ -16,12 +16,14 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 matplotlib.use("Agg")
 
 
-if __name__ == "__main__":
+def main(args=None):
+
     # PARSING USER PARAMETERS
     # please execute 'python plot_stress_tf.py -h' for input information
     # Option definition
@@ -67,7 +69,7 @@ if __name__ == "__main__":
 
     # Option argument extraction
     # --------------------------
-    args = parser.parse_args()
+    args = parser.parse_args(args)
     plot_selection = str(args.plot_selec)
     save_format = str(args.save_format)
     axis_font_size = int(args.axis_font_size)
@@ -103,8 +105,6 @@ if __name__ == "__main__":
     radial_displacement = list()
 
     # Physical quantity : WP stress
-    wp_radial_stress = list()
-    wp_toroidal_stress = list()
     wp_vertical_stress = list()
 
     # Physical quantity : values at layer border
@@ -444,7 +444,7 @@ if __name__ == "__main__":
             )
         print("")
 
-    outdir = str("SIG_TF_plots")
+    outdir = Path.cwd()
     if not os.path.isdir(outdir):
         os.mkdir(outdir)
 
@@ -770,3 +770,7 @@ if __name__ == "__main__":
         plt.savefig("{}/displacement.{}".format(outdir, save_format))
         plt.clf()
         plt.cla()
+
+
+if __name__ == "__main__":
+    main()

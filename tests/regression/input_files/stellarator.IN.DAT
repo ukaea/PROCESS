@@ -115,7 +115,7 @@ bigqmin = 1 * Minimal BigQ
 powfmax = 500. *Maximal Fusion Power
 fpnetel = 1. *f-value for net electric power
 
-dene = 2.554e20 *Electron density (/m3)
+dene = 2e20 *Electron density (/m3)
 *hfact = 1.0 *H-factor on energy confinement times
 
 alphan = 0.35 *Density profile index
@@ -132,7 +132,7 @@ iradloss = 1   *Switch for radiation loss term usage in power balance (1: Total 
 isc = 38       *Switch for energy confinement time scaling law (38: ISS04, 49: ISS04-Gyro-Bohm)
 kappa = 1.001  *Plasma separatrix elongation
 ssync = 0.6    *Synchrotron wall reflectivity factor
-te = 8.685715225897034 *Volume averaged electron temperature (keV)
+te = 6 *Volume averaged electron temperature (keV)
 tratio = 0.95 *Ion temperature / electron temperature
 *zfear = 0 *High-Z impurity switch (0: Iron)
 

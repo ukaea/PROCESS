@@ -255,10 +255,10 @@ subroutine check
     use numerics, only: ixc, icc, ioptimz, neqns, nineqns, nvar, boundl, &
         boundu
     use pfcoil_variables, only: ipfres, ngrp, pfclres, ipfloc, ncls, isumatoh
-    use physics_variables, only: aspect, eped_sf, fdeut, fgwped, fhe3, &
-        fgwsep, ftrit, ibss, i_single_null, icurr, ieped, idivrt, ishape, &
+    use physics_variables, only: aspect, fdeut, fgwped, fhe3, &
+        fgwsep, ftrit, ibss, i_single_null, icurr, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
-        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar
+        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar, idia
     use pulse_variables, only: lpulse
     use reinke_variables, only: fzactual, impvardiv
     use tfcoil_variables, only: casthi, casthi_is_fraction, casths, i_tf_sup, &
@@ -440,12 +440,6 @@ subroutine check
      ! Cannot use Psep/R and PsepB/qAR limits at the same time
      if(any(icc == 68) .and. any(icc == 56)) then
         call report_error(178)
-     endif
-
-     if(ieped > 0) then
-        if(eped_sf > 1.0) then
-           call report_error(214)
-        endif
      endif
 
      if ((any(ixc==145)) .and. (boundl(145) < fgwsep)) then  !if lower bound of fgwped < fgwsep
@@ -832,6 +826,10 @@ subroutine check
 
     if ( i_tf_wp_geom /= 0  .and. i_tf_turns_integer == 1 ) then
         call report_error(283)
+    end if
+
+    if ( ibss == 5  .and. idia /= 0 ) then
+        call report_error(284)
     end if
 
     ! Setting t_cable_tf_is_input to true if t_cable_tf is an input

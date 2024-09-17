@@ -256,7 +256,7 @@ contains
       ucblli, ucpfcb, tlife, ipnet, fcdfuel, ucbus, ucpfb, uchts, &
       maintenance_fwbs, fwbs_prob_fail, uclh, ucblss, ucblvd, ucsc, ucturb, &
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
-      startupratio, tmain, u_unplanned_cp
+      startupratio, tmain, u_unplanned_cp, supercond_cost_model
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
       ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
@@ -303,15 +303,15 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, cvol, fdeut, ffwal, eped_sf, iculbl, itartpf, ilhthresh, &
-      fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, csawth, dene, &
+      rhopedt, cvol, fdeut, ffwal, iculbl, itartpf, ilhthresh, &
+      fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
       ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
-      teped, fhe3, iwalld, gamma, falpha, fgwped, gtscale, tbeta, ibss, &
+      teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, ibss, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
-      tauratio, idensl, ieped, bt, iscrp, ipnlaws, betalim, betalim_lower, &
+      tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       idia, ips, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
@@ -549,7 +549,10 @@ contains
        case ('coreradiationfraction')
           call parse_real_variable('coreradiationfraction', coreradiationfraction, 0.0D0, 1.0D0, &
                'Fraction of core radiation subtracted from P_L')
-       case ('csawth')
+            case ('c_beta')
+               call parse_real_variable('c_beta', c_beta, 0.0D0, 1.0D0, &
+                    'Destabalisation parameter for iprofile=6')
+            case ('csawth')
           call parse_real_variable('csawth', csawth, 0.0D0, 10.0D0, &
                'Coefficient for sawteeth effects')
        case ('cvol')
@@ -567,9 +570,6 @@ contains
        case ('epbetmax')
           call parse_real_variable('epbetmax', epbetmax, 0.01D0, 10.0D0, &
                'Max epsilon*beta value')
-       case ('eped_sf')
-          call parse_real_variable('eped_sf', eped_sf, 0.0001D0, 2.0D0, &
-               'Scaling factor for EPED pedestal model')
        case ('falpha')
           call parse_real_variable('falpha', falpha, 0.0D0, 1.0D0, &
                'Fraction of alpha power deposited to plasma')
@@ -612,9 +612,6 @@ contains
        case ('gamma')
           call parse_real_variable('gamma', gamma, 0.1D0, 1.0D0, &
                'Ejima coefficient for resistive V-s formula')
-       case ('gtscale')
-          call parse_int_variable('gtscale', gtscale, 0, 2, &
-               'Flag to scale beta coefficient with R/a')
        case ('hfact')
           call parse_real_variable('hfact', hfact, 0.01D0, 10.0D0, &
                'Energy confinement time H factor')
@@ -622,7 +619,7 @@ contains
           call parse_real_variable('taumax', taumax, 0.1D0, 100.0D0, &
                'Maximum allowed energy confinement time (s)')
        case ('ibss')
-          call parse_int_variable('ibss', ibss, 1, 4, &
+          call parse_int_variable('ibss', ibss, 1, 5, &
                'Switch for bootstrap scaling')
        case ('iculbl')
           call parse_int_variable('iculbl', iculbl, 0, 3, &
@@ -653,7 +650,7 @@ contains
           call parse_int_variable('ipedestal', ipedestal, 0, 1, &
                'Switch for plasma profile type')
        case ('iprofile')
-          call parse_int_variable('iprofile', iprofile, 0, 1, &
+          call parse_int_variable('iprofile', iprofile, 0, 6, &
                'Switch for current profile consistency')
        case ('ips')
           call parse_int_variable('ips', ips, 0, 1, &
@@ -664,10 +661,6 @@ contains
        case ('isc')
           call parse_int_variable('isc', isc, 1, ipnlaws, &
                'Switch for confinement scaling law')
-       case ('ieped')
-          call parse_int_variable('ieped', ieped, 0, 1, &
-               'Switch for scaling pedestal-top temperature with plasma parameters')
-
        case ('iscrp')
           call parse_int_variable('iscrp', iscrp, 0, 1, &
                'Switch for scrapeoff width')
@@ -1861,6 +1854,9 @@ contains
        case ('isumatpf')
           call parse_int_variable('isumatpf', isumatpf, 1, 9, &
                'PF coil superconductor material')
+       case ('supercond_cost_model')
+          call parse_int_variable('supercond_cost_model', supercond_cost_model, 0, 1, &
+               'Superconductor cost model')
        case ('i_pf_current')
           call parse_int_variable('i_pf_current', i_pf_current, 0, 2, &
                'Switch for controlling the current of the PF coils')

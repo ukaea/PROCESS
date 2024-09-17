@@ -205,4 +205,4 @@ Scan variables should not be confused with iteration variables.
 
 ## Examples
 
-Example `IN.DAT` files are available in the repository in the folder `/tests/regression/scenarios/`.
+Example `IN.DAT` files are available in the repository in the folder `/tests/regression/input_files/`.

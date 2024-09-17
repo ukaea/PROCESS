@@ -350,33 +350,33 @@ class BootstrapFractionSauterParam(NamedTuple):
     "bootstrapfractionsauterparam",
     (
         BootstrapFractionSauterParam(
-            dnitot=6.6125550702454276e19,
+            dnitot=7.1297522422781575e19,
             rminor=2.6666666666666665,
             tesep=0.10000000000000001,
-            ti=12,
+            ti=12.570861186498382,
             triang=0.5,
             q0=1,
             afuel=2.5,
-            zeff=2.0909945616489103,
-            rhopedn=0.94000000000000006,
-            bt=5.7000000000000002,
-            plascur=18398455.678867526,
+            zeff=2.5211399464385624,
+            rhopedn=0.9400000000000001,
+            bt=5.326133750416047,
+            plascur=16528278.760008096,
             xarea=38.39822223637151,
             fhe3=0,
             teped=5.5,
-            dene=7.5e19,
-            te=12,
+            dene=8.016748468651018e19,
+            te=12.570861186498382,
             rmajor=8,
             q=3.5,
-            nesep=4.1177885154594193e19,
-            te0=24.402321098330372,
-            neped=7.000240476281013e19,
+            nesep=3.6992211545476006e19,
+            te0=25.986118047669795,
+            neped=6.2886759627309195e19,
             tbeta=2,
-            ne0=8.515060981068918e19,
+            ne0=1.054474759840606e20,
             alphan=1,
-            rhopedt=0.94000000000000006,
+            rhopedt=0.9400000000000001,
             alphat=1.45,
-            expected_bfs=0.27635918746616817,
+            expected_bfs=0.4110838247346975,
         ),
     ),
 )
@@ -462,10 +462,94 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(
         physics_variables, "alphat", bootstrapfractionsauterparam.alphat
     )
-
-    bfs = physics.bootstrap_fraction_sauter()
+    physics.plasma_profile.run()
+    bfs = physics.bootstrap_fraction_sauter(physics.plasma_profile)
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
+
+
+class BootstrapFractionSakaiParam(NamedTuple):
+    betap: Any = None
+
+    q95: Any = None
+
+    q0: Any = None
+
+    alphan: Any = None
+
+    alphat: Any = None
+
+    eps: Any = None
+
+    rli: Any = None
+
+    expected_bfs: Any = None
+
+
+@pytest.mark.parametrize(
+    "bootstrapfractionsakaiparam",
+    (
+        BootstrapFractionSakaiParam(
+            betap=1.3184383457774960,
+            q95=3.5151046634673557,
+            q0=1.0,
+            alphan=1.0,
+            alphat=1.45,
+            eps=1 / 3,
+            rli=1.2098126022585098,
+            expected_bfs=0.34204201506155418,
+        ),
+        BootstrapFractionSakaiParam(
+            betap=1.1701245502231756,
+            q95=5.1746754543339177,
+            q0=2.0,
+            alphan=0.9,
+            alphat=1.3999999999999999,
+            eps=1 / 1.8,
+            rli=0.3,
+            expected_bfs=0.90349498124262029,
+        ),
+    ),
+)
+def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, physics):
+    """
+    Automatically generated Regression Unit Test for bootstrap_fraction_sakai.
+
+    This test was generated using data from tests/regression/input_files/large_tokamak.IN.DAT.
+    and tests/regression/input_files/st_regression.IN.DAT.
+
+    :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
+    :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+
+    monkeypatch.setattr(physics_variables, "betap", bootstrapfractionsakaiparam.betap)
+
+    monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsakaiparam.q95)
+
+    monkeypatch.setattr(physics_variables, "q0", bootstrapfractionsakaiparam.q0)
+
+    monkeypatch.setattr(physics_variables, "alphan", bootstrapfractionsakaiparam.alphan)
+
+    monkeypatch.setattr(physics_variables, "alphat", bootstrapfractionsakaiparam.alphat)
+
+    monkeypatch.setattr(physics_variables, "eps", bootstrapfractionsakaiparam.eps)
+
+    monkeypatch.setattr(physics_variables, "rli", bootstrapfractionsakaiparam.rli)
+
+    bfs = physics.bootstrap_fraction_sakai(
+        betap=bootstrapfractionsakaiparam.betap,
+        q95=bootstrapfractionsakaiparam.q95,
+        q0=bootstrapfractionsakaiparam.q0,
+        alphan=bootstrapfractionsakaiparam.alphan,
+        alphat=bootstrapfractionsakaiparam.alphat,
+        eps=bootstrapfractionsakaiparam.eps,
+        rli=bootstrapfractionsakaiparam.rli,
+    )
+
+    assert bfs == pytest.approx(bootstrapfractionsakaiparam.expected_bfs)
 
 
 class CulcurParam(NamedTuple):

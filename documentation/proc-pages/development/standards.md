@@ -117,7 +117,7 @@ ii
 | `sig_tf_r` | TF radial stress  | Pa |
 | `` |  |  |
 
-Please see issue 939 to discuss new conventions.
+Please see issue 940 <a href = "https://github.com/ukaea/PROCESS/issues/940"> to discuss new conventions.
 
 # Code Documentation Using FORD
 

@@ -116,8 +116,8 @@ class Build:
 
         # If build_variables.vgap /= 0 use the value set by the user.
 
-        # Height to inside edge of TF coil
-        # Rem SK : definition only valid for double null#
+        # Height to inside edge of TF coil. TF coils are assumed to be symmetrical.
+        # Therefore this applies to single and double null cases.
         build_variables.hmax = (
             physics_variables.rminor * physics_variables.kappa
             + build_variables.vgap

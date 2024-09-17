@@ -400,8 +400,7 @@
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.3278E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
- Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01    
- Pedestal_scaling_switch_________________________________________________ (ieped)_______________________              0    
+ Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.7223E+19    

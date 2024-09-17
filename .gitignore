@@ -3,7 +3,6 @@
 *.html
 *.x
 *.mod
-*.exe
 *.aux
 *.log
 *.lof
@@ -28,24 +27,16 @@ site/*
 autodoc
 *.pro
 process_dicts.py
-process_dicts.py_prev
 process_dicts.json
-gui_dicts.py
-gui_dicts.py_prev
-rootdir.py
 VFILE.DAT
 MFILE.DAT
 OUT.DAT
-SIG_TF.json
 tag.num
 tests.x
 *.xml
 untracked.info
 com.msg
-Katy_test/*
-KatyTest/*
 *~
-/utilities/run_process.conf
 *.fdb_latexmk
 *.fls
 *.gz
@@ -60,6 +51,7 @@ documentation/proc-pages/io/vardes.md
 lcov_results/
 env/
 .venv
+*.DAT
 !scenario_examples/*/*.DAT
 !tests/regression/input_files/*.IN.DAT
 !scenario_examples/*/*.pdf
@@ -69,3 +61,4 @@ REBCO_JC.DAT
 python_modules.txt
 quench_data.DAT
 env-fork
+*SIG_TF.json

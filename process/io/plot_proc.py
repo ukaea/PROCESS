@@ -15,11 +15,11 @@ Revised by Michael Kovari, 7/1/2016
 """
 
 import os
-import sys
 import argparse
 from argparse import RawTextHelpFormatter
 import matplotlib
 import matplotlib.pyplot as plt
+from importlib import resources
 from matplotlib.patches import Rectangle
 from matplotlib.patches import Circle
 import matplotlib.backends.backend_pdf as bpdf
@@ -58,11 +58,6 @@ from process.io.python_fortran_dicts import get_dicts
 if os.name == "posix" and "DISPLAY" not in os.environ:
     matplotlib.use("Agg")
 matplotlib.rcParams["figure.max_open_warning"] = 40
-
-if sys.version_info >= (3, 7):
-    from importlib import resources
-else:
-    import importlib_resources as resources
 
 
 def parse_args(args):
@@ -1326,17 +1321,21 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
         )
         # Plot blanket
         axis.plot(bg_double_null.rs[0], bg_double_null.zs[0], color="black", lw=thin)
-        axis.plot(bg_double_null.rs[1], bg_double_null.zs[1], color="black", lw=thin)
         axis.fill(
             bg_double_null.rs[0],
             bg_double_null.zs[0],
             color=BLANKET_COLOUR[colour_scheme - 1],
         )
-        axis.fill(
-            bg_double_null.rs[1],
-            bg_double_null.zs[1],
-            color=BLANKET_COLOUR[colour_scheme - 1],
-        )
+        if blnkith > 0.0:
+            # only plot inboard blanket if inboard blanket thickness > 0
+            axis.plot(
+                bg_double_null.rs[1], bg_double_null.zs[1], color="black", lw=thin
+            )
+            axis.fill(
+                bg_double_null.rs[1],
+                bg_double_null.zs[1],
+                color=BLANKET_COLOUR[colour_scheme - 1],
+            )
 
 
 def plot_firstwall(axis, mfile_data, scan, colour_scheme):
@@ -1417,18 +1416,18 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             fwoth=fwoth,
             tfwvt=tfwvt,
         )
-        # Plot blanket
+        # Plot first wall
         axis.plot(fwg_double_null.rs[0], fwg_double_null.zs[0], color="black", lw=thin)
         axis.plot(fwg_double_null.rs[1], fwg_double_null.zs[1], color="black", lw=thin)
         axis.fill(
             fwg_double_null.rs[0],
             fwg_double_null.zs[0],
-            color=BLANKET_COLOUR[colour_scheme - 1],
+            color=FIRSTWALL_COLOUR[colour_scheme - 1],
         )
         axis.fill(
             fwg_double_null.rs[1],
             fwg_double_null.zs[1],
-            color=BLANKET_COLOUR[colour_scheme - 1],
+            color=FIRSTWALL_COLOUR[colour_scheme - 1],
         )
 
 
@@ -1660,6 +1659,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
+                label=f"Case: \n{nose_thickness:.4f} m nose thickness \n{side_thickness:.4f} m sidewall thickness \n$\Delta$R = {tf_thickness:.4f} m \n ",  # noqa: W605
                 label=f"Case: \n{nose_thickness:.4f} m nose thickness \n{side_thickness:.4f} m sidewall thickness \n$\Delta$R = {tf_thickness:.4f} m \n ",  # noqa: W605
             )
             # Lower main
@@ -2060,7 +2060,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
 
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
-    if iohcl == 0:
+    if iohcl == 1:
         noc = number_of_coils - 1
     else:
         noc = number_of_coils

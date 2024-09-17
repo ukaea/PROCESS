@@ -2,6 +2,7 @@
 
 from process import main
 from shutil import copy
+import json
 
 
 def test_single_run(temp_data):
@@ -79,3 +80,41 @@ def test_plot_proc(temp_data, mfile_name):
 
     # Assert a pdf has been created
     assert len(list(temp_data.glob("*.pdf")))
+
+
+def test_single_run_with_mfilejson(temp_data):
+    """Test a SingleRun Process run with CLI args including --mfilejson.
+
+    This will check that the process runs without throwing an exception
+    and a JSON output is produced in the working directory, then checks if
+    the JSON is valid and contains expected keys.
+
+    :param temp_data: temporary dir containing data files
+    :type temp_data: Path
+    """
+    # Set input file path in temp_data dir.
+    input_path = temp_data / "large_tokamak_once_through.IN.DAT"
+    mfile_path = temp_data / "large_tokamak_once_through.MFILE.DAT"
+    input_file = str(input_path.resolve())
+    mfile = str(mfile_path.resolve())
+
+    # Run a SingleRun with the --mfilejson flag.
+    main.main(args=["-i", input_file, "--mfilejson", "-m", mfile])
+
+    # Assert that 'large_tokamak_once_through.MFILE.DAT.json' has been produced in the temp_data directory.
+    expected_json = temp_data / "large_tokamak_once_through.MFILE.DAT.json"
+    assert (
+        expected_json.exists()
+    ), "large_tokamak_once_through.MFILE.DAT.json was not found"
+
+    # Check if the file contains valid JSON.
+    try:
+        with open(expected_json, "r") as f:
+            json_data = json.load(f)
+    except json.JSONDecodeError:
+        assert False, "The JSON file is not valid JSON"
+
+    # Check if the JSON contains expected outputs.
+    expected_keys = ["rmajor", "bt", "beta"]
+    for key in expected_keys:
+        assert key in json_data, f"Expected key '{key}' not found in the JSON file"

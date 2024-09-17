@@ -111,6 +111,8 @@ OBS_VARS = {
     "idhe3": "fhe3",
     "blnktth": None,
     "theat": "t_fusion_ramp",
+    "ieped": None,
+    "eped_sf": None,
 }
 
 OBS_VARS_HELP = {

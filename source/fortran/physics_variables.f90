@@ -27,7 +27,7 @@ module physics_variables
   !! average mass of all ions (amu)
 
   real(dp) :: alphaj
-  !! current profile index (calculated from q_0, q if `iprofile=1`)
+  !! current profile index (calculated from q_0 and q if `iprofile=1`)
 
   real(dp) :: alphan
   !! density profile index
@@ -89,6 +89,9 @@ module physics_variables
   real(dp) :: bvert
   !! vertical field at plasma (T)
 
+  real(dp) :: c_beta
+  !! Destabalisation parameter for iprofile=6 beta limit
+
   real(dp) :: csawth
   !! coeff. for sawteeth effects on burn V-s requirement
 
@@ -124,8 +127,7 @@ module physics_variables
   !! hot beam ion density from calculation (/m3)
 
   real(dp) :: dnbeta
-  !! Troyon-like coefficient for beta scaling calculated
-  !! as 4*rli if `iprofile=1` (see also gtscale option)
+  !! Troyon-like coefficient for beta scaling
 
   real(dp) :: dnelimt
   !! density limit (/m3)
@@ -231,13 +233,6 @@ module physics_variables
   real(dp) :: gammaft
   !! ratio of (fast alpha + neutral beam beta) to thermal beta
 
-  integer :: gtscale
-  !! switch for a/R scaling of dnbeta (`iprofile=0` only):
-  !!
-  !! - =0 do not scale dnbeta with eps
-  !! - =1 scale dnbeta with eps, original scaling
-  !! - =2 scale dnbeta with eps, Menard scaling
-
   real(dp), dimension(ipnlaws) :: hfac
   !! H factors for an ignited plasma for each energy confinement time scaling law
 
@@ -254,6 +249,7 @@ module physics_variables
   !! - =2 for Nevins et al general scaling
   !! - =3 for Wilson et al numerical scaling
   !! - =4 for Sauter et al scaling
+  !! - =5 for Sakai et al scaling
 
   integer :: iculbl
   !! switch for beta limit scaling (`constraint equation 24`)
@@ -329,16 +325,6 @@ module physics_variables
   !! - =0 Do not calculate
   !! - =1 Use SCENE scaling
 
-  integer :: ieped
-  !! switch for scaling pedestal-top temperature with plasma parameters (issue #730):
-  !!
-  !! - =0 set pedestal-top temperature manually using teped
-  !! - =1 set pedestal-top temperature using EPED scaling
-
-  real(dp) :: eped_sf
-  !! Adjustment factor for EPED scaling to reduce pedestal temperature or pressure
-  !! to mitigate or prevent ELMs
-
   real(dp) :: neped
   !! electron density of pedestal [m-3] (`ipedestal==1)
 
@@ -370,7 +356,7 @@ module physics_variables
   !! temperature profile index beta  (`ipedestal==1)
 
   real(dp) :: teped
-  !! electron temperature of pedestal (keV) (`ipedestal==1, ieped=0, calculated for ieped=1`)
+  !! electron temperature of pedestal (keV) (`ipedestal==1`)
 
   real(dp) :: tesep
   !! electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
@@ -379,8 +365,13 @@ module physics_variables
   integer :: iprofile
   !! switch for current profile consistency:
   !!
-  !! - =0 use input values for alphaj, rli, dnbeta (but see gtscale option)
+  !! - =0 use input values for alphaj, rli, dnbeta
   !! - =1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+  !! - =2 use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling)
+  !! - =3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
+  !! - =4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
+  !! - =5 use input value for alphaj.  Set rli and dnbeta from Menard scaling
+  !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and dnbeta from Tholerus
 
   integer :: iradloss
   !! switch for radiation loss term usage in power balance (see User Guide):
@@ -913,6 +904,7 @@ module physics_variables
     burnup = 0.0D0
     burnup_in = 0.0D0
     bvert = 0.0D0
+    c_beta = 0.5D0
     csawth = 1.0D0
     cvol = 1.0D0
     cwrmax = 1.35D0
@@ -954,7 +946,6 @@ module physics_variables
     fvsbrnni = 1.0D0
     gamma = 0.4D0
     gammaft = 0.0D0
-    gtscale = 0
     hfac = 0.0D0
     hfact = 1.0D0
     taumax = 10.0D0
@@ -969,8 +960,6 @@ module physics_variables
     iinvqd = 1
     ipedestal = 1
     ips = 0
-    ieped = 0
-    eped_sf = 1.0D0
     neped = 4.0D19
     nesep = 3.0D19
     alpha_crit = 0.0D0

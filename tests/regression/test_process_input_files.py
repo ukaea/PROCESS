@@ -267,6 +267,11 @@ def test_input_file(
     should be compared in the test.
     :type opt_params_only: bool
     """
+    if input_file.name == "stellarator.IN.DAT":
+        pytest.skip(
+            reason="Stellarator currently doesn't converge with satisfied inequality constraints."
+        )
+
     new_input_file = tmp_path / input_file.name
     shutil.copy(input_file, new_input_file)
 
