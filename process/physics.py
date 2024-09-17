@@ -240,7 +240,7 @@ def calculate_current_coefficient_ipdg89(eps: float, kappa95: float, triang95: f
 
 
 @nb.jit(nopython=True, cache=True)
-def conhas(
+def calculate_current_coefficient_hastie(
     alphaj: float,
     alphap: float,
     bt: float,
@@ -251,7 +251,7 @@ def conhas(
     rmu0: float,
 ) -> float:
     """
-    Routine to calculate the F coefficient used for scaling the plasma current.
+    Routine to calculate the f_q coefficient for the Connor-Hastie model used for scaling the plasma current.
 
     Parameters:
     - alphaj: float, the current profile index
@@ -267,8 +267,12 @@ def conhas(
     - float, the F coefficient
 
     This routine calculates the F coefficient used for scaling the plasma current,
-    using the Connor-Hastie scaling given in AEA FUS 172: Physics Assessment for
-    the European Reactor Study.
+    using the Connor-Hastie scaling
+
+    Reference:
+    - J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
+      https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
+    - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     # Exponent in Connor-Hastie current profile - matching total
     # current gives the following trivial relation
@@ -2733,7 +2737,7 @@ class Physics:
         # Connor-Hastie asymptotically-correct expression
         elif i_plasma_current == 7:
             # N.B. If iprofile=1, alphaj will be wrong during the first call (only)
-            fq = conhas(alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0)
+            fq = calculate_current_coefficient_hastie(alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0)
 
         # Sauter scaling allowing negative triangularity [FED May 2016]
         elif i_plasma_current == 8:

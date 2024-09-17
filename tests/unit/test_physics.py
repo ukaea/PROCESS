@@ -18,7 +18,7 @@ from process.physics import (
     ps_fraction_scene,
     calculate_plasma_current_peng,
     culblm,
-    conhas,
+    calculate_current_coefficient_hastie,
     vscalc,
     rether,
 )
@@ -808,7 +808,7 @@ def test_culblm():
 
 
 def test_conhas():
-    assert conhas(5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0) == pytest.approx(
+    assert calculate_current_coefficient_hastie(5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0) == pytest.approx(
         2.518876726889116
     )
 

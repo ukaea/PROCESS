@@ -146,7 +146,7 @@ $$
 ------------------
 
 
-#### Connor-Hastie model 
+#### Connor-Hastie model | `calculate_current_coefficient_hastie()`
 
 Switch value: `i_plasma_current = 7` [^7] [^8]
 
@@ -157,9 +157,6 @@ Asymptotically correct in the range of:
 - $(\kappa - 1) \ll 1$
 
 Assumes a parabolic profile as seen [here](../profiles/plasma_profiles.md#parabolic-profile-l-mode)
-
-Ran by the `conhas()`
-function
 
 $$
 f_q = \left(\frac{(\kappa+1)^2}{2}\right)\left(1+\left(\frac{\kappa+1}{2}\right)^2\epsilon^2+\frac{1}{2}\Delta^{\prime 2}+2\frac{\Delta}{R_0} \\
