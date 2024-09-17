@@ -39,7 +39,7 @@ the switch `i_plasma_current`, as follows:
 
 ------------
 
-#### Peng analytic fit
+#### Peng analytic fit | `calculate_current_coefficient_peng()`
 
 Switch value: `i_plasma_current = 1`
 

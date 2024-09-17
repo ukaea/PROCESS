@@ -143,6 +143,20 @@ def calculate_poloidal_field(
         return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
+def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
+    """
+    Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
+
+    Parameters:
+    - eps: float, plasma inverse aspect ratio
+    - sf: float, shaping factor calculated in the poloidal perimeter function
+
+    References:
+    - None
+    """
+    return (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
+
+
 @nb.jit(nopython=True, cache=True)
 def calculate_plasma_current_peng(
     qbar: float,
@@ -2656,7 +2670,7 @@ class Physics:
 
         # Peng analytical fit
         if i_plasma_current == 1:
-            fq = (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
+            fq = calculate_current_coefficient_peng(eps, sf)
 
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:
