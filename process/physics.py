@@ -29,6 +29,139 @@ from process.fortran import (
     process_output as po,
 )
 
+
+@nb.jit(nopython=True, cache=True)
+def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
+    """Routine to find the equilibration power between the
+    ions and electrons
+    author: P J Knight, CCFE, Culham Science Centre
+    alphan : input real :  density profile index
+    alphat : input real :  temperature profile index
+    dene   : input real :  electron density (/m3)
+    dlamie : input real :  ion-electron coulomb logarithm
+    te     : input real :  electron temperature (keV)
+    ti     : input real :  ion temperature (keV)
+    zeffai : input real :  mass weighted plasma effective charge
+    piepv  : output real : ion/electron equilibration power (MW/m3)
+    This routine calculates the equilibration power between the
+    ions and electrons.
+    Unknown origin
+    """
+    profie = (1.0 + alphan) ** 2 / (
+        (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
+    )
+    conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
+
+    return conie * (ti - te) / (te**1.5)
+
+
+@nb.jit(nopython=True, cache=True)
+def vscalc(
+    csawth,
+    eps,
+    facoh,
+    gamma,
+    kappa,
+    rmajor,
+    rplas,
+    plascur,
+    t_fusion_ramp,
+    tburn,
+    rli,
+    rmu0,
+):
+    """Volt-second requirements
+    author: P J Knight, CCFE, Culham Science Centre
+    csawth : input real :  coefficient for sawteeth effects
+    eps    : input real :  inverse aspect ratio
+    facoh  : input real :  fraction of plasma current produced inductively
+    gamma  : input real :  Ejima coeff for resistive start-up V-s component
+    kappa  : input real :  plasma elongation
+    plascur: input real :  plasma current (A)
+    rli    : input real :  plasma normalised inductivity
+    rmajor : input real :  plasma major radius (m)
+    rplas  : input real :  plasma resistance (ohm)
+    t_fusion_ramp  : input real :  heating time (s)
+    tburn  : input real :  burn time (s)
+    phiint : output real : internal plasma volt-seconds (Wb)
+    rlp    : output real : plasma inductance (H)
+    vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
+    vsind  : output real : internal and external plasma inductance V-s (Wb)
+    vsres  : output real : resistive losses in start-up volt-seconds (Wb)
+    vsstt  : output real : total volt-seconds needed (Wb)
+    This subroutine calculates the volt-second requirements and some
+    other related items.
+    """
+    # Internal inductance
+
+    rlpint = rmu0 * rmajor * rli / 2.0
+    phiint = rlpint * plascur
+
+    # Start-up resistive component
+    # Uses ITER formula without the 10 V-s add-on
+
+    vsres = gamma * rmu0 * plascur * rmajor
+
+    # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
+    # fit for external inductance
+
+    aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
+        2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
+    )
+    beps = (
+        0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
+    )
+    rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+
+    rlp = rlpext + rlpint
+
+    # Inductive V-s component
+
+    vsind = rlp * plascur
+    vsstt = vsres + vsind
+
+    # Loop voltage during flat-top
+    # Include enhancement factor in flattop V-s requirement
+    # to account for MHD sawtooth effects.
+
+    vburn = plascur * rplas * facoh * csawth
+
+    # N.B. tburn on first iteration will not be correct
+    # if the pulsed reactor option is used, but the value
+    # will be correct on subsequent calls.
+
+    vsbrn = vburn * (t_fusion_ramp + tburn)
+    vsstt = vsstt + vsbrn
+
+    return phiint, rlp, vsbrn, vsind, vsres, vsstt
+
+
+@nb.jit(nopython=True, cache=True)
+def culblm(bt, dnbeta, plascur, rminor):
+    """Beta scaling limit
+    author: P J Knight, CCFE, Culham Science Centre
+    bt      : input real :  toroidal B-field on plasma axis (T)
+    dnbeta  : input real :  Troyon-like g coefficient
+    plascur : input real :  plasma current (A)
+    rminor  : input real :  plasma minor axis (m)
+    betalim : output real : beta limit as defined below
+    This subroutine calculates the beta limit, using
+    the algorithm documented in AEA FUS 172.
+    The limit applies to beta defined with respect to the total B-field.
+    Switch iculbl determines which components of beta to include.
+
+    If iculbl = 0, then the limit is applied to the total beta
+    If iculbl = 1, then the limit is applied to the thermal beta only
+    If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components
+    If iculbl = 3, then the limit is applied to the toroidal beta
+
+    The default value for the g coefficient is dnbeta = 3.5
+    AEA FUS 172: Physics Assessment for the European Reactor Study
+    """
+
+    return 0.01 * dnbeta * (plascur / 1.0e6) / (rminor * bt)
+
+
 # -----------------------------------------------------
 # Plasma Current & Poloidal Field Calculations
 # -----------------------------------------------------
@@ -404,6 +537,11 @@ def calculate_current_coefficient_fiesta(eps: float, kappa: float, triang: float
     return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
 
 
+# --------------------------------
+# Bootstrap Current Calculations
+# --------------------------------
+
+
 def nevins_integral(
     y: float,
     dene: float,
@@ -475,138 +613,6 @@ def nevins_integral(
     pratio = (betat - betae) / betae
 
     return (q / q95) * (al1 * (a1 + (pratio * (a1 + alphai * a2))) + al2 * a2)
-
-
-@nb.jit(nopython=True, cache=True)
-def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
-    """Routine to find the equilibration power between the
-    ions and electrons
-    author: P J Knight, CCFE, Culham Science Centre
-    alphan : input real :  density profile index
-    alphat : input real :  temperature profile index
-    dene   : input real :  electron density (/m3)
-    dlamie : input real :  ion-electron coulomb logarithm
-    te     : input real :  electron temperature (keV)
-    ti     : input real :  ion temperature (keV)
-    zeffai : input real :  mass weighted plasma effective charge
-    piepv  : output real : ion/electron equilibration power (MW/m3)
-    This routine calculates the equilibration power between the
-    ions and electrons.
-    Unknown origin
-    """
-    profie = (1.0 + alphan) ** 2 / (
-        (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
-    )
-    conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
-
-    return conie * (ti - te) / (te**1.5)
-
-
-@nb.jit(nopython=True, cache=True)
-def vscalc(
-    csawth,
-    eps,
-    facoh,
-    gamma,
-    kappa,
-    rmajor,
-    rplas,
-    plascur,
-    t_fusion_ramp,
-    tburn,
-    rli,
-    rmu0,
-):
-    """Volt-second requirements
-    author: P J Knight, CCFE, Culham Science Centre
-    csawth : input real :  coefficient for sawteeth effects
-    eps    : input real :  inverse aspect ratio
-    facoh  : input real :  fraction of plasma current produced inductively
-    gamma  : input real :  Ejima coeff for resistive start-up V-s component
-    kappa  : input real :  plasma elongation
-    plascur: input real :  plasma current (A)
-    rli    : input real :  plasma normalised inductivity
-    rmajor : input real :  plasma major radius (m)
-    rplas  : input real :  plasma resistance (ohm)
-    t_fusion_ramp  : input real :  heating time (s)
-    tburn  : input real :  burn time (s)
-    phiint : output real : internal plasma volt-seconds (Wb)
-    rlp    : output real : plasma inductance (H)
-    vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
-    vsind  : output real : internal and external plasma inductance V-s (Wb)
-    vsres  : output real : resistive losses in start-up volt-seconds (Wb)
-    vsstt  : output real : total volt-seconds needed (Wb)
-    This subroutine calculates the volt-second requirements and some
-    other related items.
-    """
-    # Internal inductance
-
-    rlpint = rmu0 * rmajor * rli / 2.0
-    phiint = rlpint * plascur
-
-    # Start-up resistive component
-    # Uses ITER formula without the 10 V-s add-on
-
-    vsres = gamma * rmu0 * plascur * rmajor
-
-    # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
-    # fit for external inductance
-
-    aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
-        2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
-    )
-    beps = (
-        0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-    )
-    rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
-
-    rlp = rlpext + rlpint
-
-    # Inductive V-s component
-
-    vsind = rlp * plascur
-    vsstt = vsres + vsind
-
-    # Loop voltage during flat-top
-    # Include enhancement factor in flattop V-s requirement
-    # to account for MHD sawtooth effects.
-
-    vburn = plascur * rplas * facoh * csawth
-
-    # N.B. tburn on first iteration will not be correct
-    # if the pulsed reactor option is used, but the value
-    # will be correct on subsequent calls.
-
-    vsbrn = vburn * (t_fusion_ramp + tburn)
-    vsstt = vsstt + vsbrn
-
-    return phiint, rlp, vsbrn, vsind, vsres, vsstt
-
-
-@nb.jit(nopython=True, cache=True)
-def culblm(bt, dnbeta, plascur, rminor):
-    """Beta scaling limit
-    author: P J Knight, CCFE, Culham Science Centre
-    bt      : input real :  toroidal B-field on plasma axis (T)
-    dnbeta  : input real :  Troyon-like g coefficient
-    plascur : input real :  plasma current (A)
-    rminor  : input real :  plasma minor axis (m)
-    betalim : output real : beta limit as defined below
-    This subroutine calculates the beta limit, using
-    the algorithm documented in AEA FUS 172.
-    The limit applies to beta defined with respect to the total B-field.
-    Switch iculbl determines which components of beta to include.
-
-    If iculbl = 0, then the limit is applied to the total beta
-    If iculbl = 1, then the limit is applied to the thermal beta only
-    If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components
-    If iculbl = 3, then the limit is applied to the toroidal beta
-
-    The default value for the g coefficient is dnbeta = 3.5
-    AEA FUS 172: Physics Assessment for the European Reactor Study
-    """
-
-    return 0.01 * dnbeta * (plascur / 1.0e6) / (rminor * bt)
 
 
 # -----------------------------------------------------
