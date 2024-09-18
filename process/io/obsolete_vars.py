@@ -113,6 +113,8 @@ OBS_VARS = {
     "theat": "t_fusion_ramp",
     "ieped": None,
     "eped_sf": None,
+    "vgap2": "vgap_vv_thermalshield",
+    "vgap": "vgap_xpoint_divertor"
 }
 
 OBS_VARS_HELP = {
