@@ -193,7 +193,7 @@ and the parameters $\lambda$ and $\nu$ characterise the current profile $J_{\phi
 
 ---------------
 
-#### Sauter model, allows negative triangularity
+#### Sauter model, allows negative triangularity | `calculate_current_coefficient_sauter()`
 
 Switch value: `i_plasma_current = 8`[^9]
 

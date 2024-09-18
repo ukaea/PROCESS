@@ -352,6 +352,37 @@ def calculate_current_coefficient_hastie(
     )
 
 
+def calculate_current_coefficient_sauter(eps: float, kappa: float, triang: float, ) -> float:
+    """
+    Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
+
+    Parameters:
+    - eps: float, inverse aspect ratio
+    - kappa: float, plasma elongation at the separatrix
+    - triang: float, plasma triangularity at the separatrix
+
+    Returns:
+    - float, the fq coefficient
+
+    Reference:
+    - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
+      Fusion Engineering and Design, Volume 112, 2016, Pages 633-645,
+      ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
+    """
+    w07 = 1.0  # zero squareness - can be modified later if required
+
+    fq = (
+        (4.1e6 / 5.0e6)
+        * (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
+        * (1.0 + 0.09 * triang + 0.16 * triang**2)
+        * (1.0 + 0.45 * triang * eps)
+        / (1.0 - 0.74 * eps)
+        * (1.0 + 0.55 * (w07 - 1.0))
+    )
+
+    return fq
+
+
 def nevins_integral(
     y: float,
     dene: float,
@@ -2761,19 +2792,10 @@ class Physics:
             fq = calculate_current_coefficient_hastie(alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0)
 
         # Sauter scaling allowing negative triangularity [FED May 2016]
+        # https://doi.org/10.1016/j.fusengdes.2016.04.033.
         elif i_plasma_current == 8:
             # Assumes zero squareness, note takes kappa, delta at separatrix not _95
-
-            w07 = 1.0  # zero squareness - can be modified later if required
-
-            fq = (
-                (4.1e6 / 5.0e6)
-                * (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
-                * (1.0 + 0.09 * triang + 0.16 * triang**2)
-                * (1.0 + 0.45 * triang * eps)
-                / (1.0 - 0.74 * eps)
-                * (1.0 + 0.55 * (w07 - 1.0))
-            )
+            fq = calculate_current_coefficient_sauter(eps, kappa, triang)
 
         elif i_plasma_current == 9:
             fq = 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
