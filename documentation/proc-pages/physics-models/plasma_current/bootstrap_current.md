@@ -193,6 +193,16 @@ $$
 +R_{p e}\left(\mathcal{L}_{31}+\mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi}+\left(1-R_{p e}\right) \times\left(1+\frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right]
 $$
 
+Note that the above $\left\langle j_{\|} B\right\rangle$ given by Sauter et.al.[^4]   gives the component of the current density in the direction of the field – not the toroidal component of the current.  The error is second order in the pitch angle, but can be important, especially in the outboard region of a low aspect ratio tokamak, where the pitch angle is large.  Moreover this error will always have the effect of overestimating the current. This is accounted for via poloidal correction function implemented as: [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) and[`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter)
+
+The correction is of the form:
+
+$$
+I_{\phi}^{\text{bs}} = 2\pi \int d\psi \frac{q(\psi)}{\langle B^{2}\rangle} \left\langle j_{\|} B\right\rangle
+$$
+
+where $q(\psi)$ is the safety factor.
+
 -----------
 
 #### Calculate electron density coefficient | `calculate_l31_coefficient()`
@@ -203,6 +213,8 @@ $$
 \mathcal{L}_{31}= F_{31}\left(X=f_{\text {teff }}^{31}\right) \equiv\left(1+\frac{1.4}{Z+1}\right) X-\frac{1.9}{Z+1} X^2+\frac{0.3}{Z+1} X^3 +\frac{0.2}{Z+1} X^4 \\
 f_{\text {teff }}^{31}\left(\nu_{e *}\right)= \frac{f_t}{1+\left(1-0.1 f_t\right) \sqrt{\nu_{e *}}+0.5\left(1-f_t\right) \nu_{e *} / Z}
 $$
+
+The returned value is $\mathcal{L}_{31} \times$ [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter)  
 
 ---------------
 
@@ -225,7 +237,9 @@ F_{32 \_e i}(Y) = -\frac{0.56+1.93 Z}{Z(1+0.44 Z)}\left(Y-Y^4\right)+\frac{4.95}
 f_{\text {teff }}^{32 \_e i}\left(\nu_{e *}\right) = \frac{f_t}{1+\left(1+0.6 f_t\right) \sqrt{\nu_{e *}}+0.85\left(1-0.37 f_t\right) \nu_{e *}(1+Z)}
 $$
 
-The above is added to a call of `calculate_l31_coefficient()` and is then returned
+The above is added to a call of [`calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient). This is then multiplied by [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter). 
+
+This product above is then multplied by ([`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
 
 ---------------
 
@@ -251,7 +265,10 @@ $$
 $$
 
 The definition of $\alpha\left(\nu_{i *}\right)$ is that found in the erratum paper which changes the value of $-0.315\nu_{i *}^2 f_t^6$ to posotive.[^5]
-The above is added to a call of `calculate_l31_coefficient()` and is then returned.
+
+The return sequence is ([`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter) - [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter)) $\times (\mathcal{L}_{34} + \alpha)$ + [`calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient) $\times$ (1.0 -  [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
+
+
 
 -------------
 
