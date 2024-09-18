@@ -383,6 +383,27 @@ def calculate_current_coefficient_sauter(eps: float, kappa: float, triang: float
     return fq
 
 
+def calculate_current_coefficient_fiesta(eps: float, kappa: float, triang: float) -> float:
+    """
+    Calculate the fq coefficient used in the FIESTA plasma current scaling.
+
+    Parameters:
+    - eps: float, plasma inverse aspect ratio
+    - kappa: float, plasma elongation at the separatrix
+    - triang: float, plasma triangularity at the separatrix
+
+    Returns:
+    - float, the fq plasma current coefficient
+
+    This function calculates the fq coefficient based on the given plasma parameters for the FIESTA scaling.
+
+    References:
+    - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design,
+      Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
+    """
+    return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
+
+
 def nevins_integral(
     y: float,
     dene: float,
@@ -2797,8 +2818,10 @@ class Physics:
             # Assumes zero squareness, note takes kappa, delta at separatrix not _95
             fq = calculate_current_coefficient_sauter(eps, kappa, triang)
 
+        # FIESTA ST scaling
+        # https://doi.org/10.1016/j.fusengdes.2020.111530.
         elif i_plasma_current == 9:
-            fq = 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
+            fq = calculate_current_coefficient_fiesta(eps, kappa, triang)
         else:
             raise ValueError(f"Invalid value {i_plasma_current=}")
 

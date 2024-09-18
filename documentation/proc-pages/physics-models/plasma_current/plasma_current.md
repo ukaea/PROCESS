@@ -212,11 +212,9 @@ $$
 
 ----------------------
 
-#### FIESTA for ST's: 
+#### FIESTA for ST's | `calculate_current_coefficient_fiesta()` 
 
 Switch value: `i_plasma_current = 9`[^10]
-
-
 
 Assumptions:
 
