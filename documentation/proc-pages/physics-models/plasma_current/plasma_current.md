@@ -375,6 +375,26 @@ $$
 y_2 = \frac{\sqrt{c_2\epsilon+1}}{1-\epsilon}\frac{1-\delta}{\kappa}
 $$
 
+-----------------------
+
+## Key Constraints
+
+-----------------------
+
+### Plasma current ramp-up time lower limit
+
+This constraint can be activated by stating `icc = 41` in the input file.
+
+The value of `tohsm` can be set to the required minimum plasma current ramp up time at the start of a pulse. The scaling value `ftohs` can be varied also
+
+The calculated plasma current ramp up time `tohs` is dictated by the [pulsed plant operation configuration](../pulsed-plant.md).
+
+This constraint will ensure that the value of `tohs` is always greater than or equal to `tohsm`
+
+--------------------
+
+### Plasma and Rod current fraction upper limit
+
 [^3]: Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992). 'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A), 1729–1738. https://doi.org/10.13182/FST92-A29971
 [^4]: J.D. Galambos, 'STAR Code : Spherical Tokamak Analysis and Reactor Code',
 Unpublished internal Oak Ridge document.
