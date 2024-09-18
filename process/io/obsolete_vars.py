@@ -114,7 +114,7 @@ OBS_VARS = {
     "ieped": None,
     "eped_sf": None,
     "vgap2": "vgap_vv_thermalshield",
-    "vgap": "vgap_xpoint_divertor"
+    "vgap": "vgap_xpoint_divertor",
 }
 
 OBS_VARS_HELP = {
