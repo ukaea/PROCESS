@@ -109,7 +109,7 @@ $$
 
 --------------
 
-#### Todd empirical scaling, I 
+#### Todd empirical scaling, I | `calculate_current_coefficient_todd()`
 
 Switch value: `i_plasma_current = 5`[^6] [^7]
 
