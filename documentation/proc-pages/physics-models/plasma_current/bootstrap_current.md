@@ -378,6 +378,26 @@ The model includes the toroidal diamagnetic current in the calculation due to th
 
 ---------------------
 
+## Setting of maximum desireable bootstrap current fraction
+
+The variable `bootstrap_current_fraction_max` can be set to the value of maximum desireable bootstrap current fraction for a specific design. When optimsiing if the value of the calculated `bootstrap_current_fraction` for the model selected with `i_bootstrap_current` exceeds this value, then `bootstrap_current_fraction` is set to the value of `bootstrap_current_fraction_max`.
+
+An error is also raised to the user in the terminal output at the end of the run saying "Bootstrap fraction upper limit enforced".
+
+## Fixing the bootstrap current fraction
+
+If the user wants to set the value of the bootrap current fraction directly then the value can be set by assigning the negative of the desired value to `bootstrap_current_fraction_max`.
+
+
+```txt
+>>> IN.DAT
+
+# Setting a fixed bootstrap current fraction of 80%
+
+bootstrap_current_fraction_max = -0.8
+```
+
+
 [^0]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 [^1]: Nevins, W. M. "Summary report: ITER specialists’ meeting on heating and current drive." ITER-TN-PH-8-4, June 1988. 1988. 
 [^2]: Keii Gi, Makoto Nakamura, Kenji Tobita, Yasushi Ono, Bootstrap current fraction scaling for a tokamak reactor design study,
