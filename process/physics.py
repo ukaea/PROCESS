@@ -1320,7 +1320,7 @@ def beta_poloidal_total_sauter(
 
     Parameters:
     - radial_elements: np.ndarray, radial element indexes in range 1 to nr
-    - nr: int, maximum value of j
+    - nr: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
     - bt: float, toroidal field on axis (T)
     - ne: np.ndarray, electron density profile (/m^3)

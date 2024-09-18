@@ -305,6 +305,49 @@ $$
 
 ----------------
 
+#### Calculate electron only poloidal beta correction | `beta_poloidal_sauter()`
+
+This function returns an electron only local poloidal beta correction dependant on the array index of the profile.
+
+If the current index is not equal to the size value (or end of the array) then the following is returned:
+
+$$
+\frac{1.6\times 10^{-4}\pi R \left(n_{\text{e}}+n_{\text{e-1}}\right)\times \left(T_{\text{e}}+T_{\text{e-1}}\right)}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
+$$
+
+Otherwise the following is returned:
+
+$$
+\frac{6.4\times 10^{-4}\pi R \left(n_{\text{e-1}}T_{\text{e-1}}\right)}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
+$$
+
+The $-1$ subscript in this case refers to the value of the variable in the previous array index value
+
+
+
+---------------
+
+#### Calculate ion and electron poloidal beta correction | `beta_poloidal_total_sauter()`
+
+This function returns the local poloidal beta correction with both electron and ion pressure dependant on the array index of the profile.
+
+If the current index is not equal to the size value (or end of the array) then the following is returned:
+
+$$
+\frac{1.6\times 10^{-4}\pi R \left[\left(\left(n_{\text{e}}+n_{\text{e-1}}\right)\times \left(T_{\text{e}}+T_{\text{e-1}}\right)\right)+\left(\left(n_{\text{i}}+n_{\text{i-1}}\right)\times \left(T_{\text{i}}+T_{\text{i-1}}\right)\right)\right]}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
+$$
+
+Otherwise the following is returned:
+
+$$
+\frac{6.4\times 10^{-4}\pi R \left[\left(n_{\text{e-1}}T_{\text{e-1}}\right)+\left(n_{\text{i-1}}T_{\text{i-1}}\right)\right]}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
+$$
+
+The $-1$ subscript in this case refers to the value of the variable in the previous array index value
+
+
+------------------
+
 ### Sakai Scaling | `bootstrap_fraction_sakai()`
 
 Is selected by setting `i_bootstrap_current = 5`[^5]
