@@ -429,7 +429,7 @@ def calculate_current_coefficient_hastie(
     Returns:
     - float, the F coefficient
 
-    This routine calculates the F coefficient used for scaling the plasma current,
+    This routine calculates the f_q coefficient used for scaling the plasma current,
     using the Connor-Hastie scaling
 
     Reference:
@@ -437,8 +437,7 @@ def calculate_current_coefficient_hastie(
       https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
     - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
-    # Exponent in Connor-Hastie current profile - matching total
-    # current gives the following trivial relation
+    # Exponent in Connor-Hastie current profile
     lamda = alphaj
 
     # Exponent in Connor-Hastie pressure profile
