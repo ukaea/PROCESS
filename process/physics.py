@@ -227,7 +227,7 @@ def _plascar_bpol(
 def calculate_poloidal_field(
     i_plasma_current: int,
     ip: float,
-    qbar: float,
+    q95: float,
     aspect: float,
     eps: float,
     bt: float,
@@ -242,7 +242,7 @@ def calculate_poloidal_field(
     Parameters:
     - i_plasma_current: int, current scaling model to use
     - ip: float, plasma current (A)
-    - qbar: float, edge q-bar
+    - q95: float, 95% flux surface safety factor
     - aspect: float, plasma aspect ratio
     - eps: float, inverse aspect ratio
     - bt: float, toroidal field on axis (T)
@@ -273,6 +273,9 @@ def calculate_poloidal_field(
         # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
         ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
 
+        # Transform q95 to qbar
+        qbar = (physics_variables.q * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0)
+
         return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
@@ -292,7 +295,7 @@ def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
 
 @nb.jit(nopython=True, cache=True)
 def calculate_plasma_current_peng(
-    qbar: float,
+    q95: float,
     aspect: float,
     eps: float,
     rminor: float,
@@ -304,7 +307,7 @@ def calculate_plasma_current_peng(
     Function to calculate plasma current (Peng scaling from the STAR code)
 
     Parameters:
-    - qbar: float, edge q-bar
+    - q95: float, 95% flux surface safety factor
     - aspect: float, plasma aspect ratio
     - eps: float, inverse aspect ratio
     - rminor: float, plasma minor radius (m)
@@ -327,6 +330,9 @@ def calculate_plasma_current_peng(
       'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
       1729–1738. https://doi.org/10.13182/FST92-A29971
     """
+
+    # Transform q95 to qbar
+    qbar = (physics_variables.q * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0)
 
     ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
 
@@ -1449,24 +1455,18 @@ class Physics:
         Routine to calculate tokamak plasma physics information
         author: P J Knight, CCFE, Culham Science Centre
         None
-        This routine calculates all the primary plasma physics
-        M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants -
-        Part 1: Physics https://www.sciencedirect.com/science/article/pii/S0920379614005961
-        H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
-        https://iopscience.iop.org/article/10.1088/0029-5515/53/7/073019
-        T. Hartmann, 2013, Development of a modular systems code to analyse the
-        implications of physics assumptions on the design of a demonstration fusion power plant
-        https://inis.iaea.org/search/search.aspx?orig_q=RN:45031642
+        This routine calculates all the primary plasma physics parameters for a tokamak fusion reactor.
+
+        References:
+        - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
+          https://www.sciencedirect.com/science/article/pii/S0920379614005961
+        - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
+          https://iopscience.iop.org/article/10.1088/0029-5515/53/7/073019
+        - T. Hartmann, 2013, Development of a modular systems code to analyse the implications of physics assumptions on the design of a demonstration fusion power plant
+          https://inis.iaea.org/search/search.aspx?orig_q=RN:45031642
         """
 
-        if physics_variables.i_plasma_current == 2:
-            physics_variables.q95 = (
-                physics_variables.q * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
-            )
-        else:
-            physics_variables.q95 = (
-                physics_variables.q
-            )  # i.e. input (or iteration variable) value
+        physics_variables.q95 = physics_variables.q
 
         # Calculate plasma composition
         # Issue #261 Remove old radiation model (imprad_model=0)
