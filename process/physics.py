@@ -279,6 +279,7 @@ def calculate_poloidal_field(
         return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
+@nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
     """
     Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
@@ -351,6 +352,7 @@ def calculate_plasma_current_peng(
     )
 
 
+@nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_ipdg89(eps: float, kappa95: float, triang95: float) -> float:
     """
     Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
@@ -378,6 +380,7 @@ def calculate_current_coefficient_ipdg89(eps: float, kappa95: float, triang95: f
     )
 
 
+@nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_todd(eps: float, kappa95: float, triang95: float, model: int) -> float:
     """
     Calculate the fq coefficient used in the two Todd plasma current scalings.
@@ -495,6 +498,7 @@ def calculate_current_coefficient_hastie(
     )
 
 
+@nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_sauter(eps: float, kappa: float, triang: float, ) -> float:
     """
     Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
@@ -526,6 +530,7 @@ def calculate_current_coefficient_sauter(eps: float, kappa: float, triang: float
     return fq
 
 
+@nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_fiesta(eps: float, kappa: float, triang: float) -> float:
     """
     Calculate the fq coefficient used in the FIESTA plasma current scaling.
@@ -552,6 +557,7 @@ def calculate_current_coefficient_fiesta(eps: float, kappa: float, triang: float
 # --------------------------------
 
 
+@nb.jit(nopython=True, cache=True)
 def nevins_integral(
     y: float,
     dene: float,
@@ -630,6 +636,7 @@ def nevins_integral(
 # -----------------------------------------------------
 
 
+@nb.jit(nopython=True, cache=True)
 def diamagnetic_fraction_hender(beta: float) -> float:
     """
     Calculate the diamagnetic fraction based on the Hender fit.
@@ -643,6 +650,7 @@ def diamagnetic_fraction_hender(beta: float) -> float:
     return beta / 2.8
 
 
+@nb.jit(nopython=True, cache=True)
 def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
     """
     Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
@@ -658,6 +666,7 @@ def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
     return beta * (0.1 * q95 / q0 + 0.44) * 0.414
 
 
+@nb.jit(nopython=True, cache=True)
 def ps_fraction_scene(beta: float) -> float:
     """
     Calculate the Pfirsch-Schlüter fraction based on the SCENE fit by Tim Hender 2019.
