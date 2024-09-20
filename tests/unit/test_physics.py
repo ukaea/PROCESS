@@ -630,7 +630,7 @@ class PlasmaCurrentParam(NamedTuple):
             expected_alphaj=1.9008029008029004,
             expected_rli=1.2064840230894305,
             expected_bp=0.96008591022564971,
-            expected_qstar=2.9008029008029004,
+            expected_qstar=3.869423496255382,
             expected_plascur=18398455.678867526,
         ),
         PlasmaCurrentParam(
@@ -658,7 +658,7 @@ class PlasmaCurrentParam(NamedTuple):
             expected_alphaj=1.9008029008029004,
             expected_rli=1.2064840230894305,
             expected_bp=0.96008591022564971,
-            expected_qstar=2.9008029008029004,
+            expected_qstar=3.869423496255382,
             expected_plascur=18398455.678867526,
         ),
     ),
@@ -729,7 +729,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
             },
-            37.43306888647351,
+            46.84050744522757,
         ),
         (
             {
@@ -741,7 +741,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
             },
-            31.893383344142052,
+            39.90862317467305,
         ),
     ),
 )
@@ -765,7 +765,7 @@ def test_plasc(arguments, expected):
                 "perim": 24,
                 "rmu0": constants.rmu0,
             },
-            3.4726549397470703,
+            4.3453802853633166,
         ),
         (
             {
@@ -780,7 +780,7 @@ def test_plasc(arguments, expected):
                 "perim": 24,
                 "rmu0": constants.rmu0,
             },
-            2.958739919272374,
+            3.702311392804667,
         ),
         (
             {
