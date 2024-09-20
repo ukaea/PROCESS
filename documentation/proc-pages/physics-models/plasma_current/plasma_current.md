@@ -607,6 +607,21 @@ This constraint will ensure that the value of `tohs` is always greater than or e
 
 ### Plasma and Rod current fraction upper limit
 
+This constraint can be activated by stating `icc = 46` in the input file.
+
+The constraint condition is[^14]:
+
+$$
+\frac{I_{\text{p}}}{I_{\text{cp}}} < 1.0 + 4.91\left(\epsilon - 0.62\right)
+$$
+
+In this case $I_{\text{cp}}$ is the total current going up the centrepost in a spherical tokamak.
+This constraint was initially though to prevent instabilites and act as a guideline to limit power dissipation when generating new designs. The scaling value for the constraint, `fipir` can be varied also.
+
+ The origins of the relation should be seen in early spherical tokamak papers not yet referenced here.
+
+---------------------
+
 [^3]: Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992). 'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A), 1729–1738. https://doi.org/10.13182/FST92-A29971
 [^4]: J.D. Galambos, 'STAR Code : Spherical Tokamak Analysis and Reactor Code',
 Unpublished internal Oak Ridge document.
@@ -621,5 +636,9 @@ https://doi.org/10.1016/j.fusengdes.2016.04.033.
 [^12]: Zohm Hartmut, 2019, "On the size of tokamak fusion power plants", Phil. Trans. R. Soc. A.37720170437
 http://doi.org/10.1098/rsta.2017.0437
 [^13]: Wesson, J. and Campbell, D. J. (2004) Tokamaks. Clarendon Press (International series of monographs on physics). Available at: https://books.google.co.uk/books?id=iPlAwZI6HIYC.
+[^14]: Stuart I. Muldrew, Hanni Lux, Geof Cunningham, Tim C. Hender, Sebastien Kahn, Peter J. Knight, Bhavin Patel, Garry M. Voss, Howard R. Wilson,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design, Volume 154, 2020,
+111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
+
+
 
 
