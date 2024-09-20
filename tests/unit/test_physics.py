@@ -148,7 +148,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
 
     rminor: Any = None
 
-    ten: Any = None
+    te: Any = None
 
     zeff: Any = None
 
@@ -171,7 +171,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
             alphat=1.45,
             rmajor=8,
             rminor=2.6666666666666665,
-            ten=12.626131115905864,
+            te=12.626131115905864,
             zeff=2.0909945616489103,
             expected_fibs=889258771342.7881,
         ),
@@ -205,7 +205,7 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
         q95=bootstrapfractionnevinsparam.q95,
         rmajor=bootstrapfractionnevinsparam.rmajor,
         rminor=bootstrapfractionnevinsparam.rminor,
-        ten=bootstrapfractionnevinsparam.ten,
+        te=bootstrapfractionnevinsparam.te,
         zeff=bootstrapfractionnevinsparam.zeff,
     )
 

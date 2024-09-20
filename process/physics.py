@@ -557,7 +557,6 @@ def calculate_current_coefficient_fiesta(eps: float, kappa: float, triang: float
 # --------------------------------
 
 
-@nb.jit(nopython=True, cache=True)
 def nevins_integral(
     y: float,
     dene: float,
