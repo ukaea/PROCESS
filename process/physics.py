@@ -167,7 +167,6 @@ def culblm(bt, dnbeta, plascur, rminor):
 # -----------------------------------------------------
 
 
-@nb.jit(nopython=True, cache=True)
 def _plascar_bpol(
     aspect: float, eps: float, kappa: float, delta: float
 ) -> Tuple[float, float, float, float]:
@@ -223,7 +222,6 @@ def _plascar_bpol(
     return ff1, ff2, d1, d2
 
 
-@nb.jit(nopython=True, cache=True)
 def calculate_poloidal_field(
     i_plasma_current: int,
     ip: float,
@@ -274,12 +272,11 @@ def calculate_poloidal_field(
         ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
 
         # Transform q95 to qbar
-        qbar = (physics_variables.q * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0)
+        qbar = (q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0)
 
         return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
-@nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
     """
     Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
@@ -294,7 +291,6 @@ def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
     return (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
 
 
-@nb.jit(nopython=True, cache=True)
 def calculate_plasma_current_peng(
     q95: float,
     aspect: float,
@@ -333,7 +329,7 @@ def calculate_plasma_current_peng(
     """
 
     # Transform q95 to qbar
-    qbar = (physics_variables.q * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0)
+    qbar = (q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0)
 
     ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
 

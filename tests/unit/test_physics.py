@@ -721,7 +721,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     (
         (
             {
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 2.7,
                 "eps": 0.37037037,
                 "rminor": 1.5,
@@ -733,7 +733,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         ),
         (
             {
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 3.0,
                 "eps": 0.33333333,
                 "rminor": 1.5,
@@ -756,7 +756,7 @@ def test_plasc(arguments, expected):
             {
                 "i_plasma_current": 2,
                 "ip": 1.6e7,
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 2.7,
                 "eps": 0.37037037,
                 "bt": 12,
@@ -771,7 +771,7 @@ def test_plasc(arguments, expected):
             {
                 "i_plasma_current": 2,
                 "ip": 1.6e7,
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 3.0,
                 "eps": 0.33333333,
                 "bt": 12,
@@ -786,7 +786,7 @@ def test_plasc(arguments, expected):
             {
                 "i_plasma_current": 3,
                 "ip": 1.6e7,
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 3.0,
                 "eps": 0.33333333,
                 "bt": 12,
