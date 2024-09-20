@@ -2847,7 +2847,7 @@ class Physics:
             * rminor**2
             / (rmajor * plascur / bt)
             * 0.5
-            * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+            * (1.0 + kappa**2 * (1.0 + 2.0 * triang**2 - 1.2 * triang**3))
         )
 
         physics_variables.normalised_total_beta = (
