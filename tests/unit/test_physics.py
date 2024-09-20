@@ -120,7 +120,9 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
         vol=bootstrapfractioniter89param.vol,
     )
 
-    assert bootstrap_current_fraction == pytest.approx(bootstrapfractioniter89param.expected_bootipf)
+    assert bootstrap_current_fraction == pytest.approx(
+        bootstrapfractioniter89param.expected_bootipf
+    )
 
 
 class BootstrapFractionNevinsParam(NamedTuple):
@@ -808,9 +810,9 @@ def test_culblm():
 
 
 def test_conhas():
-    assert calculate_current_coefficient_hastie(5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0) == pytest.approx(
-        2.518876726889116
-    )
+    assert calculate_current_coefficient_hastie(
+        5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0
+    ) == pytest.approx(2.518876726889116)
 
 
 class PlasmaCompositionParam(NamedTuple):

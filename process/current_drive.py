@@ -970,7 +970,10 @@ class CurrentDrive:
         )
 
         if (
-            abs(current_drive_variables.bootstrap_current_fraction - current_drive_variables.bootstrap_current_fraction_max)
+            abs(
+                current_drive_variables.bootstrap_current_fraction
+                - current_drive_variables.bootstrap_current_fraction_max
+            )
             < 1.0e-8
         ):
             po.ocmmnt(self.outfile, "Warning : bootstrap current fraction is at")

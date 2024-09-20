@@ -469,9 +469,17 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "bigq", cudrivparam.bigq)
 
-    monkeypatch.setattr(current_drive_variables, "bootstrap_current_fraction", cudrivparam.bootstrap_current_fraction)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "bootstrap_current_fraction",
+        cudrivparam.bootstrap_current_fraction,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "bootstrap_current_fraction_max", cudrivparam.bootstrap_current_fraction_max)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "bootstrap_current_fraction_max",
+        cudrivparam.bootstrap_current_fraction_max,
+    )
 
     monkeypatch.setattr(current_drive_variables, "taubeam", cudrivparam.taubeam)
 
@@ -485,11 +493,19 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "rtanmax", cudrivparam.rtanmax)
 
-    monkeypatch.setattr(current_drive_variables, "diamagnetic_current_fraction", cudrivparam.diamagnetic_current_fraction)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "diamagnetic_current_fraction",
+        cudrivparam.diamagnetic_current_fraction,
+    )
 
     monkeypatch.setattr(current_drive_variables, "psipf", cudrivparam.psipf)
 
-    monkeypatch.setattr(current_drive_variables, "plasma_current_internal_fraction", cudrivparam.plasma_current_internal_fraction)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "plasma_current_internal_fraction",
+        cudrivparam.plasma_current_internal_fraction,
+    )
 
     monkeypatch.setattr(current_drive_variables, "harnum", cudrivparam.harnum)
 

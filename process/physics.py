@@ -272,7 +272,7 @@ def calculate_poloidal_field(
         ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
 
         # Transform q95 to qbar
-        qbar = (q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0)
+        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
         return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
@@ -329,7 +329,7 @@ def calculate_plasma_current_peng(
     """
 
     # Transform q95 to qbar
-    qbar = (q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0)
+    qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
     ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
 
@@ -349,7 +349,9 @@ def calculate_plasma_current_peng(
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_ipdg89(eps: float, kappa95: float, triang95: float) -> float:
+def calculate_current_coefficient_ipdg89(
+    eps: float, kappa95: float, triang95: float
+) -> float:
     """
     Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
 
@@ -377,7 +379,9 @@ def calculate_current_coefficient_ipdg89(eps: float, kappa95: float, triang95: f
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_todd(eps: float, kappa95: float, triang95: float, model: int) -> float:
+def calculate_current_coefficient_todd(
+    eps: float, kappa95: float, triang95: float, model: int
+) -> float:
     """
     Calculate the fq coefficient used in the two Todd plasma current scalings.
 
@@ -495,7 +499,11 @@ def calculate_current_coefficient_hastie(
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_sauter(eps: float, kappa: float, triang: float, ) -> float:
+def calculate_current_coefficient_sauter(
+    eps: float,
+    kappa: float,
+    triang: float,
+) -> float:
     """
     Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
 
@@ -527,7 +535,9 @@ def calculate_current_coefficient_sauter(eps: float, kappa: float, triang: float
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_fiesta(eps: float, kappa: float, triang: float) -> float:
+def calculate_current_coefficient_fiesta(
+    eps: float, kappa: float, triang: float
+) -> float:
     """
     Calculate the fq coefficient used in the FIESTA plasma current scaling.
 
@@ -1605,9 +1615,13 @@ class Physics:
         )
 
         if physics_variables.i_diamagnetic_current == 1:
-            current_drive_variables.diamagnetic_current_fraction = current_drive_variables.diacf_hender
+            current_drive_variables.diamagnetic_current_fraction = (
+                current_drive_variables.diacf_hender
+            )
         elif physics_variables.i_diamagnetic_current == 2:
-            current_drive_variables.diamagnetic_current_fraction = current_drive_variables.diacf_scene
+            current_drive_variables.diamagnetic_current_fraction = (
+                current_drive_variables.diacf_scene
+            )
 
         # ***************************** #
         #    PFIRSCH-SCHLÜTER CURRENT   #
@@ -1699,29 +1713,47 @@ class Physics:
         )
 
         if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
-            current_drive_variables.bootstrap_current_fraction = abs(current_drive_variables.bootstrap_current_fraction_max)
-            current_drive_variables.plasma_current_internal_fraction = current_drive_variables.bootstrap_current_fraction
+            current_drive_variables.bootstrap_current_fraction = abs(
+                current_drive_variables.bootstrap_current_fraction_max
+            )
+            current_drive_variables.plasma_current_internal_fraction = (
+                current_drive_variables.bootstrap_current_fraction
+            )
         else:
             if physics_variables.i_bootstrap_current == 1:
-                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_iter89
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_iter89
+                )
             elif physics_variables.i_bootstrap_current == 2:
-                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_nevins
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_nevins
+                )
             elif physics_variables.i_bootstrap_current == 3:
-                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_wilson
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_wilson
+                )
             elif physics_variables.i_bootstrap_current == 4:
-                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_sauter
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_sauter
+                )
             elif physics_variables.i_bootstrap_current == 5:
                 # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
                 # So the diamagnetic current calculation should be turned off when using, (i_diamagnetic_current = 0).
-                current_drive_variables.bootstrap_current_fraction = current_drive_variables.bscf_sakai
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_sakai
+                )
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
                 error_handling.report_error(75)
 
             physics_module.err242 = 0
-            if current_drive_variables.bootstrap_current_fraction > current_drive_variables.bootstrap_current_fraction_max:
+            if (
+                current_drive_variables.bootstrap_current_fraction
+                > current_drive_variables.bootstrap_current_fraction_max
+            ):
                 current_drive_variables.bootstrap_current_fraction = min(
-                    current_drive_variables.bootstrap_current_fraction, current_drive_variables.bootstrap_current_fraction_max
+                    current_drive_variables.bootstrap_current_fraction,
+                    current_drive_variables.bootstrap_current_fraction_max,
                 )
                 physics_module.err242 = 1
 
@@ -1737,9 +1769,13 @@ class Physics:
         # produced by non-inductive means (which also includes
         # the current drive proportion)
         physics_module.err243 = 0
-        if current_drive_variables.plasma_current_internal_fraction > physics_variables.fvsbrnni:
+        if (
+            current_drive_variables.plasma_current_internal_fraction
+            > physics_variables.fvsbrnni
+        ):
             current_drive_variables.plasma_current_internal_fraction = min(
-                current_drive_variables.plasma_current_internal_fraction, physics_variables.fvsbrnni
+                current_drive_variables.plasma_current_internal_fraction,
+                physics_variables.fvsbrnni,
             )
             physics_module.err243 = 1
 
@@ -1747,7 +1783,8 @@ class Physics:
         physics_variables.facoh = max(1.0e-10, (1.0e0 - physics_variables.fvsbrnni))
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.faccd = (
-            physics_variables.fvsbrnni - current_drive_variables.plasma_current_internal_fraction
+            physics_variables.fvsbrnni
+            - current_drive_variables.plasma_current_internal_fraction
         )
 
         # Auxiliary current drive power calculations
@@ -2824,7 +2861,9 @@ class Physics:
         # Connor-Hastie asymptotically-correct expression
         elif i_plasma_current == 7:
             # N.B. If iprofile=1, alphaj will be wrong during the first call (only)
-            fq = calculate_current_coefficient_hastie(alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0)
+            fq = calculate_current_coefficient_hastie(
+                alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0
+            )
 
         # Sauter scaling allowing negative triangularity [FED May 2016]
         # https://doi.org/10.1016/j.fusengdes.2016.04.033.
@@ -5362,15 +5401,21 @@ class Physics:
         radial_elements = np.arange(2, NR)
 
         # Change in localised minor radius to be used as delta term in derivative
-        drho = rho[radial_elements] - rho[radial_elements-1]
+        drho = rho[radial_elements] - rho[radial_elements - 1]
 
         # Area of annulus, assuming circular plasma cross-section
-        da = 2 * np.pi * rho[radial_elements-1] * drho  # area of annulus
+        da = 2 * np.pi * rho[radial_elements - 1] * drho  # area of annulus
 
         # Create the partial derivatives
-        dlogte_drho = (np.log(tempe[radial_elements]) - np.log(tempe[radial_elements-1])) / drho
-        dlogti_drho = (np.log(tempi[radial_elements]) - np.log(tempi[radial_elements-1])) / drho
-        dlogne_drho = (np.log(ne[radial_elements]) - np.log(ne[radial_elements-1])) / drho
+        dlogte_drho = (
+            np.log(tempe[radial_elements]) - np.log(tempe[radial_elements - 1])
+        ) / drho
+        dlogti_drho = (
+            np.log(tempi[radial_elements]) - np.log(tempi[radial_elements - 1])
+        ) / drho
+        dlogne_drho = (
+            np.log(ne[radial_elements]) - np.log(ne[radial_elements - 1])
+        ) / drho
 
         jboot = (
             0.5
@@ -5430,8 +5475,8 @@ class Physics:
             * (
                 -physics_variables.bt
                 / (0.2 * np.pi * physics_variables.rmajor)
-                * rho[radial_elements-1]
-                * inverse_q[radial_elements-1]
+                * rho[radial_elements - 1]
+                * inverse_q[radial_elements - 1]
             )
         )  # A/m2
 
