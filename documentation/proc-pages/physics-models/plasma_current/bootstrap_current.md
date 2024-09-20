@@ -119,7 +119,7 @@ $$
 
 ### Wilson Scaling | `bootstrap_fraction_wilson()`
 
-An empirical formula[^3] as a function of the pressure, 
+An empirical formula[^3] [^7] as a function of the pressure, 
 temperature and total current profiles as well as the poloidal beta and aspect ratio of the tokamak. This empirical formula is compared with an expression obtained by the ITER group; also a comparison with an analytical result (valid at large aspect ratio) is made. It is found that the empirical result determined here agrees well with the large but not so well with the empirical formula of the ITER group[^0]
 
 Is selected by setting `i_bootstrap_current = 3`
@@ -145,7 +145,16 @@ $$
 \epsilon_0 = \frac{R_2-R_1}{R_2+R_1}
 $$
 
-Where $R_2$ and $R_1$ are the maximum and minimum radii of the plasma
+Where $R_2$ and $R_1$ are the maximum and minimum radii of the plasma.
+
+The poloidal beta term is defined as:
+
+$$
+\beta_{\text{p}} = \frac{2\mu_0\langle p \rangle}{\langle \langle B_{\text{p}} \rangle \rangle^2}
+$$
+
+Where $\langle p \rangle$ is the volume averaged pressure and $\langle \langle B_{\text{p}} \rangle \rangle$  is the plasma surface average of the polidal field.
+
 
 $$
 b_1 = 1 \ \ b_2 = \alpha_{\text{p}} \ \ b_3 = \alpha_{\text{T}} \ \ b_4 = \alpha_{\text{p}}\alpha_{\text{T}} \\
@@ -405,6 +414,7 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^3]: Wilson, H.R. (1992). Bootstrap current scaling in tokamaks. Nuclear Fusion, 32(2), pp.257–263. doi:https://doi.org/10.1088/0029-5515/32/2/i05.
 [^4]: O. Sauter, C. Angioni, Y. R. Lin-Liu; Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240 
 [^5]: O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum: “Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime” [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052  
-[^6]: Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2019.111322. 
+[^6]: Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2019.111322.
+[^7]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992 
 
 
