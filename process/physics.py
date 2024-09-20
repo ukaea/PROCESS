@@ -378,9 +378,9 @@ def calculate_current_coefficient_ipdg89(eps: float, kappa95: float, triang95: f
     )
 
 
-def calculate_current_coefficient_todd(eps: float, kappa95: float, triang95: float) -> float:
+def calculate_current_coefficient_todd(eps: float, kappa95: float, triang95: float, model: int) -> float:
     """
-    Calculate the fq coefficient used in the Todd plasma current scaling.
+    Calculate the fq coefficient used in the two Todd plasma current scalings.
 
     Parameters:
     - eps: float, plasma inverse aspect ratio
@@ -390,13 +390,14 @@ def calculate_current_coefficient_todd(eps: float, kappa95: float, triang95: flo
     Returns:
     - float, the fq plasma current coefficient
 
-    This function calculates the fq coefficient based on the given plasma parameters for the Todd scaling.
+    This function calculates the fq coefficient based on the given plasma parameters for the two Todd scalings.
 
     References:
     - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
     - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
-    return (
+    # Calculate the Todd scaling based on the model
+    base_scaling = (
         (1.0 + 2.0 * eps**2)
         * ((1.0 + kappa95**2) / 0.5)
         * (
@@ -406,6 +407,10 @@ def calculate_current_coefficient_todd(eps: float, kappa95: float, triang95: flo
             + 0.125 * triang95
         )
     )
+    if model == 1:
+        return base_scaling
+    elif model == 2:
+        return base_scaling * (1.0 + (abs(kappa95 - 1.2)) ** 3)
 
 
 @nb.jit(nopython=True, cache=True)
@@ -2807,10 +2812,10 @@ class Physics:
         # Todd empirical scalings
         # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
         elif i_plasma_current in [5, 6]:
-            fq = calculate_current_coefficient_todd(eps, kappa95, triang95)
+            fq = calculate_current_coefficient_todd(eps, kappa95, triang95, model=1)
 
             if i_plasma_current == 6:
-                fq *= 1.0 + (abs(kappa95 - 1.2)) ** 3
+                fq = calculate_current_coefficient_todd(eps, kappa95, triang95, model=2)
 
         # Connor-Hastie asymptotically-correct expression
         elif i_plasma_current == 7:
