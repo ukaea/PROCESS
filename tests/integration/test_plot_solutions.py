@@ -35,4 +35,4 @@ def test_plot_mfile_solutions(run_metadata: Sequence[RunMetadata]):
     )
 
     # Check shape of solution df as evidence of plotting without error
-    assert results_df.shape == (3, 93)
+    assert results_df.shape == (3, 94)

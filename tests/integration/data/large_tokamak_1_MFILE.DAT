@@ -18,7 +18,6 @@
  Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             26    
  Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
- Objective_function_name_________________________________________________ (objf_name)___________________     "major radius"    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      1.8713E-04 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      0.0000E+00 OP 
  Normalised_objective_function___________________________________________ (norm_objf)___________________      1.6000E+00 OP 

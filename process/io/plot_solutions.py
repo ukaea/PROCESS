@@ -9,6 +9,8 @@ currently.
 """
 
 from process.io.mfile import MFile
+from process.fortran import numerics
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from pathlib import Path
 import pandas as pd
 
@@ -84,7 +86,9 @@ def plot_mfile_solutions(
 
     # Filter for tag, optimisation parameters and objective function
     filtered_results_df = _filter_vars_of_interest(
-        results_df, opt_param_value_pattern=opt_param_value_pattern
+        results_df,
+        opt_param_value_pattern=opt_param_value_pattern,
+        extra_var_names=["minmax"],
     )
 
     if normalising_tag is not None:
@@ -342,12 +346,30 @@ def _plot_solutions(
     norm_objf_values_df = norm_objf_df.filter(regex=f"{NORM_OBJF_VALUE}|{TAG}")
 
     # Acquire objective function name(s), then check only one type is being plotted
-    objf_list = norm_objf_df[NORM_OBJF_NAME].unique()
+    # The objective function is found by first checking the NORM_OBJF_NAME column.
+    # If this entry does not exist for any of the MFiles (ie they are old),
+    # then the code 'falls back' to the the minmax output. Which holds the same
+    # information, but is less descriptive.
+    if (
+        NORM_OBJF_NAME in norm_objf_df.columns
+        and not norm_objf_df[NORM_OBJF_NAME].isna().any()
+    ):
+        objf_list = norm_objf_df[NORM_OBJF_NAME].unique()
+    else:
+        numerics.init_numerics()
+        objf_list = list(
+            set(
+                [
+                    f2py_compatible_to_string(numerics.lablmm[int(abs(minmax)) - 1])
+                    for minmax in diffs_df["minmax"]
+                ]
+            )
+        )
 
     if len(objf_list) != 1:
         raise ValueError("Can't plot different objective functions on the same plot")
 
-    objf_name = objf_list[0]
+    objf_name = str(objf_list[0])
 
     # Now separate optimisation parameter values from their names
     opt_params_values_df = opt_params_df.filter(
