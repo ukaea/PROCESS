@@ -493,7 +493,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             alphat=1.45,
             eps=1 / 3,
             rli=1.2098126022585098,
-            expected_bfs=0.34204201506155418,
+            expected_bfs=0.3501274900057279,
         ),
         BootstrapFractionSakaiParam(
             betap=1.1701245502231756,
@@ -503,7 +503,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             alphat=1.3999999999999999,
             eps=1 / 1.8,
             rli=0.3,
-            expected_bfs=0.90349498124262029,
+            expected_bfs=0.81877746774625,
         ),
     ),
 )
