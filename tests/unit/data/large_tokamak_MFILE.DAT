@@ -530,7 +530,7 @@
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      4.7098E+00    
- Maximum_Allowed_Bootstrap_current_fraction______________________________ (bscfmax)_____________________      9.5000E-01    
+ Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.0141E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      2.2041E+05 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.6799E-02 OP 
@@ -1644,7 +1644,7 @@ tramp = 500.0
 *---------------*
 
 * Maximum fraction of plasma current from bootstrap
-bscfmax = 0.95
+bootstrap_current_fraction_max = 0.95
 
 * Switch for current drive efficiency model
 iefrf = 10

@@ -435,7 +435,7 @@ tramp = 500.0
 *---------------*
 
 * Maximum fraction of plasma current from bootstrap
-bscfmax = 0.95
+bootstrap_current_fraction_max = 0.95
 
 * Switch for current drive efficiency model
 iefrf = 10

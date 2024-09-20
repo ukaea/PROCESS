@@ -2929,7 +2929,7 @@ etaech = 0.45
 * Bootstrap Current *
 *-------------------*
 
-bscfmax = 0.9
+bootstrap_current_fraction_max = 0.9
 * DESCRIPTION:   Maximum Fraction of Plasma Current from Bootstrap
 * JUSTIFICATION: upper limit set for plasma stability
 *                
