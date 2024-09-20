@@ -418,11 +418,36 @@ $$
 
 -----------------------------
 
-### 2. Calculate the cylidrical safety factor
+### 2. Calculate the cylindrical safety factor
+
+In reactor design the total plasma current $I_{\text{p}}$, is limited by considerations of tearing mode stability, and major disruptions. These considerations place a limit on the safety factor at the plasma boundary, $q_{\psi}$. In a cylindrical plasma model there is a simple relation between this value, $q_{\text{cyl}}$, and the plasma current, given by
 
 $$
-q^* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa^2(1+2\delta^2-1.2\delta^3))}{2}
+q_{\psi} = q_{\text{cyl}} \equiv \frac{5a^2B_0}{R_0I_p}
 $$
+
+where the minor and major radii are expressed in metres, the toroidal magnetic field $B_0$, in Tesla, and the plasma current $I_{\text{p}}$, in megamps. Thus a stability requirement of the form  $q_{\psi} > q_{\text{crit}}$ (usually considered to be ~ 2.0) places a limit on $I_{\text{p}}$.
+The effect of toroidicity and of shaping of the plasma cross section is to modify the relation above between $q_{\psi}$ and the plasma current, $I_{\text{p}}$. In general this relation may be written in the form:
+
+
+$$
+q_{\psi} =  \frac{5a^2B_0}{R_0I_p}F\left(\epsilon,\kappa,\delta; \text{profiles}\right)
+$$
+
+It is not possible to derive a general analytic expression for $F$, so it has been customary to employ an empirical, or semi-empirical expression involving $\epsilon$,$\kappa$ and $\delta$, chosen to fit data taken from numerical solutions of the Grad Shafranov equation.
+
+The cylindrical equaivalent $q$ definition used currenly is the one given below from IPDG89[^5]
+
+$$
+q_* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa^2(1+2\delta^2-1.2\delta^3))}{2}
+$$
+
+
+!!! note "$q_{\text{cyl}}$ definition and use in PROCESS"
+
+    Though this seems to not be the definition of the cyclindrical safety factor due to the elongation and triangularity scaling. 
+    Zohm[^12], Wesson[^13], and AEA FUS 172[^7] all say that cyclindrical safety factor is just the first fraction.
+    And if we assume a cylindrical plasma where $\kappa = 1$ and $\delta = 0$ then the second term reduces to 1.
 
 --------------
 
@@ -433,6 +458,9 @@ The total normlaized beta is calculated as per:
 $$
 \beta_N = \beta\frac{1\times10^8  a B_{\text{T}}}{I_{\text{P}}}
 $$
+
+
+-----------------
 
 ### 4. Plasma Current Poloidal Field
 
@@ -457,7 +485,7 @@ $$
 A limited degree of self-consistency between the plasma current profile and other parameters can be 
 enforced by setting switch `iprofile = 1`. This sets the current 
 profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`rli`) and beta limit $g$-factor (`dnbeta`) using the 
-safety factor on axis `q0` and the cylindrical safety factor $q*$ (`qstar`):   
+safety factor on axis `q0` and the cylindrical safety factor $q_*$ (`qstar`):   
 
 $$\begin{aligned}
 \alpha_J = \frac{q*}{q_0} - 1
@@ -481,6 +509,8 @@ l_i = 3.4 - \kappa_x
 \end{aligned}$$
 
 Further desciption of `iprofile` is given in [Beta Limit](../plasma_beta.md).
+
+-----------------------
 
 ## _plasc_bpol
 
@@ -588,4 +618,8 @@ Unpublished internal Oak Ridge document.
 https://doi.org/10.1016/j.fusengdes.2016.04.033.
 [^10]: Stuart I. Muldrew, Hanni Lux, Geof Cunningham, Tim C. Hender, Sebastien Kahn, Peter J. Knight, Bhavin Patel, Garry M. Voss, Howard R. Wilson, “PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design, Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
 [^11]: J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,” Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016, doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+[^12]: Zohm Hartmut, 2019, "On the size of tokamak fusion power plants", Phil. Trans. R. Soc. A.37720170437
+http://doi.org/10.1098/rsta.2017.0437
+[^13]: Wesson, J. and Campbell, D. J. (2004) Tokamaks. Clarendon Press (International series of monographs on physics). Available at: https://books.google.co.uk/books?id=iPlAwZI6HIYC.
+
 

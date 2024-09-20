@@ -2841,7 +2841,7 @@ class Physics:
             )
         # i_plasma_current == 2 case covered above
 
-        # Calculate cyclindrical safety factor
+        # Calculate cyclindrical safety factor from IPDG89
         qstar = (
             5.0e6
             * rminor**2
