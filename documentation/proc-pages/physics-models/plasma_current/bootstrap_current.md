@@ -214,6 +214,24 @@ $$
 
 where $q(\psi)$ is the safety factor.
 
+The reconstructed implementation in PROCESS looks as such:
+
+$$
+\frac{I_{\text{b}}}{I_{\text{p}}} = \sum_2^{\rho_{\text{max}}} \left(2\pi\left[\rho\right]_{-1} \times \left(\left[\rho\right] -\left[\rho\right]_{-1}\right)  \right) \times  \\
+\left(0.5 \times \left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} 
++\left(\mathcal{L}_{31} + \mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi} 
++ \left(1 + \frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right] \times \\
+ 1 \times 10^6 \times \frac{-B_{0}\left[\rho\right]_{-1}\left[\frac{1}{q}\right]_{-1}}{0.2\pi R_0}\right)
+$$
+
+In this case square brackets denote array variables equal in length to $\rho_{\text{max}}$ representing the normalized radius elements across the profile. The $-1$ subscript denotes the previous array element in the summation.
+
+It is not known fully if the $\left(\sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\right)$ term is properly implemented into the `PROCESS` version. The $R_{pe}$ value is assumingly taken to be 0.5 as it is stated to approximately to be in Sauter et.al[^4].
+
+!!! warning "Validity of the Sauter Bootstrap Scaling"
+
+    In its current state the several base functions called by the Sauter scaling have no reference and cannot be verified. The ad-hoc adaption of the Sauter scaling for use in `PROCESS` is done knowing that `PROCESS` does not calculate flux surfaces across the plasma.
+
 -----------
 
 #### Calculate electron density coefficient | `calculate_l31_coefficient()`
