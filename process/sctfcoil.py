@@ -2286,7 +2286,7 @@ class Sctfcoil:
 
         H_vv = (
             physics_variables.rminor * physics_variables.kappa
-            + build_variables.vgap
+            + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             + build_variables.shldtth
             + (build_variables.d_vv_top / 2)

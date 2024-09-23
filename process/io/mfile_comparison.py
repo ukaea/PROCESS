@@ -259,11 +259,11 @@ GENERIC_LIST = [
     "gapsto",
     "tftsgap",
     "tfthko",
-    "vgap",
+    "vgap_xpoint_divertor",
     "divfix",
     "d_vv_bot",
     "shldlth",
-    "vgap2",
+    "vgap_vv_thermalshield",
 ]
 
 
