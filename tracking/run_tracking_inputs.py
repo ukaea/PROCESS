@@ -30,8 +30,6 @@ for current_name in mfile_names:
     new_name = prefix + "_MFILE.DAT"
     new_location_mfile_names.append(new_name)
 
-print(f"new mfile names = {new_location_mfile_names}")
-
 process_dir = Path(__file__).resolve().parent.parent
 input_file_dir = process_dir / "tests/regression/input_files"
 
