@@ -45,8 +45,17 @@ pip install notebook
 
 for just the `notebook` package.
 
-```
 
 <h2>Maintaining notebooks and scripts</h2>
 
 Notebooks are located in the `examples` directory and are tested using `testbook` to ensure they keep working.
+
+
+<h2>Issues running notebooks</h2>
+
+If you encounter a `PDFInfoNotInstalledError` when running a notebook, ensure poppler utilities are properly installed:
+
+```bash
+apt-get update
+apt-get install poppler-utils
+```

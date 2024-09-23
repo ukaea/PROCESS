@@ -30,3 +30,13 @@ A web browser will open and the notebook can be run from there. If you're using 
 
 ## Maintaining notebooks
 Notebooks are located in the `examples` directory and are tested using `testbook` to ensure they keep working.
+
+
+## Issues running notebooks
+
+If you encounter a `PDFInfoNotInstalledError` when running a notebook, ensure poppler utilities are properly installed:
+
+```bash
+apt-get update
+apt-get install poppler-utils
+```
