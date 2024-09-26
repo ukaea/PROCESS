@@ -20,9 +20,9 @@ In this case the output files will be `OUT.DAT` and `MFILE.DAT`.
 
 The user can provide a named input file, provided the last 6 characters of the input file name are IN.DAT.
 ```bash
-process -i [path-to-file]/my_file_name_IN.DAT
+process -i path/to/my_file_name_IN.DAT
 ```
-will produce output files named:
+will produce the following output files in the same directory as the input file:
 ```
     my_file_name_OUT.DAT
     my_file_name_MFILE.DAT
@@ -83,6 +83,7 @@ SEED = 5
 FACTOR = 1.5
 
 * Number of allowed unconverged scan points in a single PROCESS scan.
+* Leave this at 0 to stop the vary run only when a converged solution is found
 NO_ALLOWED_UNFEASIBLE = 0
 
 * include a summary file with the iteration variables at each stage.
