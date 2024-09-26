@@ -158,6 +158,8 @@ jobs:
           mv tests/regression/input_files/large_tokamak_nof.MFILE.DAT tracking/large_tokamak_nof_MFILE.DAT
           process -i tests/regression/input_files/large_tokamak_once_through.IN.DAT
           mv tests/regression/input_files/large_tokamak_once_through.MFILE.DAT tracking/large_tokamak_once_through_MFILE.DAT
+          process -i tests/regression/input_files/stellarator.IN.DAT
+          mv tests/regression/input_files/stellarator.MFILE.DAT tracking/stellarator_MFILE.DAT
       - name: Archive tracked MFILEs
         uses: actions/upload-artifact@v3
         with:
@@ -220,6 +222,8 @@ jobs:
           cp tracking/large_tokamak_nof_MFILE.DAT process-tracking-data/large_tokamak_nof_MFILE_$(git rev-parse HEAD).DAT
           python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_once_through_MFILE.DAT --hash ${{ github.sha }} --commit "${MSG}"
           cp tracking/large_tokamak_once_through_MFILE.DAT process-tracking-data/large_tokamak_once_through_MFILE_$(git rev-parse HEAD).DAT
+          python tracking/tracking_data.py track process-tracking-data --mfile tracking/stellarator_MFILE.DAT --hash ${{ github.sha }} --commit "${MSG}"
+          cp tracking/stellarator_MFILE.DAT process-tracking-data/stellarator_MFILE_$(git rev-parse HEAD).DAT
       - name: Create the tracking dashboard
         run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
