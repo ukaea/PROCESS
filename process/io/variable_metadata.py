@@ -161,7 +161,7 @@ var_dicts = {
     "f_tf_steel": VariableMetadata(
         latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units=""
     ),
-    "plasma_current/1d6": VariableMetadata(
+    "plasma_current_MA": VariableMetadata(
         latex=r"$I_{\mathrm{p}}$[$MA$]", description="Plasma current", units="MA"
     ),
     "n_cycle": VariableMetadata(

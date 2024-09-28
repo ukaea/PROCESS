@@ -632,7 +632,7 @@ def main(args=None):
                     plt.tight_layout()
 
             # Output file naming
-            if output_name == "plasma_current/1d6":
+            if output_name == "plasma_current_MA":
                 plt.savefig(
                     f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
                     + f"_vs_{output_name2}"

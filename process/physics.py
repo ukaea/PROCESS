@@ -3256,7 +3256,7 @@ class Physics:
                 po.ovarrf(
                     self.outfile,
                     "Plasma current (MA)",
-                    "(plasma_current/1D6)",
+                    "(plasma_current_MA)",
                     physics_variables.plasma_current / 1.0e6,
                     "OP ",
                 )
