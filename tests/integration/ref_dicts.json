@@ -7916,8 +7916,8 @@
         "vfpblkt": 0.1,
         "vfshld": 0.25,
         "vftf": 0.4,
-        "vgap": 0.0,
-        "vgap2": 0.163,
+        "vgap_xpoint_divertor": 0.0,
+        "vgap_vv_thermalshield": 0.163,
         "vgaptop": 0.6,
         "vlabel": "",
         "vlabel_2": "",
@@ -11016,9 +11016,9 @@
         "vfpblkt": "He purge gas fraction of blanket by volume (`iblanket= 1,3` (CCFE HCPB))",
         "vfshld": "coolant void fraction in shield",
         "vftf": "coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_ssup=0`)",
-        "vgap": "vertical gap between x-point and divertor (m) (if = 0, it is calculated)",
-        "vgap2": "vertical gap between vacuum vessel and thermal shields (m)",
-        "vgaptop": "vertical gap between top of plasma and first wall (m) (= vgap if double-null)",
+        "vgap_xpoint_divertor": "vertical gap between x-point and divertor (m) (if = 0, it is calculated)",
+        "vgap_vv_thermalshield": "vertical gap between vacuum vessel and thermal shields (m)",
+        "vgaptop": "vertical gap between top of plasma and first wall (m) (= vgap_xpoint_divertor if double-null)",
         "vlabel": "scan value name label",
         "vlabel_2": "scan value name label (2nd dimension)",
         "vlam": "",
@@ -14956,11 +14956,11 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "vgap": {
+        "vgap_xpoint_divertor": {
             "lb": 0.0,
             "ub": 10.0
         },
-        "vgap2": {
+        "vgap_vv_thermalshield": {
             "lb": 0.0,
             "ub": 10.0
         },
@@ -17057,8 +17057,8 @@
             "tfthko",
             "tftsgap",
             "thshield",
-            "vgap2",
-            "vgap",
+            "vgap_vv_thermalshield",
+            "vgap_xpoint_divertor",
             "vgaptop",
             "vvblgap",
             "plleni",
@@ -20865,8 +20865,8 @@
         "vfpblkt": "real_variable",
         "vfshld": "real_variable",
         "vftf": "real_variable",
-        "vgap": "real_variable",
-        "vgap2": "real_variable",
+        "vgap_xpoint_divertor": "real_variable",
+        "vgap_vv_thermalshield": "real_variable",
         "vgaptop": "real_variable",
         "vvblgap": "real_variable",
         "vvhealw": "real_variable",

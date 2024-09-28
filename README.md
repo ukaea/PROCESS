@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8338226.svg)](https://doi.org/10.5281/zenodo.8338226)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8338226.svg)](https://doi.org/10.5281/zenodo.8338226) [![codecov](https://codecov.io/gh/ukaea/process/graph/badge.svg?token=F94XDNUIX0)](https://codecov.io/gh/ukaea/process)
 
 # PROCESS
 

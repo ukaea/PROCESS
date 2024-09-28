@@ -242,7 +242,7 @@ subroutine check
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use build_variables, only: blnkith, bore, gapoh, ohcth, precomp, iprecomp, &
-        i_r_cp_top, r_cp_top, vgaptop, vgap, shldtth, shldlth, d_vv_top, d_vv_bot, tf_in_cs
+        i_r_cp_top, r_cp_top, vgaptop, vgap_xpoint_divertor, shldtth, shldlth, d_vv_top, d_vv_bot, tf_in_cs
     use buildings_variables, only: esbldgm3, triv
     use current_drive_variables, only: gamcd, iefrf, irfcd
     use error_handling, only: errors_on, idiags, fdiags, report_error
@@ -489,7 +489,7 @@ subroutine check
 
      if (i_single_null == 0) then
          idivrt = 2
-         vgaptop = vgap
+         vgaptop = vgap_xpoint_divertor
          shldtth = shldlth
          d_vv_top = d_vv_bot
          call report_error(272)

@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 """
 
   Modifies the PROCESS input file IN.DAT so all the iteration variables are
@@ -6,20 +5,12 @@
 
   James Morris 30/04/2014 based on code by Michael Kovari 9/8/13 and
   J C Rivas, 16/7/2013
-
-  Notes:
-     + JM 30/04/2014: Initial version using new libraries
-     + JM 30/04/2014: Added command line arguments
-     + PJK 19/08/2014: Corrected -- if "itvar" in value: -- line
-     + HL 16/12/2014: Updated to use new in_dat.py library
-
-  Compatible with PROCESS version 382
-
 """
 
 import argparse
+import re
 import process.io.mfile as mf
-import process.io.in_dat as in_dat
+from process.io.in_dat import InDat
 
 
 def feasible_point(filename, position):
@@ -106,9 +97,12 @@ def replace_iteration_variables(iteration_vars, in_data):
 
     """
 
-    for name in iteration_vars.keys():
-        varname = name.lower()
-        in_data.add_parameter(varname, iteration_vars[name])
+    for variable_name, variable_value in iteration_vars.items():
+        
+        if (match := re.search(r"([a-zA-Z0-9_]+)\(([0-9]+)\)", variable_name)) is None:
+            in_data.add_parameter(variable_name.lower(), variable_value)
+        else:
+            in_data.change_array(match.group(1), int(match.group(2))-1, variable_value)
 
     return in_data
 
@@ -172,7 +166,7 @@ def main(args=None):
     it_vars = get_iteration_variables(args.f, scan)
 
     # Read IN.DAT
-    in_dat_data = in_dat.InDat(args.i)
+    in_dat_data = InDat(args.i)
 
     # Amend the values for the iteration variables
     in_dat_data = replace_iteration_variables(it_vars, in_dat_data)

@@ -119,6 +119,8 @@ OBS_VARS = {
     "ips": "i_pfirsch_schluter_current",
     "bootipf": "bootstrap_current_fraction",
     "bscfmax": "bootstrap_current_fraction_max",
+    "vgap2": "vgap_vv_thermalshield",
+    "vgap": "vgap_xpoint_divertor",
 }
 
 OBS_VARS_HELP = {

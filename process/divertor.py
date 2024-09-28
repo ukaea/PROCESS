@@ -39,7 +39,7 @@ class Divertor:
                 pv.rminor,
                 pv.triang,
                 bv.scrapli,
-                bv.vgap,
+                bv.vgap_xpoint_divertor,
                 pv.pdivt,
                 output=output,
             )
@@ -752,7 +752,7 @@ class Divertor:
         rminor: float,
         triang: float,
         scrapli: float,
-        vgap: float,
+        vgap_xpoint_divertor: float,
         pdivt: float,
         output: bool,
     ) -> float:
@@ -777,8 +777,8 @@ class Divertor:
         :param scrapli: inboard scrape-off width (m)
         :type scrapli: float
 
-        :param vgap: top scrape-off width (m)
-        :type vgap: float
+        :param vgap_xpoint_divertor: top scrape-off width (m)
+        :type vgap_xpoint_divertor: float
 
         :param pdivt: power to the divertor (MW)
         :type pdivt: float
@@ -800,15 +800,15 @@ class Divertor:
 
         #  Angle of diagonal divertor plate from horizontal
 
-        if vgap <= 0.0e0:
-            eh.fdiags[0] = vgap
+        if vgap_xpoint_divertor <= 0.0e0:
+            eh.fdiags[0] = vgap_xpoint_divertor
             eh.report_error(22)
 
-        theta = math.atan(vgap / (r2 - r1))
+        theta = math.atan(vgap_xpoint_divertor / (r2 - r1))
 
         #  Vertical plate area
 
-        a1 = 2.0e0 * constants.pi * r1 * vgap
+        a1 = 2.0e0 * constants.pi * r1 * vgap_xpoint_divertor
 
         #  Horizontal plate area
 

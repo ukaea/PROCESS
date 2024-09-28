@@ -253,7 +253,7 @@ contains
         !
         ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        use build_variables, only: hmax, vgap, vgap2, blnktth, shldtth, scrapli, scraplo, &
+        use build_variables, only: hmax, vgap_xpoint_divertor, vgap_vv_thermalshield, blnktth, shldtth, scrapli, scraplo, &
         fwith, fwoth, d_vv_bot, d_vv_top
         use physics_variables, only: rminor, kappa, idivrt
         use divertor_variables, only: divfix
@@ -272,11 +272,11 @@ contains
 
         ! Calculate component internal lower half-height (m)
         ! Blanket
-        if (icomponent==0) hbot = rminor*kappa + vgap + divfix - blnktth
+        if (icomponent==0) hbot = rminor*kappa + vgap_xpoint_divertor + divfix - blnktth
         ! Sheild
-        if (icomponent==1) hbot = rminor*kappa + vgap + divfix
+        if (icomponent==1) hbot = rminor*kappa + vgap_xpoint_divertor + divfix
         ! Vacuum vessel
-        if (icomponent==2) hbot = hmax - vgap2 - d_vv_bot
+        if (icomponent==2) hbot = hmax - vgap_vv_thermalshield - d_vv_bot
 
         ! Calculate component internal upper half-height (m)
          ! If a double null machine then symmetric

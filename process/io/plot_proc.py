@@ -154,11 +154,11 @@ RADIAL_BUILD = [
 
 vertical_lower = [
     "rminor*kappa",
-    "vgap",
+    "vgap_xpoint_divertor",
     "divfix",
     "shldlth",
     "d_vv_bot",
-    "vgap2",
+    "vgap_vv_thermalshield",
     "thshield_vb",
     "tftsgap",
     "tfcth",
@@ -1153,6 +1153,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_single_null.rs,
             vvg_single_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1171,6 +1172,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_double_null.rs,
             vvg_double_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
 
@@ -1219,7 +1221,10 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
         )
         axis.plot(sg_single_null.rs, sg_single_null.zs, color="black", lw=thin)
         axis.fill(
-            sg_single_null.rs, sg_single_null.zs, color=SHIELD_COLOUR[colour_scheme - 1]
+            sg_single_null.rs,
+            sg_single_null.zs,
+            color=SHIELD_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1233,7 +1238,10 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
         )
         axis.plot(sg_double_null.rs, sg_double_null.zs, color="black", lw=thin)
         axis.fill(
-            sg_double_null.rs, sg_double_null.zs, color=SHIELD_COLOUR[colour_scheme - 1]
+            sg_double_null.rs,
+            sg_double_null.zs,
+            color=SHIELD_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
 
@@ -1307,6 +1315,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_single_null.rs,
             bg_single_null.zs,
             color=BLANKET_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1325,6 +1334,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_double_null.rs[0],
             bg_double_null.zs[0],
             color=BLANKET_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
         if blnkith > 0.0:
             # only plot inboard blanket if inboard blanket thickness > 0
@@ -1335,6 +1345,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
                 bg_double_null.rs[1],
                 bg_double_null.zs[1],
                 color=BLANKET_COLOUR[colour_scheme - 1],
+                lw=0.01,
             )
 
 
@@ -1403,6 +1414,7 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             fwg_single_null.rs,
             fwg_single_null.zs,
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1423,11 +1435,13 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             fwg_double_null.rs[0],
             fwg_double_null.zs[0],
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
         axis.fill(
             fwg_double_null.rs[1],
             fwg_double_null.zs[1],
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
 
@@ -3174,7 +3188,7 @@ def main(args=None):
             "divfix",
             "shldtth",
             "d_vv_top",
-            "vgap2",
+            "vgap_vv_thermalshield",
             "thshield_vb",
             "tftsgap",
             "tfcth",
@@ -3188,7 +3202,7 @@ def main(args=None):
             "vvblgap",
             "shldtth",
             "d_vv_top",
-            "vgap2",
+            "vgap_vv_thermalshield",
             "thshield_vb",
             "tftsgap",
             "tfcth",

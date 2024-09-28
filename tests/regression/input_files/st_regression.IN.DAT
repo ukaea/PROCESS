@@ -2152,7 +2152,7 @@ tfootfi = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vertical Build~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-vgap = 0.75
+vgap_xpoint_divertor = 0.75
 * DESCRIPTION:   Vertical Gap Between x-point and Divertor (m)
 * JUSTIFICATION: 
 
@@ -2180,7 +2180,7 @@ thshield_vb = 0.075
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
-vgap2 = 2.0
+vgap_vv_thermalshield = 2.0
 * DESCRIPTION:   Vertical Gap Between Vacuum Vessel and TF coil (m)
 * JUSTIFICATION: 
 
