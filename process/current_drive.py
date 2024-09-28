@@ -41,7 +41,7 @@ class CurrentDrive:
         pinjemwfix = 0.0
         pinjimwfix = 0.0
         auxiliary_cdfix = 0.0
-        faccdfix = 0.0
+        aux_current_fraction_fix = 0.0
         gamcdfix = 0.0e0
 
         # To stop issues with input file we force
@@ -284,7 +284,7 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                faccdfix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plascur
             elif current_drive_variables.iefrffix in [3, 7, 10, 12, 13]:
                 # Injected power
                 pinjemwfix = current_drive_variables.pinjfixmw
@@ -306,7 +306,7 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                faccdfix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plascur
             elif current_drive_variables.iefrffix in [5, 8]:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
@@ -353,7 +353,7 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                faccdfix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plascur
 
             # Fenstermacher Lower Hybrid model
             if current_drive_variables.iefrf == 1:
@@ -560,7 +560,7 @@ class CurrentDrive:
                 # Injected power
                 current_drive_variables.plhybd = (
                     1.0e-6
-                    * (physics_variables.aux_current_fraction - faccdfix)
+                    * (physics_variables.aux_current_fraction - aux_current_fraction_fix)
                     * physics_variables.plascur
                     / effrfss
                     + current_drive_variables.pheat
@@ -585,7 +585,7 @@ class CurrentDrive:
                 # Injected power (set to close to close the Steady-state current equilibrium)
                 current_drive_variables.echpwr = (
                     1.0e-6
-                    * (physics_variables.aux_current_fraction - faccdfix)
+                    * (physics_variables.aux_current_fraction - aux_current_fraction_fix)
                     * physics_variables.plascur
                     / effrfss
                     + current_drive_variables.pheat
@@ -604,7 +604,7 @@ class CurrentDrive:
                 # MDK. See Gitlab issue #248, and scanned note.
                 power1 = (
                     1.0e-6
-                    * (physics_variables.aux_current_fraction - faccdfix)
+                    * (physics_variables.aux_current_fraction - aux_current_fraction_fix)
                     * physics_variables.plascur
                     / effnbss
                     + current_drive_variables.pheat
