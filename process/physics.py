@@ -5140,7 +5140,7 @@ class Physics:
         alphat: float,
         betpth: float,
         q0: float,
-        qpsi: float,
+        q95: float,
         rmajor: float,
         rminor: float,
     ) -> float:
@@ -5153,7 +5153,7 @@ class Physics:
             alphat (float): Temperature profile index.
             betpth (float): Thermal component of poloidal beta.
             q0 (float): Safety factor on axis.
-            qpsi (float): Edge safety factor.
+            q95 (float): Edge safety factor.
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
 
@@ -5166,15 +5166,15 @@ class Physics:
                    H. R. Wilson, Nuclear Fusion 32 (1992) 257
         """
         term1 = np.log(0.5)
-        term2 = np.log(q0 / qpsi)
+        term2 = np.log(q0 / q95)
 
         termp = 1.0 - 0.5 ** (1.0 / alphap)
         termt = 1.0 - 0.5 ** (1.0 / alphat)
         termj = 1.0 - 0.5 ** (1.0 / alphaj)
 
-        alfpnw = term1 / np.log(np.log((q0 + (qpsi - q0) * termp) / qpsi) / term2)
-        alftnw = term1 / np.log(np.log((q0 + (qpsi - q0) * termt) / qpsi) / term2)
-        aj = term1 / np.log(np.log((q0 + (qpsi - q0) * termj) / qpsi) / term2)
+        alfpnw = term1 / np.log(np.log((q0 + (q95 - q0) * termp) / q95) / term2)
+        alftnw = term1 / np.log(np.log((q0 + (q95 - q0) * termt) / q95) / term2)
+        aj = term1 / np.log(np.log((q0 + (q95 - q0) * termj) / q95) / term2)
 
         # Crude check for NaN errors or other illegal values...
 

@@ -225,7 +225,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
 
     q0: Any = None
 
-    qpsi: Any = None
+    q95: Any = None
 
     rmajor: Any = None
 
@@ -243,7 +243,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
             alphat=1.45,
             betpth=1.0874279209664601,
             q0=1,
-            qpsi=3.5,
+            q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             expected_bfw=0.42321339288758714,
@@ -254,7 +254,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
             alphat=1.45,
             betpth=0.99075943086768326,
             q0=1,
-            qpsi=3.5,
+            q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             expected_bfw=0.38559122143951252,
@@ -280,7 +280,7 @@ def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
         alphat=bootstrapfractionwilsonparam.alphat,
         betpth=bootstrapfractionwilsonparam.betpth,
         q0=bootstrapfractionwilsonparam.q0,
-        qpsi=bootstrapfractionwilsonparam.qpsi,
+        q95=bootstrapfractionwilsonparam.q95,
         rmajor=bootstrapfractionwilsonparam.rmajor,
         rminor=bootstrapfractionwilsonparam.rminor,
     )
