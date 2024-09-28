@@ -158,7 +158,7 @@ class CudrivParam(NamedTuple):
 
     tbeta: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     ipedestal: Any = None
 
@@ -271,7 +271,7 @@ class CudrivParam(NamedTuple):
             bt=5.7000000000000002,
             rminor=2.6666666666666665,
             tbeta=2,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             ipedestal=1,
             aux_current_fraction=0.12364081253383186,
             ignite=0,
@@ -361,7 +361,7 @@ class CudrivParam(NamedTuple):
             bt=5.7000000000000002,
             rminor=2.6666666666666665,
             tbeta=2,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             ipedestal=1,
             aux_current_fraction=0.12364081253383186,
             ignite=0,
@@ -551,7 +551,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "tbeta", cudrivparam.tbeta)
 
-    monkeypatch.setattr(physics_variables, "plascur", cudrivparam.plascur)
+    monkeypatch.setattr(physics_variables, "plasma_current", cudrivparam.plasma_current)
 
     monkeypatch.setattr(physics_variables, "ipedestal", cudrivparam.ipedestal)
 

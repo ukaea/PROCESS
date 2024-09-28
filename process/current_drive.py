@@ -284,7 +284,7 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plasma_current
             elif current_drive_variables.iefrffix in [3, 7, 10, 12, 13]:
                 # Injected power
                 pinjemwfix = current_drive_variables.pinjfixmw
@@ -306,7 +306,7 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plasma_current
             elif current_drive_variables.iefrffix in [5, 8]:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
@@ -353,7 +353,7 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = auxiliary_cdfix / physics_variables.plasma_current
 
             # Fenstermacher Lower Hybrid model
             if current_drive_variables.iefrf == 1:
@@ -553,7 +553,7 @@ class CurrentDrive:
                 )
 
             # Compute current drive wall plug and injected powers (MW) and efficiencies
-            auxiliary_cd = physics_variables.aux_current_fraction * physics_variables.plascur
+            auxiliary_cd = physics_variables.aux_current_fraction * physics_variables.plasma_current
 
             # LHCD or ICCD
             if current_drive_variables.iefrf in [1, 2, 4, 6]:
@@ -561,7 +561,7 @@ class CurrentDrive:
                 current_drive_variables.plhybd = (
                     1.0e-6
                     * (physics_variables.aux_current_fraction - aux_current_fraction_fix)
-                    * physics_variables.plascur
+                    * physics_variables.plasma_current
                     / effrfss
                     + current_drive_variables.pheat
                 )
@@ -586,7 +586,7 @@ class CurrentDrive:
                 current_drive_variables.echpwr = (
                     1.0e-6
                     * (physics_variables.aux_current_fraction - aux_current_fraction_fix)
-                    * physics_variables.plascur
+                    * physics_variables.plasma_current
                     / effrfss
                     + current_drive_variables.pheat
                 )
@@ -605,7 +605,7 @@ class CurrentDrive:
                 power1 = (
                     1.0e-6
                     * (physics_variables.aux_current_fraction - aux_current_fraction_fix)
-                    * physics_variables.plascur
+                    * physics_variables.plasma_current
                     / effnbss
                     + current_drive_variables.pheat
                 )

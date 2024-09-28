@@ -53,7 +53,7 @@ contains
     !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    use physics_variables, only: rminor, plascur
+    use physics_variables, only: rminor, plasma_current
     implicit none
 
     !  Arguments
@@ -132,13 +132,13 @@ contains
     ! Hubbard et al. 2012 L-I threshold scaling
 
     ! Nominal
-    pthrmw(15) = 2.11 * (plascur/1.0D6)**0.94 * dnla20**0.65
+    pthrmw(15) = 2.11 * (plasma_current/1.0D6)**0.94 * dnla20**0.65
 
     ! Lower bound
-    pthrmw(16) = 2.11 * (plascur/1.0D6)**0.70 * dnla20**0.47
+    pthrmw(16) = 2.11 * (plasma_current/1.0D6)**0.70 * dnla20**0.47
 
     ! Upper bound
-    pthrmw(17) = 2.11 * (plascur/1.0D6)**1.18 * dnla20**0.83
+    pthrmw(17) = 2.11 * (plasma_current/1.0D6)**1.18 * dnla20**0.83
 
     ! Hubbard et al. 2017 L-I threshold scaling
     pthrmw(18) = 0.162 * dnla20 * sarea * (bt)**0.26

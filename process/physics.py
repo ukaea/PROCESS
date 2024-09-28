@@ -64,7 +64,7 @@ def vscalc(
     kappa,
     rmajor,
     rplas,
-    plascur,
+    plasma_current,
     t_fusion_ramp,
     tburn,
     rli,
@@ -77,7 +77,7 @@ def vscalc(
     inductive_current_fraction  : input real :  fraction of plasma current produced inductively
     gamma  : input real :  Ejima coeff for resistive start-up V-s component
     kappa  : input real :  plasma elongation
-    plascur: input real :  plasma current (A)
+    plasma_current: input real :  plasma current (A)
     rli    : input real :  plasma normalised inductivity
     rmajor : input real :  plasma major radius (m)
     rplas  : input real :  plasma resistance (ohm)
@@ -95,12 +95,12 @@ def vscalc(
     # Internal inductance
 
     rlpint = rmu0 * rmajor * rli / 2.0
-    phiint = rlpint * plascur
+    phiint = rlpint * plasma_current
 
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
 
-    vsres = gamma * rmu0 * plascur * rmajor
+    vsres = gamma * rmu0 * plasma_current * rmajor
 
     # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
     # fit for external inductance
@@ -117,14 +117,14 @@ def vscalc(
 
     # Inductive V-s component
 
-    vsind = rlp * plascur
+    vsind = rlp * plasma_current
     vsstt = vsres + vsind
 
     # Loop voltage during flat-top
     # Include enhancement factor in flattop V-s requirement
     # to account for MHD sawtooth effects.
 
-    vburn = plascur * rplas * inductive_current_fraction * csawth
+    vburn = plasma_current * rplas * inductive_current_fraction * csawth
 
     # N.B. tburn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
@@ -137,12 +137,12 @@ def vscalc(
 
 
 @nb.jit(nopython=True, cache=True)
-def culblm(bt, dnbeta, plascur, rminor):
+def culblm(bt, dnbeta, plasma_current, rminor):
     """Beta scaling limit
     author: P J Knight, CCFE, Culham Science Centre
     bt      : input real :  toroidal B-field on plasma axis (T)
     dnbeta  : input real :  Troyon-like g coefficient
-    plascur : input real :  plasma current (A)
+    plasma_current : input real :  plasma current (A)
     rminor  : input real :  plasma minor axis (m)
     betalim : output real : beta limit as defined below
     This subroutine calculates the beta limit, using
@@ -159,7 +159,7 @@ def culblm(bt, dnbeta, plascur, rminor):
     AEA FUS 172: Physics Assessment for the European Reactor Study
     """
 
-    return 0.01 * dnbeta * (plascur / 1.0e6) / (rminor * bt)
+    return 0.01 * dnbeta * (plasma_current / 1.0e6) / (rminor * bt)
 
 
 # -----------------------------------------------------
@@ -1497,7 +1497,7 @@ class Physics:
             physics_variables.rli,
             physics_variables.bp,
             physics_variables.qstar,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
         ) = self.calculate_plasma_current(
             physics_variables.alphaj,
             physics_variables.alphap,
@@ -1527,7 +1527,7 @@ class Physics:
             physics_variables.neped = (
                 physics_variables.fgwped
                 * 1.0e14
-                * physics_variables.plascur
+                * physics_variables.plasma_current
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
             )
 
@@ -1535,7 +1535,7 @@ class Physics:
             physics_variables.nesep = (
                 physics_variables.fgwsep
                 * 1.0e14
-                * physics_variables.plascur
+                * physics_variables.plasma_current
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
             )
 
@@ -1550,7 +1550,7 @@ class Physics:
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
             if times_variables.tohsin == 0.0e0:
-                times_variables.tohs = physics_variables.plascur / 5.0e5
+                times_variables.tohs = physics_variables.plasma_current / 5.0e5
                 times_variables.tramp = times_variables.tohs
                 times_variables.tqnch = times_variables.tohs
             else:
@@ -1559,7 +1559,7 @@ class Physics:
         else:
             if times_variables.pulsetimings == 0.0e0:
                 # times_variables.tramp is input
-                times_variables.tohs = physics_variables.plascur / 1.0e5
+                times_variables.tohs = physics_variables.plasma_current / 1.0e5
                 times_variables.tqnch = times_variables.tohs
 
             else:
@@ -1644,7 +1644,7 @@ class Physics:
                 physics_variables.aspect,
                 physics_variables.beta,
                 physics_variables.btot,
-                physics_variables.plascur,
+                physics_variables.plasma_current,
                 physics_variables.q95,
                 physics_variables.q0,
                 physics_variables.rmajor,
@@ -1666,7 +1666,7 @@ class Physics:
                 betat,
                 physics_variables.bt,
                 physics_variables.dene,
-                physics_variables.plascur,
+                physics_variables.plasma_current,
                 physics_variables.q95,
                 physics_variables.q0,
                 physics_variables.rmajor,
@@ -1940,7 +1940,7 @@ class Physics:
         ) = self.pohm(
             physics_variables.inductive_current_fraction,
             physics_variables.kappa95,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.ten,
@@ -2012,7 +2012,7 @@ class Physics:
             physics_variables.bt,
             physics_variables.idensl,
             physics_variables.pdivt,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
             divertor_variables.prn1,
             physics_variables.qstar,
             physics_variables.q95,
@@ -2049,7 +2049,7 @@ class Physics:
             physics_variables.kappa95,
             physics_variables.pchargemw,
             current_drive_variables.pinjmw,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
             physics_variables.pcoreradpv,
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -2084,7 +2084,7 @@ class Physics:
             physics_variables.kappa,
             physics_variables.rmajor,
             physics_variables.rplas,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
             times_variables.t_fusion_ramp,
             times_variables.tburn,
             physics_variables.rli,
@@ -2107,7 +2107,7 @@ class Physics:
             physics_variables.deni,
             physics_variables.fusionrate,
             physics_variables.alpharate,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
             sbar,
             physics_variables.dnalp,
             physics_variables.taueff,
@@ -2155,7 +2155,7 @@ class Physics:
         physics_variables.betalim = culblm(
             physics_variables.bt,
             physics_variables.dnbeta,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
             physics_variables.rminor,
         )
 
@@ -2315,7 +2315,7 @@ class Physics:
 
     @staticmethod
     def culdlm(
-        bt, idensl, pdivt, plascur, prn1, qcyl, q95, rmajor, rminor, sarea, zeff
+        bt, idensl, pdivt, plasma_current, prn1, qcyl, q95, rmajor, rminor, sarea, zeff
     ):
         """Density limit calculation
         author: P J Knight, CCFE, Culham Science Centre
@@ -2323,7 +2323,7 @@ class Physics:
         idensl   : input/output integer : switch denoting which formula to enforce
         pdivt    : input real :  power flowing to the edge plasma via
         charged particles (MW)
-        plascur  : input real :  plasma current (A)
+        plasma_current  : input real :  plasma current (A)
         prn1     : input real :  edge density / average plasma density
         qcyl     : input real :  equivalent cylindrical safety factor (qstar)
         q95      : input real :  safety factor at 95% surface
@@ -2406,7 +2406,7 @@ class Physics:
 
         # Greenwald limit
 
-        dlimit[6] = 1.0e14 * plascur / (np.pi * rminor * rminor)
+        dlimit[6] = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
 
         # Enforce the chosen density limit
 
@@ -2628,7 +2628,7 @@ class Physics:
         deni,
         fusionrate,
         alpharate,
-        plascur,
+        plasma_current,
         sbar,
         dnalp,
         taueff,
@@ -2642,7 +2642,7 @@ class Physics:
         dnalp  : input real :  alpha ash density (/m3)
         fusionrate : input real :  fusion reaction rate (/m3/s)
         alpharate  : input real :  alpha particle production rate (/m3/s)
-        plascur: input real :  plasma current (A)
+        plasma_current: input real :  plasma current (A)
         sbar   : input real :  exponent for aspect ratio (normally 1)
         taueff : input real :  global energy confinement time (s)
         vol    : input real :  plasma volume (m3)
@@ -2657,7 +2657,7 @@ class Physics:
         needed by other parts of the code
         """
 
-        figmer = 1e-6 * plascur * aspect**sbar
+        figmer = 1e-6 * plasma_current * aspect**sbar
 
         dntau = taueff * dene
 
@@ -2700,7 +2700,7 @@ class Physics:
         return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
 
     @staticmethod
-    def pohm(inductive_current_fraction, kappa95, plascur, rmajor, rminor, ten, vol, zeff):
+    def pohm(inductive_current_fraction, kappa95, plasma_current, rmajor, rminor, ten, vol, zeff):
         # Density weighted electron temperature in 10 keV units
 
         t10 = ten / 10.0
@@ -2731,9 +2731,9 @@ class Physics:
             error_handling.report_error(83)
 
         # Ohmic heating power per unit volume
-        # Corrected from: pohmpv = (inductive_current_fraction*plascur)**2 * ...
+        # Corrected from: pohmpv = (inductive_current_fraction*plasma_current)**2 * ...
 
-        pohmpv = inductive_current_fraction * plascur**2 * rplas * 1.0e-6 / vol
+        pohmpv = inductive_current_fraction * plasma_current**2 * rplas * 1.0e-6 / vol
 
         # Total ohmic heating power
 
@@ -2800,7 +2800,7 @@ class Physics:
             triang95 (float): Plasma triangularity at 95% surface.
 
         Returns:
-            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plascur, alphaj, rli.
+            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plasma_current, alphaj, rli.
 
         Raises:
             ValueError: If invalid value for i_plasma_current is provided.
@@ -2838,7 +2838,7 @@ class Physics:
 
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:
-            plascur = 1.0e6 * calculate_plasma_current_peng(
+            plasma_current = 1.0e6 * calculate_plasma_current_peng(
                 q95, aspect_ratio, eps, rminor, bt, kappa, triang
             )
 
@@ -2880,7 +2880,7 @@ class Physics:
 
         # Main plasma current calculation using the fq value from the different settings
         if i_plasma_current != 2:
-            plascur = (
+            plasma_current = (
                 (constants.twopi / constants.rmu0)
                 * rminor**2
                 / (rmajor * q95)
@@ -2893,19 +2893,19 @@ class Physics:
         qstar = (
             5.0e6
             * rminor**2
-            / (rmajor * plascur / bt)
+            / (rmajor * plasma_current / bt)
             * 0.5
             * (1.0 + kappa**2 * (1.0 + 2.0 * triang**2 - 1.2 * triang**3))
         )
 
         physics_variables.normalised_total_beta = (
-            1.0e8 * physics_variables.beta * rminor * bt / plascur
+            1.0e8 * physics_variables.beta * rminor * bt / plasma_current
         )
 
         # Calculate the poloidal field generated by the plasma current
         bp = calculate_poloidal_field(
             i_plasma_current,
-            plascur,
+            plasma_current,
             q95,
             aspect_ratio,
             eps,
@@ -2929,7 +2929,7 @@ class Physics:
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
             rli = 3.4 - kappa
 
-        return alphaj, rli, bp, qstar, plascur
+        return alphaj, rli, bp, qstar, plasma_current
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -2996,7 +2996,7 @@ class Physics:
             * physics_variables.kappa
             / (
                 physics_module.total_plasma_internal_energy**2
-                * physics_variables.plascur
+                * physics_variables.plasma_current
             )
         )
 
@@ -3256,8 +3256,8 @@ class Physics:
                 po.ovarrf(
                     self.outfile,
                     "Plasma current (MA)",
-                    "(plascur/1D6)",
-                    physics_variables.plascur / 1.0e6,
+                    "(plasma_current/1D6)",
+                    physics_variables.plasma_current / 1.0e6,
                     "OP ",
                 )
 
@@ -3448,7 +3448,7 @@ class Physics:
                 * betath
                 * physics_variables.rminor
                 * physics_variables.bt
-                / physics_variables.plascur,
+                / physics_variables.plasma_current,
                 "OP ",
             )
 
@@ -4935,7 +4935,7 @@ class Physics:
                 self.outfile,
                 "Loop voltage during burn (V)",
                 "(vburn)",
-                physics_variables.plascur
+                physics_variables.plasma_current
                 * physics_variables.rplas
                 * physics_variables.inductive_current_fraction,
                 "OP ",
@@ -5066,7 +5066,7 @@ class Physics:
                 physics_variables.kappa95,
                 physics_variables.pchargemw,
                 current_drive_variables.pinjmw,
-                physics_variables.plascur,
+                physics_variables.plasma_current,
                 physics_variables.pcoreradpv,
                 physics_variables.rmajor,
                 physics_variables.rminor,
@@ -5093,7 +5093,7 @@ class Physics:
         aspect: float,
         beta: float,
         bt: float,
-        plascur: float,
+        plasma_current: float,
         q95: float,
         q0: float,
         rmajor: float,
@@ -5106,7 +5106,7 @@ class Physics:
             aspect (float): Plasma aspect ratio.
             beta (float): Plasma total beta.
             bt (float): Toroidal field on axis (T).
-            plascur (float): Plasma current (A).
+            plasma_current (float): Plasma current (A).
             q95 (float): Safety factor at 95% surface.
             q0 (float): Central safety factor.
             rmajor (float): Plasma major radius (m).
@@ -5124,7 +5124,7 @@ class Physics:
         cbs = 1.32 - 0.235 * xbs + 0.0185 * xbs**2
         bpbs = (
             constants.rmu0
-            * plascur
+            * plasma_current
             / (2 * np.pi * np.sqrt(vol / (2 * np.pi**2 * rmajor)))
         )
         betapbs = beta * bt**2 / bpbs**2
@@ -5247,7 +5247,7 @@ class Physics:
         betat: float,
         bt: float,
         dene: float,
-        plascur: float,
+        plasma_current: float,
         q95: float,
         q0: float,
         rmajor: float,
@@ -5264,7 +5264,7 @@ class Physics:
             betat (float): Toroidal plasma beta.
             bt (float): Toroidal field on axis (T).
             dene (float): Electron density (/m3).
-            plascur (float): Plasma current (A).
+            plasma_current (float): Plasma current (A).
             q0 (float): Central safety factor.
             q95 (float): Safety factor at 95% surface.
             rmajor (float): Plasma major radius (m).
@@ -5324,7 +5324,7 @@ class Physics:
         # Calculate bootstrap current and fraction
 
         aibs = 2.5 * betae0 * rmajor * bt * q95 * ainteg
-        return 1.0e6 * aibs / plascur
+        return 1.0e6 * aibs / plasma_current
 
     @staticmethod
     def bootstrap_fraction_sauter(plasma_profile: float) -> float:
@@ -5480,7 +5480,7 @@ class Physics:
             )
         )  # A/m2
 
-        return np.sum(da * jboot, axis=0) / physics_variables.plascur
+        return np.sum(da * jboot, axis=0) / physics_variables.plasma_current
 
     @staticmethod
     def bootstrap_fraction_sakai(
@@ -5578,7 +5578,7 @@ class Physics:
             physics_variables.kappa95,
             physics_variables.pchargemw,
             current_drive_variables.pinjmw,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
             physics_variables.pcoreradpv,
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -5635,7 +5635,7 @@ class Physics:
         kappa95,
         pchargemw,
         pinjmw,
-        plascur,
+        plasma_current,
         pcoreradpv,
         rmajor,
         rminor,
@@ -5668,7 +5668,7 @@ class Physics:
         kappaa    : output real : plasma elongation calculated using area ratio
         pchargemw : input real :  non-alpha charged particle fusion power (MW)
         pinjmw    : input real :  auxiliary power to ions and electrons (MW)
-        plascur   : input real :  plasma current (A)
+        plasma_current   : input real :  plasma current (A)
         pcoreradpv: input real :  total core radiation power (MW/m3)
         q         : input real :  edge safety factor (tokamaks), or
         rotational transform iotabar (stellarators)
@@ -5749,7 +5749,7 @@ class Physics:
         n20 = dene / 1.0e20
 
         # Plasma current in MA
-        pcur = plascur / 1.0e6
+        pcur = plasma_current / 1.0e6
 
         # Separatrix kappa defined with X-section for general use
         kappaa = xarea / (np.pi * rminor * rminor)
@@ -6383,12 +6383,12 @@ class Physics:
             # q should be q95: incorrect if i_plasma_current = 2 (ST current scaling)
             qratio = q / qstar
             # Greenwald density in m^-3
-            nGW = 1.0e14 * plascur / (np.pi * rminor * rminor)
+            nGW = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
             nratio = dnla / nGW
             tauee = (
                 hfact
                 * 6.94e-7
-                * plascur**1.3678e0
+                * plasma_current**1.3678e0
                 * bt**0.12e0
                 * dnla**0.032236e0
                 * (powerht * 1.0e6) ** (-0.74e0)
@@ -6405,7 +6405,7 @@ class Physics:
             tauee = (
                 hfact
                 * 0.014e0
-                * (plascur / 1.0e6) ** 0.68e0
+                * (plasma_current / 1.0e6) ** 0.68e0
                 * bt**0.77e0
                 * dnla20**0.02e0
                 * powerht ** (-0.29e0)
@@ -6415,7 +6415,7 @@ class Physics:
             tauee = (
                 hfact
                 * 0.014e0
-                * (plascur / 1.0e6) ** 0.60e0
+                * (plasma_current / 1.0e6) ** 0.60e0
                 * bt**0.70e0
                 * dnla20 ** (-0.03e0)
                 * powerht ** (-0.33e0)
@@ -6425,7 +6425,7 @@ class Physics:
             tauee = (
                 hfact
                 * 0.014e0
-                * (plascur / 1.0e6) ** 0.76e0
+                * (plasma_current / 1.0e6) ** 0.76e0
                 * bt**0.84e0
                 * dnla20**0.07
                 * powerht ** (-0.25e0)

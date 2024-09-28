@@ -54,7 +54,7 @@ class TohswgParam(NamedTuple):
 
     cptdin: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     rmajor: Any = None
 
@@ -81,7 +81,7 @@ class BurnParam(NamedTuple):
 
     vstot: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     inductive_current_fraction: Any = None
 
@@ -560,7 +560,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            plascur=17721306.969367817,
+            plasma_current=17721306.969367817,
             rmajor=8.8901000000000003,
             active_constraints=(
                 True,
@@ -1117,7 +1117,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            plascur=17721306.969367817,
+            plasma_current=17721306.969367817,
             rmajor=8.8901000000000003,
             active_constraints=(
                 True,
@@ -1254,7 +1254,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(pfcoil_variables, "cptdin", tohswgparam.cptdin)
 
-    monkeypatch.setattr(physics_variables, "plascur", tohswgparam.plascur)
+    monkeypatch.setattr(physics_variables, "plasma_current", tohswgparam.plasma_current)
 
     monkeypatch.setattr(physics_variables, "rmajor", tohswgparam.rmajor)
 
@@ -1276,7 +1276,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             vsind=284.23601098215397,
             vsbn=0,
             vstot=-718.91787876294552,
-            plascur=17721306.969367817,
+            plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
             lpulse=1,
@@ -1292,7 +1292,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             vsind=284.23601098215397,
             vstot=-718.9849676846776,
             vsbn=-354.76231817639609,
-            plascur=17721306.969367817,
+            plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
             lpulse=1,
@@ -1327,7 +1327,7 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(pfcoil_variables, "vsbn", burnparam.vsbn)
 
-    monkeypatch.setattr(physics_variables, "plascur", burnparam.plascur)
+    monkeypatch.setattr(physics_variables, "plasma_current", burnparam.plasma_current)
 
     monkeypatch.setattr(physics_variables, "inductive_current_fraction", burnparam.inductive_current_fraction)
 

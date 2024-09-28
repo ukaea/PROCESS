@@ -197,7 +197,7 @@ contains
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, pradmw, dene, powfmw, btot, tesep, &
       pdivt, ralpne, ten, betap, hfac, teped, palpnb, qlim, rmajor, wallmw, &
-      beta, betalim, bt, plascur
+      beta, betalim, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
     implicit none
@@ -223,7 +223,7 @@ contains
     outvar( 9,iscan) = cdirt / 1.0D3
     outvar(10,iscan) = rmajor
     outvar(11,iscan) = aspect
-    outvar(12,iscan) = 1.0D-6 * plascur
+    outvar(12,iscan) = 1.0D-6 * plasma_current
     outvar(13,iscan) = bt
     outvar(14,iscan) = btot
     outvar(15,iscan) = q

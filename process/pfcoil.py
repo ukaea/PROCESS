@@ -296,11 +296,11 @@ class PFCoil:
 
                     elif pfv.ipfloc[i] == 2:
                         # PF coil is on top of the TF coil
-                        pf.ccls[i] = 0.3e0 * pv.aspect**1.6e0 * pv.plascur
+                        pf.ccls[i] = 0.3e0 * pv.aspect**1.6e0 * pv.plasma_current
 
                     elif pfv.ipfloc[i] == 3:
                         # PF coil is radially outside the TF coil
-                        pf.ccls[i] = -0.4e0 * pv.plascur
+                        pf.ccls[i] = -0.4e0 * pv.plasma_current
 
                     else:
                         eh.idiags[0] = i
@@ -310,7 +310,7 @@ class PFCoil:
                 # Vertical field (T)
                 pv.bvert = (
                     -1.0e-7
-                    * pv.plascur
+                    * pv.plasma_current
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
@@ -343,7 +343,7 @@ class PFCoil:
                         # This is a fixed current for this calculation -- RK 07/12
 
                         pf.ccls[i] = (
-                            pv.plascur
+                            pv.plasma_current
                             * 2.0e0
                             * (1.0e0 - (pv.kappa * pv.rminor) / abs(pf.zcls[i, 0]))
                         )
@@ -391,7 +391,7 @@ class PFCoil:
 
                 bzin[0] = (
                     -1.0e-7
-                    * pv.plascur
+                    * pv.plasma_current
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
@@ -767,9 +767,9 @@ class PFCoil:
         # Plasma wave form
         pfv.cpt[pfv.ncirt - 1, 0] = 0.0e0
         pfv.cpt[pfv.ncirt - 1, 1] = 0.0e0
-        pfv.cpt[pfv.ncirt - 1, 2] = pv.plascur
-        pfv.cpt[pfv.ncirt - 1, 3] = pv.plascur
-        pfv.cpt[pfv.ncirt - 1, 4] = pv.plascur
+        pfv.cpt[pfv.ncirt - 1, 2] = pv.plasma_current
+        pfv.cpt[pfv.ncirt - 1, 3] = pv.plasma_current
+        pfv.cpt[pfv.ncirt - 1, 4] = pv.plasma_current
         pfv.cpt[pfv.ncirt - 1, 5] = 0.0e0
 
     def efc(
@@ -1348,7 +1348,7 @@ class PFCoil:
             kk = kk + 1
             pf.rfxf[kk - 1] = pv.rmajor
             pf.zfxf[kk - 1] = 0.0e0
-            pf.cfxf[kk - 1] = pv.plascur
+            pf.cfxf[kk - 1] = pv.plasma_current
 
         # Calculate the field at the inner and outer edges
         # of the coil of interest

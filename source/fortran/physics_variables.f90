@@ -203,7 +203,7 @@ module physics_variables
   !! helium-3 fuel fraction
 
   real(dp) :: figmer
-  !! physics figure of merit (= plascur*aspect**sbar, where `sbar=1`)
+  !! physics figure of merit (= plasma_current*aspect**sbar, where `sbar=1`)
 
   real(dp) :: fkzohm
   !! Zohm elongation scaling adjustment factor (`ishape=2, 3`)
@@ -622,7 +622,7 @@ module physics_variables
   real(dp) :: piepv
   !! ion/electron equilibration power per volume (MW/m3)
 
-  real(dp) :: plascur
+  real(dp) :: plasma_current
   !! plasma current (A)
 
   real(dp) :: pneutmw
@@ -1010,7 +1010,7 @@ module physics_variables
     phiint = 0.0D0
     photon_wall = 0.0D0
     piepv = 0.0D0
-    plascur = 0.0D0
+    plasma_current = 0.0D0
     pneutmw = 0.0D0
     pneutpv = 0.0D0
     pohmmw = 0.0D0
