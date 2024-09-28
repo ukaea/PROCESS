@@ -2,32 +2,92 @@
 
 ## Overview
 
+In tokamaks, the plasma current ($I_{\text{p}}$) plays a crucial role in confining the plasma and maintaining the stability of the magnetic fields. The plasma current generates a poloidal magnetic field, which, when combined with the toroidal magnetic field, creates a helical magnetic field structure. 
+
+The plasma current is typically driven by inductive means, where a central solenoid induces a current in the plasma, similar to the secondary winding of a transformer. However, non-inductive methods such as neutral beam injection and radiofrequency (RF) heating are also employed, especially for steady-state operation.
+
+--------------------------
+
+### Derivation
+
+Starting with the definition of $q$ in an axisymmetrix equilibria:
+
+$$
+q = \frac{\Delta \phi}{2\pi}
+$$
+
+This is defined as the rate of returning to the same position in the poloidal plane after a change of toroidal angle $\Delta \phi$.
+
+In order to calculate the value of $q$ it is neccessary to use the equation of the field line:
+
+$$
+\frac{R d\phi}{ds} = \frac{B_{\text{T}}}{B_{\text{p}}}
+$$
+
+where $ds$ is the distance moved in the poloidal direction while moving through a toroidal angle $d\phi$ and $B_{\text{p}}$ and $B_{\text{T}}$ are the poloidal and toroidal magnetic fields.
+
+Re-arranging the two equations above and substituting for $q$ we get:
+
+$$
+q = \frac{1}{2\pi} \oint \frac{1}{R}\frac{B_{\text{T}}}{B_{\text{p}}} ds
+$$
+
+where the integral is carrie dout over a single poloidal circuit around the flux surface.
+
+Assuming a large aspect ratio tokamak that has a circular plasma cross-section the integral simplifies to:
+
+$$
+q = \frac{r}{R_0}\frac{B_{\text{T}}}{B_{\text{p}}}
+$$
+
+where $r$ is the minor radius of the flux surface and $R_0$ is the major radius of the tokamak. Above is done assuming $ds = 2\pi r$
 
 
+From above, **assuming the toroidal field to be a contant radially**, the only variation of $q$ across the flux surfaces is caused solely by the poloidal magnetic field produced by the plasma current. Again assuming a large aspect ratio machine with circular plasma and flux surface cross sections, the toroidal current density profile $j(r)$, dictates $q$.
 
+Writing the plasma currernt via [Amperes's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law):
 
+$$
+2\pi r B_{\text{p}} = \mu_0 I(r)
+$$
 
+where the current inside $r$ is:
+
+$$
+I(r) = 2\pi \int_0^r j(r^{\prime})r^{\prime} dr^{\prime}
+$$
+
+Substituting into the value of $q$ above:
+
+$$
+q(r) = \frac{2\pi r^2 B_{\text{T}}}{\mu_0 I(r) R}
+$$
+
+Taking the limit of $r$ to be the plasma minor radius, $a$:
+
+$$
+q_a = \frac{2\pi a^2 B_{\text{T}}}{\mu_0 I R}
+$$
+
+Re-arranging for $I$ we get a function for the total plasma current:
+
+$$
+I = \frac{2\pi a^2B_{\text{T}}}{\mu_0q_{95} R}
+$$
+
+Instead of $q_a$, $q_{95}$ is used as in plasma confurations with divertors the poloidal magnetic field has a null at the X-point. Thus as the separatrix is approached, $q$ tends to infinity. 
+
+-----------------
 
 ## Plasma Current Calculation | `calculate_plasma_current()`
 
 This function calculates the plasma current shaping factor ($f_q$), then plasma current ($I_{\text{p}}$) then qstar ($q^*$) then normalized beta ($\beta_{\text{N}}$) then poloidal field and the profile settings for $\mathtt{alphaj}$ ($\alpha_J$) and $\mathtt{rli}$ ($l_{\mathtt{i}}$)
 
-A number of plasma current scaling laws are available in PROCESS. These are calculated in 
-routine `calculate_plasma_current()`, in `physics.py`. The safety factor $q_{95}$ required to prevent disruptive MHD instabilities dictates the plasma current $I_{\text{p}}$:
 
 $$\begin{aligned}
 I_{\text{p}} = f_q \frac{2\pi}{\mu_0}  \frac{a^2 B_{\text{T}}}{R \ q_{95}}
 \end{aligned}$$
 
-$$
-\mu_0 I = \mu_0 \int j_{\phi}\cdot \text{d}s = \int \nabla \times B \cdot \text{d}s = \oint B \cdot \text{d}l_{\text{p}} = 2\pi a l B_{\text{p}}(a)
-$$
-
-Where $l$ is the ratio of the poloidal plasma circumference to the circumference of the inscribed circle of radius $a$. The function $q$ becomes:
-
-$$
-q(r) = \frac{RB_{\phi}}{2\pi}\oint \frac{\text{d}l_{\text{p}}}{R^2B_{\text{p}}} = \frac{rlB_{\phi}}{RB_{\text{p}(r)}}
-$$
 
 The factor $f_q$ makes allowance for toroidal effects and plasma shaping (elongation and 
 triangularity). Several formulae for this factor are available depending on the value of 
