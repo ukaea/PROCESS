@@ -766,7 +766,7 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
-        if abs(physics_variables.facoh) > 1.0e-8:
+        if abs(physics_variables.inductive_current_fraction) > 1.0e-8:
             po.ocmmnt(self.outfile, "Current is driven by both inductive")
             po.ocmmnt(self.outfile, "and non-inductive means.")
 
@@ -937,24 +937,24 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Inductive fraction",
-            "(facoh)",
-            physics_variables.facoh,
+            "(inductive_current_fraction)",
+            physics_variables.inductive_current_fraction,
             "OP ",
         )
         # Add total error check.
         po.ovarrf(
             self.outfile,
             "Total",
-            "(plasma_current_internal_fraction+faccd+facoh)",
+            "(plasma_current_internal_fraction+faccd+inductive_current_fraction)",
             current_drive_variables.plasma_current_internal_fraction
             + physics_variables.faccd
-            + physics_variables.facoh,
+            + physics_variables.inductive_current_fraction,
         )
         if (
             abs(
                 current_drive_variables.plasma_current_internal_fraction
                 + physics_variables.faccd
-                + physics_variables.facoh
+                + physics_variables.inductive_current_fraction
                 - 1.0e0
             )
             > 1.0e-8

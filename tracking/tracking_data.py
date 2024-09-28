@@ -120,7 +120,7 @@ class ProcessTracker:
         "q95",
         "te",
         "beta",
-        "facoh",
+        "inductive_current_fraction",
         "zeff",
         "bt",
         "hfact",

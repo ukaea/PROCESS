@@ -59,7 +59,7 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
 def vscalc(
     csawth,
     eps,
-    facoh,
+    inductive_current_fraction,
     gamma,
     kappa,
     rmajor,
@@ -74,7 +74,7 @@ def vscalc(
     author: P J Knight, CCFE, Culham Science Centre
     csawth : input real :  coefficient for sawteeth effects
     eps    : input real :  inverse aspect ratio
-    facoh  : input real :  fraction of plasma current produced inductively
+    inductive_current_fraction  : input real :  fraction of plasma current produced inductively
     gamma  : input real :  Ejima coeff for resistive start-up V-s component
     kappa  : input real :  plasma elongation
     plascur: input real :  plasma current (A)
@@ -124,7 +124,7 @@ def vscalc(
     # Include enhancement factor in flattop V-s requirement
     # to account for MHD sawtooth effects.
 
-    vburn = plascur * rplas * facoh * csawth
+    vburn = plascur * rplas * inductive_current_fraction * csawth
 
     # N.B. tburn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
@@ -1780,7 +1780,7 @@ class Physics:
             physics_module.err243 = 1
 
         # Fraction of plasma current produced by inductive means
-        physics_variables.facoh = max(1.0e-10, (1.0e0 - physics_variables.fvsbrnni))
+        physics_variables.inductive_current_fraction = max(1.0e-10, (1.0e0 - physics_variables.fvsbrnni))
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.faccd = (
             physics_variables.fvsbrnni
@@ -1938,7 +1938,7 @@ class Physics:
             physics_variables.rpfac,
             physics_variables.rplas,
         ) = self.pohm(
-            physics_variables.facoh,
+            physics_variables.inductive_current_fraction,
             physics_variables.kappa95,
             physics_variables.plascur,
             physics_variables.rmajor,
@@ -2079,7 +2079,7 @@ class Physics:
         ) = vscalc(
             physics_variables.csawth,
             physics_variables.eps,
-            physics_variables.facoh,
+            physics_variables.inductive_current_fraction,
             physics_variables.gamma,
             physics_variables.kappa,
             physics_variables.rmajor,
@@ -2700,7 +2700,7 @@ class Physics:
         return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
 
     @staticmethod
-    def pohm(facoh, kappa95, plascur, rmajor, rminor, ten, vol, zeff):
+    def pohm(inductive_current_fraction, kappa95, plascur, rmajor, rminor, ten, vol, zeff):
         # Density weighted electron temperature in 10 keV units
 
         t10 = ten / 10.0
@@ -2731,9 +2731,9 @@ class Physics:
             error_handling.report_error(83)
 
         # Ohmic heating power per unit volume
-        # Corrected from: pohmpv = (facoh*plascur)**2 * ...
+        # Corrected from: pohmpv = (inductive_current_fraction*plascur)**2 * ...
 
-        pohmpv = facoh * plascur**2 * rplas * 1.0e-6 / vol
+        pohmpv = inductive_current_fraction * plascur**2 * rplas * 1.0e-6 / vol
 
         # Total ohmic heating power
 
@@ -4937,7 +4937,7 @@ class Physics:
                 "(vburn)",
                 physics_variables.plascur
                 * physics_variables.rplas
-                * physics_variables.facoh,
+                * physics_variables.inductive_current_fraction,
                 "OP ",
             )
             po.ovarre(

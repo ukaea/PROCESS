@@ -151,7 +151,7 @@ class Pulse:
         vburn = (
             physics_variables.plascur
             * physics_variables.rplas
-            * physics_variables.facoh
+            * physics_variables.inductive_current_fraction
             * physics_variables.csawth
         )
 

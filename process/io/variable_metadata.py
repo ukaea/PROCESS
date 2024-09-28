@@ -233,7 +233,7 @@ var_dicts = {
     "faccd": VariableMetadata(
         latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
     ),
-    "facoh": VariableMetadata(
+    "inductive_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{CD,ind}}$", description="Inductive CD factor", units=""
     ),
     "bootstrap_current_fraction": VariableMetadata(

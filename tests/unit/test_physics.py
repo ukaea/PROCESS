@@ -1378,7 +1378,7 @@ class VscalcParam(NamedTuple):
 
     eps: Any = None
 
-    facoh: Any = None
+    inductive_current_fraction: Any = None
 
     gamma: Any = None
 
@@ -1415,7 +1415,7 @@ class VscalcParam(NamedTuple):
         VscalcParam(
             csawth=1,
             eps=0.33333333333333331,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             gamma=0.30000000000000004,
             kappa=1.8500000000000001,
             plascur=18398455.678867526,
@@ -1434,7 +1434,7 @@ class VscalcParam(NamedTuple):
         VscalcParam(
             csawth=1,
             eps=0.33333333333333331,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             gamma=0.30000000000000004,
             kappa=1.8500000000000001,
             plascur=18398455.678867526,
@@ -1465,7 +1465,7 @@ def test_vscalc(vscalcparam):
     phiint, rlp, vsbrn, vsind, vsres, vsstt = vscalc(
         csawth=vscalcparam.csawth,
         eps=vscalcparam.eps,
-        facoh=vscalcparam.facoh,
+        inductive_current_fraction=vscalcparam.inductive_current_fraction,
         gamma=vscalcparam.gamma,
         kappa=vscalcparam.kappa,
         plascur=vscalcparam.plascur,
@@ -1633,7 +1633,7 @@ class PohmParam(NamedTuple):
 
     plasma_res_factor: Any = None
 
-    facoh: Any = None
+    inductive_current_fraction: Any = None
 
     kappa95: Any = None
 
@@ -1664,7 +1664,7 @@ class PohmParam(NamedTuple):
         PohmParam(
             aspect=3,
             plasma_res_factor=0.70000000000000007,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             kappa95=1.6517857142857142,
             plascur=18398455.678867526,
             rmajor=8,
@@ -1699,7 +1699,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
     )
 
     pohmpv, pohmmw, rpfac, rplas = physics.pohm(
-        facoh=pohmparam.facoh,
+        inductive_current_fraction=pohmparam.inductive_current_fraction,
         kappa95=pohmparam.kappa95,
         plascur=pohmparam.plascur,
         rmajor=pohmparam.rmajor,

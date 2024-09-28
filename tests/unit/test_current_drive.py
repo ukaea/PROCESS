@@ -170,7 +170,7 @@ class CudrivParam(NamedTuple):
 
     powfmw: Any = None
 
-    facoh: Any = None
+    inductive_current_fraction: Any = None
 
     fvsbrnni: Any = None
 
@@ -277,7 +277,7 @@ class CudrivParam(NamedTuple):
             ignite=0,
             pohmmw=0,
             powfmw=0,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             fvsbrnni=0.40000000000000002,
             startupratio=1,
             iprint=0,
@@ -367,7 +367,7 @@ class CudrivParam(NamedTuple):
             ignite=0,
             pohmmw=0.76707314489379119,
             powfmw=1051.6562748933977,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             fvsbrnni=0.40000000000000002,
             startupratio=1,
             iprint=0,
@@ -563,7 +563,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "powfmw", cudrivparam.powfmw)
 
-    monkeypatch.setattr(physics_variables, "facoh", cudrivparam.facoh)
+    monkeypatch.setattr(physics_variables, "inductive_current_fraction", cudrivparam.inductive_current_fraction)
 
     monkeypatch.setattr(physics_variables, "fvsbrnni", cudrivparam.fvsbrnni)
 
