@@ -163,7 +163,7 @@ module physics_variables
   real(dp) :: eps
   !! inverse aspect ratio
 
-  real(dp) :: faccd
+  real(dp) :: aux_current_fraction
   !! fraction of plasma current produced by auxiliary current drive
 
   real(dp) :: inductive_current_fraction
@@ -925,7 +925,7 @@ module physics_variables
     dnz = 0.0D0
     epbetmax = 1.38D0
     eps = 0.34399724802D0
-    faccd = 0.0D0
+    aux_current_fraction = 0.0D0
     inductive_current_fraction = 0.0D0
     falpe = 0.0D0
     falpha = 0.95D0

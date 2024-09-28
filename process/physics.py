@@ -1782,7 +1782,7 @@ class Physics:
         # Fraction of plasma current produced by inductive means
         physics_variables.inductive_current_fraction = max(1.0e-10, (1.0e0 - physics_variables.fvsbrnni))
         #  Fraction of plasma current produced by auxiliary current drive
-        physics_variables.faccd = (
+        physics_variables.aux_current_fraction = (
             physics_variables.fvsbrnni
             - current_drive_variables.plasma_current_internal_fraction
         )

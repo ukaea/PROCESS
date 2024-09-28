@@ -230,7 +230,7 @@ var_dicts = {
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
     "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
-    "faccd": VariableMetadata(
+    "aux_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
     ),
     "inductive_current_fraction": VariableMetadata(

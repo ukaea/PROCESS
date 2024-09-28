@@ -553,14 +553,14 @@ class CurrentDrive:
                 )
 
             # Compute current drive wall plug and injected powers (MW) and efficiencies
-            auxiliary_cd = physics_variables.faccd * physics_variables.plascur
+            auxiliary_cd = physics_variables.aux_current_fraction * physics_variables.plascur
 
             # LHCD or ICCD
             if current_drive_variables.iefrf in [1, 2, 4, 6]:
                 # Injected power
                 current_drive_variables.plhybd = (
                     1.0e-6
-                    * (physics_variables.faccd - faccdfix)
+                    * (physics_variables.aux_current_fraction - faccdfix)
                     * physics_variables.plascur
                     / effrfss
                     + current_drive_variables.pheat
@@ -585,7 +585,7 @@ class CurrentDrive:
                 # Injected power (set to close to close the Steady-state current equilibrium)
                 current_drive_variables.echpwr = (
                     1.0e-6
-                    * (physics_variables.faccd - faccdfix)
+                    * (physics_variables.aux_current_fraction - faccdfix)
                     * physics_variables.plascur
                     / effrfss
                     + current_drive_variables.pheat
@@ -604,7 +604,7 @@ class CurrentDrive:
                 # MDK. See Gitlab issue #248, and scanned note.
                 power1 = (
                     1.0e-6
-                    * (physics_variables.faccd - faccdfix)
+                    * (physics_variables.aux_current_fraction - faccdfix)
                     * physics_variables.plascur
                     / effnbss
                     + current_drive_variables.pheat
@@ -930,8 +930,8 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Auxiliary current drive fraction",
-            "(faccd)",
-            physics_variables.faccd,
+            "(aux_current_fraction)",
+            physics_variables.aux_current_fraction,
             "OP ",
         )
         po.ovarrf(
@@ -945,15 +945,15 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Total",
-            "(plasma_current_internal_fraction+faccd+inductive_current_fraction)",
+            "(plasma_current_internal_fraction+aux_current_fraction+inductive_current_fraction)",
             current_drive_variables.plasma_current_internal_fraction
-            + physics_variables.faccd
+            + physics_variables.aux_current_fraction
             + physics_variables.inductive_current_fraction,
         )
         if (
             abs(
                 current_drive_variables.plasma_current_internal_fraction
-                + physics_variables.faccd
+                + physics_variables.aux_current_fraction
                 + physics_variables.inductive_current_fraction
                 - 1.0e0
             )

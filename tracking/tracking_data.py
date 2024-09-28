@@ -133,7 +133,7 @@ class ProcessTracker:
         "dene",
         "pradmw",
         "ne0",
-        "faccd",
+        "aux_current_fraction",
         "dnz",
         "taueff",
         "te0",
