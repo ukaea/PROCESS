@@ -208,7 +208,7 @@ module current_drive_variables
   real(dp) :: porbitlossmw
   !! neutral beam power lost after ionisation but before thermalisation (orbit loss power) (MW)
 
-  real(dp) :: psipf
+  real(dp) :: ps_current_fraction
   !! Pfirsch-Schlüter current fraction
 
   real(dp) :: pwplh
@@ -286,7 +286,7 @@ module current_drive_variables
     plhybd = 0.0D0
     pnbeam = 0.0D0
     porbitlossmw = 0.0D0
-    psipf = 0.0D0
+    ps_current_fraction = 0.0D0
     pwplh = 0.0D0
     pwpnb = 0.0D0
     rtanbeam = 0.0D0

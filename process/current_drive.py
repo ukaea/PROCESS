@@ -923,8 +923,8 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Pfirsch-Schlueter fraction",
-            "(psipf)",
-            current_drive_variables.psipf,
+            "(ps_current_fraction)",
+            current_drive_variables.ps_current_fraction,
             "OP ",
         )
         po.ovarrf(
