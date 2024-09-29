@@ -499,7 +499,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.diamagnetic_current_fraction,
     )
 
-    monkeypatch.setattr(current_drive_variables, "ps_current_fraction", cudrivparam.ps_current_fraction)
+    monkeypatch.setattr(
+        current_drive_variables, "ps_current_fraction", cudrivparam.ps_current_fraction
+    )
 
     monkeypatch.setattr(
         current_drive_variables,
@@ -555,7 +557,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "ipedestal", cudrivparam.ipedestal)
 
-    monkeypatch.setattr(physics_variables, "aux_current_fraction", cudrivparam.aux_current_fraction)
+    monkeypatch.setattr(
+        physics_variables, "aux_current_fraction", cudrivparam.aux_current_fraction
+    )
 
     monkeypatch.setattr(physics_variables, "ignite", cudrivparam.ignite)
 
@@ -563,7 +567,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "powfmw", cudrivparam.powfmw)
 
-    monkeypatch.setattr(physics_variables, "inductive_current_fraction", cudrivparam.inductive_current_fraction)
+    monkeypatch.setattr(
+        physics_variables,
+        "inductive_current_fraction",
+        cudrivparam.inductive_current_fraction,
+    )
 
     monkeypatch.setattr(physics_variables, "fvsbrnni", cudrivparam.fvsbrnni)
 

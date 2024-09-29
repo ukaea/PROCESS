@@ -1329,7 +1329,11 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(physics_variables, "plasma_current", burnparam.plasma_current)
 
-    monkeypatch.setattr(physics_variables, "inductive_current_fraction", burnparam.inductive_current_fraction)
+    monkeypatch.setattr(
+        physics_variables,
+        "inductive_current_fraction",
+        burnparam.inductive_current_fraction,
+    )
 
     monkeypatch.setattr(physics_variables, "csawth", burnparam.csawth)
 

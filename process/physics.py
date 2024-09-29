@@ -1631,7 +1631,9 @@ class Physics:
         current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
         if physics_variables.i_pfirsch_schluter_current == 1:
-            current_drive_variables.ps_current_fraction = current_drive_variables.pscf_scene
+            current_drive_variables.ps_current_fraction = (
+                current_drive_variables.pscf_scene
+            )
 
         # ***************************** #
         #       BOOTSTRAP CURRENT       #
@@ -1780,7 +1782,9 @@ class Physics:
             physics_module.err243 = 1
 
         # Fraction of plasma current produced by inductive means
-        physics_variables.inductive_current_fraction = max(1.0e-10, (1.0e0 - physics_variables.fvsbrnni))
+        physics_variables.inductive_current_fraction = max(
+            1.0e-10, (1.0e0 - physics_variables.fvsbrnni)
+        )
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.aux_current_fraction = (
             physics_variables.fvsbrnni
@@ -2700,7 +2704,16 @@ class Physics:
         return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
 
     @staticmethod
-    def pohm(inductive_current_fraction, kappa95, plasma_current, rmajor, rminor, ten, vol, zeff):
+    def pohm(
+        inductive_current_fraction,
+        kappa95,
+        plasma_current,
+        rmajor,
+        rminor,
+        ten,
+        vol,
+        zeff,
+    ):
         # Density weighted electron temperature in 10 keV units
 
         t10 = ten / 10.0
