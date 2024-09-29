@@ -5130,21 +5130,28 @@ class Physics:
 
         This function performs the original ITER calculation of the plasma current bootstrap fraction.
 
-        Reference: ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-                   ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        Reference:
+        - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
-        xbs = min(10, q95 / q0)
-        cbs = 1.32 - 0.235 * xbs + 0.0185 * xbs**2
-        bpbs = (
-            constants.rmu0
-            * plasma_current
-            / (2 * np.pi * np.sqrt(vol / (2 * np.pi**2 * rmajor)))
-        )
-        betapbs = beta * bt**2 / bpbs**2
 
-        if betapbs <= 0.0:  # only possible if beta <= 0.0
+        # Calculate the bootstrap current coefficient
+        c_bs = 1.32 - 0.235 * (q95 / q0) + 0.0185 * (q95 / q0) ** 2
+
+        # Calculate the average minor radius
+        average_a = np.sqrt(vol / (2 * np.pi ** 2 * rmajor))
+
+        b_pa = (plasma_current / 1e6) / (5 * average_a)
+
+        # Calculate the poloidal beta for bootstrap current
+        betapbs = beta * (bt / b_pa) ** 2
+
+        # Ensure betapbs is positive
+        if betapbs <= 0.0:
             return 0.0
-        return cbs * (betapbs / np.sqrt(aspect)) ** 1.3
+
+        # Calculate and return the bootstrap current fraction
+        return c_bs * (betapbs / np.sqrt(aspect)) ** 1.3
 
     @staticmethod
     def bootstrap_fraction_wilson(

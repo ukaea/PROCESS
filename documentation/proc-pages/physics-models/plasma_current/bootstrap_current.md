@@ -7,7 +7,7 @@ Some more info can be found [here](https://wiki.fusion.ciemat.es/wiki/Bootstrap_
 
 The fraction of the plasma current provided by the bootstrap effect
 can be either input into the code directly, or calculated using one of five
-methods, as summarised here. Note that methods `i_bootstrap_current = 1-3` do not take into account the 
+methods, as summarised here. Note that methods `i_bootstrap_current = 1-3 & 5` do not take into account the 
 existence of pedestals, whereas the Sauter et al. scaling 
 (`i_bootstrap_current = 4`) allows general profiles to be used. 
 
@@ -39,8 +39,10 @@ B_{\text{pa}} = \frac{I}{5\langle a \rangle}
 $$
 
 $$
-\langle a \rangle = \left(\frac{V}{2\pi^2 R_0}\right)
+\langle a \rangle = \left(\frac{V}{2\pi^2 R_0}\right)^{0.5}
 $$
+
+Here, $\beta_{\text{tot}}$ is the average total plasma (toroidal) beta. $I$ is given in $\text{MA}$ and $B_0$ is the on-axis toroidal field in Tesla.
 
 ------------
 
