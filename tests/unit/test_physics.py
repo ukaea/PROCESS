@@ -747,7 +747,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         ),
     ),
 )
-def test_plasc(arguments, expected):
+def test_calculate_plasma_current_peng(arguments, expected):
     assert calculate_plasma_current_peng(**arguments) == pytest.approx(expected)
 
 
