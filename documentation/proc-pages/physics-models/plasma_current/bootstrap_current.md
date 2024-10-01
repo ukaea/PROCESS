@@ -15,10 +15,10 @@ existence of pedestals, whereas the Sauter et al. scaling
 
 ### ITER IPDG89 Scaling | `bootstrap_fraction_iter89()`
  
-Original emperical ITER bootstrap scaling from the 1989 Physics Design Guidelines[^0]
+Original empirical ITER bootstrap scaling from the 1989 Physics Design Guidelines[^0]
 Is selected by setting `i_bootstrap_current = 1`
 
-Emperical fit for the bootstrap current fraction as:
+Empirical fit for the bootstrap current fraction as:
 
 $$
 \frac{I_{\text{BS}}}{I} = C_{\text{BS}}\left(\epsilon^{0.5}\beta_{\text{pa}}\right)^{1.3}
@@ -48,7 +48,7 @@ Here, $\beta_{\text{tot}}$ is the average total plasma (toroidal) beta. $I$ is g
 
 ### Nevins Scaling | `bootstrap_fraction_nevins()`
 
-The general Nevins scaling is normally cited from a ITER specialists meeting in 1989[^1] which is not publicaly accessible.
+The general Nevins scaling is normally cited from a ITER specialists meeting in 1989[^1] which is not publicly accessible.
 However it can be found in the appendix [here](https://doi.org/10.1016/j.fusengdes.2014.07.009)[^2].
 
 Is selected by setting `i_bootstrap_current = 2`
@@ -121,8 +121,8 @@ $$
 
 ### Wilson Scaling | `bootstrap_fraction_wilson()`
 
-An empirical formula[^3] [^7] as a function of the pressure, 
-temperature and total current profiles as well as the poloidal beta and aspect ratio of the tokamak. This empirical formula is compared with an expression obtained by the ITER group; also a comparison with an analytical result (valid at large aspect ratio) is made. It is found that the empirical result determined here agrees well with the large but not so well with the empirical formula of the ITER group[^0]
+Wilson gives an empirical formula[^3] [^7] as a function of the pressure, 
+temperature and total current profiles as well as the poloidal beta and aspect ratio of a tokamak. This empirical formula was compared with an expression obtained by the ITER group; also compared with an analytical result (valid at large aspect ratio). It is found that the determined empirical result agreed well with the large aspect ratio result, but not so well with the empirical formula of the ITER group[^0]
 
 Is selected by setting `i_bootstrap_current = 3`
 
@@ -179,7 +179,7 @@ a_{11} = -0.14  \left(1.0 - \frac{1.14}{\alpha_{\text{J}}^{\frac{1}{2}}} - 0.45 
 a_{12} = -0.0069 \\
 $$
 
-Coefficients are obtained by a least squares fit to the 3000 equilibria numerical solutions. Error distribution is shows an average error of 3.6% and a maximum error of 20%. These larger errors appear to come from the cases where the temperature profile is approximately equal to the pressure profile. For these cases the density profile is very flat over much of the plasma radius and (as it is forced to be zero at the plasma edge) this 
+Coefficients are obtained by a least squares fit to the 3000 equilibria numerical solutions. Error distribution shows an average error of 3.6% and a maximum error of 20%. These larger errors appear to come from the cases where the temperature profile is approximately equal to the pressure profile. For these cases the density profile is very flat over much of the plasma radius and (as it is forced to be zero at the plasma edge) this 
 means that it falls off sharply at the plasma edge.
 
 !!! quote "Excerpt from Wilson[^3]"
@@ -195,7 +195,7 @@ means that it falls off sharply at the plasma edge.
 
 Sauter et al.[^4] [^5] provides a formula using the exact Fokker–Planck operator and
 without any approximation on the plasma geometry or collisionality. In this way we have been able to accurately determine the neoclassical resistivity and the coefficients for the
-bootstrap current which allows one to calculate the bootstrap fraction
+bootstrap current which allows one to calculate the bootstrap fraction.
 
 Is selected by setting `i_bootstrap_current = 4`
 
@@ -218,7 +218,7 @@ where $q(\psi)$ is the safety factor.
 
 #### Calculate electron density coefficient | `calculate_l31_coefficient()`
 
-This function calulates and returns the $\mathcal{L}_{31}$ coefficient value for $\frac{\partial \ln n_e}{\partial \psi}$
+This function calculates and returns the $\mathcal{L}_{31}$ coefficient value for $\frac{\partial \ln n_e}{\partial \psi}$
 
 $$
 \mathcal{L}_{31}= F_{31}\left(X=f_{\text {teff }}^{31}\right) \equiv\left(1+\frac{1.4}{Z+1}\right) X-\frac{1.9}{Z+1} X^2+\frac{0.3}{Z+1} X^3 +\frac{0.2}{Z+1} X^4 \\
@@ -250,7 +250,7 @@ $$
 
 The above is added to a call of [`calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient). This is then multiplied by [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter). 
 
-This product above is then multplied by ([`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
+This product above is then multiplied by ([`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
 
 ---------------
 
@@ -275,7 +275,7 @@ $$
 +0.315 \nu_{i *}^2 f_t^6\right] \frac{1}{1+0.15 \nu_{i *}^2 f_t^6}
 $$
 
-The definition of $\alpha\left(\nu_{i *}\right)$ is that found in the erratum paper which changes the value of $-0.315\nu_{i *}^2 f_t^6$ to posotive.[^5]
+The definition of $\alpha\left(\nu_{i *}\right)$ is that found in the erratum paper which changes the value of $-0.315\nu_{i *}^2 f_t^6$ to positive.[^5]
 
 The return sequence is ([`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter) - [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter)) $\times (\mathcal{L}_{34} + \alpha)$ + [`calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient) $\times$ (1.0 -  [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
 
@@ -283,7 +283,7 @@ The return sequence is ([`beta_poloidal_total_sauter()`](#calculate-ion-and-elec
 
 -------------
 
-#### Calculate the Coloumb logarith | `coulomb_logarithm_sauter()`
+#### Calculate the Coulomb logarithm | `coulomb_logarithm_sauter()`
 
 $$
 \ln \Lambda = 15.9 -0.5 \times \ln{n_{\text{e}}}+\ln{T_{\text{e}}}
@@ -303,7 +303,7 @@ $$
 
 #### Calculate electron collisionality | `electron_collisionality_sauter()`
 
-The value coefficient origins are not known but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
+The origins of the coefficients values are not known, but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
 
 Using the electron collision frequency ($\nu_{\text{e}}$) calculated from `electron_collisions_sauter()` we get:
 $$
@@ -323,7 +323,7 @@ $$
 
 #### Calculate ion collisionality | `ion_collisionality_sauter()`
 
-The value coefficient origins are not known but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
+The origins of the coefficients values are not known, but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
 
 Using the ion collision frequency ($\nu_{\text{i}}$) calculated from `ion_collisions_sauter()` we get:
 
@@ -389,15 +389,15 @@ The model includes the toroidal diamagnetic current in the calculation due to th
 
 ---------------------
 
-## Setting of maximum desireable bootstrap current fraction
+## Setting of maximum desirable bootstrap current fraction
 
-The variable `bootstrap_current_fraction_max` can be set to the value of maximum desireable bootstrap current fraction for a specific design. When optimsiing if the value of the calculated `bootstrap_current_fraction` for the model selected with `i_bootstrap_current` exceeds this value, then `bootstrap_current_fraction` is set to the value of `bootstrap_current_fraction_max`.
+The variable `bootstrap_current_fraction_max` can be set to the value of maximum desirable bootstrap current fraction for a specific design. When optimising if the value of the calculated `bootstrap_current_fraction` for the model selected with `i_bootstrap_current` exceeds this value, then `bootstrap_current_fraction` is set to the value of `bootstrap_current_fraction_max`.
 
 An error is also raised to the user in the terminal output at the end of the run saying "Bootstrap fraction upper limit enforced".
 
 ## Fixing the bootstrap current fraction
 
-If the user wants to set the value of the bootrap current fraction directly then the value can be set by assigning the negative of the desired value to `bootstrap_current_fraction_max`.
+If the user wants to set the value of the bootstrap current fraction directly then the value can be set by assigning the negative of the desired value to `bootstrap_current_fraction_max`.
 
 
 ```txt

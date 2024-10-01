@@ -4,13 +4,15 @@
 
 In tokamaks, the plasma current ($I_{\text{p}}$) plays a crucial role in confining the plasma and maintaining the stability of the magnetic fields. The plasma current generates a poloidal magnetic field, which, when combined with the toroidal magnetic field, creates a helical magnetic field structure. 
 
-The plasma current is typically driven by inductive means, where a central solenoid induces a current in the plasma, similar to the secondary winding of a transformer. However, non-inductive methods such as neutral beam injection and radiofrequency (RF) heating are also employed, especially for steady-state operation.
+The plasma current is typically driven by inductive means, where a central solenoid induces a current in the plasma, similar to the secondary winding of a transformer. However, non-inductive methods such as neutral beam injection and radio frequency (RF) heating are also employed, especially for steady-state operation.
+
+more info found here
 
 --------------------------
 
 ### Derivation
 
-Starting with the definition of $q$ in an axisymmetrix equilibria:
+Starting with the definition of $q$ in an axisymmetric equilibria:
 
 $$
 q = \frac{\Delta \phi}{2\pi}
@@ -18,7 +20,7 @@ $$
 
 This is defined as the rate of returning to the same position in the poloidal plane after a change of toroidal angle $\Delta \phi$.
 
-In order to calculate the value of $q$ it is neccessary to use the equation of the field line:
+In order to calculate the value of $q$ it is necessary to use the equation of the field line:
 
 $$
 \frac{R d\phi}{ds} = \frac{B_{\text{T}}}{B_{\text{p}}}
@@ -32,7 +34,7 @@ $$
 q = \frac{1}{2\pi} \oint \frac{1}{R}\frac{B_{\text{T}}}{B_{\text{p}}} ds
 $$
 
-where the integral is carrie dout over a single poloidal circuit around the flux surface.
+where the integral is carried out over a single poloidal circuit around the flux surface.
 
 Assuming a large aspect ratio tokamak that has a circular plasma cross-section the integral simplifies to:
 
@@ -40,12 +42,12 @@ $$
 q = \frac{r}{R_0}\frac{B_{\text{T}}}{B_{\text{p}}}
 $$
 
-where $r$ is the minor radius of the flux surface and $R_0$ is the major radius of the tokamak. Above is done assuming $ds = 2\pi r$
+where $r$ is the minor radius of the flux surface and $R_0$ is the major radius of the tokamak. Above is done assuming $ds = 2\pi r$.
 
 
-From above, **assuming the toroidal field to be a contant radially**, the only variation of $q$ across the flux surfaces is caused solely by the poloidal magnetic field produced by the plasma current. Again assuming a large aspect ratio machine with circular plasma and flux surface cross sections, the toroidal current density profile $j(r)$, dictates $q$.
+From above, **assuming the toroidal field to be a constant radially**, the only variation of $q$ across the flux surfaces is caused solely by the poloidal magnetic field produced by the plasma current. Again assuming a large aspect ratio machine with circular plasma and flux surface cross sections, the toroidal current density profile $j(r)$, dictates $q$.
 
-Writing the plasma currernt via [Amperes's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law):
+Writing the plasma current via [Amperes's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law):
 
 $$
 2\pi r B_{\text{p}} = \mu_0 I(r)
@@ -75,13 +77,13 @@ $$
 I = \frac{2\pi a^2B_{\text{T}}}{\mu_0q_{95} R}
 $$
 
-Instead of $q_a$, $q_{95}$ is used as in plasma confurations with divertors the poloidal magnetic field has a null at the X-point. Thus as the separatrix is approached, $q$ tends to infinity. 
+Instead of $q_a$, $q_{95}$ is used as in plasma configurations with divertors the poloidal magnetic field has a null at the X-point. Thus as the separatrix is approached, $q$ tends to infinity. 
 
 -----------------
 
 ## Plasma Current Calculation | `calculate_plasma_current()`
 
-This function calculates the plasma current shaping factor ($f_q$), then plasma current ($I_{\text{p}}$) then qstar ($q^*$) then normalized beta ($\beta_{\text{N}}$) then poloidal field and the profile settings for $\mathtt{alphaj}$ ($\alpha_J$) and $\mathtt{rli}$ ($l_{\mathtt{i}}$)
+This function calculates the plasma current shaping factor ($f_q$), plasma current ($I_{\text{p}}$), qstar ($q^*$), normalized beta ($\beta_{\text{N}}$) and then poloidal field and the profile settings for $\mathtt{alphaj}$ ($\alpha_J$) and $\mathtt{rli}$ ($l_{\mathtt{i}}$). This is done in 5 separate steps which are shown in the following numbered sections.
 
 
 $$\begin{aligned}
@@ -152,7 +154,7 @@ $$
 
 This is to allow the use of the available $q_{95}$ parameter as **the origin and definition of $\bar{q}_0$ is not fully known.**
 
-The coefficient values $q_{95}$ and $\bar{q}_0$ for the PROCESS and STAR code implementations can be experiemented with in the graph below:
+The coefficient values $q_{95}$ and $\bar{q}_0$ for the PROCESS and STAR code implementations can be experimented with in the graph below:
 
 
 <!DOCTYPE html>
@@ -244,7 +246,7 @@ The coefficient values $q_{95}$ and $\bar{q}_0$ for the PROCESS and STAR code im
 
 Switch value: `i_plasma_current = 3` [^5]
 
-The simple cyclindrical case is assumed so:
+The simple cylindrical case is assumed so:
 
 $$
 f_q = 1
@@ -294,11 +296,11 @@ $$
 
 Switch value: `i_plasma_current = 6` [^6] [^7]
 
-This function is similar to the previous [Todd scaling](#todd-empirical-scaling-i) except it is mltiplied by a new elongation dependant term
+This function is similar to the previous [Todd scaling](#todd-empirical-scaling-i) except it is multiplied by a new elongation dependant term
 
 
 $$
-f_q = F_{T1} \times \left(1+[\kappa-1.2]^3\right) 
+f_q = F_{T1} \times \left(1+\left(\kappa-1.2\right)^3\right) 
 $$
 
 ------------------
@@ -348,7 +350,7 @@ The parameters $\lambda$ and $\nu$ characterise the current profile $J_{\phi} = 
 
 !!! warning Assumed current profiles
 
-    Since $\lambda$ in this case is treated as the current profile index `alphaj` within PROCESS will use its assumed standard [parabolic profile](../profiles/plasma_profiles.md`). Even though the profile given above by Connor-Hastie is different. The differenc between these two assumed current profiles can be experimented with below.
+    $\lambda$ in this case is treated as the current profile index within the Connor-Hastie model. This profile is not the same as the standard [parabolic profile](../profiles/plasma_profiles.md`) used within PROCESS for the current which uses the $\alpha_{\text{J}}$ index. The difference between these two assumed current profiles can be experimented with below.
 
 
 
@@ -439,6 +441,10 @@ The parameters $\lambda$ and $\nu$ characterise the current profile $J_{\phi} = 
 
 ---------------
 
+******************
+
+_____________________
+
 #### Sauter model, allows negative triangularity | `calculate_current_coefficient_sauter()`
 
 Switch value: `i_plasma_current = 8`[^9]
@@ -467,7 +473,7 @@ Assumptions:
  - D-shaped plasmas with $A < 3$:
  - X-pont values of $\kappa$ & $\delta$ used
 
-A set of eqlibria from FIESTA were created and compared to the calculatons from the [Peng double null divertor scaling](plasma_current.md#peng-double-null-divertor-scaling-st) For the low elongation equilibria, the calculated values for
+A set of equilibria from FIESTA were created and compared to the calculations from the [Peng double null divertor scaling](plasma_current.md#peng-double-null-divertor-scaling-st) For the low elongation equilibria, the calculated values for
 the plasma current were close to those from FIESTA, however moving to
 higher elongations causes an underestimate by up to 20%.
 
@@ -490,7 +496,7 @@ $$
 q_{\psi} = q_{\text{cyl}} \equiv \frac{5a^2B_0}{R_0I_p}
 $$
 
-where the minor and major radii are expressed in metres, the toroidal magnetic field $B_0$, in Tesla, and the plasma current $I_{\text{p}}$, in megamps. Thus a stability requirement of the form  $q_{\psi} > q_{\text{crit}}$ (usually considered to be ~ 2.0) places a limit on $I_{\text{p}}$.
+where the minor and major radii are expressed in metres, the toroidal magnetic field $B_0$, in Tesla, and the plasma current $I_{\text{p}}$, in megaamps. Thus a stability requirement of the form  $q_{\psi} > q_{\text{crit}}$ (usually considered to be ~ 2.0) places a limit on $I_{\text{p}}$.
 The effect of toroidicity and of shaping of the plasma cross section is to modify the relation above between $q_{\psi}$ and the plasma current, $I_{\text{p}}$. In general this relation may be written in the form:
 
 
@@ -500,7 +506,7 @@ $$
 
 It is not possible to derive a general analytic expression for $F$, so it has been customary to employ an empirical, or semi-empirical expression involving $\epsilon$,$\kappa$ and $\delta$, chosen to fit data taken from numerical solutions of the Grad Shafranov equation.
 
-The cylindrical equaivalent $q$ definition used currenly is the one given below from IPDG89[^5]
+The cylindrical equivalent $q$ definition used currently is the one given below from IPDG89[^5]
 
 $$
 q_* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa^2(1+2\delta^2-1.2\delta^3))}{2}
@@ -509,15 +515,15 @@ $$
 
 !!! note "$q_{\text{cyl}}$ definition and use in PROCESS"
 
-    Though this seems to not be the definition of the cyclindrical safety factor due to the elongation and triangularity scaling. 
-    Zohm[^12], Wesson[^13], and AEA FUS 172[^7] all say that cyclindrical safety factor is just the first fraction.
+    Though this seems to not be the definition of the cylindrical safety factor due to the elongation and triangularity scaling. 
+    Zohm[^12], Wesson[^13], and AEA FUS 172[^7] all say that cylindrical safety factor is just the first fraction.
     And if we assume a cylindrical plasma where $\kappa = 1$ and $\delta = 0$ then the second term reduces to 1.
 
 --------------
 
-### 3. Caclulate the normalized beta
+### 3. Calculate the normalized beta
 
-The total normlaized beta is calculated as per:
+The total normalized beta is calculated as per:
 
 $$
 \beta_N = \beta\frac{1\times10^8  a B_{\text{T}}}{I_{\text{P}}}
@@ -528,13 +534,13 @@ $$
 
 ### 4. Plasma Current Poloidal Field
 
-For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can simply be used. In this case the poloidal field is simply returned as:
+For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the poloidal field is simply returned as:
 
 $$
 B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\mathtt{pperim}}
 $$
 
-Where `pperim` is the plasma poloidal perimieter calculated [here](../plasma_geometry.md#poloidal-perimeter).
+Where `pperim` is the plasma poloidal perimeter calculated [here](../plasma_geometry.md#poloidal-perimeter).
 
 In the case of using the Peng double null scaling ([`i_plasma_current = 2`](plasma_current.md#star-peng-double-null-divertor-scaling-st)), the values $F_1$ and $F_2$ are calculated from [_plasc_bpol](plasma_current.md#_plasc_bpol) and used to calculated the poloidal field from the toroidal field as per:
 
@@ -572,13 +578,13 @@ $$\begin{aligned}
 l_i = 3.4 - \kappa_x
 \end{aligned}$$
 
-Further desciption of `iprofile` is given in [Beta Limit](../plasma_beta.md).
+Further description of `iprofile` is given in [Beta Limit](../plasma_beta.md).
 
 -----------------------
 
 ## _plasc_bpol
 
-This intenral function is used to calculate the plasma shape and poloidal coefficients for calculating the plasma current in the [Peng double null scaling from the STAR code](plasma_current.md#star-peng-double-null-divertor-scaling-st). If this scaling is selected the coefficents are also used to calculate the [poloidal field from the plasma current](plasma_current.md#plasma-current-poloidal-field).
+This internal function is used to calculate the plasma shape and poloidal coefficients for calculating the plasma current in the [Peng double null scaling from the STAR code](plasma_current.md#star-peng-double-null-divertor-scaling-st). If this scaling is selected the coefficients are also used to calculate the [poloidal field from the plasma current](plasma_current.md#plasma-current-poloidal-field).
 
 
 where if $A < \frac{\kappa^2}{(1+\delta)}+\delta$:
@@ -680,7 +686,7 @@ $$
 $$
 
 In this case $I_{\text{cp}}$ is the total current going up the centrepost in a spherical tokamak.
-This constraint was initially though to prevent instabilites and act as a guideline to limit power dissipation when generating new designs. The scaling value for the constraint, `fipir` can be varied also.
+This constraint was initially though to prevent instabilities and act as a guideline to limit power dissipation when generating new designs. The scaling value for the constraint, `fipir` can be varied also.
 
  The origins of the relation should be seen in early spherical tokamak papers not yet referenced here.
 

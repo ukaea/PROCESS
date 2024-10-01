@@ -41,7 +41,7 @@ $$f_{\text{dia}} = \frac{\beta}{2.8}$$
 
 This model can be used by setting: `i_diamagnetic_current = 2`
 
-This model is based off of 108 equlibria from SCENE.
+This model is based off of 108 equilibria from SCENE.
 Overall the equilibria cover: 
 
 - $A$ = 1.6 to 3.2
