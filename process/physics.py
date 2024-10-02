@@ -11,7 +11,6 @@ from process.fortran import (
     reinke_module,
     impurity_radiation_module,
     constants,
-    physics_functions_module,
     physics_variables,
     physics_module,
     pulse_variables,
@@ -860,10 +859,14 @@ class Physics:
         self.plasma_profile.run()
 
         # Calculate total magnetic field [T]
-        physics_variables.btot = physics_functions_module.total_mag_field()
+        physics_variables.btot = np.sqrt(
+            physics_variables.bt**2 + physics_variables.bp**2
+        )
 
         # Calculate physics_variables.beta poloidal [-]
-        physics_variables.betap = physics_functions_module.beta_poloidal()
+        physics_variables.betap = beta_poloidal(
+            physics_variables.btot, physics_variables.bp, physics_variables.beta
+        )
 
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
@@ -1070,7 +1073,6 @@ class Physics:
 
         # Calculate fusion power + components
 
-        # physics_funcs.palph(self.plasma_profile)
         fusion_rate = physics_funcs.FusionReactionRate(self.plasma_profile)
         fusion_rate.calculate_fusion_rates()
         fusion_rate.set_physics_variables()
@@ -1090,7 +1092,7 @@ class Physics:
                 physics_variables.betanb,
                 physics_variables.dnbeam2,
                 physics_variables.palpnb,
-            ) = physics_functions_module.beamfus(
+            ) = physics_funcs.beamfus(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.bp,
@@ -1129,30 +1131,32 @@ class Physics:
 
         # Create some derived values and add beam contribution to fusion power
         (
+            physics_variables.pneutpv,
             physics_variables.palpmw,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
             physics_variables.betaft,
+            physics_variables.palppv,
             physics_variables.palpipv,
             physics_variables.palpepv,
             physics_variables.pfuscmw,
             physics_variables.powfmw,
-        ) = physics_functions_module.palph2(
-            physics_variables.bt,
+        ) = physics_funcs.palph2(
             physics_variables.bp,
+            physics_variables.bt,
             physics_variables.dene,
             physics_variables.deni,
             physics_variables.dnitot,
             physics_variables.falpe,
             physics_variables.falpi,
             physics_variables.palpnb,
-            physics_variables.ifalphap,
             physics_variables.pchargepv,
             physics_variables.pneutpv,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.vol,
             physics_variables.palppv,
+            physics_variables.ifalphap,
         )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
@@ -1225,20 +1229,20 @@ class Physics:
         )
 
         # Calculate L- to H-mode power threshold for different scalings
-
-        physics_variables.pthrmw = physics_functions_module.pthresh(
+        physics_variables.pthrmw = pthresh(
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.bt,
             physics_variables.rmajor,
+            physics_variables.rminor,
             physics_variables.kappa,
             physics_variables.sarea,
             physics_variables.aion,
             physics_variables.aspect,
+            physics_variables.plascur,
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
-
         physics_variables.plhthresh = physics_variables.pthrmw[
             physics_variables.ilhthresh - 1
         ]
@@ -1276,7 +1280,9 @@ class Physics:
             )
 
         # Resistive diffusion time = current penetration time ~ mu0.a^2/resistivity
-        physics_variables.res_time = physics_functions_module.res_diff_time()
+        physics_variables.res_time = res_diff_time(
+            physics_variables.rmajor, physics_variables.rplas, physics_variables.kappa95
+        )
 
         # Power transported to the first wall by escaped alpha particles
         physics_variables.palpfwmw = physics_variables.palpmw * (
@@ -5769,3 +5775,171 @@ class Physics:
         taueff = (ratio + 1.0e0) / (ratio / tauei + 1.0e0 / tauee)
 
         return kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht
+
+
+def beta_poloidal(btot, bp, beta):
+    """Calculates total poloidal beta
+
+    Author: James Morris (UKAEA)
+
+    J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
+    Page 270 ISBN 0521851076
+
+    :param btot: sum of the toroidal and poloidal fields (T)
+    :param bp: poloidal field (T)
+    :param beta: total plasma beta
+    """
+    return beta * (btot / bp) ** 2
+
+
+def res_diff_time(rmajor, rplas, kappa95):
+    """Calculates resistive diffusion time
+
+    Author: James Morris (UKAEA)
+
+    :param rmajor: plasma major radius (m)
+    :param rplas: plasma resistivity (Ohms)
+    :param kappa95: plasma elongation at 95% flux surface
+    """
+
+    return 2 * constants.rmu0 * rmajor / (rplas * kappa95)
+
+
+def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plascur):
+    """L-mode to H-mode power threshold calculation
+
+    Author: P J Knight, CCFE, Culham Science Centre
+
+    - ITER Physics Design Description Document, p.2-2
+    - ITER-FDR Plasma Performance Assessments, p.III-9
+    - Snipes, 24th EPS Conference, Berchtesgaden 1997, p.961
+    - Martin et al, 11th IAEA Tech. Meeting on H-mode Physics and
+      Transport Barriers, Journal of Physics: Conference Series
+      123 (2008) 012033
+    - J A Snipes and the International H-mode Threshold Database
+      Working Group, 2000, Plasma Phys. Control. Fusion, 42, A299
+
+    :param dene: volume-averaged electron density (/m3)
+    :param dnla: line-averaged electron density (/m3)
+    :param bt:  toroidal field on axis (T)
+    :param rmajor: plasma major radius (m)
+    :param rminor: plasma minor radius (m)
+    :param kappa: plasma elongation
+    :param sarea: plasma surface area (m2)
+    :param aion: average mass of all ions (amu)
+    :param aspect: aspect ratio
+    :param plascur: plasma current (A)
+
+    :returns: array of power thresholds (18 different scalings)
+    """
+
+    dene20 = 1e-20 * dene
+    dnla20 = 1e-20 * dnla
+
+    # ITER-DDD, D.Boucher
+    # Fit to 1996 H-mode power threshold database: nominal
+    iterdd = 0.45 * dene20**0.75 * bt * rmajor**2
+
+    # Fit to 1996 H-mode power threshold database: upper bound
+    iterdd_ub = 0.37 * dene20 * bt * rmajor**2.5
+
+    # Fit to 1996 H-mode power threshold database: lower bound
+    iterdd_lb = 0.54 * dene20**0.5 * bt * rmajor**1.5
+
+    # J. A. Snipes, ITER H-mode Threshold Database Working Group,
+    # Controlled Fusion and Plasma Physics, 24th EPS Conference,
+    # Berchtesgaden, June 1997, vol.21A, part III, p.961
+    snipes_1997 = 0.65 * dnla20**0.93 * bt**0.86 * rmajor**2.15
+
+    pthrmw5 = 0.42 * dnla20**0.80 * bt**0.90 * rmajor**1.99 * kappa**0.76
+
+    # Martin et al (2008) for recent ITER scaling, with mass correction
+    # and 95% confidence limits
+    martin = 0.0488 * dnla20**0.717 * bt**0.803 * sarea**0.941 * (2.0 / aion)
+    martin_error = (
+        np.sqrt(
+            0.057**2
+            + (0.035 * np.log(dnla20)) ** 2
+            + (0.032 * np.log(bt)) ** 2
+            + (0.019 * np.log(sarea)) ** 2
+        )
+        * martin
+    )
+    martin_ub = martin + 2 * martin_error
+    martin_lb = martin - 2 * martin_error
+
+    # Snipes et al (2000) scaling with mass correction
+    # Nominal, upper and lower
+    snipes_2000 = (
+        1.42 * dnla20**0.58 * bt**0.82 * rmajor * rminor**0.81 * (2.0 / aion)
+    )
+    snipes_2000_ub = (
+        1.547
+        * dnla20**0.615
+        * bt**0.851
+        * rmajor**1.089
+        * rminor**0.876
+        * (2.0 / aion)
+    )
+    snipes_2000_lb = (
+        1.293
+        * dnla20**0.545
+        * bt**0.789
+        * rmajor**0.911
+        * rminor**0.744
+        * (2.0 / aion)
+    )
+
+    # Snipes et al (2000) scaling (closed divertor) with mass correction
+    # Nominal, upper and lower
+
+    snipes_2000_cd = 0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / aion)
+    snipes_2000_cd_ub = (
+        0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / aion)
+    )
+    snipes_2000_cd_lb = (
+        0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / aion)
+    )
+
+    # Hubbard et al. 2012 L-I threshold scaling
+    hubbard_2012 = 2.11 * (plascur / 1e6) ** 0.94 * dnla20**0.65
+    hubbard_2012_lb = 2.11 * (plascur / 1e6) ** 0.70 * dnla20**0.47
+    hubbard_2012_ub = 2.11 * (plascur / 1e6) ** 1.18 * dnla20**0.83
+
+    # Hubbard et al. 2017 L-I threshold scaling
+    hubbard_2017 = 0.162 * dnla20 * sarea * (bt) ** 0.26
+
+    pthrmw = [
+        iterdd,
+        iterdd_ub,
+        iterdd_lb,
+        snipes_1997,
+        pthrmw5,
+        martin,
+        martin_ub,
+        martin_lb,
+        snipes_2000,
+        snipes_2000_ub,
+        snipes_2000_lb,
+        snipes_2000_cd,
+        snipes_2000_cd_ub,
+        snipes_2000_cd_lb,
+        hubbard_2012,
+        hubbard_2012_lb,
+        hubbard_2012_ub,
+        hubbard_2017,
+    ]
+
+    # Aspect ratio corrected Martin et al (2008)
+    # Correction: Takizuka 2004, Plasma Phys. Control Fusion 46 A227
+    if aspect <= 2.7:
+        takizuka_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
+        pthrmw += [
+            martin * takizuka_correction,
+            martin_ub * takizuka_correction,
+            martin_lb * takizuka_correction,
+        ]
+        return pthrmw
+
+    pthrmw += [martin, martin_ub, martin_lb]
+    return pthrmw
