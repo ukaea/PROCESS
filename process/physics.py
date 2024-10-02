@@ -1023,13 +1023,6 @@ class Physics:
                 error_handling.idiags[0] = physics_variables.ibss
                 error_handling.report_error(75)
 
-            physics_module.err242 = 0
-            if current_drive_variables.bootipf > current_drive_variables.bscfmax:
-                current_drive_variables.bootipf = min(
-                    current_drive_variables.bootipf, current_drive_variables.bscfmax
-                )
-                physics_module.err242 = 1
-
             if physics_variables.idia == 1:
                 current_drive_variables.diaipf = current_drive_variables.diacf_hender
             elif physics_variables.idia == 2:
@@ -4110,9 +4103,6 @@ class Physics:
                 current_drive_variables.pscf_scene,
                 "OP ",
             )
-            # Error to catch if bootstap fraction limit has been enforced
-            if physics_module.err242 == 1:
-                error_handling.report_error(242)
 
             # Error to catch if self-driven current fraction limit has been enforced
             if physics_module.err243 == 1:
