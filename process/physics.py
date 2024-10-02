@@ -166,7 +166,7 @@ def culblm(bt, dnbeta, plasma_current, rminor):
 # Plasma Current & Poloidal Field Calculations
 # -----------------------------------------------------
 
-
+@nb.jit(nopython=True, cache=True)
 def _plascar_bpol(
     aspect: float, eps: float, kappa: float, delta: float
 ) -> Tuple[float, float, float, float]:
@@ -291,6 +291,7 @@ def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
     return (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
 
 
+@nb.jit(nopython=True, cache=True)
 def calculate_plasma_current_peng(
     q95: float,
     aspect: float,
@@ -563,7 +564,7 @@ def calculate_current_coefficient_fiesta(
 # --------------------------------
 
 
-def nevins_integral(
+def _nevins_integral(
     y: float,
     dene: float,
     te: float,
@@ -691,7 +692,7 @@ def ps_fraction_scene(beta: float) -> float:
 
 
 @nb.jit(nopython=True, cache=True)
-def coulomb_logarithm_sauter(
+def _coulomb_logarithm_sauter(
     radial_elements: int, tempe: np.ndarray, ne: np.ndarray
 ) -> np.ndarray:
     """
@@ -723,7 +724,7 @@ def coulomb_logarithm_sauter(
 
 
 @nb.jit(nopython=True, cache=True)
-def electron_collisions_sauter(
+def _electron_collisions_sauter(
     radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray
 ) -> np.ndarray:
     """
@@ -744,14 +745,14 @@ def electron_collisions_sauter(
     """
     return (
         670.0
-        * coulomb_logarithm_sauter(radial_elements, tempe, ne)
+        * _coulomb_logarithm_sauter(radial_elements, tempe, ne)
         * ne[radial_elements - 1]
         / (tempe[radial_elements - 1] * np.sqrt(tempe[radial_elements - 1]))
     )
 
 
 @nb.jit(nopython=True, cache=True)
-def electron_collisionality_sauter(
+def _electron_collisionality_sauter(
     radial_elements: np.ndarray,
     rmajor: float,
     zeff: np.ndarray,
@@ -779,7 +780,7 @@ def electron_collisionality_sauter(
     - Yushmanov, 30th April 1987 (?)
     """
     return (
-        electron_collisions_sauter(radial_elements, tempe, ne)
+        _electron_collisions_sauter(radial_elements, tempe, ne)
         * 1.4
         * zeff[radial_elements - 1]
         * rmajor
@@ -793,7 +794,7 @@ def electron_collisionality_sauter(
 
 
 @nb.jit(nopython=True, cache=True)
-def ion_collisions_sauter(
+def _ion_collisions_sauter(
     radial_elements: np.ndarray,
     zeff: np.ndarray,
     ni: np.ndarray,
@@ -830,7 +831,7 @@ def ion_collisions_sauter(
 
 
 @nb.jit(nopython=True, cache=True)
-def ion_collisionality_sauter(
+def _ion_collisionality_sauter(
     radial_elements: np.ndarray,
     rmajor: float,
     inverse_q: np.ndarray,
@@ -861,7 +862,7 @@ def ion_collisionality_sauter(
     """
     return (
         3.2e-6
-        * ion_collisions_sauter(radial_elements, zeff, ni, tempi, amain)
+        * _ion_collisions_sauter(radial_elements, zeff, ni, tempi, amain)
         * rmajor
         / (
             np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
@@ -872,7 +873,7 @@ def ion_collisionality_sauter(
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_l31_coefficient(
+def _calculate_l31_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
@@ -922,10 +923,10 @@ def calculate_l31_coefficient(
     charge_profile = zeff[radial_elements - 1]
 
     # Calculate trapped particle fraction
-    f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
+    f_trapped = _trapped_particle_fraction_sauter(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = electron_collisionality_sauter(
+    electron_collisionality = _electron_collisionality_sauter(
         radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
     )
 
@@ -942,7 +943,7 @@ def calculate_l31_coefficient(
     )
 
     # Corrections suggested by Fable, 15/05/2015
-    return l31_coefficient * beta_poloidal_total_sauter(
+    return l31_coefficient * _beta_poloidal_total_sauter(
         radial_elements,
         number_of_elements,
         rmajor,
@@ -957,7 +958,7 @@ def calculate_l31_coefficient(
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_l31_32_coefficient(
+def _calculate_l31_32_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
@@ -1008,10 +1009,10 @@ def calculate_l31_32_coefficient(
     charge_profile = zeff[radial_elements - 1]
 
     # Calculate trapped particle fraction
-    f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
+    f_trapped = _trapped_particle_fraction_sauter(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = electron_collisionality_sauter(
+    electron_collisionality = _electron_collisionality_sauter(
         radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
     )
 
@@ -1082,9 +1083,9 @@ def calculate_l31_32_coefficient(
     # big_f32ee_teff + big_f32ei_teff = L32 coefficient
 
     # Corrections suggested by Fable, 15/05/2015
-    return beta_poloidal_sauter(
+    return _beta_poloidal_sauter(
         radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
-    ) * (big_f32ee_teff + big_f32ei_teff) + calculate_l31_coefficient(
+    ) * (big_f32ee_teff + big_f32ei_teff) + _calculate_l31_coefficient(
         radial_elements,
         number_of_elements,
         rmajor,
@@ -1098,9 +1099,9 @@ def calculate_l31_32_coefficient(
         rho,
         zeff,
         sqeps,
-    ) * beta_poloidal_sauter(
+    ) * _beta_poloidal_sauter(
         radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
-    ) / beta_poloidal_total_sauter(
+    ) / _beta_poloidal_total_sauter(
         radial_elements,
         number_of_elements,
         rmajor,
@@ -1115,7 +1116,7 @@ def calculate_l31_32_coefficient(
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_l34_alpha_31_coefficient(
+def _calculate_l34_alpha_31_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
@@ -1169,10 +1170,10 @@ def calculate_l34_alpha_31_coefficient(
     charge_profile = zeff[radial_elements - 1]
 
     # Calculate trapped particle fraction
-    f_trapped = trapped_particle_fraction(radial_elements, triang, sqeps)
+    f_trapped = _trapped_particle_fraction_sauter(radial_elements, triang, sqeps)
 
     # Calculated electron collisionality; nu_e*
-    electron_collisionality = electron_collisionality_sauter(
+    electron_collisionality = _electron_collisionality_sauter(
         radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
     )
 
@@ -1196,7 +1197,7 @@ def calculate_l34_alpha_31_coefficient(
     )
 
     # Calculate the ion collisionality
-    ion_collisionality = ion_collisionality_sauter(
+    ion_collisionality = _ion_collisionality_sauter(
         radial_elements, rmajor, inverse_q, sqeps, tempi, amain, zmain, ni
     )
 
@@ -1212,7 +1213,7 @@ def calculate_l34_alpha_31_coefficient(
     # Corrections suggested by Fable, 15/05/2015
     # Below calculates the L34 * alpha + L31 coefficient
     return (
-        beta_poloidal_total_sauter(
+        _beta_poloidal_total_sauter(
             radial_elements,
             number_of_elements,
             rmajor,
@@ -1224,7 +1225,7 @@ def calculate_l34_alpha_31_coefficient(
             inverse_q,
             rho,
         )
-        - beta_poloidal_sauter(
+        - _beta_poloidal_sauter(
             radial_elements,
             number_of_elements,
             rmajor,
@@ -1234,7 +1235,7 @@ def calculate_l34_alpha_31_coefficient(
             inverse_q,
             rho,
         )
-    ) * (l34_coefficient * alpha) + calculate_l31_coefficient(
+    ) * (l34_coefficient * alpha) + _calculate_l31_coefficient(
         radial_elements,
         number_of_elements,
         rmajor,
@@ -1250,7 +1251,7 @@ def calculate_l34_alpha_31_coefficient(
         sqeps,
     ) * (
         1.0
-        - beta_poloidal_sauter(
+        - _beta_poloidal_sauter(
             radial_elements,
             number_of_elements,
             rmajor,
@@ -1260,7 +1261,7 @@ def calculate_l34_alpha_31_coefficient(
             inverse_q,
             rho,
         )
-        / beta_poloidal_total_sauter(
+        / _beta_poloidal_total_sauter(
             radial_elements,
             number_of_elements,
             rmajor,
@@ -1276,7 +1277,7 @@ def calculate_l34_alpha_31_coefficient(
 
 
 @nb.jit(nopython=True, cache=True)
-def beta_poloidal_sauter(
+def _beta_poloidal_sauter(
     radial_elements: np.ndarray,
     nr: int,
     rmajor: float,
@@ -1327,7 +1328,7 @@ def beta_poloidal_sauter(
 
 
 @nb.jit(nopython=True, cache=True)
-def beta_poloidal_total_sauter(
+def _beta_poloidal_total_sauter(
     radial_elements: np.ndarray,
     nr: int,
     rmajor: float,
@@ -1395,7 +1396,7 @@ def beta_poloidal_total_sauter(
 
 
 @nb.jit(nopython=True, cache=True)
-def trapped_particle_fraction(
+def _trapped_particle_fraction_sauter(
     radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0
 ) -> np.ndarray:
     """
@@ -5323,7 +5324,7 @@ class Physics:
         # Call integration routine using definite integral routine from scipy
 
         ainteg, _ = integrate.quad(
-            lambda y: nevins_integral(
+            lambda y: _nevins_integral(
                 y,
                 dene,
                 te,
@@ -5417,7 +5418,7 @@ class Physics:
             tempi[NR - 1] = 1e-4 * tempi[NR - 2]
 
         # Calculate total bootstrap current (MA) by summing along profiles
-        # Looping from 2 because calculate_l31_coefficient etc should return 0 @ j == 1
+        # Looping from 2 because _calculate_l31_coefficient() etc should return 0 @ j == 1
         radial_elements = np.arange(2, NR)
 
         # Change in localised minor radius to be used as delta term in derivative
@@ -5440,7 +5441,7 @@ class Physics:
         jboot = (
             0.5
             * (
-                calculate_l31_coefficient(
+                _calculate_l31_coefficient(
                     radial_elements,
                     NR,
                     physics_variables.rmajor,
@@ -5456,7 +5457,7 @@ class Physics:
                     sqeps,
                 )
                 * dlogne_drho
-                + calculate_l31_32_coefficient(
+                + _calculate_l31_32_coefficient(
                     radial_elements,
                     NR,
                     physics_variables.rmajor,
@@ -5472,7 +5473,7 @@ class Physics:
                     sqeps,
                 )
                 * dlogte_drho
-                + calculate_l34_alpha_31_coefficient(
+                + _calculate_l34_alpha_31_coefficient(
                     radial_elements,
                     NR,
                     physics_variables.rmajor,
