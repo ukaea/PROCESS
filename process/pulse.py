@@ -181,13 +181,13 @@ class Pulse:
             )
             po.ovarre(
                 self.outfile,
-                "Required volt-seconds during start-up (Wb)",
+                "Required volt-seconds during current ramp-up (Wb)",
                 "(vssoft)",
                 vssoft,
             )
             po.ovarre(
                 self.outfile,
-                "Available volt-seconds during burn (Wb)",
+                "Available volt-seconds during fusion power ramp and flat-top (Wb)",
                 "(vsmax)",
                 vsmax,
             )

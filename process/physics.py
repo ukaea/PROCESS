@@ -203,9 +203,8 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
 
     return conie * (ti - te) / (te**1.5)
+    
 
-
-@nb.jit(nopython=True, cache=True)
 def vscalc(
     csawth,
     eps,
@@ -247,10 +246,23 @@ def vscalc(
     rlpint = rmu0 * rmajor * rli / 2.0
     phiint = rlpint * plascur
 
-    # Start-up resistive component
-    # Uses ITER formula without the 10 V-s add-on
+    # Issue #489, Resistive flux consumption during the current ramp
+    # rho_cr = plasma loop resistance at the (assumed) conditions during the current ramp
+    # Typical temperature and Zeff during the current ramp:
 
-    vsres = gamma * rmu0 * plascur * rmajor
+    t_current_ramp = physics_variables.t_cr_ratio * physics_variables.te
+
+    zeff_current_ramp = (
+        physics_variables.z_eff_cr_ratio * (physics_variables.zeff - 1) + 1
+    )
+
+    # Plasma loop resistance at the (assumed) conditions during the current ramp
+    _, rho_cr = plasma_resistance(
+        kappa, rmajor, physics_variables.rminor, t_current_ramp, zeff_current_ramp
+    )
+
+    # Resistive flux consumption during the current ramp
+    vsres = 0.5 * kappa * gamma * plascur * times_variables.tohs * rho_cr
 
     # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
     # fit for external inductance
@@ -283,7 +295,7 @@ def vscalc(
     vsbrn = vburn * (t_fusion_ramp + tburn)
     vsstt = vsstt + vsbrn
 
-    return phiint, rlp, vsbrn, vsind, vsres, vsstt
+    return phiint, rlp, vsbrn, vsind, vsres, vsstt, rho_cr
 
 
 @nb.jit(nopython=True, cache=True)
@@ -765,6 +777,36 @@ def tpf(j, triang, sqeps, fit=1):
         )
 
     raise RuntimeError(f"fit={fit} is not valid. Must be 1, 2, or 3")
+
+
+def plasma_resistance(kappa95, rmajor, rminor, ten, zeff):
+    # Density weighted electron temperature in 10 keV units
+
+    t10 = ten / 10.0
+    rplas = (
+        physics_variables.plasma_res_factor
+        * 2.15e-9
+        * zeff
+        * rmajor
+        / (kappa95 * rminor**2 * t10**1.5)
+    )
+
+    # Neo-classical resistivity enhancement factor
+    # Taken from  N. A. Uckan et al, Fusion Technology 13 (1988) p.411.
+    # The expression is valid for aspect ratios in the range 2.5--4.
+
+    rpfac = 4.3 - 0.6 * rmajor / rminor
+    rplas = rplas * rpfac
+
+    # Check to see if plasma resistance is negative
+    # (possible if aspect ratio is too high)
+
+    if rplas <= 0.0:
+        error_handling.fdiags[0] = rplas
+        error_handling.fdiags[1] = physics_variables.aspect
+        error_handling.report_error(83)
+
+    return rpfac, rplas
 
 
 class Physics:
@@ -1352,6 +1394,7 @@ class Physics:
             physics_variables.vsind,
             physics_variables.vsres,
             physics_variables.vsstt,
+            physics_variables.rho_cr,
         ) = vscalc(
             physics_variables.csawth,
             physics_variables.eps,
@@ -1977,34 +2020,9 @@ class Physics:
 
     @staticmethod
     def pohm(facoh, kappa95, plascur, rmajor, rminor, ten, vol, zeff):
-        # Density weighted electron temperature in 10 keV units
-
-        t10 = ten / 10.0
 
         # Plasma resistance, from loop voltage calculation in IPDG89
-
-        rplas = (
-            physics_variables.plasma_res_factor
-            * 2.15e-9
-            * zeff
-            * rmajor
-            / (kappa95 * rminor**2 * t10**1.5)
-        )
-
-        # Neo-classical resistivity enhancement factor
-        # Taken from  N. A. Uckan et al, Fusion Technology 13 (1988) p.411.
-        # The expression is valid for aspect ratios in the range 2.5--4.
-
-        rpfac = 4.3 - 0.6 * rmajor / rminor
-        rplas = rplas * rpfac
-
-        # Check to see if plasma resistance is negative
-        # (possible if aspect ratio is too high)
-
-        if rplas <= 0.0:
-            error_handling.fdiags[0] = rplas
-            error_handling.fdiags[1] = physics_variables.aspect
-            error_handling.report_error(83)
+        rpfac, rplas = plasma_resistance(kappa95, rmajor, rminor, ten, zeff)
 
         # Ohmic heating power per unit volume
         # Corrected from: pohmpv = (facoh*plascur)**2 * ...
@@ -4231,6 +4249,30 @@ class Physics:
                 "Coefficient for sawtooth effects on burn V-s requirement",
                 "(csawth)",
                 physics_variables.csawth,
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Temperature during the current ramp as a fraction of the flat-top value",
+                "(t_cr_ratio)",
+                physics_variables.t_cr_ratio,
+                "IP ",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "(Zeff-1) during the current ramp as a fraction of the flat-top value",
+                "(z_eff_cr_ratio)",
+                physics_variables.z_eff_cr_ratio,
+                "IP ",
+            )
+
+            po.ovarre(
+                self.outfile,
+                "Plasma loop resistance during the current ramp (ohm)",
+                "(rho_cr)",
+                physics_variables.rho_cr,
+                "OP ",
             )
 
         po.osubhd(self.outfile, "Fuelling :")
