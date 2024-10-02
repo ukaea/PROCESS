@@ -279,7 +279,8 @@ contains
       denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
-      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims
+      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
+      coolwh, emult
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
@@ -316,7 +317,8 @@ contains
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
 
-    use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he
+    use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he, &
+      dp_fw_blkt, dp_fw, dp_blkt, dp_liq
 
     use scan_module, only: isweep_2, nsweep, isweep, scan_dim, nsweep_2, &
       sweep_2, sweep, ipnscns, ipnscnv
@@ -2037,6 +2039,9 @@ contains
       case ('ims')
          call parse_int_variable('ims', ims, 0, 1, &
                ' Switch for Multi or Single Modle Segment (MMS or SMS)')
+      case ('coolwh')
+         call parse_int_variable('coolwh', coolwh, 1, 2, &
+               ' Blanket coolant type (1=He, 2=H20)')
 
       case ('secondary_cycle')
           call parse_int_variable('secondary_cycle', secondary_cycle, 0, 4, &
@@ -2321,6 +2326,18 @@ contains
        case ('dp_he')
           call parse_real_variable('dp_he', dp_he, 0.0D0, 10.0D6, &
               'Helium Pressure drop or Gas Pressure drop (Pa)')
+       case ('dp_fw_blkt')
+          call parse_real_variable('dp_fw_blkt', dp_fw_blkt, 0.0D0, 10.0D6, &
+              'Pressure drop across FW and blanket (Pa)')
+       case ('dp_fw')
+          call parse_real_variable('dp_fw', dp_fw, 0.0D0, 10.0D6, &
+              'Pressure drop across FW (Pa)')
+       case ('dp_blkt')
+          call parse_real_variable('dp_blkt', dp_blkt, 0.0D0, 10.0D6, &
+              'Pressure drop across blanket (Pa)')
+       case ('dp_liq')
+          call parse_real_variable('dp_liq', dp_liq, 0.0D0, 10.0D6, &
+              'Pressure drop across liquid metal blanket (Pa)')
        case ('p_he')
           call parse_real_variable('p_he', p_he, 0.0D0, 100.0D6, &
               'Pressure in FW and blanket coolant at pump exit')
