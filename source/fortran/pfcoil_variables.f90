@@ -161,6 +161,14 @@ module pfcoil_variables
   !! - =8 Durham Ginzburg-Landau critical surface model for REBCO
   !! - =9 Hazelton experimental data + Zhai conceptual model for REBCO
 
+  real(dp) :: j_crit_str_cs
+  !! superconductor strand critical current density under operating
+  !! conditions in central solenoid (A/m2). Necessary for the cost calculation in $/kA m
+
+  real(dp) :: j_crit_str_pf
+  !! superconductor strand critical current density under operating
+  !! conditions in PF coils (A/m2). Necessary for the cost calculation in $/kA m
+
   integer :: i_pf_current
   !! Switch for controlling the current of the PF coils:
   !!
@@ -440,6 +448,8 @@ module pfcoil_variables
     itr_sum = 0.0D0
     isumatoh = 1
     isumatpf = 1
+    j_crit_str_cs = 0.0D0
+    j_crit_str_pf = 0.0D0
     i_pf_current = 1
     i_sup_pf_shape = 0
     jscoh_bop = 0.0D0

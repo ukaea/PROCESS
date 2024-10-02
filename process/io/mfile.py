@@ -336,15 +336,16 @@ class MFile(object):
             self.data[var_key] = var
             self.data[var_key].set_scan(1, value)
 
-    def write_to_json(self, keys_to_write={}, scan=-1, verbose=False):
+    def write_to_json(self, keys_to_write=None, scan=-1, verbose=False):
         """Write MFILE object to JSON file"""
 
-        if keys_to_write == {}:
+        if keys_to_write is None:
             keys_to_write = self.data.keys()
 
         filename = f"{self.filename}.json"
 
         dict_to_write = dict()
+
         if scan == 0:
             for i in range(self.data["rmajor"].get_number_of_scans()):
                 sub_dict = {}
@@ -363,6 +364,13 @@ class MFile(object):
                 dict_to_write[f"scan-{i+1}"] = sub_dict
         else:
             for item in keys_to_write:
+                # Initialize dat_key properly based on the number of scans
+                if self.data[item].get_number_of_scans() == 1:
+                    dat_key = -1
+                else:
+                    dat_key = (
+                        scan if scan > 0 else 1
+                    )  # Default to scan 1 if not specified
                 data = self.data[item].get_scan(dat_key)
                 des = self.data[item].var_description.replace("_", " ")
                 if verbose:
@@ -392,8 +400,10 @@ def sort_value(value_words: List[str]) -> Union[str, float]:
             # Attempt float conversion of first word
             return float(value_words[0])
         except ValueError:
+            # Log the exception with details
             logger.exception(f"Can't parse value in MFILE: {value_words}")
-            raise
+            # Return the original string as a fallback
+            return " ".join(value_words).strip()
 
 
 def sort_brackets(var):

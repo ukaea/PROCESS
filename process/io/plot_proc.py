@@ -15,11 +15,11 @@ Revised by Michael Kovari, 7/1/2016
 """
 
 import os
-import sys
 import argparse
 from argparse import RawTextHelpFormatter
 import matplotlib
 import matplotlib.pyplot as plt
+from importlib import resources
 from matplotlib.patches import Rectangle
 from matplotlib.patches import Circle
 import matplotlib.backends.backend_pdf as bpdf
@@ -58,11 +58,6 @@ from process.io.python_fortran_dicts import get_dicts
 if os.name == "posix" and "DISPLAY" not in os.environ:
     matplotlib.use("Agg")
 matplotlib.rcParams["figure.max_open_warning"] = 40
-
-if sys.version_info >= (3, 7):
-    from importlib import resources
-else:
-    import importlib_resources as resources
 
 
 def parse_args(args):
@@ -159,11 +154,11 @@ RADIAL_BUILD = [
 
 vertical_lower = [
     "rminor*kappa",
-    "vgap",
+    "vgap_xpoint_divertor",
     "divfix",
     "shldlth",
     "d_vv_bot",
-    "vgap2",
+    "vgap_vv_thermalshield",
     "thshield_vb",
     "tftsgap",
     "tfcth",
@@ -1158,6 +1153,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_single_null.rs,
             vvg_single_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1176,6 +1172,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_double_null.rs,
             vvg_double_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
 
@@ -1224,7 +1221,10 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
         )
         axis.plot(sg_single_null.rs, sg_single_null.zs, color="black", lw=thin)
         axis.fill(
-            sg_single_null.rs, sg_single_null.zs, color=SHIELD_COLOUR[colour_scheme - 1]
+            sg_single_null.rs,
+            sg_single_null.zs,
+            color=SHIELD_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1238,7 +1238,10 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
         )
         axis.plot(sg_double_null.rs, sg_double_null.zs, color="black", lw=thin)
         axis.fill(
-            sg_double_null.rs, sg_double_null.zs, color=SHIELD_COLOUR[colour_scheme - 1]
+            sg_double_null.rs,
+            sg_double_null.zs,
+            color=SHIELD_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
 
@@ -1312,6 +1315,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_single_null.rs,
             bg_single_null.zs,
             color=BLANKET_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1330,6 +1334,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_double_null.rs[0],
             bg_double_null.zs[0],
             color=BLANKET_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
         if blnkith > 0.0:
             # only plot inboard blanket if inboard blanket thickness > 0
@@ -1340,6 +1345,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
                 bg_double_null.rs[1],
                 bg_double_null.zs[1],
                 color=BLANKET_COLOUR[colour_scheme - 1],
+                lw=0.01,
             )
 
 
@@ -1408,6 +1414,7 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             fwg_single_null.rs,
             fwg_single_null.zs,
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1428,11 +1435,13 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             fwg_double_null.rs[0],
             fwg_double_null.zs[0],
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
         axis.fill(
             fwg_double_null.rs[1],
             fwg_double_null.zs[1],
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
 
@@ -2064,7 +2073,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
 
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
-    if iohcl == 0:
+    if iohcl == 1:
         noc = number_of_coils - 1
     else:
         noc = number_of_coils
@@ -3179,7 +3188,7 @@ def main(args=None):
             "divfix",
             "shldtth",
             "d_vv_top",
-            "vgap2",
+            "vgap_vv_thermalshield",
             "thshield_vb",
             "tftsgap",
             "tfcth",
@@ -3193,7 +3202,7 @@ def main(args=None):
             "vvblgap",
             "shldtth",
             "d_vv_top",
-            "vgap2",
+            "vgap_vv_thermalshield",
             "thshield_vb",
             "tftsgap",
             "tfcth",

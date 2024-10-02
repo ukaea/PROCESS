@@ -89,6 +89,9 @@ module physics_variables
   real(dp) :: bvert
   !! vertical field at plasma (T)
 
+  real(dp) :: c_beta
+  !! Destabalisation parameter for iprofile=6 beta limit
+
   real(dp) :: csawth
   !! coeff. for sawteeth effects on burn V-s requirement
 
@@ -246,6 +249,7 @@ module physics_variables
   !! - =2 for Nevins et al general scaling
   !! - =3 for Wilson et al numerical scaling
   !! - =4 for Sauter et al scaling
+  !! - =5 for Sakai et al scaling
 
   integer :: iculbl
   !! switch for beta limit scaling (`constraint equation 24`)
@@ -367,6 +371,7 @@ module physics_variables
   !! - =3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
   !! - =4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
   !! - =5 use input value for alphaj.  Set rli and dnbeta from Menard scaling
+  !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and dnbeta from Tholerus
 
   integer :: iradloss
   !! switch for radiation loss term usage in power balance (see User Guide):
@@ -899,6 +904,7 @@ module physics_variables
     burnup = 0.0D0
     burnup_in = 0.0D0
     bvert = 0.0D0
+    c_beta = 0.5D0
     csawth = 1.0D0
     cvol = 1.0D0
     cwrmax = 1.35D0

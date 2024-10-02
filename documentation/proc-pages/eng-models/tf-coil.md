@@ -28,6 +28,9 @@ $$
 
 This approximation is sufficiently accurate at the plasma centre.
 
+!!! tip "Recommended maximum critical current ratio"
+    For engineering feasibility, the TF coil operating current / critical current ratio shouldn't be set above 0.7, i.e. `fiooic` shouldn't be above 0.7.
+
 ## TF coil inboard mid-plane geometry
 This section describes TF coil inboard leg geometry of the cross-section defined by z=0 (mid-plane).  Resistive and superconducting coils are described separately.
 

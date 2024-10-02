@@ -16,7 +16,7 @@ import process.io.mfile as mf
 import matplotlib.pyplot as plt
 
 
-def orig_cost_model():
+def orig_cost_model(m_file, args):
     """
 
     Plot pie chart for the orginal 1990 cost model.
@@ -125,10 +125,11 @@ def orig_cost_model():
     if args.save:
         fig1.savefig("direct_cost_pie.pdf")
         fig2.savefig("cost_pie.pdf")
-    plt.show()
+    else:
+        plt.show()
 
 
-def new_cost_model():
+def new_cost_model(m_file, args):
     """
 
     Plot pie chart for the new 2014 cost model.
@@ -183,11 +184,11 @@ def new_cost_model():
     # Save figures if option selected
     if args.save:
         fig1.savefig("cost_pie.pdf")
-    plt.show()
+    else:
+        plt.show()
 
 
-# Main code
-if __name__ == "__main__":
+def main(args=None):
     # Setup command line arguments
     parser = argparse.ArgumentParser(
         description="Displays the cost breakdown as a pie chart.  "
@@ -204,14 +205,19 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--save", help="save figure", action="store_true")
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     m_file = mf.MFile(args.f)
 
     # Check which cost model is being used
     if "c21" in m_file.data.keys():
-        orig_cost_model()
+        orig_cost_model(m_file, args)
     elif "s01" in m_file.data.keys():
-        new_cost_model()
+        new_cost_model(m_file, args)
     else:
         print("ERROR: Cannot identify cost data, check MFILE!")
+
+
+# Main code
+if __name__ == "__main__":
+    main()

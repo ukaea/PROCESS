@@ -665,6 +665,10 @@ class Sctfcoil:
             #  Critical current in cable
             icrit = j_crit_cable * acs
 
+            # Strand critical current calculation for costing in $/kAm
+            # = Superconducting filaments jc * (1 - strand copper fraction)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
+
         elif isumat == 2:  # Bi-2212 high temperature superconductor parameterization
             #  Current density in a strand of Bi-2212 conductor
             #  N.B. jcrit returned by superconductors.bi2212 is the critical current density
@@ -679,6 +683,10 @@ class Sctfcoil:
             #  Critical current in cable
             icrit = j_crit_cable * acs * fcond
 
+            # Strand critical current calulation for costing in $ / kAm
+            # Copper in the strand is already accounted for
+            tfcoil_variables.j_crit_str_tf = j_crit_sc
+
         elif isumat == 3:  # NbTi data
             bc20m = 15.0e0
             tc0m = 9.3e0
@@ -688,6 +696,10 @@ class Sctfcoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
             icrit = j_crit_cable * acs
+
+            # Strand critical current calulation for costing in $ / kAm
+            # = superconducting filaments jc * (1 -strand copper fraction)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
 
         elif isumat == 4:  # ITER Nb3Sn parameterization, but user-defined parameters
             bc20m = bcritsc
@@ -703,6 +715,10 @@ class Sctfcoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
             icrit = j_crit_cable * acs
+
+            # Strand critical current calulation for costing in $ / kAm
+            # = superconducting filaments jc * (1 -strand copper fraction)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
 
         elif isumat == 5:  # WST Nb3Sn parameterisation
             bc20m = 32.97e0
@@ -721,6 +737,10 @@ class Sctfcoil:
             #  Critical current in cable
             icrit = j_crit_cable * acs
 
+            # Strand critical current calulation for costing in $ / kAm
+            # = superconducting filaments jc * (1 -strand copper fraction)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
+
         elif isumat == 6:  # "REBCO" 2nd generation HTS superconductor in CrCo strand
             raise ValueError(
                 "sctfcoil.supercon has been called but tfcoil_variables.i_tf_sc_mat=6"
@@ -736,6 +756,10 @@ class Sctfcoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable
             icrit = j_crit_cable * acs
+
+            # Strand critical current calulation for costing in $ / kAm
+            # = superconducting filaments jc * (1 -strand copper fraction)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
 
         elif isumat == 8:  # Durham Ginzburg-Landau critical surface model for REBCO
             bc20m = 430
@@ -754,6 +778,10 @@ class Sctfcoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable (copper added at this stage in HTS cables)
             icrit = j_crit_cable * acs
+
+            # Strand critical current calulation for costing in $ / kAm
+            # Already includes buffer and support layers so no need to include fcu here
+            tfcoil_variables.j_crit_str_tf = j_crit_sc
 
         elif (
             isumat == 9
@@ -776,6 +804,10 @@ class Sctfcoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
             #  Critical current in cable (copper added at this stage in HTS cables)
             icrit = j_crit_cable * acs
+
+            # Strand critical current calulation for costing in $ / kAm
+            # = superconducting filaments jc * (1 -strand copper fraction)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
 
         else:
             error_handling.idiags[0] = isumat
@@ -2254,7 +2286,7 @@ class Sctfcoil:
 
         H_vv = (
             physics_variables.rminor * physics_variables.kappa
-            + build_variables.vgap
+            + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             + build_variables.shldtth
             + (build_variables.d_vv_top / 2)
@@ -4254,11 +4286,8 @@ class Sctfcoil:
         # Tresca / Von Mises yield criteria calculations
         # -----------------------------
         # Array equation
-        sig_tf_tresca_tmp1 = numpy.maximum(
-            numpy.absolute(sig_tf_r - sig_tf_t), numpy.absolute(sig_tf_r - sig_tf_z)
-        )
         sig_tf_tresca = numpy.maximum(
-            sig_tf_tresca_tmp1, numpy.absolute(sig_tf_z - sig_tf_t)
+            numpy.absolute(sig_tf_r - sig_tf_z), numpy.absolute(sig_tf_z - sig_tf_t)
         )
 
         # Array equation

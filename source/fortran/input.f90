@@ -193,13 +193,13 @@ contains
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, shldoth, &
-      shldtth, shldlth, vgap2, plleni, fwoth, vvblgap, &
+      shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
       thshield_ib, thshield_ob, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, tfcth, &
       iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, ddwex, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
-      blbpoth, gapds, fwith, vgap, shldith, sigallpc, tfootfi, f_avspace,&
+      blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
       esbldgm3, fndt, row, wgt2, pibv, clh1, stcl, clh2, &
@@ -256,7 +256,7 @@ contains
       ucblli, ucpfcb, tlife, ipnet, fcdfuel, ucbus, ucpfb, uchts, &
       maintenance_fwbs, fwbs_prob_fail, uclh, ucblss, ucblvd, ucsc, ucturb, &
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
-      startupratio, tmain, u_unplanned_cp
+      startupratio, tmain, u_unplanned_cp, supercond_cost_model
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
       ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
@@ -279,7 +279,8 @@ contains
       denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
-      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims
+      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
+      coolwh, emult
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
@@ -304,7 +305,7 @@ contains
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, cvol, fdeut, ffwal, iculbl, itartpf, ilhthresh, &
-      fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, csawth, dene, &
+      fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
       ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
@@ -316,7 +317,8 @@ contains
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
 
-    use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he
+    use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he, &
+      dp_fw_blkt, dp_fw, dp_blkt, dp_liq
 
     use scan_module, only: isweep_2, nsweep, isweep, scan_dim, nsweep_2, &
       sweep_2, sweep, ipnscns, ipnscnv
@@ -549,7 +551,10 @@ contains
        case ('coreradiationfraction')
           call parse_real_variable('coreradiationfraction', coreradiationfraction, 0.0D0, 1.0D0, &
                'Fraction of core radiation subtracted from P_L')
-       case ('csawth')
+            case ('c_beta')
+               call parse_real_variable('c_beta', c_beta, 0.0D0, 1.0D0, &
+                    'Destabalisation parameter for iprofile=6')
+            case ('csawth')
           call parse_real_variable('csawth', csawth, 0.0D0, 10.0D0, &
                'Coefficient for sawteeth effects')
        case ('cvol')
@@ -616,7 +621,7 @@ contains
           call parse_real_variable('taumax', taumax, 0.1D0, 100.0D0, &
                'Maximum allowed energy confinement time (s)')
        case ('ibss')
-          call parse_int_variable('ibss', ibss, 1, 4, &
+          call parse_int_variable('ibss', ibss, 1, 5, &
                'Switch for bootstrap scaling')
        case ('iculbl')
           call parse_int_variable('iculbl', iculbl, 0, 3, &
@@ -647,7 +652,7 @@ contains
           call parse_int_variable('ipedestal', ipedestal, 0, 1, &
                'Switch for plasma profile type')
        case ('iprofile')
-          call parse_int_variable('iprofile', iprofile, 0, 5, &
+          call parse_int_variable('iprofile', iprofile, 0, 6, &
                'Switch for current profile consistency')
        case ('ips')
           call parse_int_variable('ips', ips, 0, 1, &
@@ -1418,11 +1423,11 @@ contains
        case ('thshield_vb')
           call parse_real_variable('thshield_vb', thshield_vb, 0.0D0, 10.0D0, &
                'TF/VV thermal shield thickness, vertical build (m)')
-       case ('vgap')
-          call parse_real_variable('vgap', vgap, 0.0D0, 10.0D0, &
+       case ('vgap_xpoint_divertor')
+          call parse_real_variable('vgap_xpoint_divertor', vgap_xpoint_divertor, 0.0D0, 10.0D0, &
                'Vert gap between x-pnt and divertor (m)')
-       case ('vgap2')
-          call parse_real_variable('vgap2', vgap2, 0.0D0, 10.0D0, &
+       case ('vgap_vv_thermalshield')
+          call parse_real_variable('vgap_vv_thermalshield', vgap_vv_thermalshield, 0.0D0, 10.0D0, &
                'Vert gap between TF coil and shield (m)')
        case ('vgaptop')
           call parse_real_variable('vgaptop', vgaptop, 0.0D0, 10.0D0, &
@@ -1851,6 +1856,9 @@ contains
        case ('isumatpf')
           call parse_int_variable('isumatpf', isumatpf, 1, 9, &
                'PF coil superconductor material')
+       case ('supercond_cost_model')
+          call parse_int_variable('supercond_cost_model', supercond_cost_model, 0, 1, &
+               'Superconductor cost model')
        case ('i_pf_current')
           call parse_int_variable('i_pf_current', i_pf_current, 0, 2, &
                'Switch for controlling the current of the PF coils')
@@ -2031,6 +2039,9 @@ contains
       case ('ims')
          call parse_int_variable('ims', ims, 0, 1, &
                ' Switch for Multi or Single Modle Segment (MMS or SMS)')
+      case ('coolwh')
+         call parse_int_variable('coolwh', coolwh, 1, 2, &
+               ' Blanket coolant type (1=He, 2=H20)')
 
       case ('secondary_cycle')
           call parse_int_variable('secondary_cycle', secondary_cycle, 0, 4, &
@@ -2315,6 +2326,18 @@ contains
        case ('dp_he')
           call parse_real_variable('dp_he', dp_he, 0.0D0, 10.0D6, &
               'Helium Pressure drop or Gas Pressure drop (Pa)')
+       case ('dp_fw_blkt')
+          call parse_real_variable('dp_fw_blkt', dp_fw_blkt, 0.0D0, 10.0D6, &
+              'Pressure drop across FW and blanket (Pa)')
+       case ('dp_fw')
+          call parse_real_variable('dp_fw', dp_fw, 0.0D0, 10.0D6, &
+              'Pressure drop across FW (Pa)')
+       case ('dp_blkt')
+          call parse_real_variable('dp_blkt', dp_blkt, 0.0D0, 10.0D6, &
+              'Pressure drop across blanket (Pa)')
+       case ('dp_liq')
+          call parse_real_variable('dp_liq', dp_liq, 0.0D0, 10.0D6, &
+              'Pressure drop across liquid metal blanket (Pa)')
        case ('p_he')
           call parse_real_variable('p_he', p_he, 0.0D0, 100.0D6, &
               'Pressure in FW and blanket coolant at pump exit')

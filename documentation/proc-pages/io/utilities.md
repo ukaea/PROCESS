@@ -232,7 +232,7 @@ N.B. Rounding to whole integer can cause errors of $\pm$1 between adjacent arrow
 
 ## TF Stress distribution plots
 
-> `utilities/plot_stress_tf.py`
+> `process/io/plot_stress_tf.py`
 
 Program to plot stress, strain and displacement radial distributions at the inboard mid-plane section of the TF coil.
 This program uses the `SIG_TF.json` file created by running `PROCESS`, that stores stress distributions of the VMCON point and stores the output
@@ -249,7 +249,7 @@ done in the near future.
 ### Usage
 
 ```bash
-python utilities/plot_stress_tf.py [-h] [-f path/to/SIG_TF.json] [-p [PLOT_SELEC]] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]]
+python process/io/plot_stress_tf.py [-h] [-f path/to/SIG_TF.json] [-p [PLOT_SELEC]] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]]
 ```
 
 ### Option
@@ -270,7 +270,7 @@ python utilities/plot_stress_tf.py [-h] [-f path/to/SIG_TF.json] [-p [PLOT_SELEC
 
 ## Turn output into input
 
-`utilities/write_new_in_dat.py`
+`process/io/write_new_in_dat.py`
 
 This program creates a new `IN.DAT` file with the initial values of all the iteration variables 
 replaced by their results in `OUT.DAT`, if that output is a feasible solution.
@@ -284,7 +284,7 @@ the new starting values. There is also an option to select the first feasible so
 
 ### Usage
 ```
-python utilities/write_new_in_dat.py [-h] [-f path/to/MFILE.DAT] [-i path/to/IN.DAT] [-o path/to/new_IN.DAT]
+python process/io/write_new_in_dat.py [-h] [-f path/to/MFILE.DAT] [-i path/to/IN.DAT] [-o path/to/new_IN.DAT]
 ```
 
 ### Options
@@ -337,7 +337,7 @@ python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv output vars] [-y
 
 ## Plot a pie chart of the cost breakdown
 
-`utilities/costs_pie.py`
+`process/io/costs_pie.py`
 
 This utility plots the cost breakdown as a pie chart giving each component as a percentage. This allows for the most expensive areas to be easily identified. For the 1990 cost model, an additional plot showing how direct, indirect and contingency costs contribute to the overall budget is shown.
 
@@ -347,7 +347,7 @@ This utility plots the cost breakdown as a pie chart giving each component as a 
 
 ### Usage
 ```
-python utilities/costs_pie.py [-h] [-f path/to/MFILE] [-s]
+python process/io/costs_pie.py [-h] [-f path/to/MFILE] [-s]
 ```
 If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the current directory.
 
@@ -362,7 +362,7 @@ If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the cu
 
 ## Plot a bar chart of the cost breakdown
 
-`utilities/costs_bar.py`
+`process/io/costs_bar.py`
 
 This utility plots the cost breakdown as a bar chart giving the cost of each component. This allows for the most expensive areas to be easily identified. For the 1990 cost model, an additional plot showing how the direct, indirect and contingency costs contribute to the overall budget is shown. Multiple MFILEs can be specified allowing for different PROCESS runs to be compared on the same plot. An inflation factor can be specified using the `-inf` argument, which multiplies all the costs by that value.
 
@@ -372,7 +372,7 @@ This utility plots the cost breakdown as a bar chart giving the cost of each com
 
 ### Usage
 ```
-python utilities/costs_bar.py [-h] [-f f [f ...]] [-s] [-inf INF]
+python process/io/costs_bar.py [-h] [-f f [f ...]] [-s] [-inf INF]
 ```
 
 ### Options

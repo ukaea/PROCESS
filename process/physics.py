@@ -24,7 +24,6 @@ from process.fortran import (
     numerics,
     stellarator_variables,
     process_output as po,
-    profiles_module,
 )
 
 
@@ -987,7 +986,21 @@ class Physics:
         current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
         current_drive_variables.bscf_sauter = (
-            current_drive_variables.cboot * self.bootstrap_fraction_sauter()
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sauter(self.plasma_profile)
+        )
+
+        current_drive_variables.bscf_sakai = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sakai(
+                betap=physics_variables.betap,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                eps=physics_variables.eps,
+                rli=physics_variables.rli,
+            )
         )
 
         if current_drive_variables.bscfmax < 0.0e0:
@@ -1002,6 +1015,10 @@ class Physics:
                 current_drive_variables.bootipf = current_drive_variables.bscf_wilson
             elif physics_variables.ibss == 4:
                 current_drive_variables.bootipf = current_drive_variables.bscf_sauter
+            elif physics_variables.ibss == 5:
+                # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+                # So the diamagnetic current calculation should be turned off when using, (idia = 0).
+                current_drive_variables.bootipf = current_drive_variables.bscf_sakai
             else:
                 error_handling.idiags[0] = physics_variables.ibss
                 error_handling.report_error(75)
@@ -1399,6 +1416,16 @@ class Physics:
             # and Pilot Plants Based on the Spherical Tokamak."
             # Nucl. Fusion, 2016, 44.
             physics_variables.dnbeta = 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
+
+        if physics_variables.iprofile == 6:
+            # Method used for STEP plasma scoping
+            # Tholerus et al. (2024), arXiv:2403.09460
+            Fp = (physics_variables.ne0 * physics_variables.te0) / (
+                physics_variables.dene * physics_variables.te
+            )
+            physics_variables.dnbeta = 3.7e0 + (
+                (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
+            )
 
         # culblm returns the betalim for beta
         physics_variables.betalim = culblm(
@@ -2161,7 +2188,7 @@ class Physics:
             alphaj = qstar / q0 - 1.0
             rli = np.log(1.65 + 0.89 * alphaj)
 
-        if iprofile == 4 or iprofile == 5:
+        if iprofile in [4, 5, 6]:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
             rli = 3.4 - kappa
@@ -4054,6 +4081,14 @@ class Physics:
                 current_drive_variables.bscf_wilson,
                 "OP ",
             )
+
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Sakai)",
+                "(bscf_sakai)",
+                current_drive_variables.bscf_sakai,
+                "OP ",
+            )
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (Hender)",
@@ -4104,6 +4139,11 @@ class Physics:
                 po.ocmmnt(
                     self.outfile,
                     "  (Sauter et al bootstrap current fraction model used)",
+                )
+            elif physics_variables.ibss == 5:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Sakai et al bootstrap current fraction model used)",
                 )
 
             if physics_variables.idia == 0:
@@ -4513,7 +4553,7 @@ class Physics:
         return 1.0e6 * aibs / plascur
 
     @staticmethod
-    def bootstrap_fraction_sauter():
+    def bootstrap_fraction_sauter(plasma_profile):
         """Bootstrap current fraction from Sauter et al scaling
         author: P J Knight, CCFE, Culham Science Centre
         None
@@ -4526,38 +4566,20 @@ class Physics:
         O. Sauter, C. Angioni and Y. R. Lin-Liu, (ERRATA)
         Physics of Plasmas <B>9</B> (2002) 5140
         """
-        NR = 200
+        NR = plasma_profile.profile_size
 
-        roa = np.arange(1, NR + 1, step=1) / NR
-
+        roa = plasma_profile.neprofile.profile_x
         rho = np.sqrt(physics_variables.xarea / np.pi) * roa
+
         sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
 
-        ne = 1e-19 * np.vectorize(
-            lambda r: profiles_module.nprofile(
-                r,
-                physics_variables.rhopedn,
-                physics_variables.ne0,
-                physics_variables.neped,
-                physics_variables.nesep,
-                physics_variables.alphan,
-            )
-        )(roa)
+        ne = plasma_profile.neprofile.profile_y * 1e-19
         ni = (physics_variables.dnitot / physics_variables.dene) * ne
-        tempe = np.vectorize(
-            lambda r: profiles_module.tprofile(
-                r,
-                physics_variables.rhopedt,
-                physics_variables.te0,
-                physics_variables.teped,
-                physics_variables.tesep,
-                physics_variables.alphat,
-                physics_variables.tbeta,
-            )
-        )(roa)
-        tempi = (physics_variables.ti / physics_variables.te) * tempe
 
-        zef = np.full_like(tempi, physics_variables.zeff)  # Flat Zeff profile assumed
+        tempe = plasma_profile.teprofile.profile_y
+        tempi = (physics_variables.ti / physics_variables.te) * tempe
+        # Flat Zeff profile assumed
+        zef = np.full_like(tempi, physics_variables.zeff)
 
         # mu = 1/safety factor
         # Parabolic q profile assumed
@@ -4580,13 +4602,11 @@ class Physics:
         # Looping from 2 because dcsa etc should return 0 @ j == 1
         nr_rng = np.arange(2, NR)
         nr_rng_1 = nr_rng - 1
-
         drho = rho[nr_rng] - rho[nr_rng_1]
         da = 2 * np.pi * rho[nr_rng_1] * drho  # area of annulus
         dlogte_drho = (np.log(tempe[nr_rng]) - np.log(tempe[nr_rng_1])) / drho
         dlogti_drho = (np.log(tempi[nr_rng]) - np.log(tempi[nr_rng_1])) / drho
         dlogne_drho = (np.log(ne[nr_rng]) - np.log(ne[nr_rng_1])) / drho
-
         jboot = (
             0.5
             * (
@@ -4651,6 +4671,55 @@ class Physics:
         )  # A/m2
 
         return np.sum(da * jboot, axis=0) / physics_variables.plascur
+
+    @staticmethod
+    def bootstrap_fraction_sakai(
+        betap: float,
+        q95: float,
+        q0: float,
+        alphan: float,
+        alphat: float,
+        eps: float,
+        rli: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Sakai formula.
+
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        q95 (float): Safety factor at 95% of the plasma radius.
+        q0 (float): Safety factor at the magnetic axis.
+        alphan (float): Density profile index
+        alphat (float): Temperature profile index
+        eps (float): Inverse aspect ratio.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+        The profile assumed for the alphan anf alpat indexes is only a prabolic profile without a pedestal (L-mode).
+        The Root Mean Squared Error for the fitting database of this formula was 0.025
+        Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
+        conditions with neutral beam (NB) injection only are calculated.
+        The electron temperature and the ion temperature were assumed to be equal
+        This can be used for all apsect ratios.
+        The diamagnetic fraction is included in this formula.
+
+        References:
+        Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
+        Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
+        https://doi.org/10.1016/j.fusengdes.2019.111322.
+        """
+        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+        # So the diamganetic current should not be calculated with this. idia = 0
+        return (
+            10 ** (0.951 * eps - 0.948)
+            * betap ** (1.226 * eps + 1.584)
+            * rli ** (-0.184 - 0.282)
+            * (q95 / q0) ** (-0.042 * eps - 0.02)
+            * alphan ** (0.13 * eps + 0.05)
+            * alphat ** (0.502 * eps - 0.273)
+        )
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance

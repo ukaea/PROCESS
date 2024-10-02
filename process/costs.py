@@ -1438,11 +1438,19 @@ class Costs:
 
             #  Superconductor ($/m)
 
-            costtfsc = (
-                cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
-                * tfcoil_variables.whtconsc
-                / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
-            )
+            if cost_variables.supercond_cost_model == 0:
+
+                costtfsc = (
+                    cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
+                    * tfcoil_variables.whtconsc
+                    / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
+                )
+            else:
+                costtfsc = (
+                    cost_variables.sc_mat_cost_0[tfcoil_variables.i_tf_sc_mat - 1]
+                    * tfcoil_variables.j_crit_str_0[tfcoil_variables.i_tf_sc_mat - 1]
+                    / tfcoil_variables.j_crit_str_tf
+                )
 
             #  Copper ($/m)
 
@@ -1565,18 +1573,28 @@ class Costs:
 
         for i in range(0, npf):
             #  Superconductor ($/m)
-            if pfcoil_variables.ipfres == 0:
-                costpfsc = (
-                    cost_variables.ucsc[pfcoil_variables.isumatpf - 1]
-                    * (1.0e0 - pfcoil_variables.fcupfsu)
-                    * (1.0e0 - pfcoil_variables.vf[i])
-                    * abs(pfcoil_variables.ric[i] / pfcoil_variables.turns[i])
-                    * 1.0e6
-                    / pfcoil_variables.rjconpf[i]
-                    * tfcoil_variables.dcond[pfcoil_variables.isumatpf - 1]
-                )
+            if cost_variables.supercond_cost_model == 0:
+                if pfcoil_variables.ipfres == 0:
+                    costpfsc = (
+                        cost_variables.ucsc[pfcoil_variables.isumatpf - 1]
+                        * (1.0e0 - pfcoil_variables.fcupfsu)
+                        * (1.0e0 - pfcoil_variables.vf[i])
+                        * abs(pfcoil_variables.ric[i] / pfcoil_variables.turns[i])
+                        * 1.0e6
+                        / pfcoil_variables.rjconpf[i]
+                        * tfcoil_variables.dcond[pfcoil_variables.isumatpf - 1]
+                    )
+                else:
+                    costpfsc = 0.0e0
             else:
-                costpfsc = 0.0e0
+                if pfcoil_variables.ipfres == 0:
+                    costpfsc = (
+                        cost_variables.sc_mat_cost_0[pfcoil_variables.isumatpf - 1]
+                        * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatpf - 1]
+                        / pfcoil_variables.j_crit_str_pf
+                    )
+                else:
+                    costpfsc = 0.0
 
             #  Copper ($/m)
             if pfcoil_variables.ipfres == 0:
@@ -1621,18 +1639,28 @@ class Costs:
 
         if build_variables.iohcl == 1:
             #  Superconductor ($/m)
-            #  Issue #328  Use CS conductor cross-sectional area (m2)
-            if pfcoil_variables.ipfres == 0:
-                costpfsc = (
-                    cost_variables.ucsc[pfcoil_variables.isumatoh - 1]
-                    * pfcoil_variables.awpoh
-                    * (1 - pfcoil_variables.vfohc)
-                    * (1 - pfcoil_variables.fcuohsu)
-                    / pfcoil_variables.turns[pfcoil_variables.nohc - 1]
-                    * tfcoil_variables.dcond[pfcoil_variables.isumatoh - 1]
-                )
+            if cost_variables.supercond_cost_model == 0:
+                #  Issue #328  Use CS conductor cross-sectional area (m2)
+                if pfcoil_variables.ipfres == 0:
+                    costpfsc = (
+                        cost_variables.ucsc[pfcoil_variables.isumatoh - 1]
+                        * pfcoil_variables.awpoh
+                        * (1 - pfcoil_variables.vfohc)
+                        * (1 - pfcoil_variables.fcuohsu)
+                        / pfcoil_variables.turns[pfcoil_variables.nohc - 1]
+                        * tfcoil_variables.dcond[pfcoil_variables.isumatoh - 1]
+                    )
+                else:
+                    costpfsc = 0.0e0
             else:
-                costpfsc = 0.0e0
+                if pfcoil_variables.ipfres == 0:
+                    costpfsc = (
+                        cost_variables.sc_mat_cost_0[pfcoil_variables.isumatoh - 1]
+                        * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatoh - 1]
+                        / pfcoil_variables.j_crit_str_cs
+                    )
+                else:
+                    costpfsc = 0.0e0
 
             #  Copper ($/m)
 
