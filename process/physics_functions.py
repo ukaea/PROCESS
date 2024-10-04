@@ -84,6 +84,34 @@ class FusionReactionRate:
         self.alpharate = 0.0
         self.protonrate = 0.0
 
+    def deuterium_branching(self, ion_temperature: float) -> float:
+        """
+        Calculate the relative rate of tritium producing D-D reactions to 3He ones based on the volume averaged ion temperature
+
+        Parameters:
+            ion_temperature (float): Volume averaged ion temperature in keV
+
+         Returns:
+            float: The rate of tritium producing D-D reactions to 3He ones
+
+        Notes:
+            - For ion temperatures between 0.5 keV and 200 keV.
+            - The deviation of the fit from the R-matrix branching ratio is always smaller than 0.5%.
+
+        References:
+            - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
+              Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+              doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+        ‌
+        """
+        return (
+            1.02934
+            - 8.3264e-3 * ion_temperature
+            + 1.7631e-4 * ion_temperature**2
+            - 1.8201e-6 * ion_temperature**3
+            + 6.9855e-9 * ion_temperature**4
+        )
+
     def dt(self):
         """D + T --> 4He + n reaction"""
         dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
@@ -427,7 +455,10 @@ def bosch_hale(temperature_profile, reaction_constants):
             * (
                 reaction_constants.cc3
                 + temperature_profile
-                * (reaction_constants.cc5 + temperature_profile * reaction_constants.cc7)
+                * (
+                    reaction_constants.cc5
+                    + temperature_profile * reaction_constants.cc7
+                )
             )
         )
     )
@@ -650,10 +681,7 @@ def beamfus(
     """
 
     tausl = (
-        1.99e19
-        * (2.0 * (1.0 - ftritbm) + (3.0 * ftritbm))
-        * (ten**1.5 / dene)
-        / dlamie
+        1.99e19 * (2.0 * (1.0 - ftritbm) + (3.0 * ftritbm)) * (ten**1.5 / dene) / dlamie
     )
 
     # Critical energy for electron/ion slowing down of the beam ion
