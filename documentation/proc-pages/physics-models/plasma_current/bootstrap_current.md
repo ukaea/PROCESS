@@ -234,7 +234,21 @@ It is not known fully if the $\left(\sigma_{\text {neo }}\left\langle E_{\|} B\r
 
 -----------
 
-#### Calculate electron density coefficient | `calculate_l31_coefficient()`
+#### Calculate the trapped particle fraction | `_trapped_particle_fraction_sauter()`
+
+This function calculates the trapped particle fraction $\left(f_t\right)$ used within other key internal Sauter scaling functions.
+
+$$
+f_t = \frac{1.0 - (1.0-\epsilon_{-1})\sqrt{1.0-\epsilon_{-1}}}{\left(1.0+1.46 \sqrt{\epsilon_{-1}}\right)}
+$$
+
+$\epsilon$ in this case is the local aspect ratio at that normalised radial point in the profile given by $\epsilon = \rho \left(\frac{a}{R}\right)$. The value of $\rho$ varies from 0 to 1 across the profile.
+
+The $-1$ subscript in this case refers to the value of the variable in the previous array index value.
+
+-------------
+
+#### Calculate electron density coefficient | `_calculate_l31_coefficient()`
 
 This function calculates and returns the $\mathcal{L}_{31}$ coefficient value for $\frac{\partial \ln n_e}{\partial \psi}$
 
@@ -243,11 +257,11 @@ $$
 f_{\text {teff }}^{31}\left(\nu_{e *}\right)= \frac{f_t}{1+\left(1-0.1 f_t\right) \sqrt{\nu_{e *}}+0.5\left(1-f_t\right) \nu_{e *} / Z}
 $$
 
-The returned value is $\mathcal{L}_{31} \times$ [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter)  
+The returned value is $\mathcal{L}_{31} \times$ [`_beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter)  
 
 ---------------
 
-#### Calculate electron temperature coefficient | `calculate_l31_32_coefficient()`
+#### Calculate electron temperature coefficient | `_calculate_l31_32_coefficient()`
 
 This function calculates and returns the $\left(\mathcal{L}_{31}+\mathcal{L}_{32}\right)$ coefficient value for $\frac{\partial \ln T_{\text{e}}}{\partial \psi}$.
 
@@ -266,13 +280,13 @@ F_{32 \_e i}(Y) = -\frac{0.56+1.93 Z}{Z(1+0.44 Z)}\left(Y-Y^4\right)+\frac{4.95}
 f_{\text {teff }}^{32 \_e i}\left(\nu_{e *}\right) = \frac{f_t}{1+\left(1+0.6 f_t\right) \sqrt{\nu_{e *}}+0.85\left(1-0.37 f_t\right) \nu_{e *}(1+Z)}
 $$
 
-The above is added to a call of [`calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient). This is then multiplied by [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter). 
+The above is added to a call of [`_calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient). This is then multiplied by [`_beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter). 
 
-This product above is then multiplied by ([`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
+This product above is then multiplied by ([`_beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`_beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
 
 ---------------
 
-#### Calculate ion temperature coefficient | `calculate_l34_alpha_31_coefficient()`
+#### Calculate ion temperature coefficient | `_calculate_l34_alpha_31_coefficient()`
 
 This function calculates and returns the $\left(1+\frac{\mathcal{L}_{34}}{\mathcal{L}_{31}}\alpha\right)\mathcal{L}_{31}$ coefficient value for $\frac{\partial \ln T_{\text{i}}}{\partial \psi}$.
 
@@ -295,13 +309,13 @@ $$
 
 The definition of $\alpha\left(\nu_{i *}\right)$ is that found in the erratum paper which changes the value of $-0.315\nu_{i *}^2 f_t^6$ to positive.[^5]
 
-The return sequence is ([`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter) - [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter)) $\times (\mathcal{L}_{34} + \alpha)$ + [`calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient) $\times$ (1.0 -  [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
+The return sequence is ([`_beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter) - [`_beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter)) $\times (\mathcal{L}_{34} + \alpha)$ + [`_calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient) $\times$ (1.0 -  [`_beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`_beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
 
 
 
 -------------
 
-#### Calculate the Coulomb logarithm | `coulomb_logarithm_sauter()`
+#### Calculate the Coulomb logarithm | `_coulomb_logarithm_sauter()`
 
 $$
 \ln \Lambda = 15.9 -0.5 \times \ln{n_{\text{e}}}+\ln{T_{\text{e}}}
@@ -309,9 +323,9 @@ $$
 
 -----------
 
-#### Calculate frequency of electron collisions | `electron_collisions_sauter()`
+#### Calculate frequency of electron collisions | `_electron_collisions_sauter()`
 
-Using the Coulomb logarithm ($\ln \Lambda$) calculated from `coulomb_logarithm_sauter()` we get:
+Using the Coulomb logarithm ($\ln \Lambda$) calculated from [`_coulomb_logarithm_sauter()`](#calculate-the-coulomb-logarithm--_coulomb_logarithm_sauter) we get:
 
 $$
 \nu_{\text{e}} = 670 \times \frac{\ln \Lambda \times n_{\text{e}}}{T_{\text{e}}^{3/2}}
@@ -319,18 +333,18 @@ $$
 
 ------------
 
-#### Calculate electron collisionality | `electron_collisionality_sauter()`
+#### Calculate electron collisionality | `_electron_collisionality_sauter()`
 
 The origins of the coefficients values are not known, but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
 
-Using the electron collision frequency ($\nu_{\text{e}}$) calculated from `electron_collisions_sauter()` we get:
+Using the electron collision frequency ($\nu_{\text{e}}$) calculated from [`_electron_collisions_sauter()`](#calculate-frequency-of-electron-collisions--_electron_collisions_sauter) we get:
 $$
 \nu_{\text{e*}} = \frac{1.4 \ R \ \nu_{\text{e}}  \ Z_{\text{eff}}}{\left|\frac{1}{q}\epsilon^{3/2}\sqrt{T_{\text{e}}}\times 1.875\times10^7\right|}
 $$
 
 -------------
 
-#### Calculate frequency of ion collisions | `ion_collisions_sauter()`
+#### Calculate frequency of ion collisions | `_ion_collisions_sauter()`
 
 
 $$
@@ -339,19 +353,19 @@ $$
 
 -----
 
-#### Calculate ion collisionality | `ion_collisionality_sauter()`
+#### Calculate ion collisionality | `_ion_collisionality_sauter()`
 
 The origins of the coefficients values are not known, but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
 
-Using the ion collision frequency ($\nu_{\text{i}}$) calculated from `ion_collisions_sauter()` we get:
+Using the ion collision frequency ($\nu_{\text{i}}$) calculated from [`_ion_collisions_sauter()`](#calculate-frequency-of-ion-collisions--_ion_collisions_sauter) we get:
 
 $$
-\nu_{\text{e*}} = \frac{3.2\times10^{-6} \nu_{\text{i}} R}{\left|(\frac{1}{q}+0.0001)\epsilon^{3/2} \sqrt{\frac{T_{\text{i}}}{a_{\text{i}}}} \right|}
+\nu_{\text{e*}} = \frac{3.2\times10^{-6} \nu_{\text{i}} R}{\left|\left(\frac{1}{q}+0.0001\right)\epsilon^{3/2} \sqrt{\frac{T_{\text{i}}}{a_{\text{i}}}} \right|}
 $$
 
 ----------------
 
-#### Calculate electron only poloidal beta correction | `beta_poloidal_sauter()`
+#### Calculate electron only poloidal beta correction | `_beta_poloidal_sauter()`
 
 This function returns an electron only local poloidal beta correction dependant on the array index of the profile.
 
@@ -373,7 +387,7 @@ The $-1$ subscript in this case refers to the value of the variable in the previ
 
 ---------------
 
-#### Calculate ion and electron poloidal beta correction | `beta_poloidal_total_sauter()`
+#### Calculate ion and electron poloidal beta correction | `_beta_poloidal_total_sauter()`
 
 This function returns the local poloidal beta correction with both electron and ion pressure dependant on the array index of the profile.
 

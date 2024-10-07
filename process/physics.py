@@ -1403,7 +1403,7 @@ def _trapped_particle_fraction_sauter(
     Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
 
     Parameters:
-    - j: list, radial element index in range 1 to nr
+    - radial_elements: list, radial element index in range 1 to nr
     - triang: float, plasma triangularity
     - sqeps: list, square root of local aspect ratio
     - fit: int, fit method (1 = ASTRA method, 2 = Equation from Sauter 2002, 3 = Equation from Sauter 2016)
