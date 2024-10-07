@@ -332,8 +332,10 @@ contains
        if (any(ptr%data%fdiags /= FLT_DEFAULT)) then
           write(*,*) 'Floating point diagnostic values for this error:'
           do i = 1,8
-             if (ptr%data%fdiags(i) /= FLT_DEFAULT) &
+             if (ptr%data%fdiags(i) /= FLT_DEFAULT) then
                   write(*,'(i4,a,1pe14.5)') i,') ',ptr%data%fdiags(i)
+                  write(nout,'(i4,a,1pe14.5)') i,') ',ptr%data%fdiags(i)
+             endif
           end do
        end if
        write(*,*) ' '
