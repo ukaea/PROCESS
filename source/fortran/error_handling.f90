@@ -325,15 +325,19 @@ contains
        if (any(ptr%data%idiags /= INT_DEFAULT)) then
           write(*,*) 'Integer diagnostic values for this error:'
           do i = 1,8
-             if (ptr%data%idiags(i) /= INT_DEFAULT) &
+             if (ptr%data%idiags(i) /= INT_DEFAULT) then
                   write(*,'(i4,a,i14)') i,') ',ptr%data%idiags(i)
+                  write(nout,'(i4,a,i14)') i,') ',ptr%data%idiags(i)
+             endif
           end do
        end if
        if (any(ptr%data%fdiags /= FLT_DEFAULT)) then
           write(*,*) 'Floating point diagnostic values for this error:'
           do i = 1,8
-             if (ptr%data%fdiags(i) /= FLT_DEFAULT) &
+             if (ptr%data%fdiags(i) /= FLT_DEFAULT) then
                   write(*,'(i4,a,1pe14.5)') i,') ',ptr%data%fdiags(i)
+                  write(nout,'(i4,a,1pe14.5)') i,') ',ptr%data%fdiags(i)
+             endif
           end do
        end if
        write(*,*) ' '
