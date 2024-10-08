@@ -258,7 +258,8 @@ turns. The number of turns can be parametrized in three different ways :
 - <p style='text-align: justify;'> 
     **Copper fraction (`fcutfsu`):** user input setting the copper fraction.
     This fraction is applied after the void and helium cooling channels areas
-    has been removed from the conductor area.
+    has been removed from the conductor area. Does not include any copper from
+    REBCO tape if used.
   </p>
 
 
@@ -1167,7 +1168,7 @@ Switch `i_tf_sc_mat` specifies which superconducting material is to be used:
 - `i_tf_sc_mat == 8` -- Durham Ginzburg-Landau critical surface model for REBCO
 - `i_tf_sc_mat == 9` -- Hazelton experimental data combined with Zhai conceptual model for REBCO
 
-The fraction of copper present in the superconducting filaments is given by `fcutfsu` (iteration variable number 59).
+The fraction of copper present in the superconducting filaments is given by `fcutfsu` (iteration variable number 59). For cases where REBCO tape is used this copper fraction does not include the copper within the tape.
 
 For `i_tf_sc_mat = 2`, a technology adjustment factor `fhts` may be used to modify 
 the critical current density fit for the Bi-2212 superconductor, to describe the 
