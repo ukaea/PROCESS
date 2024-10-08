@@ -292,7 +292,6 @@ def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
     return (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
 
 
-@nb.jit(nopython=True, cache=True)
 def calculate_plasma_current_peng(
     q95: float,
     aspect: float,
