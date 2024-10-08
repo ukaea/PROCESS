@@ -54,7 +54,7 @@ However it can be found in the appendix [here](https://doi.org/10.1016/j.fusengd
 Is selected by setting `i_bootstrap_current = 2`
 
 $$
-f_{\text{BS}} = \frac{2.5\beta_{e0}R_pB_{T}q_{95}}{I_{\text{p}}}\int^1_0 B_{\text{int}}\ dy
+f_{\text{BS}} = \frac{2.5\beta_{e0}R_pB_{T}q_{95}}{I_{\text{P}}}\int^1_0 B_{\text{int}}\ dy
 $$
 
 $$
@@ -103,7 +103,7 @@ q = q_0+\left(q_{95}-q_0\right)\frac{y+y^2+y^3}{3}
 $$
 
 $$
-\beta_{\text{tot}} = \beta_{\text{T}}\frac{B_{\text{tot}}^2}{B_{\text{T}}^2} = \frac{\beta_{T}\left(B_{T}^2+\beta_{\text{p}}\right)}{B_{\text{T}}^2}
+\beta_{\text{tot}} = \beta_{\text{T}}\frac{B_{\text{tot}}^2}{B_{\text{T}}^2} = \frac{\beta_{T}\left(B_{T}^2+\beta_{\text{P}}\right)}{B_{\text{T}}^2}
 $$
 
 $$
@@ -126,19 +126,17 @@ temperature and total current profiles as well as the poloidal beta and aspect r
 
 Is selected by setting `i_bootstrap_current = 3`
 
-- The large aspect ratio expression is valid only for $Z$ = 1, so the $Z$ dependence cannot be obtained from this  result. 
-
 Data is fitted to 3000 equilibria evenly distributed across the parameter range below:
 
-| Variable | $R$ | $A$ | $B_{\text{T}}$ | $\delta$ | $\kappa$ | $\alpha_{\text{p}}$ | $\alpha_{\text{T}}$ | $\alpha_{\text{J}}$ | $Z$ |
+| Variable | $R$ | $A$ | $B_{\text{T}}$ | $\delta$ | $\kappa$ | $\alpha_{\text{P}}$ | $\alpha_{\text{T}}$ | $\alpha_{\text{J}}$ | $Z$ |
 |----------|-----|-----|----------------|-----------|-----------|-------------------|-------------------|-------------------|-----|
-| Value    | 5.31 | 1.1-5 | 6.2 | 0.2 | 2.0 | 1-3 | 0.1-$\alpha_{\text{p}}$ | 0.5-2.0 | 1-3 |
+| Value    | 5.31 | 1.1-5 | 6.2 | 0.2 | 2.0 | 1-3 | 0.1-$\alpha_{\text{P}}$ | 0.5-2.0 | 1-3 |
 
 
 Using the relation:
 
 $$
-\frac{I_{\text{b}}}{I_{\text{p}}} = \beta_{\text{p}}\epsilon_0^{\frac{1}{2}} \sum_{i=1}^{12}a_i(\alpha_{\text{J}}, Z)b_i
+\frac{I_{\text{b}}}{I_{\text{P}}} = \beta_{\text{P}}\epsilon_0^{\frac{1}{2}} \sum_{i=1}^{12}a_i(\alpha_{\text{J}}, Z)b_i
 $$
 
 In the paper definition $\epsilon_0$ is not the standard inverse aspect ration but is defined as:
@@ -152,16 +150,63 @@ Where $R_2$ and $R_1$ are the maximum and minimum radii of the plasma.
 The poloidal beta term is defined as:
 
 $$
-\beta_{\text{p}} = \frac{2\mu_0\langle p \rangle}{\langle \langle B_{\text{p}} \rangle \rangle^2}
+\beta_{\text{P}} = \frac{2\mu_0\langle p \rangle}{\langle \langle B_{\text{P}} \rangle \rangle^2}
 $$
 
-Where $\langle p \rangle$ is the volume averaged pressure and $\langle \langle B_{\text{p}} \rangle \rangle$  is the plasma surface average of the polidal field.
+Where $\langle p \rangle$ is the volume averaged pressure and $\langle \langle B_{\text{P}} \rangle \rangle$  is the plasma surface average of the polidal field.
+
+The Wilson method extrapolates on the analytically derived expression for the bootstrap current fraction in the limit of large aspect ratio with circular cross-section. This large aspect expression assumed coincidence of a constant $r$ surface with a constant flux surface. The allowed the treatment of the temperature, pressure and current density as functions of $r$ only with the simple parabolic profile form. 
+For the Wilson method this is expanded to the arbitrary aspect ratio case with D-shaped plasmas with a given triangularity and elongation. The profiles for pressure and temperature are now of the form:
+
+$$
+P=P_0\psi^{\alpha_{\text{P}}}
+$$
+
+Where $\psi$ is the flux function. For the current density we cannot model it in the form above as it varies across a flux surface. Instead it is convenient to consider a flux surface average of the total parallel current density which is taken to vary as:
+
+$$
+\frac{\langle j \cdot B \rangle}{\langle B^2 \rangle^{\frac{1}{2}}} = J_0 \psi^{\alpha_{\text{J}}}
+$$
+
+Describing this flux surface average by using a standard **parabolic profile** for the safety factor $(q)$.
+
+$$
+q(r) = q_0 +\left(q_{95}-q_0\right)\left(\frac{r}{a}\right)^2
+$$
+
+To relate the temperature, pressure and current density profiles across a flux surface average of the flux function we re-arrange their standard parabolic forms into one that can be integrated into the $(q)$ profile function. Using the temperature profile as an example:
+
+$$
+T(r) = T_0 \left(1-\left(\frac{r}{a}\right)^2\right)^{\alpha_{\text{T}}}
+$$
+
+$$
+\frac{T(r)}{T_0} = \left(1-\left(\frac{r}{a}\right)^2\right)^{\alpha_{\text{T}}}
+$$
+
+$$
+\left(\frac{r}{a}\right)^2 = 1-\left(\frac{T(r)}{T_0}\right)^{\frac{1}{\alpha_{\text{T}}}}
+$$
+
+Substituting the above into the $q$ profile and taking a median profile value of half the core value we get:
+
+$$
+q_0+(q_{95}-q_0)\times (1-0.5^{\frac{1}{\alpha_{\text{T}}}})
+$$
+
+To find the new flux surface average where the $q$ profile shares points where the temperature, pressure and current density are half of their core values, we relate the function above of the calculated $q$ value to the core $q_0$ value. Taking the natural log of the $q$ profile point at 50% of the core value for the temperature, pressure and current density we relate these two ratios compared to $q_{95}$. Dividing $\left(\ln 0.5\right)$ by this result provides new values of the profile exponents $\alpha_{\text{T}}, \alpha_{\text{P}} ,\alpha_{\text{J}}$ which are now averaged across a shared flux function. 
 
 
 $$
-b_1 = 1 \ \ b_2 = \alpha_{\text{p}} \ \ b_3 = \alpha_{\text{T}} \ \ b_4 = \alpha_{\text{p}}\alpha_{\text{T}} \\
-b_5 = \epsilon_0^{\frac{1}{2}} \ \ b_6 = \alpha_{\text{p}}\epsilon_0^{\frac{1}{2}}  \ \ b_7 = \alpha_{\text{T}}\epsilon_0^{\frac{1}{2}} \ \ b_8 = \alpha_{\text{p}}\alpha_{\text{T}}\epsilon_0^{\frac{1}{2}} \\
-b_9 = \epsilon_0 \ \ b_{10} = \alpha_{\text{p}}\epsilon_0 \ \ b_{11} = \alpha_{\text{T}}\epsilon_0 \ \ b_{12} = \alpha_{\text{p}}\alpha_{\text{T}}\epsilon_0
+\alpha = \frac{\ln{0.5}}{\ln{\frac{\ln \left(\frac{q_0+(q_{95}-q_0)\times (1-0.5^{\frac{1}{\alpha}})}{q95}\right)}{\ln{\frac{q_0}{q_{95}}}}}}
+$$
+
+These new calculated profile exponents $(\alpha)$ are what is used in the matrix values below and **not** the standard parabolic profile indexes.
+
+$$
+b_1 = 1 \ \ b_2 = \alpha_{\text{P}} \ \ b_3 = \alpha_{\text{T}} \ \ b_4 = \alpha_{\text{P}}\alpha_{\text{T}} \\
+b_5 = \epsilon_0^{\frac{1}{2}} \ \ b_6 = \alpha_{\text{P}}\epsilon_0^{\frac{1}{2}}  \ \ b_7 = \alpha_{\text{T}}\epsilon_0^{\frac{1}{2}} \ \ b_8 = \alpha_{\text{P}}\alpha_{\text{T}}\epsilon_0^{\frac{1}{2}} \\
+b_9 = \epsilon_0 \ \ b_{10} = \alpha_{\text{P}}\epsilon_0 \ \ b_{11} = \alpha_{\text{T}}\epsilon_0 \ \ b_{12} = \alpha_{\text{P}}\alpha_{\text{T}}\epsilon_0
 $$
 
 $$
@@ -187,7 +232,12 @@ means that it falls off sharply at the plasma edge.
     *"The ITER group gives an expression for the bootstrap current[^0] which differs significantly from that 
     presented here. Their relatively simple expression,
     shows no variation with density and temperature profiles. It also does not reproduce the large aspect ratio 
-    scaling with $\beta_{\text{p}}$, and $\epsilon$ in this limit."*   
+    scaling with $\beta_{\text{P}}$, and $\epsilon$ in this limit."*   
+
+!!! warning "Flux average profile indexes"
+
+    The implementation of calculating the new profile indexes to be used in the $a$ & $b$ coefficients is not explicitly given in  Wilson[^3]. It is an adaption to make the method more aligned with what `PROCESS` calculates.    
+
 
 --------------------
 
@@ -217,7 +267,7 @@ where $q(\psi)$ is the safety factor.
 The reconstructed implementation in PROCESS looks as such:
 
 $$
-\frac{I_{\text{b}}}{I_{\text{p}}} = \sum_2^{\rho_{\text{max}}} \left(2\pi\left[\rho\right]_{-1} \times \left(\left[\rho\right] -\left[\rho\right]_{-1}\right)  \right) \times  \\
+\frac{I_{\text{b}}}{I_{\text{P}}} = \sum_2^{\rho_{\text{max}}} \left(2\pi\left[\rho\right]_{-1} \times \left(\left[\rho\right] -\left[\rho\right]_{-1}\right)  \right) \times  \\
 \left(0.5 \times \left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} 
 +\left(\mathcal{L}_{31} + \mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi} 
 + \left(1 + \frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right] \times \\

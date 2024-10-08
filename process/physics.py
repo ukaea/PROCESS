@@ -166,6 +166,7 @@ def culblm(bt, dnbeta, plasma_current, rminor):
 # Plasma Current & Poloidal Field Calculations
 # -----------------------------------------------------
 
+
 @nb.jit(nopython=True, cache=True)
 def _plascar_bpol(
     aspect: float, eps: float, kappa: float, delta: float
@@ -5140,7 +5141,7 @@ class Physics:
         c_bs = 1.32 - 0.235 * (q95 / q0) + 0.0185 * (q95 / q0) ** 2
 
         # Calculate the average minor radius
-        average_a = np.sqrt(vol / (2 * np.pi ** 2 * rmajor))
+        average_a = np.sqrt(vol / (2 * np.pi**2 * rmajor))
 
         b_pa = (plasma_current / 1e6) / (5 * average_a)
 
@@ -5183,22 +5184,29 @@ class Physics:
 
         This function calculates the bootstrap current fraction using the numerically fitted algorithm written by Howard Wilson.
 
-        Reference: AEA FUS 172: Physics Assessment for the European Reactor Study, 1989
-                   H. R. Wilson, Nuclear Fusion 32 (1992) 257
+        Reference:
+            - AEA FUS 172: Physics Assessment for the European Reactor Study, 1989
+            - H. R. Wilson, Nuclear Fusion 32 (1992) 257
         """
+
         term1 = np.log(0.5)
         term2 = np.log(q0 / q95)
+
+        # Re-arranging of parabolic profile to be equal to (r/a)^2 where the profile value is half of the core value
 
         termp = 1.0 - 0.5 ** (1.0 / alphap)
         termt = 1.0 - 0.5 ** (1.0 / alphat)
         termj = 1.0 - 0.5 ** (1.0 / alphaj)
 
+        # Assuming a parabolic safety factor profile of the form q = q0 + (q95 - q0) * (r/a)^2
+        # Substitute (r/a)^2 term from temperature,pressure and current profiles into q profile when values is 50% of core value
+        # Take natural log of q profile over q95 and q0 to get the profile index
+
         alfpnw = term1 / np.log(np.log((q0 + (q95 - q0) * termp) / q95) / term2)
         alftnw = term1 / np.log(np.log((q0 + (q95 - q0) * termt) / q95) / term2)
         aj = term1 / np.log(np.log((q0 + (q95 - q0) * termj) / q95) / term2)
 
-        # Crude check for NaN errors or other illegal values...
-
+        # Crude check for NaN errors or other illegal values.
         if np.isnan(aj) or np.isnan(alfpnw) or np.isnan(alftnw) or aj < 0:
             error_handling.fdiags[0] = aj
             error_handling.fdiags[1] = alfpnw
