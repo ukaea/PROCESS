@@ -327,7 +327,7 @@ contains
           do i = 1,8
              if (ptr%data%idiags(i) /= INT_DEFAULT) then
                   write(*,'(i4,a,i14)') i,') ',ptr%data%idiags(i)
-                  write(*,'(i4,a,i14)') i,') ',ptr%data%idiags(i)
+                  write(nout,'(i4,a,i14)') i,') ',ptr%data%idiags(i)
              endif
           end do
        end if
