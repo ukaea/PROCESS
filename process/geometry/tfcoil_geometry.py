@@ -16,6 +16,8 @@ def tfcoil_geometry_rectangular_shape(
     y4: float,
     y5: float,
     tfcth: float,
+    *,
+    offset_in: float = 0.0,
 ) -> List[RectangleGeometry]:
     """Calculates rectangular geometries for tf coils in a picture frame/rectangular shape parametrization
 
@@ -37,6 +39,8 @@ def tfcoil_geometry_rectangular_shape(
     :type y5: float
     :param tfcth: inboard tf coil thickness
     :type tfcth: float
+    :param offset_in: an increase in the thickness of the geometry on the inside
+    :type offset_in: float
     :return: list of RectangleGeometry - dataclass returning rectangular geometry parameters
     :rtype: List[RectangleGeometry]
     """
@@ -46,7 +50,7 @@ def tfcoil_geometry_rectangular_shape(
     # rectangle representing the inboard part of the tf coil
     return_rects.append(
         RectangleGeometry(
-            anchor_x=x5 - tfcth,
+            anchor_x=x5 - tfcth + offset_in,
             anchor_z=y5 - tfcth,
             width=tfcth,
             height=(y1 - y5 + 2.0 * tfcth),
@@ -55,7 +59,7 @@ def tfcoil_geometry_rectangular_shape(
     # rectangle representing the outboard part of the tf coil
     return_rects.append(
         RectangleGeometry(
-            anchor_x=x4,
+            anchor_x=x4 - offset_in,
             anchor_z=y4 - tfcth,
             width=tfcth,
             height=(y2 - y4 + 2.0 * tfcth),
@@ -63,11 +67,15 @@ def tfcoil_geometry_rectangular_shape(
     )
     # rectangle representing the lower horizontal part of the tf coil
     return_rects.append(
-        RectangleGeometry(anchor_x=x5, anchor_z=y5 - tfcth, width=x4 - x5, height=tfcth)
+        RectangleGeometry(
+            anchor_x=x5, anchor_z=y5 - tfcth + offset_in, width=x4 - x5, height=tfcth
+        )
     )
     # rectangle representing the upper horizontal part of the tf coil
     return_rects.append(
-        RectangleGeometry(anchor_x=x1, anchor_z=y1, width=(x2 - x1), height=tfcth)
+        RectangleGeometry(
+            anchor_x=x1, anchor_z=y1 - offset_in, width=(x2 - x1), height=tfcth
+        )
     )
 
     return return_rects
@@ -86,6 +94,8 @@ def tfcoil_geometry_d_shape(
     tfcth: float,
     rtangle: float,
     rtangle2: float,
+    *,
+    offset_in: float = 0.0,
 ) -> Tuple[List[RectangleGeometry], List[List[Tuple[float, float]]]]:
     """Calculates radial and vertical distances for the geometry of the tf coils in a D-shape parametrization
 
@@ -113,6 +123,8 @@ def tfcoil_geometry_d_shape(
     :type rtangle: float
     :param rtangle2: angle used in tf coil parametrization
     :type rtangle2: float
+    :param offset_in: an increase in the thickness of the geometry on the inside
+    :type offset_in: float
     :return: radial and vertical coordinates for tf coils
     :rtype: Tuple[List[RectangleGeometry], List[List[Tuple[float, float]]]]
     """
@@ -121,8 +133,8 @@ def tfcoil_geometry_d_shape(
     # Inboard upper arc
     x0 = x2
     y0 = y1
-    a1 = x2 - x1
-    b1 = y2 - y1
+    a1 = x2 - x1 - offset_in
+    b1 = y2 - y1 - offset_in
     a2 = a1 + tfcth
     b2 = b1 + tfcth
     verts1 = ellips_fill_vertices(
@@ -138,8 +150,8 @@ def tfcoil_geometry_d_shape(
     # Outboard upper arc
     x0 = x2
     y0 = 0
-    a1 = x3 - x2
-    b1 = y2
+    a1 = x3 - x2 - offset_in
+    b1 = y2 - offset_in
     a2 = a1 + tfcth
     b2 = b1 + tfcth
     verts2 = ellips_fill_vertices(
@@ -155,8 +167,8 @@ def tfcoil_geometry_d_shape(
     # Inboard lower arc
     x0 = x4
     y0 = y5
-    a1 = x4 - x5
-    b1 = y5 - y4
+    a1 = x4 - x5 - offset_in
+    b1 = y5 - y4 - offset_in
     a2 = a1 + tfcth
     b2 = b1 + tfcth
     verts3 = ellips_fill_vertices(
@@ -172,8 +184,8 @@ def tfcoil_geometry_d_shape(
     # Outboard lower arc
     x0 = x4
     y0 = 0
-    a1 = x3 - x2
-    b1 = -y4
+    a1 = x3 - x2 - offset_in
+    b1 = -y4 - offset_in
     a2 = a1 + tfcth
     b2 = b1 + tfcth
     verts4 = ellips_fill_vertices(
@@ -189,7 +201,7 @@ def tfcoil_geometry_d_shape(
     # Vertical leg
     return_rects.append(
         RectangleGeometry(
-            anchor_x=x5 - tfcth, anchor_z=y5, width=tfcth, height=(y1 - y5)
+            anchor_x=x5 - tfcth, anchor_z=y5, width=tfcth + offset_in, height=(y1 - y5)
         )
     )
     return_verts = [verts1, verts2, verts3, verts4]

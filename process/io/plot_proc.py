@@ -1210,7 +1210,7 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
     ) / 2.0
 
     if i_single_null == 1:
-        sg_single_null = shield_geometry_single_null(
+        shield_geometry = shield_geometry_single_null(
             cumulative_upper=cumulative_upper,
             radx_far=radx_far,
             rminx_far=rminx_far,
@@ -1219,16 +1219,8 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
             triang=triang_95,
             cumulative_lower=cumulative_lower,
         )
-        axis.plot(sg_single_null.rs, sg_single_null.zs, color="black", lw=thin)
-        axis.fill(
-            sg_single_null.rs,
-            sg_single_null.zs,
-            color=SHIELD_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
-
-    if i_single_null == 0:
-        sg_double_null = shield_geometry_double_null(
+    else:
+        shield_geometry = shield_geometry_double_null(
             cumulative_lower=cumulative_lower,
             radx_far=radx_far,
             radx_near=radx_near,
@@ -1236,13 +1228,14 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
             rminx_near=rminx_near,
             triang=triang_95,
         )
-        axis.plot(sg_double_null.rs, sg_double_null.zs, color="black", lw=thin)
-        axis.fill(
-            sg_double_null.rs,
-            sg_double_null.zs,
-            color=SHIELD_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
+
+    axis.plot(shield_geometry.rs, shield_geometry.zs, color="black", lw=thin)
+    axis.fill(
+        shield_geometry.rs,
+        shield_geometry.zs,
+        color=SHIELD_COLOUR[colour_scheme - 1],
+        lw=0.01,
+    )
 
 
 def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
@@ -1481,27 +1474,64 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     y4 = mfile_data.data["yarc(4)"].get_scan(scan)
     x5 = mfile_data.data["xarc(5)"].get_scan(scan)
     y5 = mfile_data.data["yarc(5)"].get_scan(scan)
+    thshield_ib = mfile_data.data["thshield_ib"].get_scan(scan)
+    thshield_ob = mfile_data.data["thshield_ob"].get_scan(scan)
+    tftsgap = mfile_data.data["tftsgap"].get_scan(scan)
     if y3 != 0:
         print("TF coil geometry: The value of yarc(3) is not zero, but should be.")
 
-    # Check for TF coil shape
-    if "i_tf_shape" in mfile_data.data.keys():
-        i_tf_shape = int(mfile_data.data["i_tf_shape"].get_scan(scan))
-    else:
-        i_tf_shape = int(1)
-
-    if i_tf_shape == 2:
-        rects = tfcoil_geometry_rectangular_shape(
-            x1=x1,
-            x2=x2,
-            x4=x4,
-            x5=x5,
-            y1=y1,
-            y2=y2,
-            y4=y4,
-            y5=y5,
-            tfcth=tfcth,
+    if thshield_ib != thshield_ob:
+        print(
+            "thshield_ib and thshield_ob are different. Using thshield_ib"
+            "for the poloidal plot of the thermal shield."
         )
+
+    for offset, colour in (
+        (thshield_ib + tftsgap, THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
+        (tftsgap, "white"),
+        (0.0, TFC_COLOUR[colour_scheme - 1]),
+    ):
+        # Check for TF coil shape
+        if "i_tf_shape" in mfile_data.data.keys():
+            i_tf_shape = int(mfile_data.data["i_tf_shape"].get_scan(scan))
+        else:
+            i_tf_shape = 1
+
+        if i_tf_shape == 2:
+            rects = tfcoil_geometry_rectangular_shape(
+                x1=x1,
+                x2=x2,
+                x4=x4,
+                x5=x5,
+                y1=y1,
+                y2=y2,
+                y4=y4,
+                y5=y5,
+                tfcth=tfcth,
+                offset_in=offset,
+            )
+
+        else:
+            rects, verts = tfcoil_geometry_d_shape(
+                x1=x1,
+                x2=x2,
+                x3=x3,
+                x4=x4,
+                x5=x5,
+                y1=y1,
+                y2=y2,
+                y4=y4,
+                y5=y5,
+                tfcth=tfcth,
+                rtangle=rtangle,
+                rtangle2=rtangle2,
+                offset_in=offset,
+            )
+
+            for vert in verts:
+                path = Path(vert, closed=True)
+                patch = patches.PathPatch(path, facecolor=colour, lw=0)
+                axis.add_patch(patch)
 
         for rec in rects:
             axis.add_patch(
@@ -1509,40 +1539,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
                     xy=(rec.anchor_x, rec.anchor_z),
                     width=rec.width,
                     height=rec.height,
-                    facecolor=TFC_COLOUR[colour_scheme - 1],
-                )
-            )
-
-    else:
-        rects, verts = tfcoil_geometry_d_shape(
-            x1=x1,
-            x2=x2,
-            x3=x3,
-            x4=x4,
-            x5=x5,
-            y1=y1,
-            y2=y2,
-            y4=y4,
-            y5=y5,
-            tfcth=tfcth,
-            rtangle=rtangle,
-            rtangle2=rtangle2,
-        )
-
-        for vert in verts:
-            path = Path(vert, closed=True)
-            patch = patches.PathPatch(
-                path, facecolor=TFC_COLOUR[colour_scheme - 1], lw=0
-            )
-            axis.add_patch(patch)
-
-        for rec in rects:
-            axis.add_patch(
-                patches.Rectangle(
-                    xy=(rec.anchor_x, rec.anchor_z),
-                    width=rec.width,
-                    height=rec.height,
-                    facecolor=TFC_COLOUR[colour_scheme - 1],
+                    facecolor=colour,
                 )
             )
 
