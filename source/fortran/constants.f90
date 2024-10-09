@@ -43,13 +43,39 @@ module constants
 
   ! Electron mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
-  !            https://pml.nist.gov/cgi-bin/cuu/Value?me|search_for=atomnuc!
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?me|search_for=ELECTRON+MASS
   real(dp), parameter :: ELECTRON_MASS = 9.1093837139D-31
 
   ! Proton mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
-  !            https://physics.nist.gov/cgi-bin/cuu/Value?mp|search_for=atomnuc!
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mp|search_for=PROTON+MASS
   real(dp), parameter :: PROTON_MASS = 1.67262192595D-27
+
+  ! Deuteron mass [kg]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?md|search_for=DEUTERON+MASS
+  real(dp), parameter :: DEUTERON_MASS = 3.3435837768D-27
+
+  ! Triton mass [kg]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mt|search_for=TRITON+MASS
+  real(dp), parameter :: TRITON_MASS = 5.0073567512D-27
+
+  ! Neutron mass [kg]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mn|search_for=NEUTRON+MASS
+  real(dp), parameter :: NEUTRON_MASS = 1.67492750056D-27
+
+  ! Alpha particle mass [kg]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mal|search_for=alpha+mass
+  real(dp), parameter :: ALPHA_MASS = 6.6446573450D-27
+
+  ! Helion (3He) mass [kg]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mh|search_for=HELION
+  real(dp), parameter :: HELION_MASS = 5.0064127862D-27
+
 
   ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0
