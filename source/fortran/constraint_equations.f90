@@ -1088,7 +1088,7 @@ contains
    end subroutine constraint_eqn_018
 
    subroutine constraint_eqn_019(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for MVA upper limit
+      !! Equation for MVA upper limit: resistive TF coil set
       !! author: P B Lloyd, CCFE, Culham Science Centre
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
@@ -1097,10 +1097,10 @@ contains
       !! #=#=# fmva, mvalim
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! tfcpmw : input real : peak resistive TF coil inboard leg power (MW)
-      !! tflegmw : input real : TF coil outboard leg resistive power (MW)
+      !! tfcpmw : input real : peak resistive TF coil inboard leg power (total) (MW)
+      !! tflegmw : input real : TF coil outboard leg resistive power (total) (MW)
       !! fmva : input real : f-value for maximum MVA
-      !! mvalim : input real : TF coil outboard leg resistive power (MW)
+      !! mvalim : input real : MVA limit for resistive TF coil set (total) (MW)
       use tfcoil_variables, only: tfcpmw, tflegmw
       use constraint_variables, only: fmva, mvalim
       implicit none
@@ -1133,7 +1133,7 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fportsz : input real : f-value for neutral beam tangency radius limit
       !! rtanmax : input real : maximum tangency radius for centreline of beam (m)
-      !! rtanbeam : input real : ratio of collision length / connection length
+      !! rtanbeam : input real : neutral beam centreline tangency radius (m)
       use constraint_variables, only: fportsz
       use current_drive_variables, only: rtanmax, rtanbeam
       implicit none
