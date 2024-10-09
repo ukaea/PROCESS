@@ -176,7 +176,7 @@ class CurrentDrive:
                     * current_drive_variables.harnum
                     * constants.echarge
                     * physics_variables.bt
-                    / constants.emass
+                    / constants.ELECTRON_MASS
                 )
                 fp = (
                     1.0e0
@@ -184,7 +184,7 @@ class CurrentDrive:
                     * np.sqrt(
                         physics_variables.dene
                         * constants.echarge**2
-                        / (constants.emass * constants.epsilon0)
+                        / (constants.ELECTRON_MASS * constants.epsilon0)
                     )
                 )
 
@@ -204,7 +204,7 @@ class CurrentDrive:
                     / (2 * np.pi)
                     * constants.echarge
                     * physics_variables.bt
-                    / constants.emass
+                    / constants.ELECTRON_MASS
                 )
                 fp = (
                     1
@@ -213,7 +213,7 @@ class CurrentDrive:
                         (
                             (physics_variables.dene / 1.0e19)
                             * constants.echarge**2
-                            / (constants.emass * constants.epsilon0)
+                            / (constants.ELECTRON_MASS * constants.epsilon0)
                         )
                     )
                 )
@@ -465,7 +465,7 @@ class CurrentDrive:
                     * current_drive_variables.harnum
                     * constants.echarge
                     * physics_variables.bt
-                    / constants.emass
+                    / constants.ELECTRON_MASS
                 )
                 fp = (
                     1.0e0
@@ -473,7 +473,7 @@ class CurrentDrive:
                     * np.sqrt(
                         physics_variables.dene
                         * constants.echarge**2
-                        / (constants.emass * constants.epsilon0)
+                        / (constants.ELECTRON_MASS * constants.epsilon0)
                     )
                 )
 
@@ -496,7 +496,7 @@ class CurrentDrive:
                     / (2 * np.pi)
                     * constants.echarge
                     * physics_variables.bt
-                    / constants.emass
+                    / constants.ELECTRON_MASS
                 )
                 fp = (
                     1
@@ -505,7 +505,7 @@ class CurrentDrive:
                         (
                             (physics_variables.dene / 1.0e19)
                             * constants.echarge**2
-                            / (constants.emass * constants.epsilon0)
+                            / (constants.ELECTRON_MASS * constants.epsilon0)
                         )
                     )
                 )
@@ -1492,7 +1492,7 @@ class CurrentDrive:
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
-        mcsq = 9.1095e-31 * 2.9979e8**2 / (1.0e3 * 1.6022e-19)  # keV
+        mcsq = constants.ELECTRON_MASS * 2.9979e8**2 / (1.0e3 * 1.6022e-19)  # keV
         f = 16.0e0 * (tlocal / mcsq) ** 2
 
         #  fp is the derivative of f with respect to gamma, the relativistic
@@ -1923,7 +1923,7 @@ class CurrentDrive:
         atmdt = 2.5
         # atmt = 3.0
         c = 3.0e8
-        me = 9.1e-31
+        me = constants.ELECTRON_MASS
         # zd = 1.0
         # zt = 1.0
 

@@ -14,78 +14,79 @@ module constants
 
   public
 
-  ! File output indexes
+  ! Standard output unit identifier
   integer, parameter :: iotty    = 6
-  !! Standard output unit identifier
 
+  ! Output file unit identifier
   integer, parameter :: nout     = 11
-  !! Output file unit identifier
 
+  ! Plot data file unit identifier
   integer, parameter :: nplot    = 12
-  !! Plot data file unit identifier
 
+  ! Machine-optimised output file unit
   integer, parameter :: mfile    = 13
-  !! Machine-optimised output file unit
 
+  ! Verbose diagnostics file
   integer, parameter :: vfile    = 14
-  !! Verbose diagnostics file
 
+  ! Optimisation information output file number
   integer, parameter :: opt_file = 15
-  !! Optimisation information output file number
 
+  ! TF inboard stress radial distributions file number
   integer, parameter :: sig_file = 16
-  !! TF inboard stress radial distributions file number
 
+  ! degrees to radians, = pi/180
   real(dp), parameter :: degrad = 0.01745329251D0
-  !! degrees to radians, = pi/180
 
+  ! electron charge [C]
   real(dp), parameter :: echarge = 1.60217733D-19
-  !! electron charge [C]
 
-  real(dp), parameter :: emass = 9.10938370D-31
-  !! electron mass [kg]
+  ! Electron mass [kg]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://pml.nist.gov/cgi-bin/cuu/Value?me|search_for=atomnuc!
+  real(dp), parameter :: ELECTRON_MASS = 9.1093837139D-31
 
+  ! proton mass [kg]
   real(dp), parameter :: mproton = 1.6726231D-27
-  !! proton mass [kg]
 
+  ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0
-  !! pi
 
+  ! permeability of free space  [H/m]
   real(dp), parameter :: rmu0 = 1.256637062D-6
-  !! permeability of free space  [H/m]
 
+  ! 2 pi
   real(dp), parameter :: twopi = 6.2831853071795862D0
-  !! 2 pi
 
+  ! unified atomic mass unit [kg]
   real(dp), parameter :: umass = 1.660538921D-27
-  !! unified atomic mass unit [kg
 
+  ! permittivity of free space [Farad/m]
   real(dp), parameter :: epsilon0 = 8.85418781D-12
-  !! permittivity of free space [Farad/m]
 
+  ! specific heat capacity of water (J/kg/K)
   real(dp), parameter :: cph2o = 4180.0D0
-  !! specific heat capacity of water (J/kg/K)
 
+  ! density of copper (kg/m3)
   real(dp) :: dcopper
-  !! density of copper (kg/m3)
 
+  ! density of aluminium (kg/m3)
   real(dp) :: dalu
-  !! density of aluminium (kg/m3)
 
+  ! density of water (kg/m3)
   real(dp), parameter :: denh2o = 985.0D0
-  !! density of water (kg/m3)
 
+  ! Copper thermal conductivity (W/m/K)
   real(dp), parameter :: k_copper = 330.0D0
-  !! Copper thermal conductivity (W/m/K)
 
+  ! thermal conductivity of water (W/m/K)
   real(dp), parameter :: kh2o = 0.651D0
-  !! thermal conductivity of water (W/m/K)
 
+  ! water dynamic viscosity (kg/m/s)
   real(dp), parameter :: muh2o = 4.71D-4
-  !! water dynamic viscosity (kg/m/s)
 
+  ! Average number of days in a year
   real(dp), parameter :: n_day_year = 365.2425D0
-  !! Average number of days in a year
 
   contains
 
