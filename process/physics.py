@@ -3022,7 +3022,7 @@ class Physics:
 
         physics_module.rho_star = np.sqrt(
             2.0e0
-            * constants.PROTON_MASS
+            * constants.proton_mass
             * physics_variables.aion
             * physics_module.total_plasma_internal_energy
             / (3.0e0 * physics_variables.vol * physics_variables.dnla)

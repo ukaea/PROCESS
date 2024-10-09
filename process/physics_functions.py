@@ -756,7 +756,7 @@ def beamcalc(
         * constants.echarge
         * 1000.0
         * ecritd
-        / (constants.PROTON_MASS * ATOMIC_MASS_DEUTERIUM)
+        / (constants.proton_mass * ATOMIC_MASS_DEUTERIUM)
     )
     tauseffd = tausbme / 3.0 * numpy.log(1.0 + (ebmratd) ** 1.5)
     nhotmsd = (1.0 - ftritbm) * ibeam * tauseffd / (constants.echarge * vol)
@@ -767,7 +767,7 @@ def beamcalc(
         * constants.echarge
         * 1000.0
         * ecritt
-        / (constants.PROTON_MASS * ATOMIC_MASS_TRITIUM)
+        / (constants.proton_mass * ATOMIC_MASS_TRITIUM)
     )
     tausefft = tausbme / 3.0 * numpy.log(1.0 + (ebmratt) ** 1.5)
     nhotmst = ftritbm * ibeam * tausefft / (constants.echarge * vol)
@@ -777,15 +777,15 @@ def beamcalc(
     nthot = nhotmst
 
     # Average hot ion energy from Deng & Emmert, UWFDM-718, Jan 87
-    vcds = 2.0 * ecritd * constants.echarge * 1000.0 / (2.0 * constants.PROTON_MASS)
-    vcts = 2.0 * ecritt * constants.echarge * 1000.0 / (3.0 * constants.PROTON_MASS)
+    vcds = 2.0 * ecritd * constants.echarge * 1000.0 / (2.0 * constants.proton_mass)
+    vcts = 2.0 * ecritt * constants.echarge * 1000.0 / (3.0 * constants.proton_mass)
 
     s0d = ifbmd / (constants.echarge * vol)
     s0t = ifbmt / (constants.echarge * vol)
 
     xcoefd = (
         ATOMIC_MASS_DEUTERIUM
-        * constants.PROTON_MASS
+        * constants.proton_mass
         * tausbme
         * vcds
         * s0d
@@ -793,7 +793,7 @@ def beamcalc(
     )
     xcoeft = (
         ATOMIC_MASS_TRITIUM
-        * constants.PROTON_MASS
+        * constants.proton_mass
         * tausbme
         * vcts
         * s0t
@@ -871,7 +871,7 @@ def sgvhot(rmass_ion, vcrx, ebeam):
     """
     # Beam velocity
 
-    vbeams = ebeam * constants.echarge * 1000.0 * 2.0 / (rmass_ion * constants.PROTON_MASS)
+    vbeams = ebeam * constants.echarge * 1000.0 * 2.0 / (rmass_ion * constants.proton_mass)
     vbeam = numpy.sqrt(vbeams)
 
     xv = vbeam / vcrx
@@ -894,7 +894,7 @@ def _hot_beam_fusion_reaction_rate_integrand(u, vcritx):
 
     # vcritx : critical velocity for electron/ion slowing down of beam ion (m/s)
     xvc = vcritx * u
-    xvcs = xvc * xvc * constants.PROTON_MASS / (constants.echarge * 1000.0)
+    xvcs = xvc * xvc * constants.proton_mass / (constants.echarge * 1000.0)
     t2 = _sigbmfus(xvcs)
 
     return t1 * t2

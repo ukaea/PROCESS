@@ -176,7 +176,7 @@ class CurrentDrive:
                     * current_drive_variables.harnum
                     * constants.echarge
                     * physics_variables.bt
-                    / constants.ELECTRON_MASS
+                    / constants.electron_mass
                 )
                 fp = (
                     1.0e0
@@ -184,7 +184,7 @@ class CurrentDrive:
                     * np.sqrt(
                         physics_variables.dene
                         * constants.echarge**2
-                        / (constants.ELECTRON_MASS * constants.epsilon0)
+                        / (constants.electron_mass * constants.epsilon0)
                     )
                 )
 
@@ -204,7 +204,7 @@ class CurrentDrive:
                     / (2 * np.pi)
                     * constants.echarge
                     * physics_variables.bt
-                    / constants.ELECTRON_MASS
+                    / constants.electron_mass
                 )
                 fp = (
                     1
@@ -213,7 +213,7 @@ class CurrentDrive:
                         (
                             (physics_variables.dene / 1.0e19)
                             * constants.echarge**2
-                            / (constants.ELECTRON_MASS * constants.epsilon0)
+                            / (constants.electron_mass * constants.epsilon0)
                         )
                     )
                 )
@@ -471,7 +471,7 @@ class CurrentDrive:
                     * current_drive_variables.harnum
                     * constants.echarge
                     * physics_variables.bt
-                    / constants.ELECTRON_MASS
+                    / constants.electron_mass
                 )
                 fp = (
                     1.0e0
@@ -479,7 +479,7 @@ class CurrentDrive:
                     * np.sqrt(
                         physics_variables.dene
                         * constants.echarge**2
-                        / (constants.ELECTRON_MASS * constants.epsilon0)
+                        / (constants.electron_mass * constants.epsilon0)
                     )
                 )
 
@@ -502,7 +502,7 @@ class CurrentDrive:
                     / (2 * np.pi)
                     * constants.echarge
                     * physics_variables.bt
-                    / constants.ELECTRON_MASS
+                    / constants.electron_mass
                 )
                 fp = (
                     1
@@ -511,7 +511,7 @@ class CurrentDrive:
                         (
                             (physics_variables.dene / 1.0e19)
                             * constants.echarge**2
-                            / (constants.ELECTRON_MASS * constants.epsilon0)
+                            / (constants.electron_mass * constants.epsilon0)
                         )
                     )
                 )
@@ -1513,7 +1513,7 @@ class CurrentDrive:
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
-        mcsq = constants.ELECTRON_MASS * 2.9979e8**2 / (1.0e3 * 1.6022e-19)  # keV
+        mcsq = constants.electron_mass * 2.9979e8**2 / (1.0e3 * 1.6022e-19)  # keV
         f = 16.0e0 * (tlocal / mcsq) ** 2
 
         #  fp is the derivative of f with respect to gamma, the relativistic
@@ -1944,7 +1944,7 @@ class CurrentDrive:
         atmdt = 2.5
         # atmt = 3.0
         c = 3.0e8
-        me = constants.ELECTRON_MASS
+        me = constants.electron_mass
         # zd = 1.0
         # zt = 1.0
 
@@ -1956,14 +1956,14 @@ class CurrentDrive:
 
         xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
         sumln = zeffai * xlmbdai / xlmbda
-        xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.PROTON_MASS * sumln) ** (
+        xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln) ** (
             2.0e0 / 3.0e0
         )
         ve = c * np.sqrt(2.0e0 * te / 511.0e0)
 
         ecritfi = (
             afast
-            * constants.PROTON_MASS
+            * constants.proton_mass
             * ve
             * ve
             * xlnrat
