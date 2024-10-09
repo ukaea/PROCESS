@@ -351,7 +351,7 @@ contains
 
     use numerics, only: name_xc
 		use global_variables, only: verbose
-		use constants, only: pi, mfile, nplot, echarge
+		use constants, only: pi, mfile, nplot, electron_charge
     implicit none
 
     !  Arguments
@@ -667,7 +667,7 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use numerics, only: boundl, boundu
-		use constants, only: echarge
+		use constants, only: electron_charge
 		use maths_library, only: variable_error
     implicit none
 
@@ -715,7 +715,7 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		use numerics, only: active_constraints, boundu, boundl
-		use constants, only: echarge
+		use constants, only: electron_charge
     implicit none
 
     !  Arguments

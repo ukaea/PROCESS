@@ -38,8 +38,19 @@ module constants
   ! degrees to radians, = pi/180
   real(dp), parameter :: degrad = 0.01745329251D0
 
-  ! electron charge [C]
-  real(dp), parameter :: echarge = 1.60217733D-19
+  ! Electron / elementary charge [C]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?e|search_for=electron+charge
+  real(dp), parameter :: electron_charge = 1.602176634D-19
+
+  ! While the electron charge is a fundamental constant, the electron volt is a derived unit and 
+  ! is added here for convenience. This allows better syntax and is more readable than using the electron
+  ! charge constant directly when working with units of energy.
+
+  ! Electron volt [J]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?evj|search_for=electron+volt
+  real(dp), parameter :: electron_volt = 1.602176634D-19
 
   ! Electron mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)

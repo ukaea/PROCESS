@@ -409,7 +409,7 @@ contains
     !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
     use physics_variables, only: betaft, betanb, dene, ten, dnitot, tin, btot, beta
-    use constants, only: echarge,rmu0
+    use constants, only: electron_charge,rmu0
 
     implicit none
 
@@ -423,7 +423,7 @@ contains
     !! constraint derived type
 
       tmp_cc = 1.0D0 - (betaft + betanb + &
-        2.0D3*rmu0*echarge * (dene*ten + dnitot*tin)/btot**2 )/beta
+        2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
       tmp_con = beta * (1.0D0 - tmp_cc)
       tmp_err = beta * tmp_cc
       tmp_symbol = '='

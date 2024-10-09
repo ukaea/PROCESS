@@ -611,7 +611,7 @@ def _nevins_integral(
     """
 
     # Compute average electron beta
-    betae = dene * te * 1.0e3 * constants.echarge / (bt**2 / (2.0 * constants.rmu0))
+    betae = dene * te * 1.0e3 * constants.electron_charge / (bt**2 / (2.0 * constants.rmu0))
 
     nabla = rminor * np.sqrt(y) / rmajor
     x = (1.46 * np.sqrt(nabla) + 2.4 * nabla) / (1.0 - nabla) ** 1.5
@@ -1845,14 +1845,14 @@ class Physics:
                 physics_variables.fusionrate
                 + 1.0e6
                 * physics_variables.palpnb
-                / (1.0e3 * physics_variables.ealphadt * constants.echarge)
+                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.vol
             )
             physics_variables.alpharate = (
                 physics_variables.alpharate
                 + 1.0e6
                 * physics_variables.palpnb
-                / (1.0e3 * physics_variables.ealphadt * constants.echarge)
+                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.vol
             )
 
@@ -3006,7 +3006,7 @@ class Physics:
         physics_module.nu_star = (
             1
             / constants.rmu0
-            * (15.0e0 * constants.echarge**4 * physics_variables.dlamie)
+            * (15.0e0 * constants.electron_charge**4 * physics_variables.dlamie)
             / (4.0e0 * np.pi**1.5e0 * constants.epsilon0**2)
             * physics_variables.vol**2
             * physics_variables.rmajor**2
@@ -3027,7 +3027,7 @@ class Physics:
             * physics_module.total_plasma_internal_energy
             / (3.0e0 * physics_variables.vol * physics_variables.dnla)
         ) / (
-            constants.echarge
+            constants.electron_charge
             * physics_variables.bt
             * physics_variables.eps
             * physics_variables.rmajor
@@ -5330,7 +5330,7 @@ class Physics:
             physics_variables.ne0
             * physics_variables.te0
             * 1.0e3
-            * constants.echarge
+            * constants.electron_charge
             / (bt**2 / (2.0 * constants.rmu0))
         )
 

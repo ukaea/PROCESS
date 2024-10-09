@@ -33,7 +33,7 @@ contains
     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    use constants, only: echarge
+    use constants, only: electron_charge
     use divertor_variables, only: prn1
     use maths_library, only: gamfun, sumup3
     use physics_variables, only: rhopedt, ten, tin, alphap, tbeta, te0, p0, &
@@ -147,7 +147,7 @@ contains
 
     !  Central pressure (Pa), from ideal gas law : p = nkT
 
-    p0 = (ne0*te0 + ni0*ti0) * 1.0D3 * echarge
+    p0 = (ne0*te0 + ni0*ti0) * 1.0D3 * electron_charge
 
     !  Pressure profile index (N.B. no pedestal effects included here)
     !  N.B. p0 is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)

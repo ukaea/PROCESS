@@ -121,7 +121,7 @@ class FusionReactionRate:
             dx=self.plasma_profile.neprofile.profile_dx,
         )
         self.sigvdt = sigmav
-        etot = 17.59 * constants.echarge  # MJ
+        etot = 17.59 * constants.electron_charge  # MJ
         # Fusion power produced [MW] per m^3 of plasma
         fusion_power_density = (
             sigmav
@@ -148,7 +148,7 @@ class FusionReactionRate:
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
-        etot = 18.35 * constants.echarge  # MJ
+        etot = 18.35 * constants.electron_charge  # MJ
         # Fusion power produced [MW] per m^3 of plasma
         fusion_power_density = (
             sigmav
@@ -175,7 +175,7 @@ class FusionReactionRate:
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
-        etot = 3.27 * constants.echarge  # MJ
+        etot = 3.27 * constants.electron_charge  # MJ
         # Fusion power produced [MW] per m^3 of plasma
         fusion_power_density = (
             sigmav
@@ -203,7 +203,7 @@ class FusionReactionRate:
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
-        etot = 4.03 * constants.echarge  # MJ
+        etot = 4.03 * constants.electron_charge  # MJ
         # Fusion power produced [MW] per m^3 of plasma
         fusion_power_density = (
             sigmav
@@ -594,7 +594,7 @@ def palph2(
         betath = (
             2.0e3
             * constants.rmu0
-            * constants.echarge
+            * constants.electron_charge
             * (dene * ten + dnitot * tin)
             / (bt**2 + bp**2)
         )
@@ -753,35 +753,35 @@ def beamcalc(
     ebmratd = ebeam / ecritd
     vcritd = numpy.sqrt(
         2.0
-        * constants.echarge
+        * constants.electron_charge
         * 1000.0
         * ecritd
         / (constants.proton_mass * ATOMIC_MASS_DEUTERIUM)
     )
     tauseffd = tausbme / 3.0 * numpy.log(1.0 + (ebmratd) ** 1.5)
-    nhotmsd = (1.0 - ftritbm) * ibeam * tauseffd / (constants.echarge * vol)
+    nhotmsd = (1.0 - ftritbm) * ibeam * tauseffd / (constants.electron_charge * vol)
 
     ebmratt = ebeam / ecritt
     vcritt = numpy.sqrt(
         2.0
-        * constants.echarge
+        * constants.electron_charge
         * 1000.0
         * ecritt
         / (constants.proton_mass * ATOMIC_MASS_TRITIUM)
     )
     tausefft = tausbme / 3.0 * numpy.log(1.0 + (ebmratt) ** 1.5)
-    nhotmst = ftritbm * ibeam * tausefft / (constants.echarge * vol)
+    nhotmst = ftritbm * ibeam * tausefft / (constants.electron_charge * vol)
 
     nhot = nhotmsd + nhotmst
     ndhot = nhotmsd
     nthot = nhotmst
 
     # Average hot ion energy from Deng & Emmert, UWFDM-718, Jan 87
-    vcds = 2.0 * ecritd * constants.echarge * 1000.0 / (2.0 * constants.proton_mass)
-    vcts = 2.0 * ecritt * constants.echarge * 1000.0 / (3.0 * constants.proton_mass)
+    vcds = 2.0 * ecritd * constants.electron_charge * 1000.0 / (2.0 * constants.proton_mass)
+    vcts = 2.0 * ecritt * constants.electron_charge * 1000.0 / (3.0 * constants.proton_mass)
 
-    s0d = ifbmd / (constants.echarge * vol)
-    s0t = ifbmt / (constants.echarge * vol)
+    s0d = ifbmd / (constants.electron_charge * vol)
+    s0t = ifbmt / (constants.electron_charge * vol)
 
     xcoefd = (
         ATOMIC_MASS_DEUTERIUM
@@ -789,7 +789,7 @@ def beamcalc(
         * tausbme
         * vcds
         * s0d
-        / (constants.echarge * 1000.0 * 3.0)
+        / (constants.electron_charge * 1000.0 * 3.0)
     )
     xcoeft = (
         ATOMIC_MASS_TRITIUM
@@ -797,7 +797,7 @@ def beamcalc(
         * tausbme
         * vcts
         * s0t
-        / (constants.echarge * 1000.0 * 3.0)
+        / (constants.electron_charge * 1000.0 * 3.0)
     )
 
     presd = xcoefd * xbrak(ebeam, ecritd)
@@ -857,7 +857,7 @@ def palphabm(ealphadt, nbm, nblk, sigv, vol, ti, svdt):
         numpy.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
     )
     return (
-        constants.echarge / 1000.0 * nbm * nblk * sigv * ealphadt * vol * ratio.item()
+        constants.electron_charge / 1000.0 * nbm * nblk * sigv * ealphadt * vol * ratio.item()
     )
 
 
@@ -871,7 +871,7 @@ def sgvhot(rmass_ion, vcrx, ebeam):
     """
     # Beam velocity
 
-    vbeams = ebeam * constants.echarge * 1000.0 * 2.0 / (rmass_ion * constants.proton_mass)
+    vbeams = ebeam * constants.electron_charge * 1000.0 * 2.0 / (rmass_ion * constants.proton_mass)
     vbeam = numpy.sqrt(vbeams)
 
     xv = vbeam / vcrx
@@ -894,7 +894,7 @@ def _hot_beam_fusion_reaction_rate_integrand(u, vcritx):
 
     # vcritx : critical velocity for electron/ion slowing down of beam ion (m/s)
     xvc = vcritx * u
-    xvcs = xvc * xvc * constants.proton_mass / (constants.echarge * 1000.0)
+    xvcs = xvc * xvc * constants.proton_mass / (constants.electron_charge * 1000.0)
     t2 = _sigbmfus(xvcs)
 
     return t1 * t2

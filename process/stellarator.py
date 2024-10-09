@@ -868,7 +868,7 @@ class Stellarator:
 
         #  Scrape-off temperature in Joules
 
-        E = T_scrape * constants.echarge
+        E = T_scrape * constants.electron_charge
 
         #  Sound speed of particles (m/s)
 
@@ -3884,7 +3884,7 @@ class Stellarator:
             + physics_variables.betanb
             + 2.0e3
             * constants.rmu0
-            * constants.echarge
+            * constants.electron_charge
             * (
                 physics_variables.dene * physics_variables.ten
                 + physics_variables.dnitot * physics_variables.tin
@@ -3907,7 +3907,7 @@ class Stellarator:
             * physics_module.total_plasma_internal_energy
             / (3.0e0 * physics_variables.vol * physics_variables.dnla)
         ) / (
-            constants.echarge
+            constants.electron_charge
             * physics_variables.bt
             * physics_variables.eps
             * physics_variables.rmajor
@@ -3975,14 +3975,14 @@ class Stellarator:
                 physics_variables.fusionrate
                 + 1.0e6
                 * physics_variables.palpnb
-                / (1.0e3 * physics_variables.ealphadt * constants.echarge)
+                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.vol
             )
             physics_variables.alpharate = (
                 physics_variables.alpharate
                 + 1.0e6
                 * physics_variables.palpnb
-                / (1.0e3 * physics_variables.ealphadt * constants.echarge)
+                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.vol
             )
 
@@ -4596,7 +4596,7 @@ class Stellarator:
             (
                 3
                 * physics_variables.ne0
-                * constants.echarge
+                * constants.electron_charge
                 * physics_variables.te0
                 * 1e3
                 * physics_variables.alphat
