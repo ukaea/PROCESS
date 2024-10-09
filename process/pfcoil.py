@@ -24,6 +24,7 @@ from process.fortran import rebco_variables as rcv
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from scipy.special import ellipe, ellipk
 
 logger = logging.getLogger(__name__)
 
@@ -3232,8 +3233,8 @@ def bfield(rc, zc, cc, rp, zp):
         t = 1.0 - s
         a = np.log(1.0 / t)
 
-        dz = zp - zc[i]
-        zs = dz**2
+        # dz = zp - zc[i]
+        # zs = dz**2
         dr = rp - rc[i]
         sd = np.sqrt(d)
 
@@ -3260,25 +3261,28 @@ def bfield(rc, zc, cc, rp, zp):
 
         #  Radial, vertical fields
 
-        brx = (
-            RMU0
-            * cc[i]
-            * dz
-            / (2 * np.pi * rp * sd)
-            * (-xk + (rc[i] ** 2 + rp**2 + zs) / (dr**2 + zs) * xe)
-        )
-        bzx = (
-            RMU0
-            * cc[i]
-            / (2 * np.pi * sd)
-            * (xk + (rc[i] ** 2 - rp**2 - zs) / (dr**2 + zs) * xe)
-        )
+        # brx = (
+        #     RMU0
+        #     * cc[i]
+        #     * dz
+        #     / (2 * np.pi * rp * sd)
+        #     * (-xk + (rc[i] ** 2 + rp**2 + zs) / (dr**2 + zs) * xe)
+        # )
+        # bzx = (
+        #     RMU0
+        #     * cc[i]
+        #     / (2 * np.pi * sd)
+        #     * (xk + (rc[i] ** 2 - rp**2 - zs) / (dr**2 + zs) * xe)
+        # )
+        # get the field due to unit current using Green's function
+        g_br, g_bz, g_psi = greens(rc[i], zc[i], rp, zp)
+        # convert to actual field from unit current
 
-        #  Sum fields, flux
+        #  Sum fields, flux and convert from unit current to actual
 
-        br += brx
-        bz += bzx
-        psi += xc[i] * cc[i]
+        br += g_br * cc[i]
+        bz += g_bz * cc[i]
+        psi += g_psi * cc[i]
 
     return xc, br, bz, psi
 
@@ -3615,3 +3619,163 @@ def init_pfcoil_variables():
     pfv.d_cond_cst = 0.0
     pfv.r_in_cst = 0.0
     pfv.r_out_cst = 3.0e-3
+
+
+GREENS_ZERO = 1e-8
+
+
+@numba.vectorize(nopython=True, cache=True)
+def clip_nb(
+    val: float | np.ndarray, val_min: float, val_max: float
+) -> float | np.ndarray:
+    """
+    Clips (limits) val between val_min and val_max. Vectorised for speed and
+    compatibility with numba.
+
+    Parameters
+    ----------
+    val:
+        The value to be clipped.
+    val_min:
+        The minimum value.
+    val_max:
+        The maximum value.
+
+    Returns
+    -------
+    The clipped values.
+    """
+    if val < val_min:
+        return val_min
+    if val > val_max:
+        return val_max
+    return val
+
+
+@numba.vectorize(nopython=True)
+def ellipe_nb(k: float | np.ndarray) -> float | np.ndarray:
+    """
+    Vectorised scipy ellipe
+
+    Notes
+    -----
+    K, E in scipy are set as K(k^2), E(k^2)
+    """
+    return ellipe(k)
+
+
+ellipe_nb.__doc__ += ellipe.__doc__
+
+
+@numba.vectorize(nopython=True)
+def ellipk_nb(k: float | np.ndarray) -> float | np.ndarray:
+    """
+    Vectorised scipy ellipk
+
+    Notes
+    -----
+    K, E in scipy are set as K(k^2), E(k^2)
+    """
+    return ellipk(k)
+
+
+@numba.jit(nopython=True)
+def calc_a_k2(
+    xc,
+    zc,
+    x,
+    z,
+):
+    a = np.hypot((x + xc), (z - zc))
+    k2 = 4 * x * xc / a**2
+    # Avoid NaN when coil on grid point
+    k2 = clip_nb(k2, GREENS_ZERO, 1.0 - GREENS_ZERO)
+    return a, k2
+
+
+@numba.jit(nopython=True)
+def calc_e_k(
+    k2,
+):
+    return ellipe_nb(k2), ellipk_nb(k2)
+
+
+@numba.jit(nopython=True)
+def calc_i1_i2(
+    a,
+    k2,
+    e,
+    k,
+):
+    if (e is None) or (k is None):
+        e, k = calc_e_k(k2)
+    i1 = k / a
+    i2 = e / (a**3 * (1 - k2))
+    return i1, i2
+
+
+@numba.jit(nopython=True)
+def greens(rc, zc, rp, zp):
+    """
+    Green's function for psi, Bx and Bz. Output is from unit current so for actual
+    field multiply result by coil current.
+
+    rc: input real array : coil r coordinates (m)
+    zc: input real array : coil z coordinates (m)
+    rp: input real array : calculation r coordinates (m)
+    zp: input real array : calculation z coordinates (m)
+    g_psi : output real : poloidal flux at (rp,zp) (Wb)
+    g_br: output real : radial field component at (rp,zp) (T)
+    g_bz : output real : vertical field component at (rp,zp) (T)
+    """
+
+    a, k2 = calc_a_k2(rc, zc, rp, zp)
+    e, k = calc_e_k(k2)
+    i1, i2 = calc_i1_i2(a, k2, e, k)
+    i1 *= 4
+    i2 *= 4
+
+    a_part = (zp - zc) ** 2 + rp**2 + rc**2
+    b_part = -2 * rp * rc
+
+    g_br = 0.25 * RMU0 / np.pi * rc * (zp - zc) * (i1 - i2 * a_part) / b_part
+    g_bz = (
+        0.25 * RMU0 / np.pi * rc * ((rc + rp * a_part / b_part) * i2 - i1 * rp / b_part)
+    )
+    g_psi = 0.25 * RMU0 / np.pi * a * ((2 - k2) * k - 2 * e)
+
+    return g_psi, g_br, g_bz
+
+
+@numba.jit(nopython=True)
+def elliptic_inductance(radius, rc):
+    """
+    Calculate the inductance of a circular coil by elliptic integrals.
+
+    Parameters
+    ----------
+    radius: input real : The radius of the circular coil
+    rc: input real : The radius of the coil cross-section
+    xc: output real : The self-inductance of the circular coil [H]
+
+    Notes
+    -----
+    The inductance is given by
+
+    .. math::
+        L = \\mu_{0} (2 r - r_c) \\Biggl((1 - k^2 / 2)~
+        \\int_0^{\\frac{\\pi}{2}} \\frac{d\\theta}{\\sqrt{1 - k~
+        \\sin (\\theta)^2}} - \\int_0^{\\frac{\\pi}{2}}~
+        \\sqrt{1 - k \\sin (\\theta)^2} \\, d\\theta\\Biggr)
+
+    where :math:`r` is the radius, :math:`\\mu_{0}` is the vacuum
+    permeability, and
+
+    .. math::
+        k = \\max\\left(10^{-8}, \\min~
+        \\left(\\frac{4r(r - r_c)}{(2r - r_c)^2}~
+        , 1.0 - 10^{-8}\\right)\\right)
+    """
+    k = 4 * radius * (radius - rc) / (2 * radius - rc) ** 2
+    k = clip_nb(k, GREENS_ZERO, 1.0 - GREENS_ZERO)
+    return RMU0 * (2 * radius - rc) * ((1 - k**2 / 2) * ellipk_nb(k) - ellipe_nb(k))
