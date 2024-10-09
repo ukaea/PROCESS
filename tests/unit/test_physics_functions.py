@@ -1,60 +1,11 @@
 """Unit tests for physics_functions.f90."""
+
 from typing import Any, NamedTuple
-from process.fortran import physics_functions_module as pf
 from process.fortran import physics_variables as pv
+from process import physics_functions
+import numpy as np
 import pytest
 from pytest import approx
-import numpy
-
-
-def test_plasma_elongation_ipb(monkeypatch):
-    """Test plasma_elongation_IPB().
-    :param monkeypatch: Mock fixture
-    :type monkeypatch: object
-    """
-    monkeypatch.setattr(pv, "rmajor", 9.137)
-    monkeypatch.setattr(pv, "rminor", 2.947)
-    monkeypatch.setattr(pv, "vol", 2634.0)
-    kappaa_ipb = pf.plasma_elongation_ipb()
-    assert kappaa_ipb == approx(1.682, abs=0.001)
-
-
-def test_total_mag_field(monkeypatch):
-    """Test total_mag_field().
-
-    :param monkeypatch: Mock fixture
-    :type monkeypatch: object
-    """
-    monkeypatch.setattr(pv, "bt", 5.278)
-    monkeypatch.setattr(pv, "bp", 0.852)
-    btot = pf.total_mag_field()
-    assert btot == approx(5.347, abs=0.001)
-
-
-def test_beta_poloidal(monkeypatch):
-    """Test beta_poloidal().
-
-    :param monkeypatch: Mock fixture
-    :type monkeypatch: object
-    """
-    monkeypatch.setattr(pv, "btot", 5.347)
-    monkeypatch.setattr(pv, "beta", 0.0307)
-    monkeypatch.setattr(pv, "bp", 0.852)
-    betap = pf.beta_poloidal()
-    assert betap == approx(1.209, abs=0.001)
-
-
-def test_res_diff_time(monkeypatch):
-    """Test res_diff_time().
-
-    :param monkeypatch: Mock fixture
-    :type monkeypatch: object
-    """
-    monkeypatch.setattr(pv, "rmajor", 9.137)
-    monkeypatch.setattr(pv, "rplas", 2.909e-9)
-    monkeypatch.setattr(pv, "kappa95", 1.650)
-    res_time = pf.res_diff_time()
-    assert res_time == approx(4784.3, abs=0.1)
 
 
 class Palph2Param(NamedTuple):
@@ -249,11 +200,18 @@ def test_palph2(palph2param, monkeypatch):
     monkeypatch.setattr(pv, "falpha", palph2param.falpha)
     monkeypatch.setattr(pv, "fdeut", palph2param.fdeut)
 
-    # allow inout params to be mutated
-    palppv = numpy.array(palph2param.palppv)
-    pneutpv = numpy.array(palph2param.pneutpv)
-
-    (palpmw, pneutmw, pchargemw, betaft, palpipv, palpepv, pfuscmw, powfmw) = pf.palph2(
+    (
+        pneutpv,
+        palpmw,
+        pneutmw,
+        pchargemw,
+        betaft,
+        palppv,
+        palpepv,
+        palpipv,
+        pfuscmw,
+        powfmw,
+    ) = physics_functions.palph2(
         ifalphap=palph2param.ifalphap,
         bp=palph2param.bp,
         bt=palph2param.bt,
@@ -267,8 +225,8 @@ def test_palph2(palph2param, monkeypatch):
         ten=palph2param.ten,
         tin=palph2param.tin,
         vol=palph2param.vol,
-        palppv=palppv,
-        pneutpv=pneutpv,
+        palppv=palph2param.palppv,
+        pneutpv=palph2param.pneutpv,
     )
 
     assert palppv == pytest.approx(palph2param.expected_palppv)
@@ -286,13 +244,12 @@ def test_palph2(palph2param, monkeypatch):
 @pytest.mark.parametrize(
     "t, reaction, expected_bosch_hale",
     (
-        (0.0, -1, 0.0),
-        (55.73, 1, 8.832857074192583e-22),
-        (55.73, 2, 7.067916724597656e-23),
-        (55.73, 3, 1.3127277533210717e-23),
-        (55.73, 4, 1.1329338540436287e-23),
+        (55.73, physics_functions.REACTION_CONSTANTS_DT, 8.832857074192583e-22),
+        (55.73, physics_functions.REACTION_CONSTANTS_DHE3, 7.067916724597656e-23),
+        (55.73, physics_functions.REACTION_CONSTANTS_DD1, 1.3127277533210717e-23),
+        (55.73, physics_functions.REACTION_CONSTANTS_DD2, 1.1329338540436287e-23),
     ),
-    ids=["t_0", "DT", "DHE3", "DD1", "DD2"],
+    ids=["DT", "DHE3", "DD1", "DD2"],
 )
 def test_bosch_hale(t, reaction, expected_bosch_hale):
     """
@@ -305,134 +262,77 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
     :param expected_bosch_hale: expected return value from the bosch_hale function
     :type expected_bosch_hale: float
     """
-    bosch_hale = pf.bosch_hale(t, reaction)
+    bosch_hale = physics_functions.bosch_hale(
+        np.array([t]), physics_functions.BoschHaleConstants(**reaction)
+    )
 
     assert bosch_hale == approx(expected_bosch_hale, abs=1e-23)
 
 
-class PhalphParams(NamedTuple):
-    alphan: float
-    alphat: float
-    deni: float
-    fdeut: float
-    fhe3: float
-    ftrit: float
-    ti: float
-
-    ipedestal: int
-    te: float
-    rhopedt: float
-    te0: float
-    teped: float
-    tesep: float
-    tbeta: float
-    dene: float
-    rhopedn: float
-    ne0: float
-    neped: float
-    nesep: float
-
-    expected_palppv: float
-    expected_pchargepv: float
-    expected_pneutpv: float
-    expected_sigvdt: float
-    expected_fusionrate: float
-    expected_alpharate: float
-    expected_protonrate: float
-    expected_pdtpv: float
-    expected_pdhe3pv: float
-    expected_pddpv: float
-
-
-@pytest.mark.parametrize(
-    "phalphparams",
-    (
-        PhalphParams(
-            1.0,
-            1.45,
-            6.2262793637240177e19,
-            0.5,
-            0.0,
-            0.5,
-            13.84,
-            1,
-            12.33,
-            0.94,
-            28.089723663920328,
-            3.7775374842470044,
-            0.1,
-            2.0,
-            7.4321e19,
-            0.94,
-            9.7756974320342041e19,
-            5.8300851381352219e19,
-            3.4294618459618943e19,
-            0.19030547335201128,
-            0.000813064815368787,
-            0.7616652065443165,
-            3.48375533764882e-22,
-            3.3979157349166214e17,
-            3.3763297977777126e17,
-            1030380967354505.6,
-            0.9515273667600563,
-            0.0,
-            0.0012563779516400874,
-        ),
-    ),
-)
-def test_phalph(phalphparams, monkeypatch):
-    """
-    Automatically generated Integration for palph.
-
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
-
-    :param palphparam: the data used to mock and assert in this test.
-    :type palphparam: palphparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-    monkeypatch.setattr(pv, "ipedestal", phalphparams.ipedestal)
-    monkeypatch.setattr(pv, "te", phalphparams.te)
-    monkeypatch.setattr(pv, "rhopedt", phalphparams.rhopedt)
-    monkeypatch.setattr(pv, "te0", phalphparams.te0)
-    monkeypatch.setattr(pv, "teped", phalphparams.teped)
-    monkeypatch.setattr(pv, "tesep", phalphparams.tesep)
-    monkeypatch.setattr(pv, "tbeta", phalphparams.tbeta)
-    monkeypatch.setattr(pv, "dene", phalphparams.dene)
-    monkeypatch.setattr(pv, "rhopedn", phalphparams.rhopedn)
-    monkeypatch.setattr(pv, "ne0", phalphparams.ne0)
-    monkeypatch.setattr(pv, "neped", phalphparams.neped)
-    monkeypatch.setattr(pv, "nesep", phalphparams.nesep)
-
-    (
-        palppv,
-        pchargepv,
-        pneutpv,
-        sigvdt,
-        fusionrate,
-        alpharate,
-        protonrate,
-        pdtpv,
-        pdhe3pv,
-        pddpv,
-    ) = pf.palph(
-        phalphparams.alphan,
-        phalphparams.alphat,
-        phalphparams.deni,
-        phalphparams.fdeut,
-        phalphparams.fhe3,
-        phalphparams.ftrit,
-        phalphparams.ti,
+def test_beamfus():
+    betanb, dnbeam2, palpnb = physics_functions.beamfus(
+        1.0,
+        1.5,
+        0.85,
+        5.3,
+        130,
+        7.8e19,
+        6.6e19,
+        17.8,
+        3520.0,
+        1000.0,
+        0.5,
+        0.5,
+        1e-06,
+        2.8e-22,
+        13.5,
+        13.5,
+        1888.0,
+        0.425,
     )
 
-    assert palppv == pytest.approx(phalphparams.expected_palppv)
-    assert pchargepv == pytest.approx(phalphparams.expected_pchargepv)
-    assert pneutpv == pytest.approx(phalphparams.expected_pneutpv)
-    assert sigvdt == pytest.approx(phalphparams.expected_sigvdt)
-    assert fusionrate == pytest.approx(phalphparams.expected_fusionrate)
-    assert alpharate == pytest.approx(phalphparams.expected_alpharate)
-    assert protonrate == pytest.approx(phalphparams.expected_protonrate)
-    assert pdtpv == pytest.approx(phalphparams.expected_pdtpv)
-    assert pdhe3pv == pytest.approx(phalphparams.expected_pdhe3pv)
-    assert pddpv == pytest.approx(phalphparams.expected_pddpv)
+    assert betanb == pytest.approx(0.002616169278788316)
+    assert dnbeam2 == pytest.approx(4.2028390908892986e17)
+    assert palpnb == pytest.approx(11.506114015489336)
+
+
+def test_beamcalc():
+    palfdb, palftb, nhot, ehot = physics_functions.beamcalc(
+        3.3e19,
+        3.3e19,
+        3520.0,
+        1000.0,
+        276.7,
+        415.0,
+        1.42,
+        1e-06,
+        130,
+        13.5,
+        1888.0,
+        2.8e-22,
+    )
+
+    assert palfdb == pytest.approx(11.489365278680932)
+    assert palftb == pytest.approx(1.0379265294979434e-05)
+    assert nhot == pytest.approx(4.1968331737565126e17)
+    assert ehot == pytest.approx(445.05787301616635)
+
+
+def test_xbrak():
+    xbrak = physics_functions.xbrak(1000.0, 276.7)
+
+    assert xbrak == pytest.approx(1.1061397270783706)
+
+
+def test_palphabm():
+    palphabm = physics_functions.palphabm(
+        3520.0, 316000000000, 3.3e19, 7.5e-22, 1888.0, 13.5, 2.8e-22
+    )
+
+    assert palphabm == pytest.approx(1.0413228502045627e-05)
+
+
+def test_sgvhot():
+    sgvhot = physics_functions.sgvhot(3, 5140000.0, 1000.0)
+
+    assert sgvhot == pytest.approx(7.465047902975452e-18)
