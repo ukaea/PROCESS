@@ -87,6 +87,31 @@ module constants
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mh|search_for=HELION
   real(dp), parameter :: helion_mass = 5.0064127862D-27
 
+  ! Speed of light in vacuum (c) [m/s]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?c|search_for=light
+  real(dp), parameter :: speed_light = 299792458D0
+
+  ! Deuterium - Tritium reaction energy [J]
+  ! Find the mass difference in the reactancts and products of the D-T reaction
+  ! Multiply by the speed of light squared to get the energy released
+  real(dp), parameter :: d_t_energy = (((deuteron_mass+triton_mass)-(alpha_mass+neutron_mass))*speed_light**2)
+
+  ! Deuterium - Helion (3He) reaction energy [J]
+  ! Find the mass difference in the reactancts and products of the D-3He reaction
+  ! Multiply by the speed of light squared to get the energy released
+  real(dp), parameter :: d_helium_energy = (((deuteron_mass+helion_mass)-(alpha_mass+proton_mass))*speed_light**2)
+
+  ! Deuterium - Deuterium (3He producing) reaction energy [J]
+  ! Find the mass difference in the reactancts and products of the D-D reaction
+  ! Multiply by the speed of light squared to get the energy released
+  real(dp), parameter :: dd_helium_energy = (((deuteron_mass+deuteron_mass)-(helion_mass+neutron_mass))*speed_light**2)
+
+  ! Deuterium - Deuterium (Triton producing) reaction energy [J]
+  ! Find the mass difference in the reactancts and products of the D-D reaction
+  ! Multiply by the speed of light squared to get the energy released
+  real(dp), parameter :: dd_triton_energy = (((deuteron_mass+deuteron_mass)-(triton_mass+proton_mass))*speed_light**2)
+
 
   ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0
