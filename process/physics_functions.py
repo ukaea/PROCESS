@@ -406,7 +406,7 @@ def fint(plasma_profile, reactionconstants):
     )
 
     # Number of fusion reactions per unit volume per particle volume density (m3/s)
-    sigv = bosch_hale(ion_temperature_profile, reactionconstants)
+    sigv = bosch_hale_reactivity(ion_temperature_profile, reactionconstants)
 
     # Integrand for the volume averaged fusion reaction rate sigmav:
     # sigmav = integral(2 rho (sigv(rho) ni(rho)^2) drho),
@@ -418,74 +418,6 @@ def fint(plasma_profile, reactionconstants):
     fint = 2.0 * plasma_profile.teprofile.profile_x * sigv * nprofsq
 
     return fint
-
-
-def bosch_hale(temperature_profile, reaction_constants):
-    """This routine calculates the volumetric fusion reaction rate
-    sigmavgt (m3/s) for one of four nuclear reactions using
-    the Bosch-Hale parametrization.
-    The valid range of the fit is 0.2 keV < t < 100 keV except for D-3He where it is 0.5 keV < t < 190 keV.
-    1 : D-T reaction
-    2 : D-3He reaction
-    3 : D-D 1st reaction (50% probability)
-    4 : D-D 2nd reaction (50% probability)
-    Authors:
-        R Kemp, CCFE, Culham Science Centre
-        P J Knight, CCFE, Culham Science Centre
-    References:
-        Bosch and Hale, Nuclear Fusion 32 (1992) 611-631
-
-    :param temperature_profile: Plasma temperature profile
-    :type temperature_profile: numpy.array
-    :param reactionconstants: BoschHale reaction constants
-    :type reactionconstants: BoschHaleConstants
-    :return: sigmav Volumetric fusion reaction rate
-    :rtype: (numpy.array)
-    """
-    theta1 = (
-        temperature_profile
-        * (
-            reaction_constants.cc2
-            + temperature_profile
-            * (reaction_constants.cc4 + temperature_profile * reaction_constants.cc6)
-        )
-        / (
-            1.0
-            + temperature_profile
-            * (
-                reaction_constants.cc3
-                + temperature_profile
-                * (
-                    reaction_constants.cc5
-                    + temperature_profile * reaction_constants.cc7
-                )
-            )
-        )
-    )
-    theta = temperature_profile / (1.0 - theta1)
-
-    xi = ((reaction_constants.bg**2) / (4.0 * theta)) ** (1 / 3)
-
-    # Volumetric reaction rate <sigma v> (m3/s)
-    # Original form is in [cm3/s], so multiply by 1.0e-6 to convert to [m3/s]
-    sigmav = (
-        1.0e-6
-        * reaction_constants.cc1
-        * theta
-        * numpy.sqrt(xi / (reaction_constants.mrc2 * temperature_profile**3))
-        * numpy.exp(-3.0 * xi)
-    )
-    # Bosch-Hale also gives value sof maximum deviation of the fit from the input data
-    # D-T reaction: max sigmav uncertainty = 0.25%
-    # D-3He reaction: max sigmav uncertainty = 2.5%
-    # D-D 1st reaction (50% probability)
-    # D-D 2nd reaction (50% probability)
-
-    # if t = 0, sigmav = 0. Use this mask to set sigmav to zero.
-    t_mask = temperature_profile == 0.0
-    sigmav[t_mask] = 0.0
-
-    return sigmav
 
 
 @dataclass
@@ -503,6 +435,73 @@ class BoschHaleConstants:
     cc5: float
     cc6: float
     cc7: float
+
+
+def bosch_hale_reactivity(ion_temperature_profile: numpy.ndarray, reaction_constants: BoschHaleConstants) -> numpy.ndarray:
+    """
+    Calculate the volumetric fusion reaction rate <sigma v> (m^3/s) for one of four nuclear reactions using
+    the Bosch-Hale parametrization.
+
+    The valid range of the fit is 0.2 keV < t < 100 keV except for D-3He where it is 0.5 keV < t < 190 keV.
+
+    Reactions:
+        1. D-T reaction
+        2. D-3He reaction
+        3. D-D 1st reaction
+        4. D-D 2nd reaction
+
+    Parameters:
+        ion_temperature_profile (numpy.ndarray): Plasma ion temperature profile in keV.
+        reaction_constants (BoschHaleConstants): Bosch-Hale reaction constants.
+
+    Returns:
+        numpy.ndarray: Volumetric fusion reaction rate <sigma v> in m^3/s for each point in the ion temperature profile.
+
+    References:
+        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
+          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+    """
+    theta1 = (
+        ion_temperature_profile
+        * (
+            reaction_constants.cc2
+            + ion_temperature_profile
+            * (reaction_constants.cc4 + ion_temperature_profile * reaction_constants.cc6)
+        )
+        / (
+            1.0
+            + ion_temperature_profile
+            * (
+                reaction_constants.cc3
+                + ion_temperature_profile
+                * (
+                    reaction_constants.cc5
+                    + ion_temperature_profile * reaction_constants.cc7
+                )
+            )
+        )
+    )
+    theta = ion_temperature_profile / (1.0 - theta1)
+
+    xi = ((reaction_constants.bg**2) / (4.0 * theta)) ** (1 / 3)
+
+    # Volumetric reaction rate / reactivity <sigma v> (m^3/s)
+    # Original form is in [cm^3/s], so multiply by 1.0e-6 to convert to [m^3/s]
+    sigmav = (
+        1.0e-6
+        * reaction_constants.cc1
+        * theta
+        * numpy.sqrt(xi / (reaction_constants.mrc2 * ion_temperature_profile**3))
+        * numpy.exp(-3.0 * xi)
+    )
+
+    # if t = 0, sigmav = 0. Use this mask to set sigmav to zero.
+    t_mask = ion_temperature_profile == 0.0
+    sigmav[t_mask] = 0.0
+
+    # Return np.ndarray of sigmav for each point in the ion temperature profile
+    return sigmav
 
 
 @dataclass
@@ -853,7 +852,7 @@ def palphabm(ealphadt, nbm, nblk, sigv, vol, ti, svdt):
 
     # [ti] because bosch_hale expects temperature profile
     # so we pass it a profile of length 1
-    ratio = svdt / bosch_hale(
+    ratio = svdt / bosch_hale_reactivity(
         numpy.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
     )
     return (

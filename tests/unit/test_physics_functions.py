@@ -262,7 +262,7 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
     :param expected_bosch_hale: expected return value from the bosch_hale function
     :type expected_bosch_hale: float
     """
-    bosch_hale = physics_functions.bosch_hale(
+    bosch_hale = physics_functions.bosch_hale_reactivity(
         np.array([t]), physics_functions.BoschHaleConstants(**reaction)
     )
 
