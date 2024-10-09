@@ -1029,7 +1029,7 @@ contains
          (shmatv(1,8)+shmatv(2,8)+shmatv(3,8)), &
          (v3matv(1,8)+v3matv(2,8)+v3matv(3,8))
 
-  contains
+  end subroutine ifebld
 
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1053,6 +1053,11 @@ contains
     use ife_variables, only: blmatf, bldrc, lipmw, etali, taufall, rrmax, chvol, &
       fwvol, v1vol, blvol, v2vol, shvol, flirad, v3vol, maxmat, chmatf, fwmatf, &
       v1matf, v2matf, shmatf, v3matf
+    use ife_variables, only: ifetyp, chrad, r1, fwdr, r2, v1dr, r3, bldr, r4, &
+      v2dr, r5, shdr, r6, v3dr, r7, zl7, v3dzl, zl6, shdzl, zl5, v2dzl, zl4, &
+      bldzl, zl3, v1dzl, zl2, fwdzl, zl1, chdzl, chdzu, zu1, fwdzu, zu2, &
+      v1dzu, zu3, bldzu, zu4, v2dzu, zu5, shdzu, zu6, v3dzu, zu7, fwmatv, &
+      v1matv, blmatv, v2matv, shmatv, v3matv, chmatv
     implicit none
 
      !  Arguments
@@ -1246,7 +1251,11 @@ contains
       use build_variables, only: fwarea
       use ife_variables, only: chvol, fwvol, v1vol, blvol, v2vol, shvol, v3vol, &
         maxmat, chmatf, fwmatf, v1matf, blmatf, v2matf, shmatf, v3matf
-
+      use ife_variables, only: ifetyp, chrad, r1, fwdr, r2, v1dr, r3, bldr, r4, &
+      v2dr, r5, shdr, r6, v3dr, r7, zl7, v3dzl, zl6, shdzl, zl5, v2dzl, zl4, &
+      bldzl, zl3, v1dzl, zl2, fwdzl, zl1, chdzl, chdzu, zu1, fwdzu, zu2, &
+      v1dzu, zu3, bldzu, zu4, v2dzu, zu5, shdzu, zu6, v3dzu, zu7, fwmatv, &
+      v1matv, blmatv, v2matv, shmatv, v3matv, chmatv
       implicit none
 
       !  Local variables
@@ -1367,6 +1376,11 @@ contains
 
       use constants, only: pi
       use build_variables, only: fwarea
+      use ife_variables, only: ifetyp, chrad, r1, fwdr, r2, v1dr, r3, bldr, r4, &
+      v2dr, r5, shdr, r6, v3dr, r7, zl7, v3dzl, zl6, shdzl, zl5, v2dzl, zl4, &
+      bldzl, zl3, v1dzl, zl2, fwdzl, zl1, chdzl, chdzu, zu1, fwdzu, zu2, &
+      v1dzu, zu3, bldzu, zu4, v2dzu, zu5, shdzu, zu6, v3dzu, zu7, fwmatv, &
+      v1matv, blmatv, v2matv, shmatv, v3matv, chmatv
 
       implicit none
 
@@ -1402,6 +1416,11 @@ contains
       use build_variables, only: fwarea
       use ife_variables, only: chvol, fwvol, v1vol, blvol, v2vol, somtdr, sombdr, &
         shvol, v3vol, maxmat, chmatf, fwmatf, blmatf, v1matf, v2matf, shmatf, v3matf
+      use ife_variables, only: ifetyp, chrad, r1, fwdr, r2, v1dr, r3, bldr, r4, &
+      v2dr, r5, shdr, r6, v3dr, r7, zl7, v3dzl, zl6, shdzl, zl5, v2dzl, zl4, &
+      bldzl, zl3, v1dzl, zl2, fwdzl, zl1, chdzl, chdzu, zu1, fwdzu, zu2, &
+      v1dzu, zu3, bldzu, zu4, v2dzu, zu5, shdzu, zu6, v3dzu, zu7, fwmatv, &
+      v1matv, blmatv, v2matv, shmatv, v3matv, chmatv
 
       implicit none
 
@@ -1545,6 +1564,11 @@ contains
       use build_variables, only: fwarea
       use ife_variables, only: chvol, fwvol, v1vol, blvol, v2vol, shvol, v3vol, &
         maxmat, chmatf, fwmatf, blmatf, v1matf, v2matf, shmatf, v3matf, flirad
+      use ife_variables, only: ifetyp, chrad, r1, fwdr, r2, v1dr, r3, bldr, r4, &
+      v2dr, r5, shdr, r6, v3dr, r7, zl7, v3dzl, zl6, shdzl, zl5, v2dzl, zl4, &
+      bldzl, zl3, v1dzl, zl2, fwdzl, zl1, chdzl, chdzu, zu1, fwdzu, zu2, &
+      v1dzu, zu3, bldzu, zu4, v2dzu, zu5, shdzu, zu6, v3dzu, zu7, fwmatv, &
+      v1matv, blmatv, v2matv, shmatv, v3matv, chmatv
 
       implicit none
 
@@ -1644,8 +1668,6 @@ contains
       fwarea = fwarea + pi * r1 * sqrt(r1*r1 + (zl3-zl1)**2)
 
     end subroutine hylbld
-
-  end subroutine ifebld
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
