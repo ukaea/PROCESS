@@ -65,9 +65,9 @@
 !========================================================================
 ! Physical constants (SI)
 !========================================================================
- REAL(wp_), PARAMETER :: e_     = 1.601917d-19    ! [C]
- REAL(wp_), PARAMETER :: me_    = 9.109558d-31    ! [kg]
- REAL(wp_), PARAMETER :: mp_    = 1.672614d-27    ! [kg]
+ REAL(wp_), PARAMETER :: e_     = 1.602176634d-19    ! [C]
+ REAL(wp_), PARAMETER :: me_    = 9.1093837139d-31    ! [kg]
+ REAL(wp_), PARAMETER :: mp_    = 1.67262192595d-27    ! [kg]
  REAL(wp_), PARAMETER :: rmpe_  = mp_/me_
  REAL(wp_), PARAMETER :: c_     = 2.997925d+08    ! [m/s]
  REAL(wp_), PARAMETER :: eps0_  = 8.854188d-12    ! [F/m]

@@ -186,7 +186,7 @@ subroutine constraint_eqn_001(args)
   !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
   use physics_variables, only: betaft, betanb, dene, ten, dnitot, tin, btot, beta
-  use constants, only: echarge,rmu0
+  use constants, only: electron_charge,rmu0
 
   implicit none
 
@@ -194,7 +194,7 @@ subroutine constraint_eqn_001(args)
   !! constraint derived type
 
     args%cc = 1.0D0 - (betaft + betanb + &
-      2.0D3*rmu0*echarge * (dene*ten + dnitot*tin)/btot**2 )/beta
+      2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
     args%con = beta * (1.0D0 - args%cc)
     args%err = beta * args%cc
     args%symbol = '='

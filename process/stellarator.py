@@ -24,7 +24,6 @@ from process.fortran import (
     constraint_variables,
     rebco_variables,
     maths_library,
-    physics_functions_module,
     neoclassics_module,
     impurity_radiation_module,
     sctfcoil_module,
@@ -869,7 +868,7 @@ class Stellarator:
 
         #  Scrape-off temperature in Joules
 
-        E = T_scrape * constants.echarge
+        E = T_scrape * constants.electron_charge
 
         #  Sound speed of particles (m/s)
 
@@ -3885,7 +3884,7 @@ class Stellarator:
             + physics_variables.betanb
             + 2.0e3
             * constants.rmu0
-            * constants.echarge
+            * constants.electron_charge
             * (
                 physics_variables.dene * physics_variables.ten
                 + physics_variables.dnitot * physics_variables.tin
@@ -3903,12 +3902,12 @@ class Stellarator:
 
         physics_module.rho_star = np.sqrt(
             2.0e0
-            * constants.mproton
+            * constants.proton_mass
             * physics_variables.aion
             * physics_module.total_plasma_internal_energy
             / (3.0e0 * physics_variables.vol * physics_variables.dnla)
         ) / (
-            constants.echarge
+            constants.electron_charge
             * physics_variables.bt
             * physics_variables.eps
             * physics_variables.rmajor
@@ -3934,30 +3933,13 @@ class Stellarator:
 
         #  Calculate fusion power
 
-        (
-            physics_variables.palppv,
-            physics_variables.pchargepv,
-            physics_variables.pneutpv,
-            sigvdt,
-            physics_variables.fusionrate,
-            physics_variables.alpharate,
-            physics_variables.protonrate,
-            pdtpv,
-            pdhe3pv,
-            pddpv,
-        ) = physics_functions_module.palph(
-            physics_variables.alphan,
-            physics_variables.alphat,
-            physics_variables.deni,
-            physics_variables.fdeut,
-            physics_variables.fhe3,
-            physics_variables.ftrit,
-            physics_variables.ti,
-        )
+        fusion_rate = physics_funcs.FusionReactionRate(self.plasma_profile)
+        fusion_rate.calculate_fusion_rates()
+        fusion_rate.set_physics_variables()
 
-        physics_variables.pdt = pdtpv * physics_variables.vol
-        physics_variables.pdhe3 = pdhe3pv * physics_variables.vol
-        physics_variables.pdd = pddpv * physics_variables.vol
+        physics_variables.pdt = physics_module.pdtpv * physics_variables.vol
+        physics_variables.pdhe3 = physics_module.pdhe3pv * physics_variables.vol
+        physics_variables.pdd = physics_module.pddpv * physics_variables.vol
 
         #  Calculate neutral beam slowing down effects
         #  If ignited, then ignore beam fusion effects
@@ -3969,7 +3951,7 @@ class Stellarator:
                 physics_variables.betanb,
                 physics_variables.dnbeam2,
                 physics_variables.palpnb,
-            ) = physics_functions_module.beamfus(
+            ) = physics_funcs.beamfus(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.bp,
@@ -3983,7 +3965,7 @@ class Stellarator:
                 physics_variables.fdeut,
                 physics_variables.ftrit,
                 current_drive_variables.ftritbm,
-                sigvdt,
+                physics_module.sigvdt,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.vol,
@@ -3993,44 +3975,46 @@ class Stellarator:
                 physics_variables.fusionrate
                 + 1.0e6
                 * physics_variables.palpnb
-                / (1.0e3 * physics_variables.ealphadt * constants.echarge)
+                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.vol
             )
             physics_variables.alpharate = (
                 physics_variables.alpharate
                 + 1.0e6
                 * physics_variables.palpnb
-                / (1.0e3 * physics_variables.ealphadt * constants.echarge)
+                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.vol
             )
 
         physics_variables.pdt = physics_variables.pdt + 5.0e0 * physics_variables.palpnb
 
         (
+            physics_variables.pneutpv,
             physics_variables.palpmw,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
             physics_variables.betaft,
+            physics_variables.palppv,
             physics_variables.palpipv,
             physics_variables.palpepv,
             physics_variables.pfuscmw,
             physics_variables.powfmw,
-        ) = physics_functions_module.palph2(
-            physics_variables.bt,
+        ) = physics_funcs.palph2(
             physics_variables.bp,
+            physics_variables.bt,
             physics_variables.dene,
             physics_variables.deni,
             physics_variables.dnitot,
             physics_variables.falpe,
             physics_variables.falpi,
             physics_variables.palpnb,
-            physics_variables.ifalphap,
             physics_variables.pchargepv,
             physics_variables.pneutpv,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.vol,
             physics_variables.palppv,
+            physics_variables.ifalphap,
         )
 
         #  Neutron wall load
@@ -4521,7 +4505,7 @@ class Stellarator:
             * impurity_radiation_module.coreradius
         )
         dmdt_neo_fuel = (
-            dndt_neo_fuel * physics_variables.afuel * constants.mproton * 1.0e6
+            dndt_neo_fuel * physics_variables.afuel * constants.proton_mass * 1.0e6
         )  # mg
         dmdt_neo_fuel_from_e = (
             4
@@ -4529,7 +4513,7 @@ class Stellarator:
             * physics_variables.sarea
             * impurity_radiation_module.coreradius
             * physics_variables.afuel
-            * constants.mproton
+            * constants.proton_mass
             * 1.0e6
         )  # kg
 
@@ -4612,7 +4596,7 @@ class Stellarator:
             (
                 3
                 * physics_variables.ne0
-                * constants.echarge
+                * constants.electron_charge
                 * physics_variables.te0
                 * 1e3
                 * physics_variables.alphat

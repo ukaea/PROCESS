@@ -204,7 +204,7 @@ contains
     !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    use constants, only: echarge, mproton, degrad, pi
+    use constants, only: electron_charge, proton_mass, degrad, pi
     implicit none
 
     !  Arguments
@@ -235,7 +235,7 @@ contains
 
        !  Electron charge / (proton mass * c**2)
 
-       eomc2 = echarge / (mproton*c2)
+       eomc2 = electron_charge / (proton_mass*c2)
 
        !  Degrees to radians
 
@@ -292,8 +292,8 @@ contains
        !  Transport beam radius (m)
 
        tbrad = ( (emitt**2 * sig0 * c2)/(sig**2 * bmax/1.5D0 * etai * &
-            sqrt(vi)) )**(0.333333D0) * sqrt(2.0D0 * aaion * mproton / &
-            (qion * echarge))
+            sqrt(vi)) )**(0.333333D0) * sqrt(2.0D0 * aaion * proton_mass / &
+            (qion * electron_charge))
 
        !  Extractor voltage (V)
 
@@ -318,7 +318,7 @@ contains
 
        !  Pulse length at injection (m)
 
-       lpi = taui * sqrt( 2.0D0 * qion * echarge * vi / (aaion * mproton) )
+       lpi = taui * sqrt( 2.0D0 * qion * electron_charge * vi / (aaion * proton_mass) )
 
        !  Initial voltage gradient (V/m)
 
@@ -349,8 +349,8 @@ contains
 
        !  Pulse length (m)
 
-       lpfo = taui * vi / vfo * sqrt( 2.0D0 * qion * echarge * vfo / &
-            (aaion * mproton) )
+       lpfo = taui * vi / vfo * sqrt( 2.0D0 * qion * electron_charge * vfo / &
+            (aaion * proton_mass) )
 
        !  Length of the low energy transport stage (m)
        !  (rearrangement of integral of PHI(V).dl)
@@ -360,7 +360,7 @@ contains
        !  End of Pulse Compression Stage:
        !  Pulse length = final pulse length (m)
 
-       lpf = tauf * sqrt( 2.0D0 * qion * echarge * vf / (aaion * mproton) )
+       lpf = tauf * sqrt( 2.0D0 * qion * electron_charge * vf / (aaion * proton_mass) )
        lppc = lpf
 
        !  Length of the pulse compression region (m)
@@ -459,7 +459,7 @@ contains
 
        lq = ( emitt * etai * sig0**2 * sqrt(c2*vi) / &
             (sig*(bmax/1.5D0)**2) )**(0.333333D0) * &
-            sqrt(2.0D0*aaion*mproton/(qion*echarge))
+            sqrt(2.0D0*aaion*proton_mass/(qion*electron_charge))
 
        write(*,*) '   lq = ',lq
 
@@ -636,7 +636,7 @@ contains
 
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      betgam = sqrt( 2.0D0*qion*echarge*v / (aaion*mproton*c2) )
+      betgam = sqrt( 2.0D0*qion*electron_charge*v / (aaion*proton_mass*c2) )
 
     end function betgam
 

@@ -21,6 +21,8 @@ from process.physics import (
     calculate_current_coefficient_hastie,
     vscalc,
     rether,
+    beta_poloidal,
+    res_diff_time,
 )
 from process.plasma_profiles import PlasmaProfile
 from process.current_drive import CurrentDrive
@@ -35,6 +37,18 @@ def physics():
     :rtype: process.physics.Physics
     """
     return Physics(PlasmaProfile(), CurrentDrive())
+
+
+def test_beta_poloidal():
+    """Test beta_poloidal()"""
+    betap = beta_poloidal(5.347, 0.852, 0.0307)
+    assert betap == pytest.approx(1.209, abs=0.001)
+
+
+def test_res_diff_time():
+    """Test res_diff_time()"""
+    res_time = res_diff_time(9.137, 2.909e-9, 1.65)
+    assert res_time == pytest.approx(4784.3, abs=0.1)
 
 
 def test_diamagnetic_fraction_hender():
