@@ -46,8 +46,10 @@ module constants
   !            https://pml.nist.gov/cgi-bin/cuu/Value?me|search_for=atomnuc!
   real(dp), parameter :: ELECTRON_MASS = 9.1093837139D-31
 
-  ! proton mass [kg]
-  real(dp), parameter :: mproton = 1.6726231D-27
+  ! Proton mass [kg]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mp|search_for=atomnuc!
+  real(dp), parameter :: PROTON_MASS = 1.67262192595D-27
 
   ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0

@@ -1935,14 +1935,14 @@ class CurrentDrive:
 
         xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
         sumln = zeffai * xlmbdai / xlmbda
-        xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.mproton * sumln) ** (
+        xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.PROTON_MASS * sumln) ** (
             2.0e0 / 3.0e0
         )
         ve = c * np.sqrt(2.0e0 * te / 511.0e0)
 
         ecritfi = (
             afast
-            * constants.mproton
+            * constants.PROTON_MASS
             * ve
             * ve
             * xlnrat

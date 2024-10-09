@@ -3902,7 +3902,7 @@ class Stellarator:
 
         physics_module.rho_star = np.sqrt(
             2.0e0
-            * constants.mproton
+            * constants.PROTON_MASS
             * physics_variables.aion
             * physics_module.total_plasma_internal_energy
             / (3.0e0 * physics_variables.vol * physics_variables.dnla)
@@ -4505,7 +4505,7 @@ class Stellarator:
             * impurity_radiation_module.coreradius
         )
         dmdt_neo_fuel = (
-            dndt_neo_fuel * physics_variables.afuel * constants.mproton * 1.0e6
+            dndt_neo_fuel * physics_variables.afuel * constants.PROTON_MASS * 1.0e6
         )  # mg
         dmdt_neo_fuel_from_e = (
             4
@@ -4513,7 +4513,7 @@ class Stellarator:
             * physics_variables.sarea
             * impurity_radiation_module.coreradius
             * physics_variables.afuel
-            * constants.mproton
+            * constants.PROTON_MASS
             * 1.0e6
         )  # kg
 
