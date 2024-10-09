@@ -40,25 +40,29 @@ nav:
       # - Versioning: development/versioning.md
   - Reference:
       - Physics Models:
-          - Plasma: 
-            - Overview: physics-models/plasma_overview.md
-            - Geometry: physics-models/plasma_geometry.md
-            - Profiles: 
-              - Overview: physics-models/profiles/plasma_profiles.md
-              - Density Profile: physics-models/profiles/plasma_density_profile.md
-              - Temperature Profile: physics-models/profiles/plasma_temperature_profile.md
-              - Profile Base Class: physics-models/profiles/plasma_profiles_abstract_class.md
-            - Fusion Reactions: 
-              - Overview: physics-models/fusion_reactions/plasma_reactions.md
-              - Bosch-Hale Methods: physics-models/fusion_reactions/plasma_bosch_hale.md
-            - Beta Limit: physics-models/plasma_beta.md
-            - Fast Alpha: physics-models/plasma_alpha.md
-            - Density Limit: physics-models/plasma_density.md
-            - Composition & Impurities: physics-models/plasma_radiation_impurities.md
-            - Radiation: physics-models/plasma_radiation_impurities.md
-            - Plasma Current: physics-models/plasma_current.md
-            - Confinement time: physics-models/plasma_confinement.md
-            - Plasma Core Power Balance: physics-models/plasma_power_balance.md
+          - Plasma:
+              - Overview: physics-models/plasma_overview.md
+              - Geometry: physics-models/plasma_geometry.md
+              - Profiles:
+                  - Overview: physics-models/profiles/plasma_profiles.md
+                  - Density Profile: physics-models/profiles/plasma_density_profile.md
+                  - Temperature Profile: physics-models/profiles/plasma_temperature_profile.md
+                  - Profile Base Class: physics-models/profiles/plasma_profiles_abstract_class.md
+              - Fusion Reactions: 
+                - Overview: physics-models/fusion_reactions/plasma_reactions.md
+                - Bosch-Hale Methods: physics-models/fusion_reactions/plasma_bosch_hale.md
+              - Beta Limit: physics-models/plasma_beta.md
+              - Fast Alpha: physics-models/plasma_alpha.md
+              - Density Limit: physics-models/plasma_density.md
+              - Composition, Impurities & Radiation: physics-models/plasma_radiation_impurities.md
+              - Plasma Current:
+                  - Overview: physics-models/plasma_current/plasma_current.md
+                  - Bootstrap Current: physics-models/plasma_current/bootstrap_current.md
+                  - Diamagnetic Current: physics-models/plasma_current/diamagnetic_current.md
+                  - Pfirsch-Schlüter Current: physics-models/plasma_current/pfirsch_schlüter_current_drive.md
+                  - Inductive Current: physics-models/plasma_current/inductive_plasma_current.md
+              - Confinement time: physics-models/plasma_confinement.md
+              - Plasma Core Power Balance: physics-models/plasma_power_balance.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md
       - Engineering Models:
           - Machine Build: eng-models/machine-build.md

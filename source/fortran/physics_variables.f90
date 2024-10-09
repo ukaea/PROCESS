@@ -163,10 +163,10 @@ module physics_variables
   real(dp) :: eps
   !! inverse aspect ratio
 
-  real(dp) :: faccd
+  real(dp) :: aux_current_fraction
   !! fraction of plasma current produced by auxiliary current drive
 
-  real(dp) :: facoh
+  real(dp) :: inductive_current_fraction
   !! fraction of plasma current produced inductively
 
   real(dp) :: falpe
@@ -203,7 +203,7 @@ module physics_variables
   !! helium-3 fuel fraction
 
   real(dp) :: figmer
-  !! physics figure of merit (= plascur*aspect**sbar, where `sbar=1`)
+  !! physics figure of merit (= plasma_current*aspect**sbar, where `sbar=1`)
 
   real(dp) :: fkzohm
   !! Zohm elongation scaling adjustment factor (`ishape=2, 3`)
@@ -242,7 +242,7 @@ module physics_variables
   real(dp) :: taumax
   !! Maximum allowed energy confinement time (s)
 
-  integer :: ibss
+  integer :: i_bootstrap_current
   !! switch for bootstrap current scaling
   !!
   !! - =1 ITER 1989 bootstrap scaling (high R/a only)
@@ -259,7 +259,7 @@ module physics_variables
   !! - =2 apply limit to thermal + neutral beam beta
   !! - =3 apply limit to toroidal beta
 
-  integer :: icurr
+  integer :: i_plasma_current
   !! switch for plasma current scaling to use
   !!
   !! - =1 Peng analytic fit
@@ -272,7 +272,7 @@ module physics_variables
   !! - =8 Sauter scaling allowing negative triangularity
   !! - =9 FIESTA ST fit
 
-  integer :: idia
+  integer :: i_diamagnetic_current
   !! switch for diamagnetic current scaling
   !!
   !! - =0 Do not calculate
@@ -319,7 +319,7 @@ module physics_variables
   !! - =0 use original parabolic profiles
   !! - =1 use pedestal profile
 
-  integer :: ips
+  integer :: i_pfirsch_schluter_current
   !! switch for Pfirsch-Schlüter current scaling (issue #413):
   !!
   !! - =0 Do not calculate
@@ -366,7 +366,7 @@ module physics_variables
   !! switch for current profile consistency:
   !!
   !! - =0 use input values for alphaj, rli, dnbeta
-  !! - =1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+  !! - =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
   !! - =2 use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling)
   !! - =3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
   !! - =4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
@@ -622,7 +622,7 @@ module physics_variables
   real(dp) :: piepv
   !! ion/electron equilibration power per volume (MW/m3)
 
-  real(dp) :: plascur
+  real(dp) :: plasma_current
   !! plasma current (A)
 
   real(dp) :: pneutmw
@@ -713,7 +713,7 @@ module physics_variables
 
   real(dp) :: q
   !! Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
-  !! (unless `icurr=2` (ST current scaling), in which case q = mean edge safety factor qbar)
+  !! (unless `i_plasma_current=2` (ST current scaling), in which case q = mean edge safety factor qbar)
 
   real(dp) :: q0
   !! safety factor on axis
@@ -925,8 +925,8 @@ module physics_variables
     dnz = 0.0D0
     epbetmax = 1.38D0
     eps = 0.34399724802D0
-    faccd = 0.0D0
-    facoh = 0.0D0
+    aux_current_fraction = 0.0D0
+    inductive_current_fraction = 0.0D0
     falpe = 0.0D0
     falpha = 0.95D0
     falpi = 0.0D0
@@ -949,17 +949,17 @@ module physics_variables
     hfac = 0.0D0
     hfact = 1.0D0
     taumax = 10.0D0
-    ibss = 3
+    i_bootstrap_current = 3
     iculbl = 0
-    icurr = 4
-    idia = 0
+    i_plasma_current = 4
+    i_diamagnetic_current = 0
     idensl = 7
     idivrt = 2
     ifalphap = 1
     ignite = 0
     iinvqd = 1
     ipedestal = 1
-    ips = 0
+    i_pfirsch_schluter_current = 0
     neped = 4.0D19
     nesep = 3.0D19
     alpha_crit = 0.0D0
@@ -1010,7 +1010,7 @@ module physics_variables
     phiint = 0.0D0
     photon_wall = 0.0D0
     piepv = 0.0D0
-    plascur = 0.0D0
+    plasma_current = 0.0D0
     pneutmw = 0.0D0
     pneutpv = 0.0D0
     pohmmw = 0.0D0

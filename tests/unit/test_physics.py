@@ -12,13 +12,13 @@ import numpy
 import pytest
 from process.physics import (
     Physics,
-    bpol,
+    calculate_poloidal_field,
     diamagnetic_fraction_scene,
     diamagnetic_fraction_hender,
     ps_fraction_scene,
-    plasc,
+    calculate_plasma_current_peng,
     culblm,
-    conhas,
+    calculate_current_coefficient_hastie,
     vscalc,
     rether,
     beta_poloidal,
@@ -81,9 +81,7 @@ class BootstrapFractionIter89Param(NamedTuple):
 
     bt: Any = None
 
-    cboot: Any = None
-
-    plascur: Any = None
+    plasma_current: Any = None
 
     q95: Any = None
 
@@ -103,8 +101,7 @@ class BootstrapFractionIter89Param(NamedTuple):
             aspect=3,
             beta=0.030000000000000006,
             bt=5.7802910787445487,
-            cboot=1,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             q95=3.5,
             q0=1,
             rmajor=8,
@@ -126,19 +123,20 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    bootipf = physics.bootstrap_fraction_iter89(
+    bootstrap_current_fraction = physics.bootstrap_fraction_iter89(
         aspect=bootstrapfractioniter89param.aspect,
         beta=bootstrapfractioniter89param.beta,
         bt=bootstrapfractioniter89param.bt,
-        cboot=bootstrapfractioniter89param.cboot,
-        plascur=bootstrapfractioniter89param.plascur,
+        plasma_current=bootstrapfractioniter89param.plasma_current,
         q95=bootstrapfractioniter89param.q95,
         q0=bootstrapfractioniter89param.q0,
         rmajor=bootstrapfractioniter89param.rmajor,
         vol=bootstrapfractioniter89param.vol,
     )
 
-    assert bootipf == pytest.approx(bootstrapfractioniter89param.expected_bootipf)
+    assert bootstrap_current_fraction == pytest.approx(
+        bootstrapfractioniter89param.expected_bootipf
+    )
 
 
 class BootstrapFractionNevinsParam(NamedTuple):
@@ -154,7 +152,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
 
     dene: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     q0: Any = None
 
@@ -166,7 +164,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
 
     rminor: Any = None
 
-    ten: Any = None
+    te: Any = None
 
     zeff: Any = None
 
@@ -183,13 +181,13 @@ class BootstrapFractionNevinsParam(NamedTuple):
             betat=0.03,
             bt=5.7,
             dene=18398455.678867526,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             q0=1,
             q95=3.5,
             alphat=1.45,
             rmajor=8,
             rminor=2.6666666666666665,
-            ten=12.626131115905864,
+            te=12.626131115905864,
             zeff=2.0909945616489103,
             expected_fibs=889258771342.7881,
         ),
@@ -218,12 +216,12 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
         betat=bootstrapfractionnevinsparam.betat,
         bt=bootstrapfractionnevinsparam.bt,
         dene=bootstrapfractionnevinsparam.dene,
-        plascur=bootstrapfractionnevinsparam.plascur,
+        plasma_current=bootstrapfractionnevinsparam.plasma_current,
         q0=bootstrapfractionnevinsparam.q0,
         q95=bootstrapfractionnevinsparam.q95,
         rmajor=bootstrapfractionnevinsparam.rmajor,
         rminor=bootstrapfractionnevinsparam.rminor,
-        ten=bootstrapfractionnevinsparam.ten,
+        te=bootstrapfractionnevinsparam.te,
         zeff=bootstrapfractionnevinsparam.zeff,
     )
 
@@ -241,7 +239,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
 
     q0: Any = None
 
-    qpsi: Any = None
+    q95: Any = None
 
     rmajor: Any = None
 
@@ -259,7 +257,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
             alphat=1.45,
             betpth=1.0874279209664601,
             q0=1,
-            qpsi=3.5,
+            q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             expected_bfw=0.42321339288758714,
@@ -270,7 +268,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
             alphat=1.45,
             betpth=0.99075943086768326,
             q0=1,
-            qpsi=3.5,
+            q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             expected_bfw=0.38559122143951252,
@@ -296,7 +294,7 @@ def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
         alphat=bootstrapfractionwilsonparam.alphat,
         betpth=bootstrapfractionwilsonparam.betpth,
         q0=bootstrapfractionwilsonparam.q0,
-        qpsi=bootstrapfractionwilsonparam.qpsi,
+        q95=bootstrapfractionwilsonparam.q95,
         rmajor=bootstrapfractionwilsonparam.rmajor,
         rminor=bootstrapfractionwilsonparam.rminor,
     )
@@ -325,7 +323,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     bt: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     xarea: Any = None
 
@@ -374,7 +372,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             zeff=2.5211399464385624,
             rhopedn=0.9400000000000001,
             bt=5.326133750416047,
-            plascur=16528278.760008096,
+            plasma_current=16528278.760008096,
             xarea=38.39822223637151,
             fhe3=0,
             teped=5.5,
@@ -436,7 +434,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(physics_variables, "bt", bootstrapfractionsauterparam.bt)
 
     monkeypatch.setattr(
-        physics_variables, "plascur", bootstrapfractionsauterparam.plascur
+        physics_variables, "plasma_current", bootstrapfractionsauterparam.plasma_current
     )
 
     monkeypatch.setattr(physics_variables, "xarea", bootstrapfractionsauterparam.xarea)
@@ -511,7 +509,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             alphat=1.45,
             eps=1 / 3,
             rli=1.2098126022585098,
-            expected_bfs=0.34204201506155418,
+            expected_bfs=0.3501274900057279,
         ),
         BootstrapFractionSakaiParam(
             betap=1.1701245502231756,
@@ -521,7 +519,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             alphat=1.3999999999999999,
             eps=1 / 1.8,
             rli=0.3,
-            expected_bfs=0.90349498124262029,
+            expected_bfs=0.81877746774625,
         ),
     ),
 )
@@ -566,12 +564,12 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     assert bfs == pytest.approx(bootstrapfractionsakaiparam.expected_bfs)
 
 
-class CulcurParam(NamedTuple):
+class PlasmaCurrentParam(NamedTuple):
     normalised_total_beta: Any = None
 
     beta: Any = None
 
-    icurr: Any = None
+    i_plasma_current: Any = None
 
     iprofile: Any = None
 
@@ -617,16 +615,16 @@ class CulcurParam(NamedTuple):
 
     expected_qstar: Any = None
 
-    expected_plascur: Any = None
+    expected_plasma_current: Any = None
 
 
 @pytest.mark.parametrize(
-    "culcurparam",
+    "plasmacurrentparam",
     (
-        CulcurParam(
+        PlasmaCurrentParam(
             normalised_total_beta=0,
             beta=0.030000000000000006,
-            icurr=4,
+            i_plasma_current=4,
             iprofile=1,
             alphaj=1,
             rli=0.90000000000000002,
@@ -648,13 +646,13 @@ class CulcurParam(NamedTuple):
             expected_alphaj=1.9008029008029004,
             expected_rli=1.2064840230894305,
             expected_bp=0.96008591022564971,
-            expected_qstar=2.9008029008029004,
-            expected_plascur=18398455.678867526,
+            expected_qstar=3.869423496255382,
+            expected_plasma_current=18398455.678867526,
         ),
-        CulcurParam(
+        PlasmaCurrentParam(
             normalised_total_beta=2.4784688886891844,
             beta=0.030000000000000006,
-            icurr=4,
+            i_plasma_current=4,
             iprofile=1,
             alphaj=1.9008029008029004,
             rli=1.2064840230894305,
@@ -676,60 +674,62 @@ class CulcurParam(NamedTuple):
             expected_alphaj=1.9008029008029004,
             expected_rli=1.2064840230894305,
             expected_bp=0.96008591022564971,
-            expected_qstar=2.9008029008029004,
-            expected_plascur=18398455.678867526,
+            expected_qstar=3.869423496255382,
+            expected_plasma_current=18398455.678867526,
         ),
     ),
 )
-def test_culcur(culcurparam, monkeypatch, physics):
+def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for culcur.
+    Automatically generated Regression Unit Test for calculate_plasma_current().
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
-    :param culcurparam: the data used to mock and assert in this test.
-    :type culcurparam: culcurparam
+    :param plasmacurrentparam: the data used to mock and assert in this test.
+    :type plasmacurrentparam: plasmacurrentparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
     monkeypatch.setattr(
-        physics_variables, "normalised_total_beta", culcurparam.normalised_total_beta
+        physics_variables,
+        "normalised_total_beta",
+        plasmacurrentparam.normalised_total_beta,
     )
 
-    monkeypatch.setattr(physics_variables, "beta", culcurparam.beta)
+    monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
 
-    _, _, bp, qstar, plascur = physics.culcur(
-        icurr=culcurparam.icurr,
-        iprofile=culcurparam.iprofile,
-        alphaj=culcurparam.alphaj,
-        rli=culcurparam.rli,
-        alphap=culcurparam.alphap,
-        bt=culcurparam.bt,
-        eps=culcurparam.eps,
-        kappa=culcurparam.kappa,
-        kappa95=culcurparam.kappa95,
-        p0=culcurparam.p0,
-        pperim=culcurparam.pperim,
-        q0=culcurparam.q0,
-        q95=culcurparam.q95,
-        rmajor=culcurparam.rmajor,
-        rminor=culcurparam.rminor,
-        sf=culcurparam.sf,
-        triang=culcurparam.triang,
-        triang95=culcurparam.triang95,
+    _, _, bp, qstar, plasma_current = physics.calculate_plasma_current(
+        i_plasma_current=plasmacurrentparam.i_plasma_current,
+        iprofile=plasmacurrentparam.iprofile,
+        alphaj=plasmacurrentparam.alphaj,
+        rli=plasmacurrentparam.rli,
+        alphap=plasmacurrentparam.alphap,
+        bt=plasmacurrentparam.bt,
+        eps=plasmacurrentparam.eps,
+        kappa=plasmacurrentparam.kappa,
+        kappa95=plasmacurrentparam.kappa95,
+        p0=plasmacurrentparam.p0,
+        pperim=plasmacurrentparam.pperim,
+        q0=plasmacurrentparam.q0,
+        q95=plasmacurrentparam.q95,
+        rmajor=plasmacurrentparam.rmajor,
+        rminor=plasmacurrentparam.rminor,
+        sf=plasmacurrentparam.sf,
+        triang=plasmacurrentparam.triang,
+        triang95=plasmacurrentparam.triang95,
     )
 
     assert physics_variables.normalised_total_beta == pytest.approx(
-        culcurparam.expected_normalised_total_beta
+        plasmacurrentparam.expected_normalised_total_beta
     )
 
-    assert bp == pytest.approx(culcurparam.expected_bp)
+    assert bp == pytest.approx(plasmacurrentparam.expected_bp)
 
-    assert qstar == pytest.approx(culcurparam.expected_qstar)
+    assert qstar == pytest.approx(plasmacurrentparam.expected_qstar)
 
-    assert plascur == pytest.approx(culcurparam.expected_plascur)
+    assert plasma_current == pytest.approx(plasmacurrentparam.expected_plasma_current)
 
 
 @pytest.mark.parametrize(
@@ -737,7 +737,7 @@ def test_culcur(culcurparam, monkeypatch, physics):
     (
         (
             {
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 2.7,
                 "eps": 0.37037037,
                 "rminor": 1.5,
@@ -745,11 +745,11 @@ def test_culcur(culcurparam, monkeypatch, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
             },
-            37.43306888647351,
+            46.84050744522757,
         ),
         (
             {
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 3.0,
                 "eps": 0.33333333,
                 "rminor": 1.5,
@@ -757,12 +757,12 @@ def test_culcur(culcurparam, monkeypatch, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
             },
-            31.893383344142052,
+            39.90862317467305,
         ),
     ),
 )
-def test_plasc(arguments, expected):
-    assert plasc(**arguments) == pytest.approx(expected)
+def test_calculate_plasma_current_peng(arguments, expected):
+    assert calculate_plasma_current_peng(**arguments) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -770,9 +770,9 @@ def test_plasc(arguments, expected):
     (
         (
             {
-                "icurr": 2,
+                "i_plasma_current": 2,
                 "ip": 1.6e7,
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 2.7,
                 "eps": 0.37037037,
                 "bt": 12,
@@ -781,13 +781,13 @@ def test_plasc(arguments, expected):
                 "perim": 24,
                 "rmu0": constants.rmu0,
             },
-            3.4726549397470703,
+            4.3453802853633166,
         ),
         (
             {
-                "icurr": 2,
+                "i_plasma_current": 2,
                 "ip": 1.6e7,
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 3.0,
                 "eps": 0.33333333,
                 "bt": 12,
@@ -796,13 +796,13 @@ def test_plasc(arguments, expected):
                 "perim": 24,
                 "rmu0": constants.rmu0,
             },
-            2.958739919272374,
+            3.702311392804667,
         ),
         (
             {
-                "icurr": 3,
+                "i_plasma_current": 3,
                 "ip": 1.6e7,
-                "qbar": 2.5,
+                "q95": 2.5,
                 "aspect": 3.0,
                 "eps": 0.33333333,
                 "bt": 12,
@@ -815,8 +815,8 @@ def test_plasc(arguments, expected):
         ),
     ),
 )
-def test_bpol(arguments, expected):
-    assert bpol(**arguments) == pytest.approx(expected)
+def test_calculate_poloidal_field(arguments, expected):
+    assert calculate_poloidal_field(**arguments) == pytest.approx(expected)
 
 
 def test_culblm():
@@ -824,9 +824,9 @@ def test_culblm():
 
 
 def test_conhas():
-    assert conhas(5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0) == pytest.approx(
-        2.518876726889116
-    )
+    assert calculate_current_coefficient_hastie(
+        5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0
+    ) == pytest.approx(2.518876726889116)
 
 
 class PlasmaCompositionParam(NamedTuple):
@@ -1392,13 +1392,13 @@ class VscalcParam(NamedTuple):
 
     eps: Any = None
 
-    facoh: Any = None
+    inductive_current_fraction: Any = None
 
     gamma: Any = None
 
     kappa: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     rli: Any = None
 
@@ -1429,10 +1429,10 @@ class VscalcParam(NamedTuple):
         VscalcParam(
             csawth=1,
             eps=0.33333333333333331,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             gamma=0.30000000000000004,
             kappa=1.8500000000000001,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             rli=1.2064840230894305,
             rmajor=8,
             rplas=3.7767895536275952e-09,
@@ -1448,10 +1448,10 @@ class VscalcParam(NamedTuple):
         VscalcParam(
             csawth=1,
             eps=0.33333333333333331,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             gamma=0.30000000000000004,
             kappa=1.8500000000000001,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             rli=1.2064840230894305,
             rmajor=8,
             rplas=3.7767895536275952e-09,
@@ -1479,10 +1479,10 @@ def test_vscalc(vscalcparam):
     phiint, rlp, vsbrn, vsind, vsres, vsstt = vscalc(
         csawth=vscalcparam.csawth,
         eps=vscalcparam.eps,
-        facoh=vscalcparam.facoh,
+        inductive_current_fraction=vscalcparam.inductive_current_fraction,
         gamma=vscalcparam.gamma,
         kappa=vscalcparam.kappa,
-        plascur=vscalcparam.plascur,
+        plasma_current=vscalcparam.plasma_current,
         rli=vscalcparam.rli,
         rmajor=vscalcparam.rmajor,
         rplas=vscalcparam.rplas,
@@ -1521,7 +1521,7 @@ class PhyauxParam(NamedTuple):
 
     alpharate: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     sbar: Any = None
 
@@ -1556,7 +1556,7 @@ class PhyauxParam(NamedTuple):
             dnalp=7.5e18,
             fusionrate=1.9852091609123786e17,
             alpharate=1.973996644759543e17,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             sbar=1,
             taueff=3.401323521525641,
             vol=1888.1711539956691,
@@ -1577,7 +1577,7 @@ class PhyauxParam(NamedTuple):
             dnalp=7.5e18,
             fusionrate=1.9843269653375773e17,
             alpharate=1.9731194318497056e17,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             sbar=1,
             taueff=3.402116961408892,
             vol=1888.1711539956691,
@@ -1615,7 +1615,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         dnalp=phyauxparam.dnalp,
         fusionrate=phyauxparam.fusionrate,
         alpharate=phyauxparam.alpharate,
-        plascur=phyauxparam.plascur,
+        plasma_current=phyauxparam.plasma_current,
         sbar=phyauxparam.sbar,
         taueff=phyauxparam.taueff,
         vol=phyauxparam.vol,
@@ -1647,11 +1647,11 @@ class PohmParam(NamedTuple):
 
     plasma_res_factor: Any = None
 
-    facoh: Any = None
+    inductive_current_fraction: Any = None
 
     kappa95: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     rmajor: Any = None
 
@@ -1678,9 +1678,9 @@ class PohmParam(NamedTuple):
         PohmParam(
             aspect=3,
             plasma_res_factor=0.70000000000000007,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             kappa95=1.6517857142857142,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             rmajor=8,
             rminor=2.6666666666666665,
             ten=12.626131115905864,
@@ -1713,9 +1713,9 @@ def test_pohm(pohmparam, monkeypatch, physics):
     )
 
     pohmpv, pohmmw, rpfac, rplas = physics.pohm(
-        facoh=pohmparam.facoh,
+        inductive_current_fraction=pohmparam.inductive_current_fraction,
         kappa95=pohmparam.kappa95,
-        plascur=pohmparam.plascur,
+        plasma_current=pohmparam.plasma_current,
         rmajor=pohmparam.rmajor,
         rminor=pohmparam.rminor,
         ten=pohmparam.ten,
@@ -1739,7 +1739,7 @@ class CuldlmParam(NamedTuple):
 
     pdivt: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     prn1: Any = None
 
@@ -1767,7 +1767,7 @@ class CuldlmParam(NamedTuple):
             idensl=7,
             bt=5.7000000000000002,
             pdivt=169.86588182297265,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             prn1=0.54903846872792261,
             q95=3.5,
             qcyl=2.9008029008029004,
@@ -1805,7 +1805,7 @@ def test_culdlm(culdlmparam, physics):
         idensl=culdlmparam.idensl,
         bt=culdlmparam.bt,
         pdivt=culdlmparam.pdivt,
-        plascur=culdlmparam.plascur,
+        plasma_current=culdlmparam.plasma_current,
         prn1=culdlmparam.prn1,
         q95=culdlmparam.q95,
         qcyl=culdlmparam.qcyl,
@@ -1865,7 +1865,7 @@ class PcondParam(NamedTuple):
 
     pinjmw: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     pcoreradpv: Any = None
 
@@ -1932,7 +1932,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -1976,7 +1976,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2020,7 +2020,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2064,7 +2064,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2108,7 +2108,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2152,7 +2152,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2196,7 +2196,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2240,7 +2240,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2284,7 +2284,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2328,7 +2328,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2372,7 +2372,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2416,7 +2416,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2460,7 +2460,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2504,7 +2504,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2548,7 +2548,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2592,7 +2592,7 @@ class PcondParam(NamedTuple):
             kappa95=1.6517857142857142,
             pchargemw=1.2453296074483358,
             pinjmw=75.397788712812741,
-            plascur=16616203.759182997,
+            plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
             q=3.5610139569387185,
             qstar=2.9513713188821282,
@@ -2657,7 +2657,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
         kappa95=pcondparam.kappa95,
         pchargemw=pcondparam.pchargemw,
         pinjmw=pcondparam.pinjmw,
-        plascur=pcondparam.plascur,
+        plasma_current=pcondparam.plasma_current,
         pcoreradpv=pcondparam.pcoreradpv,
         q=pcondparam.q,
         qstar=pcondparam.qstar,

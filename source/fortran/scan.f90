@@ -48,7 +48,7 @@ module scan_module
   !!         <LI> 9  te
   !!         <LI> 10 boundu(15: fvs)
   !!         <LI> 11 dnbeta
-  !!         <LI> 12 bscfmax (use negative values only)
+  !!         <LI> 12 bootstrap_current_fraction_max
   !!         <LI> 13 boundu(10: hfact)
   !!         <LI> 14 fiooic
   !!         <LI> 15 fjprot
@@ -182,7 +182,7 @@ contains
     use constraint_variables, only: taulimit
     use cost_variables, only: cdirt, coe, coeoam, coefuelt, c222, ireactor, &
       capcost, coecap, c221
-    use current_drive_variables, only: pheat, pinjmw, bootipf, enbeam, bigq
+    use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, enbeam, bigq
     use divertor_variables, only: hldiv
     use error_handling, only: errors_on
     use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
@@ -197,7 +197,7 @@ contains
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, pradmw, dene, powfmw, btot, tesep, &
       pdivt, ralpne, ten, betap, hfac, teped, palpnb, qlim, rmajor, wallmw, &
-      beta, betalim, bt, plascur
+      beta, betalim, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
     implicit none
@@ -223,7 +223,7 @@ contains
     outvar( 9,iscan) = cdirt / 1.0D3
     outvar(10,iscan) = rmajor
     outvar(11,iscan) = aspect
-    outvar(12,iscan) = 1.0D-6 * plascur
+    outvar(12,iscan) = 1.0D-6 * plasma_current
     outvar(13,iscan) = bt
     outvar(14,iscan) = btot
     outvar(15,iscan) = q
@@ -243,7 +243,7 @@ contains
     outvar(29,iscan) = pheat
     outvar(30,iscan) = pinjmw - pheat
     outvar(31,iscan) = bigq
-    outvar(32,iscan) = bootipf
+    outvar(32,iscan) = bootstrap_current_fraction
     outvar(33,iscan) = enbeam/1.0D3
     outvar(34,iscan) = hldiv
     outvar(35,iscan) = tfcmw
@@ -597,7 +597,7 @@ contains
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
         gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
-	use current_drive_variables, only: bscfmax, etaech
+	use current_drive_variables, only: bootstrap_current_fraction_max, etaech
 	use divertor_variables, only: hldivlim
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
@@ -658,8 +658,8 @@ contains
             dnbeta = swp(iscn)
             vlab = 'dnbeta' ; xlab = 'Beta_coefficient'
         case (12)
-            bscfmax = swp(iscn)
-            vlab = 'bscfmax' ; xlab = 'Bootstrap_fraction'
+            bootstrap_current_fraction_max = swp(iscn)
+            vlab = 'bootstrap_current_fraction_max' ; xlab = 'Bootstrap_fraction'
         case (13)
             boundu(10) = swp(iscn)
             vlab = 'boundu(10)' ; xlab = 'H_factor_upper_bound'

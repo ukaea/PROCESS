@@ -258,7 +258,7 @@ contains
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
       startupratio, tmain, u_unplanned_cp, supercond_cost_model
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
-      ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bscfmax, &
+      ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bootstrap_current_fraction_max, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
       etalh, frbeam, harnum, xi_ebw, wave_mode
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
@@ -308,12 +308,12 @@ contains
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
-      ifalphap, tauee_in, alphaj, alphat, icurr, q, ti, tesep, rli, triang, &
+      ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
-      teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, ibss, &
+      teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
-      idia, ips, m_s_limit, burnup_in
+      i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
 
@@ -620,20 +620,20 @@ contains
        case ('taumax')
           call parse_real_variable('taumax', taumax, 0.1D0, 100.0D0, &
                'Maximum allowed energy confinement time (s)')
-       case ('ibss')
-          call parse_int_variable('ibss', ibss, 1, 5, &
+       case ('i_bootstrap_current')
+          call parse_int_variable('i_bootstrap_current', i_bootstrap_current, 1, 5, &
                'Switch for bootstrap scaling')
        case ('iculbl')
           call parse_int_variable('iculbl', iculbl, 0, 3, &
                'Switch for beta limit scaling')
-       case ('icurr')
-          call parse_int_variable('icurr', icurr, 1, 9, &
+       case ('i_plasma_current')
+          call parse_int_variable('i_plasma_current', i_plasma_current, 1, 9, &
                'Switch for plasma current scaling')
        case ('idensl')
           call parse_int_variable('idensl', idensl, 1, 7, &
                'Switch for enforced density limit')
-       case ('idia')
-          call parse_int_variable('idia', idia, 0, 2, &
+       case ('i_diamagnetic_current')
+          call parse_int_variable('i_diamagnetic_current', i_diamagnetic_current, 0, 2, &
                 'Switch for diamagnetic scaling')
        case ('ifalphap')
           call parse_int_variable('ifalphap', ifalphap, 0, 1, &
@@ -654,8 +654,8 @@ contains
        case ('iprofile')
           call parse_int_variable('iprofile', iprofile, 0, 6, &
                'Switch for current profile consistency')
-       case ('ips')
-          call parse_int_variable('ips', ips, 0, 1, &
+       case ('i_pfirsch_schluter_current')
+          call parse_int_variable('i_pfirsch_schluter_current', i_pfirsch_schluter_current, 0, 1, &
                'Switch for Pfirsch-Schlüter scaling')
        case ('iradloss')
           call parse_int_variable('iradloss', iradloss, 0, 2, &
@@ -1040,8 +1040,8 @@ contains
           call parse_real_variable('beamwd', beamwd, 0.001D0, 5.0D0, &
                'Beam width (m)')
 
-       case ('bscfmax')
-          call parse_real_variable('bscfmax', bscfmax, -0.999D0, 0.999D0, &
+       case ('bootstrap_current_fraction_max')
+          call parse_real_variable('bootstrap_current_fraction_max', bootstrap_current_fraction_max, -0.999D0, 0.999D0, &
                '(-fixed)/maximum Bootstrap fraction')
        case ('cboot')
           call parse_real_variable('cboot', cboot, 0.0D0, 10.0D0, &

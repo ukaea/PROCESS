@@ -85,7 +85,7 @@ class ProcessTracker:
 
     tracking_variables = {
         "pheat",
-        "bootipf",
+        "bootstrap_current_fraction",
         "pinjmw",
         "shldith",
         "fwith",
@@ -120,7 +120,7 @@ class ProcessTracker:
         "q95",
         "te",
         "beta",
-        "facoh",
+        "inductive_current_fraction",
         "zeff",
         "bt",
         "hfact",
@@ -133,7 +133,7 @@ class ProcessTracker:
         "dene",
         "pradmw",
         "ne0",
-        "faccd",
+        "aux_current_fraction",
         "dnz",
         "taueff",
         "te0",

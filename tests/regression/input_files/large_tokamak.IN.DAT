@@ -372,13 +372,13 @@ fkzohm = 1.02
 gamma = 0.3
 
 * Switch for bootstrap current scaling
-ibss = 4
+i_bootstrap_current = 4
 
 * Switch for beta limit scaling
 iculbl = 1
 
 * Switch for plasma current scaling
-icurr    = 4
+i_plasma_current = 4
 
 * Switch for density limit to enforce
 idensl = 7
@@ -453,7 +453,7 @@ tramp = 500.0
 *---------------*
 
 * Maximum fraction of plasma current from bootstrap
-bscfmax = 0.95
+bootstrap_current_fraction_max = 0.95
 
 * Switch for current drive efficiency model
 iefrf = 10

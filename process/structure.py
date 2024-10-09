@@ -47,7 +47,7 @@ class Structure:
             stv.coldmass,
             stv.gsmass,
         ) = self.structure(
-            pv.plascur,
+            pv.plasma_current,
             pv.rmajor,
             pv.rminor,
             pv.kappa,

@@ -92,9 +92,9 @@ class CudrivParam(NamedTuple):
 
     bigq: Any = None
 
-    bootipf: Any = None
+    bootstrap_current_fraction: Any = None
 
-    bscfmax: Any = None
+    bootstrap_current_fraction_max: Any = None
 
     taubeam: Any = None
 
@@ -108,11 +108,11 @@ class CudrivParam(NamedTuple):
 
     rtanmax: Any = None
 
-    diaipf: Any = None
+    diamagnetic_current_fraction: Any = None
 
-    psipf: Any = None
+    ps_current_fraction: Any = None
 
-    plasipf: Any = None
+    plasma_current_internal_fraction: Any = None
 
     harnum: Any = None
 
@@ -158,11 +158,11 @@ class CudrivParam(NamedTuple):
 
     tbeta: Any = None
 
-    plascur: Any = None
+    plasma_current: Any = None
 
     ipedestal: Any = None
 
-    faccd: Any = None
+    aux_current_fraction: Any = None
 
     ignite: Any = None
 
@@ -170,7 +170,7 @@ class CudrivParam(NamedTuple):
 
     powfmw: Any = None
 
-    facoh: Any = None
+    inductive_current_fraction: Any = None
 
     fvsbrnni: Any = None
 
@@ -238,17 +238,17 @@ class CudrivParam(NamedTuple):
             pinjemw=0,
             pinjimw=0,
             bigq=0,
-            bootipf=0.27635918746616817,
-            bscfmax=0.95000000000000007,
+            bootstrap_current_fraction=0.27635918746616817,
+            bootstrap_current_fraction_max=0.95000000000000007,
             taubeam=0,
             pinjalw=200,
             nbshield=0.5,
             frbeam=1.05,
             rtanbeam=0,
             rtanmax=0,
-            diaipf=0,
-            psipf=0,
-            plasipf=0.27635918746616817,
+            diamagnetic_current_fraction=0,
+            ps_current_fraction=0,
+            plasma_current_internal_fraction=0.27635918746616817,
             harnum=1,
             xi_ebw=0.80000000000000004,
             dene=7.5e19,
@@ -271,13 +271,13 @@ class CudrivParam(NamedTuple):
             bt=5.7000000000000002,
             rminor=2.6666666666666665,
             tbeta=2,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             ipedestal=1,
-            faccd=0.12364081253383186,
+            aux_current_fraction=0.12364081253383186,
             ignite=0,
             pohmmw=0,
             powfmw=0,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             fvsbrnni=0.40000000000000002,
             startupratio=1,
             iprint=0,
@@ -328,17 +328,17 @@ class CudrivParam(NamedTuple):
             pinjemw=120.49600019005746,
             pinjimw=0,
             bigq=0,
-            bootipf=0.27635918746616817,
-            bscfmax=0.95000000000000007,
+            bootstrap_current_fraction=0.27635918746616817,
+            bootstrap_current_fraction_max=0.95000000000000007,
             taubeam=0,
             pinjalw=200,
             nbshield=0.5,
             frbeam=1.05,
             rtanbeam=8.4000000000000004,
             rtanmax=13.179564451855533,
-            diaipf=0,
-            psipf=0,
-            plasipf=0.27635918746616817,
+            diamagnetic_current_fraction=0,
+            ps_current_fraction=0,
+            plasma_current_internal_fraction=0.27635918746616817,
             harnum=1,
             xi_ebw=0.80000000000000004,
             dene=7.5e19,
@@ -361,13 +361,13 @@ class CudrivParam(NamedTuple):
             bt=5.7000000000000002,
             rminor=2.6666666666666665,
             tbeta=2,
-            plascur=18398455.678867526,
+            plasma_current=18398455.678867526,
             ipedestal=1,
-            faccd=0.12364081253383186,
+            aux_current_fraction=0.12364081253383186,
             ignite=0,
             pohmmw=0.76707314489379119,
             powfmw=1051.6562748933977,
-            facoh=0.59999999999999998,
+            inductive_current_fraction=0.59999999999999998,
             fvsbrnni=0.40000000000000002,
             startupratio=1,
             iprint=0,
@@ -469,9 +469,17 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "bigq", cudrivparam.bigq)
 
-    monkeypatch.setattr(current_drive_variables, "bootipf", cudrivparam.bootipf)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "bootstrap_current_fraction",
+        cudrivparam.bootstrap_current_fraction,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "bscfmax", cudrivparam.bscfmax)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "bootstrap_current_fraction_max",
+        cudrivparam.bootstrap_current_fraction_max,
+    )
 
     monkeypatch.setattr(current_drive_variables, "taubeam", cudrivparam.taubeam)
 
@@ -485,11 +493,21 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "rtanmax", cudrivparam.rtanmax)
 
-    monkeypatch.setattr(current_drive_variables, "diaipf", cudrivparam.diaipf)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "diamagnetic_current_fraction",
+        cudrivparam.diamagnetic_current_fraction,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "psipf", cudrivparam.psipf)
+    monkeypatch.setattr(
+        current_drive_variables, "ps_current_fraction", cudrivparam.ps_current_fraction
+    )
 
-    monkeypatch.setattr(current_drive_variables, "plasipf", cudrivparam.plasipf)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "plasma_current_internal_fraction",
+        cudrivparam.plasma_current_internal_fraction,
+    )
 
     monkeypatch.setattr(current_drive_variables, "harnum", cudrivparam.harnum)
 
@@ -535,11 +553,13 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "tbeta", cudrivparam.tbeta)
 
-    monkeypatch.setattr(physics_variables, "plascur", cudrivparam.plascur)
+    monkeypatch.setattr(physics_variables, "plasma_current", cudrivparam.plasma_current)
 
     monkeypatch.setattr(physics_variables, "ipedestal", cudrivparam.ipedestal)
 
-    monkeypatch.setattr(physics_variables, "faccd", cudrivparam.faccd)
+    monkeypatch.setattr(
+        physics_variables, "aux_current_fraction", cudrivparam.aux_current_fraction
+    )
 
     monkeypatch.setattr(physics_variables, "ignite", cudrivparam.ignite)
 
@@ -547,7 +567,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "powfmw", cudrivparam.powfmw)
 
-    monkeypatch.setattr(physics_variables, "facoh", cudrivparam.facoh)
+    monkeypatch.setattr(
+        physics_variables,
+        "inductive_current_fraction",
+        cudrivparam.inductive_current_fraction,
+    )
 
     monkeypatch.setattr(physics_variables, "fvsbrnni", cudrivparam.fvsbrnni)
 

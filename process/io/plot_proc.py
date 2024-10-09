@@ -2404,7 +2404,7 @@ def plot_physics_info(axis, mfile_data, scan):
     data = [
         ("powfmw", "Fusion power", "MW"),
         ("bigq", "$Q_{p}$", ""),
-        ("plascur/1d6", "$I_p$", "MA"),
+        ("plasma_current_MA", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
         ("normalised_thermal_beta", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
@@ -2746,9 +2746,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
                 "effcd",
@@ -2776,9 +2776,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("gamnb", "NB gamma", "$10^{20}$ A W$^{-1}$ m$^{-2}$"),
             ("enbeam", "NB energy", "keV"),
             ("powerht", "Plasma heating used for H factor", "MW"),
@@ -2802,9 +2802,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
@@ -2831,9 +2831,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
@@ -2860,9 +2860,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
