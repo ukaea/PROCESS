@@ -328,8 +328,8 @@
  Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (sarea)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
- Plasma_current_scaling_law_used_________________________________________ (icurr)_______________________              4    
- Plasma_current_(MA)_____________________________________________________ (plascur/1D6)_________________      1.6521E+01    
+ Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
+ Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6521E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      2.0295E+00    
  Plasma_internal_inductance,_li__________________________________________ (rli)_________________________      1.2402E+00    
  Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.4379E-01    
@@ -513,7 +513,7 @@
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -2.9744E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2290E-01    
  Diamagnetic_fraction_(enforced)_________________________________________ (diaipf.)_____________________      0.0000E+00    
- Pfirsch-Schlueter_fraction_(enforced)___________________________________ (psipf.)______________________      0.0000E+00    
+ Pfirsch-Schlueter_fraction_(enforced)___________________________________ (ps_current_fraction.)______________________      0.0000E+00    
  Loop_voltage_during_burn_(V)____________________________________________ (vburn)_______________________      3.6762E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (rplas)_______________________      3.9470E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0839E+03 OP 
@@ -530,7 +530,7 @@
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      4.7098E+00    
- Maximum_Allowed_Bootstrap_current_fraction______________________________ (bscfmax)_____________________      9.5000E-01    
+ Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.0141E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      2.2041E+05 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.6799E-02 OP 
@@ -539,10 +539,10 @@
  ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2290E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
- Pfirsch-Schlueter_fraction______________________________________________ (psipf)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (faccd)_______________________      1.3342E-02    
- Inductive_fraction______________________________________________________ (facoh)_______________________      5.6376E-01    
- Total___________________________________________________________________ (plasipf+faccd+facoh)_________      1.0000E+00    
+ Pfirsch-Schlueter_fraction______________________________________________ (ps_current_fraction)_______________________      0.0000E+00    
+ Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      1.3342E-02    
+ Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.6376E-01    
+ Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.3624E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      7.9710E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      2.0000E+02    
@@ -1563,13 +1563,13 @@ fkzohm = 1.02
 gamma = 0.3
 
 * Switch for bootstrap current scaling
-ibss = 4
+i_bootstrap_current = 4
 
 * Switch for beta limit scaling
 iculbl = 1
 
 * Switch for plasma current scaling
-icurr    = 4
+i_plasma_current    = 4
 
 * Switch for density limit to enforce
 idensl = 7
@@ -1644,7 +1644,7 @@ tramp = 500.0
 *---------------*
 
 * Maximum fraction of plasma current from bootstrap
-bscfmax = 0.95
+bootstrap_current_fraction_max = 0.95
 
 * Switch for current drive efficiency model
 iefrf = 10

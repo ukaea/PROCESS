@@ -377,7 +377,7 @@ $$
 \mathtt{pperim} = 2.0 \times (\mathtt{xo} \times \mathtt{thetao} + \mathtt{xi} \times \mathtt{thetai})
 $$
 
-The shaping factor for `icurr=1` is also claculated here:
+The shaping factor for `i_plasma_current = 1` is also calculated here:
 $$
 \mathtt{sf} = \frac{\mathtt{pperim}}{
     2.0\pi  a}

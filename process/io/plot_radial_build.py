@@ -160,7 +160,7 @@ def main(args=None):
         "te",
         "boundu(15)",
         "dnbeta",
-        "bscfmax",
+        "bootstrap_current_fraction_max",
         "boundu(10)",
         "fiooic",
         "fjprot",

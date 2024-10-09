@@ -233,8 +233,8 @@ class PlasmaGeom:
         )
         physics_variables.sareao = xso
 
-        # icurr = 8 specifies use of the Sauter geometry as well as plasma current.
-        if physics_variables.icurr == 8:
+        # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma current.
+        if physics_variables.i_plasma_current == 8:
             (
                 physics_variables.pperim,
                 physics_variables.sf,

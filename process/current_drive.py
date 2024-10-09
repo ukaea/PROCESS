@@ -41,7 +41,7 @@ class CurrentDrive:
         pinjemwfix = 0.0
         pinjimwfix = 0.0
         auxiliary_cdfix = 0.0
-        faccdfix = 0.0
+        aux_current_fraction_fix = 0.0
         gamcdfix = 0.0e0
 
         # To stop issues with input file we force
@@ -284,7 +284,9 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                faccdfix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = (
+                    auxiliary_cdfix / physics_variables.plasma_current
+                )
             elif current_drive_variables.iefrffix in [3, 7, 10, 12, 13]:
                 # Injected power
                 pinjemwfix = current_drive_variables.pinjfixmw
@@ -306,7 +308,9 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                faccdfix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = (
+                    auxiliary_cdfix / physics_variables.plasma_current
+                )
             elif current_drive_variables.iefrffix in [5, 8]:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
@@ -353,7 +357,9 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                faccdfix = auxiliary_cdfix / physics_variables.plascur
+                aux_current_fraction_fix = (
+                    auxiliary_cdfix / physics_variables.plasma_current
+                )
 
             # Fenstermacher Lower Hybrid model
             if current_drive_variables.iefrf == 1:
@@ -553,15 +559,21 @@ class CurrentDrive:
                 )
 
             # Compute current drive wall plug and injected powers (MW) and efficiencies
-            auxiliary_cd = physics_variables.faccd * physics_variables.plascur
+            auxiliary_cd = (
+                physics_variables.aux_current_fraction
+                * physics_variables.plasma_current
+            )
 
             # LHCD or ICCD
             if current_drive_variables.iefrf in [1, 2, 4, 6]:
                 # Injected power
                 current_drive_variables.plhybd = (
                     1.0e-6
-                    * (physics_variables.faccd - faccdfix)
-                    * physics_variables.plascur
+                    * (
+                        physics_variables.aux_current_fraction
+                        - aux_current_fraction_fix
+                    )
+                    * physics_variables.plasma_current
                     / effrfss
                     + current_drive_variables.pheat
                 )
@@ -585,8 +597,11 @@ class CurrentDrive:
                 # Injected power (set to close to close the Steady-state current equilibrium)
                 current_drive_variables.echpwr = (
                     1.0e-6
-                    * (physics_variables.faccd - faccdfix)
-                    * physics_variables.plascur
+                    * (
+                        physics_variables.aux_current_fraction
+                        - aux_current_fraction_fix
+                    )
+                    * physics_variables.plasma_current
                     / effrfss
                     + current_drive_variables.pheat
                 )
@@ -604,8 +619,11 @@ class CurrentDrive:
                 # MDK. See Gitlab issue #248, and scanned note.
                 power1 = (
                     1.0e-6
-                    * (physics_variables.faccd - faccdfix)
-                    * physics_variables.plascur
+                    * (
+                        physics_variables.aux_current_fraction
+                        - aux_current_fraction_fix
+                    )
+                    * physics_variables.plasma_current
                     / effnbss
                     + current_drive_variables.pheat
                 )
@@ -766,7 +784,7 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
-        if abs(physics_variables.facoh) > 1.0e-8:
+        if abs(physics_variables.inductive_current_fraction) > 1.0e-8:
             po.ocmmnt(self.outfile, "Current is driven by both inductive")
             po.ocmmnt(self.outfile, "and non-inductive means.")
 
@@ -793,8 +811,8 @@ class CurrentDrive:
         po.ovarre(
             self.outfile,
             "Maximum Allowed Bootstrap current fraction",
-            "(bscfmax)",
-            current_drive_variables.bscfmax,
+            "(bootstrap_current_fraction_max)",
+            current_drive_variables.bootstrap_current_fraction_max,
         )
         if current_drive_variables.iefrffix != 0:
             po.ovarre(
@@ -909,52 +927,52 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Bootstrap fraction",
-            "(bootipf)",
-            current_drive_variables.bootipf,
+            "(bootstrap_current_fraction)",
+            current_drive_variables.bootstrap_current_fraction,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Diamagnetic fraction",
-            "(diaipf)",
-            current_drive_variables.diaipf,
+            "(diamagnetic_current_fraction)",
+            current_drive_variables.diamagnetic_current_fraction,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Pfirsch-Schlueter fraction",
-            "(psipf)",
-            current_drive_variables.psipf,
+            "(ps_current_fraction)",
+            current_drive_variables.ps_current_fraction,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Auxiliary current drive fraction",
-            "(faccd)",
-            physics_variables.faccd,
+            "(aux_current_fraction)",
+            physics_variables.aux_current_fraction,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Inductive fraction",
-            "(facoh)",
-            physics_variables.facoh,
+            "(inductive_current_fraction)",
+            physics_variables.inductive_current_fraction,
             "OP ",
         )
         # Add total error check.
         po.ovarrf(
             self.outfile,
             "Total",
-            "(plasipf+faccd+facoh)",
-            current_drive_variables.plasipf
-            + physics_variables.faccd
-            + physics_variables.facoh,
+            "(plasma_current_internal_fraction+aux_current_fraction+inductive_current_fraction)",
+            current_drive_variables.plasma_current_internal_fraction
+            + physics_variables.aux_current_fraction
+            + physics_variables.inductive_current_fraction,
         )
         if (
             abs(
-                current_drive_variables.plasipf
-                + physics_variables.faccd
-                + physics_variables.facoh
+                current_drive_variables.plasma_current_internal_fraction
+                + physics_variables.aux_current_fraction
+                + physics_variables.inductive_current_fraction
                 - 1.0e0
             )
             > 1.0e-8
@@ -970,7 +988,10 @@ class CurrentDrive:
         )
 
         if (
-            abs(current_drive_variables.bootipf - current_drive_variables.bscfmax)
+            abs(
+                current_drive_variables.bootstrap_current_fraction
+                - current_drive_variables.bootstrap_current_fraction_max
+            )
             < 1.0e-8
         ):
             po.ocmmnt(self.outfile, "Warning : bootstrap current fraction is at")

@@ -1042,15 +1042,15 @@ Scalings}\label{bootstrap-diamagnetic-and-pfirsch-schluxfcter-current-scalings}
 The fraction of the plasma current provided by the so-called bootstrap
 effect can be either input into the code directly, or calculated using
 one of four methods, as summarised here. Note that methods
-\texttt{ibss\ =\ 1-3} use fits to parabolic density and temperature
+\texttt{i_bootstrap_current\ =\ 1-3} use fits to parabolic density and temperature
 profiles, and do not take into account the existence of pedestals
 (\texttt{ipedestal\ =\ 1}), whereas the Sauter et al. scaling
-(\texttt{ibss\ =\ 4}) allows general profiles to be used.
+(\texttt{i_bootstrap_current\ =\ 4}) allows general profiles to be used.
 
 \begin{longtable}[]{@{}cl@{}}
 \toprule
 \begin{minipage}[b]{0.05\columnwidth}\centering\strut
-\texttt{ibss}\strut
+\texttt{i_bootstrap_current}\strut
 \end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedright\strut
 Description\strut
 \end{minipage}\tabularnewline
@@ -1060,7 +1060,7 @@ Description\strut
 1\strut
 \end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedright\strut
 ITER scaling -- To use the ITER scaling method for the bootstrap current
-fraction. Set \texttt{bscfmax} to the maximum required bootstrap current
+fraction. Set \texttt{bootstrap_current_fraction_max} to the maximum required bootstrap current
 fraction (\(\leq 1\)). This method is valid at high aspect ratio
 only.\strut
 \end{minipage}\tabularnewline
@@ -1068,7 +1068,7 @@ only.\strut
 2\strut
 \end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedright\strut
 General scaling\footnotemark{} -- To use a more general scaling method,
-set \texttt{bscfmax} to the maximum required bootstrap current fraction
+set \texttt{bootstrap_current_fraction_max} to the maximum required bootstrap current fraction
 (\(\leq 1\)).\strut
 \end{minipage}
 \footnotetext{W.M. Nevins, `Summary Report: ITER Specialists' Meeting on
@@ -1078,7 +1078,7 @@ set \texttt{bscfmax} to the maximum required bootstrap current fraction
 3\strut
 \end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedright\strut
 Numerically fitted scaling\footnotemark{} -- To use a numerically fitted
-scaling method, valid for all aspect ratios, set \texttt{bscfmax} to the
+scaling method, valid for all aspect ratios, set \texttt{bootstrap_current_fraction_max} to the
 maximum required bootstrap current fraction (\(\leq 1\)).\strut
 \end{minipage}
 \footnotetext{H.R. Wilson, Nuclear Fusion \textbf{32} (1992) 257}\tabularnewline
@@ -1086,7 +1086,7 @@ maximum required bootstrap current fraction (\(\leq 1\)).\strut
 4\strut
 \end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedright\strut
 Sauter, Angioni and Lin-Liu scaling\footnotemark{} \footnotemark{} --
-Set \texttt{bscfmax} to the maximum required bootstrap current fraction
+Set \texttt{bootstrap_current_fraction_max} to the maximum required bootstrap current fraction
 (\(\leq 1\)).\strut
 \end{minipage}
 \addtocounter{footnote}{-1}
@@ -1099,7 +1099,7 @@ Set \texttt{bscfmax} to the maximum required bootstrap current fraction
 \end{longtable}
 
 !!! Note ``Fixed Bootstrap Current'' Direct input -- To input the
-bootstrap current fraction directly, set \texttt{bscfmax} to \((-1)\)
+bootstrap current fraction directly, set \texttt{bootstrap_current_fraction_max} to \((-1)\)
 times the required value (e.g. -0.73 sets the bootstrap faction to
 0.73).
 
@@ -2547,7 +2547,7 @@ Overfull \hbox (3.56793pt too wide) in paragraph at lines 1038--1043
 \T1/lmr/m/n/10 (-20) tion.
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1038--1043
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1038--1043
 \T1/lmr/m/n/10 (-20) max-
@@ -2619,7 +2619,7 @@ Overfull \hbox (19.63986pt too wide) in paragraph at lines 1046--1050
 \T1/lmr/m/n/10 (-20) method,
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1046--1050
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1046--1050
 \T1/lmr/m/n/10 (-20) max-
@@ -2679,7 +2679,7 @@ Overfull \hbox (2.53915pt too wide) in paragraph at lines 1056--1060
 \T1/lmr/m/n/10 (-20) tios,
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1056--1060
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1056--1060
 \T1/lmr/m/n/10 (-20) max-
@@ -2727,7 +2727,7 @@ Overfull \hbox (7.44649pt too wide) in paragraph at lines 1064--1068
 \T1/lmr/m/n/10 (-20) ing[][][]
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1064--1068
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1064--1068
 \T1/lmr/m/n/10 (-20) max-
@@ -4677,7 +4677,7 @@ Overfull \hbox (3.56793pt too wide) in paragraph at lines 1038--1043
 \T1/lmr/m/n/10 (-20) tion.
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1038--1043
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1038--1043
 \T1/lmr/m/n/10 (-20) max-
@@ -4749,7 +4749,7 @@ Overfull \hbox (19.63986pt too wide) in paragraph at lines 1046--1050
 \T1/lmr/m/n/10 (-20) method,
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1046--1050
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1046--1050
 \T1/lmr/m/n/10 (-20) max-
@@ -4809,7 +4809,7 @@ Overfull \hbox (2.53915pt too wide) in paragraph at lines 1056--1060
 \T1/lmr/m/n/10 (-20) tios,
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1056--1060
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1056--1060
 \T1/lmr/m/n/10 (-20) max-
@@ -4857,7 +4857,7 @@ Overfull \hbox (7.44649pt too wide) in paragraph at lines 1064--1068
 \T1/lmr/m/n/10 (-20) ing[][][]
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1064--1068
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1064--1068
 \T1/lmr/m/n/10 (-20) max-
@@ -6789,7 +6789,7 @@ Overfull \hbox (3.56793pt too wide) in paragraph at lines 1038--1043
 \T1/lmr/m/n/10 (-20) tion.
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1038--1043
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1038--1043
 \T1/lmr/m/n/10 (-20) max-
@@ -6861,7 +6861,7 @@ Overfull \hbox (19.63986pt too wide) in paragraph at lines 1046--1050
 \T1/lmr/m/n/10 (-20) method,
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1046--1050
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1046--1050
 \T1/lmr/m/n/10 (-20) max-
@@ -6921,7 +6921,7 @@ Overfull \hbox (2.53915pt too wide) in paragraph at lines 1056--1060
 \T1/lmr/m/n/10 (-20) tios,
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1056--1060
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1056--1060
 \T1/lmr/m/n/10 (-20) max-
@@ -6969,7 +6969,7 @@ Overfull \hbox (7.44649pt too wide) in paragraph at lines 1064--1068
 \T1/lmr/m/n/10 (-20) ing[][][]
 
 Overfull \hbox (22.65782pt too wide) in paragraph at lines 1064--1068
-\T1/lmtt/m/n/10 bscfmax
+\T1/lmtt/m/n/10 bootstrap_current_fraction_max
 
 Overfull \hbox (5.74335pt too wide) in paragraph at lines 1064--1068
 \T1/lmr/m/n/10 (-20) max-

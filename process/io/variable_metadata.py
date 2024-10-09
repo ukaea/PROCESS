@@ -161,7 +161,7 @@ var_dicts = {
     "f_tf_steel": VariableMetadata(
         latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units=""
     ),
-    "plascur/1d6": VariableMetadata(
+    "plasma_current_MA": VariableMetadata(
         latex=r"$I_{\mathrm{p}}$[$MA$]", description="Plasma current", units="MA"
     ),
     "n_cycle": VariableMetadata(
@@ -230,13 +230,13 @@ var_dicts = {
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
     "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
-    "faccd": VariableMetadata(
+    "aux_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
     ),
-    "facoh": VariableMetadata(
+    "inductive_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{CD,ind}}$", description="Inductive CD factor", units=""
     ),
-    "bootipf": VariableMetadata(
+    "bootstrap_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units=""
     ),
     "pdivt": VariableMetadata(

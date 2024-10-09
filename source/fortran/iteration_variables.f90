@@ -3936,7 +3936,7 @@ contains
     use maths_library, only: variable_error
     use error_handling, only: idiags, fdiags, report_error
     use numerics, only: nvar, xcm, ixc, name_xc, lablxc, scafc, scale
-    use physics_variables, only: icurr
+    use physics_variables, only: i_plasma_current
     use global_variables, only: vlabel
     implicit none
 
@@ -4133,8 +4133,8 @@ contains
         ! Simple list of iteration variable names
         name_xc(i) = lablxc(ixc(i))
         ! Note that iteration variable 18 has more than one name:
-        if ((ixc(i) == 18).and.(icurr /= 2)) name_xc(i) = 'q95'
-        if ((ixc(i) == 18).and.(icurr == 2)) name_xc(i) = 'qbar'
+        if ((ixc(i) == 18).and.(i_plasma_current /= 2)) name_xc(i) = 'q95'
+        if ((ixc(i) == 18).and.(i_plasma_current == 2)) name_xc(i) = 'qbar'
 
 
          ! MDK Check if sweep variable is also an iteration variable

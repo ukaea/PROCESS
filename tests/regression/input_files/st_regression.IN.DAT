@@ -2929,17 +2929,17 @@ etaech = 0.45
 * Bootstrap Current *
 *-------------------*
 
-bscfmax = 0.9
+bootstrap_current_fraction_max = 0.9
 * DESCRIPTION:   Maximum Fraction of Plasma Current from Bootstrap
 * JUSTIFICATION: upper limit set for plasma stability
 *                
 
-ibss = 4
+i_bootstrap_current = 4
 * DESCRIPTION:   Switch for Bootstrap Current Scaling (4: Sauter scaling)
 * JUSTIFICATION: Wilson model was previously used for STs
 
 *cboot = 
-* DESCRIPTION:   Bootstrap current fraction multiplier (ibss=1)
+* DESCRIPTION:   Bootstrap current fraction multiplier (i_bootstrap_current=1)
 * JUSTIFICATION: Not used, not scaling bootstrap current
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2959,16 +2959,16 @@ ibss = 4
 * DESCRIPTION:   Non-inductive volt-sec burn fraction, fraction of the plasma current produced by non-inductive means
 * JUSTIFICATION: Not scaling plasma current induction. default = 1.0
 
-icurr = 9
+i_plasma_current = 9
 * DESCRIPTION:   Switch for Plasma Current Scaling to Use (9: Fit from FIESTA (ST))
 * JUSTIFICATION: Fit derived from FIESTA for FNSF-like Plasmas
 * REFERENCE:     Muldrew et al. (2020), Fus. Eng. & Des., 154, 111530
 
-idia = 2
+i_diamagnetic_current = 2
 * DESCRIPTION:   Switch for Diamagnetic Current Scaling (2: SCENE Fit)
 * JUSTIFICATION: 
 
-ips = 1 
+i_pfirsch_schluter_current = 1 
 * DESCRIPTION:   Switch for Pfirsch-Schlüter Current Scaling (1: SCENE Fit)
 * JUSTIFICATION: 
 
@@ -2977,7 +2977,7 @@ ips = 1
 iprofile = 0
 * DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli dnbeta)
 * =0 use input values for alphaj, rli, dnbeta (but see gtscale option)
-* =1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+* =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
 * JUSTIFICATION: These consistency equations don't hold for STs
 * REFERENCE:     
 
