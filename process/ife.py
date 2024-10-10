@@ -1,4 +1,11 @@
-from process.fortran import ife_module as ife, ife_variables, constants, process_output
+import numpy as np
+from process.fortran import (
+    ife_module as ife,
+    ife_variables,
+    constants,
+    process_output,
+    build_variables,
+)
 
 MATERIALS = [
     "void",
@@ -139,7 +146,7 @@ class IFE:
         """
         match ife_variables.ifetyp:
             case 1:
-                ife.osibld()
+                self.osibld()
             case 2:
                 ife.sombld()
             case 3:
@@ -270,6 +277,28 @@ class IFE:
 
         for i in range(len(MATERIALS)):
             process_output.write(self.outfile, material_row_gen(i))
+
+    def osibld(self):
+        """Routine to create the build of an inertial fusion energy
+        device, based on the design of the OSIRIS study,
+        and to calculate the material volumes for the device core
+        author: P J Knight, CCFE, Culham Science Centre
+        None
+        This routine constructs the build of an inertial fusion energy
+        device, based on the design of the OSIRIS study, and to calculate
+        the material volumes for the device core.
+        """
+
+        # Careful choice of thicknesses, and assuming that the FLiBe
+        # inlet radius is small, allows the generic build calculation
+        # to be roughly applicable.
+        ife.genbld()
+
+        # First wall area: no true first wall at bottom of chamber
+        build_variables.fwarea = (
+            2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl1)
+            + np.pi * ife_variables.r1 * ife_variables.r1
+        )
 
 
 def _material_string_generator(chmatv, fwmatv, v1matv, blmatv, v2matv, shmatv, v3matv):
