@@ -75,7 +75,7 @@ class FusionReactionRate:
     def __init__(self, plasma_profile):
         self.plasma_profile = plasma_profile
         self.sigvdt = 0.0
-        self.pdhe3pv = 0.0
+        self.dhe3_power_density = 0.0
         self.dd_power_density = 0.0
         self.dt_power_density = 0.0
         self.alpha_power_density = 0.0
@@ -165,7 +165,7 @@ class FusionReactionRate:
         frate = fusion_power_density / etot  # reactions/m3/second
         arate = frate
         prate = frate  # proton production /m3/second
-        self.pdhe3pv = fusion_power_density
+        self.dhe3_power_density = fusion_power_density
         self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
 
     def dd1(self):
@@ -264,7 +264,7 @@ class FusionReactionRate:
         physics_variables.proton_rate_density = self.proton_rate_density
         physics_module.sigvdt = self.sigvdt
         physics_module.dt_power_density = self.dt_power_density
-        physics_module.pdhe3pv = self.pdhe3pv
+        physics_module.dhe3_power_density = self.dhe3_power_density
         physics_module.dd_power_density = self.dd_power_density
 
 
