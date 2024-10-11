@@ -1807,7 +1807,7 @@ class Physics:
         fusion_reactions.set_physics_variables()
 
         #
-        physics_variables.pdt = physics_module.dt_power_density * physics_variables.vol
+        physics_variables.dt_power = physics_module.dt_power_density * physics_variables.vol
         physics_variables.pdhe3 = physics_module.dhe3_power_density * physics_variables.vol
         physics_variables.pdd = physics_module.dd_power_density * physics_variables.vol
 
@@ -1856,7 +1856,7 @@ class Physics:
                 / physics_variables.vol
             )
 
-        physics_variables.pdt = physics_variables.pdt + 5.0e0 * physics_variables.palpnb
+        physics_variables.dt_power = physics_variables.dt_power + 5.0e0 * physics_variables.palpnb
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -3908,8 +3908,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             " =    D-T fusion power (MW)",
-            "(pdt)",
-            physics_variables.pdt,
+            "(dt_power)",
+            physics_variables.dt_power,
             "OP ",
         )
         po.ovarre(

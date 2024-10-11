@@ -601,8 +601,8 @@ module physics_variables
   real(dp) :: pdivmax
   !! power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)
 
-  real(dp) :: pdt
-  !! deuterium-tritium fusion power (MW)
+  real(dp) :: dt_power
+  !!  Total deuterium-tritium fusion power [MW]
 
   real(dp) :: pouterzoneradmw
   !! radiation power from outer zone (MW)
@@ -1003,7 +1003,7 @@ module physics_variables
     pdivl = 0.0D0
     pdivu = 0.0D0
     pdivmax = 0.0D0
-    pdt = 0.0D0
+    dt_power = 0.0D0
     pouterzoneradmw = 0.0D0
     pedgeradpv = 0.0D0
     pfuscmw = 0.0D0
