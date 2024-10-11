@@ -224,28 +224,37 @@ class FusionReactionRate:
         self.dd_power_density = self.dd_power_density + fusion_power_density
         self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
 
-    def sum_fusion_rates(self, pa, pc, pn, frate, arate, prate):
+    def sum_fusion_rates(
+        self,
+        alpha_power_add: float,
+        charged_power_add: float,
+        neutron_power_add: float,
+        fusion_rate_add: float,
+        alpha_rate_add: float,
+        proton_rate_add: float,
+    ) -> None:
         """Sum the fusion rate at the end of each reaction.
 
-        :param pa: alpha_power_density  alpha particle fusion power per volume [MW/m3]
-        :type pa: float
-        :param pc: charged_power_density other charged particle fusion power/volume (MW/m3)
-        :type pc: float
-        :param pn: neutron_power_density neutron fusion power per volume (MW/m3)
-        :type pn: float
-        :param frate: fusion_rate_density fusion reaction rate (reactions/m3/s)
-        :type frate: float
-        :param arate:  alpha_rate_density alpha particle production rate (/m3/s)
-        :type arate: float
-        :param prate: proton_rate_density proton production rate (/m3/s)
-        :type prate: float
+        This method updates the cumulative fusion power densities and reaction rates
+        for alpha particles, charged particles, neutrons, and protons.
+
+        Parameters:
+            alpha_power_add (float): Alpha particle fusion power per unit volume [MW/m3].
+            charged_power_add (float): Other charged particle fusion power per unit volume [MW/m3].
+            neutron_power_add (float): Neutron fusion power per unit volume [MW/m3].
+            fusion_rate_add (float): Fusion reaction rate per unit volume [reactions/m3/s].
+            alpha_rate_add (float): Alpha particle production rate per unit volume [/m3/s].
+            proton_rate_add (float): Proton production rate per unit volume [/m3/s].
+
+        Returns:
+            None
         """
-        self.alpha_power_density = self.alpha_power_density + pa
-        self.charged_power_density = self.charged_power_density + pc
-        self.neutron_power_density = self.neutron_power_density + pn
-        self.fusion_rate_density = self.fusion_rate_density + frate
-        self.alpha_rate_density = self.alpha_rate_density + arate
-        self.proton_rate_density = self.proton_rate_density + prate
+        self.alpha_power_density += alpha_power_add
+        self.charged_power_density += charged_power_add
+        self.neutron_power_density += neutron_power_add
+        self.fusion_rate_density += fusion_rate_add
+        self.alpha_rate_density += alpha_rate_add
+        self.proton_rate_density += proton_rate_add
 
     def calculate_fusion_rates(self):
         """Initiate all the fusion rate calculations."""
