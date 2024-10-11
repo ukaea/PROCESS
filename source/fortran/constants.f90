@@ -112,6 +112,29 @@ module constants
   ! Multiply by the speed of light squared to get the energy released
   real(dp), parameter :: dd_triton_energy = (((deuteron_mass+deuteron_mass)-(triton_mass+proton_mass))*speed_light**2)
 
+  ! Deuterium - Tritium reaction energy fraction carried by neutron
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
+  ! Roughly 79.867% of the energy is carried by the neutron
+  real(dp), parameter :: dt_neutron_energy_fraction = (alpha_mass/(neutron_mass+alpha_mass))
+
+  ! Deuterium - Deuterium (3He producing) reaction energy fraction carried by neutron
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
+  ! Roughly 74.935% of the energy is carried by the neutron
+  real(dp), parameter :: dd_neutron_energy_fraction = (helion_mass/(neutron_mass+helion_mass))
+
+  ! Deuterium - Deuterium (Triton producing) reaction energy fraction carried by proton
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
+  ! Roughly 74.960% of the energy is carried by the proton
+  real(dp), parameter :: dd_proton_energy_fraction = (triton_mass/(proton_mass+triton_mass))
+
+  ! Deuterium - Helion (3He) reaction energy fraction carried by proton
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
+  ! Roughly 74.957% of the energy is carried by the proton
+  real(dp), parameter :: dhelium_proton_energy_fraction = (helion_mass/(proton_mass+helion_mass))
 
   ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0
