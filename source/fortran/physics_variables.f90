@@ -655,8 +655,8 @@ module physics_variables
   real(dp) :: pradsolmw
   !! radiation power from SoL (MW)
 
-  real(dp) :: protonrate
-  !! proton production rate (particles/m3/sec)
+  real(dp) :: proton_rate_density
+  !! Proton production rate [particles/m3/sec]
 
   real(dp) :: psolradmw
   !! SOL radiation power (MW) (`stellarator only`)
@@ -1021,7 +1021,7 @@ module physics_variables
     pradmw = 0.0D0
     pradpv = 0.0D0
     pradsolmw = 0.0D0
-    protonrate = 0.0D0
+    proton_rate_density = 0.0D0
     psolradmw = 0.0D0
     psyncpv = 0.0D0
     ilhthresh = 19

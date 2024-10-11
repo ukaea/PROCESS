@@ -886,7 +886,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     te: Any = None
 
-    protonrate: Any = None
+    proton_rate_density: Any = None
 
     fdeut: Any = None
 
@@ -1021,7 +1021,7 @@ class PlasmaCompositionParam(NamedTuple):
             abeam=0,
             dlamie=0,
             te=12,
-            protonrate=0,
+            proton_rate_density=0,
             fdeut=0.5,
             alphan=1,
             dnbeam=0,
@@ -1143,7 +1143,7 @@ class PlasmaCompositionParam(NamedTuple):
             abeam=2.0000010000000001,
             dlamie=17.810652035055568,
             te=12,
-            protonrate=540072280299564.38,
+            proton_rate_density=540072280299564.38,
             fdeut=0.5,
             alphan=1,
             dnbeam=0,
@@ -1285,7 +1285,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "te", plasmacompositionparam.te)
 
     monkeypatch.setattr(
-        physics_variables, "protonrate", plasmacompositionparam.protonrate
+        physics_variables, "proton_rate_density", plasmacompositionparam.proton_rate_density
     )
 
     monkeypatch.setattr(physics_variables, "fdeut", plasmacompositionparam.fdeut)

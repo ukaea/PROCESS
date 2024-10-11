@@ -83,7 +83,7 @@ class FusionReactionRate:
         self.neutron_power_density = 0.0
         self.fusion_rate_density = 0.0
         self.alpha_rate_density = 0.0
-        self.protonrate = 0.0
+        self.proton_rate_density = 0.0
 
     def deuterium_branching(self, ion_temperature: float) -> float:
         """
@@ -237,7 +237,7 @@ class FusionReactionRate:
         :type frate: float
         :param arate:  alpha_rate_density alpha particle production rate (/m3/s)
         :type arate: float
-        :param prate: protonrate proton production rate (/m3/s)
+        :param prate: proton_rate_density proton production rate (/m3/s)
         :type prate: float
         """
         self.alpha_power_density = self.alpha_power_density + pa
@@ -245,7 +245,7 @@ class FusionReactionRate:
         self.neutron_power_density = self.neutron_power_density + pn
         self.fusion_rate_density = self.fusion_rate_density + frate
         self.alpha_rate_density = self.alpha_rate_density + arate
-        self.protonrate = self.protonrate + prate
+        self.proton_rate_density = self.proton_rate_density + prate
 
     def calculate_fusion_rates(self):
         """Initiate all the fusion rate calculations."""
@@ -261,7 +261,7 @@ class FusionReactionRate:
         physics_variables.neutron_power_density = self.neutron_power_density
         physics_variables.fusion_rate_density = self.fusion_rate_density
         physics_variables.alpha_rate_density = self.alpha_rate_density
-        physics_variables.protonrate = self.protonrate
+        physics_variables.proton_rate_density = self.proton_rate_density
         physics_module.sigvdt = self.sigvdt
         physics_module.pdtpv = self.pdtpv
         physics_module.pdhe3pv = self.pdhe3pv

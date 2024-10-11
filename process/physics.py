@@ -2450,7 +2450,7 @@ class Physics:
             physics_variables.dnprot = max(
                 physics_variables.protium * physics_variables.dene,
                 physics_variables.dnalp
-                * physics_variables.protonrate
+                * physics_variables.proton_rate_density
                 / physics_variables.alpha_rate_density,
             )
 
