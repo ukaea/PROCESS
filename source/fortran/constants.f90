@@ -133,8 +133,8 @@ module constants
   ! Deuterium - Helion (3He) reaction energy fraction carried by proton
   ! Assuming centre of mass frame as the momenta of the fusion products exceed 
   ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
-  ! Roughly 74.957% of the energy is carried by the proton
-  real(dp), parameter :: dhelium_proton_energy_fraction = (helion_mass/(proton_mass+helion_mass))
+  ! Roughly 79.889% of the energy is carried by the proton
+  real(dp), parameter :: dhelium_proton_energy_fraction = (alpha_mass/(proton_mass+alpha_mass))
 
   ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0

@@ -148,7 +148,7 @@ class FusionReactionRate:
         self.sigmav_dt_average = sigmav
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = 17.59 * constants.electron_charge
+        reaction_energy = constants.d_t_energy / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
@@ -159,9 +159,10 @@ class FusionReactionRate:
         )
 
         # Power densities for different particles [MW/m^3]
-        alpha_power_density = 0.2 * fusion_power_density
+        # Alpha particle gets approximately 20% of the fusion power
+        alpha_power_density = (1.0-constants.dt_neutron_energy_fraction) * fusion_power_density
         charged_power_density = 0.0
-        neutron_power_density = 0.8 * fusion_power_density
+        neutron_power_density = (constants.dt_neutron_energy_fraction * fusion_power_density)
 
         # Calculate the fusion rate density [reactions/m^3/second]
         fusion_rate_density = fusion_power_density / reaction_energy
@@ -212,7 +213,7 @@ class FusionReactionRate:
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = 18.35 * constants.electron_charge
+        reaction_energy = constants.d_helium_energy / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
@@ -223,8 +224,9 @@ class FusionReactionRate:
         )
 
         # Power densities for different particles [MW/m^3]
-        alpha_power_density = 0.2 * fusion_power_density
-        charged_power_density = 0.8 * fusion_power_density
+        # Alpha particle gets approximately 20% of the fusion power
+        alpha_power_density = (1.0-constants.dhelium_proton_energy_fraction) * fusion_power_density
+        charged_power_density = constants.dhelium_proton_energy_fraction * fusion_power_density
         neutron_power_density = 0.0
 
         # Calculate the fusion rate density [reactions/m^3/second]
@@ -277,7 +279,7 @@ class FusionReactionRate:
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = 3.27 * constants.electron_charge
+        reaction_energy = constants.dd_helium_energy / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
@@ -289,9 +291,10 @@ class FusionReactionRate:
         )
 
         # Power densities for different particles [MW/m^3]
+        # Neutron particle gets approximately 75% of the fusion power
         alpha_power_density = 0.0
-        charged_power_density = 0.25 * fusion_power_density
-        neutron_power_density = 0.75 * fusion_power_density
+        charged_power_density = (1.0-constants.dd_neutron_energy_fraction) * fusion_power_density
+        neutron_power_density = constants.dd_neutron_energy_fraction * fusion_power_density
 
         # Calculate the fusion rate density [reactions/m^3/second]
         fusion_rate_density = fusion_power_density / reaction_energy
@@ -343,7 +346,7 @@ class FusionReactionRate:
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = 4.03 * constants.electron_charge
+        reaction_energy = constants.dd_triton_energy / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
