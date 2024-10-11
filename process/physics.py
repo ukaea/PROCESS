@@ -1848,8 +1848,8 @@ class Physics:
                 / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.vol
             )
-            physics_variables.alpharate = (
-                physics_variables.alpharate
+            physics_variables.alpha_rate_density = (
+                physics_variables.alpha_rate_density
                 + 1.0e6
                 * physics_variables.palpnb
                 / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
@@ -2117,7 +2117,7 @@ class Physics:
             physics_variables.dene,
             physics_variables.deni,
             physics_variables.fusion_rate_density,
-            physics_variables.alpharate,
+            physics_variables.alpha_rate_density,
             physics_variables.plasma_current,
             sbar,
             physics_variables.dnalp,
@@ -2441,7 +2441,7 @@ class Physics:
         # production rates are evaluated later in the calling sequence
         # Issue #557 Allow protium impurity to be specified: 'protium'
         # This will override the calculated value which is a minimum.
-        if physics_variables.alpharate < 1.0e-6:  # not calculated yet...
+        if physics_variables.alpha_rate_density < 1.0e-6:  # not calculated yet...
             physics_variables.dnprot = max(
                 physics_variables.protium * physics_variables.dene,
                 physics_variables.dnalp * (physics_variables.fhe3 + 1.0e-3),
@@ -2451,7 +2451,7 @@ class Physics:
                 physics_variables.protium * physics_variables.dene,
                 physics_variables.dnalp
                 * physics_variables.protonrate
-                / physics_variables.alpharate,
+                / physics_variables.alpha_rate_density,
             )
 
         # Beam hot ion component
@@ -2638,7 +2638,7 @@ class Physics:
         dene,
         deni,
         fusion_rate_density,
-        alpharate,
+        alpha_rate_density,
         plasma_current,
         sbar,
         dnalp,
@@ -2652,7 +2652,7 @@ class Physics:
         deni   : input real :  fuel ion density (/m3)
         dnalp  : input real :  alpha ash density (/m3)
         fusion_rate_density : input real :  fusion reaction rate (/m3/s)
-        alpharate  : input real :  alpha particle production rate (/m3/s)
+        alpha_rate_density  : input real :  alpha particle production rate (/m3/s)
         plasma_current: input real :  plasma current (A)
         sbar   : input real :  exponent for aspect ratio (normally 1)
         taueff : input real :  global energy confinement time (s)
@@ -2679,8 +2679,8 @@ class Physics:
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
 
-        if alpharate != 0.0:
-            taup = dnalp / alpharate
+        if alpha_rate_density != 0.0:
+            taup = dnalp / alpha_rate_density
         else:  # only likely if DD is only active fusion reaction
             taup = 0.0
 

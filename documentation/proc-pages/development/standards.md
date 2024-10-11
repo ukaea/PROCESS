@@ -138,7 +138,7 @@ real(kind(1.0D0)) :: alphan = 0.25D0
 real(kind(1.0D0)) :: alphap = 0.0D0
 !! Pressure profile index
 
-real(kind(1.0D0)) :: alpharate = 0.0D0
+real(kind(1.0D0)) :: alpha_rate_density = 0.0D0
 !! Alpha particle production rate (particles/m3/sec)
 ```
 

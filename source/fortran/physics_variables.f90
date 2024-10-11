@@ -35,8 +35,8 @@ module physics_variables
   real(dp) :: alphap
   !! pressure profile index
 
-  real(dp) :: alpharate
-  !! alpha particle production rate (particles/m3/sec)
+  real(dp) :: alpha_rate_density
+  !! Alpha particle production rate per unit volume [particles/m3/sec]
 
   real(dp) :: alphat
   !! temperature profile index
@@ -886,7 +886,7 @@ module physics_variables
     alphaj = 1.0D0
     alphan = 0.25D0
     alphap = 0.0D0
-    alpharate = 0.0D0
+    alpha_rate_density = 0.0D0
     alphat = 0.5D0
     aspect = 2.907D0
     beamfus0 = 1.0D0
