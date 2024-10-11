@@ -3,6 +3,7 @@ import numpy
 from scipy import integrate
 from dataclasses import dataclass
 from process.fortran import physics_variables, physics_module, constants
+from process.plasma_profiles import PlasmaProfile
 import process.impurity_radiation as impurity
 
 
@@ -116,7 +117,7 @@ class FusionReactionRate:
         """D + T --> 4He + n reaction"""
         dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
         sigmav = integrate.simpson(
-            fint(self.plasma_profile, dt),
+            fusion_rate_integral(self.plasma_profile, dt),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
@@ -144,7 +145,7 @@ class FusionReactionRate:
         """D + 3He --> 4He + p reaction"""
         dhe3 = BoschHaleConstants(**REACTION_CONSTANTS_DHE3)
         sigmav = integrate.simpson(
-            fint(self.plasma_profile, dhe3),
+            fusion_rate_integral(self.plasma_profile, dhe3),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
@@ -171,7 +172,7 @@ class FusionReactionRate:
         """D + D --> 3He + n reaction"""
         dd1 = BoschHaleConstants(**REACTION_CONSTANTS_DD1)
         sigmav = integrate.simpson(
-            fint(self.plasma_profile, dd1),
+            fusion_rate_integral(self.plasma_profile, dd1),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
@@ -199,7 +200,7 @@ class FusionReactionRate:
         """D + D --> T + p reaction"""
         dd2 = BoschHaleConstants(**REACTION_CONSTANTS_DD2)
         sigmav = integrate.simpson(
-            fint(self.plasma_profile, dd2),
+            fusion_rate_integral(self.plasma_profile, dd2),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
@@ -379,47 +380,6 @@ def psync_albajar_fidone():
     return psyncpv
 
 
-def fint(plasma_profile, reactionconstants):
-    """This function evaluates the integrand for the fusion power
-    integration.
-    Authors:
-        P J Knight, CCFE, Culham Science Centre
-        G Turkington (UKAEA)
-    References:
-
-    :param plasma_profile: Parameterised temperature and density profiles
-    :type plasma_profile: PlasmaProfile
-    :param reactionconstants: BoschHale reaction constants
-    :type reactionconstants: DataClass
-    :return: fint Integrand for the fusion power
-    :rtype: numpy.array
-    """
-
-    # Since the electron temperature profile is only calculated directly, we scale the ion temperature
-    # profile by the ratio of the volume averaged ion to electron temperature
-    ion_temperature_profile = (
-        physics_variables.ti / physics_variables.te * plasma_profile.teprofile.profile_y
-    )
-
-    sigv = numpy.zeros(
-        plasma_profile.teprofile.profile_size,
-    )
-
-    # Number of fusion reactions per unit volume per particle volume density (m3/s)
-    sigv = bosch_hale_reactivity(ion_temperature_profile, reactionconstants)
-
-    # Integrand for the volume averaged fusion reaction rate sigmav:
-    # sigmav = integral(2 rho (sigv(rho) ni(rho)^2) drho),
-    # divided by the square of the volume-averaged ion density
-    # to retain the dimensions m3/s (thbosch_haleis is multiplied back in later)
-
-    nprof = 1.0 / physics_variables.dene * plasma_profile.neprofile.profile_y
-    nprofsq = nprof * nprof
-    fint = 2.0 * plasma_profile.teprofile.profile_x * sigv * nprofsq
-
-    return fint
-
-
 @dataclass
 class BoschHaleConstants:
     """DataClass which holds the constants required for the Bosch Hale calculation
@@ -435,6 +395,47 @@ class BoschHaleConstants:
     cc5: float
     cc6: float
     cc7: float
+
+
+def fusion_rate_integral(plasma_profile: PlasmaProfile, reaction_constants: BoschHaleConstants) -> numpy.ndarray:
+    """
+    Evaluate the integrand for the fusion power integration.
+
+    Parameters:
+        plasma_profile (PlasmaProfile): Parameterised temperature and density profiles.
+        reactionconstants (BoschHaleConstants): Bosch-Hale reaction constants.
+
+    Returns:
+        numpy.ndarray: Integrand for the fusion power.
+
+    References:
+        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
+          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+    """
+
+    # Since the electron temperature profile is only calculated directly, we scale the ion temperature
+    # profile by the ratio of the volume averaged ion to electron temperature
+    ion_temperature_profile = (
+        (physics_variables.ti / physics_variables.te) * plasma_profile.teprofile.profile_y
+    )
+
+    # Number of fusion reactions per unit volume per particle volume density (m^3/s)
+    sigv = bosch_hale_reactivity(ion_temperature_profile, reaction_constants)
+
+    # Integrand for the volume averaged fusion reaction rate sigmav:
+    # sigmav = integral(2 rho (sigv(rho) ni(rho)^2) drho),
+    # divided by the square of the volume-averaged ion density
+    # to retain the dimensions m^3/s (this is multiplied back in later)
+
+    # Set each point in the desnity profile as a fraction of the volume averaged desnity
+    density_profile_normalised = (1.0 / physics_variables.dene) * plasma_profile.neprofile.profile_y
+
+    # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
+    # just the volume averged ion density.
+    fusion_integral = 2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
+
+    return fusion_integral
 
 
 def bosch_hale_reactivity(ion_temperature_profile: numpy.ndarray, reaction_constants: BoschHaleConstants) -> numpy.ndarray:
