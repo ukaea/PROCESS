@@ -1802,9 +1802,9 @@ class Physics:
 
         # Calculate fusion power + components
 
-        fusion_rate = physics_funcs.FusionReactionRate(self.plasma_profile)
-        fusion_rate.calculate_fusion_rates()
-        fusion_rate.set_physics_variables()
+        fusion_reactions = physics_funcs.FusionReactionRate(self.plasma_profile)
+        fusion_reactions.calculate_fusion_rates()
+        fusion_reactions.set_physics_variables()
 
         #
         physics_variables.pdt = physics_module.pdtpv * physics_variables.vol
