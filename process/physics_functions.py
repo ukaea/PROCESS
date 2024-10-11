@@ -113,116 +113,269 @@ class FusionReactionRate:
             + 6.9855e-9 * ion_temperature**4
         )
 
-    def dt(self):
-        """D + T --> 4He + n reaction"""
+    def dt_reaction(self) -> None:
+        """D + T --> 4He + n reaction
+
+        This method calculates the fusion reaction rate and power density for the
+        deuterium-tritium (D-T) fusion reaction. It uses the Bosch-Hale parametrization
+        to compute the volumetric fusion reaction rate <sigma v> and integrates over
+        the plasma cross-section to find the core plasma fusion power.
+
+        The method updates the following attributes:
+            - self.sigmav_dt_average: Average fusion reaction rate <sigma v> for D-T.
+            - self.dt_power_density: Fusion power density produced by the D-T reaction.
+            - self.alpha_power_density: Power density of alpha particles produced.
+            - self.charged_power_density: Power density of charged particles produced.
+            - self.neutron_power_density: Power density of neutrons produced.
+            - self.fusion_rate_density: Fusion reaction rate density.
+            - self.alpha_rate_density: Alpha particle production rate density.
+            - self.proton_rate_density: Proton production rate density.
+
+        Returns:
+            None
+        """
+        # Initialize Bosch-Hale constants for the D-T reaction
         dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
+
+        # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
             fusion_rate_integral(self.plasma_profile, dt),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
+
+        # Store the average fusion reaction rate
         self.sigmav_dt_average = sigmav
-        etot = 17.59 * constants.electron_charge  # MJ
-        # Fusion power produced [MW] per m^3 of plasma
+
+        # Reaction energy in MegaJoules [MJ]
+        reaction_energy = 17.59 * constants.electron_charge
+
+        # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
             sigmav
-            * etot
-            * physics_variables.fdeut
-            * physics_variables.ftrit
-            * physics_variables.deni
-            * physics_variables.deni
-        )  # MW/m3
-        pa = 0.2 * fusion_power_density
-        pc = 0.0
-        pn = 0.8 * fusion_power_density
-        frate = fusion_power_density / etot  # reactions/m3/second
-        arate = frate
-        prate = 0.0
-        self.dt_power_density = fusion_power_density
-        self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
+            * reaction_energy
+            * (physics_variables.fdeut * physics_variables.deni)
+            * (physics_variables.ftrit * physics_variables.deni)
+        )
 
-    def dhe3(self):
-        """D + 3He --> 4He + p reaction"""
+        # Power densities for different particles [MW/m^3]
+        alpha_power_density = 0.2 * fusion_power_density
+        charged_power_density = 0.0
+        neutron_power_density = 0.8 * fusion_power_density
+
+        # Calculate the fusion rate density [reactions/m^3/second]
+        fusion_rate_density = fusion_power_density / reaction_energy
+        alpha_rate_density = fusion_rate_density
+        proton_rate_density = 0.0
+
+        # Update the cumulative D-T power density
+        self.dt_power_density = fusion_power_density
+
+        # Sum the fusion rates for all particles
+        self.sum_fusion_rates(
+            alpha_power_density,
+            charged_power_density,
+            neutron_power_density,
+            fusion_rate_density,
+            alpha_rate_density,
+            proton_rate_density,
+        )
+
+    def dhe3_reaction(self) -> None:
+        """D + 3He --> 4He + p reaction
+
+        This method calculates the fusion reaction rate and power density for the
+        deuterium-helium-3 (D-3He) fusion reaction. It uses the Bosch-Hale parametrization
+        to compute the volumetric fusion reaction rate <sigma v> and integrates over
+        the plasma cross-section to find the core plasma fusion power.
+
+        The method updates the following attributes:
+            - self.dhe3_power_density: Fusion power density produced by the D-3He reaction.
+            - self.alpha_power_density: Power density of alpha particles produced.
+            - self.charged_power_density: Power density of charged particles produced.
+            - self.neutron_power_density: Power density of neutrons produced.
+            - self.fusion_rate_density: Fusion reaction rate density.
+            - self.alpha_rate_density: Alpha particle production rate density.
+            - self.proton_rate_density: Proton production rate density.
+
+        Returns:
+            None
+        """
+        # Initialize Bosch-Hale constants for the D-3He reaction
         dhe3 = BoschHaleConstants(**REACTION_CONSTANTS_DHE3)
+
+        # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
             fusion_rate_integral(self.plasma_profile, dhe3),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
-        etot = 18.35 * constants.electron_charge  # MJ
-        # Fusion power produced [MW] per m^3 of plasma
+
+        # Reaction energy in MegaJoules [MJ]
+        reaction_energy = 18.35 * constants.electron_charge
+
+        # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
             sigmav
-            * etot
-            * physics_variables.fdeut
-            * physics_variables.fhe3
-            * physics_variables.deni
-            * physics_variables.deni
-        )  # MW/m3
-        pa = 0.2 * fusion_power_density
-        pc = 0.8 * fusion_power_density
-        pn = 0.0
-        frate = fusion_power_density / etot  # reactions/m3/second
-        arate = frate
-        prate = frate  # proton production /m3/second
-        self.dhe3_power_density = fusion_power_density
-        self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
+            * reaction_energy
+            * (physics_variables.fdeut * physics_variables.deni)
+            * (physics_variables.fhe3 * physics_variables.deni)
+        )
 
-    def dd1(self):
-        """D + D --> 3He + n reaction"""
+        # Power densities for different particles [MW/m^3]
+        alpha_power_density = 0.2 * fusion_power_density
+        charged_power_density = 0.8 * fusion_power_density
+        neutron_power_density = 0.0
+
+        # Calculate the fusion rate density [reactions/m^3/second]
+        fusion_rate_density = fusion_power_density / reaction_energy
+        alpha_rate_density = fusion_rate_density
+        proton_rate_density = fusion_rate_density  # Proton production rate [m^3/second]
+
+        # Update the cumulative D-3He power density
+        self.dhe3_power_density = fusion_power_density
+
+        # Sum the fusion rates for all particles
+        self.sum_fusion_rates(
+            alpha_power_density,
+            charged_power_density,
+            neutron_power_density,
+            fusion_rate_density,
+            alpha_rate_density,
+            proton_rate_density,
+        )
+
+    def dd1_reaction(self) -> None:
+        """D + D --> 3He + n reaction
+
+        This method calculates the fusion reaction rate and power density for the
+        deuterium-deuterium (D-D) fusion reaction, specifically the branch that produces
+        helium-3 (3He) and a neutron (n). It uses the Bosch-Hale parametrization
+        to compute the volumetric fusion reaction rate <sigma v> and integrates over
+        the plasma cross-section to find the core plasma fusion power.
+
+        The method updates the following attributes:
+            - self.dd_power_density: Fusion power density produced by the D-D reaction.
+            - self.alpha_power_density: Power density of alpha particles produced.
+            - self.charged_power_density: Power density of charged particles produced.
+            - self.neutron_power_density: Power density of neutrons produced.
+            - self.fusion_rate_density: Fusion reaction rate density.
+            - self.alpha_rate_density: Alpha particle production rate density.
+            - self.proton_rate_density: Proton production rate density.
+
+        Returns:
+            None
+        """
+        # Initialize Bosch-Hale constants for the D-D reaction
         dd1 = BoschHaleConstants(**REACTION_CONSTANTS_DD1)
+
+        # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
             fusion_rate_integral(self.plasma_profile, dd1),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
-        etot = 3.27 * constants.electron_charge  # MJ
-        # Fusion power produced [MW] per m^3 of plasma
+
+        # Reaction energy in MegaJoules [MJ]
+        reaction_energy = 3.27 * constants.electron_charge
+
+        # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
             sigmav
-            * etot
-            * 0.5
-            * physics_variables.fdeut
-            * physics_variables.fdeut
-            * physics_variables.deni
-            * physics_variables.deni
-        )  # MW/m3
-        pa = 0.0
-        pc = 0.25 * fusion_power_density
-        pn = 0.75 * fusion_power_density
-        frate = fusion_power_density / etot  # reactions/m3/second
-        arate = 0.0
-        prate = 0.0
-        self.dd_power_density = self.dd_power_density + fusion_power_density
-        self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
+            * reaction_energy
+            * 0.5  # Factor for D-D reaction
+            * (physics_variables.fdeut * physics_variables.deni)
+            * (physics_variables.fdeut * physics_variables.deni)
+        )
 
-    def dd2(self):
-        """D + D --> T + p reaction"""
+        # Power densities for different particles [MW/m^3]
+        alpha_power_density = 0.0
+        charged_power_density = 0.25 * fusion_power_density
+        neutron_power_density = 0.75 * fusion_power_density
+
+        # Calculate the fusion rate density [reactions/m^3/second]
+        fusion_rate_density = fusion_power_density / reaction_energy
+        alpha_rate_density = 0.0
+        proton_rate_density = 0.0
+
+        # Update the cumulative D-D power density
+        self.dd_power_density = self.dd_power_density + fusion_power_density
+
+        # Sum the fusion rates for all particles
+        self.sum_fusion_rates(
+            alpha_power_density,
+            charged_power_density,
+            neutron_power_density,
+            fusion_rate_density,
+            alpha_rate_density,
+            proton_rate_density,
+        )
+
+    def dd2_reaction(self) -> None:
+        """D + D --> T + p reaction
+
+        This method calculates the fusion reaction rate and power density for the
+        deuterium-deuterium (D-D) fusion reaction, specifically the branch that produces
+        tritium (T) and a proton (p). It uses the Bosch-Hale parametrization
+        to compute the volumetric fusion reaction rate <sigma v> and integrates over
+        the plasma cross-section to find the core plasma fusion power.
+
+        The method updates the following attributes:
+            - self.dd_power_density: Fusion power density produced by the D-D reaction.
+            - self.alpha_power_density: Power density of alpha particles produced.
+            - self.charged_power_density: Power density of charged particles produced.
+            - self.neutron_power_density: Power density of neutrons produced.
+            - self.fusion_rate_density: Fusion reaction rate density.
+            - self.alpha_rate_density: Alpha particle production rate density.
+            - self.proton_rate_density: Proton production rate density.
+
+        Returns:
+            None
+        """
+        # Initialize Bosch-Hale constants for the D-D reaction
         dd2 = BoschHaleConstants(**REACTION_CONSTANTS_DD2)
+
+        # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
             fusion_rate_integral(self.plasma_profile, dd2),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
-        etot = 4.03 * constants.electron_charge  # MJ
-        # Fusion power produced [MW] per m^3 of plasma
+
+        # Reaction energy in MegaJoules [MJ]
+        reaction_energy = 4.03 * constants.electron_charge
+
+        # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
             sigmav
-            * etot
-            * 0.5
-            * physics_variables.fdeut
-            * physics_variables.fdeut
-            * physics_variables.deni
-            * physics_variables.deni
-        )  # MW/m3
-        pa = 0.0
-        pc = fusion_power_density
-        pn = 0.0
-        frate = fusion_power_density / etot  # reactions/m3/second
-        arate = 0.0
-        prate = frate  # proton production /m3/second
-        self.dd_power_density = self.dd_power_density + fusion_power_density
-        self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
+            * reaction_energy
+            * 0.5  # Factor for D-D reaction
+            * (physics_variables.fdeut * physics_variables.deni)
+            * (physics_variables.fdeut * physics_variables.deni)
+        )
+
+        # Power densities for different particles [MW/m^3]
+        alpha_power_density = 0.0
+        charged_power_density = fusion_power_density
+        neutron_power_density = 0.0
+
+        # Calculate the fusion rate density [reactions/m^3/second]
+        fusion_rate_density = fusion_power_density / reaction_energy
+        alpha_rate_density = 0.0
+        proton_rate_density = fusion_rate_density  # Proton production rate [m^3/second]
+
+        # Update the cumulative D-D power density
+        self.dd_power_density += fusion_power_density
+
+        # Sum the fusion rates for all particles
+        self.sum_fusion_rates(
+            alpha_power_density,
+            charged_power_density,
+            neutron_power_density,
+            fusion_rate_density,
+            alpha_rate_density,
+            proton_rate_density,
+        )
 
     def sum_fusion_rates(
         self,
@@ -256,12 +409,27 @@ class FusionReactionRate:
         self.alpha_rate_density += alpha_rate_add
         self.proton_rate_density += proton_rate_add
 
-    def calculate_fusion_rates(self):
-        """Initiate all the fusion rate calculations."""
-        self.dt()
-        self.dhe3()
-        self.dd1()
-        self.dd2()
+    def calculate_fusion_rates(self) -> None:
+        """
+        Initiate all the fusion rate calculations.
+
+        This method sequentially calculates the fusion reaction rates and power densities
+        for the following reactions:
+            - Deuterium-Tritium (D-T)
+            - Deuterium-Helium-3 (D-3He)
+            - Deuterium-Deuterium (D-D) first branch
+            - Deuterium-Deuterium (D-D) second branch
+
+        It updates the instance attributes for the cumulative power densities and reaction rates
+        for alpha particles, charged particles, neutrons, and protons.
+
+        Returns:
+            None
+        """
+        self.dt_reaction()
+        self.dhe3_reaction()
+        self.dd1_reaction()
+        self.dd2_reaction()
 
     def set_physics_variables(self) -> None:
         """
@@ -414,7 +582,9 @@ class BoschHaleConstants:
     cc7: float
 
 
-def fusion_rate_integral(plasma_profile: PlasmaProfile, reaction_constants: BoschHaleConstants) -> numpy.ndarray:
+def fusion_rate_integral(
+    plasma_profile: PlasmaProfile, reaction_constants: BoschHaleConstants
+) -> numpy.ndarray:
     """
     Evaluate the integrand for the fusion power integration.
 
@@ -434,8 +604,8 @@ def fusion_rate_integral(plasma_profile: PlasmaProfile, reaction_constants: Bosc
     # Since the electron temperature profile is only calculated directly, we scale the ion temperature
     # profile by the ratio of the volume averaged ion to electron temperature
     ion_temperature_profile = (
-        (physics_variables.ti / physics_variables.te) * plasma_profile.teprofile.profile_y
-    )
+        physics_variables.ti / physics_variables.te
+    ) * plasma_profile.teprofile.profile_y
 
     # Number of fusion reactions per unit volume per particle volume density (m^3/s)
     sigv = bosch_hale_reactivity(ion_temperature_profile, reaction_constants)
@@ -446,16 +616,25 @@ def fusion_rate_integral(plasma_profile: PlasmaProfile, reaction_constants: Bosc
     # to retain the dimensions m^3/s (this is multiplied back in later)
 
     # Set each point in the desnity profile as a fraction of the volume averaged desnity
-    density_profile_normalised = (1.0 / physics_variables.dene) * plasma_profile.neprofile.profile_y
+    density_profile_normalised = (
+        1.0 / physics_variables.dene
+    ) * plasma_profile.neprofile.profile_y
 
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
     # just the volume averged ion density.
-    fusion_integral = 2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
+    fusion_integral = (
+        2.0
+        * plasma_profile.teprofile.profile_x
+        * sigv
+        * density_profile_normalised**2
+    )
 
     return fusion_integral
 
 
-def bosch_hale_reactivity(ion_temperature_profile: numpy.ndarray, reaction_constants: BoschHaleConstants) -> numpy.ndarray:
+def bosch_hale_reactivity(
+    ion_temperature_profile: numpy.ndarray, reaction_constants: BoschHaleConstants
+) -> numpy.ndarray:
     """
     Calculate the volumetric fusion reaction rate <sigma v> (m^3/s) for one of four nuclear reactions using
     the Bosch-Hale parametrization.
@@ -485,7 +664,10 @@ def bosch_hale_reactivity(ion_temperature_profile: numpy.ndarray, reaction_const
         * (
             reaction_constants.cc2
             + ion_temperature_profile
-            * (reaction_constants.cc4 + ion_temperature_profile * reaction_constants.cc6)
+            * (
+                reaction_constants.cc4
+                + ion_temperature_profile * reaction_constants.cc6
+            )
         )
         / (
             1.0
@@ -698,7 +880,10 @@ def beamfus(
     """
 
     tausl = (
-        1.99e19 * (2.0 * (1.0 - ftritbm) + (3.0 * ftritbm)) * (ten**1.5 / dene) / dlamie
+        1.99e19
+        * (2.0 * (1.0 - ftritbm) + (3.0 * ftritbm))
+        * (ten**1.5 / dene)
+        / dlamie
     )
 
     # Critical energy for electron/ion slowing down of the beam ion
@@ -794,8 +979,20 @@ def beamcalc(
     nthot = nhotmst
 
     # Average hot ion energy from Deng & Emmert, UWFDM-718, Jan 87
-    vcds = 2.0 * ecritd * constants.electron_charge * 1000.0 / (2.0 * constants.proton_mass)
-    vcts = 2.0 * ecritt * constants.electron_charge * 1000.0 / (3.0 * constants.proton_mass)
+    vcds = (
+        2.0
+        * ecritd
+        * constants.electron_charge
+        * 1000.0
+        / (2.0 * constants.proton_mass)
+    )
+    vcts = (
+        2.0
+        * ecritt
+        * constants.electron_charge
+        * 1000.0
+        / (3.0 * constants.proton_mass)
+    )
 
     s0d = ifbmd / (constants.electron_charge * vol)
     s0t = ifbmt / (constants.electron_charge * vol)
@@ -874,7 +1071,14 @@ def palphabm(ealphadt, nbm, nblk, sigv, vol, ti, svdt):
         numpy.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
     )
     return (
-        constants.electron_charge / 1000.0 * nbm * nblk * sigv * ealphadt * vol * ratio.item()
+        constants.electron_charge
+        / 1000.0
+        * nbm
+        * nblk
+        * sigv
+        * ealphadt
+        * vol
+        * ratio.item()
     )
 
 
@@ -888,7 +1092,13 @@ def sgvhot(rmass_ion, vcrx, ebeam):
     """
     # Beam velocity
 
-    vbeams = ebeam * constants.electron_charge * 1000.0 * 2.0 / (rmass_ion * constants.proton_mass)
+    vbeams = (
+        ebeam
+        * constants.electron_charge
+        * 1000.0
+        * 2.0
+        / (rmass_ion * constants.proton_mass)
+    )
     vbeam = numpy.sqrt(vbeams)
 
     xv = vbeam / vcrx
