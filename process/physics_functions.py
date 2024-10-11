@@ -245,7 +245,7 @@ class FusionReactionRate:
             proton_rate_density,
         )
 
-    def dd1_reaction(self) -> None:
+    def dd_helion_reaction(self) -> None:
         """D + D --> 3He + n reaction
 
         This method calculates the fusion reaction rate and power density for the
@@ -311,7 +311,7 @@ class FusionReactionRate:
             proton_rate_density,
         )
 
-    def dd2_reaction(self) -> None:
+    def dd_triton_reaction(self) -> None:
         """D + D --> T + p reaction
 
         This method calculates the fusion reaction rate and power density for the
@@ -428,8 +428,8 @@ class FusionReactionRate:
         """
         self.dt_reaction()
         self.dhe3_reaction()
-        self.dd1_reaction()
-        self.dd2_reaction()
+        self.dd_helion_reaction()
+        self.dd_triton_reaction()
 
     def set_physics_variables(self) -> None:
         """
