@@ -586,7 +586,7 @@ module physics_variables
   real(dp) :: pdd
   !! deuterium-deuterium fusion power (MW)
 
-  real(dp) :: pdhe3
+  real(dp) :: dhe3_power
   !! deuterium-helium3 fusion power (MW)
 
   real(dp) :: pdivt
@@ -998,7 +998,7 @@ module physics_variables
     pinnerzoneradmw = 0.0D0
     pcoreradpv = 0.0D0
     pdd = 0.0D0
-    pdhe3 = 0.0D0
+    dhe3_power = 0.0D0
     pdivt = 0.0D0
     pdivl = 0.0D0
     pdivu = 0.0D0

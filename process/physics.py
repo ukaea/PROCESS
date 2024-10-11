@@ -1808,7 +1808,7 @@ class Physics:
 
         #
         physics_variables.dt_power = physics_module.dt_power_density * physics_variables.vol
-        physics_variables.pdhe3 = physics_module.dhe3_power_density * physics_variables.vol
+        physics_variables.dhe3_power = physics_module.dhe3_power_density * physics_variables.vol
         physics_variables.pdd = physics_module.dd_power_density * physics_variables.vol
 
         # Calculate neutral beam slowing down effects
@@ -3922,8 +3922,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "  + D-He3 fusion power (MW)",
-            "(pdhe3)",
-            physics_variables.pdhe3,
+            "(dhe3_power)",
+            physics_variables.dhe3_power,
             "OP ",
         )
         po.ovarre(
