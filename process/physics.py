@@ -1841,8 +1841,8 @@ class Physics:
                 physics_variables.vol,
                 physics_variables.zeffai,
             )
-            physics_variables.fusionrate = (
-                physics_variables.fusionrate
+            physics_variables.fusion_rate_density = (
+                physics_variables.fusion_rate_density
                 + 1.0e6
                 * physics_variables.palpnb
                 / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
@@ -2116,7 +2116,7 @@ class Physics:
             physics_variables.aspect,
             physics_variables.dene,
             physics_variables.deni,
-            physics_variables.fusionrate,
+            physics_variables.fusion_rate_density,
             physics_variables.alpharate,
             physics_variables.plasma_current,
             sbar,
@@ -2637,7 +2637,7 @@ class Physics:
         aspect,
         dene,
         deni,
-        fusionrate,
+        fusion_rate_density,
         alpharate,
         plasma_current,
         sbar,
@@ -2651,7 +2651,7 @@ class Physics:
         dene   : input real :  electron density (/m3)
         deni   : input real :  fuel ion density (/m3)
         dnalp  : input real :  alpha ash density (/m3)
-        fusionrate : input real :  fusion reaction rate (/m3/s)
+        fusion_rate_density : input real :  fusion reaction rate (/m3/s)
         alpharate  : input real :  alpha particle production rate (/m3/s)
         plasma_current: input real :  plasma current (A)
         sbar   : input real :  exponent for aspect ratio (normally 1)
@@ -2674,7 +2674,7 @@ class Physics:
 
         # Fusion reactions per second
 
-        fusrat = fusionrate * vol
+        fusrat = fusion_rate_density * vol
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate

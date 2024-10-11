@@ -221,7 +221,7 @@ module physics_variables
   real(dp) :: ftrit
   !! tritium fuel fraction
 
-  real(dp) :: fusionrate
+  real(dp) :: fusion_rate_density
   !! fusion reaction rate (reactions/m3/sec)
 
   real(dp) :: fvsbrnni
@@ -942,7 +942,7 @@ module physics_variables
     fpdivlim = 1.0D0
     fne0 = 1.0D0
     ftrit = 0.5D0
-    fusionrate = 0.0D0
+    fusion_rate_density = 0.0D0
     fvsbrnni = 1.0D0
     gamma = 0.4D0
     gammaft = 0.0D0

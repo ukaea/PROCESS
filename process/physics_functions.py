@@ -81,7 +81,7 @@ class FusionReactionRate:
         self.alpha_power_density = 0.0
         self.charged_power_density = 0.0
         self.neutron_power_density = 0.0
-        self.fusionrate = 0.0
+        self.fusion_rate_density = 0.0
         self.alpharate = 0.0
         self.protonrate = 0.0
 
@@ -233,7 +233,7 @@ class FusionReactionRate:
         :type pc: float
         :param pn: neutron_power_density neutron fusion power per volume (MW/m3)
         :type pn: float
-        :param frate: fusionrate fusion reaction rate (reactions/m3/s)
+        :param frate: fusion_rate_density fusion reaction rate (reactions/m3/s)
         :type frate: float
         :param arate:  alpharate alpha particle production rate (/m3/s)
         :type arate: float
@@ -243,7 +243,7 @@ class FusionReactionRate:
         self.alpha_power_density = self.alpha_power_density + pa
         self.charged_power_density = self.charged_power_density + pc
         self.neutron_power_density = self.neutron_power_density + pn
-        self.fusionrate = self.fusionrate + frate
+        self.fusion_rate_density = self.fusion_rate_density + frate
         self.alpharate = self.alpharate + arate
         self.protonrate = self.protonrate + prate
 
@@ -259,7 +259,7 @@ class FusionReactionRate:
         physics_variables.alpha_power_density = self.alpha_power_density
         physics_variables.charged_power_density = self.charged_power_density
         physics_variables.neutron_power_density = self.neutron_power_density
-        physics_variables.fusionrate = self.fusionrate
+        physics_variables.fusion_rate_density = self.fusion_rate_density
         physics_variables.alpharate = self.alpharate
         physics_variables.protonrate = self.protonrate
         physics_module.sigvdt = self.sigvdt

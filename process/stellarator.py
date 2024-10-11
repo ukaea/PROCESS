@@ -3971,8 +3971,8 @@ class Stellarator:
                 physics_variables.vol,
                 physics_variables.zeffai,
             )
-            physics_variables.fusionrate = (
-                physics_variables.fusionrate
+            physics_variables.fusion_rate_density = (
+                physics_variables.fusion_rate_density
                 + 1.0e6
                 * physics_variables.palpnb
                 / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
@@ -4224,7 +4224,7 @@ class Stellarator:
             physics_variables.aspect,
             physics_variables.dene,
             physics_variables.deni,
-            physics_variables.fusionrate,
+            physics_variables.fusion_rate_density,
             physics_variables.alpharate,
             physics_variables.plasma_current,
             sbar,

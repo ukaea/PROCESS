@@ -1517,7 +1517,7 @@ class PhyauxParam(NamedTuple):
 
     dnalp: Any = None
 
-    fusionrate: Any = None
+    fusion_rate_density: Any = None
 
     alpharate: Any = None
 
@@ -1554,7 +1554,7 @@ class PhyauxParam(NamedTuple):
             dene=7.5e19,
             deni=5.8589175702454272e19,
             dnalp=7.5e18,
-            fusionrate=1.9852091609123786e17,
+            fusion_rate_density=1.9852091609123786e17,
             alpharate=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
@@ -1575,7 +1575,7 @@ class PhyauxParam(NamedTuple):
             dene=7.5e19,
             deni=5.8576156204039725e19,
             dnalp=7.5e18,
-            fusionrate=1.9843269653375773e17,
+            fusion_rate_density=1.9843269653375773e17,
             alpharate=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
@@ -1613,7 +1613,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         dene=phyauxparam.dene,
         deni=phyauxparam.deni,
         dnalp=phyauxparam.dnalp,
-        fusionrate=phyauxparam.fusionrate,
+        fusion_rate_density=phyauxparam.fusion_rate_density,
         alpharate=phyauxparam.alpharate,
         plasma_current=phyauxparam.plasma_current,
         sbar=phyauxparam.sbar,
