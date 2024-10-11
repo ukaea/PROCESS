@@ -74,7 +74,7 @@ class FusionReactionRate:
 
     def __init__(self, plasma_profile):
         self.plasma_profile = plasma_profile
-        self.sigvdt = 0.0
+        self.sigmav_dt_average = 0.0
         self.dhe3_power_density = 0.0
         self.dd_power_density = 0.0
         self.dt_power_density = 0.0
@@ -121,7 +121,7 @@ class FusionReactionRate:
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
-        self.sigvdt = sigmav
+        self.sigmav_dt_average = sigmav
         etot = 17.59 * constants.electron_charge  # MJ
         # Fusion power produced [MW] per m^3 of plasma
         fusion_power_density = (
@@ -262,7 +262,7 @@ class FusionReactionRate:
         physics_variables.fusion_rate_density = self.fusion_rate_density
         physics_variables.alpha_rate_density = self.alpha_rate_density
         physics_variables.proton_rate_density = self.proton_rate_density
-        physics_module.sigvdt = self.sigvdt
+        physics_module.sigmav_dt_average = self.sigmav_dt_average
         physics_module.dt_power_density = self.dt_power_density
         physics_module.dhe3_power_density = self.dhe3_power_density
         physics_module.dd_power_density = self.dd_power_density
@@ -648,7 +648,7 @@ def beamfus(
     fdeut,
     ftrit,
     ftritbm,
-    sigvdt,
+    sigmav_dt_average,
     ten,
     tin,
     vol,
@@ -670,7 +670,7 @@ def beamfus(
     :param fdeut: deuterium fraction of main plasma
     :param ftrit: tritium fraction of main plasma
     :param ftritbm: tritium fraction of neutral beam
-    :param sigvdt: profile averaged <sigma v> for D-T (m3/s)
+    :param sigmav_dt_average: profile averaged <sigma v> for D-T (m3/s)
     :param ten: density-weighted electron temperature (keV)
     :param tin: density-weighted ion temperature (keV)
     :param vol: plasma volume (m3)
@@ -707,7 +707,7 @@ def beamfus(
         cnbeam,
         tin,
         vol,
-        sigvdt,
+        sigmav_dt_average,
     )
 
     # Neutral beam alpha power

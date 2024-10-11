@@ -1835,7 +1835,7 @@ class Physics:
                 physics_variables.fdeut,
                 physics_variables.ftrit,
                 current_drive_variables.ftritbm,
-                physics_module.sigvdt,
+                physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.vol,
