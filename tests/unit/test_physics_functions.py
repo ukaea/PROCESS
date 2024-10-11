@@ -31,7 +31,7 @@ class Palph2Param(NamedTuple):
 
     palpnb: Any = None
 
-    pchargepv: Any = None
+    charged_power_density: Any = None
 
     ten: Any = None
 
@@ -79,7 +79,7 @@ class Palph2Param(NamedTuple):
             falpe=0.68,
             falpi=0.32,
             palpnb=0,
-            pchargepv=0.00066,
+            charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
             vol=2426.25,
@@ -108,7 +108,7 @@ class Palph2Param(NamedTuple):
             falpe=0.68,
             falpi=0.32,
             palpnb=100.5,
-            pchargepv=0.00066,
+            charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
             vol=2426.25,
@@ -137,7 +137,7 @@ class Palph2Param(NamedTuple):
             falpe=0.68,
             falpi=0.32,
             palpnb=100.5,
-            pchargepv=0.00066,
+            charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
             vol=2426.25,
@@ -166,7 +166,7 @@ class Palph2Param(NamedTuple):
             falpe=0.68,
             falpi=0.32,
             palpnb=100.5,
-            pchargepv=0.00066,
+            charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
             vol=2426.25,
@@ -221,7 +221,7 @@ def test_palph2(palph2param, monkeypatch):
         falpe=palph2param.falpe,
         falpi=palph2param.falpi,
         palpnb=palph2param.palpnb,
-        pchargepv=palph2param.pchargepv,
+        charged_power_density=palph2param.charged_power_density,
         ten=palph2param.ten,
         tin=palph2param.tin,
         vol=palph2param.vol,

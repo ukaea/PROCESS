@@ -1879,7 +1879,7 @@ class Physics:
             physics_variables.falpe,
             physics_variables.falpi,
             physics_variables.palpnb,
-            physics_variables.pchargepv,
+            physics_variables.charged_power_density,
             physics_variables.pneutpv,
             physics_variables.ten,
             physics_variables.tin,
@@ -2567,7 +2567,7 @@ class Physics:
         # Fraction of alpha energy to ions and electrons
         # From Max Fenstermacher
         # (used with electron and ion power balance equations only)
-        # No consideration of pchargepv here...
+        # No consideration of charged_power_density here...
 
         # pcoef now calculated in plasma_profiles, after the very first
         # call of plasma_composition; use old parabolic profile estimate
@@ -5632,7 +5632,7 @@ class Physics:
             ptrez
             + ptriz
             - physics_variables.falpha * physics_variables.alpha_power_density
-            - physics_variables.pchargepv
+            - physics_variables.charged_power_density
             - physics_variables.pohmpv
         )
 

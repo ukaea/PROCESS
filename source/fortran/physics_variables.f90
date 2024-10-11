@@ -571,8 +571,8 @@ module physics_variables
   real(dp) :: pchargemw
   !! non-alpha charged particle fusion power (MW)
 
-  real(dp) :: pchargepv
-  !! non-alpha charged particle fusion power per volume (MW/m3)
+  real(dp) :: charged_power_density
+  !! Non-alpha charged particle fusion power per volume [MW/m3]
 
   real(dp) :: pcoef
   !! profile factor (= n-weighted T / average T)
@@ -993,7 +993,7 @@ module physics_variables
     palpmw = 0.0D0
     palpnb = 0.0D0
     pchargemw = 0.0D0
-    pchargepv = 0.0D0
+    charged_power_density = 0.0D0
     pcoef = 0.0D0
     pinnerzoneradmw = 0.0D0
     pcoreradpv = 0.0D0

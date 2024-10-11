@@ -79,7 +79,7 @@ class FusionReactionRate:
         self.pddpv = 0.0
         self.pdtpv = 0.0
         self.alpha_power_density = 0.0
-        self.pchargepv = 0.0
+        self.charged_power_density = 0.0
         self.pneutpv = 0.0
         self.fusionrate = 0.0
         self.alpharate = 0.0
@@ -229,7 +229,7 @@ class FusionReactionRate:
 
         :param pa: alpha_power_density  alpha particle fusion power per volume [MW/m3]
         :type pa: float
-        :param pc: pchargepv other charged particle fusion power/volume (MW/m3)
+        :param pc: charged_power_density other charged particle fusion power/volume (MW/m3)
         :type pc: float
         :param pn: pneutpv neutron fusion power per volume (MW/m3)
         :type pn: float
@@ -241,7 +241,7 @@ class FusionReactionRate:
         :type prate: float
         """
         self.alpha_power_density = self.alpha_power_density + pa
-        self.pchargepv = self.pchargepv + pc
+        self.charged_power_density = self.charged_power_density + pc
         self.pneutpv = self.pneutpv + pn
         self.fusionrate = self.fusionrate + frate
         self.alpharate = self.alpharate + arate
@@ -257,7 +257,7 @@ class FusionReactionRate:
     def set_physics_variables(self):
         """Set the required physics variables."""
         physics_variables.alpha_power_density = self.alpha_power_density
-        physics_variables.pchargepv = self.pchargepv
+        physics_variables.charged_power_density = self.charged_power_density
         physics_variables.pneutpv = self.pneutpv
         physics_variables.fusionrate = self.fusionrate
         physics_variables.alpharate = self.alpharate
@@ -524,7 +524,7 @@ def palph2(
     falpe,
     falpi,
     palpnb,
-    pchargepv,
+    charged_power_density,
     pneutpv,
     ten,
     tin,
@@ -546,7 +546,7 @@ def palph2(
     :param falpe: fraction of alpha energy to electrons
     :param falpi: fraction of alpha energy to ions
     :param palpnb: alpha power from hot neutral beam ions (MW)
-    :param pchargepv: other charged particle fusion power/volume (MW/m3)
+    :param charged_power_density: other charged particle fusion power/volume (MW/m3)
     :param pneutpv: neutron fusion power per volume (MW/m3)
     :param ten: density-weighted electron temperature (keV)
     :param tin: density-weighted ion temperature (keV)
@@ -571,7 +571,7 @@ def palph2(
     palpmw = palppv_out * vol
 
     # Total non-alpha charged particle power
-    pchargemw = pchargepv * vol
+    pchargemw = charged_power_density * vol
 
     # Total neutron power
     pneutmw = pneutpv_out * vol
@@ -584,7 +584,7 @@ def palph2(
 
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
-    # No consideration of pchargepv here...
+    # No consideration of charged_power_density here...
     palpipv = physics_variables.falpha * palppv_out * falpi
     palpepv = physics_variables.falpha * palppv_out * falpe
 

@@ -4008,7 +4008,7 @@ class Stellarator:
             physics_variables.falpe,
             physics_variables.falpi,
             physics_variables.palpnb,
-            physics_variables.pchargepv,
+            physics_variables.charged_power_density,
             physics_variables.pneutpv,
             physics_variables.ten,
             physics_variables.tin,
