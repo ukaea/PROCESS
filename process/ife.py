@@ -148,7 +148,7 @@ class IFE:
             case 1:
                 self.osibld()
             case 2:
-                ife.sombld()
+                self.sombld()
             case 3:
                 ife.hylbld()
             case 4:
@@ -298,6 +298,350 @@ class IFE:
         build_variables.fwarea = (
             2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl1)
             + np.pi * ife_variables.r1 * ife_variables.r1
+        )
+
+    def sombld(self):
+        """Routine to create the build of an inertial fusion energy
+        device, based on the design of the SOMBRERO study,
+        and to calculate the material volumes for the device core
+        author: P J Knight, CCFE, Culham Science Centre
+        None
+        This routine constructs the build of an inertial fusion energy
+        device, based on the design of the SOMBRERO study, and to calculate
+        the material volumes for the device core.
+        Sviatoslavsky et al, Fusion Technology vol.21 (1992) 1470
+        """
+
+        # Radial build
+        ife_variables.r1 = ife_variables.chrad
+        ife_variables.r2 = ife_variables.r1 + ife_variables.fwdr
+        ife_variables.r3 = ife_variables.r2 + ife_variables.v1dr
+        ife_variables.r4 = ife_variables.r3 + ife_variables.bldr
+        ife_variables.r5 = ife_variables.r4 + ife_variables.v2dr
+        ife_variables.r6 = ife_variables.r5 + ife_variables.shdr
+        ife_variables.r7 = ife_variables.r6 + ife_variables.v3dr
+
+        # Vertical build (below midplane)
+        ife_variables.zl1 = ife_variables.chdzl
+        ife_variables.zl2 = ife_variables.zl1 + ife_variables.fwdzl
+        ife_variables.zl3 = ife_variables.zl2 + ife_variables.v1dzl
+        ife_variables.zl4 = ife_variables.zl3 + ife_variables.bldzl
+        ife_variables.zl5 = ife_variables.zl4 + ife_variables.v2dzl
+        ife_variables.zl6 = ife_variables.zl5 + ife_variables.shdzl
+        ife_variables.zl7 = ife_variables.zl6 + ife_variables.v3dzl
+
+        # Vertical build (above midplane)
+        ife_variables.zu1 = ife_variables.chdzu
+        ife_variables.zu2 = ife_variables.zu1 + ife_variables.fwdzu
+        ife_variables.zu3 = ife_variables.zu2 + ife_variables.v1dzu
+        ife_variables.zu4 = ife_variables.zu3 + ife_variables.bldzu
+        ife_variables.zu5 = ife_variables.zu4 + ife_variables.v2dzu
+        ife_variables.zu6 = ife_variables.zu5 + ife_variables.shdzu
+        ife_variables.zu7 = ife_variables.zu6 + ife_variables.v3dzu
+
+        # The SOMBRERO chamber is made up of a cylindrical first wall/
+        # blanket, with conical regions above and below. Outside this is
+        # a cylindrical shield.
+
+        # Component volumes
+        # The following notation applies below:
+        # J=1 : side part
+        # J=2 : top part
+        # J=3 : bottom part
+
+        # Chamber : CHCYLH is the height of the cylindrical part
+        chcylh = ife_variables.chdzu + ife_variables.chdzl - 2.0 * ife_variables.chrad
+
+        ife_variables.chvol = (
+            np.pi
+            * ife_variables.r1
+            * ife_variables.r1
+            * (chcylh + (2.0 / 3.0) * ife_variables.chrad)
+        )
+
+        # First wall
+        ife_variables.fwvol[0] = (
+            np.pi
+            * (
+                ife_variables.r2 * ife_variables.r2
+                - ife_variables.r1 * ife_variables.r1
+            )
+            * chcylh
+        )
+        ife_variables.fwvol[1] = (
+            (1.0 / 3.0)
+            * np.pi
+            * (
+                ife_variables.r2
+                * ife_variables.r2
+                * (ife_variables.chrad + ife_variables.fwdzu)
+                - ife_variables.r1 * ife_variables.r1 * ife_variables.chrad
+            )
+        )
+        ife_variables.fwvol[2] = (
+            (1.0 / 3.0)
+            * np.pi
+            * (
+                ife_variables.r2
+                * ife_variables.r2
+                * (ife_variables.chrad + ife_variables.fwdzl)
+                - ife_variables.r1 * ife_variables.r1 * ife_variables.chrad
+            )
+        )
+
+        # First void
+        ife_variables.v1vol[0] = (
+            np.pi
+            * (
+                ife_variables.r3 * ife_variables.r3
+                - ife_variables.r2 * ife_variables.r2
+            )
+            * chcylh
+        )
+        ife_variables.v1vol[1] = (
+            (1.0 / 3.0)
+            * np.pi
+            * (
+                ife_variables.r3
+                * ife_variables.r3
+                * (ife_variables.chrad + ife_variables.fwdzu + ife_variables.v1dzu)
+                - ife_variables.r2
+                * ife_variables.r2
+                * (ife_variables.chrad + ife_variables.fwdzu)
+            )
+        )
+        ife_variables.v1vol[2] = (
+            (1.0 / 3.0)
+            * np.pi
+            * (
+                ife_variables.r3
+                * ife_variables.r3
+                * (ife_variables.chrad + ife_variables.fwdzl + ife_variables.v1dzl)
+                - ife_variables.r2
+                * ife_variables.r2
+                * (ife_variables.chrad + ife_variables.fwdzl)
+            )
+        )
+
+        # Blanket:  SOMTDR and SOMBDR are the radii of the cylindrical
+        # sections at the top/bottom of the blanket
+        # DDZ = Height of top cylindrical section (by similar triangles)
+        # DVOL = Volume of top cylindrical section, less the internal cone
+
+        ife_variables.blvol[0] = (
+            np.pi
+            * (
+                ife_variables.r4 * ife_variables.r4
+                - ife_variables.r3 * ife_variables.r3
+            )
+            * chcylh
+        )
+
+        ife_variables.blvol[1] = (
+            (1.0 / 3.0)
+            * np.pi
+            * (
+                ife_variables.r4
+                * ife_variables.r4
+                * (
+                    ife_variables.chrad
+                    + ife_variables.fwdzu
+                    + ife_variables.v1dzu
+                    + ife_variables.bldzu
+                )
+                - ife_variables.r3
+                * ife_variables.r3
+                * (ife_variables.chrad + ife_variables.fwdzu + ife_variables.v1dzu)
+            )
+        )
+        ddz = (
+            (
+                ife_variables.chrad
+                + ife_variables.fwdzu
+                + ife_variables.v1dzu
+                + ife_variables.bldzu
+            )
+            / (
+                ife_variables.chrad
+                + ife_variables.fwdr
+                + ife_variables.v1dr
+                + ife_variables.bldr
+            )
+            * ife_variables.somtdr
+        )
+        dvol = (
+            2.0
+            * (1.0 / 3.0)
+            * np.pi
+            * ife_variables.somtdr
+            * ife_variables.somtdr
+            * ddz
+        )
+
+        ife_variables.blvol[1] = ife_variables.blvol[1] + dvol
+
+        # Ditto for bottom region...
+
+        ife_variables.blvol[2] = (
+            (1.0 / 3.0)
+            * np.pi
+            * (
+                ife_variables.r4
+                * ife_variables.r4
+                * (
+                    ife_variables.chrad
+                    + ife_variables.fwdzl
+                    + ife_variables.v1dzl
+                    + ife_variables.bldzl
+                )
+                - ife_variables.r3
+                * ife_variables.r3
+                * (ife_variables.chrad + ife_variables.fwdzl + ife_variables.v1dzl)
+            )
+        )
+        ddz = (
+            (
+                ife_variables.chrad
+                + ife_variables.fwdzl
+                + ife_variables.v1dzl
+                + ife_variables.bldzl
+            )
+            / (
+                ife_variables.chrad
+                + ife_variables.fwdr
+                + ife_variables.v1dr
+                + ife_variables.bldr
+            )
+            * ife_variables.sombdr
+        )
+        dvol = (
+            2.0
+            * (1.0 / 3.0)
+            * np.pi
+            * ife_variables.sombdr
+            * ife_variables.sombdr
+            * ddz
+        )
+
+        ife_variables.blvol[2] = ife_variables.blvol[2] + dvol
+
+        # Second void
+        ife_variables.v2vol[0] = (
+            np.pi
+            * (
+                ife_variables.r5 * ife_variables.r5
+                - ife_variables.r4 * ife_variables.r4
+            )
+            * chcylh
+        )
+        ife_variables.v2vol[1] = np.pi * ife_variables.r5 * ife_variables.r5 * (
+            ife_variables.zu5 - ife_variables.chdzu + ife_variables.chrad
+        ) - (
+            ife_variables.fwvol[1]
+            + ife_variables.v1vol[1]
+            + ife_variables.blvol[1]
+            + (
+                (1.0 / 3.0)
+                * np.pi
+                * ife_variables.r1
+                * ife_variables.r1
+                * ife_variables.chrad
+            )
+        )
+        ife_variables.v2vol[2] = np.pi * ife_variables.r5 * ife_variables.r5 * (
+            ife_variables.zl5 - ife_variables.chdzl + ife_variables.chrad
+        ) - (
+            ife_variables.fwvol[2]
+            + ife_variables.v1vol[2]
+            + ife_variables.blvol[2]
+            + (
+                (1.0 / 3.0)
+                * np.pi
+                * ife_variables.r1
+                * ife_variables.r1
+                * ife_variables.chrad
+            )
+        )
+
+        # Shield
+        ife_variables.shvol[0] = (
+            np.pi
+            * (
+                ife_variables.r6 * ife_variables.r6
+                - ife_variables.r5 * ife_variables.r5
+            )
+            * (ife_variables.zu6 + ife_variables.zl6)
+        )
+        ife_variables.shvol[1] = (
+            np.pi
+            * ife_variables.r5
+            * ife_variables.r5
+            * (ife_variables.zu6 - ife_variables.zu5)
+        )
+        ife_variables.shvol[2] = (
+            np.pi
+            * ife_variables.r5
+            * ife_variables.r5
+            * (ife_variables.zl6 - ife_variables.zl5)
+        )
+
+        # Third void
+        ife_variables.v3vol[0] = (
+            np.pi
+            * (
+                ife_variables.r7 * ife_variables.r7
+                - ife_variables.r6 * ife_variables.r6
+            )
+            * (ife_variables.zu7 + ife_variables.zl7)
+        )
+        ife_variables.v3vol[1] = (
+            np.pi
+            * ife_variables.r6
+            * ife_variables.r6
+            * (ife_variables.zu7 - ife_variables.zu6)
+        )
+        ife_variables.v3vol[2] = (
+            np.pi
+            * ife_variables.r6
+            * ife_variables.r6
+            * (ife_variables.zl7 - ife_variables.zl6)
+        )
+
+        # Material volumes
+        for i in range(ife_variables.maxmat):
+
+            ife_variables.chmatv[i] = max(
+                0.0, ife_variables.chvol * ife_variables.chmatf[i]
+            )
+            for j in range(3):
+                ife_variables.fwmatv[j, i] = max(
+                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                )
+                ife_variables.v1matv[j, i] = max(
+                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                )
+                ife_variables.blmatv[j, i] = max(
+                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                )
+                ife_variables.v2matv[j, i] = max(
+                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                )
+                ife_variables.shmatv[j, i] = max(
+                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                )
+                ife_variables.v3matv[j, i] = max(
+                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                )
+
+        # First wall area
+        build_variables.fwarea = (
+            2.0
+            * np.pi
+            * ife_variables.r1
+            * (
+                (ife_variables.zu1 + ife_variables.zl1)
+                + ife_variables.r1 * np.sqrt(2.0)
+            )
         )
 
 
