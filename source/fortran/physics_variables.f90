@@ -550,8 +550,8 @@ module physics_variables
   real(dp) :: p0
   !! central total plasma pressure (Pa)
 
-  real(dp) :: palppv
-  !! alpha power per volume (MW/m3)
+  real(dp) :: alpha_power_density
+  !! Alpha power per volume [MW/m3]
 
   real(dp) :: palpepv
   !! alpha power per volume to electrons (MW/m3)
@@ -986,7 +986,7 @@ module physics_variables
     ni0 = 0.0D0
     m_s_limit = 0.3D0
     p0 = 0.0D0
-    palppv = 0.0D0
+    alpha_power_density = 0.0D0
     palpepv = 0.0D0
     palpfwmw = 0.0D0
     palpipv = 0.0D0

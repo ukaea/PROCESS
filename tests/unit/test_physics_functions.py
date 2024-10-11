@@ -39,7 +39,7 @@ class Palph2Param(NamedTuple):
 
     vol: Any = None
 
-    palppv: Any = None
+    alpha_power_density: Any = None
 
     pneutpv: Any = None
 
@@ -83,7 +83,7 @@ class Palph2Param(NamedTuple):
             ten=13.84,
             tin=13.84,
             vol=2426.25,
-            palppv=0.163,
+            alpha_power_density=0.163,
             pneutpv=0.654,
             expected_palppv=0.163,
             expected_pneutpv=0.654,
@@ -112,7 +112,7 @@ class Palph2Param(NamedTuple):
             ten=13.84,
             tin=13.84,
             vol=2426.25,
-            palppv=0.163,
+            alpha_power_density=0.163,
             pneutpv=0.654,
             expected_palppv=0.20442195,
             expected_pneutpv=0.81968779,
@@ -141,7 +141,7 @@ class Palph2Param(NamedTuple):
             ten=13.84,
             tin=13.84,
             vol=2426.25,
-            palppv=0.163,
+            alpha_power_density=0.163,
             pneutpv=0.654,
             expected_palppv=0.20442195,
             expected_pneutpv=0.81968779,
@@ -170,7 +170,7 @@ class Palph2Param(NamedTuple):
             ten=13.84,
             tin=13.84,
             vol=2426.25,
-            palppv=0.163,
+            alpha_power_density=0.163,
             pneutpv=0.654,
             expected_palppv=0.20442195,
             expected_pneutpv=0.81968779,
@@ -206,7 +206,7 @@ def test_palph2(palph2param, monkeypatch):
         pneutmw,
         pchargemw,
         betaft,
-        palppv,
+        alpha_power_density,
         palpepv,
         palpipv,
         pfuscmw,
@@ -225,11 +225,11 @@ def test_palph2(palph2param, monkeypatch):
         ten=palph2param.ten,
         tin=palph2param.tin,
         vol=palph2param.vol,
-        palppv=palph2param.palppv,
+        alpha_power_density=palph2param.alpha_power_density,
         pneutpv=palph2param.pneutpv,
     )
 
-    assert palppv == pytest.approx(palph2param.expected_palppv)
+    assert alpha_power_density == pytest.approx(palph2param.expected_palppv)
     assert pneutpv == pytest.approx(palph2param.expected_pneutpv)
     assert palpmw == pytest.approx(palph2param.expected_palpmw)
     assert pneutmw == pytest.approx(palph2param.expected_pneutmw)

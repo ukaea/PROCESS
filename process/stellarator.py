@@ -3994,7 +3994,7 @@ class Stellarator:
             physics_variables.pneutmw,
             physics_variables.pchargemw,
             physics_variables.betaft,
-            physics_variables.palppv,
+            physics_variables.alpha_power_density,
             physics_variables.palpipv,
             physics_variables.palpepv,
             physics_variables.pfuscmw,
@@ -4013,7 +4013,7 @@ class Stellarator:
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.vol,
-            physics_variables.palppv,
+            physics_variables.alpha_power_density,
             physics_variables.ifalphap,
         )
 
@@ -4439,7 +4439,7 @@ class Stellarator:
 
         q_PROCESS = (
             (
-                physics_variables.falpha * physics_variables.palppv
+                physics_variables.falpha * physics_variables.alpha_power_density
                 - physics_variables.pcoreradpv
             )
             * physics_variables.vol
@@ -4448,7 +4448,7 @@ class Stellarator:
         )
         q_PROCESS_r1 = (
             (
-                physics_variables.falpha * physics_variables.palppv
+                physics_variables.falpha * physics_variables.alpha_power_density
                 - physics_variables.pcoreradpv
             )
             * physics_variables.vol
@@ -4584,7 +4584,7 @@ class Stellarator:
         )
 
         nominator = (
-            physics_variables.falpha * physics_variables.palppv
+            physics_variables.falpha * physics_variables.alpha_power_density
             - physics_variables.pcoreradpv
         ) * volscaling
 

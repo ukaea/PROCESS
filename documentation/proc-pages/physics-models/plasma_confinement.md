@@ -78,17 +78,17 @@ derived directly from the energy confinement scaling law.
 
 `iradloss = 0` -- Total power lost is scaling power plus radiation:
 
-`pscaling + pradpv = falpha*palppv + pchargepv + pohmpv + pinjmw/vol`
+`pscaling + pradpv = falpha*alpha_power_density + pchargepv + pohmpv + pinjmw/vol`
 
 
 `iradloss = 1` -- Total power lost is scaling power plus radiation from a region defined as the "core":
   
-`pscaling + pcoreradpv = falpha*palppv + pchargepv + pohmpv + pinjmw/vol`
+`pscaling + pcoreradpv = falpha*alpha_power_density + pchargepv + pohmpv + pinjmw/vol`
 
 `iradloss = 2` -- Total power lost is scaling power only, with no additional 
 allowance for radiation. This is not recommended for power plant models.
 
-`pscaling = falpha*palppv + pchargepv + pohmpv + pinjmw/vol`
+`pscaling = falpha*alpha_power_density + pchargepv + pohmpv + pinjmw/vol`
 
 ## L-H Power Threshold Scalings
 
