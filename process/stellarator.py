@@ -3989,7 +3989,7 @@ class Stellarator:
         physics_variables.pdt = physics_variables.pdt + 5.0e0 * physics_variables.palpnb
 
         (
-            physics_variables.pneutpv,
+            physics_variables.neutron_power_density,
             physics_variables.palpmw,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
@@ -4009,7 +4009,7 @@ class Stellarator:
             physics_variables.falpi,
             physics_variables.palpnb,
             physics_variables.charged_power_density,
-            physics_variables.pneutpv,
+            physics_variables.neutron_power_density,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.vol,

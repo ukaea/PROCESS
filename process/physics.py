@@ -1860,7 +1860,7 @@ class Physics:
 
         # Create some derived values and add beam contribution to fusion power
         (
-            physics_variables.pneutpv,
+            physics_variables.neutron_power_density,
             physics_variables.palpmw,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
@@ -1880,7 +1880,7 @@ class Physics:
             physics_variables.falpi,
             physics_variables.palpnb,
             physics_variables.charged_power_density,
-            physics_variables.pneutpv,
+            physics_variables.neutron_power_density,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.vol,
