@@ -263,8 +263,16 @@ class FusionReactionRate:
         self.dd1()
         self.dd2()
 
-    def set_physics_variables(self):
-        """Set the required physics variables."""
+    def set_physics_variables(self) -> None:
+        """
+        Set the required physics variables in the physics_variables and physics_module modules.
+
+        This method updates the global physics variables and module variables with the
+        current instance's fusion power densities and reaction rates.
+
+        Returns:
+            None
+        """
         physics_variables.alpha_power_density = self.alpha_power_density
         physics_variables.charged_power_density = self.charged_power_density
         physics_variables.neutron_power_density = self.neutron_power_density
