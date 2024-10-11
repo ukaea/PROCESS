@@ -3937,7 +3937,7 @@ class Stellarator:
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
-        physics_variables.pdt = physics_module.pdtpv * physics_variables.vol
+        physics_variables.pdt = physics_module.dt_power_density * physics_variables.vol
         physics_variables.pdhe3 = physics_module.pdhe3pv * physics_variables.vol
         physics_variables.pdd = physics_module.dd_power_density * physics_variables.vol
 
