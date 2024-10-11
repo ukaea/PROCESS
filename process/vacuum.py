@@ -57,7 +57,7 @@ class Vacuum:
                 pv.rminor,
                 0.5e0 * (buv.scrapli + buv.scraplo),
                 pv.sarea,
-                pv.vol,
+                pv.plasma_volume,
                 buv.shldoth,
                 buv.shldith,
                 buv.tfcth,

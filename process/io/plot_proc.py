@@ -895,7 +895,7 @@ def synchrotron_rad():
     # rpow is the(1-Rsyn) power dependence based on plasma shape
     # (see Fidone)
     rpow = 0.62
-    kap = vol / (2.0 * 3.1415**2 * rmajor * rminor**2)
+    kap = plasma_volume / (2.0 * 3.1415**2 * rmajor * rminor**2)
 
     # No account is taken of pedestal profiles here, other than use of
     # the correct ne0 and te0...
@@ -915,8 +915,8 @@ def synchrotron_rad():
 
     # psyncpv should be per unit volume
     # Albajar gives it as total
-    psyncpv = psync / vol
-    print("psyncpv = ", psyncpv * vol)  # matches the out.dat file
+    psyncpv = psync / plasma_volume
+    print("psyncpv = ", psyncpv * plasma_volume)  # matches the out.dat file
 
     return psyncpv
 
@@ -1050,8 +1050,8 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     # print('pbrem = ',pbrem)
     # print(1.0e32*lz[12])
     # print('pradpv = ',pradint)
-    # print('pbremmw = ',pbremint*vol)
-    # print('pradmw = ', pradint*vol, 'MW') # pimp = pline + pbrem
+    # print('pbremmw = ',pbremint*plasma_volume)
+    # print('pradmw = ', pradint*plasma_volume, 'MW') # pimp = pline + pbrem
 
     prof.plot(rho, prad, label="Total")
     prof.plot(rho, pimpden[0] * 2.0e-6, label="H")
@@ -2349,7 +2349,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("triang95", r"$\delta_{95}$", ""),
         ("sarea", "Plasma surface area", "m$^2$"),
         ("xarea", "Plasma cross-sectional area", "m$^2$"),
-        ("vol", "Plasma volume", "m$^3$"),
+        ("plasma_volume", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
         ("inboard_build", "Inboard build thickness", "m"),
@@ -3171,10 +3171,10 @@ def main(args=None):
     # rad profile
     global ssync
     global bt
-    global vol
+    global plasma_volume
     ssync = m_file.data["ssync"].get_scan(scan)
     bt = m_file.data["bt"].get_scan(scan)
-    vol = m_file.data["vol"].get_scan(scan)
+    plasma_volume = m_file.data["plasma_volume"].get_scan(scan)
 
     # Build the dictionaries of radial and vertical build values and cumulative values
     global vertical_upper

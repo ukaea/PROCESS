@@ -37,7 +37,7 @@ class Palph2Param(NamedTuple):
 
     tin: Any = None
 
-    vol: Any = None
+    plasma_volume: Any = None
 
     alpha_power_density: Any = None
 
@@ -82,7 +82,7 @@ class Palph2Param(NamedTuple):
             charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
-            vol=2426.25,
+            plasma_volume=2426.25,
             alpha_power_density=0.163,
             neutron_power_density=0.654,
             expected_palppv=0.163,
@@ -111,7 +111,7 @@ class Palph2Param(NamedTuple):
             charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
-            vol=2426.25,
+            plasma_volume=2426.25,
             alpha_power_density=0.163,
             neutron_power_density=0.654,
             expected_palppv=0.20442195,
@@ -140,7 +140,7 @@ class Palph2Param(NamedTuple):
             charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
-            vol=2426.25,
+            plasma_volume=2426.25,
             alpha_power_density=0.163,
             neutron_power_density=0.654,
             expected_palppv=0.20442195,
@@ -169,7 +169,7 @@ class Palph2Param(NamedTuple):
             charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
-            vol=2426.25,
+            plasma_volume=2426.25,
             alpha_power_density=0.163,
             neutron_power_density=0.654,
             expected_palppv=0.20442195,
@@ -224,7 +224,7 @@ def test_palph2(palph2param, monkeypatch):
         charged_power_density=palph2param.charged_power_density,
         ten=palph2param.ten,
         tin=palph2param.tin,
-        vol=palph2param.vol,
+        plasma_volume=palph2param.plasma_volume,
         alpha_power_density=palph2param.alpha_power_density,
         neutron_power_density=palph2param.neutron_power_density,
     )

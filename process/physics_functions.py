@@ -513,7 +513,7 @@ def psync_albajar_fidone():
     psync = 0.0
     psyncpv = 0.0
 
-    kap = physics_variables.vol / (
+    kap = physics_variables.plasma_volume / (
         2.0e0 * numpy.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
     )
 
@@ -563,7 +563,7 @@ def psync_albajar_fidone():
 
     # psyncpv should be per unit volume; Albajar gives it as total
 
-    psyncpv = psync / physics_variables.vol
+    psyncpv = psync / physics_variables.plasma_volume
 
     return psyncpv
 
@@ -730,7 +730,7 @@ def palph2(
     neutron_power_density,
     ten,
     tin,
-    vol,
+    plasma_volume,
     alpha_power_density,
     ifalphap,
 ):
@@ -752,7 +752,7 @@ def palph2(
     :param neutron_power_density: neutron fusion power per volume (MW/m3)
     :param ten: density-weighted electron temperature (keV)
     :param tin: density-weighted ion temperature (keV)
-    :param vol: plasma volume (m3)
+    :param plasma_volume: plasma volume (m3)
     :param alpha_power_density: alpha power per volume (MW/m3)
     :param ifalphap: switch for fast alpha pressure method
 
@@ -764,19 +764,19 @@ def palph2(
     """
 
     # Add neutral beam alpha power / volume
-    palppv_out = alpha_power_density + palpnb / vol
+    palppv_out = alpha_power_density + palpnb / plasma_volume
 
     # Add extra neutron power
-    pneutpv_out = neutron_power_density + 4.0 * palpnb / vol
+    pneutpv_out = neutron_power_density + 4.0 * palpnb / plasma_volume
 
     # Total alpha power
-    palpmw = palppv_out * vol
+    palpmw = palppv_out * plasma_volume
 
     # Total non-alpha charged particle power
-    pchargemw = charged_power_density * vol
+    pchargemw = charged_power_density * plasma_volume
 
     # Total neutron power
-    pneutmw = pneutpv_out * vol
+    pneutmw = pneutpv_out * plasma_volume
 
     # Total fusion power
     powfmw = palpmw + pneutmw + pchargemw
@@ -853,7 +853,7 @@ def beamfus(
     sigmav_dt_average,
     ten,
     tin,
-    vol,
+    plasma_volume,
     zeffai,
 ):
     """Routine to calculate beam slowing down properties
@@ -875,7 +875,7 @@ def beamfus(
     :param sigmav_dt_average: profile averaged <sigma v> for D-T (m3/s)
     :param ten: density-weighted electron temperature (keV)
     :param tin: density-weighted ion temperature (keV)
-    :param vol: plasma volume (m3)
+    :param plasma_volume: plasma volume (m3)
     :param zeffai: mass weighted plasma effective charge
 
     :returns: neutral beam beta component, hot beam ion density (m^-3),
@@ -911,7 +911,7 @@ def beamfus(
         ftritbm,
         cnbeam,
         tin,
-        vol,
+        plasma_volume,
         sigmav_dt_average,
     )
 
@@ -927,7 +927,7 @@ def beamfus(
 
 
 def beamcalc(
-    nd, nt, ealphadt, ebeam, ecritd, ecritt, tausbme, ftritbm, ibeam, ti, vol, svdt
+    nd, nt, ealphadt, ebeam, ecritd, ecritt, tausbme, ftritbm, ibeam, ti, plasma_volume, svdt
 ):
     """Neutral beam alpha power and ion energy
     author: P J Knight, CCFE, Culham Science Centre
@@ -944,7 +944,7 @@ def beamcalc(
     :param svdt: profile averaged <sigma v> for D-T (m3/s)
     :param tausbme: beam ion slowing down time on electrons (s)
     :param ti: thermal ion temperature (keV)
-    :param vol: plasma volume (m3) (95% flux surface)
+    :param plasma_volume: plasma volume (m3) (95% flux surface)
 
     :returns: alpha power from deut. beam-background fusion (MW),
     alpha power from trit. beam-background fusion (MW), hot beam ion density (m^-3),
@@ -964,7 +964,7 @@ def beamcalc(
         / (constants.proton_mass * ATOMIC_MASS_DEUTERIUM)
     )
     tauseffd = tausbme / 3.0 * numpy.log(1.0 + (ebmratd) ** 1.5)
-    nhotmsd = (1.0 - ftritbm) * ibeam * tauseffd / (constants.electron_charge * vol)
+    nhotmsd = (1.0 - ftritbm) * ibeam * tauseffd / (constants.electron_charge * plasma_volume)
 
     ebmratt = ebeam / ecritt
     vcritt = numpy.sqrt(
@@ -975,7 +975,7 @@ def beamcalc(
         / (constants.proton_mass * ATOMIC_MASS_TRITIUM)
     )
     tausefft = tausbme / 3.0 * numpy.log(1.0 + (ebmratt) ** 1.5)
-    nhotmst = ftritbm * ibeam * tausefft / (constants.electron_charge * vol)
+    nhotmst = ftritbm * ibeam * tausefft / (constants.electron_charge * plasma_volume)
 
     nhot = nhotmsd + nhotmst
     ndhot = nhotmsd
@@ -997,8 +997,8 @@ def beamcalc(
         / (3.0 * constants.proton_mass)
     )
 
-    s0d = ifbmd / (constants.electron_charge * vol)
-    s0t = ifbmt / (constants.electron_charge * vol)
+    s0d = ifbmd / (constants.electron_charge * plasma_volume)
+    s0t = ifbmt / (constants.electron_charge * plasma_volume)
 
     xcoefd = (
         ATOMIC_MASS_DEUTERIUM
@@ -1029,8 +1029,8 @@ def beamcalc(
     iabm = 3
     svthotn = 1e-4 * sgvhot(iabm, vcritt, ebeam)
 
-    palfdb = palphabm(ealphadt, ndhot, nt, svdhotn, vol, ti, svdt)
-    palftb = palphabm(ealphadt, nthot, nd, svthotn, vol, ti, svdt)
+    palfdb = palphabm(ealphadt, ndhot, nt, svdhotn, plasma_volume, ti, svdt)
+    palftb = palphabm(ealphadt, nthot, nd, svthotn, plasma_volume, ti, svdt)
 
     return palfdb, palftb, nhot, ehot
 
@@ -1055,7 +1055,7 @@ def xbrak(e0, ec):
     return t1 + t2 - t3 - t4
 
 
-def palphabm(ealphadt, nbm, nblk, sigv, vol, ti, svdt):
+def palphabm(ealphadt, nbm, nblk, sigv, plasma_volume, ti, svdt):
     """Alpha power from beam-background fusion
     author: P J Knight, CCFE, Culham Science Centre
 
@@ -1063,7 +1063,7 @@ def palphabm(ealphadt, nbm, nblk, sigv, vol, ti, svdt):
     :param nblk: thermal ion density (/m3)
     :param nbm: hot beam ion density (/m3)
     :param sigv: hot beam fusion reaction rate (m3/s)
-    :param vol: plasma volume (m3)
+    :param plasma_volume: plasma volume (m3)
     :param ti: thermal ion temperature (keV)
     :param svdt: profile averaged <sigma v> for D-T (m3/s)
     """
@@ -1080,7 +1080,7 @@ def palphabm(ealphadt, nbm, nblk, sigv, vol, ti, svdt):
         * nblk
         * sigv
         * ealphadt
-        * vol
+        * plasma_volume
         * ratio.item()
     )
 

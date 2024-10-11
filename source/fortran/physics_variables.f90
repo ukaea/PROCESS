@@ -841,7 +841,7 @@ module physics_variables
   real(dp) :: triang95
   !! plasma triangularity at 95% surface (calculated if `ishape = 0-2, 6, 8 or 9`)
 
-  real(dp) :: vol
+  real(dp) :: plasma_volume
   !! plasma volume (m3)
 
   real(dp) :: vsbrn
@@ -1074,7 +1074,7 @@ module physics_variables
     tratio = 1.0D0
     triang = 0.36D0
     triang95 = 0.24D0
-    vol = 0.0D0
+    plasma_volume = 0.0D0
     vsbrn = 0.0D0
     vshift = 0.0D0
     vsind = 0.0D0

@@ -457,11 +457,11 @@ contains
     !! charged_power_density : input real : non-alpha charged particle fusion power per volume (MW/m3)
     !! pohmpv : input real : ohmic heating power per volume (MW/m3)
     !! pinjmw : input real : total auxiliary injected power (MW)
-    !! vol : input real : plasma volume (m3)
+    !! plasma_volume : input real : plasma volume (m3)
 
     use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pradpv, &
                                   pcoreradpv, falpha, alpha_power_density, charged_power_density, &
-                                  pohmpv, vol
+                                  pohmpv, plasma_volume
     use current_drive_variables, only: pinjmw
 
     implicit none
@@ -488,7 +488,7 @@ contains
 
     ! if plasma not ignited include injected power
     if (ignite == 0) then
-      pdenom = falpha*alpha_power_density + charged_power_density + pohmpv + pinjmw/vol
+      pdenom = falpha*alpha_power_density + charged_power_density + pohmpv + pinjmw/plasma_volume
     else
       ! if plasma ignited
       pdenom = falpha*alpha_power_density + charged_power_density + pohmpv
@@ -520,8 +520,8 @@ contains
       !! falpha : input real : fraction of alpha power deposited in plasma
       !! palpipv : input real : alpha power per volume to ions (MW/m3)
       !! pinjimw : input real : auxiliary injected power to ions (MW)
-      !! vol : input real : plasma volume (m3)
-      use physics_variables, only: ignite, ptripv, piepv, falpha, palpipv, vol
+      !! plasma_volume : input real : plasma volume (m3)
+      use physics_variables, only: ignite, ptripv, piepv, falpha, palpipv, plasma_volume
       use current_drive_variables, only: pinjimw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -532,9 +532,9 @@ contains
 
 	   ! No assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - (ptripv + piepv) / (falpha*palpipv + pinjimw/vol)
-         tmp_con    = (falpha*palpipv + pinjimw/vol) * (1.0D0 - tmp_cc)
-         tmp_err    = (falpha*palpipv + pinjimw/vol) * tmp_cc
+         tmp_cc     = 1.0D0 - (ptripv + piepv) / (falpha*palpipv + pinjimw/plasma_volume)
+         tmp_con    = (falpha*palpipv + pinjimw/plasma_volume) * (1.0D0 - tmp_cc)
+         tmp_err    = (falpha*palpipv + pinjimw/plasma_volume) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
@@ -575,9 +575,9 @@ contains
       !! palpepv : input real : alpha power per volume to electrons (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
-      !! vol : input real : plasma volume (m3)
+      !! plasma_volume : input real : plasma volume (m3)
       use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, falpha, &
-                                 palpepv, piepv, vol, pradpv
+                                 palpepv, piepv, plasma_volume, pradpv
       use current_drive_variables, only: pinjemw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -601,7 +601,7 @@ contains
 
       ! if plasma not ignited include injected power
       if (ignite == 0) then
-         pdenom = falpha*palpepv + piepv + pinjemw/vol
+         pdenom = falpha*palpepv + piepv + pinjemw/plasma_volume
       else
       ! if plasma ignited
          pdenom = falpha*palpepv + piepv
@@ -1029,13 +1029,13 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! falpha : input real : fraction of alpha power deposited in plasma
       !! pinjmw : input real : total auxiliary injected power (MW)
-      !! vol : input real : plasma volume (m3)
+      !! plasma_volume : input real : plasma volume (m3)
       !! alpha_power_density : input real : alpha power per volume (MW/m3)
       !! charged_power_density :  input real : non-alpha charged particle fusion power per volume (MW/m3)
       !! pohmpv : input real : ohmic heating power per volume (MW/m3)
       !! fradpwr : input real : f-value for core radiation power limit
       !! pradpv : input real : total radiation power per volume (MW/m3)
-      use physics_variables, only: falpha, vol, alpha_power_density, charged_power_density, pohmpv, pradpv
+      use physics_variables, only: falpha, plasma_volume, alpha_power_density, charged_power_density, pohmpv, pradpv
       use current_drive_variables, only: pinjmw
       use constraint_variables, only: fradpwr
       implicit none
@@ -1046,9 +1046,9 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       real(dp) :: pradmaxpv
-      !! Maximum possible power/vol that can be radiated (local)
+      !! Maximum possible power/plasma_volume that can be radiated (local)
 
-      pradmaxpv = pinjmw/vol + alpha_power_density*falpha + charged_power_density + pohmpv
+      pradmaxpv = pinjmw/plasma_volume + alpha_power_density*falpha + charged_power_density + pohmpv
       tmp_cc =  1.0D0 - fradpwr * pradmaxpv / pradpv
       tmp_con = pradmaxpv * (1.0D0 - tmp_cc)
       tmp_err = pradpv * tmp_cc
