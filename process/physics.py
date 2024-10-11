@@ -1809,7 +1809,7 @@ class Physics:
         #
         physics_variables.dt_power = physics_module.dt_power_density * physics_variables.vol
         physics_variables.dhe3_power = physics_module.dhe3_power_density * physics_variables.vol
-        physics_variables.pdd = physics_module.dd_power_density * physics_variables.vol
+        physics_variables.dd_power = physics_module.dd_power_density * physics_variables.vol
 
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
@@ -3915,8 +3915,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "  +   D-D fusion power (MW)",
-            "(pdd)",
-            physics_variables.pdd,
+            "(dd_power)",
+            physics_variables.dd_power,
             "OP ",
         )
         po.ovarre(

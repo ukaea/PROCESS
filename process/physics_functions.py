@@ -302,7 +302,7 @@ class FusionReactionRate:
         proton_rate_density = 0.0
 
         # Update the cumulative D-D power density
-        self.dd_power_density = self.dd_power_density + fusion_power_density
+        self.dd_power_density += fusion_power_density
 
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(

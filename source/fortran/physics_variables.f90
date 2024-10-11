@@ -583,7 +583,7 @@ module physics_variables
   real(dp) :: pcoreradpv
   !! total core radiation power per volume (MW/m3)
 
-  real(dp) :: pdd
+  real(dp) :: dd_power
   !! deuterium-deuterium fusion power (MW)
 
   real(dp) :: dhe3_power
@@ -997,7 +997,7 @@ module physics_variables
     pcoef = 0.0D0
     pinnerzoneradmw = 0.0D0
     pcoreradpv = 0.0D0
-    pdd = 0.0D0
+    dd_power = 0.0D0
     dhe3_power = 0.0D0
     pdivt = 0.0D0
     pdivl = 0.0D0
