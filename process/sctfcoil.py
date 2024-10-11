@@ -7266,6 +7266,7 @@ def vv_stress_on_quench(
     Empirical Formulas for Estimating Self and Mutual Inductances of Toroidal Field Coils and Structures.
     Plasma and Fusion Research. 15. 1405078-1405078. 10.1585/pfr.15.1405078.
     """
+    d_vv = 0.12
     # Poloidal loop resistance (PLR) in ohms
     plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (S_cc + S_rp))) * 1e-6
     plr_vv = ((0.84 / d_vv) * 0.94) * 1e-6

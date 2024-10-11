@@ -568,7 +568,7 @@ class CCFE_HCPB:
                 + fwbs_variables.psurffwo
                 + fwbs_variables.pnucblkt
             )
-            primary_pumping_variables.htpmw_fw_blkt = fpump / (1 - fpump) * p_plasma
+            primary_pumping_variables.htpmw_fw_blkt = (24.0 / 90.0) * fpump / (1 - fpump) * p_plasma
 
             # For divertor and shield, mechanical pumping power is a fraction of thermal
             # power removed by coolant
