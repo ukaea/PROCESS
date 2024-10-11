@@ -3939,7 +3939,7 @@ class Stellarator:
 
         physics_variables.pdt = physics_module.pdtpv * physics_variables.vol
         physics_variables.pdhe3 = physics_module.pdhe3pv * physics_variables.vol
-        physics_variables.pdd = physics_module.pddpv * physics_variables.vol
+        physics_variables.pdd = physics_module.dd_power_density * physics_variables.vol
 
         #  Calculate neutral beam slowing down effects
         #  If ignited, then ignore beam fusion effects

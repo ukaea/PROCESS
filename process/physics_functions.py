@@ -76,7 +76,7 @@ class FusionReactionRate:
         self.plasma_profile = plasma_profile
         self.sigvdt = 0.0
         self.pdhe3pv = 0.0
-        self.pddpv = 0.0
+        self.dd_power_density = 0.0
         self.pdtpv = 0.0
         self.alpha_power_density = 0.0
         self.charged_power_density = 0.0
@@ -193,7 +193,7 @@ class FusionReactionRate:
         frate = fusion_power_density / etot  # reactions/m3/second
         arate = 0.0
         prate = 0.0
-        self.pddpv = self.pddpv + fusion_power_density
+        self.dd_power_density = self.dd_power_density + fusion_power_density
         self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
 
     def dd2(self):
@@ -221,7 +221,7 @@ class FusionReactionRate:
         frate = fusion_power_density / etot  # reactions/m3/second
         arate = 0.0
         prate = frate  # proton production /m3/second
-        self.pddpv = self.pddpv + fusion_power_density
+        self.dd_power_density = self.dd_power_density + fusion_power_density
         self.sum_fusion_rates(pa, pc, pn, frate, arate, prate)
 
     def sum_fusion_rates(self, pa, pc, pn, frate, arate, prate):
@@ -265,7 +265,7 @@ class FusionReactionRate:
         physics_module.sigvdt = self.sigvdt
         physics_module.pdtpv = self.pdtpv
         physics_module.pdhe3pv = self.pdhe3pv
-        physics_module.pddpv = self.pddpv
+        physics_module.dd_power_density = self.dd_power_density
 
 
 def radpwr(plasma_profile):
