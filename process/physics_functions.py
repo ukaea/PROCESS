@@ -718,65 +718,78 @@ class RadpwrData:
 
 
 def palph2(
-    bp,
-    bt,
-    dene,
-    deni,
-    dnitot,
-    falpe,
-    falpi,
-    palpnb,
-    charged_power_density,
-    neutron_power_density,
-    ten,
-    tin,
-    plasma_volume,
-    alpha_power_density,
-    ifalphap,
-):
+    bp: float,
+    bt: float,
+    dene: float,
+    deni: float,
+    dnitot: float,
+    falpe: float,
+    falpi: float,
+    palpnb: float,
+    charged_power_density: float,
+    neutron_power_density: float,
+    ten: float,
+    tin: float,
+    plasma_volume: float,
+    alpha_power_density: float,
+    ifalphap: int,
+) -> tuple:
     """
-    Fusion power and fast alpha pressure calculations.
-    ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-    ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-    D J Ward, UKAEA Fusion: F/PL/PJK/PROCESS/CODE/050
+    Calculate fusion power and fast alpha pressure.
 
-    :param bp: poloidal field (T)
-    :param bt: totoidal field on axis (T)
-    :param dene: electron density (m^-3)
-    :param deni: fuel ion density (m^-3)
-    :param dnitot: total ion density (m^-3)
-    :param falpe: fraction of alpha energy to electrons
-    :param falpi: fraction of alpha energy to ions
-    :param palpnb: alpha power from hot neutral beam ions (MW)
-    :param charged_power_density: other charged particle fusion power/volume (MW/m3)
-    :param neutron_power_density: neutron fusion power per volume (MW/m3)
-    :param ten: density-weighted electron temperature (keV)
-    :param tin: density-weighted ion temperature (keV)
-    :param plasma_volume: plasma volume (m3)
-    :param alpha_power_density: alpha power per volume (MW/m3)
-    :param ifalphap: switch for fast alpha pressure method
+    This function computes various fusion power metrics and the fast alpha pressure
+    based on the provided plasma parameters.
 
-    :return: neutron fusion power per volume (MW/m3), alpha power (MW),
-    neutron fusion power (MW), other charged particle fusion power (MW),
-    fast alpha beta component, alpha power per volume (MW/m3),
-    alpha power per volume to electrons (MW/m3), alpha power per volume to ions (MW/m3),
-    charged particle fusion power (MW), fusion power (MW)
+    Parameters:
+        bp (float): Poloidal field (T).
+        bt (float): Toroidal field on axis (T).
+        dene (float): Electron density (m^-3).
+        deni (float): Fuel ion density (m^-3).
+        dnitot (float): Total ion density (m^-3).
+        falpe (float): Fraction of alpha energy to electrons.
+        falpi (float): Fraction of alpha energy to ions.
+        palpnb (float): Alpha power from hot neutral beam ions (MW).
+        charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
+        neutron_power_density (float): Neutron fusion power per unit volume (MW/m^3).
+        ten (float): Density-weighted electron temperature (keV).
+        tin (float): Density-weighted ion temperature (keV).
+        plasma_volume (float): Plasma volume (m^3).
+        alpha_power_density (float): Alpha power per unit volume (MW/m^3).
+        ifalphap (int): Switch for fast alpha pressure method.
+
+    Returns:
+        tuple: A tuple containing the following elements:
+            - neutron_power_density_out (float): Neutron fusion power per unit volume [MW/m^3].
+            - palpmw (float): Ttoal alpha power [MW].
+            - pneutmw (float): Total neutron fusion power [MW].
+            - pchargemw (float): Other total charged particle fusion power [MW].
+            - betaft (float): Fast alpha beta component.
+            - alpha_power_density_out (float): Alpha power per unit volume [MW/m^3].
+            - palpepv (float): Alpha power per unit volume to electrons [MW/m^3].
+            - palpipv (float): Alpha power per unit volume to ions [MW/m^3].
+            - pfuscmw (float): Charged particle fusion power [MW].
+            - powfmw (float): Total fusion power [MW].
+
+    References:
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
+        - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
     """
 
     # Add neutral beam alpha power / volume
-    palppv_out = alpha_power_density + palpnb / plasma_volume
+    alpha_power_density_out = alpha_power_density + (palpnb / plasma_volume)
 
     # Add extra neutron power
-    pneutpv_out = neutron_power_density + 4.0 * palpnb / plasma_volume
+    neutron_power_density_out = neutron_power_density + ((4.0 * palpnb) / plasma_volume)
 
     # Total alpha power
-    palpmw = palppv_out * plasma_volume
+    palpmw = alpha_power_density_out * plasma_volume
 
     # Total non-alpha charged particle power
     pchargemw = charged_power_density * plasma_volume
 
     # Total neutron power
-    pneutmw = pneutpv_out * plasma_volume
+    pneutmw = neutron_power_density_out * plasma_volume
 
     # Total fusion power
     powfmw = palpmw + pneutmw + pchargemw
@@ -787,8 +800,8 @@ def palph2(
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
     # No consideration of charged_power_density here...
-    palpipv = physics_variables.falpha * palppv_out * falpi
-    palpepv = physics_variables.falpha * palppv_out * falpe
+    palpipv = physics_variables.falpha * alpha_power_density_out * falpi
+    palpepv = physics_variables.falpha * alpha_power_density_out * falpe
 
     # Determine average fast alpha density
     if physics_variables.fdeut < 1.0:
@@ -816,19 +829,19 @@ def palph2(
             )
 
         fact = max(fact, 0.0)
-        fact2 = palppv_out / alpha_power_density
+        fact2 = alpha_power_density_out / alpha_power_density
         betaft = betath * fact * fact2
 
     else:  # negligible alpha production, alpha_power_density = palpnb = 0
         betaft = 0.0
 
     return (
-        pneutpv_out,
+        neutron_power_density_out,
         palpmw,
         pneutmw,
         pchargemw,
         betaft,
-        palppv_out,
+        alpha_power_density_out,
         palpepv,
         palpipv,
         pfuscmw,
