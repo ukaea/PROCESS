@@ -568,7 +568,7 @@ module physics_variables
   real(dp) :: palpmw
   !! Total alpha power from plasma and beams (MW)
 
-  real(dp) :: palpnb
+  real(dp) :: alpha_power_beams
   !! alpha power from hot neutral beam ions (MW)
 
   real(dp) :: pchargemw
@@ -995,7 +995,7 @@ module physics_variables
     palpipv = 0.0D0
     palpmw = 0.0D0
     alpha_power_plasma = 0.0D0
-    palpnb = 0.0D0
+    alpha_power_beams = 0.0D0
     pchargemw = 0.0D0
     charged_power_density = 0.0D0
     pcoef = 0.0D0

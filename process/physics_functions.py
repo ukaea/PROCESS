@@ -725,7 +725,7 @@ def palph2(
     dnitot: float,
     falpe: float,
     falpi: float,
-    palpnb: float,
+    alpha_power_beams: float,
     charged_power_density: float,
     neutron_power_density: float,
     ten: float,
@@ -748,7 +748,7 @@ def palph2(
         dnitot (float): Total ion density (m^-3).
         falpe (float): Fraction of alpha energy to electrons.
         falpi (float): Fraction of alpha energy to ions.
-        palpnb (float): Alpha power from hot neutral beam ions (MW).
+        alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
         charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
         neutron_power_density (float): Neutron fusion power per unit volume (MW/m^3).
         ten (float): Density-weighted electron temperature (keV).
@@ -781,10 +781,10 @@ def palph2(
     alpha_power_plasma = alpha_power_density * plasma_volume
 
     # Add neutral beam alpha power / volume
-    alpha_power_density_out = alpha_power_density + (palpnb / plasma_volume)
+    alpha_power_density_out = alpha_power_density + (alpha_power_beams / plasma_volume)
 
     # Add extra neutron power
-    neutron_power_density_out = neutron_power_density + ((4.0 * palpnb) / plasma_volume)
+    neutron_power_density_out = neutron_power_density + ((4.0 * alpha_power_beams) / plasma_volume)
 
     # Total alpha power
     palpmw = alpha_power_density_out * plasma_volume
@@ -836,7 +836,7 @@ def palph2(
         fact2 = alpha_power_density_out / alpha_power_density
         betaft = betath * fact * fact2
 
-    else:  # negligible alpha production, alpha_power_density = palpnb = 0
+    else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0
         betaft = 0.0
 
     return (
@@ -935,13 +935,13 @@ def beamfus(
 
     # Neutral beam alpha power
 
-    palpnb = beamfus0 * (palpdb + palptb)
+    alpha_power_beams = beamfus0 * (palpdb + palptb)
 
     # Neutral beam beta
 
     betanb = betbm0 * 4.03e-22 * 0.66666 * dnbeam2 * ehotnb / (bt**2 + bp**2)
 
-    return betanb, dnbeam2, palpnb
+    return betanb, dnbeam2, alpha_power_beams
 
 
 def beamcalc(

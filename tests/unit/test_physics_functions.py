@@ -29,7 +29,7 @@ class Palph2Param(NamedTuple):
 
     falpi: Any = None
 
-    palpnb: Any = None
+    alpha_power_beams: Any = None
 
     charged_power_density: Any = None
 
@@ -78,7 +78,7 @@ class Palph2Param(NamedTuple):
             dnitot=6.743e19,
             falpe=0.68,
             falpi=0.32,
-            palpnb=0,
+            alpha_power_beams=0,
             charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
@@ -107,7 +107,7 @@ class Palph2Param(NamedTuple):
             dnitot=6.743e19,
             falpe=0.68,
             falpi=0.32,
-            palpnb=100.5,
+            alpha_power_beams=100.5,
             charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
@@ -136,7 +136,7 @@ class Palph2Param(NamedTuple):
             dnitot=6.743e19,
             falpe=0.68,
             falpi=0.32,
-            palpnb=100.5,
+            alpha_power_beams=100.5,
             charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
@@ -165,7 +165,7 @@ class Palph2Param(NamedTuple):
             dnitot=6.743e19,
             falpe=0.68,
             falpi=0.32,
-            palpnb=100.5,
+            alpha_power_beams=100.5,
             charged_power_density=0.00066,
             ten=13.84,
             tin=13.84,
@@ -220,7 +220,7 @@ def test_palph2(palph2param, monkeypatch):
         dnitot=palph2param.dnitot,
         falpe=palph2param.falpe,
         falpi=palph2param.falpi,
-        palpnb=palph2param.palpnb,
+        alpha_power_beams=palph2param.alpha_power_beams,
         charged_power_density=palph2param.charged_power_density,
         ten=palph2param.ten,
         tin=palph2param.tin,
@@ -270,7 +270,7 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
 
 
 def test_beamfus():
-    betanb, dnbeam2, palpnb = physics_functions.beamfus(
+    betanb, dnbeam2, alpha_power_beams = physics_functions.beamfus(
         1.0,
         1.5,
         0.85,
@@ -293,7 +293,7 @@ def test_beamfus():
 
     assert betanb == pytest.approx(0.002616169278788316)
     assert dnbeam2 == pytest.approx(4.2028390908892986e17)
-    assert palpnb == pytest.approx(11.506114015489336)
+    assert alpha_power_beams == pytest.approx(11.506114015489336)
 
 
 def test_beamcalc():

@@ -1820,7 +1820,7 @@ class Physics:
             (
                 physics_variables.betanb,
                 physics_variables.dnbeam2,
-                physics_variables.palpnb,
+                physics_variables.alpha_power_beams,
             ) = physics_funcs.beamfus(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
@@ -1844,19 +1844,19 @@ class Physics:
             physics_variables.fusion_rate_density = (
                 physics_variables.fusion_rate_density
                 + 1.0e6
-                * physics_variables.palpnb
+                * physics_variables.alpha_power_beams
                 / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.plasma_volume
             )
             physics_variables.alpha_rate_density = (
                 physics_variables.alpha_rate_density
                 + 1.0e6
-                * physics_variables.palpnb
+                * physics_variables.alpha_power_beams
                 / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
                 / physics_variables.plasma_volume
             )
 
-        physics_variables.dt_power = physics_variables.dt_power + 5.0e0 * physics_variables.palpnb
+        physics_variables.dt_power = physics_variables.dt_power + 5.0e0 * physics_variables.alpha_power_beams
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -1879,7 +1879,7 @@ class Physics:
             physics_variables.dnitot,
             physics_variables.falpe,
             physics_variables.falpi,
-            physics_variables.palpnb,
+            physics_variables.alpha_power_beams,
             physics_variables.charged_power_density,
             physics_variables.neutron_power_density,
             physics_variables.ten,
@@ -3944,8 +3944,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power: beam-plasma (MW)",
-            "(palpnb)",
-            physics_variables.palpnb,
+            "(alpha_power_beams)",
+            physics_variables.alpha_power_beams,
             "OP ",
         )
         po.ovarre(

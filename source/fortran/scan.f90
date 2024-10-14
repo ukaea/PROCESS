@@ -196,7 +196,7 @@ contains
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, pradmw, dene, powfmw, btot, tesep, &
-      pdivt, ralpne, ten, betap, hfac, teped, palpnb, qlim, rmajor, wallmw, &
+      pdivt, ralpne, ten, betap, hfac, teped, alpha_power_beams, qlim, rmajor, wallmw, &
       beta, betalim, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
@@ -236,7 +236,7 @@ contains
     outvar(22,iscan) = hfac(6)
     outvar(23,iscan) = hfac(7)
     outvar(24,iscan) = powfmw
-    outvar(25,iscan) = palpnb * 5.0D0
+    outvar(25,iscan) = alpha_power_beams * 5.0D0
     outvar(26,iscan) = wallmw
     outvar(27,iscan) = pinjmw
     outvar(28,iscan) = pinjwp
