@@ -1862,7 +1862,7 @@ class Physics:
         (
             physics_variables.neutron_power_density,
             physics_variables.alpha_power_plasma,
-            physics_variables.palpmw,
+            physics_variables.alpha_power_total,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
             physics_variables.betaft,
@@ -1986,7 +1986,7 @@ class Physics:
             pinj = 0.0e0
 
         physics_variables.pdivt = (
-            physics_variables.falpha * physics_variables.palpmw
+            physics_variables.falpha * physics_variables.alpha_power_total
             + physics_variables.pchargemw
             + pinj
             + physics_variables.pohmmw
@@ -2015,7 +2015,7 @@ class Physics:
         )
 
         # Power transported to the first wall by escaped alpha particles
-        physics_variables.palpfwmw = physics_variables.palpmw * (
+        physics_variables.palpfwmw = physics_variables.alpha_power_total * (
             1.0e0 - physics_variables.falpha
         )
 
@@ -2046,7 +2046,7 @@ class Physics:
             physics_variables.powerht,
         ) = self.pcond(
             physics_variables.afuel,
-            physics_variables.palpmw,
+            physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
             physics_variables.dnitot,
@@ -2262,7 +2262,7 @@ class Physics:
 
         # Calculate some derived quantities that may not have been defined earlier
         physics_module.total_loss_power = 1e6 * (
-            physics_variables.falpha * physics_variables.palpmw
+            physics_variables.falpha * physics_variables.alpha_power_total
             + physics_variables.pchargemw
             + physics_variables.pohmmw
             + current_drive_variables.pinjmw
@@ -3930,8 +3930,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power: total (MW)",
-            "(palpmw)",
-            physics_variables.palpmw,
+            "(alpha_power_total)",
+            physics_variables.alpha_power_total,
             "OP ",
         )
         po.ovarre(
@@ -3963,7 +3963,7 @@ class Physics:
             "OP ",
         )
         tot_power_plasma = (
-            physics_variables.falpha * physics_variables.palpmw
+            physics_variables.falpha * physics_variables.alpha_power_total
             + physics_variables.pchargemw
             + physics_variables.pohmmw
             + current_drive_variables.pinjmw
@@ -3975,7 +3975,7 @@ class Physics:
             tot_power_plasma,
             "OP ",
         )
-        # po.ovarre(self.outfile,'Total power deposited in plasma (MW)','()',falpha*palpmw+pchargemw+pohmmw+pinjmw, 'OP ')
+        # po.ovarre(self.outfile,'Total power deposited in plasma (MW)','()',falpha*alpha_power_total+pchargemw+pohmmw+pinjmw, 'OP ')
 
         po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
         po.ovarre(
@@ -5079,7 +5079,7 @@ class Physics:
                 powerhtz,
             ) = self.pcond(
                 physics_variables.afuel,
-                physics_variables.palpmw,
+                physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
                 physics_variables.dnitot,
@@ -5605,7 +5605,7 @@ class Physics:
             powerhtz,
         ) = self.pcond(
             physics_variables.afuel,
-            physics_variables.palpmw,
+            physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
             physics_variables.dnitot,
@@ -5662,7 +5662,7 @@ class Physics:
     @staticmethod
     def pcond(
         afuel,
-        palpmw,
+        alpha_power_total,
         aspect,
         bt,
         dnitot,
@@ -5694,7 +5694,7 @@ class Physics:
         the transport power loss terms.
         author: P J Knight, CCFE, Culham Science Centre
         afuel     : input real :  average mass of fuel (amu)
-        palpmw    : input real :  alpha particle power (MW)
+        alpha_power_total    : input real :  alpha particle power (MW)
         aspect    : input real :  aspect ratio
         bt        : input real :  toroidal field on axis (T)
         dene      : input real :  volume averaged electron density (/m3)
@@ -5764,7 +5764,7 @@ class Physics:
 
         # Calculate heating power (MW)
         powerht = (
-            physics_variables.falpha * palpmw + pchargemw + physics_variables.pohmmw
+            physics_variables.falpha * alpha_power_total + pchargemw + physics_variables.pohmmw
         )
 
         # If the device is not ignited, add the injected auxiliary power

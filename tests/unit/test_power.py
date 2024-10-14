@@ -2117,7 +2117,7 @@ class Power2Param(NamedTuple):
 
     pfwpmw: Any = None
 
-    palpmw: Any = None
+    alpha_power_total: Any = None
 
     ignite: Any = None
 
@@ -2266,7 +2266,7 @@ class Power2Param(NamedTuple):
             htpsecmw=30.457120415306122,
             helpow_cryal=0,
             pfwpmw=0.89998039031509891,
-            palpmw=396.66154806848488,
+            alpha_power_total=396.66154806848488,
             ignite=0,
             pinnerzoneradmw=113.53817859231452,
             pradmw=287.99550050743289,
@@ -2368,7 +2368,7 @@ class Power2Param(NamedTuple):
             htpsecmw=30.448114159579291,
             helpow_cryal=0,
             pfwpmw=0.068213156646500808,
-            palpmw=396.53774329057228,
+            alpha_power_total=396.53774329057228,
             ignite=0,
             pinnerzoneradmw=113.53817859231452,
             pradmw=287.99550050743289,
@@ -2542,7 +2542,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "pfwpmw", power2param.pfwpmw)
 
-    monkeypatch.setattr(physics_variables, "palpmw", power2param.palpmw)
+    monkeypatch.setattr(physics_variables, "alpha_power_total", power2param.alpha_power_total)
 
     monkeypatch.setattr(physics_variables, "ignite", power2param.ignite)
 

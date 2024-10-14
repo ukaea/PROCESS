@@ -565,7 +565,7 @@ module physics_variables
   real(dp) :: alpha_power_plasma
   !! Alpha power from only the plasma (MW)
   
-  real(dp) :: palpmw
+  real(dp) :: alpha_power_total
   !! Total alpha power from plasma and beams (MW)
 
   real(dp) :: alpha_power_beams
@@ -993,7 +993,7 @@ module physics_variables
     palpepv = 0.0D0
     palpfwmw = 0.0D0
     palpipv = 0.0D0
-    palpmw = 0.0D0
+    alpha_power_total = 0.0D0
     alpha_power_plasma = 0.0D0
     alpha_power_beams = 0.0D0
     pchargemw = 0.0D0

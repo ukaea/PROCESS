@@ -205,7 +205,7 @@ class Stellarator:
                 physics_variables.powerht,
             ) = self.physics.pcond(
                 physics_variables.afuel,
-                physics_variables.palpmw,
+                physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
                 physics_variables.dnitot,
@@ -3990,7 +3990,7 @@ class Stellarator:
 
         (
             physics_variables.neutron_power_density,
-            physics_variables.palpmw,
+            physics_variables.alpha_power_total,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
             physics_variables.betaft,
@@ -4080,7 +4080,7 @@ class Stellarator:
         #  physics_variables.pradmw here is core + edge (no SOL)
 
         powht = (
-            physics_variables.falpha * physics_variables.palpmw
+            physics_variables.falpha * physics_variables.alpha_power_total
             + physics_variables.pchargemw
             + physics_variables.pohmmw
             - physics_variables.pradpv * physics_variables.plasma_volume
@@ -4117,7 +4117,7 @@ class Stellarator:
 
         #  Power transported to the first wall by escaped alpha particles
 
-        physics_variables.palpfwmw = physics_variables.palpmw * (
+        physics_variables.palpfwmw = physics_variables.alpha_power_total * (
             1.0e0 - physics_variables.falpha
         )
 
@@ -4152,7 +4152,7 @@ class Stellarator:
         )
 
         physics_variables.rad_fraction_total = physics_variables.pradmw / (
-            physics_variables.falpha * physics_variables.palpmw
+            physics_variables.falpha * physics_variables.alpha_power_total
             + physics_variables.pchargemw
             + physics_variables.pohmmw
             + current_drive_variables.pinjmw
@@ -4172,7 +4172,7 @@ class Stellarator:
             physics_variables.powerht,
         ) = self.physics.pcond(
             physics_variables.afuel,
-            physics_variables.palpmw,
+            physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
             physics_variables.dnitot,
