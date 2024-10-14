@@ -26,7 +26,7 @@ def plot_full_sankey(
     pinjmw = m_file.data["pinjmw"].get_scan(-1)  # Total auxiliary injected power (MW)
     pohmmw = m_file.data["pohmmw"].get_scan(-1)  # Ohmic heating power (MW)
     totalplasma = powfmw + pinjmw + pohmmw  # Total Power in plasma (MW)
-    pneutmw = m_file.data["pneutmw"].get_scan(-1)  # Neutron fusion power (MW)
+    neutron_power_total = m_file.data["neutron_power_total"].get_scan(-1)  # Neutron fusion power (MW)
     pchargemw = m_file.data["pchargemw"].get_scan(
         -1
     )  # Non-alpha charged particle power (MW)
@@ -108,7 +108,7 @@ def plot_full_sankey(
         # --------------------------------------- PLASMA - 0 --------------------------------------
 
         # Fusion, Injected, Ohmic, -Charged P.-Ohmic, -Alphas-Injected, -Neutrons
-        PLASMA = [powfmw, pinjmw, pohmmw, -pcharohmmw, -palpinjmw, -pneutmw]
+        PLASMA = [powfmw, pinjmw, pohmmw, -pcharohmmw, -palpinjmw, -neutron_power_total]
         sankey.add(
             flows=PLASMA,
             # [left(in), down(in), down(in), up(out), up(out), right(out)]
@@ -135,7 +135,7 @@ def plot_full_sankey(
         # ------------------------------------- NEUTRONICS - 1 ------------------------------------
 
         # Neutrons, -Divertor, -1st wall, -Shield, -TF coils, -Blanket+Energy Mult.
-        NEUTRONS = [pneutmw, -pnucdiv, -pnucfw, -pnucshld, -ptfnuc, -pnucemblkt]
+        NEUTRONS = [neutron_power_total, -pnucdiv, -pnucfw, -pnucshld, -ptfnuc, -pnucemblkt]
         sankey.add(
             flows=NEUTRONS,
             # left(in), up(out), up(out), up(out), up(out), right(out)

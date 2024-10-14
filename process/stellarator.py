@@ -1187,7 +1187,7 @@ class Stellarator:
         #  Neutron power lost through holes in first wall (eventually absorbed by
         #  shield)
 
-        fwbs_variables.pnucloss = physics_variables.pneutmw * fwbs_variables.fhole
+        fwbs_variables.pnucloss = physics_variables.neutron_power_total * fwbs_variables.fhole
 
         # The peaking factor, obtained as precalculated parameter
         fwbs_variables.wallpf = (
@@ -1199,10 +1199,10 @@ class Stellarator:
             self.blanket_neutronics()
 
             if heat_transport_variables.ipowerflow == 1:
-                fwbs_variables.pnucdiv = physics_variables.pneutmw * fwbs_variables.fdiv
-                fwbs_variables.pnuchcd = physics_variables.pneutmw * fwbs_variables.fhcd
+                fwbs_variables.pnucdiv = physics_variables.neutron_power_total * fwbs_variables.fdiv
+                fwbs_variables.pnuchcd = physics_variables.neutron_power_total * fwbs_variables.fhcd
                 fwbs_variables.pnucfw = (
-                    physics_variables.pneutmw
+                    physics_variables.neutron_power_total
                     - fwbs_variables.pnucdiv
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuchcd
@@ -1258,13 +1258,13 @@ class Stellarator:
                 #  Energy-multiplied neutron power
 
                 pneut2 = (
-                    physics_variables.pneutmw
+                    physics_variables.neutron_power_total
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
                 ) * fwbs_variables.emult
 
                 fwbs_variables.emultmw = pneut2 - (
-                    physics_variables.pneutmw
+                    physics_variables.neutron_power_total
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
                 )
@@ -1302,16 +1302,16 @@ class Stellarator:
             else:  # heat_transport_variables.ipowerflow == 1
                 #  Neutron power incident on divertor (MW)
 
-                fwbs_variables.pnucdiv = physics_variables.pneutmw * fwbs_variables.fdiv
+                fwbs_variables.pnucdiv = physics_variables.neutron_power_total * fwbs_variables.fdiv
 
                 #  Neutron power incident on HCD apparatus (MW)
 
-                fwbs_variables.pnuchcd = physics_variables.pneutmw * fwbs_variables.fhcd
+                fwbs_variables.pnuchcd = physics_variables.neutron_power_total * fwbs_variables.fhcd
 
                 #  Neutron power deposited in first wall, blanket and shield (MW)
 
                 pnucfwbs = (
-                    physics_variables.pneutmw
+                    physics_variables.neutron_power_total
                     - fwbs_variables.pnucdiv
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
@@ -3991,7 +3991,7 @@ class Stellarator:
         (
             physics_variables.neutron_power_density,
             physics_variables.alpha_power_total,
-            physics_variables.pneutmw,
+            physics_variables.neutron_power_total,
             physics_variables.pchargemw,
             physics_variables.betaft,
             physics_variables.alpha_power_density,
@@ -4022,14 +4022,14 @@ class Stellarator:
         if physics_variables.iwalld == 1:
             physics_variables.wallmw = (
                 physics_variables.ffwal
-                * physics_variables.pneutmw
+                * physics_variables.neutron_power_total
                 / physics_variables.sarea
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
                 physics_variables.wallmw = (
                     (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.pneutmw
+                    * physics_variables.neutron_power_total
                     / build_variables.fwarea
                 )
             else:
@@ -4040,7 +4040,7 @@ class Stellarator:
                         - fwbs_variables.fhcd
                         - fwbs_variables.fdiv
                     )
-                    * physics_variables.pneutmw
+                    * physics_variables.neutron_power_total
                     / build_variables.fwarea
                 )
 

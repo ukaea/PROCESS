@@ -1864,7 +1864,7 @@ class Physics:
             physics_variables.alpha_power_plasma,
             physics_variables.alpha_power_total,
             physics_variables.neutron_power_plasma,
-            physics_variables.pneutmw,
+            physics_variables.neutron_power_total,
             physics_variables.pchargemw,
             physics_variables.betaft,
             physics_variables.alpha_power_density,
@@ -1895,7 +1895,7 @@ class Physics:
         if physics_variables.iwalld == 1:
             physics_variables.wallmw = (
                 physics_variables.ffwal
-                * physics_variables.pneutmw
+                * physics_variables.neutron_power_total
                 / physics_variables.sarea
             )
         else:
@@ -1903,14 +1903,14 @@ class Physics:
                 # Double null configuration
                 physics_variables.wallmw = (
                     (1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv)
-                    * physics_variables.pneutmw
+                    * physics_variables.neutron_power_total
                     / build_variables.fwarea
                 )
             else:
                 # Single null Configuration
                 physics_variables.wallmw = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
-                    * physics_variables.pneutmw
+                    * physics_variables.neutron_power_total
                     / build_variables.fwarea
                 )
 
@@ -3952,8 +3952,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Neutron power: total (MW)",
-            "(pneutmw)",
-            physics_variables.pneutmw,
+            "(neutron_power_total)",
+            physics_variables.neutron_power_total,
             "OP ",
         )
         po.ovarre(

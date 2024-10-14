@@ -631,7 +631,7 @@ module physics_variables
   real(dp) :: neutron_power_plasma
   !! Neutron fusion power from just the plasma [MW]
   
-  real(dp) :: pneutmw
+  real(dp) :: neutron_power_total
   !! Total neutron fusion power from plasma and beams [MW]
 
   real(dp) :: neutron_power_density
@@ -1019,7 +1019,7 @@ module physics_variables
     piepv = 0.0D0
     plasma_current = 0.0D0
     neutron_power_plasma = 0.0D0
-    pneutmw = 0.0D0
+    neutron_power_total = 0.0D0
     neutron_power_density = 0.0D0
     pohmmw = 0.0D0
     pohmpv = 0.0D0

@@ -762,7 +762,7 @@ def palph2(
             - neutron_power_density_out (float): Neutron fusion power per unit volume [MW/m^3].
             - alpha_power_plasma (float): Alpha power from only the plasma [MW].
             - alpha_power_total (float): Total alpha power [MW].
-            - pneutmw (float): Total neutron fusion power [MW].
+            - neutron_power_total (float): Total neutron fusion power [MW].
             - pchargemw (float): Other total charged particle fusion power [MW].
             - betaft (float): Fast alpha beta component.
             - alpha_power_density_out (float): Alpha power per unit volume [MW/m^3].
@@ -796,7 +796,7 @@ def palph2(
     neutron_power_density_out = neutron_power_density + ((4.0 * alpha_power_beams) / plasma_volume)
 
     # Total neutron power
-    pneutmw = neutron_power_density_out * plasma_volume
+    neutron_power_total = neutron_power_density_out * plasma_volume
 
     # Charged particle power
 
@@ -807,7 +807,7 @@ def palph2(
     pfuscmw = alpha_power_total + pchargemw
 
     # Total fusion power
-    powfmw = alpha_power_total + pneutmw + pchargemw
+    powfmw = alpha_power_total + neutron_power_total + pchargemw
 
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
@@ -852,7 +852,7 @@ def palph2(
         alpha_power_plasma,
         alpha_power_total,
         neutron_power_plasma,
-        pneutmw,
+        neutron_power_total,
         pchargemw,
         betaft,
         alpha_power_density_out,
