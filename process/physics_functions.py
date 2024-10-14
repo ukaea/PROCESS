@@ -760,7 +760,8 @@ def palph2(
     Returns:
         tuple: A tuple containing the following elements:
             - neutron_power_density_out (float): Neutron fusion power per unit volume [MW/m^3].
-            - palpmw (float): Ttoal alpha power [MW].
+            - alpha_power_plasma (float): Alpha power from only the plasma [MW].
+            - palpmw (float): Total alpha power [MW].
             - pneutmw (float): Total neutron fusion power [MW].
             - pchargemw (float): Other total charged particle fusion power [MW].
             - betaft (float): Fast alpha beta component.
@@ -775,6 +776,9 @@ def palph2(
         - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
 
     """
+
+    # Calculate alpha power produced just by the plasma
+    alpha_power_plasma = alpha_power_density * plasma_volume
 
     # Add neutral beam alpha power / volume
     alpha_power_density_out = alpha_power_density + (palpnb / plasma_volume)
@@ -837,6 +841,7 @@ def palph2(
 
     return (
         neutron_power_density_out,
+        alpha_power_plasma,
         palpmw,
         pneutmw,
         pchargemw,

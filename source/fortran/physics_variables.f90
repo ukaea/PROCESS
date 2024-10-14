@@ -562,8 +562,11 @@ module physics_variables
   real(dp) :: palpipv
   !! alpha power per volume to ions (MW/m3)
 
+  real(dp) :: alpha_power_plasma
+  !! Alpha power from only the plasma (MW)
+  
   real(dp) :: palpmw
-  !! alpha power (MW)
+  !! Total alpha power from plasma and beams (MW)
 
   real(dp) :: palpnb
   !! alpha power from hot neutral beam ions (MW)
@@ -991,6 +994,7 @@ module physics_variables
     palpfwmw = 0.0D0
     palpipv = 0.0D0
     palpmw = 0.0D0
+    alpha_power_plasma = 0.0D0
     palpnb = 0.0D0
     pchargemw = 0.0D0
     charged_power_density = 0.0D0

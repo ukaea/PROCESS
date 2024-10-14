@@ -1861,6 +1861,7 @@ class Physics:
         # Create some derived values and add beam contribution to fusion power
         (
             physics_variables.neutron_power_density,
+            physics_variables.alpha_power_plasma,
             physics_variables.palpmw,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
@@ -1968,7 +1969,7 @@ class Physics:
             physics_variables.sarea,
             physics_variables.aion,
             physics_variables.aspect,
-            physics_variables.plascur,
+            physics_variables.plasma_current,
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
@@ -3907,21 +3908,21 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            " =    D-T fusion power (MW)",
+            "D-T fusion power (MW)",
             "(dt_power)",
             physics_variables.dt_power,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "  +   D-D fusion power (MW)",
+            "D-D fusion power (MW)",
             "(dd_power)",
             physics_variables.dd_power,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "  + D-He3 fusion power (MW)",
+            "D-He3 fusion power (MW)",
             "(dhe3_power)",
             physics_variables.dhe3_power,
             "OP ",
@@ -3931,6 +3932,13 @@ class Physics:
             "Alpha power: total (MW)",
             "(palpmw)",
             physics_variables.palpmw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha power: plasma only (MW)",
+            "(alpha_power_plasma)",
+            physics_variables.alpha_power_plasma,
             "OP ",
         )
         po.ovarre(
@@ -6643,7 +6651,7 @@ def res_diff_time(rmajor, rplas, kappa95):
     return 2 * constants.rmu0 * rmajor / (rplas * kappa95)
 
 
-def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plascur):
+def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_current):
     """L-mode to H-mode power threshold calculation
 
     Author: P J Knight, CCFE, Culham Science Centre
@@ -6666,7 +6674,7 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plascur)
     :param sarea: plasma surface area (m2)
     :param aion: average mass of all ions (amu)
     :param aspect: aspect ratio
-    :param plascur: plasma current (A)
+    :param plasma_current: plasma current (A)
 
     :returns: array of power thresholds (18 different scalings)
     """
@@ -6740,9 +6748,9 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plascur)
     )
 
     # Hubbard et al. 2012 L-I threshold scaling
-    hubbard_2012 = 2.11 * (plascur / 1e6) ** 0.94 * dnla20**0.65
-    hubbard_2012_lb = 2.11 * (plascur / 1e6) ** 0.70 * dnla20**0.47
-    hubbard_2012_ub = 2.11 * (plascur / 1e6) ** 1.18 * dnla20**0.83
+    hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65
+    hubbard_2012_lb = 2.11 * (plasma_current / 1e6) ** 0.70 * dnla20**0.47
+    hubbard_2012_ub = 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
 
     # Hubbard et al. 2017 L-I threshold scaling
     hubbard_2017 = 0.162 * dnla20 * sarea * (bt) ** 0.26
