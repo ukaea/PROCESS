@@ -3965,6 +3965,13 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Neutron power: beam-plasma (MW)",
+            "(neutron_power_beams)",
+            physics_variables.alpha_power_beams * 4.0e0,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Charged particle power (excluding alphas) (MW)",
             "(pchargemw)",
             physics_variables.pchargemw,

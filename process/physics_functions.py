@@ -760,9 +760,10 @@ def palph2(
     Returns:
         tuple: A tuple containing the following elements:
             - neutron_power_density_out (float): Neutron fusion power per unit volume [MW/m^3].
-            - alpha_power_plasma (float): Alpha power from only the plasma [MW].
-            - alpha_power_total (float): Total alpha power [MW].
-            - neutron_power_total (float): Total neutron fusion power [MW].
+            - alpha_power_plasma (float): Alpha fusion power from only the plasma [MW].
+            - alpha_power_total (float): Total alpha fusion power from plasma and beams [MW].
+            - neutron_power_plasma (float): Neutron fusion power from only the plasma [MW].
+            - neutron_power_total (float): Total neutron fusion power from plasma and beams [MW].
             - pchargemw (float): Other total charged particle fusion power [MW].
             - betaft (float): Fast alpha beta component.
             - alpha_power_density_out (float): Alpha power per unit volume [MW/m^3].
