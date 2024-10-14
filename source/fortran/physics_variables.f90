@@ -628,8 +628,11 @@ module physics_variables
   real(dp) :: plasma_current
   !! plasma current (A)
 
+  real(dp) :: neutron_power_plasma
+  !! Neutron fusion power from just the plasma [MW]
+  
   real(dp) :: pneutmw
-  !! neutron fusion power (MW)
+  !! Total neutron fusion power from plasma and beams [MW]
 
   real(dp) :: neutron_power_density
   !! neutron fusion power per volume (MW/m3)
@@ -1015,6 +1018,7 @@ module physics_variables
     photon_wall = 0.0D0
     piepv = 0.0D0
     plasma_current = 0.0D0
+    neutron_power_plasma = 0.0D0
     pneutmw = 0.0D0
     neutron_power_density = 0.0D0
     pohmmw = 0.0D0

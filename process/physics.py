@@ -1863,6 +1863,7 @@ class Physics:
             physics_variables.neutron_power_density,
             physics_variables.alpha_power_plasma,
             physics_variables.alpha_power_total,
+            physics_variables.neutron_power_plasma,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
             physics_variables.betaft,
@@ -3950,9 +3951,16 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Neutron power (MW)",
+            "Neutron power: total (MW)",
             "(pneutmw)",
             physics_variables.pneutmw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutron power: plasma only (MW)",
+            "(neutron_power_plasma)",
+            physics_variables.neutron_power_plasma,
             "OP ",
         )
         po.ovarre(

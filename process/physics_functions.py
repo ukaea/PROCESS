@@ -776,6 +776,7 @@ def palph2(
         - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
 
     """
+    # Alpha power
 
     # Calculate alpha power produced just by the plasma
     alpha_power_plasma = alpha_power_density * plasma_volume
@@ -783,23 +784,30 @@ def palph2(
     # Add neutral beam alpha power / volume
     alpha_power_density_out = alpha_power_density + (alpha_power_beams / plasma_volume)
 
-    # Add extra neutron power
-    neutron_power_density_out = neutron_power_density + ((4.0 * alpha_power_beams) / plasma_volume)
-
     # Total alpha power
     alpha_power_total = alpha_power_density_out * plasma_volume
 
-    # Total non-alpha charged particle power
-    pchargemw = charged_power_density * plasma_volume
+    # Neutron Power
+
+    # Calculate neutron power produced just by the plasma
+    neutron_power_plasma = neutron_power_density * plasma_volume
+
+    # Add extra neutron power from beams
+    neutron_power_density_out = neutron_power_density + ((4.0 * alpha_power_beams) / plasma_volume)
 
     # Total neutron power
     pneutmw = neutron_power_density_out * plasma_volume
 
-    # Total fusion power
-    powfmw = alpha_power_total + pneutmw + pchargemw
+    # Charged particle power
+
+    # Total non-alpha charged particle power
+    pchargemw = charged_power_density * plasma_volume
 
     # Charged particle fusion power
     pfuscmw = alpha_power_total + pchargemw
+
+    # Total fusion power
+    powfmw = alpha_power_total + pneutmw + pchargemw
 
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
@@ -843,6 +851,7 @@ def palph2(
         neutron_power_density_out,
         alpha_power_plasma,
         alpha_power_total,
+        neutron_power_plasma,
         pneutmw,
         pchargemw,
         betaft,
