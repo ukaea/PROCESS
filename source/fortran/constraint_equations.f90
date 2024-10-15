@@ -572,12 +572,12 @@ contains
       !! pradpv : input real : total radiation power per volume (MW/m3)
       !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
       !! falpha : input real : fraction of alpha power deposited in plasma
-      !! palpepv : input real : alpha power per volume to electrons (MW/m3)
+      !! alpha_power_electron_density : input real : alpha power per volume to electrons (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
       !! plasma_volume : input real : plasma volume (m3)
       use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, falpha, &
-                                 palpepv, piepv, plasma_volume, pradpv
+                                 alpha_power_electron_density, piepv, plasma_volume, pradpv
       use current_drive_variables, only: pinjemw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -601,10 +601,10 @@ contains
 
       ! if plasma not ignited include injected power
       if (ignite == 0) then
-         pdenom = falpha*palpepv + piepv + pinjemw/plasma_volume
+         pdenom = falpha*alpha_power_electron_density + piepv + pinjemw/plasma_volume
       else
       ! if plasma ignited
-         pdenom = falpha*palpepv + piepv
+         pdenom = falpha*alpha_power_electron_density + piepv
       end if
 
       tmp_cc     = 1.0D0 - pnumerator / pdenom

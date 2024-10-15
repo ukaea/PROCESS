@@ -3996,7 +3996,7 @@ class Stellarator:
             physics_variables.betaft,
             physics_variables.alpha_power_density,
             physics_variables.alpha_power_ions_density,
-            physics_variables.palpepv,
+            physics_variables.alpha_power_electron_density,
             physics_variables.pfuscmw,
             physics_variables.fusion_power,
         ) = physics_funcs.palph2(

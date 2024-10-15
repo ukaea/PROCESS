@@ -767,7 +767,7 @@ def palph2(
             - non_alpha_charged_power (float): Other total charged particle fusion power [MW].
             - betaft (float): Fast alpha beta component.
             - alpha_power_density_out (float): Alpha power per unit volume [MW/m^3].
-            - palpepv (float): Alpha power per unit volume to electrons [MW/m^3].
+            - alpha_power_electron_density (float): Alpha power per unit volume to electrons [MW/m^3].
             - alpha_power_ions_density (float): Alpha power per unit volume to ions [MW/m^3].
             - charged_particle_power(float): Charged particle fusion power [MW].
             - fusion_power (float): Total fusion power [MW].
@@ -814,7 +814,7 @@ def palph2(
     # and ion power balance equations only)
     # No consideration of charged_power_density here...
     alpha_power_ions_density = physics_variables.falpha * alpha_power_density_out * falpi
-    palpepv = physics_variables.falpha * alpha_power_density_out * falpe
+    alpha_power_electron_density = physics_variables.falpha * alpha_power_density_out * falpe
 
     # Determine average fast alpha density
     if physics_variables.fdeut < 1.0:
@@ -857,7 +857,7 @@ def palph2(
         non_alpha_charged_power,
         betaft,
         alpha_power_density_out,
-        palpepv,
+        alpha_power_electron_density,
         alpha_power_ions_density,
         charged_particle_power,
         fusion_power,
