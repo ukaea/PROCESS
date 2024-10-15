@@ -4002,6 +4002,7 @@ class Stellarator:
         ) = physics_funcs.palph2(
             physics_variables.bp,
             physics_variables.bt,
+            physics_variables.bt,
             physics_variables.dene,
             physics_variables.deni,
             physics_variables.dnitot,

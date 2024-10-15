@@ -1,7 +1,10 @@
 """Unit tests for physics_functions.f90."""
 
+
 from typing import Any, NamedTuple
 from process.fortran import physics_variables as pv
+from process import physics_functions
+import numpy as np
 from process import physics_functions
 import numpy as np
 import pytest
@@ -248,7 +251,12 @@ def test_palph2(palph2param, monkeypatch):
         (55.73, physics_functions.REACTION_CONSTANTS_DHE3, 7.067916724597656e-23),
         (55.73, physics_functions.REACTION_CONSTANTS_DD1, 1.3127277533210717e-23),
         (55.73, physics_functions.REACTION_CONSTANTS_DD2, 1.1329338540436287e-23),
+        (55.73, physics_functions.REACTION_CONSTANTS_DT, 8.832857074192583e-22),
+        (55.73, physics_functions.REACTION_CONSTANTS_DHE3, 7.067916724597656e-23),
+        (55.73, physics_functions.REACTION_CONSTANTS_DD1, 1.3127277533210717e-23),
+        (55.73, physics_functions.REACTION_CONSTANTS_DD2, 1.1329338540436287e-23),
     ),
+    ids=["DT", "DHE3", "DD1", "DD2"],
     ids=["DT", "DHE3", "DD1", "DD2"],
 )
 def test_bosch_hale(t, reaction, expected_bosch_hale):
@@ -312,6 +320,30 @@ def test_beamcalc():
         2.8e-22,
     )
 
+    assert palfdb == pytest.approx(11.489365278680932)
+    assert palftb == pytest.approx(1.0379265294979434e-05)
+    assert nhot == pytest.approx(4.1968331737565126e17)
+    assert ehot == pytest.approx(445.05787301616635)
+
+
+def test_xbrak():
+    xbrak = physics_functions.xbrak(1000.0, 276.7)
+
+    assert xbrak == pytest.approx(1.1061397270783706)
+
+
+def test_palphabm():
+    palphabm = physics_functions.palphabm(
+        3520.0, 316000000000, 3.3e19, 7.5e-22, 1888.0, 13.5, 2.8e-22
+    )
+
+    assert palphabm == pytest.approx(1.0413228502045627e-05)
+
+
+def test_sgvhot():
+    sgvhot = physics_functions.sgvhot(3, 5140000.0, 1000.0)
+
+    assert sgvhot == pytest.approx(7.465047902975452e-18)
     assert palfdb == pytest.approx(11.489365278680932)
     assert palftb == pytest.approx(1.0379265294979434e-05)
     assert nhot == pytest.approx(4.1968331737565126e17)

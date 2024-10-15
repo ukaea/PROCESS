@@ -680,8 +680,8 @@ contains
 
     !  Local variables
 
-    character(len=30) :: dum30
-    character(len=20) :: dum20
+    character(len=50) :: dum30
+    character(len=40) :: dum20
 
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
