@@ -3951,6 +3951,20 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Alpha power per unit volume transferred to electrons (MW/m3)",
+            "(alpha_power_electron_density)",
+            physics_variables.alpha_power_electron_density,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha power per unit volume transferred to ions (MW/m3)",
+            "(alpha_power_ions_density)",
+            physics_variables.alpha_power_ions_density,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Neutron power: total (MW)",
             "(neutron_power_total)",
             physics_variables.neutron_power_total,
