@@ -181,16 +181,29 @@ This method sets the required physics variables in the `physics_variables` and `
 
 ### Fusion Power Upper limit
 
+This constraint can be activated by stating `icc = 9` in the input file.
+
+The value of `powfmax` can be set to the desired maximum fusion power. The scaling value `ffuspow` can be varied also.
+
+---------------------------------
+
 ### Global power balance for electrons
+
+This constraint can be activated by stating `icc = 41` in the input file.
+
+-------------------------------
 
 ### Global power balance for ions
 
+This constraint can be activated by stating `icc = 41` in the input file.
+
+-----------------------------
+
 ### Q value lower limit
 
-###
+This constraint can be activated by stating `icc = 28` in the input file.
 
-Constraint equation no. 28 can be turned on to enforce the fusion gain *Q* to be at
-least equal to `bigqmin`.
+The value of `bigqmin` can be set to the minimum desired $Q_{\text{plasma}}$ value. The scaling value `fqval` can be varied also.
 
 -----------------------
 
