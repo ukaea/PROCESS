@@ -1870,7 +1870,7 @@ class Physics:
             physics_variables.alpha_power_density,
             physics_variables.palpipv,
             physics_variables.palpepv,
-            physics_variables.pfuscmw,
+            physics_variables.charged_particle_power,
             physics_variables.powfmw,
         ) = physics_funcs.palph2(
             physics_variables.bp,
@@ -3975,6 +3975,13 @@ class Physics:
             "Charged particle power (excluding alphas) (MW)",
             "(non_alpha_charged_power)",
             physics_variables.non_alpha_charged_power,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total charged particle power (including alphas) (MW)",
+            "(charged_particle_power)",
+            physics_variables.charged_particle_power,
             "OP ",
         )
         tot_power_plasma = (

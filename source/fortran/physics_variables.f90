@@ -574,6 +574,9 @@ module physics_variables
   real(dp) :: non_alpha_charged_power
   !! non-alpha charged particle fusion power (MW)
 
+  real(dp) :: charged_particle_power
+  !! Total charged particle fusion power [MW]
+
   real(dp) :: charged_power_density
   !! Non-alpha charged particle fusion power per volume [MW/m3]
 
@@ -1013,7 +1016,7 @@ module physics_variables
     dt_power = 0.0D0
     pouterzoneradmw = 0.0D0
     pedgeradpv = 0.0D0
-    pfuscmw = 0.0D0
+    charged_particle_power = 0.0D0
     phiint = 0.0D0
     photon_wall = 0.0D0
     piepv = 0.0D0

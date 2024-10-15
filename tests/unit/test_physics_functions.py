@@ -237,7 +237,7 @@ def test_palph2(palph2param, monkeypatch):
     assert betaft == pytest.approx(palph2param.expected_betaft)
     assert palpepv == pytest.approx(palph2param.expected_palpepv)
     assert palpipv == pytest.approx(palph2param.expected_palpipv)
-    assert pfuscmw == pytest.approx(palph2param.expected_pfuscmw)
+    assert charged_particle_power== pytest.approx(palph2param.expected_pfuscmw)
     assert powfmw == pytest.approx(palph2param.expected_powfmw)
 
 

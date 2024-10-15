@@ -769,7 +769,7 @@ def palph2(
             - alpha_power_density_out (float): Alpha power per unit volume [MW/m^3].
             - palpepv (float): Alpha power per unit volume to electrons [MW/m^3].
             - palpipv (float): Alpha power per unit volume to ions [MW/m^3].
-            - pfuscmw (float): Charged particle fusion power [MW].
+            - charged_particle_power(float): Charged particle fusion power [MW].
             - powfmw (float): Total fusion power [MW].
 
     References:
@@ -805,7 +805,7 @@ def palph2(
     non_alpha_charged_power = charged_power_density * plasma_volume
 
     # Charged particle fusion power
-    pfuscmw = alpha_power_total + non_alpha_charged_power
+    charged_particle_power = alpha_power_total + non_alpha_charged_power
 
     # Total fusion power
     powfmw = alpha_power_total + neutron_power_total + non_alpha_charged_power
@@ -859,7 +859,7 @@ def palph2(
         alpha_power_density_out,
         palpepv,
         palpipv,
-        pfuscmw,
+        charged_particle_power,
         powfmw,
     )
 
