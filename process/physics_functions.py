@@ -62,17 +62,86 @@ REACTION_CONSTANTS_DD2 = dict(
 
 
 class FusionReactionRate:
-    """Calculate the fusion reaction rate for each reaction case (DT,DHE3,DD1,DD2).
-    This subroutine numerically integrates over plasma cross-section to
-    find the core plasma fusion power.
+    """
+    Calculate the fusion reaction rate for each reaction case (DT, DHE3, DD1, DD2).
+
+    This class provides methods to numerically integrate over the plasma cross-section
+    to find the core plasma fusion power for different fusion reactions. The reactions
+    considered are:
+        - Deuterium-Tritium (D-T)
+        - Deuterium-Helium-3 (D-3He)
+        - Deuterium-Deuterium (D-D) first branch
+        - Deuterium-Deuterium (D-D) second branch
+
+    The class uses the Bosch-Hale parametrization to compute the volumetric fusion reaction
+    rate <sigma v> and integrates over the plasma cross-section to find the core plasma
+    fusion power.
+
+    Attributes:
+        plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
+        sigmav_dt_average (float): Average fusion reaction rate <sigma v> for D-T.
+        dhe3_power_density (float): Fusion power density produced by the D-3He reaction.
+        dd_power_density (float): Fusion power density produced by the D-D reactions.
+        dt_power_density (float): Fusion power density produced by the D-T reaction.
+        alpha_power_density (float): Power density of alpha particles produced.
+        charged_power_density (float): Power density of charged particles produced.
+        neutron_power_density (float): Power density of neutrons produced.
+        fusion_rate_density (float): Fusion reaction rate density.
+        alpha_rate_density (float): Alpha particle production rate density.
+        proton_rate_density (float): Proton production rate density.
+
+    Methods:
+        deuterium_branching(ion_temperature: float) -> float:
+            Calculate the relative rate of tritium producing D-D reactions to 3He ones based on the volume averaged ion temperature.
+
+        dt_reaction() -> None:
+            Calculate the fusion reaction rate and power density for the deuterium-tritium (D-T) fusion reaction.
+
+        dhe3_reaction() -> None:
+            Calculate the fusion reaction rate and power density for the deuterium-helium-3 (D-3He) fusion reaction.
+
+        dd_helion_reaction() -> None:
+            Calculate the fusion reaction rate and power density for the deuterium-deuterium (D-D) fusion reaction, specifically the branch that produces helium-3 (3He) and a neutron (n).
+
+        dd_triton_reaction() -> None:
+            Calculate the fusion reaction rate and power density for the deuterium-deuterium (D-D) fusion reaction, specifically the branch that produces tritium (T) and a proton (p).
+
+        sum_fusion_rates(alpha_power_add: float, charged_power_add: float, neutron_power_add: float, fusion_rate_add: float, alpha_rate_add: float, proton_rate_add: float) -> None:
+            Sum the fusion rate at the end of each reaction.
+
+        calculate_fusion_rates() -> None:
+            Initiate all the fusion rate calculations.
+
+        set_physics_variables() -> None:
+            Set the required physics variables in the physics_variables and physics_module modules.
+
     References:
-        T & M/PKNIGHT/LOGBOOK24, p.6
-    Author:
-        P J Knight, CCFE, Culham Science Centre
-        G Turkington (UKAEA)
+        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
+          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+
     """
 
-    def __init__(self, plasma_profile):
+    def __init__(self, plasma_profile: PlasmaProfile) -> None:
+        """
+        Initialize the FusionReactionRate class with the given plasma profile.
+
+        Parameters:
+            plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
+
+        Attributes:
+            plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
+            sigmav_dt_average (float): Average fusion reaction rate <sigma v> for D-T.
+            dhe3_power_density (float): Fusion power density produced by the D-3He reaction.
+            dd_power_density (float): Fusion power density produced by the D-D reactions.
+            dt_power_density (float): Fusion power density produced by the D-T reaction.
+            alpha_power_density (float): Power density of alpha particles produced.
+            charged_power_density (float): Power density of charged particles produced.
+            neutron_power_density (float): Power density of neutrons produced.
+            fusion_rate_density (float): Fusion reaction rate density.
+            alpha_rate_density (float): Alpha particle production rate density.
+            proton_rate_density (float): Proton production rate density.
+        """
         self.plasma_profile = plasma_profile
         self.sigmav_dt_average = 0.0
         self.dhe3_power_density = 0.0
