@@ -79,7 +79,6 @@ LIST(APPEND PROCESS_SRCS
     pfcoil.f90
     reinke_module.f90
     sctfcoil.f90
-    plasma_profiles.f90
     final_module.f90
     cost_variables.f90
     divertor_variables.f90

@@ -1,20 +1,22 @@
 import numpy as np
 
+from process.plasma_profiles import PlasmaProfile
+
 from process.fortran import (
     heat_transport_variables,
     current_drive_variables,
     physics_variables,
     cost_variables,
     constants,
-    profiles_module,
     process_output as po,
     error_handling as eh,
 )
 
 
 class CurrentDrive:
-    def __init__(self):
+    def __init__(self, plasma_profile: PlasmaProfile):
         self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
 
     def cudriv(self, output: bool):
         """Routine to calculate the current drive power requirements
@@ -1375,7 +1377,7 @@ class CurrentDrive:
 
         # Local density, temperature, toroidal field at this minor radius
 
-        dlocal = 1.0e-19 * profiles_module.nprofile(
+        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
             physics_variables.rhopedn,
             physics_variables.ne0,
@@ -1383,7 +1385,7 @@ class CurrentDrive:
             physics_variables.nesep,
             physics_variables.alphan,
         )
-        tlocal = profiles_module.tprofile(
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
             physics_variables.rhopedt,
             physics_variables.te0,
@@ -1439,7 +1441,7 @@ class CurrentDrive:
         rrr = 1.0e0 / 3.0e0
 
         #  Temperature
-        tlocal = profiles_module.tprofile(
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rrr,
             physics_variables.rhopedt,
             physics_variables.te0,
@@ -1450,7 +1452,7 @@ class CurrentDrive:
         )
 
         #  Density (10**20 m**-3)
-        dlocal = 1.0e-20 * profiles_module.nprofile(
+        dlocal = 1.0e-20 * self.plasma_profile.neprofile.calculate_profile_y(
             rrr,
             physics_variables.rhopedn,
             physics_variables.ne0,
@@ -1829,7 +1831,7 @@ class CurrentDrive:
         routine <A HREF="lhrad.html">lhrad</A>.
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
-        dlocal = 1.0e-19 * profiles_module.nprofile(
+        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
             physics_variables.rhopedn,
             physics_variables.ne0,
@@ -1840,7 +1842,7 @@ class CurrentDrive:
 
         #  Local electron temperature
 
-        tlocal = profiles_module.tprofile(
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
             physics_variables.rhopedt,
             physics_variables.te0,
