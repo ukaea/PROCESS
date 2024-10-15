@@ -210,7 +210,7 @@ def test_palph2(palph2param, monkeypatch):
         palpepv,
         palpipv,
         pfuscmw,
-        powfmw,
+        fusion_power,
     ) = physics_functions.palph2(
         ifalphap=palph2param.ifalphap,
         bp=palph2param.bp,
@@ -238,7 +238,7 @@ def test_palph2(palph2param, monkeypatch):
     assert palpepv == pytest.approx(palph2param.expected_palpepv)
     assert palpipv == pytest.approx(palph2param.expected_palpipv)
     assert charged_particle_power== pytest.approx(palph2param.expected_pfuscmw)
-    assert powfmw == pytest.approx(palph2param.expected_powfmw)
+    assert fusion_power == pytest.approx(palph2param.expected_powfmw)
 
 
 @pytest.mark.parametrize(

@@ -781,9 +781,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ffuspow : input real : f-value for maximum fusion power
       !! powfmax : input real : maximum fusion power (MW)
-      !! powfmw : input real : fusion power (MW)
+      !! fusion_power : input real : fusion power (MW)
       use constraint_variables, only: ffuspow, powfmax
-      use physics_variables, only: powfmw
+      use physics_variables, only: fusion_power
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -791,9 +791,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ffuspow * powfmax/powfmw
+      tmp_cc =  1.0D0 - ffuspow * powfmax/fusion_power
       tmp_con = powfmax * (1.0D0 - tmp_cc)
-      tmp_err = powfmw * tmp_cc
+      tmp_err = fusion_power * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW'
 

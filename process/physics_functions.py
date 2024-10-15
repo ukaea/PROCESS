@@ -770,7 +770,7 @@ def palph2(
             - palpepv (float): Alpha power per unit volume to electrons [MW/m^3].
             - palpipv (float): Alpha power per unit volume to ions [MW/m^3].
             - charged_particle_power(float): Charged particle fusion power [MW].
-            - powfmw (float): Total fusion power [MW].
+            - fusion_power (float): Total fusion power [MW].
 
     References:
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
@@ -808,7 +808,7 @@ def palph2(
     charged_particle_power = alpha_power_total + non_alpha_charged_power
 
     # Total fusion power
-    powfmw = alpha_power_total + neutron_power_total + non_alpha_charged_power
+    fusion_power = alpha_power_total + neutron_power_total + non_alpha_charged_power
 
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
@@ -860,7 +860,7 @@ def palph2(
         palpepv,
         palpipv,
         charged_particle_power,
-        powfmw,
+        fusion_power,
     )
 
 

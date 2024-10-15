@@ -1709,8 +1709,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(powfmw)",
-            physics_variables.powfmw,
+            "(fusion_power)",
+            physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(
@@ -1736,7 +1736,7 @@ class Power:
             "OP ",
         )
         sum = (
-            physics_variables.powfmw
+            physics_variables.fusion_power
             + fwbs_variables.emultmw
             + pinj
             + self.htpmw_mech
@@ -1936,8 +1936,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(powfmw)",
-            physics_variables.powfmw,
+            "(fusion_power)",
+            physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(
@@ -1947,7 +1947,7 @@ class Power:
             fwbs_variables.emultmw,
             "OP ",
         )
-        sum = physics_variables.powfmw + fwbs_variables.emultmw
+        sum = physics_variables.fusion_power + fwbs_variables.emultmw
         po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
         po.oblnkl(self.outfile)
         po.ovarrf(
@@ -2004,17 +2004,17 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(pnetelmw/(powfmw+emultmw)",
+            "(pnetelmw/(fusion_power+emultmw)",
             100.0e0
             * heat_transport_variables.pnetelmw
-            / (physics_variables.powfmw + fwbs_variables.emultmw),
+            / (physics_variables.fusion_power + fwbs_variables.emultmw),
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Net electric power / total fusion power (%)",
-            "(pnetelmw/powfmw)",
-            100.0e0 * heat_transport_variables.pnetelmw / physics_variables.powfmw,
+            "(pnetelmw/fusion_power)",
+            100.0e0 * heat_transport_variables.pnetelmw / physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(

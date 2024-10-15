@@ -1871,7 +1871,7 @@ class Physics:
             physics_variables.palpipv,
             physics_variables.palpepv,
             physics_variables.charged_particle_power,
-            physics_variables.powfmw,
+            physics_variables.fusion_power,
         ) = physics_funcs.palph2(
             physics_variables.bp,
             physics_variables.bt,
@@ -3903,8 +3903,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total fusion power (MW)",
-            "(powfmw)",
-            physics_variables.powfmw,
+            "(fusion_power)",
+            physics_variables.fusion_power,
             "OP ",
         )
         po.ovarre(

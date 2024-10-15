@@ -125,7 +125,7 @@ class ProcessTracker:
         "bt",
         "hfact",
         "kappa",
-        "powfmw",
+        "fusion_power",
         "teped",
         "powerht",
         "kappa95",

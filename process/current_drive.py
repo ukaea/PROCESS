@@ -706,7 +706,7 @@ class CurrentDrive:
             ):
                 current_drive_variables.bigq = 1.0e18
             else:
-                current_drive_variables.bigq = physics_variables.powfmw / (
+                current_drive_variables.bigq = physics_variables.fusion_power / (
                     current_drive_variables.pinjmw
                     + current_drive_variables.porbitlossmw
                     + physics_variables.pohmmw

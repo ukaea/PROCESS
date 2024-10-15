@@ -649,7 +649,7 @@ module physics_variables
   real(dp) :: powerht
   !! heating power (= transport loss power) (MW) used in confinement time calculation
 
-  real(dp) :: powfmw
+  real(dp) :: fusion_power
   !! fusion power (MW)
 
   real(dp) :: pperim
@@ -1027,7 +1027,7 @@ module physics_variables
     pohmmw = 0.0D0
     pohmpv = 0.0D0
     powerht = 0.0D0
-    powfmw = 0.0D0
+    fusion_power = 0.0D0
     pperim = 0.0D0
     pradmw = 0.0D0
     pradpv = 0.0D0

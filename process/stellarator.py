@@ -3998,7 +3998,7 @@ class Stellarator:
             physics_variables.palpipv,
             physics_variables.palpepv,
             physics_variables.pfuscmw,
-            physics_variables.powfmw,
+            physics_variables.fusion_power,
         ) = physics_funcs.palph2(
             physics_variables.bp,
             physics_variables.bt,
@@ -4689,7 +4689,7 @@ class Stellarator:
         ):
             current_drive_variables.bigq = 1e18
         else:
-            current_drive_variables.bigq = physics_variables.powfmw / (
+            current_drive_variables.bigq = physics_variables.fusion_power / (
                 current_drive_variables.pinjmw
                 + current_drive_variables.porbitlossmw
                 + physics_variables.pohmmw

@@ -36,7 +36,7 @@ contains
     use process_output, only: oheadr, oblnkl, ocmmnt, ovarre
     use ife_variables, only: ifedrv, edrive, gainve, etave, gain, etadrv, tgain, &
       drveff, reprat, pdrive, rrin, pfusife, ifetyp, zl1, r1, zu1, flirad
-    use physics_variables, only: powfmw, wallmw
+    use physics_variables, only: fusion_power, wallmw
 
 		use constants, only: pi
     implicit none
@@ -104,15 +104,15 @@ contains
         !  Repetition rate (Hz)
         reprat = pdrive / edrive
         !  Fusion power (MW)
-        powfmw = 1.0D-6 * pdrive * gain
+        fusion_power = 1.0D-6 * pdrive * gain
 
     else
         !  Driver Power
         reprat = rrin
         pdrive = reprat * edrive
         !  Gain
-        powfmw = pfusife
-        gain = powfmw / (1.0D-6 * pdrive)
+        fusion_power = pfusife
+        gain = fusion_power / (1.0D-6 * pdrive)
     end if
 
     !  Wall load (assume total fusion power applies)
@@ -123,7 +123,7 @@ contains
 
        phi = 0.5D0*pi + atan(zl1/r1)
        sang = 1.0D0 - cos(phi)
-       wallmw = powfmw * 0.5D0*sang / fwarea
+       wallmw = fusion_power * 0.5D0*sang / fwarea
 
     else if (ifetyp == 4) then
 
@@ -134,10 +134,10 @@ contains
        sang = 1.0D0 - cos(phi)
        phi = atan(flirad/zu1)
        sang = sang - (1.0D0 - cos(phi))
-       wallmw = powfmw * 0.5D0*sang / fwarea
+       wallmw = fusion_power * 0.5D0*sang / fwarea
 
     else
-       wallmw = powfmw / fwarea
+       wallmw = fusion_power / fwarea
     end if
 
     if (iprint == 0) return
@@ -163,7 +163,7 @@ contains
          pdrive)
     call ovarre(outfile,'Driver repetition rate (Hz)','(reprat)',reprat)
     call ovarre(outfile,'Target gain','(gain)',gain)
-    call ovarre(outfile,'Fusion power (MW)','(powfmw)',powfmw)
+    call ovarre(outfile,'Fusion power (MW)','(fusion_power)',fusion_power)
     call ovarre(outfile,'Neutron wall load (MW/m2)','(wallmw)',wallmw)
 
   end subroutine ifephy
@@ -1864,7 +1864,7 @@ contains
     use heat_transport_variables, only: priheat, pthermmw, pfwdiv, nphx, pinjwp, &
       pinjht, crypmw, helpow
     use ife_variables, only: pdrive, ifetyp, etadrv, pifecr
-    use physics_variables, only: powfmw
+    use physics_variables, only: fusion_power
 
     implicit none
 
@@ -1881,7 +1881,7 @@ contains
     !  Primary nuclear heating (MW)
     !  Total thermal power removed from fusion core
 
-    priheat = emult * powfmw
+    priheat = emult * fusion_power
 
     !  Useful (high-grade) thermal power (MW)
 
