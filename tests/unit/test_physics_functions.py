@@ -204,7 +204,7 @@ def test_palph2(palph2param, monkeypatch):
         neutron_power_density,
         alpha_power_total,
         neutron_power_total,
-        pchargemw,
+        non_alpha_charged_power,
         betaft,
         alpha_power_density,
         palpepv,
@@ -233,7 +233,7 @@ def test_palph2(palph2param, monkeypatch):
     assert neutron_power_density == pytest.approx(palph2param.expected_pneutpv)
     assert alpha_power_total == pytest.approx(palph2param.expected_palpmw)
     assert neutron_power_total == pytest.approx(palph2param.expected_pneutmw)
-    assert pchargemw == pytest.approx(palph2param.expected_pchargemw)
+    assert non_alpha_charged_power == pytest.approx(palph2param.expected_pchargemw)
     assert betaft == pytest.approx(palph2param.expected_betaft)
     assert palpepv == pytest.approx(palph2param.expected_palpepv)
     assert palpipv == pytest.approx(palph2param.expected_palpipv)

@@ -571,7 +571,7 @@ module physics_variables
   real(dp) :: alpha_power_beams
   !! alpha power from hot neutral beam ions (MW)
 
-  real(dp) :: pchargemw
+  real(dp) :: non_alpha_charged_power
   !! non-alpha charged particle fusion power (MW)
 
   real(dp) :: charged_power_density
@@ -999,7 +999,7 @@ module physics_variables
     alpha_power_total = 0.0D0
     alpha_power_plasma = 0.0D0
     alpha_power_beams = 0.0D0
-    pchargemw = 0.0D0
+    non_alpha_charged_power = 0.0D0
     charged_power_density = 0.0D0
     pcoef = 0.0D0
     pinnerzoneradmw = 0.0D0

@@ -1865,7 +1865,7 @@ class Physics:
             physics_variables.alpha_power_total,
             physics_variables.neutron_power_plasma,
             physics_variables.neutron_power_total,
-            physics_variables.pchargemw,
+            physics_variables.non_alpha_charged_power,
             physics_variables.betaft,
             physics_variables.alpha_power_density,
             physics_variables.palpipv,
@@ -1988,7 +1988,7 @@ class Physics:
 
         physics_variables.pdivt = (
             physics_variables.falpha * physics_variables.alpha_power_total
-            + physics_variables.pchargemw
+            + physics_variables.non_alpha_charged_power
             + pinj
             + physics_variables.pohmmw
             - physics_variables.pradmw
@@ -2060,7 +2060,7 @@ class Physics:
             physics_variables.ignite,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.pchargemw,
+            physics_variables.non_alpha_charged_power,
             current_drive_variables.pinjmw,
             physics_variables.plasma_current,
             physics_variables.pcoreradpv,
@@ -2264,7 +2264,7 @@ class Physics:
         # Calculate some derived quantities that may not have been defined earlier
         physics_module.total_loss_power = 1e6 * (
             physics_variables.falpha * physics_variables.alpha_power_total
-            + physics_variables.pchargemw
+            + physics_variables.non_alpha_charged_power
             + physics_variables.pohmmw
             + current_drive_variables.pinjmw
         )
@@ -3973,13 +3973,13 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Charged particle power (excluding alphas) (MW)",
-            "(pchargemw)",
-            physics_variables.pchargemw,
+            "(non_alpha_charged_power)",
+            physics_variables.non_alpha_charged_power,
             "OP ",
         )
         tot_power_plasma = (
             physics_variables.falpha * physics_variables.alpha_power_total
-            + physics_variables.pchargemw
+            + physics_variables.non_alpha_charged_power
             + physics_variables.pohmmw
             + current_drive_variables.pinjmw
         )
@@ -3990,7 +3990,7 @@ class Physics:
             tot_power_plasma,
             "OP ",
         )
-        # po.ovarre(self.outfile,'Total power deposited in plasma (MW)','()',falpha*alpha_power_total+pchargemw+pohmmw+pinjmw, 'OP ')
+        # po.ovarre(self.outfile,'Total power deposited in plasma (MW)','()',falpha*alpha_power_total+non_alpha_charged_power+pohmmw+pinjmw, 'OP ')
 
         po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
         po.ovarre(
@@ -5107,7 +5107,7 @@ class Physics:
                 physics_variables.ignite,
                 physics_variables.kappa,
                 physics_variables.kappa95,
-                physics_variables.pchargemw,
+                physics_variables.non_alpha_charged_power,
                 current_drive_variables.pinjmw,
                 physics_variables.plasma_current,
                 physics_variables.pcoreradpv,
@@ -5633,7 +5633,7 @@ class Physics:
             physics_variables.ignite,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.pchargemw,
+            physics_variables.non_alpha_charged_power,
             current_drive_variables.pinjmw,
             physics_variables.plasma_current,
             physics_variables.pcoreradpv,
@@ -5690,7 +5690,7 @@ class Physics:
         ignite,
         kappa,
         kappa95,
-        pchargemw,
+        non_alpha_charged_power,
         pinjmw,
         plasma_current,
         pcoreradpv,
@@ -5723,7 +5723,7 @@ class Physics:
         kappa     : input real :  plasma elongation
         kappa95   : input real :  plasma elongation at 95% surface
         kappaa    : output real : plasma elongation calculated using area ratio
-        pchargemw : input real :  non-alpha charged particle fusion power (MW)
+        non_alpha_charged_power : input real :  non-alpha charged particle fusion power (MW)
         pinjmw    : input real :  auxiliary power to ions and electrons (MW)
         plasma_current   : input real :  plasma current (A)
         pcoreradpv: input real :  total core radiation power (MW/m3)
@@ -5779,7 +5779,7 @@ class Physics:
 
         # Calculate heating power (MW)
         powerht = (
-            physics_variables.falpha * alpha_power_total + pchargemw + physics_variables.pohmmw
+            physics_variables.falpha * alpha_power_total + non_alpha_charged_power + physics_variables.pohmmw
         )
 
         # If the device is not ignited, add the injected auxiliary power

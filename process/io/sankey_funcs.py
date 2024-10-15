@@ -27,10 +27,10 @@ def plot_full_sankey(
     pohmmw = m_file.data["pohmmw"].get_scan(-1)  # Ohmic heating power (MW)
     totalplasma = powfmw + pinjmw + pohmmw  # Total Power in plasma (MW)
     neutron_power_total = m_file.data["neutron_power_total"].get_scan(-1)  # Neutron fusion power (MW)
-    pchargemw = m_file.data["pchargemw"].get_scan(
+    non_alpha_charged_power = m_file.data["non_alpha_charged_power"].get_scan(
         -1
     )  # Non-alpha charged particle power (MW)
-    pcharohmmw = pchargemw + pohmmw  # The ohmic and charged particle power (MW)
+    pcharohmmw = non_alpha_charged_power + pohmmw  # The ohmic and charged particle power (MW)
     alpha_power_total = m_file.data["alpha_power_total"].get_scan(-1)  # Alpha power (MW)
     palpinjmw = alpha_power_total + pinjmw  # Alpha particle and HC&D power (MW)
 
@@ -414,7 +414,7 @@ def plot_full_sankey(
                 t.set_position((pos[0]-0.2,pos[1]))
             if t == diagrams[0].texts[4]: # Charged Particles
                 t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(pchargemw/totalplasma)-0.05,pos[1]))
+                t.set_position((pos[0]-0.5*(non_alpha_charged_power/totalplasma)-0.05,pos[1]))
             if t == diagrams[0].texts[5]: # Alphas
                 t.set_horizontalalignment('left')
                 t.set_position((pos[0]+0.5*(alpha_power_total/totalplasma)+0.05,pos[1]-0.1))
