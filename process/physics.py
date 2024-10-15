@@ -1868,7 +1868,7 @@ class Physics:
             physics_variables.non_alpha_charged_power,
             physics_variables.betaft,
             physics_variables.alpha_power_density,
-            physics_variables.palpipv,
+            physics_variables.alpha_power_ions_density,
             physics_variables.palpepv,
             physics_variables.charged_particle_power,
             physics_variables.fusion_power,

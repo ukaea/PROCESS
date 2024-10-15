@@ -518,10 +518,10 @@ contains
       !! ptripv : input real :  ion transport power per volume (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! falpha : input real : fraction of alpha power deposited in plasma
-      !! palpipv : input real : alpha power per volume to ions (MW/m3)
+      !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
       !! pinjimw : input real : auxiliary injected power to ions (MW)
       !! plasma_volume : input real : plasma volume (m3)
-      use physics_variables, only: ignite, ptripv, piepv, falpha, palpipv, plasma_volume
+      use physics_variables, only: ignite, ptripv, piepv, falpha, alpha_power_ions_density, plasma_volume
       use current_drive_variables, only: pinjimw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -532,16 +532,16 @@ contains
 
 	   ! No assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - (ptripv + piepv) / (falpha*palpipv + pinjimw/plasma_volume)
-         tmp_con    = (falpha*palpipv + pinjimw/plasma_volume) * (1.0D0 - tmp_cc)
-         tmp_err    = (falpha*palpipv + pinjimw/plasma_volume) * tmp_cc
+         tmp_cc     = 1.0D0 - (ptripv + piepv) / (falpha*alpha_power_ions_density + pinjimw/plasma_volume)
+         tmp_con    = (falpha*alpha_power_ions_density + pinjimw/plasma_volume) * (1.0D0 - tmp_cc)
+         tmp_err    = (falpha*alpha_power_ions_density + pinjimw/plasma_volume) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
       else
-         tmp_cc     = 1.0D0 - (ptripv+piepv) / (falpha*palpipv)
-         tmp_con    = (falpha*palpipv) * (1.0D0 - tmp_cc)
-         tmp_err    = (falpha*palpipv) * tmp_cc
+         tmp_cc     = 1.0D0 - (ptripv+piepv) / (falpha*alpha_power_ions_density)
+         tmp_con    = (falpha*alpha_power_ions_density) * (1.0D0 - tmp_cc)
+         tmp_err    = (falpha*alpha_power_ions_density) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
       end if
