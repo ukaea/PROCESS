@@ -24,7 +24,6 @@ from process.fortran import (
     constraint_variables,
     rebco_variables,
     maths_library,
-    physics_functions_module,
     neoclassics_module,
     impurity_radiation_module,
     sctfcoil_module,
@@ -3934,30 +3933,13 @@ class Stellarator:
 
         #  Calculate fusion power
 
-        (
-            physics_variables.palppv,
-            physics_variables.pchargepv,
-            physics_variables.pneutpv,
-            sigvdt,
-            physics_variables.fusionrate,
-            physics_variables.alpharate,
-            physics_variables.protonrate,
-            pdtpv,
-            pdhe3pv,
-            pddpv,
-        ) = physics_functions_module.palph(
-            physics_variables.alphan,
-            physics_variables.alphat,
-            physics_variables.deni,
-            physics_variables.fdeut,
-            physics_variables.fhe3,
-            physics_variables.ftrit,
-            physics_variables.ti,
-        )
+        fusion_rate = physics_funcs.FusionReactionRate(self.plasma_profile)
+        fusion_rate.calculate_fusion_rates()
+        fusion_rate.set_physics_variables()
 
-        physics_variables.pdt = pdtpv * physics_variables.vol
-        physics_variables.pdhe3 = pdhe3pv * physics_variables.vol
-        physics_variables.pdd = pddpv * physics_variables.vol
+        physics_variables.pdt = physics_module.pdtpv * physics_variables.vol
+        physics_variables.pdhe3 = physics_module.pdhe3pv * physics_variables.vol
+        physics_variables.pdd = physics_module.pddpv * physics_variables.vol
 
         #  Calculate neutral beam slowing down effects
         #  If ignited, then ignore beam fusion effects
@@ -3969,7 +3951,7 @@ class Stellarator:
                 physics_variables.betanb,
                 physics_variables.dnbeam2,
                 physics_variables.palpnb,
-            ) = physics_functions_module.beamfus(
+            ) = physics_funcs.beamfus(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.bp,
@@ -3983,7 +3965,7 @@ class Stellarator:
                 physics_variables.fdeut,
                 physics_variables.ftrit,
                 current_drive_variables.ftritbm,
-                sigvdt,
+                physics_module.sigvdt,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.vol,
@@ -4007,30 +3989,32 @@ class Stellarator:
         physics_variables.pdt = physics_variables.pdt + 5.0e0 * physics_variables.palpnb
 
         (
+            physics_variables.pneutpv,
             physics_variables.palpmw,
             physics_variables.pneutmw,
             physics_variables.pchargemw,
             physics_variables.betaft,
+            physics_variables.palppv,
             physics_variables.palpipv,
             physics_variables.palpepv,
             physics_variables.pfuscmw,
             physics_variables.powfmw,
-        ) = physics_functions_module.palph2(
-            physics_variables.bt,
+        ) = physics_funcs.palph2(
             physics_variables.bp,
+            physics_variables.bt,
             physics_variables.dene,
             physics_variables.deni,
             physics_variables.dnitot,
             physics_variables.falpe,
             physics_variables.falpi,
             physics_variables.palpnb,
-            physics_variables.ifalphap,
             physics_variables.pchargepv,
             physics_variables.pneutpv,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.vol,
             physics_variables.palppv,
+            physics_variables.ifalphap,
         )
 
         #  Neutron wall load
