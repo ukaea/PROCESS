@@ -1,10 +1,16 @@
 # Style Guide
 
+`PROCESS` follows the Python [PEP8](https://peps.python.org/pep-0008/) style guide for its layout and namespace style. This should not conflict with Fortran90 in terms of names but may with the line lengths.
+
+--------------------
+
 ## Line Length
 
 For optimal readability, a limit of 100 characters for maximum line length has been set. This is 
 below the maximum line length of 132 characters for Fortran (to prevent compilation errors) and 
 prevents long lines that run on past the edge of the screen wasting programmers time with scrolling.
+
+--------------------
 
 ## Double declarations
 
@@ -20,16 +26,41 @@ real(dp) :: b
 
 ```
 
+all new models should have their own function
+
+--------------------
+
 ## Naming conventions
 
+!!! quote "The Zen of Python"
 
-### Case
+    *“Explicit is better than implicit.”*
 
-All variables should be lower case.
+    *"Readability counts."*
+
+### Functions
+
+Use a lowercase word or words. Separate words by underscores to improve readability.
+
+### Switches
+
+Switches should start with the `i_` prefix in their name, be of integer type and should be indexed from 0.
+Switches should by their nature not override other switches.
+
+### Constants
+
+Use an uppercase single letter, word, or words. Separate words with underscores to improve readability.
+
+Refrain from declaring or typing known numerical constants directly in the code. Instead call the value from `constants.f90`
+If the constants doesn't exist then add it with a source link and uncertainty value.
+
+### Variables
+
+Use a lowercase single letter, word, or words. Separate words with underscores to improve readability.
 
 ### Length
 
-Try to keep variable names to a sensible length. Abbreviations of some parts of the name are suitable e.g. div for divertor. Use underscores to separate words.
+Try to keep names to a sensible length while also keeping the name explicit and descriptive.
 
 ### Physical Type
 
@@ -51,10 +82,10 @@ Inside PROCESS all variables should be in SI units unless otherwise stated. For 
 
 ```fortran
 ! Fusion power [W]
-p_fusion = 1000.0d6
+fusion_power = 1000.0d6
 
 ! Fusion power [MW]
-p_fusion_mw = 1000.0d0
+fusion_power_MW = 1000.0d0
 ```
 
 ### Coordinates and dimensions
@@ -119,7 +150,32 @@ ii
 
 Please see issue 940 <a href = "https://github.com/ukaea/PROCESS/issues/940"> to discuss new conventions.
 
-# Code Documentation Using FORD
+## Docstrings
+
+```python
+def function_name(param1, param2):
+    """
+    Brief description of what the function does.
+
+    Args:
+        param1 (type): Description of the first parameter with units.
+        param2 (type): Description of the second parameter with units.
+
+    Returns:
+        return_type: Description of the return value with units.
+
+    Notes:
+        Detailed description of the function. This can include information about the algorithm,
+        any important notes, and other relevant details.
+
+    References:
+        - Reference 1 
+        - Reference 2
+         (Use a verbose reference style that has a clickable DOI or HTML link.)
+    """    
+```
+
+## Code Documentation Using FORD
 
 PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments 
 in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well 
@@ -161,7 +217,7 @@ use "!!" for consistency. The rationale behind this and further information is i
 
 The FORD project on github can be found [here](https://github.com/Fortran-FOSS-Programmers/ford).
 
-## Example of FORD documentation for a subroutine (constraint equation)
+### Example of FORD documentation for a subroutine (constraint equation)
 
 ```fortran
 
