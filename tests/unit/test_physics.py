@@ -1831,7 +1831,7 @@ class PcondParam(NamedTuple):
 
     pohmmw: Any = None
 
-    falpha: Any = None
+    f_alpha_plasma: Any = None
 
     iinvqd: Any = None
 
@@ -1915,7 +1915,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=32,
             ignite=0,
@@ -1959,7 +1959,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=33,
             ignite=0,
@@ -2003,7 +2003,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=34,
             ignite=0,
@@ -2047,7 +2047,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=35,
             ignite=0,
@@ -2091,7 +2091,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=36,
             ignite=0,
@@ -2135,7 +2135,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=37,
             ignite=0,
@@ -2179,7 +2179,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=38,
             ignite=0,
@@ -2223,7 +2223,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=39,
             ignite=0,
@@ -2267,7 +2267,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=40,
             ignite=0,
@@ -2311,7 +2311,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=41,
             ignite=0,
@@ -2355,7 +2355,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=42,
             ignite=0,
@@ -2399,7 +2399,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=43,
             ignite=0,
@@ -2443,7 +2443,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=44,
             ignite=0,
@@ -2487,7 +2487,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=45,
             ignite=0,
@@ -2531,7 +2531,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=46,
             ignite=0,
@@ -2575,7 +2575,7 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=47,
             ignite=0,
@@ -2638,7 +2638,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "pohmmw", pcondparam.pohmmw)
 
-    monkeypatch.setattr(physics_variables, "falpha", pcondparam.falpha)
+    monkeypatch.setattr(physics_variables, "f_alpha_plasma", pcondparam.f_alpha_plasma)
 
     kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = physics.pcond(
         iinvqd=pcondparam.iinvqd,

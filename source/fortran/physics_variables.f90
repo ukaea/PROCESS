@@ -169,8 +169,8 @@ module physics_variables
   real(dp) :: falpe
   !! fraction of alpha energy to electrons
 
-  real(dp) :: falpha
-  !! fraction of alpha power deposited in plasma (Physics of Energetic Ions, p.2489)
+  real(dp) :: f_alpha_plasma
+  !! Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305.
 
   real(dp) :: falpi
   !! fraction of alpha power to ions
@@ -931,7 +931,7 @@ module physics_variables
     aux_current_fraction = 0.0D0
     inductive_current_fraction = 0.0D0
     falpe = 0.0D0
-    falpha = 0.95D0
+    f_alpha_plasma = 0.95D0
     falpi = 0.0D0
     fdeut = 0.5D0
     ftar = 1.0D0

@@ -11,7 +11,7 @@ $$
 
 Roughly 20% of the energy produced is given to the alpha particles (\(^4\)He). The remaining 80% is carried
 away by the neutrons, which deposit their energy within the blanket and shield and other reactor components.
-The fraction of the alpha energy deposited in the plasma is `falpha`.
+The fraction of the alpha energy deposited in the plasma is `f_alpha_plasma`.
 
 PROCESS can also model D-\(^3\)He power plants, which utilise the following
 primary fusion reaction:
@@ -177,6 +177,16 @@ This method sets the required physics variables in the `physics_variables` and `
 
 -----------------------
 
+## Coupled alpha particle power
+
+!!! quote "ITER Physics Expert Group on Energetic Particles, Heating and Current Drive"
+
+    *"Present day experiments (1999) show that in a quiescent plasma the diffusion rate of the fast particles is close to the neoclassical level. Even if one considers the case when anomalous diffusion by the fast alpha particles is at a rate nearly the same as that predicted by empirical scaling for the particles in the main plasma, estimates show that the energy loss fraction will be less than the ITER design specification of 5%.[^2]"*
+
+The fraction of alpha particle power produced by the plasma that gets coupled to the plasma for internal heating can be set in `PROCESS` with the `f_alpha_plasma` input variable. By default it is set to 95% or 0.95 as is the assumed ITER default.[^2]
+
+------------------------
+
 ## Key Constraints
 
 ### Fusion Power Upper limit
@@ -208,3 +218,4 @@ The value of `bigqmin` can be set to the minimum desired $Q_{\text{plasma}}$ val
 -----------------------
 
 [^1]: H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+[^2]: I. P. E. G. on E. Drive and I. P. B. Editors, “Chapter 5: Physics of energetic ions,” Nuclear Fusion, vol. 39, no. 12, pp. 2471–2495, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/305.

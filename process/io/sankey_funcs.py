@@ -57,10 +57,10 @@ def plot_full_sankey(
     pdivt = m_file.data["pdivt"].get_scan(
         -1
     )  # Charged particle power deposited on divertor (MW)
-    falpha = m_file.data["falpha"].get_scan(
+    f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
-    palpfwmw = alpha_power_total * (1 - falpha)  # Alpha particles hitting first wall (MW)
+    palpfwmw = alpha_power_total * (1 - f_alpha_plasma)  # Alpha particles hitting first wall (MW)
     pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)
 
     # Used in [RADIATION]
@@ -495,10 +495,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     )  # nuclear heating in the CP shield (MW)
     emultmw = m_file.data["emultmw"].get_scan(-1)  # Blanket energy multiplication (MW)
     alpha_power_total = m_file.data["alpha_power_total"].get_scan(-1)  # Alpha power (MW)
-    falpha = m_file.data["falpha"].get_scan(
+    f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
-    palpfwmw = alpha_power_total * (1 - falpha)  # Alpha power hitting 1st wall (MW)
+    palpfwmw = alpha_power_total * (1 - f_alpha_plasma)  # Alpha power hitting 1st wall (MW)
     itart = m_file.data["itart"].get_scan(
         -1
     )  # switch for spherical tokamak (ST) models

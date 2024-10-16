@@ -12,7 +12,7 @@ from pytest import approx
 
 
 class Palph2Param(NamedTuple):
-    falpha: Any = None
+    f_alpha_plasma: Any = None
 
     fdeut: Any = None
 
@@ -71,7 +71,7 @@ class Palph2Param(NamedTuple):
     "palph2param",
     (
         Palph2Param(
-            falpha=0.95,
+            f_alpha_plasma=0.95,
             fdeut=0.5,
             ifalphap=1,
             bp=0.86,
@@ -100,7 +100,7 @@ class Palph2Param(NamedTuple):
             expected_powfmw=1983.847575,
         ),
         Palph2Param(
-            falpha=0.95,
+            f_alpha_plasma=0.95,
             fdeut=0.5,
             ifalphap=1,
             bp=0.86,
@@ -129,7 +129,7 @@ class Palph2Param(NamedTuple):
             expected_powfmw=2486.347575,
         ),
         Palph2Param(
-            falpha=0.95,
+            f_alpha_plasma=0.95,
             fdeut=0.5,
             ifalphap=0,
             bp=0.86,
@@ -158,7 +158,7 @@ class Palph2Param(NamedTuple):
             expected_powfmw=2486.347575,
         ),
         Palph2Param(
-            falpha=0.95,
+            f_alpha_plasma=0.95,
             fdeut=2.5,
             ifalphap=0,
             bp=0.86,
@@ -200,7 +200,7 @@ def test_palph2(palph2param, monkeypatch):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(pv, "falpha", palph2param.falpha)
+    monkeypatch.setattr(pv, "f_alpha_plasma", palph2param.f_alpha_plasma)
     monkeypatch.setattr(pv, "fdeut", palph2param.fdeut)
 
     (

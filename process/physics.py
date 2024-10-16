@@ -2002,7 +2002,7 @@ class Physics:
             pinj = 0.0e0
 
         physics_variables.pdivt = (
-            physics_variables.falpha * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + pinj
             + physics_variables.pohmmw
@@ -2032,7 +2032,7 @@ class Physics:
 
         # Power transported to the first wall by escaped alpha particles
         physics_variables.palpfwmw = physics_variables.alpha_power_total * (
-            1.0e0 - physics_variables.falpha
+            1.0e0 - physics_variables.f_alpha_plasma
         )
 
         # Density limit
@@ -2282,7 +2282,7 @@ class Physics:
 
         # Calculate some derived quantities that may not have been defined earlier
         physics_module.total_loss_power = 1e6 * (
-            physics_variables.falpha * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.pohmmw
             + current_drive_variables.pinjmw
@@ -4024,7 +4024,7 @@ class Physics:
             "OP ",
         )
         tot_power_plasma = (
-            physics_variables.falpha * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.pohmmw
             + current_drive_variables.pinjmw
@@ -4036,7 +4036,7 @@ class Physics:
             tot_power_plasma,
             "OP ",
         )
-        # po.ovarre(self.outfile,'Total power deposited in plasma (MW)','()',falpha*alpha_power_total+non_alpha_charged_power+pohmmw+pinjmw, 'OP ')
+        # po.ovarre(self.outfile,'Total power deposited in plasma (MW)','()',f_alpha_plasma*alpha_power_total+non_alpha_charged_power+pohmmw+pinjmw, 'OP ')
 
         po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
         po.ovarre(
@@ -4255,8 +4255,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Fraction of alpha power deposited in plasma",
-            "(falpha)",
-            physics_variables.falpha,
+            "(f_alpha_plasma)",
+            physics_variables.f_alpha_plasma,
             "IP",
         )
         po.ovarrf(
@@ -5700,7 +5700,7 @@ class Physics:
         fhz = (
             ptrez
             + ptriz
-            - physics_variables.falpha * physics_variables.alpha_power_density
+            - physics_variables.f_alpha_plasma * physics_variables.alpha_power_density
             - physics_variables.charged_power_density
             - physics_variables.pohmpv
         )
@@ -5825,7 +5825,7 @@ class Physics:
 
         # Calculate heating power (MW)
         powerht = (
-            physics_variables.falpha * alpha_power_total
+            physics_variables.f_alpha_plasma * alpha_power_total
             + non_alpha_charged_power
             + physics_variables.pohmmw
         )

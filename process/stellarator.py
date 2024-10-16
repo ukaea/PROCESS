@@ -4100,7 +4100,7 @@ class Stellarator:
         #  physics_variables.pradmw here is core + edge (no SOL)
 
         powht = (
-            physics_variables.falpha * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.pohmmw
             - physics_variables.pradpv * physics_variables.plasma_volume
@@ -4138,7 +4138,7 @@ class Stellarator:
         #  Power transported to the first wall by escaped alpha particles
 
         physics_variables.palpfwmw = physics_variables.alpha_power_total * (
-            1.0e0 - physics_variables.falpha
+            1.0e0 - physics_variables.f_alpha_plasma
         )
 
         # Nominal mean photon wall load
@@ -4172,7 +4172,7 @@ class Stellarator:
         )
 
         physics_variables.rad_fraction_total = physics_variables.pradmw / (
-            physics_variables.falpha * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.pohmmw
             + current_drive_variables.pinjmw
@@ -4463,7 +4463,7 @@ class Stellarator:
 
         q_PROCESS = (
             (
-                physics_variables.falpha * physics_variables.alpha_power_density
+                physics_variables.f_alpha_plasma * physics_variables.alpha_power_density
                 - physics_variables.pcoreradpv
             )
             * physics_variables.plasma_volume
@@ -4472,7 +4472,7 @@ class Stellarator:
         )
         q_PROCESS_r1 = (
             (
-                physics_variables.falpha * physics_variables.alpha_power_density
+                physics_variables.f_alpha_plasma * physics_variables.alpha_power_density
                 - physics_variables.pcoreradpv
             )
             * physics_variables.plasma_volume
@@ -4608,7 +4608,7 @@ class Stellarator:
         )
 
         nominator = (
-            physics_variables.falpha * physics_variables.alpha_power_density
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_density
             - physics_variables.pcoreradpv
         ) * volscaling
 

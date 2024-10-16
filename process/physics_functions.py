@@ -957,10 +957,10 @@ def palph2(
     # and ion power balance equations only)
     # No consideration of charged_power_density here...
     alpha_power_ions_density = (
-        physics_variables.falpha * alpha_power_density_out * falpi
+        physics_variables.f_alpha_plasma * alpha_power_density_out * falpi
     )
     alpha_power_electron_density = (
-        physics_variables.falpha * alpha_power_density_out * falpe
+        physics_variables.f_alpha_plasma * alpha_power_density_out * falpe
     )
 
     # Determine average fast alpha density

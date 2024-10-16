@@ -638,7 +638,7 @@ boundu(28) = 1.0
 * DESCRIPTION:   Helium-3 fuel fraction
 * JUSTIFICATION: Using default = 0.0
 
-*falpha = 
+*f_alpha_plasma = 
 * DESCRIPTION:   Fraction of alpha power deposited to plasma
 * JUSTIFICATION: Using default = 0.95
 
