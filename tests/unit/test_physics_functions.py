@@ -62,7 +62,7 @@ class Palph2Param(NamedTuple):
 
     expected_palpipv: Any = None
 
-    expected_pfuscmw: Any = None
+    expected_charged_particle_power: Any = None
 
     expected_powfmw: Any = None
 
@@ -96,7 +96,7 @@ class Palph2Param(NamedTuple):
             expected_betaft=0.00423788,
             expected_palpipv=0.049552,
             expected_palpepv=0.105298,
-            expected_pfuscmw=397.080075,
+            expected_charged_particle_power=397.080075,
             expected_powfmw=1983.847575,
         ),
         Palph2Param(
@@ -125,7 +125,7 @@ class Palph2Param(NamedTuple):
             expected_betaft=0.00531482,
             expected_palpipv=0.062144272,
             expected_palpepv=0.132056578,
-            expected_pfuscmw=497.580075,
+            expected_charged_particle_power=497.580075,
             expected_powfmw=2486.347575,
         ),
         Palph2Param(
@@ -154,7 +154,7 @@ class Palph2Param(NamedTuple):
             expected_betaft=0.00701622,
             expected_palpipv=0.062144272,
             expected_palpepv=0.132056578,
-            expected_pfuscmw=497.580075,
+            expected_charged_particle_power=497.580075,
             expected_powfmw=2486.347575,
         ),
         Palph2Param(
@@ -183,7 +183,7 @@ class Palph2Param(NamedTuple):
             expected_betaft=0.0,
             expected_palpipv=0.062144272,
             expected_palpepv=0.132056578,
-            expected_pfuscmw=497.580075,
+            expected_charged_particle_power=497.580075,
             expected_powfmw=2486.347575,
         ),
     ),
@@ -212,7 +212,7 @@ def test_palph2(palph2param, monkeypatch):
         alpha_power_density,
         alpha_power_electron_density,
         alpha_power_ions_density,
-        pfuscmw,
+        charged_particle_power,
         fusion_power,
     ) = physics_functions.palph2(
         ifalphap=palph2param.ifalphap,
@@ -240,7 +240,7 @@ def test_palph2(palph2param, monkeypatch):
     assert betaft == pytest.approx(palph2param.expected_betaft)
     assert alpha_power_electron_density == pytest.approx(palph2param.expected_palpepv)
     assert alpha_power_ions_density == pytest.approx(palph2param.expected_palpipv)
-    assert charged_particle_power== pytest.approx(palph2param.expected_pfuscmw)
+    assert charged_particle_power== pytest.approx(palph2param.expected_charged_particle_power)
     assert fusion_power == pytest.approx(palph2param.expected_powfmw)
 
 
