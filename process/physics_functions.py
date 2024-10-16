@@ -280,9 +280,13 @@ class FusionReactionRate:
 
         # Power densities for different particles [MW/m^3]
         # Alpha particle gets approximately 20% of the fusion power
-        alpha_power_density = (1.0-constants.dt_neutron_energy_fraction) * fusion_power_density
+        alpha_power_density = (
+            1.0 - constants.dt_neutron_energy_fraction
+        ) * fusion_power_density
         charged_power_density = 0.0
-        neutron_power_density = (constants.dt_neutron_energy_fraction * fusion_power_density)
+        neutron_power_density = (
+            constants.dt_neutron_energy_fraction * fusion_power_density
+        )
 
         # Calculate the fusion rate density [reactions/m^3/second]
         fusion_rate_density = fusion_power_density / reaction_energy
@@ -345,8 +349,12 @@ class FusionReactionRate:
 
         # Power densities for different particles [MW/m^3]
         # Alpha particle gets approximately 20% of the fusion power
-        alpha_power_density = (1.0-constants.dhelium_proton_energy_fraction) * fusion_power_density
-        charged_power_density = constants.dhelium_proton_energy_fraction * fusion_power_density
+        alpha_power_density = (
+            1.0 - constants.dhelium_proton_energy_fraction
+        ) * fusion_power_density
+        charged_power_density = (
+            constants.dhelium_proton_energy_fraction * fusion_power_density
+        )
         neutron_power_density = 0.0
 
         # Calculate the fusion rate density [reactions/m^3/second]
@@ -413,8 +421,12 @@ class FusionReactionRate:
         # Power densities for different particles [MW/m^3]
         # Neutron particle gets approximately 75% of the fusion power
         alpha_power_density = 0.0
-        charged_power_density = (1.0-constants.dd_neutron_energy_fraction) * fusion_power_density
-        neutron_power_density = constants.dd_neutron_energy_fraction * fusion_power_density
+        charged_power_density = (
+            1.0 - constants.dd_neutron_energy_fraction
+        ) * fusion_power_density
+        neutron_power_density = (
+            constants.dd_neutron_energy_fraction * fusion_power_density
+        )
 
         # Calculate the fusion rate density [reactions/m^3/second]
         fusion_rate_density = fusion_power_density / reaction_energy
@@ -923,7 +935,9 @@ def palph2(
     neutron_power_plasma = neutron_power_density * plasma_volume
 
     # Add extra neutron power from beams
-    neutron_power_density_out = neutron_power_density + ((4.0 * alpha_power_beams) / plasma_volume)
+    neutron_power_density_out = neutron_power_density + (
+        (4.0 * alpha_power_beams) / plasma_volume
+    )
 
     # Total neutron power
     neutron_power_total = neutron_power_density_out * plasma_volume
@@ -942,8 +956,12 @@ def palph2(
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
     # No consideration of charged_power_density here...
-    alpha_power_ions_density = physics_variables.falpha * alpha_power_density_out * falpi
-    alpha_power_electron_density = physics_variables.falpha * alpha_power_density_out * falpe
+    alpha_power_ions_density = (
+        physics_variables.falpha * alpha_power_density_out * falpi
+    )
+    alpha_power_electron_density = (
+        physics_variables.falpha * alpha_power_density_out * falpe
+    )
 
     # Determine average fast alpha density
     if physics_variables.fdeut < 1.0:
@@ -1002,7 +1020,6 @@ def beamfus(
     dene,
     deni,
     dlamie,
-    ealphadt,
     enbeam,
     fdeut,
     ftrit,
@@ -1024,7 +1041,6 @@ def beamfus(
     :param dene: electron density (m^-3)
     :param deni: fuel ion density (m^-3)
     :param dlamie: ion-electron coulomb logarithm
-    :param ealphadt: alpha particle birth energy (D-T) (keV)
     :param enbeam: neutral beam energy (keV)
     :param fdeut: deuterium fraction of main plasma
     :param ftrit: tritium fraction of main plasma
@@ -1060,7 +1076,6 @@ def beamfus(
     palpdb, palptb, dnbeam2, ehotnb = beamcalc(
         denid,
         denit,
-        ealphadt,
         enbeam,
         ecritd,
         ecritt,
@@ -1084,14 +1099,13 @@ def beamfus(
 
 
 def beamcalc(
-    nd, nt, ealphadt, ebeam, ecritd, ecritt, tausbme, ftritbm, ibeam, ti, plasma_volume, svdt
+    nd, nt, ebeam, ecritd, ecritt, tausbme, ftritbm, ibeam, ti, plasma_volume, svdt
 ):
     """Neutral beam alpha power and ion energy
     author: P J Knight, CCFE, Culham Science Centre
 
     :param nd: thermal deuterium density (/m3)
     :param nt: thermal tritium density   (/m3)
-    :param ealphadt: alpha particle birth energy (D-T) (keV)
     :param ebeam: beam energy (keV)
     :param ecritd: critical energy for electron/ion slowing down of
     the beam ion (deuterium neutral beam) (keV)
@@ -1121,7 +1135,9 @@ def beamcalc(
         / (constants.proton_mass * ATOMIC_MASS_DEUTERIUM)
     )
     tauseffd = tausbme / 3.0 * numpy.log(1.0 + (ebmratd) ** 1.5)
-    nhotmsd = (1.0 - ftritbm) * ibeam * tauseffd / (constants.electron_charge * plasma_volume)
+    nhotmsd = (
+        (1.0 - ftritbm) * ibeam * tauseffd / (constants.electron_charge * plasma_volume)
+    )
 
     ebmratt = ebeam / ecritt
     vcritt = numpy.sqrt(
@@ -1186,8 +1202,8 @@ def beamcalc(
     iabm = 3
     svthotn = 1e-4 * sgvhot(iabm, vcritt, ebeam)
 
-    palfdb = palphabm(ealphadt, ndhot, nt, svdhotn, plasma_volume, ti, svdt)
-    palftb = palphabm(ealphadt, nthot, nd, svthotn, plasma_volume, ti, svdt)
+    palfdb = palphabm(ndhot, nt, svdhotn, plasma_volume, ti, svdt)
+    palftb = palphabm(nthot, nd, svthotn, plasma_volume, ti, svdt)
 
     return palfdb, palftb, nhot, ehot
 
@@ -1212,11 +1228,10 @@ def xbrak(e0, ec):
     return t1 + t2 - t3 - t4
 
 
-def palphabm(ealphadt, nbm, nblk, sigv, plasma_volume, ti, svdt):
+def palphabm(nbm, nblk, sigv, plasma_volume, ti, svdt):
     """Alpha power from beam-background fusion
     author: P J Knight, CCFE, Culham Science Centre
 
-    :param ealphadt: alpha particle birth energy (D-T) (keV)
     :param nblk: thermal ion density (/m3)
     :param nbm: hot beam ion density (/m3)
     :param sigv: hot beam fusion reaction rate (m3/s)
@@ -1230,16 +1245,7 @@ def palphabm(ealphadt, nbm, nblk, sigv, plasma_volume, ti, svdt):
     ratio = svdt / bosch_hale_reactivity(
         numpy.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
     )
-    return (
-        constants.electron_charge
-        / 1000.0
-        * nbm
-        * nblk
-        * sigv
-        * ealphadt
-        * plasma_volume
-        * ratio.item()
-    )
+    return nbm * nblk * sigv * constants.dt_alpha_energy * plasma_volume * ratio.item()
 
 
 def sgvhot(rmass_ion, vcrx, ebeam):

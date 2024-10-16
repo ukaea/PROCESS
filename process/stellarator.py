@@ -1187,7 +1187,9 @@ class Stellarator:
         #  Neutron power lost through holes in first wall (eventually absorbed by
         #  shield)
 
-        fwbs_variables.pnucloss = physics_variables.neutron_power_total * fwbs_variables.fhole
+        fwbs_variables.pnucloss = (
+            physics_variables.neutron_power_total * fwbs_variables.fhole
+        )
 
         # The peaking factor, obtained as precalculated parameter
         fwbs_variables.wallpf = (
@@ -1199,8 +1201,12 @@ class Stellarator:
             self.blanket_neutronics()
 
             if heat_transport_variables.ipowerflow == 1:
-                fwbs_variables.pnucdiv = physics_variables.neutron_power_total * fwbs_variables.fdiv
-                fwbs_variables.pnuchcd = physics_variables.neutron_power_total * fwbs_variables.fhcd
+                fwbs_variables.pnucdiv = (
+                    physics_variables.neutron_power_total * fwbs_variables.fdiv
+                )
+                fwbs_variables.pnuchcd = (
+                    physics_variables.neutron_power_total * fwbs_variables.fhcd
+                )
                 fwbs_variables.pnucfw = (
                     physics_variables.neutron_power_total
                     - fwbs_variables.pnucdiv
@@ -1302,11 +1308,15 @@ class Stellarator:
             else:  # heat_transport_variables.ipowerflow == 1
                 #  Neutron power incident on divertor (MW)
 
-                fwbs_variables.pnucdiv = physics_variables.neutron_power_total * fwbs_variables.fdiv
+                fwbs_variables.pnucdiv = (
+                    physics_variables.neutron_power_total * fwbs_variables.fdiv
+                )
 
                 #  Neutron power incident on HCD apparatus (MW)
 
-                fwbs_variables.pnuchcd = physics_variables.neutron_power_total * fwbs_variables.fhcd
+                fwbs_variables.pnuchcd = (
+                    physics_variables.neutron_power_total * fwbs_variables.fhcd
+                )
 
                 #  Neutron power deposited in first wall, blanket and shield (MW)
 
@@ -3937,9 +3947,15 @@ class Stellarator:
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
-        physics_variables.dt_power = physics_module.dt_power_density * physics_variables.plasma_volume
-        physics_variables.dhe3_power = physics_module.dhe3_power_density * physics_variables.plasma_volume
-        physics_variables.dd_power = physics_module.dd_power_density * physics_variables.plasma_volume
+        physics_variables.dt_power = (
+            physics_module.dt_power_density * physics_variables.plasma_volume
+        )
+        physics_variables.dhe3_power = (
+            physics_module.dhe3_power_density * physics_variables.plasma_volume
+        )
+        physics_variables.dd_power = (
+            physics_module.dd_power_density * physics_variables.plasma_volume
+        )
 
         #  Calculate neutral beam slowing down effects
         #  If ignited, then ignore beam fusion effects
@@ -3960,7 +3976,6 @@ class Stellarator:
                 physics_variables.dene,
                 physics_variables.deni,
                 physics_variables.dlamie,
-                physics_variables.ealphadt,
                 current_drive_variables.enbeam,
                 physics_variables.fdeut,
                 physics_variables.ftrit,
@@ -3975,18 +3990,20 @@ class Stellarator:
                 physics_variables.fusion_rate_density
                 + 1.0e6
                 * physics_variables.alpha_power_beams
-                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
+                / (constants.dt_alpha_energy)
                 / physics_variables.plasma_volume
             )
             physics_variables.alpha_rate_density = (
                 physics_variables.alpha_rate_density
                 + 1.0e6
                 * physics_variables.alpha_power_beams
-                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
+                / (constants.dt_alpha_energy)
                 / physics_variables.plasma_volume
             )
 
-        physics_variables.dt_power = physics_variables.dt_power + 5.0e0 * physics_variables.alpha_power_beams
+        physics_variables.dt_power = (
+            physics_variables.dt_power + 5.0e0 * physics_variables.alpha_power_beams
+        )
 
         (
             physics_variables.neutron_power_density,
@@ -4074,7 +4091,9 @@ class Stellarator:
             physics_variables.pedgeradpv * physics_variables.plasma_volume
         )
 
-        physics_variables.pradmw = physics_variables.pradpv * physics_variables.plasma_volume
+        physics_variables.pradmw = (
+            physics_variables.pradpv * physics_variables.plasma_volume
+        )
 
         #  Heating power to plasma (= Psol in divertor model)
         #  Ohmic power is zero in a stellarator
@@ -4202,8 +4221,12 @@ class Stellarator:
             physics_variables.zeff,
         )
 
-        physics_variables.ptremw = physics_variables.ptrepv * physics_variables.plasma_volume
-        physics_variables.ptrimw = physics_variables.ptripv * physics_variables.plasma_volume
+        physics_variables.ptremw = (
+            physics_variables.ptrepv * physics_variables.plasma_volume
+        )
+        physics_variables.ptrimw = (
+            physics_variables.ptripv * physics_variables.plasma_volume
+        )
 
         physics_variables.pscalingmw = (
             physics_variables.ptremw + physics_variables.ptrimw

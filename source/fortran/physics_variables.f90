@@ -153,9 +153,6 @@ module physics_variables
   real(dp) :: gradient_length_te
   !! Max. normalized gradient length in el. temperature (ipedestal==0 only)
 
-  real(dp), parameter :: ealphadt = 3520.0D0
-  !! alpha birth energy in D-T reaction (keV)
-
   real(dp) :: epbetmax
   !! maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346
   !! "Operation at the tokamak equilibrium poloidal beta-limit in TFTR", 1992 Nucl. Fusion 32 1468

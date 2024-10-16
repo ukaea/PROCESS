@@ -611,7 +611,13 @@ def _nevins_integral(
     """
 
     # Compute average electron beta
-    betae = dene * te * 1.0e3 * constants.electron_charge / (bt**2 / (2.0 * constants.rmu0))
+    betae = (
+        dene
+        * te
+        * 1.0e3
+        * constants.electron_charge
+        / (bt**2 / (2.0 * constants.rmu0))
+    )
 
     nabla = rminor * np.sqrt(y) / rmajor
     x = (1.46 * np.sqrt(nabla) + 2.4 * nabla) / (1.0 - nabla) ** 1.5
@@ -1807,9 +1813,15 @@ class Physics:
         fusion_reactions.set_physics_variables()
 
         #
-        physics_variables.dt_power = physics_module.dt_power_density * physics_variables.plasma_volume
-        physics_variables.dhe3_power = physics_module.dhe3_power_density * physics_variables.plasma_volume
-        physics_variables.dd_power = physics_module.dd_power_density * physics_variables.plasma_volume
+        physics_variables.dt_power = (
+            physics_module.dt_power_density * physics_variables.plasma_volume
+        )
+        physics_variables.dhe3_power = (
+            physics_module.dhe3_power_density * physics_variables.plasma_volume
+        )
+        physics_variables.dd_power = (
+            physics_module.dd_power_density * physics_variables.plasma_volume
+        )
 
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
@@ -1830,7 +1842,6 @@ class Physics:
                 physics_variables.dene,
                 physics_variables.deni,
                 physics_variables.dlamie,
-                physics_variables.ealphadt,
                 current_drive_variables.enbeam,
                 physics_variables.fdeut,
                 physics_variables.ftrit,
@@ -1845,18 +1856,20 @@ class Physics:
                 physics_variables.fusion_rate_density
                 + 1.0e6
                 * physics_variables.alpha_power_beams
-                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
+                / (constants.dt_alpha_energy)
                 / physics_variables.plasma_volume
             )
             physics_variables.alpha_rate_density = (
                 physics_variables.alpha_rate_density
                 + 1.0e6
                 * physics_variables.alpha_power_beams
-                / (1.0e3 * physics_variables.ealphadt * constants.electron_charge)
+                / (constants.dt_alpha_energy)
                 / physics_variables.plasma_volume
             )
 
-        physics_variables.dt_power = physics_variables.dt_power + 5.0e0 * physics_variables.alpha_power_beams
+        physics_variables.dt_power = (
+            physics_variables.dt_power + 5.0e0 * physics_variables.alpha_power_beams
+        )
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -1940,7 +1953,9 @@ class Physics:
         physics_variables.pouterzoneradmw = (
             physics_variables.pedgeradpv * physics_variables.plasma_volume
         )
-        physics_variables.pradmw = physics_variables.pradpv * physics_variables.plasma_volume
+        physics_variables.pradmw = (
+            physics_variables.pradpv * physics_variables.plasma_volume
+        )
 
         # Calculate ohmic power
         (
@@ -2076,8 +2091,12 @@ class Physics:
             physics_variables.zeff,
         )
 
-        physics_variables.ptremw = physics_variables.ptrepv * physics_variables.plasma_volume
-        physics_variables.ptrimw = physics_variables.ptripv * physics_variables.plasma_volume
+        physics_variables.ptremw = (
+            physics_variables.ptrepv * physics_variables.plasma_volume
+        )
+        physics_variables.ptrimw = (
+            physics_variables.ptripv * physics_variables.plasma_volume
+        )
         # Total transport power from scaling law (MW)
         # pscalingmw = physics_variables.ptremw + physics_variables.ptrimw #KE - why is this commented?
 
@@ -2755,7 +2774,13 @@ class Physics:
         # Ohmic heating power per unit volume
         # Corrected from: pohmpv = (inductive_current_fraction*plasma_current)**2 * ...
 
-        pohmpv = inductive_current_fraction * plasma_current**2 * rplas * 1.0e-6 / plasma_volume
+        pohmpv = (
+            inductive_current_fraction
+            * plasma_current**2
+            * rplas
+            * 1.0e-6
+            / plasma_volume
+        )
 
         # Total ohmic heating power
 
@@ -5800,7 +5825,9 @@ class Physics:
 
         # Calculate heating power (MW)
         powerht = (
-            physics_variables.falpha * alpha_power_total + non_alpha_charged_power + physics_variables.pohmmw
+            physics_variables.falpha * alpha_power_total
+            + non_alpha_charged_power
+            + physics_variables.pohmmw
         )
 
         # If the device is not ignited, add the injected auxiliary power

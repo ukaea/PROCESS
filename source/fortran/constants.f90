@@ -118,6 +118,12 @@ module constants
   ! Roughly 79.867% of the energy is carried by the neutron
   real(dp), parameter :: dt_neutron_energy_fraction = (alpha_mass/(neutron_mass+alpha_mass))
 
+  ! Deuterium - Tritium reaction energy carried by alpha particle neutron [J]
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
+  ! Roughly 3.5 MeV of the energy is carried by the alpha particle
+  real(dp), parameter :: dt_alpha_energy = (1.0D0-dt_neutron_energy_fraction)*d_t_energy
+
   ! Deuterium - Deuterium (3He producing) reaction energy fraction carried by neutron
   ! Assuming centre of mass frame as the momenta of the fusion products exceed 
   ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
