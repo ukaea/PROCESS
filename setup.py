@@ -44,6 +44,7 @@ setup_kwargs = {
         "CoolProp>=6.4",
         "matplotlib>=2.1.1",
         "seaborn>=0.12.2",
+        "tabulate",
     ],
     "extras_require": {
         "test": ["pytest>=5.4.1", "requests>=2.30", "testbook>=0.4"],
