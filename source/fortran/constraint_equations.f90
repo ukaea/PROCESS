@@ -1088,7 +1088,7 @@ contains
    end subroutine constraint_eqn_018
 
    subroutine constraint_eqn_019(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for MVA upper limit: resistive TF coil set
+      !! Equation for MVA (power) upper limit: resistive TF coil set
       !! author: P B Lloyd, CCFE, Culham Science Centre
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
