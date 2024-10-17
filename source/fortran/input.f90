@@ -310,7 +310,7 @@ contains
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
       ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
-      teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, i_bootstrap_current, &
+      teped, fhe3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
@@ -572,8 +572,8 @@ contains
        case ('epbetmax')
           call parse_real_variable('epbetmax', epbetmax, 0.01D0, 10.0D0, &
                'Max epsilon*beta value')
-       case ('falpha')
-          call parse_real_variable('falpha', falpha, 0.0D0, 1.0D0, &
+       case ('f_alpha_plasma')
+          call parse_real_variable('f_alpha_plasma', f_alpha_plasma, 0.0D0, 1.0D0, &
                'Fraction of alpha power deposited to plasma')
        case ('ftar')
           call parse_real_variable('ftar', ftar, 0.0D0, 1.0D0, &
