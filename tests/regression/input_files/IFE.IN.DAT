@@ -1,0 +1,258 @@
+*************************************************************************
+*****                                                               *****
+*****               OSIRIS Inertial Fusion Plant                    *****
+*****               Stuart Muldrew (01/08/2019)                     *****
+*****               Based on run by Peter Knight                    *****
+*****                                                               *****
+*****                                                               *****
+*************************************************************************
+
+*---------------Constraint Equations---------------*
+
+icc = 16               *Net electric power lower limit
+
+*---------------Iteration Variables----------------*
+ixc = 81               *edrive
+edrive = 5.0D6         *IFE driver energy (J)
+
+*-----------------Global Variables-----------------*
+runtitle = IFE_001
+
+*---------------Constraint Variables---------------*
+pnetelin  = 1000.0     *Required net electric power (MW)
+
+*---------------Numerics Variables-----------------*
+IOPTIMZ   = 1         *Code operation switch (1: for optimisation VMCON only)
+minmax    = 18        *Null FoM, find feasible
+
+
+*------------------IFE Variables-------------------*
+ife         = 1        *Switch for Inertial Fusion Energy model
+ifetyp      = 1        *Switch for type of IFE device build (1: OSIRIS-like build)
+ifedrv      = 2        *Switch for type of IFE driver (2: Heavy ion beam driver based on OSIRIS)
+bldr        = 0.55     *Radial thickness of IFE blanket (m)
+bldzl       = 0.65     *Vertical thickness of IFE blanket below chamber (m)
+bldzu       = 0.55     *Vertical thickness of IFE blanket above chamber (m)
+
+blmatf(1)   = 0.0500   *Blanket material fraction (radial void)
+blmatf(2)   = 0.0000   *Blanket material fraction (upper void)
+blmatf(3)   = 0.0000   *Blanket material fraction (lower void)
+blmatf(4)   = 0.0000   *Blanket material fraction (radial steel)
+blmatf(5)   = 0.0000   *Blanket material fraction (upper steel)
+blmatf(6)   = 0.0000   *Blanket material fraction (lower steel)
+blmatf(7)   = 0.0086   *Blanket material fraction (radial carbon)
+blmatf(8)   = 0.0091   *Blanket material fraction (upper carbon)
+blmatf(9)   = 0.0000   *Blanket material fraction (lower carbon)
+blmatf(10)  = 0.9414   *Blanket material fraction (radial FLiBe)
+blmatf(11)  = 0.9909   *Blanket material fraction (upper FLiBe)
+blmatf(12)  = 1.0000   *Blanket material fraction (lower FLiBe)
+blmatf(13)  = 0.0000   *Blanket material fraction (radial Li20)
+blmatf(14)  = 0.0000   *Blanket material fraction (upper Li20)
+blmatf(15)  = 0.0000   *Blanket material fraction (lower Li20)
+blmatf(16)  = 0.0000   *Blanket material fraction (radial concrete)
+blmatf(17)  = 0.0000   *Blanket material fraction (upper concrete)
+blmatf(18)  = 0.0000   *Blanket material fraction (lower concrete)
+blmatf(19)  = 0.0000   *Blanket material fraction (radial helium)
+blmatf(20)  = 0.0000   *Blanket material fraction (upper helium)
+blmatf(21)  = 0.0000   *Blanket material fraction (lower helium)
+blmatf(22)  = 0.0000   *Blanket material fraction (radial xenon)
+blmatf(23)  = 0.0000   *Blanket material fraction (upper xenon)
+blmatf(24)  = 0.0000   *Blanket material fraction (lower xenon)
+blmatf(25)  = 0.0000   *Blanket material fraction (radial lithium)
+blmatf(26)  = 0.0000   *Blanket material fraction (upper lithium)
+blmatf(27)  = 0.0000   *Blanket material fraction (lower lithium)
+
+chdzl       = 3.1      *Vertical thickness of IFE chamber below centre (m)
+chdzu       = 3.7      *Vertical thickness of IFE chamber above centre (m)
+chmatf(0)   = 1.0      *IFE chamber material fractions (void)
+chrad       = 3.5      *Radius of IFE chamber (m)
+fauxbop     = 0.0      *Fraction of gross electric power to balance-of-plant
+fbreed      = 0.526    *Fraction of breeder external to device core
+fwdr        = 0.055    *Radial thickness of IFE first wall (m)
+fwdzl       = 0.0      *Vertical thickness of IFE first wall below chamber (m)
+fwdzu       = 0.055    *Vertical thickness of IFE first wall above chamber (m)
+
+fwmatf(1)   = 0.0500   *First wall material fraction (radial void)
+fwmatf(2)   = 0.0000   *First wall material fraction (upper void)
+fwmatf(3)   = 1.0000   *First wall material fraction (lower void)
+fwmatf(4)   = 0.0000   *First wall material fraction (radial steel)
+fwmatf(5)   = 0.0000   *First wall material fraction (upper steel)
+fwmatf(6)   = 0.0000   *First wall material fraction (lower steel)
+fwmatf(7)   = 0.0864   *First wall material fraction (radial carbon)
+fwmatf(8)   = 0.0909   *First wall material fraction (upper carbon)
+fwmatf(9)   = 0.0000   *First wall material fraction (lower carbon)
+fwmatf(10)  = 0.8636   *First wall material fraction (radial FLiBe)
+fwmatf(11)  = 0.9091   *First wall material fraction (upper FLiBe)
+fwmatf(12)  = 0.0000   *First wall material fraction (lower FLiBe)
+fwmatf(13)  = 0.0000   *First wall material fraction (radial Li20)
+fwmatf(14)  = 0.0000   *First wall material fraction (upper Li20)
+fwmatf(15)  = 0.0000   *First wall material fraction (lower Li20)
+fwmatf(16)  = 0.0000   *First wall material fraction (radial concrete)
+fwmatf(17)  = 0.0000   *First wall material fraction (upper concrete)
+fwmatf(18)  = 0.0000   *First wall material fraction (lower concrete)
+fwmatf(19)  = 0.0000   *First wall material fraction (radial helium)
+fwmatf(20)  = 0.0000   *First wall material fraction (upper helium)
+fwmatf(21)  = 0.0000   *First wall material fraction (lower helium)
+fwmatf(22)  = 0.0000   *First wall material fraction (radial xenon)
+fwmatf(23)  = 0.0000   *First wall material fraction (upper xenon)
+fwmatf(24)  = 0.0000   *First wall material fraction (lower xenon)
+fwmatf(25)  = 0.0000   *First wall material fraction (radial lithium)
+fwmatf(26)  = 0.0000   *First wall material fraction (upper lithium)
+fwmatf(27)  = 0.0000   *First wall material fraction (lower lithium)
+
+pdrive      = 23.1D6   *IFE driver power reaching target (W)
+shdr        = 0.2      *Radial thickness of IFE shield (m)
+shdzl       = 0.35     *Vertical thickness of IFE shield below chamber (m)
+shdzu       = 0.2      *Vertical thickness of IFE shield above chamber (m)
+
+shmatf(1)   = 0.0000   *Shield material fraction (radial void)
+shmatf(2)   = 0.3000   *Shield material fraction (upper void)
+shmatf(3)   = 0.3000   *Shield material fraction (lower void)
+shmatf(4)   = 1.0000   *Shield material fraction (radial steel)
+shmatf(5)   = 0.7000   *Shield material fraction (upper steel)
+shmatf(6)   = 0.7000   *Shield material fraction (lower steel)
+shmatf(7)   = 0.0000   *Shield material fraction (radial carbon)
+shmatf(8)   = 0.0000   *Shield material fraction (upper carbon)
+shmatf(9)   = 0.0000   *Shield material fraction (lower carbon)
+shmatf(10)  = 0.0000   *Shield material fraction (radial FLiBe)
+shmatf(11)  = 0.0000   *Shield material fraction (upper FLiBe)
+shmatf(12)  = 0.0000   *Shield material fraction (lower FLiBe)
+shmatf(13)  = 0.0000   *Shield material fraction (radial Li20)
+shmatf(14)  = 0.0000   *Shield material fraction (upper Li20)
+shmatf(15)  = 0.0000   *Shield material fraction (lower Li20)
+shmatf(16)  = 0.0000   *Shield material fraction (radial concrete)
+shmatf(17)  = 0.0000   *Shield material fraction (upper concrete)
+shmatf(18)  = 0.0000   *Shield material fraction (lower concrete)
+shmatf(19)  = 0.0000   *Shield material fraction (radial helium)
+shmatf(20)  = 0.0000   *Shield material fraction (upper helium)
+shmatf(21)  = 0.0000   *Shield material fraction (lower helium)
+shmatf(22)  = 0.0000   *Shield material fraction (radial xenon)
+shmatf(23)  = 0.0000   *Shield material fraction (upper xenon)
+shmatf(24)  = 0.0000   *Shield material fraction (lower xenon)
+shmatf(25)  = 0.0000   *Shield material fraction (radial lithium)
+shmatf(26)  = 0.0000   *Shield material fraction (upper lithium)
+shmatf(27)  = 0.0000   *Shield material fraction (lower lithium)
+
+v1dr        = 0.005    *Radial thickness of IFE void between first wall and blanket (m)
+v1dzl       = 1.75     *Vertical thickness of IFE void 1 below chamber (m)
+v1dzu       = 0.005    *Vertical thickness of IFE void 1 above chamber (m)
+
+v1matf(1)   = 0.0500   *Void 1 material fraction (radial void)
+v1matf(2)   = 0.0000   *Void 1 material fraction (upper void)
+v1matf(3)   = 1.0000   *Void 1 material fraction (lower void)
+v1matf(4)   = 0.0000   *Void 1 material fraction (radial steel)
+v1matf(5)   = 0.0000   *Void 1 material fraction (upper steel)
+v1matf(6)   = 0.0000   *Void 1 material fraction (lower steel)
+v1matf(7)   = 0.9500   *Void 1 material fraction (radial carbon)
+v1matf(8)   = 1.0000   *Void 1 material fraction (upper carbon)
+v1matf(9)   = 0.0000   *Void 1 material fraction (lower carbon)
+v1matf(10)  = 0.0000   *Void 1 material fraction (radial FLiBe)
+v1matf(11)  = 0.0000   *Void 1 material fraction (upper FLiBe)
+v1matf(12)  = 0.0000   *Void 1 material fraction (lower FLiBe)
+v1matf(13)  = 0.0000   *Void 1 material fraction (radial Li20)
+v1matf(14)  = 0.0000   *Void 1 material fraction (upper Li20)
+v1matf(15)  = 0.0000   *Void 1 material fraction (lower Li20)
+v1matf(16)  = 0.0000   *Void 1 material fraction (radial concrete)
+v1matf(17)  = 0.0000   *Void 1 material fraction (upper concrete)
+v1matf(18)  = 0.0000   *Void 1 material fraction (lower concrete)
+v1matf(19)  = 0.0000   *Void 1 material fraction (radial helium)
+v1matf(20)  = 0.0000   *Void 1 material fraction (upper helium)
+v1matf(21)  = 0.0000   *Void 1 material fraction (lower helium)
+v1matf(22)  = 0.0000   *Void 1 material fraction (radial xenon)
+v1matf(23)  = 0.0000   *Void 1 material fraction (upper xenon)
+v1matf(24)  = 0.0000   *Void 1 material fraction (lower xenon)
+v1matf(25)  = 0.0000   *Void 1 material fraction (radial lithium)
+v1matf(26)  = 0.0000   *Void 1 material fraction (upper lithium)
+v1matf(27)  = 0.0000   *Void 1 material fraction (lower lithium)
+
+v2dr        = 2.19     *Radial thickness of IFE void between blanket and shield (m)
+v2dzl       = 0.0      *Vertical thickness of IFE void 2 below chamber (m)
+v2dzu       = 0.85     *Vertical thickness of IFE void 2 above chamber (m)
+
+v2matf(1)   = 0.9500   *Void 2 material fraction (radial void)
+v2matf(2)   = 0.9500   *Void 2 material fraction (upper void)
+v2matf(3)   = 0.9500   *Void 2 material fraction (lower void)
+v2matf(4)   = 0.0000   *Void 2 material fraction (radial steel)
+v2matf(5)   = 0.0000   *Void 2 material fraction (upper steel)
+v2matf(6)   = 0.0000   *Void 2 material fraction (lower steel)
+v2matf(7)   = 0.0000   *Void 2 material fraction (radial carbon)
+v2matf(8)   = 0.0000   *Void 2 material fraction (upper carbon)
+v2matf(9)   = 0.0000   *Void 2 material fraction (lower carbon)
+v2matf(10)  = 0.0500   *Void 2 material fraction (radial FLiBe)
+v2matf(11)  = 0.0500   *Void 2 material fraction (upper FLiBe)
+v2matf(12)  = 0.5000   *Void 2 material fraction (lower FLiBe)
+v2matf(13)  = 0.0000   *Void 2 material fraction (radial Li20)
+v2matf(14)  = 0.0000   *Void 2 material fraction (upper Li20)
+v2matf(15)  = 0.0000   *Void 2 material fraction (lower Li20)
+v2matf(16)  = 0.0000   *Void 2 material fraction (radial concrete)
+v2matf(17)  = 0.0000   *Void 2 material fraction (upper concrete)
+v2matf(18)  = 0.0000   *Void 2 material fraction (lower concrete)
+v2matf(19)  = 0.0000   *Void 2 material fraction (radial helium)
+v2matf(20)  = 0.0000   *Void 2 material fraction (upper helium)
+v2matf(21)  = 0.0000   *Void 2 material fraction (lower helium)
+v2matf(22)  = 0.0000   *Void 2 material fraction (radial xenon)
+v2matf(23)  = 0.0000   *Void 2 material fraction (upper xenon)
+v2matf(24)  = 0.0000   *Void 2 material fraction (lower xenon)
+v2matf(25)  = 0.0000   *Void 2 material fraction (radial lithium)
+v2matf(26)  = 0.0000   *Void 2 material fraction (upper lithium)
+v2matf(27)  = 0.0000   *Void 2 material fraction (lower lithium)
+
+v3dr        = 3.5      *Radial thickness of IFE void outside shield (m)
+v3dzl       = 0.0      *Vertical thickness of IFE void 3 below chamber (m)
+v3dzu       = 13.64    *Vertical thickness of IFE void 3 above chamber (m)
+
+v3matf(1)   = 1.0000   *Void 3 material fraction (radial void)
+v3matf(2)   = 1.0000   *Void 3 material fraction (upper void)
+v3matf(3)   = 1.0000   *Void 3 material fraction (lower void)
+v3matf(4)   = 0.0000   *Void 3 material fraction (radial steel)
+v3matf(5)   = 0.0000   *Void 3 material fraction (upper steel)
+v3matf(6)   = 0.0000   *Void 3 material fraction (lower steel)
+v3matf(7)   = 0.0000   *Void 3 material fraction (radial carbon)
+v3matf(8)   = 0.0000   *Void 3 material fraction (upper carbon)
+v3matf(9)   = 0.0000   *Void 3 material fraction (lower carbon)
+v3matf(10)  = 0.0000   *Void 3 material fraction (radial FLiBe)
+v3matf(11)  = 0.0000   *Void 3 material fraction (upper FLiBe)
+v3matf(12)  = 0.0000   *Void 3 material fraction (lower FLiBe)
+v3matf(13)  = 0.0000   *Void 3 material fraction (radial Li20)
+v3matf(14)  = 0.0000   *Void 3 material fraction (upper Li20)
+v3matf(15)  = 0.0000   *Void 3 material fraction (lower Li20)
+v3matf(16)  = 0.0000   *Void 3 material fraction (radial concrete)
+v3matf(17)  = 0.0000   *Void 3 material fraction (upper concrete)
+v3matf(18)  = 0.0000   *Void 3 material fraction (lower concrete)
+v3matf(19)  = 0.0000   *Void 3 material fraction (radial helium)
+v3matf(20)  = 0.0000   *Void 3 material fraction (upper helium)
+v3matf(21)  = 0.0000   *Void 3 material fraction (lower helium)
+v3matf(22)  = 0.0000   *Void 3 material fraction (radial xenon)
+v3matf(23)  = 0.0000   *Void 3 material fraction (upper xenon)
+v3matf(24)  = 0.0000   *Void 3 material fraction (lower xenon)
+v3matf(25)  = 0.0000   *Void 3 material fraction (radial lithium)
+v3matf(26)  = 0.0000   *Void 3 material fraction (upper lithium)
+v3matf(27)  = 0.0000   *Void 3 material fraction (lower lithium)
+
+*------------------FWBS Variables------------------*
+emult       = 1.26     *Energy multiplication in blanket and shield
+fhole       = 0.0      *Area fraction taken up by other holes 
+
+*-----------------Cost Variables-------------------*
+cost_model = 0         *1990 cost model
+abktflnc    = 20.0     *Allowable first wall/blanket neutron fluence (MW-yr/m2)
+cfactr      = 0.75     *Total plant availability fraction
+fcdfuel     = 0.0      *Fraction of current drive cost treated as fuel (if ifueltyp = 1)
+fkind       = 1.0      *Multiplier for Nth of a kind costs
+iavail      = 0        *Switch for plant availability model (use cfactr)
+ifueltyp    = 1        *Fuel Switch (1: Treat blankets, FW and fcdfuel of CD as fuel)
+ireactor    = 1        *Switch for net electric and CoE (1: calculate)
+lsa         = 4        *Level of safety assurance switch (4: like current fission plant)
+uccarb      = 500.0    *Cost of carbon cloth ($/kg)
+ucf1        = 5.0D6    *Cost of fuelling system ($)
+ucme        = 3.0D8    *Cost of maintenance equipment ($)
+
+*---------------Buildings Variables----------------*
+pibv        = 4.0D4    *Power injection building volume (m3)
+rbrt        = 3.2      *Reactor building roof thickness (m)
+rbwt        = 3.2      *Reactor building wall thickness (m)
+
+*---------------Heat Transport Variables-----------*
+etath       = 0.45    *Thermal-to-electric conversion efficiency
+fauxbop     = 0.0     *Fraction of gross electric power to balance-of-plant
+htpmw_ife   = 10.0    *IFE heat transport system electrical pump power (MW)
