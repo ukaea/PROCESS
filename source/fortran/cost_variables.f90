@@ -48,7 +48,10 @@ module cost_variables
   !! total plant direct cost (M$)
 
   real(dp) :: cdrlife
-  !! lifetime of heating/current drive system (y)
+  !! Full power year lifetime of heating/current drive system (y)
+
+  real(dp) :: cdrlife_cal
+  !! Calendar year lifetime of heating/current drive system (y)
 
   real(dp) :: cfactr
   !! Total plant availability fraction; input if `iavail=0`
@@ -140,6 +143,9 @@ module cost_variables
   real(dp) :: cplife
   !! Calculated full power year lifetime of centrepost (years)
 
+  real(dp) :: cplife_cal
+  !! Calculated calendar year lifetime of centrepost (years)
+
   real(dp) :: cpstcst
   !! ST centrepost direct cost (M$)
 
@@ -166,6 +172,9 @@ module cost_variables
 
   real(dp) :: divlife
   !! Full power lifetime of divertor (y)
+
+  real(dp) :: divlife_cal
+  !! Calendar year lifetime of divertor (y)
 
   real(dp) :: dtlife
   !! period prior to the end of the plant life that the decommissioning fund is used (years)
