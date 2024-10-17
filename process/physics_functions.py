@@ -1202,8 +1202,8 @@ def beamcalc(
     iabm = 3
     svthotn = 1e-4 * sgvhot(iabm, vcritt, ebeam)
 
-    palfdb = palphabm(ndhot, nt, svdhotn, plasma_volume, ti, svdt)
-    palftb = palphabm(nthot, nd, svthotn, plasma_volume, ti, svdt)
+    palfdb = alpha_power_beam(ndhot, nt, svdhotn, plasma_volume, ti, svdt)
+    palftb = alpha_power_beam(nthot, nd, svthotn, plasma_volume, ti, svdt)
 
     return palfdb, palftb, nhot, ehot
 
@@ -1228,46 +1228,82 @@ def xbrak(e0, ec):
     return t1 + t2 - t3 - t4
 
 
-def palphabm(nbm, nblk, sigv, plasma_volume, ti, svdt):
-    """Alpha power from beam-background fusion
-    author: P J Knight, CCFE, Culham Science Centre
-
-    :param nblk: thermal ion density (/m3)
-    :param nbm: hot beam ion density (/m3)
-    :param sigv: hot beam fusion reaction rate (m3/s)
-    :param plasma_volume: plasma volume (m3)
-    :param ti: thermal ion temperature (keV)
-    :param svdt: profile averaged <sigma v> for D-T (m3/s)
+def alpha_power_beam(
+    beam_ion_desnity: float,
+    plasma_ion_desnity: float,
+    sigv: float,
+    plasma_volume: float,
+    ti: float,
+    sigmav_dt: float
+) -> float:
     """
+    Calculate alpha power from beam-background fusion.
 
-    # [ti] because bosch_hale expects temperature profile
-    # so we pass it a profile of length 1
-    ratio = svdt / bosch_hale_reactivity(
+    This function computes the alpha power generated from the interaction between
+    hot beam ions and thermal ions in the plasma.
+
+    Parameters:
+        beam_ion_desnity (float): Hot beam ion density (m^-3).
+        plasma_ion_desnity (float): Thermal ion density (m^-3).
+        sigv (float): Hot beam fusion reaction rate (m^3/s).
+        plasma_volume (float): Plasma volume (m^3).
+        ti (float): Thermal ion temperature (keV).
+        sigmav_dt (float): Profile averaged <sigma v> for D-T (m^3/s).
+
+    Returns:
+        float: Alpha power from beam-background fusion (MW).
+
+    Notes:
+        - The function uses the Bosch-Hale parametrization to compute the reactivity.
+        - The ratio of the profile-averaged <sigma v> to the reactivity at the given
+          thermal ion temperature is used to scale the alpha power.
+
+    References:
+        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
+          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+    """
+    # Calculate the reactivity ratio
+    ratio = sigmav_dt / bosch_hale_reactivity(
         numpy.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
-    )
-    return nbm * nblk * sigv * constants.dt_alpha_energy * plasma_volume * ratio.item()
+    ).item()
+
+    # Calculate and return the alpha power
+    return beam_ion_desnity * plasma_ion_desnity * sigv * constants.dt_alpha_energy * plasma_volume * ratio
 
 
-def sgvhot(rmass_ion, vcrx, ebeam):
-    """Hot beam fusion reaction rate
-    author: P J Knight, CCFE, Culham Science Centre
+def sgvhot(rmass_ion: float, vcrx: float, beam_energy_keV: float) -> float:
+    """
+    Calculate the hot beam fusion reaction rate.
 
-    :param rmass_ion: relative atomic mass of the ion (of D or T)
-    :param vcrx: critical velocity for electron/ion slowing down of the beam ion (m/s)
-    :param ebeam: neutral beam energy (keV)
+    This function computes the fusion reaction rate for hot beam ions
+    using the critical velocity for electron/ion slowing down and the
+    neutral beam energy.
+
+    Parameters:
+        rmass_ion (float): Relative atomic mass of the ion (e.g., 2.0 for D, 3.0 for T).
+        vcrx (float): Critical velocity for electron/ion slowing down of the beam ion [m/s].
+        ebeam (float): Neutral beam energy [keV].
+
+    Returns:
+        float: Hot beam fusion reaction rate (m^3/s).
+
+    Notes:
+        - The function integrates the hot beam fusion reaction rate integrand
+          over the range of beam velocities up to the critical velocity.
+        - The integration is performed using the quad function from scipy.integrate.
+
+    References:
+        - P J Knight, CCFE, Culham Science Centre
     """
     # Beam velocity
-
-    vbeams = (
-        ebeam
-        * constants.electron_charge
-        * 1000.0
+    beam_velocity = numpy.sqrt((
+        (beam_energy_keV * constants.kiloelectron_volt)
         * 2.0
-        / (rmass_ion * constants.proton_mass)
+        / (rmass_ion * constants.atomic_mass_unit))
     )
-    vbeam = numpy.sqrt(vbeams)
 
-    xv = vbeam / vcrx
+    xv = beam_velocity / vcrx
     t1 = 3.0 * vcrx / numpy.log(1.0 + (xv**3))
 
     svint = integrate.quad(

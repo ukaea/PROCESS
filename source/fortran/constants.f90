@@ -52,6 +52,16 @@ module constants
   !            https://physics.nist.gov/cgi-bin/cuu/Value?evj|search_for=electron+volt
   real(dp), parameter :: electron_volt = 1.602176634D-19
 
+  ! Kiloelectron volt [J]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?evj|search_for=electron+volt
+  real(dp), parameter :: kiloelectron_volt = 1.602176634D-16
+  
+  ! Unified atomic mass unit [kg]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?u|search_for=atomic+mass+constant
+  real(dp), parameter :: atomic_mass_unit = 1.66053906892D-27
+
   ! Electron mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/cuu/Value?me|search_for=ELECTRON+MASS

@@ -332,8 +332,8 @@ def test_xbrak():
     assert xbrak == pytest.approx(1.1061397270783706)
 
 
-def test_palphabm():
-    palphabm = physics_functions.palphabm(
+def test_alpha_power_beam():
+    palphabm = physics_functions.alpha_power_beam(
         3520.0, 316000000000, 3.3e19, 7.5e-22, 1888.0, 13.5, 2.8e-22
     )
 
@@ -356,8 +356,8 @@ def test_xbrak():
     assert xbrak == pytest.approx(1.1061397270783706)
 
 
-def test_palphabm():
-    palphabm = physics_functions.palphabm(
+def test_alpha_power_beam():
+    palphabm = physics_functions.alpha_power_beam(
         3520.0, 316000000000, 3.3e19, 7.5e-22, 1888.0, 13.5, 2.8e-22
     )
 
