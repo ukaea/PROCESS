@@ -41,7 +41,7 @@ Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
-from typing import Protocol
+from typing import Protocol, Optional
 from process import fortran
 from process.buildings import Buildings
 from process.costs import Costs
@@ -78,6 +78,7 @@ from process.caller import write_output_files
 from pathlib import Path
 import os
 import logging
+import json
 
 # For VaryRun
 from process.io.process_config import RunProcessConfig
@@ -158,6 +159,14 @@ class Process:
             help="The path to the input file that Process runs on",
         )
         parser.add_argument(
+            "-cp",
+            "--customprofiles",
+            default=None,
+            metavar="profile_file_path",
+            type=str,
+            help="The path to the custom plasma profiles",
+        )
+        parser.add_argument(
             "-s",
             "--solver",
             default="vmcon",
@@ -204,9 +213,14 @@ class Process:
         """Determine how to run Process."""
         # Store run object: useful for testing
         if self.args.varyiterparams:
-            self.run = VaryRun(self.args.varyiterparamsconfig, self.args.solver)
+            self.run = VaryRun(
+                self.args.varyiterparamsconfig,
+                self.args.solver,
+            )
         else:
-            self.run = SingleRun(self.args.input, self.args.solver)
+            self.run = SingleRun(
+                self.args.input, self.args.customprofiles, self.args.solver
+            )
         self.run.run()
 
     def post_process(self):
@@ -346,22 +360,46 @@ class VaryRun:
 class SingleRun:
     """Perform a single run of PROCESS."""
 
-    def __init__(self, input_file, solver="vmcon"):
-        """Read input file and initialise variables.
+    def __init__(
+        self,
+        input_file: str,
+        custom_profiles: Optional[str] = None,
+        solver: str = "vmcon",
+    ):
+        """Read input file and initialize variables.
 
-        :param input_file: input file named <optional_name>IN.DAT
-        :type input_file: str
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str, optional
+        :param input_file: Input file named <optional_name>IN.DAT.
+        :param custom_profiles: Optional path to a JSON file containing custom profiles.
+        :param solver: Solver to use, as specified in solver.py.
         """
         self.input_file = input_file
+        self.custom_profiles = custom_profiles
+        self.solver = solver
 
         self.validate_input()
         self.init_module_vars()
         self.set_filenames()
         self.initialise()
-        self.models = Models()
-        self.solver = solver
+
+        if self.custom_profiles:
+            self.custom_profiles = self.load_custom_profiles(self.custom_profiles)
+        self.models = Models(self.custom_profiles)
+
+    def load_custom_profiles(self, custom_profiles_path: str):
+        """Load custom profiles from a JSON file.
+
+        :param custom_profiles_path: Path to the JSON file.
+        :return: Loaded custom profiles as a dictionary.
+        """
+        try:
+            with open(custom_profiles_path, "r") as json_file:
+                return json.load(json_file)
+        except FileNotFoundError:
+            print(f"Error: The file '{custom_profiles_path}' does not exist.")
+            return None  # Handle as needed
+        except json.JSONDecodeError:
+            print(f"Error: The file '{custom_profiles_path}' is not a valid JSON file.")
+            return None  # Handle as needed
 
     def run(self):
         """Run PROCESS
@@ -589,7 +627,7 @@ class Models:
     engineering modules.
     """
 
-    def __init__(self):
+    def __init__(self, custom_profiles):
         """Create physics and engineering model objects.
 
         This also initialises module variables in the Fortran for that module.
@@ -612,7 +650,7 @@ class Models:
         self.water_use = WaterUse()
         self.pulse = Pulse()
         self.ife = IFE(availability=self.availability, costs=self.costs)
-        self.plasma_profile = PlasmaProfile()
+        self.plasma_profile = PlasmaProfile(custom_profile=custom_profiles)
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
