@@ -15,7 +15,9 @@ logger.addHandler(s_handler)
 class Profile(ABC):
     """Abstract base class used to create and hold profiles (temperature, density)"""
 
-    def __init__(self, profile_size: int) -> None:
+    def __init__(
+        self, profile_size: int, profile_x: list = None, profile_y: list = None
+    ) -> None:
         """
         Initialize a Profiles object.
 
@@ -31,8 +33,17 @@ class Profile(ABC):
 
         """
         self.profile_size = profile_size
-        self.profile_x = np.arange(self.profile_size)
-        self.profile_y = np.zeros(self.profile_size)
+        # If profile_x is not provided, use np.arange(profile_size)
+        if profile_x is None:
+            self.profile_x = np.arange(self.profile_size)
+        else:
+            self.profile_x = np.array(profile_x)
+
+        # If profile_y is not provided, initialize as zeros
+        if profile_y is None:
+            self.profile_y = np.zeros(self.profile_size)
+        else:
+            self.profile_y = np.array(profile_y)
         self.profile_integ = 0
         self.profile_dx = 0
 
@@ -118,6 +129,8 @@ class NProfile(Profile):
             physics_variables.alphan,
         )
         self.integrate_profile_y()
+        # self.profile_x = self.custom_profile.profile_x
+        # self.profile_y = self.custom_profile.profile_y
 
     def calculate_profile_y(
         self,
@@ -171,7 +184,6 @@ class NProfile(Profile):
     def ncore(
         rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
     ) -> float:
-
         """
         This routine calculates the core density of a pedestalised profile.
         The solution comes from integrating and summing the two separate density profiles for the core
