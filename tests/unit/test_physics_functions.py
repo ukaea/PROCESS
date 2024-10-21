@@ -326,8 +326,8 @@ def test_beamcalc():
     assert ehot == pytest.approx(445.05787301616635)
 
 
-def test_xbrak():
-    xbrak = physics_functions.xbrak(1000.0, 276.7)
+def test_beam_energy_to_ions():
+    xbrak = physics_functions.beam_energy_to_ions(1000.0, 276.7)
 
     assert xbrak == pytest.approx(1.1061397270783706)
 
@@ -350,8 +350,8 @@ def test_sgvhot():
     assert ehot == pytest.approx(445.05787301616635)
 
 
-def test_xbrak():
-    xbrak = physics_functions.xbrak(1000.0, 276.7)
+def test_beam_energy_to_ions():
+    xbrak = physics_functions.beam_energy_to_ions(1000.0, 276.7)
 
     assert xbrak == pytest.approx(1.1061397270783706)
 

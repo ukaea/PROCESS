@@ -1,5 +1,5 @@
 import logging
-import numpy
+import numpy as np
 from scipy import integrate
 from dataclasses import dataclass
 from process.fortran import physics_variables, physics_module, constants
@@ -603,7 +603,7 @@ def psync_albajar_fidone():
     psyncpv = 0.0
 
     kap = physics_variables.plasma_volume / (
-        2.0e0 * numpy.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
+        2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
     )
 
     # No account is taken of pedestal profiles here, other than use of
@@ -616,7 +616,7 @@ def psync_albajar_fidone():
     gfun = 0.93e0 * (
         1.0e0
         + 0.85e0
-        * numpy.exp(-0.82e0 * physics_variables.rmajor / physics_variables.rminor)
+        * np.exp(-0.82e0 * physics_variables.rmajor / physics_variables.rminor)
     )
     kfun = (physics_variables.alphan + 3.87e0 * physics_variables.alphat + 1.46e0) ** (
         -0.79e0
@@ -680,7 +680,7 @@ class BoschHaleConstants:
 
 def fusion_rate_integral(
     plasma_profile: PlasmaProfile, reaction_constants: BoschHaleConstants
-) -> numpy.ndarray:
+) -> np.ndarray:
     """
     Evaluate the integrand for the fusion power integration.
 
@@ -689,7 +689,7 @@ def fusion_rate_integral(
         reactionconstants (BoschHaleConstants): Bosch-Hale reaction constants.
 
     Returns:
-        numpy.ndarray: Integrand for the fusion power.
+        np.ndarray: Integrand for the fusion power.
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
@@ -729,8 +729,8 @@ def fusion_rate_integral(
 
 
 def bosch_hale_reactivity(
-    ion_temperature_profile: numpy.ndarray, reaction_constants: BoschHaleConstants
-) -> numpy.ndarray:
+    ion_temperature_profile: np.ndarray, reaction_constants: BoschHaleConstants
+) -> np.ndarray:
     """
     Calculate the volumetric fusion reaction rate <sigma v> (m^3/s) for one of four nuclear reactions using
     the Bosch-Hale parametrization.
@@ -744,11 +744,11 @@ def bosch_hale_reactivity(
         4. D-D 2nd reaction
 
     Parameters:
-        ion_temperature_profile (numpy.ndarray): Plasma ion temperature profile in keV.
+        ion_temperature_profile (np.ndarray): Plasma ion temperature profile in keV.
         reaction_constants (BoschHaleConstants): Bosch-Hale reaction constants.
 
     Returns:
-        numpy.ndarray: Volumetric fusion reaction rate <sigma v> in m^3/s for each point in the ion temperature profile.
+        np.ndarray: Volumetric fusion reaction rate <sigma v> in m^3/s for each point in the ion temperature profile.
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
@@ -788,8 +788,8 @@ def bosch_hale_reactivity(
         1.0e-6
         * reaction_constants.cc1
         * theta
-        * numpy.sqrt(xi / (reaction_constants.mrc2 * ion_temperature_profile**3))
-        * numpy.exp(-3.0 * xi)
+        * np.sqrt(xi / (reaction_constants.mrc2 * ion_temperature_profile**3))
+        * np.exp(-3.0 * xi)
     )
 
     # if t = 0, sigmav = 0. Use this mask to set sigmav to zero.
@@ -937,7 +937,7 @@ def palph2(
                 0.30,
                 0.26
                 * (deni / dene) ** 2
-                * numpy.sqrt(max(0.0, ((ten + tin) / 20.0 - 0.65))),
+                * np.sqrt(max(0.0, ((ten + tin) / 20.0 - 0.65))),
             )
 
         fact = max(fact, 0.0)
@@ -1079,27 +1079,27 @@ def beamcalc(
     ifbmt = ibeam * ftritbm
 
     ebmratd = ebeam / ecritd
-    vcritd = numpy.sqrt(
+    vcritd = np.sqrt(
         2.0
         * constants.electron_charge
         * 1000.0
         * ecritd
         / (constants.atomic_mass_unit * ATOMIC_MASS_DEUTERIUM)
     )
-    tauseffd = tausbme / 3.0 * numpy.log(1.0 + (ebmratd) ** 1.5)
+    tauseffd = tausbme / 3.0 * np.log(1.0 + (ebmratd) ** 1.5)
     nhotmsd = (
         (1.0 - ftritbm) * ibeam * tauseffd / (constants.electron_charge * plasma_volume)
     )
 
     ebmratt = ebeam / ecritt
-    vcritt = numpy.sqrt(
+    vcritt = np.sqrt(
         2.0
         * constants.electron_charge
         * 1000.0
         * ecritt
         / (constants.atomic_mass_unit * ATOMIC_MASS_TRITIUM)
     )
-    tausefft = tausbme / 3.0 * numpy.log(1.0 + (ebmratt) ** 1.5)
+    tausefft = tausbme / 3.0 * np.log(1.0 + (ebmratt) ** 1.5)
     nhotmst = ftritbm * ibeam * tausefft / (constants.electron_charge * plasma_volume)
 
     nhot = nhotmsd + nhotmst
@@ -1142,8 +1142,8 @@ def beamcalc(
         / (constants.electron_charge * 1000.0 * 3.0)
     )
 
-    presd = xcoefd * xbrak(ebeam, ecritd)
-    prest = xcoeft * xbrak(ebeam, ecritt)
+    presd = xcoefd * beam_energy_to_ions(ebeam, ecritd)
+    prest = xcoeft * beam_energy_to_ions(ebeam, ecritt)
 
     ehotd = 1.5 * presd / ndhot
     ehott = 1.5 * prest / nthot
@@ -1160,22 +1160,43 @@ def beamcalc(
     return palfdb, palftb, nhot, ehot
 
 
-def xbrak(e0, ec):
-    """Hot ion energy parameter
-    author: P J Knight, CCFE, Culham Science Centre
-
-    :param e0: neutral beam energy (keV)
-    :param ec: critical energy for electron/ion slowing down of the beam ion (keV)
+def beam_energy_to_ions(beam_energy: float, critical_energy: float) -> float:
     """
-    xcs = e0 / ec
-    xc = numpy.sqrt(xcs)
+    Calculate the fraction of initial beam energy given to the ions.
+
+    This function computes the fraction of initial beam energy given to the ions. based on the neutral beam energy
+    and the critical energy for electron/ion slowing down of the beam ion.
+
+    Parameters:
+        beam_energy (float): Neutral beam energy (keV).
+        critical_energy (float): Critical energy for electron/ion slowing down of the beam ion (keV).
+
+    Returns:
+        float: Fraction of initial beam energy given to the ions.
+
+    Notes:
+        - The function uses the ratio of the beam energy to the critical energy to compute
+          the hot ion energy parameter.
+        - The calculation involves logarithmic and arctangent functions to account for
+          the energy distribution of the hot ions.
+
+    References:
+        - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
+          vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+
+        - W.A Houlberg, “Thermalization of an Energetic Heavy Ion in a Multi-species Plasma,” University of Wisconsin Fusion Technology Institute,
+          Report UWFDM-103 1974, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm103.pdf
+    """
+
+    xcs = beam_energy / critical_energy
+    xc = np.sqrt(xcs)
 
     t1 = xcs / 2.0
-    t2 = (numpy.log((xcs + 2.0 * xc + 1.0) / (xcs - xc + 1.0))) / 6.0
+    t2 = np.log((xcs + 2.0 * xc + 1.0) / (xcs - xc + 1.0)) / 6.0
 
-    xarg = (2.0 * xc - 1.0) / numpy.sqrt(3.0)
-    t3 = (numpy.arctan(xarg)) / numpy.sqrt(3.0)
-    t4 = 0.3022999
+    xarg = (2.0 * xc - 1.0) / np.sqrt(3.0)
+    t3 = np.arctan(xarg) / np.sqrt(3.0)
+    t4 = (1/np.sqrt(3.0))*np.arctan(1/np.sqrt(3.0))
 
     return t1 + t2 - t3 - t4
 
@@ -1217,7 +1238,7 @@ def alpha_power_beam(
     """
     # Calculate the reactivity ratio
     ratio = sigmav_dt / bosch_hale_reactivity(
-        numpy.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
+        np.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
     ).item()
 
     # Calculate and return the alpha power
@@ -1249,14 +1270,14 @@ def sgvhot(rmass_ion: float, vcrx: float, beam_energy_keV: float) -> float:
         - P J Knight, CCFE, Culham Science Centre
     """
     # Beam velocity
-    beam_velocity = numpy.sqrt((
+    beam_velocity = np.sqrt((
         (beam_energy_keV * constants.kiloelectron_volt)
         * 2.0
         / (rmass_ion * constants.atomic_mass_unit))
     )
 
     xv = beam_velocity / vcrx
-    t1 = 3.0 * vcrx / numpy.log(1.0 + (xv**3))
+    t1 = 3.0 * vcrx / np.log(1.0 + (xv**3))
 
     svint = integrate.quad(
         _hot_beam_fusion_reaction_rate_integrand, 0.0, xv, args=(vcrx,)
@@ -1309,5 +1330,5 @@ def _sigbmfus(vrelsq):
         return 8.0e-26
     else:
         t1 = a2 / (1.0e0 + (a3 * ebm - a4) ** 2) + a5
-        t2 = ebm * (numpy.exp(a1 / numpy.sqrt(ebm)) - 1.0)
+        t2 = ebm * (np.exp(a1 / np.sqrt(ebm)) - 1.0)
         return 1.0e-24 * t1 / t2

@@ -185,24 +185,6 @@ This method sets the required physics variables in the `physics_variables` and `
 
 The fraction of alpha particle power produced by the plasma that gets coupled to the plasma for internal heating can be set in `PROCESS` with the `f_alpha_plasma` input variable. By default it is set to 95% or 0.95 as is the assumed ITER default.[^2]
 
-## NBI Fusion
-
-### Beam fusion cross section | `_sigbmfus()`
-
-### Beam fusion reaction rate | `sgvhot()`
-
-### Beam fusion reaction rate integrand | `_hot_beam_fusion_reaction_rate_integrand()`
-
-### Beam fusion alpha power | `alpha_power_beam()`
-
-### Hot ion energy parameter | `xbrak()`
-
-### Neutral beam alpha power and ion energy | `beamcalc()`
-
-### Beam slowing down properties | `beamfus()`
-
-------------------------
-
 ## Key Constraints
 
 ### Fusion Power Upper limit
