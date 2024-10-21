@@ -2062,8 +2062,12 @@ class Build:
                     "(Bore hollow space has been filled with a solid metal cyclinder to act as wedge support)\n",
                 )
 
+            # an array that holds the following information
+            # description, variable name, thickness, radius
+            radial_build_data = []
+
             radius = 0.0e0
-            po.obuild(self.outfile, "Device centreline", 0.0e0, radius)
+            radial_build_data.append(["Device centreline", None, 0.0, radius])
             if build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking >= 2:
                 radius = (
                     radius
@@ -2071,22 +2075,16 @@ class Build:
                     - build_variables.tfcth
                     - build_variables.gapoh
                 )
-                po.obuild(
-                    self.outfile,
-                    "Machine bore wedge support",
-                    build_variables.bore
-                    - build_variables.tfcth
-                    - build_variables.gapoh,
-                    radius,
-                    "(bore)",
-                )
-                po.ovarre(
-                    self.mfile,
-                    "Machine bore wedge support cylinder (m)",
-                    "(bore)",
-                    build_variables.bore
-                    - build_variables.tfcth
-                    - build_variables.gapoh,
+
+                radial_build_data.append(
+                    [
+                        "Machine bore wedge support cylinder",
+                        "bore",
+                        build_variables.bore
+                        - build_variables.tfcth
+                        - build_variables.gapoh,
+                        radius,
+                    ]
                 )
             elif build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking < 2:
                 radius = (
@@ -2095,408 +2093,239 @@ class Build:
                     - build_variables.tfcth
                     - build_variables.gapoh
                 )
-                po.obuild(
-                    self.outfile,
-                    "Machine bore hole",
-                    build_variables.bore
-                    - build_variables.tfcth
-                    - build_variables.gapoh,
-                    radius,
-                    "(bore)",
-                )
-                po.ovarre(
-                    self.mfile,
-                    "Machine bore hole (m)",
-                    "(bore)",
-                    build_variables.bore
-                    - build_variables.tfcth
-                    - build_variables.gapoh,
+                radial_build_data.append(
+                    [
+                        "Machine bore hole",
+                        "bore",
+                        build_variables.bore
+                        - build_variables.tfcth
+                        - build_variables.gapoh,
+                        radius,
+                    ]
                 )
             else:
                 radius = radius + build_variables.bore
-                po.obuild(
-                    self.outfile,
-                    "Machine bore",
-                    build_variables.bore,
-                    radius,
-                    "(bore)",
-                )
-                po.ovarre(
-                    self.mfile,
-                    "Machine bore (m)",
-                    "(bore)",
-                    build_variables.bore,
+                radial_build_data.append(
+                    ["Machine bore", "bore", build_variables.bore, radius]
                 )
             if build_variables.tf_in_cs == 1:
                 radius += build_variables.tfcth
-                po.obuild(
-                    self.outfile,
-                    "TF coil inboard leg,in bore",
-                    build_variables.tfcth,
-                    radius,
-                    "(tfcth)",
+                radial_build_data.append(
+                    [
+                        "TF coil inboard leg (in bore)",
+                        "tfcth",
+                        build_variables.tfcth,
+                        radius,
+                    ]
                 )
-                po.ovarre(
-                    self.mfile,
-                    "TF coil inboard leg (m)",
-                    "(tfcth)",
-                    build_variables.tfcth,
-                )
-            if build_variables.tf_in_cs == 1:
+
                 radius += build_variables.gapoh
-                po.obuild(
-                    self.outfile,
-                    "Gap",
-                    build_variables.gapoh,
-                    radius,
-                    "(gapoh)",
-                )
-                po.ovarre(
-                    self.mfile,
-                    "CS precompresion to TF coil radial gap (m)",
-                    "(gapoh)",
-                    build_variables.gapoh,
+                radial_build_data.append(
+                    [
+                        "CS precompresion to TF coil radial gap",
+                        "gapoh",
+                        build_variables.gapoh,
+                        radius,
+                    ]
                 )
 
             radius = radius + build_variables.ohcth
-            po.obuild(
-                self.outfile,
-                "Central solenoid",
-                build_variables.ohcth,
-                radius,
-                "(ohcth)",
-            )
-
-            po.ovarre(
-                self.mfile,
-                "CS radial thickness (m)",
-                "(ohcth)",
-                build_variables.ohcth,
+            radial_build_data.append(
+                ["Central solenoid", "ohcth", build_variables.ohcth, radius]
             )
 
             radius = radius + build_variables.precomp
-            po.obuild(
-                self.outfile,
-                "CS precompression",
-                build_variables.precomp,
-                radius,
-                "(precomp)",
-            )
-            po.ovarre(
-                self.mfile,
-                "CS precompression (m)",
-                "(precomp)",
-                build_variables.precomp,
+            radial_build_data.append(
+                ["CS precompression", "precomp", build_variables.precomp, radius]
             )
             if build_variables.tf_in_cs == 0:
                 radius = radius + build_variables.gapoh
-                po.obuild(
-                    self.outfile,
-                    "Gap",
-                    build_variables.gapoh,
-                    radius,
-                    "(gapoh)",
+                radial_build_data.append(
+                    [
+                        "CS precompresion to TF coil radial gap",
+                        "gapoh",
+                        build_variables.gapoh,
+                        radius,
+                    ]
                 )
-                po.ovarre(
-                    self.mfile,
-                    "CS precompresion to TF coil radial gap (m)",
-                    "(gapoh)",
-                    build_variables.gapoh,
-                )
-            if build_variables.tf_in_cs == 0:
+
                 radius = radius + build_variables.tfcth
-                po.obuild(
-                    self.outfile,
-                    "TF coil inboard leg",
-                    build_variables.tfcth,
-                    radius,
-                    "(tfcth)",
-                )
-                po.ovarre(
-                    self.mfile,
-                    "TF coil inboard leg (m)",
-                    "(tfcth)",
-                    build_variables.tfcth,
+                radial_build_data.append(
+                    [
+                        "TF coil inboard leg",
+                        "tfcth",
+                        build_variables.tfcth,
+                        radius,
+                    ]
                 )
 
             radius = radius + build_variables.tftsgap
-            po.obuild(
-                self.outfile,
-                "Gap",
-                build_variables.tftsgap,
-                radius,
-                "(tftsgap)",
-            )
-            po.ovarre(
-                self.mfile,
-                "TF coil inboard leg insulation gap (m)",
-                "(tftsgap)",
-                build_variables.tftsgap,
+            radial_build_data.append(
+                [
+                    "TF coil inboard leg insulation gap",
+                    "tftsgap",
+                    build_variables.tftsgap,
+                    radius,
+                ]
             )
 
             radius = radius + build_variables.thshield_ib
-            po.obuild(
-                self.outfile,
-                "Thermal shield, inboard",
-                build_variables.thshield_ib,
-                radius,
-                "(thshield_ib)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Thermal shield, inboard (m)",
-                "(thshield_ib)",
-                build_variables.thshield_ib,
+            radial_build_data.append(
+                [
+                    "Thermal shield, inboard",
+                    "thshield_ib",
+                    build_variables.thshield_ib,
+                    radius,
+                ]
             )
 
             radius = radius + build_variables.gapds
-            po.obuild(
-                self.outfile,
-                "Gap",
-                build_variables.gapds,
-                radius,
-                "(gapds)",
-            )
-            po.ovarre(
-                self.mfile,
-                "thermal shield to vessel radial gap (m)",
-                "(gapds)",
-                build_variables.gapds,
+            radial_build_data.append(
+                [
+                    "Thermal shield to vessel radial gap",
+                    "gapds",
+                    build_variables.gapds,
+                    radius,
+                ]
             )
 
-            radius = radius + build_variables.d_vv_in + build_variables.shldith
-            po.obuild(
-                self.outfile,
-                "Vacuum vessel (and shielding)",
-                build_variables.d_vv_in + build_variables.shldith,
-                radius,
-                "(d_vv_in + shldith)",
+            radius += build_variables.d_vv_in
+            radial_build_data.append(
+                [
+                    "Inboard vacuum vessel",
+                    "d_vv_in",
+                    build_variables.d_vv_in,
+                    radius,
+                ]
             )
-            po.ovarre(
-                self.mfile,
-                "Inboard vacuum vessel radial thickness (m)",
-                "(d_vv_in)",
-                build_variables.d_vv_in,
-            )
-            po.ovarre(
-                self.mfile,
-                "Inner radiation shield radial thickness (m)",
-                "(shldith)",
-                build_variables.shldith,
+
+            radius += build_variables.shldith
+            radial_build_data.append(
+                ["Inner radiation shield", "shldith", build_variables.shldith, radius]
             )
 
             radius = radius + build_variables.vvblgap
-            po.obuild(
-                self.outfile,
-                "Gap",
-                build_variables.vvblgap,
-                radius,
-                "(vvblgap)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Gap (m)",
-                "(vvblgap)",
-                build_variables.vvblgap,
+            radial_build_data.append(
+                ["Gap", "vvblgap", build_variables.vvblgap, radius]
             )
 
             radius = radius + build_variables.blnkith
-            po.obuild(
-                self.outfile,
-                "Inboard blanket",
-                build_variables.blnkith,
-                radius,
-                "(blnkith)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Inboard blanket radial thickness (m)",
-                "(blnkith)",
-                build_variables.blnkith,
+            radial_build_data.append(
+                ["Inboard blanket", "blnkith", build_variables.blnkith, radius]
             )
 
             radius = radius + build_variables.fwith
-            po.obuild(
-                self.outfile,
-                "Inboard first wall",
-                build_variables.fwith,
-                radius,
-                "(fwith)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Inboard first wall radial thickness (m)",
-                "(fwith)",
-                build_variables.fwith,
+            radial_build_data.append(
+                ["Inboard first wall", "fwith", build_variables.fwith, radius]
             )
 
             radius = radius + build_variables.scrapli
-            po.obuild(
-                self.outfile,
-                "Inboard scrape-off",
-                build_variables.scrapli,
-                radius,
-                "(scrapli)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Inboard scrape-off radial thickness (m)",
-                "(scrapli)",
-                build_variables.scrapli,
+            radial_build_data.append(
+                ["Inboard scrape-off", "scrapli", build_variables.scrapli, radius]
             )
 
             radius = radius + physics_variables.rminor
-            po.obuild(
-                self.outfile,
-                "Plasma geometric centre",
-                physics_variables.rminor,
-                radius,
-                "(rminor)",
+            radial_build_data.append(
+                ["Plasma geometric centre", "rminor", physics_variables.rminor, radius]
             )
 
             radius = radius + physics_variables.rminor
-            po.obuild(
-                self.outfile,
-                "Plasma outboard edge",
-                physics_variables.rminor,
-                radius,
-                "(rminor)",
+            radial_build_data.append(
+                ["Plasma outboard edge", "rminor", physics_variables.rminor, radius]
             )
 
             radius = radius + build_variables.scraplo
-            po.obuild(
-                self.outfile,
-                "Outboard scrape-off",
-                build_variables.scraplo,
-                radius,
-                "(scraplo)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Outboard scrape-off radial thickness (m)",
-                "(scraplo)",
-                build_variables.scraplo,
+            radial_build_data.append(
+                ["Outboard scrape-off", "scraplo", build_variables.scraplo, radius]
             )
 
             radius = radius + build_variables.fwoth
-            po.obuild(
-                self.outfile,
-                "Outboard first wall",
-                build_variables.fwoth,
-                radius,
-                "(fwoth)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Outboard first wall radial thickness (m)",
-                "(fwoth)",
-                build_variables.fwoth,
+            radial_build_data.append(
+                ["Outboard first wall", "fwoth", build_variables.fwoth, radius]
             )
 
             radius = radius + build_variables.blnkoth
-            po.obuild(
-                self.outfile,
-                "Outboard blanket",
-                build_variables.blnkoth,
-                radius,
-                "(blnkoth)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Outboard blanket radial thickness (m)",
-                "(blnkoth)",
-                build_variables.blnkoth,
+            radial_build_data.append(
+                ["Outboard blanket", "blnkoth", build_variables.blnkoth, radius]
             )
 
             radius = radius + build_variables.vvblgap
-            po.obuild(
-                self.outfile,
-                "Gap",
-                build_variables.vvblgap,
-                radius,
-                "(vvblgap)",
+            radial_build_data.append(
+                ["Gap", "vvblgap", build_variables.vvblgap, radius]
             )
 
-            radius = radius + build_variables.d_vv_out + build_variables.shldoth
-            po.obuild(
-                self.outfile,
-                "Vacuum vessel (and shielding)",
-                build_variables.d_vv_out + build_variables.shldoth,
-                radius,
-                "(d_vv_out+shldoth)",
+            radius += build_variables.shldoth
+            radial_build_data.append(
+                ["Outer radiation shield", "shldoth", build_variables.shldoth, radius]
             )
-            po.ovarre(
-                self.mfile,
-                "Outer radiation shield radial thickness (m)",
-                "(shldoth)",
-                build_variables.shldoth,
-            )
-            po.ovarre(
-                self.mfile,
-                "Outboard vacuum vessel radial thickness (m)",
-                "(d_vv_out)",
-                build_variables.d_vv_out,
+
+            radius += build_variables.d_vv_out
+            radial_build_data.append(
+                ["Outboard vacuum vessel", "d_vv_out", build_variables.d_vv_out, radius]
             )
 
             radius = radius + build_variables.gapsto
-            po.obuild(
-                self.outfile,
-                "Gap",
-                build_variables.gapsto,
-                radius,
-                "(gapsto)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Vessel to TF radial gap (m)",
-                "(gapsto)",
-                build_variables.gapsto,
+            radial_build_data.append(
+                ["Vessel to TF gap", "gapsto", build_variables.gapsto, radius]
             )
 
             radius = radius + build_variables.thshield_ob
-            po.obuild(
-                self.outfile,
-                "Thermal shield, outboard",
-                build_variables.thshield_ob,
-                radius,
-                "(thshield_ob)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Thermal shield, outboard (m)",
-                "(thshield_ob)",
-                build_variables.thshield_ob,
+            radial_build_data.append(
+                [
+                    "Ouboard thermal shield",
+                    "thshield_ob",
+                    build_variables.thshield_ob,
+                    radius,
+                ]
             )
 
             radius = radius + build_variables.tftsgap
-            po.obuild(
-                self.outfile,
-                "Gap",
-                build_variables.tftsgap,
-                radius,
-                "(tftsgap)",
-            )
-            po.ovarre(
-                self.mfile,
-                "Gap (m)",
-                "(tftsgap)",
-                build_variables.tftsgap,
+            radial_build_data.append(
+                ["Gap", "tftsgap", build_variables.tftsgap, radius]
             )
 
             radius = radius + build_variables.tfthko
-            po.obuild(
-                self.outfile,
-                "TF coil outboard leg",
-                build_variables.tfthko,
-                radius,
-                "(tfthko)",
+            radial_build_data.append(
+                ["TF coil outboard leg", "tfthko", build_variables.tfthko, radius]
             )
-            po.ovarre(
-                self.mfile,
-                "TF coil outboard leg radial thickness (m)",
-                "(tfthko)",
-                build_variables.tfthko,
-            )
+
+            for description, variable, thickness, radius in radial_build_data:
+                po.obuild(
+                    self.outfile,
+                    description,
+                    thickness,
+                    radius,
+                    f"({variable})" if variable else "",
+                )
+
+            # use manual index to ensure count is contiguous in the event
+            # of a `None` variable component
+            index = 0
+            for description, variable, thickness, radius in radial_build_data:
+                if variable is None:
+                    continue
+
+                index += 1
+
+                po.ovarre(
+                    self.mfile,
+                    f"{description} radial thickness (m)",
+                    f"({variable})",
+                    thickness,
+                )
+
+                po.ovarst(
+                    self.mfile,
+                    f"Radial build component {index}",
+                    f"(radial_label({index}))",
+                    f'"{variable}"',
+                )
+                po.ovarre(
+                    self.mfile,
+                    f"Radial build cumulative radius {index}",
+                    f"(radial_cum({index}))",
+                    radius,
+                )
 
             po.ovarre(
                 self.mfile,
