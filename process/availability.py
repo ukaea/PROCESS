@@ -376,6 +376,25 @@ class Availability:
 
         # Output
         if output:
+            po.ovarre(
+                self.outfile,
+                "First wall / blanket lifetime (FPY)",
+                "(bktlife)",
+                fwbsv.bktlife,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
+            )
+            if pv.itart == 1:
+                po.ovarre(
+                    self.outfile,
+                    "Centrepost lifetime (FPY)",
+                    "(cplife)",
+                    cv.cplife,
+                    "OP ",
+                )
+            po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Total unavailability:")
             po.oblnkl(self.outfile)
             po.ovarre(
@@ -516,17 +535,6 @@ class Availability:
                 "(adivflnc)",
                 cv.adivflnc,
             )
-            po.ovarre(
-                self.outfile,
-                "First wall / blanket lifetime (FPY)",
-                "(bktlife)",
-                fwbsv.bktlife,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
-            )
-
             po.ovarin(
                 self.outfile,
                 "Number of remote handling systems",
