@@ -340,8 +340,8 @@ def test_alpha_power_beam():
     assert palphabm == pytest.approx(1.0413228502045627e-05)
 
 
-def test_sgvhot():
-    sgvhot = physics_functions.sgvhot(3, 5140000.0, 1000.0)
+def test_beam_reaction_rate():
+    sgvhot = physics_functions.beam_reaction_rate(3, 5140000.0, 1000.0)
 
     assert sgvhot == pytest.approx(7.465047902975452e-18)
     assert palfdb == pytest.approx(11.489365278680932)
@@ -364,7 +364,7 @@ def test_alpha_power_beam():
     assert palphabm == pytest.approx(1.0413228502045627e-05)
 
 
-def test_sgvhot():
-    sgvhot = physics_functions.sgvhot(3, 5140000.0, 1000.0)
+def test_beam_reaction_rate():
+    sgvhot = physics_functions.beam_reaction_rate(3, 5140000.0, 1000.0)
 
     assert sgvhot == pytest.approx(7.465047902975452e-18)

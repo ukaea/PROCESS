@@ -2,7 +2,7 @@
 
 ### Beam fusion cross section | `_sigbmfus()`
 
-### Beam fusion reaction rate | `sgvhot()`
+### Beam fusion reaction rate | `beam_reaction_rate()`
 
 ### Beam fusion reaction rate integrand | `_hot_beam_fusion_reaction_rate_integrand()`
 

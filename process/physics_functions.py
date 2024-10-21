@@ -1204,9 +1204,9 @@ def beamcalc(
     ehott = 1.5 * prest / tritium_beam_desnity
     ehot = (deuterium_beam_desnity * ehotd + tritium_beam_desnity * ehott) / nhot
 
-    svdhotn = 1e-4 * sgvhot(ATOMIC_MASS_DEUTERIUM, deuterium_critical_energy_speed, beam_energy)
+    svdhotn = 1e-4 * beam_reaction_rate(ATOMIC_MASS_DEUTERIUM, deuterium_critical_energy_speed, beam_energy)
 
-    svthotn = 1e-4 * sgvhot(ATOMIC_MASS_TRITIUM, tritium_critical_energy_speed, beam_energy)
+    svthotn = 1e-4 * beam_reaction_rate(ATOMIC_MASS_TRITIUM, tritium_critical_energy_speed, beam_energy)
 
     palfdb = alpha_power_beam(deuterium_beam_desnity, nt, svdhotn, plasma_volume, ti, svdt)
     palftb = alpha_power_beam(tritium_beam_desnity, nd, svthotn, plasma_volume, ti, svdt)
@@ -1299,7 +1299,7 @@ def alpha_power_beam(
     return beam_ion_desnity * plasma_ion_desnity * sigv * constants.dt_alpha_energy * plasma_volume * ratio
 
 
-def sgvhot(rmass_ion: float, vcrx: float, beam_energy_keV: float) -> float:
+def beam_reaction_rate(relative_mass_ion: float, critical_velocity: float, beam_energy_keV: float) -> float:
     """
     Calculate the hot beam fusion reaction rate.
 
@@ -1308,9 +1308,9 @@ def sgvhot(rmass_ion: float, vcrx: float, beam_energy_keV: float) -> float:
     neutral beam energy.
 
     Parameters:
-        rmass_ion (float): Relative atomic mass of the ion (e.g., 2.0 for D, 3.0 for T).
-        vcrx (float): Critical velocity for electron/ion slowing down of the beam ion [m/s].
-        ebeam (float): Neutral beam energy [keV].
+        relative_mass_ion (float): Relative atomic mass of the ion (e.g., approx 2.0 for D, 3.0 for T).
+        critical_velocity (float): Critical velocity for electron/ion slowing down of the beam ion [m/s].
+        beam_energy_keV(float): Neutral beam energy [keV].
 
     Returns:
         float: Hot beam fusion reaction rate (m^3/s).
@@ -1323,18 +1323,20 @@ def sgvhot(rmass_ion: float, vcrx: float, beam_energy_keV: float) -> float:
     References:
         - P J Knight, CCFE, Culham Science Centre
     """
-    # Beam velocity
+
+    # Find the speed of the beam particle when it has the critical energy.
+    # Re-arrange kinetic energy equation to find speed. Non-relativistic.
     beam_velocity = np.sqrt((
         (beam_energy_keV * constants.kiloelectron_volt)
         * 2.0
-        / (rmass_ion * constants.atomic_mass_unit))
+        / (relative_mass_ion * constants.atomic_mass_unit))
     )
 
-    xv = beam_velocity / vcrx
-    t1 = 3.0 * vcrx / np.log(1.0 + (xv**3))
+    relative_velocity = beam_velocity / critical_velocity
+    t1 = 3.0 * critical_velocity / np.log(1.0 + (relative_velocity**3))
 
     svint = integrate.quad(
-        _hot_beam_fusion_reaction_rate_integrand, 0.0, xv, args=(vcrx,)
+        _hot_beam_fusion_reaction_rate_integrand, 0.0, relative_velocity, args=(critical_velocity,)
     )[0]
 
     return t1 * svint
