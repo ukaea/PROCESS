@@ -636,6 +636,7 @@ module cost_variables
     cdcost = 0.0D0
     cdirt = 0.0D0
     cdrlife = 0.0D0
+    cdrlife_cal = 0.0D0
     cfactr = 0.75D0
     cpfact = 0.0D0
     cfind = (/0.244D0, 0.244D0, 0.244D0, 0.29D0/)
@@ -661,6 +662,7 @@ module cost_variables
     cost_model = 1
     cowner = 0.15D0
     cplife = 0.0D0
+    cplife_cal = 0.0D0
     cpstcst = 0.0D0
     cpstflnc = 10.0D0
     crctcore = 0.0D0
@@ -670,6 +672,7 @@ module cost_variables
     dintrt = 0.0D0
     divcst = 0.0D0
     divlife = 0.0D0
+    divlife_cal = 0.0D0
     dtlife = 0.0D0
     fcap0 = 1.165D0
     fcap0cp = 1.08D0

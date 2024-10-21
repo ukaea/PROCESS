@@ -5426,15 +5426,21 @@ class CoelcParam(NamedTuple):
 
     divlife: Any = None
 
+    divlife_cal: Any = None
+
     coefuelt: Any = None
 
     moneyint: Any = None
 
     cdrlife: Any = None
 
+    cdrlife_cal: Any = None
+
     capcost: Any = None
 
     cplife: Any = None
+
+    cplife_cal: Any = None
 
     fwallcst: Any = None
 
@@ -5465,6 +5471,8 @@ class CoelcParam(NamedTuple):
     cfind: Any = None
 
     bktlife: Any = None
+
+    bktlife_cal: Any = None
 
     uctarg: Any = None
 
@@ -5517,11 +5525,14 @@ class CoelcParam(NamedTuple):
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             divlife=6.1337250397740126,
+            divlife_cal=6.1337250397740126,
             coefuelt=0,
             moneyint=0,
             cdrlife=19.216116010620578,
+            cdrlife_cal=19.216116010620578,
             capcost=0,
             cplife=0,
+            cplife_cal=0,
             fwallcst=143.19827300247195,
             fcr0=0.065000000000000016,
             discount_rate=0.060000000000000012,
@@ -5565,6 +5576,7 @@ class CoelcParam(NamedTuple):
                 order="F",
             ).transpose(),
             bktlife=19.216116010620578,
+            bktlife_cal=19.216116010620578,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
@@ -5577,8 +5589,8 @@ class CoelcParam(NamedTuple):
             outfile=11,
             expected_coeoam=4.4099029328740929e20,
             expected_coecap=4.9891775218979061e21,
-            expected_coe=9.25536206e21,
-            expected_coefuelt=3.78301522e21,
+            expected_coe=6.95253391e21,
+            expected_coefuelt=1.48018708e21,
             expected_moneyint=1001.1727468691442,
             expected_capcost=7675.6577259967762,
         ),
@@ -5597,11 +5609,14 @@ class CoelcParam(NamedTuple):
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             divlife=6.145510750914414,
+            divlife_cal=6.145510750914414,
             coefuelt=1.4801870771036603e21,
             moneyint=1001.1727468691442,
             cdrlife=19.222115557991025,
+            cdrlife_cal=19.222115557991025,
             capcost=7675.6577259967762,
             cplife=0,
+            cplife_cal=0,
             fwallcst=167.7865317453867,
             fcr0=0.065000000000000016,
             discount_rate=0.060000000000000012,
@@ -5645,6 +5660,7 @@ class CoelcParam(NamedTuple):
                 order="F",
             ).transpose(),
             bktlife=19.222115557991025,
+            bktlife_cal=19.222115557991025,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
@@ -5657,8 +5673,8 @@ class CoelcParam(NamedTuple):
             outfile=11,
             expected_coeoam=1.2419424614419636,
             expected_coecap=15.547404530833255,
-            expected_coe=28.66823363,
-            expected_coefuelt=11.74744727,
+            expected_coe=21.50420973,
+            expected_coefuelt=4.58342338,
             expected_moneyint=1025.4310038198375,
             expected_capcost=7861.6376959520912,
         ),
@@ -5705,15 +5721,21 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "divlife", coelcparam.divlife)
 
+    monkeypatch.setattr(cost_variables, "divlife_cal", coelcparam.divlife_cal)
+
     monkeypatch.setattr(cost_variables, "coefuelt", coelcparam.coefuelt)
 
     monkeypatch.setattr(cost_variables, "moneyint", coelcparam.moneyint)
 
     monkeypatch.setattr(cost_variables, "cdrlife", coelcparam.cdrlife)
 
+    monkeypatch.setattr(cost_variables, "cdrlife_cal", coelcparam.cdrlife_cal)
+
     monkeypatch.setattr(cost_variables, "capcost", coelcparam.capcost)
 
     monkeypatch.setattr(cost_variables, "cplife", coelcparam.cplife)
+
+    monkeypatch.setattr(cost_variables, "cplife_cal", coelcparam.cplife_cal)
 
     monkeypatch.setattr(cost_variables, "fwallcst", coelcparam.fwallcst)
 
@@ -5744,6 +5766,8 @@ def test_coelc(coelcparam, monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "cfind", coelcparam.cfind)
 
     monkeypatch.setattr(fwbs_variables, "bktlife", coelcparam.bktlife)
+
+    monkeypatch.setattr(fwbs_variables, "bktlife_cal", coelcparam.bktlife_cal)
 
     monkeypatch.setattr(ife_variables, "uctarg", coelcparam.uctarg)
 

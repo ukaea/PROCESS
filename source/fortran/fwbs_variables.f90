@@ -666,6 +666,7 @@ module fwbs_variables
     implicit none
 
     bktlife = 0.0D0
+    bktlife_cal = 0.0D0
     coolmass = 0.0D0
     vvmass = 0.0D0
     denstl = 7800.0D0

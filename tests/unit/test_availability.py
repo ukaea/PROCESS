@@ -526,8 +526,13 @@ def test_avail_2(monkeypatch, availability):
     )
 
     # Mock module variables
-    monkeypatch.setattr(tv, "tburn", 500.0)
-    monkeypatch.setattr(tv, "tcycle", 5.0)
+    monkeypatch.setattr(tv, "tburn", 5.0)
+    monkeypatch.setattr(tv, "tcycle", 50.0)
+    monkeypatch.setattr(ifev, "ife", 0)
+    monkeypatch.setattr(pv, "itart", 1)
+    monkeypatch.setattr(fwbsv, "bktlife", 5.0)
+    monkeypatch.setattr(cv, "divlife", 10.0)
+    monkeypatch.setattr(cv, "cplife", 15.0)
 
     availability.avail_2(False)
 
@@ -536,19 +541,19 @@ def test_avail_2(monkeypatch, availability):
     assert pytest.approx(cfactr_obs) == cfactr_exp
 
     cpfact_obs = cv.cpfact
-    cpfact_exp = 71.73
+    cpfact_exp = 0.07173
     assert pytest.approx(cpfact_obs) == cpfact_exp
 
     bktlife_obs = fwbsv.bktlife
-    bktlife_exp = 11.849993029415865
+    bktlife_exp = 6.97058413
     assert pytest.approx(bktlife_obs) == bktlife_exp
 
     divlife_obs = cv.divlife
-    divlife_exp = 4.182350480970305
+    divlife_exp = 13.94116827
     assert pytest.approx(divlife_obs) == divlife_exp
 
     cplife_obs = cv.cplife
-    cplife_exp = 30.0
+    cplife_exp = 20.9117524
     assert pytest.approx(cplife_obs) == cplife_exp
 
 
