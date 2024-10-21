@@ -616,7 +616,7 @@ class Models:
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
-        self.current_drive = CurrentDrive()
+        self.current_drive = CurrentDrive(plasma_profile=self.plasma_profile)
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )

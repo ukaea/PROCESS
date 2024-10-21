@@ -36,7 +36,7 @@ def physics():
     :returns: initialised Physics object
     :rtype: process.physics.Physics
     """
-    return Physics(PlasmaProfile(), CurrentDrive())
+    return Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile()))
 
 
 def test_beta_poloidal():
