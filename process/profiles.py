@@ -129,8 +129,6 @@ class NProfile(Profile):
             physics_variables.alphan,
         )
         self.integrate_profile_y()
-        # self.profile_x = self.custom_profile.profile_x
-        # self.profile_y = self.custom_profile.profile_y
 
     def calculate_profile_y(
         self,
