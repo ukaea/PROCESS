@@ -133,7 +133,7 @@ def get_python_variables() -> List[AnnotatedVariableData]:
     """Drives the discovery of AnnotatedVariables, returning them back to be
     parsed into the dicts by `create_dicts.py`.
     """
-    models_obj = Models()
+    models_obj = Models(custom_profiles=None)
     # non-dunder methods of Models are all the models
     # that we want to get the variables from
     models_dict = get_non_dunder_class_members(models_obj)
