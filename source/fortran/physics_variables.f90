@@ -35,8 +35,8 @@ module physics_variables
   real(dp) :: alphap
   !! pressure profile index
 
-  real(dp) :: alpharate
-  !! alpha particle production rate (particles/m3/sec)
+  real(dp) :: alpha_rate_density
+  !! Alpha particle production rate per unit volume [particles/m3/sec]
 
   real(dp) :: alphat
   !! temperature profile index
@@ -153,9 +153,6 @@ module physics_variables
   real(dp) :: gradient_length_te
   !! Max. normalized gradient length in el. temperature (ipedestal==0 only)
 
-  real(dp), parameter :: ealphadt = 3520.0D0
-  !! alpha birth energy in D-T reaction (keV)
-
   real(dp) :: epbetmax
   !! maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346
   !! "Operation at the tokamak equilibrium poloidal beta-limit in TFTR", 1992 Nucl. Fusion 32 1468
@@ -172,8 +169,8 @@ module physics_variables
   real(dp) :: falpe
   !! fraction of alpha energy to electrons
 
-  real(dp) :: falpha
-  !! fraction of alpha power deposited in plasma (Physics of Energetic Ions, p.2489)
+  real(dp) :: f_alpha_plasma
+  !! Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305.
 
   real(dp) :: falpi
   !! fraction of alpha power to ions
@@ -221,7 +218,7 @@ module physics_variables
   real(dp) :: ftrit
   !! tritium fuel fraction
 
-  real(dp) :: fusionrate
+  real(dp) :: fusion_rate_density
   !! fusion reaction rate (reactions/m3/sec)
 
   real(dp) :: fvsbrnni
@@ -550,29 +547,35 @@ module physics_variables
   real(dp) :: p0
   !! central total plasma pressure (Pa)
 
-  real(dp) :: palppv
-  !! alpha power per volume (MW/m3)
+  real(dp) :: alpha_power_density
+  !! Alpha power per volume [MW/m3]
 
-  real(dp) :: palpepv
-  !! alpha power per volume to electrons (MW/m3)
+  real(dp) :: alpha_power_electron_density
+  !! Alpha power per volume to electrons [MW/m3]
 
   real(dp) :: palpfwmw
   !! alpha power escaping plasma and reaching first wall (MW)
 
-  real(dp) :: palpipv
+  real(dp) :: alpha_power_ions_density
   !! alpha power per volume to ions (MW/m3)
 
-  real(dp) :: palpmw
-  !! alpha power (MW)
+  real(dp) :: alpha_power_plasma
+  !! Alpha power from only the plasma (MW)
+  
+  real(dp) :: alpha_power_total
+  !! Total alpha power from plasma and beams (MW)
 
-  real(dp) :: palpnb
+  real(dp) :: alpha_power_beams
   !! alpha power from hot neutral beam ions (MW)
 
-  real(dp) :: pchargemw
+  real(dp) :: non_alpha_charged_power
   !! non-alpha charged particle fusion power (MW)
 
-  real(dp) :: pchargepv
-  !! non-alpha charged particle fusion power per volume (MW/m3)
+  real(dp) :: charged_particle_power
+  !! Total charged particle fusion power [MW]
+
+  real(dp) :: charged_power_density
+  !! Non-alpha charged particle fusion power per volume [MW/m3]
 
   real(dp) :: pcoef
   !! profile factor (= n-weighted T / average T)
@@ -583,10 +586,10 @@ module physics_variables
   real(dp) :: pcoreradpv
   !! total core radiation power per volume (MW/m3)
 
-  real(dp) :: pdd
+  real(dp) :: dd_power
   !! deuterium-deuterium fusion power (MW)
 
-  real(dp) :: pdhe3
+  real(dp) :: dhe3_power
   !! deuterium-helium3 fusion power (MW)
 
   real(dp) :: pdivt
@@ -601,17 +604,14 @@ module physics_variables
   real(dp) :: pdivmax
   !! power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)
 
-  real(dp) :: pdt
-  !! deuterium-tritium fusion power (MW)
+  real(dp) :: dt_power
+  !!  Total deuterium-tritium fusion power [MW]
 
   real(dp) :: pouterzoneradmw
   !! radiation power from outer zone (MW)
 
   real(dp) :: pedgeradpv
   !! edge radiation power per volume (MW/m3)
-
-  real(dp) :: pfuscmw
-  !! charged particle fusion power (MW)
 
   real(dp) :: phiint
   !! internal plasma V-s
@@ -625,10 +625,13 @@ module physics_variables
   real(dp) :: plasma_current
   !! plasma current (A)
 
-  real(dp) :: pneutmw
-  !! neutron fusion power (MW)
+  real(dp) :: neutron_power_plasma
+  !! Neutron fusion power from just the plasma [MW]
+  
+  real(dp) :: neutron_power_total
+  !! Total neutron fusion power from plasma and beams [MW]
 
-  real(dp) :: pneutpv
+  real(dp) :: neutron_power_density
   !! neutron fusion power per volume (MW/m3)
 
   real(dp) :: pohmmw
@@ -640,7 +643,7 @@ module physics_variables
   real(dp) :: powerht
   !! heating power (= transport loss power) (MW) used in confinement time calculation
 
-  real(dp) :: powfmw
+  real(dp) :: fusion_power
   !! fusion power (MW)
 
   real(dp) :: pperim
@@ -655,8 +658,8 @@ module physics_variables
   real(dp) :: pradsolmw
   !! radiation power from SoL (MW)
 
-  real(dp) :: protonrate
-  !! proton production rate (particles/m3/sec)
+  real(dp) :: proton_rate_density
+  !! Proton production rate [particles/m3/sec]
 
   real(dp) :: psolradmw
   !! SOL radiation power (MW) (`stellarator only`)
@@ -841,7 +844,7 @@ module physics_variables
   real(dp) :: triang95
   !! plasma triangularity at 95% surface (calculated if `ishape = 0-2, 6, 8 or 9`)
 
-  real(dp) :: vol
+  real(dp) :: plasma_volume
   !! plasma volume (m3)
 
   real(dp) :: vsbrn
@@ -886,7 +889,7 @@ module physics_variables
     alphaj = 1.0D0
     alphan = 0.25D0
     alphap = 0.0D0
-    alpharate = 0.0D0
+    alpha_rate_density = 0.0D0
     alphat = 0.5D0
     aspect = 2.907D0
     beamfus0 = 1.0D0
@@ -928,7 +931,7 @@ module physics_variables
     aux_current_fraction = 0.0D0
     inductive_current_fraction = 0.0D0
     falpe = 0.0D0
-    falpha = 0.95D0
+    f_alpha_plasma = 0.95D0
     falpi = 0.0D0
     fdeut = 0.5D0
     ftar = 1.0D0
@@ -942,7 +945,7 @@ module physics_variables
     fpdivlim = 1.0D0
     fne0 = 1.0D0
     ftrit = 0.5D0
-    fusionrate = 0.0D0
+    fusion_rate_density = 0.0D0
     fvsbrnni = 1.0D0
     gamma = 0.4D0
     gammaft = 0.0D0
@@ -986,42 +989,44 @@ module physics_variables
     ni0 = 0.0D0
     m_s_limit = 0.3D0
     p0 = 0.0D0
-    palppv = 0.0D0
-    palpepv = 0.0D0
+    alpha_power_density = 0.0D0
+    alpha_power_electron_density = 0.0D0
     palpfwmw = 0.0D0
-    palpipv = 0.0D0
-    palpmw = 0.0D0
-    palpnb = 0.0D0
-    pchargemw = 0.0D0
-    pchargepv = 0.0D0
+    alpha_power_ions_density = 0.0D0
+    alpha_power_total = 0.0D0
+    alpha_power_plasma = 0.0D0
+    alpha_power_beams = 0.0D0
+    non_alpha_charged_power = 0.0D0
+    charged_power_density = 0.0D0
     pcoef = 0.0D0
     pinnerzoneradmw = 0.0D0
     pcoreradpv = 0.0D0
-    pdd = 0.0D0
-    pdhe3 = 0.0D0
+    dd_power = 0.0D0
+    dhe3_power = 0.0D0
     pdivt = 0.0D0
     pdivl = 0.0D0
     pdivu = 0.0D0
     pdivmax = 0.0D0
-    pdt = 0.0D0
+    dt_power = 0.0D0
     pouterzoneradmw = 0.0D0
     pedgeradpv = 0.0D0
-    pfuscmw = 0.0D0
+    charged_particle_power = 0.0D0
     phiint = 0.0D0
     photon_wall = 0.0D0
     piepv = 0.0D0
     plasma_current = 0.0D0
-    pneutmw = 0.0D0
-    pneutpv = 0.0D0
+    neutron_power_plasma = 0.0D0
+    neutron_power_total = 0.0D0
+    neutron_power_density = 0.0D0
     pohmmw = 0.0D0
     pohmpv = 0.0D0
     powerht = 0.0D0
-    powfmw = 0.0D0
+    fusion_power = 0.0D0
     pperim = 0.0D0
     pradmw = 0.0D0
     pradpv = 0.0D0
     pradsolmw = 0.0D0
-    protonrate = 0.0D0
+    proton_rate_density = 0.0D0
     psolradmw = 0.0D0
     psyncpv = 0.0D0
     ilhthresh = 19
@@ -1074,7 +1079,7 @@ module physics_variables
     tratio = 1.0D0
     triang = 0.36D0
     triang95 = 0.24D0
-    vol = 0.0D0
+    plasma_volume = 0.0D0
     vsbrn = 0.0D0
     vshift = 0.0D0
     vsind = 0.0D0

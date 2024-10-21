@@ -13712,7 +13712,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
 
     pdivt: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
     res_time: Any = None
 
@@ -13763,7 +13763,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
         CalcRemainingSubsystemsParam(
             pinjmw=43.745615131519273,
             pdivt=94.203763268233445,
-            powfmw=1726.9363495105574,
+            fusion_power=1726.9363495105574,
             res_time=2562.1529343276788,
             itr_sum=687546826.85995734,
             ensxpfm=34911.529178721656,
@@ -14859,7 +14859,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
         CalcRemainingSubsystemsParam(
             pinjmw=43.745615131519266,
             pdivt=94.062415557688894,
-            powfmw=1726.1944723154274,
+            fusion_power=1726.1944723154274,
             res_time=2562.1529343276788,
             itr_sum=1176301401.3409874,
             ensxpfm=34908.848681194133,
@@ -15976,7 +15976,7 @@ def test_calc_remaining_subsystems(
     monkeypatch.setattr(physics_variables, "pdivt", calcremainingsubsystemsparam.pdivt)
 
     monkeypatch.setattr(
-        physics_variables, "powfmw", calcremainingsubsystemsparam.powfmw
+        physics_variables, "fusion_power", calcremainingsubsystemsparam.fusion_power
     )
 
     monkeypatch.setattr(

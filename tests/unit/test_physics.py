@@ -89,7 +89,7 @@ class BootstrapFractionIter89Param(NamedTuple):
 
     rmajor: Any = None
 
-    vol: Any = None
+    plasma_volume: Any = None
 
     expected_bootipf: Any = None
 
@@ -105,7 +105,7 @@ class BootstrapFractionIter89Param(NamedTuple):
             q95=3.5,
             q0=1,
             rmajor=8,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             expected_bootipf=0.30255906256775245,
         ),
     ),
@@ -131,7 +131,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
         q95=bootstrapfractioniter89param.q95,
         q0=bootstrapfractioniter89param.q0,
         rmajor=bootstrapfractioniter89param.rmajor,
-        vol=bootstrapfractioniter89param.vol,
+        plasma_volume=bootstrapfractioniter89param.plasma_volume,
     )
 
     assert bootstrap_current_fraction == pytest.approx(
@@ -876,7 +876,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     pcoef: Any = None
 
-    alpharate: Any = None
+    alpha_rate_density: Any = None
 
     rnfene: Any = None
 
@@ -886,7 +886,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     te: Any = None
 
-    protonrate: Any = None
+    proton_rate_density: Any = None
 
     fdeut: Any = None
 
@@ -1016,12 +1016,12 @@ class PlasmaCompositionParam(NamedTuple):
             zeff=0,
             dnz=0,
             pcoef=0,
-            alpharate=0,
+            alpha_rate_density=0,
             rnfene=0,
             abeam=0,
             dlamie=0,
             te=12,
-            protonrate=0,
+            proton_rate_density=0,
             fdeut=0.5,
             alphan=1,
             dnbeam=0,
@@ -1138,12 +1138,12 @@ class PlasmaCompositionParam(NamedTuple):
             zeff=2.0909945616489103,
             dnz=28875000000000004,
             pcoef=1.0521775929921553,
-            alpharate=1.973996644759543e17,
+            alpha_rate_density=1.973996644759543e17,
             rnfene=0,
             abeam=2.0000010000000001,
             dlamie=17.810652035055568,
             te=12,
-            protonrate=540072280299564.38,
+            proton_rate_density=540072280299564.38,
             fdeut=0.5,
             alphan=1,
             dnbeam=0,
@@ -1273,7 +1273,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "pcoef", plasmacompositionparam.pcoef)
 
     monkeypatch.setattr(
-        physics_variables, "alpharate", plasmacompositionparam.alpharate
+        physics_variables, "alpha_rate_density", plasmacompositionparam.alpha_rate_density
     )
 
     monkeypatch.setattr(physics_variables, "rnfene", plasmacompositionparam.rnfene)
@@ -1285,7 +1285,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "te", plasmacompositionparam.te)
 
     monkeypatch.setattr(
-        physics_variables, "protonrate", plasmacompositionparam.protonrate
+        physics_variables, "proton_rate_density", plasmacompositionparam.proton_rate_density
     )
 
     monkeypatch.setattr(physics_variables, "fdeut", plasmacompositionparam.fdeut)
@@ -1517,9 +1517,9 @@ class PhyauxParam(NamedTuple):
 
     dnalp: Any = None
 
-    fusionrate: Any = None
+    fusion_rate_density: Any = None
 
-    alpharate: Any = None
+    alpha_rate_density: Any = None
 
     plasma_current: Any = None
 
@@ -1527,7 +1527,7 @@ class PhyauxParam(NamedTuple):
 
     taueff: Any = None
 
-    vol: Any = None
+    plasma_volume: Any = None
 
     expected_burnup: Any = None
 
@@ -1554,12 +1554,12 @@ class PhyauxParam(NamedTuple):
             dene=7.5e19,
             deni=5.8589175702454272e19,
             dnalp=7.5e18,
-            fusionrate=1.9852091609123786e17,
-            alpharate=1.973996644759543e17,
+            fusion_rate_density=1.9852091609123786e17,
+            alpha_rate_density=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
             taueff=3.401323521525641,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             expected_burnup=0.20383432558954095,
             expected_dntau=2.5509926411442307e20,
             expected_figmer=55.195367036602576,
@@ -1575,12 +1575,12 @@ class PhyauxParam(NamedTuple):
             dene=7.5e19,
             deni=5.8576156204039725e19,
             dnalp=7.5e18,
-            fusionrate=1.9843269653375773e17,
-            alpharate=1.9731194318497056e17,
+            fusion_rate_density=1.9843269653375773e17,
+            alpha_rate_density=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
             taueff=3.402116961408892,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             expected_burnup=0.20387039462081086,
             expected_dntau=2.5515877210566689e20,
             expected_figmer=55.195367036602576,
@@ -1613,12 +1613,12 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         dene=phyauxparam.dene,
         deni=phyauxparam.deni,
         dnalp=phyauxparam.dnalp,
-        fusionrate=phyauxparam.fusionrate,
-        alpharate=phyauxparam.alpharate,
+        fusion_rate_density=phyauxparam.fusion_rate_density,
+        alpha_rate_density=phyauxparam.alpha_rate_density,
         plasma_current=phyauxparam.plasma_current,
         sbar=phyauxparam.sbar,
         taueff=phyauxparam.taueff,
-        vol=phyauxparam.vol,
+        plasma_volume=phyauxparam.plasma_volume,
     )
 
     assert burnup == pytest.approx(phyauxparam.expected_burnup)
@@ -1659,7 +1659,7 @@ class PohmParam(NamedTuple):
 
     ten: Any = None
 
-    vol: Any = None
+    plasma_volume: Any = None
 
     zeff: Any = None
 
@@ -1684,7 +1684,7 @@ class PohmParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             ten=12.626131115905864,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             zeff=2.0909945616489103,
             expected_pohmpv=0.0004062519138005805,
             expected_pohmmw=0.7670731448937912,
@@ -1719,7 +1719,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         rmajor=pohmparam.rmajor,
         rminor=pohmparam.rminor,
         ten=pohmparam.ten,
-        vol=pohmparam.vol,
+        plasma_volume=pohmparam.plasma_volume,
         zeff=pohmparam.zeff,
     )
 
@@ -1831,7 +1831,7 @@ class PcondParam(NamedTuple):
 
     pohmmw: Any = None
 
-    falpha: Any = None
+    f_alpha_plasma: Any = None
 
     iinvqd: Any = None
 
@@ -1841,7 +1841,7 @@ class PcondParam(NamedTuple):
 
     afuel: Any = None
 
-    palpmw: Any = None
+    alpha_power_total: Any = None
 
     aspect: Any = None
 
@@ -1861,7 +1861,7 @@ class PcondParam(NamedTuple):
 
     kappa95: Any = None
 
-    pchargemw: Any = None
+    non_alpha_charged_power: Any = None
 
     pinjmw: Any = None
 
@@ -1883,7 +1883,7 @@ class PcondParam(NamedTuple):
 
     tin: Any = None
 
-    vol: Any = None
+    plasma_volume: Any = None
 
     xarea: Any = None
 
@@ -1915,12 +1915,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=32,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -1930,7 +1930,7 @@ class PcondParam(NamedTuple):
             hfact=6.1946504123280199,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -1941,7 +1941,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -1959,12 +1959,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=33,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -1974,7 +1974,7 @@ class PcondParam(NamedTuple):
             hfact=0.96163409847948844,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -1985,7 +1985,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2003,12 +2003,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=34,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2018,7 +2018,7 @@ class PcondParam(NamedTuple):
             hfact=1.1960655150953154,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2029,7 +2029,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2047,12 +2047,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=35,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2062,7 +2062,7 @@ class PcondParam(NamedTuple):
             hfact=0.78453691772934719,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2073,7 +2073,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2091,12 +2091,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=36,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2106,7 +2106,7 @@ class PcondParam(NamedTuple):
             hfact=1.1619079679077555,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2117,7 +2117,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2135,12 +2135,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=37,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2150,7 +2150,7 @@ class PcondParam(NamedTuple):
             hfact=1.7340642483550435,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2161,7 +2161,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2179,12 +2179,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=38,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2194,7 +2194,7 @@ class PcondParam(NamedTuple):
             hfact=1.1117392853827024,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2205,7 +2205,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2223,12 +2223,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=39,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2238,7 +2238,7 @@ class PcondParam(NamedTuple):
             hfact=0.84477227311274361,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2249,7 +2249,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2267,12 +2267,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=40,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2282,7 +2282,7 @@ class PcondParam(NamedTuple):
             hfact=1.6096667103064701,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2293,7 +2293,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2311,12 +2311,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=41,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2326,7 +2326,7 @@ class PcondParam(NamedTuple):
             hfact=0.67053301699102119,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2337,7 +2337,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2355,12 +2355,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=42,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2370,7 +2370,7 @@ class PcondParam(NamedTuple):
             hfact=2.1212580310552207,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2381,7 +2381,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2399,12 +2399,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=43,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2414,7 +2414,7 @@ class PcondParam(NamedTuple):
             hfact=50.095480115636271,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2425,7 +2425,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2443,12 +2443,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=44,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2458,7 +2458,7 @@ class PcondParam(NamedTuple):
             hfact=87.869318916638761,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2469,7 +2469,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2487,12 +2487,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=45,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2502,7 +2502,7 @@ class PcondParam(NamedTuple):
             hfact=28.562137619592285,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2513,7 +2513,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2531,12 +2531,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=46,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2546,7 +2546,7 @@ class PcondParam(NamedTuple):
             hfact=0.50082256309019457,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2557,7 +2557,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2575,12 +2575,12 @@ class PcondParam(NamedTuple):
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
             pohmmw=0.63634001890069991,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=47,
             ignite=0,
             afuel=2.5,
-            palpmw=319.03020327154269,
+            alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
@@ -2590,7 +2590,7 @@ class PcondParam(NamedTuple):
             hfact=0.77961193402355955,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            pchargemw=1.2453296074483358,
+            non_alpha_charged_power=1.2453296074483358,
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
@@ -2601,7 +2601,7 @@ class PcondParam(NamedTuple):
             te=12.437097421317889,
             ten=13.745148298980761,
             tin=13.745148298980761,
-            vol=1888.1711539956691,
+            plasma_volume=1888.1711539956691,
             xarea=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
@@ -2638,14 +2638,14 @@ def test_pcond(pcondparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "pohmmw", pcondparam.pohmmw)
 
-    monkeypatch.setattr(physics_variables, "falpha", pcondparam.falpha)
+    monkeypatch.setattr(physics_variables, "f_alpha_plasma", pcondparam.f_alpha_plasma)
 
     kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = physics.pcond(
         iinvqd=pcondparam.iinvqd,
         isc=pcondparam.isc,
         ignite=pcondparam.ignite,
         afuel=pcondparam.afuel,
-        palpmw=pcondparam.palpmw,
+        alpha_power_total=pcondparam.alpha_power_total,
         aspect=pcondparam.aspect,
         bt=pcondparam.bt,
         dene=pcondparam.dene,
@@ -2655,7 +2655,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
         hfact=pcondparam.hfact,
         kappa=pcondparam.kappa,
         kappa95=pcondparam.kappa95,
-        pchargemw=pcondparam.pchargemw,
+        non_alpha_charged_power=pcondparam.non_alpha_charged_power,
         pinjmw=pcondparam.pinjmw,
         plasma_current=pcondparam.plasma_current,
         pcoreradpv=pcondparam.pcoreradpv,
@@ -2666,7 +2666,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
         te=pcondparam.te,
         ten=pcondparam.ten,
         tin=pcondparam.tin,
-        vol=pcondparam.vol,
+        plasma_volume=pcondparam.plasma_volume,
         xarea=pcondparam.xarea,
         zeff=pcondparam.zeff,
     )

@@ -127,13 +127,13 @@ class DCLL:
 
         # Nuclear heating in the first wall (MW)
         fwbs_variables.pnucfw = (
-            physics_variables.pneutmw * fwbs_variables.pnuc_fw_ratio_dcll * covf
+            physics_variables.neutron_power_total * fwbs_variables.pnuc_fw_ratio_dcll * covf
         )
 
         # Nuclear heating in the blanket with energy multiplication (MW)
         fwbs_variables.pnuc_blkt_ratio_dcll = 1 - fwbs_variables.pnuc_fw_ratio_dcll
         fwbs_variables.pnucblkt = (
-            physics_variables.pneutmw
+            physics_variables.neutron_power_total
             * fwbs_variables.pnuc_blkt_ratio_dcll
             * fwbs_variables.emult
             * covf
@@ -141,7 +141,7 @@ class DCLL:
 
         # Energy multiplication energy (MW)
         fwbs_variables.emultmw = (
-            (physics_variables.pneutmw * fwbs_variables.pnuc_blkt_ratio_dcll)
+            (physics_variables.neutron_power_total * fwbs_variables.pnuc_blkt_ratio_dcll)
             * (fwbs_variables.emult - 1)
             * covf
         )
@@ -151,13 +151,13 @@ class DCLL:
         if physics_variables.idivrt == 2:
             # Double null configuration
             # Nuclear heating in the divertor (MW), neutron power times fdiv
-            fwbs_variables.pnucdiv = physics_variables.pneutmw * 2 * fwbs_variables.fdiv
+            fwbs_variables.pnucdiv = physics_variables.neutron_power_total * 2 * fwbs_variables.fdiv
             # Radiation power incident on divertor (MW)
             fwbs_variables.praddiv = physics_variables.pradmw * 2 * fwbs_variables.fdiv
         else:
             # Single null configuration
             # Nuclear heating in the divertor (MW), neutron power times fdiv
-            fwbs_variables.pnucdiv = physics_variables.pneutmw * fwbs_variables.fdiv
+            fwbs_variables.pnucdiv = physics_variables.neutron_power_total * fwbs_variables.fdiv
             # Radiation power incident on divertor (MW)
             fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
 
@@ -416,7 +416,7 @@ class DCLL:
 
         LT MMS DCLL model [Pal2016]
 
-             Radial Build (m, % vol):
+             Radial Build (m, % plasma_volume):
 
                   FW
                  IB/OB armour = 2.0D-3 m, 100% W
@@ -433,7 +433,7 @@ class DCLL:
 
                  MF/BSS = variable thickness, 51.29% EUROfer, 4.35% He, 44.36% PbLi
 
-             Other info (m, % vol):
+             Other info (m, % plasma_volume):
 
                  Side walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
                  Top walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
