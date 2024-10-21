@@ -2,6 +2,7 @@ import logging
 import numpy as np
 import scipy as sp
 import process.profiles as profiles
+import json
 
 from process.fortran import (
     constants,
@@ -32,7 +33,7 @@ class PlasmaProfile:
         calculate_parabolic_profile_factors(): The gradient information for ipedestal = 0.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, custom_profile: dict = None) -> None:
         """
         Initialize the PlasmaProfile class.
 
@@ -45,8 +46,34 @@ class PlasmaProfile:
         # Default profile_size = 501, but it's possible to experiment with this value.
         self.profile_size = 501
         self.outfile = constants.nout
-        self.neprofile = profiles.NProfile(self.profile_size)
-        self.teprofile = profiles.TProfile(self.profile_size)
+        self.custom_profile = custom_profile
+
+        if custom_profile:
+            neprofile = custom_profile.get("neprofile", {})
+            teprofile = custom_profile.get("teprofile", {})
+            # Extract values, raise error if keys are not found
+            try:
+                neprofile_x = neprofile["profile_x"]  # Raises KeyError if not found
+                neprofile_y = neprofile["profile_y"]
+                teprofile_x = teprofile["profile_x"]
+                teprofile_y = teprofile["profile_y"]
+            except KeyError as e:
+                raise KeyError(f"Missing required key in profile data: {e}")
+            # Set correct profile size
+            self.profile_size = len(neprofile_x)
+        else:
+            # If custom_profile is not provided, use default values
+            neprofile_x = np.arange(self.profile_size)  # Default x range
+            neprofile_y = np.zeros(
+                self.profile_size
+            )  # Default density profile as zeros
+            teprofile_x = np.arange(self.profile_size)  # Default x range
+            teprofile_y = np.zeros(
+                self.profile_size
+            )  # Default temperature profile as zeros
+        # Initialize the density and temperature profiles
+        self.neprofile = profiles.NProfile(self.profile_size, neprofile_x, neprofile_y)
+        self.teprofile = profiles.TProfile(self.profile_size, teprofile_x, teprofile_y)
 
     def run(self) -> None:
         """
@@ -86,27 +113,41 @@ class PlasmaProfile:
 
         # Parabolic profile case
         if physics_variables.ipedestal == 0:
+            if self.custom_profile is None:
+                self.calculate_parabolic_profiles()
+            else:
+                self.calculate_custom_profiles()
+
             self.parabolic_paramterisation()
             self.calculate_profile_factors()
             self.calculate_parabolic_profile_factors()
         # Pedestal profile case
         else:
+            if self.custom_profile is None:
+                self.teprofile.run()
+                self.neprofile.run()
+            else:
+                self.calculate_custom_profiles()
+
             self.pedestal_parameterisation()
             self.calculate_profile_factors()
 
-    def parabolic_paramterisation(self) -> None:
+    def calculate_custom_profiles(self) -> None:
+        """Calculate the properties of custom input temperature
+        and density profiles.
         """
-        Parameterise plasma profiles in the case where ipedestal == 0.
+        self.neprofile.normalise_profile_x()
+        self.neprofile.calculate_profile_dx()
+        self.neprofile.set_physics_variables()
+        self.neprofile.integrate_profile_y()
 
-        This routine calculates the parameterization of plasma profiles in the case where ipedestal=0.
-        It sets the necessary physics variables for the parabolic profile case.
+        self.teprofile.normalise_profile_x()
+        self.teprofile.calculate_profile_dx()
+        self.teprofile.set_physics_variables()
+        self.teprofile.integrate_profile_y()
 
-        Args:
-            None
-
-        Returns:
-            None
-        """
+    def calculate_parabolic_profiles(self) -> None:
+        """Reset the pedestal values and calculate the profiles."""
         # Reset pedestal values to agree with original parabolic profiles
         if (
             physics_variables.rhopedt != 1.0
@@ -136,6 +177,19 @@ class PlasmaProfile:
         self.teprofile.run()
         self.neprofile.run()
 
+    def parabolic_paramterisation(self) -> None:
+        """
+        Parameterise plasma profiles in the case where ipedestal == 0.
+
+        This routine calculates the parameterization of plasma profiles in the case where ipedestal=0.
+        It sets the necessary physics variables for the parabolic profile case.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
 
@@ -185,12 +239,6 @@ class PlasmaProfile:
         Returns:
             None
         """
-        #  Run TProfile and NProfile class methods:
-        #  Re-caluclate core and profile values
-
-        self.teprofile.run()
-        self.neprofile.run()
-
         #  Perform integrations to calculate ratio of density-weighted
         #  to volume-averaged temperature, etc.
         #  Density-weighted temperature = integral(n.T dV) / integral(n dV)
