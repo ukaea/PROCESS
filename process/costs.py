@@ -129,7 +129,7 @@ class Costs:
         po.ovarrf(
             self.outfile,
             "First wall / blanket life (years)",
-            "(fwbllife_cal)",
+            "(bktlife_cal)",
             fwbs_variables.bktlife_cal,
         )
 
@@ -2873,7 +2873,8 @@ class Costs:
             + coedecom
         )
 
-    def convert_fpy_to_calendar(self):
+    @staticmethod
+    def convert_fpy_to_calendar() -> None:
         """
         Routine to convert component lifetimes in FPY to calendar years.
         Required for replacement component costs.
@@ -2882,6 +2883,7 @@ class Costs:
         # FW/Blanket and HCD
         if fwbs_variables.bktlife < cost_variables.tlife:
             fwbs_variables.bktlife_cal = fwbs_variables.bktlife * cost_variables.cfactr
+            # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
             cost_variables.cdrlife_cal = fwbs_variables.bktlife_cal
 
         # Divertor

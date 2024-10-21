@@ -361,6 +361,7 @@ class Availability:
             # First wall / blanket
             if fwbsv.bktlife < cv.tlife:
                 fwbsv.bktlife = min(fwbsv.bktlife / cv.cfactr, cv.tlife)
+                # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
                 cv.cdrlife = fwbsv.bktlife
 
             # Divertor
