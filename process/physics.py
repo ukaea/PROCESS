@@ -1729,6 +1729,16 @@ class Physics:
             )
         )
 
+        current_drive_variables.bscf_andrade = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_andrade(
+                betap=physics_variables.betap,
+                core_pressure=physics_variables.p0,
+                average_pressure=physics_variables.vol_avg_pressure,
+                inverse_aspect=physics_variables.eps,
+            )
+        )
+
         if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
             current_drive_variables.bootstrap_current_fraction = abs(
                 current_drive_variables.bootstrap_current_fraction_max
@@ -1761,8 +1771,12 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 6:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_sauter
-                ) 
+                    current_drive_variables.bscf_aries
+                )
+            elif physics_variables.i_bootstrap_current == 7:
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_andrade
+                )
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
                 error_handling.report_error(75)
@@ -3596,6 +3610,20 @@ class Physics:
             physics_variables.dnla,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Plasma pressure on axis (Pa)",
+            "(p0)",
+            physics_variables.p0,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma pressure (Pa)",
+            "(vol_avg_pressure)",
+            physics_variables.vol_avg_pressure,
+            "OP ",
+        )
 
         if stellarator_variables.istell == 0:
             po.ovarre(
@@ -4866,7 +4894,14 @@ class Physics:
                 current_drive_variables.bscf_aries,
                 "OP ",
             )
-            
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Andrade)",
+                "(bscf_andrade)",
+                current_drive_variables.bscf_andrade,
+                "OP ",
+            )
+
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (Hender)",
@@ -5604,7 +5639,7 @@ class Physics:
         rli (float): Plasma normalized internal inductance.
         core_density (float): Core plasma density.
         average_density (float): Average plasma density.
-        inverse_aspect (float): Inverse aspect ratio.o.
+        inverse_aspect (float): Inverse aspect ratio.
 
         Returns:
         float: The calculated bootstrap fraction.
@@ -5624,6 +5659,42 @@ class Physics:
         c_bs = a_1+b_1*(core_density/average_desnity)
 
         return c_bs * np.sqrt(inverse_aspect) * betap
+
+    @staticmethod
+    def bootstrap_fraction_andrade(
+        betap: float,
+        core_pressure: float,
+        average_pressure: float,
+        inverse_aspect: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Andrade et al formula.
+
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        core_pressure (float): Core plasma pressure.
+        average_pressure (float): Average plasma pressure.
+        inverse_aspect (float): Inverse aspect ratio.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+
+        References:
+            - M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,”
+              Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001–065001, Apr. 2008,
+              doi: https://doi.org/10.1088/0741-3335/50/6/065001.
+
+        """
+
+        # Using the standard variable naming from the Andrade et.al. paper
+        c_p = core_pressure / average_pressure
+
+        # Error +- 0.0007
+        c_bs = 0.2340
+
+        return c_bs * np.sqrt(inverse_aspect) * betap * c_p**0.8
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance

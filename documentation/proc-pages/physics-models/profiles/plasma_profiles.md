@@ -407,8 +407,15 @@ $$
 With the coefficients used to turn the temperature from $\text{keV}$ back to Joules.
 
 Since we multiply the density and temperature profiles together to get the pressure we can find the pressure profile factor by adding the profile factors for temperature and density.
+
 $$
 \alpha_p = \alpha_n + \alpha_T
+$$
+
+The volume averaged pressure can then be set if we assume the pressure also has a parabolic profile. Using the standard relation used for both density and temeprature we can set the volume averaged pressure as:
+
+$$
+\langle p \rangle =   \frac{p_0}{\alpha_p+1}
 $$
 
 ???+ note "Pressure profile factor"

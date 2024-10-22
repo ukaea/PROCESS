@@ -251,6 +251,7 @@ module physics_variables
   !! - =4 for Sauter et al scaling
   !! - =5 for Sakai et al scaling
   !! - =6 for ARIES scaling
+  !! - =7 for Andrade et al scaling
 
   integer :: iculbl
   !! switch for beta limit scaling (`constraint equation 24`)
@@ -550,6 +551,9 @@ module physics_variables
 
   real(dp) :: p0
   !! central total plasma pressure (Pa)
+
+  real(dp) :: vol_avg_pressure
+  !! Volume average plasma pressure (Pa)
 
   real(dp) :: palppv
   !! alpha power per volume (MW/m3)
