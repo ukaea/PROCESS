@@ -493,6 +493,24 @@ $$
 
 ---------------------
 
+### Andrade Scaling | `bootstrap_fraction_andrade()`
+
+Is selected by setting `i_bootstrap_current = 7`[^9]
+
+$$
+C_{\text{BS}} = 0.2340 \pm 0.0007
+$$
+
+$$
+c_p = \frac{p_0}{\langle p \rangle}
+$$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} \sqrt{\epsilon}\beta_{\text{p}}c_p^{0.8}
+$$
+
+---------------------
+
 ## Setting of maximum desirable bootstrap current fraction
 
 The variable `bootstrap_current_fraction_max` can be set to the value of maximum desirable bootstrap current fraction for a specific design. When optimising if the value of the calculated `bootstrap_current_fraction` for the model selected with `i_bootstrap_current` exceeds this value, then `bootstrap_current_fraction` is set to the value of `bootstrap_current_fraction_max`.
@@ -523,3 +541,4 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^6]: Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2019.111322.
 [^7]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992 
 [^8]: Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants, ”Fusion Engineering and Design, vol. 85, no. 2, pp. 243–265, Apr. 2010, doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
+[^9]: M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,” Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001–065001, Apr. 2008, doi: https://doi.org/10.1088/0741-3335/50/6/065001.
