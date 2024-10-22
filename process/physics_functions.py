@@ -1353,20 +1353,35 @@ def _hot_beam_fusion_reaction_rate_integrand(u, vcritx):
     # vcritx : critical velocity for electron/ion slowing down of beam ion (m/s)
     xvc = vcritx * u
     xvcs = xvc * xvc * constants.proton_mass / (constants.electron_charge * 1000.0)
-    t2 = _sigbmfus(xvcs)
+    t2 = _beam_fusion_cross_section(xvcs)
 
     return t1 * t2
 
 
-def _sigbmfus(vrelsq):
-    """Fusion reaction cross-section
-    author: P J Knight, CCFE, Culham Science Centre
+def _beam_fusion_cross_section(vrelsq: float) -> float:
+    """
+    Calculate the fusion reaction cross-section.
 
-    The functional form of the cross-section is in terms of the equivalent
-    deuterium energy, i.e. for a tritium beam at 500 keV the energy
-    used in the cross-section function is 333 keV.
+    This function computes the fusion reaction cross-section based on the
+    square of the speed of the beam ion (keV/amu). The functional form of
+    the cross-section is in terms of the equivalent deuterium energy, i.e.,
+    for a tritium beam at 500 keV the energy used in the cross-section
+    function is 333 keV.
 
-    :param vrelsq: square of the speed of the beam ion (keV/amu)
+    Parameters:
+        vrelsq (float): Square of the speed of the beam ion (keV/amu).
+
+    Returns:
+        float: Fusion reaction cross-section (cm^2).
+
+    Notes:
+        - The cross-section is limited at low and high beam energies.
+        - For beam kinetic energy less than 10 keV, the cross-section is set to 1.0e-27 m^2.
+        - For beam kinetic energy greater than 10,000 keV, the cross-section is set to 8.0e-26 m^2.
+        - The cross-section is calculated using a functional form with parameters a1 to a5.
+
+    References:
+        - None
     """
     a1 = 45.95
     a2 = 5.02e4
@@ -1375,16 +1390,14 @@ def _sigbmfus(vrelsq):
     a5 = 4.09e2
 
     # Beam kinetic energy
-
-    ebm = 0.5 * ATOMIC_MASS_DEUTERIUM * vrelsq
+    beam_energy = 0.5 * ATOMIC_MASS_DEUTERIUM * vrelsq
 
     # Set limits on cross-section at low and high beam energies
-
-    if ebm < 10.0:
+    if beam_energy < 10.0:
         return 1.0e-27
-    elif ebm > 1.0e4:
+    elif beam_energy > 1.0e4:
         return 8.0e-26
     else:
-        t1 = a2 / (1.0e0 + (a3 * ebm - a4) ** 2) + a5
-        t2 = ebm * (np.exp(a1 / np.sqrt(ebm)) - 1.0)
+        t1 = a2 / (1.0 + (a3 * beam_energy - a4) ** 2) + a5
+        t2 = beam_energy * (np.exp(a1 / np.sqrt(beam_energy)) - 1.0)
         return 1.0e-24 * t1 / t2

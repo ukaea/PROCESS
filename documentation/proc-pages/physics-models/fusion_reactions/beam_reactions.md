@@ -1,6 +1,34 @@
 ## NBI Fusion
 
-### Beam fusion cross section | `_sigbmfus()`
+### Beam fusion cross section | `_beam_fusion_cross_section()`
+
+This internal function is used to find the beam cross section.
+It sets limits on cross-section at low and high beam energies. The plasma ions are assumed to be stationary:
+
+$$
+\sigma_{\text{bm}}(E) = 
+\begin{cases} 
+1.0 \times 10^{-27} \ \text{cm}^2 & \text{if } E < 10.0 \ \text{keV/amu} \\
+8.0 \times 10^{-26} \ \text{cm}^2 & \text{if } E > 10^4 \ \text{keV/amu} \\
+\frac{1.0 \times 10^{-24} \cdot \left( \frac{a_2}{1.0 + (a_3 E - a_4)^2} + a_5 \right)}{E \left( \exp\left(\frac{a_1}{\sqrt{E}}\right) - 1.0 \right)} \ \text{cm}^2 & \text{otherwise}
+\end{cases}
+$$
+
+where:
+
+- \( E \) is the beam energy in, $\text{keV/amu}$
+
+- \( a_1, a_2, a_3, a_4, a_5 \) are constants.
+
+The constants are defined as:
+
+- \( a_1 = 45.95 \)
+- \( a_2 = 5.02 \times 10^4 \)
+- \( a_3 = 1.368 \times 10^{-2} \)
+- \( a_4 = 1.076 \)
+- \( a_5 = 4.09 \times 10^2 \)
+
+----------------------
 
 ### Beam fusion reaction rate | `beam_reaction_rate()`
 
