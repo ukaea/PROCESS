@@ -24,6 +24,16 @@ from process.fortran import rebco_variables as rcv
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process import fortran as ft
+import process.superconductors as superconductors
+import math
+import numpy as np
+import numba
+from numba.types import CPointer, float64, intc
+from scipy import LowLevelCallable
+from scipy.integrate import IntegrationWarning, quad, nquad
+import logging
+from scipy import optimize
 from scipy.special import ellipe, ellipk
 
 logger = logging.getLogger(__name__)
@@ -3720,6 +3730,9 @@ def greens(rc, zc, rp, zp):
     Green's function for psi, Bx and Bz. Output is from unit current so for actual
     field multiply result by coil current.
 
+    Used for producing the radial (x) and vertical (z) components of the magnetic field,
+    and the magnetic flux at any point not inside a solenoid (PF or CS).
+
     rc: input real array : coil r coordinates (m)
     zc: input real array : coil z coordinates (m)
     rp: input real array : calculation r coordinates (m)
@@ -3745,6 +3758,383 @@ def greens(rc, zc, rp, zp):
     g_psi = 0.25 * RMU0 / np.pi * a * ((2 - k2) * k - 2 * e)
 
     return g_psi, g_br, g_bz
+
+
+def floatify(x):
+    """
+    Converts the np array or float into a float by returning
+    the first element or the element itself.
+
+    Notes
+    -----
+    This function aims to avoid numpy warnings for float(x) for >0 rank scalars
+    it emulates the functionality of float conversion
+
+    Raises
+    ------
+    ValueError
+        If array like object has more than 1 element
+    TypeError
+        If object is None
+    """
+    if x is None:
+        raise TypeError("The argument cannot be None")
+    return np.asarray(x, dtype=float).item()
+
+
+def integrate(func, args, bound1, bound2):
+    """
+    Utility for integration of a function between bounds. Easier to refactor
+    integration methods.
+
+    Parameters
+    ----------
+    func:
+        The function to integrate. The integration variable should be the last
+        argument of this function.
+    args:
+        The iterable of static arguments to the function.
+    bound1:
+        The lower integration bound
+    bound2:
+        The upper integration bound
+
+    Returns
+    -------
+    The value of the integral of the function between the bounds
+
+    Raises
+    ------
+    MagnetostaticsIntegrationError
+        Integration failed
+    """
+    # warnings.filterwarnings("error", category=IntegrationWarning)
+    try:
+        result = quad(func, bound1, bound2, args=args)[0]
+    except IntegrationWarning:
+        # First attempt at fixing the integration problem
+        points = [
+            0.25 * (bound2 - bound1),
+            0.5 * (bound2 - bound1),
+            0.75 * (bound2 - bound1),
+        ]
+        try:
+            result = quad(func, bound1, bound2, args=args, points=points, limit=200)[0]
+        except IntegrationWarning:
+            raise IntegrationWarning
+
+    # warnings.filterwarnings("default", category=IntegrationWarning)
+    return result
+
+
+def n_integrate(func, args, bounds):
+    """
+    Utility for n-dimensional integration of a function between bounds. Easier
+    to refactor integration methods.
+
+    Parameters
+    ----------
+    func:
+        The function to integrate. The integration variable should be the last
+        argument of this function.
+    args:
+        The iterable of static arguments to the function.
+    bounds:
+        The list of lower and upper integration bounds applied to x[0], x[1], ..
+
+    Returns
+    -------
+    The value of the integral of the function between the bounds
+    """
+    return nquad(func, bounds, args=args)[0]
+
+
+def jit_llc5(f_integrand):
+    """
+    Decorator for 4-argument integrand function to a low-level callable.
+
+    Parameters
+    ----------
+    f_integrand:
+        The integrand function
+
+    Returns
+    -------
+    The decorated integrand function as a LowLevelCallable
+    """
+    f_jitted = numba.jit(f_integrand, nopython=True, cache=True)
+
+    @numba.cfunc(float64(intc, CPointer(float64)))
+    def wrapped(n, xx):  # noqa: ARG001
+        return f_jitted(xx[0], xx[1], xx[2], xx[3], xx[4])
+
+    return LowLevelCallable(wrapped.ctypes)
+
+
+def jit_llc3(f_integrand):
+    """
+    Decorator for 2-argument integrand function to a low-level callable.
+
+    Parameters
+    ----------
+    f_integrand:
+        The integrand function
+
+    Returns
+    -------
+    The decorated integrand function as a LowLevelCallable
+    """
+    f_jitted = numba.jit(f_integrand, nopython=True, cache=True)
+
+    @numba.cfunc(float64(intc, CPointer(float64)))
+    def wrapped(n, xx):  # noqa: ARG001
+        return f_jitted(xx[0], xx[1], xx[2])
+
+    return LowLevelCallable(wrapped.ctypes)
+
+
+def jit_llc7(f_integrand):
+    """
+    Decorator for 6-argument integrand function to a low-level callable.
+
+    Parameters
+    ----------
+    f_integrand:
+        The integrand function
+
+    Returns
+    -------
+    The decorated integrand function as a LowLevelCallable
+    """
+    f_jitted = numba.jit(f_integrand, nopython=True, cache=True)
+
+    @numba.cfunc(float64(intc, CPointer(float64)))
+    def wrapped(n, xx):  # noqa: ARG001
+        return f_jitted(xx[0], xx[1], xx[2], xx[3], xx[4], xx[5], xx[6])
+
+    return LowLevelCallable(wrapped.ctypes)
+
+
+EPS = np.finfo(float).eps
+
+
+@numba.jit(nopython=True, cache=True)
+def _partial_x_integrand(phi, rr, zz):
+    """
+    Integrand edge cases derived to constant integrals. Much faster than
+    splitting up the integrands.
+    """
+    cos_phi = np.cos(phi)
+    r0 = np.sqrt(rr**2 + 1 - 2 * rr * cos_phi + zz**2)
+
+    if abs(zz) < EPS:
+        if abs(rr - 1.0) < EPS:
+            return -1.042258937608 / np.pi
+        if rr < 1.0:
+            return cos_phi * (
+                r0 + cos_phi * np.log((r0 + 1 + rr) / (r0 + 1 - rr))
+            ) - 0.25 * (1 + np.log(4))
+
+    return (r0 + cos_phi * np.log(r0 + rr - cos_phi)) * cos_phi
+
+
+@jit_llc5
+def _full_x_integrand(phi, r1, r2, z1, z2):
+    """
+    Calculate the P_x primitive integral.
+
+    \t:math:`P_{x}(R, Z) = \\int_{0}^{\\pi}[R_{0}+cos(\\phi)ln(R_{0}+R`
+    \t:math:`-cos(\\phi))]cos(\\phi)d\\phi`
+    """
+    return (
+        _partial_x_integrand(phi, r1, z1)
+        - _partial_x_integrand(phi, r1, z2)
+        - _partial_x_integrand(phi, r2, z1)
+        + _partial_x_integrand(phi, r2, z2)
+    )
+
+
+def _partial_z_integrand_nojit(phi, rr, zz):
+    """
+    Integrand edge cases derived to constant integrals. Much faster than
+    splitting up the integrands.
+    """
+    if abs(zz) < EPS:
+        return 0.0
+
+    sin_phi = np.sin(phi)
+    cos_phi = np.cos(phi)
+    r0 = np.sqrt(rr**2 + 1 - 2 * rr * cos_phi + zz**2)
+
+    # F1
+    result = zz * np.log(r0 + rr - cos_phi) - cos_phi * np.log(r0 + zz)
+
+    # F2
+    result = result - 0.5 * rr if rr - 1 < EPS else result - 0.5 / rr
+    # F3
+    if 0.5 * np.pi * sin_phi > 1e-9:  # noqa: PLR2004
+        result -= sin_phi * np.arctan(zz * (rr - cos_phi) / (r0 * sin_phi))
+    return result
+
+
+_partial_z_integrand = numba.jit(_partial_z_integrand_nojit, nopython=True, cache=True)
+_partial_z_integrand_llc = jit_llc3(_partial_z_integrand_nojit)
+
+
+def _integrate_z_by_parts(r1, r2, z1, z2):
+    """
+    Integrate the Bz integrand by parts.
+
+    This can be used as a fallback if the full integration fails.
+    """
+    return (
+        integrate(_partial_z_integrand_llc, (r1, z1), 0, np.pi)
+        - integrate(_partial_z_integrand_llc, (r1, z2), 0, np.pi)
+        - integrate(_partial_z_integrand_llc, (r2, z1), 0, np.pi)
+        + integrate(_partial_z_integrand_llc, (r2, z2), 0, np.pi)
+    )
+
+
+@jit_llc7
+def _full_psi_integrand(rp, phi, rc, zc, zp, d_rc, d_zc):
+    """
+    Integrand for psi = xBz
+    """
+    z = zp - zc  # numba issue # noqa: PLR6104
+    r1, r2 = (rc - d_rc) / rp, (rc + d_rc) / rp
+    z1, z2 = (-d_zc - z) / rp, (d_zc - z) / rp
+    return rp**2 * (
+        _partial_z_integrand(phi, r1, z1)
+        - _partial_z_integrand(phi, r1, z2)
+        - _partial_z_integrand(phi, r2, z1)
+        + _partial_z_integrand(phi, r2, z2)
+    )
+
+
+@numba.jit(nopython=True, cache=True)
+def _get_working_coords(rc, zc, rp, zp, d_rc, d_zc):
+    """
+    Convert coil and global coordinates to working coordinates.
+    """
+    z = zp - zc
+    r1, r2 = (rc - d_rc) / rp, (rc + d_rc) / rp
+    z1, z2 = (-d_zc - z) / rp, (d_zc - z) / rp
+    j_tor = 1 / (4 * d_rc * d_zc)  # Keep current out of the equation
+    return r1, r2, z1, z2, j_tor
+
+
+def is_num(thing):
+    """
+    Determine whether or not the input is a number.
+
+    Parameters
+    ----------
+    thing:
+        The input which we need to determine is a number or not
+
+    Returns
+    -------
+    Whether or not the input is a number
+    """
+    if thing is True or thing is False:
+        return False
+    try:
+        thing = floatify(thing)
+    except (ValueError, TypeError):
+        return False
+    else:
+        return not np.isnan(thing)
+
+
+def _array_dispatcher(func):
+    """
+    Decorator for float and array handling.
+    """
+
+    def wrapper(rc, zc, rp, zp, d_rc, d_zc):
+        # Handle floats
+        if is_num(rp):
+            return func(rc, zc, rp, zp, d_rc, d_zc)
+
+        # Handle arrays
+        if len(rp.shape) == 1:
+            if not isinstance(rc, np.ndarray) or len(rc.shape) == 1:
+                result = np.zeros(len(rp))
+                for i in range(len(rp)):
+                    result[i] = floatify(func(rc, zc, rp[i], zp[i], d_rc, d_zc))
+            else:
+                result = np.zeros((len(rp), len(rc)))
+                for j in range(rc.shape[1]):
+                    for i in range(len(rp)):
+                        result[i, j] = floatify(
+                            func(
+                                rc[:, j], zc[:, j], rp[i], zp[i], d_rc[:, j], d_zc[:, j]
+                            )
+                        )
+        # 2-D arrays
+        elif not isinstance(rc, np.ndarray) or len(rc.shape) == 1:
+            result = np.zeros(rp.shape)
+            for i in range(rp.shape[0]):
+                for j in range(zp.shape[1]):
+                    result[i, j] = floatify(
+                        func(rc, zc, rp[i, j], zp[i, j], d_rc, d_zc)
+                    )
+        else:
+            result = np.zeros([*list(rp.shape), rc.shape[1]])
+            for k in range(rc.shape[1]):
+                for i in range(rp.shape[0]):
+                    for j in range(zp.shape[1]):
+                        result[i, j, ..., k] = func(
+                            rc[:, k],
+                            zc[:, k],
+                            rp[i, j],
+                            zp[i, j],
+                            d_rc[:, k],
+                            d_zc[:, k],
+                        )
+        return result
+
+    return wrapper
+
+
+@_array_dispatcher
+def semianalytic(rc, zc, rp, zp, d_rc, d_zc):
+    """
+    Function that uses a semi-analytic reduction of the Biot-Savart law to
+    calculate the magnetic fields (Bx, Bz) and magnetic flux (psi) from a
+    rectangular cross-section circular current. Output is from unit current
+    so for actual field multiply result by coil current.
+
+    Used for producing the radial (x) and vertical (z) components of the magnetic
+    field, alongside the magnetic flux at any point inside the solenoid (PF or CS)
+    that contains the source point.
+
+    rc: input real array : coil r coordinates (m)
+    zc: input real array : coil z coordinates (m)
+    rp: input real array : calculation r coordinates (m)
+    zp: input real array : calculation z coordinates (m)
+    d_rc: input real array : half-width of the coil (m)
+    d_zc: input real array : half-height of the coil (m)
+    br: output real : radial field component at (rp,zp) (T)
+    bz : output real : vertical field component at (rp,zp) (T)
+    psi : output real : psi component at (rp, zp) (Wb)
+    """
+    r1, r2, z1, z2, j_tor = _get_working_coords(rc, zc, rp, zp, d_rc, d_zc)
+    Br = integrate(
+        _full_x_integrand, tuple(np.asarray((r1, r2, z1, z2)).ravel()), 0, np.pi
+    )
+
+    Bz = _integrate_z_by_parts(r1, r2, z1, z2)
+
+    psi = n_integrate(
+        _full_psi_integrand,
+        (floatify(rc), floatify(zc), floatify(zp), floatify(d_rc), floatify(d_zc)),
+        [[0, floatify(rp)], [0, np.pi]],
+    )
+    fac_B = 2e-7 * j_tor * rp  # MU_0/(2*np.pi)
+    fac_psi = 2e-7 * j_tor
+
+    return fac_B * Br, fac_B * Bz, fac_psi * psi
 
 
 @numba.jit(nopython=True)
