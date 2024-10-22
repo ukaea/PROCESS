@@ -40,7 +40,7 @@ all new models should have their own function
 
 ### Functions
 
-Use a lowercase word or words. Separate words by underscores to improve readability.
+Use a lowercase word or words. Separate words by underscores(`_`) to improve readability.
 
 ### Switches
 
@@ -57,6 +57,11 @@ If the constants doesn't exist then add it with a source link and uncertainty va
 ### Variables
 
 Use a lowercase single letter, word, or words. Separate words with underscores to improve readability.
+If converting between units it may be required to have some capital letters at the end of the variable name to differentiate between different orders of magnitude, `m` and `M` etc.
+
+#### Variables representing fractions
+
+If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
 
 ### Length
 
@@ -75,6 +80,8 @@ Another example would be pulse length
 ```fortran
 time_pulse_length = 7200.0
 ```
+
+------------------
 
 ### Units
 
@@ -125,32 +132,40 @@ ii
 
 | Variable name | Description | Units |
 | ------------- | ----------- | :---: |
-| `i_plasma`    | Plasma current | A |
-| `i_plasma_ma` | Plasma current | MA |
+| `plasma_current`    | Plasma current | A |
+| `plasma_current_MA` | Plasma current | MA |
 | `b_t_onaxis`  | Toroidal field on-axis | T |
 | `b_t_max`     | Max toroidal field | T |
 | `n_electron_vol` | Volume average electron density | m-3 |
 | `t_electron_vol_ev` | Volume avgerage electron temperature | eV |
-| `m_steel` | Mass of steel | kg |
-| `m_steel_tonne` | Mass of steel | tonne |
+| `mass_steel` | Mass of steel | kg |
+| `mass_steel_tonne` | Mass of steel | tonne |
 | `e_neutron_ev` | Energy of neutron | eV |
-| `e_neutron_mev` | Energy of neutron | MeV |
+| `e_neutron_MeV` | Energy of neutron | MeV |
 | `v_tf_dump` | TF dump voltage | V |
 | `time_plant_life` | Plant lifetime | s |
 | `time_plant_life_yrs` | Plant lifetime | years |
 | `dr_tf_inboard_leg` | TF coil inboard leg radial thickness | m |
 | `dr_blanket_inboard` | Inboard blanket thickness | m |
 | `velocity_coolant` | TF centrepost coolant velocity | m/s |
-| `vol_plasma` | Plasma volume | m3 |
-| `a_plasma` | Plasma area | m2 |
+| `plasma_volume` | Plasma volume | m3 |
+| `plasma_area` | Plasma area | m2 |
 | `angle_div_target` | Divertor target angle | radians |
 | `angle_div_target_deg` | Divertor target angle | deg |
 | `sig_tf_r` | TF radial stress  | Pa |
 | `` |  |  |
 
-Please see issue 940 <a href = "https://github.com/ukaea/PROCESS/issues/940"> to discuss new conventions.
+Please see issue [#940](https://github.com/ukaea/PROCESS/issues/940) to discuss new conventions.
+
+## Type-Hints
+
+It is greatly encouraged and recommended to include type hints for all inputs and outputs in Python. Please follow the guidelines set out in [PEP-484](https://peps.python.org/pep-0484/).
 
 ## Docstrings
+
+### Functions
+
+If writing in new Python functions please use the docstring template below.
 
 ```python
 def function_name(param1, param2):
@@ -174,6 +189,43 @@ def function_name(param1, param2):
          (Use a verbose reference style that has a clickable DOI or HTML link.)
     """    
 ```
+
+### Classes
+
+If writing in new Python classes please use the docstring template below.
+
+```python
+class ClassName:
+    """
+    Brief description of the class.
+
+    Detailed description of the class. This can include information about the purpose
+    of the class, how it should be used, and any other relevant details.
+
+    Attributes:
+        attribute1 (type): Description of attribute1.
+        attribute2 (type): Description of attribute2.
+        attribute3 (type): Description of attribute3.
+        attribute4 (type): Description of attribute4.
+
+    Methods:
+        method1(): Description of method1.
+        method2(): Description of method2.
+        method3(): Description of method3.
+        method4(): Description of method4.
+    """
+```
+
+## Comments
+
+- **Comments that contradict the code are worse than no comments**
+
+- Comments should be complete sentences. The first word should be capitalized, unless it is an identifier that begins with a lower case letter.
+
+- Use inline comments sparingly.
+
+- Comments above apply to code below.
+
 
 ## Code Documentation Using FORD
 
