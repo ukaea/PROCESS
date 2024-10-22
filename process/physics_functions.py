@@ -1342,20 +1342,42 @@ def beam_reaction_rate(relative_mass_ion: float, critical_velocity: float, beam_
     return t1 * svint
 
 
-def _hot_beam_fusion_reaction_rate_integrand(u, vcritx):
-    """Integrand function for the hot beam fusion reaction rate
-    author: P J Knight, CCFE, Culham Science Centre
-
-    :param u: ratio of beam velocity to the critical velocity
+def _hot_beam_fusion_reaction_rate_integrand(velocity_ratio: float, critical_velocity: float) -> float:
     """
-    t1 = (u**3) / (1.0 + u**3)
+    Integrand function for the hot beam fusion reaction rate.
 
-    # vcritx : critical velocity for electron/ion slowing down of beam ion (m/s)
-    xvc = vcritx * u
-    xvcs = xvc * xvc * constants.proton_mass / (constants.electron_charge * 1000.0)
-    t2 = _beam_fusion_cross_section(xvcs)
+    This function computes the integrand for the hot beam fusion reaction rate
+    based on the ratio of beam velocity to the critical velocity and the critical
+    velocity for electron/ion slowing down of the beam ion.
 
-    return t1 * t2
+    Parameters:
+        velocity_ratio (float): Ratio of beam velocity to the critical velocity.
+        critical_velocity (float): Critical velocity for electron/ion slowing down of the beam ion (m/s).
+
+    Returns:
+        float: Value of the integrand for the hot beam fusion reaction rate.
+
+    Notes:
+        - The function uses the ratio of the beam velocity to the critical velocity
+          to compute the integrand.
+        - The integrand involves the fusion reaction cross-section and the critical
+          velocity for electron/ion slowing down of the beam ion.
+
+    References:
+        - P J Knight, CCFE, Culham Science Centre
+    """
+    intgeral_term = (velocity_ratio**3) / (1.0 + velocity_ratio**3)
+
+    # critical_velocity : critical velocity for electron/ion slowing down of beam ion (m/s)
+    beam_velcoity = critical_velocity * velocity_ratio
+
+    # Calculate the beam kinetic energy per amu and normalise to keV
+    xvcs = beam_velcoity**2 * constants.atomic_mass_unit / (constants.kiloelectron_volt)
+
+    # Calculate the fusion reaction cross-section from beam kinetic energy
+    cross_section = _beam_fusion_cross_section(xvcs)
+
+    return intgeral_term * cross_section
 
 
 def _beam_fusion_cross_section(vrelsq: float) -> float:
@@ -1376,8 +1398,8 @@ def _beam_fusion_cross_section(vrelsq: float) -> float:
 
     Notes:
         - The cross-section is limited at low and high beam energies.
-        - For beam kinetic energy less than 10 keV, the cross-section is set to 1.0e-27 m^2.
-        - For beam kinetic energy greater than 10,000 keV, the cross-section is set to 8.0e-26 m^2.
+        - For beam kinetic energy less than 10 keV, the cross-section is set to 1.0e-27 cm^2.
+        - For beam kinetic energy greater than 10,000 keV, the cross-section is set to 8.0e-26 cm^2.
         - The cross-section is calculated using a functional form with parameters a1 to a5.
 
     References:

@@ -34,6 +34,23 @@ The constants are defined as:
 
 ### Beam fusion reaction rate integrand | `_hot_beam_fusion_reaction_rate_integrand()`
 
+### Hot Beam Fusion Reaction Rate Integrand | `_hot_beam_fusion_reaction_rate_integrand()`
+
+This function computes the integrand for the hot beam fusion reaction rate based on the ratio of beam velocity to the critical velocity and the critical velocity for electron/ion slowing down of the beam ion.
+
+The integrand function is:
+
+$$
+\int \frac{u^3}{1+u^3}\sigma_{\text{bmfus}}(E_{\text{amu}})
+$$
+
+Where $u$ is the inputted ratio of the beam to the critical velocity.
+$E_{\text{amu}}$ represents the beam kinetic energy per atomic mass unit.
+
+The calculated beam fusion cross section $\sigma_{\text{bmfus}}$ is calculated from [`_beam_fusion_cross_section()`](#beam-fusion-cross-section--_beam_fusion_cross_section)
+
+-------------------------------
+
 ### Beam fusion alpha power | `alpha_power_beam()`
 
 ### Beam energy given to ions | `beam_energy_to_ions()`
