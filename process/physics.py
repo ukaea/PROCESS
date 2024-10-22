@@ -1718,6 +1718,17 @@ class Physics:
             )
         )
 
+        current_drive_variables.bscf_aries = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_aries(
+                betap=physics_variables.betap,
+                rli=physics_variables.rli,
+                core_density=physics_variables.ne0,
+                average_desnity=physics_variables.dene,
+                inverse_aspect=physics_variables.eps,
+            )
+        )
+
         if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
             current_drive_variables.bootstrap_current_fraction = abs(
                 current_drive_variables.bootstrap_current_fraction_max
@@ -1748,6 +1759,10 @@ class Physics:
                 current_drive_variables.bootstrap_current_fraction = (
                     current_drive_variables.bscf_sakai
                 )
+            elif physics_variables.i_bootstrap_current == 6:
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_sauter
+                ) 
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
                 error_handling.report_error(75)
@@ -4837,7 +4852,6 @@ class Physics:
                 current_drive_variables.bscf_wilson,
                 "OP ",
             )
-
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Sakai)",
@@ -4845,6 +4859,14 @@ class Physics:
                 current_drive_variables.bscf_sakai,
                 "OP ",
             )
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (ARIES)",
+                "(bscf_aries)",
+                current_drive_variables.bscf_aries,
+                "OP ",
+            )
+            
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (Hender)",
@@ -5536,6 +5558,7 @@ class Physics:
         alphan (float): Density profile index
         alphat (float): Temperature profile index
         eps (float): Inverse aspect ratio.
+        rli (float): Internal Inductance
 
         Returns:
         float: The calculated bootstrap fraction.
@@ -5564,6 +5587,43 @@ class Physics:
             * alphan ** (0.13 * eps + 0.05)
             * alphat ** (0.502 * eps - 0.273)
         )
+
+    @staticmethod
+    def bootstrap_fraction_aries(
+        betap: float,
+        rli: float,
+        core_density: float,
+        average_desnity: float,
+        inverse_aspect: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the ARIES formula.
+
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        rli (float): Plasma normalized internal inductance.
+        core_density (float): Core plasma density.
+        average_density (float): Average plasma density.
+        inverse_aspect (float): Inverse aspect ratio.o.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+
+        References:
+            - Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants,”
+              Fusion Engineering and Design, vol. 85, no. 2, pp. 243–265, Apr. 2010,
+              doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
+
+        """
+        # Using the standard variable naming from the ARIES paper
+        a_1 = 1.10-1.165*rli+0.47*rli**2
+        b_1 = 0.806 - 0.885*rli + 0.297*rli**2
+
+        c_bs = a_1+b_1*(core_density/average_desnity)
+
+        return c_bs * np.sqrt(inverse_aspect) * betap
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance

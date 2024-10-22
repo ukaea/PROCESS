@@ -7,7 +7,7 @@ Some more info can be found [here](https://wiki.fusion.ciemat.es/wiki/Bootstrap_
 
 The fraction of the plasma current provided by the bootstrap effect
 can be either input into the code directly, or calculated using one of five
-methods, as summarised here. Note that methods `i_bootstrap_current = 1-3 & 5` do not take into account the 
+methods, as summarised here. Note that methods `i_bootstrap_current = 1-3 & 5-6` do not take into account the
 existence of pedestals, whereas the Sauter et al. scaling 
 (`i_bootstrap_current = 4`) allows general profiles to be used. 
 
@@ -460,7 +460,7 @@ The $-1$ subscript in this case refers to the value of the variable in the previ
 
 ### Sakai Scaling | `bootstrap_fraction_sakai()`
 
-Is selected by setting `i_bootstrap_current = 5`[^5]
+Is selected by setting `i_bootstrap_current = 5`[^6]
 
 $$
 f_{\text{BS}} = 10^{0.951 \epsilon - 0.948} \cdot \beta_p^{1.226 \epsilon + 1.584} \cdot l_i^{-0.184\epsilon - 0.282} \cdot \left(\frac{q_{95}}{q_0}\right)^{-0.042 \epsilon - 0.02} \\
@@ -468,6 +468,28 @@ f_{\text{BS}} = 10^{0.951 \epsilon - 0.948} \cdot \beta_p^{1.226 \epsilon + 1.58
 $$
 
 The model includes the toroidal diamagnetic current in the calculation due to the dataset, so `i_diamagnetic_current = 0` can only be used with it
+
+-------------------
+
+### ARIES Scaling | `bootstrap_fraction_aries()`
+
+Is selected by setting `i_bootstrap_current = 6`[^8]
+
+$$
+a_1 = 1.10-1.165l_{\text{i}}+0.47l_{\text{i}}^2
+$$
+
+$$
+b_1 = 0.806-0.885l_{\text{i}}+0.297l_{\text{i}}^2
+$$
+
+$$
+C_{\text{BS}} = a_1+b_1\left(\frac{n(0)}{\langle n \rangle}\right)
+$$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} \sqrt{\epsilon}\beta_{\text{p}}
+$$
 
 ---------------------
 
@@ -500,5 +522,4 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^5]: O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum: “Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime” [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052  
 [^6]: Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2019.111322.
 [^7]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992 
-
-
+[^8]: Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants, ”Fusion Engineering and Design, vol. 85, no. 2, pp. 243–265, Apr. 2010, doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
