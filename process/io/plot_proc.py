@@ -2947,7 +2947,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     axis.violinplot(data, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(data, showfliers=True)
+    axis.boxplot(data, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data)))
