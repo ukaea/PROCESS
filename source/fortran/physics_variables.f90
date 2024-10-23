@@ -253,6 +253,7 @@ module physics_variables
   !! - =6 for ARIES scaling
   !! - =7 for Andrade et al scaling
   !! - =8 for Hoang et al scaling
+  !! - =9 for Wong et al scaling
 
   integer :: iculbl
   !! switch for beta limit scaling (`constraint equation 24`)

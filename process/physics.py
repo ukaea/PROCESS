@@ -1,6 +1,7 @@
 import math
 from typing import Tuple
 import numpy as np
+import scipy
 import numba as nb
 from scipy.optimize import root_scalar
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -1749,6 +1750,17 @@ class Physics:
             )
         )
 
+        current_drive_variables.bscf_wong = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_wong(
+                betap=physics_variables.betap,
+                density_index=physics_variables.alphan,
+                temperature_index=physics_variables.alphat,
+                inverse_aspect=physics_variables.eps,
+                elongation=physics_variables.kappa,
+            )
+        )
+
         if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
             current_drive_variables.bootstrap_current_fraction = abs(
                 current_drive_variables.bootstrap_current_fraction_max
@@ -1791,6 +1803,10 @@ class Physics:
                 current_drive_variables.bootstrap_current_fraction = (
                     current_drive_variables.bscf_hoang
                 )
+            elif physics_variables.i_bootstrap_current == 9:
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_wong
+                )    
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
                 error_handling.report_error(75)
@@ -4922,6 +4938,14 @@ class Physics:
                 current_drive_variables.bscf_hoang,
                 "OP ",
             )
+            
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Wong)",
+                "(bscf_wong)",
+                current_drive_variables.bscf_wong,
+                "OP ",
+            )
 
             po.ovarrf(
                 self.outfile,
@@ -4994,6 +5018,12 @@ class Physics:
                     self.outfile,
                     "  (Hoang et al bootstrap current fraction model used)",
                 )
+            elif physics_variables.i_bootstrap_current == 9:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Wong et al bootstrap current fraction model used)",
+                )    
+                
 
             if physics_variables.i_diamagnetic_current == 0:
                 po.ocmmnt(
@@ -5740,23 +5770,22 @@ class Physics:
         inverse_aspect: float,
     ) -> float:
         """
-                Calculate the bootstrap fraction using the Hoang et al formula.
+        Calculate the bootstrap fraction using the Hoang et al formula.
 
-                Parameters:
-                betap (float): Plasma poloidal beta.
-                pressure_index (float): Pressure profile index.
-                current_index (float): Current profile index.
-                inverse_aspect (float): Inverse aspect ratio.
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        pressure_index (float): Pressure profile index.
+        current_index (float): Current profile index.
+        inverse_aspect (float): Inverse aspect ratio.
 
-                Returns:
-                float: The calculated bootstrap fraction.
+        Returns:
+        float: The calculated bootstrap fraction.
 
-                Notes:
+        Notes:
 
-                References:
-                    - G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings,
-                      Jan. 1997, doi: https://doi.org/10.1063/1.53414.
-        ‌
+        References:
+            - G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings,
+              Jan. 1997, doi: https://doi.org/10.1063/1.53414.
         """
 
         # Using the standard variable naming from the Hoang et.al. paper
@@ -5765,6 +5794,40 @@ class Physics:
         c_bs = np.sqrt(pressure_index / current_index)
 
         return 0.4 * np.sqrt(inverse_aspect) * betap**0.9 * c_bs
+
+    @staticmethod
+    def bootstrap_fraction_wong(
+        betap: float,
+        density_index: float,
+        temperature_index: float,
+        inverse_aspect: float,
+        elongation: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Wong et al formula.
+
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        density_index (float): Density profile index.
+        temperature_index (float): Temperature profile index.
+        inverse_aspect (float): Inverse aspect ratio.
+        elongation (float): Plasma elongation.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+
+        References:
+            - C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,”
+              vol. 42, no. 5, pp. 547–556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
+        """
+        # Using the standard variable naming from the Wong et.al. paper
+        f_peak = 2.0/scipy.special.beta(0.5, density_index + temperature_index + 1)
+
+        c_bs = 0.773 + 0.019 * elongation
+
+        return c_bs * f_peak**0.25 * betap * np.sqrt(inverse_aspect)
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance

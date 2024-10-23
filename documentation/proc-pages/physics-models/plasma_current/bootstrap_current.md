@@ -525,6 +525,32 @@ $$
 
 ---------------------
 
+### Wong Scaling | `bootstrap_fraction_wong()`
+
+Is selected by setting `i_bootstrap_current = 9`[^11]
+
+$$
+C_{\text{BS}} = 0.773+0.019\kappa
+$$
+
+$$
+f_{\text{peak}} = \left(\int_0^1 \left(1-\rho^2 \right)^{\alpha_{\text{T}}} \left(1-\rho^2 \right)^{\alpha_{\text{n}}} \ \ \mathrm{d\rho}\right)^{-1}
+$$
+
+The integral above is set by the definite solution below
+
+$$
+\frac{\operatorname{B}\left(\frac{1}{2},{\alpha}_{n} + {\alpha}_{T} + 1\right)}{2}
+$$
+
+Assuming that $\alpha_{\text{n}} + \alpha_{\text{T}} > 0,   \alpha_{\text{n}} + \alpha_{\text{T}} + 1 > 0$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} f_{\text{peak}}^{0.25}\beta_{\text{p}}\sqrt{\epsilon}
+$$
+
+---------------------
+
 ## Setting of maximum desirable bootstrap current fraction
 
 The variable `bootstrap_current_fraction_max` can be set to the value of maximum desirable bootstrap current fraction for a specific design. When optimising if the value of the calculated `bootstrap_current_fraction` for the model selected with `i_bootstrap_current` exceeds this value, then `bootstrap_current_fraction` is set to the value of `bootstrap_current_fraction_max`.
@@ -557,3 +583,4 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^8]: Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants, ”Fusion Engineering and Design, vol. 85, no. 2, pp. 243–265, Apr. 2010, doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
 [^9]: M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,” Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001–065001, Apr. 2008, doi: https://doi.org/10.1088/0741-3335/50/6/065001.
 [^10]: G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings, Jan. 1997, doi: https://doi.org/10.1063/1.53414.
+[^11]: C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,” vol. 42, no. 5, pp. 547–556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
