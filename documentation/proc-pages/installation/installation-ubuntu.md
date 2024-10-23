@@ -43,7 +43,7 @@ git clone https://github.com/ukaea/PROCESS
 cd PROCESS
 ```
 
-If you would like to install PROCESS using a package manager such as conda, follow the instructions for [HPC installation](https://ukaea.github.io/PROCESS/installation/csd3-for-process/). Otherwise, create and activate a virtual environment. Note that you must use Python 3.8 - 3.11:
+If you would like to install PROCESS using a package manager such as conda, follow the instructions for [HPC installation](https://ukaea.github.io/PROCESS/installation/csd3-for-process/). Otherwise, create and activate a virtual environment, as shown below. Note that you must use Python 3.10 or 3.11:
 
 ```bash
 python3 -m venv env
