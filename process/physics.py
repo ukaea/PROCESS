@@ -1739,6 +1739,16 @@ class Physics:
             )
         )
 
+        current_drive_variables.bscf_hoang = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_hoang(
+                betap=physics_variables.betap,
+                pressure_index=physics_variables.alphap,
+                current_index=physics_variables.alphaj,
+                inverse_aspect=physics_variables.eps,
+            )
+        )
+
         if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
             current_drive_variables.bootstrap_current_fraction = abs(
                 current_drive_variables.bootstrap_current_fraction_max
@@ -1776,6 +1786,10 @@ class Physics:
             elif physics_variables.i_bootstrap_current == 7:
                 current_drive_variables.bootstrap_current_fraction = (
                     current_drive_variables.bscf_andrade
+                )
+            elif physics_variables.i_bootstrap_current == 8:
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_hoang
                 )
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
@@ -4901,6 +4915,13 @@ class Physics:
                 current_drive_variables.bscf_andrade,
                 "OP ",
             )
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Hoang)",
+                "(bscf_hoang)",
+                current_drive_variables.bscf_hoang,
+                "OP ",
+            )
 
             po.ovarrf(
                 self.outfile,
@@ -4957,6 +4978,21 @@ class Physics:
                 po.ocmmnt(
                     self.outfile,
                     "  (Sakai et al bootstrap current fraction model used)",
+                )
+            elif physics_variables.i_bootstrap_current == 6:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (ARIES bootstrap current fraction model used)",
+                )
+            elif physics_variables.i_bootstrap_current == 7:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Andrade et al bootstrap current fraction model used)",
+                )
+            elif physics_variables.i_bootstrap_current == 8:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Hoang et al bootstrap current fraction model used)",
                 )
 
             if physics_variables.i_diamagnetic_current == 0:
@@ -5653,10 +5689,10 @@ class Physics:
 
         """
         # Using the standard variable naming from the ARIES paper
-        a_1 = 1.10-1.165*rli+0.47*rli**2
-        b_1 = 0.806 - 0.885*rli + 0.297*rli**2
+        a_1 = 1.10 - 1.165 * rli + 0.47 * rli**2
+        b_1 = 0.806 - 0.885 * rli + 0.297 * rli**2
 
-        c_bs = a_1+b_1*(core_density/average_desnity)
+        c_bs = a_1 + b_1 * (core_density / average_desnity)
 
         return c_bs * np.sqrt(inverse_aspect) * betap
 
@@ -5695,6 +5731,40 @@ class Physics:
         c_bs = 0.2340
 
         return c_bs * np.sqrt(inverse_aspect) * betap * c_p**0.8
+
+    @staticmethod
+    def bootstrap_fraction_hoang(
+        betap: float,
+        pressure_index: float,
+        current_index: float,
+        inverse_aspect: float,
+    ) -> float:
+        """
+                Calculate the bootstrap fraction using the Hoang et al formula.
+
+                Parameters:
+                betap (float): Plasma poloidal beta.
+                pressure_index (float): Pressure profile index.
+                current_index (float): Current profile index.
+                inverse_aspect (float): Inverse aspect ratio.
+
+                Returns:
+                float: The calculated bootstrap fraction.
+
+                Notes:
+
+                References:
+                    - G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings,
+                      Jan. 1997, doi: https://doi.org/10.1063/1.53414.
+        ‌
+        """
+
+        # Using the standard variable naming from the Hoang et.al. paper
+        # These terms do not equal the profile indexes, though are closely linked
+
+        c_bs = np.sqrt(pressure_index / current_index)
+
+        return 0.4 * np.sqrt(inverse_aspect) * betap**0.9 * c_bs
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance

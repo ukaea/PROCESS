@@ -511,6 +511,20 @@ $$
 
 ---------------------
 
+### Hoang Scaling | `bootstrap_fraction_hoang()`
+
+Is selected by setting `i_bootstrap_current = 8`[^10]
+
+$$
+C_{\text{BS}} = \sqrt{\frac{\alpha_{\text{p}}}{\alpha_{\text{j}}}}
+$$
+
+$$
+f_{\text{BS}} = 0.4C_{\text{BS}} \sqrt{\epsilon}\beta_{\text{p}}^{0.9}
+$$
+
+---------------------
+
 ## Setting of maximum desirable bootstrap current fraction
 
 The variable `bootstrap_current_fraction_max` can be set to the value of maximum desirable bootstrap current fraction for a specific design. When optimising if the value of the calculated `bootstrap_current_fraction` for the model selected with `i_bootstrap_current` exceeds this value, then `bootstrap_current_fraction` is set to the value of `bootstrap_current_fraction_max`.
@@ -542,3 +556,4 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^7]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992 
 [^8]: Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants, ”Fusion Engineering and Design, vol. 85, no. 2, pp. 243–265, Apr. 2010, doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
 [^9]: M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,” Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001–065001, Apr. 2008, doi: https://doi.org/10.1088/0741-3335/50/6/065001.
+[^10]: G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings, Jan. 1997, doi: https://doi.org/10.1063/1.53414.

@@ -2914,6 +2914,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     boot_sakai = mfile_data.data["bscf_sakai"].get_scan(scan)
     boot_aries = mfile_data.data["bscf_aries"].get_scan(scan)
     boot_andrade = mfile_data.data["bscf_andrade"].get_scan(scan)
+    boot_hoang = mfile_data.data["bscf_hoang"].get_scan(scan)
 
     # Data for the box plot
     data = [
@@ -2924,6 +2925,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         boot_sakai,
         boot_aries,
         boot_andrade,
+        boot_hoang,
     ]
     labels = [
         "IPDG",
@@ -2933,6 +2935,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         "Sakai",
         "ARIES",
         "Andrade",
+        "Hoang",
     ]
 
     x = np.ones(len(data))

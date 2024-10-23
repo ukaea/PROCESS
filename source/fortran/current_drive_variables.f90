@@ -51,6 +51,9 @@ module current_drive_variables
   real(dp) :: bscf_andrade
   !! Bootstrap current fraction, Andrade et al model
 
+  real(dp) :: bscf_hoang
+  !! Bootstrap current fraction, Hoang et al model
+
   real(dp) :: cboot
   !! bootstrap current fraction multiplier (`i_bootstrap_current=1`)
 
