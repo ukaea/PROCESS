@@ -6847,7 +6847,6 @@ def extended_plane_strain(
 
     A_vec_solution[:4] = numpy.linalg.solve(M_toinv, RHS_vec)
 
-    # maths_library.linesolv(M_toinv, RHS_vec, A_vec_solution[:4])
     A_vec_solution[4] = A_vec_solution[3]
     A_vec_solution[3] = 1
 
@@ -7051,8 +7050,6 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     # ***
     aa = numpy.asfortranarray(aa)
     cc = numpy.linalg.solve(aa, bb)
-
-    # maths_library.linesolv(aa, bb, cc)
 
     #  Multiply c by (-1) (John Last, internal CCFE memorandum, 21/05/2013)
     for ii in range(nlayers):

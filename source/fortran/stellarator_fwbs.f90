@@ -54,8 +54,6 @@ contains
     use physics_variables, only: wallmw
     use tfcoil_variables, only: casthi, i_tf_sup, tfsai, tfsao, dr_tf_wp, &
       tinstf
-
-		use maths_library, only: tril
     implicit none
 
     !  Arguments

@@ -38,7 +38,6 @@ contains
     use numerics, only: active_constraints, ncalls, ipnvars, ioptimz
     use global_variables, only: run_tests, verbose, output_prefix
 		use constants, only: mfile
-    use maths_library, only: secant_solve
     implicit none
 
     !  Arguments
