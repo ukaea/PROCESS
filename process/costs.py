@@ -1144,27 +1144,27 @@ class Costs:
                 * (
                     cost_variables.ucblss
                     * (
-                        ife_variables.fwmatm(1, 1)
-                        + ife_variables.fwmatm(2, 1)
-                        + ife_variables.fwmatm(3, 1)
+                        ife_variables.fwmatm[0, 0]
+                        + ife_variables.fwmatm[1, 0]
+                        + ife_variables.fwmatm[2, 0]
                     )
                     + ife_variables.uccarb
                     * (
-                        ife_variables.fwmatm(1, 2)
-                        + ife_variables.fwmatm(2, 2)
-                        + ife_variables.fwmatm(3, 2)
+                        ife_variables.fwmatm[0, 1]
+                        + ife_variables.fwmatm[1, 1]
+                        + ife_variables.fwmatm[2, 1]
                     )
                     + cost_variables.ucblli2o
                     * (
-                        ife_variables.fwmatm(1, 4)
-                        + ife_variables.fwmatm(2, 4)
-                        + ife_variables.fwmatm(3, 4)
+                        ife_variables.fwmatm[0, 3]
+                        + ife_variables.fwmatm[1, 3]
+                        + ife_variables.fwmatm[2, 3]
                     )
                     + ife_variables.ucconc
                     * (
-                        ife_variables.fwmatm(1, 5)
-                        + ife_variables.fwmatm(2, 5)
-                        + ife_variables.fwmatm(3, 5)
+                        ife_variables.fwmatm[0, 4]
+                        + ife_variables.fwmatm[1, 4]
+                        + ife_variables.fwmatm[2, 4]
                     )
                 )
             )
@@ -1232,18 +1232,18 @@ class Costs:
                 1.0e-6
                 * ife_variables.uccarb
                 * (
-                    ife_variables.blmatm(1, 2)
-                    + ife_variables.blmatm(2, 2)
-                    + ife_variables.blmatm(3, 2)
+                    ife_variables.blmatm[0, 1]
+                    + ife_variables.blmatm[1, 1]
+                    + ife_variables.blmatm[2, 1]
                 )
             )
             self.c22126 = (
                 1.0e-6
                 * ife_variables.ucconc
                 * (
-                    ife_variables.blmatm(1, 5)
-                    + ife_variables.blmatm(2, 5)
-                    + ife_variables.blmatm(3, 5)
+                    ife_variables.blmatm[0, 4]
+                    + ife_variables.blmatm[1, 4]
+                    + ife_variables.blmatm[2, 4]
                 )
             )
             self.c22127 = 1.0e-6 * ife_variables.ucflib * ife_variables.mflibe
@@ -1298,27 +1298,27 @@ class Costs:
                 * (
                     cost_variables.ucshld
                     * (
-                        ife_variables.shmatm(1, 1)
-                        + ife_variables.shmatm(2, 1)
-                        + ife_variables.shmatm(3, 1)
+                        ife_variables.shmatm[0, 0]
+                        + ife_variables.shmatm[1, 0]
+                        + ife_variables.shmatm[2, 0]
                     )
                     + ife_variables.uccarb
                     * (
-                        ife_variables.shmatm(1, 2)
-                        + ife_variables.shmatm(2, 2)
-                        + ife_variables.shmatm(3, 2)
+                        ife_variables.shmatm[0, 1]
+                        + ife_variables.shmatm[1, 1]
+                        + ife_variables.shmatm[2, 1]
                     )
                     + cost_variables.ucblli2o
                     * (
-                        ife_variables.shmatm(1, 4)
-                        + ife_variables.shmatm(2, 4)
-                        + ife_variables.shmatm(3, 4)
+                        ife_variables.shmatm[0, 3]
+                        + ife_variables.shmatm[1, 3]
+                        + ife_variables.shmatm[2, 3]
                     )
                     + ife_variables.ucconc
                     * (
-                        ife_variables.shmatm(1, 5)
-                        + ife_variables.shmatm(2, 5)
-                        + ife_variables.shmatm(3, 5)
+                        ife_variables.shmatm[0, 4]
+                        + ife_variables.shmatm[1, 4]
+                        + ife_variables.shmatm[2, 4]
                     )
                 )
             )
