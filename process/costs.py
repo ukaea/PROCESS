@@ -2885,14 +2885,20 @@ class Costs:
             fwbs_variables.bktlife_cal = fwbs_variables.bktlife * cost_variables.cfactr
             # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
             cost_variables.cdrlife_cal = fwbs_variables.bktlife_cal
+        else:
+            fwbs_variables.bktlife_cal = fwbs_variables.bktlife
 
         # Divertor
         if cost_variables.divlife < cost_variables.tlife:
             cost_variables.divlife_cal = cost_variables.divlife * cost_variables.cfactr
+        else:
+            cost_variables.divlife_cal = cost_variables.divlife
 
         # Centrepost
-        if (
-            physics_variables.itart == 1
-            and cost_variables.cplife < cost_variables.tlife
-        ):
-            cost_variables.cplife_cal = cost_variables.cplife * cost_variables.cfactr
+        if physics_variables.itart == 1:
+            if cost_variables.cplife < cost_variables.tlife:
+                cost_variables.cplife_cal = (
+                    cost_variables.cplife * cost_variables.cfactr
+                )
+            else:
+                cost_variables.cplife_cal = cost_variables.cplife
