@@ -5718,7 +5718,7 @@ class Physics:
         betap: float,
         rli: float,
         core_density: float,
-        average_desnity: float,
+        average_density: float,
         inverse_aspect: float,
     ) -> float:
         """
@@ -5735,6 +5735,7 @@ class Physics:
         float: The calculated bootstrap fraction.
 
         Notes:
+            - The source reference does not provide any info about the derivation of the formula. It is only stated
 
         References:
             - Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants,”
@@ -5746,7 +5747,7 @@ class Physics:
         a_1 = 1.10 - 1.165 * rli + 0.47 * rli**2
         b_1 = 0.806 - 0.885 * rli + 0.297 * rli**2
 
-        c_bs = a_1 + b_1 * (core_density / average_desnity)
+        c_bs = a_1 + b_1 * (core_density / average_density)
 
         return c_bs * np.sqrt(inverse_aspect) * betap
 

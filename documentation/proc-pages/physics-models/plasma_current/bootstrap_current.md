@@ -475,6 +475,8 @@ The model includes the toroidal diamagnetic current in the calculation due to th
 
 Is selected by setting `i_bootstrap_current = 6`[^8]
 
+The source reference[^8] does not provide any info about the derivation of the formula. It is only stated like that shown below.
+
 $$
 a_1 = 1.10-1.165l_{\text{i}}+0.47l_{\text{i}}^2
 $$
