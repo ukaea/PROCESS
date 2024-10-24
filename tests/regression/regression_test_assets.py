@@ -21,9 +21,7 @@ class TrackedMFile:
 
 
 class RegressionTestAssetCollector:
-    remote_repository_url = (
-        "https://api.github.com/repos/timothy-nunn/process-tracking-data/contents/"
-    )
+    remote_repository_url = "https://api.github.com/repos/timothy-nunn/process-tracking-data/git/trees/master"
 
     def __init__(self) -> None:
         self._hashes = self._git_commit_hashes()
@@ -88,7 +86,7 @@ class RegressionTestAssetCollector:
         hashes returned from `_git_commit_hashes`.
         :rtype: list[TrackedMFile]
         """
-        repository_files = requests.get(self.remote_repository_url).json()
+        repository_files = requests.get(self.remote_repository_url).json()["tree"]
 
         # create a list of tracked MFiles from the list of all files
         # in the remote repository.
@@ -121,12 +119,12 @@ class RegressionTestAssetCollector:
         tracked mfile.
         :rtype: TrackedMFile | None
         """
-        rematch = re.match(r"([a-zA-Z0-9_.]+)_MFILE_([a-z0-9]+).DAT", json_data["name"])
+        rematch = re.match(r"([a-zA-Z0-9_.]+)_MFILE_([a-z0-9]+).DAT", json_data["path"])
 
         if rematch is None:
             return None
         return TrackedMFile(
             hash=rematch.group(2),
             scenario_name=rematch.group(1),
-            download_link=json_data["download_url"],
+            download_link=f"https://raw.githubusercontent.com/timothy-nunn/process-tracking-data/master/{json_data['path']}",
         )
