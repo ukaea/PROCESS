@@ -45,8 +45,23 @@ module current_drive_variables
   real(dp) :: bscf_sakai
   !! Bootstrap current fraction, Sakai et al model
 
+  real(dp) :: bscf_aries
+  !! Bootstrap current fraction, ARIES model
+
+  real(dp) :: bscf_andrade
+  !! Bootstrap current fraction, Andrade et al model
+
+  real(dp) :: bscf_hoang
+  !! Bootstrap current fraction, Hoang et al model
+
+  real(dp) :: bscf_wong
+  !! Bootstrap current fraction, Wong et al model
+
+  real(dp) :: bscf_gi
+  !! Bootstrap current fraction, Gi et al model
+
   real(dp) :: cboot
-  !! bootstrap current fraction multiplier (`i_bootstrap_current=1`)
+  !! bootstrap current fraction multiplier
 
   real(dp) :: cnbeam
   !! neutral beam current (A)

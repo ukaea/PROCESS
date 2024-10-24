@@ -564,6 +564,54 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     assert bfs == pytest.approx(bootstrapfractionsakaiparam.expected_bfs)
 
 
+class BootstrapFractionAriesParam(NamedTuple):
+    betap: Any = None
+
+    rli: Any = None
+
+    core_density: Any = None
+
+    average_density: Any = None
+
+    inverse_aspect: Any = None
+
+    expected_bfs: Any = None
+
+
+@pytest.mark.parametrize(
+    "bootstrapfractionariesparam",
+    (
+        BootstrapFractionAriesParam(
+            betap=1.2708883332338736,
+            rli=1.4279108047138775,
+            core_density=1.0695994460047332E+20,
+            average_density=8.1317358967210131E+19,
+            inverse_aspect=1 / 3,
+            expected_bfs=4.3237405809568441E-01,
+        ),
+    ),
+)
+def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
+    """
+    Automatically generated Regression Unit Test for bootstrap_fraction_aries.
+
+    This test was generated using data from tests/regression/input_files/large_tokamak.IN.DAT.
+
+    :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
+    :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
+    """
+
+    bfs = physics.bootstrap_fraction_aries(
+        betap=bootstrapfractionariesparam.betap,
+        rli=bootstrapfractionariesparam.rli,
+        core_density=bootstrapfractionariesparam.core_density,
+        average_density=bootstrapfractionariesparam.average_density,
+        inverse_aspect=bootstrapfractionariesparam.inverse_aspect,
+    )
+
+    assert bfs == pytest.approx(bootstrapfractionariesparam.expected_bfs)
+
+
 class PlasmaCurrentParam(NamedTuple):
     normalised_total_beta: Any = None
 
