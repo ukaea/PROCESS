@@ -6,6 +6,8 @@ from process.final import finalise
 from process.io.mfile import MFile
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from typing import Union, Tuple, TYPE_CHECKING
+import warnings
+from tabulate import tabulate
 
 if TYPE_CHECKING:
     from process.main import Models
@@ -41,7 +43,36 @@ class Caller:
         :return: whether values agree or not
         :rtype: bool
         """
-        return np.allclose(previous, current, rtol=1.0e-6)
+        # Check for same shape: mfile length can change between iterations
+        if isinstance(previous, float) or previous.shape == current.shape:
+            return np.allclose(previous, current, rtol=1.0e-6, equal_nan=True)
+        else:
+            return False
+
+    @staticmethod
+    def check_mfile_agreement(
+        previous: dict[str, float], current: dict[str, float]
+    ) -> dict[str, list[float, float]]:
+        """Compare previous and current mfiles for agreement within a tolerance.
+
+        :param previous: variables and values from previous models evaluation
+        :type previous: dict[str,float]
+        :param current: variables and values from current models evaluation
+        :type current: dict[str,float]
+        :return: non-converged values
+        :rtype: dict[str, list[float, float]
+        """
+        nonconverged_vars = {}
+        for var in previous.keys():
+            if np.allclose(
+                previous[var], current.get(var, np.nan), rtol=1.0e-6, equal_nan=True
+            ):
+                continue
+            else:
+                # Value has changed between previous and current mfiles
+                nonconverged_vars[var] = [previous[var], current.get(var, np.nan)]
+
+        return nonconverged_vars
 
     def call_models(self, xc: np.ndarray, m: int) -> Tuple[float, np.ndarray]:
         """Evalutate models until results are idempotent.
@@ -113,7 +144,7 @@ class Caller:
         """
         # TODO The only way to ensure idempotence in all outputs is by comparing
         # mfiles at this stage
-        previous_mfile_arr = None
+        previous_mfile_data = None
 
         try:
             # Evaluate models up to 10 times; any more implies non-converging values
@@ -131,24 +162,25 @@ class Caller:
                     + "IDEM_MFILE.DAT"
                 )
                 mfile = MFile(mfile_path)
-                mfile_data = {}
-                for var in mfile.data.keys():
-                    mfile_data[var] = mfile.data[var].get_scan(-1)
+                # Create mfile dict of float values: only compare floats
+                mfile_data = {
+                    var: val
+                    for var in mfile.data.keys()
+                    if isinstance(val := mfile.data[var].get_scan(-1), float)
+                }
 
-                # Extract floats from mfile dict into array for straightforward
-                # comparison: only compare floats
-                current_mfile_arr = np.array(
-                    [val for val in mfile_data.values() if isinstance(val, float)]
-                )
-                if previous_mfile_arr is None:
+                if previous_mfile_data is None:
                     # First run: need another run to compare with
                     logger.debug(
                         "New mfile created: evaluating models again to check idempotence"
                     )
-                    previous_mfile_arr = np.copy(current_mfile_arr)
+                    previous_mfile_data = mfile_data.copy()
                     continue
 
-                if self.check_agreement(previous_mfile_arr, current_mfile_arr):
+                nonconverged_vars = self.check_mfile_agreement(
+                    previous_mfile_data, mfile_data
+                )
+                if len(nonconverged_vars) == 0:
                     # Previous and current mfiles agree (idempotent)
                     logger.debug("Mfiles idempotent, returning")
                     # Divert OUT.DAT and MFILE.DAT output back to original files
@@ -158,17 +190,32 @@ class Caller:
                     finalise(self.models, ifail)
                     return
 
-                # Mfiles not yet idempotent: re-evaluate models
+                # Mfiles not yet idempotent: need to re-evaluate models
                 logger.debug("Mfiles not idempotent, evaluating models again")
-                previous_mfile_arr = np.copy(current_mfile_arr)
+                previous_mfile_data = mfile_data.copy()
 
-            raise RuntimeError(
+            # Values haven't all stabilised after 10 evaluations
+            # Which variables are still changing?
+            warnings.warn(
                 "Model evaluations at the current optimisation parameter vector "
                 "don't produce idempotent values in the final output."
             )
+
+            print(
+                tabulate(
+                    [[k, v[0], v[1]] for k, v in nonconverged_vars.items()],
+                    headers=["Variable", "Previous value", "Current value"],
+                )
+            )
+
+            # Close idempotence files, write final output file and mfile
+            ft.init_module.close_idempotence_files()
+            finalise(self.models, ifail)
+            return
+
         except Exception:
-            # If exception in model evaluations or idempotence can't be
-            # achieved, delete intermediate idempotence files to clean up
+            # If exception in model evaluations delete intermediate idempotence
+            # files to clean up
             ft.init_module.close_idempotence_files()
             raise
 
