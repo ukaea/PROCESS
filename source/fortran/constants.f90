@@ -87,6 +87,9 @@ module constants
   real(dp), parameter :: n_day_year = 365.2425D0
   !! Average number of days in a year
 
+  real(dp), parameter :: speed_light = 2.997925d+08
+  !! The speed of light (m/s)
+
   contains
 
   subroutine init_constants
