@@ -621,7 +621,7 @@ contains
           call parse_real_variable('taumax', taumax, 0.1D0, 100.0D0, &
                'Maximum allowed energy confinement time (s)')
        case ('i_bootstrap_current')
-          call parse_int_variable('i_bootstrap_current', i_bootstrap_current, 1, 9, &
+          call parse_int_variable('i_bootstrap_current', i_bootstrap_current, 1, 10, &
                'Switch for bootstrap scaling')
        case ('iculbl')
           call parse_int_variable('iculbl', iculbl, 0, 3, &

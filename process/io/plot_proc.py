@@ -2916,6 +2916,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     boot_andrade = mfile_data.data["bscf_andrade"].get_scan(scan)
     boot_hoang = mfile_data.data["bscf_hoang"].get_scan(scan)
     boot_wong = mfile_data.data["bscf_wong"].get_scan(scan)
+    boot_gi = mfile_data.data["bscf_gi"].get_scan(scan)
 
     # Data for the box plot
     data = [
@@ -2928,6 +2929,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         boot_andrade,
         boot_hoang,
         boot_wong,
+        boot_gi,
     ]
     labels = [
         "IPDG",
@@ -2939,6 +2941,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         "Andrade",
         "Hoang",
         "Wong",
+        "Gi",
     ]
 
     x = np.ones(len(data))
@@ -2953,7 +2956,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     colors = plt.cm.plasma(np.linspace(0, 1, len(data)))
     for i, value in enumerate(data):
         axis.scatter(x[i], value, color=colors[i], label=labels[i], alpha=1.0)
-    axis.legend(loc='upper left', bbox_to_anchor=(1, 1))
+    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     # Calculate average, standard deviation, and median
     avg_bootstrap = np.mean(data)
@@ -2965,9 +2968,19 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         0.6, 0.9, f"Average: {avg_bootstrap:.4f}", transform=axis.transAxes, fontsize=9
     )
     axis.text(
-        0.6, 0.85, f"Standard Dev: {std_bootstrap:.4f}", transform=axis.transAxes, fontsize=9
+        0.6,
+        0.85,
+        f"Standard Dev: {std_bootstrap:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
     )
-    axis.text(0.6, 0.8, f"Median: {median_bootstrap:.4f}", transform=axis.transAxes, fontsize=9)
+    axis.text(
+        0.6,
+        0.8,
+        f"Median: {median_bootstrap:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
 
     axis.set_title("Bootstrap Current Fraction Comparison")
     axis.set_ylabel("Bootstrap Current Fraction")

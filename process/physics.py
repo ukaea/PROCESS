@@ -1739,7 +1739,6 @@ class Physics:
                 inverse_aspect=physics_variables.eps,
             )
         )
-
         current_drive_variables.bscf_hoang = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_hoang(
@@ -1749,7 +1748,6 @@ class Physics:
                 inverse_aspect=physics_variables.eps,
             )
         )
-
         current_drive_variables.bscf_wong = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wong(
@@ -1758,6 +1756,18 @@ class Physics:
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
                 elongation=physics_variables.kappa,
+            )
+        )
+        current_drive_variables.bscf_gi = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_gi(
+                betap=physics_variables.betap,
+                pressure_index=physics_variables.alphap,
+                temperature_index=physics_variables.alphat,
+                inverse_aspect=physics_variables.eps,
+                effective_charge=physics_variables.zeff,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
             )
         )
 
@@ -1806,7 +1816,11 @@ class Physics:
             elif physics_variables.i_bootstrap_current == 9:
                 current_drive_variables.bootstrap_current_fraction = (
                     current_drive_variables.bscf_wong
-                )    
+                )
+            elif physics_variables.i_bootstrap_current == 10:
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_gi
+                )         
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
                 error_handling.report_error(75)
@@ -4938,12 +4952,18 @@ class Physics:
                 current_drive_variables.bscf_hoang,
                 "OP ",
             )
-            
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Wong)",
                 "(bscf_wong)",
                 current_drive_variables.bscf_wong,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Gi)",
+                "(bscf_gi)",
+                current_drive_variables.bscf_gi,
                 "OP ",
             )
 
@@ -5022,8 +5042,12 @@ class Physics:
                 po.ocmmnt(
                     self.outfile,
                     "  (Wong et al bootstrap current fraction model used)",
-                )    
-                
+                )
+            elif physics_variables.i_bootstrap_current == 10:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Gi et al bootstrap current fraction model used)",
+                )
 
             if physics_variables.i_diamagnetic_current == 0:
                 po.ocmmnt(
@@ -5828,6 +5852,45 @@ class Physics:
         c_bs = 0.773 + 0.019 * elongation
 
         return c_bs * f_peak**0.25 * betap * np.sqrt(inverse_aspect)
+
+    @staticmethod
+    def bootstrap_fraction_gi(
+        betap: float,
+        pressure_index: float,
+        temperature_index: float,
+        inverse_aspect: float,
+        effective_charge: float,
+        q95: float,
+        q0: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Gi et al formula.
+
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        pressure_index (float): Pressure profile index.
+        temperature_index (float): Temperature profile index.
+        inverse_aspect (float): Inverse aspect ratio.
+        effective_charge (float): Plasma effective charge.
+        q95 (float): Safety factor at 95% of the plasma radius.
+        q0 (float): Safety factor at the magnetic axis.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+
+        References:
+            - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,” 
+              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014,
+              doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+        """
+
+        # Using the standard variable naming from the Gi et.al. paper
+
+        c_bs = 0.474 * inverse_aspect**-0.1 * pressure_index**0.974 * temperature_index**-0.416 * effective_charge**0.178 * (q95/q0)**-0.133
+
+        return c_bs * np.sqrt(inverse_aspect) * betap
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance
