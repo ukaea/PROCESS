@@ -364,8 +364,8 @@ contains
     !  Local variables
 
     character(len=72) :: dum72
-    character(len=20) :: dum20
-    character(len=20) :: stripped
+    character(len=35) :: dum20
+    character(len=40) :: stripped
     character(len=3) :: flag
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -396,7 +396,7 @@ contains
     end if
 
 10  format(1x,a,t75,a,t100,f13.6, t115, a)
-20  format(1x,a,t75,a,t100,f10.3, t112, a)
+20  format(1x,a,t95,a,t130,f10.3, t142, a)
 
     call ovarre(mfile,descr,varnam,value)
 
@@ -436,8 +436,8 @@ contains
     !  Local variables
 
     character(len=72) :: dum72
-    character(len=30) :: dum20
-    character(len=20) :: stripped
+    character(len=35) :: dum20
+    character(len=40) :: stripped
     character(len=3) :: flag
     integer :: dotindex
 
@@ -480,7 +480,7 @@ contains
   ! for full precision of a double float
 10  format(1x,a,t75,a,t110,ES23.16e2," ",a,t10)
   ! OUT.DAT format
-20  format(1x,a,t75,a,t100,1pe10.3, t112, a)
+20  format(1x,a,t95,a,t130,1pe10.3, t142, a)
 
   end subroutine ovarre
 
@@ -516,8 +516,8 @@ contains
     !  Local variables
 
     character(len=72) :: dum72
-    character(len=30) :: dum20
-    character(len=20) :: stripped
+    character(len=35) :: dum20
+    character(len=40) :: stripped
     character(len=3) :: flag
 
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -548,7 +548,7 @@ contains
     write(mfile,10) dum72, dum20, value, flag
 
 10  format(1x,a,t75,a,t110,i10," ",a,t10)
-20  format(1x,a,t75,a,t100,i10,t112, a)
+20  format(1x,a,t95,a,t130,i10,t142, a)
 
   end subroutine ovarin
 
