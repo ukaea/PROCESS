@@ -3976,7 +3976,7 @@ class Stellarator:
                 physics_variables.dene,
                 physics_variables.deni,
                 physics_variables.dlamie,
-                current_drive_variables.enbeam,
+                current_drive_variables.beam_energy,
                 physics_variables.fdeut,
                 physics_variables.ftrit,
                 current_drive_variables.ftritbm,
@@ -4696,7 +4696,7 @@ class Stellarator:
             current_drive_variables.beam_current = (
                 1e-3
                 * (current_drive_variables.pnbeam * 1e6)
-                / current_drive_variables.enbeam
+                / current_drive_variables.beam_energy
             )
         else:
             current_drive_variables.beam_current = 0
@@ -4754,8 +4754,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam energy (keV)",
-                    "(enbeam)",
-                    current_drive_variables.enbeam,
+                    "(beam_energy)",
+                    current_drive_variables.beam_energy,
                 )
                 po.ovarre(
                     self.outfile,

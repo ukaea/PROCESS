@@ -1846,7 +1846,7 @@ class Physics:
                 physics_variables.dene,
                 physics_variables.deni,
                 physics_variables.dlamie,
-                current_drive_variables.enbeam,
+                current_drive_variables.beam_energy,
                 physics_variables.fdeut,
                 physics_variables.ftrit,
                 current_drive_variables.ftritbm,

@@ -88,7 +88,7 @@ DEFAULT_COMPARE_PARAMS = [
     "aux_current_fraction",
     "inductive_current_fraction",
     "gamnb",
-    "enbeam",
+    "beam_energy",
     "powerht",
 ]
 
@@ -177,7 +177,7 @@ BASELINE_LIST = [
     "aux_current_fraction",
     "inductive_current_fraction",
     "gamnb",
-    "enbeam",
+    "beam_energy",
     "powerht",
     "pdivt",
     "vssoft",

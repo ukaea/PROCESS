@@ -74,7 +74,7 @@ class CudrivParam(NamedTuple):
 
     etanbi: Any = None
 
-    enbeam: Any = None
+    beam_energy: Any = None
 
     effcd: Any = None
 
@@ -229,7 +229,7 @@ class CudrivParam(NamedTuple):
             pinjmw=0,
             pwpnb=0,
             etanbi=0.29999999999999999,
-            enbeam=1000,
+            beam_energy=1000,
             effcd=0,
             pwplh=0,
             echwpow=0,
@@ -319,7 +319,7 @@ class CudrivParam(NamedTuple):
             pinjmw=120.49600019005746,
             pwpnb=0,
             etanbi=0.29999999999999999,
-            enbeam=1000,
+            beam_energy=1000,
             effcd=0.05000000000000001,
             pwplh=0,
             echwpow=240.99200038011492,
@@ -451,7 +451,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "etanbi", cudrivparam.etanbi)
 
-    monkeypatch.setattr(current_drive_variables, "enbeam", cudrivparam.enbeam)
+    monkeypatch.setattr(current_drive_variables, "beam_energy", cudrivparam.beam_energy)
 
     monkeypatch.setattr(current_drive_variables, "effcd", cudrivparam.effcd)
 
