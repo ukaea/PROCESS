@@ -6,9 +6,7 @@
 
 ## Line Length
 
-For optimal readability, a limit of 100 characters for maximum line length has been set. This is 
-below the maximum line length of 132 characters for Fortran (to prevent compilation errors) and 
-prevents long lines that run on past the edge of the screen wasting programmers time with scrolling.
+For optimal readability, a limit of 79 characters for maximum line length has been encouraged, as recommended in [PEP8](https://peps.python.org/pep-0008/). This is below the maximum line length of 132 characters for Fortran (to prevent compilation errors) and prevents long lines that run on past the edge of the screen wasting programmers time with scrolling.
 
 --------------------
 
@@ -45,7 +43,6 @@ Use a lowercase word or words. Separate words by underscores(`_`) to improve rea
 ### Switches
 
 Switches should start with the `i_` prefix in their name, be of integer type and should be indexed from 0.
-Switches should by their nature not override other switches.
 
 ### Constants
 
@@ -62,6 +59,10 @@ If converting between units it may be required to have some capital letters at t
 #### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
+
+#### F-values
+
+Variables used within constraint equations to scale iteration variables (f-values) should start with the `f` prefix without an underscore before the next word.
 
 ### Length
 
@@ -162,6 +163,20 @@ Please see issue [#940](https://github.com/ukaea/PROCESS/issues/940) to discuss 
 It is greatly encouraged and recommended to include type hints for all inputs and outputs in Python. Please follow the guidelines set out in [PEP-484](https://peps.python.org/pep-0484/).
 
 ## Docstrings
+
+The docstring style is that of the [Google type](https://google.github.io/styleguide/pyguide.html#s3.8.1-comments-in-doc-strings). Though there are some additions for `Notes` and `References` in order to give mathematical reasoning and sources to some functions.
+
+The following VSCode extensions can be used to generate the bulk of the docstring in the Google style:
+
+------------------------------------
+
+Name: autoDocstring - Python Docstring Generator
+
+Id: njpwerner.autodocstring
+
+VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring
+
+----------------------------------
 
 ### Functions
 
