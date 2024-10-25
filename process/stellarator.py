@@ -3972,7 +3972,7 @@ class Stellarator:
                 physics_variables.betbm0,
                 physics_variables.bp,
                 physics_variables.bt,
-                current_drive_variables.cnbeam,
+                current_drive_variables.beam_current,
                 physics_variables.dene,
                 physics_variables.deni,
                 physics_variables.dlamie,
@@ -4693,13 +4693,13 @@ class Stellarator:
         #  Calculate neutral beam current
 
         if abs(current_drive_variables.pnbeam) > 1e-8:
-            current_drive_variables.cnbeam = (
+            current_drive_variables.beam_current = (
                 1e-3
                 * (current_drive_variables.pnbeam * 1e6)
                 / current_drive_variables.enbeam
             )
         else:
-            current_drive_variables.cnbeam = 0
+            current_drive_variables.beam_current = 0
 
         #  Ratio of fusion to input (injection+ohmic) power
 
@@ -4760,8 +4760,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam current (A)",
-                    "(cnbeam)",
-                    current_drive_variables.cnbeam,
+                    "(beam_current)",
+                    current_drive_variables.beam_current,
                 )
                 po.ovarre(
                     self.outfile, "Fraction of beam energy to ions", "(fpion)", fpion

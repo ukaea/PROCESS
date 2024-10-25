@@ -29,8 +29,8 @@ class CurrentDrive:
         current_drive_variables.echpwr = 0.0e0
         current_drive_variables.pnbeam = 0.0e0
         current_drive_variables.plhybd = 0.0e0
-        current_drive_variables.cnbeam = 0.0e0
-        cnbeamfix = 0.0e0
+        current_drive_variables.beam_current = 0.0e0
+        beam_current_fix = 0.0e0
         current_drive_variables.porbitlossmw = 0.0e0
         porbitlossmwfix = 0.0e0
 
@@ -346,7 +346,7 @@ class CurrentDrive:
                 current_drive_variables.etacdfix = current_drive_variables.etanbi
                 gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
                 gamcdfix = gamnb
-                cnbeamfix = (
+                beam_current_fix = (
                     1.0e-3 * (pnbitotfix * 1.0e6) / current_drive_variables.enbeam
                 )  # Neutral beam current (A)
                 auxiliary_cdfix = (
@@ -672,7 +672,7 @@ class CurrentDrive:
                 current_drive_variables.etacd = current_drive_variables.etanbi
                 gamnb = effnbss * (dene20 * physics_variables.rmajor)
                 current_drive_variables.gamcd = gamnb
-                current_drive_variables.cnbeam = (
+                current_drive_variables.beam_current = (
                     1.0e-3
                     * (current_drive_variables.pnbitot * 1.0e6)
                     / current_drive_variables.enbeam
@@ -1043,8 +1043,8 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam current (A)",
-                    "(cnbeam)",
-                    current_drive_variables.cnbeam,
+                    "(beam_current)",
+                    current_drive_variables.beam_current,
                     "OP ",
                 )
 
@@ -1054,8 +1054,8 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Secondary fixed neutral beam current (A)",
-                    "(cnbeamfix)",
-                    cnbeamfix,
+                    "(beam_current_fix)",
+                    beam_current_fix,
                     "OP ",
                 )
 
