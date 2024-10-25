@@ -1806,13 +1806,17 @@ class Physics:
         if current_drive_variables.irfcd != 0:
             self.current_drive.cudriv(False)
 
+        # ***************************** #
+        #        FUSION REACTIONS       #
+        # ***************************** #
+
         # Calculate fusion power + components
 
         fusion_reactions = physics_funcs.FusionReactionRate(self.plasma_profile)
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
-        #
+        # This neglects the power from the beam
         physics_variables.dt_power = (
             physics_module.dt_power_density * physics_variables.plasma_volume
         )
@@ -1885,7 +1889,7 @@ class Physics:
             physics_variables.alpha_power_electron_density,
             physics_variables.charged_particle_power,
             physics_variables.fusion_power,
-        ) = physics_funcs.palph2(
+        ) = physics_funcs.set_fusion_powers(
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,

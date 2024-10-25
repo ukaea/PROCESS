@@ -11,7 +11,7 @@ import pytest
 from pytest import approx
 
 
-class Palph2Param(NamedTuple):
+class SetFusionPowersParam(NamedTuple):
     f_alpha_plasma: Any = None
 
     fdeut: Any = None
@@ -42,35 +42,35 @@ class Palph2Param(NamedTuple):
 
     plasma_volume: Any = None
 
-    alpha_power_density: Any = None
+    alpha_power_density_plasma: Any = None
 
-    neutron_power_density: Any = None
+    neutron_power_density_plasma: Any = None
 
-    expected_palppv: Any = None
+    expected_alpha_power_density: Any = None
 
-    expected_pneutpv: Any = None
+    expected_neutron_power_density: Any = None
 
-    expected_palpmw: Any = None
+    expected_alpha_power_total: Any = None
 
-    expected_pneutmw: Any = None
+    expected_neutron_power_total: Any = None
 
-    expected_pchargemw: Any = None
+    expected_non_alpha_charged_power: Any = None
 
     expected_betaft: Any = None
 
-    expected_palpepv: Any = None
+    expected_alpha_power_electron_density: Any = None
 
-    expected_palpipv: Any = None
+    expected_alpha_power_ion_density: Any = None
 
     expected_charged_particle_power: Any = None
 
-    expected_powfmw: Any = None
+    expected_fusion_power: Any = None
 
 
 @pytest.mark.parametrize(
-    "palph2param",
+    "setfusionpowersparam",
     (
-        Palph2Param(
+        SetFusionPowersParam(
             f_alpha_plasma=0.95,
             fdeut=0.5,
             ifalphap=1,
@@ -86,20 +86,20 @@ class Palph2Param(NamedTuple):
             ten=13.84,
             tin=13.84,
             plasma_volume=2426.25,
-            alpha_power_density=0.163,
-            neutron_power_density=0.654,
-            expected_palppv=0.163,
-            expected_pneutpv=0.654,
-            expected_palpmw=395.47875,
-            expected_pneutmw=1586.7675,
-            expected_pchargemw=1.601325,
+            alpha_power_density_plasma=0.163,
+            neutron_power_density_plasma=0.654,
+            expected_alpha_power_density=0.163,
+            expected_neutron_power_density=0.654,
+            expected_alpha_power_total=395.47875,
+            expected_neutron_power_total=1586.7675,
+            expected_non_alpha_charged_power=1.601325,
             expected_betaft=0.00423788,
-            expected_palpipv=0.049552,
-            expected_palpepv=0.105298,
+            expected_alpha_power_ion_density=0.049552,
+            expected_alpha_power_electron_density=0.105298,
             expected_charged_particle_power=397.080075,
-            expected_powfmw=1983.847575,
+            expected_fusion_power=1983.847575,
         ),
-        Palph2Param(
+        SetFusionPowersParam(
             f_alpha_plasma=0.95,
             fdeut=0.5,
             ifalphap=1,
@@ -115,20 +115,20 @@ class Palph2Param(NamedTuple):
             ten=13.84,
             tin=13.84,
             plasma_volume=2426.25,
-            alpha_power_density=0.163,
-            neutron_power_density=0.654,
-            expected_palppv=0.20442195,
-            expected_pneutpv=0.81968779,
-            expected_palpmw=495.97875,
-            expected_pneutmw=1988.7675,
-            expected_pchargemw=1.601325,
+            alpha_power_density_plasma=0.163,
+            neutron_power_density_plasma=0.654,
+            expected_alpha_power_density=0.20442195,
+            expected_neutron_power_density=0.81968779,
+            expected_alpha_power_total=495.97875,
+            expected_neutron_power_total=1988.7675,
+            expected_non_alpha_charged_power=1.601325,
             expected_betaft=0.00531482,
-            expected_palpipv=0.062144272,
-            expected_palpepv=0.132056578,
+            expected_alpha_power_ion_density=0.062144272,
+            expected_alpha_power_electron_density=0.132056578,
             expected_charged_particle_power=497.580075,
-            expected_powfmw=2486.347575,
+            expected_fusion_power=2486.347575,
         ),
-        Palph2Param(
+        SetFusionPowersParam(
             f_alpha_plasma=0.95,
             fdeut=0.5,
             ifalphap=0,
@@ -144,20 +144,20 @@ class Palph2Param(NamedTuple):
             ten=13.84,
             tin=13.84,
             plasma_volume=2426.25,
-            alpha_power_density=0.163,
-            neutron_power_density=0.654,
-            expected_palppv=0.20442195,
-            expected_pneutpv=0.81968779,
-            expected_palpmw=495.97875,
-            expected_pneutmw=1988.7675,
-            expected_pchargemw=1.601325,
+            alpha_power_density_plasma=0.163,
+            neutron_power_density_plasma=0.654,
+            expected_alpha_power_density=0.20442195,
+            expected_neutron_power_density=0.81968779,
+            expected_alpha_power_total=495.97875,
+            expected_neutron_power_total=1988.7675,
+            expected_non_alpha_charged_power=1.601325,
             expected_betaft=0.00701622,
-            expected_palpipv=0.062144272,
-            expected_palpepv=0.132056578,
+            expected_alpha_power_ion_density=0.062144272,
+            expected_alpha_power_electron_density=0.132056578,
             expected_charged_particle_power=497.580075,
-            expected_powfmw=2486.347575,
+            expected_fusion_power=2486.347575,
         ),
-        Palph2Param(
+        SetFusionPowersParam(
             f_alpha_plasma=0.95,
             fdeut=2.5,
             ifalphap=0,
@@ -173,35 +173,35 @@ class Palph2Param(NamedTuple):
             ten=13.84,
             tin=13.84,
             plasma_volume=2426.25,
-            alpha_power_density=0.163,
-            neutron_power_density=0.654,
-            expected_palppv=0.20442195,
-            expected_pneutpv=0.81968779,
-            expected_palpmw=495.97875,
-            expected_pneutmw=1988.7675,
-            expected_pchargemw=1.601325,
+            alpha_power_density_plasma=0.163,
+            neutron_power_density_plasma=0.654,
+            expected_alpha_power_density=0.20442195,
+            expected_neutron_power_density=0.81968779,
+            expected_alpha_power_total=495.97875,
+            expected_neutron_power_total=1988.7675,
+            expected_non_alpha_charged_power=1.601325,
             expected_betaft=0.0,
-            expected_palpipv=0.062144272,
-            expected_palpepv=0.132056578,
+            expected_alpha_power_ion_density=0.062144272,
+            expected_alpha_power_electron_density=0.132056578,
             expected_charged_particle_power=497.580075,
-            expected_powfmw=2486.347575,
+            expected_fusion_power=2486.347575,
         ),
     ),
 )
-def test_palph2(palph2param, monkeypatch):
+def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     """
-    Automatically generated Regression Unit Test for palph2.
+    Automatically generated Regression Unit Test for set_fusion_powers().
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
-    :param palph2param: the data used to mock and assert in this test.
-    :type palph2param: palph2param
+    :param setfusionpowersparam: the data used to mock and assert in this test.
+    :type setfusionpowersparam: setfusionpowersparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(pv, "f_alpha_plasma", palph2param.f_alpha_plasma)
-    monkeypatch.setattr(pv, "fdeut", palph2param.fdeut)
+    monkeypatch.setattr(pv, "f_alpha_plasma", setfusionpowersparam.f_alpha_plasma)
+    monkeypatch.setattr(pv, "fdeut", setfusionpowersparam.fdeut)
 
     (
         neutron_power_density,
@@ -214,34 +214,34 @@ def test_palph2(palph2param, monkeypatch):
         alpha_power_ions_density,
         charged_particle_power,
         fusion_power,
-    ) = physics_functions.palph2(
-        ifalphap=palph2param.ifalphap,
-        bp=palph2param.bp,
-        bt=palph2param.bt,
-        dene=palph2param.dene,
-        deni=palph2param.deni,
-        dnitot=palph2param.dnitot,
-        falpe=palph2param.falpe,
-        falpi=palph2param.falpi,
-        alpha_power_beams=palph2param.alpha_power_beams,
-        charged_power_density=palph2param.charged_power_density,
-        ten=palph2param.ten,
-        tin=palph2param.tin,
-        plasma_volume=palph2param.plasma_volume,
-        alpha_power_density=palph2param.alpha_power_density,
-        neutron_power_density=palph2param.neutron_power_density,
+    ) = physics_functions.set_fusion_powers(
+        ifalphap=setfusionpowersparam.ifalphap,
+        bp=setfusionpowersparam.bp,
+        bt=setfusionpowersparam.bt,
+        dene=setfusionpowersparam.dene,
+        deni=setfusionpowersparam.deni,
+        dnitot=setfusionpowersparam.dnitot,
+        falpe=setfusionpowersparam.falpe,
+        falpi=setfusionpowersparam.falpi,
+        alpha_power_beams=setfusionpowersparam.alpha_power_beams,
+        charged_power_density=setfusionpowersparam.charged_power_density,
+        ten=setfusionpowersparam.ten,
+        tin=setfusionpowersparam.tin,
+        plasma_volume=setfusionpowersparam.plasma_volume,
+        alpha_power_density_plasma=setfusionpowersparam.alpha_power_density_plasma,
+        neutron_power_density_plasma=setfusionpowersparam.neutron_power_density_plasma,
     )
 
-    assert alpha_power_density == pytest.approx(palph2param.expected_palppv)
-    assert neutron_power_density == pytest.approx(palph2param.expected_pneutpv)
-    assert alpha_power_total == pytest.approx(palph2param.expected_palpmw)
-    assert neutron_power_total == pytest.approx(palph2param.expected_pneutmw)
-    assert non_alpha_charged_power == pytest.approx(palph2param.expected_pchargemw)
-    assert betaft == pytest.approx(palph2param.expected_betaft)
-    assert alpha_power_electron_density == pytest.approx(palph2param.expected_palpepv)
-    assert alpha_power_ions_density == pytest.approx(palph2param.expected_palpipv)
-    assert charged_particle_power== pytest.approx(palph2param.expected_charged_particle_power)
-    assert fusion_power == pytest.approx(palph2param.expected_powfmw)
+    assert alpha_power_density == pytest.approx(setfusionpowersparam.expected_alpha_power_density)
+    assert neutron_power_density == pytest.approx(setfusionpowersparam.expected_neutron_power_density)
+    assert alpha_power_total == pytest.approx(setfusionpowersparam.expected_alpha_power_total)
+    assert neutron_power_total == pytest.approx(setfusionpowersparam.expected_neutron_power_total)
+    assert non_alpha_charged_power == pytest.approx(setfusionpowersparam.expected_non_alpha_charged_power)
+    assert betaft == pytest.approx(setfusionpowersparam.expected_betaft)
+    assert alpha_power_electron_density == pytest.approx(setfusionpowersparam.expected_alpha_power_electron_density)
+    assert alpha_power_ions_density == pytest.approx(setfusionpowersparam.expected_alpha_power_ion_density)
+    assert charged_particle_power== pytest.approx(setfusionpowersparam.expected_charged_particle_power)
+    assert fusion_power == pytest.approx(setfusionpowersparam.expected_fusion_power)
 
 
 @pytest.mark.parametrize(
@@ -251,12 +251,7 @@ def test_palph2(palph2param, monkeypatch):
         (55.73, physics_functions.REACTION_CONSTANTS_DHE3, 7.067916724597656e-23),
         (55.73, physics_functions.REACTION_CONSTANTS_DD1, 1.3127277533210717e-23),
         (55.73, physics_functions.REACTION_CONSTANTS_DD2, 1.1329338540436287e-23),
-        (55.73, physics_functions.REACTION_CONSTANTS_DT, 8.832857074192583e-22),
-        (55.73, physics_functions.REACTION_CONSTANTS_DHE3, 7.067916724597656e-23),
-        (55.73, physics_functions.REACTION_CONSTANTS_DD1, 1.3127277533210717e-23),
-        (55.73, physics_functions.REACTION_CONSTANTS_DD2, 1.1329338540436287e-23),
     ),
-    ids=["DT", "DHE3", "DD1", "DD2"],
     ids=["DT", "DHE3", "DD1", "DD2"],
 )
 def test_bosch_hale(t, reaction, expected_bosch_hale):

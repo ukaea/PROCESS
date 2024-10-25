@@ -4016,7 +4016,7 @@ class Stellarator:
             physics_variables.alpha_power_electron_density,
             physics_variables.charged_particle_power,
             physics_variables.fusion_power,
-        ) = physics_funcs.palph2(
+        ) = physics_funcs.set_fusion_powers(
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.bt,

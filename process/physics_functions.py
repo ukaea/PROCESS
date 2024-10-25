@@ -810,7 +810,7 @@ class RadpwrData:
     pradpv: float
 
 
-def palph2(
+def set_fusion_powers(
     bp: float,
     bt: float,
     dene: float,
@@ -820,11 +820,11 @@ def palph2(
     falpi: float,
     alpha_power_beams: float,
     charged_power_density: float,
-    neutron_power_density: float,
+    neutron_power_density_plasma: float,
     ten: float,
     tin: float,
     plasma_volume: float,
-    alpha_power_density: float,
+    alpha_power_density_plasma: float,
     ifalphap: int,
 ) -> tuple:
     """
@@ -843,23 +843,23 @@ def palph2(
         falpi (float): Fraction of alpha energy to ions.
         alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
         charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
-        neutron_power_density (float): Neutron fusion power per unit volume (MW/m^3).
+        neutron_power_density_plasma (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
         ten (float): Density-weighted electron temperature (keV).
         tin (float): Density-weighted ion temperature (keV).
         plasma_volume (float): Plasma volume (m^3).
-        alpha_power_density (float): Alpha power per unit volume (MW/m^3).
+        alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
         ifalphap (int): Switch for fast alpha pressure method.
 
     Returns:
         tuple: A tuple containing the following elements:
-            - neutron_power_density_out (float): Neutron fusion power per unit volume [MW/m^3].
+            - neutron_power_density_total (float): Neutron fusion power per unit volume from plasma and beams [MW/m^3].
             - alpha_power_plasma (float): Alpha fusion power from only the plasma [MW].
             - alpha_power_total (float): Total alpha fusion power from plasma and beams [MW].
             - neutron_power_plasma (float): Neutron fusion power from only the plasma [MW].
             - neutron_power_total (float): Total neutron fusion power from plasma and beams [MW].
             - non_alpha_charged_power (float): Other total charged particle fusion power [MW].
             - betaft (float): Fast alpha beta component.
-            - alpha_power_density_out (float): Alpha power per unit volume [MW/m^3].
+            - alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma [MW/m^3].
             - alpha_power_electron_density (float): Alpha power per unit volume to electrons [MW/m^3].
             - alpha_power_ions_density (float): Alpha power per unit volume to ions [MW/m^3].
             - charged_particle_power(float): Charged particle fusion power [MW].
@@ -873,26 +873,26 @@ def palph2(
     # Alpha power
 
     # Calculate alpha power produced just by the plasma
-    alpha_power_plasma = alpha_power_density * plasma_volume
+    alpha_power_plasma = alpha_power_density_plasma * plasma_volume
 
     # Add neutral beam alpha power / volume
-    alpha_power_density_out = alpha_power_density + (alpha_power_beams / plasma_volume)
+    alpha_power_density_total = alpha_power_density_plasma + (alpha_power_beams / plasma_volume)
 
     # Total alpha power
-    alpha_power_total = alpha_power_density_out * plasma_volume
+    alpha_power_total = alpha_power_density_total * plasma_volume
 
     # Neutron Power
 
     # Calculate neutron power produced just by the plasma
-    neutron_power_plasma = neutron_power_density * plasma_volume
+    neutron_power_plasma = neutron_power_density_plasma * plasma_volume
 
     # Add extra neutron power from beams
-    neutron_power_density_out = neutron_power_density + (
+    neutron_power_density_total = neutron_power_density_plasma + (
         (4.0 * alpha_power_beams) / plasma_volume
     )
 
     # Total neutron power
-    neutron_power_total = neutron_power_density_out * plasma_volume
+    neutron_power_total = neutron_power_density_total * plasma_volume
 
     # Charged particle power
 
@@ -909,10 +909,10 @@ def palph2(
     # and ion power balance equations only)
     # No consideration of charged_power_density here...
     alpha_power_ions_density = (
-        physics_variables.f_alpha_plasma * alpha_power_density_out * falpi
+        physics_variables.f_alpha_plasma * alpha_power_density_total * falpi
     )
     alpha_power_electron_density = (
-        physics_variables.f_alpha_plasma * alpha_power_density_out * falpe
+        physics_variables.f_alpha_plasma * alpha_power_density_total * falpe
     )
 
     # Determine average fast alpha density
@@ -941,21 +941,21 @@ def palph2(
             )
 
         fact = max(fact, 0.0)
-        fact2 = alpha_power_density_out / alpha_power_density
+        fact2 = alpha_power_density_total / alpha_power_density_plasma
         betaft = betath * fact * fact2
 
     else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0
         betaft = 0.0
 
     return (
-        neutron_power_density_out,
+        neutron_power_density_total,
         alpha_power_plasma,
         alpha_power_total,
         neutron_power_plasma,
         neutron_power_total,
         non_alpha_charged_power,
         betaft,
-        alpha_power_density_out,
+        alpha_power_density_total,
         alpha_power_electron_density,
         alpha_power_ions_density,
         charged_particle_power,
