@@ -1849,7 +1849,7 @@ class Physics:
                 current_drive_variables.beam_energy,
                 physics_variables.fdeut,
                 physics_variables.ftrit,
-                current_drive_variables.ftritbm,
+                current_drive_variables.f_tritium_beam,
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
@@ -2617,8 +2617,8 @@ class Physics:
             + 3.0 * physics_variables.fhe3
         )
         physics_variables.abeam = (
-            2.0 * (1.0 - current_drive_variables.ftritbm)
-            + 3.0 * current_drive_variables.ftritbm
+            2.0 * (1.0 - current_drive_variables.f_tritium_beam)
+            + 3.0 * current_drive_variables.f_tritium_beam
         )
 
         # Density weighted mass
@@ -2645,8 +2645,8 @@ class Physics:
             + 4.0 * physics_variables.fhe3 * physics_variables.deni / 3.0
             + physics_variables.dnalp
             + physics_variables.dnprot
-            + (1.0 - current_drive_variables.ftritbm) * physics_variables.dnbeam / 2.0
-            + current_drive_variables.ftritbm * physics_variables.dnbeam / 3.0
+            + (1.0 - current_drive_variables.f_tritium_beam) * physics_variables.dnbeam / 2.0
+            + current_drive_variables.f_tritium_beam * physics_variables.dnbeam / 3.0
         ) / physics_variables.dene
         for imp in range(impurity_radiation_module.nimp):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:

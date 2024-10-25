@@ -2044,7 +2044,7 @@
         "ftoroidalgap": 1.0,
         "ftpeak": 1.0,
         "ftrit": 0.5,
-        "ftritbm": 1e-06,
+        "f_tritium_beam": 1e-06,
         "fusion_rate_density": 0.0,
         "fvdump": 1.0,
         "fvoldw": 1.74,
@@ -9627,7 +9627,7 @@
         "ftoroidalgap": "F-value for minimum tftort (`constraint equation 82`)",
         "ftpeak": "f-value for first wall peak temperature (`constraint equation 39`, `iteration variable 63`)",
         "ftrit": "tritium fuel fraction",
-        "ftritbm": "fraction of beam that is tritium",
+        "f_tritium_beam": "fraction of beam that is tritium",
         "fusion_rate_density": "fusion reaction rate (reactions/m3/sec)",
         "fvdump": "f-value for dump voltage (`constraint equation 34`, `iteration variable 51`)",
         "fvoldw": "area coverage factor for vacuum vessel volume",
@@ -12934,7 +12934,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "ftritbm": {
+        "f_tritium_beam": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -17782,7 +17782,7 @@
             "feffcd",
             "forbitloss",
             "frbeam",
-            "ftritbm",
+            "f_tritium_beam",
             "gamcd",
             "gamma_ecrh",
             "xi_ebw",
@@ -20326,7 +20326,7 @@
         "ftoroidalgap": "real_variable",
         "ftpeak": "real_variable",
         "ftrit": "real_variable",
-        "ftritbm": "real_variable",
+        "f_tritium_beam": "real_variable",
         "fvdump": "real_variable",
         "fvoldw": "real_variable",
         "fvolsi": "real_variable",

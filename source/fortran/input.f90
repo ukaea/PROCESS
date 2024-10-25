@@ -258,7 +258,7 @@ contains
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
       startupratio, tmain, u_unplanned_cp, supercond_cost_model
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
-      ftritbm, gamma_ecrh, pheat, beamwd, beam_energy, pheatfix, bootstrap_current_fraction_max, &
+      f_tritium_beam, gamma_ecrh, pheat, beamwd, beam_energy, pheatfix, bootstrap_current_fraction_max, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
       etalh, frbeam, harnum, xi_ebw, wave_mode
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
@@ -1067,8 +1067,8 @@ contains
        case ('frbeam')
           call parse_real_variable('frbeam', frbeam, 0.5D0, 2.0D0, &
                'R_tan / R_major for NBI')
-       case ('ftritbm')
-          call parse_real_variable('ftritbm', ftritbm, 0.0D0, 1.0D0, &
+       case ('f_tritium_beam')
+          call parse_real_variable('f_tritium_beam', f_tritium_beam, 0.0D0, 1.0D0, &
                'Tritium fraction of beam')
        case ('gamma_ecrh')
           call parse_real_variable('gamma_ecrh', gamma_ecrh, 0.0D0, 1.0D0, &

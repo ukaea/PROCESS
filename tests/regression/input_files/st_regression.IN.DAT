@@ -2824,7 +2824,7 @@ feffcd = 1.0
 * DESCRIPTION:   R_tan / R_major for NBI
 * JUSTIFICATION: Not used as no NBI used
 
-*ftritbm
+*f_tritium_beam
 * DESCRIPTION:   Tritium fraction of beam
 * JUSTIFICATION: Not used as no NBI used
 

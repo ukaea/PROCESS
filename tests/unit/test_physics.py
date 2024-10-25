@@ -830,7 +830,7 @@ def test_conhas():
 
 
 class PlasmaCompositionParam(NamedTuple):
-    ftritbm: Any = None
+    f_tritium_beam: Any = None
 
     impurity_arr_frac: Any = None
 
@@ -963,7 +963,7 @@ class PlasmaCompositionParam(NamedTuple):
     "plasmacompositionparam",
     (
         PlasmaCompositionParam(
-            ftritbm=9.9999999999999995e-07,
+            f_tritium_beam=9.9999999999999995e-07,
             impurity_arr_frac=[
                 0.90000000000000002,
                 0.10000000000000001,
@@ -1074,7 +1074,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_first_call=0,
         ),
         PlasmaCompositionParam(
-            ftritbm=9.9999999999999995e-07,
+            f_tritium_beam=9.9999999999999995e-07,
             impurity_arr_frac=(
                 0.78128900936605694,
                 0.10000000000000001,
@@ -1213,7 +1213,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     initialise_imprad()
 
     monkeypatch.setattr(
-        current_drive_variables, "ftritbm", plasmacompositionparam.ftritbm
+        current_drive_variables, "f_tritium_beam", plasmacompositionparam.f_tritium_beam
     )
 
     monkeypatch.setattr(

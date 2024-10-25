@@ -3979,7 +3979,7 @@ class Stellarator:
                 current_drive_variables.beam_energy,
                 physics_variables.fdeut,
                 physics_variables.ftrit,
-                current_drive_variables.ftritbm,
+                current_drive_variables.f_tritium_beam,
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
