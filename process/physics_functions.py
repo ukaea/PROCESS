@@ -963,7 +963,7 @@ def set_fusion_powers(
     )
 
 
-def beamfus(
+def beam_fusion(
     beamfus0: float,
     betbm0: float,
     bp: float,
@@ -1333,13 +1333,13 @@ def beam_reaction_rate(relative_mass_ion: float, critical_velocity: float, beam_
     )
 
     relative_velocity = beam_velocity / critical_velocity
-    t1 = 3.0 * critical_velocity / np.log(1.0 + (relative_velocity**3))
+    integral_coefficient = 3.0 * critical_velocity / np.log(1.0 + (relative_velocity**3))
 
-    svint = integrate.quad(
+    fusion_integral = integrate.quad(
         _hot_beam_fusion_reaction_rate_integrand, 0.0, relative_velocity, args=(critical_velocity,)
     )[0]
 
-    return t1 * svint
+    return integral_coefficient * fusion_integral
 
 
 def _hot_beam_fusion_reaction_rate_integrand(velocity_ratio: float, critical_velocity: float) -> float:

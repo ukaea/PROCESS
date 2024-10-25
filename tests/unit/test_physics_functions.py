@@ -272,8 +272,8 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
     assert bosch_hale == approx(expected_bosch_hale, abs=1e-23)
 
 
-def test_beamfus():
-    betanb, dnbeam2, alpha_power_beams = physics_functions.beamfus(
+def test_beam_fusion():
+    betanb, dnbeam2, alpha_power_beams = physics_functions.beam_fusion(
         1.0,
         1.5,
         0.85,

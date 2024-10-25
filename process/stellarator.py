@@ -3967,7 +3967,7 @@ class Stellarator:
                 physics_variables.betanb,
                 physics_variables.dnbeam2,
                 physics_variables.alpha_power_beams,
-            ) = physics_funcs.beamfus(
+            ) = physics_funcs.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.bp,
