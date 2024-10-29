@@ -1010,7 +1010,7 @@ def beam_fusion(
         Returns:
             tuple: A tuple containing the following elements:
                 - betanb (float): Neutral beam beta component.
-                - dnbeam2 (float): Hot beam ion density (m^-3).
+                - beam_density_out (float): Hot beam ion density (m^-3).
                 - alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
 
         Notes:
@@ -1129,9 +1129,9 @@ def beamcalc(
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-          vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf  
+          vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
-        - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications, 
+        - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
           International Series of Monographs on Physics, Volume 149.
 
         - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,
@@ -1216,7 +1216,7 @@ def beamcalc(
     tritium_pressure = pressure_coeff_tritium * _fast_ion_pressure_integral(beam_energy, critical_energy_tritium)
 
     # Beam deposited energy
-    # Find the energy from the ideal gas pressure, P=1/3 * nmv^2 = 2/3 * n<E> 
+    # Find the energy from the ideal gas pressure, P=1/3 * nmv^2 = 2/3 * n<E>
     deuterium_depsoited_energy = 1.5 * deuterium_pressure / deuterium_beam_desnity
     tritium_depsoited_energy = 1.5 * tritium_pressure / tritium_beam_desnity
 

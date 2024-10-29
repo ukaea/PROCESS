@@ -711,9 +711,9 @@ contains
       !! If ignite=1, any auxiliary power is assumed to be used only
       !! during plasma start-up, and is excluded from all steady-state
       !! power balance calculations.
-      !! dnbeam2 : input real :  hot beam ion density from calculation (/m3)
+      !! beam_density_out : input real :  hot beam ion density from calculation (/m3)
       !! dnbeam : input real : hot beam ion density, variable (/m3)
-      use physics_variables, only: ignite, dnbeam2, dnbeam
+      use physics_variables, only: ignite, beam_density_out, dnbeam
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -723,7 +723,7 @@ contains
 
 	   ! Do not assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - dnbeam2/dnbeam
+         tmp_cc     = 1.0D0 - beam_density_out/dnbeam
          tmp_con    = dnbeam * (1.0D0 - tmp_cc)
          tmp_err    = dnbeam * tmp_cc
          tmp_symbol = '='

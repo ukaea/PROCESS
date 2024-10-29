@@ -123,7 +123,7 @@ module physics_variables
   real(dp) :: dnbeam
   !! hot beam ion density, variable (/m3)
 
-  real(dp) :: dnbeam2
+  real(dp) :: beam_density_out
   !! hot beam ion density from calculation (/m3)
 
   real(dp) :: dnbeta
@@ -918,7 +918,7 @@ module physics_variables
     dlimit = 0.0D0
     dnalp = 0.0D0
     dnbeam = 0.0D0
-    dnbeam2 = 0.0D0
+    beam_density_out = 0.0D0
     dnbeta = 3.5D0
     dnelimt = 0.0D0
     dnitot = 0.0D0
