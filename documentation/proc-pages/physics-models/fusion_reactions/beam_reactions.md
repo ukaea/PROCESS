@@ -100,7 +100,7 @@ Only take into account D-T beam fusion
 6. Calculate the neutral beam beta
 
     $$
-    \mathtt{betanb = betbm0 * 4.03e-22 * 0.66666 * beam_density_out * ehotnb / (bt**2 + bp**2)}
+    \mathtt{beta_beam = betbm0 * 4.03e-22 * 0.66666 * beam_density_out * ehotnb / (bt**2 + bp**2)}
     $$
 
 ------------------------

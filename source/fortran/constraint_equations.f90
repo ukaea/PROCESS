@@ -342,9 +342,9 @@ contains
    subroutine constraint_err_001()
     !! Error in: Relationship between beta, temperature (keV) and density (consistency equation)
     !! author: P B Lloyd, CCFE, Culham Science Centre
-    use physics_variables, only: betaft, betanb, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
     write(*,*) 'betaft = ', betaft
-    write(*,*) 'betanb = ', betanb
+    write(*,*) 'beta_beam = ', beta_beam
     write(*,*) 'dene = ', dene
     write(*,*) 'ten = ', ten
     write(*,*) 'dnitot = ', dnitot
@@ -408,7 +408,7 @@ contains
     !! - \( T_i \) -- density weighted average ion temperature [keV]
     !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
-    use physics_variables, only: betaft, betanb, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
     use constants, only: electron_charge,rmu0
 
     implicit none
@@ -422,7 +422,7 @@ contains
 
     !! constraint derived type
 
-      tmp_cc = 1.0D0 - (betaft + betanb + &
+      tmp_cc = 1.0D0 - (betaft + beta_beam + &
         2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
       tmp_con = beta * (1.0D0 - tmp_cc)
       tmp_err = beta * tmp_cc
@@ -1271,10 +1271,10 @@ contains
       !! betalim : input real : allowable beta
       !! beta : input real : total plasma beta (calculated if ipedestal =3)
       !! betaft : input real : fast alpha beta component
-      !! betanb : input real : neutral beam beta component
+      !! beta_beam : input real : neutral beam beta component
       !! bt : input real : toroidal field
       !! btot : input real : total field
-      use physics_variables, only: iculbl, betalim, beta, betanb, betaft, bt, btot
+      use physics_variables, only: iculbl, betalim, beta, beta_beam, betaft, bt, btot
       use stellarator_variables, only: istell
       use constraint_variables, only: fbetatry
       implicit none
@@ -1293,9 +1293,9 @@ contains
          tmp_units = ''
       ! Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
       else if (iculbl == 1) then
-         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-betaft-betanb)
+         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-betaft-beta_beam)
          tmp_con = betalim
-         tmp_err = betalim - (beta-betaft-betanb) / fbetatry
+         tmp_err = betalim - (beta-betaft-beta_beam) / fbetatry
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas

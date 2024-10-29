@@ -273,7 +273,7 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
 
 
 def test_beam_fusion():
-    betanb, beam_density_out, alpha_power_beams = physics_functions.beam_fusion(
+    beta_beam, beam_density_out, alpha_power_beams = physics_functions.beam_fusion(
         1.0,
         1.5,
         0.85,
@@ -294,7 +294,7 @@ def test_beam_fusion():
         0.425,
     )
 
-    assert betanb == pytest.approx(0.002616169278788316)
+    assert beta_beam == pytest.approx(0.002616169278788316)
     assert beam_density_out == pytest.approx(4.2028390908892986e17)
     assert alpha_power_beams == pytest.approx(11.506114015489336)
 

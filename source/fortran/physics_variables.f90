@@ -59,7 +59,7 @@ module physics_variables
   real(dp) :: betalim_lower
   !! allowable lower beta
 
-  real(dp) :: betanb
+  real(dp) :: beta_beam
   !! neutral beam beta component
 
   real(dp) :: betap
@@ -897,7 +897,7 @@ module physics_variables
     betaft = 0.0D0
     betalim = 0.0D0
     betalim_lower = 0.0D0
-    betanb = 0.0D0
+    beta_beam = 0.0D0
     betap = 0.0D0
     normalised_total_beta = 0.0D0
     betbm0 = 1.5D0
