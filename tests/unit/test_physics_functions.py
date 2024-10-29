@@ -321,8 +321,8 @@ def test_beamcalc():
     assert ehot == pytest.approx(445.05787301616635)
 
 
-def test_beam_energy_to_ions():
-    xbrak = physics_functions.beam_energy_to_ions(1000.0, 276.7)
+def test__fast_ion_pressure_integral():
+    xbrak = physics_functions._fast_ion_pressure_integral(1000.0, 276.7)
 
     assert xbrak == pytest.approx(1.1061397270783706)
 
@@ -345,8 +345,8 @@ def test_beam_reaction_rate():
     assert ehot == pytest.approx(445.05787301616635)
 
 
-def test_beam_energy_to_ions():
-    xbrak = physics_functions.beam_energy_to_ions(1000.0, 276.7)
+def test__fast_ion_pressure_integral():
+    xbrak = physics_functions._fast_ion_pressure_integral(1000.0, 276.7)
 
     assert xbrak == pytest.approx(1.1061397270783706)
 

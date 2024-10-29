@@ -1045,15 +1045,15 @@ def beam_fusion(
     # (deuterium and tritium neutral beams, respectively) (keV)
     # Taken from J.W Sheffield, “The physics of magnetic fusion reactors,”
     critical_energy_deuterium = (
-        14.8 * ATOMIC_MASS_DEUTERIUM * ten * zeffai**0.6666 * (ion_electron_coulomb_log + 4.0) / ion_electron_coulomb_log
+        14.8 * ATOMIC_MASS_DEUTERIUM * ten * zeffai**(2/3) * (ion_electron_coulomb_log + 4.0) / ion_electron_coulomb_log
     )
-    critical_energy_tritium = critical_energy_deuterium * 1.5
+    critical_energy_tritium = critical_energy_deuterium * (ATOMIC_MASS_TRITIUM / ATOMIC_MASS_DEUTERIUM)
 
     # Deuterium and tritium ion densities
     deuterium_density = deni * f_deuterium_plasma
     tritium_density = deni * f_tritium_plasma
 
-    palpdb, palptb, dnbeam2, ehotnb = beamcalc(
+    deuterium_beam_alpha_power, tritium_beam_alpha_power, hot_beam_density, beam_deposited_energy = beamcalc(
         deuterium_density,
         tritium_density,
         beam_energy,
@@ -1068,12 +1068,12 @@ def beam_fusion(
     )
 
     # Neutral beam alpha power
-    alpha_power_beams = beamfus0 * (palpdb + palptb)
+    alpha_power_beams = beamfus0 * (deuterium_beam_alpha_power + tritium_beam_alpha_power)
 
     # Neutral beam beta
-    betanb = betbm0 * 4.03e-22 * 0.66666 * dnbeam2 * ehotnb / (bt**2 + bp**2)
+    beta_beam = betbm0 * 4.03e-22 * (2/3) * hot_beam_density * beam_deposited_energy / (bt**2 + bp**2)
 
-    return betanb, dnbeam2, alpha_power_beams
+    return beta_beam, hot_beam_density, alpha_power_beams
 
 
 def beamcalc(
@@ -1128,8 +1128,15 @@ def beamcalc(
           Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
+        - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
+          vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf  
+
+        - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications, 
+          International Series of Monographs on Physics, Volume 149.
+
         - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,
           Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
+
     """
 
     # D and T beam current fractions
@@ -1142,16 +1149,23 @@ def beamcalc(
     # Ratio of beam energy to critical energy for deuterium
     beam_energy_ratio_deuterium = beam_energy / critical_energy_deuterium
 
-    effective_deuterium_beam_slow_time = beam_slow_time / 3.0 * np.log(1.0 + (beam_energy_ratio_deuterium) ** 1.5)
+    # Calculate the characterstic time for the deuterium ions to slow down to the thermal energy, eg E = 0.
+    characteristic_deuterium_beam_slow_time = beam_slow_time / 3.0 * np.log(1.0 + (beam_energy_ratio_deuterium) ** 1.5)
+
     deuterium_beam_desnity = (
-        (1.0 - f_tritium_beam) * beam_current * effective_deuterium_beam_slow_time / (constants.electron_charge * plasma_volume)
+        (1.0 - f_tritium_beam) * beam_current * characteristic_deuterium_beam_slow_time / (constants.electron_charge * plasma_volume)
     )
 
     # Ratio of beam energy to critical energy for tritium
     beam_energy_ratio_tritium = beam_energy / critical_energy_tritium
 
-    effective_tritium_beam_slow_time = beam_slow_time / 3.0 * np.log(1.0 + (beam_energy_ratio_tritium) ** 1.5)
-    tritium_beam_desnity = f_tritium_beam * beam_current * effective_tritium_beam_slow_time / (constants.electron_charge * plasma_volume)
+    # Calculate the characterstic time for the tritium to slow down to the thermal energy, eg E = 0.
+    # Wesson, J. (2011) Tokamaks.
+    characteristic_tritium_beam_slow_time = beam_slow_time / 3.0 * np.log(1.0 + (beam_energy_ratio_tritium) ** 1.5)
+
+    tritium_beam_desnity = f_tritium_beam * beam_current * characteristic_tritium_beam_slow_time / (constants.electron_charge * plasma_volume)
+
+    hot_beam_density = deuterium_beam_desnity + tritium_beam_desnity
 
     # Find the speed of the deuterium particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
@@ -1171,50 +1185,54 @@ def beamcalc(
         / (constants.atomic_mass_unit * ATOMIC_MASS_TRITIUM)
     )
 
-    nhot = deuterium_beam_desnity + tritium_beam_desnity
+    # Source term representing the number of ions born per unit time per unit volume.
+    # D.Baiquan et.al.  “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
+    # vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
-    # Average hot ion energy from Deng & Emmert, UWFDM-718, Jan 87
-    vcds = deuterium_critical_energy_speed**2
-    vcts = tritium_critical_energy_speed**2
+    source_deuterium = f_beam_current_deuterium / (constants.electron_charge * plasma_volume)
 
-    s0d = f_beam_current_deuterium / (constants.electron_charge * plasma_volume)
-    s0t = f_beam_current_tritium / (constants.electron_charge * plasma_volume)
+    source_tritium = f_beam_current_tritium / (constants.electron_charge * plasma_volume)
 
-    xcoefd = (
+    pressure_coeff_deuterium = (
         ATOMIC_MASS_DEUTERIUM
         * constants.atomic_mass_unit
         * beam_slow_time
-        * vcds
-        * s0d
+        * deuterium_critical_energy_speed**2
+        * source_deuterium
         / (constants.kiloelectron_volt * 3.0)
     )
-    xcoeft = (
+    pressure_coeff_tritium = (
         ATOMIC_MASS_TRITIUM
         * constants.atomic_mass_unit
         * beam_slow_time
-        * vcts
-        * s0t
+        * tritium_critical_energy_speed**2
+        * source_tritium
         / (constants.kiloelectron_volt * 3.0)
     )
 
-    presd = xcoefd * beam_energy_to_ions(beam_energy, critical_energy_deuterium)
-    prest = xcoeft * beam_energy_to_ions(beam_energy, critical_energy_tritium)
+    # Fast Ion Pressure
+    # This is the same form as the ideal gas law pressure, P=1/3 * nmv^2
+    deuterium_pressure = pressure_coeff_deuterium * _fast_ion_pressure_integral(beam_energy, critical_energy_deuterium)
+    tritium_pressure = pressure_coeff_tritium * _fast_ion_pressure_integral(beam_energy, critical_energy_tritium)
 
-    ehotd = 1.5 * presd / deuterium_beam_desnity
-    ehott = 1.5 * prest / tritium_beam_desnity
-    ehot = (deuterium_beam_desnity * ehotd + tritium_beam_desnity * ehott) / nhot
+    # Beam deposited energy
+    # Find the energy from the ideal gas pressure, P=1/3 * nmv^2 = 2/3 * n<E> 
+    deuterium_depsoited_energy = 1.5 * deuterium_pressure / deuterium_beam_desnity
+    tritium_depsoited_energy = 1.5 * tritium_pressure / tritium_beam_desnity
 
-    svdhotn = 1e-4 * beam_reaction_rate(ATOMIC_MASS_DEUTERIUM, deuterium_critical_energy_speed, beam_energy)
+    total_depsoited_energy = ((deuterium_beam_desnity * deuterium_depsoited_energy) + (tritium_beam_desnity * tritium_depsoited_energy)) / hot_beam_density
 
-    svthotn = 1e-4 * beam_reaction_rate(ATOMIC_MASS_TRITIUM, tritium_critical_energy_speed, beam_energy)
+    hot_deuterium_rate = 1e-4 * beam_reaction_rate(ATOMIC_MASS_DEUTERIUM, deuterium_critical_energy_speed, beam_energy)
 
-    palfdb = alpha_power_beam(deuterium_beam_desnity, nt, svdhotn, plasma_volume, ti, svdt)
-    palftb = alpha_power_beam(tritium_beam_desnity, nd, svthotn, plasma_volume, ti, svdt)
+    hot_tritium_rate = 1e-4 * beam_reaction_rate(ATOMIC_MASS_TRITIUM, tritium_critical_energy_speed, beam_energy)
 
-    return palfdb, palftb, nhot, ehot
+    deuterium_beam_alpha_power = alpha_power_beam(deuterium_beam_desnity, nt, hot_deuterium_rate, plasma_volume, ti, svdt)
+    tritium_beam_alpha_power = alpha_power_beam(tritium_beam_desnity, nd, hot_tritium_rate, plasma_volume, ti, svdt)
+
+    return deuterium_beam_alpha_power, tritium_beam_alpha_power, hot_beam_density, total_depsoited_energy
 
 
-def beam_energy_to_ions(beam_energy: float, critical_energy: float) -> float:
+def _fast_ion_pressure_integral(beam_energy: float, critical_energy: float) -> float:
     """
     Calculate the fraction of initial beam energy given to the ions.
 
