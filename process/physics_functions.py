@@ -1140,8 +1140,8 @@ def beamcalc(
     """
 
     # D and T beam current fractions
-    f_beam_current_deuterium = beam_current * (1.0 - f_tritium_beam)
-    f_beam_current_tritium = beam_current * f_tritium_beam
+    beam_current_deuterium = beam_current * (1.0 - f_tritium_beam)
+    beam_current_tritium = beam_current * f_tritium_beam
 
     # At a critical energy the rate of loss to the ions becomes equal to that to the electrons,
     # and at lower energies the loss to the ions predominates.
@@ -1152,8 +1152,8 @@ def beamcalc(
     # Calculate the characterstic time for the deuterium ions to slow down to the thermal energy, eg E = 0.
     characteristic_deuterium_beam_slow_time = beam_slow_time / 3.0 * np.log(1.0 + (beam_energy_ratio_deuterium) ** 1.5)
 
-    deuterium_beam_desnity = (
-        (1.0 - f_tritium_beam) * beam_current * characteristic_deuterium_beam_slow_time / (constants.electron_charge * plasma_volume)
+    deuterium_beam_density = (
+        beam_current_deuterium * characteristic_deuterium_beam_slow_time / (constants.electron_charge * plasma_volume)
     )
 
     # Ratio of beam energy to critical energy for tritium
@@ -1163,9 +1163,9 @@ def beamcalc(
     # Wesson, J. (2011) Tokamaks.
     characteristic_tritium_beam_slow_time = beam_slow_time / 3.0 * np.log(1.0 + (beam_energy_ratio_tritium) ** 1.5)
 
-    tritium_beam_desnity = f_tritium_beam * beam_current * characteristic_tritium_beam_slow_time / (constants.electron_charge * plasma_volume)
+    tritium_beam_density = beam_current_tritium * characteristic_tritium_beam_slow_time / (constants.electron_charge * plasma_volume)
 
-    hot_beam_density = deuterium_beam_desnity + tritium_beam_desnity
+    hot_beam_density = deuterium_beam_density + tritium_beam_density
 
     # Find the speed of the deuterium particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
@@ -1189,9 +1189,9 @@ def beamcalc(
     # D.Baiquan et.al.  “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
     # vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
-    source_deuterium = f_beam_current_deuterium / (constants.electron_charge * plasma_volume)
+    source_deuterium = beam_current_deuterium / (constants.electron_charge * plasma_volume)
 
-    source_tritium = f_beam_current_tritium / (constants.electron_charge * plasma_volume)
+    source_tritium = beam_current_tritium / (constants.electron_charge * plasma_volume)
 
     pressure_coeff_deuterium = (
         ATOMIC_MASS_DEUTERIUM
@@ -1217,17 +1217,17 @@ def beamcalc(
 
     # Beam deposited energy
     # Find the energy from the ideal gas pressure, P=1/3 * nmv^2 = 2/3 * n<E>
-    deuterium_depsoited_energy = 1.5 * deuterium_pressure / deuterium_beam_desnity
-    tritium_depsoited_energy = 1.5 * tritium_pressure / tritium_beam_desnity
+    deuterium_deposited_energy = 1.5 * deuterium_pressure / deuterium_beam_density
+    tritium_deposited_energy = 1.5 * tritium_pressure / tritium_beam_density
 
-    total_depsoited_energy = ((deuterium_beam_desnity * deuterium_depsoited_energy) + (tritium_beam_desnity * tritium_depsoited_energy)) / hot_beam_density
+    total_depsoited_energy = ((deuterium_beam_density * deuterium_deposited_energy) + (tritium_beam_density * tritium_deposited_energy)) / hot_beam_density
 
     hot_deuterium_rate = 1e-4 * beam_reaction_rate(ATOMIC_MASS_DEUTERIUM, deuterium_critical_energy_speed, beam_energy)
 
     hot_tritium_rate = 1e-4 * beam_reaction_rate(ATOMIC_MASS_TRITIUM, tritium_critical_energy_speed, beam_energy)
 
-    deuterium_beam_alpha_power = alpha_power_beam(deuterium_beam_desnity, nt, hot_deuterium_rate, plasma_volume, ti, svdt)
-    tritium_beam_alpha_power = alpha_power_beam(tritium_beam_desnity, nd, hot_tritium_rate, plasma_volume, ti, svdt)
+    deuterium_beam_alpha_power = alpha_power_beam(deuterium_beam_density, nt, hot_deuterium_rate, plasma_volume, ti, svdt)
+    tritium_beam_alpha_power = alpha_power_beam(tritium_beam_density, nd, hot_tritium_rate, plasma_volume, ti, svdt)
 
     return deuterium_beam_alpha_power, tritium_beam_alpha_power, hot_beam_density, total_depsoited_energy
 
