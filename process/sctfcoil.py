@@ -2366,9 +2366,10 @@ class Sctfcoil:
             n_tf_turn=tfcoil_variables.n_tf_turn,
             # Area of the radial plate taken to be the area of steel in the WP
             # TODO: value clipped due to #1883
-            s_rp=np.clip(sctfcoil_module.a_tf_steel, 0, None),
-            # TODO: Does this calculation of Scc exclude the area of the case down the side?
-            s_cc=sctfcoil_module.a_case_front + sctfcoil_module.a_case_nose,
+            s_rp=numpy.clip(sctfcoil_module.a_tf_steel, 0, None),
+            s_cc=sctfcoil_module.a_case_front
+            + sctfcoil_module.a_case_nose
+            + 2.0 * sctfcoil_module.t_lat_case_av,
             taud=tfcoil_variables.tdmptf,
             # TODO: is this the correct current?
             i_op=sctfcoil_module.tfc_current / tfcoil_variables.n_tf_turn,
