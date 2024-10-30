@@ -547,8 +547,11 @@ module physics_variables
   real(dp) :: p0
   !! central total plasma pressure (Pa)
 
-  real(dp) :: alpha_power_density
-  !! Alpha power per volume [MW/m3]
+  real(dp) :: alpha_power_density_plasma
+  !! Alpha power per volume just from plasma [MW/m3]
+
+  real(dp) :: alpha_power_density_total
+  !! Alpha power per volume from plasma and beams [MW/m3]
 
   real(dp) :: alpha_power_electron_density
   !! Alpha power per volume to electrons [MW/m3]
@@ -631,8 +634,11 @@ module physics_variables
   real(dp) :: neutron_power_total
   !! Total neutron fusion power from plasma and beams [MW]
 
-  real(dp) :: neutron_power_density
-  !! neutron fusion power per volume (MW/m3)
+  real(dp) :: neutron_power_density_total
+  !! neutron fusion power per volume from beams and plasma (MW/m3)
+
+  real(dp) :: neutron_power_density_plasma
+  !! neutron fusion power per volume just from plasma (MW/m3)
 
   real(dp) :: pohmmw
   !! ohmic heating power (MW)
@@ -989,7 +995,8 @@ module physics_variables
     ni0 = 0.0D0
     m_s_limit = 0.3D0
     p0 = 0.0D0
-    alpha_power_density = 0.0D0
+    alpha_power_density_plasma = 0.0D0
+    alpha_power_density_total = 0.0D0
     alpha_power_electron_density = 0.0D0
     palpfwmw = 0.0D0
     alpha_power_ions_density = 0.0D0
@@ -1017,7 +1024,8 @@ module physics_variables
     plasma_current = 0.0D0
     neutron_power_plasma = 0.0D0
     neutron_power_total = 0.0D0
-    neutron_power_density = 0.0D0
+    neutron_power_density_total = 0.0D0
+    neutron_power_density_plasma = 0.0D0
     pohmmw = 0.0D0
     pohmpv = 0.0D0
     powerht = 0.0D0

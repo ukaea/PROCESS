@@ -164,9 +164,9 @@ It updates the instance attributes for the cumulative power densities and reacti
 This method sets the required physics variables in the `physics_variables` and `physics_module` modules. It updates the global physics variables and module variables with the current instance's fusion power densities and reaction rates.
 
 #### Updates:
-- `physics_variables.alpha_power_density`: Updated with `self.alpha_power_density`
+- `physics_variables.alpha_power_density_plasma`: Updated with `self.alpha_power_density`
 - `physics_variables.charged_power_density`: Updated with `self.charged_power_density`
-- `physics_variables.neutron_power_density`: Updated with `self.neutron_power_density`
+- `physics_variables.neutron_power_density_plasma`: Updated with `self.neutron_power_density`
 - `physics_variables.fusion_rate_density`: Updated with `self.fusion_rate_density`
 - `physics_variables.alpha_rate_density`: Updated with `self.alpha_rate_density`
 - `physics_variables.proton_rate_density`: Updated with `self.proton_rate_density`

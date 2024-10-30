@@ -1877,35 +1877,38 @@ class Physics:
 
         # Create some derived values and add beam contribution to fusion power
         (
-            physics_variables.neutron_power_density,
+            physics_variables.neutron_power_density_total,
             physics_variables.alpha_power_plasma,
             physics_variables.alpha_power_total,
             physics_variables.neutron_power_plasma,
             physics_variables.neutron_power_total,
             physics_variables.non_alpha_charged_power,
-            physics_variables.betaft,
-            physics_variables.alpha_power_density,
-            physics_variables.alpha_power_ions_density,
+            physics_variables.alpha_power_density_total,
             physics_variables.alpha_power_electron_density,
+            physics_variables.alpha_power_ions_density,
             physics_variables.charged_particle_power,
             physics_variables.fusion_power,
         ) = physics_funcs.set_fusion_powers(
+            physics_variables.f_alpha_electron,
+            physics_variables.f_alpha_ion,
+            physics_variables.alpha_power_beams,
+            physics_variables.charged_power_density,
+            physics_variables.neutron_power_density_plasma,
+            physics_variables.plasma_volume,
+            physics_variables.alpha_power_density_plasma,
+        )
+
+        physics_variables.betaft = physics_funcs.fast_alpha_beta(
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
             physics_variables.deni,
             physics_variables.dnitot,
-            physics_variables.f_alpha_electron,
-            physics_variables.f_alpha_ion,
-            physics_variables.alpha_power_beams,
-            physics_variables.charged_power_density,
-            physics_variables.neutron_power_density,
             physics_variables.ten,
             physics_variables.tin,
-            physics_variables.plasma_volume,
-            physics_variables.alpha_power_density,
-            physics_variables.ifalphap,
-        )
+            physics_variables.alpha_power_density_total,
+            physics_variables.alpha_power_density_plasma,
+            physics_variables.ifalphap,)
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
         # Note that 'fwarea' excludes these, so they have been added back in.
@@ -3966,9 +3969,23 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Alpha power density: total (MW/m^3)",
+            "(alpha_power_density_total)",
+            physics_variables.alpha_power_density_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Alpha power: plasma only (MW)",
             "(alpha_power_plasma)",
             physics_variables.alpha_power_plasma,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha power density: plasma (MW/m^3)",
+            "(alpha_power_density_plasma)",
+            physics_variables.alpha_power_density_plasma,
             "OP ",
         )
         po.ovarre(
@@ -4001,9 +4018,23 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Neutron power density: total (MW/m^3)",
+            "(neutron_power_density_total)",
+            physics_variables.neutron_power_density_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Neutron power: plasma only (MW)",
             "(neutron_power_plasma)",
             physics_variables.neutron_power_plasma,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutron power density: plasma (MW/m^3)",
+            "(neutron_power_density_plasma)",
+            physics_variables.neutron_power_density_plasma,
             "OP ",
         )
         po.ovarre(
@@ -5704,7 +5735,7 @@ class Physics:
         fhz = (
             ptrez
             + ptriz
-            - physics_variables.f_alpha_plasma * physics_variables.alpha_power_density
+            - physics_variables.f_alpha_plasma * physics_variables.alpha_power_density_total
             - physics_variables.charged_power_density
             - physics_variables.pohmpv
         )

@@ -528,9 +528,9 @@ class FusionReactionRate:
         Returns:
             None
         """
-        physics_variables.alpha_power_density = self.alpha_power_density
+        physics_variables.alpha_power_density_plasma = self.alpha_power_density
         physics_variables.charged_power_density = self.charged_power_density
-        physics_variables.neutron_power_density = self.neutron_power_density
+        physics_variables.neutron_power_density_plasma = self.neutron_power_density
         physics_variables.fusion_rate_density = self.fusion_rate_density
         physics_variables.alpha_rate_density = self.alpha_rate_density
         physics_variables.proton_rate_density = self.proton_rate_density
@@ -811,44 +811,26 @@ class RadpwrData:
 
 
 def set_fusion_powers(
-    bp: float,
-    bt: float,
-    dene: float,
-    deni: float,
-    dnitot: float,
     f_alpha_electron: float,
     f_alpha_ion: float,
     alpha_power_beams: float,
     charged_power_density: float,
     neutron_power_density_plasma: float,
-    ten: float,
-    tin: float,
     plasma_volume: float,
     alpha_power_density_plasma: float,
-    ifalphap: int,
 ) -> tuple:
     """
-    Calculate fusion power and fast alpha pressure.
 
-    This function computes various fusion power metrics and the fast alpha pressure
-    based on the provided plasma parameters.
+    This function computes various fusion power metrics based on the provided plasma parameters.
 
     Parameters:
-        bp (float): Poloidal field (T).
-        bt (float): Toroidal field on axis (T).
-        dene (float): Electron density (m^-3).
-        deni (float): Fuel ion density (m^-3).
-        dnitot (float): Total ion density (m^-3).
         f_alpha_electron (float): Fraction of alpha energy to electrons.
         f_alpha_ion (float): Fraction of alpha energy to ions.
         alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
         charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
         neutron_power_density_plasma (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
-        ten (float): Density-weighted electron temperature (keV).
-        tin (float): Density-weighted ion temperature (keV).
         plasma_volume (float): Plasma volume (m^3).
         alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
-        ifalphap (int): Switch for fast alpha pressure method.
 
     Returns:
         tuple: A tuple containing the following elements:
@@ -858,11 +840,10 @@ def set_fusion_powers(
             - neutron_power_plasma (float): Neutron fusion power from only the plasma [MW].
             - neutron_power_total (float): Total neutron fusion power from plasma and beams [MW].
             - non_alpha_charged_power (float): Other total charged particle fusion power [MW].
-            - betaft (float): Fast alpha beta component.
             - alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma [MW/m^3].
             - alpha_power_electron_density (float): Alpha power per unit volume to electrons [MW/m^3].
             - alpha_power_ions_density (float): Alpha power per unit volume to ions [MW/m^3].
-            - charged_particle_power(float): Charged particle fusion power [MW].
+            - charged_particle_power (float): Charged particle fusion power [MW].
             - fusion_power (float): Total fusion power [MW].
 
     References:
@@ -915,6 +896,55 @@ def set_fusion_powers(
         physics_variables.f_alpha_plasma * alpha_power_density_total * f_alpha_electron
     )
 
+    return (
+        neutron_power_density_total,
+        alpha_power_plasma,
+        alpha_power_total,
+        neutron_power_plasma,
+        neutron_power_total,
+        non_alpha_charged_power,
+        alpha_power_density_total,
+        alpha_power_electron_density,
+        alpha_power_ions_density,
+        charged_particle_power,
+        fusion_power,
+    )
+
+
+def fast_alpha_beta(
+    bp: float,
+    bt: float,
+    dene: float,
+    deni: float,
+    dnitot: float,
+    ten: float,
+    tin: float,
+    alpha_power_density_total: float,
+    alpha_power_density_plasma: float,
+    ifalphap: int,
+) -> float:
+    """
+    Calculate the fast alpha beta component.
+
+    This function computes the fast alpha beta contribution based on the provided plasma parameters.
+
+    Parameters:
+        bp (float): Poloidal field (T).
+        bt (float): Toroidal field on axis (T).
+        dene (float): Electron density (m^-3).
+        deni (float): Fuel ion density (m^-3).
+        dnitot (float): Total ion density (m^-3).
+        ten (float): Density-weighted electron temperature (keV).
+        tin (float): Density-weighted ion temperature (keV).
+        alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
+        alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
+        ifalphap (int): Switch for fast alpha pressure method.
+
+    Returns:
+        float: Fast alpha beta component.
+    """
+    # Determine average fast alpha density
+
     # Determine average fast alpha density
     if physics_variables.f_deuterium < 1.0:
 
@@ -947,20 +977,7 @@ def set_fusion_powers(
     else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0
         betaft = 0.0
 
-    return (
-        neutron_power_density_total,
-        alpha_power_plasma,
-        alpha_power_total,
-        neutron_power_plasma,
-        neutron_power_total,
-        non_alpha_charged_power,
-        betaft,
-        alpha_power_density_total,
-        alpha_power_electron_density,
-        alpha_power_ions_density,
-        charged_particle_power,
-        fusion_power,
-    )
+    return betaft
 
 
 def beam_fusion(
