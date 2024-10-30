@@ -197,6 +197,7 @@ class Caller:
             # Values haven't all stabilised after 10 evaluations
             # Which variables are still changing?
             warnings.warn(
+                "\033[93m"
                 "Model evaluations at the current optimisation parameter vector "
                 "don't produce idempotent values in the final output."
             )
@@ -206,6 +207,7 @@ class Caller:
                     [[k, v[0], v[1]] for k, v in nonconverged_vars.items()],
                     headers=["Variable", "Previous value", "Current value"],
                 )
+                + "\033[0m"
             )
 
             # Close idempotence files, write final output file and mfile
