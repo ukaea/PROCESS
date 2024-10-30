@@ -38,7 +38,7 @@ nav:
           - Standards: development/standards.md
           - F2Py Standards: development/f2py-standards.md
       # - Versioning: development/versioning.md
-  - Reference:
+  - Models:
       - Physics Models:
           - Plasma:
               - Overview: physics-models/plasma_overview.md
