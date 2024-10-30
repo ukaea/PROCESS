@@ -349,11 +349,44 @@ The beam fusion calculations will only run if the calculated beam current is gre
 
 8. Calculate the alpha power produced by the hot ion species
 
-    The function `alpha_power_beam()` is ran to calculate the alpha power produced by the deuterium and tritium fast ions.
+    The function [`alpha_power_beam()`](#beam-fusion-alpha-power--alpha_power_beam) is ran to calculate the alpha power produced by the deuterium and tritium fast ions.
+
+    -----------------------
 
     ### Beam fusion alpha power | `alpha_power_beam()`
 
+    1. Calculate reactivity ratio
+
+        The ratio between the profile averaged reactivity for D-T reactions and the reactivity for the D-T reactions if the plasma is assumed to be homogeneously at the volume averaged ion temperature ($T_{\text{i}}$) is calculated.
+
+        $$
+        f_{\text{DT}} = \frac{\langle\langle \sigma v \rangle\rangle_{\text{DT}}}{\langle \sigma v \rangle_{\text{DT}}}
+        $$
+
+    2. Calculate the alpha fusion power
+
+        The alpha powers from the deuterium and tritium beam components are calculated:
+
+        $$
+        P_{\alpha,\text{D}} = \langle n_{\text{beam}} \rangle_{\text{D}} n_{\text{i}} \langle \sigma v \rangle_{\text{beam}} E_{\alpha} V_{\text{plasma}} f_{\text{DT}} \\
+        P_{\alpha,\text{T}} = \langle n_{\text{beam}} \rangle_{\text{T}} n_{\text{i}} \langle \sigma v \rangle_{\text{beam}} E_{\alpha} V_{\text{plasma}} f_{\text{DT}}
+        $$
+
     ------------------------------
+
+## Key Constraints
+
+### Hot beam ion density limit
+
+This constraint can be activated by stating `icc = 7` in the input file.
+
+The desired value of the hot ion beam density calculated from the code (`beam_density_out`) can be constrained using the input variable, `rnbeam`. Which is the ratio of the beam density to the plasma electron density. It can be set as an iteration variable by setting `ixc = 7`.
+
+
+
+
+
+
 
 [^1]: J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
 [^2]: Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf  

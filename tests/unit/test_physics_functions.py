@@ -28,9 +28,9 @@ class SetFusionPowersParam(NamedTuple):
 
     dnitot: Any = None
 
-    falpe: Any = None
+    f_alpha_electron: Any = None
 
-    falpi: Any = None
+    f_alpha_ion: Any = None
 
     alpha_power_beams: Any = None
 
@@ -79,8 +79,8 @@ class SetFusionPowersParam(NamedTuple):
             dene=7.432e19,
             deni=6.226e19,
             dnitot=6.743e19,
-            falpe=0.68,
-            falpi=0.32,
+            f_alpha_electron=0.68,
+            f_alpha_ion=0.32,
             alpha_power_beams=0,
             charged_power_density=0.00066,
             ten=13.84,
@@ -108,8 +108,8 @@ class SetFusionPowersParam(NamedTuple):
             dene=7.432e19,
             deni=6.226e19,
             dnitot=6.743e19,
-            falpe=0.68,
-            falpi=0.32,
+            f_alpha_electron=0.68,
+            f_alpha_ion=0.32,
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
             ten=13.84,
@@ -137,8 +137,8 @@ class SetFusionPowersParam(NamedTuple):
             dene=7.432e19,
             deni=6.226e19,
             dnitot=6.743e19,
-            falpe=0.68,
-            falpi=0.32,
+            f_alpha_electron=0.68,
+            f_alpha_ion=0.32,
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
             ten=13.84,
@@ -166,8 +166,8 @@ class SetFusionPowersParam(NamedTuple):
             dene=7.432e19,
             deni=6.226e19,
             dnitot=6.743e19,
-            falpe=0.68,
-            falpi=0.32,
+            f_alpha_electron=0.68,
+            f_alpha_ion=0.32,
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
             ten=13.84,
@@ -221,8 +221,8 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         dene=setfusionpowersparam.dene,
         deni=setfusionpowersparam.deni,
         dnitot=setfusionpowersparam.dnitot,
-        falpe=setfusionpowersparam.falpe,
-        falpi=setfusionpowersparam.falpi,
+        f_alpha_electron=setfusionpowersparam.f_alpha_electron,
+        f_alpha_ion=setfusionpowersparam.f_alpha_ion,
         alpha_power_beams=setfusionpowersparam.alpha_power_beams,
         charged_power_density=setfusionpowersparam.charged_power_density,
         ten=setfusionpowersparam.ten,

@@ -166,13 +166,13 @@ module physics_variables
   real(dp) :: inductive_current_fraction
   !! fraction of plasma current produced inductively
 
-  real(dp) :: falpe
+  real(dp) :: f_alpha_electron
   !! fraction of alpha energy to electrons
 
   real(dp) :: f_alpha_plasma
   !! Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305.
 
-  real(dp) :: falpi
+  real(dp) :: f_alpha_ion
   !! fraction of alpha power to ions
 
   real(dp) :: fdeut
@@ -930,9 +930,9 @@ module physics_variables
     eps = 0.34399724802D0
     aux_current_fraction = 0.0D0
     inductive_current_fraction = 0.0D0
-    falpe = 0.0D0
+    f_alpha_electron = 0.0D0
     f_alpha_plasma = 0.95D0
-    falpi = 0.0D0
+    f_alpha_ion = 0.0D0
     fdeut = 0.5D0
     ftar = 1.0D0
     ffwal = 0.92D0

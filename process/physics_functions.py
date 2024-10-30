@@ -816,8 +816,8 @@ def set_fusion_powers(
     dene: float,
     deni: float,
     dnitot: float,
-    falpe: float,
-    falpi: float,
+    f_alpha_electron: float,
+    f_alpha_ion: float,
     alpha_power_beams: float,
     charged_power_density: float,
     neutron_power_density_plasma: float,
@@ -839,8 +839,8 @@ def set_fusion_powers(
         dene (float): Electron density (m^-3).
         deni (float): Fuel ion density (m^-3).
         dnitot (float): Total ion density (m^-3).
-        falpe (float): Fraction of alpha energy to electrons.
-        falpi (float): Fraction of alpha energy to ions.
+        f_alpha_electron (float): Fraction of alpha energy to electrons.
+        f_alpha_ion (float): Fraction of alpha energy to ions.
         alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
         charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
         neutron_power_density_plasma (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
@@ -909,10 +909,10 @@ def set_fusion_powers(
     # and ion power balance equations only)
     # No consideration of charged_power_density here...
     alpha_power_ions_density = (
-        physics_variables.f_alpha_plasma * alpha_power_density_total * falpi
+        physics_variables.f_alpha_plasma * alpha_power_density_total * f_alpha_ion
     )
     alpha_power_electron_density = (
-        physics_variables.f_alpha_plasma * alpha_power_density_total * falpe
+        physics_variables.f_alpha_plasma * alpha_power_density_total * f_alpha_electron
     )
 
     # Determine average fast alpha density

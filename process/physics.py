@@ -1895,8 +1895,8 @@ class Physics:
             physics_variables.dene,
             physics_variables.deni,
             physics_variables.dnitot,
-            physics_variables.falpe,
-            physics_variables.falpi,
+            physics_variables.f_alpha_electron,
+            physics_variables.f_alpha_ion,
             physics_variables.alpha_power_beams,
             physics_variables.charged_power_density,
             physics_variables.neutron_power_density,
@@ -2607,8 +2607,8 @@ class Physics:
         else:
             pc = physics_variables.pcoef
 
-        physics_variables.falpe = 0.88155 * np.exp(-physics_variables.te * pc / 67.4036)
-        physics_variables.falpi = 1.0 - physics_variables.falpe
+        physics_variables.f_alpha_electron = 0.88155 * np.exp(-physics_variables.te * pc / 67.4036)
+        physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
         # Average atomic masses
         physics_variables.afuel = (
@@ -4266,15 +4266,15 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Fraction of alpha power to electrons",
-            "(falpe)",
-            physics_variables.falpe,
+            "(f_alpha_electron)",
+            physics_variables.f_alpha_electron,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Fraction of alpha power to ions",
-            "(falpi)",
-            physics_variables.falpi,
+            "(f_alpha_ion)",
+            physics_variables.f_alpha_ion,
             "OP ",
         )
         po.ovarre(

@@ -842,7 +842,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     ignite: Any = None
 
-    falpe: Any = None
+    f_alpha_electron: Any = None
 
     afuel: Any = None
 
@@ -862,7 +862,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     rnone: Any = None
 
-    falpi: Any = None
+    f_alpha_ion: Any = None
 
     ralpne: Any = None
 
@@ -928,7 +928,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_impurity_arr_frac: Any = None
 
-    expected_falpe: Any = None
+    expected_f_alpha_electron: Any = None
 
     expected_afuel: Any = None
 
@@ -940,7 +940,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_zeffai: Any = None
 
-    expected_falpi: Any = None
+    expected_f_alpha_ion: Any = None
 
     expected_dlamee: Any = None
 
@@ -999,7 +999,7 @@ class PlasmaCompositionParam(NamedTuple):
             ],
             alphat=1.45,
             ignite=0,
-            falpe=0,
+            f_alpha_electron=0,
             afuel=0,
             ftrit=0.5,
             deni=0,
@@ -1009,7 +1009,7 @@ class PlasmaCompositionParam(NamedTuple):
             zeffai=0,
             rncne=0,
             rnone=0,
-            falpi=0,
+            f_alpha_ion=0,
             ralpne=0.10000000000000001,
             dlamee=0,
             rnbeam=0,
@@ -1057,13 +1057,13 @@ class PlasmaCompositionParam(NamedTuple):
                 0.00038000000000000008,
                 5.0000000000000021e-06,
             ],
-            expected_falpe=0.6845930883190634,
+            expected_f_alpha_electron=0.6845930883190634,
             expected_afuel=2.5,
             expected_deni=5.8589175702454272e19,
             expected_aion=2.7265017998473029,
             expected_dnitot=6.6125550702454276e19,
             expected_zeffai=0.43248858851447464,
-            expected_falpi=0.3154069116809366,
+            expected_f_alpha_ion=0.3154069116809366,
             expected_dlamee=17.510652035055571,
             expected_zeff=2.0909945616489103,
             expected_dnz=28875000000000004,
@@ -1121,7 +1121,7 @@ class PlasmaCompositionParam(NamedTuple):
             ).transpose(),
             alphat=1.45,
             ignite=0,
-            falpe=0.6845930883190634,
+            f_alpha_electron=0.6845930883190634,
             afuel=2.5,
             ftrit=0.5,
             deni=5.8589175702454272e19,
@@ -1131,7 +1131,7 @@ class PlasmaCompositionParam(NamedTuple):
             zeffai=0.43248858851447464,
             rncne=0,
             rnone=0,
-            falpi=0.3154069116809366,
+            f_alpha_ion=0.3154069116809366,
             ralpne=0.10000000000000001,
             dlamee=17.510652035055571,
             rnbeam=0,
@@ -1179,13 +1179,13 @@ class PlasmaCompositionParam(NamedTuple):
                 0.00038000000000000008,
                 5.0000000000000021e-06,
             ),
-            expected_falpe=0.73096121787894142,
+            expected_f_alpha_electron=0.73096121787894142,
             expected_afuel=2.5,
             expected_deni=5.8576156204039725e19,
             expected_aion=2.7262064639685937,
             expected_dnitot=6.6125550702454276e19,
             expected_zeffai=0.43258985127992111,
-            expected_falpi=0.26903878212105858,
+            expected_f_alpha_ion=0.26903878212105858,
             expected_dlamee=17.510652035055571,
             expected_zeff=2.0909945616489103,
             expected_dnz=28875000000000004,
@@ -1238,7 +1238,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "ignite", plasmacompositionparam.ignite)
 
-    monkeypatch.setattr(physics_variables, "falpe", plasmacompositionparam.falpe)
+    monkeypatch.setattr(physics_variables, "f_alpha_electron", plasmacompositionparam.f_alpha_electron)
 
     monkeypatch.setattr(physics_variables, "afuel", plasmacompositionparam.afuel)
 
@@ -1258,7 +1258,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "rnone", plasmacompositionparam.rnone)
 
-    monkeypatch.setattr(physics_variables, "falpi", plasmacompositionparam.falpi)
+    monkeypatch.setattr(physics_variables, "f_alpha_ion", plasmacompositionparam.f_alpha_ion)
 
     monkeypatch.setattr(physics_variables, "ralpne", plasmacompositionparam.ralpne)
 
@@ -1334,8 +1334,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_impurity_arr_frac
     )
 
-    assert physics_variables.falpe == pytest.approx(
-        plasmacompositionparam.expected_falpe
+    assert physics_variables.f_alpha_electron == pytest.approx(
+        plasmacompositionparam.expected_f_alpha_electron
     )
 
     assert physics_variables.afuel == pytest.approx(
@@ -1354,8 +1354,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_zeffai
     )
 
-    assert physics_variables.falpi == pytest.approx(
-        plasmacompositionparam.expected_falpi
+    assert physics_variables.f_alpha_ion == pytest.approx(
+        plasmacompositionparam.expected_f_alpha_ion
     )
 
     assert physics_variables.dlamee == pytest.approx(
