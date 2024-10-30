@@ -182,23 +182,25 @@ class Caller:
 
             # Values haven't all stabilised after 10 evaluations
             # Which variables are still changing?
-            warnings.warn(
-                "\033[93m"
+            non_idempotent_warning = (
                 "Model evaluations at the current optimisation parameter vector "
                 "don't produce idempotent values in the final output."
             )
-
-            print(
-                tabulate(
-                    [[k, v[0], v[1]] for k, v in nonconverged_vars.items()],
-                    headers=["Variable", "Previous value", "Current value"],
-                )
-                + "\033[0m"
+            non_idempotent_table = tabulate(
+                [[k, v[0], v[1]] for k, v in nonconverged_vars.items()],
+                headers=["Variable", "Previous value", "Current value"],
             )
+
+            warnings.warn("\033[93m" + non_idempotent_warning)
+            print(non_idempotent_table + "\033[0m")
 
             # Close idempotence files, write final output file and mfile
             ft.init_module.close_idempotence_files()
-            finalise(self.models, ifail)
+            finalise(
+                self.models,
+                ifail,
+                non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
+            )
             return
 
         except Exception:
