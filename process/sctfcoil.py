@@ -2373,7 +2373,7 @@ class Sctfcoil:
             # TODO: is this the correct current?
             i_op=sctfcoil_module.tfc_current / tfcoil_variables.n_tf_turn,
             # VV properties
-            d_vv=build_variables.dr_vv_inboard,
+            d_vv=build_variables.d_vv_shell_thickness,
         )
 
     def tf_field_and_force(self):
@@ -7295,7 +7295,7 @@ def vv_stress_on_quench(
     :param taud: the discharge time of the TF coil when quench occurs
     :param i_op: the 'normal' operating current of the TF coil
 
-    :param d_vv: the thickness of the vacuum vessel
+    :param d_vv: the thickness of the vacuum vessel shell
 
     :returns: the maximum stress experienced by the vacuum vessel
 
@@ -7304,8 +7304,8 @@ def vv_stress_on_quench(
     The theta1 quantity for the TF coil and VV is not very meaningful. The
     impact of it of the inductance is rather small. Generally, the paper seems to
     suggest the TF coil is between 40 and 60, as this is the range they calculate
-    the surrogates over. No range is provided for the VV but the example using
-    JA DEMO is 1 degree suggesting the quantity will be very small.
+    the surrogates over. The thickness of the VV considers an ITER like design and
+    only the outer and inner shells that which act of conductuve structural material.
 
     References
     ----------
