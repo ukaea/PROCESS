@@ -198,7 +198,7 @@ def acc2273_param(**kwargs):
     """
     # Default parameters
     defaults = {
-        "ftrit": 0.0001,
+        "f_tritium": 0.0001,
         "volrci": fortran.buildings_variables.volrci,
         "wsvol": fortran.buildings_variables.wsvol,
         "expected": approx(0.0, abs=0.00001),
@@ -221,7 +221,7 @@ def acc2273_params():
     params = [
         acc2273_param(),
         acc2273_param(
-            ftrit=0.5,
+            f_tritium=0.5,
             volrci=1299783.4,
             wsvol=132304.1,
             expected=approx(74.12, abs=0.01),
@@ -248,7 +248,7 @@ def acc2273_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(fortran.buildings_variables, "wsvol", param["wsvol"])
     monkeypatch.setattr(fortran.buildings_variables, "volrci", param["volrci"])
-    monkeypatch.setattr(fortran.physics_variables, "ftrit", param["ftrit"])
+    monkeypatch.setattr(fortran.physics_variables, "f_tritium", param["f_tritium"])
 
     # Mock result var as negative, as an expected result is 0
     # Otherwise could get false positive result
@@ -4391,7 +4391,7 @@ class Acc2273Param(NamedTuple):
 
     fkind: Any = None
 
-    ftrit: Any = None
+    f_tritium: Any = None
 
     c227: Any = None
 
@@ -4409,7 +4409,7 @@ class Acc2273Param(NamedTuple):
             wsvol=130018.25667917728,
             volrci=1205439.8543893537,
             fkind=1,
-            ftrit=0.5,
+            f_tritium=0.5,
             c227=0,
             c2273=0,
             c22=0,
@@ -4419,7 +4419,7 @@ class Acc2273Param(NamedTuple):
             wsvol=130255.93791329287,
             volrci=1206887.4047542624,
             fkind=1,
-            ftrit=0.5,
+            f_tritium=0.5,
             c227=284.96904049038437,
             c2273=69.115208498727412,
             c22=3474.7391916096453,
@@ -4446,7 +4446,7 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2273param.fkind)
 
-    monkeypatch.setattr(physics_variables, "ftrit", acc2273param.ftrit)
+    monkeypatch.setattr(physics_variables, "f_tritium", acc2273param.f_tritium)
 
     monkeypatch.setattr(costs, "c227", acc2273param.c227)
 
@@ -5478,7 +5478,7 @@ class CoelcParam(NamedTuple):
 
     wtgpd: Any = None
 
-    fhe3: Any = None
+    f_helium3: Any = None
 
     tcycle: Any = None
 
@@ -5571,7 +5571,7 @@ class CoelcParam(NamedTuple):
             pnetelmw=493.01760776192009,
             itart=0,
             wtgpd=507.88376577416528,
-            fhe3=0,
+            f_helium3=0,
             tcycle=10864.426139387357,
             tburn=0,
             outfile=11,
@@ -5651,7 +5651,7 @@ class CoelcParam(NamedTuple):
             pnetelmw=422.4198205312706,
             itart=0,
             wtgpd=507.72524666099866,
-            fhe3=0,
+            f_helium3=0,
             tcycle=864.42613938735622,
             tburn=10230.533336387549,
             outfile=11,
@@ -5757,7 +5757,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "wtgpd", coelcparam.wtgpd)
 
-    monkeypatch.setattr(physics_variables, "fhe3", coelcparam.fhe3)
+    monkeypatch.setattr(physics_variables, "f_helium3", coelcparam.f_helium3)
 
     monkeypatch.setattr(times_variables, "tcycle", coelcparam.tcycle)
 

@@ -254,17 +254,17 @@ integrated over the plasma profiles (correctly, with or without
 pedestals).
 
 The fractional composition of the `fuel' ions (D, T and \(^3\)He) is
-controlled using the three variables \texttt{fdeut}, \texttt{ftrit} and
-\texttt{fhe3}, respectively:
+controlled using the three variables \texttt{f_deuterium}, \texttt{f_tritium} and
+\texttt{f_helium3}, respectively:
 
 \[\begin{aligned}
 n_{\mbox{fuel}}  & = n_D + n_T + n_{\mathrm{^{3}He}}  \;\;\; \mbox{particles/m$^3$} \\
-n_D  & = \mathtt{fdeut} \, n_{\mbox{fuel}} \\
-n_T  & = \mathtt{ftrit} \, n_{\mbox{fuel}} \\
-n_{\mathrm{^{3}He}} & = \mathtt{fhe3} \, n_{\mbox{fuel}}
+n_D  & = \mathtt{f_deuterium} \, n_{\mbox{fuel}} \\
+n_T  & = \mathtt{f_tritium} \, n_{\mbox{fuel}} \\
+n_{\mathrm{^{3}He}} & = \mathtt{f_helium3} \, n_{\mbox{fuel}}
 \end{aligned}\]
 
-PROCESS checks that \(fdeut + ftrit + fhe3 = 1.0\), and stops with an
+PROCESS checks that \(f_deuterium + f_tritium + f_helium3 = 1.0\), and stops with an
 error message otherwise.
 
 \subsection{Plasma Profiles}\label{plasma-profiles}
@@ -499,8 +499,8 @@ model. The available impurities are as follows:
 As stated above, the number density fractions for hydrogen (all
 isotopes) and helium need not be set, as they are calculated by the code
 to ensure that plasma quasi-neutrality is maintained, and taking into
-account the fuel ratios \texttt{fdeut}, \texttt{ftrit} and
-\texttt{fhe3}, and the alpha particle fraction \texttt{ralpne} which may
+account the fuel ratios \texttt{f_deuterium}, \texttt{f_tritium} and
+\texttt{f_helium3}, and the alpha particle fraction \texttt{ralpne} which may
 be input by the user.
 
 The impurity fraction of one of the elements listed in array

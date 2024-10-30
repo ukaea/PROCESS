@@ -14,7 +14,7 @@ from pytest import approx
 class SetFusionPowersParam(NamedTuple):
     f_alpha_plasma: Any = None
 
-    fdeut: Any = None
+    f_deuterium: Any = None
 
     ifalphap: Any = None
 
@@ -72,7 +72,7 @@ class SetFusionPowersParam(NamedTuple):
     (
         SetFusionPowersParam(
             f_alpha_plasma=0.95,
-            fdeut=0.5,
+            f_deuterium=0.5,
             ifalphap=1,
             bp=0.86,
             bt=5.3292,
@@ -101,7 +101,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_alpha_plasma=0.95,
-            fdeut=0.5,
+            f_deuterium=0.5,
             ifalphap=1,
             bp=0.86,
             bt=5.3292,
@@ -130,7 +130,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_alpha_plasma=0.95,
-            fdeut=0.5,
+            f_deuterium=0.5,
             ifalphap=0,
             bp=0.86,
             bt=5.3292,
@@ -159,7 +159,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_alpha_plasma=0.95,
-            fdeut=2.5,
+            f_deuterium=2.5,
             ifalphap=0,
             bp=0.86,
             bt=5.3292,
@@ -201,7 +201,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(pv, "f_alpha_plasma", setfusionpowersparam.f_alpha_plasma)
-    monkeypatch.setattr(pv, "fdeut", setfusionpowersparam.fdeut)
+    monkeypatch.setattr(pv, "f_deuterium", setfusionpowersparam.f_deuterium)
 
     (
         neutron_power_density,

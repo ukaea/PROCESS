@@ -626,15 +626,15 @@ boundu(28) = 1.0
 * DESCRIPTION:   Seeded protium density / electron density (default = 0.0)
 * JUSTIFICATION: Not used, no protium seeding.
 
-*fdeut = 
+*f_deuterium = 
 * DESCRIPTION:   Deuterium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*ftrit = 
+*f_tritium = 
 * DESCRIPTION:   Tritium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*fhe3 = 
+*f_helium3 = 
 * DESCRIPTION:   Helium-3 fuel fraction
 * JUSTIFICATION: Using default = 0.0
 

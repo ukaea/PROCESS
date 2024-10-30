@@ -226,8 +226,8 @@ class FusionReactionRate:
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * (physics_variables.fdeut * physics_variables.deni)
-            * (physics_variables.ftrit * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.deni)
+            * (physics_variables.f_tritium * physics_variables.deni)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -295,8 +295,8 @@ class FusionReactionRate:
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * (physics_variables.fdeut * physics_variables.deni)
-            * (physics_variables.fhe3 * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.deni)
+            * (physics_variables.f_helium3 * physics_variables.deni)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -366,8 +366,8 @@ class FusionReactionRate:
             sigmav
             * reaction_energy
             * 0.5  # Factor for D-D reaction
-            * (physics_variables.fdeut * physics_variables.deni)
-            * (physics_variables.fdeut * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.deni)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -437,8 +437,8 @@ class FusionReactionRate:
             sigmav
             * reaction_energy
             * 0.5  # Factor for D-D reaction
-            * (physics_variables.fdeut * physics_variables.deni)
-            * (physics_variables.fdeut * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.deni)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -916,7 +916,7 @@ def set_fusion_powers(
     )
 
     # Determine average fast alpha density
-    if physics_variables.fdeut < 1.0:
+    if physics_variables.f_deuterium < 1.0:
 
         betath = (
             2.0e3

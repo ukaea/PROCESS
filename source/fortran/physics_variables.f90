@@ -175,7 +175,7 @@ module physics_variables
   real(dp) :: f_alpha_ion
   !! fraction of alpha power to ions
 
-  real(dp) :: fdeut
+  real(dp) :: f_deuterium
   !! deuterium fuel fraction
 
   real(dp) :: ftar
@@ -196,7 +196,7 @@ module physics_variables
   !! density set manually using nesep (`ipedestal==1`).
   !! (`iteration variable 152`)
 
-  real(dp) :: fhe3
+  real(dp) :: f_helium3
   !! helium-3 fuel fraction
 
   real(dp) :: figmer
@@ -215,7 +215,7 @@ module physics_variables
   !! f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
   !! (`Iteration variable 154`)
 
-  real(dp) :: ftrit
+  real(dp) :: f_tritium
   !! tritium fuel fraction
 
   real(dp) :: fusion_rate_density
@@ -933,18 +933,18 @@ module physics_variables
     f_alpha_electron = 0.0D0
     f_alpha_plasma = 0.95D0
     f_alpha_ion = 0.0D0
-    fdeut = 0.5D0
+    f_deuterium = 0.5D0
     ftar = 1.0D0
     ffwal = 0.92D0
     fgwped = 0.85D0
     fgwsep = 0.50D0
-    fhe3 = 0.0D0
+    f_helium3 = 0.0D0
     figmer = 0.0D0
     fkzohm = 1.0D0
     fplhsep = 1.0D0
     fpdivlim = 1.0D0
     fne0 = 1.0D0
-    ftrit = 0.5D0
+    f_tritium = 0.5D0
     fusion_rate_density = 0.0D0
     fvsbrnni = 1.0D0
     gamma = 0.4D0

@@ -1901,7 +1901,7 @@
         "fcutfsu": 0.69,
         "fcwr": 1.0,
         "fdene": 1.0,
-        "fdeut": 0.5,
+        "f_deuterium": 0.5,
         "fdfs": 10.0,
         "fdiags": [
             "FLT_DEFAULT",
@@ -1932,7 +1932,7 @@
         "fgwped": 0.85,
         "fgwsep": 0.5,
         "fhcd": 0.0,
-        "fhe3": 0.0,
+        "f_helium3": 0.0,
         "fhldiv": 1.0,
         "fhole": 0.0,
         "fhout": 0.0,
@@ -2043,7 +2043,7 @@
         "ftol": 0.0001,
         "ftoroidalgap": 1.0,
         "ftpeak": 1.0,
-        "ftrit": 0.5,
+        "f_tritium": 0.5,
         "f_tritium_beam": 1e-06,
         "fusion_rate_density": 0.0,
         "fvdump": 1.0,
@@ -9508,7 +9508,7 @@
         "fcutfsu": "copper fraction of cable conductor (TF coils)\n (iteration variable 59)",
         "fcwr": "f-value for conducting wall radius / rminor limit\n (`constraint equation 23`, `iteration variable 104`)",
         "fdene": "f-value for density limit (`constraint equation 5`, `iteration variable 9`)\n (invalid if `ipedestal=3`)",
-        "fdeut": "deuterium fuel fraction",
+        "f_deuterium": "deuterium fuel fraction",
         "fdfs": "radial gradient ratio",
         "fdiags": "",
         "fdiv": "Solid angle fraction taken by one divertor",
@@ -9530,7 +9530,7 @@
         "fgwped": "fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top\n density set manually using neped (`ipedestal>=1`). Needs to be `>0` if `ipedestal = 3`.\n (`iteration variable 145`)",
         "fgwsep": "fraction of Greenwald density to set as separatrix density. If `<0`, separatrix\n density set manually using nesep (`ipedestal>=1`). Needs to be `>0` if `ipedestal = 3`.\n (`iteration variable 152`)",
         "fhcd": "area fraction covered by heating/current drive apparatus plus diagnostics",
-        "fhe3": "helium-3 fuel fraction",
+        "f_helium3": "helium-3 fuel fraction",
         "fhldiv": "f-value for divertor heat load (`constraint equation 18`, `iteration variable 27`)",
         "fhole": "area fraction taken up by other holes (IFE)",
         "fhout": "fraction of power to outboard divertor (for single null)",
@@ -9626,7 +9626,7 @@
         "ftol": "ftol /1.0e-4/ : error tolerance for HYBRD",
         "ftoroidalgap": "F-value for minimum tftort (`constraint equation 82`)",
         "ftpeak": "f-value for first wall peak temperature (`constraint equation 39`, `iteration variable 63`)",
-        "ftrit": "tritium fuel fraction",
+        "f_tritium": "tritium fuel fraction",
         "f_tritium_beam": "fraction of beam that is tritium",
         "fusion_rate_density": "fusion reaction rate (reactions/m3/sec)",
         "fvdump": "f-value for dump voltage (`constraint equation 34`, `iteration variable 51`)",
@@ -12598,7 +12598,7 @@
             "lb": 0.001,
             "ub": 10.0
         },
-        "fdeut": {
+        "f_deuterium": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -12662,7 +12662,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "fhe3": {
+        "f_helium3": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -12930,7 +12930,7 @@
             "lb": 0.001,
             "ub": 10.0
         },
-        "ftrit": {
+        "f_tritium": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -19079,18 +19079,18 @@
             "f_alpha_electron",
             "f_alpha_plasma",
             "f_alpha_ion",
-            "fdeut",
+            "f_deuterium",
             "ftar",
             "ffwal",
             "fgwped",
             "fgwsep",
-            "fhe3",
+            "f_helium3",
             "figmer",
             "fkzohm",
             "fplhsep",
             "fpdivlim",
             "fne0",
-            "ftrit",
+            "f_tritium",
             "fusion_rate_density",
             "fvsbrnni",
             "gamma",
@@ -20242,7 +20242,7 @@
         "fcutfsu": "real_variable",
         "fcwr": "real_variable",
         "fdene": "real_variable",
-        "fdeut": "real_variable",
+        "f_deuterium": "real_variable",
         "fdfs": "real_variable",
         "fdiv": "real_variable",
         "fdiva": "real_variable",
@@ -20258,7 +20258,7 @@
         "fgwped": "real_variable",
         "fgwsep": "real_variable",
         "fhcd": "real_variable",
-        "fhe3": "real_variable",
+        "f_helium3": "real_variable",
         "fhldiv": "real_variable",
         "fhole": "real_variable",
         "fhts": "real_variable",
@@ -20325,7 +20325,7 @@
         "ftol": "real_variable",
         "ftoroidalgap": "real_variable",
         "ftpeak": "real_variable",
-        "ftrit": "real_variable",
+        "f_tritium": "real_variable",
         "f_tritium_beam": "real_variable",
         "fvdump": "real_variable",
         "fvoldw": "real_variable",

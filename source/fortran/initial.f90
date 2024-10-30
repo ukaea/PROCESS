@@ -255,8 +255,8 @@ subroutine check
     use numerics, only: ixc, icc, ioptimz, neqns, nineqns, nvar, boundl, &
         boundu
     use pfcoil_variables, only: ipfres, ngrp, pfclres, ipfloc, ncls, isumatoh
-    use physics_variables, only: aspect, fdeut, fgwped, fhe3, &
-        fgwsep, ftrit, i_bootstrap_current, i_single_null, i_plasma_current, idivrt, ishape, &
+    use physics_variables, only: aspect, f_deuterium, fgwped, f_helium3, &
+        fgwsep, f_tritium, i_bootstrap_current, i_single_null, i_plasma_current, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
         rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar, i_diamagnetic_current
     use pulse_variables, only: lpulse
@@ -335,12 +335,12 @@ subroutine check
     end if
 
     !  Fuel ion fractions must add up to 1.0
-    if (abs(1.0D0 - fdeut - ftrit - fhe3) > 1.0D-6) then
-        fdiags(1) = fdeut; fdiags(2) = ftrit ; fdiags(3) = fhe3
+    if (abs(1.0D0 - f_deuterium - f_tritium - f_helium3) > 1.0D-6) then
+        fdiags(1) = f_deuterium; fdiags(2) = f_tritium ; fdiags(3) = f_helium3
         call report_error(36)
     end if
 
-    if (ftrit < 1.0D-3) then  !  tritium fraction is negligible
+    if (f_tritium < 1.0D-3) then  !  tritium fraction is negligible
         triv = 0.0D0
         trithtmw = 0.0D0
     end if

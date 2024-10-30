@@ -1847,8 +1847,8 @@ class Physics:
                 physics_variables.deni,
                 physics_variables.dlamie,
                 current_drive_variables.beam_energy,
-                physics_variables.fdeut,
-                physics_variables.ftrit,
+                physics_variables.f_deuterium,
+                physics_variables.f_tritium,
                 current_drive_variables.f_tritium_beam,
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
@@ -2469,7 +2469,7 @@ class Physics:
         if physics_variables.alpha_rate_density < 1.0e-6:  # not calculated yet...
             physics_variables.dnprot = max(
                 physics_variables.protium * physics_variables.dene,
-                physics_variables.dnalp * (physics_variables.fhe3 + 1.0e-3),
+                physics_variables.dnalp * (physics_variables.f_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             physics_variables.dnprot = max(
@@ -2509,8 +2509,8 @@ class Physics:
 
         # Fuel ion density, deni
         # For D-T-He3 mix, deni = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
-        # So deni = znfuel - nHe3 = znfuel - fhe3*deni
-        physics_variables.deni = znfuel / (1.0 + physics_variables.fhe3)
+        # So deni = znfuel - nHe3 = znfuel - f_helium3*deni
+        physics_variables.deni = znfuel / (1.0 + physics_variables.f_helium3)
 
         # Set hydrogen and helium impurity fractions for
         # radiation calculations
@@ -2518,7 +2518,7 @@ class Physics:
             impurity_radiation_module.element2index("H_") - 1
         ] = (
             physics_variables.dnprot
-            + (physics_variables.fdeut + physics_variables.ftrit)
+            + (physics_variables.f_deuterium + physics_variables.f_tritium)
             * physics_variables.deni
             + physics_variables.dnbeam
         ) / physics_variables.dene
@@ -2526,7 +2526,7 @@ class Physics:
         impurity_radiation_module.impurity_arr_frac[
             impurity_radiation_module.element2index("He") - 1
         ] = (
-            physics_variables.fhe3 * physics_variables.deni / physics_variables.dene
+            physics_variables.f_helium3 * physics_variables.deni / physics_variables.dene
             + physics_variables.ralpne
         )
 
@@ -2612,9 +2612,9 @@ class Physics:
 
         # Average atomic masses
         physics_variables.afuel = (
-            2.0 * physics_variables.fdeut
-            + 3.0 * physics_variables.ftrit
-            + 3.0 * physics_variables.fhe3
+            2.0 * physics_variables.f_deuterium
+            + 3.0 * physics_variables.f_tritium
+            + 3.0 * physics_variables.f_helium3
         )
         physics_variables.abeam = (
             2.0 * (1.0 - current_drive_variables.f_tritium_beam)
@@ -2640,9 +2640,9 @@ class Physics:
 
         # Mass weighted plasma effective charge
         physics_variables.zeffai = (
-            physics_variables.fdeut * physics_variables.deni / 2.0
-            + physics_variables.ftrit * physics_variables.deni / 3.0
-            + 4.0 * physics_variables.fhe3 * physics_variables.deni / 3.0
+            physics_variables.f_deuterium * physics_variables.deni / 2.0
+            + physics_variables.f_tritium * physics_variables.deni / 3.0
+            + 4.0 * physics_variables.f_helium3 * physics_variables.deni / 3.0
             + physics_variables.dnalp
             + physics_variables.dnprot
             + (1.0 - current_drive_variables.f_tritium_beam) * physics_variables.dnbeam / 2.0
@@ -3918,14 +3918,14 @@ class Physics:
 
         po.osubhd(self.outfile, "Fuel Constituents :")
         po.ovarrf(
-            self.outfile, "Deuterium fuel fraction", "(fdeut)", physics_variables.fdeut
+            self.outfile, "Deuterium fuel fraction", "(f_deuterium)", physics_variables.f_deuterium
         )
         po.ovarrf(
-            self.outfile, "Tritium fuel fraction", "(ftrit)", physics_variables.ftrit
+            self.outfile, "Tritium fuel fraction", "(f_tritium)", physics_variables.f_tritium
         )
-        if physics_variables.fhe3 > 1.0e-3:
+        if physics_variables.f_helium3 > 1.0e-3:
             po.ovarrf(
-                self.outfile, "3-Helium fuel fraction", "(fhe3)", physics_variables.fhe3
+                self.outfile, "3-Helium fuel fraction", "(f_helium3)", physics_variables.f_helium3
             )
 
         po.osubhd(self.outfile, "Fusion Power :")
@@ -5491,7 +5491,7 @@ class Physics:
         amain = np.full_like(inverse_q, physics_variables.afuel)
 
         # Create new array of average main ion charge
-        zmain = np.full_like(inverse_q, 1.0 + physics_variables.fhe3)
+        zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_helium3)
 
         # Prevent division by zero
         if ne[NR - 1] == 0.0:

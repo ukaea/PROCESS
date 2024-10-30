@@ -50,16 +50,16 @@ calculated using the parameterizations in [^1], integrated over the plasma
 profiles (correctly, with or without pedestals).
 
 The fractional composition of the 'fuel' ions (D, T and \(^3\)He) is
-controlled using the three variables `fdeut`, `ftrit` and `fhe3`, respectively:
+controlled using the three variables `f_deuterium`, `f_tritium` and `f_helium3`, respectively:
 
 $$\begin{aligned}
 n_{\mbox{fuel}}  & = n_D + n_T + n_{\mathrm{^{3}He}}  \;\;\; \mbox{particles/m$^3$} \\
-n_D  & = \mathtt{fdeut} \, n_{\mbox{fuel}} \\
-n_T  & = \mathtt{ftrit} \, n_{\mbox{fuel}} \\
-n_{\mathrm{^{3}He}} & = \mathtt{fhe3} \, n_{\mbox{fuel}}
+n_D  & = \mathtt{f_deuterium} \, n_{\mbox{fuel}} \\
+n_T  & = \mathtt{f_tritium} \, n_{\mbox{fuel}} \\
+n_{\mathrm{^{3}He}} & = \mathtt{f_helium3} \, n_{\mbox{fuel}}
 \end{aligned}$$
 
-PROCESS checks that $\mathtt{fdeut} + \mathtt{ftrit} + \mathtt{fhe3} = 1.0$, and stops with an error message otherwise. Shouldnt this account for impurities also?
+PROCESS checks that $\mathtt{f_deuterium} + \mathtt{f_tritium} + \mathtt{f_helium3} = 1.0$, and stops with an error message otherwise. Shouldnt this account for impurities also?
 
 -------------------------
 
@@ -109,7 +109,7 @@ There are 4 key functions for calculating the fusion reaction for the plasma. Th
 #### Detailed Steps
 1. **Initialize Bosch-Hale Constants**: Initializes the Bosch-Hale constants for the required reaction using predefined reaction constants stored in the BoschHaleConstants dataclass.
 2. **Calculate Fusion Reaction Rate**: Uses Simpson's rule to integrate the fusion reaction rate over the plasma profile.
-3. **Calculate Fusion Power Density**: Compute the fusion power density produced by the given reaction. Using the reaction energy calculated and stored in `constants.f90`. The reactant density is is given by $\mathtt{fdeut, ftrit}$ or $\mathtt{fhe3}$ multiplied by the volume averaged ion density.
+3. **Calculate Fusion Power Density**: Compute the fusion power density produced by the given reaction. Using the reaction energy calculated and stored in `constants.f90`. The reactant density is is given by $\mathtt{f_deuterium, f_tritium}$ or $\mathtt{f_helium3}$ multiplied by the volume averaged ion density.
 4. **Calculate Fusion Power Densities**: Compute the fusion power density for alpha particles, neutrons and other charged particles, depending on the reaction. Energy branching fractions used are calculated and called from `constants.f90`
 5. **Calculate Fusion Rate Densities**: Compute the fusion rate density and for alpha particles, neutrons and other charged particles, depending on the reaction.
 6. **Update Reaction Power Density**: Updates the object attribute for the specific reaction power density.

@@ -304,13 +304,13 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, cvol, fdeut, ffwal, iculbl, itartpf, ilhthresh, &
+      rhopedt, cvol, f_deuterium, ffwal, iculbl, itartpf, ilhthresh, &
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
-      fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
+      fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
       ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
-      teped, fhe3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
+      teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
@@ -578,8 +578,8 @@ contains
        case ('ftar')
           call parse_real_variable('ftar', ftar, 0.0D0, 1.0D0, &
                'Fraction of power to divertor with lower divertor in double null')
-       case ('fdeut')
-          call parse_real_variable('fdeut', fdeut, 0.0D0, 1.0D0, &
+       case ('f_deuterium')
+          call parse_real_variable('f_deuterium', f_deuterium, 0.0D0, 1.0D0, &
                'Deuterium fuel fraction')
        case ('ffwal')
           call parse_real_variable('ffwal', ffwal, 0.0D0, 10.0D0, &
@@ -590,8 +590,8 @@ contains
        case ('fgwsep')
           call parse_real_variable('fgwsep', fgwsep, -1.0D0, 1.0D0, &
                'Fraction of n_G at separatrix')
-       case ('fhe3')
-          call parse_real_variable('fhe3', fhe3, 0.0D0, 1.0D0, &
+       case ('f_helium3')
+          call parse_real_variable('f_helium3', f_helium3, 0.0D0, 1.0D0, &
                'Helium-3 fuel fraction')
        case ('fimp')
           call parse_real_array('fimp', fimp, isub1, nimp, &
@@ -605,8 +605,8 @@ contains
        case ('ftaulimit')
           call parse_real_variable('ftaulimit', ftaulimit, 0.001D0, 1.0D0, &
                'f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement times')
-       case ('ftrit')
-          call parse_real_variable('ftrit', ftrit, 0.0D0, 1.0D0, &
+       case ('f_tritium')
+          call parse_real_variable('f_tritium', f_tritium, 0.0D0, 1.0D0, &
                'Tritium fuel fraction')
        case ('fvsbrnni')
           call parse_real_variable('fvsbrnni', fvsbrnni, 0.0D0, 1.0D0, &
