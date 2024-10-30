@@ -49,31 +49,6 @@ class Caller:
         else:
             return False
 
-    @staticmethod
-    def check_mfile_agreement(
-        previous: dict[str, float], current: dict[str, float]
-    ) -> dict[str, list[float, float]]:
-        """Compare previous and current mfiles for agreement within a tolerance.
-
-        :param previous: variables and values from previous models evaluation
-        :type previous: dict[str,float]
-        :param current: variables and values from current models evaluation
-        :type current: dict[str,float]
-        :return: non-converged values
-        :rtype: dict[str, list[float, float]
-        """
-        nonconverged_vars = {}
-        for var in previous.keys():
-            if np.allclose(
-                previous[var], current.get(var, np.nan), rtol=1.0e-6, equal_nan=True
-            ):
-                continue
-            else:
-                # Value has changed between previous and current mfiles
-                nonconverged_vars[var] = [previous[var], current.get(var, np.nan)]
-
-        return nonconverged_vars
-
     def call_models(self, xc: np.ndarray, m: int) -> Tuple[float, np.ndarray]:
         """Evalutate models until results are idempotent.
 
@@ -177,9 +152,20 @@ class Caller:
                     previous_mfile_data = mfile_data.copy()
                     continue
 
-                nonconverged_vars = self.check_mfile_agreement(
-                    previous_mfile_data, mfile_data
-                )
+                # Compare previous and current mfiles for agreement
+                nonconverged_vars = {}
+                for var in previous_mfile_data.keys():
+                    previous_value = previous_mfile_data[var]
+                    current_value = mfile_data.get(var, np.nan)
+                    if self.check_agreement(previous_value, current_value):
+                        continue
+                    else:
+                        # Value has changed between previous and current mfiles
+                        nonconverged_vars[var] = [
+                            previous_value,
+                            current_value,
+                        ]
+
                 if len(nonconverged_vars) == 0:
                     # Previous and current mfiles agree (idempotent)
                     logger.debug("Mfiles idempotent, returning")
