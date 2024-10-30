@@ -7230,8 +7230,8 @@ def vv_stress_on_quench(
     The theta1 quantity for the TF coil and VV is not very meaningful. The
     impact of it of the inductance is rather small. Generally, the paper seems to
     suggest the TF coil is between 40 and 60, as this is the range they calculate
-    the surrogates over. No range is provided for the VV but the example using
-    JA DEMO is 1 degree suggesting the quantity will be very small.
+    the surrogates over. The thickness of the VV considers an ITER like design and
+    only the outer and inner shells that which act of conductuve structural material.
 
     References
     ----------
