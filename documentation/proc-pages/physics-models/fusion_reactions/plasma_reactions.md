@@ -49,17 +49,19 @@ the total fusion power production calculation. The fusion reaction rates are
 calculated using the parameterizations in [^1], integrated over the plasma 
 profiles (correctly, with or without pedestals).
 
-The fractional composition of the 'fuel' ions (D, T and \(^3\)He) is
-controlled using the three variables `f_deuterium`, `f_tritium` and `f_helium3`, respectively:
+-------------------------
 
-$$\begin{aligned}
-n_{\mbox{fuel}}  & = n_D + n_T + n_{\mathrm{^{3}He}}  \;\;\; \mbox{particles/m$^3$} \\
-n_D  & = \mathtt{f_deuterium} \, n_{\mbox{fuel}} \\
-n_T  & = \mathtt{f_tritium} \, n_{\mbox{fuel}} \\
-n_{\mathrm{^{3}He}} & = \mathtt{f_helium3} \, n_{\mbox{fuel}}
-\end{aligned}$$
+## Setting of plasma fuel composition
 
-PROCESS checks that $\mathtt{f_deuterium} + \mathtt{f_tritium} + \mathtt{f_helium3} = 1.0$, and stops with an error message otherwise. Shouldnt this account for impurities also?
+The fractional composition of the 'fuel' ions ($\text{D}$, $\text{T}$ and $^3\text{He}$) is
+controlled using the three variables `f_deuterium`, `f_tritium` and `f_helium3`, respectively.
+More information about setting seeded impurities and simulating first wall sputtering can be found in the [impurities and radiation section](../plasma_radiation_impurities.md)
+
+!!! note "Reactions not calculated"
+
+    `PROCESS` at the moment does not do calculations for the core reactions of $\text{T-T}$,  $\text{T-}^3\text{He}$,  $^3$$\text{He}$ $-^3$$\text{He}$ and $\text{p}$ -$^{11}$$\text{B}$.
+
+    Fusion reactions involving fusion products such as $\text{n}$, $\text{p}$ and $\alpha$ are also not calculated.
 
 -------------------------
 
@@ -100,6 +102,11 @@ $$
 -1.8201\times 10^{-6}\langle T_{\text{e}} \rangle^3 + 6.9855\times 10^{-9}\langle T_{\text{e}} \rangle^4
 $$
 
+<figure markdown>
+![D-D reaction branching ratio](./deuterium_branching_plot.png){ width = "100"}
+<figcaption>Figure 1: Ratio of the neutron producing to proton producing D-D reaction branches based on the ion temperature .</figcaption>
+</figure>
+
 -----------------------
 
 ### Calculate fusion reactions
@@ -109,7 +116,7 @@ There are 4 key functions for calculating the fusion reaction for the plasma. Th
 #### Detailed Steps
 1. **Initialize Bosch-Hale Constants**: Initializes the Bosch-Hale constants for the required reaction using predefined reaction constants stored in the BoschHaleConstants dataclass.
 2. **Calculate Fusion Reaction Rate**: Uses Simpson's rule to integrate the fusion reaction rate over the plasma profile.
-3. **Calculate Fusion Power Density**: Compute the fusion power density produced by the given reaction. Using the reaction energy calculated and stored in `constants.f90`. The reactant density is is given by $\mathtt{f_deuterium, f_tritium}$ or $\mathtt{f_helium3}$ multiplied by the volume averaged ion density.
+3. **Calculate Fusion Power Density**: Compute the fusion power density produced by the given reaction. Using the reaction energy calculated and stored in `constants.f90`. The reactant density is is given by $\mathtt{f\_deuterium, f\_tritium}$ or $\mathtt{f\_helium3}$ multiplied by the volume averaged ion density.
 4. **Calculate Fusion Power Densities**: Compute the fusion power density for alpha particles, neutrons and other charged particles, depending on the reaction. Energy branching fractions used are calculated and called from `constants.f90`
 5. **Calculate Fusion Rate Densities**: Compute the fusion rate density and for alpha particles, neutrons and other charged particles, depending on the reaction.
 6. **Update Reaction Power Density**: Updates the object attribute for the specific reaction power density.
@@ -184,6 +191,8 @@ This method sets the required physics variables in the `physics_variables` and `
     *"Present day experiments (1999) show that in a quiescent plasma the diffusion rate of the fast particles is close to the neoclassical level. Even if one considers the case when anomalous diffusion by the fast alpha particles is at a rate nearly the same as that predicted by empirical scaling for the particles in the main plasma, estimates show that the energy loss fraction will be less than the ITER design specification of 5%.[^2]"*
 
 The fraction of alpha particle power produced by the plasma that gets coupled to the plasma for internal heating can be set in `PROCESS` with the `f_alpha_plasma` input variable. By default it is set to 95% or 0.95 as is the assumed ITER default.[^2]
+
+-----------------------------
 
 ## Key Constraints
 
