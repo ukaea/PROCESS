@@ -164,19 +164,7 @@ It is greatly encouraged and recommended to include type hints for all inputs an
 
 ## Docstrings
 
-The docstring style is that of the [Google type](https://google.github.io/styleguide/pyguide.html#s3.8.1-comments-in-doc-strings). Though there are some additions for `Notes` and `References` in order to give mathematical reasoning and sources to some functions.
-
-The following VSCode extensions can be used to generate the bulk of the docstring in the Google style:
-
-------------------------------------
-
-Name: autoDocstring - Python Docstring Generator
-
-Id: njpwerner.autodocstring
-
-VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring
-
-----------------------------------
+The docstring style is that of the [Sphinx type](https://www.sphinx-doc.org/en/master/index.html). Though there are some additions for `Notes` and `References` in order to give mathematical reasoning and sources to some functions.
 
 ### Functions
 
@@ -187,22 +175,23 @@ def function_name(param1, param2):
     """
     Brief description of what the function does.
 
-    Args:
-        param1 (type): Description of the first parameter with units.
-        param2 (type): Description of the second parameter with units.
+    Detailed description of the function. This can include information about the algorithm,
+    any important notes, and other relevant details.
 
-    Returns:
-        return_type: Description of the return value with units.
+    :param type param1: Description of the first parameter.
+    :param type param2: Description of the second parameter.
+    :returns: Description of the return value.
+    :rtype: return_type
+    :raises ExceptionType: Description of the exception raised (if any).
 
-    Notes:
-        Detailed description of the function. This can include information about the algorithm,
-        any important notes, and other relevant details.
+    :notes:
+        - Additional notes about the function.
+        - Any important considerations or caveats.
 
-    References:
-        - Reference 1 
-        - Reference 2
-         (Use a verbose reference style that has a clickable DOI or HTML link.)
-    """    
+    :references:
+        - Reference 1: Description of the reference.
+        - Reference 2: Description of the reference.
+    """
 ```
 
 ### Classes
@@ -210,7 +199,7 @@ def function_name(param1, param2):
 If writing in new Python classes please use the docstring template below.
 
 ```python
-class ClassName:
+class ExampleClass:
     """
     Brief description of the class.
 
@@ -221,14 +210,23 @@ class ClassName:
         attribute1 (type): Description of attribute1.
         attribute2 (type): Description of attribute2.
         attribute3 (type): Description of attribute3.
-        attribute4 (type): Description of attribute4.
 
     Methods:
-        method1(): Description of method1.
-        method2(): Description of method2.
-        method3(): Description of method3.
-        method4(): Description of method4.
+        method1(param1, param2): Description of method1.
+        method2(param1, param2): Description of method2.
     """
+
+    def __init__(self, attribute1, attribute2, attribute3):
+        """
+        Initializes the ExampleClass with the given attributes.
+
+        :param type attribute1: Description of attribute1.
+        :param type attribute2: Description of attribute2.
+        :param type attribute3: Description of attribute3.
+        """
+        self.attribute1 = attribute1
+        self.attribute2 = attribute2
+        self.attribute3 = attribute3
 ```
 
 ## Comments
