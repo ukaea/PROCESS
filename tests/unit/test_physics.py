@@ -439,7 +439,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
     monkeypatch.setattr(physics_variables, "xarea", bootstrapfractionsauterparam.xarea)
 
-    monkeypatch.setattr(physics_variables, "f_helium3", bootstrapfractionsauterparam.f_helium3)
+    monkeypatch.setattr(
+        physics_variables, "f_helium3", bootstrapfractionsauterparam.f_helium3
+    )
 
     monkeypatch.setattr(physics_variables, "teped", bootstrapfractionsauterparam.teped)
 
@@ -1238,11 +1240,15 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "ignite", plasmacompositionparam.ignite)
 
-    monkeypatch.setattr(physics_variables, "f_alpha_electron", plasmacompositionparam.f_alpha_electron)
+    monkeypatch.setattr(
+        physics_variables, "f_alpha_electron", plasmacompositionparam.f_alpha_electron
+    )
 
     monkeypatch.setattr(physics_variables, "afuel", plasmacompositionparam.afuel)
 
-    monkeypatch.setattr(physics_variables, "f_tritium", plasmacompositionparam.f_tritium)
+    monkeypatch.setattr(
+        physics_variables, "f_tritium", plasmacompositionparam.f_tritium
+    )
 
     monkeypatch.setattr(physics_variables, "deni", plasmacompositionparam.deni)
 
@@ -1258,7 +1264,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "rnone", plasmacompositionparam.rnone)
 
-    monkeypatch.setattr(physics_variables, "f_alpha_ion", plasmacompositionparam.f_alpha_ion)
+    monkeypatch.setattr(
+        physics_variables, "f_alpha_ion", plasmacompositionparam.f_alpha_ion
+    )
 
     monkeypatch.setattr(physics_variables, "ralpne", plasmacompositionparam.ralpne)
 
@@ -1273,7 +1281,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "pcoef", plasmacompositionparam.pcoef)
 
     monkeypatch.setattr(
-        physics_variables, "alpha_rate_density_total", plasmacompositionparam.alpha_rate_density_total
+        physics_variables,
+        "alpha_rate_density_total",
+        plasmacompositionparam.alpha_rate_density_total,
     )
 
     monkeypatch.setattr(physics_variables, "rnfene", plasmacompositionparam.rnfene)
@@ -1285,16 +1295,22 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "te", plasmacompositionparam.te)
 
     monkeypatch.setattr(
-        physics_variables, "proton_rate_density", plasmacompositionparam.proton_rate_density
+        physics_variables,
+        "proton_rate_density",
+        plasmacompositionparam.proton_rate_density,
     )
 
-    monkeypatch.setattr(physics_variables, "f_deuterium", plasmacompositionparam.f_deuterium)
+    monkeypatch.setattr(
+        physics_variables, "f_deuterium", plasmacompositionparam.f_deuterium
+    )
 
     monkeypatch.setattr(physics_variables, "alphan", plasmacompositionparam.alphan)
 
     monkeypatch.setattr(physics_variables, "dnbeam", plasmacompositionparam.dnbeam)
 
-    monkeypatch.setattr(physics_variables, "f_helium3", plasmacompositionparam.f_helium3)
+    monkeypatch.setattr(
+        physics_variables, "f_helium3", plasmacompositionparam.f_helium3
+    )
 
     monkeypatch.setattr(physics_variables, "dnalp", plasmacompositionparam.dnalp)
 

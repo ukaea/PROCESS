@@ -2542,7 +2542,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "pfwpmw", power2param.pfwpmw)
 
-    monkeypatch.setattr(physics_variables, "alpha_power_total", power2param.alpha_power_total)
+    monkeypatch.setattr(
+        physics_variables, "alpha_power_total", power2param.alpha_power_total
+    )
 
     monkeypatch.setattr(physics_variables, "ignite", power2param.ignite)
 
@@ -2566,7 +2568,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "fusion_power", power2param.fusion_power)
 
-    monkeypatch.setattr(physics_variables, "non_alpha_charged_power", power2param.non_alpha_charged_power)
+    monkeypatch.setattr(
+        physics_variables,
+        "non_alpha_charged_power",
+        power2param.non_alpha_charged_power,
+    )
 
     monkeypatch.setattr(physics_variables, "pscalingmw", power2param.pscalingmw)
 

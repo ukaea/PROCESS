@@ -1513,7 +1513,9 @@ class CurrentDrive:
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
-        mcsq = constants.electron_mass * 2.9979e8**2 / (1.0e3 * constants.electron_volt)  # keV
+        mcsq = (
+            constants.electron_mass * 2.9979e8**2 / (1.0e3 * constants.electron_volt)
+        )  # keV
         f = 16.0e0 * (tlocal / mcsq) ** 2
 
         #  fp is the derivative of f with respect to gamma, the relativistic
@@ -1956,9 +1958,9 @@ class CurrentDrive:
 
         xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
         sumln = zeffai * xlmbdai / xlmbda
-        xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln) ** (
-            2.0e0 / 3.0e0
-        )
+        xlnrat = (
+            3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln
+        ) ** (2.0e0 / 3.0e0)
         ve = c * np.sqrt(2.0e0 * te / 511.0e0)
 
         ecritfi = (

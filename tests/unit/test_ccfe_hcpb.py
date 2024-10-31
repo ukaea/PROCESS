@@ -294,7 +294,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "vffwo", nuclearheatingmagnetsparam.vffwo)
 
-    monkeypatch.setattr(physics_variables, "fusion_power", nuclearheatingmagnetsparam.fusion_power)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingmagnetsparam.fusion_power
+    )
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingmagnetsparam.itart)
 
@@ -441,7 +443,9 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(fwbs_variables, "fwmass", nuclearheatingfwparam.fwmass)
 
-    monkeypatch.setattr(physics_variables, "fusion_power", nuclearheatingfwparam.fusion_power)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingfwparam.fusion_power
+    )
 
     monkeypatch.setattr(
         ccfe_hcpb_module,
@@ -510,7 +514,9 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "pnucblkt", nuclearheatingblanketparam.pnucblkt)
 
-    monkeypatch.setattr(physics_variables, "fusion_power", nuclearheatingblanketparam.fusion_power)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingblanketparam.fusion_power
+    )
 
     monkeypatch.setattr(
         ccfe_hcpb_module, "exp_blanket", nuclearheatingblanketparam.exp_blanket
@@ -619,7 +625,9 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", nuclearheatingshieldparam.pnucshld)
 
-    monkeypatch.setattr(physics_variables, "fusion_power", nuclearheatingshieldparam.fusion_power)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingshieldparam.fusion_power
+    )
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingshieldparam.itart)
 
@@ -724,7 +732,9 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
 
     monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
 
-    monkeypatch.setattr(physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power
+    )
 
     monkeypatch.setattr(ccfe_hcpb_module, "ip", nuclearheatingdivertorparam.ip)
 

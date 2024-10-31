@@ -175,7 +175,8 @@ class CCFE_HCPB:
 
         # Power deposited in the CP
         fwbs_variables.pnuc_cp_sh = (
-            f_geom_cp * physics_variables.neutron_power_total - fwbs_variables.pnuc_cp_tf
+            f_geom_cp * physics_variables.neutron_power_total
+            - fwbs_variables.pnuc_cp_tf
         )
 
         # Old code kept for backward compatibility
@@ -187,7 +188,9 @@ class CCFE_HCPB:
 
         # New code, a bit simpler
         fwbs_variables.emultmw = (
-            (fwbs_variables.emult - 1) * f_geom_blanket * physics_variables.neutron_power_total
+            (fwbs_variables.emult - 1)
+            * f_geom_blanket
+            * physics_variables.neutron_power_total
         )
 
         # powerflow calculation for pumping power
@@ -332,7 +335,12 @@ class CCFE_HCPB:
                 "(ptfnuc.)",
                 fwbs_variables.ptfnuc,
             )
-            po.ovarre(self.outfile, "fusion_power", "(fusion_power.)", physics_variables.fusion_power)
+            po.ovarre(
+                self.outfile,
+                "fusion_power",
+                "(fusion_power.)",
+                physics_variables.fusion_power,
+            )
             po.ovarre(
                 self.outfile,
                 "total mass of the TF coils (kg)",
@@ -753,7 +761,10 @@ class CCFE_HCPB:
 
             # Scaling to the actual plasma neutron power
             neut_flux_cp = (
-                f_wc_density * f_neut_flux_out_wall * neut_flux_cp * (neutron_power_total / 800)
+                f_wc_density
+                * f_neut_flux_out_wall
+                * neut_flux_cp
+                * (neutron_power_total / 800)
             )
 
         return neut_flux_cp

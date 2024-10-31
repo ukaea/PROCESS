@@ -43,7 +43,7 @@ module constants
   !            https://physics.nist.gov/cgi-bin/cuu/Value?e|search_for=electron+charge
   real(dp), parameter :: electron_charge = 1.602176634D-19
 
-  ! While the electron charge is a fundamental constant, the electron volt is a derived unit and 
+  ! While the electron charge is a fundamental constant, the electron volt is a derived unit and
   ! is added here for convenience. This allows better syntax and is more readable than using the electron
   ! charge constant directly when working with units of energy.
 
@@ -56,7 +56,7 @@ module constants
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/cuu/Value?evj|search_for=electron+volt
   real(dp), parameter :: kiloelectron_volt = 1.602176634D-16
-  
+
   ! Unified atomic mass unit [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/cuu/Value?u|search_for=atomic+mass+constant
@@ -123,31 +123,31 @@ module constants
   real(dp), parameter :: dd_triton_energy = (((deuteron_mass+deuteron_mass)-(triton_mass+proton_mass))*speed_light**2)
 
   ! Deuterium - Tritium reaction energy fraction carried by neutron
-  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed
   ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
   ! Roughly 79.867% of the energy is carried by the neutron
   real(dp), parameter :: dt_neutron_energy_fraction = (alpha_mass/(neutron_mass+alpha_mass))
 
   ! Deuterium - Tritium reaction energy carried by alpha particle neutron [J]
-  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed
   ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
   ! Roughly 3.5 MeV of the energy is carried by the alpha particle
   real(dp), parameter :: dt_alpha_energy = (1.0D0-dt_neutron_energy_fraction)*d_t_energy
 
   ! Deuterium - Deuterium (3He producing) reaction energy fraction carried by neutron
-  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed
   ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
   ! Roughly 74.935% of the energy is carried by the neutron
   real(dp), parameter :: dd_neutron_energy_fraction = (helion_mass/(neutron_mass+helion_mass))
 
   ! Deuterium - Deuterium (Triton producing) reaction energy fraction carried by proton
-  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed
   ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
   ! Roughly 74.960% of the energy is carried by the proton
   real(dp), parameter :: dd_proton_energy_fraction = (triton_mass/(proton_mass+triton_mass))
 
   ! Deuterium - Helion (3He) reaction energy fraction carried by proton
-  ! Assuming centre of mass frame as the momenta of the fusion products exceed 
+  ! Assuming centre of mass frame as the momenta of the fusion products exceed
   ! those of the fusion reagents by many orders of magnitude. Assumed to be non-relativistic.
   ! Roughly 79.889% of the energy is carried by the proton
   real(dp), parameter :: dhelium_proton_energy_fraction = (alpha_mass/(proton_mass+alpha_mass))

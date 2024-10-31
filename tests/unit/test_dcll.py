@@ -232,7 +232,9 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     monkeypatch.setattr(physics_variables, "idivrt", dcllneutronicsandpowerparam.idivrt)
 
     monkeypatch.setattr(
-        physics_variables, "neutron_power_total", dcllneutronicsandpowerparam.neutron_power_total
+        physics_variables,
+        "neutron_power_total",
+        dcllneutronicsandpowerparam.neutron_power_total,
     )
 
     monkeypatch.setattr(physics_variables, "pradmw", dcllneutronicsandpowerparam.pradmw)

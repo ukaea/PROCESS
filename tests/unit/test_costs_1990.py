@@ -666,7 +666,9 @@ def acc26_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(cost_variables, "ireactor", param["ireactor"])
-    monkeypatch.setattr(fortran.physics_variables, "fusion_power", param["fusion_power"])
+    monkeypatch.setattr(
+        fortran.physics_variables, "fusion_power", param["fusion_power"]
+    )
     monkeypatch.setattr(htv, "pinjwp", param["pinjwp"])
     monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(htv, "pthermmw", param["pthermmw"])

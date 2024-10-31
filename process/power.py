@@ -1686,7 +1686,8 @@ class Power:
             abs(
                 sum
                 - (
-                    physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
+                    physics_variables.f_alpha_plasma
+                    * physics_variables.alpha_power_total
                     + physics_variables.non_alpha_charged_power
                     + physics_variables.pohmmw
                     + pinj
@@ -2014,7 +2015,9 @@ class Power:
             self.outfile,
             "Net electric power / total fusion power (%)",
             "(pnetelmw/fusion_power)",
-            100.0e0 * heat_transport_variables.pnetelmw / physics_variables.fusion_power,
+            100.0e0
+            * heat_transport_variables.pnetelmw
+            / physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(

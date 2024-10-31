@@ -1690,7 +1690,9 @@ class Physics:
 
         # Wilson scaling uses thermal poloidal beta, not total
         betpth = (
-            physics_variables.beta - physics_variables.betaft - physics_variables.beta_beam
+            physics_variables.beta
+            - physics_variables.betaft
+            - physics_variables.beta_beam
         ) * (physics_variables.btot / physics_variables.bp) ** 2
         current_drive_variables.bscf_wilson = (
             current_drive_variables.cboot
@@ -1870,12 +1872,19 @@ class Physics:
                 / (constants.dt_alpha_energy)
                 / physics_variables.plasma_volume
             )
-            physics_variables.dt_power_total = (physics_variables.dt_power_plasma + 5.0e0 * physics_variables.alpha_power_beams)
+            physics_variables.dt_power_total = (
+                physics_variables.dt_power_plasma
+                + 5.0e0 * physics_variables.alpha_power_beams
+            )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
-            physics_variables.fusion_rate_density_total = physics_variables.fusion_rate_density_plasma
-            physics_variables.alpha_rate_density_total = physics_variables.alpha_rate_density_plasma
-            physics_variables.dt_power_total = physics_variables.dt_power_plasma 
+            physics_variables.fusion_rate_density_total = (
+                physics_variables.fusion_rate_density_plasma
+            )
+            physics_variables.alpha_rate_density_total = (
+                physics_variables.alpha_rate_density_plasma
+            )
+            physics_variables.dt_power_total = physics_variables.dt_power_plasma
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -1910,7 +1919,8 @@ class Physics:
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
             physics_variables.alpha_power_density_plasma,
-            physics_variables.ifalphap,)
+            physics_variables.ifalphap,
+        )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
         # Note that 'fwarea' excludes these, so they have been added back in.
@@ -2531,7 +2541,9 @@ class Physics:
         impurity_radiation_module.impurity_arr_frac[
             impurity_radiation_module.element2index("He") - 1
         ] = (
-            physics_variables.f_helium3 * physics_variables.deni / physics_variables.dene
+            physics_variables.f_helium3
+            * physics_variables.deni
+            / physics_variables.dene
             + physics_variables.ralpne
         )
 
@@ -2612,7 +2624,9 @@ class Physics:
         else:
             pc = physics_variables.pcoef
 
-        physics_variables.f_alpha_electron = 0.88155 * np.exp(-physics_variables.te * pc / 67.4036)
+        physics_variables.f_alpha_electron = 0.88155 * np.exp(
+            -physics_variables.te * pc / 67.4036
+        )
         physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
         # Average atomic masses
@@ -2650,7 +2664,9 @@ class Physics:
             + 4.0 * physics_variables.f_helium3 * physics_variables.deni / 3.0
             + physics_variables.dnalp
             + physics_variables.dnprot
-            + (1.0 - current_drive_variables.f_tritium_beam) * physics_variables.dnbeam / 2.0
+            + (1.0 - current_drive_variables.f_tritium_beam)
+            * physics_variables.dnbeam
+            / 2.0
             + current_drive_variables.f_tritium_beam * physics_variables.dnbeam / 3.0
         ) / physics_variables.dene
         for imp in range(impurity_radiation_module.nimp):
@@ -3415,7 +3431,9 @@ class Physics:
         po.osubhd(self.outfile, "Beta Information :")
 
         betath = (
-            physics_variables.beta - physics_variables.betaft - physics_variables.beta_beam
+            physics_variables.beta
+            - physics_variables.betaft
+            - physics_variables.beta_beam
         )
         gammaft = (physics_variables.betaft + physics_variables.beta_beam) / betath
 
@@ -3439,7 +3457,11 @@ class Physics:
             self.outfile, "Fast alpha beta", "(betaft)", physics_variables.betaft, "OP "
         )
         po.ovarre(
-            self.outfile, "Beam ion beta", "(beta_beam)", physics_variables.beta_beam, "OP "
+            self.outfile,
+            "Beam ion beta",
+            "(beta_beam)",
+            physics_variables.beta_beam,
+            "OP ",
         )
         po.ovarre(
             self.outfile,
@@ -3923,18 +3945,30 @@ class Physics:
 
         po.osubhd(self.outfile, "Fuel Constituents :")
         po.ovarrf(
-            self.outfile, "Deuterium fuel fraction", "(f_deuterium)", physics_variables.f_deuterium
+            self.outfile,
+            "Deuterium fuel fraction",
+            "(f_deuterium)",
+            physics_variables.f_deuterium,
         )
         po.ovarrf(
-            self.outfile, "Tritium fuel fraction", "(f_tritium)", physics_variables.f_tritium
+            self.outfile,
+            "Tritium fuel fraction",
+            "(f_tritium)",
+            physics_variables.f_tritium,
         )
         if physics_variables.f_helium3 > 1.0e-3:
             po.ovarrf(
-                self.outfile, "3-Helium fuel fraction", "(f_helium3)", physics_variables.f_helium3
+                self.outfile,
+                "3-Helium fuel fraction",
+                "(f_helium3)",
+                physics_variables.f_helium3,
             )
 
         po.osubhd(self.outfile, "Fusion Powers :")
-        po.ocmmnt(self.outfile, "Fusion power totals from the main plasma and beam-plasma interactions (if present)\n")
+        po.ocmmnt(
+            self.outfile,
+            "Fusion power totals from the main plasma and beam-plasma interactions (if present)\n",
+        )
 
         po.ovarre(
             self.outfile,
@@ -4113,7 +4147,7 @@ class Physics:
             tot_power_plasma,
             "OP ",
         )
-        
+
         po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
         po.ovarre(
             self.outfile,
@@ -5776,7 +5810,8 @@ class Physics:
         fhz = (
             ptrez
             + ptriz
-            - physics_variables.f_alpha_plasma * physics_variables.alpha_power_density_total
+            - physics_variables.f_alpha_plasma
+            * physics_variables.alpha_power_density_total
             - physics_variables.charged_power_density
             - physics_variables.pohmpv
         )

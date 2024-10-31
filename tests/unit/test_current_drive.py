@@ -407,7 +407,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "plhybd", cudrivparam.plhybd)
 
-    monkeypatch.setattr(current_drive_variables, "beam_current", cudrivparam.beam_current)
+    monkeypatch.setattr(
+        current_drive_variables, "beam_current", cudrivparam.beam_current
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "porbitlossmw", cudrivparam.porbitlossmw

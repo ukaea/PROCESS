@@ -2659,7 +2659,7 @@ class StCalcEffChiParam(NamedTuple):
 
     f_alpha_plasma: Any = None
 
-    alpha_power_density: Any = None
+    alpha_power_density_total: Any = None
 
     pcoreradpv: Any = None
 
@@ -2689,7 +2689,7 @@ class StCalcEffChiParam(NamedTuple):
             te0=19.108573496973477,
             ne0=3.4479000000000007e20,
             f_alpha_plasma=0.95000000000000007,
-            alpha_power_density=1.2629524018077414,
+            alpha_power_density_total=1.2629524018077414,
             pcoreradpv=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
@@ -2706,7 +2706,7 @@ class StCalcEffChiParam(NamedTuple):
             te0=17.5,
             ne0=3.4479000000000007e20,
             f_alpha_plasma=0.95000000000000007,
-            alpha_power_density=1.0570658694225301,
+            alpha_power_density_total=1.0570658694225301,
             pcoreradpv=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
@@ -2738,9 +2738,15 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "ne0", stcalceffchiparam.ne0)
 
-    monkeypatch.setattr(physics_variables, "f_alpha_plasma", stcalceffchiparam.f_alpha_plasma)
+    monkeypatch.setattr(
+        physics_variables, "f_alpha_plasma", stcalceffchiparam.f_alpha_plasma
+    )
 
-    monkeypatch.setattr(physics_variables, "alpha_power_density", stcalceffchiparam.alpha_power_density)
+    monkeypatch.setattr(
+        physics_variables,
+        "alpha_power_density_total",
+        stcalceffchiparam.alpha_power_density_total,
+    )
 
     monkeypatch.setattr(physics_variables, "pcoreradpv", stcalceffchiparam.pcoreradpv)
 
@@ -2748,7 +2754,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "alphat", stcalceffchiparam.alphat)
 
-    monkeypatch.setattr(physics_variables, "plasma_volume", stcalceffchiparam.plasma_volume)
+    monkeypatch.setattr(
+        physics_variables, "plasma_volume", stcalceffchiparam.plasma_volume
+    )
 
     monkeypatch.setattr(physics_variables, "sarea", stcalceffchiparam.sarea)
 

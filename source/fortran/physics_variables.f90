@@ -570,7 +570,7 @@ module physics_variables
 
   real(dp) :: alpha_power_plasma
   !! Alpha power from only the plasma (MW)
-  
+
   real(dp) :: alpha_power_total
   !! Total alpha power from plasma and beams (MW)
 
@@ -639,7 +639,7 @@ module physics_variables
 
   real(dp) :: neutron_power_plasma
   !! Neutron fusion power from just the plasma [MW]
-  
+
   real(dp) :: neutron_power_total
   !! Total neutron fusion power from plasma and beams [MW]
 

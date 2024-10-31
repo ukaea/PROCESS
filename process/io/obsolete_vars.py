@@ -121,6 +121,12 @@ OBS_VARS = {
     "bscfmax": "bootstrap_current_fraction_max",
     "vgap2": "vgap_vv_thermalshield",
     "vgap": "vgap_xpoint_divertor",
+    "ftritbm": "f_tritium_bream",
+    "enbeam": "beam_energy",
+    "fdeut": "f_deuterium",
+    "ftrit": "f_tritium",
+    "fhe3": "f_helium3",
+    "falpha": "f_alpha_plasma",
 }
 
 OBS_VARS_HELP = {
