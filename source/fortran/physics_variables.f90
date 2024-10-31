@@ -35,8 +35,11 @@ module physics_variables
   real(dp) :: alphap
   !! pressure profile index
 
-  real(dp) :: alpha_rate_density
-  !! Alpha particle production rate per unit volume [particles/m3/sec]
+  real(dp) :: alpha_rate_density_total
+  !! Alpha particle production rate per unit volume, from plasma and beams [particles/m3/sec]
+
+  real(dp) :: alpha_rate_density_plasma
+  !! Alpha particle production rate per unit volume, just from plasma [particles/m3/sec]
 
   real(dp) :: alphat
   !! temperature profile index
@@ -218,8 +221,11 @@ module physics_variables
   real(dp) :: f_tritium
   !! tritium fuel fraction
 
-  real(dp) :: fusion_rate_density
-  !! fusion reaction rate (reactions/m3/sec)
+  real(dp) :: fusion_rate_density_total
+  !! fusion reaction rate, from beams and plasma (reactions/m3/sec)
+
+  real(dp) :: fusion_rate_density_plasma
+  !! fusion reaction rate, just from plasma (reactions/m3/sec)
 
   real(dp) :: fvsbrnni
   !! fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
@@ -607,8 +613,11 @@ module physics_variables
   real(dp) :: pdivmax
   !! power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)
 
-  real(dp) :: dt_power
-  !!  Total deuterium-tritium fusion power [MW]
+  real(dp) :: dt_power_total
+  !!  Total deuterium-tritium fusion power, from plasma and beams [MW]
+
+  real(dp) :: dt_power_plasma
+  !!  Deuterium-tritium fusion power, just from plasma [MW]
 
   real(dp) :: pouterzoneradmw
   !! radiation power from outer zone (MW)
@@ -895,7 +904,8 @@ module physics_variables
     alphaj = 1.0D0
     alphan = 0.25D0
     alphap = 0.0D0
-    alpha_rate_density = 0.0D0
+    alpha_rate_density_total = 0.0D0
+    alpha_rate_density_plasma = 0.0D0
     alphat = 0.5D0
     aspect = 2.907D0
     beamfus0 = 1.0D0
@@ -951,7 +961,8 @@ module physics_variables
     fpdivlim = 1.0D0
     fne0 = 1.0D0
     f_tritium = 0.5D0
-    fusion_rate_density = 0.0D0
+    fusion_rate_density_total = 0.0D0
+    fusion_rate_density_plasma = 0.0D0
     fvsbrnni = 1.0D0
     gamma = 0.4D0
     gammaft = 0.0D0
@@ -1014,7 +1025,8 @@ module physics_variables
     pdivl = 0.0D0
     pdivu = 0.0D0
     pdivmax = 0.0D0
-    dt_power = 0.0D0
+    dt_power_total = 0.0D0
+    dt_power_plasma = 0.0D0
     pouterzoneradmw = 0.0D0
     pedgeradpv = 0.0D0
     charged_particle_power = 0.0D0

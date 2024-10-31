@@ -876,7 +876,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     pcoef: Any = None
 
-    alpha_rate_density: Any = None
+    alpha_rate_density_total: Any = None
 
     rnfene: Any = None
 
@@ -1016,7 +1016,7 @@ class PlasmaCompositionParam(NamedTuple):
             zeff=0,
             dnz=0,
             pcoef=0,
-            alpha_rate_density=0,
+            alpha_rate_density_total=0,
             rnfene=0,
             abeam=0,
             dlamie=0,
@@ -1138,7 +1138,7 @@ class PlasmaCompositionParam(NamedTuple):
             zeff=2.0909945616489103,
             dnz=28875000000000004,
             pcoef=1.0521775929921553,
-            alpha_rate_density=1.973996644759543e17,
+            alpha_rate_density_total=1.973996644759543e17,
             rnfene=0,
             abeam=2.0000010000000001,
             dlamie=17.810652035055568,
@@ -1273,7 +1273,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "pcoef", plasmacompositionparam.pcoef)
 
     monkeypatch.setattr(
-        physics_variables, "alpha_rate_density", plasmacompositionparam.alpha_rate_density
+        physics_variables, "alpha_rate_density_total", plasmacompositionparam.alpha_rate_density_total
     )
 
     monkeypatch.setattr(physics_variables, "rnfene", plasmacompositionparam.rnfene)
@@ -1517,9 +1517,9 @@ class PhyauxParam(NamedTuple):
 
     dnalp: Any = None
 
-    fusion_rate_density: Any = None
+    fusion_rate_density_total: Any = None
 
-    alpha_rate_density: Any = None
+    alpha_rate_density_total: Any = None
 
     plasma_current: Any = None
 
@@ -1554,8 +1554,8 @@ class PhyauxParam(NamedTuple):
             dene=7.5e19,
             deni=5.8589175702454272e19,
             dnalp=7.5e18,
-            fusion_rate_density=1.9852091609123786e17,
-            alpha_rate_density=1.973996644759543e17,
+            fusion_rate_density_total=1.9852091609123786e17,
+            alpha_rate_density_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
             taueff=3.401323521525641,
@@ -1575,8 +1575,8 @@ class PhyauxParam(NamedTuple):
             dene=7.5e19,
             deni=5.8576156204039725e19,
             dnalp=7.5e18,
-            fusion_rate_density=1.9843269653375773e17,
-            alpha_rate_density=1.9731194318497056e17,
+            fusion_rate_density_total=1.9843269653375773e17,
+            alpha_rate_density_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
             taueff=3.402116961408892,
@@ -1613,8 +1613,8 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         dene=phyauxparam.dene,
         deni=phyauxparam.deni,
         dnalp=phyauxparam.dnalp,
-        fusion_rate_density=phyauxparam.fusion_rate_density,
-        alpha_rate_density=phyauxparam.alpha_rate_density,
+        fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
+        alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
         plasma_current=phyauxparam.plasma_current,
         sbar=phyauxparam.sbar,
         taueff=phyauxparam.taueff,

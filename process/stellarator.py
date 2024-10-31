@@ -3946,9 +3946,10 @@ class Stellarator:
         fusion_reactions = physics_funcs.FusionReactionRate(self.plasma_profile)
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
-
-        physics_variables.dt_power = (
-            physics_module.dt_power_density * physics_variables.plasma_volume
+        
+        # D-T power density is named differently to differentiate it from the beam given component
+        physics_variables.dt_power_plasma = (
+            physics_module.dt_power_density_plasma * physics_variables.plasma_volume
         )
         physics_variables.dhe3_power = (
             physics_module.dhe3_power_density * physics_variables.plasma_volume
@@ -3986,24 +3987,26 @@ class Stellarator:
                 physics_variables.plasma_volume,
                 physics_variables.zeffai,
             )
-            physics_variables.fusion_rate_density = (
-                physics_variables.fusion_rate_density
+            physics_variables.fusion_rate_density_total = (
+                physics_variables.fusion_rate_density_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
                 / physics_variables.plasma_volume
             )
-            physics_variables.alpha_rate_density = (
-                physics_variables.alpha_rate_density
+            physics_variables.alpha_rate_density_total = (
+                physics_variables.alpha_rate_density_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
                 / physics_variables.plasma_volume
             )
-
-        physics_variables.dt_power = (
-            physics_variables.dt_power + 5.0e0 * physics_variables.alpha_power_beams
-        )
+            physics_variables.dt_power_total = (physics_variables.dt_power_plasma + 5.0e0 * physics_variables.alpha_power_beams)
+        else:
+            # If no beams present then the total alpha rates and power are the same as the plasma values
+            physics_variables.fusion_rate_density_total = physics_variables.fusion_rate_density_plasma
+            physics_variables.alpha_rate_density_total = physics_variables.alpha_rate_density_plasma
+            physics_variables.dt_power_total = physics_variables.dt_power_plasma 
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -4253,8 +4256,8 @@ class Stellarator:
             physics_variables.aspect,
             physics_variables.dene,
             physics_variables.deni,
-            physics_variables.fusion_rate_density,
-            physics_variables.alpha_rate_density,
+            physics_variables.fusion_rate_density_total,
+            physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
             sbar,
             physics_variables.dnalp,

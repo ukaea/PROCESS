@@ -531,11 +531,11 @@ class FusionReactionRate:
         physics_variables.alpha_power_density_plasma = self.alpha_power_density
         physics_variables.charged_power_density = self.charged_power_density
         physics_variables.neutron_power_density_plasma = self.neutron_power_density
-        physics_variables.fusion_rate_density = self.fusion_rate_density
-        physics_variables.alpha_rate_density = self.alpha_rate_density
+        physics_variables.fusion_rate_density_plasma = self.fusion_rate_density
+        physics_variables.alpha_rate_density_plasma = self.alpha_rate_density
         physics_variables.proton_rate_density = self.proton_rate_density
         physics_module.sigmav_dt_average = self.sigmav_dt_average
-        physics_module.dt_power_density = self.dt_power_density
+        physics_module.dt_power_density_plasma = self.dt_power_density
         physics_module.dhe3_power_density = self.dhe3_power_density
         physics_module.dd_power_density = self.dd_power_density
 
@@ -869,7 +869,7 @@ def set_fusion_powers(
 
     # Add extra neutron power from beams
     neutron_power_density_total = neutron_power_density_plasma + (
-        (4.0 * alpha_power_beams) / plasma_volume
+        ((constants.dt_neutron_energy_fraction/(1.0-constants.dt_neutron_energy_fraction)) * alpha_power_beams) / plasma_volume
     )
 
     # Total neutron power
@@ -888,7 +888,7 @@ def set_fusion_powers(
 
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
-    # No consideration of charged_power_density here...
+    # No consideration of charged_power_density here.
     alpha_power_ions_density = (
         physics_variables.f_alpha_plasma * alpha_power_density_total * f_alpha_ion
     )
