@@ -191,8 +191,9 @@ class Caller:
                 headers=["Variable", "Previous value", "Current value"],
             )
 
-            warnings.warn("\033[93m" + non_idempotent_warning)
-            print(non_idempotent_table + "\033[0m")
+            warnings.warn(
+                f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m"
+            )
 
             # Close idempotence files, write final output file and mfile
             ft.init_module.close_idempotence_files()
