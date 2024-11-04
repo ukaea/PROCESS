@@ -4,7 +4,20 @@ import logging
 
 import numba
 import numpy as np
-from scipy import optimize
+
+from process.fortran import rebco_variables
+from process.fortran import global_variables
+from process.fortran import tfcoil_variables
+from process.fortran import physics_variables
+from process.fortran import build_variables
+from process.fortran import constants
+from process.fortran import sctfcoil_module
+from process.fortran import process_output as po
+from process.fortran import error_handling
+from process.fortran import fwbs_variables
+from process.fortran import pfcoil_variables
+from process.fortran import numerics
+from process.fortran import divertor_variables
 
 import process.superconductors as superconductors
 from process.fortran import (
@@ -7159,6 +7172,69 @@ def _inductance_factor(H, ri, ro, rm, theta1):
     )
 
 
+def lambda_term(tau, omega):
+    """
+    words
+    """
+    p = 1.0 - omega**2.0
+
+    if p < 0:
+        integral = (1.0 / np.sqrt(np.abs(p))) * np.arcsin(
+            (1.0 + omega * tau) / (tau + omega)
+        )
+    else:
+        integral = (1.0 / np.sqrt(np.abs(p))) * np.log(
+            (2.0 * (1.0 + tau * omega - np.sqrt(p * (1 - tau**2.0)))) / (tau + omega)
+        )
+
+    return integral
+
+
+def _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv):
+    """
+    words
+    """
+    theta2 = np.pi / 2.0 + theta1_vv
+    a = (Ro_vv - Ri_vv) / 2.0
+    Rbar = (Ro_vv + Ri_vv) / 2.0
+    A = Rbar / a
+    delta = (Rbar - Rm_vv) / a
+    kappa = H_vv / a
+    iota = (1.0 + delta) / kappa
+
+    denom = np.cos(theta1_vv) + np.sin(theta1_vv) - 1.0
+
+    R1 = H_vv * ((np.cos(theta1_vv) + iota * (np.sin(theta1_vv) - 1.0)) / denom)
+    R2 = H_vv * ((np.cos(theta1_vv) - 1.0 + iota * np.sin(theta1_vv)) / denom)
+    R3 = H_vv * (1 - delta) / kappa
+
+    Rc1 = (H_vv / kappa) * (A + 1.0) - R1
+    Rc2 = Rc1 + (R1 - R2) * np.cos(theta1_vv)
+    Rc3 = Rc2
+    Zc2 = (R1 - R2) * np.sin(theta1_vv)
+    Zc3 = Zc2 + R2 - R3
+
+    tau = np.array(
+        [
+            [np.cos(theta1_vv), np.cos(theta1_vv + theta2), -1.0],
+            [1.0, np.cos(theta1_vv), np.cos(theta1_vv + theta2)],
+        ]
+    )
+
+    omega = np.array([Rc1 / R1, Rc2 / R2, Rc3 / R3])
+
+    # Assume up down symmetry and let Zc6 = - Zc3
+    chi1 = (Zc3 + np.abs(-Zc3)) / Ri_vv
+    chi2 = 0.0
+
+    for k in range(len(omega)):
+        chi2 = chi2 + np.abs(
+            lambda_term(tau[1, k], omega[k]) - lambda_term(tau[0, k], omega[k])
+        )
+
+    return (chi1 + chi2) / np.pi
+
+
 def vv_stress_on_quench(
     # TF shape
     H_coil,
@@ -7241,8 +7317,9 @@ def vv_stress_on_quench(
     Plasma and Fusion Research. 15. 1405078-1405078. 10.1585/pfr.15.1405078.
     """
     # Poloidal loop resistance (PLR) in ohms
-    plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (s_cc + s_rp))) * 1e-6
-    plr_vv = ((0.84 / d_vv) * 0.94) * 1e-6
+    theta_vv = _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv)
+    plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (S_cc + S_rp))) * 1e-6
+    plr_vv = ((0.84 / d_vv) * theta_vv) * 1e-6
 
     # relevant self-inductances in henry (H)
     coil_structure_self_inductance = (
