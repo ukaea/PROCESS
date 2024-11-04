@@ -5,8 +5,6 @@ from typing import Any, NamedTuple
 from process.fortran import physics_variables as pv
 from process import physics_functions
 import numpy as np
-from process import physics_functions
-import numpy as np
 import pytest
 from pytest import approx
 
@@ -290,32 +288,6 @@ def test_beamcalc():
         2.8e-22,
     )
 
-    assert deuterium_beam_alpha_power == pytest.approx(11.561197668655383)
-    assert tritium_beam_alpha_power == pytest.approx(1.0434445041616093e-05)
-    assert hot_beam_density == pytest.approx(4.1968331737565126e17)
-    assert beam_deposited_energy == pytest.approx(445.05787301616635)
-
-
-def test__fast_ion_pressure_integral():
-    pressure_integral = physics_functions._fast_ion_pressure_integral(1000.0, 276.7)
-
-    assert pressure_integral == pytest.approx(1.1061397270783706)
-
-
-def test_alpha_power_beam():
-    alpha_power_beam = physics_functions.alpha_power_beam(
-        316000000000, 3.3e19, 7.5e-22, 1888.0, 13.5, 2.8e-22
-    )
-
-    assert alpha_power_beam == pytest.approx(1.047572705194316e-05)
-
-
-def test_beam_reaction_rate():
-    beam_reaction_rate = physics_functions.beam_reaction_rate(
-        3.01550071597, 5140000.0, 1000.0
-    )
-
-    assert beam_reaction_rate == pytest.approx(7.465047902975452e-18)
     assert deuterium_beam_alpha_power == pytest.approx(11.561197668655383)
     assert tritium_beam_alpha_power == pytest.approx(1.0434445041616093e-05)
     assert hot_beam_density == pytest.approx(4.1968331737565126e17)
