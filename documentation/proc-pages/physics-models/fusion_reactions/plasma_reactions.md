@@ -11,7 +11,8 @@ $$
 
 Roughly 20% of the energy produced is given to the alpha particles (\(^4\)He). The remaining 80% is carried
 away by the neutrons, which deposit their energy within the blanket and shield and other reactor components.
-The fraction of the alpha energy deposited in the plasma is `f_alpha_plasma`.
+The fraction of the alpha energy deposited in the plasma is [`f_alpha_plasma`](#coupled-alpha-particle-power). 
+**`PROCESS` only assumes the alpha power produced is coupled to and self heats the plasma, other charged particles do not.**
 
 PROCESS can also model D-\(^3\)He power plants, which utilise the following
 primary fusion reaction:
@@ -192,9 +193,23 @@ This method sets the required physics variables in the `physics_variables` and `
 
 The fraction of alpha particle power produced by the plasma that gets coupled to the plasma for internal heating can be set in `PROCESS` with the `f_alpha_plasma` input variable. By default it is set to 95% or 0.95 as is the assumed ITER default.[^2]
 
+**`PROCESS` only assumes the alpha power produced is coupled to and self heats the plasma, other charged particles do not.**
+
 -----------------------------
 
 ## Key Constraints
+
+### Global plasma power balance
+
+This constraint can be activated by stating `icc = 2` in the input file.
+
+**It is highly recommended to always have this constraint on as it is a global power balance checker**
+
+This model ensures that the sum of the ion and electron power densities plus the radiation density is equal to the sum of the coupled alpha power density, charged particle power density, ohmic heating power density and injected heating power density.
+
+If the plasma is classed as ignited then the injected heating power density is not considered.
+
+-------------------------------
 
 ### Fusion Power Upper limit
 
@@ -204,25 +219,11 @@ The value of `powfmax` can be set to the desired maximum fusion power. The scali
 
 ---------------------------------
 
-### Global power balance for electrons
-
-This constraint can be activated by stating `icc = 41` in the input file.
-
--------------------------------
-
-### Global power balance for ions
-
-This constraint can be activated by stating `icc = 41` in the input file.
-
------------------------------
-
 ### Q value lower limit
 
 This constraint can be activated by stating `icc = 28` in the input file.
 
 The value of `bigqmin` can be set to the minimum desired $Q_{\text{plasma}}$ value. The scaling value `fqval` can be varied also.
-
------------------------
 
 [^1]: H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 [^2]: I. P. E. G. on E. Drive and I. P. B. Editors, “Chapter 5: Physics of energetic ions,” Nuclear Fusion, vol. 39, no. 12, pp. 2471–2495, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/305.

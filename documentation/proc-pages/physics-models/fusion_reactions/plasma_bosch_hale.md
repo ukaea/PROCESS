@@ -75,7 +75,7 @@ This function calculates the integrand for the fusion power integration by evalu
 
     $$
     \mathtt{density\_profile\_normalised} = \frac{1}{\langle n_{\text{i}} \rangle} \\
-    \times \mathtt{plasma\_profile.neprofile.profile_y}
+    \times \mathtt{plasma\_profile.neprofile.profile\_y}
     $$
 
 4. **Compute and return the Fusion Integral**:

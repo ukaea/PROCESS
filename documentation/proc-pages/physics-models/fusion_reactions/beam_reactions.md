@@ -32,7 +32,7 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
     E_{\text{crit}} \approx 0.1AT_{10} \ \ [\text{MeV}]
     $$
 
-    <span style="color:red">Though is currently implemented for deuterium as:</span>
+    Though is currently implemented for deuterium as:
 
     $$
     E_{\text{crit,D}} = 14.8A_{\text{D}}T_{\text{e}}Z_{\text{eff}}^{2/3}\frac{\ln \Lambda_{\text{ie}}+4.0}{\Lambda_{\text{ie}}}
