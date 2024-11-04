@@ -86,8 +86,8 @@ class Availability:
             # - the neutron energy spectrum
             # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
             # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
-            ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
-            f_scale = pv.fusion_power / ref_powfmw
+            ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
+            f_scale = pv.fusion_power / ref_fusion_power
             ref_dpa_fpy = (
                 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
             )
@@ -463,8 +463,8 @@ class Availability:
         # - the neutron energy spectrum
         # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
         # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
-        ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
-        f_scale = pv.fusion_power / ref_powfmw
+        ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
+        f_scale = pv.fusion_power / ref_fusion_power
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
         dpa_fpy = f_scale * ref_dpa_fpy
 
