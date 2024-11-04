@@ -21,7 +21,7 @@ Please discuss any feature ideas you have with the developers before submitting 
 * Submit an issue (if one does not exist for this feature/ bug) that documents the proposed change.
 * Fork our repository.
 * Create a branch off `main` with an appropriate name (e.g. `feature-abc`).
-* Make the relevant changes for the repository (ensuring the changes do not creep away from the scope of the issue).
+* Make the relevant changes for the repository (ensuring the changes do not creep away from the scope of the issue). Also ensure that the implementation follows the PROCESS [style guide](https://ukaea.github.io/PROCESS/development/standards/) for names of variables and functions etc.
 * Discuss any problems or development choices in the issue and keep everyone updated on the progress of your development.
 * If the changes are notable and it would benefit other users to be aware, [create a changelog entry](https://ukaea.github.io/PROCESS/development/versioning/).
 * Finally, submit a pull request onto the `main` branch:
@@ -36,3 +36,4 @@ Please remember that all contributions are made under the [MIT license](https://
 PROCESS has unit, integration, and regression tests. Any new functionality must be appropriately tested. Sometimes, changes may require other tests to be changed. These changes should be justified in the pull request description. Tests can be run locally by following [our testing documentation](https://ukaea.github.io/PROCESS/development/testing/). All pull requests will also be run against our GitHub actions which will run all of the tests and report back to the reviewer any failures. **The unit and integration tests must pass on the CI for the changes to be accepted**.
 
 Regression tests, due to the nature of PROCESS, can change as model changes affect the optima which PROCESS converges to. A reviewer will review these changes to ensure they are minor and justified. We recommend justifying how a regression test is changing in the pull request discussion, a reviewer will likely request this anyway. For convenience, the CI system runs a 0% tolerance job that will highlight all differences between the current version of PROCESS on the `main` branch and your modified version of PROCESS; the 5% job excludes all differences under 5% differences between the two versions.
+

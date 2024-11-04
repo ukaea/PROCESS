@@ -130,18 +130,14 @@ subroutine initial
     call init_itv_74
     call init_itv_75
 
-
-
-
     call init_itv_79
 
+    call init_itv_81
+    call init_itv_82
+    call init_itv_83
 
-
-
-
-
-
-
+    call init_itv_85
+    call init_itv_86
 
     call init_itv_89
     call init_itv_90

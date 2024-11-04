@@ -42,8 +42,8 @@ def stellarator():
         Power(),
         PlasmaProfile(),
         CCFE_HCPB(BlanketLibrary(Fw())),
-        CurrentDrive(),
-        Physics(PlasmaProfile(), CurrentDrive()),
+        CurrentDrive(PlasmaProfile()),
+        Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile())),
     )
 
 
