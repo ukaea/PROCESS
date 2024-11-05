@@ -7172,9 +7172,17 @@ def _inductance_factor(H, ri, ro, rm, theta1):
     )
 
 
+@staticmethod
 def lambda_term(tau, omega):
-    """
-    words
+    """Lambda Term
+
+    Author: Alexander Pearce, UKAEA
+
+    :param tau: tau_{s,k} = (R_{s,k} - R_{c,k}) / R_k
+    :param omega: omega_k = R_{c,k}/R_k
+
+    The lammbda fucntion used inegral in inductance calcuation found
+    in Y. Itoh et al. The full form of the functions are given in appendix A.
     """
     p = 1.0 - omega**2.0
 
@@ -7190,9 +7198,20 @@ def lambda_term(tau, omega):
     return integral
 
 
+@staticmethod
 def _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv):
-    """
-    words
+    """Theta Factor Integral
+    Author: Alexander Pearce, UKAEA
+
+    :param Ro_vv: the radius of the outboard edge of the VV CCL
+    :param Ri_vv: the radius of the inboard edge of the VV CCL
+    :param Rm_vv: the radius where the maximum height of the VV CCL occurs
+    :param H_vv: the maximum height of the VV CCL
+    :param theta1_vv: the polar angle of the point at which one circular arc is
+    joined to another circular arc in the approximation to the VV CCL
+
+    The calcuation of the theta factor found in Eq 4 of Y. Itoh et al. The
+    full form of the integral is given in appendix A.
     """
     theta2 = np.pi / 2.0 + theta1_vv
     a = (Ro_vv - Ri_vv) / 2.0
