@@ -573,9 +573,30 @@ $$
 
 Is selected by setting `i_bootstrap_current = 9`[^11]
 
+This scaling data is based off of equilibria from Miller et.al.[^12].
+The equilibria from Miller et.al. are in the range of $A$ =  1.2 - 3 that are stable to infinite $n$ ballooning and low $n$ kink modes at a bootstrap fraction of 99% for $\kappa$ = 2, 2.5, 3.0. The results were parameterized as a function of aspect ratio and elongation.
+
+The parametric dependency of $\beta_{\text{p}}$ and $\beta_{\text{T}}$ are based on fitting of the DIII-D high equivalent DT yield results.
+
+$$
+\beta_{\text{N}}=\frac{\left(3.09+\frac{3.35}{A}+\frac{3.87}{A^{0.5}}\right)\left(\frac{\kappa}{3}\right)^{0.5}}{f_{\text{peak}}^{0.5}}
+$$
+
+$$
+\beta_{\text{T}}=\frac{25}{\beta_p}\left(\frac{1+\kappa^2}{2}\right)\left(\frac{\beta_N}{100}\right)^2
+$$
+
+Here $\beta_{\text{p}}$ is given by
+
+$$
+\beta_p=f_{b s} \frac{\sqrt{A}}{C_{b s} f_{\text{peak}}^{0.25}}
+$$
+
 $$
 C_{\text{BS}} = 0.773+0.019\kappa
 $$
+
+Parabolic profiles should be used for best results as the pressure peaking value is calculated as the product of a parabolic temperature and density profile.
 
 $$
 f_{\text{peak}} = \left(\int_0^1 \left(1-\rho^2 \right)^{\alpha_{\text{T}}} \left(1-\rho^2 \right)^{\alpha_{\text{n}}} \ \ \mathrm{d\rho}\right)^{-1}
@@ -597,7 +618,7 @@ $$
 
 ### Gi Scaling | `bootstrap_fraction_gi()`
 
-Is selected by setting `i_bootstrap_current = 10`[^12]
+Is selected by setting `i_bootstrap_current = 10`[^13]
 
 $$
 C_{\text{BS}} = 0.474 \epsilon^{-0.1} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178} \left(\frac{q_{95}}{q_0}\right)^{-0.133}
@@ -642,4 +663,5 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^9]: M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,” Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001–065001, Apr. 2008, doi: https://doi.org/10.1088/0741-3335/50/6/065001.
 [^10]: G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings, Jan. 1997, doi: https://doi.org/10.1063/1.53414.
 [^11]: C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,” vol. 42, no. 5, pp. 547–556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
-[^12]: K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,” Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014, doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+[^12]: Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks". Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
+[^13]: K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,” Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014, doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.

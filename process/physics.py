@@ -5864,10 +5864,19 @@ class Physics:
         float: The calculated bootstrap fraction.
 
         Notes:
+            - Data is based off of equilibria from Miller et al.
+            - A: 1.2 - 3.0 and stable to n ballooning and low n kink modes at a bootstrap fraction of 99% for kappa = 2, 2.5 and 3
+            - The results were parameterized as a function of aspect ratio and elongation
+            - The parametric dependency of beta_p and beta_T are based on fitting of the DIII-D high equivalent DT yield results
+            - Parabolic profiles should be used for best results as the pressure peaking value is calculated as the product of a parabolic
+              temperature and density profile
 
         References:
             - C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,”
               vol. 42, no. 5, pp. 547–556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
+
+            - Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks".
+              Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
         """
         # Using the standard variable naming from the Wong et.al. paper
         f_peak = 2.0 / scipy.special.beta(0.5, density_index + temperature_index + 1)
