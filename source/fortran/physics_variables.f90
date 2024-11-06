@@ -553,6 +553,9 @@ module physics_variables
   real(dp) :: p0
   !! central total plasma pressure (Pa)
 
+  real(dp) :: f_dd_branching_trit
+  !! branching ratio for DD -> T
+
   real(dp) :: alpha_power_density_plasma
   !! Alpha power per volume just from plasma [MW/m3]
 
@@ -1006,6 +1009,7 @@ module physics_variables
     ni0 = 0.0D0
     m_s_limit = 0.3D0
     p0 = 0.0D0
+    f_dd_branching_trit = 0.0D0
     alpha_power_density_plasma = 0.0D0
     alpha_power_density_total = 0.0D0
     alpha_power_electron_density = 0.0D0

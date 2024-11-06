@@ -92,6 +92,7 @@ class FusionReactionRate:
         fusion_rate_density (float): Fusion reaction rate density.
         alpha_rate_density (float): Alpha particle production rate density.
         proton_rate_density (float): Proton production rate density.
+        f_dd_branching_trit (float): The rate of tritium producing D-D reactions to 3He ones.
 
     Methods:
         deuterium_branching(ion_temperature: float) -> float:
@@ -144,6 +145,7 @@ class FusionReactionRate:
             fusion_rate_density (float): Fusion reaction rate density.
             alpha_rate_density (float): Alpha particle production rate density.
             proton_rate_density (float): Proton production rate density.
+            f_dd_branching_trit (float): The rate of tritium producing D-D reactions to 3He ones.
         """
         self.plasma_profile = plasma_profile
         self.sigmav_dt_average = 0.0
@@ -156,6 +158,7 @@ class FusionReactionRate:
         self.fusion_rate_density = 0.0
         self.alpha_rate_density = 0.0
         self.proton_rate_density = 0.0
+        self.f_dd_branching_trit = 0.0
 
     def deuterium_branching(self, ion_temperature: float) -> float:
         """
@@ -164,8 +167,8 @@ class FusionReactionRate:
         Parameters:
             ion_temperature (float): Volume averaged ion temperature in keV
 
-         Returns:
-            float: The rate of tritium producing D-D reactions to 3He ones
+        The method updates the following attributes:
+            -f_dd_branching_trit: The rate of tritium producing D-D reactions to 3He ones
 
         Notes:
             - For ion temperatures between 0.5 keV and 200 keV.
@@ -177,13 +180,15 @@ class FusionReactionRate:
               doi: https://doi.org/10.1088/0029-5515/32/4/i07.
         ‌
         """
-        return (
+        # Divide by 2 to get the branching ratio for the D-D reaction that produces tritium as the output
+        # is just the ratio of the two normalized cross sections
+        self.f_dd_branching_trit = (
             1.02934
             - 8.3264e-3 * ion_temperature
             + 1.7631e-4 * ion_temperature**2
             - 1.8201e-6 * ion_temperature**3
             + 6.9855e-9 * ion_temperature**4
-        )
+        ) / 2.0
 
     def dt_reaction(self) -> None:
         """D + T --> 4He + n reaction
@@ -362,10 +367,12 @@ class FusionReactionRate:
         reaction_energy = constants.dd_helium_energy / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
+        # The power density is scaled by the branching ratio to simulate the different
+        # product pathways
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * 0.5  # Factor for D-D reaction
+            * (1.0 - self.f_dd_branching_trit)
             * (physics_variables.f_deuterium * physics_variables.deni)
             * (physics_variables.f_deuterium * physics_variables.deni)
         )
@@ -433,10 +440,12 @@ class FusionReactionRate:
         reaction_energy = constants.dd_triton_energy / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
+        # The power density is scaled by the branching ratio to simulate the different
+        # product pathways
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * 0.5  # Factor for D-D reaction
+            * self.f_dd_branching_trit
             * (physics_variables.f_deuterium * physics_variables.deni)
             * (physics_variables.f_deuterium * physics_variables.deni)
         )
@@ -538,6 +547,7 @@ class FusionReactionRate:
         physics_module.dt_power_density_plasma = self.dt_power_density
         physics_module.dhe3_power_density = self.dhe3_power_density
         physics_module.dd_power_density = self.dd_power_density
+        physics_variables.f_dd_branching_trit = self.f_dd_branching_trit
 
 
 def radpwr(plasma_profile):

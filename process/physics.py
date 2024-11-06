@@ -1815,6 +1815,7 @@ class Physics:
         # Calculate fusion power + components
 
         fusion_reactions = physics_funcs.FusionReactionRate(self.plasma_profile)
+        fusion_reactions.deuterium_branching(physics_variables.ti)
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
@@ -4010,6 +4011,13 @@ class Physics:
             "D-D fusion power (MW)",
             "(dd_power)",
             physics_variables.dd_power,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-D branching ratio for tritium producing reactions",
+            "(f_dd_branching_trit)",
+            physics_variables.f_dd_branching_trit,
             "OP ",
         )
         po.ovarre(

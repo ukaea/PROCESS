@@ -3944,6 +3944,7 @@ class Stellarator:
         #  Calculate fusion power
 
         fusion_reactions = physics_funcs.FusionReactionRate(self.plasma_profile)
+        fusion_reactions.deuterium_branching(physics_variables.ti)
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 

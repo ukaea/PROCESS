@@ -87,6 +87,7 @@ Initialize the FusionReactionRate class with the given plasma profile.
 - `fusion_rate_density (float)`: Fusion reaction rate density.
 - `alpha_rate_density (float)`: Alpha particle production rate density.
 - `proton_rate_density (float)`: Proton production rate density.
+- `f_dd_branching_trit (float)`: The rate of tritium producing D-D reactions to 3He ones.
 
 All variables above are initialized to be 0.0.
 
@@ -99,14 +100,19 @@ Valid for ion temperatures between 0.5 keV and 200 keV.
 The deviation of the fit from the R-matrix branching ratio is always smaller than 0.5%.
 
 $$
- = 1.02934 - 8.3264\times 10^{-3}\langle T_{\text{e}} \rangle + 1.7631\times 10^{-4}\langle T_{\text{e}} \rangle^2 \\
--1.8201\times 10^{-6}\langle T_{\text{e}} \rangle^3 + 6.9855\times 10^{-9}\langle T_{\text{e}} \rangle^4
+ = 1.02934 - 8.3264\times 10^{-3}\langle T_{\text{i}} \rangle + 1.7631\times 10^{-4}\langle T_{\text{i}} \rangle^2 \\
+-1.8201\times 10^{-6}\langle T_{\text{i}} \rangle^3 + 6.9855\times 10^{-9}\langle T_{\text{i}} \rangle^4
 $$
 
 <figure markdown>
 ![D-D reaction branching ratio](./deuterium_branching_plot.png){ width = "100"}
 <figcaption>Figure 1: Ratio of the neutron producing to proton producing D-D reaction branches based on the ion temperature .</figcaption>
 </figure>
+
+#### Attributes updated
+The method updates the following attributes:
+
+- `self.f_dd_branching_trit`: The rate of tritium producing D-D reactions to 3He ones
 
 -----------------------
 
@@ -117,8 +123,8 @@ There are 4 key functions for calculating the fusion reaction for the plasma. Th
 #### Detailed Steps
 1. **Initialize Bosch-Hale Constants**: Initializes the Bosch-Hale constants for the required reaction using predefined reaction constants stored in the BoschHaleConstants dataclass.
 2. **Calculate Fusion Reaction Rate**: Uses Simpson's rule to integrate the fusion reaction rate over the plasma profile.
-3. **Calculate Fusion Power Density**: Compute the fusion power density produced by the given reaction. Using the reaction energy calculated and stored in `constants.f90`. The reactant density is given by $\mathtt{f\_deuterium, f\_tritium}$ or $\mathtt{f\_helium3}$ multiplied by the volume averaged ion density.
-4. **Calculate Specific Fusion Power Densities**: Compute the fusion power density for alpha particles, neutrons and other charged particles, depending on the reaction. Energy branching fractions used are calculated and called from `constants.f90`
+3. **Calculate Fusion Power Density**: Compute the fusion power density produced by the given reaction. Using the reaction energy calculated and stored in `constants.f90`. The reactant density is given by $\mathtt{f\_deuterium, f\_tritium}$ or $\mathtt{f\_helium3}$ multiplied by the volume averaged ion density. For the D-D reactions the fusion reaction rate is scaled with the output of [`deuterium_branching()`](#deuterium-branching-fraction--deuterium_branching) to simulate the different branching ratios.
+4. **Calculate Specific Fusion Power Densities**: Compute the fusion power density for alpha particles, neutrons and other charged particles, depending on the reaction. Energy branching fractions used are calculated and called from `constants.f90`.
 5. **Calculate Fusion Rate Densities**: Compute the total fusion rate density and fusion rates just for the alpha particles, neutrons and other charged particles, depending on the reaction.
 6. **Update Reaction Power Density**: Updates the object attribute for the specific reaction power density.
 7. **Sum Fusion Rates**: Call the [`sum_fusion_rates()`](#sum-the-fusion-rates--sum_fusion_rates) function to add the reaction to the global plasma power balance.
@@ -182,6 +188,7 @@ This method sets the required physics variables in the `physics_variables` and `
 - `physics_module.dt_power_density_plasma`: Updated with `self.dt_power_density`
 - `physics_module.dhe3_power_density`: Updated with `self.dhe3_power_density`
 - `physics_module.dd_power_density`: Updated with `self.dd_power_density`
+- `physics_functions.f_dd_branching_trit`: Updated with `self.f_dd_branching_trit`
 
 -----------------------
 
