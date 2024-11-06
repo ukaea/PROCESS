@@ -9,6 +9,7 @@ from process.fortran import (
     heat_transport_variables,
 )
 from process.current_drive import CurrentDrive
+from process.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture
@@ -18,7 +19,7 @@ def current_drive():
     :returns current_drive: initialised CurrentDrive object
     :rtype: process.current_drive.CurrentDrive
     """
-    return CurrentDrive()
+    return CurrentDrive(PlasmaProfile())
 
 
 class CudrivParam(NamedTuple):
