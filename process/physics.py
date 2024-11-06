@@ -5816,6 +5816,12 @@ class Physics:
         float: The calculated bootstrap fraction.
 
         Notes:
+            - Based off of TFTR data calculated using the TRANSP plasma analysis code
+            - 170 discharges which was assembled to  study the tritium influx and transport in discharges with D-only neutral beam
+              injection (NBI)
+            - Contains L-mode, supershots, reversed shear, enhanced reversed shear and increased li discharges
+            - Discharges with monotonic flux profiles with reversed shear are also included
+            - Is applied to circular cross-section plasmas
 
         References:
             - G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings,
@@ -5823,9 +5829,16 @@ class Physics:
         """
 
         # Using the standard variable naming from the Hoang et.al. paper
-        # These terms do not equal the profile indexes, though are closely linked
+        # Hoang et.al uses a different definition for the profile indexes such that
+        # alpha_p is defined as the ratio of the central and the volume-averaged values, and the peakedness of the density of the total plasma current
+        # (defined as ratio of the central value and I_p), alpha_j$
 
-        c_bs = np.sqrt(pressure_index / current_index)
+        # We assume the pressure and current profile is parabolic and use the (profile_index +1) term in lieu
+        # The term represent the ratio of the the core to volume averaged value
+
+        # This could lead to large changes in the value depending on interpretation of the profile index
+
+        c_bs = np.sqrt(pressure_index + 1 / current_index + 1)
 
         return 0.4 * np.sqrt(inverse_aspect) * betap**0.9 * c_bs
 

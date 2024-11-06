@@ -503,12 +503,12 @@ Based off plasma profiles from Experimento Tokamak Esferico (ETE) spherical toka
 
 | Parameter             | Value     || Parameter             | Value     |
 |-----------------------|-----------||-----------------------|-----------|
-| $A$                   | 1.5       || $\alpha_{\text{T}_e}$ | 0.02      |
-| $R_0$                 | 0.3       || $\alpha_{\text{T}_i}$ | 2         |
-| $p(0)$                | 15 kPa    || $\kappa(a)$           | 2         |
-| $T_{\text{e,i}}(0)$   | 1 keV     || $\delta$              | 0.3       |
-| $T_{\text{e,i}}(a)$   | 0.1 keV   || $I_{\text{p}}$        | 200 kA    |
-| $\alpha_{\text{p}}$   | 3         || $B_0$                 | 0.4 T     |
+| $A$                   | 1.5       || $\alpha_{\text{T_e}}$ | 0.02      |
+| $R_0$                 | 0.3 $\text{[m]}$     || $\alpha_{\text{T_i}}$ | 2         |
+| $p(0)$                | 15 $\text{[kPa]}$    || $\kappa(a)$           | 2         |
+| $T_{\text{e,i}}(0)$   | 1 $\text{[keV]}$     || $\delta$              | 0.3       |
+| $T_{\text{e,i}}(a)$   | 0.1 $\text{[keV]}$   || $I_{\text{p}}$        | 200 $\text{[kA]}$    |
+| $\alpha_{\text{p}}$   | 3         || $B_0$                 | 0.4 $\text{[T]}$     |
 | $\beta$               | 4-10%     || $Z_{\text{eff}}$      | 1         |
 
 
@@ -531,8 +531,36 @@ $$
 
 Is selected by setting `i_bootstrap_current = 8`[^10]
 
+This scaling is based off of 170 discharges from TFTR with the neoclassical bootstrap current being calculated by the TRANSP plasma analysis code.
+The plasma parameters of the discharges can be seen in the table below:
+
+| Parameter             | Value     |
+|-----------------------|-----------|
+| $I_{\text{p}}$        | 0.6 - 2.7 $\text{[MA]}$    |  
+| $q(a)$                 | 2.8 - 11.0       |
+| $P_{\text{NBI}}$                | 2.0 - 35.0 $\text{[MW]}$    |
+| $P_{\text{ICRH}}$   | 1.5 - 6.0 $\text{[MW]}$     |
+| $B_{\text{T}}$   | 1.9 - 5.7 $\text{[T]}$   |
+| $n_{\text{e,0}}$   | 0.2 - 1.2 $[10^{20} \text{m}^{-3}]$         |
+
+I wide variety of discharge regimes are included, such as: L-mode  supershots, discharges
+with reversed shear (RS) and enhanced reversed shear (ERS), and discharges  with increased-$l_i$.
+Discharges with both monotonic $q$ profiles and with reversed shear are included in the dataset.
+
+For an example ERS discharge the bootstrap current is driven by the thermal particles surpasses 1 MA ($f_{\text{boot}}$ = 63%). Some ERS discharges in TFTR achieved $f_{\text{boot}}$ greater than 100% transiently.
+
+
+!!! note "Change of profile index definition"
+
+    Hoang et.al uses a different definition for the profile indexes such that
+    $\alpha_{\text{p}}$ is defined as the ratio of the central and the volume-averaged values, and the peakedness of the density of the total plasma current (defined as ratio of the central value and $I_{\text{p}}$), $\alpha_{\text{J}}$ 
+
+    Assuming that the pressure and current profile is parabolic we can represent these ratios as $\frac{p_0}{\langle p \rangle}= \alpha_{\text{p}}+1$
+
+    **This could lead to large changes in the value depending on interpretation of the profile index**
+
 $$
-C_{\text{BS}} = \sqrt{\frac{\alpha_{\text{p}}}{\alpha_{\text{j}}}}
+C_{\text{BS}} = \sqrt{\frac{\alpha_{\text{p}}+1}{\alpha_{\text{j}}+1}}
 $$
 
 $$
