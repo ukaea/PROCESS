@@ -377,7 +377,7 @@ def color_key(axis, mfile_data, scan, colour_scheme):
     axis.text(
         -5,
         12,
-        "*The CS comp and thermal shield are not shown in the poloidal cross-section",
+        "*The CS comp is not shown in the poloidal cross-section",
         ha="left",
         va="top",
         size="medium",

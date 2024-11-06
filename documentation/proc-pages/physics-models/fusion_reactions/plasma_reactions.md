@@ -47,8 +47,8 @@ no tritium needs to be produced for fuel.
 
 The contributions from all four of the above fusion reactions are included in
 the total fusion power production calculation. The fusion reaction rates are
-calculated using the parameterizations in [^1], integrated over the plasma 
-profiles (correctly, with or without pedestals).
+calculated using the parameterizations in [^1], integrated over the plasma
+profiles
 
 -------------------------
 
@@ -117,9 +117,9 @@ There are 4 key functions for calculating the fusion reaction for the plasma. Th
 #### Detailed Steps
 1. **Initialize Bosch-Hale Constants**: Initializes the Bosch-Hale constants for the required reaction using predefined reaction constants stored in the BoschHaleConstants dataclass.
 2. **Calculate Fusion Reaction Rate**: Uses Simpson's rule to integrate the fusion reaction rate over the plasma profile.
-3. **Calculate Fusion Power Density**: Compute the fusion power density produced by the given reaction. Using the reaction energy calculated and stored in `constants.f90`. The reactant density is is given by $\mathtt{f\_deuterium, f\_tritium}$ or $\mathtt{f\_helium3}$ multiplied by the volume averaged ion density.
-4. **Calculate Fusion Power Densities**: Compute the fusion power density for alpha particles, neutrons and other charged particles, depending on the reaction. Energy branching fractions used are calculated and called from `constants.f90`
-5. **Calculate Fusion Rate Densities**: Compute the fusion rate density and for alpha particles, neutrons and other charged particles, depending on the reaction.
+3. **Calculate Fusion Power Density**: Compute the fusion power density produced by the given reaction. Using the reaction energy calculated and stored in `constants.f90`. The reactant density is given by $\mathtt{f\_deuterium, f\_tritium}$ or $\mathtt{f\_helium3}$ multiplied by the volume averaged ion density.
+4. **Calculate Specific Fusion Power Densities**: Compute the fusion power density for alpha particles, neutrons and other charged particles, depending on the reaction. Energy branching fractions used are calculated and called from `constants.f90`
+5. **Calculate Fusion Rate Densities**: Compute the total fusion rate density and fusion rates just for the alpha particles, neutrons and other charged particles, depending on the reaction.
 6. **Update Reaction Power Density**: Updates the object attribute for the specific reaction power density.
 7. **Sum Fusion Rates**: Call the [`sum_fusion_rates()`](#sum-the-fusion-rates--sum_fusion_rates) function to add the reaction to the global plasma power balance.
 

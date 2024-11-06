@@ -588,8 +588,6 @@ def psync_albajar_fidone():
 
     # rpow is the (1-Rsyn) power dependence based on plasma shape
     # (see Fidone)
-    # rpow is the (1-Rsyn) power dependence based on plasma shape
-    # (see Fidone)
 
     rpow = 0.62e0
 
@@ -606,8 +604,6 @@ def psync_albajar_fidone():
         2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
     )
 
-    # No account is taken of pedestal profiles here, other than use of
-    # the correct physics_variables.ne0 and physics_variables.te0...
     # No account is taken of pedestal profiles here, other than use of
     # the correct physics_variables.ne0 and physics_variables.te0...
 
@@ -632,7 +628,6 @@ def psync_albajar_fidone():
     )
 
     # Very high T modification, from Fidone
-    # Very high T modification, from Fidone
 
     dum = dum ** (-1.51e0)
 
@@ -652,7 +647,6 @@ def psync_albajar_fidone():
         * kfun
     )
 
-    # psyncpv should be per unit volume; Albajar gives it as total
     # psyncpv should be per unit volume; Albajar gives it as total
 
     psyncpv = psync / physics_variables.plasma_volume

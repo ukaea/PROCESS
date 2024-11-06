@@ -4,7 +4,7 @@ These methods are still kept in `physics_functions.py` but outside the [`FusionR
 
 ## Bosch-Hale Constants | `BoschHaleConstants`
 
-The `BoschHaleConstants` class is a data structure designed to hold the constants required for the Bosch-Hale calculation for a given fusion reaction.
+The `BoschHaleConstants` class is a data structure designed to hold the constants required for the Bosch-Hale calculation for a given fusion reaction. The values for each of the given reactions are given in the original paper[^1].
 
 ### Attributes
 
@@ -24,7 +24,7 @@ The `BoschHaleConstants` class is a data structure designed to hold the constant
 
 This function calcualtes the relative velocity fusion reactivity $\langle \sigma v \rangle$ for each point in the plasma profile based on the temperature.
 
- |  Input Variable             |    |
+ |  Input Variable             |  Variable Name  |
     |----------------------------------|-----------|
     | Array of temperature values for the plasma profile            | `temperature_profile`  |
     | Bosch-Hale constants for the specific reaction                   | `reaction_constants`  |
@@ -41,13 +41,13 @@ $$
 \langle \sigma v \rangle = \text{C1} \times \theta \times \sqrt{\frac{\xi}{m_{\text{r}}\text{c}^2\text{T}^3}} \times e^{-3\xi}
 $$
 
-This will output a numpy.array for of the relative velocity fusion reactivity $\langle \sigma v \rangle$ for each point in the temperature profile in units of $[\text{m}^3\text{s}^{-1}]$ After calculation each value is multiplied by $10^{-6}$ as the original Bosch-Hale calculation[^1] give the output in $[\text{cm}^3\text{s}^{-1}]$
+This will output a numpy array for of the relative velocity fusion reactivity $\langle \sigma v \rangle$ for each point in the temperature profile in units of $[\text{m}^3\text{s}^{-1}]$ After calculation each value is multiplied by $10^{-6}$ as the original Bosch-Hale calculation[^1] give the output in $[\text{cm}^3\text{s}^{-1}]$
 
 --------------------------------
 
 ## Fusion Rate Integral | `fusion_rate_integral()`
 
-|  Input Variable             |    |
+|  Input Variable             | Variable Name   |
     |----------------------------------|-----------|
     | PlasmaProfile object            | `plasma_profile`  |
     | Bosch-Hale constants for the specific reaction                   | `reaction_constants`  |

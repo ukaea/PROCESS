@@ -425,7 +425,7 @@ class DCLL:
 
         LT MMS DCLL model [Pal2016]
 
-             Radial Build (m, % plasma_volume):
+             Radial Build (m, % vol):
 
                   FW
                  IB/OB armour = 2.0D-3 m, 100% W
@@ -442,7 +442,7 @@ class DCLL:
 
                  MF/BSS = variable thickness, 51.29% EUROfer, 4.35% He, 44.36% PbLi
 
-             Other info (m, % plasma_volume):
+             Other info (m, % vol):
 
                  Side walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
                  Top walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
