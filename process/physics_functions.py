@@ -706,7 +706,7 @@ def fusion_rate_integral(
 
     # Set each point in the desnity profile as a fraction of the volume averaged desnity
     density_profile_normalised = (
-        1.0 / physics_variables.deni
+        1.0 / physics_variables.dene
     ) * plasma_profile.neprofile.profile_y
 
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
