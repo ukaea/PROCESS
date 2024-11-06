@@ -2404,7 +2404,7 @@ def plot_physics_info(axis, mfile_data, scan):
     data = [
         ("powfmw", "Fusion power", "MW"),
         ("bigq", "$Q_{p}$", ""),
-        ("plasma_current_MA", "$I_p$", "MA"),
+        ("plasma_current_ma", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
         ("normalised_thermal_beta", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),

@@ -1725,7 +1725,7 @@ class Physics:
                 betap=physics_variables.betap,
                 rli=physics_variables.rli,
                 core_density=physics_variables.ne0,
-                average_desnity=physics_variables.dene,
+                average_density=physics_variables.dene,
                 inverse_aspect=physics_variables.eps,
             )
         )
@@ -1820,7 +1820,7 @@ class Physics:
             elif physics_variables.i_bootstrap_current == 10:
                 current_drive_variables.bootstrap_current_fraction = (
                     current_drive_variables.bscf_gi
-                )         
+                )
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
                 error_handling.report_error(75)
@@ -3919,6 +3919,12 @@ class Physics:
             "(tbeta)",
             physics_variables.tbeta,
         )
+        po.ovarrf(
+            self.outfile,
+            "Pressure profile index",
+            "(alphap)",
+            physics_variables.alphap,
+        )
 
         if stellarator_variables.istell == 0:
             po.osubhd(self.outfile, "Density Limit using different models :")
@@ -5771,6 +5777,9 @@ class Physics:
         float: The calculated bootstrap fraction.
 
         Notes:
+            - Based off plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak
+            - A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T, beta = 4-10%. Profiles taken as Gaussian shaped functions.
+
 
         References:
             - M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,”
@@ -5848,7 +5857,7 @@ class Physics:
               vol. 42, no. 5, pp. 547–556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
         """
         # Using the standard variable naming from the Wong et.al. paper
-        f_peak = 2.0/scipy.special.beta(0.5, density_index + temperature_index + 1)
+        f_peak = 2.0 / scipy.special.beta(0.5, density_index + temperature_index + 1)
 
         c_bs = 0.773 + 0.019 * elongation
 
@@ -5882,14 +5891,21 @@ class Physics:
         Notes:
 
         References:
-            - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,” 
+            - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
               Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014,
               doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
 
         # Using the standard variable naming from the Gi et.al. paper
 
-        c_bs = 0.474 * inverse_aspect**-0.1 * pressure_index**0.974 * temperature_index**-0.416 * effective_charge**0.178 * (q95/q0)**-0.133
+        c_bs = (
+            0.474
+            * inverse_aspect**-0.1
+            * pressure_index**0.974
+            * temperature_index**-0.416
+            * effective_charge**0.178
+            * (q95 / q0) ** -0.133
+        )
 
         return c_bs * np.sqrt(inverse_aspect) * betap
 

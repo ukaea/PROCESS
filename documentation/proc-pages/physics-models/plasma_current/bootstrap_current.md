@@ -499,6 +499,20 @@ $$
 
 Is selected by setting `i_bootstrap_current = 7`[^9]
 
+Based off plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak.
+
+| Parameter             | Value     || Parameter             | Value     |
+|-----------------------|-----------||-----------------------|-----------|
+| $A$                   | 1.5       || $\alpha_{\text{T}_e}$ | 0.02      |
+| $R_0$                 | 0.3       || $\alpha_{\text{T}_i}$ | 2         |
+| $p(0)$                | 15 kPa    || $\kappa(a)$           | 2         |
+| $T_{\text{e,i}}(0)$   | 1 keV     || $\delta$              | 0.3       |
+| $T_{\text{e,i}}(a)$   | 0.1 keV   || $I_{\text{p}}$        | 200 kA    |
+| $\alpha_{\text{p}}$   | 3         || $B_0$                 | 0.4 T     |
+| $\beta$               | 4-10%     || $Z_{\text{eff}}$      | 1         |
+
+
+
 $$
 C_{\text{BS}} = 0.2340 \pm 0.0007
 $$
