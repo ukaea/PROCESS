@@ -593,7 +593,7 @@ Is selected by setting `i_bootstrap_current = 9`[^11]
 This scaling data is based off of equilibria from Miller et.al.[^12].
 The equilibria from Miller et.al. are in the range of $A$ =  1.2 - 3 that are stable to infinite $n$ ballooning and low $n$ kink modes at a bootstrap fraction of 99% for $\kappa$ = 2, 2.5, 3.0. The results were parameterized as a function of aspect ratio and elongation.
 
-The parametric dependency of $\beta_{\text{p}}$ and $\beta_{\text{T}}$ are based on fitting of the DIII-D high equivalent DT yield results.
+The parametric dependency of $\beta_{\text{p}}$ and $\beta_{\text{T}}$ are based on the fitting of the DIII-D high equivalent DT yield results.
 
 $$
 \beta_{\text{N}}=\frac{\left(3.09+\frac{3.35}{A}+\frac{3.87}{A^{0.5}}\right)\left(\frac{\kappa}{3}\right)^{0.5}}{f_{\text{peak}}^{0.5}}
