@@ -560,7 +560,7 @@ The plasma parameters of the discharges can be seen in the table below:
 | $B_{\text{T}}$   | 1.9 - 5.7 $\text{[T]}$   |
 | $n_{\text{e,0}}$   | 0.2 - 1.2 $[10^{20} \text{m}^{-3}]$         |
 
-I wide variety of discharge regimes are included, such as: L-mode  supershots, discharges
+A wide variety of discharge regimes are included, such as: L-mode  supershots, discharges
 with reversed shear (RS) and enhanced reversed shear (ERS), and discharges  with increased-$l_i$.
 Discharges with both monotonic $q$ profiles and with reversed shear are included in the dataset.
 
