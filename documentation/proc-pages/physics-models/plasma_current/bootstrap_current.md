@@ -6,10 +6,8 @@ Some more info can be found [here](https://wiki.fusion.ciemat.es/wiki/Bootstrap_
 ## Selection
 
 The fraction of the plasma current provided by the bootstrap effect
-can be either input into the code directly, or calculated using one of five
-methods, as summarised here. Note that methods `i_bootstrap_current = 1-3 & 5-6` do not take into account the
-existence of pedestals, whereas the Sauter et al. scaling 
-(`i_bootstrap_current = 4`) allows general profiles to be used. 
+can be either input into the code directly, or calculated using one of eleven
+methods, as summarized below:
 
 --------------
 
