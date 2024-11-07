@@ -564,7 +564,7 @@ A wide variety of discharge regimes are included, such as: L-mode  supershots, d
 with reversed shear (RS) and enhanced reversed shear (ERS), and discharges with increased-$l_i$.
 Discharges with both monotonic $q$ profiles and with reversed shear are included in the dataset.
 
-For an example ERS discharge the bootstrap current is driven by the thermal particles surpasses 1 MA ($f_{\text{boot}}$ = 63%). Some ERS discharges in TFTR achieved $f_{\text{boot}}$ greater than 100% transiently.
+For an example ERS discharge the bootstrap current is driven by when the thermal particles surpasses 1 MA ($f_{\text{boot}}$ = 63%). Some ERS discharges in TFTR achieved $f_{\text{boot}}$ greater than 100% transiently.
 
 
 !!! note "Change of profile index definition"
