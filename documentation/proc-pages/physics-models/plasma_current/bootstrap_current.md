@@ -495,23 +495,42 @@ $$
 
 ---------------------
 
-### Andrade Scaling | `bootstrap_fraction_andrade()`
+### Andrade Scaling 
 
 Is selected by setting `i_bootstrap_current = 7`[^9]
 
-Based off plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak.
+Based off of 350 plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak.
+Profiles were taken to be Gaussian shaped functions.
 
-| Parameter             | Value     || Parameter             | Value     |
-|-----------------------|-----------||-----------------------|-----------|
-| $A$                   | 1.5       || $\alpha_{\text{T_e}}$ | 0.02      |
-| $R_0$                 | 0.3 $\text{[m]}$     || $\alpha_{\text{T_i}}$ | 2         |
-| $p(0)$                | 15 $\text{[kPa]}$    || $\kappa(a)$           | 2         |
-| $T_{\text{e,i}}(0)$   | 1 $\text{[keV]}$     || $\delta$              | 0.3       |
-| $T_{\text{e,i}}(a)$   | 0.1 $\text{[keV]}$   || $I_{\text{p}}$        | 200 $\text{[kA]}$    |
-| $\alpha_{\text{p}}$   | 3         || $B_0$                 | 0.4 $\text{[T]}$     |
-| $\beta$               | 4-10%     || $Z_{\text{eff}}$      | 1         |
+The range of parameters from the discharges in ETE can be found in the table below:
 
+| Parameter             | Value     | Parameter             | Value     |
+|-----------------------|-----------|-----------------------|-----------|
+| $A$                   | 1.5       | $\alpha_{\text{T}_\text{e}}$ | 0.02      |
+| $R_0$                 | 0.3 $\text{[m]}$     | $\alpha_{\text{T}_\text{i}}$ | 2         |
+| $p(0)$                | 15 $\text{[kPa]}$    | $\kappa(a)$           | 2         |
+| $T_{\text{e,i}}(0)$   | 1 $\text{[keV]}$     | $\delta$              | 0.3       |
+| $T_{\text{e,i}}(a)$   | 0.1 $\text{[keV]}$   | $I_{\text{p}}$        | 200 $\text{[kA]}$    |
+| $\alpha_{\text{p}}$   | 3         | $B_0$                 | 0.4 $\text{[T]}$     |
+| $\beta$               | 4-10%     | $Z_{\text{eff}}$      | 1         |
 
+Errors mostly up to the order of 10% are obtained when both expressions are compared with the equilibrium estimates for the bootstrap current in ETE.
+
+#### Scaling 1
+
+!!! note "Applicability of 1st scaling"
+
+    Andrade et.al[^9] actually presents two scalings, the first is:
+
+    $$
+    \frac{I_{\text{BS}}}{I_\text{p}}5C_{\text{bs}}c_{\text{p}}^{\lambda}\frac{\beta_{\text{N}}q_{\text{cyl}}}{\epsilon^{1/2}l_i^{\gamma}}\frac{R_0}{R_{\text{m}}}
+    $$
+
+    $R_{\text{m}}$ in this case is the major radius of the magnetic axis which `PROCESS` does not have as it does not currently calculate the [Shafranov shift](https://wiki.fusion.ciemat.es/wiki/Shafranov_shift). If this is implemented then the first Andrade scaling can be properly implemented.
+
+#### Scaling 2 | `bootstrap_fraction_andrade()`
+
+This form of the Andrade scaling in terms of $\beta_{\text{p}}$ found using a least-square fit to 347 of the equilibria points.
 
 $$
 C_{\text{BS}} = 0.2340 \pm 0.0007
