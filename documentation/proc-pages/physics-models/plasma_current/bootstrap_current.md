@@ -668,7 +668,7 @@ The plasma parameters for each point in the aspect ratio scan can be seen in the
 Is selected by setting `i_bootstrap_current = 10`
 
 Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the $f_{\text{BS}}$
-value for reversed shear equilibrium. Although Scaling 2 does not have internal current profile term, it can predict the $f_{\text{BS}}$ values to a certain extent for the high-$f_{\text{BS}}$ equilibria which are expected for next fusion devices.
+value for reversed shear equilibrium. Although Scaling 2 does not have an internal current profile term, it can predict the $f_{\text{BS}}$ values to a certain extent for the high-$f_{\text{BS}}$ equilibria which are expected for next fusion devices.
 
 $$
 C_{\text{BS}} = 0.474 \epsilon^{-0.1} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178} \left(\frac{q_{95}}{q_0}\right)^{-0.133}
