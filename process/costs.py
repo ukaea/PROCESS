@@ -2193,7 +2193,7 @@ class Costs:
         """
         if ife_variables.ife != 1:
             #  Previous calculation, using qfuel in Amps:
-            #  1.3 should have been physics_variables.afuel*umass/echarge*1000*s/day = 2.2
+            #  1.3 should have been physics_variables.afuel*umass/electron_charge*1000*s/day = 2.2
             # wtgpd = burnup * qfuel * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
@@ -2212,7 +2212,7 @@ class Costs:
                 * 3.0e0
                 * 1.67e-27
                 * 1.0e3
-                / (1.602e-19 * 17.6e6 * ife_variables.fburn)
+                / (constants.electron_volt * 17.6e6 * ife_variables.fburn)
             )
             physics_variables.wtgpd = targtm * ife_variables.reprat * 86400.0e0
 
@@ -2235,7 +2235,7 @@ class Costs:
         cfrht = 1.0e5
 
         #  No detritiation needed if purely D-He3 reaction
-        if physics_variables.ftrit > 1.0e-3:
+        if physics_variables.f_tritium > 1.0e-3:
             self.c2273 = (
                 1.0e-6
                 * cost_variables.ucdtc
@@ -2422,7 +2422,7 @@ class Costs:
         # Calculate rejected heat for non-reactor (==0) and reactor (==1)
         if cost_variables.ireactor == 0:
             pwrrej = (
-                physics_variables.powfmw
+                physics_variables.fusion_power
                 + heat_transport_variables.pinjwp
                 + tfcoil_variables.tfcmw
             )
@@ -2792,7 +2792,7 @@ class Costs:
             annfuel = (
                 cost_variables.ucfuel * heat_transport_variables.pnetelmw / 1200.0e0
                 + 1.0e-6
-                * physics_variables.fhe3
+                * physics_variables.f_helium3
                 * physics_variables.wtgpd
                 * 1.0e-3
                 * cost_variables.uche3

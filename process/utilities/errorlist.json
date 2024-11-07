@@ -188,7 +188,7 @@
     {
       "no": 36,
       "level": 3,
-      "message": "CHECK: Fuel ion fractions do not sum to 1.0; check fdeut, ftrit, fhe3 values"
+      "message": "CHECK: Fuel ion fractions do not sum to 1.0; check f_deuterium, f_tritium, f_helium3 values"
     },
     {
       "no": 37,

@@ -461,25 +461,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_19
-    !! <LI> (19) enbeam
+    !! <LI> (19) beam_energy
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(19) = 'enbeam        '
+    lablxc(19) = 'beam_energy        '
     boundl(19) = 1.000D0
     boundu(19) = 1.000D6
   end subroutine init_itv_19
 
   real(kind(1.d0)) function itv_19()
-    use current_drive_variables, only: enbeam
+    use current_drive_variables, only: beam_energy
     implicit none
-    itv_19 = enbeam
+    itv_19 = beam_energy
   end function itv_19
 
   subroutine set_itv_19(ratio)
-    use current_drive_variables, only: enbeam
+    use current_drive_variables, only: beam_energy
     implicit none
     real(kind(1.d0)) :: ratio
-    enbeam = ratio
+    beam_energy = ratio
   end subroutine
 
   !---------------------------------

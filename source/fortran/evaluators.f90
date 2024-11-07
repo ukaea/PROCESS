@@ -100,7 +100,7 @@ contains
 		use error_handling, only: idiags, fdiags, errors_on, report_error
 		use heat_transport_variables, only: pnetelmw
     use numerics, only: minmax
-		use physics_variables, only: powfmw, bt, rmajor, wallmw, aspect, pohmmw
+		use physics_variables, only: fusion_power, bt, rmajor, wallmw, aspect, pohmmw
 		use pf_power_variables, only: srcktpm
 		use process_output, only: int_to_string3
 		use tfcoil_variables, only: tfcmw
@@ -134,7 +134,7 @@ contains
         write(*,*) 'Figure of merit 2 (fusion power / input power) is not used.'
         write(*,*) 'Figure of merit 5 (fusion gain Q) is available.'
         stop 1
-       ! fc = sgn * powfmw / (pinjmw + porbitlossmw + tfcpmw + ppump/1.0D6)
+       ! fc = sgn * fusion_power / (pinjmw + porbitlossmw + tfcpmw + ppump/1.0D6)
 
     case (3)  !  neutron wall load
        fc = sgn * wallmw
@@ -143,8 +143,8 @@ contains
        fc = sgn * (tfcmw + 1.0D-3*srcktpm)/10.0D0
 
    case (5)  !  Q = fusion gain  Issue #540
-       fc = sgn * powfmw / (pinjmw + porbitlossmw + pohmmw)
-       !fc = sgn * powfmw / pinjmw
+       fc = sgn * fusion_power / (pinjmw + porbitlossmw + pohmmw)
+       !fc = sgn * fusion_power / pinjmw
 
     case (6)  !  cost of electricity
        fc = sgn * coe/100.0D0

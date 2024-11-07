@@ -79,7 +79,7 @@ class CCFE_HCPB:
 
             # TF fast neutron flux (E > 0.1 MeV) [m^{-2}.s^{-1}]
             fwbs_variables.neut_flux_cp = self.st_tf_centrepost_fast_neut_flux(
-                physics_variables.pneutmw,
+                physics_variables.neutron_power_total,
                 build_variables.shldith,
                 physics_variables.rmajor,
             )
@@ -90,7 +90,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnuc_cp_sh,
                 fwbs_variables.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
-                physics_variables.pneutmw, build_variables.shldith
+                physics_variables.neutron_power_total, build_variables.shldith
             )
 
         else:  # No CP
@@ -143,7 +143,7 @@ class CCFE_HCPB:
             (fwbs_variables.pnucfw / ccfe_hcpb_module.pnuc_tot_blk_sector)
             * fwbs_variables.emult
             * f_geom_blanket
-            * physics_variables.pneutmw
+            * physics_variables.neutron_power_total
         )
 
         # Power to the blanket (MW)
@@ -151,7 +151,7 @@ class CCFE_HCPB:
             (fwbs_variables.pnucblkt / ccfe_hcpb_module.pnuc_tot_blk_sector)
             * fwbs_variables.emult
             * f_geom_blanket
-            * physics_variables.pneutmw
+            * physics_variables.neutron_power_total
         )
 
         # Power to the shield(MW)
@@ -160,7 +160,7 @@ class CCFE_HCPB:
             (fwbs_variables.pnucshld / ccfe_hcpb_module.pnuc_tot_blk_sector)
             * fwbs_variables.emult
             * f_geom_blanket
-            * physics_variables.pneutmw
+            * physics_variables.neutron_power_total
         )
 
         # Power to the TF coils (MW)
@@ -169,25 +169,28 @@ class CCFE_HCPB:
             (fwbs_variables.ptfnuc / ccfe_hcpb_module.pnuc_tot_blk_sector)
             * fwbs_variables.emult
             * f_geom_blanket
-            * physics_variables.pneutmw
+            * physics_variables.neutron_power_total
             + fwbs_variables.pnuc_cp_tf
         )
 
         # Power deposited in the CP
         fwbs_variables.pnuc_cp_sh = (
-            f_geom_cp * physics_variables.pneutmw - fwbs_variables.pnuc_cp_tf
+            f_geom_cp * physics_variables.neutron_power_total
+            - fwbs_variables.pnuc_cp_tf
         )
 
         # Old code kept for backward compatibility
         # ---
         # pnucdiv is not changed.
         # The energy due to multiplication, by subtraction:
-        # emultmw = pnucfw + pnucblkt + pnucshld + ptfnuc + pnucdiv - pneutmw
+        # emultmw = pnucfw + pnucblkt + pnucshld + ptfnuc + pnucdiv - neutron_power_total
         # ---
 
         # New code, a bit simpler
         fwbs_variables.emultmw = (
-            (fwbs_variables.emult - 1) * f_geom_blanket * physics_variables.pneutmw
+            (fwbs_variables.emult - 1)
+            * f_geom_blanket
+            * physics_variables.neutron_power_total
         )
 
         # powerflow calculation for pumping power
@@ -302,7 +305,7 @@ class CCFE_HCPB:
         # Total heating (MW)
         fwbs_variables.ptfnuc = (
             ccfe_hcpb_module.tfc_nuc_heating
-            * (physics_variables.powfmw / 1000.0)
+            * (physics_variables.fusion_power / 1000.0)
             / 1.0e6
         )
 
@@ -332,7 +335,12 @@ class CCFE_HCPB:
                 "(ptfnuc.)",
                 fwbs_variables.ptfnuc,
             )
-            po.ovarre(self.outfile, "powfmw", "(powfmw.)", physics_variables.powfmw)
+            po.ovarre(
+                self.outfile,
+                "fusion_power",
+                "(fusion_power.)",
+                physics_variables.fusion_power,
+            )
             po.ovarre(
                 self.outfile,
                 "total mass of the TF coils (kg)",
@@ -353,13 +361,13 @@ class CCFE_HCPB:
         fwbs_variables.pnucfw = (
             fwbs_variables.fwmass
             * ccfe_hcpb_module.fw_armour_u_nuc_heating
-            * physics_variables.powfmw
+            * physics_variables.fusion_power
         )
 
         if fwbs_variables.pnucfw < 0:
             raise RuntimeError(
                 f"""Error in nuclear_heating_fw. {fwbs_variables.pnucfw = },
-                {physics_variables.powfmw = }, {fwbs_variables.fwmass = }"""
+                {physics_variables.fusion_power = }, {fwbs_variables.fwmass = }"""
             )
 
     def nuclear_heating_blanket(self):
@@ -377,13 +385,13 @@ class CCFE_HCPB:
         # Total blanket nuclear heating (MW)
         ccfe_hcpb_module.exp_blanket = 1 - np.exp(-b * mass)
         fwbs_variables.pnucblkt = (
-            physics_variables.powfmw * a * ccfe_hcpb_module.exp_blanket
+            physics_variables.fusion_power * a * ccfe_hcpb_module.exp_blanket
         )
 
         if fwbs_variables.pnucblkt < 1:
             eh.fdiags[0] = fwbs_variables.pnucblkt
             eh.fdiags[1] = ccfe_hcpb_module.exp_blanket
-            eh.fdiags[2] = physics_variables.powfmw
+            eh.fdiags[2] = physics_variables.fusion_power
             eh.fdiags[3] = mass
             eh.report_error(274)
 
@@ -422,7 +430,7 @@ class CCFE_HCPB:
         # Total nuclear heating in shield (MW)
         fwbs_variables.pnucshld = (
             ccfe_hcpb_module.shld_u_nuc_heating
-            * (physics_variables.powfmw / 1000)
+            * (physics_variables.fusion_power / 1000)
             / 1.0e6
         )
 
@@ -443,12 +451,12 @@ class CCFE_HCPB:
         if physics_variables.idivrt == 2:
             # Double null configuration
             fwbs_variables.pnucdiv = (
-                0.8 * physics_variables.powfmw * 2 * fwbs_variables.fdiv
+                0.8 * physics_variables.fusion_power * 2 * fwbs_variables.fdiv
             )
         else:
             # single null configuration
             fwbs_variables.pnucdiv = (
-                0.8 * physics_variables.powfmw * fwbs_variables.fdiv
+                0.8 * physics_variables.fusion_power * fwbs_variables.fdiv
             )
 
         # No heating of the H & CD
@@ -712,7 +720,7 @@ class CCFE_HCPB:
         # Solid angle fraction covered by the CP (OUTPUT) [-]
         return 0.25 * cp_sol_angle / np.pi
 
-    def st_tf_centrepost_fast_neut_flux(self, pneutmw, sh_width, rmajor):
+    def st_tf_centrepost_fast_neut_flux(self, neutron_power_total, sh_width, rmajor):
         """Author S Kahn
         Routine calculating the fast neutron (E > 0.1 MeV) flux reaching the TF
         at the centerpost. These calcualtion are made from a CP only MCNP fit
@@ -723,7 +731,7 @@ class CCFE_HCPB:
         of 16.6 cm, close to the "15 - 16 cm" of Menard et al. 2016.
         (This is an e-folding lenth of 7.22 cm.)
 
-        :param pneutmw: neutron fusion power [MW]
+        :param neutron_power_total: neutron fusion power [MW]
         :param sh_width: Neutron shield width [m]
         :param rmajor: Plasma major radius [m]
         """
@@ -753,7 +761,10 @@ class CCFE_HCPB:
 
             # Scaling to the actual plasma neutron power
             neut_flux_cp = (
-                f_wc_density * f_neut_flux_out_wall * neut_flux_cp * (pneutmw / 800)
+                f_wc_density
+                * f_neut_flux_out_wall
+                * neut_flux_cp
+                * (neutron_power_total / 800)
             )
 
         return neut_flux_cp

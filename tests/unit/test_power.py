@@ -2117,7 +2117,7 @@ class Power2Param(NamedTuple):
 
     pfwpmw: Any = None
 
-    palpmw: Any = None
+    alpha_power_total: Any = None
 
     ignite: Any = None
 
@@ -2137,13 +2137,13 @@ class Power2Param(NamedTuple):
 
     iradloss: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
-    pchargemw: Any = None
+    non_alpha_charged_power: Any = None
 
     pscalingmw: Any = None
 
-    falpha: Any = None
+    f_alpha_plasma: Any = None
 
     ppump: Any = None
 
@@ -2266,7 +2266,7 @@ class Power2Param(NamedTuple):
             htpsecmw=30.457120415306122,
             helpow_cryal=0,
             pfwpmw=0.89998039031509891,
-            palpmw=396.66154806848488,
+            alpha_power_total=396.66154806848488,
             ignite=0,
             pinnerzoneradmw=113.53817859231452,
             pradmw=287.99550050743289,
@@ -2276,10 +2276,10 @@ class Power2Param(NamedTuple):
             idivrt=1,
             pohmmw=0.61391840981850698,
             iradloss=1,
-            powfmw=1985.785106643267,
-            pchargemw=1.6064693283140403,
+            fusion_power=1985.785106643267,
+            non_alpha_charged_power=1.6064693283140403,
             pscalingmw=325.08626176539281,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             ppump=0,
             i_tf_sup=1,
             tfcmw=0,
@@ -2368,7 +2368,7 @@ class Power2Param(NamedTuple):
             htpsecmw=30.448114159579291,
             helpow_cryal=0,
             pfwpmw=0.068213156646500808,
-            palpmw=396.53774329057228,
+            alpha_power_total=396.53774329057228,
             ignite=0,
             pinnerzoneradmw=113.53817859231452,
             pradmw=287.99550050743289,
@@ -2378,10 +2378,10 @@ class Power2Param(NamedTuple):
             idivrt=1,
             pohmmw=0.61391840981850698,
             iradloss=1,
-            powfmw=1985.1653095257811,
-            pchargemw=1.6059679220663614,
+            fusion_power=1985.1653095257811,
+            non_alpha_charged_power=1.6059679220663614,
             pscalingmw=325.00280675287695,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             ppump=0,
             i_tf_sup=1,
             tfcmw=0,
@@ -2542,7 +2542,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "pfwpmw", power2param.pfwpmw)
 
-    monkeypatch.setattr(physics_variables, "palpmw", power2param.palpmw)
+    monkeypatch.setattr(
+        physics_variables, "alpha_power_total", power2param.alpha_power_total
+    )
 
     monkeypatch.setattr(physics_variables, "ignite", power2param.ignite)
 
@@ -2564,13 +2566,17 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "iradloss", power2param.iradloss)
 
-    monkeypatch.setattr(physics_variables, "powfmw", power2param.powfmw)
+    monkeypatch.setattr(physics_variables, "fusion_power", power2param.fusion_power)
 
-    monkeypatch.setattr(physics_variables, "pchargemw", power2param.pchargemw)
+    monkeypatch.setattr(
+        physics_variables,
+        "non_alpha_charged_power",
+        power2param.non_alpha_charged_power,
+    )
 
     monkeypatch.setattr(physics_variables, "pscalingmw", power2param.pscalingmw)
 
-    monkeypatch.setattr(physics_variables, "falpha", power2param.falpha)
+    monkeypatch.setattr(physics_variables, "f_alpha_plasma", power2param.f_alpha_plasma)
 
     monkeypatch.setattr(tfcoil_variables, "ppump", power2param.ppump)
 

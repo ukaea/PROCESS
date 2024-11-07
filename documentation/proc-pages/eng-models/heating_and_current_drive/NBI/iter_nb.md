@@ -39,11 +39,11 @@ $$
 
 Deuterium and tritium beam densities:
 $$
-n_D = n_i * (1.0 - \mathtt{ftritbm}) 
+n_D = n_i * (1.0 - \mathtt{f_tritium_beam}) 
 $$
 
 $$
-n_T = n_i * \mathtt{ftritbm}
+n_T = n_i * \mathtt{f_tritium_beam}
 $$
 
 Power split to ions / electrons is calculated via the the `cfnbi` method described [here](nbi_overview.md)
