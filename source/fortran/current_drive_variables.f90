@@ -57,8 +57,11 @@ module current_drive_variables
   real(dp) :: bscf_wong
   !! Bootstrap current fraction, Wong et al model
 
-  real(dp) :: bscf_gi
-  !! Bootstrap current fraction, Gi et al model
+  real(dp) :: bscf_gi_I
+  !! Bootstrap current fraction, first Gi et al model
+
+  real(dp) :: bscf_gi_II
+  !! Bootstrap current fraction, second Gi et al model
 
   real(dp) :: cboot
   !! bootstrap current fraction multiplier
@@ -258,6 +261,13 @@ module current_drive_variables
     bscf_nevins = 0.0D0
     bscf_sauter = 0.0D0
     bscf_wilson = 0.0D0
+    bscf_sakai = 0.0D0
+    bscf_aries = 0.0D0
+    bscf_andrade = 0.0D0
+    bscf_hoang = 0.0D0
+    bscf_wong = 0.0D0
+    bscf_gi_I = 0.0D0
+    bscf_gi_II = 0.0D0
     cboot = 1.0D0
     cnbeam = 0.0D0
     diacf_hender = 0.0D0

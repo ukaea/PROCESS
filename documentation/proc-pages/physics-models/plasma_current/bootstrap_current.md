@@ -616,12 +616,59 @@ $$
 
 ---------------------
 
-### Gi Scaling | `bootstrap_fraction_gi()`
+### Gi Scaling's
 
-Is selected by setting `i_bootstrap_current = 10`[^13]
+This scaling is found by solving the Hirshman-Sigmar bootstrap current model using the matrix inversion method to create bootstrap current scalings with variables given explicitly in the TPC systems code[^13].
+A 8800 point database for the bootstrap current fraction using the bootstrap current density calculation module in the ACCOME code is used, using the variable ranges in the table below:
+
+The fitting of the variable exponents is done using the least squares method with a $R^2$ value of > 0.98 for [scaling one](#scaling-1--bootstrap_fraction_gi_i) and > 0.96 for [scaling two](#scaling-2--bootstrap_fraction_gi_ii) compared to the ACCOME data.
+
+
+| Parameter                  | Range          | Points |
+|----------------------------|----------------|--------|
+| Major radius $R$ | 5.0    | 1      |
+| Aspect ratio $A$        | 1.3, 1.5, 1.7, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 5.0 | 10     |
+| Elongation $\kappa$   | $\sim$ 2 | 1      |
+| Triangularity $\delta$   | $\sim$ 0.3 | 1      |
+| Density profile index $a_{\text{n}}$      | 0.1-0.8 | 8      |
+| Temperature profile index $a_{\text{T}}$  | 1.0-3.0 | 11     |
+| Effective charge $Z_{\text{eff}}$ | 1.2-3.0 | 10     |
+
+The plasma parameters for each point in the aspect ratio scan can be seen in the table below:
+
+| Aspect ratio A | 1.3 | 1.5 | 1.7 | 2.0 | 2.2 | 2.5 | 3.0 | 3.5 | 4.0 | 5.0 |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Electron density at axis, $n_{\text{e0}}\left[10^{20} \mathrm{~m}^{-3}\right]$ | 1.0 | 1.0 | 1.5 | 1.5 | 1.5 | 2.0 | 2.0 | 2.0 | 2.0 | 1.0 |
+| Electron temperature at axis, $T_{\text{e0}}[\mathrm{keV}]$ | 40 | 20 | 30 | 30 | 30 | 40 | 20 | 40 | 20 | 30 |
+| Plasma current, $I_p$ $[\mathrm{MA}]$ | 20 | 15 | 20 | 15 | 15 | 15 | 10 | 15 | 10 | 5 |
+| Toroidal magnetic field at axis, $B_{\text{T}}$ $[\mathrm{T}]$ | 3.0 | 2.0 | 3.0 | 2.0 | 4.0 | 2.0 | 2.0 | 6.0 | 2.0 | 5.0 |
+| Poloidal beta, $\beta_{\text{p}}$ | 0.9-2.6 | 0.6-1.8 | 0.6-1.8 | 0.8-1.9 | 0.7-2.0 | 0.9-2.7 | 0.7-2.2 | 0.5-1.4 | 0.4-1.2 | 0.8-2.3 |
+
+
+
+#### Scaling 1 | `bootstrap_fraction_gi_I()`
+
+Is selected by setting `i_bootstrap_current = 10`
+
+Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the $f_{\text{BS}}$
+value for reversed shear equilibrium. Although Scaling 2 does not have internal current profile term, it can predict the $f_{\text{BS}}$ values to a certain extent for the high-$f_{\text{BS}}$ equilibria which are expected for next fusion devices.
 
 $$
 C_{\text{BS}} = 0.474 \epsilon^{-0.1} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178} \left(\frac{q_{95}}{q_0}\right)^{-0.133}
+$$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} \beta_{\text{p}}\sqrt{\epsilon}
+$$
+
+#### Scaling 2 | `bootstrap_fraction_gi_II()`
+
+Is selected by setting `i_bootstrap_current = 11`
+
+This scaling has the $q$ profile dependance removed to obtain a scaling formula with much more flexible variables than that by a single profile factor for internal current profile.
+
+$$
+C_{\text{BS}} = 0.382 \epsilon^{-0.242} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178}
 $$
 
 $$

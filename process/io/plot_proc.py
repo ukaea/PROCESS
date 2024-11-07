@@ -2916,7 +2916,8 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     boot_andrade = mfile_data.data["bscf_andrade"].get_scan(scan)
     boot_hoang = mfile_data.data["bscf_hoang"].get_scan(scan)
     boot_wong = mfile_data.data["bscf_wong"].get_scan(scan)
-    boot_gi = mfile_data.data["bscf_gi"].get_scan(scan)
+    boot_gi_I = mfile_data.data["bscf_gi_i"].get_scan(scan)
+    boot_gi_II = mfile_data.data["bscf_gi_ii"].get_scan(scan)
 
     # Data for the box plot
     data = [
@@ -2929,7 +2930,8 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         boot_andrade,
         boot_hoang,
         boot_wong,
-        boot_gi,
+        boot_gi_I,
+        boot_gi_II,
     ]
     labels = [
         "IPDG",
@@ -2941,7 +2943,8 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         "Andrade",
         "Hoang",
         "Wong",
-        "Gi",
+        "Gi-I",
+        "Gi-II",
     ]
 
     x = np.ones(len(data))
@@ -2965,17 +2968,17 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
 
     # Plot average, standard deviation, and median as text
     axis.text(
-        0.6, 0.9, f"Average: {avg_bootstrap:.4f}", transform=axis.transAxes, fontsize=9
+        0.65, 0.9, f"Average: {avg_bootstrap:.4f}", transform=axis.transAxes, fontsize=9
     )
     axis.text(
-        0.6,
+        0.65,
         0.85,
         f"Standard Dev: {std_bootstrap:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
     axis.text(
-        0.6,
+        0.65,
         0.8,
         f"Median: {median_bootstrap:.4f}",
         transform=axis.transAxes,

@@ -748,7 +748,7 @@ def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
     assert bfs == pytest.approx(bootstrapfractionwongparam.expected_bfs)
 
 
-class BootstrapFractionGiParam(NamedTuple):
+class BootstrapFractionGiIParam(NamedTuple):
     betap: Any = None
 
     pressure_index: Any = None
@@ -767,9 +767,9 @@ class BootstrapFractionGiParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "bootstrapfractiongiparam",
+    "bootstrapfractiongiiparam",
     (
-        BootstrapFractionGiParam(
+        BootstrapFractionGiIParam(
             betap=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
             temperature_index=1.4500000000000000e00,
@@ -781,7 +781,7 @@ class BootstrapFractionGiParam(NamedTuple):
         ),
     ),
 )
-def test_bootstrap_fraction_gi(bootstrapfractiongiparam, physics):
+def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
     """
     Automatically generated Regression Unit Test for bootstrap_fraction_gi.
 
@@ -791,17 +791,65 @@ def test_bootstrap_fraction_gi(bootstrapfractiongiparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_gi(
-        betap=bootstrapfractiongiparam.betap,
-        pressure_index=bootstrapfractiongiparam.pressure_index,
-        temperature_index=bootstrapfractiongiparam.temperature_index,
-        inverse_aspect=bootstrapfractiongiparam.inverse_aspect,
-        effective_charge=bootstrapfractiongiparam.effective_charge,
-        q95=bootstrapfractiongiparam.q95,
-        q0=bootstrapfractiongiparam.q0,
+    bfs = physics.bootstrap_fraction_gi_I(
+        betap=bootstrapfractiongiiparam.betap,
+        pressure_index=bootstrapfractiongiiparam.pressure_index,
+        temperature_index=bootstrapfractiongiiparam.temperature_index,
+        inverse_aspect=bootstrapfractiongiiparam.inverse_aspect,
+        effective_charge=bootstrapfractiongiiparam.effective_charge,
+        q95=bootstrapfractiongiiparam.q95,
+        q0=bootstrapfractiongiiparam.q0,
     )
 
-    assert bfs == pytest.approx(bootstrapfractiongiparam.expected_bfs)
+    assert bfs == pytest.approx(bootstrapfractiongiiparam.expected_bfs)
+
+
+class BootstrapFractionGiIIParam(NamedTuple):
+    betap: Any = None
+
+    pressure_index: Any = None
+
+    temperature_index: Any = None
+
+    inverse_aspect: Any = None
+
+    effective_charge: Any = None
+
+    expected_bfs: Any = None
+
+
+@pytest.mark.parametrize(
+    "bootstrapfractiongiiiparam",
+    (
+        BootstrapFractionGiIIParam(
+            betap=1.2708883332338736,
+            pressure_index=2.4500000000000002e00,
+            temperature_index=1.4500000000000000e00,
+            inverse_aspect=1 / 3,
+            effective_charge=2.5368733516769737e00,
+            expected_bfs=8.8502865710180589e-01,
+        ),
+    ),
+)
+def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
+    """
+    Automatically generated Regression Unit Test for bootstrap_fraction_gi.
+
+    This test was generated using data from tests/regression/input_files/large_tokamak.IN.DAT.
+
+    :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
+    :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
+    """
+
+    bfs = physics.bootstrap_fraction_gi_II(
+        betap=bootstrapfractiongiiiparam.betap,
+        pressure_index=bootstrapfractiongiiiparam.pressure_index,
+        temperature_index=bootstrapfractiongiiiparam.temperature_index,
+        inverse_aspect=bootstrapfractiongiiiparam.inverse_aspect,
+        effective_charge=bootstrapfractiongiiiparam.effective_charge,
+    )
+
+    assert bfs == pytest.approx(bootstrapfractiongiiiparam.expected_bfs)
 
 
 class PlasmaCurrentParam(NamedTuple):

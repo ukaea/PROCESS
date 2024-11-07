@@ -1758,9 +1758,9 @@ class Physics:
                 elongation=physics_variables.kappa,
             )
         )
-        current_drive_variables.bscf_gi = (
+        current_drive_variables.bscf_gi_I = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_gi(
+            * self.bootstrap_fraction_gi_I(
                 betap=physics_variables.betap,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
@@ -1768,6 +1768,17 @@ class Physics:
                 effective_charge=physics_variables.zeff,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
+            )
+        )
+
+        current_drive_variables.bscf_gi_II = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_gi_II(
+                betap=physics_variables.betap,
+                pressure_index=physics_variables.alphap,
+                temperature_index=physics_variables.alphat,
+                inverse_aspect=physics_variables.eps,
+                effective_charge=physics_variables.zeff,
             )
         )
 
@@ -1819,7 +1830,11 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 10:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_gi
+                    current_drive_variables.bscf_gi_I
+                )
+            elif physics_variables.i_bootstrap_current == 11:
+                current_drive_variables.bootstrap_current_fraction = (
+                    current_drive_variables.bscf_gi_II
                 )
             else:
                 error_handling.idiags[0] = physics_variables.i_bootstrap_current
@@ -4967,9 +4982,16 @@ class Physics:
             )
             po.ovarrf(
                 self.outfile,
-                "Bootstrap fraction (Gi)",
-                "(bscf_gi)",
-                current_drive_variables.bscf_gi,
+                "Bootstrap fraction (Gi I)",
+                "(bscf_gi_I)",
+                current_drive_variables.bscf_gi_I,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Gi II)",
+                "(bscf_gi_II)",
+                current_drive_variables.bscf_gi_II,
                 "OP ",
             )
 
@@ -5052,7 +5074,12 @@ class Physics:
             elif physics_variables.i_bootstrap_current == 10:
                 po.ocmmnt(
                     self.outfile,
-                    "  (Gi et al bootstrap current fraction model used)",
+                    "  (Gi-I et al bootstrap current fraction model used)",
+                )
+            elif physics_variables.i_bootstrap_current == 11:
+                po.ocmmnt(
+                    self.outfile,
+                    "  (Gi-II et al bootstrap current fraction model used)",
                 )
 
             if physics_variables.i_diamagnetic_current == 0:
@@ -5886,7 +5913,7 @@ class Physics:
         return c_bs * f_peak**0.25 * betap * np.sqrt(inverse_aspect)
 
     @staticmethod
-    def bootstrap_fraction_gi(
+    def bootstrap_fraction_gi_I(
         betap: float,
         pressure_index: float,
         temperature_index: float,
@@ -5896,7 +5923,7 @@ class Physics:
         q0: float,
     ) -> float:
         """
-        Calculate the bootstrap fraction using the Gi et al formula.
+        Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
 
         Parameters:
         betap (float): Plasma poloidal beta.
@@ -5911,6 +5938,14 @@ class Physics:
         float: The calculated bootstrap fraction.
 
         Notes:
+            - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
+            - Method was done to put the scaling into parameters compatible with the TPC systems code
+            - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
+              curent drive and equilibrium models in the scan
+            - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
+            - Uses parabolic plasma profiles only.
+            - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value for reversed shear
+              equilibrium.
 
         References:
             - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
@@ -5927,6 +5962,55 @@ class Physics:
             * temperature_index**-0.416
             * effective_charge**0.178
             * (q95 / q0) ** -0.133
+        )
+
+        return c_bs * np.sqrt(inverse_aspect) * betap
+
+    @staticmethod
+    def bootstrap_fraction_gi_II(
+        betap: float,
+        pressure_index: float,
+        temperature_index: float,
+        inverse_aspect: float,
+        effective_charge: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the second scaling from the Gi et al formula.
+
+        Parameters:
+        betap (float): Plasma poloidal beta.
+        pressure_index (float): Pressure profile index.
+        temperature_index (float): Temperature profile index.
+        inverse_aspect (float): Inverse aspect ratio.
+        effective_charge (float): Plasma effective charge.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+            - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
+            - Method was done to put the scaling into parameters compatible with the TPC systems code
+            - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
+              curent drive and equilibrium models in the scan
+            - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
+            - Uses parabolic plasma profiles only.
+            - This scaling has the q profile dependance removed to obtain a scaling formula with much more flexible variables than
+              that by a single profile factor for internal current profile.
+
+        References:
+            - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
+              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014,
+              doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+        """
+
+        # Using the standard variable naming from the Gi et.al. paper
+
+        c_bs = (
+            0.382
+            * inverse_aspect**-0.242
+            * pressure_index**0.974
+            * temperature_index**-0.416
+            * effective_charge**0.178
         )
 
         return c_bs * np.sqrt(inverse_aspect) * betap
