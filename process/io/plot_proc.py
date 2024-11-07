@@ -2920,51 +2920,38 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     boot_gi_II = mfile_data.data["bscf_gi_ii"].get_scan(scan)
 
     # Data for the box plot
-    data = [
-        boot_ipdg,
-        boot_sauter,
-        boot_nenins,
-        boot_wilson,
-        boot_sakai,
-        boot_aries,
-        boot_andrade,
-        boot_hoang,
-        boot_wong,
-        boot_gi_I,
-        boot_gi_II,
-    ]
-    labels = [
-        "IPDG",
-        "Sauter",
-        "Nevins",
-        "Wilson",
-        "Sakai",
-        "ARIES",
-        "Andrade",
-        "Hoang",
-        "Wong",
-        "Gi-I",
-        "Gi-II",
-    ]
-
-    x = np.ones(len(data))
-
+    data = {
+        "IPDG": boot_ipdg,
+        "Sauter": boot_sauter,
+        "Nevins": boot_nenins,
+        "Wilson": boot_wilson,
+        "Sakai": boot_sakai,
+        "ARIES": boot_aries,
+        "Andrade": boot_andrade,
+        "Hoang": boot_hoang,
+        "Wong": boot_wong,
+        "Gi-I": boot_gi_I,
+        "Gi-II": boot_gi_II,
+    }
     # Create the violin plot
-    axis.violinplot(data, showextrema=False)
+    axis.violinplot(data.values(), showextrema=False)
 
     # Create the box plot
-    axis.boxplot(data, showfliers=True, showmeans=True, meanline=True, widths=0.3)
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
 
     # Scatter plot for each data point
-    colors = plt.cm.plasma(np.linspace(0, 1, len(data)))
-    for i, value in enumerate(data):
-        axis.scatter(x[i], value, color=colors[i], label=labels[i], alpha=1.0)
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
     axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     # Calculate average, standard deviation, and median
-    avg_bootstrap = np.mean(data)
-    std_bootstrap = np.std(data)
-    median_bootstrap = np.median(data)
+    data_values = list(data.values())
+    avg_bootstrap = np.mean(data_values)
+    std_bootstrap = np.std(data_values)
+    median_bootstrap = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
     axis.text(

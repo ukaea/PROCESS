@@ -5806,7 +5806,7 @@ class Physics:
         Notes:
             - Based off 350 plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak
             - A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T, beta = 4-10%. Profiles taken as Gaussian shaped functions.
-            - Errors mostly up to the order of 10% are obtained when both expressions are compared with the equilibrium estimates for the 
+            - Errors mostly up to the order of 10% are obtained when both expressions are compared with the equilibrium estimates for the
               bootstrap current in ETE
 
         References:

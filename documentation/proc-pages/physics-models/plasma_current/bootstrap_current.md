@@ -504,13 +504,13 @@ The range of parameters from the discharges in ETE can be found in the table bel
 
 | Parameter             | Value     | Parameter             | Value     |
 |-----------------------|-----------|-----------------------|-----------|
-| $A$                   | 1.5       | $\alpha_{\text{T}_\text{e}}$ | 0.02      |
-| $R_0$                 | 0.3 $\text{[m]}$     | $\alpha_{\text{T}_\text{i}}$ | 2         |
-| $p(0)$                | 15 $\text{[kPa]}$    | $\kappa(a)$           | 2         |
-| $T_{\text{e,i}}(0)$   | 1 $\text{[keV]}$     | $\delta$              | 0.3       |
-| $T_{\text{e,i}}(a)$   | 0.1 $\text{[keV]}$   | $I_{\text{p}}$        | 200 $\text{[kA]}$    |
-| $\alpha_{\text{p}}$   | 3         | $B_0$                 | 0.4 $\text{[T]}$     |
-| $\beta$               | 4-10%     | $Z_{\text{eff}}$      | 1         |
+| Aspect ratio, $A$                   | 1.5       | Electron temperature profile index, $\alpha_{\text{T}_\text{e}}$ | 0.02      |
+| Major radius, $R_0$                 | 0.3 $\text{[m]}$     | Ion temperature profile index, $\alpha_{\text{T}_\text{i}}$ | 2         |
+| Core plasma pressure, $p(0)$                | 15 $\text{[kPa]}$    | Elongation, $\kappa(a)$           | 2         |
+| Core electron/ion temperature, $T_{\text{e,i}}(0)$   | 1 $\text{[keV]}$     | Triangularity, $\delta$              | 0.3       |
+| Edge electron/ion temperature $T_{\text{e,i}}(a)$   | 0.1 $\text{[keV]}$   | Plasma Current, $I_{\text{p}}$        | 200 $\text{[kA]}$    |
+| Pressure profile index, $\alpha_{\text{p}}$   | 3         | Toroidal field on-axis, $B_0$                 | 0.4 $\text{[T]}$     |
+| Plasma total beta, $\beta$               | 4-10%     | Plasma effective charge, $Z_{\text{eff}}$      | 1         |
 
 Errors mostly up to the order of 10% are obtained when both expressions are compared with the equilibrium estimates for the bootstrap current in ETE.
 
@@ -553,12 +553,12 @@ The plasma parameters of the discharges can be seen in the table below:
 
 | Parameter             | Value     |
 |-----------------------|-----------|
-| $I_{\text{p}}$        | 0.6 - 2.7 $\text{[MA]}$    |  
-| $q(a)$                 | 2.8 - 11.0       |
-| $P_{\text{NBI}}$                | 2.0 - 35.0 $\text{[MW]}$    |
-| $P_{\text{ICRH}}$   | 1.5 - 6.0 $\text{[MW]}$     |
-| $B_{\text{T}}$   | 1.9 - 5.7 $\text{[T]}$   |
-| $n_{\text{e,0}}$   | 0.2 - 1.2 $[10^{20} \text{m}^{-3}]$         |
+| Plasma Current, $I_{\text{p}}$        | 0.6 - 2.7 $\text{[MA]}$    |  
+| Edge safety factor, $q(a)$                 | 2.8 - 11.0       |
+| Injected NBI power, $P_{\text{NBI}}$                | 2.0 - 35.0 $\text{[MW]}$    |
+| Injected ICRH power, $P_{\text{ICRH}}$   | 1.5 - 6.0 $\text{[MW]}$     |
+| Toroidal field on-axis, $B_{\text{T}}$   | 1.9 - 5.7 $\text{[T]}$   |
+| Core electron density, $n_{\text{e,0}}$   | 0.2 - 1.2 $[10^{20} \text{m}^{-3}]$         |
 
 A wide variety of discharge regimes are included, such as: L-mode  supershots, discharges
 with reversed shear (RS) and enhanced reversed shear (ERS), and discharges with increased-$l_i$.
@@ -643,13 +643,13 @@ The fitting of the variable exponents is done using the least squares method wit
 
 | Parameter                  | Range          | Points |
 |----------------------------|----------------|--------|
-| Major radius $R$ | 5.0    | 1      |
-| Aspect ratio $A$        | 1.3, 1.5, 1.7, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 5.0 | 10     |
-| Elongation $\kappa$   | $\sim$ 2 | 1      |
-| Triangularity $\delta$   | $\sim$ 0.3 | 1      |
-| Density profile index $a_{\text{n}}$      | 0.1-0.8 | 8      |
-| Temperature profile index $a_{\text{T}}$  | 1.0-3.0 | 11     |
-| Effective charge $Z_{\text{eff}}$ | 1.2-3.0 | 10     |
+| Major radius, $R$  | 5.0 $[\mathrm{m}]$   | 1      |
+| Aspect ratio, $A$        | 1.3, 1.5, 1.7, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 5.0 | 10     |
+| Elongation, $\kappa$   | $\sim$ 2 | 1      |
+| Triangularity, $\delta$   | $\sim$ 0.3 | 1      |
+| Density profile index, $a_{\text{n}}$      | 0.1-0.8 | 8      |
+| Temperature profile index, $a_{\text{T}}$  | 1.0-3.0 | 11     |
+| Effective charge, $Z_{\text{eff}}$ | 1.2-3.0 | 10     |
 
 The plasma parameters for each point in the aspect ratio scan can be seen in the table below:
 
@@ -667,8 +667,7 @@ The plasma parameters for each point in the aspect ratio scan can be seen in the
 
 Is selected by setting `i_bootstrap_current = 10`
 
-Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the $f_{\text{BS}}$
-value for reversed shear equilibrium. Although Scaling 2 does not have an internal current profile term, it can predict the $f_{\text{BS}}$ values to a certain extent for the high-$f_{\text{BS}}$ equilibria which are expected for next fusion devices.
+Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the $f_{\text{BS}}$ value for reversed shear equilibrium. Although Scaling 2 does not have an internal current profile term, it can predict the $f_{\text{BS}}$ values to a certain extent for the high-$f_{\text{BS}}$ equilibria which are expected for next fusion devices.
 
 $$
 C_{\text{BS}} = 0.474 \epsilon^{-0.1} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178} \left(\frac{q_{95}}{q_0}\right)^{-0.133}
