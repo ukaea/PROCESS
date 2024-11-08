@@ -559,6 +559,9 @@ module physics_variables
   real(dp) :: p0
   !! central total plasma pressure (Pa)
 
+  real(dp) :: vol_avg_pressure
+  !! Volume averaged plasma pressure (Pa)
+
   real(dp) :: f_dd_branching_trit
   !! branching ratio for DD -> T
 
