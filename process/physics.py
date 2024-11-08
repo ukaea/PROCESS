@@ -1708,7 +1708,7 @@ class Physics:
         # Wilson scaling uses thermal poloidal beta, not total
         betpth = (
             physics_variables.beta
-            - physics_variables.betaft
+            - physics_variables.beta_fast_alpha
             - physics_variables.beta_beam
         ) * (physics_variables.btot / physics_variables.bp) ** 2
         current_drive_variables.bscf_wilson = (
@@ -1927,7 +1927,7 @@ class Physics:
             physics_variables.alpha_power_density_plasma,
         )
 
-        physics_variables.betaft = physics_funcs.fast_alpha_beta(
+        physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
@@ -3450,10 +3450,12 @@ class Physics:
 
         betath = (
             physics_variables.beta
-            - physics_variables.betaft
+            - physics_variables.beta_fast_alpha
             - physics_variables.beta_beam
         )
-        gammaft = (physics_variables.betaft + physics_variables.beta_beam) / betath
+        gammaft = (
+            physics_variables.beta_fast_alpha + physics_variables.beta_beam
+        ) / betath
 
         po.ovarre(self.outfile, "Total plasma beta", "(beta)", physics_variables.beta)
         po.ovarre(
@@ -3472,7 +3474,11 @@ class Physics:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Fast alpha beta", "(betaft)", physics_variables.betaft, "OP "
+            self.outfile,
+            "Fast alpha beta",
+            "(beta_fast_alpha)",
+            physics_variables.beta_fast_alpha,
+            "OP ",
         )
         po.ovarre(
             self.outfile,

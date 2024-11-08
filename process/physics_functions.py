@@ -984,12 +984,12 @@ def fast_alpha_beta(
 
         fact = max(fact, 0.0)
         fact2 = alpha_power_density_total / alpha_power_density_plasma
-        betaft = betath * fact * fact2
+        beta_fast_alpha = betath * fact * fact2
 
     else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0
-        betaft = 0.0
+        beta_fast_alpha = 0.0
 
-    return betaft
+    return beta_fast_alpha
 
 
 def beam_fusion(

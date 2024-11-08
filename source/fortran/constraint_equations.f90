@@ -342,8 +342,8 @@ contains
    subroutine constraint_err_001()
     !! Error in: Relationship between beta, temperature (keV) and density (consistency equation)
     !! author: P B Lloyd, CCFE, Culham Science Centre
-    use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
-    write(*,*) 'betaft = ', betaft
+    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
+    write(*,*) 'beta_fast_alpha = ', beta_fast_alpha
     write(*,*) 'beta_beam = ', beta_beam
     write(*,*) 'dene = ', dene
     write(*,*) 'ten = ', ten
@@ -408,7 +408,7 @@ contains
     !! - \( T_i \) -- density weighted average ion temperature [keV]
     !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
-    use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
     use constants, only: electron_charge,rmu0
 
     implicit none
@@ -422,7 +422,7 @@ contains
 
     !! constraint derived type
 
-      tmp_cc = 1.0D0 - (betaft + beta_beam + &
+      tmp_cc = 1.0D0 - (beta_fast_alpha + beta_beam + &
         2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
       tmp_con = beta * (1.0D0 - tmp_cc)
       tmp_err = beta * tmp_cc
@@ -1270,11 +1270,11 @@ contains
       !! fbetatry : input real : f-value for beta limit
       !! betalim : input real : allowable beta
       !! beta : input real : total plasma beta (calculated if ipedestal =3)
-      !! betaft : input real : fast alpha beta component
+      !! beta_fast_alpha : input real : fast alpha beta component
       !! beta_beam : input real : neutral beam beta component
       !! bt : input real : toroidal field
       !! btot : input real : total field
-      use physics_variables, only: iculbl, betalim, beta, beta_beam, betaft, bt, btot
+      use physics_variables, only: iculbl, betalim, beta, beta_beam, beta_fast_alpha, bt, btot
       use stellarator_variables, only: istell
       use constraint_variables, only: fbetatry
       implicit none
@@ -1293,16 +1293,16 @@ contains
          tmp_units = ''
       ! Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
       else if (iculbl == 1) then
-         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-betaft-beta_beam)
+         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-beta_fast_alpha-beta_beam)
          tmp_con = betalim
-         tmp_err = betalim - (beta-betaft-beta_beam) / fbetatry
+         tmp_err = betalim - (beta-beta_fast_alpha-beta_beam) / fbetatry
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
       else if (iculbl == 2) then
-         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-betaft)
+         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-beta_fast_alpha)
          tmp_con = betalim * (1.0D0 - tmp_cc)
-         tmp_err = (beta-betaft) * tmp_cc
+         tmp_err = (beta-beta_fast_alpha) * tmp_cc
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to toroidal beta
@@ -3130,16 +3130,16 @@ contains
       !! author: J Lion, IPP Greifswald
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !!  (beta-betaft) > betalim_lower
+      !!  (beta-beta_fast_alpha) > betalim_lower
       !! #=# physics
-      !! #=#=# betaft, beta, fbetatry_lower
+      !! #=#=# beta_fast_alpha, beta, fbetatry_lower
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbetatry_lower : input real : f-value for constraint beta-betaft > betalim_lower
+      !! fbetatry_lower : input real : f-value for constraint beta-beta_fast_alpha > betalim_lower
       !! betalim_lower : input real :  Lower limit for beta
       !! beta : input real :  plasma beta
-      !! betaft : input real : Alpha particle beta
+      !! beta_fast_alpha : input real : Alpha particle beta
 
-      use physics_variables, only: betalim_lower, beta, betaft
+      use physics_variables, only: betalim_lower, beta, beta_fast_alpha
       use constraint_variables, only: fbetatry_lower
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -3149,9 +3149,9 @@ contains
       character(len=10), intent(out) :: tmp_units
 
 
-      tmp_cc = 1.0D0 - fbetatry_lower * (beta-betaft)/betalim_lower
+      tmp_cc = 1.0D0 - fbetatry_lower * (beta-beta_fast_alpha)/betalim_lower
       tmp_con = betalim_lower * (1.0D0 - tmp_cc)
-      tmp_err = (beta-betaft) * tmp_cc
+      tmp_err = (beta-beta_fast_alpha) * tmp_cc
       tmp_symbol = '>'
       tmp_units = ''
 
