@@ -304,7 +304,7 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, cvol, f_deuterium, ffwal, iculbl, itartpf, ilhthresh, &
+      rhopedt, cvol, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
@@ -623,8 +623,8 @@ contains
        case ('i_bootstrap_current')
           call parse_int_variable('i_bootstrap_current', i_bootstrap_current, 1, 5, &
                'Switch for bootstrap scaling')
-       case ('iculbl')
-          call parse_int_variable('iculbl', iculbl, 0, 3, &
+       case ('i_beta_component')
+          call parse_int_variable('i_beta_component', i_beta_component, 0, 3, &
                'Switch for beta limit scaling')
        case ('i_plasma_current')
           call parse_int_variable('i_plasma_current', i_plasma_current, 1, 9, &

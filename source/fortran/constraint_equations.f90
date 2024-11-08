@@ -1259,7 +1259,7 @@ contains
       !! #=#=# fbetatry, betalim
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! iculbl : input integer : switch for beta limit scaling (constraint equation  24):<UL>
+      !! i_beta_component : input integer : switch for beta limit scaling (constraint equation  24):<UL>
       !! <LI> = 0 apply limit to total beta;
       !! <LI> = 1 apply limit to thermal beta;
       !! <LI> = 2 apply limit to thermal + neutral beam beta
@@ -1274,7 +1274,7 @@ contains
       !! beta_beam : input real : neutral beam beta component
       !! bt : input real : toroidal field
       !! btot : input real : total field
-      use physics_variables, only: iculbl, betalim, beta, beta_beam, beta_fast_alpha, bt, btot
+      use physics_variables, only: i_beta_component, betalim, beta, beta_beam, beta_fast_alpha, bt, btot
       use stellarator_variables, only: istell
       use constraint_variables, only: fbetatry
       implicit none
@@ -1285,28 +1285,28 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! Include all beta components: relevant for both tokamaks and stellarators
-      if ((iculbl == 0).or.(istell /= 0)) then
+      if ((i_beta_component == 0).or.(istell /= 0)) then
          tmp_cc =  1.0D0 - fbetatry * betalim/beta
          tmp_con = betalim
          tmp_err = betalim - beta / fbetatry
          tmp_symbol = '<'
          tmp_units = ''
       ! Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
-      else if (iculbl == 1) then
+      else if (i_beta_component == 1) then
          tmp_cc = 1.0D0 - fbetatry * betalim/(beta-beta_fast_alpha-beta_beam)
          tmp_con = betalim
          tmp_err = betalim - (beta-beta_fast_alpha-beta_beam) / fbetatry
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
-      else if (iculbl == 2) then
+      else if (i_beta_component == 2) then
          tmp_cc = 1.0D0 - fbetatry * betalim/(beta-beta_fast_alpha)
          tmp_con = betalim * (1.0D0 - tmp_cc)
          tmp_err = (beta-beta_fast_alpha) * tmp_cc
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to toroidal beta
-      else if (iculbl == 3) then
+      else if (i_beta_component == 3) then
          tmp_cc =  1.0D0 - fbetatry * betalim/(beta*(btot/bt)**2)
          tmp_con = betalim
          tmp_err = betalim - (beta*(btot/bt)**2) / fbetatry

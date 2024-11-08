@@ -2428,7 +2428,7 @@
             0.0
         ],
         "icode": 0.0,
-        "iculbl": 0.0,
+        "i_beta_component": 0.0,
         "i_plasma_current": 4.0,
         "idensl": 7.0,
         "i_diamagnetic_current": 0.0,
@@ -9808,7 +9808,7 @@
         "icase": "power plant type",
         "icc": "",
         "icode": "",
-        "iculbl": "switch for beta limit scaling (`constraint equation 24`)\n<ul>\n<li>=0 apply limit to total beta</li>\n<li>=1 apply limit to thermal beta</li>\n<li>=2 apply limit to thermal + neutral beam beta</li>\n<li>=3 apply limit to toroidal beta</li>\n</ul>",
+        "i_beta_component": "switch for beta limit scaling (`constraint equation 24`)\n<ul>\n<li>=0 apply limit to total beta</li>\n<li>=1 apply limit to thermal beta</li>\n<li>=2 apply limit to thermal + neutral beam beta</li>\n<li>=3 apply limit to toroidal beta</li>\n</ul>",
         "i_plasma_current": "switch for plasma current scaling to use\n<ul>\n<li>=1 Peng analytic fit</li>\n<li>=2 Peng double null divertor scaling (ST)</li>\n<li>=3 simple ITER scaling (k = 2.2, d = 0.6)</li>\n<li>=4 later ITER scaling, a la Uckan</li>\n<li>=5 Todd empirical scaling I</li>\n<li>=6 Todd empirical scaling II</li>\n<li>=7 Connor-Hastie model</li>\n<li>=8 Sauter scaling allowing negative triangularity</li>\n<li>=9 FIESTA ST fit</li>\n</ul>",
         "idensl": "switch for density limit to enforce (`constraint equation 5`)\n<ul>\n<li>=1 old ASDEX</li>\n<li>=2 Borrass model for ITER (I)</li>\n<li>=3 Borrass model for ITER (II)</li>\n<li>=4 JET edge radiation</li>\n<li>=5 JET simplified</li>\n<li>=6 Hugill-Murakami Mq limit</li>\n<li>=7 Greenwald limit</li>\n</ul>",
         "i_diamagnetic_current": "switch for diamagnetic current scaling\n<ul>\n<li>=0 Do not calculate</li>\n<li>=1 Use original TART scaling</li>\n<li>=2 Use SCENE scaling</li>\n</ul>",
@@ -13322,7 +13322,7 @@
             "lb": 1,
             "ub": 4
         },
-        "iculbl": {
+        "i_beta_component": {
             "lb": 0,
             "ub": 3
         },
@@ -19114,7 +19114,7 @@
             "hfact",
             "taumax",
             "i_bootstrap_current",
-            "iculbl",
+            "i_beta_component",
             "i_plasma_current",
             "i_diamagnetic_current",
             "idensl",
@@ -20441,7 +20441,7 @@
         "iblnkith": "int_variable",
         "i_bootstrap_current": "int_variable",
         "icc": "int_array",
-        "iculbl": "int_variable",
+        "i_beta_component": "int_variable",
         "i_plasma_current": "int_variable",
         "idensl": "int_variable",
         "i_diamagnetic_current": "int_variable",

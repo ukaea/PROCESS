@@ -155,13 +155,13 @@ def calculate_beta_limit(
 
     This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
     The limit applies to beta defined with respect to the total B-field.
-    Switch iculbl determines which components of beta to include.
+    Switch i_beta_component determines which components of beta to include.
 
     Notes:
-        - If iculbl = 0, then the limit is applied to the total beta.
-        - If iculbl = 1, then the limit is applied to the thermal beta only.
-        - If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components.
-        - If iculbl = 3, then the limit is applied to the toroidal beta.
+        - If i_beta_component = 0, then the limit is applied to the total beta.
+        - If i_beta_component = 1, then the limit is applied to the thermal beta only.
+        - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
+        - If i_beta_component = 3, then the limit is applied to the toroidal beta.
 
         - The default value for the g coefficient is dnbeta = 3.5.
 
@@ -3574,7 +3574,7 @@ class Physics:
                 "OP ",
             )
 
-        if physics_variables.iculbl == 0:
+        if physics_variables.i_beta_component == 0:
             po.ovarrf(
                 self.outfile,
                 "Limit on total beta",
@@ -3582,7 +3582,7 @@ class Physics:
                 physics_variables.betalim,
                 "OP ",
             )
-        elif physics_variables.iculbl == 1:
+        elif physics_variables.i_beta_component == 1:
             po.ovarrf(
                 self.outfile,
                 "Limit on thermal beta",

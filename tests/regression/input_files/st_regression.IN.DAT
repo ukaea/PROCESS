@@ -325,7 +325,7 @@ boundu(36) = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-iculbl = 3
+i_beta_component = 3
 * DESCRIPTION:   Switch for Beta Limit Scaling (icc=24) (3: Apply Limit to Toroidal)
 * JUSTIFICATION: Total beta is used to agree with literature limit
 * REFERENCE:     Ono & Kaita (2015), Physics of Plasmas, 22, 040501

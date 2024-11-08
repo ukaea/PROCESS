@@ -254,7 +254,7 @@ module physics_variables
   !! - =4 for Sauter et al scaling
   !! - =5 for Sakai et al scaling
 
-  integer :: iculbl
+  integer :: i_beta_component
   !! switch for beta limit scaling (`constraint equation 24`)
   !!
   !! - =0 apply limit to total beta
@@ -973,7 +973,7 @@ module physics_variables
     hfact = 1.0D0
     taumax = 10.0D0
     i_bootstrap_current = 3
-    iculbl = 0
+    i_beta_component = 0
     i_plasma_current = 4
     i_diamagnetic_current = 0
     idensl = 7

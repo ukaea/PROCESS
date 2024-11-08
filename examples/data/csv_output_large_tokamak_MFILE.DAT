@@ -1571,7 +1571,7 @@ gamma = 0.3
 i_bootstrap_current = 4
 
 * Switch for beta limit scaling
-iculbl = 1
+i_beta_component = 1
 
 * Switch for plasma current scaling
 i_plasma_current    = 4

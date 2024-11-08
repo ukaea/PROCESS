@@ -13,14 +13,14 @@ constraint equation 24 should be turned on with iteration variable 36
 
 By default, $\beta$ is defined with respect to the total equilibrium B-field [^2]. 
 
-| `iculbl` | Description |
+| `i_beta_component` | Description |
 | :-: | - |
 | 0 (default) | Apply the $\beta$ limit to the total plasma beta (including the contribution from fast ions) |
 | 1 | Apply the $\beta$ limit to only the thermal component of beta |
 | 2 | Apply the $\beta$ limit to only the thermal plus neutral beam contributions to beta |
 | 3 | Apply the $\beta$ limit to the total beta (including the contribution from fast ions), calculated using only the toroidal field |
 
-### Setting the Beta $g$ Coefficient
+## Setting the Beta $g$ Coefficient
 
 Switch `iprofile` determines how the beta $g$ coefficient `dnbeta` should 
 be calculated.
@@ -37,12 +37,16 @@ be calculated.
 
 Further details on the calculation of `alphaj` and `rli` is given in [Plasma Current](./plasma_current.md).
 
-### Limiting $\epsilon\beta_p$
+## Limiting $\epsilon\beta_p$
 
 To apply a limit to the value of $\epsilon\beta_p$, where $\epsilon = a/R$ is
 the inverse aspect ratio and $\beta_p$ is the poloidal $\beta$, constraint equation no. 6 should be 
 turned on with iteration variable no. 8 (`fbeta`). The limiting value of $\epsilon\beta_p$ 
 is be set using input parameter `epbetmax`.
+
+## Key Constraints
+
+
 
 [^1]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 
