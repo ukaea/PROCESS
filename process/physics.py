@@ -2498,9 +2498,9 @@ class Physics:
         # Beam hot ion component
         # If ignited, prevent beam fusion effects
         if physics_variables.ignite == 0:
-            physics_variables.dnbeam = physics_variables.dene * physics_variables.rnbeam
+            physics_variables.beam_density = physics_variables.dene * physics_variables.rnbeam
         else:
-            physics_variables.dnbeam = 0.0
+            physics_variables.beam_density = 0.0
 
         # Sum of Zi.ni for all impurity ions (those with charge > helium)
         znimp = 0.0
@@ -2519,7 +2519,7 @@ class Physics:
             physics_variables.dene
             - 2.0 * physics_variables.dnalp
             - physics_variables.dnprot
-            - physics_variables.dnbeam
+            - physics_variables.beam_density
             - znimp
         )
 
@@ -2536,7 +2536,7 @@ class Physics:
             physics_variables.dnprot
             + (physics_variables.f_deuterium + physics_variables.f_tritium)
             * physics_variables.deni
-            + physics_variables.dnbeam
+            + physics_variables.beam_density
         ) / physics_variables.dene
 
         impurity_radiation_module.impurity_arr_frac[
@@ -2562,7 +2562,7 @@ class Physics:
             physics_variables.deni
             + physics_variables.dnalp
             + physics_variables.dnprot
-            + physics_variables.dnbeam
+            + physics_variables.beam_density
             + physics_variables.dnz
         )
 
@@ -2646,7 +2646,7 @@ class Physics:
             physics_variables.afuel * physics_variables.deni
             + 4.0 * physics_variables.dnalp
             + physics_variables.dnprot
-            + physics_variables.abeam * physics_variables.dnbeam
+            + physics_variables.abeam * physics_variables.beam_density
         )
         for imp in range(impurity_radiation_module.nimp):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
@@ -2666,9 +2666,9 @@ class Physics:
             + physics_variables.dnalp
             + physics_variables.dnprot
             + (1.0 - current_drive_variables.f_tritium_beam)
-            * physics_variables.dnbeam
+            * physics_variables.beam_density
             / 2.0
-            + current_drive_variables.f_tritium_beam * physics_variables.dnbeam / 3.0
+            + current_drive_variables.f_tritium_beam * physics_variables.beam_density / 3.0
         ) / physics_variables.dene
         for imp in range(impurity_radiation_module.nimp):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
@@ -3692,8 +3692,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Hot beam density (/m3)",
-            "(dnbeam)",
-            physics_variables.dnbeam,
+            "(beam_density)",
+            physics_variables.beam_density,
             "OP ",
         )
         po.ovarre(
