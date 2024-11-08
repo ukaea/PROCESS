@@ -34,24 +34,4 @@ The impurity fraction of any one of the elements listed in array `fimp` (other t
 isotopes and helium) may be used as an iteration variable.
 The impurity fraction to be varied can be set simply with `fimp(i) = <value>`, where `i` is the corresponding number value for the desired impurity in the table above.
 
-The synchrotron radiation power[^2] [^3] is assumed to originate from the 
-plasma core. The wall reflection factor `ssync` may be set by the user.
-
-By changing the input parameter `coreradius`, the user may set the normalised 
-radius defining the 'core' region. Only the impurity and synchrotron radiation 
-from this affects the confinement scaling. Figure 1 below shows the
-radiation power contributions.
-
-![Schematic diagram of radiation power contributions](../images/radiation.png "Schematic diagram of radiation power contributions")
-*Figure 1: Schematic diagram of the radiation power contributions and how they are split between core and edge radiation*
-
-Constraint equation no. 17 with iteration variable no. 28 (`fradpwr`)
-ensures that the calculated total radiation power does not exceed the total
-power available that can be converted to radiation (i.e. the sum of the fusion
-alpha power, other charged particle fusion power, auxiliary injected power and
-the ohmic power). This constraint should always be turned on.
-
-[^1]: H. Lux, R. Kemp, D.J. Ward, M. Sertoli, 'Impurity radiation in DEMO 
-systems modelling', Fus. Eng.  | Des. **101**, 42-51 (2015)
-[^2]:  Albajar, Nuclear Fusion **41** (2001) 665
-[^3]: Fidone, Giruzzi and Granata, Nuclear Fusion **41** (2001) 1755
+[^1]: H. Lux, R. Kemp, D.J. Ward, M. Sertoli, Impurity radiation in DEMO systems modelling, Fusion Engineering and Design, Volume 101, 2015, Pages 42-51, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2015.10.002.
