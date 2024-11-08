@@ -48,7 +48,10 @@ nav:
                   - Density Profile: physics-models/profiles/plasma_density_profile.md
                   - Temperature Profile: physics-models/profiles/plasma_temperature_profile.md
                   - Profile Base Class: physics-models/profiles/plasma_profiles_abstract_class.md
-              - Fusion Reactions: physics-models/plasma_reactions.md
+              - Fusion Reactions:
+                  - Overview: physics-models/fusion_reactions/plasma_reactions.md
+                  - Beam reactions: physics-models/fusion_reactions/beam_reactions.md
+                  - Bosch-Hale Methods: physics-models/fusion_reactions/plasma_bosch_hale.md
               - Beta Limit: physics-models/plasma_beta.md
               - Fast Alpha: physics-models/plasma_alpha.md
               - Density Limit: physics-models/plasma_density.md

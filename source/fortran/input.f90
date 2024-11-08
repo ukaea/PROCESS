@@ -258,7 +258,7 @@ contains
       ucpens, cland, ucwindpf, i_cp_lifetime, cplife_input, &
       startupratio, tmain, u_unplanned_cp, supercond_cost_model
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
-      ftritbm, gamma_ecrh, pheat, beamwd, enbeam, pheatfix, bootstrap_current_fraction_max, &
+      f_tritium_beam, gamma_ecrh, pheat, beamwd, beam_energy, pheatfix, bootstrap_current_fraction_max, &
       forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
       etalh, frbeam, harnum, xi_ebw, wave_mode
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
@@ -304,13 +304,13 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, cvol, fdeut, ffwal, iculbl, itartpf, ilhthresh, &
+      rhopedt, cvol, f_deuterium, ffwal, iculbl, itartpf, ilhthresh, &
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
-      fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, ftrit, &
+      fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
       ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
-      teped, fhe3, iwalld, gamma, falpha, fgwped, tbeta, i_bootstrap_current, &
+      teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
@@ -572,14 +572,14 @@ contains
        case ('epbetmax')
           call parse_real_variable('epbetmax', epbetmax, 0.01D0, 10.0D0, &
                'Max epsilon*beta value')
-       case ('falpha')
-          call parse_real_variable('falpha', falpha, 0.0D0, 1.0D0, &
+       case ('f_alpha_plasma')
+          call parse_real_variable('f_alpha_plasma', f_alpha_plasma, 0.0D0, 1.0D0, &
                'Fraction of alpha power deposited to plasma')
        case ('ftar')
           call parse_real_variable('ftar', ftar, 0.0D0, 1.0D0, &
                'Fraction of power to divertor with lower divertor in double null')
-       case ('fdeut')
-          call parse_real_variable('fdeut', fdeut, 0.0D0, 1.0D0, &
+       case ('f_deuterium')
+          call parse_real_variable('f_deuterium', f_deuterium, 0.0D0, 1.0D0, &
                'Deuterium fuel fraction')
        case ('ffwal')
           call parse_real_variable('ffwal', ffwal, 0.0D0, 10.0D0, &
@@ -590,8 +590,8 @@ contains
        case ('fgwsep')
           call parse_real_variable('fgwsep', fgwsep, -1.0D0, 1.0D0, &
                'Fraction of n_G at separatrix')
-       case ('fhe3')
-          call parse_real_variable('fhe3', fhe3, 0.0D0, 1.0D0, &
+       case ('f_helium3')
+          call parse_real_variable('f_helium3', f_helium3, 0.0D0, 1.0D0, &
                'Helium-3 fuel fraction')
        case ('fimp')
           call parse_real_array('fimp', fimp, isub1, nimp, &
@@ -605,8 +605,8 @@ contains
        case ('ftaulimit')
           call parse_real_variable('ftaulimit', ftaulimit, 0.001D0, 1.0D0, &
                'f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement times')
-       case ('ftrit')
-          call parse_real_variable('ftrit', ftrit, 0.0D0, 1.0D0, &
+       case ('f_tritium')
+          call parse_real_variable('f_tritium', f_tritium, 0.0D0, 1.0D0, &
                'Tritium fuel fraction')
        case ('fvsbrnni')
           call parse_real_variable('fvsbrnni', fvsbrnni, 0.0D0, 1.0D0, &
@@ -1046,8 +1046,8 @@ contains
        case ('cboot')
           call parse_real_variable('cboot', cboot, 0.0D0, 10.0D0, &
                'Bootstrap current fraction multiplier')
-       case ('enbeam')
-          call parse_real_variable('enbeam', enbeam, 1.0D0, 1.0D6, &
+       case ('beam_energy')
+          call parse_real_variable('beam_energy', beam_energy, 1.0D0, 1.0D6, &
                'Neutral beam energy (keV)')
        case ('etalh')
           call parse_real_variable('etalh', etalh, 0.0D0, 1.0D0, &
@@ -1067,8 +1067,8 @@ contains
        case ('frbeam')
           call parse_real_variable('frbeam', frbeam, 0.5D0, 2.0D0, &
                'R_tan / R_major for NBI')
-       case ('ftritbm')
-          call parse_real_variable('ftritbm', ftritbm, 0.0D0, 1.0D0, &
+       case ('f_tritium_beam')
+          call parse_real_variable('f_tritium_beam', f_tritium_beam, 0.0D0, 1.0D0, &
                'Tritium fraction of beam')
        case ('gamma_ecrh')
           call parse_real_variable('gamma_ecrh', gamma_ecrh, 0.0D0, 1.0D0, &

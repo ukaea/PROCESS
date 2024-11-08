@@ -102,7 +102,7 @@ bt = 3.0
 icc = 9
 * DESCRIPTION:   Fusion Power Upper Limit Constraint
 * JUSTIFICATION: Working to target fusion
-* VARIABLES:     powfmw (fusion power) calculated in-situ
+* VARIABLES:     fusion_power (fusion power) calculated in-situ
 
 *ixc = 26
 ffuspow = 1.0
@@ -626,19 +626,19 @@ boundu(28) = 1.0
 * DESCRIPTION:   Seeded protium density / electron density (default = 0.0)
 * JUSTIFICATION: Not used, no protium seeding.
 
-*fdeut = 
+*f_deuterium = 
 * DESCRIPTION:   Deuterium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*ftrit = 
+*f_tritium = 
 * DESCRIPTION:   Tritium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*fhe3 = 
+*f_helium3 = 
 * DESCRIPTION:   Helium-3 fuel fraction
 * JUSTIFICATION: Using default = 0.0
 
-*falpha = 
+*f_alpha_plasma = 
 * DESCRIPTION:   Fraction of alpha power deposited to plasma
 * JUSTIFICATION: Using default = 0.95
 
@@ -2800,7 +2800,7 @@ feffcd = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Neutral Beam Injection ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*enbeam = 
+*beam_energy = 
 * DESCRIPTION:   Neutral beam energy (keV)
 * JUSTIFICATION: Not used as no NBI used
 
@@ -2824,7 +2824,7 @@ feffcd = 1.0
 * DESCRIPTION:   R_tan / R_major for NBI
 * JUSTIFICATION: Not used as no NBI used
 
-*ftritbm
+*f_tritium_beam
 * DESCRIPTION:   Tritium fraction of beam
 * JUSTIFICATION: Not used as no NBI used
 

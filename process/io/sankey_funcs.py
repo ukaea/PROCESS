@@ -22,17 +22,23 @@ def plot_full_sankey(
     m_file = MFile(mfilename)
 
     # Used in [PLASMA]
-    powfmw = m_file.data["powfmw"].get_scan(-1)  # Fusion power (MW)
+    fusion_power = m_file.data["fusion_power"].get_scan(-1)  # Fusion power (MW)
     pinjmw = m_file.data["pinjmw"].get_scan(-1)  # Total auxiliary injected power (MW)
     pohmmw = m_file.data["pohmmw"].get_scan(-1)  # Ohmic heating power (MW)
-    totalplasma = powfmw + pinjmw + pohmmw  # Total Power in plasma (MW)
-    pneutmw = m_file.data["pneutmw"].get_scan(-1)  # Neutron fusion power (MW)
-    pchargemw = m_file.data["pchargemw"].get_scan(
+    totalplasma = fusion_power + pinjmw + pohmmw  # Total Power in plasma (MW)
+    neutron_power_total = m_file.data["neutron_power_total"].get_scan(
+        -1
+    )  # Neutron fusion power (MW)
+    non_alpha_charged_power = m_file.data["non_alpha_charged_power"].get_scan(
         -1
     )  # Non-alpha charged particle power (MW)
-    pcharohmmw = pchargemw + pohmmw  # The ohmic and charged particle power (MW)
-    palpmw = m_file.data["palpmw"].get_scan(-1)  # Alpha power (MW)
-    palpinjmw = palpmw + pinjmw  # Alpha particle and HC&D power (MW)
+    pcharohmmw = (
+        non_alpha_charged_power + pohmmw
+    )  # The ohmic and charged particle power (MW)
+    alpha_power_total = m_file.data["alpha_power_total"].get_scan(
+        -1
+    )  # Alpha power (MW)
+    palpinjmw = alpha_power_total + pinjmw  # Alpha particle and HC&D power (MW)
 
     # Used in [NEUTRONICS]
     emultmw = m_file.data["emultmw"].get_scan(
@@ -57,10 +63,12 @@ def plot_full_sankey(
     pdivt = m_file.data["pdivt"].get_scan(
         -1
     )  # Charged particle power deposited on divertor (MW)
-    falpha = m_file.data["falpha"].get_scan(
+    f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
-    palpfwmw = palpmw * (1 - falpha)  # Alpha particles hitting first wall (MW)
+    palpfwmw = alpha_power_total * (
+        1 - f_alpha_plasma
+    )  # Alpha particles hitting first wall (MW)
     pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)
 
     # Used in [RADIATION]
@@ -108,7 +116,14 @@ def plot_full_sankey(
         # --------------------------------------- PLASMA - 0 --------------------------------------
 
         # Fusion, Injected, Ohmic, -Charged P.-Ohmic, -Alphas-Injected, -Neutrons
-        PLASMA = [powfmw, pinjmw, pohmmw, -pcharohmmw, -palpinjmw, -pneutmw]
+        PLASMA = [
+            fusion_power,
+            pinjmw,
+            pohmmw,
+            -pcharohmmw,
+            -palpinjmw,
+            -neutron_power_total,
+        ]
         sankey.add(
             flows=PLASMA,
             # [left(in), down(in), down(in), up(out), up(out), right(out)]
@@ -135,7 +150,14 @@ def plot_full_sankey(
         # ------------------------------------- NEUTRONICS - 1 ------------------------------------
 
         # Neutrons, -Divertor, -1st wall, -Shield, -TF coils, -Blanket+Energy Mult.
-        NEUTRONS = [pneutmw, -pnucdiv, -pnucfw, -pnucshld, -ptfnuc, -pnucemblkt]
+        NEUTRONS = [
+            neutron_power_total,
+            -pnucdiv,
+            -pnucfw,
+            -pnucshld,
+            -ptfnuc,
+            -pnucemblkt,
+        ]
         sankey.add(
             flows=NEUTRONS,
             # left(in), up(out), up(out), up(out), up(out), right(out)
@@ -414,10 +436,10 @@ def plot_full_sankey(
                 t.set_position((pos[0]-0.2,pos[1]))
             if t == diagrams[0].texts[4]: # Charged Particles
                 t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(pchargemw/totalplasma)-0.05,pos[1]))
+                t.set_position((pos[0]-0.5*(non_alpha_charged_power/totalplasma)-0.05,pos[1]))
             if t == diagrams[0].texts[5]: # Alphas
                 t.set_horizontalalignment('left')
-                t.set_position((pos[0]+0.5*(palpmw/totalplasma)+0.05,pos[1]-0.1))
+                t.set_position((pos[0]+0.5*(alpha_power_total/totalplasma)+0.05,pos[1]-0.1))
             if t == diagrams[1].texts[0]: # H&CD power
                 t.set_horizontalalignment('right')
                 t.set_position((pos[0]-0.5*((pinjht+pinjmw)/totalplasma)-0.05,pos[1]))
@@ -454,10 +476,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     m_file = MFile(mfilename)
 
     # Used in [PLASMA]
-    powfmw = m_file.data["powfmw"].get_scan(-1)  # Fusion Power (MW)
+    fusion_power = m_file.data["fusion_power"].get_scan(-1)  # Fusion Power (MW)
     pinjmw = m_file.data["pinjmw"].get_scan(-1)  # Total auxiliary injected Power (MW)
     pohmmw = m_file.data["pohmmw"].get_scan(-1)  # Ohmic heating Power (MW)
-    totalplasma = powfmw + pinjmw + pohmmw  # Total Power in plasma (MW)
+    totalplasma = fusion_power + pinjmw + pohmmw  # Total Power in plasma (MW)
 
     # Used in [DEPOSITION]
     pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)
@@ -494,11 +516,15 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # nuclear heating in the CP shield (MW)
     emultmw = m_file.data["emultmw"].get_scan(-1)  # Blanket energy multiplication (MW)
-    palpmw = m_file.data["palpmw"].get_scan(-1)  # Alpha power (MW)
-    falpha = m_file.data["falpha"].get_scan(
+    alpha_power_total = m_file.data["alpha_power_total"].get_scan(
+        -1
+    )  # Alpha power (MW)
+    f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
-    palpfwmw = palpmw * (1 - falpha)  # Alpha power hitting 1st wall (MW)
+    palpfwmw = alpha_power_total * (
+        1 - f_alpha_plasma
+    )  # Alpha power hitting 1st wall (MW)
     itart = m_file.data["itart"].get_scan(
         -1
     )  # switch for spherical tokamak (ST) models
@@ -572,7 +598,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # --------------------------------------- PLASMA - 0 --------------------------------------
 
         # Fusion power, Injected power + ohmic power, - total plasma power
-        PLASMA = [powfmw, pinjmw + pohmmw, -totalplasma]
+        PLASMA = [fusion_power, pinjmw + pohmmw, -totalplasma]
         sankey.add(
             flows=PLASMA,
             orientations=[0, -1, 0],  # [right(in), down(in), right(out)]
@@ -723,7 +749,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             if t == diagrams[0].texts[0]:  # Fusion Power
                 t.set_horizontalalignment("left")
                 t.set_position(
-                    (pos[0] - 0.35, pos[1] + 0.5 * (powfmw / totalplasma) + 0.2)
+                    (pos[0] - 0.35, pos[1] + 0.5 * (fusion_power / totalplasma) + 0.2)
                 )
             if t == diagrams[0].texts[2]:  # Plasma
                 t.set_horizontalalignment("right")
