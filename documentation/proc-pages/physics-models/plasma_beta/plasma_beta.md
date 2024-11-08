@@ -37,16 +37,46 @@ be calculated.
 
 Further details on the calculation of `alphaj` and `rli` is given in [Plasma Current](./plasma_current.md).
 
-## Limiting $\epsilon\beta_p$
+----------------------
+
+## Key Constraints
+
+### Beta consistency
+
+This constraint can be activated by stating `icc = 1` in the input file.
+
+Relationship between beta, temperature (keV) and density
+
+**It is highly recommended to always have this constraint on as it is a global consistency checker**
+
+----------------
+
+### Poloidal beta and inverse aspect upper limit
+
+This constraint can be activated by stating `icc = 6` in the input file.
 
 To apply a limit to the value of $\epsilon\beta_p$, where $\epsilon = a/R$ is
 the inverse aspect ratio and $\beta_p$ is the poloidal $\beta$, constraint equation no. 6 should be 
 turned on with iteration variable no. 8 (`fbeta`). The limiting value of $\epsilon\beta_p$ 
 is be set using input parameter `epbetmax`.
 
-## Key Constraints
+--------------------
 
+### Beta upper limit
 
+This constraint can be activated by stating `icc = 24` in the input file.
+
+--------------------
+
+### Poloidal upper limit
+
+This constraint can be activated by stating `icc = 48` in the input file.
+
+-------------------
+
+### Beta lower limit
+
+This constraint can be activated by stating `icc = 84` in the input file.
 
 [^1]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 
