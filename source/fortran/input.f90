@@ -229,7 +229,7 @@ contains
       warm_shop_h, water_buildings_l, water_buildings_w, water_buildings_h, &
       workshop_l, workshop_w, workshop_h
     use constraint_variables, only: flhthresh, fpeakb, fpsep, fdivcol, ftcycl, &
-      betpmx, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
+      beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
@@ -777,8 +777,8 @@ contains
        case ('auxmin')
           call parse_real_variable('auxmin', auxmin, 0.01D0, 100.0D0, &
                'Minimum auxiliary power (MW)')
-       case ('betpmx')
-          call parse_real_variable('betpmx', betpmx, 0.01D0, 2.0D0, &
+       case ('beta_poloidal_max')
+          call parse_real_variable('beta_poloidal_max', beta_poloidal_max, 0.01D0, 2.0D0, &
                'Maximum poloidal beta')
        case ('bigqmin')
           call parse_real_variable('bigqmin', bigqmin, 0.01D0, 100.0D0, &

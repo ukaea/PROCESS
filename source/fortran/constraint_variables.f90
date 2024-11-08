@@ -18,7 +18,7 @@ module constraint_variables
   real(dp) :: auxmin
   !! minimum auxiliary power (MW) (`constraint equation 40`)
 
-  real(dp) :: betpmx
+  real(dp) :: beta_poloidal_max
   !! maximum poloidal beta (`constraint equation 48`)
 
   real(dp) :: bigqmin
@@ -313,7 +313,7 @@ module constraint_variables
     implicit none
 
     auxmin = 0.1D0
-    betpmx = 0.19D0
+    beta_poloidal_max = 0.19D0
     bigqmin = 10.0D0
     bmxlim = 12.0D0
     fauxmn = 1.0D0

@@ -363,9 +363,9 @@ dnbeta = 5.0
 *icc = 48
 * DESCRIPTION:   Constraint equation for poloidal beta upper limit
 * JUSTIFICATION: Turned off, do not care about poloidal beta
-* VARIABLES:     betpmx, fbetap. betap calculated in-situ
+* VARIABLES:     beta_poloidal_max, fbetap. betap calculated in-situ
 
-*betpmx = 
+*beta_poloidal_max = 
 * DESCRIPTION:   Maximum poloidal beta (`constraint equation 48`) (default = 0.19)
 * JUSTIFICATION: Not set, not using icc = 48
 

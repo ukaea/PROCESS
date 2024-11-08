@@ -303,7 +303,7 @@
         "betao": 1.0,
         "betap": 0.0,
         "betbm0": 1.5,
-        "betpmx": 0.19,
+        "beta_poloidal_max": 0.19,
         "bfw": 0.0,
         "bigq": 0.0,
         "bigqmin": 10.0,
@@ -8870,7 +8870,7 @@
         "betao": "poloidal plane angle between divertor plate and leg, outboard (rad)",
         "betap": "poloidal beta",
         "betbm0": "leading coefficient for NB beta fraction",
-        "betpmx": "maximum poloidal beta (`constraint equation 48`)",
+        "beta_poloidal_max": "maximum poloidal beta (`constraint equation 48`)",
         "bfw": "outer radius of each first wall structural tube (m) (0.5 * average of fwith and fwoth)",
         "bigq": "Fusion gain; P_fusion / (P_injection + P_ohmic)",
         "bigqmin": "minimum fusion gain Q (`constraint equation 28`)",
@@ -11682,7 +11682,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "betpmx": {
+        "beta_poloidal_max": {
             "lb": 0.01,
             "ub": 2.0
         },
@@ -17379,7 +17379,7 @@
         ],
         "constraint_variables": [
             "auxmin",
-            "betpmx",
+            "beta_poloidal_max",
             "bigqmin",
             "bmxlim",
             "fauxmn",
@@ -20018,7 +20018,7 @@
         "beta_limit_lower": "real_variable",
         "betao": "real_variable",
         "betbm0": "real_variable",
-        "betpmx": "real_variable",
+        "beta_poloidal_max": "real_variable",
         "bigqmin": "real_variable",
         "bioshld_thk": "real_variable",
         "blbmith": "real_variable",
