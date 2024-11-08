@@ -197,7 +197,7 @@ contains
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, pradmw, dene, fusion_power, btot, tesep, &
       pdivt, ralpne, ten, betap, hfac, teped, alpha_power_beams, qlim, rmajor, wallmw, &
-      beta, betalim, bt, plasma_current
+      beta, beta_limit_upper, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
     implicit none
@@ -229,7 +229,7 @@ contains
     outvar(15,iscan) = q
     outvar(16,iscan) = qlim
     outvar(17,iscan) = beta
-    outvar(18,iscan) = betalim
+    outvar(18,iscan) = beta_limit_upper
     outvar(19,iscan) = betap / aspect
     outvar(20,iscan) = ten/10.0D0
     outvar(21,iscan) = dene/1.0D20
