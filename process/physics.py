@@ -2988,6 +2988,7 @@ class Physics:
             * (1.0 + kappa**2 * (1.0 + 2.0 * triang**2 - 1.2 * triang**3))
         )
 
+        # Normalised beta from Troyon beta limit
         physics_variables.normalised_total_beta = (
             1.0e8 * physics_variables.beta * rminor * bt / plasma_current
         )
@@ -3556,7 +3557,7 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Normalised total beta",
-                " ",
+                "(normalised_total_beta)",
                 physics_variables.normalised_total_beta,
                 "OP ",
             )
