@@ -2410,7 +2410,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("normalised_thermal_beta", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
         ("normalised_toroidal_beta", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("thermal_poloidal_beta", r"$\beta_P$, thermal", ""),
-        ("betap", r"$\beta_P$, total", ""),
+        ("beta_poloidal", r"$\beta_P$, total", ""),
         ("te", r"$< T_e >$", "keV"),
         ("dene", r"$< n_e >$", "m$^{-3}$"),
         (nong, r"$< n_{\mathrm{e,line}} >/n_G$", ""),

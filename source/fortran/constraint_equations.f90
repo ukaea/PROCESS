@@ -676,8 +676,8 @@ contains
       !! fbeta : input real : f-value for epsilon beta-poloidal
       !! epbetmax : input real : maximum (eps*beta_poloidal)
       !! eps : input real : inverse aspect ratio
-      !! betap : input real : poloidal beta
-      use physics_variables, only: epbetmax, eps, betap
+      !! beta_poloidal : input real : poloidal beta
+      use physics_variables, only: epbetmax, eps, beta_poloidal
       use constraint_variables, only: fbeta, fbeta
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -686,9 +686,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fbeta * epbetmax/(eps*betap)
+      tmp_cc =  1.0D0 - fbeta * epbetmax/(eps*beta_poloidal)
       tmp_con = epbetmax * (1.0D0 - tmp_cc)
-      tmp_err = (eps*betap) * tmp_cc
+      tmp_err = (eps*beta_poloidal) * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 
@@ -2084,9 +2084,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fbeta_poloidal : input real : rf-value for poloidal beta
       !! beta_poloidal_max : input real :  maximum poloidal beta
-      !! betap : input real :  poloidal beta
+      !! beta_poloidal : input real :  poloidal beta
       use constraint_variables, only: fbeta_poloidal, beta_poloidal_max
-      use physics_variables, only: betap
+      use physics_variables, only: beta_poloidal
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2094,9 +2094,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fbeta_poloidal * beta_poloidal_max/betap
+      tmp_cc =  1.0D0 - fbeta_poloidal * beta_poloidal_max/beta_poloidal
       tmp_con = beta_poloidal_max * (1.0D0 - tmp_cc)
-      tmp_err = betap * tmp_cc
+      tmp_err = beta_poloidal * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 

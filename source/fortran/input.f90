@@ -791,7 +791,7 @@ contains
                'F-value for minimum auxiliary power')
        case ('fbeta')
           call parse_real_variable('fbeta', fbeta, 0.001D0, 10.0D0, &
-               'F-value for eps.betap beta limit')
+               'F-value for eps.beta_poloidal beta limit')
        case ('fbeta_poloidal')
           call parse_real_variable('fbeta_poloidal', fbeta_poloidal, 0.001D0, 10.0D0, &
                'F-value for poloidal beta limit')

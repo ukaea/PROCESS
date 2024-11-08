@@ -21,7 +21,7 @@ from process.physics import (
     calculate_current_coefficient_hastie,
     vscalc,
     rether,
-    beta_poloidal,
+    calculate_poloidal_beta,
     res_diff_time,
 )
 from process.plasma_profiles import PlasmaProfile
@@ -39,10 +39,10 @@ def physics():
     return Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile()))
 
 
-def test_beta_poloidal():
-    """Test beta_poloidal()"""
-    betap = beta_poloidal(5.347, 0.852, 0.0307)
-    assert betap == pytest.approx(1.209, abs=0.001)
+def test_calculate_poloidal_beta():
+    """Test calculate_poloidal_beta()"""
+    beta_poloidal = calculate_poloidal_beta(5.347, 0.852, 0.0307)
+    assert beta_poloidal == pytest.approx(1.209, abs=0.001)
 
 
 def test_res_diff_time():
@@ -483,7 +483,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
 
 class BootstrapFractionSakaiParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     q95: Any = None
 
@@ -504,7 +504,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
     "bootstrapfractionsakaiparam",
     (
         BootstrapFractionSakaiParam(
-            betap=1.3184383457774960,
+            beta_poloidal=1.3184383457774960,
             q95=3.5151046634673557,
             q0=1.0,
             alphan=1.0,
@@ -514,7 +514,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             expected_bfs=0.3501274900057279,
         ),
         BootstrapFractionSakaiParam(
-            betap=1.1701245502231756,
+            beta_poloidal=1.1701245502231756,
             q95=5.1746754543339177,
             q0=2.0,
             alphan=0.9,
@@ -539,7 +539,9 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "betap", bootstrapfractionsakaiparam.betap)
+    monkeypatch.setattr(
+        physics_variables, "beta_poloidal", bootstrapfractionsakaiparam.beta_poloidal
+    )
 
     monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsakaiparam.q95)
 
@@ -554,7 +556,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     monkeypatch.setattr(physics_variables, "rli", bootstrapfractionsakaiparam.rli)
 
     bfs = physics.bootstrap_fraction_sakai(
-        betap=bootstrapfractionsakaiparam.betap,
+        beta_poloidal=bootstrapfractionsakaiparam.beta_poloidal,
         q95=bootstrapfractionsakaiparam.q95,
         q0=bootstrapfractionsakaiparam.q0,
         alphan=bootstrapfractionsakaiparam.alphan,

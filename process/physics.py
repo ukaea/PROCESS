@@ -1570,7 +1570,7 @@ class Physics:
         )
 
         # Calculate physics_variables.beta poloidal [-]
-        physics_variables.betap = beta_poloidal(
+        physics_variables.beta_poloidal = calculate_poloidal_beta(
             physics_variables.btot, physics_variables.bp, physics_variables.beta
         )
 
@@ -1733,7 +1733,7 @@ class Physics:
         current_drive_variables.bscf_sakai = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_sakai(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
                 alphan=physics_variables.alphan,
@@ -3461,8 +3461,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total poloidal beta",
-            "(betap)",
-            physics_variables.betap,
+            "(beta_poloidal)",
+            physics_variables.beta_poloidal,
             "OP ",
         )
         po.ovarre(
@@ -3514,8 +3514,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "2nd stability physics_variables.beta : beta_p / (R/a)",
-            "(eps*betap)",
-            physics_variables.eps * physics_variables.betap,
+            "(eps*beta_poloidal)",
+            physics_variables.eps * physics_variables.beta_poloidal,
             "OP ",
         )
         po.ovarrf(
@@ -5728,7 +5728,7 @@ class Physics:
 
     @staticmethod
     def bootstrap_fraction_sakai(
-        betap: float,
+        beta_poloidal: float,
         q95: float,
         q0: float,
         alphan: float,
@@ -5740,7 +5740,7 @@ class Physics:
         Calculate the bootstrap fraction using the Sakai formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         q95 (float): Safety factor at 95% of the plasma radius.
         q0 (float): Safety factor at the magnetic axis.
         alphan (float): Density profile index
@@ -5768,7 +5768,7 @@ class Physics:
         # So the diamganetic current should not be calculated with this. i_diamagnetic_current = 0
         return (
             10 ** (0.951 * eps - 0.948)
-            * betap ** (1.226 * eps + 1.584)
+            * beta_poloidal ** (1.226 * eps + 1.584)
             * rli ** (-0.184 * eps - 0.282)
             * (q95 / q0) ** (-0.042 * eps - 0.02)
             * alphan ** (0.13 * eps + 0.05)
@@ -6828,7 +6828,7 @@ class Physics:
         return kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht
 
 
-def beta_poloidal(btot, bp, beta):
+def calculate_poloidal_beta(btot, bp, beta):
     """Calculates total poloidal beta
 
     Author: James Morris (UKAEA)

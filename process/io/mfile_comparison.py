@@ -60,7 +60,7 @@ DEFAULT_COMPARE_PARAMS = [
     "plasma_current_MA",
     "bt",
     "q95",
-    "betap",
+    "beta_poloidal",
     "te",
     "dene",
     "hfact",

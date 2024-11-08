@@ -3935,7 +3935,7 @@ class Stellarator:
 
         #  Poloidal physics_variables.beta
 
-        # betap = physics_variables.beta * ( physics_variables.btot/physics_variables.bp )**2 # Dont need this I think.
+        # beta_poloidal = physics_variables.beta * ( physics_variables.btot/physics_variables.bp )**2 # Dont need this I think.
 
         #  Perform auxiliary power calculations
 
