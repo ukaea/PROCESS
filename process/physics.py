@@ -136,7 +136,9 @@ def vscalc(
 
 
 @nb.jit(nopython=True, cache=True)
-def calculate_beta_limit(bt: float, dnbeta: float, plasma_current: float, rminor: float) -> float:
+def calculate_beta_limit(
+    bt: float, dnbeta: float, plasma_current: float, rminor: float
+) -> float:
     """
     Calculate the beta scaling limit.
 
