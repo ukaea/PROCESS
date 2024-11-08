@@ -2079,13 +2079,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for poloidal beta upper limit
       !! #=# physics
-      !! #=#=# fbetap, beta_poloidal_max
+      !! #=#=# fbeta_poloidal, beta_poloidal_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbetap : input real : rf-value for poloidal beta
+      !! fbeta_poloidal : input real : rf-value for poloidal beta
       !! beta_poloidal_max : input real :  maximum poloidal beta
       !! betap : input real :  poloidal beta
-      use constraint_variables, only: fbetap, beta_poloidal_max
+      use constraint_variables, only: fbeta_poloidal, beta_poloidal_max
       use physics_variables, only: betap
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2094,7 +2094,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fbetap * beta_poloidal_max/betap
+      tmp_cc =  1.0D0 - fbeta_poloidal * beta_poloidal_max/betap
       tmp_con = beta_poloidal_max * (1.0D0 - tmp_cc)
       tmp_err = betap * tmp_cc
       tmp_symbol = '<'

@@ -237,7 +237,7 @@ contains
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
       ftohs, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
-      fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbetap, fbeta, fjohc, &
+      fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta, fjohc, &
       fflutf, bmxlim, tbrnmn, fbetatry_lower, fecrh_ignition, fstr_wp, fncycle
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
       cost_factor_vv, cfind, uccry, fcap0cp, uccase, uuves, cconshtf, conf_mag, &
@@ -792,8 +792,8 @@ contains
        case ('fbeta')
           call parse_real_variable('fbeta', fbeta, 0.001D0, 10.0D0, &
                'F-value for eps.betap beta limit')
-       case ('fbetap')
-          call parse_real_variable('fbetap', fbetap, 0.001D0, 10.0D0, &
+       case ('fbeta_poloidal')
+          call parse_real_variable('fbeta_poloidal', fbeta_poloidal, 0.001D0, 10.0D0, &
                'F-value for poloidal beta limit')
        case ('fbetatry')
           call parse_real_variable('fbetatry', fbetatry, 0.001D0, 10.0D0, &
