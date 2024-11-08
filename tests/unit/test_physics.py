@@ -146,7 +146,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
 
     alphan: Any = None
 
-    betat: Any = None
+    beta_toroidal: Any = None
 
     bt: Any = None
 
@@ -178,7 +178,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
             te0=24.402321098330372,
             ne0=8.515060981068918e19,
             alphan=1.0,
-            betat=0.03,
+            beta_toroidal=0.03,
             bt=5.7,
             dene=18398455.678867526,
             plasma_current=18398455.678867526,
@@ -213,7 +213,7 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
     fibs = physics.bootstrap_fraction_nevins(
         alphan=bootstrapfractionnevinsparam.alphan,
         alphat=bootstrapfractionnevinsparam.alphat,
-        betat=bootstrapfractionnevinsparam.betat,
+        beta_toroidal=bootstrapfractionnevinsparam.beta_toroidal,
         bt=bootstrapfractionnevinsparam.bt,
         dene=bootstrapfractionnevinsparam.dene,
         plasma_current=bootstrapfractionnevinsparam.plasma_current,

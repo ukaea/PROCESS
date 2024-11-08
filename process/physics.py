@@ -592,7 +592,7 @@ def _nevins_integral(
     alphan: float,
     q0: float,
     q95: float,
-    betat: float,
+    beta_toroidal: float,
 ) -> float:
     """
     Integrand function for Nevins et al bootstrap current scaling.
@@ -609,7 +609,7 @@ def _nevins_integral(
     - alphan: float, density profile index
     - q0: float, normalized safety factor at the magnetic axis
     - q95: float, normalized safety factor at 95% of the plasma radius
-    - betat: float, Toroidal plasma beta
+    - beta_toroidal: float, Toroidal plasma beta
 
     Returns:
     - float, the integrand value
@@ -654,7 +654,7 @@ def _nevins_integral(
     # q-profile
     q = q0 + (q95 - q0) * ((y + y**2 + y**3) / (3.0))
 
-    pratio = (betat - betae) / betae
+    pratio = (beta_toroidal - betae) / betae
 
     return (q / q95) * (al1 * (a1 + (pratio * (a1 + alphai * a2))) + al2 * a2)
 
@@ -1569,6 +1569,12 @@ class Physics:
             physics_variables.bt**2 + physics_variables.bp**2
         )
 
+        physics_variables.beta_toroidal = (
+            physics_variables.beta
+            * physics_variables.btot**2
+            / physics_variables.bt**2
+        )
+
         # Calculate physics_variables.beta poloidal [-]
         physics_variables.beta_poloidal = calculate_poloidal_beta(
             physics_variables.btot, physics_variables.bp, physics_variables.beta
@@ -1680,19 +1686,13 @@ class Physics:
                 physics_variables.plasma_volume,
             )
         )
-        # Calculate the toroidal beta for the Nevins scaling
-        betat = (
-            physics_variables.beta
-            * physics_variables.btot**2
-            / physics_variables.bt**2
-        )
 
         current_drive_variables.bscf_nevins = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_nevins(
                 physics_variables.alphan,
                 physics_variables.alphat,
-                betat,
+                physics_variables.beta_toroidal,
                 physics_variables.bt,
                 physics_variables.dene,
                 physics_variables.plasma_current,
@@ -3468,9 +3468,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total toroidal beta",
-            " ",
-            physics_variables.beta
-            * (physics_variables.btot / physics_variables.bt) ** 2,
+            "(beta_toroidal)",
+            physics_variables.beta_toroidal,
             "OP ",
         )
         po.ovarre(
@@ -5488,7 +5487,7 @@ class Physics:
     def bootstrap_fraction_nevins(
         alphan: float,
         alphat: float,
-        betat: float,
+        beta_toroidal: float,
         bt: float,
         dene: float,
         plasma_current: float,
@@ -5505,7 +5504,7 @@ class Physics:
         Args:
             alphan (float): Density profile index.
             alphat (float): Temperature profile index.
-            betat (float): Toroidal plasma beta.
+            beta_toroidal (float): Toroidal plasma beta.
             bt (float): Toroidal field on axis (T).
             dene (float): Electron density (/m3).
             plasma_current (float): Plasma current (A).
@@ -5559,7 +5558,7 @@ class Physics:
                 alphan,
                 q0,
                 q95,
-                betat,
+                beta_toroidal,
             ),
             0,  # Lower bound
             1.0,  # Upper bound
