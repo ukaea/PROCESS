@@ -136,28 +136,43 @@ def vscalc(
 
 
 @nb.jit(nopython=True, cache=True)
-def culblm(bt, dnbeta, plasma_current, rminor):
-    """Beta scaling limit
-    author: P J Knight, CCFE, Culham Science Centre
-    bt      : input real :  toroidal B-field on plasma axis (T)
-    dnbeta  : input real :  Troyon-like g coefficient
-    plasma_current : input real :  plasma current (A)
-    rminor  : input real :  plasma minor axis (m)
-    betalim : output real : beta limit as defined below
-    This subroutine calculates the beta limit, using
-    the algorithm documented in AEA FUS 172.
+def calculate_beta_limit(bt: float, dnbeta: float, plasma_current: float, rminor: float) -> float:
+    """
+    Calculate the beta scaling limit.
+
+    :param bt: Toroidal B-field on plasma axis [T].
+    :type bt: float
+    :param dnbeta: Troyon-like g coefficient.
+    :type dnbeta: float
+    :param plasma_current: Plasma current [A].
+    :type plasma_current: float
+    :param rminor: Plasma minor axis [m].
+    :type rminor: float
+    :return: Beta limit as defined below.
+    :rtype: float
+
+    This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
     The limit applies to beta defined with respect to the total B-field.
     Switch iculbl determines which components of beta to include.
 
-    If iculbl = 0, then the limit is applied to the total beta
-    If iculbl = 1, then the limit is applied to the thermal beta only
-    If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components
-    If iculbl = 3, then the limit is applied to the toroidal beta
+    Notes:
+        - If iculbl = 0, then the limit is applied to the total beta.
+        - If iculbl = 1, then the limit is applied to the thermal beta only.
+        - If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components.
+        - If iculbl = 3, then the limit is applied to the toroidal beta.
 
-    The default value for the g coefficient is dnbeta = 3.5
-    AEA FUS 172: Physics Assessment for the European Reactor Study
+        - The default value for the g coefficient is dnbeta = 3.5.
+
+    References:
+        - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
+          Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597–1609, Oct. 1988,
+          doi: https://doi.org/10.1088/0741-3335/30/11/019.
+
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
     """
 
+    # Multiplied by 0.01 to convert from % to fraction
     return 0.01 * dnbeta * (plasma_current / 1.0e6) / (rminor * bt)
 
 
@@ -2203,8 +2218,8 @@ class Physics:
                 (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
             )
 
-        # culblm returns the betalim for beta
-        physics_variables.betalim = culblm(
+        # calculate_beta_limit() returns the betalim for beta
+        physics_variables.betalim = calculate_beta_limit(
             physics_variables.bt,
             physics_variables.dnbeta,
             physics_variables.plasma_current,

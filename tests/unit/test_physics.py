@@ -17,7 +17,7 @@ from process.physics import (
     diamagnetic_fraction_hender,
     ps_fraction_scene,
     calculate_plasma_current_peng,
-    culblm,
+    calculate_beta_limit,
     calculate_current_coefficient_hastie,
     vscalc,
     rether,
@@ -821,8 +821,8 @@ def test_calculate_poloidal_field(arguments, expected):
     assert calculate_poloidal_field(**arguments) == pytest.approx(expected)
 
 
-def test_culblm():
-    assert culblm(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
+def test_calculate_beta_limit():
+    assert calculate_beta_limit(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
 
 
 def test_conhas():
