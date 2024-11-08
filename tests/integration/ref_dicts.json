@@ -298,7 +298,7 @@
         "beta_fast_alpha": 0.0,
         "betai": 1.0,
         "beta_limit_upper": 0.0,
-        "betalim_lower": 0.0,
+        "beta_limit_lower": 0.0,
         "beta_beam": 0.0,
         "betao": 1.0,
         "betap": 0.0,
@@ -2973,7 +2973,7 @@
             "ne0>neped",
             "toroidalgap>tftort",
             "available_space>required_space",
-            "beta>betalim_lower",
+            "beta>beta_limit_lower",
             "CPlifetime",
             "TFCturndimension",
             "Cryogenicplantpower",
@@ -8865,7 +8865,7 @@
         "beta_fast_alpha": "fast alpha beta component",
         "betai": "poloidal plane angle between divertor plate and leg, inboard (rad)",
         "beta_limit_upper": "allowable beta",
-        "betalim_lower": "allowable lower beta",
+        "beta_limit_lower": "allowable lower beta",
         "beta_beam": "neutral beam beta component",
         "betao": "poloidal plane angle between divertor plate and leg, outboard (rad)",
         "betap": "poloidal beta",
@@ -11670,7 +11670,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "betalim_lower": {
+        "beta_limit_lower": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -19055,7 +19055,7 @@
             "beta",
             "beta_fast_alpha",
             "beta_limit_upper",
-            "betalim_lower",
+            "beta_limit_lower",
             "beta_beam",
             "betap",
             "normalised_total_beta",
@@ -20015,7 +20015,7 @@
         "beta": "real_variable",
         "betai": "real_variable",
         "beta_limit_upper": "real_variable",
-        "betalim_lower": "real_variable",
+        "beta_limit_lower": "real_variable",
         "betao": "real_variable",
         "betbm0": "real_variable",
         "betpmx": "real_variable",

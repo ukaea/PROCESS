@@ -3130,16 +3130,16 @@ contains
       !! author: J Lion, IPP Greifswald
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !!  (beta-beta_fast_alpha) > betalim_lower
+      !!  (beta-beta_fast_alpha) > beta_limit_lower
       !! #=# physics
       !! #=#=# beta_fast_alpha, beta, fbetatry_lower
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbetatry_lower : input real : f-value for constraint beta-beta_fast_alpha > betalim_lower
-      !! betalim_lower : input real :  Lower limit for beta
+      !! fbetatry_lower : input real : f-value for constraint beta-beta_fast_alpha > beta_limit_lower
+      !! beta_limit_lower : input real :  Lower limit for beta
       !! beta : input real :  plasma beta
       !! beta_fast_alpha : input real : Alpha particle beta
 
-      use physics_variables, only: betalim_lower, beta, beta_fast_alpha
+      use physics_variables, only: beta_limit_lower, beta, beta_fast_alpha
       use constraint_variables, only: fbetatry_lower
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -3149,8 +3149,8 @@ contains
       character(len=10), intent(out) :: tmp_units
 
 
-      tmp_cc = 1.0D0 - fbetatry_lower * (beta-beta_fast_alpha)/betalim_lower
-      tmp_con = betalim_lower * (1.0D0 - tmp_cc)
+      tmp_cc = 1.0D0 - fbetatry_lower * (beta-beta_fast_alpha)/beta_limit_lower
+      tmp_con = beta_limit_lower * (1.0D0 - tmp_cc)
       tmp_err = (beta-beta_fast_alpha) * tmp_cc
       tmp_symbol = '>'
       tmp_units = ''

@@ -352,9 +352,9 @@ dnbeta = 5.0
 *icc = 84
 * DESCRIPTION:   Constraint equation for lower limit of beta
 * JUSTIFICATION: Turned off, do not require a beta lower limit
-* VARIABLES:     betalim_lower (Lower limit for beta). beta,betaft calculated in-situ
+* VARIABLES:     beta_limit_lower (Lower limit for beta). beta,betaft calculated in-situ
 
-*betalim_lower = 
+*beta_limit_lower = 
 * DESCRIPTION:   Plasma beta lower limit
 * JUSTIFICATION: Turned off, not in use, Used with icc=84 to enforce beta limit
 
