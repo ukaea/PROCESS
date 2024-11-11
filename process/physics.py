@@ -6049,11 +6049,11 @@ class Physics:
         # (defined as ratio of the central value and I_p), alpha_j$
 
         # We assume the pressure and current profile is parabolic and use the (profile_index +1) term in lieu
-        # The term represent the ratio of the the core to volume averaged value
+        # The term represents the ratio of the the core to volume averaged value
 
         # This could lead to large changes in the value depending on interpretation of the profile index
 
-        c_bs = np.sqrt(pressure_index + 1 / current_index + 1)
+        c_bs = np.sqrt((pressure_index + 1) / (current_index + 1))
 
         return 0.4 * np.sqrt(inverse_aspect) * betap**0.9 * c_bs
 

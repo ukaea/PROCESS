@@ -678,7 +678,7 @@ class BootstrapFractionHoangParam(NamedTuple):
             pressure_index=2.4500000000000002e00,
             current_index=2.8314361644755763e00,
             inverse_aspect=1 / 3,
-            expected_bfs=0.5588166329771835,
+            expected_bfs=0.27190974213794156,
         ),
     ),
 )
