@@ -954,16 +954,28 @@ def fast_alpha_beta(
 
     Returns:
         float: Fast alpha beta component.
+
+    Notes:
+        - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, <T> = 5-20 keV
+
+
+    References:
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+          https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+
+        - Uckan, N. A., Tolliver, J. S., Houlberg, W. A., and Attenberger, S. E.
+          Influence of fast alpha diffusion and thermal alpha buildup on tokamak reactor performance.
+          United States: N. p., 1987. Web.https://www.osti.gov/servlets/purl/5611706
+
     """
-    # Determine average fast alpha density
 
     # Determine average fast alpha density
     if physics_variables.f_deuterium < 1.0:
 
         beta_thermal = (
-            2.0e3
+            2.0
             * constants.rmu0
-            * constants.electron_charge
+            * constants.kiloelectron_volt
             * (dene * ten + dnitot * tin)
             / (bt**2 + bp**2)
         )
