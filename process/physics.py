@@ -1594,6 +1594,14 @@ class Physics:
             physics_variables.beta_thermal
             * (physics_variables.btot / physics_variables.bt) ** 2
         )
+        physics_variables.norm_beta_thermal = (
+            1.0e8
+            * physics_variables.beta_thermal
+            * physics_variables.rminor
+            * physics_variables.bt
+            / physics_variables.plasma_current,
+        )
+
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
             if times_variables.tohsin == 0.0e0:
@@ -3560,12 +3568,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Normalised thermal beta",
-                " ",
-                1.0e8
-                * physics_variables.beta_thermal
-                * physics_variables.rminor
-                * physics_variables.bt
-                / physics_variables.plasma_current,
+                "(norm_beta_thermal) ",
+                physics_variables.norm_beta_thermal,
                 "OP ",
             )
 
