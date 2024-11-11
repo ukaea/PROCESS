@@ -1586,6 +1586,14 @@ class Physics:
             - physics_variables.beta_beam
         )
 
+        physics_variables.beta_thermal_poloidal = (
+            physics_variables.beta_thermal
+            * (physics_variables.btot / physics_variables.bp) ** 2
+        )
+        physics_variables.beta_thermal_toroidal = (
+            physics_variables.beta_thermal
+            * (physics_variables.btot / physics_variables.bt) ** 2
+        )
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
             if times_variables.tohsin == 0.0e0:
@@ -3506,17 +3514,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Thermal poloidal beta",
-            " ",
-            physics_variables.beta_thermal
-            * (physics_variables.btot / physics_variables.bp) ** 2,
+            "(beta_thermal_poloidal)",
+            physics_variables.beta_thermal_poloidal,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Thermal toroidal physics_variables.beta (= beta-exp)",
-            " ",
-            physics_variables.beta_thermal
-            * (physics_variables.btot / physics_variables.bt) ** 2,
+            "Thermal toroidal beta",
+            "(beta_thermal_toroidal)",
+            physics_variables.beta_thermal_toroidal,
             "OP ",
         )
 
