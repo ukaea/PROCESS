@@ -960,7 +960,7 @@ def fast_alpha_beta(
     # Determine average fast alpha density
     if physics_variables.f_deuterium < 1.0:
 
-        betath = (
+        beta_thermal = (
             2.0e3
             * constants.rmu0
             * constants.electron_charge
@@ -984,7 +984,7 @@ def fast_alpha_beta(
 
         fact = max(fact, 0.0)
         fact2 = alpha_power_density_total / alpha_power_density_plasma
-        beta_fast_alpha = betath * fact * fact2
+        beta_fast_alpha = beta_thermal * fact * fact2
 
     else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0
         beta_fast_alpha = 0.0

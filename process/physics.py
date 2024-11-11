@@ -1580,6 +1580,12 @@ class Physics:
             physics_variables.btot, physics_variables.bp, physics_variables.beta
         )
 
+        physics_variables.beta_thermal = (
+            physics_variables.beta
+            - physics_variables.beta_fast_alpha
+            - physics_variables.beta_beam
+        )
+
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
             if times_variables.tohsin == 0.0e0:
@@ -3449,14 +3455,9 @@ class Physics:
 
         po.osubhd(self.outfile, "Beta Information :")
 
-        betath = (
-            physics_variables.beta
-            - physics_variables.beta_fast_alpha
-            - physics_variables.beta_beam
-        )
         gammaft = (
             physics_variables.beta_fast_alpha + physics_variables.beta_beam
-        ) / betath
+        ) / physics_variables.beta_thermal
 
         po.ovarre(self.outfile, "Total plasma beta", "(beta)", physics_variables.beta)
         po.ovarre(
@@ -3495,19 +3496,27 @@ class Physics:
             "OP ",
         )
 
-        po.ovarre(self.outfile, "Thermal beta", " ", betath, "OP ")
+        po.ovarre(
+            self.outfile,
+            "Thermal beta",
+            "(beta_thermal)",
+            physics_variables.beta_thermal,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Thermal poloidal beta",
             " ",
-            betath * (physics_variables.btot / physics_variables.bp) ** 2,
+            physics_variables.beta_thermal
+            * (physics_variables.btot / physics_variables.bp) ** 2,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Thermal toroidal physics_variables.beta (= beta-exp)",
             " ",
-            betath * (physics_variables.btot / physics_variables.bt) ** 2,
+            physics_variables.beta_thermal
+            * (physics_variables.btot / physics_variables.bt) ** 2,
             "OP ",
         )
 
@@ -3547,7 +3556,7 @@ class Physics:
                 "Normalised thermal beta",
                 " ",
                 1.0e8
-                * betath
+                * physics_variables.beta_thermal
                 * physics_variables.rminor
                 * physics_variables.bt
                 / physics_variables.plasma_current,
@@ -3604,7 +3613,7 @@ class Physics:
             "Plasma thermal energy (J)",
             " ",
             1.5e0
-            * betath
+            * physics_variables.beta_thermal
             * physics_variables.btot
             * physics_variables.btot
             / (2.0e0 * constants.rmu0)
