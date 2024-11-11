@@ -569,7 +569,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
 
 
 class PlasmaCurrentParam(NamedTuple):
-    normalised_total_beta: Any = None
+    norm_beta_total: Any = None
 
     beta: Any = None
 
@@ -626,7 +626,7 @@ class PlasmaCurrentParam(NamedTuple):
     "plasmacurrentparam",
     (
         PlasmaCurrentParam(
-            normalised_total_beta=0,
+            norm_beta_total=0,
             beta=0.030000000000000006,
             i_plasma_current=4,
             iprofile=1,
@@ -654,7 +654,7 @@ class PlasmaCurrentParam(NamedTuple):
             expected_plasma_current=18398455.678867526,
         ),
         PlasmaCurrentParam(
-            normalised_total_beta=2.4784688886891844,
+            norm_beta_total=2.4784688886891844,
             beta=0.030000000000000006,
             i_plasma_current=4,
             iprofile=1,
@@ -698,8 +698,8 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(
         physics_variables,
-        "normalised_total_beta",
-        plasmacurrentparam.normalised_total_beta,
+        "norm_beta_total",
+        plasmacurrentparam.norm_beta_total,
     )
 
     monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
@@ -725,7 +725,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         triang95=plasmacurrentparam.triang95,
     )
 
-    assert physics_variables.normalised_total_beta == pytest.approx(
+    assert physics_variables.norm_beta_total == pytest.approx(
         plasmacurrentparam.expected_normalised_total_beta
     )
 

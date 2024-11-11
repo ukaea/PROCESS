@@ -80,11 +80,17 @@ module physics_variables
   real(dp) :: beta_thermal_toroidal
   !! poloidal thermal beta
 
-  real(dp) :: normalised_total_beta
+  real(dp) :: norm_beta_total
   !! normaised total beta
 
   real(dp) :: norm_beta_thermal
   !! normaised thermal beta
+
+  real(dp) :: norm_beta_toroidal
+  !! normaised toroidal beta
+
+  real(dp) :: norm_beta_poloidal
+  !! normaised poloidal beta
 
   real(dp) :: betbm0
   !! leading coefficient for NB beta fraction
@@ -937,8 +943,10 @@ module physics_variables
     beta_thermal = 0.0D0
     beta_thermal_poloidal = 0.0D0
     beta_thermal_poloidal = 0.0D0
-    normalised_total_beta = 0.0D0
+    norm_beta_total = 0.0D0
     norm_beta_thermal = 0.0D0
+    norm_beta_poloidal = 0.0D0
+    norm_beta_toroidal = 0.0D0
     betbm0 = 1.5D0
     bp = 0.0D0
     bt = 5.68D0

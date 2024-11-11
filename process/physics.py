@@ -1601,6 +1601,14 @@ class Physics:
             * physics_variables.bt
             / physics_variables.plasma_current,
         )
+        physics_variables.norm_beta_toroidal = (
+            physics_variables.norm_beta_total
+            * (physics_variables.btot / physics_variables.bt) ** 2
+        )
+        physics_variables.norm_beta_poloidal = (
+            physics_variables.norm_beta_total
+            * (physics_variables.btot / physics_variables.bp) ** 2
+        )
 
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
@@ -3011,7 +3019,7 @@ class Physics:
         )
 
         # Normalised beta from Troyon beta limit
-        physics_variables.normalised_total_beta = (
+        physics_variables.norm_beta_total = (
             1.0e8 * physics_variables.beta * rminor * bt / plasma_current
         )
 
@@ -3470,7 +3478,30 @@ class Physics:
             )
 
         po.osubhd(self.outfile, "Beta Information :")
-
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Limit on total beta",
+                "(beta_limit_upper)",
+                physics_variables.beta_limit_upper,
+                "OP ",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Limit on thermal beta",
+                "(beta_limit_upper)",
+                physics_variables.beta_limit_upper,
+                "OP ",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Limit on thermal + NB beta",
+                "(beta_limit_upper)",
+                physics_variables.beta_limit_upper,
+                "OP ",
+            )
         gammaft = (
             physics_variables.beta_fast_alpha + physics_variables.beta_beam
         ) / physics_variables.beta_thermal
@@ -3547,7 +3578,7 @@ class Physics:
             "(epbetmax)",
             physics_variables.epbetmax,
         )
-
+        po.osubhd(self.outfile, "Normalised Beta Information :")
         if stellarator_variables.istell == 0:
             if physics_variables.iprofile == 1:
                 po.ovarrf(
@@ -3564,7 +3595,13 @@ class Physics:
                     "(dnbeta)",
                     physics_variables.dnbeta,
                 )
-
+            po.ovarrf(
+                self.outfile,
+                "Normalised total beta",
+                "(norm_beta_total)",
+                physics_variables.norm_beta_total,
+                "OP ",
+            )
             po.ovarrf(
                 self.outfile,
                 "Normalised thermal beta",
@@ -3575,46 +3612,17 @@ class Physics:
 
             po.ovarrf(
                 self.outfile,
-                "Normalised total beta",
-                "(normalised_total_beta)",
-                physics_variables.normalised_total_beta,
-                "OP ",
-            )
-
-            normalised_toroidal_beta = (
-                physics_variables.normalised_total_beta
-                * (physics_variables.btot / physics_variables.bt) ** 2
-            )
-            po.ovarrf(
-                self.outfile,
                 "Normalised toroidal beta",
-                "(normalised_toroidal_beta)",
-                normalised_toroidal_beta,
+                "(norm_beta_toroidal) ",
+                physics_variables.norm_beta_toroidal,
                 "OP ",
             )
 
-        if physics_variables.i_beta_component == 0:
             po.ovarrf(
                 self.outfile,
-                "Limit on total beta",
-                "(beta_limit_upper)",
-                physics_variables.beta_limit_upper,
-                "OP ",
-            )
-        elif physics_variables.i_beta_component == 1:
-            po.ovarrf(
-                self.outfile,
-                "Limit on thermal beta",
-                "(beta_limit_upper)",
-                physics_variables.beta_limit_upper,
-                "OP ",
-            )
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Limit on thermal + NB beta",
-                "(beta_limit_upper)",
-                physics_variables.beta_limit_upper,
+                "Normalised poloidal beta",
+                "(norm_beta_poloidal) ",
+                physics_variables.norm_beta_poloidal,
                 "OP ",
             )
 
