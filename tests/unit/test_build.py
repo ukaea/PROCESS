@@ -313,7 +313,7 @@ class PortszParam(NamedTuple):
 
     r_tf_outboard_mid: Any = None
 
-    tfthko: Any = None
+    dr_tf_coil_outboard: Any = None
 
     rtanbeam: Any = None
 
@@ -341,7 +341,7 @@ class PortszParam(NamedTuple):
     (
         PortszParam(
             r_tf_outboard_mid=16.519405859443332,
-            tfthko=1.208,
+            dr_tf_coil_outboard=1.208,
             rtanbeam=0,
             rtanmax=0,
             nbshield=0.5,
@@ -355,7 +355,7 @@ class PortszParam(NamedTuple):
         ),
         PortszParam(
             r_tf_outboard_mid=16.519405859443332,
-            tfthko=1.208,
+            dr_tf_coil_outboard=1.208,
             rtanbeam=9.3346050000000016,
             rtanmax=14.735821603386416,
             nbshield=0.5,
@@ -389,7 +389,9 @@ def test_portsz(portszparam, monkeypatch, build):
         build_variables, "r_tf_outboard_mid", portszparam.r_tf_outboard_mid
     )
 
-    monkeypatch.setattr(build_variables, "tfthko", portszparam.tfthko)
+    monkeypatch.setattr(
+        build_variables, "dr_tf_coil_outboard", portszparam.dr_tf_coil_outboard
+    )
 
     monkeypatch.setattr(current_drive_variables, "rtanbeam", portszparam.rtanbeam)
 

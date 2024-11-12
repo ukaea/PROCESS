@@ -36,7 +36,7 @@ into account snull and other recent changes e.g. rclsnorm)
 *Z* = $\pm$(`hmax` * `tfcth` + 0.86)
 
 `ipfloc(j)` = 3: PF coils are placed radially outside the TF coils (any number of groups);<br>
-*R* = `rtot` + `tfthko`/2 + `routr`<br>
+*R* = `rtot` + `dr_tf_coil_outboard`/2 + `routr`<br>
 *Z* = $\pm$(`rminor` * `zref(j)`
 
 The void fraction (for coolant) in each coil `i`'s winding pack is given by `vf(i)`.

@@ -54,7 +54,7 @@ class Structure:
             pv.bt,
             tfv.i_tf_sup,
             pfv.ipfres,
-            bv.dr_tf_inner_bore + bv.tfthko + bv.tfcth,
+            bv.dr_tf_inner_bore + bv.dr_tf_coil_outboard + bv.tfcth,
             bv.hmax,
             fwbsv.whtshld,
             divv.divmas,

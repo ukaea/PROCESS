@@ -252,7 +252,7 @@ module build_variables
   !! TF coil outboard leg / inboard leg radial thickness
   !! ratio (`i_tf_sup=0` only) (`iteration variable 75`)
 
-  real(dp) :: tfthko
+  real(dp) :: dr_tf_coil_outboard
   !! Outboard TF coil thickness (m)
 
   real(dp) :: tftsgap
@@ -371,7 +371,7 @@ module build_variables
     tfcth = 0.0D0
     tfoffset = 0.0D0
     tfootfi = 1.19D0
-    tfthko = 0.0D0
+    dr_tf_coil_outboard = 0.0D0
     tftsgap = 0.05D0
     thshield_ib = 0.05D0
     thshield_ob = 0.05D0

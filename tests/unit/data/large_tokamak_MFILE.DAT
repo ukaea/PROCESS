@@ -584,7 +584,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3653E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      9.2950E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_coil_outboard)______________________      9.2950E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Cryostat_roof_structure*________________________________________________ (clh1)________________________      5.6032E+00    
@@ -673,7 +673,7 @@
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4985E+01 OP 
  Outboard_leg_nose_case_type_____________________________________________ (i_tf_case_geom)______________      0.0000E+00    
  Total_inboard_leg_radial_thickness_(m)__________________________________ (tfcth)_______________________      9.2950E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      9.2950E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_coil_outboard)______________________      9.2950E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7969E+01 OP 

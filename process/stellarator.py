@@ -463,7 +463,7 @@ class Stellarator:
         )
 
         #  Thickness of outboard TF coil legs
-        build_variables.tfthko = build_variables.tfcth
+        build_variables.dr_tf_coil_outboard = build_variables.tfcth
 
         #  Radius to centre of outboard TF coil legs
 
@@ -472,7 +472,7 @@ class Stellarator:
             build_variables.rsldo
             + build_variables.d_vv_out
             + build_variables.gapsto
-            + 0.5e0 * build_variables.tfthko
+            + 0.5e0 * build_variables.dr_tf_coil_outboard
         )
 
         #  Height to inside edge of TF coil
@@ -741,19 +741,19 @@ class Stellarator:
             po.obuild(self.outfile, "Gap", build_variables.gapsto, radius, "(gapsto)")
             po.ovarre(self.outfile, "Gap (m)", "(gapsto)", build_variables.gapsto)
 
-            radius = radius + build_variables.tfthko
+            radius = radius + build_variables.dr_tf_coil_outboard
             po.obuild(
                 self.outfile,
                 "Coil outboard leg",
-                build_variables.tfthko,
+                build_variables.dr_tf_coil_outboard,
                 radius,
-                "(tfthko)",
+                "(dr_tf_coil_outboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Coil outboard leg radial thickness (m)",
-                "(tfthko)",
-                build_variables.tfthko,
+                "(dr_tf_coil_outboard)",
+                build_variables.dr_tf_coil_outboard,
             )
 
     def ststrc(self, output):
@@ -1061,7 +1061,7 @@ class Stellarator:
         # Rough estimate of TF coil volume used, assuming 25% of the total
         # TF coil perimeter is inboard, 75% outboard
         tf_volume = (
-            0.25 * tfcoil_variables.tfleng * tfcoil_variables.tfareain
+            0.25 * tfcoil_variables.tfleng * tfcoil_variables.a_tf_inboard
             + 0.75
             * tfcoil_variables.tfleng
             * tfcoil_variables.arealeg
@@ -1807,7 +1807,7 @@ class Stellarator:
 
         fwbs_variables.rdewex = (
             build_variables.r_tf_outboard_mid
-            + 0.5e0 * build_variables.tfthko
+            + 0.5e0 * build_variables.dr_tf_coil_outboard
             + fwbs_variables.rpf2dewar
         )
         adewex = fwbs_variables.rdewex - physics_variables.rmajor
@@ -2516,7 +2516,7 @@ class Stellarator:
             + tfcoil_variables.casthi
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of inboard leg in radial direction
-        build_variables.tfthko = (
+        build_variables.dr_tf_coil_outboard = (
             tfcoil_variables.thkcas
             + tfcoil_variables.dr_tf_wp
             + tfcoil_variables.casthi
@@ -2563,14 +2563,14 @@ class Stellarator:
         coilcoilgap = tfcoil_variables.toroidalgap - tfcoil_variables.tftort
 
         #  Variables for ALL coils.
-        tfcoil_variables.tfareain = (
+        tfcoil_variables.a_tf_inboard = (
             tfcoil_variables.n_tf * tfcoil_variables.arealeg
         )  # [m^2] Total area of all coil legs (midplane)
         tfcoil_variables.ritfc = (
             tfcoil_variables.n_tf * coilcurrent * 1.0e6
         )  # [A] Total current in ALL coils
         tfcoil_variables.oacdcp = (
-            tfcoil_variables.ritfc / tfcoil_variables.tfareain
+            tfcoil_variables.ritfc / tfcoil_variables.a_tf_inboard
         )  # [A / m^2] overall current density
         tfcoil_variables.rbmax = (
             r_coil_major - r_coil_minor + awp_rad
@@ -3409,7 +3409,7 @@ class Stellarator:
             self.outfile,
             "Cross-sectional area per coil (m2)",
             "(tfarea/n_tf)",
-            tfcoil_variables.tfareain / tfcoil_variables.n_tf,
+            tfcoil_variables.a_tf_inboard / tfcoil_variables.n_tf,
         )
         po.ovarre(
             self.outfile,
@@ -3420,8 +3420,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Total outboard leg radial thickness (m)",
-            "(tfthko)",
-            build_variables.tfthko,
+            "(dr_tf_coil_outboard)",
+            build_variables.dr_tf_coil_outboard,
         )
         po.ovarre(
             self.outfile,

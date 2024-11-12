@@ -51,7 +51,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(bv, "hpfu", 4.0)  # guess
     monkeypatch.setattr(bv, "hmax", 8.8)
     monkeypatch.setattr(bv, "ohcth", 0.65)
-    monkeypatch.setattr(bv, "tfthko", 1.4)
+    monkeypatch.setattr(bv, "dr_tf_coil_outboard", 1.4)
     monkeypatch.setattr(bv, "tfcth", 1.4)
     monkeypatch.setattr(bv, "r_tf_outboard_mid", 1.66e1)
     monkeypatch.setattr(bv, "bore", 2.15)

@@ -18,7 +18,7 @@ OBS_VARS = {
     "itfsup": "i_tf_sup",
     "r_tf_inleg_mid": "r_tf_inboard_mid",
     "rtot": "r_tf_outboard_mid",
-    "a_tf_inboard": "tfareain",
+    "a_tf_inboard": "a_tf_inboard",
     "r_tf_inleg_in": "r_tf_inleg_in",
     "r_tf_inleg_out": "r_tf_inleg_out",
     "a_tf_wp": "awpc",
@@ -127,6 +127,7 @@ OBS_VARS = {
     "ftrit": "f_tritium",
     "fhe3": "f_helium3",
     "falpha": "f_alpha_plasma",
+    "tfthko": "dr_tf_coil_outboard",
 }
 
 OBS_VARS_HELP = {

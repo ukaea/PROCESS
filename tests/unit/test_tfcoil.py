@@ -219,7 +219,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     monkeypatch.setattr(tfv, "tcoolin", cntrpst_asset.tcoolin)
     monkeypatch.setattr(fwbsv, "pnuc_cp_tf", 1)
     monkeypatch.setattr(bv, "hmax", 1)
-    monkeypatch.setattr(bv, "tfthko", 0.5)
+    monkeypatch.setattr(bv, "dr_tf_coil_outboard", 0.5)
 
     tfcoil.cntrpst()
 

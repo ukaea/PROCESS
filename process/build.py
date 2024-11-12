@@ -53,7 +53,7 @@ class Build:
             a = 1e10
 
         #  Radial thickness of outboard TF coil leg (m)
-        b = build_variables.tfthko
+        b = build_variables.dr_tf_coil_outboard
         try:
             assert b < np.inf
         except AssertionError:
@@ -1823,9 +1823,11 @@ class Build:
 
         #  Thickness of outboard TF coil legs
         if tfcoil_variables.i_tf_sup != 1:
-            build_variables.tfthko = build_variables.tfootfi * build_variables.tfcth
+            build_variables.dr_tf_coil_outboard = (
+                build_variables.tfootfi * build_variables.tfcth
+            )
         else:
-            build_variables.tfthko = build_variables.tfcth
+            build_variables.dr_tf_coil_outboard = build_variables.tfcth
 
         #  Radius to centre of outboard TF coil legs
         build_variables.r_tf_outboard_mid = (
@@ -1835,12 +1837,13 @@ class Build:
             + build_variables.gapomin
             + build_variables.thshield_ob
             + build_variables.tftsgap
-            + 0.5e0 * build_variables.tfthko
+            + 0.5e0 * build_variables.dr_tf_coil_outboard
         )
 
         # TF coil horizontal build_variables.bore [m]
         build_variables.dr_tf_inner_bore = (
-            build_variables.r_tf_outboard_mid - 0.5e0 * build_variables.tfthko
+            build_variables.r_tf_outboard_mid
+            - 0.5e0 * build_variables.dr_tf_coil_outboard
         ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.tfcth)
 
         (
@@ -1857,7 +1860,7 @@ class Build:
             build_variables.r_tf_outboard_mid = r_tf_outboard_midl
             build_variables.gapsto = (
                 build_variables.r_tf_outboard_mid
-                - 0.5e0 * build_variables.tfthko
+                - 0.5e0 * build_variables.dr_tf_coil_outboard
                 - build_variables.d_vv_out
                 - build_variables.rsldo
                 - build_variables.thshield_ob
@@ -1865,7 +1868,8 @@ class Build:
                 - build_variables.vvblgap
             )
             build_variables.dr_tf_inner_bore = (
-                build_variables.r_tf_outboard_mid - 0.5e0 * build_variables.tfthko
+                build_variables.r_tf_outboard_mid
+                - 0.5e0 * build_variables.dr_tf_coil_outboard
             ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.tfcth)
         else:
             build_variables.gapsto = build_variables.gapomin
@@ -2284,9 +2288,14 @@ class Build:
                 ["Gap", "tftsgap", build_variables.tftsgap, radius]
             )
 
-            radius = radius + build_variables.tfthko
+            radius = radius + build_variables.dr_tf_coil_outboard
             radial_build_data.append(
-                ["TF coil outboard leg", "tfthko", build_variables.tfthko, radius]
+                [
+                    "TF coil outboard leg",
+                    "dr_tf_coil_outboard",
+                    build_variables.dr_tf_coil_outboard,
+                    radius,
+                ]
             )
 
             for description, variable, thickness, radius in radial_build_data:

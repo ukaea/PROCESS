@@ -191,7 +191,7 @@ contains
     use pf_power_variables, only: srcktpm
     use process_output, only: oblnkl
     use numerics, only: sqsumsq
-    use tfcoil_variables, only: tfareain, wwp2, sig_tf_wp, tfcmw, tcpmax, oacdcp, &
+    use tfcoil_variables, only: a_tf_inboard, wwp2, sig_tf_wp, tfcmw, tcpmax, oacdcp, &
       tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
@@ -273,7 +273,7 @@ contains
     outvar(54,iscan) = fcutfsu
     outvar(55,iscan) = (wwp1+wwp2)*dr_tf_wp
     outvar(56,iscan) = acond
-    outvar(57,iscan) = tfareain/n_tf
+    outvar(57,iscan) = a_tf_inboard/n_tf
     outvar(58,iscan) = taulimit
     outvar(66,iscan) = ralpne
     outvar(69,iscan) = fimp(1)

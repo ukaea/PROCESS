@@ -68,11 +68,11 @@ class TFcoil:
         # Coolant channels:
         acool = tfv.a_cp_cool * tfv.n_tf  # Cooling cross-sectional area
         dcool = 2.0e0 * tfv.rcool  # Diameter
-        lcool = 2.0e0 * (bv.hmax + bv.tfthko)  # Length
+        lcool = 2.0e0 * (bv.hmax + bv.dr_tf_coil_outboard)  # Length
         tfv.ncool = acool / (constants.pi * tfv.rcool**2)  # Number
 
         # Average conductor cross-sectional area to cool (with cooling area)
-        acpav = 0.5e0 * tfv.vol_cond_cp / (bv.hmax + bv.tfthko) + acool
+        acpav = 0.5e0 * tfv.vol_cond_cp / (bv.hmax + bv.dr_tf_coil_outboard) + acool
         ro = (acpav / (constants.pi * tfv.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
