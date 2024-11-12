@@ -1728,7 +1728,7 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, sctfcoil):
     )
 
 
-class TfcindParam(NamedTuple):
+class TfselfinductanceParam(NamedTuple):
     yarc: Any = None
 
     xarc: Any = None
@@ -1743,9 +1743,9 @@ class TfcindParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "tfcindparam",
+    "tfselfinductanceparam",
     (
-        TfcindParam(
+        TfselfinductanceParam(
             yarc=numpy.array(
                 (
                     4.5228880258064512,
@@ -1770,7 +1770,7 @@ class TfcindParam(NamedTuple):
             tfthk=1.208,
             expected_tfind=5.4453892599192845e-06,
         ),
-        TfcindParam(
+        TfselfinductanceParam(
             yarc=numpy.array(
                 (
                     4.5336880258064509,
@@ -1797,26 +1797,26 @@ class TfcindParam(NamedTuple):
         ),
     ),
 )
-def test_tfcind(tfcindparam, monkeypatch, sctfcoil):
+def test_tf_self_inductance(tfselfinductanceparam, monkeypatch, sctfcoil):
     """
-    Automatically generated Regression Unit Test for tfcind.
+    Automatically generated Regression Unit Test for tfselfinductance.
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
-    :param tfcindparam: the data used to mock and assert in this test.
-    :type tfcindparam: tfcindparam
+    :param tfselfinductanceparam: the data used to mock and assert in this test.
+    :type tfselfinductanceparam: tfselfinductanceparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "tfind", tfcindparam.tfind)
+    monkeypatch.setattr(tfcoil_variables, "tfind", tfselfinductanceparam.tfind)
 
-    tfind = sctfcoil.tfcind(
-        tfthk=tfcindparam.tfthk, xarc=tfcindparam.xarc, yarc=tfcindparam.yarc
+    tfind = sctfcoil.tf_self_inductance(
+        tfthk=tfselfinductanceparam.tfthk, xarc=tfselfinductanceparam.xarc, yarc=tfselfinductanceparam.yarc
     )
 
-    assert tfind == pytest.approx(tfcindparam.expected_tfind)
+    assert tfind == pytest.approx(tfselfinductanceparam.expected_tfind)
 
 
 class TfCoilAreaAndMassesParam(NamedTuple):

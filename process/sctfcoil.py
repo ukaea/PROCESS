@@ -1176,7 +1176,7 @@ class Sctfcoil:
         # TF coil inductance
         # ---
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
-            tfcoil_variables.tfind = self.tfcind(
+            tfcoil_variables.tfind = self.tf_self_inductance(
                 build_variables.tfcth, tfcoil_variables.xarc, tfcoil_variables.yarc
             )
         else:
@@ -2462,7 +2462,7 @@ class Sctfcoil:
 
     @staticmethod
     @numba.njit(cache=True)
-    def tfcind(tfthk, xarc, yarc):
+    def tf_self_inductance(tfthk, xarc, yarc):
         """Calculates the self inductance of a TF coil
         This routine calculates the self inductance of a TF coil
         approximated by a straight inboard section and two elliptical arcs.
