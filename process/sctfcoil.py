@@ -1164,7 +1164,7 @@ class Sctfcoil:
         # ---
 
         # Coil vertical geometry
-        self.coilshap()
+        self.tf_coil_shape()
 
         # TF resistive heating (res TF only)
         if tfcoil_variables.i_tf_sup != 1:
@@ -1605,7 +1605,7 @@ class Sctfcoil:
         # Global inboard leg average current in TF coils [A/m2]
         tfcoil_variables.oacdcp = tfcoil_variables.ritfc / tfcoil_variables.tfareain
 
-    def coilshap(self):
+    def tf_coil_shape(self):
         """Calculates the TF coil shape
         Calculates the shape of the INSIDE of the TF coil. The coil is
         approximated by a straight inboard section and four elliptical arcs
