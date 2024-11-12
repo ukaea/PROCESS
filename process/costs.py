@@ -78,6 +78,10 @@ class Costs:
         to account for Nth-of-a-kind cost reductions.
         <P>The code is arranged in the order of the standard accounts.
         """
+        # Convert FPY component lifetimes to calendar years
+        # for replacment components
+        self.convert_fpy_to_calendar()
+
         self.acc21()
 
         #  Account 22 : Fusion power island
@@ -125,23 +129,23 @@ class Costs:
         po.ovarrf(
             self.outfile,
             "First wall / blanket life (years)",
-            "(fwbllife)",
-            fwbs_variables.bktlife,
+            "(bktlife_cal)",
+            fwbs_variables.bktlife_cal,
         )
 
         if ife_variables.ife != 1:
             po.ovarrf(
                 self.outfile,
                 "Divertor life (years)",
-                "(divlife.)",
-                cost_variables.divlife,
+                "(divlife_cal)",
+                cost_variables.divlife_cal,
             )
             if physics_variables.itart == 1:
                 po.ovarrf(
                     self.outfile,
                     "Centrepost life (years)",
-                    "(cplife.)",
-                    cost_variables.cplife,
+                    "(cplife_cal)",
+                    cost_variables.cplife_cal,
                 )
 
         po.ovarrf(
@@ -1140,27 +1144,27 @@ class Costs:
                 * (
                     cost_variables.ucblss
                     * (
-                        ife_variables.fwmatm(1, 1)
-                        + ife_variables.fwmatm(2, 1)
-                        + ife_variables.fwmatm(3, 1)
+                        ife_variables.fwmatm[0, 0]
+                        + ife_variables.fwmatm[1, 0]
+                        + ife_variables.fwmatm[2, 0]
                     )
                     + ife_variables.uccarb
                     * (
-                        ife_variables.fwmatm(1, 2)
-                        + ife_variables.fwmatm(2, 2)
-                        + ife_variables.fwmatm(3, 2)
+                        ife_variables.fwmatm[0, 1]
+                        + ife_variables.fwmatm[1, 1]
+                        + ife_variables.fwmatm[2, 1]
                     )
                     + cost_variables.ucblli2o
                     * (
-                        ife_variables.fwmatm(1, 4)
-                        + ife_variables.fwmatm(2, 4)
-                        + ife_variables.fwmatm(3, 4)
+                        ife_variables.fwmatm[0, 3]
+                        + ife_variables.fwmatm[1, 3]
+                        + ife_variables.fwmatm[2, 3]
                     )
                     + ife_variables.ucconc
                     * (
-                        ife_variables.fwmatm(1, 5)
-                        + ife_variables.fwmatm(2, 5)
-                        + ife_variables.fwmatm(3, 5)
+                        ife_variables.fwmatm[0, 4]
+                        + ife_variables.fwmatm[1, 4]
+                        + ife_variables.fwmatm[2, 4]
                     )
                 )
             )
@@ -1228,18 +1232,18 @@ class Costs:
                 1.0e-6
                 * ife_variables.uccarb
                 * (
-                    ife_variables.blmatm(1, 2)
-                    + ife_variables.blmatm(2, 2)
-                    + ife_variables.blmatm(3, 2)
+                    ife_variables.blmatm[0, 1]
+                    + ife_variables.blmatm[1, 1]
+                    + ife_variables.blmatm[2, 1]
                 )
             )
             self.c22126 = (
                 1.0e-6
                 * ife_variables.ucconc
                 * (
-                    ife_variables.blmatm(1, 5)
-                    + ife_variables.blmatm(2, 5)
-                    + ife_variables.blmatm(3, 5)
+                    ife_variables.blmatm[0, 4]
+                    + ife_variables.blmatm[1, 4]
+                    + ife_variables.blmatm[2, 4]
                 )
             )
             self.c22127 = 1.0e-6 * ife_variables.ucflib * ife_variables.mflibe
@@ -1294,27 +1298,27 @@ class Costs:
                 * (
                     cost_variables.ucshld
                     * (
-                        ife_variables.shmatm(1, 1)
-                        + ife_variables.shmatm(2, 1)
-                        + ife_variables.shmatm(3, 1)
+                        ife_variables.shmatm[0, 0]
+                        + ife_variables.shmatm[1, 0]
+                        + ife_variables.shmatm[2, 0]
                     )
                     + ife_variables.uccarb
                     * (
-                        ife_variables.shmatm(1, 2)
-                        + ife_variables.shmatm(2, 2)
-                        + ife_variables.shmatm(3, 2)
+                        ife_variables.shmatm[0, 1]
+                        + ife_variables.shmatm[1, 1]
+                        + ife_variables.shmatm[2, 1]
                     )
                     + cost_variables.ucblli2o
                     * (
-                        ife_variables.shmatm(1, 4)
-                        + ife_variables.shmatm(2, 4)
-                        + ife_variables.shmatm(3, 4)
+                        ife_variables.shmatm[0, 3]
+                        + ife_variables.shmatm[1, 3]
+                        + ife_variables.shmatm[2, 3]
                     )
                     + ife_variables.ucconc
                     * (
-                        ife_variables.shmatm(1, 5)
-                        + ife_variables.shmatm(2, 5)
-                        + ife_variables.shmatm(3, 5)
+                        ife_variables.shmatm[0, 4]
+                        + ife_variables.shmatm[1, 4]
+                        + ife_variables.shmatm[2, 4]
                     )
                 )
             )
@@ -2189,7 +2193,7 @@ class Costs:
         """
         if ife_variables.ife != 1:
             #  Previous calculation, using qfuel in Amps:
-            #  1.3 should have been physics_variables.afuel*umass/echarge*1000*s/day = 2.2
+            #  1.3 should have been physics_variables.afuel*umass/electron_charge*1000*s/day = 2.2
             # wtgpd = burnup * qfuel * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
@@ -2208,7 +2212,7 @@ class Costs:
                 * 3.0e0
                 * 1.67e-27
                 * 1.0e3
-                / (1.602e-19 * 17.6e6 * ife_variables.fburn)
+                / (constants.electron_volt * 17.6e6 * ife_variables.fburn)
             )
             physics_variables.wtgpd = targtm * ife_variables.reprat * 86400.0e0
 
@@ -2231,7 +2235,7 @@ class Costs:
         cfrht = 1.0e5
 
         #  No detritiation needed if purely D-He3 reaction
-        if physics_variables.ftrit > 1.0e-3:
+        if physics_variables.f_tritium > 1.0e-3:
             self.c2273 = (
                 1.0e-6
                 * cost_variables.ucdtc
@@ -2418,7 +2422,7 @@ class Costs:
         # Calculate rejected heat for non-reactor (==0) and reactor (==1)
         if cost_variables.ireactor == 0:
             pwrrej = (
-                physics_variables.powfmw
+                physics_variables.fusion_power
                 + heat_transport_variables.pinjwp
                 + tfcoil_variables.tfcmw
             )
@@ -2620,13 +2624,9 @@ class Costs:
         #  Costs due to first wall and blanket renewal
         #  ===========================================
 
-        #  Operational life
-
-        fwbllife = fwbs_variables.bktlife
-
         #  Compound interest factor
 
-        feffwbl = (1.0e0 + cost_variables.discount_rate) ** fwbllife
+        feffwbl = (1.0e0 + cost_variables.discount_rate) ** fwbs_variables.bktlife_cal
 
         #  Capital recovery factor
 
@@ -2642,7 +2642,7 @@ class Costs:
         )
 
         if cost_variables.ifueltyp == 2:
-            annfwbl = annfwbl * (1.0e0 - fwbllife / cost_variables.tlife)
+            annfwbl = annfwbl * (1.0e0 - fwbs_variables.bktlife / cost_variables.tlife)
 
         #  Cost of electricity due to first wall/blanket replacements
 
@@ -2657,7 +2657,9 @@ class Costs:
         else:
             #  Compound interest factor
 
-            fefdiv = (1.0e0 + cost_variables.discount_rate) ** cost_variables.divlife
+            fefdiv = (
+                1.0e0 + cost_variables.discount_rate
+            ) ** cost_variables.divlife_cal
 
             #  Capital recovery factor
 
@@ -2687,7 +2689,7 @@ class Costs:
         if (physics_variables.itart == 1) and (ife_variables.ife != 1):
             #  Compound interest factor
 
-            fefcp = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cplife
+            fefcp = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cplife_cal
 
             #  Capital recovery factor
 
@@ -2717,7 +2719,7 @@ class Costs:
 
         #  Compound interest factor
 
-        fefcdr = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cdrlife
+        fefcdr = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cdrlife_cal
 
         #  Capital recovery factor
 
@@ -2790,7 +2792,7 @@ class Costs:
             annfuel = (
                 cost_variables.ucfuel * heat_transport_variables.pnetelmw / 1200.0e0
                 + 1.0e-6
-                * physics_variables.fhe3
+                * physics_variables.f_helium3
                 * physics_variables.wtgpd
                 * 1.0e-3
                 * cost_variables.uche3
@@ -2870,3 +2872,33 @@ class Costs:
             + cost_variables.coeoam
             + coedecom
         )
+
+    @staticmethod
+    def convert_fpy_to_calendar() -> None:
+        """
+        Routine to convert component lifetimes in FPY to calendar years.
+        Required for replacement component costs.
+        Author: J Foster, CCFE, Culham Campus
+        """
+        # FW/Blanket and HCD
+        if fwbs_variables.bktlife < cost_variables.tlife:
+            fwbs_variables.bktlife_cal = fwbs_variables.bktlife * cost_variables.cfactr
+            # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
+            cost_variables.cdrlife_cal = fwbs_variables.bktlife_cal
+        else:
+            fwbs_variables.bktlife_cal = fwbs_variables.bktlife
+
+        # Divertor
+        if cost_variables.divlife < cost_variables.tlife:
+            cost_variables.divlife_cal = cost_variables.divlife * cost_variables.cfactr
+        else:
+            cost_variables.divlife_cal = cost_variables.divlife
+
+        # Centrepost
+        if physics_variables.itart == 1:
+            if cost_variables.cplife < cost_variables.tlife:
+                cost_variables.cplife_cal = (
+                    cost_variables.cplife * cost_variables.cfactr
+                )
+            else:
+                cost_variables.cplife_cal = cost_variables.cplife

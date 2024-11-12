@@ -74,6 +74,7 @@ from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 from process.caller import write_output_files
 
+import process
 
 from pathlib import Path
 import os
@@ -200,6 +201,11 @@ class Process:
             action="store_true",
             help="Produce a filled json from --mfile arg in working dir",
         )
+        parser.add_argument(
+            "--version",
+            action="store_true",
+            help="Print the version of PROCESS to the terminal",
+        )
 
         # If args is not None, then parse the supplied arguments. This is likely
         # to come from the test suite when testing command-line arguments; the
@@ -211,6 +217,9 @@ class Process:
 
     def run_mode(self):
         """Determine how to run Process."""
+        if self.args.version:
+            print(process.__version__)
+            return
         # Store run object: useful for testing
         if self.args.varyiterparams:
             self.run = VaryRun(
@@ -654,7 +663,7 @@ class Models:
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
-        self.current_drive = CurrentDrive()
+        self.current_drive = CurrentDrive(plasma_profile=self.plasma_profile)
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )

@@ -1,20 +1,22 @@
 import numpy as np
 
+from process.plasma_profiles import PlasmaProfile
+
 from process.fortran import (
     heat_transport_variables,
     current_drive_variables,
     physics_variables,
     cost_variables,
     constants,
-    profiles_module,
     process_output as po,
     error_handling as eh,
 )
 
 
 class CurrentDrive:
-    def __init__(self):
+    def __init__(self, plasma_profile: PlasmaProfile):
         self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
 
     def cudriv(self, output: bool):
         """Routine to calculate the current drive power requirements
@@ -29,8 +31,8 @@ class CurrentDrive:
         current_drive_variables.echpwr = 0.0e0
         current_drive_variables.pnbeam = 0.0e0
         current_drive_variables.plhybd = 0.0e0
-        current_drive_variables.cnbeam = 0.0e0
-        cnbeamfix = 0.0e0
+        current_drive_variables.beam_current = 0.0e0
+        beam_current_fix = 0.0e0
         current_drive_variables.porbitlossmw = 0.0e0
         porbitlossmwfix = 0.0e0
 
@@ -174,17 +176,17 @@ class CurrentDrive:
                     1.0e0
                     / (2.0e0 * np.pi)
                     * current_drive_variables.harnum
-                    * constants.echarge
+                    * constants.electron_charge
                     * physics_variables.bt
-                    / constants.emass
+                    / constants.electron_mass
                 )
                 fp = (
                     1.0e0
                     / (2.0e0 * np.pi)
                     * np.sqrt(
                         physics_variables.dene
-                        * constants.echarge**2
-                        / (constants.emass * constants.epsilon0)
+                        * constants.electron_charge**2
+                        / (constants.electron_mass * constants.epsilon0)
                     )
                 )
 
@@ -202,9 +204,9 @@ class CurrentDrive:
                 fc = (
                     1
                     / (2 * np.pi)
-                    * constants.echarge
+                    * constants.electron_charge
                     * physics_variables.bt
-                    / constants.emass
+                    / constants.electron_mass
                 )
                 fp = (
                     1
@@ -212,8 +214,8 @@ class CurrentDrive:
                     * np.sqrt(
                         (
                             (physics_variables.dene / 1.0e19)
-                            * constants.echarge**2
-                            / (constants.emass * constants.epsilon0)
+                            * constants.electron_charge**2
+                            / (constants.electron_mass * constants.epsilon0)
                         )
                     )
                 )
@@ -346,8 +348,8 @@ class CurrentDrive:
                 current_drive_variables.etacdfix = current_drive_variables.etanbi
                 gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
                 gamcdfix = gamnb
-                cnbeamfix = (
-                    1.0e-3 * (pnbitotfix * 1.0e6) / current_drive_variables.enbeam
+                beam_current_fix = (
+                    1.0e-3 * (pnbitotfix * 1.0e6) / current_drive_variables.beam_energy
                 )  # Neutral beam current (A)
                 auxiliary_cdfix = (
                     effnbssfix
@@ -469,17 +471,17 @@ class CurrentDrive:
                     1.0e0
                     / (2.0e0 * np.pi)
                     * current_drive_variables.harnum
-                    * constants.echarge
+                    * constants.electron_charge
                     * physics_variables.bt
-                    / constants.emass
+                    / constants.electron_mass
                 )
                 fp = (
                     1.0e0
                     / (2.0e0 * np.pi)
                     * np.sqrt(
                         physics_variables.dene
-                        * constants.echarge**2
-                        / (constants.emass * constants.epsilon0)
+                        * constants.electron_charge**2
+                        / (constants.electron_mass * constants.epsilon0)
                     )
                 )
 
@@ -500,9 +502,9 @@ class CurrentDrive:
                 fc = (
                     1
                     / (2 * np.pi)
-                    * constants.echarge
+                    * constants.electron_charge
                     * physics_variables.bt
-                    / constants.emass
+                    / constants.electron_mass
                 )
                 fp = (
                     1
@@ -510,8 +512,8 @@ class CurrentDrive:
                     * np.sqrt(
                         (
                             (physics_variables.dene / 1.0e19)
-                            * constants.echarge**2
-                            / (constants.emass * constants.epsilon0)
+                            * constants.electron_charge**2
+                            / (constants.electron_mass * constants.epsilon0)
                         )
                     )
                 )
@@ -672,10 +674,10 @@ class CurrentDrive:
                 current_drive_variables.etacd = current_drive_variables.etanbi
                 gamnb = effnbss * (dene20 * physics_variables.rmajor)
                 current_drive_variables.gamcd = gamnb
-                current_drive_variables.cnbeam = (
+                current_drive_variables.beam_current = (
                     1.0e-3
                     * (current_drive_variables.pnbitot * 1.0e6)
-                    / current_drive_variables.enbeam
+                    / current_drive_variables.beam_energy
                 )  # Neutral beam current (A)
 
             # Total injected power
@@ -706,7 +708,7 @@ class CurrentDrive:
             ):
                 current_drive_variables.bigq = 1.0e18
             else:
-                current_drive_variables.bigq = physics_variables.powfmw / (
+                current_drive_variables.bigq = physics_variables.fusion_power / (
                     current_drive_variables.pinjmw
                     + current_drive_variables.porbitlossmw
                     + physics_variables.pohmmw
@@ -1034,8 +1036,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Neutral beam energy (keV)",
-                "(enbeam)",
-                current_drive_variables.enbeam,
+                "(beam_energy)",
+                current_drive_variables.beam_energy,
             )
             if (current_drive_variables.iefrf == 5) or (
                 current_drive_variables.iefrf == 8
@@ -1043,8 +1045,8 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam current (A)",
-                    "(cnbeam)",
-                    current_drive_variables.cnbeam,
+                    "(beam_current)",
+                    current_drive_variables.beam_current,
                     "OP ",
                 )
 
@@ -1054,8 +1056,8 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Secondary fixed neutral beam current (A)",
-                    "(cnbeamfix)",
-                    cnbeamfix,
+                    "(beam_current_fix)",
+                    beam_current_fix,
                     "OP ",
                 )
 
@@ -1315,7 +1317,7 @@ class CurrentDrive:
 
         # Calculate beam stopping cross-section
         sigstop = self.sigbeam(
-            current_drive_variables.enbeam / physics_variables.abeam,
+            current_drive_variables.beam_energy / physics_variables.abeam,
             physics_variables.te,
             physics_variables.dene,
             physics_variables.ralpne,
@@ -1332,13 +1334,13 @@ class CurrentDrive:
         fshine = max(fshine, 1e-20)
 
         # Deuterium and tritium beam densities
-        dend = physics_variables.deni * (1.0 - current_drive_variables.ftritbm)
-        dent = physics_variables.deni * current_drive_variables.ftritbm
+        dend = physics_variables.deni * (1.0 - current_drive_variables.f_tritium_beam)
+        dent = physics_variables.deni * current_drive_variables.f_tritium_beam
 
         # Power split to ions / electrons
         fpion = self.cfnbi(
             physics_variables.abeam,
-            current_drive_variables.enbeam,
+            current_drive_variables.beam_energy,
             physics_variables.ten,
             physics_variables.dene,
             dend,
@@ -1354,7 +1356,7 @@ class CurrentDrive:
             physics_variables.alphat,
             physics_variables.aspect,
             physics_variables.dene,
-            current_drive_variables.enbeam,
+            current_drive_variables.beam_energy,
             physics_variables.rmajor,
             physics_variables.ten,
             physics_variables.zeff,
@@ -1375,7 +1377,7 @@ class CurrentDrive:
 
         # Local density, temperature, toroidal field at this minor radius
 
-        dlocal = 1.0e-19 * profiles_module.nprofile(
+        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
             physics_variables.rhopedn,
             physics_variables.ne0,
@@ -1383,7 +1385,7 @@ class CurrentDrive:
             physics_variables.nesep,
             physics_variables.alphan,
         )
-        tlocal = profiles_module.tprofile(
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
             physics_variables.rhopedt,
             physics_variables.te0,
@@ -1439,7 +1441,7 @@ class CurrentDrive:
         rrr = 1.0e0 / 3.0e0
 
         #  Temperature
-        tlocal = profiles_module.tprofile(
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rrr,
             physics_variables.rhopedt,
             physics_variables.te0,
@@ -1450,7 +1452,7 @@ class CurrentDrive:
         )
 
         #  Density (10**20 m**-3)
-        dlocal = 1.0e-20 * profiles_module.nprofile(
+        dlocal = 1.0e-20 * self.plasma_profile.neprofile.calculate_profile_y(
             rrr,
             physics_variables.rhopedn,
             physics_variables.ne0,
@@ -1513,7 +1515,9 @@ class CurrentDrive:
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
-        mcsq = 9.1095e-31 * 2.9979e8**2 / (1.0e3 * 1.6022e-19)  # keV
+        mcsq = (
+            constants.electron_mass * 2.9979e8**2 / (1.0e3 * constants.electron_volt)
+        )  # keV
         f = 16.0e0 * (tlocal / mcsq) ** 2
 
         #  fp is the derivative of f with respect to gamma, the relativistic
@@ -1583,7 +1587,7 @@ class CurrentDrive:
         #  Calculate beam stopping cross-section
 
         sigstop = self.sigbeam(
-            current_drive_variables.enbeam / physics_variables.abeam,
+            current_drive_variables.beam_energy / physics_variables.abeam,
             physics_variables.te,
             physics_variables.dene,
             physics_variables.ralpne,
@@ -1603,14 +1607,14 @@ class CurrentDrive:
 
         #  Deuterium and tritium beam densities
 
-        dend = physics_variables.deni * (1.0e0 - current_drive_variables.ftritbm)
-        dent = physics_variables.deni * current_drive_variables.ftritbm
+        dend = physics_variables.deni * (1.0e0 - current_drive_variables.f_tritium_beam)
+        dent = physics_variables.deni * current_drive_variables.f_tritium_beam
 
         #  Power split to ions / electrons
 
         fpion = self.cfnbi(
             physics_variables.abeam,
-            current_drive_variables.enbeam,
+            current_drive_variables.beam_energy,
             physics_variables.ten,
             physics_variables.dene,
             dend,
@@ -1628,7 +1632,7 @@ class CurrentDrive:
             physics_variables.aspect,
             physics_variables.dene,
             physics_variables.dnla,
-            current_drive_variables.enbeam,
+            current_drive_variables.beam_energy,
             current_drive_variables.frbeam,
             fshine,
             physics_variables.rmajor,
@@ -1703,7 +1707,7 @@ class CurrentDrive:
         aspect,
         dene,
         dnla,
-        enbeam,
+        beam_energy,
         frbeam,
         fshine,
         rmajor,
@@ -1721,7 +1725,7 @@ class CurrentDrive:
         aspect  : input real : aspect ratio
         dene    : input real : volume averaged electron density (m**-3)
         dnla    : input real : line averaged electron density (m**-3)
-        enbeam  : input real : neutral beam energy (keV)
+        beam_energy  : input real : neutral beam energy (keV)
         frbeam  : input real : R_tangent / R_major for neutral beam injection
         fshine  : input real : shine-through fraction of beam
         rmajor  : input real : plasma major radius (m)
@@ -1753,7 +1757,7 @@ class CurrentDrive:
         ecrit = 0.01 * abeam * ten
 
         #  Beam energy in MeV
-        ebmev = enbeam / 1e3
+        ebmev = beam_energy / 1e3
 
         #  x and y coefficients of function J0(x,y) (IPDG89)
         xjs = ebmev / (bbd * ecrit)
@@ -1829,7 +1833,7 @@ class CurrentDrive:
         routine <A HREF="lhrad.html">lhrad</A>.
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
-        dlocal = 1.0e-19 * profiles_module.nprofile(
+        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
             physics_variables.rhopedn,
             physics_variables.ne0,
@@ -1840,7 +1844,7 @@ class CurrentDrive:
 
         #  Local electron temperature
 
-        tlocal = profiles_module.tprofile(
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
             physics_variables.rhopedt,
             physics_variables.te0,
@@ -1944,7 +1948,7 @@ class CurrentDrive:
         atmdt = 2.5
         # atmt = 3.0
         c = 3.0e8
-        me = 9.1e-31
+        me = constants.electron_mass
         # zd = 1.0
         # zt = 1.0
 
@@ -1956,18 +1960,18 @@ class CurrentDrive:
 
         xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
         sumln = zeffai * xlmbdai / xlmbda
-        xlnrat = (3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.mproton * sumln) ** (
-            2.0e0 / 3.0e0
-        )
+        xlnrat = (
+            3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln
+        ) ** (2.0e0 / 3.0e0)
         ve = c * np.sqrt(2.0e0 * te / 511.0e0)
 
         ecritfi = (
             afast
-            * constants.mproton
+            * constants.proton_mass
             * ve
             * ve
             * xlnrat
-            / (2.0e0 * constants.echarge * 1.0e3)
+            / (2.0e0 * constants.electron_charge * 1.0e3)
         )
 
         x = np.sqrt(efast / ecritfi)

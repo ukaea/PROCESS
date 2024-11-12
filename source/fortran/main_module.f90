@@ -331,7 +331,7 @@ end subroutine run_summary
 !     icc, lablcc, eqsolv
 !   use process_output, only: ovarin, oblnkl, ocmmnt, oheadr, osubhd, &
 !     ovarre, int_to_string3
-!   use physics_variables, only: bt, aspect, rmajor, powfmw, wallmw
+!   use physics_variables, only: bt, aspect, rmajor, fusion_power, wallmw
 !   use define_iteration_variables, only: loadxc
 !   implicit none
 
@@ -677,7 +677,7 @@ end subroutine verror
 subroutine runtests
    ! These tests should gradually be moved to pytest
   use constants, only: nout
-  use maths_library, only: nearly_equal, binomial, test_secant_solve
+  use maths_library, only: binomial
   use process_output, only: ocmmnt, ovarre
 !   use pfcoil_module, only: brookscoil
 !   use reinke_module, only: test_reinke
@@ -692,7 +692,6 @@ subroutine runtests
   call ovarre(nout,'Binomial coefficients C(5,5): 1', '(binomial(5,5))', binomial(5,5))
 
    !   call brookscoil(nout) Moved to pytest
-  call test_secant_solve()
   ! Disabled for ease of #1542 - Tim
 !   call test_reinke()
 end subroutine runtests

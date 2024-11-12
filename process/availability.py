@@ -86,8 +86,8 @@ class Availability:
             # - the neutron energy spectrum
             # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
             # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
-            ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
-            f_scale = pv.powfmw / ref_powfmw
+            ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
+            f_scale = pv.fusion_power / ref_fusion_power
             ref_dpa_fpy = (
                 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
             )
@@ -356,11 +356,46 @@ class Availability:
             1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
         )
 
+        # Modify lifetimes to take account of the availability
+        if ifev.ife != 1:
+            # First wall / blanket
+            if fwbsv.bktlife < cv.tlife:
+                fwbsv.bktlife = min(fwbsv.bktlife / cv.cfactr, cv.tlife)
+                # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
+                cv.cdrlife = fwbsv.bktlife
+
+            # Divertor
+            if cv.divlife < cv.tlife:
+                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+
+            # Centrepost
+            if pv.itart == 1 and cv.cplife < cv.tlife:
+                cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
+
         # Capacity factor
-        cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
 
         # Output
         if output:
+            po.ovarre(
+                self.outfile,
+                "First wall / blanket lifetime (FPY)",
+                "(bktlife)",
+                fwbsv.bktlife,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
+            )
+            if pv.itart == 1:
+                po.ovarre(
+                    self.outfile,
+                    "Centrepost lifetime (FPY)",
+                    "(cplife)",
+                    cv.cplife,
+                    "OP ",
+                )
+            po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Total unavailability:")
             po.oblnkl(self.outfile)
             po.ovarre(
@@ -397,7 +432,7 @@ class Availability:
                 self.outfile,
                 "Capacity factor: total lifetime elec. energy output / output power",
                 "(cpfact)",
-                cpfact,
+                cv.cpfact,
                 "OP ",
             )
 
@@ -428,8 +463,8 @@ class Availability:
         # - the neutron energy spectrum
         # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
         # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
-        ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
-        f_scale = pv.powfmw / ref_powfmw
+        ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
+        f_scale = pv.fusion_power / ref_fusion_power
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
         dpa_fpy = f_scale * ref_dpa_fpy
 
@@ -501,17 +536,6 @@ class Availability:
                 "(adivflnc)",
                 cv.adivflnc,
             )
-            po.ovarre(
-                self.outfile,
-                "First wall / blanket lifetime (FPY)",
-                "(bktlife)",
-                fwbsv.bktlife,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
-            )
-
             po.ovarin(
                 self.outfile,
                 "Number of remote handling systems",

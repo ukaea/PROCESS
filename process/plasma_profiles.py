@@ -302,7 +302,7 @@ class PlasmaProfile:
                 + physics_variables.ni0 * physics_variables.ti0
             )
             * 1.0e3
-            * constants.echarge
+            * constants.electron_charge
         )
 
         #  Pressure profile index (N.B. no pedestal effects included here)

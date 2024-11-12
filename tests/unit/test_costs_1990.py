@@ -198,7 +198,7 @@ def acc2273_param(**kwargs):
     """
     # Default parameters
     defaults = {
-        "ftrit": 0.0001,
+        "f_tritium": 0.0001,
         "volrci": fortran.buildings_variables.volrci,
         "wsvol": fortran.buildings_variables.wsvol,
         "expected": approx(0.0, abs=0.00001),
@@ -221,7 +221,7 @@ def acc2273_params():
     params = [
         acc2273_param(),
         acc2273_param(
-            ftrit=0.5,
+            f_tritium=0.5,
             volrci=1299783.4,
             wsvol=132304.1,
             expected=approx(74.12, abs=0.01),
@@ -248,7 +248,7 @@ def acc2273_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(fortran.buildings_variables, "wsvol", param["wsvol"])
     monkeypatch.setattr(fortran.buildings_variables, "volrci", param["volrci"])
-    monkeypatch.setattr(fortran.physics_variables, "ftrit", param["ftrit"])
+    monkeypatch.setattr(fortran.physics_variables, "f_tritium", param["f_tritium"])
 
     # Mock result var as negative, as an expected result is 0
     # Otherwise could get false positive result
@@ -612,7 +612,7 @@ def acc26_param(**kwargs):
     # Default parameters
     defaults = {
         "ireactor": 0,
-        "powfmw": 2000.0,
+        "fusion_power": 2000.0,
         "pinjwp": 250.0,
         "tfcmw": 50.0,
         "pthermmw": htv.pthermmw,
@@ -638,7 +638,7 @@ def acc26_params():
         acc26_param(),
         acc26_param(
             ireactor=1,
-            powfmw=fortran.physics_variables.powfmw,
+            fusion_power=fortran.physics_variables.fusion_power,
             pinjwp=htv.pinjwp,
             tfcmw=fortran.tfcoil_variables.tfcmw,
             pthermmw=3000.0,
@@ -666,7 +666,9 @@ def acc26_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(cost_variables, "ireactor", param["ireactor"])
-    monkeypatch.setattr(fortran.physics_variables, "powfmw", param["powfmw"])
+    monkeypatch.setattr(
+        fortran.physics_variables, "fusion_power", param["fusion_power"]
+    )
     monkeypatch.setattr(htv, "pinjwp", param["pinjwp"])
     monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(htv, "pthermmw", param["pthermmw"])
@@ -4391,7 +4393,7 @@ class Acc2273Param(NamedTuple):
 
     fkind: Any = None
 
-    ftrit: Any = None
+    f_tritium: Any = None
 
     c227: Any = None
 
@@ -4409,7 +4411,7 @@ class Acc2273Param(NamedTuple):
             wsvol=130018.25667917728,
             volrci=1205439.8543893537,
             fkind=1,
-            ftrit=0.5,
+            f_tritium=0.5,
             c227=0,
             c2273=0,
             c22=0,
@@ -4419,7 +4421,7 @@ class Acc2273Param(NamedTuple):
             wsvol=130255.93791329287,
             volrci=1206887.4047542624,
             fkind=1,
-            ftrit=0.5,
+            f_tritium=0.5,
             c227=284.96904049038437,
             c2273=69.115208498727412,
             c22=3474.7391916096453,
@@ -4446,7 +4448,7 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2273param.fkind)
 
-    monkeypatch.setattr(physics_variables, "ftrit", acc2273param.ftrit)
+    monkeypatch.setattr(physics_variables, "f_tritium", acc2273param.f_tritium)
 
     monkeypatch.setattr(costs, "c227", acc2273param.c227)
 
@@ -5121,7 +5123,7 @@ class Acc26Param(NamedTuple):
 
     pgrossmw: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
     tfcmw: Any = None
 
@@ -5140,7 +5142,7 @@ class Acc26Param(NamedTuple):
             pthermmw=2620.2218111502593,
             pinjwp=129.94611930107126,
             pgrossmw=982.58317918134742,
-            powfmw=1985.785106643267,
+            fusion_power=1985.785106643267,
             tfcmw=0,
             c26=0,
             expected_c26=56.327648771765475,
@@ -5152,7 +5154,7 @@ class Acc26Param(NamedTuple):
             pthermmw=2619.4223856129224,
             pinjwp=129.94611930107126,
             pgrossmw=982.28339460484608,
-            powfmw=1985.1653095257811,
+            fusion_power=1985.1653095257811,
             tfcmw=0,
             c26=56.327648771765475,
             expected_c26=56.310463295064743,
@@ -5184,7 +5186,7 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pgrossmw", acc26param.pgrossmw)
 
-    monkeypatch.setattr(physics_variables, "powfmw", acc26param.powfmw)
+    monkeypatch.setattr(physics_variables, "fusion_power", acc26param.fusion_power)
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc26param.tfcmw)
 
@@ -5426,15 +5428,21 @@ class CoelcParam(NamedTuple):
 
     divlife: Any = None
 
+    divlife_cal: Any = None
+
     coefuelt: Any = None
 
     moneyint: Any = None
 
     cdrlife: Any = None
 
+    cdrlife_cal: Any = None
+
     capcost: Any = None
 
     cplife: Any = None
+
+    cplife_cal: Any = None
 
     fwallcst: Any = None
 
@@ -5466,6 +5474,8 @@ class CoelcParam(NamedTuple):
 
     bktlife: Any = None
 
+    bktlife_cal: Any = None
+
     uctarg: Any = None
 
     ife: Any = None
@@ -5478,7 +5488,7 @@ class CoelcParam(NamedTuple):
 
     wtgpd: Any = None
 
-    fhe3: Any = None
+    f_helium3: Any = None
 
     tcycle: Any = None
 
@@ -5517,11 +5527,14 @@ class CoelcParam(NamedTuple):
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             divlife=6.1337250397740126,
+            divlife_cal=6.1337250397740126,
             coefuelt=0,
             moneyint=0,
             cdrlife=19.216116010620578,
+            cdrlife_cal=19.216116010620578,
             capcost=0,
             cplife=0,
+            cplife_cal=0,
             fwallcst=143.19827300247195,
             fcr0=0.065000000000000016,
             discount_rate=0.060000000000000012,
@@ -5565,20 +5578,21 @@ class CoelcParam(NamedTuple):
                 order="F",
             ).transpose(),
             bktlife=19.216116010620578,
+            bktlife_cal=19.216116010620578,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
             pnetelmw=493.01760776192009,
             itart=0,
             wtgpd=507.88376577416528,
-            fhe3=0,
+            f_helium3=0,
             tcycle=10864.426139387357,
             tburn=0,
             outfile=11,
             expected_coeoam=4.4099029328740929e20,
             expected_coecap=4.9891775218979061e21,
-            expected_coe=6.9525339143363677e21,
-            expected_coefuelt=1.4801870771036603e21,
+            expected_coe=6.95253391e21,
+            expected_coefuelt=1.48018708e21,
             expected_moneyint=1001.1727468691442,
             expected_capcost=7675.6577259967762,
         ),
@@ -5597,11 +5611,14 @@ class CoelcParam(NamedTuple):
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             divlife=6.145510750914414,
+            divlife_cal=6.145510750914414,
             coefuelt=1.4801870771036603e21,
             moneyint=1001.1727468691442,
             cdrlife=19.222115557991025,
+            cdrlife_cal=19.222115557991025,
             capcost=7675.6577259967762,
             cplife=0,
+            cplife_cal=0,
             fwallcst=167.7865317453867,
             fcr0=0.065000000000000016,
             discount_rate=0.060000000000000012,
@@ -5645,20 +5662,21 @@ class CoelcParam(NamedTuple):
                 order="F",
             ).transpose(),
             bktlife=19.222115557991025,
+            bktlife_cal=19.222115557991025,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
             pnetelmw=422.4198205312706,
             itart=0,
             wtgpd=507.72524666099866,
-            fhe3=0,
+            f_helium3=0,
             tcycle=864.42613938735622,
             tburn=10230.533336387549,
             outfile=11,
             expected_coeoam=1.2419424614419636,
             expected_coecap=15.547404530833255,
-            expected_coe=21.504209731681467,
-            expected_coefuelt=4.5834233757821812,
+            expected_coe=21.50420973,
+            expected_coefuelt=4.58342338,
             expected_moneyint=1025.4310038198375,
             expected_capcost=7861.6376959520912,
         ),
@@ -5705,15 +5723,21 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "divlife", coelcparam.divlife)
 
+    monkeypatch.setattr(cost_variables, "divlife_cal", coelcparam.divlife_cal)
+
     monkeypatch.setattr(cost_variables, "coefuelt", coelcparam.coefuelt)
 
     monkeypatch.setattr(cost_variables, "moneyint", coelcparam.moneyint)
 
     monkeypatch.setattr(cost_variables, "cdrlife", coelcparam.cdrlife)
 
+    monkeypatch.setattr(cost_variables, "cdrlife_cal", coelcparam.cdrlife_cal)
+
     monkeypatch.setattr(cost_variables, "capcost", coelcparam.capcost)
 
     monkeypatch.setattr(cost_variables, "cplife", coelcparam.cplife)
+
+    monkeypatch.setattr(cost_variables, "cplife_cal", coelcparam.cplife_cal)
 
     monkeypatch.setattr(cost_variables, "fwallcst", coelcparam.fwallcst)
 
@@ -5745,6 +5769,8 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "bktlife", coelcparam.bktlife)
 
+    monkeypatch.setattr(fwbs_variables, "bktlife_cal", coelcparam.bktlife_cal)
+
     monkeypatch.setattr(ife_variables, "uctarg", coelcparam.uctarg)
 
     monkeypatch.setattr(ife_variables, "ife", coelcparam.ife)
@@ -5757,7 +5783,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "wtgpd", coelcparam.wtgpd)
 
-    monkeypatch.setattr(physics_variables, "fhe3", coelcparam.fhe3)
+    monkeypatch.setattr(physics_variables, "f_helium3", coelcparam.f_helium3)
 
     monkeypatch.setattr(times_variables, "tcycle", coelcparam.tcycle)
 

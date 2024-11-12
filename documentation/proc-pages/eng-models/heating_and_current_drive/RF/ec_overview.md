@@ -33,7 +33,7 @@ The answer ECGAM is the normalised efficiency $n_{\text{e}}IR/P$ with $n_{\text{
         
 
 $$
-\mathtt{mcsq} = 9.1095\times10^{-31} \frac{c^2}{1  \text{keV}}
+\mathtt{mcsq} = m_{\text{e}} \frac{c^2}{1  \text{keV}}
 $$
 
 $$
