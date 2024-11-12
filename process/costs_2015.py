@@ -675,7 +675,7 @@ class Costs2015:
         # Scale with TF coil longest dimension
         self.s_k[11] = (
             max(build_variables.dh_tf_inner_bore, build_variables.dr_tf_inner_bore)
-            + 2.0e0 * build_variables.tfcth
+            + 2.0e0 * build_variables.dr_tf_coil_inboard
         )
         self.s_kref[11] = 14.0e0
         self.s_cost[11] = (

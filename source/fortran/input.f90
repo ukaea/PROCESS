@@ -195,7 +195,7 @@ contains
     use build_variables, only: tf_in_cs, blbmoth, blbuith, shldoth, &
       shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
       thshield_ib, thshield_ob, thshield_vb, iprecomp, &
-      blbpith, aplasmin, blbuoth, tfcth, &
+      blbpith, aplasmin, blbuoth, dr_tf_coil_inboard, &
       iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, ddwex, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
@@ -1399,10 +1399,10 @@ contains
        case ('sigallpc')
           call parse_real_variable('sigallpc', sigallpc, 0.0D1, 1.0D9, &
                'Allowable stress in CS pre-comp structure (Pa)')
-       ! Issue #514 Make tfcth an output not an input or iteration variable:
+       ! Issue #514 Make dr_tf_coil_inboard an output not an input or iteration variable:
        ! Eventually this input will be removed.
-       case ('tfcth')
-          call parse_real_variable('tfcth', tfcth, 0.0D0, 10.0D0, &
+       case ('dr_tf_coil_inboard')
+          call parse_real_variable('dr_tf_coil_inboard', dr_tf_coil_inboard, 0.0D0, 10.0D0, &
                'TF coil thickness (m)')
        case ('dr_tf_wp')
           call parse_real_variable('dr_tf_wp', dr_tf_wp, 0.0D0, 10.0D0, &
@@ -1496,7 +1496,7 @@ contains
        ! OR
        case ('casthi_fraction')
           call parse_real_variable('casthi_fraction', casthi_fraction, 0.0D0, 1.0D0, &
-               'inboard TF coil case plasma side thickness as a fraction of tfcth')
+               'inboard TF coil case plasma side thickness as a fraction of dr_tf_coil_inboard')
 
        ! Use EITHER
        case ('casths')

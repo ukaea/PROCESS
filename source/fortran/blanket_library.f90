@@ -472,7 +472,7 @@ contains
         ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         use constants, only: pi
-        use build_variables, only: clhsf, hmax, tfcth, ddwex
+        use build_variables, only: clhsf, hmax, dr_tf_coil_inboard, ddwex
         use fwbs_variables, only: rdewex, rpf2dewar, zdewex, vdewex, vvmass, vdewin, &
           denstl, dewmkg
         use pfcoil_variables, only: rb, zh
@@ -494,7 +494,7 @@ contains
         zdewex = maxval(zh) + hcryopf
 
         ! Vertical clearance between TF coil and cryostat (m)
-        clh1 = zdewex - (hmax + tfcth)
+        clh1 = zdewex - (hmax + dr_tf_coil_inboard)
 
         ! cryostat volume (m3)
         vdewex = ( (2.0D0*pi*rdewex) * 2.0D0*zdewex + (2.0D0*pi*rdewex**2) ) * ddwex

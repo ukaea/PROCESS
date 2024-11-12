@@ -1177,7 +1177,7 @@ class Sctfcoil:
         # ---
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
             tfcoil_variables.tfind = self.tf_self_inductance(
-                build_variables.tfcth, tfcoil_variables.xarc, tfcoil_variables.yarc
+                build_variables.dr_tf_coil_inboard, tfcoil_variables.xarc, tfcoil_variables.yarc
             )
         else:
             tfcoil_variables.tfind = (
@@ -1266,7 +1266,7 @@ class Sctfcoil:
                 pfcoil_variables.ohhghf,
                 build_variables.ohcth,
                 build_variables.tf_in_cs,
-                build_variables.tfcth,
+                build_variables.dr_tf_coil_inboard,
                 build_variables.gapoh,
                 pfcoil_variables.ipfres,
                 pfcoil_variables.coheof,
@@ -1561,7 +1561,7 @@ class Sctfcoil:
         """
         if tfcoil_variables.casthi_is_fraction:
             tfcoil_variables.casthi = (
-                tfcoil_variables.casthi_fraction * build_variables.tfcth
+                tfcoil_variables.casthi_fraction * build_variables.dr_tf_coil_inboard
             )
 
         # Case thickness of side wall [m]
@@ -1643,9 +1643,9 @@ class Sctfcoil:
             else:
                 # Single null
                 tfcoil_variables.yarc[0] = FSTRAIGHT * (
-                    build_variables.hpfu - build_variables.tfcth
+                    build_variables.hpfu - build_variables.dr_tf_coil_inboard
                 )
-                tfcoil_variables.yarc[1] = build_variables.hpfu - build_variables.tfcth
+                tfcoil_variables.yarc[1] = build_variables.hpfu - build_variables.dr_tf_coil_inboard
                 tfcoil_variables.yarc[2] = 0
                 tfcoil_variables.yarc[3] = -build_variables.hmax
                 tfcoil_variables.yarc[4] = -FSTRAIGHT * build_variables.hmax
@@ -1665,8 +1665,8 @@ class Sctfcoil:
                     tfcoil_variables.yarc[ii + 1] - tfcoil_variables.yarc[ii]
                 )
                 # Radii and length of midline of coil segments
-                aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.tfcth
-                bb = tfcoil_variables.tfb[ii] + 0.5e0 * build_variables.tfcth
+                aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.dr_tf_coil_inboard
+                bb = tfcoil_variables.tfb[ii] + 0.5e0 * build_variables.dr_tf_coil_inboard
                 tfcoil_variables.tfleng = (
                     tfcoil_variables.tfleng + 0.25e0 * self.circumference(aa, bb)
                 )
@@ -1685,8 +1685,8 @@ class Sctfcoil:
             tfcoil_variables.yarc[4] = tfcoil_variables.xarc[0]
 
             # Double null, eq(23) and text before it
-            tfcoil_variables.yarc[0] = build_variables.hpfu - build_variables.tfcth
-            tfcoil_variables.yarc[1] = build_variables.hpfu - build_variables.tfcth
+            tfcoil_variables.yarc[0] = build_variables.hpfu - build_variables.dr_tf_coil_inboard
+            tfcoil_variables.yarc[1] = build_variables.hpfu - build_variables.dr_tf_coil_inboard
             tfcoil_variables.yarc[2] = 0
             tfcoil_variables.yarc[3] = -build_variables.hmax
             tfcoil_variables.yarc[4] = -build_variables.hmax
@@ -1733,8 +1733,8 @@ class Sctfcoil:
             tfcoil_variables.xarc[4] = tfcoil_variables.xarc[0]
 
             # Y position of the arcs
-            tfcoil_variables.yarc[0] = build_variables.hpfu - build_variables.tfcth
-            tfcoil_variables.yarc[1] = build_variables.hpfu - build_variables.tfcth
+            tfcoil_variables.yarc[0] = build_variables.hpfu - build_variables.dr_tf_coil_inboard
+            tfcoil_variables.yarc[1] = build_variables.hpfu - build_variables.dr_tf_coil_inboard
             tfcoil_variables.yarc[2] = 0
             tfcoil_variables.yarc[3] = -build_variables.hmax
             tfcoil_variables.yarc[4] = -build_variables.hmax
@@ -1744,7 +1744,7 @@ class Sctfcoil:
             if physics_variables.itart == 0:
                 tfcoil_variables.tfleng = 2.0e0 * (
                     2.0e0 * build_variables.hmax
-                    + build_variables.tfcth
+                    + build_variables.dr_tf_coil_inboard
                     + build_variables.r_tf_outboard_mid
                     - build_variables.r_tf_inboard_mid
                 )  # eq(25)
@@ -2287,7 +2287,7 @@ class Sctfcoil:
         We assume vertical symmetry which is only true for double null
         machines.
         """
-        H_coil = build_variables.hmax + (build_variables.tfcth / 2)
+        H_coil = build_variables.hmax + (build_variables.dr_tf_coil_inboard / 2)
         Ri_coil = build_variables.r_tf_inboard_mid
         Ro_coil = build_variables.r_tf_outboard_mid
         # NOTE: Rm is measured from the outside edge of the coil because thats where
@@ -2601,7 +2601,7 @@ class Sctfcoil:
             # The length of the vertical section is that of the first (inboard) segment
             # = height of TF coil inner edge + (2 * coil thickness)
             tfcoil_variables.cplen = (2.0e0 * build_variables.hmax) + (
-                2.0e0 * build_variables.tfcth
+                2.0e0 * build_variables.dr_tf_coil_inboard
             )
 
             # The 2.2 factor is used as a scaling factor to fit
@@ -3549,7 +3549,7 @@ class Sctfcoil:
         ohhghf,
         ohcth,
         tf_in_cs,
-        tfcth,
+        dr_tf_coil_inboard,
         gapoh,
         ipfres,
         coheof,
@@ -3742,7 +3742,7 @@ class Sctfcoil:
 
                 # CS vertical cross-section area [m2]
                 if tf_in_cs == 1:
-                    a_oh = 2.0e0 * hmax * ohhghf * (bore - tfcth)
+                    a_oh = 2.0e0 * hmax * ohhghf * (bore - dr_tf_coil_inboard)
                 else:
                     a_oh = 2.0e0 * hmax * ohhghf * ohcth
 
@@ -3846,7 +3846,7 @@ class Sctfcoil:
 
             # Outer radius of the CS
             if tf_in_cs == 1:
-                radtf[1] = bore - tfcth - gapoh
+                radtf[1] = bore - dr_tf_coil_inboard - gapoh
             else:
                 radtf[1] = bore + ohcth
 
@@ -4596,8 +4596,8 @@ class Sctfcoil:
         po.ovarre(
             self.outfile,
             "Total inboard leg radial thickness (m)",
-            "(tfcth)",
-            build_variables.tfcth,
+            "(dr_tf_coil_inboard)",
+            build_variables.dr_tf_coil_inboard,
         )
         po.ovarre(
             self.outfile,
@@ -5685,7 +5685,7 @@ class Sctfcoil:
 
         # Radial build consistency check
         if (
-            abs(radius - build_variables.r_tf_inboard_in - build_variables.tfcth)
+            abs(radius - build_variables.r_tf_inboard_in - build_variables.dr_tf_coil_inboard)
             < 10.0e0 * numpy.finfo(float(radius)).eps
         ):
             po.ocmmnt(self.outfile, "TF coil dimensions are consistent")
@@ -5695,20 +5695,20 @@ class Sctfcoil:
                 self.outfile,
                 "Radius of plasma-facing side of inner leg SHOULD BE [m]",
                 "",
-                build_variables.r_tf_inboard_in + build_variables.tfcth,
+                build_variables.r_tf_inboard_in + build_variables.dr_tf_coil_inboard,
             )
             po.ovarre(
                 self.outfile,
                 "Inboard TF coil radial thickness [m]",
-                "(tfcth)",
-                build_variables.tfcth,
+                "(dr_tf_coil_inboard)",
+                build_variables.dr_tf_coil_inboard,
             )
             po.oblnkl(self.outfile)
 
-        tf_total_height = build_variables.dh_tf_inner_bore + 2 * build_variables.tfcth
+        tf_total_height = build_variables.dh_tf_inner_bore + 2 * build_variables.dr_tf_coil_inboard
         tf_total_width = (
             build_variables.dr_tf_inner_bore
-            + build_variables.tfcth
+            + build_variables.dr_tf_coil_inboard
             + build_variables.dr_tf_coil_outboard
         )
         po.oblnkl(self.outfile)

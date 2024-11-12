@@ -240,8 +240,8 @@ module build_variables
   real(dp) :: sigallpc
   !! allowable stress in CSpre-compression structure (Pa)
 
-  !#TODO: Issue #514 Make tfcth an output not an iteration variable
-  real(dp) :: tfcth
+  !#TODO: Issue #514 Make dr_tf_coil_inboard an output not an iteration variable
+  real(dp) :: dr_tf_coil_inboard
   !! inboard TF coil thickness, (centrepost for ST) (m)
   !! (input, calculated or `iteration variable 13`)
 
@@ -368,7 +368,7 @@ module build_variables
     shldoth = 1.05D0
     shldtth = 0.6D0
     sigallpc = 3.0D8
-    tfcth = 0.0D0
+    dr_tf_coil_inboard = 0.0D0
     tfoffset = 0.0D0
     tfootfi = 1.19D0
     dr_tf_coil_outboard = 0.0D0

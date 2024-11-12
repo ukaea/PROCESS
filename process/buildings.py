@@ -38,7 +38,7 @@ class Buildings:
             build_variables.dr_tf_coil_outboard * 0.5e0
         )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
-        tfri = build_variables.r_tf_inboard_mid - (build_variables.tfcth * 0.5e0)
+        tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_coil_inboard * 0.5e0)
 
         # Find width, in radial dimension, of TF coil (m)
         tf_radial_dim = tfro - tfri
@@ -533,7 +533,7 @@ class Buildings:
             hcomp_height = 2 * (
                 build_variables.hmax
                 - (
-                    build_variables.tfcth
+                    build_variables.dr_tf_coil_inboard
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
@@ -577,7 +577,7 @@ class Buildings:
             hcomp_height = 2 * (
                 build_variables.hmax
                 - (
-                    build_variables.tfcth
+                    build_variables.dr_tf_coil_inboard
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
@@ -641,7 +641,7 @@ class Buildings:
             if tfcoil_variables.i_tf_sup != 1:
                 hcomp_rad_thk = build_variables.r_cp_top
             else:
-                hcomp_rad_thk = build_variables.tfcth
+                hcomp_rad_thk = build_variables.dr_tf_coil_inboard
 
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
                 hcomp_rad_thk + buildings_variables.hot_sepdist

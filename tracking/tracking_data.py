@@ -104,7 +104,7 @@ class ProcessTracker:
         "gapoh",
         "gapsto",
         "shldoth",
-        "tfcth",
+        "dr_tf_coil_inboard",
         "gapds",
         "pnucshld",
         "pnucblkt",

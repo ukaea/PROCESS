@@ -77,7 +77,7 @@ module tfcoil_variables
   !! inboard TF coil case plasma side thickness (m) (calculated for stellarators)
 
   real(dp) :: casthi_fraction
-  !! inboard TF coil case plasma side thickness as a fraction of tfcth
+  !! inboard TF coil case plasma side thickness as a fraction of dr_tf_coil_inboard
 
   logical :: casthi_is_fraction
   !! logical switch to make casthi a fraction of TF coil thickness (`casthi_fraction`)

@@ -25,7 +25,7 @@ depending on the switches used.
  Central solenoid                             0.500           2.624   (ohcth)             IP, ITV
  CS precompression                            0.065           2.689   (precomp)           
  Gap                                          0.050           2.739   (gapoh)             IP, ITV
- TF coil inboard leg                          1.400           4.139   (tfcth)             IP
+ TF coil inboard leg                          1.400           4.139   (dr_tf_coil_inboard)             IP
  Gap                                          0.050           4.189   (tftsgap)           IP
  Thermal shield, inboard                      0.050           4.239   (thshield_ib)       IP
  Gap                                          0.020           4.259   (gapds)             IP
@@ -63,7 +63,7 @@ case the machine is not symmetric about the midplane.
  
  Single null case
                                           Thickness (m)    Height (m)
- TF coil                                      1.576           9.862   (tfcth)             
+ TF coil                                      1.576           9.862   (dr_tf_coil_inboard)             
  Gap                                          0.050           8.286   (tftsgap)           
  Thermal shield                               0.050           8.236   (thshield)          
  Gap                                          0.050           8.186   (vgap_vv_thermalshield)             
@@ -81,7 +81,7 @@ case the machine is not symmetric about the midplane.
  Gap                                          0.050          -9.702   (vgap_vv_thermalshield)             
  Thermal shield                               0.050          -9.752   (thshield)          
  Gap                                          0.050          -9.802   (tftsgap)           
- TF coil                                      1.576         -11.379   (tfcth)    
+ TF coil                                      1.576         -11.379   (dr_tf_coil_inboard)    
 
 ```
 

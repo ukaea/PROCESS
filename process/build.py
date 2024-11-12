@@ -130,7 +130,7 @@ class Build:
 
                 vbuild = (
                     buildings_variables.clh1
-                    + build_variables.tfcth
+                    + build_variables.dr_tf_coil_inboard
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
@@ -165,11 +165,11 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "TF coil",
-                    build_variables.tfcth,
+                    build_variables.dr_tf_coil_inboard,
                     vbuild,
-                    "(tfcth)",
+                    "(dr_tf_coil_inboard)",
                 )
-                vbuild = vbuild - build_variables.tfcth
+                vbuild = vbuild - build_variables.dr_tf_coil_inboard
 
                 po.obuild(
                     self.outfile,
@@ -368,19 +368,19 @@ class Build:
                     "(tftsgap)",
                 )
 
-                vbuild = vbuild - build_variables.tfcth
+                vbuild = vbuild - build_variables.dr_tf_coil_inboard
                 po.obuild(
                     self.outfile,
                     "TF coil",
-                    build_variables.tfcth,
+                    build_variables.dr_tf_coil_inboard,
                     vbuild,
-                    "(tfcth)",
+                    "(dr_tf_coil_inboard)",
                 )
 
                 # Total height of TF coil
                 tf_height = tf_top - vbuild
                 # Inner vertical dimension of TF coil
-                build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.tfcth
+                build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.dr_tf_coil_inboard
 
                 vbuild = vbuild - buildings_variables.clh1
                 po.obuild(
@@ -401,7 +401,7 @@ class Build:
 
                 vbuild = (
                     buildings_variables.clh1
-                    + build_variables.tfcth
+                    + build_variables.dr_tf_coil_inboard
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
@@ -438,11 +438,11 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "TF coil",
-                    build_variables.tfcth,
+                    build_variables.dr_tf_coil_inboard,
                     vbuild,
-                    "(tfcth)",
+                    "(dr_tf_coil_inboard)",
                 )
-                vbuild = vbuild - build_variables.tfcth
+                vbuild = vbuild - build_variables.dr_tf_coil_inboard
 
                 po.obuild(
                     self.outfile,
@@ -659,19 +659,19 @@ class Build:
                     "(tftsgap)",
                 )
 
-                vbuild = vbuild - build_variables.tfcth
+                vbuild = vbuild - build_variables.dr_tf_coil_inboard
                 po.obuild(
                     self.outfile,
                     "TF coil",
-                    build_variables.tfcth,
+                    build_variables.dr_tf_coil_inboard,
                     vbuild,
-                    "(tfcth)",
+                    "(dr_tf_coil_inboard)",
                 )
 
                 # Total height of TF coil
                 tf_height = tf_top - vbuild
                 # Inner vertical dimension of TF coil
-                build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.tfcth
+                build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.dr_tf_coil_inboard
 
                 vbuild = vbuild - buildings_variables.clh1
 
@@ -723,11 +723,11 @@ class Build:
 
         #  Vertical locations of divertor coils
         if physics_variables.i_single_null == 0:
-            build_variables.hpfu = build_variables.hmax + build_variables.tfcth
+            build_variables.hpfu = build_variables.hmax + build_variables.dr_tf_coil_inboard
             build_variables.hpfdif = 0.0e0
         else:
             build_variables.hpfu = (
-                build_variables.tfcth
+                build_variables.dr_tf_coil_inboard
                 + build_variables.tftsgap
                 + build_variables.thshield_vb
                 + build_variables.vgap_vv_thermalshield
@@ -740,7 +740,7 @@ class Build:
                 + physics_variables.rminor * physics_variables.kappa
             )
             build_variables.hpfdif = (
-                build_variables.hpfu - (build_variables.hmax + build_variables.tfcth)
+                build_variables.hpfu - (build_variables.hmax + build_variables.dr_tf_coil_inboard)
             ) / 2.0e0
 
     def divgeom(self, output: bool):
@@ -1561,7 +1561,7 @@ class Build:
         return ripple, r_tf_outboard_midmin, flag
 
     def tf_in_cs_bore_calc(self):
-        build_variables.bore += build_variables.tfcth + build_variables.gapoh
+        build_variables.bore += build_variables.dr_tf_coil_inboard + build_variables.gapoh
 
     def calculate_radial_build(self, output: bool) -> None:
         """
@@ -1619,7 +1619,7 @@ class Build:
 
         if build_variables.tf_in_cs == 1:
             build_variables.r_tf_inboard_in = (
-                build_variables.bore - build_variables.tfcth - build_variables.gapoh
+                build_variables.bore - build_variables.dr_tf_coil_inboard - build_variables.gapoh
             )
         else:
             # Inboard side inner radius [m]
@@ -1631,12 +1631,12 @@ class Build:
             )
 
         # Issue #514 Radial dimensions of inboard leg
-        # Calculate build_variables.tfcth if tfcoil_variables.dr_tf_wp is an iteration variable (140)
+        # Calculate build_variables.dr_tf_coil_inboard if tfcoil_variables.dr_tf_wp is an iteration variable (140)
         if any(numerics.ixc[0 : numerics.nvar] == 140):
 
             # SC TF coil thickness defined using its maximum (diagonal)
             if tfcoil_variables.i_tf_sup == 1:
-                build_variables.tfcth = (
+                build_variables.dr_tf_coil_inboard = (
                     build_variables.r_tf_inboard_in
                     + tfcoil_variables.dr_tf_wp
                     + tfcoil_variables.casthi
@@ -1647,7 +1647,7 @@ class Build:
 
             # Rounded resistive TF geometry
             else:
-                build_variables.tfcth = (
+                build_variables.dr_tf_coil_inboard = (
                     tfcoil_variables.dr_tf_wp
                     + tfcoil_variables.casthi
                     + tfcoil_variables.thkcas
@@ -1655,12 +1655,12 @@ class Build:
 
         # Radial build to tfcoil middle [m]
         build_variables.r_tf_inboard_mid = (
-            build_variables.r_tf_inboard_in + 0.5e0 * build_variables.tfcth
+            build_variables.r_tf_inboard_in + 0.5e0 * build_variables.dr_tf_coil_inboard
         )
 
         # Radial build to tfcoil plasma facing side [m]
         build_variables.r_tf_inboard_out = (
-            build_variables.r_tf_inboard_in + build_variables.tfcth
+            build_variables.r_tf_inboard_in + build_variables.dr_tf_coil_inboard
         )
 
         # WP radial thickness [m]
@@ -1680,7 +1680,7 @@ class Build:
             # Resistive magnets
             else:
                 tfcoil_variables.dr_tf_wp = (
-                    build_variables.tfcth
+                    build_variables.dr_tf_coil_inboard
                     - tfcoil_variables.casthi
                     - tfcoil_variables.thkcas
                 )
@@ -1824,10 +1824,10 @@ class Build:
         #  Thickness of outboard TF coil legs
         if tfcoil_variables.i_tf_sup != 1:
             build_variables.dr_tf_coil_outboard = (
-                build_variables.tfootfi * build_variables.tfcth
+                build_variables.tfootfi * build_variables.dr_tf_coil_inboard
             )
         else:
-            build_variables.dr_tf_coil_outboard = build_variables.tfcth
+            build_variables.dr_tf_coil_outboard = build_variables.dr_tf_coil_inboard
 
         #  Radius to centre of outboard TF coil legs
         build_variables.r_tf_outboard_mid = (
@@ -1844,7 +1844,7 @@ class Build:
         build_variables.dr_tf_inner_bore = (
             build_variables.r_tf_outboard_mid
             - 0.5e0 * build_variables.dr_tf_coil_outboard
-        ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.tfcth)
+        ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.dr_tf_coil_inboard)
 
         (
             tfcoil_variables.ripple,
@@ -1870,7 +1870,7 @@ class Build:
             build_variables.dr_tf_inner_bore = (
                 build_variables.r_tf_outboard_mid
                 - 0.5e0 * build_variables.dr_tf_coil_outboard
-            ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.tfcth)
+            ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.dr_tf_coil_inboard)
         else:
             build_variables.gapsto = build_variables.gapomin
 
@@ -2057,7 +2057,7 @@ class Build:
                 po.ocmmnt(
                     self.outfile,
                     (
-                        "the true bore size used for calculations is bore + tfcth + gapoh)\n"
+                        "the true bore size used for calculations is bore + dr_tf_coil_inboard + gapoh)\n"
                     ),
                 )
             if build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking >= 2:
@@ -2076,7 +2076,7 @@ class Build:
                 radius = (
                     radius
                     + build_variables.bore
-                    - build_variables.tfcth
+                    - build_variables.dr_tf_coil_inboard
                     - build_variables.gapoh
                 )
 
@@ -2085,7 +2085,7 @@ class Build:
                         "Machine bore wedge support cylinder",
                         "bore",
                         build_variables.bore
-                        - build_variables.tfcth
+                        - build_variables.dr_tf_coil_inboard
                         - build_variables.gapoh,
                         radius,
                     ]
@@ -2094,7 +2094,7 @@ class Build:
                 radius = (
                     radius
                     + build_variables.bore
-                    - build_variables.tfcth
+                    - build_variables.dr_tf_coil_inboard
                     - build_variables.gapoh
                 )
                 radial_build_data.append(
@@ -2102,7 +2102,7 @@ class Build:
                         "Machine bore hole",
                         "bore",
                         build_variables.bore
-                        - build_variables.tfcth
+                        - build_variables.dr_tf_coil_inboard
                         - build_variables.gapoh,
                         radius,
                     ]
@@ -2113,12 +2113,12 @@ class Build:
                     ["Machine bore", "bore", build_variables.bore, radius]
                 )
             if build_variables.tf_in_cs == 1:
-                radius += build_variables.tfcth
+                radius += build_variables.dr_tf_coil_inboard
                 radial_build_data.append(
                     [
                         "TF coil inboard leg (in bore)",
-                        "tfcth",
-                        build_variables.tfcth,
+                        "dr_tf_coil_inboard",
+                        build_variables.dr_tf_coil_inboard,
                         radius,
                     ]
                 )
@@ -2153,12 +2153,12 @@ class Build:
                     ]
                 )
 
-                radius = radius + build_variables.tfcth
+                radius = radius + build_variables.dr_tf_coil_inboard
                 radial_build_data.append(
                     [
                         "TF coil inboard leg",
-                        "tfcth",
-                        build_variables.tfcth,
+                        "dr_tf_coil_inboard",
+                        build_variables.dr_tf_coil_inboard,
                         radius,
                     ]
                 )

@@ -1073,7 +1073,7 @@ boundu(50) = 1.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 * Below is specifically set up for superconducting coils *
-* tfcth is set up in the radial build section and should generally never be iterated with dr_tf_wp *
+* dr_tf_coil_inboard is set up in the radial build section and should generally never be iterated with dr_tf_wp *
 
 *-------------------*
 * Casing dimensions * 
@@ -1103,7 +1103,7 @@ boundu(57) = 0.5
 * Use one or the other *
 
 casthi_fraction = 1.0E-12
-* DESCRIPTION:   Inboard TF coil case plasma side thickness as a fraction of tfcth (total coil thickness)
+* DESCRIPTION:   Inboard TF coil case plasma side thickness as a fraction of dr_tf_coil_inboard (total coil thickness)
 * JUSTIFICATION: 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2025,7 +2025,7 @@ gapoh = 0.0
 *---------*
 
 *ixc = 13
-*tfcth = 0.69
+*dr_tf_coil_inboard = 0.69
 *boundl(13) = 0.69 
 *boundu(13) = 0.695
 * DESCRIPTION:   TF coil thickness (m)

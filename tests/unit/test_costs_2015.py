@@ -2363,7 +2363,7 @@ class CalcLandCostsParam(NamedTuple):
 
     dh_tf_inner_bore: Any = None
 
-    tfcth: Any = None
+    dr_tf_coil_inboard: Any = None
 
     rdewex: Any = None
 
@@ -2398,7 +2398,7 @@ class CalcLandCostsParam(NamedTuple):
         CalcLandCostsParam(
             dr_tf_inner_bore=11.753025251709767,
             dh_tf_inner_bore=14.474776497695849,
-            tfcth=0.91858999999999991,
+            dr_tf_coil_inboard=0.91858999999999991,
             rdewex=18.314040399601147,
             cost_factor_land=1,
             costexp=0.80000000000000004,
@@ -3486,7 +3486,7 @@ class CalcLandCostsParam(NamedTuple):
         CalcLandCostsParam(
             dr_tf_inner_bore=11.753830505540675,
             dh_tf_inner_bore=14.450776497695848,
-            tfcth=0.91858999999999991,
+            dr_tf_coil_inboard=0.91858999999999991,
             rdewex=18.31462428923539,
             cost_factor_land=1,
             costexp=0.80000000000000004,
@@ -4594,7 +4594,7 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
         build_variables, "dh_tf_inner_bore", calclandcostsparam.dh_tf_inner_bore
     )
 
-    monkeypatch.setattr(build_variables, "tfcth", calclandcostsparam.tfcth)
+    monkeypatch.setattr(build_variables, "dr_tf_coil_inboard", calclandcostsparam.dr_tf_coil_inboard)
 
     monkeypatch.setattr(fwbs_variables, "rdewex", calclandcostsparam.rdewex)
 

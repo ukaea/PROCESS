@@ -214,7 +214,7 @@ module numerics
   !! <LI> (10) hfact
   !! <LI> (11) pheat
   !! <LI> (12) oacdcp
-  !! <LI> (13) tfcth (NOT RECOMMENDED)
+  !! <LI> (13) dr_tf_coil_inboard (NOT RECOMMENDED)
   !! <LI> (14) fwalld (f-value for equation 8)
   !! <LI> (15) fvs (f-value for equation 12)
   !! <LI> (16) ohcth

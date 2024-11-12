@@ -128,7 +128,7 @@ RADIAL_BUILD = [
     "ohcth",
     "precomp",
     "gapoh",
-    "tfcth",
+    "dr_tf_coil_inboard",
     "tftsgap",
     "thshield_ib",
     "gapds",
@@ -161,7 +161,7 @@ vertical_lower = [
     "vgap_vv_thermalshield",
     "thshield_vb",
     "tftsgap",
-    "tfcth",
+    "dr_tf_coil_inboard",
 ]
 
 ANIMATION_INFO = [
@@ -494,7 +494,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("precomp", mfile_data, scan)
     arc_fill(axis, r1, r2, color=CSCOMPRESSION_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("tfcth", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_tf_coil_inboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=TFC_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("thshield_ib", mfile_data, scan)
@@ -543,7 +543,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     angl = ang - spacing / 2
     angu = ang + spacing / 2
     r1, null = cumulative_radial_build2("gapoh", mfile_data, scan)
-    r2, null = cumulative_radial_build2("tfcth", mfile_data, scan)
+    r2, null = cumulative_radial_build2("dr_tf_coil_inboard", mfile_data, scan)
     r4, r3 = cumulative_radial_build2("dr_tf_coil_outboard", mfile_data, scan)
 
     # Coil width
@@ -1507,7 +1507,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
                 y2=y2,
                 y4=y4,
                 y5=y5,
-                tfcth=tfcth,
+                dr_tf_coil_inboard=dr_tf_coil_inboard,
                 offset_in=offset,
             )
 
@@ -1522,7 +1522,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
                 y2=y2,
                 y4=y4,
                 y5=y5,
-                tfcth=tfcth,
+                dr_tf_coil_inboard=dr_tf_coil_inboard,
                 rtangle=rtangle,
                 rtangle2=rtangle2,
                 offset_in=offset,
@@ -1579,7 +1579,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     side_thickness = mfile_data.data["casths"].get_scan(scan)
     case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
     jwptf = round(mfile_data.data["jwptf"].get_scan(scan)) / 1e6
-    tf_thickness = mfile_data.data["tfcth"].get_scan(scan)
+    tf_thickness = mfile_data.data["dr_tf_coil_inboard"].get_scan(scan)
     integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
 
     if integer_turns == 1:
@@ -3035,7 +3035,7 @@ def main(args=None):
     global bore
     global ohcth
     global gapoh
-    global tfcth
+    global dr_tf_coil_inboard
     global gapds
     global ddwi
     global shldith
@@ -3058,7 +3058,7 @@ def main(args=None):
     bore = m_file.data["bore"].get_scan(scan)
     ohcth = m_file.data["ohcth"].get_scan(scan)
     gapoh = m_file.data["gapoh"].get_scan(scan)
-    tfcth = m_file.data["tfcth"].get_scan(scan)
+    dr_tf_coil_inboard = m_file.data["dr_tf_coil_inboard"].get_scan(scan)
     gapds = m_file.data["gapds"].get_scan(scan)
     shldith = m_file.data["shldith"].get_scan(scan)
     blnkith = m_file.data["blnkith"].get_scan(scan)
@@ -3188,7 +3188,7 @@ def main(args=None):
             "vgap_vv_thermalshield",
             "thshield_vb",
             "tftsgap",
-            "tfcth",
+            "dr_tf_coil_inboard",
         ]
     else:
         vertical_upper = [
@@ -3202,7 +3202,7 @@ def main(args=None):
             "vgap_vv_thermalshield",
             "thshield_vb",
             "tftsgap",
-            "tfcth",
+            "dr_tf_coil_inboard",
         ]
 
     radial = {}
