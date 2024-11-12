@@ -1,64 +1,65 @@
-"""Run the tracked files and move into tracking/ directory."""
+"""Run the tracked files and move into tracking directory."""
 
 import argparse
 from pathlib import Path
 import subprocess
-import shutil
+
+from tracking_data import ProcessTracker
 
 
-def run_and_move_tracked_files():
-    # Stellarator doesn't converge so don't want to track it
-    exclusions = ["stellarator"]
+def run_and_move_tracked_files(arguments):
+    """
+    Run PROCESS on the tracked files and move the MFiles to the tracking directory.
+    """
+    path_to_tracking_files = Path(arguments.input_locs)
 
-    path_to_tracking_files = Path("tests/regression/input_files")
-    all_files = path_to_tracking_files.iterdir()
-
-    all_files = []
-    for file in list(path_to_tracking_files.iterdir()):
-        if file.is_file():
-            all_files.append(file.name)
-
-    input_files = []
-    for file in all_files:
-        for excl in exclusions:
-            if excl not in file and file.endswith("IN.DAT"):
-                input_files.append(file)
-
-    mfile_names = []
-    for in_dat in input_files:
-        file_prefix = in_dat.removesuffix("IN.DAT")
-        mfile_name = file_prefix + "MFILE.DAT"
-        mfile_names.append(mfile_name)
-
-    new_location_mfile_names = []
-    for current_name in mfile_names:
-        prefix = current_name.removesuffix(".MFILE.DAT")
-        new_name = prefix + "_MFILE.DAT"
-        new_location_mfile_names.append(new_name)
-
-    process_dir = Path(__file__).resolve().parent.parent
-    input_file_dir = process_dir / "tests/regression/input_files"
-
-    for count, file in enumerate(input_files):
-        input_file_path = input_file_dir / file
-        output_file_path = input_file_dir / mfile_names[count]
-        subprocess.run(f"process -i {input_file_path}", shell=True)
-        new_mfile_location = process_dir / "tracking" / new_location_mfile_names[count]
-        shutil.move(output_file_path, new_mfile_location)
+    input_files = path_to_tracking_files.glob("*.IN.DAT")
+    tracking_dir = Path(__file__).parent
+    for file_path in input_files:
+        try:
+            subprocess.run(f"process -i {file_path}", shell=True, check=True)
+        except subprocess.CalledProcessError:
+            continue
+        created_mfile = file_path.with_name(
+            file_path.name.replace(".IN.DAT", ".MFILE.DAT")
+        )
+        moved_mfile = created_mfile.with_name(
+            created_mfile.name.replace(".MFILE.DAT", "_MFILE.DAT")
+        )
+        created_mfile.rename(tracking_dir / moved_mfile.name)
 
 
-# def tracking():
-# ^ will use the parsed args of track hash etc
-# set up parse, parse args, then if sub parser is run call run_and_move_tracked_files, if other args then do
-# the other fn which will be in here
+def tracking(arguments):
+    """
+    Call the ProcessTracker, move the MFiles to the database and rename.
+    """
+    db = arguments.db
+    commit = arguments.commit
+    hash = arguments.hash
+    path_to_tracking_mfiles = Path(__file__).parent
+    mfiles = path_to_tracking_mfiles.glob("*_MFILE.DAT")
+    for mfile_path in mfiles:
+        ProcessTracker(mfile=mfile_path, database=db, message=commit, hashid=hash)
+        moved_mfile_name = mfile_path.with_name(
+            mfile_path.name.replace("_MFILE.DAT", f"_MFILE_{hash}.DAT")
+        )
+        copied_mfile_destination = Path(db) / moved_mfile_name.name
+        copied_mfile_destination.write_bytes(mfile_path.read_bytes())
+
+
 if __name__ == "__main__":
-    run_and_move_tracked_files()
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help="Choose the usage mode", dest="command")
+    subparser_run = subparsers.add_parser("run")
+    subparser_trk = subparsers.add_parser("track")
+    subparser_run.add_argument("input_locs", type=str)
+    subparser_trk.add_argument("db", type=str)
+    subparser_trk.add_argument("commit", type=str)
+    subparser_trk.add_argument("hash", type=str)
 
+    arguments = parser.parse_args()
 
-# def main(args=None):
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument("-r", "--run")
-#     parser.add_argument(
-#         "-t",
-#         "--track",
-#     )
+    if arguments.command == "run":
+        run_and_move_tracked_files(arguments)
+    else:
+        tracking(arguments)
