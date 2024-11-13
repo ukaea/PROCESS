@@ -166,7 +166,7 @@ class PFCoil:
         for j in range(pfv.ngrp):
             if pfv.ipfloc[j] == 1:
                 # PF coil is stacked on top of the Central Solenoid
-                for k in pfv.ncls[j]:
+                for k in range(pfv.ncls[j]):
                     pf.rcls[j, k] = pfv.rohc + pfv.rpf1
 
                     # Z coordinate of coil enforced so as not
@@ -327,6 +327,9 @@ class PFCoil:
                 nocoil = 0
                 for i in range(pfv.ngrp):
                     if pfv.ipfloc[i] == 1:
+                        # Do not allow if no central solenoid
+                        if bv.iohcl == 0:
+                            eh.report_error(288)
                         # PF coil is stacked on top of the Central Solenoid
                         # This coil is to balance Central Solenoid flux and should not be involved
                         # in equilibrium calculation -- RK 07/12
