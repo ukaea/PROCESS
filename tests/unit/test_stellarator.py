@@ -14,7 +14,7 @@ from process.fortran import (
     impurity_radiation_module,
 )
 from process.power import Power
-from process.stellarator import Stellarator
+from process.stellarator import Stellarator, Neoclassics
 from process.vacuum import Vacuum
 from process.availability import Availability
 from process.buildings import Buildings
@@ -44,6 +44,7 @@ def stellarator():
         CCFE_HCPB(BlanketLibrary(Fw())),
         CurrentDrive(PlasmaProfile()),
         Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile())),
+        Neoclassics(),
     )
 
 
