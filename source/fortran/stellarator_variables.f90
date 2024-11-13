@@ -115,5 +115,7 @@ module stellarator_variables
     vportamax = 0.0D0
     vportpmax = 0.0D0
     vporttmax = 0.0D0
+    max_gyrotron_frequency = 1.0D9
+    te0_ecrh_achievable = 1.0D2
   end subroutine init_stellarator_variables
 end module stellarator_variables
