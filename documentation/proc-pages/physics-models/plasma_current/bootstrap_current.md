@@ -6,10 +6,8 @@ Some more info can be found [here](https://wiki.fusion.ciemat.es/wiki/Bootstrap_
 ## Selection
 
 The fraction of the plasma current provided by the bootstrap effect
-can be either input into the code directly, or calculated using one of five
-methods, as summarised here. Note that methods `i_bootstrap_current = 1-3 & 5` do not take into account the 
-existence of pedestals, whereas the Sauter et al. scaling 
-(`i_bootstrap_current = 4`) allows general profiles to be used. 
+can be either input into the code directly, or calculated using one of eleven
+methods, as summarized below:
 
 --------------
 
@@ -460,7 +458,7 @@ The $-1$ subscript in this case refers to the value of the variable in the previ
 
 ### Sakai Scaling | `bootstrap_fraction_sakai()`
 
-Is selected by setting `i_bootstrap_current = 5`[^5]
+Is selected by setting `i_bootstrap_current = 5`[^6]
 
 $$
 f_{\text{BS}} = 10^{0.951 \epsilon - 0.948} \cdot \beta_p^{1.226 \epsilon + 1.584} \cdot l_i^{-0.184\epsilon - 0.282} \cdot \left(\frac{q_{95}}{q_0}\right)^{-0.042 \epsilon - 0.02} \\
@@ -468,6 +466,230 @@ f_{\text{BS}} = 10^{0.951 \epsilon - 0.948} \cdot \beta_p^{1.226 \epsilon + 1.58
 $$
 
 The model includes the toroidal diamagnetic current in the calculation due to the dataset, so `i_diamagnetic_current = 0` can only be used with it
+
+-------------------
+
+### ARIES Scaling | `bootstrap_fraction_aries()`
+
+Is selected by setting `i_bootstrap_current = 6`[^8]
+
+The source reference[^8] does not provide any info about the derivation of the formula. It is only stated like that shown below.
+
+$$
+a_1 = 1.10-1.165l_{\text{i}}+0.47l_{\text{i}}^2
+$$
+
+$$
+b_1 = 0.806-0.885l_{\text{i}}+0.297l_{\text{i}}^2
+$$
+
+$$
+C_{\text{BS}} = a_1+b_1\left(\frac{n(0)}{\langle n \rangle}\right)
+$$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} \sqrt{\epsilon}\beta_{\text{p}}
+$$
+
+---------------------
+
+### Andrade Scaling 
+
+Is selected by setting `i_bootstrap_current = 7`[^9]
+
+Based off of 350 plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak.
+Profiles were taken to be Gaussian shaped functions.
+
+The range of parameters from the discharges in ETE can be found in the table below:
+
+| Parameter             | Value     | Parameter             | Value     |
+|-----------------------|-----------|-----------------------|-----------|
+| Aspect ratio, $A$                   | 1.5       | Electron temperature profile index, $\alpha_{\text{T}_\text{e}}$ | 0.02      |
+| Major radius, $R_0$                 | 0.3 $\text{[m]}$     | Ion temperature profile index, $\alpha_{\text{T}_\text{i}}$ | 2         |
+| Core plasma pressure, $p(0)$                | 15 $\text{[kPa]}$    | Elongation, $\kappa(a)$           | 2         |
+| Core electron/ion temperature, $T_{\text{e,i}}(0)$   | 1 $\text{[keV]}$     | Triangularity, $\delta$              | 0.3       |
+| Edge electron/ion temperature $T_{\text{e,i}}(a)$   | 0.1 $\text{[keV]}$   | Plasma Current, $I_{\text{p}}$        | 200 $\text{[kA]}$    |
+| Pressure profile index, $\alpha_{\text{p}}$   | 3         | Toroidal field on-axis, $B_0$                 | 0.4 $\text{[T]}$     |
+| Plasma total beta, $\beta$               | 4-10%     | Plasma effective charge, $Z_{\text{eff}}$      | 1         |
+
+Errors mostly up to the order of 10% are obtained when both expressions are compared with the equilibrium estimates for the bootstrap current in ETE.
+
+#### Scaling 1
+
+!!! note "Applicability of 1st scaling"
+
+    Andrade et.al[^9] actually presents two scalings, the first is:
+
+    $$
+    \frac{I_{\text{BS}}}{I_\text{p}}5C_{\text{bs}}c_{\text{p}}^{\lambda}\frac{\beta_{\text{N}}q_{\text{cyl}}}{\epsilon^{1/2}l_i^{\gamma}}\frac{R_0}{R_{\text{m}}}
+    $$
+
+    $R_{\text{m}}$ in this case is the major radius of the magnetic axis which `PROCESS` does not have as it does not currently calculate the [Shafranov shift](https://wiki.fusion.ciemat.es/wiki/Shafranov_shift). If this is implemented then the first Andrade scaling can be properly implemented.
+
+#### Scaling 2 | `bootstrap_fraction_andrade()`
+
+This form of the Andrade scaling in terms of $\beta_{\text{p}}$ found using a least-square fit to 347 of the equilibria points.
+
+$$
+C_{\text{BS}} = 0.2340 \pm 0.0007
+$$
+
+$$
+c_p = \frac{p_0}{\langle p \rangle}
+$$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} \sqrt{\epsilon}\beta_{\text{p}}c_p^{0.8}
+$$
+
+---------------------
+
+### Hoang Scaling | `bootstrap_fraction_hoang()`
+
+Is selected by setting `i_bootstrap_current = 8`[^10]
+
+This scaling is based off of 170 discharges from TFTR with the neoclassical bootstrap current being calculated by the TRANSP plasma analysis code.
+The plasma parameters of the discharges can be seen in the table below:
+
+| Parameter             | Value     |
+|-----------------------|-----------|
+| Plasma Current, $I_{\text{p}}$        | 0.6 - 2.7 $\text{[MA]}$    |  
+| Edge safety factor, $q(a)$                 | 2.8 - 11.0       |
+| Injected NBI power, $P_{\text{NBI}}$                | 2.0 - 35.0 $\text{[MW]}$    |
+| Injected ICRH power, $P_{\text{ICRH}}$   | 1.5 - 6.0 $\text{[MW]}$     |
+| Toroidal field on-axis, $B_{\text{T}}$   | 1.9 - 5.7 $\text{[T]}$   |
+| Core electron density, $n_{\text{e,0}}$   | 0.2 - 1.2 $[10^{20} \text{m}^{-3}]$         |
+
+A wide variety of discharge regimes are included, such as: L-mode  supershots, discharges
+with reversed shear (RS) and enhanced reversed shear (ERS), and discharges with increased-$l_i$.
+Discharges with both monotonic $q$ profiles and with reversed shear are included in the dataset.
+
+For an example ERS discharge the bootstrap current is driven by when the thermal particles surpasses 1 MA ($f_{\text{boot}}$ = 63%). Some ERS discharges in TFTR achieved $f_{\text{boot}}$ greater than 100% transiently.
+
+
+!!! note "Change of profile index definition"
+
+    Hoang et.al uses a different definition for the profile indexes such that
+    $\alpha_{\text{p}}$ is defined as the ratio of the central and the volume-averaged values, and the peakedness of the density of the total plasma current (defined as ratio of the central value and $I_{\text{p}}$), $\alpha_{\text{J}}$ 
+
+    Assuming that the pressure and current profile is parabolic we can represent these ratios as $\frac{p_0}{\langle p \rangle}= \alpha_{\text{p}}+1$
+
+    **This could lead to large changes in the value depending on interpretation of the profile index**
+
+$$
+C_{\text{BS}} = \sqrt{\frac{\alpha_{\text{p}}+1}{\alpha_{\text{j}}+1}}
+$$
+
+$$
+f_{\text{BS}} = 0.4C_{\text{BS}} \sqrt{\epsilon}\beta_{\text{p}}^{0.9}
+$$
+
+---------------------
+
+### Wong Scaling | `bootstrap_fraction_wong()`
+
+Is selected by setting `i_bootstrap_current = 9`[^11]
+
+This scaling data is based off of equilibria from Miller et.al.[^12].
+The equilibria from Miller et.al. are in the range of $A$ =  1.2 - 3 that are stable to infinite $n$ ballooning and low $n$ kink modes at a bootstrap fraction of 99% for $\kappa$ = 2, 2.5, 3.0. The results were parameterized as a function of aspect ratio and elongation.
+
+The parametric dependency of $\beta_{\text{p}}$ and $\beta_{\text{T}}$ are based on the fitting of the DIII-D high equivalent DT yield results.
+
+$$
+\beta_{\text{N}}=\frac{\left(3.09+\frac{3.35}{A}+\frac{3.87}{A^{0.5}}\right)\left(\frac{\kappa}{3}\right)^{0.5}}{f_{\text{peak}}^{0.5}}
+$$
+
+$$
+\beta_{\text{T}}=\frac{25}{\beta_p}\left(\frac{1+\kappa^2}{2}\right)\left(\frac{\beta_N}{100}\right)^2
+$$
+
+Here $\beta_{\text{p}}$ is given by
+
+$$
+\beta_p=f_{b s} \frac{\sqrt{A}}{C_{b s} f_{\text{peak}}^{0.25}}
+$$
+
+$$
+C_{\text{BS}} = 0.773+0.019\kappa
+$$
+
+Parabolic profiles should be used for best results as the pressure peaking value is calculated as the product of a parabolic temperature and density profile.
+
+$$
+f_{\text{peak}} = \left(\int_0^1 \left(1-\rho^2 \right)^{\alpha_{\text{T}}} \left(1-\rho^2 \right)^{\alpha_{\text{n}}} \ \ \mathrm{d\rho}\right)^{-1}
+$$
+
+The integral above is set by the definite solution below
+
+$$
+\frac{\operatorname{B}\left(\frac{1}{2},{\alpha}_{n} + {\alpha}_{T} + 1\right)}{2}
+$$
+
+Assuming that $\alpha_{\text{n}} + \alpha_{\text{T}} > 0,   \alpha_{\text{n}} + \alpha_{\text{T}} + 1 > 0$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} f_{\text{peak}}^{0.25}\beta_{\text{p}}\sqrt{\epsilon}
+$$
+
+---------------------
+
+### Gi Scaling's
+
+This scaling is found by solving the Hirshman-Sigmar bootstrap current model using the matrix inversion method to create bootstrap current scalings with variables given explicitly in the TPC systems code[^13].
+A 8800 point database for the bootstrap current fraction using the bootstrap current density calculation module in the ACCOME code is used, using the variable ranges in the table below:
+
+The fitting of the variable exponents is done using the least squares method with a $R^2$ value of > 0.98 for [scaling one](#scaling-1--bootstrap_fraction_gi_i) and > 0.96 for [scaling two](#scaling-2--bootstrap_fraction_gi_ii) compared to the ACCOME data.
+
+
+| Parameter                  | Range          | Points |
+|----------------------------|----------------|--------|
+| Major radius, $R$  | 5.0 $[\mathrm{m}]$   | 1      |
+| Aspect ratio, $A$        | 1.3, 1.5, 1.7, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 5.0 | 10     |
+| Elongation, $\kappa$   | $\sim$ 2 | 1      |
+| Triangularity, $\delta$   | $\sim$ 0.3 | 1      |
+| Density profile index, $a_{\text{n}}$      | 0.1-0.8 | 8      |
+| Temperature profile index, $a_{\text{T}}$  | 1.0-3.0 | 11     |
+| Effective charge, $Z_{\text{eff}}$ | 1.2-3.0 | 10     |
+
+The plasma parameters for each point in the aspect ratio scan can be seen in the table below:
+
+| Aspect ratio A | 1.3 | 1.5 | 1.7 | 2.0 | 2.2 | 2.5 | 3.0 | 3.5 | 4.0 | 5.0 |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Electron density at axis, $n_{\text{e0}}\left[10^{20} \mathrm{~m}^{-3}\right]$ | 1.0 | 1.0 | 1.5 | 1.5 | 1.5 | 2.0 | 2.0 | 2.0 | 2.0 | 1.0 |
+| Electron temperature at axis, $T_{\text{e0}}[\mathrm{keV}]$ | 40 | 20 | 30 | 30 | 30 | 40 | 20 | 40 | 20 | 30 |
+| Plasma current, $I_p$ $[\mathrm{MA}]$ | 20 | 15 | 20 | 15 | 15 | 15 | 10 | 15 | 10 | 5 |
+| Toroidal magnetic field at axis, $B_{\text{T}}$ $[\mathrm{T}]$ | 3.0 | 2.0 | 3.0 | 2.0 | 4.0 | 2.0 | 2.0 | 6.0 | 2.0 | 5.0 |
+| Poloidal beta, $\beta_{\text{p}}$ | 0.9-2.6 | 0.6-1.8 | 0.6-1.8 | 0.8-1.9 | 0.7-2.0 | 0.9-2.7 | 0.7-2.2 | 0.5-1.4 | 0.4-1.2 | 0.8-2.3 |
+
+
+
+#### Scaling 1 | `bootstrap_fraction_gi_I()`
+
+Is selected by setting `i_bootstrap_current = 10`
+
+Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the $f_{\text{BS}}$ value for reversed shear equilibrium. Although Scaling 2 does not have an internal current profile term, it can predict the $f_{\text{BS}}$ values to a certain extent for the high-$f_{\text{BS}}$ equilibria which are expected for next fusion devices.
+
+$$
+C_{\text{BS}} = 0.474 \epsilon^{-0.1} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178} \left(\frac{q_{95}}{q_0}\right)^{-0.133}
+$$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} \beta_{\text{p}}\sqrt{\epsilon}
+$$
+
+#### Scaling 2 | `bootstrap_fraction_gi_II()`
+
+Is selected by setting `i_bootstrap_current = 11`
+
+This scaling has the $q$ profile dependance removed to obtain a scaling formula with much more flexible variables than that by a single profile factor for internal current profile.
+
+$$
+C_{\text{BS}} = 0.382 \epsilon^{-0.242} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178}
+$$
+
+$$
+f_{\text{BS}} = C_{\text{BS}} \beta_{\text{p}}\sqrt{\epsilon}
+$$
 
 ---------------------
 
@@ -500,5 +722,9 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^5]: O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum: “Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime” [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052  
 [^6]: Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2019.111322.
 [^7]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992 
-
-
+[^8]: Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants, ”Fusion Engineering and Design, vol. 85, no. 2, pp. 243–265, Apr. 2010, doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
+[^9]: M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,” Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001–065001, Apr. 2008, doi: https://doi.org/10.1088/0741-3335/50/6/065001.
+[^10]: G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings, Jan. 1997, doi: https://doi.org/10.1063/1.53414.
+[^11]: C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,” vol. 42, no. 5, pp. 547–556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
+[^12]: Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks". Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
+[^13]: K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,” Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014, doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
