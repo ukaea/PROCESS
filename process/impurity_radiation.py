@@ -462,6 +462,20 @@ def pimpden(imp_element_index, nprofile, tprofile):
     return pimpden
 
 
+def element2index(element: str):
+    """Returns the index of the `element` in the impurity array with
+    a given name
+    """
+    try:
+        return (
+            impurity_radiation_module.impurity_arr_label.astype(str)
+            .tolist()
+            .index(element)
+        )
+    except ValueError as e:
+        raise ValueError(f"Element {element} is not found in impurity_arr_label") from e
+
+
 class ImpurityRadiation:
     """This class calculates the impurity radiation losses for given temperature and density profiles.
     The considers the  total impurity radiation from the core (radcore) and total impurity radiation

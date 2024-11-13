@@ -9,6 +9,7 @@ from process.utilities.f2py_string_patch import f2py_compatible_to_string
 import scipy.integrate as integrate
 
 import process.physics_functions as physics_funcs
+import process.impurity_radiation as impurity_radiation
 from process.fortran import (
     constraint_variables,
     reinke_variables,
@@ -2594,9 +2595,9 @@ class Physics:
         znimp = 0.0
         for imp in range(impurity_radiation_module.nimp):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                znimp += impurity_radiation_module.zav_of_te(
-                    imp + 1, physics_variables.te
-                ) * (
+                znimp += impurity_radiation.zav_of_te(
+                    imp, np.array([physics_variables.te])
+                ).squeeze() * (
                     impurity_radiation_module.impurity_arr_frac[imp]
                     * physics_variables.dene
                 )
@@ -2619,7 +2620,7 @@ class Physics:
         # Set hydrogen and helium impurity fractions for
         # radiation calculations
         impurity_radiation_module.impurity_arr_frac[
-            impurity_radiation_module.element2index("H_") - 1
+            impurity_radiation.element2index("H_")
         ] = (
             physics_variables.dnprot
             + (physics_variables.f_deuterium + physics_variables.f_tritium)
@@ -2628,7 +2629,7 @@ class Physics:
         ) / physics_variables.dene
 
         impurity_radiation_module.impurity_arr_frac[
-            impurity_radiation_module.element2index("He") - 1
+            impurity_radiation.element2index("He")
         ] = (
             physics_variables.f_helium3
             * physics_variables.deni
@@ -2657,17 +2658,17 @@ class Physics:
         # Set some (obsolescent) impurity fraction variables
         # for the benefit of other routines
         physics_variables.rncne = impurity_radiation_module.impurity_arr_frac[
-            impurity_radiation_module.element2index("C_")
+            impurity_radiation.element2index("C_")
         ]
         physics_variables.rnone = impurity_radiation_module.impurity_arr_frac[
-            impurity_radiation_module.element2index("O_")
+            impurity_radiation.element2index("O_")
         ]
         physics_variables.rnfene = (
             impurity_radiation_module.impurity_arr_frac[
-                impurity_radiation_module.element2index("Fe")
+                impurity_radiation.element2index("Fe")
             ]
             + impurity_radiation_module.impurity_arr_frac[
-                impurity_radiation_module.element2index("Ar")
+                impurity_radiation.element2index("Ar")
             ]
         )
 
@@ -2678,7 +2679,9 @@ class Physics:
         for imp in range(impurity_radiation_module.nimp):
             physics_variables.zeff += (
                 impurity_radiation_module.impurity_arr_frac[imp]
-                * impurity_radiation_module.zav_of_te(imp + 1, physics_variables.te)
+                * impurity_radiation.zav_of_te(
+                    imp, np.array([physics_variables.te])
+                ).squeeze()
                 ** 2
             )
 
@@ -2762,7 +2765,9 @@ class Physics:
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.zeffai += (
                     impurity_radiation_module.impurity_arr_frac[imp]
-                    * impurity_radiation_module.zav_of_te(imp + 1, physics_variables.te)
+                    * impurity_radiation.zav_of_te(
+                        imp, np.array([physics_variables.te])
+                    ).squeeze()
                     ** 2
                     / impurity_radiation_module.impurity_arr_amass[imp]
                 )
