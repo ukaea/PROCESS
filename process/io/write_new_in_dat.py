@@ -98,13 +98,11 @@ def replace_iteration_variables(iteration_vars, in_data):
     """
 
     for variable_name, variable_value in iteration_vars.items():
-
+        
         if (match := re.search(r"([a-zA-Z0-9_]+)\(([0-9]+)\)", variable_name)) is None:
             in_data.add_parameter(variable_name.lower(), variable_value)
         else:
-            in_data.change_array(
-                match.group(1), int(match.group(2)) - 1, variable_value
-            )
+            in_data.change_array(match.group(1), int(match.group(2))-1, variable_value)
 
     return in_data
 

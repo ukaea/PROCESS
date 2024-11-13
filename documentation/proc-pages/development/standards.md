@@ -259,7 +259,7 @@ real(kind(1.0D0)) :: alphan = 0.25D0
 real(kind(1.0D0)) :: alphap = 0.0D0
 !! Pressure profile index
 
-real(kind(1.0D0)) :: alpha_rate_density = 0.0D0
+real(kind(1.0D0)) :: alpharate = 0.0D0
 !! Alpha particle production rate (particles/m3/sec)
 ```
 
@@ -306,16 +306,16 @@ subroutine constraint_eqn_001(args)
   !! - \( T_i \) -- density weighted average ion temperature [keV]
   !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
-  use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
-  use constants, only: electron_charge,rmu0
+  use physics_variables, only: betaft, betanb, dene, ten, dnitot, tin, btot, beta
+  use constants, only: echarge,rmu0
 
   implicit none
 
   type(constraint_args_type), intent(out) :: args
   !! constraint derived type
 
-    args%cc = 1.0D0 - (betaft + beta_beam + &
-      2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
+    args%cc = 1.0D0 - (betaft + betanb + &
+      2.0D3*rmu0*echarge * (dene*ten + dnitot*tin)/btot**2 )/beta
     args%con = beta * (1.0D0 - args%cc)
     args%err = beta * args%cc
     args%symbol = '='

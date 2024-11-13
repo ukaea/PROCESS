@@ -27,7 +27,7 @@ using input array `fimp(1,...,14)`. The available species are as follows:
 As stated above, the number density fractions for hydrogen (all isotopes) and
 helium need not be set, as they are calculated by the code to ensure 
 plasma quasi-neutrality taking into account the fuel ratios
-`f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `ralpne` which may 
+`fdeut`, `ftrit` and `fhe3`, and the alpha particle fraction `ralpne` which may 
 be input by the user or selected as an iteration variable.
 
 The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 

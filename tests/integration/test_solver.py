@@ -128,7 +128,7 @@ def test_solver(temp_data):
             ind = -1  # last scan point
 
             # Obtain fusion power and injected power from MFILE.DAT
-            fusion_power = m_file.data["fusion_power"].get_scan(ind)
+            fusion_power = m_file.data["powfmw"].get_scan(ind)
             injected_power = m_file.data["pinjmw"].get_scan(ind)
             ratio_fus_inj_power = fusion_power / injected_power
 

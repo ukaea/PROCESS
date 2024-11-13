@@ -338,7 +338,7 @@ contains
         !
         ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         use const_and_precisions, only: pi, me_, mp_, eps0_,e_, keV_
-        use physics_variables, only: rmajor, te,ti, dene,deni, dnalp, f_deuterium
+        use physics_variables, only: rmajor, te,ti, dene,deni, dnalp, fdeut
 
         real(dp),dimension(4) :: neoclassics_calc_nu_star_fromT
         real(dp) :: t,erfn,phixmgx,expxk,xk, lnlambda,x,v
@@ -348,7 +348,7 @@ contains
         integer :: jj,kk
 
         temp = (/te,ti,ti,ti /) * keV_
-        density = (/dene,deni * f_deuterium,deni*(1-f_deuterium),dnalp /)
+        density = (/dene,deni * fdeut,deni*(1-fdeut),dnalp /)
 
         !          e      D      T         a (He)
         mass = (/me_,mp_*2.0d0,mp_*3.0d0,mp_*4.0d0/)
@@ -503,7 +503,7 @@ contains
         ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         use physics_variables, only: ne0,te0,alphan,&
-                                     alphat,ti0,ni0,f_deuterium, dnalp, rminor
+                                     alphat,ti0,ni0,fdeut, dnalp, rminor
         use const_and_precisions, only: keV_
 
         real(dp), intent(in) :: rho
@@ -526,8 +526,8 @@ contains
         tempa = ti0 * (1-rho**2)**alphat * keV_
 
         dense = ne0 * (1-rho**2)**alphan
-        densT = (1-f_deuterium) * ni0 * (1-rho**2)**alphan
-        densD = f_deuterium *ni0 * (1-rho**2)**alphan
+        densT = (1-fdeut) * ni0 * (1-rho**2)**alphan
+        densD = fdeut *ni0 * (1-rho**2)**alphan
         densa = dnalp*(1+alphan) * (1-rho**2)**alphan
 
         ! Derivatives in real space
@@ -537,8 +537,8 @@ contains
         dr_tempa = -2.0d0 * 1.0d0/rminor * ti0 * rho * (1.0d0-rho**2)**(alphat-1.0d0) * alphat * keV_
 
         dr_dense = -2.0d0 * 1.0d0/rminor * rho * ne0 *             (1.0d0-rho**2)**(alphan-1.0d0) * alphan
-        dr_densT = -2.0d0 * 1.0d0/rminor * rho * (1-f_deuterium) * ni0 * (1.0d0-rho**2)**(alphan-1.0d0) * alphan
-        dr_densD = -2.0d0 * 1.0d0/rminor * rho * f_deuterium *ni0 *      (1.0d0-rho**2)**(alphan-1.0d0) * alphan
+        dr_densT = -2.0d0 * 1.0d0/rminor * rho * (1-fdeut) * ni0 * (1.0d0-rho**2)**(alphan-1.0d0) * alphan
+        dr_densD = -2.0d0 * 1.0d0/rminor * rho * fdeut *ni0 *      (1.0d0-rho**2)**(alphan-1.0d0) * alphan
         dr_densa = -2.0d0 * 1.0d0/rminor * rho * dnalp*(1+alphan)* (1.0d0-rho**2)**(alphan-1.0d0) * alphan
 
         dens(1) = dense

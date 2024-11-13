@@ -36,7 +36,7 @@ contains
     use process_output, only: oheadr, oblnkl, ocmmnt, ovarre
     use ife_variables, only: ifedrv, edrive, gainve, etave, gain, etadrv, tgain, &
       drveff, reprat, pdrive, rrin, pfusife, ifetyp, zl1, r1, zu1, flirad
-    use physics_variables, only: fusion_power, wallmw
+    use physics_variables, only: powfmw, wallmw
 
 		use constants, only: pi
     implicit none
@@ -104,15 +104,15 @@ contains
         !  Repetition rate (Hz)
         reprat = pdrive / edrive
         !  Fusion power (MW)
-        fusion_power = 1.0D-6 * pdrive * gain
+        powfmw = 1.0D-6 * pdrive * gain
 
     else
         !  Driver Power
         reprat = rrin
         pdrive = reprat * edrive
         !  Gain
-        fusion_power = pfusife
-        gain = fusion_power / (1.0D-6 * pdrive)
+        powfmw = pfusife
+        gain = powfmw / (1.0D-6 * pdrive)
     end if
 
     !  Wall load (assume total fusion power applies)
@@ -123,7 +123,7 @@ contains
 
        phi = 0.5D0*pi + atan(zl1/r1)
        sang = 1.0D0 - cos(phi)
-       wallmw = fusion_power * 0.5D0*sang / fwarea
+       wallmw = powfmw * 0.5D0*sang / fwarea
 
     else if (ifetyp == 4) then
 
@@ -134,10 +134,10 @@ contains
        sang = 1.0D0 - cos(phi)
        phi = atan(flirad/zu1)
        sang = sang - (1.0D0 - cos(phi))
-       wallmw = fusion_power * 0.5D0*sang / fwarea
+       wallmw = powfmw * 0.5D0*sang / fwarea
 
     else
-       wallmw = fusion_power / fwarea
+       wallmw = powfmw / fwarea
     end if
 
     if (iprint == 0) return
@@ -163,7 +163,7 @@ contains
          pdrive)
     call ovarre(outfile,'Driver repetition rate (Hz)','(reprat)',reprat)
     call ovarre(outfile,'Target gain','(gain)',gain)
-    call ovarre(outfile,'Fusion power (MW)','(fusion_power)',fusion_power)
+    call ovarre(outfile,'Fusion power (MW)','(powfmw)',powfmw)
     call ovarre(outfile,'Neutron wall load (MW/m2)','(wallmw)',wallmw)
 
   end subroutine ifephy
@@ -204,7 +204,7 @@ contains
     !!
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    use constants, only: electron_charge, proton_mass, degrad, pi
+    use constants, only: echarge, mproton, degrad, pi
     implicit none
 
     !  Arguments
@@ -235,7 +235,7 @@ contains
 
        !  Electron charge / (proton mass * c**2)
 
-       eomc2 = electron_charge / (proton_mass*c2)
+       eomc2 = echarge / (mproton*c2)
 
        !  Degrees to radians
 
@@ -292,8 +292,8 @@ contains
        !  Transport beam radius (m)
 
        tbrad = ( (emitt**2 * sig0 * c2)/(sig**2 * bmax/1.5D0 * etai * &
-            sqrt(vi)) )**(0.333333D0) * sqrt(2.0D0 * aaion * proton_mass / &
-            (qion * electron_charge))
+            sqrt(vi)) )**(0.333333D0) * sqrt(2.0D0 * aaion * mproton / &
+            (qion * echarge))
 
        !  Extractor voltage (V)
 
@@ -318,7 +318,7 @@ contains
 
        !  Pulse length at injection (m)
 
-       lpi = taui * sqrt( 2.0D0 * qion * electron_charge * vi / (aaion * proton_mass) )
+       lpi = taui * sqrt( 2.0D0 * qion * echarge * vi / (aaion * mproton) )
 
        !  Initial voltage gradient (V/m)
 
@@ -349,8 +349,8 @@ contains
 
        !  Pulse length (m)
 
-       lpfo = taui * vi / vfo * sqrt( 2.0D0 * qion * electron_charge * vfo / &
-            (aaion * proton_mass) )
+       lpfo = taui * vi / vfo * sqrt( 2.0D0 * qion * echarge * vfo / &
+            (aaion * mproton) )
 
        !  Length of the low energy transport stage (m)
        !  (rearrangement of integral of PHI(V).dl)
@@ -360,7 +360,7 @@ contains
        !  End of Pulse Compression Stage:
        !  Pulse length = final pulse length (m)
 
-       lpf = tauf * sqrt( 2.0D0 * qion * electron_charge * vf / (aaion * proton_mass) )
+       lpf = tauf * sqrt( 2.0D0 * qion * echarge * vf / (aaion * mproton) )
        lppc = lpf
 
        !  Length of the pulse compression region (m)
@@ -459,7 +459,7 @@ contains
 
        lq = ( emitt * etai * sig0**2 * sqrt(c2*vi) / &
             (sig*(bmax/1.5D0)**2) )**(0.333333D0) * &
-            sqrt(2.0D0*aaion*proton_mass/(qion*electron_charge))
+            sqrt(2.0D0*aaion*mproton/(qion*echarge))
 
        write(*,*) '   lq = ',lq
 
@@ -636,7 +636,7 @@ contains
 
       ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      betgam = sqrt( 2.0D0*qion*electron_charge*v / (aaion*proton_mass*c2) )
+      betgam = sqrt( 2.0D0*qion*echarge*v / (aaion*mproton*c2) )
 
     end function betgam
 
@@ -1864,7 +1864,7 @@ contains
     use heat_transport_variables, only: priheat, pthermmw, pfwdiv, nphx, pinjwp, &
       pinjht, crypmw, helpow
     use ife_variables, only: pdrive, ifetyp, etadrv, pifecr
-    use physics_variables, only: fusion_power
+    use physics_variables, only: powfmw
 
     implicit none
 
@@ -1881,7 +1881,7 @@ contains
     !  Primary nuclear heating (MW)
     !  Total thermal power removed from fusion core
 
-    priheat = emult * fusion_power
+    priheat = emult * powfmw
 
     !  Useful (high-grade) thermal power (MW)
 

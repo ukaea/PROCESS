@@ -73,7 +73,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     vffwo: Any = None
 
-    fusion_power: Any = None
+    powfmw: Any = None
 
     itart: Any = None
 
@@ -152,7 +152,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             denw=19250,
             vffwi=0,
             vffwo=0,
-            fusion_power=1986.0623241661431,
+            powfmw=1986.0623241661431,
             itart=0,
             whttf=19649856.627845347,
             whttflgs=0,
@@ -202,7 +202,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             denw=19250,
             vffwi=0.31415926535897931,
             vffwo=0.31415926535897931,
-            fusion_power=1985.4423932312809,
+            powfmw=1985.4423932312809,
             itart=0,
             whttf=19662548.210142396,
             whttflgs=0,
@@ -294,9 +294,7 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "vffwo", nuclearheatingmagnetsparam.vffwo)
 
-    monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingmagnetsparam.fusion_power
-    )
+    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingmagnetsparam.powfmw)
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingmagnetsparam.itart)
 
@@ -396,7 +394,7 @@ class NuclearHeatingFwParam(NamedTuple):
 
     fwmass: Any = None
 
-    fusion_power: Any = None
+    powfmw: Any = None
 
     fw_armour_u_nuc_heating: Any = None
 
@@ -411,7 +409,7 @@ class NuclearHeatingFwParam(NamedTuple):
         NuclearHeatingFwParam(
             pnucfw=0,
             fwmass=224802.80270851994,
-            fusion_power=1986.0623241661431,
+            powfmw=1986.0623241661431,
             fw_armour_u_nuc_heating=0,
             expected_pnucfw=279.04523551646628,
             expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
@@ -419,7 +417,7 @@ class NuclearHeatingFwParam(NamedTuple):
         NuclearHeatingFwParam(
             pnucfw=276.80690153753221,
             fwmass=182115.83467868491,
-            fusion_power=1985.4423932312809,
+            powfmw=1985.4423932312809,
             fw_armour_u_nuc_heating=6.2500000000000005e-07,
             expected_pnucfw=225.98781165610032,
             expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
@@ -443,9 +441,7 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(fwbs_variables, "fwmass", nuclearheatingfwparam.fwmass)
 
-    monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingfwparam.fusion_power
-    )
+    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingfwparam.powfmw)
 
     monkeypatch.setattr(
         ccfe_hcpb_module,
@@ -467,7 +463,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
 
     pnucblkt: Any = None
 
-    fusion_power: Any = None
+    powfmw: Any = None
 
     exp_blanket: Any = None
 
@@ -482,7 +478,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
         NuclearHeatingBlanketParam(
             whtblkt=3501027.3252278985,
             pnucblkt=0,
-            fusion_power=1986.0623241661431,
+            powfmw=1986.0623241661431,
             exp_blanket=0,
             expected_pnucblkt=1517.0907688379014,
             expected_exp_blanket=0.99982809071915879,
@@ -490,7 +486,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
         NuclearHeatingBlanketParam(
             whtblkt=3507503.3737008357,
             pnucblkt=1504.9215740808861,
-            fusion_power=1985.4423932312809,
+            powfmw=1985.4423932312809,
             exp_blanket=0.99982809071915879,
             expected_pnucblkt=1516.6213709741428,
             expected_exp_blanket=0.99983082524994527,
@@ -514,9 +510,7 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "pnucblkt", nuclearheatingblanketparam.pnucblkt)
 
-    monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingblanketparam.fusion_power
-    )
+    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingblanketparam.powfmw)
 
     monkeypatch.setattr(
         ccfe_hcpb_module, "exp_blanket", nuclearheatingblanketparam.exp_blanket
@@ -542,7 +536,7 @@ class NuclearHeatingShieldParam(NamedTuple):
 
     pnucshld: Any = None
 
-    fusion_power: Any = None
+    powfmw: Any = None
 
     itart: Any = None
 
@@ -573,7 +567,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shldoth=0.80000000000000004,
             whtshld=2294873.8131476045,
             pnucshld=0,
-            fusion_power=1986.0623241661431,
+            powfmw=1986.0623241661431,
             itart=0,
             shield_density=3119.9999999999995,
             x_blanket=2.3374537748527975,
@@ -590,7 +584,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shldoth=0.80000000000000004,
             whtshld=2297808.3935174854,
             pnucshld=1.3611259588044891,
-            fusion_power=1985.4423932312809,
+            powfmw=1985.4423932312809,
             itart=0,
             shield_density=3120,
             x_blanket=2.3374537748527979,
@@ -625,9 +619,7 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", nuclearheatingshieldparam.pnucshld)
 
-    monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingshieldparam.fusion_power
-    )
+    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingshieldparam.powfmw)
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingshieldparam.itart)
 
@@ -681,7 +673,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     idivrt: Any = None
 
-    fusion_power: Any = None
+    powfmw: Any = None
 
     ip: Any = None
 
@@ -696,7 +688,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             pnucdiv=0,
             pnuchcd=0,
             idivrt=1,
-            fusion_power=1986.0623241661431,
+            powfmw=1986.0623241661431,
             ip=0,
             expected_pnucdiv=182.71773382328519,
         ),
@@ -705,7 +697,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             pnucdiv=182.71773382328519,
             pnuchcd=0,
             idivrt=1,
-            fusion_power=1985.4423932312809,
+            powfmw=1985.4423932312809,
             ip=0,
             expected_pnucdiv=182.66070017727785,
         ),
@@ -732,9 +724,7 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
 
     monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
 
-    monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power
-    )
+    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingdivertorparam.powfmw)
 
     monkeypatch.setattr(ccfe_hcpb_module, "ip", nuclearheatingdivertorparam.ip)
 
@@ -1144,7 +1134,7 @@ def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
 class StTfCentrepostFastNeutFluxParam(NamedTuple):
     i_tf_sup: Any = None
 
-    neutron_power_total: Any = None
+    pneutmw: Any = None
 
     sh_width: Any = None
 
@@ -1158,14 +1148,14 @@ class StTfCentrepostFastNeutFluxParam(NamedTuple):
     (
         StTfCentrepostFastNeutFluxParam(
             i_tf_sup=1,
-            neutron_power_total=400.65875490746737,
+            pneutmw=400.65875490746737,
             sh_width=0.60000000000000009,
             rmajor=3,
             expected_neut_flux_cp=144701998710998.5,
         ),
         StTfCentrepostFastNeutFluxParam(
             i_tf_sup=1,
-            neutron_power_total=409.82485143909827,
+            pneutmw=409.82485143909827,
             sh_width=0.60000000000000009,
             rmajor=3,
             expected_neut_flux_cp=148012428028364.28,
@@ -1192,7 +1182,7 @@ def test_st_tf_centrepost_fast_neut_flux(
     )
 
     neut_flux_cp = ccfe_hcpb.st_tf_centrepost_fast_neut_flux(
-        neutron_power_total=sttfcentrepostfastneutfluxparam.neutron_power_total,
+        pneutmw=sttfcentrepostfastneutfluxparam.pneutmw,
         sh_width=sttfcentrepostfastneutfluxparam.sh_width,
         rmajor=sttfcentrepostfastneutfluxparam.rmajor,
     )

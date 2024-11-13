@@ -7,7 +7,7 @@ PARAMETER_DEFAULTS = [
     "aspect",
     "rminor",
     "bt",
-    "fusion_power",
+    "powfmw",
     "pnetelmw",
     "te",
     "pdivt",

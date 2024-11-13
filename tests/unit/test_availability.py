@@ -39,7 +39,7 @@ def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param
 
     # Mock module vars
     monkeypatch.setattr(ifev, "ife", 0)
-    monkeypatch.setattr(pv, "fusion_power", 4.0e3)
+    monkeypatch.setattr(pv, "powfmw", 4.0e3)
     monkeypatch.setattr(fwbsv, "fwlife", fwlife)
     monkeypatch.setattr(cv, "ibkt_life", ibkt_life)
     monkeypatch.setattr(cv, "abktflnc", 4.0)

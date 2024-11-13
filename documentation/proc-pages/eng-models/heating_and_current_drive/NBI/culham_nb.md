@@ -49,11 +49,11 @@ $$
 Deuterium and tritium beam densities
 
 $$
-\mathtt{dend} = n_{\text{ion}} \times (1-\mathtt{f_tritium_beam})
+\mathtt{dend} = n_{\text{ion}} \times (1-\mathtt{ftritbm})
 $$
 
 $$
-\mathtt{dent} = n_{\text{ion}} \times \mathtt{f_tritium_beam}
+\mathtt{dent} = n_{\text{ion}} \times \mathtt{ftritbm}
 $$
 
 Power split to the ions and electrons is clauclated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{fpion}$
@@ -72,7 +72,7 @@ plus correction terms outlined in Culham Report AEA FUS 172.
 |  $\mathtt{aspect}$, $A$      |   aspect ratio                            |
 |  $\mathtt{dene}$, $n_{\text{e}}$     |    volume averaged electron density $(\text{m}^{-3})$                           |
 |  $\mathtt{dnla}$, $n_{\text{e,0}}$      |    line averaged electron density $(\text{m}^{-3})$                           |
-|  $\mathtt{beam_energy}$      |  neutral beam energy $(\text{keV})$                             |
+|  $\mathtt{enbeam}$      |  neutral beam energy $(\text{keV})$                             |
 |  $\mathtt{frbeam}$      |   R_tangent / R_major for neutral beam injection                            |
 |  $\mathtt{fshine}$      |  shine-through fraction of beam                             |
 |  $\mathtt{rmajor}$, $R$      |  plasma major radius $(\text{m})$                              |
@@ -114,7 +114,7 @@ $$
 Beam energy in MeV
 
 $$
-\mathtt{ebmev} = \frac{\mathtt{beam_energy}}{10^3}
+\mathtt{ebmev} = \frac{\mathtt{enbeam}}{10^3}
 $$
 
 x and y coefficients of function J0(x,y) (IPDG89)

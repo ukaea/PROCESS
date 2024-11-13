@@ -331,7 +331,7 @@ end subroutine run_summary
 !     icc, lablcc, eqsolv
 !   use process_output, only: ovarin, oblnkl, ocmmnt, oheadr, osubhd, &
 !     ovarre, int_to_string3
-!   use physics_variables, only: bt, aspect, rmajor, fusion_power, wallmw
+!   use physics_variables, only: bt, aspect, rmajor, powfmw, wallmw
 !   use define_iteration_variables, only: loadxc
 !   implicit none
 

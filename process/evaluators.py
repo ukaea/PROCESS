@@ -66,7 +66,7 @@ class Evaluators:
             logger.debug(f"{pv.te = }")
             logger.debug(f"{cv.coe = }")
             logger.debug(f"{pv.rmajor = }")
-            logger.debug(f"{pv.fusion_power = }")
+            logger.debug(f"{pv.powfmw = }")
             logger.debug(f"{pv.bt = }")
             logger.debug(f"{tv.tburn = }")
             logger.debug(f"{sqsumconfsq = }")

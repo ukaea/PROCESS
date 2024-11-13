@@ -207,7 +207,7 @@ deuterium-tritium reaction:
 \]
 
 20\% of the energy produced is given to the alpha particles (\(^4\)He),
-a fraction of which remain (c.f. \texttt{f_alpha_plasma}) within the plasma and
+a fraction of which remain (c.f. \texttt{falpha}) within the plasma and
 thermalise (slow down) due to collisions, thus heating the plasma. The
 remaining 80\% is carried away by the neutrons, which deposit their
 energy within the blanket and shield.
@@ -254,17 +254,17 @@ integrated over the plasma profiles (correctly, with or without
 pedestals).
 
 The fractional composition of the `fuel' ions (D, T and \(^3\)He) is
-controlled using the three variables \texttt{f_deuterium}, \texttt{f_tritium} and
-\texttt{f_helium3}, respectively:
+controlled using the three variables \texttt{fdeut}, \texttt{ftrit} and
+\texttt{fhe3}, respectively:
 
 \[\begin{aligned}
 n_{\mbox{fuel}}  & = n_D + n_T + n_{\mathrm{^{3}He}}  \;\;\; \mbox{particles/m$^3$} \\
-n_D  & = \mathtt{f_deuterium} \, n_{\mbox{fuel}} \\
-n_T  & = \mathtt{f_tritium} \, n_{\mbox{fuel}} \\
-n_{\mathrm{^{3}He}} & = \mathtt{f_helium3} \, n_{\mbox{fuel}}
+n_D  & = \mathtt{fdeut} \, n_{\mbox{fuel}} \\
+n_T  & = \mathtt{ftrit} \, n_{\mbox{fuel}} \\
+n_{\mathrm{^{3}He}} & = \mathtt{fhe3} \, n_{\mbox{fuel}}
 \end{aligned}\]
 
-PROCESS checks that \(f_deuterium + f_tritium + f_helium3 = 1.0\), and stops with an
+PROCESS checks that \(fdeut + ftrit + fhe3 = 1.0\), and stops with an
 error message otherwise.
 
 \subsection{Plasma Profiles}\label{plasma-profiles}
@@ -499,8 +499,8 @@ model. The available impurities are as follows:
 As stated above, the number density fractions for hydrogen (all
 isotopes) and helium need not be set, as they are calculated by the code
 to ensure that plasma quasi-neutrality is maintained, and taking into
-account the fuel ratios \texttt{f_deuterium}, \texttt{f_tritium} and
-\texttt{f_helium3}, and the alpha particle fraction \texttt{ralpne} which may
+account the fuel ratios \texttt{fdeut}, \texttt{ftrit} and
+\texttt{fhe3}, and the alpha particle fraction \texttt{ralpne} which may
 be input by the user.
 
 The impurity fraction of one of the elements listed in array
@@ -994,18 +994,18 @@ is derived directly from the energy confinement scaling law.
 \texttt{iradloss\ =\ 0} -- Total power lost is scaling power plus
 radiation
 
-\texttt{pscaling\ +\ pradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pohmpv\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ +\ pradpv\ =\ falpha*palppv\ +\ pchargepv\ +\ pohmpv\ +\ pinjmw/vol}
 
 \texttt{iradloss\ =\ 1} -- Total power lost is scaling power plus core
 radiation only
 
-\texttt{pscaling\ +\ pcoreradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pohmpv\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ +\ pcoreradpv\ =\ falpha*palppv\ +\ pchargepv\ +\ pohmpv\ +\ pinjmw/vol}
 
 \texttt{iradloss\ =\ 2} -- Total power lost is scaling power only, with
 no additional allowance for radiation. This is not recommended for power
 plant models.
 
-\texttt{pscaling\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pohmpv\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ =\ falpha*palppv\ +\ pchargepv\ +\ pohmpv\ +\ pinjmw/vol}
 
 \subsection{Plasma Core Power Balance}\label{plasma-core-power-balance}
 
@@ -1027,7 +1027,7 @@ The primary sources of power are the fusion reactions themselves, ohmic
 power due to resistive heating within the plasma, and any auxiliary
 power provided for heating and current drive. The power carried by the
 fusion-generated neutrons is lost from the plasma, but is deposited in
-the surrounding material. A fraction \texttt{f_alpha_plasma} of the alpha
+the surrounding material. A fraction \texttt{falpha} of the alpha
 particle power is assumed to stay within the plasma core to contribute
 to the plasma power balance. The sum of this core alpha power, any power
 carried by non-alpha charged particles, the ohmic power and any injected

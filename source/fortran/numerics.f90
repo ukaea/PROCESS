@@ -220,7 +220,7 @@ module numerics
   !! <LI> (16) ohcth
   !! <LI> (17) tdwell
   !! <LI> (18) q
-  !! <LI> (19) beam_energy
+  !! <LI> (19) enbeam
   !! <LI> (20) tcpav
   !! <LI> (21) ftburn (f-value for equation 13)
   !! <LI> (22) NOT USED

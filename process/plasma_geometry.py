@@ -240,7 +240,7 @@ class PlasmaGeom:
                 physics_variables.sf,
                 physics_variables.sarea,
                 physics_variables.xarea,
-                physics_variables.plasma_volume,
+                physics_variables.vol,
             ) = self.Sauter_geometry(
                 physics_variables.rminor,
                 physics_variables.rmajor,
@@ -257,7 +257,7 @@ class PlasmaGeom:
             )
 
             #  Volume
-            physics_variables.plasma_volume = physics_variables.cvol * self.xvol(
+            physics_variables.vol = physics_variables.cvol * self.xvol(
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 xi,
@@ -579,6 +579,6 @@ class PlasmaGeom:
         xarea = numpy.pi * a**2 * kap * (1 + 0.52 * (w07 - 1))
 
         # Volume
-        plasma_volume = 2.0e0 * numpy.pi * r0 * (1 - 0.25 * tri * eps) * xarea
+        vol = 2.0e0 * numpy.pi * r0 * (1 - 0.25 * tri * eps) * xarea
 
-        return pperim, sf, sarea, xarea, plasma_volume
+        return pperim, sf, sarea, xarea, vol

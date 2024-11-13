@@ -33,7 +33,7 @@ class CudrivParam(NamedTuple):
 
     plhybd: Any = None
 
-    beam_current: Any = None
+    cnbeam: Any = None
 
     porbitlossmw: Any = None
 
@@ -75,7 +75,7 @@ class CudrivParam(NamedTuple):
 
     etanbi: Any = None
 
-    beam_energy: Any = None
+    enbeam: Any = None
 
     effcd: Any = None
 
@@ -169,7 +169,7 @@ class CudrivParam(NamedTuple):
 
     pohmmw: Any = None
 
-    fusion_power: Any = None
+    powfmw: Any = None
 
     inductive_current_fraction: Any = None
 
@@ -209,7 +209,7 @@ class CudrivParam(NamedTuple):
             echpwr=0,
             pnbeam=0,
             plhybd=0,
-            beam_current=0,
+            cnbeam=0,
             porbitlossmw=0,
             iefrf=10,
             iefrffix=0,
@@ -230,7 +230,7 @@ class CudrivParam(NamedTuple):
             pinjmw=0,
             pwpnb=0,
             etanbi=0.29999999999999999,
-            beam_energy=1000,
+            enbeam=1000,
             effcd=0,
             pwplh=0,
             echwpow=0,
@@ -277,7 +277,7 @@ class CudrivParam(NamedTuple):
             aux_current_fraction=0.12364081253383186,
             ignite=0,
             pohmmw=0,
-            fusion_power=0,
+            powfmw=0,
             inductive_current_fraction=0.59999999999999998,
             fvsbrnni=0.40000000000000002,
             startupratio=1,
@@ -299,7 +299,7 @@ class CudrivParam(NamedTuple):
             echpwr=120.49600019005746,
             pnbeam=0,
             plhybd=0,
-            beam_current=0,
+            cnbeam=0,
             porbitlossmw=0,
             iefrf=10,
             iefrffix=0,
@@ -320,7 +320,7 @@ class CudrivParam(NamedTuple):
             pinjmw=120.49600019005746,
             pwpnb=0,
             etanbi=0.29999999999999999,
-            beam_energy=1000,
+            enbeam=1000,
             effcd=0.05000000000000001,
             pwplh=0,
             echwpow=240.99200038011492,
@@ -367,7 +367,7 @@ class CudrivParam(NamedTuple):
             aux_current_fraction=0.12364081253383186,
             ignite=0,
             pohmmw=0.76707314489379119,
-            fusion_power=1051.6562748933977,
+            powfmw=1051.6562748933977,
             inductive_current_fraction=0.59999999999999998,
             fvsbrnni=0.40000000000000002,
             startupratio=1,
@@ -408,9 +408,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "plhybd", cudrivparam.plhybd)
 
-    monkeypatch.setattr(
-        current_drive_variables, "beam_current", cudrivparam.beam_current
-    )
+    monkeypatch.setattr(current_drive_variables, "cnbeam", cudrivparam.cnbeam)
 
     monkeypatch.setattr(
         current_drive_variables, "porbitlossmw", cudrivparam.porbitlossmw
@@ -454,7 +452,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "etanbi", cudrivparam.etanbi)
 
-    monkeypatch.setattr(current_drive_variables, "beam_energy", cudrivparam.beam_energy)
+    monkeypatch.setattr(current_drive_variables, "enbeam", cudrivparam.enbeam)
 
     monkeypatch.setattr(current_drive_variables, "effcd", cudrivparam.effcd)
 
@@ -568,7 +566,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "pohmmw", cudrivparam.pohmmw)
 
-    monkeypatch.setattr(physics_variables, "fusion_power", cudrivparam.fusion_power)
+    monkeypatch.setattr(physics_variables, "powfmw", cudrivparam.powfmw)
 
     monkeypatch.setattr(
         physics_variables,

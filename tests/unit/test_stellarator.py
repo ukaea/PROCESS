@@ -58,7 +58,7 @@ class StgeomParam(NamedTuple):
 
     sareao: Any = None
 
-    plasma_volume: Any = None
+    vol: Any = None
 
     xarea: Any = None
 
@@ -90,7 +90,7 @@ class StgeomParam(NamedTuple):
             rminor=1.7842660178426601,
             sarea=0,
             sareao=0,
-            plasma_volume=0,
+            vol=0,
             xarea=0,
             bt=5.5,
             stella_config_plasma_volume=1422.6300000000001,
@@ -108,7 +108,7 @@ class StgeomParam(NamedTuple):
             rminor=1.7842660178426601,
             sarea=1925.3641313657533,
             sareao=962.68206568287667,
-            plasma_volume=1385.2745877380669,
+            vol=1385.2745877380669,
             xarea=10.001590778710231,
             bt=5.5,
             stella_config_plasma_volume=1422.6300000000001,
@@ -145,7 +145,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "sareao", stgeomparam.sareao)
 
-    monkeypatch.setattr(physics_variables, "plasma_volume", stgeomparam.plasma_volume)
+    monkeypatch.setattr(physics_variables, "vol", stgeomparam.vol)
 
     monkeypatch.setattr(physics_variables, "xarea", stgeomparam.xarea)
 
@@ -173,7 +173,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     assert physics_variables.sareao == pytest.approx(stgeomparam.expected_sareao)
 
-    assert physics_variables.plasma_volume == pytest.approx(stgeomparam.expected_vol)
+    assert physics_variables.vol == pytest.approx(stgeomparam.expected_vol)
 
     assert physics_variables.xarea == pytest.approx(stgeomparam.expected_xarea)
 
@@ -2657,9 +2657,9 @@ class StCalcEffChiParam(NamedTuple):
 
     ne0: Any = None
 
-    f_alpha_plasma: Any = None
+    falpha: Any = None
 
-    alpha_power_density_total: Any = None
+    palppv: Any = None
 
     pcoreradpv: Any = None
 
@@ -2667,7 +2667,7 @@ class StCalcEffChiParam(NamedTuple):
 
     alphat: Any = None
 
-    plasma_volume: Any = None
+    vol: Any = None
 
     sarea: Any = None
 
@@ -2688,12 +2688,12 @@ class StCalcEffChiParam(NamedTuple):
         StCalcEffChiParam(
             te0=19.108573496973477,
             ne0=3.4479000000000007e20,
-            f_alpha_plasma=0.95000000000000007,
-            alpha_power_density_total=1.2629524018077414,
+            falpha=0.95000000000000007,
+            palppv=1.2629524018077414,
             pcoreradpv=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
-            plasma_volume=1385.8142655379029,
+            vol=1385.8142655379029,
             sarea=1926.0551116585129,
             rminor=1.7863900994187722,
             coreradius=0.60000000000000009,
@@ -2705,12 +2705,12 @@ class StCalcEffChiParam(NamedTuple):
         StCalcEffChiParam(
             te0=17.5,
             ne0=3.4479000000000007e20,
-            f_alpha_plasma=0.95000000000000007,
-            alpha_power_density_total=1.0570658694225301,
+            falpha=0.95000000000000007,
+            palppv=1.0570658694225301,
             pcoreradpv=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
-            plasma_volume=1385.8142655379029,
+            vol=1385.8142655379029,
             sarea=1926.0551116585129,
             rminor=1.7863900994187722,
             coreradius=0.60000000000000009,
@@ -2738,15 +2738,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "ne0", stcalceffchiparam.ne0)
 
-    monkeypatch.setattr(
-        physics_variables, "f_alpha_plasma", stcalceffchiparam.f_alpha_plasma
-    )
+    monkeypatch.setattr(physics_variables, "falpha", stcalceffchiparam.falpha)
 
-    monkeypatch.setattr(
-        physics_variables,
-        "alpha_power_density_total",
-        stcalceffchiparam.alpha_power_density_total,
-    )
+    monkeypatch.setattr(physics_variables, "palppv", stcalceffchiparam.palppv)
 
     monkeypatch.setattr(physics_variables, "pcoreradpv", stcalceffchiparam.pcoreradpv)
 
@@ -2754,9 +2748,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "alphat", stcalceffchiparam.alphat)
 
-    monkeypatch.setattr(
-        physics_variables, "plasma_volume", stcalceffchiparam.plasma_volume
-    )
+    monkeypatch.setattr(physics_variables, "vol", stcalceffchiparam.vol)
 
     monkeypatch.setattr(physics_variables, "sarea", stcalceffchiparam.sarea)
 

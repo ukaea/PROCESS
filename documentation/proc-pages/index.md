@@ -65,6 +65,20 @@ itself to ensure that the documentation remains consistent with the latest versi
 It is to be hoped that it will be of assistance not only to users of PROCESS, but 
 to anyone using PROCESS outputs or models based on them.
 
+## Developer Group
+
+- [James Morris](mailto:james.morris2@ukaea.uk)
+- [Michael Kovari](mailto:michael.kovari@ukaea.uk)
+- [Stuart Muldrew](mailto:stuart.muldrew@ukaea.uk)
+- [Alex Pearce](mailto:alexander.pearce@ukaea.uk)
+- [Jonathan Maddock](mailto:jonathan.maddock@ukaea.uk)
+- [Timothy Nunn](mailto:timothy.nunn@ukaea.uk)
+- [Christopher Ashe](mailto:christopher.ashe@ukaea.uk)
+- [Georgina Graham](mailto:georgina.graham@ukaea.uk)
+- [Jack Foster](mailto:jack.foster@ukaea.uk)
+- [Graeme Turkington](mailto:graeme.turkington@ukaea.uk)
+- [Jonathan Matthews](mailto:jonathan.matthews@ukaea.uk)
+
 ## References
 
 Below is a list of PROCESS publications describing the models:

@@ -182,7 +182,7 @@ contains
     use constraint_variables, only: taulimit
     use cost_variables, only: cdirt, coe, coeoam, coefuelt, c222, ireactor, &
       capcost, coecap, c221
-    use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, beam_energy, bigq
+    use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, enbeam, bigq
     use divertor_variables, only: hldiv
     use error_handling, only: errors_on
     use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
@@ -195,8 +195,8 @@ contains
       tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
-    use physics_variables, only: q, aspect, pradmw, dene, fusion_power, btot, tesep, &
-      pdivt, ralpne, ten, betap, hfac, teped, alpha_power_beams, qlim, rmajor, wallmw, &
+    use physics_variables, only: q, aspect, pradmw, dene, powfmw, btot, tesep, &
+      pdivt, ralpne, ten, betap, hfac, teped, palpnb, qlim, rmajor, wallmw, &
       beta, betalim, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
@@ -235,8 +235,8 @@ contains
     outvar(21,iscan) = dene/1.0D20
     outvar(22,iscan) = hfac(6)
     outvar(23,iscan) = hfac(7)
-    outvar(24,iscan) = fusion_power
-    outvar(25,iscan) = alpha_power_beams * 5.0D0
+    outvar(24,iscan) = powfmw
+    outvar(25,iscan) = palpnb * 5.0D0
     outvar(26,iscan) = wallmw
     outvar(27,iscan) = pinjmw
     outvar(28,iscan) = pinjwp
@@ -244,7 +244,7 @@ contains
     outvar(30,iscan) = pinjmw - pheat
     outvar(31,iscan) = bigq
     outvar(32,iscan) = bootstrap_current_fraction
-    outvar(33,iscan) = beam_energy/1.0D3
+    outvar(33,iscan) = enbeam/1.0D3
     outvar(34,iscan) = hldiv
     outvar(35,iscan) = tfcmw
     outvar(36,iscan) = whttf

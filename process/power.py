@@ -1638,15 +1638,15 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Alpha power deposited in plasma (MW)",
-            "(f_alpha_plasma*alpha_power_total)",
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total,
+            "(falpha*palpmw)",
+            physics_variables.falpha * physics_variables.palpmw,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Power from charged products of DD and/or D-He3 fusion (MW)",
-            "(non_alpha_charged_power.)",
-            physics_variables.non_alpha_charged_power,
+            "(pchargemw.)",
+            physics_variables.pchargemw,
             "OP ",
         )
         po.ovarrf(
@@ -1657,9 +1657,9 @@ class Power:
             "OP ",
         )
         # if (physics_variables.ignite == 1) :
-        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+pohmmw, 'OP ')
+        #    po.ovarrf(self.outfile,'Total (MW)','',falpha*physics_variables.palpmw+physics_variables.pchargemw+pohmmw, 'OP ')
         #    po.oblnkl(self.outfile)
-        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+physics_variables.pohmmw)) > 5.0e0) :
+        #    if (abs(sum - (physics_variables.falpha*physics_variables.palpmw+physics_variables.pchargemw+physics_variables.pohmmw)) > 5.0e0) :
         #        write(*,*) 'WARNING: Power balance across separatrix is in error by more than 5 MW.'
         #    po.ocmmnt(self.outfile,'WARNING: Power balance across separatrix is in error by more than 5 MW.')
         #
@@ -1675,8 +1675,8 @@ class Power:
             self.outfile,
             "Total (MW)",
             "",
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
-            + physics_variables.non_alpha_charged_power
+            physics_variables.falpha * physics_variables.palpmw
+            + physics_variables.pchargemw
             + physics_variables.pohmmw
             + pinj,
             "OP ",
@@ -1686,9 +1686,8 @@ class Power:
             abs(
                 sum
                 - (
-                    physics_variables.f_alpha_plasma
-                    * physics_variables.alpha_power_total
-                    + physics_variables.non_alpha_charged_power
+                    physics_variables.falpha * physics_variables.palpmw
+                    + physics_variables.pchargemw
                     + physics_variables.pohmmw
                     + pinj
                 )
@@ -1710,8 +1709,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(fusion_power)",
-            physics_variables.fusion_power,
+            "(powfmw)",
+            physics_variables.powfmw,
             "OP ",
         )
         po.ovarrf(
@@ -1737,7 +1736,7 @@ class Power:
             "OP ",
         )
         sum = (
-            physics_variables.fusion_power
+            physics_variables.powfmw
             + fwbs_variables.emultmw
             + pinj
             + self.htpmw_mech
@@ -1937,8 +1936,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(fusion_power)",
-            physics_variables.fusion_power,
+            "(powfmw)",
+            physics_variables.powfmw,
             "OP ",
         )
         po.ovarrf(
@@ -1948,7 +1947,7 @@ class Power:
             fwbs_variables.emultmw,
             "OP ",
         )
-        sum = physics_variables.fusion_power + fwbs_variables.emultmw
+        sum = physics_variables.powfmw + fwbs_variables.emultmw
         po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
         po.oblnkl(self.outfile)
         po.ovarrf(
@@ -2005,19 +2004,17 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(pnetelmw/(fusion_power+emultmw)",
+            "(pnetelmw/(powfmw+emultmw)",
             100.0e0
             * heat_transport_variables.pnetelmw
-            / (physics_variables.fusion_power + fwbs_variables.emultmw),
+            / (physics_variables.powfmw + fwbs_variables.emultmw),
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Net electric power / total fusion power (%)",
-            "(pnetelmw/fusion_power)",
-            100.0e0
-            * heat_transport_variables.pnetelmw
-            / physics_variables.fusion_power,
+            "(pnetelmw/powfmw)",
+            100.0e0 * heat_transport_variables.pnetelmw / physics_variables.powfmw,
             "OP ",
         )
         po.ovarrf(

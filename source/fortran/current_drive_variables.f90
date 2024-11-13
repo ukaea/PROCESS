@@ -48,7 +48,7 @@ module current_drive_variables
   real(dp) :: cboot
   !! bootstrap current fraction multiplier (`i_bootstrap_current=1`)
 
-  real(dp) :: beam_current
+  real(dp) :: cnbeam
   !! neutral beam current (A)
 
   real(dp) :: diacf_hender
@@ -78,7 +78,7 @@ module current_drive_variables
   !!  - =0 O-mode
   !!  - =1 X-mode
 
-  real(dp) :: beam_energy
+  real(dp) :: enbeam
   !! neutral beam energy (keV) (`iteration variable 19`)
 
   real(dp) :: etacd
@@ -118,7 +118,7 @@ module current_drive_variables
   real(dp) :: frbeam
   !! R_tangential / R_major for neutral beam injection
 
-  real(dp) :: f_tritium_beam
+  real(dp) :: ftritbm
   !! fraction of beam that is tritium
 
   real(dp) :: gamcd
@@ -244,7 +244,7 @@ module current_drive_variables
     bscf_sauter = 0.0D0
     bscf_wilson = 0.0D0
     cboot = 1.0D0
-    beam_current = 0.0D0
+    cnbeam = 0.0D0
     diacf_hender = 0.0D0
     diacf_scene = 0.0D0
     diamagnetic_current_fraction = 0.0D0
@@ -253,7 +253,7 @@ module current_drive_variables
     effcd = 0.0D0
     harnum = 2.0
     wave_mode = 0
-    beam_energy = 1.0D3
+    enbeam = 1.0D3
     etacd = 0.0D0
     etacdfix = 0.0D0
     etaech = 0.3D0
@@ -266,7 +266,7 @@ module current_drive_variables
     feffcd = 1.0D0
     forbitloss = 0.0D0
     frbeam = 1.05D0
-    f_tritium_beam = 1.0D-6
+    ftritbm = 1.0D-6
     gamcd = 0.0D0
     gamma_ecrh = 0.35D0
     xi_ebw = 0.8D0
