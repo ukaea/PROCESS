@@ -10,6 +10,7 @@ from process.fortran import fwbs_variables as fwbsv
 from process.fortran import times_variables as tv
 from process.fortran import ife_variables as ifev
 from process.fortran import divertor_variables as dv
+from process.init import init_all_module_vars
 import pytest
 from pytest import approx
 
@@ -80,6 +81,9 @@ def test_avail_1(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
+    # Initialise fortran variables to keep test isolated from others
+    init_all_module_vars()
+
     # Mock module vars
     monkeypatch.setattr(cv, "iavail", 1)
     monkeypatch.setattr(cv, "divlife", 1.0)
@@ -99,6 +103,9 @@ def test_avail_1(monkeypatch, availability):
     cfactr_obs = cv.cfactr
     cfactr_exp = 0.0006344554455445239
     assert pytest.approx(cfactr_exp) == cfactr_obs
+
+    # Initialise fortran variables again to reset for other tests
+    init_all_module_vars()
 
 
 def test_calc_u_unplanned_hcd(availability):
@@ -561,6 +568,8 @@ def test_avail_st(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
+    # Initialise fortran variables to keep test isolated from others
+    init_all_module_vars()
     monkeypatch.setattr(cv, "tmain", 1.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)

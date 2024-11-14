@@ -58,6 +58,6 @@ def test_parse_real(epsvmc, expected, tmp_path):
         fortran.global_variables.fileprefix,
         _create_input_file(tmp_path, f"epsvmc = {epsvmc}"),
     )
-    init.init()
+    init.init_process()
 
     assert fortran.numerics.epsvmc.item() == expected
