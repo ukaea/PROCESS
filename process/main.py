@@ -50,7 +50,7 @@ from process.io import mfile
 from process.plasma_geometry import PlasmaGeom
 from process.pulse import Pulse
 from process.scan import Scan
-from process.stellarator import Stellarator
+from process.stellarator import Stellarator, Neoclassics
 from process.structure import Structure
 from process.build import Build
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
@@ -629,6 +629,7 @@ class Models:
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )
+        self.neoclassics = Neoclassics()
         self.stellarator = Stellarator(
             availability=self.availability,
             buildings=self.buildings,
@@ -639,6 +640,7 @@ class Models:
             hcpb=self.ccfe_hcpb,
             current_drive=self.current_drive,
             physics=self.physics,
+            neoclassics=self.neoclassics,
         )
         self.dcll = DCLL(blanket_library=self.blanket_library)
 

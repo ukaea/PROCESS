@@ -69,7 +69,7 @@ A `.csv` file will be saved to the directory of the input file.
 
 > `process/io/plot_proc.py`
 
-A utility to produce a three-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles and TF coil layout and turn strucuture.
+A utility to produce a four-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles and TF coil layout and turn strucuture.
 
 ### Usage
 

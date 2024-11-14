@@ -1876,14 +1876,14 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 )
             )
 
-        plt.minorticks_on()
-        plt.xlim(0.0, r_tf_inboard_out * 1.1)
-        plt.ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
+        axis.minorticks_on()
+        axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
+        axis.set_ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
 
-        plt.title("Top-down view of inboard TF coil at midplane")
-        plt.xlabel("Radial distance [m]")
-        plt.ylabel("Toroidal distance [m]")
-        plt.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
+        axis.set_title("Top-down view of inboard TF coil at midplane")
+        axis.set_xlabel("Radial distance [m]")
+        axis.set_ylabel("Toroidal distance [m]")
+        axis.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
@@ -1974,8 +1974,8 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 edgecolor="black",
             ),
         )
-        plt.xlim(-turn_width * 0.05, turn_width * 1.05)
-        plt.ylim(-turn_width * 0.05, turn_width * 1.05)
+        axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
+        axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
 
     # Non square turns
     elif integer_turns == 1:
@@ -2026,14 +2026,14 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             ),
         )
 
-        plt.xlim(-turn_width * 0.05, turn_width * 1.05)
-        plt.ylim(-turn_height * 0.05, turn_height * 1.05)
+        axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
+        axis.set_ylim(-turn_height * 0.05, turn_height * 1.05)
 
-    plt.minorticks_on()
-    plt.title("WP Turn Structure")
-    plt.xlabel("X [mm]")
-    plt.ylabel("Y [mm]")
-    plt.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
+    axis.minorticks_on()
+    axis.set_title("WP Turn Structure")
+    axis.set_xlabel("X [mm]")
+    axis.set_ylabel("Y [mm]")
+    axis.legend(loc="upper right", bbox_to_anchor=(1.0, -0.25))
 
 
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
@@ -2404,7 +2404,7 @@ def plot_physics_info(axis, mfile_data, scan):
     data = [
         ("fusion_power", "Fusion power", "MW"),
         ("bigq", "$Q_{p}$", ""),
-        ("plasma_current_MA", "$I_p$", "MA"),
+        ("plasma_current_ma", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
         ("normalised_thermal_beta", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
@@ -2898,10 +2898,92 @@ def plot_current_drive_info(axis, mfile_data, scan):
     plot_info(axis, data, mfile_data, scan)
 
 
+def plot_bootstrap_comparison(axis, mfile_data, scan):
+    """Function to plot a scatter box plot of bootstrap current fractions.
+
+    Arguments:
+        axis --> axis object to plot to
+        mfile_data --> MFILE data object
+        scan --> scan number to use
+    """
+
+    boot_ipdg = mfile_data.data["bscf_iter89"].get_scan(scan)
+    boot_sauter = mfile_data.data["bscf_sauter"].get_scan(scan)
+    boot_nenins = mfile_data.data["bscf_nevins"].get_scan(scan)
+    boot_wilson = mfile_data.data["bscf_wilson"].get_scan(scan)
+    boot_sakai = mfile_data.data["bscf_sakai"].get_scan(scan)
+    boot_aries = mfile_data.data["bscf_aries"].get_scan(scan)
+    boot_andrade = mfile_data.data["bscf_andrade"].get_scan(scan)
+    boot_hoang = mfile_data.data["bscf_hoang"].get_scan(scan)
+    boot_wong = mfile_data.data["bscf_wong"].get_scan(scan)
+    boot_gi_I = mfile_data.data["bscf_gi_i"].get_scan(scan)
+    boot_gi_II = mfile_data.data["bscf_gi_ii"].get_scan(scan)
+
+    # Data for the box plot
+    data = {
+        "IPDG": boot_ipdg,
+        "Sauter": boot_sauter,
+        "Nevins": boot_nenins,
+        "Wilson": boot_wilson,
+        "Sakai": boot_sakai,
+        "ARIES": boot_aries,
+        "Andrade": boot_andrade,
+        "Hoang": boot_hoang,
+        "Wong": boot_wong,
+        "Gi-I": boot_gi_I,
+        "Gi-II": boot_gi_II,
+    }
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_bootstrap = np.mean(data_values)
+    std_bootstrap = np.std(data_values)
+    median_bootstrap = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        0.65, 0.9, f"Average: {avg_bootstrap:.4f}", transform=axis.transAxes, fontsize=9
+    )
+    axis.text(
+        0.65,
+        0.85,
+        f"Standard Dev: {std_bootstrap:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        0.65,
+        0.8,
+        f"Median: {median_bootstrap:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("Bootstrap Current Fraction Comparison")
+    axis.set_ylabel("Bootstrap Current Fraction")
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+
+
 def main_plot(
     fig1,
     fig2,
     fig3,
+    fig4,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -2988,7 +3070,7 @@ def main_plot(
     plot_current_drive_info(plot_6, m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
-    # Can only plot WP and turn sturcutre if superconducting coil at the moment
+    # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
         plot_7 = fig3.add_subplot(321)
@@ -2997,6 +3079,9 @@ def main_plot(
         # TF coil turn structure
         plot_8 = fig3.add_subplot(322, aspect="equal")
         plot_tf_turn(plot_8, m_file_data, scan)
+
+    plot_9 = fig4.add_subplot(221)
+    plot_bootstrap_comparison(plot_9, m_file_data, scan)
 
 
 def main(args=None):
@@ -3252,12 +3337,14 @@ def main(args=None):
     page1 = plt.figure(figsize=(12, 9), dpi=80)
     page2 = plt.figure(figsize=(12, 9), dpi=80)
     page3 = plt.figure(figsize=(12, 9), dpi=80)
+    page4 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
         page1,
         page2,
         page3,
+        page4,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3269,6 +3356,7 @@ def main(args=None):
         pdf.savefig(page1)
         pdf.savefig(page2)
         pdf.savefig(page3)
+        pdf.savefig(page4)
 
     # show fig if option used
     if args.show:
@@ -3277,6 +3365,7 @@ def main(args=None):
     plt.close(page1)
     plt.close(page2)
     plt.close(page3)
+    plt.close(page4)
 
 
 if __name__ == "__main__":
