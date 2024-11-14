@@ -23,6 +23,10 @@ Philosophical Transactions of the Royal Society A (2024) 382:20230414
 I.T. Chapman, S.C. Cowley, H.R. Wilson   
 Philosophical Transactions of the Royal Society A (2024) 382:20230416   
 
+[Flat-top plasma operational space of the STEP power plant](https://iopscience.iop.org/article/10.1088/1741-4326/ad6ea2)   
+E. Tholerus, F.J. Casson, S.P. Marsden, T. Wilson, D. Brunetti, P. Fox, S.J. Freethy, T.C. Hender, S.S. Henderson, A. Hudoba, K.K. Kirov, F. Koechl, H. Meyer, S.I. Muldrew, C. Olde, B.S. Patel, C.M. Roach, S. Saarelma, G. Xia   
+Nuclear Fusion 64 (2024) 106030   
+
 [The Influence of Confinement Scaling on Spherical Tokamak Power Plant Design and Performance](https://ieeexplore.ieee.org/abstract/document/10522478)   
 C. Ashe, S.I. Muldrew   
 IEEE Transactions on Plasma Science (Early Access)
@@ -31,9 +35,9 @@ IEEE Transactions on Plasma Science (Early Access)
 F. Warmer, J. Alguacil, D. Biek, T. Bogaarts, G. Bongiovì, V. Bykov, J.P. Catalán, R.K. Duligal, I. Fernández-Berceruelo, S. Giambrone, C. Hume, M. Hrecinuc, R. Kembleton, J. Lion, T. Lyytinen, J.A. Noguerón Valiente, I. Palermo, V. Queral, D. Rapisarda, W.J. Rutten, L. Sanchis, X. Sarasola, K. Sedlak, A. Snicker, D. Sosa, F.R. Urgorri   
 Fusion Engineering and Design 202 (2024) 114386   
 
-[Flat-top plasma operational space of the STEP power plant](https://arxiv.org/abs/2403.09460)   
-E. Tholerus, F.J. Casson, S.P. Marsden, T. Wilson, D. Brunetti, P. Fox, S.J. Freethy, T.C. Hender, S.S. Henderson, A. Hudoba, K.K. Kirov, F. Koechl, H. Meyer, S.I. Muldrew, C. Olde, B.S. Patel, C.M. Roach, S. Saarelma, G. Xia   
-Nuclear Fusion (Submitted) arXiv:2403.09460
+[Transitioning From Top–Down to Bottom–Up Cost Assessments in Fusion](https://ieeexplore.ieee.org/abstract/document/10482860)   
+M. Butcher, H. Lux, J. Foster   
+IEEE Transactions on Plasma Science (Early Access)   
 
 [Using Bayesian Networks as Metamodels for Predicting Uncertain Fusion Economics in Spherical Tokamaks](https://ieeexplore.ieee.org/abstract/document/10453409)   
 T. Griffiths, Z. Xuereb Conti, J. Hidalgo-Salaverri, M. Bluck   
