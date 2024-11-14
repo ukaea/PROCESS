@@ -7,6 +7,22 @@ Below is a list of publications using or citing PROCESS by year:
 
 ## 2024
 
+[Optimizing the cost of the STEP programme](https://royalsocietypublishing.org/doi/full/10.1098/rsta.2023.0413)   
+H. Lux, C. Brown, M. Butcher, R. Chapman, J. Foster, N. Nawal   
+Philosophical Transactions of the Royal Society A (2024) 382:20230413   
+
+[Digital: accelerating the pathway](https://royalsocietypublishing.org/doi/full/10.1098/rsta.2023.0411)   
+A. Davis, C. Waldon, S.I. Muldrew, B.S. Patel, P. Verrier, T.R. Barrett, G.A. Politis   
+Philosophical Transactions of the Royal Society A (2024) 382:20230411   
+
+[Concept design overview: a question of choices and compromise](https://royalsocietypublishing.org/doi/full/10.1098/rsta.2023.0414)   
+C. Waldon, S.I. Muldrew, J. Keep, R. Verhoeven, T. Thompson, M. Kisbey-Ascott   
+Philosophical Transactions of the Royal Society A (2024) 382:20230414   
+
+[The Spherical Tokamak for Energy Production: theme issue introduction](https://royalsocietypublishing.org/doi/full/10.1098/rsta.2023.0416)   
+I.T. Chapman, S.C. Cowley, H.R. Wilson   
+Philosophical Transactions of the Royal Society A (2024) 382:20230416   
+
 [The Influence of Confinement Scaling on Spherical Tokamak Power Plant Design and Performance](https://ieeexplore.ieee.org/abstract/document/10522478)   
 C. Ashe, S.I. Muldrew   
 IEEE Transactions on Plasma Science (Early Access)
