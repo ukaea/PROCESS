@@ -1778,7 +1778,7 @@ class Physics:
         current_drive_variables.bscf_aries = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 rli=physics_variables.rli,
                 core_density=physics_variables.ne0,
                 average_density=physics_variables.dene,
@@ -1789,7 +1789,7 @@ class Physics:
         current_drive_variables.bscf_andrade = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 core_pressure=physics_variables.p0,
                 average_pressure=physics_variables.vol_avg_pressure,
                 inverse_aspect=physics_variables.eps,
@@ -1798,7 +1798,7 @@ class Physics:
         current_drive_variables.bscf_hoang = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_hoang(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 pressure_index=physics_variables.alphap,
                 current_index=physics_variables.alphaj,
                 inverse_aspect=physics_variables.eps,
@@ -1807,7 +1807,7 @@ class Physics:
         current_drive_variables.bscf_wong = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wong(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 density_index=physics_variables.alphan,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -1817,7 +1817,7 @@ class Physics:
         current_drive_variables.bscf_gi_I = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_I(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -1830,7 +1830,7 @@ class Physics:
         current_drive_variables.bscf_gi_II = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_II(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -5990,7 +5990,7 @@ class Physics:
 
     @staticmethod
     def bootstrap_fraction_aries(
-        betap: float,
+        beta_poloidal: float,
         rli: float,
         core_density: float,
         average_density: float,
@@ -6000,7 +6000,7 @@ class Physics:
         Calculate the bootstrap fraction using the ARIES formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         rli (float): Plasma normalized internal inductance.
         core_density (float): Core plasma density.
         average_density (float): Average plasma density.
@@ -6024,11 +6024,11 @@ class Physics:
 
         c_bs = a_1 + b_1 * (core_density / average_density)
 
-        return c_bs * np.sqrt(inverse_aspect) * betap
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
 
     @staticmethod
     def bootstrap_fraction_andrade(
-        betap: float,
+        beta_poloidal: float,
         core_pressure: float,
         average_pressure: float,
         inverse_aspect: float,
@@ -6037,7 +6037,7 @@ class Physics:
         Calculate the bootstrap fraction using the Andrade et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         core_pressure (float): Core plasma pressure.
         average_pressure (float): Average plasma pressure.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6064,11 +6064,11 @@ class Physics:
         # Error +- 0.0007
         c_bs = 0.2340
 
-        return c_bs * np.sqrt(inverse_aspect) * betap * c_p**0.8
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal * c_p**0.8
 
     @staticmethod
     def bootstrap_fraction_hoang(
-        betap: float,
+        beta_poloidal: float,
         pressure_index: float,
         current_index: float,
         inverse_aspect: float,
@@ -6077,7 +6077,7 @@ class Physics:
         Calculate the bootstrap fraction using the Hoang et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         pressure_index (float): Pressure profile index.
         current_index (float): Current profile index.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6110,11 +6110,11 @@ class Physics:
 
         c_bs = np.sqrt((pressure_index + 1) / (current_index + 1))
 
-        return 0.4 * np.sqrt(inverse_aspect) * betap**0.9 * c_bs
+        return 0.4 * np.sqrt(inverse_aspect) * beta_poloidal**0.9 * c_bs
 
     @staticmethod
     def bootstrap_fraction_wong(
-        betap: float,
+        beta_poloidal: float,
         density_index: float,
         temperature_index: float,
         inverse_aspect: float,
@@ -6124,7 +6124,7 @@ class Physics:
         Calculate the bootstrap fraction using the Wong et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         density_index (float): Density profile index.
         temperature_index (float): Temperature profile index.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6153,11 +6153,11 @@ class Physics:
 
         c_bs = 0.773 + 0.019 * elongation
 
-        return c_bs * f_peak**0.25 * betap * np.sqrt(inverse_aspect)
+        return c_bs * f_peak**0.25 * beta_poloidal * np.sqrt(inverse_aspect)
 
     @staticmethod
     def bootstrap_fraction_gi_I(
-        betap: float,
+        beta_poloidal: float,
         pressure_index: float,
         temperature_index: float,
         inverse_aspect: float,
@@ -6169,7 +6169,7 @@ class Physics:
         Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         pressure_index (float): Pressure profile index.
         temperature_index (float): Temperature profile index.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6207,11 +6207,11 @@ class Physics:
             * (q95 / q0) ** -0.133
         )
 
-        return c_bs * np.sqrt(inverse_aspect) * betap
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
 
     @staticmethod
     def bootstrap_fraction_gi_II(
-        betap: float,
+        beta_poloidal: float,
         pressure_index: float,
         temperature_index: float,
         inverse_aspect: float,
@@ -6221,7 +6221,7 @@ class Physics:
         Calculate the bootstrap fraction using the second scaling from the Gi et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         pressure_index (float): Pressure profile index.
         temperature_index (float): Temperature profile index.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6256,7 +6256,7 @@ class Physics:
             * effective_charge**0.178
         )
 
-        return c_bs * np.sqrt(inverse_aspect) * betap
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance
