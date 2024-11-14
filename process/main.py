@@ -73,6 +73,7 @@ from process.fw import Fw
 from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 from process.caller import write_output_files
+import process.init as init
 
 import process
 
@@ -298,8 +299,8 @@ class VaryRun:
         config = RunProcessConfig(self.config_file)
         config.setup()
 
-        fortran.init_module.init_all_module_vars()
-        fortran.init_module.init()
+        init.init_all_module_vars()
+        init.init_process()
 
         neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
@@ -399,7 +400,7 @@ class SingleRun:
         This "resets" all module variables to their initialised values, so each
         new run doesn't have any side-effects from previous runs.
         """
-        fortran.init_module.init_all_module_vars()
+        init.init_all_module_vars()
 
     def set_filenames(self):
         """Validate the input filename and create other filenames from it."""
@@ -455,7 +456,7 @@ class SingleRun:
         """Run the init module to call all initialisation routines."""
         initialise_imprad()
         # Reads in input file
-        fortran.init_module.init()
+        init.init_process()
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
