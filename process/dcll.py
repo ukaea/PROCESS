@@ -3,7 +3,6 @@ from process.fortran import (
     build_variables,
     fwbs_variables,
     dcll_module,
-    blanket_library,
     physics_variables,
     current_drive_variables,
     process_output as po,
@@ -94,9 +93,9 @@ class DCLL:
         build_variables.fwith = 2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall
         build_variables.fwoth = build_variables.fwith
 
-        blanket_library.component_volumes()
+        self.blanket_library.component_volumes()
         self.blanket_library.primary_coolant_properties(output=output)
-        blanket_library.liquid_breeder_properties(int(output), self.outfile)
+        self.blanket_library.liquid_breeder_properties(output)
         self.dcll_neutronics_and_power(output=output)
         self.dcll_masses(output=output)
         self.dcll_power_and_heating(output=output)
