@@ -148,6 +148,8 @@ jobs:
           path: process/
       - name: Install PROCESS
         run: pip install -e .
+      - name: Install dev dependencies
+        run: pip install -r requirements_dev.txt
       - name: Run regression input files
         run: python tracking/run_tracking_inputs.py run tests/regression/input_files
       - name: Archive tracked MFILEs
