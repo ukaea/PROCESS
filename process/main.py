@@ -549,6 +549,7 @@ class SingleRun:
         filename = self.input_file
         variables_in_in_dat = []
         modified_lines = []
+        changes_made = []  # To store details of the changes
 
         with open(filename, "r") as file:
             for line in file:
@@ -570,11 +571,17 @@ class SingleRun:
                         if replacement is None:
                             # If no replacement is defined, comment out the line
                             modified_lines.append(f"* Obsolete: {line}")
+                            changes_made.append(
+                                f"Commented out obsolete variable: {variable_name}"
+                            )
                         else:
                             # Replace obsolete variable with updated variable
                             modified_line = line.replace(variable_name, replacement, 1)
                             modified_lines.append(
                                 f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
+                            )
+                            changes_made.append(
+                                f"Replaced '{variable_name}' with '{replacement}'"
                             )
                     else:
                         # If replacement is False, add the line as-is
@@ -593,6 +600,9 @@ class SingleRun:
                 print(
                     "The IN.DAT file has been updated to replace or comment out obsolete variables."
                 )
+                print("Summary of changes made:")
+                for change in changes_made:
+                    print(f" - {change}")
             else:
                 # Only print the report if replace_obsolete is False
                 message = (
