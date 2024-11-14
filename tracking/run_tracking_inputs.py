@@ -2,6 +2,7 @@
 
 import argparse
 from pathlib import Path
+import shutil
 import subprocess
 
 from tracking_data import ProcessTracker
@@ -33,26 +34,33 @@ def tracking(arguments):
     """
     Call the ProcessTracker, move the MFiles to the database and rename.
     """
-    db = arguments.db
-    commit = arguments.commit
-    hash = arguments.hash
     path_to_tracking_mfiles = Path(__file__).parent
     mfiles = path_to_tracking_mfiles.glob("*_MFILE.DAT")
     for mfile_path in mfiles:
-        ProcessTracker(mfile=mfile_path, database=db, message=commit, hashid=hash)
-        moved_mfile_name = mfile_path.with_name(
-            mfile_path.name.replace("_MFILE.DAT", f"_MFILE_{hash}.DAT")
+        ProcessTracker(
+            mfile=mfile_path,
+            database=arguments.db,
+            message=arguments.commit,
+            hashid=arguments.hash,
         )
-        copied_mfile_destination = Path(db) / moved_mfile_name.name
-        copied_mfile_destination.write_bytes(mfile_path.read_bytes())
+
+        copied_mfile = shutil.copy(mfile_path, Path(arguments.db) / mfile_path.name)
+        moved_mfile_name = copied_mfile.with_name(
+            copied_mfile.name.replace("_MFILE.DAT", f"_MFILE_{arguments.hash}.DAT")
+        )
+        copied_mfile.rename(moved_mfile_name)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help="Choose the usage mode", dest="command")
+
+    # Run command
     subparser_run = subparsers.add_parser("run")
-    subparser_trk = subparsers.add_parser("track")
     subparser_run.add_argument("input_locs", type=str)
+
+    # Tracking command
+    subparser_trk = subparsers.add_parser("track")
     subparser_trk.add_argument("db", type=str)
     subparser_trk.add_argument("commit", type=str)
     subparser_trk.add_argument("hash", type=str)
