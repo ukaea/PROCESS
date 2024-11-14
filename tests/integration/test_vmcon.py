@@ -5,14 +5,15 @@ behaviour with different initial guesses for the solution vector x
 Expected answers for tests 1 to 3 are given in
 VMCON documentation ANL-80-64
 """
-from process.evaluators import Evaluators
-from process.fortran import init_module
-from process.fortran import error_handling
+
 import pytest
 import numpy as np
 import logging
 from abc import ABC, abstractmethod
 from process.solver import get_solver
+from process.init import init_all_module_vars
+from process.evaluators import Evaluators
+from process.fortran import error_handling
 
 # Debug-level terminal output logging
 logger = logging.getLogger(__name__)
@@ -24,7 +25,7 @@ error_handling.initialise_error_list()
 @pytest.fixture(autouse=True)
 def reinit():
     """Re-initialise Fortran module variables before each test is run."""
-    init_module.init_all_module_vars()
+    init_all_module_vars()
 
 
 class Case:

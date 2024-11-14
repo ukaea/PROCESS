@@ -7,6 +7,7 @@ from copy import copy
 import numpy as np
 import jinja2
 
+from process.init import init_all_module_vars
 from process import fortran
 
 
@@ -81,7 +82,7 @@ def get_input_output_variables(variables: List[FortranVariable]):
         except AttributeError:
             continue
 
-    fortran.init_module.init_all_module_vars()
+    init_all_module_vars()
 
     for var in variables:
         current_values_entry = f"{var.module}.{var.name}"
