@@ -362,7 +362,7 @@ class VaryRun:
 class SingleRun:
     """Perform a single run of PROCESS."""
 
-    def __init__(self, input_file, update_obsolete, solver="vmcon"):
+    def __init__(self, input_file, update_obsolete=False, solver="vmcon"):
         """Read input file and initialise variables.
 
         :param input_file: input file named <optional_name>IN.DAT
