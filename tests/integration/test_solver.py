@@ -75,7 +75,7 @@ def test_solver(temp_data):
     update_ixc_bounds()
 
     init.init_all_module_vars()
-    init.init_process()()
+    init.init_process()
 
     LBS, UBS = get_variable_range(ITERVARS, CONFIG.factor)
 
