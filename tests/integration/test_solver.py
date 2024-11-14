@@ -14,7 +14,7 @@ from process.io.process_funcs import (
     get_solution_from_mfile,
     process_warnings,
 )
-from process import fortran
+import process.init as init
 
 # Required to prevent pytest collecting this as a test
 TestProcessConfig.__test__ = False
@@ -74,8 +74,8 @@ def test_solver(temp_data):
 
     update_ixc_bounds()
 
-    fortran.init_module.init_all_module_vars()
-    fortran.init_module.init()
+    init.init_all_module_vars()
+    init.init_process()()
 
     LBS, UBS = get_variable_range(ITERVARS, CONFIG.factor)
 

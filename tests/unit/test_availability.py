@@ -80,9 +80,6 @@ def test_avail_1(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
-    # Initialise fortran variables to keep test isolated from others
-    fortran.init_module.init_all_module_vars()
-
     # Mock module vars
     monkeypatch.setattr(cv, "iavail", 1)
     monkeypatch.setattr(cv, "divlife", 1.0)
@@ -102,9 +99,6 @@ def test_avail_1(monkeypatch, availability):
     cfactr_obs = cv.cfactr
     cfactr_exp = 0.0006344554455445239
     assert pytest.approx(cfactr_exp) == cfactr_obs
-
-    # Initialise fortran variables again to reset for other tests
-    fortran.init_module.init_all_module_vars()
 
 
 def test_calc_u_unplanned_hcd(availability):
@@ -486,6 +480,7 @@ def test_avail_2(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
+
     # Mock return values for for functions called in avail_2
     def mock_calc_u_planned(*args, **kwargs):
         return 0.01
@@ -566,9 +561,6 @@ def test_avail_st(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
-    # Initialise fortran variables to keep test isolated from others
-    fortran.init_module.init_all_module_vars()
-
     monkeypatch.setattr(cv, "tmain", 1.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
@@ -580,9 +572,6 @@ def test_avail_st(monkeypatch, availability):
     assert pytest.approx(cv.t_operation) == 29.03225806
     assert pytest.approx(cv.cfactr) == 0.82579737
     assert pytest.approx(cv.cpfact) == 0.41289868
-
-    # Initialise fortran variables again to reset for other tests
-    fortran.init_module.init_all_module_vars()
 
 
 @pytest.mark.parametrize("i_tf_sup, exp", ((1, 6.337618), (0, 4)))
