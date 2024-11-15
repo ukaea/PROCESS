@@ -230,7 +230,7 @@ GENERIC_LIST = [
     "pinnerzoneradmw",
     "pradmw",
     "bootstrap_current_fraction",
-    "pdivmax/rmajor",
+    "pdivmax_over_rmajor",
     "fimp(14",
     "etath",
     "capcost",

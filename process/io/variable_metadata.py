@@ -361,7 +361,7 @@ var_dicts = {
     "fimp(13)": VariableMetadata(
         latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
     ),
-    "pdivmax/rmajor": VariableMetadata(
+    "pdivmax_over_rmajor": VariableMetadata(
         latex=r"$P_{\mathrm{div}}/R_\mathrm{maj}$ [MW/m]",
         description="Divertor power per major radius",
         units="MW/m",
