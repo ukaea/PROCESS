@@ -245,7 +245,7 @@ var_dicts = {
     "pradmw": VariableMetadata(
         latex=r"$P_{\mathrm{rad}}$ [$MW$]", description="Radiation power", units="MW"
     ),
-    "pdivtbt/qar": VariableMetadata(
+    "pdivtbt_over_qar": VariableMetadata(
         latex=r"$\frac{P_{\mathrm{sep}}B_T}{q_{95}AR_{\mathrm{maj}}}$ [$MWTm^{-1}$]",
         description="",
         units="MWTm^{-1}",

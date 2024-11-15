@@ -640,7 +640,7 @@ def main(args=None):
                     else f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
                     + f".{save_format}"
                 )
-            elif output_name == "pdivtbt/qar":
+            elif output_name == "pdivtbt_over_qar":
                 plt.savefig(
                     f"{args.outputdir}/scan_{scan_var_name}_vs_pdivtbtqar"
                     + f"_vs_{output_name2}"
