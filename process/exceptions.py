@@ -1,4 +1,6 @@
 class ProcessException(Exception):
+    """A base Exception to derive other PROCESS exceptions from"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self._diagnostics = kwargs
@@ -13,6 +15,14 @@ class ProcessException(Exception):
             return f"{exception_message}\n{diagnostics_message}"
 
         return exception_message
+
+
+class ProcessValidationError(ProcessException):
+    """Exception raised when validating PROCESS input.
+
+    E.g. initial values, constraint/variable combinations, switch combinations"""
+
+    pass
 
 
 class ProcessValueError(ProcessException, ValueError):
