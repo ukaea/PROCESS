@@ -7400,5 +7400,5 @@ def vv_stress_on_quench(
     zeta = 1 + ((A_vv - 1) * numpy.log((A_vv + 1) / (A_vv - 1)) / (2 * A_vv))
 
     tresca_stress_vv = zeta * B_vvi * J_vvi * Ri_vv
-    print(tresca_stress_vv)
+
     return tresca_stress_vv
