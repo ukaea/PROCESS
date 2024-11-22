@@ -7266,7 +7266,7 @@ def _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv):
             lambda_term(tau[1, k], omega[k]) - lambda_term(tau[0, k], omega[k])
         )
 
-    return (chi1 + chi2) / np.pi
+    return (chi1 + 2.0 * chi2) / (2.0 * np.pi)
 
 
 def vv_stress_on_quench(
@@ -7350,8 +7350,11 @@ def vv_stress_on_quench(
     Empirical Formulas for Estimating Self and Mutual Inductances of Toroidal Field Coils and Structures.
     Plasma and Fusion Research. 15. 1405078-1405078. 10.1585/pfr.15.1405078.
     """
+    # Convert angles into radians
+    theta1_vv_rad = np.pi * (theta1_vv / 180.0)
+
     # Poloidal loop resistance (PLR) in ohms
-    theta_vv = _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv)
+    theta_vv = _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv_rad)
     plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (S_cc + S_rp))) * 1e-6
     plr_vv = ((0.84 / d_vv) * theta_vv) * 1e-6
 
@@ -7397,5 +7400,5 @@ def vv_stress_on_quench(
     zeta = 1 + ((A_vv - 1) * numpy.log((A_vv + 1) / (A_vv - 1)) / (2 * A_vv))
 
     tresca_stress_vv = zeta * B_vvi * J_vvi * Ri_vv
-
+    print(tresca_stress_vv)
     return tresca_stress_vv
