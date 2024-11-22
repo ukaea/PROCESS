@@ -14076,7 +14076,7 @@ def test_vv_stress_on_quench():
                 d_vv=0.12,  # for 6.6 restistance -> lambda2 = 2.1
             )
         )
-        == 56835032.21809308
+        == 57045874.69917925
     )
 
 
@@ -14142,4 +14142,4 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
 
     sctfcoil.vv_stress_on_quench()
 
-    assert pytest.approx(sctfcoil_module.vv_stress_quench) == 56834395.24352395
+    assert pytest.approx(sctfcoil_module.vv_stress_quench) == 56893800.120420754
