@@ -198,7 +198,7 @@ class Process:
             help="Print the version of PROCESS to the terminal",
         )
         parser.add_argument(
-            "--update_obsolete",
+            "--update-obsolete",
             action="store_true",
             help="Automatically update obsolete variables in the IN.DAT file",
         )
@@ -221,7 +221,9 @@ class Process:
             self.run = VaryRun(self.args.varyiterparamsconfig, self.args.solver)
         else:
             self.run = SingleRun(
-                self.args.input, self.args.update_obsolete, self.args.solver
+                self.args.input,
+                self.args.solver,
+                update_obsolete=self.args.update_obsolete,
             )
         self.run.run()
 
@@ -362,9 +364,8 @@ class VaryRun:
 class SingleRun:
     """Perform a single run of PROCESS."""
 
-    def __init__(self, input_file, update_obsolete=False, solver="vmcon"):
+    def __init__(self, input_file, solver="vmcon", *, update_obsolete=False):
         """Read input file and initialise variables.
-
         :param input_file: input file named <optional_name>IN.DAT
         :type input_file: str
         :param solver: which solver to use, as specified in solver.py
@@ -559,7 +560,7 @@ class SingleRun:
                     continue
 
                 # Extract the variable name before the separator
-                variable_name = line.strip().split(" ", 1)[0]
+                variable_name = line.split("=", 1)[0].strip()
                 variables_in_in_dat.append(variable_name)
 
                 # Check if the variable is obsolete and needs replacing
@@ -575,14 +576,24 @@ class SingleRun:
                                 f"Commented out obsolete variable: {variable_name}"
                             )
                         else:
-                            # Replace obsolete variable with updated variable
-                            modified_line = line.replace(variable_name, replacement, 1)
-                            modified_lines.append(
-                                f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
-                            )
-                            changes_made.append(
-                                f"Replaced '{variable_name}' with '{replacement}'"
-                            )
+                            if isinstance(replacement, list):
+                                # Raise an error if replacement is a list
+                                replacement_str = ", ".join(replacement)
+                                raise ValueError(
+                                    f"The variable '{variable_name}' is obsolete and should be replaced by the following variables: {replacement_str}. "
+                                    "Please set their values accordingly."
+                                )
+                            else:
+                                # Replace obsolete variable with updated variable
+                                modified_line = line.replace(
+                                    variable_name, replacement, 1
+                                )
+                                modified_lines.append(
+                                    f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
+                                )
+                                changes_made.append(
+                                    f"Replaced '{variable_name}' with '{replacement}'"
+                                )
                     else:
                         # If replacement is False, add the line as-is
                         modified_lines.append(line)
