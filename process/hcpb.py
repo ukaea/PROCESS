@@ -2,7 +2,6 @@ import numpy as np
 
 from process.fortran import (
     constants,
-    blanket_library,
     ccfe_hcpb_module,
     build_variables,
     fwbs_variables,
@@ -50,7 +49,7 @@ class CCFE_HCPB:
         # Note that the first wall coolant is now input separately.
 
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
-        blanket_library.component_volumes()
+        self.blanket_library.component_volumes()
 
         # Centrepost neutronics
         if physics_variables.itart == 1:
@@ -100,7 +99,7 @@ class CCFE_HCPB:
             fwbs_variables.pnuc_cp = 0
             fwbs_variables.neut_flux_cp = 0
 
-        blanket_library.component_masses()
+        self.component_masses()
 
         # Calculate the nuclear heating
         # Rem : The heating power will be normalized to the neutron power using
@@ -199,6 +198,165 @@ class CCFE_HCPB:
         # output
         if output:
             self.write_output()
+
+    def component_masses(self):
+        """Calculations for component masses
+        author: J. Morris, CCFE, Culham Science Centre
+
+        This model used to be in the blanket library. However,
+        it only appears to contain code relevant to hcpb.
+        """
+        # CCFE HCPB modal calculates the coolant mass,
+        # have added an if staement using the iblanket switch for this.
+        # N.B. iblanket=1 for CCFE HCPB and iblanket=3 for the same with TBR using Shimwell.
+
+        # Start adding components of the coolant mass:
+        # Divertor coolant volume (m3)
+        coolvol = (
+            divertor_variables.divsur
+            * divertor_variables.divclfr
+            * divertor_variables.divplt
+        )
+
+        # Blanket coolant volume (m3)
+        coolvol = coolvol + fwbs_variables.volblkt * fwbs_variables.vfblkt
+
+        # Shield coolant volume (m3)
+        coolvol = coolvol + fwbs_variables.volshld * fwbs_variables.vfshld
+
+        # First wall coolant volume (m3)
+        coolvol = (
+            coolvol
+            + build_variables.fwareaib * build_variables.fwith * fwbs_variables.vffwi
+            + build_variables.fwareaob * build_variables.fwoth * fwbs_variables.vffwo
+        )
+
+        # Mass of He coolant = volume * density at typical coolant temperatures and pressures (kg)
+        fwbs_variables.coolmass = coolvol * 1.517
+
+        # Average first wall coolant fraction, only used by old routines in fispact.f90, safety.f90
+        fwbs_variables.fwclfr = (
+            build_variables.fwareaib * build_variables.fwith * fwbs_variables.vffwi
+            + build_variables.fwareaob * build_variables.fwoth * fwbs_variables.vffwo
+        ) / (
+            build_variables.fwarea
+            * 0.5
+            * (build_variables.fwith + build_variables.fwoth)
+        )
+
+        # CCFE HCPB calculates the mass of the divertor, blanket (including seprate masses for each material),
+        # shield, FW and FW armour.
+        # KIT HCPB calculates the mass of the blanket (including seprate masses for each material)
+        # and the void fraction for the blanket.
+        # N.B. iblanket=1 for CCFE HCPB and iblanket=3 for the same with TBR using Shimwell.
+
+        # Component masses
+
+        # Divertor mass (kg)
+        divertor_variables.divsur = (
+            divertor_variables.fdiva
+            * 2.0
+            * np.pi
+            * physics_variables.rmajor
+            * physics_variables.rminor
+        )
+        if physics_variables.idivrt == 2:
+            divertor_variables.divsur = divertor_variables.divsur * 2.0
+        divertor_variables.divmas = (
+            divertor_variables.divsur
+            * divertor_variables.divdens
+            * (1.0 - divertor_variables.divclfr)
+            * divertor_variables.divplt
+        )
+
+        # Shield mass (kg)
+        fwbs_variables.whtshld = (
+            fwbs_variables.volshld
+            * fwbs_variables.denstl
+            * (1.0 - fwbs_variables.vfshld)
+        )
+
+        # Penetration shield mass (set = internal shield) (kg)
+        fwbs_variables.wpenshld = fwbs_variables.whtshld
+
+        # First wall volume (m^3)
+        fwbs_variables.volfw = build_variables.fwareaib * build_variables.fwith * (
+            1.0 - fwbs_variables.vffwi
+        ) + build_variables.fwareaob * build_variables.fwoth * (
+            1.0 - fwbs_variables.vffwo
+        )
+
+        # First wall mass, excluding armour (kg)
+        fwbs_variables.fwmass = fwbs_variables.denstl * fwbs_variables.volfw
+
+        # First wall armour volume (m^3)
+        fwbs_variables.fw_armour_vol = (
+            physics_variables.sarea * fwbs_variables.fw_armour_thickness
+        )
+
+        # First wall armour mass (kg)
+        fwbs_variables.fw_armour_mass = (
+            fwbs_variables.fw_armour_vol * fwbs_variables.denw
+        )
+
+        if fwbs_variables.breeder_f < 1.0e-10:
+            fwbs_variables.breeder_f = 1.0e-10
+        if fwbs_variables.breeder_f > 1.0:
+            fwbs_variables.breeder_f = 1.0
+
+        # fbltibe12 = fblli2sio4 * (1 - breeder_f)/breeder_f
+        # New combined variable breeder_multiplier
+        # Lithium orthosilicate fraction:
+        fwbs_variables.fblli2sio4 = (
+            fwbs_variables.breeder_f * fwbs_variables.breeder_multiplier
+        )
+
+        # Titanium beryllide fraction, and mass (kg):
+        fwbs_variables.fbltibe12 = (
+            fwbs_variables.breeder_multiplier - fwbs_variables.fblli2sio4
+        )
+        fwbs_variables.whtbltibe12 = (
+            fwbs_variables.volblkt * fwbs_variables.fbltibe12 * 2260.0
+        )
+
+        # Blanket Lithium orthosilicate mass (kg)
+        # Ref: www.rockwoodlithium.com...
+        fwbs_variables.whtblli4sio4 = (
+            fwbs_variables.volblkt * fwbs_variables.fblli2sio4 * 2400.0
+        )
+
+        # TODO sort this out so that costs model uses new variables.
+        # #327 For backwards compatibility, set the old blanket masses the same:
+        fwbs_variables.whtblbe = fwbs_variables.whtbltibe12
+        fwbs_variables.wtblli2o = fwbs_variables.whtblli4sio4
+
+        # Steel fraction by volume is the remainder:
+        fwbs_variables.fblss_ccfe = (
+            1.0
+            - fwbs_variables.fblli2sio4
+            - fwbs_variables.fbltibe12
+            - fwbs_variables.vfcblkt
+            - fwbs_variables.vfpblkt
+        )
+
+        # Steel mass (kg)
+        fwbs_variables.whtblss = (
+            fwbs_variables.volblkt * fwbs_variables.fblss_ccfe * fwbs_variables.denstl
+        )
+
+        # Total blanket mass (kg)
+        fwbs_variables.whtblkt = (
+            fwbs_variables.whtbltibe12
+            + fwbs_variables.whtblli4sio4
+            + fwbs_variables.whtblss
+        )
+
+        # Total mass of first wall and blanket
+        fwbs_variables.armour_fw_bl_mass = (
+            fwbs_variables.fw_armour_mass
+            + fwbs_variables.fwmass
+            + fwbs_variables.whtblkt
+        )
 
     def nuclear_heating_magnets(self, output: bool):
         """Nuclear heating in the magnets for CCFE HCPB model

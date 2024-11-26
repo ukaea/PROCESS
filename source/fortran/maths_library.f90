@@ -22,9 +22,6 @@ module maths_library
 
   implicit none
 
-  !  Precision variable
-  integer, parameter :: double = 8
-
 contains
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -622,11 +619,11 @@ contains
     implicit none
 
     !  Arguments
-    real(kind=double), intent(in) :: rshell, rmini, rmino, zminor, drin, drout, dz
-    real(kind=double), intent(out) :: vin, vout, vtot
+    real(kind=dp), intent(in) :: rshell, rmini, rmino, zminor, drin, drout, dz
+    real(kind=dp), intent(out) :: vin, vout, vtot
 
     !  Local variables
-    real(kind=double) :: a, b, elong, v1, v2
+    real(kind=dp) :: a, b, elong, v1, v2
 
     !  Global shared variables
     !  Input: pi,twopi
@@ -704,11 +701,11 @@ contains
     implicit none
 
     !  Arguments
-    real(kind=double), intent(in) :: rmajor, rminor, zminor, drin, drout, dz
-    real(kind=double), intent(out) :: vin, vout, vtot
+    real(kind=dp), intent(in) :: rmajor, rminor, zminor, drin, drout, dz
+    real(kind=dp), intent(out) :: vin, vout, vtot
 
     !  Local variables
-    real(kind=double) :: a, b, elong, v1, v2
+    real(kind=dp) :: a, b, elong, v1, v2
 
     !  Global shared variables
     !  Input: pi,twopi

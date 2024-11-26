@@ -123,7 +123,7 @@ class RegressionTestScenario:
         )
         if differences:
             differences = sorted(
-                differences, key=lambda i: i.percentage_change, reverse=True
+                differences, key=lambda i: abs(i.percentage_change), reverse=True
             )
 
             logger.warning(

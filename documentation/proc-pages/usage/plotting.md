@@ -31,7 +31,7 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 
 <figure markdown>
 ![plot_proc_4](../images/plot_proc_4.PNG){ width="100%"}
-<figcaption>Figure 4: plot_proc bootstrap current model comparison page </figcaption>
+<figcaption>Figure 4: plot_proc bootstrap current model and L-H threshold comparison page </figcaption>
 </figure>
 
 <h3>Scan files</h3>
