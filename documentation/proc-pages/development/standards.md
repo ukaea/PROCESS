@@ -306,7 +306,7 @@ subroutine constraint_eqn_001(args)
   !! - \( T_i \) -- density weighted average ion temperature [keV]
   !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
-  use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
+  use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
   use constants, only: electron_charge,rmu0
 
   implicit none
@@ -314,7 +314,7 @@ subroutine constraint_eqn_001(args)
   type(constraint_args_type), intent(out) :: args
   !! constraint derived type
 
-    args%cc = 1.0D0 - (betaft + beta_beam + &
+    args%cc = 1.0D0 - (beta_fast_alpha + beta_beam + &
       2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
     args%con = beta * (1.0D0 - args%cc)
     args%err = beta * args%cc

@@ -229,7 +229,7 @@ contains
       warm_shop_h, water_buildings_l, water_buildings_w, water_buildings_h, &
       workshop_l, workshop_w, workshop_h
     use constraint_variables, only: flhthresh, fpeakb, fpsep, fdivcol, ftcycl, &
-      betpmx, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
+      beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
@@ -237,7 +237,7 @@ contains
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
       ftohs, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
-      fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbetap, fbeta, fjohc, &
+      fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta, fjohc, &
       fflutf, bmxlim, tbrnmn, fbetatry_lower, fecrh_ignition, fstr_wp, fncycle
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
       cost_factor_vv, cfind, uccry, fcap0cp, uccase, uuves, cconshtf, conf_mag, &
@@ -304,7 +304,7 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, cvol, f_deuterium, ffwal, iculbl, itartpf, ilhthresh, &
+      rhopedt, cvol, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
@@ -312,7 +312,7 @@ contains
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
-      tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
+      tauratio, idensl, bt, iscrp, ipnlaws, beta_limit_upper, beta_limit_lower, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
@@ -530,11 +530,11 @@ contains
        case ('beta')
           call parse_real_variable('beta', beta, 0.0D0, 1.0D0, &
                'Plasma beta')
-       case ('betalim')
-          call parse_real_variable('betalim', betalim, 0.0D0, 1.0D0, &
+       case ('beta_limit_upper')
+          call parse_real_variable('beta_limit_upper', beta_limit_upper, 0.0D0, 1.0D0, &
               'Plasma beta upper limit')
-       case ('betalim_lower')
-          call parse_real_variable('betalim_lower', betalim_lower, 0.0D0, 1.0D0, &
+       case ('beta_limit_lower')
+          call parse_real_variable('beta_limit_lower', beta_limit_lower, 0.0D0, 1.0D0, &
                 'Plasma beta lower limit')
        case ('betbm0')
           call parse_real_variable('betbm0', betbm0, 0.0D0, 10.0D0, &
@@ -623,8 +623,8 @@ contains
        case ('i_bootstrap_current')
           call parse_int_variable('i_bootstrap_current', i_bootstrap_current, 1, 11, &
                'Switch for bootstrap scaling')
-       case ('iculbl')
-          call parse_int_variable('iculbl', iculbl, 0, 3, &
+       case ('i_beta_component')
+          call parse_int_variable('i_beta_component', i_beta_component, 0, 3, &
                'Switch for beta limit scaling')
        case ('i_plasma_current')
           call parse_int_variable('i_plasma_current', i_plasma_current, 1, 9, &
@@ -777,8 +777,8 @@ contains
        case ('auxmin')
           call parse_real_variable('auxmin', auxmin, 0.01D0, 100.0D0, &
                'Minimum auxiliary power (MW)')
-       case ('betpmx')
-          call parse_real_variable('betpmx', betpmx, 0.01D0, 2.0D0, &
+       case ('beta_poloidal_max')
+          call parse_real_variable('beta_poloidal_max', beta_poloidal_max, 0.01D0, 2.0D0, &
                'Maximum poloidal beta')
        case ('bigqmin')
           call parse_real_variable('bigqmin', bigqmin, 0.01D0, 100.0D0, &
@@ -791,9 +791,9 @@ contains
                'F-value for minimum auxiliary power')
        case ('fbeta')
           call parse_real_variable('fbeta', fbeta, 0.001D0, 10.0D0, &
-               'F-value for eps.betap beta limit')
-       case ('fbetap')
-          call parse_real_variable('fbetap', fbetap, 0.001D0, 10.0D0, &
+               'F-value for eps.beta_poloidal beta limit')
+       case ('fbeta_poloidal')
+          call parse_real_variable('fbeta_poloidal', fbeta_poloidal, 0.001D0, 10.0D0, &
                'F-value for poloidal beta limit')
        case ('fbetatry')
           call parse_real_variable('fbetatry', fbetatry, 0.001D0, 10.0D0, &

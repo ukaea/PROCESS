@@ -4079,7 +4079,7 @@ class Stellarator:
         #  Set physics_variables.beta as a consequence:
         #  This replaces constraint equation 1 as it is just an equality.
         physics_variables.beta = (
-            physics_variables.betaft
+            physics_variables.beta_fast_alpha
             + physics_variables.beta_beam
             + 2.0e3
             * constants.rmu0
@@ -4124,7 +4124,7 @@ class Stellarator:
 
         #  Poloidal physics_variables.beta
 
-        # betap = physics_variables.beta * ( physics_variables.btot/physics_variables.bp )**2 # Dont need this I think.
+        # beta_poloidal = physics_variables.beta * ( physics_variables.btot/physics_variables.bp )**2 # Dont need this I think.
 
         #  Perform auxiliary power calculations
 
@@ -4228,7 +4228,7 @@ class Stellarator:
             physics_variables.alpha_power_density_plasma,
         )
 
-        physics_variables.betaft = physics_funcs.fast_alpha_beta(
+        physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
@@ -4464,7 +4464,7 @@ class Stellarator:
         )
 
         # Calculate physics_variables.beta limit. Does nothing atm so commented out
-        # call stblim(physics_variables.betalim)
+        # call stblim(physics_variables.beta_limit_upper)
 
         # Calculate the neoclassical sanity check with PROCESS parameters
         (

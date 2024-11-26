@@ -18,7 +18,7 @@ module constraint_variables
   real(dp) :: auxmin
   !! minimum auxiliary power (MW) (`constraint equation 40`)
 
-  real(dp) :: betpmx
+  real(dp) :: beta_poloidal_max
   !! maximum poloidal beta (`constraint equation 48`)
 
   real(dp) :: bigqmin
@@ -33,7 +33,7 @@ module constraint_variables
   real(dp) :: fbeta
   !! f-value for epsilon beta-poloidal (`constraint equation 6`, `iteration variable 8`)
 
-  real(dp) :: fbetap
+  real(dp) :: fbeta_poloidal
   !! f-value for poloidal beta (`constraint equation 48`, `iteration variable 79`)
 
   real(dp) :: fbetatry
@@ -313,12 +313,12 @@ module constraint_variables
     implicit none
 
     auxmin = 0.1D0
-    betpmx = 0.19D0
+    beta_poloidal_max = 0.19D0
     bigqmin = 10.0D0
     bmxlim = 12.0D0
     fauxmn = 1.0D0
     fbeta = 1.0D0
-    fbetap = 1.0D0
+    fbeta_poloidal = 1.0D0
     fbetatry = 1.0D0
     fbetatry_lower = 1.0D0
     fcpttf = 1.0D0

@@ -53,23 +53,44 @@ module physics_variables
   real(dp) :: beta
   !! total plasma beta (`iteration variable 5`) (calculated if stellarator)
 
-  real(dp) :: betaft
+  real(dp) :: beta_fast_alpha
   !! fast alpha beta component
 
-  real(dp) :: betalim
-  !! allowable beta
+  real(dp) :: beta_limit_upper
+  !! Max allowable beta
 
-  real(dp) :: betalim_lower
+  real(dp) :: beta_limit_lower
   !! allowable lower beta
 
   real(dp) :: beta_beam
   !! neutral beam beta component
 
-  real(dp) :: betap
+  real(dp) :: beta_poloidal
   !! poloidal beta
 
-  real(dp) :: normalised_total_beta
+  real(dp) :: beta_toroidal
+  !! toroidal beta
+
+  real(dp) :: beta_thermal
+  !! thermal beta
+
+  real(dp) :: beta_thermal_poloidal
+  !! poloidal thermal beta
+
+  real(dp) :: beta_thermal_toroidal
+  !! poloidal thermal beta
+
+  real(dp) :: norm_beta_total
   !! normaised total beta
+
+  real(dp) :: norm_beta_thermal
+  !! normaised thermal beta
+
+  real(dp) :: norm_beta_toroidal
+  !! normaised toroidal beta
+
+  real(dp) :: norm_beta_poloidal
+  !! normaised poloidal beta
 
   real(dp) :: betbm0
   !! leading coefficient for NB beta fraction
@@ -260,7 +281,7 @@ module physics_variables
   !! - =10 for Gi-I et al scaling
   !! - =11 for Gi-II et al scaling
 
-  integer :: iculbl
+  integer :: i_beta_component
   !! switch for beta limit scaling (`constraint equation 24`)
   !!
   !! - =0 apply limit to total beta
@@ -922,12 +943,19 @@ module physics_variables
     aspect = 2.907D0
     beamfus0 = 1.0D0
     beta = 0.042D0
-    betaft = 0.0D0
-    betalim = 0.0D0
-    betalim_lower = 0.0D0
+    beta_fast_alpha = 0.0D0
+    beta_limit_upper = 0.0D0
+    beta_limit_lower = 0.0D0
     beta_beam = 0.0D0
-    betap = 0.0D0
-    normalised_total_beta = 0.0D0
+    beta_poloidal = 0.0D0
+    beta_toroidal = 0.0D0
+    beta_thermal = 0.0D0
+    beta_thermal_poloidal = 0.0D0
+    beta_thermal_poloidal = 0.0D0
+    norm_beta_total = 0.0D0
+    norm_beta_thermal = 0.0D0
+    norm_beta_poloidal = 0.0D0
+    norm_beta_toroidal = 0.0D0
     betbm0 = 1.5D0
     bp = 0.0D0
     bt = 5.68D0
@@ -982,7 +1010,7 @@ module physics_variables
     hfact = 1.0D0
     taumax = 10.0D0
     i_bootstrap_current = 3
-    iculbl = 0
+    i_beta_component = 0
     i_plasma_current = 4
     i_diamagnetic_current = 0
     idensl = 7

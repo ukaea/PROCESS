@@ -305,7 +305,7 @@ icc = 24
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     beta calculated in-situ
 
-*betalim
+*beta_limit_upper
 * DESCRIPTION:   Plasma beta upper limit
 * JUSTIFICATION: Turned off, not in use. icc=24. Allow to be calculated in-situ
 
@@ -325,7 +325,7 @@ boundu(36) = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-iculbl = 3
+i_beta_component = 3
 * DESCRIPTION:   Switch for Beta Limit Scaling (icc=24) (3: Apply Limit to Toroidal)
 * JUSTIFICATION: Total beta is used to agree with literature limit
 * REFERENCE:     Ono & Kaita (2015), Physics of Plasmas, 22, 040501
@@ -352,9 +352,9 @@ dnbeta = 5.0
 *icc = 84
 * DESCRIPTION:   Constraint equation for lower limit of beta
 * JUSTIFICATION: Turned off, do not require a beta lower limit
-* VARIABLES:     betalim_lower (Lower limit for beta). beta,betaft calculated in-situ
+* VARIABLES:     beta_limit_lower (Lower limit for beta). beta,betaft calculated in-situ
 
-*betalim_lower = 
+*beta_limit_lower = 
 * DESCRIPTION:   Plasma beta lower limit
 * JUSTIFICATION: Turned off, not in use, Used with icc=84 to enforce beta limit
 
@@ -363,9 +363,9 @@ dnbeta = 5.0
 *icc = 48
 * DESCRIPTION:   Constraint equation for poloidal beta upper limit
 * JUSTIFICATION: Turned off, do not care about poloidal beta
-* VARIABLES:     betpmx, fbetap. betap calculated in-situ
+* VARIABLES:     beta_poloidal_max, fbeta_poloidal. beta_poloidal calculated in-situ
 
-*betpmx = 
+*beta_poloidal_max = 
 * DESCRIPTION:   Maximum poloidal beta (`constraint equation 48`) (default = 0.19)
 * JUSTIFICATION: Not set, not using icc = 48
 
