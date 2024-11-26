@@ -2145,7 +2145,10 @@ class Physics:
         )
 
         # Density limit
-        physics_variables.dlimit, physics_variables.dnelimt = self.culdlm(
+        (
+            physics_variables.dlimit,
+            physics_variables.dnelimt,
+        ) = self.calculate_density_limit(
             physics_variables.bt,
             physics_variables.idensl,
             physics_variables.pdivt,
@@ -2455,29 +2458,48 @@ class Physics:
             )
 
     @staticmethod
-    def culdlm(
-        bt, idensl, pdivt, plasma_current, prn1, qcyl, q95, rmajor, rminor, sarea, zeff
-    ):
-        """Density limit calculation
-        author: P J Knight, CCFE, Culham Science Centre
-        bt       : input real :  toroidal field on axis (T)
-        idensl   : input/output integer : switch denoting which formula to enforce
-        pdivt    : input real :  power flowing to the edge plasma via
-        charged particles (MW)
-        plasma_current  : input real :  plasma current (A)
-        prn1     : input real :  edge density / average plasma density
-        qcyl     : input real :  equivalent cylindrical safety factor (qstar)
-        q95      : input real :  safety factor at 95% surface
-        rmajor   : input real :  plasma major radius (m)
-        rminor   : input real :  plasma minor radius (m)
-        sarea    : input real :  plasma surface area (m**2)
-        zeff     : input real :  plasma effective charge
-        dlimit(7): output real array : average plasma density limit using
-        seven different models (m**-3)
-        dnelimt  : output real : enforced average plasma density limit (m**-3)
-        This routine calculates several different formulae for the
-        density limit, and enforces the one chosen by the user.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
+    def calculate_density_limit(
+        bt: float,
+        idensl: int,
+        pdivt: float,
+        plasma_current: float,
+        prn1: float,
+        qcyl: float,
+        q95: float,
+        rmajor: float,
+        rminor: float,
+        sarea: float,
+        zeff: float,
+    ) -> Tuple[np.ndarray, float]:
+        """
+        Calculate the density limit using various models.
+
+        Args:
+            bt (float): Toroidal field on axis (T).
+            idensl (int): Switch denoting which formula to enforce.
+            pdivt (float): Power flowing to the edge plasma via charged particles (MW).
+            plasma_current (float): Plasma current (A).
+            prn1 (float): Edge density / average plasma density.
+            qcyl (float): Equivalent cylindrical safety factor (qstar).
+            q95 (float): Safety factor at 95% surface.
+            rmajor (float): Plasma major radius (m).
+            rminor (float): Plasma minor radius (m).
+            sarea (float): Plasma surface area (m^2).
+            zeff (float): Plasma effective charge.
+
+        Returns:
+            Tuple[np.ndarray, float]: A tuple containing:
+                - dlimit (np.ndarray): Average plasma density limit using seven different models (m^-3).
+                - dnelimt (float): Enforced average plasma density limit (m^-3).
+
+        Raises:
+            ValueError: If idensl is not between 1 and 7.
+
+        Notes:
+            This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
+
+        References:
+            - AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if idensl < 1 or idensl > 7:
             error_handling.idiags[0] = idensl

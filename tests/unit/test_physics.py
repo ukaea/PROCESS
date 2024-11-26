@@ -2036,7 +2036,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
     assert rplas == pytest.approx(pohmparam.expected_rplas)
 
 
-class CuldlmParam(NamedTuple):
+class CalculateDensityLimitParam(NamedTuple):
     idensl: Any = None
 
     bt: Any = None
@@ -2065,9 +2065,9 @@ class CuldlmParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "culdlmparam",
+    "calculatedensitylimitparam",
     (
-        CuldlmParam(
+        CalculateDensityLimitParam(
             idensl=7,
             bt=5.7000000000000002,
             pdivt=169.86588182297265,
@@ -2092,36 +2092,36 @@ class CuldlmParam(NamedTuple):
         ),
     ),
 )
-def test_culdlm(culdlmparam, physics):
+def test_calculate_density_limit(calculatedensitylimitparam, physics):
     """
-    Automatically generated Regression Unit Test for culdlm.
+    Automatically generated Regression Unit Test for calculate_density_limit().
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
-    :param culdlmparam: the data used to mock and assert in this test.
-    :type culdlmparam: culdlmparam
+    :param calculatedensitylimitparam: the data used to mock and assert in this test.
+    :type calculatedensitylimitparam: calculatedensitylimitparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    dlimit, dnelimt = physics.culdlm(
-        idensl=culdlmparam.idensl,
-        bt=culdlmparam.bt,
-        pdivt=culdlmparam.pdivt,
-        plasma_current=culdlmparam.plasma_current,
-        prn1=culdlmparam.prn1,
-        q95=culdlmparam.q95,
-        qcyl=culdlmparam.qcyl,
-        rmajor=culdlmparam.rmajor,
-        rminor=culdlmparam.rminor,
-        sarea=culdlmparam.sarea,
-        zeff=culdlmparam.zeff,
+    dlimit, dnelimt = physics.calculate_density_limit(
+        idensl=calculatedensitylimitparam.idensl,
+        bt=calculatedensitylimitparam.bt,
+        pdivt=calculatedensitylimitparam.pdivt,
+        plasma_current=calculatedensitylimitparam.plasma_current,
+        prn1=calculatedensitylimitparam.prn1,
+        q95=calculatedensitylimitparam.q95,
+        qcyl=calculatedensitylimitparam.qcyl,
+        rmajor=calculatedensitylimitparam.rmajor,
+        rminor=calculatedensitylimitparam.rminor,
+        sarea=calculatedensitylimitparam.sarea,
+        zeff=calculatedensitylimitparam.zeff,
     )
 
-    assert dnelimt == pytest.approx(culdlmparam.expected_dnelimt)
+    assert dnelimt == pytest.approx(calculatedensitylimitparam.expected_dnelimt)
 
-    assert dlimit == pytest.approx(culdlmparam.expected_dlimit)
+    assert dlimit == pytest.approx(calculatedensitylimitparam.expected_dlimit)
 
 
 class PcondParam(NamedTuple):
