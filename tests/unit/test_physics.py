@@ -2037,7 +2037,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
 
 
 class CalculateDensityLimitParam(NamedTuple):
-    idensl: Any = None
+    i_density_limit: Any = None
 
     bt: Any = None
 
@@ -2068,7 +2068,7 @@ class CalculateDensityLimitParam(NamedTuple):
     "calculatedensitylimitparam",
     (
         CalculateDensityLimitParam(
-            idensl=7,
+            i_density_limit=7,
             bt=5.7000000000000002,
             pdivt=169.86588182297265,
             plasma_current=18398455.678867526,
@@ -2106,7 +2106,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     """
 
     dlimit, dnelimt = physics.calculate_density_limit(
-        idensl=calculatedensitylimitparam.idensl,
+        i_density_limit=calculatedensitylimitparam.i_density_limit,
         bt=calculatedensitylimitparam.bt,
         pdivt=calculatedensitylimitparam.pdivt,
         plasma_current=calculatedensitylimitparam.plasma_current,

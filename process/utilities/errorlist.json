@@ -403,7 +403,7 @@
     {
       "no": 79,
       "level": 3,
-      "message": "calculate_density_limit: Illegal value for idensl"
+      "message": "calculate_density_limit: Illegal value for i_density_limit"
     },
     {
       "no": 80,

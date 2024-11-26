@@ -239,7 +239,7 @@ icc = 5
 * JUSTIFICATION: Used to enforce Greenwald limit
 * VARIABLES:     dnelimt & dnla calculated in-situ
 
-idensl = 7
+i_density_limit = 7
 * DESCRIPTION:   Switch for Density Limit to Enforce (icc=5) (7: Greenwald Limit)
 * JUSTIFICATION: Enforce Greenwald limit
 

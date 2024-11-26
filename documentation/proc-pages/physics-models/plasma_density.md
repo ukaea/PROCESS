@@ -3,10 +3,10 @@
 Several density limit models[^1] are available in PROCESS. These are
 calculated in routine `calculate_density_limit`, which is called by `physics`. To enforce any of 
 these limits, turn on constraint equation no. 5 with iteration variable no. 9 
-(`fdene`). In addition, switch `idensl` must be set to the relevant value, as 
+(`fdene`). In addition, switch `i_density_limit` must be set to the relevant value, as 
 follows:
 
-| `idensl` | Description |
+| `i_density_limit` | Description |
 | :-: | - |
 | 1 | ASDEX model |
 | 2 | Borrass model for ITER, I |

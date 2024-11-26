@@ -288,7 +288,7 @@ module physics_variables
   !! - =1 Use original TART scaling
   !! - =2 Use SCENE scaling
 
-  integer :: idensl
+  integer :: i_density_limit
   !! switch for density limit to enforce (`constraint equation 5`)
   !!
   !! - =1 old ASDEX
@@ -985,7 +985,7 @@ module physics_variables
     iculbl = 0
     i_plasma_current = 4
     i_diamagnetic_current = 0
-    idensl = 7
+    i_density_limit = 7
     idivrt = 2
     ifalphap = 1
     ignite = 0

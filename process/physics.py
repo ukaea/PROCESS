@@ -2150,7 +2150,7 @@ class Physics:
             physics_variables.dnelimt,
         ) = self.calculate_density_limit(
             physics_variables.bt,
-            physics_variables.idensl,
+            physics_variables.i_density_limit,
             physics_variables.pdivt,
             physics_variables.plasma_current,
             divertor_variables.prn1,
@@ -2460,7 +2460,7 @@ class Physics:
     @staticmethod
     def calculate_density_limit(
         bt: float,
-        idensl: int,
+        i_density_limit: int,
         pdivt: float,
         plasma_current: float,
         prn1: float,
@@ -2476,7 +2476,7 @@ class Physics:
 
         Args:
             bt (float): Toroidal field on axis (T).
-            idensl (int): Switch denoting which formula to enforce.
+            i_density_limit (int): Switch denoting which formula to enforce.
             pdivt (float): Power flowing to the edge plasma via charged particles (MW).
             plasma_current (float): Plasma current (A).
             prn1 (float): Edge density / average plasma density.
@@ -2493,7 +2493,7 @@ class Physics:
                 - dnelimt (float): Enforced average plasma density limit (m^-3).
 
         Raises:
-            ValueError: If idensl is not between 1 and 7.
+            ValueError: If i_density_limit is not between 1 and 7.
 
         Notes:
             This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
@@ -2501,8 +2501,8 @@ class Physics:
         References:
             - AEA FUS 172: Physics Assessment for the European Reactor Study
         """
-        if idensl < 1 or idensl > 7:
-            error_handling.idiags[0] = idensl
+        if i_density_limit < 1 or i_density_limit > 7:
+            error_handling.idiags[0] = i_density_limit
             error_handling.report_error(79)
 
         dlimit = np.empty((7,))
@@ -2546,11 +2546,11 @@ class Physics:
 
         denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
         if denom <= 0.0:
-            if idensl == 4:
+            if i_density_limit == 4:
                 error_handling.fdiags[0] = denom
                 error_handling.fdiags[1] = qcyl
                 error_handling.report_error(80)
-                idensl = 5
+                i_density_limit = 5
 
             dlimit[3] = 0.0
         else:
@@ -2573,7 +2573,7 @@ class Physics:
 
         # Enforce the chosen density limit
 
-        return dlimit, dlimit[idensl - 1]
+        return dlimit, dlimit[i_density_limit - 1]
 
     @staticmethod
     def plasma_composition():
