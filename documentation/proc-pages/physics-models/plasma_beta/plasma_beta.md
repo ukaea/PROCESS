@@ -137,7 +137,11 @@ Further details on the calculation of `alphaj` and `rli` is given in [Plasma Cur
 
 This constraint can be activated by stating `icc = 1` in the input file.
 
-Relationship between beta, temperature (keV) and density
+Ensures the relationship between $\beta$, density, temperature and total magnetic field is withheld by checking the fixed input or iteration variable $\mathtt{beta}$ is consistent in value with the rest of the physics parameters
+
+$$
+\mathtt{beta} \equiv \frac{2\mu_0 \langle n_{\text{e}}T_{\text{e}}+n_{\text{i}}T_{\text{i}}\rangle}{B^2} + \beta_{\alpha} + \beta_{\text{beam}}
+$$
 
 **It is highly recommended to always have this constraint on as it is a global consistency checker**
 
@@ -145,7 +149,7 @@ Relationship between beta, temperature (keV) and density
 
 ### Poloidal beta and inverse aspect upper limit
 
-This constraint can be activated by stating `icc = 6` in the input file.
+This constraint can be activated by stating `icc = 6` in the input file [^6].
 
 To apply a limit to the value of $\epsilon\beta_p$, where $\epsilon = a/R$ is
 the inverse aspect ratio and $\beta_p$ is the poloidal $\beta$, constraint equation no. 6 should be 
@@ -158,11 +162,19 @@ is be set using input parameter `epbetmax`.
 
 This constraint can be activated by stating `icc = 24` in the input file.
 
+It is the general setting of the $\beta$ limit depending on the $\beta_{\text{N}}$ value calculated in the [beta limit](#beta-limit) calculations.
+
+The upper limit value of beta is calculated by `calculate_beta_limit()`. The scaling value `fbetatry` can be varied also.
+
+**It is recommended to have this constraint on as it is a plasma stability model**
+
 --------------------
 
 ### Poloidal upper limit
 
 This constraint can be activated by stating `icc = 48` in the input file.
+
+The value of `beta_poloidal_max` can be set to the desired maximum poloidal beta. The scaling value `fbeta_poloidal` can be varied also.
 
 -------------------
 
@@ -179,3 +191,5 @@ This constraint can be activated by stating `icc = 84` in the input file.
 [^4]: Menard et al. (2016), Nuclear Fusion, 56, 106023
 
 [^5]: Tholerus et al. (2024), arXiv:2403.09460
+
+[^6]: M. E. Mauel et al., “Operation at the tokamak equilibrium poloidal beta-limit in TFTR,” Nuclear Fusion, vol. 32, no. 8, pp. 1468–1473, Aug. 1992. doi:10.1088/0029-5515/32/8/i14 
