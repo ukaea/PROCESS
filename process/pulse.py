@@ -165,7 +165,7 @@ class Pulse:
             error_handling.fdiags[3] = times_variables.t_fusion_ramp
             error_handling.report_error(93)
 
-        times_variables.tburn = max(0.0e0, tb)
+        times_variables.t_burn = max(0.0e0, tb)
 
         #  Output section
 

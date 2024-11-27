@@ -430,8 +430,8 @@ vftf     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (
 *-----------------Times Variables------------------*
 
 pulsetimings = 0 * Switch for pulse timings (if lpulse=1);
-tdwell   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
-tramp    = 500.0 * initial PF coil charge time (s); if pulsed; = tohs
+t_between_pulse   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
+t_precharge    = 500.0 * initial PF coil charge time (s); if pulsed; = t_current_ramp_up
 
 *--------------------Utilities---------------------*
 

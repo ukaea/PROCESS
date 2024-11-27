@@ -51,7 +51,7 @@ def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param
     monkeypatch.setattr(tv, "tcycle", 5.0)
     monkeypatch.setattr(cv, "iavail", 0)
     monkeypatch.setattr(cv, "cfactr", 0.8)
-    monkeypatch.setattr(tv, "tburn", 500.0)
+    monkeypatch.setattr(tv, "t_burn", 500.0)
     monkeypatch.setattr(pv, "itart", 1)
 
     availability.avail(output=False)
@@ -526,7 +526,7 @@ def test_avail_2(monkeypatch, availability):
     )
 
     # Mock module variables
-    monkeypatch.setattr(tv, "tburn", 5.0)
+    monkeypatch.setattr(tv, "t_burn", 5.0)
     monkeypatch.setattr(tv, "tcycle", 50.0)
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "itart", 1)
@@ -572,7 +572,7 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(cv, "tmain", 1.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
-    monkeypatch.setattr(tv, "tburn", 5.0)
+    monkeypatch.setattr(tv, "t_burn", 5.0)
     monkeypatch.setattr(tv, "tcycle", 10.0)
 
     availability.avail_st(output=False)

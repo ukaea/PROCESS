@@ -266,7 +266,7 @@ var_dicts = {
     "zeff": VariableMetadata(
         latex=r"$Z_{\mathrm{eff}}$", description="Effective charge", units=""
     ),
-    "tburn": VariableMetadata(
+    "t_burn": VariableMetadata(
         latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s"
     ),
     "vburn": VariableMetadata(

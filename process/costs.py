@@ -2590,7 +2590,7 @@ class Costs:
                 * heat_transport_variables.pnetelmw
                 * (24.0e0 * constants.n_day_year)
                 * cost_variables.cfactr
-                * times_variables.tburn
+                * times_variables.t_burn
                 / times_variables.tcycle
             )
 

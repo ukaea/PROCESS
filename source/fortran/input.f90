@@ -345,8 +345,8 @@ contains
       sig_tf_wp_max, eyoung_cond_trans, i_tf_cond_eyoung_axial, i_tf_cond_eyoung_trans, &
       str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv
 
-    use times_variables, only: tohs, pulsetimings, tqnch, t_fusion_ramp, tramp, tburn, &
-      tdwell, tohsin
+    use times_variables, only: t_current_ramp_up, pulsetimings, t_ramp_down, t_fusion_ramp, t_precharge, t_burn, &
+      t_between_pulse, tohsin
     use vacuum_variables, only: dwell_pump, pbase, tn, pumpspeedfactor, &
       initialpressure, outgasfactor, prdiv, pumpspeedmax, rat, outgasindex, &
       pumpareafraction, ntype, vacuum_model, pumptp
@@ -1112,26 +1112,26 @@ contains
 
           !  Time settings
 
-       case ('tburn')
-          call parse_real_variable('tburn', tburn, 0.0D0, 1.0D8, &
+       case ('t_burn')
+          call parse_real_variable('t_burn', t_burn, 0.0D0, 1.0D8, &
                'Burn time (s)')
-       case ('tdwell')
-          call parse_real_variable('tdwell', tdwell, 0.0D0, 1.0D8, &
+       case ('t_between_pulse')
+          call parse_real_variable('t_between_pulse', t_between_pulse, 0.0D0, 1.0D8, &
                'Time between burns (s)')
        case ('t_fusion_ramp')
           call parse_real_variable('t_fusion_ramp', t_fusion_ramp, 0.0D0, 1.0D4, &
                'Heating time after current ramp (s)')
-       case ('tohs')
-          call parse_real_variable('tohs', tohs, 0.0D0, 1.0D4, &
+       case ('t_current_ramp_up')
+          call parse_real_variable('t_current_ramp_up', t_current_ramp_up, 0.0D0, 1.0D4, &
                'Plasma current ramp-up time for current init (s)')
        case ('tohsin')
           call parse_real_variable('tohsin', tohsin, 0.0D0, 1.0D4, &
-               'Switch for TOHS calculation')
-       case ('tqnch')
-          call parse_real_variable('tqnch', tqnch, 0.0D0, 1.0D4, &
+               'Switch for t_current_ramp_up calculation')
+       case ('t_ramp_down')
+          call parse_real_variable('t_ramp_down', t_ramp_down, 0.0D0, 1.0D4, &
                'PF coil shutdown time (s)')
-       case ('tramp')
-          call parse_real_variable('tramp', tramp, 0.0D0, 1.0D4, &
+       case ('t_precharge')
+          call parse_real_variable('t_precharge', t_precharge, 0.0D0, 1.0D4, &
                'Initial charge time for PF coils (s)')
        case ('pulsetimings')
           call parse_real_variable('pulsetimings', pulsetimings, 0.0D0, 1.0D0, &

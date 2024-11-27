@@ -67,7 +67,7 @@ def vscalc(
     rplas,
     plasma_current,
     t_fusion_ramp,
-    tburn,
+    t_burn,
     rli,
     rmu0,
 ):
@@ -83,7 +83,7 @@ def vscalc(
     rmajor : input real :  plasma major radius (m)
     rplas  : input real :  plasma resistance (ohm)
     t_fusion_ramp  : input real :  heating time (s)
-    tburn  : input real :  burn time (s)
+    t_burn  : input real :  burn time (s)
     phiint : output real : internal plasma volt-seconds (Wb)
     rlp    : output real : plasma inductance (H)
     vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
@@ -127,11 +127,11 @@ def vscalc(
 
     vburn = plasma_current * rplas * inductive_current_fraction * csawth
 
-    # N.B. tburn on first iteration will not be correct
+    # N.B. t_burn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
     # will be correct on subsequent calls.
 
-    vsbrn = vburn * (t_fusion_ramp + tburn)
+    vsbrn = vburn * (t_fusion_ramp + t_burn)
     vsstt = vsstt + vsbrn
 
     return phiint, rlp, vsbrn, vsind, vsres, vsstt
@@ -1562,54 +1562,60 @@ class Physics:
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
             if times_variables.tohsin == 0.0e0:
-                times_variables.tohs = physics_variables.plasma_current / 5.0e5
-                times_variables.tramp = times_variables.tohs
-                times_variables.tqnch = times_variables.tohs
+                times_variables.t_current_ramp_up = (
+                    physics_variables.plasma_current / 5.0e5
+                )
+                times_variables.t_precharge = times_variables.t_current_ramp_up
+                times_variables.t_ramp_down = times_variables.t_current_ramp_up
             else:
-                times_variables.tohs = times_variables.tohsin
+                times_variables.t_current_ramp_up = times_variables.tohsin
 
         else:
             if times_variables.pulsetimings == 0.0e0:
-                # times_variables.tramp is input
-                times_variables.tohs = physics_variables.plasma_current / 1.0e5
-                times_variables.tqnch = times_variables.tohs
+                # times_variables.t_precharge is input
+                times_variables.t_current_ramp_up = (
+                    physics_variables.plasma_current / 1.0e5
+                )
+                times_variables.t_ramp_down = times_variables.t_current_ramp_up
 
             else:
-                # times_variables.tohs is set either in INITIAL or INPUT, or by being
+                # times_variables.t_current_ramp_up is set either in INITIAL or INPUT, or by being
                 # iterated using limit equation 41.
-                times_variables.tramp = max(times_variables.tramp, times_variables.tohs)
-                # tqnch = max(tqnch,tohs)
-                times_variables.tqnch = times_variables.tohs
+                times_variables.t_precharge = max(
+                    times_variables.t_precharge, times_variables.t_current_ramp_up
+                )
+                # t_ramp_down = max(t_ramp_down,t_current_ramp_up)
+                times_variables.t_ramp_down = times_variables.t_current_ramp_up
 
-        # Reset second times_variables.tburn value (times_variables.tburn0).
+        # Reset second times_variables.t_burn value (times_variables.tburn0).
         # This is used to ensure that the burn time is used consistently;
         # see convergence loop in fcnvmc1, evaluators.f90
-        times_variables.tburn0 = times_variables.tburn
+        times_variables.tburn0 = times_variables.t_burn
 
         # Pulse and down times : The reactor is assumed to be 'down'
         # at all times outside of the plasma current flat-top period.
         # The pulse length is the duration of non-zero plasma current
-        times_variables.tpulse = (
-            times_variables.tohs
+        times_variables.t_pulse_repetition = (
+            times_variables.t_current_ramp_up
             + times_variables.t_fusion_ramp
-            + times_variables.tburn
-            + times_variables.tqnch
+            + times_variables.t_burn
+            + times_variables.t_ramp_down
         )
         times_variables.tdown = (
-            times_variables.tramp
-            + times_variables.tohs
-            + times_variables.tqnch
-            + times_variables.tdwell
+            times_variables.t_precharge
+            + times_variables.t_current_ramp_up
+            + times_variables.t_ramp_down
+            + times_variables.t_between_pulse
         )
 
         # Total cycle time
         times_variables.tcycle = (
-            times_variables.tramp
-            + times_variables.tohs
+            times_variables.t_precharge
+            + times_variables.t_current_ramp_up
             + times_variables.t_fusion_ramp
-            + times_variables.tburn
-            + times_variables.tqnch
-            + times_variables.tdwell
+            + times_variables.t_burn
+            + times_variables.t_ramp_down
+            + times_variables.t_between_pulse
         )
 
         # ***************************** #
@@ -2227,7 +2233,7 @@ class Physics:
             physics_variables.rplas,
             physics_variables.plasma_current,
             times_variables.t_fusion_ramp,
-            times_variables.tburn,
+            times_variables.t_burn,
             physics_variables.rli,
             constants.rmu0,
         )
@@ -3103,14 +3109,14 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Initial charge time for CS from zero current (s)",
-            "(tramp)",
-            times_variables.tramp,
+            "(t_precharge)",
+            times_variables.t_precharge,
         )
         po.ovarrf(
             self.outfile,
             "Plasma current ramp-up time (s)",
-            "(tohs)",
-            times_variables.tohs,
+            "(t_current_ramp_up)",
+            times_variables.t_current_ramp_up,
         )
         po.ovarrf(
             self.outfile,
@@ -3119,16 +3125,19 @@ class Physics:
             times_variables.t_fusion_ramp,
         )
         po.ovarre(
-            self.outfile, "Burn time (s)", "(tburn)", times_variables.tburn, "OP "
+            self.outfile, "Burn time (s)", "(t_burn)", times_variables.t_burn, "OP "
         )
         po.ovarrf(
             self.outfile,
             "Reset time to zero current for CS (s)",
-            "(tqnch)",
-            times_variables.tqnch,
+            "(t_ramp_down)",
+            times_variables.t_ramp_down,
         )
         po.ovarrf(
-            self.outfile, "Time between pulses (s)", "(tdwell)", times_variables.tdwell
+            self.outfile,
+            "Time between pulses (s)",
+            "(t_between_pulse)",
+            times_variables.t_between_pulse,
         )
         po.oblnkl(self.outfile)
         po.ovarre(

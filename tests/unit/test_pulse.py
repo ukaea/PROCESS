@@ -89,7 +89,7 @@ class BurnParam(NamedTuple):
 
     lpulse: Any = None
 
-    tburn: Any = None
+    t_burn: Any = None
 
     t_fusion_ramp: Any = None
 
@@ -1280,7 +1280,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
             lpulse=1,
-            tburn=0,
+            t_burn=0,
             t_fusion_ramp=10,
             outfile=11,
             iprint=0,
@@ -1296,7 +1296,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
             lpulse=1,
-            tburn=10234.092022756307,
+            t_burn=10234.092022756307,
             t_fusion_ramp=10,
             outfile=11,
             iprint=0,
@@ -1339,10 +1339,10 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(pulse_variables, "lpulse", burnparam.lpulse)
 
-    monkeypatch.setattr(times_variables, "tburn", burnparam.tburn)
+    monkeypatch.setattr(times_variables, "t_burn", burnparam.t_burn)
 
     monkeypatch.setattr(times_variables, "t_fusion_ramp", burnparam.t_fusion_ramp)
 
     pulse.burn(output=True)
 
-    assert times_variables.tburn == pytest.approx(burnparam.expected_tburn)
+    assert times_variables.t_burn == pytest.approx(burnparam.expected_tburn)

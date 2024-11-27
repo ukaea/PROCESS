@@ -293,9 +293,9 @@ plasma_res_factor = 0.66 * plasma resistivity pre-factor
 *-----------------Pulse Variables------------------*
 
 lpulse = 1 * Switch for reactor model;
-tdwell = 0 * dwell time (s)
+t_between_pulse = 0 * dwell time (s)
 pulsetimings = 0
-tramp = 500.0
+t_precharge = 500.0
 
 *-----------------Tfcoil Variables-----------------*
 
@@ -330,8 +330,8 @@ qnuc = 1.292E4
 
 *-----------------Times Variables------------------*
 
-tburn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
-tburn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
+t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
+t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
 
 
                      bt            =   5.3292E+00

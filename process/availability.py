@@ -166,7 +166,7 @@ class Availability:
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
-        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.tcycle)
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
@@ -373,7 +373,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.tcycle)
 
         # Output
         if output:
@@ -1072,7 +1072,7 @@ class Availability:
         )
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.tcycle)
 
         if output:
             if tfv.i_tf_sup == 1:

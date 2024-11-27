@@ -423,13 +423,13 @@ plasma_res_factor = 0.7
 lpulse = 1
 
 * dwell time [s]
-tdwell = 1800.0
+t_between_pulse = 1800.0
 
 * Switch for pulse timing calculations
 pulsetimings = 0
 
 * CS ramp up time [s]
-tramp = 500.0
+t_precharge = 500.0
 
 * Current drive *
 *---------------*
