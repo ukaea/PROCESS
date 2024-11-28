@@ -3110,11 +3110,94 @@ def plot_h_threshold_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_density_limit_comparison(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+) -> None:
+    """
+    Function to plot a scatter box plot of different density limit comparisons.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+    old_asdex = mfile_data.data["dlimit(1)"].get_scan(scan)
+    borrass_iter_i = mfile_data.data["dlimit(2)"].get_scan(scan)
+    borrass_iter_ii = mfile_data.data["dlimit(3)"].get_scan(scan)
+    jet_edge_radiation = mfile_data.data["dlimit(4)"].get_scan(scan)
+    jet_simplified = mfile_data.data["dlimit(5)"].get_scan(scan)
+    hugill_murakami = mfile_data.data["dlimit(6)"].get_scan(scan)
+    greenwald = mfile_data.data["dlimit(7)"].get_scan(scan)
+
+    # Data for the box plot
+    data = {
+        "Old ASDEX": old_asdex,
+        "Borrass ITER I": borrass_iter_i,
+        "Borrass ITER II": borrass_iter_ii,
+        "JET Edge Radiation": jet_edge_radiation,
+        "JET Simplified": jet_simplified,
+        "Hugill-Murakami": hugill_murakami,
+        "Greenwald": greenwald,
+    }
+
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_density_limit = np.mean(data_values)
+    std_density_limit = np.std(data_values)
+    median_density_limit = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        1.02,
+        0.2,
+        rf"Average: {avg_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.15,
+        rf"Standard Dev: {std_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.1,
+        rf"Median: {median_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("Density Limit Comparison")
+    axis.set_ylabel(r"Density Limit [$10^{20}$ m$^{-3}$]")
+    axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-20:.1f}"))
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_facecolor("#f0f0f0")
+
+
 def main_plot(
     fig1,
     fig2,
     fig3,
     fig4,
+    fig5,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3216,6 +3299,9 @@ def main_plot(
 
     plot_10 = fig4.add_subplot(224)
     plot_h_threshold_comparison(plot_10, m_file_data, scan)
+
+    plot_11 = fig5.add_subplot(221)
+    plot_density_limit_comparison(plot_11, m_file_data, scan)
 
 
 def main(args=None):
@@ -3472,6 +3558,7 @@ def main(args=None):
     page2 = plt.figure(figsize=(12, 9), dpi=80)
     page3 = plt.figure(figsize=(12, 9), dpi=80)
     page4 = plt.figure(figsize=(12, 9), dpi=80)
+    page5 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3479,6 +3566,7 @@ def main(args=None):
         page2,
         page3,
         page4,
+        page5,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3491,6 +3579,7 @@ def main(args=None):
         pdf.savefig(page2)
         pdf.savefig(page3)
         pdf.savefig(page4)
+        pdf.savefig(page5)
 
     # show fig if option used
     if args.show:
@@ -3500,6 +3589,7 @@ def main(args=None):
     plt.close(page2)
     plt.close(page3)
     plt.close(page4)
+    plt.close(page5)
 
 
 if __name__ == "__main__":
