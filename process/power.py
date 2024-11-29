@@ -2483,7 +2483,7 @@ class Power:
             tfbusres = tfcoil_variables.rho_tf_bus * tfcoil_variables.len_tf_bus / abus
 
             #  Bus mass (kg)
-            tfcoil_variables.tfbusmas = (
+            tfcoil_variables.m_tf_bus = (
                 tfcoil_variables.len_tf_bus * abus * constants.dcopper
             )
 
@@ -2557,8 +2557,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Bus mass (kg)",
-            "(tfbusmas)",
-            tfcoil_variables.tfbusmas,
+            "(m_tf_bus)",
+            tfcoil_variables.m_tf_bus,
             "OP ",
         )
         # po.ovarre(outfile,'Maximum impedance (ohm)','(ztot)',ztot)
