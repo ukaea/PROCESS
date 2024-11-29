@@ -505,7 +505,7 @@ module tfcoil_variables
   real(dp) :: len_tf_bus
   !! TF coil bus length (m)
 
-  real(dp) :: tfbusmas
+  real(dp) :: m_tf_bus
   !! TF coil bus mass (kg)
 
   real(dp) :: tfckw
@@ -957,7 +957,7 @@ module tfcoil_variables
     tdmptf = 10.0D0
     tfareain = 0.0D0
     len_tf_bus = 300.0D0
-    tfbusmas = 0.0D0
+    m_tf_bus = 0.0D0
     tfckw = 0.0D0
     tfcmw = 0.0D0
     tfcpmw = 0.0D0

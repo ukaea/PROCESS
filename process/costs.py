@@ -1964,7 +1964,7 @@ class Costs:
         #  Account 225.1.5 : TF coil bussing
 
         if tfcoil_variables.i_tf_sup != 1:
-            self.c22515 = 1.0e-6 * cost_variables.uctfbus * tfcoil_variables.tfbusmas
+            self.c22515 = 1.0e-6 * cost_variables.uctfbus * tfcoil_variables.m_tf_bus
         else:
             self.c22515 = (
                 1.0e-6
