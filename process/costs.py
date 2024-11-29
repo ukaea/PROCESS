@@ -1970,7 +1970,7 @@ class Costs:
                 1.0e-6
                 * cost_variables.ucbus
                 * tfcoil_variables.cpttf
-                * tfcoil_variables.tfbusl
+                * tfcoil_variables.len_tf_bus
             )
 
         self.c22515 = cost_variables.fkind * self.c22515
