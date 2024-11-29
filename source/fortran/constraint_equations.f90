@@ -901,13 +901,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for burn time lower limit
       !! #=# times
-      !! #=#=# ftburn, tbrnmn
+      !! #=#=# ft_burn, t_burn_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ftburn : input real : f-value for minimum burn time
+      !! ft_burn : input real : f-value for minimum burn time
       !! t_burn : input real : burn time (s) (calculated if lpulse=1)
-      !! tbrnmn : input real :  minimum burn time (s)
-      use constraint_variables, only: ftburn,tbrnmn
+      !! t_burn_min : input real :  minimum burn time (s)
+      use constraint_variables, only: ft_burn,t_burn_min
       use times_variables, only: t_burn
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -916,9 +916,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ftburn * t_burn/tbrnmn
-      tmp_con = tbrnmn / ftburn
-      tmp_err = tbrnmn / ftburn  - t_burn
+      tmp_cc =  1.0D0 - ft_burn * t_burn/t_burn_min
+      tmp_con = t_burn_min / ft_burn
+      tmp_err = t_burn_min / ft_burn  - t_burn
       tmp_symbol = '>'
       tmp_units = 'sec'
 
@@ -1817,13 +1817,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for plasma current ramp-up time lower limit
       !! #=# times
-      !! #=#=# ftohs, tohsmn
+      !! #=#=# ft_current_ramp_up, tohsmn
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ftohs : input real : f-value for plasma current ramp-up time
+      !! ft_current_ramp_up : input real : f-value for plasma current ramp-up time
       !! t_current_ramp_up : input real : plasma current ramp-up time for current initiation (s)
       !! tohsmn : input real : minimum plasma current ramp-up time (s)
-      use constraint_variables, only: ftohs, tohsmn
+      use constraint_variables, only: ft_current_ramp_up, tohsmn
       use times_variables, only: t_current_ramp_up
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1832,7 +1832,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ftohs * t_current_ramp_up/tohsmn
+      tmp_cc =  1.0D0 - ft_current_ramp_up * t_current_ramp_up/tohsmn
       tmp_con = tohsmn * (1.0D0 - tmp_cc)
       tmp_err = tohsmn * tmp_cc
       tmp_symbol = '>'

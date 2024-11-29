@@ -48,7 +48,7 @@ module times_variables
   !! time intervals - as strings (s)
 
   real(dp) :: t_current_ramp_up
-  !! the plasma current ramps up to approx. full value (s) (calculated if `lpulse=0`)
+  !! time for plasma current to ramp up to approx. full value (s) (calculated if `lpulse=0`)
   !! (`iteration variable 65`)
 
   real(dp) :: tohsin

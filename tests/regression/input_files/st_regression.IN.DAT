@@ -3223,12 +3223,12 @@ lpulse = 0
 * JUSTIFICATION: Not used, no minimum burn time required
 * VARIABLES:     Calculated in-situ
 
-*tbrnmn =  
+*t_burn_min =  
 * DESCRIPTION:   Minimum required burn Time (s)
 * JUSTIFICATION: No required burn time
 
 *ixc = 21
-*ftburn = 1.0
+*ft_burn = 1.0
 *boundl(21) = 0.99
 *boundu(21) = 1.0
 * DESCRIPTION:   f-value for minimum burn time

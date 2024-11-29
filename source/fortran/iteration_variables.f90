@@ -509,25 +509,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_21
-    !! <LI> (21) ftburn (f-value for equation 13)
+    !! <LI> (21) ft_burn (f-value for equation 13)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(21) = 'ftburn        '
+    lablxc(21) = 'ft_burn        '
     boundl(21) = 0.001D0
     boundu(21) = 1.000D0
   end subroutine init_itv_21
 
   real(kind(1.d0)) function itv_21()
-    use constraint_variables, only: ftburn
+    use constraint_variables, only: ft_burn
     implicit none
-    itv_21 = ftburn
+    itv_21 = ft_burn
   end function itv_21
 
   subroutine set_itv_21(ratio)
-    use constraint_variables, only: ftburn
+    use constraint_variables, only: ft_burn
     implicit none
     real(kind(1.d0)) :: ratio
-    ftburn = ratio
+    ft_burn = ratio
   end subroutine set_itv_21
 
   !! <LI> (22) NOT USED
@@ -1524,25 +1524,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_66
-    !! <LI> (66) ftohs (f-value for equation 41)
+    !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(66) = 'ftohs         '
+    lablxc(66) = 'ft_current_ramp_up         '
     boundl(66) = 0.001D0
     boundu(66) = 1.000D0
   end subroutine init_itv_66
 
   real(kind(1.d0)) function itv_66()
-    use constraint_variables, only: ftohs
+    use constraint_variables, only: ft_current_ramp_up
     implicit none
-    itv_66 = ftohs
+    itv_66 = ft_current_ramp_up
   end function itv_66
 
   subroutine set_itv_66(ratio)
-    use constraint_variables, only: ftohs
+    use constraint_variables, only: ft_current_ramp_up
     implicit none
     real(kind(1.d0)) :: ratio
-    ftohs = ratio
+    ft_current_ramp_up = ratio
   end subroutine set_itv_66
 
   !---------------------------------

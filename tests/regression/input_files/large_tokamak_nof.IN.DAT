@@ -172,7 +172,7 @@ powfmax = 3000
 *-----------------------*
 icc = 13 
 * minimum burn time [s]
-tbrnmn = 7200.0
+t_burn_min = 7200.0
 
 
 

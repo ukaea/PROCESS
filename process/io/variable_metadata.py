@@ -292,7 +292,7 @@ var_dicts = {
         description="Cross-sectional area of CS coil turns",
         units="m^2",
     ),
-    "tbrnmn": VariableMetadata(
+    "t_burn_min": VariableMetadata(
         latex=r"$t_{\mathrm{burn.min}}$[$s$]",
         description="Minimum burn time",
         units="s",

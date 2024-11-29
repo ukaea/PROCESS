@@ -222,7 +222,7 @@ module numerics
   !! <LI> (18) q
   !! <LI> (19) beam_energy
   !! <LI> (20) tcpav
-  !! <LI> (21) ftburn (f-value for equation 13)
+  !! <LI> (21) ft_burn (f-value for equation 13)
   !! <LI> (22) NOT USED
   !! <LI> (23) fcoolcp
   !! <LI> (24) NOT USED
@@ -267,7 +267,7 @@ module numerics
   !! <LI> (63) ftpeak (f-value for equation 39)
   !! <LI> (64) fauxmn (f-value for equation 40)
   !! <LI> (65) t_current_ramp_up
-  !! <LI> (66) ftohs (f-value for equation 41)
+  !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
   !! <LI> (67) ftcycl (f-value for equation 42)
   !! <LI> (68) fptemp (f-value for equation 44)
   !! <LI> (69) rcool

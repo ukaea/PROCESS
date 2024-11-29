@@ -233,12 +233,12 @@ contains
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
-      fstrcond, fptemp, ftmargoh, fvs, fbetatry, vvhealw, fpnetel, ftburn, &
+      fstrcond, fptemp, ftmargoh, fvs, fbetatry, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
-      ftohs, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
+      ft_current_ramp_up, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
       fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbetap, fbeta, fjohc, &
-      fflutf, bmxlim, tbrnmn, fbetatry_lower, fecrh_ignition, fstr_wp, fncycle
+      fflutf, bmxlim, t_burn_min, fbetatry_lower, fecrh_ignition, fstr_wp, fncycle
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
       cost_factor_vv, cfind, uccry, fcap0cp, uccase, uuves, cconshtf, conf_mag, &
       ucbllipb, ucfuel, uumag, ucpfbs, ireactor, uucd, div_umain_time, div_nu, &
@@ -924,8 +924,8 @@ contains
        case ('ftbr')
           call parse_real_variable('ftbr', ftbr, 0.001D0, 10.0D0, &
                'F-value for tritium breeding ratio limit')
-       case ('ftburn')
-          call parse_real_variable('ftburn', ftburn, 0.001D0, 10.0D0, &
+       case ('ft_burn')
+          call parse_real_variable('ft_burn', ft_burn, 0.001D0, 10.0D0, &
                'F-value for burn time limit')
        case ('ftcycl')
           call parse_real_variable('ftcycl', ftcycl, 0.001D0, 10.0D0, &
@@ -937,8 +937,8 @@ contains
           call parse_real_variable('ftmargoh', ftmargoh, 0.001D0, 10.0D0, &
                'F-value for TF coil temp. margin')
 
-       case ('ftohs')
-          call parse_real_variable('ftohs', ftohs, 0.001D0, 10.0D0, &
+       case ('ft_current_ramp_up')
+          call parse_real_variable('ft_current_ramp_up', ft_current_ramp_up, 0.001D0, 10.0D0, &
                'F-value for plasma current ramp-up time')
        case ('ftpeak')
           call parse_real_variable('ftpeak', ftpeak, 0.001D0, 10.0D0, &
@@ -1018,8 +1018,8 @@ contains
        case ('tbrmin')
           call parse_real_variable('tbrmin', tbrmin, 0.001D0, 2.0D0, &
                'Minimum tritium breeding ratio')
-       case ('tbrnmn')
-          call parse_real_variable('tbrnmn', tbrnmn, 1.0D-3, 1.0D6, &
+       case ('t_burn_min')
+          call parse_real_variable('t_burn_min', t_burn_min, 1.0D-3, 1.0D6, &
                'Minimum burn time (s)')
        case ('tcycmn')
           call parse_real_variable('tcycmn', tcycmn, 1.0D-3, 2.0D6, &

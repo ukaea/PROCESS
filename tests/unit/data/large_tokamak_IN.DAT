@@ -63,9 +63,9 @@ powfmax = 3000
 * Burn time lower limit *
 *-----------------------*
 icc = 13 
-ixc = 21 * ftburn
+ixc = 21 * ft_burn
 * minimum burn time [s]
-tbrnmn = 7200.0
+t_burn_min = 7200.0
 
 * L-H threshold scaling *
 *-----------------------*

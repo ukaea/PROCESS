@@ -2136,8 +2136,8 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "Minimum burn time (s)",
-                        "(tbrnmn)",
-                        ctv.tbrnmn,
+                        "(t_burn_min)",
+                        ctv.t_burn_min,
                     )
                     op.ovarre(
                         self.outfile,
