@@ -2867,7 +2867,7 @@
         "j_plus_ib": 0.237,
         "j_plus_ob": 0.686,
         "jacket": null,
-        "jbus": 1250000.0,
+        "j_tf_bus": 1250000.0,
         "jscoh_bop": 0.0,
         "jscoh_eof": 0.0,
         "jcableoh_bop": 0.0,
@@ -9929,7 +9929,7 @@
         "j_plus_ib": "",
         "j_plus_ob": "",
         "jacket": "",
-        "jbus": "bussing current density (A/m2)",
+        "j_tf_bus": "bussing current density (A/m2)",
         "jscoh_bop": "central solenoid superconductor critical current density (A/m2) at beginning-of-pulse",
         "jscoh_eof": "central solenoid superconductor critical current density (A/m2) at end-of-flattop",
         "jcableoh_bop": "central solenoid cable critical current density (A/m2) at beginning-of-pulse",
@@ -13535,7 +13535,7 @@
             "lb": 1,
             "ub": 2
         },
-        "jbus": {
+        "j_tf_bus": {
             "lb": 10000.0,
             "ub": 100000000.0
         },
@@ -19578,7 +19578,7 @@
             "n_tf_graded_layers",
             "n_tf_stress_layers",
             "n_tf_wp_layers",
-            "jbus",
+            "j_tf_bus",
             "jwdgcrt",
             "jwdgpro",
             "jwptf",
@@ -20508,7 +20508,7 @@
         "itcycl": "int_variable",
         "iwalld": "int_variable",
         "ixc": "int_array",
-        "jbus": "real_variable",
+        "j_tf_bus": "real_variable",
         "kallenbach_scan_end": "real_variable",
         "kallenbach_scan_num": "int_variable",
         "kallenbach_scan_start": "real_variable",

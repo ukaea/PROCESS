@@ -1609,7 +1609,7 @@ tftmp = 20.0
 * DESCRIPTION:   TF coil bus (feeders) resistivity (ohm-m) 
 * JUSTIFICATION: Unknown, assuming default
 
-* jbus =  
+* j_tf_bus =  
 * DESCRIPTION:   Bussing Current Density (A/m2) 
 * JUSTIFICATION: Unknown
 

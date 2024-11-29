@@ -330,7 +330,7 @@ contains
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
       thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
-      i_tf_tresca, dhecoil, tmaxpro, n_tf_coils, tcpav, fcutfsu, jbus, &
+      i_tf_tresca, dhecoil, tmaxpro, n_tf_coils, tcpav, fcutfsu, j_tf_bus, &
       casthi_fraction, tmargmin_cs, vdalw, dcase, t_turn_tf,&
       cpttf_max, tdmptf, casths, i_tf_turns_integer, quench_model, &
       tcritsc, layer_ins, tinstf, n_layer, tcoolin, ripmax, frhocp, &
@@ -1659,8 +1659,8 @@ contains
        case ('i_str_wp')
          call parse_int_variable('i_str_wp', i_str_wp, 0, 1, &
               'Switch for the TF coil strain behavior')
-       case ('jbus')
-          call parse_real_variable('jbus', jbus, 1.0D4, 1.0D8, &
+       case ('j_tf_bus')
+          call parse_real_variable('j_tf_bus', j_tf_bus, 1.0D4, 1.0D8, &
                'TF coil bus current density (A/m2)')
        case ('n_pancake')
           call parse_int_variable('n_pancake', n_pancake, 1, 100, &

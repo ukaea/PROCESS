@@ -2483,8 +2483,8 @@ class Power:
 
             # Cross-sectional area of bus
             # tfcoil_variables.cpttf  - current per TFC turn (A)
-            # tfcoil_variables.jbus   - bus current density (A/m2)
-            abus = tfcoil_variables.cpttf / tfcoil_variables.jbus
+            # tfcoil_variables.j_tf_bus   - bus current density (A/m2)
+            abus = tfcoil_variables.cpttf / tfcoil_variables.j_tf_bus
 
             # Bus resistance [ohm]
             # Bus resistivity (tfcoil_variables.rho_tf_bus)
@@ -2555,7 +2555,7 @@ class Power:
         po.oheadr(self.outfile, "Resistive TF Coil Power Conversion")
         po.ovarre(self.outfile, "Bus resistance (ohm)", "(tfbusres)", tfbusres, "OP ")
         po.ovarre(
-            self.outfile, "Bus current density (A/m2)", "(jbus)", tfcoil_variables.jbus
+            self.outfile, "Bus current density (A/m2)", "(j_tf_bus)", tfcoil_variables.j_tf_bus
         )
         po.ovarre(
             self.outfile,
