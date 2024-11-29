@@ -502,7 +502,7 @@ module tfcoil_variables
   real(dp) :: tfareain
   !! Area of inboard midplane TF legs (m2)
 
-  real(dp) :: tfbusl
+  real(dp) :: len_tf_bus
   !! TF coil bus length (m)
 
   real(dp) :: tfbusmas
@@ -956,7 +956,7 @@ module tfcoil_variables
     tcritsc = 16.0D0
     tdmptf = 10.0D0
     tfareain = 0.0D0
-    tfbusl = 0.0D0
+    len_tf_bus = 0.0D0
     tfbusmas = 0.0D0
     tfckw = 0.0D0
     tfcmw = 0.0D0

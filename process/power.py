@@ -2480,7 +2480,7 @@ class Power:
         None
         """
         if tfcoil_variables.i_tf_sup != 1:
-            tfcoil_variables.tfbusl = 300.0e0
+            tfcoil_variables.len_tf_bus = 300.0e0
 
             # Cross-sectional area of bus
             # tfcoil_variables.cpttf  - current per TFC turn (A)
@@ -2491,11 +2491,11 @@ class Power:
             # Bus resistivity (tfcoil_variables.rhotfbus)
             # Issue #1253: there was a fudge here to set the bus bar resistivity equal
             # to the TF conductor resistivity. I have removed this.
-            tfbusres = tfcoil_variables.rhotfbus * tfcoil_variables.tfbusl / abus
+            tfbusres = tfcoil_variables.rhotfbus * tfcoil_variables.len_tf_bus / abus
 
             #  Bus mass (kg)
             tfcoil_variables.tfbusmas = (
-                tfcoil_variables.tfbusl * abus * constants.dcopper
+                tfcoil_variables.len_tf_bus * abus * constants.dcopper
             )
 
             #  Total maximum impedance MDK actually just fixed resistance
@@ -2561,8 +2561,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Bus length - all coils (m)",
-            "(tfbusl)",
-            tfcoil_variables.tfbusl,
+            "(len_tf_bus)",
+            tfcoil_variables.len_tf_bus,
         )
         po.ovarre(
             self.outfile,
@@ -2648,7 +2648,7 @@ class Power:
 
         (
             tfcoil_variables.tfckw,
-            tfcoil_variables.tfbusl,
+            tfcoil_variables.len_tf_bus,
             tfcoil_variables.drarea,
             buildings_variables.tfcbv,
             heat_transport_variables.tfacpd,
@@ -2710,18 +2710,18 @@ class Power:
         albusa = itfka / djmka
 
         #  Total TF system bus length, m
-        tfbusl = (
+        len_tf_bus = (
             8.0e0 * np.pi * rmajor
             + (1.0e0 + ntfbkr) * (12.0e0 * rmajor + 80.0e0)
             + 0.2e0 * itfka * np.sqrt(ntfc * rptfc * 1000.0e0)
         )
 
         #  Aluminium bus weight, tonnes
-        albuswt = 2.7e0 * albusa * tfbusl / 1.0e4
+        albuswt = 2.7e0 * albusa * len_tf_bus / 1.0e4
 
         #  Total resistance of TF bus, ohms
-        # rtfbus = 2.62e-4 * tfbusl / albusa
-        rtfbus = tfcoil_variables.rhotfbus * tfbusl / (albusa / 10000)
+        # rtfbus = 2.62e-4 * len_tf_bus / albusa
+        rtfbus = tfcoil_variables.rhotfbus * len_tf_bus / (albusa / 10000)
 
         #  Total voltage drop across TF bus, volts
         vtfbus = 1000.0e0 * itfka * rtfbus
@@ -2897,8 +2897,8 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Total length of TF coil bussing (m)",
-                "(tfbusl)",
-                tfbusl,
+                "(len_tf_bus)",
+                len_tf_bus,
                 "OP ",
             )
             po.ovarre(
@@ -2951,4 +2951,4 @@ class Power:
                 "OP ",
             )
 
-        return (tfckw, tfbusl, drarea, tfcbv, tfacpd)
+        return (tfckw, len_tf_bus, drarea, tfcbv, tfacpd)

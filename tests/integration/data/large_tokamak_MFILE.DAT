@@ -1017,7 +1017,7 @@
  TF_coil_inductive_power_(MVA)___________________________________________ (xpower)______________________      1.7235E+01 OP 
  Aluminium_bus_current_density_(kA/cm2)__________________________________ (djmka)_______________________      1.2500E-01    
  Aluminium_bus_cross-sectional_area_(cm2)________________________________ (albusa)______________________      7.0344E+02 OP 
- Total_length_of_TF_coil_bussing_(m)_____________________________________ (tfbusl)______________________      3.1931E+03 OP 
+ Total_length_of_TF_coil_bussing_(m)_____________________________________ (len_tf_bus)______________________      3.1931E+03 OP 
  Aluminium_bus_weight_(tonnes)___________________________________________ (albuswt)_____________________      6.0645E+02 OP 
  Total_TF_coil_bus_resistance_(ohm)______________________________________ (rtfbus)______________________      1.1893E-03 OP 
  TF_coil_bus_voltage_drop_(V)____________________________________________ (vtfbus)______________________      1.0457E+02 OP 
