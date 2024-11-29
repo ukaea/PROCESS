@@ -210,7 +210,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
     monkeypatch.setattr(tfv, "a_cp_cool", 1)
-    monkeypatch.setattr(tfv, "n_tf", 16)
+    monkeypatch.setattr(tfv, "n_tf_coils", 16)
     monkeypatch.setattr(tfv, "rcool", 0.005)
     monkeypatch.setattr(tfv, "vcool", 20.0)
     monkeypatch.setattr(tfv, "vol_cond_cp", 2)

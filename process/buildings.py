@@ -49,7 +49,7 @@ class Buildings:
         tf_vertical_dim = 2.0e0 * (build_variables.hmax + build_variables.tfthko)
 
         # Find mass of each TF coil, in tonnes
-        tfmtn = 1.0e-3 * tfcoil_variables.whttf / tfcoil_variables.n_tf
+        tfmtn = 1.0e-3 * tfcoil_variables.whttf / tfcoil_variables.n_tf_coils
 
         # Calculate building areas and volumes
 
@@ -74,7 +74,7 @@ class Buildings:
                 tfri,
                 tf_vertical_dim,
                 tfmtn,
-                tfcoil_variables.n_tf,
+                tfcoil_variables.n_tf_coils,
                 build_variables.rsldo,
                 build_variables.rsldi,
                 2.0e0 * (build_variables.hmax - build_variables.vgap_vv_thermalshield)
@@ -94,7 +94,7 @@ class Buildings:
         tfri,
         tfh,
         tfm,
-        n_tf,
+        n_tf_coils,
         shro,
         shri,
         shh,
@@ -194,7 +194,7 @@ class Buildings:
         if buildings_variables.wgt > 1.0e0:
             wt = buildings_variables.wgt
         else:
-            wt = buildings_variables.shmf * shm / n_tf
+            wt = buildings_variables.shmf * shm / n_tf_coils
             wt = max(wt, 1.0e3 * pfm, 1.0e3 * tfm)
 
         # Crane height (m)
@@ -262,7 +262,7 @@ class Buildings:
         if buildings_variables.wgt2 > 1.0e0:
             wgts = buildings_variables.wgt2
         else:
-            wgts = buildings_variables.shmf * shm / n_tf
+            wgts = buildings_variables.shmf * shm / n_tf_coils
 
         cran = 9.41e-6 * wgts + 5.1e0
         rmbh = (
@@ -521,7 +521,7 @@ class Buildings:
         # Footprints and volumes required for storage include hot separation distance (buildings_variables.hot_sepdist).
 
         # Assumptions:
-        # tokomak is toroidally segmented based on number of TF coils (tfcoil_variables.n_tf);
+        # tokomak is toroidally segmented based on number of TF coils (tfcoil_variables.n_tf_coils);
         # component will be stored with the largest dimension oriented horizontally;
         # height is the largest dimension;
         # if a component lifetime == 0, that component is not in the current machine build.
@@ -556,7 +556,7 @@ class Buildings:
                         + build_variables.shldith
                     )
                 )
-            ) / tfcoil_variables.n_tf
+            ) / tfcoil_variables.n_tf_coils
             # find footprint and volume for storing component
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
                 max(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
@@ -567,7 +567,8 @@ class Buildings:
             # required lifetime supply of components =
             #   ( number in build * (plant lifetime / component lifetime) ) * quantity safety factor
             hcomp_req_supply = (
-                tfcoil_variables.n_tf * (cost_variables.tlife / cost_variables.tlife)
+                tfcoil_variables.n_tf_coils
+                * (cost_variables.tlife / cost_variables.tlife)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of inboard shield-blanket-wall
             ib_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -598,7 +599,7 @@ class Buildings:
                     + build_variables.blnkoth
                     + build_variables.shldoth
                 )
-            ) / tfcoil_variables.n_tf
+            ) / tfcoil_variables.n_tf_coils
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
                 max(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
             )
@@ -606,7 +607,8 @@ class Buildings:
                 min(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
             )
             hcomp_req_supply = (
-                tfcoil_variables.n_tf * (cost_variables.tlife / cost_variables.tlife)
+                tfcoil_variables.n_tf_coils
+                * (cost_variables.tlife / cost_variables.tlife)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of outboard wall-blanket-shield
             ob_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -627,7 +629,8 @@ class Buildings:
                 min(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
             )
             hcomp_req_supply = (
-                tfcoil_variables.n_tf * (cost_variables.tlife / cost_variables.divlife)
+                tfcoil_variables.n_tf_coils
+                * (cost_variables.tlife / cost_variables.divlife)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of divertor segments
             div_hotcell_vol = hcomp_req_supply * hcomp_vol

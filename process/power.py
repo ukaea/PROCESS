@@ -791,7 +791,7 @@ class Power:
                 pf_power_variables.ensxpfm,
                 times_variables.t_pulse_repetition,
                 tfcoil_variables.cpttf,
-                tfcoil_variables.n_tf,
+                tfcoil_variables.n_tf_coils,
             )
 
             # Use 13% of ideal Carnot efficiency to fit J. Miller estimate
@@ -2268,7 +2268,7 @@ class Power:
         ensxpfm,
         t_pulse_repetition,
         cpttf,
-        n_tf,
+        n_tf,_coils
     ):
         """
         Calculates cryogenic loads
@@ -2302,7 +2302,7 @@ class Power:
 
         #  Current leads
         if i_tf_sup == 1:
-            self.qcl = 13.6e-3 * n_tf * cpttf
+            self.qcl = 13.6e-3 * n_tf_coils * cpttf
         else:
             self.qcl = 0.0e0
 
@@ -2499,7 +2499,7 @@ class Power:
 
             #  Total maximum impedance MDK actually just fixed resistance
             ztot = (
-                tfcoil_variables.n_tf * tfcoil_variables.tflegres
+                tfcoil_variables.n_tf_coils * tfcoil_variables.tflegres
                 + (tfcoil_variables.prescp / tfcoil_variables.ritfc**2)
                 + tfbusres
             )
@@ -2507,7 +2507,7 @@ class Power:
             #  No reactive portion of the voltage is included here - assume long ramp times
             #  MDK This is steady state voltage, not "peak" voltage
             tfcoil_variables.vtfkv = (
-                1.0e-3 * ztot * tfcoil_variables.cpttf / tfcoil_variables.n_tf
+                1.0e-3 * ztot * tfcoil_variables.cpttf / tfcoil_variables.n_tf_coils
             )
 
             # Resistive powers (MW):
@@ -2527,7 +2527,7 @@ class Power:
             #  The TF coil can be ramped up as slowly as you like
             #  (although this will affect the time to recover from a magnet quench).
             #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_precharge)
-            #                                 estotf(=estotftgj/tfcoil_variables.n_tf) has been removed (#199 #847)
+            #                                 estotf(=estotftgj/tfcoil_variables.n_tf_coils) has been removed (#199 #847)
             tfreacmw = 0.0e0
 
             # Total power consumption (MW)
@@ -2639,7 +2639,7 @@ class Power:
         the power conversion requirements for superconducting TF coils.
         None
         """
-        ettfmj = tfcoil_variables.estotftgj / tfcoil_variables.n_tf * 1.0e3
+        ettfmj = tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e3
 
         #  TF coil current (kA)
 
@@ -2655,7 +2655,7 @@ class Power:
             output,
             itfka,
             physics_variables.rmajor,
-            tfcoil_variables.n_tf,
+            tfcoil_variables.n_tf_coils,
             tfcoil_variables.vtfskv,
             ettfmj,
             tfcoil_variables.tflegres,
@@ -2839,7 +2839,7 @@ class Power:
                 rcoils,
                 "OP ",
             )
-            # MDK Remove this as it leads to confusion between (a) total inductance/n_tf, or (b)
+            # MDK Remove this as it leads to confusion between (a) total inductance/n_tf_coils, or (b)
             #     self-inductance of one single coil
             # po.ovarre(outfile,'Inductance per TF coil (H)','(lptfcs)',lptfcs, 'OP ')
             po.ovarre(self.outfile, "TF coil charging voltage (V)", "(tfcv)", tfcv)

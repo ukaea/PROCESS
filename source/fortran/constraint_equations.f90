@@ -2490,7 +2490,7 @@ contains
       !! tfno : input real : number of TF coils (default = 50 for stellarators)
       !! niterpump : input real : number of high vacuum pumps (real number), each with the throughput
       use constraint_variables, only: fniterpump
-      use tfcoil_variables, only: n_tf
+      use tfcoil_variables, only: n_tf_coils
       use vacuum_variables, only: niterpump
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2499,9 +2499,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - fniterpump * n_tf / niterpump
-      tmp_con = n_tf
-      tmp_err = n_tf * tmp_cc
+      tmp_cc = 1.0D0 - fniterpump * n_tf_coils / niterpump
+      tmp_con = n_tf_coils
+      tmp_err = n_tf_coils * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 
