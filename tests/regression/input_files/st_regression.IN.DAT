@@ -1605,7 +1605,7 @@ tftmp = 20.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Power Supplies ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-* rhotfbus = 
+* rho_tf_bus = 
 * DESCRIPTION:   TF coil bus (feeders) resistivity (ohm-m) 
 * JUSTIFICATION: Unknown, assuming default
 

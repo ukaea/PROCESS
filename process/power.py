@@ -2487,10 +2487,10 @@ class Power:
             abus = tfcoil_variables.cpttf / tfcoil_variables.jbus
 
             # Bus resistance [ohm]
-            # Bus resistivity (tfcoil_variables.rhotfbus)
+            # Bus resistivity (tfcoil_variables.rho_tf_bus)
             # Issue #1253: there was a fudge here to set the bus bar resistivity equal
             # to the TF conductor resistivity. I have removed this.
-            tfbusres = tfcoil_variables.rhotfbus * tfcoil_variables.len_tf_bus / abus
+            tfbusres = tfcoil_variables.rho_tf_bus * tfcoil_variables.len_tf_bus / abus
 
             #  Bus mass (kg)
             tfcoil_variables.tfbusmas = (
@@ -2720,7 +2720,7 @@ class Power:
 
         #  Total resistance of TF bus, ohms
         # rtfbus = 2.62e-4 * len_tf_bus / albusa
-        rtfbus = tfcoil_variables.rhotfbus * len_tf_bus / (albusa / 10000)
+        rtfbus = tfcoil_variables.rho_tf_bus * len_tf_bus / (albusa / 10000)
 
         #  Total voltage drop across TF bus, volts
         vtfbus = 1000.0e0 * itfka * rtfbus

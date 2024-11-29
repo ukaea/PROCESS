@@ -4218,7 +4218,7 @@
         "rhocp": 0.0,
         "rhopedn": 1.0,
         "rhopedt": 1.0,
-        "rhotfbus": -1.0,
+        "rho_tf_bus": -1.0,
         "rhotfleg": 0.0,
         "ric": 0.0,
         "ricpf": 0.0,
@@ -10526,7 +10526,7 @@
         "rhocp": "TF coil inboard leg resistivity [Ohm-m]. If `itart=0`, this variable is the\n average resistivity over the whole magnet",
         "rhopedn": "r/a of density pedestal (`ipedestal>=1`)",
         "rhopedt": "r/a of temperature pedestal (`ipedestal>=1`)",
-        "rhotfbus": "Resistivity of a TF coil bus (Ohm-m). Default value takes the same res as the leg one",
+        "rho_tf_bus": "Resistivity of a TF coil bus (Ohm-m). Default value takes the same res as the leg one",
         "rhotfleg": "Resistivity of a TF coil leg (Ohm-m)",
         "ric": "peak current in coil i (MA-turns)",
         "ricpf": "",
@@ -14135,7 +14135,7 @@
             "lb": 0.01,
             "ub": 1.0
         },
-        "rhotfbus": {
+        "rho_tf_bus": {
             "lb": 0.0,
             "ub": 1e-05
         },
@@ -19640,7 +19640,7 @@
             "tflegmw",
             "rhocp",
             "rhotfleg",
-            "rhotfbus",
+            "rho_tf_bus",
             "frhocp",
             "frholeg",
             "i_cp_joints",
@@ -20667,7 +20667,7 @@
         "rho_tf_joints": "real_variable",
         "rhopedn": "real_variable",
         "rhopedt": "real_variable",
-        "rhotfbus": "real_variable",
+        "rho_tf_bus": "real_variable",
         "rinboard": "real_variable",
         "ripmax": "real_variable",
         "rjconpf": "real_array",

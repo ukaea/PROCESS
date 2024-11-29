@@ -338,7 +338,7 @@ contains
       eyoung_steel, eyoung_res_tf_buck, eyoung_cond_axial, f_vforce_inboard, &
       fcoolleg, frholeg, ftoroidalgap, i_tf_sc_mat, i_tf_shape, i_tf_bucking, &
       n_tf_graded_layers, n_tf_joints, n_tf_joints_contact, poisson_al, &
-      poisson_copper, poisson_steel, rho_tf_joints, rhotfbus, th_joint_contact,&
+      poisson_copper, poisson_steel, rho_tf_joints, rho_tf_bus, th_joint_contact,&
       i_tf_stress_model, eyoung_al, i_tf_wp_geom, i_tf_case_geom, &
       i_tf_turns_integer, n_rad_per_layer, b_crit_upper_nbti, t_crit_nbti, &
       i_cp_joints, n_tf_turn, f_t_turn_tf, t_turn_tf_max, t_cable_tf, &
@@ -1732,8 +1732,8 @@ contains
        case ('tfinsgap')
           call parse_real_variable('tfinsgap', tfinsgap, 1.0D-10, 1.0D-1, &
                'TF coil WP insertion gap (m)')
-       case ('rhotfbus')
-          call parse_real_variable('rhotfbus', rhotfbus, 0.0D0, 1.0D-5, &
+       case ('rho_tf_bus')
+          call parse_real_variable('rho_tf_bus', rho_tf_bus, 0.0D0, 1.0D-5, &
                'TF coil bus (feeders) resistivity (ohm-m)')
        case ('n_tf')
           call parse_real_variable('n_tf', n_tf, 0.0D0, 100.0D0, &

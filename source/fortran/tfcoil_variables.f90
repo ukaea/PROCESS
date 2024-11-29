@@ -542,8 +542,8 @@ module tfcoil_variables
   real(dp) :: rhotfleg
   !! Resistivity of a TF coil leg (Ohm-m)
 
-  real(dp) :: rhotfbus
-  !! Resistivity of a TF coil bus (Ohm-m). Default value takes the same res as the leg one
+  real(dp) :: rho_tf_bus
+  !! Resistivity of a TF coil bus (Ohm-m). Default values is for that of GLIDCOP Copper at 293K
 
   real(dp) :: frhocp
   !! Centrepost resistivity enhancement factor. For `itart=0`, this factor
@@ -969,7 +969,7 @@ module tfcoil_variables
     tflegmw = 0.0D0
     rhocp = 0.0D0
     rhotfleg = 0.0D0
-    rhotfbus = 2.62D-8    !-1.0D0 ! 2.5D-8
+    rho_tf_bus = 1.86D-8
     frhocp = 1.0D0
     frholeg = 1.0D0
     rho_tf_joints = 2.5D-10
