@@ -145,7 +145,7 @@ class ProcessTracker:
         "etath",
         "pgrossmw",
         "tftmp",
-        "n_tf",
+        "n_tf_coils",
         "bmaxtf",
         "vstot",
         "dnitot",

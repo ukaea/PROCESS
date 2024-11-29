@@ -69,7 +69,7 @@ class RippleAmplitudeParam(NamedTuple):
 
     tinstf: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     tftort: Any = None
 
@@ -201,7 +201,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
             rminor=2.8677741935483869,
             rmajor=8.8901000000000003,
             tinstf=0.0080000000000000019,
-            n_tf=16,
+            n_tf_coils=16,
             tftort=1,
             casths=0.05000000000000001,
             dr_tf_wp=0.54261087836601019,
@@ -222,7 +222,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
             rminor=2.8677741935483869,
             rmajor=8.8901000000000003,
             tinstf=0.0080000000000000019,
-            n_tf=16,
+            n_tf_coils=16,
             tftort=1,
             casths=0.05000000000000001,
             dr_tf_wp=0.54261087836601019,
@@ -263,7 +263,7 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
 
     monkeypatch.setattr(tfcoil_variables, "tinstf", rippleamplitudeparam.tinstf)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", rippleamplitudeparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", rippleamplitudeparam.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "tftort", rippleamplitudeparam.tftort)
 
@@ -329,7 +329,7 @@ class PortszParam(NamedTuple):
 
     tftort: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     expected_rtanbeam: Any = None
 
@@ -349,7 +349,7 @@ class PortszParam(NamedTuple):
             frbeam=1.05,
             rmajor=8.8901000000000003,
             tftort=1.6395161177915356,
-            n_tf=16,
+            n_tf_coils=16,
             expected_rtanbeam=9.3346050000000016,
             expected_rtanmax=14.735821603386416,
         ),
@@ -363,7 +363,7 @@ class PortszParam(NamedTuple):
             frbeam=1.05,
             rmajor=8.8901000000000003,
             tftort=1.6395161177915356,
-            n_tf=16,
+            n_tf_coils=16,
             expected_rtanbeam=9.3346050000000016,
             expected_rtanmax=14.735821603386416,
         ),
@@ -405,7 +405,7 @@ def test_portsz(portszparam, monkeypatch, build):
 
     monkeypatch.setattr(tfcoil_variables, "tftort", portszparam.tftort)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", portszparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", portszparam.n_tf_coils)
 
     build.portsz()
 

@@ -1245,7 +1245,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 
 |  Parameter | description | Default |
 | - | - | - |
-| `n_tf` | Number of TF coils | 16 |
+| `n_tf_coils` | Number of TF coils | 16 |
 | `i_tf_sup` | Swich selecting the conductor technology: <br>  - 0 : Water cooled copper (GLIDCOP) <br>  - 1 : Superconducting TF magnets <br>  - 2 : Helium cooled Aluminium magnets | 1 |
 | `i_tf_sc_mat` | Swich for superconducting material  <br> 1 : Nb$_3$Sn superconductor, ITER critical surface parameterization[^1], standard critical values <br> 2 : Bi-2212 high temperature superconductor <br> 3 : NbTi superconductor <br> 4 : Nb$_3$Sn superconductor, ITER critical surface  parameterization[^1], user-defined critical parameters <br> 5 : WST Nb$_3$Sn parameterization <br> 6 : REBCO HTS tape in CroCo strand <br> 7 : Durham Ginzburg-Landau critical surface model for Nb-Ti <br> 8 : Durham Ginzburg-Landau critical surface model for REBCO <br> 9 : Hazelton experimental data combined with Zhai conceptual model for REBCO | 1 |
 
