@@ -330,7 +330,7 @@ contains
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
       thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
-      i_tf_tresca, dhecoil, tmaxpro, n_tf, tcpav, fcutfsu, jbus, &
+      i_tf_tresca, dhecoil, tmaxpro, n_tf_coils, tcpav, fcutfsu, jbus, &
       casthi_fraction, tmargmin_cs, vdalw, dcase, t_turn_tf,&
       cpttf_max, tdmptf, casths, i_tf_turns_integer, quench_model, &
       tcritsc, layer_ins, tinstf, n_layer, tcoolin, ripmax, frhocp, &
@@ -1735,8 +1735,8 @@ contains
        case ('rho_tf_bus')
           call parse_real_variable('rho_tf_bus', rho_tf_bus, 0.0D0, 1.0D-5, &
                'TF coil bus (feeders) resistivity (ohm-m)')
-       case ('n_tf')
-          call parse_real_variable('n_tf', n_tf, 0.0D0, 100.0D0, &
+       case ('n_tf_coils')
+          call parse_real_variable('n_tf_coils', n_tf_coils, 0.0D0, 100.0D0, &
                'Number of TF coils')
        case ('n_tf_turn')
           call parse_real_variable('n_tf_turn', n_tf_turn, 0.0D0, 100.0D0, &
@@ -1811,7 +1811,7 @@ contains
                'Coolant fraction of TF coil leg')
        case ('len_tf_bus')
           call parse_real_variable('len_tf_bus', len_tf_bus, 0.01D0, 1.0D3, &
-               'TF coil bus length (m)')        
+               'TF coil bus length (m)')
 
        !  PF coil settings
 

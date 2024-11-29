@@ -192,7 +192,7 @@ contains
     use process_output, only: oblnkl
     use numerics, only: sqsumsq
     use tfcoil_variables, only: tfareain, wwp2, sig_tf_wp, tfcmw, tcpmax, oacdcp, &
-      tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf, &
+      tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf_coils, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, p_plasma_rad_mw, dene, fusion_power, btot, tesep, &
@@ -273,7 +273,7 @@ contains
     outvar(54,iscan) = fcutfsu
     outvar(55,iscan) = (wwp1+wwp2)*dr_tf_wp
     outvar(56,iscan) = acond
-    outvar(57,iscan) = tfareain/n_tf
+    outvar(57,iscan) = tfareain/n_tf_coils
     outvar(58,iscan) = f_alpha_energy_confinement_min
     outvar(66,iscan) = f_nd_alpha_electron
     outvar(69,iscan) = fimp(1)

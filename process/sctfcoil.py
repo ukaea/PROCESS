@@ -39,10 +39,12 @@ class Sctfcoil:
         """
         Routine to call the superconductor module for the TF coils
         """
-        tfes = sctfcoil_module.estotft / tfcoil_variables.n_tf
+        tfes = sctfcoil_module.estotft / tfcoil_variables.n_tf_coils
         # Cross-sectional area per turn
         aturn = tfcoil_variables.ritfc / (
-            tfcoil_variables.jwptf * tfcoil_variables.n_tf * tfcoil_variables.n_tf_turn
+            tfcoil_variables.jwptf
+            * tfcoil_variables.n_tf_coils
+            * tfcoil_variables.n_tf_turn
         )
 
         if tfcoil_variables.i_tf_sc_mat == 6:
@@ -90,7 +92,7 @@ class Sctfcoil:
             croco_voltage = (
                 2.0e0
                 / sctfcoil_module.time2
-                * (sctfcoil_module.estotft / tfcoil_variables.n_tf)
+                * (sctfcoil_module.estotft / tfcoil_variables.n_tf_coils)
                 / tfcoil_variables.cpttf
             )
         elif f2py_compatible_to_string(tfcoil_variables.quench_model) == "exponential":
@@ -98,7 +100,7 @@ class Sctfcoil:
             croco_voltage = (
                 2.0e0
                 / sctfcoil_module.tau2
-                * (sctfcoil_module.estotft / tfcoil_variables.n_tf)
+                * (sctfcoil_module.estotft / tfcoil_variables.n_tf_coils)
                 / tfcoil_variables.cpttf
             )
         else:
@@ -1206,7 +1208,7 @@ class Sctfcoil:
         # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
         if tfcoil_variables.i_tf_sup == 1:
             tfcoil_variables.bmaxtfrp, peaktfflag = self.peak_tf_with_ripple(
-                tfcoil_variables.n_tf,
+                tfcoil_variables.n_tf_coils,
                 tfcoil_variables.wwp1,
                 tfcoil_variables.dr_tf_wp
                 - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap),
@@ -1487,7 +1489,7 @@ class Sctfcoil:
         - Winding Pack NOT included
         """
 
-        sctfcoil_module.theta_coil = np.pi / tfcoil_variables.n_tf
+        sctfcoil_module.theta_coil = np.pi / tfcoil_variables.n_tf_coils
         sctfcoil_module.tan_theta_coil = np.tan(sctfcoil_module.theta_coil)
 
         # TF coil inboard legs mid-plane cross-section area (WP + casing ) [m2]
@@ -1499,7 +1501,7 @@ class Sctfcoil:
         else:
             # Straight front case
             tfcoil_variables.tfareain = (
-                tfcoil_variables.n_tf
+                tfcoil_variables.n_tf_coils
                 * np.sin(sctfcoil_module.theta_coil)
                 * np.cos(sctfcoil_module.theta_coil)
                 * build_variables.r_tf_inboard_out**2
@@ -1567,7 +1569,7 @@ class Sctfcoil:
             tfcoil_variables.casths = (
                 tfcoil_variables.casths_fraction
                 * (build_variables.r_tf_inboard_in + tfcoil_variables.thkcas)
-                * np.tan(np.pi / tfcoil_variables.n_tf)
+                * np.tan(np.pi / tfcoil_variables.n_tf_coils)
             )
 
         # Radial position of peak toroidal field [m]
@@ -1602,7 +1604,9 @@ class Sctfcoil:
         )
 
         # Current per TF coil [A]
-        sctfcoil_module.tfc_current = tfcoil_variables.ritfc / tfcoil_variables.n_tf
+        sctfcoil_module.tfc_current = (
+            tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils
+        )
 
         # Global inboard leg average current in TF coils [A/m2]
         tfcoil_variables.oacdcp = tfcoil_variables.ritfc / tfcoil_variables.tfareain
@@ -1856,7 +1860,7 @@ class Sctfcoil:
                 tfcoil_variables.ritfc,
                 tfcoil_variables.rhocp,
                 tfcoil_variables.fcoolcp,
-                tfcoil_variables.n_tf,
+                tfcoil_variables.n_tf_coils,
             )
 
         # Leg cross-section areas
@@ -1897,7 +1901,7 @@ class Sctfcoil:
             tfcoil_variables.presleg = (
                 tfcoil_variables.tflegres
                 * tfcoil_variables.ritfc**2
-                / tfcoil_variables.n_tf
+                / tfcoil_variables.n_tf_coils
             )
             # ---
 
@@ -1908,7 +1912,7 @@ class Sctfcoil:
                 n_contact_tot = (
                     tfcoil_variables.n_tf_joints_contact
                     * np.round(tfcoil_variables.n_tf_turn)
-                    * np.round(tfcoil_variables.n_tf)
+                    * np.round(tfcoil_variables.n_tf_coils)
                 )
 
                 # Area of joint contact (all legs)
@@ -1939,7 +1943,7 @@ class Sctfcoil:
                 tfcoil_variables.rhocp
                 * tfcoil_variables.ritfc**2
                 * tfcoil_variables.tfleng
-                / (sctfcoil_module.a_leg_cond * tfcoil_variables.n_tf)
+                / (sctfcoil_module.a_leg_cond * tfcoil_variables.n_tf_coils)
             )
 
             # tfcoil_variables.prescp containts the the total resistive power losses
@@ -1964,7 +1968,7 @@ class Sctfcoil:
         curr,
         rho,
         fcool,
-        n_tf,
+        n_tf_coils,
     ):
         """
         author: P J Knight, CCFE, Culham Science Centre
@@ -2035,7 +2039,7 @@ class Sctfcoil:
         # Mid-plane area calculations
         # ---------------------------
         # Total number of CP turns
-        n_turns_tot = n_tf * n_tf_turn
+        n_turns_tot = n_tf_coils * n_tf_turn
 
         # Area of the innner TF central hole [m2]
         a_tfin_hole = np.pi * r_tfin_inleg**2
@@ -2048,7 +2052,7 @@ class Sctfcoil:
         # Mid-plane outter ground insulation thickness [m2]
         a_cp_gr_ins = (
             np.pi * ((rmid + gr_ins_th) ** 2 - rmid**2)
-            + 2.0e0 * gr_ins_th * (rmid - r_tfin_inleg) * n_tf
+            + 2.0e0 * gr_ins_th * (rmid - r_tfin_inleg) * n_tf_coils
         )
 
         # Mid-plane turn layer cross-section area [m2]
@@ -2061,7 +2065,7 @@ class Sctfcoil:
 
         # Cooling pipes cross-section per coil [m2]
         a_cp_cool = fcool * (
-            (np.pi * rmid**2 - a_tfin_hole - a_cp_ins) / n_tf
+            (np.pi * rmid**2 - a_tfin_hole - a_cp_ins) / n_tf_coils
             - 2.0e0 * gr_ins_th * (rmid - r_tfin_inleg)
         )  # Wedge ground insulation
         # ---------------------------
@@ -2087,7 +2091,7 @@ class Sctfcoil:
         if np.abs(rmid - rtop) < EPS:
             # Exact conductor cross-section
             a_cond_midplane = (
-                np.pi * rmid**2 - a_tfin_hole - n_tf * a_cp_cool - a_cp_ins
+                np.pi * rmid**2 - a_tfin_hole - n_tf_coils * a_cp_cool - a_cp_ins
             )
 
             # Volumes and resisitive losses calculations
@@ -2156,15 +2160,15 @@ class Sctfcoil:
             yy_cond[ii] = (
                 np.pi * r**2
                 - a_tfin_hole
-                - n_tf * a_cp_cool
+                - n_tf_coils * a_cp_cool
                 - yy_ins[ii]
-                - 2.0e0 * n_tf * gr_ins_th * (r - r_tfin_inleg)
+                - 2.0e0 * n_tf_coils * gr_ins_th * (r - r_tfin_inleg)
             )  # Wedge ground insulation
 
             #  Outer ground insulation area at z
             yy_gr_ins[ii] = np.pi * (
                 (r + gr_ins_th) ** 2 - r**2
-            ) + 2.0e0 * n_tf * gr_ins_th * (r - r_tfin_inleg)
+            ) + 2.0e0 * n_tf_coils * gr_ins_th * (r - r_tfin_inleg)
 
             #  Outer casing Cross-sectional area at z
             yy_casout[ii] = np.pi * (
@@ -2203,7 +2207,7 @@ class Sctfcoil:
         # Ground insulation layer cross-section at CP top [m2]
         a_cp_gr_ins = (
             np.pi * ((rtop + gr_ins_th) ** 2 - rtop**2)
-            + 2.0e0 * gr_ins_th * (rtop - r_tfin_inleg) * n_tf
+            + 2.0e0 * gr_ins_th * (rtop - r_tfin_inleg) * n_tf_coils
         )
 
         # Outer casing cross-section area at CP top [m2]
@@ -2218,8 +2222,8 @@ class Sctfcoil:
             np.pi * rtop**2
             - a_tfin_hole
             - a_cp_ins
-            - n_tf * a_cp_cool
-            - 2.0e0 * n_tf * gr_ins_th * (rtop - r_tfin_inleg)
+            - n_tf_coils * a_cp_cool
+            - 2.0e0 * n_tf_coils * gr_ins_th * (rtop - r_tfin_inleg)
         )  # subtracting ground insulation wedge separation
 
         # Resistive power losses in taped section (variable radius section) [W]
@@ -2257,8 +2261,8 @@ class Sctfcoil:
                     np.pi * rtop**2
                     - a_tfin_hole
                     - a_cp_ins
-                    - n_tf * a_cp_cool
-                    - 2.0e0 * n_tf * gr_ins_th * (rtop - r_tfin_inleg)
+                    - n_tf_coils * a_cp_cool
+                    - 2.0e0 * n_tf_coils * gr_ins_th * (rtop - r_tfin_inleg)
                 )
             )
         )  # ground insulation separation
@@ -2336,7 +2340,7 @@ class Sctfcoil:
             rm_vv=rm_vv,
             theta1_vv=tfcoil_variables.theta1_vv,
             # TF properties
-            n_tf=tfcoil_variables.n_tf,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
             n_tf_turn=tfcoil_variables.n_tf_turn,
             # Area of the radial plate taken to be the area of steel in the WP
             # TODO: value clipped due to #1883
@@ -2383,7 +2387,7 @@ class Sctfcoil:
             0.5e0
             * tfcoil_variables.bmaxtf
             * tfcoil_variables.ritfc
-            / tfcoil_variables.n_tf
+            / tfcoil_variables.n_tf_coils
         )
 
         # Vertical force per coil [N]
@@ -2411,7 +2415,7 @@ class Sctfcoil:
         vforce_tot = (
             0.5e0
             * (physics_variables.bt * physics_variables.rmajor * tfcoil_variables.ritfc)
-            / (tfcoil_variables.n_tf * dr_wp**2)
+            / (tfcoil_variables.n_tf_coils * dr_wp**2)
             * (
                 r_out_wp**2 * np.log(r_out_wp / r_in_wp)
                 + r_in_outwp**2 * np.log((r_in_outwp + dr_wp) / r_in_outwp)
@@ -2437,7 +2441,7 @@ class Sctfcoil:
                     * physics_variables.rmajor
                     * tfcoil_variables.ritfc
                 )
-                / (tfcoil_variables.n_tf * dr_wp**2)
+                / (tfcoil_variables.n_tf_coils * dr_wp**2)
                 * (
                     2.0e0 * r_out_wp**2 * np.log(r_out_wp / r_in_wp)
                     + 2.0e0 * dr_wp**2 * np.log(build_variables.r_cp_top / r_in_wp)
@@ -2467,7 +2471,7 @@ class Sctfcoil:
 
         # Total vertical force
         sctfcoil_module.vforce_inboard_tot = (
-            tfcoil_variables.vforce * tfcoil_variables.n_tf
+            tfcoil_variables.vforce * tfcoil_variables.n_tf_coils
         )
 
     @staticmethod
@@ -2684,7 +2688,7 @@ class Sctfcoil:
                 tfcoil_variables.whtcas
                 + tfcoil_variables.whtcon
                 + tfcoil_variables.whtgw
-            ) * tfcoil_variables.n_tf
+            ) * tfcoil_variables.n_tf_coils
 
             # If spherical tokamak, distribute between centrepost and outboard legs
             # (in this case, total TF coil length = inboard `cplen` + outboard `tfleng`)
@@ -2716,7 +2720,8 @@ class Sctfcoil:
 
                 # Total TF conductor volume [m3]
                 vol_cond = (
-                    tfcoil_variables.vol_cond_cp + tfcoil_variables.n_tf * vol_cond_leg
+                    tfcoil_variables.vol_cond_cp
+                    + tfcoil_variables.n_tf_coils * vol_cond_leg
                 )
 
                 # Outboard leg TF turn insulation layer volume (per leg) [m3]
@@ -2724,7 +2729,8 @@ class Sctfcoil:
 
                 # Total turn insulation layer volume [m3]
                 vol_ins = (
-                    sctfcoil_module.vol_ins_cp + tfcoil_variables.n_tf * vol_ins_leg
+                    sctfcoil_module.vol_ins_cp
+                    + tfcoil_variables.n_tf_coils * vol_ins_leg
                 )
 
                 # Ouboard leg TF ground insulation layer volume (per leg) [m3]
@@ -2733,7 +2739,7 @@ class Sctfcoil:
                 # Total ground insulation layer volume [m3]
                 vol_gr_ins = (
                     sctfcoil_module.vol_gr_ins_cp
-                    + tfcoil_variables.n_tf * vol_gr_ins_leg
+                    + tfcoil_variables.n_tf_coils * vol_gr_ins_leg
                 )
 
                 # Total volume of the CP casing [m3]
@@ -2747,28 +2753,28 @@ class Sctfcoil:
                 vol_cond = (
                     tfcoil_variables.tfleng
                     * sctfcoil_module.a_leg_cond
-                    * tfcoil_variables.n_tf
+                    * tfcoil_variables.n_tf_coils
                 )
 
                 # Total turn insulation layer volume [m3]
                 vol_ins = (
                     tfcoil_variables.tfleng
                     * sctfcoil_module.a_leg_ins
-                    * tfcoil_variables.n_tf
+                    * tfcoil_variables.n_tf_coils
                 )
 
                 # Total ground insulation volume [m3]
                 vol_gr_ins = (
                     tfcoil_variables.tfleng
                     * sctfcoil_module.a_leg_gr_ins
-                    * tfcoil_variables.n_tf
+                    * tfcoil_variables.n_tf_coils
                 )
 
                 # Total case volume [m3]
                 vol_case = (
                     tfcoil_variables.tfleng
                     * tfcoil_variables.acasetf
-                    * tfcoil_variables.n_tf
+                    * tfcoil_variables.n_tf_coils
                 )
 
             # ---
@@ -2777,17 +2783,17 @@ class Sctfcoil:
             # Copper magnets casing/conductor weights per coil [kg]
             if tfcoil_variables.i_tf_sup == 0:
                 tfcoil_variables.whtcas = (
-                    fwbs_variables.denstl * vol_case / tfcoil_variables.n_tf
+                    fwbs_variables.denstl * vol_case / tfcoil_variables.n_tf_coils
                 )  # Per TF leg, no casing for outer leg
                 tfcoil_variables.whtconcu = (
-                    constants.dcopper * vol_cond / tfcoil_variables.n_tf
+                    constants.dcopper * vol_cond / tfcoil_variables.n_tf_coils
                 )
                 tfcoil_variables.whtconal = 0.0e0
 
                 # Outer legs/CP weights
                 if physics_variables.itart == 1:
                     # Weight of all the TF legs
-                    tfcoil_variables.whttflgs = tfcoil_variables.n_tf * (
+                    tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
                         constants.dcopper * vol_cond_leg
                         + tfcoil_variables.dcondins * (vol_ins_leg + vol_gr_ins_leg)
                     )
@@ -2805,17 +2811,17 @@ class Sctfcoil:
             elif tfcoil_variables.i_tf_sup == 2:
                 # Casing weight (CP only if physics_variables.itart = 1)bper leg/coil
                 tfcoil_variables.whtcas = (
-                    constants.dalu * vol_case / tfcoil_variables.n_tf
+                    constants.dalu * vol_case / tfcoil_variables.n_tf_coils
                 )
                 tfcoil_variables.whtconcu = 0.0e0
                 tfcoil_variables.whtconal = (
-                    constants.dalu * vol_cond / tfcoil_variables.n_tf
+                    constants.dalu * vol_cond / tfcoil_variables.n_tf_coils
                 )
 
                 # Outer legs/CP weights
                 if physics_variables.itart == 1:
                     # Weight of all the TF legs
-                    tfcoil_variables.whttflgs = tfcoil_variables.n_tf * (
+                    tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
                         constants.dalu * vol_cond_leg
                         + tfcoil_variables.dcondins * (vol_ins_leg + vol_gr_ins_leg)
                     )
@@ -2830,12 +2836,12 @@ class Sctfcoil:
 
             # Turn insulation mass [kg]
             tfcoil_variables.whtconin = (
-                tfcoil_variables.dcondins * vol_ins / tfcoil_variables.n_tf
+                tfcoil_variables.dcondins * vol_ins / tfcoil_variables.n_tf_coils
             )
 
             # Ground wall insulation layer weight
             tfcoil_variables.whtgw = (
-                tfcoil_variables.dcondins * vol_gr_ins / tfcoil_variables.n_tf
+                tfcoil_variables.dcondins * vol_gr_ins / tfcoil_variables.n_tf_coils
             )
 
             # Total weight
@@ -2845,9 +2851,9 @@ class Sctfcoil:
                 + tfcoil_variables.whtconal
                 + tfcoil_variables.whtconin
                 + tfcoil_variables.whtgw
-            ) * tfcoil_variables.n_tf
+            ) * tfcoil_variables.n_tf_coils
 
-    def peak_tf_with_ripple(self, n_tf, wwp1, dr_tf_wp, tfin, bmaxtf):
+    def peak_tf_with_ripple(self, n_tf_coils, wwp1, dr_tf_wp, tfin, bmaxtf):
         """Peak toroidal field on the conductor
         author: P J Knight, CCFE, Culham Science Centre
         This subroutine calculates the peak toroidal field at the
@@ -2861,8 +2867,8 @@ class Sctfcoil:
         M. Kovari, Toroidal Field Coils - Maximum Field and Ripple -
         Parametric Calculation, July 2014
 
-        :param n_tf: number of TF coils
-        :type n_tf: float
+        :param n_tf_coils: number of TF coils
+        :type n_tf_coils: float
         :param wwp1: width of plasma-facing face of winding pack (m)
         :type wwp1: float
         :param dr_tf_wp: radial thickness of winding pack (m)
@@ -2884,7 +2890,7 @@ class Sctfcoil:
 
         #  Set fitting coefficients for different numbers of TF coils
 
-        int_n_tf = np.round(n_tf)
+        int_n_tf = np.round(n_tf_coils)
 
         if int_n_tf == 16:
             a[0] = 0.28101e0
@@ -2909,7 +2915,7 @@ class Sctfcoil:
         #  Maximum winding pack width before adjacent packs touch
         #  (ignoring the external case and ground wall thicknesses)
 
-        wmax = (2.0e0 * tfin + dr_tf_wp) * np.tan(np.pi / n_tf)
+        wmax = (2.0e0 * tfin + dr_tf_wp) * np.tan(np.pi / n_tf_coils)
 
         #  Dimensionless winding pack width
 
@@ -2973,7 +2979,7 @@ class Sctfcoil:
         sctfcoil_module.awpc = (
             np.pi
             * (sctfcoil_module.r_wp_outer**2 - sctfcoil_module.r_wp_inner**2)
-            / tfcoil_variables.n_tf
+            / tfcoil_variables.n_tf_coils
         )
 
         # Area of the front case, the plasma-facing case of the inner TF coil [m2]
@@ -2983,14 +2989,14 @@ class Sctfcoil:
                 (sctfcoil_module.r_wp_outer + tfcoil_variables.casthi) ** 2
                 - sctfcoil_module.r_wp_outer**2
             )
-            / tfcoil_variables.n_tf
+            / tfcoil_variables.n_tf_coils
         )
 
         # WP mid-plane cross-section excluding ground insulation per coil [m2]
         sctfcoil_module.awptf = np.pi * (
             (sctfcoil_module.r_wp_outer - tfcoil_variables.tinstf) ** 2
             - (sctfcoil_module.r_wp_inner + tfcoil_variables.tinstf) ** 2
-        ) / tfcoil_variables.n_tf - 2.0e0 * tfcoil_variables.tinstf * (
+        ) / tfcoil_variables.n_tf_coils - 2.0e0 * tfcoil_variables.tinstf * (
             tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.tinstf
         )
 
@@ -3011,7 +3017,7 @@ class Sctfcoil:
                 + tfcoil_variables.thicndut
             )
             ** 2
-        ) / tfcoil_variables.n_tf - (
+        ) / tfcoil_variables.n_tf_coils - (
             tfcoil_variables.dr_tf_wp
             - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.thicndut)
         ) * 2.0e0 * (
@@ -3030,19 +3036,21 @@ class Sctfcoil:
 
         # Insulation fraction [-]
         sctfcoil_module.f_tf_ins = (
-            tfcoil_variables.n_tf * sctfcoil_module.a_tf_ins / tfcoil_variables.tfareain
+            tfcoil_variables.n_tf_coils
+            * sctfcoil_module.a_tf_ins
+            / tfcoil_variables.tfareain
         )
 
         # Total cross-sectional area of the bucking cylindre and the outer support
         # support structure per coil [m2]
         # physics_variables.itart = 1 : Only valid at mid-plane
         tfcoil_variables.acasetf = (
-            tfcoil_variables.tfareain / tfcoil_variables.n_tf
+            tfcoil_variables.tfareain / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.awpc
 
         # Current per turn
         tfcoil_variables.cpttf = tfcoil_variables.ritfc / (
-            tfcoil_variables.n_tf_turn * tfcoil_variables.n_tf
+            tfcoil_variables.n_tf_turn * tfcoil_variables.n_tf_coils
         )
 
         # Exact current density on TF oubard legs
@@ -3155,7 +3163,7 @@ class Sctfcoil:
 
         # Inboard coil steel fraction [-]
         sctfcoil_module.f_tf_steel = (
-            tfcoil_variables.n_tf
+            tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_steel
             / tfcoil_variables.tfareain
         )
@@ -3165,7 +3173,9 @@ class Sctfcoil:
 
         #  Inboard coil insulation fraction [-]
         sctfcoil_module.f_tf_ins = (
-            tfcoil_variables.n_tf * sctfcoil_module.a_tf_ins / tfcoil_variables.tfareain
+            tfcoil_variables.n_tf_coils
+            * sctfcoil_module.a_tf_ins
+            / tfcoil_variables.tfareain
         )
 
         # Negative areas or fractions error reporting
@@ -3356,7 +3366,7 @@ class Sctfcoil:
         Setting the case geometry and area for SC magnets
         """
         tfcoil_variables.acasetf = (
-            tfcoil_variables.tfareain / tfcoil_variables.n_tf
+            tfcoil_variables.tfareain / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.awpc
 
         # Outboard leg cross-sectional area of surrounding case [m2]
@@ -3526,7 +3536,8 @@ class Sctfcoil:
         """
         tfcoil_variables.jwptf = max(
             1.0e0,
-            tfcoil_variables.ritfc / (tfcoil_variables.n_tf * sctfcoil_module.awptf),
+            tfcoil_variables.ritfc
+            / (tfcoil_variables.n_tf_coils * sctfcoil_module.awptf),
         )
 
     @staticmethod
@@ -4526,7 +4537,10 @@ class Sctfcoil:
         # TF coil geometry
         po.osubhd(self.outfile, "TF coil Geometry :")
         po.ovarin(
-            self.outfile, "Number of TF coils", "(n_tf)", int(tfcoil_variables.n_tf)
+            self.outfile,
+            "Number of TF coils",
+            "(n_tf_coils)",
+            int(tfcoil_variables.n_tf_coils),
         )
         po.ovarre(
             self.outfile,
@@ -4715,8 +4729,8 @@ class Sctfcoil:
             po.ovarre(
                 self.outfile,
                 "Total steel cross-section (m2)",
-                "(a_tf_steel*n_tf)",
-                sctfcoil_module.a_tf_steel * tfcoil_variables.n_tf,
+                "(a_tf_steel*n_tf_coils)",
+                sctfcoil_module.a_tf_steel * tfcoil_variables.n_tf_coils,
             )
             po.ovarre(
                 self.outfile,
@@ -4727,8 +4741,8 @@ class Sctfcoil:
             po.ovarre(
                 self.outfile,
                 "Total Insulation cross-section (total) (m2)",
-                "(a_tf_ins*n_tf)",
-                sctfcoil_module.a_tf_ins * tfcoil_variables.n_tf,
+                "(a_tf_ins*n_tf_coils)",
+                sctfcoil_module.a_tf_ins * tfcoil_variables.n_tf_coils,
             )
             po.ovarre(
                 self.outfile,
@@ -4834,8 +4848,8 @@ class Sctfcoil:
             po.ovarre(
                 self.outfile,
                 "Steel WP cross-section (total) (m2)",
-                "(aswp*n_tf)",
-                tfcoil_variables.aswp * tfcoil_variables.n_tf,
+                "(aswp*n_tf_coils)",
+                tfcoil_variables.aswp * tfcoil_variables.n_tf_coils,
             )
             po.ovarre(
                 self.outfile,
@@ -5221,8 +5235,8 @@ class Sctfcoil:
         po.ovarre(
             self.outfile,
             "Mass of each TF coil (kg)",
-            "(whttf/n_tf)",
-            tfcoil_variables.whttf / tfcoil_variables.n_tf,
+            "(whttf/n_tf_coils)",
+            tfcoil_variables.whttf / tfcoil_variables.n_tf_coils,
             "OP ",
         )
         po.ovarre(
@@ -5597,7 +5611,7 @@ class Sctfcoil:
                 "(casthi)",
             )
 
-            radius = radius / np.cos(np.pi / tfcoil_variables.n_tf)
+            radius = radius / np.cos(np.pi / tfcoil_variables.n_tf_coils)
             po.obuild(
                 self.outfile,
                 "Plasma side case max radius",
@@ -7191,7 +7205,7 @@ def vv_stress_on_quench(
     rm_vv,
     theta1_vv,
     # TF properties
-    n_tf,
+    n_tf_coils,
     n_tf_turn,
     s_rp,
     s_cc,
@@ -7232,7 +7246,7 @@ def vv_stress_on_quench(
     joined to another circular arc in the approximation to the VV CCL,
     using an arbitrary origin of coordinates (Rc2, Zc2).
 
-    :param n_tf: the number of TF coils
+    :param n_tf_coils: the number of TF coils
     :param n_tf_turn: the number of turns per TF coil
     :param s_rp: the cross-sectional area of the radial plates of the TF coil
     :param s_cc: the cross-sectional area of the TF coil case
@@ -7258,7 +7272,7 @@ def vv_stress_on_quench(
     Plasma and Fusion Research. 15. 1405078-1405078. 10.1585/pfr.15.1405078.
     """
     # Poloidal loop resistance (PLR) in ohms
-    plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (s_cc + s_rp))) * 1e-6
+    plr_coil = ((0.5 * ccl_length_coil) / (n_tf_coils * (s_cc + s_rp))) * 1e-6
     plr_vv = ((0.84 / d_vv) * 0.94) * 1e-6
 
     # relevant self-inductances in henry (H)
@@ -7284,7 +7298,7 @@ def vv_stress_on_quench(
     i0 = i_op * np.exp(-lambda0 * tmaxforce)
     i1 = (
         lambda0
-        * n_tf
+        * n_tf_coils
         * n_tf_turn
         * i_op
         * (
@@ -7295,7 +7309,7 @@ def vv_stress_on_quench(
     i2 = (lambda1 / lambda2) * i1
 
     a_vv = (ro_vv + ri_vv) / (ro_vv - ri_vv)
-    b_vvi = (constants.rmu0 * (n_tf * n_tf_turn * i0 + i1 + (i2 / 2))) / (
+    b_vvi = (constants.rmu0 * (n_tf_coils * n_tf_turn * i0 + i1 + (i2 / 2))) / (
         2 * np.pi * ri_vv
     )
     j_vvi = i2 / (2 * np.pi * d_vv * ri_vv)

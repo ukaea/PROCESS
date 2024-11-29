@@ -571,7 +571,7 @@ casths = 0.05
 ripmax = 0.6
 
 * Number of TF coils
-n_tf = 16
+n_tf_coils = 16
 
 * Groundwall insulation thickness [m]
 tinstf = 0.008

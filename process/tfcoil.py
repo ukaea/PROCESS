@@ -67,7 +67,7 @@ class TFcoil:
         n_tcool_it = 20
 
         # Coolant channels:
-        acool = tfv.a_cp_cool * tfv.n_tf  # Cooling cross-sectional area
+        acool = tfv.a_cp_cool * tfv.n_tf_coils  # Cooling cross-sectional area
         dcool = 2.0e0 * tfv.rcool  # Diameter
         lcool = 2.0e0 * (bv.hmax + bv.dr_tf_outboard)  # Length
         tfv.ncool = acool / (constants.pi * tfv.rcool**2)  # Number

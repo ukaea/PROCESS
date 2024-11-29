@@ -101,7 +101,7 @@ def test_protect(protectparam, sctfcoil):
 class SuperconParam(NamedTuple):
     tmargmin_tf: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     temp_margin: Any = None
 
@@ -181,7 +181,7 @@ class SuperconParam(NamedTuple):
     (
         SuperconParam(
             tmargmin_tf=1.5,
-            n_tf=16,
+            n_tf_coils=16,
             temp_margin=0,
             jwdgpro=0,
             dhecoil=0.010000000000000002,
@@ -221,7 +221,7 @@ class SuperconParam(NamedTuple):
         ),
         SuperconParam(
             tmargmin_tf=1.5,
-            n_tf=16,
+            n_tf_coils=16,
             temp_margin=2.3431632224075836,
             jwdgpro=17475706.393616617,
             dhecoil=0.010000000000000002,
@@ -261,7 +261,7 @@ class SuperconParam(NamedTuple):
         ),
         SuperconParam(
             tmargmin_tf=1.5,
-            n_tf=16,
+            n_tf_coils=16,
             temp_margin=2.3431632224075836,
             jwdgpro=17475706.393616617,
             dhecoil=0.010000000000000002,
@@ -319,7 +319,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tmargmin_tf", superconparam.tmargmin_tf)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", superconparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", superconparam.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "temp_margin", superconparam.temp_margin)
 
@@ -412,7 +412,7 @@ class TfCurrentParam(NamedTuple):
 
     casthi_fraction: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     thicndut: Any = None
 
@@ -464,7 +464,7 @@ class TfCurrentParam(NamedTuple):
             casths=0.05000000000000001,
             casthi_is_fraction=False,
             casthi_fraction=0.050000000000000003,
-            n_tf=16,
+            n_tf_coils=16,
             thicndut=0.002,
             thkcas=0.52465000000000006,
             oacdcp=8673900,
@@ -536,7 +536,7 @@ def test_tf_current(tfcurrentparam, monkeypatch, sctfcoil):
         tfcoil_variables, "casthi_fraction", tfcurrentparam.casthi_fraction
     )
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", tfcurrentparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfcurrentparam.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "thicndut", tfcurrentparam.thicndut)
 
@@ -596,7 +596,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     tftort: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     arealeg: Any = None
 
@@ -649,7 +649,7 @@ class TfGlobalGeometryParam(NamedTuple):
             tfareain=0,
             ritfc=0,
             tftort=1,
-            n_tf=16,
+            n_tf_coils=16,
             arealeg=0,
             i_tf_sup=1,
             dztop=0,
@@ -679,7 +679,7 @@ class TfGlobalGeometryParam(NamedTuple):
             tfareain=35.703669036223495,
             ritfc=241812532.66279837,
             tftort=1.7488698442633552,
-            n_tf=16,
+            n_tf_coils=16,
             arealeg=2.6728635794409041,
             i_tf_sup=1,
             dztop=0,
@@ -742,7 +742,9 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tftort", tfglobalgeometryparam.tftort)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", tfglobalgeometryparam.n_tf)
+    monkeypatch.setattr(
+        tfcoil_variables, "n_tf_coils", tfglobalgeometryparam.n_tf_coils
+    )
 
     monkeypatch.setattr(tfcoil_variables, "arealeg", tfglobalgeometryparam.arealeg)
 
@@ -866,7 +868,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     tinstf: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     dr_tf_outboard: Any = None
 
@@ -910,7 +912,7 @@ class TfResHeatingParam(NamedTuple):
     pres_joints: Any = None
     n_tf_joints_contact: Any = None
     n_tf_joints: Any = None
-    n_tf: Any = None
+    n_tf_coils: Any = None
     i_tf_sup: Any = None
     frholeg: Any = None
     frhocp: Any = None
@@ -958,7 +960,7 @@ class TfResHeatingParam(NamedTuple):
             aiwp=0,
             acasetf=0,
             tinstf=0,
-            n_tf=12,
+            n_tf_coils=12,
             dr_tf_outboard=0.15483000000000002,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
@@ -985,7 +987,7 @@ class TfResHeatingParam(NamedTuple):
             aiwp=0.00030678028680367151,
             acasetf=0.00061190425043863676,
             tinstf=0,
-            n_tf=12,
+            n_tf_coils=12,
             dr_tf_outboard=0.15483000000000002,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
@@ -1043,7 +1045,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tinstf", restfinternalgeomparam.tinstf)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", restfinternalgeomparam.n_tf)
+    monkeypatch.setattr(
+        tfcoil_variables, "n_tf_coils", restfinternalgeomparam.n_tf_coils
+    )
 
     monkeypatch.setattr(
         build_variables, "dr_tf_outboard", restfinternalgeomparam.dr_tf_outboard
@@ -1124,7 +1128,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             pres_joints=0,
             n_tf_joints_contact=6,
             n_tf_joints=4,
-            n_tf=12,
+            n_tf_coils=12,
             i_tf_sup=0,
             frholeg=1,
             frhocp=1,
@@ -1174,7 +1178,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             pres_joints=1944336.7995005273,
             n_tf_joints_contact=6,
             n_tf_joints=4,
-            n_tf=12,
+            n_tf_coils=12,
             i_tf_sup=0,
             frholeg=1,
             frhocp=1,
@@ -1264,7 +1268,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_joints", tfresheatingparam.n_tf_joints)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", tfresheatingparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfresheatingparam.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfresheatingparam.i_tf_sup)
 
@@ -1346,7 +1350,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
 
 class CpostParam(NamedTuple):
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     hmax: Any = None
 
@@ -1393,7 +1397,7 @@ class CpostParam(NamedTuple):
     "cpostparam",
     (
         CpostParam(
-            n_tf=12,
+            n_tf_coils=12,
             hmax=4.4214285714285717,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
@@ -1416,7 +1420,7 @@ class CpostParam(NamedTuple):
             expected_a_cp_cool=0.00068328705812121333,
         ),
         CpostParam(
-            n_tf=12,
+            n_tf_coils=12,
             hmax=4.4214285714285717,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
@@ -1476,7 +1480,7 @@ def test_cpost(cpostparam, monkeypatch, sctfcoil):
         curr=cpostparam.curr,
         rho=cpostparam.rho,
         fcool=cpostparam.fcool,
-        n_tf=cpostparam.n_tf,
+        n_tf_coils=cpostparam.n_tf_coils,
     )
 
     assert vol_ins_cp == pytest.approx(cpostparam.expected_vol_ins_cp)
@@ -1511,7 +1515,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     vforce: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     taucq: Any = None
 
@@ -1573,7 +1577,7 @@ class TfFieldAndForceParam(NamedTuple):
             r_tf_inboard_mid=0.077415000000000012,
             r_cp_top=0.87643571428571443,
             vforce=0,
-            n_tf=12,
+            n_tf_coils=12,
             taucq=30,
             sigvvall=93000000,
             cforce=0,
@@ -1608,7 +1612,7 @@ class TfFieldAndForceParam(NamedTuple):
             r_tf_inboard_mid=0.077415000000000012,
             r_cp_top=0.85843571428571441,
             vforce=12380916.66459452,
-            n_tf=12,
+            n_tf_coils=12,
             taucq=30,
             sigvvall=93000000,
             cforce=37041530.947408713,
@@ -1672,7 +1676,7 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "vforce", tffieldandforceparam.vforce)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", tffieldandforceparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tffieldandforceparam.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "cforce", tffieldandforceparam.cforce)
 
@@ -1883,7 +1887,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     n_tf_turn: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     aiwp: Any = None
 
@@ -1997,7 +2001,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             dcase=8000,
             acndttf=0.0014685061538103825,
             n_tf_turn=200,
-            n_tf=16,
+            n_tf_coils=16,
             aiwp=0.087880174466980876,
             acasetfo=1.2752592893394648,
             acasetf=1.0015169239205168,
@@ -2069,7 +2073,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             dcase=8000,
             acndttf=0.0014685061538103825,
             n_tf_turn=200,
-            n_tf=16,
+            n_tf_coils=16,
             aiwp=0.087880174466980876,
             acasetfo=1.2752592893394648,
             acasetf=1.0015169239205168,
@@ -2194,7 +2198,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
         tfcoil_variables, "n_tf_turn", tfcoilareaandmassesparam.n_tf_turn
     )
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", tfcoilareaandmassesparam.n_tf)
+    monkeypatch.setattr(
+        tfcoil_variables, "n_tf_coils", tfcoilareaandmassesparam.n_tf_coils
+    )
 
     monkeypatch.setattr(tfcoil_variables, "aiwp", tfcoilareaandmassesparam.aiwp)
 
@@ -2324,7 +2330,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     tf_fit_y: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     wwp1: Any = None
 
@@ -2352,7 +2358,7 @@ class PeakTfWithRippleParam(NamedTuple):
             tf_fit_t=0,
             tf_fit_z=0,
             tf_fit_y=0,
-            n_tf=16,
+            n_tf_coils=16,
             wwp1=1.299782604942499,
             dr_tf_wp=0.50661087836601015,
             tfin=3.789896624292115,
@@ -2367,7 +2373,7 @@ class PeakTfWithRippleParam(NamedTuple):
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
             tf_fit_y=1.0658869305062604,
-            n_tf=16,
+            n_tf_coils=16,
             wwp1=1.299782604942499,
             dr_tf_wp=0.50661087836601015,
             tfin=3.789896624292115,
@@ -2400,7 +2406,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "tf_fit_y", peaktfwithrippleparam.tf_fit_y)
 
     bmaxtfrp, flag = sctfcoil.peak_tf_with_ripple(
-        n_tf=peaktfwithrippleparam.n_tf,
+        n_tf_coils=peaktfwithrippleparam.n_tf_coils,
         wwp1=peaktfwithrippleparam.wwp1,
         dr_tf_wp=peaktfwithrippleparam.dr_tf_wp,
         tfin=peaktfwithrippleparam.tfin,
@@ -2662,7 +2668,7 @@ class TfCaseGeomParam(NamedTuple):
 
     tfareain: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     casths: Any = None
 
@@ -2713,7 +2719,7 @@ class TfCaseGeomParam(NamedTuple):
             acasetfo=0,
             arealeg=1.9805354702921749,
             tfareain=27.308689677971632,
-            n_tf=16,
+            n_tf_coils=16,
             casths=0.05000000000000001,
             casthi=0.060000000000000012,
             dr_tf_wp=0.54261087836601019,
@@ -2740,7 +2746,7 @@ class TfCaseGeomParam(NamedTuple):
             acasetfo=1.2752592893394648,
             arealeg=1.9805354702921749,
             tfareain=27.308689677971632,
-            n_tf=16,
+            n_tf_coils=16,
             casths=0.05000000000000001,
             casthi=0.060000000000000012,
             dr_tf_wp=0.54261087836601019,
@@ -2785,7 +2791,7 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tfareain", tfcasegeomparam.tfareain)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", tfcasegeomparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfcasegeomparam.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "casths", tfcasegeomparam.casths)
 
@@ -3358,7 +3364,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
 class TfWpCurrentsParam(NamedTuple):
     ritfc: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     jwptf: Any = None
 
@@ -3372,14 +3378,14 @@ class TfWpCurrentsParam(NamedTuple):
     (
         TfWpCurrentsParam(
             ritfc=256500000.00000003,
-            n_tf=16,
+            n_tf_coils=16,
             jwptf=0,
             awptf=0.60510952642236249,
             expected_jwptf=26493137.688284047,
         ),
         TfWpCurrentsParam(
             ritfc=256500000.00000003,
-            n_tf=16,
+            n_tf_coils=16,
             jwptf=26493137.688284047,
             awptf=0.60510952642236249,
             expected_jwptf=26493137.688284047,
@@ -3401,7 +3407,7 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "ritfc", tfwpcurrentsparam.ritfc)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", tfwpcurrentsparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfwpcurrentsparam.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "jwptf", tfwpcurrentsparam.jwptf)
 
@@ -3499,7 +3505,7 @@ class StressclParam(NamedTuple):
 
     cpttf: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     i_tf_stress_model: Any = None
 
@@ -3641,7 +3647,7 @@ class StressclParam(NamedTuple):
             aiwp=0.087880174466980876,
             aswp=0.29370123076207649,
             cpttf=74026.751437500003,
-            n_tf=16,
+            n_tf_coils=16,
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
             i_tf_turns_integer=1,
@@ -3764,7 +3770,7 @@ class StressclParam(NamedTuple):
             aiwp=0.087880174466980876,
             aswp=0.29370123076207649,
             cpttf=74026.751437500003,
-            n_tf=16,
+            n_tf_coils=16,
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
             i_tf_turns_integer=1,
@@ -14026,7 +14032,7 @@ def test_vv_stress_on_quench():
                 rm_vv=7.88,
                 theta1_vv=1,
                 # TF properties
-                n_tf=18,
+                n_tf_coils=18,
                 n_tf_turn=192,
                 s_rp=0.55,
                 s_cc=0.94,
@@ -14090,7 +14096,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(
         tfcoil_variables, "tfa", [3.41, 7.77, 7.77, 3.41]
     )  # chosen to achieve Rm_coil in Table 2
-    monkeypatch.setattr(tfcoil_variables, "n_tf", 18)  # Section 3
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 18)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", 192)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "tdmptf", 30)  # Figure 6
     monkeypatch.setattr(sctfcoil_module, "tfc_current", 83200 * 192)  # Section 3

@@ -666,7 +666,7 @@
  Superconductor_material_________________________________________________ (i_tf_sc_mat)_________________              1    
  Presence_of_TF_demountable_joints_______________________________________ (itart)_______________________              0    
  TF_inboard_leg_support_strategy_________________________________________ (i_tf_bucking)________________              1    
- Number_of_TF_coils______________________________________________________ (n_tf)________________________             16    
+ Number_of_TF_coils______________________________________________________ (n_tf_coils)________________________             16    
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1673E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4985E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      9.1597E-01 ITV
@@ -686,9 +686,9 @@
  TF_coil_arc_point_4_R_(m)_______________________________________________ (xarc(5))_____________________      3.6253E+00    
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (yarc(5))_____________________     -5.2909E+00    
  TF_cross-section_(total)_(m2)___________________________________________ (tfareain)____________________      1.8229E+01    
- Total_steel_cross-section_(m2)__________________________________________ (a_tf_steel*n_tf)_____________      1.2853E+01    
+ Total_steel_cross-section_(m2)__________________________________________ (a_tf_steel*n_tf_coils)_____________      1.2853E+01    
  Total_steel_TF_fraction_________________________________________________ (f_tf_steel)__________________      7.0508E-01    
- Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf)_______________      8.4752E-01    
+ Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.4752E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.6493E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.6444E-01    
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
@@ -702,7 +702,7 @@
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0901E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (tinstf)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
- Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf)___________________      3.8217E+00    
+ Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.8217E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.1550E-01    
  Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.7934E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.3656E-01    
@@ -729,7 +729,7 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.9310E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3777E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.5446E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf)__________________      7.1402E+05 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      7.1402E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.1424E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.2178E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (ritfc/1.D6)__________________      2.1176E+02 OP 
@@ -1780,7 +1780,7 @@ casths = 0.05
 ripmax = 0.6
 
 * Number of TF coils
-n_tf = 16
+n_tf_coils = 16
 
 * Groundwall insulation thickness [m]
 tinstf = 0.008

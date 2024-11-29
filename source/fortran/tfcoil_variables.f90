@@ -586,7 +586,7 @@ module tfcoil_variables
   !!  - i_tf_sup = 1 : SC magnet, eff_tf_cryo = 0.13 (ITER design)
   !!  - i_tf_sup = 2 : Cryo-aluminium, eff_tf_cryo = 0.4
 
-  real(dp) :: n_tf
+  real(dp) :: n_tf_coils
   !! Number of TF coils (default = 50 for stellarators). Number of TF coils outer legs for ST
 
   real(dp) :: tfocrn
@@ -686,15 +686,15 @@ module tfcoil_variables
 
   real(dp) :: whtcon
   !! TF coil conductor mass per coil (kg/coil).
-  !! For `itart=1`, coil is return limb plus centrepost/n_tf
+  !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
   real(dp) :: whtconcu
   !! copper mass in TF coil conductor (kg/coil).
-  !! For `itart=1`, coil is return limb plus centrepost/n_tf
+  !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
   real(dp) :: whtconal
   !! Aluminium mass in TF coil conductor (kg/coil).
-  !! For `itart=1`, coil is return limb plus centrepost/n_tf
+  !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
   real(dp) :: whtconin
   !! conduit insulation mass in TF coil conductor (kg/coil)
@@ -979,7 +979,7 @@ module tfcoil_variables
     pres_joints = 0.0D0
     tfleng = 0.0D0
     eff_tf_cryo = -1.0D0
-    n_tf = 16.0D0
+    n_tf_coils = 16.0D0
     tfocrn = 0.0D0
     tfsai = 0.0D0
     tfsao = 0.0D0

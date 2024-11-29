@@ -1742,7 +1742,7 @@ class Acc2221Param(NamedTuple):
 
     whtcas: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     whttflgs: Any = None
 
@@ -1804,7 +1804,7 @@ class Acc2221Param(NamedTuple):
             whtconcu=58744.465423173802,
             whtconsc=5802.5700395134345,
             whtcas=1034021.9996272125,
-            n_tf=16,
+            n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
@@ -1845,7 +1845,7 @@ class Acc2221Param(NamedTuple):
             whtconcu=58779.575542593491,
             whtconsc=5806.038092640837,
             whtcas=1034699.2182961091,
-            n_tf=16,
+            n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
@@ -1886,7 +1886,7 @@ class Acc2221Param(NamedTuple):
             whtconcu=58779.575542593491,
             whtconsc=5806.038092640837,
             whtcas=1034699.2182961091,
-            n_tf=16,
+            n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
@@ -1956,7 +1956,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "whtcas", acc2221param.whtcas)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", acc2221param.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2221param.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "whttflgs", acc2221param.whttflgs)
 
@@ -3244,7 +3244,7 @@ class Acc2251Param(NamedTuple):
 
     tfckw: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     cpttf: Any = None
 
@@ -3294,7 +3294,7 @@ class Acc2251Param(NamedTuple):
             i_tf_sup=1,
             m_tf_bus=0,
             tfckw=32474.753636211804,
-            n_tf=16,
+            n_tf_coils=16,
             cpttf=74026.751437500003,
             c22=0,
             c225=0,
@@ -3325,7 +3325,7 @@ class Acc2251Param(NamedTuple):
             i_tf_sup=1,
             m_tf_bus=0,
             tfckw=32505.257577809778,
-            n_tf=16,
+            n_tf_coils=16,
             cpttf=74026.751437500003,
             c22=3474.7391916096453,
             c225=185.05656643685359,
@@ -3383,7 +3383,7 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "tfckw", acc2251param.tfckw)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", acc2251param.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2251param.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "cpttf", acc2251param.cpttf)
 
