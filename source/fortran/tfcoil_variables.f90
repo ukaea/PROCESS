@@ -305,7 +305,7 @@ module tfcoil_variables
   !! stress analysis. This is the layers of one turn, not the entire WP.
   !! Default: 5. void, conductor, copper, conduit, insulation.
 
-  real(dp) :: jbus
+  real(dp) :: j_tf_bus
   !! bussing current density (A/m2)
 
   real(dp) :: j_crit_str_tf
@@ -903,7 +903,7 @@ module tfcoil_variables
     n_tf_graded_layers = 1
     n_tf_stress_layers = 0
     n_tf_wp_layers = 5
-    jbus = 1.25D6
+    j_tf_bus = 1.25D6
     j_crit_str_tf = 0.0D0
     j_crit_str_0 = &
       (/596905475.80390120D0,1925501534.8512938D0,&
