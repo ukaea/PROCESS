@@ -956,7 +956,7 @@ module tfcoil_variables
     tcritsc = 16.0D0
     tdmptf = 10.0D0
     tfareain = 0.0D0
-    len_tf_bus = 0.0D0
+    len_tf_bus = 300.0D0
     tfbusmas = 0.0D0
     tfckw = 0.0D0
     tfcmw = 0.0D0

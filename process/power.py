@@ -2480,7 +2480,6 @@ class Power:
         None
         """
         if tfcoil_variables.i_tf_sup != 1:
-            tfcoil_variables.len_tf_bus = 300.0e0
 
             # Cross-sectional area of bus
             # tfcoil_variables.cpttf  - current per TFC turn (A)

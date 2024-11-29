@@ -343,7 +343,8 @@ contains
       i_tf_turns_integer, n_rad_per_layer, b_crit_upper_nbti, t_crit_nbti, &
       i_cp_joints, n_tf_turn, f_t_turn_tf, t_turn_tf_max, t_cable_tf, &
       sig_tf_wp_max, eyoung_cond_trans, i_tf_cond_eyoung_axial, i_tf_cond_eyoung_trans, &
-      str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv
+      str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv, &
+      len_tf_bus
 
     use times_variables, only: t_current_ramp_up, pulsetimings, t_ramp_down, t_fusion_ramp, t_precharge, t_burn, &
       t_between_pulse, tohsin
@@ -1808,6 +1809,9 @@ contains
        case ('vftf')
           call parse_real_variable('vftf', vftf, 0.0D0, 1.0D0, &
                'Coolant fraction of TF coil leg')
+       case ('len_tf_bus')
+          call parse_real_variable('len_tf_bus', len_tf_bus, 0.01D0, 1.0D3, &
+               'TF coil bus length (m)')        
 
        !  PF coil settings
 
