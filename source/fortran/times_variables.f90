@@ -26,7 +26,7 @@ module times_variables
   real(dp) :: t_burn_0
   !! burn time (s) - used for internal consistency
 
-  real(dp) :: tcycle
+  real(dp) :: t_cycle
   !! full cycle time (s)
 
   real(dp) :: tdown
@@ -76,7 +76,7 @@ module times_variables
     pulsetimings = 1.0D0
     t_burn = 1000.0D0
     t_burn_0 = 0.0D0
-    tcycle = 0.0D0
+    t_cycle = 0.0D0
     tdown = 0.0D0
     t_between_pulse = 1800.0D0
     t_fusion_ramp = 10.0D0

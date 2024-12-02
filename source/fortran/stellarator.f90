@@ -59,7 +59,7 @@ contains
     use numerics, only: boundl, boundu
     use stellarator_variables, only: istell
     use tfcoil_variables, only: n_tf
-    use times_variables, only: t_burn, tcycle, tdown, t_between_pulse, t_fusion_ramp, t_current_ramp_up, &
+    use times_variables, only: t_burn, t_cycle, tdown, t_between_pulse, t_fusion_ramp, t_current_ramp_up, &
       t_pulse_repetition, t_ramp_down, t_precharge
 		use global_variables, only: icase
 		use constants, only: pi, rmu0, nout
@@ -115,7 +115,7 @@ contains
     t_ramp_down = 0.0D0
     t_pulse_repetition = t_current_ramp_up + t_fusion_ramp + t_burn + t_ramp_down
     tdown  = t_precharge + t_current_ramp_up + t_ramp_down + t_between_pulse
-    tcycle = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn + t_ramp_down + t_between_pulse
+    t_cycle = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn + t_ramp_down + t_between_pulse
 
   end subroutine stinit
 end module stellarator_module

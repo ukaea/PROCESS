@@ -1851,10 +1851,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftcycl : input real : f-value for cycle time
-      !! tcycle : input real : full cycle time (s)
+      !! t_cycle : input real : full cycle time (s)
       !! tcycmn : input real : minimum cycle time (s)
       use constraint_variables, only: ftcycl, tcycmn
-      use times_variables, only: tcycle
+      use times_variables, only: t_cycle
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1864,7 +1864,7 @@ contains
 
       ! if the minimum cycle time == 0 report an error
       if (tcycmn < 1.0D0) call report_error(6)
-      tmp_cc =  1.0D0 - ftcycl * tcycle/tcycmn
+      tmp_cc =  1.0D0 - ftcycl * t_cycle/tcycmn
       tmp_con = tcycmn * (1.0D0 - tmp_cc)
       tmp_err = tcycmn * tmp_cc
       tmp_symbol = '>'
