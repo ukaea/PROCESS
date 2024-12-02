@@ -94,6 +94,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
+#### Volumes
+
+- Volumes should start with the `vol_` prefix
+
+---------------------
+
 #### Lengths
 
 - Lengths should start with the `len_` prefix
@@ -106,9 +112,22 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
+#### Pressures
+
+- Pressures should start with the `pres_` prefix
+
+---------------------
+
+
 #### Densities
 
 - Densities should start with the `den_` prefix
+
+---------------------
+
+#### Voltages
+
+- Voltages should start with the `v_` prefix
 
 ---------------------
 
@@ -124,6 +143,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
+#### Currents
+
+- Currents should start with the `amps_` prefix
+
+---------------------
+
 #### Current densities
 
 - Current densities should start with the `j_` prefix
@@ -133,6 +158,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 #### Powers
 
 - Powers should start with the `p_` prefix
+
+---------------------
+
+#### Energies
+
+- Energies should start with the `e_` prefix
 
 ---------------------
 
@@ -151,7 +182,13 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 #### Magnetic field strengths
 
-- Magnetic field strengths should start with the `b_prefix`
+- Magnetic field strengths should start with the `b_`
+
+---------------------
+
+#### Frequencies
+
+- Frequencies should start with the `hz_`
 
 ---------------------
 
