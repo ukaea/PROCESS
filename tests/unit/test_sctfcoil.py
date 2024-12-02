@@ -934,8 +934,8 @@ class TfResHeatingParam(NamedTuple):
     expected_rhocp: Any = None
     expected_rhotfleg: Any = None
     expected_vol_cond_cp: Any = None
-    expected_tflegres: Any = None
-    expected_presleg: Any = None
+    expected_res_tf_leg: Any = None
+    expected_p_tf_leg_resistive: Any = None
     expected_prescp: Any = None
     expected_pres_joints: Any = None
     expected_a_cp_cool: Any = None
@@ -1150,8 +1150,8 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             expected_rhocp=2.1831760869565221e-08,
             expected_rhotfleg=2.1831760869565221e-08,
             expected_vol_cond_cp=12.020160732580297,
-            expected_tflegres=6.1387543007600344e-06,
-            expected_presleg=332643748.67243439,
+            expected_res_tf_leg=6.1387543007600344e-06,
+            expected_p_tf_leg_resistive=27720312.38936953,
             expected_prescp=470083798.99090022,
             expected_pres_joints=1944336.7995005273,
             expected_a_cp_cool=0.00068328705812121333,
@@ -1200,8 +1200,8 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             expected_rhocp=2.1831760869565221e-08,
             expected_rhotfleg=2.1831760869565221e-08,
             expected_vol_cond_cp=11.545770024935592,
-            expected_tflegres=6.2969005770928158e-06,
-            expected_presleg=341213300.02121693,
+            expected_res_tf_leg=6.2969005770928158e-06,
+            expected_p_tf_leg_resistive=28434441.66843475,
             expected_prescp=475710489.56122422,
             expected_pres_joints=1944336.7995005273,
             expected_a_cp_cool=0.00068328705812121333,
@@ -1329,10 +1329,10 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
     )
 
     assert tfcoil_variables.res_tf_leg == pytest.approx(
-        tfresheatingparam.expected_tflegres
+        tfresheatingparam.expected_res_tf_leg
     )
 
-    assert tfcoil_variables.p_tf_leg_resistive == pytest.approx(tfresheatingparam.expected_presleg)
+    assert tfcoil_variables.p_tf_leg_resistive == pytest.approx(tfresheatingparam.expected_p_tf_leg_resistive)
 
     assert tfcoil_variables.prescp == pytest.approx(tfresheatingparam.expected_prescp)
 

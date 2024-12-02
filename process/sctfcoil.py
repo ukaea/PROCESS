@@ -1900,8 +1900,7 @@ class Sctfcoil:
             # TF outer leg resistive power (TOTAL) [W]
             tfcoil_variables.p_tf_leg_resistive = (
                 tfcoil_variables.res_tf_leg
-                * tfcoil_variables.ritfc**2
-                / tfcoil_variables.n_tf_coils
+                * (tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils)**2
             )
             # ---
 
