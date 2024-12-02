@@ -258,7 +258,7 @@
     {
       "no": 50,
       "level": 3,
-      "message": "LOADXC: Do not use tohs as an iteration variable if lpulse /= 1"
+      "message": "LOADXC: Do not use t_current_ramp_up as an iteration variable if lpulse /= 1"
     },
     {
       "no": 51,

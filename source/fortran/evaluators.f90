@@ -104,7 +104,7 @@ contains
 		use pf_power_variables, only: srcktpm
 		use process_output, only: int_to_string3
 		use tfcoil_variables, only: tfcmw
-		use times_variables, only: tburn
+		use times_variables, only: t_burn
     implicit none
 
     !  Arguments
@@ -178,7 +178,7 @@ contains
        stop 1
 
     case (14)  !  pulse length
-       fc = sgn * tburn / 2.0D4
+       fc = sgn * t_burn / 2.0D4
 
     case (15)  !  plant availability factor (N.B. requires iavail = 1)
 
@@ -187,7 +187,7 @@ contains
        fc = sgn * cfactr
 
     case (16)  !  major radius/burn time
-       fc = sgn * ( 0.95d0 * (rmajor/9.0d0) - 0.05d0 * (tburn/7200.d0) )
+       fc = sgn * ( 0.95d0 * (rmajor/9.0d0) - 0.05d0 * (t_burn/7200.d0) )
 
     case (17)  !  net electrical output
        fc = sgn * pnetelmw / 500.0d0
@@ -196,7 +196,7 @@ contains
       fc = 1d0
 
    case (19)  !  major radius/burn time
-      fc = sgn * ( -0.5d0 * (bigq/20.0D0) - 0.5d0 * (tburn/7200.d0) )
+      fc = sgn * ( -0.5d0 * (bigq/20.0D0) - 0.5d0 * (t_burn/7200.d0) )
 
     case default
        idiags(1) = iab ; call report_error(24)

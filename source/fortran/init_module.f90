@@ -161,7 +161,7 @@ contains
             'been an escape from a failed line search.'
          write(vfile,'(a80)') 'odd/even is a convenient plotting bit.'
          write(vfile,'(100a13)') 'nviter','escape', 'odd/even', 'te','coe','rmajor', &
-            'fusion_power','bt','tburn','sqsumsq', (lablxc(ixc(i)),i=1,nvar)
+            'fusion_power','bt','t_burn','sqsumsq', (lablxc(ixc(i)),i=1,nvar)
       end if
 
    end subroutine init
