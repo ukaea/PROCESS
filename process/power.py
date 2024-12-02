@@ -2499,7 +2499,7 @@ class Power:
 
             #  Total maximum impedance MDK actually just fixed resistance
             ztot = (
-                tfcoil_variables.n_tf_coils * tfcoil_variables.tflegres
+                tfcoil_variables.n_tf_coils * tfcoil_variables.res_tf_leg
                 + (tfcoil_variables.prescp / tfcoil_variables.ritfc**2)
                 + tfbusres
             )
@@ -2658,7 +2658,7 @@ class Power:
             tfcoil_variables.n_tf_coils,
             tfcoil_variables.vtfskv,
             ettfmj,
-            tfcoil_variables.tflegres,
+            tfcoil_variables.res_tf_leg,
         )
 
     def tfcpwr(self, output: bool, itfka, rmajor, ntfc, vtfskv, ettfmj, rptfc):

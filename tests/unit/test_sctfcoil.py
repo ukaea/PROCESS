@@ -902,7 +902,7 @@ class TfResHeatingParam(NamedTuple):
     thkcas: Any = None
     tftort: Any = None
     tfleng: Any = None
-    tflegres: Any = None
+    res_tf_leg: Any = None
     tcpav: Any = None
     arealeg: Any = None
     ritfc: Any = None
@@ -1118,7 +1118,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             thkcas=0,
             tftort=0.45367650933034859,
             tfleng=15.582502857142856,
-            tflegres=0,
+            res_tf_leg=0,
             tcpav=347.13,
             arealeg=0.070242733939617885,
             ritfc=25500000,
@@ -1168,7 +1168,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             thkcas=0,
             tftort=0.44435902370665786,
             tfleng=15.654502857142857,
-            tflegres=6.1387543007600344e-06,
+            res_tf_leg=6.1387543007600344e-06,
             tcpav=347.13,
             arealeg=0.068800107640501845,
             ritfc=25500000,
@@ -1244,7 +1244,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tfleng", tfresheatingparam.tfleng)
 
-    monkeypatch.setattr(tfcoil_variables, "tflegres", tfresheatingparam.tflegres)
+    monkeypatch.setattr(tfcoil_variables, "res_tf_leg", tfresheatingparam.res_tf_leg)
 
     monkeypatch.setattr(tfcoil_variables, "tcpav", tfresheatingparam.tcpav)
 
@@ -1328,7 +1328,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
         tfresheatingparam.expected_vol_cond_cp
     )
 
-    assert tfcoil_variables.tflegres == pytest.approx(
+    assert tfcoil_variables.res_tf_leg == pytest.approx(
         tfresheatingparam.expected_tflegres
     )
 
