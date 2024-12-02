@@ -269,7 +269,7 @@ module constraint_variables
   real(dp) :: tcycmn
   !! minimum cycle time (s) (`constraint equation 42`)
 
-  real(dp) :: tohsmn
+  real(dp) :: t_current_ramp_up_min
   !! minimum plasma current ramp-up time (s) (`constraint equation 41`)
 
   real(dp) :: vvhealw
@@ -387,7 +387,7 @@ module constraint_variables
     tbrmin = 1.1D0
     t_burn_min = 1.0D0
     tcycmn = 0.0D0
-    tohsmn = 1.0D0
+    t_current_ramp_up_min = 1.0D0
     vvhealw = 1.0D0
     walalw = 1.0D0
     taulimit = 5.0D0

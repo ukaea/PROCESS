@@ -41,7 +41,7 @@ can be set as an iteration variable (65). The ramp-up and shutdown time in the p
 equal to `t_current_ramp_up`. To ensure that the plasma current ramp rate during start-up is prevented from being 
 too high, as governed by the requirement to maintain plasma stability by ensuring that the induced 
 current has time to diffuse into the body of the plasma, constraint equation no. 41 should be 
-turned on with iteration variable no. 66 `ft_current_ramp_up` and input `tohsmn`, the minimum plasma current 
+turned on with iteration variable no. 66 `ft_current_ramp_up` and input `t_current_ramp_up_min`, the minimum plasma current 
 ramp-up time.
 
 ## Burn time

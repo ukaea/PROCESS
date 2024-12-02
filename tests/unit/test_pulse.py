@@ -32,7 +32,7 @@ def pulse():
 
 class TohswgParam(NamedTuple):
 
-    tohsmn: Any = None
+    t_current_ramp_up_min: Any = None
 
     vpfskv: Any = None
 
@@ -104,7 +104,7 @@ class BurnParam(NamedTuple):
     "tohswgparam",
     (
         TohswgParam(
-            tohsmn=0,
+            t_current_ramp_up_min=0,
             vpfskv=0,
             ncirt=8,
             ipfres=0,
@@ -661,7 +661,7 @@ class BurnParam(NamedTuple):
             expected_tohsmn=-526.67247746645455,
         ),
         TohswgParam(
-            tohsmn=-526.67247746645455,
+            t_current_ramp_up_min=-526.67247746645455,
             vpfskv=20,
             ncirt=8,
             ipfres=0,
@@ -1232,7 +1232,9 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(constraint_variables, "tohsmn", tohswgparam.tohsmn)
+    monkeypatch.setattr(
+        constraint_variables, "t_current_ramp_up_min", tohswgparam.t_current_ramp_up_min
+    )
 
     monkeypatch.setattr(pf_power_variables, "vpfskv", tohswgparam.vpfskv)
 
@@ -1264,7 +1266,9 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     pulse.tohswg(output=False)
 
-    assert constraint_variables.tohsmn == pytest.approx(tohswgparam.expected_tohsmn)
+    assert constraint_variables.t_current_ramp_up_min == pytest.approx(
+        tohswgparam.expected_tohsmn
+    )
 
 
 @pytest.mark.parametrize(

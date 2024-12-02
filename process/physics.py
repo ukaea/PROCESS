@@ -1587,10 +1587,10 @@ class Physics:
                 # t_ramp_down = max(t_ramp_down,t_current_ramp_up)
                 times_variables.t_ramp_down = times_variables.t_current_ramp_up
 
-        # Reset second times_variables.t_burn value (times_variables.tburn0).
+        # Reset second times_variables.t_burn value (times_variables.t_burn_0).
         # This is used to ensure that the burn time is used consistently;
         # see convergence loop in fcnvmc1, evaluators.f90
-        times_variables.tburn0 = times_variables.t_burn
+        times_variables.t_burn_0 = times_variables.t_burn
 
         # Pulse and down times : The reactor is assumed to be 'down'
         # at all times outside of the plasma current flat-top period.

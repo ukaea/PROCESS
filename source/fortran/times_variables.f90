@@ -23,7 +23,7 @@ module times_variables
   real(dp) :: t_burn
   !! flat-top duration (s) (calculated if `lpulse=1`)
 
-  real(dp) :: tburn0
+  real(dp) :: t_burn_0
   !! burn time (s) - used for internal consistency
 
   real(dp) :: tcycle
@@ -75,7 +75,7 @@ module times_variables
 
     pulsetimings = 1.0D0
     t_burn = 1000.0D0
-    tburn0 = 0.0D0
+    t_burn_0 = 0.0D0
     tcycle = 0.0D0
     tdown = 0.0D0
     t_between_pulse = 1800.0D0

@@ -1817,13 +1817,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for plasma current ramp-up time lower limit
       !! #=# times
-      !! #=#=# ft_current_ramp_up, tohsmn
+      !! #=#=# ft_current_ramp_up, t_current_ramp_up_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ft_current_ramp_up : input real : f-value for plasma current ramp-up time
       !! t_current_ramp_up : input real : plasma current ramp-up time for current initiation (s)
-      !! tohsmn : input real : minimum plasma current ramp-up time (s)
-      use constraint_variables, only: ft_current_ramp_up, tohsmn
+      !! t_current_ramp_up_min : input real : minimum plasma current ramp-up time (s)
+      use constraint_variables, only: ft_current_ramp_up, t_current_ramp_up_min
       use times_variables, only: t_current_ramp_up
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1832,9 +1832,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ft_current_ramp_up * t_current_ramp_up/tohsmn
-      tmp_con = tohsmn * (1.0D0 - tmp_cc)
-      tmp_err = tohsmn * tmp_cc
+      tmp_cc =  1.0D0 - ft_current_ramp_up * t_current_ramp_up/t_current_ramp_up_min
+      tmp_con = t_current_ramp_up_min * (1.0D0 - tmp_cc)
+      tmp_err = t_current_ramp_up_min * tmp_cc
       tmp_symbol = '>'
       tmp_units = 'sec'
 

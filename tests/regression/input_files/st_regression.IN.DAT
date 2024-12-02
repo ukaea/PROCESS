@@ -3257,7 +3257,7 @@ t_between_pulse = 100.0
 * JUSTIFICATION: Turned off, do not care about plasma current ramp up time 
 * VARIABLES:     t_current_ramp_up (s) calculated in-situ
 
-*tohsmn =  
+*t_current_ramp_up_min =  
 * DESCRIPTION:   Minimum plasma current ramp-up time (s)
 * JUSTIFICATION: Turned off, not using icc = 41
 
