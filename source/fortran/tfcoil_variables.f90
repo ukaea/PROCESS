@@ -779,7 +779,7 @@ module tfcoil_variables
   !! resistive power in the centrepost (itart=1) [W].
   !! If `itart=0`, this variable is the ressitive power on the whole magnet
 
-  real(dp) :: presleg
+  real(dp) :: p_tf_leg_resistive
   !! Summed resistive power in the TF coil legs [W]. Remain 0 if `itart=0`.
 
   real(dp) :: ptempalw
@@ -1037,7 +1037,7 @@ module tfcoil_variables
     ncool = 0.0D0
     ppump = 0.0D0
     prescp = 0.0D0
-    presleg = 0.0D0
+    p_tf_leg_resistive = 0.0D0
     ptempalw = 473.15D0   ! 200 C
     rcool = 0.005D0
     tcoolin = 313.15D0   ! 40 C
