@@ -814,7 +814,7 @@ class Power:
             # Heat removal power at cryogenic temperature tfcoil_variables.tcoolin (W)
             heat_transport_variables.helpow_cryal = (
                 tfcoil_variables.prescp
-                + tfcoil_variables.presleg
+                + tfcoil_variables.p_tf_leg_resistive
                 + tfcoil_variables.pres_joints
                 + fwbs_variables.pnuc_cp_tf * 1.0e6
             )
@@ -2515,7 +2515,7 @@ class Power:
                 1.0e-6 * tfcoil_variables.prescp
             )  # inboard legs (called centrepost, CP for tart design)
             tfcoil_variables.tflegmw = (
-                1.0e-6 * tfcoil_variables.presleg
+                1.0e-6 * tfcoil_variables.p_tf_leg_resistive
             )  # outboard legs
             tfcoil_variables.tfjtsmw = 1.0e-6 * tfcoil_variables.pres_joints  # Joints
             tfbusmw = (

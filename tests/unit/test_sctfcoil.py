@@ -907,7 +907,7 @@ class TfResHeatingParam(NamedTuple):
     arealeg: Any = None
     ritfc: Any = None
     rho_tf_joints: Any = None
-    presleg: Any = None
+    p_tf_leg_resistive: Any = None
     prescp: Any = None
     pres_joints: Any = None
     n_tf_joints_contact: Any = None
@@ -1123,7 +1123,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             arealeg=0.070242733939617885,
             ritfc=25500000,
             rho_tf_joints=2.5000000000000002e-10,
-            presleg=0,
+            p_tf_leg_resistive=0,
             prescp=0,
             pres_joints=0,
             n_tf_joints_contact=6,
@@ -1173,7 +1173,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             arealeg=0.068800107640501845,
             ritfc=25500000,
             rho_tf_joints=2.5000000000000002e-10,
-            presleg=332643748.67243439,
+            p_tf_leg_resistive=332643748.67243439,
             prescp=470083798.99090022,
             pres_joints=1944336.7995005273,
             n_tf_joints_contact=6,
@@ -1256,7 +1256,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
         tfcoil_variables, "rho_tf_joints", tfresheatingparam.rho_tf_joints
     )
 
-    monkeypatch.setattr(tfcoil_variables, "presleg", tfresheatingparam.presleg)
+    monkeypatch.setattr(tfcoil_variables, "p_tf_leg_resistive", tfresheatingparam.p_tf_leg_resistive)
 
     monkeypatch.setattr(tfcoil_variables, "prescp", tfresheatingparam.prescp)
 
@@ -1332,7 +1332,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
         tfresheatingparam.expected_tflegres
     )
 
-    assert tfcoil_variables.presleg == pytest.approx(tfresheatingparam.expected_presleg)
+    assert tfcoil_variables.p_tf_leg_resistive == pytest.approx(tfresheatingparam.expected_presleg)
 
     assert tfcoil_variables.prescp == pytest.approx(tfresheatingparam.expected_prescp)
 

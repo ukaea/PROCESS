@@ -1898,7 +1898,7 @@ class Sctfcoil:
             )
 
             # TF outer leg resistive power (TOTAL) [W]
-            tfcoil_variables.presleg = (
+            tfcoil_variables.p_tf_leg_resistive = (
                 tfcoil_variables.res_tf_leg
                 * tfcoil_variables.ritfc**2
                 / tfcoil_variables.n_tf_coils
@@ -1947,7 +1947,7 @@ class Sctfcoil:
             )
 
             # tfcoil_variables.prescp containts the the total resistive power losses
-            tfcoil_variables.presleg = 0.0e0
+            tfcoil_variables.p_tf_leg_resistive = 0.0e0
 
             # No joints if physics_variables.itart = 0
             tfcoil_variables.pres_joints = 0.0e0
@@ -5373,8 +5373,8 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "Leg resitive power loss, (per leg) (W)",
-                    "(presleg)",
-                    tfcoil_variables.presleg,
+                    "(p_tf_leg_resistive)",
+                    tfcoil_variables.p_tf_leg_resistive,
                 )
                 po.ovarre(
                     self.outfile,
