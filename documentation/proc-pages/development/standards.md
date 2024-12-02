@@ -56,13 +56,116 @@ If the constants doesn't exist then add it with a source link and uncertainty va
 Use a lowercase single letter, word, or words. Separate words with underscores to improve readability.
 If converting between units it may be required to have some capital letters at the end of the variable name to differentiate between different orders of magnitude, `m` and `M` etc.
 
+The agreed upon style is to name the variables by the following scheme:
+
+`var = <data type>_<system>_<description>_<description...>`
+
+If the variables are physics variables and do not belong to a system then:
+
+`var = <physics variable>_<description>`
+
+The data types of different variables can be seen below:
+
+---------------------
+
+#### Radii and thicknesses
+
+- Radial positions should start with the `r_` prefix
+- Radial thicknesses should start with the `dr_` prefix
+
+- Vertical positions should start with the `z_` prefix
+- Vertical thicknesses should start with the `dz_` prefix
+
+---------------------
+
+#### Integer countable items
+
+- Integer countable items should start with the `n_` prefix
+
+Example, the total number of TF coils: `n_tf_coils`
+
+---------------------
+
+#### Areas
+
+- Areas should start with the `a_` prefix
+
+Example, the area of the TF winding pack: `a_tf_wp`
+
+---------------------
+
+#### Lengths
+
+- Lengths should start with the `len_` prefix
+
+---------------------
+
+#### Mass
+
+- Masses should start with the `m_` prefix
+
+---------------------
+
+#### Densities
+
+- Densities should start with the `den_` prefix
+
+---------------------
+
+#### Resistances
+
+- Resistances should start with the `res_` prefix
+
+---------------------
+
+#### Resistivity
+
+- Resistivity variables should start with the `rho_` prefix
+
+---------------------
+
+#### Current densities
+
+- Current densities should start with the `j_` prefix
+
+---------------------
+
+#### Powers
+
+- Powers should start with the `p_` prefix
+
+---------------------
+
+#### Temperatures
+
+- Temperatures should start with the `temp_` prefix
+
+---------------------
+
+#### Times
+
+- Times should start with the `t_` prefix
+- Time intervals should start with the `dt_` prefix
+
+---------------------
+
+#### Magnetic field strengths
+
+- Magnetic field strengths should start with the `b_prefix`
+
+---------------------
+
 #### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
 
+---------------------
+
 #### F-values
 
 Variables used within constraint equations to scale iteration variables (f-values) should start with the `f` prefix without an underscore before the next word.
+
+---------------------
 
 ### Length
 
