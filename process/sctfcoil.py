@@ -1879,7 +1879,7 @@ class Sctfcoil:
             # Outer leg resistive power loss
             # ---
             # TF outboard leg's resistance calculation (per leg) [ohm]
-            tfcoil_variables.tflegres = (
+            tfcoil_variables.res_tf_leg = (
                 tfcoil_variables.rhotfleg
                 * tfcoil_variables.tfleng
                 / sctfcoil_module.a_leg_cond
@@ -1887,7 +1887,7 @@ class Sctfcoil:
 
             # TF outer leg resistive power (TOTAL) [W]
             tfcoil_variables.presleg = (
-                tfcoil_variables.tflegres
+                tfcoil_variables.res_tf_leg
                 * tfcoil_variables.ritfc**2
                 / tfcoil_variables.n_tf_coils
             )
@@ -5388,8 +5388,8 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "Outboard leg resistance per coil (ohm)",
-                    "(tflegres)",
-                    tfcoil_variables.tflegres,
+                    "(res_tf_leg)",
+                    tfcoil_variables.res_tf_leg,
                 )
                 po.ovarre(
                     self.outfile,

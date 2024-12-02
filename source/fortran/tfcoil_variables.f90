@@ -381,7 +381,7 @@ module tfcoil_variables
   real(dp) :: rbmax
   !! Radius of maximum TF B-field (m)
 
-  real(dp) :: tflegres
+  real(dp) :: res_tf_leg
   !! TF coil leg resistance (ohm)
 
   real(dp) :: toroidalgap
@@ -929,7 +929,7 @@ module tfcoil_variables
     poisson_cond_axial = 0.3
     poisson_cond_trans = 0.3
     rbmax = 0.0D0
-    tflegres = 0.0D0
+    res_tf_leg = 0.0D0
     toroidalgap = 1.0D0 ![m]
     ftoroidalgap = 1.0D0
     ripmax = 1.0D0
