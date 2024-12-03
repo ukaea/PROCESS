@@ -145,7 +145,13 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 #### Currents
 
-- Currents should start with the `amps_` prefix
+- Currents should start with the `c_` prefix
+
+---------------------
+
+#### Inductances
+
+- Inductances should start with the `h_` prefix
 
 ---------------------
 
@@ -188,7 +194,13 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 #### Frequencies
 
-- Frequencies should start with the `hz_`
+- Frequencies should start with the `freq_`
+
+---------------------
+
+#### Angles
+
+- Angles should start with the `deg_` or `rad_` depending on the units used
 
 ---------------------
 
