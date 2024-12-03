@@ -1,19 +1,23 @@
 # Density Limit
 
-Several density limit models[^1] are available in PROCESS. These are
+Several density limit models[^1][^2] are available in PROCESS. These are
 calculated in routine `calculate_density_limit`, which is called by `physics`. To enforce any of 
 these limits, turn on constraint equation no. 5 with iteration variable no. 9 
 (`fdene`). In addition, switch `i_density_limit` must be set to the relevant value, as 
 follows:
 
+For the `i_density_limit = 1-5` scalings we scale the function output by the separatrix to volume averaged electron density so that we can set the limit on the volume averaged. Therefore it is recommended to only use these scalings with an H-mode profile (`ipedestal == 1`) otherwise the separatrix density (`nesep`) will not be calculated.
+
+For the models below $P_{\perp}$ is the mean heat flux density across the separatrix ($\mathrm{MW}/\mathrm{m^2}$), which we take as the divertor power divided by the plasma surface area.
+
 -----------------
 
 ## ASDEX model
 
-Switch value: `i_density_limit = 1`[^1]
+Switch value: `i_density_limit = 1`[^1][^2]
 
 $$
-n_{\text{b}}^{\text{crit}} = 1.54 \frac{q_{\perp}^{0.43}B_{\text{T}}^{0.31}}{\left(q_{95}R\right)^{0.45}}
+n_{\text{b}}^{\text{crit}} = 1.54 \frac{P_{\perp}^{0.43}B_{\text{T}}^{0.31}}{\left(q_{95}R\right)^{0.45}}
 $$
 
 -----------------
@@ -23,8 +27,10 @@ $$
 Switch value: `i_density_limit = 2` [^1]
 
 $$
-n_{\text{b}}^{\text{crit}} = 1.8 \frac{q_{\perp}^{0.53}B_{\text{T}}^0.31}{\left(q_{95}R\right)^{0.22}}
+n_{\text{b}}^{\text{crit}} = C \frac{P_{\perp}^{0.53}B_{\text{T}}^{0.31}}{\left(q_{95}R\right)^{0.22}}
 $$
+
+$C \approx$  1.8 for ITER-like conditions.
 
 -----------------
 
@@ -33,7 +39,7 @@ $$
 Switch value: `i_density_limit = 3` [^1]
 
 $$
-n_{\text{b}}^{\text{crit}} = 0.5 \frac{q_{\perp}^{0.57}B_{\text{T}}^0.31}{\left(q_{95}R\right)^{0.09}}
+n_{\text{b}}^{\text{crit}} = 0.5 \frac{P_{\perp}^{0.57}B_{\text{T}}^{0.31}}{\left(q_{95}R\right)^{0.09}}
 $$
 
 -----------------
@@ -66,17 +72,14 @@ where $\kappa \approx 1.5, \Delta \approx 0.1a$ has been taken from JET.
 
 -----------------
 
-## Hugill-Murakami $M.q$ model
+## Hugill-Murakami model
 
 Switch value: `i_density_limit = 6` [^2]
 
 $$
-n_{\text{e,s20}^{\text{crit}}} \approx C \left[\frac{P_{\perp}^{0.53}B_{\text{T}}^{0.31}}{\left(q_{95}R\right)^{0.22}}\right]
+\langle n_{^{\text{crit}}} \rangle \approx \frac{3.0 B_{\text{T}}}{R_0 q_{\text{cyl}}}
 $$
 
-where $n_{\text{e,s20}^{\text{crit}}}$ = critical plasma density at the separatrix, $P_{\perp}$(/MW/m2) =
-mean heat flux across the separatrix and $C \approx$  1.8 for ITER-like
-conditions.
 
 -----------------
 
@@ -84,7 +87,11 @@ conditions.
 
 Switch value: `i_density_limit = 7`
 
-For the Greenwald model the limit applies to the line-averaged electron density, not the volume-averaged density. |
+$$
+\overline{n}_{\text{e}}^{\text{ crit}} = 1.0 \times 10^{14} \frac{I_\text{p}}{\pi a^2}
+$$
+
+For the Greenwald model the limit applies to the line-averaged electron density, not the volume-averaged density.
 
 -----------------
 

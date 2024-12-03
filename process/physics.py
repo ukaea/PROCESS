@@ -2503,7 +2503,7 @@ class Physics:
 
         Notes:
             This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
-
+            For i_density_limit = 1-5, we scale the sepatrix density limit output by the ratio of the separatrix to volume averaged density
         References:
             - AEA FUS 172: Physics Assessment for the European Reactor Study
         """
@@ -2516,14 +2516,14 @@ class Physics:
         # Power per unit area crossing the plasma edge
         # (excludes radiation and neutrons)
 
-        qperp = pdivt / sarea
+        p_perp = pdivt / sarea
 
         # Old ASDEX density limit formula
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
         dlimit[0] = (
-            1.54e20 * qperp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
+            1.54e20 * p_perp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
         ) / prn1
 
         # Borrass density limit model for ITER (I)
@@ -2532,7 +2532,7 @@ class Physics:
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
         dlimit[1] = (
-            1.8e20 * qperp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
+            1.8e20 * p_perp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
         ) / prn1
 
         # Borrass density limit model for ITER (II)
@@ -2542,7 +2542,7 @@ class Physics:
         # denlim (now deleted).
 
         dlimit[2] = (
-            0.5e20 * qperp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
+            0.5e20 * p_perp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
         ) / prn1
 
         # JET edge radiation density limit model
