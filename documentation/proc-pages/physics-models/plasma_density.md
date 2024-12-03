@@ -6,7 +6,7 @@ these limits, turn on constraint equation no. 5 with iteration variable no. 9
 (`fdene`). In addition, switch `i_density_limit` must be set to the relevant value, as 
 follows:
 
-For the `i_density_limit = 1-5` scalings we scale the function output by the separatrix to volume averaged electron density so that we can set the limit on the volume averaged. Therefore it is recommended to only use these scalings with an H-mode profile (`ipedestal == 1`) otherwise the separatrix density (`nesep`) will not be calculated.
+For the `i_density_limit = 1-5` scalings we scale the function output by the separatrix to volume averaged electron density so that we can set the limit on the volume averaged. **Therefore it is recommended to only use these scalings with an H-mode profile (`ipedestal == 1`) otherwise the separatrix density (`nesep`) will not be calculated.**
 
 For the models below $P_{\perp}$ is the mean heat flux density across the separatrix ($\mathrm{MW}/\mathrm{m^2}$), which we take as the divertor power divided by the plasma surface area.
 
