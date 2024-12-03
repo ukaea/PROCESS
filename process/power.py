@@ -2484,21 +2484,21 @@ class Power:
             # Cross-sectional area of bus
             # tfcoil_variables.cpttf  - current per TFC turn (A)
             # tfcoil_variables.j_tf_bus   - bus current density (A/m2)
-            abus = tfcoil_variables.cpttf / tfcoil_variables.j_tf_bus
+            a_tf_bus = tfcoil_variables.cpttf / tfcoil_variables.j_tf_bus
 
             # Bus resistance [ohm]
             # Bus resistivity (tfcoil_variables.rho_tf_bus)
             # Issue #1253: there was a fudge here to set the bus bar resistivity equal
             # to the TF conductor resistivity. I have removed this.
-            tfbusres = tfcoil_variables.rho_tf_bus * tfcoil_variables.len_tf_bus / abus
+            tfbusres = tfcoil_variables.rho_tf_bus * tfcoil_variables.len_tf_bus / a_tf_bus
 
             #  Bus mass (kg)
             tfcoil_variables.m_tf_bus = (
-                tfcoil_variables.len_tf_bus * abus * constants.dcopper
+                tfcoil_variables.len_tf_bus * a_tf_bus * constants.dcopper
             )
 
             #  Total maximum impedance MDK actually just fixed resistance
-            ztot = (
+            res_tf_system_total = (
                 tfcoil_variables.n_tf_coils * tfcoil_variables.res_tf_leg
                 + (tfcoil_variables.prescp / tfcoil_variables.ritfc**2)
                 + tfbusres
@@ -2507,7 +2507,7 @@ class Power:
             #  No reactive portion of the voltage is included here - assume long ramp times
             #  MDK This is steady state voltage, not "peak" voltage
             tfcoil_variables.vtfkv = (
-                1.0e-3 * ztot * tfcoil_variables.cpttf / tfcoil_variables.n_tf_coils
+                1.0e-3 * res_tf_system_total * tfcoil_variables.cpttf / tfcoil_variables.n_tf_coils
             )
 
             # Resistive powers (MW):
@@ -2574,8 +2574,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Total resistance for TF coil set (ohm)",
-            "(ztot)",
-            ztot,
+            "(res_tf_system_total)",
+            res_tf_system_total,
             "OP ",
         )
         # po.ovarre(outfile,'Peak voltage per coil (kV)','(vtfkv)',vtfkv)
