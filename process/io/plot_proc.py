@@ -2557,7 +2557,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
 
     else:
         n_tf_coils = mfile_data.data["n_tf_coils"].get_scan(scan)
-        prescp = 1.0e-6 * mfile_data.data["prescp"].get_scan(scan)
+        p_cp_resistive = 1.0e-6 * mfile_data.data["p_cp_resistive"].get_scan(scan)
         p_tf_leg_resistive = 1.0e-6 * mfile_data.data["p_tf_leg_resistive"].get_scan(scan)
         pres_joints = 1.0e-6 * mfile_data.data["pres_joints"].get_scan(scan)
         fcoolcp = 100.0 * mfile_data.data["fcoolcp"].get_scan(scan)
@@ -2579,7 +2579,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
             ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
-            (prescp, "CP Resisitive heating", "MW"),
+            (p_cp_resistive, "CP Resisitive heating", "MW"),
             (p_tf_leg_resistive * n_tf_coils, "legs Resisitive heating (all legs)", "MW"),
             (pres_joints, "TF joints resisitive heating ", "MW"),
         ]

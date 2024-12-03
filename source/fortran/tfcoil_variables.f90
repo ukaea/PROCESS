@@ -775,7 +775,7 @@ module tfcoil_variables
   real(dp) :: ppump
   !! centrepost coolant pump power (W)
 
-  real(dp) :: prescp
+  real(dp) :: p_cp_resistive
   !! resistive power in the centrepost (itart=1) [W].
   !! If `itart=0`, this variable is the ressitive power on the whole magnet
 
@@ -1036,7 +1036,7 @@ module tfcoil_variables
     a_cp_cool = 0.0D0
     ncool = 0.0D0
     ppump = 0.0D0
-    prescp = 0.0D0
+    p_cp_resistive = 0.0D0
     p_tf_leg_resistive = 0.0D0
     ptempalw = 473.15D0   ! 200 C
     rcool = 0.005D0
