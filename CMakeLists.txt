@@ -74,7 +74,6 @@ FILE(GLOB PROCESS_PYTHON_SRC_PATHS ${PROCESS_PYTHON_SRC_DIR}/*.py)
 LIST(APPEND PROCESS_SRCS
     numerics.f90
     scan.f90
-    fw.f90
     hcpb.f90
     pfcoil.f90
     reinke_module.f90

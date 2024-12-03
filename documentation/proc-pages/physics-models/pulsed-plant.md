@@ -29,27 +29,49 @@ change equal to the maximum proposed in [^1], or it can be set by the user.  The
 constraint is likely to depend on whether the ramp-up is purely inductive or includes current drive, 
 but this is not taken ito account.
 
-In the steady-state scenario (`lpulse` = 0), the plasma current ramp-up time `tohs` is determined as follows. 
+In the steady-state scenario (`lpulse` = 0), the plasma current ramp-up time `t_current_ramp_up` is determined as follows. 
 
-- If `tohsin` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `tramp` 
-  and shutdown time `tqnch` are (arbitrarily) set equal to `tohs`. 
-- If `tohsin` $\neq$ 0, the plasma current ramp-up time `tohs` = `tohsin`, and the PF coil ramp 
+- If `tohsin` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `t_precharge` 
+  and shutdown time `t_ramp_down` are (arbitrarily) set equal to `t_current_ramp_up`. 
+- If `tohsin` $\neq$ 0, the plasma current ramp-up time `t_current_ramp_up` = `tohsin`, and the PF coil ramp 
   and shutdown times are input parameters.
 
-In the pulsed scenario, (`lpulse` = 1), the plasma current ramp-up time `tohs` is an input, and it 
+In the pulsed scenario, (`lpulse` = 1), the plasma current ramp-up time `t_current_ramp_up` is an input, and it 
 can be set as an iteration variable (65). The ramp-up and shutdown time in the pulsed case are set 
-equal to `tohs`. To ensure that the plasma current ramp rate during start-up is prevented from being 
+equal to `t_current_ramp_up`. To ensure that the plasma current ramp rate during start-up is prevented from being 
 too high, as governed by the requirement to maintain plasma stability by ensuring that the induced 
 current has time to diffuse into the body of the plasma, constraint equation no. 41 should be 
-turned on with iteration variable no. 66 `ftohs` and input `tohsmn`, the minimum plasma current 
+turned on with iteration variable no. 66 `ft_current_ramp_up` and input `t_current_ramp_up_min`, the minimum plasma current 
 ramp-up time.
 
 ## Burn time
 
 The length of the burn time is calculated from the surplus volt-seconds available from the Central 
 Solenoid and the other PF coils during the plasma burn phase, after the flux required during the 
-plasma start-up is taken into account. A minimum burn time (`tbrnmn`) can be enforced via 
-constraint equation no. 13 and iteration variable no 21 (`ftburn`).
+plasma start-up is taken into account. A minimum burn time (`t_burn_min`) can be enforced via 
+constraint equation no. 13 and iteration variable no 21 (`ft_burn`).
+
+## Currents over time
+
+Over the course of a pulse, the timings are detailed as:
+
+- Precharge (`t_precharge`) - the CS current ramps from zero to maximum value. The other PF coils also ramp from zero to their required values.
+- Current ramp-up (`t_current_ramp_up`) - The plasma current ramps up to approx full value. Auxiliary heating is possibly on.
+- Fusion ramp (`t_fusion_ramp`) - The plasma temperature and density rise to the full values. The CS and other PF coil currents all change steadily. Auxiliary heating is on.
+- Burn time (`t_burn`) - Flat-top duration. The plasma is approximately steady. Fusion power and electricity are produced. The CS and other PF coil currents all change steadily in a pulsed reactor, but are constant for a "steady-state" reactor. Auxiliary heating is on.
+- Ramp-down (`t_ramp_down`) - The plasma current, density and temperature all ramp down to zero simultaneously. As a starter for ten we could assume that the CS and PF coil currents also ramp to zero at the same time. Auxiliary heating is possibly on.
+- Between pulse (`t_between_pulse`) -  CS and PF coil currents are zero - a few minutes may be required to permit vacuum pumping. May be much longer for an experimental device such as DEMO.
+- Pulse repitition (`t_pulse_repitition`) - Sum of all the above times.
+
+A plot showing schematically these timings over a pulse can be found in Figure 2.
+
+<figure markdown>
+![current-vs-time-plot](../current_vs_time.png){ width="100%"}
+<figcaption>Figure 1: Plot showing schematically the current waveforms for the plasma, a typical PF 
+coil, and the central solenoid. Note that the currents in some of the PF coils may be the opposite 
+sign to that shown, and the central solenoid current may remain positive during the I<sub>p</sub> 
+ramp-up period, although it will pass through zero during the burn phase.</figcaption>
+</figure>
 
 ## Thermal storage and back-up generation
 

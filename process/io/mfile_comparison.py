@@ -182,7 +182,7 @@ BASELINE_LIST = [
     "pdivt",
     "vssoft",
     "vstot",
-    "tburn",
+    "t_burn",
     "bmaxtf",
     "iooic",
     "tmarg",

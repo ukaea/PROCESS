@@ -133,11 +133,11 @@ fjprot   = 1.0 * F-value for tf coil winding pack current density
 flhthresh = 1.271 * F-value for l-h power threshold
 fpinj    = 1.0 * F-value for injection power
 fpnetel  = 1.0 * F-value for net electric power
-ftburn   = 1.00e+00 * F-value for minimum burn time
+ft_burn   = 1.00e+00 * F-value for minimum burn time
 fvdump   = 0.6116 * F-value for dump voltage
 fwalld   = 0.1312 * F-value for maximum wall load
 pnetelin = 500.0 * Required net electric power (mw)
-tbrnmn   = 7.2e3 * Minimum burn time (s)
+t_burn_min   = 7.2e3 * Minimum burn time (s)
 walalw   = 8.0 * Allowable wall-load (mw/m2)
 psepbqarmax = 9.2 * maximum ratio of Psep*Bt/qAR (MWT/m)
 
@@ -293,9 +293,9 @@ plasma_res_factor = 0.66 * plasma resistivity pre-factor
 *-----------------Pulse Variables------------------*
 
 lpulse = 1 * Switch for reactor model;
-tdwell = 0 * dwell time (s)
+t_between_pulse = 0 * dwell time (s)
 pulsetimings = 0
-tramp = 500.0
+t_precharge = 500.0
 
 *-----------------Tfcoil Variables-----------------*
 
@@ -330,8 +330,8 @@ qnuc = 1.292E4
 
 *-----------------Times Variables------------------*
 
-tburn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
-tburn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
+t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
+t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
 
 
                      bt            =   5.3292E+00

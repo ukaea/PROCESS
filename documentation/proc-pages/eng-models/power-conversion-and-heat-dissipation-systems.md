@@ -115,6 +115,6 @@ The recirculating power comprises the electrical power required to run all of th
 electrical systems surrounding the fusion power core, plus the on-site building services, offices, 
 etc., as shown in Figure 1. Of these, the cryogenic plant power includes the power required to cool 
 the TF coils from the neutron power absorbed by the coils, the PF coils (as defined by the ratio of 
-the total PF coil stored energy to the fusion power pulse time `tpulse`), and other 'cold' components.
+the total PF coil stored energy to the fusion power pulse time `t_pulse_repetition`), and other 'cold' components.
 
 [^1]: C. Harrington, *"Development and Implementation of Improved Balance of Plant Models for PROCESS"*, CCFE C5.M15 Milestone Report, August 2014 (copy stored as CCFE internal note T&M/PKNIGHT/PROCESS/027)

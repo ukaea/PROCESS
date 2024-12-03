@@ -413,25 +413,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_17
-    !! <LI> (17) tdwell
+    !! <LI> (17) t_between_pulse
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(17) = 'tdwell        '
+    lablxc(17) = 't_between_pulse        '
     boundl(17) = 0.100D0
     boundu(17) = 1.000D8
   end subroutine init_itv_17
 
   real(kind(1.d0)) function itv_17()
-    use times_variables, only: tdwell
+    use times_variables, only: t_between_pulse
     implicit none
-    itv_17 = tdwell
+    itv_17 = t_between_pulse
   end function itv_17
 
   subroutine set_itv_17(ratio)
-    use times_variables, only: tdwell
+    use times_variables, only: t_between_pulse
     implicit none
     real(kind(1.d0)) :: ratio
-    tdwell = ratio
+    t_between_pulse = ratio
   end subroutine set_itv_17
 
   !---------------------------------
@@ -509,25 +509,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_21
-    !! <LI> (21) ftburn (f-value for equation 13)
+    !! <LI> (21) ft_burn (f-value for equation 13)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(21) = 'ftburn        '
+    lablxc(21) = 'ft_burn        '
     boundl(21) = 0.001D0
     boundu(21) = 1.000D0
   end subroutine init_itv_21
 
   real(kind(1.d0)) function itv_21()
-    use constraint_variables, only: ftburn
+    use constraint_variables, only: ft_burn
     implicit none
-    itv_21 = ftburn
+    itv_21 = ft_burn
   end function itv_21
 
   subroutine set_itv_21(ratio)
-    use constraint_variables, only: ftburn
+    use constraint_variables, only: ft_burn
     implicit none
     real(kind(1.d0)) :: ratio
-    ftburn = ratio
+    ft_burn = ratio
   end subroutine set_itv_21
 
   !! <LI> (22) NOT USED
@@ -1495,10 +1495,10 @@ contains
   !---------------------------------
 
   subroutine init_itv_65
-    !! <LI> (65) tohs
+    !! <LI> (65) t_current_ramp_up
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(65) = 'tohs          '
+    lablxc(65) = 't_current_ramp_up          '
     boundl(65) = 0.100D0
     boundu(65) = 1.000D3
   end subroutine init_itv_65
@@ -1506,43 +1506,43 @@ contains
   real(kind(1.d0)) function itv_65()
     use error_handling, only: report_error
     use pulse_variables, only: lpulse
-    use times_variables, only: tohs
+    use times_variables, only: t_current_ramp_up
     implicit none
-    itv_65 = tohs
+    itv_65 = t_current_ramp_up
     if (lpulse /= 1) then
         call report_error(50)
     end if
   end function itv_65
 
   subroutine set_itv_65(ratio)
-    use times_variables, only: tohs
+    use times_variables, only: t_current_ramp_up
     implicit none
     real(kind(1.d0)) :: ratio
-    tohs = ratio
+    t_current_ramp_up = ratio
   end subroutine set_itv_65
 
   !---------------------------------
 
   subroutine init_itv_66
-    !! <LI> (66) ftohs (f-value for equation 41)
+    !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(66) = 'ftohs         '
+    lablxc(66) = 'ft_current_ramp_up         '
     boundl(66) = 0.001D0
     boundu(66) = 1.000D0
   end subroutine init_itv_66
 
   real(kind(1.d0)) function itv_66()
-    use constraint_variables, only: ftohs
+    use constraint_variables, only: ft_current_ramp_up
     implicit none
-    itv_66 = ftohs
+    itv_66 = ft_current_ramp_up
   end function itv_66
 
   subroutine set_itv_66(ratio)
-    use constraint_variables, only: ftohs
+    use constraint_variables, only: ft_current_ramp_up
     implicit none
     real(kind(1.d0)) :: ratio
-    ftohs = ratio
+    ft_current_ramp_up = ratio
   end subroutine set_itv_66
 
   !---------------------------------

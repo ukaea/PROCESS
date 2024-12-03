@@ -266,7 +266,7 @@ var_dicts = {
     "zeff": VariableMetadata(
         latex=r"$Z_{\mathrm{eff}}$", description="Effective charge", units=""
     ),
-    "tburn": VariableMetadata(
+    "t_burn": VariableMetadata(
         latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s"
     ),
     "vburn": VariableMetadata(
@@ -292,7 +292,7 @@ var_dicts = {
         description="Cross-sectional area of CS coil turns",
         units="m^2",
     ),
-    "tbrnmn": VariableMetadata(
+    "t_burn_min": VariableMetadata(
         latex=r"$t_{\mathrm{burn.min}}$[$s$]",
         description="Minimum burn time",
         units="s",

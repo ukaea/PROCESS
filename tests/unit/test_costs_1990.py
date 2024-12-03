@@ -5490,9 +5490,9 @@ class CoelcParam(NamedTuple):
 
     f_helium3: Any = None
 
-    tcycle: Any = None
+    t_cycle: Any = None
 
-    tburn: Any = None
+    t_burn: Any = None
 
     outfile: Any = None
 
@@ -5586,8 +5586,8 @@ class CoelcParam(NamedTuple):
             itart=0,
             wtgpd=507.88376577416528,
             f_helium3=0,
-            tcycle=10864.426139387357,
-            tburn=0,
+            t_cycle=10864.426139387357,
+            t_burn=0,
             outfile=11,
             expected_coeoam=4.4099029328740929e20,
             expected_coecap=4.9891775218979061e21,
@@ -5670,8 +5670,8 @@ class CoelcParam(NamedTuple):
             itart=0,
             wtgpd=507.72524666099866,
             f_helium3=0,
-            tcycle=864.42613938735622,
-            tburn=10230.533336387549,
+            t_cycle=864.42613938735622,
+            t_burn=10230.533336387549,
             outfile=11,
             expected_coeoam=1.2419424614419636,
             expected_coecap=15.547404530833255,
@@ -5785,9 +5785,9 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "f_helium3", coelcparam.f_helium3)
 
-    monkeypatch.setattr(times_variables, "tcycle", coelcparam.tcycle)
+    monkeypatch.setattr(times_variables, "t_cycle", coelcparam.t_cycle)
 
-    monkeypatch.setattr(times_variables, "tburn", coelcparam.tburn)
+    monkeypatch.setattr(times_variables, "t_burn", coelcparam.t_burn)
 
     costs.coelc()
 

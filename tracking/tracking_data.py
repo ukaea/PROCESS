@@ -149,7 +149,7 @@ class ProcessTracker:
         "bmaxtf",
         "vstot",
         "dnitot",
-        "tburn",
+        "t_burn",
         "divlife",
         "CostModel2.step20",
         "CostModel2.step21",

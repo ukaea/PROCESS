@@ -128,6 +128,14 @@ OBS_VARS = {
     "fhe3": "f_helium3",
     "falpha": "f_alpha_plasma",
     "idensl": "i_density_limit",
+    "ftburn": "ft_burn",
+    "ftohs": "ft_current_ramp_up",
+    "tbrnmn": "t_burn_min",
+    "tohs": "t_current_ramp_up",
+    "tdwell": "t_between_pulse",
+    "tramp": "t_precharge",
+    "tqnch": "t_ramp_down",
+    "tburn": "t_burn",
 }
 
 OBS_VARS_HELP = {
