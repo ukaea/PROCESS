@@ -813,7 +813,7 @@ class Power:
         if tfcoil_variables.i_tf_sup == 2:
             # Heat removal power at cryogenic temperature tfcoil_variables.tcoolin (W)
             heat_transport_variables.helpow_cryal = (
-                tfcoil_variables.prescp
+                tfcoil_variables.p_cp_resistive
                 + tfcoil_variables.p_tf_leg_resistive
                 + tfcoil_variables.pres_joints
                 + fwbs_variables.pnuc_cp_tf * 1.0e6
@@ -2500,7 +2500,7 @@ class Power:
             #  Total maximum impedance MDK actually just fixed resistance
             res_tf_system_total = (
                 tfcoil_variables.n_tf_coils * tfcoil_variables.res_tf_leg
-                + (tfcoil_variables.prescp / tfcoil_variables.ritfc**2)
+                + (tfcoil_variables.p_cp_resistive / tfcoil_variables.ritfc**2)
                 + tfbusres
             )
 
@@ -2512,7 +2512,7 @@ class Power:
 
             # Resistive powers (MW):
             tfcoil_variables.tfcpmw = (
-                1.0e-6 * tfcoil_variables.prescp
+                1.0e-6 * tfcoil_variables.p_cp_resistive
             )  # inboard legs (called centrepost, CP for tart design)
             tfcoil_variables.tflegmw = (
                 1.0e-6 * tfcoil_variables.p_tf_leg_resistive

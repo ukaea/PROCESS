@@ -77,7 +77,7 @@ class TFcoil:
         ro = (acpav / (constants.pi * tfv.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
-        ptot = tfv.prescp + fwbsv.pnuc_cp_tf * 1.0e6
+        ptot = tfv.p_cp_resistive + fwbsv.pnuc_cp_tf * 1.0e6
 
         # Temperature calculations
         # -------------------------
@@ -304,8 +304,8 @@ class TFcoil:
             po.ovarre(
                 self.outfile,
                 "Resistive heating (MW)",
-                "(prescp/1.0e6)",
-                tfv.prescp / 1.0e6,
+                "(p_cp_resistive/1.0e6)",
+                tfv.p_cp_resistive / 1.0e6,
             )
             po.ovarre(
                 self.outfile, "Nuclear heating (MW)", "(pnuc_cp_tf)", fwbsv.pnuc_cp_tf
