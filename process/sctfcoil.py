@@ -1830,7 +1830,7 @@ class Sctfcoil:
             (
                 tfcoil_variables.a_cp_cool,
                 tfcoil_variables.vol_cond_cp,
-                tfcoil_variables.prescp,
+                tfcoil_variables.p_cp_resistive,
                 sctfcoil_module.vol_ins_cp,
                 sctfcoil_module.vol_case_cp,
                 sctfcoil_module.vol_gr_ins_cp,
@@ -1926,14 +1926,14 @@ class Sctfcoil:
         # ***
         else:
             # TF resistive powers
-            tfcoil_variables.prescp = (
+            tfcoil_variables.p_cp_resistive = (
                 tfcoil_variables.rhocp
                 * tfcoil_variables.ritfc**2
                 * tfcoil_variables.tfleng
                 / (sctfcoil_module.a_leg_cond * tfcoil_variables.n_tf_coils)
             )
 
-            # tfcoil_variables.prescp containts the the total resistive power losses
+            # tfcoil_variables.p_cp_resistive containts the the total resistive power losses
             tfcoil_variables.p_tf_leg_resistive = 0.0e0
 
             # No joints if physics_variables.itart = 0
@@ -5369,8 +5369,8 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "CP resistive power loss (W)",
-                    "(prescp)",
-                    tfcoil_variables.prescp,
+                    "(p_cp_resistive)",
+                    tfcoil_variables.p_cp_resistive,
                 )
                 po.ovarre(
                     self.outfile,
@@ -5407,14 +5407,14 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "TF resistivity (ohm.m)",
-                    "(prescp)",
+                    "(p_cp_resistive)",
                     tfcoil_variables.rhocp,
                 )
                 po.ovarre(
                     self.outfile,
                     "TF coil resistive power less (total) (ohm.m)",
-                    "(prescp)",
-                    tfcoil_variables.prescp,
+                    "(p_cp_resistive)",
+                    tfcoil_variables.p_cp_resistive,
                 )
                 po.ovarre(
                     self.outfile,
