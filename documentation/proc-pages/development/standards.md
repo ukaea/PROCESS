@@ -86,6 +86,14 @@ Example, the total number of TF coils: `n_tf_coils`
 
 ---------------------
 
+#### Number densities
+
+- Number density items should start with the `nd_` prefix
+
+Example, the plasma electron density: `dn_electron`
+
+---------------------
+
 #### Areas
 
 - Areas should start with the `a_` prefix
