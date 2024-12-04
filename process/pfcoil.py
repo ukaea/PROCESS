@@ -22,6 +22,7 @@ import numpy as np
 import numba
 import logging
 from scipy import optimize
+from scipy.special import ellipk, ellipe
 
 logger = logging.getLogger(__name__)
 
@@ -1594,13 +1595,15 @@ class PFCoil:
         axial_term_1 = -(constants.rmu0 / 2.0e0) * (ni / (2.0e0 * hl)) ** 2
 
         # term 2
-        ekb2_1, ekb2_2 = ml.ellipke(kb2)
+        ekb2_1 = ellipk(kb2)
+        ekb2_2 = ellipe(kb2)
         axial_term_2 = (
             2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + hl**2)) * (ekb2_1 - ekb2_2)
         )
 
         # term 3
-        ek2b2_1, ek2b2_2 = ml.ellipke(k2b2)
+        ek2b2_1 = ellipk(k2b2)
+        ek2b2_2 = ellipe(k2b2)
         axial_term_3 = (
             2.0e0
             * hl
