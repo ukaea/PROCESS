@@ -8,7 +8,6 @@ from process.fortran import tfcoil_variables as tfv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import constants
 from process.fortran import cs_fatigue_variables as csfv
-from process.fortran import maths_library as ml
 from process.fortran import process_output as op
 from process.fortran import numerics
 from process.fortran import rebco_variables as rcv
@@ -23,6 +22,7 @@ import numba
 import logging
 from scipy import optimize
 from scipy.special import ellipk, ellipe
+from scipy.linalg import svd
 
 logger = logging.getLogger(__name__)
 
@@ -892,7 +892,7 @@ class PFCoil:
         )
 
         # Solve matrix equation
-        ccls, umat, vmat, sigma, work2 = self.solv(pfv.ngrpmx, ngrp, nrws, gmat, bvec)
+        ccls = self.solv(pfv.ngrpmx, ngrp, nrws, gmat, bvec)
 
         # Calculate the norm of the residual vectors
         brssq, brnrm, bzssq, bznrm, ssq = rsid(
@@ -965,13 +965,10 @@ class PFCoil:
         :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray,
         numpy.ndarray, numpy.ndarray]
         """
-        truth = True
-        eps = 1.0e-10
         ccls = np.zeros(ngrpmx)
+        work2 = np.zeros(ngrpmx)
 
-        sigma, umat, vmat, ierr, work2 = ml.svd(
-            nrws, np.asfortranarray(gmat), truth, truth
-        )
+        umat, sigma, vmat = svd(gmat)
 
         for i in range(ngrp):
             work2[i] = 0.0e0
@@ -983,12 +980,12 @@ class PFCoil:
             ccls[i] = 0.0e0
             zvec = 0.0e0
             for j in range(ngrp):
-                if sigma[j] > eps:
+                if sigma[j] > 1.0e-10:
                     zvec = work2[j] / sigma[j]
 
-                ccls[i] = ccls[i] + vmat[i, j] * zvec
+                ccls[i] = ccls[i] + vmat[j, i] * zvec
 
-        return ccls, umat, vmat, sigma, work2
+        return ccls
 
     def ohcalc(self):
         """Routine to perform calculations for the Central Solenoid.
