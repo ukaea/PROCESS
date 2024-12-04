@@ -245,7 +245,7 @@ var_dicts = {
     "pradmw": VariableMetadata(
         latex=r"$P_{\mathrm{rad}}$ [$MW$]", description="Radiation power", units="MW"
     ),
-    "pdivtbt/qar": VariableMetadata(
+    "pdivtbt_over_qar": VariableMetadata(
         latex=r"$\frac{P_{\mathrm{sep}}B_T}{q_{95}AR_{\mathrm{maj}}}$ [$MWTm^{-1}$]",
         description="",
         units="MWTm^{-1}",
@@ -361,7 +361,7 @@ var_dicts = {
     "fimp(13)": VariableMetadata(
         latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
     ),
-    "pdivmax/rmajor": VariableMetadata(
+    "pdivmax_over_rmajor": VariableMetadata(
         latex=r"$P_{\mathrm{div}}/R_\mathrm{maj}$ [MW/m]",
         description="Divertor power per major radius",
         units="MW/m",

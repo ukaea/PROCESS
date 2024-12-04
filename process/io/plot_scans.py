@@ -640,13 +640,6 @@ def main(args=None):
                     else f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
                     + f".{save_format}"
                 )
-            elif output_name == "pdivtbt/qar":
-                plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_pdivtbtqar"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else "" + f".{save_format}"
-                )
             elif stack_plots and output_names[-1] == output_name:
                 plt.savefig(
                     (
