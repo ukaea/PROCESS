@@ -101,25 +101,6 @@ contains
   end function find_y_nonuniform_x
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  function binomial(n,k) result(coefficient)
-    ! This outputs a real approximation to the coefficient
-    ! http://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
-    implicit none
-    integer, intent(in) :: n, k
-    real(dp) :: coefficient
-    integer :: numerator, i
-    if (k == 0) then
-        coefficient = 1
-    else
-        coefficient = 1.0D0
-        do i = 1, k
-            numerator = n + 1 -i
-            coefficient = coefficient * real(numerator)/real(i)
-        end do
-    end if
-  end function binomial
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine svd(nm,m,n,a,w,matu,u,matv,v,ierr,rv1)
 

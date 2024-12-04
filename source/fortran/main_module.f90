@@ -671,32 +671,6 @@ end subroutine verror
 
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
-
-subroutine runtests
-   ! These tests should gradually be moved to pytest
-  use constants, only: nout
-  use maths_library, only: binomial
-  use process_output, only: ocmmnt, ovarre
-!   use pfcoil_module, only: brookscoil
-!   use reinke_module, only: test_reinke
-  implicit none
-  real(dp) :: fshift, xf, enpa,ftherm,fpp,cdeff, ampperwatt
-  logical :: Temperature_capped
-  call ovarre(nout,'Binomial coefficients C(5,0): 1', '(binomial(5,0))', binomial(5,0))
-  call ovarre(nout,'Binomial coefficients C(5,1): 5', '(binomial(5,1))', binomial(5,1))
-  call ovarre(nout,'Binomial coefficients C(5,2): 10', '(binomial(5,2))', binomial(5,2))
-  call ovarre(nout,'Binomial coefficients C(5,3): 10', '(binomial(5,3))', binomial(5,3))
-  call ovarre(nout,'Binomial coefficients C(5,4): 5', '(binomial(5,4))', binomial(5,4))
-  call ovarre(nout,'Binomial coefficients C(5,5): 1', '(binomial(5,5))', binomial(5,5))
-
-   !   call brookscoil(nout) Moved to pytest
-  ! Disabled for ease of #1542 - Tim
-!   call test_reinke()
-end subroutine runtests
-
-
 subroutine get_DDMonYYTimeZone(dt_time)
   !! Routine to get date, time and timezone
   !! author: M Kumar, CCFE, Culham Science Centre
