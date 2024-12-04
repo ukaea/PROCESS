@@ -22,7 +22,6 @@ from process.fortran import (
     error_handling,
     constraint_variables,
     rebco_variables,
-    maths_library,
     neoclassics_module,
     impurity_radiation_module,
     sctfcoil_module,
@@ -3126,8 +3125,8 @@ class Stellarator:
             1.32773e14,
         ]
 
-        q_he = maths_library.find_y_nonuniform_x(temp, temp_k, q_he_array_sA2m4, 13)
-        q_cu = maths_library.find_y_nonuniform_x(temp, temp_k, q_cu_array_sA2m4, 13)
+        q_he = np.interp(temp, temp_k, q_he_array_sA2m4)
+        q_cu = np.interp(temp, temp_k, q_cu_array_sA2m4)
 
         # This leaves out the contribution from the superconductor fraction for now
         return (acs / aturn) * np.sqrt(
@@ -3351,8 +3350,8 @@ class Stellarator:
         for i in range(100):
             #  Find difference in y values at x
 
-            y01 = maths_library.find_y_nonuniform_x(x, x1, y1, n1)
-            y02 = maths_library.find_y_nonuniform_x(x, x2, y2, n2)
+            y01 = np.interp(x, x1, y1)
+            y02 = np.interp(x, x2, y2)
             y = y01 - y02
 
             if abs(y) < epsy:
@@ -3360,14 +3359,14 @@ class Stellarator:
 
             #  Find difference in y values at x+dx
 
-            y01 = maths_library.find_y_nonuniform_x(x + dx, x1, y1, n1)
-            y02 = maths_library.find_y_nonuniform_x(x + dx, x2, y2, n2)
+            y01 = np.interp(x + dx, x1, y1)
+            y02 = np.interp(x + dx, x2, y2)
             yright = y01 - y02
 
             #  Find difference in y values at x-dx
 
-            y01 = maths_library.find_y_nonuniform_x(x - dx, x1, y1, n1)
-            y02 = maths_library.find_y_nonuniform_x(x - dx, x2, y2, n2)
+            y01 = np.interp(x - dx, x1, y1)
+            y02 = np.interp(x - dx, x2, y2)
             yleft = y01 - y02
 
             #  Adjust x using Newton-Raphson method
