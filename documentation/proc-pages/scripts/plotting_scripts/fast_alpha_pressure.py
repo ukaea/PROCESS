@@ -4,8 +4,8 @@ from bokeh.models import ColumnDataSource, CustomJS, Slider
 from bokeh.plotting import figure, output_file, save
 
 x = np.linspace(0, 10, 500)
-y1 = 0.29 * (x) ** 2(0.75 - 0.37)
-y2 = 0.26(0.75 - 0.65) ** 0.5 * (x) ** 2  # Initial data for the second line
+y1 = 0.29 * (x) ** 2 * (0.75 - 0.37)
+y2 = 0.26 * (0.75 - 0.65) ** 0.5 * (x) ** 2  # Initial data for the second line
 
 source = ColumnDataSource(data=dict(x=x, y1=y1, y2=y2))
 
