@@ -64,5 +64,5 @@ qbar_0.js_on_change("value", callback)
 output_file("my_bokeh_plot.html", title="My Bokeh Plot")
 save(
     row(plot, column(q95, qbar_0)),
-    filename="PROCESS/profile_star_qbar.html",
+    filename="profile_star_qbar.html",
 )
