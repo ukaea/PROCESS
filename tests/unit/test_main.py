@@ -102,6 +102,8 @@ def test_run_mode(process_obj, monkeypatch):
     monkeypatch.setattr(process_obj, "args", argparse.Namespace(), raising=False)
     monkeypatch.setattr(process_obj.args, "varyiterparams", True, raising=False)
     monkeypatch.setattr(process_obj.args, "version", False, raising=False)
+    monkeypatch.setattr(process_obj.args, "update_obsolete", False, raising=False)
+
     monkeypatch.setattr(
         process_obj.args, "varyiterparamsconfig", "file.conf", raising=False
     )
