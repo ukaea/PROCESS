@@ -101,61 +101,6 @@ contains
   end function find_y_nonuniform_x
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine ellipke(sqk,kk,ek)
-
-    !! Routine that calculates the complete elliptic integral
-    !! of the first and second kinds
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! sqk : input real : square of the elliptic modulus
-    !! kk  : output real : complete elliptic integral of the first kind
-    !! ek  : output real : complete elliptic integral of the second kind
-    !! This routine calculates the complete elliptic integral
-    !! of the first and second kinds.
-    !! <P>The method used is that described in the reference, and
-    !! the code is taken from the Culham maglib library routine FN02A.
-    !! Approximations for Digital Computers, C. Hastings,
-    !! Princeton University Press, 1955
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    implicit none
-
-    !  Arguments
-
-    real(dp), intent(in) :: sqk
-    real(dp), intent(out) :: kk,ek
-
-    !  Local variables
-
-    real(dp) :: a,b,d,e
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    d = 1.0D0 - sqk
-    e = log(d)
-
-    !  Evaluate series for integral of first kind
-
-    a = (((0.014511962D0*d + 0.037425637D0)*d + 0.035900924D0)*d &
-         + 0.096663443D0)*d + 1.386294361D0
-    b = (((0.004417870D0*d + 0.033283553D0)*d + 0.06880249D0)*d &
-         + 0.12498594D0)*d + 0.5D0
-
-    kk = a - b*e
-
-    !  Evaluate series for integral of second kind
-
-    a = (((0.017365065D0*d + 0.047573835D0)*d + 0.06260601D0)*d &
-         + 0.44325141D0)*d + 1.0D0
-    b = (((0.005264496D0*d + 0.040696975D0)*d + 0.09200180D0)*d &
-         + 0.24998368D0)*d
-
-    ek = a - b*e
-
-  end subroutine ellipke
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   function binomial(n,k) result(coefficient)
     ! This outputs a real approximation to the coefficient
     ! http://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
