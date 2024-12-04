@@ -135,6 +135,8 @@ OBS_VARS = {
     "tramp": "t_precharge",
     "tqnch": "t_ramp_down",
     "tburn": "t_burn",
+    "pdivmax/rmajor": "pdivmax_over_rmajor",
+    "pdivtbt/qar": "pdivtbt_over_qar",
 }
 
 OBS_VARS_HELP = {
