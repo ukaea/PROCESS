@@ -3128,6 +3128,7 @@ def plot_density_limit_comparison(
     jet_simplified = mfile_data.data["dlimit(5)"].get_scan(scan)
     hugill_murakami = mfile_data.data["dlimit(6)"].get_scan(scan)
     greenwald = mfile_data.data["dlimit(7)"].get_scan(scan)
+    asdex_new = mfile_data.data["dlimit(8)"].get_scan(scan)
 
     # Data for the box plot
     data = {
@@ -3138,6 +3139,7 @@ def plot_density_limit_comparison(
         "JET Simplified": jet_simplified,
         "Hugill-Murakami": hugill_murakami,
         "Greenwald": greenwald,
+        "ASDEX New": asdex_new,
     }
 
     # Create the violin plot

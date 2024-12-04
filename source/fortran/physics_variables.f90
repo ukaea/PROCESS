@@ -117,7 +117,7 @@ module physics_variables
   real(dp) :: dlamie
   !! ion-electron coulomb logarithm
 
-  real(dp), dimension(7) :: dlimit
+  real(dp), dimension(8) :: dlimit
   !! density limit (/m3) as calculated using various models
 
   real(dp) :: dnalp
@@ -298,6 +298,7 @@ module physics_variables
   !! - =5 JET simplified
   !! - =6 Hugill-Murakami Mq limit
   !! - =7 Greenwald limit
+  !! - =8 ASDEX New
 
   integer :: idivrt
   !! number of divertors (calculated from `i_single_null`)
@@ -985,7 +986,7 @@ module physics_variables
     iculbl = 0
     i_plasma_current = 4
     i_diamagnetic_current = 0
-    i_density_limit = 7
+    i_density_limit = 8
     idivrt = 2
     ifalphap = 1
     ignite = 0

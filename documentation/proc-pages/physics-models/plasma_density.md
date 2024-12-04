@@ -1,12 +1,13 @@
 # Density Limit
 
-Several density limit models[^1][^2] are available in PROCESS. These are
-calculated in routine `calculate_density_limit`, which is called by `physics`. To enforce any of 
-these limits, turn on constraint equation no. 5 with iteration variable no. 9 
-(`fdene`). In addition, switch `i_density_limit` must be set to the relevant value, as 
-follows:
+Several density limit models are available in PROCESS. These are
+calculated in routine `calculate_density_limit()`, which is called by `physics`.
 
-For the `i_density_limit = 1-5` scalings we scale the function output by the separatrix to volume averaged electron density so that we can set the limit on the volume averaged. **Therefore it is recommended to only use these scalings with an H-mode profile (`ipedestal == 1`) otherwise the separatrix density (`nesep`) will not be calculated.**
+This constraint can be activated by stating `icc = 5` in the input file.
+
+The value of `i_density_limit` can be set to apply the relevant limit . The scaling value `fdene` can be varied also. 
+
+For the `i_density_limit = 1-5,8` scalings we scale the function output by the separatrix to volume averaged electron density so that we can set the limit on the volume averaged. **Therefore it is recommended to only use these scalings with an H-mode profile (`ipedestal == 1`) otherwise the separatrix density (`nesep`) will not be calculated.**
 
 For the models below $P_{\perp}$ is the mean heat flux density across the separatrix ($\mathrm{MW}/\mathrm{m^2}$), which we take as the divertor power divided by the plasma surface area.
 
@@ -85,13 +86,23 @@ $$
 
 ## Greenwald model
 
-Switch value: `i_density_limit = 7`
+Switch value: `i_density_limit = 7` [^3][^4]
 
 $$
 \overline{n}_{\text{e}}^{\text{ crit}} = 1.0 \times 10^{14} \frac{I_\text{p}}{\pi a^2}
 $$
 
-For the Greenwald model the limit applies to the line-averaged electron density, not the volume-averaged density.
+For the Greenwald model the limit applies to the line-averaged electron density, not the volume-averaged density. The plasma current term is given in $[\mathrm{A}]$ and the minor radius in $[\mathrm{m}]$
+
+---------------------
+
+## ASDEX New model
+
+Switch value: `i_density_limit = 8` [^5][^6]
+
+$$
+\overline{n}_{\text{sep}}^{\text{ crit}} = 1.0 \times 10^{20} \times 0.506 \pm 0.192 \frac{P_\text{heat}^{0.396\pm0.13} I_{\text{p}}^{0.265\pm 0.14}}{q_{95}^{0.323 \pm 0.14}}
+$$
 
 -----------------
 
@@ -100,3 +111,15 @@ For the Greenwald model the limit applies to the line-averaged electron density,
 [^1]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
 
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+
+[^3]: M. Greenwald et al., “A new look at density limits in tokamaks,” Nuclear Fusion, vol. 28, no. 12, pp. 2199–2207, Dec. 1988, doi: https://doi.org/10.1088/0029-5515/28/12/009.
+
+[^4]: M. Greenwald, “Density limits in toroidal plasmas,” Plasma Physics and Controlled Fusion, vol. 44, no. 8, pp. R27–R53, Jul. 2002, doi: https://doi.org/10.1088/0741-3335/44/8/201.
+
+[^5]: J. W. Berkery et al., “Density limits as disruption forecasters for spherical tokamaks,” Plasma Physics and Controlled Fusion, vol. 65, no. 9, pp. 095003–095003, Jul. 2023, doi: https://doi.org/10.1088/1361-6587/ace476.
+
+[^6]: M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,” vol. 57, no. 1, pp. 014038–014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038.
+‌
+‌
+‌
+‌

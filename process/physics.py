@@ -2158,6 +2158,7 @@ class Physics:
             physics_variables.bt,
             physics_variables.i_density_limit,
             physics_variables.pdivt,
+            current_drive_variables.pinjmw,
             physics_variables.plasma_current,
             divertor_variables.prn1,
             physics_variables.qstar,
@@ -2468,6 +2469,7 @@ class Physics:
         bt: float,
         i_density_limit: int,
         pdivt: float,
+        pinjmw: float,
         plasma_current: float,
         prn1: float,
         qcyl: float,
@@ -2484,6 +2486,7 @@ class Physics:
             bt (float): Toroidal field on axis (T).
             i_density_limit (int): Switch denoting which formula to enforce.
             pdivt (float): Power flowing to the edge plasma via charged particles (MW).
+            pinjmw (float): Power injected into the plasma (MW).
             plasma_current (float): Plasma current (A).
             prn1 (float): Edge density / average plasma density.
             qcyl (float): Equivalent cylindrical safety factor (qstar).
@@ -2503,15 +2506,22 @@ class Physics:
 
         Notes:
             This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
-            For i_density_limit = 1-5, we scale the sepatrix density limit output by the ratio of the separatrix to volume averaged density
+            For i_density_limit = 1-5, 8, we scale the sepatrix density limit output by the ratio of the separatrix to volume averaged density
+        
         References:
             - AEA FUS 172: Physics Assessment for the European Reactor Study
+            
+            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989
+            
+            - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,” 
+              vol. 57, no. 1, pp. 014038–014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038. ‌
         """
+        
         if i_density_limit < 1 or i_density_limit > 7:
             error_handling.idiags[0] = i_density_limit
             error_handling.report_error(79)
 
-        dlimit = np.empty((7,))
+        dlimit = np.empty((8,))
 
         # Power per unit area crossing the plasma edge
         # (excludes radiation and neutrons)
@@ -2576,6 +2586,13 @@ class Physics:
         # Greenwald limit
 
         dlimit[6] = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
+
+        dlimit[7] = (
+            1.0e20
+            * 0.506
+            * (pinjmw**0.396 * (plasma_current / 1.0e6) ** 0.265)
+            / (q95**0.323)
+        ) / prn1
 
         # Enforce the chosen density limit
 
@@ -4085,6 +4102,13 @@ class Physics:
                 "Greenwald model",
                 "(dlimit(7))",
                 physics_variables.dlimit[6],
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "ASDEX New",
+                "(dlimit(8))",
+                physics_variables.dlimit[7],
                 "OP ",
             )
 
