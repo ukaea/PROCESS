@@ -56,4 +56,4 @@ te.js_on_change("value", callback)
 
 # Save the plot as HTML
 output_file("my_bokeh_plot.html", title="My Bokeh Plot")
-save(row(plot, column(te)), filename="PROCESS/profile_alpha_beta.html")
+save(row(plot, column(te)), filename="profile_alpha_beta.html")
