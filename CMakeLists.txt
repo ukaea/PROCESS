@@ -87,7 +87,6 @@ LIST(APPEND PROCESS_SRCS
     tfcoil_variables.f90
     times_variables.f90
     ife_variables.f90
-    ife.f90
     heat_transport_variables.f90
     buildings_variables.f90
     maths_library.f90

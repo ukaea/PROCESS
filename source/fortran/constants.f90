@@ -191,6 +191,9 @@ module constants
   ! Average number of days in a year
   real(dp), parameter :: n_day_year = 365.2425D0
 
+  real(dp), parameter :: acceleration_gravity = 9.81D0
+  !! Acceleration due to gravity [m/s2]
+
   contains
 
   subroutine init_constants
