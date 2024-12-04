@@ -73,5 +73,5 @@ Tbeta.js_on_change("value", callback)
 # Save the plot as HTML
 save(
     row(plot, column(T0, alpha, Trho, Tped, Tsep, Tbeta)),
-    filename="/PROCESS/profile_pedestal_plot.html",
+    filename="profile_pedestal_plot.html",
 )
