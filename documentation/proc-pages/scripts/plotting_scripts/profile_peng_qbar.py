@@ -61,7 +61,7 @@ q95.js_on_change("value", callback)
 qbar_0.js_on_change("value", callback)
 
 # Save the plot as HTML
-output_file("my_bokeh_plot.html", title="My Bokeh Plot")
+output_file("profile_star_qbar.html", title="Peng q Profile")
 save(
     row(plot, column(q95, qbar_0)),
     filename="profile_star_qbar.html",

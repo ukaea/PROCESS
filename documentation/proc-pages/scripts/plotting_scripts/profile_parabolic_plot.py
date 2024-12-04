@@ -1,7 +1,7 @@
 import numpy as np
 from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, CustomJS, Slider
-from bokeh.plotting import figure
+from bokeh.plotting import figure, output_file, save
 from bokeh.io import save
 
 
@@ -42,7 +42,8 @@ n0.js_on_change("value", callback)
 alpha.js_on_change("value", callback)
 
 # Save the plot as HTML
+output_file("profile_parabolic_plot.html", title="Parabolic Profile")
 save(
     row(plot, column(n0, alpha)),
-    filename="/PROCESS/profile_parabolic_plot.html",
+    filename="profile_parabolic_plot.html",
 )

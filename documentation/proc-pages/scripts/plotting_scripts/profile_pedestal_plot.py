@@ -1,9 +1,8 @@
 import numpy as np
 from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, CustomJS, Slider
-from bokeh.plotting import figure
-from bokeh.io import save
-from bokeh.io import output_file
+from bokeh.plotting import figure, output_file, save
+from bokeh.io import save, output_file
 
 
 T0 = Slider(start=0.1, end=10, value=10.0, step=0.1, title="Plasma centre value | T0")
@@ -71,6 +70,7 @@ Tsep.js_on_change("value", callback)
 Tbeta.js_on_change("value", callback)
 
 # Save the plot as HTML
+output_file("profile_pedestal_plot.html", title="Pedestal Profile")
 save(
     row(plot, column(T0, alpha, Trho, Tped, Tsep, Tbeta)),
     filename="profile_pedestal_plot.html",

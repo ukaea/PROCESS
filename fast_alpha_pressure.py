@@ -58,5 +58,5 @@ callback = CustomJS(
 te.js_on_change("value", callback)
 
 # Save the plot as HTML
-output_file("profile_alpha_beta.html", title="Fast Alpha Beta Fractions")
-save(row(plot, column(te)), filename="profile_alpha_beta.html")
+output_file("my_bokeh_plot.html", title="My Bokeh Plot")
+save(row(plot, column(te)), filename="/home/mn3981/PROCESS/profile_alpha_beta.html")

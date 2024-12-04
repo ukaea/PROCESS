@@ -121,4 +121,4 @@ ax.grid(True, linestyle="--", alpha=0.6)
 
 # Adjust layout and display the plot
 plt.tight_layout()
-plt.savefig("/home/jg6173/testing/my_scripts/current_vs_time_plot.png")
+plt.savefig("current_vs_time_plot.png")

@@ -58,5 +58,5 @@ n0.js_on_change("value", callback)
 alpha.js_on_change("value", callback)
 
 # Save the plot as HTML
-output_file("my_bokeh_plot.html", title="My Bokeh Plot")
-save(row(plot, column(n0, alpha)), filename="/PROCESS/profile_hastie.html")
+output_file("profile_hastie.html", title="Hastie Current Profile")
+save(row(plot, column(n0, alpha)), filename="profile_hastie.html")
