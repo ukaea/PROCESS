@@ -4,6 +4,7 @@ import math
 import numba
 import numpy as np
 from scipy import optimize
+from scipy.special import ellipe, ellipk
 
 import process.superconductors as superconductors
 from process import fortran as ft
@@ -1599,13 +1600,15 @@ class PFCoil:
         axial_term_1 = -(constants.rmu0 / 2.0e0) * (ni / (2.0e0 * hl)) ** 2
 
         # term 2
-        ekb2_1, ekb2_2 = ml.ellipke(kb2)
+        ekb2_1 = ellipk(kb2)
+        ekb2_2 = ellipe(kb2)
         axial_term_2 = (
             2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + hl**2)) * (ekb2_1 - ekb2_2)
         )
 
         # term 3
-        ek2b2_1, ek2b2_2 = ml.ellipke(k2b2)
+        ek2b2_1 = ellipk(k2b2)
+        ek2b2_2 = ellipe(k2b2)
         axial_term_3 = (
             2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2)) * (ek2b2_1 - ek2b2_2)
         )
