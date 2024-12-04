@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 plt.style.use("ggplot")
-# plt.rcParams['text.usetex'] = True
 
 # Define the ion_temperature range
 ion_temperature = np.linspace(0, 500, 5000)
