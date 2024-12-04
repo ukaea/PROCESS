@@ -44,5 +44,5 @@ alpha.js_on_change("value", callback)
 # Save the plot as HTML
 save(
     row(plot, column(n0, alpha)),
-    filename="/PROCESS/profile_parabolic_plot.html",
+    filename="profile_parabolic_plot.html",
 )
