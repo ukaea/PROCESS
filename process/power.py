@@ -50,7 +50,7 @@ class Power:
         )
         self.pdivfraction = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.iprimdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.i_div_thermal = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.rejected_main = AnnotatedVariable(float, 0.0, docstring="", units="")
 
     def pfpwr(self, output: bool):
@@ -711,7 +711,7 @@ class Power:
             #  Secondary thermal power deposited in divertor (MW)
             heat_transport_variables.psecdiv = self.pthermdiv
             # Divertor primary/secondary power switch: does NOT contribute to energy generation cycle
-            self.iprimdiv = 0
+            self.i_div_thermal = 0
         else:
             #  Primary thermal power (MW)
             heat_transport_variables.pthermmw = (
@@ -722,7 +722,7 @@ class Power:
             #  Secondary thermal power deposited in divertor (MW)
             heat_transport_variables.psecdiv = 0.0e0
             # Divertor primary/secondary power switch: contributes to energy generation cycle
-            self.iprimdiv = 1
+            self.i_div_thermal = 1
 
         if abs(heat_transport_variables.pthermmw) < 1.0e-4:
             logger.error(f'{"ERROR Primary thermal power is zero or negative"}')
@@ -1215,12 +1215,12 @@ class Power:
         )
         # #284
         po.osubhd(self.outfile, "Plant thermodynamics: options :")
-        if self.iprimdiv == 1:
+        if self.i_div_thermal == 1:
             po.ocmmnt(
                 self.outfile,
                 "Divertor thermal power is collected at only 150 C and is used to preheat the coolant in the power cycle",
             )
-        elif self.iprimdiv == 0:
+        elif self.i_div_thermal == 0:
             po.ocmmnt(
                 self.outfile,
                 "Divertor thermal power is not used, but rejected directly to the environment.",
@@ -1382,41 +1382,41 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.pnucdiv*self.iprimdiv} {fwbs_variables.pnucdiv*(1-self.iprimdiv)} {fwbs_variables.pnucdiv}"
+                f"{fwbs_variables.pnucdiv*self.i_div_thermal} {fwbs_variables.pnucdiv*(1-self.i_div_thermal)} {fwbs_variables.pnucdiv}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{physics_variables.pdivt*self.iprimdiv} {physics_variables.pdivt*(1-self.iprimdiv)} {physics_variables.pdivt}"
+                f"{physics_variables.pdivt*self.i_div_thermal} {physics_variables.pdivt*(1-self.i_div_thermal)} {physics_variables.pdivt}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.praddiv*self.iprimdiv} {fwbs_variables.praddiv*(1-self.iprimdiv)} {fwbs_variables.praddiv}"
+                f"{fwbs_variables.praddiv*self.i_div_thermal} {fwbs_variables.praddiv*(1-self.i_div_thermal)} {fwbs_variables.praddiv}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.htpmw_div*self.iprimdiv} {heat_transport_variables.htpmw_div*(1-self.iprimdiv)} {heat_transport_variables.htpmw_div}"
+                f"{heat_transport_variables.htpmw_div*self.i_div_thermal} {heat_transport_variables.htpmw_div*(1-self.i_div_thermal)} {heat_transport_variables.htpmw_div}"
             ),
         )
 
         primsum = (
             primsum
-            + fwbs_variables.pnucdiv * self.iprimdiv
-            + physics_variables.pdivt * self.iprimdiv
-            + fwbs_variables.praddiv * self.iprimdiv
-            + heat_transport_variables.htpmw_div * self.iprimdiv
+            + fwbs_variables.pnucdiv * self.i_div_thermal
+            + physics_variables.pdivt * self.i_div_thermal
+            + fwbs_variables.praddiv * self.i_div_thermal
+            + heat_transport_variables.htpmw_div * self.i_div_thermal
         )
         secsum = (
             secsum
-            + fwbs_variables.pnucdiv * (1 - self.iprimdiv)
-            + physics_variables.pdivt * (1 - self.iprimdiv)
-            + fwbs_variables.praddiv * (1 - self.iprimdiv)
-            + heat_transport_variables.htpmw_div * (1 - self.iprimdiv)
+            + fwbs_variables.pnucdiv * (1 - self.i_div_thermal)
+            + physics_variables.pdivt * (1 - self.i_div_thermal)
+            + fwbs_variables.praddiv * (1 - self.i_div_thermal)
+            + heat_transport_variables.htpmw_div * (1 - self.i_div_thermal)
         )
 
         if physics_variables.itart == 1:
