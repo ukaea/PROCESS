@@ -1438,19 +1438,6 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
         )
 
 
-def angle_check(angle1, angle2):
-    """Function to perform TF coil angle check"""
-    if angle1 > 1:
-        angle1 = 1
-    if angle1 < -1:
-        angle1 = -1
-    if angle2 > 1:
-        angle2 = 1
-    if angle2 < -1:
-        angle2 = -1
-    return angle1, angle2
-
-
 def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     """Function to plot TF coils
 
