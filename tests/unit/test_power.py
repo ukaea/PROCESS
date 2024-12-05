@@ -1869,7 +1869,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
 class AcpowParam(NamedTuple):
 
-    efloor: Any = None
+    a_floor_total: Any = None
 
     p_baseload_electrical: Any = None
 
@@ -1912,7 +1912,7 @@ class AcpowParam(NamedTuple):
     "acpowparam",
     (
         AcpowParam(
-            efloor=379218.8908858358,
+            a_floor_total=379218.8908858358,
             p_baseload_electrical=5000000,
             p_cryo_plant=37.900388528497025,
             vachtmw=0.5,
@@ -1933,7 +1933,7 @@ class AcpowParam(NamedTuple):
             expected_pacpmw=1164.244494532182,
         ),
         AcpowParam(
-            efloor=381580.9594357388,
+            a_floor_total=381580.9594357388,
             p_baseload_electrical=5000000,
             p_cryo_plant=108.74512702403499,
             vachtmw=0.5,
@@ -1968,9 +1968,13 @@ def test_acpow(acpowparam, monkeypatch, power):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(buildings_variables, "efloor", acpowparam.efloor)
+    monkeypatch.setattr(buildings_variables, "a_floor_total", acpowparam.a_floor_total)
 
-    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical", acpowparam.p_baseload_electrical)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_baseload_electrical",
+        acpowparam.p_baseload_electrical,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_cryo_plant", acpowparam.p_cryo_plant
@@ -1992,7 +1996,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "peakmva", acpowparam.peakmva)
 
-    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical_total_mw", acpowparam.p_baseload_electrical_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_baseload_electrical_total_mw",
+        acpowparam.p_baseload_electrical_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "fmgdmw", acpowparam.fmgdmw)
 
@@ -2518,7 +2526,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fpumpfw", power2param.fpumpfw)
 
-    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical_total_mw", power2param.p_baseload_electrical_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_baseload_electrical_total_mw",
+        power2param.p_baseload_electrical_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "iprimshld", power2param.iprimshld)
 

@@ -4891,7 +4891,11 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pacpmw", acc242param.pacpmw)
 
-    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical_total_mw", acc242param.p_baseload_electrical_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_baseload_electrical_total_mw",
+        acc242param.p_baseload_electrical_total_mw,
+    )
 
     monkeypatch.setattr(costs, "c24", acc242param.c24)
 

@@ -2562,7 +2562,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
 
 
 class IfeacpParam(NamedTuple):
-    efloor: Any = None
+    a_floor_total: Any = None
     p_baseload_electrical: Any = None
     pwpm2: Any = None
     pacpmw: Any = None
@@ -2587,7 +2587,7 @@ class IfeacpParam(NamedTuple):
     "ifeacpparam",
     (
         IfeacpParam(
-            efloor=128814.70697706047,
+            a_floor_total=128814.70697706047,
             p_baseload_electrical=5000000,
             pwpm2=150,
             pacpmw=0,
@@ -2621,8 +2621,12 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(buildings_variables, "efloor", ifeacpparam.efloor)
-    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical", ifeacpparam.p_baseload_electrical)
+    monkeypatch.setattr(buildings_variables, "a_floor_total", ifeacpparam.a_floor_total)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_baseload_electrical",
+        ifeacpparam.p_baseload_electrical,
+    )
     monkeypatch.setattr(heat_transport_variables, "pwpm2", ifeacpparam.pwpm2)
     monkeypatch.setattr(heat_transport_variables, "pacpmw", ifeacpparam.pacpmw)
     monkeypatch.setattr(
@@ -2633,7 +2637,11 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
     monkeypatch.setattr(
         heat_transport_variables, "p_hcd_electrical_mw", ifeacpparam.p_hcd_electrical_mw
     )
-    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical_total_mw", ifeacpparam.p_baseload_electrical_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_baseload_electrical_total_mw",
+        ifeacpparam.p_baseload_electrical_total_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "tlvpmw", ifeacpparam.tlvpmw)
     monkeypatch.setattr(ife_variables, "tdspmw", ifeacpparam.tdspmw)
     monkeypatch.setattr(ife_variables, "tfacmw", ifeacpparam.tfacmw)
@@ -2645,7 +2653,9 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
     ife.ifeacp()
 
     assert heat_transport_variables.pacpmw == pytest.approx(ifeacpparam.expected_pacpmw)
-    assert heat_transport_variables.p_baseload_electrical_total_mw == pytest.approx(ifeacpparam.expected_p_baseload_electrical_total_mw)
+    assert heat_transport_variables.p_baseload_electrical_total_mw == pytest.approx(
+        ifeacpparam.expected_p_baseload_electrical_total_mw
+    )
     assert heat_transport_variables.tlvpmw == pytest.approx(ifeacpparam.expected_tlvpmw)
 
 
@@ -2660,7 +2670,7 @@ class IfebdgParam(NamedTuple):
     wgt2: Any = None
     stcl: Any = None
     pibv: Any = None
-    efloor: Any = None
+    a_floor_total: Any = None
     triv: Any = None
     conv: Any = None
     admv: Any = None
@@ -2683,7 +2693,7 @@ class IfebdgParam(NamedTuple):
     zu6: Any = None
     r6: Any = None
     expected_wrbi: Any = None
-    expected_efloor: Any = None
+    expected_a_floor_total: Any = None
     expected_admvol: Any = None
     expected_convol: Any = None
     expected_elevol: Any = None
@@ -2709,7 +2719,7 @@ class IfebdgParam(NamedTuple):
             wgt2=100000,
             stcl=3,
             pibv=40000,
-            efloor=0,
+            a_floor_total=0,
             triv=40000,
             conv=60000,
             admv=100000,
@@ -2732,7 +2742,7 @@ class IfebdgParam(NamedTuple):
             zu6=5.3600000000000003,
             r6=6.5000000000000009,
             expected_wrbi=10,
-            expected_efloor=128814.70697706047,
+            expected_a_floor_total=128814.70697706047,
             expected_admvol=100000,
             expected_convol=60000,
             expected_elevol=40000,
@@ -2767,7 +2777,7 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     monkeypatch.setattr(buildings_variables, "wgt2", ifebdgparam.wgt2)
     monkeypatch.setattr(buildings_variables, "stcl", ifebdgparam.stcl)
     monkeypatch.setattr(buildings_variables, "pibv", ifebdgparam.pibv)
-    monkeypatch.setattr(buildings_variables, "efloor", ifebdgparam.efloor)
+    monkeypatch.setattr(buildings_variables, "a_floor_total", ifebdgparam.a_floor_total)
     monkeypatch.setattr(buildings_variables, "triv", ifebdgparam.triv)
     monkeypatch.setattr(buildings_variables, "conv", ifebdgparam.conv)
     monkeypatch.setattr(buildings_variables, "admv", ifebdgparam.admv)
@@ -2793,7 +2803,9 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     ife.ifebdg()
 
     assert buildings_variables.wrbi == pytest.approx(ifebdgparam.expected_wrbi)
-    assert buildings_variables.efloor == pytest.approx(ifebdgparam.expected_efloor)
+    assert buildings_variables.a_floor_total == pytest.approx(
+        ifebdgparam.expected_a_floor_total
+    )
     assert buildings_variables.admvol == pytest.approx(ifebdgparam.expected_admvol)
     assert buildings_variables.convol == pytest.approx(ifebdgparam.expected_convol)
     assert buildings_variables.elevol == pytest.approx(ifebdgparam.expected_elevol)
@@ -2899,7 +2911,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(fwbs_variables, "tbr", ifepw2param.tbr)
     monkeypatch.setattr(fwbs_variables, "pnucblkt", ifepw2param.pnucblkt)
     monkeypatch.setattr(heat_transport_variables, "fachtmw", ifepw2param.fachtmw)
-    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical_total_mw", ifepw2param.p_baseload_electrical_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_baseload_electrical_total_mw",
+        ifepw2param.p_baseload_electrical_total_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "psechtmw", ifepw2param.psechtmw)
     monkeypatch.setattr(heat_transport_variables, "pinjht", ifepw2param.pinjht)
     monkeypatch.setattr(heat_transport_variables, "vachtmw", ifepw2param.vachtmw)

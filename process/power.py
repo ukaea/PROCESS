@@ -451,7 +451,7 @@ class Power:
 
         #  Total baseline power to facility loads, MW
         heat_transport_variables.p_baseload_electrical_total_mw = (
-            basemw + buildings_variables.efloor * pkwpm2 / 1000.0e0
+            basemw + buildings_variables.a_floor_total * pkwpm2 / 1000.0e0
         )
 
         # Estimate of the total low voltage power, MW
@@ -853,7 +853,9 @@ class Power:
             self.ppumpmw = 0.0e0
 
         #  Facility heat removal (heat_transport_variables.p_baseload_electrical_total_mw calculated in ACPOW)
-        heat_transport_variables.fachtmw = heat_transport_variables.p_baseload_electrical_total_mw
+        heat_transport_variables.fachtmw = (
+            heat_transport_variables.p_baseload_electrical_total_mw
+        )
 
         #  Electrical power consumed by fusion power core systems
         #  (excluding heat transport pumps and auxiliary injection power system)

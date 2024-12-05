@@ -140,5 +140,5 @@ Amalgamating multiple individual buildings (and using an average height), this e
 
 ## Summary variables
 
-- Effective floor area for AC power module, `efloor`: total floor area (m2) across all buildings. This estimate attempts to account for multiple floors within buildings by assuming an average storey height of 6m across the site; the volume of all buildings is therefore summed and divided by 6.
+- Effective floor area for AC power module, `a_floor_total`: total floor area (m2) across all buildings. This estimate attempts to account for multiple floors within buildings by assuming an average storey height of 6m across the site; the volume of all buildings is therefore summed and divided by 6.
 - Total volume of nuclear buildings, `volnucb`: sum of all nuclear building (external) volumes.
