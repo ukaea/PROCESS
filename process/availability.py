@@ -1038,7 +1038,7 @@ class Availability:
         """
 
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
-        f_scale = pv.powfmw / ref_powfmw
+        f_scale = pv.fusion_power / ref_powfmw
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
         dpa_fpy = f_scale * ref_dpa_fpy
 
