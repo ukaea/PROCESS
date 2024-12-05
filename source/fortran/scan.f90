@@ -185,7 +185,7 @@ contains
     use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, beam_energy, bigq
     use divertor_variables, only: hldiv
     use error_handling, only: errors_on
-    use heat_transport_variables, only: p_gross_electrical, pinjwp, pnetelmw
+    use heat_transport_variables, only: p_gross_electrical, p_hcd_electrical_mw, pnetelmw
     use impurity_radiation_module, only: fimp
     use pfcoil_variables, only: whtpf
     use pf_power_variables, only: srcktpm
@@ -239,7 +239,7 @@ contains
     outvar(25,iscan) = alpha_power_beams * 5.0D0
     outvar(26,iscan) = wallmw
     outvar(27,iscan) = pinjmw
-    outvar(28,iscan) = pinjwp
+    outvar(28,iscan) = p_hcd_electrical_mw
     outvar(29,iscan) = pheat
     outvar(30,iscan) = pinjmw - pheat
     outvar(31,iscan) = bigq

@@ -1154,7 +1154,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1424E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0069E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.8762E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -2317,7 +2317,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1614E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0684E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.8935E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -3480,7 +3480,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1722E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0930E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5112E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5112E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9047E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -4643,7 +4643,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1752E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1139E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9072E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -5806,7 +5806,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1784E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1204E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9089E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -6969,7 +6969,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1716E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0955E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9016E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -8132,7 +8132,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1758E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1093E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9051E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -9295,7 +9295,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1789E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1211E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9091E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -10458,7 +10458,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1711E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1001E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9028E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -11621,7 +11621,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1847E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1424E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9149E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -12784,7 +12784,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1971E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1769E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9262E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -13947,7 +13947,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1962E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1711E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9243E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -15110,7 +15110,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.2076E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.2066E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9345E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -16273,7 +16273,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.2189E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.2438E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9458E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -17436,7 +17436,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.2309E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.2830E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electrical_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9577E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    

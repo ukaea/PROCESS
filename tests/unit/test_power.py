@@ -1881,7 +1881,7 @@ class AcpowParam(NamedTuple):
 
     trithtmw: Any = None
 
-    pinjwp: Any = None
+    p_hcd_electrical_mw: Any = None
 
     tlvpmw: Any = None
 
@@ -1918,7 +1918,7 @@ class AcpowParam(NamedTuple):
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
             trithtmw=15,
-            pinjwp=129.94611930107126,
+            p_hcd_electrical_mw=129.94611930107126,
             tlvpmw=0,
             peakmva=736.39062584245937,
             fcsht=0,
@@ -1939,7 +1939,7 @@ class AcpowParam(NamedTuple):
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
             trithtmw=15,
-            pinjwp=129.94611930107126,
+            p_hcd_electrical_mw=129.94611930107126,
             tlvpmw=699.34943812129745,
             peakmva=90.673341440806112,
             fcsht=61.882833632875375,
@@ -1982,7 +1982,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", acpowparam.trithtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pinjwp", acpowparam.pinjwp)
+    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", acpowparam.p_hcd_electrical_mw)
 
     monkeypatch.setattr(heat_transport_variables, "tlvpmw", acpowparam.tlvpmw)
 
@@ -2091,7 +2091,7 @@ class Power2Param(NamedTuple):
 
     iprimshld: Any = None
 
-    pinjwp: Any = None
+    p_hcd_electrical_mw: Any = None
 
     fachtmw: Any = None
 
@@ -2255,7 +2255,7 @@ class Power2Param(NamedTuple):
             fpumpfw=0.0050000000000000001,
             fcsht=61.882833632875375,
             iprimshld=1,
-            pinjwp=129.94611930107126,
+            p_hcd_electrical_mw=129.94611930107126,
             fachtmw=0,
             p_gross_electrical=0,
             psechtmw=0,
@@ -2357,7 +2357,7 @@ class Power2Param(NamedTuple):
             fpumpfw=0.0050000000000000001,
             fcsht=62.237143915360818,
             iprimshld=1,
-            pinjwp=129.94611930107126,
+            p_hcd_electrical_mw=129.94611930107126,
             fachtmw=61.882833632875375,
             p_gross_electrical=982.58317918134742,
             psechtmw=233.80288075411508,
@@ -2514,7 +2514,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "iprimshld", power2param.iprimshld)
 
-    monkeypatch.setattr(heat_transport_variables, "pinjwp", power2param.pinjwp)
+    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", power2param.p_hcd_electrical_mw)
 
     monkeypatch.setattr(heat_transport_variables, "fachtmw", power2param.fachtmw)
 
@@ -2671,7 +2671,7 @@ class Power3Param(NamedTuple):
 
     trithtmw: Any = None
 
-    pinjwp: Any = None
+    p_hcd_electrical_mw: Any = None
 
     fachtmw: Any = None
 
@@ -2707,7 +2707,7 @@ class Power3Param(NamedTuple):
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
             trithtmw=15,
-            pinjwp=129.94611930107126,
+            p_hcd_electrical_mw=129.94611930107126,
             fachtmw=61.882833632875375,
             p_gross_electrical=982.58317918134742,
             poloidalpower=numpy.array(
@@ -2734,7 +2734,7 @@ class Power3Param(NamedTuple):
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
             trithtmw=15,
-            pinjwp=129.94611930107126,
+            p_hcd_electrical_mw=129.94611930107126,
             fachtmw=62.237143915360818,
             p_gross_electrical=982.28339460484608,
             poloidalpower=numpy.array(
@@ -2790,7 +2790,7 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", power3param.trithtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pinjwp", power3param.pinjwp)
+    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", power3param.p_hcd_electrical_mw)
 
     monkeypatch.setattr(heat_transport_variables, "fachtmw", power3param.fachtmw)
 

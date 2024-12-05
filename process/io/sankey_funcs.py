@@ -582,7 +582,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pcoresystems = (
         p_cryo_plant + fachtmw + tfacpd + trithtmw + vachtmw + pfwpmw + ppumpmw
     )
-    pinjwp = m_file.data["pinjwp"].get_scan(-1)  # injector wall plug power (MW)
+    p_hcd_electrical_mw = m_file.data["p_hcd_electrical_mw"].get_scan(-1)  # injector wall plug power (MW)
     htpmw = m_file.data["htpmw"].get_scan(
         -1
     )  # heat transport system electrical pump power (MW)
@@ -705,13 +705,13 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # -------------------------------- RECIRCULATING POWER - 5 --------------------------------
 
         # Recirculated power, -Core Systems, -Heating System
-        RECIRC = [precircmw, -pcoresystems - htpmw, -pinjwp + ppumpmw]
+        RECIRC = [precircmw, -pcoresystems - htpmw, -p_hcd_electrical_mw + ppumpmw]
         # Check if difference >2 between recirculated power and the output sum
         if sum(RECIRC) ** 2 > 2:
             print(
                 "Recirc. Power Balance",
                 precircmw,
-                -pcoresystems + ppumpmw - pinjwp - htpmw,
+                -pcoresystems + ppumpmw - p_hcd_electrical_mw - htpmw,
             )
         sankey.add(
             flows=RECIRC,
@@ -725,7 +725,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # --------------------------------------- LOSSES - 6 --------------------------------------
 
         # HCD: Heating system, -Plasma heating, -losses
-        HCD = [pinjwp - ppumpmw, -pinjmw, -pinjwp + pinjmw + ppumpmw]
+        HCD = [p_hcd_electrical_mw - ppumpmw, -pinjmw, -p_hcd_electrical_mw + pinjmw + ppumpmw]
         sankey.add(
             flows=HCD,
             orientations=[0, -1, 0],  # [left(in), up(out), left(out)]
@@ -800,11 +800,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             if t == diagrams[5].texts[2]:  # Heating System
                 if pnetelmw >= 1:
                     t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2)
+                        (pos[0] + 0.15, pos[1] + 0.5 * (p_hcd_electrical_mw / totalplasma) + 0.2)
                     )
                 if pnetelmw < 1:
                     t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2)
+                        (pos[0] + 0.15, pos[1] + 0.5 * (p_hcd_electrical_mw / totalplasma) + 0.2)
                     )
             if t == diagrams[6].texts[1]:  # Plasma Heating
                 t.set_horizontalalignment("left")
@@ -816,7 +816,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 t.set_position(
                     (
                         pos[0] + 0.15,
-                        pos[1] - 0.5 * ((pinjwp - pinjmw) / totalplasma) - 0.2,
+                        pos[1] - 0.5 * ((p_hcd_electrical_mw - pinjmw) / totalplasma) - 0.2,
                     )
                 )
             y += 1

@@ -4858,7 +4858,7 @@ class Stellarator:
             current_drive_variables.pinjimw = 0
             current_drive_variables.pinjemw = current_drive_variables.echpwr
             current_drive_variables.etacd = current_drive_variables.etaech
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electrical_mw = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd
         elif stellarator_variables.isthtr == 2:
@@ -4866,7 +4866,7 @@ class Stellarator:
             current_drive_variables.pinjimw = 0
             current_drive_variables.pinjemw = current_drive_variables.plhybd
             current_drive_variables.etacd = current_drive_variables.etalh
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electrical_mw = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd
         elif stellarator_variables.isthtr == 3:
@@ -4886,7 +4886,7 @@ class Stellarator:
                 1 - fpion
             )
             current_drive_variables.etacd = current_drive_variables.etanbi
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electrical_mw = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd
         else:
