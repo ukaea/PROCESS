@@ -58,7 +58,9 @@ If converting between units it may be required to have some capital letters at t
 
 The agreed upon style is to name the variables by the following scheme:
 
-`var = <data type>_<system>_<description>_<description...>`
+`var = <data type>_<system>_<description>_<units>`
+
+It is not always necessary to add the units abbreviation to the end of the variable but if doing so make sure it is case sensitive.
 
 If the variables are physics variables and do not belong to a system then:
 
@@ -90,8 +92,6 @@ Example, the total number of TF coils: `n_tf_coils`
 
 - Number density items should start with the `nd_` prefix
 
-Example, the plasma electron density: `dn_electron`
-
 ---------------------
 
 #### Areas
@@ -111,6 +111,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 #### Lengths
 
 - Lengths should start with the `len_` prefix
+
+---------------------
+
+#### Velocities
+
+- Velocities should start with the `vel_` prefix
 
 ---------------------
 
@@ -293,26 +299,26 @@ ii
 
 | Variable name | Description | Units |
 | ------------- | ----------- | :---: |
-| `plasma_current`    | Plasma current | A |
-| `plasma_current_MA` | Plasma current | MA |
+| `c_plasma`    | Plasma current | A |
+| `c_plasma_MA` | Plasma current | MA |
 | `b_t_onaxis`  | Toroidal field on-axis | T |
 | `b_t_max`     | Max toroidal field | T |
-| `n_electron_vol` | Volume average electron density | m-3 |
-| `t_electron_vol_ev` | Volume avgerage electron temperature | eV |
-| `mass_steel` | Mass of steel | kg |
-| `mass_steel_tonne` | Mass of steel | tonne |
-| `e_neutron_ev` | Energy of neutron | eV |
+| `nd_electron_vol` | Volume average electron density | m-3 |
+| `temp_electron_vol_eV` | Volume avgerage electron temperature | eV |
+| `m_steel` | Mass of steel | kg |
+| `m_steel_tonne` | Mass of steel | tonne |
+| `e_neutron_eV` | Energy of neutron | eV |
 | `e_neutron_MeV` | Energy of neutron | MeV |
 | `v_tf_dump` | TF dump voltage | V |
-| `time_plant_life` | Plant lifetime | s |
-| `time_plant_life_yrs` | Plant lifetime | years |
+| `t_plant_life` | Plant lifetime | s |
+| `t_plant_life_yrs` | Plant lifetime | years |
 | `dr_tf_inboard_leg` | TF coil inboard leg radial thickness | m |
 | `dr_blanket_inboard` | Inboard blanket thickness | m |
-| `velocity_coolant` | TF centrepost coolant velocity | m/s |
-| `plasma_volume` | Plasma volume | m3 |
-| `plasma_area` | Plasma area | m2 |
-| `angle_div_target` | Divertor target angle | radians |
-| `angle_div_target_deg` | Divertor target angle | deg |
+| `vel_coolant` | TF centrepost coolant velocity | m/s |
+| `vol_plasma` | Plasma volume | m3 |
+| `a_plasma` | Plasma area | m2 |
+| `rad_div_target` | Divertor target angle | radians |
+| `deg_div_target` | Divertor target angle | deg |
 | `sig_tf_r` | TF radial stress  | Pa |
 | `` |  |  |
 
