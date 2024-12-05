@@ -2181,7 +2181,7 @@ class Power2Param(NamedTuple):
 
     ppumpmw: Any = None
 
-    pcoresystems: Any = None
+    p_core_electrical_mw: Any = None
 
     pdivfraction: Any = None
 
@@ -2207,7 +2207,7 @@ class Power2Param(NamedTuple):
 
     expected_psechtmw: Any = None
 
-    expected_pcoresystems: Any = None
+    expected_p_core_electrical_mw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -2300,7 +2300,7 @@ class Power2Param(NamedTuple):
             pthermfw=0,
             pthermshld=1.3677406976945679,
             ppumpmw=0,
-            pcoresystems=0,
+            p_core_electrical_mw=0,
             pdivfraction=0.13763633828287813,
             qss=20361.633927097802,
             qac=3611.3456752656607,
@@ -2313,7 +2313,7 @@ class Power2Param(NamedTuple):
             expected_fachtmw=61.882833632875375,
             expected_p_gross_electrical=982.58317918134742,
             expected_psechtmw=233.80288075411508,
-            expected_pcoresystems=125.33391046215507,
+            expected_p_core_electrical_mw=125.33391046215507,
         ),
         Power2Param(
             pnetelin=500,
@@ -2402,7 +2402,7 @@ class Power2Param(NamedTuple):
             pthermfw=0,
             pthermshld=1.4106393366228915,
             ppumpmw=0,
-            pcoresystems=125.33391046215507,
+            p_core_electrical_mw=125.33391046215507,
             pdivfraction=0.13761114839248584,
             qss=20342.863776957758,
             qac=102701.82327748176,
@@ -2415,7 +2415,7 @@ class Power2Param(NamedTuple):
             expected_fachtmw=62.237143915360818,
             expected_p_gross_electrical=982.28339460484608,
             expected_psechtmw=304.16251287817744,
-            expected_pcoresystems=195.70119200650984,
+            expected_p_core_electrical_mw=195.70119200650984,
         ),
     ),
 )
@@ -2618,7 +2618,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(power, "ppumpmw", power2param.ppumpmw)
 
-    monkeypatch.setattr(power, "pcoresystems", power2param.pcoresystems)
+    monkeypatch.setattr(power, "p_core_electrical_mw", power2param.p_core_electrical_mw)
 
     monkeypatch.setattr(power, "pdivfraction", power2param.pdivfraction)
 
@@ -2652,7 +2652,7 @@ def test_power2(power2param, monkeypatch, power):
         power2param.expected_psechtmw
     )
 
-    assert power.pcoresystems == pytest.approx(power2param.expected_pcoresystems)
+    assert power.p_core_electrical_mw == pytest.approx(power2param.expected_p_core_electrical_mw)
 
 
 class Power3Param(NamedTuple):
