@@ -142,7 +142,7 @@ module heat_transport_variables
     real(dp) :: pnetelmw
     !! net electric power (MW)
 
-    real(dp) :: precircmw
+    real(dp) :: p_recirc_electrical_mw
     !! recirculating electric power (MW)
 
     real(dp) :: priheat
@@ -228,7 +228,7 @@ module heat_transport_variables
       p_hcd_electrical_mw = 0.0D0
       pinjwpfix = 0.0D0
       pnetelmw = 0.0D0
-      precircmw = 0.0D0
+      p_recirc_electrical_mw = 0.0D0
       priheat = 0.0D0
       psecdiv = 0.0D0
       psechcd = 0.0D0

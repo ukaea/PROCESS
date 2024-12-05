@@ -108,7 +108,7 @@ In the above three equations, *T* is the temperature (K) of the (secondary) cool
 to the turbine, assumed to be 20 K below the outlet temperature of the primary coolant.
 
 The electrical power required to operate the power plant itself is the so-called recirculating 
-electric power (`precircmw`). Any surplus is exported to the electricity grid as net electric 
+electric power (`p_recirc_electrical_mw`). Any surplus is exported to the electricity grid as net electric 
 power (`pnetelmw`).
 
 The recirculating power comprises the electrical power required to run all of the associated 

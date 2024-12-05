@@ -896,7 +896,7 @@ class Power:
                 )
 
             #  Total recirculating power
-            heat_transport_variables.precircmw = (
+            heat_transport_variables.p_recirc_electrical_mw = (
                 self.pcoresystems
                 + heat_transport_variables.p_hcd_electrical_mw
                 + heat_transport_variables.htpmw
@@ -905,7 +905,7 @@ class Power:
             #  Net electric power
             heat_transport_variables.pnetelmw = (
                 heat_transport_variables.p_gross_electrical
-                - heat_transport_variables.precircmw
+                - heat_transport_variables.p_recirc_electrical_mw
             )
 
             #  Recirculating power fraction

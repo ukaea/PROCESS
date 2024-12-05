@@ -557,7 +557,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
 
     # Used in [NET]
     pnetelmw = m_file.data["pnetelmw"].get_scan(-1)  # net electric power (MW)
-    precircmw = p_gross_electrical - pnetelmw  # Recirculating power (MW)
+    p_recirc_electrical_mw = p_gross_electrical - pnetelmw  # Recirculating power (MW)
 
     # Used in [RECIRC]
     p_cryo_plant = m_file.data["p_cryo_plant"].get_scan(
@@ -681,7 +681,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # If net electric is +ve or -ve changes the flow organisation
         if pnetelmw >= 0:  # net electric is +ve
             # Gross electric power, -net electric power, -recirculated power
-            NET = [p_gross_electrical, -pnetelmw, -precircmw]
+            NET = [p_gross_electrical, -pnetelmw, -p_recirc_electrical_mw]
             sankey.add(
                 flows=NET,
                 orientations=[0, 0, -1],  # [down(in), down(out), left(out)]
@@ -692,7 +692,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             )
         elif pnetelmw < 0:  # net electric is -ve
             # Gross electric power, -net electric power, -recirculated power
-            NET = [-pnetelmw, p_gross_electrical, -precircmw]
+            NET = [-pnetelmw, p_gross_electrical, -p_recirc_electrical_mw]
             sankey.add(
                 flows=NET,
                 orientations=[0, -1, 0],  # [left(in), down(in), left(out)]
@@ -705,12 +705,12 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # -------------------------------- RECIRCULATING POWER - 5 --------------------------------
 
         # Recirculated power, -Core Systems, -Heating System
-        RECIRC = [precircmw, -pcoresystems - htpmw, -p_hcd_electrical_mw + ppumpmw]
+        RECIRC = [p_recirc_electrical_mw, -pcoresystems - htpmw, -p_hcd_electrical_mw + ppumpmw]
         # Check if difference >2 between recirculated power and the output sum
         if sum(RECIRC) ** 2 > 2:
             print(
                 "Recirc. Power Balance",
-                precircmw,
+                p_recirc_electrical_mw,
                 -pcoresystems + ppumpmw - p_hcd_electrical_mw - htpmw,
             )
         sankey.add(
@@ -790,7 +790,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             if t == diagrams[4].texts[2]:  # Recirc. Power
                 if pnetelmw >= 1:
                     t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (precircmw / totalplasma) + 0.2)
+                        (pos[0] + 0.15, pos[1] + 0.5 * (p_recirc_electrical_mw / totalplasma) + 0.2)
                     )
                 elif pnetelmw < 1:
                     t.set_horizontalalignment("left")
