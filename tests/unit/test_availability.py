@@ -573,7 +573,7 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
     monkeypatch.setattr(tv, "t_burn", 5.0)
-    monkeypatch.setattr(tv, "tcycle", 9000.0)
+    monkeypatch.setattr(tv, "t_cycle", 9000.0)
     monkeypatch.setattr(cv, "adivflnc", 10.0)
     monkeypatch.setattr(dv, "hldiv", 10.0)
     monkeypatch.setattr(cv, "ibkt_life", 0)
