@@ -1977,8 +1977,8 @@ class IFE:
         <A HREF="ifeacp.html">IFEACP</A>.
         F/MI/PJK/LOGBOOK12, p.67
         """
-        # Facility heat removal (fcsht calculated in IFEACP)
-        heat_transport_variables.fachtmw = heat_transport_variables.fcsht
+        # Facility heat removal (p_baseload_electrical_total_mw calculated in IFEACP)
+        heat_transport_variables.fachtmw = heat_transport_variables.p_baseload_electrical_total_mw
 
         # Total secondary heat
         heat_transport_variables.psechtmw = (
@@ -2182,12 +2182,12 @@ class IFE:
 
         # Total baseline power to facility loads, MW
 
-        heat_transport_variables.fcsht = basemw + (buildings_variables.efloor * pmwpm2)
+        heat_transport_variables.p_baseload_electrical_total_mw = basemw + (buildings_variables.efloor * pmwpm2)
 
         # Estimate of the total low voltage power, MW
 
         heat_transport_variables.tlvpmw = (
-            heat_transport_variables.fcsht
+            heat_transport_variables.p_baseload_electrical_total_mw
             + heat_transport_variables.trithtmw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
             + heat_transport_variables.vachtmw
@@ -2268,8 +2268,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Total base power reqd at all times (MW)",
-            "(fcsht)",
-            heat_transport_variables.fcsht,
+            "(p_baseload_electrical_total_mw)",
+            heat_transport_variables.p_baseload_electrical_total_mw,
         )
         process_output.ovarre(
             self.outfile,

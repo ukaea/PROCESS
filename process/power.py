@@ -450,7 +450,7 @@ class Power:
             )
 
         #  Total baseline power to facility loads, MW
-        heat_transport_variables.fcsht = (
+        heat_transport_variables.p_baseload_electrical_total_mw = (
             basemw + buildings_variables.efloor * pkwpm2 / 1000.0e0
         )
 
@@ -458,7 +458,7 @@ class Power:
         # MDK No idea what this is - especially the last term
         # It is used in the old cost routine, so I will leave it in place.
         heat_transport_variables.tlvpmw = (
-            heat_transport_variables.fcsht
+            heat_transport_variables.p_baseload_electrical_total_mw
             + heat_transport_variables.trithtmw
             + heat_transport_variables.htpmw
             + heat_transport_variables.vachtmw
@@ -522,8 +522,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Total base power required at all times (MW)",
-            "(fcsht)",
-            heat_transport_variables.fcsht,
+            "(p_baseload_electrical_total_mw)",
+            heat_transport_variables.p_baseload_electrical_total_mw,
             "OP ",
         )
         # MDK Remove this output: no idea what this is
@@ -852,8 +852,8 @@ class Power:
         else:
             self.ppumpmw = 0.0e0
 
-        #  Facility heat removal (heat_transport_variables.fcsht calculated in ACPOW)
-        heat_transport_variables.fachtmw = heat_transport_variables.fcsht
+        #  Facility heat removal (heat_transport_variables.p_baseload_electrical_total_mw calculated in ACPOW)
+        heat_transport_variables.fachtmw = heat_transport_variables.p_baseload_electrical_total_mw
 
         #  Electrical power consumed by fusion power core systems
         #  (excluding heat transport pumps and auxiliary injection power system)
