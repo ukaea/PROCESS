@@ -979,20 +979,40 @@ class Availability:
         return u_unplanned_vacuum
 
     def avail_st(self, output: bool):
-        """Routine to calculate availability for plant with a Spherical Tokamak
-
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
         """
-        # Calculate DPA per FPY
-        # Detailed and cited in T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
-        # https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
-        # Scaling w.r.t. fusion power drops out a large number of factors relating to neutronics, such as:
-        # - the actual neutron flux
-        # - the geometry and material composition leading to the neutron flux at the EUROfer FW OMP
-        # - the neutron energy spectrum
-        # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
-        # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
+        Calculate the availability for a plant with a Spherical Tokamak.
+
+        This routine calculates the availability of a plant by considering various factors such as
+        the lifetime of different components, planned and unplanned unavailability, and maintenance cycles.
+
+        Parameters:
+        -----------
+        output : bool
+            Indicates whether the output should be written to the output file or not.
+
+        Detailed Description:
+        ---------------------
+        - The method calculates the Displacements Per Atom (DPA) per Full Power Year (FPY) based on the fusion power.
+        - It determines the lifetime of the first wall and blanket, divertor, and current drive.
+        - It calculates the time for a maintenance cycle and the number of maintenance cycles over the plant's lifetime.
+        - It computes the planned and unplanned unavailability of various components such as magnets, divertor, first wall and blanket, balance of plant, heating and current drive, and vacuum systems.
+        - The total availability of the plant is then calculated considering both planned and unplanned unavailability.
+        - The method also adjusts the lifetimes of components based on the calculated availability.
+        - Finally, it calculates the capacity factor and operational time of the plant.
+
+        If `output` is True, the method writes detailed availability information to the output file.
+
+        References:
+        -----------
+        - T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
+          https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
+
+        Notes:
+        ------
+        - The method assumes certain constants and reference points for calculations.
+        - The method modifies the lifetimes of components to account for the calculated availability.
+        """
+
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
         f_scale = pv.powfmw / ref_powfmw
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
