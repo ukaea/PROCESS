@@ -1871,7 +1871,7 @@ class AcpowParam(NamedTuple):
 
     efloor: Any = None
 
-    baseel: Any = None
+    p_baseload_electrical: Any = None
 
     p_cryo_plant: Any = None
 
@@ -1913,7 +1913,7 @@ class AcpowParam(NamedTuple):
     (
         AcpowParam(
             efloor=379218.8908858358,
-            baseel=5000000,
+            p_baseload_electrical=5000000,
             p_cryo_plant=37.900388528497025,
             vachtmw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
@@ -1934,7 +1934,7 @@ class AcpowParam(NamedTuple):
         ),
         AcpowParam(
             efloor=381580.9594357388,
-            baseel=5000000,
+            p_baseload_electrical=5000000,
             p_cryo_plant=108.74512702403499,
             vachtmw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
@@ -1970,7 +1970,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(buildings_variables, "efloor", acpowparam.efloor)
 
-    monkeypatch.setattr(heat_transport_variables, "baseel", acpowparam.baseel)
+    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical", acpowparam.p_baseload_electrical)
 
     monkeypatch.setattr(
         heat_transport_variables, "p_cryo_plant", acpowparam.p_cryo_plant

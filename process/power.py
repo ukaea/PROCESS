@@ -422,7 +422,7 @@ class Power:
         crymw = heat_transport_variables.p_cryo_plant
 
         #  Facility base load, MW (loads not dependent on floor area)
-        basemw = heat_transport_variables.baseel * 1.0e-6
+        basemw = heat_transport_variables.p_baseload_electrical * 1.0e-6
 
         #  Power needed per unit floor area, kW/m2
         pkwpm2 = heat_transport_variables.pwpm2 * 1.0e-3

@@ -2563,7 +2563,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
 
 class IfeacpParam(NamedTuple):
     efloor: Any = None
-    baseel: Any = None
+    p_baseload_electrical: Any = None
     pwpm2: Any = None
     pacpmw: Any = None
     p_cryo_plant: Any = None
@@ -2588,7 +2588,7 @@ class IfeacpParam(NamedTuple):
     (
         IfeacpParam(
             efloor=128814.70697706047,
-            baseel=5000000,
+            p_baseload_electrical=5000000,
             pwpm2=150,
             pacpmw=0,
             p_cryo_plant=10,
@@ -2622,7 +2622,7 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(buildings_variables, "efloor", ifeacpparam.efloor)
-    monkeypatch.setattr(heat_transport_variables, "baseel", ifeacpparam.baseel)
+    monkeypatch.setattr(heat_transport_variables, "p_baseload_electrical", ifeacpparam.p_baseload_electrical)
     monkeypatch.setattr(heat_transport_variables, "pwpm2", ifeacpparam.pwpm2)
     monkeypatch.setattr(heat_transport_variables, "pacpmw", ifeacpparam.pacpmw)
     monkeypatch.setattr(

@@ -55,7 +55,7 @@ for the primary coolant.
     - The mechanical pumping power required for the first wall and breeder zone is calculated using 
       the Darcy friction factor, estimated from the Haaland equation, an approximation to the 
       ColebrookWhite equation. (If you consider that the calculated value for the pumping power is 
-      too low, then you can add an additional electric power requirement using `baseel`. Do not use 
+      too low, then you can add an additional electric power requirement using `p_baseload_electrical`. Do not use 
       `htpmw_min` as this prevents the optimisation of the first wall.) The inlet and outlet temperatures 
       of the first wall and blanket can be different. The isentropic efficiency of the first wall and 
       blanket coolant pumps (enthalpy increase in the fluid for isentropic compression divided by the 

@@ -2159,7 +2159,7 @@ class IFE:
         """
         # Facility base load, MW (loads not dependent on floor area)
 
-        basemw = heat_transport_variables.baseel * 1e-6
+        basemw = heat_transport_variables.p_baseload_electrical * 1e-6
 
         # Power needed per floor area, MW/m2
 

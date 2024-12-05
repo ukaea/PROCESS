@@ -15,7 +15,7 @@ module heat_transport_variables
 
     public
 
-    real(dp) :: baseel
+    real(dp) :: p_baseload_electrical
     !! base plant electric load (W)
 
     real(dp) :: p_cryo_plant
@@ -43,7 +43,7 @@ module heat_transport_variables
     !! facility heat removal (MW)
 
     real(dp) :: p_baseload_electrical_total_mw
-    !! total baseline power required at all times (MW)
+    !! total baseline power required at all times including floor space power (MW)
 
     real(dp) :: fgrosbop
     !! scaled fraction of gross power to balance-of-plant
@@ -190,7 +190,7 @@ module heat_transport_variables
       !! Initialise module variables
       implicit none
 
-      baseel = 5.0D6
+      p_baseload_electrical = 5.0D6
       p_cryo_plant = 0.0D0
       crypmw_max = 50.0D0
       f_crypmw = 1.0D0

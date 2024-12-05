@@ -281,7 +281,7 @@ contains
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
-    use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
+    use heat_transport_variables, only: htpmw_fw, p_baseload_electrical, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
       fpumpfw, crypmw_max, f_crypmw
@@ -2262,8 +2262,8 @@ contains
 
           !  Heat transport / power settings
 
-       case ('baseel')
-          call parse_real_variable('baseel', baseel, 1.0D6, 1.0D10, &
+       case ('p_baseload_electrical')
+          call parse_real_variable('p_baseload_electrical', p_baseload_electrical, 1.0D6, 1.0D10, &
                'Base plant electric load (W)')
        case ('crypmw_max')
           call parse_real_variable('crypmw_max', crypmw_max, 0.01D0, 200.0D0, &

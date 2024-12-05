@@ -3065,7 +3065,7 @@ iprimshld = 1
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*baseel = 
+*p_baseload_electrical = 
 * DESCRIPTION:   Base plant electric load (W) (default = 5E6)
 * JUSTIFICATION: 
 

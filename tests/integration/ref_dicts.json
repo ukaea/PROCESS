@@ -283,7 +283,7 @@
         "axial_force": 0.0,
         "b": null,
         "b_crit_upper_nbti": 14.86,
-        "baseel": 5000000.0,
+        "p_baseload_electrical": 5000000.0,
         "bcritsc": 24.0,
         "bctmp": 320.0,
         "bdelta": null,
@@ -8857,7 +8857,7 @@
         "axial_force": "",
         "b": "",
         "b_crit_upper_nbti": "upper critical field of GL_nbti",
-        "baseel": "base plant electric load (W)",
+        "p_baseload_electrical": "base plant electric load (W)",
         "bcritsc": "upper critical field (T) for Nb3Sn superconductor at zero temperature and\n strain (`i_tf_sc_mat=4, =bc20m`)",
         "bctmp": "first wall bulk coolant temperature (C)",
         "bdelta": "",
@@ -11652,7 +11652,7 @@
             "lb": 0.0,
             "ub": 30.0
         },
-        "baseel": {
+        "p_baseload_electrical": {
             "lb": 1000000.0,
             "ub": 10000000000.0
         },
@@ -18197,7 +18197,7 @@
         ],
         "hare": [],
         "heat_transport_variables": [
-            "baseel",
+            "p_baseload_electrical",
             "p_cryo_plant",
             "crypmw_max",
             "f_crypmw",
@@ -20028,7 +20028,7 @@
         "auxmin": "real_variable",
         "avail_min": "real_variable",
         "b_crit_upper_nbti": "real_variable",
-        "baseel": "real_variable",
+        "p_baseload_electrical": "real_variable",
         "bcritsc": "real_variable",
         "bctmp": "real_variable",
         "beamfus0": "real_variable",
