@@ -49,7 +49,6 @@ contains
       use rebco_variables, only: init_rebco_variables
       use reinke_variables, only: init_reinke_variables
       use define_iteration_variables, only: init_define_iteration_variables
-      use physics_functions_module, only: init_physics_functions
       use reinke_module, only: init_reinke_module
       use water_usage_variables, only: init_watuse_variables
       use CS_fatigue_variables, only: init_CS_fatigue_variables
@@ -91,7 +90,6 @@ contains
       call init_rebco_variables
       call init_reinke_variables
       call init_define_iteration_variables
-      call init_physics_functions
       call init_reinke_module
       call init_watuse_variables
       call init_CS_fatigue_variables
@@ -163,7 +161,7 @@ contains
             'been an escape from a failed line search.'
          write(vfile,'(a80)') 'odd/even is a convenient plotting bit.'
          write(vfile,'(100a13)') 'nviter','escape', 'odd/even', 'te','coe','rmajor', &
-            'powfmw','bt','tburn','sqsumsq', (lablxc(ixc(i)),i=1,nvar)
+            'fusion_power','bt','t_burn','sqsumsq', (lablxc(ixc(i)),i=1,nvar)
       end if
 
    end subroutine init

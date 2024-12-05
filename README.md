@@ -1,14 +1,17 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8338226.svg)](https://doi.org/10.5281/zenodo.8338226)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8338226.svg)](https://doi.org/10.5281/zenodo.8338226) [![codecov](https://codecov.io/gh/ukaea/process/graph/badge.svg?token=F94XDNUIX0)](https://codecov.io/gh/ukaea/process)
 
 # PROCESS
+
+**Here are the [PROCESS docs](https://ukaea.github.io/PROCESS/).**
+
 PROCESS is the reactor systems code at the [UK Atomic Energy Authority](https://ccfe.ukaea.uk/). More information on PROCESS can be found on the PROCESS [webpage](https://ccfe.ukaea.uk/resources/process/).
 
 PROCESS was originally a Fortran code, but is currently a mixture of Python and Python-wrapped Fortran; the eventual aim is to have an entirely Python code base. In order to use PROCESS, the Fortran must be compiled and a Python-Fortran interface generated for the Python to import. Once built, it can be installed and run as a Python package.
 
 
 
-![BlenderImage](<documentation/proc-pages/images/blender images/initial_collage.png>)
-<center>Split view of DEMO-like reactor (generated using fusrr-pipeline).</center>
+![Blender_and_output](./documentation/proc-pages/images/README_image.PNG)
+<center>Overview of some outputs for a DEMO-like reactor (3D image generated using Fusrr-pipeline).</center>
 
 
 ## Getting Started

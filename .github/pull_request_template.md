@@ -6,6 +6,7 @@
 
 I confirm that I have completed the following checks:
 
+- [ ] My changes follow the [PROCESS style guide](https://ukaea.github.io/PROCESS/development/standards/)
 - [ ] I have justified any large differences in the regression tests caused by this pull request in the comments.
 - [ ] I have added new tests where appropriate for the changes I have made.
 - [ ] If I have had to change any existing unit or integration tests, I have justified this change in the pull request comments.

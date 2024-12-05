@@ -58,7 +58,7 @@ class CryoParam(NamedTuple):
 
     tfcryoarea: Any = None
 
-    tpulse: Any = None
+    t_pulse_repetition: Any = None
 
     expected_qss: Any = None
 
@@ -88,7 +88,7 @@ class CryoParam(NamedTuple):
             ptfnuc=0.044178296011112193,
             n_tf=16,
             tfcryoarea=0,
-            tpulse=10364.426139387357,
+            t_pulse_repetition=10364.426139387357,
             expected_qss=20361.633927097802,
             expected_qac=3611.3456752656607,
             expected_qcl=16108.2211128,
@@ -109,7 +109,7 @@ class CryoParam(NamedTuple):
             ptfnuc=0.045535131445547841,
             n_tf=16,
             tfcryoarea=0,
-            tpulse=364.42613938735633,
+            t_pulse_repetition=364.42613938735633,
             expected_qss=20342.863776957758,
             expected_qac=102701.82327748176,
             expected_qcl=16108.2211128,
@@ -151,7 +151,7 @@ def test_cryo(cryoparam, monkeypatch, power):
         ptfnuc=cryoparam.ptfnuc,
         n_tf=cryoparam.n_tf,
         tfcryoarea=cryoparam.tfcryoarea,
-        tpulse=cryoparam.tpulse,
+        t_pulse_repetition=cryoparam.t_pulse_repetition,
     )
 
     assert power.qss == pytest.approx(cryoparam.expected_qss)
@@ -235,7 +235,7 @@ class PfpwrParam(NamedTuple):
 
     timelabel: Any = None
 
-    tohs: Any = None
+    t_current_ramp_up: Any = None
 
     outfile: Any = None
 
@@ -969,11 +969,11 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             intervallabel=(
-                "tramp      ",
-                "tohs       ",
+                "t_precharge      ",
+                "t_current_ramp_up       ",
                 "t_fusion_ramp      ",
-                "tburn      ",
-                "tqnch      ",
+                "t_burn      ",
+                "t_ramp_down      ",
             ),
             timelabel=(
                 "Start      ",
@@ -983,7 +983,7 @@ class PfpwrParam(NamedTuple):
                 "EOF        ",
                 "EOP        ",
             ),
-            tohs=177.21306969367816,
+            t_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
             expected_peakmva=736.39062584245937,
@@ -1711,11 +1711,11 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             intervallabel=(
-                "tramp      ",
-                "tohs       ",
+                "t_precharge      ",
+                "t_current_ramp_up       ",
                 "t_fusion_ramp      ",
-                "tburn      ",
-                "tqnch      ",
+                "t_burn      ",
+                "t_ramp_down      ",
             ),
             timelabel=(
                 "Start      ",
@@ -1725,7 +1725,7 @@ class PfpwrParam(NamedTuple):
                 "EOF        ",
                 "EOP        ",
             ),
-            tohs=177.21306969367816,
+            t_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
             expected_peakmva=90.673341440806112,
@@ -1834,7 +1834,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(times_variables, "tim", pfpwrparam.tim)
 
-    monkeypatch.setattr(times_variables, "tohs", pfpwrparam.tohs)
+    monkeypatch.setattr(
+        times_variables, "t_current_ramp_up", pfpwrparam.t_current_ramp_up
+    )
 
     power.pfpwr(output=False)
 
@@ -2117,7 +2119,7 @@ class Power2Param(NamedTuple):
 
     pfwpmw: Any = None
 
-    palpmw: Any = None
+    alpha_power_total: Any = None
 
     ignite: Any = None
 
@@ -2137,13 +2139,13 @@ class Power2Param(NamedTuple):
 
     iradloss: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
-    pchargemw: Any = None
+    non_alpha_charged_power: Any = None
 
     pscalingmw: Any = None
 
-    falpha: Any = None
+    f_alpha_plasma: Any = None
 
     ppump: Any = None
 
@@ -2266,7 +2268,7 @@ class Power2Param(NamedTuple):
             htpsecmw=30.457120415306122,
             helpow_cryal=0,
             pfwpmw=0.89998039031509891,
-            palpmw=396.66154806848488,
+            alpha_power_total=396.66154806848488,
             ignite=0,
             pinnerzoneradmw=113.53817859231452,
             pradmw=287.99550050743289,
@@ -2276,10 +2278,10 @@ class Power2Param(NamedTuple):
             idivrt=1,
             pohmmw=0.61391840981850698,
             iradloss=1,
-            powfmw=1985.785106643267,
-            pchargemw=1.6064693283140403,
+            fusion_power=1985.785106643267,
+            non_alpha_charged_power=1.6064693283140403,
             pscalingmw=325.08626176539281,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             ppump=0,
             i_tf_sup=1,
             tfcmw=0,
@@ -2368,7 +2370,7 @@ class Power2Param(NamedTuple):
             htpsecmw=30.448114159579291,
             helpow_cryal=0,
             pfwpmw=0.068213156646500808,
-            palpmw=396.53774329057228,
+            alpha_power_total=396.53774329057228,
             ignite=0,
             pinnerzoneradmw=113.53817859231452,
             pradmw=287.99550050743289,
@@ -2378,10 +2380,10 @@ class Power2Param(NamedTuple):
             idivrt=1,
             pohmmw=0.61391840981850698,
             iradloss=1,
-            powfmw=1985.1653095257811,
-            pchargemw=1.6059679220663614,
+            fusion_power=1985.1653095257811,
+            non_alpha_charged_power=1.6059679220663614,
             pscalingmw=325.00280675287695,
-            falpha=0.94999999999999996,
+            f_alpha_plasma=0.94999999999999996,
             ppump=0,
             i_tf_sup=1,
             tfcmw=0,
@@ -2542,7 +2544,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "pfwpmw", power2param.pfwpmw)
 
-    monkeypatch.setattr(physics_variables, "palpmw", power2param.palpmw)
+    monkeypatch.setattr(
+        physics_variables, "alpha_power_total", power2param.alpha_power_total
+    )
 
     monkeypatch.setattr(physics_variables, "ignite", power2param.ignite)
 
@@ -2564,13 +2568,17 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "iradloss", power2param.iradloss)
 
-    monkeypatch.setattr(physics_variables, "powfmw", power2param.powfmw)
+    monkeypatch.setattr(physics_variables, "fusion_power", power2param.fusion_power)
 
-    monkeypatch.setattr(physics_variables, "pchargemw", power2param.pchargemw)
+    monkeypatch.setattr(
+        physics_variables,
+        "non_alpha_charged_power",
+        power2param.non_alpha_charged_power,
+    )
 
     monkeypatch.setattr(physics_variables, "pscalingmw", power2param.pscalingmw)
 
-    monkeypatch.setattr(physics_variables, "falpha", power2param.falpha)
+    monkeypatch.setattr(physics_variables, "f_alpha_plasma", power2param.f_alpha_plasma)
 
     monkeypatch.setattr(tfcoil_variables, "ppump", power2param.ppump)
 
@@ -2665,17 +2673,17 @@ class Power3Param(NamedTuple):
 
     poloidalpower: Any = None
 
-    tramp: Any = None
+    t_precharge: Any = None
 
-    tburn: Any = None
+    t_burn: Any = None
 
     t_fusion_ramp: Any = None
 
-    tdwell: Any = None
+    t_between_pulse: Any = None
 
-    tqnch: Any = None
+    t_ramp_down: Any = None
 
-    tohs: Any = None
+    t_current_ramp_up: Any = None
 
     outfile: Any = None
 
@@ -2703,12 +2711,12 @@ class Power3Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            tramp=500,
-            tburn=0,
+            t_precharge=500,
+            t_burn=0,
             t_fusion_ramp=10,
-            tdwell=0,
-            tqnch=177.21306969367816,
-            tohs=177.21306969367816,
+            t_between_pulse=0,
+            t_ramp_down=177.21306969367816,
+            t_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
         ),
@@ -2736,12 +2744,12 @@ class Power3Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            tramp=500,
-            tburn=10230.533336387543,
+            t_precharge=500,
+            t_burn=10230.533336387543,
             t_fusion_ramp=10,
-            tdwell=0,
-            tqnch=177.21306969367816,
-            tohs=177.21306969367816,
+            t_between_pulse=0,
+            t_ramp_down=177.21306969367816,
+            t_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
         ),
@@ -2782,16 +2790,18 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(pf_power_variables, "poloidalpower", power3param.poloidalpower)
 
-    monkeypatch.setattr(times_variables, "tramp", power3param.tramp)
+    monkeypatch.setattr(times_variables, "t_precharge", power3param.t_precharge)
 
-    monkeypatch.setattr(times_variables, "tburn", power3param.tburn)
+    monkeypatch.setattr(times_variables, "t_burn", power3param.t_burn)
 
     monkeypatch.setattr(times_variables, "t_fusion_ramp", power3param.t_fusion_ramp)
 
-    monkeypatch.setattr(times_variables, "tdwell", power3param.tdwell)
+    monkeypatch.setattr(times_variables, "t_between_pulse", power3param.t_between_pulse)
 
-    monkeypatch.setattr(times_variables, "tqnch", power3param.tqnch)
+    monkeypatch.setattr(times_variables, "t_ramp_down", power3param.t_ramp_down)
 
-    monkeypatch.setattr(times_variables, "tohs", power3param.tohs)
+    monkeypatch.setattr(
+        times_variables, "t_current_ramp_up", power3param.t_current_ramp_up
+    )
 
     power.power3(output=False)

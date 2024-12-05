@@ -1,11 +1,24 @@
 import pytest
-from process.fortran import physics_variables as pv
-from process.fortran import fwbs_variables as fwbs
-from process.fortran import build_variables as bv
-from process.fortran import blanket_library as bl
+from process.fortran import (
+    physics_variables as pv,
+    fwbs_variables as fwbs,
+    build_variables as bv,
+)
+from process.blanket_library import BlanketLibrary
+from process.fw import Fw
 
 
-def test_hydraulic_diameter(monkeypatch):
+@pytest.fixture
+def blanket_library_fixture():
+    """Provides BlanketLibrary object for testing.
+
+    :returns: initialised BlanketLibrary object
+    :rtype: process.blanket_library.BlanketLibrary
+    """
+    return BlanketLibrary(Fw())
+
+
+def test_hydraulic_diameter(monkeypatch, blanket_library_fixture):
     """
     Test for hydraulic_diameter function.
     """
@@ -15,24 +28,38 @@ def test_hydraulic_diameter(monkeypatch):
     monkeypatch.setattr(fwbs, "b_bz_liq", 1.0)
 
     # hydraulic_diameter input = i_channel_shape: 1 = circle, 2 = rectangle
-    assert bl.hydraulic_diameter(1) == 2.0  # 2.0D0*afw
-    assert bl.hydraulic_diameter(2) == 1.0  # 2*a_bz_liq*b_bz_liq/(a_bz_liq+b_bz_liq)
+    assert blanket_library_fixture.hydraulic_diameter(1) == 2.0  # 2.0D0*afw
+    assert (
+        blanket_library_fixture.hydraulic_diameter(2) == 1.0
+    )  # 2*a_bz_liq*b_bz_liq/(a_bz_liq+b_bz_liq)
 
 
-def test_elbow_coeff():
+def test_elbow_coeff(blanket_library_fixture):
     """
     Test for elbow_coeff function.
     """
     # input = r_elbow, ang_elbow, lambda, dh
-    assert bl.elbow_coeff(1, 0, 1, 1) == pytest.approx(0.0, rel=1e-3)
-    assert bl.elbow_coeff(1, 90, 1, 1) == pytest.approx(1.785, rel=1e-3)
-    assert bl.elbow_coeff(1, 180, 1, 1) == pytest.approx(3.3, rel=1e-3)
-    assert bl.elbow_coeff(1, 90, 1, 0.1) == pytest.approx(15.816, rel=1e-3)
-    assert bl.elbow_coeff(0.1, 90, 1, 1) == pytest.approx(66.57, rel=1e-3)
-    assert bl.elbow_coeff(1, 90, 0.1, 1) == pytest.approx(0.3675, rel=1e-3)
+    assert blanket_library_fixture.elbow_coeff(1, 0, 1, 1) == pytest.approx(
+        0.0, rel=1e-3
+    )
+    assert blanket_library_fixture.elbow_coeff(1, 90, 1, 1) == pytest.approx(
+        1.785, rel=1e-3
+    )
+    assert blanket_library_fixture.elbow_coeff(1, 180, 1, 1) == pytest.approx(
+        3.3, rel=1e-3
+    )
+    assert blanket_library_fixture.elbow_coeff(1, 90, 1, 0.1) == pytest.approx(
+        15.816, rel=1e-3
+    )
+    assert blanket_library_fixture.elbow_coeff(0.1, 90, 1, 1) == pytest.approx(
+        66.57, rel=1e-3
+    )
+    assert blanket_library_fixture.elbow_coeff(1, 90, 0.1, 1) == pytest.approx(
+        0.3675, rel=1e-3
+    )
 
 
-def test_flow_velocity(monkeypatch):
+def test_flow_velocity(monkeypatch, blanket_library_fixture):
     """
     Test for flow_velocity function.
     """
@@ -42,13 +69,15 @@ def test_flow_velocity(monkeypatch):
     monkeypatch.setattr(fwbs, "b_bz_liq", 1.0)
 
     # input = i_channel_shape, mass_flow_rate, flow_density
-    assert bl.flow_velocity(1, 1, 1) == pytest.approx(0.318, rel=1e-3)
-    assert bl.flow_velocity(2, 1, 1) == 1.0
-    assert bl.flow_velocity(1, 0, 1) == 0.0
-    assert bl.flow_velocity(2, 0, 1) == 0.0
+    assert blanket_library_fixture.flow_velocity(1, 1, 1) == pytest.approx(
+        0.318, rel=1e-3
+    )
+    assert blanket_library_fixture.flow_velocity(2, 1, 1) == 1.0
+    assert blanket_library_fixture.flow_velocity(1, 0, 1) == 0.0
+    assert blanket_library_fixture.flow_velocity(2, 0, 1) == 0.0
 
 
-def test_liquid_breeder_properties_part_1(monkeypatch):
+def test_liquid_breeder_properties_part_1(monkeypatch, blanket_library_fixture):
     """
     Test for liquid_breeder_properties procedure.
     PbLi or Li, with inboard blanket, no inlet/outlet temp difference.
@@ -66,8 +95,8 @@ def test_liquid_breeder_properties_part_1(monkeypatch):
 
     # PbLi - see [Fer2020] for relavent equations
     monkeypatch.setattr(fwbs, "i_bb_liq", 0)
-    # input = ip, ofile
-    bl.liquid_breeder_properties(0, 0)
+
+    blanket_library_fixture.liquid_breeder_properties()
 
     assert pytest.approx(fwbs.den_liq, rel=1e-3) == 1.052e4
     assert pytest.approx(fwbs.specific_heat_liq, rel=1e-3) == 195.0
@@ -80,8 +109,8 @@ def test_liquid_breeder_properties_part_1(monkeypatch):
 
     # Li - see [Lyublinski et al., 2009] for relavent equations
     monkeypatch.setattr(fwbs, "i_bb_liq", 1)
-    # input = ip, ofile
-    bl.liquid_breeder_properties(0, 0)
+
+    blanket_library_fixture.liquid_breeder_properties()
 
     assert pytest.approx(fwbs.den_liq, rel=1e-3) == 504.0
     assert pytest.approx(fwbs.specific_heat_liq, rel=1e-3) == 2.833e6
@@ -94,7 +123,7 @@ def test_liquid_breeder_properties_part_1(monkeypatch):
     # hartmann_liq = b_mag_blkt * a_bz_liq/2.0D0 * sqrt(con_vsc_rat)
 
 
-def test_liquid_breeder_properties_part_2(monkeypatch):
+def test_liquid_breeder_properties_part_2(monkeypatch, blanket_library_fixture):
     """
     Test for liquid_breeder_properties procedure. No inboard blanket.
     """
@@ -110,13 +139,12 @@ def test_liquid_breeder_properties_part_2(monkeypatch):
     monkeypatch.setattr(fwbs, "inlet_temp_liq", 0.0)
     monkeypatch.setattr(fwbs, "outlet_temp_liq", 0.0)
 
-    # input = ip, ofile
-    bl.liquid_breeder_properties(0, 0)
+    blanket_library_fixture.liquid_breeder_properties()
 
     assert pytest.approx(fwbs.b_mag_blkt, rel=1e-3) == (8.999, 4.458)
 
 
-def test_liquid_breeder_properties_part_3(monkeypatch):
+def test_liquid_breeder_properties_part_3(monkeypatch, blanket_library_fixture):
     """
     Test for liquid_breeder_properties procedure.
     With inlet/outlet temp difference.
@@ -134,17 +162,17 @@ def test_liquid_breeder_properties_part_3(monkeypatch):
 
     # PbLi - see [Fer2020] for relavent equations
     monkeypatch.setattr(fwbs, "i_bb_liq", 0)
-    # input = ip, ofile
-    bl.liquid_breeder_properties(0, 0)
+
+    blanket_library_fixture.liquid_breeder_properties()
     assert pytest.approx(fwbs.den_liq, rel=1e-3) == 1.052e4
     # Li - see [Lyublinski et al., 2009] for relavent equations
     monkeypatch.setattr(fwbs, "i_bb_liq", 1)
-    # input = ip, ofile
-    bl.liquid_breeder_properties(0, 0)
+
+    blanket_library_fixture.liquid_breeder_properties()
     assert pytest.approx(fwbs.den_liq, rel=1e-3) == 504.0
 
 
-def test_pressure_drop(monkeypatch):
+def test_pressure_drop(monkeypatch, blanket_library_fixture):
     """
     Test for pressure_drop function.
     """
@@ -156,8 +184,8 @@ def test_pressure_drop(monkeypatch):
     monkeypatch.setattr(fwbs, "roughness", 1.0e-6)
 
     # input = ip, ofile, i_ps, num_90, num_180, l_pipe, den, vsc, vv, label
-    assert bl.pressure_drop(
-        0, 0, 2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, "label"
+    assert blanket_library_fixture.pressure_drop(
+        2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, "label"
     ) == pytest.approx(1.438, rel=1e-3)
 
 

@@ -198,7 +198,7 @@ def acc2273_param(**kwargs):
     """
     # Default parameters
     defaults = {
-        "ftrit": 0.0001,
+        "f_tritium": 0.0001,
         "volrci": fortran.buildings_variables.volrci,
         "wsvol": fortran.buildings_variables.wsvol,
         "expected": approx(0.0, abs=0.00001),
@@ -221,7 +221,7 @@ def acc2273_params():
     params = [
         acc2273_param(),
         acc2273_param(
-            ftrit=0.5,
+            f_tritium=0.5,
             volrci=1299783.4,
             wsvol=132304.1,
             expected=approx(74.12, abs=0.01),
@@ -248,7 +248,7 @@ def acc2273_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(fortran.buildings_variables, "wsvol", param["wsvol"])
     monkeypatch.setattr(fortran.buildings_variables, "volrci", param["volrci"])
-    monkeypatch.setattr(fortran.physics_variables, "ftrit", param["ftrit"])
+    monkeypatch.setattr(fortran.physics_variables, "f_tritium", param["f_tritium"])
 
     # Mock result var as negative, as an expected result is 0
     # Otherwise could get false positive result
@@ -612,7 +612,7 @@ def acc26_param(**kwargs):
     # Default parameters
     defaults = {
         "ireactor": 0,
-        "powfmw": 2000.0,
+        "fusion_power": 2000.0,
         "pinjwp": 250.0,
         "tfcmw": 50.0,
         "pthermmw": htv.pthermmw,
@@ -638,7 +638,7 @@ def acc26_params():
         acc26_param(),
         acc26_param(
             ireactor=1,
-            powfmw=fortran.physics_variables.powfmw,
+            fusion_power=fortran.physics_variables.fusion_power,
             pinjwp=htv.pinjwp,
             tfcmw=fortran.tfcoil_variables.tfcmw,
             pthermmw=3000.0,
@@ -666,7 +666,9 @@ def acc26_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(cost_variables, "ireactor", param["ireactor"])
-    monkeypatch.setattr(fortran.physics_variables, "powfmw", param["powfmw"])
+    monkeypatch.setattr(
+        fortran.physics_variables, "fusion_power", param["fusion_power"]
+    )
     monkeypatch.setattr(htv, "pinjwp", param["pinjwp"])
     monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(htv, "pthermmw", param["pthermmw"])
@@ -1765,6 +1767,10 @@ class Acc2221Param(NamedTuple):
 
     i_tf_sup: Any = None
 
+    supercond_cost_model: Any = None
+
+    j_crit_str_tf: Any = None
+
     n_tf_turn: Any = None
 
     tfleng: Any = None
@@ -1819,6 +1825,8 @@ class Acc2221Param(NamedTuple):
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
+            supercond_cost_model=0,
+            j_crit_str_tf=300.0,
             n_tf_turn=200,
             tfleng=50.483843027201402,
             i_tf_sc_mat=5,
@@ -1858,6 +1866,8 @@ class Acc2221Param(NamedTuple):
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
+            supercond_cost_model=0,
+            j_crit_str_tf=300.0,
             n_tf_turn=200,
             tfleng=50.514015976170839,
             i_tf_sc_mat=5,
@@ -1869,6 +1879,47 @@ class Acc2221Param(NamedTuple):
             c22214=172.4182702723208,
             c22215=57.77719854752457,
             expected_c22211=127.87250498362496,
+            expected_c22212=65.563151615791654,
+        ),
+        Acc2221Param(
+            uccpclb=150,
+            uccase=50,
+            uccu=75,
+            fkind=1,
+            cconshtf=75,
+            ucsc=numpy.array(
+                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+                order="F",
+            ).transpose(),
+            ifueltyp=1,
+            uccpcl1=250,
+            ucwindtf=480,
+            cpstcst=0,
+            lsa=2,
+            cconfix=80,
+            itart=0,
+            clgsmass=1951781.4798732549,
+            aintmass=5829865.436088616,
+            whtconcu=58779.575542593491,
+            whtconsc=5806.038092640837,
+            whtcas=1034699.2182961091,
+            n_tf=16,
+            whttflgs=0,
+            whtcp=0,
+            i_tf_sup=1,
+            supercond_cost_model=1,
+            j_crit_str_tf=300.0,
+            n_tf_turn=200,
+            tfleng=50.514015976170839,
+            i_tf_sc_mat=5,
+            c22=3474.7391916096453,
+            c2221=1122.5144544988982,
+            c22211=127.79612438919186,
+            c22212=65.523989541865234,
+            c22213=698.99887174799562,
+            c22214=172.4182702723208,
+            c22215=57.77719854752457,
+            expected_c22211=1462760.833721748,
             expected_c22212=65.563151615791654,
         ),
     ),
@@ -1930,6 +1981,12 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", acc2221param.i_tf_sup)
 
+    monkeypatch.setattr(
+        cost_variables, "supercond_cost_model", acc2221param.supercond_cost_model
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "j_crit_str_tf", acc2221param.j_crit_str_tf)
+
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", acc2221param.n_tf_turn)
 
     monkeypatch.setattr(tfcoil_variables, "tfleng", acc2221param.tfleng)
@@ -1979,6 +2036,12 @@ class Acc2222Param(NamedTuple):
     fkind: Any = None
 
     rjconpf: Any = None
+
+    supercond_cost_model: Any = None
+
+    j_crit_str_cs: Any = None
+
+    j_crit_str_pf: Any = None
 
     ipfres: Any = None
 
@@ -2080,6 +2143,9 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
+            supercond_cost_model=0,
+            j_crit_str_cs=100.0,
+            j_crit_str_pf=200.0,
             ipfres=0,
             vfohc=0.29999999999999999,
             nohc=7,
@@ -2273,6 +2339,9 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
+            supercond_cost_model=0,
+            j_crit_str_cs=100.0,
+            j_crit_str_pf=200.0,
             ipfres=0,
             vfohc=0.29999999999999999,
             nohc=7,
@@ -2422,6 +2491,202 @@ class Acc2222Param(NamedTuple):
             expected_c22223=106.06545230249935,
             expected_c22224=9.1894413521392071,
         ),
+        Acc2222Param(
+            iohcl=1,
+            uccase=50,
+            uccu=75,
+            cconshpf=70,
+            ucfnc=35,
+            cconfix=80,
+            ucsc=numpy.array(
+                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+                order="F",
+            ).transpose(),
+            ucwindpf=465,
+            lsa=2,
+            fkind=1,
+            rjconpf=numpy.array(
+                numpy.array(
+                    (
+                        11000000,
+                        11000000,
+                        6000000,
+                        6000000,
+                        8000000,
+                        8000000,
+                        8000000,
+                        8000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                        30000000,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            supercond_cost_model=1,
+            j_crit_str_cs=100.0,
+            j_crit_str_pf=200.0,
+            ipfres=0,
+            vfohc=0.29999999999999999,
+            nohc=7,
+            turns=numpy.array(
+                numpy.array(
+                    (
+                        440.26292595093469,
+                        525.4843415877815,
+                        192.44107218389988,
+                        192.44107218389988,
+                        129.65302435274731,
+                        129.65302435274731,
+                        4348.5468837135222,
+                        1,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                        100,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            isumatpf=3,
+            whtpfs=2510424.9065680322,
+            ric=numpy.array(
+                numpy.array(
+                    (
+                        18.579095475129446,
+                        22.175439215004378,
+                        -8.1210132461605742,
+                        -8.1210132461605742,
+                        -5.575080047168135,
+                        -5.575080047168135,
+                        -186.98751599968145,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            rpf=numpy.array(
+                numpy.array(
+                    (
+                        6.2732560483870969,
+                        6.2732560483870969,
+                        18.401280308184159,
+                        18.401280308184159,
+                        16.803394770584916,
+                        16.803394770584916,
+                        2.6084100000000001,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            isumatoh=5,
+            fcupfsu=0.68999999999999995,
+            fcuohsu=0.70000000000000007,
+            vf=numpy.array(
+                numpy.array(
+                    (
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                        0.29999999999999999,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            awpoh=3.8004675824985918,
+            fncmass=310716.52923547616,
+            dcond=numpy.array(
+                numpy.array(
+                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            c22=3474.7391916096453,
+            c2222=626.57984594974835,
+            c22221=434.46640986938519,
+            c22222=69.02908267696219,
+            c22223=113.89491205126185,
+            c22224=9.1894413521392071,
+            expected_c2222=2271626.1414324627,
+            expected_c22221=2271439.6839775303,
+            expected_c22222=71.202561277966055,
+            expected_c22223=106.06545230249935,
+            expected_c22224=9.1894413521392071,
+        ),
     ),
 )
 def test_acc2222(acc2222param, monkeypatch, costs):
@@ -2458,6 +2723,14 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "fkind", acc2222param.fkind)
 
     monkeypatch.setattr(pfcoil_variables, "rjconpf", acc2222param.rjconpf)
+
+    monkeypatch.setattr(
+        cost_variables, "supercond_cost_model", acc2222param.supercond_cost_model
+    )
+
+    monkeypatch.setattr(pfcoil_variables, "j_crit_str_cs", acc2222param.j_crit_str_cs)
+
+    monkeypatch.setattr(pfcoil_variables, "j_crit_str_pf", acc2222param.j_crit_str_pf)
 
     monkeypatch.setattr(pfcoil_variables, "ipfres", acc2222param.ipfres)
 
@@ -4120,7 +4393,7 @@ class Acc2273Param(NamedTuple):
 
     fkind: Any = None
 
-    ftrit: Any = None
+    f_tritium: Any = None
 
     c227: Any = None
 
@@ -4138,7 +4411,7 @@ class Acc2273Param(NamedTuple):
             wsvol=130018.25667917728,
             volrci=1205439.8543893537,
             fkind=1,
-            ftrit=0.5,
+            f_tritium=0.5,
             c227=0,
             c2273=0,
             c22=0,
@@ -4148,7 +4421,7 @@ class Acc2273Param(NamedTuple):
             wsvol=130255.93791329287,
             volrci=1206887.4047542624,
             fkind=1,
-            ftrit=0.5,
+            f_tritium=0.5,
             c227=284.96904049038437,
             c2273=69.115208498727412,
             c22=3474.7391916096453,
@@ -4175,7 +4448,7 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2273param.fkind)
 
-    monkeypatch.setattr(physics_variables, "ftrit", acc2273param.ftrit)
+    monkeypatch.setattr(physics_variables, "f_tritium", acc2273param.f_tritium)
 
     monkeypatch.setattr(costs, "c227", acc2273param.c227)
 
@@ -4850,7 +5123,7 @@ class Acc26Param(NamedTuple):
 
     pgrossmw: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
     tfcmw: Any = None
 
@@ -4869,7 +5142,7 @@ class Acc26Param(NamedTuple):
             pthermmw=2620.2218111502593,
             pinjwp=129.94611930107126,
             pgrossmw=982.58317918134742,
-            powfmw=1985.785106643267,
+            fusion_power=1985.785106643267,
             tfcmw=0,
             c26=0,
             expected_c26=56.327648771765475,
@@ -4881,7 +5154,7 @@ class Acc26Param(NamedTuple):
             pthermmw=2619.4223856129224,
             pinjwp=129.94611930107126,
             pgrossmw=982.28339460484608,
-            powfmw=1985.1653095257811,
+            fusion_power=1985.1653095257811,
             tfcmw=0,
             c26=56.327648771765475,
             expected_c26=56.310463295064743,
@@ -4913,7 +5186,7 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pgrossmw", acc26param.pgrossmw)
 
-    monkeypatch.setattr(physics_variables, "powfmw", acc26param.powfmw)
+    monkeypatch.setattr(physics_variables, "fusion_power", acc26param.fusion_power)
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc26param.tfcmw)
 
@@ -5155,15 +5428,21 @@ class CoelcParam(NamedTuple):
 
     divlife: Any = None
 
+    divlife_cal: Any = None
+
     coefuelt: Any = None
 
     moneyint: Any = None
 
     cdrlife: Any = None
 
+    cdrlife_cal: Any = None
+
     capcost: Any = None
 
     cplife: Any = None
+
+    cplife_cal: Any = None
 
     fwallcst: Any = None
 
@@ -5195,6 +5474,8 @@ class CoelcParam(NamedTuple):
 
     bktlife: Any = None
 
+    bktlife_cal: Any = None
+
     uctarg: Any = None
 
     ife: Any = None
@@ -5207,11 +5488,11 @@ class CoelcParam(NamedTuple):
 
     wtgpd: Any = None
 
-    fhe3: Any = None
+    f_helium3: Any = None
 
-    tcycle: Any = None
+    t_cycle: Any = None
 
-    tburn: Any = None
+    t_burn: Any = None
 
     outfile: Any = None
 
@@ -5246,11 +5527,14 @@ class CoelcParam(NamedTuple):
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             divlife=6.1337250397740126,
+            divlife_cal=6.1337250397740126,
             coefuelt=0,
             moneyint=0,
             cdrlife=19.216116010620578,
+            cdrlife_cal=19.216116010620578,
             capcost=0,
             cplife=0,
+            cplife_cal=0,
             fwallcst=143.19827300247195,
             fcr0=0.065000000000000016,
             discount_rate=0.060000000000000012,
@@ -5294,20 +5578,21 @@ class CoelcParam(NamedTuple):
                 order="F",
             ).transpose(),
             bktlife=19.216116010620578,
+            bktlife_cal=19.216116010620578,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
             pnetelmw=493.01760776192009,
             itart=0,
             wtgpd=507.88376577416528,
-            fhe3=0,
-            tcycle=10864.426139387357,
-            tburn=0,
+            f_helium3=0,
+            t_cycle=10864.426139387357,
+            t_burn=0,
             outfile=11,
             expected_coeoam=4.4099029328740929e20,
             expected_coecap=4.9891775218979061e21,
-            expected_coe=6.9525339143363677e21,
-            expected_coefuelt=1.4801870771036603e21,
+            expected_coe=6.95253391e21,
+            expected_coefuelt=1.48018708e21,
             expected_moneyint=1001.1727468691442,
             expected_capcost=7675.6577259967762,
         ),
@@ -5326,11 +5611,14 @@ class CoelcParam(NamedTuple):
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             divlife=6.145510750914414,
+            divlife_cal=6.145510750914414,
             coefuelt=1.4801870771036603e21,
             moneyint=1001.1727468691442,
             cdrlife=19.222115557991025,
+            cdrlife_cal=19.222115557991025,
             capcost=7675.6577259967762,
             cplife=0,
+            cplife_cal=0,
             fwallcst=167.7865317453867,
             fcr0=0.065000000000000016,
             discount_rate=0.060000000000000012,
@@ -5374,20 +5662,21 @@ class CoelcParam(NamedTuple):
                 order="F",
             ).transpose(),
             bktlife=19.222115557991025,
+            bktlife_cal=19.222115557991025,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
             pnetelmw=422.4198205312706,
             itart=0,
             wtgpd=507.72524666099866,
-            fhe3=0,
-            tcycle=864.42613938735622,
-            tburn=10230.533336387549,
+            f_helium3=0,
+            t_cycle=864.42613938735622,
+            t_burn=10230.533336387549,
             outfile=11,
             expected_coeoam=1.2419424614419636,
             expected_coecap=15.547404530833255,
-            expected_coe=21.504209731681467,
-            expected_coefuelt=4.5834233757821812,
+            expected_coe=21.50420973,
+            expected_coefuelt=4.58342338,
             expected_moneyint=1025.4310038198375,
             expected_capcost=7861.6376959520912,
         ),
@@ -5434,15 +5723,21 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "divlife", coelcparam.divlife)
 
+    monkeypatch.setattr(cost_variables, "divlife_cal", coelcparam.divlife_cal)
+
     monkeypatch.setattr(cost_variables, "coefuelt", coelcparam.coefuelt)
 
     monkeypatch.setattr(cost_variables, "moneyint", coelcparam.moneyint)
 
     monkeypatch.setattr(cost_variables, "cdrlife", coelcparam.cdrlife)
 
+    monkeypatch.setattr(cost_variables, "cdrlife_cal", coelcparam.cdrlife_cal)
+
     monkeypatch.setattr(cost_variables, "capcost", coelcparam.capcost)
 
     monkeypatch.setattr(cost_variables, "cplife", coelcparam.cplife)
+
+    monkeypatch.setattr(cost_variables, "cplife_cal", coelcparam.cplife_cal)
 
     monkeypatch.setattr(cost_variables, "fwallcst", coelcparam.fwallcst)
 
@@ -5474,6 +5769,8 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "bktlife", coelcparam.bktlife)
 
+    monkeypatch.setattr(fwbs_variables, "bktlife_cal", coelcparam.bktlife_cal)
+
     monkeypatch.setattr(ife_variables, "uctarg", coelcparam.uctarg)
 
     monkeypatch.setattr(ife_variables, "ife", coelcparam.ife)
@@ -5486,11 +5783,11 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "wtgpd", coelcparam.wtgpd)
 
-    monkeypatch.setattr(physics_variables, "fhe3", coelcparam.fhe3)
+    monkeypatch.setattr(physics_variables, "f_helium3", coelcparam.f_helium3)
 
-    monkeypatch.setattr(times_variables, "tcycle", coelcparam.tcycle)
+    monkeypatch.setattr(times_variables, "t_cycle", coelcparam.t_cycle)
 
-    monkeypatch.setattr(times_variables, "tburn", coelcparam.tburn)
+    monkeypatch.setattr(times_variables, "t_burn", coelcparam.t_burn)
 
     costs.coelc()
 

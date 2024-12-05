@@ -28,7 +28,7 @@ var_dicts = {
         description="TF coil thickness",
         units="m",
     ),
-    "powfmw": VariableMetadata(
+    "fusion_power": VariableMetadata(
         latex=r"$P_\mathrm{fus}$ [$MW$]", description="Fusion power", units="MW"
     ),
     "pinjemw": VariableMetadata(
@@ -161,7 +161,7 @@ var_dicts = {
     "f_tf_steel": VariableMetadata(
         latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units=""
     ),
-    "plascur/1d6": VariableMetadata(
+    "plasma_current_MA": VariableMetadata(
         latex=r"$I_{\mathrm{p}}$[$MA$]", description="Plasma current", units="MA"
     ),
     "n_cycle": VariableMetadata(
@@ -230,13 +230,13 @@ var_dicts = {
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
     "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
-    "faccd": VariableMetadata(
+    "aux_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
     ),
-    "facoh": VariableMetadata(
+    "inductive_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{CD,ind}}$", description="Inductive CD factor", units=""
     ),
-    "bootipf": VariableMetadata(
+    "bootstrap_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units=""
     ),
     "pdivt": VariableMetadata(
@@ -245,7 +245,7 @@ var_dicts = {
     "pradmw": VariableMetadata(
         latex=r"$P_{\mathrm{rad}}$ [$MW$]", description="Radiation power", units="MW"
     ),
-    "pdivtbt/qar": VariableMetadata(
+    "pdivtbt_over_qar": VariableMetadata(
         latex=r"$\frac{P_{\mathrm{sep}}B_T}{q_{95}AR_{\mathrm{maj}}}$ [$MWTm^{-1}$]",
         description="",
         units="MWTm^{-1}",
@@ -266,7 +266,7 @@ var_dicts = {
     "zeff": VariableMetadata(
         latex=r"$Z_{\mathrm{eff}}$", description="Effective charge", units=""
     ),
-    "tburn": VariableMetadata(
+    "t_burn": VariableMetadata(
         latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s"
     ),
     "vburn": VariableMetadata(
@@ -292,7 +292,7 @@ var_dicts = {
         description="Cross-sectional area of CS coil turns",
         units="m^2",
     ),
-    "tbrnmn": VariableMetadata(
+    "t_burn_min": VariableMetadata(
         latex=r"$t_{\mathrm{burn.min}}$[$s$]",
         description="Minimum burn time",
         units="s",
@@ -361,7 +361,7 @@ var_dicts = {
     "fimp(13)": VariableMetadata(
         latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
     ),
-    "pdivmax/rmajor": VariableMetadata(
+    "pdivmax_over_rmajor": VariableMetadata(
         latex=r"$P_{\mathrm{div}}/R_\mathrm{maj}$ [MW/m]",
         description="Divertor power per major radius",
         units="MW/m",

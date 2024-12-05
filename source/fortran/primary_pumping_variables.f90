@@ -34,6 +34,18 @@ module primary_pumping_variables
   real(dp) :: dp_he
   !! pressure drop in FW and blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
 
+  real(dp) :: dp_fw_blkt
+  !! pressure drop in FW and blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+
+  real(dp) :: dp_fw
+  !! pressure drop in FW coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+
+  real(dp) :: dp_blkt
+  !! pressure drop in blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+
+  real(dp) :: dp_liq
+  !! pressure drop in liquid metal blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+
   real(dp) :: htpmw_fw_blkt
   !! mechanical pumping power for FW and blanket including heat exchanger and
   !! pipes (`primary_pumping=3`) [MW]
@@ -51,6 +63,10 @@ module primary_pumping_variables
     t_out_bb = 773.13D0 ! K
     p_he = 8.0D6 ! Pa
     dp_he = 5.5D5 ! Pa
+    dp_fw_blkt = 1.5D5 ! Pa
+    dp_fw = 1.5D5 ! Pa
+    dp_blkt = 3.5D3 ! Pa
+    dp_liq = 1.0D7 ! Pa
     htpmw_fw_blkt = 0.0D0
 
   end subroutine init_primary_pumping_variables

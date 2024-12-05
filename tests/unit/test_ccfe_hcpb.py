@@ -15,6 +15,7 @@ from process.fortran import (
     current_drive_variables,
     heat_transport_variables,
     constraint_variables,
+    divertor_variables,
 )
 
 
@@ -73,7 +74,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     vffwo: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
     itart: Any = None
 
@@ -152,7 +153,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             denw=19250,
             vffwi=0,
             vffwo=0,
-            powfmw=1986.0623241661431,
+            fusion_power=1986.0623241661431,
             itart=0,
             whttf=19649856.627845347,
             whttflgs=0,
@@ -202,7 +203,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             denw=19250,
             vffwi=0.31415926535897931,
             vffwo=0.31415926535897931,
-            powfmw=1985.4423932312809,
+            fusion_power=1985.4423932312809,
             itart=0,
             whttf=19662548.210142396,
             whttflgs=0,
@@ -294,7 +295,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "vffwo", nuclearheatingmagnetsparam.vffwo)
 
-    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingmagnetsparam.powfmw)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingmagnetsparam.fusion_power
+    )
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingmagnetsparam.itart)
 
@@ -394,7 +397,7 @@ class NuclearHeatingFwParam(NamedTuple):
 
     fwmass: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
     fw_armour_u_nuc_heating: Any = None
 
@@ -409,7 +412,7 @@ class NuclearHeatingFwParam(NamedTuple):
         NuclearHeatingFwParam(
             pnucfw=0,
             fwmass=224802.80270851994,
-            powfmw=1986.0623241661431,
+            fusion_power=1986.0623241661431,
             fw_armour_u_nuc_heating=0,
             expected_pnucfw=279.04523551646628,
             expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
@@ -417,7 +420,7 @@ class NuclearHeatingFwParam(NamedTuple):
         NuclearHeatingFwParam(
             pnucfw=276.80690153753221,
             fwmass=182115.83467868491,
-            powfmw=1985.4423932312809,
+            fusion_power=1985.4423932312809,
             fw_armour_u_nuc_heating=6.2500000000000005e-07,
             expected_pnucfw=225.98781165610032,
             expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
@@ -441,7 +444,9 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(fwbs_variables, "fwmass", nuclearheatingfwparam.fwmass)
 
-    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingfwparam.powfmw)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingfwparam.fusion_power
+    )
 
     monkeypatch.setattr(
         ccfe_hcpb_module,
@@ -463,7 +468,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
 
     pnucblkt: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
     exp_blanket: Any = None
 
@@ -478,7 +483,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
         NuclearHeatingBlanketParam(
             whtblkt=3501027.3252278985,
             pnucblkt=0,
-            powfmw=1986.0623241661431,
+            fusion_power=1986.0623241661431,
             exp_blanket=0,
             expected_pnucblkt=1517.0907688379014,
             expected_exp_blanket=0.99982809071915879,
@@ -486,7 +491,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
         NuclearHeatingBlanketParam(
             whtblkt=3507503.3737008357,
             pnucblkt=1504.9215740808861,
-            powfmw=1985.4423932312809,
+            fusion_power=1985.4423932312809,
             exp_blanket=0.99982809071915879,
             expected_pnucblkt=1516.6213709741428,
             expected_exp_blanket=0.99983082524994527,
@@ -510,7 +515,9 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "pnucblkt", nuclearheatingblanketparam.pnucblkt)
 
-    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingblanketparam.powfmw)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingblanketparam.fusion_power
+    )
 
     monkeypatch.setattr(
         ccfe_hcpb_module, "exp_blanket", nuclearheatingblanketparam.exp_blanket
@@ -536,7 +543,7 @@ class NuclearHeatingShieldParam(NamedTuple):
 
     pnucshld: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
     itart: Any = None
 
@@ -567,7 +574,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shldoth=0.80000000000000004,
             whtshld=2294873.8131476045,
             pnucshld=0,
-            powfmw=1986.0623241661431,
+            fusion_power=1986.0623241661431,
             itart=0,
             shield_density=3119.9999999999995,
             x_blanket=2.3374537748527975,
@@ -584,7 +591,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shldoth=0.80000000000000004,
             whtshld=2297808.3935174854,
             pnucshld=1.3611259588044891,
-            powfmw=1985.4423932312809,
+            fusion_power=1985.4423932312809,
             itart=0,
             shield_density=3120,
             x_blanket=2.3374537748527979,
@@ -619,7 +626,9 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", nuclearheatingshieldparam.pnucshld)
 
-    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingshieldparam.powfmw)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingshieldparam.fusion_power
+    )
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingshieldparam.itart)
 
@@ -673,7 +682,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     idivrt: Any = None
 
-    powfmw: Any = None
+    fusion_power: Any = None
 
     ip: Any = None
 
@@ -688,7 +697,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             pnucdiv=0,
             pnuchcd=0,
             idivrt=1,
-            powfmw=1986.0623241661431,
+            fusion_power=1986.0623241661431,
             ip=0,
             expected_pnucdiv=182.71773382328519,
         ),
@@ -697,7 +706,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             pnucdiv=182.71773382328519,
             pnuchcd=0,
             idivrt=1,
-            powfmw=1985.4423932312809,
+            fusion_power=1985.4423932312809,
             ip=0,
             expected_pnucdiv=182.66070017727785,
         ),
@@ -724,7 +733,9 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
 
     monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
 
-    monkeypatch.setattr(physics_variables, "powfmw", nuclearheatingdivertorparam.powfmw)
+    monkeypatch.setattr(
+        physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power
+    )
 
     monkeypatch.setattr(ccfe_hcpb_module, "ip", nuclearheatingdivertorparam.ip)
 
@@ -1134,7 +1145,7 @@ def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
 class StTfCentrepostFastNeutFluxParam(NamedTuple):
     i_tf_sup: Any = None
 
-    pneutmw: Any = None
+    neutron_power_total: Any = None
 
     sh_width: Any = None
 
@@ -1148,14 +1159,14 @@ class StTfCentrepostFastNeutFluxParam(NamedTuple):
     (
         StTfCentrepostFastNeutFluxParam(
             i_tf_sup=1,
-            pneutmw=400.65875490746737,
+            neutron_power_total=400.65875490746737,
             sh_width=0.60000000000000009,
             rmajor=3,
             expected_neut_flux_cp=144701998710998.5,
         ),
         StTfCentrepostFastNeutFluxParam(
             i_tf_sup=1,
-            pneutmw=409.82485143909827,
+            neutron_power_total=409.82485143909827,
             sh_width=0.60000000000000009,
             rmajor=3,
             expected_neut_flux_cp=148012428028364.28,
@@ -1182,7 +1193,7 @@ def test_st_tf_centrepost_fast_neut_flux(
     )
 
     neut_flux_cp = ccfe_hcpb.st_tf_centrepost_fast_neut_flux(
-        pneutmw=sttfcentrepostfastneutfluxparam.pneutmw,
+        neutron_power_total=sttfcentrepostfastneutfluxparam.neutron_power_total,
         sh_width=sttfcentrepostfastneutfluxparam.sh_width,
         rmajor=sttfcentrepostfastneutfluxparam.rmajor,
     )
@@ -1345,3 +1356,334 @@ def test_tbr_shimwell(tbrshimwellparam, monkeypatch, ccfe_hcpb):
     )
 
     assert tbr == pytest.approx(tbrshimwellparam.expected_tbr)
+
+
+class ComponentMassesParam(NamedTuple):
+    divsur: Any = None
+    divclfr: Any = None
+    divplt: Any = None
+    fdiva: Any = None
+    divmas: Any = None
+    divdens: Any = None
+    rminor: Any = None
+    rmajor: Any = None
+    idivrt: Any = None
+    sarea: Any = None
+    blnkith: Any = None
+    blbuith: Any = None
+    blbmith: Any = None
+    blbpith: Any = None
+    blnkoth: Any = None
+    blbuoth: Any = None
+    blbmoth: Any = None
+    blbpoth: Any = None
+    fwareaib: Any = None
+    fwith: Any = None
+    fwareaob: Any = None
+    fwoth: Any = None
+    fwarea: Any = None
+    volblkt: Any = None
+    vfblkt: Any = None
+    whtblbe: Any = None
+    whtblss: Any = None
+    denstl: Any = None
+    whtblkt: Any = None
+    volshld: Any = None
+    vfshld: Any = None
+    coolmass: Any = None
+    fwclfr: Any = None
+    breeder_f: Any = None
+    breeder_multiplier: Any = None
+    whtbltibe12: Any = None
+    whtblli4sio4: Any = None
+    wtblli2o: Any = None
+    vfcblkt: Any = None
+    vfpblkt: Any = None
+    whtshld: Any = None
+    wpenshld: Any = None
+    fwmass: Any = None
+    fw_armour_vol: Any = None
+    fw_armour_thickness: Any = None
+    fw_armour_mass: Any = None
+    armour_fw_bl_mass: Any = None
+    volblkti: Any = None
+    volblkto: Any = None
+    iblnkith: Any = None
+    fblhebmi: Any = None
+    fblhebpi: Any = None
+    fblhebmo: Any = None
+    fblhebpo: Any = None
+    fblss: Any = None
+    fblbe: Any = None
+    whtblbreed: Any = None
+    densbreed: Any = None
+    fblbreed: Any = None
+    iblanket: Any = None
+    denw: Any = None
+    vffwi: Any = None
+    vffwo: Any = None
+    volfw: Any = None
+    fblss_ccfe: Any = None
+    fblli2sio4: Any = None
+    fbltibe12: Any = None
+    expected_divsur: Any = None
+    expected_divmas: Any = None
+    expected_whtblbe: Any = None
+    expected_whtblss: Any = None
+    expected_whtblkt: Any = None
+    expected_coolmass: Any = None
+    expected_fwclfr: Any = None
+    expected_whtbltibe12: Any = None
+    expected_whtblli4sio4: Any = None
+    expected_wtblli2o: Any = None
+    expected_whtshld: Any = None
+    expected_wpenshld: Any = None
+    expected_fwmass: Any = None
+    expected_fw_armour_vol: Any = None
+    expected_fw_armour_mass: Any = None
+    expected_armour_fw_bl_mass: Any = None
+    expected_fblss_ccfe: Any = None
+    expected_fblli2sio4: Any = None
+    expected_fbltibe12: Any = None
+
+
+@pytest.mark.parametrize(
+    "componentmassesparam",
+    (
+        ComponentMassesParam(
+            divsur=0,
+            divclfr=0.29999999999999999,
+            divplt=0.035000000000000003,
+            fdiva=1.1100000000000001,
+            divmas=0,
+            divdens=10000,
+            rminor=2.6666666666666665,
+            rmajor=8,
+            idivrt=1,
+            sarea=1173.8427771245592,
+            blnkith=0.70000000000000007,
+            blbuith=0.36499999999999999,
+            blbmith=0.17000000000000001,
+            blbpith=0.29999999999999999,
+            blnkoth=1,
+            blbuoth=0.46500000000000002,
+            blbmoth=0.27000000000000002,
+            blbpoth=0.34999999999999998,
+            fwareaib=505.96109565204046,
+            fwith=0.018000000000000002,
+            fwareaob=838.00728058362097,
+            fwoth=0.018000000000000002,
+            fwarea=1343.9683762356615,
+            volblkt=1182.5433772195902,
+            vfblkt=0.25,
+            whtblbe=0,
+            whtblss=0,
+            denstl=7800,
+            whtblkt=0,
+            volshld=783.69914576548854,
+            vfshld=0.60000000000000009,
+            coolmass=0,
+            fwclfr=0.14999999999999999,
+            breeder_f=0.5,
+            breeder_multiplier=0.75,
+            whtbltibe12=0,
+            whtblli4sio4=0,
+            wtblli2o=0,
+            vfcblkt=0.052949999999999997,
+            vfpblkt=0.10000000000000001,
+            whtshld=0,
+            wpenshld=0,
+            fwmass=0,
+            fw_armour_vol=0,
+            fw_armour_thickness=0.0050000000000000001,
+            fw_armour_mass=0,
+            armour_fw_bl_mass=0,
+            volblkti=315.83946385183026,
+            volblkto=866.70391336775992,
+            iblnkith=1,
+            fblhebmi=0.40000000000000002,
+            fblhebpi=0.65949999999999998,
+            fblhebmo=0.40000000000000002,
+            fblhebpo=0.67130000000000001,
+            fblss=0.097049999999999997,
+            fblbe=0.59999999999999998,
+            whtblbreed=0,
+            densbreed=0,
+            fblbreed=0.154,
+            iblanket=1,
+            denw=19250,
+            vffwi=0,
+            vffwo=0,
+            volfw=0,
+            fblss_ccfe=0,
+            fblli2sio4=0,
+            fbltibe12=0,
+            expected_divsur=148.78582807401261,
+            expected_divmas=36452.527878133093,
+            expected_whtblbe=1002205.5121936026,
+            expected_whtblss=895173.51112145756,
+            expected_whtblkt=2961668.0628126911,
+            expected_coolmass=1161.8025382862772,
+            expected_fwclfr=0,
+            expected_whtbltibe12=1002205.5121936026,
+            expected_whtblli4sio4=1064289.0394976311,
+            expected_wtblli2o=1064289.0394976311,
+            expected_whtshld=2445141.3347883238,
+            expected_wpenshld=2445141.3347883238,
+            expected_fwmass=188693.16002348688,
+            expected_fw_armour_vol=5.8692138856227967,
+            expected_fw_armour_mass=112982.36729823884,
+            expected_armour_fw_bl_mass=3263343.5901344167,
+            expected_fblss_ccfe=0.097049999999999997,
+            expected_fblli2sio4=0.375,
+            expected_fbltibe12=0.375,
+        ),
+    ),
+)
+def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
+    """
+    Automatically generated Regression Unit Test for component_masses.
+
+    This test was generated using data from tests/regression/input_files/large_tokamak_once_through.IN.DAT.
+
+    :param componentmassesparam: the data used to mock and assert in this test.
+    :type componentmassesparam: componentmassesparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+    monkeypatch.setattr(divertor_variables, "divsur", componentmassesparam.divsur)
+    monkeypatch.setattr(divertor_variables, "divclfr", componentmassesparam.divclfr)
+    monkeypatch.setattr(divertor_variables, "divplt", componentmassesparam.divplt)
+    monkeypatch.setattr(divertor_variables, "fdiva", componentmassesparam.fdiva)
+    monkeypatch.setattr(divertor_variables, "divmas", componentmassesparam.divmas)
+    monkeypatch.setattr(divertor_variables, "divdens", componentmassesparam.divdens)
+    monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
+    monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
+    monkeypatch.setattr(physics_variables, "idivrt", componentmassesparam.idivrt)
+    monkeypatch.setattr(physics_variables, "sarea", componentmassesparam.sarea)
+    monkeypatch.setattr(build_variables, "blnkith", componentmassesparam.blnkith)
+    monkeypatch.setattr(build_variables, "blbuith", componentmassesparam.blbuith)
+    monkeypatch.setattr(build_variables, "blbmith", componentmassesparam.blbmith)
+    monkeypatch.setattr(build_variables, "blbpith", componentmassesparam.blbpith)
+    monkeypatch.setattr(build_variables, "blnkoth", componentmassesparam.blnkoth)
+    monkeypatch.setattr(build_variables, "blbuoth", componentmassesparam.blbuoth)
+    monkeypatch.setattr(build_variables, "blbmoth", componentmassesparam.blbmoth)
+    monkeypatch.setattr(build_variables, "blbpoth", componentmassesparam.blbpoth)
+    monkeypatch.setattr(build_variables, "fwareaib", componentmassesparam.fwareaib)
+    monkeypatch.setattr(build_variables, "fwith", componentmassesparam.fwith)
+    monkeypatch.setattr(build_variables, "fwareaob", componentmassesparam.fwareaob)
+    monkeypatch.setattr(build_variables, "fwoth", componentmassesparam.fwoth)
+    monkeypatch.setattr(build_variables, "fwarea", componentmassesparam.fwarea)
+    monkeypatch.setattr(fwbs_variables, "volblkt", componentmassesparam.volblkt)
+    monkeypatch.setattr(fwbs_variables, "vfblkt", componentmassesparam.vfblkt)
+    monkeypatch.setattr(fwbs_variables, "whtblbe", componentmassesparam.whtblbe)
+    monkeypatch.setattr(fwbs_variables, "whtblss", componentmassesparam.whtblss)
+    monkeypatch.setattr(fwbs_variables, "denstl", componentmassesparam.denstl)
+    monkeypatch.setattr(fwbs_variables, "whtblkt", componentmassesparam.whtblkt)
+    monkeypatch.setattr(fwbs_variables, "volshld", componentmassesparam.volshld)
+    monkeypatch.setattr(fwbs_variables, "vfshld", componentmassesparam.vfshld)
+    monkeypatch.setattr(fwbs_variables, "coolmass", componentmassesparam.coolmass)
+    monkeypatch.setattr(fwbs_variables, "fwclfr", componentmassesparam.fwclfr)
+    monkeypatch.setattr(fwbs_variables, "breeder_f", componentmassesparam.breeder_f)
+    monkeypatch.setattr(
+        fwbs_variables, "breeder_multiplier", componentmassesparam.breeder_multiplier
+    )
+    monkeypatch.setattr(fwbs_variables, "whtbltibe12", componentmassesparam.whtbltibe12)
+    monkeypatch.setattr(
+        fwbs_variables, "whtblli4sio4", componentmassesparam.whtblli4sio4
+    )
+    monkeypatch.setattr(fwbs_variables, "wtblli2o", componentmassesparam.wtblli2o)
+    monkeypatch.setattr(fwbs_variables, "vfcblkt", componentmassesparam.vfcblkt)
+    monkeypatch.setattr(fwbs_variables, "vfpblkt", componentmassesparam.vfpblkt)
+    monkeypatch.setattr(fwbs_variables, "whtshld", componentmassesparam.whtshld)
+    monkeypatch.setattr(fwbs_variables, "wpenshld", componentmassesparam.wpenshld)
+    monkeypatch.setattr(fwbs_variables, "fwmass", componentmassesparam.fwmass)
+    monkeypatch.setattr(
+        fwbs_variables, "fw_armour_vol", componentmassesparam.fw_armour_vol
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "fw_armour_thickness", componentmassesparam.fw_armour_thickness
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "fw_armour_mass", componentmassesparam.fw_armour_mass
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "armour_fw_bl_mass", componentmassesparam.armour_fw_bl_mass
+    )
+    monkeypatch.setattr(fwbs_variables, "volblkti", componentmassesparam.volblkti)
+    monkeypatch.setattr(fwbs_variables, "volblkto", componentmassesparam.volblkto)
+    monkeypatch.setattr(fwbs_variables, "iblnkith", componentmassesparam.iblnkith)
+    monkeypatch.setattr(fwbs_variables, "fblhebmi", componentmassesparam.fblhebmi)
+    monkeypatch.setattr(fwbs_variables, "fblhebpi", componentmassesparam.fblhebpi)
+    monkeypatch.setattr(fwbs_variables, "fblhebmo", componentmassesparam.fblhebmo)
+    monkeypatch.setattr(fwbs_variables, "fblhebpo", componentmassesparam.fblhebpo)
+    monkeypatch.setattr(fwbs_variables, "fblss", componentmassesparam.fblss)
+    monkeypatch.setattr(fwbs_variables, "fblbe", componentmassesparam.fblbe)
+    monkeypatch.setattr(fwbs_variables, "whtblbreed", componentmassesparam.whtblbreed)
+    monkeypatch.setattr(fwbs_variables, "densbreed", componentmassesparam.densbreed)
+    monkeypatch.setattr(fwbs_variables, "fblbreed", componentmassesparam.fblbreed)
+    monkeypatch.setattr(fwbs_variables, "iblanket", componentmassesparam.iblanket)
+    monkeypatch.setattr(fwbs_variables, "denw", componentmassesparam.denw)
+    monkeypatch.setattr(fwbs_variables, "vffwi", componentmassesparam.vffwi)
+    monkeypatch.setattr(fwbs_variables, "vffwo", componentmassesparam.vffwo)
+    monkeypatch.setattr(fwbs_variables, "volfw", componentmassesparam.volfw)
+    monkeypatch.setattr(fwbs_variables, "fblss_ccfe", componentmassesparam.fblss_ccfe)
+    monkeypatch.setattr(fwbs_variables, "fblli2sio4", componentmassesparam.fblli2sio4)
+    monkeypatch.setattr(fwbs_variables, "fbltibe12", componentmassesparam.fbltibe12)
+
+    ccfe_hcpb.component_masses()
+
+    assert divertor_variables.divsur == pytest.approx(
+        componentmassesparam.expected_divsur
+    )
+    assert divertor_variables.divmas == pytest.approx(
+        componentmassesparam.expected_divmas
+    )
+    assert fwbs_variables.whtblbe == pytest.approx(
+        componentmassesparam.expected_whtblbe
+    )
+    assert fwbs_variables.whtblss == pytest.approx(
+        componentmassesparam.expected_whtblss
+    )
+    assert fwbs_variables.whtblkt == pytest.approx(
+        componentmassesparam.expected_whtblkt
+    )
+    assert fwbs_variables.coolmass == pytest.approx(
+        componentmassesparam.expected_coolmass
+    )
+    assert fwbs_variables.fwclfr == pytest.approx(componentmassesparam.expected_fwclfr)
+    assert fwbs_variables.whtbltibe12 == pytest.approx(
+        componentmassesparam.expected_whtbltibe12
+    )
+    assert fwbs_variables.whtblli4sio4 == pytest.approx(
+        componentmassesparam.expected_whtblli4sio4
+    )
+    assert fwbs_variables.wtblli2o == pytest.approx(
+        componentmassesparam.expected_wtblli2o
+    )
+    assert fwbs_variables.whtshld == pytest.approx(
+        componentmassesparam.expected_whtshld
+    )
+    assert fwbs_variables.wpenshld == pytest.approx(
+        componentmassesparam.expected_wpenshld
+    )
+    assert fwbs_variables.fwmass == pytest.approx(componentmassesparam.expected_fwmass)
+    assert fwbs_variables.fw_armour_vol == pytest.approx(
+        componentmassesparam.expected_fw_armour_vol
+    )
+    assert fwbs_variables.fw_armour_mass == pytest.approx(
+        componentmassesparam.expected_fw_armour_mass
+    )
+    assert fwbs_variables.armour_fw_bl_mass == pytest.approx(
+        componentmassesparam.expected_armour_fw_bl_mass
+    )
+    assert fwbs_variables.fblss_ccfe == pytest.approx(
+        componentmassesparam.expected_fblss_ccfe
+    )
+    assert fwbs_variables.fblli2sio4 == pytest.approx(
+        componentmassesparam.expected_fblli2sio4
+    )
+    assert fwbs_variables.fbltibe12 == pytest.approx(
+        componentmassesparam.expected_fbltibe12
+    )

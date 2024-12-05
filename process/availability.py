@@ -86,8 +86,8 @@ class Availability:
             # - the neutron energy spectrum
             # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
             # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
-            ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
-            f_scale = pv.powfmw / ref_powfmw
+            ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
+            f_scale = pv.fusion_power / ref_fusion_power
             ref_dpa_fpy = (
                 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
             )
@@ -126,7 +126,7 @@ class Availability:
         # Plant Availability (iavail=0,1)
 
         # Calculate the number of fusion cycles for a given blanket lifetime
-        pulse_fpy = tv.tcycle / YEAR_SECONDS
+        pulse_fpy = tv.t_cycle / YEAR_SECONDS
         cv.bktcycles = (fwbsv.bktlife / pulse_fpy) + 1
 
         # if iavail = 0 use input value for cfactr
@@ -166,7 +166,7 @@ class Availability:
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
-        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
@@ -356,11 +356,46 @@ class Availability:
             1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
         )
 
+        # Modify lifetimes to take account of the availability
+        if ifev.ife != 1:
+            # First wall / blanket
+            if fwbsv.bktlife < cv.tlife:
+                fwbsv.bktlife = min(fwbsv.bktlife / cv.cfactr, cv.tlife)
+                # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
+                cv.cdrlife = fwbsv.bktlife
+
+            # Divertor
+            if cv.divlife < cv.tlife:
+                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+
+            # Centrepost
+            if pv.itart == 1 and cv.cplife < cv.tlife:
+                cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
+
         # Capacity factor
-        cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
 
         # Output
         if output:
+            po.ovarre(
+                self.outfile,
+                "First wall / blanket lifetime (FPY)",
+                "(bktlife)",
+                fwbsv.bktlife,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
+            )
+            if pv.itart == 1:
+                po.ovarre(
+                    self.outfile,
+                    "Centrepost lifetime (FPY)",
+                    "(cplife)",
+                    cv.cplife,
+                    "OP ",
+                )
+            po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Total unavailability:")
             po.oblnkl(self.outfile)
             po.ovarre(
@@ -397,7 +432,7 @@ class Availability:
                 self.outfile,
                 "Capacity factor: total lifetime elec. energy output / output power",
                 "(cpfact)",
-                cpfact,
+                cv.cpfact,
                 "OP ",
             )
 
@@ -428,8 +463,8 @@ class Availability:
         # - the neutron energy spectrum
         # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
         # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
-        ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
-        f_scale = pv.powfmw / ref_powfmw
+        ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
+        f_scale = pv.fusion_power / ref_fusion_power
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
         dpa_fpy = f_scale * ref_dpa_fpy
 
@@ -501,17 +536,6 @@ class Availability:
                 "(adivflnc)",
                 cv.adivflnc,
             )
-            po.ovarre(
-                self.outfile,
-                "First wall / blanket lifetime (FPY)",
-                "(bktlife)",
-                fwbsv.bktlife,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
-            )
-
             po.ovarin(
                 self.outfile,
                 "Number of remote handling systems",
@@ -637,11 +661,11 @@ class Availability:
 
         # Calculate cycle limit in terms of days
         # Number of cycles between planned blanket replacements, N
-        n = cv.divlife * YEAR_SECONDS / tv.tcycle
+        n = cv.divlife * YEAR_SECONDS / tv.t_cycle
 
         # The probability of failure in one pulse cycle (before the reference cycle life)
-        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.tcycle
-        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.tcycle
+        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.t_cycle
+        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.t_cycle
 
         # Integrating the instantaneous availability gives the mean
         # availability over the planned cycle life N
@@ -733,12 +757,12 @@ class Availability:
         # Calculate cycle limit in terms of days
 
         # Number of cycles between planned blanket replacements, N
-        n = fwbsv.bktlife * YEAR_SECONDS / tv.tcycle
+        n = fwbsv.bktlife * YEAR_SECONDS / tv.t_cycle
 
         # The probability of failure in one pulse cycle
         # (before the reference cycle life)
-        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.tcycle
-        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.tcycle
+        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.t_cycle
+        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.t_cycle
 
         if cv.fwbs_nu <= cv.fwbs_nref:
             logger.error(
@@ -1111,7 +1135,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
 
         if output:
             po.ocmmnt(self.outfile, "Plant Availability")

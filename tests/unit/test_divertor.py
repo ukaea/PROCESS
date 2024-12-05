@@ -137,13 +137,15 @@ class TestDivertor:
         rminor = 0.97142857142857153
         triang = 0.5
         scrapli = 0.09595
-        vgap = 0.5
+        vgap_xpoint_divertor = 0.5
         pdivt = 7.7197999809272062
         monkeypatch.setattr(dv, "i_hldiv", 1)
 
         expected_hldiv = 0.087770426974167357
 
-        hldiv = divertor.divtart(rmajor, rminor, triang, scrapli, vgap, pdivt, False)
+        hldiv = divertor.divtart(
+            rmajor, rminor, triang, scrapli, vgap_xpoint_divertor, pdivt, False
+        )
 
         assert hldiv == pytest.approx(expected_hldiv)
 

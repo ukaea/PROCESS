@@ -44,11 +44,6 @@ electricity have been revised extensively.
     using parametric fits to an MCNP neutron and photon transport model of a 
     sector of a tokamak. The blanket contains lithium orthosilicate 
     Li$_4$SiO$_4$, titanium beryllide TiBe$_{12}$, helium and Eurofer steel. 
-- `== 2` -- KIT HCPB model. It allows the energy multiplication factor `emult`, 
-    the shielding requirements and tritium breeding ratio to be calculated 
-    self-consistently with the blanket and shielding materials and sub-assembly 
-    thicknesses, and for constraints to be applied to satisfy the engineering 
-    requirements. For further details of this model.
 - `== 3` -- CCFE HCPB model with tritium breeding ratio. It has the features of 
     the CCFE HCPB model above, with a set of fitting functions for calculating 
     tritium breeding ratio (TBR).  It requires a choice of `iblanket_thickness`, 
@@ -70,107 +65,10 @@ first wall and blanket is determined, and also how the calculation of the plant'
 thermal to electric conversion efficiency (the secondary cycle thermal 
 efficiency) proceeds.
 
-### KIT Blanket Neutronics Model
-
-The model used if `blktmodel = 1` is based on the Helium-Cooled Pebble
-Bed (HCPB) blanket concept developed by KIT (a second advanced model --
-Helium-Cooled Lithium Lead, HCLL -- will be implemented in due course). The
-blanket, shield and vacuum vessel are segmented radially into a number of
-sub-assemblies. Moving in the direction away from the plasma/first wall, these
-are:
-
-Breeding Zone (BZ) (which includes the first wall), with radial
-thicknesses (inboard and outboard, respectively) `fwith + blbuith`,
-`fwoth+blbuoth`. This consists of beryllium (with fraction by volume `fblbe`), 
-breeder material (`fblbreed`), steel (`fblss`) and helium coolant. Three 
-forms of breeder material are available: 
-  
-| `breedmat` | Description                           |
-| :--------: | ------------------------------------- |
-|     1      | lithium orthosilicate (Li$_4$SiO$_4$) |
-|     2      | lithium metatitanate (Li$_2$TiO$_3$)  |
-|     3      | lithium zirconate (Li$_2$ZrO$_3$)     |
-
-The $^6$Li enrichment percentage may be modified from the default 30% using 
-input parameter `li6enrich`.
-
-- Box Manifold (BM), with radial thicknesses (inboard and outboard,
-  respectively) `blbmith`, `blbmoth` and helium fractions `fblhebmi`, `fblhebmo` 
-  (the rest being steel).
-- Back Plate (BP), with radial thicknesses (inboard and outboard,
-  respectively) `blbpith`, `blbpoth` and helium fractions `fblhebpi`, `fblhebpo` 
-  (the rest being steel).
-
-Together, the BZ, BM and BP make up the `blanket`, with total radial
-thicknesses `blnkith` (inboard) and `blnkoth` (outboard), and void (coolant) 
-fraction `vfblkt`; Note that these quantities are `calculated` from the 
-sub-assembly values if `blktmodel > 0`, rather than being input parameters.
-
-Low Temperature Shield and Vacuum Vessel (lumped together for these 
-calculations), with radial thicknesses (inboard and outboard, respectively) 
-`shldith + d_vv_in`, `shldoth + d_vv_out` and **water** coolant fraction 
-`vfshld` (the rest being assumed to be steel for its mass calculation; the 
-neutronics model assumes that the shield contains 2% boron  as a neutron absorber, 
-but this material is not explicitly mentioned elsewhere in the code -- so 
-its cost is not calculated, for example).
-
-!!! Note "Note" 
-    The fact that water is assumed to be the coolant in the shield, whereas 
-    helium is the coolant in the blanket, leads to an inconsistency when 
-    specifying the coolant type via switch `coolwh`. At present we mitigate this 
-    by forcing `coolwh=2` (making water the coolant), as in this case the
-    coolant mass and pumping costs are higher, giving the more pessimistic
-    solution with regards to costs.
-
-A few other input parameters are useful for tuning purposes, as follows:
-
-|     Parameter      | Description                                                                                                                                                                                                                    |
-| :----------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-|  `fvolsi/fvolso`   | area (and volume) coverage factors for the inboard and outboard shields, respectively.                                                                                                                                         |
-|      `fvoldw`      | multiplier for volume of vacuum vessel, used in mass calculations to account for ports, etc.                                                                                                                                   |
-|      `npdiv`       | number of divertor ports, used in the calculation of the tritium breeding ratio.                                                                                                                                               |
-| `nphcdin/nphcdout` | number of heating/current drive ports on the inboard and outboard sides, respectively, used in the calculation of the tritium breeding ratio. These may be either 'small'  (`hcdportsize = 1`) or 'large' (`hcdportsize = 2`). |
-|      `wallpf`      | neutron wall load peaking factor (maximum/mean), used in the calculation of the blanket lifetime.                                                                                                                              |
-|    `ucblbreed`     | unit cost (\$/kg) of the breeder material                                                                                                                                                                                      |
-
-#### KIT model outputs and available constraints
-
-The KIT blanket model has the following available constraints
-
-| Constraint No. |  F-value  | F-value No. |    Limit    | Description                        |
-| :------------: | :-------: | :---------: | :---------: | ---------------------------------- |
-|       52       |  `ftbr`   |     89      |  `tbrmin`   | Min required `tbr`                 |
-|       53       | `fflutf`  |     92      | `nflutfmax` | Max allowed TF fluence             |
-|       54       | `fptfnuc` |     95      | `ptfnucmax` | Max allowed heating of TF coils    |
-|       55       |  `fvvhe`  |     96      |  `vvhealw`  | Max allowed He concentration in VV |
-
-The KIT blanket neutronics model provides the following outputs:
-
-|   Output    |  Units   | Itvar. | Description                                                              |
-| :---------: | :------: | ------ | ------------------------------------------------------------------------ |
-| `pnucblkt`  |    MW    | -      | Total nuclear power deposited in blanket                                 |
-| `pnucshld`  |    MW    | -      | Total nuclear power deposited in shield                                  |
-|   `emult`   |    -     | -      | The energy multiplication factor in the blanket                          |
-|    `tbr`    |    -     | -      | Tritium breeding ratio                                                   |
-|  `blbuith`  |    m     | 90     | Inboard blanket thickness                                                |
-|  `blbuoth`  |    m     | 91     | Outboard blanket thickness                                               |
-| `tritprate` |    -     | -      | The tritium production rate in grammes/day is calculated.                |
-|  `nflutfi`  | n/m$^2$  | -      | The fast neutron fluence on the inboard TF coils                         |
-|  `nflutfo`  | n/m$^2$  | -      | The fast neutron fluence on the inboard TF coils                         |
-|  `shldith`  |    m     | 93     | Inboard shield thickness                                                 |
-|  `shldoth`  |    m     | 94     | Outboard shield thickness                                                |
-|  `pnuctfi`  | MW/m$^3$ | -      | Nuclear heating power on inboard TF coil                                 |
-|  `pnuctfo`  | MW/m$^3$ | -      | Nuclear heating power on outboard TF coil                                |
-| `vvhemini`  |   appm   | -      | Min He concentration in the inboard VV at the end of the plant lifetime  |
-| `vvhemaxi`  |   appm   | -      | Max He concentration in the inboard VV at the end of the plant lifetime  |
-| `vvhemino`  |   appm   | -      | Min He concentration in the outboard VV at the end of the plant lifetime |
-| `vvhemaxo`  |   appm   | -      | Max He concentration in the outboard VV at the end of the plant lifetime |
-|  `bktlife`  |  fp-yrs  | -      | Blanket lifetime in full power years assuming max damage ~60 dpa         |
-
 ## Thermo-hydraulic model for first wall and blanket
 
 !!! Note "Note" 
-    This is only called for primary_pumping = 2
+    This is called for primary_pumping = 2 and 3
 
 Summary of key variables and switches:  
 
@@ -244,6 +142,8 @@ where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and
 
 The temperature difference between the channel inner wall (film temperature) and the bulk coolant is calculated using the heat transfer coefficient, which is derived using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation).  The pressure drop is based on the Darcy fraction factor, using the [Haaland equation](https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation), an approximation to the implicit Colebrook–White equation.  The thermal conductivity of Eurofer is used, from "Fusion Demo Interim Structural Design Criteria - Appendix A Material Design Limit Data", F. Tavassoli, TW4-TTMS-005-D01, 2004"
 
+!!! Note "Note" 
+    The pressure drop calculation is only performed for primary_pumping = 2, as for 3 it is used as an input, as explained in the heat transport section.
 
 ### Model Switches
 

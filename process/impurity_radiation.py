@@ -1,17 +1,12 @@
 import numpy
 import dataclasses
 import re
-import sys
+from importlib import resources
 from typing import Optional, List
 from pathlib import Path
 from scipy import integrate
 from process.fortran import impurity_radiation_module
 from process.fortran import error_handling
-
-if sys.version_info >= (3, 9):
-    from importlib import resources
-else:
-    import importlib_resources as resources
 
 
 import logging
@@ -465,6 +460,20 @@ def pimpden(imp_element_index, nprofile, tprofile):
     ]
 
     return pimpden
+
+
+def element2index(element: str):
+    """Returns the index of the `element` in the impurity array with
+    a given name
+    """
+    try:
+        return (
+            impurity_radiation_module.impurity_arr_label.astype(str)
+            .tolist()
+            .index(element)
+        )
+    except ValueError as e:
+        raise ValueError(f"Element {element} is not found in impurity_arr_label") from e
 
 
 class ImpurityRadiation:

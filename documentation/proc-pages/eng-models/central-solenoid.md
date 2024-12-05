@@ -93,7 +93,7 @@ An example output follows.  Note that in this example the cycle life is *not* su
 
 ```text
  Residual hoop stress in CS Steel (Pa)                                    (residual_sig_hoop)       2.400E+08     
- Minimum burn time (s)                                                    (tbrnmn)                  7.200E+03     
+ Minimum burn time (s)                                                    (t_burn_min)                  7.200E+03     
  Initial vertical crack size (m)                                          (t_crack_vertical)        8.900E-04     
  Initial radial crack size (m)                                            (t_crack_radial)          2.670E-03     
  CS turn area (m)                                                         (a_oh_turn)               1.904E-03     
@@ -150,15 +150,7 @@ The absolute value of the central solenoid current density at the end-of-flat-to
 is specified by the user, and can be used as an iteration variable (no. 37). The current density at 
 the beginning-of-pulse ('BOP' - See Figure 1) is specified as a (positive) fraction of `coheof` 
 using `fcohbop` (iteration variable no. 41). The current density in the CS at all other times is 
-calculated by taking into account the flux swing necessary to initiate and maintain plasma current. 
-
-<figure markdown>
-![current-vs-time-plot](../images/current_vs_time.png){ width="100%"}
-<figcaption>Figure 2: Plot showing schematically the current waveforms for the plasma, a typical PF 
-coil, and the central solenoid. Note that the currents in some of the PF coils may be the opposite 
-sign to that shown, and the central solenoid current may remain positive during the I<sub>p</sub> 
-ramp-up period, although it will pass through zero during the burn phase.</figcaption>
-</figure>
+calculated by taking into account the flux swing necessary to initiate and maintain plasma current.
 
 The current density in the central solenoid can be limited at BOP and at EOF. To limit the current 
 density at BOP, constraint equation no. 27 is used with iteration variable no. 39 (`fjohc0`). To 
@@ -174,3 +166,9 @@ no. 106 (`ftmargoh`).
 
 It is recommended that EITHER the temperature margin constraint (60), OR the current density 
 constraints (26 and 27) are activated.
+
+!!! tip "Recommended maximum current ratio"
+    For engineering feasibility, the centrepost currents at end of flat-top and beginning of pulse (`fjohc` and `fjohc0` respectively) shouldn't be set above 0.7.
+
+!!! note "Central solenoid current over time"
+    A plot of how the central solenoid current varies over time can be found [here](../physics-models/pulsed-plant.md#burn-time)

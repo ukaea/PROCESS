@@ -87,6 +87,8 @@ values differ by >5% from the reference, the regression test will fail for that 
 value may be the desired result of the changes, however. Optionally, a 0% tolerance regression 
 test can be run using `pytest --reg-tolerance=0`.
 
+By default, pytest will only display warnings and above that are logged in PROCESS (not info or debug logs). However, lower level logging may be appropriate when tests are failing. To capture lower level logs, run pytest with either of the following options `--log-level=INFO` or `--log-level=DEBUG`.
+
 It is incumbent on the author to check the test results created by their code changes, and modify 
 source or tests if required. Are the regression changes expected and acceptable?
 

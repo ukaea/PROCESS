@@ -4,8 +4,8 @@ from process.fortran import (
     constants,
     fwbs_variables,
     error_handling as eh,
-    fw_module,
     process_output as po,
+    error_handling,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process.coolprop_interface import FluidProperties
@@ -127,10 +127,10 @@ class Fw:
             eh.report_error(224)
 
         # Thermal conductivity of first wall material (W/m.K)
-        tkfw = fw_module.fw_thermal_conductivity(temp_k)
+        tkfw = self.fw_thermal_conductivity(temp_k)
 
         # Heat transfer coefficient (W/m2K)
-        hcoeff = fw_module.heat_transfer(
+        hcoeff = self.heat_transfer(
             masflx,
             ob_fluid_properties.density,
             afw,
@@ -303,3 +303,90 @@ class Fw:
             )
 
         return tpeakfw, cfmean, rhofmean, massrate
+
+    def fw_thermal_conductivity(self, t):
+        """Calculates the thermal conductivity of the first wall
+        t : input real : property temperature (K)
+        Calculates the thermal conductivity of Eurofer (W/m/K).
+        """
+        # Eurofer correlation, from "Fusion Demo Interim Structural Design Criteria -
+        # Appendix A Material Design Limit Data", F. Tavassoli, TW4-TTMS-005-D01, 2004
+        # t in Kelvin
+        return (
+            (5.4308 + 0.13565 * t - 0.00023862 * t * t + 1.3393e-7 * t * t * t)
+            * fwbs_variables.fw_th_conductivity
+            / 28.34
+        )
+
+    def heat_transfer(self, masflx, rhof, radius, cf, viscf, kf):
+        """Calculate heat transfer coefficient using Gnielinski correlation
+        author: M Kovari, CCFE, Culham Science Centre
+        masflx : input real : coolant mass flux in a single channel (kg/m2/s)
+        rhof : input real : coolant density (average of inlet and outlet) (kg/m3)
+        radius : input real : coolant pipe radius (m)
+        cf : input real : coolant specific heat capacity (average of inlet and outlet) (J/K)
+        viscf : input real : coolant viscosity (average of inlet and outlet) (Pa.s)
+        kf : input real : thermal conductivity of coolant (average of inlet and outlet) (W/m.K)
+        Gnielinski correlation. Ignore the distinction between wall and
+        bulk temperatures. Valid for:3000 < Re < 5e6, 0.5 < Pr < 2000
+        https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation
+        """
+        # Calculate pipe diameter (m)
+        diameter = 2 * radius
+
+        # Calculate flow velocity (m/s)
+        velocity = masflx / rhof
+
+        # Calculate Reynolds number
+        reynolds = rhof * velocity * diameter / viscf
+
+        # Calculate Prandtl number
+        pr = cf * viscf / kf
+
+        # Calculate Darcy friction factor, using Haaland equation
+        f = self.friction(reynolds)
+
+        # Calculate the Nusselt number
+        nusselt = (
+            (f / 8.0)
+            * (reynolds - 1000.0)
+            * pr
+            / (1 + 12.7 * np.sqrt(f / 8.0) * (pr**0.6667 - 1.0))
+        )
+
+        # Calculate the heat transfer coefficient (W/m2K)
+        heat_transfer = nusselt * kf / (2.0 * radius)
+
+        # Check that Reynolds number is in valid range for the Gnielinski correlation
+        if (reynolds <= 3000.0) or (reynolds > 5.0e6):
+            error_handling.fdiags[0] = reynolds
+            error_handling.report_error(225)
+
+        # Check that Prandtl number is in valid range for the Gnielinski correlation
+        if (pr < 0.5) or (pr > 2000.0):
+            error_handling.fdiags[0] = pr
+            error_handling.report_error(226)
+
+        # Check that the Darcy friction factor is in valid range for the Gnielinski correlation
+        if f <= 0.0:
+            error_handling.report_error(227)
+
+        return heat_transfer
+
+    def friction(self, reynolds):
+        """Calculate Darcy friction factor, using Haaland equation
+        author: M Kovari, CCFE, Culham Science Centre
+        reynolds : input real : Reynolds number
+        darcy_friction : output real : Darcy friction factor
+        Darcy friction factor, using Haaland equation, an approximation to the
+        implicit Colebrook-White equationGnielinski correlation.
+        https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
+        """
+
+        # Bracketed term in Haaland equation
+        bracket = (
+            fwbs_variables.roughness / fwbs_variables.afw / 3.7
+        ) ** 1.11 + 6.9 / reynolds
+
+        # Calculate Darcy friction factor
+        return (1.8 * np.log10(bracket)) ** (-2)

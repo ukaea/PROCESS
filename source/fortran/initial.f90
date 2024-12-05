@@ -130,18 +130,14 @@ subroutine initial
     call init_itv_74
     call init_itv_75
 
-
-
-
     call init_itv_79
 
+    call init_itv_81
+    call init_itv_82
+    call init_itv_83
 
-
-
-
-
-
-
+    call init_itv_85
+    call init_itv_86
 
     call init_itv_89
     call init_itv_90
@@ -242,7 +238,7 @@ subroutine check
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use build_variables, only: blnkith, bore, gapoh, ohcth, precomp, iprecomp, &
-        i_r_cp_top, r_cp_top, vgaptop, vgap, shldtth, shldlth, d_vv_top, d_vv_bot, tf_in_cs
+        i_r_cp_top, r_cp_top, vgaptop, vgap_xpoint_divertor, shldtth, shldlth, d_vv_top, d_vv_bot, tf_in_cs
     use buildings_variables, only: esbldgm3, triv
     use current_drive_variables, only: gamcd, iefrf, irfcd
     use error_handling, only: errors_on, idiags, fdiags, report_error
@@ -255,10 +251,10 @@ subroutine check
     use numerics, only: ixc, icc, ioptimz, neqns, nineqns, nvar, boundl, &
         boundu
     use pfcoil_variables, only: ipfres, ngrp, pfclres, ipfloc, ncls, isumatoh
-    use physics_variables, only: aspect, eped_sf, fdeut, fgwped, fhe3, &
-        fgwsep, ftrit, ibss, i_single_null, icurr, ieped, idivrt, ishape, &
+    use physics_variables, only: aspect, f_deuterium, fgwped, f_helium3, &
+        fgwsep, f_tritium, i_bootstrap_current, i_single_null, i_plasma_current, idivrt, ishape, &
         iradloss, isc, ipedestal, ilhthresh, itart, nesep, rhopedn, rhopedt, &
-        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar
+        rnbeam, neped, te, tauee_in, tesep, teped, itartpf, ftar, i_diamagnetic_current
     use pulse_variables, only: lpulse
     use reinke_variables, only: fzactual, impvardiv
     use tfcoil_variables, only: casthi, casthi_is_fraction, casths, i_tf_sup, &
@@ -335,12 +331,12 @@ subroutine check
     end if
 
     !  Fuel ion fractions must add up to 1.0
-    if (abs(1.0D0 - fdeut - ftrit - fhe3) > 1.0D-6) then
-        fdiags(1) = fdeut; fdiags(2) = ftrit ; fdiags(3) = fhe3
+    if (abs(1.0D0 - f_deuterium - f_tritium - f_helium3) > 1.0D-6) then
+        fdiags(1) = f_deuterium; fdiags(2) = f_tritium ; fdiags(3) = f_helium3
         call report_error(36)
     end if
 
-    if (ftrit < 1.0D-3) then  !  tritium fraction is negligible
+    if (f_tritium < 1.0D-3) then  !  tritium fraction is negligible
         triv = 0.0D0
         trithtmw = 0.0D0
     end if
@@ -442,12 +438,6 @@ subroutine check
         call report_error(178)
      endif
 
-     if(ieped > 0) then
-        if(eped_sf > 1.0) then
-           call report_error(214)
-        endif
-     endif
-
      if ((any(ixc==145)) .and. (boundl(145) < fgwsep)) then  !if lower bound of fgwped < fgwsep
         fdiags(1) = boundl(145); fdiags(2) = fgwsep
         call report_error(186)
@@ -495,7 +485,7 @@ subroutine check
 
      if (i_single_null == 0) then
          idivrt = 2
-         vgaptop = vgap
+         vgaptop = vgap_xpoint_divertor
          shldtth = shldlth
          d_vv_top = d_vv_bot
          call report_error(272)
@@ -516,8 +506,8 @@ subroutine check
         ! Check if the choice of plasma current is addapted for ST
         ! 2 : Peng Ip scaling (See STAR code documentation)
         ! 9 : Fiesta Ip scaling
-        if (icurr /= 2 .and. icurr /= 9) then
-            idiags(1) = icurr ; call report_error(37)
+        if (i_plasma_current /= 2 .and. i_plasma_current /= 9) then
+            idiags(1) = i_plasma_current ; call report_error(37)
         end if
 
         !! If using Peng and Strickler (1986) model (itartpf == 0)
@@ -566,7 +556,7 @@ subroutine check
         end if
 
         ! Check if the boostrap current selection is addapted to ST
-        if (ibss  == 1) call report_error(38)
+        if (i_bootstrap_current  == 1) call report_error(38)
 
         ! Check if a single null divertor is used in double null machine
         if (i_single_null == 0 .and. (ftar == 1.0 .or. ftar == 0.0)) then
@@ -605,7 +595,7 @@ subroutine check
     ! ------------------------------------
     else
 
-        if (icurr == 2 .or. icurr == 9) call report_error(40)
+        if (i_plasma_current == 2 .or. i_plasma_current == 9) call report_error(40)
 
         ! Set the TF coil shape to PROCESS D-shape (if default value)
         if ( i_tf_shape == 0 ) i_tf_shape = 1
@@ -834,6 +824,10 @@ subroutine check
         call report_error(283)
     end if
 
+    if ( i_bootstrap_current == 5  .and. i_diamagnetic_current /= 0 ) then
+        call report_error(284)
+    end if
+
     ! Setting t_cable_tf_is_input to true if t_cable_tf is an input
     if ( abs(t_cable_tf) < epsilon(t_cable_tf) ) then
         t_cable_tf_is_input = .false.
@@ -949,7 +943,7 @@ subroutine check
         call report_error(221)
      end if
 
-    if (icurr.eq.2.and.isc.eq.42) then
+    if (i_plasma_current.eq.2.and.isc.eq.42) then
         call report_error(222)
     end if
 

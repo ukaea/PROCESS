@@ -330,7 +330,7 @@ Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Des
 | `pperim`       | Plasma Poloidal perimeter length [$\text{m}$] |
 | `sarea`       | Plasma surface area [$\text{m}^2$] |
 | `xarea`       | Plasma cross-sectional area [$\text{m}^2$] |
-| `vol`       | Plasma volume [$\text{m}^3$] |
+| `plasma_volume`       | Plasma volume [$\text{m}^3$] |
 
 $$
 \mathtt{w07} = 1
@@ -365,7 +365,7 @@ $$
 
 Volume
 $$
-\mathtt{vol} = 2.0\pi R (1 - 0.25 \delta \epsilon) \mathtt{xarea}
+\mathtt{plasma_volume} = 2.0\pi R (1 - 0.25 \delta \epsilon) \mathtt{xarea}
 $$
 
 
@@ -377,7 +377,7 @@ $$
 \mathtt{pperim} = 2.0 \times (\mathtt{xo} \times \mathtt{thetao} + \mathtt{xi} \times \mathtt{thetai})
 $$
 
-The shaping factor for `icurr=1` is also claculated here:
+The shaping factor for `i_plasma_current = 1` is also calculated here:
 $$
 \mathtt{sf} = \frac{\mathtt{pperim}}{
     2.0\pi  a}

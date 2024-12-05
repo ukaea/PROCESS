@@ -23,9 +23,6 @@ setup_kwargs = {
         "process": [
             "lib/lib*",
             "fortran*.so",
-            "data/fluids/*",
-            "data/h_data/*",
-            "data/lz_non_corona/*",
             "data/lz_non_corona_14_elements/*",
             "utilities/*",
         ],
@@ -34,26 +31,26 @@ setup_kwargs = {
         "process.uncertainties": ["*.json"],
     },
     "test_suite": "pytest",
+    "python_requires": ">=3.10",
     "install_requires": [
-        "numpy>=1.23",
+        "numpy>=1.23,<2",
         "scipy>=1.10",
         "cvxpy!=1.3.0,!=1.3.1",
-        "importlib-resources ; python_version<'3.9'",
-        "pandas",
+        "pandas>=2.0",
         "tables",
         "SALib",
         "numba>=0.57",
         "PyVMCON>=2.2.2,<3.0.0",
         "CoolProp>=6.4",
+        "matplotlib>=2.1.1",
         "seaborn>=0.12.2",
+        "tabulate",
     ],
-    "extras_require": {"test": ["pytest"]},
-    "entry_points": {
-        "console_scripts": [
-            "process_script=process.process_script_advanced:main",
-            "process=process.main:main",
-        ]
+    "extras_require": {
+        "test": ["pytest>=5.4.1", "requests>=2.30", "testbook>=0.4"],
+        "examples": ["pillow>=5.1.0", "jupyter==1.0.0", "pdf2image==1.16.0"],
     },
+    "entry_points": {"console_scripts": ["process=process.main:main"]},
     "extra_link_args": EXTRA_ARGS,
 }
 

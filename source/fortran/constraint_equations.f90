@@ -342,9 +342,9 @@ contains
    subroutine constraint_err_001()
     !! Error in: Relationship between beta, temperature (keV) and density (consistency equation)
     !! author: P B Lloyd, CCFE, Culham Science Centre
-    use physics_variables, only: betaft, betanb, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
     write(*,*) 'betaft = ', betaft
-    write(*,*) 'betanb = ', betanb
+    write(*,*) 'beta_beam = ', beta_beam
     write(*,*) 'dene = ', dene
     write(*,*) 'ten = ', ten
     write(*,*) 'dnitot = ', dnitot
@@ -408,8 +408,8 @@ contains
     !! - \( T_i \) -- density weighted average ion temperature [keV]
     !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
-    use physics_variables, only: betaft, betanb, dene, ten, dnitot, tin, btot, beta
-    use constants, only: echarge,rmu0
+    use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
+    use constants, only: electron_charge,rmu0
 
     implicit none
 
@@ -422,8 +422,8 @@ contains
 
     !! constraint derived type
 
-      tmp_cc = 1.0D0 - (betaft + betanb + &
-        2.0D3*rmu0*echarge * (dene*ten + dnitot*tin)/btot**2 )/beta
+      tmp_cc = 1.0D0 - (betaft + beta_beam + &
+        2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
       tmp_con = beta * (1.0D0 - tmp_cc)
       tmp_err = beta * tmp_cc
       tmp_symbol = '='
@@ -452,16 +452,16 @@ contains
     !! ptripv : input real :  ion transport power per volume (MW/m3)
     !! pradpv : input real : total radiation power per volume (MW/m3)
     !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
-    !! falpha : input real : fraction of alpha power deposited in plasma
-    !! palppv : input real : alpha power per volume (MW/m3)
-    !! pchargepv : input real : non-alpha charged particle fusion power per volume (MW/m3)
+    !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
+    !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
+    !! charged_power_density : input real : non-alpha charged particle fusion power per volume (MW/m3)
     !! pohmpv : input real : ohmic heating power per volume (MW/m3)
     !! pinjmw : input real : total auxiliary injected power (MW)
-    !! vol : input real : plasma volume (m3)
+    !! plasma_volume : input real : plasma volume (m3)
 
     use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pradpv, &
-                                  pcoreradpv, falpha, palppv, pchargepv, &
-                                  pohmpv, vol
+                                  pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
+                                  pohmpv, plasma_volume
     use current_drive_variables, only: pinjmw
 
     implicit none
@@ -488,10 +488,10 @@ contains
 
     ! if plasma not ignited include injected power
     if (ignite == 0) then
-      pdenom = falpha*palppv + pchargepv + pohmpv + pinjmw/vol
+      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pohmpv + pinjmw/plasma_volume
     else
       ! if plasma ignited
-      pdenom = falpha*palppv + pchargepv + pohmpv
+      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pohmpv
     end if
 
     tmp_cc = 1.0D0 - pnumerator / pdenom
@@ -517,11 +517,11 @@ contains
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
       !! ptripv : input real :  ion transport power per volume (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
-      !! falpha : input real : fraction of alpha power deposited in plasma
-      !! palpipv : input real : alpha power per volume to ions (MW/m3)
+      !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
+      !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
       !! pinjimw : input real : auxiliary injected power to ions (MW)
-      !! vol : input real : plasma volume (m3)
-      use physics_variables, only: ignite, ptripv, piepv, falpha, palpipv, vol
+      !! plasma_volume : input real : plasma volume (m3)
+      use physics_variables, only: ignite, ptripv, piepv, f_alpha_plasma, alpha_power_ions_density, plasma_volume
       use current_drive_variables, only: pinjimw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -532,16 +532,16 @@ contains
 
 	   ! No assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - (ptripv + piepv) / (falpha*palpipv + pinjimw/vol)
-         tmp_con    = (falpha*palpipv + pinjimw/vol) * (1.0D0 - tmp_cc)
-         tmp_err    = (falpha*palpipv + pinjimw/vol) * tmp_cc
+         tmp_cc     = 1.0D0 - (ptripv + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume)
+         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume) * (1.0D0 - tmp_cc)
+         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
       else
-         tmp_cc     = 1.0D0 - (ptripv+piepv) / (falpha*palpipv)
-         tmp_con    = (falpha*palpipv) * (1.0D0 - tmp_cc)
-         tmp_err    = (falpha*palpipv) * tmp_cc
+         tmp_cc     = 1.0D0 - (ptripv+piepv) / (f_alpha_plasma*alpha_power_ions_density)
+         tmp_con    = (f_alpha_plasma*alpha_power_ions_density) * (1.0D0 - tmp_cc)
+         tmp_err    = (f_alpha_plasma*alpha_power_ions_density) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
       end if
@@ -571,13 +571,13 @@ contains
       !! ptrepv : input real : electron transport power per volume (MW/m3)
       !! pradpv : input real : total radiation power per volume (MW/m3)
       !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
-      !! falpha : input real : fraction of alpha power deposited in plasma
-      !! palpepv : input real : alpha power per volume to electrons (MW/m3)
+      !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
+      !! alpha_power_electron_density : input real : alpha power per volume to electrons (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
-      !! vol : input real : plasma volume (m3)
-      use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, falpha, &
-                                 palpepv, piepv, vol, pradpv
+      !! plasma_volume : input real : plasma volume (m3)
+      use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
+                                 alpha_power_electron_density, piepv, plasma_volume, pradpv
       use current_drive_variables, only: pinjemw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -601,10 +601,10 @@ contains
 
       ! if plasma not ignited include injected power
       if (ignite == 0) then
-         pdenom = falpha*palpepv + piepv + pinjemw/vol
+         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + pinjemw/plasma_volume
       else
       ! if plasma ignited
-         pdenom = falpha*palpepv + piepv
+         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv
       end if
 
       tmp_cc     = 1.0D0 - pnumerator / pdenom
@@ -711,9 +711,9 @@ contains
       !! If ignite=1, any auxiliary power is assumed to be used only
       !! during plasma start-up, and is excluded from all steady-state
       !! power balance calculations.
-      !! dnbeam2 : input real :  hot beam ion density from calculation (/m3)
+      !! beam_density_out : input real :  hot beam ion density from calculation (/m3)
       !! dnbeam : input real : hot beam ion density, variable (/m3)
-      use physics_variables, only: ignite, dnbeam2, dnbeam
+      use physics_variables, only: ignite, beam_density_out, dnbeam
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -723,7 +723,7 @@ contains
 
 	   ! Do not assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - dnbeam2/dnbeam
+         tmp_cc     = 1.0D0 - beam_density_out/dnbeam
          tmp_con    = dnbeam * (1.0D0 - tmp_cc)
          tmp_err    = dnbeam * tmp_cc
          tmp_symbol = '='
@@ -781,9 +781,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ffuspow : input real : f-value for maximum fusion power
       !! powfmax : input real : maximum fusion power (MW)
-      !! powfmw : input real : fusion power (MW)
+      !! fusion_power : input real : fusion power (MW)
       use constraint_variables, only: ffuspow, powfmax
-      use physics_variables, only: powfmw
+      use physics_variables, only: fusion_power
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -791,9 +791,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ffuspow * powfmax/powfmw
+      tmp_cc =  1.0D0 - ffuspow * powfmax/fusion_power
       tmp_con = powfmax * (1.0D0 - tmp_cc)
-      tmp_err = powfmw * tmp_cc
+      tmp_err = fusion_power * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW'
 
@@ -901,14 +901,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for burn time lower limit
       !! #=# times
-      !! #=#=# ftburn, tbrnmn
+      !! #=#=# ft_burn, t_burn_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ftburn : input real : f-value for minimum burn time
-      !! tburn : input real : burn time (s) (calculated if lpulse=1)
-      !! tbrnmn : input real :  minimum burn time (s)
-      use constraint_variables, only: ftburn,tbrnmn
-      use times_variables, only: tburn
+      !! ft_burn : input real : f-value for minimum burn time
+      !! t_burn : input real : burn time (s) (calculated if lpulse=1)
+      !! t_burn_min : input real :  minimum burn time (s)
+      use constraint_variables, only: ft_burn,t_burn_min
+      use times_variables, only: t_burn
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -916,9 +916,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ftburn * tburn/tbrnmn
-      tmp_con = tbrnmn / ftburn
-      tmp_err = tbrnmn / ftburn  - tburn
+      tmp_cc =  1.0D0 - ft_burn * t_burn/t_burn_min
+      tmp_con = t_burn_min / ft_burn
+      tmp_err = t_burn_min / ft_burn  - t_burn
       tmp_symbol = '>'
       tmp_units = 'sec'
 
@@ -1027,15 +1027,15 @@ contains
       !! #=#=# fradpwr, pradmaxpv
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! falpha : input real : fraction of alpha power deposited in plasma
+      !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! pinjmw : input real : total auxiliary injected power (MW)
-      !! vol : input real : plasma volume (m3)
-      !! palppv : input real : alpha power per volume (MW/m3)
-      !! pchargepv :  input real : non-alpha charged particle fusion power per volume (MW/m3)
+      !! plasma_volume : input real : plasma volume (m3)
+      !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
+      !! charged_power_density :  input real : non-alpha charged particle fusion power per volume (MW/m3)
       !! pohmpv : input real : ohmic heating power per volume (MW/m3)
       !! fradpwr : input real : f-value for core radiation power limit
       !! pradpv : input real : total radiation power per volume (MW/m3)
-      use physics_variables, only: falpha, vol, palppv, pchargepv, pohmpv, pradpv
+      use physics_variables, only: f_alpha_plasma, plasma_volume, alpha_power_density_total, charged_power_density, pohmpv, pradpv
       use current_drive_variables, only: pinjmw
       use constraint_variables, only: fradpwr
       implicit none
@@ -1046,9 +1046,9 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       real(dp) :: pradmaxpv
-      !! Maximum possible power/vol that can be radiated (local)
+      !! Maximum possible power/plasma_volume that can be radiated (local)
 
-      pradmaxpv = pinjmw/vol + palppv*falpha + pchargepv + pohmpv
+      pradmaxpv = pinjmw/plasma_volume + alpha_power_density_total*f_alpha_plasma + charged_power_density + pohmpv
       tmp_cc =  1.0D0 - fradpwr * pradmaxpv / pradpv
       tmp_con = pradmaxpv * (1.0D0 - tmp_cc)
       tmp_err = pradpv * tmp_cc
@@ -1088,7 +1088,7 @@ contains
    end subroutine constraint_eqn_018
 
    subroutine constraint_eqn_019(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for MVA upper limit
+      !! Equation for MVA (power) upper limit: resistive TF coil set
       !! author: P B Lloyd, CCFE, Culham Science Centre
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
@@ -1097,10 +1097,10 @@ contains
       !! #=#=# fmva, mvalim
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! tfcpmw : input real : peak resistive TF coil inboard leg power (MW)
-      !! tflegmw : input real : TF coil outboard leg resistive power (MW)
+      !! tfcpmw : input real : peak resistive TF coil inboard leg power (total) (MW)
+      !! tflegmw : input real : TF coil outboard leg resistive power (total) (MW)
       !! fmva : input real : f-value for maximum MVA
-      !! mvalim : input real : TF coil outboard leg resistive power (MW)
+      !! mvalim : input real : MVA limit for resistive TF coil set (total) (MW)
       use tfcoil_variables, only: tfcpmw, tflegmw
       use constraint_variables, only: fmva, mvalim
       implicit none
@@ -1133,7 +1133,7 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fportsz : input real : f-value for neutral beam tangency radius limit
       !! rtanmax : input real : maximum tangency radius for centreline of beam (m)
-      !! rtanbeam : input real : ratio of collision length / connection length
+      !! rtanbeam : input real : neutral beam centreline tangency radius (m)
       use constraint_variables, only: fportsz
       use current_drive_variables, only: rtanmax, rtanbeam
       implicit none
@@ -1271,10 +1271,10 @@ contains
       !! betalim : input real : allowable beta
       !! beta : input real : total plasma beta (calculated if ipedestal =3)
       !! betaft : input real : fast alpha beta component
-      !! betanb : input real : neutral beam beta component
+      !! beta_beam : input real : neutral beam beta component
       !! bt : input real : toroidal field
       !! btot : input real : total field
-      use physics_variables, only: iculbl, betalim, beta, betanb, betaft, bt, btot
+      use physics_variables, only: iculbl, betalim, beta, beta_beam, betaft, bt, btot
       use stellarator_variables, only: istell
       use constraint_variables, only: fbetatry
       implicit none
@@ -1293,9 +1293,9 @@ contains
          tmp_units = ''
       ! Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
       else if (iculbl == 1) then
-         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-betaft-betanb)
+         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-betaft-beta_beam)
          tmp_con = betalim
-         tmp_err = betalim - (beta-betaft-betanb) / fbetatry
+         tmp_err = betalim - (beta-betaft-beta_beam) / fbetatry
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
@@ -1597,6 +1597,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
+      if (fiooic > 0.7D0) call report_error(285)
       tmp_cc =  1.0D0 - fiooic * jwdgcrt/jwptf
       tmp_con = jwdgcrt * (1.0D0 - tmp_cc)
       tmp_err = jwptf * tmp_cc
@@ -1816,14 +1817,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for plasma current ramp-up time lower limit
       !! #=# times
-      !! #=#=# ftohs, tohsmn
+      !! #=#=# ft_current_ramp_up, t_current_ramp_up_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ftohs : input real : f-value for plasma current ramp-up time
-      !! tohs : input real : plasma current ramp-up time for current initiation (s)
-      !! tohsmn : input real : minimum plasma current ramp-up time (s)
-      use constraint_variables, only: ftohs, tohsmn
-      use times_variables, only: tohs
+      !! ft_current_ramp_up : input real : f-value for plasma current ramp-up time
+      !! t_current_ramp_up : input real : plasma current ramp-up time for current initiation (s)
+      !! t_current_ramp_up_min : input real : minimum plasma current ramp-up time (s)
+      use constraint_variables, only: ft_current_ramp_up, t_current_ramp_up_min
+      use times_variables, only: t_current_ramp_up
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1831,9 +1832,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ftohs * tohs/tohsmn
-      tmp_con = tohsmn * (1.0D0 - tmp_cc)
-      tmp_err = tohsmn * tmp_cc
+      tmp_cc =  1.0D0 - ft_current_ramp_up * t_current_ramp_up/t_current_ramp_up_min
+      tmp_con = t_current_ramp_up_min * (1.0D0 - tmp_cc)
+      tmp_err = t_current_ramp_up_min * tmp_cc
       tmp_symbol = '>'
       tmp_units = 'sec'
 
@@ -1850,10 +1851,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftcycl : input real : f-value for cycle time
-      !! tcycle : input real : full cycle time (s)
+      !! t_cycle : input real : full cycle time (s)
       !! tcycmn : input real : minimum cycle time (s)
       use constraint_variables, only: ftcycl, tcycmn
-      use times_variables, only: tcycle
+      use times_variables, only: t_cycle
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1863,7 +1864,7 @@ contains
 
       ! if the minimum cycle time == 0 report an error
       if (tcycmn < 1.0D0) call report_error(6)
-      tmp_cc =  1.0D0 - ftcycl * tcycle/tcycmn
+      tmp_cc =  1.0D0 - ftcycl * t_cycle/tcycmn
       tmp_con = tcycmn * (1.0D0 - tmp_cc)
       tmp_err = tcycmn * tmp_cc
       tmp_symbol = '>'
@@ -1984,7 +1985,7 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fq : input real : f-value for edge safety factor
       !! q : safety factor 'near' plasma edge: equal to q95
-      !! (unless icurr = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
+      !! (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
       !! qlim : input real :  lower limit for edge safety factor
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
@@ -2021,11 +2022,11 @@ contains
       !! eps : input real :  inverse aspect ratio
       !! fipir : input real : f-value for Ip/Irod upper limit
       !! ritfc : input real : total (summed) current in TF coils (A)
-      !! plascur : input real :  plasma current (A)
+      !! plasma_current : input real :  plasma current (A)
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
-      use physics_variables, only: eps, plascur, itart
+      use physics_variables, only: eps, plasma_current, itart
       use constraint_variables, only: fipir
       use tfcoil_variables, only: ritfc
       implicit none
@@ -2040,9 +2041,9 @@ contains
       ! if the machine isn't a ST then report error
       if (itart == 0) call report_error(10)
       cratmx = 1.0D0 + 4.91D0*(eps-0.62D0)
-      tmp_cc =  1.0D0 - fipir * cratmx * ritfc/plascur
+      tmp_cc =  1.0D0 - fipir * cratmx * ritfc/plasma_current
       tmp_con = cratmx * (1.0D0 - tmp_cc)
-      tmp_err = plascur/ritfc * tmp_cc
+      tmp_err = plasma_current/ritfc * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 

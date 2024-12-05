@@ -117,11 +117,11 @@ class PFCoil:
 
         # Set up array of times
         tv.tim[0] = 0.0e0
-        tv.tim[1] = tv.tramp
-        tv.tim[2] = tv.tim[1] + tv.tohs
+        tv.tim[1] = tv.t_precharge
+        tv.tim[2] = tv.tim[1] + tv.t_current_ramp_up
         tv.tim[3] = tv.tim[2] + tv.t_fusion_ramp
-        tv.tim[4] = tv.tim[3] + tv.tburn
-        tv.tim[5] = tv.tim[4] + tv.tqnch
+        tv.tim[4] = tv.tim[3] + tv.t_burn
+        tv.tim[5] = tv.tim[4] + tv.t_ramp_down
 
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
@@ -296,11 +296,11 @@ class PFCoil:
 
                     elif pfv.ipfloc[i] == 2:
                         # PF coil is on top of the TF coil
-                        pf.ccls[i] = 0.3e0 * pv.aspect**1.6e0 * pv.plascur
+                        pf.ccls[i] = 0.3e0 * pv.aspect**1.6e0 * pv.plasma_current
 
                     elif pfv.ipfloc[i] == 3:
                         # PF coil is radially outside the TF coil
-                        pf.ccls[i] = -0.4e0 * pv.plascur
+                        pf.ccls[i] = -0.4e0 * pv.plasma_current
 
                     else:
                         eh.idiags[0] = i
@@ -310,7 +310,7 @@ class PFCoil:
                 # Vertical field (T)
                 pv.bvert = (
                     -1.0e-7
-                    * pv.plascur
+                    * pv.plasma_current
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
@@ -343,7 +343,7 @@ class PFCoil:
                         # This is a fixed current for this calculation -- RK 07/12
 
                         pf.ccls[i] = (
-                            pv.plascur
+                            pv.plasma_current
                             * 2.0e0
                             * (1.0e0 - (pv.kappa * pv.rminor) / abs(pf.zcls[i, 0]))
                         )
@@ -391,7 +391,7 @@ class PFCoil:
 
                 bzin[0] = (
                     -1.0e-7
-                    * pv.plascur
+                    * pv.plasma_current
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
@@ -506,15 +506,15 @@ class PFCoil:
                     pf.ccl0[nng] = 1.0e6 * pfv.ccl0_ma[nng]
                     pf.ccls[nng] = 1.0e6 * pfv.ccls_ma[nng]
 
-                # Beginning of pulse: t = tv.tramp
+                # Beginning of pulse: t = tv.t_precharge
                 pfv.curpfs[ncl] = 1.0e-6 * pf.ccl0[nng]
 
-                # Beginning of flat-top: t = tv.tramp+tv.tohs
+                # Beginning of flat-top: t = tv.t_precharge+tv.t_current_ramp_up
                 pfv.curpff[ncl] = 1.0e-6 * (
                     pf.ccls[nng] - (pf.ccl0[nng] * pfv.fcohbof / pfv.fcohbop)
                 )
 
-                # End of flat-top: t = tv.tramp+tv.tohs+tv.t_fusion_ramp+tv.tburn
+                # End of flat-top: t = tv.t_precharge+tv.t_current_ramp_up+tv.t_fusion_ramp+tv.t_burn
                 pfv.curpfb[ncl] = 1.0e-6 * (
                     pf.ccls[nng] - (pf.ccl0[nng] * (1.0e0 / pfv.fcohbop))
                 )
@@ -638,6 +638,13 @@ class PFCoil:
                         tfv.tcritsc,
                     )
 
+                    # Strand critical current calculation for costing in $/kAm
+                    # = superconducting filaments jc * (1 - strand copper fraction)
+                    if pfv.isumatoh.item() in {2, 6, 8}:
+                        pfv.j_crit_str_pf = jsc
+                    else:
+                        pfv.j_crit_str_pf = jsc * (1 - pfv.fcupfsu)
+
                 # Length of conductor
 
                 rll = 2.0e0 * constants.pi * pfv.rpf[i] * pfv.turns[i]
@@ -760,9 +767,9 @@ class PFCoil:
         # Plasma wave form
         pfv.cpt[pfv.ncirt - 1, 0] = 0.0e0
         pfv.cpt[pfv.ncirt - 1, 1] = 0.0e0
-        pfv.cpt[pfv.ncirt - 1, 2] = pv.plascur
-        pfv.cpt[pfv.ncirt - 1, 3] = pv.plascur
-        pfv.cpt[pfv.ncirt - 1, 4] = pv.plascur
+        pfv.cpt[pfv.ncirt - 1, 2] = pv.plasma_current
+        pfv.cpt[pfv.ncirt - 1, 3] = pv.plasma_current
+        pfv.cpt[pfv.ncirt - 1, 4] = pv.plasma_current
         pfv.cpt[pfv.ncirt - 1, 5] = 0.0e0
 
     def efc(
@@ -1105,7 +1112,7 @@ class PFCoil:
 
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design
-            if pv.facoh > 0.0e-4:
+            if pv.inductive_current_fraction > 0.0e-4:
                 csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
                     pf.sig_hoop,
                     csfv.residual_sig_hoop,
@@ -1193,6 +1200,12 @@ class PFCoil:
                 tfv.bcritsc,
                 tfv.tcritsc,
             )
+            # Strand critical current calculation for costing in $/kAm
+            # = superconducting filaments jc * (1 - strand copper fraction)
+            if pfv.isumatoh.item() in {2, 6, 8}:
+                pfv.j_crit_str_cs = pfv.jscoh_eof
+            else:
+                pfv.j_crit_str_cs = pfv.jscoh_eof * (1 - pfv.fcuohsu)
 
             pfv.rjohc = jcritwp * pfv.awpoh / pfv.areaoh
 
@@ -1335,7 +1348,7 @@ class PFCoil:
             kk = kk + 1
             pf.rfxf[kk - 1] = pv.rmajor
             pf.zfxf[kk - 1] = 0.0e0
-            pf.cfxf[kk - 1] = pv.plascur
+            pf.cfxf[kk - 1] = pv.plasma_current
 
         # Calculate the field at the inner and outer edges
         # of the coil of interest
@@ -2113,7 +2126,7 @@ class PFCoil:
                     tfv.tmargmin_cs,
                 )
                 # only output CS fatigue model for pulsed reactor design
-                if pv.facoh > 0.0e-4:
+                if pv.inductive_current_fraction > 0.0e-4:
                     op.ovarre(
                         self.outfile,
                         "Residual hoop stress in CS Steel (Pa)",
@@ -2123,8 +2136,8 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "Minimum burn time (s)",
-                        "(tbrnmn)",
-                        ctv.tbrnmn,
+                        "(t_burn_min)",
+                        ctv.t_burn_min,
                     )
                     op.ovarre(
                         self.outfile,
@@ -2199,6 +2212,12 @@ class PFCoil:
                     pf.cslimit = True
                 if not pf.cslimit:
                     eh.report_error(135)
+
+                # Check whether CS coil currents are feasible from engineering POV
+                if ctv.fjohc > 0.7:
+                    eh.report_error(286)
+                if ctv.fjohc0 > 0.7:
+                    eh.report_error(287)
 
                 # REBCO fractures in strains above ~+/- 0.7%
                 if (
@@ -2328,7 +2347,7 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 f"PF coil {k} radius (m)",
-                f"(rpf[{k}]",
+                f"(rpf[{k}])",
                 pfv.rpf[k],
             )
             op.ovarre(
@@ -2495,7 +2514,7 @@ class PFCoil:
         op.oheadr(self.outfile, "Volt Second Consumption")
 
         op.write(self.outfile, "\t" * 3 + "volt-sec\t\t\tvolt-sec\t\tvolt-sec")
-        op.write(self.outfile, "\t" * 3 + "start-up\t\t\tburn\t\t\ttotal")
+        op.write(self.outfile, "\t" * 3 + "start-up\t\t\t_burn\t\t\ttotal")
         op.write(
             self.outfile,
             f"PF coils:\t\t{pfv.vsefsu:.2f}\t\t\t\t{pfv.vsefbn:.2f}\t\t\t{pfv.vseft:.2f}",
@@ -2677,19 +2696,19 @@ class PFCoil:
 
         for ic in range(pfv.nohc):
             # Find where the peak current occurs
-            # Beginning of pulse, t = tramp
+            # Beginning of pulse, t = t_precharge
             if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfb[ic])) and (
                 abs(pfv.curpfs[ic]) >= abs(pfv.curpff[ic])
             ):
                 pfv.ric[ic] = pfv.curpfs[ic]
 
-            # Beginning of flat-top, t = tramp + tohs
+            # Beginning of flat-top, t = t_precharge + t_current_ramp_up
             if (abs(pfv.curpff[ic]) >= abs(pfv.curpfb[ic])) and (
                 abs(pfv.curpff[ic]) >= abs(pfv.curpfs[ic])
             ):
                 pfv.ric[ic] = pfv.curpff[ic]
 
-            # End of flat-top, t = tramp + tohs + t_fusion_ramp + tburn
+            # End of flat-top, t = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn
             if (abs(pfv.curpfb[ic]) >= abs(pfv.curpfs[ic])) and (
                 abs(pfv.curpfb[ic]) >= abs(pfv.curpff[ic])
             ):

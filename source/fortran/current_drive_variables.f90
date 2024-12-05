@@ -23,12 +23,12 @@ module current_drive_variables
   real(dp) :: bigq
   !! Fusion gain; P_fusion / (P_injection + P_ohmic)
 
-  real(dp) :: bootipf
-  !! bootstrap current fraction (enforced; see ibss)
+  real(dp) :: bootstrap_current_fraction
+  !! bootstrap current fraction (enforced; see i_bootstrap_current)
 
-  real(dp) :: bscfmax
-  !! maximum fraction of plasma current from bootstrap; if `bscfmax < 0`,
-  !! bootstrap fraction = abs(bscfmax)
+  real(dp) :: bootstrap_current_fraction_max
+  !! maximum fraction of plasma current from bootstrap; if `bootstrap_current_fraction_max < 0`,
+  !! bootstrap fraction = abs(bootstrap_current_fraction_max)
 
   real(dp) :: bscf_iter89
   !! bootstrap current fraction, ITER 1989 model
@@ -42,10 +42,31 @@ module current_drive_variables
   real(dp) :: bscf_wilson
   !! bootstrap current fraction, Wilson et al model
 
-  real(dp) :: cboot
-  !! bootstrap current fraction multiplier (`ibss=1`)
+  real(dp) :: bscf_sakai
+  !! Bootstrap current fraction, Sakai et al model
 
-  real(dp) :: cnbeam
+  real(dp) :: bscf_aries
+  !! Bootstrap current fraction, ARIES model
+
+  real(dp) :: bscf_andrade
+  !! Bootstrap current fraction, Andrade et al model
+
+  real(dp) :: bscf_hoang
+  !! Bootstrap current fraction, Hoang et al model
+
+  real(dp) :: bscf_wong
+  !! Bootstrap current fraction, Wong et al model
+
+  real(dp) :: bscf_gi_I
+  !! Bootstrap current fraction, first Gi et al model
+
+  real(dp) :: bscf_gi_II
+  !! Bootstrap current fraction, second Gi et al model
+
+  real(dp) :: cboot
+  !! bootstrap current fraction multiplier
+
+  real(dp) :: beam_current
   !! neutral beam current (A)
 
   real(dp) :: diacf_hender
@@ -54,7 +75,7 @@ module current_drive_variables
   real(dp) :: diacf_scene
   !! diamagnetic current fraction, SCENE fit
 
-  real(dp) :: diaipf
+  real(dp) :: diamagnetic_current_fraction
   !! diamagnetic current fraction
 
   real(dp) :: echpwr
@@ -75,7 +96,7 @@ module current_drive_variables
   !!  - =0 O-mode
   !!  - =1 X-mode
 
-  real(dp) :: enbeam
+  real(dp) :: beam_energy
   !! neutral beam energy (keV) (`iteration variable 19`)
 
   real(dp) :: etacd
@@ -115,7 +136,7 @@ module current_drive_variables
   real(dp) :: frbeam
   !! R_tangential / R_major for neutral beam injection
 
-  real(dp) :: ftritbm
+  real(dp) :: f_tritium_beam
   !! fraction of beam that is tritium
 
   real(dp) :: gamcd
@@ -193,8 +214,8 @@ module current_drive_variables
   real(dp)  :: pinjfixmw
   !! secondary total fixed auxiliary injected power (MW)
 
-  real(dp) :: plasipf
-  !! plasma driven current fraction (Bootstrap + Diamagnetic + PS)
+  real(dp) :: plasma_current_internal_fraction
+  !! plasma current fraction driven internally (Bootstrap + Diamagnetic + PS)
 
   real(dp) :: plhybd
   !! lower hybrid injection power (MW)
@@ -205,7 +226,7 @@ module current_drive_variables
   real(dp) :: porbitlossmw
   !! neutral beam power lost after ionisation but before thermalisation (orbit loss power) (MW)
 
-  real(dp) :: psipf
+  real(dp) :: ps_current_fraction
   !! Pfirsch-Schlüter current fraction
 
   real(dp) :: pwplh
@@ -234,23 +255,30 @@ module current_drive_variables
 
     beamwd = 0.58D0
     bigq = 0.0D0
-    bootipf = 0.0D0
-    bscfmax = 0.9D0
+    bootstrap_current_fraction = 0.0D0
+    bootstrap_current_fraction_max = 0.9D0
     bscf_iter89 = 0.0D0
     bscf_nevins = 0.0D0
     bscf_sauter = 0.0D0
     bscf_wilson = 0.0D0
+    bscf_sakai = 0.0D0
+    bscf_aries = 0.0D0
+    bscf_andrade = 0.0D0
+    bscf_hoang = 0.0D0
+    bscf_wong = 0.0D0
+    bscf_gi_I = 0.0D0
+    bscf_gi_II = 0.0D0
     cboot = 1.0D0
-    cnbeam = 0.0D0
+    beam_current = 0.0D0
     diacf_hender = 0.0D0
     diacf_scene = 0.0D0
-    diaipf = 0.0D0
+    diamagnetic_current_fraction = 0.0D0
     echpwr = 0.0D0
     echwpow = 0.0D0
     effcd = 0.0D0
     harnum = 2.0
     wave_mode = 0
-    enbeam = 1.0D3
+    beam_energy = 1.0D3
     etacd = 0.0D0
     etacdfix = 0.0D0
     etaech = 0.3D0
@@ -263,7 +291,7 @@ module current_drive_variables
     feffcd = 1.0D0
     forbitloss = 0.0D0
     frbeam = 1.05D0
-    ftritbm = 1.0D-6
+    f_tritium_beam = 1.0D-6
     gamcd = 0.0D0
     gamma_ecrh = 0.35D0
     xi_ebw = 0.8D0
@@ -279,11 +307,11 @@ module current_drive_variables
     pinjimw = 0.0D0
     pinjmw = 0.0D0
     pinjfixmw = 0.0D0
-    plasipf = 0.0D0
+    plasma_current_internal_fraction = 0.0D0
     plhybd = 0.0D0
     pnbeam = 0.0D0
     porbitlossmw = 0.0D0
-    psipf = 0.0D0
+    ps_current_fraction = 0.0D0
     pwplh = 0.0D0
     pwpnb = 0.0D0
     rtanbeam = 0.0D0

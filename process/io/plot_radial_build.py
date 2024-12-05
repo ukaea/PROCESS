@@ -160,7 +160,7 @@ def main(args=None):
         "te",
         "boundu(15)",
         "dnbeta",
-        "bscfmax",
+        "bootstrap_current_fraction_max",
         "boundu(10)",
         "fiooic",
         "fjprot",
@@ -168,7 +168,7 @@ def main(args=None):
         "bmaxtf",  # bmxlim the maximum T field upper limit is the scan variable
         "gammax",
         "boundl(16)",
-        "cnstv.tbrnmn",
+        "cnstv.t_burn_min",
         "",
         "cfactr",
         "boundu(72)",
@@ -353,7 +353,8 @@ def main(args=None):
             radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=f"{radial_labels[kk]}" + f"\n {radial_build[kk][0]} m" * args.numbers,
+            label=f"{radial_labels[kk]}"
+            + f"\n {radial_build[kk][0]:.3f} m" * args.numbers,
             color=radial_color[kk],
             edgecolor="black",
             linewidth=0.05,

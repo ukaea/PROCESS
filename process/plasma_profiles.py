@@ -16,26 +16,64 @@ class PlasmaProfile:
     """
     Plasma profile class. Initiates the density and temperature profiles and
     handles the required physics variables.
+
+    Attributes:
+        profile_size (int): The size of the plasma profile.
+        outfile (str): The output file path.
+        neprofile (NProfile): An instance of the NProfile class.
+        teprofile (TProfile): An instance of the TProfile class.
+
+    Methods:
+        run(): Subroutine to execute PlasmaProfile functions.
+        parameterise_plasma(): Initializes the density and temperature profile averages and peak values.
+        parabolic_paramterisation(): Parameterizes plasma profiles in the case where ipedestal=0.
+        pedestal_parameterisation(): Instance temperature and density profiles then integrate them, setting physics variables ten and tin.
+        calculate_profile_factors(): Calculate and set the central pressure (p0) using the ideal gas law and the pressure profile index (alphap).
+        calculate_parabolic_profile_factors(): The gradient information for ipedestal = 0.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Initialize the PlasmaProfile class.
+
+        Args:
+            profile_size (int): The size of the plasma profile.
+            outfile (str): The output file path.
+            neprofile (NProfile): An instance of the NProfile class.
+            teprofile (TProfile): An instance of the TProfile class.
+        """
         # Default profile_size = 501, but it's possible to experiment with this value.
         self.profile_size = 501
         self.outfile = constants.nout
         self.neprofile = profiles.NProfile(self.profile_size)
         self.teprofile = profiles.TProfile(self.profile_size)
 
-    def run(self):
-        """Subroutine to execute PlasmaProfile functions."""
+    def run(self) -> None:
+        """
+        Subroutine to execute PlasmaProfile functions.
+
+        This method calls the parameterise_plasma() method to initialize the plasma profiles.
+
+        Returns:
+            None
+        """
         self.parameterise_plasma()
 
-    def parameterise_plasma(self):
+    def parameterise_plasma(self) -> None:
         """
-        This routine initialises the density and temperature
+        This routine initializes the density and temperature
         profile averages and peak values, given the main
         parameters describing these profiles.
+
+        Args:
+            None
+
+        Returns:
+            None
+
         Authors:
             P J Knight, CCFE, Culham Science Centre
+
         References:
             T&M/PKNIGHT/LOGBOOK24, pp.4-7
         """
@@ -46,17 +84,29 @@ class PlasmaProfile:
         if physics_variables.tratio > 0.0e0:
             physics_variables.ti = physics_variables.tratio * physics_variables.te
 
+        # Parabolic profile case
         if physics_variables.ipedestal == 0:
             self.parabolic_paramterisation()
             self.calculate_profile_factors()
             self.calculate_parabolic_profile_factors()
-
+        # Pedestal profile case
         else:
             self.pedestal_parameterisation()
             self.calculate_profile_factors()
 
-    def parabolic_paramterisation(self):
-        """Parameterise plasma profiles in the case where ipedestal=0"""
+    def parabolic_paramterisation(self) -> None:
+        """
+        Parameterise plasma profiles in the case where ipedestal == 0.
+
+        This routine calculates the parameterization of plasma profiles in the case where ipedestal=0.
+        It sets the necessary physics variables for the parabolic profile case.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Reset pedestal values to agree with original parabolic profiles
         if (
             physics_variables.rhopedt != 1.0
@@ -82,6 +132,7 @@ class PlasmaProfile:
             physics_variables.nesep = 0.0e0
             physics_variables.tbeta = 2.0e0
 
+        # Re-caluclate core and profile values
         self.teprofile.run()
         self.neprofile.run()
 
@@ -94,12 +145,13 @@ class PlasmaProfile:
             / (1.0e0 + physics_variables.alphan + physics_variables.alphat)
         )
 
-        #  Line averaged electron density (IPDG89)
+        # Line averaged electron density (IPDG89)
+        # Taken by integrating the parabolic profile over rho in the bounds of 0 and 1 and dividng by the width of the integration bounds
 
         physics_variables.dnla = (
             physics_variables.dene
             * (1.0 + physics_variables.alphan)
-            * 0.886227
+            * (sp.special.gamma(0.5) / 2.0)
             * sp.special.gamma(physics_variables.alphan + 1.0)
             / sp.special.gamma(physics_variables.alphan + 1.5)
         )
@@ -121,14 +173,20 @@ class PlasmaProfile:
             1.0 + physics_variables.alphan
         )
 
-    def pedestal_parameterisation(self):
-        """Instance temperature and density profiles then integrate them, setting physics variables ten and tin."""
-        #  Run TProfile and NProfile class methods:
-        #  The following reproduces the above results within sensible
-        #  tolerances if rhopedt = rhopedn = 1.0, teped = tesep = neped
-        #  = nesep = 0.0, and tbeta = 2.0
+    def pedestal_parameterisation(self) -> None:
+        """
+        Instance temperature and density profiles then integrate them, setting physics variables ten and tin.
 
-        #  Central values for temperature (keV) and density (m**-3)
+        This routine instances temperature and density profiles and integrates them to calculate the values of the physics variables `ten` and `tin`.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
+        #  Run TProfile and NProfile class methods:
+        #  Re-caluclate core and profile values
 
         self.teprofile.run()
         self.neprofile.run()
@@ -172,10 +230,21 @@ class PlasmaProfile:
 
         divertor_variables.prn1 = max(
             0.01e0, physics_variables.nesep / physics_variables.dene
-        )  # preventing division by zero later
+        )  # Preventing division by zero later
 
-    def calculate_profile_factors(self):
-        """Calculate and set the central pressure (p0) using the ideal gas law and the pressure profile index (alphap)."""
+    def calculate_profile_factors(self) -> None:
+        """
+        Calculate and set the central pressure (p0) using the ideal gas law and the pressure profile index (alphap).
+
+        This method calculates the central pressure (p0) using the ideal gas law and the pressure profile index (alphap).
+        It sets the value of the physics variable `p0`.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
 
         #  Central pressure (Pa), from ideal gas law : p = nkT
 
@@ -185,7 +254,7 @@ class PlasmaProfile:
                 + physics_variables.ni0 * physics_variables.ti0
             )
             * 1.0e3
-            * constants.echarge
+            * constants.electron_charge
         )
 
         #  Pressure profile index (N.B. no pedestal effects included here)
@@ -195,11 +264,28 @@ class PlasmaProfile:
 
         physics_variables.alphap = physics_variables.alphan + physics_variables.alphat
 
+        # Shall assume that the pressure profile is parabolic. Can find volume average from
+        # profile index and core value the same as for density and temperature
+        physics_variables.vol_avg_pressure = physics_variables.p0 / (
+            physics_variables.alphap + 1
+        )
+
     @staticmethod
-    def calculate_parabolic_profile_factors():
-        """The gradient information for ipedestal = 0:
-        All formulas can be obtained from the analytical parametric form of the ipedestal profiles
-        rho_max is obtained by equalling the second derivative to zero e.g.
+    def calculate_parabolic_profile_factors() -> None:
+        """
+        Calculate the gradient information for ipedestal = 0.
+
+        This function calculates the gradient information for the plasma profiles at the pedestal region
+        when the value of ipedestal is 0. It is used by the stellarator routines.
+
+        The function uses analytical parametric formulas to calculate the gradient information.
+        The maximum normalized radius (rho_max) is obtained by equating the second derivative to zero.
+
+        Args:
+            None
+
+        Returns:
+            None
         """
         if physics_variables.ipedestal == 0:
             if physics_variables.alphat > 1.0:

@@ -12,9 +12,10 @@ from process.fortran import (
     structure_variables,
     tfcoil_variables,
     impurity_radiation_module,
+    cost_variables,
 )
 from process.power import Power
-from process.stellarator import Stellarator
+from process.stellarator import Stellarator, Neoclassics
 from process.vacuum import Vacuum
 from process.availability import Availability
 from process.buildings import Buildings
@@ -42,8 +43,9 @@ def stellarator():
         Power(),
         PlasmaProfile(),
         CCFE_HCPB(BlanketLibrary(Fw())),
-        CurrentDrive(),
-        Physics(PlasmaProfile(), CurrentDrive()),
+        CurrentDrive(PlasmaProfile()),
+        Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile())),
+        Neoclassics(),
     )
 
 
@@ -58,7 +60,7 @@ class StgeomParam(NamedTuple):
 
     sareao: Any = None
 
-    vol: Any = None
+    plasma_volume: Any = None
 
     xarea: Any = None
 
@@ -90,7 +92,7 @@ class StgeomParam(NamedTuple):
             rminor=1.7842660178426601,
             sarea=0,
             sareao=0,
-            vol=0,
+            plasma_volume=0,
             xarea=0,
             bt=5.5,
             stella_config_plasma_volume=1422.6300000000001,
@@ -108,7 +110,7 @@ class StgeomParam(NamedTuple):
             rminor=1.7842660178426601,
             sarea=1925.3641313657533,
             sareao=962.68206568287667,
-            vol=1385.2745877380669,
+            plasma_volume=1385.2745877380669,
             xarea=10.001590778710231,
             bt=5.5,
             stella_config_plasma_volume=1422.6300000000001,
@@ -145,7 +147,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "sareao", stgeomparam.sareao)
 
-    monkeypatch.setattr(physics_variables, "vol", stgeomparam.vol)
+    monkeypatch.setattr(physics_variables, "plasma_volume", stgeomparam.plasma_volume)
 
     monkeypatch.setattr(physics_variables, "xarea", stgeomparam.xarea)
 
@@ -173,7 +175,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     assert physics_variables.sareao == pytest.approx(stgeomparam.expected_sareao)
 
-    assert physics_variables.vol == pytest.approx(stgeomparam.expected_vol)
+    assert physics_variables.plasma_volume == pytest.approx(stgeomparam.expected_vol)
 
     assert physics_variables.xarea == pytest.approx(stgeomparam.expected_xarea)
 
@@ -2657,9 +2659,9 @@ class StCalcEffChiParam(NamedTuple):
 
     ne0: Any = None
 
-    falpha: Any = None
+    f_alpha_plasma: Any = None
 
-    palppv: Any = None
+    alpha_power_density_total: Any = None
 
     pcoreradpv: Any = None
 
@@ -2667,7 +2669,7 @@ class StCalcEffChiParam(NamedTuple):
 
     alphat: Any = None
 
-    vol: Any = None
+    plasma_volume: Any = None
 
     sarea: Any = None
 
@@ -2688,12 +2690,12 @@ class StCalcEffChiParam(NamedTuple):
         StCalcEffChiParam(
             te0=19.108573496973477,
             ne0=3.4479000000000007e20,
-            falpha=0.95000000000000007,
-            palppv=1.2629524018077414,
+            f_alpha_plasma=0.95000000000000007,
+            alpha_power_density_total=1.2629524018077414,
             pcoreradpv=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
-            vol=1385.8142655379029,
+            plasma_volume=1385.8142655379029,
             sarea=1926.0551116585129,
             rminor=1.7863900994187722,
             coreradius=0.60000000000000009,
@@ -2705,12 +2707,12 @@ class StCalcEffChiParam(NamedTuple):
         StCalcEffChiParam(
             te0=17.5,
             ne0=3.4479000000000007e20,
-            falpha=0.95000000000000007,
-            palppv=1.0570658694225301,
+            f_alpha_plasma=0.95000000000000007,
+            alpha_power_density_total=1.0570658694225301,
             pcoreradpv=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
-            vol=1385.8142655379029,
+            plasma_volume=1385.8142655379029,
             sarea=1926.0551116585129,
             rminor=1.7863900994187722,
             coreradius=0.60000000000000009,
@@ -2738,9 +2740,15 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "ne0", stcalceffchiparam.ne0)
 
-    monkeypatch.setattr(physics_variables, "falpha", stcalceffchiparam.falpha)
+    monkeypatch.setattr(
+        physics_variables, "f_alpha_plasma", stcalceffchiparam.f_alpha_plasma
+    )
 
-    monkeypatch.setattr(physics_variables, "palppv", stcalceffchiparam.palppv)
+    monkeypatch.setattr(
+        physics_variables,
+        "alpha_power_density_total",
+        stcalceffchiparam.alpha_power_density_total,
+    )
 
     monkeypatch.setattr(physics_variables, "pcoreradpv", stcalceffchiparam.pcoreradpv)
 
@@ -2748,7 +2756,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "alphat", stcalceffchiparam.alphat)
 
-    monkeypatch.setattr(physics_variables, "vol", stcalceffchiparam.vol)
+    monkeypatch.setattr(
+        physics_variables, "plasma_volume", stcalceffchiparam.plasma_volume
+    )
 
     monkeypatch.setattr(physics_variables, "sarea", stcalceffchiparam.sarea)
 
@@ -2769,3 +2779,150 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     output = stellarator.st_calc_eff_chi()
 
     assert output == pytest.approx(stcalceffchiparam.expected_output)
+
+
+class SctfcoilNuclearHeatingIter90Param(NamedTuple):
+    blnkith: Any = None
+    blnkoth: Any = None
+    fwith: Any = None
+    fwoth: Any = None
+    shldith: Any = None
+    shldoth: Any = None
+    cfactr: Any = None
+    tlife: Any = None
+    wallmw: Any = None
+    casthi: Any = None
+    i_tf_sup: Any = None
+    tfsai: Any = None
+    tfsao: Any = None
+    dr_tf_wp: Any = None
+    tinstf: Any = None
+    expected_coilhtmx: Any = None
+    expected_dpacop: Any = None
+    expected_htheci: Any = None
+    expected_nflutf: Any = None
+    expected_pheci: Any = None
+    expected_pheco: Any = None
+    expected_ptfiwp: Any = None
+    expected_ptfowp: Any = None
+    expected_raddose: Any = None
+    expected_ptfnuc: Any = None
+
+
+@pytest.mark.parametrize(
+    "sctfcoilnuclearheatingiter90param",
+    (
+        SctfcoilNuclearHeatingIter90Param(
+            blnkith=0.83499999999999996,
+            blnkoth=1.085,
+            fwith=0.018000000000000002,
+            fwoth=0.018000000000000002,
+            shldith=0.20000000000000001,
+            shldoth=0.20000000000000001,
+            cfactr=0.75000000000000011,
+            tlife=40,
+            wallmw=0.61095969282042206,
+            casthi=0.050000000000000003,
+            i_tf_sup=1,
+            tfsai=0,
+            tfsao=0,
+            dr_tf_wp=0.73180646211514355,
+            tinstf=0.01,
+            expected_coilhtmx=2.2389491150157432e-05,
+            expected_dpacop=0.00010755386610285162,
+            expected_htheci=4.9451030969257898e-05,
+            expected_nflutf=2.302420258429136e21,
+            expected_pheci=0,
+            expected_pheco=0,
+            expected_ptfiwp=0,
+            expected_ptfowp=0,
+            expected_raddose=588883584.03266943,
+            expected_ptfnuc=0,
+        ),
+    ),
+)
+def test_sctfcoil_nuclear_heating_iter90(
+    sctfcoilnuclearheatingiter90param, monkeypatch, stellarator
+):
+    """
+    Automatically generated Regression Unit Test for sctfcoil_nuclear_heating_iter90.
+
+    This test was generated using data from stellarator/fwbs.IN.DAT.
+
+    :param sctfcoilnuclearheatingiter90param: the data used to mock and assert in this test.
+    :type sctfcoilnuclearheatingiter90param: sctfcoilnuclearheatingiter90param
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+    monkeypatch.setattr(
+        build_variables, "blnkith", sctfcoilnuclearheatingiter90param.blnkith
+    )
+    monkeypatch.setattr(
+        build_variables, "blnkoth", sctfcoilnuclearheatingiter90param.blnkoth
+    )
+    monkeypatch.setattr(
+        build_variables, "fwith", sctfcoilnuclearheatingiter90param.fwith
+    )
+    monkeypatch.setattr(
+        build_variables, "fwoth", sctfcoilnuclearheatingiter90param.fwoth
+    )
+    monkeypatch.setattr(
+        build_variables, "shldith", sctfcoilnuclearheatingiter90param.shldith
+    )
+    monkeypatch.setattr(
+        build_variables, "shldoth", sctfcoilnuclearheatingiter90param.shldoth
+    )
+    monkeypatch.setattr(
+        cost_variables, "cfactr", sctfcoilnuclearheatingiter90param.cfactr
+    )
+    monkeypatch.setattr(
+        cost_variables, "tlife", sctfcoilnuclearheatingiter90param.tlife
+    )
+    monkeypatch.setattr(
+        physics_variables, "wallmw", sctfcoilnuclearheatingiter90param.wallmw
+    )
+    monkeypatch.setattr(
+        tfcoil_variables, "casthi", sctfcoilnuclearheatingiter90param.casthi
+    )
+    monkeypatch.setattr(
+        tfcoil_variables, "i_tf_sup", sctfcoilnuclearheatingiter90param.i_tf_sup
+    )
+    monkeypatch.setattr(
+        tfcoil_variables, "tfsai", sctfcoilnuclearheatingiter90param.tfsai
+    )
+    monkeypatch.setattr(
+        tfcoil_variables, "tfsao", sctfcoilnuclearheatingiter90param.tfsao
+    )
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_wp", sctfcoilnuclearheatingiter90param.dr_tf_wp
+    )
+    monkeypatch.setattr(
+        tfcoil_variables, "tinstf", sctfcoilnuclearheatingiter90param.tinstf
+    )
+
+    (
+        coilhtmx,
+        dpacop,
+        htheci,
+        nflutf,
+        pheci,
+        pheco,
+        ptfiwp,
+        ptfowp,
+        raddose,
+        ptfnuc,
+    ) = stellarator.sctfcoil_nuclear_heating_iter90()
+
+    assert coilhtmx == pytest.approx(
+        sctfcoilnuclearheatingiter90param.expected_coilhtmx
+    )
+    assert dpacop == pytest.approx(sctfcoilnuclearheatingiter90param.expected_dpacop)
+    assert htheci == pytest.approx(sctfcoilnuclearheatingiter90param.expected_htheci)
+    assert nflutf == pytest.approx(sctfcoilnuclearheatingiter90param.expected_nflutf)
+    assert pheci == pytest.approx(sctfcoilnuclearheatingiter90param.expected_pheci)
+    assert pheco == pytest.approx(sctfcoilnuclearheatingiter90param.expected_pheco)
+    assert ptfiwp == pytest.approx(sctfcoilnuclearheatingiter90param.expected_ptfiwp)
+    assert ptfowp == pytest.approx(sctfcoilnuclearheatingiter90param.expected_ptfowp)
+    assert raddose == pytest.approx(sctfcoilnuclearheatingiter90param.expected_raddose)
+    assert ptfnuc == pytest.approx(sctfcoilnuclearheatingiter90param.expected_ptfnuc)

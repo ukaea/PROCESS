@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 """
 
-    Python tool for comparing MFILE and outputting differences
+    Python tool for comparing MFILE and outputting differences.
+    The tool does not work for MFiles that are not the result of
+    a full PROCESS run (ie if an error or exception occured).
 
     James Morris
     14/04/15
@@ -48,14 +50,14 @@ DEFAULT_COMPARE_PARAMS = [
     "fimp(13",
     "fimp(14",
     "sarea",
-    "vol",
+    "plasma_volume",
     "n_tf",
     "shldith",
     "shldoth",
     "blnkith",
     "blnkoth",
-    "powfmw",
-    "plascur/1d6",
+    "fusion_power",
+    "plasma_current_MA",
     "bt",
     "q95",
     "betap",
@@ -82,11 +84,11 @@ DEFAULT_COMPARE_PARAMS = [
     "pnucshld",
     "pdivt",
     "pheat",
-    "bootipf",
-    "faccd",
-    "facoh",
+    "bootstrap_current_fraction",
+    "aux_current_fraction",
+    "inductive_current_fraction",
     "gamnb",
-    "enbeam",
+    "beam_energy",
     "powerht",
 ]
 
@@ -105,10 +107,10 @@ BASELINE_LIST = [
     "triang",
     "triang95",
     "sarea",
-    "vol",
+    "plasma_volume",
     "n_tf",
-    "powfmw",
-    "plascur/1d6",
+    "fusion_power",
+    "plasma_current_MA",
     "bt",
     "q95",
     "beta",
@@ -125,7 +127,6 @@ BASELINE_LIST = [
     "nesep",
     "teped",
     "neped",
-    "ieped",
     "zeff",
     "dnz",
     "taueff",
@@ -134,7 +135,7 @@ BASELINE_LIST = [
     "ralpne",
     "wallmw",
     "pinnerzoneradmw",
-    "psyncpv*vol",
+    "psyncpv*plasma_volume",
     "pradmw",
     "pnucblkt",
     "pnucshld",
@@ -172,16 +173,16 @@ BASELINE_LIST = [
     "pnetelmw",
     "pinjmw",
     "pheat",
-    "bootipf",
-    "faccd",
-    "facoh",
+    "bootstrap_current_fraction",
+    "aux_current_fraction",
+    "inductive_current_fraction",
     "gamnb",
-    "enbeam",
+    "beam_energy",
     "powerht",
     "pdivt",
     "vssoft",
     "vstot",
-    "tburn",
+    "t_burn",
     "bmaxtf",
     "iooic",
     "tmarg",
@@ -194,7 +195,7 @@ BASELINE_LIST = [
 BLANKET_COMPARE_PARAMS = [
     "blnkith",
     "blnkoth",
-    "powfmw",
+    "fusion_power",
     "pnucblkt",
     "pnucfw",
     "ptfnuc",
@@ -214,8 +215,8 @@ GENERIC_LIST = [
     "kappa95",
     "triang",
     "triang95",
-    "powfmw",
-    "plascur/1d6",
+    "fusion_power",
+    "plasma_current_MA",
     "bt",
     "q95",
     "beta",
@@ -228,8 +229,8 @@ GENERIC_LIST = [
     "ralpne",
     "pinnerzoneradmw",
     "pradmw",
-    "bootipf",
-    "pdivmax/rmajor",
+    "bootstrap_current_fraction",
+    "pdivmax_over_rmajor",
     "fimp(14",
     "etath",
     "capcost",
@@ -258,11 +259,11 @@ GENERIC_LIST = [
     "gapsto",
     "tftsgap",
     "tfthko",
-    "vgap",
+    "vgap_xpoint_divertor",
     "divfix",
     "d_vv_bot",
     "shldlth",
-    "vgap2",
+    "vgap_vv_thermalshield",
 ]
 
 
@@ -286,7 +287,14 @@ def main(arg):
     n = 2
     mfile_list = list()
     for item in arg.f:
-        mfile_list.append(mf.MFile(filename=item))
+        mfile = mf.MFile(filename=item)
+        if mfile.data["error_status"].get_scan(-1) == 3:
+            raise RuntimeError(
+                f"{item} is an MFile from a PROCESS run that did not converge"
+                " and instead results from an error during the run"
+            )
+
+        mfile_list.append(mfile)
 
     var_list = list()
     missing_vars = list()

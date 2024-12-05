@@ -413,25 +413,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_17
-    !! <LI> (17) tdwell
+    !! <LI> (17) t_between_pulse
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(17) = 'tdwell        '
+    lablxc(17) = 't_between_pulse        '
     boundl(17) = 0.100D0
     boundu(17) = 1.000D8
   end subroutine init_itv_17
 
   real(kind(1.d0)) function itv_17()
-    use times_variables, only: tdwell
+    use times_variables, only: t_between_pulse
     implicit none
-    itv_17 = tdwell
+    itv_17 = t_between_pulse
   end function itv_17
 
   subroutine set_itv_17(ratio)
-    use times_variables, only: tdwell
+    use times_variables, only: t_between_pulse
     implicit none
     real(kind(1.d0)) :: ratio
-    tdwell = ratio
+    t_between_pulse = ratio
   end subroutine set_itv_17
 
   !---------------------------------
@@ -461,25 +461,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_19
-    !! <LI> (19) enbeam
+    !! <LI> (19) beam_energy
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(19) = 'enbeam        '
+    lablxc(19) = 'beam_energy        '
     boundl(19) = 1.000D0
     boundu(19) = 1.000D6
   end subroutine init_itv_19
 
   real(kind(1.d0)) function itv_19()
-    use current_drive_variables, only: enbeam
+    use current_drive_variables, only: beam_energy
     implicit none
-    itv_19 = enbeam
+    itv_19 = beam_energy
   end function itv_19
 
   subroutine set_itv_19(ratio)
-    use current_drive_variables, only: enbeam
+    use current_drive_variables, only: beam_energy
     implicit none
     real(kind(1.d0)) :: ratio
-    enbeam = ratio
+    beam_energy = ratio
   end subroutine
 
   !---------------------------------
@@ -509,25 +509,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_21
-    !! <LI> (21) ftburn (f-value for equation 13)
+    !! <LI> (21) ft_burn (f-value for equation 13)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(21) = 'ftburn        '
+    lablxc(21) = 'ft_burn        '
     boundl(21) = 0.001D0
     boundu(21) = 1.000D0
   end subroutine init_itv_21
 
   real(kind(1.d0)) function itv_21()
-    use constraint_variables, only: ftburn
+    use constraint_variables, only: ft_burn
     implicit none
-    itv_21 = ftburn
+    itv_21 = ft_burn
   end function itv_21
 
   subroutine set_itv_21(ratio)
-    use constraint_variables, only: ftburn
+    use constraint_variables, only: ft_burn
     implicit none
     real(kind(1.d0)) :: ratio
-    ftburn = ratio
+    ft_burn = ratio
   end subroutine set_itv_21
 
   !! <LI> (22) NOT USED
@@ -1495,10 +1495,10 @@ contains
   !---------------------------------
 
   subroutine init_itv_65
-    !! <LI> (65) tohs
+    !! <LI> (65) t_current_ramp_up
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(65) = 'tohs          '
+    lablxc(65) = 't_current_ramp_up          '
     boundl(65) = 0.100D0
     boundu(65) = 1.000D3
   end subroutine init_itv_65
@@ -1506,43 +1506,43 @@ contains
   real(kind(1.d0)) function itv_65()
     use error_handling, only: report_error
     use pulse_variables, only: lpulse
-    use times_variables, only: tohs
+    use times_variables, only: t_current_ramp_up
     implicit none
-    itv_65 = tohs
+    itv_65 = t_current_ramp_up
     if (lpulse /= 1) then
         call report_error(50)
     end if
   end function itv_65
 
   subroutine set_itv_65(ratio)
-    use times_variables, only: tohs
+    use times_variables, only: t_current_ramp_up
     implicit none
     real(kind(1.d0)) :: ratio
-    tohs = ratio
+    t_current_ramp_up = ratio
   end subroutine set_itv_65
 
   !---------------------------------
 
   subroutine init_itv_66
-    !! <LI> (66) ftohs (f-value for equation 41)
+    !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(66) = 'ftohs         '
+    lablxc(66) = 'ft_current_ramp_up         '
     boundl(66) = 0.001D0
     boundu(66) = 1.000D0
   end subroutine init_itv_66
 
   real(kind(1.d0)) function itv_66()
-    use constraint_variables, only: ftohs
+    use constraint_variables, only: ft_current_ramp_up
     implicit none
-    itv_66 = ftohs
+    itv_66 = ft_current_ramp_up
   end function itv_66
 
   subroutine set_itv_66(ratio)
-    use constraint_variables, only: ftohs
+    use constraint_variables, only: ft_current_ramp_up
     implicit none
     real(kind(1.d0)) :: ratio
-    ftohs = ratio
+    ft_current_ramp_up = ratio
   end subroutine set_itv_66
 
   !---------------------------------
@@ -3849,7 +3849,7 @@ contains
     real(kind(1.d0)) :: ratio
     casths = ratio
   end subroutine set_itv_172
-  
+
   !---------------------------------
   ! DUMMY variables below here
   !---------------------------------
@@ -3936,7 +3936,7 @@ contains
     use maths_library, only: variable_error
     use error_handling, only: idiags, fdiags, report_error
     use numerics, only: nvar, xcm, ixc, name_xc, lablxc, scafc, scale
-    use physics_variables, only: icurr
+    use physics_variables, only: i_plasma_current
     use global_variables, only: vlabel
     implicit none
 
@@ -4116,8 +4116,8 @@ contains
            case (168);  xcm(i) = itv_168()
            case (169);  xcm(i) = itv_169()
            case (170);  xcm(i) = itv_170()
-           case (171);  xcm(i) = itv_171() 
-           case (172);  xcm(i) = itv_172() 
+           case (171);  xcm(i) = itv_171()
+           case (172);  xcm(i) = itv_172()
             ! DUMMY Cases
            case (173);  xcm(i) = itv_173()
            case (174);  xcm(i) = itv_174()
@@ -4133,8 +4133,8 @@ contains
         ! Simple list of iteration variable names
         name_xc(i) = lablxc(ixc(i))
         ! Note that iteration variable 18 has more than one name:
-        if ((ixc(i) == 18).and.(icurr /= 2)) name_xc(i) = 'q95'
-        if ((ixc(i) == 18).and.(icurr == 2)) name_xc(i) = 'qbar'
+        if ((ixc(i) == 18).and.(i_plasma_current /= 2)) name_xc(i) = 'q95'
+        if ((ixc(i) == 18).and.(i_plasma_current == 2)) name_xc(i) = 'qbar'
 
 
          ! MDK Check if sweep variable is also an iteration variable
@@ -4384,7 +4384,7 @@ contains
            case (169);  call set_itv_169(ratio)
            case (170);  call set_itv_170(ratio)
            case (171);  call set_itv_171(ratio)
-           case (172);  call set_itv_172(ratio) 
+           case (172);  call set_itv_172(ratio)
             ! DUMMY Cases
            case (173);  call set_itv_173(ratio)
            case (174);  call set_itv_174(ratio)

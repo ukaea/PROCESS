@@ -15,11 +15,11 @@ Revised by Michael Kovari, 7/1/2016
 """
 
 import os
-import sys
 import argparse
 from argparse import RawTextHelpFormatter
 import matplotlib
 import matplotlib.pyplot as plt
+from importlib import resources
 from matplotlib.patches import Rectangle
 from matplotlib.patches import Circle
 import matplotlib.backends.backend_pdf as bpdf
@@ -58,11 +58,6 @@ from process.io.python_fortran_dicts import get_dicts
 if os.name == "posix" and "DISPLAY" not in os.environ:
     matplotlib.use("Agg")
 matplotlib.rcParams["figure.max_open_warning"] = 40
-
-if sys.version_info >= (3, 7):
-    from importlib import resources
-else:
-    import importlib_resources as resources
 
 
 def parse_args(args):
@@ -159,11 +154,11 @@ RADIAL_BUILD = [
 
 vertical_lower = [
     "rminor*kappa",
-    "vgap",
+    "vgap_xpoint_divertor",
     "divfix",
     "shldlth",
     "d_vv_bot",
-    "vgap2",
+    "vgap_vv_thermalshield",
     "thshield_vb",
     "tftsgap",
     "tfcth",
@@ -382,7 +377,7 @@ def color_key(axis, mfile_data, scan, colour_scheme):
     axis.text(
         -5,
         12,
-        "*The CS comp and thermal shield are not shown in the poloidal cross-section",
+        "*The CS comp is not shown in the poloidal cross-section",
         ha="left",
         va="top",
         size="medium",
@@ -900,7 +895,7 @@ def synchrotron_rad():
     # rpow is the(1-Rsyn) power dependence based on plasma shape
     # (see Fidone)
     rpow = 0.62
-    kap = vol / (2.0 * 3.1415**2 * rmajor * rminor**2)
+    kap = plasma_volume / (2.0 * 3.1415**2 * rmajor * rminor**2)
 
     # No account is taken of pedestal profiles here, other than use of
     # the correct ne0 and te0...
@@ -920,8 +915,8 @@ def synchrotron_rad():
 
     # psyncpv should be per unit volume
     # Albajar gives it as total
-    psyncpv = psync / vol
-    print("psyncpv = ", psyncpv * vol)  # matches the out.dat file
+    psyncpv = psync / plasma_volume
+    print("psyncpv = ", psyncpv * plasma_volume)  # matches the out.dat file
 
     return psyncpv
 
@@ -1055,8 +1050,8 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     # print('pbrem = ',pbrem)
     # print(1.0e32*lz[12])
     # print('pradpv = ',pradint)
-    # print('pbremmw = ',pbremint*vol)
-    # print('pradmw = ', pradint*vol, 'MW') # pimp = pline + pbrem
+    # print('pbremmw = ',pbremint*plasma_volume)
+    # print('pradmw = ', pradint*plasma_volume, 'MW') # pimp = pline + pbrem
 
     prof.plot(rho, prad, label="Total")
     prof.plot(rho, pimpden[0] * 2.0e-6, label="H")
@@ -1158,6 +1153,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_single_null.rs,
             vvg_single_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1176,6 +1172,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_double_null.rs,
             vvg_double_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
 
@@ -1213,7 +1210,7 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
     ) / 2.0
 
     if i_single_null == 1:
-        sg_single_null = shield_geometry_single_null(
+        shield_geometry = shield_geometry_single_null(
             cumulative_upper=cumulative_upper,
             radx_far=radx_far,
             rminx_far=rminx_far,
@@ -1222,13 +1219,8 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
             triang=triang_95,
             cumulative_lower=cumulative_lower,
         )
-        axis.plot(sg_single_null.rs, sg_single_null.zs, color="black", lw=thin)
-        axis.fill(
-            sg_single_null.rs, sg_single_null.zs, color=SHIELD_COLOUR[colour_scheme - 1]
-        )
-
-    if i_single_null == 0:
-        sg_double_null = shield_geometry_double_null(
+    else:
+        shield_geometry = shield_geometry_double_null(
             cumulative_lower=cumulative_lower,
             radx_far=radx_far,
             radx_near=radx_near,
@@ -1236,10 +1228,14 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
             rminx_near=rminx_near,
             triang=triang_95,
         )
-        axis.plot(sg_double_null.rs, sg_double_null.zs, color="black", lw=thin)
-        axis.fill(
-            sg_double_null.rs, sg_double_null.zs, color=SHIELD_COLOUR[colour_scheme - 1]
-        )
+
+    axis.plot(shield_geometry.rs, shield_geometry.zs, color="black", lw=thin)
+    axis.fill(
+        shield_geometry.rs,
+        shield_geometry.zs,
+        color=SHIELD_COLOUR[colour_scheme - 1],
+        lw=0.01,
+    )
 
 
 def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
@@ -1312,6 +1308,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_single_null.rs,
             bg_single_null.zs,
             color=BLANKET_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1330,6 +1327,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_double_null.rs[0],
             bg_double_null.zs[0],
             color=BLANKET_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
         if blnkith > 0.0:
             # only plot inboard blanket if inboard blanket thickness > 0
@@ -1340,6 +1338,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
                 bg_double_null.rs[1],
                 bg_double_null.zs[1],
                 color=BLANKET_COLOUR[colour_scheme - 1],
+                lw=0.01,
             )
 
 
@@ -1408,6 +1407,7 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             fwg_single_null.rs,
             fwg_single_null.zs,
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
     if i_single_null == 0:
@@ -1428,11 +1428,13 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             fwg_double_null.rs[0],
             fwg_double_null.zs[0],
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
         axis.fill(
             fwg_double_null.rs[1],
             fwg_double_null.zs[1],
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
+            lw=0.01,
         )
 
 
@@ -1472,27 +1474,64 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     y4 = mfile_data.data["yarc(4)"].get_scan(scan)
     x5 = mfile_data.data["xarc(5)"].get_scan(scan)
     y5 = mfile_data.data["yarc(5)"].get_scan(scan)
+    thshield_ib = mfile_data.data["thshield_ib"].get_scan(scan)
+    thshield_ob = mfile_data.data["thshield_ob"].get_scan(scan)
+    tftsgap = mfile_data.data["tftsgap"].get_scan(scan)
     if y3 != 0:
         print("TF coil geometry: The value of yarc(3) is not zero, but should be.")
 
-    # Check for TF coil shape
-    if "i_tf_shape" in mfile_data.data.keys():
-        i_tf_shape = int(mfile_data.data["i_tf_shape"].get_scan(scan))
-    else:
-        i_tf_shape = int(1)
-
-    if i_tf_shape == 2:
-        rects = tfcoil_geometry_rectangular_shape(
-            x1=x1,
-            x2=x2,
-            x4=x4,
-            x5=x5,
-            y1=y1,
-            y2=y2,
-            y4=y4,
-            y5=y5,
-            tfcth=tfcth,
+    if thshield_ib != thshield_ob:
+        print(
+            "thshield_ib and thshield_ob are different. Using thshield_ib"
+            "for the poloidal plot of the thermal shield."
         )
+
+    for offset, colour in (
+        (thshield_ib + tftsgap, THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
+        (tftsgap, "white"),
+        (0.0, TFC_COLOUR[colour_scheme - 1]),
+    ):
+        # Check for TF coil shape
+        if "i_tf_shape" in mfile_data.data.keys():
+            i_tf_shape = int(mfile_data.data["i_tf_shape"].get_scan(scan))
+        else:
+            i_tf_shape = 1
+
+        if i_tf_shape == 2:
+            rects = tfcoil_geometry_rectangular_shape(
+                x1=x1,
+                x2=x2,
+                x4=x4,
+                x5=x5,
+                y1=y1,
+                y2=y2,
+                y4=y4,
+                y5=y5,
+                tfcth=tfcth,
+                offset_in=offset,
+            )
+
+        else:
+            rects, verts = tfcoil_geometry_d_shape(
+                x1=x1,
+                x2=x2,
+                x3=x3,
+                x4=x4,
+                x5=x5,
+                y1=y1,
+                y2=y2,
+                y4=y4,
+                y5=y5,
+                tfcth=tfcth,
+                rtangle=rtangle,
+                rtangle2=rtangle2,
+                offset_in=offset,
+            )
+
+            for vert in verts:
+                path = Path(vert, closed=True)
+                patch = patches.PathPatch(path, facecolor=colour, lw=0)
+                axis.add_patch(patch)
 
         for rec in rects:
             axis.add_patch(
@@ -1500,40 +1539,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
                     xy=(rec.anchor_x, rec.anchor_z),
                     width=rec.width,
                     height=rec.height,
-                    facecolor=TFC_COLOUR[colour_scheme - 1],
-                )
-            )
-
-    else:
-        rects, verts = tfcoil_geometry_d_shape(
-            x1=x1,
-            x2=x2,
-            x3=x3,
-            x4=x4,
-            x5=x5,
-            y1=y1,
-            y2=y2,
-            y4=y4,
-            y5=y5,
-            tfcth=tfcth,
-            rtangle=rtangle,
-            rtangle2=rtangle2,
-        )
-
-        for vert in verts:
-            path = Path(vert, closed=True)
-            patch = patches.PathPatch(
-                path, facecolor=TFC_COLOUR[colour_scheme - 1], lw=0
-            )
-            axis.add_patch(patch)
-
-        for rec in rects:
-            axis.add_patch(
-                patches.Rectangle(
-                    xy=(rec.anchor_x, rec.anchor_z),
-                    width=rec.width,
-                    height=rec.height,
-                    facecolor=TFC_COLOUR[colour_scheme - 1],
+                    facecolor=colour,
                 )
             )
 
@@ -1870,14 +1876,14 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 )
             )
 
-        plt.minorticks_on()
-        plt.xlim(0.0, r_tf_inboard_out * 1.1)
-        plt.ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
+        axis.minorticks_on()
+        axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
+        axis.set_ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
 
-        plt.title("Top-down view of inboard TF coil at midplane")
-        plt.xlabel("Radial distance [m]")
-        plt.ylabel("Toroidal distance [m]")
-        plt.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
+        axis.set_title("Top-down view of inboard TF coil at midplane")
+        axis.set_xlabel("Radial distance [m]")
+        axis.set_ylabel("Toroidal distance [m]")
+        axis.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
@@ -1968,8 +1974,8 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 edgecolor="black",
             ),
         )
-        plt.xlim(-turn_width * 0.05, turn_width * 1.05)
-        plt.ylim(-turn_width * 0.05, turn_width * 1.05)
+        axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
+        axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
 
     # Non square turns
     elif integer_turns == 1:
@@ -2020,14 +2026,14 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             ),
         )
 
-        plt.xlim(-turn_width * 0.05, turn_width * 1.05)
-        plt.ylim(-turn_height * 0.05, turn_height * 1.05)
+        axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
+        axis.set_ylim(-turn_height * 0.05, turn_height * 1.05)
 
-    plt.minorticks_on()
-    plt.title("WP Turn Structure")
-    plt.xlabel("X [mm]")
-    plt.ylabel("Y [mm]")
-    plt.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
+    axis.minorticks_on()
+    axis.set_title("WP Turn Structure")
+    axis.set_xlabel("X [mm]")
+    axis.set_ylabel("Y [mm]")
+    axis.legend(loc="upper right", bbox_to_anchor=(1.0, -0.25))
 
 
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
@@ -2064,7 +2070,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
 
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
-    if iohcl == 0:
+    if iohcl == 1:
         noc = number_of_coils - 1
     else:
         noc = number_of_coils
@@ -2343,7 +2349,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("triang95", r"$\delta_{95}$", ""),
         ("sarea", "Plasma surface area", "m$^2$"),
         ("xarea", "Plasma cross-sectional area", "m$^2$"),
-        ("vol", "Plasma volume", "m$^3$"),
+        ("plasma_volume", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
         ("inboard_build", "Inboard build thickness", "m"),
@@ -2396,9 +2402,9 @@ def plot_physics_info(axis, mfile_data, scan):
         pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
 
     data = [
-        ("powfmw", "Fusion power", "MW"),
+        ("fusion_power", "Fusion power", "MW"),
         ("bigq", "$Q_{p}$", ""),
-        ("plascur/1d6", "$I_p$", "MA"),
+        ("plasma_current_ma", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
         ("normalised_thermal_beta", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
@@ -2475,7 +2481,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
         pf_info_3_a = ""
         pf_info_3_b = ""
 
-    tburn = mfile_data.data["tburn"].get_scan(scan) / 3600.0
+    t_burn = mfile_data.data["t_burn"].get_scan(scan) / 3600.0
 
     if "i_tf_bucking" in mfile_data.data.keys():
         i_tf_bucking = int(mfile_data.data["i_tf_bucking"].get_scan(scan))
@@ -2514,7 +2520,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
             ("vstot", "Available flux swing", "Wb"),
-            (tburn, "Burn time", "hrs"),
+            (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             ("#TF coil type is {}".format(tftype), "", ""),
             ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
@@ -2539,7 +2545,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
             ("vstot", "Available flux swing", "Wb"),
-            (tburn, "Burn time", "hrs"),
+            (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             ("#TF coil type is {}".format(tftype), "", ""),
             ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
@@ -2598,7 +2604,7 @@ def plot_power_info(axis, mfile_data, scan):
 
     plant_eff = 100.0 * (
         mfile_data.data["pnetelmw"].get_scan(scan)
-        / mfile_data.data["powfmw"].get_scan(scan)
+        / mfile_data.data["fusion_power"].get_scan(scan)
     )
 
     # Define appropriate pedestal and impurity parameters
@@ -2740,9 +2746,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
                 "effcd",
@@ -2770,11 +2776,11 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("gamnb", "NB gamma", "$10^{20}$ A W$^{-1}$ m$^{-2}$"),
-            ("enbeam", "NB energy", "keV"),
+            ("beam_energy", "NB energy", "keV"),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -2796,9 +2802,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
@@ -2825,9 +2831,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
@@ -2854,9 +2860,9 @@ def plot_current_drive_info(axis, mfile_data, scan):
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
             ("pheat", "Power for heating only", "MW"),
-            ("bootipf", "Bootstrap fraction", ""),
-            ("faccd", "Auxiliary fraction", ""),
-            ("facoh", "Inductive fraction", ""),
+            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("inductive_current_fraction", "Inductive fraction", ""),
             ("powerht", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
@@ -2892,10 +2898,223 @@ def plot_current_drive_info(axis, mfile_data, scan):
     plot_info(axis, data, mfile_data, scan)
 
 
+def plot_bootstrap_comparison(axis, mfile_data, scan):
+    """Function to plot a scatter box plot of bootstrap current fractions.
+
+    Arguments:
+        axis --> axis object to plot to
+        mfile_data --> MFILE data object
+        scan --> scan number to use
+    """
+
+    boot_ipdg = mfile_data.data["bscf_iter89"].get_scan(scan)
+    boot_sauter = mfile_data.data["bscf_sauter"].get_scan(scan)
+    boot_nenins = mfile_data.data["bscf_nevins"].get_scan(scan)
+    boot_wilson = mfile_data.data["bscf_wilson"].get_scan(scan)
+    boot_sakai = mfile_data.data["bscf_sakai"].get_scan(scan)
+    boot_aries = mfile_data.data["bscf_aries"].get_scan(scan)
+    boot_andrade = mfile_data.data["bscf_andrade"].get_scan(scan)
+    boot_hoang = mfile_data.data["bscf_hoang"].get_scan(scan)
+    boot_wong = mfile_data.data["bscf_wong"].get_scan(scan)
+    boot_gi_I = mfile_data.data["bscf_gi_i"].get_scan(scan)
+    boot_gi_II = mfile_data.data["bscf_gi_ii"].get_scan(scan)
+
+    # Data for the box plot
+    data = {
+        "IPDG": boot_ipdg,
+        "Sauter": boot_sauter,
+        "Nevins": boot_nenins,
+        "Wilson": boot_wilson,
+        "Sakai": boot_sakai,
+        "ARIES": boot_aries,
+        "Andrade": boot_andrade,
+        "Hoang": boot_hoang,
+        "Wong": boot_wong,
+        "Gi-I": boot_gi_I,
+        "Gi-II": boot_gi_II,
+    }
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_bootstrap = np.mean(data_values)
+    std_bootstrap = np.std(data_values)
+    median_bootstrap = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        1.02, 0.2, f"Average: {avg_bootstrap:.4f}", transform=axis.transAxes, fontsize=9
+    )
+    axis.text(
+        1.02,
+        0.15,
+        f"Standard Dev: {std_bootstrap:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.1,
+        f"Median: {median_bootstrap:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("Bootstrap Current Fraction Comparison")
+    axis.set_ylabel("Bootstrap Current Fraction")
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_facecolor("#f0f0f0")
+
+
+def plot_h_threshold_comparison(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+) -> None:
+    """
+    Function to plot a scatter box plot of L-H threshold power comparisons.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+    iter_nominal = mfile_data.data["pthrmw(1)"].get_scan(scan)
+    iter_upper = mfile_data.data["pthrmw(2)"].get_scan(scan)
+    iter_lower = mfile_data.data["pthrmw(3)"].get_scan(scan)
+    iter_1997_1 = mfile_data.data["pthrmw(4)"].get_scan(scan)
+    iter_1997_2 = mfile_data.data["pthrmw(5)"].get_scan(scan)
+    martin_nominal = mfile_data.data["pthrmw(6)"].get_scan(scan)
+    martin_upper = mfile_data.data["pthrmw(7)"].get_scan(scan)
+    martin_lower = mfile_data.data["pthrmw(8)"].get_scan(scan)
+    snipes_nominal = mfile_data.data["pthrmw(9)"].get_scan(scan)
+    snipes_upper = mfile_data.data["pthrmw(10)"].get_scan(scan)
+    snipes_lower = mfile_data.data["pthrmw(11)"].get_scan(scan)
+    snipes_closed_nominal = mfile_data.data["pthrmw(12)"].get_scan(scan)
+    snipes_closed_upper = mfile_data.data["pthrmw(13)"].get_scan(scan)
+    snipes_closed_lower = mfile_data.data["pthrmw(14)"].get_scan(scan)
+    hubbard_nominal = mfile_data.data["pthrmw(15)"].get_scan(scan)
+    hubbard_lower = mfile_data.data["pthrmw(16)"].get_scan(scan)
+    hubbard_upper = mfile_data.data["pthrmw(17)"].get_scan(scan)
+    hubbard_2017 = mfile_data.data["pthrmw(18)"].get_scan(scan)
+    martin_aspect_nominal = mfile_data.data["pthrmw(19)"].get_scan(scan)
+    martin_aspect_upper = mfile_data.data["pthrmw(20)"].get_scan(scan)
+    martin_aspect_lower = mfile_data.data["pthrmw(21)"].get_scan(scan)
+
+    # Data for the box plot
+    data = {
+        "ITER 1996 Nominal": iter_nominal,
+        "ITER 1996 Upper": iter_upper,
+        "ITER 1996 Lower": iter_lower,
+        "ITER 1997 (1)": iter_1997_1,
+        "ITER 1997 (2)": iter_1997_2,
+        "Martin Nominal": martin_nominal,
+        "Martin Upper": martin_upper,
+        "Martin Lower": martin_lower,
+        "Snipes Nominal": snipes_nominal,
+        "Snipes Upper": snipes_upper,
+        "Snipes Lower": snipes_lower,
+        "Snipes Closed Divertor Nominal": snipes_closed_nominal,
+        "Snipes Closed Divertor Upper": snipes_closed_upper,
+        "Snipes Closed Divertor Lower": snipes_closed_lower,
+        "Hubbard Nominal (I-mode)": hubbard_nominal,
+        "Hubbard Lower (I-mode)": hubbard_lower,
+        "Hubbard Upper (I-mode)": hubbard_upper,
+        "Hubbard 2017 (I-mode)": hubbard_2017,
+        "Martin Aspect Corrected Nominal": martin_aspect_nominal,
+        "Martin Aspect Corrected Upper": martin_aspect_upper,
+        "Martin Aspect Corrected Lower": martin_aspect_lower,
+    }
+
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    x_values = np.random.normal(loc=1, scale=0.01, size=len(data.values()))
+    for index, (key, value) in enumerate(data.items()):
+        if "ITER 1996" in key:
+            color = "blue"
+        elif "ITER 1997" in key:
+            color = "cyan"
+        elif "Martin" in key and "Aspect" not in key:
+            color = "green"
+        elif "Snipes" in key and "Closed" not in key:
+            color = "red"
+        elif "Snipes Closed" in key:
+            color = "orange"
+        elif "Martin Aspect" in key:
+            color = "yellow"
+        elif "Hubbard" in key and "2017" not in key:
+            color = "purple"
+        elif "Hubbard 2017" in key:
+            color = "magenta"
+        else:
+            color = colors[index]
+        axis.scatter(x_values[index], value, color=color, label=key, alpha=1.0)
+        axis.legend(loc="upper left", bbox_to_anchor=(-1.1, 1), ncol=2)
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_threshold = np.mean(data_values)
+    std_threshold = np.std(data_values)
+    median_threshold = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        -0.45,
+        0.15,
+        f"Average: {avg_threshold:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        -0.45,
+        0.1,
+        f"Standard Dev: {std_threshold:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        -0.45,
+        0.05,
+        f"Median: {median_threshold:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("L-H Threshold Comparison")
+    axis.set_ylabel("L-H threshold power [MW]")
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+
+    # Add background color
+    axis.set_facecolor("#f0f0f0")
+
+
 def main_plot(
     fig1,
     fig2,
     fig3,
+    fig4,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -2982,7 +3201,7 @@ def main_plot(
     plot_current_drive_info(plot_6, m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
-    # Can only plot WP and turn sturcutre if superconducting coil at the moment
+    # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
         plot_7 = fig3.add_subplot(321)
@@ -2991,6 +3210,12 @@ def main_plot(
         # TF coil turn structure
         plot_8 = fig3.add_subplot(322, aspect="equal")
         plot_tf_turn(plot_8, m_file_data, scan)
+
+    plot_9 = fig4.add_subplot(221)
+    plot_bootstrap_comparison(plot_9, m_file_data, scan)
+
+    plot_10 = fig4.add_subplot(224)
+    plot_h_threshold_comparison(plot_10, m_file_data, scan)
 
 
 def main(args=None):
@@ -3165,10 +3390,10 @@ def main(args=None):
     # rad profile
     global ssync
     global bt
-    global vol
+    global plasma_volume
     ssync = m_file.data["ssync"].get_scan(scan)
     bt = m_file.data["bt"].get_scan(scan)
-    vol = m_file.data["vol"].get_scan(scan)
+    plasma_volume = m_file.data["plasma_volume"].get_scan(scan)
 
     # Build the dictionaries of radial and vertical build values and cumulative values
     global vertical_upper
@@ -3179,7 +3404,7 @@ def main(args=None):
             "divfix",
             "shldtth",
             "d_vv_top",
-            "vgap2",
+            "vgap_vv_thermalshield",
             "thshield_vb",
             "tftsgap",
             "tfcth",
@@ -3193,7 +3418,7 @@ def main(args=None):
             "vvblgap",
             "shldtth",
             "d_vv_top",
-            "vgap2",
+            "vgap_vv_thermalshield",
             "thshield_vb",
             "tftsgap",
             "tfcth",
@@ -3246,12 +3471,14 @@ def main(args=None):
     page1 = plt.figure(figsize=(12, 9), dpi=80)
     page2 = plt.figure(figsize=(12, 9), dpi=80)
     page3 = plt.figure(figsize=(12, 9), dpi=80)
+    page4 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
         page1,
         page2,
         page3,
+        page4,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3263,6 +3490,7 @@ def main(args=None):
         pdf.savefig(page1)
         pdf.savefig(page2)
         pdf.savefig(page3)
+        pdf.savefig(page4)
 
     # show fig if option used
     if args.show:
@@ -3271,6 +3499,7 @@ def main(args=None):
     plt.close(page1)
     plt.close(page2)
     plt.close(page3)
+    plt.close(page4)
 
 
 if __name__ == "__main__":

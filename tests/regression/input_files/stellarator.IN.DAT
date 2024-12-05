@@ -13,7 +13,7 @@ icc = 11                *Radial build (consistency equation)
 
 * Inequalities
 
-icc = 34 * icc_dumbvoltage
+icc = 34 * icc_dumpvoltage
 icc = 65 * icc_stressVV * broken for stellarators?
 icc = 35 * icc_quench
 icc = 82 * icc_toroidalbuild
@@ -89,14 +89,14 @@ f_avspace = 1.   * f value for radial gap between coils and plasma
 ftoroidalgap = 1. * f value for toroidal gap between coils
 fbetatry = 1.    * f value for beta limit
 ffuspow = 1.0
-falpha = 0.95    * fast particle fraction
-ralpne = 0.2    * thermal alpha density / electron density
+f_alpha_plasma = 0.95    * fast particle fraction
+ralpne = 0.144    * thermal alpha density / electron density
 fradpwr = 1      * needed to control radiation power
 epsfcn = 0.0001  * convergence important to start with 10^-4, 10^-3 is NOT sufficient to match the constraint resonably well!!
 taulimit = 6     * tau_He/tau_E
 fhldiv = 0.8     * f value for divertor heat load
 fradwall = 1.0   * f value for radiation wall load
-te0_ecrh_achievable = 17.5 * keV
+te0_ecrh_achievable = 15.6203 * keV
 fecrh_ignition = 1.0 * Needs to be set for Constraint equation 90, itv 168
 max_gyrotron_frequency = 4.e11 * Hz
 
@@ -108,21 +108,21 @@ fptfnuc = 1 *f-value neutron heating
 
 *----------------Physics Variables-----------------*
 
-betalim = 0.04 * upper beta limit
+betalim = 0.06 * upper beta limit
 betalim_lower = 0.01 * lower beta limit
 bigqmin = 1 * Minimal BigQ
 
 powfmax = 500. *Maximal Fusion Power
-fpnetel = 1. *f-value for net electric power
+fpnetel = 0.637 *f-value for net electric power
 
-dene = 2e20 *Electron density (/m3)
-*hfact = 1.0 *H-factor on energy confinement times
+dene = 2.07086e20 *Electron density (/m3)
+hfact = 1.0 *H-factor on energy confinement times
 
 alphan = 0.35 *Density profile index
 alphat = 1.2 *Temperature profile index
 
-bt = 6.91 *Toroidal field on axis (T)
-rmajor = 22.0 *Plasma major radius (m)
+bt = 5.24 *Toroidal field on axis (T)
+rmajor = 22.16 *Plasma major radius (m)
 aspect = 10.1 *Aspect ratio
 
 ignite = 1     *Switch for ignition assumption (1: Ignited)
@@ -132,7 +132,7 @@ iradloss = 1   *Switch for radiation loss term usage in power balance (1: Total 
 isc = 38       *Switch for energy confinement time scaling law (38: ISS04, 49: ISS04-Gyro-Bohm)
 kappa = 1.001  *Plasma separatrix elongation
 ssync = 0.6    *Synchrotron wall reflectivity factor
-te = 6 *Volume averaged electron temperature (keV)
+te = 6.019 *Volume averaged electron temperature (keV)
 tratio = 0.95 *Ion temperature / electron temperature
 *zfear = 0 *High-Z impurity switch (0: Iron)
 
@@ -159,7 +159,7 @@ scraplo = 0.2 *Gap between plasma and first wall; outboard side (m)
 shldith = 0.2 *Inboard shield thickness (m)
 shldoth = 0.2 *Outboard shield thickness (m)
 shldtth = 0.2 *Upper/lower shield thickness (m)
-vgap = 0. *Vertical gap between x-point and divertor (m)
+vgap_xpoint_divertor = 0. *Vertical gap between x-point and divertor (m)
 thkcas = 0.05 * Thickness TF Coil case (for stellarator: Also for toroidal direction)
 
 *---------------Constraint Variables---------------*
@@ -235,14 +235,14 @@ fimp(14) = 0.
 *---------------------Numerics---------------------*
 
 ioptimz = 1 *Code operation switch (1: Optimisation, VMCON only)
-maxcal = 1000 *Maximum number of VMCON iterations
+maxcal = 200 *Maximum number of VMCON iterations
 minmax = 7 *Switch for figure-of-merit (7: Min Capital Cost)
 runtitle = HELIAS_DEMO_6
 
 *-----------------Tfcoil Variables-----------------*
 
 sig_tf_wp_max = 4.e8 *Maximal allowable Tresca stress
-fcutfsu = 0.8 *Copper fraction of cable conductor (TF coils), Schauer: 900 SCU strands, 522 Copper strands. Value for 0.4 Helium
+fcutfsu = 0.75639 *Copper fraction of cable conductor (TF coils), Schauer: 900 SCU strands, 522 Copper strands. Value for 0.4 Helium
 *i_tf_sc_mat = 1 *Switch for superconductor material in tf coils (1: ITER Nb3Sn)
 i_tf_sc_mat = 8 * Switch for superconductor material in tf coils;
 
@@ -250,9 +250,9 @@ tftmp = 4.5 *Peak helium coolant temperature in TF coils and PF coils (K)
 tmpcry = 4.5 * Cryogenic Temperature (K)
 
 vftf = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
-fiooic = 0.78 *Fraction TF coil critical current to operation current
+fiooic = 0.70 *Fraction TF coil critical current to operation current
 *fvdump = 0.6116 * F-value for dump voltage
-vdalw = 12.64 * Max voltage across tf coil during quench (kv)
+vdalw = 12.5 * Max voltage across tf coil during quench (kv)
 
 *-----------------WP Variables-----------------*
 fjprot = 0.95 * F-value for tf coil winding pack current density
@@ -260,7 +260,7 @@ t_turn_tf = 0.037 * Dimension conductor area including steel and insulation. Fro
 thicndut = 0.001 * Conduit insulation thickness (m)
 thwcndut = 0.006 * thickness of steel around each conductor
 tinstf = 0.01 * insulation on top of winding pack
-tdmptf = 20 * Dump time
+tdmptf = 19.24 * Dump time
 
 *-----------------Pfcoil Variables-----------------*
 

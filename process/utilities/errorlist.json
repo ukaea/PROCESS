@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 283,
+  "n_errortypes": 287,
   "errors": [
     {
       "no": 1,
@@ -118,7 +118,7 @@
     {
       "no": 22,
       "level": 3,
-      "message": "DIVCALL: Non-positive vgap"
+      "message": "DIVCALL: Non-positive vgap_xpoint_divertor"
     },
     {
       "no": 23,
@@ -188,17 +188,17 @@
     {
       "no": 36,
       "level": 3,
-      "message": "CHECK: Fuel ion fractions do not sum to 1.0; check fdeut, ftrit, fhe3 values"
+      "message": "CHECK: Fuel ion fractions do not sum to 1.0; check f_deuterium, f_tritium, f_helium3 values"
     },
     {
       "no": 37,
       "level": 2,
-      "message": "CHECK: Usual current scaling for TARTs (icurr=2 or 9) is not being used"
+      "message": "CHECK: Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used"
     },
     {
       "no": 38,
       "level": 3,
-      "message": "CHECK: Invalid boostrap current law for ST, do not use ibss = 1"
+      "message": "CHECK: Invalid boostrap current law for ST, do not use i_bootstrap_current = 1"
     },
     {
       "no": 39,
@@ -208,7 +208,7 @@
     {
       "no": 40,
       "level": 2,
-      "message": "CHECK: icurr=2 is not a valid option for a non-TART device"
+      "message": "CHECK: i_plasma_current=2 is not a valid option for a non-TART device"
     },
     {
       "no": 41,
@@ -258,7 +258,7 @@
     {
       "no": 50,
       "level": 3,
-      "message": "LOADXC: Do not use tohs as an iteration variable if lpulse /= 1"
+      "message": "LOADXC: Do not use t_current_ramp_up as an iteration variable if lpulse /= 1"
     },
     {
       "no": 51,
@@ -383,7 +383,7 @@
     {
       "no": 75,
       "level": 3,
-      "message": "PHYSICS: Illegal value of ibss"
+      "message": "PHYSICS: Illegal value of i_bootstrap_current"
     },
     {
       "no": 76,
@@ -393,7 +393,7 @@
     {
       "no": 77,
       "level": 3,
-      "message": "CULCUR: Illegal value for icurr"
+      "message": "CALCULATE_PLASMA_CURRENT: Illegal value for i_plasma_current"
     },
     {
       "no": 78,
@@ -1077,8 +1077,8 @@
     },
     {
       "no": 214,
-      "level": 2,
-      "message": "CHECK: Values of EPED scaling factor 'eped_sf' greater than 1 are not recommended"
+      "level": 0,
+      "message": "OBSOLETE"
     },
     {
       "no": 215,
@@ -1118,7 +1118,7 @@
     {
       "no": 222,
       "level": 3,
-      "message": "CHECK: Lang 2012 confinement scaling cannot be used for icurr=2 due to wrong q"
+      "message": "CHECK: Lang 2012 confinement scaling cannot be used for i_plasma_current=2 due to wrong q"
     },
     {
       "no": 223,
@@ -1228,7 +1228,7 @@
     {
       "no": 244,
       "level": 2,
-      "message": "PHYSICS: Diamagnetic fraction is more than 1%, but not calculated. Consider using idia=2 and ips=1."
+      "message": "PHYSICS: Diamagnetic fraction is more than 1%, but not calculated. Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1."
     },
     {
       "no": 245,
@@ -1424,6 +1424,26 @@
       "no": 283,
       "level": 3,
       "message": "[tfcoil]: Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
+    },
+    {
+      "no": 284,
+      "level": 3,
+      "message": "CHECK: i_diamagnetic_current = 0 should be used with the Sakai plasma current scaling."
+    },
+    {
+      "no": 285,
+      "level": 2,
+      "message": "[tfcoil]: fiooic shouldn't be above 0.7 for engineering reliability."
+    },
+    {
+      "no": 286,
+      "level": 2,
+      "message": "[pfcoil][cntrpost]: fjohc shouldn't be above 0.7 for engineering reliability."
+    },
+    {
+      "no": 287,
+      "level": 2,
+      "message": "[pfcoil][cntrpost]: fjohc0 shouldn't be above 0.7 for engineering reliability."
     }
   ]
 }

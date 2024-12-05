@@ -3,7 +3,6 @@ from process.fortran import (
     build_variables,
     fwbs_variables,
     dcll_module,
-    blanket_library,
     physics_variables,
     current_drive_variables,
     process_output as po,
@@ -94,9 +93,9 @@ class DCLL:
         build_variables.fwith = 2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall
         build_variables.fwoth = build_variables.fwith
 
-        blanket_library.component_volumes()
+        self.blanket_library.component_volumes()
         self.blanket_library.primary_coolant_properties(output=output)
-        blanket_library.liquid_breeder_properties(int(output), self.outfile)
+        self.blanket_library.liquid_breeder_properties(output)
         self.dcll_neutronics_and_power(output=output)
         self.dcll_masses(output=output)
         self.dcll_power_and_heating(output=output)
@@ -127,13 +126,15 @@ class DCLL:
 
         # Nuclear heating in the first wall (MW)
         fwbs_variables.pnucfw = (
-            physics_variables.pneutmw * fwbs_variables.pnuc_fw_ratio_dcll * covf
+            physics_variables.neutron_power_total
+            * fwbs_variables.pnuc_fw_ratio_dcll
+            * covf
         )
 
         # Nuclear heating in the blanket with energy multiplication (MW)
         fwbs_variables.pnuc_blkt_ratio_dcll = 1 - fwbs_variables.pnuc_fw_ratio_dcll
         fwbs_variables.pnucblkt = (
-            physics_variables.pneutmw
+            physics_variables.neutron_power_total
             * fwbs_variables.pnuc_blkt_ratio_dcll
             * fwbs_variables.emult
             * covf
@@ -141,7 +142,10 @@ class DCLL:
 
         # Energy multiplication energy (MW)
         fwbs_variables.emultmw = (
-            (physics_variables.pneutmw * fwbs_variables.pnuc_blkt_ratio_dcll)
+            (
+                physics_variables.neutron_power_total
+                * fwbs_variables.pnuc_blkt_ratio_dcll
+            )
             * (fwbs_variables.emult - 1)
             * covf
         )
@@ -151,13 +155,17 @@ class DCLL:
         if physics_variables.idivrt == 2:
             # Double null configuration
             # Nuclear heating in the divertor (MW), neutron power times fdiv
-            fwbs_variables.pnucdiv = physics_variables.pneutmw * 2 * fwbs_variables.fdiv
+            fwbs_variables.pnucdiv = (
+                physics_variables.neutron_power_total * 2 * fwbs_variables.fdiv
+            )
             # Radiation power incident on divertor (MW)
             fwbs_variables.praddiv = physics_variables.pradmw * 2 * fwbs_variables.fdiv
         else:
             # Single null configuration
             # Nuclear heating in the divertor (MW), neutron power times fdiv
-            fwbs_variables.pnucdiv = physics_variables.pneutmw * fwbs_variables.fdiv
+            fwbs_variables.pnucdiv = (
+                physics_variables.neutron_power_total * fwbs_variables.fdiv
+            )
             # Radiation power incident on divertor (MW)
             fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
 
@@ -296,10 +304,9 @@ class DCLL:
                 + fwbs_variables.praddiv
             )
 
-        elif fwbs_variables.primary_pumping == 2:
+        elif fwbs_variables.primary_pumping in [2, 3]:
             # Mechanical pumping power is calculated for first wall and blanket
             self.blanket_library.thermo_hydraulic_model(output=output)
-
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt

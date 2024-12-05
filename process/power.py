@@ -141,7 +141,7 @@ class Power:
             pf_power_variables.srcktpm = pf_power_variables.srcktpm + 1.0e3 * rcktpm[ig]
 
         #  Inductive MVA requirements, and stored energy
-        delktim = times_variables.tohs
+        delktim = times_variables.t_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
         #  pfcoil_variables.cpt(i,j) : current per turn of coil i at (end) time period j (A)
@@ -791,7 +791,7 @@ class Power:
                 structure_variables.coldmass,
                 fwbs_variables.ptfnuc,
                 pf_power_variables.ensxpfm,
-                times_variables.tpulse,
+                times_variables.t_pulse_repetition,
                 tfcoil_variables.cpttf,
                 tfcoil_variables.n_tf,
             )
@@ -1638,15 +1638,15 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Alpha power deposited in plasma (MW)",
-            "(falpha*palpmw)",
-            physics_variables.falpha * physics_variables.palpmw,
+            "(f_alpha_plasma*alpha_power_total)",
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Power from charged products of DD and/or D-He3 fusion (MW)",
-            "(pchargemw.)",
-            physics_variables.pchargemw,
+            "(non_alpha_charged_power.)",
+            physics_variables.non_alpha_charged_power,
             "OP ",
         )
         po.ovarrf(
@@ -1657,9 +1657,9 @@ class Power:
             "OP ",
         )
         # if (physics_variables.ignite == 1) :
-        #    po.ovarrf(self.outfile,'Total (MW)','',falpha*physics_variables.palpmw+physics_variables.pchargemw+pohmmw, 'OP ')
+        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+pohmmw, 'OP ')
         #    po.oblnkl(self.outfile)
-        #    if (abs(sum - (physics_variables.falpha*physics_variables.palpmw+physics_variables.pchargemw+physics_variables.pohmmw)) > 5.0e0) :
+        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+physics_variables.pohmmw)) > 5.0e0) :
         #        write(*,*) 'WARNING: Power balance across separatrix is in error by more than 5 MW.'
         #    po.ocmmnt(self.outfile,'WARNING: Power balance across separatrix is in error by more than 5 MW.')
         #
@@ -1675,8 +1675,8 @@ class Power:
             self.outfile,
             "Total (MW)",
             "",
-            physics_variables.falpha * physics_variables.palpmw
-            + physics_variables.pchargemw
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
+            + physics_variables.non_alpha_charged_power
             + physics_variables.pohmmw
             + pinj,
             "OP ",
@@ -1686,8 +1686,9 @@ class Power:
             abs(
                 sum
                 - (
-                    physics_variables.falpha * physics_variables.palpmw
-                    + physics_variables.pchargemw
+                    physics_variables.f_alpha_plasma
+                    * physics_variables.alpha_power_total
+                    + physics_variables.non_alpha_charged_power
                     + physics_variables.pohmmw
                     + pinj
                 )
@@ -1709,8 +1710,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(powfmw)",
-            physics_variables.powfmw,
+            "(fusion_power)",
+            physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(
@@ -1736,7 +1737,7 @@ class Power:
             "OP ",
         )
         sum = (
-            physics_variables.powfmw
+            physics_variables.fusion_power
             + fwbs_variables.emultmw
             + pinj
             + self.htpmw_mech
@@ -1936,8 +1937,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(powfmw)",
-            physics_variables.powfmw,
+            "(fusion_power)",
+            physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(
@@ -1947,7 +1948,7 @@ class Power:
             fwbs_variables.emultmw,
             "OP ",
         )
-        sum = physics_variables.powfmw + fwbs_variables.emultmw
+        sum = physics_variables.fusion_power + fwbs_variables.emultmw
         po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
         po.oblnkl(self.outfile)
         po.ovarrf(
@@ -2004,17 +2005,19 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(pnetelmw/(powfmw+emultmw)",
+            "(pnetelmw/(fusion_power+emultmw)",
             100.0e0
             * heat_transport_variables.pnetelmw
-            / (physics_variables.powfmw + fwbs_variables.emultmw),
+            / (physics_variables.fusion_power + fwbs_variables.emultmw),
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Net electric power / total fusion power (%)",
-            "(pnetelmw/powfmw)",
-            100.0e0 * heat_transport_variables.pnetelmw / physics_variables.powfmw,
+            "(pnetelmw/fusion_power)",
+            100.0e0
+            * heat_transport_variables.pnetelmw
+            / physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(
@@ -2051,22 +2054,22 @@ class Power:
         p_int_tot = numpy.zeros((6,))
         p_gross = numpy.zeros((6,))
 
-        t_cs = times_variables.tramp
+        t_cs = times_variables.t_precharge
 
         # Plasma current ramp up time (s)
-        t_ip_up = times_variables.tohs
+        t_ip_up = times_variables.t_current_ramp_up
 
         # Plasma heating phase (s)
         t_heat = times_variables.t_fusion_ramp
 
         # Flat-top phase (s)
-        t_flat_top = times_variables.tburn
+        t_flat_top = times_variables.t_burn
 
         # Plasma current ramp down time (s)
-        t_ip_down = times_variables.tqnch
+        t_ip_down = times_variables.t_ramp_down
 
         # Extra time between pulses (s)
-        t_extra = times_variables.tdwell
+        t_extra = times_variables.t_between_pulse
 
         # Continuous power usage
 
@@ -2140,7 +2143,10 @@ class Power:
 
         po.write(self.outfile, "Pulse timings [s]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2151,7 +2157,10 @@ class Power:
 
         po.write(self.outfile, "Continous power usage [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "System tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "System t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2200,7 +2209,10 @@ class Power:
 
         po.write(self.outfile, "Intermittent power usage [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "System tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "System t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2226,7 +2238,10 @@ class Power:
 
         po.write(self.outfile, "Power production [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, " tramp tohs t_fusion_ramp tburn tqnch tdwell avg")
+        po.write(
+            self.outfile,
+            " t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse avg",
+        )
         po.write(self.outfile, " ----- ---- ----- ----- ----- ------ ---")
         po.write(
             self.outfile,
@@ -2250,7 +2265,15 @@ class Power:
     # 40    format(t20,a20,t40,f8.2,t50,f8.2,t60,f8.2,t70,f8.2,t80,f8.2,t90,f8.2,t100,f8.2,t110,f8.2)
 
     def cryo(
-        self, i_tf_sup, tfcryoarea, coldmass, ptfnuc, ensxpfm, tpulse, cpttf, n_tf
+        self,
+        i_tf_sup,
+        tfcryoarea,
+        coldmass,
+        ptfnuc,
+        ensxpfm,
+        t_pulse_repetition,
+        cpttf,
+        n_tf,
     ):
         """
         Calculates cryogenic loads
@@ -2263,7 +2286,7 @@ class Power:
         intercoil structure
         ptfnuc : input real : Nuclear heating in TF coils (MW)
         ensxpfm : input real : Maximum PF coil stored energy (MJ)
-        tpulse : input real : Pulse length of cycle (s)
+        t_pulse_repetition : input real : Pulse length of cycle (s)
         cpttf : input real : Current per turn in TF coils (A)
         tfno : input real : Number of TF coils
         helpow : output real : Helium heat removal at cryo temperatures (W)
@@ -2280,7 +2303,7 @@ class Power:
         # Issue #511: if fwbs_variables.inuclear = 1 : fwbs_variables.qnuc is input.
 
         #  AC losses
-        self.qac = 1.0e3 * ensxpfm / tpulse
+        self.qac = 1.0e3 * ensxpfm / t_pulse_repetition
 
         #  Current leads
         if i_tf_sup == 1:
@@ -2514,7 +2537,7 @@ class Power:
             #  Set reactive power to 0, since ramp up can be long
             #  The TF coil can be ramped up as slowly as you like
             #  (although this will affect the time to recover from a magnet quench).
-            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(tohs + tramp)
+            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_precharge)
             #                                 estotf(=estotftgj/tfcoil_variables.n_tf) has been removed (#199 #847)
             tfreacmw = 0.0e0
 

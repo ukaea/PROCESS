@@ -32,7 +32,7 @@ class TestVacuum:
         monkeypatch.setattr(pv, "qfuel", 7.5745668997694112e22)
         monkeypatch.setattr(pv, "sarea", 1500.3146527709359)
         monkeypatch.setattr(tfv, "n_tf", 18)
-        monkeypatch.setattr(tv, "tdwell", 500)
+        monkeypatch.setattr(tv, "t_between_pulse", 500)
         monkeypatch.setattr(vacv, "outgasfactor", 0.0235)
         monkeypatch.setattr(vacv, "outgasindex", 1)
         monkeypatch.setattr(vacv, "pbase", 0.0005)
@@ -50,9 +50,9 @@ class TestVacuum:
 
         Values taken from first calling of the model in G-L_Nb-Ti regression test.
         """
-        monkeypatch.setattr(pv, "powfmw", 2115.3899563651776)
+        monkeypatch.setattr(pv, "fusion_power", 2115.3899563651776)
         monkeypatch.setattr(pv, "te", 15.872999999999999)
-        monkeypatch.setattr(tv, "tramp", 30)
+        monkeypatch.setattr(tv, "t_precharge", 30)
         monkeypatch.setattr(vacv, "dwell_pump", 0)
         monkeypatch.setattr(vacv, "ntype", 1)
         monkeypatch.setattr(vacv, "pbase", 0.00050000000000000001)
@@ -72,7 +72,7 @@ class TestVacuum:
         thtf = 0.63812000000000002
         ritf = 3.6371848450794664
         n_tf = 18
-        tdwell = 1800
+        t_between_pulse = 1800
         nplasma = 7.2834e19
         qtorus = 0
         gasld = 2.7947500651998464e-05
@@ -94,7 +94,7 @@ class TestVacuum:
             thtf,
             ritf,
             n_tf,
-            tdwell,
+            t_between_pulse,
             nplasma,
             ndiv,
             qtorus,

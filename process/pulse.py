@@ -92,12 +92,12 @@ class Pulse:
         #  Maximum rate of change of plasma current (A/s)
         #  - now a function of the plasma current itself (previously just 0.5e6)
 
-        ipdot = 0.0455e0 * physics_variables.plascur
+        ipdot = 0.0455e0 * physics_variables.plasma_current
 
         #  Minimum plasma current ramp-up time (s)
         #  - corrected (bus resistance is not a function of pfcoil_variables.turns)
 
-        constraint_variables.tohsmn = (
+        constraint_variables.t_current_ramp_up_min = (
             loh
             * (ioht2 - ioht1)
             / (
@@ -115,8 +115,8 @@ class Pulse:
                 po.ovarre(
                     self.outfile,
                     "Minimum plasma current ramp-up time (s)",
-                    "(tohsmn)",
-                    constraint_variables.tohsmn,
+                    "(t_current_ramp_up_min)",
+                    constraint_variables.t_current_ramp_up_min,
                 )
 
     def burn(self, output: bool):
@@ -149,9 +149,9 @@ class Pulse:
         #  Loop voltage during flat-top (including MHD sawtooth enhancement)
 
         vburn = (
-            physics_variables.plascur
+            physics_variables.plasma_current
             * physics_variables.rplas
-            * physics_variables.facoh
+            * physics_variables.inductive_current_fraction
             * physics_variables.csawth
         )
 
@@ -165,7 +165,7 @@ class Pulse:
             error_handling.fdiags[3] = times_variables.t_fusion_ramp
             error_handling.report_error(93)
 
-        times_variables.tburn = max(0.0e0, tb)
+        times_variables.t_burn = max(0.0e0, tb)
 
         #  Output section
 

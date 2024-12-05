@@ -11,7 +11,7 @@ turbines. Figure 1 shows the power flow.
 
 ## Divertor
 
-All of the charged particle transport power leaving the plasma (excluding the `1-falpha` portion of 
+All of the charged particle transport power leaving the plasma (excluding the `1-f_alpha_plasma` portion of 
 the alpha power that escapes directly to the first wall) is assumed to be absorbed in the divertor, 
 along with a proportion `fdiv` of the radiation power and the neutron power.
 
@@ -62,7 +62,18 @@ for the primary coolant.
       mechanical power used) is specified by the parameter `etaiso`. Note that the mechanical pumping 
       power for the shield and divertor are still calculated using the simplified method (a fixed 
       fraction of the heat transported).
-  - If `primary_pumping` = 3, the mechanical pumping power is calculated using specified pressure drop.  The pressures and temperatures are set by the user.  
+  - If `primary_pumping` = 3, the mechanical pumping power is calculated using specified pressure drop. 
+    The pressures and temperatures are set by the user.
+      - When used with the DCLL model a different set of pressure drop variables are used, which are outlined below:
+
+    |   Variable    | Units | Default | Description                                                                      |
+    | :----------:  | :---: | ------- | -------------------------------------------------------------------------------- |
+    | `dp_fw_blnkt` |  Pa   | 1.5D5   | Pressure drop in FW and blanket coolant including heat exchanger and pipes       |
+    | `dp_fw`       |  Pa   | 1.5D5   | Pressure drop in FW coolant including heat exchanger and pipes                   |
+    | `dp_blkt`     |  Pa   | 3.5D3   | Pressure drop in blanket coolant including heat exchanger and pipes              |
+    | `dp_liq`      |  Pa   | 1.0D7   | Pressure drop in liquid metal blanket coolant including heat exchanger and pipes |
+
+     - The defaults for these variables are geared towards a WCLL concept, so different values should be used with Helium cooling.
 
 `secondary_cycle` : This switch controls the calculation of the thermal to electric conversion 
 efficiency in the secondary cycle.
@@ -104,6 +115,6 @@ The recirculating power comprises the electrical power required to run all of th
 electrical systems surrounding the fusion power core, plus the on-site building services, offices, 
 etc., as shown in Figure 1. Of these, the cryogenic plant power includes the power required to cool 
 the TF coils from the neutron power absorbed by the coils, the PF coils (as defined by the ratio of 
-the total PF coil stored energy to the fusion power pulse time `tpulse`), and other 'cold' components.
+the total PF coil stored energy to the fusion power pulse time `t_pulse_repetition`), and other 'cold' components.
 
 [^1]: C. Harrington, *"Development and Implementation of Improved Balance of Plant Models for PROCESS"*, CCFE C5.M15 Milestone Report, August 2014 (copy stored as CCFE internal note T&M/PKNIGHT/PROCESS/027)

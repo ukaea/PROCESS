@@ -102,7 +102,7 @@ bt = 3.0
 icc = 9
 * DESCRIPTION:   Fusion Power Upper Limit Constraint
 * JUSTIFICATION: Working to target fusion
-* VARIABLES:     powfmw (fusion power) calculated in-situ
+* VARIABLES:     fusion_power (fusion power) calculated in-situ
 
 *ixc = 26
 ffuspow = 1.0
@@ -565,17 +565,6 @@ tesep = 0.125
 * DESCRIPTION:   Electron Temperature at Separatrix (keV)
 * JUSTIFICATION: 
 
-*ieped = 
-* DESCRIPTION:   Switch for scaling pedestal-top temperature with plasma parameters(default = 0)
-* =0 set pedestal-top temperature manually using teped
-* =1 set pedestal-top temperature using EPED scaling
-* JUSTIFICATION: Not set, assuming default value
-
-*eped_sf
-* DESCRIPTION:   Adjustment factor for EPED scaling to reduce pedestal temperature or pressure
-*                to mitigate or prevent ELMs
-* JUSTIFICATION: Turned off, not using
-
 *lhat =  
 * DESCRIPTION:   Connection length factor L|| = lhat qstar R for Reinke criterion
 * JUSTIFICATION: Not set, not using Reinke model. 
@@ -637,19 +626,19 @@ boundu(28) = 1.0
 * DESCRIPTION:   Seeded protium density / electron density (default = 0.0)
 * JUSTIFICATION: Not used, no protium seeding.
 
-*fdeut = 
+*f_deuterium = 
 * DESCRIPTION:   Deuterium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*ftrit = 
+*f_tritium = 
 * DESCRIPTION:   Tritium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*fhe3 = 
+*f_helium3 = 
 * DESCRIPTION:   Helium-3 fuel fraction
 * JUSTIFICATION: Using default = 0.0
 
-*falpha = 
+*f_alpha_plasma = 
 * DESCRIPTION:   Fraction of alpha power deposited to plasma
 * JUSTIFICATION: Using default = 0.95
 
@@ -2163,7 +2152,7 @@ tfootfi = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vertical Build~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-vgap = 0.75
+vgap_xpoint_divertor = 0.75
 * DESCRIPTION:   Vertical Gap Between x-point and Divertor (m)
 * JUSTIFICATION: 
 
@@ -2191,7 +2180,7 @@ thshield_vb = 0.075
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
-vgap2 = 2.0
+vgap_vv_thermalshield = 2.0
 * DESCRIPTION:   Vertical Gap Between Vacuum Vessel and TF coil (m)
 * JUSTIFICATION: 
 
@@ -2811,7 +2800,7 @@ feffcd = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Neutral Beam Injection ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*enbeam = 
+*beam_energy = 
 * DESCRIPTION:   Neutral beam energy (keV)
 * JUSTIFICATION: Not used as no NBI used
 
@@ -2835,7 +2824,7 @@ feffcd = 1.0
 * DESCRIPTION:   R_tan / R_major for NBI
 * JUSTIFICATION: Not used as no NBI used
 
-*ftritbm
+*f_tritium_beam
 * DESCRIPTION:   Tritium fraction of beam
 * JUSTIFICATION: Not used as no NBI used
 
@@ -2940,17 +2929,17 @@ etaech = 0.45
 * Bootstrap Current *
 *-------------------*
 
-bscfmax = 0.9
+bootstrap_current_fraction_max = 0.9
 * DESCRIPTION:   Maximum Fraction of Plasma Current from Bootstrap
 * JUSTIFICATION: upper limit set for plasma stability
 *                
 
-ibss = 4
+i_bootstrap_current = 4
 * DESCRIPTION:   Switch for Bootstrap Current Scaling (4: Sauter scaling)
 * JUSTIFICATION: Wilson model was previously used for STs
 
 *cboot = 
-* DESCRIPTION:   Bootstrap current fraction multiplier (ibss=1)
+* DESCRIPTION:   Bootstrap current fraction multiplier (i_bootstrap_current=1)
 * JUSTIFICATION: Not used, not scaling bootstrap current
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2970,16 +2959,16 @@ ibss = 4
 * DESCRIPTION:   Non-inductive volt-sec burn fraction, fraction of the plasma current produced by non-inductive means
 * JUSTIFICATION: Not scaling plasma current induction. default = 1.0
 
-icurr = 9
+i_plasma_current = 9
 * DESCRIPTION:   Switch for Plasma Current Scaling to Use (9: Fit from FIESTA (ST))
 * JUSTIFICATION: Fit derived from FIESTA for FNSF-like Plasmas
 * REFERENCE:     Muldrew et al. (2020), Fus. Eng. & Des., 154, 111530
 
-idia = 2
+i_diamagnetic_current = 2
 * DESCRIPTION:   Switch for Diamagnetic Current Scaling (2: SCENE Fit)
 * JUSTIFICATION: 
 
-ips = 1 
+i_pfirsch_schluter_current = 1 
 * DESCRIPTION:   Switch for Pfirsch-Schlüter Current Scaling (1: SCENE Fit)
 * JUSTIFICATION: 
 
@@ -2988,7 +2977,7 @@ ips = 1
 iprofile = 0
 * DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli dnbeta)
 * =0 use input values for alphaj, rli, dnbeta (but see gtscale option)
-* =1 make these consistent with input q, q_0 values (recommend `icurr=4` with this option)
+* =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
 * JUSTIFICATION: These consistency equations don't hold for STs
 * REFERENCE:     
 
@@ -3185,9 +3174,9 @@ lsa = 2
 
 *dwell_pump = 
 * DESCRIPTION:   Switch for dwell pumping options:
-* =0 pumping only during tdwell
-* =1 pumping only during tramp
-* =2 pumping during tdwell + tramp
+* =0 pumping only during t_between_pulse
+* =1 pumping only during t_precharge
+* =2 pumping during t_between_pulse + t_precharge
 * JUSTIFICATION: Not yet set.
 
 *pumpareafraction = 
@@ -3234,24 +3223,24 @@ lpulse = 0
 * JUSTIFICATION: Not used, no minimum burn time required
 * VARIABLES:     Calculated in-situ
 
-*tbrnmn =  
+*t_burn_min =  
 * DESCRIPTION:   Minimum required burn Time (s)
 * JUSTIFICATION: No required burn time
 
 *ixc = 21
-*ftburn = 1.0
+*ft_burn = 1.0
 *boundl(21) = 0.99
 *boundu(21) = 1.0
 * DESCRIPTION:   f-value for minimum burn time
 * JUSTIFICATION: Used with icc=13 to enforce minimum burn time, not required
 
-tburn = 1000.0 
+t_burn = 1000.0 
 * DESCRIPTION:   Burn Time (s)
 * JUSTIFICATION: Default, steady-state device so input, calculates if lpulse = 1
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-tdwell = 100.0 
+t_between_pulse = 100.0 
 * DESCRIPTION:   Time Between Pulses in a Pulsed Reactor (s)
 * JUSTIFICATION: Steady-state device, assumed
 
@@ -3259,34 +3248,34 @@ tdwell = 100.0
 
 *pulsetimings
 * DESCRIPTION:   Switch for pulse timings (if lpulse=1):
-* =0, tohs = Ip(MA)/0.1 tramp, tqnch = input
-* =1, tohs = iteration var or input. tramp/tqnch max of input or tohs
+* =0, t_current_ramp_up = Ip(MA)/0.1 t_precharge, t_ramp_down = input
+* =1, t_current_ramp_up = iteration var or input. t_precharge/t_ramp_down max of input or t_current_ramp_up
 * JUSTIFICATION: Assuming default, may change
 
 *icc = 41
 * DESCRIPTION:   Constraint equation for plasma current ramp-up time lower limit
 * JUSTIFICATION: Turned off, do not care about plasma current ramp up time 
-* VARIABLES:     tohs (s) calculated in-situ
+* VARIABLES:     t_current_ramp_up (s) calculated in-situ
 
-*tohsmn =  
+*t_current_ramp_up_min =  
 * DESCRIPTION:   Minimum plasma current ramp-up time (s)
 * JUSTIFICATION: Turned off, not using icc = 41
 
 *tohsin =  
-* DESCRIPTION:   Switch for TOHS calculation
-* = 0, tohs = tramp = tqnch = Ip(MA)/0.5
-* = 1, tohs = tohsin; tramp, tqnch are input
+* DESCRIPTION:   Switch for t_current_ramp_up calculation
+* = 0, t_current_ramp_up = t_precharge = t_ramp_down = Ip(MA)/0.5
+* = 1, t_current_ramp_up = tohsin; t_precharge, t_ramp_down are input
 * JUSTIFICATION: Not used, assuming default
 
-*tqnch =  
+*t_ramp_down =  
 * DESCRIPTION:   PF coil shutdown time (s)
 * JUSTIFICATION: Assuming default.
 
-*tohs =  
+*t_current_ramp_up =  
 * DESCRIPTION:   Plasma current ramp-up time for current initiation (s)
 * JUSTIFICATION: Assuming default of 10 seconds
 
-*tramp =  
+*t_precharge =  
 * DESCRIPTION:   Initial charge time for PF coils (s)
 * JUSTIFICATION: Assuming default.
 
@@ -3299,7 +3288,7 @@ tdwell = 100.0
 *icc = 42
 * DESCRIPTION:   Constraint equation for full pulse cycle time lower limit. 
 * JUSTIFICATION: Turned off, do not care about the full pulse cycle time 
-* VARIABLES:     tcycle (s) calculated in-situ
+* VARIABLES:     t_cycle (s) calculated in-situ
 
 *tcycmn =  
 * DESCRIPTION:   Minimum full pulse cycle time (s)

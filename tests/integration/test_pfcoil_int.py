@@ -120,7 +120,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pv, "rli", 1.693)
     monkeypatch.setattr(pv, "itartpf", 0)
     monkeypatch.setattr(pv, "vsres", 6.151e1)
-    monkeypatch.setattr(pv, "plascur", 1.8254e7)
+    monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
     monkeypatch.setattr(pv, "triang", 0.413)
     monkeypatch.setattr(pv, "rminor", 2.883)
     monkeypatch.setattr(pv, "rmajor", 8.938)
@@ -138,10 +138,10 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
     monkeypatch.setattr(tv, "tim", np.full(6, 0.0))
-    monkeypatch.setattr(tv, "tramp", 5.0e2)
-    monkeypatch.setattr(tv, "tburn", 7.1263e-1)
-    monkeypatch.setattr(tv, "tohs", 1.82538e2)
-    monkeypatch.setattr(tv, "tqnch", 1.82538e2)
+    monkeypatch.setattr(tv, "t_precharge", 5.0e2)
+    monkeypatch.setattr(tv, "t_burn", 7.1263e-1)
+    monkeypatch.setattr(tv, "t_current_ramp_up", 1.82538e2)
+    monkeypatch.setattr(tv, "t_ramp_down", 1.82538e2)
     monkeypatch.setattr(tv, "t_fusion_ramp", 1.0e1)
     monkeypatch.setattr(constants, "dcopper", 8.9e3)
     monkeypatch.setattr(pf, "first_call", True)
@@ -253,7 +253,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "curpff", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "curpfs", np.full(22, -175.84911993600002))
     monkeypatch.setattr(pv, "rmajor", 8.938)
-    monkeypatch.setattr(pv, "plascur", 1.8254e7)
+    monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
 
     # Mocks for hoop_stress()
     monkeypatch.setattr(tfv, "poisson_steel", 3.0e-1)
@@ -2609,7 +2609,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
         ),
     )
     monkeypatch.setattr(pv, "rmajor", 8.8901000000000003)
-    monkeypatch.setattr(pv, "plascur", 17721306.969367817)
+    monkeypatch.setattr(pv, "plasma_current", 17721306.969367817)
 
     i = 1
     ii = 1

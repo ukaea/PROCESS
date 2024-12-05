@@ -48,7 +48,7 @@ module scan_module
   !!         <LI> 9  te
   !!         <LI> 10 boundu(15: fvs)
   !!         <LI> 11 dnbeta
-  !!         <LI> 12 bscfmax (use negative values only)
+  !!         <LI> 12 bootstrap_current_fraction_max
   !!         <LI> 13 boundu(10: hfact)
   !!         <LI> 14 fiooic
   !!         <LI> 15 fjprot
@@ -56,7 +56,7 @@ module scan_module
   !!         <LI> 17 bmxlim
   !!         <LI> 18 gammax
   !!         <LI> 19 boundl(16: ohcth)
-  !!         <LI> 20 tbrnmn
+  !!         <LI> 20 t_burn_min
   !!         <LI> 21 not used
   !!         <LI> 22 cfactr (N.B. requires iavail=0)
   !!         <LI> 23 boundu(72: fipir)
@@ -182,7 +182,7 @@ contains
     use constraint_variables, only: taulimit
     use cost_variables, only: cdirt, coe, coeoam, coefuelt, c222, ireactor, &
       capcost, coecap, c221
-    use current_drive_variables, only: pheat, pinjmw, bootipf, enbeam, bigq
+    use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, beam_energy, bigq
     use divertor_variables, only: hldiv
     use error_handling, only: errors_on
     use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
@@ -195,9 +195,9 @@ contains
       tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
-    use physics_variables, only: q, aspect, pradmw, dene, powfmw, btot, tesep, &
-      pdivt, ralpne, ten, betap, hfac, teped, palpnb, qlim, rmajor, wallmw, &
-      beta, betalim, bt, plascur
+    use physics_variables, only: q, aspect, pradmw, dene, fusion_power, btot, tesep, &
+      pdivt, ralpne, ten, betap, hfac, teped, alpha_power_beams, qlim, rmajor, wallmw, &
+      beta, betalim, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
     implicit none
@@ -223,7 +223,7 @@ contains
     outvar( 9,iscan) = cdirt / 1.0D3
     outvar(10,iscan) = rmajor
     outvar(11,iscan) = aspect
-    outvar(12,iscan) = 1.0D-6 * plascur
+    outvar(12,iscan) = 1.0D-6 * plasma_current
     outvar(13,iscan) = bt
     outvar(14,iscan) = btot
     outvar(15,iscan) = q
@@ -235,16 +235,16 @@ contains
     outvar(21,iscan) = dene/1.0D20
     outvar(22,iscan) = hfac(6)
     outvar(23,iscan) = hfac(7)
-    outvar(24,iscan) = powfmw
-    outvar(25,iscan) = palpnb * 5.0D0
+    outvar(24,iscan) = fusion_power
+    outvar(25,iscan) = alpha_power_beams * 5.0D0
     outvar(26,iscan) = wallmw
     outvar(27,iscan) = pinjmw
     outvar(28,iscan) = pinjwp
     outvar(29,iscan) = pheat
     outvar(30,iscan) = pinjmw - pheat
     outvar(31,iscan) = bigq
-    outvar(32,iscan) = bootipf
-    outvar(33,iscan) = enbeam/1.0D3
+    outvar(32,iscan) = bootstrap_current_fraction
+    outvar(33,iscan) = beam_energy/1.0D3
     outvar(34,iscan) = hldiv
     outvar(35,iscan) = tfcmw
     outvar(36,iscan) = whttf
@@ -595,9 +595,9 @@ contains
 
 	use build_variables, only: blnkoth, shldith, scrapli, scraplo, ohcth
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
-        gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax
+        gammax, t_burn_min, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
-	use current_drive_variables, only: bscfmax, etaech
+	use current_drive_variables, only: bootstrap_current_fraction_max, etaech
 	use divertor_variables, only: hldivlim
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
@@ -658,8 +658,8 @@ contains
             dnbeta = swp(iscn)
             vlab = 'dnbeta' ; xlab = 'Beta_coefficient'
         case (12)
-            bscfmax = swp(iscn)
-            vlab = 'bscfmax' ; xlab = 'Bootstrap_fraction'
+            bootstrap_current_fraction_max = swp(iscn)
+            vlab = 'bootstrap_current_fraction_max' ; xlab = 'Bootstrap_fraction'
         case (13)
             boundu(10) = swp(iscn)
             vlab = 'boundu(10)' ; xlab = 'H_factor_upper_bound'
@@ -682,8 +682,8 @@ contains
             boundl(16) = swp(iscn)
             vlab = 'boundl(16)' ; xlab = 'CS_thickness_lower_bound'
         case (20)
-            tbrnmn = swp(iscn)
-            vlab = 'tbrnmn' ; xlab = 'Minimum_burn_time_(s)'
+            t_burn_min = swp(iscn)
+            vlab = 't_burn_min' ; xlab = 'Minimum_burn_time_(s)'
         case (21)
             ! sigpfalw = swp(iscn)
             vlab = 'obsolete' ; xlab = 'obsolete'

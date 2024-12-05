@@ -100,11 +100,11 @@ contains
 		use error_handling, only: idiags, fdiags, errors_on, report_error
 		use heat_transport_variables, only: pnetelmw
     use numerics, only: minmax
-		use physics_variables, only: powfmw, bt, rmajor, wallmw, aspect, pohmmw
+		use physics_variables, only: fusion_power, bt, rmajor, wallmw, aspect, pohmmw
 		use pf_power_variables, only: srcktpm
 		use process_output, only: int_to_string3
 		use tfcoil_variables, only: tfcmw
-		use times_variables, only: tburn
+		use times_variables, only: t_burn
     implicit none
 
     !  Arguments
@@ -134,7 +134,7 @@ contains
         write(*,*) 'Figure of merit 2 (fusion power / input power) is not used.'
         write(*,*) 'Figure of merit 5 (fusion gain Q) is available.'
         stop 1
-       ! fc = sgn * powfmw / (pinjmw + porbitlossmw + tfcpmw + ppump/1.0D6)
+       ! fc = sgn * fusion_power / (pinjmw + porbitlossmw + tfcpmw + ppump/1.0D6)
 
     case (3)  !  neutron wall load
        fc = sgn * wallmw
@@ -143,8 +143,8 @@ contains
        fc = sgn * (tfcmw + 1.0D-3*srcktpm)/10.0D0
 
    case (5)  !  Q = fusion gain  Issue #540
-       fc = sgn * powfmw / (pinjmw + porbitlossmw + pohmmw)
-       !fc = sgn * powfmw / pinjmw
+       fc = sgn * fusion_power / (pinjmw + porbitlossmw + pohmmw)
+       !fc = sgn * fusion_power / pinjmw
 
     case (6)  !  cost of electricity
        fc = sgn * coe/100.0D0
@@ -178,7 +178,7 @@ contains
        stop 1
 
     case (14)  !  pulse length
-       fc = sgn * tburn / 2.0D4
+       fc = sgn * t_burn / 2.0D4
 
     case (15)  !  plant availability factor (N.B. requires iavail = 1)
 
@@ -187,7 +187,7 @@ contains
        fc = sgn * cfactr
 
     case (16)  !  major radius/burn time
-       fc = sgn * ( 0.95d0 * (rmajor/9.0d0) - 0.05d0 * (tburn/7200.d0) )
+       fc = sgn * ( 0.95d0 * (rmajor/9.0d0) - 0.05d0 * (t_burn/7200.d0) )
 
     case (17)  !  net electrical output
        fc = sgn * pnetelmw / 500.0d0
@@ -196,7 +196,7 @@ contains
       fc = 1d0
 
    case (19)  !  major radius/burn time
-      fc = sgn * ( -0.5d0 * (bigq/20.0D0) - 0.5d0 * (tburn/7200.d0) )
+      fc = sgn * ( -0.5d0 * (bigq/20.0D0) - 0.5d0 * (t_burn/7200.d0) )
 
     case default
        idiags(1) = iab ; call report_error(24)

@@ -48,7 +48,10 @@ module cost_variables
   !! total plant direct cost (M$)
 
   real(dp) :: cdrlife
-  !! lifetime of heating/current drive system (y)
+  !! Full power year lifetime of heating/current drive system (y)
+
+  real(dp) :: cdrlife_cal
+  !! Calendar year lifetime of heating/current drive system (y)
 
   real(dp) :: cfactr
   !! Total plant availability fraction; input if `iavail=0`
@@ -140,6 +143,9 @@ module cost_variables
   real(dp) :: cplife
   !! Calculated full power year lifetime of centrepost (years)
 
+  real(dp) :: cplife_cal
+  !! Calculated calendar year lifetime of centrepost (years)
+
   real(dp) :: cpstcst
   !! ST centrepost direct cost (M$)
 
@@ -166,6 +172,9 @@ module cost_variables
 
   real(dp) :: divlife
   !! Full power lifetime of divertor (y)
+
+  real(dp) :: divlife_cal
+  !! Calendar year lifetime of divertor (y)
 
   real(dp) :: dtlife
   !! period prior to the end of the plant life that the decommissioning fund is used (years)
@@ -338,6 +347,12 @@ module cost_variables
 
   real(dp) :: startuppwr
   !! cost associated with additional HCD system power required on start-up ($)
+
+  integer :: supercond_cost_model
+  !! Switch for superconductor cost model:
+  !!
+  !! - =0 use $/kg
+  !! - =1 use $/kAm
 
   real(dp) :: tlife
   !! Full power year plant lifetime (years)
@@ -540,6 +555,9 @@ module cost_variables
   real(dp), dimension(9) :: ucsc
   !! cost of superconductor ($/kg)
 
+  real(dp), dimension(9) :: sc_mat_cost_0
+  !!cost of superconductor ($/kA m) at 6.4 T, 4.2 K
+
   real(dp), parameter :: ucsh = 115.0D0
   !! cost of shops and warehouses (M$/m3)
 
@@ -618,6 +636,7 @@ module cost_variables
     cdcost = 0.0D0
     cdirt = 0.0D0
     cdrlife = 0.0D0
+    cdrlife_cal = 0.0D0
     cfactr = 0.75D0
     cpfact = 0.0D0
     cfind = (/0.244D0, 0.244D0, 0.244D0, 0.29D0/)
@@ -643,6 +662,7 @@ module cost_variables
     cost_model = 1
     cowner = 0.15D0
     cplife = 0.0D0
+    cplife_cal = 0.0D0
     cpstcst = 0.0D0
     cpstflnc = 10.0D0
     crctcore = 0.0D0
@@ -652,6 +672,7 @@ module cost_variables
     dintrt = 0.0D0
     divcst = 0.0D0
     divlife = 0.0D0
+    divlife_cal = 0.0D0
     dtlife = 0.0D0
     fcap0 = 1.165D0
     fcap0cp = 1.08D0
@@ -742,6 +763,9 @@ module cost_variables
     ucsc = &
       (/600.0D0, 600.0D0, 300.0D0, 600.0D0, 600.0D0, 600.0D0, 300.0D0, 1200.0D0, &
       1200.0D0/)
+    sc_mat_cost_0 = &
+      (/4.8D0, 2.0D0, 1.0D0, 4.8D0, 4.8D0, 47.4D0, 1.0D0, 47.4D0, 47.4D0/)
+    supercond_cost_model = 0
     ucshld = 32.0D0
     uctfbr = 1.22D0
     uctfbus = 100.0D0
