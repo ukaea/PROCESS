@@ -5186,7 +5186,9 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", acc26param.pthermmw)
 
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", acc26param.p_hcd_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", acc26param.p_hcd_electrical_mw
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_gross_electrical", acc26param.p_gross_electrical

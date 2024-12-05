@@ -169,7 +169,7 @@ module heat_transport_variables
     real(dp) :: pwpm2
     !! base AC power requirement per unit floor area (W/m2)
 
-    real(dp) :: tfacpd
+    real(dp) :: p_tf_electrical_mw
     !! total steady state TF coil AC power demand (MW)
 
     real(dp) :: tlvpmw
@@ -237,7 +237,7 @@ module heat_transport_variables
       psecshld = 0.0D0
       pthermmw = 0.0D0
       pwpm2 = 150.0D0
-      tfacpd = 0.0D0
+      p_tf_electrical_mw = 0.0D0
       tlvpmw = 0.0D0
       trithtmw = 15.0D0
       tturb = 0.0D0

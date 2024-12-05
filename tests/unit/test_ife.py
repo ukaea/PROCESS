@@ -2106,7 +2106,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     monkeypatch.setattr(heat_transport_variables, "pthermmw", ifepw1param.pthermmw)
     monkeypatch.setattr(heat_transport_variables, "pfwdiv", ifepw1param.pfwdiv)
     monkeypatch.setattr(heat_transport_variables, "nphx", ifepw1param.nphx)
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", ifepw1param.p_hcd_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", ifepw1param.p_hcd_electrical_mw
+    )
     monkeypatch.setattr(heat_transport_variables, "pinjht", ifepw1param.pinjht)
     monkeypatch.setattr(
         heat_transport_variables, "p_cryo_plant", ifepw1param.p_cryo_plant
@@ -2129,7 +2131,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     )
     assert heat_transport_variables.pfwdiv == pytest.approx(ifepw1param.expected_pfwdiv)
     assert heat_transport_variables.nphx == pytest.approx(ifepw1param.expected_nphx)
-    assert heat_transport_variables.p_hcd_electrical_mw == pytest.approx(ifepw1param.expected_p_hcd_electrical_mw)
+    assert heat_transport_variables.p_hcd_electrical_mw == pytest.approx(
+        ifepw1param.expected_p_hcd_electrical_mw
+    )
     assert heat_transport_variables.pinjht == pytest.approx(ifepw1param.expected_pinjht)
     assert heat_transport_variables.p_cryo_plant == pytest.approx(
         ifepw1param.expected_crypmw
@@ -2626,7 +2630,9 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
     )
     monkeypatch.setattr(heat_transport_variables, "vachtmw", ifeacpparam.vachtmw)
     monkeypatch.setattr(heat_transport_variables, "trithtmw", ifeacpparam.trithtmw)
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", ifeacpparam.p_hcd_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", ifeacpparam.p_hcd_electrical_mw
+    )
     monkeypatch.setattr(heat_transport_variables, "fcsht", ifeacpparam.fcsht)
     monkeypatch.setattr(heat_transport_variables, "tlvpmw", ifeacpparam.tlvpmw)
     monkeypatch.setattr(ife_variables, "tdspmw", ifeacpparam.tdspmw)
@@ -2907,10 +2913,16 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(heat_transport_variables, "pthermmw", ifepw2param.pthermmw)
     monkeypatch.setattr(heat_transport_variables, "etath", ifepw2param.etath)
     monkeypatch.setattr(heat_transport_variables, "fgrosbop", ifepw2param.fgrosbop)
-    monkeypatch.setattr(heat_transport_variables, "p_recirc_electrical_mw", ifepw2param.p_recirc_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_recirc_electrical_mw",
+        ifepw2param.p_recirc_electrical_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "pacpmw", ifepw2param.pacpmw)
     monkeypatch.setattr(heat_transport_variables, "pnetelmw", ifepw2param.pnetelmw)
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", ifepw2param.p_hcd_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", ifepw2param.p_hcd_electrical_mw
+    )
     monkeypatch.setattr(heat_transport_variables, "pfwdiv", ifepw2param.pfwdiv)
     monkeypatch.setattr(heat_transport_variables, "nphx", ifepw2param.nphx)
     monkeypatch.setattr(ife_variables, "tdspmw", ifepw2param.tdspmw)

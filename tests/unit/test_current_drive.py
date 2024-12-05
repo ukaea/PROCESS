@@ -400,7 +400,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(heat_transport_variables, "pinjwpfix", cudrivparam.pinjwpfix)
 
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", cudrivparam.p_hcd_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", cudrivparam.p_hcd_electrical_mw
+    )
 
     monkeypatch.setattr(current_drive_variables, "echpwr", cudrivparam.echpwr)
 
@@ -582,7 +584,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     current_drive.cudriv(output=False)
 
-    assert heat_transport_variables.p_hcd_electrical_mw == pytest.approx(cudrivparam.expected_p_hcd_electrical_mw)
+    assert heat_transport_variables.p_hcd_electrical_mw == pytest.approx(
+        cudrivparam.expected_p_hcd_electrical_mw
+    )
 
     assert current_drive_variables.echpwr == pytest.approx(cudrivparam.expected_echpwr)
 

@@ -1952,7 +1952,9 @@ class IFE:
 
         # Waste driver power (MW)
 
-        heat_transport_variables.pinjht = heat_transport_variables.p_hcd_electrical_mw - pdrvmw
+        heat_transport_variables.pinjht = (
+            heat_transport_variables.p_hcd_electrical_mw - pdrvmw
+        )
 
         # Cryogenic power (MW)
         # Cryogenic temperature is assumed to be 4.5K

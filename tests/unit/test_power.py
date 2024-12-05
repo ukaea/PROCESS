@@ -1877,7 +1877,7 @@ class AcpowParam(NamedTuple):
 
     vachtmw: Any = None
 
-    tfacpd: Any = None
+    p_tf_electrical_mw: Any = None
 
     trithtmw: Any = None
 
@@ -1916,7 +1916,7 @@ class AcpowParam(NamedTuple):
             baseel=5000000,
             p_cryo_plant=37.900388528497025,
             vachtmw=0.5,
-            tfacpd=9.1507079104675704,
+            p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
             p_hcd_electrical_mw=129.94611930107126,
             tlvpmw=0,
@@ -1937,7 +1937,7 @@ class AcpowParam(NamedTuple):
             baseel=5000000,
             p_cryo_plant=108.74512702403499,
             vachtmw=0.5,
-            tfacpd=9.1507079104675704,
+            p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
             p_hcd_electrical_mw=129.94611930107126,
             tlvpmw=699.34943812129745,
@@ -1978,11 +1978,15 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", acpowparam.vachtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "tfacpd", acpowparam.tfacpd)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_tf_electrical_mw", acpowparam.p_tf_electrical_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", acpowparam.trithtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", acpowparam.p_hcd_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", acpowparam.p_hcd_electrical_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "tlvpmw", acpowparam.tlvpmw)
 
@@ -2103,7 +2107,7 @@ class Power2Param(NamedTuple):
 
     psechcd: Any = None
 
-    tfacpd: Any = None
+    p_tf_electrical_mw: Any = None
 
     htpmw: Any = None
 
@@ -2261,7 +2265,7 @@ class Power2Param(NamedTuple):
             psechtmw=0,
             trithtmw=15,
             psechcd=0,
-            tfacpd=9.1507079104675704,
+            p_tf_electrical_mw=9.1507079104675704,
             htpmw=234.28554165620102,
             etath=0.37500000000000006,
             p_cryo_plant=37.900388528497025,
@@ -2363,7 +2367,7 @@ class Power2Param(NamedTuple):
             psechtmw=233.80288075411508,
             trithtmw=15,
             psechcd=0,
-            tfacpd=9.1507079104675704,
+            p_tf_electrical_mw=9.1507079104675704,
             htpmw=234.2162627659944,
             etath=0.37500000000000006,
             p_cryo_plant=108.74512702403499,
@@ -2504,7 +2508,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "htpmw_fw", power2param.htpmw_fw)
 
-    monkeypatch.setattr(heat_transport_variables, "p_recirc_electrical_mw", power2param.p_recirc_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_recirc_electrical_mw",
+        power2param.p_recirc_electrical_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", power2param.pthermmw)
 
@@ -2514,7 +2522,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "iprimshld", power2param.iprimshld)
 
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", power2param.p_hcd_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", power2param.p_hcd_electrical_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "fachtmw", power2param.fachtmw)
 
@@ -2528,7 +2538,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "psechcd", power2param.psechcd)
 
-    monkeypatch.setattr(heat_transport_variables, "tfacpd", power2param.tfacpd)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_tf_electrical_mw", power2param.p_tf_electrical_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "htpmw", power2param.htpmw)
 
@@ -2652,7 +2664,9 @@ def test_power2(power2param, monkeypatch, power):
         power2param.expected_psechtmw
     )
 
-    assert power.p_core_electrical_mw == pytest.approx(power2param.expected_p_core_electrical_mw)
+    assert power.p_core_electrical_mw == pytest.approx(
+        power2param.expected_p_core_electrical_mw
+    )
 
 
 class Power3Param(NamedTuple):
@@ -2667,7 +2681,7 @@ class Power3Param(NamedTuple):
 
     vachtmw: Any = None
 
-    tfacpd: Any = None
+    p_tf_electrical_mw: Any = None
 
     trithtmw: Any = None
 
@@ -2705,7 +2719,7 @@ class Power3Param(NamedTuple):
             pinjmax=120,
             p_cryo_plant=37.900388528497025,
             vachtmw=0.5,
-            tfacpd=9.1507079104675704,
+            p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
             p_hcd_electrical_mw=129.94611930107126,
             fachtmw=61.882833632875375,
@@ -2732,7 +2746,7 @@ class Power3Param(NamedTuple):
             pinjmax=120,
             p_cryo_plant=108.74512702403499,
             vachtmw=0.5,
-            tfacpd=9.1507079104675704,
+            p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
             p_hcd_electrical_mw=129.94611930107126,
             fachtmw=62.237143915360818,
@@ -2786,11 +2800,15 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", power3param.vachtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "tfacpd", power3param.tfacpd)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_tf_electrical_mw", power3param.p_tf_electrical_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", power3param.trithtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electrical_mw", power3param.p_hcd_electrical_mw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", power3param.p_hcd_electrical_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "fachtmw", power3param.fachtmw)
 

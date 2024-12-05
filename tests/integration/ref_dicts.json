@@ -7527,7 +7527,7 @@
             0.0
         ],
         "tfacmw": 0.0,
-        "tfacpd": 0.0,
+        "p_tf_electrical_mw": 0.0,
         "tfareain": 0.0,
         "tfb": [
             0.0,
@@ -10780,7 +10780,7 @@
         "tf_fit_z": "Dimensionless winding pack radial thickness",
         "tfa": "Horizontal radius of inside edge of TF coil (m)",
         "tfacmw": "IFE target factory power (MW)",
-        "tfacpd": "total steady state TF coil AC power demand (MW)",
+        "p_tf_electrical_mw": "total steady state TF coil AC power demand (MW)",
         "tfareain": "Area of inboard midplane TF legs (m2)",
         "tfb": "Vertical radius of inside edge of TF coil (m)",
         "tfbusl": "TF coil bus length (m)",
@@ -18241,7 +18241,7 @@
             "psecshld",
             "pthermmw",
             "pwpm2",
-            "tfacpd",
+            "p_tf_electrical_mw",
             "tlvpmw",
             "trithtmw",
             "tturb",

@@ -45,7 +45,9 @@ class Power:
         self.pthermblkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermshld = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.ppumpmw = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.p_core_electrical_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_core_electrical_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pdivfraction = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.iprimdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -403,7 +405,7 @@ class Power:
         the plant. Included in STORAC in January 1992 by P.C. Shipe.
         None
         """
-        ptfmw = heat_transport_variables.tfacpd
+        ptfmw = heat_transport_variables.p_tf_electrical_mw
 
         # Power to PF coil power supplies, MW
         ppfmw = 1.0e-3 * pf_power_variables.srcktpm
@@ -412,7 +414,9 @@ class Power:
             ppfmw = ppfmw + heat_transport_variables.peakmva
 
         #  Power to plasma heating supplies, MW
-        pheatingmw = heat_transport_variables.p_hcd_electrical_mw  # Should be zero if ignite==1
+        pheatingmw = (
+            heat_transport_variables.p_hcd_electrical_mw
+        )  # Should be zero if ignite==1
 
         #  Power to cryogenic comp. motors, MW
         crymw = heat_transport_variables.p_cryo_plant
@@ -754,7 +758,8 @@ class Power:
             # MDK
             # pinjht = heat_transport_variables.p_hcd_electrical_mw - current_drive_variables.pinjmw - current_drive_variables.porbitlossmw - physics_variables.palpfwmw
             heat_transport_variables.pinjht = (
-                heat_transport_variables.p_hcd_electrical_mw - current_drive_variables.pinjmw
+                heat_transport_variables.p_hcd_electrical_mw
+                - current_drive_variables.pinjmw
             )
         else:
             heat_transport_variables.pinjht = 0.0e0
@@ -859,7 +864,7 @@ class Power:
             heat_transport_variables.p_cryo_plant
             + heat_transport_variables.fachtmw
             + self.ppumpmw
-            + heat_transport_variables.tfacpd
+            + heat_transport_variables.p_tf_electrical_mw
             + heat_transport_variables.trithtmw
             + heat_transport_variables.vachtmw
             + pfcoil_variables.pfwpmw
@@ -1865,8 +1870,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for TF coils (MW)",
-            "(tfacpd)",
-            heat_transport_variables.tfacpd,
+            "(p_tf_electrical_mw)",
+            heat_transport_variables.p_tf_electrical_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1890,7 +1895,7 @@ class Power:
             + heat_transport_variables.vachtmw
             + heat_transport_variables.trithtmw
             + heat_transport_variables.p_cryo_plant
-            + heat_transport_variables.tfacpd
+            + heat_transport_variables.p_tf_electrical_mw
             + heat_transport_variables.fachtmw
             + pfcoil_variables.pfwpmw
         )
@@ -2077,7 +2082,7 @@ class Power:
         p_fac[0:6] = heat_transport_variables.fachtmw
 
         # TF coil electrical power [MWe]
-        p_tf[0:6] = heat_transport_variables.tfacpd
+        p_tf[0:6] = heat_transport_variables.p_tf_electrical_mw
 
         # Total continuous power [MWe]
         p_cont_tot = p_cooling + p_cryo + p_vac + p_tritium + p_fac + p_tf
@@ -2534,7 +2539,7 @@ class Power:
             )
 
             # Total steady state AC power demand (MW)
-            heat_transport_variables.tfacpd = (
+            heat_transport_variables.p_tf_electrical_mw = (
                 tfcoil_variables.tfcmw / heat_transport_variables.etatf
             )
 
@@ -2645,7 +2650,7 @@ class Power:
             tfcoil_variables.tfbusl,
             tfcoil_variables.drarea,
             buildings_variables.tfcbv,
-            heat_transport_variables.tfacpd,
+            heat_transport_variables.p_tf_electrical_mw,
         ) = self.tfcpwr(
             output,
             itfka,
@@ -2686,7 +2691,7 @@ class Power:
             nsptfc = 0.0e0  # resistive (1.0 = superconducting, 0.0 = resistive)
 
         #  Total steady state TF coil AC power demand (summed later)
-        tfacpd = 0.0e0
+        p_tf_electrical_mw = 0.0e0
 
         #  Stored energy of all TF coils, MJ
         ettfc = ntfc * ettfmj
@@ -2799,7 +2804,9 @@ class Power:
         xpwrmw = xpower / 0.9e0
 
         #  Total steady state AC power demand, MW
-        tfacpd = tfacpd + rpower / heat_transport_variables.etatf
+        p_tf_electrical_mw = (
+            p_tf_electrical_mw + rpower / heat_transport_variables.etatf
+        )
         #  Total TF coil power conversion building floor area, m2
 
         # tftsp = tfcfsp
@@ -2941,9 +2948,9 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Total steady state AC power demand (MW)",
-                "(tfacpd)",
-                tfacpd,
+                "(p_tf_electrical_mw)",
+                p_tf_electrical_mw,
                 "OP ",
             )
 
-        return (tfckw, tfbusl, drarea, tfcbv, tfacpd)
+        return (tfckw, tfbusl, drarea, tfcbv, p_tf_electrical_mw)

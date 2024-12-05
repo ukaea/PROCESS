@@ -1023,7 +1023,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8564E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1139E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7969E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0256E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0256E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0180E+02 OP 
@@ -1159,7 +1159,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6258E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0256E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0256E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.3205E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5323E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.5697E+02    
@@ -2186,7 +2186,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8331E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.0999E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7257E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0255E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0255E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9908E+02 OP 
@@ -2322,7 +2322,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6086E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0255E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0255E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2819E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5253E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.6457E+02    
@@ -3349,7 +3349,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8009E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.0805E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.6545E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0174E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0174E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9672E+02 OP 
@@ -3485,7 +3485,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.5859E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0174E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0174E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2616E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5193E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.6888E+02    
@@ -4512,7 +4512,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8006E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.0804E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.6549E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0170E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0170E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9653E+02 OP 
@@ -4648,7 +4648,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.5830E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0170E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0170E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2477E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5198E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7006E+02    
@@ -5675,7 +5675,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8374E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1024E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7257E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0295E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0295E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9917E+02 OP 
@@ -5811,7 +5811,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6107E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0295E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0295E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2645E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5254E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7135E+02    
@@ -6838,7 +6838,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8754E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1252E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7971E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0439E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0439E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0097E+02 OP 
@@ -6974,7 +6974,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6398E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0439E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0439E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2660E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5330E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.6865E+02    
@@ -8001,7 +8001,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8739E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1244E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7976E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0429E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0429E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0068E+02 OP 
@@ -8137,7 +8137,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6363E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0429E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0429E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2523E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5337E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7033E+02    
@@ -9164,7 +9164,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8423E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1054E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7270E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0349E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0349E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9848E+02 OP 
@@ -9300,7 +9300,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6160E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0349E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0349E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2468E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5271E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7155E+02    
@@ -10327,7 +10327,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8082E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.0849E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.6557E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0255E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0255E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9620E+02 OP 
@@ -10463,7 +10463,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.5938E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0255E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0255E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2408E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5208E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.6843E+02    
@@ -11490,7 +11490,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8082E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.0849E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.6559E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0256E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0256E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9611E+02 OP 
@@ -11626,7 +11626,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.5931E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0256E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0256E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2326E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5212E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7386E+02    
@@ -12653,7 +12653,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8430E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1058E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7273E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0355E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0355E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9846E+02 OP 
@@ -12789,7 +12789,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6168E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0355E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0355E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2418E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5277E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7884E+02    
@@ -13816,7 +13816,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8783E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1270E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7978E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0456E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0456E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0035E+02 OP 
@@ -13952,7 +13952,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6396E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0456E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0456E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2484E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5342E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7848E+02    
@@ -14979,7 +14979,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8783E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1270E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7982E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0455E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0455E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0024E+02 OP 
@@ -15115,7 +15115,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6384E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0455E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0455E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2391E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5346E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.8304E+02    
@@ -16142,7 +16142,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8458E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1075E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.7275E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0373E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0373E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9825E+02 OP 
@@ -16278,7 +16278,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6204E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0373E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0373E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2421E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5281E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.8757E+02    
@@ -17305,7 +17305,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8121E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.0873E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.6558E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0288E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electrical_mw)______________________      1.0288E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9616E+02 OP 
@@ -17441,7 +17441,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6020E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0288E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0288E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2451E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5216E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.9234E+02    
