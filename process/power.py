@@ -391,20 +391,6 @@ class Power:
 
         # write(self.outfile,50)(times_variables.tim(time),time=1,6)
 
-    # 50    format(t45,'time (sec)'//t15,6f11.2)
-    #     # write(self.outfile,55)(times_variables.timelabel(time),time=1,6)
-    # 55    format(' Time point', t21,6a11)
-
-    #     # write(self.outfile,60) (poloidalenergy(time)/1.0e6,time=1,6)
-    # 60    format(' Energy (MJ)',t17,6(1pe11.3))
-    #     po.oblnkl(self.outfile)
-
-    #     write(outfile,65)(times_variables.intervallabel(time),time=1,5)
-    # 65    format(' Interval', t26,6a11)
-    #     write(outfile,70) (pf_power_variables.poloidalpower(time)/1.0e6,time=1,5)
-    # 70    format(' dE/dt (MW)',t22,5(1pe11.3))
-    #     po.oblnkl(outfile)
-
     def acpow(self, output: bool):
         """
         AC power requirements
@@ -2258,11 +2244,6 @@ class Power:
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
 
         po.oblnkl(self.outfile)
-
-    # 10    format(t20,a20,t40,a8,t50,a8,t60,a8,t70,a8,t80,a8,t90,a8)
-    # 20    format(t20,a20,t40,f8.2,t50,f8.2,t60,f8.2,t70,f8.2,t80,f8.2,t90,f8.2,t100,f8.2)
-    # 30    format(t20,a20,t40,a8,t50,a8,t60,a8,t70,a8,t80,a8,t90,a8,t100,a8)
-    # 40    format(t20,a20,t40,f8.2,t50,f8.2,t60,f8.2,t70,f8.2,t80,f8.2,t90,f8.2,t100,f8.2,t110,f8.2)
 
     def cryo(
         self,
