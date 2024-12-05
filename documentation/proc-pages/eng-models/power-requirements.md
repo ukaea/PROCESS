@@ -1,5 +1,54 @@
 # Power Requirements
 
+The main power flow is controlled by `power.py`. The main class `Power` controls this.
+## Power requirements | `Power`
+
+---
+
+### PF power | `pfpwr()`
+
+---
+
+### AC power | `acpow()`
+
+---
+
+### Main power conversion | `power1()`
+
+---
+
+### Remainder power conversion | `power2()`
+
+---
+
+### Time dependent power requirements | `power3()`
+
+---
+
+### Cryogenic power requirements | `cryo()`
+
+---
+
+### Plant thermal efficiency | `plant_thermal_efficiency()`
+
+---
+
+### Liquid metal breeder plant thermal efficiency | `plant_thermal_efficiency_2()`
+
+---
+
+### Resistive TF coil power requirements | `tfpwr()`
+
+---
+
+### Superconducting TF coil power requirements | `tfpwr()`
+
+---
+
+### TF coil power conversion system parameters | `tfcpwr()`
+
+---
+
 Figure 1 shows a simplified description of the power flow. 
 
 <figure>
