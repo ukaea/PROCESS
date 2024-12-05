@@ -1957,9 +1957,9 @@ class IFE:
         # Cryogenic power (MW)
         # Cryogenic temperature is assumed to be 4.5K
 
-        heat_transport_variables.crypmw = ife_variables.pifecr
+        heat_transport_variables.p_cryo_plant = ife_variables.pifecr
         heat_transport_variables.helpow = (
-            1.0e6 * heat_transport_variables.crypmw * (0.13 * 4.5) / (293.0 - 4.5)
+            1.0e6 * heat_transport_variables.p_cryo_plant * (0.13 * 4.5) / (293.0 - 4.5)
         )
 
     def ifepw2(self, output: bool = False):
@@ -1987,7 +1987,7 @@ class IFE:
             + heat_transport_variables.trithtmw
             + ife_variables.tdspmw
             + ife_variables.tfacmw
-            + heat_transport_variables.crypmw
+            + heat_transport_variables.p_cryo_plant
             + ife_variables.htpmw_ife
         )
 
@@ -2085,8 +2085,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from cryogenic plant (MW)",
-                "(crypmw)",
-                heat_transport_variables.crypmw,
+                "(p_cryo_plant)",
+                heat_transport_variables.p_cryo_plant,
             )
             process_output.ovarre(
                 self.outfile,
@@ -2164,7 +2164,7 @@ class IFE:
         # Total pulsed power system load, MW
 
         heat_transport_variables.pacpmw = (
-            heat_transport_variables.crypmw
+            heat_transport_variables.p_cryo_plant
             + heat_transport_variables.vachtmw
             + ife_variables.tdspmw
             + ife_variables.tfacmw
@@ -2187,7 +2187,7 @@ class IFE:
             + heat_transport_variables.trithtmw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
             + heat_transport_variables.vachtmw
-            + 0.5 * heat_transport_variables.crypmw
+            + 0.5 * heat_transport_variables.p_cryo_plant
             + ife_variables.tfacmw
         )
 
@@ -2238,8 +2238,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Cryogenic comp motors (MW)",
-            "(crypmw)",
-            heat_transport_variables.crypmw,
+            "(p_cryo_plant)",
+            heat_transport_variables.p_cryo_plant,
         )
         process_output.ovarre(
             self.outfile,

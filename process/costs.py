@@ -2123,7 +2123,7 @@ class Costs:
             * cost_variables.ucahts
             * (
                 (1.0e6 * heat_transport_variables.pinjht) ** exphts
-                + (1.0e6 * heat_transport_variables.crypmw) ** exphts
+                + (1.0e6 * heat_transport_variables.p_cryo_plant) ** exphts
                 + (1.0e6 * heat_transport_variables.vachtmw) ** exphts
                 + (1.0e6 * heat_transport_variables.trithtmw) ** exphts
                 + (1.0e6 * heat_transport_variables.fachtmw) ** exphts

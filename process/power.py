@@ -415,7 +415,7 @@ class Power:
         pheatingmw = heat_transport_variables.pinjwp  # Should be zero if ignite==1
 
         #  Power to cryogenic comp. motors, MW
-        crymw = heat_transport_variables.crypmw
+        crymw = heat_transport_variables.p_cryo_plant
 
         #  Facility base load, MW (loads not dependent on floor area)
         basemw = heat_transport_variables.baseel * 1.0e-6
@@ -763,7 +763,7 @@ class Power:
         # ---
         # Initialisation (unchanged if all coil resisitive)
         heat_transport_variables.helpow = 0.0e0
-        heat_transport_variables.crypmw = 0.0e0
+        heat_transport_variables.p_cryo_plant = 0.0e0
         p_tf_cryoal_cryo = 0.0e0
         tfcoil_variables.cryo_cool_req = 0.0e0
 
@@ -786,7 +786,7 @@ class Power:
             # Rem SK : This ITER efficiency is very low compare to the Strowbridge curve
             #          any reasons why?
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tmpcry (MW)
-            heat_transport_variables.crypmw = (
+            heat_transport_variables.p_cryo_plant = (
                 1.0e-6
                 * (293.0e0 - tfcoil_variables.tmpcry)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tmpcry)
@@ -816,8 +816,8 @@ class Power:
             )
 
             # Add to electric power requirement for cryogenic plant (MW)
-            heat_transport_variables.crypmw = (
-                heat_transport_variables.crypmw + p_tf_cryoal_cryo
+            heat_transport_variables.p_cryo_plant = (
+                heat_transport_variables.p_cryo_plant + p_tf_cryoal_cryo
             )
 
         # Calculate cryo cooling requirement at 4.5K (kW)
@@ -856,7 +856,7 @@ class Power:
         #  increase or decrease the poloidal field energy AND extra due to ohmic heating
         #  of the plasma.  Issue #713
         self.pcoresystems = (
-            heat_transport_variables.crypmw
+            heat_transport_variables.p_cryo_plant
             + heat_transport_variables.fachtmw
             + self.ppumpmw
             + heat_transport_variables.tfacpd
@@ -998,8 +998,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electric power for cryogenic plant (MW)",
-            "(crypmw)",
-            heat_transport_variables.crypmw,
+            "(p_cryo_plant)",
+            heat_transport_variables.p_cryo_plant,
             "OP ",
         )
 
@@ -1463,8 +1463,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat removal from cryogenic plant (MW)",
-            "(crypmw)",
-            heat_transport_variables.crypmw,
+            "(p_cryo_plant)",
+            heat_transport_variables.p_cryo_plant,
             "OP ",
         )
         po.ovarrf(
@@ -1856,8 +1856,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for cryoplant (MW)",
-            "(crypmw)",
-            heat_transport_variables.crypmw,
+            "(p_cryo_plant)",
+            heat_transport_variables.p_cryo_plant,
             "OP ",
         )
         po.ovarrf(
@@ -1887,7 +1887,7 @@ class Power:
             + heat_transport_variables.htpmw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.trithtmw
-            + heat_transport_variables.crypmw
+            + heat_transport_variables.p_cryo_plant
             + heat_transport_variables.tfacpd
             + heat_transport_variables.fachtmw
             + pfcoil_variables.pfwpmw
@@ -2063,7 +2063,7 @@ class Power:
         p_cooling[0:6] = heat_transport_variables.htpmw
 
         # Cryoplant electrical power [MWe]
-        p_cryo[0:6] = heat_transport_variables.crypmw
+        p_cryo[0:6] = heat_transport_variables.p_cryo_plant
 
         # Vacuum electrical power [MWe]
         p_vac[0:6] = heat_transport_variables.vachtmw
