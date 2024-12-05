@@ -462,13 +462,13 @@ def color_key(axis, mfile_data, scan, colour_scheme):
                 [0.7, -0.3], 1, 0.4, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
             )
         )
-
-    axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+    else:
+        axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
+        axis.add_patch(
+            patches.Rectangle(
+                [0.7, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+            )
         )
-    )
 
 
 def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
@@ -2791,7 +2791,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data.keys():
+        if mfile_data.data["iefrffix"].get_scan(scan) != 0:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
