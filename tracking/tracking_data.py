@@ -143,7 +143,7 @@ class ProcessTracker:
         "sarea",
         "pnetelmw",
         "etath",
-        "pgrossmw",
+        "p_gross_electrical",
         "tftmp",
         "n_tf",
         "bmaxtf",

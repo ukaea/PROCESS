@@ -883,15 +883,15 @@ class Power:
         if cost_variables.ireactor == 1:
 
             #  Gross electric power
-            # pgrossmw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
+            # p_gross_electrical = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
             if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
-                heat_transport_variables.pgrossmw = (
+                heat_transport_variables.p_gross_electrical = (
                     (heat_transport_variables.pthermmw - self.pthermblkt_liq)
                     * heat_transport_variables.etath
                     + self.pthermblkt_liq * heat_transport_variables.etath_liq
                 )
             else:
-                heat_transport_variables.pgrossmw = (
+                heat_transport_variables.p_gross_electrical = (
                     heat_transport_variables.pthermmw * heat_transport_variables.etath
                 )
 
@@ -904,13 +904,15 @@ class Power:
 
             #  Net electric power
             heat_transport_variables.pnetelmw = (
-                heat_transport_variables.pgrossmw - heat_transport_variables.precircmw
+                heat_transport_variables.p_gross_electrical
+                - heat_transport_variables.precircmw
             )
 
             #  Recirculating power fraction
             cirpowfr = (
-                heat_transport_variables.pgrossmw - heat_transport_variables.pnetelmw
-            ) / heat_transport_variables.pgrossmw
+                heat_transport_variables.p_gross_electrical
+                - heat_transport_variables.pnetelmw
+            ) / heat_transport_variables.p_gross_electrical
 
         if output == 0:
             return
@@ -1901,15 +1903,15 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Gross electrical output* (MW)",
-            "(pgrossmw)",
-            heat_transport_variables.pgrossmw,
+            "(p_gross_electrical)",
+            heat_transport_variables.p_gross_electrical,
             "OP ",
         )
         po.ocmmnt(
             self.outfile, "(*Power for pumps in secondary circuit already subtracted)"
         )
         po.oblnkl(self.outfile)
-        if abs(sum - heat_transport_variables.pgrossmw) > 5.0e0:
+        if abs(sum - heat_transport_variables.p_gross_electrical) > 5.0e0:
             logger.warning(
                 f'{"WARNING: Electrical Power balance is in error by more than 5 MW."}'
             )
@@ -2103,7 +2105,7 @@ class Power:
 
         # Gross power [MWe]
         p_gross[0:3] = 0.0e0
-        p_gross[3] = heat_transport_variables.pgrossmw
+        p_gross[3] = heat_transport_variables.p_gross_electrical
         p_gross[4:6] = 0.0e0
 
         # Net electric power [MWe]

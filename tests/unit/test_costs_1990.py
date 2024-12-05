@@ -453,7 +453,7 @@ def acc23_fix(request, monkeypatch, costs):
     # Mock variables used by acc23()
     # Some may be parameterised
     monkeypatch.setattr(fv, "coolwh", param["coolwh"])
-    monkeypatch.setattr(htv, "pgrossmw", 1200.0)
+    monkeypatch.setattr(htv, "p_gross_electrical", 1200.0)
     monkeypatch.setattr(costs, "c23", 0)
 
     # Return the expected result for the given parameter list
@@ -616,7 +616,7 @@ def acc26_param(**kwargs):
         "pinjwp": 250.0,
         "tfcmw": 50.0,
         "pthermmw": htv.pthermmw,
-        "pgrossmw": htv.pgrossmw,
+        "p_gross_electrical": htv.p_gross_electrical,
         "expected": approx(87.9, abs=0.01),
     }
 
@@ -642,7 +642,7 @@ def acc26_params():
             pinjwp=htv.pinjwp,
             tfcmw=fortran.tfcoil_variables.tfcmw,
             pthermmw=3000.0,
-            pgrossmw=700.0,
+            p_gross_electrical=700.0,
         ),
     ]
 
@@ -672,7 +672,7 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(htv, "pinjwp", param["pinjwp"])
     monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(htv, "pthermmw", param["pthermmw"])
-    monkeypatch.setattr(htv, "pgrossmw", param["pgrossmw"])
+    monkeypatch.setattr(htv, "p_gross_electrical", param["p_gross_electrical"])
     monkeypatch.setattr(costs, "c26", 0)
 
     # Return the expected result for the given parameter list
@@ -4653,7 +4653,7 @@ class Acc23Param(NamedTuple):
 
     coolwh: Any = None
 
-    pgrossmw: Any = None
+    p_gross_electrical: Any = None
 
     c23: Any = None
 
@@ -4669,7 +4669,7 @@ class Acc23Param(NamedTuple):
             ).transpose(),
             ireactor=1,
             coolwh=1,
-            pgrossmw=982.58317918134742,
+            p_gross_electrical=982.58317918134742,
             c23=0,
             expected_c23=194.83812507173698,
         ),
@@ -4679,7 +4679,7 @@ class Acc23Param(NamedTuple):
             ).transpose(),
             ireactor=1,
             coolwh=1,
-            pgrossmw=982.28339460484608,
+            p_gross_electrical=982.28339460484608,
             c23=194.83812507173698,
             expected_c23=194.78878460447092,
         ),
@@ -4704,7 +4704,9 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "coolwh", acc23param.coolwh)
 
-    monkeypatch.setattr(heat_transport_variables, "pgrossmw", acc23param.pgrossmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_gross_electrical", acc23param.p_gross_electrical
+    )
 
     monkeypatch.setattr(costs, "c23", acc23param.c23)
 
@@ -5123,7 +5125,7 @@ class Acc26Param(NamedTuple):
 
     pinjwp: Any = None
 
-    pgrossmw: Any = None
+    p_gross_electrical: Any = None
 
     fusion_power: Any = None
 
@@ -5143,7 +5145,7 @@ class Acc26Param(NamedTuple):
             lsa=2,
             pthermmw=2620.2218111502593,
             pinjwp=129.94611930107126,
-            pgrossmw=982.58317918134742,
+            p_gross_electrical=982.58317918134742,
             fusion_power=1985.785106643267,
             tfcmw=0,
             c26=0,
@@ -5155,7 +5157,7 @@ class Acc26Param(NamedTuple):
             lsa=2,
             pthermmw=2619.4223856129224,
             pinjwp=129.94611930107126,
-            pgrossmw=982.28339460484608,
+            p_gross_electrical=982.28339460484608,
             fusion_power=1985.1653095257811,
             tfcmw=0,
             c26=56.327648771765475,
@@ -5186,7 +5188,9 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pinjwp", acc26param.pinjwp)
 
-    monkeypatch.setattr(heat_transport_variables, "pgrossmw", acc26param.pgrossmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_gross_electrical", acc26param.p_gross_electrical
+    )
 
     monkeypatch.setattr(physics_variables, "fusion_power", acc26param.fusion_power)
 

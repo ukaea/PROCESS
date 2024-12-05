@@ -124,7 +124,7 @@ module heat_transport_variables
     real(dp) :: pfwdiv
     !! heat removal from first wall/divertor (MW)
 
-    real(dp) :: pgrossmw
+    real(dp) :: p_gross_electrical
     !! gross electric power (MW)
 
     real(dp) :: pinjht
@@ -222,7 +222,7 @@ module heat_transport_variables
       pacpmw = 0.0D0
       peakmva = 0.0D0
       pfwdiv = 0.0D0
-      pgrossmw = 0.0D0
+      p_gross_electrical = 0.0D0
       pinjht = 0.0D0
       pinjmax = 120.0D0
       pinjwp = 0.0D0

@@ -2303,7 +2303,7 @@ class Costs:
             self.c23 = (
                 1.0e-6
                 * cost_variables.ucturb[fwbs_variables.coolwh - 1]
-                * (heat_transport_variables.pgrossmw / 1200.0e0) ** exptpe
+                * (heat_transport_variables.p_gross_electrical / 1200.0e0) ** exptpe
             )
 
     def acc24(self):
@@ -2428,7 +2428,8 @@ class Costs:
             )
         else:
             pwrrej = (
-                heat_transport_variables.pthermmw - heat_transport_variables.pgrossmw
+                heat_transport_variables.pthermmw
+                - heat_transport_variables.p_gross_electrical
             )
 
         # cost_variables.uchrs - reference cost of heat rejection system [$]

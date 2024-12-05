@@ -2587,13 +2587,13 @@ def plot_power_info(axis, mfile_data, scan):
     axis.set_autoscalex_on(False)
 
     gross_eff = 100.0 * (
-        mfile_data.data["pgrossmw"].get_scan(scan)
+        mfile_data.data["p_gross_electrical"].get_scan(scan)
         / mfile_data.data["pthermmw"].get_scan(scan)
     )
 
     net_eff = 100.0 * (
         (
-            mfile_data.data["pgrossmw"].get_scan(scan)
+            mfile_data.data["p_gross_electrical"].get_scan(scan)
             - mfile_data.data["htpmw"].get_scan(scan)
         )
         / (
@@ -2633,7 +2633,7 @@ def plot_power_info(axis, mfile_data, scan):
         ("pthermmw", "Primary (high grade) heat", "MW"),
         (gross_eff, "Gross cycle efficiency", "%"),
         (net_eff, "Net cycle efficiency", "%"),
-        ("pgrossmw", "Gross electric power", "MW"),
+        ("p_gross_electrical", "Gross electric power", "MW"),
         ("pnetelmw", "Net electric power", "MW"),
         (
             plant_eff,

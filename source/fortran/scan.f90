@@ -185,7 +185,7 @@ contains
     use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, beam_energy, bigq
     use divertor_variables, only: hldiv
     use error_handling, only: errors_on
-    use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
+    use heat_transport_variables, only: p_gross_electrical, pinjwp, pnetelmw
     use impurity_radiation_module, only: fimp
     use pfcoil_variables, only: whtpf
     use pf_power_variables, only: srcktpm
@@ -258,10 +258,10 @@ contains
     outvar(44,iscan) = ppump/1.0D6
     outvar(45,iscan) = 1.0D-3 * srcktpm
     outvar(46,iscan) = whtpf
-    outvar(47,iscan) = pgrossmw
+    outvar(47,iscan) = p_gross_electrical
     outvar(48,iscan) = pnetelmw
     if (ireactor == 1) then
-        outvar(49,iscan) = (pgrossmw-pnetelmw) / pgrossmw
+        outvar(49,iscan) = (p_gross_electrical-pnetelmw) / p_gross_electrical
     else
         outvar(49,iscan) = 0.0D0
     end if

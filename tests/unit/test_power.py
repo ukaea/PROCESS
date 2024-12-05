@@ -2095,7 +2095,7 @@ class Power2Param(NamedTuple):
 
     fachtmw: Any = None
 
-    pgrossmw: Any = None
+    p_gross_electrical: Any = None
 
     psechtmw: Any = None
 
@@ -2203,7 +2203,7 @@ class Power2Param(NamedTuple):
 
     expected_fachtmw: Any = None
 
-    expected_pgrossmw: Any = None
+    expected_p_gross_electrical: Any = None
 
     expected_psechtmw: Any = None
 
@@ -2257,7 +2257,7 @@ class Power2Param(NamedTuple):
             iprimshld=1,
             pinjwp=129.94611930107126,
             fachtmw=0,
-            pgrossmw=0,
+            p_gross_electrical=0,
             psechtmw=0,
             trithtmw=15,
             psechcd=0,
@@ -2311,7 +2311,7 @@ class Power2Param(NamedTuple):
             expected_pnetelmw=493.01760776192009,
             expected_precircmw=489.56557141942733,
             expected_fachtmw=61.882833632875375,
-            expected_pgrossmw=982.58317918134742,
+            expected_p_gross_electrical=982.58317918134742,
             expected_psechtmw=233.80288075411508,
             expected_pcoresystems=125.33391046215507,
         ),
@@ -2359,7 +2359,7 @@ class Power2Param(NamedTuple):
             iprimshld=1,
             pinjwp=129.94611930107126,
             fachtmw=61.882833632875375,
-            pgrossmw=982.58317918134742,
+            p_gross_electrical=982.58317918134742,
             psechtmw=233.80288075411508,
             trithtmw=15,
             psechcd=0,
@@ -2413,7 +2413,7 @@ class Power2Param(NamedTuple):
             expected_pnetelmw=422.4198205312706,
             expected_precircmw=559.86357407357548,
             expected_fachtmw=62.237143915360818,
-            expected_pgrossmw=982.28339460484608,
+            expected_p_gross_electrical=982.28339460484608,
             expected_psechtmw=304.16251287817744,
             expected_pcoresystems=195.70119200650984,
         ),
@@ -2518,7 +2518,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fachtmw", power2param.fachtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pgrossmw", power2param.pgrossmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_gross_electrical", power2param.p_gross_electrical
+    )
 
     monkeypatch.setattr(heat_transport_variables, "psechtmw", power2param.psechtmw)
 
@@ -2642,8 +2644,8 @@ def test_power2(power2param, monkeypatch, power):
         power2param.expected_fachtmw
     )
 
-    assert heat_transport_variables.pgrossmw == pytest.approx(
-        power2param.expected_pgrossmw
+    assert heat_transport_variables.p_gross_electrical == pytest.approx(
+        power2param.expected_p_gross_electrical
     )
 
     assert heat_transport_variables.psechtmw == pytest.approx(
@@ -2673,7 +2675,7 @@ class Power3Param(NamedTuple):
 
     fachtmw: Any = None
 
-    pgrossmw: Any = None
+    p_gross_electrical: Any = None
 
     poloidalpower: Any = None
 
@@ -2707,7 +2709,7 @@ class Power3Param(NamedTuple):
             trithtmw=15,
             pinjwp=129.94611930107126,
             fachtmw=61.882833632875375,
-            pgrossmw=982.58317918134742,
+            p_gross_electrical=982.58317918134742,
             poloidalpower=numpy.array(
                 numpy.array(
                     (59332953.082890816, 43806300.444207191, 0, 0, -211211992.31967318),
@@ -2734,7 +2736,7 @@ class Power3Param(NamedTuple):
             trithtmw=15,
             pinjwp=129.94611930107126,
             fachtmw=62.237143915360818,
-            pgrossmw=982.28339460484608,
+            p_gross_electrical=982.28339460484608,
             poloidalpower=numpy.array(
                 numpy.array(
                     (
@@ -2792,7 +2794,9 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fachtmw", power3param.fachtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pgrossmw", power3param.pgrossmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_gross_electrical", power3param.p_gross_electrical
+    )
 
     monkeypatch.setattr(pf_power_variables, "poloidalpower", power3param.poloidalpower)
 

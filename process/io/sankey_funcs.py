@@ -370,7 +370,7 @@ def plot_full_sankey(
         """# ------------------------------- ELECTRICITY CONVERSION - 8 ------------------------------
 
         # Total thermal, Elctricty conversion loss, Gross Electricity
-        GROSS = [pthermmw, -pelectloss, -pgrossmw]
+        GROSS = [pthermmw, -pelectloss, -p_gross_electrical]
         sankey.add(flows=GROSS,
                    orientations=[0, -1, 0],
                    trunklength=0.5,
@@ -551,11 +551,13 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pthermmw_p = pthermfw_blkt - htpmw_fw_blkt  # Heat - pumping power (MW)
 
     # Used in [PRIMARY]
-    pgrossmw = m_file.data["pgrossmw"].get_scan(-1)  # gross electric power (MW)
+    p_gross_electrical = m_file.data["p_gross_electrical"].get_scan(
+        -1
+    )  # gross electric power (MW)
 
     # Used in [NET]
     pnetelmw = m_file.data["pnetelmw"].get_scan(-1)  # net electric power (MW)
-    precircmw = pgrossmw - pnetelmw  # Recirculating power (MW)
+    precircmw = p_gross_electrical - pnetelmw  # Recirculating power (MW)
 
     # Used in [RECIRC]
     p_cryo_plant = m_file.data["p_cryo_plant"].get_scan(
@@ -662,8 +664,8 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # Primary heat, -Gross electric power, -difference (loss)
         PRIMARY = [
             pthermmw_p + totaldivetc + totalcpetc + pnucshld,
-            -pgrossmw,
-            -pthermmw_p + pgrossmw - totaldivetc - totalcpetc - pnucshld,
+            -p_gross_electrical,
+            -pthermmw_p + p_gross_electrical - totaldivetc - totalcpetc - pnucshld,
         ]
         sankey.add(
             flows=PRIMARY,
@@ -679,7 +681,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # If net electric is +ve or -ve changes the flow organisation
         if pnetelmw >= 0:  # net electric is +ve
             # Gross electric power, -net electric power, -recirculated power
-            NET = [pgrossmw, -pnetelmw, -precircmw]
+            NET = [p_gross_electrical, -pnetelmw, -precircmw]
             sankey.add(
                 flows=NET,
                 orientations=[0, 0, -1],  # [down(in), down(out), left(out)]
@@ -690,7 +692,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             )
         elif pnetelmw < 0:  # net electric is -ve
             # Gross electric power, -net electric power, -recirculated power
-            NET = [-pnetelmw, pgrossmw, -precircmw]
+            NET = [-pnetelmw, p_gross_electrical, -precircmw]
             sankey.add(
                 flows=NET,
                 orientations=[0, -1, 0],  # [left(in), down(in), left(out)]
@@ -769,7 +771,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             if t == diagrams[3].texts[1]:  # Gross Electric
                 t.set_horizontalalignment("right")
                 t.set_position(
-                    (pos[0] - 0.5 * (pgrossmw / totalplasma) - 0.1, pos[1] + 0.1)
+                    (
+                        pos[0] - 0.5 * (p_gross_electrical / totalplasma) - 0.1,
+                        pos[1] + 0.1,
+                    )
                 )
             if t == diagrams[3].texts[2]:  # Losses
                 t.set_horizontalalignment("right")
