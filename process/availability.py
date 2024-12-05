@@ -1224,7 +1224,8 @@ class Availability:
                 self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife, "OP"
             )
 
-    def cp_lifetime(self):
+    @staticmethod
+    def cp_lifetime():
         """Calculate Centrepost Lifetime
 
         This routine calculates the lifetime of the centrepost,
@@ -1245,7 +1246,8 @@ class Availability:
 
         return cplife
 
-    def divertor_lifetime(self):
+    @staticmethod
+    def divertor_lifetime():
         """Calculate Divertor Lifetime
 
         This routine calculates the lifetime of the divertor based on the allowable divertor heat fluence.
