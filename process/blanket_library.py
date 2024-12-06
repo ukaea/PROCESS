@@ -1810,7 +1810,7 @@ class BlanketLibrary:
             blanket_library.mftotal = blanket_library.mffwi + blanket_library.mffwo
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.htpmw_fw_blkt = self.pumppower(
+            primary_pumping_variables.p_fw_blanket_pumping_mw = self.pumppower(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.fwinlet.item(),
@@ -1878,7 +1878,7 @@ class BlanketLibrary:
             )
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.htpmw_fw_blkt = (
+            primary_pumping_variables.p_fw_blanket_pumping_mw = (
                 heat_transport_variables.p_fw_pumping_mw
                 + heat_transport_variables.htpmw_blkt
             )
@@ -1915,7 +1915,7 @@ class BlanketLibrary:
             )
 
             heat_transport_variables.htpmw_blkt_tot = (
-                primary_pumping_variables.htpmw_fw_blkt
+                primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.htpmw_blkt_liq
             )
 
@@ -2112,8 +2112,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Total mechanical pumping power for FW and blanket (MW)",
-                "(htpmw_fw_blkt)",
-                primary_pumping_variables.htpmw_fw_blkt,
+                "(p_fw_blanket_pumping_mw)",
+                primary_pumping_variables.p_fw_blanket_pumping_mw,
                 "OP ",
             )
             if fwbs_variables.icooldual > 0:

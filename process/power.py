@@ -542,7 +542,7 @@ class Power:
         None
         """
         if fwbs_variables.primary_pumping != 2 and fwbs_variables.primary_pumping != 3:
-            primary_pumping_variables.htpmw_fw_blkt = (
+            primary_pumping_variables.p_fw_blanket_pumping_mw = (
                 heat_transport_variables.p_fw_pumping_mw
                 + heat_transport_variables.htpmw_blkt
             )
@@ -551,7 +551,7 @@ class Power:
         #  100% efficient so the electric power to run them is greater than the power deposited
         #  in the coolant.  The difference should be lost as secondary heat.
         self.htpmwe_fw_blkt = (
-            primary_pumping_variables.htpmw_fw_blkt / fwbs_variables.etahtp
+            primary_pumping_variables.p_fw_blanket_pumping_mw / fwbs_variables.etahtp
         )
         self.htpmwe_shld = (
             heat_transport_variables.p_shield_pumping_mw / fwbs_variables.etahtp
@@ -565,7 +565,7 @@ class Power:
         if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
             # Total mechanical pump power (deposited in coolant)
             self.htpmw_mech = (
-                primary_pumping_variables.htpmw_fw_blkt
+                primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.htpmw_blkt_liq
                 + heat_transport_variables.p_shield_pumping_mw
                 + heat_transport_variables.htpmw_div
@@ -583,7 +583,7 @@ class Power:
         else:
             # Total mechanical pump power (deposited in coolant)
             self.htpmw_mech = (
-                primary_pumping_variables.htpmw_fw_blkt
+                primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.p_shield_pumping_mw
                 + heat_transport_variables.htpmw_div
             )
@@ -620,7 +620,7 @@ class Power:
                     + fwbs_variables.pnucfw
                     + fwbs_variables.pradfw
                     + (fwbs_variables.pnucblkt * (1 - fwbs_variables.f_nuc_pow_bz_liq))
-                    + primary_pumping_variables.htpmw_fw_blkt
+                    + primary_pumping_variables.p_fw_blanket_pumping_mw
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.nbshinemw
@@ -631,7 +631,7 @@ class Power:
                     + fwbs_variables.pnucfw
                     + fwbs_variables.pradfw
                     + fwbs_variables.pnucblkt
-                    + primary_pumping_variables.htpmw_fw_blkt
+                    + primary_pumping_variables.p_fw_blanket_pumping_mw
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.nbshinemw
@@ -641,7 +641,7 @@ class Power:
                     fwbs_variables.pnucfw
                     + fwbs_variables.pradfw
                     + fwbs_variables.pnucblkt
-                    + primary_pumping_variables.htpmw_fw_blkt
+                    + primary_pumping_variables.p_fw_blanket_pumping_mw
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.nbshinemw
@@ -654,7 +654,7 @@ class Power:
                 fwbs_variables.pnucfw
                 + fwbs_variables.pradfw
                 + fwbs_variables.pnucblkt
-                + primary_pumping_variables.htpmw_fw_blkt
+                + primary_pumping_variables.p_fw_blanket_pumping_mw
                 + current_drive_variables.porbitlossmw
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.nbshinemw
@@ -1119,8 +1119,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
-            "(htpmw_fw_blkt)",
-            primary_pumping_variables.htpmw_fw_blkt,
+            "(p_fw_blanket_pumping_mw)",
+            primary_pumping_variables.p_fw_blanket_pumping_mw,
             "OP ",
         )
 

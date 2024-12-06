@@ -821,7 +821,7 @@ class PowerflowCalcParam(NamedTuple):
 
     t_out_bb: Any = None
 
-    htpmw_fw_blkt: Any = None
+    p_fw_blanket_pumping_mw: Any = None
 
     ip: Any = None
 
@@ -839,7 +839,7 @@ class PowerflowCalcParam(NamedTuple):
 
     expected_htpmw_div: Any = None
 
-    expected_htpmw_fw_blkt: Any = None
+    expected_p_fw_blanket_pumping_mw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -883,7 +883,7 @@ class PowerflowCalcParam(NamedTuple):
             gamma_he=1.667,
             t_in_bb=573.13,
             t_out_bb=773.13,
-            htpmw_fw_blkt=0,
+            p_fw_blanket_pumping_mw=0,
             ip=0,
             ofile=11,
             expected_praddiv=33.056596978820579,
@@ -892,7 +892,7 @@ class PowerflowCalcParam(NamedTuple):
             expected_psurffwo=176.95628839065773,
             expected_p_shield_pumping_mw=0.0068056297940224456,
             expected_htpmw_div=1.7970292653352464,
-            expected_htpmw_fw_blkt=202.00455086503842,
+            expected_p_fw_blanket_pumping_mw=202.00455086503842,
         ),
         PowerflowCalcParam(
             fwareaob=1168.1172772224481,
@@ -932,7 +932,7 @@ class PowerflowCalcParam(NamedTuple):
             gamma_he=1.667,
             t_in_bb=573.13,
             t_out_bb=773.13,
-            htpmw_fw_blkt=202.00455086503842,
+            p_fw_blanket_pumping_mw=202.00455086503842,
             ip=0,
             ofile=11,
             expected_praddiv=33.056596978820579,
@@ -941,7 +941,7 @@ class PowerflowCalcParam(NamedTuple):
             expected_psurffwo=176.95009681558912,
             expected_p_shield_pumping_mw=0.007019085478296147,
             expected_htpmw_div=1.7961533897828594,
-            expected_htpmw_fw_blkt=201.94492795635171,
+            expected_p_fw_blanket_pumping_mw=201.94492795635171,
         ),
     ),
 )
@@ -1061,7 +1061,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        primary_pumping_variables, "htpmw_fw_blkt", powerflowcalcparam.htpmw_fw_blkt
+        primary_pumping_variables,
+        "p_fw_blanket_pumping_mw",
+        powerflowcalcparam.p_fw_blanket_pumping_mw,
     )
 
     monkeypatch.setattr(ccfe_hcpb_module, "ip", powerflowcalcparam.ip)
@@ -1090,8 +1092,8 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.expected_htpmw_div
     )
 
-    assert primary_pumping_variables.htpmw_fw_blkt == pytest.approx(
-        powerflowcalcparam.expected_htpmw_fw_blkt
+    assert primary_pumping_variables.p_fw_blanket_pumping_mw == pytest.approx(
+        powerflowcalcparam.expected_p_fw_blanket_pumping_mw
     )
 
 
