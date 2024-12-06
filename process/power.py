@@ -623,7 +623,7 @@ class Power:
                     + primary_pumping_variables.p_fw_blanket_pumping_mw
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.nbshinemw
+                    + current_drive_variables.p_nb_shine_through_mw
                 )
             elif fwbs_variables.icooldual == 1:
                 self.pthermfw_blkt = (
@@ -634,7 +634,7 @@ class Power:
                     + primary_pumping_variables.p_fw_blanket_pumping_mw
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.nbshinemw
+                    + current_drive_variables.p_nb_shine_through_mw
                 )
             else:
                 self.pthermfw_blkt = (
@@ -644,7 +644,7 @@ class Power:
                     + primary_pumping_variables.p_fw_blanket_pumping_mw
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.nbshinemw
+                    + current_drive_variables.p_nb_shine_through_mw
                 )
 
         elif fwbs_variables.primary_pumping == 3:
@@ -657,7 +657,7 @@ class Power:
                 + primary_pumping_variables.p_fw_blanket_pumping_mw
                 + current_drive_variables.porbitlossmw
                 + physics_variables.p_fw_alpha_mw
-                + current_drive_variables.nbshinemw
+                + current_drive_variables.p_nb_shine_through_mw
             )
 
         else:
@@ -669,7 +669,7 @@ class Power:
                 + heat_transport_variables.p_fw_pumping_mw
                 + current_drive_variables.porbitlossmw
                 + physics_variables.p_fw_alpha_mw
-                + current_drive_variables.nbshinemw
+                + current_drive_variables.p_nb_shine_through_mw
             )
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.pnucblkt already)
             self.pthermblkt = (

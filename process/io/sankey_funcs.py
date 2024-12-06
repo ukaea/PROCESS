@@ -97,7 +97,7 @@ def plot_full_sankey(
     htpmwfw = p_fw_blanket_pumping_mw / 2  # Pump power in FW (MW)
     pthermfw = pthermfw_blkt - htpmwblkt - pnucblkt  # Power extracted 1st wall (MW)
     # porbitloss = m_file.data['porbitloss'].get_scan(-1) # Charged P. on FW before thermalising
-    # nbshinemw = m_file.data['nbshinemw'].get_scan(-1) # Injection shine-through to 1st wall
+    # p_nb_shine_through_mw = m_file.data['p_nb_shine_through_mw'].get_scan(-1) # Injection shine-through to 1st wall
 
     # Initialising x and y variables for adjusting 'Plasma Heating' branch tip location
     y_adj_1 = 0
