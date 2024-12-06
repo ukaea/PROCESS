@@ -28,7 +28,7 @@ The power balance for cryogenics is detailed as in the example below.  The calcu
  Resistive losses in current leads (MW)                                   (qcl/1.0D6)               2.065E-02  OP 
  45% allowance for heat loads in transfer lines, storage tanks etc (MW)   (qmisc/1.0D6)             3.116E-02  OP 
  Sum = Total heat removal at cryogenic temperatures (W)                   (helpow/1.0D6)            1.004E-01  OP 
- Temperature of cryogenic components (K)                                  (tmpcry)                  4.500E+00     
+ Temperature of cryogenic components (K)                                  (temp_tf_coil_cryo)                  4.500E+00     
  Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot v                           2.028E-03  OP 
  Electric power for cryogenic plant (MW)                                  (p_cryo_plant)                  4.952E+01  OP 
 ```

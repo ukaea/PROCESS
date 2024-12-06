@@ -247,7 +247,7 @@ fcutfsu = 0.75639 *Copper fraction of cable conductor (TF coils), Schauer: 900 S
 i_tf_sc_mat = 8 * Switch for superconductor material in tf coils;
 
 tftmp = 4.5 *Peak helium coolant temperature in TF coils and PF coils (K)
-tmpcry = 4.5 * Cryogenic Temperature (K)
+temp_tf_coil_cryo = 4.5 * Cryogenic Temperature (K)
 
 vftf = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
 fiooic = 0.70 *Fraction TF coil critical current to operation current

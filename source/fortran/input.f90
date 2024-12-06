@@ -328,7 +328,7 @@ contains
     use tfcoil_variables, only: fcoolcp, tfinsgap, vftf, &
       fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
-      thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
+      thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, temp_tf_coil_cryo, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
       i_tf_tresca, dhecoil, tmaxpro, n_tf, tcpav, fcutfsu, jbus, &
       casthi_fraction, tmargmin_cs, vdalw, dcase, t_turn_tf,&
@@ -1790,8 +1790,8 @@ contains
        !    case ('tmax_jacket')
        !       call parse_real_variable('tmax_jacket', tmax_jacket, 4.0D0, 1.0D3, &
        !            'Jacket: maximum temp during a quench (K)')
-       case ('tmpcry')
-          call parse_real_variable('tmpcry', tmpcry, 0.01D0, 293.0D0, &
+       case ('temp_tf_coil_cryo')
+          call parse_real_variable('temp_tf_coil_cryo', temp_tf_coil_cryo, 0.01D0, 293.0D0, &
                'Cryogenic temperature (K)')
        case ('vcool')
           call parse_real_variable('vcool', vcool, 0.001D0, 100.0D0, &

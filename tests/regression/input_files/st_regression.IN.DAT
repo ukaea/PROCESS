@@ -1457,7 +1457,7 @@ boundu(49) = 1.0
 * DESCRIPTION:   TF coil cryo-plant efficiency
 * JUSTIFICATION: Not yet set, assuming default
 
-tmpcry = 20.0 
+temp_tf_coil_cryo = 20.0 
 * DESCRIPTION:   Coil temperature for cryogenic plant power calculation (K)
 * JUSTIFICATION: 
 

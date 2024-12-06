@@ -924,7 +924,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5632E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
@@ -1919,7 +1919,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5632E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
@@ -2914,7 +2914,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5632E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
@@ -3909,7 +3909,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5632E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
@@ -4904,7 +4904,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5633E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
@@ -5899,7 +5899,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5633E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
@@ -6894,7 +6894,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5633E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
@@ -7889,7 +7889,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5633E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
@@ -8884,7 +8884,7 @@
  Resistive_losses_in_current_leads_(MW)__________________________________ (qcl/1.0D6)___________________      1.6432E-02 OP 
  45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)__ (qmisc/1.0D6)_________________      2.5633E-02 OP 
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
- Temperature_of_cryogenic_components_(K)_________________________________ (tmpcry)______________________      4.5000E+00    
+ Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_coil_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
