@@ -40,7 +40,7 @@ class DCLL:
              i_bb_liq = 0 * Liquid Metal Breeder Material = PbLi
 
          Specify dual-coolant i.e., get mass flow required from heat extracted from liqid metal breeder
-             icooldual = 2
+             i_blkt_dual_coolant = 2
 
          FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator, 2 = FCIs, with specified conductance
              ifci = 0, 1, or 2
@@ -354,7 +354,7 @@ class DCLL:
                     "OP ",
                 )
 
-            if fwbs_variables.icooldual > 0:
+            if fwbs_variables.i_blkt_dual_coolant > 0:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for liquid metal breeder (MW)",
@@ -402,7 +402,7 @@ class DCLL:
                 "(blpressure)",
                 fwbs_variables.blpressure,
             )
-            if fwbs_variables.icooldual > 0:
+            if fwbs_variables.i_blkt_dual_coolant > 0:
                 po.ovarre(
                     self.outfile,
                     "Blanket liquid metal breeder pressure (Pa)",
@@ -509,7 +509,7 @@ class DCLL:
                 * (dcll_module.bz_r_ob * (1 - fwbs_variables.r_f_liq_ob))
                 / build_variables.blnkoth
             )
-            if fwbs_variables.icooldual > 0:
+            if fwbs_variables.i_blkt_dual_coolant > 0:
                 fwbs_variables.vfblkt = (
                     (1 - dcll_module.f_vol_stl_bz_struct) * dcll_module.vol_bz_struct
                 ) / fwbs_variables.volblkt
@@ -581,7 +581,7 @@ class DCLL:
                 * (1 - fwbs_variables.r_f_liq_ob)
                 / build_variables.blnkoth
             )
-            if fwbs_variables.icooldual > 0:
+            if fwbs_variables.i_blkt_dual_coolant > 0:
                 fwbs_variables.vfblkt = (
                     (1 - dcll_module.f_vol_stl_bz_struct) * dcll_module.vol_bz_struct
                 ) / fwbs_variables.volblkt

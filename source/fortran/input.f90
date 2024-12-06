@@ -279,7 +279,7 @@ contains
       denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
-      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
+      i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
@@ -2021,8 +2021,8 @@ contains
        case ('i_bb_liq')
          call parse_int_variable('i_bb_liq', i_bb_liq, 0, 1, &
                'Switch for breeding blaket liquid metal')
-       case ('icooldual')
-         call parse_int_variable('icooldual', icooldual, 0, 2, &
+       case ('i_blkt_dual_coolant')
+         call parse_int_variable('i_blkt_dual_coolant', i_blkt_dual_coolant, 0, 2, &
                'Switch for single or dual-coolant blanket)')
        case ('ifci')
          call parse_int_variable('ifci', ifci, 0, 2, &

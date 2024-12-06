@@ -147,7 +147,7 @@ The temperature difference between the channel inner wall (film temperature) and
 
 ### Model Switches
 
-There are three blanket model options, chosen by the user to match their selected blanket design using the switch 'icooldual' (default=0):
+There are three blanket model options, chosen by the user to match their selected blanket design using the switch 'i_blkt_dual_coolant' (default=0):
     0.   Solid breeder - nuclear heating in the blanket is exctrated by the primary coolant.
     1.   Liquid metal breeder, single-coolant 
         - nuclear heating in the blanket is exctrated by the primary coolant.

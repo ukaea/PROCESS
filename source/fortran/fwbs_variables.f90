@@ -545,7 +545,7 @@ module fwbs_variables
   !!  - =0   PbLi
   !!  - =1   Li
 
-  integer :: icooldual
+  integer :: i_blkt_dual_coolant
   !! Switch to specify whether breeding blanket is single-cooled or dual-coolant.
   !!  - =0    Single coolant used for FW and Blanket (H2O or He). Solid Breeder.
   !!  - =1    Single coolant used for FW and Blanket (H2O or He). Liquid metal breeder
@@ -565,7 +565,7 @@ module fwbs_variables
   !!  - =1    SMS
 
   integer :: n_liq_recirc
-  !! Number of liquid metal breeder recirculations per day, for use with icooldual=1
+  !! Number of liquid metal breeder recirculations per day, for use with i_blkt_dual_coolant=1
 
   real(dp) :: r_f_liq_ib, r_f_liq_ob
   !! Radial fraction of BZ liquid channels
@@ -809,7 +809,7 @@ module fwbs_variables
     neut_flux_cp = 0.0D0
     ipump = 0
     i_bb_liq = 0
-    icooldual = 0
+    i_blkt_dual_coolant = 0
     ifci = 0
     ims = 0
     n_liq_recirc = 10

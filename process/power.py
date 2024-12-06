@@ -568,13 +568,14 @@ class Power:
             heat_transport_variables.htpmw_div
             / fwbs_variables.eta_pump_coolant_electrical
         )
-        if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
+
+        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.primary_pumping == 2:
             self.htpmwe_blkt_liq = (
                 heat_transport_variables.htpmw_blkt_liq
                 / fwbs_variables.eta_pump_coolant_electrical
             )
 
-        if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
+        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.primary_pumping == 2:
             # Total mechanical pump power (deposited in coolant)
             self.htpmw_mech = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
@@ -620,16 +621,16 @@ class Power:
         if fwbs_variables.primary_pumping == 2:
 
             # Liquid metal breeder/coolant
-            if fwbs_variables.icooldual == 2:
+            if fwbs_variables.i_blkt_dual_coolant == 2:
                 self.pthermblkt_liq = (
                     fwbs_variables.p_blanket_nuclear_heat_mw
                     * fwbs_variables.f_nuc_pow_bz_liq
                 ) + heat_transport_variables.htpmw_blkt_liq
-            elif fwbs_variables.icooldual == 1:
+            elif fwbs_variables.i_blkt_dual_coolant == 1:
                 self.pthermblkt_liq = heat_transport_variables.htpmw_blkt_liq
 
             # First wall and blanket coolant combined
-            if fwbs_variables.icooldual == 2:
+            if fwbs_variables.i_blkt_dual_coolant == 2:
                 self.pthermfw_blkt = (
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_mw
@@ -643,7 +644,7 @@ class Power:
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_nb_shine_through_mw
                 )
-            elif fwbs_variables.icooldual == 1:
+            elif fwbs_variables.i_blkt_dual_coolant == 1:
                 self.pthermfw_blkt = (
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_mw
@@ -915,7 +916,7 @@ class Power:
 
             #  Gross electric power
             # p_gross_electrical = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
-            if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
+            if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.primary_pumping == 2:
                 heat_transport_variables.p_gross_electrical = (
                     (heat_transport_variables.pthermmw - self.pthermblkt_liq)
                     * heat_transport_variables.etath
@@ -1859,7 +1860,7 @@ class Power:
             )
 
         # Heat rejected by main power conversion circuit
-        if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
+        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.primary_pumping == 2:
             self.p_thermal_main_loss_mw = (
                 heat_transport_variables.pthermmw - self.pthermblkt_liq
             ) * (1 - heat_transport_variables.etath) + self.pthermblkt_liq * (
