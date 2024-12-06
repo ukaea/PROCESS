@@ -117,7 +117,7 @@ module fwbs_variables
   real(dp) :: pnuc_cp
   !! Total nuclear heating in the ST centrepost [MW]
 
-  real(dp) :: pnuc_cp_sh
+  real(dp) :: p_cp_shield_nuclear_heat_mw
   !! Neutronic shield nuclear heating in the ST centrepost [MW]
 
   real(dp) :: pnuc_cp_tf
@@ -804,7 +804,7 @@ module fwbs_variables
     etaiso = 0.85D0
     eta_pump_coolant_electrical = 0.95D0
     pnuc_cp = 0.0D0
-    pnuc_cp_sh = 0.0D0
+    p_cp_shield_nuclear_heat_mw = 0.0D0
     pnuc_cp_tf = 0.0D0
     neut_flux_cp = 0.0D0
     ipump = 0

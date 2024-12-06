@@ -298,7 +298,7 @@ class DCLL:
                 heat_transport_variables.fpumpblkt
                 * fwbs_variables.p_blanket_nuclear_heat_mw
             )
-            # For CCFE HCPB: p_shield_pumping_mw = fpumpshld * ( p_shield_nuclear_heat_mw + pnuc_cp_sh )
+            # For CCFE HCPB: p_shield_pumping_mw = fpumpshld * ( p_shield_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )
             # Use same as KIT HCLL for now "p_shield_nuclear_heat_mw is not available and is very small
             # compared to other powers so set to zero."
             heat_transport_variables.p_shield_pumping_mw = (

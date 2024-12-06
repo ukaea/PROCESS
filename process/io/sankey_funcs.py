@@ -532,7 +532,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_shield_nuclear_heat_mw = m_file.data["p_shield_nuclear_heat_mw"].get_scan(
         -1
     )  # nuclear heating in the shield (MW)
-    pnuc_cp_sh = m_file.data["pnuc_cp_sh"].get_scan(
+    p_cp_shield_nuclear_heat_mw = m_file.data["p_cp_shield_nuclear_heat_mw"].get_scan(
         -1
     )  # nuclear heating in the CP shield (MW)
     emultmw = m_file.data["emultmw"].get_scan(-1)  # Blanket energy multiplication (MW)
@@ -566,7 +566,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         totalcpetc = 0.0
     elif itart == 1:
         # Power deposited in CP (MW)
-        totalcpetc = pnuc_cp_sh
+        totalcpetc = p_cp_shield_nuclear_heat_mw
 
     # Used in [BLANKETSETC]
     pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
