@@ -200,7 +200,9 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_dual_coolant", primarycoolantpropertiesparam.i_blkt_dual_coolant
+        fwbs_variables,
+        "i_blkt_dual_coolant",
+        primarycoolantpropertiesparam.i_blkt_dual_coolant,
     )
 
     monkeypatch.setattr(
@@ -1622,7 +1624,9 @@ def test_liquid_breeder_properties(
         fwbs_variables, "iblnkith", liquidbreederpropertiesparam.iblnkith
     )
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_dual_coolant", liquidbreederpropertiesparam.i_blkt_dual_coolant
+        fwbs_variables,
+        "i_blkt_dual_coolant",
+        liquidbreederpropertiesparam.i_blkt_dual_coolant,
     )
     monkeypatch.setattr(physics_variables, "bt", liquidbreederpropertiesparam.bt)
     monkeypatch.setattr(

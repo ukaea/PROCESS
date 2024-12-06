@@ -39,7 +39,9 @@ class Power:
         self.p_div_pump_cool_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.htpmw_mech = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_pump_coolant_total_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pthermfw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_fw_blkt_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
@@ -569,15 +571,21 @@ class Power:
             / fwbs_variables.eta_pump_coolant_electrical
         )
 
-        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.primary_pumping == 2:
+        if (
+            fwbs_variables.i_blkt_dual_coolant > 0
+            and fwbs_variables.primary_pumping == 2
+        ):
             self.htpmwe_blkt_liq = (
                 heat_transport_variables.htpmw_blkt_liq
                 / fwbs_variables.eta_pump_coolant_electrical
             )
 
-        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.primary_pumping == 2:
+        if (
+            fwbs_variables.i_blkt_dual_coolant > 0
+            and fwbs_variables.primary_pumping == 2
+        ):
             # Total mechanical pump power (deposited in coolant)
-            self.htpmw_mech = (
+            self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.htpmw_blkt_liq
                 + heat_transport_variables.p_shield_pumping_mw
@@ -595,7 +603,7 @@ class Power:
             )
         else:
             # Total mechanical pump power (deposited in coolant)
-            self.htpmw_mech = (
+            self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.p_shield_pumping_mw
                 + heat_transport_variables.htpmw_div
@@ -613,7 +621,7 @@ class Power:
 
         #  Heat lost through pump power inefficiencies (MW)
         heat_transport_variables.htpsecmw = (
-            heat_transport_variables.htpmw - self.htpmw_mech
+            heat_transport_variables.htpmw - self.p_pump_coolant_total_mw
         )
 
         # Calculate total deposited power (MW), n.b. energy multiplication in p_blanket_nuclear_heat_mw already
@@ -916,7 +924,10 @@ class Power:
 
             #  Gross electric power
             # p_gross_electrical = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
-            if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.primary_pumping == 2:
+            if (
+                fwbs_variables.i_blkt_dual_coolant > 0
+                and fwbs_variables.primary_pumping == 2
+            ):
                 heat_transport_variables.p_gross_electrical = (
                     (heat_transport_variables.pthermmw - self.pthermblkt_liq)
                     * heat_transport_variables.etath
@@ -1777,15 +1788,15 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Power deposited in primary coolant by pump (MW)",
-            "(htpmw_mech)",
-            self.htpmw_mech,
+            "(p_pump_coolant_total_mw)",
+            self.p_pump_coolant_total_mw,
             "OP ",
         )
         sum = (
             physics_variables.fusion_power
             + fwbs_variables.emultmw
             + pinj
-            + self.htpmw_mech
+            + self.p_pump_coolant_total_mw
             + physics_variables.pohmmw
         )
         po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
@@ -1860,7 +1871,10 @@ class Power:
             )
 
         # Heat rejected by main power conversion circuit
-        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.primary_pumping == 2:
+        if (
+            fwbs_variables.i_blkt_dual_coolant > 0
+            and fwbs_variables.primary_pumping == 2
+        ):
             self.p_thermal_main_loss_mw = (
                 heat_transport_variables.pthermmw - self.pthermblkt_liq
             ) * (1 - heat_transport_variables.etath) + self.pthermblkt_liq * (

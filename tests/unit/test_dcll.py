@@ -856,7 +856,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(fwbs_variables, "vfblkt", dcllmassesparam.vfblkt)
 
-    monkeypatch.setattr(fwbs_variables, "i_blkt_dual_coolant", dcllmassesparam.i_blkt_dual_coolant)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_dual_coolant", dcllmassesparam.i_blkt_dual_coolant
+    )
 
     monkeypatch.setattr(fwbs_variables, "rhof_fw", dcllmassesparam.rhof_fw)
 

@@ -1144,7 +1144,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0435E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.8062E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6323E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6323E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1423E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8059E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4023E+00    
@@ -2307,7 +2307,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0715E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.7249E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6474E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6474E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1613E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8226E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4152E+00    
@@ -3470,7 +3470,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0862E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5559E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.7110E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6571E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6571E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1721E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8334E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4220E+00    
@@ -4633,7 +4633,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0915E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.6372E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6593E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6593E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1751E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8358E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4245E+00    
@@ -5796,7 +5796,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0964E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.6412E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6607E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6607E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1783E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8374E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4267E+00    
@@ -6959,7 +6959,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0866E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.5587E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6544E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6544E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1715E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8303E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4222E+00    
@@ -8122,7 +8122,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0929E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.4910E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6575E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6575E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1757E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8337E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4251E+00    
@@ -9285,7 +9285,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0972E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.5510E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6609E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6609E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1788E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8375E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4271E+00    
@@ -10448,7 +10448,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0856E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.5992E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6554E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6554E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1710E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8315E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4218E+00    
@@ -11611,7 +11611,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.1056E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.5632E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6660E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6660E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1846E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8432E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4310E+00    
@@ -12774,7 +12774,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.1240E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.5331E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6758E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6758E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1970E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8540E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4394E+00    
@@ -13937,7 +13937,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.1228E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.4852E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6742E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6742E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1961E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8522E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4389E+00    
@@ -15100,7 +15100,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.1396E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.4429E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6830E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6830E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.2075E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8620E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4466E+00    
@@ -16263,7 +16263,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.1561E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.5500E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6928E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.6928E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.2188E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8730E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4542E+00    
@@ -17426,7 +17426,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.1735E+02    
  Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      7.5000E+01    
  Ohmic_power_(MW)________________________________________________________ (pohmmw.)_____________________      6.6591E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.7032E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      1.7032E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.2308E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8845E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4623E+00    
