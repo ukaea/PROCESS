@@ -751,7 +751,7 @@ class PowerflowCalcParam(NamedTuple):
 
     fwarea: Any = None
 
-    porbitlossmw: Any = None
+    p_nb_orbit_loss_mw: Any = None
 
     fdiv: Any = None
 
@@ -848,7 +848,7 @@ class PowerflowCalcParam(NamedTuple):
         PowerflowCalcParam(
             fwareaob=988.92586580655245,
             fwarea=1601.1595634509963,
-            porbitlossmw=0,
+            p_nb_orbit_loss_mw=0,
             fdiv=0.115,
             praddiv=0,
             pradhcd=0,
@@ -897,7 +897,7 @@ class PowerflowCalcParam(NamedTuple):
         PowerflowCalcParam(
             fwareaob=1168.1172772224481,
             fwarea=1891.2865102700493,
-            porbitlossmw=0,
+            p_nb_orbit_loss_mw=0,
             fdiv=0.115,
             praddiv=33.056596978820579,
             pradhcd=0,
@@ -963,7 +963,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(build_variables, "fwarea", powerflowcalcparam.fwarea)
 
     monkeypatch.setattr(
-        current_drive_variables, "porbitlossmw", powerflowcalcparam.porbitlossmw
+        current_drive_variables, "p_nb_orbit_loss_mw", powerflowcalcparam.p_nb_orbit_loss_mw
     )
 
     monkeypatch.setattr(fwbs_variables, "fdiv", powerflowcalcparam.fdiv)

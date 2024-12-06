@@ -1239,7 +1239,7 @@ class Stellarator:
                     * (
                         fwbs_variables.pnucfw
                         + fwbs_variables.pradfw
-                        + current_drive_variables.porbitlossmw
+                        + current_drive_variables.p_nb_orbit_loss_mw
                     )
                 )
                 heat_transport_variables.p_blanket_pumping_mw = (
@@ -1473,7 +1473,7 @@ class Stellarator:
                             + pnucfwo
                             + psurffwi
                             + psurffwo
-                            + current_drive_variables.porbitlossmw
+                            + current_drive_variables.p_nb_orbit_loss_mw
                         )
                     )
                     heat_transport_variables.p_blanket_pumping_mw = (
@@ -4881,7 +4881,7 @@ class Stellarator:
             current_drive_variables.pnbeam = current_drive_variables.pheat * (
                 1 - current_drive_variables.forbitloss
             )
-            current_drive_variables.porbitlossmw = (
+            current_drive_variables.p_nb_orbit_loss_mw = (
                 current_drive_variables.pheat * current_drive_variables.forbitloss
             )
             current_drive_variables.pinjimw = current_drive_variables.pnbeam * fpion
@@ -4918,7 +4918,7 @@ class Stellarator:
         if (
             abs(
                 current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+                + current_drive_variables.p_nb_orbit_loss_mw
                 + physics_variables.pohmmw
             )
             < 1e-6
@@ -4927,7 +4927,7 @@ class Stellarator:
         else:
             current_drive_variables.bigq = physics_variables.fusion_power / (
                 current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+                + current_drive_variables.p_nb_orbit_loss_mw
                 + physics_variables.pohmmw
             )
 
@@ -4987,8 +4987,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam orbit loss power (MW)",
-                    "(porbitlossmw)",
-                    current_drive_variables.porbitlossmw,
+                    "(p_nb_orbit_loss_mw)",
+                    current_drive_variables.p_nb_orbit_loss_mw,
                 )
                 po.ovarre(
                     self.outfile,

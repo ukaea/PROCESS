@@ -33,7 +33,7 @@ class CurrentDrive:
         current_drive_variables.plhybd = 0.0e0
         current_drive_variables.beam_current = 0.0e0
         beam_current_fix = 0.0e0
-        current_drive_variables.porbitlossmw = 0.0e0
+        current_drive_variables.p_nb_orbit_loss_mw = 0.0e0
         porbitlossmwfix = 0.0e0
 
         pinjmw1 = 0.0
@@ -650,7 +650,7 @@ class CurrentDrive:
                 )
 
                 # First orbit loss
-                current_drive_variables.porbitlossmw = (
+                current_drive_variables.p_nb_orbit_loss_mw = (
                     current_drive_variables.forbitloss
                     * (
                         current_drive_variables.pnbitot
@@ -662,7 +662,7 @@ class CurrentDrive:
                 pinjmw1 = (
                     current_drive_variables.pnbitot
                     - current_drive_variables.p_nb_shine_through_mw
-                    - current_drive_variables.porbitlossmw
+                    - current_drive_variables.p_nb_orbit_loss_mw
                 )
                 pinjimw1 = pinjmw1 * current_drive_variables.fpion
                 pinjemw1 = pinjmw1 * (1.0e0 - current_drive_variables.fpion)
@@ -701,7 +701,7 @@ class CurrentDrive:
             if (
                 abs(
                     current_drive_variables.pinjmw
-                    + current_drive_variables.porbitlossmw
+                    + current_drive_variables.p_nb_orbit_loss_mw
                     + physics_variables.pohmmw
                 )
                 < 1.0e-6
@@ -710,7 +710,7 @@ class CurrentDrive:
             else:
                 current_drive_variables.bigq = physics_variables.fusion_power / (
                     current_drive_variables.pinjmw
-                    + current_drive_variables.porbitlossmw
+                    + current_drive_variables.p_nb_orbit_loss_mw
                     + physics_variables.pohmmw
                 )
 
@@ -1119,8 +1119,8 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Beam first orbit loss power (MW)",
-                    "(porbitlossmw)",
-                    current_drive_variables.porbitlossmw,
+                    "(p_nb_orbit_loss_mw)",
+                    current_drive_variables.p_nb_orbit_loss_mw,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1146,8 +1146,8 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Total (MW)",
-                    "(current_drive_variables.porbitlossmw+current_drive_variables.p_nb_shine_through_mw+current_drive_variables.pinjmw)",
-                    current_drive_variables.porbitlossmw
+                    "(current_drive_variables.p_nb_orbit_loss_mw+current_drive_variables.p_nb_shine_through_mw+current_drive_variables.pinjmw)",
+                    current_drive_variables.p_nb_orbit_loss_mw
                     + current_drive_variables.p_nb_shine_through_mw
                     + pinjmw1,
                 )

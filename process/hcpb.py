@@ -657,7 +657,7 @@ class CCFE_HCPB:
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
             fwbs_variables.pradfw * build_variables.fwareaob / build_variables.fwarea
-            + current_drive_variables.porbitlossmw
+            + current_drive_variables.p_nb_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
         )
         fwbs_variables.psurffwi = fwbs_variables.pradfw * (
