@@ -393,7 +393,7 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
 
 class NuclearHeatingFwParam(NamedTuple):
-    pnucfw: Any = None
+    p_fw_nuclear_heat_mw: Any = None
 
     fwmass: Any = None
 
@@ -401,7 +401,7 @@ class NuclearHeatingFwParam(NamedTuple):
 
     fw_armour_u_nuc_heating: Any = None
 
-    expected_pnucfw: Any = None
+    expected_p_fw_nuclear_heat_mw: Any = None
 
     expected_fw_armour_u_nuc_heating: Any = None
 
@@ -410,19 +410,19 @@ class NuclearHeatingFwParam(NamedTuple):
     "nuclearheatingfwparam",
     (
         NuclearHeatingFwParam(
-            pnucfw=0,
+            p_fw_nuclear_heat_mw=0,
             fwmass=224802.80270851994,
             fusion_power=1986.0623241661431,
             fw_armour_u_nuc_heating=0,
-            expected_pnucfw=279.04523551646628,
+            expected_p_fw_nuclear_heat_mw=279.04523551646628,
             expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
         ),
         NuclearHeatingFwParam(
-            pnucfw=276.80690153753221,
+            p_fw_nuclear_heat_mw=276.80690153753221,
             fwmass=182115.83467868491,
             fusion_power=1985.4423932312809,
             fw_armour_u_nuc_heating=6.2500000000000005e-07,
-            expected_pnucfw=225.98781165610032,
+            expected_p_fw_nuclear_heat_mw=225.98781165610032,
             expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
         ),
     ),
@@ -440,7 +440,7 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "pnucfw", nuclearheatingfwparam.pnucfw)
+    monkeypatch.setattr(fwbs_variables, "p_fw_nuclear_heat_mw", nuclearheatingfwparam.p_fw_nuclear_heat_mw)
 
     monkeypatch.setattr(fwbs_variables, "fwmass", nuclearheatingfwparam.fwmass)
 
@@ -456,7 +456,7 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
     ccfe_hcpb.nuclear_heating_fw()
 
-    assert fwbs_variables.pnucfw == pytest.approx(nuclearheatingfwparam.expected_pnucfw)
+    assert fwbs_variables.p_fw_nuclear_heat_mw == pytest.approx(nuclearheatingfwparam.expected_p_fw_nuclear_heat_mw)
 
     assert ccfe_hcpb_module.fw_armour_u_nuc_heating == pytest.approx(
         nuclearheatingfwparam.expected_fw_armour_u_nuc_heating
@@ -771,7 +771,7 @@ class PowerflowCalcParam(NamedTuple):
 
     primary_pumping: Any = None
 
-    pnucfw: Any = None
+    p_fw_nuclear_heat_mw: Any = None
 
     pnucblkt: Any = None
 
@@ -858,7 +858,7 @@ class PowerflowCalcParam(NamedTuple):
             outlet_temp=823,
             blpressure=15500000,
             primary_pumping=3,
-            pnucfw=276.80690153753221,
+            p_fw_nuclear_heat_mw=276.80690153753221,
             pnucblkt=1504.9215740808861,
             pnucdiv=182.71773382328519,
             pnucshld=1.3611259588044891,
@@ -907,7 +907,7 @@ class PowerflowCalcParam(NamedTuple):
             outlet_temp=823,
             blpressure=15500000,
             primary_pumping=3,
-            pnucfw=230.98304919926957,
+            p_fw_nuclear_heat_mw=230.98304919926957,
             pnucblkt=1550.1447895848396,
             pnucdiv=182.66070017727785,
             pnucshld=1.4038170956592293,
@@ -986,7 +986,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         fwbs_variables, "primary_pumping", powerflowcalcparam.primary_pumping
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnucfw", powerflowcalcparam.pnucfw)
+    monkeypatch.setattr(fwbs_variables, "p_fw_nuclear_heat_mw", powerflowcalcparam.p_fw_nuclear_heat_mw)
 
     monkeypatch.setattr(fwbs_variables, "pnucblkt", powerflowcalcparam.pnucblkt)
 

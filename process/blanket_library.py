@@ -1515,10 +1515,10 @@ class BlanketLibrary:
         ######################################################
         # IB/OB FW (MW)
         blanket_library.pnucfwi = (
-            fwbs_variables.pnucfw * build_variables.fwareaib / build_variables.fwarea
+            fwbs_variables.p_fw_nuclear_heat_mw * build_variables.fwareaib / build_variables.fwarea
         )
         blanket_library.pnucfwo = (
-            fwbs_variables.pnucfw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.p_fw_nuclear_heat_mw * build_variables.fwareaob / build_variables.fwarea
         )
 
         # IB/OB Blanket (MW)

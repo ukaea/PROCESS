@@ -197,7 +197,7 @@ BLANKET_COMPARE_PARAMS = [
     "blnkoth",
     "fusion_power",
     "pnucblkt",
-    "pnucfw",
+    "p_fw_nuclear_heat_mw",
     "ptfnuc",
     "pnucshld",
     "pnucdiv",
