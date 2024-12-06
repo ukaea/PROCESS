@@ -210,6 +210,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
+#### Power fluxes
+
+- Power fluxes should start with the `pflux_` prefix
+
+---------------------
+
 #### Energies
 
 - Energies should start with the `e_` prefix
@@ -250,6 +256,10 @@ Example, the area of the TF winding pack: `a_tf_wp`
 #### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
+
+Similar to this is variables representing efficiencies.
+
+If a variable is intended to represent an engineering efficiency then it should start with the `eta_` prefix to represent $\eta$
 
 ---------------------
 
