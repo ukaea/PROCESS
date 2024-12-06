@@ -2145,7 +2145,7 @@ class Power2Param(NamedTuple):
 
     pdivt: Any = None
 
-    palpfwmw: Any = None
+    p_fw_alpha_mw: Any = None
 
     idivrt: Any = None
 
@@ -2288,7 +2288,7 @@ class Power2Param(NamedTuple):
             pradmw=287.99550050743289,
             itart=0,
             pdivt=143.03180561618876,
-            palpfwmw=19.833077403424262,
+            p_fw_alpha_mw=19.833077403424262,
             idivrt=1,
             pohmmw=0.61391840981850698,
             iradloss=1,
@@ -2390,7 +2390,7 @@ class Power2Param(NamedTuple):
             pradmw=287.99550050743289,
             itart=0,
             pdivt=142.91368967092416,
-            palpfwmw=19.826887164528632,
+            p_fw_alpha_mw=19.826887164528632,
             idivrt=1,
             pohmmw=0.61391840981850698,
             iradloss=1,
@@ -2590,7 +2590,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "pdivt", power2param.pdivt)
 
-    monkeypatch.setattr(physics_variables, "palpfwmw", power2param.palpfwmw)
+    monkeypatch.setattr(physics_variables, "p_fw_alpha_mw", power2param.p_fw_alpha_mw)
 
     monkeypatch.setattr(physics_variables, "idivrt", power2param.idivrt)
 

@@ -2146,7 +2146,7 @@ class Physics:
         )
 
         # Power transported to the first wall by escaped alpha particles
-        physics_variables.palpfwmw = physics_variables.alpha_power_total * (
+        physics_variables.p_fw_alpha_mw = physics_variables.alpha_power_total * (
             1.0e0 - physics_variables.f_alpha_plasma
         )
 
@@ -4373,8 +4373,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Fast alpha particle power incident on the first wall (MW)",
-            "(palpfwmw)",
-            physics_variables.palpfwmw,
+            "(p_fw_alpha_mw)",
+            physics_variables.p_fw_alpha_mw,
             "OP ",
         )
         po.ovarre(

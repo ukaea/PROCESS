@@ -66,7 +66,7 @@ def plot_full_sankey(
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
-    palpfwmw = alpha_power_total * (
+    p_fw_alpha_mw = alpha_power_total * (
         1 - f_alpha_plasma
     )  # Alpha particles hitting first wall (MW)
     pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)
@@ -188,7 +188,7 @@ def plot_full_sankey(
         # --------------------------------- CHARGED PARTICLES - 2 ---------------------------------
 
         # Charge P.+Ohmic, Alpha+Injected, -Divertor, -1st Wall, -Photons
-        CHARGEDP = [pcharohmmw, palpinjmw, -pdivt, -palpfwmw, -pradmw]
+        CHARGEDP = [pcharohmmw, palpinjmw, -pdivt, -p_fw_alpha_mw, -pradmw]
         sankey.add(
             flows=CHARGEDP,
             # down(in), down(in), up(out), up(out), right(out)
@@ -289,7 +289,7 @@ def plot_full_sankey(
         # ---------------------------------------- 1ST WALL - 5 ---------------------------------------
 
         # Alphas, Neutrons, Photons, Coolant Pumping, Total 1st Wall
-        FIRST_WALL = [palpfwmw, pnucfw, pradfw, htpmwfw, -pthermfw]
+        FIRST_WALL = [p_fw_alpha_mw, pnucfw, pradfw, htpmwfw, -pthermfw]
         sankey.add(
             flows=FIRST_WALL,
             orientations=[0, -1, 1, -1, 0],
@@ -460,7 +460,7 @@ def plot_full_sankey(
                 t.set_position((pos[0],pos[1]+0.5*(pradfw/totalplasma)+0.15))
             if t == diagrams[3].texts[3]: # Charged P.
                 t.set_horizontalalignment('left')
-                t.set_position((pos[0]+0.5*((pdivt+palpfwmw)/totalplasma)+0.1,pos[1]+0.05))
+                t.set_position((pos[0]+0.5*((pdivt+p_fw_alpha_mw)/totalplasma)+0.1,pos[1]+0.05))
             if t == diagrams[3].texts[4]: # Rad. Div.
                 t.set_horizontalalignment('right')
                 t.set_position((pos[0]-0.5*(praddiv/totalplasma)-0.1,pos[1]))
@@ -522,7 +522,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
-    palpfwmw = alpha_power_total * (
+    p_fw_alpha_mw = alpha_power_total * (
         1 - f_alpha_plasma
     )  # Alpha power hitting 1st wall (MW)
     itart = m_file.data["itart"].get_scan(
@@ -532,7 +532,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     # Power deposited on divertor (MW)
     totaldivetc = pdivt + pnucdiv + praddiv
     # Power deposited on Blanket (MW)
-    totalblktetc = pnucfw + pnucblkt + pnucshld + pradfw + palpfwmw - emultmw
+    totalblktetc = pnucfw + pnucblkt + pnucshld + pradfw + p_fw_alpha_mw - emultmw
 
     if itart == 0:
         # Power deposited in CP (MW) (None here)

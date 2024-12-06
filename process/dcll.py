@@ -188,7 +188,7 @@ class DCLL:
         fwbs_variables.psurffwo = (
             fwbs_variables.pradfw * build_variables.fwareaob / build_variables.fwarea
             + current_drive_variables.porbitlossmw
-            + physics_variables.palpfwmw
+            + physics_variables.p_fw_alpha_mw
         )
         fwbs_variables.psurffwi = fwbs_variables.pradfw * (
             1 - build_variables.fwareaob / build_variables.fwarea

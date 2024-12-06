@@ -4346,7 +4346,7 @@ class Stellarator:
 
         #  Power transported to the first wall by escaped alpha particles
 
-        physics_variables.palpfwmw = physics_variables.alpha_power_total * (
+        physics_variables.p_fw_alpha_mw = physics_variables.alpha_power_total * (
             1.0e0 - physics_variables.f_alpha_plasma
         )
 
