@@ -125,7 +125,7 @@ bt = 5.24 *Toroidal field on axis (T)
 rmajor = 22.16 *Plasma major radius (m)
 aspect = 10.1 *Aspect ratio
 
-ignite = 1     *Switch for ignition assumption (1: Ignited)
+i_ignited = 1     *Switch for ignition assumption (1: Ignited)
 iinvqd = 1     *Switch for inverse quadrature in L-mode scaling laws 5 and 9 (1: Inverse quadrature with Neo-Alcator tau-E used)
 ipedestal = 0  *Switch for pedestal profiles (0: Parabolic Profiles)
 iradloss = 1   *Switch for radiation loss term usage in power balance (1: Total power lost is scaling power plus core radiation only)

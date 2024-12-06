@@ -2457,7 +2457,7 @@
         "ifedrv": 2.0,
         "ifetyp": 0.0,
         "ifueltyp": 0.0,
-        "ignite": 0.0,
+        "i_ignited": 0.0,
         "iinvqd": 1.0,
         "ikind": "int_def",
         "ilhthresh": 19.0,
@@ -9836,7 +9836,7 @@
         "ifetyp": "Switch for type of IFE device build:\n<ul>\n<li>=0 generic (cylindrical) build</li>\n<li>=1 OSIRIS-like build</li>\n<li>=2 SOMBRERO-like build</li>\n<li>=3 HYLIFE-II-like build</li>\n<li>=4 2019 build</li>\n</ul>",
         "ifueltyp": "Switch for fuel type:\n<ul>\n<li>=2 treat initial blanket, divertor, first wall\n   as capital costs. Treat all later items and\n   fraction fcdfuel of CD equipment as fuel costs</li>\n<li>=1 treat blanket divertor, first wall and\n   fraction fcdfuel of CD equipment as fuel cost</li>\n<li>=0 treat these as capital cost</li>\n</ul>",
         "igeom": "switch for plasma geometry calculation:\n<ul>\n<li>=0 original method (possibly based on Peng ST modelling)</li>\n<li>=1 improved (and traceable) method</li>\n</ul>",
-        "ignite": "switch for ignition assumption. Obviously, ignite must be zero if current drive\n is required. If ignite is 1, any auxiliary power is assumed to be used only during\n plasma start-up, and is excluded from all steady-state power balance calculations.\n<ul>\n<li>=0 do not assume plasma ignition</li>\n<li>=1 assume ignited (but include auxiliary power in costs)</UL</li>\n</ul>",
+        "i_ignited": "switch for ignition assumption. Obviously, i_ignited must be zero if current drive\n is required. If i_ignited is 1, any auxiliary power is assumed to be used only during\n plasma start-up, and is excluded from all steady-state power balance calculations.\n<ul>\n<li>=0 do not assume plasma ignition</li>\n<li>=1 assume ignited (but include auxiliary power in costs)</UL</li>\n</ul>",
         "iinvqd": "switch for inverse quadrature in L-mode scaling laws 5 and 9:\n<ul>\n<li>=0 inverse quadrature not used</li>\n<li>=1 inverse quadrature with Neo-Alcator tau-E used</li>\n</ul>",
         "ikind": "",
         "ilhthresh": "switch for L-H mode power threshold scaling to use (see pthrmw for list)",
@@ -13384,7 +13384,7 @@
             "lb": 0,
             "ub": 1
         },
-        "ignite": {
+        "i_ignited": {
             "lb": 0,
             "ub": 1
         },
@@ -19142,7 +19142,7 @@
             "idivrt",
             "ifalphap",
             "igeom",
-            "ignite",
+            "i_ignited",
             "iinvqd",
             "ipedestal",
             "i_pfirsch_schluter_current",
@@ -20474,7 +20474,7 @@
         "ifetyp": "int_variable",
         "ifueltyp": "int_variable",
         "igeom": "int_variable",
-        "ignite": "int_variable",
+        "i_ignited": "int_variable",
         "iinvqd": "int_variable",
         "ilhthresh": "int_variable",
         "ilw_smelter_h": "real_variable",

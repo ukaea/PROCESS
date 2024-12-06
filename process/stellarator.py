@@ -223,7 +223,7 @@ class Stellarator:
                 2.0,
                 physics_variables.iinvqd,
                 physics_variables.isc,
-                physics_variables.ignite,
+                physics_variables.i_ignited,
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
@@ -4165,7 +4165,7 @@ class Stellarator:
         #  If ignited, then ignore beam fusion effects
 
         if (current_drive_variables.pnbeam != 0.0e0) and (
-            physics_variables.ignite == 0
+            physics_variables.i_ignited == 0
         ):
             (
                 physics_variables.beta_beam,
@@ -4328,7 +4328,7 @@ class Stellarator:
             0.00001e0, powht
         )  # To avoid negative heating power. This line is VERY important
 
-        if physics_variables.ignite == 0:
+        if physics_variables.i_ignited == 0:
             powht = (
                 powht + current_drive_variables.pinjmw
             )  # if not ignited add the auxiliary power
@@ -4421,7 +4421,7 @@ class Stellarator:
             physics_variables.hfact,
             physics_variables.iinvqd,
             physics_variables.isc,
-            physics_variables.ignite,
+            physics_variables.i_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
@@ -4951,7 +4951,7 @@ class Stellarator:
             elif stellarator_variables.isthtr == 3:
                 po.ocmmnt(self.outfile, "Neutral Beam Injection Heating")
 
-            if physics_variables.ignite == 1:
+            if physics_variables.i_ignited == 1:
                 po.ocmmnt(
                     self.outfile,
                     "Ignited plasma; injected power only used for start-up phase",

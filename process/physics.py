@@ -1929,7 +1929,7 @@ class Physics:
         # If ignited, then ignore beam fusion effects
 
         if (current_drive_variables.beam_current != 0.0e0) and (
-            physics_variables.ignite == 0
+            physics_variables.i_ignited == 0
         ):
             (
                 physics_variables.beta_beam,
@@ -2111,7 +2111,7 @@ class Physics:
         # Power transported to the divertor by charged particles,
         # i.e. excludes neutrons and radiation, and also NBI orbit loss power,
         # which is assumed to be absorbed by the first wall
-        if physics_variables.ignite == 0:
+        if physics_variables.i_ignited == 0:
             pinj = current_drive_variables.pinjmw
         else:
             pinj = 0.0e0
@@ -2187,7 +2187,7 @@ class Physics:
             physics_variables.hfact,
             physics_variables.iinvqd,
             physics_variables.isc,
-            physics_variables.ignite,
+            physics_variables.i_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
@@ -2592,7 +2592,7 @@ class Physics:
 
         # Beam hot ion component
         # If ignited, prevent beam fusion effects
-        if physics_variables.ignite == 0:
+        if physics_variables.i_ignited == 0:
             physics_variables.dnbeam = physics_variables.dene * physics_variables.rnbeam
         else:
             physics_variables.dnbeam = 0.0
@@ -4541,14 +4541,14 @@ class Physics:
             current_drive_variables.pinjemw,
             "OP ",
         )
-        if physics_variables.ignite == 1:
+        if physics_variables.i_ignited == 1:
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
         po.ovarin(
             self.outfile,
             "Ignited plasma switch (0=not ignited, 1=ignited)",
-            "(ignite)",
-            physics_variables.ignite,
+            "(i_ignited)",
+            physics_variables.i_ignited,
         )
 
         po.oblnkl(self.outfile)
@@ -4857,7 +4857,7 @@ class Physics:
 
         po.osubhd(self.outfile, "Confinement :")
 
-        if physics_variables.ignite == 1:
+        if physics_variables.i_ignited == 1:
             po.ocmmnt(
                 self.outfile,
                 "Device is assumed to be ignited for the calculation of confinement time",
@@ -5462,7 +5462,7 @@ class Physics:
                 1.0,
                 physics_variables.iinvqd,
                 iisc,
-                physics_variables.ignite,
+                physics_variables.i_ignited,
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
@@ -6259,7 +6259,7 @@ class Physics:
             hhh,
             physics_variables.iinvqd,
             physics_module.iscz,
-            physics_variables.ignite,
+            physics_variables.i_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
@@ -6292,7 +6292,7 @@ class Physics:
         # Take into account whether injected power is included in tau_e
         # calculation (i.e. whether device is ignited)
 
-        if physics_variables.ignite == 0:
+        if physics_variables.i_ignited == 0:
             fhz -= current_drive_variables.pinjmw / physics_variables.plasma_volume
 
         # Include the radiation power if requested
@@ -6317,7 +6317,7 @@ class Physics:
         hfact,
         iinvqd,
         isc,
-        ignite,
+        i_ignited,
         kappa,
         kappa95,
         non_alpha_charged_power,
@@ -6349,7 +6349,7 @@ class Physics:
         hfact     : input real :  H factor on energy confinement scalings
         iinvqd    : input integer :  switch for inverse quadrature
         isc       : input integer :  switch for energy confinement scaling to use
-        ignite    : input integer :  switch for ignited calculation
+        i_ignited    : input integer :  switch for ignited calculation
         kappa     : input real :  plasma elongation
         kappa95   : input real :  plasma elongation at 95% surface
         kappaa    : output real : plasma elongation calculated using area ratio
@@ -6415,7 +6415,7 @@ class Physics:
         )
 
         # If the device is not ignited, add the injected auxiliary power
-        if ignite == 0:
+        if i_ignited == 0:
             powerht = powerht + pinjmw
 
         # Include the radiation as a loss term if requested

@@ -165,7 +165,7 @@ class CudrivParam(NamedTuple):
 
     aux_current_fraction: Any = None
 
-    ignite: Any = None
+    i_ignited: Any = None
 
     pohmmw: Any = None
 
@@ -275,7 +275,7 @@ class CudrivParam(NamedTuple):
             plasma_current=18398455.678867526,
             ipedestal=1,
             aux_current_fraction=0.12364081253383186,
-            ignite=0,
+            i_ignited=0,
             pohmmw=0,
             fusion_power=0,
             inductive_current_fraction=0.59999999999999998,
@@ -365,7 +365,7 @@ class CudrivParam(NamedTuple):
             plasma_current=18398455.678867526,
             ipedestal=1,
             aux_current_fraction=0.12364081253383186,
-            ignite=0,
+            i_ignited=0,
             pohmmw=0.76707314489379119,
             fusion_power=1051.6562748933977,
             inductive_current_fraction=0.59999999999999998,
@@ -570,7 +570,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         physics_variables, "aux_current_fraction", cudrivparam.aux_current_fraction
     )
 
-    monkeypatch.setattr(physics_variables, "ignite", cudrivparam.ignite)
+    monkeypatch.setattr(physics_variables, "i_ignited", cudrivparam.i_ignited)
 
     monkeypatch.setattr(physics_variables, "pohmmw", cudrivparam.pohmmw)
 

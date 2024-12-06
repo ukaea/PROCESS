@@ -173,7 +173,7 @@ Stellarators require no curren drive, although provision for auxiliary heating d
 
 `isthtr = 3` : neutral beam injection
 
-The value of variable `pheat` determines the actual amount of auxiliary heating power (in Watts) to be applied to the plasma. This variable may be used as an iteration variable (no. 11). Switch `ignite` may be used if necessary.
+The value of variable `pheat` determines the actual amount of auxiliary heating power (in Watts) to be applied to the plasma. This variable may be used as an iteration variable (no. 11). Switch `i_ignited` may be used if necessary.
 
 ### Divertor
 

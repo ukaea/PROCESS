@@ -29,7 +29,7 @@ used to heat the plasma. Useful energy is extracted from the plasma since the
 radiation power produced is very high, and this, in theory, can be converted to
 electricity without using a thermal cycle.
 
-Since the temperature required to ignite the D-\(^3\)He reaction is considerably
+Since the temperature required to i_ignited the D-\(^3\)He reaction is considerably
 higher than that for D-T, it is necessary to take into account the following
 D-D reactions, which have significant reaction rates at such temperatures:
 

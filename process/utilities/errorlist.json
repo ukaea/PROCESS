@@ -13,7 +13,7 @@
     {
       "no": 1,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 7 if ignite=1"
+      "message": "CONSTRAINTS: Do not use constraint 7 if i_ignited=1"
     },
     {
       "no": 2,
@@ -28,7 +28,7 @@
     {
       "no": 4,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 28 if ignite=1"
+      "message": "CONSTRAINTS: Do not use constraint 28 if i_ignited=1"
     },
     {
       "no": 5,

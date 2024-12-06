@@ -307,7 +307,7 @@ contains
       rhopedt, cvol, f_deuterium, ffwal, iculbl, itartpf, ilhthresh, &
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
-      fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
+      fgwsep, rhopedn, tratio, q0, ishape, fne0, i_ignited, f_tritium, &
       ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
@@ -638,8 +638,8 @@ contains
        case ('ifalphap')
           call parse_int_variable('ifalphap', ifalphap, 0, 1, &
                'Switch for fast alpha pressure fit')
-       case ('ignite')
-          call parse_int_variable('ignite', ignite, 0, 1, &
+       case ('i_ignited')
+          call parse_int_variable('i_ignited', i_ignited, 0, 1, &
                'Switch for ignited plasma assumption')
        case ('iinvqd')
           call parse_int_variable('iinvqd', iinvqd, 0, 1, &
