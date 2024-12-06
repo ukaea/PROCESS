@@ -83,6 +83,7 @@ Below are a few shorthand designations for different systems that should be used
 - Central Solenoid: `_cs_`
 - Heating & Current Drive: `_hcd_`
 - Neutral Beam: `_nb_`
+- Centre post: `_cp_` Should only be used for ST's
 
 If the variables are physics variables and do not belong to a system then:
 
