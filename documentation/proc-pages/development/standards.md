@@ -40,9 +40,13 @@ all new models should have their own function
 
 Use a lowercase word or words. Separate words by underscores(`_`) to improve readability.
 
+---------------------
+
 ### Switches
 
 Switches should start with the `i_` prefix in their name, be of integer type and should be indexed from 0.
+
+---------------------
 
 ### Constants
 
@@ -51,7 +55,13 @@ Use an uppercase single letter, word, or words. Separate words with underscores 
 Refrain from declaring or typing known numerical constants directly in the code. Instead call the value from `constants.f90`
 If the constants doesn't exist then add it with a source link and uncertainty value.
 
+---------------------
+
 ### Variables
+
+!!! note
+
+    Variable names are slowly being converted to their new verbose form as development progresses. Therefore you may come across variables that do not match the style mentioned below.
 
 Use a lowercase single letter, word, or words. Separate words with underscores to improve readability.
 If converting between units it may be required to have some capital letters at the end of the variable name to differentiate between different orders of magnitude, `m` and `M` etc.
@@ -60,7 +70,19 @@ The agreed upon style is to name the variables by the following scheme:
 
 `var = <data type>_<system>_<description>_<units>`
 
-It is not always necessary to add the units abbreviation to the end of the variable but if doing so make sure it is case sensitive.
+#### System designations
+
+Below are a few shorthand designations for different systems that should be used in variable names
+
+- Toroidal field coils: `_tf_`
+- Poloidal field coils: `_pf_`
+- Vacuum Vessel: `_vv_`
+- Divertor: `_div_`
+- Blanket: `_blkt_`
+- Shield: `_shield_`
+- Central Solenoid: `_cs_`
+- Heating & Current Drive: `_hcd_`
+- Neutral Beam: `_nb_`
 
 If the variables are physics variables and do not belong to a system then:
 
@@ -241,6 +263,8 @@ Variables used within constraint equations to scale iteration variables (f-value
 
 Try to keep names to a sensible length while also keeping the name explicit and descriptive.
 
+---------------------
+
 ### Physical Type
 
 The physical type of the variable should form the first part of the variable name, e.g. for plasma resistance the variable should be named:
@@ -264,10 +288,21 @@ Inside PROCESS all variables should be in SI units unless otherwise stated. For 
 ```fortran
 ! Fusion power [W]
 fusion_power = 1000.0d6
+```
 
+If a variable is not in SI units then its units should be put at the end of of the variable name.
+Example:
+
+```fortran
 ! Fusion power [MW]
 fusion_power_MW = 1000.0d0
 ```
+
+!!! note
+
+    With `f2py` you may encounter a Fortran error where the variable with units at the end in capital letters is not recognised. If so for the meantime put the units in their lowercase form. This problem will be solved in the future by full Pythonisation.
+
+---------------------    
 
 ### Coordinates and dimensions
 
@@ -291,6 +326,8 @@ dz_cs =
 dtheta_description =
 ```
 
+---------------------
+
 ### Loop order
 
 Loop variables that use I, j etc. should use
@@ -301,6 +338,8 @@ ii
         kk
             mm
 ```
+
+---------------------
 
 ### Examples
 
