@@ -151,7 +151,7 @@ def main(args=None):
     nsweep_list = [
         "aspect",
         "hldivlim",
-        "pnetelmw",
+        "p_net_electrical_mw",
         "hfact",
         "oacdcp",
         "walalw",

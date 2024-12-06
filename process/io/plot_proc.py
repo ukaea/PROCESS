@@ -2603,7 +2603,7 @@ def plot_power_info(axis, mfile_data, scan):
     )
 
     plant_eff = 100.0 * (
-        mfile_data.data["pnetelmw"].get_scan(scan)
+        mfile_data.data["p_net_electrical_mw"].get_scan(scan)
         / mfile_data.data["fusion_power"].get_scan(scan)
     )
 
@@ -2634,7 +2634,7 @@ def plot_power_info(axis, mfile_data, scan):
         (gross_eff, "Gross cycle efficiency", "%"),
         (net_eff, "Net cycle efficiency", "%"),
         ("p_gross_electrical", "Gross electric power", "MW"),
-        ("pnetelmw", "Net electric power", "MW"),
+        ("p_net_electrical_mw", "Net electric power", "MW"),
         (
             plant_eff,
             "Fusion-to-electric efficiency "

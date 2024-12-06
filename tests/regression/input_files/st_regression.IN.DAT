@@ -122,7 +122,7 @@ powfmax = 2500.0
 * icc = 16
 * DESCRIPTION:   Net electric power lower limit
 * JUSTIFICATION: Required to generate 100MW
-* VARIABLES:     pnetelmw (net electric power) calculated in-situ
+* VARIABLES:     p_net_electrical_mw (net electric power) calculated in-situ
 
 *pnetelin = 
 * DESCRIPTION:   Required net electric power lower limit (MW) (icc=16)

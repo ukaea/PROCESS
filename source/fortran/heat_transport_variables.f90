@@ -139,7 +139,7 @@ module heat_transport_variables
     real(dp) :: pinjwpfix
     !! secondary injector wall plug power (MW)
 
-    real(dp) :: pnetelmw
+    real(dp) :: p_net_electrical_mw
     !! net electric power (MW)
 
     real(dp) :: p_recirc_electrical_mw
@@ -227,7 +227,7 @@ module heat_transport_variables
       pinjmax = 120.0D0
       p_hcd_electrical_mw = 0.0D0
       pinjwpfix = 0.0D0
-      pnetelmw = 0.0D0
+      p_net_electrical_mw = 0.0D0
       p_recirc_electrical_mw = 0.0D0
       priheat = 0.0D0
       psecdiv = 0.0D0

@@ -109,7 +109,7 @@ to the turbine, assumed to be 20 K below the outlet temperature of the primary c
 
 The electrical power required to operate the power plant itself is the so-called recirculating 
 electric power (`p_recirc_electrical_mw`). Any surplus is exported to the electricity grid as net electric 
-power (`pnetelmw`).
+power (`p_net_electrical_mw`).
 
 The recirculating power comprises the electrical power required to run all of the associated 
 electrical systems surrounding the fusion power core, plus the on-site building services, offices, 

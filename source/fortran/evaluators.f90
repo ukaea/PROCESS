@@ -98,7 +98,7 @@ contains
 		use current_drive_variables, only: bigq, p_nb_orbit_loss_mw, pinjmw
 		use divertor_variables, only: hldiv
 		use error_handling, only: idiags, fdiags, errors_on, report_error
-		use heat_transport_variables, only: pnetelmw
+		use heat_transport_variables, only: p_net_electrical_mw
     use numerics, only: minmax
 		use physics_variables, only: fusion_power, bt, rmajor, wallmw, aspect, pohmmw
 		use pf_power_variables, only: srcktpm
@@ -190,7 +190,7 @@ contains
        fc = sgn * ( 0.95d0 * (rmajor/9.0d0) - 0.05d0 * (t_burn/7200.d0) )
 
     case (17)  !  net electrical output
-       fc = sgn * pnetelmw / 500.0d0
+       fc = sgn * p_net_electrical_mw / 500.0d0
 
    case (18)  !  Null figure of merit
       fc = 1d0

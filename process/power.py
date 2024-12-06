@@ -946,7 +946,7 @@ class Power:
             )
 
             #  Net electric power
-            heat_transport_variables.pnetelmw = (
+            heat_transport_variables.p_net_electrical_mw = (
                 heat_transport_variables.p_gross_electrical
                 - heat_transport_variables.p_recirc_electrical_mw
             )
@@ -954,7 +954,7 @@ class Power:
             #  Recirculating power fraction
             cirpowfr = (
                 heat_transport_variables.p_gross_electrical
-                - heat_transport_variables.pnetelmw
+                - heat_transport_variables.p_net_electrical_mw
             ) / heat_transport_variables.p_gross_electrical
 
         if output == 0:
@@ -1049,7 +1049,7 @@ class Power:
         )
 
         po.oheadr(self.outfile, "Plant Power / Heat Transport Balance")
-        if heat_transport_variables.pnetelmw < 0:
+        if heat_transport_variables.p_net_electrical_mw < 0:
             po.ocmmnt(
                 self.outfile, "WARNING: Calculated net electric power is negative"
             )
@@ -1890,8 +1890,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power output(MW)",
-            "(pnetelmw.)",
-            heat_transport_variables.pnetelmw,
+            "(p_net_electrical_mw.)",
+            heat_transport_variables.p_net_electrical_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1955,7 +1955,7 @@ class Power:
             "OP ",
         )
         sum = (
-            heat_transport_variables.pnetelmw
+            heat_transport_variables.p_net_electrical_mw
             + heat_transport_variables.p_hcd_electrical_mw
             + heat_transport_variables.htpmw
             + heat_transport_variables.vachtmw
@@ -2013,8 +2013,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electrical output (MW)	",
-            "(pnetelmw)",
-            heat_transport_variables.pnetelmw,
+            "(p_net_electrical_mw)",
+            heat_transport_variables.p_net_electrical_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2035,7 +2035,7 @@ class Power:
             self.outfile,
             "Total (MW)",
             "",
-            heat_transport_variables.pnetelmw
+            heat_transport_variables.p_net_electrical_mw
             + self.p_thermal_main_loss_mw
             + heat_transport_variables.psechtmw,
             "OP ",
@@ -2045,7 +2045,7 @@ class Power:
             abs(
                 sum
                 - (
-                    heat_transport_variables.pnetelmw
+                    heat_transport_variables.p_net_electrical_mw
                     + self.p_thermal_main_loss_mw
                     + heat_transport_variables.psechtmw
                 )
@@ -2064,18 +2064,18 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(pnetelmw/(fusion_power+emultmw)",
+            "(p_net_electrical_mw/(fusion_power+emultmw)",
             100.0e0
-            * heat_transport_variables.pnetelmw
+            * heat_transport_variables.p_net_electrical_mw
             / (physics_variables.fusion_power + fwbs_variables.emultmw),
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Net electric power / total fusion power (%)",
-            "(pnetelmw/fusion_power)",
+            "(p_net_electrical_mw/fusion_power)",
             100.0e0
-            * heat_transport_variables.pnetelmw
+            * heat_transport_variables.p_net_electrical_mw
             / physics_variables.fusion_power,
             "OP ",
         )

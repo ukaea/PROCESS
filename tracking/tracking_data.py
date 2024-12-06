@@ -141,7 +141,7 @@ class ProcessTracker:
         "nesep",
         "plasma_volume",
         "sarea",
-        "pnetelmw",
+        "p_net_electrical_mw",
         "etath",
         "p_gross_electrical",
         "tftmp",

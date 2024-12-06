@@ -2077,7 +2077,7 @@ class Power2Param(NamedTuple):
 
     tturb: Any = None
 
-    pnetelmw: Any = None
+    p_net_electrical_mw: Any = None
 
     fpumpdiv: Any = None
 
@@ -2209,7 +2209,7 @@ class Power2Param(NamedTuple):
 
     iprint: Any = None
 
-    expected_pnetelmw: Any = None
+    expected_p_net_electrical_mw: Any = None
 
     expected_p_recirc_electrical_mw: Any = None
 
@@ -2254,7 +2254,7 @@ class Power2Param(NamedTuple):
             psecshld=0,
             fpumpshld=0.0050000000000000001,
             tturb=0,
-            pnetelmw=0,
+            p_net_electrical_mw=0,
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
             vachtmw=0.5,
@@ -2320,7 +2320,7 @@ class Power2Param(NamedTuple):
             qmisc=23850.540321823562,
             outfile=11,
             iprint=0,
-            expected_pnetelmw=493.01760776192009,
+            expected_p_net_electrical_mw=493.01760776192009,
             expected_p_recirc_electrical_mw=489.56557141942733,
             expected_fachtmw=61.882833632875375,
             expected_p_gross_electrical=982.58317918134742,
@@ -2356,7 +2356,7 @@ class Power2Param(NamedTuple):
             psecshld=0,
             fpumpshld=0.0050000000000000001,
             tturb=0,
-            pnetelmw=493.01760776192009,
+            p_net_electrical_mw=493.01760776192009,
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
             vachtmw=0.5,
@@ -2422,7 +2422,7 @@ class Power2Param(NamedTuple):
             qmisc=68432.80867525778,
             outfile=11,
             iprint=0,
-            expected_pnetelmw=422.4198205312706,
+            expected_p_net_electrical_mw=422.4198205312706,
             expected_p_recirc_electrical_mw=559.86357407357548,
             expected_fachtmw=62.237143915360818,
             expected_p_gross_electrical=982.28339460484608,
@@ -2522,7 +2522,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "tturb", power2param.tturb)
 
-    monkeypatch.setattr(heat_transport_variables, "pnetelmw", power2param.pnetelmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_net_electrical_mw", power2param.p_net_electrical_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "fpumpdiv", power2param.fpumpdiv)
 
@@ -2694,8 +2696,8 @@ def test_power2(power2param, monkeypatch, power):
 
     power.power2(output=False)
 
-    assert heat_transport_variables.pnetelmw == pytest.approx(
-        power2param.expected_pnetelmw
+    assert heat_transport_variables.p_net_electrical_mw == pytest.approx(
+        power2param.expected_p_net_electrical_mw
     )
 
     assert heat_transport_variables.p_recirc_electrical_mw == pytest.approx(
