@@ -573,13 +573,20 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
     monkeypatch.setattr(tv, "t_burn", 5.0)
-    monkeypatch.setattr(tv, "t_cycle", 10.0)
+    monkeypatch.setattr(tv, "t_cycle", 9000.0)
+    monkeypatch.setattr(cv, "adivflnc", 10.0)
+    monkeypatch.setattr(dv, "hldiv", 10.0)
+    monkeypatch.setattr(cv, "ibkt_life", 0)
+    monkeypatch.setattr(cv, "abktflnc", 10.0)
+    monkeypatch.setattr(pv, "wallmw", 10.0)
+    monkeypatch.setattr(cv, "cplife", 5.0)
+    monkeypatch.setattr(cv, "cdrlife", 15.0)
 
     availability.avail_st(output=False)
 
-    assert pytest.approx(cv.t_operation) == 29.03225806
-    assert pytest.approx(cv.cfactr) == 0.82579737
-    assert pytest.approx(cv.cpfact) == 0.41289868
+    assert pytest.approx(cv.t_operation) == 15.0
+    assert pytest.approx(cv.cfactr) == 0.27008858
+    assert pytest.approx(cv.cpfact, abs=1.0e-8) == 0.00015005
 
     # Initialise fortran variables again to reset for other tests
     fortran.init_module.init_all_module_vars()
@@ -606,3 +613,23 @@ def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     cplife = availability.cp_lifetime()
 
     assert pytest.approx(cplife) == exp
+
+
+def test_divertor_lifetime(monkeypatch, availability):
+    """Test divertor_lifetime routine
+
+    :param monkeypatch: Mock fixture
+    :type monkeypatch: object
+
+    :param availability: fixture containing an initialised `Availability` object
+    :type availability: tests.unit.test_availability.availability (functional fixture)
+    """
+
+    monkeypatch.setattr(cv, "adivflnc", 100.0)
+    monkeypatch.setattr(dv, "hldiv", 10.0)
+    monkeypatch.setattr(cv, "tlife", 30.0)
+
+    divlife_obs = availability.divertor_lifetime()
+    divlife_exp = 10.0
+
+    assert pytest.approx(divlife_obs) == divlife_exp

@@ -76,15 +76,23 @@ All availability models in PROCESS require the calculation of the centerpost lif
 
 For superconducting magnets (`i_tf_sup = 1`), the centrepost lifetime is calculated as
 
-$$ t_{\text{CP,life}} = min(f_{\text{TF,max}}/(\phi_{\text{CP,max}}t_{\text{year}}),t_{\text{life}}) $$
+$$ t_{\text{CP,life}} = \min(f_{\text{TF,max}}/(\phi_{\text{CP,max}}t_{\text{year}}),t_{\text{life}}) $$
 
 where $f_{\text{TF,max}}$ is the max fast neutron fluence on the TF coil ($\mathrm{m}^{-2} \mathrm{s}$), $\phi_{\text{CP,max}}$ is the centrepost TF fast neutron flux ($\mathrm{m}^{-2}$ $\mathrm{s}^{-1}$) and $t_{\text{year}}$ is the number of seconds in a year. 
 
 For copper or cryogenic aluminium magnets (`i_tf_sup = 0 or 2`), the centrepost lifetime is
 
-$$ t_{\text{CP,life}} = min(f_{\text{CP, allowable}}/P_{\text{wall}}, t_{\text{life}}) $$
+$$ t_{\text{CP,life}} = \min(f_{\text{CP, allowable}}/P_{\text{wall}}, t_{\text{life}}) $$
 
 where $f_{\text{CP, allowable}}$ is the allowable centrepost neutron fluence and $P_{\text{wall}}$ is the average neutron wall load ($\mathrm{MW} \mathrm{m}^{-2}$).
+
+## Divertor lifetime
+
+The divertor lifetime is calculated as
+
+$$ t_{\text{div, life}} = \max (0, \min(f_{\text{div, allowable}} / P_{\text{div}}, t_{\text{life}})) $$
+
+where $f_{\text{div, allowable}}$ is the allowable divertor heat fluence ($\mathrm{MW}\text{-}\mathrm{yr} \mathrm{m}^{-2}$) and $P_{\text{div}}$ is the heat load to the divertor ($\mathrm{MW} \mathrm{m}^{-2}$).
 
 [^1]: P. J. Knight, *"PROCESS 3020: Plant Availability Model"*, Work File Note
 F/PL/PJK/PROCESS/CODE/<br>
