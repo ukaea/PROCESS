@@ -279,7 +279,7 @@ class DCLL:
 
         # For primary_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of htpmw_blkt, htpmw_div, p_fw_pumping_mw, p_shield_pumping_mw set in input file
+        # Values of p_blanket_pumping_mw, htpmw_div, p_fw_pumping_mw, p_shield_pumping_mw set in input file
 
         if fwbs_variables.primary_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
@@ -292,7 +292,7 @@ class DCLL:
                     + fwbs_variables.psurffwo
                 )
             )
-            primary_pumping_variables.htpmw_blkt = (
+            primary_pumping_variables.p_blanket_pumping_mw = (
                 heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
             )
             # For CCFE HCPB: p_shield_pumping_mw = fpumpshld * ( pnucshld + pnuc_cp_sh )
@@ -338,8 +338,8 @@ class DCLL:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for blanket (MW)",
-                    "(htpmw_blkt)",
-                    heat_transport_variables.htpmw_blkt,
+                    "(p_blanket_pumping_mw)",
+                    heat_transport_variables.p_blanket_pumping_mw,
                     "OP ",
                 )
             else:

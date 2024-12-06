@@ -282,7 +282,7 @@ contains
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, htpmw_div, &
-      pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
+      pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, p_shield_pumping_mw, fpumpshld, trithtmw, &
       fpumpfw, crypmw_max, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
@@ -2003,8 +2003,8 @@ contains
        case ('primary_pumping')
           call parse_int_variable('primary_pumping', primary_pumping, 0, 3, &
                'Switch for pumping of primary coolant')
-       case ('htpmw_blkt')
-          call parse_real_variable('htpmw_blkt', htpmw_blkt, 0.0D0, 1.0D3, &
+       case ('p_blanket_pumping_mw')
+          call parse_real_variable('p_blanket_pumping_mw', p_blanket_pumping_mw, 0.0D0, 1.0D3, &
                'blanket coolant mechanical pumping power (MW)')
        case ('htpmw_div')
           call parse_real_variable('htpmw_div', htpmw_div, 0.0D0, 1.0D3, &

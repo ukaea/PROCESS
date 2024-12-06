@@ -1242,7 +1242,7 @@ class Stellarator:
                         + current_drive_variables.porbitlossmw
                     )
                 )
-                heat_transport_variables.htpmw_blkt = (
+                heat_transport_variables.p_blanket_pumping_mw = (
                     heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
                 )
                 heat_transport_variables.p_shield_pumping_mw = (
@@ -1476,7 +1476,7 @@ class Stellarator:
                             + current_drive_variables.porbitlossmw
                         )
                     )
-                    heat_transport_variables.htpmw_blkt = (
+                    heat_transport_variables.p_blanket_pumping_mw = (
                         heat_transport_variables.fpumpblkt
                         * (
                             pnucbzi * fwbs_variables.emult

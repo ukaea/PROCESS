@@ -666,7 +666,7 @@ class CCFE_HCPB:
 
         # primary_pumping == 0
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of htpmw_blkt, htpmw_div, p_fw_pumping_mw, p_shield_pumping_mw set in input file
+        # Values of p_blanket_pumping_mw, htpmw_div, p_fw_pumping_mw, p_shield_pumping_mw set in input file
         if fwbs_variables.primary_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
@@ -678,7 +678,7 @@ class CCFE_HCPB:
                     + fwbs_variables.psurffwo
                 )
             )
-            heat_transport_variables.htpmw_blkt = (
+            heat_transport_variables.p_blanket_pumping_mw = (
                 heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
             )
             heat_transport_variables.p_shield_pumping_mw = (
@@ -1471,8 +1471,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for blanket (MW)",
-                "(htpmw_blkt)",
-                heat_transport_variables.htpmw_blkt,
+                "(p_blanket_pumping_mw)",
+                heat_transport_variables.p_blanket_pumping_mw,
                 "OP ",
             )
             po.ovarre(

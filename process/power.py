@@ -544,7 +544,7 @@ class Power:
         if fwbs_variables.primary_pumping != 2 and fwbs_variables.primary_pumping != 3:
             primary_pumping_variables.p_fw_blanket_pumping_mw = (
                 heat_transport_variables.p_fw_pumping_mw
-                + heat_transport_variables.htpmw_blkt
+                + heat_transport_variables.p_blanket_pumping_mw
             )
 
         #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
@@ -673,7 +673,7 @@ class Power:
             )
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.pnucblkt already)
             self.pthermblkt = (
-                fwbs_variables.pnucblkt + heat_transport_variables.htpmw_blkt
+                fwbs_variables.pnucblkt + heat_transport_variables.p_blanket_pumping_mw
             )
             self.pthermfw_blkt = self.pthermfw + self.pthermblkt
 
@@ -1112,8 +1112,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for blanket cooling loop including heat exchanger (MW)",
-            "(htpmw_blkt)",
-            heat_transport_variables.htpmw_blkt,
+            "(p_blanket_pumping_mw)",
+            heat_transport_variables.p_blanket_pumping_mw,
             "OP ",
         )
         po.ovarre(
@@ -1135,8 +1135,8 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for blanket (MW)",
-                "(htpmw_blkt)",
-                heat_transport_variables.htpmw_blkt,
+                "(p_blanket_pumping_mw)",
+                heat_transport_variables.p_blanket_pumping_mw,
                 "OP ",
             )
 
@@ -1348,11 +1348,11 @@ class Power:
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.dblcol(
-            self.outfile, "htpmw_blkt", 0.0e0, heat_transport_variables.htpmw_blkt
+            self.outfile, "p_blanket_pumping_mw", 0.0e0, heat_transport_variables.p_blanket_pumping_mw
         )
 
         primsum = (
-            primsum + fwbs_variables.pnucblkt + heat_transport_variables.htpmw_blkt
+            primsum + fwbs_variables.pnucblkt + heat_transport_variables.p_blanket_pumping_mw
         )
         secsum = secsum
 

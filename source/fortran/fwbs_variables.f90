@@ -272,7 +272,7 @@ module fwbs_variables
   !! Switch for pumping power for primary coolant (mechanical power only and peak first wall
   !! temperature is only calculated if `primary_pumping=2`):
   !!
-  !! - =0 User sets pump power directly (htpmw_blkt, p_fw_pumping_mw, htpmw_div, p_shield_pumping_mw)
+  !! - =0 User sets pump power directly (p_blanket_pumping_mw, p_fw_pumping_mw, htpmw_div, p_shield_pumping_mw)
   !! - =1 User sets pump power as a fraction of thermal power (fpumpblkt, fpumpfw, fpumpdiv, fpumpshld)
   !! - =2 Mechanical pumping power is calculated
   !! - =3 Mechanical pumping power is calculated using specified pressure drop

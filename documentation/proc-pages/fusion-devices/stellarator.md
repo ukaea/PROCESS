@@ -266,7 +266,7 @@ fblvd = 0. *Vanadium fraction of blanket by volume (only relevant for mass calcu
 fhole = 0. *Area fraction taken up by other holes (in addition to fdiv and fhcd when ipowerflow=1)
 fwclfr = 0.1 *First wall coolant fraction (only relevant for mass calculations)
 primary_pumping = 1 *Switch for pumping power (0: User sets pump power directly)
-htpmw_blkt = 120. *Blanket coolant mechanical pumping power (MW)
+p_blanket_pumping_mw = 120. *Blanket coolant mechanical pumping power (MW)
 p_fw_pumping_mw= 56. *First wall coolant mechanical pumping power (MW)
 htpmw_div = 24. *Divertor coolant mechanical pumping power (MW)
 secondary_cycle = 2 *Switch for power conversion cycle (2: user input thermal-electric efficiency)
