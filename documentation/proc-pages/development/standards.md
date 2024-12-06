@@ -129,6 +129,7 @@ Example, the area of the TF winding pack: `a_tf_wp`
 #### Pressures
 
 - Pressures should start with the `pres_` prefix
+- Pressure changes or drops should start with the `dpres_` prefix
 
 ---------------------
 
@@ -178,6 +179,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 #### Powers
 
 - Powers should start with the `p_` prefix
+
+---------------------
+
+#### Power densities
+
+- Power densities should start with the `pden_` prefix
 
 ---------------------
 
