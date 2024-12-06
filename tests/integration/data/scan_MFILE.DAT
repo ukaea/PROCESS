@@ -933,7 +933,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
@@ -1928,7 +1928,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
@@ -2923,7 +2923,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
@@ -3918,7 +3918,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
@@ -4913,7 +4913,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
@@ -5908,7 +5908,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
@@ -6903,7 +6903,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
@@ -7898,7 +7898,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
@@ -8893,7 +8893,7 @@
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
- Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
+ Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      2.0197E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 

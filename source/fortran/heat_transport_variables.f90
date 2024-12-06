@@ -91,7 +91,7 @@ module heat_transport_variables
     real(dp) :: htpmw_div
     !! divertor coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_fw
+    real(dp) :: p_fw_pumping_mw
     !! first wall coolant mechanical pumping power (MW)
 
     real(dp) :: htpmw_shld
@@ -213,7 +213,7 @@ module heat_transport_variables
       htpmw_blkt_liq = 0.0D0
       htpmw_blkt_tot = 0.0D0
       htpmw_div = 0.0D0
-      htpmw_fw = 0.0D0
+      p_fw_pumping_mw= 0.0D0
       htpmw_shld = 0.0D0
       htpsecmw = 0.0D0
       ipowerflow = 1

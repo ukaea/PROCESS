@@ -1234,10 +1234,13 @@ class Stellarator:
                     - fwbs_variables.pradhcd
                 )
 
-                heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
-                    fwbs_variables.pnucfw
-                    + fwbs_variables.pradfw
-                    + current_drive_variables.porbitlossmw
+                heat_transport_variables.p_fw_pumping_mw = (
+                    heat_transport_variables.fpumpfw
+                    * (
+                        fwbs_variables.pnucfw
+                        + fwbs_variables.pradfw
+                        + current_drive_variables.porbitlossmw
+                    )
                 )
                 heat_transport_variables.htpmw_blkt = (
                     heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
@@ -1463,7 +1466,7 @@ class Stellarator:
                     #    Use input
                     pass
                 elif fwbs_variables.primary_pumping == 1:
-                    heat_transport_variables.htpmw_fw = (
+                    heat_transport_variables.p_fw_pumping_mw = (
                         heat_transport_variables.fpumpfw
                         * (
                             pnucfwi

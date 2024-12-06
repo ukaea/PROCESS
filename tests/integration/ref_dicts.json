@@ -2292,7 +2292,7 @@
         "htpmw_blkti": 0.0,
         "htpmw_blkto": 0.0,
         "htpmw_div": 0.0,
-        "htpmw_fw": 0.0,
+        "p_fw_pumping_mw": 0.0,
         "htpmw_fw_blkt": 0.0,
         "htpmw_fwi": 0.0,
         "htpmw_fwo": 0.0,
@@ -9771,7 +9771,7 @@
         "htpmw_blkti": "Inboard/outboard blanket pumping power (MW)",
         "htpmw_blkto": "Inboard/outboard blanket pumping power (MW)",
         "htpmw_div": "divertor coolant mechanical pumping power (MW)",
-        "htpmw_fw": "first wall coolant mechanical pumping power (MW)",
+        "p_fw_pumping_mw": "first wall coolant mechanical pumping power (MW)",
         "htpmw_fw_blkt": "mechanical pumping power for FW and blanket including heat exchanger and\n pipes (`primary_pumping=3`) [MW]",
         "htpmw_fwi": "Inboard/outboard first wall pumping power (MW)",
         "htpmw_fwo": "Inboard/outboard first wall pumping power (MW)",
@@ -10377,7 +10377,7 @@
         "presleg": "Summed resistive power in the TF coil legs [W]. Remain 0 if `itart=0`.",
         "pressure0": "Total plasma pressure near target (thermal+dynamic) [Pa]",
         "priheat": "total thermal power removed from fusion core (MW)",
-        "primary_pumping": "Switch for pumping power for primary coolant (mechanical power only and peak first wall\n temperature is only calculated if `primary_pumping=2`):\n<ul>\n<li>=0 User sets pump power directly (htpmw_blkt, htpmw_fw, htpmw_div, htpmw_shld)</li>\n<li>=1 User sets pump power as a fraction of thermal power (fpumpblkt, fpumpfw, fpumpdiv, fpumpshld)</li>\n<li>=2 Mechanical pumping power is calculated</li>\n<li>=3 Mechanical pumping power is calculated using specified pressure drop</li>\n</ul>",
+        "primary_pumping": "Switch for pumping power for primary coolant (mechanical power only and peak first wall\n temperature is only calculated if `primary_pumping=2`):\n<ul>\n<li>=0 User sets pump power directly (htpmw_blkt, p_fw_pumping_mw, htpmw_div, htpmw_shld)</li>\n<li>=1 User sets pump power as a fraction of thermal power (fpumpblkt, fpumpfw, fpumpdiv, fpumpshld)</li>\n<li>=2 Mechanical pumping power is calculated</li>\n<li>=3 Mechanical pumping power is calculated using specified pressure drop</li>\n</ul>",
         "prn1": "n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/dene if `ipedestal>=1`)",
         "profcalc": "",
         "protium": "Seeded protium density / electron density.",
@@ -13196,7 +13196,7 @@
             "lb": 0.0,
             "ub": 1000.0
         },
-        "htpmw_fw": {
+        "p_fw_pumping_mw": {
             "lb": 0.0,
             "ub": 1000.0
         },
@@ -18217,7 +18217,7 @@
             "htpmw",
             "htpmw_blkt",
             "htpmw_div",
-            "htpmw_fw",
+            "p_fw_pumping_mw",
             "htpmw_shld",
             "htpsecmw",
             "ipowerflow",
@@ -20426,7 +20426,7 @@
         "hotcell_h": "real_variable",
         "htpmw_blkt": "real_variable",
         "htpmw_div": "real_variable",
-        "htpmw_fw": "real_variable",
+        "p_fw_pumping_mw": "real_variable",
         "htpmw_ife": "real_variable",
         "htpmw_min": "real_variable",
         "htpmw_shld": "real_variable",

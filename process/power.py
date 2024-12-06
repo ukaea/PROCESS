@@ -543,7 +543,8 @@ class Power:
         """
         if fwbs_variables.primary_pumping != 2 and fwbs_variables.primary_pumping != 3:
             primary_pumping_variables.htpmw_fw_blkt = (
-                heat_transport_variables.htpmw_fw + heat_transport_variables.htpmw_blkt
+                heat_transport_variables.p_fw_pumping_mw
+                + heat_transport_variables.htpmw_blkt
             )
 
         #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
@@ -663,7 +664,7 @@ class Power:
             self.pthermfw = (
                 fwbs_variables.pnucfw
                 + fwbs_variables.pradfw
-                + heat_transport_variables.htpmw_fw
+                + heat_transport_variables.p_fw_pumping_mw
                 + current_drive_variables.porbitlossmw
                 + physics_variables.palpfwmw
                 + current_drive_variables.nbshinemw
@@ -1102,8 +1103,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for FW cooling loop including heat exchanger (MW)",
-            "(htpmw_fw)",
-            heat_transport_variables.htpmw_fw,
+            "(p_fw_pumping_mw)",
+            heat_transport_variables.p_fw_pumping_mw,
             "OP ",
         )
         po.ovarre(
@@ -1125,8 +1126,8 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for FW (MW)",
-                "(htpmw_fw)",
-                heat_transport_variables.htpmw_fw,
+                "(p_fw_pumping_mw)",
+                heat_transport_variables.p_fw_pumping_mw,
                 "OP ",
             )
             po.ovarre(
@@ -1322,14 +1323,14 @@ class Power:
         po.dblcol(self.outfile, "pnucfw", 0.0e0, fwbs_variables.pnucfw)
         po.dblcol(self.outfile, "palpfwmw", 0.0e0, physics_variables.palpfwmw)
         po.dblcol(self.outfile, "pradfw", 0.0e0, fwbs_variables.pradfw)
-        po.dblcol(self.outfile, "htpmw_fw", 0.0e0, heat_transport_variables.htpmw_fw)
+        po.dblcol(self.outfile, "p_fw_pumping_mw", 0.0e0, heat_transport_variables.p_fw_pumping_mw)
 
         primsum = (
             primsum
             + fwbs_variables.pnucfw
             + physics_variables.palpfwmw
             + fwbs_variables.pradfw
-            + heat_transport_variables.htpmw_fw
+            + heat_transport_variables.p_fw_pumping_mw
         )
         secsum = secsum
 
