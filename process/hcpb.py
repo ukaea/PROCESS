@@ -186,9 +186,9 @@ class CCFE_HCPB:
 
         # Old code kept for backward compatibility
         # ---
-        # pnucdiv is not changed.
+        # p_div_nuclear_heat_mw is not changed.
         # The energy due to multiplication, by subtraction:
-        # emultmw = p_fw_nuclear_heat_mw + p_blanket_nuclear_heat_mw + p_shield_nuclear_heat_mw + ptfnuc + pnucdiv - neutron_power_total
+        # emultmw = p_fw_nuclear_heat_mw + p_blanket_nuclear_heat_mw + p_shield_nuclear_heat_mw + ptfnuc + p_div_nuclear_heat_mw - neutron_power_total
         # ---
 
         # New code, a bit simpler
@@ -614,12 +614,12 @@ class CCFE_HCPB:
         # Nuclear heating in the divertor just the neutron power times fdiv
         if physics_variables.idivrt == 2:
             # Double null configuration
-            fwbs_variables.pnucdiv = (
+            fwbs_variables.p_div_nuclear_heat_mw = (
                 0.8 * physics_variables.fusion_power * 2 * fwbs_variables.fdiv
             )
         else:
             # single null configuration
-            fwbs_variables.pnucdiv = (
+            fwbs_variables.p_div_nuclear_heat_mw = (
                 0.8 * physics_variables.fusion_power * fwbs_variables.fdiv
             )
 
@@ -698,7 +698,7 @@ class CCFE_HCPB:
                 heat_transport_variables.fpumpdiv
                 * (
                     physics_variables.pdivt
-                    + fwbs_variables.pnucdiv
+                    + fwbs_variables.p_div_nuclear_heat_mw
                     + fwbs_variables.praddiv
                 )
             )
@@ -719,7 +719,7 @@ class CCFE_HCPB:
                 heat_transport_variables.fpumpdiv
                 * (
                     physics_variables.pdivt
-                    + fwbs_variables.pnucdiv
+                    + fwbs_variables.p_div_nuclear_heat_mw
                     + fwbs_variables.praddiv
                 )
             )
@@ -768,7 +768,7 @@ class CCFE_HCPB:
                 heat_transport_variables.fpumpdiv
                 * (
                     physics_variables.pdivt
-                    + fwbs_variables.pnucdiv
+                    + fwbs_variables.p_div_nuclear_heat_mw
                     + fwbs_variables.praddiv
                 )
             )
@@ -1426,8 +1426,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Total nuclear heating in the divertor (MW)",
-            "(pnucdiv)",
-            fwbs_variables.pnucdiv,
+            "(p_div_nuclear_heat_mw)",
+            fwbs_variables.p_div_nuclear_heat_mw,
             "OP ",
         )
         po.osubhd(self.outfile, " Diagostic output for nuclear heating :")

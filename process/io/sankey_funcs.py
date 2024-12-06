@@ -50,7 +50,7 @@ def plot_full_sankey(
     pnucemblkt = (
         p_blanket_nuclear_heat_mw - emultmw
     )  # External nuclear heating in blanket (MW)
-    pnucdiv = m_file.data["pnucdiv"].get_scan(
+    p_div_nuclear_heat_mw = m_file.data["p_div_nuclear_heat_mw"].get_scan(
         -1
     )  # Nuclear heating in the divertor (MW)
     p_fw_nuclear_heat_mw = m_file.data["p_fw_nuclear_heat_mw"].get_scan(
@@ -158,7 +158,7 @@ def plot_full_sankey(
         # Neutrons, -Divertor, -1st wall, -Shield, -TF coils, -Blanket+Energy Mult.
         NEUTRONS = [
             neutron_power_total,
-            -pnucdiv,
+            -p_div_nuclear_heat_mw,
             -p_fw_nuclear_heat_mw,
             -p_shield_nuclear_heat_mw,
             -ptfnuc,
@@ -262,7 +262,13 @@ def plot_full_sankey(
         # -------------------------------------- DIVERTOR - 4 -------------------------------------
 
         # Charged P., Neutrons, Photons, Coolant Pumping, Total Divertor
-        DIVERTOR = [pdivt, pnucdiv, praddiv, p_div_pump_cool_mw, -p_div_thermal_mw]
+        DIVERTOR = [
+            pdivt,
+            p_div_nuclear_heat_mw,
+            praddiv,
+            p_div_pump_cool_mw,
+            -p_div_thermal_mw,
+        ]
         sankey.add(
             flows=DIVERTOR,
             # down(in), up(in), down(in), up(in), right(out)
@@ -466,7 +472,7 @@ def plot_full_sankey(
                 t.set_position((pos[0]-0.2,pos[1]))
             if t == diagrams[2].texts[3]: # Divertor
                 t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(pnucdiv/totalplasma)-0.1,pos[1]))
+                t.set_position((pos[0]-0.5*(p_div_nuclear_heat_mw/totalplasma)-0.1,pos[1]))
             if t == diagrams[3].texts[2]: # Rad.FW
                 t.set_horizontalalignment('right')
                 t.set_position((pos[0],pos[1]+0.5*(p_fw_radiation_mw/totalplasma)+0.15))
@@ -514,7 +520,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pdivt = m_file.data["pdivt"].get_scan(
         -1
     )  # power to conducted to the divertor region (MW)
-    pnucdiv = m_file.data["pnucdiv"].get_scan(
+    p_div_nuclear_heat_mw = m_file.data["p_div_nuclear_heat_mw"].get_scan(
         -1
     )  # nuclear heating in the divertor (MW)
     p_fw_nuclear_heat_mw = m_file.data["p_fw_nuclear_heat_mw"].get_scan(
@@ -544,7 +550,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     )  # switch for spherical tokamak (ST) models
 
     # Power deposited on divertor (MW)
-    totaldivetc = pdivt + pnucdiv + praddiv
+    totaldivetc = pdivt + p_div_nuclear_heat_mw + praddiv
     # Power deposited on Blanket (MW)
     totalblktetc = (
         p_fw_nuclear_heat_mw

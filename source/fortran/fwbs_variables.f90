@@ -123,7 +123,7 @@ module fwbs_variables
   real(dp) :: pnuc_cp_tf
   !! TF neutronic nuclear heating in the ST centrepost [MW]
 
-  real(dp) :: pnucdiv
+  real(dp) :: p_div_nuclear_heat_mw
   !! nuclear heating in the divertor [MW]
 
   real(dp) :: p_fw_nuclear_heat_mw
@@ -691,7 +691,7 @@ module fwbs_variables
     qnuc = 0.0D0
     li6enrich = 30.0D0
     p_blanket_nuclear_heat_mw = 0.0D0
-    pnucdiv = 0.0D0
+    p_div_nuclear_heat_mw = 0.0D0
     p_fw_nuclear_heat_mw = 0.0D0
     pnuchcd = 0.0D0
     pnucloss = 0.0D0

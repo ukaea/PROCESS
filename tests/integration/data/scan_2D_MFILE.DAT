@@ -973,7 +973,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6103E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2733E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.3954E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4712E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4712E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -2136,7 +2136,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6251E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2850E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4082E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4847E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4847E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -3299,7 +3299,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6329E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2912E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4150E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4918E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4918E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -4462,7 +4462,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6357E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2934E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4174E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4944E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4944E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -5625,7 +5625,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6383E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2955E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4196E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4968E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4968E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -6788,7 +6788,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6332E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2914E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4152E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4920E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4920E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -7951,7 +7951,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6364E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2940E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4180E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4951E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4951E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -9114,7 +9114,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6387E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2958E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4200E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4971E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4971E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -10277,7 +10277,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6326E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2909E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4147E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4915E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.4915E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -11440,7 +11440,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6432E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.2993E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4239E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.5012E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.5012E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -12603,7 +12603,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6529E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.3070E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4323E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.5101E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.5101E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -13766,7 +13766,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6523E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.3065E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4317E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.5095E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.5095E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -14929,7 +14929,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6612E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.3135E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4394E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.5176E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.5176E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -16092,7 +16092,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6699E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.3204E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4470E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.5256E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.5256E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
@@ -17255,7 +17255,7 @@
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_mw)______________________      1.6791E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blanket_nuclear_heat_mw)____________________      1.3277E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shield_nuclear_heat_mw)____________________      1.4550E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.5340E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_mw)_____________________      1.5340E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 

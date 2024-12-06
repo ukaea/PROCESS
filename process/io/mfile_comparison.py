@@ -200,7 +200,7 @@ BLANKET_COMPARE_PARAMS = [
     "p_fw_nuclear_heat_mw",
     "ptfnuc",
     "p_shield_nuclear_heat_mw",
-    "pnucdiv",
+    "p_div_nuclear_heat_mw",
     "tbr",
     "li6enrich",
     "fwarea",
