@@ -36,7 +36,9 @@ class Power:
         self.p_shield_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.htpmwe_div = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_div_pump_cool_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.htpmw_mech = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_fw_blkt_pump_elec_mw = AnnotatedVariable(
@@ -562,7 +564,7 @@ class Power:
             heat_transport_variables.p_shield_pumping_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
-        self.htpmwe_div = (
+        self.p_div_pump_cool_elec_mw = (
             heat_transport_variables.htpmw_div
             / fwbs_variables.eta_pump_coolant_electrical
         )
@@ -588,7 +590,7 @@ class Power:
                 self.p_fw_blkt_pump_elec_mw
                 + self.htpmwe_blkt_liq
                 + self.p_shield_pump_elec_mw
-                + self.htpmwe_div,
+                + self.p_div_pump_cool_elec_mw,
             )
         else:
             # Total mechanical pump power (deposited in coolant)
@@ -605,7 +607,7 @@ class Power:
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_pump_elec_mw
                 + self.p_shield_pump_elec_mw
-                + self.htpmwe_div,
+                + self.p_div_pump_cool_elec_mw,
             )
 
         #  Heat lost through pump power inefficiencies (MW)
@@ -1189,8 +1191,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical pumping power for divertor (MW)",
-            "(htpmwe_div)",
-            self.htpmwe_div,
+            "(p_div_pump_cool_elec_mw)",
+            self.p_div_pump_cool_elec_mw,
             "OP ",
         )
         po.ovarre(
