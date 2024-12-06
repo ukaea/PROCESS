@@ -2035,7 +2035,7 @@ class Power2Param(NamedTuple):
 
     pnucblkt: Any = None
 
-    pradfw: Any = None
+    p_fw_radiation_mw: Any = None
 
     qnuc: Any = None
 
@@ -2233,7 +2233,7 @@ class Power2Param(NamedTuple):
             emultmw=377.93233088402548,
             inuclear=1,
             pnucblkt=1504.711566619962,
-            pradfw=254.87601794907812,
+            p_fw_radiation_mw=254.87601794907812,
             qnuc=12920,
             etahtp=0.87000000000000011,
             emult=1.2690000534057617,
@@ -2335,7 +2335,7 @@ class Power2Param(NamedTuple):
             emultmw=377.8143718115644,
             inuclear=1,
             pnucblkt=1549.9285082739402,
-            pradfw=254.87601794907812,
+            p_fw_radiation_mw=254.87601794907812,
             qnuc=12920,
             etahtp=0.87000000000000011,
             emult=1.2690000534057617,
@@ -2458,7 +2458,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "pnucblkt", power2param.pnucblkt)
 
-    monkeypatch.setattr(fwbs_variables, "pradfw", power2param.pradfw)
+    monkeypatch.setattr(fwbs_variables, "p_fw_radiation_mw", power2param.p_fw_radiation_mw)
 
     monkeypatch.setattr(fwbs_variables, "qnuc", power2param.qnuc)
 

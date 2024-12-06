@@ -761,7 +761,7 @@ class PowerflowCalcParam(NamedTuple):
 
     fhcd: Any = None
 
-    pradfw: Any = None
+    p_fw_radiation_mw: Any = None
 
     coolwh: Any = None
 
@@ -829,7 +829,7 @@ class PowerflowCalcParam(NamedTuple):
 
     expected_praddiv: Any = None
 
-    expected_pradfw: Any = None
+    expected_p_fw_radiation_mw: Any = None
 
     expected_psurffwi: Any = None
 
@@ -853,7 +853,7 @@ class PowerflowCalcParam(NamedTuple):
             praddiv=0,
             pradhcd=0,
             fhcd=0,
-            pradfw=0,
+            p_fw_radiation_mw=0,
             coolwh=1,
             outlet_temp=823,
             blpressure=15500000,
@@ -887,7 +887,7 @@ class PowerflowCalcParam(NamedTuple):
             ip=0,
             ofile=11,
             expected_praddiv=33.056596978820579,
-            expected_pradfw=254.39207240222791,
+            expected_p_fw_radiation_mw=254.39207240222791,
             expected_psurffwi=97.271629070225231,
             expected_psurffwo=176.95628839065773,
             expected_p_shield_pumping_mw=0.0068056297940224456,
@@ -902,7 +902,7 @@ class PowerflowCalcParam(NamedTuple):
             praddiv=33.056596978820579,
             pradhcd=0,
             fhcd=0,
-            pradfw=254.39207240222791,
+            p_fw_radiation_mw=254.39207240222791,
             coolwh=1,
             outlet_temp=823,
             blpressure=15500000,
@@ -936,7 +936,7 @@ class PowerflowCalcParam(NamedTuple):
             ip=0,
             ofile=11,
             expected_praddiv=33.056596978820579,
-            expected_pradfw=254.39207240222791,
+            expected_p_fw_radiation_mw=254.39207240222791,
             expected_psurffwi=97.271629070225259,
             expected_psurffwo=176.95009681558912,
             expected_p_shield_pumping_mw=0.007019085478296147,
@@ -974,7 +974,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(fwbs_variables, "fhcd", powerflowcalcparam.fhcd)
 
-    monkeypatch.setattr(fwbs_variables, "pradfw", powerflowcalcparam.pradfw)
+    monkeypatch.setattr(fwbs_variables, "p_fw_radiation_mw", powerflowcalcparam.p_fw_radiation_mw)
 
     monkeypatch.setattr(fwbs_variables, "coolwh", powerflowcalcparam.coolwh)
 
@@ -1074,7 +1074,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     assert fwbs_variables.praddiv == pytest.approx(powerflowcalcparam.expected_praddiv)
 
-    assert fwbs_variables.pradfw == pytest.approx(powerflowcalcparam.expected_pradfw)
+    assert fwbs_variables.p_fw_radiation_mw == pytest.approx(powerflowcalcparam.expected_p_fw_radiation_mw)
 
     assert fwbs_variables.psurffwi == pytest.approx(
         powerflowcalcparam.expected_psurffwi

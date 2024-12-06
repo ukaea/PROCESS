@@ -179,18 +179,18 @@ class DCLL:
         # FW
 
         # Radiation power incident on first wall (MW)
-        fwbs_variables.pradfw = (
+        fwbs_variables.p_fw_radiation_mw = (
             physics_variables.pradmw - fwbs_variables.praddiv - fwbs_variables.pradhcd
         )
 
         # Surface heat flux on first wall (MW)
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
-            fwbs_variables.pradfw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.p_fw_radiation_mw * build_variables.fwareaob / build_variables.fwarea
             + current_drive_variables.p_nb_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
         )
-        fwbs_variables.psurffwi = fwbs_variables.pradfw * (
+        fwbs_variables.psurffwi = fwbs_variables.p_fw_radiation_mw * (
             1 - build_variables.fwareaob / build_variables.fwarea
         )
 
@@ -269,8 +269,8 @@ class DCLL:
             po.ovarrf(
                 self.outfile,
                 "Radiation heating power into the first wall (MW)",
-                "(pradfw)",
-                fwbs_variables.pradfw,
+                "(p_fw_radiation_mw)",
+                fwbs_variables.p_fw_radiation_mw,
                 "OP ",
             )
 
