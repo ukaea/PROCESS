@@ -551,15 +551,15 @@ class Power:
         #  100% efficient so the electric power to run them is greater than the power deposited
         #  in the coolant.  The difference should be lost as secondary heat.
         self.htpmwe_fw_blkt = (
-            primary_pumping_variables.p_fw_blanket_pumping_mw / fwbs_variables.etahtp
+            primary_pumping_variables.p_fw_blanket_pumping_mw / fwbs_variables.eta_pump_coolant_electrical
         )
         self.htpmwe_shld = (
-            heat_transport_variables.p_shield_pumping_mw / fwbs_variables.etahtp
+            heat_transport_variables.p_shield_pumping_mw / fwbs_variables.eta_pump_coolant_electrical
         )
-        self.htpmwe_div = heat_transport_variables.htpmw_div / fwbs_variables.etahtp
+        self.htpmwe_div = heat_transport_variables.htpmw_div / fwbs_variables.eta_pump_coolant_electrical
         if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
             self.htpmwe_blkt_liq = (
-                heat_transport_variables.htpmw_blkt_liq / fwbs_variables.etahtp
+                heat_transport_variables.htpmw_blkt_liq / fwbs_variables.eta_pump_coolant_electrical
             )
 
         if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
@@ -1215,8 +1215,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical efficiency of heat transport coolant pumps",
-            "(etahtp)",
-            fwbs_variables.etahtp,
+            "(eta_pump_coolant_electrical)",
+            fwbs_variables.eta_pump_coolant_electrical,
         )
         # #284
         po.osubhd(self.outfile, "Plant thermodynamics: options :")

@@ -1783,7 +1783,7 @@
         "etacdfix": 0.0,
         "etadrv": 0.0,
         "etaech": 0.3,
-        "etahtp": 0.95,
+        "eta_pump_coolant_electrical": 0.95,
         "etaiso": 0.85,
         "etalh": 0.3,
         "etali": 0.4,
@@ -9426,7 +9426,7 @@
         "etacdfix": "secondary auxiliary power wall plug to injector efficiency",
         "etadrv": "IFE driver wall plug to target efficiency",
         "etaech": "ECH wall plug to injector efficiency",
-        "etahtp": "electrical efficiency of primary coolant pumps",
+        "eta_pump_coolant_electrical": "electrical efficiency of primary coolant pumps",
         "etaiso": "isentropic efficiency of FW and blanket coolant pumps",
         "etalh": "lower hybrid wall plug to injector efficiency",
         "etali": "IFE lithium pump wall plug efficiency (`ifetyp=4`)",
@@ -12360,7 +12360,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "etahtp": {
+        "eta_pump_coolant_electrical": {
             "lb": 0.1,
             "ub": 1.0
         },
@@ -18159,7 +18159,7 @@
             "declshld",
             "blkttype",
             "etaiso",
-            "etahtp"
+            "eta_pump_coolant_electrical"
         ],
         "global_variables": [
             "icase",
@@ -20214,7 +20214,7 @@
         "epsvmc": "real_variable",
         "esbldgm3": "real_variable",
         "etaech": "real_variable",
-        "etahtp": "real_variable",
+        "eta_pump_coolant_electrical": "real_variable",
         "etaiso": "real_variable",
         "etalh": "real_variable",
         "etali": "real_variable",

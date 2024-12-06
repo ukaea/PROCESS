@@ -3069,7 +3069,7 @@ iprimshld = 1
 * DESCRIPTION:   Base plant electric load (W) (default = 5E6)
 * JUSTIFICATION: 
 
-etahtp = 0.87
+eta_pump_coolant_electrical = 0.87
 * DESCRIPTION:   Electrical efficiency of primary coolant pumps (default = 0.95)
 * JUSTIFICATION: Not yet set
 

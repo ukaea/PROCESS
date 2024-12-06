@@ -944,7 +944,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -1939,7 +1939,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -2934,7 +2934,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -3929,7 +3929,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -4924,7 +4924,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -5919,7 +5919,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -6914,7 +6914,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -7909,7 +7909,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -8904,7 +8904,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      2.3440E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
- Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
+ Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
@@ -9168,7 +9168,7 @@ vfshld   = 0.60 * Coolant void fraction in shield
 
 ipowerflow = 0 * Switch for power flow model;  HAS NO EFFECT?
 primary_pumping = 3 * Switch for pumping power for primary coolant
-etahtp = 0.87 * electrical efficiency of FW and blanket coolant pumps
+eta_pump_coolant_electrical = 0.87 * electrical efficiency of FW and blanket coolant pumps
 etaiso = 0.9  * isentropic efficiency of FW and blanket coolant pumps
 secondary_cycle = 2  * user input thermal-electric efficiency (etath)
 iprimshld = 1  * switch for shield thermal power destiny: = 1 contributes to energy generation cycle

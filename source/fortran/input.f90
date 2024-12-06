@@ -271,7 +271,7 @@ contains
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       denw, f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
-      fvolsi, etahtp, nblktmodpo, fwpressure, emult, fwoutlet, nblktmodpi, &
+      fvolsi, eta_pump_coolant_electrical, nblktmodpo, fwpressure, emult, fwoutlet, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
@@ -2271,8 +2271,8 @@ contains
        case ('f_crypmw')
           call parse_real_variable('f_crypmw', f_crypmw, 0.0D0, 100.0D0, &
               ' f-value for cryogenic plant power (icc = 87, c = 164)')
-       case ('etahtp')
-          call parse_real_variable('etahtp', etahtp, 0.1D0, 1.0D0, &
+       case ('eta_pump_coolant_electrical')
+          call parse_real_variable('eta_pump_coolant_electrical', eta_pump_coolant_electrical, 0.1D0, 1.0D0, &
                'Coolant pump electrical efficiency')
         case ('etatf')
           call parse_real_variable('etatf', etatf, 0.0D0, 1.0D0, &
