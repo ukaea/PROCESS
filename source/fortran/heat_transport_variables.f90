@@ -127,7 +127,7 @@ module heat_transport_variables
     real(dp) :: p_gross_electrical
     !! gross electric power (MW)
 
-    real(dp) :: pinjht
+    real(dp) :: p_hcd_electrical_loss_mw
     !! power dissipated in heating and current drive system (MW)
 
     real(dp) :: pinjmax
@@ -223,7 +223,7 @@ module heat_transport_variables
       peakmva = 0.0D0
       pfwdiv = 0.0D0
       p_gross_electrical = 0.0D0
-      pinjht = 0.0D0
+      p_hcd_electrical_loss_mw = 0.0D0
       pinjmax = 120.0D0
       p_hcd_electrical_mw = 0.0D0
       pinjwpfix = 0.0D0

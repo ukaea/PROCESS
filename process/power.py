@@ -789,13 +789,13 @@ class Power:
         #  Waste injection power
         if physics_variables.i_ignited == 0:
             # MDK
-            # pinjht = heat_transport_variables.p_hcd_electrical_mw - current_drive_variables.pinjmw - current_drive_variables.p_nb_orbit_loss_mw - physics_variables.p_fw_alpha_mw
-            heat_transport_variables.pinjht = (
+            # p_hcd_electrical_loss_mw = heat_transport_variables.p_hcd_electrical_mw - current_drive_variables.pinjmw - current_drive_variables.p_nb_orbit_loss_mw - physics_variables.p_fw_alpha_mw
+            heat_transport_variables.p_hcd_electrical_loss_mw = (
                 heat_transport_variables.p_hcd_electrical_mw
                 - current_drive_variables.pinjmw
             )
         else:
-            heat_transport_variables.pinjht = 0.0e0
+            heat_transport_variables.p_hcd_electrical_loss_mw = 0.0e0
 
         #  Cryogenic power
         # ---
@@ -908,10 +908,10 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.pinjht + heat_transport_variables.htpsecmw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.htpsecmw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
         heat_transport_variables.psechtmw = (
             self.p_core_electrical_mw
-            + heat_transport_variables.pinjht
+            + heat_transport_variables.p_hcd_electrical_loss_mw
             + heat_transport_variables.htpsecmw
             + heat_transport_variables.psecdiv
             + heat_transport_variables.psecshld
@@ -1555,8 +1555,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat removal from injection power (MW)",
-            "(pinjht)",
-            heat_transport_variables.pinjht,
+            "(p_hcd_electrical_loss_mw)",
+            heat_transport_variables.p_hcd_electrical_loss_mw,
             "OP ",
         )
         po.ovarrf(

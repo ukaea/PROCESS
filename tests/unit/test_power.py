@@ -2125,7 +2125,7 @@ class Power2Param(NamedTuple):
 
     psecdiv: Any = None
 
-    pinjht: Any = None
+    p_hcd_electrical_loss_mw: Any = None
 
     htpsecmw: Any = None
 
@@ -2278,7 +2278,7 @@ class Power2Param(NamedTuple):
             etath=0.37500000000000006,
             p_cryo_plant=37.900388528497025,
             psecdiv=0,
-            pinjht=77.967671580642758,
+            p_hcd_electrical_loss_mw=77.967671580642758,
             htpsecmw=30.457120415306122,
             helpow_cryal=0,
             pfwpmw=0.89998039031509891,
@@ -2380,7 +2380,7 @@ class Power2Param(NamedTuple):
             etath=0.37500000000000006,
             p_cryo_plant=108.74512702403499,
             psecdiv=0,
-            pinjht=77.967671580642758,
+            p_hcd_electrical_loss_mw=77.967671580642758,
             htpsecmw=30.448114159579291,
             helpow_cryal=0,
             pfwpmw=0.068213156646500808,
@@ -2594,7 +2594,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "psecdiv", power2param.psecdiv)
 
-    monkeypatch.setattr(heat_transport_variables, "pinjht", power2param.pinjht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_electrical_loss_mw",
+        power2param.p_hcd_electrical_loss_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "htpsecmw", power2param.htpsecmw)
 

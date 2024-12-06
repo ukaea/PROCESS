@@ -2032,7 +2032,7 @@ class Ifepw1Param(NamedTuple):
     pfwdiv: Any = None
     nphx: Any = None
     p_hcd_electrical_mw: Any = None
-    pinjht: Any = None
+    p_hcd_electrical_loss_mw: Any = None
     p_cryo_plant: Any = None
     helpow: Any = None
     pdrive: Any = None
@@ -2046,7 +2046,7 @@ class Ifepw1Param(NamedTuple):
     expected_pfwdiv: Any = None
     expected_nphx: Any = None
     expected_p_hcd_electrical_mw: Any = None
-    expected_pinjht: Any = None
+    expected_p_hcd_electrical_loss_mw: Any = None
     expected_crypmw: Any = None
     expected_helpow: Any = None
 
@@ -2065,7 +2065,7 @@ class Ifepw1Param(NamedTuple):
             pfwdiv=0,
             nphx=0,
             p_hcd_electrical_mw=0,
-            pinjht=0,
+            p_hcd_electrical_loss_mw=0,
             p_cryo_plant=0,
             helpow=0,
             pdrive=23100000,
@@ -2079,7 +2079,7 @@ class Ifepw1Param(NamedTuple):
             expected_pfwdiv=607.73327999999992,
             expected_nphx=3,
             expected_p_hcd_electrical_mw=81.914893617021278,
-            expected_pinjht=58.814893617021283,
+            expected_p_hcd_electrical_loss_mw=58.814893617021283,
             expected_crypmw=10,
             expected_helpow=20266.75905075,
         ),
@@ -2115,7 +2115,11 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     monkeypatch.setattr(
         heat_transport_variables, "p_hcd_electrical_mw", ifepw1param.p_hcd_electrical_mw
     )
-    monkeypatch.setattr(heat_transport_variables, "pinjht", ifepw1param.pinjht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_electrical_loss_mw",
+        ifepw1param.p_hcd_electrical_loss_mw,
+    )
     monkeypatch.setattr(
         heat_transport_variables, "p_cryo_plant", ifepw1param.p_cryo_plant
     )
@@ -2142,7 +2146,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     assert heat_transport_variables.p_hcd_electrical_mw == pytest.approx(
         ifepw1param.expected_p_hcd_electrical_mw
     )
-    assert heat_transport_variables.pinjht == pytest.approx(ifepw1param.expected_pinjht)
+    assert heat_transport_variables.p_hcd_electrical_loss_mw == pytest.approx(
+        ifepw1param.expected_p_hcd_electrical_loss_mw
+    )
     assert heat_transport_variables.p_cryo_plant == pytest.approx(
         ifepw1param.expected_crypmw
     )
@@ -2834,7 +2840,7 @@ class Ifepw2Param(NamedTuple):
     fachtmw: Any = None
     p_baseload_electrical_total_mw: Any = None
     psechtmw: Any = None
-    pinjht: Any = None
+    p_hcd_electrical_loss_mw: Any = None
     vachtmw: Any = None
     trithtmw: Any = None
     p_cryo_plant: Any = None
@@ -2873,7 +2879,7 @@ class Ifepw2Param(NamedTuple):
             fachtmw=0,
             p_baseload_electrical_total_mw=24.322206046559071,
             psechtmw=0,
-            pinjht=58.814893617021283,
+            p_hcd_electrical_loss_mw=58.814893617021283,
             vachtmw=0.5,
             trithtmw=15,
             p_cryo_plant=10,
@@ -2929,7 +2935,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         ifepw2param.p_baseload_electrical_total_mw,
     )
     monkeypatch.setattr(heat_transport_variables, "psechtmw", ifepw2param.psechtmw)
-    monkeypatch.setattr(heat_transport_variables, "pinjht", ifepw2param.pinjht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_electrical_loss_mw",
+        ifepw2param.p_hcd_electrical_loss_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "vachtmw", ifepw2param.vachtmw)
     monkeypatch.setattr(heat_transport_variables, "trithtmw", ifepw2param.trithtmw)
     monkeypatch.setattr(

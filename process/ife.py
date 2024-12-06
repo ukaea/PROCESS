@@ -1952,7 +1952,7 @@ class IFE:
 
         # Waste driver power (MW)
 
-        heat_transport_variables.pinjht = (
+        heat_transport_variables.p_hcd_electrical_loss_mw = (
             heat_transport_variables.p_hcd_electrical_mw - pdrvmw
         )
 
@@ -1987,7 +1987,7 @@ class IFE:
 
         # Total secondary heat
         heat_transport_variables.psechtmw = (
-            heat_transport_variables.pinjht
+            heat_transport_variables.p_hcd_electrical_loss_mw
             + fwbs_variables.pnucloss
             + heat_transport_variables.fachtmw
             + heat_transport_variables.vachtmw
@@ -2088,8 +2088,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from driver power (MW)",
-                "(pinjht)",
-                heat_transport_variables.pinjht,
+                "(p_hcd_electrical_loss_mw)",
+                heat_transport_variables.p_hcd_electrical_loss_mw,
             )
             process_output.ovarre(
                 self.outfile,

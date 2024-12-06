@@ -2122,7 +2122,7 @@ class Costs:
             1.0e-6
             * cost_variables.ucahts
             * (
-                (1.0e6 * heat_transport_variables.pinjht) ** exphts
+                (1.0e6 * heat_transport_variables.p_hcd_electrical_loss_mw) ** exphts
                 + (1.0e6 * heat_transport_variables.p_cryo_plant) ** exphts
                 + (1.0e6 * heat_transport_variables.vachtmw) ** exphts
                 + (1.0e6 * heat_transport_variables.trithtmw) ** exphts
