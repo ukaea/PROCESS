@@ -553,7 +553,9 @@ class Power:
         self.htpmwe_fw_blkt = (
             primary_pumping_variables.htpmw_fw_blkt / fwbs_variables.etahtp
         )
-        self.htpmwe_shld = heat_transport_variables.htpmw_shld / fwbs_variables.etahtp
+        self.htpmwe_shld = (
+            heat_transport_variables.p_shield_pumping_mw / fwbs_variables.etahtp
+        )
         self.htpmwe_div = heat_transport_variables.htpmw_div / fwbs_variables.etahtp
         if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
             self.htpmwe_blkt_liq = (
@@ -565,7 +567,7 @@ class Power:
             self.htpmw_mech = (
                 primary_pumping_variables.htpmw_fw_blkt
                 + heat_transport_variables.htpmw_blkt_liq
-                + heat_transport_variables.htpmw_shld
+                + heat_transport_variables.p_shield_pumping_mw
                 + heat_transport_variables.htpmw_div
             )
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
@@ -582,7 +584,7 @@ class Power:
             # Total mechanical pump power (deposited in coolant)
             self.htpmw_mech = (
                 primary_pumping_variables.htpmw_fw_blkt
-                + heat_transport_variables.htpmw_shld
+                + heat_transport_variables.p_shield_pumping_mw
                 + heat_transport_variables.htpmw_div
             )
 
@@ -679,7 +681,7 @@ class Power:
         self.pthermshld = (
             fwbs_variables.pnuc_cp_sh
             + fwbs_variables.pnucshld
-            + heat_transport_variables.htpmw_shld
+            + heat_transport_variables.p_shield_pumping_mw
         )
 
         #  Total thermal power deposited in divertor coolant (MW)
@@ -1148,8 +1150,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for shield and vacuum vessel (MW)",
-            "(htpmw_shld)",
-            heat_transport_variables.htpmw_shld,
+            "(p_shield_pumping_mw)",
+            heat_transport_variables.p_shield_pumping_mw,
             "OP ",
         )
 
@@ -1323,7 +1325,12 @@ class Power:
         po.dblcol(self.outfile, "pnucfw", 0.0e0, fwbs_variables.pnucfw)
         po.dblcol(self.outfile, "p_fw_alpha_mw", 0.0e0, physics_variables.p_fw_alpha_mw)
         po.dblcol(self.outfile, "pradfw", 0.0e0, fwbs_variables.pradfw)
-        po.dblcol(self.outfile, "p_fw_pumping_mw", 0.0e0, heat_transport_variables.p_fw_pumping_mw)
+        po.dblcol(
+            self.outfile,
+            "p_fw_pumping_mw",
+            0.0e0,
+            heat_transport_variables.p_fw_pumping_mw,
+        )
 
         primsum = (
             primsum
@@ -1363,19 +1370,20 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.htpmw_shld*heat_transport_variables.iprimshld} {heat_transport_variables.htpmw_shld*(1-heat_transport_variables.iprimshld)} {heat_transport_variables.htpmw_shld}"
+                f"{heat_transport_variables.p_shield_pumping_mw*heat_transport_variables.iprimshld} {heat_transport_variables.p_shield_pumping_mw*(1-heat_transport_variables.iprimshld)} {heat_transport_variables.p_shield_pumping_mw}"
             ),
         )
 
         primsum = (
             primsum
             + fwbs_variables.pnucshld * heat_transport_variables.iprimshld
-            + heat_transport_variables.htpmw_shld * heat_transport_variables.iprimshld
+            + heat_transport_variables.p_shield_pumping_mw
+            * heat_transport_variables.iprimshld
         )
         secsum = (
             secsum
             + fwbs_variables.pnucshld * (1 - heat_transport_variables.iprimshld)
-            + heat_transport_variables.htpmw_shld
+            + heat_transport_variables.p_shield_pumping_mw
             * (1 - heat_transport_variables.iprimshld)
         )
 

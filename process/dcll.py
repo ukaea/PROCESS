@@ -279,7 +279,7 @@ class DCLL:
 
         # For primary_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of htpmw_blkt, htpmw_div, p_fw_pumping_mw, htpmw_shld set in input file
+        # Values of htpmw_blkt, htpmw_div, p_fw_pumping_mw, p_shield_pumping_mw set in input file
 
         if fwbs_variables.primary_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
@@ -295,10 +295,10 @@ class DCLL:
             primary_pumping_variables.htpmw_blkt = (
                 heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
             )
-            # For CCFE HCPB: htpmw_shld = fpumpshld * ( pnucshld + pnuc_cp_sh )
+            # For CCFE HCPB: p_shield_pumping_mw = fpumpshld * ( pnucshld + pnuc_cp_sh )
             # Use same as KIT HCLL for now "pnucshld is not available and is very small
             # compared to other powers so set to zero."
-            heat_transport_variables.htpmw_shld = (
+            heat_transport_variables.p_shield_pumping_mw = (
                 heat_transport_variables.fpumpshld * 0.0
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
@@ -318,7 +318,9 @@ class DCLL:
             )
 
             # Shield power is negligible and this model doesn't have nuclear heating to the shield
-            heat_transport_variables.htpmw_shld = heat_transport_variables.fpumpshld * 0
+            heat_transport_variables.p_shield_pumping_mw = (
+                heat_transport_variables.fpumpshld * 0
+            )
 
         if output:
             po.osubhd(self.outfile, "DCLL model: Thermal-hydraulics Component Totals")
@@ -368,8 +370,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for shield and vacuum vessel (MW)",
-                "(htpmw_shld)",
-                heat_transport_variables.htpmw_shld,
+                "(p_shield_pumping_mw)",
+                heat_transport_variables.p_shield_pumping_mw,
                 "OP ",
             )
 

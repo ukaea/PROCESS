@@ -283,7 +283,7 @@ contains
       coolwh, emult
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
-      htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
+      htpmw_min, fpumpblkt, ipowerflow, p_shield_pumping_mw, fpumpshld, trithtmw, &
       fpumpfw, crypmw_max, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
       bldrc, fauxbop, pfusife, dcdrv0, fwdr, pdrive, mcdriv, ucconc, shdr, &
@@ -2012,8 +2012,8 @@ contains
        case ('p_fw_pumping_mw')
           call parse_real_variable('p_fw_pumping_mw', p_fw_pumping_mw, 0.0D0, 1.0D3, &
                'first wall coolant mechanical pumping power (MW)')
-       case ('htpmw_shld')
-          call parse_real_variable('htpmw_shld', htpmw_shld, 0.0D0, 1.0D3, &
+       case ('p_shield_pumping_mw')
+          call parse_real_variable('p_shield_pumping_mw', p_shield_pumping_mw, 0.0D0, 1.0D3, &
                'shield and vacuum vessel coolant mechanical pumping power (MW)')
        case ('i_shield_mat')
          call parse_int_variable('i_shield_mat', i_shield_mat, 0, 1, &

@@ -1245,7 +1245,7 @@ class Stellarator:
                 heat_transport_variables.htpmw_blkt = (
                     heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
                 )
-                heat_transport_variables.htpmw_shld = (
+                heat_transport_variables.p_shield_pumping_mw = (
                     heat_transport_variables.fpumpshld * fwbs_variables.pnucshld
                 )
                 heat_transport_variables.htpmw_div = (
@@ -1552,7 +1552,7 @@ class Stellarator:
 
                 if fwbs_variables.primary_pumping == 1:
                     #  Shield pumping power (MW)
-                    heat_transport_variables.htpmw_shld = (
+                    heat_transport_variables.p_shield_pumping_mw = (
                         heat_transport_variables.fpumpshld * (pnucshldi + pnucshldo)
                     )
 

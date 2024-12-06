@@ -948,7 +948,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6156E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6675E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      6.9768E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      6.9768E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -1111,7 +1111,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6156E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6675E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      6.9768E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      6.9768E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8570E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.0193E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9167E+00 OP 
@@ -2111,7 +2111,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6305E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6789E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0410E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0410E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -2274,7 +2274,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6305E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6789E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0410E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0410E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8742E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.0931E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9297E+00 OP 
@@ -3274,7 +3274,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6403E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6782E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0748E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0748E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -3437,7 +3437,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6403E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6782E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0748E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0748E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8853E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1320E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9290E+00 OP 
@@ -4437,7 +4437,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6424E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6810E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0869E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0869E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -4600,7 +4600,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6424E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6810E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0869E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0869E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8878E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1459E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9322E+00 OP 
@@ -5600,7 +5600,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6438E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6894E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0982E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0982E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -5763,7 +5763,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6438E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6894E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0982E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0982E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8894E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1589E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9419E+00 OP 
@@ -6763,7 +6763,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6374E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6912E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0758E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0758E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -6926,7 +6926,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6374E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6912E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0758E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0758E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8821E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1331E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9439E+00 OP 
@@ -7926,7 +7926,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6404E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6952E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0901E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0901E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -8089,7 +8089,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6404E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6952E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0901E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0901E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8856E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1495E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9485E+00 OP 
@@ -9089,7 +9089,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6439E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6911E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1000E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1000E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -9252,7 +9252,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6439E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6911E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1000E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1000E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8896E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1609E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9438E+00 OP 
@@ -10252,7 +10252,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6385E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6824E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0734E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0734E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -10415,7 +10415,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6385E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6824E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0734E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0734E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8834E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1304E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9337E+00 OP 
@@ -11415,7 +11415,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6490E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6915E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1193E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1193E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -11578,7 +11578,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6490E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6915E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1193E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1193E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8954E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1831E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9443E+00 OP 
@@ -12578,7 +12578,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6587E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6997E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1614E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1614E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -12741,7 +12741,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6587E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6997E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1614E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1614E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.9065E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.2315E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9536E+00 OP 
@@ -13741,7 +13741,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6570E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.7043E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1587E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1587E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -13904,7 +13904,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6570E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.7043E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1587E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1587E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.9046E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.2283E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9589E+00 OP 
@@ -14904,7 +14904,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6658E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.7121E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1972E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1972E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -15067,7 +15067,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6658E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.7121E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.1972E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.1972E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.9147E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.2726E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9680E+00 OP 
@@ -16067,7 +16067,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6756E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.7138E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.2350E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.2350E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -16230,7 +16230,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6756E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.7138E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.2350E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.2350E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.9260E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.3161E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9699E+00 OP 
@@ -17230,7 +17230,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6860E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.7157E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.2749E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.2749E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -17393,7 +17393,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6860E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.7157E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.2749E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.2749E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.9379E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.3620E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9720E+00 OP 
