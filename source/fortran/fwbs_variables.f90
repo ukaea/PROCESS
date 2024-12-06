@@ -138,7 +138,7 @@ module fwbs_variables
   real(dp) :: pnucvvplus
   !! nuclear heating to vacuum vessel and beyond [MW]
 
-  real(dp) :: pnucshld
+  real(dp) :: p_shield_nuclear_heat_mw
   !! nuclear heating in the shield [MW]
 
   real(dp) :: whtblkt
@@ -696,7 +696,7 @@ module fwbs_variables
     pnuchcd = 0.0D0
     pnucloss = 0.0D0
     pnucvvplus = 0.0D0
-    pnucshld = 0.0D0
+    p_shield_nuclear_heat_mw = 0.0D0
     whtblkt = 0.0D0
     whtblss = 0.0D0
     armour_fw_bl_mass = 0.0D0

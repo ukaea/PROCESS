@@ -541,7 +541,7 @@ class NuclearHeatingShieldParam(NamedTuple):
 
     whtshld: Any = None
 
-    pnucshld: Any = None
+    p_shield_nuclear_heat_mw: Any = None
 
     fusion_power: Any = None
 
@@ -557,7 +557,7 @@ class NuclearHeatingShieldParam(NamedTuple):
 
     exp_shield2: Any = None
 
-    expected_pnucshld: Any = None
+    expected_p_shield_nuclear_heat_mw: Any = None
 
     expected_shld_u_nuc_heating: Any = None
 
@@ -573,7 +573,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shldith=0.30000000000000004,
             shldoth=0.80000000000000004,
             whtshld=2294873.8131476045,
-            pnucshld=0,
+            p_shield_nuclear_heat_mw=0,
             fusion_power=1986.0623241661431,
             itart=0,
             shield_density=3119.9999999999995,
@@ -581,7 +581,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shld_u_nuc_heating=0,
             exp_shield1=0,
             exp_shield2=0,
-            expected_pnucshld=1.3721323841005297,
+            expected_p_shield_nuclear_heat_mw=1.3721323841005297,
             expected_shld_u_nuc_heating=690880.82856444374,
             expected_exp_shield1=0.0017209365527675318,
             expected_exp_shield2=0.25426760591013942,
@@ -590,7 +590,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shldith=0.30000000000000004,
             shldoth=0.80000000000000004,
             whtshld=2297808.3935174854,
-            pnucshld=1.3611259588044891,
+            p_shield_nuclear_heat_mw=1.3611259588044891,
             fusion_power=1985.4423932312809,
             itart=0,
             shield_density=3120,
@@ -598,7 +598,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shld_u_nuc_heating=690880.82856444374,
             exp_shield1=0.0017209365527675318,
             exp_shield2=0.25426760591013942,
-            expected_pnucshld=1.3734581585671393,
+            expected_p_shield_nuclear_heat_mw=1.3734581585671393,
             expected_shld_u_nuc_heating=691764.29557941214,
             expected_exp_shield1=0.0017209365527675303,
             expected_exp_shield2=0.25426760591013942,
@@ -624,7 +624,7 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
     monkeypatch.setattr(fwbs_variables, "whtshld", nuclearheatingshieldparam.whtshld)
 
-    monkeypatch.setattr(fwbs_variables, "pnucshld", nuclearheatingshieldparam.pnucshld)
+    monkeypatch.setattr(fwbs_variables, "p_shield_nuclear_heat_mw", nuclearheatingshieldparam.p_shield_nuclear_heat_mw)
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingshieldparam.fusion_power
@@ -656,8 +656,8 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
     ccfe_hcpb.nuclear_heating_shield()
 
-    assert fwbs_variables.pnucshld == pytest.approx(
-        nuclearheatingshieldparam.expected_pnucshld
+    assert fwbs_variables.p_shield_nuclear_heat_mw == pytest.approx(
+        nuclearheatingshieldparam.expected_p_shield_nuclear_heat_mw
     )
 
     assert ccfe_hcpb_module.shld_u_nuc_heating == pytest.approx(
@@ -777,7 +777,7 @@ class PowerflowCalcParam(NamedTuple):
 
     pnucdiv: Any = None
 
-    pnucshld: Any = None
+    p_shield_nuclear_heat_mw: Any = None
 
     etaiso: Any = None
 
@@ -861,7 +861,7 @@ class PowerflowCalcParam(NamedTuple):
             p_fw_nuclear_heat_mw=276.80690153753221,
             p_blanket_nuclear_heat_mw=1504.9215740808861,
             pnucdiv=182.71773382328519,
-            pnucshld=1.3611259588044891,
+            p_shield_nuclear_heat_mw=1.3611259588044891,
             etaiso=0.90000000000000002,
             pnuc_cp_sh=0,
             psurffwi=0,
@@ -910,7 +910,7 @@ class PowerflowCalcParam(NamedTuple):
             p_fw_nuclear_heat_mw=230.98304919926957,
             p_blanket_nuclear_heat_mw=1550.1447895848396,
             pnucdiv=182.66070017727785,
-            pnucshld=1.4038170956592293,
+            p_shield_nuclear_heat_mw=1.4038170956592293,
             etaiso=0.90000000000000002,
             pnuc_cp_sh=0,
             psurffwi=97.271629070225231,
@@ -992,7 +992,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(fwbs_variables, "pnucdiv", powerflowcalcparam.pnucdiv)
 
-    monkeypatch.setattr(fwbs_variables, "pnucshld", powerflowcalcparam.pnucshld)
+    monkeypatch.setattr(fwbs_variables, "p_shield_nuclear_heat_mw", powerflowcalcparam.p_shield_nuclear_heat_mw)
 
     monkeypatch.setattr(fwbs_variables, "etaiso", powerflowcalcparam.etaiso)
 

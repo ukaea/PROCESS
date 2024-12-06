@@ -54,7 +54,7 @@ def plot_full_sankey(
     p_fw_nuclear_heat_mw = m_file.data["p_fw_nuclear_heat_mw"].get_scan(
         -1
     )  # Nuclear heating in the first wall (MW)
-    pnucshld = m_file.data["pnucshld"].get_scan(
+    p_shield_nuclear_heat_mw = m_file.data["p_shield_nuclear_heat_mw"].get_scan(
         -1
     )  # Nuclear heating in the shield (MW)
     ptfnuc = m_file.data["ptfnuc"].get_scan(-1)  # Nuclear heating in the TF coil (MW)
@@ -154,7 +154,7 @@ def plot_full_sankey(
             neutron_power_total,
             -pnucdiv,
             -p_fw_nuclear_heat_mw,
-            -pnucshld,
+            -p_shield_nuclear_heat_mw,
             -ptfnuc,
             -pnucemblkt,
         ]
@@ -336,7 +336,7 @@ def plot_full_sankey(
         """# --------------------------------------- SHIELD - 7 --------------------------------------
 
         # Neutrons, Coolant pumping, Total power
-        SHIELD = [pnucshld, p_shield_pumping_mw, -pthermshld]
+        SHIELD = [p_shield_nuclear_heat_mw, p_shield_pumping_mw, -pthermshld]
         sankey.add(flows=SHIELD,
                    orientations=[-1, -1, 1],
                    trunklength=0.5,
@@ -509,7 +509,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_blanket_nuclear_heat_mw = m_file.data["p_blanket_nuclear_heat_mw"].get_scan(
         -1
     )  # nuclear heating in the blanket (MW)
-    pnucshld = m_file.data["pnucshld"].get_scan(
+    p_shield_nuclear_heat_mw = m_file.data["p_shield_nuclear_heat_mw"].get_scan(
         -1
     )  # nuclear heating in the shield (MW)
     pnuc_cp_sh = m_file.data["pnuc_cp_sh"].get_scan(
@@ -532,7 +532,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     # Power deposited on divertor (MW)
     totaldivetc = pdivt + pnucdiv + praddiv
     # Power deposited on Blanket (MW)
-    totalblktetc = p_fw_nuclear_heat_mw + p_blanket_nuclear_heat_mw + pnucshld + p_fw_radiation_mw + p_fw_alpha_mw - emultmw
+    totalblktetc = p_fw_nuclear_heat_mw + p_blanket_nuclear_heat_mw + p_shield_nuclear_heat_mw + p_fw_radiation_mw + p_fw_alpha_mw - emultmw
 
     if itart == 0:
         # Power deposited in CP (MW) (None here)
@@ -649,14 +649,14 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         BLANKETSETC = [
             totalblktetc + totaldivetc + totalcpetc,
             emultmw,
-            -pthermmw_p - totaldivetc - totalcpetc - pnucshld,
+            -pthermmw_p - totaldivetc - totalcpetc - p_shield_nuclear_heat_mw,
         ]
         # Check if difference >2 between primary heat and blanket + blanket multiplication
         if _ == 1 and sqrt(sum(BLANKETSETC) ** 2) > 2:
             print(
                 "blankets etc. power balance",
                 totalblktetc + emultmw,
-                -pthermmw_p - pnucshld,
+                -pthermmw_p - p_shield_nuclear_heat_mw,
             )
         sankey.add(
             flows=BLANKETSETC,
@@ -671,9 +671,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
 
         # Primary heat, -Gross electric power, -difference (loss)
         PRIMARY = [
-            pthermmw_p + totaldivetc + totalcpetc + pnucshld,
+            pthermmw_p + totaldivetc + totalcpetc + p_shield_nuclear_heat_mw,
             -p_gross_electrical,
-            -pthermmw_p + p_gross_electrical - totaldivetc - totalcpetc - pnucshld,
+            -pthermmw_p + p_gross_electrical - totaldivetc - totalcpetc - p_shield_nuclear_heat_mw,
         ]
         sankey.add(
             flows=PRIMARY,

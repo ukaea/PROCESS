@@ -680,7 +680,7 @@ class Power:
         #  Total power deposited in shield coolant (MW)
         self.pthermshld = (
             fwbs_variables.pnuc_cp_sh
-            + fwbs_variables.pnucshld
+            + fwbs_variables.p_shield_nuclear_heat_mw
             + heat_transport_variables.p_shield_pumping_mw
         )
 
@@ -1362,7 +1362,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.pnucshld*heat_transport_variables.iprimshld} {fwbs_variables.pnucshld*(1-heat_transport_variables.iprimshld)} {fwbs_variables.pnucshld}"
+                f"{fwbs_variables.p_shield_nuclear_heat_mw*heat_transport_variables.iprimshld} {fwbs_variables.p_shield_nuclear_heat_mw*(1-heat_transport_variables.iprimshld)} {fwbs_variables.p_shield_nuclear_heat_mw}"
             ),
         )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
@@ -1376,13 +1376,13 @@ class Power:
 
         primsum = (
             primsum
-            + fwbs_variables.pnucshld * heat_transport_variables.iprimshld
+            + fwbs_variables.p_shield_nuclear_heat_mw * heat_transport_variables.iprimshld
             + heat_transport_variables.p_shield_pumping_mw
             * heat_transport_variables.iprimshld
         )
         secsum = (
             secsum
-            + fwbs_variables.pnucshld * (1 - heat_transport_variables.iprimshld)
+            + fwbs_variables.p_shield_nuclear_heat_mw * (1 - heat_transport_variables.iprimshld)
             + heat_transport_variables.p_shield_pumping_mw
             * (1 - heat_transport_variables.iprimshld)
         )

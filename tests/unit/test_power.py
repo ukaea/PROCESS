@@ -2061,7 +2061,7 @@ class Power2Param(NamedTuple):
 
     pnuchcd: Any = None
 
-    pnucshld: Any = None
+    p_shield_nuclear_heat_mw: Any = None
 
     pradhcd: Any = None
 
@@ -2246,7 +2246,7 @@ class Power2Param(NamedTuple):
             primary_pumping=3,
             ptfnuc=0.044178296011112193,
             pnuchcd=0,
-            pnucshld=1.3609360176065353,
+            p_shield_nuclear_heat_mw=1.3609360176065353,
             pradhcd=0,
             p_fw_nuclear_heat_mw=276.76827393356979,
             p_shield_pumping_mw=0.0068046800880326762,
@@ -2348,7 +2348,7 @@ class Power2Param(NamedTuple):
             primary_pumping=3,
             ptfnuc=0.045535131445547841,
             pnuchcd=0,
-            pnucshld=1.4036212304705389,
+            p_shield_nuclear_heat_mw=1.4036212304705389,
             pradhcd=0,
             p_fw_nuclear_heat_mw=230.95082168283884,
             p_shield_pumping_mw=0.0070181061523526943,
@@ -2484,7 +2484,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "pnuchcd", power2param.pnuchcd)
 
-    monkeypatch.setattr(fwbs_variables, "pnucshld", power2param.pnucshld)
+    monkeypatch.setattr(fwbs_variables, "p_shield_nuclear_heat_mw", power2param.p_shield_nuclear_heat_mw)
 
     monkeypatch.setattr(fwbs_variables, "pradhcd", power2param.pradhcd)
 

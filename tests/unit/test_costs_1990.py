@@ -104,7 +104,7 @@ def acc2261_fix(costs, request, monkeypatch):
     monkeypatch.setattr(cost_variables, "lsa", 1)
     monkeypatch.setattr(htv, "pfwdiv", 0.0)
     monkeypatch.setattr(fv, "p_blanket_nuclear_heat_mw", 1558.0)
-    monkeypatch.setattr(fv, "pnucshld", 1.478)
+    monkeypatch.setattr(fv, "p_shield_nuclear_heat_mw", 1.478)
     monkeypatch.setattr(htv, "pthermmw", 2647.0)
     monkeypatch.setattr(htv, "nphx", 3)
     monkeypatch.setattr(costs, "c2261", 0)
@@ -3807,7 +3807,7 @@ class Acc2261Param(NamedTuple):
 
     coolwh: Any = None
 
-    pnucshld: Any = None
+    p_shield_nuclear_heat_mw: Any = None
 
     p_blanket_nuclear_heat_mw: Any = None
 
@@ -3845,7 +3845,7 @@ class Acc2261Param(NamedTuple):
             lsa=2,
             fkind=1,
             coolwh=1,
-            pnucshld=1.3609360176065353,
+            p_shield_nuclear_heat_mw=1.3609360176065353,
             p_blanket_nuclear_heat_mw=1504.711566619962,
             pthermmw=2620.2218111502593,
             pfwdiv=0,
@@ -3867,7 +3867,7 @@ class Acc2261Param(NamedTuple):
             lsa=2,
             fkind=1,
             coolwh=1,
-            pnucshld=1.4036212304705389,
+            p_shield_nuclear_heat_mw=1.4036212304705389,
             p_blanket_nuclear_heat_mw=1549.9285082739402,
             pthermmw=2619.4223856129224,
             pfwdiv=0,
@@ -3904,7 +3904,7 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "coolwh", acc2261param.coolwh)
 
-    monkeypatch.setattr(fwbs_variables, "pnucshld", acc2261param.pnucshld)
+    monkeypatch.setattr(fwbs_variables, "p_shield_nuclear_heat_mw", acc2261param.p_shield_nuclear_heat_mw)
 
     monkeypatch.setattr(fwbs_variables, "p_blanket_nuclear_heat_mw", acc2261param.p_blanket_nuclear_heat_mw)
 

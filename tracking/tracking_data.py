@@ -106,7 +106,7 @@ class ProcessTracker:
         "shldoth",
         "tfcth",
         "gapds",
-        "pnucshld",
+        "p_shield_nuclear_heat_mw",
         "p_blanket_nuclear_heat_mw",
         "triang",
         "triang95",
