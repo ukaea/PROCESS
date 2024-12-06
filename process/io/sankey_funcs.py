@@ -44,10 +44,10 @@ def plot_full_sankey(
     emultmw = m_file.data["emultmw"].get_scan(
         -1
     )  # Energy multiplication in blanket (MW)
-    pnucblkt = m_file.data["pnucblkt"].get_scan(
+    p_blanket_nuclear_heat_mw = m_file.data["p_blanket_nuclear_heat_mw"].get_scan(
         -1
     )  # Total Nuclear heating in the blanket (MW)
-    pnucemblkt = pnucblkt - emultmw  # External nuclear heating in blanket (MW)
+    pnucemblkt = p_blanket_nuclear_heat_mw - emultmw  # External nuclear heating in blanket (MW)
     pnucdiv = m_file.data["pnucdiv"].get_scan(
         -1
     )  # Nuclear heating in the divertor (MW)
@@ -95,7 +95,7 @@ def plot_full_sankey(
     )  # Pump Power in FW and blanket (MW)
     htpmwblkt = p_fw_blanket_pumping_mw / 2  # Pump power in blanket (MW)
     htpmwfw = p_fw_blanket_pumping_mw / 2  # Pump power in FW (MW)
-    pthermfw = pthermfw_blkt - htpmwblkt - pnucblkt  # Power extracted 1st wall (MW)
+    pthermfw = pthermfw_blkt - htpmwblkt - p_blanket_nuclear_heat_mw  # Power extracted 1st wall (MW)
     # porbitloss = m_file.data['porbitloss'].get_scan(-1) # Charged P. on FW before thermalising
     # p_nb_shine_through_mw = m_file.data['p_nb_shine_through_mw'].get_scan(-1) # Injection shine-through to 1st wall
 
@@ -506,7 +506,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_fw_nuclear_heat_mw = m_file.data["p_fw_nuclear_heat_mw"].get_scan(
         -1
     )  # nuclear heating in the first wall (MW)
-    pnucblkt = m_file.data["pnucblkt"].get_scan(
+    p_blanket_nuclear_heat_mw = m_file.data["p_blanket_nuclear_heat_mw"].get_scan(
         -1
     )  # nuclear heating in the blanket (MW)
     pnucshld = m_file.data["pnucshld"].get_scan(
@@ -532,7 +532,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     # Power deposited on divertor (MW)
     totaldivetc = pdivt + pnucdiv + praddiv
     # Power deposited on Blanket (MW)
-    totalblktetc = p_fw_nuclear_heat_mw + pnucblkt + pnucshld + p_fw_radiation_mw + p_fw_alpha_mw - emultmw
+    totalblktetc = p_fw_nuclear_heat_mw + p_blanket_nuclear_heat_mw + pnucshld + p_fw_radiation_mw + p_fw_alpha_mw - emultmw
 
     if itart == 0:
         # Power deposited in CP (MW) (None here)

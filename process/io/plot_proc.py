@@ -2625,7 +2625,7 @@ def plot_power_info(axis, mfile_data, scan):
         ped_pos,
         ("pinnerzoneradmw", "Inner zone radiation", "MW"),
         ("pradmw", "Total radiation in LCFS", "MW"),
-        ("pnucblkt", "Nuclear heating in blanket", "MW"),
+        ("p_blanket_nuclear_heat_mw", "Nuclear heating in blanket", "MW"),
         ("pnucshld", "Nuclear heating in shield", "MW"),
         (p_cryo_plant, "TF cryogenic power", "MW"),
         ("pdivt", "Power to divertor", "MW"),

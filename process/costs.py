@@ -2084,7 +2084,7 @@ class Costs:
             * cost_variables.uchts[fwbs_variables.coolwh - 1]
             * (
                 (1.0e6 * heat_transport_variables.pfwdiv) ** exphts
-                + (1.0e6 * fwbs_variables.pnucblkt) ** exphts
+                + (1.0e6 * fwbs_variables.p_blanket_nuclear_heat_mw) ** exphts
                 + (1.0e6 * fwbs_variables.pnucshld) ** exphts
             )
         )
