@@ -1243,10 +1243,12 @@ class Stellarator:
                     )
                 )
                 heat_transport_variables.p_blanket_pumping_mw = (
-                    heat_transport_variables.fpumpblkt * fwbs_variables.p_blanket_nuclear_heat_mw
+                    heat_transport_variables.fpumpblkt
+                    * fwbs_variables.p_blanket_nuclear_heat_mw
                 )
                 heat_transport_variables.p_shield_pumping_mw = (
-                    heat_transport_variables.fpumpshld * fwbs_variables.p_shield_nuclear_heat_mw
+                    heat_transport_variables.fpumpshld
+                    * fwbs_variables.p_shield_nuclear_heat_mw
                 )
                 heat_transport_variables.htpmw_div = (
                     heat_transport_variables.fpumpdiv
@@ -1300,7 +1302,9 @@ class Stellarator:
                 )
 
                 #  Nuclear heating in the shield
-                fwbs_variables.p_shield_nuclear_heat_mw = pneut2 - fwbs_variables.p_blanket_nuclear_heat_mw
+                fwbs_variables.p_shield_nuclear_heat_mw = (
+                    pneut2 - fwbs_variables.p_blanket_nuclear_heat_mw
+                )
 
                 #  Superconducting coil shielding calculations
                 (
@@ -1498,7 +1502,9 @@ class Stellarator:
 
                 #  Total nuclear heating of blanket (MW)
 
-                fwbs_variables.p_blanket_nuclear_heat_mw = (pnucbzi + pnucbzo) * fwbs_variables.emult
+                fwbs_variables.p_blanket_nuclear_heat_mw = (
+                    pnucbzi + pnucbzo
+                ) * fwbs_variables.emult
 
                 fwbs_variables.emultmw = fwbs_variables.emultmw + (
                     pnucbzi + pnucbzo

@@ -186,7 +186,9 @@ class DCLL:
         # Surface heat flux on first wall (MW)
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
-            fwbs_variables.p_fw_radiation_mw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.p_fw_radiation_mw
+            * build_variables.fwareaob
+            / build_variables.fwarea
             + current_drive_variables.p_nb_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
         )
@@ -293,7 +295,8 @@ class DCLL:
                 )
             )
             primary_pumping_variables.p_blanket_pumping_mw = (
-                heat_transport_variables.fpumpblkt * fwbs_variables.p_blanket_nuclear_heat_mw
+                heat_transport_variables.fpumpblkt
+                * fwbs_variables.p_blanket_nuclear_heat_mw
             )
             # For CCFE HCPB: p_shield_pumping_mw = fpumpshld * ( p_shield_nuclear_heat_mw + pnuc_cp_sh )
             # Use same as KIT HCLL for now "p_shield_nuclear_heat_mw is not available and is very small

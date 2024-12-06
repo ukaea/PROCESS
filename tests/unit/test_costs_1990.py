@@ -3904,9 +3904,17 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "coolwh", acc2261param.coolwh)
 
-    monkeypatch.setattr(fwbs_variables, "p_shield_nuclear_heat_mw", acc2261param.p_shield_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_shield_nuclear_heat_mw",
+        acc2261param.p_shield_nuclear_heat_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "p_blanket_nuclear_heat_mw", acc2261param.p_blanket_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blanket_nuclear_heat_mw",
+        acc2261param.p_blanket_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", acc2261param.pthermmw)
 
@@ -4132,7 +4140,9 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "helpow", acc2263param.helpow)
 
-    monkeypatch.setattr(tfcoil_variables, "temp_tf_coil_cryo", acc2263param.temp_tf_coil_cryo)
+    monkeypatch.setattr(
+        tfcoil_variables, "temp_tf_coil_cryo", acc2263param.temp_tf_coil_cryo
+    )
 
     monkeypatch.setattr(costs, "c226", acc2263param.c226)
 

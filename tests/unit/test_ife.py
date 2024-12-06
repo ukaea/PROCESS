@@ -2099,8 +2099,14 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     """
     monkeypatch.setattr(fwbs_variables, "emult", ifepw1param.emult)
     monkeypatch.setattr(fwbs_variables, "fhole", ifepw1param.fhole)
-    monkeypatch.setattr(fwbs_variables, "p_blanket_nuclear_heat_mw", ifepw1param.p_blanket_nuclear_heat_mw)
-    monkeypatch.setattr(fwbs_variables, "p_shield_nuclear_heat_mw", ifepw1param.p_shield_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blanket_nuclear_heat_mw",
+        ifepw1param.p_blanket_nuclear_heat_mw,
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "p_shield_nuclear_heat_mw", ifepw1param.p_shield_nuclear_heat_mw
+    )
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw1param.pnucloss)
     monkeypatch.setattr(heat_transport_variables, "priheat", ifepw1param.priheat)
     monkeypatch.setattr(heat_transport_variables, "pthermmw", ifepw1param.pthermmw)
@@ -2122,7 +2128,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
 
     ife.ifepw1()
 
-    assert fwbs_variables.p_blanket_nuclear_heat_mw == pytest.approx(ifepw1param.expected_p_blanket_nuclear_heat_mw)
+    assert fwbs_variables.p_blanket_nuclear_heat_mw == pytest.approx(
+        ifepw1param.expected_p_blanket_nuclear_heat_mw
+    )
     assert heat_transport_variables.priheat == pytest.approx(
         ifepw1param.expected_priheat
     )
@@ -2909,7 +2917,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw2param.pnucloss)
     monkeypatch.setattr(fwbs_variables, "emult", ifepw2param.emult)
     monkeypatch.setattr(fwbs_variables, "tbr", ifepw2param.tbr)
-    monkeypatch.setattr(fwbs_variables, "p_blanket_nuclear_heat_mw", ifepw2param.p_blanket_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blanket_nuclear_heat_mw",
+        ifepw2param.p_blanket_nuclear_heat_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "fachtmw", ifepw2param.fachtmw)
     monkeypatch.setattr(
         heat_transport_variables,

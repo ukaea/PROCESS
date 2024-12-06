@@ -147,7 +147,10 @@ class CCFE_HCPB:
 
         # Power to the blanket (MW)
         fwbs_variables.p_blanket_nuclear_heat_mw = (
-            (fwbs_variables.p_blanket_nuclear_heat_mw / ccfe_hcpb_module.pnuc_tot_blk_sector)
+            (
+                fwbs_variables.p_blanket_nuclear_heat_mw
+                / ccfe_hcpb_module.pnuc_tot_blk_sector
+            )
             * fwbs_variables.emult
             * f_geom_blanket
             * physics_variables.neutron_power_total
@@ -156,7 +159,10 @@ class CCFE_HCPB:
         # Power to the shield(MW)
         # The power deposited in the CP shield is added back in powerflow_calc
         fwbs_variables.p_shield_nuclear_heat_mw = (
-            (fwbs_variables.p_shield_nuclear_heat_mw / ccfe_hcpb_module.pnuc_tot_blk_sector)
+            (
+                fwbs_variables.p_shield_nuclear_heat_mw
+                / ccfe_hcpb_module.pnuc_tot_blk_sector
+            )
             * fwbs_variables.emult
             * f_geom_blanket
             * physics_variables.neutron_power_total
@@ -656,7 +662,9 @@ class CCFE_HCPB:
         # Surface heat flux on first wall (outboard and inboard) (MW)
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
-            fwbs_variables.p_fw_radiation_mw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.p_fw_radiation_mw
+            * build_variables.fwareaob
+            / build_variables.fwarea
             + current_drive_variables.p_nb_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
         )
@@ -679,7 +687,8 @@ class CCFE_HCPB:
                 )
             )
             heat_transport_variables.p_blanket_pumping_mw = (
-                heat_transport_variables.fpumpblkt * fwbs_variables.p_blanket_nuclear_heat_mw
+                heat_transport_variables.fpumpblkt
+                * fwbs_variables.p_blanket_nuclear_heat_mw
             )
             heat_transport_variables.p_shield_pumping_mw = (
                 heat_transport_variables.fpumpshld

@@ -33,11 +33,15 @@ class Power:
         self.qac = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qcl = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qss = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmwe_shld = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_shield_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.htpmwe_div = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.htpmw_mech = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.p_fw_blkt_pump_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_fw_blkt_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.htpmwe_blkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_div_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -551,15 +555,21 @@ class Power:
         #  100% efficient so the electric power to run them is greater than the power deposited
         #  in the coolant.  The difference should be lost as secondary heat.
         self.p_fw_blkt_pump_elec_mw = (
-            primary_pumping_variables.p_fw_blanket_pumping_mw / fwbs_variables.eta_pump_coolant_electrical
+            primary_pumping_variables.p_fw_blanket_pumping_mw
+            / fwbs_variables.eta_pump_coolant_electrical
         )
-        self.htpmwe_shld = (
-            heat_transport_variables.p_shield_pumping_mw / fwbs_variables.eta_pump_coolant_electrical
+        self.p_shield_pump_elec_mw = (
+            heat_transport_variables.p_shield_pumping_mw
+            / fwbs_variables.eta_pump_coolant_electrical
         )
-        self.htpmwe_div = heat_transport_variables.htpmw_div / fwbs_variables.eta_pump_coolant_electrical
+        self.htpmwe_div = (
+            heat_transport_variables.htpmw_div
+            / fwbs_variables.eta_pump_coolant_electrical
+        )
         if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
             self.htpmwe_blkt_liq = (
-                heat_transport_variables.htpmw_blkt_liq / fwbs_variables.eta_pump_coolant_electrical
+                heat_transport_variables.htpmw_blkt_liq
+                / fwbs_variables.eta_pump_coolant_electrical
             )
 
         if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
@@ -577,7 +587,7 @@ class Power:
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_pump_elec_mw
                 + self.htpmwe_blkt_liq
-                + self.htpmwe_shld
+                + self.p_shield_pump_elec_mw
                 + self.htpmwe_div,
             )
         else:
@@ -593,7 +603,9 @@ class Power:
             # Note that htpmw is an ELECTRICAL power
             heat_transport_variables.htpmw = max(
                 heat_transport_variables.htpmw_min,
-                self.p_fw_blkt_pump_elec_mw + self.htpmwe_shld + self.htpmwe_div,
+                self.p_fw_blkt_pump_elec_mw
+                + self.p_shield_pump_elec_mw
+                + self.htpmwe_div,
             )
 
         #  Heat lost through pump power inefficiencies (MW)
@@ -608,7 +620,8 @@ class Power:
             # Liquid metal breeder/coolant
             if fwbs_variables.icooldual == 2:
                 self.pthermblkt_liq = (
-                    fwbs_variables.p_blanket_nuclear_heat_mw * fwbs_variables.f_nuc_pow_bz_liq
+                    fwbs_variables.p_blanket_nuclear_heat_mw
+                    * fwbs_variables.f_nuc_pow_bz_liq
                 ) + heat_transport_variables.htpmw_blkt_liq
             elif fwbs_variables.icooldual == 1:
                 self.pthermblkt_liq = heat_transport_variables.htpmw_blkt_liq
@@ -619,7 +632,10 @@ class Power:
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_mw
                     + fwbs_variables.p_fw_radiation_mw
-                    + (fwbs_variables.p_blanket_nuclear_heat_mw * (1 - fwbs_variables.f_nuc_pow_bz_liq))
+                    + (
+                        fwbs_variables.p_blanket_nuclear_heat_mw
+                        * (1 - fwbs_variables.f_nuc_pow_bz_liq)
+                    )
                     + primary_pumping_variables.p_fw_blanket_pumping_mw
                     + current_drive_variables.p_nb_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
@@ -673,7 +689,8 @@ class Power:
             )
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.p_blanket_nuclear_heat_mw already)
             self.pthermblkt = (
-                fwbs_variables.p_blanket_nuclear_heat_mw + heat_transport_variables.p_blanket_pumping_mw
+                fwbs_variables.p_blanket_nuclear_heat_mw
+                + heat_transport_variables.p_blanket_pumping_mw
             )
             self.pthermfw_blkt = self.pthermfw + self.pthermblkt
 
@@ -1165,8 +1182,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical pumping power for shield (MW)",
-            "(htpmwe_shld)",
-            self.htpmwe_shld,
+            "(p_shield_pump_elec_mw)",
+            self.p_shield_pump_elec_mw,
             "OP ",
         )
         po.ovarre(
@@ -1322,9 +1339,16 @@ class Power:
         po.write(self.outfile, "thermal power (MW)     thermal power (MW)      (MW)")
 
         po.write(self.outfile, "First wall:")
-        po.dblcol(self.outfile, "p_fw_nuclear_heat_mw", 0.0e0, fwbs_variables.p_fw_nuclear_heat_mw)
+        po.dblcol(
+            self.outfile,
+            "p_fw_nuclear_heat_mw",
+            0.0e0,
+            fwbs_variables.p_fw_nuclear_heat_mw,
+        )
         po.dblcol(self.outfile, "p_fw_alpha_mw", 0.0e0, physics_variables.p_fw_alpha_mw)
-        po.dblcol(self.outfile, "p_fw_radiation_mw", 0.0e0, fwbs_variables.p_fw_radiation_mw)
+        po.dblcol(
+            self.outfile, "p_fw_radiation_mw", 0.0e0, fwbs_variables.p_fw_radiation_mw
+        )
         po.dblcol(
             self.outfile,
             "p_fw_pumping_mw",
@@ -1344,15 +1368,25 @@ class Power:
         po.oblnkl(self.outfile)
 
         po.write(self.outfile, "Blanket:")
-        po.dblcol(self.outfile, "p_blanket_nuclear_heat_mw", 0.0e0, fwbs_variables.p_blanket_nuclear_heat_mw)
+        po.dblcol(
+            self.outfile,
+            "p_blanket_nuclear_heat_mw",
+            0.0e0,
+            fwbs_variables.p_blanket_nuclear_heat_mw,
+        )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.dblcol(
-            self.outfile, "p_blanket_pumping_mw", 0.0e0, heat_transport_variables.p_blanket_pumping_mw
+            self.outfile,
+            "p_blanket_pumping_mw",
+            0.0e0,
+            heat_transport_variables.p_blanket_pumping_mw,
         )
 
         primsum = (
-            primsum + fwbs_variables.p_blanket_nuclear_heat_mw + heat_transport_variables.p_blanket_pumping_mw
+            primsum
+            + fwbs_variables.p_blanket_nuclear_heat_mw
+            + heat_transport_variables.p_blanket_pumping_mw
         )
         secsum = secsum
 
@@ -1376,13 +1410,15 @@ class Power:
 
         primsum = (
             primsum
-            + fwbs_variables.p_shield_nuclear_heat_mw * heat_transport_variables.iprimshld
+            + fwbs_variables.p_shield_nuclear_heat_mw
+            * heat_transport_variables.iprimshld
             + heat_transport_variables.p_shield_pumping_mw
             * heat_transport_variables.iprimshld
         )
         secsum = (
             secsum
-            + fwbs_variables.p_shield_nuclear_heat_mw * (1 - heat_transport_variables.iprimshld)
+            + fwbs_variables.p_shield_nuclear_heat_mw
+            * (1 - heat_transport_variables.iprimshld)
             + heat_transport_variables.p_shield_pumping_mw
             * (1 - heat_transport_variables.iprimshld)
         )

@@ -47,7 +47,9 @@ def plot_full_sankey(
     p_blanket_nuclear_heat_mw = m_file.data["p_blanket_nuclear_heat_mw"].get_scan(
         -1
     )  # Total Nuclear heating in the blanket (MW)
-    pnucemblkt = p_blanket_nuclear_heat_mw - emultmw  # External nuclear heating in blanket (MW)
+    pnucemblkt = (
+        p_blanket_nuclear_heat_mw - emultmw
+    )  # External nuclear heating in blanket (MW)
     pnucdiv = m_file.data["pnucdiv"].get_scan(
         -1
     )  # Nuclear heating in the divertor (MW)
@@ -95,7 +97,9 @@ def plot_full_sankey(
     )  # Pump Power in FW and blanket (MW)
     htpmwblkt = p_fw_blanket_pumping_mw / 2  # Pump power in blanket (MW)
     htpmwfw = p_fw_blanket_pumping_mw / 2  # Pump power in FW (MW)
-    pthermfw = pthermfw_blkt - htpmwblkt - p_blanket_nuclear_heat_mw  # Power extracted 1st wall (MW)
+    pthermfw = (
+        pthermfw_blkt - htpmwblkt - p_blanket_nuclear_heat_mw
+    )  # Power extracted 1st wall (MW)
     # porbitloss = m_file.data['porbitloss'].get_scan(-1) # Charged P. on FW before thermalising
     # p_nb_shine_through_mw = m_file.data['p_nb_shine_through_mw'].get_scan(-1) # Injection shine-through to 1st wall
 
@@ -289,7 +293,13 @@ def plot_full_sankey(
         # ---------------------------------------- 1ST WALL - 5 ---------------------------------------
 
         # Alphas, Neutrons, Photons, Coolant Pumping, Total 1st Wall
-        FIRST_WALL = [p_fw_alpha_mw, p_fw_nuclear_heat_mw, p_fw_radiation_mw, htpmwfw, -pthermfw]
+        FIRST_WALL = [
+            p_fw_alpha_mw,
+            p_fw_nuclear_heat_mw,
+            p_fw_radiation_mw,
+            htpmwfw,
+            -pthermfw,
+        ]
         sankey.add(
             flows=FIRST_WALL,
             orientations=[0, -1, 1, -1, 0],
@@ -496,7 +506,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # Area fraction covered by HCD and diagnostics
     pradhcd = pradmw * fhcd  # Radiation deposited on HCD and diagnostics (MW)
-    p_fw_radiation_mw = pradmw - praddiv - pradhcd  # Radiation deposited in the blanket (MW)
+    p_fw_radiation_mw = (
+        pradmw - praddiv - pradhcd
+    )  # Radiation deposited in the blanket (MW)
     pdivt = m_file.data["pdivt"].get_scan(
         -1
     )  # power to conducted to the divertor region (MW)
@@ -532,7 +544,14 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     # Power deposited on divertor (MW)
     totaldivetc = pdivt + pnucdiv + praddiv
     # Power deposited on Blanket (MW)
-    totalblktetc = p_fw_nuclear_heat_mw + p_blanket_nuclear_heat_mw + p_shield_nuclear_heat_mw + p_fw_radiation_mw + p_fw_alpha_mw - emultmw
+    totalblktetc = (
+        p_fw_nuclear_heat_mw
+        + p_blanket_nuclear_heat_mw
+        + p_shield_nuclear_heat_mw
+        + p_fw_radiation_mw
+        + p_fw_alpha_mw
+        - emultmw
+    )
 
     if itart == 0:
         # Power deposited in CP (MW) (None here)
@@ -673,7 +692,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         PRIMARY = [
             pthermmw_p + totaldivetc + totalcpetc + p_shield_nuclear_heat_mw,
             -p_gross_electrical,
-            -pthermmw_p + p_gross_electrical - totaldivetc - totalcpetc - p_shield_nuclear_heat_mw,
+            -pthermmw_p
+            + p_gross_electrical
+            - totaldivetc
+            - totalcpetc
+            - p_shield_nuclear_heat_mw,
         ]
         sankey.add(
             flows=PRIMARY,

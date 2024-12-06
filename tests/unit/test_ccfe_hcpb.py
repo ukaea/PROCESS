@@ -440,7 +440,11 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "p_fw_nuclear_heat_mw", nuclearheatingfwparam.p_fw_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_nuclear_heat_mw",
+        nuclearheatingfwparam.p_fw_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "fwmass", nuclearheatingfwparam.fwmass)
 
@@ -456,7 +460,9 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
     ccfe_hcpb.nuclear_heating_fw()
 
-    assert fwbs_variables.p_fw_nuclear_heat_mw == pytest.approx(nuclearheatingfwparam.expected_p_fw_nuclear_heat_mw)
+    assert fwbs_variables.p_fw_nuclear_heat_mw == pytest.approx(
+        nuclearheatingfwparam.expected_p_fw_nuclear_heat_mw
+    )
 
     assert ccfe_hcpb_module.fw_armour_u_nuc_heating == pytest.approx(
         nuclearheatingfwparam.expected_fw_armour_u_nuc_heating
@@ -513,7 +519,11 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "whtblkt", nuclearheatingblanketparam.whtblkt)
 
-    monkeypatch.setattr(fwbs_variables, "p_blanket_nuclear_heat_mw", nuclearheatingblanketparam.p_blanket_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blanket_nuclear_heat_mw",
+        nuclearheatingblanketparam.p_blanket_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingblanketparam.fusion_power
@@ -624,7 +634,11 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
     monkeypatch.setattr(fwbs_variables, "whtshld", nuclearheatingshieldparam.whtshld)
 
-    monkeypatch.setattr(fwbs_variables, "p_shield_nuclear_heat_mw", nuclearheatingshieldparam.p_shield_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_shield_nuclear_heat_mw",
+        nuclearheatingshieldparam.p_shield_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingshieldparam.fusion_power
@@ -963,7 +977,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(build_variables, "fwarea", powerflowcalcparam.fwarea)
 
     monkeypatch.setattr(
-        current_drive_variables, "p_nb_orbit_loss_mw", powerflowcalcparam.p_nb_orbit_loss_mw
+        current_drive_variables,
+        "p_nb_orbit_loss_mw",
+        powerflowcalcparam.p_nb_orbit_loss_mw,
     )
 
     monkeypatch.setattr(fwbs_variables, "fdiv", powerflowcalcparam.fdiv)
@@ -974,7 +990,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(fwbs_variables, "fhcd", powerflowcalcparam.fhcd)
 
-    monkeypatch.setattr(fwbs_variables, "p_fw_radiation_mw", powerflowcalcparam.p_fw_radiation_mw)
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_radiation_mw", powerflowcalcparam.p_fw_radiation_mw
+    )
 
     monkeypatch.setattr(fwbs_variables, "coolwh", powerflowcalcparam.coolwh)
 
@@ -986,13 +1004,23 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         fwbs_variables, "primary_pumping", powerflowcalcparam.primary_pumping
     )
 
-    monkeypatch.setattr(fwbs_variables, "p_fw_nuclear_heat_mw", powerflowcalcparam.p_fw_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_nuclear_heat_mw", powerflowcalcparam.p_fw_nuclear_heat_mw
+    )
 
-    monkeypatch.setattr(fwbs_variables, "p_blanket_nuclear_heat_mw", powerflowcalcparam.p_blanket_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blanket_nuclear_heat_mw",
+        powerflowcalcparam.p_blanket_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnucdiv", powerflowcalcparam.pnucdiv)
 
-    monkeypatch.setattr(fwbs_variables, "p_shield_nuclear_heat_mw", powerflowcalcparam.p_shield_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_shield_nuclear_heat_mw",
+        powerflowcalcparam.p_shield_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "etaiso", powerflowcalcparam.etaiso)
 
@@ -1009,7 +1037,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(heat_transport_variables, "fpumpfw", powerflowcalcparam.fpumpfw)
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_blanket_pumping_mw", powerflowcalcparam.p_blanket_pumping_mw
+        heat_transport_variables,
+        "p_blanket_pumping_mw",
+        powerflowcalcparam.p_blanket_pumping_mw,
     )
 
     monkeypatch.setattr(
@@ -1074,7 +1104,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     assert fwbs_variables.praddiv == pytest.approx(powerflowcalcparam.expected_praddiv)
 
-    assert fwbs_variables.p_fw_radiation_mw == pytest.approx(powerflowcalcparam.expected_p_fw_radiation_mw)
+    assert fwbs_variables.p_fw_radiation_mw == pytest.approx(
+        powerflowcalcparam.expected_p_fw_radiation_mw
+    )
 
     assert fwbs_variables.psurffwi == pytest.approx(
         powerflowcalcparam.expected_psurffwi

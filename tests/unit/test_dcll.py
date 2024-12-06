@@ -192,12 +192,22 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     monkeypatch.setattr(fwbs_variables, "pnuchcd", dcllneutronicsandpowerparam.pnuchcd)
 
     monkeypatch.setattr(
-        fwbs_variables, "p_shield_nuclear_heat_mw", dcllneutronicsandpowerparam.p_shield_nuclear_heat_mw
+        fwbs_variables,
+        "p_shield_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_shield_nuclear_heat_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "p_fw_radiation_mw", dcllneutronicsandpowerparam.p_fw_radiation_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_radiation_mw",
+        dcllneutronicsandpowerparam.p_fw_radiation_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "p_fw_nuclear_heat_mw", dcllneutronicsandpowerparam.p_fw_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_fw_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "psurffwi", dcllneutronicsandpowerparam.psurffwi
@@ -208,7 +218,9 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_blanket_nuclear_heat_mw", dcllneutronicsandpowerparam.p_blanket_nuclear_heat_mw
+        fwbs_variables,
+        "p_blanket_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_blanket_nuclear_heat_mw,
     )
 
     monkeypatch.setattr(

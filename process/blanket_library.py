@@ -1515,10 +1515,14 @@ class BlanketLibrary:
         ######################################################
         # IB/OB FW (MW)
         blanket_library.pnucfwi = (
-            fwbs_variables.p_fw_nuclear_heat_mw * build_variables.fwareaib / build_variables.fwarea
+            fwbs_variables.p_fw_nuclear_heat_mw
+            * build_variables.fwareaib
+            / build_variables.fwarea
         )
         blanket_library.pnucfwo = (
-            fwbs_variables.p_fw_nuclear_heat_mw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.p_fw_nuclear_heat_mw
+            * build_variables.fwareaob
+            / build_variables.fwarea
         )
 
         # IB/OB Blanket (MW)
@@ -1533,7 +1537,9 @@ class BlanketLibrary:
 
         # Neutron power deposited in outboard blanket (MW)
         blanket_library.pnucblkto = (
-            fwbs_variables.p_blanket_nuclear_heat_mw * fwbs_variables.volblkto / fwbs_variables.volblkt
+            fwbs_variables.p_blanket_nuclear_heat_mw
+            * fwbs_variables.volblkto
+            / fwbs_variables.volblkt
         )
 
         # For a dual-coolant blanket, some fraction of the power goes into the
@@ -1546,17 +1552,19 @@ class BlanketLibrary:
 
             # Inboard blanket calc. Will return 0 if no inboard shldith thickness
             pnucblkti_struct = (
-                fwbs_variables.p_blanket_nuclear_heat_mw * fwbs_variables.f_nuc_pow_bz_struct
+                fwbs_variables.p_blanket_nuclear_heat_mw
+                * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
-            pnucblkti_liq = (fwbs_variables.p_blanket_nuclear_heat_mw * f_nuc_pow_bz_liq) * (
-                fwbs_variables.volblkti / fwbs_variables.volblkt
-            )
+            pnucblkti_liq = (
+                fwbs_variables.p_blanket_nuclear_heat_mw * f_nuc_pow_bz_liq
+            ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
             pnucblkto_struct = (
-                fwbs_variables.p_blanket_nuclear_heat_mw * fwbs_variables.f_nuc_pow_bz_struct
+                fwbs_variables.p_blanket_nuclear_heat_mw
+                * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.volblkto / fwbs_variables.volblkt)
-            pnucblkto_liq = (fwbs_variables.p_blanket_nuclear_heat_mw * f_nuc_pow_bz_liq) * (
-                fwbs_variables.volblkto / fwbs_variables.volblkt
-            )
+            pnucblkto_liq = (
+                fwbs_variables.p_blanket_nuclear_heat_mw * f_nuc_pow_bz_liq
+            ) * (fwbs_variables.volblkto / fwbs_variables.volblkt)
 
         # FW and BB Mass Flow ###########
 

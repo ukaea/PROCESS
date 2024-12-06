@@ -1961,7 +1961,10 @@ class IFE:
 
         heat_transport_variables.p_cryo_plant = ife_variables.pifecr
         heat_transport_variables.helpow = (
-            1.0e6 * heat_transport_variables.p_cryo_plant * (0.13 * 4.5) / (constants.temp_room_kelvin - 4.5)
+            1.0e6
+            * heat_transport_variables.p_cryo_plant
+            * (0.13 * 4.5)
+            / (constants.temp_room_kelvin - 4.5)
         )
 
     def ifepw2(self, output: bool = False):

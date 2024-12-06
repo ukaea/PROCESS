@@ -466,7 +466,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "pnbitot", cudrivparam.pnbitot)
 
-    monkeypatch.setattr(current_drive_variables, "p_nb_shine_through_mw", cudrivparam.p_nb_shine_through_mw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_nb_shine_through_mw",
+        cudrivparam.p_nb_shine_through_mw,
+    )
 
     monkeypatch.setattr(current_drive_variables, "pinjemw", cudrivparam.pinjemw)
 
