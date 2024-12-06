@@ -674,7 +674,7 @@ class CCFE_HCPB:
 
         # primary_pumping == 0
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of p_blanket_pumping_mw, htpmw_div, p_fw_pumping_mw, p_shield_pumping_mw set in input file
+        # Values of p_blanket_pumping_mw, p_div_pump_cool_mw, p_fw_pumping_mw, p_shield_pumping_mw set in input file
         if fwbs_variables.primary_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
@@ -694,10 +694,13 @@ class CCFE_HCPB:
                 heat_transport_variables.fpumpshld
                 * (fwbs_variables.p_shield_nuclear_heat_mw + fwbs_variables.pnuc_cp_sh)
             )
-            heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
-                + fwbs_variables.pnucdiv
-                + fwbs_variables.praddiv
+            heat_transport_variables.p_div_pump_cool_mw = (
+                heat_transport_variables.fpumpdiv
+                * (
+                    physics_variables.pdivt
+                    + fwbs_variables.pnucdiv
+                    + fwbs_variables.praddiv
+                )
             )
 
         elif fwbs_variables.primary_pumping == 2:
@@ -712,10 +715,13 @@ class CCFE_HCPB:
                 heat_transport_variables.fpumpshld
                 * (fwbs_variables.p_shield_nuclear_heat_mw + fwbs_variables.pnuc_cp_sh)
             )
-            heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
-                + fwbs_variables.pnucdiv
-                + fwbs_variables.praddiv
+            heat_transport_variables.p_div_pump_cool_mw = (
+                heat_transport_variables.fpumpdiv
+                * (
+                    physics_variables.pdivt
+                    + fwbs_variables.pnucdiv
+                    + fwbs_variables.praddiv
+                )
             )
 
         elif fwbs_variables.primary_pumping == 3:
@@ -758,10 +764,13 @@ class CCFE_HCPB:
                 heat_transport_variables.fpumpshld
                 * (fwbs_variables.p_shield_nuclear_heat_mw + fwbs_variables.pnuc_cp_sh)
             )
-            heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
-                + fwbs_variables.pnucdiv
-                + fwbs_variables.praddiv
+            heat_transport_variables.p_div_pump_cool_mw = (
+                heat_transport_variables.fpumpdiv
+                * (
+                    physics_variables.pdivt
+                    + fwbs_variables.pnucdiv
+                    + fwbs_variables.praddiv
+                )
             )
             if output:
                 po.oheadr(self.outfile, "Pumping for primary coolant (helium)")
@@ -814,8 +823,8 @@ class CCFE_HCPB:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for divertor (MW)",
-                    "(htpmw_div)",
-                    heat_transport_variables.htpmw_div,
+                    "(p_div_pump_cool_mw)",
+                    heat_transport_variables.p_div_pump_cool_mw,
                     "OP ",
                 )
                 po.ovarre(
@@ -1487,8 +1496,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for divertor (MW)",
-                "(htpmw_div)",
-                heat_transport_variables.htpmw_div,
+                "(p_div_pump_cool_mw)",
+                heat_transport_variables.p_div_pump_cool_mw,
                 "OP ",
             )
             po.ovarre(

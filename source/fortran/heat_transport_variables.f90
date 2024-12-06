@@ -88,7 +88,7 @@ module heat_transport_variables
     real(dp) :: htpmw_blkt_tot
     !! blanket primary + secondary coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_div
+    real(dp) :: p_div_pump_cool_mw
     !! divertor coolant mechanical pumping power (MW)
 
     real(dp) :: p_fw_pumping_mw
@@ -212,7 +212,7 @@ module heat_transport_variables
       p_blanket_pumping_mw = 0.0D0
       htpmw_blkt_liq = 0.0D0
       htpmw_blkt_tot = 0.0D0
-      htpmw_div = 0.0D0
+      p_div_pump_cool_mw = 0.0D0
       p_fw_pumping_mw= 0.0D0
       p_shield_pumping_mw = 0.0D0
       htpsecmw = 0.0D0

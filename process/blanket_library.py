@@ -2135,8 +2135,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Pumping power for divertor (MW)",
-                "(htpmw_div)",
-                heat_transport_variables.htpmw_div,
+                "(p_div_pump_cool_mw)",
+                heat_transport_variables.p_div_pump_cool_mw,
                 "OP ",
             )
             po.ovarre(

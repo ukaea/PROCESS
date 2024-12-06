@@ -567,7 +567,7 @@ class Power:
             / fwbs_variables.eta_pump_coolant_electrical
         )
         self.p_div_pump_cool_elec_mw = (
-            heat_transport_variables.htpmw_div
+            heat_transport_variables.p_div_pump_cool_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
 
@@ -589,7 +589,7 @@ class Power:
                 primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.htpmw_blkt_liq
                 + heat_transport_variables.p_shield_pumping_mw
-                + heat_transport_variables.htpmw_div
+                + heat_transport_variables.p_div_pump_cool_mw
             )
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
@@ -606,7 +606,7 @@ class Power:
             self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.p_shield_pumping_mw
-                + heat_transport_variables.htpmw_div
+                + heat_transport_variables.p_div_pump_cool_mw
             )
 
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
@@ -718,7 +718,7 @@ class Power:
         self.p_div_thermal_mw = (
             physics_variables.pdivt
             + (fwbs_variables.pnucdiv + fwbs_variables.praddiv)
-            + heat_transport_variables.htpmw_div
+            + heat_transport_variables.p_div_pump_cool_mw
         )
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
@@ -1174,8 +1174,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for divertor (MW)",
-            "(htpmw_div)",
-            heat_transport_variables.htpmw_div,
+            "(p_div_pump_cool_mw)",
+            heat_transport_variables.p_div_pump_cool_mw,
             "OP ",
         )
         po.ovarre(
@@ -1461,7 +1461,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.htpmw_div*self.i_div_thermal} {heat_transport_variables.htpmw_div*(1-self.i_div_thermal)} {heat_transport_variables.htpmw_div}"
+                f"{heat_transport_variables.p_div_pump_cool_mw*self.i_div_thermal} {heat_transport_variables.p_div_pump_cool_mw*(1-self.i_div_thermal)} {heat_transport_variables.p_div_pump_cool_mw}"
             ),
         )
 
@@ -1470,14 +1470,14 @@ class Power:
             + fwbs_variables.pnucdiv * self.i_div_thermal
             + physics_variables.pdivt * self.i_div_thermal
             + fwbs_variables.praddiv * self.i_div_thermal
-            + heat_transport_variables.htpmw_div * self.i_div_thermal
+            + heat_transport_variables.p_div_pump_cool_mw * self.i_div_thermal
         )
         secsum = (
             secsum
             + fwbs_variables.pnucdiv * (1 - self.i_div_thermal)
             + physics_variables.pdivt * (1 - self.i_div_thermal)
             + fwbs_variables.praddiv * (1 - self.i_div_thermal)
-            + heat_transport_variables.htpmw_div * (1 - self.i_div_thermal)
+            + heat_transport_variables.p_div_pump_cool_mw * (1 - self.i_div_thermal)
         )
 
         if physics_variables.itart == 1:

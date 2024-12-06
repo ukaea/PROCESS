@@ -281,7 +281,7 @@ contains
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
-    use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, htpmw_div, &
+    use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, p_div_pump_cool_mw, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, p_shield_pumping_mw, fpumpshld, trithtmw, &
       fpumpfw, crypmw_max, f_crypmw
@@ -2006,8 +2006,8 @@ contains
        case ('p_blanket_pumping_mw')
           call parse_real_variable('p_blanket_pumping_mw', p_blanket_pumping_mw, 0.0D0, 1.0D3, &
                'blanket coolant mechanical pumping power (MW)')
-       case ('htpmw_div')
-          call parse_real_variable('htpmw_div', htpmw_div, 0.0D0, 1.0D3, &
+       case ('p_div_pump_cool_mw')
+          call parse_real_variable('p_div_pump_cool_mw', p_div_pump_cool_mw, 0.0D0, 1.0D3, &
                'divertor coolant mechanical pumping power (MW)')
        case ('p_fw_pumping_mw')
           call parse_real_variable('p_fw_pumping_mw', p_fw_pumping_mw, 0.0D0, 1.0D3, &

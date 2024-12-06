@@ -1250,7 +1250,7 @@ class Stellarator:
                     heat_transport_variables.fpumpshld
                     * fwbs_variables.p_shield_nuclear_heat_mw
                 )
-                heat_transport_variables.htpmw_div = (
+                heat_transport_variables.p_div_pump_cool_mw = (
                     heat_transport_variables.fpumpdiv
                     * (
                         physics_variables.pdivt
@@ -1563,7 +1563,7 @@ class Stellarator:
                     )
 
                     #  Divertor pumping power (MW)
-                    heat_transport_variables.htpmw_div = (
+                    heat_transport_variables.p_div_pump_cool_mw = (
                         heat_transport_variables.fpumpdiv
                         * (
                             physics_variables.pdivt

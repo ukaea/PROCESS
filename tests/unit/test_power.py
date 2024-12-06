@@ -2085,7 +2085,7 @@ class Power2Param(NamedTuple):
 
     vachtmw: Any = None
 
-    htpmw_div: Any = None
+    p_div_pump_cool_mw: Any = None
 
     nphx: Any = None
 
@@ -2258,7 +2258,7 @@ class Power2Param(NamedTuple):
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
             vachtmw=0.5,
-            htpmw_div=1.7942175899286208,
+            p_div_pump_cool_mw=1.7942175899286208,
             nphx=3,
             helpow=76851.741036987034,
             p_fw_pumping_mw=0,
@@ -2360,7 +2360,7 @@ class Power2Param(NamedTuple):
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
             vachtmw=0.5,
-            htpmw_div=1.7933419035282543,
+            p_div_pump_cool_mw=1.7933419035282543,
             nphx=3,
             helpow=220505.71684249729,
             p_fw_pumping_mw=0,
@@ -2528,7 +2528,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", power2param.vachtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "htpmw_div", power2param.htpmw_div)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_div_pump_cool_mw", power2param.p_div_pump_cool_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "nphx", power2param.nphx)
 

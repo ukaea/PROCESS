@@ -775,7 +775,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -936,7 +936,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
@@ -1770,7 +1770,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -1931,7 +1931,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
@@ -2765,7 +2765,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -2926,7 +2926,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
@@ -3760,7 +3760,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -3921,7 +3921,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
@@ -4755,7 +4755,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -4916,7 +4916,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
@@ -5750,7 +5750,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -5911,7 +5911,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
@@ -6745,7 +6745,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -6906,7 +6906,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
@@ -7740,7 +7740,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -7901,7 +7901,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
@@ -8735,7 +8735,7 @@
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)_______________ (t_in_bb)_____________________      5.7313E+02    
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
@@ -8896,7 +8896,7 @@
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_pumping_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      2.0197E+02 OP 
- Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.9453E+00 OP 
+ Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.9453E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.4423E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      2.3215E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.5544E-03 OP 
