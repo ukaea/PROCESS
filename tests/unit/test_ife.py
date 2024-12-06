@@ -2081,7 +2081,7 @@ class Ifepw1Param(NamedTuple):
             expected_p_hcd_electrical_mw=81.914893617021278,
             expected_pinjht=58.814893617021283,
             expected_crypmw=10,
-            expected_helpow=20277.29636048527,
+            expected_helpow=20266.75905075,
         ),
     ),
 )

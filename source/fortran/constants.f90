@@ -152,6 +152,10 @@ module constants
   ! Roughly 79.889% of the energy is carried by the proton
   real(dp), parameter :: dhelium_proton_energy_fraction = (alpha_mass/(proton_mass+alpha_mass))
 
+  ! Room temperature in Kelvin
+  ! Assume the room is at 20 degrees Celsius
+  real(dp), parameter :: temp_room_kelvin = 293.15D0
+
   ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0
 

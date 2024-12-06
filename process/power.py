@@ -798,7 +798,7 @@ class Power:
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tmpcry (MW)
             heat_transport_variables.p_cryo_plant = (
                 1.0e-6
-                * (293.0e0 - tfcoil_variables.tmpcry)
+                * (constants.temp_room_kelvin - tfcoil_variables.tmpcry)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tmpcry)
                 * heat_transport_variables.helpow
             )
@@ -820,7 +820,7 @@ class Power:
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tcoolin (MW)
             p_tf_cryoal_cryo = (
                 1.0e-6
-                * (293.0e0 - tfcoil_variables.tcoolin)
+                * (constants.temp_room_kelvin - tfcoil_variables.tcoolin)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
                 * heat_transport_variables.helpow_cryal
             )
@@ -833,11 +833,11 @@ class Power:
         # Calculate cryo cooling requirement at 4.5K (kW)
         tfcoil_variables.cryo_cool_req = (
             heat_transport_variables.helpow
-            * ((293 / tfcoil_variables.tmpcry) - 1)
-            / ((293 / 4.5) - 1)
+            * ((constants.temp_room_kelvin / tfcoil_variables.tmpcry) - 1)
+            / ((constants.temp_room_kelvin / 4.5) - 1)
             + heat_transport_variables.helpow_cryal
-            * ((293 / tfcoil_variables.tcoolin) - 1)
-            / ((293 / 4.5) - 1)
+            * ((constants.temp_room_kelvin / tfcoil_variables.tcoolin) - 1)
+            / ((constants.temp_room_kelvin / 4.5) - 1)
         ) / 1.0e3
 
     def power2(self, output: bool):
@@ -998,7 +998,7 @@ class Power:
             "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
             "",
             (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tmpcry)
-            / (293.0e0 - tfcoil_variables.tmpcry),
+            / (constants.temp_room_kelvin - tfcoil_variables.tmpcry),
             "OP ",
         )
         po.ovarre(
@@ -1006,7 +1006,7 @@ class Power:
             "Efficiency (figure of merit) of cryogenic aluminium plant is 40% of ideal Carnot value:",
             "",
             (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
-            / (293.0e0 - tfcoil_variables.tcoolin),
+            / (constants.temp_room_kelvin - tfcoil_variables.tcoolin),
             "OP ",
         )
         po.ovarre(
