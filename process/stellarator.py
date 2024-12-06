@@ -1225,11 +1225,13 @@ class Stellarator:
                 fwbs_variables.pradloss = (
                     physics_variables.pradmw * fwbs_variables.fhole
                 )
-                fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
+                fwbs_variables.p_div_radiation_mw = (
+                    physics_variables.pradmw * fwbs_variables.fdiv
+                )
                 fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
                 fwbs_variables.p_fw_radiation_mw = (
                     physics_variables.pradmw
-                    - fwbs_variables.praddiv
+                    - fwbs_variables.p_div_radiation_mw
                     - fwbs_variables.pradloss
                     - fwbs_variables.pradhcd
                 )
@@ -1255,7 +1257,7 @@ class Stellarator:
                     * (
                         physics_variables.pdivt
                         + fwbs_variables.p_div_nuclear_heat_mw
-                        + fwbs_variables.praddiv
+                        + fwbs_variables.p_div_radiation_mw
                     )
                 )
 
@@ -1350,7 +1352,9 @@ class Stellarator:
 
                 #  Radiation power incident on divertor (MW)
 
-                fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
+                fwbs_variables.p_div_radiation_mw = (
+                    physics_variables.pradmw * fwbs_variables.fdiv
+                )
 
                 #  Radiation power incident on HCD apparatus (MW)
 
@@ -1366,7 +1370,7 @@ class Stellarator:
 
                 fwbs_variables.p_fw_radiation_mw = (
                     physics_variables.pradmw
-                    - fwbs_variables.praddiv
+                    - fwbs_variables.p_div_radiation_mw
                     - fwbs_variables.pradloss
                     - fwbs_variables.pradhcd
                 )
@@ -1568,7 +1572,7 @@ class Stellarator:
                         * (
                             physics_variables.pdivt
                             + fwbs_variables.p_div_nuclear_heat_mw
-                            + fwbs_variables.praddiv
+                            + fwbs_variables.p_div_radiation_mw
                         )
                     )
 

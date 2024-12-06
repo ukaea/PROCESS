@@ -74,13 +74,15 @@ def plot_full_sankey(
     pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)
 
     # Used in [RADIATION]
-    praddiv = pradmw * m_file.data["fdiv"].get_scan(
+    p_div_radiation_mw = pradmw * m_file.data["fdiv"].get_scan(
         -1
     )  # Radiation deposited on the divertor (MW)
     pradhcd = pradmw * m_file.data["fhcd"].get_scan(
         -1
     )  # Radiation deposited on HCD (MW)
-    p_fw_radiation_mw = pradmw - praddiv - pradhcd  # Radiation deposited in the FW (MW)
+    p_fw_radiation_mw = (
+        pradmw - p_div_radiation_mw - pradhcd
+    )  # Radiation deposited in the FW (MW)
 
     # Used in [DIVERTOR]
     p_div_pump_cool_mw = m_file.data["p_div_pump_cool_mw"].get_scan(
@@ -228,7 +230,7 @@ def plot_full_sankey(
         # ------------------------------------- RADIATION - 3 -------------------------------------
 
         # Photons, -1st Wall, -Divertor, -H&CD
-        RADIATION = [pradmw, -p_fw_radiation_mw, -praddiv, -pradhcd]
+        RADIATION = [pradmw, -p_fw_radiation_mw, -p_div_radiation_mw, -pradhcd]
         sankey.add(
             flows=RADIATION,
             # right(in), up(out), up(out), up(out)
@@ -265,7 +267,7 @@ def plot_full_sankey(
         DIVERTOR = [
             pdivt,
             p_div_nuclear_heat_mw,
-            praddiv,
+            p_div_radiation_mw,
             p_div_pump_cool_mw,
             -p_div_thermal_mw,
         ]
@@ -481,7 +483,7 @@ def plot_full_sankey(
                 t.set_position((pos[0]+0.5*((pdivt+p_fw_alpha_mw)/totalplasma)+0.1,pos[1]+0.05))
             if t == diagrams[3].texts[4]: # Rad. Div.
                 t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(praddiv/totalplasma)-0.1,pos[1]))
+                t.set_position((pos[0]-0.5*(p_div_radiation_mw/totalplasma)-0.1,pos[1]))
             y += 1"""
 
 
@@ -509,13 +511,13 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         fdiv_2 > 0
     ):  # Takes into account old MFILE representation of double null divertor
         fdiv = fdiv_2
-    praddiv = pradmw * fdiv  # Radiation deposited on the divertor (MW)
+    p_div_radiation_mw = pradmw * fdiv  # Radiation deposited on the divertor (MW)
     fhcd = m_file.data["fhcd"].get_scan(
         -1
     )  # Area fraction covered by HCD and diagnostics
     pradhcd = pradmw * fhcd  # Radiation deposited on HCD and diagnostics (MW)
     p_fw_radiation_mw = (
-        pradmw - praddiv - pradhcd
+        pradmw - p_div_radiation_mw - pradhcd
     )  # Radiation deposited in the blanket (MW)
     pdivt = m_file.data["pdivt"].get_scan(
         -1
@@ -550,7 +552,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     )  # switch for spherical tokamak (ST) models
 
     # Power deposited on divertor (MW)
-    totaldivetc = pdivt + p_div_nuclear_heat_mw + praddiv
+    totaldivetc = pdivt + p_div_nuclear_heat_mw + p_div_radiation_mw
     # Power deposited on Blanket (MW)
     totalblktetc = (
         p_fw_nuclear_heat_mw

@@ -159,7 +159,9 @@ class DCLL:
                 physics_variables.neutron_power_total * 2 * fwbs_variables.fdiv
             )
             # Radiation power incident on divertor (MW)
-            fwbs_variables.praddiv = physics_variables.pradmw * 2 * fwbs_variables.fdiv
+            fwbs_variables.p_div_radiation_mw = (
+                physics_variables.pradmw * 2 * fwbs_variables.fdiv
+            )
         else:
             # Single null configuration
             # Nuclear heating in the divertor (MW), neutron power times fdiv
@@ -167,7 +169,9 @@ class DCLL:
                 physics_variables.neutron_power_total * fwbs_variables.fdiv
             )
             # Radiation power incident on divertor (MW)
-            fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
+            fwbs_variables.p_div_radiation_mw = (
+                physics_variables.pradmw * fwbs_variables.fdiv
+            )
 
         # HCD Apperatus
 
@@ -180,7 +184,9 @@ class DCLL:
 
         # Radiation power incident on first wall (MW)
         fwbs_variables.p_fw_radiation_mw = (
-            physics_variables.pradmw - fwbs_variables.praddiv - fwbs_variables.pradhcd
+            physics_variables.pradmw
+            - fwbs_variables.p_div_radiation_mw
+            - fwbs_variables.pradhcd
         )
 
         # Surface heat flux on first wall (MW)
@@ -264,8 +270,8 @@ class DCLL:
             po.ovarrf(
                 self.outfile,
                 "Radiation heating power into the divertor (MW)",
-                "(praddiv)",
-                fwbs_variables.praddiv,
+                "(p_div_radiation_mw)",
+                fwbs_variables.p_div_radiation_mw,
                 "OP ",
             )
             po.ovarrf(
@@ -309,7 +315,7 @@ class DCLL:
                 * (
                     physics_variables.pdivt
                     + fwbs_variables.p_div_nuclear_heat_mw
-                    + fwbs_variables.praddiv
+                    + fwbs_variables.p_div_radiation_mw
                 )
             )
 
@@ -322,7 +328,7 @@ class DCLL:
                 * (
                     physics_variables.pdivt
                     + fwbs_variables.p_div_nuclear_heat_mw
-                    + fwbs_variables.praddiv
+                    + fwbs_variables.p_div_radiation_mw
                 )
             )
 

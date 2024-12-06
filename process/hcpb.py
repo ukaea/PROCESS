@@ -634,19 +634,23 @@ class CCFE_HCPB:
         # Radiation power incident on divertor (MW)
         if physics_variables.idivrt == 2:
             # Double null configuration
-            fwbs_variables.praddiv = (
+            fwbs_variables.p_div_radiation_mw = (
                 physics_variables.pradmw * 2.0 * fwbs_variables.fdiv
             )
         else:
             # single null configuration
-            fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
+            fwbs_variables.p_div_radiation_mw = (
+                physics_variables.pradmw * fwbs_variables.fdiv
+            )
 
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
 
         # Radiation power incident on first wall (MW)
         fwbs_variables.p_fw_radiation_mw = (
-            physics_variables.pradmw - fwbs_variables.praddiv - fwbs_variables.pradhcd
+            physics_variables.pradmw
+            - fwbs_variables.p_div_radiation_mw
+            - fwbs_variables.pradhcd
         )
 
         # If we have chosen pressurised water as the blanket coolant, set the
@@ -702,7 +706,7 @@ class CCFE_HCPB:
                 * (
                     physics_variables.pdivt
                     + fwbs_variables.p_div_nuclear_heat_mw
-                    + fwbs_variables.praddiv
+                    + fwbs_variables.p_div_radiation_mw
                 )
             )
 
@@ -726,7 +730,7 @@ class CCFE_HCPB:
                 * (
                     physics_variables.pdivt
                     + fwbs_variables.p_div_nuclear_heat_mw
-                    + fwbs_variables.praddiv
+                    + fwbs_variables.p_div_radiation_mw
                 )
             )
 
@@ -778,7 +782,7 @@ class CCFE_HCPB:
                 * (
                     physics_variables.pdivt
                     + fwbs_variables.p_div_nuclear_heat_mw
-                    + fwbs_variables.praddiv
+                    + fwbs_variables.p_div_radiation_mw
                 )
             )
             if output:

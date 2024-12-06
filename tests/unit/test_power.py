@@ -2043,7 +2043,7 @@ class Power2Param(NamedTuple):
 
     emult: Any = None
 
-    praddiv: Any = None
+    p_div_radiation_mw: Any = None
 
     fdiv: Any = None
 
@@ -2237,7 +2237,7 @@ class Power2Param(NamedTuple):
             qnuc=12920,
             eta_pump_coolant_electrical=0.87000000000000011,
             emult=1.2690000534057617,
-            praddiv=33.119482558354782,
+            p_div_radiation_mw=33.119482558354782,
             fdiv=0.115,
             fhcd=0,
             secondary_cycle=2,
@@ -2339,7 +2339,7 @@ class Power2Param(NamedTuple):
             qnuc=12920,
             eta_pump_coolant_electrical=0.87000000000000011,
             emult=1.2690000534057617,
-            praddiv=33.119482558354782,
+            p_div_radiation_mw=33.119482558354782,
             fdiv=0.115,
             fhcd=0,
             secondary_cycle=2,
@@ -2476,7 +2476,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "emult", power2param.emult)
 
-    monkeypatch.setattr(fwbs_variables, "praddiv", power2param.praddiv)
+    monkeypatch.setattr(
+        fwbs_variables, "p_div_radiation_mw", power2param.p_div_radiation_mw
+    )
 
     monkeypatch.setattr(fwbs_variables, "fdiv", power2param.fdiv)
 

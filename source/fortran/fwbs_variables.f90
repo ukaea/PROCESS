@@ -398,7 +398,7 @@ module fwbs_variables
   real(dp) :: fwclfr
   !! first wall coolant fraction (calculated if `lpulse=1` or `ipowerflow=1`)
 
-  real(dp) :: praddiv
+  real(dp) :: p_div_radiation_mw
   !! Radiation power incident on the divertor (MW)
 
   real(dp) :: p_fw_radiation_mw
@@ -766,7 +766,7 @@ module fwbs_variables
     fvolsi = 1.0D0
     fvolso = 0.64D0
     fwclfr = 0.15D0
-    praddiv = 0.0D0
+    p_div_radiation_mw = 0.0D0
     p_fw_radiation_mw = 0.0D0
     pradhcd = 0.0D0
     pradloss = 0.0D0
