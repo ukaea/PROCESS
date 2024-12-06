@@ -178,7 +178,9 @@ class DCLL:
         # No nuclear heating of the H & CD
         fwbs_variables.pnuchcd = 0
         # Radiation power incident on HCD apparatus (MW)
-        fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
+        fwbs_variables.p_hcd_radiation_mw = (
+            physics_variables.pradmw * fwbs_variables.fhcd
+        )
 
         # FW
 
@@ -186,7 +188,7 @@ class DCLL:
         fwbs_variables.p_fw_radiation_mw = (
             physics_variables.pradmw
             - fwbs_variables.p_div_radiation_mw
-            - fwbs_variables.pradhcd
+            - fwbs_variables.p_hcd_radiation_mw
         )
 
         # Surface heat flux on first wall (MW)

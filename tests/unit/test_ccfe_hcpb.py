@@ -775,7 +775,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_div_radiation_mw: Any = None
 
-    pradhcd: Any = None
+    p_hcd_radiation_mw: Any = None
 
     fhcd: Any = None
 
@@ -869,7 +869,7 @@ class PowerflowCalcParam(NamedTuple):
             p_nb_orbit_loss_mw=0,
             fdiv=0.115,
             p_div_radiation_mw=0,
-            pradhcd=0,
+            p_hcd_radiation_mw=0,
             fhcd=0,
             p_fw_radiation_mw=0,
             coolwh=1,
@@ -918,7 +918,7 @@ class PowerflowCalcParam(NamedTuple):
             p_nb_orbit_loss_mw=0,
             fdiv=0.115,
             p_div_radiation_mw=33.056596978820579,
-            pradhcd=0,
+            p_hcd_radiation_mw=0,
             fhcd=0,
             p_fw_radiation_mw=254.39207240222791,
             coolwh=1,
@@ -992,7 +992,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         fwbs_variables, "p_div_radiation_mw", powerflowcalcparam.p_div_radiation_mw
     )
 
-    monkeypatch.setattr(fwbs_variables, "pradhcd", powerflowcalcparam.pradhcd)
+    monkeypatch.setattr(
+        fwbs_variables, "p_hcd_radiation_mw", powerflowcalcparam.p_hcd_radiation_mw
+    )
 
     monkeypatch.setattr(fwbs_variables, "fhcd", powerflowcalcparam.fhcd)
 

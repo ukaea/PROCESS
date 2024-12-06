@@ -539,16 +539,25 @@ class Power:
         # MDK Remove this output: no idea what this is
         # po.ovarre(self.outfile,'Total low voltage power (MW)','(tlvpmw)',tlvpmw)
 
-    def power1(self):
+    def power1(self) -> None:
         """
-        Calculates the first part of the heat transport
-        and plant power balance constituents
-        author: P J Knight, CCFE, Culham Science Centre
-        None
-        This routine calculates the first part of the heat transport
-        and plant power balance constituents.
-        None
+        Calculates the first part of the heat transport and plant power balance constituents.
+
+        Author: P J Knight, CCFE, Culham Science Centre
+
+        This routine calculates the first part of the heat transport and plant power balance constituents.
+        It initializes and computes various power variables related to the heat transport system,
+        including primary and secondary thermal power, pumping power, and thermal efficiency.
+
+        Returns:
+            None
+
+        Notes:
+
+        References:
+
         """
+
         if fwbs_variables.primary_pumping != 2 and fwbs_variables.primary_pumping != 3:
             primary_pumping_variables.p_fw_blanket_pumping_mw = (
                 heat_transport_variables.p_fw_pumping_mw
@@ -772,7 +781,7 @@ class Power:
 
         #  Secondary thermal power lost to HCD apparatus and diagnostics
         heat_transport_variables.psechcd = (
-            fwbs_variables.pnuchcd + fwbs_variables.pradhcd
+            fwbs_variables.pnuchcd + fwbs_variables.p_hcd_radiation_mw
         )
 
         #  Number of primary heat exchangers
@@ -1505,11 +1514,13 @@ class Power:
         po.write(self.outfile, "Losses to H/CD apparatus + diagnostics:")
         po.dblcol(self.outfile, "pnuchcd", 0.0e0, fwbs_variables.pnuchcd)
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.dblcol(self.outfile, "pradhcd", 0.0e0, fwbs_variables.pradhcd)
+        po.dblcol(
+            self.outfile, "p_hcd_radiation_mw", 0.0e0, fwbs_variables.p_hcd_radiation_mw
+        )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
 
         primsum = primsum
-        secsum = secsum + fwbs_variables.pnuchcd + fwbs_variables.pradhcd
+        secsum = secsum + fwbs_variables.pnuchcd + fwbs_variables.p_hcd_radiation_mw
 
         po.oblnkl(self.outfile)
         #     write(self.outfile,'(t10,a)') repeat('-',88)
