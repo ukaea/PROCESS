@@ -97,7 +97,7 @@ module heat_transport_variables
     real(dp) :: p_shield_pumping_mw
     !! shield and vacuum vessel coolant mechanical pumping power (MW)
 
-    real(dp) :: htpsecmw
+    real(dp) :: p_pump_cool_loss_total_mw
     !! Waste power lost from primary coolant pumps (MW)
 
     integer :: ipowerflow
@@ -215,7 +215,7 @@ module heat_transport_variables
       p_div_pump_cool_mw = 0.0D0
       p_fw_pumping_mw= 0.0D0
       p_shield_pumping_mw = 0.0D0
-      htpsecmw = 0.0D0
+      p_pump_cool_loss_total_mw = 0.0D0
       ipowerflow = 1
       iprimshld = 1
       nphx = 0

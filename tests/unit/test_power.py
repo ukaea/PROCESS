@@ -2006,7 +2006,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "pwpm2", acpowparam.pwpm2)
 
-    monkeypatch.setattr(heat_transport_variables, "p_pump_cool_elec_total_mw", acpowparam.p_pump_cool_elec_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_pump_cool_elec_total_mw",
+        acpowparam.p_pump_cool_elec_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pacpmw", acpowparam.pacpmw)
 
@@ -2127,7 +2131,7 @@ class Power2Param(NamedTuple):
 
     p_hcd_electrical_loss_mw: Any = None
 
-    htpsecmw: Any = None
+    p_pump_cool_loss_total_mw: Any = None
 
     helpow_cryal: Any = None
 
@@ -2279,7 +2283,7 @@ class Power2Param(NamedTuple):
             p_cryo_plant=37.900388528497025,
             psecdiv=0,
             p_hcd_electrical_loss_mw=77.967671580642758,
-            htpsecmw=30.457120415306122,
+            p_pump_cool_loss_total_mw=30.457120415306122,
             helpow_cryal=0,
             pfwpmw=0.89998039031509891,
             alpha_power_total=396.66154806848488,
@@ -2381,7 +2385,7 @@ class Power2Param(NamedTuple):
             p_cryo_plant=108.74512702403499,
             psecdiv=0,
             p_hcd_electrical_loss_mw=77.967671580642758,
-            htpsecmw=30.448114159579291,
+            p_pump_cool_loss_total_mw=30.448114159579291,
             helpow_cryal=0,
             pfwpmw=0.068213156646500808,
             alpha_power_total=396.53774329057228,
@@ -2586,7 +2590,11 @@ def test_power2(power2param, monkeypatch, power):
         heat_transport_variables, "p_tf_electrical_mw", power2param.p_tf_electrical_mw
     )
 
-    monkeypatch.setattr(heat_transport_variables, "p_pump_cool_elec_total_mw", power2param.p_pump_cool_elec_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_pump_cool_elec_total_mw",
+        power2param.p_pump_cool_elec_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "etath", power2param.etath)
 
@@ -2602,7 +2610,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_hcd_electrical_loss_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "htpsecmw", power2param.htpsecmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_pump_cool_loss_total_mw",
+        power2param.p_pump_cool_loss_total_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "helpow_cryal", power2param.helpow_cryal
@@ -2850,7 +2862,11 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(current_drive_variables, "etacd", power3param.etacd)
 
-    monkeypatch.setattr(heat_transport_variables, "p_pump_cool_elec_total_mw", power3param.p_pump_cool_elec_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_pump_cool_elec_total_mw",
+        power3param.p_pump_cool_elec_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pinjmax", power3param.pinjmax)
 

@@ -616,7 +616,7 @@ class Power:
                 + self.p_div_pump_cool_elec_mw,
             )
         else:
-            # Total mechanical pump power if no secondary coolant is used (deposited in coolant)
+            # Total mechanical pump power if no secondary coolant is used (deposited in coolant) (MW)
             self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.p_shield_pumping_mw
@@ -634,8 +634,9 @@ class Power:
             )
 
         #  Heat lost through pump power inefficiencies (MW)
-        heat_transport_variables.htpsecmw = (
-            heat_transport_variables.p_pump_cool_elec_total_mw - self.p_pump_coolant_total_mw
+        heat_transport_variables.p_pump_cool_loss_total_mw = (
+            heat_transport_variables.p_pump_cool_elec_total_mw
+            - self.p_pump_coolant_total_mw
         )
 
         # Calculate total deposited power (MW), n.b. energy multiplication in p_blanket_nuclear_heat_mw already
@@ -922,11 +923,11 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.htpsecmw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
         heat_transport_variables.psechtmw = (
             self.p_core_electrical_mw
             + heat_transport_variables.p_hcd_electrical_loss_mw
-            + heat_transport_variables.htpsecmw
+            + heat_transport_variables.p_pump_cool_loss_total_mw
             + heat_transport_variables.psecdiv
             + heat_transport_variables.psecshld
             + heat_transport_variables.psechcd
@@ -1564,8 +1565,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Coolant pumping efficiency losses (MW)",
-            "(htpsecmw)",
-            heat_transport_variables.htpsecmw,
+            "(p_pump_cool_loss_total_mw)",
+            heat_transport_variables.p_pump_cool_loss_total_mw,
             "OP ",
         )
         po.ovarrf(

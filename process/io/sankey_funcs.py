@@ -767,7 +767,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             print(
                 "Recirc. Power Balance",
                 p_recirc_electrical_mw,
-                -p_core_electrical_mw + ppumpmw - p_hcd_electrical_mw - p_pump_cool_elec_total_mw,
+                -p_core_electrical_mw
+                + ppumpmw
+                - p_hcd_electrical_mw
+                - p_pump_cool_elec_total_mw,
             )
         sankey.add(
             flows=RECIRC,

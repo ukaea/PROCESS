@@ -1122,7 +1122,7 @@
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.0111E+03    
  Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant)______________________      3.6566E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5490E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      2.4769E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_pump_cool_loss_total_mw)____________________      2.4769E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (p_hcd_electrical_loss_mw)______________________      8.0143E+01    
  Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
