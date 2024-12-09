@@ -94,7 +94,7 @@ module heat_transport_variables
     real(dp) :: p_fw_pumping_mw
     !! first wall coolant mechanical pumping power (MW)
 
-    real(dp) :: p_shield_pumping_mw
+    real(dp) :: p_shield_pump_cool_mw
     !! shield and vacuum vessel coolant mechanical pumping power (MW)
 
     real(dp) :: p_pump_cool_loss_total_mw
@@ -214,7 +214,7 @@ module heat_transport_variables
       htpmw_blkt_tot = 0.0D0
       p_div_pump_cool_mw = 0.0D0
       p_fw_pumping_mw= 0.0D0
-      p_shield_pumping_mw = 0.0D0
+      p_shield_pump_cool_mw = 0.0D0
       p_pump_cool_loss_total_mw = 0.0D0
       ipowerflow = 1
       i_shield_power_generation = 1

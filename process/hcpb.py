@@ -680,7 +680,7 @@ class CCFE_HCPB:
 
         # primary_pumping == 0
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of p_blanket_pumping_mw, p_div_pump_cool_mw, p_fw_pumping_mw, p_shield_pumping_mw set in input file
+        # Values of p_blanket_pumping_mw, p_div_pump_cool_mw, p_fw_pumping_mw, p_shield_pump_cool_mw set in input file
         if fwbs_variables.primary_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
@@ -696,7 +696,7 @@ class CCFE_HCPB:
                 heat_transport_variables.fpumpblkt
                 * fwbs_variables.p_blanket_nuclear_heat_mw
             )
-            heat_transport_variables.p_shield_pumping_mw = (
+            heat_transport_variables.p_shield_pump_cool_mw = (
                 heat_transport_variables.fpumpshld
                 * (
                     fwbs_variables.p_shield_nuclear_heat_mw
@@ -720,7 +720,7 @@ class CCFE_HCPB:
 
             # For divertor and shield, mechanical pumping power is a fraction of thermal
             # power removed by coolant
-            heat_transport_variables.p_shield_pumping_mw = (
+            heat_transport_variables.p_shield_pump_cool_mw = (
                 heat_transport_variables.fpumpshld
                 * (
                     fwbs_variables.p_shield_nuclear_heat_mw
@@ -772,7 +772,7 @@ class CCFE_HCPB:
 
             # For divertor and shield, mechanical pumping power is a fraction of thermal
             # power removed by coolant
-            heat_transport_variables.p_shield_pumping_mw = (
+            heat_transport_variables.p_shield_pump_cool_mw = (
                 heat_transport_variables.fpumpshld
                 * (
                     fwbs_variables.p_shield_nuclear_heat_mw
@@ -845,8 +845,8 @@ class CCFE_HCPB:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for shield and vacuum vessel (MW)",
-                    "(p_shield_pumping_mw)",
-                    heat_transport_variables.p_shield_pumping_mw,
+                    "(p_shield_pump_cool_mw)",
+                    heat_transport_variables.p_shield_pump_cool_mw,
                     "OP ",
                 )
 
@@ -1518,8 +1518,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for shield and vacuum vessel (MW)",
-                "(p_shield_pumping_mw)",
-                heat_transport_variables.p_shield_pumping_mw,
+                "(p_shield_pump_cool_mw)",
+                heat_transport_variables.p_shield_pump_cool_mw,
                 "OP ",
             )
             po.ovarre(

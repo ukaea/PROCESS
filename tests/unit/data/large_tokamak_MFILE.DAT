@@ -950,7 +950,7 @@
  Outlet_temperature_of_FW_&_blanket_(K)__________________________________ (t_out_bb)____________________      7.7313E+02    
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      1.6366E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.6938E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0576E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pump_cool_mw)__________________      7.0576E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
  Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
@@ -1113,7 +1113,7 @@
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blanket_pumping_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blanket_pumping_mw)_______________      1.6366E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_mw)___________________      1.6938E+00 OP 
- Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pumping_mw)__________________      7.0576E-03 OP 
+ Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (p_shield_pump_cool_mw)__________________      7.0576E-03 OP 
  Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_pump_elec_mw)______________      1.8812E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shield_pump_elec_mw)_________________      8.1122E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (p_div_pump_cool_elec_mw)__________________      1.9469E+00 OP 

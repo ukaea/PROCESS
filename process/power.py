@@ -585,7 +585,7 @@ class Power:
         )
         # Calculate electrical power needed to pump shield coolant (MW)
         self.p_shield_pump_elec_mw = (
-            heat_transport_variables.p_shield_pumping_mw
+            heat_transport_variables.p_shield_pump_cool_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
         # Calculate electrical power needed to pump divertor coolant (MW)
@@ -612,7 +612,7 @@ class Power:
             self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.p_blkt_pump_cool_secondary_mw
-                + heat_transport_variables.p_shield_pumping_mw
+                + heat_transport_variables.p_shield_pump_cool_mw
                 + heat_transport_variables.p_div_pump_cool_mw
             )
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
@@ -629,7 +629,7 @@ class Power:
             # Total mechanical pump power if no secondary coolant is used (deposited in coolant) (MW)
             self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
-                + heat_transport_variables.p_shield_pumping_mw
+                + heat_transport_variables.p_shield_pump_cool_mw
                 + heat_transport_variables.p_div_pump_cool_mw
             )
 
@@ -738,7 +738,7 @@ class Power:
         self.p_shield_coolant_thermal_mw = (
             fwbs_variables.p_cp_shield_nuclear_heat_mw
             + fwbs_variables.p_shield_nuclear_heat_mw
-            + heat_transport_variables.p_shield_pumping_mw
+            + heat_transport_variables.p_shield_pump_cool_mw
         )
 
         #  Total thermal power deposited in divertor coolant (MW)
@@ -1217,8 +1217,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for shield and vacuum vessel (MW)",
-            "(p_shield_pumping_mw)",
-            heat_transport_variables.p_shield_pumping_mw,
+            "(p_shield_pump_cool_mw)",
+            heat_transport_variables.p_shield_pump_cool_mw,
             "OP ",
         )
 
@@ -1454,7 +1454,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.p_shield_pumping_mw*heat_transport_variables.i_shield_power_generation} {heat_transport_variables.p_shield_pumping_mw*(1-heat_transport_variables.i_shield_power_generation)} {heat_transport_variables.p_shield_pumping_mw}"
+                f"{heat_transport_variables.p_shield_pump_cool_mw*heat_transport_variables.i_shield_power_generation} {heat_transport_variables.p_shield_pump_cool_mw*(1-heat_transport_variables.i_shield_power_generation)} {heat_transport_variables.p_shield_pump_cool_mw}"
             ),
         )
 
@@ -1462,14 +1462,14 @@ class Power:
             primsum
             + fwbs_variables.p_shield_nuclear_heat_mw
             * heat_transport_variables.i_shield_power_generation
-            + heat_transport_variables.p_shield_pumping_mw
+            + heat_transport_variables.p_shield_pump_cool_mw
             * heat_transport_variables.i_shield_power_generation
         )
         secsum = (
             secsum
             + fwbs_variables.p_shield_nuclear_heat_mw
             * (1 - heat_transport_variables.i_shield_power_generation)
-            + heat_transport_variables.p_shield_pumping_mw
+            + heat_transport_variables.p_shield_pump_cool_mw
             * (1 - heat_transport_variables.i_shield_power_generation)
         )
 

@@ -289,7 +289,7 @@ class DCLL:
 
         # For primary_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of p_blanket_pumping_mw, p_div_pump_cool_mw, p_fw_pumping_mw, p_shield_pumping_mw set in input file
+        # Values of p_blanket_pumping_mw, p_div_pump_cool_mw, p_fw_pumping_mw, p_shield_pump_cool_mw set in input file
 
         if fwbs_variables.primary_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
@@ -306,10 +306,10 @@ class DCLL:
                 heat_transport_variables.fpumpblkt
                 * fwbs_variables.p_blanket_nuclear_heat_mw
             )
-            # For CCFE HCPB: p_shield_pumping_mw = fpumpshld * ( p_shield_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )
+            # For CCFE HCPB: p_shield_pump_cool_mw = fpumpshld * ( p_shield_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )
             # Use same as KIT HCLL for now "p_shield_nuclear_heat_mw is not available and is very small
             # compared to other powers so set to zero."
-            heat_transport_variables.p_shield_pumping_mw = (
+            heat_transport_variables.p_shield_pump_cool_mw = (
                 heat_transport_variables.fpumpshld * 0.0
             )
             heat_transport_variables.p_div_pump_cool_mw = (
@@ -335,7 +335,7 @@ class DCLL:
             )
 
             # Shield power is negligible and this model doesn't have nuclear heating to the shield
-            heat_transport_variables.p_shield_pumping_mw = (
+            heat_transport_variables.p_shield_pump_cool_mw = (
                 heat_transport_variables.fpumpshld * 0
             )
 
@@ -387,8 +387,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for shield and vacuum vessel (MW)",
-                "(p_shield_pumping_mw)",
-                heat_transport_variables.p_shield_pumping_mw,
+                "(p_shield_pump_cool_mw)",
+                heat_transport_variables.p_shield_pump_cool_mw,
                 "OP ",
             )
 

@@ -813,7 +813,7 @@ class PowerflowCalcParam(NamedTuple):
 
     fpumpblkt: Any = None
 
-    p_shield_pumping_mw: Any = None
+    p_shield_pump_cool_mw: Any = None
 
     fpumpshld: Any = None
 
@@ -853,7 +853,7 @@ class PowerflowCalcParam(NamedTuple):
 
     expected_psurffwo: Any = None
 
-    expected_p_shield_pumping_mw: Any = None
+    expected_p_shield_pump_cool_mw: Any = None
 
     expected_p_div_pump_cool_mw: Any = None
 
@@ -888,7 +888,7 @@ class PowerflowCalcParam(NamedTuple):
             fpumpfw=0.0050000000000000001,
             p_blanket_pumping_mw=0,
             fpumpblkt=0.0050000000000000001,
-            p_shield_pumping_mw=0,
+            p_shield_pump_cool_mw=0,
             fpumpshld=0.0050000000000000001,
             p_div_pump_cool_mw=0,
             fpumpdiv=0.0050000000000000001,
@@ -908,7 +908,7 @@ class PowerflowCalcParam(NamedTuple):
             expected_p_fw_radiation_mw=254.39207240222791,
             expected_psurffwi=97.271629070225231,
             expected_psurffwo=176.95628839065773,
-            expected_p_shield_pumping_mw=0.0068056297940224456,
+            expected_p_shield_pump_cool_mw=0.0068056297940224456,
             expected_p_div_pump_cool_mw=1.7970292653352464,
             expected_p_fw_blanket_pumping_mw=202.00455086503842,
         ),
@@ -937,7 +937,7 @@ class PowerflowCalcParam(NamedTuple):
             fpumpfw=0.0050000000000000001,
             p_blanket_pumping_mw=0,
             fpumpblkt=0.0050000000000000001,
-            p_shield_pumping_mw=0.0068056297940224456,
+            p_shield_pump_cool_mw=0.0068056297940224456,
             fpumpshld=0.0050000000000000001,
             p_div_pump_cool_mw=1.7970292653352464,
             fpumpdiv=0.0050000000000000001,
@@ -957,7 +957,7 @@ class PowerflowCalcParam(NamedTuple):
             expected_p_fw_radiation_mw=254.39207240222791,
             expected_psurffwi=97.271629070225259,
             expected_psurffwo=176.95009681558912,
-            expected_p_shield_pumping_mw=0.007019085478296147,
+            expected_p_shield_pump_cool_mw=0.007019085478296147,
             expected_p_div_pump_cool_mw=1.7961533897828594,
             expected_p_fw_blanket_pumping_mw=201.94492795635171,
         ),
@@ -1064,8 +1064,8 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(
         heat_transport_variables,
-        "p_shield_pumping_mw",
-        powerflowcalcparam.p_shield_pumping_mw,
+        "p_shield_pump_cool_mw",
+        powerflowcalcparam.p_shield_pump_cool_mw,
     )
 
     monkeypatch.setattr(
@@ -1136,8 +1136,8 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.expected_psurffwo
     )
 
-    assert heat_transport_variables.p_shield_pumping_mw == pytest.approx(
-        powerflowcalcparam.expected_p_shield_pumping_mw
+    assert heat_transport_variables.p_shield_pump_cool_mw == pytest.approx(
+        powerflowcalcparam.expected_p_shield_pump_cool_mw
     )
 
     assert heat_transport_variables.p_div_pump_cool_mw == pytest.approx(

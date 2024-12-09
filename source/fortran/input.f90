@@ -283,7 +283,7 @@ contains
       coolwh, emult
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, p_div_pump_cool_mw, &
       pwpm2, eta_thermal_electric, vachtmw, i_shield_power_generation, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
-      htpmw_min, fpumpblkt, ipowerflow, p_shield_pumping_mw, fpumpshld, trithtmw, &
+      htpmw_min, fpumpblkt, ipowerflow, p_shield_pump_cool_mw, fpumpshld, trithtmw, &
       fpumpfw, crypmw_max, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
       bldrc, fauxbop, pfusife, dcdrv0, fwdr, pdrive, mcdriv, ucconc, shdr, &
@@ -2012,8 +2012,8 @@ contains
        case ('p_fw_pumping_mw')
           call parse_real_variable('p_fw_pumping_mw', p_fw_pumping_mw, 0.0D0, 1.0D3, &
                'first wall coolant mechanical pumping power (MW)')
-       case ('p_shield_pumping_mw')
-          call parse_real_variable('p_shield_pumping_mw', p_shield_pumping_mw, 0.0D0, 1.0D3, &
+       case ('p_shield_pump_cool_mw')
+          call parse_real_variable('p_shield_pump_cool_mw', p_shield_pump_cool_mw, 0.0D0, 1.0D3, &
                'shield and vacuum vessel coolant mechanical pumping power (MW)')
        case ('i_shield_mat')
          call parse_int_variable('i_shield_mat', i_shield_mat, 0, 1, &

@@ -2142,8 +2142,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Pumping power for shield and vacuum vessel (MW)",
-                "(p_shield_pumping_mw)",
-                heat_transport_variables.p_shield_pumping_mw,
+                "(p_shield_pump_cool_mw)",
+                heat_transport_variables.p_shield_pump_cool_mw,
                 "OP ",
             )
 

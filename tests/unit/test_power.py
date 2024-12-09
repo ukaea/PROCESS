@@ -2071,7 +2071,7 @@ class Power2Param(NamedTuple):
 
     p_fw_nuclear_heat_mw: Any = None
 
-    p_shield_pumping_mw: Any = None
+    p_shield_pump_cool_mw: Any = None
 
     p_blanket_pumping_mw: Any = None
 
@@ -2253,7 +2253,7 @@ class Power2Param(NamedTuple):
             p_shield_nuclear_heat_mw=1.3609360176065353,
             p_hcd_radiation_mw=0,
             p_fw_nuclear_heat_mw=276.76827393356979,
-            p_shield_pumping_mw=0.0068046800880326762,
+            p_shield_pump_cool_mw=0.0068046800880326762,
             p_blanket_pumping_mw=0,
             psecshld=0,
             fpumpshld=0.0050000000000000001,
@@ -2355,7 +2355,7 @@ class Power2Param(NamedTuple):
             p_shield_nuclear_heat_mw=1.4036212304705389,
             p_hcd_radiation_mw=0,
             p_fw_nuclear_heat_mw=230.95082168283884,
-            p_shield_pumping_mw=0.0070181061523526943,
+            p_shield_pump_cool_mw=0.0070181061523526943,
             p_blanket_pumping_mw=0,
             psecshld=0,
             fpumpshld=0.0050000000000000001,
@@ -2515,7 +2515,7 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_shield_pumping_mw", power2param.p_shield_pumping_mw
+        heat_transport_variables, "p_shield_pump_cool_mw", power2param.p_shield_pump_cool_mw
     )
 
     monkeypatch.setattr(
