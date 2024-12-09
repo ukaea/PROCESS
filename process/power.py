@@ -569,7 +569,7 @@ class Power:
         """
 
         if fwbs_variables.primary_pumping != 2 and fwbs_variables.primary_pumping != 3:
-            primary_pumping_variables.p_fw_blanket_pumping_mw = (
+            primary_pumping_variables.p_fw_blkt_pump_cool_mw = (
                 heat_transport_variables.p_fw_pumping_mw
                 + heat_transport_variables.p_blanket_pumping_mw
             )
@@ -580,7 +580,7 @@ class Power:
 
         # Calculate electrical power needed to pump blanket coolant (MW)
         self.p_fw_blkt_pump_elec_mw = (
-            primary_pumping_variables.p_fw_blanket_pumping_mw
+            primary_pumping_variables.p_fw_blkt_pump_cool_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
         # Calculate electrical power needed to pump shield coolant (MW)
@@ -610,7 +610,7 @@ class Power:
         ):
             # Total mechanical pump power if using liquid secondary coolant (deposited in coolant)
             self.p_pump_coolant_total_mw = (
-                primary_pumping_variables.p_fw_blanket_pumping_mw
+                primary_pumping_variables.p_fw_blkt_pump_cool_mw
                 + heat_transport_variables.p_blkt_pump_cool_secondary_mw
                 + heat_transport_variables.p_shield_pump_cool_mw
                 + heat_transport_variables.p_div_pump_cool_mw
@@ -628,7 +628,7 @@ class Power:
         else:
             # Total mechanical pump power if no secondary coolant is used (deposited in coolant) (MW)
             self.p_pump_coolant_total_mw = (
-                primary_pumping_variables.p_fw_blanket_pumping_mw
+                primary_pumping_variables.p_fw_blkt_pump_cool_mw
                 + heat_transport_variables.p_shield_pump_cool_mw
                 + heat_transport_variables.p_div_pump_cool_mw
             )
@@ -674,7 +674,7 @@ class Power:
                         fwbs_variables.p_blanket_nuclear_heat_mw
                         * (1 - fwbs_variables.f_nuc_pow_bz_liq)
                     )
-                    + primary_pumping_variables.p_fw_blanket_pumping_mw
+                    + primary_pumping_variables.p_fw_blkt_pump_cool_mw
                     + current_drive_variables.p_nb_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_nb_shine_through_mw
@@ -685,7 +685,7 @@ class Power:
                     + fwbs_variables.p_fw_nuclear_heat_mw
                     + fwbs_variables.p_fw_radiation_mw
                     + fwbs_variables.p_blanket_nuclear_heat_mw
-                    + primary_pumping_variables.p_fw_blanket_pumping_mw
+                    + primary_pumping_variables.p_fw_blkt_pump_cool_mw
                     + current_drive_variables.p_nb_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_nb_shine_through_mw
@@ -695,7 +695,7 @@ class Power:
                     fwbs_variables.p_fw_nuclear_heat_mw
                     + fwbs_variables.p_fw_radiation_mw
                     + fwbs_variables.p_blanket_nuclear_heat_mw
-                    + primary_pumping_variables.p_fw_blanket_pumping_mw
+                    + primary_pumping_variables.p_fw_blkt_pump_cool_mw
                     + current_drive_variables.p_nb_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_nb_shine_through_mw
@@ -708,7 +708,7 @@ class Power:
                 fwbs_variables.p_fw_nuclear_heat_mw
                 + fwbs_variables.p_fw_radiation_mw
                 + fwbs_variables.p_blanket_nuclear_heat_mw
-                + primary_pumping_variables.p_fw_blanket_pumping_mw
+                + primary_pumping_variables.p_fw_blkt_pump_cool_mw
                 + current_drive_variables.p_nb_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.p_nb_shine_through_mw
@@ -1186,8 +1186,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
-            "(p_fw_blanket_pumping_mw)",
-            primary_pumping_variables.p_fw_blanket_pumping_mw,
+            "(p_fw_blkt_pump_cool_mw)",
+            primary_pumping_variables.p_fw_blkt_pump_cool_mw,
             "OP ",
         )
 

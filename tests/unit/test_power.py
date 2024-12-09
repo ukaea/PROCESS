@@ -2177,7 +2177,7 @@ class Power2Param(NamedTuple):
 
     eff_tf_cryo: Any = None
 
-    p_fw_blanket_pumping_mw: Any = None
+    p_fw_blkt_pump_cool_mw: Any = None
 
     p_shield_pump_cool_elec_mw: Any = None
 
@@ -2306,7 +2306,7 @@ class Power2Param(NamedTuple):
             temp_tf_coil_cryo=4.5,
             tcoolin=313.14999999999998,
             eff_tf_cryo=0.13,
-            p_fw_blanket_pumping_mw=202.02739897087824,
+            p_fw_blkt_pump_cool_mw=202.02739897087824,
             p_shield_pump_cool_elec_mw=0.0078214713655548,
             p_div_pump_cool_elec_mw=2.0623190688834718,
             p_pump_coolant_total_mw=203.8284212408949,
@@ -2408,7 +2408,7 @@ class Power2Param(NamedTuple):
             temp_tf_coil_cryo=4.5,
             tcoolin=313.14999999999998,
             eff_tf_cryo=0.13,
-            p_fw_blanket_pumping_mw=201.96778859673452,
+            p_fw_blkt_pump_cool_mw=201.96778859673452,
             p_shield_pump_cool_elec_mw=0.0080667886808651647,
             p_div_pump_cool_elec_mw=2.0613125327910966,
             p_pump_coolant_total_mw=203.76814860641511,
@@ -2677,7 +2677,7 @@ def test_power2(power2param, monkeypatch, power):
     monkeypatch.setattr(tfcoil_variables, "eff_tf_cryo", power2param.eff_tf_cryo)
 
     monkeypatch.setattr(
-        ppv, "p_fw_blanket_pumping_mw", power2param.p_fw_blanket_pumping_mw
+        ppv, "p_fw_blkt_pump_cool_mw", power2param.p_fw_blkt_pump_cool_mw
     )
 
     monkeypatch.setattr(

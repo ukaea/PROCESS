@@ -2293,7 +2293,7 @@
         "htpmw_blkto": 0.0,
         "p_div_pump_cool_mw": 0.0,
         "p_fw_pumping_mw": 0.0,
-        "p_fw_blanket_pumping_mw": 0.0,
+        "p_fw_blkt_pump_cool_mw": 0.0,
         "htpmw_fwi": 0.0,
         "htpmw_fwo": 0.0,
         "htpmw_ife": 0.0,
@@ -9772,7 +9772,7 @@
         "htpmw_blkto": "Inboard/outboard blanket pumping power (MW)",
         "p_div_pump_cool_mw": "divertor coolant mechanical pumping power (MW)",
         "p_fw_pumping_mw": "first wall coolant mechanical pumping power (MW)",
-        "p_fw_blanket_pumping_mw": "mechanical pumping power for FW and blanket including heat exchanger and\n pipes (`primary_pumping=3`) [MW]",
+        "p_fw_blkt_pump_cool_mw": "mechanical pumping power for FW and blanket including heat exchanger and\n pipes (`primary_pumping=3`) [MW]",
         "htpmw_fwi": "Inboard/outboard first wall pumping power (MW)",
         "htpmw_fwo": "Inboard/outboard first wall pumping power (MW)",
         "htpmw_ife": "IFE heat transport system electrical pump power (MW)",
@@ -19314,7 +19314,7 @@
             "t_out_bb",
             "p_he",
             "dp_he",
-            "p_fw_blanket_pumping_mw"
+            "p_fw_blkt_pump_cool_mw"
         ],
         "process_input": [
             "nin",
