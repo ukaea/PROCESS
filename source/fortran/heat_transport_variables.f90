@@ -148,7 +148,7 @@ module heat_transport_variables
     real(dp) :: priheat
     !! total thermal power removed from fusion core (MW)
 
-    real(dp) :: psecdiv
+    real(dp) :: p_div_thermal_secondary_mw
     !! Low-grade heat lost in divertor (MW)
 
     real(dp) :: psechcd
@@ -163,7 +163,7 @@ module heat_transport_variables
     real(dp) :: psecshld
     !! Low-grade heat deposited in shield (MW)
 
-    real(dp) :: pthermmw
+    real(dp) :: p_thermal_primary_mw
     !! High-grade heat useful for electric production (MW)
 
     real(dp) :: pwpm2
@@ -230,12 +230,12 @@ module heat_transport_variables
       p_net_electrical_mw = 0.0D0
       p_recirc_electrical_mw = 0.0D0
       priheat = 0.0D0
-      psecdiv = 0.0D0
+      p_div_thermal_secondary_mw = 0.0D0
       psechcd = 0.0D0
       psechtmw = 0.0D0
       pseclossmw = 0.0D0
       psecshld = 0.0D0
-      pthermmw = 0.0D0
+      p_thermal_primary_mw = 0.0D0
       pwpm2 = 150.0D0
       p_tf_electrical_mw = 0.0D0
       tlvpmw = 0.0D0

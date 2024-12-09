@@ -2099,7 +2099,7 @@ class Power2Param(NamedTuple):
 
     p_recirc_electrical_mw: Any = None
 
-    pthermmw: Any = None
+    p_thermal_primary_mw: Any = None
 
     fpumpfw: Any = None
 
@@ -2127,7 +2127,7 @@ class Power2Param(NamedTuple):
 
     p_cryo_plant: Any = None
 
-    psecdiv: Any = None
+    p_div_thermal_secondary_mw: Any = None
 
     p_hcd_electrical_loss_mw: Any = None
 
@@ -2267,7 +2267,7 @@ class Power2Param(NamedTuple):
             helpow=76851.741036987034,
             p_fw_pumping_mw=0,
             p_recirc_electrical_mw=0,
-            pthermmw=2620.2218111502593,
+            p_thermal_primary_mw=2620.2218111502593,
             fpumpfw=0.0050000000000000001,
             p_baseload_electrical_total_mw=61.882833632875375,
             i_shield_power_generation=1,
@@ -2281,7 +2281,7 @@ class Power2Param(NamedTuple):
             p_pump_cool_elec_total_mw=234.28554165620102,
             eta_thermal_electric=0.37500000000000006,
             p_cryo_plant=37.900388528497025,
-            psecdiv=0,
+            p_div_thermal_secondary_mw=0,
             p_hcd_electrical_loss_mw=77.967671580642758,
             p_pump_cool_loss_total_mw=30.457120415306122,
             helpow_cryal=0,
@@ -2369,7 +2369,7 @@ class Power2Param(NamedTuple):
             helpow=220505.71684249729,
             p_fw_pumping_mw=0,
             p_recirc_electrical_mw=489.56557141942733,
-            pthermmw=2619.4223856129224,
+            p_thermal_primary_mw=2619.4223856129224,
             fpumpfw=0.0050000000000000001,
             p_baseload_electrical_total_mw=62.237143915360818,
             i_shield_power_generation=1,
@@ -2383,7 +2383,7 @@ class Power2Param(NamedTuple):
             p_pump_cool_elec_total_mw=234.2162627659944,
             eta_thermal_electric=0.37500000000000006,
             p_cryo_plant=108.74512702403499,
-            psecdiv=0,
+            p_div_thermal_secondary_mw=0,
             p_hcd_electrical_loss_mw=77.967671580642758,
             p_pump_cool_loss_total_mw=30.448114159579291,
             helpow_cryal=0,
@@ -2558,7 +2558,7 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_recirc_electrical_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "pthermmw", power2param.pthermmw)
+    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", power2param.p_thermal_primary_mw)
 
     monkeypatch.setattr(heat_transport_variables, "fpumpfw", power2param.fpumpfw)
 
@@ -2606,7 +2606,7 @@ def test_power2(power2param, monkeypatch, power):
         heat_transport_variables, "p_cryo_plant", power2param.p_cryo_plant
     )
 
-    monkeypatch.setattr(heat_transport_variables, "psecdiv", power2param.psecdiv)
+    monkeypatch.setattr(heat_transport_variables, "p_div_thermal_secondary_mw", power2param.p_div_thermal_secondary_mw)
 
     monkeypatch.setattr(
         heat_transport_variables,

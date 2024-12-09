@@ -2028,7 +2028,7 @@ class Ifepw1Param(NamedTuple):
     p_shield_nuclear_heat_mw: Any = None
     pnucloss: Any = None
     priheat: Any = None
-    pthermmw: Any = None
+    p_thermal_primary_mw: Any = None
     pfwdiv: Any = None
     nphx: Any = None
     p_hcd_electrical_mw: Any = None
@@ -2042,7 +2042,7 @@ class Ifepw1Param(NamedTuple):
     powfmw: Any = None
     expected_p_blanket_nuclear_heat_mw: Any = None
     expected_priheat: Any = None
-    expected_pthermmw: Any = None
+    expected_p_thermal_primary_mw: Any = None
     expected_pfwdiv: Any = None
     expected_nphx: Any = None
     expected_p_hcd_electrical_mw: Any = None
@@ -2061,7 +2061,7 @@ class Ifepw1Param(NamedTuple):
             p_shield_nuclear_heat_mw=0,
             pnucloss=0,
             priheat=0,
-            pthermmw=0,
+            p_thermal_primary_mw=0,
             pfwdiv=0,
             nphx=0,
             p_hcd_electrical_mw=0,
@@ -2075,7 +2075,7 @@ class Ifepw1Param(NamedTuple):
             powfmw=2009.6999999999998,
             expected_p_blanket_nuclear_heat_mw=1924.4887199999998,
             expected_priheat=2532.2219999999998,
-            expected_pthermmw=2532.2219999999998,
+            expected_p_thermal_primary_mw=2532.2219999999998,
             expected_pfwdiv=607.73327999999992,
             expected_nphx=3,
             expected_p_hcd_electrical_mw=81.914893617021278,
@@ -2109,7 +2109,7 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     )
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw1param.pnucloss)
     monkeypatch.setattr(heat_transport_variables, "priheat", ifepw1param.priheat)
-    monkeypatch.setattr(heat_transport_variables, "pthermmw", ifepw1param.pthermmw)
+    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", ifepw1param.p_thermal_primary_mw)
     monkeypatch.setattr(heat_transport_variables, "pfwdiv", ifepw1param.pfwdiv)
     monkeypatch.setattr(heat_transport_variables, "nphx", ifepw1param.nphx)
     monkeypatch.setattr(
@@ -2138,8 +2138,8 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     assert heat_transport_variables.priheat == pytest.approx(
         ifepw1param.expected_priheat
     )
-    assert heat_transport_variables.pthermmw == pytest.approx(
-        ifepw1param.expected_pthermmw
+    assert heat_transport_variables.p_thermal_primary_mw == pytest.approx(
+        ifepw1param.expected_p_thermal_primary_mw
     )
     assert heat_transport_variables.pfwdiv == pytest.approx(ifepw1param.expected_pfwdiv)
     assert heat_transport_variables.nphx == pytest.approx(ifepw1param.expected_nphx)
@@ -2845,7 +2845,7 @@ class Ifepw2Param(NamedTuple):
     trithtmw: Any = None
     p_cryo_plant: Any = None
     p_gross_electrical: Any = None
-    pthermmw: Any = None
+    p_thermal_primary_mw: Any = None
     eta_thermal_electric: Any = None
     fgrosbop: Any = None
     p_recirc_electrical_mw: Any = None
@@ -2884,7 +2884,7 @@ class Ifepw2Param(NamedTuple):
             trithtmw=15,
             p_cryo_plant=10,
             p_gross_electrical=0,
-            pthermmw=2532.2219999999998,
+            p_thermal_primary_mw=2532.2219999999998,
             eta_thermal_electric=0.45000000000000001,
             fgrosbop=0,
             p_recirc_electrical_mw=0,
@@ -2948,7 +2948,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(
         heat_transport_variables, "p_gross_electrical", ifepw2param.p_gross_electrical
     )
-    monkeypatch.setattr(heat_transport_variables, "pthermmw", ifepw2param.pthermmw)
+    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", ifepw2param.p_thermal_primary_mw)
     monkeypatch.setattr(
         heat_transport_variables,
         "eta_thermal_electric",

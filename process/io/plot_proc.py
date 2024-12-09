@@ -2588,7 +2588,7 @@ def plot_power_info(axis, mfile_data, scan):
 
     gross_eff = 100.0 * (
         mfile_data.data["p_gross_electrical"].get_scan(scan)
-        / mfile_data.data["pthermmw"].get_scan(scan)
+        / mfile_data.data["p_thermal_primary_mw"].get_scan(scan)
     )
 
     net_eff = 100.0 * (
@@ -2597,7 +2597,7 @@ def plot_power_info(axis, mfile_data, scan):
             - mfile_data.data["p_pump_cool_elec_total_mw"].get_scan(scan)
         )
         / (
-            mfile_data.data["pthermmw"].get_scan(scan)
+            mfile_data.data["p_thermal_primary_mw"].get_scan(scan)
             - mfile_data.data["p_pump_cool_elec_total_mw"].get_scan(scan)
         )
     )
@@ -2630,7 +2630,7 @@ def plot_power_info(axis, mfile_data, scan):
         (p_cryo_plant, "TF cryogenic power", "MW"),
         ("pdivt", "Power to divertor", "MW"),
         ("divlife", "Divertor life", "years"),
-        ("pthermmw", "Primary (high grade) heat", "MW"),
+        ("p_thermal_primary_mw", "Primary (high grade) heat", "MW"),
         (gross_eff, "Gross cycle efficiency", "%"),
         (net_eff, "Net cycle efficiency", "%"),
         ("p_gross_electrical", "Gross electric power", "MW"),

@@ -1128,7 +1128,7 @@
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.2417E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.1751E+03    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_thermal_primary_mw)____________________      2.1751E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      2.9785E+02    
  Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      9.1650E+01    

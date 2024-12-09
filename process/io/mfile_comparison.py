@@ -141,7 +141,7 @@ BASELINE_LIST = [
     "p_shield_nuclear_heat_mw",
     "pdivt",
     "divlife",
-    "pthermmw",
+    "p_thermal_primary_mw",
     "bore",
     "ohcth",
     "precomp",

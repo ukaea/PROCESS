@@ -31,7 +31,7 @@ class CalcBuildingCostsParam(NamedTuple):
 
     pfrmax: Any = None
 
-    pthermmw: Any = None
+    p_thermal_primary_mw: Any = None
 
     psechtmw: Any = None
 
@@ -80,7 +80,7 @@ class CalcBuildingCostsParam(NamedTuple):
         CalcBuildingCostsParam(
             pwpnb=109.38112972595434,
             pfrmax=17.814040399601147,
-            pthermmw=2112.8165753998965,
+            p_thermal_primary_mw=2112.8165753998965,
             psechtmw=311.54038043019023,
             helpow=142703.41458500578,
             ritfc=234156150,
@@ -1180,7 +1180,7 @@ class CalcBuildingCostsParam(NamedTuple):
         CalcBuildingCostsParam(
             pwpnb=109.38112972595434,
             pfrmax=17.81462428923539,
-            pthermmw=2111.8102173541502,
+            p_thermal_primary_mw=2111.8102173541502,
             psechtmw=640.27066522894324,
             helpow=823308.59959198488,
             ritfc=234156150,
@@ -2292,7 +2292,7 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     monkeypatch.setattr(pfcoil_variables, "pfrmax", calcbuildingcostsparam.pfrmax)
 
     monkeypatch.setattr(
-        heat_transport_variables, "pthermmw", calcbuildingcostsparam.pthermmw
+        heat_transport_variables, "p_thermal_primary_mw", calcbuildingcostsparam.p_thermal_primary_mw
     )
 
     monkeypatch.setattr(
@@ -13722,7 +13722,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
 
     ensxpfm: Any = None
 
-    pthermmw: Any = None
+    p_thermal_primary_mw: Any = None
 
     psechtmw: Any = None
 
@@ -13769,7 +13769,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             res_time=2562.1529343276788,
             itr_sum=687546826.85995734,
             ensxpfm=34911.529178721656,
-            pthermmw=2112.8165753998965,
+            p_thermal_primary_mw=2112.8165753998965,
             psechtmw=311.54038043019023,
             helpow=142703.41458500578,
             vvmass=8957118.946216708,
@@ -14865,7 +14865,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             res_time=2562.1529343276788,
             itr_sum=1176301401.3409874,
             ensxpfm=34908.848681194133,
-            pthermmw=2111.8102173541502,
+            p_thermal_primary_mw=2111.8102173541502,
             psechtmw=640.27066522894324,
             helpow=823308.59959198488,
             vvmass=8948002.9350915737,
@@ -15994,7 +15994,7 @@ def test_calc_remaining_subsystems(
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "pthermmw", calcremainingsubsystemsparam.pthermmw
+        heat_transport_variables, "p_thermal_primary_mw", calcremainingsubsystemsparam.p_thermal_primary_mw
     )
 
     monkeypatch.setattr(

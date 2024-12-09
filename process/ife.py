@@ -1911,7 +1911,7 @@ class IFE:
 
         # Useful (high-grade) thermal power (MW)
 
-        heat_transport_variables.pthermmw = heat_transport_variables.priheat * (
+        heat_transport_variables.p_thermal_primary_mw = heat_transport_variables.priheat * (
             1.0 - fwbs_variables.fhole
         )
 
@@ -1922,26 +1922,26 @@ class IFE:
         # conventional blanket
 
         if (ife_variables.ifetyp != 3) and (ife_variables.ifetyp != 4):
-            heat_transport_variables.pfwdiv = 0.24 * heat_transport_variables.pthermmw
+            heat_transport_variables.pfwdiv = 0.24 * heat_transport_variables.p_thermal_primary_mw
             fwbs_variables.p_blanket_nuclear_heat_mw = (
-                heat_transport_variables.pthermmw - heat_transport_variables.pfwdiv
+                heat_transport_variables.p_thermal_primary_mw - heat_transport_variables.pfwdiv
             )
         else:
             heat_transport_variables.pfwdiv = 0.0
-            fwbs_variables.p_blanket_nuclear_heat_mw = heat_transport_variables.pthermmw
+            fwbs_variables.p_blanket_nuclear_heat_mw = heat_transport_variables.p_thermal_primary_mw
 
         fwbs_variables.p_shield_nuclear_heat_mw = 0.0
 
         # Lost fusion power (MW)
 
         fwbs_variables.pnucloss = (
-            heat_transport_variables.priheat - heat_transport_variables.pthermmw
+            heat_transport_variables.priheat - heat_transport_variables.p_thermal_primary_mw
         )  # = priheat*fhole
 
         # Number of primary heat exchangers
 
         heat_transport_variables.nphx = np.ceil(
-            heat_transport_variables.pthermmw / 1000.0
+            heat_transport_variables.p_thermal_primary_mw / 1000.0
         )
 
         # Secondary heat (some of it... rest calculated in IFEPW2)
@@ -2003,7 +2003,7 @@ class IFE:
 
             # Gross electric power
             heat_transport_variables.p_gross_electrical = (
-                heat_transport_variables.pthermmw
+                heat_transport_variables.p_thermal_primary_mw
                 * heat_transport_variables.eta_thermal_electric
             )
 
@@ -2076,8 +2076,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Primary heat (MW)",
-                "(pthermmw)",
-                heat_transport_variables.pthermmw,
+                "(p_thermal_primary_mw)",
+                heat_transport_variables.p_thermal_primary_mw,
             )
             process_output.ovarre(
                 self.outfile,

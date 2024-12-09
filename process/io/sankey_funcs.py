@@ -378,7 +378,7 @@ def plot_full_sankey(
         """# ------------------------------------ PRIMARY HEAT - 7 -----------------------------------
 
         # 1st wall, Blanket, Shield, Divertor, Total thermal power
-        HEAT = [p_fw_coolant_thermal_mw, p_blkt_coolant_thermal_mw, p_shield_coolant_thermal_mw, p_div_coolant_thermal_mw, -pthermmw]
+        HEAT = [p_fw_coolant_thermal_mw, p_blkt_coolant_thermal_mw, p_shield_coolant_thermal_mw, p_div_coolant_thermal_mw, -p_thermal_primary_mw]
         sankey.add(flows=HEAT,
                    orientations=[1, 0, -1, 1, 0],
                    trunklength=0.5,
@@ -395,7 +395,7 @@ def plot_full_sankey(
         """# ------------------------------- ELECTRICITY CONVERSION - 8 ------------------------------
 
         # Total thermal, Elctricty conversion loss, Gross Electricity
-        GROSS = [pthermmw, -pelectloss, -p_gross_electrical]
+        GROSS = [p_thermal_primary_mw, -pelectloss, -p_gross_electrical]
         sankey.add(flows=GROSS,
                    orientations=[0, -1, 0],
                    trunklength=0.5,

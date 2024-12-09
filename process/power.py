@@ -774,31 +774,31 @@ class Power:
         #  is 1 or 0, is user choice on whether the shield thermal power goes to primary or secondary heat
         if fwbs_variables.secondary_cycle == 0:
             #  Primary thermal power (MW)
-            heat_transport_variables.pthermmw = (
+            heat_transport_variables.p_thermal_primary_mw = (
                 self.p_fw_blkt_coolant_thermal_mw
                 + heat_transport_variables.i_shield_power_generation * self.p_shield_coolant_thermal_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
-            heat_transport_variables.psecdiv = self.p_div_coolant_thermal_mw
+            heat_transport_variables.p_div_thermal_secondary_mw = self.p_div_coolant_thermal_mw
             # Divertor primary/secondary power switch: does NOT contribute to energy generation cycle
             self.i_div_thermal = 0
         else:
             #  Primary thermal power (MW)
-            heat_transport_variables.pthermmw = (
+            heat_transport_variables.p_thermal_primary_mw = (
                 self.p_fw_blkt_coolant_thermal_mw
                 + heat_transport_variables.i_shield_power_generation * self.p_shield_coolant_thermal_mw
                 + self.p_div_coolant_thermal_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
-            heat_transport_variables.psecdiv = 0.0e0
+            heat_transport_variables.p_div_thermal_secondary_mw = 0.0e0
             # Divertor primary/secondary power switch: contributes to energy generation cycle
             self.i_div_thermal = 1
 
-        if abs(heat_transport_variables.pthermmw) < 1.0e-4:
+        if abs(heat_transport_variables.p_thermal_primary_mw) < 1.0e-4:
             logger.error(f'{"ERROR Primary thermal power is zero or negative"}')
 
         # #284 Fraction of total high-grade thermal power to divertor
-        self.pdivfraction = self.p_div_coolant_thermal_mw / heat_transport_variables.pthermmw
+        self.pdivfraction = self.p_div_coolant_thermal_mw / heat_transport_variables.p_thermal_primary_mw
         # Loss in efficiency as this primary power is collecetd at very low temperature
         self.delta_eta = 0.339 * self.pdivfraction
 
@@ -814,7 +814,7 @@ class Power:
 
         #  Number of primary heat exchangers
         heat_transport_variables.nphx = math.ceil(
-            heat_transport_variables.pthermmw / 1000.0e0
+            heat_transport_variables.p_thermal_primary_mw / 1000.0e0
         )
 
         #  Secondary heat (some of it... rest calculated in POWER2)
@@ -945,12 +945,12 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.p_div_thermal_secondary_mw + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
         heat_transport_variables.psechtmw = (
             self.p_core_electrical_mw
             + heat_transport_variables.p_hcd_electrical_loss_mw
             + heat_transport_variables.p_pump_cool_loss_total_mw
-            + heat_transport_variables.psecdiv
+            + heat_transport_variables.p_div_thermal_secondary_mw
             + heat_transport_variables.psecshld
             + heat_transport_variables.psechcd
             + fwbs_variables.ptfnuc
@@ -960,14 +960,14 @@ class Power:
         if cost_variables.ireactor == 1:
 
             #  Gross electric power
-            # p_gross_electrical = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.eta_thermal_electric
+            # p_gross_electrical = (heat_transport_variables.p_thermal_primary_mw-hthermmw) * heat_transport_variables.eta_thermal_electric
             if (
                 fwbs_variables.i_blkt_dual_coolant > 0
                 and fwbs_variables.primary_pumping == 2
             ):
                 heat_transport_variables.p_gross_electrical = (
                     (
-                        heat_transport_variables.pthermmw
+                        heat_transport_variables.p_thermal_primary_mw
                         - self.p_blkt_coolant_secondary_thermal_mw
                     )
                     * heat_transport_variables.eta_thermal_electric
@@ -976,7 +976,7 @@ class Power:
                 )
             else:
                 heat_transport_variables.p_gross_electrical = (
-                    heat_transport_variables.pthermmw
+                    heat_transport_variables.p_thermal_primary_mw
                     * heat_transport_variables.eta_thermal_electric
                 )
 
@@ -1636,8 +1636,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Total High-grade thermal power (MW)",
-            "(pthermmw)",
-            heat_transport_variables.pthermmw,
+            "(p_thermal_primary_mw)",
+            heat_transport_variables.p_thermal_primary_mw,
             "OP ",
         )
 
@@ -1920,7 +1920,7 @@ class Power:
             and fwbs_variables.primary_pumping == 2
         ):
             self.p_thermal_main_loss_mw = (
-                heat_transport_variables.pthermmw
+                heat_transport_variables.p_thermal_primary_mw
                 - self.p_blkt_coolant_secondary_thermal_mw
             ) * (
                 1 - heat_transport_variables.eta_thermal_electric
@@ -1928,7 +1928,7 @@ class Power:
                 1 - heat_transport_variables.etath_liq
             )
         else:
-            self.p_thermal_main_loss_mw = heat_transport_variables.pthermmw * (
+            self.p_thermal_main_loss_mw = heat_transport_variables.p_thermal_primary_mw * (
                 1 - heat_transport_variables.eta_thermal_electric
             )
 
