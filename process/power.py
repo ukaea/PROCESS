@@ -2398,52 +2398,57 @@ class Power:
 
     def cryo(
         self,
-        i_tf_sup,
-        tfcryoarea,
-        coldmass,
-        p_tf_nuclear_heat_mw,
-        ensxpfm,
-        t_pulse_repetition,
-        cpttf,
-        n_tf,
-    ):
+        i_tf_sup: int,
+        tfcryoarea: float,
+        coldmass: float,
+        p_tf_nuclear_heat_mw: float,
+        ensxpfm: float,
+        t_pulse_repetition: float,
+        cpttf: float,
+        n_tf: int,
+    ) -> float:
         """
-        Calculates cryogenic loads
-        author: P J Knight, CCFE, Culham Science Centre
-        itfsup : input integer : Switch denoting whether TF coils are
-        superconducting
-        tfcryoarea : input real : Surface area of toroidal shells covering TF coils (m2)
-        coldmass : input real : Mass of cold (cryogenic) components (kg),
-        including TF coils, PF coils, cryostat, and
-        intercoil structure
-        p_tf_nuclear_heat_mw : input real : Nuclear heating in TF coils (MW)
-        ensxpfm : input real : Maximum PF coil stored energy (MJ)
-        t_pulse_repetition : input real : Pulse length of cycle (s)
-        cpttf : input real : Current per turn in TF coils (A)
-        tfno : input real : Number of TF coils
-        helpow : output real : Helium heat removal at cryo temperatures (W)
-        This routine calculates the cryogenic heat load.
-        D. Slack memo SCMDG 88-5-1-059, LLNL ITER-88-054, Aug. 1988
+        Calculates cryogenic loads.
+
+        Args:
+            i_tf_sup (int): Switch denoting whether TF coils are superconducting.
+            tfcryoarea (float): Surface area of toroidal shells covering TF coils (m2).
+            coldmass (float): Mass of cold (cryogenic) components (kg), including TF coils, PF coils, cryostat, and intercoil structure.
+            p_tf_nuclear_heat_mw (float): Nuclear heating in TF coils (MW).
+            ensxpfm (float): Maximum PF coil stored energy (MJ).
+            t_pulse_repetition (float): Pulse length of cycle (s).
+            cpttf (float): Current per turn in TF coils (A).
+            n_tf (int): Number of TF coils.
+
+        Returns:
+            float: Helium heat removal at cryo temperatures (W).
+
+        Notes:
+
+        References:
+         - D. Slack memo SCMDG 88-5-1-059, LLNL ITER-88-054, Aug. 1988.
+           https://www.osti.gov/servlets/purl/6567556
+
         """
         self.qss = 4.3e-4 * coldmass
         if i_tf_sup == 1:
             self.qss = self.qss + 2.0e0 * tfcryoarea
 
-        #  Nuclear heating of TF coils (W) (zero if resistive)
+        # Nuclear heating of TF coils (W) (zero if resistive)
         if fwbs_variables.inuclear == 0 and i_tf_sup == 1:
             fwbs_variables.qnuc = 1.0e6 * p_tf_nuclear_heat_mw
         # Issue #511: if fwbs_variables.inuclear = 1 : fwbs_variables.qnuc is input.
 
-        #  AC losses
+        # AC losses
         self.qac = 1.0e3 * ensxpfm / t_pulse_repetition
 
-        #  Current leads
+        # Current leads
         if i_tf_sup == 1:
             self.qcl = 13.6e-3 * n_tf * cpttf
         else:
             self.qcl = 0.0e0
 
-        #  45% extra miscellaneous, piping and reserves
+        # 45% extra miscellaneous, piping and reserves
         self.qmisc = 0.45e0 * (self.qss + fwbs_variables.qnuc + self.qac + self.qcl)
         helpow = max(
             0.0e0,
