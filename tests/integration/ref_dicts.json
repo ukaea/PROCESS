@@ -1469,7 +1469,7 @@
         "coeoam": 0.0,
         "cohbop": 0.0,
         "coheof": 18500000.0,
-        "coldmass": 0.0,
+        "m_components_cryo_cooled": 0.0,
         "comp": null,
         "comp_eps": "EPSILON(unit)",
         "comp_eps2": "comp_eps**2",
@@ -9136,7 +9136,7 @@
         "coeoam": "operation and maintenance contribution to cost of electricity (m$/kW-hr)",
         "cohbop": "Central solenoid overall current density at beginning of pulse (A/m2)",
         "coheof": "Central solenoid overall current density at end of flat-top (A/m2) (`iteration variable 37`) (`sweep variable 62`)",
-        "coldmass": "total mass of components at cryogenic temperatures (kg)",
+        "m_components_cryo_cooled": "total mass of components at cryogenic temperatures (kg)",
         "comp_eps": "",
         "comp_eps2": "",
         "comp_huge": "",
@@ -19519,7 +19519,7 @@
         "structure_variables": [
             "aintmass",
             "clgsmass",
-            "coldmass",
+            "m_components_cryo_cooled",
             "fncmass",
             "gsmass"
         ],

@@ -868,7 +868,7 @@ class Power:
             heat_transport_variables.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,
                 tfcoil_variables.tfcryoarea,
-                structure_variables.coldmass,
+                structure_variables.m_components_cryo_cooled,
                 fwbs_variables.p_tf_nuclear_heat_mw,
                 pf_power_variables.ensxpfm,
                 times_variables.t_pulse_repetition,
@@ -2400,7 +2400,7 @@ class Power:
         self,
         i_tf_sup: int,
         tfcryoarea: float,
-        coldmass: float,
+        m_components_cryo_cooled: float,
         p_tf_nuclear_heat_mw: float,
         ensxpfm: float,
         t_pulse_repetition: float,
@@ -2413,7 +2413,7 @@ class Power:
         Args:
             i_tf_sup (int): Switch denoting whether TF coils are superconducting.
             tfcryoarea (float): Surface area of toroidal shells covering TF coils (m2).
-            coldmass (float): Mass of cold (cryogenic) components (kg), including TF coils, PF coils, cryostat, and intercoil structure.
+            m_components_cryo_cooled (float): Mass of cold (cryogenic) components (kg), including TF coils, PF coils, cryostat, and intercoil structure.
             p_tf_nuclear_heat_mw (float): Nuclear heating in TF coils (MW).
             ensxpfm (float): Maximum PF coil stored energy (MJ).
             t_pulse_repetition (float): Pulse length of cycle (s).
@@ -2430,7 +2430,7 @@ class Power:
            https://www.osti.gov/servlets/purl/6567556
 
         """
-        self.qss = 4.3e-4 * coldmass
+        self.qss = 4.3e-4 * m_components_cryo_cooled
         if i_tf_sup == 1:
             self.qss = self.qss + 2.0e0 * tfcryoarea
 

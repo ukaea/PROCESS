@@ -44,7 +44,7 @@ class Structure:
             stv.fncmass,
             stv.aintmass,
             stv.clgsmass,
-            stv.coldmass,
+            stv.m_components_cryo_cooled,
             stv.gsmass,
         ) = self.structure(
             pv.plasma_current,
@@ -151,7 +151,7 @@ class Structure:
             - fncmass (`float`) mass of outer pf coil support fence (kg)
             - aintmass (`float`) mass of intercoil support (kg)
             - clgsmass (`float`) coil gravity support mass (kg)
-            - coldmass (`float`) total mass of cryogenic temp. stuff (kg)
+            - m_components_cryo_cooled (`float`) total mass of cryogenic temp. stuff (kg)
             - gsm (`float`) gravity support for magnets, and shield/blanket (kg)
         """
 
@@ -171,11 +171,11 @@ class Structure:
         coilmass = tfmass + pfmass + aintmass + dewmass
 
         #  Total mass of cooled components
-        coldmass = 0.0e0
+        m_components_cryo_cooled = 0.0e0
         if i_tf_sup == 1:
-            coldmass = coldmass + tfmass + aintmass + dewmass
+            m_components_cryo_cooled = m_components_cryo_cooled + tfmass + aintmass + dewmass
         if ipfres != 1:
-            coldmass = coldmass + pfmass
+            m_components_cryo_cooled = m_components_cryo_cooled + pfmass
 
         #  Coil gravity support mass
         #  Set density (kg/m3) and allowable stress (Pa)
@@ -223,8 +223,8 @@ class Structure:
             po.ovarre(
                 self.outfile,
                 "Mass of cooled components (kg)",
-                "(coldmass)",
-                coldmass,
+                "(m_components_cryo_cooled)",
+                m_components_cryo_cooled,
                 "OP ",
             )
             po.ovarre(
@@ -240,4 +240,4 @@ class Structure:
             po.ovarre(self.outfile, "Ring beam mass (kg)", "(gsm2)", gsm2, "OP ")
             po.ovarre(self.outfile, "Ring legs mass (kg)", "(gsm3)", gsm3, "OP ")
 
-        return fncmass, aintmass, clgsmass, coldmass, gsm
+        return fncmass, aintmass, clgsmass, m_components_cryo_cooled, gsm

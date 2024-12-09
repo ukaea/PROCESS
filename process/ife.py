@@ -1714,7 +1714,7 @@ class IFE:
 
         structure_variables.aintmass = 0.0
         structure_variables.clgsmass = 0.0
-        structure_variables.coldmass = 0.0
+        structure_variables.m_components_cryo_cooled = 0.0
         structure_variables.fncmass = 0.0
         structure_variables.gsmass = 0.0
 
