@@ -91,7 +91,7 @@ module scan_module
   !!         <LI> 52 SoL radiation fraction
   !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
   !!         <LI> 55 `shldith` : Inboard neutron shield thickness
-  !!         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)
+  !!         <LI> 56 p_cryo_plant_max_mw: Maximum cryogenic power (ixx=164, ixc=87)
   !!         <LI> 57 `bt` lower boundary
   !!         <LI> 58 `scrapli` : Inboard plasma-first wall gap
   !!         <LI> 59 `scraplo` : Outboard plasma-first wall gap
@@ -111,7 +111,7 @@ module scan_module
   !!         <LI> 73 `pnuc_fw_ratio_dcll' : Ratio of FW nuclear power as fraction of total (FW+BB)
   !!         <LI> 74 `f_nuc_pow_bz_struct' : Fraction of BZ power cooled by primary coolant for dual-coolant balnket
   !!         <LI> 75 pitch : pitch of first wall cooling channels (m)
-  !!         <LI> 76 etath : Thermal conversion eff.
+  !!         <LI> 76 eta_thermal_electric : Thermal conversion eff.
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
   !!         <LI> 79 etaech : ECH wall plug to injector efficiency
@@ -185,14 +185,14 @@ contains
     use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, beam_energy, bigq
     use divertor_variables, only: hldiv
     use error_handling, only: errors_on
-    use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
+    use heat_transport_variables, only: p_gross_electrical, p_hcd_electrical_mw, p_net_electrical_mw
     use impurity_radiation_module, only: fimp
     use pfcoil_variables, only: whtpf
-    use pf_power_variables, only: srcktpm
+    use pf_power_variables, only: p_pf_resisitve_total_kw
     use process_output, only: oblnkl
     use numerics, only: sqsumsq
     use tfcoil_variables, only: tfareain, wwp2, sig_tf_wp, tfcmw, tcpmax, oacdcp, &
-      tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf, &
+      tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, p_cp_pump_cool, vcool, wwp1, n_tf, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, pradmw, dene, fusion_power, btot, tesep, &
@@ -239,7 +239,7 @@ contains
     outvar(25,iscan) = alpha_power_beams * 5.0D0
     outvar(26,iscan) = wallmw
     outvar(27,iscan) = pinjmw
-    outvar(28,iscan) = pinjwp
+    outvar(28,iscan) = p_hcd_electrical_mw
     outvar(29,iscan) = pheat
     outvar(30,iscan) = pinjmw - pheat
     outvar(31,iscan) = bigq
@@ -255,13 +255,13 @@ contains
     outvar(41,iscan) = fcoolcp
     outvar(42,iscan) = rcool
     outvar(43,iscan) = vcool
-    outvar(44,iscan) = ppump/1.0D6
-    outvar(45,iscan) = 1.0D-3 * srcktpm
+    outvar(44,iscan) = p_cp_pump_cool/1.0D6
+    outvar(45,iscan) = 1.0D-3 * p_pf_resisitve_total_kw
     outvar(46,iscan) = whtpf
-    outvar(47,iscan) = pgrossmw
-    outvar(48,iscan) = pnetelmw
+    outvar(47,iscan) = p_gross_electrical
+    outvar(48,iscan) = p_net_electrical_mw
     if (ireactor == 1) then
-        outvar(49,iscan) = (pgrossmw-pnetelmw) / pgrossmw
+        outvar(49,iscan) = (p_gross_electrical-p_net_electrical_mw) / p_gross_electrical
     else
         outvar(49,iscan) = 0.0D0
     end if
@@ -608,7 +608,7 @@ contains
     use numerics, only: epsvmc, boundu, boundl
     use tfcoil_variables, only: tmargmin_tf, sig_tf_case_max, n_pancake, oacdcp, &
       n_layer, b_crit_upper_nbti, sig_tf_wp_max, fcoolcp, n_tf_turn
-    use heat_transport_variables, only: crypmw_max, etath
+    use heat_transport_variables, only: p_cryo_plant_max_mw, eta_thermal_electric
     use rebco_variables, only: copperaoh_m2_max
     use pfcoil_variables, only: coheof, ohhghf, oh_steel_frac
     use CS_fatigue_variables, only: n_cycle_min, t_crack_vertical
@@ -778,8 +778,8 @@ contains
             shldith = swp(iscn)
             vlab = 'shldith' ; xlab = 'Inboard neutronic shield'
         case(56)
-            crypmw_max = swp(iscn)
-            vlab = 'crypmw_max' ; xlab = 'max allowable crypmw'
+            p_cryo_plant_max_mw = swp(iscn)
+            vlab = 'p_cryo_plant_max_mw' ; xlab = 'max allowable p_cryo_plant_mw'
         case(57)
             boundl(2) = swp(iscn)
             vlab = 'boundl(2)' ; xlab = 'bt minimum'
@@ -838,8 +838,8 @@ contains
             pitch = swp(iscn)
             vlab = 'pitch' ; xlab = 'pitch of first wall cooling channels (m)'
         case (76)
-            etath = swp(iscn)
-              vlab = 'etath' ; xlab = 'Thermal conversion eff.'
+            eta_thermal_electric = swp(iscn)
+              vlab = 'eta_thermal_electric' ; xlab = 'Thermal conversion eff.'
         case (77)
             startupratio = swp(iscn)
               vlab = 'startupratio' ; xlab = 'Gyrotron redundancy'

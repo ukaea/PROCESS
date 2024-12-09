@@ -2587,23 +2587,23 @@ def plot_power_info(axis, mfile_data, scan):
     axis.set_autoscalex_on(False)
 
     gross_eff = 100.0 * (
-        mfile_data.data["pgrossmw"].get_scan(scan)
-        / mfile_data.data["pthermmw"].get_scan(scan)
+        mfile_data.data["p_gross_electrical"].get_scan(scan)
+        / mfile_data.data["p_thermal_primary_mw"].get_scan(scan)
     )
 
     net_eff = 100.0 * (
         (
-            mfile_data.data["pgrossmw"].get_scan(scan)
-            - mfile_data.data["htpmw"].get_scan(scan)
+            mfile_data.data["p_gross_electrical"].get_scan(scan)
+            - mfile_data.data["p_pump_cool_elec_total_mw"].get_scan(scan)
         )
         / (
-            mfile_data.data["pthermmw"].get_scan(scan)
-            - mfile_data.data["htpmw"].get_scan(scan)
+            mfile_data.data["p_thermal_primary_mw"].get_scan(scan)
+            - mfile_data.data["p_pump_cool_elec_total_mw"].get_scan(scan)
         )
     )
 
     plant_eff = 100.0 * (
-        mfile_data.data["pnetelmw"].get_scan(scan)
+        mfile_data.data["p_net_electrical_mw"].get_scan(scan)
         / mfile_data.data["fusion_power"].get_scan(scan)
     )
 
@@ -2616,7 +2616,7 @@ def plot_power_info(axis, mfile_data, scan):
         ped_height = ("", "No pedestal model used", "")
         ped_pos = ("", "", "")
 
-    crypmw = mfile_data.data["crypmw"].get_scan(scan)
+    p_cryo_plant_mw = mfile_data.data["p_cryo_plant_mw"].get_scan(scan)
 
     data = [
         ("wallmw", "Nominal neutron wall load", "MW m$^{-2}$"),
@@ -2625,16 +2625,16 @@ def plot_power_info(axis, mfile_data, scan):
         ped_pos,
         ("pinnerzoneradmw", "Inner zone radiation", "MW"),
         ("pradmw", "Total radiation in LCFS", "MW"),
-        ("pnucblkt", "Nuclear heating in blanket", "MW"),
-        ("pnucshld", "Nuclear heating in shield", "MW"),
-        (crypmw, "TF cryogenic power", "MW"),
+        ("p_blanket_nuclear_heat_mw", "Nuclear heating in blanket", "MW"),
+        ("p_shield_nuclear_heat_mw", "Nuclear heating in shield", "MW"),
+        (p_cryo_plant_mw, "TF cryogenic power", "MW"),
         ("pdivt", "Power to divertor", "MW"),
         ("divlife", "Divertor life", "years"),
-        ("pthermmw", "Primary (high grade) heat", "MW"),
+        ("p_thermal_primary_mw", "Primary (high grade) heat", "MW"),
         (gross_eff, "Gross cycle efficiency", "%"),
         (net_eff, "Net cycle efficiency", "%"),
-        ("pgrossmw", "Gross electric power", "MW"),
-        ("pnetelmw", "Net electric power", "MW"),
+        ("p_gross_electrical", "Gross electric power", "MW"),
+        ("p_net_electrical_mw", "Net electric power", "MW"),
         (
             plant_eff,
             "Fusion-to-electric efficiency "

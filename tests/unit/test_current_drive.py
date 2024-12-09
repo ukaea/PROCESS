@@ -25,7 +25,7 @@ def current_drive():
 class CudrivParam(NamedTuple):
     pinjwpfix: Any = None
 
-    pinjwp: Any = None
+    p_hcd_electrical_mw: Any = None
 
     echpwr: Any = None
 
@@ -35,7 +35,7 @@ class CudrivParam(NamedTuple):
 
     beam_current: Any = None
 
-    porbitlossmw: Any = None
+    p_nb_orbit_loss_mw: Any = None
 
     iefrf: Any = None
 
@@ -85,7 +85,7 @@ class CudrivParam(NamedTuple):
 
     pnbitot: Any = None
 
-    nbshinemw: Any = None
+    p_nb_shine_through_mw: Any = None
 
     pinjemw: Any = None
 
@@ -165,7 +165,7 @@ class CudrivParam(NamedTuple):
 
     aux_current_fraction: Any = None
 
-    ignite: Any = None
+    i_ignited: Any = None
 
     pohmmw: Any = None
 
@@ -181,7 +181,7 @@ class CudrivParam(NamedTuple):
 
     outfile: Any = None
 
-    expected_pinjwp: Any = None
+    expected_p_hcd_electrical_mw: Any = None
 
     expected_echpwr: Any = None
 
@@ -205,12 +205,12 @@ class CudrivParam(NamedTuple):
     (
         CudrivParam(
             pinjwpfix=0,
-            pinjwp=0,
+            p_hcd_electrical_mw=0,
             echpwr=0,
             pnbeam=0,
             plhybd=0,
             beam_current=0,
-            porbitlossmw=0,
+            p_nb_orbit_loss_mw=0,
             iefrf=10,
             iefrffix=0,
             pheat=75,
@@ -235,7 +235,7 @@ class CudrivParam(NamedTuple):
             pwplh=0,
             echwpow=0,
             pnbitot=0,
-            nbshinemw=0,
+            p_nb_shine_through_mw=0,
             pinjemw=0,
             pinjimw=0,
             bigq=0,
@@ -275,7 +275,7 @@ class CudrivParam(NamedTuple):
             plasma_current=18398455.678867526,
             ipedestal=1,
             aux_current_fraction=0.12364081253383186,
-            ignite=0,
+            i_ignited=0,
             pohmmw=0,
             fusion_power=0,
             inductive_current_fraction=0.59999999999999998,
@@ -283,7 +283,7 @@ class CudrivParam(NamedTuple):
             startupratio=1,
             iprint=0,
             outfile=11,
-            expected_pinjwp=240.99200038011492,
+            expected_p_hcd_electrical_mw=240.99200038011492,
             expected_echpwr=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
@@ -295,12 +295,12 @@ class CudrivParam(NamedTuple):
         ),
         CudrivParam(
             pinjwpfix=0,
-            pinjwp=240.99200038011492,
+            p_hcd_electrical_mw=240.99200038011492,
             echpwr=120.49600019005746,
             pnbeam=0,
             plhybd=0,
             beam_current=0,
-            porbitlossmw=0,
+            p_nb_orbit_loss_mw=0,
             iefrf=10,
             iefrffix=0,
             pheat=75,
@@ -325,7 +325,7 @@ class CudrivParam(NamedTuple):
             pwplh=0,
             echwpow=240.99200038011492,
             pnbitot=0,
-            nbshinemw=0,
+            p_nb_shine_through_mw=0,
             pinjemw=120.49600019005746,
             pinjimw=0,
             bigq=0,
@@ -365,7 +365,7 @@ class CudrivParam(NamedTuple):
             plasma_current=18398455.678867526,
             ipedestal=1,
             aux_current_fraction=0.12364081253383186,
-            ignite=0,
+            i_ignited=0,
             pohmmw=0.76707314489379119,
             fusion_power=1051.6562748933977,
             inductive_current_fraction=0.59999999999999998,
@@ -373,7 +373,7 @@ class CudrivParam(NamedTuple):
             startupratio=1,
             iprint=0,
             outfile=11,
-            expected_pinjwp=240.99200038011492,
+            expected_p_hcd_electrical_mw=240.99200038011492,
             expected_echpwr=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
@@ -400,7 +400,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(heat_transport_variables, "pinjwpfix", cudrivparam.pinjwpfix)
 
-    monkeypatch.setattr(heat_transport_variables, "pinjwp", cudrivparam.pinjwp)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_hcd_electrical_mw", cudrivparam.p_hcd_electrical_mw
+    )
 
     monkeypatch.setattr(current_drive_variables, "echpwr", cudrivparam.echpwr)
 
@@ -413,7 +415,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "porbitlossmw", cudrivparam.porbitlossmw
+        current_drive_variables, "p_nb_orbit_loss_mw", cudrivparam.p_nb_orbit_loss_mw
     )
 
     monkeypatch.setattr(current_drive_variables, "iefrf", cudrivparam.iefrf)
@@ -464,7 +466,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "pnbitot", cudrivparam.pnbitot)
 
-    monkeypatch.setattr(current_drive_variables, "nbshinemw", cudrivparam.nbshinemw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_nb_shine_through_mw",
+        cudrivparam.p_nb_shine_through_mw,
+    )
 
     monkeypatch.setattr(current_drive_variables, "pinjemw", cudrivparam.pinjemw)
 
@@ -564,7 +570,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         physics_variables, "aux_current_fraction", cudrivparam.aux_current_fraction
     )
 
-    monkeypatch.setattr(physics_variables, "ignite", cudrivparam.ignite)
+    monkeypatch.setattr(physics_variables, "i_ignited", cudrivparam.i_ignited)
 
     monkeypatch.setattr(physics_variables, "pohmmw", cudrivparam.pohmmw)
 
@@ -582,7 +588,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     current_drive.cudriv(output=False)
 
-    assert heat_transport_variables.pinjwp == pytest.approx(cudrivparam.expected_pinjwp)
+    assert heat_transport_variables.p_hcd_electrical_mw == pytest.approx(
+        cudrivparam.expected_p_hcd_electrical_mw
+    )
 
     assert current_drive_variables.echpwr == pytest.approx(cudrivparam.expected_echpwr)
 

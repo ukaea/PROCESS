@@ -5,7 +5,7 @@ beyond. This minimises the radiological impact of the neutrons, and their
 heating of the TF coils which, if superconducting, need to remain at liquid 
 helium temperatures. As with the blanket the energy deposited in the coolant 
 may or may not be used to produce electricity, depending on the value of the 
-switch `iprimshld`. The shield coolant fraction by volume is set via the input 
+switch `i_shield_power_generation`. The shield coolant fraction by volume is set via the input 
 parameter `vfshld`.
 
 The inboard and outboard shield thicknesses (`shldith` and `shldoth`, 

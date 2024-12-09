@@ -95,13 +95,13 @@ contains
 		use constants, only: nout, iotty, mfile
 		use constraints, only: constraint_eqns
 		use cost_variables, only: concost, cfactr, cdirt, ireactor, iavail, coe
-		use current_drive_variables, only: bigq, porbitlossmw, pinjmw
+		use current_drive_variables, only: bigq, p_nb_orbit_loss_mw, pinjmw
 		use divertor_variables, only: hldiv
 		use error_handling, only: idiags, fdiags, errors_on, report_error
-		use heat_transport_variables, only: pnetelmw
+		use heat_transport_variables, only: p_net_electrical_mw
     use numerics, only: minmax
 		use physics_variables, only: fusion_power, bt, rmajor, wallmw, aspect, pohmmw
-		use pf_power_variables, only: srcktpm
+		use pf_power_variables, only: p_pf_resisitve_total_kw
 		use process_output, only: int_to_string3
 		use tfcoil_variables, only: tfcmw
 		use times_variables, only: t_burn
@@ -134,16 +134,16 @@ contains
         write(*,*) 'Figure of merit 2 (fusion power / input power) is not used.'
         write(*,*) 'Figure of merit 5 (fusion gain Q) is available.'
         stop 1
-       ! fc = sgn * fusion_power / (pinjmw + porbitlossmw + tfcpmw + ppump/1.0D6)
+       ! fc = sgn * fusion_power / (pinjmw + p_nb_orbit_loss_mw + tfcpmw + p_cp_pump_cool/1.0D6)
 
     case (3)  !  neutron wall load
        fc = sgn * wallmw
 
     case (4)  !  TF coil + PF coil power
-       fc = sgn * (tfcmw + 1.0D-3*srcktpm)/10.0D0
+       fc = sgn * (tfcmw + 1.0D-3*p_pf_resisitve_total_kw)/10.0D0
 
    case (5)  !  Q = fusion gain  Issue #540
-       fc = sgn * fusion_power / (pinjmw + porbitlossmw + pohmmw)
+       fc = sgn * fusion_power / (pinjmw + p_nb_orbit_loss_mw + pohmmw)
        !fc = sgn * fusion_power / pinjmw
 
     case (6)  !  cost of electricity
@@ -190,7 +190,7 @@ contains
        fc = sgn * ( 0.95d0 * (rmajor/9.0d0) - 0.05d0 * (t_burn/7200.d0) )
 
     case (17)  !  net electrical output
-       fc = sgn * pnetelmw / 500.0d0
+       fc = sgn * p_net_electrical_mw / 500.0d0
 
    case (18)  !  Null figure of merit
       fc = 1d0

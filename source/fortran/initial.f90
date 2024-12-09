@@ -263,7 +263,7 @@ subroutine check
         n_tf_graded_layers, n_tf_stress_layers, tlegav,  i_tf_stress_model, &
         i_tf_sc_mat, i_tf_wp_geom, i_tf_turns_integer, tinstf, thwcndut, &
         tfinsgap, rcool, dhecoil, thicndut, i_cp_joints, t_turn_tf_is_input, &
-        t_turn_tf, tftmp, t_cable_tf, t_cable_tf_is_input, tftmp, tmpcry, &
+        t_turn_tf, tftmp, t_cable_tf, t_cable_tf_is_input, tftmp, temp_tf_coil_cryo, &
         i_tf_cond_eyoung_axial, eyoung_cond_axial, eyoung_cond_trans, &
         i_tf_cond_eyoung_trans, i_str_wp
     use stellarator_variables, only: istell
@@ -958,7 +958,7 @@ subroutine check
     endif
 
     ! Cold end of the cryocooler should be colder than the TF
-    if(tmpcry > tftmp) then
+    if(temp_tf_coil_cryo > tftmp) then
         call report_error(273)
     endif
 

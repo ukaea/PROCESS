@@ -1130,7 +1130,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     alphat: Any = None
 
-    ignite: Any = None
+    i_ignited: Any = None
 
     f_alpha_electron: Any = None
 
@@ -1288,7 +1288,7 @@ class PlasmaCompositionParam(NamedTuple):
                 183.84999999999999,
             ],
             alphat=1.45,
-            ignite=0,
+            i_ignited=0,
             f_alpha_electron=0,
             afuel=0,
             f_tritium=0.5,
@@ -1410,7 +1410,7 @@ class PlasmaCompositionParam(NamedTuple):
                 order="F",
             ).transpose(),
             alphat=1.45,
-            ignite=0,
+            i_ignited=0,
             f_alpha_electron=0.6845930883190634,
             afuel=2.5,
             f_tritium=0.5,
@@ -1526,7 +1526,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "alphat", plasmacompositionparam.alphat)
 
-    monkeypatch.setattr(physics_variables, "ignite", plasmacompositionparam.ignite)
+    monkeypatch.setattr(
+        physics_variables, "i_ignited", plasmacompositionparam.i_ignited
+    )
 
     monkeypatch.setattr(
         physics_variables, "f_alpha_electron", plasmacompositionparam.f_alpha_electron
@@ -2141,7 +2143,7 @@ class PcondParam(NamedTuple):
 
     isc: Any = None
 
-    ignite: Any = None
+    i_ignited: Any = None
 
     afuel: Any = None
 
@@ -2222,7 +2224,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=32,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2266,7 +2268,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=33,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2310,7 +2312,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=34,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2354,7 +2356,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=35,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2398,7 +2400,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=36,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2442,7 +2444,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=37,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2486,7 +2488,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=38,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2530,7 +2532,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=39,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2574,7 +2576,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=40,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2618,7 +2620,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=41,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2662,7 +2664,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=42,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2706,7 +2708,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=43,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2750,7 +2752,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=44,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2794,7 +2796,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=45,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2838,7 +2840,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=46,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2882,7 +2884,7 @@ class PcondParam(NamedTuple):
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=47,
-            ignite=0,
+            i_ignited=0,
             afuel=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
@@ -2947,7 +2949,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
     kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = physics.pcond(
         iinvqd=pcondparam.iinvqd,
         isc=pcondparam.isc,
-        ignite=pcondparam.ignite,
+        i_ignited=pcondparam.i_ignited,
         afuel=pcondparam.afuel,
         alpha_power_total=pcondparam.alpha_power_total,
         aspect=pcondparam.aspect,

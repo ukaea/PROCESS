@@ -2566,7 +2566,7 @@ class Sctfcoil:
         # Total surface area of two toroidal shells covering the TF coils [m2]
         # (inside and outside surfaces)
         # = 2 * centroid coil length * 2 pi R, where R is average of i/b and o/b centres
-        tfcoil_variables.tfcryoarea = (
+        tfcoil_variables.a_tf_cryo = (
             2.0e0
             * tfcoil_variables.tfleng
             * constants.twopi

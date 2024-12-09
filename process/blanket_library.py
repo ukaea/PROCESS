@@ -591,7 +591,7 @@ class BlanketLibrary:
         included there.
 
         Returns the pressure drops as a list with the number of entries dependent upon
-        the switches icooldual and iblnkith.
+        the switches i_blkt_dual_coolant and iblnkith.
         """
         npoltoti = 0
         npoltoto = 0
@@ -638,7 +638,7 @@ class BlanketLibrary:
         # Calculate poloidal height of blanket modules
         self.blanket_mod_pol_height()
 
-        if fwbs_variables.icooldual > 0:
+        if fwbs_variables.i_blkt_dual_coolant > 0:
             # Use smallest space available to pipes for pipe sizes in pumping calculations (worst case)
             if fwbs_variables.iblnkith == 1:
                 # Radial direction
@@ -709,12 +709,12 @@ class BlanketLibrary:
         no180fw = 0
 
         # N.B. This is for BZ only, does not include MF/BSS.
-        if fwbs_variables.icooldual == 2:
+        if fwbs_variables.i_blkt_dual_coolant == 2:
             no90bz = 4
             no180bz = 1
             no90bz_liq = 2
             no180bz_liq = 1
-        elif fwbs_variables.icooldual == 1:
+        elif fwbs_variables.i_blkt_dual_coolant == 1:
             no90bz = 4
             no180bz = 1
             no90bz_liq = 2
@@ -750,7 +750,7 @@ class BlanketLibrary:
         )
 
         # If the blanket is dual-coolant...
-        if fwbs_variables.icooldual == 2:
+        if fwbs_variables.i_blkt_dual_coolant == 2:
             # Calc total num of pipes (in all inboard modules) from
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
@@ -823,7 +823,7 @@ class BlanketLibrary:
                 )
 
         # If the blanket is single-coolant with liquid metal breeder...
-        elif fwbs_variables.icooldual == 1:
+        elif fwbs_variables.i_blkt_dual_coolant == 1:
             # Calc total num of pipes (in all inboard modules) from
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
@@ -1031,7 +1031,7 @@ class BlanketLibrary:
             )
 
         # If the blanket has a liquid metal breeder...
-        if fwbs_variables.icooldual > 0:
+        if fwbs_variables.i_blkt_dual_coolant > 0:
             deltap_blo_liq = self.deltap_tot(
                 output,
                 icoolpump=2,
@@ -1381,12 +1381,12 @@ class BlanketLibrary:
 
         po.oheadr(self.outfile, "Blanket : Liquid Breeder Properties")
 
-        if fwbs_variables.icooldual == 1:
+        if fwbs_variables.i_blkt_dual_coolant == 1:
             po.ocmmnt(
                 self.outfile,
                 "Single coolant: liquid metal circulted for tritium extraction.",
             )
-        if fwbs_variables.icooldual == 2:
+        if fwbs_variables.i_blkt_dual_coolant == 2:
             po.ocmmnt(self.outfile, "Dual coolant: self-cooled liquid metal breeder.")
 
         if fwbs_variables.i_bb_liq == 0:
@@ -1515,10 +1515,14 @@ class BlanketLibrary:
         ######################################################
         # IB/OB FW (MW)
         blanket_library.pnucfwi = (
-            fwbs_variables.pnucfw * build_variables.fwareaib / build_variables.fwarea
+            fwbs_variables.p_fw_nuclear_heat_mw
+            * build_variables.fwareaib
+            / build_variables.fwarea
         )
         blanket_library.pnucfwo = (
-            fwbs_variables.pnucfw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.p_fw_nuclear_heat_mw
+            * build_variables.fwareaob
+            / build_variables.fwarea
         )
 
         # IB/OB Blanket (MW)
@@ -1526,14 +1530,16 @@ class BlanketLibrary:
         # Neutron power deposited in inboard blanket (MW)
         if fwbs_variables.iblnkith == 1:
             blanket_library.pnucblkti = (
-                fwbs_variables.pnucblkt
+                fwbs_variables.p_blanket_nuclear_heat_mw
                 * fwbs_variables.volblkti
                 / fwbs_variables.volblkt
             )
 
         # Neutron power deposited in outboard blanket (MW)
         blanket_library.pnucblkto = (
-            fwbs_variables.pnucblkt * fwbs_variables.volblkto / fwbs_variables.volblkt
+            fwbs_variables.p_blanket_nuclear_heat_mw
+            * fwbs_variables.volblkto
+            / fwbs_variables.volblkt
         )
 
         # For a dual-coolant blanket, some fraction of the power goes into the
@@ -1541,22 +1547,24 @@ class BlanketLibrary:
         # goes into the liquid breeder to be cooled by itself.
 
         # If the blanket is dual-coolant...
-        if fwbs_variables.icooldual == 2:
+        if fwbs_variables.i_blkt_dual_coolant == 2:
             f_nuc_pow_bz_liq = 1 - fwbs_variables.f_nuc_pow_bz_struct
 
             # Inboard blanket calc. Will return 0 if no inboard shldith thickness
             pnucblkti_struct = (
-                fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
+                fwbs_variables.p_blanket_nuclear_heat_mw
+                * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
-            pnucblkti_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
-                fwbs_variables.volblkti / fwbs_variables.volblkt
-            )
+            pnucblkti_liq = (
+                fwbs_variables.p_blanket_nuclear_heat_mw * f_nuc_pow_bz_liq
+            ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
             pnucblkto_struct = (
-                fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
+                fwbs_variables.p_blanket_nuclear_heat_mw
+                * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.volblkto / fwbs_variables.volblkt)
-            pnucblkto_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
-                fwbs_variables.volblkto / fwbs_variables.volblkt
-            )
+            pnucblkto_liq = (
+                fwbs_variables.p_blanket_nuclear_heat_mw * f_nuc_pow_bz_liq
+            ) * (fwbs_variables.volblkto / fwbs_variables.volblkt)
 
         # FW and BB Mass Flow ###########
 
@@ -1576,7 +1584,7 @@ class BlanketLibrary:
         # If FW and BB have the same coolant...
         if fwbs_variables.ipump == 0:
             # Fraction of heat to be removed by IB/OB FW
-            if fwbs_variables.icooldual == 2:
+            if fwbs_variables.i_blkt_dual_coolant == 2:
                 f_nuc_fwi = (blanket_library.pnucfwi + fwbs_variables.psurffwi) / (
                     blanket_library.pnucfwi + fwbs_variables.psurffwi + pnucblkti_struct
                 )
@@ -1680,7 +1688,7 @@ class BlanketLibrary:
         )
 
         # If the blanket is dual-coolant...
-        if fwbs_variables.icooldual == 2:
+        if fwbs_variables.i_blkt_dual_coolant == 2:
             # Mass flow rates for outboard blanket coolants (kg/s)
             blanket_library.mfblkto = (
                 1.0e6
@@ -1720,7 +1728,7 @@ class BlanketLibrary:
                 )
 
         # If the blanket is single-coolant with liquid metal breeder...
-        elif fwbs_variables.icooldual == 1:
+        elif fwbs_variables.i_blkt_dual_coolant == 1:
             # Mass flow rate for outboard blanket coolant (kg/s)
             blanket_library.mfblkto = (
                 1.0e6
@@ -1784,7 +1792,7 @@ class BlanketLibrary:
             deltap_fwi = deltap[0]
             deltap_fwo = deltap[1]
             deltap_blo = deltap[2]
-            if fwbs_variables.icooldual > 0:
+            if fwbs_variables.i_blkt_dual_coolant > 0:
                 if fwbs_variables.iblnkith == 1:
                     deltap_bli = deltap[3]
                     deltap_blo_liq = deltap[4]
@@ -1810,7 +1818,7 @@ class BlanketLibrary:
             blanket_library.mftotal = blanket_library.mffwi + blanket_library.mffwo
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.htpmw_fw_blkt = self.pumppower(
+            primary_pumping_variables.p_fw_blkt_pump_cool_mw = self.pumppower(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.fwinlet.item(),
@@ -1846,7 +1854,7 @@ class BlanketLibrary:
             blanket_library.mfblkt = blanket_library.mfblkti + blanket_library.mfblkto
 
             # Mechanical pumping power for the first wall (MW)
-            heat_transport_variables.htpmw_fw = self.pumppower(
+            heat_transport_variables.p_fw_pumping_mw = self.pumppower(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.fwinlet.item(),
@@ -1862,7 +1870,7 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.htpmw_blkt = self.pumppower(
+            heat_transport_variables.p_blanket_pumping_mw = self.pumppower(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.inlet_temp.item(),
@@ -1878,12 +1886,13 @@ class BlanketLibrary:
             )
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.htpmw_fw_blkt = (
-                heat_transport_variables.htpmw_fw + heat_transport_variables.htpmw_blkt
+            primary_pumping_variables.p_fw_blkt_pump_cool_mw = (
+                heat_transport_variables.p_fw_pumping_mw
+                + heat_transport_variables.p_blanket_pumping_mw
             )
 
         # If the blanket has a liquid metal breeder...
-        if fwbs_variables.icooldual > 0:
+        if fwbs_variables.i_blkt_dual_coolant > 0:
             # Total pressure drop in the blanket (Pa)
             if fwbs_variables.primary_pumping == 2:
                 if fwbs_variables.iblnkith == 1:
@@ -1898,7 +1907,7 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.htpmw_blkt_liq = self.pumppower(
+            heat_transport_variables.p_blkt_pump_cool_secondary_mw = self.pumppower(
                 output=output,
                 icoolpump=2,
                 temp_in=fwbs_variables.inlet_temp_liq.item(),
@@ -1914,8 +1923,8 @@ class BlanketLibrary:
             )
 
             heat_transport_variables.htpmw_blkt_tot = (
-                primary_pumping_variables.htpmw_fw_blkt
-                + heat_transport_variables.htpmw_blkt_liq
+                primary_pumping_variables.p_fw_blkt_pump_cool_mw
+                + heat_transport_variables.p_blkt_pump_cool_secondary_mw
             )
 
         if output:
@@ -2037,7 +2046,7 @@ class BlanketLibrary:
                 )
 
             # BB Liquid Metal Breeder !
-            if fwbs_variables.icooldual > 0:
+            if fwbs_variables.i_blkt_dual_coolant > 0:
                 po.osubhd(self.outfile, "Breeding Blanket (breeder): ")
 
                 po.ovarin(
@@ -2046,7 +2055,7 @@ class BlanketLibrary:
                     "(i_bb_liq)",
                     fwbs_variables.i_bb_liq,
                 )
-                if fwbs_variables.icooldual == 2:
+                if fwbs_variables.i_blkt_dual_coolant == 2:
                     po.ocmmnt(
                         self.outfile, "Dual-coolant BB, i.e. self-cooled breeder."
                     )
@@ -2089,33 +2098,33 @@ class BlanketLibrary:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for FW (MW)",
-                    "(htpmw_fw)",
-                    fwbs_variables.htpmw_fw,
+                    "(p_fw_pumping_mw)",
+                    fwbs_variables.p_fw_pumping_mw,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for blanket (primary) coolant (MW)",
-                    "(htpmw_blkt)",
-                    fwbs_variables.htpmw_blkt,
+                    "(p_blanket_pumping_mw)",
+                    fwbs_variables.p_blanket_pumping_mw,
                     "OP ",
                 )
-            if fwbs_variables.icooldual > 0:
+            if fwbs_variables.i_blkt_dual_coolant > 0:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for blanket liquid breeder (MW)",
-                    "(htpmw_blkt_liq)",
-                    heat_transport_variables.htpmw_blkt_liq,
+                    "(p_blkt_pump_cool_secondary_mw)",
+                    heat_transport_variables.p_blkt_pump_cool_secondary_mw,
                     "OP ",
                 )
             po.ovarre(
                 self.outfile,
                 "Total mechanical pumping power for FW and blanket (MW)",
-                "(htpmw_fw_blkt)",
-                primary_pumping_variables.htpmw_fw_blkt,
+                "(p_fw_blkt_pump_cool_mw)",
+                primary_pumping_variables.p_fw_blkt_pump_cool_mw,
                 "OP ",
             )
-            if fwbs_variables.icooldual > 0:
+            if fwbs_variables.i_blkt_dual_coolant > 0:
                 po.ovarre(
                     self.outfile,
                     "Total mechanical pumping power for FW, blanket and liquid metal breeder(MW)",
@@ -2126,15 +2135,15 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Pumping power for divertor (MW)",
-                "(htpmw_div)",
-                heat_transport_variables.htpmw_div,
+                "(p_div_pump_cool_mw)",
+                heat_transport_variables.p_div_pump_cool_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Pumping power for shield and vacuum vessel (MW)",
-                "(htpmw_shld)",
-                heat_transport_variables.htpmw_shld,
+                "(p_shield_pump_cool_mw)",
+                heat_transport_variables.p_shield_pump_cool_mw,
                 "OP ",
             )
 

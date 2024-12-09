@@ -271,7 +271,7 @@ contains
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       denw, f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
-      fvolsi, etahtp, nblktmodpo, fwpressure, emult, fwoutlet, nblktmodpi, &
+      fvolsi, eta_pump_coolant_electrical, nblktmodpo, fwpressure, emult, fwoutlet, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
@@ -279,12 +279,12 @@ contains
       denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
-      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
+      i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
-    use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
-      pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
-      htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
-      fpumpfw, crypmw_max, f_crypmw
+    use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, p_div_pump_cool_mw, &
+      pwpm2, eta_thermal_electric, p_vacuum_pumps_mw, i_shield_power_generation, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
+      htpmw_min, fpumpblkt, ipowerflow, p_shield_pump_cool_mw, fpumpshld, trithtmw, &
+      fpumpfw, p_cryo_plant_max_mw, fcryo_plant_power
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
       bldrc, fauxbop, pfusife, dcdrv0, fwdr, pdrive, mcdriv, ucconc, shdr, &
       v3dzu, bldzl, rrin, maxmat, shmatf, fwmatf, drveff, flirad, shdzu, v2dzu, &
@@ -307,14 +307,14 @@ contains
       rhopedt, cvol, f_deuterium, ffwal, iculbl, itartpf, ilhthresh, &
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
-      fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
+      fgwsep, rhopedn, tratio, q0, ishape, fne0, i_ignited, f_tritium, &
       ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
-    use pf_power_variables, only: iscenr, maxpoloidalpower
+    use pf_power_variables, only: i_pf_power_source, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
 
     use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he, &
@@ -328,7 +328,7 @@ contains
     use tfcoil_variables, only: fcoolcp, tfinsgap, vftf, &
       fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
-      thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
+      thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, temp_tf_coil_cryo, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
       i_tf_tresca, dhecoil, tmaxpro, n_tf, tcpav, fcutfsu, jbus, &
       casthi_fraction, tmargmin_cs, vdalw, dcase, t_turn_tf,&
@@ -638,8 +638,8 @@ contains
        case ('ifalphap')
           call parse_int_variable('ifalphap', ifalphap, 0, 1, &
                'Switch for fast alpha pressure fit')
-       case ('ignite')
-          call parse_int_variable('ignite', ignite, 0, 1, &
+       case ('i_ignited')
+          call parse_int_variable('i_ignited', i_ignited, 0, 1, &
                'Switch for ignited plasma assumption')
        case ('iinvqd')
           call parse_int_variable('iinvqd', iinvqd, 0, 1, &
@@ -1790,8 +1790,8 @@ contains
        !    case ('tmax_jacket')
        !       call parse_real_variable('tmax_jacket', tmax_jacket, 4.0D0, 1.0D3, &
        !            'Jacket: maximum temp during a quench (K)')
-       case ('tmpcry')
-          call parse_real_variable('tmpcry', tmpcry, 0.01D0, 293.0D0, &
+       case ('temp_tf_coil_cryo')
+          call parse_real_variable('temp_tf_coil_cryo', temp_tf_coil_cryo, 0.01D0, 293.0D0, &
                'Cryogenic temperature (K)')
        case ('vcool')
           call parse_real_variable('vcool', vcool, 0.001D0, 100.0D0, &
@@ -2003,17 +2003,17 @@ contains
        case ('primary_pumping')
           call parse_int_variable('primary_pumping', primary_pumping, 0, 3, &
                'Switch for pumping of primary coolant')
-       case ('htpmw_blkt')
-          call parse_real_variable('htpmw_blkt', htpmw_blkt, 0.0D0, 1.0D3, &
+       case ('p_blanket_pumping_mw')
+          call parse_real_variable('p_blanket_pumping_mw', p_blanket_pumping_mw, 0.0D0, 1.0D3, &
                'blanket coolant mechanical pumping power (MW)')
-       case ('htpmw_div')
-          call parse_real_variable('htpmw_div', htpmw_div, 0.0D0, 1.0D3, &
+       case ('p_div_pump_cool_mw')
+          call parse_real_variable('p_div_pump_cool_mw', p_div_pump_cool_mw, 0.0D0, 1.0D3, &
                'divertor coolant mechanical pumping power (MW)')
-       case ('htpmw_fw')
-          call parse_real_variable('htpmw_fw', htpmw_fw, 0.0D0, 1.0D3, &
+       case ('p_fw_pumping_mw')
+          call parse_real_variable('p_fw_pumping_mw', p_fw_pumping_mw, 0.0D0, 1.0D3, &
                'first wall coolant mechanical pumping power (MW)')
-       case ('htpmw_shld')
-          call parse_real_variable('htpmw_shld', htpmw_shld, 0.0D0, 1.0D3, &
+       case ('p_shield_pump_cool_mw')
+          call parse_real_variable('p_shield_pump_cool_mw', p_shield_pump_cool_mw, 0.0D0, 1.0D3, &
                'shield and vacuum vessel coolant mechanical pumping power (MW)')
        case ('i_shield_mat')
          call parse_int_variable('i_shield_mat', i_shield_mat, 0, 1, &
@@ -2021,8 +2021,8 @@ contains
        case ('i_bb_liq')
          call parse_int_variable('i_bb_liq', i_bb_liq, 0, 1, &
                'Switch for breeding blaket liquid metal')
-       case ('icooldual')
-         call parse_int_variable('icooldual', icooldual, 0, 2, &
+       case ('i_blkt_dual_coolant')
+         call parse_int_variable('i_blkt_dual_coolant', i_blkt_dual_coolant, 0, 2, &
                'Switch for single or dual-coolant blanket)')
        case ('ifci')
          call parse_int_variable('ifci', ifci, 0, 2, &
@@ -2262,23 +2262,23 @@ contains
 
           !  Heat transport / power settings
 
-       case ('baseel')
-          call parse_real_variable('baseel', baseel, 1.0D6, 1.0D10, &
+       case ('p_baseload_electrical')
+          call parse_real_variable('p_baseload_electrical', p_baseload_electrical, 1.0D6, 1.0D10, &
                'Base plant electric load (W)')
-       case ('crypmw_max')
-          call parse_real_variable('crypmw_max', crypmw_max, 0.01D0, 200.0D0, &
+       case ('p_cryo_plant_max_mw')
+          call parse_real_variable('p_cryo_plant_max_mw', p_cryo_plant_max_mw, 0.01D0, 200.0D0, &
                ' Maximum cryogenic plant power (MW)')
-       case ('f_crypmw')
-          call parse_real_variable('f_crypmw', f_crypmw, 0.0D0, 100.0D0, &
+       case ('fcryo_plant_power')
+          call parse_real_variable('fcryo_plant_power', fcryo_plant_power, 0.0D0, 100.0D0, &
               ' f-value for cryogenic plant power (icc = 87, c = 164)')
-       case ('etahtp')
-          call parse_real_variable('etahtp', etahtp, 0.1D0, 1.0D0, &
+       case ('eta_pump_coolant_electrical')
+          call parse_real_variable('eta_pump_coolant_electrical', eta_pump_coolant_electrical, 0.1D0, 1.0D0, &
                'Coolant pump electrical efficiency')
         case ('etatf')
           call parse_real_variable('etatf', etatf, 0.0D0, 1.0D0, &
                'AC to resistive power conversion for TF coils')
-       case ('etath')
-          call parse_real_variable('etath', etath, 0.0D0, 1.0D0, &
+       case ('eta_thermal_electric')
+          call parse_real_variable('eta_thermal_electric', eta_thermal_electric, 0.0D0, 1.0D0, &
                'Thermal-electric conversion efficiency')
        case ('fmgdmw')
           call parse_real_variable('fmgdmw', fmgdmw, 0.0D0, 100.0D0, &
@@ -2301,8 +2301,8 @@ contains
        case ('ipowerflow')
           call parse_int_variable('ipowerflow', ipowerflow, 0, 1, &
                'Switch for power flow model')
-       case ('iprimshld')
-          call parse_int_variable('iprimshld', iprimshld, 0, 1, &
+       case ('i_shield_power_generation')
+          call parse_int_variable('i_shield_power_generation', i_shield_power_generation, 0, 1, &
                'Switch for shield thermal power destiny')
        case ('pwpm2')
           call parse_real_variable('pwpm2', pwpm2, 0.0D0, 1.0D3, &
@@ -2313,8 +2313,8 @@ contains
        case ('trithtmw')
           call parse_real_variable('trithtmw', trithtmw, 0.0D0, 100.0D0, &
                'Tritium process power (MW)')
-       case ('vachtmw')
-          call parse_real_variable('vachtmw', vachtmw, 0.0D0, 100.0D0, &
+       case ('p_vacuum_pumps_mw')
+          call parse_real_variable('p_vacuum_pumps_mw', p_vacuum_pumps_mw, 0.0D0, 100.0D0, &
                'Vacuum pump power (MW)')
 
        case ('t_in_bb')
@@ -3138,8 +3138,8 @@ contains
 
           !  Energy storage settings
 
-       case ('iscenr')
-          call parse_int_variable('iscenr', iscenr, 1, 3, &
+       case ('i_pf_power_source')
+          call parse_int_variable('i_pf_power_source', i_pf_power_source, 1, 3, &
                'Switch for energy storage option')
 
        case ('maxpoloidalpower')

@@ -223,7 +223,7 @@ class Stellarator:
                 2.0,
                 physics_variables.iinvqd,
                 physics_variables.isc,
-                physics_variables.ignite,
+                physics_variables.i_ignited,
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
@@ -821,7 +821,7 @@ class Stellarator:
         # This fits for the Helias 5b reactor design point ( F. and Bykov, V. design of Helias 5-B. (nucl Fus. 2013)).
 
         #  Total mass of cooled components
-        structure_variables.coldmass = (
+        structure_variables.m_components_cryo_cooled = (
             tfcoil_variables.whttf
             + structure_variables.aintmass
             + fwbs_variables.dewmkg
@@ -852,8 +852,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Mass of cooled components (kg)",
-                "(coldmass)",
-                structure_variables.coldmass,
+                "(m_components_cryo_cooled)",
+                structure_variables.m_components_cryo_cooled,
             )
 
     def stdiv(self, output: bool):
@@ -1076,7 +1076,7 @@ class Stellarator:
             * tfcoil_variables.n_tf
         )
 
-        fwbs_variables.ptfnucpm3 = fwbs_variables.ptfnuc / tf_volume
+        fwbs_variables.ptfnucpm3 = fwbs_variables.p_tf_nuclear_heat_mw / tf_volume
 
         # heating of the shield
         self.hcpb.nuclear_heating_shield()
@@ -1209,48 +1209,57 @@ class Stellarator:
             self.blanket_neutronics()
 
             if heat_transport_variables.ipowerflow == 1:
-                fwbs_variables.pnucdiv = (
+                fwbs_variables.p_div_nuclear_heat_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fdiv
                 )
-                fwbs_variables.pnuchcd = (
+                fwbs_variables.p_hcd_nuclear_heat_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fhcd
                 )
-                fwbs_variables.pnucfw = (
+                fwbs_variables.p_fw_nuclear_heat_mw = (
                     physics_variables.neutron_power_total
-                    - fwbs_variables.pnucdiv
+                    - fwbs_variables.p_div_nuclear_heat_mw
                     - fwbs_variables.pnucloss
-                    - fwbs_variables.pnuchcd
+                    - fwbs_variables.p_hcd_nuclear_heat_mw
                 )
 
                 fwbs_variables.pradloss = (
                     physics_variables.pradmw * fwbs_variables.fhole
                 )
-                fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
-                fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
-                fwbs_variables.pradfw = (
+                fwbs_variables.p_div_radiation_mw = (
+                    physics_variables.pradmw * fwbs_variables.fdiv
+                )
+                fwbs_variables.p_hcd_radiation_mw = (
+                    physics_variables.pradmw * fwbs_variables.fhcd
+                )
+                fwbs_variables.p_fw_radiation_mw = (
                     physics_variables.pradmw
-                    - fwbs_variables.praddiv
+                    - fwbs_variables.p_div_radiation_mw
                     - fwbs_variables.pradloss
-                    - fwbs_variables.pradhcd
+                    - fwbs_variables.p_hcd_radiation_mw
                 )
 
-                heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
-                    fwbs_variables.pnucfw
-                    + fwbs_variables.pradfw
-                    + current_drive_variables.porbitlossmw
+                heat_transport_variables.p_fw_pumping_mw = (
+                    heat_transport_variables.fpumpfw
+                    * (
+                        fwbs_variables.p_fw_nuclear_heat_mw
+                        + fwbs_variables.p_fw_radiation_mw
+                        + current_drive_variables.p_nb_orbit_loss_mw
+                    )
                 )
-                heat_transport_variables.htpmw_blkt = (
-                    heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
+                heat_transport_variables.p_blanket_pumping_mw = (
+                    heat_transport_variables.fpumpblkt
+                    * fwbs_variables.p_blanket_nuclear_heat_mw
                 )
-                heat_transport_variables.htpmw_shld = (
-                    heat_transport_variables.fpumpshld * fwbs_variables.pnucshld
+                heat_transport_variables.p_shield_pump_cool_mw = (
+                    heat_transport_variables.fpumpshld
+                    * fwbs_variables.p_shield_nuclear_heat_mw
                 )
-                heat_transport_variables.htpmw_div = (
+                heat_transport_variables.p_div_pump_cool_mw = (
                     heat_transport_variables.fpumpdiv
                     * (
                         physics_variables.pdivt
-                        + fwbs_variables.pnucdiv
-                        + fwbs_variables.praddiv
+                        + fwbs_variables.p_div_nuclear_heat_mw
+                        + fwbs_variables.p_div_radiation_mw
                     )
                 )
 
@@ -1292,12 +1301,14 @@ class Stellarator:
                     - fwbs_variables.fblbe
                 )
 
-                fwbs_variables.pnucblkt = pneut2 * (
+                fwbs_variables.p_blanket_nuclear_heat_mw = pneut2 * (
                     1.0e0 - np.exp(-build_variables.blnkoth / decaybl)
                 )
 
                 #  Nuclear heating in the shield
-                fwbs_variables.pnucshld = pneut2 - fwbs_variables.pnucblkt
+                fwbs_variables.p_shield_nuclear_heat_mw = (
+                    pneut2 - fwbs_variables.p_blanket_nuclear_heat_mw
+                )
 
                 #  Superconducting coil shielding calculations
                 (
@@ -1310,19 +1321,19 @@ class Stellarator:
                     ptfiwp,
                     ptfowp,
                     raddose,
-                    fwbs_variables.ptfnuc,
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 ) = self.sctfcoil_nuclear_heating_iter90()
 
             else:  # heat_transport_variables.ipowerflow == 1
                 #  Neutron power incident on divertor (MW)
 
-                fwbs_variables.pnucdiv = (
+                fwbs_variables.p_div_nuclear_heat_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fdiv
                 )
 
                 #  Neutron power incident on HCD apparatus (MW)
 
-                fwbs_variables.pnuchcd = (
+                fwbs_variables.p_hcd_nuclear_heat_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fhcd
                 )
 
@@ -1330,10 +1341,10 @@ class Stellarator:
 
                 pnucfwbs = (
                     physics_variables.neutron_power_total
-                    - fwbs_variables.pnucdiv
+                    - fwbs_variables.p_div_nuclear_heat_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
-                    - fwbs_variables.pnuchcd
+                    - fwbs_variables.p_hcd_nuclear_heat_mw
                 )
 
                 #  Split between inboard and outboard by first wall area fractions
@@ -1343,11 +1354,15 @@ class Stellarator:
 
                 #  Radiation power incident on divertor (MW)
 
-                fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
+                fwbs_variables.p_div_radiation_mw = (
+                    physics_variables.pradmw * fwbs_variables.fdiv
+                )
 
                 #  Radiation power incident on HCD apparatus (MW)
 
-                fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
+                fwbs_variables.p_hcd_radiation_mw = (
+                    physics_variables.pradmw * fwbs_variables.fhcd
+                )
 
                 #  Radiation power lost through holes (eventually hits shield) (MW)
 
@@ -1357,11 +1372,11 @@ class Stellarator:
 
                 #  Radiation power incident on first wall (MW)
 
-                fwbs_variables.pradfw = (
+                fwbs_variables.p_fw_radiation_mw = (
                     physics_variables.pradmw
-                    - fwbs_variables.praddiv
+                    - fwbs_variables.p_div_radiation_mw
                     - fwbs_variables.pradloss
-                    - fwbs_variables.pradhcd
+                    - fwbs_variables.p_hcd_radiation_mw
                 )
 
                 #  Calculate the power deposited in the first wall, blanket and shield,
@@ -1407,15 +1422,15 @@ class Stellarator:
                 decayfwi = fwbs_variables.declfw
                 decayfwo = fwbs_variables.declfw
 
-                #  Surface heat flux on first wall (MW) (sum = fwbs_variables.pradfw)
+                #  Surface heat flux on first wall (MW) (sum = fwbs_variables.p_fw_radiation_mw)
 
                 psurffwi = (
-                    fwbs_variables.pradfw
+                    fwbs_variables.p_fw_radiation_mw
                     * build_variables.fwareaib
                     / build_variables.fwarea
                 )
                 psurffwo = (
-                    fwbs_variables.pradfw
+                    fwbs_variables.p_fw_radiation_mw
                     * build_variables.fwareaob
                     / build_variables.fwarea
                 )
@@ -1463,17 +1478,17 @@ class Stellarator:
                     #    Use input
                     pass
                 elif fwbs_variables.primary_pumping == 1:
-                    heat_transport_variables.htpmw_fw = (
+                    heat_transport_variables.p_fw_pumping_mw = (
                         heat_transport_variables.fpumpfw
                         * (
                             pnucfwi
                             + pnucfwo
                             + psurffwi
                             + psurffwo
-                            + current_drive_variables.porbitlossmw
+                            + current_drive_variables.p_nb_orbit_loss_mw
                         )
                     )
-                    heat_transport_variables.htpmw_blkt = (
+                    heat_transport_variables.p_blanket_pumping_mw = (
                         heat_transport_variables.fpumpblkt
                         * (
                             pnucbzi * fwbs_variables.emult
@@ -1491,11 +1506,13 @@ class Stellarator:
 
                 #  Total nuclear heating of first wall (MW)
 
-                fwbs_variables.pnucfw = pnucfwi + pnucfwo
+                fwbs_variables.p_fw_nuclear_heat_mw = pnucfwi + pnucfwo
 
                 #  Total nuclear heating of blanket (MW)
 
-                fwbs_variables.pnucblkt = (pnucbzi + pnucbzo) * fwbs_variables.emult
+                fwbs_variables.p_blanket_nuclear_heat_mw = (
+                    pnucbzi + pnucbzo
+                ) * fwbs_variables.emult
 
                 fwbs_variables.emultmw = fwbs_variables.emultmw + (
                     pnucbzi + pnucbzo
@@ -1539,7 +1556,7 @@ class Stellarator:
                     1.0e0 - np.exp(-build_variables.shldoth / decayshldo)
                 )
 
-                fwbs_variables.pnucshld = pnucshldi + pnucshldo
+                fwbs_variables.p_shield_nuclear_heat_mw = pnucshldi + pnucshldo
 
                 #  Calculate coolant pumping powers from input fraction.
                 #  The pumping power is assumed to be a fraction, fpump, of the incident
@@ -1549,17 +1566,17 @@ class Stellarator:
 
                 if fwbs_variables.primary_pumping == 1:
                     #  Shield pumping power (MW)
-                    heat_transport_variables.htpmw_shld = (
+                    heat_transport_variables.p_shield_pump_cool_mw = (
                         heat_transport_variables.fpumpshld * (pnucshldi + pnucshldo)
                     )
 
                     #  Divertor pumping power (MW)
-                    heat_transport_variables.htpmw_div = (
+                    heat_transport_variables.p_div_pump_cool_mw = (
                         heat_transport_variables.fpumpdiv
                         * (
                             physics_variables.pdivt
-                            + fwbs_variables.pnucdiv
-                            + fwbs_variables.praddiv
+                            + fwbs_variables.p_div_nuclear_heat_mw
+                            + fwbs_variables.p_div_radiation_mw
                         )
                     )
 
@@ -1568,9 +1585,11 @@ class Stellarator:
                 #  coils, and so contributes to the cryogenic load
 
                 if tfcoil_variables.i_tf_sup == 1:
-                    fwbs_variables.ptfnuc = pnucsi + pnucso - pnucshldi - pnucshldo
+                    fwbs_variables.p_tf_nuclear_heat_mw = (
+                        pnucsi + pnucso - pnucshldi - pnucshldo
+                    )
                 else:  # resistive coils
-                    fwbs_variables.ptfnuc = 0.0e0
+                    fwbs_variables.p_tf_nuclear_heat_mw = 0.0e0
 
         #  heat_transport_variables.ipowerflow
 
@@ -2012,34 +2031,34 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Blanket heating (including energy multiplication) (MW)",
-                    "(pnucblkt)",
-                    fwbs_variables.pnucblkt,
+                    "(p_blanket_nuclear_heat_mw)",
+                    fwbs_variables.p_blanket_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Shield nuclear heating (MW)",
-                    "(pnucshld)",
-                    fwbs_variables.pnucshld,
+                    "(p_shield_nuclear_heat_mw)",
+                    fwbs_variables.p_shield_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Coil nuclear heating (MW)",
-                    "(ptfnuc)",
-                    fwbs_variables.ptfnuc,
+                    "(p_tf_nuclear_heat_mw)",
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 )
             else:
                 po.osubhd(self.outfile, "Blanket neutronics :")
                 po.ovarre(
                     self.outfile,
                     "Blanket heating (including energy multiplication) (MW)",
-                    "(pnucblkt)",
-                    fwbs_variables.pnucblkt,
+                    "(p_blanket_nuclear_heat_mw)",
+                    fwbs_variables.p_blanket_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Shield heating (MW)",
-                    "(pnucshld)",
-                    fwbs_variables.pnucshld,
+                    "(p_shield_nuclear_heat_mw)",
+                    fwbs_variables.p_shield_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2121,8 +2140,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Total nuclear heating on coil (MW)",
-                    "(ptfnuc)",
-                    fwbs_variables.ptfnuc,
+                    "(p_tf_nuclear_heat_mw)",
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2280,7 +2299,7 @@ class Stellarator:
         ptfiwp : output real : inboard TF coil winding pack heating (MW)
         ptfowp : output real : outboard TF coil winding pack heating (MW)
         raddose : output real : insulator dose (rad)
-        ptfnuc : output real : TF coil nuclear heating (MW)
+        p_tf_nuclear_heat_mw : output real : TF coil nuclear heating (MW)
         This subroutine calculates the nuclear heating in the
         superconducting TF coils, assuming an exponential neutron
         attenuation through the blanket and shield materials.
@@ -2306,7 +2325,7 @@ class Stellarator:
             raddose = 0.0
             nflutf = 0.0
             dpacop = 0.0
-            ptfnuc = 0.0
+            p_tf_nuclear_heat_mw = 0.0
 
         else:
 
@@ -2398,7 +2417,7 @@ class Stellarator:
             ptfi = ptfiwp + pheci
             ptfo = ptfowp + pheco
 
-            ptfnuc = ptfi + ptfo
+            p_tf_nuclear_heat_mw = ptfi + ptfo
 
             # Full power DT operation years for replacement of TF Coil
             # (or plant life)
@@ -2446,7 +2465,7 @@ class Stellarator:
                 ptfiwp,
                 ptfowp,
                 raddose,
-                ptfnuc,
+                p_tf_nuclear_heat_mw,
             )
 
     def stcoil(self, output: bool):
@@ -2811,7 +2830,7 @@ class Stellarator:
         )  # [m] estimated average length of a coil
 
         # [m^2] Total surface area of toroidal shells covering coils
-        tfcoil_variables.tfcryoarea = (
+        tfcoil_variables.a_tf_cryo = (
             stellarator_configuration.stella_config_coilsurface
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
             * 1.1e0
@@ -4152,7 +4171,7 @@ class Stellarator:
         #  If ignited, then ignore beam fusion effects
 
         if (current_drive_variables.pnbeam != 0.0e0) and (
-            physics_variables.ignite == 0
+            physics_variables.i_ignited == 0
         ):
             (
                 physics_variables.beta_beam,
@@ -4315,7 +4334,7 @@ class Stellarator:
             0.00001e0, powht
         )  # To avoid negative heating power. This line is VERY important
 
-        if physics_variables.ignite == 0:
+        if physics_variables.i_ignited == 0:
             powht = (
                 powht + current_drive_variables.pinjmw
             )  # if not ignited add the auxiliary power
@@ -4343,7 +4362,7 @@ class Stellarator:
 
         #  Power transported to the first wall by escaped alpha particles
 
-        physics_variables.palpfwmw = physics_variables.alpha_power_total * (
+        physics_variables.p_fw_alpha_mw = physics_variables.alpha_power_total * (
             1.0e0 - physics_variables.f_alpha_plasma
         )
 
@@ -4408,7 +4427,7 @@ class Stellarator:
             physics_variables.hfact,
             physics_variables.iinvqd,
             physics_variables.isc,
-            physics_variables.ignite,
+            physics_variables.i_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
@@ -4858,7 +4877,7 @@ class Stellarator:
             current_drive_variables.pinjimw = 0
             current_drive_variables.pinjemw = current_drive_variables.echpwr
             current_drive_variables.etacd = current_drive_variables.etaech
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electrical_mw = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd
         elif stellarator_variables.isthtr == 2:
@@ -4866,7 +4885,7 @@ class Stellarator:
             current_drive_variables.pinjimw = 0
             current_drive_variables.pinjemw = current_drive_variables.plhybd
             current_drive_variables.etacd = current_drive_variables.etalh
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electrical_mw = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd
         elif stellarator_variables.isthtr == 3:
@@ -4878,7 +4897,7 @@ class Stellarator:
             current_drive_variables.pnbeam = current_drive_variables.pheat * (
                 1 - current_drive_variables.forbitloss
             )
-            current_drive_variables.porbitlossmw = (
+            current_drive_variables.p_nb_orbit_loss_mw = (
                 current_drive_variables.pheat * current_drive_variables.forbitloss
             )
             current_drive_variables.pinjimw = current_drive_variables.pnbeam * fpion
@@ -4886,7 +4905,7 @@ class Stellarator:
                 1 - fpion
             )
             current_drive_variables.etacd = current_drive_variables.etanbi
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electrical_mw = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd
         else:
@@ -4915,7 +4934,7 @@ class Stellarator:
         if (
             abs(
                 current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+                + current_drive_variables.p_nb_orbit_loss_mw
                 + physics_variables.pohmmw
             )
             < 1e-6
@@ -4924,7 +4943,7 @@ class Stellarator:
         else:
             current_drive_variables.bigq = physics_variables.fusion_power / (
                 current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+                + current_drive_variables.p_nb_orbit_loss_mw
                 + physics_variables.pohmmw
             )
 
@@ -4938,7 +4957,7 @@ class Stellarator:
             elif stellarator_variables.isthtr == 3:
                 po.ocmmnt(self.outfile, "Neutral Beam Injection Heating")
 
-            if physics_variables.ignite == 1:
+            if physics_variables.i_ignited == 1:
                 po.ocmmnt(
                     self.outfile,
                     "Ignited plasma; injected power only used for start-up phase",
@@ -4984,8 +5003,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam orbit loss power (MW)",
-                    "(porbitlossmw)",
-                    current_drive_variables.porbitlossmw,
+                    "(p_nb_orbit_loss_mw)",
+                    current_drive_variables.p_nb_orbit_loss_mw,
                 )
                 po.ovarre(
                     self.outfile,
