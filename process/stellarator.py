@@ -2830,7 +2830,7 @@ class Stellarator:
         )  # [m] estimated average length of a coil
 
         # [m^2] Total surface area of toroidal shells covering coils
-        tfcoil_variables.tfcryoarea = (
+        tfcoil_variables.a_tf_cryo = (
             stellarator_configuration.stella_config_coilsurface
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
             * 1.1e0

@@ -867,7 +867,7 @@ class Power:
             # heat_transport_variables.helpow calculation
             heat_transport_variables.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,
-                tfcoil_variables.tfcryoarea,
+                tfcoil_variables.a_tf_cryo,
                 structure_variables.m_components_cryo_cooled,
                 fwbs_variables.p_tf_nuclear_heat_mw,
                 pf_power_variables.ensxpfm,
@@ -2399,7 +2399,7 @@ class Power:
     def cryo(
         self,
         i_tf_sup: int,
-        tfcryoarea: float,
+        a_tf_cryo: float,
         m_components_cryo_cooled: float,
         p_tf_nuclear_heat_mw: float,
         ensxpfm: float,
@@ -2412,7 +2412,7 @@ class Power:
 
         Args:
             i_tf_sup (int): Switch denoting whether TF coils are superconducting.
-            tfcryoarea (float): Surface area of toroidal shells covering TF coils (m2).
+            a_tf_cryo (float): Surface area of toroidal shells covering TF coils (m2).
             m_components_cryo_cooled (float): Mass of cold (cryogenic) components (kg), including TF coils, PF coils, cryostat, and intercoil structure.
             p_tf_nuclear_heat_mw (float): Nuclear heating in TF coils (MW).
             ensxpfm (float): Maximum PF coil stored energy (MJ).
@@ -2432,7 +2432,7 @@ class Power:
         """
         self.qss = 4.3e-4 * m_components_cryo_cooled
         if i_tf_sup == 1:
-            self.qss = self.qss + 2.0e0 * tfcryoarea
+            self.qss = self.qss + 2.0e0 * a_tf_cryo
 
         # Nuclear heating of TF coils (W) (zero if resistive)
         if fwbs_variables.inuclear == 0 and i_tf_sup == 1:

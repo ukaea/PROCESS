@@ -520,7 +520,7 @@ module tfcoil_variables
   real(dp) :: tfjtsmw
   !! TF joints resistive power losses (MW)
 
-  real(dp) :: tfcryoarea
+  real(dp) :: a_tf_cryo
   !! surface area of toroidal shells covering TF coils (m2)
 
   real(dp) :: tficrn
@@ -962,7 +962,7 @@ module tfcoil_variables
     tfcmw = 0.0D0
     tfcpmw = 0.0D0
     tfjtsmw = 0.0D0
-    tfcryoarea = 0.0D0
+    a_tf_cryo = 0.0D0
     tficrn = 0.0D0
     tfind = 0.0D0
     tfinsgap = 0.010D0
