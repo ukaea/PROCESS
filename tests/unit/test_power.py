@@ -2199,7 +2199,7 @@ class Power2Param(NamedTuple):
 
     p_core_electrical_mw: Any = None
 
-    pdivfraction: Any = None
+    f_div_thermal_primary: Any = None
 
     qss: Any = None
 
@@ -2317,7 +2317,7 @@ class Power2Param(NamedTuple):
             p_shield_coolant_thermal_mw=1.3677406976945679,
             ppumpmw=0,
             p_core_electrical_mw=0,
-            pdivfraction=0.13763633828287813,
+            f_div_thermal_primary=0.13763633828287813,
             qss=20361.633927097802,
             qac=3611.3456752656607,
             qcl=16108.2211128,
@@ -2419,7 +2419,7 @@ class Power2Param(NamedTuple):
             p_shield_coolant_thermal_mw=1.4106393366228915,
             ppumpmw=0,
             p_core_electrical_mw=125.33391046215507,
-            pdivfraction=0.13761114839248584,
+            f_div_thermal_primary=0.13761114839248584,
             qss=20342.863776957758,
             qac=102701.82327748176,
             qcl=16108.2211128,
@@ -2714,7 +2714,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(power, "p_core_electrical_mw", power2param.p_core_electrical_mw)
 
-    monkeypatch.setattr(power, "pdivfraction", power2param.pdivfraction)
+    monkeypatch.setattr(power, "f_div_thermal_primary", power2param.f_div_thermal_primary)
 
     monkeypatch.setattr(power, "qss", power2param.qss)
 

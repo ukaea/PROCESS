@@ -1124,7 +1124,7 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_thermal_electric)_______________________      4.0000E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.5417E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_div_thermal_primary)________________      1.5417E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      1.9734E+03    
  Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant)______________________      3.4704E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5246E+01    
