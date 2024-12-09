@@ -164,8 +164,8 @@ class CntrpstTestAsset(NamedTuple):
     :type expected_tcpav2: float
     :expected_tcpmax: expected value of tfcoil_variables.tcpmax after tfcoil.cntrpst routine has run
     :type expected_tcpmax: float
-    :expected_ppump: expected value of tfcoil_variables.ppump after tfcoil.cntrpst routine has run
-    :type expected_ppump: float
+    :expected_p_cp_pump_cool: expected value of tfcoil_variables.p_cp_pump_cool after tfcoil.cntrpst routine has run
+    :type expected_p_cp_pump_cool: float
     """
 
     i_tf_sup: int
@@ -173,7 +173,7 @@ class CntrpstTestAsset(NamedTuple):
     expected_dtiocool: float
     expected_tcpav2: float
     expected_tcpmax: float
-    expected_ppump: float
+    expected_p_cp_pump_cool: float
 
 
 @pytest.mark.parametrize(
@@ -195,7 +195,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
         - dtiocool
         - tcpav2
         - tcpmax
-        - ppump
+        - p_cp_pump_cool
 
     :param cntrpst_asset: test asset containing values to mock and expected results for the represented test case
     :type cntrpst_asset: CntrpstTestAsset
@@ -229,4 +229,4 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     assert pytest.approx(tfv.dtiocool, abs=1e-8) == cntrpst_asset.expected_dtiocool
     assert pytest.approx(tfv.tcpav2) == cntrpst_asset.expected_tcpav2
     assert pytest.approx(tfv.tcpmax) == cntrpst_asset.expected_tcpmax
-    assert pytest.approx(tfv.ppump) == cntrpst_asset.expected_ppump
+    assert pytest.approx(tfv.p_cp_pump_cool) == cntrpst_asset.expected_p_cp_pump_cool

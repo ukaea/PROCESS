@@ -621,7 +621,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # Total mean wall plug power for PFC & CS (MW)
     ppumpmw = (
-        m_file.data["ppump"].get_scan(-1) / 1e6
+        m_file.data["p_cp_pump_cool"].get_scan(-1) / 1e6
     )  # Set pumping power to MW by dividing by 1e6
 
     # Energy required for rest of power plant (MW)

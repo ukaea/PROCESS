@@ -2185,7 +2185,7 @@ class Power2Param(NamedTuple):
 
     f_alpha_plasma: Any = None
 
-    ppump: Any = None
+    p_cp_pump_cool: Any = None
 
     i_tf_sup: Any = None
 
@@ -2320,7 +2320,7 @@ class Power2Param(NamedTuple):
             non_alpha_charged_power=1.6064693283140403,
             pscalingmw=325.08626176539281,
             f_alpha_plasma=0.94999999999999996,
-            ppump=0,
+            p_cp_pump_cool=0,
             i_tf_sup=1,
             tfcmw=0,
             temp_tf_coil_cryo=4.5,
@@ -2422,7 +2422,7 @@ class Power2Param(NamedTuple):
             non_alpha_charged_power=1.6059679220663614,
             pscalingmw=325.00280675287695,
             f_alpha_plasma=0.94999999999999996,
-            ppump=0,
+            p_cp_pump_cool=0,
             i_tf_sup=1,
             tfcmw=0,
             temp_tf_coil_cryo=4.5,
@@ -2710,7 +2710,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "f_alpha_plasma", power2param.f_alpha_plasma)
 
-    monkeypatch.setattr(tfcoil_variables, "ppump", power2param.ppump)
+    monkeypatch.setattr(tfcoil_variables, "p_cp_pump_cool", power2param.p_cp_pump_cool)
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", power2param.i_tf_sup)
 

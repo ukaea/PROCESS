@@ -134,7 +134,7 @@ contains
         write(*,*) 'Figure of merit 2 (fusion power / input power) is not used.'
         write(*,*) 'Figure of merit 5 (fusion gain Q) is available.'
         stop 1
-       ! fc = sgn * fusion_power / (pinjmw + p_nb_orbit_loss_mw + tfcpmw + ppump/1.0D6)
+       ! fc = sgn * fusion_power / (pinjmw + p_nb_orbit_loss_mw + tfcpmw + p_cp_pump_cool/1.0D6)
 
     case (3)  !  neutron wall load
        fc = sgn * wallmw

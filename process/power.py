@@ -940,7 +940,7 @@ class Power:
         None
         """
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 0:
-            self.ppumpmw = 1.0e-6 * tfcoil_variables.ppump
+            self.ppumpmw = 1.0e-6 * tfcoil_variables.p_cp_pump_cool
         else:
             self.ppumpmw = 0.0e0
 

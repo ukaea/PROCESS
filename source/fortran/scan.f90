@@ -192,7 +192,7 @@ contains
     use process_output, only: oblnkl
     use numerics, only: sqsumsq
     use tfcoil_variables, only: tfareain, wwp2, sig_tf_wp, tfcmw, tcpmax, oacdcp, &
-      tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf, &
+      tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, p_cp_pump_cool, vcool, wwp1, n_tf, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, pradmw, dene, fusion_power, btot, tesep, &
@@ -255,7 +255,7 @@ contains
     outvar(41,iscan) = fcoolcp
     outvar(42,iscan) = rcool
     outvar(43,iscan) = vcool
-    outvar(44,iscan) = ppump/1.0D6
+    outvar(44,iscan) = p_cp_pump_cool/1.0D6
     outvar(45,iscan) = 1.0D-3 * p_pf_resisitve_total_kw
     outvar(46,iscan) = whtpf
     outvar(47,iscan) = p_gross_electrical

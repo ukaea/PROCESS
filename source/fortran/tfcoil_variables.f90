@@ -772,7 +772,7 @@ module tfcoil_variables
   real(dp) :: ncool
   !! number of centrepost coolant tubes
 
-  real(dp) :: ppump
+  real(dp) :: p_cp_pump_cool
   !! centrepost coolant pump power (W)
 
   real(dp) :: prescp
@@ -1035,7 +1035,7 @@ module tfcoil_variables
     fcoolleg = 0.2D0
     a_cp_cool = 0.0D0
     ncool = 0.0D0
-    ppump = 0.0D0
+    p_cp_pump_cool = 0.0D0
     prescp = 0.0D0
     presleg = 0.0D0
     ptempalw = 473.15D0   ! 200 C
