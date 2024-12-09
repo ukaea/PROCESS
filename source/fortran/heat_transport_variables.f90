@@ -106,7 +106,7 @@ module heat_transport_variables
     !! - =0 pre-2014 version
     !! - =1 comprehensive 2014 model
 
-    integer :: iprimshld
+    integer :: i_shield_power_generation
     !! Switch for shield thermal power destiny:
     !!
     !! - =0 does not contribute to energy generation cycle
@@ -217,7 +217,7 @@ module heat_transport_variables
       p_shield_pumping_mw = 0.0D0
       p_pump_cool_loss_total_mw = 0.0D0
       ipowerflow = 1
-      iprimshld = 1
+      i_shield_power_generation = 1
       nphx = 0
       pacpmw = 0.0D0
       peakmva = 0.0D0

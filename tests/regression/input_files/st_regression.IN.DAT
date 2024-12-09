@@ -3039,7 +3039,7 @@ ipowerflow = 0
 * DESCRIPTION:   Switch for Power Flow Model (0: Pre-2014 Version)
 * JUSTIFICATION: 
 
-iprimshld = 1
+i_shield_power_generation = 1
 * DESCRIPTION:   Switch for shield thermal power destiny:
 *=0 does not contribute to energy generation cycle
 *=1 contributes to energy generation cycle

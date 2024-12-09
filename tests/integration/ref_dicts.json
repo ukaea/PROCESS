@@ -2653,7 +2653,7 @@
         "ipowerflow": 1.0,
         "iprecomp": 1.0,
         "i_div_thermal": 0.0,
-        "iprimshld": 1.0,
+        "i_shield_power_generation": 1.0,
         "iprofile": 1.0,
         "i_pfirsch_schluter_current": 0.0,
         "iptnt": "(ipeqns*(3*ipeqns+13))/2",
@@ -9894,7 +9894,7 @@
         "ipowerflow": "switch for power flow model:\n<ul>\n<li>=0 pre-2014 version</li>\n<li>=1 comprehensive 2014 model</li>\n</ul>",
         "iprecomp": "Switch for existence of central solenoid pre-compression structure:\n<ul>\n<li>=0 no pre-compression structure</li>\n<li>=1 calculated pre-compression structure</li>\n</ul>",
         "i_div_thermal": "",
-        "iprimshld": "Switch for shield thermal power destiny:\n<ul>\n<li>=0 does not contribute to energy generation cycle</li>\n<li>=1 contributes to energy generation cycle</li>\n</ul>",
+        "i_shield_power_generation": "Switch for shield thermal power destiny:\n<ul>\n<li>=0 does not contribute to energy generation cycle</li>\n<li>=1 contributes to energy generation cycle</li>\n</ul>",
         "iprofile": "switch for current profile consistency:\n<ul>\n<li>=0 use input values for alphaj, rli, dnbeta (but see gtscale option)</li>\n<li>=1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)</li>\n</ul>",
         "i_pfirsch_schluter_current": "switch for Pfirsch-Schl\u00fcter current scaling (issue #413):\n<ul>\n<li>=0 Do not calculate</li>\n<li>=1 Use SCENE scaling</li>\n</ul>",
         "iptnt": "",
@@ -13468,7 +13468,7 @@
             "lb": 0,
             "ub": 1
         },
-        "iprimshld": {
+        "i_shield_power_generation": {
             "lb": 0,
             "ub": 1
         },
@@ -18221,7 +18221,7 @@
             "p_shield_pumping_mw",
             "p_pump_cool_loss_total_mw",
             "ipowerflow",
-            "iprimshld",
+            "i_shield_power_generation",
             "nphx",
             "pacpmw",
             "peakmva",
@@ -20497,7 +20497,7 @@
         "ipnet": "int_variable",
         "ipowerflow": "int_variable",
         "iprecomp": "int_variable",
-        "iprimshld": "int_variable",
+        "i_shield_power_generation": "int_variable",
         "iprofile": "int_variable",
         "i_pfirsch_schluter_current": "int_variable",
         "iradloss": "int_variable",

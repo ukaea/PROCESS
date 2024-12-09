@@ -282,7 +282,7 @@ contains
       i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, p_div_pump_cool_mw, &
-      pwpm2, eta_thermal_electric, vachtmw, iprimshld, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
+      pwpm2, eta_thermal_electric, vachtmw, i_shield_power_generation, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, p_shield_pumping_mw, fpumpshld, trithtmw, &
       fpumpfw, crypmw_max, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
@@ -2301,8 +2301,8 @@ contains
        case ('ipowerflow')
           call parse_int_variable('ipowerflow', ipowerflow, 0, 1, &
                'Switch for power flow model')
-       case ('iprimshld')
-          call parse_int_variable('iprimshld', iprimshld, 0, 1, &
+       case ('i_shield_power_generation')
+          call parse_int_variable('i_shield_power_generation', i_shield_power_generation, 0, 1, &
                'Switch for shield thermal power destiny')
        case ('pwpm2')
           call parse_real_variable('pwpm2', pwpm2, 0.0D0, 1.0D3, &
