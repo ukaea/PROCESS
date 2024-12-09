@@ -48,7 +48,7 @@ class Power:
         self.p_fw_blkt_pump_cool_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.htpmwe_blkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_blkt_pump_cool_secondary_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_div_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_fw_coolant_thermal_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
@@ -599,7 +599,7 @@ class Power:
             fwbs_variables.i_blkt_dual_coolant > 0
             and fwbs_variables.primary_pumping == 2
         ):
-            self.htpmwe_blkt_liq = (
+            self.p_blkt_pump_cool_secondary_elec_mw = (
                 heat_transport_variables.p_blkt_pump_cool_secondary_mw
                 / fwbs_variables.eta_pump_coolant_electrical
             )
@@ -621,7 +621,7 @@ class Power:
             heat_transport_variables.p_pump_cool_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_pump_cool_elec_mw
-                + self.htpmwe_blkt_liq
+                + self.p_blkt_pump_cool_secondary_elec_mw
                 + self.p_shield_pump_cool_elec_mw
                 + self.p_div_pump_cool_elec_mw,
             )
