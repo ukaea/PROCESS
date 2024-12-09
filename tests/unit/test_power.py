@@ -1893,7 +1893,7 @@ class AcpowParam(NamedTuple):
 
     pwpm2: Any = None
 
-    htpmw: Any = None
+    p_pump_cool_elec_total_mw: Any = None
 
     pacpmw: Any = None
 
@@ -1924,7 +1924,7 @@ class AcpowParam(NamedTuple):
             p_baseload_electrical_total_mw=0,
             fmgdmw=0,
             pwpm2=150,
-            htpmw=234.28554165620102,
+            p_pump_cool_elec_total_mw=234.28554165620102,
             pacpmw=0,
             iscenr=2,
             srcktpm=1071.1112934857531,
@@ -1945,7 +1945,7 @@ class AcpowParam(NamedTuple):
             p_baseload_electrical_total_mw=61.882833632875375,
             fmgdmw=0,
             pwpm2=150,
-            htpmw=234.2162627659944,
+            p_pump_cool_elec_total_mw=234.2162627659944,
             pacpmw=1226.1273281650574,
             iscenr=2,
             srcktpm=1069.8879533693198,
@@ -2006,7 +2006,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "pwpm2", acpowparam.pwpm2)
 
-    monkeypatch.setattr(heat_transport_variables, "htpmw", acpowparam.htpmw)
+    monkeypatch.setattr(heat_transport_variables, "p_pump_cool_elec_total_mw", acpowparam.p_pump_cool_elec_total_mw)
 
     monkeypatch.setattr(heat_transport_variables, "pacpmw", acpowparam.pacpmw)
 
@@ -2117,7 +2117,7 @@ class Power2Param(NamedTuple):
 
     p_tf_electrical_mw: Any = None
 
-    htpmw: Any = None
+    p_pump_cool_elec_total_mw: Any = None
 
     etath: Any = None
 
@@ -2274,7 +2274,7 @@ class Power2Param(NamedTuple):
             trithtmw=15,
             psechcd=0,
             p_tf_electrical_mw=9.1507079104675704,
-            htpmw=234.28554165620102,
+            p_pump_cool_elec_total_mw=234.28554165620102,
             etath=0.37500000000000006,
             p_cryo_plant=37.900388528497025,
             psecdiv=0,
@@ -2376,7 +2376,7 @@ class Power2Param(NamedTuple):
             trithtmw=15,
             psechcd=0,
             p_tf_electrical_mw=9.1507079104675704,
-            htpmw=234.2162627659944,
+            p_pump_cool_elec_total_mw=234.2162627659944,
             etath=0.37500000000000006,
             p_cryo_plant=108.74512702403499,
             psecdiv=0,
@@ -2586,7 +2586,7 @@ def test_power2(power2param, monkeypatch, power):
         heat_transport_variables, "p_tf_electrical_mw", power2param.p_tf_electrical_mw
     )
 
-    monkeypatch.setattr(heat_transport_variables, "htpmw", power2param.htpmw)
+    monkeypatch.setattr(heat_transport_variables, "p_pump_cool_elec_total_mw", power2param.p_pump_cool_elec_total_mw)
 
     monkeypatch.setattr(heat_transport_variables, "etath", power2param.etath)
 
@@ -2733,7 +2733,7 @@ class Power3Param(NamedTuple):
 
     etacd: Any = None
 
-    htpmw: Any = None
+    p_pump_cool_elec_total_mw: Any = None
 
     pinjmax: Any = None
 
@@ -2775,7 +2775,7 @@ class Power3Param(NamedTuple):
     (
         Power3Param(
             etacd=0.40000000000000002,
-            htpmw=234.28554165620102,
+            p_pump_cool_elec_total_mw=234.28554165620102,
             pinjmax=120,
             p_cryo_plant=37.900388528497025,
             vachtmw=0.5,
@@ -2802,7 +2802,7 @@ class Power3Param(NamedTuple):
         ),
         Power3Param(
             etacd=0.40000000000000002,
-            htpmw=234.2162627659944,
+            p_pump_cool_elec_total_mw=234.2162627659944,
             pinjmax=120,
             p_cryo_plant=108.74512702403499,
             vachtmw=0.5,
@@ -2850,7 +2850,7 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(current_drive_variables, "etacd", power3param.etacd)
 
-    monkeypatch.setattr(heat_transport_variables, "htpmw", power3param.htpmw)
+    monkeypatch.setattr(heat_transport_variables, "p_pump_cool_elec_total_mw", power3param.p_pump_cool_elec_total_mw)
 
     monkeypatch.setattr(heat_transport_variables, "pinjmax", power3param.pinjmax)
 

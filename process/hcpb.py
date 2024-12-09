@@ -1525,8 +1525,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "Total electrical coolant pumping power: first wall, blanket, shield and divertor (MW)",
-                "(htpmw)",
-                heat_transport_variables.htpmw,
+                "(p_pump_cool_elec_total_mw)",
+                heat_transport_variables.p_pump_cool_elec_total_mw,
                 "OP ",
             )
 

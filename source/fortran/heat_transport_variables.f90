@@ -76,7 +76,7 @@ module heat_transport_variables
     real(dp) :: helpow_cryal
     !! Heat removal at cryogenic temperature tcoolin (W)
 
-    real(dp) :: htpmw
+    real(dp) :: p_pump_cool_elec_total_mw
     !! heat transport system electrical pump power (MW)
 
     real(dp) :: p_blanket_pumping_mw
@@ -208,7 +208,7 @@ module heat_transport_variables
       htpmw_min = 0.0D0
       helpow = 0.0D0
       helpow_cryal = 0.0D0
-      htpmw = 0.0D0
+      p_pump_cool_elec_total_mw = 0.0D0
       p_blanket_pumping_mw = 0.0D0
       htpmw_blkt_liq = 0.0D0
       htpmw_blkt_tot = 0.0D0

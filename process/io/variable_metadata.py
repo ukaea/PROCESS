@@ -111,7 +111,7 @@ var_dicts = {
         description="Gross electrical power",
         units="MW",
     ),
-    "htpmw": VariableMetadata(
+    "p_pump_cool_elec_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{Primary\ coolant}^\mathrm{elec}$ [$MW$]",
         description="Primary coolant power",
         units="MW",

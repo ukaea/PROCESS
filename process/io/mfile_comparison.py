@@ -74,7 +74,7 @@ DEFAULT_COMPARE_PARAMS = [
     "sig_tf_case_max",
     "sig_tf_wp_max",
     "p_gross_electrical",
-    "htpmw",
+    "p_pump_cool_elec_total_mw",
     "p_net_electrical_mw",
     "wallmw",
     "ralpne",

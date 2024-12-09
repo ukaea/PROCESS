@@ -447,7 +447,7 @@ class Power:
             + ptfmw
             + crymw
             + heat_transport_variables.vachtmw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_pump_cool_elec_total_mw
             + heat_transport_variables.trithtmw
             + pheatingmw
         )
@@ -470,7 +470,7 @@ class Power:
         heat_transport_variables.tlvpmw = (
             heat_transport_variables.p_baseload_electrical_total_mw
             + heat_transport_variables.trithtmw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_pump_cool_elec_total_mw
             + heat_transport_variables.vachtmw
             + 0.5e0 * (crymw + ppfmw)
         )
@@ -492,8 +492,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Primary coolant pumps (MW)",
-            "(htpmw..)",
-            heat_transport_variables.htpmw,
+            "(p_pump_cool_elec_total_mw..)",
+            heat_transport_variables.p_pump_cool_elec_total_mw,
             "OP ",
         )
 
@@ -567,19 +567,24 @@ class Power:
         #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
         #  100% efficient so the electric power to run them is greater than the power deposited
         #  in the coolant.  The difference should be lost as secondary heat.
+
+        # Calculate electrical power needed to pump blanket coolant (MW)
         self.p_fw_blkt_pump_elec_mw = (
             primary_pumping_variables.p_fw_blanket_pumping_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
+        # Calculate electrical power needed to pump shield coolant (MW)
         self.p_shield_pump_elec_mw = (
             heat_transport_variables.p_shield_pumping_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
+        # Calculate electrical power needed to pump divertor coolant (MW)
         self.p_div_pump_cool_elec_mw = (
             heat_transport_variables.p_div_pump_cool_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
 
+        # If using a secondary liquid coolant/breeder calculate electrical power needed to pump its coolant (MW)
         if (
             fwbs_variables.i_blkt_dual_coolant > 0
             and fwbs_variables.primary_pumping == 2
@@ -593,7 +598,7 @@ class Power:
             fwbs_variables.i_blkt_dual_coolant > 0
             and fwbs_variables.primary_pumping == 2
         ):
-            # Total mechanical pump power (deposited in coolant)
+            # Total mechanical pump power if using liquid secondary coolant (deposited in coolant)
             self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.htpmw_blkt_liq
@@ -602,8 +607,8 @@ class Power:
             )
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
-            # Note that htpmw is an ELECTRICAL power
-            heat_transport_variables.htpmw = max(
+            # Note that p_pump_cool_elec_total_mw is an ELECTRICAL power
+            heat_transport_variables.p_pump_cool_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_pump_elec_mw
                 + self.htpmwe_blkt_liq
@@ -611,7 +616,7 @@ class Power:
                 + self.p_div_pump_cool_elec_mw,
             )
         else:
-            # Total mechanical pump power (deposited in coolant)
+            # Total mechanical pump power if no secondary coolant is used (deposited in coolant)
             self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
                 + heat_transport_variables.p_shield_pumping_mw
@@ -620,8 +625,8 @@ class Power:
 
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
-            # Note that htpmw is an ELECTRICAL power
-            heat_transport_variables.htpmw = max(
+            # Note that p_pump_cool_elec_total_mw is an ELECTRICAL power
+            heat_transport_variables.p_pump_cool_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_pump_elec_mw
                 + self.p_shield_pump_elec_mw
@@ -630,7 +635,7 @@ class Power:
 
         #  Heat lost through pump power inefficiencies (MW)
         heat_transport_variables.htpsecmw = (
-            heat_transport_variables.htpmw - self.p_pump_coolant_total_mw
+            heat_transport_variables.p_pump_cool_elec_total_mw - self.p_pump_coolant_total_mw
         )
 
         # Calculate total deposited power (MW), n.b. energy multiplication in p_blanket_nuclear_heat_mw already
@@ -951,7 +956,7 @@ class Power:
             heat_transport_variables.p_recirc_electrical_mw = (
                 self.p_core_electrical_mw
                 + heat_transport_variables.p_hcd_electrical_mw
-                + heat_transport_variables.htpmw
+                + heat_transport_variables.p_pump_cool_elec_total_mw
             )
 
             #  Net electric power
@@ -1219,8 +1224,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Total electrical pumping power for primary coolant (MW)",
-            "(htpmw)",
-            heat_transport_variables.htpmw,
+            "(p_pump_cool_elec_total_mw)",
+            heat_transport_variables.p_pump_cool_elec_total_mw,
             "OP ",
         )
 
@@ -1921,8 +1926,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for primary coolant pumps (MW)",
-            "(htpmw)",
-            heat_transport_variables.htpmw,
+            "(p_pump_cool_elec_total_mw)",
+            heat_transport_variables.p_pump_cool_elec_total_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1968,7 +1973,7 @@ class Power:
         sum = (
             heat_transport_variables.p_net_electrical_mw
             + heat_transport_variables.p_hcd_electrical_mw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_pump_cool_elec_total_mw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.trithtmw
             + heat_transport_variables.p_cryo_plant
@@ -2144,7 +2149,7 @@ class Power:
         # Continuous power usage
 
         # Primary pumping electrical power [MWe]
-        p_cooling[0:6] = heat_transport_variables.htpmw
+        p_cooling[0:6] = heat_transport_variables.p_pump_cool_elec_total_mw
 
         # Cryoplant electrical power [MWe]
         p_cryo[0:6] = heat_transport_variables.p_cryo_plant

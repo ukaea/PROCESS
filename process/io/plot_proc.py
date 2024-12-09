@@ -2594,11 +2594,11 @@ def plot_power_info(axis, mfile_data, scan):
     net_eff = 100.0 * (
         (
             mfile_data.data["p_gross_electrical"].get_scan(scan)
-            - mfile_data.data["htpmw"].get_scan(scan)
+            - mfile_data.data["p_pump_cool_elec_total_mw"].get_scan(scan)
         )
         / (
             mfile_data.data["pthermmw"].get_scan(scan)
-            - mfile_data.data["htpmw"].get_scan(scan)
+            - mfile_data.data["p_pump_cool_elec_total_mw"].get_scan(scan)
         )
     )
 
