@@ -973,7 +973,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8227E-02    
@@ -1968,7 +1968,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8227E-02    
@@ -2963,7 +2963,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
@@ -3958,7 +3958,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
@@ -4953,7 +4953,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
@@ -5948,7 +5948,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
@@ -6943,7 +6943,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
@@ -7938,7 +7938,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
@@ -8933,7 +8933,7 @@
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_pump_coolant_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shield_coolant_thermal_mw)__________________      1.4959E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_thermal_mw)___________________      3.9100E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    

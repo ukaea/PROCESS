@@ -361,7 +361,7 @@ def plot_full_sankey(
         """# --------------------------------------- SHIELD - 7 --------------------------------------
 
         # Neutrons, Coolant pumping, Total power
-        SHIELD = [p_shield_nuclear_heat_mw, p_shield_pumping_mw, -pthermshld]
+        SHIELD = [p_shield_nuclear_heat_mw, p_shield_pumping_mw, -p_shield_coolant_thermal_mw]
         sankey.add(flows=SHIELD,
                    orientations=[-1, -1, 1],
                    trunklength=0.5,
@@ -378,7 +378,7 @@ def plot_full_sankey(
         """# ------------------------------------ PRIMARY HEAT - 7 -----------------------------------
 
         # 1st wall, Blanket, Shield, Divertor, Total thermal power
-        HEAT = [pthermfw, pthermblkt, pthermshld, p_div_thermal_mw, -pthermmw]
+        HEAT = [pthermfw, pthermblkt, p_shield_coolant_thermal_mw, p_div_thermal_mw, -pthermmw]
         sankey.add(flows=HEAT,
                    orientations=[1, 0, -1, 1, 0],
                    trunklength=0.5,
