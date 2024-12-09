@@ -1792,7 +1792,11 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pf_power_variables, "acptmax", pfpwrparam.acptmax)
 
-    monkeypatch.setattr(pf_power_variables, "p_pf_resisitve_total_kw", pfpwrparam.p_pf_resisitve_total_kw)
+    monkeypatch.setattr(
+        pf_power_variables,
+        "p_pf_resisitve_total_kw",
+        pfpwrparam.p_pf_resisitve_total_kw,
+    )
 
     monkeypatch.setattr(pfcoil_variables, "ngrp", pfpwrparam.ngrp)
 
@@ -1864,7 +1868,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     assert pf_power_variables.acptmax == pytest.approx(pfpwrparam.expected_acptmax)
 
-    assert pf_power_variables.p_pf_resisitve_total_kw == pytest.approx(pfpwrparam.expected_p_pf_resisitve_total_kw)
+    assert pf_power_variables.p_pf_resisitve_total_kw == pytest.approx(
+        pfpwrparam.expected_p_pf_resisitve_total_kw
+    )
 
 
 class AcpowParam(NamedTuple):
@@ -1875,7 +1881,7 @@ class AcpowParam(NamedTuple):
 
     p_cryo_plant_mw: Any = None
 
-    vachtmw: Any = None
+    p_vacuum_pumps_mw: Any = None
 
     p_tf_electrical_mw: Any = None
 
@@ -1915,7 +1921,7 @@ class AcpowParam(NamedTuple):
             a_floor_total=379218.8908858358,
             p_baseload_electrical=5000000,
             p_cryo_plant_mw=37.900388528497025,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
             p_hcd_electrical_mw=129.94611930107126,
@@ -1936,7 +1942,7 @@ class AcpowParam(NamedTuple):
             a_floor_total=381580.9594357388,
             p_baseload_electrical=5000000,
             p_cryo_plant_mw=108.74512702403499,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
             p_hcd_electrical_mw=129.94611930107126,
@@ -1980,7 +1986,9 @@ def test_acpow(acpowparam, monkeypatch, power):
         heat_transport_variables, "p_cryo_plant_mw", acpowparam.p_cryo_plant_mw
     )
 
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", acpowparam.vachtmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_vacuum_pumps_mw", acpowparam.p_vacuum_pumps_mw
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_tf_electrical_mw", acpowparam.p_tf_electrical_mw
@@ -2012,15 +2020,27 @@ def test_acpow(acpowparam, monkeypatch, power):
         acpowparam.p_pump_cool_elec_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "p_pulsed_power_total_mw", acpowparam.p_pulsed_power_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_pulsed_power_total_mw",
+        acpowparam.p_pulsed_power_total_mw,
+    )
 
-    monkeypatch.setattr(pf_power_variables, "i_pf_power_source", acpowparam.i_pf_power_source)
+    monkeypatch.setattr(
+        pf_power_variables, "i_pf_power_source", acpowparam.i_pf_power_source
+    )
 
-    monkeypatch.setattr(pf_power_variables, "p_pf_resisitve_total_kw", acpowparam.p_pf_resisitve_total_kw)
+    monkeypatch.setattr(
+        pf_power_variables,
+        "p_pf_resisitve_total_kw",
+        acpowparam.p_pf_resisitve_total_kw,
+    )
 
     power.acpow(output=False)
 
-    assert heat_transport_variables.p_pulsed_power_total_mw == pytest.approx(acpowparam.expected_p_pulsed_power_total_mw)
+    assert heat_transport_variables.p_pulsed_power_total_mw == pytest.approx(
+        acpowparam.expected_p_pulsed_power_total_mw
+    )
 
 
 class Power2Param(NamedTuple):
@@ -2087,7 +2107,7 @@ class Power2Param(NamedTuple):
 
     fpumpblkt: Any = None
 
-    vachtmw: Any = None
+    p_vacuum_pumps_mw: Any = None
 
     p_div_pump_cool_mw: Any = None
 
@@ -2261,7 +2281,7 @@ class Power2Param(NamedTuple):
             p_net_electrical_mw=0,
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             p_div_pump_cool_mw=1.7942175899286208,
             nphx=3,
             helpow=76851.741036987034,
@@ -2363,7 +2383,7 @@ class Power2Param(NamedTuple):
             p_net_electrical_mw=493.01760776192009,
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             p_div_pump_cool_mw=1.7933419035282543,
             nphx=3,
             helpow=220505.71684249729,
@@ -2548,7 +2568,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fpumpblkt", power2param.fpumpblkt)
 
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", power2param.vachtmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_vacuum_pumps_mw", power2param.p_vacuum_pumps_mw
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_div_pump_cool_mw", power2param.p_div_pump_cool_mw
@@ -2791,7 +2813,7 @@ class Power3Param(NamedTuple):
 
     p_cryo_plant_mw: Any = None
 
-    vachtmw: Any = None
+    p_vacuum_pumps_mw: Any = None
 
     p_tf_electrical_mw: Any = None
 
@@ -2830,7 +2852,7 @@ class Power3Param(NamedTuple):
             p_pump_cool_elec_total_mw=234.28554165620102,
             pinjmax=120,
             p_cryo_plant_mw=37.900388528497025,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
             p_hcd_electrical_mw=129.94611930107126,
@@ -2857,7 +2879,7 @@ class Power3Param(NamedTuple):
             p_pump_cool_elec_total_mw=234.2162627659944,
             pinjmax=120,
             p_cryo_plant_mw=108.74512702403499,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
             p_hcd_electrical_mw=129.94611930107126,
@@ -2914,7 +2936,9 @@ def test_power3(power3param, monkeypatch, power):
         heat_transport_variables, "p_cryo_plant_mw", power3param.p_cryo_plant_mw
     )
 
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", power3param.vachtmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_vacuum_pumps_mw", power3param.p_vacuum_pumps_mw
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_tf_electrical_mw", power3param.p_tf_electrical_mw

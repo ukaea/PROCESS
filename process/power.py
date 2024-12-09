@@ -166,7 +166,9 @@ class Power:
 
             #  Compute the sum of resistive power in the PF circuits, kW
             pfbuspwr = pfbuspwr + 1.0e-3 * pfbusr[ig] * cptburn**2
-            pf_power_variables.p_pf_resisitve_total_kw = pf_power_variables.p_pf_resisitve_total_kw + 1.0e3 * rcktpm[ig]
+            pf_power_variables.p_pf_resisitve_total_kw = (
+                pf_power_variables.p_pf_resisitve_total_kw + 1.0e3 * rcktpm[ig]
+            )
 
         #  Inductive MVA requirements, and stored energy
         delktim = times_variables.t_current_ramp_up
@@ -462,7 +464,7 @@ class Power:
             + bdvmw
             + heat_transport_variables.p_tf_electrical_mw
             + crymw
-            + heat_transport_variables.vachtmw
+            + heat_transport_variables.p_vacuum_pumps_mw
             + heat_transport_variables.p_pump_cool_elec_total_mw
             + heat_transport_variables.trithtmw
             + pheatingmw
@@ -472,7 +474,8 @@ class Power:
         #  the PF coil energy storage system
         if pf_power_variables.i_pf_power_source != 2:
             heat_transport_variables.p_pulsed_power_total_mw = (
-                heat_transport_variables.p_pulsed_power_total_mw + heat_transport_variables.fmgdmw
+                heat_transport_variables.p_pulsed_power_total_mw
+                + heat_transport_variables.fmgdmw
             )
 
         #  Total baseline power to facility loads, MW
@@ -487,7 +490,7 @@ class Power:
             heat_transport_variables.p_baseload_electrical_total_mw
             + heat_transport_variables.trithtmw
             + heat_transport_variables.p_pump_cool_elec_total_mw
-            + heat_transport_variables.vachtmw
+            + heat_transport_variables.p_vacuum_pumps_mw
             + 0.5e0 * (crymw + ppfmw)
         )
 
@@ -532,8 +535,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Vacuum pumps  (MW)",
-            "(vachtmw..)",
-            heat_transport_variables.vachtmw,
+            "(p_vacuum_pumps_mw..)",
+            heat_transport_variables.p_vacuum_pumps_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -957,7 +960,7 @@ class Power:
             + self.ppumpmw
             + heat_transport_variables.p_tf_electrical_mw
             + heat_transport_variables.trithtmw
-            + heat_transport_variables.vachtmw
+            + heat_transport_variables.p_vacuum_pumps_mw
             + pfcoil_variables.pfwpmw
         )
 
@@ -1555,7 +1558,10 @@ class Power:
         po.oblnkl(self.outfile)
         po.write(self.outfile, "TF coil:")
         po.dblcol(
-            self.outfile, "p_tf_nuclear_heat_mw", 0.0e0, fwbs_variables.p_tf_nuclear_heat_mw
+            self.outfile,
+            "p_tf_nuclear_heat_mw",
+            0.0e0,
+            fwbs_variables.p_tf_nuclear_heat_mw,
         )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
@@ -1643,8 +1649,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat removal from vacuum pumps (MW)",
-            "(vachtmw)",
-            heat_transport_variables.vachtmw,
+            "(p_vacuum_pumps_mw)",
+            heat_transport_variables.p_vacuum_pumps_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1995,8 +2001,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for vacuum pumps (MW)",
-            "(vachtmw)",
-            heat_transport_variables.vachtmw,
+            "(p_vacuum_pumps_mw)",
+            heat_transport_variables.p_vacuum_pumps_mw,
         )
         po.ovarrf(
             self.outfile,
@@ -2036,7 +2042,7 @@ class Power:
             heat_transport_variables.p_net_electrical_mw
             + heat_transport_variables.p_hcd_electrical_mw
             + heat_transport_variables.p_pump_cool_elec_total_mw
-            + heat_transport_variables.vachtmw
+            + heat_transport_variables.p_vacuum_pumps_mw
             + heat_transport_variables.trithtmw
             + heat_transport_variables.p_cryo_plant_mw
             + heat_transport_variables.p_tf_electrical_mw
@@ -2217,7 +2223,7 @@ class Power:
         p_cryo[0:6] = heat_transport_variables.p_cryo_plant_mw
 
         # Vacuum electrical power [MWe]
-        p_vac[0:6] = heat_transport_variables.vachtmw
+        p_vac[0:6] = heat_transport_variables.p_vacuum_pumps_mw
 
         # Tritium system electrical power [MWe]
         p_tritium[0:6] = heat_transport_variables.trithtmw

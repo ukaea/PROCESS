@@ -1996,7 +1996,7 @@ class IFE:
             heat_transport_variables.p_hcd_electrical_loss_mw
             + fwbs_variables.pnucloss
             + heat_transport_variables.fachtmw
-            + heat_transport_variables.vachtmw
+            + heat_transport_variables.p_vacuum_pumps_mw
             + heat_transport_variables.trithtmw
             + ife_variables.tdspmw
             + ife_variables.tfacmw
@@ -2107,8 +2107,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from vacuum pumps (MW)",
-                "(vachtmw)",
-                heat_transport_variables.vachtmw,
+                "(p_vacuum_pumps_mw)",
+                heat_transport_variables.p_vacuum_pumps_mw,
             )
             process_output.ovarre(
                 self.outfile,
@@ -2181,7 +2181,7 @@ class IFE:
 
         heat_transport_variables.p_pulsed_power_total_mw = (
             heat_transport_variables.p_cryo_plant_mw
-            + heat_transport_variables.vachtmw
+            + heat_transport_variables.p_vacuum_pumps_mw
             + ife_variables.tdspmw
             + ife_variables.tfacmw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
@@ -2204,7 +2204,7 @@ class IFE:
             heat_transport_variables.p_baseload_electrical_total_mw
             + heat_transport_variables.trithtmw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
-            + heat_transport_variables.vachtmw
+            + heat_transport_variables.p_vacuum_pumps_mw
             + 0.5 * heat_transport_variables.p_cryo_plant_mw
             + ife_variables.tfacmw
         )
@@ -2250,8 +2250,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Vacuum pump motors (MW)",
-            "(vachtmw)",
-            heat_transport_variables.vachtmw,
+            "(p_vacuum_pumps_mw)",
+            heat_transport_variables.p_vacuum_pumps_mw,
         )
         process_output.ovarre(
             self.outfile,

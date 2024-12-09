@@ -7900,7 +7900,7 @@
             0.0
         ],
         "vacdshm": 0.0,
-        "vachtmw": 0.5,
+        "p_vacuum_pumps_mw": 0.5,
         "vacuum_model": "'old'",
         "vcdimax": 0.0,
         "vcool": 20.0,
@@ -11012,7 +11012,7 @@
         "v3matv": "IFE void 3 material volumes (kg)",
         "v3vol": "IFE void 3 volume (m3)",
         "vacdshm": "mass of vacuum duct shield (kg)",
-        "vachtmw": "vacuum pump power (MW)",
+        "p_vacuum_pumps_mw": "vacuum pump power (MW)",
         "vacuum_model": "switch for vacuum pumping model:\n<ul>\n<li>='old' for old detailed ETR model</li>\n<li>='simple' for simple steady-state model with comparison to ITER cryopumps</li>\n</ul>",
         "vcdimax": "diameter of duct passage (m)",
         "vcool": "inlet centrepost coolant flow speed at midplane (m/s) (`iteration variable 70`)",
@@ -14940,7 +14940,7 @@
             "lb": 0.0,
             "ub": 30.0
         },
-        "vachtmw": {
+        "p_vacuum_pumps_mw": {
             "lb": 0.0,
             "ub": 100.0
         },
@@ -18245,7 +18245,7 @@
             "tlvpmw",
             "trithtmw",
             "tturb",
-            "vachtmw"
+            "p_vacuum_pumps_mw"
         ],
         "ife_module": [],
         "ife_variables": [
@@ -20890,7 +20890,7 @@
         "v3dzl": "real_variable",
         "v3dzu": "real_variable",
         "v3matf": "real_array",
-        "vachtmw": "real_variable",
+        "p_vacuum_pumps_mw": "real_variable",
         "vcool": "real_variable",
         "vdalw": "real_variable",
         "verbose": "int_variable",

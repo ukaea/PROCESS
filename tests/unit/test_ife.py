@@ -2585,7 +2585,7 @@ class IfeacpParam(NamedTuple):
     pwpm2: Any = None
     p_pulsed_power_total_mw: Any = None
     p_cryo_plant_mw: Any = None
-    vachtmw: Any = None
+    p_vacuum_pumps_mw: Any = None
     trithtmw: Any = None
     p_hcd_electrical_mw: Any = None
     p_baseload_electrical_total_mw: Any = None
@@ -2610,7 +2610,7 @@ class IfeacpParam(NamedTuple):
             pwpm2=150,
             p_pulsed_power_total_mw=0,
             p_cryo_plant_mw=10,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             trithtmw=15,
             p_hcd_electrical_mw=81.914893617021278,
             p_baseload_electrical_total_mw=0,
@@ -2646,11 +2646,17 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
         ifeacpparam.p_baseload_electrical,
     )
     monkeypatch.setattr(heat_transport_variables, "pwpm2", ifeacpparam.pwpm2)
-    monkeypatch.setattr(heat_transport_variables, "p_pulsed_power_total_mw", ifeacpparam.p_pulsed_power_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_pulsed_power_total_mw",
+        ifeacpparam.p_pulsed_power_total_mw,
+    )
     monkeypatch.setattr(
         heat_transport_variables, "p_cryo_plant_mw", ifeacpparam.p_cryo_plant_mw
     )
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", ifeacpparam.vachtmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_vacuum_pumps_mw", ifeacpparam.p_vacuum_pumps_mw
+    )
     monkeypatch.setattr(heat_transport_variables, "trithtmw", ifeacpparam.trithtmw)
     monkeypatch.setattr(
         heat_transport_variables, "p_hcd_electrical_mw", ifeacpparam.p_hcd_electrical_mw
@@ -2670,7 +2676,9 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
 
     ife.ifeacp()
 
-    assert heat_transport_variables.p_pulsed_power_total_mw == pytest.approx(ifeacpparam.expected_p_pulsed_power_total_mw)
+    assert heat_transport_variables.p_pulsed_power_total_mw == pytest.approx(
+        ifeacpparam.expected_p_pulsed_power_total_mw
+    )
     assert heat_transport_variables.p_baseload_electrical_total_mw == pytest.approx(
         ifeacpparam.expected_p_baseload_electrical_total_mw
     )
@@ -2845,7 +2853,7 @@ class Ifepw2Param(NamedTuple):
     p_baseload_electrical_total_mw: Any = None
     psechtmw: Any = None
     p_hcd_electrical_loss_mw: Any = None
-    vachtmw: Any = None
+    p_vacuum_pumps_mw: Any = None
     trithtmw: Any = None
     p_cryo_plant_mw: Any = None
     p_gross_electrical: Any = None
@@ -2884,7 +2892,7 @@ class Ifepw2Param(NamedTuple):
             p_baseload_electrical_total_mw=24.322206046559071,
             psechtmw=0,
             p_hcd_electrical_loss_mw=58.814893617021283,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             trithtmw=15,
             p_cryo_plant_mw=10,
             p_gross_electrical=0,
@@ -2944,7 +2952,9 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         "p_hcd_electrical_loss_mw",
         ifepw2param.p_hcd_electrical_loss_mw,
     )
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", ifepw2param.vachtmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_vacuum_pumps_mw", ifepw2param.p_vacuum_pumps_mw
+    )
     monkeypatch.setattr(heat_transport_variables, "trithtmw", ifepw2param.trithtmw)
     monkeypatch.setattr(
         heat_transport_variables, "p_cryo_plant_mw", ifepw2param.p_cryo_plant_mw
@@ -2968,7 +2978,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         "p_recirc_electrical_mw",
         ifepw2param.p_recirc_electrical_mw,
     )
-    monkeypatch.setattr(heat_transport_variables, "p_pulsed_power_total_mw", ifepw2param.p_pulsed_power_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_pulsed_power_total_mw",
+        ifepw2param.p_pulsed_power_total_mw,
+    )
     monkeypatch.setattr(
         heat_transport_variables, "p_net_electrical_mw", ifepw2param.p_net_electrical_mw
     )

@@ -173,7 +173,9 @@ class Structure:
         #  Total mass of cooled components
         m_components_cryo_cooled = 0.0e0
         if i_tf_sup == 1:
-            m_components_cryo_cooled = m_components_cryo_cooled + tfmass + aintmass + dewmass
+            m_components_cryo_cooled = (
+                m_components_cryo_cooled + tfmass + aintmass + dewmass
+            )
         if ipfres != 1:
             m_components_cryo_cooled = m_components_cryo_cooled + pfmass
 

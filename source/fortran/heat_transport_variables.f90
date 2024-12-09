@@ -181,7 +181,7 @@ module heat_transport_variables
     real(dp) :: tturb
     !! coolant temperature at turbine inlet (K) (`secondary_cycle = 3,4`)
 
-    real(dp) :: vachtmw
+    real(dp) :: p_vacuum_pumps_mw
     !! vacuum pump power (MW)
 
     contains
@@ -241,6 +241,6 @@ module heat_transport_variables
       tlvpmw = 0.0D0
       trithtmw = 15.0D0
       tturb = 0.0D0
-      vachtmw = 0.5D0
+      p_vacuum_pumps_mw = 0.5D0
     end subroutine init_heat_transport_variables
   end module heat_transport_variables

@@ -754,7 +754,11 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(structure_variables, "clgsmass", ststrcparam.clgsmass)
 
-    monkeypatch.setattr(structure_variables, "m_components_cryo_cooled", ststrcparam.m_components_cryo_cooled)
+    monkeypatch.setattr(
+        structure_variables,
+        "m_components_cryo_cooled",
+        ststrcparam.m_components_cryo_cooled,
+    )
 
     monkeypatch.setattr(structure_variables, "fncmass", ststrcparam.fncmass)
 
@@ -794,7 +798,9 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     assert structure_variables.clgsmass == pytest.approx(ststrcparam.expected_clgsmass)
 
-    assert structure_variables.m_components_cryo_cooled == pytest.approx(ststrcparam.expected_m_components_cryo_cooled)
+    assert structure_variables.m_components_cryo_cooled == pytest.approx(
+        ststrcparam.expected_m_components_cryo_cooled
+    )
 
 
 def test_u_max_protect_v(stellarator):

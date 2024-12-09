@@ -42,7 +42,13 @@ class TestStructure:
         expected_m_components_cryo_cooled: float = 48937690.168336436
         expected_gsm: float = 1685092.6111564008
 
-        fncmass, aintmass, clgsmass, m_components_cryo_cooled, gsm = structure.structure(
+        (
+            fncmass,
+            aintmass,
+            clgsmass,
+            m_components_cryo_cooled,
+            gsm,
+        ) = structure.structure(
             ai,
             r0,
             a,
@@ -66,5 +72,7 @@ class TestStructure:
         assert fncmass == pytest.approx(expected_fncmass)
         assert aintmass == pytest.approx(expected_aintmass)
         assert clgsmass == pytest.approx(expected_clgsmass)
-        assert m_components_cryo_cooled == pytest.approx(expected_m_components_cryo_cooled)
+        assert m_components_cryo_cooled == pytest.approx(
+            expected_m_components_cryo_cooled
+        )
         assert gsm == pytest.approx(expected_gsm)

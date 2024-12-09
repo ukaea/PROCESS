@@ -135,7 +135,7 @@ def test_acc2262(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(htv, "p_hcd_electrical_loss_mw", 76.5)
     monkeypatch.setattr(htv, "p_cryo_plant_mw", 39.936)
-    monkeypatch.setattr(htv, "vachtmw", 0.5)
+    monkeypatch.setattr(htv, "p_vacuum_pumps_mw", 0.5)
     monkeypatch.setattr(htv, "trithtmw", 15.0)
     monkeypatch.setattr(htv, "fachtmw", 64.835)
     monkeypatch.setattr(costs, "c2262", 0)
@@ -3599,7 +3599,11 @@ def test_acc2252(acc2252param, monkeypatch, costs):
 
     monkeypatch.setattr(pf_power_variables, "pfckts", acc2252param.pfckts)
 
-    monkeypatch.setattr(pf_power_variables, "p_pf_resisitve_total_kw", acc2252param.p_pf_resisitve_total_kw)
+    monkeypatch.setattr(
+        pf_power_variables,
+        "p_pf_resisitve_total_kw",
+        acc2252param.p_pf_resisitve_total_kw,
+    )
 
     monkeypatch.setattr(pf_power_variables, "vpfskv", acc2252param.vpfskv)
 
@@ -3966,7 +3970,7 @@ class Acc2262Param(NamedTuple):
 
     p_hcd_electrical_loss_mw: Any = None
 
-    vachtmw: Any = None
+    p_vacuum_pumps_mw: Any = None
 
     trithtmw: Any = None
 
@@ -3999,7 +4003,7 @@ class Acc2262Param(NamedTuple):
             ife=0,
             tdspmw=0.01,
             p_hcd_electrical_loss_mw=77.967671580642758,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             trithtmw=15,
             fachtmw=61.882833632875375,
             p_cryo_plant_mw=37.900388528497025,
@@ -4018,7 +4022,7 @@ class Acc2262Param(NamedTuple):
             ife=0,
             tdspmw=0.01,
             p_hcd_electrical_loss_mw=77.967671580642758,
-            vachtmw=0.5,
+            p_vacuum_pumps_mw=0.5,
             trithtmw=15,
             fachtmw=62.237143915360818,
             p_cryo_plant_mw=108.74512702403499,
@@ -4061,7 +4065,9 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
         acc2262param.p_hcd_electrical_loss_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", acc2262param.vachtmw)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_vacuum_pumps_mw", acc2262param.p_vacuum_pumps_mw
+    )
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", acc2262param.trithtmw)
 
@@ -4915,7 +4921,11 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", acc242param.lsa)
 
-    monkeypatch.setattr(heat_transport_variables, "p_pulsed_power_total_mw", acc242param.p_pulsed_power_total_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_pulsed_power_total_mw",
+        acc242param.p_pulsed_power_total_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,

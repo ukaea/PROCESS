@@ -282,7 +282,7 @@ contains
       i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, p_div_pump_cool_mw, &
-      pwpm2, eta_thermal_electric, vachtmw, i_shield_power_generation, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
+      pwpm2, eta_thermal_electric, p_vacuum_pumps_mw, i_shield_power_generation, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, p_shield_pump_cool_mw, fpumpshld, trithtmw, &
       fpumpfw, p_cryo_plant_max_mw, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
@@ -2313,8 +2313,8 @@ contains
        case ('trithtmw')
           call parse_real_variable('trithtmw', trithtmw, 0.0D0, 100.0D0, &
                'Tritium process power (MW)')
-       case ('vachtmw')
-          call parse_real_variable('vachtmw', vachtmw, 0.0D0, 100.0D0, &
+       case ('p_vacuum_pumps_mw')
+          call parse_real_variable('p_vacuum_pumps_mw', p_vacuum_pumps_mw, 0.0D0, 100.0D0, &
                'Vacuum pump power (MW)')
 
        case ('t_in_bb')

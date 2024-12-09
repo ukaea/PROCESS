@@ -2015,7 +2015,11 @@ class Costs:
                 1.0e-6
                 * cost_variables.ucpfbs
                 * pf_power_variables.pfckts
-                * (pf_power_variables.p_pf_resisitve_total_kw / pf_power_variables.pfckts) ** 0.7e0
+                * (
+                    pf_power_variables.p_pf_resisitve_total_kw
+                    / pf_power_variables.pfckts
+                )
+                ** 0.7e0
             )
         else:
             self.c22524 = 0.0e0
@@ -2124,7 +2128,7 @@ class Costs:
             * (
                 (1.0e6 * heat_transport_variables.p_hcd_electrical_loss_mw) ** exphts
                 + (1.0e6 * heat_transport_variables.p_cryo_plant_mw) ** exphts
-                + (1.0e6 * heat_transport_variables.vachtmw) ** exphts
+                + (1.0e6 * heat_transport_variables.p_vacuum_pumps_mw) ** exphts
                 + (1.0e6 * heat_transport_variables.trithtmw) ** exphts
                 + (1.0e6 * heat_transport_variables.fachtmw) ** exphts
             )
@@ -2340,7 +2344,8 @@ class Costs:
 
         #  Account 242 : Transformers
         self.c242 = 1.0e-6 * (
-            cost_variables.ucpp * (heat_transport_variables.p_pulsed_power_total_mw * 1.0e3) ** expepe
+            cost_variables.ucpp
+            * (heat_transport_variables.p_pulsed_power_total_mw * 1.0e3) ** expepe
             + cost_variables.ucap
             * (heat_transport_variables.p_baseload_electrical_total_mw * 1.0e3)
         )
