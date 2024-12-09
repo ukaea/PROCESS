@@ -3032,7 +3032,7 @@ eta_thermal_electric = 0.40
 * JUSTIFICATION: Not yet set
 
 *fmgdmw = 
-* DESCRIPTION:   Power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)
+* DESCRIPTION:   Power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_power_source=2`)
 * JUSTIFICATION: Not yet set
 
 ipowerflow = 0 
@@ -3435,7 +3435,7 @@ iavail = 0
 *------------------------------ Energy Storage --------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-*iscenr = 
+*i_pf_power_source = 
 * DESCRIPTION:    Switch for PF coil energy storage option (default = 2):
 * =1 all power from MGF (motor-generator flywheel) units
 * =2 all pulsed power from line

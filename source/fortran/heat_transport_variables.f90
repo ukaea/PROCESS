@@ -49,7 +49,7 @@ module heat_transport_variables
     !! scaled fraction of gross power to balance-of-plant
 
     real(dp) :: fmgdmw
-    !! power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)
+    !! power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_power_source=2`)
 
     real(dp) :: fpumpblkt
     !! fraction of total blanket thermal power required to drive the blanket

@@ -20,7 +20,7 @@ module pf_power_variables
   real(dp) :: ensxpfm
   !! maximum stored energy in the PF circuits (MJ)
 
-  integer :: iscenr
+  integer :: i_pf_power_source
   !! Switch for PF coil energy storage option:
   !!
   !! - =1 all power from MGF (motor-generator flywheel) units
@@ -60,7 +60,7 @@ module pf_power_variables
 
     acptmax = 0.0D0
     ensxpfm = 0.0D0
-    iscenr = 2
+    i_pf_power_source = 2
     pfckts = 0.0D0
     spfbusl = 0.0D0
     spsmva = 0.0D0

@@ -314,7 +314,7 @@ contains
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
-    use pf_power_variables, only: iscenr, maxpoloidalpower
+    use pf_power_variables, only: i_pf_power_source, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
 
     use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he, &
@@ -3138,8 +3138,8 @@ contains
 
           !  Energy storage settings
 
-       case ('iscenr')
-          call parse_int_variable('iscenr', iscenr, 1, 3, &
+       case ('i_pf_power_source')
+          call parse_int_variable('i_pf_power_source', i_pf_power_source, 1, 3, &
                'Switch for energy storage option')
 
        case ('maxpoloidalpower')

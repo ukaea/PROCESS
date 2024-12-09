@@ -2667,7 +2667,7 @@
         "is_leg_cp_temp_same": 0.0,
         "isc": 34.0,
         "iscan_global": 0.0,
-        "iscenr": 2.0,
+        "i_pf_power_source": 2.0,
         "iscrp": 1.0,
         "iscz": 0.0,
         "ishape": 0.0,
@@ -9578,7 +9578,7 @@
         "fls": "",
         "flsa": "",
         "fluxdens_to_pa": "",
-        "fmgdmw": "power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)",
+        "fmgdmw": "power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_power_source=2`)",
         "fmom": "momentum factor [-]",
         "fmt_str": "",
         "fmva": "f-value for maximum MVA (`constraint equation 19`, `iteration variable 30`)",
@@ -9908,7 +9908,7 @@
         "is_leg_cp_temp_same": "",
         "isc": "switch for energy confinement time scaling law (see description in `tauscl`)",
         "iscan_global": "Makes iscan available globally.",
-        "iscenr": "Switch for PF coil energy storage option:\n<ul>\n<li>=1 all power from MGF (motor-generator flywheel) units</li>\n<li>=2 all pulsed power from line</li>\n<li>=3 PF power from MGF, heating from line</li>\n</ul>",
+        "i_pf_power_source": "Switch for PF coil energy storage option:\n<ul>\n<li>=1 all power from MGF (motor-generator flywheel) units</li>\n<li>=2 all pulsed power from line</li>\n<li>=3 PF power from MGF, heating from line</li>\n</ul>",
         "iscrp": "switch for plasma-first wall clearances:\n<ul>\n<li>=0 use 10% of rminor</li>\n<li>=1 use input (scrapli and scraplo)</li>\n</ul>",
         "iscz": "",
         "ishape": "switch for plasma cross-sectional shape calculation:\n<ul>\n<li>=0 use input kappa, triang to calculate 95% values</li>\n<li>=1 scale qlim, kappa, triang with aspect ratio (ST)</li>\n<li>=2 set kappa to the natural elongation value (Zohm ITER scaling), triang input</li>\n<li>=3 set kappa to the natural elongation value (Zohm ITER scaling), triang95 input</li>\n<li>=4 use input kappa95, triang95 to calculate separatrix values</li>\n<li>=5 use input kappa95, triang95 to calculate separatrix values based on MAST scaling (ST)</li>\n<li>=6 use input kappa, triang to calculate 95% values based on MAST scaling (ST)</li>\n<li>=7 use input kappa95, triang95 to calculate separatrix values based on fit to FIESTA (ST)</li>\n<li>=8 use input kappa, triang to calculate 95% values based on fit to FIESTA (ST)</li>\n<li>=9 set kappa to the natural elongation value, triang input</li>\n<li>=10 set kappa to maximum stable value at a given aspect ratio (2.6<A<3.6)), triang input (#1399)</li>\n<li>=11 set kappa Menard 2016 aspect-ratio-dependent scaling, triang input (#1439)</li>\n</ul>",
@@ -13496,7 +13496,7 @@
             "lb": 0,
             "ub": 1
         },
-        "iscenr": {
+        "i_pf_power_source": {
             "lb": 1,
             "ub": 3
         },
@@ -18900,7 +18900,7 @@
         "pf_power_variables": [
             "acptmax",
             "ensxpfm",
-            "iscenr",
+            "i_pf_power_source",
             "pfckts",
             "spfbusl",
             "spsmva",
@@ -20505,7 +20505,7 @@
         "irefprop": "int_variable",
         "irfcd": "int_variable",
         "isc": "int_variable",
-        "iscenr": "int_variable",
+        "i_pf_power_source": "int_variable",
         "iscrp": "int_variable",
         "ishape": "int_variable",
         "istell": "int_variable",

@@ -436,7 +436,7 @@ class Power:
         # Power to PF coil power supplies, MW
         ppfmw = 1.0e-3 * pf_power_variables.p_pf_resisitve_total_kw
 
-        if pf_power_variables.iscenr == 2:
+        if pf_power_variables.i_pf_power_source == 2:
             ppfmw = ppfmw + heat_transport_variables.peakmva
 
         #  Power to plasma heating supplies, MW
@@ -470,7 +470,7 @@ class Power:
 
         #  Add contribution from motor-generator flywheels if these are part of
         #  the PF coil energy storage system
-        if pf_power_variables.iscenr != 2:
+        if pf_power_variables.i_pf_power_source != 2:
             heat_transport_variables.pacpmw = (
                 heat_transport_variables.pacpmw + heat_transport_variables.fmgdmw
             )

@@ -1897,7 +1897,7 @@ class AcpowParam(NamedTuple):
 
     pacpmw: Any = None
 
-    iscenr: Any = None
+    i_pf_power_source: Any = None
 
     p_pf_resisitve_total_kw: Any = None
 
@@ -1926,7 +1926,7 @@ class AcpowParam(NamedTuple):
             pwpm2=150,
             p_pump_cool_elec_total_mw=234.28554165620102,
             pacpmw=0,
-            iscenr=2,
+            i_pf_power_source=2,
             p_pf_resisitve_total_kw=1071.1112934857531,
             iprint=0,
             outfile=11,
@@ -1947,7 +1947,7 @@ class AcpowParam(NamedTuple):
             pwpm2=150,
             p_pump_cool_elec_total_mw=234.2162627659944,
             pacpmw=1226.1273281650574,
-            iscenr=2,
+            i_pf_power_source=2,
             p_pf_resisitve_total_kw=1069.8879533693198,
             iprint=0,
             outfile=11,
@@ -2014,7 +2014,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "pacpmw", acpowparam.pacpmw)
 
-    monkeypatch.setattr(pf_power_variables, "iscenr", acpowparam.iscenr)
+    monkeypatch.setattr(pf_power_variables, "i_pf_power_source", acpowparam.i_pf_power_source)
 
     monkeypatch.setattr(pf_power_variables, "p_pf_resisitve_total_kw", acpowparam.p_pf_resisitve_total_kw)
 
