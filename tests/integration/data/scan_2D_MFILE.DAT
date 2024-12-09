@@ -1087,7 +1087,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3039E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3039E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5323E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4490E-02 OP 
@@ -2250,7 +2250,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.2982E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.2982E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5253E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4364E-02 OP 
@@ -3413,7 +3413,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5112E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.2987E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.2987E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5193E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4259E-02 OP 
@@ -4576,7 +4576,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.2888E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.2888E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5198E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4260E-02 OP 
@@ -5739,7 +5739,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3165E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3165E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5254E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4358E-02 OP 
@@ -6902,7 +6902,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3393E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3393E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5330E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4479E-02 OP 
@@ -8065,7 +8065,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3424E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3424E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5337E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4481E-02 OP 
@@ -9228,7 +9228,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3197E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3197E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5271E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4366E-02 OP 
@@ -10391,7 +10391,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.2848E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.2848E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5208E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4250E-02 OP 
@@ -11554,7 +11554,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3002E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3002E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5212E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4256E-02 OP 
@@ -12717,7 +12717,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3407E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3407E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5277E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4375E-02 OP 
@@ -13880,7 +13880,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3635E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3635E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5342E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4488E-02 OP 
@@ -15043,7 +15043,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3759E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3759E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5346E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4494E-02 OP 
@@ -16206,7 +16206,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3653E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3653E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5281E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4387E-02 OP 
@@ -17369,7 +17369,7 @@
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
  Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
- Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3559E+02 OP 
+ Total_pulsed_power_(MW)_________________________________________________ (p_pulsed_power_total_mw)______________________      5.3559E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (p_baseload_electrical_total_mw)_______________________      5.5216E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0d6)___________________      1.4280E-02 OP 

@@ -2340,7 +2340,7 @@ class Costs:
 
         #  Account 242 : Transformers
         self.c242 = 1.0e-6 * (
-            cost_variables.ucpp * (heat_transport_variables.pacpmw * 1.0e3) ** expepe
+            cost_variables.ucpp * (heat_transport_variables.p_pulsed_power_total_mw * 1.0e3) ** expepe
             + cost_variables.ucap
             * (heat_transport_variables.p_baseload_electrical_total_mw * 1.0e3)
         )

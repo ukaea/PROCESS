@@ -457,7 +457,7 @@ class Power:
         bdvmw = 0.0e0
 
         #  Total pulsed power system load, MW
-        heat_transport_variables.pacpmw = (
+        heat_transport_variables.p_pulsed_power_total_mw = (
             ppfmw
             + bdvmw
             + heat_transport_variables.p_tf_electrical_mw
@@ -471,8 +471,8 @@ class Power:
         #  Add contribution from motor-generator flywheels if these are part of
         #  the PF coil energy storage system
         if pf_power_variables.i_pf_power_source != 2:
-            heat_transport_variables.pacpmw = (
-                heat_transport_variables.pacpmw + heat_transport_variables.fmgdmw
+            heat_transport_variables.p_pulsed_power_total_mw = (
+                heat_transport_variables.p_pulsed_power_total_mw + heat_transport_variables.fmgdmw
             )
 
         #  Total baseline power to facility loads, MW
@@ -541,8 +541,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Total pulsed power (MW)",
-            "(pacpmw)",
-            heat_transport_variables.pacpmw,
+            "(p_pulsed_power_total_mw)",
+            heat_transport_variables.p_pulsed_power_total_mw,
             "OP ",
         )
         po.ovarre(

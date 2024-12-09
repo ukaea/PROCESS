@@ -115,7 +115,7 @@ module heat_transport_variables
     integer :: nphx
     !! number of primary heat exchangers
 
-    real(dp) :: pacpmw
+    real(dp) :: p_pulsed_power_total_mw
     !! total pulsed power system load (MW)
 
     real(dp) :: peakmva
@@ -219,7 +219,7 @@ module heat_transport_variables
       ipowerflow = 1
       i_shield_power_generation = 1
       nphx = 0
-      pacpmw = 0.0D0
+      p_pulsed_power_total_mw = 0.0D0
       peakmva = 0.0D0
       pfwdiv = 0.0D0
       p_gross_electrical = 0.0D0

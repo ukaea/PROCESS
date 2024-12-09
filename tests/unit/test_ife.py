@@ -2583,7 +2583,7 @@ class IfeacpParam(NamedTuple):
     a_floor_total: Any = None
     p_baseload_electrical: Any = None
     pwpm2: Any = None
-    pacpmw: Any = None
+    p_pulsed_power_total_mw: Any = None
     p_cryo_plant: Any = None
     vachtmw: Any = None
     trithtmw: Any = None
@@ -2596,7 +2596,7 @@ class IfeacpParam(NamedTuple):
     reprat: Any = None
     lipmw: Any = None
     ifetyp: Any = None
-    expected_pacpmw: Any = None
+    expected_p_pulsed_power_total_mw: Any = None
     expected_p_baseload_electrical_total_mw: Any = None
     expected_tlvpmw: Any = None
 
@@ -2608,7 +2608,7 @@ class IfeacpParam(NamedTuple):
             a_floor_total=128814.70697706047,
             p_baseload_electrical=5000000,
             pwpm2=150,
-            pacpmw=0,
+            p_pulsed_power_total_mw=0,
             p_cryo_plant=10,
             vachtmw=0.5,
             trithtmw=15,
@@ -2621,7 +2621,7 @@ class IfeacpParam(NamedTuple):
             reprat=4.6200000000000001,
             lipmw=0,
             ifetyp=1,
-            expected_pacpmw=141.11271036807165,
+            expected_p_pulsed_power_total_mw=141.11271036807165,
             expected_p_baseload_electrical_total_mw=24.322206046559071,
             expected_tlvpmw=54.187816751050391,
         ),
@@ -2646,7 +2646,7 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
         ifeacpparam.p_baseload_electrical,
     )
     monkeypatch.setattr(heat_transport_variables, "pwpm2", ifeacpparam.pwpm2)
-    monkeypatch.setattr(heat_transport_variables, "pacpmw", ifeacpparam.pacpmw)
+    monkeypatch.setattr(heat_transport_variables, "p_pulsed_power_total_mw", ifeacpparam.p_pulsed_power_total_mw)
     monkeypatch.setattr(
         heat_transport_variables, "p_cryo_plant", ifeacpparam.p_cryo_plant
     )
@@ -2670,7 +2670,7 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
 
     ife.ifeacp()
 
-    assert heat_transport_variables.pacpmw == pytest.approx(ifeacpparam.expected_pacpmw)
+    assert heat_transport_variables.p_pulsed_power_total_mw == pytest.approx(ifeacpparam.expected_p_pulsed_power_total_mw)
     assert heat_transport_variables.p_baseload_electrical_total_mw == pytest.approx(
         ifeacpparam.expected_p_baseload_electrical_total_mw
     )
@@ -2853,7 +2853,7 @@ class Ifepw2Param(NamedTuple):
     eta_thermal_electric: Any = None
     fgrosbop: Any = None
     p_recirc_electrical_mw: Any = None
-    pacpmw: Any = None
+    p_pulsed_power_total_mw: Any = None
     p_net_electrical_mw: Any = None
     p_hcd_electrical_mw: Any = None
     pfwdiv: Any = None
@@ -2892,7 +2892,7 @@ class Ifepw2Param(NamedTuple):
             eta_thermal_electric=0.45000000000000001,
             fgrosbop=0,
             p_recirc_electrical_mw=0,
-            pacpmw=141.11271036807165,
+            p_pulsed_power_total_mw=141.11271036807165,
             p_net_electrical_mw=0,
             p_hcd_electrical_mw=81.914893617021278,
             pfwdiv=607.73327999999992,
@@ -2968,7 +2968,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         "p_recirc_electrical_mw",
         ifepw2param.p_recirc_electrical_mw,
     )
-    monkeypatch.setattr(heat_transport_variables, "pacpmw", ifepw2param.pacpmw)
+    monkeypatch.setattr(heat_transport_variables, "p_pulsed_power_total_mw", ifepw2param.p_pulsed_power_total_mw)
     monkeypatch.setattr(
         heat_transport_variables, "p_net_electrical_mw", ifepw2param.p_net_electrical_mw
     )

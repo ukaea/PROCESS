@@ -492,7 +492,7 @@ def test_acc242(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
-    monkeypatch.setattr(htv, "pacpmw", 630.0)
+    monkeypatch.setattr(htv, "p_pulsed_power_total_mw", 630.0)
     monkeypatch.setattr(htv, "p_baseload_electrical_total_mw", 65.0)
     monkeypatch.setattr(costs, "c242", 0)
 
@@ -4864,7 +4864,7 @@ def test_acc241_rut(acc241param, monkeypatch, costs):
 class Acc242Param(NamedTuple):
     lsa: Any = None
 
-    pacpmw: Any = None
+    p_pulsed_power_total_mw: Any = None
 
     p_baseload_electrical_total_mw: Any = None
 
@@ -4882,7 +4882,7 @@ class Acc242Param(NamedTuple):
     (
         Acc242Param(
             lsa=2,
-            pacpmw=1226.1273281650574,
+            p_pulsed_power_total_mw=1226.1273281650574,
             p_baseload_electrical_total_mw=61.882833632875375,
             c24=0,
             c242=0,
@@ -4891,7 +4891,7 @@ class Acc242Param(NamedTuple):
         ),
         Acc242Param(
             lsa=2,
-            pacpmw=651.53859031110449,
+            p_pulsed_power_total_mw=651.53859031110449,
             p_baseload_electrical_total_mw=62.237143915360818,
             c24=44.135962032044716,
             c242=12.196675853540341,
@@ -4915,7 +4915,7 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", acc242param.lsa)
 
-    monkeypatch.setattr(heat_transport_variables, "pacpmw", acc242param.pacpmw)
+    monkeypatch.setattr(heat_transport_variables, "p_pulsed_power_total_mw", acc242param.p_pulsed_power_total_mw)
 
     monkeypatch.setattr(
         heat_transport_variables,

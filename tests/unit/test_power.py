@@ -1895,7 +1895,7 @@ class AcpowParam(NamedTuple):
 
     p_pump_cool_elec_total_mw: Any = None
 
-    pacpmw: Any = None
+    p_pulsed_power_total_mw: Any = None
 
     i_pf_power_source: Any = None
 
@@ -1905,7 +1905,7 @@ class AcpowParam(NamedTuple):
 
     outfile: Any = None
 
-    expected_pacpmw: Any = None
+    expected_p_pulsed_power_total_mw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1925,12 +1925,12 @@ class AcpowParam(NamedTuple):
             fmgdmw=0,
             pwpm2=150,
             p_pump_cool_elec_total_mw=234.28554165620102,
-            pacpmw=0,
+            p_pulsed_power_total_mw=0,
             i_pf_power_source=2,
             p_pf_resisitve_total_kw=1071.1112934857531,
             iprint=0,
             outfile=11,
-            expected_pacpmw=1164.244494532182,
+            expected_p_pulsed_power_total_mw=1164.244494532182,
         ),
         AcpowParam(
             a_floor_total=381580.9594357388,
@@ -1946,12 +1946,12 @@ class AcpowParam(NamedTuple):
             fmgdmw=0,
             pwpm2=150,
             p_pump_cool_elec_total_mw=234.2162627659944,
-            pacpmw=1226.1273281650574,
+            p_pulsed_power_total_mw=1226.1273281650574,
             i_pf_power_source=2,
             p_pf_resisitve_total_kw=1069.8879533693198,
             iprint=0,
             outfile=11,
-            expected_pacpmw=589.3014463957436,
+            expected_p_pulsed_power_total_mw=589.3014463957436,
         ),
     ),
 )
@@ -2012,7 +2012,7 @@ def test_acpow(acpowparam, monkeypatch, power):
         acpowparam.p_pump_cool_elec_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "pacpmw", acpowparam.pacpmw)
+    monkeypatch.setattr(heat_transport_variables, "p_pulsed_power_total_mw", acpowparam.p_pulsed_power_total_mw)
 
     monkeypatch.setattr(pf_power_variables, "i_pf_power_source", acpowparam.i_pf_power_source)
 
@@ -2020,7 +2020,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     power.acpow(output=False)
 
-    assert heat_transport_variables.pacpmw == pytest.approx(acpowparam.expected_pacpmw)
+    assert heat_transport_variables.p_pulsed_power_total_mw == pytest.approx(acpowparam.expected_p_pulsed_power_total_mw)
 
 
 class Power2Param(NamedTuple):

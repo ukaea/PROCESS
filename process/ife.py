@@ -2026,7 +2026,7 @@ class IFE:
             heat_transport_variables.p_recirc_electrical_mw = (
                 heat_transport_variables.fgrosbop
                 * heat_transport_variables.p_gross_electrical
-            ) + heat_transport_variables.pacpmw
+            ) + heat_transport_variables.p_pulsed_power_total_mw
 
             # Net electric power
             heat_transport_variables.p_net_electrical_mw = (
@@ -2179,7 +2179,7 @@ class IFE:
 
         # Total pulsed power system load, MW
 
-        heat_transport_variables.pacpmw = (
+        heat_transport_variables.p_pulsed_power_total_mw = (
             heat_transport_variables.p_cryo_plant
             + heat_transport_variables.vachtmw
             + ife_variables.tdspmw
@@ -2276,8 +2276,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Total pulsed power (MW)",
-            "(pacpmw)",
-            heat_transport_variables.pacpmw,
+            "(p_pulsed_power_total_mw)",
+            heat_transport_variables.p_pulsed_power_total_mw,
         )
         process_output.ovarre(
             self.outfile,
