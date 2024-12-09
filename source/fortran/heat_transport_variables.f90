@@ -160,7 +160,7 @@ module heat_transport_variables
     real(dp) :: pseclossmw
     !! Low-grade heat (VV + lost)(MW)
 
-    real(dp) :: psecshld
+    real(dp) :: p_shield_thermal_secondary_mw
     !! Low-grade heat deposited in shield (MW)
 
     real(dp) :: p_thermal_primary_mw
@@ -234,7 +234,7 @@ module heat_transport_variables
       psechcd = 0.0D0
       psechtmw = 0.0D0
       pseclossmw = 0.0D0
-      psecshld = 0.0D0
+      p_shield_thermal_secondary_mw = 0.0D0
       p_thermal_primary_mw = 0.0D0
       pwpm2 = 150.0D0
       p_tf_electrical_mw = 0.0D0

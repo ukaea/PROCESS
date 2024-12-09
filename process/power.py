@@ -802,10 +802,13 @@ class Power:
         # Loss in efficiency as this primary power is collecetd at very low temperature
         self.delta_eta = 0.339 * self.f_div_thermal_primary
 
-        #  Secondary thermal power deposited in shield
-        heat_transport_variables.psecshld = self.p_shield_coolant_thermal_mw * (
-            1 - heat_transport_variables.i_shield_power_generation
-        )
+        # Secondary thermal power deposited in shield
+        # Shield heat generation is lost as secondary heat
+        if heat_transport_variables.i_shield_power_generation == 0:
+            heat_transport_variables.p_shield_thermal_secondary_mw = self.p_shield_coolant_thermal_mw
+        # Shield heat generation is used as primary heat so no secondary
+        else:
+            heat_transport_variables.p_shield_thermal_secondary_mw = 0.0
 
         #  Secondary thermal power lost to HCD apparatus and diagnostics
         heat_transport_variables.psechcd = (
@@ -945,13 +948,13 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.p_div_thermal_secondary_mw + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.p_div_thermal_secondary_mw + heat_transport_variables.p_shield_thermal_secondary_mw + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
         heat_transport_variables.psechtmw = (
             self.p_core_electrical_mw
             + heat_transport_variables.p_hcd_electrical_loss_mw
             + heat_transport_variables.p_pump_cool_loss_total_mw
             + heat_transport_variables.p_div_thermal_secondary_mw
-            + heat_transport_variables.psecshld
+            + heat_transport_variables.p_shield_thermal_secondary_mw
             + heat_transport_variables.psechcd
             + fwbs_variables.ptfnuc
         )
