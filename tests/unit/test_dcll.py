@@ -40,7 +40,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_hcd_radiation_mw: Any = None
 
-    pnuchcd: Any = None
+    p_hcd_nuclear_heat_mw: Any = None
 
     p_shield_nuclear_heat_mw: Any = None
 
@@ -97,7 +97,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_div_nuclear_heat_mw=0,
             fhcd=0,
             p_hcd_radiation_mw=0,
-            pnuchcd=0,
+            p_hcd_nuclear_heat_mw=0,
             p_shield_nuclear_heat_mw=0,
             p_fw_radiation_mw=0,
             p_fw_nuclear_heat_mw=0,
@@ -129,7 +129,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_div_nuclear_heat_mw=182.58994516305046,
             fhcd=0,
             p_hcd_radiation_mw=0,
-            pnuchcd=0,
+            p_hcd_nuclear_heat_mw=0,
             p_shield_nuclear_heat_mw=0,
             p_fw_radiation_mw=254.39207240222791,
             p_fw_nuclear_heat_mw=196.72081918001697,
@@ -201,7 +201,7 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         dcllneutronicsandpowerparam.p_hcd_radiation_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnuchcd", dcllneutronicsandpowerparam.pnuchcd)
+    monkeypatch.setattr(fwbs_variables, "p_hcd_nuclear_heat_mw", dcllneutronicsandpowerparam.p_hcd_nuclear_heat_mw)
 
     monkeypatch.setattr(
         fwbs_variables,

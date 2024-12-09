@@ -176,7 +176,7 @@ class DCLL:
         # HCD Apperatus
 
         # No nuclear heating of the H & CD
-        fwbs_variables.pnuchcd = 0
+        fwbs_variables.p_hcd_nuclear_heat_mw = 0
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.p_hcd_radiation_mw = (
             physics_variables.pradmw * fwbs_variables.fhcd
