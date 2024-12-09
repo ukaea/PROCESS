@@ -365,7 +365,7 @@ module numerics
   !! <LI> (161) fbetatry_lower (f-value for equation 84)
   !! <LI> (162) r_cp_top : Top outer radius of the centropost (ST only) (m)
   !! <LI> (163) f_t_turn_tf : f-value for TF coils WP trurn squared dimension constraint
-  !! <LI> (164) f_crypmw : f-value for cryogenic plant power
+  !! <LI> (164) fcryo_plant_power : f-value for cryogenic plant power
   !! <LI> (165) fstr_wp : f-value for TF coil strain absolute value
   !! <LI> (166) f_copperaoh_m2 : CS coil current /copper area < Maximum value
   !! <LI> (167) fncycle : f-value for minimum CS coil stress load cycles

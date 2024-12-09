@@ -3057,7 +3057,7 @@ i_shield_power_generation = 1
 * JUSTIFICATION: Turned off, not using icc=85
 
 *ixc = 164
-*f_crypmw = 
+*fcryo_plant_power = 
 *boundl(164) = 
 *boundu(164) = 
 * DESCRIPTION: f-value for maximum cryogenic plant power

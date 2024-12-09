@@ -284,7 +284,7 @@ contains
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, p_div_pump_cool_mw, &
       pwpm2, eta_thermal_electric, p_vacuum_pumps_mw, i_shield_power_generation, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, p_shield_pump_cool_mw, fpumpshld, trithtmw, &
-      fpumpfw, p_cryo_plant_max_mw, f_crypmw
+      fpumpfw, p_cryo_plant_max_mw, fcryo_plant_power
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
       bldrc, fauxbop, pfusife, dcdrv0, fwdr, pdrive, mcdriv, ucconc, shdr, &
       v3dzu, bldzl, rrin, maxmat, shmatf, fwmatf, drveff, flirad, shdzu, v2dzu, &
@@ -2268,8 +2268,8 @@ contains
        case ('p_cryo_plant_max_mw')
           call parse_real_variable('p_cryo_plant_max_mw', p_cryo_plant_max_mw, 0.01D0, 200.0D0, &
                ' Maximum cryogenic plant power (MW)')
-       case ('f_crypmw')
-          call parse_real_variable('f_crypmw', f_crypmw, 0.0D0, 100.0D0, &
+       case ('fcryo_plant_power')
+          call parse_real_variable('fcryo_plant_power', fcryo_plant_power, 0.0D0, 100.0D0, &
               ' f-value for cryogenic plant power (icc = 87, c = 164)')
        case ('eta_pump_coolant_electrical')
           call parse_real_variable('eta_pump_coolant_electrical', eta_pump_coolant_electrical, 0.1D0, 1.0D0, &
