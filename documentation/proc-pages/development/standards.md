@@ -77,12 +77,16 @@ Below are a few shorthand designations for different systems that should be used
 - Toroidal field coils: `_tf_`
 - Poloidal field coils: `_pf_`
 - Vacuum Vessel: `_vv_`
+- First wall: `_fw_`
 - Divertor: `_div_`
 - Blanket: `_blkt_`
 - Shield: `_shield_`
 - Central Solenoid: `_cs_`
 - Heating & Current Drive: `_hcd_`
-- Neutral Beam: `_nb_`
+    - Electron cyclotron current drive: `_eccd_`
+    - Ion cyclotron current drive: `_iccd_`
+    - Electron Bernstein Wave: `_ebw_`
+    - Neutral Beam: `_nb_`
 - Centre post: `_cp_` Should only be used for ST's
 
 If the variables are physics variables and do not belong to a system then:
