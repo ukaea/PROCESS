@@ -590,7 +590,7 @@ class Power:
             and fwbs_variables.primary_pumping == 2
         ):
             self.htpmwe_blkt_liq = (
-                heat_transport_variables.htpmw_blkt_liq
+                heat_transport_variables.p_blkt_pump_cool_secondary_mw
                 / fwbs_variables.eta_pump_coolant_electrical
             )
 
@@ -601,7 +601,7 @@ class Power:
             # Total mechanical pump power if using liquid secondary coolant (deposited in coolant)
             self.p_pump_coolant_total_mw = (
                 primary_pumping_variables.p_fw_blanket_pumping_mw
-                + heat_transport_variables.htpmw_blkt_liq
+                + heat_transport_variables.p_blkt_pump_cool_secondary_mw
                 + heat_transport_variables.p_shield_pumping_mw
                 + heat_transport_variables.p_div_pump_cool_mw
             )
@@ -648,9 +648,9 @@ class Power:
                 self.pthermblkt_liq = (
                     fwbs_variables.p_blanket_nuclear_heat_mw
                     * fwbs_variables.f_nuc_pow_bz_liq
-                ) + heat_transport_variables.htpmw_blkt_liq
+                ) + heat_transport_variables.p_blkt_pump_cool_secondary_mw
             elif fwbs_variables.i_blkt_dual_coolant == 1:
-                self.pthermblkt_liq = heat_transport_variables.htpmw_blkt_liq
+                self.pthermblkt_liq = heat_transport_variables.p_blkt_pump_cool_secondary_mw
 
             # First wall and blanket coolant combined
             if fwbs_variables.i_blkt_dual_coolant == 2:

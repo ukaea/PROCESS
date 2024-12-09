@@ -372,8 +372,8 @@ class DCLL:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for liquid metal breeder (MW)",
-                    "(htpmw_blkt_liq)",
-                    heat_transport_variables.htpmw_blkt_liq,
+                    "(p_blkt_pump_cool_secondary_mw)",
+                    heat_transport_variables.p_blkt_pump_cool_secondary_mw,
                     "OP ",
                 )
 
