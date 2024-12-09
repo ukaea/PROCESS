@@ -50,7 +50,7 @@ class Power:
         self.p_div_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_fw_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_blkt_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.pthermblkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_blkt_coolant_secondary_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_shield_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.ppumpmw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_core_electrical_mw = AnnotatedVariable(
@@ -645,17 +645,17 @@ class Power:
 
             # Liquid metal breeder/coolant
             if fwbs_variables.i_blkt_dual_coolant == 2:
-                self.pthermblkt_liq = (
+                self.p_blkt_coolant_secondary_thermal_mw = (
                     fwbs_variables.p_blanket_nuclear_heat_mw
                     * fwbs_variables.f_nuc_pow_bz_liq
                 ) + heat_transport_variables.p_blkt_pump_cool_secondary_mw
             elif fwbs_variables.i_blkt_dual_coolant == 1:
-                self.pthermblkt_liq = heat_transport_variables.p_blkt_pump_cool_secondary_mw
+                self.p_blkt_coolant_secondary_thermal_mw = heat_transport_variables.p_blkt_pump_cool_secondary_mw
 
             # First wall and blanket coolant combined
             if fwbs_variables.i_blkt_dual_coolant == 2:
                 self.p_fw_blkt_coolant_thermal_mw = (
-                    self.pthermblkt_liq
+                    self.p_blkt_coolant_secondary_thermal_mw
                     + fwbs_variables.p_fw_nuclear_heat_mw
                     + fwbs_variables.p_fw_radiation_mw
                     + (
@@ -669,7 +669,7 @@ class Power:
                 )
             elif fwbs_variables.i_blkt_dual_coolant == 1:
                 self.p_fw_blkt_coolant_thermal_mw = (
-                    self.pthermblkt_liq
+                    self.p_blkt_coolant_secondary_thermal_mw
                     + fwbs_variables.p_fw_nuclear_heat_mw
                     + fwbs_variables.p_fw_radiation_mw
                     + fwbs_variables.p_blanket_nuclear_heat_mw
@@ -944,9 +944,9 @@ class Power:
                 and fwbs_variables.primary_pumping == 2
             ):
                 heat_transport_variables.p_gross_electrical = (
-                    (heat_transport_variables.pthermmw - self.pthermblkt_liq)
+                    (heat_transport_variables.pthermmw - self.p_blkt_coolant_secondary_thermal_mw)
                     * heat_transport_variables.etath
-                    + self.pthermblkt_liq * heat_transport_variables.etath_liq
+                    + self.p_blkt_coolant_secondary_thermal_mw * heat_transport_variables.etath_liq
                 )
             else:
                 heat_transport_variables.p_gross_electrical = (
@@ -1893,8 +1893,8 @@ class Power:
             and fwbs_variables.primary_pumping == 2
         ):
             self.p_thermal_main_loss_mw = (
-                heat_transport_variables.pthermmw - self.pthermblkt_liq
-            ) * (1 - heat_transport_variables.etath) + self.pthermblkt_liq * (
+                heat_transport_variables.pthermmw - self.p_blkt_coolant_secondary_thermal_mw
+            ) * (1 - heat_transport_variables.etath) + self.p_blkt_coolant_secondary_thermal_mw * (
                 1 - heat_transport_variables.etath_liq
             )
         else:
