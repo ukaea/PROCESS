@@ -21,7 +21,7 @@ module heat_transport_variables
     real(dp) :: p_cryo_plant
     !! cryogenic plant power (MW)
 
-    real(dp) :: crypmw_max
+    real(dp) :: p_cryo_plant_max_mw
     !! Maximum cryogenic plant power (MW)
     !! Constraint equation icc = 87
     !! Scan variable nwseep = 56
@@ -192,7 +192,7 @@ module heat_transport_variables
 
       p_baseload_electrical = 5.0D6
       p_cryo_plant = 0.0D0
-      crypmw_max = 50.0D0
+      p_cryo_plant_max_mw = 50.0D0
       f_crypmw = 1.0D0
       etatf = 0.9D0
       eta_thermal_electric = 0.35D0

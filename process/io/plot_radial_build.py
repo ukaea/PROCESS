@@ -204,7 +204,7 @@ def main(args=None):
         "",
         "b_crit_upper_nbti",
         "shldith",
-        "crypmw_max",
+        "p_cryo_plant_max_mw",
         "bt",  # Genuinly bt lower bound
         "scrapli",
         "scraplo",

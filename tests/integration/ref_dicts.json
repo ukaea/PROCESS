@@ -1569,7 +1569,7 @@
         "cryostore_l": 160.0,
         "cryostore_w": 30.0,
         "p_cryo_plant": 0.0,
-        "crypmw_max": 50.0,
+        "p_cryo_plant_max_mw": 50.0,
         "cryvol": 0.0,
         "csawth": 1.0,
         "csi": 16.0,
@@ -9235,7 +9235,7 @@
         "cryostore_l": "Magnet Cryo Storage Tanks length, width, height (m)",
         "cryostore_w": "Magnet Cryo Storage Tanks length, width, height (m)",
         "p_cryo_plant": "cryogenic plant power (MW)",
-        "crypmw_max": "Maximum cryogenic plant power (MW)\n Constraint equation icc = 87\n Scan variable nwseep = 56",
+        "p_cryo_plant_max_mw": "Maximum cryogenic plant power (MW)\n Constraint equation icc = 87\n Scan variable nwseep = 56",
         "cryvol": "volume of cryoplant building (m3)",
         "csawth": "coeff. for sawteeth effects on burn V-s requirement",
         "csi": "allowance for site costs (M$)",
@@ -10198,7 +10198,7 @@
         "nre": "",
         "nsix": "",
         "nsixi": "",
-        "nsweep": "Switch denoting quantity to scan:<UL>\n         <LI> 1  aspect\n         <LI> 2  hldivlim\n         <LI> 3  pnetelin\n         <LI> 4  hfact\n         <LI> 5  oacdcp\n         <LI> 6  walalw\n         <LI> 7  beamfus0\n         <LI> 8  fqval\n         <LI> 9  te\n         <LI> 10 boundu(15: fvs)\n         <LI> 11 dnbeta\n         <LI> 12 bootstrap_current_fraction_max (use negative values only)\n         <LI> 13 boundu(10: hfact)\n         <LI> 14 fiooic\n         <LI> 15 fjprot\n         <LI> 16 rmajor\n         <LI> 17 bmxlim\n         <LI> 18 gammax\n         <LI> 19 boundl(16: ohcth)\n         <LI> 20 t_burn_min\n         <LI> 21 not used\n         <LI> 22 cfactr (N.B. requires iavail=0)\n         <LI> 23 boundu(72: fipir)\n         <LI> 24 powfmax\n         <LI> 25 kappa\n         <LI> 26 triang\n         <LI> 27 tbrmin (for blktmodel > 0 only)\n         <LI> 28 bt\n         <LI> 29 coreradius\n       <LI> 31 taulimit\n         <LI> 32 epsvmc\n         <LI> 33 ttarget\n         <LI> 34 qtargettotal\n         <LI> 35 lambda_q_omp\n         <LI> 36 lambda_target\n         <LI> 37 lcon_factor\n         <LI> 38 Neon upper limit\n         <LI> 39 Argon upper limit\n         <LI> 40 Xenon upper limit\n         <LI> 41 blnkoth\n         <LI> 42 Argon fraction fimp(9)\n         <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum\n         <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material\n         <LI> 45 Minimum allowable temperature margin ; tf coils\n         <LI> 46 boundu(150) fgwsep\n         <LI> 47 impurity_enrichment(9) Argon impurity enrichment\n         <LI> 48 TF coil - n_pancake (integer turn winding pack)\n         <LI> 49 TF coil - n_layer (integer turn winding pack)\n         <LI> 50 Xenon fraction fimp(13)\n         <LI> 51 Power fraction to lower DN Divertor ftar\n         <LI> 52 SoL radiation fraction\n         <LI> 54 GL_nbti upper critical field at 0 Kelvin\n         <LI> 55 `shldith` : Inboard neutron shield thickness\n         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)\n         <LI> 57 `bt` lower boundary\n         <LI> 58 `scrapli` : Inboard plasma-first wall gap\n         <LI> 59 `scraplo` : Outboard plasma-first wall gap\n         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)\n         <LI> 61 copperaoh_m2_max : CS coil current / copper area\n         <LI> 62 coheof : CS coil current density at EOF\n         <LI> 63 ohcth : CS thickness (m)\n         <LI> 64 ohhghf : CS height (m) </UL>",
+        "nsweep": "Switch denoting quantity to scan:<UL>\n         <LI> 1  aspect\n         <LI> 2  hldivlim\n         <LI> 3  pnetelin\n         <LI> 4  hfact\n         <LI> 5  oacdcp\n         <LI> 6  walalw\n         <LI> 7  beamfus0\n         <LI> 8  fqval\n         <LI> 9  te\n         <LI> 10 boundu(15: fvs)\n         <LI> 11 dnbeta\n         <LI> 12 bootstrap_current_fraction_max (use negative values only)\n         <LI> 13 boundu(10: hfact)\n         <LI> 14 fiooic\n         <LI> 15 fjprot\n         <LI> 16 rmajor\n         <LI> 17 bmxlim\n         <LI> 18 gammax\n         <LI> 19 boundl(16: ohcth)\n         <LI> 20 t_burn_min\n         <LI> 21 not used\n         <LI> 22 cfactr (N.B. requires iavail=0)\n         <LI> 23 boundu(72: fipir)\n         <LI> 24 powfmax\n         <LI> 25 kappa\n         <LI> 26 triang\n         <LI> 27 tbrmin (for blktmodel > 0 only)\n         <LI> 28 bt\n         <LI> 29 coreradius\n       <LI> 31 taulimit\n         <LI> 32 epsvmc\n         <LI> 33 ttarget\n         <LI> 34 qtargettotal\n         <LI> 35 lambda_q_omp\n         <LI> 36 lambda_target\n         <LI> 37 lcon_factor\n         <LI> 38 Neon upper limit\n         <LI> 39 Argon upper limit\n         <LI> 40 Xenon upper limit\n         <LI> 41 blnkoth\n         <LI> 42 Argon fraction fimp(9)\n         <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum\n         <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material\n         <LI> 45 Minimum allowable temperature margin ; tf coils\n         <LI> 46 boundu(150) fgwsep\n         <LI> 47 impurity_enrichment(9) Argon impurity enrichment\n         <LI> 48 TF coil - n_pancake (integer turn winding pack)\n         <LI> 49 TF coil - n_layer (integer turn winding pack)\n         <LI> 50 Xenon fraction fimp(13)\n         <LI> 51 Power fraction to lower DN Divertor ftar\n         <LI> 52 SoL radiation fraction\n         <LI> 54 GL_nbti upper critical field at 0 Kelvin\n         <LI> 55 `shldith` : Inboard neutron shield thickness\n         <LI> 56 p_cryo_plant_max_mw: Maximum cryogenic power (ixx=164, ixc=87)\n         <LI> 57 `bt` lower boundary\n         <LI> 58 `scrapli` : Inboard plasma-first wall gap\n         <LI> 59 `scraplo` : Outboard plasma-first wall gap\n         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)\n         <LI> 61 copperaoh_m2_max : CS coil current / copper area\n         <LI> 62 coheof : CS coil current density at EOF\n         <LI> 63 ohcth : CS thickness (m)\n         <LI> 64 ohhghf : CS height (m) </UL>",
         "nsweep_2": "nsweep_2 /3/ : switch denoting quantity to scan for 2D scan:",
         "nt": "",
         "ntype": "switch for vacuum pump type:\n<ul>\n<li>=0 - for turbomolecular pump (magnetic bearing) with speed of 2.0 m3/s\n   (1.95 for N2, 1.8 for He, 1.8 for DT)</li>\n<li>=1 - for compound cryopump with nominal speed of 10.0 m3/s\n   (9.0 for N2, 5.0 for He and 25.0 for DT)</li>\n</ul>",
@@ -12100,7 +12100,7 @@
             "lb": 10.0,
             "ub": 1000.0
         },
-        "crypmw_max": {
+        "p_cryo_plant_max_mw": {
             "lb": 0.01,
             "ub": 200.0
         },
@@ -18199,7 +18199,7 @@
         "heat_transport_variables": [
             "p_baseload_electrical",
             "p_cryo_plant",
-            "crypmw_max",
+            "p_cryo_plant_max_mw",
             "f_crypmw",
             "etatf",
             "eta_thermal_electric",
@@ -19955,7 +19955,7 @@
         "boundu(157=swp(iscn": "case(54)",
         "coheof=swp(iscn": "case(63)",
         "copperaoh_m2_max=swp(iscn": "case(62)",
-        "crypmw_max=swp(iscn": "case(57)",
+        "p_cryo_plant_max_mw=swp(iscn": "case(57)",
         "fimp(13=swp(iscn": "case(51)",
         "ftar=swp(iscn": "case(52)",
         "impurity_enrichment(9=swp(iscn": "case(48)",
@@ -20148,7 +20148,7 @@
         "cryostore_h": "real_variable",
         "cryostore_l": "real_variable",
         "cryostore_w": "real_variable",
-        "crypmw_max": "real_variable",
+        "p_cryo_plant_max_mw": "real_variable",
         "csawth": "real_variable",
         "csi": "real_variable",
         "cturbb": "real_variable",
