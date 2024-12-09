@@ -49,7 +49,7 @@ class Power:
         self.htpmwe_blkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_div_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.pthermblkt = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_blkt_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermblkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_shield_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.ppumpmw = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -714,11 +714,11 @@ class Power:
                 + current_drive_variables.p_nb_shine_through_mw
             )
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.p_blanket_nuclear_heat_mw already)
-            self.pthermblkt = (
+            self.p_blkt_coolant_thermal_mw = (
                 fwbs_variables.p_blanket_nuclear_heat_mw
                 + heat_transport_variables.p_blanket_pumping_mw
             )
-            self.pthermfw_blkt = self.pthermfw + self.pthermblkt
+            self.pthermfw_blkt = self.pthermfw + self.p_blkt_coolant_thermal_mw
 
         #  Total power deposited in shield coolant (MW)
         self.p_shield_coolant_thermal_mw = (

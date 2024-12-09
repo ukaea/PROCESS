@@ -334,7 +334,7 @@ def plot_full_sankey(
         """# -------------------------------------- BLANKET - 6 --------------------------------------
 
         # Blanket - Energy mult., Energy Mult., pumping power, Blanket
-        BLANKET = [pnucemblkt, emultmw, htpmwblkt, -pthermblkt]
+        BLANKET = [pnucemblkt, emultmw, htpmwblkt, -p_blkt_coolant_thermal_mw]
         sankey.add(flows=BLANKET,
                    # left(in), down(in), down(in), right(out)
                    orientations=[0, -1, -1, 0],
@@ -378,7 +378,7 @@ def plot_full_sankey(
         """# ------------------------------------ PRIMARY HEAT - 7 -----------------------------------
 
         # 1st wall, Blanket, Shield, Divertor, Total thermal power
-        HEAT = [pthermfw, pthermblkt, p_shield_coolant_thermal_mw, p_div_thermal_mw, -pthermmw]
+        HEAT = [pthermfw, p_blkt_coolant_thermal_mw, p_shield_coolant_thermal_mw, p_div_thermal_mw, -pthermmw]
         sankey.add(flows=HEAT,
                    orientations=[1, 0, -1, 1, 0],
                    trunklength=0.5,
