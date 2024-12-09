@@ -49,7 +49,7 @@ class Power:
             float, 0.0, docstring="", units=""
         )
         self.p_blkt_pump_cool_secondary_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.p_div_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_div_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_fw_coolant_thermal_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
@@ -649,22 +649,24 @@ class Power:
             - self.p_pump_coolant_total_mw
         )
 
-        # Calculate total deposited power (MW), n.b. energy multiplication in p_blanket_nuclear_heat_mw already
-
         if fwbs_variables.primary_pumping == 2:
 
             # Liquid metal breeder/coolant
+            # A portion of the blanket nuclear heat is taken by the secondary coolant/breeder
             if fwbs_variables.i_blkt_dual_coolant == 2:
                 self.p_blkt_coolant_secondary_thermal_mw = (
                     fwbs_variables.p_blanket_nuclear_heat_mw
                     * fwbs_variables.f_nuc_pow_bz_liq
                 ) + heat_transport_variables.p_blkt_pump_cool_secondary_mw
+
+            # None of the blanket nuclear heat is taken by the secondary coolant/breeder
             elif fwbs_variables.i_blkt_dual_coolant == 1:
                 self.p_blkt_coolant_secondary_thermal_mw = (
                     heat_transport_variables.p_blkt_pump_cool_secondary_mw
                 )
 
             # First wall and blanket coolant combined
+            # If the secondary coolant takes some of the blanket nuclear heat then remove from the total thermal power for the main coolant
             if fwbs_variables.i_blkt_dual_coolant == 2:
                 self.p_fw_blkt_coolant_thermal_mw = (
                     self.p_blkt_coolant_secondary_thermal_mw
@@ -679,6 +681,8 @@ class Power:
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_nb_shine_through_mw
                 )
+
+            # Main blanket coolant takes all nuclear heat
             elif fwbs_variables.i_blkt_dual_coolant == 1:
                 self.p_fw_blkt_coolant_thermal_mw = (
                     self.p_blkt_coolant_secondary_thermal_mw
@@ -690,6 +694,8 @@ class Power:
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_nb_shine_through_mw
                 )
+
+            # No secondary coolant so no pumping power contribution
             else:
                 self.p_fw_blkt_coolant_thermal_mw = (
                     fwbs_variables.p_fw_nuclear_heat_mw
@@ -744,7 +750,7 @@ class Power:
         #  Total thermal power deposited in divertor coolant (MW)
         #  = (conduction to divertor, less radiation) + (neutron and radiation power)
         #  using physics_variables.pdivt as calculated in physics.f90
-        self.p_div_thermal_mw = (
+        self.p_div_coolant_thermal_mw = (
             physics_variables.pdivt
             + (fwbs_variables.p_div_nuclear_heat_mw + fwbs_variables.p_div_radiation_mw)
             + heat_transport_variables.p_div_pump_cool_mw
@@ -753,7 +759,7 @@ class Power:
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
         if fwbs_variables.primary_pumping != 3:
             heat_transport_variables.pfwdiv = (
-                self.p_fw_coolant_thermal_mw + self.p_div_thermal_mw
+                self.p_fw_coolant_thermal_mw + self.p_div_coolant_thermal_mw
             )
 
         #  Thermal to electric efficiency
@@ -773,7 +779,7 @@ class Power:
                 + heat_transport_variables.i_shield_power_generation * self.p_shield_coolant_thermal_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
-            heat_transport_variables.psecdiv = self.p_div_thermal_mw
+            heat_transport_variables.psecdiv = self.p_div_coolant_thermal_mw
             # Divertor primary/secondary power switch: does NOT contribute to energy generation cycle
             self.i_div_thermal = 0
         else:
@@ -781,7 +787,7 @@ class Power:
             heat_transport_variables.pthermmw = (
                 self.p_fw_blkt_coolant_thermal_mw
                 + heat_transport_variables.i_shield_power_generation * self.p_shield_coolant_thermal_mw
-                + self.p_div_thermal_mw
+                + self.p_div_coolant_thermal_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
             heat_transport_variables.psecdiv = 0.0e0
@@ -792,7 +798,7 @@ class Power:
             logger.error(f'{"ERROR Primary thermal power is zero or negative"}')
 
         # #284 Fraction of total high-grade thermal power to divertor
-        self.pdivfraction = self.p_div_thermal_mw / heat_transport_variables.pthermmw
+        self.pdivfraction = self.p_div_coolant_thermal_mw / heat_transport_variables.pthermmw
         # Loss in efficiency as this primary power is collecetd at very low temperature
         self.delta_eta = 0.339 * self.pdivfraction
 
@@ -1857,8 +1863,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat extracted from divertor (MW)",
-            "(p_div_thermal_mw)",
-            self.p_div_thermal_mw,
+            "(p_div_coolant_thermal_mw)",
+            self.p_div_coolant_thermal_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1881,7 +1887,7 @@ class Power:
             "",
             self.p_fw_blkt_coolant_thermal_mw
             + self.p_shield_coolant_thermal_mw
-            + self.p_div_thermal_mw
+            + self.p_div_coolant_thermal_mw
             + heat_transport_variables.psechcd
             + fwbs_variables.ptfnuc,
             "OP ",
@@ -1893,7 +1899,7 @@ class Power:
                 - (
                     self.p_fw_blkt_coolant_thermal_mw
                     + self.p_shield_coolant_thermal_mw
-                    + self.p_div_thermal_mw
+                    + self.p_div_coolant_thermal_mw
                     + heat_transport_variables.psechcd
                     + fwbs_variables.ptfnuc
                 )
