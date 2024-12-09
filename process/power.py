@@ -810,8 +810,8 @@ class Power:
         else:
             heat_transport_variables.p_shield_thermal_secondary_mw = 0.0
 
-        #  Secondary thermal power lost to HCD apparatus and diagnostics
-        heat_transport_variables.psechcd = (
+        # Secondary thermal power lost to HCD apparatus and diagnostics
+        heat_transport_variables.p_hcd_thermal_secondary_mw = (
             fwbs_variables.pnuchcd + fwbs_variables.p_hcd_radiation_mw
         )
 
@@ -948,14 +948,14 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.p_div_thermal_secondary_mw + heat_transport_variables.p_shield_thermal_secondary_mw + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.p_div_thermal_secondary_mw + heat_transport_variables.p_shield_thermal_secondary_mw + heat_transport_variables.p_hcd_thermal_secondary_mw + fwbs_variables.ptfnuc
         heat_transport_variables.psechtmw = (
             self.p_core_electrical_mw
             + heat_transport_variables.p_hcd_electrical_loss_mw
             + heat_transport_variables.p_pump_cool_loss_total_mw
             + heat_transport_variables.p_div_thermal_secondary_mw
             + heat_transport_variables.p_shield_thermal_secondary_mw
-            + heat_transport_variables.psechcd
+            + heat_transport_variables.p_hcd_thermal_secondary_mw
             + fwbs_variables.ptfnuc
         )
 
@@ -1873,8 +1873,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Nuclear and photon power lost to H/CD system (MW)",
-            "(psechcd)",
-            heat_transport_variables.psechcd,
+            "(p_hcd_thermal_secondary_mw)",
+            heat_transport_variables.p_hcd_thermal_secondary_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1891,7 +1891,7 @@ class Power:
             self.p_fw_blkt_coolant_thermal_mw
             + self.p_shield_coolant_thermal_mw
             + self.p_div_coolant_thermal_mw
-            + heat_transport_variables.psechcd
+            + heat_transport_variables.p_hcd_thermal_secondary_mw
             + fwbs_variables.ptfnuc,
             "OP ",
         )
@@ -1903,7 +1903,7 @@ class Power:
                     self.p_fw_blkt_coolant_thermal_mw
                     + self.p_shield_coolant_thermal_mw
                     + self.p_div_coolant_thermal_mw
-                    + heat_transport_variables.psechcd
+                    + heat_transport_variables.p_hcd_thermal_secondary_mw
                     + fwbs_variables.ptfnuc
                 )
             )

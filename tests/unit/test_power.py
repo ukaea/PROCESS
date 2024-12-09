@@ -2117,7 +2117,7 @@ class Power2Param(NamedTuple):
 
     trithtmw: Any = None
 
-    psechcd: Any = None
+    p_hcd_thermal_secondary_mw: Any = None
 
     p_tf_electrical_mw: Any = None
 
@@ -2276,7 +2276,7 @@ class Power2Param(NamedTuple):
             p_gross_electrical=0,
             psechtmw=0,
             trithtmw=15,
-            psechcd=0,
+            p_hcd_thermal_secondary_mw=0,
             p_tf_electrical_mw=9.1507079104675704,
             p_pump_cool_elec_total_mw=234.28554165620102,
             eta_thermal_electric=0.37500000000000006,
@@ -2378,7 +2378,7 @@ class Power2Param(NamedTuple):
             p_gross_electrical=982.58317918134742,
             psechtmw=233.80288075411508,
             trithtmw=15,
-            psechcd=0,
+            p_hcd_thermal_secondary_mw=0,
             p_tf_electrical_mw=9.1507079104675704,
             p_pump_cool_elec_total_mw=234.2162627659944,
             eta_thermal_electric=0.37500000000000006,
@@ -2584,7 +2584,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", power2param.trithtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "psechcd", power2param.psechcd)
+    monkeypatch.setattr(heat_transport_variables, "p_hcd_thermal_secondary_mw", power2param.p_hcd_thermal_secondary_mw)
 
     monkeypatch.setattr(
         heat_transport_variables, "p_tf_electrical_mw", power2param.p_tf_electrical_mw
