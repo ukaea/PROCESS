@@ -3712,7 +3712,11 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2253param.fkind)
 
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", acc2253param.p_thermal_primary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        acc2253param.p_thermal_primary_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -3920,7 +3924,11 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
         acc2261param.p_blanket_nuclear_heat_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", acc2261param.p_thermal_primary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        acc2261param.p_thermal_primary_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pfwdiv", acc2261param.pfwdiv)
 
@@ -5206,7 +5214,11 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", acc26param.lsa)
 
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", acc26param.p_thermal_primary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        acc26param.p_thermal_primary_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_hcd_electrical_mw", acc26param.p_hcd_electrical_mw
@@ -5406,7 +5418,11 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2253param.fkind)
 
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", acc2253param.p_thermal_primary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        acc2253param.p_thermal_primary_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,

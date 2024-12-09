@@ -262,8 +262,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Total nuclear heating in TF+PF coils (CS is negligible) (MW)",
-                "(ptfnuc)",
-                fwbs_variables.ptfnuc,
+                "(p_tf_nuclear_heat_mw)",
+                fwbs_variables.p_tf_nuclear_heat_mw,
                 "OP ",
             )
 

@@ -198,7 +198,7 @@ BLANKET_COMPARE_PARAMS = [
     "fusion_power",
     "p_blanket_nuclear_heat_mw",
     "p_fw_nuclear_heat_mw",
-    "ptfnuc",
+    "p_tf_nuclear_heat_mw",
     "p_shield_nuclear_heat_mw",
     "p_div_nuclear_heat_mw",
     "tbr",

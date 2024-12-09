@@ -606,7 +606,8 @@ class Costs2015:
         self.s_cref[7] = 51000.0e0 * cost_variables.light_build_cost_per_vol
         # Scale with total thermal power removed from the core (MW)
         self.s_k[7] = (
-            heat_transport_variables.p_thermal_primary_mw + heat_transport_variables.psechtmw
+            heat_transport_variables.p_thermal_primary_mw
+            + heat_transport_variables.psechtmw
         )
         self.s_kref[7] = 880.0e0
         self.s_cost[7] = (
@@ -960,7 +961,8 @@ class Costs2015:
         self.s_cref[42] = 40.0e6
         #  Scale with total thermal power removed from fusion core (MW)
         self.s_k[42] = (
-            heat_transport_variables.p_thermal_primary_mw + heat_transport_variables.psechtmw
+            heat_transport_variables.p_thermal_primary_mw
+            + heat_transport_variables.psechtmw
         )
         self.s_kref[42] = 550.0e0
         self.s_cost[42] = (
@@ -988,7 +990,8 @@ class Costs2015:
         self.s_cref[44] = 724.0e6
         #  Scale with total thermal power removed from fusion core (MW)
         self.s_k[44] = (
-            heat_transport_variables.p_thermal_primary_mw + heat_transport_variables.psechtmw
+            heat_transport_variables.p_thermal_primary_mw
+            + heat_transport_variables.psechtmw
         )
         self.s_kref[44] = 550.0e0
         self.s_cost[44] = (

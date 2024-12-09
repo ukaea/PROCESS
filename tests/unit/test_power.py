@@ -52,7 +52,7 @@ class CryoParam(NamedTuple):
 
     ensxpfm: Any = None
 
-    ptfnuc: Any = None
+    p_tf_nuclear_heat_mw: Any = None
 
     n_tf: Any = None
 
@@ -85,7 +85,7 @@ class CryoParam(NamedTuple):
             coldmass=47352637.039762333,
             cpttf=74026.751437500003,
             ensxpfm=37429.525515086898,
-            ptfnuc=0.044178296011112193,
+            p_tf_nuclear_heat_mw=0.044178296011112193,
             n_tf=16,
             tfcryoarea=0,
             t_pulse_repetition=10364.426139387357,
@@ -106,7 +106,7 @@ class CryoParam(NamedTuple):
             coldmass=47308985.527808741,
             cpttf=74026.751437500003,
             ensxpfm=37427.228965055205,
-            ptfnuc=0.045535131445547841,
+            p_tf_nuclear_heat_mw=0.045535131445547841,
             n_tf=16,
             tfcryoarea=0,
             t_pulse_repetition=364.42613938735633,
@@ -148,7 +148,7 @@ def test_cryo(cryoparam, monkeypatch, power):
         coldmass=cryoparam.coldmass,
         cpttf=cryoparam.cpttf,
         ensxpfm=cryoparam.ensxpfm,
-        ptfnuc=cryoparam.ptfnuc,
+        p_tf_nuclear_heat_mw=cryoparam.p_tf_nuclear_heat_mw,
         n_tf=cryoparam.n_tf,
         tfcryoarea=cryoparam.tfcryoarea,
         t_pulse_repetition=cryoparam.t_pulse_repetition,
@@ -2061,7 +2061,7 @@ class Power2Param(NamedTuple):
 
     primary_pumping: Any = None
 
-    ptfnuc: Any = None
+    p_tf_nuclear_heat_mw: Any = None
 
     p_hcd_nuclear_heat_mw: Any = None
 
@@ -2248,7 +2248,7 @@ class Power2Param(NamedTuple):
             pnuc_cp=0,
             p_div_nuclear_heat_mw=182.69222981118057,
             primary_pumping=3,
-            ptfnuc=0.044178296011112193,
+            p_tf_nuclear_heat_mw=0.044178296011112193,
             p_hcd_nuclear_heat_mw=0,
             p_shield_nuclear_heat_mw=1.3609360176065353,
             p_hcd_radiation_mw=0,
@@ -2350,7 +2350,7 @@ class Power2Param(NamedTuple):
             pnuc_cp=0,
             p_div_nuclear_heat_mw=182.6352084763719,
             primary_pumping=3,
-            ptfnuc=0.045535131445547841,
+            p_tf_nuclear_heat_mw=0.045535131445547841,
             p_hcd_nuclear_heat_mw=0,
             p_shield_nuclear_heat_mw=1.4036212304705389,
             p_hcd_radiation_mw=0,
@@ -2498,9 +2498,13 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "primary_pumping", power2param.primary_pumping)
 
-    monkeypatch.setattr(fwbs_variables, "ptfnuc", power2param.ptfnuc)
+    monkeypatch.setattr(
+        fwbs_variables, "p_tf_nuclear_heat_mw", power2param.p_tf_nuclear_heat_mw
+    )
 
-    monkeypatch.setattr(fwbs_variables, "p_hcd_nuclear_heat_mw", power2param.p_hcd_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables, "p_hcd_nuclear_heat_mw", power2param.p_hcd_nuclear_heat_mw
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "p_shield_nuclear_heat_mw", power2param.p_shield_nuclear_heat_mw
@@ -2515,7 +2519,9 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_shield_pump_cool_mw", power2param.p_shield_pump_cool_mw
+        heat_transport_variables,
+        "p_shield_pump_cool_mw",
+        power2param.p_shield_pump_cool_mw,
     )
 
     monkeypatch.setattr(
@@ -2524,7 +2530,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_blanket_pumping_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "p_shield_thermal_secondary_mw", power2param.p_shield_thermal_secondary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_shield_thermal_secondary_mw",
+        power2param.p_shield_thermal_secondary_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "fpumpshld", power2param.fpumpshld)
 
@@ -2558,7 +2568,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_recirc_electrical_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", power2param.p_thermal_primary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        power2param.p_thermal_primary_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "fpumpfw", power2param.fpumpfw)
 
@@ -2568,7 +2582,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_baseload_electrical_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "i_shield_power_generation", power2param.i_shield_power_generation)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "i_shield_power_generation",
+        power2param.i_shield_power_generation,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_hcd_electrical_mw", power2param.p_hcd_electrical_mw
@@ -2584,7 +2602,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", power2param.trithtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_thermal_secondary_mw", power2param.p_hcd_thermal_secondary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_thermal_secondary_mw",
+        power2param.p_hcd_thermal_secondary_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_tf_electrical_mw", power2param.p_tf_electrical_mw
@@ -2606,7 +2628,11 @@ def test_power2(power2param, monkeypatch, power):
         heat_transport_variables, "p_cryo_plant", power2param.p_cryo_plant
     )
 
-    monkeypatch.setattr(heat_transport_variables, "p_div_thermal_secondary_mw", power2param.p_div_thermal_secondary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_div_thermal_secondary_mw",
+        power2param.p_div_thermal_secondary_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2700,7 +2726,9 @@ def test_power2(power2param, monkeypatch, power):
         power, "p_fw_blkt_pump_cool_elec_mw", power2param.p_fw_blkt_pump_cool_elec_mw
     )
 
-    monkeypatch.setattr(power, "p_div_coolant_thermal_mw", power2param.p_div_coolant_thermal_mw)
+    monkeypatch.setattr(
+        power, "p_div_coolant_thermal_mw", power2param.p_div_coolant_thermal_mw
+    )
 
     monkeypatch.setattr(
         power, "p_fw_coolant_thermal_mw", power2param.p_fw_coolant_thermal_mw
@@ -2714,7 +2742,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(power, "p_core_electrical_mw", power2param.p_core_electrical_mw)
 
-    monkeypatch.setattr(power, "f_div_thermal_primary", power2param.f_div_thermal_primary)
+    monkeypatch.setattr(
+        power, "f_div_thermal_primary", power2param.f_div_thermal_primary
+    )
 
     monkeypatch.setattr(power, "qss", power2param.qss)
 

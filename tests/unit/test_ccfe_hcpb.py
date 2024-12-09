@@ -66,7 +66,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     fw_armour_thickness: Any = None
 
-    ptfnuc: Any = None
+    p_tf_nuclear_heat_mw: Any = None
 
     denw: Any = None
 
@@ -104,7 +104,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     tfc_nuc_heating: Any = None
 
-    expected_ptfnuc: Any = None
+    expected_p_tf_nuclear_heat: Any = None
 
     expected_vffwi: Any = None
 
@@ -149,7 +149,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             vvmass=9043937.8018644415,
             vdewin=1159.4792053672361,
             fw_armour_thickness=0.0050000000000000001,
-            ptfnuc=0,
+            p_tf_nuclear_heat_mw=0,
             denw=19250,
             vffwi=0,
             vffwo=0,
@@ -168,7 +168,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             x_blanket=0,
             x_shield=0,
             tfc_nuc_heating=0,
-            expected_ptfnuc=0.044541749095475737,
+            expected_p_tf_nuclear_heat=0.044541749095475737,
             expected_vffwi=0.31415926535897931,
             expected_vffwo=0.31415926535897931,
             expected_armour_density=13202.434141839649,
@@ -199,7 +199,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             vvmass=9056931.558219457,
             vdewin=1161.1450715665972,
             fw_armour_thickness=0.0050000000000000001,
-            ptfnuc=0.044184461825198453,
+            p_tf_nuclear_heat_mw=0.044184461825198453,
             denw=19250,
             vffwi=0.31415926535897931,
             vffwo=0.31415926535897931,
@@ -218,7 +218,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             x_blanket=2.3374537748527975,
             x_shield=4.056,
             tfc_nuc_heating=22427.165831352642,
-            expected_ptfnuc=0.044556605747797934,
+            expected_p_tf_nuclear_heat=0.044556605747797934,
             expected_vffwi=0.31415926535897931,
             expected_vffwo=0.31415926535897931,
             expected_armour_density=13202.434141839649,
@@ -287,7 +287,11 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         nuclearheatingmagnetsparam.fw_armour_thickness,
     )
 
-    monkeypatch.setattr(fwbs_variables, "ptfnuc", nuclearheatingmagnetsparam.ptfnuc)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_tf_nuclear_heat_mw",
+        nuclearheatingmagnetsparam.p_tf_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "denw", nuclearheatingmagnetsparam.denw)
 
@@ -347,8 +351,8 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     ccfe_hcpb.nuclear_heating_magnets(False)
 
-    assert fwbs_variables.ptfnuc == pytest.approx(
-        nuclearheatingmagnetsparam.expected_ptfnuc
+    assert fwbs_variables.p_tf_nuclear_heat_mw == pytest.approx(
+        nuclearheatingmagnetsparam.expected_p_tf_nuclear_heat
     )
 
     assert fwbs_variables.vffwi == pytest.approx(
@@ -747,7 +751,11 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
         nuclearheatingdivertorparam.p_div_nuclear_heat_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "p_hcd_nuclear_heat_mw", nuclearheatingdivertorparam.p_hcd_nuclear_heat_mw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_hcd_nuclear_heat_mw",
+        nuclearheatingdivertorparam.p_hcd_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
 

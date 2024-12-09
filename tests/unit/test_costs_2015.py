@@ -2292,7 +2292,9 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     monkeypatch.setattr(pfcoil_variables, "pfrmax", calcbuildingcostsparam.pfrmax)
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_thermal_primary_mw", calcbuildingcostsparam.p_thermal_primary_mw
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        calcbuildingcostsparam.p_thermal_primary_mw,
     )
 
     monkeypatch.setattr(
@@ -15994,7 +15996,9 @@ def test_calc_remaining_subsystems(
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_thermal_primary_mw", calcremainingsubsystemsparam.p_thermal_primary_mw
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        calcremainingsubsystemsparam.p_thermal_primary_mw,
     )
 
     monkeypatch.setattr(

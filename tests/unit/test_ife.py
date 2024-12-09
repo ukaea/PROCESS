@@ -2109,7 +2109,11 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     )
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw1param.pnucloss)
     monkeypatch.setattr(heat_transport_variables, "priheat", ifepw1param.priheat)
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", ifepw1param.p_thermal_primary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        ifepw1param.p_thermal_primary_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "pfwdiv", ifepw1param.pfwdiv)
     monkeypatch.setattr(heat_transport_variables, "nphx", ifepw1param.nphx)
     monkeypatch.setattr(
@@ -2948,7 +2952,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(
         heat_transport_variables, "p_gross_electrical", ifepw2param.p_gross_electrical
     )
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_primary_mw", ifepw2param.p_thermal_primary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_primary_mw",
+        ifepw2param.p_thermal_primary_mw,
+    )
     monkeypatch.setattr(
         heat_transport_variables,
         "eta_thermal_electric",

@@ -1911,8 +1911,8 @@ class IFE:
 
         # Useful (high-grade) thermal power (MW)
 
-        heat_transport_variables.p_thermal_primary_mw = heat_transport_variables.priheat * (
-            1.0 - fwbs_variables.fhole
+        heat_transport_variables.p_thermal_primary_mw = (
+            heat_transport_variables.priheat * (1.0 - fwbs_variables.fhole)
         )
 
         # Assume 0.24 of thermal power is intercepted by the first wall
@@ -1922,20 +1922,26 @@ class IFE:
         # conventional blanket
 
         if (ife_variables.ifetyp != 3) and (ife_variables.ifetyp != 4):
-            heat_transport_variables.pfwdiv = 0.24 * heat_transport_variables.p_thermal_primary_mw
+            heat_transport_variables.pfwdiv = (
+                0.24 * heat_transport_variables.p_thermal_primary_mw
+            )
             fwbs_variables.p_blanket_nuclear_heat_mw = (
-                heat_transport_variables.p_thermal_primary_mw - heat_transport_variables.pfwdiv
+                heat_transport_variables.p_thermal_primary_mw
+                - heat_transport_variables.pfwdiv
             )
         else:
             heat_transport_variables.pfwdiv = 0.0
-            fwbs_variables.p_blanket_nuclear_heat_mw = heat_transport_variables.p_thermal_primary_mw
+            fwbs_variables.p_blanket_nuclear_heat_mw = (
+                heat_transport_variables.p_thermal_primary_mw
+            )
 
         fwbs_variables.p_shield_nuclear_heat_mw = 0.0
 
         # Lost fusion power (MW)
 
         fwbs_variables.pnucloss = (
-            heat_transport_variables.priheat - heat_transport_variables.p_thermal_primary_mw
+            heat_transport_variables.priheat
+            - heat_transport_variables.p_thermal_primary_mw
         )  # = priheat*fhole
 
         # Number of primary heat exchangers
