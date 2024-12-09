@@ -1873,7 +1873,7 @@ class AcpowParam(NamedTuple):
 
     p_baseload_electrical: Any = None
 
-    p_cryo_plant: Any = None
+    p_cryo_plant_mw: Any = None
 
     vachtmw: Any = None
 
@@ -1914,7 +1914,7 @@ class AcpowParam(NamedTuple):
         AcpowParam(
             a_floor_total=379218.8908858358,
             p_baseload_electrical=5000000,
-            p_cryo_plant=37.900388528497025,
+            p_cryo_plant_mw=37.900388528497025,
             vachtmw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
@@ -1935,7 +1935,7 @@ class AcpowParam(NamedTuple):
         AcpowParam(
             a_floor_total=381580.9594357388,
             p_baseload_electrical=5000000,
-            p_cryo_plant=108.74512702403499,
+            p_cryo_plant_mw=108.74512702403499,
             vachtmw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
@@ -1977,7 +1977,7 @@ def test_acpow(acpowparam, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_cryo_plant", acpowparam.p_cryo_plant
+        heat_transport_variables, "p_cryo_plant_mw", acpowparam.p_cryo_plant_mw
     )
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", acpowparam.vachtmw)
@@ -2125,7 +2125,7 @@ class Power2Param(NamedTuple):
 
     eta_thermal_electric: Any = None
 
-    p_cryo_plant: Any = None
+    p_cryo_plant_mw: Any = None
 
     p_div_thermal_secondary_mw: Any = None
 
@@ -2280,7 +2280,7 @@ class Power2Param(NamedTuple):
             p_tf_electrical_mw=9.1507079104675704,
             p_pump_cool_elec_total_mw=234.28554165620102,
             eta_thermal_electric=0.37500000000000006,
-            p_cryo_plant=37.900388528497025,
+            p_cryo_plant_mw=37.900388528497025,
             p_div_thermal_secondary_mw=0,
             p_hcd_electrical_loss_mw=77.967671580642758,
             p_pump_cool_loss_total_mw=30.457120415306122,
@@ -2382,7 +2382,7 @@ class Power2Param(NamedTuple):
             p_tf_electrical_mw=9.1507079104675704,
             p_pump_cool_elec_total_mw=234.2162627659944,
             eta_thermal_electric=0.37500000000000006,
-            p_cryo_plant=108.74512702403499,
+            p_cryo_plant_mw=108.74512702403499,
             p_div_thermal_secondary_mw=0,
             p_hcd_electrical_loss_mw=77.967671580642758,
             p_pump_cool_loss_total_mw=30.448114159579291,
@@ -2625,7 +2625,7 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_cryo_plant", power2param.p_cryo_plant
+        heat_transport_variables, "p_cryo_plant_mw", power2param.p_cryo_plant_mw
     )
 
     monkeypatch.setattr(
@@ -2789,7 +2789,7 @@ class Power3Param(NamedTuple):
 
     pinjmax: Any = None
 
-    p_cryo_plant: Any = None
+    p_cryo_plant_mw: Any = None
 
     vachtmw: Any = None
 
@@ -2829,7 +2829,7 @@ class Power3Param(NamedTuple):
             etacd=0.40000000000000002,
             p_pump_cool_elec_total_mw=234.28554165620102,
             pinjmax=120,
-            p_cryo_plant=37.900388528497025,
+            p_cryo_plant_mw=37.900388528497025,
             vachtmw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
@@ -2856,7 +2856,7 @@ class Power3Param(NamedTuple):
             etacd=0.40000000000000002,
             p_pump_cool_elec_total_mw=234.2162627659944,
             pinjmax=120,
-            p_cryo_plant=108.74512702403499,
+            p_cryo_plant_mw=108.74512702403499,
             vachtmw=0.5,
             p_tf_electrical_mw=9.1507079104675704,
             trithtmw=15,
@@ -2911,7 +2911,7 @@ def test_power3(power3param, monkeypatch, power):
     monkeypatch.setattr(heat_transport_variables, "pinjmax", power3param.pinjmax)
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_cryo_plant", power3param.p_cryo_plant
+        heat_transport_variables, "p_cryo_plant_mw", power3param.p_cryo_plant_mw
     )
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", power3param.vachtmw)

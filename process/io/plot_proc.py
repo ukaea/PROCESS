@@ -2616,7 +2616,7 @@ def plot_power_info(axis, mfile_data, scan):
         ped_height = ("", "No pedestal model used", "")
         ped_pos = ("", "", "")
 
-    p_cryo_plant = mfile_data.data["p_cryo_plant"].get_scan(scan)
+    p_cryo_plant_mw = mfile_data.data["p_cryo_plant_mw"].get_scan(scan)
 
     data = [
         ("wallmw", "Nominal neutron wall load", "MW m$^{-2}$"),
@@ -2627,7 +2627,7 @@ def plot_power_info(axis, mfile_data, scan):
         ("pradmw", "Total radiation in LCFS", "MW"),
         ("p_blanket_nuclear_heat_mw", "Nuclear heating in blanket", "MW"),
         ("p_shield_nuclear_heat_mw", "Nuclear heating in shield", "MW"),
-        (p_cryo_plant, "TF cryogenic power", "MW"),
+        (p_cryo_plant_mw, "TF cryogenic power", "MW"),
         ("pdivt", "Power to divertor", "MW"),
         ("divlife", "Divertor life", "years"),
         ("p_thermal_primary_mw", "Primary (high grade) heat", "MW"),

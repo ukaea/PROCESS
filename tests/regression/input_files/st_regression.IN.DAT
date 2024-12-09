@@ -3050,7 +3050,7 @@ i_shield_power_generation = 1
 *icc = 87
 * DESCRIPTION:   Constraint equation for limiting the cryogenic plant power
 * JUSTIFICATION: Turned off, not concerned with cryogenic plant power
-* VARIABLES:     p_cryo_plant_max_mw (Max cryo plant power [MW]). p_cryo_plant calculated in-situ
+* VARIABLES:     p_cryo_plant_max_mw (Max cryo plant power [MW]). p_cryo_plant_mw calculated in-situ
 
 *p_cryo_plant_max_mw = 
 * DESCRIPTION: Maximum cryogenic plant power (MW)

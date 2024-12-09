@@ -604,7 +604,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     )  # Recirculating power (MW)
 
     # Used in [RECIRC]
-    p_cryo_plant = m_file.data["p_cryo_plant"].get_scan(
+    p_cryo_plant_mw = m_file.data["p_cryo_plant_mw"].get_scan(
         -1
     )  # cryogenic plant power (MW)
     fachtmw = m_file.data["fachtmw"].get_scan(-1)  # facility heat removal (MW)
@@ -624,7 +624,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
 
     # Energy required for rest of power plant (MW)
     p_core_electrical_mw = (
-        p_cryo_plant
+        p_cryo_plant_mw
         + fachtmw
         + p_tf_electrical_mw
         + trithtmw

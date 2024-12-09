@@ -134,7 +134,7 @@ def test_acc2262(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(htv, "p_hcd_electrical_loss_mw", 76.5)
-    monkeypatch.setattr(htv, "p_cryo_plant", 39.936)
+    monkeypatch.setattr(htv, "p_cryo_plant_mw", 39.936)
     monkeypatch.setattr(htv, "vachtmw", 0.5)
     monkeypatch.setattr(htv, "trithtmw", 15.0)
     monkeypatch.setattr(htv, "fachtmw", 64.835)
@@ -3972,7 +3972,7 @@ class Acc2262Param(NamedTuple):
 
     fachtmw: Any = None
 
-    p_cryo_plant: Any = None
+    p_cryo_plant_mw: Any = None
 
     c226: Any = None
 
@@ -4002,7 +4002,7 @@ class Acc2262Param(NamedTuple):
             vachtmw=0.5,
             trithtmw=15,
             fachtmw=61.882833632875375,
-            p_cryo_plant=37.900388528497025,
+            p_cryo_plant_mw=37.900388528497025,
             c226=0,
             c2262=0,
             c22=0,
@@ -4021,7 +4021,7 @@ class Acc2262Param(NamedTuple):
             vachtmw=0.5,
             trithtmw=15,
             fachtmw=62.237143915360818,
-            p_cryo_plant=108.74512702403499,
+            p_cryo_plant_mw=108.74512702403499,
             c226=228.30921518184891,
             c2262=20.313088941037051,
             c22=3474.7391916096453,
@@ -4068,7 +4068,7 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
     monkeypatch.setattr(heat_transport_variables, "fachtmw", acc2262param.fachtmw)
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_cryo_plant", acc2262param.p_cryo_plant
+        heat_transport_variables, "p_cryo_plant_mw", acc2262param.p_cryo_plant_mw
     )
 
     monkeypatch.setattr(costs, "c226", acc2262param.c226)

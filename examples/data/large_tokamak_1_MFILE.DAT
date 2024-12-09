@@ -1099,7 +1099,7 @@
  Temperature_of_cryogenic_aluminium_components_(K)_______________________ (tcoolin)_____________________      3.1315E+02    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Efficiency_(figure_of_merit)_of_cryogenic_aluminium_plant_is_40%_of_idea ______________________________     -2.0203E+00 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant)______________________      3.6566E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_mw)______________________      3.6566E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (fdiv)________________________      1.1500E-01    
@@ -1121,7 +1121,7 @@
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_thermal_electric)_______________________      4.0000E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_div_thermal_primary)________________      1.5623E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.0111E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant)______________________      3.6566E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_mw)______________________      3.6566E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5490E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_pump_cool_loss_total_mw)____________________      2.4769E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (p_hcd_electrical_loss_mw)______________________      8.0143E+01    
@@ -1157,7 +1157,7 @@
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_pump_cool_elec_total_mw)_______________________      1.9053E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant)______________________      3.6566E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_mw)______________________      3.6566E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electrical_mw)______________________      1.0434E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2422E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5490E+01    
