@@ -89,7 +89,7 @@
             "coreradius",
             "kappa",
             "etaech",
-            "etath",
+            "eta_thermal_electric",
             "boundl(18)",
             "alstrtf",
             "triang"

@@ -2123,7 +2123,7 @@ class Power2Param(NamedTuple):
 
     p_pump_cool_elec_total_mw: Any = None
 
-    etath: Any = None
+    eta_thermal_electric: Any = None
 
     p_cryo_plant: Any = None
 
@@ -2279,7 +2279,7 @@ class Power2Param(NamedTuple):
             psechcd=0,
             p_tf_electrical_mw=9.1507079104675704,
             p_pump_cool_elec_total_mw=234.28554165620102,
-            etath=0.37500000000000006,
+            eta_thermal_electric=0.37500000000000006,
             p_cryo_plant=37.900388528497025,
             psecdiv=0,
             p_hcd_electrical_loss_mw=77.967671580642758,
@@ -2381,7 +2381,7 @@ class Power2Param(NamedTuple):
             psechcd=0,
             p_tf_electrical_mw=9.1507079104675704,
             p_pump_cool_elec_total_mw=234.2162627659944,
-            etath=0.37500000000000006,
+            eta_thermal_electric=0.37500000000000006,
             p_cryo_plant=108.74512702403499,
             psecdiv=0,
             p_hcd_electrical_loss_mw=77.967671580642758,
@@ -2596,7 +2596,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_pump_cool_elec_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "etath", power2param.etath)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "eta_thermal_electric",
+        power2param.eta_thermal_electric,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_cryo_plant", power2param.p_cryo_plant
@@ -2688,7 +2692,9 @@ def test_power2(power2param, monkeypatch, power):
         power, "p_pump_coolant_total_mw", power2param.p_pump_coolant_total_mw
     )
 
-    monkeypatch.setattr(power, "p_fw_blkt_coolant_thermal_mw", power2param.p_fw_blkt_coolant_thermal_mw)
+    monkeypatch.setattr(
+        power, "p_fw_blkt_coolant_thermal_mw", power2param.p_fw_blkt_coolant_thermal_mw
+    )
 
     monkeypatch.setattr(
         power, "p_fw_blkt_pump_elec_mw", power2param.p_fw_blkt_pump_elec_mw
@@ -2696,9 +2702,13 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(power, "p_div_thermal_mw", power2param.p_div_thermal_mw)
 
-    monkeypatch.setattr(power, "p_fw_coolant_thermal_mw", power2param.p_fw_coolant_thermal_mw)
+    monkeypatch.setattr(
+        power, "p_fw_coolant_thermal_mw", power2param.p_fw_coolant_thermal_mw
+    )
 
-    monkeypatch.setattr(power, "p_shield_coolant_thermal_mw", power2param.p_shield_coolant_thermal_mw)
+    monkeypatch.setattr(
+        power, "p_shield_coolant_thermal_mw", power2param.p_shield_coolant_thermal_mw
+    )
 
     monkeypatch.setattr(power, "ppumpmw", power2param.ppumpmw)
 

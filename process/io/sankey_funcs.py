@@ -584,7 +584,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_fw_blanket_pumping_mw = m_file.data["p_fw_blanket_pumping_mw"].get_scan(
         -1
     )  # 1st wall & blanket pumping (MW)
-    pthermmw_p = p_fw_blkt_coolant_thermal_mw - p_fw_blanket_pumping_mw  # Heat - pumping power (MW)
+    pthermmw_p = (
+        p_fw_blkt_coolant_thermal_mw - p_fw_blanket_pumping_mw
+    )  # Heat - pumping power (MW)
 
     # Used in [PRIMARY]
     p_gross_electrical = m_file.data["p_gross_electrical"].get_scan(

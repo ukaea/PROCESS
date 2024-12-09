@@ -88,7 +88,7 @@ efficiency in the secondary cycle.
     divertor heat is used for electricity generation.
   - If `secondary_cycle` = 2, the efficiency of the power generation cycle is input by the user.
   - If `secondary_cycle` = 3, a steam Rankine cycle is assumed. The secondary cycle thermal 
-    efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
+    efficiency (`eta_thermal_electric`) is calculated from the coolant outlet temperature using simple relations 
     between temperature and efficiency[^1]:
 
     $\begin{eqnarray*}
@@ -97,7 +97,7 @@ efficiency in the secondary cycle.
     \end{eqnarray*}$
 
   - If `secondary_cycle` = 4, a supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle 
-    efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
+    efficiency (`eta_thermal_electric`) is calculated from the coolant outlet temperature using simple relations 
     between temperature and efficiency from [^1]:
 
     $$

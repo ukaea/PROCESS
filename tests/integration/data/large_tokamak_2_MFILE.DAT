@@ -1118,7 +1118,7 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_pump_coolant_electrical)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      4.0000E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_thermal_electric)_______________________      4.0000E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.5623E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.0111E+03    
  Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant)______________________      3.6566E+01    
@@ -1173,7 +1173,7 @@
  Total_(MW)______________________________________________________________ ______________________________      1.9293E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_net_electrical_mw/(fusion_power+emultmw)____      2.0741E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_net_electrical_mw/fusion_power)_____________      2.4689E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      4.0000E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_thermal_electric)_______________________      4.0000E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      5.4025E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      5.5485E+04 OP 
@@ -1701,7 +1701,7 @@ etaiso = 0.9
 secondary_cycle = 2
 
 * Thermal to electric conversion efficiency
-etath = 0.4
+eta_thermal_electric = 0.4
 
 * Switch for shield thermal power density
 iprimshld = 1

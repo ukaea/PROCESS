@@ -34,7 +34,7 @@ module heat_transport_variables
     real(dp) :: etatf
     !! AC to resistive power conversion for TF coils
 
-    real(dp) :: etath
+    real(dp) :: eta_thermal_electric
     !! thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated.
 
     real(dp) :: etath_liq
@@ -195,7 +195,7 @@ module heat_transport_variables
       crypmw_max = 50.0D0
       f_crypmw = 1.0D0
       etatf = 0.9D0
-      etath = 0.35D0
+      eta_thermal_electric = 0.35D0
       etath_liq = 0.35D0
       fachtmw = 0.0D0
       p_baseload_electrical_total_mw = 0.0D0

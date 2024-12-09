@@ -111,7 +111,7 @@ module scan_module
   !!         <LI> 73 `pnuc_fw_ratio_dcll' : Ratio of FW nuclear power as fraction of total (FW+BB)
   !!         <LI> 74 `f_nuc_pow_bz_struct' : Fraction of BZ power cooled by primary coolant for dual-coolant balnket
   !!         <LI> 75 pitch : pitch of first wall cooling channels (m)
-  !!         <LI> 76 etath : Thermal conversion eff.
+  !!         <LI> 76 eta_thermal_electric : Thermal conversion eff.
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
   !!         <LI> 79 etaech : ECH wall plug to injector efficiency
@@ -608,7 +608,7 @@ contains
     use numerics, only: epsvmc, boundu, boundl
     use tfcoil_variables, only: tmargmin_tf, sig_tf_case_max, n_pancake, oacdcp, &
       n_layer, b_crit_upper_nbti, sig_tf_wp_max, fcoolcp, n_tf_turn
-    use heat_transport_variables, only: crypmw_max, etath
+    use heat_transport_variables, only: crypmw_max, eta_thermal_electric
     use rebco_variables, only: copperaoh_m2_max
     use pfcoil_variables, only: coheof, ohhghf, oh_steel_frac
     use CS_fatigue_variables, only: n_cycle_min, t_crack_vertical
@@ -838,8 +838,8 @@ contains
             pitch = swp(iscn)
             vlab = 'pitch' ; xlab = 'pitch of first wall cooling channels (m)'
         case (76)
-            etath = swp(iscn)
-              vlab = 'etath' ; xlab = 'Thermal conversion eff.'
+            eta_thermal_electric = swp(iscn)
+              vlab = 'eta_thermal_electric' ; xlab = 'Thermal conversion eff.'
         case (77)
             startupratio = swp(iscn)
               vlab = 'startupratio' ; xlab = 'Gyrotron redundancy'

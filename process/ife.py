@@ -2003,7 +2003,8 @@ class IFE:
 
             # Gross electric power
             heat_transport_variables.p_gross_electrical = (
-                heat_transport_variables.pthermmw * heat_transport_variables.etath
+                heat_transport_variables.pthermmw
+                * heat_transport_variables.eta_thermal_electric
             )
 
             # Balance of plant recirculating power fraction

@@ -142,7 +142,7 @@ class ProcessTracker:
         "plasma_volume",
         "sarea",
         "p_net_electrical_mw",
-        "etath",
+        "eta_thermal_electric",
         "p_gross_electrical",
         "tftmp",
         "n_tf",

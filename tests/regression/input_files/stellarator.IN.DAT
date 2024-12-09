@@ -211,7 +211,7 @@ declfw = 0.075
 declshld = 0.075
 *-------------Heat Transport Variables-------------*
 
-etath = 0.4 *Thermal to electric conversion efficiency; if seconday_cycle=2
+eta_thermal_electric = 0.4 *Thermal to electric conversion efficiency; if seconday_cycle=2
 
 *------------Impurity Radiation Module-------------*
 

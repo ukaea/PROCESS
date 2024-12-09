@@ -282,7 +282,7 @@ contains
       i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, p_div_pump_cool_mw, &
-      pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
+      pwpm2, eta_thermal_electric, vachtmw, iprimshld, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, p_shield_pumping_mw, fpumpshld, trithtmw, &
       fpumpfw, crypmw_max, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
@@ -2277,8 +2277,8 @@ contains
         case ('etatf')
           call parse_real_variable('etatf', etatf, 0.0D0, 1.0D0, &
                'AC to resistive power conversion for TF coils')
-       case ('etath')
-          call parse_real_variable('etath', etath, 0.0D0, 1.0D0, &
+       case ('eta_thermal_electric')
+          call parse_real_variable('eta_thermal_electric', eta_thermal_electric, 0.0D0, 1.0D0, &
                'Thermal-electric conversion efficiency')
        case ('fmgdmw')
           call parse_real_variable('fmgdmw', fmgdmw, 0.0D0, 100.0D0, &

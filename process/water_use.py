@@ -23,7 +23,7 @@ class WaterUse:
         :type output: boolean
         """
         rejected_heat = heat_transport_variables.pthermmw * (
-            1 - heat_transport_variables.etath
+            1 - heat_transport_variables.eta_thermal_electric
         )
 
         wastethermeng = rejected_heat * SECDAY

@@ -42,16 +42,26 @@ class Power:
         self.p_pump_coolant_total_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.p_fw_blkt_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_fw_blkt_coolant_thermal_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.p_fw_blkt_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
         self.htpmwe_blkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_div_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.p_fw_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.p_blkt_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.p_blkt_coolant_secondary_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.p_shield_coolant_thermal_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_fw_coolant_thermal_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
+        self.p_blkt_coolant_thermal_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
+        self.p_blkt_coolant_secondary_thermal_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
+        self.p_shield_coolant_thermal_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.ppumpmw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_core_electrical_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
@@ -650,7 +660,9 @@ class Power:
                     * fwbs_variables.f_nuc_pow_bz_liq
                 ) + heat_transport_variables.p_blkt_pump_cool_secondary_mw
             elif fwbs_variables.i_blkt_dual_coolant == 1:
-                self.p_blkt_coolant_secondary_thermal_mw = heat_transport_variables.p_blkt_pump_cool_secondary_mw
+                self.p_blkt_coolant_secondary_thermal_mw = (
+                    heat_transport_variables.p_blkt_pump_cool_secondary_mw
+                )
 
             # First wall and blanket coolant combined
             if fwbs_variables.i_blkt_dual_coolant == 2:
@@ -718,7 +730,9 @@ class Power:
                 fwbs_variables.p_blanket_nuclear_heat_mw
                 + heat_transport_variables.p_blanket_pumping_mw
             )
-            self.p_fw_blkt_coolant_thermal_mw = self.p_fw_coolant_thermal_mw + self.p_blkt_coolant_thermal_mw
+            self.p_fw_blkt_coolant_thermal_mw = (
+                self.p_fw_coolant_thermal_mw + self.p_blkt_coolant_thermal_mw
+            )
 
         #  Total power deposited in shield coolant (MW)
         self.p_shield_coolant_thermal_mw = (
@@ -738,11 +752,13 @@ class Power:
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
         if fwbs_variables.primary_pumping != 3:
-            heat_transport_variables.pfwdiv = self.p_fw_coolant_thermal_mw + self.p_div_thermal_mw
+            heat_transport_variables.pfwdiv = (
+                self.p_fw_coolant_thermal_mw + self.p_div_thermal_mw
+            )
 
         #  Thermal to electric efficiency
-        heat_transport_variables.etath = self.plant_thermal_efficiency(
-            heat_transport_variables.etath
+        heat_transport_variables.eta_thermal_electric = self.plant_thermal_efficiency(
+            heat_transport_variables.eta_thermal_electric
         )
         heat_transport_variables.etath_liq = self.plant_thermal_efficiency_2(
             heat_transport_variables.etath_liq
@@ -938,19 +954,24 @@ class Power:
         if cost_variables.ireactor == 1:
 
             #  Gross electric power
-            # p_gross_electrical = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
+            # p_gross_electrical = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.eta_thermal_electric
             if (
                 fwbs_variables.i_blkt_dual_coolant > 0
                 and fwbs_variables.primary_pumping == 2
             ):
                 heat_transport_variables.p_gross_electrical = (
-                    (heat_transport_variables.pthermmw - self.p_blkt_coolant_secondary_thermal_mw)
-                    * heat_transport_variables.etath
-                    + self.p_blkt_coolant_secondary_thermal_mw * heat_transport_variables.etath_liq
+                    (
+                        heat_transport_variables.pthermmw
+                        - self.p_blkt_coolant_secondary_thermal_mw
+                    )
+                    * heat_transport_variables.eta_thermal_electric
+                    + self.p_blkt_coolant_secondary_thermal_mw
+                    * heat_transport_variables.etath_liq
                 )
             else:
                 heat_transport_variables.p_gross_electrical = (
-                    heat_transport_variables.pthermmw * heat_transport_variables.etath
+                    heat_transport_variables.pthermmw
+                    * heat_transport_variables.eta_thermal_electric
                 )
 
             #  Total recirculating power
@@ -1304,8 +1325,8 @@ class Power:
                 po.ovarrf(
                     self.outfile,
                     "Thermal to electric conversion efficiency of the power conversion cycle",
-                    "(etath)",
-                    heat_transport_variables.etath,
+                    "(eta_thermal_electric)",
+                    heat_transport_variables.eta_thermal_electric,
                 )
             elif fwbs_variables.secondary_cycle == 2:
                 po.ocmmnt(
@@ -1315,8 +1336,8 @@ class Power:
                 po.ovarrf(
                     self.outfile,
                     "Thermal to electric conversion efficiency of the power conversion cycle",
-                    "(etath)",
-                    heat_transport_variables.etath,
+                    "(eta_thermal_electric)",
+                    heat_transport_variables.eta_thermal_electric,
                 )
             elif fwbs_variables.secondary_cycle == 3:
                 po.ocmmnt(
@@ -1893,13 +1914,16 @@ class Power:
             and fwbs_variables.primary_pumping == 2
         ):
             self.p_thermal_main_loss_mw = (
-                heat_transport_variables.pthermmw - self.p_blkt_coolant_secondary_thermal_mw
-            ) * (1 - heat_transport_variables.etath) + self.p_blkt_coolant_secondary_thermal_mw * (
+                heat_transport_variables.pthermmw
+                - self.p_blkt_coolant_secondary_thermal_mw
+            ) * (
+                1 - heat_transport_variables.eta_thermal_electric
+            ) + self.p_blkt_coolant_secondary_thermal_mw * (
                 1 - heat_transport_variables.etath_liq
             )
         else:
             self.p_thermal_main_loss_mw = heat_transport_variables.pthermmw * (
-                1 - heat_transport_variables.etath
+                1 - heat_transport_variables.eta_thermal_electric
             )
 
         po.ocmmnt(self.outfile, "Electrical Power Balance :")
@@ -2099,8 +2123,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Gross electric power* / high grade heat (%)",
-            "(etath)",
-            100.0e0 * heat_transport_variables.etath,
+            "(eta_thermal_electric)",
+            100.0e0 * heat_transport_variables.eta_thermal_electric,
         )
         po.ocmmnt(
             self.outfile, "(*Power for pumps in secondary circuit already subtracted)"
@@ -2390,12 +2414,12 @@ class Power:
         )
         return helpow
 
-    def plant_thermal_efficiency(self, etath):
+    def plant_thermal_efficiency(self, eta_thermal_electric):
         """
         Calculates the thermal efficiency of the power conversion cycle
         author: P J Knight, CCFE, Culham Science Centre
         author: C Harrington, CCFE, Culham Science Centre
-        etath : input/output real : thermal to electric conversion efficiency
+        eta_thermal_electric : input/output real : thermal to electric conversion efficiency
         This routine calculates the thermal efficiency of the power conversion cycle.
         This gives the gross power of the plant, i.e. the primary coolant pumping
         power is not subtracted at this point; however, the pumping of the
@@ -2404,7 +2428,7 @@ class Power:
         taken from cycle modelling studies.
         <P>If secondary_cycle > 1, the outlet temperature from the first wall
         and breeder zone is used to calculate an efficiency, using a simple relationship
-        between etath and outlet_temp again obtained from previous studies.
+        between eta_thermal_electric and outlet_temp again obtained from previous studies.
         C. Harrington, K:Power Plant Physics and Technology  PROCESS  blanket_model
          New Power Module Harrington  Cycle correlations  Cycle correlations.xls
         """
@@ -2416,7 +2440,7 @@ class Power:
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
                 # Feedheat & reheat cycle assumed
-                etath = 0.411e0
+                eta_thermal_electric = 0.411e0
 
                 #  KIT HCPB model
             elif fwbs_variables.iblanket == 2:
@@ -2424,7 +2448,7 @@ class Power:
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
                 # Feedheat & reheat cycle assumed
-                etath = 0.411e0
+                eta_thermal_electric = 0.411e0
             else:
                 logger.log(f'{"iblanket does not have a value in range 1-3."}')
 
@@ -2437,17 +2461,17 @@ class Power:
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
                 # Feedheat & reheat cycle assumed
-                etath = 0.411e0 - self.delta_eta
+                eta_thermal_electric = 0.411e0 - self.delta_eta
 
                 #  KIT HCPB model
             elif fwbs_variables.iblanket == 2:
-                etath = 0.411e0 - self.delta_eta
+                eta_thermal_electric = 0.411e0 - self.delta_eta
             else:
                 logger.log(f'{"iblanket does not have a value in range 1-3."}')
 
-            #  User input used, etath not changed
+            #  User input used, eta_thermal_electric not changed
         elif fwbs_variables.secondary_cycle == 2:
-            return etath
+            return eta_thermal_electric
             # Do nothing
 
             #  Steam Rankine cycle to be used
@@ -2473,7 +2497,7 @@ class Power:
                     error_handling.fdiags[0] = heat_transport_variables.tturb
                     error_handling.report_error(166)
 
-                etath = (
+                eta_thermal_electric = (
                     0.1802e0 * numpy.log(heat_transport_variables.tturb)
                     - 0.7823
                     - self.delta_eta
@@ -2490,7 +2514,7 @@ class Power:
                     error_handling.fdiags[0] = heat_transport_variables.tturb
                     error_handling.report_error(166)
 
-                etath = (
+                eta_thermal_electric = (
                     0.1802e0 * numpy.log(heat_transport_variables.tturb)
                     - 0.7823
                     - self.delta_eta
@@ -2517,13 +2541,15 @@ class Power:
                 error_handling.fdiags[0] = heat_transport_variables.tturb
                 error_handling.report_error(166)
 
-            etath = 0.4347e0 * numpy.log(heat_transport_variables.tturb) - 2.5043e0
+            eta_thermal_electric = (
+                0.4347e0 * numpy.log(heat_transport_variables.tturb) - 2.5043e0
+            )
 
         else:
             logger.log(
                 f'{"secondary_cycle does not appear to have a value within its range (0-4)"}'
             )
-        return etath
+        return eta_thermal_electric
 
     def plant_thermal_efficiency_2(self, etath_liq):
         """
@@ -2531,7 +2557,7 @@ class Power:
         for the liquid metal breeder
         """
         if fwbs_variables.secondary_cycle_liq == 2:
-            #  User input used, etath not changed
+            #  User input used, eta_thermal_electric not changed
             return etath_liq
 
         if fwbs_variables.secondary_cycle_liq == 4:

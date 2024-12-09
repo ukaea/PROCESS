@@ -1791,7 +1791,7 @@
         "etapsu": 0.9,
         "etapump": 0.8,
         "etatf": 0.9,
-        "etath": 0.35,
+        "eta_thermal_electric": 0.35,
         "etave": [
             0.082,
             0.079,
@@ -9434,7 +9434,7 @@
         "etapsu": "Efficiency of transfer of PF stored energy into or out of storage.",
         "etapump": "centrepost coolant pump efficiency",
         "etatf": "AC to resistive power conversion for TF coils",
-        "etath": "thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated.",
+        "eta_thermal_electric": "thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated.",
         "etave": "IFE driver efficiency vs driver energy (`ifedrv=-1`)",
         "evapratio": "evaporation ratio: ratio of the heat used to evaporate water\n   to the total heat discharged through the tower",
         "evapvol": "evaporated volume of water (m3)",
@@ -10604,7 +10604,7 @@
         "sec_buildings_h": "security &amp; safety buildings length, width, height (m)",
         "sec_buildings_l": "security &amp; safety buildings length, width, height (m)",
         "sec_buildings_w": "security &amp; safety buildings length, width, height (m)",
-        "secondary_cycle": "Switch for power conversion cycle:\n<ul>\n<li>=0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)</li>\n<li>=1 Set efficiency for chosen blanket, from detailed models (divertor heat used)</li>\n<li>=2 user input thermal-electric efficiency (etath)</li>\n<li>=3 steam Rankine cycle</li>\n<li>=4 supercritical CO2 cycle</li>\n</ul>",
+        "secondary_cycle": "Switch for power conversion cycle:\n<ul>\n<li>=0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)</li>\n<li>=1 Set efficiency for chosen blanket, from detailed models (divertor heat used)</li>\n<li>=2 user input thermal-electric efficiency (eta_thermal_electric)</li>\n<li>=3 steam Rankine cycle</li>\n<li>=4 supercritical CO2 cycle</li>\n</ul>",
         "seppowerratio": "",
         "sf": "shape factor = plasma poloidal perimeter / (2.pi.rminor)",
         "sfd": "",
@@ -12392,7 +12392,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "etath": {
+        "eta_thermal_electric": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -18202,7 +18202,7 @@
             "crypmw_max",
             "f_crypmw",
             "etatf",
-            "etath",
+            "eta_thermal_electric",
             "fachtmw",
             "p_baseload_electrical_total_mw",
             "fgrosbop",
@@ -20222,7 +20222,7 @@
         "etapsu": "real_variable",
         "etapump": "real_variable",
         "etatf": "real_variable",
-        "etath": "real_variable",
+        "eta_thermal_electric": "real_variable",
         "etave": "real_array",
         "eyoung_al": "real_variable",
         "eyoung_cond_axial": "real_variable",
