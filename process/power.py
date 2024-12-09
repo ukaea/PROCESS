@@ -45,7 +45,7 @@ class Power:
         self.p_fw_blkt_coolant_thermal_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.p_fw_blkt_pump_elec_mw = AnnotatedVariable(
+        self.p_fw_blkt_pump_cool_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
         self.htpmwe_blkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -579,7 +579,7 @@ class Power:
         #  in the coolant.  The difference should be lost as secondary heat.
 
         # Calculate electrical power needed to pump blanket coolant (MW)
-        self.p_fw_blkt_pump_elec_mw = (
+        self.p_fw_blkt_pump_cool_elec_mw = (
             primary_pumping_variables.p_fw_blkt_pump_cool_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
@@ -620,7 +620,7 @@ class Power:
             # Note that p_pump_cool_elec_total_mw is an ELECTRICAL power
             heat_transport_variables.p_pump_cool_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
-                self.p_fw_blkt_pump_elec_mw
+                self.p_fw_blkt_pump_cool_elec_mw
                 + self.htpmwe_blkt_liq
                 + self.p_shield_pump_cool_elec_mw
                 + self.p_div_pump_cool_elec_mw,
@@ -638,7 +638,7 @@ class Power:
             # Note that p_pump_cool_elec_total_mw is an ELECTRICAL power
             heat_transport_variables.p_pump_cool_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
-                self.p_fw_blkt_pump_elec_mw
+                self.p_fw_blkt_pump_cool_elec_mw
                 + self.p_shield_pump_cool_elec_mw
                 + self.p_div_pump_cool_elec_mw,
             )
@@ -1225,8 +1225,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical pumping power for FW and blanket (MW)",
-            "(p_fw_blkt_pump_elec_mw)",
-            self.p_fw_blkt_pump_elec_mw,
+            "(p_fw_blkt_pump_cool_elec_mw)",
+            self.p_fw_blkt_pump_cool_elec_mw,
             "OP ",
         )
         po.ovarre(
