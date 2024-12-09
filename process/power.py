@@ -33,7 +33,7 @@ class Power:
         self.qac = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qcl = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qss = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.p_shield_pump_elec_mw = AnnotatedVariable(
+        self.p_shield_pump_cool_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
         self.p_div_pump_cool_elec_mw = AnnotatedVariable(
@@ -584,7 +584,7 @@ class Power:
             / fwbs_variables.eta_pump_coolant_electrical
         )
         # Calculate electrical power needed to pump shield coolant (MW)
-        self.p_shield_pump_elec_mw = (
+        self.p_shield_pump_cool_elec_mw = (
             heat_transport_variables.p_shield_pump_cool_mw
             / fwbs_variables.eta_pump_coolant_electrical
         )
@@ -622,7 +622,7 @@ class Power:
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_pump_elec_mw
                 + self.htpmwe_blkt_liq
-                + self.p_shield_pump_elec_mw
+                + self.p_shield_pump_cool_elec_mw
                 + self.p_div_pump_cool_elec_mw,
             )
         else:
@@ -639,7 +639,7 @@ class Power:
             heat_transport_variables.p_pump_cool_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_pump_elec_mw
-                + self.p_shield_pump_elec_mw
+                + self.p_shield_pump_cool_elec_mw
                 + self.p_div_pump_cool_elec_mw,
             )
 
@@ -1232,8 +1232,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical pumping power for shield (MW)",
-            "(p_shield_pump_elec_mw)",
-            self.p_shield_pump_elec_mw,
+            "(p_shield_pump_cool_elec_mw)",
+            self.p_shield_pump_cool_elec_mw,
             "OP ",
         )
         po.ovarre(
