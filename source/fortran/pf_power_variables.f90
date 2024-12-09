@@ -37,7 +37,7 @@ module pf_power_variables
   real(dp) :: spsmva
   !! sum of PF power supply ratings (MVA)
 
-  real(dp) :: srcktpm
+  real(dp) :: p_pf_resisitve_total_kw
   !! sum of resistive PF coil power (kW)
 
   real(dp) :: vpfskv
@@ -64,7 +64,7 @@ module pf_power_variables
     pfckts = 0.0D0
     spfbusl = 0.0D0
     spsmva = 0.0D0
-    srcktpm = 0.0D0
+    p_pf_resisitve_total_kw = 0.0D0
     vpfskv = 0.0D0
     peakpoloidalpower = 0.0D0
     maxpoloidalpower = 1000.0D0

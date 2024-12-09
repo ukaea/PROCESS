@@ -188,7 +188,7 @@ contains
     use heat_transport_variables, only: p_gross_electrical, p_hcd_electrical_mw, p_net_electrical_mw
     use impurity_radiation_module, only: fimp
     use pfcoil_variables, only: whtpf
-    use pf_power_variables, only: srcktpm
+    use pf_power_variables, only: p_pf_resisitve_total_kw
     use process_output, only: oblnkl
     use numerics, only: sqsumsq
     use tfcoil_variables, only: tfareain, wwp2, sig_tf_wp, tfcmw, tcpmax, oacdcp, &
@@ -256,7 +256,7 @@ contains
     outvar(42,iscan) = rcool
     outvar(43,iscan) = vcool
     outvar(44,iscan) = ppump/1.0D6
-    outvar(45,iscan) = 1.0D-3 * srcktpm
+    outvar(45,iscan) = 1.0D-3 * p_pf_resisitve_total_kw
     outvar(46,iscan) = whtpf
     outvar(47,iscan) = p_gross_electrical
     outvar(48,iscan) = p_net_electrical_mw

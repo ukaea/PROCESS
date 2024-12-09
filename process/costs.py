@@ -2015,7 +2015,7 @@ class Costs:
                 1.0e-6
                 * cost_variables.ucpfbs
                 * pf_power_variables.pfckts
-                * (pf_power_variables.srcktpm / pf_power_variables.pfckts) ** 0.7e0
+                * (pf_power_variables.p_pf_resisitve_total_kw / pf_power_variables.pfckts) ** 0.7e0
             )
         else:
             self.c22524 = 0.0e0

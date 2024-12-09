@@ -189,7 +189,7 @@ class PfpwrParam(NamedTuple):
 
     acptmax: Any = None
 
-    srcktpm: Any = None
+    p_pf_resisitve_total_kw: Any = None
 
     ngrp: Any = None
 
@@ -259,7 +259,7 @@ class PfpwrParam(NamedTuple):
 
     expected_acptmax: Any = None
 
-    expected_srcktpm: Any = None
+    expected_p_pf_resisitve_total_kw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -279,7 +279,7 @@ class PfpwrParam(NamedTuple):
             vpfskv=0,
             ensxpfm=0,
             acptmax=0,
-            srcktpm=0,
+            p_pf_resisitve_total_kw=0,
             ngrp=4,
             cpt=numpy.array(
                 (
@@ -1001,7 +1001,7 @@ class PfpwrParam(NamedTuple):
             expected_vpfskv=20,
             expected_ensxpfm=37429.525515086898,
             expected_acptmax=24.816666666666666,
-            expected_srcktpm=1071.1112934857531,
+            expected_p_pf_resisitve_total_kw=1071.1112934857531,
         ),
         PfpwrParam(
             iohcl=1,
@@ -1021,7 +1021,7 @@ class PfpwrParam(NamedTuple):
             vpfskv=20,
             ensxpfm=37429.525515086898,
             acptmax=24.816666666666666,
-            srcktpm=1071.1112934857531,
+            p_pf_resisitve_total_kw=1071.1112934857531,
             ngrp=4,
             cpt=numpy.array(
                 (
@@ -1749,7 +1749,7 @@ class PfpwrParam(NamedTuple):
             expected_vpfskv=20,
             expected_ensxpfm=37427.228965055205,
             expected_acptmax=24.816666666666666,
-            expected_srcktpm=1069.8879533693198,
+            expected_p_pf_resisitve_total_kw=1069.8879533693198,
         ),
     ),
 )
@@ -1792,7 +1792,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pf_power_variables, "acptmax", pfpwrparam.acptmax)
 
-    monkeypatch.setattr(pf_power_variables, "srcktpm", pfpwrparam.srcktpm)
+    monkeypatch.setattr(pf_power_variables, "p_pf_resisitve_total_kw", pfpwrparam.p_pf_resisitve_total_kw)
 
     monkeypatch.setattr(pfcoil_variables, "ngrp", pfpwrparam.ngrp)
 
@@ -1864,7 +1864,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     assert pf_power_variables.acptmax == pytest.approx(pfpwrparam.expected_acptmax)
 
-    assert pf_power_variables.srcktpm == pytest.approx(pfpwrparam.expected_srcktpm)
+    assert pf_power_variables.p_pf_resisitve_total_kw == pytest.approx(pfpwrparam.expected_p_pf_resisitve_total_kw)
 
 
 class AcpowParam(NamedTuple):
@@ -1899,7 +1899,7 @@ class AcpowParam(NamedTuple):
 
     iscenr: Any = None
 
-    srcktpm: Any = None
+    p_pf_resisitve_total_kw: Any = None
 
     iprint: Any = None
 
@@ -1927,7 +1927,7 @@ class AcpowParam(NamedTuple):
             p_pump_cool_elec_total_mw=234.28554165620102,
             pacpmw=0,
             iscenr=2,
-            srcktpm=1071.1112934857531,
+            p_pf_resisitve_total_kw=1071.1112934857531,
             iprint=0,
             outfile=11,
             expected_pacpmw=1164.244494532182,
@@ -1948,7 +1948,7 @@ class AcpowParam(NamedTuple):
             p_pump_cool_elec_total_mw=234.2162627659944,
             pacpmw=1226.1273281650574,
             iscenr=2,
-            srcktpm=1069.8879533693198,
+            p_pf_resisitve_total_kw=1069.8879533693198,
             iprint=0,
             outfile=11,
             expected_pacpmw=589.3014463957436,
@@ -2016,7 +2016,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(pf_power_variables, "iscenr", acpowparam.iscenr)
 
-    monkeypatch.setattr(pf_power_variables, "srcktpm", acpowparam.srcktpm)
+    monkeypatch.setattr(pf_power_variables, "p_pf_resisitve_total_kw", acpowparam.p_pf_resisitve_total_kw)
 
     power.acpow(output=False)
 

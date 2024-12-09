@@ -3460,7 +3460,7 @@ class Acc2252Param(NamedTuple):
 
     pfckts: Any = None
 
-    srcktpm: Any = None
+    p_pf_resisitve_total_kw: Any = None
 
     vpfskv: Any = None
 
@@ -3511,7 +3511,7 @@ class Acc2252Param(NamedTuple):
             ensxpfm=37429.525515086898,
             spfbusl=2533.4495999999999,
             pfckts=12,
-            srcktpm=1071.1112934857531,
+            p_pf_resisitve_total_kw=1071.1112934857531,
             vpfskv=20,
             acptmax=24.816666666666666,
             c22=0,
@@ -3542,7 +3542,7 @@ class Acc2252Param(NamedTuple):
             ensxpfm=37427.228965055205,
             spfbusl=2533.4495999999999,
             pfckts=12,
-            srcktpm=1069.8879533693198,
+            p_pf_resisitve_total_kw=1069.8879533693198,
             vpfskv=20,
             acptmax=24.816666666666666,
             c22=3474.7391916096453,
@@ -3599,7 +3599,7 @@ def test_acc2252(acc2252param, monkeypatch, costs):
 
     monkeypatch.setattr(pf_power_variables, "pfckts", acc2252param.pfckts)
 
-    monkeypatch.setattr(pf_power_variables, "srcktpm", acc2252param.srcktpm)
+    monkeypatch.setattr(pf_power_variables, "p_pf_resisitve_total_kw", acc2252param.p_pf_resisitve_total_kw)
 
     monkeypatch.setattr(pf_power_variables, "vpfskv", acc2252param.vpfskv)
 

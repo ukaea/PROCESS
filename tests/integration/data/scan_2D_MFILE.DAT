@@ -1029,7 +1029,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0180E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6662E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6662E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6662E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0222E+04 OP 
@@ -2192,7 +2192,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9908E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6689E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6689E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6689E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0522E+04 OP 
@@ -3355,7 +3355,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9672E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6709E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6709E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6709E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0750E+04 OP 
@@ -4518,7 +4518,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9653E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6726E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6726E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6726E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0718E+04 OP 
@@ -5681,7 +5681,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9917E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6706E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6706E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6706E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0613E+04 OP 
@@ -6844,7 +6844,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0097E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6675E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6675E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6675E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0284E+04 OP 
@@ -8007,7 +8007,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0068E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6690E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6690E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6690E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0253E+04 OP 
@@ -9170,7 +9170,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9848E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6733E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6733E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6733E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0532E+04 OP 
@@ -10333,7 +10333,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9620E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6798E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6798E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6798E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0779E+04 OP 
@@ -11496,7 +11496,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9611E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6800E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6800E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6800E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0795E+04 OP 
@@ -12659,7 +12659,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9846E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6722E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6722E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6722E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0542E+04 OP 
@@ -13822,7 +13822,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0035E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6667E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6667E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6667E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0198E+04 OP 
@@ -14985,7 +14985,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0024E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6670E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6670E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6670E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0201E+04 OP 
@@ -16148,7 +16148,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9825E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6702E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6702E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6702E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0539E+04 OP 
@@ -17311,7 +17311,7 @@
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      2.9616E+02 OP 
  Total_PF_coil_circuit_bus_length_(m)____________________________________ (spfbusl)_____________________      2.4480E+03 OP 
  Total_PF_coil_bus_resistive_power_(kW)__________________________________ (pfbuspwr)____________________      9.6734E+02 OP 
- Total_PF_coil_resistive_power_(kW)______________________________________ (srcktpm)_____________________      9.6734E+02 OP 
+ Total_PF_coil_resistive_power_(kW)______________________________________ (p_pf_resisitve_total_kw)_____________________      9.6734E+02 OP 
  Maximum_PF_coil_voltage_(kV)____________________________________________ (vpfskv)______________________      2.0000E+01    
  Efficiency_of_transfer_of_PF_stored_energy_into_or_out_of_storage_______ (etapsu)______________________      9.0000E-01    
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0868E+04 OP 

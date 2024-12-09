@@ -101,7 +101,7 @@ contains
 		use heat_transport_variables, only: p_net_electrical_mw
     use numerics, only: minmax
 		use physics_variables, only: fusion_power, bt, rmajor, wallmw, aspect, pohmmw
-		use pf_power_variables, only: srcktpm
+		use pf_power_variables, only: p_pf_resisitve_total_kw
 		use process_output, only: int_to_string3
 		use tfcoil_variables, only: tfcmw
 		use times_variables, only: t_burn
@@ -140,7 +140,7 @@ contains
        fc = sgn * wallmw
 
     case (4)  !  TF coil + PF coil power
-       fc = sgn * (tfcmw + 1.0D-3*srcktpm)/10.0D0
+       fc = sgn * (tfcmw + 1.0D-3*p_pf_resisitve_total_kw)/10.0D0
 
    case (5)  !  Q = fusion gain  Issue #540
        fc = sgn * fusion_power / (pinjmw + p_nb_orbit_loss_mw + pohmmw)

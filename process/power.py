@@ -120,7 +120,7 @@ class Power:
         if build_variables.iohcl != 0:
             ngrpt = ngrpt + 1
 
-        pf_power_variables.srcktpm = 0.0e0
+        pf_power_variables.p_pf_resisitve_total_kw = 0.0e0
         pfbuspwr = 0.0e0
 
         for ig in range(0, ngrpt):
@@ -166,7 +166,7 @@ class Power:
 
             #  Compute the sum of resistive power in the PF circuits, kW
             pfbuspwr = pfbuspwr + 1.0e-3 * pfbusr[ig] * cptburn**2
-            pf_power_variables.srcktpm = pf_power_variables.srcktpm + 1.0e3 * rcktpm[ig]
+            pf_power_variables.p_pf_resisitve_total_kw = pf_power_variables.p_pf_resisitve_total_kw + 1.0e3 * rcktpm[ig]
 
         #  Inductive MVA requirements, and stored energy
         delktim = times_variables.t_current_ramp_up
@@ -366,8 +366,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Total PF coil resistive power (kW)",
-            "(srcktpm)",
-            pf_power_variables.srcktpm,
+            "(p_pf_resisitve_total_kw)",
+            pf_power_variables.p_pf_resisitve_total_kw,
             "OP ",
         )
         po.ovarre(
@@ -434,7 +434,7 @@ class Power:
         ptfmw = heat_transport_variables.p_tf_electrical_mw
 
         # Power to PF coil power supplies, MW
-        ppfmw = 1.0e-3 * pf_power_variables.srcktpm
+        ppfmw = 1.0e-3 * pf_power_variables.p_pf_resisitve_total_kw
 
         if pf_power_variables.iscenr == 2:
             ppfmw = ppfmw + heat_transport_variables.peakmva
@@ -460,7 +460,7 @@ class Power:
         heat_transport_variables.pacpmw = (
             ppfmw
             + bdvmw
-            + ptfmw
+            + heat_transport_variables.p_tf_electrical_mw
             + crymw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.p_pump_cool_elec_total_mw
