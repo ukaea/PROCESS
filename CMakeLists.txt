@@ -181,24 +181,3 @@ else()
 endif()
 
 ADD_DEPENDENCIES(install_process ${PIP_NAME} f2py ${FORD_NAME} ${GFORTLIB_NAME} ${DICTS_NAME} coverage_cleanup)
-
-if(EXISTS ${CMAKE_SOURCE_DIR}/lcov_results)
-    execute_process(COMMAND echo "-- Delete existing lcov_coverage directory...")
-    execute_process(COMMAND cmake -E remove_directory ${CMAKE_SOURCE_DIR}/lcov_results)
-    execute_process(COMMAND mkdir ${CMAKE_SOURCE_DIR}/lcov_results)
-elseif(NOT EXISTS ${CMAKE_SOURCE_DIR}/lcov_results)
-    execute_process(COMMAND echo "-- Create lcov_coverage directory...")
-    execute_process(COMMAND mkdir ${CMAKE_SOURCE_DIR}/lcov_results)
-endif()
-
-# Custom target to run the regression tests and generate coverage report
-ADD_CUSTOM_TARGET(regression
-    COMMAND pytest -v tests/regression/ -s | tee tests/regression/pytest.log
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-
-ADD_CUSTOM_TARGET(coverage
-    COMMAND lcov --gcov-tool gcov --capture --directory build/CMakeFiles/process.dir/source/fortran/ --output-file lcov_results/coverage.info
-    COMMAND genhtml --output-directory lcov_results/html lcov_results/coverage.info
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
