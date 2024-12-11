@@ -5,11 +5,11 @@ from tabulate import tabulate
 from process.fortran import (
     process_output as po,
     constants,
-    function_evaluator,
     numerics,
     constraints,
 )
 from process import output as op
+from process.objectives import objective_function
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -50,7 +50,7 @@ def output_once_through():
     po.oblnkl(constants.nout)
 
     # Evaluate objective function
-    norm_objf = function_evaluator.funfom()
+    norm_objf = objective_function(numerics.minmax)
     po.ovarre(
         constants.mfile, "Normalised objective function", "(norm_objf)", norm_objf
     )
