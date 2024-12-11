@@ -94,7 +94,6 @@ subroutine run_summary
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout, mfile, iotty, mfile
-  use maths_library, only: integer2string, integer3string
   use global_variables, only: maxcal, fileprefix, icase, runtitle
   use numerics, only: nvar, neqns, ioptimz, nineqns, epsvmc, minmax, icc, &
     lablcc, lablmm
@@ -714,5 +713,19 @@ subroutine get_DDMonYYTimeZone(dt_time)
     dt_time = trim(dt_time)
 
   END subroutine get_DDMonYYTimeZone
+
+  pure function integer2string(value)
+      ! Convert an integer value to a 2-digit string with leading zero if required.
+      integer, intent(in) :: value
+      character(len=2) integer2string
+      write (integer2string,'(I2.2)') value
+  end function integer2string
+
+  pure function integer3string(value)
+      ! Convert an integer value to a 3-digit string with leading zero if required.
+      integer, intent(in) :: value
+      character(len=3) integer3string
+      write (integer3string,'(I3.3)') value
+  end function integer3string
 
 end module main_module
