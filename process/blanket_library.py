@@ -15,7 +15,6 @@ from process.fortran import (
     error_handling,
     fwbs_variables,
     heat_transport_variables,
-    maths_library,
     pfcoil_variables,
     physics_variables,
     primary_pumping_variables,
@@ -194,7 +193,7 @@ class BlanketLibrary:
                 fwbs_variables.volblkti,
                 fwbs_variables.volblkto,
                 fwbs_variables.volblkt,
-            ) = maths_library.dshellvol(
+            ) = dshellvol(
                 r1,
                 r2,
                 blanket_library.hblnkt,
@@ -207,7 +206,7 @@ class BlanketLibrary:
                 blanket_library.volshldi,
                 blanket_library.volshldo,
                 fwbs_variables.volshld,
-            ) = maths_library.dshellvol(
+            ) = dshellvol(
                 r1,
                 r2,
                 blanket_library.hshld,
@@ -220,7 +219,7 @@ class BlanketLibrary:
                 blanket_library.volvvi,
                 blanket_library.volvvo,
                 fwbs_variables.vdewin,
-            ) = maths_library.dshellvol(
+            ) = dshellvol(
                 r1,
                 r2,
                 blanket_library.hvv,
@@ -2826,6 +2825,51 @@ def eshellvol(rshell, rmini, rmino, zminor, drin, drout, dz):
     v2 = 2.0 * np.pi * elong * (0.5 * np.pi * rshell * a**2 + (2.0 / 3.0) * a**3)
 
     # Volume of outboard section of shell
+    vout = v2 - v1
+
+    return vin, vout, vin + vout
+
+
+def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
+    """Routine to calculate the inboard, outboard and total volumes
+    of a D-shaped toroidal shell
+    author: P J Knight, CCFE, Culham Science Centre
+    rmajor : input real : major radius to outer point of inboard
+    straight section of shell (m)
+    rminor : input real : horizontal internal width of shell (m)
+    zminor : input real : vertical internal half-height of shell (m)
+    drin   : input real : horiz. thickness of inboard shell at midplane (m)
+    drout  : input real : horiz. thickness of outboard shell at midplane (m)
+    dz     : input real : vertical thickness of shell at top/bottom (m)
+    vin    : output real : volume of inboard straight section (m3)
+    vout   : output real : volume of outboard curved section (m3)
+    vtot   : output real : total volume of shell (m3)
+    This routine calculates the volume of the inboard and outboard sections
+    of a D-shaped toroidal shell defined by the above input parameters.
+    The inboard section is assumed to be a cylinder of uniform thickness.
+    The outboard section's internal and external surfaces are defined
+    by two semi-ellipses, centred on the outer edge of the inboard section;
+    its volume is calculated as the difference in those of the volumes of
+    revolution enclosed by the two surfaces.
+    """
+    # Volume of inboard cylindrical shell
+    vin = 2.0 * (zminor + dz) * np.pi * (rmajor**2 - (rmajor - drin) ** 2)
+
+    # Volume enclosed by inner surface of elliptical outboard section
+    # and the vertical straight line joining its ends
+    a = rminor
+    b = zminor
+    elong = b / a
+    v1 = 2.0 * np.pi * elong * (0.5 * np.pi * rmajor * a**2 + (2.0 / 3.0) * a**3)
+
+    # Volume enclosed by outer surface of elliptical outboard section
+    # and the vertical straight line joining its ends
+    a = rminor + drout
+    b = zminor + dz
+    elong = b / a
+    v2 = 2.0 * np.pi * elong * (0.5 * np.pi * rmajor * a**2 + (2.0 / 3.0) * a**3)
+
+    # Volume of elliptical outboard shell
     vout = v2 - v1
 
     return vin, vout, vin + vout
