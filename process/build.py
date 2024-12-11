@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-from process.blanket_library import eshellarea
+from process.blanket_library import dshellarea, eshellarea
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -11,7 +11,6 @@ from process.fortran import (
     divertor_variables,
     error_handling,
     fwbs_variables,
-    maths_library,
     numerics,
     pfcoil_variables,
     physics_variables,
@@ -1923,7 +1922,7 @@ class Build:
                 build_variables.fwareaib,
                 build_variables.fwareaob,
                 build_variables.fwarea,
-            ) = maths_library.dshellarea(r1, r2, hfw)
+            ) = dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
             #  Major radius to centre of inboard and outboard ellipses
