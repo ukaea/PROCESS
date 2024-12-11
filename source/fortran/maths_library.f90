@@ -224,52 +224,6 @@ contains
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine eshellarea(rshell,rmini,rmino,zminor,ain,aout,atot)
-
-    !! Routine to calculate the inboard, outboard and total surface areas
-    !! of a toroidal shell comprising two elliptical sections
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! rshell : input real : major radius of centre of both ellipses (m)
-    !! rmini  : input real : horizontal distance from rshell to
-    !! inboard elliptical shell (m)
-    !! rmino  : input real : horizontal distance from rshell to
-    !! outboard elliptical shell (m)
-    !! zminor : input real : vertical internal half-height of shell (m)
-    !! ain    : output real : surface area of inboard section (m3)
-    !! aout   : output real : surface area of outboard section (m3)
-    !! atot   : output real : total surface area of shell (m3)
-    !! This routine calculates the surface area of the inboard and outboard
-    !! sections of a toroidal shell defined by two co-centred semi-ellipses.
-    !! <P>See also <A HREF="eshellvol.html"><CODE>eshellvol</CODE></A>
-    !! Internal CCFE note T&amp;M/PKNIGHT/PROCESS/009, P J Knight:
-    !! Surface Area and Volume Calculations for Toroidal Shells
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    use constants, only: pi, twopi
-    implicit none
-
-    !  Arguments
-    real(dp), intent(in) :: rshell,rmini,rmino,zminor
-    real(dp), intent(out) :: ain,aout,atot
-
-    !  Local variables
-    real(dp) :: elong
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    !  Inboard section
-    elong = zminor/rmini
-    ain = twopi * elong * (pi*rshell*rmini - 2.0D0*rmini*rmini)
-
-    !  Outboard section
-    elong = zminor/rmino
-    aout = twopi * elong * (pi*rshell*rmino + 2.0D0*rmino*rmino)
-
-    !  Total surface area
-    atot = ain + aout
-
-  end subroutine eshellarea
-
   ! ------------------------------------------------------------------------
   pure function variable_error(variable)
       real(dp), intent(in) ::variable

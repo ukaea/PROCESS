@@ -270,13 +270,13 @@ class BlanketLibrary:
                 build_variables.blareaib,
                 build_variables.blareaob,
                 build_variables.blarea,
-            ) = maths_library.eshellarea(r1, r2, r3, blanket_library.hblnkt)
+            ) = eshellarea(r1, r2, r3, blanket_library.hblnkt)
         if icomponent == 1:
             (
                 build_variables.shareaib,
                 build_variables.shareaob,
                 build_variables.sharea,
-            ) = maths_library.eshellarea(r1, r2, r3, blanket_library.hshld)
+            ) = eshellarea(r1, r2, r3, blanket_library.hshld)
 
         # Calculate volumes, assuming 100% coverage
         if icomponent == 0:
@@ -2710,3 +2710,31 @@ class BlanketLibrary:
             po.ovarre(self.outfile, "Mass flow rate in (kg/s) = ", "(mf)", mf, "OP ")
 
         return pumppower
+
+
+def eshellarea(rshell, rmini, rmino, zminor):
+    """Routine to calculate the inboard, outboard and total surface areas
+    of a toroidal shell comprising two elliptical sections
+    author: P J Knight, CCFE, Culham Science Centre
+    rshell : input real : major radius of centre of both ellipses (m)
+    rmini  : input real : horizontal distance from rshell to
+    inboard elliptical shell (m)
+    rmino  : input real : horizontal distance from rshell to
+    outboard elliptical shell (m)
+    zminor : input real : vertical internal half-height of shell (m)
+    ain    : output real : surface area of inboard section (m3)
+    aout   : output real : surface area of outboard section (m3)
+    atot   : output real : total surface area of shell (m3)
+    This routine calculates the surface area of the inboard and outboard
+    sections of a toroidal shell defined by two co-centred semi-ellipses.
+    """
+
+    # Inboard section
+    elong = zminor / rmini
+    ain = 2.0 * np.pi * elong * (np.pi * rshell * rmini - 2.0 * rmini * rmini)
+
+    # Outboard section
+    elong = zminor / rmino
+    aout = 2.0 * np.pi * elong * (np.pi * rshell * rmino + 2.0 * rmino * rmino)
+
+    return ain, aout, ain + aout
