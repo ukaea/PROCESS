@@ -174,54 +174,6 @@ contains
 
   end subroutine dshellvol
 
-! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine dshellarea(rmajor,rminor,zminor,ain,aout,atot)
-
-    !! Routine to calculate the inboard, outboard and total surface areas
-    !! of a D-shaped toroidal shell
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! rmajor : input real : major radius of inboard straight section (m)
-    !! rminor : input real : horizontal width of shell (m)
-    !! zminor : input real : vertical half-height of shell (m)
-    !! ain    : output real : surface area of inboard straight section (m3)
-    !! aout   : output real : surface area of outboard curved section (m3)
-    !! atot   : output real : total surface area of shell (m3)
-    !! This routine calculates the surface area of the inboard and outboard
-    !! sections of a D-shaped toroidal shell defined by the above input
-    !! parameters.
-    !! The inboard section is assumed to be a cylinder.
-    !! The outboard section is defined by a semi-ellipse, centred on the
-    !! major radius of the inboard section.
-    !! <P>See also <A HREF="dshellvol.html"><CODE>dshellvol</CODE></A>
-    !! Internal CCFE note T&amp;M/PKNIGHT/PROCESS/009, P J Knight:
-    !! Surface Area and Volume Calculations for Toroidal Shells
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    use constants, only: pi, twopi
-    implicit none
-
-    !  Arguments
-    real(dp), intent(in) :: rmajor,rminor,zminor
-    real(dp), intent(out) :: ain,aout,atot
-
-    !  Local variables
-    real(dp) :: elong
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    !  Area of inboard cylindrical shell
-    ain = 4.0D0*zminor*pi*rmajor
-
-    !  Area of elliptical outboard section
-    elong = zminor/rminor
-    aout = twopi * elong * (pi*rmajor*rminor + 2.0D0*rminor*rminor)
-
-    !  Total surface area
-    atot = ain + aout
-
-  end subroutine dshellarea
-
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   ! ------------------------------------------------------------------------

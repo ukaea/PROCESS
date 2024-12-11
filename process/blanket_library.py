@@ -180,13 +180,13 @@ class BlanketLibrary:
                 build_variables.blareaib,
                 build_variables.blareaob,
                 build_variables.blarea,
-            ) = maths_library.dshellarea(r1, r2, blanket_library.hblnkt)
+            ) = dshellarea(r1, r2, blanket_library.hblnkt)
         if icomponent == 1:
             (
                 build_variables.shareaib,
                 build_variables.shareaob,
                 build_variables.sharea,
-            ) = maths_library.dshellarea(r1, r2, blanket_library.hshld)
+            ) = dshellarea(r1, r2, blanket_library.hshld)
 
         # Calculate volumes, assuming 100% coverage
         if icomponent == 0:
@@ -2736,5 +2736,32 @@ def eshellarea(rshell, rmini, rmino, zminor):
     # Outboard section
     elong = zminor / rmino
     aout = 2.0 * np.pi * elong * (np.pi * rshell * rmino + 2.0 * rmino * rmino)
+
+    return ain, aout, ain + aout
+
+
+def dshellarea(rmajor, rminor, zminor):
+    """Routine to calculate the inboard, outboard and total surface areas
+    of a D-shaped toroidal shell
+    author: P J Knight, CCFE, Culham Science Centre
+    rmajor : input real : major radius of inboard straight section (m)
+    rminor : input real : horizontal width of shell (m)
+    zminor : input real : vertical half-height of shell (m)
+    ain    : output real : surface area of inboard straight section (m3)
+    aout   : output real : surface area of outboard curved section (m3)
+    atot   : output real : total surface area of shell (m3)
+    This routine calculates the surface area of the inboard and outboard
+    sections of a D-shaped toroidal shell defined by the above input
+    parameters.
+    The inboard section is assumed to be a cylinder.
+    The outboard section is defined by a semi-ellipse, centred on the
+    major radius of the inboard section.
+    """
+    # Area of inboard cylindrical shell
+    ain = 4.0 * zminor * np.pi * rmajor
+
+    # Area of elliptical outboard section
+    elong = zminor / rminor
+    aout = 2.0 * np.pi * elong * (np.pi * rmajor * rminor + 2.0 * rminor * rminor)
 
     return ain, aout, ain + aout
