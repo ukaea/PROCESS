@@ -47,7 +47,6 @@ contains
     !!
     !! 1.
     use numerics, only: icc
-    use maths_library, only: variable_error
 
     implicit none
 
@@ -307,9 +306,7 @@ contains
         if (present(units))  units(i)  = tmp_units
       end if
 
-      ! Crude method of catching NaN errors
-      !if ((abs(cc(i)) > 9.99D99).or.(cc(i) /= cc(i))) then
-      if (variable_error(cc(i))) then
+      if (isnan(cc(i)).or.(abs(cc(i))>9.99D99)) then
 
         ! Add debugging lines as appropriate...
         select case (icc(i))

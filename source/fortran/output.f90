@@ -422,7 +422,6 @@ contains
     use numerics, only: name_xc
 		use global_variables, only: icase, vlabel
 		use constants, only: mfile, nout
-		use maths_library, only: variable_error
     implicit none
 
     !  Arguments
@@ -502,7 +501,6 @@ contains
     use numerics, only: name_xc, icc, ioptimz
 		use global_variables, only: xlabel_2, iscan_global
 		use constants, only: mfile, nout
-		use maths_library, only: variable_error
     implicit none
 
     !  Arguments
@@ -619,7 +617,6 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		use constants, only: pi, mfile, nplot, twopi
-		use maths_library, only: variable_error
     implicit none
 
     !  Arguments
@@ -667,7 +664,6 @@ contains
 
     use numerics, only: boundl, boundu
 		use constants, only: electron_charge
-		use maths_library, only: variable_error
     implicit none
 
     !  Arguments
