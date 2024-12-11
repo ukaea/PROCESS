@@ -3933,7 +3933,6 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use constants, only: nout
-    use maths_library, only: variable_error
     use error_handling, only: idiags, fdiags, report_error
     use numerics, only: nvar, xcm, ixc, name_xc, lablxc, scafc, scale
     use physics_variables, only: i_plasma_current
@@ -4152,10 +4151,7 @@ contains
           call report_error(55)
        end if
 
-       !  Crude method of catching NaN errors
-
-       !if ( (abs(xcm(i)) > 9.99D99).or.(xcm(i) /= xcm(i)) ) then
-       if ( variable_error(xcm(i)) ) then
+       if ((isnan(xcm(i)).or.(abs(xcm(i))>9.99D99))) then
           idiags(1) = i ; idiags(2) = ixc(i) ; fdiags(1) = xcm(i)
           call report_error(56)
        end if
@@ -4190,7 +4186,6 @@ contains
 
     use error_handling, only: idiags, fdiags, report_error
     use numerics, only: ipnvars, scale, ixc, lablxc
-    use maths_library, only: variable_error
 #ifndef dp
     use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
@@ -4406,7 +4401,7 @@ contains
        !  Crude method of catching NaN errors
 
        !if ((abs(xc(i)) > 9.99D99).or.(xc(i) /= xc(i))) then
-       if(variable_error(xc(i)))then
+       if (isnan(xc(i)).or.(abs(xc(i))>9.99D99)) then
           idiags(1) = i ; idiags(2) = ixc(i) ; fdiags(1) = xc(i)
           call report_error(59)
        end if
