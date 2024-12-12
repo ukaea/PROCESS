@@ -9,14 +9,12 @@ repos:
       - id: check-docstring-first
       - id: check-merge-conflict
       - id: debug-statements
-  - repo: https://github.com/psf/black
-    rev: 22.3.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.0
     hooks:
-      - id: black
-  - repo: https://github.com/PyCQA/flake8
-    rev: 4.0.1
-    hooks:
-      - id: flake8
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
   - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
     rev: 0.2.3
     hooks:
