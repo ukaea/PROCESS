@@ -1443,7 +1443,6 @@ class Costs:
             #  Superconductor ($/m)
 
             if cost_variables.supercond_cost_model == 0:
-
                 costtfsc = (
                     cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
                     * tfcoil_variables.whtconsc

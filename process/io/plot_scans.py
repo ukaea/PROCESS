@@ -223,9 +223,9 @@ def main(args=None):
     nsweep_dict[14] = "fiooic"
     nsweep_dict[15] = "fjprot"
     nsweep_dict[16] = "rmajor"
-    nsweep_dict[
-        17
-    ] = "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
+    nsweep_dict[17] = (
+        "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
+    )
     nsweep_dict[18] = "gammax"
     nsweep_dict[19] = "boundl(16)"
     nsweep_dict[20] = "cnstv.t_burn_min"
@@ -779,9 +779,7 @@ def main(args=None):
 
             else:
                 # Converged indexes, for normal 2D line plot
-                for (
-                    conv_j
-                ) in (
+                for conv_j in (
                     conv_ij
                 ):  # conv_j is an array element containing the converged scan numbers
                     # Scanned variables

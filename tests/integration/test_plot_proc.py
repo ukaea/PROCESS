@@ -1,4 +1,5 @@
 """Integration tests for plot_proc.py."""
+
 from process.io import plot_proc
 from shutil import copy
 

@@ -2,6 +2,7 @@
 
 Define fixtures that will be shared across integration test modules.
 """
+
 import pytest
 from pathlib import Path
 from shutil import copy

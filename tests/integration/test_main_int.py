@@ -103,9 +103,9 @@ def test_single_run_with_mfilejson(temp_data):
 
     # Assert that 'large_tokamak_once_through.MFILE.DAT.json' has been produced in the temp_data directory.
     expected_json = temp_data / "large_tokamak_once_through.MFILE.DAT.json"
-    assert (
-        expected_json.exists()
-    ), "large_tokamak_once_through.MFILE.DAT.json was not found"
+    assert expected_json.exists(), (
+        "large_tokamak_once_through.MFILE.DAT.json was not found"
+    )
 
     # Check if the file contains valid JSON.
     try:

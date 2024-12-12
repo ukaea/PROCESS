@@ -486,6 +486,7 @@ def test_avail_2(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
+
     # Mock return values for for functions called in avail_2
     def mock_calc_u_planned(*args, **kwargs):
         return 0.01

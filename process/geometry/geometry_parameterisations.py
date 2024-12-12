@@ -1,6 +1,7 @@
 """
 Module to hold geometry parameterisation dataclasses common to multiple reactor components
 """
+
 from dataclasses import dataclass
 import numpy as np
 

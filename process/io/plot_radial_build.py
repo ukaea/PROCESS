@@ -119,9 +119,9 @@ def get_radial_build(m_file):
 
     for ii in range(isweep):
         if m_file.data["ifail"].get_scan(ii + 1) == 1:
-            radial_build.append(
-                [m_file.data[rl].get_scan(ii + 1) for rl in radial_labels]
-            )
+            radial_build.append([
+                m_file.data[rl].get_scan(ii + 1) for rl in radial_labels
+            ])
 
     radial_build = np.array(radial_build)
 

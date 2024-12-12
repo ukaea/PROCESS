@@ -855,8 +855,7 @@ class CCFE_HCPB:
                 int_calc_3 = 0.0
 
             int_calc_1 = 1.0 / np.sqrt(
-                h_cp_top**2
-                + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
+                h_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
             phy_cp_calc = phy_cp_calc + d_phy_cp
@@ -867,8 +866,7 @@ class CCFE_HCPB:
                 int_calc_3 = 0.0
 
             int_calc_2 = 1.0 / np.sqrt(
-                h_cp_top**2
-                + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
+                h_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
             cp_sol_angle = cp_sol_angle + d_phy_cp * 0.5 * (int_calc_1 + int_calc_2)

@@ -55,8 +55,7 @@ def parse_args(args):
     :rtype: Namespace
     """
     parser = argparse.ArgumentParser(
-        description="Program to evaluate "
-        "uncertainties in a given PROCESS design point."
+        description="Program to evaluate uncertainties in a given PROCESS design point."
     )
 
     parser.add_argument(

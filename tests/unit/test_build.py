@@ -25,7 +25,6 @@ def build():
 
 
 class DivgeomParam(NamedTuple):
-
     rspo: Any = None
 
     plleno: Any = None
@@ -62,7 +61,6 @@ class DivgeomParam(NamedTuple):
 
 
 class RippleAmplitudeParam(NamedTuple):
-
     rminor: Any = None
 
     rmajor: Any = None
@@ -310,7 +308,6 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
 
 
 class PortszParam(NamedTuple):
-
     r_tf_outboard_mid: Any = None
 
     tfthko: Any = None

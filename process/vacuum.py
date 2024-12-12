@@ -121,7 +121,6 @@ class Vacuum:
 
         #  Output section
         if output:
-
             po.oheadr(self.outfile, "Vacuum System")
             po.ovarst(
                 self.outfile,
@@ -385,7 +384,6 @@ class Vacuum:
         d = np.full(4, 1e-6)
 
         for i in range(4):
-
             sss = nduct / (
                 1.0e0 / sp[i] / pumpn + 1.0e0 / cmax * xmult[i] / xmult[imax]
             )
@@ -515,7 +513,6 @@ class Vacuum:
         dimax = d[imax]
 
         if output:
-
             #  Output section
 
             po.oheadr(self.outfile, "Vacuum System")

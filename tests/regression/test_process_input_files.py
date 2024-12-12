@@ -95,9 +95,9 @@ class RegressionTestScenario:
 
         assert (ifail := mfile.data["ifail"].get_scan(-1)) == 1 or mfile.data[
             "ioptimz"
-        ].get_scan(
-            -1
-        ) == -2, f"ifail of {ifail} indicates PROCESS did not solve successfully"
+        ].get_scan(-1) == -2, (
+            f"ifail of {ifail} indicates PROCESS did not solve successfully"
+        )
 
         mfile_keys = set(mfile.data.keys())
         reference_mfile_keys = set(reference_mfile.data.keys())

@@ -170,7 +170,6 @@ class Pulse:
         #  Output section
 
         if output:
-
             po.osubhd(self.outfile, "Volt-second considerations:")
 
             po.ovarre(

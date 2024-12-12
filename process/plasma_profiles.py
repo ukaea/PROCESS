@@ -322,7 +322,7 @@ class PlasmaProfile:
                     * (1 - rho_te_max**2) ** physics_variables.alphat
                 )
             else:
-                raise ValueError(f"alphat is negative: { physics_variables.alphat}")
+                raise ValueError(f"alphat is negative: {physics_variables.alphat}")
 
             # Same for density
             if physics_variables.alphan > 1.0:
@@ -357,7 +357,7 @@ class PlasmaProfile:
                     * (1 - rho_ne_max**2) ** physics_variables.alphan
                 )
             else:
-                raise ValueError(f"alphan is negative: { physics_variables.alphan}")
+                raise ValueError(f"alphan is negative: {physics_variables.alphan}")
 
             # set normalized gradient length
             # te at rho_te_max
