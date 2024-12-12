@@ -5,13 +5,11 @@ Our GitHub actions Continuous Integration (CI) pipeline serves to ensure each br
 
 | Name | Functionality |
 | ---- | ------------- |
-| docker | Checks if the `process-ci` Docker container is up-to-date and builds it if not. Only runs on the **main** branch. |
-| make-py38 | Builds and archives the PROCESS build artefacts |
-| unit-py38 | Installs PROCESS and runs the unit tests. The job will fail if any of the unit tests fail. |
-| integration-py38 | Installs PROCESS and runs the integration tests. The job will fail if any of the integration tests fail. |
-| regression-py38 | Installs PROCESS and runs the regression tests with a 0% and 5% tolerance, respectively. The job will fail if any of the regression tests fail. |
-| large-tokamak-py38 | Installs PROCESS and runs the `large-tokamak` input file, archiving the output MFILE. Only runs on the **main** branch. |
-| flake8 | Runs the flake8 Python linter and fails if any lint errors occur. |
-| black | Runs the black Python formatter and fails if any formatting issues are detected. |
-| tracking | Collects MFILEs for input files of interest and creates a dashboard of changes in key values over time (one datapoint for each commit on main). |
+| make | Builds and archives the PROCESS build artefacts |
+| unit-test | Installs PROCESS and runs the unit tests. The job will fail if any of the unit tests fail. |
+| integration-test | Installs PROCESS and runs the integration tests. The job will fail if any of the integration tests fail. |
+| regression-test | Installs PROCESS and runs the regression tests with a 0% and 5% tolerance, respectively. The job will fail if any of the regression tests fail. |
+| run-tracking-inputs | Installs PROCESS and runs the regression test input files, archiving the output MFILEs. Only runs on the **main** branch. |
+| tracking | Collects MFILEs for input files of interest and creates a dashboard of changes in key values over time (one datapoint for each commit on main). Only runs on the **main** branch. |
+| pre-commit-quality-check | ensures the pushed code meets our standards as defined in `.pre-commit-config.yaml`. |
 | docs | Builds and deploys the documentation onto GitHub pages. |
