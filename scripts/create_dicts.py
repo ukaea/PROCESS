@@ -15,6 +15,7 @@ the dicts from the saved JSON file and use them.
 This ultimately provides Process Python with the ability to access variable
 information in the Process Fortran source code.
 """
+
 import re
 import logging
 import argparse
@@ -707,7 +708,7 @@ def dict_var_type():
         DICT_VAR_TYPE['beta'] = 'real_variable'
     """
     di = {}
-    regexp = r"call parse_(real|int)_(array|variable)\("
+    regexp = r"call parse_(real|int|string)_(array|variable)\("
     lines = grep(SOURCEDIR + "/input.f90", regexp)
     for line in lines:
         args = line.split("(")[1]
