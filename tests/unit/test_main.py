@@ -215,23 +215,6 @@ def test_initialise(single_run, monkeypatch):
     single_run.initialise()
 
 
-def test_run_tests(single_run, monkeypatch):
-    """Check main_module.runtests() is run if run_tests == 1.
-
-    :param single_run: single_run fixture
-    :type single_run: SingleRun
-    :param monkeypatch: monkeypatch fixture
-    :type monkeypatch: object
-    """
-    # TODO Can't actually check that this is being run yet; need a result that
-    # can be checked in the Python (isolated fixtures), to avoid side-effects
-    # persisting in the Fortran
-    # For now, just check that no exceptions are thrown before calling into
-    # the Fortran
-    monkeypatch.setattr(fortran.global_variables, "run_tests", 1)
-    single_run.run_tests()
-
-
 def test_call_solver(single_run, monkeypatch):
     """Attempt to call the hybrd() non-optimising solver.
 

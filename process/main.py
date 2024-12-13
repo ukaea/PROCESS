@@ -379,7 +379,6 @@ class SingleRun:
         This is separate from init to allow model instances to be modified before a run.
         """
         self.validate_user_model()
-        self.run_tests()
         self.call_solver()
         self.run_scan(self.solver)
         self.finish()
@@ -455,12 +454,6 @@ class SingleRun:
         n = int(fortran.numerics.nvar)
         # [:n] as array always at max size: contains 0s
         fortran.numerics.ixc[:n].sort()
-
-    def run_tests(self):
-        """Run tests if required to by input file."""
-        # TODO This would do better in a separate input validation module.
-        if fortran.global_variables.run_tests == 1:
-            fortran.main_module.runtests()
 
     def call_solver(self):
         """Call the equation solver (HYBRD)."""
