@@ -99,7 +99,6 @@ LIST(APPEND PROCESS_SRCS
     structure_variables.f90
     output.f90
     init_module.f90
-    main_module.f90
     error_handling.f90
     global_variables.f90
     constraint_variables.f90
