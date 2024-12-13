@@ -23,7 +23,6 @@ matplotlib.use("Agg")
 
 
 def main(args=None):
-
     # PARSING USER PARAMETERS
     # please execute 'python plot_stress_tf.py -h' for input information
     # Option definition

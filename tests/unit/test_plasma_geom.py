@@ -18,7 +18,6 @@ def plasma():
 
 
 class XparamParam(NamedTuple):
-
     a: Any = None
 
     kap: Any = None
@@ -258,7 +257,6 @@ def test_xsect0(a, kap, tri, expected_xsect0, plasma):
 
 
 class XsurfParam(NamedTuple):
-
     rmajor: Any = None
 
     rminor: Any = None
@@ -329,7 +327,6 @@ def test_xsurf(xsurfparam, monkeypatch, plasma):
 
 
 class SurfaParam(NamedTuple):
-
     a: Any = None
 
     r: Any = None

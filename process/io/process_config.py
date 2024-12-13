@@ -728,7 +728,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
         )
         # setup the output_vars
         for u_dict in self.uncertainties:
-            if not u_dict["varname"] in self.output_vars:
+            if u_dict["varname"] not in self.output_vars:
                 self.output_vars += [u_dict["varname"]]
 
         # add normalised constraints/iteration variables to output

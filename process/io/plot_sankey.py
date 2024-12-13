@@ -9,6 +9,7 @@ Input file:
 MFILE.DAT
 
 """
+
 import matplotlib
 import argparse
 from pylab import show, savefig

@@ -911,17 +911,11 @@ class Divertor:
         Bt_omp = -bt * rmajor / r_omp
 
         # Eich scaling for lambda_q
-        lambda_eich = (
-            1.35 * pdivt**-0.02 * rmajor**0.04 * bp**-0.92 * aspect**0.42
-        )
+        lambda_eich = 1.35 * pdivt**-0.02 * rmajor**0.04 * bp**-0.92 * aspect**0.42
 
         # Spreading factor
         spread_fact = (
-            0.12
-            * (nesep / 1e19) ** -0.02
-            * pdivt**-0.21
-            * rmajor**0.71
-            * bp**-0.82
+            0.12 * (nesep / 1e19) ** -0.02 * pdivt**-0.21 * rmajor**0.71 * bp**-0.82
         )
 
         # SOL width
@@ -934,9 +928,7 @@ class Divertor:
         alpha_div = flux_exp * alpha_mid
 
         # Tilt of the separatrix relative to the target in the poloidal plane
-        theta_div = math.asin(
-            (1 + 1 / alpha_div**2) * math.sin(math.radians(beta_div))
-        )
+        theta_div = math.asin((1 + 1 / alpha_div**2) * math.sin(math.radians(beta_div)))
 
         # Wetted area
         area_wetted = (

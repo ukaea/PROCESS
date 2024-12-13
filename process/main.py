@@ -350,8 +350,9 @@ class VaryRun:
                     break
                 else:
                     print(
-                        "WARNING: {} non-feasible point(s) in sweep! "
-                        "Rerunning!".format(no_unfeasible)
+                        "WARNING: {} non-feasible point(s) in sweep! Rerunning!".format(
+                            no_unfeasible
+                        )
                     )
             else:
                 print("PROCESS has stopped without finishing!")
@@ -424,9 +425,9 @@ class SingleRun:
         else:
             print("-- Info -- run `process --help` for usage")
             raise FileNotFoundError(
-                "Input file not found on this path. There " "is no input file named",
+                "Input file not found on this path. There is no input file named",
                 self.input_file,
-                "in the analysis " "folder",
+                "in the analysis folder",
             )
 
         # Set the input file in the Fortran
@@ -480,7 +481,7 @@ class SingleRun:
             # Original call:
             # self.ifail = fortran.main_module.eqslv()
             raise NotImplementedError(
-                "HYBRD non-optimisation solver is not " "implemented"
+                "HYBRD non-optimisation solver is not implemented"
             )
 
     def run_scan(self, solver):

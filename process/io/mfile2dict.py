@@ -229,7 +229,7 @@ class MFILEParser(abc.MutableMapping):
         """
         if not os.path.exists(mfile_addr):
             raise FileNotFoundError(
-                "Could not open MFILE '{}', " "file does not exist.".format(mfile_addr)
+                "Could not open MFILE '{}', file does not exist.".format(mfile_addr)
             )
 
         self._logger.info("Parsing MFILE: %s", mfile_addr)

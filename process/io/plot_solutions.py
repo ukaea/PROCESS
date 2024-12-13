@@ -358,12 +358,10 @@ def _plot_solutions(
     else:
         numerics.init_numerics()
         objf_list = list(
-            set(
-                [
-                    f2py_compatible_to_string(numerics.lablmm[int(abs(minmax)) - 1])
-                    for minmax in diffs_df["minmax"]
-                ]
-            )
+            set([
+                f2py_compatible_to_string(numerics.lablmm[int(abs(minmax)) - 1])
+                for minmax in diffs_df["minmax"]
+            ])
         )
 
     if len(objf_list) != 1:

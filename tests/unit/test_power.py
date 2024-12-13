@@ -31,7 +31,6 @@ def power():
 
 
 class CryoParam(NamedTuple):
-
     qnuc: Any = None
 
     inuclear: Any = None
@@ -166,7 +165,6 @@ def test_cryo(cryoparam, monkeypatch, power):
 
 
 class PfpwrParam(NamedTuple):
-
     iohcl: Any = None
 
     peakmva: Any = None
@@ -1868,7 +1866,6 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
 
 class AcpowParam(NamedTuple):
-
     efloor: Any = None
 
     baseel: Any = None
@@ -2006,7 +2003,6 @@ def test_acpow(acpowparam, monkeypatch, power):
 
 
 class Power2Param(NamedTuple):
-
     pnetelin: Any = None
 
     ipnet: Any = None
@@ -2650,7 +2646,6 @@ def test_power2(power2param, monkeypatch, power):
 
 
 class Power3Param(NamedTuple):
-
     etacd: Any = None
 
     htpmw: Any = None

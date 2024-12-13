@@ -171,7 +171,6 @@ class NProfile(Profile):
     def ncore(
         rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
     ) -> float:
-
         """
         This routine calculates the core density of a pedestalised profile.
         The solution comes from integrating and summing the two separate density profiles for the core

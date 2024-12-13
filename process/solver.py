@@ -173,7 +173,7 @@ class Vmcon(_Solver):
             numerics.nviter = i + 1
             global_variables.convergence_parameter = convergence_param
             print(
-                f"{i+1} | Convergence Parameter: {convergence_param:.3E}",
+                f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
                 end="\r",
                 flush=True,
             )

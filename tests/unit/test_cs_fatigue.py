@@ -16,7 +16,6 @@ def cs_fatigue_python():
 
 
 class NcycleParam(NamedTuple):
-
     max_hoop_stress: Any = None
 
     residual_stress: Any = None

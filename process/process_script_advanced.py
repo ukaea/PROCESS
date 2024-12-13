@@ -4,6 +4,7 @@
 This compiles, runs and displays output from PROCESS. The aim is to provide a
 common entry point to the code in Python, and to automate a standard workflow.
 """
+
 # TODO This requires converting to run the Python-wrapped version of Process
 import subprocess
 import argparse
@@ -50,7 +51,7 @@ class Process(object):
     def parse_args(self):
         """Parse the command line arguments."""
         parser = argparse.ArgumentParser(
-            description="Script to automate " "running PROCESS"
+            description="Script to automate running PROCESS"
         )
 
         # Optional arguments
@@ -140,7 +141,7 @@ class Process(object):
                 self.ref_input = path
             else:
                 raise FileNotFoundError(
-                    "Reference input file not found; " "check the path."
+                    "Reference input file not found; check the path."
                 )
 
             # Input file exists
@@ -154,7 +155,7 @@ class Process(object):
             else:
                 # File isn't an IN.DAT or a REF_IN.DAT
                 raise ValueError(
-                    "Reference input file should end in IN.DAT or " "REF_IN.DAT"
+                    "Reference input file should end in IN.DAT or REF_IN.DAT"
                 )
         else:
             # Ref input not specified: try to find one in the input file's dir

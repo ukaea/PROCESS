@@ -63,7 +63,6 @@ class BlanketLibrary:
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.fwbsshape == 1:
-
             for icomponent in range(3):
                 self.dshaped_component(icomponent)
 
@@ -1087,7 +1086,6 @@ class BlanketLibrary:
         if (
             physics_variables.itart == 1 or fwbs_variables.fwbsshape == 1
         ):  # D-shaped machine
-
             # Segment vertical inboard surface (m)
             blanket_library.bllengi = (
                 2.0 * blanket_library.hblnkt
@@ -1127,7 +1125,6 @@ class BlanketLibrary:
 
         # shape defined by two half-ellipses
         else:
-
             # Major radius where half-ellipses 'meet' (m)
             r1 = (
                 physics_variables.rmajor
@@ -1222,7 +1219,6 @@ class BlanketLibrary:
 
         # If the liquid metal is PbLi...
         if fwbs_variables.i_bb_liq == 0:
-
             # PbLi from [Mar2019]
             # Constant pressure ~ 17 atmospheres ~ 1.7D6 Pa
             # Li content is ~ 17%
@@ -1267,7 +1263,6 @@ class BlanketLibrary:
 
         # If the liquid metal is Li...
         elif fwbs_variables.i_bb_liq == 1:
-
             # Temporary - should be updated with information from Li reviews conducted at CCFE once completed
             # Li Properties from [Mal1995] at 300 Celcius
             # den_liq = 505                            kg/m3
@@ -1619,7 +1614,12 @@ class BlanketLibrary:
         # First wall flow is just along the first wall, with no allowance for radial
         # pipes, manifolds etc. The outputs are mid quantities of inlet and outlet.
         # This subroutine recalculates cp and rhof.
-        (blanket_library.tpeakfwi, _, _, blanket_library.mffwpi,) = self.fw.fw_temp(
+        (
+            blanket_library.tpeakfwi,
+            _,
+            _,
+            blanket_library.mffwpi,
+        ) = self.fw.fw_temp(
             output,
             fwbs_variables.afw,
             build_variables.fwith,
@@ -1930,7 +1930,7 @@ class BlanketLibrary:
                 self.outfile,
                 "First wall coolant type",
                 "(fwcoolant)",
-                f'"{fwbs_variables. fwcoolant}"',
+                f'"{fwbs_variables.fwcoolant}"',
             )
             po.ovarre(
                 self.outfile,
@@ -2277,7 +2277,6 @@ class BlanketLibrary:
 
         # If have thin conducting walls...
         if fwbs_variables.ifci != 1:
-
             # Caculate resistances of fluid and walls
             r_i = half_wth_b / (conduct_liq * half_wth_a)
             r_w = half_wth_b / (
@@ -2290,7 +2289,6 @@ class BlanketLibrary:
 
         # If have perfcetly insulating FCIs...
         else:
-
             # Calculate pressure drop for (perfectly) insulating FCI [Mal1995]
             mhd_pressure_drop = (
                 vel * b_mag * l_channel * np.sqrt(conduct_liq * vsc / half_wth_a)

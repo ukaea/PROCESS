@@ -31,7 +31,6 @@ def pulse():
 
 
 class TohswgParam(NamedTuple):
-
     t_current_ramp_up_min: Any = None
 
     vpfskv: Any = None
@@ -70,7 +69,6 @@ class TohswgParam(NamedTuple):
 
 
 class BurnParam(NamedTuple):
-
     rplas: Any = None
 
     vsres: Any = None

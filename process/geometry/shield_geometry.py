@@ -1,6 +1,7 @@
 """
 Calculate radial and vertical coordinates for the geometry of the shield
 """
+
 from typing import Tuple
 import numpy as np
 from process.geometry.utils import dh_vertices
@@ -63,22 +64,18 @@ def shield_geometry_single_null(
         triang=triang,
     )
 
-    rs = np.concatenate(
-        [
-            rs_lower_inboard,
-            rs_lower_outboard[::-1],
-            rs_upper_outboard,
-            rs_upper_inboard[::-1],
-        ]
-    )
-    zs = np.concatenate(
-        [
-            zs_lower_inboard,
-            zs_lower_outboard[::-1],
-            zs_upper_outboard,
-            zs_upper_inboard[::-1],
-        ]
-    )
+    rs = np.concatenate([
+        rs_lower_inboard,
+        rs_lower_outboard[::-1],
+        rs_upper_outboard,
+        rs_upper_inboard[::-1],
+    ])
+    zs = np.concatenate([
+        zs_lower_inboard,
+        zs_lower_outboard[::-1],
+        zs_upper_outboard,
+        zs_upper_inboard[::-1],
+    ])
     return ArbitraryGeometry(
         rs=rs,
         zs=zs,

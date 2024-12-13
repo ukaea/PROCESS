@@ -1,0 +1,5 @@
+extend-exclude = ["env", ".env"]
+target-version = "py310"
+
+[format]
+preview = true

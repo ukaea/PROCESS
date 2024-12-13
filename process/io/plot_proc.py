@@ -939,24 +939,22 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     imp_data = read_imprad_data(2, impp)
 
     # find impurity densities
-    imp_frac = np.array(
-        [
-            mfile_data.data["fimp(01)"].get_scan(scan),
-            mfile_data.data["fimp(02)"].get_scan(scan),
-            mfile_data.data["fimp(03)"].get_scan(scan),
-            mfile_data.data["fimp(04)"].get_scan(scan),
-            mfile_data.data["fimp(05)"].get_scan(scan),
-            mfile_data.data["fimp(06)"].get_scan(scan),
-            mfile_data.data["fimp(07)"].get_scan(scan),
-            mfile_data.data["fimp(08)"].get_scan(scan),
-            mfile_data.data["fimp(09)"].get_scan(scan),
-            mfile_data.data["fimp(10)"].get_scan(scan),
-            mfile_data.data["fimp(11)"].get_scan(scan),
-            mfile_data.data["fimp(12)"].get_scan(scan),
-            mfile_data.data["fimp(13)"].get_scan(scan),
-            mfile_data.data["fimp(14)"].get_scan(scan),
-        ]
-    )
+    imp_frac = np.array([
+        mfile_data.data["fimp(01)"].get_scan(scan),
+        mfile_data.data["fimp(02)"].get_scan(scan),
+        mfile_data.data["fimp(03)"].get_scan(scan),
+        mfile_data.data["fimp(04)"].get_scan(scan),
+        mfile_data.data["fimp(05)"].get_scan(scan),
+        mfile_data.data["fimp(06)"].get_scan(scan),
+        mfile_data.data["fimp(07)"].get_scan(scan),
+        mfile_data.data["fimp(08)"].get_scan(scan),
+        mfile_data.data["fimp(09)"].get_scan(scan),
+        mfile_data.data["fimp(10)"].get_scan(scan),
+        mfile_data.data["fimp(11)"].get_scan(scan),
+        mfile_data.data["fimp(12)"].get_scan(scan),
+        mfile_data.data["fimp(13)"].get_scan(scan),
+        mfile_data.data["fimp(14)"].get_scan(scan),
+    ])
 
     if ipedestal == 0:
         # Intialise the radius
@@ -984,9 +982,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = (
-                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
-                )
+                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -1742,7 +1738,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     dr_tf_wp,
                     wp_toridal_dxbig,
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 ),
             )
             # Plots the WP inside the insulation
@@ -1797,7 +1793,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp / 2) + (tinstf),
                     wp_toridal_dxsmall + (tinstf),
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 ),
             )
 
@@ -1851,7 +1847,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y)),
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 )
             )
 
@@ -2467,12 +2463,10 @@ def plot_magnetics_info(axis, mfile_data, scan):
     pf_info = []
     for i in range(1, number_of_coils):
         if i % 2 != 0:
-            pf_info.append(
-                (
-                    mfile_data.data["ric[{:01}]".format(i)].get_scan(scan),
-                    "PF {}".format(i),
-                )
-            )
+            pf_info.append((
+                mfile_data.data["ric[{:01}]".format(i)].get_scan(scan),
+                "PF {}".format(i),
+            ))
 
     if len(pf_info) > 2:
         pf_info_3_a = pf_info[2][0]

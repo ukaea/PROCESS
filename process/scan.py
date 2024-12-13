@@ -110,13 +110,13 @@ class Scan:
             if scan_1d_ifail_dict[iscan] == 1:
                 converged_count += 1
                 print(
-                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan-1]} "
+                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan - 1]} "
                     + " " * offsets[iscan - 1]
                     + "\u001b[32mCONVERGED \u001b[0m"
                 )
             else:
                 print(
-                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan-1]} "
+                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan - 1]} "
                     + " " * offsets[iscan - 1]
                     + "\u001b[31mUNCONVERGED \u001b[0m"
                 )
@@ -197,14 +197,14 @@ class Scan:
                 if scan_2d_ifail_list[iscan_1][iscan_2] == 1:
                     converged_count += 1
                     print(
-                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1-1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2-1]}) "
+                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2 - 1]}) "
                         + " " * offsets[iscan_1 - 1][iscan_2 - 1]
                         + "\u001b[32mCONVERGED \u001b[0m"
                     )
                     scan_point += 1
                 else:
                     print(
-                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1-1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2-1]}) "
+                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2 - 1]}) "
                         + " " * offsets[iscan_1 - 1][iscan_2 - 1]
                         + "\u001b[31mUNCONVERGED \u001b[0m"
                     )

@@ -133,9 +133,7 @@ def get_variable_range(itervars, factor, wdir="."):
         if lbs[-1] > ubs[-1]:
             print(
                 "Error: Iteration variable {0} has BOUNDL={1} >\
- BOUNDU={2}\n Update process_dicts or input file!".format(
-                    varname, lbs[-1], ubs[-1]
-                ),
+ BOUNDU={2}\n Update process_dicts or input file!".format(varname, lbs[-1], ubs[-1]),
                 file=stderr,
             )
 
@@ -203,9 +201,7 @@ def check_in_dat():
                 "Warning: boundu for",
                 itervarname,
                 "lies out of allowed input range!\n Reset boundu({}) \
-to".format(
-                    itervarno
-                ),
+to".format(itervarno),
                 upperinputbound,
                 file=stderr,
             )

@@ -1188,7 +1188,12 @@ class PFCoil:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
-            (jcritwp, pfv.jcableoh_eof, pfv.jscoh_eof, tmarg1,) = self.superconpf(
+            (
+                jcritwp,
+                pfv.jcableoh_eof,
+                pfv.jscoh_eof,
+                tmarg1,
+            ) = self.superconpf(
                 pfv.bmaxoh,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1211,7 +1216,12 @@ class PFCoil:
 
             # Allowable coil overall current density at BOP
 
-            (jcritwp, pfv.jcableoh_bop, pfv.jscoh_bop, tmarg2,) = self.superconpf(
+            (
+                jcritwp,
+                pfv.jcableoh_bop,
+                pfv.jscoh_bop,
+                tmarg2,
+            ) = self.superconpf(
                 pfv.bmaxoh0,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1602,10 +1612,7 @@ class PFCoil:
         # term 3
         ek2b2_1, ek2b2_2 = ml.ellipke(k2b2)
         axial_term_3 = (
-            2.0e0
-            * hl
-            * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2))
-            * (ek2b2_1 - ek2b2_2)
+            2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2)) * (ek2b2_1 - ek2b2_2)
         )
 
         # calculate axial force [N]
@@ -1836,18 +1843,18 @@ class PFCoil:
             for ig in range(pf.nef):
                 op.write(
                     self.outfile,
-                    f"{ig}\t{pfv.sxlg[:pfv.ncirt,ig]}",
+                    f"{ig}\t{pfv.sxlg[: pfv.ncirt, ig]}",
                 )
 
             if bv.iohcl != 0:
                 op.write(
                     self.outfile,
-                    f"CS\t\t\t{pfv.sxlg[:pfv.ncirt,pfv.ncirt-2]}",
+                    f"CS\t\t\t{pfv.sxlg[: pfv.ncirt, pfv.ncirt - 2]}",
                 )
 
             op.write(
                 self.outfile,
-                f"Plasma\t{pfv.sxlg[:pfv.ncirt,pfv.ncirt-1]}",
+                f"Plasma\t{pfv.sxlg[: pfv.ncirt, pfv.ncirt - 1]}",
             )
 
     def outpf(self):
@@ -2340,7 +2347,7 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k]-pfv.ra[k]:.2e}\t{abs(pfv.zh[k]-pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k] - pfv.ra[k]:.2e}\t{abs(pfv.zh[k] - pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
@@ -2392,7 +2399,7 @@ class PFCoil:
         if bv.iohcl != 0:
             op.write(
                 self.outfile,
-                f"CS\t\t\t\t{pfv.rpf[pfv.nohc-1]:.2e}\t{pfv.zpf[pfv.nohc-1]:.2e}\t{pfv.rb[pfv.nohc-1]-pfv.ra[pfv.nohc-1]:.2e}\t{abs(pfv.zh[pfv.nohc-1]-pfv.zl[pfv.nohc-1]):.2e}\t{pfv.turns[pfv.nohc-1]:.2e}\t{pfv.pfcaseth[pfv.nohc-1]:.2e}",
+                f"CS\t\t\t\t{pfv.rpf[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1]:.2e}\t{abs(pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
             )
             op.ovarre(
                 self.mfile,
@@ -2440,7 +2447,7 @@ class PFCoil:
         # Plasma
         op.write(
             self.outfile,
-            f"Plasma\t\t\t{pv.rmajor:.2e}\t0.0e0\t\t{2.0e0*pv.rminor:.2e}\t{2.0e0*pv.rminor*pv.kappa:.2e}\t1.0e0",
+            f"Plasma\t\t\t{pv.rmajor:.2e}\t0.0e0\t\t{2.0e0 * pv.rminor:.2e}\t{2.0e0 * pv.rminor * pv.kappa:.2e}\t1.0e0",
         )
 
         op.osubhd(self.outfile, "PF Coil Information at Peak Current:")
@@ -2461,7 +2468,7 @@ class PFCoil:
             if pfv.ipfres == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k]/pfv.rjpfalw[k]:.2e}\t{pfv.wtc[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}",
+                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.rjpfalw[k]:.2e}\t{pfv.wtc[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}",
                 )
             else:
                 op.write(
@@ -2475,12 +2482,12 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.nohc-1]:.2e}\t{pfv.rjpfalw[pfv.nohc-1]:.2e}\t{max(abs(pfv.cohbop),abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop),abs(pfv.coheof))/pfv.rjpfalw[pfv.nohc-1]:.2e}\t{pfv.wtc[pfv.nohc-1]:.2e}\t{pfv.wts[pfv.nohc-1]:.2e}\t{pfv.bpf[pfv.nohc-1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t{pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)) / pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{pfv.wtc[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.nohc-1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.wtc[pfv.nohc-1]:.2e}\t{pfv.wts[pfv.nohc-1]:.2e}\t{pfv.bpf[pfv.nohc-1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.wtc[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
                 )
 
         # Miscellaneous totals
@@ -2548,12 +2555,12 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"\t{k}\t\t\t{pf.vsdum[k,0]:.3f}\t\t\t{pf.vsdum[k,1]:.3f}\t\t{pf.vsdum[k,2]:.3f}",
+                f"\t{k}\t\t\t{pf.vsdum[k, 0]:.3f}\t\t\t{pf.vsdum[k, 1]:.3f}\t\t{pf.vsdum[k, 2]:.3f}",
             )
 
         op.write(
             self.outfile,
-            f"\tCS coil\t\t\t{pf.vsdum[pfv.nohc-1,0]:.3f}\t\t\t{pf.vsdum[pfv.nohc-1,1]:.3f}\t\t{pf.vsdum[pfv.nohc-1,2]:.3f}",
+            f"\tCS coil\t\t\t{pf.vsdum[pfv.nohc - 1, 0]:.3f}\t\t\t{pf.vsdum[pfv.nohc - 1, 1]:.3f}\t\t{pf.vsdum[pfv.nohc - 1, 2]:.3f}",
         )
 
         op.oshead(self.outfile, "Waveforms")
@@ -2577,12 +2584,12 @@ class PFCoil:
         for k in range(pfv.ncirt - 1):
             line = f"\t{k}\t\t"
             for jj in range(6):
-                line += f"\t{pfv.cpt[k,jj]*pfv.turns[k]:.3e}"
+                line += f"\t{pfv.cpt[k, jj] * pfv.turns[k]:.3e}"
             op.write(self.outfile, line)
 
         line = "Plasma (A)\t\t"
         for jj in range(6):
-            line += f"\t{pfv.cpt[pfv.ncirt-1,jj]:.3e}"
+            line += f"\t{pfv.cpt[pfv.ncirt - 1, jj]:.3e}"
 
         op.write(self.outfile, line)
 
@@ -2592,12 +2599,12 @@ class PFCoil:
             op.write(
                 self.outfile,
                 (
-                    f"{k}\t\t\t{pfv.cpt[k,0]*pfv.turns[k]:.3e}\t"
-                    f"{pfv.cpt[k,1]*pfv.turns[k]:.3e}\t"
-                    f"{-pfv.cpt[k,1]*pfv.turns[k]*(pfv.fcohbof/pfv.fcohbop):.3e}\t"
-                    f"{-pfv.cpt[k,1]*pfv.turns[k]*(pfv.fcohbof/pfv.fcohbop):.3e}\t"
-                    f"{-pfv.cpt[k,1]*pfv.turns[k]*(1.0e0/pfv.fcohbop):.3e}\t"
-                    f"{pfv.cpt[k,5]*pfv.turns[k]:.3e}"
+                    f"{k}\t\t\t{pfv.cpt[k, 0] * pfv.turns[k]:.3e}\t"
+                    f"{pfv.cpt[k, 1] * pfv.turns[k]:.3e}\t"
+                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (1.0e0 / pfv.fcohbop):.3e}\t"
+                    f"{pfv.cpt[k, 5] * pfv.turns[k]:.3e}"
                 ),
             )
 
@@ -2608,9 +2615,9 @@ class PFCoil:
                 self.outfile,
                 (
                     f"{k}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
-                    f"{(pfv.cpt[k,2]+pfv.cpt[k,1]*pfv.fcohbof/pfv.fcohbop)*pfv.turns[k]:.3e}\t"
-                    f"{(pfv.cpt[k,3]+pfv.cpt[k,1]*pfv.fcohbof/pfv.fcohbop)*pfv.turns[k]:.3e}\t"
-                    f"{(pfv.cpt[k,4]+pfv.cpt[k,1]*1.0e0/pfv.fcohbop)*pfv.turns[k]:.3e}\t"
+                    f"{(pfv.cpt[k, 2] + pfv.cpt[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
+                    f"{(pfv.cpt[k, 3] + pfv.cpt[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
+                    f"{(pfv.cpt[k, 4] + pfv.cpt[k, 1] * 1.0e0 / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
                     "0.0e0"
                 ),
             )
@@ -2923,7 +2930,6 @@ class PFCoil:
             or (isumat == 8)
             or (isumat == 9)
         ):  # Find temperature at which current density margin = 0
-
             if isumat == 3:
                 arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
             else:
