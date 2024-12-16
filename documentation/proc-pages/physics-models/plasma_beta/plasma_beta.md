@@ -156,6 +156,15 @@ the inverse aspect ratio and $\beta_p$ is the poloidal $\beta$, constraint equat
 turned on with iteration variable no. 8 (`fbeta`). The limiting value of $\epsilon\beta_p$ 
 is be set using input parameter `beta_poloidal_eps_max`.
 
+!!! note "Origin of the $\epsilon\beta_p$ limit"
+
+    High poloidal beta shots in TFTR were performed[^6] and it was found that as $\beta_p$, 
+    exceeds approximately 1.2 times the aspect ratio, a separatrix with 
+    an inside poloidal field null is observed to limit the outer boundary 
+    of the plasma. Since the curvature of TFTR’s applied vertical field 
+    is constant, the appearance of the poloidal field null corresponds to 
+    the equilibrium poloidal beta limit.
+
 --------------------
 
 ### Beta upper limit

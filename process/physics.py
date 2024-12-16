@@ -1588,6 +1588,10 @@ class Physics:
             - physics_variables.beta_beam
         )
 
+        physics_variables.beta_poloidal_eps = (
+            physics_variables.beta_poloidal * physics_variables.eps
+        )
+
         physics_variables.beta_thermal_poloidal = (
             physics_variables.beta_thermal
             * (physics_variables.btot / physics_variables.bp) ** 2
@@ -3672,14 +3676,14 @@ class Physics:
 
         po.ovarrf(
             self.outfile,
-            "2nd stability physics_variables.beta : beta_p / (R/a)",
-            "(eps*beta_poloidal)",
-            physics_variables.eps * physics_variables.beta_poloidal,
+            "Poloidal beta and inverse aspect ratio",
+            "(beta_poloidal_eps)",
+            physics_variables.beta_poloidal_eps,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "2nd stability physics_variables.beta upper limit",
+            "Poloidal beta and inverse aspect ratio upper limit",
             "(beta_poloidal_eps_max)",
             physics_variables.beta_poloidal_eps_max,
         )

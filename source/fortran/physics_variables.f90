@@ -68,6 +68,9 @@ module physics_variables
   real(dp) :: beta_poloidal
   !! poloidal beta
 
+  real(dp) :: beta_poloidal_eps
+  !! Poloidal beta and inverse aspcet ratio product
+
   real(dp) :: beta_toroidal
   !! toroidal beta
 
@@ -948,6 +951,7 @@ module physics_variables
     beta_limit_lower = 0.0D0
     beta_beam = 0.0D0
     beta_poloidal = 0.0D0
+    beta_poloidal_eps = 0.0D0
     beta_toroidal = 0.0D0
     beta_thermal = 0.0D0
     beta_thermal_poloidal = 0.0D0
