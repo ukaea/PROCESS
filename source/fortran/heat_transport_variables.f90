@@ -154,7 +154,7 @@ module heat_transport_variables
     real(dp) :: p_hcd_thermal_secondary_mw
     !! Low-grade heat lost into HCD apparatus (MW)
 
-    real(dp) :: psechtmw
+    real(dp) :: p_thermal_secondary_mw
     !! Low-grade heat (MW)
 
     real(dp) :: pseclossmw
@@ -232,7 +232,7 @@ module heat_transport_variables
       priheat = 0.0D0
       p_div_thermal_secondary_mw = 0.0D0
       p_hcd_thermal_secondary_mw = 0.0D0
-      psechtmw = 0.0D0
+      p_thermal_secondary_mw = 0.0D0
       pseclossmw = 0.0D0
       p_shield_thermal_secondary_mw = 0.0D0
       p_thermal_primary_mw = 0.0D0

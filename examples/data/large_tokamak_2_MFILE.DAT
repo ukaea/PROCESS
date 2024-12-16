@@ -1128,7 +1128,7 @@
  Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (p_vacuum_pumps_mw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.2417E+02    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_thermal_secondary_mw)____________________      2.2417E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_thermal_primary_mw)____________________      2.1751E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      2.9785E+02    
@@ -1169,7 +1169,7 @@
  Total_(MW)______________________________________________________________ ______________________________      1.9285E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_net_electrical_mw)____________________      4.0001E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_thermal_main_loss_mw)_______________      1.3051E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.2417E+02    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_thermal_secondary_mw)____________________      2.2417E+02    
  Total_(MW)______________________________________________________________ ______________________________      1.9293E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_net_electrical_mw/(powfmw+emultmw)____      2.0741E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_net_electrical_mw/powfmw)_____________      2.4689E+01    

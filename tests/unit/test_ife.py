@@ -2851,7 +2851,7 @@ class Ifepw2Param(NamedTuple):
     p_blanket_nuclear_heat_mw: Any = None
     fachtmw: Any = None
     p_baseload_electrical_total_mw: Any = None
-    psechtmw: Any = None
+    p_thermal_secondary_mw: Any = None
     p_hcd_electrical_loss_mw: Any = None
     p_vacuum_pumps_mw: Any = None
     trithtmw: Any = None
@@ -2873,7 +2873,7 @@ class Ifepw2Param(NamedTuple):
     ifetyp: Any = None
     taufall: Any = None
     expected_fachtmw: Any = None
-    expected_psechtmw: Any = None
+    expected_p_thermal_secondary_mw: Any = None
     expected_p_gross_electrical: Any = None
     expected_p_recirc_electrical_mw: Any = None
     expected_p_net_electrical_mw: Any = None
@@ -2890,7 +2890,7 @@ class Ifepw2Param(NamedTuple):
             p_blanket_nuclear_heat_mw=1924.4887199999998,
             fachtmw=0,
             p_baseload_electrical_total_mw=24.322206046559071,
-            psechtmw=0,
+            p_thermal_secondary_mw=0,
             p_hcd_electrical_loss_mw=58.814893617021283,
             p_vacuum_pumps_mw=0.5,
             trithtmw=15,
@@ -2912,7 +2912,7 @@ class Ifepw2Param(NamedTuple):
             ifetyp=1,
             taufall=0,
             expected_fachtmw=24.322206046559071,
-            expected_psechtmw=120.31271036807168,
+            expected_p_thermal_secondary_mw=120.31271036807168,
             expected_p_gross_electrical=1139.4999,
             expected_p_recirc_electrical_mw=141.11271036807165,
             expected_p_net_electrical_mw=998.38718963192832,
@@ -2946,7 +2946,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         "p_baseload_electrical_total_mw",
         ifepw2param.p_baseload_electrical_total_mw,
     )
-    monkeypatch.setattr(heat_transport_variables, "psechtmw", ifepw2param.psechtmw)
+    monkeypatch.setattr(heat_transport_variables, "p_thermal_secondary_mw", ifepw2param.p_thermal_secondary_mw)
     monkeypatch.setattr(
         heat_transport_variables,
         "p_hcd_electrical_loss_mw",
@@ -3003,8 +3003,8 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     assert heat_transport_variables.fachtmw == pytest.approx(
         ifepw2param.expected_fachtmw
     )
-    assert heat_transport_variables.psechtmw == pytest.approx(
-        ifepw2param.expected_psechtmw
+    assert heat_transport_variables.p_thermal_secondary_mw == pytest.approx(
+        ifepw2param.expected_p_thermal_secondary_mw
     )
     assert heat_transport_variables.p_gross_electrical == pytest.approx(
         ifepw2param.expected_p_gross_electrical

@@ -967,8 +967,8 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.p_tf_nuclear_heat_mw
-        # psechtmw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.p_div_thermal_secondary_mw + heat_transport_variables.p_shield_thermal_secondary_mw + heat_transport_variables.p_hcd_thermal_secondary_mw + fwbs_variables.p_tf_nuclear_heat_mw
-        heat_transport_variables.psechtmw = (
+        # p_thermal_secondary_mw = self.p_core_electrical_mw + heat_transport_variables.p_hcd_electrical_loss_mw + heat_transport_variables.p_pump_cool_loss_total_mw + hthermmw + heat_transport_variables.p_div_thermal_secondary_mw + heat_transport_variables.p_shield_thermal_secondary_mw + heat_transport_variables.p_hcd_thermal_secondary_mw + fwbs_variables.p_tf_nuclear_heat_mw
+        heat_transport_variables.p_thermal_secondary_mw = (
             self.p_core_electrical_mw
             + heat_transport_variables.p_hcd_electrical_loss_mw
             + heat_transport_variables.p_pump_cool_loss_total_mw
@@ -1665,8 +1665,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Total low-grade thermal power (MW)",
-            "(psechtmw)",
-            heat_transport_variables.psechtmw,
+            "(p_thermal_secondary_mw)",
+            heat_transport_variables.p_thermal_secondary_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2111,8 +2111,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat rejected by other cooling circuits (MW)",
-            "(psechtmw)",
-            heat_transport_variables.psechtmw,
+            "(p_thermal_secondary_mw)",
+            heat_transport_variables.p_thermal_secondary_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2121,7 +2121,7 @@ class Power:
             "",
             heat_transport_variables.p_net_electrical_mw
             + self.p_thermal_main_loss_mw
-            + heat_transport_variables.psechtmw,
+            + heat_transport_variables.p_thermal_secondary_mw,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -2131,7 +2131,7 @@ class Power:
                 - (
                     heat_transport_variables.p_net_electrical_mw
                     + self.p_thermal_main_loss_mw
-                    + heat_transport_variables.psechtmw
+                    + heat_transport_variables.p_thermal_secondary_mw
                 )
             )
             > 5.0e0

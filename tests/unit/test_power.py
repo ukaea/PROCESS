@@ -2133,7 +2133,7 @@ class Power2Param(NamedTuple):
 
     p_gross_electrical: Any = None
 
-    psechtmw: Any = None
+    p_thermal_secondary_mw: Any = None
 
     trithtmw: Any = None
 
@@ -2241,7 +2241,7 @@ class Power2Param(NamedTuple):
 
     expected_p_gross_electrical: Any = None
 
-    expected_psechtmw: Any = None
+    expected_p_thermal_secondary_mw: Any = None
 
     expected_p_core_electrical_mw: Any = None
 
@@ -2294,7 +2294,7 @@ class Power2Param(NamedTuple):
             p_hcd_electrical_mw=129.94611930107126,
             fachtmw=0,
             p_gross_electrical=0,
-            psechtmw=0,
+            p_thermal_secondary_mw=0,
             trithtmw=15,
             p_hcd_thermal_secondary_mw=0,
             p_tf_electrical_mw=9.1507079104675704,
@@ -2348,7 +2348,7 @@ class Power2Param(NamedTuple):
             expected_p_recirc_electrical_mw=489.56557141942733,
             expected_fachtmw=61.882833632875375,
             expected_p_gross_electrical=982.58317918134742,
-            expected_psechtmw=233.80288075411508,
+            expected_p_thermal_secondary_mw=233.80288075411508,
             expected_p_core_electrical_mw=125.33391046215507,
         ),
         Power2Param(
@@ -2396,7 +2396,7 @@ class Power2Param(NamedTuple):
             p_hcd_electrical_mw=129.94611930107126,
             fachtmw=61.882833632875375,
             p_gross_electrical=982.58317918134742,
-            psechtmw=233.80288075411508,
+            p_thermal_secondary_mw=233.80288075411508,
             trithtmw=15,
             p_hcd_thermal_secondary_mw=0,
             p_tf_electrical_mw=9.1507079104675704,
@@ -2450,7 +2450,7 @@ class Power2Param(NamedTuple):
             expected_p_recirc_electrical_mw=559.86357407357548,
             expected_fachtmw=62.237143915360818,
             expected_p_gross_electrical=982.28339460484608,
-            expected_psechtmw=304.16251287817744,
+            expected_p_thermal_secondary_mw=304.16251287817744,
             expected_p_core_electrical_mw=195.70119200650984,
         ),
     ),
@@ -2620,7 +2620,7 @@ def test_power2(power2param, monkeypatch, power):
         heat_transport_variables, "p_gross_electrical", power2param.p_gross_electrical
     )
 
-    monkeypatch.setattr(heat_transport_variables, "psechtmw", power2param.psechtmw)
+    monkeypatch.setattr(heat_transport_variables, "p_thermal_secondary_mw", power2param.p_thermal_secondary_mw)
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", power2param.trithtmw)
 
@@ -2794,8 +2794,8 @@ def test_power2(power2param, monkeypatch, power):
         power2param.expected_p_gross_electrical
     )
 
-    assert heat_transport_variables.psechtmw == pytest.approx(
-        power2param.expected_psechtmw
+    assert heat_transport_variables.p_thermal_secondary_mw == pytest.approx(
+        power2param.expected_p_thermal_secondary_mw
     )
 
     assert power.p_core_electrical_mw == pytest.approx(

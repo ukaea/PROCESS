@@ -1992,7 +1992,7 @@ class IFE:
         )
 
         # Total secondary heat
-        heat_transport_variables.psechtmw = (
+        heat_transport_variables.p_thermal_secondary_mw = (
             heat_transport_variables.p_hcd_electrical_loss_mw
             + fwbs_variables.pnucloss
             + heat_transport_variables.fachtmw
@@ -2088,8 +2088,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Secondary heat (MW)",
-                "(psechtmw)",
-                heat_transport_variables.psechtmw,
+                "(p_thermal_secondary_mw)",
+                heat_transport_variables.p_thermal_secondary_mw,
             )
             process_output.oblnkl(self.outfile)
             process_output.ovarre(
