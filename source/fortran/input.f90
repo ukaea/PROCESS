@@ -233,7 +233,7 @@ contains
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
-      fstrcond, fptemp, ftmargoh, fvs, fbetatry, vvhealw, fpnetel, ft_burn, &
+      fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
       ft_current_ramp_up, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
@@ -795,8 +795,8 @@ contains
        case ('fbeta_poloidal')
           call parse_real_variable('fbeta_poloidal', fbeta_poloidal, 0.001D0, 10.0D0, &
                'F-value for poloidal beta limit')
-       case ('fbetatry')
-          call parse_real_variable('fbetatry', fbetatry, 0.001D0, 10.0D0, &
+       case ('fbeta_max')
+          call parse_real_variable('fbeta_max', fbeta_max, 0.001D0, 10.0D0, &
                'F-value for beta limit')
        case ('fbetatry_lower')
           call parse_real_variable('fbetatry_lower', fbetatry_lower, 0.001D0, 10.0D0, &

@@ -837,25 +837,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_36
-    !! <LI> (36) fbetatry (f-value for equation 24)
+    !! <LI> (36) fbeta_max (f-value for equation 24)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(36) = 'fbetatry      '
+    lablxc(36) = 'fbeta_max      '
     boundl(36) = 0.001D0
     boundu(36) = 1.000D0
   end subroutine init_itv_36
 
   real(kind(1.d0)) function itv_36()
-    use constraint_variables, only: fbetatry
+    use constraint_variables, only: fbeta_max
     implicit none
-    itv_36 = fbetatry
+    itv_36 = fbeta_max
   end function itv_36
 
   subroutine set_itv_36(ratio)
-    use constraint_variables, only: fbetatry
+    use constraint_variables, only: fbeta_max
     implicit none
     real(kind(1.d0)) :: ratio
-    fbetatry = ratio
+    fbeta_max = ratio
   end subroutine set_itv_36
 
   !---------------------------------

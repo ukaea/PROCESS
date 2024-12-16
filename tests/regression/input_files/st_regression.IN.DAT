@@ -317,7 +317,7 @@ boundu(5) = 1.0
 * JUSTIFICATION: Beta is limited by beta_norm_limit_upper
 
 ixc = 36
-fbetatry = 0.75
+fbeta_max = 0.75
 boundl(36) = 0.01
 boundu(36) = 1.0
 * DESCRIPTION:   f-value for Beta Limit

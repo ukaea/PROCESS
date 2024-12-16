@@ -46,7 +46,7 @@ ixc = 18 * q
 boundl(18) = 3.5
 ixc = 29 * bore
 boundl(29) = 0.1
-ixc = 36 * fbetatry
+ixc = 36 * fbeta_max
 ixc = 37 * coheof
 ixc = 38 * fjohc
 boundu(38) = 1.0
@@ -124,7 +124,7 @@ vvblgap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Constraint Variables---------------*
 
-fbetatry = 0.4815 * F-value for beta limit
+fbeta_max = 0.4815 * F-value for beta limit
 fdene    = 1.2 * F-value for density limit
 ffuspow  = 1 * F-value for maximum fusion power
 fjohc    = 0.25 * F-value for central solenoid current at end-of-flattop
@@ -346,7 +346,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      ohcth          =  5.5242E-01
                      q              =  3.5000E+00
                      bore           =  2.3322E+00
-                     fbetatry       =  4.8251E-01
+                     fbeta_max       =  4.8251E-01
                      coheof         =  2.0726E+07
                      fjohc          =  5.7941E-01
                      fjohc0         =  5.3923E-01

@@ -390,7 +390,7 @@ defined with respect to the total equilibrium \(\mathbf{B}\)-field
   Reactor Study', AEA Fusion Report AEA FUS 172 (1992)}. The beta
 coefficient \(g\) is set using input parameter \texttt{beta_norm_limit_upper}. To apply
 the beta limit, constraint equation no. 24 should be turned on with
-iteration variable no. 36 (\texttt{fbetatry}). The limit can be applied
+iteration variable no. 36 (\texttt{fbeta_max}). The limit can be applied
 to either the total plasma beta, in which case switch \texttt{iculbl}
 should be set to 0, to only the thermal component of the plasma beta, in
 which case \texttt{iculbl} should be set to 1, or to the thermal plus

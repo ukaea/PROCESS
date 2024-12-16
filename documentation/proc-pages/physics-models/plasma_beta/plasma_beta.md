@@ -101,16 +101,16 @@ $$\begin{aligned}
 where $B_0$ is the axial vacuum toroidal field. The beta
 coefficient $g$ is set using input parameter `beta_norm_limit_upper`. To apply the beta limit, 
 constraint equation 24 should be turned on with iteration variable 36
-(`fbetatry`). 
+(`fbeta_max`). 
 
 By default, $\beta$ is defined with respect to the total equilibrium B-field [^2]. 
 
 | `i_beta_component` | Description |
 | :-: | - |
-| 0 (default) | Apply the $\beta$ limit to the total plasma beta (including the contribution from fast ions) |
+| 0 (default) | Apply the $\beta$ limit to the total plasma beta (including the contribution from fast alphas and  neutral beams) |
 | 1 | Apply the $\beta$ limit to only the thermal component of beta |
 | 2 | Apply the $\beta$ limit to only the thermal plus neutral beam contributions to beta |
-| 3 | Apply the $\beta$ limit to the total beta (including the contribution from fast ions), calculated using only the toroidal field |
+| 3 | Apply the $\beta$ limit to the total toroidal beta (including the contribution from fast alphas and neutral beams) |
 
 ### Setting the Beta $g$ Coefficient
 
@@ -173,7 +173,7 @@ This constraint can be activated by stating `icc = 24` in the input file.
 
 It is the general setting of the $\beta$ limit depending on the $\beta_{\text{N}}$ value calculated in the [beta limit](#beta-limit) calculations.
 
-The upper limit value of beta is calculated by `calculate_beta_limit()`. The scaling value `fbetatry` can be varied also.
+The upper limit value of beta is calculated by `calculate_beta_limit()`. The scaling value `fbeta_max` can be varied also.
 
 **It is recommended to have this constraint on as it is a plasma stability model**
 

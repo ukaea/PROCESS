@@ -17573,8 +17573,8 @@ pnetelin = 400.0
 * Beta upper limit *
 *------------------*
 icc = 24
-ixc = 36 * fbetatry
-fbetatry = 0.5
+ixc = 36 * fbeta_max
+fbeta_max = 0.5
 
 * Max TF field *
 *--------------*

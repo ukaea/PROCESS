@@ -237,7 +237,7 @@ module numerics
   !! <LI> (33) fportsz (f-value for equation 20)
   !! <LI> (34) fdivcol (f-value for equation 22)
   !! <LI> (35) fpeakb (f-value for equation 25)
-  !! <LI> (36) fbetatry (f-value for equation 24)
+  !! <LI> (36) fbeta_max (f-value for equation 24)
   !! <LI> (37) coheof
   !! <LI> (38) fjohc (f-value for equation 26)
   !! <LI> (39) fjohc0 (f-value for equation 27)

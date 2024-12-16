@@ -1256,7 +1256,7 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for beta upper limit
       !! #=# physics
-      !! #=#=# fbetatry, beta_limit_upper
+      !! #=#=# fbeta_max, beta_limit_upper
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! i_beta_component : input integer : switch for beta limit scaling (constraint equation  24):<UL>
@@ -1267,7 +1267,7 @@ contains
       !! istell : input integer : switch for stellarator option (set via <CODE>device.dat</CODE>):<UL>
       !! <LI> = 0 use tokamak model;
       !! <LI> = 1 use stellarator model</UL>
-      !! fbetatry : input real : f-value for beta limit
+      !! fbeta_max : input real : f-value for beta limit
       !! beta_limit_upper : input real : allowable beta
       !! beta : input real : total plasma beta (calculated if ipedestal =3)
       !! beta_fast_alpha : input real : fast alpha beta component
@@ -1276,7 +1276,7 @@ contains
       !! btot : input real : total field
       use physics_variables, only: i_beta_component, beta_limit_upper, beta, beta_beam, beta_fast_alpha, bt, btot
       use stellarator_variables, only: istell
-      use constraint_variables, only: fbetatry
+      use constraint_variables, only: fbeta_max
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1286,30 +1286,30 @@ contains
 
       ! Include all beta components: relevant for both tokamaks and stellarators
       if ((i_beta_component == 0).or.(istell /= 0)) then
-         tmp_cc =  1.0D0 - fbetatry * beta_limit_upper/beta
+         tmp_cc =  1.0D0 - fbeta_max * beta_limit_upper/beta
          tmp_con = beta_limit_upper
-         tmp_err = beta_limit_upper - beta / fbetatry
+         tmp_err = beta_limit_upper - beta / fbeta_max
          tmp_symbol = '<'
          tmp_units = ''
       ! Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
       else if (i_beta_component == 1) then
-         tmp_cc = 1.0D0 - fbetatry * beta_limit_upper/(beta-beta_fast_alpha-beta_beam)
+         tmp_cc = 1.0D0 - fbeta_max * beta_limit_upper/(beta-beta_fast_alpha-beta_beam)
          tmp_con = beta_limit_upper
-         tmp_err = beta_limit_upper - (beta-beta_fast_alpha-beta_beam) / fbetatry
+         tmp_err = beta_limit_upper - (beta-beta_fast_alpha-beta_beam) / fbeta_max
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
       else if (i_beta_component == 2) then
-         tmp_cc = 1.0D0 - fbetatry * beta_limit_upper/(beta-beta_fast_alpha)
+         tmp_cc = 1.0D0 - fbeta_max * beta_limit_upper/(beta-beta_fast_alpha)
          tmp_con = beta_limit_upper * (1.0D0 - tmp_cc)
          tmp_err = (beta-beta_fast_alpha) * tmp_cc
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to toroidal beta
       else if (i_beta_component == 3) then
-         tmp_cc =  1.0D0 - fbetatry * beta_limit_upper/(beta*(btot/bt)**2)
+         tmp_cc =  1.0D0 - fbeta_max * beta_limit_upper/(beta*(btot/bt)**2)
          tmp_con = beta_limit_upper
-         tmp_err = beta_limit_upper - (beta*(btot/bt)**2) / fbetatry
+         tmp_err = beta_limit_upper - (beta*(btot/bt)**2) / fbeta_max
          tmp_symbol = '<'
          tmp_units = ''
       end if
