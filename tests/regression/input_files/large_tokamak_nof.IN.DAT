@@ -363,7 +363,7 @@ iculbl = 1
 i_plasma_current = 4
 
 * Switch for density limit to enforce
-idensl = 7
+i_density_limit = 7
 
 * Switch for fast alpha pressure calculation
 ifalphap = 1

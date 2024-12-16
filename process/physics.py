@@ -2151,10 +2151,14 @@ class Physics:
         )
 
         # Density limit
-        physics_variables.dlimit, physics_variables.dnelimt = self.culdlm(
+        (
+            physics_variables.dlimit,
+            physics_variables.dnelimt,
+        ) = self.calculate_density_limit(
             physics_variables.bt,
-            physics_variables.idensl,
+            physics_variables.i_density_limit,
             physics_variables.pdivt,
+            current_drive_variables.pinjmw,
             physics_variables.plasma_current,
             divertor_variables.prn1,
             physics_variables.qstar,
@@ -2461,47 +2465,75 @@ class Physics:
             )
 
     @staticmethod
-    def culdlm(
-        bt, idensl, pdivt, plasma_current, prn1, qcyl, q95, rmajor, rminor, sarea, zeff
-    ):
-        """Density limit calculation
-        author: P J Knight, CCFE, Culham Science Centre
-        bt       : input real :  toroidal field on axis (T)
-        idensl   : input/output integer : switch denoting which formula to enforce
-        pdivt    : input real :  power flowing to the edge plasma via
-        charged particles (MW)
-        plasma_current  : input real :  plasma current (A)
-        prn1     : input real :  edge density / average plasma density
-        qcyl     : input real :  equivalent cylindrical safety factor (qstar)
-        q95      : input real :  safety factor at 95% surface
-        rmajor   : input real :  plasma major radius (m)
-        rminor   : input real :  plasma minor radius (m)
-        sarea    : input real :  plasma surface area (m**2)
-        zeff     : input real :  plasma effective charge
-        dlimit(7): output real array : average plasma density limit using
-        seven different models (m**-3)
-        dnelimt  : output real : enforced average plasma density limit (m**-3)
-        This routine calculates several different formulae for the
-        density limit, and enforces the one chosen by the user.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
+    def calculate_density_limit(
+        bt: float,
+        i_density_limit: int,
+        pdivt: float,
+        pinjmw: float,
+        plasma_current: float,
+        prn1: float,
+        qcyl: float,
+        q95: float,
+        rmajor: float,
+        rminor: float,
+        sarea: float,
+        zeff: float,
+    ) -> Tuple[np.ndarray, float]:
         """
-        if idensl < 1 or idensl > 7:
-            error_handling.idiags[0] = idensl
+        Calculate the density limit using various models.
+
+        Args:
+            bt (float): Toroidal field on axis (T).
+            i_density_limit (int): Switch denoting which formula to enforce.
+            pdivt (float): Power flowing to the edge plasma via charged particles (MW).
+            pinjmw (float): Power injected into the plasma (MW).
+            plasma_current (float): Plasma current (A).
+            prn1 (float): Edge density / average plasma density.
+            qcyl (float): Equivalent cylindrical safety factor (qstar).
+            q95 (float): Safety factor at 95% surface.
+            rmajor (float): Plasma major radius (m).
+            rminor (float): Plasma minor radius (m).
+            sarea (float): Plasma surface area (m^2).
+            zeff (float): Plasma effective charge.
+
+        Returns:
+            Tuple[np.ndarray, float]: A tuple containing:
+                - dlimit (np.ndarray): Average plasma density limit using seven different models (m^-3).
+                - dnelimt (float): Enforced average plasma density limit (m^-3).
+
+        Raises:
+            ValueError: If i_density_limit is not between 1 and 7.
+
+        Notes:
+            This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
+            For i_density_limit = 1-5, 8, we scale the sepatrix density limit output by the ratio of the separatrix to volume averaged density
+
+        References:
+            - AEA FUS 172: Physics Assessment for the European Reactor Study
+
+            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989
+
+            - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,”
+              vol. 57, no. 1, pp. 014038–014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038. ‌
+        """
+
+        if i_density_limit < 1 or i_density_limit > 7:
+            error_handling.idiags[0] = i_density_limit
             error_handling.report_error(79)
 
-        dlimit = np.empty((7,))
+        dlimit = np.empty((8,))
 
         # Power per unit area crossing the plasma edge
         # (excludes radiation and neutrons)
 
-        qperp = pdivt / sarea
+        p_perp = pdivt / sarea
 
         # Old ASDEX density limit formula
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
         dlimit[0] = (
-            1.54e20 * qperp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
+            1.54e20 * p_perp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
         ) / prn1
 
         # Borrass density limit model for ITER (I)
@@ -2510,7 +2542,7 @@ class Physics:
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
         dlimit[1] = (
-            1.8e20 * qperp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
+            1.8e20 * p_perp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
         ) / prn1
 
         # Borrass density limit model for ITER (II)
@@ -2520,7 +2552,7 @@ class Physics:
         # denlim (now deleted).
 
         dlimit[2] = (
-            0.5e20 * qperp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
+            0.5e20 * p_perp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
         ) / prn1
 
         # JET edge radiation density limit model
@@ -2530,15 +2562,15 @@ class Physics:
 
         denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
         if denom <= 0.0:
-            if idensl == 4:
+            if i_density_limit == 4:
                 error_handling.fdiags[0] = denom
                 error_handling.fdiags[1] = qcyl
                 error_handling.report_error(80)
-                idensl = 5
+                i_density_limit = 5
 
             dlimit[3] = 0.0
         else:
-            dlimit[3] = (1.0e20 * np.sqrt(pdivt / denom)) / prn1
+            dlimit[3] = (1.0e20 * np.sqrt(pinjmw / denom)) / prn1
 
         # JET simplified density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -2555,9 +2587,16 @@ class Physics:
 
         dlimit[6] = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
 
+        dlimit[7] = (
+            1.0e20
+            * 0.506
+            * (pinjmw**0.396 * (plasma_current / 1.0e6) ** 0.265)
+            / (q95**0.323)
+        ) / prn1
+
         # Enforce the chosen density limit
 
-        return dlimit, dlimit[idensl - 1]
+        return dlimit, dlimit[i_density_limit - 1]
 
     @staticmethod
     def plasma_composition():
@@ -4063,6 +4102,13 @@ class Physics:
                 "Greenwald model",
                 "(dlimit(7))",
                 physics_variables.dlimit[6],
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "ASDEX New",
+                "(dlimit(8))",
+                physics_variables.dlimit[7],
                 "OP ",
             )
 

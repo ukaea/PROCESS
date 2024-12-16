@@ -403,12 +403,12 @@
     {
       "no": 79,
       "level": 3,
-      "message": "CULDLM: Illegal value for idensl"
+      "message": "calculate_density_limit: Illegal value for i_density_limit"
     },
     {
       "no": 80,
       "level": 2,
-      "message": "CULDLM: qcyl < 4/3; dlimit(4) set to zero; model 5 will be enforced instead"
+      "message": "calculate_density_limit: qcyl < 4/3; dlimit(4) set to zero; model 5 will be enforced instead"
     },
     {
       "no": 81,
