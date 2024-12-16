@@ -3680,8 +3680,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "2nd stability physics_variables.beta upper limit",
-            "(epbetmax)",
-            physics_variables.epbetmax,
+            "(beta_poloidal_eps_max)",
+            physics_variables.beta_poloidal_eps_max,
         )
         po.osubhd(self.outfile, "Normalised Beta Information :")
         if stellarator_variables.istell == 0:

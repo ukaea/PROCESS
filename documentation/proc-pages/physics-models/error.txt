@@ -413,7 +413,7 @@ To apply a limit to the value of \(\epsilon.\beta_p\), where
 \(\epsilon = a/R\) is the inverse aspect ratio, constraint equation no.
 6 should be turned on with iteration variable no. 8 (\texttt{fbeta}).
 The limiting value of \(\epsilon.\beta_p\) should be set using input
-parameter \texttt{epbetmax}.
+parameter \texttt{beta_poloidal_eps_max}.
 
 \subsection{Fast Alpha Pressure
 Contribution}\label{fast-alpha-pressure-contribution}

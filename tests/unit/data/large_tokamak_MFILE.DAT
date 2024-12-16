@@ -349,7 +349,7 @@
  Thermal_poloidal_beta___________________________________________________ ______________________________      1.1388E+00 OP 
  Thermal_toroidal_physics_variables.beta_(=_beta-exp)____________________ ______________________________      2.9623E-02 OP 
  2nd_stability_physics_variables.beta_:_beta_p_/_(R/a)___________________ (eps*beta_poloidal)___________________      4.3453E-01    
- 2nd_stability_physics_variables.beta_upper_limit________________________ (epbetmax)____________________      1.3800E+00    
+ 2nd_stability_physics_variables.beta_upper_limit________________________ (beta_poloidal_eps_max)____________________      1.3800E+00    
  Beta_g_coefficient______________________________________________________ (beta_norm_limit_upper)______________________      4.9607E+00    
  Normalised_thermal_beta_________________________________________________ ______________________________      2.4911E+00    
  Normalised_total_beta___________________________________________________ ______________________________      2.8515E+00    

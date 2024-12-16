@@ -177,7 +177,7 @@ module physics_variables
   real(dp) :: gradient_length_te
   !! Max. normalized gradient length in el. temperature (ipedestal==0 only)
 
-  real(dp) :: epbetmax
+  real(dp) :: beta_poloidal_eps_max
   !! maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346
   !! "Operation at the tokamak equilibrium poloidal beta-limit in TFTR", 1992 Nucl. Fusion 32 1468
 
@@ -982,7 +982,7 @@ module physics_variables
     dnprot = 0.0D0
     dntau = 0.0D0
     dnz = 0.0D0
-    epbetmax = 1.38D0
+    beta_poloidal_eps_max = 1.38D0
     eps = 0.34399724802D0
     aux_current_fraction = 0.0D0
     inductive_current_fraction = 0.0D0

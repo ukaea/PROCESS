@@ -294,7 +294,7 @@ tratio = 1.0
 * JUSTIFICATION: Turned off, not in use 
 * VARIABLES:     eps,fbeta Rest calculated in-situ
 
-*epbetmax
+*beta_poloidal_eps_max
 * DESCRIPTION:   Max epsilon*beta value
 * JUSTIFICATION: Turned off, not in use. icc=6.
 

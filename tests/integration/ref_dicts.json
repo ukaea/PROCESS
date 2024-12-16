@@ -1759,7 +1759,7 @@
         "end_of_record": -2.0,
         "energypervol": 0.0,
         "ensxpfm": 0.0,
-        "epbetmax": 1.38,
+        "beta_poloidal_eps_max": 1.38,
         "eps": 0.34399724802,
         "eps0_": 8.854188e-12,
         "epsfcn": 0.001,
@@ -9402,7 +9402,7 @@
         "end_of_record": "",
         "energypervol": "input waste (heat) energy cooled per evaporated volume (J/m3)",
         "ensxpfm": "maximum stored energy in the PF circuits (MJ)",
-        "epbetmax": "maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346\n \"Operation at the tokamak equilibrium poloidal beta-limit in TFTR\", 1992 Nucl. Fusion 32 1468",
+        "beta_poloidal_eps_max": "maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346\n \"Operation at the tokamak equilibrium poloidal beta-limit in TFTR\", 1992 Nucl. Fusion 32 1468",
         "eps": "inverse aspect ratio",
         "eps0_": "",
         "epsfcn": "epsfcn /1.0e-3/ : finite difference step length for HYBRD/VMCON derivatives",
@@ -12341,7 +12341,7 @@
             "lb": 1.0,
             "ub": 1000000.0
         },
-        "epbetmax": {
+        "beta_poloidal_eps_max": {
             "lb": 0.01,
             "ub": 10.0
         },
@@ -19107,7 +19107,7 @@
             "dnz",
             "dndrho_max",
             "dtdrho_max",
-            "epbetmax",
+            "beta_poloidal_eps_max",
             "eps",
             "aux_current_fraction",
             "inductive_current_fraction",
@@ -20210,7 +20210,7 @@
         "elecstore_w": "real_variable",
         "emult": "real_variable",
         "beam_energy": "real_variable",
-        "epbetmax": "real_variable",
+        "beta_poloidal_eps_max": "real_variable",
         "epsfcn": "real_variable",
         "epsvmc": "real_variable",
         "esbldgm3": "real_variable",
