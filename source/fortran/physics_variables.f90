@@ -254,7 +254,7 @@ module physics_variables
   real(dp) :: gamma
   !! Ejima coefficient for resistive startup V-s formula
 
-  real(dp) :: gammaft
+  real(dp) :: f_beta_alpha_beam_thermal
   !! ratio of (fast alpha + neutral beam beta) to thermal beta
 
   real(dp), dimension(ipnlaws) :: hfac
@@ -1005,7 +1005,7 @@ module physics_variables
     fusion_rate_density_plasma = 0.0D0
     fvsbrnni = 1.0D0
     gamma = 0.4D0
-    gammaft = 0.0D0
+    f_beta_alpha_beam_thermal = 0.0D0
     hfac = 0.0D0
     hfact = 1.0D0
     taumax = 10.0D0

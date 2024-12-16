@@ -348,7 +348,7 @@
  Total_toroidal_beta_____________________________________________________ ______________________________      3.4553E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.2236E-03 OP 
  Beam_ion_beta___________________________________________________________ (betanb)______________________      0.0000E+00 OP 
- (Fast_alpha_+_beam_physics_variables.beta)/(thermal_physics_variables.be (gammaft)_____________________      1.4354E-01 OP 
+ (Fast_alpha_+_beam_physics_variables.beta)/(thermal_physics_variables.be (f_beta_alpha_beam_thermal)_____________________      1.4354E-01 OP 
  Thermal_beta____________________________________________________________ ______________________________      2.9425E-02 OP 
  Thermal_poloidal_beta___________________________________________________ ______________________________      1.1243E+00 OP 
  Thermal_toroidal_physics_variables.beta_(=_beta-exp)____________________ ______________________________      3.0215E-02 OP 

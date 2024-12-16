@@ -1612,6 +1612,10 @@ class Physics:
             * (physics_variables.btot / physics_variables.bp) ** 2
         )
 
+        physics_variables.f_beta_alpha_beam_thermal = (
+            physics_variables.beta_fast_alpha + physics_variables.beta_beam
+        ) / physics_variables.beta_thermal
+
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
             if times_variables.tohsin == 0.0e0:
@@ -3606,9 +3610,6 @@ class Physics:
                 physics_variables.beta_limit_upper,
                 "OP ",
             )
-        gammaft = (
-            physics_variables.beta_fast_alpha + physics_variables.beta_beam
-        ) / physics_variables.beta_thermal
 
         po.ovarre(self.outfile, "Total plasma beta", "(beta)", physics_variables.beta)
         po.ovarre(
@@ -3634,16 +3635,16 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Beam ion beta",
+            "Neutral Beam ion beta",
             "(beta_beam)",
             physics_variables.beta_beam,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "(Fast alpha + beam physics_variables.beta)/(thermal physics_variables.beta)",
-            "(gammaft)",
-            gammaft,
+            "Ratio of fast alpha and beam beta to thermal beta",
+            "(f_beta_alpha_beam_thermal)",
+            physics_variables.f_beta_alpha_beam_thermal,
             "OP ",
         )
 
