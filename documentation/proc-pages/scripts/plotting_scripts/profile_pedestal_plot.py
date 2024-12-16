@@ -52,9 +52,9 @@ callback = CustomJS(
     const E = Tsep.value
     const F = Tbeta.value
 
-    const x = Array.from({length: 50000}, (_, i) => i * C / 100)
+    const x = Array.from({length: 50000}, (_, i) => i * C/50000 )
     const y = Array.from(x, (x) => D + (A - D)*(1-((x**F)/(C**F)))**B)
-    const x2 = Array.from({length: 50000}, (_, i) => C + i * (1 - C) / 5000)
+    const x2 = Array.from({length: 50000}, (_, i) => C + i * (1 - C)/50000)
     const y2 = Array.from(x2, (x) => E + (D - E)*((1-(x))/(1-C)))
 
     source.data = { x, y, x2, y2 }
