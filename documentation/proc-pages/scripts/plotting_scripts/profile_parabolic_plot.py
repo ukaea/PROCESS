@@ -2,7 +2,6 @@ import numpy as np
 from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, CustomJS, Slider
 from bokeh.plotting import figure, output_file, save
-from bokeh.io import save
 
 
 x = np.linspace(0, 1, 500)
