@@ -139,15 +139,15 @@ def vscalc(
 
 @nb.jit(nopython=True, cache=True)
 def calculate_beta_limit(
-    bt: float, dnbeta: float, plasma_current: float, rminor: float
+    bt: float, beta_norm_limit_upper: float, plasma_current: float, rminor: float
 ) -> float:
     """
     Calculate the beta scaling limit.
 
     :param bt: Toroidal B-field on plasma axis [T].
     :type bt: float
-    :param dnbeta: Troyon-like g coefficient.
-    :type dnbeta: float
+    :param beta_norm_limit_upper: Troyon-like g coefficient.
+    :type beta_norm_limit_upper: float
     :param plasma_current: Plasma current [A].
     :type plasma_current: float
     :param rminor: Plasma minor axis [m].
@@ -165,7 +165,7 @@ def calculate_beta_limit(
         - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
         - If i_beta_component = 3, then the limit is applied to the toroidal beta.
 
-        - The default value for the g coefficient is dnbeta = 3.5.
+        - The default value for the g coefficient is beta_norm_limit_upper = 3.5.
 
     References:
         - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
@@ -177,7 +177,7 @@ def calculate_beta_limit(
     """
 
     # Multiplied by 0.01 to convert from % to fraction
-    return 0.01 * dnbeta * (plasma_current / 1.0e6) / (rminor * bt)
+    return 0.01 * beta_norm_limit_upper * (plasma_current / 1.0e6) / (rminor * bt)
 
 
 # -----------------------------------------------------
@@ -2320,20 +2320,22 @@ class Physics:
         if physics_variables.iprofile == 1:
             # Relation between physics_variables.beta limit and plasma internal inductance
             # Hartmann and Zohm
-            physics_variables.dnbeta = 4.0e0 * physics_variables.rli
+            physics_variables.beta_norm_limit_upper = 4.0e0 * physics_variables.rli
 
         if physics_variables.iprofile == 2:
             # Original scaling law
-            physics_variables.dnbeta = 2.7e0 * (
+            physics_variables.beta_norm_limit_upper = 2.7e0 * (
                 1.0e0 + 5.0e0 * physics_variables.eps**3.5e0
             )
 
         if physics_variables.iprofile == 3 or physics_variables.iprofile == 5:
-            # physics_variables.dnbeta found from physics_variables.aspect ratio scaling on p32 of Menard:
+            # physics_variables.beta_norm_limit_upper found from physics_variables.aspect ratio scaling on p32 of Menard:
             # Menard, et al. "Fusion Nuclear Science Facilities
             # and Pilot Plants Based on the Spherical Tokamak."
             # Nucl. Fusion, 2016, 44.
-            physics_variables.dnbeta = 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
+            physics_variables.beta_norm_limit_upper = (
+                3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
+            )
 
         if physics_variables.iprofile == 6:
             # Method used for STEP plasma scoping
@@ -2341,14 +2343,14 @@ class Physics:
             Fp = (physics_variables.ne0 * physics_variables.te0) / (
                 physics_variables.dene * physics_variables.te
             )
-            physics_variables.dnbeta = 3.7e0 + (
+            physics_variables.beta_norm_limit_upper = 3.7e0 + (
                 (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
             )
 
         # calculate_beta_limit() returns the beta_limit_upper for beta
         physics_variables.beta_limit_upper = calculate_beta_limit(
             physics_variables.bt,
-            physics_variables.dnbeta,
+            physics_variables.beta_norm_limit_upper,
             physics_variables.plasma_current,
             physics_variables.rminor,
         )
@@ -2999,12 +3001,12 @@ class Physics:
                 8 = Sauter scaling (allowing negative triangularity)
                 9 = FIESTA ST scaling
             iprofile (int): Switch for current profile consistency.
-                0: Use input values for alphaj, rli, dnbeta.
+                0: Use input values for alphaj, rli, beta_norm_limit_upper.
                 1: Make these consistent with input q, q_0 values.
-                2: Use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling).
-                3: Use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling).
-                4: Use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling).
-                5: Use input value for alphaj. Set rli and dnbeta from Menard scaling.
+                2: Use input values for alphaj, rli. Scale beta_norm_limit_upper with aspect ratio (original scaling).
+                3: Use input values for alphaj, rli. Scale beta_norm_limit_upper with aspect ratio (Menard scaling).
+                4: Use input values for alphaj, beta_norm_limit_upper. Set rli from elongation (Menard scaling).
+                5: Use input value for alphaj. Set rli and beta_norm_limit_upper from Menard scaling.
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
             p0 (float): Central plasma pressure (Pa).
@@ -3460,12 +3462,12 @@ class Physics:
                 if physics_variables.iprofile == 1:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,dnbeta is enforced",
+                        "Consistency between q0,q,alphaj,rli,beta_norm_limit_upper is enforced",
                     )
                 else:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,dnbeta is not enforced",
+                        "Consistency between q0,q,alphaj,rli,beta_norm_limit_upper is not enforced",
                     )
 
                 po.oblnkl(self.outfile)
@@ -3686,16 +3688,16 @@ class Physics:
                 po.ovarrf(
                     self.outfile,
                     "Beta g coefficient",
-                    "(dnbeta)",
-                    physics_variables.dnbeta,
+                    "(beta_norm_limit_upper)",
+                    physics_variables.beta_norm_limit_upper,
                     "OP ",
                 )
             else:
                 po.ovarrf(
                     self.outfile,
                     "Beta g coefficient",
-                    "(dnbeta)",
-                    physics_variables.dnbeta,
+                    "(beta_norm_limit_upper)",
+                    physics_variables.beta_norm_limit_upper,
                 )
             po.ovarrf(
                 self.outfile,

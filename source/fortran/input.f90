@@ -306,7 +306,7 @@ contains
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, cvol, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
       fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
-      ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
+      ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_limit_upper, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
       ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
@@ -566,8 +566,8 @@ contains
        case ('dene')
           call parse_real_variable('dene', dene, 1.0D18, 1.0D22, &
                'Electron density (/m3)')
-       case ('dnbeta')
-          call parse_real_variable('dnbeta', dnbeta, 0.0D0, 20.0D0, &
+       case ('beta_norm_limit_upper')
+          call parse_real_variable('beta_norm_limit_upper', beta_norm_limit_upper, 0.0D0, 20.0D0, &
                'beta coefficient')
        case ('epbetmax')
           call parse_real_variable('epbetmax', epbetmax, 0.01D0, 10.0D0, &

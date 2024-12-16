@@ -353,7 +353,7 @@
  Thermal_toroidal_beta_(=_beta-exp)______________________________________ ______________________________      3.2509E-02 OP 
  2nd_stability_beta_:_beta_p_/_(R/a)_____________________________________ (eps*beta_poloidal)___________________      4.1770E-01    
  2nd_stability_beta_upper_limit__________________________________________ (epbetmax)____________________      1.3800E+00    
- Beta_g_coefficient______________________________________________________ (dnbeta)______________________      4.7593E+00    
+ Beta_g_coefficient______________________________________________________ (beta_norm_limit_upper)______________________      4.7593E+00    
  Normalised_thermal_beta_________________________________________________ ______________________________      2.5527E+00    
  Normalised_total_beta___________________________________________________ ______________________________      2.9150E+00    
  Normalised_toroidal_beta________________________________________________ (normalised_toroidal_beta)____      3.0013E+00    
@@ -1559,7 +1559,7 @@ alphan = 1.00
 alphat = 1.45 
 
 * (troyon-like) coefficient for beta scaling
-dnbeta = 3.0
+beta_norm_limit_upper = 3.0
 
 * Zohm elongation scaling adjustment factor (ishape=2; 3)
 fkzohm = 1.02
