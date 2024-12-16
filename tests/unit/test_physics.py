@@ -2043,6 +2043,8 @@ class CalculateDensityLimitParam(NamedTuple):
 
     pdivt: Any = None
 
+    pinjmw: Any = None
+
     plasma_current: Any = None
 
     prn1: Any = None
@@ -2069,25 +2071,27 @@ class CalculateDensityLimitParam(NamedTuple):
     (
         CalculateDensityLimitParam(
             i_density_limit=7,
-            bt=5.7000000000000002,
-            pdivt=169.86588182297265,
-            plasma_current=18398455.678867526,
-            prn1=0.54903846872792261,
-            q95=3.5,
-            qcyl=2.9008029008029004,
+            bt=5.1847188735686647,
+            pdivt=162.32943903093374,
+            pinjmw=79.928763793309031,
+            plasma_current=16702766.338258133,
+            prn1=0.4614366315228275,
+            q95=3.5068029786872268,
+            qcyl=3.8769445264202052,
             rmajor=8,
             rminor=2.6666666666666665,
             sarea=1173.8427771245592,
-            zeff=2.0909945616489103,
-            expected_dnelimt=8.2355770309188387e19,
+            zeff=2.5668755115791471,
+            expected_dnelimt=7.4765470107450917e19,
             expected_dlimit=(
-                4.6776897596806603e19,
-                9.6979327595095458e19,
-                3.8452719591725253e19,
-                3.0917086651329429e21,
-                4.0085150551984223e20,
-                7.3686495535714296e19,
-                8.2355770309188387e19,
+                5.2955542598288974e19,
+                1.0934080161360552e20,
+                4.3286395478282289e19,
+                1.9109162908046821e21,
+                4.2410183109151497e20,
+                5.0149533075302982e19,
+                7.4765470107450917e19,
+                8.7406037163890049e20,
             ),
         ),
     ),
@@ -2109,6 +2113,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
         i_density_limit=calculatedensitylimitparam.i_density_limit,
         bt=calculatedensitylimitparam.bt,
         pdivt=calculatedensitylimitparam.pdivt,
+        pinjmw=calculatedensitylimitparam.pinjmw,
         plasma_current=calculatedensitylimitparam.plasma_current,
         prn1=calculatedensitylimitparam.prn1,
         q95=calculatedensitylimitparam.q95,

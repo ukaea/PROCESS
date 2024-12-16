@@ -106,8 +106,6 @@ $$
 
 -----------------
 
-## Key Constraints
-
 [^1]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
 
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
@@ -119,7 +117,5 @@ $$
 [^5]: J. W. Berkery et al., “Density limits as disruption forecasters for spherical tokamaks,” Plasma Physics and Controlled Fusion, vol. 65, no. 9, pp. 095003–095003, Jul. 2023, doi: https://doi.org/10.1088/1361-6587/ace476.
 
 [^6]: M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,” vol. 57, no. 1, pp. 014038–014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038.
-‌
-‌
 ‌
 ‌

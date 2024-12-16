@@ -3185,6 +3185,7 @@ def plot_density_limit_comparison(
         fontsize=9,
     )
 
+    axis.set_yscale("log")
     axis.set_title("Density Limit Comparison")
     axis.set_ylabel(r"Density Limit [$10^{20}$ m$^{-3}$]")
     axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-20:.1f}"))

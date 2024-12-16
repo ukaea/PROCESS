@@ -2507,16 +2507,16 @@ class Physics:
         Notes:
             This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
             For i_density_limit = 1-5, 8, we scale the sepatrix density limit output by the ratio of the separatrix to volume averaged density
-        
+
         References:
             - AEA FUS 172: Physics Assessment for the European Reactor Study
-            
+
             - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989
-            
-            - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,” 
+
+            - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,”
               vol. 57, no. 1, pp. 014038–014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038. ‌
         """
-        
+
         if i_density_limit < 1 or i_density_limit > 7:
             error_handling.idiags[0] = i_density_limit
             error_handling.report_error(79)
@@ -2570,7 +2570,7 @@ class Physics:
 
             dlimit[3] = 0.0
         else:
-            dlimit[3] = (1.0e20 * np.sqrt(pdivt / denom)) / prn1
+            dlimit[3] = (1.0e20 * np.sqrt(pinjmw / denom)) / prn1
 
         # JET simplified density limit model
         # This applies to the density at the plasma edge, so must be scaled
