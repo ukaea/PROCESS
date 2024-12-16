@@ -74,12 +74,10 @@ FILE(GLOB PROCESS_PYTHON_SRC_PATHS ${PROCESS_PYTHON_SRC_DIR}/*.py)
 LIST(APPEND PROCESS_SRCS
     numerics.f90
     scan.f90
-    fw.f90
     hcpb.f90
     pfcoil.f90
     reinke_module.f90
     sctfcoil.f90
-    final_module.f90
     cost_variables.f90
     divertor_variables.f90
     fwbs_variables.f90
@@ -88,7 +86,6 @@ LIST(APPEND PROCESS_SRCS
     tfcoil_variables.f90
     times_variables.f90
     ife_variables.f90
-    ife.f90
     heat_transport_variables.f90
     buildings_variables.f90
     maths_library.f90
@@ -184,24 +181,3 @@ else()
 endif()
 
 ADD_DEPENDENCIES(install_process ${PIP_NAME} f2py ${FORD_NAME} ${GFORTLIB_NAME} ${DICTS_NAME} coverage_cleanup)
-
-if(EXISTS ${CMAKE_SOURCE_DIR}/lcov_results)
-    execute_process(COMMAND echo "-- Delete existing lcov_coverage directory...")
-    execute_process(COMMAND cmake -E remove_directory ${CMAKE_SOURCE_DIR}/lcov_results)
-    execute_process(COMMAND mkdir ${CMAKE_SOURCE_DIR}/lcov_results)
-elseif(NOT EXISTS ${CMAKE_SOURCE_DIR}/lcov_results)
-    execute_process(COMMAND echo "-- Create lcov_coverage directory...")
-    execute_process(COMMAND mkdir ${CMAKE_SOURCE_DIR}/lcov_results)
-endif()
-
-# Custom target to run the regression tests and generate coverage report
-ADD_CUSTOM_TARGET(regression
-    COMMAND pytest -v tests/regression/ -s | tee tests/regression/pytest.log
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-
-ADD_CUSTOM_TARGET(coverage
-    COMMAND lcov --gcov-tool gcov --capture --directory build/CMakeFiles/process.dir/source/fortran/ --output-file lcov_results/coverage.info
-    COMMAND genhtml --output-directory lcov_results/html lcov_results/coverage.info
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)

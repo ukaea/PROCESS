@@ -228,7 +228,7 @@ def main(args=None):
     ] = "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
     nsweep_dict[18] = "gammax"
     nsweep_dict[19] = "boundl(16)"
-    nsweep_dict[20] = "cnstv.tbrnmn"
+    nsweep_dict[20] = "cnstv.t_burn_min"
     nsweep_dict[21] = ""
     nsweep_dict[22] = "cfactr"
     nsweep_dict[23] = "boundu(72)"
@@ -639,13 +639,6 @@ def main(args=None):
                     if output_names2 != []
                     else f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
                     + f".{save_format}"
-                )
-            elif output_name == "pdivtbt/qar":
-                plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_pdivtbtqar"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else "" + f".{save_format}"
                 )
             elif stack_plots and output_names[-1] == output_name:
                 plt.savefig(

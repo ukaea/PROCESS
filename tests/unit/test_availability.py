@@ -48,10 +48,10 @@ def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param
     monkeypatch.setattr(cv, "life_dpa", 40.0)
     monkeypatch.setattr(cv, "adivflnc", 8.0)
     monkeypatch.setattr(dv, "hldiv", 10.0)
-    monkeypatch.setattr(tv, "tcycle", 5.0)
+    monkeypatch.setattr(tv, "t_cycle", 5.0)
     monkeypatch.setattr(cv, "iavail", 0)
     monkeypatch.setattr(cv, "cfactr", 0.8)
-    monkeypatch.setattr(tv, "tburn", 500.0)
+    monkeypatch.setattr(tv, "t_burn", 500.0)
     monkeypatch.setattr(pv, "itart", 1)
 
     availability.avail(output=False)
@@ -336,7 +336,7 @@ def calc_u_unplanned_divertor_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"divlife": 1.99, "tcycle": 9000, "expected": approx(0.02, abs=0.005)}
+    defaults = {"divlife": 1.99, "t_cycle": 9000, "expected": approx(0.02, abs=0.005)}
 
     # Merge default dict with any optional keyword arguments to override values
     param = {**defaults, **kwargs}
@@ -380,7 +380,7 @@ def calc_u_unplanned_divertor_fix(request, monkeypatch):
 
     # Mock variables used by calc_u_unplanned_divertor()
     # Some may be parameterised
-    monkeypatch.setattr(fortran.times_variables, "tcycle", param["tcycle"])
+    monkeypatch.setattr(fortran.times_variables, "t_cycle", param["t_cycle"])
     monkeypatch.setattr(cv, "divlife", param["divlife"])
 
     # Return the expected result for the given parameter list
@@ -411,7 +411,7 @@ def calc_u_unplanned_fwbs_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"bktlife": 5, "tcycle": 9000, "expected": approx(0.02, abs=0.005)}
+    defaults = {"bktlife": 5, "t_cycle": 9000, "expected": approx(0.02, abs=0.005)}
 
     # Merge default dict with any optional keyword arguments to override values
     param = {**defaults, **kwargs}
@@ -454,7 +454,7 @@ def calc_u_unplanned_fwbs_fix(request, monkeypatch):
 
     # Mock variables used by calc_u_unplanned_fwbs()
     # Some may be parameterised
-    monkeypatch.setattr(fortran.times_variables, "tcycle", param["tcycle"])
+    monkeypatch.setattr(fortran.times_variables, "t_cycle", param["t_cycle"])
     monkeypatch.setattr(fortran.fwbs_variables, "bktlife", param["bktlife"])
 
     # Return the expected result for the given parameter list
@@ -526,8 +526,8 @@ def test_avail_2(monkeypatch, availability):
     )
 
     # Mock module variables
-    monkeypatch.setattr(tv, "tburn", 5.0)
-    monkeypatch.setattr(tv, "tcycle", 50.0)
+    monkeypatch.setattr(tv, "t_burn", 5.0)
+    monkeypatch.setattr(tv, "t_cycle", 50.0)
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "itart", 1)
     monkeypatch.setattr(fwbsv, "bktlife", 5.0)
@@ -572,14 +572,21 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(cv, "tmain", 1.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
-    monkeypatch.setattr(tv, "tburn", 5.0)
-    monkeypatch.setattr(tv, "tcycle", 10.0)
+    monkeypatch.setattr(tv, "t_burn", 5.0)
+    monkeypatch.setattr(tv, "t_cycle", 9000.0)
+    monkeypatch.setattr(cv, "adivflnc", 10.0)
+    monkeypatch.setattr(dv, "hldiv", 10.0)
+    monkeypatch.setattr(cv, "ibkt_life", 0)
+    monkeypatch.setattr(cv, "abktflnc", 10.0)
+    monkeypatch.setattr(pv, "wallmw", 10.0)
+    monkeypatch.setattr(cv, "cplife", 5.0)
+    monkeypatch.setattr(cv, "cdrlife", 15.0)
 
     availability.avail_st(output=False)
 
-    assert pytest.approx(cv.t_operation) == 29.03225806
-    assert pytest.approx(cv.cfactr) == 0.82579737
-    assert pytest.approx(cv.cpfact) == 0.41289868
+    assert pytest.approx(cv.t_operation) == 15.0
+    assert pytest.approx(cv.cfactr) == 0.27008858
+    assert pytest.approx(cv.cpfact, abs=1.0e-8) == 0.00015005
 
     # Initialise fortran variables again to reset for other tests
     fortran.init_module.init_all_module_vars()
@@ -606,3 +613,23 @@ def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     cplife = availability.cp_lifetime()
 
     assert pytest.approx(cplife) == exp
+
+
+def test_divertor_lifetime(monkeypatch, availability):
+    """Test divertor_lifetime routine
+
+    :param monkeypatch: Mock fixture
+    :type monkeypatch: object
+
+    :param availability: fixture containing an initialised `Availability` object
+    :type availability: tests.unit.test_availability.availability (functional fixture)
+    """
+
+    monkeypatch.setattr(cv, "adivflnc", 100.0)
+    monkeypatch.setattr(dv, "hldiv", 10.0)
+    monkeypatch.setattr(cv, "tlife", 30.0)
+
+    divlife_obs = availability.divertor_lifetime()
+    divlife_exp = 10.0
+
+    assert pytest.approx(divlife_obs) == divlife_exp

@@ -2481,7 +2481,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
         pf_info_3_a = ""
         pf_info_3_b = ""
 
-    tburn = mfile_data.data["tburn"].get_scan(scan) / 3600.0
+    t_burn = mfile_data.data["t_burn"].get_scan(scan) / 3600.0
 
     if "i_tf_bucking" in mfile_data.data.keys():
         i_tf_bucking = int(mfile_data.data["i_tf_bucking"].get_scan(scan))
@@ -2520,7 +2520,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
             ("vstot", "Available flux swing", "Wb"),
-            (tburn, "Burn time", "hrs"),
+            (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             ("#TF coil type is {}".format(tftype), "", ""),
             ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
@@ -2545,7 +2545,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
             ("vstot", "Available flux swing", "Wb"),
-            (tburn, "Burn time", "hrs"),
+            (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             ("#TF coil type is {}".format(tftype), "", ""),
             ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),

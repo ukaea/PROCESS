@@ -40,9 +40,13 @@ all new models should have their own function
 
 Use a lowercase word or words. Separate words by underscores(`_`) to improve readability.
 
+---------------------
+
 ### Switches
 
 Switches should start with the `i_` prefix in their name, be of integer type and should be indexed from 0.
+
+---------------------
 
 ### Constants
 
@@ -51,22 +55,230 @@ Use an uppercase single letter, word, or words. Separate words with underscores 
 Refrain from declaring or typing known numerical constants directly in the code. Instead call the value from `constants.f90`
 If the constants doesn't exist then add it with a source link and uncertainty value.
 
+---------------------
+
 ### Variables
+
+!!! note
+
+    Variable names are slowly being converted to their new verbose form as development progresses. Therefore you may come across variables that do not match the style mentioned below.
 
 Use a lowercase single letter, word, or words. Separate words with underscores to improve readability.
 If converting between units it may be required to have some capital letters at the end of the variable name to differentiate between different orders of magnitude, `m` and `M` etc.
+
+The agreed upon style is to name the variables by the following scheme:
+
+`var = <data type>_<system>_<description>_<units>`
+
+#### System designations
+
+Below are a few shorthand designations for different systems that should be used in variable names
+
+- Toroidal field coils: `_tf_`
+- Poloidal field coils: `_pf_`
+- Vacuum Vessel: `_vv_`
+- First wall: `_fw_`
+- Divertor: `_div_`
+- Blanket: `_blkt_`
+- Shield: `_shield_`
+- Central Solenoid: `_cs_`
+- Heating & Current Drive: `_hcd_`
+    - Electron cyclotron current drive: `_eccd_`
+    - Ion cyclotron current drive: `_iccd_`
+    - Electron Bernstein Wave: `_ebw_`
+    - Neutral Beam: `_nb_`
+- Centre post: `_cp_` Should only be used for ST's
+
+If the variables are physics variables and do not belong to a system then:
+
+`var = <physics variable>_<description>`
+
+The data types of different variables can be seen below:
+
+---------------------
+
+#### Radii and thicknesses
+
+- Radial positions should start with the `r_` prefix
+- Radial thicknesses should start with the `dr_` prefix
+
+- Vertical positions should start with the `z_` prefix
+- Vertical thicknesses should start with the `dz_` prefix
+
+---------------------
+
+#### Integer countable items
+
+- Integer countable items should start with the `n_` prefix
+
+Example, the total number of TF coils: `n_tf_coils`
+
+---------------------
+
+#### Number densities
+
+- Number density items should start with the `nd_` prefix
+
+---------------------
+
+#### Areas
+
+- Areas should start with the `a_` prefix
+
+Example, the area of the TF winding pack: `a_tf_wp`
+
+---------------------
+
+#### Volumes
+
+- Volumes should start with the `vol_` prefix
+
+---------------------
+
+#### Lengths
+
+- Lengths should start with the `len_` prefix
+
+---------------------
+
+#### Velocities
+
+- Velocities should start with the `vel_` prefix
+
+---------------------
+
+#### Mass
+
+- Masses should start with the `m_` prefix
+
+---------------------
+
+#### Pressures
+
+- Pressures should start with the `pres_` prefix
+- Pressure changes or drops should start with the `dpres_` prefix
+
+---------------------
+
+
+#### Densities
+
+- Densities should start with the `den_` prefix
+
+---------------------
+
+#### Voltages
+
+- Voltages should start with the `v_` prefix
+
+---------------------
+
+#### Resistances
+
+- Resistances should start with the `res_` prefix
+
+---------------------
+
+#### Resistivity
+
+- Resistivity variables should start with the `rho_` prefix
+
+---------------------
+
+#### Currents
+
+- Currents should start with the `c_` prefix
+
+---------------------
+
+#### Inductances
+
+- Inductances should start with the `h_` prefix
+
+---------------------
+
+#### Current densities
+
+- Current densities should start with the `j_` prefix
+
+---------------------
+
+#### Powers
+
+- Powers should start with the `p_` prefix
+
+---------------------
+
+#### Power densities
+
+- Power densities should start with the `pden_` prefix
+
+---------------------
+
+#### Power fluxes
+
+- Power fluxes should start with the `pflux_` prefix
+
+---------------------
+
+#### Energies
+
+- Energies should start with the `e_` prefix
+
+---------------------
+
+#### Temperatures
+
+- Temperatures should start with the `temp_` prefix
+
+---------------------
+
+#### Times
+
+- Times should start with the `t_` prefix
+- Time intervals should start with the `dt_` prefix
+
+---------------------
+
+#### Magnetic field strengths
+
+- Magnetic field strengths should start with the `b_`
+
+---------------------
+
+#### Frequencies
+
+- Frequencies should start with the `freq_`
+
+---------------------
+
+#### Angles
+
+- Angles should start with the `deg_` or `rad_` depending on the units used
+
+---------------------
 
 #### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
 
+Similar to this is variables representing efficiencies.
+
+If a variable is intended to represent an engineering efficiency then it should start with the `eta_` prefix to represent $\eta$
+
+---------------------
+
 #### F-values
 
 Variables used within constraint equations to scale iteration variables (f-values) should start with the `f` prefix without an underscore before the next word.
 
+---------------------
+
 ### Length
 
 Try to keep names to a sensible length while also keeping the name explicit and descriptive.
+
+---------------------
 
 ### Physical Type
 
@@ -91,10 +303,21 @@ Inside PROCESS all variables should be in SI units unless otherwise stated. For 
 ```fortran
 ! Fusion power [W]
 fusion_power = 1000.0d6
+```
 
+If a variable is not in SI units then its units should be put at the end of of the variable name.
+Example:
+
+```fortran
 ! Fusion power [MW]
 fusion_power_MW = 1000.0d0
 ```
+
+!!! note
+
+    With `f2py` you may encounter a Fortran error where the variable with units at the end in capital letters is not recognised. If so for the meantime put the units in their lowercase form. This problem will be solved in the future by full Pythonisation.
+
+---------------------    
 
 ### Coordinates and dimensions
 
@@ -118,6 +341,8 @@ dz_cs =
 dtheta_description =
 ```
 
+---------------------
+
 ### Loop order
 
 Loop variables that use I, j etc. should use
@@ -129,30 +354,32 @@ ii
             mm
 ```
 
+---------------------
+
 ### Examples
 
 | Variable name | Description | Units |
 | ------------- | ----------- | :---: |
-| `plasma_current`    | Plasma current | A |
-| `plasma_current_MA` | Plasma current | MA |
+| `c_plasma`    | Plasma current | A |
+| `c_plasma_MA` | Plasma current | MA |
 | `b_t_onaxis`  | Toroidal field on-axis | T |
 | `b_t_max`     | Max toroidal field | T |
-| `n_electron_vol` | Volume average electron density | m-3 |
-| `t_electron_vol_ev` | Volume avgerage electron temperature | eV |
-| `mass_steel` | Mass of steel | kg |
-| `mass_steel_tonne` | Mass of steel | tonne |
-| `e_neutron_ev` | Energy of neutron | eV |
+| `nd_electron_vol` | Volume average electron density | m-3 |
+| `temp_electron_vol_eV` | Volume avgerage electron temperature | eV |
+| `m_steel` | Mass of steel | kg |
+| `m_steel_tonne` | Mass of steel | tonne |
+| `e_neutron_eV` | Energy of neutron | eV |
 | `e_neutron_MeV` | Energy of neutron | MeV |
 | `v_tf_dump` | TF dump voltage | V |
-| `time_plant_life` | Plant lifetime | s |
-| `time_plant_life_yrs` | Plant lifetime | years |
+| `t_plant_life` | Plant lifetime | s |
+| `t_plant_life_yrs` | Plant lifetime | years |
 | `dr_tf_inboard_leg` | TF coil inboard leg radial thickness | m |
 | `dr_blanket_inboard` | Inboard blanket thickness | m |
-| `velocity_coolant` | TF centrepost coolant velocity | m/s |
-| `plasma_volume` | Plasma volume | m3 |
-| `plasma_area` | Plasma area | m2 |
-| `angle_div_target` | Divertor target angle | radians |
-| `angle_div_target_deg` | Divertor target angle | deg |
+| `vel_coolant` | TF centrepost coolant velocity | m/s |
+| `vol_plasma` | Plasma volume | m3 |
+| `a_plasma` | Plasma area | m2 |
+| `rad_div_target` | Divertor target angle | radians |
+| `deg_div_target` | Divertor target angle | deg |
 | `sig_tf_r` | TF radial stress  | Pa |
 | `` |  |  |
 

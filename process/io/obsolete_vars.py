@@ -127,6 +127,16 @@ OBS_VARS = {
     "ftrit": "f_tritium",
     "fhe3": "f_helium3",
     "falpha": "f_alpha_plasma",
+    "ftburn": "ft_burn",
+    "ftohs": "ft_current_ramp_up",
+    "tbrnmn": "t_burn_min",
+    "tohs": "t_current_ramp_up",
+    "tdwell": "t_between_pulse",
+    "tramp": "t_precharge",
+    "tqnch": "t_ramp_down",
+    "tburn": "t_burn",
+    "pdivmax/rmajor": "pdivmax_over_rmajor",
+    "pdivtbt/qar": "pdivtbt_over_qar",
 }
 
 OBS_VARS_HELP = {

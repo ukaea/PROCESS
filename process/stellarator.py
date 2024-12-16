@@ -1,6 +1,7 @@
 import logging
 from copy import copy
 import numpy as np
+from pathlib import Path
 
 from process.fortran import (
     constants,
@@ -26,11 +27,14 @@ from process.fortran import (
     neoclassics_module,
     impurity_radiation_module,
     sctfcoil_module,
+    global_variables,
 )
 import process.superconductors as superconductors
 import process.physics_functions as physics_funcs
+from process.stellarator_config import load_stellarator_config
 from process.coolprop_interface import FluidProperties
 from process.physics import rether
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -254,7 +258,12 @@ class Stellarator:
         It overwrites rminor with rmajor and aspect ratio e.g.
         """
 
-        stellarator_configuration.new_stella_config(stellarator_variables.istell)
+        load_stellarator_config(
+            stellarator_variables.istell,
+            Path(
+                f"{f2py_compatible_to_string(global_variables.output_prefix)}stella_conf.json"
+            ),
+        )
 
         # If physics_variables.aspect ratio is not in numerics.ixc set it to default value
         # Or when you call it the first time

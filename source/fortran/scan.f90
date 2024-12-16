@@ -56,7 +56,7 @@ module scan_module
   !!         <LI> 17 bmxlim
   !!         <LI> 18 gammax
   !!         <LI> 19 boundl(16: ohcth)
-  !!         <LI> 20 tbrnmn
+  !!         <LI> 20 t_burn_min
   !!         <LI> 21 not used
   !!         <LI> 22 cfactr (N.B. requires iavail=0)
   !!         <LI> 23 boundu(72: fipir)
@@ -595,7 +595,7 @@ contains
 
 	use build_variables, only: blnkoth, shldith, scrapli, scraplo, ohcth
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
-        gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax
+        gammax, t_burn_min, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
 	use current_drive_variables, only: bootstrap_current_fraction_max, etaech
 	use divertor_variables, only: hldivlim
@@ -682,8 +682,8 @@ contains
             boundl(16) = swp(iscn)
             vlab = 'boundl(16)' ; xlab = 'CS_thickness_lower_bound'
         case (20)
-            tbrnmn = swp(iscn)
-            vlab = 'tbrnmn' ; xlab = 'Minimum_burn_time_(s)'
+            t_burn_min = swp(iscn)
+            vlab = 't_burn_min' ; xlab = 'Minimum_burn_time_(s)'
         case (21)
             ! sigpfalw = swp(iscn)
             vlab = 'obsolete' ; xlab = 'obsolete'

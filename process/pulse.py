@@ -97,7 +97,7 @@ class Pulse:
         #  Minimum plasma current ramp-up time (s)
         #  - corrected (bus resistance is not a function of pfcoil_variables.turns)
 
-        constraint_variables.tohsmn = (
+        constraint_variables.t_current_ramp_up_min = (
             loh
             * (ioht2 - ioht1)
             / (
@@ -115,8 +115,8 @@ class Pulse:
                 po.ovarre(
                     self.outfile,
                     "Minimum plasma current ramp-up time (s)",
-                    "(tohsmn)",
-                    constraint_variables.tohsmn,
+                    "(t_current_ramp_up_min)",
+                    constraint_variables.t_current_ramp_up_min,
                 )
 
     def burn(self, output: bool):
@@ -165,7 +165,7 @@ class Pulse:
             error_handling.fdiags[3] = times_variables.t_fusion_ramp
             error_handling.report_error(93)
 
-        times_variables.tburn = max(0.0e0, tb)
+        times_variables.t_burn = max(0.0e0, tb)
 
         #  Output section
 

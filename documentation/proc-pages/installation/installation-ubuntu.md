@@ -26,7 +26,7 @@ Open the terminal and install `cmake`, `gfortran`, `pip`, etc.:
 
 ```bash
 sudo apt update
-sudo apt install -y cmake gfortran python3-pip lcov poppler-utils python3-venv
+sudo apt install -y cmake gfortran python3-pip poppler-utils python3-venv
 ```
 
 !!! Note "CMake"

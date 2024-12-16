@@ -20,7 +20,6 @@ from process.fortran import (
     pfcoil_variables,
     buildings_variables,
     error_handling,
-    fw_module,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process.coolprop_interface import FluidProperties
@@ -2412,7 +2411,7 @@ class BlanketLibrary:
         # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.
         # Use dh which allows us to do fluid calculations for non-cicular tubes
         # (dh is estimate appropriate for fully developed flow).
-        lamda = fw_module.friction(reyn)
+        lamda = self.fw.friction(reyn)
 
         # Pressure drop coefficient
 

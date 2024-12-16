@@ -1712,7 +1712,7 @@ class VscalcParam(NamedTuple):
 
     rplas: Any = None
 
-    tburn: Any = None
+    t_burn: Any = None
 
     t_fusion_ramp: Any = None
 
@@ -1742,7 +1742,7 @@ class VscalcParam(NamedTuple):
             rli=1.2064840230894305,
             rmajor=8,
             rplas=3.7767895536275952e-09,
-            tburn=1000,
+            t_burn=1000,
             t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
@@ -1761,7 +1761,7 @@ class VscalcParam(NamedTuple):
             rli=1.2064840230894305,
             rmajor=8,
             rplas=3.7767895536275952e-09,
-            tburn=0,
+            t_burn=0,
             t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
@@ -1792,7 +1792,7 @@ def test_vscalc(vscalcparam):
         rli=vscalcparam.rli,
         rmajor=vscalcparam.rmajor,
         rplas=vscalcparam.rplas,
-        tburn=vscalcparam.tburn,
+        t_burn=vscalcparam.t_burn,
         t_fusion_ramp=vscalcparam.t_fusion_ramp,
         rmu0=constants.rmu0,
     )

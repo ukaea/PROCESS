@@ -77,7 +77,7 @@ class Availability:
 
         # Full power lifetime (in years)
         if ifev.ife != 1:
-            # Caculate DPA per FPY - based on neutronics-derived fusion power relation to DEMO blanket lifetime provided by Matti Coleman
+            # Calculate DPA per FPY - based on neutronics-derived fusion power relation to DEMO blanket lifetime provided by Matti Coleman
             # Detailed and cited in T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
             # https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
             # Scaling w.r.t. fusion power drops out a large number of factors relating to neutronics, such as:
@@ -117,7 +117,7 @@ class Availability:
                 dv.hldiv = 1.0e-10
 
             # Divertor lifetime (years)
-            cv.divlife = max(0.0, min(cv.adivflnc / dv.hldiv, cv.tlife))
+            cv.divlife = self.divertor_lifetime()
 
             # Centrepost lifetime (years) (ST machines only)
             if pv.itart == 1:
@@ -126,7 +126,7 @@ class Availability:
         # Plant Availability (iavail=0,1)
 
         # Calculate the number of fusion cycles for a given blanket lifetime
-        pulse_fpy = tv.tcycle / YEAR_SECONDS
+        pulse_fpy = tv.t_cycle / YEAR_SECONDS
         cv.bktcycles = (fwbsv.bktlife / pulse_fpy) + 1
 
         # if iavail = 0 use input value for cfactr
@@ -166,7 +166,7 @@ class Availability:
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
-        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
@@ -373,7 +373,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
 
         # Output
         if output:
@@ -477,7 +477,7 @@ class Availability:
             fwbsv.bktlife = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
 
         # Divertor lifetime (years)
-        cv.divlife = min(cv.adivflnc / dv.hldiv, cv.tlife)
+        cv.divlife = self.divertor_lifetime()
 
         # Centrepost lifetime (years) (ST only)
         if pv.itart == 1:
@@ -661,11 +661,11 @@ class Availability:
 
         # Calculate cycle limit in terms of days
         # Number of cycles between planned blanket replacements, N
-        n = cv.divlife * YEAR_SECONDS / tv.tcycle
+        n = cv.divlife * YEAR_SECONDS / tv.t_cycle
 
         # The probability of failure in one pulse cycle (before the reference cycle life)
-        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.tcycle
-        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.tcycle
+        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.t_cycle
+        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.t_cycle
 
         # Integrating the instantaneous availability gives the mean
         # availability over the planned cycle life N
@@ -757,12 +757,12 @@ class Availability:
         # Calculate cycle limit in terms of days
 
         # Number of cycles between planned blanket replacements, N
-        n = fwbsv.bktlife * YEAR_SECONDS / tv.tcycle
+        n = fwbsv.bktlife * YEAR_SECONDS / tv.t_cycle
 
         # The probability of failure in one pulse cycle
         # (before the reference cycle life)
-        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.tcycle
-        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.tcycle
+        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.t_cycle
+        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.t_cycle
 
         if cv.fwbs_nu <= cv.fwbs_nref:
             logger.error(
@@ -1003,17 +1003,65 @@ class Availability:
         return u_unplanned_vacuum
 
     def avail_st(self, output: bool):
-        """Routine to calculate availability for plant with a Spherical Tokamak
-
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
         """
-        # CP lifetime
+        Calculate the availability for a plant with a Spherical Tokamak.
+
+        This routine calculates the availability of a plant by considering various factors such as
+        the lifetime of different components, planned and unplanned unavailability, and maintenance cycles.
+
+        Parameters:
+        -----------
+        output : bool
+            Indicates whether the output should be written to the output file or not.
+
+        Detailed Description:
+        ---------------------
+        - The method calculates the Displacements Per Atom (DPA) per Full Power Year (FPY) based on the fusion power.
+        - It determines the lifetime of the first wall and blanket, divertor, and current drive.
+        - It calculates the time for a maintenance cycle and the number of maintenance cycles over the plant's lifetime.
+        - It computes the planned and unplanned unavailability of various components such as magnets, divertor, first wall and blanket, balance of plant, heating and current drive, and vacuum systems.
+        - The total availability of the plant is then calculated considering both planned and unplanned unavailability.
+        - The method also adjusts the lifetimes of components based on the calculated availability.
+        - Finally, it calculates the capacity factor and operational time of the plant.
+
+        If `output` is True, the method writes detailed availability information to the output file.
+
+        References:
+        -----------
+        - T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
+          https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
+
+        Notes:
+        ------
+        - The method assumes certain constants and reference points for calculations.
+        - The method modifies the lifetimes of components to account for the calculated availability.
+        """
+
+        ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
+        f_scale = pv.fusion_power / ref_powfmw
+        ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
+        dpa_fpy = f_scale * ref_dpa_fpy
+
+        if cv.ibkt_life == 0:
+            fwbsv.bktlife = min(cv.abktflnc / pv.wallmw, cv.tlife)
+        else:
+            fwbsv.bktlife = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
+
+        # Divertor lifetime (years)
+        cv.divlife = self.divertor_lifetime()
+
+        # CP lifetime (years)
         cv.cplife = self.cp_lifetime()
 
+        # Current drive lifetime (assumed equal to first wall and blanket lifetime)
+        cv.cdrlife = fwbsv.bktlife
+
         # Time for a maintenance cycle (years)
-        # Lifetime of CP + time to replace
-        maint_cycle = cv.cplife + cv.tmain
+        # Shortest component lifetime + time to replace
+        shortest_lifetime = min(
+            fwbsv.bktlife, cv.divlife, cv.cplife, cv.cdrlife, cv.tlife
+        )
+        maint_cycle = shortest_lifetime + cv.tmain
 
         # Number of maintenance cycles over plant lifetime
         n_cycles_main = cv.tlife / maint_cycle
@@ -1071,10 +1119,49 @@ class Availability:
             1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
         )
 
+        # Modify lifetimes to take account of the availability
+        if ifev.ife != 1:
+            # First wall / blanket
+            if fwbsv.bktlife < cv.tlife:
+                fwbsv.bktlife = min(fwbsv.bktlife / cv.cfactr, cv.tlife)
+                cv.cdrlife = fwbsv.bktlife
+
+            # Divertor
+            if cv.divlife < cv.tlife:
+                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+
+            # Centrepost
+            if pv.itart == 1 and cv.cplife < cv.tlife:
+                cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
+
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.tburn / tv.tcycle)
+        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
 
         if output:
+            po.ocmmnt(self.outfile, "Plant Availability")
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Allowable blanket neutron fluence (MW-yr/m2)",
+                "(abktflnc)",
+                cv.abktflnc,
+            )
+            po.ovarre(
+                self.outfile,
+                "Allowable divertor heat fluence (MW-yr/m2)",
+                "(adivflnc)",
+                cv.adivflnc,
+            )
+            po.ovarre(
+                self.outfile,
+                "First wall / blanket lifetime (FPY)",
+                "(bktlife)",
+                fwbsv.bktlife,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
+            )
             if tfv.i_tf_sup == 1:
                 po.ovarre(
                     self.outfile,
@@ -1113,6 +1200,13 @@ class Availability:
                 "OP ",
             )
             po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Maintenance time for replacing CP (years)",
+                "(tmain)",
+                cv.tmain,
+                "OP ",
+            )
             po.ovarre(
                 self.outfile,
                 "Length of maintenance cycle (years)",
@@ -1174,7 +1268,8 @@ class Availability:
                 self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife, "OP"
             )
 
-    def cp_lifetime(self):
+    @staticmethod
+    def cp_lifetime():
         """Calculate Centrepost Lifetime
 
         This routine calculates the lifetime of the centrepost,
@@ -1189,8 +1284,20 @@ class Availability:
             cplife = min(ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife)
 
         # Aluminium/Copper magnets CP lifetime
-        # For now, we keep the original def, developped for GLIDCOP magnets ...
+        # For now, we keep the original def, developed for GLIDCOP magnets ...
         else:
             cplife = min(cv.cpstflnc / pv.wallmw, cv.tlife)
 
         return cplife
+
+    @staticmethod
+    def divertor_lifetime():
+        """Calculate Divertor Lifetime
+
+        This routine calculates the lifetime of the divertor based on the allowable divertor heat fluence.
+        :returns: Divertor lifetime
+        :rtype: float
+        """
+        # Divertor lifetime
+        # Either 0.0, calculated from allowable divertor fluence and heat load, or lifetime of the plant
+        return max(0.0, min(cv.adivflnc / dv.hldiv, cv.tlife))

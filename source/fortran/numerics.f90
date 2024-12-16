@@ -167,7 +167,7 @@ module numerics
   !!  <LI> (64) Zeff less than or equal to zeffmax (itv 112)
   !!  <LI> (65) Dump time set by VV loads (itv 56, 113)
   !!  <LI> (66) Limit on rate of change of energy in poloidal field
-  !!            (Use iteration variable 65(tohs), 115)
+  !!            (Use iteration variable 65(t_current_ramp_up), 115)
   !!  <LI> (67) Simple Radiation Wall load limit (itv 116, 4,6)
   !!  <LI> (68) Psep * Bt / qAR upper limit (itv 117)
   !!  <LI> (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)
@@ -218,11 +218,11 @@ module numerics
   !! <LI> (14) fwalld (f-value for equation 8)
   !! <LI> (15) fvs (f-value for equation 12)
   !! <LI> (16) ohcth
-  !! <LI> (17) tdwell
+  !! <LI> (17) t_between_pulse
   !! <LI> (18) q
   !! <LI> (19) beam_energy
   !! <LI> (20) tcpav
-  !! <LI> (21) ftburn (f-value for equation 13)
+  !! <LI> (21) ft_burn (f-value for equation 13)
   !! <LI> (22) NOT USED
   !! <LI> (23) fcoolcp
   !! <LI> (24) NOT USED
@@ -266,8 +266,8 @@ module numerics
   !! <LI> (62) fdtmp (f-value for equation 38)
   !! <LI> (63) ftpeak (f-value for equation 39)
   !! <LI> (64) fauxmn (f-value for equation 40)
-  !! <LI> (65) tohs
-  !! <LI> (66) ftohs (f-value for equation 41)
+  !! <LI> (65) t_current_ramp_up
+  !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
   !! <LI> (67) ftcycl (f-value for equation 42)
   !! <LI> (68) fptemp (f-value for equation 44)
   !! <LI> (69) rcool

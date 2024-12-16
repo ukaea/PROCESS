@@ -168,7 +168,7 @@ def main(args=None):
         "bmaxtf",  # bmxlim the maximum T field upper limit is the scan variable
         "gammax",
         "boundl(16)",
-        "cnstv.tbrnmn",
+        "cnstv.t_burn_min",
         "",
         "cfactr",
         "boundu(72)",

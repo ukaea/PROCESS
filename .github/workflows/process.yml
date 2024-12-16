@@ -30,13 +30,6 @@ jobs:
           path: |
             process/**/*.so
             process/io/python_fortran_dicts.json
-      - name: Archive coverage data
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-artifacts
-          path: |
-            build/CMakeFiles/process.dir/source/fortran/*.gcno
-            lcov_results
       - name: Archive ford artifacts
         uses: actions/upload-artifact@v3
         with:

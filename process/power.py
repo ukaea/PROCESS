@@ -141,7 +141,7 @@ class Power:
             pf_power_variables.srcktpm = pf_power_variables.srcktpm + 1.0e3 * rcktpm[ig]
 
         #  Inductive MVA requirements, and stored energy
-        delktim = times_variables.tohs
+        delktim = times_variables.t_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
         #  pfcoil_variables.cpt(i,j) : current per turn of coil i at (end) time period j (A)
@@ -791,7 +791,7 @@ class Power:
                 structure_variables.coldmass,
                 fwbs_variables.ptfnuc,
                 pf_power_variables.ensxpfm,
-                times_variables.tpulse,
+                times_variables.t_pulse_repetition,
                 tfcoil_variables.cpttf,
                 tfcoil_variables.n_tf,
             )
@@ -2054,22 +2054,22 @@ class Power:
         p_int_tot = numpy.zeros((6,))
         p_gross = numpy.zeros((6,))
 
-        t_cs = times_variables.tramp
+        t_cs = times_variables.t_precharge
 
         # Plasma current ramp up time (s)
-        t_ip_up = times_variables.tohs
+        t_ip_up = times_variables.t_current_ramp_up
 
         # Plasma heating phase (s)
         t_heat = times_variables.t_fusion_ramp
 
         # Flat-top phase (s)
-        t_flat_top = times_variables.tburn
+        t_flat_top = times_variables.t_burn
 
         # Plasma current ramp down time (s)
-        t_ip_down = times_variables.tqnch
+        t_ip_down = times_variables.t_ramp_down
 
         # Extra time between pulses (s)
-        t_extra = times_variables.tdwell
+        t_extra = times_variables.t_between_pulse
 
         # Continuous power usage
 
@@ -2143,7 +2143,10 @@ class Power:
 
         po.write(self.outfile, "Pulse timings [s]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2154,7 +2157,10 @@ class Power:
 
         po.write(self.outfile, "Continous power usage [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "System tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "System t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2203,7 +2209,10 @@ class Power:
 
         po.write(self.outfile, "Intermittent power usage [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "System tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "System t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2229,7 +2238,10 @@ class Power:
 
         po.write(self.outfile, "Power production [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, " tramp tohs t_fusion_ramp tburn tqnch tdwell avg")
+        po.write(
+            self.outfile,
+            " t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse avg",
+        )
         po.write(self.outfile, " ----- ---- ----- ----- ----- ------ ---")
         po.write(
             self.outfile,
@@ -2253,7 +2265,15 @@ class Power:
     # 40    format(t20,a20,t40,f8.2,t50,f8.2,t60,f8.2,t70,f8.2,t80,f8.2,t90,f8.2,t100,f8.2,t110,f8.2)
 
     def cryo(
-        self, i_tf_sup, tfcryoarea, coldmass, ptfnuc, ensxpfm, tpulse, cpttf, n_tf
+        self,
+        i_tf_sup,
+        tfcryoarea,
+        coldmass,
+        ptfnuc,
+        ensxpfm,
+        t_pulse_repetition,
+        cpttf,
+        n_tf,
     ):
         """
         Calculates cryogenic loads
@@ -2266,7 +2286,7 @@ class Power:
         intercoil structure
         ptfnuc : input real : Nuclear heating in TF coils (MW)
         ensxpfm : input real : Maximum PF coil stored energy (MJ)
-        tpulse : input real : Pulse length of cycle (s)
+        t_pulse_repetition : input real : Pulse length of cycle (s)
         cpttf : input real : Current per turn in TF coils (A)
         tfno : input real : Number of TF coils
         helpow : output real : Helium heat removal at cryo temperatures (W)
@@ -2283,7 +2303,7 @@ class Power:
         # Issue #511: if fwbs_variables.inuclear = 1 : fwbs_variables.qnuc is input.
 
         #  AC losses
-        self.qac = 1.0e3 * ensxpfm / tpulse
+        self.qac = 1.0e3 * ensxpfm / t_pulse_repetition
 
         #  Current leads
         if i_tf_sup == 1:
@@ -2517,7 +2537,7 @@ class Power:
             #  Set reactive power to 0, since ramp up can be long
             #  The TF coil can be ramped up as slowly as you like
             #  (although this will affect the time to recover from a magnet quench).
-            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(tohs + tramp)
+            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_precharge)
             #                                 estotf(=estotftgj/tfcoil_variables.n_tf) has been removed (#199 #847)
             tfreacmw = 0.0e0
 
