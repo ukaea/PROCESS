@@ -34,6 +34,11 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 <figcaption>Figure 4: plot_proc bootstrap current model and L-H threshold comparison page </figcaption>
 </figure>
 
+<figure markdown>
+![plot_proc_5](../images/plot_proc_5.PNG){ width="100%"}
+<figcaption>Figure 4: plot_proc density limit comparison page </figcaption>
+</figure>
+
 <h3>Scan files</h3>
 
 `plot_scans` is a tool to show the change in variables as a scan variable is varied.
