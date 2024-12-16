@@ -4247,7 +4247,7 @@ class Stellarator:
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
             physics_variables.alpha_power_density_plasma,
-            physics_variables.ifalphap,
+            physics_variables.i_beta_fast_alpha,
         )
 
         #  Neutron wall load

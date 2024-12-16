@@ -1580,7 +1580,7 @@ i_plasma_current    = 4
 idensl = 7
 
 * Switch for fast alpha pressure calculation
-ifalphap = 1
+i_beta_fast_alpha = 1
 
 * Switch for inverse quadrature in l-mode scaling laws 5 and 9
 iinvqd = 1

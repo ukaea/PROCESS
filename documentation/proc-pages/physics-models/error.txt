@@ -418,7 +418,7 @@ parameter \texttt{beta_poloidal_eps_max}.
 \subsection{Fast Alpha Pressure
 Contribution}\label{fast-alpha-pressure-contribution}
 
-Switch \texttt{ifalphap} may be used to select the model used to
+Switch \texttt{i_beta_fast_alpha} may be used to select the model used to
 calculate the pressure contribution from the fast alpha particles, there
 are two options 1\footnote{N.A. Uckan and ITER Physics Group, `ITER
   Physics Design Guidelines: 1989', ITER Documentation Series, No. 10,
@@ -428,10 +428,10 @@ are two options 1\footnote{N.A. Uckan and ITER Physics Group, `ITER
 \[\begin{aligned}
 \frac{\beta_{\alpha}}{\beta_{th}} & = 0.29 \, \left( \langle T_{10} \rangle -
   0.37 \right) \, \left( \frac{n_{DT}}{n_e} \right)^2
-\hspace{20mm} \mbox{ifalphap = 0} \\
+\hspace{20mm} \mbox{i_beta_fast_alpha = 0} \\
 \frac{\beta_{\alpha}}{\beta_{th}} & = 0.26 \, \left( \langle T_{10} \rangle -
   0.65 \right)^{0.5} \, \left( \frac{n_{DT}}{n_e} \right)^2
-\hspace{16mm} \mbox{ifalphap = 1 (default)}
+\hspace{16mm} \mbox{i_beta_fast_alpha = 1 (default)}
 \end{aligned}\]
 
 The latter model is a better estimate at higher temperatures.

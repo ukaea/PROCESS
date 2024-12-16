@@ -14,7 +14,7 @@ class SetFusionPowersParam(NamedTuple):
 
     f_deuterium: Any = None
 
-    ifalphap: Any = None
+    i_beta_fast_alpha: Any = None
 
     bp: Any = None
 

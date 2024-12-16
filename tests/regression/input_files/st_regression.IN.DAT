@@ -371,7 +371,7 @@ beta_norm_limit_upper = 5.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*ifalphap = 
+*i_beta_fast_alpha = 
 * DESCRIPTION:   Switch for fast alpha pressure calculation
 * JUSTIFICATION: Not worried about alpha pressure, default =1, (modified fit)
 

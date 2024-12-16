@@ -2452,7 +2452,7 @@
         "idivrt": 2.0,
         "iefrf": 5.0,
         "iefrffix": 0.0,
-        "ifalphap": 1.0,
+        "i_beta_fast_alpha": 1.0,
         "ife": 0.0,
         "ifedrv": 2.0,
         "ifetyp": 0.0,
@@ -9830,7 +9830,7 @@
         "idivrt": "number of divertors (calculated from `i_single_null`)",
         "iefrf": "Switch for current drive efficiency model:\n<ul>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
         "iefrffix": "Switch for 2nd current drive efficiency model:\n<ul>\n<li>=0 No fixed current drive</li>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
-        "ifalphap": "switch for fast alpha pressure calculation\n<ul>\n<li>=0 ITER physics rules (Uckan) fit</li>\n<li>=1 Modified fit (D. Ward) - better at high temperature</li>\n</ul>",
+        "i_beta_fast_alpha": "switch for fast alpha pressure calculation\n<ul>\n<li>=0 ITER physics rules (Uckan) fit</li>\n<li>=1 Modified fit (D. Ward) - better at high temperature</li>\n</ul>",
         "ife": "Switch for IFE option:\n<ul>\n<li>=0 use tokamak, RFP or stellarator model</li>\n<li>=1 use IFE model</li>\n</ul>",
         "ifedrv": "Switch for type of IFE driver:\n<ul>\n<li>=-1 use gainve, etave for gain and driver efficiency</li>\n<li>=0 use tgain, drveff for gain and driver efficiency</li>\n<li>=1 use laser driver based on SOMBRERO design</li>\n<li>=2 use heavy ion beam driver based on OSIRIS</li>\n<li>=3 Input pfusife, rrin and drveff</li>\n</ul>",
         "ifetyp": "Switch for type of IFE device build:\n<ul>\n<li>=0 generic (cylindrical) build</li>\n<li>=1 OSIRIS-like build</li>\n<li>=2 SOMBRERO-like build</li>\n<li>=3 HYLIFE-II-like build</li>\n<li>=4 2019 build</li>\n</ul>",
@@ -13361,7 +13361,7 @@
             "lb": 0,
             "ub": 12
         },
-        "ifalphap": {
+        "i_beta_fast_alpha": {
             "lb": 0,
             "ub": 1
         },
@@ -19141,7 +19141,7 @@
             "i_diamagnetic_current",
             "idensl",
             "idivrt",
-            "ifalphap",
+            "i_beta_fast_alpha",
             "igeom",
             "ignite",
             "iinvqd",
@@ -20469,7 +20469,7 @@
         "i_diamagnetic_current": "int_variable",
         "iefrf": "int_variable",
         "iefrffix": "int_variable",
-        "ifalphap": "int_variable",
+        "i_beta_fast_alpha": "int_variable",
         "ife": "int_variable",
         "ifedrv": "int_variable",
         "ifetyp": "int_variable",

@@ -933,7 +933,7 @@ def fast_alpha_beta(
     tin: float,
     alpha_power_density_total: float,
     alpha_power_density_plasma: float,
-    ifalphap: int,
+    i_beta_fast_alpha: int,
 ) -> float:
     """
     Calculate the fast alpha beta component.
@@ -950,7 +950,7 @@ def fast_alpha_beta(
         tin (float): Density-weighted ion temperature (keV).
         alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
         alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
-        ifalphap (int): Switch for fast alpha pressure method.
+        i_beta_fast_alpha (int): Switch for fast alpha pressure method.
 
     Returns:
         float: Fast alpha beta component.
@@ -982,7 +982,7 @@ def fast_alpha_beta(
 
         # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
         # IPDG89 fast alpha scaling
-        if ifalphap == 0:
+        if i_beta_fast_alpha == 0:
             fact = min(0.3, 0.29 * (deni / dene) ** 2 * ((ten + tin) / 20.0 - 0.37))
 
         # Modified scaling, D J Ward

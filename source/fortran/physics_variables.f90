@@ -326,7 +326,7 @@ module physics_variables
   integer :: idivrt
   !! number of divertors (calculated from `i_single_null`)
 
-  integer :: ifalphap
+  integer :: i_beta_fast_alpha
   !! switch for fast alpha pressure calculation
   !!
   !! - =0 ITER physics rules (Uckan) fit
@@ -1019,7 +1019,7 @@ module physics_variables
     i_diamagnetic_current = 0
     idensl = 7
     idivrt = 2
-    ifalphap = 1
+    i_beta_fast_alpha = 1
     ignite = 0
     iinvqd = 1
     ipedestal = 1

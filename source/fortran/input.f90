@@ -308,7 +308,7 @@ contains
       fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_limit_upper, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
-      ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
+      i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
@@ -635,8 +635,8 @@ contains
        case ('i_diamagnetic_current')
           call parse_int_variable('i_diamagnetic_current', i_diamagnetic_current, 0, 2, &
                 'Switch for diamagnetic scaling')
-       case ('ifalphap')
-          call parse_int_variable('ifalphap', ifalphap, 0, 1, &
+       case ('i_beta_fast_alpha')
+          call parse_int_variable('i_beta_fast_alpha', i_beta_fast_alpha, 0, 1, &
                'Switch for fast alpha pressure fit')
        case ('ignite')
           call parse_int_variable('ignite', ignite, 0, 1, &

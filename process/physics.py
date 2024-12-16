@@ -2070,7 +2070,7 @@ class Physics:
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
             physics_variables.alpha_power_density_plasma,
-            physics_variables.ifalphap,
+            physics_variables.i_beta_fast_alpha,
         )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
