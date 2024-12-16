@@ -345,7 +345,7 @@ alphan = 1.00
 alphat = 1.45 
 
 * (troyon-like) coefficient for beta scaling
-dnbeta = 3.0
+beta_norm_limit_upper = 3.0
 
 * Zohm elongation scaling adjustment factor (ishape=2; 3)
 fkzohm = 1.02
@@ -357,7 +357,7 @@ gamma = 0.3
 i_bootstrap_current = 4
 
 * Switch for beta limit scaling
-iculbl = 1
+i_beta_component = 1
 
 * Switch for plasma current scaling
 i_plasma_current = 4

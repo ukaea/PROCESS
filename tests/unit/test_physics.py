@@ -17,11 +17,11 @@ from process.physics import (
     diamagnetic_fraction_hender,
     ps_fraction_scene,
     calculate_plasma_current_peng,
-    culblm,
+    calculate_beta_limit,
     calculate_current_coefficient_hastie,
     vscalc,
     rether,
-    beta_poloidal,
+    calculate_poloidal_beta,
     res_diff_time,
 )
 from process.plasma_profiles import PlasmaProfile
@@ -39,10 +39,10 @@ def physics():
     return Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile()))
 
 
-def test_beta_poloidal():
-    """Test beta_poloidal()"""
-    betap = beta_poloidal(5.347, 0.852, 0.0307)
-    assert betap == pytest.approx(1.209, abs=0.001)
+def test_calculate_poloidal_beta():
+    """Test calculate_poloidal_beta()"""
+    beta_poloidal = calculate_poloidal_beta(5.347, 0.852, 0.0307)
+    assert beta_poloidal == pytest.approx(1.209, abs=0.001)
 
 
 def test_res_diff_time():
@@ -146,7 +146,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
 
     alphan: Any = None
 
-    betat: Any = None
+    beta_toroidal: Any = None
 
     bt: Any = None
 
@@ -178,7 +178,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
             te0=24.402321098330372,
             ne0=8.515060981068918e19,
             alphan=1.0,
-            betat=0.03,
+            beta_toroidal=0.03,
             bt=5.7,
             dene=18398455.678867526,
             plasma_current=18398455.678867526,
@@ -213,7 +213,7 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
     fibs = physics.bootstrap_fraction_nevins(
         alphan=bootstrapfractionnevinsparam.alphan,
         alphat=bootstrapfractionnevinsparam.alphat,
-        betat=bootstrapfractionnevinsparam.betat,
+        beta_toroidal=bootstrapfractionnevinsparam.beta_toroidal,
         bt=bootstrapfractionnevinsparam.bt,
         dene=bootstrapfractionnevinsparam.dene,
         plasma_current=bootstrapfractionnevinsparam.plasma_current,
@@ -483,7 +483,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
 
 class BootstrapFractionSakaiParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     q95: Any = None
 
@@ -504,7 +504,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
     "bootstrapfractionsakaiparam",
     (
         BootstrapFractionSakaiParam(
-            betap=1.3184383457774960,
+            beta_poloidal=1.3184383457774960,
             q95=3.5151046634673557,
             q0=1.0,
             alphan=1.0,
@@ -514,7 +514,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             expected_bfs=0.3501274900057279,
         ),
         BootstrapFractionSakaiParam(
-            betap=1.1701245502231756,
+            beta_poloidal=1.1701245502231756,
             q95=5.1746754543339177,
             q0=2.0,
             alphan=0.9,
@@ -539,7 +539,9 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "betap", bootstrapfractionsakaiparam.betap)
+    monkeypatch.setattr(
+        physics_variables, "beta_poloidal", bootstrapfractionsakaiparam.beta_poloidal
+    )
 
     monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsakaiparam.q95)
 
@@ -554,7 +556,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     monkeypatch.setattr(physics_variables, "rli", bootstrapfractionsakaiparam.rli)
 
     bfs = physics.bootstrap_fraction_sakai(
-        betap=bootstrapfractionsakaiparam.betap,
+        beta_poloidal=bootstrapfractionsakaiparam.beta_poloidal,
         q95=bootstrapfractionsakaiparam.q95,
         q0=bootstrapfractionsakaiparam.q0,
         alphan=bootstrapfractionsakaiparam.alphan,
@@ -567,7 +569,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
 
 
 class BootstrapFractionAriesParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     rli: Any = None
 
@@ -584,7 +586,7 @@ class BootstrapFractionAriesParam(NamedTuple):
     "bootstrapfractionariesparam",
     (
         BootstrapFractionAriesParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             rli=1.4279108047138775,
             core_density=1.0695994460047332e20,
             average_density=8.1317358967210131e19,
@@ -604,7 +606,7 @@ def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_aries(
-        betap=bootstrapfractionariesparam.betap,
+        beta_poloidal=bootstrapfractionariesparam.beta_poloidal,
         rli=bootstrapfractionariesparam.rli,
         core_density=bootstrapfractionariesparam.core_density,
         average_density=bootstrapfractionariesparam.average_density,
@@ -615,7 +617,7 @@ def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
 
 
 class BootstrapFractionAndradeParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     core_pressure: Any = None
 
@@ -630,7 +632,7 @@ class BootstrapFractionAndradeParam(NamedTuple):
     "bootstrapfractionandradeparam",
     (
         BootstrapFractionAndradeParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             core_pressure=8.3049163275475602e05,
             average_pressure=2.4072221239268288e05,
             inverse_aspect=1 / 3,
@@ -649,7 +651,7 @@ def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_andrade(
-        betap=bootstrapfractionandradeparam.betap,
+        beta_poloidal=bootstrapfractionandradeparam.beta_poloidal,
         core_pressure=bootstrapfractionandradeparam.core_pressure,
         average_pressure=bootstrapfractionandradeparam.average_pressure,
         inverse_aspect=bootstrapfractionandradeparam.inverse_aspect,
@@ -659,7 +661,7 @@ def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
 
 
 class BootstrapFractionHoangParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     pressure_index: Any = None
 
@@ -674,7 +676,7 @@ class BootstrapFractionHoangParam(NamedTuple):
     "bootstrapfractionhoangparam",
     (
         BootstrapFractionHoangParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
             current_index=2.8314361644755763e00,
             inverse_aspect=1 / 3,
@@ -693,7 +695,7 @@ def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_hoang(
-        betap=bootstrapfractionhoangparam.betap,
+        beta_poloidal=bootstrapfractionhoangparam.beta_poloidal,
         pressure_index=bootstrapfractionhoangparam.pressure_index,
         current_index=bootstrapfractionhoangparam.current_index,
         inverse_aspect=bootstrapfractionhoangparam.inverse_aspect,
@@ -703,7 +705,7 @@ def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
 
 
 class BootstrapFractionWongParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     density_index: Any = None
 
@@ -720,7 +722,7 @@ class BootstrapFractionWongParam(NamedTuple):
     "bootstrapfractionwongparam",
     (
         BootstrapFractionWongParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             density_index=1.0000000000000000e00,
             temperature_index=1.4500000000000000e00,
             inverse_aspect=1 / 3,
@@ -740,7 +742,7 @@ def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_wong(
-        betap=bootstrapfractionwongparam.betap,
+        beta_poloidal=bootstrapfractionwongparam.beta_poloidal,
         density_index=bootstrapfractionwongparam.density_index,
         temperature_index=bootstrapfractionwongparam.temperature_index,
         inverse_aspect=bootstrapfractionwongparam.inverse_aspect,
@@ -751,7 +753,7 @@ def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
 
 
 class BootstrapFractionGiIParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     pressure_index: Any = None
 
@@ -772,7 +774,7 @@ class BootstrapFractionGiIParam(NamedTuple):
     "bootstrapfractiongiiparam",
     (
         BootstrapFractionGiIParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
             temperature_index=1.4500000000000000e00,
             inverse_aspect=1 / 3,
@@ -794,7 +796,7 @@ def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_gi_I(
-        betap=bootstrapfractiongiiparam.betap,
+        beta_poloidal=bootstrapfractiongiiparam.beta_poloidal,
         pressure_index=bootstrapfractiongiiparam.pressure_index,
         temperature_index=bootstrapfractiongiiparam.temperature_index,
         inverse_aspect=bootstrapfractiongiiparam.inverse_aspect,
@@ -807,7 +809,7 @@ def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
 
 
 class BootstrapFractionGiIIParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     pressure_index: Any = None
 
@@ -824,7 +826,7 @@ class BootstrapFractionGiIIParam(NamedTuple):
     "bootstrapfractiongiiiparam",
     (
         BootstrapFractionGiIIParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
             temperature_index=1.4500000000000000e00,
             inverse_aspect=1 / 3,
@@ -844,7 +846,7 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_gi_II(
-        betap=bootstrapfractiongiiiparam.betap,
+        beta_poloidal=bootstrapfractiongiiiparam.beta_poloidal,
         pressure_index=bootstrapfractiongiiiparam.pressure_index,
         temperature_index=bootstrapfractiongiiiparam.temperature_index,
         inverse_aspect=bootstrapfractiongiiiparam.inverse_aspect,
@@ -855,7 +857,7 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
 
 
 class PlasmaCurrentParam(NamedTuple):
-    normalised_total_beta: Any = None
+    beta_norm_total: Any = None
 
     beta: Any = None
 
@@ -912,7 +914,7 @@ class PlasmaCurrentParam(NamedTuple):
     "plasmacurrentparam",
     (
         PlasmaCurrentParam(
-            normalised_total_beta=0,
+            beta_norm_total=0,
             beta=0.030000000000000006,
             i_plasma_current=4,
             iprofile=1,
@@ -940,7 +942,7 @@ class PlasmaCurrentParam(NamedTuple):
             expected_plasma_current=18398455.678867526,
         ),
         PlasmaCurrentParam(
-            normalised_total_beta=2.4784688886891844,
+            beta_norm_total=2.4784688886891844,
             beta=0.030000000000000006,
             i_plasma_current=4,
             iprofile=1,
@@ -984,8 +986,8 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(
         physics_variables,
-        "normalised_total_beta",
-        plasmacurrentparam.normalised_total_beta,
+        "beta_norm_total",
+        plasmacurrentparam.beta_norm_total,
     )
 
     monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
@@ -1011,7 +1013,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         triang95=plasmacurrentparam.triang95,
     )
 
-    assert physics_variables.normalised_total_beta == pytest.approx(
+    assert physics_variables.beta_norm_total == pytest.approx(
         plasmacurrentparam.expected_normalised_total_beta
     )
 
@@ -1109,8 +1111,8 @@ def test_calculate_poloidal_field(arguments, expected):
     assert calculate_poloidal_field(**arguments) == pytest.approx(expected)
 
 
-def test_culblm():
-    assert culblm(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
+def test_calculate_beta_limit():
+    assert calculate_beta_limit(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
 
 
 def test_conhas():

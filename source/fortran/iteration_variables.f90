@@ -1788,25 +1788,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_79
-    !! <LI> (79) fbetap (f-value for equation 48)
+    !! <LI> (79) fbeta_poloidal (f-value for equation 48)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(79) = 'fbetap        '
+    lablxc(79) = 'fbeta_poloidal        '
     boundl(79) = 0.001D0
     boundu(79) = 1.000D0
   end subroutine init_itv_79
 
   real(kind(1.d0)) function itv_79()
-    use constraint_variables, only: fbetap
+    use constraint_variables, only: fbeta_poloidal
     implicit none
-    itv_79 = fbetap
+    itv_79 = fbeta_poloidal
   end function itv_79
 
   subroutine set_itv_79(ratio)
-    use constraint_variables, only: fbetap
+    use constraint_variables, only: fbeta_poloidal
     implicit none
     real(kind(1.d0)) :: ratio
-    fbetap = ratio
+    fbeta_poloidal = ratio
   end subroutine set_itv_79
 
   !! <LI> (80) NOT USED

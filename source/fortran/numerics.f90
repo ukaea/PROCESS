@@ -280,7 +280,7 @@ module numerics
   !! <LI> (76) NOT USED
   !! <LI> (77) NOT USED
   !! <LI> (78) NOT USED
-  !! <LI> (79) fbetap (f-value for equation 48)
+  !! <LI> (79) fbeta_poloidal (f-value for equation 48)
   !! <LI> (80) NOT USED
   !! <LI> (81) edrive
   !! <LI> (82) drveff
@@ -538,7 +538,7 @@ contains
       'ne0 > neped                      ', &
       'toroidalgap >  tftort            ', &
       'available_space > required_space ', &
-      'beta > betalim_lower             ', &
+      'beta > beta_limit_lower          ', &
       'CP lifetime                      ', &
       'TFC turn dimension               ', &
       'Cryogenic plant power            ', &

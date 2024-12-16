@@ -556,7 +556,7 @@ $$
 
 A limited degree of self-consistency between the plasma current profile and other parameters can be 
 enforced by setting switch `iprofile = 1`. This sets the current 
-profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`rli`) and beta limit $g$-factor (`dnbeta`) using the 
+profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`rli`) and beta limit $g$-factor (`beta_norm_limit_upper`) using the 
 safety factor on axis `q0` and the cylindrical safety factor $q_*$ (`qstar`):   
 
 $$\begin{aligned}
