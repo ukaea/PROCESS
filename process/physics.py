@@ -1604,11 +1604,11 @@ class Physics:
             / physics_variables.plasma_current,
         )
         physics_variables.beta_norm_toroidal = (
-            physics_variables.norm_beta_total
+            physics_variables.beta_norm_total
             * (physics_variables.btot / physics_variables.bt) ** 2
         )
         physics_variables.beta_norm_poloidal = (
-            physics_variables.norm_beta_total
+            physics_variables.beta_norm_total
             * (physics_variables.btot / physics_variables.bp) ** 2
         )
 
@@ -3118,7 +3118,7 @@ class Physics:
         )
 
         # Normalised beta from Troyon beta limit
-        physics_variables.norm_beta_total = (
+        physics_variables.beta_norm_total = (
             1.0e8 * physics_variables.beta * rminor * bt / plasma_current
         )
 
@@ -3700,8 +3700,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Normalised total beta",
-                "(norm_beta_total)",
-                physics_variables.norm_beta_total,
+                "(beta_norm_total)",
+                physics_variables.beta_norm_total,
                 "OP ",
             )
             po.ovarrf(

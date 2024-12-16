@@ -115,7 +115,7 @@ BASELINE_LIST = [
     "q95",
     "beta",
     "normalised_thermal_beta",
-    "norm_beta_total",
+    "beta_norm_total",
     "thermal_beta",
     "thermal_poloidal_beta",
     "te",

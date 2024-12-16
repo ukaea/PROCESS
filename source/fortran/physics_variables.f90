@@ -80,7 +80,7 @@ module physics_variables
   real(dp) :: beta_thermal_toroidal
   !! poloidal thermal beta
 
-  real(dp) :: norm_beta_total
+  real(dp) :: beta_norm_total
   !! normaised total beta
 
   real(dp) :: beta_norm_thermal
@@ -952,7 +952,7 @@ module physics_variables
     beta_thermal = 0.0D0
     beta_thermal_poloidal = 0.0D0
     beta_thermal_poloidal = 0.0D0
-    norm_beta_total = 0.0D0
+    beta_norm_total = 0.0D0
     beta_norm_thermal = 0.0D0
     beta_norm_poloidal = 0.0D0
     beta_norm_toroidal = 0.0D0
