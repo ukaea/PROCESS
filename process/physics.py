@@ -1603,7 +1603,7 @@ class Physics:
             * physics_variables.bt
             / physics_variables.plasma_current,
         )
-        physics_variables.norm_beta_toroidal = (
+        physics_variables.beta_norm_toroidal = (
             physics_variables.norm_beta_total
             * (physics_variables.btot / physics_variables.bt) ** 2
         )
@@ -3715,8 +3715,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Normalised toroidal beta",
-                "(norm_beta_toroidal) ",
-                physics_variables.norm_beta_toroidal,
+                "(beta_norm_toroidal) ",
+                physics_variables.beta_norm_toroidal,
                 "OP ",
             )
 
