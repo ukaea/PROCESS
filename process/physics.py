@@ -1607,7 +1607,7 @@ class Physics:
             physics_variables.norm_beta_total
             * (physics_variables.btot / physics_variables.bt) ** 2
         )
-        physics_variables.norm_beta_poloidal = (
+        physics_variables.beta_norm_poloidal = (
             physics_variables.norm_beta_total
             * (physics_variables.btot / physics_variables.bp) ** 2
         )
@@ -3723,8 +3723,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Normalised poloidal beta",
-                "(norm_beta_poloidal) ",
-                physics_variables.norm_beta_poloidal,
+                "(beta_norm_poloidal) ",
+                physics_variables.beta_norm_poloidal,
                 "OP ",
             )
 
