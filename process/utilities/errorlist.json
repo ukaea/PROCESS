@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 287,
+  "n_errortypes": 288,
   "errors": [
     {
       "no": 1,
@@ -1444,6 +1444,11 @@
       "no": 287,
       "level": 2,
       "message": "[pfcoil][cntrpost]: fjohc0 shouldn't be above 0.7 for engineering reliability."
+    },
+    {
+      "no": 288,
+      "level": 3,
+      "message": "PFCOIL: ipfloc(i) should not be 1 if iohcl=0"
     }
   ]
 }
