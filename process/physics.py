@@ -1596,7 +1596,7 @@ class Physics:
             physics_variables.beta_thermal
             * (physics_variables.btot / physics_variables.bt) ** 2
         )
-        physics_variables.norm_beta_thermal = (
+        physics_variables.beta_norm_thermal = (
             1.0e8
             * physics_variables.beta_thermal
             * physics_variables.rminor
@@ -3707,8 +3707,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Normalised thermal beta",
-                "(norm_beta_thermal) ",
-                physics_variables.norm_beta_thermal,
+                "(beta_norm_thermal) ",
+                physics_variables.beta_norm_thermal,
                 "OP ",
             )
 
