@@ -883,44 +883,6 @@ def read_imprad_data(skiprows, data_path):
     return impdata
 
 
-def synchrotron_rad():
-    """Function for Synchrotron radiation power calculation from Albajar, Nuclear Fusion 41 (2001) 665
-      Fidone, Giruzzi, Granata, Nuclear Fusion 41 (2001) 1755
-
-    Arguments:
-    """
-    # tbet is betaT in Albajar, not to be confused with plasma beta
-
-    tbet = 2.0
-    # rpow is the(1-Rsyn) power dependence based on plasma shape
-    # (see Fidone)
-    rpow = 0.62
-    kap = plasma_volume / (2.0 * 3.1415**2 * rmajor * rminor**2)
-
-    # No account is taken of pedestal profiles here, other than use of
-    # the correct ne0 and te0...
-    de2o = 1.0e-20 * ne0
-    pao = 6.04e3 * (rminor * de2o) / bt
-    gfun = 0.93 * (1.0 + 0.85 * np.exp(-0.82 * rmajor / rminor))
-    kfun = (alphan + 3.87e0 * alphat + 1.46) ** (-0.79)
-    kfun = kfun * (1.98 + alphat) ** 1.36 * tbet**2.14
-    kfun = kfun * (tbet**1.53 + 1.87 * alphat - 0.16) ** (-1.33)
-    dum = 1.0 + 0.12 * (te0 / (pao**0.41)) * (1.0 - ssync) ** 0.41
-    # Very high T modification, from Fidone
-    dum = dum ** (-1.51)
-
-    psync = 3.84e-8 * (1.0e0 - ssync) ** rpow * rmajor * rminor**1.38
-    psync = psync * kap**0.79 * bt**2.62 * de2o**0.38
-    psync = psync * te0 * (16.0 + te0) ** 2.61 * dum * gfun * kfun
-
-    # psyncpv should be per unit volume
-    # Albajar gives it as total
-    psyncpv = psync / plasma_volume
-    print("psyncpv = ", psyncpv * plasma_volume)  # matches the out.dat file
-
-    return psyncpv
-
-
 def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     """Function to plot radiation profile, formula taken from ???.
 
@@ -1001,21 +963,10 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
                     1 - min(0.9999, rhopedt)
                 )
 
-        # ncore = neped + (ne0-neped) * (1-rhocore**2/rhopedn**2)**alphan
-        # nsep = nesep + (neped-nesep) * (1-rhosep)/(1-min(0.9999, rhopedn))
-        # ne = np.append(ncore, nsep)
-
-        # The temperatue profile
-        # tcore = teped + (te0-teped) * (1-(rhocore/rhopedt)**tbeta)**alphat
-        # tsep = tesep + (teped-tesep)* (1-rhosep)/(1-min(0.9999,rhopedt))
-        # te = np.append(tcore,tsep)
-
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
     lz = np.zeros([imp_data.shape[0], te.shape[0]])
     prad = np.zeros(te.shape[0])
-
-    # psyncpv = synchrotron_rad()
 
     # Intailise the impurity radiation profile
     for k in range(te.shape[0]):
@@ -1040,18 +991,6 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
         for l in range(imp_data.shape[0]):  # noqa: E741
             prad[k] = prad[k] + pimpden[l][k] * 2.0e-6
-
-    # benchmark prad again outfile so mod prad
-    # pbremint = (rho[1:] * pbrem[1:]) @ drho
-    # pradint = prad[1:] @ drho * 2.0e-5
-    # pbremint = pbrem[1:] @ drho * 2.0e-5
-
-    # print('prad = ',prad)
-    # print('pbrem = ',pbrem)
-    # print(1.0e32*lz[12])
-    # print('pradpv = ',pradint)
-    # print('pbremmw = ',pbremint*plasma_volume)
-    # print('pradmw = ', pradint*plasma_volume, 'MW') # pimp = pline + pbrem
 
     prof.plot(rho, prad, label="Total")
     prof.plot(rho, pimpden[0] * 2.0e-6, label="H")
