@@ -474,36 +474,42 @@ class CCFE_HCPB:
                 "Shield line density (tonne/m2)",
                 "(x_shield)",
                 ccfe_hcpb_module.x_shield,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Blanket line density (tonne/m2)",
                 "(x_blanket)",
                 ccfe_hcpb_module.x_blanket,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Unit nuclear heating in TF coil (W/GW)",
                 "(tfc_nuc_heating)",
                 ccfe_hcpb_module.tfc_nuc_heating,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Total nuclear heating in TF coil (MW)",
                 "(ptfnuc.)",
                 fwbs_variables.ptfnuc,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "fusion_power",
                 "(fusion_power.)",
                 physics_variables.fusion_power,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "total mass of the TF coils (kg)",
                 "(whttf)",
                 tfcoil_variables.whttf,
+                "OP",
             )
 
     def nuclear_heating_fw(self):
@@ -753,6 +759,7 @@ class CCFE_HCPB:
                     "Pressure drop in FW and blanket coolant incl. hx and pipes (Pa)",
                     "(dp_he)",
                     primary_pumping_variables.dp_he,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
@@ -780,12 +787,14 @@ class CCFE_HCPB:
                     "Coolant pump outlet/Inlet temperature of FW & blanket (K)",
                     "(t_in_bb)",
                     primary_pumping_variables.t_in_bb,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Outlet temperature of FW & blanket (K)",
                     "(t_out_bb)",
                     primary_pumping_variables.t_out_bb,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
@@ -1128,13 +1137,18 @@ class CCFE_HCPB:
 
         if output:
             po.ovarrf(
-                self.outfile, "Lithium-6 enrichment (%)", "(li6enrich)", li6enrich
+                self.outfile,
+                "Lithium-6 enrichment (%)",
+                "(li6enrich)",
+                li6enrich,
+                "IP",
             )
             po.ovarrf(
                 self.outfile,
                 "Breeder fraction by volume: Li4SiO4/(Be12Ti+Li4SiO4)",
                 "(breeder_f)",
                 breeder_f,
+                "ITV",
             )
             if iblanket_thickness == 1:
                 po.ovarin(
@@ -1142,6 +1156,7 @@ class CCFE_HCPB:
                     "Blanket thickness choice: THIN (0.53 m inboard, 0.91 m outboard)",
                     "[iblanket_thickness-1]",
                     iblanket_thickness,
+                    "IP",
                 )
             elif iblanket_thickness == 2:
                 po.ovarin(
@@ -1149,6 +1164,7 @@ class CCFE_HCPB:
                     "Blanket thickness choice: MEDIUM (0.64 m inboard, 1.11 m outboard)",
                     "[iblanket_thickness-1]",
                     iblanket_thickness,
+                    "IP",
                 )
             elif iblanket_thickness == 3:
                 po.ovarin(
@@ -1156,6 +1172,7 @@ class CCFE_HCPB:
                     "Blanket thickness choice: THICK (0.75 m inboard, 1.30 m outboard)",
                     "[iblanket_thickness-1]",
                     iblanket_thickness,
+                    "IP",
                 )
             po.ovarrf(
                 self.outfile,
@@ -1169,6 +1186,7 @@ class CCFE_HCPB:
                 "Minimum Tritium breeding ratio",
                 "(tbrmin)",
                 constraint_variables.tbrmin,
+                "IP",
             )
 
             po.ocmmnt(
@@ -1181,18 +1199,21 @@ class CCFE_HCPB:
                 "For consistency, inboard first wall thicknesses should be 0.03 (m)",
                 "(fwith)",
                 build_variables.fwith,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "For consistency, outboard first wall thicknesses should be 0.03 (m)",
                 "(fwoth)",
                 build_variables.fwoth,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "For consistency, first wall armour thickness should be 0.003 (m)",
                 "(fw_armour_thickness)",
                 fwbs_variables.fw_armour_thickness,
+                "IP",
             )
 
         return tbr
@@ -1222,9 +1243,19 @@ class CCFE_HCPB:
             fwbs_variables.fblss_ccfe,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Coolant fraction", "(vfcblkt)", fwbs_variables.vfcblkt)
         po.ovarrf(
-            self.outfile, "Purge gas fraction", "(vfpblkt)", fwbs_variables.vfpblkt
+            self.outfile,
+            "Coolant fraction",
+            "(vfcblkt)",
+            fwbs_variables.vfcblkt,
+            "IP",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Purge gas fraction",
+            "(vfpblkt)",
+            fwbs_variables.vfpblkt,
+            "IP",
         )
 
         po.osubhd(self.outfile, "Component Volumes :")
@@ -1431,6 +1462,7 @@ class CCFE_HCPB:
             "Solid angle fraction taken by on divertor",
             "(fdiv)",
             fwbs_variables.fdiv,
+            "IP",
         )
 
         po.ovarin(
@@ -1438,18 +1470,21 @@ class CCFE_HCPB:
             "Switch for plant secondary cycle ",
             "(secondary_cycle)",
             fwbs_variables.secondary_cycle,
+            "IP",
         )
         po.ovarre(
             self.outfile,
             "First wall coolant pressure (Pa)",
             "(fwpressure)",
             fwbs_variables.fwpressure,
+            "IP",
         )
         po.ovarre(
             self.outfile,
             "Blanket coolant pressure (Pa)",
             "(blpressure)",
             fwbs_variables.blpressure,
+            "IP",
         )
 
         if fwbs_variables.primary_pumping != 3:
@@ -1494,36 +1529,42 @@ class CCFE_HCPB:
             "Allowable nominal neutron fluence at first wall (MW.year/m2)",
             "(abktflnc)",
             cost_variables.abktflnc,
+            "IP",
         )
         po.ovarin(
             self.outfile,
             "No of inboard blanket modules poloidally",
             "(nblktmodpi)",
             fwbs_variables.nblktmodpi,
+            "IP",
         )
         po.ovarin(
             self.outfile,
             "No of inboard blanket modules toroidally",
             "(nblktmodti)",
             fwbs_variables.nblktmodti,
+            "IP",
         )
         po.ovarin(
             self.outfile,
             "No of outboard blanket modules poloidally",
             "(nblktmodpo)",
             fwbs_variables.nblktmodpo,
+            "IP",
         )
         po.ovarin(
             self.outfile,
             "No of outboard blanket modules toroidally",
             "(nblktmodto)",
             fwbs_variables.nblktmodto,
+            "IP",
         )
         po.ovarre(
             self.outfile,
             "Isentropic efficiency of first wall / blanket coolant pumps",
             "(etaiso)",
             fwbs_variables.etaiso,
+            "IP",
         )
 
         po.osubhd(self.outfile, "Other volumes, masses and areas :")

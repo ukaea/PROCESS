@@ -52,7 +52,11 @@ def output_once_through():
     # Evaluate objective function
     norm_objf = function_evaluator.funfom()
     po.ovarre(
-        constants.mfile, "Normalised objective function", "(norm_objf)", norm_objf
+        constants.mfile,
+        "Normalised objective function",
+        "(norm_objf)",
+        norm_objf,
+        "OP",
     )
 
     # Print the residuals of the constraint equations
@@ -86,6 +90,7 @@ def output_once_through():
             f"{labels[i]} normalised residue",
             f"(eq_con{constraint_id:03d})",
             residual_error[i],
+            "OP",
         )
 
     for i in range(numerics.nineqns):
@@ -95,4 +100,5 @@ def output_once_through():
             f"{labels[numerics.neqns + i]}",
             f"(ineq_con{constraint_id:03d})",
             residual_error[numerics.neqns + i],
+            "OP",
         )

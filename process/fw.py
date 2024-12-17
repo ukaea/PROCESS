@@ -207,7 +207,13 @@ class Fw:
             po.oheadr(
                 self.outfile, "Heat transfer parameters at the coolant outlet: " + label
             )
-            po.ovarre(self.outfile, "Radius of coolant channel (m)", "(afw)", afw)
+            po.ovarre(
+                self.outfile,
+                "Radius of coolant channel (m)",
+                "(afw)",
+                afw,
+                "IP",
+            )
             po.ovarre(
                 self.outfile,
                 "Mean surface heat flux on first wall (W/m2) ",
@@ -227,18 +233,21 @@ class Fw:
                 "Ratio of peak local heat load (surface and nuclear) to mean",
                 "(peaking_factor)",
                 fwbs_variables.peaking_factor,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Length of a single coolant channel (all in parallel) (m)",
                 "(fw_channel_length)",
                 fwbs_variables.fw_channel_length,
+                "ITV",
             )
             po.ovarre(
                 self.outfile,
                 "Pitch of coolant channels (m)",
                 "(pitch)",
                 fwbs_variables.pitch,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
@@ -269,6 +278,7 @@ class Fw:
                 "Outlet temperature of first wall coolant (K)",
                 "(fwoutlet)",
                 fwbs_variables.fwoutlet,
+                "IP",
             )
             po.ovarre(
                 self.outfile, "Heat transfer coefficient", "(hcoeff)", hcoeff, "OP "

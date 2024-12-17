@@ -502,6 +502,7 @@ class BlanketLibrary:
                 "Coolant type",
                 "(fwcoolant)",
                 f'"{fwbs_variables.fwcoolant}"',
+                "IP",
             )
             po.ovarrf(
                 self.outfile,
@@ -1931,42 +1932,49 @@ class BlanketLibrary:
                 "First wall coolant type",
                 "(fwcoolant)",
                 f'"{fwbs_variables. fwcoolant}"',
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Wall thickness of first wall cooling channels (m)",
                 "(fw_wall)",
                 fwbs_variables.fw_wall,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Radius of first wall cooling channels (m)",
                 "(afw)",
                 fwbs_variables.afw,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Roughness of first wall cooling channels (m)",
                 "(roughness)",
                 fwbs_variables.roughness,
+                "IP",
             )
             po.ovarrf(
                 self.outfile,
                 "Inlet temperature of first wall coolant (K)",
                 "(fwinlet)",
                 fwbs_variables.fwinlet,
+                "IP",
             )
             po.ovarrf(
                 self.outfile,
                 "Outlet temperature of first wall coolant (K)",
                 "(fwoutlet)",
                 fwbs_variables.fwoutlet,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "First wall coolant pressure (Pa)",
                 "(fwpressure)",
                 fwbs_variables.fwpressure,
+                "IP",
             )
             if fwbs_variables.ipump == 1:
                 po.ovarre(
@@ -1981,6 +1989,7 @@ class BlanketLibrary:
                 "Allowable temperature of first wall material, excluding armour (K)",
                 "(tfwmatmax)",
                 fwbs_variables.tfwmatmax,
+                "IP",
             )
             po.ovarrf(
                 self.outfile,
@@ -1998,24 +2007,28 @@ class BlanketLibrary:
                 "Blanket coolant type (1=He, 2=H20)",
                 "(coolwh)",
                 fwbs_variables.coolwh,
+                "IP",
             )
             po.ovarrf(
                 self.outfile,
                 "Inlet temperature of blanket coolant (K)",
                 "(inlet_temp)",
                 fwbs_variables.inlet_temp,
+                "IP",
             )
             po.ovarrf(
                 self.outfile,
                 "Outlet temperature of blanket coolant (K)",
                 "(outlet_temp)",
                 fwbs_variables.outlet_temp,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Blanket (primary) coolant pressure (Pa)",
                 "(blpressure)",
                 fwbs_variables.blpressure,
+                "IP",
             )
             if fwbs_variables.ipump == 1:
                 po.ovarre(
@@ -2045,6 +2058,7 @@ class BlanketLibrary:
                     "Blanket liquid breeder type (0=PbLi, 1=Li)",
                     "(i_bb_liq)",
                     fwbs_variables.i_bb_liq,
+                    "OP",
                 )
                 if fwbs_variables.icooldual == 2:
                     po.ocmmnt(
@@ -2055,18 +2069,21 @@ class BlanketLibrary:
                         "Inlet temperature of blanket liquid breeder (K)",
                         "(inlet_temp_liq)",
                         fwbs_variables.inlet_temp_liq,
+                        "IP",
                     )
                     po.ovarrf(
                         self.outfile,
                         "Outlet temperature of blanket liquid breeder (K)",
                         "(outlet_temp_liq)",
                         fwbs_variables.outlet_temp_liq,
+                        "IP",
                     )
                     po.ovarre(
                         self.outfile,
                         "Blanket liquid breeder pressure (Pa)",
                         "(blpressure_liq)",
                         fwbs_variables.blpressure_liq,
+                        "IP",
                     )
                 else:
                     po.ocmmnt(

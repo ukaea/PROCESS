@@ -206,8 +206,9 @@ class DCLL:
                 "Solid angle fraction taken by on divertor",
                 "(fdiv)",
                 fwbs_variables.fdiv,
+                "IP",
             )
-            po.ovarre(self.outfile, "Blanket coverage factor", "(covf)", covf)
+            po.ovarre(self.outfile, "Blanket coverage factor", "(covf)", covf, "OP")
 
             po.osubhd(self.outfile, "Nuclear heating :")
 
@@ -375,24 +376,28 @@ class DCLL:
                 "Switch for plant secondary cycle ",
                 "(secondary_cycle)",
                 fwbs_variables.secondary_cycle,
+                "IP",
             )
             po.ovarin(
                 self.outfile,
                 "Switch for plant secondary cycle (liquid metal breeder) ",
                 "(secondary_cycle_liq)",
                 fwbs_variables.secondary_cycle_liq,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "First wall coolant pressure (Pa)",
                 "(fwpressure)",
                 fwbs_variables.fwpressure,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Blanket coolant pressure (Pa)",
                 "(blpressure)",
                 fwbs_variables.blpressure,
+                "IP",
             )
             if fwbs_variables.icooldual > 0:
                 po.ovarre(
@@ -400,6 +405,7 @@ class DCLL:
                     "Blanket liquid metal breeder pressure (Pa)",
                     "(blpressure_liq)",
                     fwbs_variables.blpressure_liq,
+                    "IP",
                 )
 
     def dcll_masses(self, output: bool):
@@ -842,24 +848,28 @@ class DCLL:
                 "Inboard radial first wall thickness (m)",
                 "(fwith)",
                 build_variables.fwith,
+                "OP",
             )
             po.ovarrf(
                 self.outfile,
                 "Outboard radial first wall thickness (m)",
                 "(fwoth)",
                 build_variables.fwoth,
+                "OP",
             )
             po.ovarrf(
                 self.outfile,
                 "Inboard radial breeder zone thickness (m)",
                 "(blbuith)",
                 build_variables.blbuith,
+                "ITV",
             )
             po.ovarrf(
                 self.outfile,
                 "Outboard radial breeder zone thickness (m)",
                 "(blbuoth)",
                 build_variables.blbuoth,
+                "ITV",
             )
 
     def write_output(self):

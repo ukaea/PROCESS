@@ -3111,18 +3111,21 @@ class Physics:
             "Initial charge time for CS from zero current (s)",
             "(t_precharge)",
             times_variables.t_precharge,
+            "IP",
         )
         po.ovarrf(
             self.outfile,
             "Plasma current ramp-up time (s)",
             "(t_current_ramp_up)",
             times_variables.t_current_ramp_up,
+            "IP",
         )
         po.ovarrf(
             self.outfile,
             "Heating time (s)",
             "(t_fusion_ramp)",
             times_variables.t_fusion_ramp,
+            "IP",
         )
         po.ovarre(
             self.outfile, "Burn time (s)", "(t_burn)", times_variables.t_burn, "OP "
@@ -3132,12 +3135,14 @@ class Physics:
             "Reset time to zero current for CS (s)",
             "(t_ramp_down)",
             times_variables.t_ramp_down,
+            "IP",
         )
         po.ovarrf(
             self.outfile,
             "Time between pulses (s)",
             "(t_between_pulse)",
             times_variables.t_between_pulse,
+            "ITV",
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -3219,6 +3224,7 @@ class Physics:
                     "Tokamak aspect ratio = Conventional, itart = 0",
                     "(itart)",
                     physics_module.itart_r,
+                    "OP",
                 )
             elif physics_variables.itart == 1:
                 physics_module.itart_r = physics_variables.itart
@@ -3227,11 +3233,16 @@ class Physics:
                     "Tokamak aspect ratio = Spherical, itart = 1",
                     "(itart)",
                     physics_module.itart_r,
+                    "OP",
                 )
 
         po.osubhd(self.outfile, "Plasma Geometry :")
         po.ovarrf(
-            self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor
+            self.outfile,
+            "Major radius (m)",
+            "(rmajor)",
+            physics_variables.rmajor,
+            "ITV",
         )
         po.ovarrf(
             self.outfile,
@@ -3272,6 +3283,7 @@ class Physics:
                     "Zohm scaling adjustment factor",
                     "(fkzohm)",
                     physics_variables.fkzohm,
+                    "IP",
                 )
             elif physics_variables.ishape in [4, 5, 7]:
                 po.ovarrf(
@@ -3426,6 +3438,7 @@ class Physics:
                     "Plasma current scaling law used",
                     "(i_plasma_current)",
                     physics_variables.i_plasma_current,
+                    "IP",
                 )
 
                 po.ovarrf(

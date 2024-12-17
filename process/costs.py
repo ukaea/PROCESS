@@ -131,6 +131,7 @@ class Costs:
             "First wall / blanket life (years)",
             "(bktlife_cal)",
             fwbs_variables.bktlife_cal,
+            "OP",
         )
 
         if ife_variables.ife != 1:
@@ -139,6 +140,7 @@ class Costs:
                 "Divertor life (years)",
                 "(divlife_cal)",
                 cost_variables.divlife_cal,
+                "OP",
             )
             if physics_variables.itart == 1:
                 po.ovarrf(
@@ -146,10 +148,15 @@ class Costs:
                     "Centrepost life (years)",
                     "(cplife_cal)",
                     cost_variables.cplife_cal,
+                    "OP",
                 )
 
         po.ovarrf(
-            self.outfile, "Cost of electricity (m$/kWh)", "(coe)", cost_variables.coe
+            self.outfile,
+            "Cost of electricity (m$/kWh)",
+            "(coe)",
+            cost_variables.coe,
+            "OP",
         )
 
         po.osubhd(self.outfile, "Power Generation Costs :")
@@ -171,12 +178,14 @@ class Costs:
                 "First wall direct capital cost (M$)",
                 "(fwallcst)",
                 cost_variables.fwallcst,
+                "OP",
             )
             po.ovarrf(
                 self.outfile,
                 "Blanket direct capital cost (M$)",
                 "(blkcst)",
                 cost_variables.blkcst,
+                "OP",
             )
             if ife_variables.ife != 1:
                 po.ovarrf(
@@ -184,6 +193,7 @@ class Costs:
                     "Divertor direct capital cost (M$)",
                     "(divcst)",
                     cost_variables.divcst,
+                    "OP",
                 )
                 if physics_variables.itart == 1:
                     po.ovarrf(
@@ -191,6 +201,7 @@ class Costs:
                         "Centrepost direct capital cost (M$)",
                         "(cpstcst)",
                         cost_variables.cpstcst,
+                        "OP",
                     )
 
                 po.ovarrf(
@@ -200,12 +211,14 @@ class Costs:
                     cost_variables.cdcost
                     * cost_variables.fcdfuel
                     / (1.0e0 - cost_variables.fcdfuel),
+                    "OP",
                 )
                 po.ovarrf(
                     self.outfile,
                     "Fraction of CD cost --> fuel cost",
                     "(fcdfuel)",
                     cost_variables.fcdfuel,
+                    "OP",
                 )
             else:
                 po.ovarrf(
@@ -215,12 +228,14 @@ class Costs:
                     cost_variables.cdcost
                     * cost_variables.fcdfuel
                     / (1.0e0 - cost_variables.fcdfuel),
+                    "OP",
                 )
                 po.ovarrf(
                     self.outfile,
                     "Fraction of driver cost --> fuel cost",
                     "(fcdfuel)",
                     cost_variables.fcdfuel,
+                    "OP",
                 )
 
         po.oheadr(self.outfile, "Detailed Costings (1990 US$)")
@@ -229,9 +244,14 @@ class Costs:
             "Acc.22 multiplier for Nth of a kind",
             "(fkind)",
             cost_variables.fkind,
+            "IP",
         )
         po.ovarin(
-            self.outfile, "Level of Safety Assurance", "(lsa)", cost_variables.lsa
+            self.outfile,
+            "Level of Safety Assurance",
+            "(lsa)",
+            cost_variables.lsa,
+            "IP",
         )
         po.oblnkl(self.outfile)
         po.oshead(self.outfile, "Structures and Site Facilities")

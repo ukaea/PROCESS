@@ -828,14 +828,44 @@ class Divertor:
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
             po.oblnkl(self.outfile)
-            po.ovarre(self.outfile, "Power to the divertor (MW)", "(pdivt.)", pdivt)
-            po.ovarre(self.outfile, "Divertor surface area (m2)", "(areadv)", areadv)
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
+            po.ovarre(
+                self.outfile,
+                "Power to the divertor (MW)",
+                "(pdivt.)",
+                pdivt,
+                "OP",
+            )
+            po.ovarre(
+                self.outfile,
+                "Divertor surface area (m2)",
+                "(areadv)",
+                areadv,
+                "OP",
+            )
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(hldiv)",
+                dv.hldiv,
+                "OP",
+            )
 
         elif output:
             po.osubhd(self.outfile, "Divertor Heat Load")
-            po.ovarre(self.outfile, "Power to the divertor (MW)", "(pdivt.)", pdivt)
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
+            po.ovarre(
+                self.outfile,
+                "Power to the divertor (MW)",
+                "(pdivt.)",
+                pdivt,
+                "OP",
+            )
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(hldiv)",
+                dv.hldiv,
+                "OP",
+            )
         return dv.hldiv
 
     def divwade(
@@ -958,12 +988,19 @@ class Divertor:
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
             po.oblnkl(self.outfile)
-            po.ovarre(self.outfile, "Flux expansion", "(flux_exp)", flux_exp)
+            po.ovarre(self.outfile, "Flux expansion", "(flux_exp)", flux_exp, "IP")
             po.ovarre(
                 self.outfile,
                 "Field line angle wrt to target divertor plate (degrees)",
                 "(beta_div)",
                 beta_div,
+                "ITV",
             )
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(hldiv)",
+                dv.hldiv,
+                "OP",
+            )
         return dv.hldiv

@@ -325,46 +325,84 @@ class Buildings:
                 "Dist from centre of torus to bldg wall (m)",
                 "(wrbi)",
                 buildings_variables.wrbi,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Effective floor area (m2)",
                 "(efloor)",
                 buildings_variables.efloor,
+                "OP",
             )
-            po.ovarre(self.outfile, "Reactor building volume (m3)", "(rbv)", rbv)
             po.ovarre(
-                self.outfile, "Reactor maintenance building volume (m3)", "(rmbv)", rmbv
+                self.outfile,
+                "Reactor building volume (m3)",
+                "(rbv)",
+                rbv,
+                "OP",
             )
-            po.ovarre(self.outfile, "Warmshop volume (m3)", "(wsv)", wsv)
+            po.ovarre(
+                self.outfile,
+                "Reactor maintenance building volume (m3)",
+                "(rmbv)",
+                rmbv,
+                "OP",
+            )
+            po.ovarre(
+                self.outfile,
+                "Warmshop volume (m3)",
+                "(wsv)",
+                wsv,
+                "OP",
+            )
             po.ovarre(
                 self.outfile,
                 "Tritium building volume (m3)",
                 "(triv)",
                 buildings_variables.triv,
+                "IP",
             )
-            po.ovarre(self.outfile, "Electrical building volume (m3)", "(elev)", elev)
+            po.ovarre(
+                self.outfile,
+                "Electrical building volume (m3)",
+                "(elev)",
+                elev,
+                "OP",
+            )
             po.ovarre(
                 self.outfile,
                 "Control building volume (m3)",
                 "(conv)",
                 buildings_variables.conv,
+                "IP",
             )
-            po.ovarre(self.outfile, "Cryogenics building volume (m3)", "(cryv)", cryv)
+            po.ovarre(
+                self.outfile,
+                "Cryogenics building volume (m3)",
+                "(cryv)",
+                cryv,
+                "OP",
+            )
             po.ovarre(
                 self.outfile,
                 "Administration building volume (m3)",
                 "(admv)",
                 buildings_variables.admv,
+                "IP",
             )
             po.ovarre(
-                self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov
+                self.outfile,
+                "Shops volume (m3)",
+                "(shov)",
+                buildings_variables.shov,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Total volume of nuclear buildings (m3)",
                 "(volnucb)",
                 buildings_variables.volnucb,
+                "OP",
             )
 
         return cryv, vrci, rbv, rmbv, wsv, elev
@@ -959,30 +997,35 @@ class Buildings:
                 "Reactor hall (internal) footprint (m2)",
                 "(reactor_hall_area)",
                 reactor_hall_area,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Reactor hall (internal) volume (m3)",
                 "(reactor_hall_vol)",
                 reactor_hall_vol,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "   Reactor hall length (m)",
                 "(reactor_hall_l)",
                 buildings_variables.reactor_hall_l,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "   Reactor hall width (m)",
                 "(reactor_hall_w)",
                 buildings_variables.reactor_hall_w,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "   Reactor hall height (m)",
                 "(reactor_hall_h)",
                 buildings_variables.reactor_hall_h,
+                "OP",
             )
             if (current_drive_variables.iefrf == 5) or (
                 current_drive_variables.iefrf == 8
@@ -996,12 +1039,14 @@ class Buildings:
                     "      NBI system length (m)",
                     "(nbi_sys_l)",
                     buildings_variables.nbi_sys_l,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
                     "      NBI system width (m)",
                     "(nbi_sys_w)",
                     buildings_variables.nbi_sys_w,
+                    "IP",
                 )
 
             po.ovarre(
@@ -1009,18 +1054,21 @@ class Buildings:
                 "Reactor building external footprint (m2)",
                 "(reactor_building_area)",
                 reactor_building_area,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Reactor building external volume (m3)",
                 "(reactor_building_vol)",
                 reactor_building_vol,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "   Reactor building length (m)",
                 "(reactor_building_l)",
                 reactor_building_l,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
@@ -1033,24 +1081,28 @@ class Buildings:
                 "   Reactor building height (m)",
                 "(reactor_building_h)",
                 reactor_building_h,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Reactor basement footprint (m2)",
                 "(reactor_basement_area)",
                 reactor_basement_area,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Reactor basement volume (m3)",
                 "(reactor_basement_vol)",
                 reactor_basement_vol,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Reactor building + basement volume (m3)",
                 "(reactor_build_totvol)",
                 reactor_build_totvol,
+                "OP",
             )
             po.oblnkl(self.outfile)
             po.ovarre(
@@ -1058,24 +1110,28 @@ class Buildings:
                 "Hot cell facility internal footprint (m2)",
                 "(hotcell_area)",
                 hotcell_area,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Hot cell facility internal volume (m3)",
                 "(hotcell_vol)",
                 hotcell_vol,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Hot cell facility external footprint (m2)",
                 "(hotcell_area_ext)",
                 hotcell_area_ext,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Hot cell facility external volume (m3)",
                 "(hotcell_vol_ext)",
                 hotcell_vol_ext,
+                "OP",
             )
             po.oblnkl(self.outfile)
             if (current_drive_variables.iefrf != 5) and (
@@ -1086,12 +1142,14 @@ class Buildings:
                     "HCD (EC/EBW) building footprint (m2)",
                     "(hcd_building_area)",
                     hcd_building_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "HCD (EC/EBW) building volume (m3)",
                     "(hcd_building_vol)",
                     hcd_building_vol,
+                    "OP",
                 )
                 if buildings_variables.i_bldgs_v == 1:
                     po.ovarre(
@@ -1099,18 +1157,21 @@ class Buildings:
                         "   HCD (EC/EBW) building length (m)",
                         "(hcd_building_l)",
                         buildings_variables.hcd_building_l,
+                        "IP",
                     )
                     po.ovarre(
                         self.outfile,
                         "   HCD (EC/EBW) building width (m)",
                         "(hcd_building_w)",
                         buildings_variables.hcd_building_w,
+                        "IP",
                     )
                     po.ovarre(
                         self.outfile,
                         "   HCD (EC/EBW) building height (m)",
                         "(hcd_building_h)",
                         buildings_variables.hcd_building_h,
+                        "IP",
                     )
                 po.oblnkl(self.outfile)
             po.ovarre(
@@ -1118,12 +1179,14 @@ class Buildings:
                 "Turbine hall footprint (m2)",
                 "(turbine_hall_area)",
                 turbine_hall_area,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Turbine hall volume (m3)",
                 "(turbine_hall_vol)",
                 turbine_hall_vol,
+                "OP",
             )
             if buildings_variables.i_bldgs_v == 1:
                 po.ovarre(
@@ -1131,18 +1194,21 @@ class Buildings:
                     "   Turbine hall length (m)",
                     "(turbine_hall_l)",
                     buildings_variables.turbine_hall_l,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
                     "   Turbine hall width (m)",
                     "(turbine_hall_w)",
                     buildings_variables.turbine_hall_w,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
                     "   Turbine hall height (m)",
                     "(turbine_hall_h)",
                     buildings_variables.turbine_hall_h,
+                    "IP",
                 )
 
             po.oblnkl(self.outfile)
@@ -1151,12 +1217,14 @@ class Buildings:
                 "Effective floor area (m2)",
                 "(efloor)",
                 buildings_variables.efloor,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Total volume of nuclear buildings (m3)",
                 "(volnucb)",
                 buildings_variables.volnucb,
+                "OP",
             )
 
             if buildings_variables.i_bldgs_v == 1:
@@ -1167,12 +1235,14 @@ class Buildings:
                     "Chemistry labs and facilities footprint (m2)",
                     "(chemlab_area)",
                     chemlab_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Chemistry labs and facilities volume (m3)",
                     "(chemlab_vol)",
                     chemlab_vol,
+                    "OP",
                 )
 
                 po.ovarre(
@@ -1180,36 +1250,42 @@ class Buildings:
                     "Reactor support buildings footprint (m2)",
                     "(aux_build_area)",
                     aux_build_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Reactor support buildings volume (m3)",
                     "(aux_build_vol)",
                     aux_build_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Heat sinks footprint (m2)",
                     "(heat_sink_area)",
                     heat_sink_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Heat sinks volume (m3)",
                     "(heat_sink_vol)",
                     heat_sink_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Reactor auxiliary buildings footprint (m2)",
                     "(reactor_aux_area)",
                     reactor_aux_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Reactor auxiliary buildings volume (m3)",
                     "(reactor_aux_vol)",
                     reactor_aux_vol,
+                    "OP",
                 )
 
                 po.ovarre(
@@ -1217,36 +1293,42 @@ class Buildings:
                     "Magnet trains footprint (m2)",
                     "(magnet_trains_area)",
                     magnet_trains_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Magnet trains volume (m3)",
                     "(magnet_trains_vol)",
                     magnet_trains_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Magnet pulse footprint (m2)",
                     "(magnet_pulse_area)",
                     magnet_pulse_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Magnet pulse volume (m3)",
                     "(magnet_pulse_vol)",
                     magnet_pulse_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Power buildings footprint (m2)",
                     "(power_buildings_area)",
                     power_buildings_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Power buildings volume (m3)",
                     "(power_buildings_vol)",
                     power_buildings_vol,
+                    "OP",
                 )
 
                 po.ovarre(
@@ -1254,12 +1336,14 @@ class Buildings:
                     "Control buildings area (m2)",
                     "(control_buildings_area)",
                     control_buildings_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Control buildings volume (m3)",
                     "(control_buildings_vol)",
                     control_buildings_vol,
+                    "OP",
                 )
 
                 po.ovarre(
@@ -1267,57 +1351,70 @@ class Buildings:
                     "Warm shop footprint (m2)",
                     "(warm_shop_area)",
                     warm_shop_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Warm shop volume (m3)",
                     "(warm_shop_vol)",
                     warm_shop_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Workshop footprint (m2)",
                     "(workshop_area)",
                     workshop_area,
+                    "OP",
                 )
                 po.ovarre(
-                    self.outfile, "Workshop volume (m3)", "(workshop_vol)", workshop_vol
+                    self.outfile,
+                    "Workshop volume (m3)",
+                    "(workshop_vol)",
+                    workshop_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Robotics building footprint (m2)",
                     "(robotics_area)",
                     robotics_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Robotics building volume (m3)",
                     "(robotics_vol)",
                     robotics_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Maintenance control footprint (m2)",
                     "(maint_cont_area)",
                     maint_cont_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Maintenance control volume (m3)",
                     "(maint_cont_vol)",
                     maint_cont_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Maintenance buildings footprint (m2)",
                     "(maintenance_area)",
                     maintenance_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Maintenance buildings volume (m3)",
                     "(maintenance_vol)",
                     maintenance_vol,
+                    "OP",
                 )
 
                 po.ovarre(
@@ -1325,48 +1422,56 @@ class Buildings:
                     "Cryogenic buildings footprint (m2)",
                     "(cryomag_area)",
                     cryomag_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Cryogenic buildings volume (m3)",
                     "(cryomag_vol)",
                     cryomag_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Magnet cryo storage tanks footprint (m2)",
                     "(cryostore_area)",
                     cryostore_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Magnet cryo storage tanks volume (m3)",
                     "(cryostore_vol)",
                     cryostore_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Auxiliary cooling footprint (m2)",
                     "(auxcool_area)",
                     auxcool_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Auxiliary cooling volume (m3)",
                     "(auxcool_vol)",
                     auxcool_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Cryogenic & cooling total footprint (m2)",
                     "(cryocool_area)",
                     cryocool_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Cryogenic & cooling total volume (m3)",
                     "(cryocool_vol)",
                     cryocool_vol,
+                    "OP",
                 )
 
                 po.ovarre(
@@ -1374,48 +1479,56 @@ class Buildings:
                     "Electrical transformers footprint (m2)",
                     "(elecdist_area)",
                     elecdist_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Electrical transformers volume (m3)",
                     "(elecdist_vol)",
                     elecdist_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Electrical load centres footprint (m2)",
                     "(elecload_area)",
                     elecload_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Electrical load centres volume (m3)",
                     "(elecload_vol)",
                     elecload_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Energy storage systems footprint (m2)",
                     "(elecstore_area)",
                     elecstore_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Energy storage systems volume (m3)",
                     "(elecstore_vol)",
                     elecstore_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Electrical buildings total footprint (m2)",
                     "(elec_buildings_area)",
                     elec_buildings_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Electrical buildings total volume (m3)",
                     "(elec_buildings_vol)",
                     elec_buildings_vol,
+                    "OP",
                 )
 
                 po.ovarre(
@@ -1423,12 +1536,14 @@ class Buildings:
                     "Waste buildings footprint (m2)",
                     "(waste_buildings_area)",
                     waste_buildings_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Waste buildings volume (m3)",
                     "(waste_buildings_vol)",
                     waste_buildings_vol,
+                    "OP",
                 )
 
                 po.ovarre(
@@ -1436,46 +1551,54 @@ class Buildings:
                     "Air & gas supplies footprint (m2)",
                     "(gas_buildings_area)",
                     gas_buildings_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Air & gas supplies volume (m3)",
                     "(gas_buildings_vol)",
                     gas_buildings_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Water supplies footprint (m2)",
                     "(water_buildings_area)",
                     water_buildings_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Water supplies volume (m3)",
                     "(water_buildings_vol)",
                     water_buildings_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Security & Safety buildings footprint (m2)",
                     "(sec_buildings_area)",
                     sec_buildings_area,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Security & Safety buildings volume (m3)",
                     "(sec_buildings_vol)",
                     sec_buildings_vol,
+                    "OP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Staff buildings footprint (m2)",
                     "(staff_buildings_area)",
                     buildings_variables.staff_buildings_area,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Staff buildings volume (m3)",
                     "(staff_buildings_vol)",
                     staff_buildings_vol,
+                    "OP",
                 )

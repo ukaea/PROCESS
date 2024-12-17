@@ -121,6 +121,7 @@ class Build:
                 "Divertor null switch",
                 "(i_single_null)",
                 physics_variables.i_single_null,
+                "IP",
             )
 
             if physics_variables.i_single_null == 0:
@@ -156,6 +157,7 @@ class Build:
                     "Cryostat roof structure*",
                     "(clh1)",
                     buildings_variables.clh1,
+                    "IP",
                 )
                 vbuild = vbuild - buildings_variables.clh1
 
@@ -193,6 +195,7 @@ class Build:
                     "Thermal shield, vertical (m)",
                     "(thshield_vb)",
                     build_variables.thshield_vb,
+                    "IP",
                 )
                 vbuild = vbuild - build_variables.thshield_vb
 
@@ -208,6 +211,7 @@ class Build:
                     "Vessel - TF coil vertical gap (m)",
                     "(vgap_vv_thermalshield)",
                     build_variables.vgap_vv_thermalshield,
+                    "IP",
                 )
                 vbuild = vbuild - build_variables.vgap_vv_thermalshield
 
@@ -224,12 +228,14 @@ class Build:
                     "Topside vacuum vessel radial thickness (m)",
                     "(d_vv_top)",
                     build_variables.d_vv_top,
+                    "IP",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top radiation shield thickness (m)",
                     "(shldtth)",
                     build_variables.shldtth,
+                    "IP",
                 )
 
                 po.obuild(
@@ -244,6 +250,7 @@ class Build:
                     "Divertor structure vertical thickness (m)",
                     "(divfix)",
                     divertor_variables.divfix,
+                    "IP",
                 )
                 vbuild = vbuild - divertor_variables.divfix
 
@@ -259,6 +266,7 @@ class Build:
                     "Top scrape-off vertical thickness (m)",
                     "(vgaptop)",
                     build_variables.vgaptop,
+                    "IP",
                 )
                 vbuild = vbuild - build_variables.vgaptop
 
@@ -274,6 +282,7 @@ class Build:
                     "Plasma half-height (m)",
                     "(rminor*kappa)",
                     physics_variables.rminor * physics_variables.kappa,
+                    "OP",
                 )
                 vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
 
@@ -301,6 +310,7 @@ class Build:
                     "Bottom scrape-off vertical thickness (m)",
                     "(vgap_xpoint_divertor)",
                     build_variables.vgap_xpoint_divertor,
+                    "OP",
                 )
 
                 vbuild = vbuild - divertor_variables.divfix
@@ -316,6 +326,7 @@ class Build:
                     "Divertor structure vertical thickness (m)",
                     "(divfix)",
                     divertor_variables.divfix,
+                    "IP",
                 )
 
                 vbuild = vbuild - build_variables.shldlth
@@ -333,12 +344,14 @@ class Build:
                     "Bottom radiation shield thickness (m)",
                     "(shldlth)",
                     build_variables.shldlth,
+                    "IP",
                 )
                 po.ovarre(
                     self.mfile,
                     "Underside vacuum vessel radial thickness (m)",
                     "(d_vv_bot)",
                     build_variables.d_vv_bot,
+                    "IP",
                 )
 
                 vbuild = vbuild - build_variables.vgap_vv_thermalshield
@@ -429,6 +442,7 @@ class Build:
                     "Cryostat roof structure*",
                     "(clh1)",
                     buildings_variables.clh1,
+                    "IP",
                 )
                 vbuild = vbuild - buildings_variables.clh1
 
@@ -465,6 +479,7 @@ class Build:
                     "Thermal shield, vertical (m)",
                     "(thshield_vb)",
                     build_variables.thshield_vb,
+                    "IP",
                 )
                 vbuild = vbuild - build_variables.thshield_vb
 
@@ -480,6 +495,7 @@ class Build:
                     "Vessel - TF coil vertical gap (m)",
                     "(vgap_vv_thermalshield)",
                     build_variables.vgap_vv_thermalshield,
+                    "IP",
                 )
                 vbuild = vbuild - build_variables.vgap_vv_thermalshield
 
@@ -496,12 +512,14 @@ class Build:
                     "Topside vacuum vessel radial thickness (m)",
                     "(d_vv_top)",
                     build_variables.d_vv_top,
+                    "IP",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top radiation shield thickness (m)",
                     "(shldtth)",
                     build_variables.shldtth,
+                    "IP",
                 )
 
                 po.obuild(
@@ -525,6 +543,7 @@ class Build:
                     "Top blanket vertical thickness (m)",
                     "(blnktth)",
                     build_variables.blnktth,
+                    "OP",
                 )
                 vbuild = vbuild - build_variables.blnktth
 
@@ -535,6 +554,7 @@ class Build:
                     "Top first wall vertical thickness (m)",
                     "(fwtth)",
                     fwtth,
+                    "OP",
                 )
                 vbuild = vbuild - fwtth
 
@@ -550,6 +570,7 @@ class Build:
                     "Top scrape-off vertical thickness (m)",
                     "(vgaptop)",
                     build_variables.vgaptop,
+                    "IP",
                 )
                 vbuild = vbuild - build_variables.vgaptop
 
@@ -565,6 +586,7 @@ class Build:
                     "Plasma half-height (m)",
                     "(rminor*kappa)",
                     physics_variables.rminor * physics_variables.kappa,
+                    "OP",
                 )
                 vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
 
@@ -592,6 +614,7 @@ class Build:
                     "Bottom scrape-off vertical thickness (m)",
                     "(vgap_xpoint_divertor)",
                     build_variables.vgap_xpoint_divertor,
+                    "OP",
                 )
 
                 vbuild = vbuild - divertor_variables.divfix
@@ -607,6 +630,7 @@ class Build:
                     "Divertor structure vertical thickness (m)",
                     "(divfix)",
                     divertor_variables.divfix,
+                    "IP",
                 )
 
                 vbuild = vbuild - build_variables.shldlth
@@ -624,12 +648,14 @@ class Build:
                     "Bottom radiation shield thickness (m)",
                     "(shldlth)",
                     build_variables.shldlth,
+                    "IP",
                 )
                 po.ovarre(
                     self.mfile,
                     "Underside vacuum vessel radial thickness (m)",
                     "(d_vv_bot)",
                     build_variables.d_vv_bot,
+                    "IP",
                 )
 
                 vbuild = vbuild - build_variables.vgap_vv_thermalshield
@@ -693,6 +719,7 @@ class Build:
                 "Ratio of Central Solenoid height to TF coil internal height",
                 "(ohhghf)",
                 pfcoil_variables.ohhghf,
+                "IP",
             )
             po.ocmmnt(
                 self.outfile,
@@ -2312,6 +2339,7 @@ class Build:
                     f"{description} radial thickness (m)",
                     f"({variable})",
                     thickness,
+                    "OP",
                 )
 
                 po.ovarst(
@@ -2325,6 +2353,7 @@ class Build:
                     f"Radial build cumulative radius {index}",
                     f"(radial_cum({index}))",
                     radius,
+                    "OP",
                 )
 
             po.ovarre(
@@ -2332,6 +2361,7 @@ class Build:
                 "External cryostat thickness (excludes structure) (m)",
                 "(ddwex)",
                 build_variables.ddwex,
+                "IP",
             )
 
             if (current_drive_variables.iefrf in [5, 8]) or (
@@ -2342,4 +2372,5 @@ class Build:
                     "Width of neutral beam duct where it passes between the TF coils (m)",
                     "(beamwd)",
                     current_drive_variables.beamwd,
+                    "IP",
                 )

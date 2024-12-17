@@ -749,6 +749,7 @@ class CurrentDrive:
             "Current drive efficiency model",
             "(iefrf)",
             current_drive_variables.iefrf,
+            "IP",
         )
 
         if current_drive_variables.iefrffix in [1, 4, 6]:
@@ -776,6 +777,7 @@ class CurrentDrive:
             "Secondary current drive efficiency model",
             "(iefrffix)",
             current_drive_variables.iefrffix,
+            "IP",
         )
 
         if physics_variables.ignite == 1:
@@ -795,12 +797,14 @@ class CurrentDrive:
             "Ratio of power for flat-top to start-up (MW)",
             "(startupratio)",
             cost_variables.startupratio,
+            "IP",
         )
         po.ovarre(
             self.outfile,
             "Auxiliary power used for plasma heating only (MW)",
             "(pheat)",
             current_drive_variables.pheat + current_drive_variables.pheatfix,
+            "OP",
         )
         po.ovarre(
             self.outfile,
@@ -809,12 +813,14 @@ class CurrentDrive:
             current_drive_variables.pinjmw
             - current_drive_variables.pheat
             - current_drive_variables.pheatfix,
+            "OP",
         )
         po.ovarre(
             self.outfile,
             "Maximum Allowed Bootstrap current fraction",
             "(bootstrap_current_fraction_max)",
             current_drive_variables.bootstrap_current_fraction_max,
+            "IP",
         )
         if current_drive_variables.iefrffix != 0:
             po.ovarre(
@@ -822,12 +828,14 @@ class CurrentDrive:
                 "Power injected for main current drive (MW)",
                 "(pcurrentdrivemw1)",
                 pinjmw1 - current_drive_variables.pheat,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Power injected for secondary current drive (MW)",
                 "(pcurrentdrivemw2)",
                 pinjmwfix - current_drive_variables.pheatfix,
+                "OP",
             )
 
         po.ovarre(
@@ -872,6 +880,7 @@ class CurrentDrive:
             "Wall plug to injector efficiency",
             "(etacd)",
             current_drive_variables.etacd,
+            "OP",
         )
 
         if current_drive_variables.iefrf == 10:
@@ -880,6 +889,7 @@ class CurrentDrive:
                 "ECRH plasma heating efficiency",
                 "(gamma_ecrh)",
                 current_drive_variables.gamma_ecrh,
+                "IP",
             )
         if current_drive_variables.iefrf == 12:
             po.ovarre(
@@ -887,6 +897,7 @@ class CurrentDrive:
                 "EBW plasma heating efficiency",
                 "(xi_ebw)",
                 current_drive_variables.xi_ebw,
+                "IP",
             )
         if current_drive_variables.iefrf in [12, 13]:
             po.ovarre(
@@ -894,6 +905,7 @@ class CurrentDrive:
                 "EC harmonic number",
                 "(harnum)",
                 current_drive_variables.harnum,
+                "IP",
             )
         if current_drive_variables.iefrf == 13:
             po.ovarin(
@@ -901,6 +913,7 @@ class CurrentDrive:
                 "EC cutoff wave mode switch",
                 "(wave_mode)",
                 current_drive_variables.wave_mode,
+                "OP",
             )
 
         if current_drive_variables.iefrffix != 0:
@@ -916,6 +929,7 @@ class CurrentDrive:
                 "Seconday wall plug to injector efficiency",
                 "(etacdfix)",
                 current_drive_variables.etacdfix,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
@@ -969,6 +983,7 @@ class CurrentDrive:
             current_drive_variables.plasma_current_internal_fraction
             + physics_variables.aux_current_fraction
             + physics_variables.inductive_current_fraction,
+            "OP",
         )
         if (
             abs(
@@ -987,6 +1002,7 @@ class CurrentDrive:
             "Fraction of the plasma current produced by non-inductive means",
             "(fvsbrnni)",
             physics_variables.fvsbrnni,
+            "ITV",
         )
 
         if (
@@ -1016,6 +1032,7 @@ class CurrentDrive:
                 "Lower hybrid wall plug efficiency",
                 "(etalh)",
                 current_drive_variables.etalh,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
@@ -1047,7 +1064,7 @@ class CurrentDrive:
                     "Neutral beam current (A)",
                     "(beam_current)",
                     current_drive_variables.beam_current,
-                    "OP ",
+                    "ITV ",
                 )
 
             if (current_drive_variables.iefrffix == 5) or (
@@ -1087,6 +1104,7 @@ class CurrentDrive:
                 "Neutral beam wall plug efficiency",
                 "(etanbi)",
                 current_drive_variables.etanbi,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
@@ -1142,6 +1160,7 @@ class CurrentDrive:
                     "Maximum allowable beam power (MW)",
                     "(pinjalw)",
                     current_drive_variables.pinjalw,
+                    "IP",
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1150,6 +1169,7 @@ class CurrentDrive:
                     current_drive_variables.porbitlossmw
                     + current_drive_variables.nbshinemw
                     + pinjmw1,
+                    "OP",
                 )
                 po.oblnkl(self.outfile)
                 po.ovarrf(
@@ -1192,12 +1212,14 @@ class CurrentDrive:
                     "Maximum allowable beam power (MW)",
                     "(pinjalw)",
                     current_drive_variables.pinjalw,
+                    "IP",
                 )
                 po.ovarrf(
                     self.outfile,
                     "Secondary fixed total (MW)",
                     "(porbitlossmwfixed+nbshinemwfix+pinjmwfix)",
                     porbitlossmwfix + nbshinemwfix + pinjmwfix,
+                    "OP",
                 )
                 po.oblnkl(self.outfile)
                 po.ovarrf(
@@ -1222,12 +1244,14 @@ class CurrentDrive:
                 "Beam duct shielding thickness (m)",
                 "(nbshield)",
                 current_drive_variables.nbshield,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Beam tangency radius / Plasma major radius",
                 "(frbeam)",
                 current_drive_variables.frbeam,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
@@ -1257,12 +1281,14 @@ class CurrentDrive:
                 "Maximum allowable ECRH power (MW)",
                 "(pinjalw)",
                 current_drive_variables.pinjalw,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "ECH wall plug efficiency",
                 "(etaech)",
                 current_drive_variables.etaech,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
@@ -1278,12 +1304,14 @@ class CurrentDrive:
                 "Fixed ECRH power (MW)",
                 "(pinjmwfix)",
                 current_drive_variables.pinjmwfix,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "ECH wall plug efficiency",
                 "(etaech)",
                 current_drive_variables.etaech,
+                "IP",
             )
             po.ovarre(
                 self.outfile,

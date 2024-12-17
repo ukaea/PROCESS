@@ -194,6 +194,7 @@ class Availability:
                     "Allowable blanket neutron fluence (MW-yr/m2)",
                     "(abktflnc)",
                     cv.abktflnc,
+                    "IP",
                 )
 
             po.ovarre(
@@ -201,6 +202,7 @@ class Availability:
                 "Allowable divertor heat fluence (MW-yr/m2)",
                 "(adivflnc)",
                 cv.adivflnc,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
@@ -233,7 +235,13 @@ class Availability:
                 cv.cdrlife,
                 "OP ",
             )
-            po.ovarre(self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife)
+            po.ovarre(
+                self.outfile,
+                "Total plant lifetime (years)",
+                "(tlife)",
+                cv.tlife,
+                "IP",
+            )
 
             if cv.iavail == 1:
                 if cv.divlife < fwbsv.bktlife:
@@ -242,6 +250,7 @@ class Availability:
                         "Time needed to replace divertor (years)",
                         "(tdivrepl)",
                         cv.tdivrepl,
+                        "IP",
                     )
                 else:
                     po.ovarre(
@@ -249,6 +258,7 @@ class Availability:
                         "Time needed to replace blanket (years)",
                         "(tbktrepl)",
                         cv.tbktrepl,
+                        "IP",
                     )
 
                 po.ovarre(
@@ -256,6 +266,7 @@ class Availability:
                     "Time needed to replace blkt + div (years)",
                     "(tcomrepl)",
                     cv.tcomrepl,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
@@ -278,12 +289,14 @@ class Availability:
                     "Total plant availability fraction",
                     "(cfactr)",
                     cv.cfactr,
+                    "IP",
                 )
                 po.ovarre(
                     self.outfile,
                     "Number of fusion cycles to reach allowable fw/blanket DPA",
                     "(bktcycles)",
                     cv.bktcycles,
+                    "IP",
                 )
             else:
                 po.ovarre(
@@ -529,36 +542,42 @@ class Availability:
                 "Allowable blanket neutron fluence (MW-yr/m2)",
                 "(abktflnc)",
                 cv.abktflnc,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Allowable divertor heat fluence (MW-yr/m2)",
                 "(adivflnc)",
                 cv.adivflnc,
+                "IP",
             )
             po.ovarin(
                 self.outfile,
                 "Number of remote handling systems",
                 "(num_rh_systems)",
                 cv.num_rh_systems,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Time needed to replace divertor (yrs)",
                 "(mttr_divertor)",
                 mttr_divertor,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Time needed to replace blanket (yrs)",
                 "(mttr_blanket)",
                 mttr_blanket,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
                 "Time needed to replace blkt + div (yrs)",
                 "(mttr_blanket)",
                 mttr_blanket,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
@@ -629,6 +648,7 @@ class Availability:
                 "c parameter, determining the temp margin where lifetime declines",
                 "(conf_mag)",
                 cv.conf_mag,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
@@ -708,27 +728,35 @@ class Availability:
                 "Probability of failure per operational day",
                 "(div_prob_fail)",
                 cv.div_prob_fail,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Repair time (years)",
                 "(div_umain_time)",
                 cv.div_umain_time,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Reference value for cycle life",
                 "(div_nref)",
                 cv.div_nref,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "The cycle when failure is 100% certain",
                 "(div_nu)",
                 cv.div_nu,
+                "IP",
             )
             po.ovarre(
-                self.outfile, "Number of cycles between planned replacements", "(n)", n
+                self.outfile,
+                "Number of cycles between planned replacements",
+                "(n)",
+                n,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
@@ -798,27 +826,35 @@ class Availability:
                 "Probability of failure per operational day",
                 "(fwbs_prob_fail)",
                 cv.fwbs_prob_fail,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Repair time (years)",
                 "(fwbs_umain_time)",
                 cv.fwbs_umain_time,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Reference value for cycle life",
                 "(fwbs_nref)",
                 cv.fwbs_nref,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "The cycle when failure is 100% certain",
                 "(fwbs_nu)",
                 cv.fwbs_nu,
+                "IP",
             )
             po.ovarre(
-                self.outfile, "Number of cycles between planned replacements", "(n)", n
+                self.outfile,
+                "Number of cycles between planned replacements",
+                "(n)",
+                n,
+                "OP",
             )
             po.ovarre(
                 self.outfile,
@@ -868,7 +904,11 @@ class Availability:
             po.ocmmnt(self.outfile, "Balance of plant:")
             po.oblnkl(self.outfile)
             po.ovarre(
-                self.outfile, "Failure rate (1/h)", "(bop_fail_rate)", bop_fail_rate
+                self.outfile,
+                "Failure rate (1/h)",
+                "(bop_fail_rate)",
+                bop_fail_rate,
+                "OP",
             )
             po.ovarin(
                 self.outfile,
@@ -877,7 +917,13 @@ class Availability:
                 bop_num_failures,
                 "OP ",
             )
-            po.ovarre(self.outfile, "Balance of plant MTTR", "(bop_mttr)", bop_mttr)
+            po.ovarre(
+                self.outfile,
+                "Balance of plant MTTR",
+                "(bop_mttr)",
+                bop_mttr,
+                "OP",
+            )
             po.ovarre(
                 self.outfile,
                 "Balance of plant unplanned unavailability",
@@ -1145,12 +1191,14 @@ class Availability:
                 "Allowable blanket neutron fluence (MW-yr/m2)",
                 "(abktflnc)",
                 cv.abktflnc,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
                 "Allowable divertor heat fluence (MW-yr/m2)",
                 "(adivflnc)",
                 cv.adivflnc,
+                "IP",
             )
             po.ovarre(
                 self.outfile,
