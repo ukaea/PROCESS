@@ -123,7 +123,7 @@ module physics_variables
   real(dp) :: dnalp
   !! thermal alpha density (/m3)
 
-  real(dp) :: dnbeam
+  real(dp) :: beam_density
   !! hot beam ion density, variable (/m3)
 
   real(dp) :: beam_density_out
@@ -946,7 +946,7 @@ module physics_variables
     dlamie = 0.0D0
     dlimit = 0.0D0
     dnalp = 0.0D0
-    dnbeam = 0.0D0
+    beam_density = 0.0D0
     beam_density_out = 0.0D0
     dnbeta = 3.5D0
     dnelimt = 0.0D0
