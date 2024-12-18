@@ -3,6 +3,7 @@ from process import fortran as ft
 import numpy as np
 import logging
 from process.final import finalise
+from process.objectives import objective_function
 from process.io.mfile import MFile
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from typing import Union, Tuple, TYPE_CHECKING
@@ -70,7 +71,7 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc)
             # Evaluate objective function and constraints
-            objf = ft.function_evaluator.funfom()
+            objf = objective_function(ft.numerics.minmax)
             conf, _, _, _, _ = ft.constraints.constraint_eqns(m, -1)
 
             if objf_prev is None and conf_prev is None:
