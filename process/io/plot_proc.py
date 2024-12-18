@@ -741,6 +741,22 @@ def plot_nprofile(prof, demo_ranges):
             alpha=0.4,
         )
         prof.minorticks_on()
+
+        # Add text box with density profile parameters
+        textstr_density = '\n'.join((
+            r'$n_{\text{e,ped}}$: ' + f'{neped:.3e} m$^{{-3}}$',
+            r'$n_{\text{e,sep}}$: ' + f'{nesep:.3e} m$^{{-3}}$',
+            r'$\rho_{\text{ped,n}}$: ' + f'{rhopedn:.3f}',
+            r'$\alpha_{\text{n}}$: ' + f'{alphan:.3f}',
+            r'$n_{\text{e,0}}$: ' + f'{ne0:.3e} m$^{{-3}}$',
+            r'$f_{\text{GW e,sep}}$: ' + f'{neped:.3f}',
+            r'$f_{\text{GW e,ped}}$: ' + f'{nesep:.3f}'
+        ))
+
+        props_density = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        prof.text(0.05, -0.25, textstr_density, transform=prof.transAxes, fontsize=12,
+                    verticalalignment='top', bbox=props_density)
+
     # ---
 
 
@@ -755,9 +771,7 @@ def plot_tprofile(prof, demo_ranges):
     prof.set_title("Temperature profile")
 
     if ipedestal == 1:
-        rhocore1 = np.linspace(0, 0.9 * rhopedt)
-        rhocore2 = np.linspace(0.9 * rhopedt, rhopedt)
-        rhocore = np.append(rhocore1, rhocore2)
+        rhocore = np.linspace(0.0, rhopedt)
         tcore = teped + (te0 - teped) * (1 - (rhocore / rhopedt) ** tbeta) ** alphat
 
         rhosep = np.linspace(rhopedt, 1)
@@ -770,7 +784,8 @@ def plot_tprofile(prof, demo_ranges):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         te = te0 * (1 - rho**2) ** alphat
-    prof.plot(rho, te)
+    prof.plot(rho, te, color='blue')
+    prof.plot(rho, te[:]*1.0369, color='red')
 
     # Ranges
     # ---
@@ -798,6 +813,19 @@ def plot_tprofile(prof, demo_ranges):
             alpha=0.4,
         )
         prof.minorticks_on()
+        
+    # Add text box with temperature profile parameters
+    textstr_temperature = '\n'.join((
+            r'$T_{\text{e,ped}}$: '+ f'{teped:.3e} m$^{{-3}}$',
+            r'$T_{\text{e,sep}}$: '+ f'{tesep:.3e} m$^{{-3}}$',
+            r'$\rho_{\text{ped,T}}$: '+ f'{rhopedt:.3f}',
+            r'$\alpha_{\text{T}}$: '+ f'{alphat:.3f}',
+            r'$T_{\text{e,0}}$: '+ f'{te0:.3e} m$^{{-3}}$'
+        ))
+
+    props_temperature = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    prof.text(0.05, -0.25, textstr_temperature, transform=prof.transAxes, fontsize=12,
+                verticalalignment='top', bbox=props_temperature)    
     # ---
 
 
@@ -3234,30 +3262,29 @@ def main_plot(
         print("          -> No impurity plot done\033[0m")
 
     # Plot poloidal cross-section
-    plot_1 = fig2.add_subplot(221, aspect="equal")
-    poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
+    #plot_1 = fig2.add_subplot(221, aspect="equal")
+    #poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
-    plot_2 = fig2.add_subplot(222, aspect="equal")
-    toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
+    #plot_2 = fig2.add_subplot(222, aspect="equal")
+    #toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot color key
-    plot_3 = fig2.add_subplot(241)
-    color_key(plot_3, m_file_data, scan, colour_scheme)
+    #plot_3 = fig2.add_subplot(241)
+    #color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
-    plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
+    plot_4 = fig2.add_subplot(231)  # , aspect= 0.05)
     fig2.subplots_adjust(wspace=0.3)
     plot_nprofile(plot_4, demo_ranges)
 
     # Plot temperature profiles
-    plot_5 = fig2.add_subplot(235)  # , aspect= 1/35)
+    plot_5 = fig2.add_subplot(232)  # , aspect= 1/35)
     plot_tprofile(plot_5, demo_ranges)
 
     # plot_qprofile(plot_6)
-    plot_6 = fig2.add_subplot(236)  # , aspect=2)
-    if os.path.isdir(imp):
-        plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
+    plot_6 = fig2.add_subplot(233)  # , aspect=2)
+    plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
 
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
@@ -3434,6 +3461,9 @@ def main(args=None):
     global alphat
     global ne0
     global te0
+    global fgwped
+    global fgwsep
+    global tratio
 
     ipedestal = m_file.data["ipedestal"].get_scan(scan)
     neped = m_file.data["neped"].get_scan(scan)
@@ -3447,6 +3477,9 @@ def main(args=None):
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["ne0"].get_scan(scan)
     te0 = m_file.data["te0"].get_scan(scan)
+    fgwped = m_file.data["fgwped_out"].get_scan(scan)
+    fgwsep = m_file.data["fgwsep_out"].get_scan(scan)
+    tratio = m_file.data["tratio"].get_scan(scan)
 
     # Plasma
     global triang
