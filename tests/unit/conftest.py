@@ -2,9 +2,10 @@
 
 Define fixtures that will be shared across unit test modules.
 """
+
 import pytest
-from process import fortran
 from pathlib import Path
+from process.init import init_all_module_vars
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -17,7 +18,7 @@ def reinit_fix():
     the module variable values. autouse ensures that this fixture is used
     automatically by any test function in the unit directory.
     """
-    fortran.init_module.init_all_module_vars()
+    init_all_module_vars()
 
 
 @pytest.fixture()

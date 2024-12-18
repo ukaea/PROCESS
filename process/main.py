@@ -73,6 +73,7 @@ from process.fw import Fw
 from process.current_drive import CurrentDrive
 from process.impurity_radiation import initialise_imprad
 from process.caller import write_output_files
+import process.init as init
 
 import process
 
@@ -298,8 +299,8 @@ class VaryRun:
         config = RunProcessConfig(self.config_file)
         config.setup()
 
-        fortran.init_module.init_all_module_vars()
-        fortran.init_module.init()
+        init.init_all_module_vars()
+        init.init_process()
 
         neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
@@ -386,7 +387,6 @@ class SingleRun:
         This is separate from init to allow model instances to be modified before a run.
         """
         self.validate_user_model()
-        self.run_tests()
         self.call_solver()
         self.run_scan(self.solver)
         self.finish()
@@ -399,7 +399,7 @@ class SingleRun:
         This "resets" all module variables to their initialised values, so each
         new run doesn't have any side-effects from previous runs.
         """
-        fortran.init_module.init_all_module_vars()
+        init.init_all_module_vars()
 
     def set_filenames(self):
         """Validate the input filename and create other filenames from it."""
@@ -455,19 +455,13 @@ class SingleRun:
         """Run the init module to call all initialisation routines."""
         initialise_imprad()
         # Reads in input file
-        fortran.init_module.init()
+        init.init_process()
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
         n = int(fortran.numerics.nvar)
         # [:n] as array always at max size: contains 0s
         fortran.numerics.ixc[:n].sort()
-
-    def run_tests(self):
-        """Run tests if required to by input file."""
-        # TODO This would do better in a separate input validation module.
-        if fortran.global_variables.run_tests == 1:
-            fortran.main_module.runtests()
 
     def call_solver(self):
         """Call the equation solver (HYBRD)."""

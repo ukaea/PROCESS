@@ -1,6 +1,7 @@
 import pytest
 from process import fortran
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
+import process.init as init
 
 
 def _create_input_file(directory, content: str):
@@ -57,6 +58,6 @@ def test_parse_real(epsvmc, expected, tmp_path):
         fortran.global_variables.fileprefix,
         _create_input_file(tmp_path, f"epsvmc = {epsvmc}"),
     )
-    fortran.init_module.init()
+    init.init_process()
 
     assert fortran.numerics.epsvmc.item() == expected

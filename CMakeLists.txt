@@ -100,7 +100,6 @@ LIST(APPEND PROCESS_SRCS
     structure_variables.f90
     output.f90
     init_module.f90
-    main_module.f90
     error_handling.f90
     global_variables.f90
     constraint_variables.f90
@@ -118,6 +117,7 @@ LIST(APPEND PROCESS_SRCS
     stellarator_variables.f90
     stellarator.f90
     stellarator_configuration.f90
+    input.f90
 )
 
 PREPROCESS()
