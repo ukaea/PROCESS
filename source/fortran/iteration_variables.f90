@@ -3570,25 +3570,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_161
-    !! <LI> (161) fbetatry_lower (f-value for equation 84)
-    use constraint_variables, only: fbetatry_lower
+    !! <LI> (161) fbeta_min (f-value for equation 84)
+    use constraint_variables, only: fbeta_min
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(161) = 'fbetatry_lower     '
+    lablxc(161) = 'fbeta_min     '
     boundl(161) = 0.010D0
     boundu(161) = 1.000D0
   end subroutine init_itv_161
 
   real(kind(1.d0)) function itv_161()
-    use constraint_variables, only: fbetatry_lower
+    use constraint_variables, only: fbeta_min
     implicit none
-    itv_161 = fbetatry_lower
+    itv_161 = fbeta_min
   end function itv_161
 
   subroutine set_itv_161(ratio)
-    use constraint_variables, only: fbetatry_lower
+    use constraint_variables, only: fbeta_min
     real(kind(1.d0)) :: ratio
-    fbetatry_lower = ratio
+    fbeta_min = ratio
   end subroutine set_itv_161
 
   !---------------------------------

@@ -3132,15 +3132,15 @@ contains
       !! residual error in physical units; output string; units string
       !!  (beta-beta_fast_alpha) > beta_min
       !! #=# physics
-      !! #=#=# beta_fast_alpha, beta, fbetatry_lower
+      !! #=#=# beta_fast_alpha, beta, fbeta_min
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbetatry_lower : input real : f-value for constraint beta-beta_fast_alpha > beta_min
+      !! fbeta_min : input real : f-value for constraint beta-beta_fast_alpha > beta_min
       !! beta_min : input real :  Lower limit for beta
       !! beta : input real :  plasma beta
       !! beta_fast_alpha : input real : Alpha particle beta
 
       use physics_variables, only: beta_min, beta, beta_fast_alpha
-      use constraint_variables, only: fbetatry_lower
+      use constraint_variables, only: fbeta_min
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3149,7 +3149,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
 
-      tmp_cc = 1.0D0 - fbetatry_lower * (beta-beta_fast_alpha)/beta_min
+      tmp_cc = 1.0D0 - fbeta_min * (beta-beta_fast_alpha)/beta_min
       tmp_con = beta_min * (1.0D0 - tmp_cc)
       tmp_err = (beta-beta_fast_alpha) * tmp_cc
       tmp_symbol = '>'

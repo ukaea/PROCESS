@@ -39,7 +39,7 @@ module constraint_variables
   real(dp) :: fbeta_max
   !! f-value for beta limit (`constraint equation 24`, `iteration variable 36`)
 
-  real(dp) :: fbetatry_lower
+  real(dp) :: fbeta_min
   !! f-value for (lower) beta limit (`constraint equation 84`, `iteration variable 173`)
 
   real(dp) :: fcpttf
@@ -320,7 +320,7 @@ module constraint_variables
     fbeta = 1.0D0
     fbeta_poloidal = 1.0D0
     fbeta_max = 1.0D0
-    fbetatry_lower = 1.0D0
+    fbeta_min = 1.0D0
     fcpttf = 1.0D0
     fcwr = 1.0D0
     fdene = 1.0D0

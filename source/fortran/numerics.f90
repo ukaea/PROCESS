@@ -186,7 +186,7 @@ module numerics
   !!  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)
   !!  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)
   !!  <LI> (83) Radial build consistency for stellarators (itv 172 f_avspace)
-  !!  <LI> (84) Lower limit for beta (itv 173 fbetatry_lower)
+  !!  <LI> (84) Lower limit for beta (itv 173 fbeta_min)
   !!  <LI> (85) Constraint for CP lifetime
   !!  <LI> (86) Constraint for TF coil turn dimension
   !!  <LI> (87) Constraint for cryogenic power
@@ -362,7 +362,7 @@ module numerics
   !! <LI> (158) croco_thick : Thickness of CroCo copper tube (m)
   !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)
   !! <LI> (160) f_avspace (f-value for equation 83)
-  !! <LI> (161) fbetatry_lower (f-value for equation 84)
+  !! <LI> (161) fbeta_min (f-value for equation 84)
   !! <LI> (162) r_cp_top : Top outer radius of the centropost (ST only) (m)
   !! <LI> (163) f_t_turn_tf : f-value for TF coils WP trurn squared dimension constraint
   !! <LI> (164) f_crypmw : f-value for cryogenic plant power

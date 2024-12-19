@@ -238,7 +238,7 @@ contains
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
       ft_current_ramp_up, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
       fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta, fjohc, &
-      fflutf, bmxlim, t_burn_min, fbetatry_lower, fecrh_ignition, fstr_wp, fncycle
+      fflutf, bmxlim, t_burn_min, fbeta_min, fecrh_ignition, fstr_wp, fncycle
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
       cost_factor_vv, cfind, uccry, fcap0cp, uccase, uuves, cconshtf, conf_mag, &
       ucbllipb, ucfuel, uumag, ucpfbs, ireactor, uucd, div_umain_time, div_nu, &
@@ -798,8 +798,8 @@ contains
        case ('fbeta_max')
           call parse_real_variable('fbeta_max', fbeta_max, 0.001D0, 10.0D0, &
                'F-value for beta limit')
-       case ('fbetatry_lower')
-          call parse_real_variable('fbetatry_lower', fbetatry_lower, 0.001D0, 10.0D0, &
+       case ('fbeta_min')
+          call parse_real_variable('fbeta_min', fbeta_min, 0.001D0, 10.0D0, &
                'F-value for (lower) beta limit')
        case ('fecrh_ignition')
           call parse_real_variable('fecrh_ignition', fecrh_ignition, 0.001D0, 10.0D0, &
