@@ -314,7 +314,7 @@ class PFCoil:
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
-                        + pv.betap
+                        + pv.beta_poloidal
                         + (pv.rli / 2.0e0)
                         - 1.5e0
                     )
@@ -398,7 +398,7 @@ class PFCoil:
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
-                        + pv.betap
+                        + pv.beta_poloidal
                         + (pv.rli / 2.0e0)
                         - 1.5e0
                     )

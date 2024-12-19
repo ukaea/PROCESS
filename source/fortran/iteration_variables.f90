@@ -192,25 +192,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_8
-    !! <LI> ( 8) fbeta (f-value for equation 6)
+    !! <LI> ( 8) fbeta_poloidal_eps (f-value for equation 6)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(8) = 'fbeta         '
+    lablxc(8) = 'fbeta_poloidal_eps         '
     boundl(8) = 0.001D0
     boundu(8) = 1.000D0
   end subroutine init_itv_8
 
   real(kind(1.d0)) function itv_8()
-    use constraint_variables, only: fbeta
+    use constraint_variables, only: fbeta_poloidal_eps
     implicit none
-    itv_8 = fbeta
+    itv_8 = fbeta_poloidal_eps
   end function itv_8
 
   subroutine set_itv_8(ratio)
-    use constraint_variables, only: fbeta
+    use constraint_variables, only: fbeta_poloidal_eps
     implicit none
     real(kind(1.d0)) :: ratio
-    fbeta = ratio
+    fbeta_poloidal_eps = ratio
   end subroutine set_itv_8
 
   !---------------------------------
@@ -837,25 +837,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_36
-    !! <LI> (36) fbetatry (f-value for equation 24)
+    !! <LI> (36) fbeta_max (f-value for equation 24)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(36) = 'fbetatry      '
+    lablxc(36) = 'fbeta_max      '
     boundl(36) = 0.001D0
     boundu(36) = 1.000D0
   end subroutine init_itv_36
 
   real(kind(1.d0)) function itv_36()
-    use constraint_variables, only: fbetatry
+    use constraint_variables, only: fbeta_max
     implicit none
-    itv_36 = fbetatry
+    itv_36 = fbeta_max
   end function itv_36
 
   subroutine set_itv_36(ratio)
-    use constraint_variables, only: fbetatry
+    use constraint_variables, only: fbeta_max
     implicit none
     real(kind(1.d0)) :: ratio
-    fbetatry = ratio
+    fbeta_max = ratio
   end subroutine set_itv_36
 
   !---------------------------------
@@ -1788,25 +1788,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_79
-    !! <LI> (79) fbetap (f-value for equation 48)
+    !! <LI> (79) fbeta_poloidal (f-value for equation 48)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(79) = 'fbetap        '
+    lablxc(79) = 'fbeta_poloidal        '
     boundl(79) = 0.001D0
     boundu(79) = 1.000D0
   end subroutine init_itv_79
 
   real(kind(1.d0)) function itv_79()
-    use constraint_variables, only: fbetap
+    use constraint_variables, only: fbeta_poloidal
     implicit none
-    itv_79 = fbetap
+    itv_79 = fbeta_poloidal
   end function itv_79
 
   subroutine set_itv_79(ratio)
-    use constraint_variables, only: fbetap
+    use constraint_variables, only: fbeta_poloidal
     implicit none
     real(kind(1.d0)) :: ratio
-    fbetap = ratio
+    fbeta_poloidal = ratio
   end subroutine set_itv_79
 
   !! <LI> (80) NOT USED
@@ -3570,25 +3570,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_161
-    !! <LI> (161) fbetatry_lower (f-value for equation 84)
-    use constraint_variables, only: fbetatry_lower
+    !! <LI> (161) fbeta_min (f-value for equation 84)
+    use constraint_variables, only: fbeta_min
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(161) = 'fbetatry_lower     '
+    lablxc(161) = 'fbeta_min     '
     boundl(161) = 0.010D0
     boundu(161) = 1.000D0
   end subroutine init_itv_161
 
   real(kind(1.d0)) function itv_161()
-    use constraint_variables, only: fbetatry_lower
+    use constraint_variables, only: fbeta_min
     implicit none
-    itv_161 = fbetatry_lower
+    itv_161 = fbeta_min
   end function itv_161
 
   subroutine set_itv_161(ratio)
-    use constraint_variables, only: fbetatry_lower
+    use constraint_variables, only: fbeta_min
     real(kind(1.d0)) :: ratio
-    fbetatry_lower = ratio
+    fbeta_min = ratio
   end subroutine set_itv_161
 
   !---------------------------------

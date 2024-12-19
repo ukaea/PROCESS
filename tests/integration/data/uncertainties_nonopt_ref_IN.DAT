@@ -46,7 +46,7 @@ ixc = 18 * q
 boundl(18) = 3.5
 ixc = 29 * bore
 boundl(29) = 0.1
-ixc = 36 * fbetatry
+ixc = 36 * fbeta_max
 ixc = 37 * coheof
 ixc = 38 * fjohc
 boundu(38) = 1.0
@@ -124,7 +124,7 @@ vvblgap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Constraint Variables---------------*
 
-fbetatry = 0.4815 * F-value for beta limit
+fbeta_max = 0.4815 * F-value for beta limit
 fdene    = 1.2 * F-value for density limit
 ffuspow  = 1 * F-value for maximum fusion power
 fjohc    = 0.25 * F-value for central solenoid current at end-of-flattop
@@ -254,16 +254,16 @@ alphan   = 1.00 * Density profile index
 alphat   = 1.45 * Temperature profile index
 aspect   = 3.1 * Aspect ratio (iteration variable 1)
 dene     = 7.983e+19 * Electron density (/m3) (iteration variable 6)
-dnbeta   = 3.0 * (troyon-like) coefficient for beta scaling;
+beta_norm_max   = 3.0 * (troyon-like) coefficient for beta scaling;
 fkzohm   = 1.0245 * Zohm elongation scaling adjustment factor (ishape=2; 3)
 fvsbrnni = 0.4434 * Fraction of the plasma current produced by
 gamma    = 0.3 * Ejima coefficient for resistive startup v-s formula
 hfact    = 1.1 * H factor on energy confinement times (iteration variable 10)
 i_bootstrap_current     = 4 * Switch for bootstrap current scaling;
-iculbl   = 1 * Switch for beta limit scaling (constraint equation 24);
+i_beta_component   = 1 * Switch for beta limit scaling (constraint equation 24);
 i_plasma_current    = 4 * Switch for plasma current scaling to use;
 i_density_limit   = 7 * Switch for density limit to enforce (constraint equation 5);
-ifalphap = 1 * Switch for fast alpha pressure calculation;
+i_beta_fast_alpha = 1 * Switch for fast alpha pressure calculation;
 ifispact = 0 * Switch for neutronics calculations;
 iinvqd   = 1 * Switch for inverse quadrature in l-mode scaling laws 5 and 9;
 ipedestal = 1 * Switch for pedestal profiles;
@@ -346,7 +346,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      ohcth          =  5.5242E-01
                      q              =  3.5000E+00
                      bore           =  2.3322E+00
-                     fbetatry       =  4.8251E-01
+                     fbeta_max       =  4.8251E-01
                      coheof         =  2.0726E+07
                      fjohc          =  5.7941E-01
                      fjohc0         =  5.3923E-01
