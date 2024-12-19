@@ -209,7 +209,7 @@ module numerics
   !! <LI> ( 5) beta
   !! <LI> ( 6) dene
   !! <LI> ( 7) rnbeam
-  !! <LI> ( 8) fbeta (f-value for equation 6)
+  !! <LI> ( 8) fbeta_poloidal_eps (f-value for equation 6)
   !! <LI> ( 9) fdene (f-value for equation 5)
   !! <LI> (10) hfact
   !! <LI> (11) pheat
@@ -538,7 +538,7 @@ contains
       'ne0 > neped                      ', &
       'toroidalgap >  tftort            ', &
       'available_space > required_space ', &
-      'beta > beta_min          ', &
+      'beta > beta_min                  ', &
       'CP lifetime                      ', &
       'TFC turn dimension               ', &
       'Cryogenic plant power            ', &

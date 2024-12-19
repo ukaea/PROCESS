@@ -151,10 +151,9 @@ $$
 
 This constraint can be activated by stating `icc = 6` in the input file [^6].
 
-To apply a limit to the value of $\epsilon\beta_p$, where $\epsilon = a/R$ is
-the inverse aspect ratio and $\beta_p$ is the poloidal $\beta$, constraint equation no. 6 should be 
-turned on with iteration variable no. 8 (`fbeta`). The limiting value of $\epsilon\beta_p$ 
-is be set using input parameter `beta_poloidal_eps_max`.
+The limiting value of $\epsilon\beta_p$ is be set using input parameter `beta_poloidal_eps_max`.
+
+The scaling value `fbeta_poloidal_eps` can be varied also.
 
 !!! note "Origin of the $\epsilon\beta_p$ limit"
 

@@ -146,6 +146,7 @@ OBS_VARS = {
     "ifalphap": "i_beta_fast_alpha",
     "betalim": "beta_max",
     "betalim_lower": "beta_min",
+    "fbeta": "fbeta_poloidal_eps",
 }
 
 OBS_VARS_HELP = {

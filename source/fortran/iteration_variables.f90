@@ -192,25 +192,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_8
-    !! <LI> ( 8) fbeta (f-value for equation 6)
+    !! <LI> ( 8) fbeta_poloidal_eps (f-value for equation 6)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(8) = 'fbeta         '
+    lablxc(8) = 'fbeta_poloidal_eps         '
     boundl(8) = 0.001D0
     boundu(8) = 1.000D0
   end subroutine init_itv_8
 
   real(kind(1.d0)) function itv_8()
-    use constraint_variables, only: fbeta
+    use constraint_variables, only: fbeta_poloidal_eps
     implicit none
-    itv_8 = fbeta
+    itv_8 = fbeta_poloidal_eps
   end function itv_8
 
   subroutine set_itv_8(ratio)
-    use constraint_variables, only: fbeta
+    use constraint_variables, only: fbeta_poloidal_eps
     implicit none
     real(kind(1.d0)) :: ratio
-    fbeta = ratio
+    fbeta_poloidal_eps = ratio
   end subroutine set_itv_8
 
   !---------------------------------

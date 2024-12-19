@@ -670,15 +670,15 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for epsilon beta-poloidal upper limit
       !! #=# physics
-      !! #=#=# fbeta, beta_poloidal_eps_max
+      !! #=#=# fbeta_poloidal_eps, beta_poloidal_eps_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbeta : input real : f-value for epsilon beta-poloidal
+      !! fbeta_poloidal_eps : input real : f-value for epsilon beta-poloidal
       !! beta_poloidal_eps_max : input real : maximum (eps*beta_poloidal)
       !! eps : input real : inverse aspect ratio
       !! beta_poloidal : input real : poloidal beta
       use physics_variables, only: beta_poloidal_eps_max, eps, beta_poloidal
-      use constraint_variables, only: fbeta, fbeta
+      use constraint_variables, only: fbeta_poloidal_eps
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -686,7 +686,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fbeta * beta_poloidal_eps_max/(eps*beta_poloidal)
+      tmp_cc =  1.0D0 - fbeta_poloidal_eps * beta_poloidal_eps_max/(eps*beta_poloidal)
       tmp_con = beta_poloidal_eps_max * (1.0D0 - tmp_cc)
       tmp_err = (eps*beta_poloidal) * tmp_cc
       tmp_symbol = '<'

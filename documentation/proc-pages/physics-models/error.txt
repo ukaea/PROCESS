@@ -411,7 +411,7 @@ Switch \texttt{gtscale} determines whether the beta \(g\) coefficient
 
 To apply a limit to the value of \(\epsilon.\beta_p\), where
 \(\epsilon = a/R\) is the inverse aspect ratio, constraint equation no.
-6 should be turned on with iteration variable no. 8 (\texttt{fbeta}).
+6 should be turned on with iteration variable no. 8 (\texttt{fbeta_poloidal_eps}).
 The limiting value of \(\epsilon.\beta_p\) should be set using input
 parameter \texttt{beta_poloidal_eps_max}.
 

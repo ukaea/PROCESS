@@ -292,7 +292,7 @@ tratio = 1.0
 *icc = 6
 * DESCRIPTION:   Equation for epsilon beta-poloidal upper limit
 * JUSTIFICATION: Turned off, not in use 
-* VARIABLES:     eps,fbeta Rest calculated in-situ
+* VARIABLES:     eps,fbeta_poloidal_eps Rest calculated in-situ
 
 *beta_poloidal_eps_max
 * DESCRIPTION:   Max epsilon*beta value
