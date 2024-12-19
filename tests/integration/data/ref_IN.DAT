@@ -254,7 +254,7 @@ alphan   = 1.00 * Density profile index
 alphat   = 1.45 * Temperature profile index
 aspect   = 3.1 * Aspect ratio (iteration variable 1)
 dene     = 7.983e+19 * Electron density (/m3) (iteration variable 6)
-beta_norm_limit_upper   = 3.0 * (troyon-like) coefficient for beta scaling;
+beta_norm_max   = 3.0 * (troyon-like) coefficient for beta scaling;
 fkzohm   = 1.0245 * Zohm elongation scaling adjustment factor (ishape=2; 3)
 fvsbrnni = 0.4434 * Fraction of the plasma current produced by
 gamma    = 0.3 * Ejima coefficient for resistive startup v-s formula

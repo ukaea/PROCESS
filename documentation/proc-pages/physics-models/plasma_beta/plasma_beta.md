@@ -99,7 +99,7 @@ $$\begin{aligned}
 \end{aligned}$$
 
 where $B_0$ is the axial vacuum toroidal field. The beta
-coefficient $g$ is set using input parameter `beta_norm_limit_upper`. To apply the beta limit, 
+coefficient $g$ is set using input parameter `beta_norm_max`. To apply the beta limit, 
 constraint equation 24 should be turned on with iteration variable 36
 (`fbeta_max`). 
 
@@ -114,18 +114,18 @@ By default, $\beta$ is defined with respect to the total equilibrium B-field [^2
 
 ### Setting the Beta $g$ Coefficient
 
-Switch `iprofile` determines how the beta $g$ coefficient `beta_norm_limit_upper` should 
+Switch `iprofile` determines how the beta $g$ coefficient `beta_norm_max` should 
 be calculated.
 
 | `iprofile` | Description |
 | :-: | - |
-| 0 | `alphaj`, `rli` and `beta_norm_limit_upper` are inputs. |
-| 1 (default) | `alphaj`, `rli` and `beta_norm_limit_upper` are calulcated consistently. `beta_norm_limit_upper` calculated using $g=4l_i$ [^3].  This is only recommended for high aspect ratio tokamaks.|
-| 2 | `alphaj` and `rli` are inputs. `beta_norm_limit_upper` calculated using $g=2.7(1+5\epsilon^{3.5})$ (which gives g = 3.0 for aspect ratio = 3) |
-| 3 | `alphaj` and `rli` are inputs. `beta_norm_limit_upper` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]|
-| 4 | `alphaj` and `beta_norm_limit_upper` are inputs. `rli` calculated from elongation [^4]. This is only recommended for spherical tokamaks.|
-| 5 | `alphaj` is an input.  `rli` calculated from elongation and `beta_norm_limit_upper` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]. This is only recommended for spherical tokamaks.|
-| 6 | `alphaj` and `c_beta` are inputs.  `rli` calculated from elongation and `beta_norm_limit_upper` calculated using $C_{\beta}=(g-3.7)F_p / 12.5-3.5F_p$, where $F_p$ is the pressure peaking and $C_{\beta}$ is the destabilisation papermeter (default 0.5)[^5]. See Section 2.4 of Tholerus et al. (2024) for a more detailed description.  <u> This is only recommended for spherical tokamaks <u>.|
+| 0 | `alphaj`, `rli` and `beta_norm_max` are inputs. |
+| 1 (default) | `alphaj`, `rli` and `beta_norm_max` are calulcated consistently. `beta_norm_max` calculated using $g=4l_i$ [^3].  This is only recommended for high aspect ratio tokamaks.|
+| 2 | `alphaj` and `rli` are inputs. `beta_norm_max` calculated using $g=2.7(1+5\epsilon^{3.5})$ (which gives g = 3.0 for aspect ratio = 3) |
+| 3 | `alphaj` and `rli` are inputs. `beta_norm_max` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]|
+| 4 | `alphaj` and `beta_norm_max` are inputs. `rli` calculated from elongation [^4]. This is only recommended for spherical tokamaks.|
+| 5 | `alphaj` is an input.  `rli` calculated from elongation and `beta_norm_max` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]. This is only recommended for spherical tokamaks.|
+| 6 | `alphaj` and `c_beta` are inputs.  `rli` calculated from elongation and `beta_norm_max` calculated using $C_{\beta}=(g-3.7)F_p / 12.5-3.5F_p$, where $F_p$ is the pressure peaking and $C_{\beta}$ is the destabilisation papermeter (default 0.5)[^5]. See Section 2.4 of Tholerus et al. (2024) for a more detailed description.  <u> This is only recommended for spherical tokamaks <u>.|
 
 Further details on the calculation of `alphaj` and `rli` is given in [Plasma Current](./plasma_current.md).
 

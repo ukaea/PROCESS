@@ -314,7 +314,7 @@ beta = 0.2
 boundl(5) = 0.01
 boundu(5) = 1.0
 * DESCRIPTION:   Total Plasma Beta, 
-* JUSTIFICATION: Beta is limited by beta_norm_limit_upper
+* JUSTIFICATION: Beta is limited by beta_norm_max
 
 ixc = 36
 fbeta_max = 0.75
@@ -334,7 +334,7 @@ i_beta_component = 3
 * = 2 apply limit to thermal + neutral beam beta
 * = 3 apply limit to toroidal beta
 
-beta_norm_limit_upper = 5.0 
+beta_norm_max = 5.0 
 * DESCRIPTION:   (Troyon-like) coefficient for beta scaling
 * JUSTIFICATION: 
 * REFERENCE:     Ono & Kaita (2015), Physics of Plasmas, 22, 040501
@@ -342,9 +342,9 @@ beta_norm_limit_upper = 5.0
 
 *gtscale = 
 * DESCRIPTION:   Flag to scale beta coefficient with aspect, iprofile=0 only
-* = 0 do not scale beta_norm_limit_upper with eps
-* = 1 scale beta_norm_limit_upper with aspect, original scaling
-* = 2 scale beta_norm_limit_upper with aspect, Menard scaling
+* = 0 do not scale beta_norm_max with eps
+* = 1 scale beta_norm_max with aspect, original scaling
+* = 2 scale beta_norm_max with aspect, Menard scaling
 * JUSTIFICATION: Working at fixed normalized beta, default = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2975,8 +2975,8 @@ i_pfirsch_schluter_current = 1
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 iprofile = 0
-* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli beta_norm_limit_upper)
-* =0 use input values for alphaj, rli, beta_norm_limit_upper (but see gtscale option)
+* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli beta_norm_max)
+* =0 use input values for alphaj, rli, beta_norm_max (but see gtscale option)
 * =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
 * JUSTIFICATION: These consistency equations don't hold for STs
 * REFERENCE:     

@@ -318,7 +318,7 @@ aspect   = 3.0 * aspect ratio (`iteration variable 1`)
 beta     = 0.03230408815355488 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
 bt       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
 dene     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6`)
-beta_norm_limit_upper   = 3.0 * Troyon-like coefficient for beta scaling calculated
+beta_norm_max   = 3.0 * Troyon-like coefficient for beta scaling calculated
 fgwsep   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
 fkzohm   = 1.02 * Zohm elongation scaling adjustment factor (`ishape=2; 3`)
 fvsbrnni = 0.4242184436680697 * fraction of the plasma current produced by non-inductive means (`iteration variable 44`)

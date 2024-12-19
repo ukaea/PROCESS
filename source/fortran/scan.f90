@@ -47,7 +47,7 @@ module scan_module
   !!         <LI> 8  fqval
   !!         <LI> 9  te
   !!         <LI> 10 boundu(15: fvs)
-  !!         <LI> 11 beta_norm_limit_upper
+  !!         <LI> 11 beta_norm_max
   !!         <LI> 12 bootstrap_current_fraction_max
   !!         <LI> 13 boundu(10: hfact)
   !!         <LI> 14 fiooic
@@ -603,7 +603,7 @@ contains
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
         n_liq_recirc, bz_channel_conduct_liq, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, pitch
 	use impurity_radiation_module, only: fimp, coreradius, impurity_arr_frac
-    use physics_variables, only: kappa, beta_norm_limit_upper, te, aspect, ftar, bt, &
+    use physics_variables, only: kappa, beta_norm_max, te, aspect, ftar, bt, &
         rad_fraction_sol, triang, rmajor, beamfus0, hfact
     use numerics, only: epsvmc, boundu, boundl
     use tfcoil_variables, only: tmargmin_tf, sig_tf_case_max, n_pancake, oacdcp, &
@@ -655,8 +655,8 @@ contains
             boundu(15) = swp(iscn)
             vlab = 'boundu(15)' ; xlab = 'Volt-second_upper_bound'
         case (11)
-            beta_norm_limit_upper = swp(iscn)
-            vlab = 'beta_norm_limit_upper' ; xlab = 'Beta_coefficient'
+            beta_norm_max = swp(iscn)
+            vlab = 'beta_norm_max' ; xlab = 'Beta_coefficient'
         case (12)
             bootstrap_current_fraction_max = swp(iscn)
             vlab = 'bootstrap_current_fraction_max' ; xlab = 'Bootstrap_fraction'

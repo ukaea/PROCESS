@@ -153,7 +153,7 @@ module physics_variables
   real(dp) :: beam_density_out
   !! hot beam ion density from calculation (/m3)
 
-  real(dp) :: beta_norm_limit_upper
+  real(dp) :: beta_norm_max
   !! Troyon-like coefficient for beta scaling
 
   real(dp) :: dnelimt
@@ -398,13 +398,13 @@ module physics_variables
   integer :: iprofile
   !! switch for current profile consistency:
   !!
-  !! - =0 use input values for alphaj, rli, beta_norm_limit_upper
+  !! - =0 use input values for alphaj, rli, beta_norm_max
   !! - =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
-  !! - =2 use input values for alphaj, rli. Scale beta_norm_limit_upper with aspect ratio (original scaling)
-  !! - =3 use input values for alphaj, rli. Scale beta_norm_limit_upper with aspect ratio (Menard scaling)
-  !! - =4 use input values for alphaj, beta_norm_limit_upper. Set rli from elongation (Menard scaling)
-  !! - =5 use input value for alphaj.  Set rli and beta_norm_limit_upper from Menard scaling
-  !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and beta_norm_limit_upper from Tholerus
+  !! - =2 use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (original scaling)
+  !! - =3 use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (Menard scaling)
+  !! - =4 use input values for alphaj, beta_norm_max. Set rli from elongation (Menard scaling)
+  !! - =5 use input value for alphaj.  Set rli and beta_norm_max from Menard scaling
+  !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and beta_norm_max from Tholerus
 
   integer :: iradloss
   !! switch for radiation loss term usage in power balance (see User Guide):
@@ -979,7 +979,7 @@ module physics_variables
     dnalp = 0.0D0
     dnbeam = 0.0D0
     beam_density_out = 0.0D0
-    beta_norm_limit_upper = 3.5D0
+    beta_norm_max = 3.5D0
     dnelimt = 0.0D0
     dnitot = 0.0D0
     dnla = 0.0D0

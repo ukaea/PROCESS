@@ -363,7 +363,7 @@ alphan = 1.00
 alphat = 1.45 
 
 * (troyon-like) coefficient for beta scaling
-beta_norm_limit_upper = 3.0
+beta_norm_max = 3.0
 
 * Zohm elongation scaling adjustment factor (ishape=2; 3)
 fkzohm = 1.02

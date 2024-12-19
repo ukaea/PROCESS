@@ -159,7 +159,7 @@ def main(args=None):
         "fqval",
         "te",
         "boundu(15)",
-        "beta_norm_limit_upper",
+        "beta_norm_max",
         "bootstrap_current_fraction_max",
         "boundu(10)",
         "fiooic",
