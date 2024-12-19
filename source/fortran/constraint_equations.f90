@@ -625,7 +625,7 @@ contains
       !! #=#=# fdene, dnelimt
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! idensl : input integer : switch for density limit to enforce (constraint equation 5):<UL>
+      !! i_density_limit : input integer : switch for density limit to enforce (constraint equation 5):<UL>
       !! <LI> = 1 old ASDEX;
       !! <LI> = 2 Borrass model for ITER (I);
       !! <LI> = 3 Borrass model for ITER (II);
@@ -637,7 +637,7 @@ contains
       !! dene : input real : electron density (/m3)
       !! dnelimt : input real : density limit (/m3)
       !! dnla : input real : line averaged electron density (m-3)
-      use physics_variables, only: idensl, dnelimt, dnla, dene
+      use physics_variables, only: i_density_limit, dnelimt, dnla, dene
       use constraint_variables, only: fdene
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -647,7 +647,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
 	   ! Apply Greenwald limit to line-averaged density
-      if (idensl == 7) then
+      if (i_density_limit == 7) then
          tmp_cc     = 1.0D0 - fdene * dnelimt/dnla
          tmp_con    = fdene * dnelimt
          tmp_err    = fdene * dnelimt - dnla

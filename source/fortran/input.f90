@@ -312,7 +312,7 @@ contains
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
-      tauratio, idensl, bt, iscrp, ipnlaws, beta_max, beta_min, &
+      tauratio, i_density_limit, bt, iscrp, ipnlaws, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
@@ -629,8 +629,8 @@ contains
        case ('i_plasma_current')
           call parse_int_variable('i_plasma_current', i_plasma_current, 1, 9, &
                'Switch for plasma current scaling')
-       case ('idensl')
-          call parse_int_variable('idensl', idensl, 1, 7, &
+       case ('i_density_limit')
+          call parse_int_variable('i_density_limit', i_density_limit, 1, 7, &
                'Switch for enforced density limit')
        case ('i_diamagnetic_current')
           call parse_int_variable('i_diamagnetic_current', i_diamagnetic_current, 0, 2, &
