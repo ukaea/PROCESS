@@ -147,37 +147,6 @@ contains
     first_call_2d = .true.
   end subroutine init_scan_module
 
-  subroutine scan_1d_write_point_header(iscan)
-    use global_variables, only: iscan_global, xlabel, vlabel
-    use constants, only: mfile, nout
-    use process_output, only: ovarin, ostars, oblnkl
-    implicit none
-    integer, intent(in) :: iscan
-    !! Scan point number
-
-    ! Makes iscan available globally (read-only)
-    iscan_global = iscan
-
-    call scan_select(nsweep, sweep, iscan, vlabel, xlabel)
-
-    ! Write banner to output file
-    call oblnkl(nout)
-    call ostars(nout,width)
-    write(nout,10) ' ***** Scan point ', iscan,' of ',isweep,': &
-        ',trim(xlabel),', ',trim(vlabel),' = ',sweep(iscan),' *****'
-10     format(a,i2,a,i2,5a,1pe10.3,a)
-    call ostars(nout,width)
-
-    ! Write additional information to mfile
-    call oblnkl(mfile)
-    call ovarin(mfile,'Scan point number','(iscan)',iscan)
-
-    ! Call the optimization routine VMCON at this scan point
-    write(*,20)'Starting scan point ',iscan,' of ',isweep,': ', trim(xlabel),', &
-        ',trim(vlabel),' = ',sweep(iscan)
-20     format(a,i2,a,i2,a,4a,1pe10.3)
-  end subroutine scan_1d_write_point_header
-
   subroutine scan_1d_store_output(iscan, ifail, noutvars_, ipnscns_, outvar)
     use constraint_variables, only: taulimit
     use cost_variables, only: cdirt, coe, coeoam, coefuelt, c222, ireactor, &

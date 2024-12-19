@@ -1,8 +1,16 @@
 import numpy as np
 
 from process.caller import write_output_files
-from process.fortran import error_handling, numerics, scan_module
+from process.fortran import (
+    constants,
+    error_handling,
+    global_variables,
+    numerics,
+    process_output,
+    scan_module,
+)
 from process.optimiser import Optimiser
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
 class Scan:
@@ -72,7 +80,7 @@ class Scan:
         scan_1d_ifail_dict = {}
 
         for iscan in range(1, scan_module.isweep + 1):
-            scan_module.scan_1d_write_point_header(iscan)
+            self.scan_1d_write_point_header(iscan)
             ifail = self.doopt()
             scan_1d_ifail_dict[iscan] = ifail
             write_output_files(models=self.models, ifail=ifail)
@@ -212,3 +220,28 @@ class Scan:
             converged_count / (scan_module.isweep * scan_module.isweep_2) * 100
         )
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
+
+    def scan_1d_write_point_header(self, iscan: int):
+        global_variables.iscan_global = iscan
+        global_variables.vlabel, global_variables.xlabel = scan_module.scan_select(
+            scan_module.nsweep, scan_module.sweep, iscan
+        )
+
+        process_output.oblnkl(constants.nout)
+        process_output.ostars(constants.nout, 110)
+
+        process_output.write(
+            constants.nout,
+            f"***** Scan point {iscan} of {scan_module.isweep} : {f2py_compatible_to_string(global_variables.xlabel)}"
+            f", {f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan - 1]} "
+            "*****",
+        )
+        process_output.ostars(constants.nout, 110)
+        process_output.oblnkl(constants.mfile)
+        process_output.ovarin(constants.mfile, "Scan point number", "(iscan)", iscan)
+
+        print(
+            f"Starting scan point {iscan} of {scan_module.isweep} : "
+            f"{f2py_compatible_to_string(global_variables.xlabel)} , {f2py_compatible_to_string(global_variables.vlabel)}"
+            f" = {scan_module.sweep[iscan - 1]}"
+        )
