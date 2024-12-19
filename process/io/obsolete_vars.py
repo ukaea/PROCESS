@@ -137,6 +137,15 @@ OBS_VARS = {
     "tburn": "t_burn",
     "pdivmax/rmajor": "pdivmax_over_rmajor",
     "pdivtbt/qar": "pdivtbt_over_qar",
+    "betpmx": "beta_poloidal_max",
+    "fbetatry": "fbeta_max",
+    "fbetap": "fbeta_poloidal",
+    "iculbl": "i_beta_component",
+    "epbetmax": "beta_poloidal_eps_max",
+    "dnbeta": "beta_norm_max",
+    "ifalphap": "i_beta_fast_alpha",
+    "betalim": "beta_max",
+    "betalim_lower": "beta_limit_lower",
 }
 
 OBS_VARS_HELP = {
