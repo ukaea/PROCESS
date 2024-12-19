@@ -119,8 +119,6 @@ By default, $\beta$ is defined with respect to the total equilibrium B-field. Th
 Switch `iprofile` determines how the beta $g$ coefficient `beta_norm_max` should
 be calculated. The following switch options are available below:
 
----------
-
 #### User Input
 
 This can be activated by stating `iprofile = 0` in the input file.
@@ -133,7 +131,17 @@ This can be activated by stating `iprofile = 0` in the input file.
 
 This can be activated by stating `iprofile = 1` in the input file.
 
-`alphaj`, `rli` and `beta_norm_max` are calculated consistently. `beta_norm_max` calculated using $g=4l_i$ [^3].  This is only recommended for high aspect ratio tokamaks.
+`alphaj`, `rli` and `beta_norm_max` are calculated consistently. 
+
+`beta_norm_max` is calculated using:  
+
+$$
+g = 4l_i
+$$
+
+This relation is based off of data taken from DIII-D shots[^7].
+
+This is only recommended for high aspect ratio tokamaks[^3].
 
 ---------
 
@@ -173,7 +181,15 @@ This can be activated by stating `iprofile = 5` in the input file.
 
 This can be activated by stating `iprofile = 6` in the input file.
 
-`alphaj` and `c_beta` are inputs.  `rli` calculated from elongation and `beta_norm_max` calculated using $C_{\beta}=(g-3.7)F_p / 12.5-3.5F_p$, where $F_p$ is the pressure peaking and $C_{\beta}$ is the destabilisation papermeter (default 0.5)[^5]. See Section 2.4 of Tholerus et al. (2024) for a more detailed description.  <u> This is only recommended for spherical tokamaks </u>
+`alphaj` and `c_beta` are inputs.  `rli` calculated from elongation and `beta_norm_max` calculated using 
+
+$$
+C_{\beta}\approx\frac{(g-3.7)F_p}{12.5-3.5 F_p}
+$$
+
+where $F_p$ is the pressure peaking, $F_p = p_{\text{ax}} / \langle p \rangle$ and $C_{\beta}$ is the destabilization parameter (default 0.5)[^5].  
+
+<u> This is only recommended for spherical tokamaks </u>
 
 ---------
 
@@ -207,11 +223,11 @@ The scaling value `fbeta_poloidal_eps` can be varied also.
 
 !!! note "Origin of the $\epsilon\beta_p$ limit"
 
-    High poloidal beta shots in TFTR were performed[^6] and it was found that as $\beta_p$, 
-    exceeds approximately 1.2 times the aspect ratio, a separatrix with 
-    an inside poloidal field null is observed to limit the outer boundary 
-    of the plasma. Since the curvature of TFTR’s applied vertical field 
-    is constant, the appearance of the poloidal field null corresponds to 
+    High poloidal beta shots in TFTR were performed[^6] and it was found that as $\beta_p$,
+    exceeds approximately 1.2 times the aspect ratio, a separatrix with
+    an inside poloidal field null is observed to limit the outer boundary
+    of the plasma. Since the curvature of TFTR’s applied vertical field
+    is constant, the appearance of the poloidal field null corresponds to
     the equilibrium poloidal beta limit.
 
 --------------------
@@ -253,8 +269,11 @@ The value of `beta_max` can be set to the desired minimum total beta. The scalin
 
 [^3]: Tokamaks 4th Edition, Wesson, page 116
 
-[^4]: Menard et al. (2016), Nuclear Fusion, 56, 106023
+[^4]: J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,” Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016, doi: https://doi.org/10.1088/0029-5515/56/10/106023.
 
-[^5]: Tholerus et al. (2024), arXiv:2403.09460
-
+[^5]: E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,” Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+‌
 [^6]: M. E. Mauel et al., “Operation at the tokamak equilibrium poloidal beta-limit in TFTR,” Nuclear Fusion, vol. 32, no. 8, pp. 1468–1473, Aug. 1992. doi:https://dx.doi.org/10.1088/0029-5515/32/8/I14
+
+[^7]: T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,” Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+‌

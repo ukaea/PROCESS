@@ -2326,8 +2326,9 @@ class Physics:
         # Calculate physics_variables.beta limit
 
         if physics_variables.iprofile == 1:
-            # Relation between physics_variables.beta limit and plasma internal inductance
-            # Hartmann and Zohm
+            # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+            # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+
             physics_variables.beta_norm_max = 4.0e0 * physics_variables.rli
 
         if physics_variables.iprofile == 2:
@@ -2337,20 +2338,22 @@ class Physics:
             )
 
         if physics_variables.iprofile == 3 or physics_variables.iprofile == 5:
-            # physics_variables.beta_norm_max found from physics_variables.aspect ratio scaling on p32 of Menard:
-            # Menard, et al. "Fusion Nuclear Science Facilities
-            # and Pilot Plants Based on the Spherical Tokamak."
-            # Nucl. Fusion, 2016, 44.
+            # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            # Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            # doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+
             physics_variables.beta_norm_max = (
                 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
             )
 
         if physics_variables.iprofile == 6:
             # Method used for STEP plasma scoping
-            # Tholerus et al. (2024), arXiv:2403.09460
-            Fp = (physics_variables.ne0 * physics_variables.te0) / (
-                physics_variables.dene * physics_variables.te
-            )
+            # E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
+            # Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+
+            # Pressure peaking factor (Fp) is defined as the ratio of the peak pressure to the average pressure
+            Fp = physics_variables.p0 / physics_variables.vol_avg_pressure
+
             physics_variables.beta_norm_max = 3.7e0 + (
                 (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
             )
