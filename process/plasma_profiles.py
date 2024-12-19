@@ -1,8 +1,9 @@
 import logging
+
 import numpy as np
 import scipy as sp
-import process.profiles as profiles
 
+from process import profiles
 from process.fortran import (
     constants,
     divertor_variables,
@@ -121,7 +122,7 @@ class PlasmaProfile:
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
                 "but the physics variables do not describe an L-Mode plasma. "
                 "'rhopedt', 'rhopedn', 'teped', 'tesep', 'neped', 'nesep', "
-                "and 'tbeta' have all been reset to L-Mode appropriate values"
+                "and 'tbeta' have all been reset to L-Mode appropriate values",
             )
 
             physics_variables.rhopedt = 1.0e0
@@ -229,7 +230,8 @@ class PlasmaProfile:
         #  (Input value is used if ipedestal = 0)
 
         divertor_variables.prn1 = max(
-            0.01e0, physics_variables.nesep / physics_variables.dene
+            0.01e0,
+            physics_variables.nesep / physics_variables.dene,
         )  # Preventing division by zero later
 
     def calculate_profile_factors(self) -> None:
@@ -322,7 +324,7 @@ class PlasmaProfile:
                     * (1 - rho_te_max**2) ** physics_variables.alphat
                 )
             else:
-                raise ValueError(f"alphat is negative: { physics_variables.alphat}")
+                raise ValueError(f"alphat is negative: {physics_variables.alphat}")
 
             # Same for density
             if physics_variables.alphan > 1.0:
@@ -357,7 +359,7 @@ class PlasmaProfile:
                     * (1 - rho_ne_max**2) ** physics_variables.alphan
                 )
             else:
-                raise ValueError(f"alphan is negative: { physics_variables.alphan}")
+                raise ValueError(f"alphan is negative: {physics_variables.alphan}")
 
             # set normalized gradient length
             # te at rho_te_max

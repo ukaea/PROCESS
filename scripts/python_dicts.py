@@ -6,12 +6,11 @@ This extension to the existing `create_dicts.py` provides a means to allow data 
 still be included in the 'dictionaries'.
 """
 
+import importlib.util
 import inspect
 import pathlib
-import importlib.util
 import sys
-from typing import Any, List, NamedTuple
-
+from typing import Any, NamedTuple
 
 # the directory which this script resides (scripts/)
 CURRENT_DIR = pathlib.Path(__file__).resolve().parent
@@ -24,7 +23,8 @@ CURRENT_DIR = pathlib.Path(__file__).resolve().parent
 
 # find import information for the process directory sitting above this scripts directory
 process_spec = importlib.util.spec_from_file_location(
-    "process", CURRENT_DIR.parent / "process/__init__.py"
+    "process",
+    CURRENT_DIR.parent / "process/__init__.py",
 )
 # get the module from the above import information
 process_module = importlib.util.module_from_spec(process_spec)
@@ -94,7 +94,7 @@ def get_non_dunder_class_members(_object: object) -> dict:
     return non_dunder_members
 
 
-def get_annotated_variables(parent_name: str, _object) -> List[AnnotatedVariableData]:
+def get_annotated_variables(parent_name: str, _object) -> list[AnnotatedVariableData]:
     """Given a physics and engineering module, this function extracts and returns all of the
     annotated variables as a named tuple with important information contained.
 
@@ -123,13 +123,13 @@ def get_annotated_variables(parent_name: str, _object) -> List[AnnotatedVariable
                     obj=member,
                     docstring=member.__doc__,
                     units=member.__units__,
-                )
+                ),
             )
 
     return annotated_variables
 
 
-def get_python_variables() -> List[AnnotatedVariableData]:
+def get_python_variables() -> list[AnnotatedVariableData]:
     """Drives the discovery of AnnotatedVariables, returning them back to be
     parsed into the dicts by `create_dicts.py`.
     """

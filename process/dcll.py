@@ -1,13 +1,15 @@
 from process.fortran import (
-    constants,
     build_variables,
-    fwbs_variables,
-    dcll_module,
-    physics_variables,
+    constants,
     current_drive_variables,
-    process_output as po,
-    primary_pumping_variables,
+    dcll_module,
+    fwbs_variables,
     heat_transport_variables,
+    physics_variables,
+    primary_pumping_variables,
+)
+from process.fortran import (
+    process_output as po,
 )
 
 
@@ -196,7 +198,8 @@ class DCLL:
 
         if output:
             po.osubhd(
-                self.outfile, "DCLL model: Nuclear and Radiation Heating of Components"
+                self.outfile,
+                "DCLL model: Nuclear and Radiation Heating of Components",
             )
 
             po.osubhd(self.outfile, "Component Coverage :")
@@ -226,7 +229,8 @@ class DCLL:
                 "OP ",
             )
             po.ocmmnt(
-                self.outfile, "(Note: emult is fixed for this model inside the code)"
+                self.outfile,
+                "(Note: emult is fixed for this model inside the code)",
             )
             po.ovarre(
                 self.outfile,

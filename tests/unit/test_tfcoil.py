@@ -1,15 +1,15 @@
 """Unit and Integration tests for tfcoil.f90."""
 
 from typing import NamedTuple
-from process.sctfcoil import Sctfcoil
+
 import pytest
 
-from process.tfcoil import TFcoil
-
-from process.fortran import tfcoil_variables as tfv
+from process.build import Build
 from process.fortran import build_variables as bv
 from process.fortran import fwbs_variables as fwbsv
-from process.build import Build
+from process.fortran import tfcoil_variables as tfv
+from process.sctfcoil import Sctfcoil
+from process.tfcoil import TFcoil
 
 
 @pytest.fixture
@@ -180,11 +180,21 @@ class CntrpstTestAsset(NamedTuple):
     "cntrpst_asset",
     [
         CntrpstTestAsset(
-            0, 100.0, 0.00075899, 100.00109611, 100.00147829, 7.05905966e08
+            0,
+            100.0,
+            0.00075899,
+            100.00109611,
+            100.00147829,
+            7.05905966e08,
         ),
         # CntrpstTestAsset(1, 45.0),
         CntrpstTestAsset(
-            2, 43.6, 0.00645998, 43.60678774, 43.61001841, 80926408.5501315
+            2,
+            43.6,
+            0.00645998,
+            43.60678774,
+            43.61001841,
+            80926408.5501315,
         ),
     ],
 )

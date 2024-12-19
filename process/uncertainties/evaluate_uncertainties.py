@@ -24,23 +24,23 @@ sobol.txt             - contains the dictionary of the Sobol
 """
 
 import argparse
+from pathlib import Path
 
-from SALib.analyze import sobol
+import numpy as np
+import pandas as pd
 from SALib.analyze import morris as morris_method
+from SALib.analyze import sobol
 from SALib.sample import morris, saltelli
 
-from pathlib import Path
-import pandas as pd
-import numpy as np
 import process.io.mfile as mf
 from process.io.in_dat import InDat
 from process.io.process_config import UncertaintiesConfig
 from process.io.process_funcs import (
+    check_input_error,
     get_neqns_itervars,
     get_variable_range,
-    check_input_error,
-    process_stopped,
     no_unfeasible_mfile,
+    process_stopped,
     set_variable_in_indat,
     vary_iteration_variables,
 )
@@ -55,8 +55,7 @@ def parse_args(args):
     :rtype: Namespace
     """
     parser = argparse.ArgumentParser(
-        description="Program to evaluate "
-        "uncertainties in a given PROCESS design point."
+        description="Program to evaluate uncertainties in a given PROCESS design point.",
     )
 
     parser.add_argument(
@@ -128,7 +127,7 @@ def run_monte_carlo(args):
                         )
 
                     # add run to index list
-                    indexDataSet.append("run{}".format(RUN_ID))
+                    indexDataSet.append(f"run{RUN_ID}")
 
                     # collect the process solution
                     mfilepath = Path(config.wdir) / "MFILE.DAT"
@@ -146,7 +145,7 @@ def run_monte_carlo(args):
                     print(
                         "WARNING: %i non feasible point(s) in sweep!\
                     Rerunning!"
-                        % no_unfeasible
+                        % no_unfeasible,
                     )
             else:
                 print("PROCESS has stopped without finishing!")
@@ -183,7 +182,7 @@ def write_Morris_Method_Output(X, S):
                     S["mu_star"][i],
                     S["sigma"][i],
                     S["mu_star_conf"][i],
-                )
+                ),
             )
 
 
@@ -208,7 +207,7 @@ def write_Sobol_Output(X, S):
                     S["S1_conf"][i],
                     S["ST"][i],
                     S["ST_conf"][i],
-                )
+                ),
             )
 
 
@@ -275,7 +274,7 @@ def run_morris_method(args):
         # Define path for the input file to run
         input_path = Path(config.wdir) / "IN.DAT"
         config.run_process(
-            input_path
+            input_path,
         )  # run_process in uncertaintyconfig or RunProcessConfig
 
         mfilepath = Path(config.wdir) / "MFILE.DAT"
@@ -288,7 +287,7 @@ def run_morris_method(args):
         outputDataSet = []
 
         # add run to index list
-        indexDataSet.append("run{}".format(run_id))
+        indexDataSet.append(f"run{run_id}")
 
         # We need to find a way to catch failed runs
         process_status = m_file.data["ifail"].get_scan(-1)
@@ -339,7 +338,9 @@ def run_sobol_method(args):
 
     # Generate samples
     params_values = saltelli.sample(
-        config.sobol_uncertainties, config.no_samples, calc_second_order=False
+        config.sobol_uncertainties,
+        config.no_samples,
+        calc_second_order=False,
     )
 
     np.savetxt("param_values.txt", params_values)
@@ -371,7 +372,7 @@ def run_sobol_method(args):
         outputDataSet = []
 
         # add run to index list
-        indexDataSet.append("run{}".format(run_id))
+        indexDataSet.append(f"run{run_id}")
 
         # We need to find a way to catch failed runs
         process_status = m_file.data["ifail"].get_scan(-1)
@@ -386,7 +387,10 @@ def run_sobol_method(args):
             sols = np.append(sols, config.output_mean)
 
     params_sol = sobol.analyze(
-        config.sobol_uncertainties, sols, calc_second_order=False, print_to_console=True
+        config.sobol_uncertainties,
+        sols,
+        calc_second_order=False,
+        print_to_console=True,
     )
 
     # write output file

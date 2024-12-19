@@ -1,12 +1,14 @@
+import logging
+import math
+
+import numpy as np
+
 from process.caller import Caller
-from process.fortran import global_variables as gv
 from process.fortran import cost_variables as cv
+from process.fortran import global_variables as gv
 from process.fortran import numerics
 from process.fortran import physics_variables as pv
 from process.fortran import times_variables as tv
-import numpy as np
-import math
-import logging
 
 logger = logging.getLogger(__name__)
 

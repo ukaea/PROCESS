@@ -1,9 +1,11 @@
-from typing import NamedTuple, Any
-import pytest
+from typing import Any, NamedTuple
+
 import numpy as np
+import pytest
+
 from process.fortran import divertor_variables, physics_variables
 from process.plasma_profiles import PlasmaProfile
-from process.profiles import TProfile, NProfile
+from process.profiles import NProfile, TProfile
 
 
 class ProfileParam(NamedTuple):
@@ -61,7 +63,7 @@ def test_ncore():
     nav = 7.4321e19
     alphan = 1.0
     assert nprofile.ncore(rhopedn, nped, nsep, nav, alphan) == pytest.approx(
-        9.7756974320342041e19
+        9.7756974320342041e19,
     )
 
 
@@ -118,7 +120,7 @@ def test_tcore():
     tbeta = 2.0
 
     assert tprofile.tcore(rhopedt, tped, tsep, tav, alphat, tbeta) == pytest.approx(
-        28.09093632260765
+        28.09093632260765,
     )
 
 
@@ -376,11 +378,15 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
     monkeypatch.setattr(physics_variables, "rho_te_max", plasmaprofilesparam.rho_te_max)
 
     monkeypatch.setattr(
-        physics_variables, "gradient_length_ne", plasmaprofilesparam.gradient_length_ne
+        physics_variables,
+        "gradient_length_ne",
+        plasmaprofilesparam.gradient_length_ne,
     )
 
     monkeypatch.setattr(
-        physics_variables, "gradient_length_te", plasmaprofilesparam.gradient_length_te
+        physics_variables,
+        "gradient_length_te",
+        plasmaprofilesparam.gradient_length_te,
     )
 
     monkeypatch.setattr(physics_variables, "rminor", plasmaprofilesparam.rminor)
@@ -395,7 +401,7 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
     assert physics_variables.tin == pytest.approx(plasmaprofilesparam.expected_tin)
 
     assert physics_variables.alphap == pytest.approx(
-        plasmaprofilesparam.expected_alphap
+        plasmaprofilesparam.expected_alphap,
     )
 
     assert physics_variables.te0 == pytest.approx(plasmaprofilesparam.expected_te0)

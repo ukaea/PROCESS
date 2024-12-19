@@ -1,18 +1,21 @@
+import logging
+
 import numpy
 
-from process.fortran import current_drive_variables
-from process.fortran import fwbs_variables
-from process.fortran import buildings_variables
-from process.fortran import physics_variables
-from process.fortran import cost_variables
-from process.fortran import pfcoil_variables
-from process.fortran import tfcoil_variables
-from process.fortran import build_variables
-from process.fortran import divertor_variables
-from process.fortran import heat_transport_variables
-from process.fortran import constants
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constants,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
 from process.fortran import process_output as po
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -318,7 +321,10 @@ class Buildings:
         if output:
             po.oheadr(self.outfile, "Plant Buildings System")
             po.ovarre(
-                self.outfile, "Internal volume of reactor building (m3)", "(vrci)", vrci
+                self.outfile,
+                "Internal volume of reactor building (m3)",
+                "(vrci)",
+                vrci,
             )
             po.ovarre(
                 self.outfile,
@@ -334,7 +340,10 @@ class Buildings:
             )
             po.ovarre(self.outfile, "Reactor building volume (m3)", "(rbv)", rbv)
             po.ovarre(
-                self.outfile, "Reactor maintenance building volume (m3)", "(rmbv)", rmbv
+                self.outfile,
+                "Reactor maintenance building volume (m3)",
+                "(rmbv)",
+                rmbv,
             )
             po.ovarre(self.outfile, "Warmshop volume (m3)", "(wsv)", wsv)
             po.ovarre(
@@ -358,7 +367,10 @@ class Buildings:
                 buildings_variables.admv,
             )
             po.ovarre(
-                self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov
+                self.outfile,
+                "Shops volume (m3)",
+                "(shov)",
+                buildings_variables.shov,
             )
             po.ovarre(
                 self.outfile,
@@ -387,7 +399,9 @@ class Buildings:
         # Lateral size driven by radial width of largest component, from:
         #  PF coil max radius, cryostat radius, TF coil outer radius
         width_reactor_piece = max(
-            pfcoil_variables.pfrmax, fwbs_variables.rdewex, tf_radial_dim
+            pfcoil_variables.pfrmax,
+            fwbs_variables.rdewex,
+            tf_radial_dim,
         )
         # Allow for biological shielding around reactor
         width_reactor_piece = width_reactor_piece + buildings_variables.bioshld_thk
@@ -1281,7 +1295,10 @@ class Buildings:
                     workshop_area,
                 )
                 po.ovarre(
-                    self.outfile, "Workshop volume (m3)", "(workshop_vol)", workshop_vol
+                    self.outfile,
+                    "Workshop volume (m3)",
+                    "(workshop_vol)",
+                    workshop_vol,
                 )
                 po.ovarre(
                     self.outfile,

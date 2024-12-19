@@ -41,60 +41,57 @@ Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
-from typing import Protocol
-from process import fortran
-from process.buildings import Buildings
-from process.costs import Costs
-from process.io import plot_proc
-from process.io import mfile
-from process.plasma_geometry import PlasmaGeom
-from process.pulse import Pulse
-from process.scan import Scan
-from process.stellarator import Stellarator, Neoclassics
-from process.structure import Structure
-from process.build import Build
-from process.utilities.f2py_string_patch import string_to_f2py_compatible
 import argparse
-from process.pfcoil import PFCoil
-from process.tfcoil import TFcoil
-from process.divertor import Divertor
-from process.availability import Availability
-from process.ife import IFE
-from process.costs_2015 import Costs2015
-from process.power import Power
-from process.cs_fatigue import CsFatigue
-from process.physics import Physics
-from process.io import obsolete_vars as ov
-from process.plasma_profiles import PlasmaProfile
-from process.hcpb import CCFE_HCPB
-from process.dcll import DCLL
-from process.blanket_library import BlanketLibrary
-from process.fw import Fw
-from process.current_drive import CurrentDrive
-from process.impurity_radiation import initialise_imprad
-from process.caller import write_output_files
+import logging
+import os
+from pathlib import Path
+from typing import Protocol
 
 import process
-
-from pathlib import Path
-import os
-import logging
+from process import fortran
+from process.availability import Availability
+from process.blanket_library import BlanketLibrary
+from process.build import Build
+from process.buildings import Buildings
+from process.caller import write_output_files
+from process.costs import Costs
+from process.costs_2015 import Costs2015
+from process.cs_fatigue import CsFatigue
+from process.current_drive import CurrentDrive
+from process.dcll import DCLL
+from process.divertor import Divertor
+from process.fw import Fw
+from process.hcpb import CCFE_HCPB
+from process.ife import IFE
+from process.impurity_radiation import initialise_imprad
+from process.io import mfile, plot_proc
+from process.io import obsolete_vars as ov
 
 # For VaryRun
 from process.io.process_config import RunProcessConfig
 from process.io.process_funcs import (
+    check_input_error,
     get_neqns_itervars,
     get_variable_range,
-    check_input_error,
-    process_stopped,
     no_unfeasible_mfile,
-    vary_iteration_variables,
+    process_stopped,
     process_warnings,
+    vary_iteration_variables,
 )
+from process.pfcoil import PFCoil
+from process.physics import Physics
+from process.plasma_geometry import PlasmaGeom
+from process.plasma_profiles import PlasmaProfile
+from process.power import Power
+from process.pulse import Pulse
+from process.scan import Scan
+from process.sctfcoil import Sctfcoil
+from process.stellarator import Neoclassics, Stellarator
+from process.structure import Structure
+from process.tfcoil import TFcoil
+from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
-from process.sctfcoil import Sctfcoil
-
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -339,20 +336,18 @@ class VaryRun:
                     if no_unfeasible > 0:
                         print(
                             "WARNING: Non feasible point(s) in sweep, "
-                            "But finished anyway! {} ".format(no_unfeasible)
+                            f"But finished anyway! {no_unfeasible} ",
                         )
                     if process_warnings():
                         print(
                             "\nThere were warnings in the final PROCESS run. "
-                            "Please check the log file!\n"
+                            "Please check the log file!\n",
                         )
                     # This means success: feasible solution found
                     break
-                else:
-                    print(
-                        "WARNING: {} non-feasible point(s) in sweep! "
-                        "Rerunning!".format(no_unfeasible)
-                    )
+                print(
+                    f"WARNING: {no_unfeasible} non-feasible point(s) in sweep! Rerunning!",
+                )
             else:
                 print("PROCESS has stopped without finishing!")
 
@@ -424,9 +419,9 @@ class SingleRun:
         else:
             print("-- Info -- run `process --help` for usage")
             raise FileNotFoundError(
-                "Input file not found on this path. There " "is no input file named",
+                "Input file not found on this path. There is no input file named",
                 self.input_file,
-                "in the analysis " "folder",
+                "in the analysis folder",
             )
 
         # Set the input file in the Fortran
@@ -443,7 +438,8 @@ class SingleRun:
         """
         self.output_path = Path(self.filename_prefix + "OUT.DAT")
         fortran.global_variables.output_prefix = string_to_f2py_compatible(
-            fortran.global_variables.output_prefix, self.filename_prefix
+            fortran.global_variables.output_prefix,
+            self.filename_prefix,
         )
 
     def set_mfile(self):
@@ -474,14 +470,13 @@ class SingleRun:
         # If no HYBRD (non-optimisation) runs are required, return
         if (fortran.numerics.ioptimz > 0) or (fortran.numerics.ioptimz == -2):
             return
-        else:
-            # eqslv() has been temporarily commented out. Please see the comment
-            # in fortran.function_evaluator.fcnhyb() for an explanation.
-            # Original call:
-            # self.ifail = fortran.main_module.eqslv()
-            raise NotImplementedError(
-                "HYBRD non-optimisation solver is not " "implemented"
-            )
+        # eqslv() has been temporarily commented out. Please see the comment
+        # in fortran.function_evaluator.fcnhyb() for an explanation.
+        # Original call:
+        # self.ifail = fortran.main_module.eqslv()
+        raise NotImplementedError(
+            "HYBRD non-optimisation solver is not implemented",
+        )
 
     def run_scan(self, solver):
         """Create scan object if required.
@@ -502,7 +497,7 @@ class SingleRun:
         else:
             raise ValueError(
                 f"Invalid ioptimz value: {fortran.numerics.ioptimz}. Please "
-                "select either 1 (optimise) or -2 (no optimisation)."
+                "select either 1 (optimise) or -2 (no optimisation).",
             )
 
     def show_errors(self):
@@ -520,7 +515,7 @@ class SingleRun:
     def append_input(self):
         """Append the input file to the output file and mfile."""
         # Read IN.DAT input file
-        with open(self.input_path, "r", encoding="utf-8") as input_file:
+        with open(self.input_path, encoding="utf-8") as input_file:
             input_lines = input_file.readlines()
 
         # Append the input file to the output file
@@ -552,7 +547,7 @@ class SingleRun:
         modified_lines = []
         changes_made = []  # To store details of the changes
 
-        with open(filename, "r") as file:
+        with open(filename) as file:
             for line in file:
                 # Skip comment lines or lines without an assignment
                 if line.startswith("*") or "=" not in line:
@@ -573,7 +568,7 @@ class SingleRun:
                             # If no replacement is defined, comment out the line
                             modified_lines.append(f"* Obsolete: {line}")
                             changes_made.append(
-                                f"Commented out obsolete variable: {variable_name}"
+                                f"Commented out obsolete variable: {variable_name}",
                             )
                         else:
                             if isinstance(replacement, list):
@@ -581,19 +576,20 @@ class SingleRun:
                                 replacement_str = ", ".join(replacement)
                                 raise ValueError(
                                     f"The variable '{variable_name}' is obsolete and should be replaced by the following variables: {replacement_str}. "
-                                    "Please set their values accordingly."
+                                    "Please set their values accordingly.",
                                 )
-                            else:
-                                # Replace obsolete variable with updated variable
-                                modified_line = line.replace(
-                                    variable_name, replacement, 1
-                                )
-                                modified_lines.append(
-                                    f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
-                                )
-                                changes_made.append(
-                                    f"Replaced '{variable_name}' with '{replacement}'"
-                                )
+                            # Replace obsolete variable with updated variable
+                            modified_line = line.replace(
+                                variable_name,
+                                replacement,
+                                1,
+                            )
+                            modified_lines.append(
+                                f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}",
+                            )
+                            changes_made.append(
+                                f"Replaced '{variable_name}' with '{replacement}'",
+                            )
                     else:
                         # If replacement is False, add the line as-is
                         modified_lines.append(line)
@@ -609,7 +605,7 @@ class SingleRun:
                 with open(filename, "w") as file:
                     file.writelines(modified_lines)
                 print(
-                    "The IN.DAT file has been updated to replace or comment out obsolete variables."
+                    "The IN.DAT file has been updated to replace or comment out obsolete variables.",
                 )
                 print("Summary of changes made:")
                 for change in changes_made:
@@ -689,7 +685,8 @@ class Models:
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
         self.current_drive = CurrentDrive(plasma_profile=self.plasma_profile)
         self.physics = Physics(
-            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+            plasma_profile=self.plasma_profile,
+            current_drive=self.current_drive,
         )
         self.neoclassics = Neoclassics()
         self.stellarator = Stellarator(

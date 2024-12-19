@@ -1,35 +1,34 @@
 """
 
-  PROCESS MFILE.DAT IO library
+PROCESS MFILE.DAT IO library
 
-  process.io.mfile.
+process.io.mfile.
 
-  James Morris
-  CCFE
+James Morris
+CCFE
 
-  Notes:
-    + 12/03/2014: Initial version
-    + 12/03/2014: Added MFILE variable class
-    + 12/03/2014: Added MFILE class for containing all info from file.
-    + 12/03/2014: Added ability to read MFILE.DAT into class
-    + 12/03/2014: Added ability write MFILE.DAT from class
-    + 12/05/2014: Fixed mfile issue with strings in MFILE.DAT with no scans
-    + 16/05/2014: Cleaned up MFileVariable
-    + 19/05/2014: Cleaned up MFile and put some functions outside class.
-    + 12/06/2014: Fixed error handling for "variable not in MFILE" errors
-    + 16/06/2014: Fixed library path error; fix in get_scans
-    + 24/11/2021: Global dictionary variables moved within the functions
-                  to avoid cyclic dependencies. This is because the dicts
-                  generation script imports, and inspects, process.
+Notes:
+  + 12/03/2014: Initial version
+  + 12/03/2014: Added MFILE variable class
+  + 12/03/2014: Added MFILE class for containing all info from file.
+  + 12/03/2014: Added ability to read MFILE.DAT into class
+  + 12/03/2014: Added ability write MFILE.DAT from class
+  + 12/05/2014: Fixed mfile issue with strings in MFILE.DAT with no scans
+  + 16/05/2014: Cleaned up MFileVariable
+  + 19/05/2014: Cleaned up MFile and put some functions outside class.
+  + 12/06/2014: Fixed error handling for "variable not in MFILE" errors
+  + 16/06/2014: Fixed library path error; fix in get_scans
+  + 24/11/2021: Global dictionary variables moved within the functions
+                to avoid cyclic dependencies. This is because the dicts
+                generation script imports, and inspects, process.
 
-  Compatible with PROCESS version 286
+Compatible with PROCESS version 286
 
 """
 
-from collections import OrderedDict
-import logging
 import json
-from typing import List, Union
+import logging
+from collections import OrderedDict
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +37,13 @@ class MFileVariable(dict):
     """Class for containing a single mfile variable"""
 
     def __init__(
-        self, var_name, var_description, var_unit=None, var_flag=None, *args, **kwargs
+        self,
+        var_name,
+        var_description,
+        var_unit=None,
+        var_flag=None,
+        *args,
+        **kwargs,
     ):
         """
         An object class to contain information (and data values) for a single
@@ -61,7 +66,7 @@ class MFileVariable(dict):
         self.latest_scan = 0
         super().__init__(*args, **kwargs)
         logger.debug(
-            "Initialising variable '{}': {}".format(self.var_name, self.var_description)
+            f"Initialising variable '{self.var_name}': {self.var_description}",
         )
 
     def __getattr__(self, name):
@@ -69,10 +74,9 @@ class MFileVariable(dict):
         # print("Trying to get({}) on {}, {}".format(name, self, id(self)))
         if result:
             return result
-        else:
-            raise AttributeError(
-                "{} object has no attribute {}".format(self.__class__, name)
-            )
+        raise AttributeError(
+            f"{self.__class__} object has no attribute {name}",
+        )
 
     def set_scan(self, scan_number, scan_value):
         """Sets the class attribute self.scan# where # is scan number
@@ -82,13 +86,10 @@ class MFileVariable(dict):
           scan_value --> value of parameter for scan
 
         """
-        self["scan{:02}".format(scan_number)] = scan_value
-        if scan_number > self.latest_scan:
-            self.latest_scan = scan_number
+        self[f"scan{scan_number:02}"] = scan_value
+        self.latest_scan = max(scan_number, self.latest_scan)
         logger.debug(
-            "Scan {} for variable '{}' == {}".format(
-                scan_number, self.var_name, scan_value
-            )
+            f"Scan {scan_number} for variable '{self.var_name}' == {scan_value}",
         )
 
     def get_scan(self, scan_number):
@@ -104,9 +105,8 @@ class MFileVariable(dict):
 
         try:
             if scan_number is None or scan_number == -1:
-                return self["scan{:02}".format(self.latest_scan)]
-            else:
-                return self["scan{:02}".format(scan_number)]
+                return self[f"scan{self.latest_scan:02}"]
+            return self[f"scan{scan_number:02}"]
         except KeyError:
             raise  # or substitute with any other exception type you want
 
@@ -120,7 +120,7 @@ class MFileVariable(dict):
         return [
             v
             for k, v in sorted(
-                filter(lambda x: True if "scan" in x[0] else False, self.items())
+                filter(lambda x: True if "scan" in x[0] else False, self.items()),
             )
         ]
 
@@ -135,7 +135,7 @@ class MFileVariable(dict):
         return True
 
 
-class MFileErrorClass(object):
+class MFileErrorClass:
     """Error class for handling missing data from MFILE"""
 
     def __init__(self, item):
@@ -146,17 +146,15 @@ class MFileErrorClass(object):
         self.get_number_of_scans = self.get_error
 
     def get_error(self, *args, **kwargs):
-        logger.error("Key '{}' not in MFILE. KeyError! Check MFILE".format(self.item))
+        logger.error(f"Key '{self.item}' not in MFILE. KeyError! Check MFILE")
 
         if self.item == "error_status":
             # Missing error_status key means Process exited prematurely, usually
             # due to a "STOP 1"
             raise KeyError(
-                "error_status not found in MFILE. Process probably "
-                "exited prematurely"
+                "error_status not found in MFILE. Process probably exited prematurely",
             )
-        else:
-            return 0
+        return 0
 
     @property
     def exists(self):
@@ -170,10 +168,9 @@ class MFileDataDictionary(OrderedDict):
         result = self.get(name)
         if result:
             return result
-        else:
-            raise AttributeError(
-                "{} object has no attribute {}".format(self.__class__, name)
-            )
+        raise AttributeError(
+            f"{self.__class__} object has no attribute {name}",
+        )
 
     def __getitem__(self, item):
         try:
@@ -227,10 +224,10 @@ class DefaultOrderedDict(OrderedDict):
         )
 
 
-class MFile(object):
+class MFile:
     def __init__(self, filename="MFILE.DAT"):
         """Class object to store the MFile Objects"""
-        logger.info("Creating MFile class for file '{}'".format(filename))
+        logger.info(f"Creating MFile class for file '{filename}'")
         self.filename = filename
         # self.data = MFileDataDictionary()
         # self.data = OrderedDict()
@@ -241,14 +238,14 @@ class MFile(object):
         self.mfile_modules["Misc"] = list()
         self.current_module = "Misc"
         if filename is not None:
-            logger.info("Opening file '{}'".format(self.filename))
+            logger.info(f"Opening file '{self.filename}'")
             self.open_mfile()
-            logger.info("Parsing file '{}'".format(self.filename))
+            logger.info(f"Parsing file '{self.filename}'")
             self.parse_mfile()
 
     def open_mfile(self):
         """Function to open MFILE.DAT"""
-        with open(self.filename, "r", encoding="utf-8") as mfile:
+        with open(self.filename, encoding="utf-8") as mfile:
             self.mfile_lines = mfile.readlines()
 
         for i in range(len(self.mfile_lines)):
@@ -283,7 +280,6 @@ class MFile(object):
                 self.mfile_modules[self.current_module] = list()
 
         else:
-
             var_des = line[0]
             extracted_var_name = sort_brackets(line[1])
 
@@ -331,7 +327,11 @@ class MFile(object):
                 self.data[var_key].set_scan(scan_num, value)
         else:
             var = MFileVariable(
-                name, des, unit, var_flag=flag, var_mod=self.current_module
+                name,
+                des,
+                unit,
+                var_flag=flag,
+                var_mod=self.current_module,
             )
             self.data[var_key] = var
             self.data[var_key].set_scan(1, value)
@@ -361,7 +361,7 @@ class MFile(object):
                     else:
                         entry = data
                     sub_dict[item] = entry
-                dict_to_write[f"scan-{i+1}"] = sub_dict
+                dict_to_write[f"scan-{i + 1}"] = sub_dict
         else:
             for item in keys_to_write:
                 # Initialize dat_key properly based on the number of scans
@@ -383,7 +383,7 @@ class MFile(object):
             json.dump(dict_to_write, fp, indent=4)
 
 
-def sort_value(value_words: List[str]) -> Union[str, float]:
+def sort_value(value_words: list[str]) -> str | float:
     """Parse value section of a line in MFILE.
 
     value_words is a list of strings, which is then parsed.
@@ -395,15 +395,14 @@ def sort_value(value_words: List[str]) -> Union[str, float]:
     if '"' in value_words[0]:
         # First "word" begins with ": return words as single str
         return " ".join(value_words).strip().strip('"').strip()
-    else:
-        try:
-            # Attempt float conversion of first word
-            return float(value_words[0])
-        except ValueError:
-            # Log the exception with details
-            logger.exception(f"Can't parse value in MFILE: {value_words}")
-            # Return the original string as a fallback
-            return " ".join(value_words).strip()
+    try:
+        # Attempt float conversion of first word
+        return float(value_words[0])
+    except ValueError:
+        # Log the exception with details
+        logger.exception(f"Can't parse value in MFILE: {value_words}")
+        # Return the original string as a fallback
+        return " ".join(value_words).strip()
 
 
 def sort_brackets(var):
@@ -412,10 +411,8 @@ def sort_brackets(var):
         tmp_name = var.lstrip("(").split(")")
         if len(tmp_name) > 2:
             return tmp_name[0] + ")"
-        else:
-            return tmp_name[0]
-    else:
-        return ""
+        return tmp_name[0]
+    return ""
 
 
 def clean_line(line):
@@ -474,8 +471,7 @@ def get_unit(variable_desc):
     candidate = variable_desc.rsplit("_", 1)[-1]
     if candidate.startswith("(") and candidate.endswith(")"):
         return candidate[1:-1]
-    else:
-        return None
+    return None
 
 
 def is_number(val):

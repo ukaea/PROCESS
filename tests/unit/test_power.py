@@ -1,22 +1,24 @@
-from typing import NamedTuple, Any
-import pytest
+from typing import Any, NamedTuple
+
 import numpy
+import pytest
 
-
-from process.fortran import fwbs_variables
-from process.fortran import heat_transport_variables
-from process.fortran import pfcoil_variables
-from process.fortran import numerics
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import pf_power_variables
-from process.fortran import times_variables
-from process.fortran import buildings_variables
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constraint_variables,
+    cost_variables,
+    current_drive_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+    times_variables,
+)
 from process.fortran import primary_pumping_variables as ppv
-from process.fortran import constraint_variables
-from process.fortran import cost_variables
-from process.fortran import current_drive_variables
-from process.fortran import tfcoil_variables
 from process.power import Power
 
 
@@ -31,7 +33,6 @@ def power():
 
 
 class CryoParam(NamedTuple):
-
     qnuc: Any = None
 
     inuclear: Any = None
@@ -166,7 +167,6 @@ def test_cryo(cryoparam, monkeypatch, power):
 
 
 class PfpwrParam(NamedTuple):
-
     iohcl: Any = None
 
     peakmva: Any = None
@@ -273,7 +273,8 @@ class PfpwrParam(NamedTuple):
             peakpoloidalpower=0,
             spfbusl=0,
             poloidalpower=numpy.array(
-                numpy.array((0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             spsmva=0,
             vpfskv=0,
@@ -434,7 +435,8 @@ class PfpwrParam(NamedTuple):
             pfclres=0,
             ncirt=8,
             ncls=numpy.array(
-                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             ric=numpy.array(
                 numpy.array(
@@ -1176,7 +1178,8 @@ class PfpwrParam(NamedTuple):
             pfclres=0,
             ncirt=8,
             ncls=numpy.array(
-                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             ric=numpy.array(
                 numpy.array(
@@ -1773,11 +1776,15 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     monkeypatch.setattr(pf_power_variables, "pfckts", pfpwrparam.pfckts)
 
     monkeypatch.setattr(
-        pf_power_variables, "maxpoloidalpower", pfpwrparam.maxpoloidalpower
+        pf_power_variables,
+        "maxpoloidalpower",
+        pfpwrparam.maxpoloidalpower,
     )
 
     monkeypatch.setattr(
-        pf_power_variables, "peakpoloidalpower", pfpwrparam.peakpoloidalpower
+        pf_power_variables,
+        "peakpoloidalpower",
+        pfpwrparam.peakpoloidalpower,
     )
 
     monkeypatch.setattr(pf_power_variables, "spfbusl", pfpwrparam.spfbusl)
@@ -1835,25 +1842,27 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     monkeypatch.setattr(times_variables, "tim", pfpwrparam.tim)
 
     monkeypatch.setattr(
-        times_variables, "t_current_ramp_up", pfpwrparam.t_current_ramp_up
+        times_variables,
+        "t_current_ramp_up",
+        pfpwrparam.t_current_ramp_up,
     )
 
     power.pfpwr(output=False)
 
     assert heat_transport_variables.peakmva == pytest.approx(
-        pfpwrparam.expected_peakmva
+        pfpwrparam.expected_peakmva,
     )
 
     assert pf_power_variables.pfckts == pytest.approx(pfpwrparam.expected_pfckts)
 
     assert pf_power_variables.peakpoloidalpower == pytest.approx(
-        pfpwrparam.expected_peakpoloidalpower
+        pfpwrparam.expected_peakpoloidalpower,
     )
 
     assert pf_power_variables.spfbusl == pytest.approx(pfpwrparam.expected_spfbusl)
 
     assert pf_power_variables.poloidalpower == pytest.approx(
-        pfpwrparam.expected_poloidalpower
+        pfpwrparam.expected_poloidalpower,
     )
 
     assert pf_power_variables.spsmva == pytest.approx(pfpwrparam.expected_spsmva)
@@ -1868,7 +1877,6 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
 
 class AcpowParam(NamedTuple):
-
     efloor: Any = None
 
     baseel: Any = None
@@ -2006,7 +2014,6 @@ def test_acpow(acpowparam, monkeypatch, power):
 
 
 class Power2Param(NamedTuple):
-
     pnetelin: Any = None
 
     ipnet: Any = None
@@ -2539,19 +2546,25 @@ def test_power2(power2param, monkeypatch, power):
     monkeypatch.setattr(heat_transport_variables, "htpsecmw", power2param.htpsecmw)
 
     monkeypatch.setattr(
-        heat_transport_variables, "helpow_cryal", power2param.helpow_cryal
+        heat_transport_variables,
+        "helpow_cryal",
+        power2param.helpow_cryal,
     )
 
     monkeypatch.setattr(pfcoil_variables, "pfwpmw", power2param.pfwpmw)
 
     monkeypatch.setattr(
-        physics_variables, "alpha_power_total", power2param.alpha_power_total
+        physics_variables,
+        "alpha_power_total",
+        power2param.alpha_power_total,
     )
 
     monkeypatch.setattr(physics_variables, "ignite", power2param.ignite)
 
     monkeypatch.setattr(
-        physics_variables, "pinnerzoneradmw", power2param.pinnerzoneradmw
+        physics_variables,
+        "pinnerzoneradmw",
+        power2param.pinnerzoneradmw,
     )
 
     monkeypatch.setattr(physics_variables, "pradmw", power2param.pradmw)
@@ -2627,30 +2640,29 @@ def test_power2(power2param, monkeypatch, power):
     power.power2(output=False)
 
     assert heat_transport_variables.pnetelmw == pytest.approx(
-        power2param.expected_pnetelmw
+        power2param.expected_pnetelmw,
     )
 
     assert heat_transport_variables.precircmw == pytest.approx(
-        power2param.expected_precircmw
+        power2param.expected_precircmw,
     )
 
     assert heat_transport_variables.fachtmw == pytest.approx(
-        power2param.expected_fachtmw
+        power2param.expected_fachtmw,
     )
 
     assert heat_transport_variables.pgrossmw == pytest.approx(
-        power2param.expected_pgrossmw
+        power2param.expected_pgrossmw,
     )
 
     assert heat_transport_variables.psechtmw == pytest.approx(
-        power2param.expected_psechtmw
+        power2param.expected_psechtmw,
     )
 
     assert power.pcoresystems == pytest.approx(power2param.expected_pcoresystems)
 
 
 class Power3Param(NamedTuple):
-
     etacd: Any = None
 
     htpmw: Any = None
@@ -2801,7 +2813,9 @@ def test_power3(power3param, monkeypatch, power):
     monkeypatch.setattr(times_variables, "t_ramp_down", power3param.t_ramp_down)
 
     monkeypatch.setattr(
-        times_variables, "t_current_ramp_up", power3param.t_current_ramp_up
+        times_variables,
+        "t_current_ramp_up",
+        power3param.t_current_ramp_up,
     )
 
     power.power3(output=False)

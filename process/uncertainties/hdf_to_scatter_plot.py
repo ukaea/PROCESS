@@ -8,6 +8,7 @@ CCFE
 """
 
 import argparse
+
 import pandas as pd
 from pylab import figure, savefig
 
@@ -21,7 +22,7 @@ def parse_args(args):
     :rtype: Namespace
     """
     parser = argparse.ArgumentParser(
-        description="Program to read and  " "plot PROCESS hdf5 output."
+        description="Program to read and  plot PROCESS hdf5 output.",
     )
 
     parser.add_argument(
@@ -86,7 +87,9 @@ def main(args=None):
     figsize = (8, 8)
     figure(figsize=figsize)
     pd.plotting.scatter_matrix(
-        data_set_converge[output_names], alpha=0.2, diagonal="kde"
+        data_set_converge[output_names],
+        alpha=0.2,
+        diagonal="kde",
     )
     savefig("uncertainties." + args.save_format)
 

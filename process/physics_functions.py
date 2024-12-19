@@ -1,11 +1,12 @@
 import logging
+from dataclasses import dataclass
+
 import numpy as np
 from scipy import integrate
-from dataclasses import dataclass
-from process.fortran import physics_variables, physics_module, constants
-from process.plasma_profiles import PlasmaProfile
-import process.impurity_radiation as impurity
 
+import process.impurity_radiation as impurity
+from process.fortran import constants, physics_module, physics_variables
+from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -682,7 +683,8 @@ class BoschHaleConstants:
 
 
 def fusion_rate_integral(
-    plasma_profile: PlasmaProfile, reaction_constants: BoschHaleConstants
+    plasma_profile: PlasmaProfile,
+    reaction_constants: BoschHaleConstants,
 ) -> np.ndarray:
     """
     Evaluate the integrand for the fusion power integration.
@@ -722,17 +724,15 @@ def fusion_rate_integral(
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
     # just the volume averged ion density.
     fusion_integral = (
-        2.0
-        * plasma_profile.teprofile.profile_x
-        * sigv
-        * density_profile_normalised**2
+        2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
     )
 
     return fusion_integral
 
 
 def bosch_hale_reactivity(
-    ion_temperature_profile: np.ndarray, reaction_constants: BoschHaleConstants
+    ion_temperature_profile: np.ndarray,
+    reaction_constants: BoschHaleConstants,
 ) -> np.ndarray:
     """
     Calculate the volumetric fusion reaction rate <sigma v> (m^3/s) for one of four nuclear reactions using
@@ -959,7 +959,6 @@ def fast_alpha_beta(
 
     # Determine average fast alpha density
     if physics_variables.f_deuterium < 1.0:
-
         betath = (
             2.0e3
             * constants.rmu0
@@ -1236,7 +1235,7 @@ def beamcalc(
         2.0
         * constants.kiloelectron_volt
         * critical_energy_deuterium
-        / (constants.atomic_mass_unit * ATOMIC_MASS_DEUTERIUM)
+        / (constants.atomic_mass_unit * ATOMIC_MASS_DEUTERIUM),
     )
 
     # Find the speed of the tritium particle when it has the critical energy.
@@ -1245,7 +1244,7 @@ def beamcalc(
         2.0
         * constants.kiloelectron_volt
         * critical_energy_tritium
-        / (constants.atomic_mass_unit * ATOMIC_MASS_TRITIUM)
+        / (constants.atomic_mass_unit * ATOMIC_MASS_TRITIUM),
     )
 
     # Source term representing the number of ions born per unit time per unit volume.
@@ -1278,10 +1277,12 @@ def beamcalc(
     # Fast Ion Pressure
     # This is the same form as the ideal gas law pressure, P=1/3 * nmv^2
     deuterium_pressure = pressure_coeff_deuterium * _fast_ion_pressure_integral(
-        beam_energy, critical_energy_deuterium
+        beam_energy,
+        critical_energy_deuterium,
     )
     tritium_pressure = pressure_coeff_tritium * _fast_ion_pressure_integral(
-        beam_energy, critical_energy_tritium
+        beam_energy,
+        critical_energy_tritium,
     )
 
     # Beam deposited energy
@@ -1295,18 +1296,32 @@ def beamcalc(
     ) / hot_beam_density
 
     hot_deuterium_rate = 1e-4 * beam_reaction_rate(
-        ATOMIC_MASS_DEUTERIUM, deuterium_critical_energy_speed, beam_energy
+        ATOMIC_MASS_DEUTERIUM,
+        deuterium_critical_energy_speed,
+        beam_energy,
     )
 
     hot_tritium_rate = 1e-4 * beam_reaction_rate(
-        ATOMIC_MASS_TRITIUM, tritium_critical_energy_speed, beam_energy
+        ATOMIC_MASS_TRITIUM,
+        tritium_critical_energy_speed,
+        beam_energy,
     )
 
     deuterium_beam_alpha_power = alpha_power_beam(
-        deuterium_beam_density, nt, hot_deuterium_rate, plasma_volume, ti, svdt
+        deuterium_beam_density,
+        nt,
+        hot_deuterium_rate,
+        plasma_volume,
+        ti,
+        svdt,
     )
     tritium_beam_alpha_power = alpha_power_beam(
-        tritium_beam_density, nd, hot_tritium_rate, plasma_volume, ti, svdt
+        tritium_beam_density,
+        nd,
+        hot_tritium_rate,
+        plasma_volume,
+        ti,
+        svdt,
     )
 
     return (
@@ -1397,7 +1412,8 @@ def alpha_power_beam(
     ratio = (
         sigmav_dt
         / bosch_hale_reactivity(
-            np.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
+            np.array([ti]),
+            BoschHaleConstants(**REACTION_CONSTANTS_DT),
         ).item()
     )
 
@@ -1413,7 +1429,9 @@ def alpha_power_beam(
 
 
 def beam_reaction_rate(
-    relative_mass_ion: float, critical_velocity: float, beam_energy_keV: float
+    relative_mass_ion: float,
+    critical_velocity: float,
+    beam_energy_keV: float,
 ) -> float:
     """
     Calculate the hot beam fusion reaction rate.
@@ -1442,11 +1460,9 @@ def beam_reaction_rate(
     # Find the speed of the beam particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
     beam_velocity = np.sqrt(
-        (
-            (beam_energy_keV * constants.kiloelectron_volt)
-            * 2.0
-            / (relative_mass_ion * constants.atomic_mass_unit)
-        )
+        (beam_energy_keV * constants.kiloelectron_volt)
+        * 2.0
+        / (relative_mass_ion * constants.atomic_mass_unit),
     )
 
     relative_velocity = beam_velocity / critical_velocity
@@ -1465,7 +1481,8 @@ def beam_reaction_rate(
 
 
 def _hot_beam_fusion_reaction_rate_integrand(
-    velocity_ratio: float, critical_velocity: float
+    velocity_ratio: float,
+    critical_velocity: float,
 ) -> float:
     """
     Integrand function for the hot beam fusion reaction rate.
@@ -1496,9 +1513,7 @@ def _hot_beam_fusion_reaction_rate_integrand(
     beam_velcoity = critical_velocity * velocity_ratio
 
     # Calculate the beam kinetic energy per amu and normalise to keV
-    xvcs = (
-        beam_velcoity**2 * constants.atomic_mass_unit / (constants.kiloelectron_volt)
-    )
+    xvcs = beam_velcoity**2 * constants.atomic_mass_unit / (constants.kiloelectron_volt)
 
     # Calculate the fusion reaction cross-section from beam kinetic energy
     cross_section = _beam_fusion_cross_section(xvcs)
@@ -1543,9 +1558,8 @@ def _beam_fusion_cross_section(vrelsq: float) -> float:
     # Set limits on cross-section at low and high beam energies
     if beam_energy < 10.0:
         return 1.0e-27
-    elif beam_energy > 1.0e4:
+    if beam_energy > 1.0e4:
         return 8.0e-26
-    else:
-        t1 = a2 / (1.0 + (a3 * beam_energy - a4) ** 2) + a5
-        t2 = beam_energy * (np.exp(a1 / np.sqrt(beam_energy)) - 1.0)
-        return 1.0e-24 * t1 / t2
+    t1 = a2 / (1.0 + (a3 * beam_energy - a4) ** 2) + a5
+    t2 = beam_energy * (np.exp(a1 / np.sqrt(beam_energy)) - 1.0)
+    return 1.0e-24 * t1 / t2

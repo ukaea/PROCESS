@@ -4,10 +4,12 @@ These tests check the utilities that PROCESS uses, mainly for file IO. They run
 on each of the regression test scenarios.
 """
 
-import pytest
 import logging
-import process.io.mfile as mf
+
+import pytest
+
 import process.io.in_dat as indat
+import process.io.mfile as mf
 
 logger = logging.getLogger(__name__)
 

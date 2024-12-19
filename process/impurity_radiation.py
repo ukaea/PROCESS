@@ -1,15 +1,13 @@
-import numpy
 import dataclasses
+import logging
 import re
 from importlib import resources
-from typing import Optional, List
 from pathlib import Path
+
+import numpy
 from scipy import integrate
-from process.fortran import impurity_radiation_module
-from process.fortran import error_handling
 
-
-import logging
+from process.fortran import error_handling, impurity_radiation_module
 
 logger = logging.getLogger(__name__)
 
@@ -197,14 +195,14 @@ class ImpurityDataHeader:
     """
 
     content: str
-    data: Optional[List[float]] = None
+    data: list[float] | None = None
 
 
 def read_impurity_file(impurity_file: Path):
     with open(impurity_file) as f:
         data = f.readlines()
 
-    file_contents: List[ImpurityDataHeader] = []
+    file_contents: list[ImpurityDataHeader] = []
 
     for line in data:
         # do not parse comments
@@ -260,7 +258,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 
     if len_tab > 200:
         print(
-            f"ERROR: len_tab is {len_tab} but has a maximum value of {impurity_radiation_module.all_array_hotfix_len}"
+            f"ERROR: len_tab is {len_tab} but has a maximum value of {impurity_radiation_module.all_array_hotfix_len}",
         )
 
     impurity_label = label.decode("utf-8")
@@ -271,7 +269,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 
     if not lz_file.exists() or not z_file.exists():
         raise FileNotFoundError(
-            f"Cannot find one or both of the impurity datafiles: {lz_file}, {z_file}"
+            f"Cannot find one or both of the impurity datafiles: {lz_file}, {z_file}",
         )
 
     lz_data = read_impurity_file(lz_file)
@@ -291,7 +289,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
         raise RuntimeError(f"Cannot locate Te data in {lz_file}")
     if lz is None:
         raise RuntimeError(
-            f"Cannot locate Lz for infinite confinement data in {lz_file}"
+            f"Cannot locate Lz for infinite confinement data in {lz_file}",
         )
 
     zav = None
@@ -301,7 +299,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 
     if zav is None:
         raise RuntimeError(
-            f"Cannot locate Zav for infinite confinement data in {z_file}"
+            f"Cannot locate Zav for infinite confinement data in {z_file}",
         )
 
     impurity_radiation_module.impurity_arr_temp_kev[no - 1, :] = Te * 1e-3
@@ -310,7 +308,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 
 
 def z2index(zimp):
-    for i in range(0, len(impurity_radiation_module.impurity_arr_label)):
+    for i in range(len(impurity_radiation_module.impurity_arr_label)):
         if zimp == impurity_radiation_module.impurity_arr_z[i]:
             z2index = i
             return z2index
@@ -357,13 +355,13 @@ def zav_of_te(imp_element_index, tprofile):
     indices[indices < 0] = 0
     yi = impurity_radiation_module.impurity_arr_zav[imp_element_index, indices - 1]
     xi = numpy.log(
-        impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices - 1]
+        impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices - 1],
     )
     c = (
         impurity_radiation_module.impurity_arr_zav[imp_element_index, indices] - yi
     ) / (
         numpy.log(
-            impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices]
+            impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices],
         )
         - xi
     )
@@ -373,7 +371,8 @@ def zav_of_te(imp_element_index, tprofile):
         <= impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, 0]
     )
     zav_of_te[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_zav[
-        imp_element_index, 0
+        imp_element_index,
+        0,
     ]
     greater_than_imp_temp_mask = (
         tprofile
@@ -409,19 +408,19 @@ def pimpden(imp_element_index, nprofile, tprofile):
     indices[indices < 0] = 0
 
     yi = numpy.log(
-        impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices - 1]
+        impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices - 1],
     )
     xi = numpy.log(
-        impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices - 1]
+        impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices - 1],
     )
     c = (
         numpy.log(
-            impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices]
+            impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices],
         )
         - yi
     ) / (
         numpy.log(
-            impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices]
+            impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices],
         )
         - xi
     )
@@ -439,7 +438,8 @@ def pimpden(imp_element_index, nprofile, tprofile):
         <= impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, 0]
     )
     pimpden[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_lz_wm3[
-        imp_element_index, 0
+        imp_element_index,
+        0,
     ]
     # if not impurity_radiation_module.toolow:  # Only print warning once during a run
     #     impurity_radiation_module.toolow = True
@@ -555,10 +555,14 @@ class ImpurityRadiation:
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss."""
         self.radtot = 2.0e-6 * integrate.simpson(
-            self.radtot_profile, x=self.rho, dx=self.rhodx
+            self.radtot_profile,
+            x=self.rho,
+            dx=self.rhodx,
         )
         self.radcore = 2.0e-6 * integrate.simpson(
-            self.radcore_profile, x=self.rho, dx=self.rhodx
+            self.radcore_profile,
+            x=self.rho,
+            dx=self.rhodx,
         )
 
     def calculate_imprad(self):

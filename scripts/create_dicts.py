@@ -15,18 +15,17 @@ the dicts from the saved JSON file and use them.
 This ultimately provides Process Python with the ability to access variable
 information in the Process Fortran source code.
 """
-import re
-import logging
+
 import argparse
 import json
+import logging
 import pickle
-
-import numpy
-import create_dicts_config
+import re
 from pathlib import Path
 
+import create_dicts_config
+import numpy
 from python_dicts import get_python_variables
-
 
 output_dict = {}
 # Dict of nested dicts e.g. output_dict['DICT_DESCRIPTIONS'] =
@@ -35,7 +34,7 @@ output_dict = {}
 
 
 # Classes for the various dictionary types
-class Dictionary(object):
+class Dictionary:
     # Base Dictionary class for all dicts
     def __init__(self, name):
         self.name = name  # Dict name
@@ -76,7 +75,8 @@ class ProjectDictionary(Dictionary):
 
         for annotated_variable in self.python_variables:
             self.dict[self.name][annotated_variable.name] = getattr(
-                annotated_variable, self.value_type
+                annotated_variable,
+                self.value_type,
             )
 
 
@@ -110,7 +110,11 @@ class VariableDescriptions(ProjectDictionary):
     # Dictionary of variable descriptions
     def __init__(self, project, python_variables):
         ProjectDictionary.__init__(
-            self, "DICT_DESCRIPTIONS", project, python_variables, "doc"
+            self,
+            "DICT_DESCRIPTIONS",
+            project,
+            python_variables,
+            "doc",
         )
 
     def make_dict(self):
@@ -120,14 +124,9 @@ class VariableDescriptions(ProjectDictionary):
                 desc = getattr(var, self.value_type)
 
                 # If var key doesn't exist, add it
-                if var.name not in self.dict[self.name]:
-                    self.dict[self.name][var.name] = desc
-
-                # Only overwrite description if it's falsey and we're
-                # overwriting with something truthy
-                # Guards against multiple declarations in different modules,
-                # when only one declaration is commented
-                elif not self.dict[self.name][var.name] and desc:
+                if var.name not in self.dict[self.name] or (
+                    not self.dict[self.name][var.name] and desc
+                ):
                     self.dict[self.name][var.name] = desc
 
         for annotated_variable in self.python_variables:
@@ -170,7 +169,11 @@ class DefaultValues(ProjectDictionary):
     # Dictionary of default values of variables
     def __init__(self, project, python_variables):
         ProjectDictionary.__init__(
-            self, "DICT_DEFAULT", project, python_variables, "initial"
+            self,
+            "DICT_DEFAULT",
+            project,
+            python_variables,
+            "initial",
         )
 
     def make_dict(self):
@@ -371,7 +374,7 @@ class DefaultValues(ProjectDictionary):
                 r"(\w+)"  # capture "name" of "subroutine init_name"
                 r"(.*?end\ssubroutine)",  # capture all subroutine contents
                 lines,
-                re.S,  # Dot matches newline characters (allows multiline matches)
+                re.DOTALL,  # Dot matches newline characters (allows multiline matches)
             )
 
             if init_match:
@@ -400,7 +403,7 @@ class DefaultValues(ProjectDictionary):
             r"(?:\s*!))|"  # or a comment
             r"(?:\s*if\s))",  # or an if statement
             init_contents,
-            re.S,  # Allow multiline matches
+            re.DOTALL,  # Allow multiline matches
         )
 
         # Now process captured value
@@ -464,7 +467,7 @@ class DefaultValues(ProjectDictionary):
             # This probably means that something was picked up by the init
             # subroutine regex in error
             return
-        elif self.dict[self.name][var] is None:
+        if self.dict[self.name][var] is None:
             # Only overwrite the value if Ford has produced a None, which is
             # stored on self.dict
             # Find the var in the Ford project again
@@ -503,7 +506,11 @@ class Modules(ProjectDictionary):
     # Dictionary mapping modules to arrays of its module-level variables
     def __init__(self, project, python_variables):
         ProjectDictionary.__init__(
-            self, "DICT_MODULE", project, python_variables, "name"
+            self,
+            "DICT_MODULE",
+            project,
+            python_variables,
+            "name",
         )
 
     def make_dict(self):
@@ -518,7 +525,7 @@ class Modules(ProjectDictionary):
             if annotated_variable.parent not in self.dict[self.name]:
                 self.dict[self.name][annotated_variable.parent] = []
             self.dict[self.name][annotated_variable.parent].append(
-                annotated_variable.name
+                annotated_variable.name,
             )
 
 
@@ -539,9 +546,8 @@ def to_type(string):
             # try a float conversion
             string_mod = string.strip().lower().replace("d", "e")
             return float(string_mod)
-        else:
-            # try an int conversion
-            return int(string.strip())
+        # try an int conversion
+        return int(string.strip())
     except ValueError:
         match = re.match(r"\s*(\d+)", string)
         if match:
@@ -552,7 +558,7 @@ def to_type(string):
         return string.strip()
 
 
-def grep(file, regexp, flags=re.U):
+def grep(file, regexp, flags=re.UNICODE):
     """Implements an in-python grep. Returns the lines that match
     as a list.
     Args:
@@ -567,7 +573,7 @@ def grep(file, regexp, flags=re.U):
     lines = []
 
     try:
-        with open(file, "r", encoding="utf-8") as file_open:
+        with open(file, encoding="utf-8") as file_open:
             for line in file_open.readlines():
                 if re.search(regexp, line, flags):
                     lines.append(line)
@@ -591,7 +597,7 @@ def slice_file(file, re1, re2):
          lines --> List of lines from file between re1 and re2 inclusive
     """
 
-    filetext = open(file, "r", encoding="utf-8").readlines()
+    filetext = open(file, encoding="utf-8").readlines()
     start = None
     for i in range(len(filetext)):
         # look for first match
@@ -866,7 +872,6 @@ def dict_ixc_full():
             ixc_full[itv_num] = dict()
 
     for line in lines:
-
         if "lablxc" in line and "=" in line:
             if "lablxc(i)" not in line and "lablxc(ixc(i))" not in line:
                 labl_num = line.split("(")[1].split(")")[0]
@@ -913,9 +918,7 @@ def dict_ixc_default():
         if name in default:
             ixc_default[name] = default[name]
         else:
-            logging.warning(
-                "print_dict_ixc could not find %s" " in DICT_DEFAULT\n", name
-            )
+            logging.warning("print_dict_ixc could not find %s in DICT_DEFAULT\n", name)
 
     return ixc_default
 
@@ -950,34 +953,34 @@ def create_dicts(project):
     # Make dict objects
     # Some dicts depend on other dicts already existing in output_dicts, so
     # be careful if changing the order!
-    dict_objects.extend(
-        [
-            VariableDescriptions(project, python_variables),
-            DefaultValues(project, python_variables),
-            Modules(project, python_variables),
-            HardcodedDictionary("DICT_TF_TYPE", create_dicts_config.DICT_TF_TYPE),
-            HardcodedDictionary("DICT_FIMP", create_dicts_config.DICT_FIMP),
-            HardcodedDictionary(
-                "DICT_OPTIMISATION_VARS", create_dicts_config.DICT_OPTIMISATION_VARS
-            ),
-            HardcodedDictionary("IFAIL_SUCCESS", create_dicts_config.IFAIL_SUCCESS),
-            HardcodedDictionary(
-                "PARAMETER_DEFAULTS", create_dicts_config.PARAMETER_DEFAULTS
-            ),
-            HardcodedDictionary("NON_F_VALUES", create_dicts_config.NON_F_VALUES),
-            SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
-            SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
-            SourceDictionary("DICT_VAR_TYPE", dict_var_type),
-            SourceDictionary("DICT_ICC_FULL", dict_icc_full),
-            SourceDictionary("DICT_IXC2NSWEEP", dict_ixc2nsweep),
-            SourceDictionary("DICT_NSWEEP2IXC", dict_nsweep2ixc),
-            SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
-            SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),
-            SourceDictionary("DICT_IXC_DEFAULT", dict_ixc_default),
-            SourceDictionary("DICT_IXC_SIMPLE", dict_ixc_simple),
-            SourceDictionary("DICT_IXC_SIMPLE_REV", dict_ixc_simple_rev),
-        ]
-    )
+    dict_objects.extend([
+        VariableDescriptions(project, python_variables),
+        DefaultValues(project, python_variables),
+        Modules(project, python_variables),
+        HardcodedDictionary("DICT_TF_TYPE", create_dicts_config.DICT_TF_TYPE),
+        HardcodedDictionary("DICT_FIMP", create_dicts_config.DICT_FIMP),
+        HardcodedDictionary(
+            "DICT_OPTIMISATION_VARS",
+            create_dicts_config.DICT_OPTIMISATION_VARS,
+        ),
+        HardcodedDictionary("IFAIL_SUCCESS", create_dicts_config.IFAIL_SUCCESS),
+        HardcodedDictionary(
+            "PARAMETER_DEFAULTS",
+            create_dicts_config.PARAMETER_DEFAULTS,
+        ),
+        HardcodedDictionary("NON_F_VALUES", create_dicts_config.NON_F_VALUES),
+        SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
+        SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
+        SourceDictionary("DICT_VAR_TYPE", dict_var_type),
+        SourceDictionary("DICT_ICC_FULL", dict_icc_full),
+        SourceDictionary("DICT_IXC2NSWEEP", dict_ixc2nsweep),
+        SourceDictionary("DICT_NSWEEP2IXC", dict_nsweep2ixc),
+        SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
+        SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),
+        SourceDictionary("DICT_IXC_DEFAULT", dict_ixc_default),
+        SourceDictionary("DICT_IXC_SIMPLE", dict_ixc_simple),
+        SourceDictionary("DICT_IXC_SIMPLE_REV", dict_ixc_simple_rev),
+    ])
 
     # Make individual dicts within dict objects, process, then add to output_dict
     for dict_object in dict_objects:
@@ -995,9 +998,7 @@ if __name__ == "__main__":
     # create_dicts.py. This module would benefit from more class structuring
 
     # Called from make; parse arguments from make
-    parser = argparse.ArgumentParser(
-        description="Create Fortran-Python " "dictionaries"
-    )
+    parser = argparse.ArgumentParser(description="Create Fortran-Python dictionaries")
     parser.add_argument("fortran_source", help="Fortran source dir")
     parser.add_argument("ford_project", help="The pickled Ford project filename")
     parser.add_argument("dicts_filename", help="The output dicts filename")

@@ -1,34 +1,35 @@
 import math
-from typing import Tuple
+
+import numba as nb
 import numpy as np
 import scipy
-import numba as nb
+from scipy import integrate
 from scipy.optimize import root_scalar
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-
-import scipy.integrate as integrate
 
 import process.physics_functions as physics_funcs
-import process.impurity_radiation as impurity_radiation
+from process import impurity_radiation
 from process.fortran import (
-    constraint_variables,
-    reinke_variables,
-    reinke_module,
-    impurity_radiation_module,
+    build_variables,
     constants,
-    physics_variables,
-    physics_module,
-    pulse_variables,
-    times_variables,
+    constraint_variables,
     current_drive_variables,
+    divertor_variables,
     error_handling,
     fwbs_variables,
-    build_variables,
-    divertor_variables,
+    impurity_radiation_module,
     numerics,
+    physics_module,
+    physics_variables,
+    pulse_variables,
+    reinke_module,
+    reinke_variables,
     stellarator_variables,
+    times_variables,
+)
+from process.fortran import (
     process_output as po,
 )
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
 @nb.jit(nopython=True, cache=True)
@@ -109,9 +110,7 @@ def vscalc(
     aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
         2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
     )
-    beps = (
-        0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-    )
+    beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
     rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
 
     rlp = rlpext + rlpint
@@ -170,8 +169,11 @@ def culblm(bt, dnbeta, plasma_current, rminor):
 
 @nb.jit(nopython=True, cache=True)
 def _plascar_bpol(
-    aspect: float, eps: float, kappa: float, delta: float
-) -> Tuple[float, float, float, float]:
+    aspect: float,
+    eps: float,
+    kappa: float,
+    delta: float,
+) -> tuple[float, float, float, float]:
     """
     Calculate the poloidal field coefficients for determining the plasma current
     and poloidal field.
@@ -269,14 +271,13 @@ def calculate_poloidal_field(
     # Use Ampere's law using the plasma poloidal cross-section
     if i_plasma_current != 2:
         return rmu0 * ip / perim
-    else:
-        # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
-        ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
+    # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
+    ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
 
-        # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
+    # Transform q95 to qbar
+    qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
-        return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
+    return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
 def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
@@ -352,7 +353,9 @@ def calculate_plasma_current_peng(
 
 @nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_ipdg89(
-    eps: float, kappa95: float, triang95: float
+    eps: float,
+    kappa95: float,
+    triang95: float,
 ) -> float:
     """
     Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
@@ -382,7 +385,10 @@ def calculate_current_coefficient_ipdg89(
 
 @nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_todd(
-    eps: float, kappa95: float, triang95: float, model: int
+    eps: float,
+    kappa95: float,
+    triang95: float,
+    model: int,
 ) -> float:
     """
     Calculate the fq coefficient used in the two Todd plasma current scalings.
@@ -405,16 +411,11 @@ def calculate_current_coefficient_todd(
     base_scaling = (
         (1.0 + 2.0 * eps**2)
         * ((1.0 + kappa95**2) / 0.5)
-        * (
-            1.24
-            - 0.54 * kappa95
-            + 0.3 * (kappa95**2 + triang95**2)
-            + 0.125 * triang95
-        )
+        * (1.24 - 0.54 * kappa95 + 0.3 * (kappa95**2 + triang95**2) + 0.125 * triang95)
     )
     if model == 1:
         return base_scaling
-    elif model == 2:
+    if model == 2:
         return base_scaling * (1.0 + (abs(kappa95 - 1.2)) ** 3)
 
 
@@ -480,9 +481,9 @@ def calculate_current_coefficient_hastie(
     eprime = er * lamp1 / (1.0 + lamda / 3.0)
 
     # Delta primed in AEA FUS 172
-    deltap = (0.5 * kap1 * eps * 0.5 * li) + (
-        beta0 / (0.5 * kap1 * eps)
-    ) * lamp1**2 / (1.0 + nu)
+    deltap = (0.5 * kap1 * eps * 0.5 * li) + (beta0 / (0.5 * kap1 * eps)) * lamp1**2 / (
+        1.0 + nu
+    )
 
     # Delta/R0 in AEA FUS 172
     deltar = beta0 / 6.0 * (1.0 + 5.0 * lamda / 6.0 + 0.25 * lamda**2) + (
@@ -538,7 +539,9 @@ def calculate_current_coefficient_sauter(
 
 @nb.jit(nopython=True, cache=True)
 def calculate_current_coefficient_fiesta(
-    eps: float, kappa: float, triang: float
+    eps: float,
+    kappa: float,
+    triang: float,
 ) -> float:
     """
     Calculate the fq coefficient used in the FIESTA plasma current scaling.
@@ -614,11 +617,7 @@ def _nevins_integral(
 
     # Compute average electron beta
     betae = (
-        dene
-        * te
-        * 1.0e3
-        * constants.electron_charge
-        / (bt**2 / (2.0 * constants.rmu0))
+        dene * te * 1.0e3 * constants.electron_charge / (bt**2 / (2.0 * constants.rmu0))
     )
 
     nabla = rminor * np.sqrt(y) / rmajor
@@ -700,7 +699,9 @@ def ps_fraction_scene(beta: float) -> float:
 
 @nb.jit(nopython=True, cache=True)
 def _coulomb_logarithm_sauter(
-    radial_elements: int, tempe: np.ndarray, ne: np.ndarray
+    radial_elements: int,
+    tempe: np.ndarray,
+    ne: np.ndarray,
 ) -> np.ndarray:
     """
     Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap current scaling.
@@ -732,7 +733,9 @@ def _coulomb_logarithm_sauter(
 
 @nb.jit(nopython=True, cache=True)
 def _electron_collisions_sauter(
-    radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray
+    radial_elements: np.ndarray,
+    tempe: np.ndarray,
+    ne: np.ndarray,
 ) -> np.ndarray:
     """
     Calculate the frequency of electron-electron collisions used in the arrays for the Sauter bootstrap current scaling.
@@ -795,7 +798,7 @@ def _electron_collisionality_sauter(
             inverse_q[radial_elements - 1]
             * (sqeps[radial_elements - 1] ** 3)
             * np.sqrt(tempe[radial_elements - 1])
-            * 1.875e7
+            * 1.875e7,
         )
     )
 
@@ -934,7 +937,13 @@ def _calculate_l31_coefficient(
 
     # Calculated electron collisionality; nu_e*
     electron_collisionality = _electron_collisionality_sauter(
-        radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
+        radial_elements,
+        rmajor,
+        zeff,
+        inverse_q,
+        sqeps,
+        tempe,
+        ne,
     )
 
     # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
@@ -1020,20 +1029,24 @@ def _calculate_l31_32_coefficient(
 
     # Calculated electron collisionality; nu_e*
     electron_collisionality = _electron_collisionality_sauter(
-        radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
+        radial_elements,
+        rmajor,
+        zeff,
+        inverse_q,
+        sqeps,
+        tempe,
+        ne,
     )
 
     # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
     f32ee_teff = f_trapped / (
-        (
-            1.0
-            + 0.26 * (1.0 - f_trapped) * np.sqrt(electron_collisionality)
-            + (
-                0.18
-                * (1.0 - 0.37 * f_trapped)
-                * electron_collisionality
-                / np.sqrt(charge_profile)
-            )
+        1.0
+        + 0.26 * (1.0 - f_trapped) * np.sqrt(electron_collisionality)
+        + (
+            0.18
+            * (1.0 - 0.37 * f_trapped)
+            * electron_collisionality
+            / np.sqrt(charge_profile)
         )
     )
 
@@ -1057,11 +1070,7 @@ def _calculate_l31_32_coefficient(
             * (f32ee_teff - f32ee_teff**4)
         )
         + (
-            (
-                f32ee_teff**2
-                - f32ee_teff**4
-                - 1.2 * (f32ee_teff**3 - f32ee_teff**4)
-            )
+            (f32ee_teff**2 - f32ee_teff**4 - 1.2 * (f32ee_teff**3 - f32ee_teff**4))
             / (1.0 + 0.22 * charge_profile)
         )
         + (1.2 / (1.0 + 0.5 * charge_profile) * f32ee_teff**4)
@@ -1078,11 +1087,7 @@ def _calculate_l31_32_coefficient(
         + (
             4.95
             / (1.0 + 2.48 * charge_profile)
-            * (
-                f32ei_teff**2
-                - f32ei_teff**4
-                - 0.55 * (f32ei_teff**3 - f32ei_teff**4)
-            )
+            * (f32ei_teff**2 - f32ei_teff**4 - 0.55 * (f32ei_teff**3 - f32ei_teff**4))
         )
         - (1.2 / (1.0 + 0.5 * charge_profile) * f32ei_teff**4)
     )
@@ -1091,7 +1096,14 @@ def _calculate_l31_32_coefficient(
 
     # Corrections suggested by Fable, 15/05/2015
     return _beta_poloidal_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        bt,
+        ne,
+        tempe,
+        inverse_q,
+        rho,
     ) * (big_f32ee_teff + big_f32ei_teff) + _calculate_l31_coefficient(
         radial_elements,
         number_of_elements,
@@ -1107,7 +1119,14 @@ def _calculate_l31_32_coefficient(
         zeff,
         sqeps,
     ) * _beta_poloidal_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        bt,
+        ne,
+        tempe,
+        inverse_q,
+        rho,
     ) / _beta_poloidal_total_sauter(
         radial_elements,
         number_of_elements,
@@ -1181,7 +1200,13 @@ def _calculate_l34_alpha_31_coefficient(
 
     # Calculated electron collisionality; nu_e*
     electron_collisionality = _electron_collisionality_sauter(
-        radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
+        radial_elements,
+        rmajor,
+        zeff,
+        inverse_q,
+        sqeps,
+        tempe,
+        ne,
     )
 
     # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
@@ -1205,16 +1230,21 @@ def _calculate_l34_alpha_31_coefficient(
 
     # Calculate the ion collisionality
     ion_collisionality = _ion_collisionality_sauter(
-        radial_elements, rmajor, inverse_q, sqeps, tempi, amain, zmain, ni
+        radial_elements,
+        rmajor,
+        inverse_q,
+        sqeps,
+        tempi,
+        amain,
+        zmain,
+        ni,
     )
 
     # $\alpha(\nu_{i*})$, Eq.17b
     alpha = (
-        (
-            (alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality))
-            / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
-            + (0.315 * ion_collisionality**2 * f_trapped**6)
-        )
+        (alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality))
+        / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
+        + (0.315 * ion_collisionality**2 * f_trapped**6)
     ) / (1.0 + (0.15 * ion_collisionality**2 * f_trapped**6))
 
     # Corrections suggested by Fable, 15/05/2015
@@ -1404,7 +1434,10 @@ def _beta_poloidal_total_sauter(
 
 @nb.jit(nopython=True, cache=True)
 def _trapped_particle_fraction_sauter(
-    radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0
+    radial_elements: np.ndarray,
+    triang: float,
+    sqeps: np.ndarray,
+    fit: int = 0,
 ) -> np.ndarray:
     """
     Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
@@ -1448,16 +1481,15 @@ def _trapped_particle_fraction_sauter(
         zz = 1.0 - eps
         return 1.0 - zz * np.sqrt(zz) / (1.0 + 1.46 * sqeps_reduced)
 
-    elif fit == 1:
+    if fit == 1:
         # Equation 4 of Sauter 2002; https://doi.org/10.1088/0741-3335/44/9/315.
         # Similar to, but not quite identical to above
 
         return 1.0 - (
-            ((1.0 - eps) ** 2)
-            / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2))
+            ((1.0 - eps) ** 2) / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2))
         )
 
-    elif fit == 2:
+    if fit == 2:
         # Sauter 2016; https://doi.org/10.1016/j.fusengdes.2016.04.033.
         # Includes correction for triangularity
 
@@ -1551,12 +1583,14 @@ class Physics:
 
         # Calculate total magnetic field [T]
         physics_variables.btot = np.sqrt(
-            physics_variables.bt**2 + physics_variables.bp**2
+            physics_variables.bt**2 + physics_variables.bp**2,
         )
 
         # Calculate physics_variables.beta poloidal [-]
         physics_variables.betap = beta_poloidal(
-            physics_variables.btot, physics_variables.bp, physics_variables.beta
+            physics_variables.btot,
+            physics_variables.bp,
+            physics_variables.beta,
         )
 
         # Set PF coil ramp times
@@ -1570,22 +1604,20 @@ class Physics:
             else:
                 times_variables.t_current_ramp_up = times_variables.tohsin
 
-        else:
-            if times_variables.pulsetimings == 0.0e0:
-                # times_variables.t_precharge is input
-                times_variables.t_current_ramp_up = (
-                    physics_variables.plasma_current / 1.0e5
-                )
-                times_variables.t_ramp_down = times_variables.t_current_ramp_up
+        elif times_variables.pulsetimings == 0.0e0:
+            # times_variables.t_precharge is input
+            times_variables.t_current_ramp_up = physics_variables.plasma_current / 1.0e5
+            times_variables.t_ramp_down = times_variables.t_current_ramp_up
 
-            else:
-                # times_variables.t_current_ramp_up is set either in INITIAL or INPUT, or by being
-                # iterated using limit equation 41.
-                times_variables.t_precharge = max(
-                    times_variables.t_precharge, times_variables.t_current_ramp_up
-                )
-                # t_ramp_down = max(t_ramp_down,t_current_ramp_up)
-                times_variables.t_ramp_down = times_variables.t_current_ramp_up
+        else:
+            # times_variables.t_current_ramp_up is set either in INITIAL or INPUT, or by being
+            # iterated using limit equation 41.
+            times_variables.t_precharge = max(
+                times_variables.t_precharge,
+                times_variables.t_current_ramp_up,
+            )
+            # t_ramp_down = max(t_ramp_down,t_current_ramp_up)
+            times_variables.t_ramp_down = times_variables.t_current_ramp_up
 
         # Reset second times_variables.t_burn value (times_variables.t_burn_0).
         # This is used to ensure that the burn time is used consistently;
@@ -1624,12 +1656,14 @@ class Physics:
 
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
         current_drive_variables.diacf_hender = diamagnetic_fraction_hender(
-            physics_variables.beta
+            physics_variables.beta,
         )
 
         # SCENE scaling for diamagnetic current
         current_drive_variables.diacf_scene = diamagnetic_fraction_scene(
-            physics_variables.beta, physics_variables.q95, physics_variables.q0
+            physics_variables.beta,
+            physics_variables.q95,
+            physics_variables.q0,
         )
 
         if physics_variables.i_diamagnetic_current == 1:
@@ -1673,9 +1707,7 @@ class Physics:
         )
         # Calculate the toroidal beta for the Nevins scaling
         betat = (
-            physics_variables.beta
-            * physics_variables.btot**2
-            / physics_variables.bt**2
+            physics_variables.beta * physics_variables.btot**2 / physics_variables.bt**2
         )
 
         current_drive_variables.bscf_nevins = (
@@ -1799,7 +1831,7 @@ class Physics:
 
         if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
             current_drive_variables.bootstrap_current_fraction = abs(
-                current_drive_variables.bootstrap_current_fraction_max
+                current_drive_variables.bootstrap_current_fraction_max,
             )
             current_drive_variables.plasma_current_internal_fraction = (
                 current_drive_variables.bootstrap_current_fraction
@@ -1890,7 +1922,8 @@ class Physics:
 
         # Fraction of plasma current produced by inductive means
         physics_variables.inductive_current_fraction = max(
-            1.0e-10, (1.0e0 - physics_variables.fvsbrnni)
+            1.0e-10,
+            (1.0e0 - physics_variables.fvsbrnni),
         )
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.aux_current_fraction = (
@@ -2026,21 +2059,20 @@ class Physics:
                 * physics_variables.neutron_power_total
                 / physics_variables.sarea
             )
+        elif physics_variables.idivrt == 2:
+            # Double null configuration
+            physics_variables.wallmw = (
+                (1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv)
+                * physics_variables.neutron_power_total
+                / build_variables.fwarea
+            )
         else:
-            if physics_variables.idivrt == 2:
-                # Double null configuration
-                physics_variables.wallmw = (
-                    (1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv)
-                    * physics_variables.neutron_power_total
-                    / build_variables.fwarea
-                )
-            else:
-                # Single null Configuration
-                physics_variables.wallmw = (
-                    (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
-                    * physics_variables.neutron_power_total
-                    / build_variables.fwarea
-                )
+            # Single null Configuration
+            physics_variables.wallmw = (
+                (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                * physics_variables.neutron_power_total
+                / build_variables.fwarea
+            )
 
         # Calculate ion/electron equilibration power
 
@@ -2137,12 +2169,15 @@ class Physics:
                 1.0e0 - physics_variables.ftar
             ) * physics_variables.pdivt
             physics_variables.pdivmax = max(
-                physics_variables.pdivl, physics_variables.pdivu
+                physics_variables.pdivl,
+                physics_variables.pdivu,
             )
 
         # Resistive diffusion time = current penetration time ~ mu0.a^2/resistivity
         physics_variables.res_time = res_diff_time(
-            physics_variables.rmajor, physics_variables.rplas, physics_variables.kappa95
+            physics_variables.rmajor,
+            physics_variables.rplas,
+            physics_variables.kappa95,
         )
 
         # Power transported to the first wall by escaped alpha particles
@@ -2315,23 +2350,26 @@ class Physics:
                 * physics_variables.pradmw
                 / physics_variables.sarea
             )
+        elif physics_variables.idivrt == 2:
+            # Double Null configuration in - including SoL radiation
+            physics_variables.photon_wall = (
+                1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
+            ) * physics_variables.pradmw / build_variables.fwarea + (
+                1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
+            ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / (
+                build_variables.fwarea
+            )
         else:
-            if physics_variables.idivrt == 2:
-                # Double Null configuration in - including SoL radiation
-                physics_variables.photon_wall = (
-                    1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
-                ) * physics_variables.pradmw / build_variables.fwarea + (
-                    1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
-                ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / (
-                    build_variables.fwarea
-                )
-            else:
-                # Single null configuration - including SoL radaition
-                physics_variables.photon_wall = (
-                    1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv
-                ) * physics_variables.pradmw / build_variables.fwarea + (
-                    1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv
-                ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / build_variables.fwarea
+            # Single null configuration - including SoL radaition
+            physics_variables.photon_wall = (
+                (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                * physics_variables.pradmw
+                / build_variables.fwarea
+                + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                * physics_variables.rad_fraction_sol
+                * physics_variables.pdivt
+                / build_variables.fwarea
+            )
 
         constraint_variables.peakradwallload = (
             physics_variables.photon_wall * constraint_variables.peakfactrad
@@ -2462,7 +2500,17 @@ class Physics:
 
     @staticmethod
     def culdlm(
-        bt, idensl, pdivt, plasma_current, prn1, qcyl, q95, rmajor, rminor, sarea, zeff
+        bt,
+        idensl,
+        pdivt,
+        plasma_current,
+        prn1,
+        qcyl,
+        q95,
+        rmajor,
+        rminor,
+        sarea,
+        zeff,
     ):
         """Density limit calculation
         author: P J Knight, CCFE, Culham Science Centre
@@ -2500,18 +2548,14 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[0] = (
-            1.54e20 * qperp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
-        ) / prn1
+        dlimit[0] = (1.54e20 * qperp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45) / prn1
 
         # Borrass density limit model for ITER (I)
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
-        dlimit[1] = (
-            1.8e20 * qperp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
-        ) / prn1
+        dlimit[1] = (1.8e20 * qperp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22) / prn1
 
         # Borrass density limit model for ITER (II)
         # This applies to the density at the plasma edge, so must be scaled
@@ -2519,9 +2563,7 @@ class Physics:
         # This formula is (almost) identical to that in the original routine
         # denlim (now deleted).
 
-        dlimit[2] = (
-            0.5e20 * qperp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
-        ) / prn1
+        dlimit[2] = (0.5e20 * qperp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09) / prn1
 
         # JET edge radiation density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -2602,7 +2644,8 @@ class Physics:
         for imp in range(impurity_radiation_module.nimp):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 znimp += impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.te])
+                    imp,
+                    np.array([physics_variables.te]),
                 ).squeeze() * (
                     impurity_radiation_module.impurity_arr_frac[imp]
                     * physics_variables.dene
@@ -2686,7 +2729,8 @@ class Physics:
             physics_variables.zeff += (
                 impurity_radiation_module.impurity_arr_frac[imp]
                 * impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.te])
+                    imp,
+                    np.array([physics_variables.te]),
                 ).squeeze()
                 ** 2
             )
@@ -2723,7 +2767,7 @@ class Physics:
             pc = physics_variables.pcoef
 
         physics_variables.f_alpha_electron = 0.88155 * np.exp(
-            -physics_variables.te * pc / 67.4036
+            -physics_variables.te * pc / 67.4036,
         )
         physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
@@ -2772,7 +2816,8 @@ class Physics:
                 physics_variables.zeffai += (
                     impurity_radiation_module.impurity_arr_frac[imp]
                     * impurity_radiation.zav_of_te(
-                        imp, np.array([physics_variables.te])
+                        imp,
+                        np.array([physics_variables.te]),
                     ).squeeze()
                     ** 2
                     / impurity_radiation_module.impurity_arr_amass[imp]
@@ -2933,7 +2978,7 @@ class Physics:
         sf: float,
         triang: float,
         triang95: float,
-    ) -> Tuple[float, float, float, float, float]:
+    ) -> tuple[float, float, float, float, float]:
         """Calculate the plasma current.
 
         Args:
@@ -2998,7 +3043,7 @@ class Physics:
         # Only the Sauter scaling (i_plasma_current=8) is suitable for negative triangularity:
         if i_plasma_current != 8 and triang < 0.0:
             raise ValueError(
-                f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
+                f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}",
             )
 
         # Calculate the function Fq that scales the edge q from the
@@ -3011,7 +3056,13 @@ class Physics:
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:
             plasma_current = 1.0e6 * calculate_plasma_current_peng(
-                q95, aspect_ratio, eps, rminor, bt, kappa, triang
+                q95,
+                aspect_ratio,
+                eps,
+                rminor,
+                bt,
+                kappa,
+                triang,
             )
 
         # Simple ITER scaling (simply the cylindrical case)
@@ -3034,7 +3085,14 @@ class Physics:
         elif i_plasma_current == 7:
             # N.B. If iprofile=1, alphaj will be wrong during the first call (only)
             fq = calculate_current_coefficient_hastie(
-                alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0
+                alphaj,
+                alphap,
+                bt,
+                triang95,
+                eps,
+                kappa95,
+                p0,
+                constants.rmu0,
             )
 
         # Sauter scaling allowing negative triangularity [FED May 2016]
@@ -3125,7 +3183,11 @@ class Physics:
             times_variables.t_fusion_ramp,
         )
         po.ovarre(
-            self.outfile, "Burn time (s)", "(t_burn)", times_variables.t_burn, "OP "
+            self.outfile,
+            "Burn time (s)",
+            "(t_burn)",
+            times_variables.t_burn,
+            "OP ",
         )
         po.ovarrf(
             self.outfile,
@@ -3180,7 +3242,7 @@ class Physics:
             * constants.proton_mass
             * physics_variables.aion
             * physics_module.total_plasma_internal_energy
-            / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla)
+            / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla),
         ) / (
             constants.electron_charge
             * physics_variables.bt
@@ -3231,7 +3293,10 @@ class Physics:
 
         po.osubhd(self.outfile, "Plasma Geometry :")
         po.ovarrf(
-            self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor
+            self.outfile,
+            "Major radius (m)",
+            "(rmajor)",
+            physics_variables.rmajor,
         )
         po.ovarrf(
             self.outfile,
@@ -3491,12 +3556,18 @@ class Physics:
 
         if stellarator_variables.istell == 0:
             po.ovarrf(
-                self.outfile, "Safety factor on axis", "(q0)", physics_variables.q0
+                self.outfile,
+                "Safety factor on axis",
+                "(q0)",
+                physics_variables.q0,
             )
 
             if physics_variables.i_plasma_current == 2:
                 po.ovarrf(
-                    self.outfile, "Mean edge safety factor", "(q)", physics_variables.q
+                    self.outfile,
+                    "Mean edge safety factor",
+                    "(q)",
+                    physics_variables.q,
                 )
 
             po.ovarrf(
@@ -3557,7 +3628,11 @@ class Physics:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Fast alpha beta", "(betaft)", physics_variables.betaft, "OP "
+            self.outfile,
+            "Fast alpha beta",
+            "(betaft)",
+            physics_variables.betaft,
+            "OP ",
         )
         po.ovarre(
             self.outfile,
@@ -3701,7 +3776,10 @@ class Physics:
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
-            self.outfile, "Electron temperature (keV)", "(te)", physics_variables.te
+            self.outfile,
+            "Electron temperature (keV)",
+            "(te)",
+            physics_variables.te,
         )
         po.ovarrf(
             self.outfile,
@@ -3726,7 +3804,10 @@ class Physics:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Electron density (/m3)", "(dene)", physics_variables.dene
+            self.outfile,
+            "Electron density (/m3)",
+            "(dene)",
+            physics_variables.dene,
         )
         po.ovarre(
             self.outfile,
@@ -3774,7 +3855,11 @@ class Physics:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Fuel density (/m3)", "(deni)", physics_variables.deni, "OP "
+            self.outfile,
+            "Fuel density (/m3)",
+            "(deni)",
+            physics_variables.deni,
+            "OP ",
         )
         po.ovarre(
             self.outfile,
@@ -3842,12 +3927,12 @@ class Physics:
 
         for imp in range(impurity_radiation_module.nimp):
             # MDK Update fimp, as this will make the ITV output work correctly.
-            impurity_radiation_module.fimp[
-                imp
-            ] = impurity_radiation_module.impurity_arr_frac[imp]
+            impurity_radiation_module.fimp[imp] = (
+                impurity_radiation_module.impurity_arr_frac[imp]
+            )
             str1 = (
                 f2py_compatible_to_string(
-                    impurity_radiation_module.impurity_arr_label[imp]
+                    impurity_radiation_module.impurity_arr_label[imp],
                 )
                 + " concentration"
             )
@@ -3855,7 +3940,11 @@ class Physics:
             # MDK Add output flag for H which is calculated.
             if imp == 0:
                 po.ovarre(
-                    self.outfile, str1, str2, impurity_radiation_module.fimp[imp], "OP "
+                    self.outfile,
+                    str1,
+                    str2,
+                    impurity_radiation_module.fimp[imp],
+                    "OP ",
                 )
             else:
                 po.ovarre(self.outfile, str1, str2, impurity_radiation_module.fimp[imp])
@@ -3874,7 +3963,11 @@ class Physics:
         #
         po.oblnkl(self.outfile)
         po.ovarrf(
-            self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "
+            self.outfile,
+            "Effective charge",
+            "(zeff)",
+            physics_variables.zeff,
+            "OP ",
         )
 
         # Issue #487.  No idea what zeffai is.
@@ -3883,7 +3976,10 @@ class Physics:
         # po.ovarrf(self.outfile,'Mass weighted effective charge','(zeffai)',zeffai, 'OP ')
 
         po.ovarrf(
-            self.outfile, "Density profile factor", "(alphan)", physics_variables.alphan
+            self.outfile,
+            "Density profile factor",
+            "(alphan)",
+            physics_variables.alphan,
         )
         po.ovarin(
             self.outfile,
@@ -4565,14 +4661,17 @@ class Physics:
             error_handling.report_error(87)
             po.oblnkl(self.outfile)
             po.ocmmnt(
-                self.outfile, "  BEWARE: possible problem with high radiation power"
+                self.outfile,
+                "  BEWARE: possible problem with high radiation power",
             )
             po.ocmmnt(
-                self.outfile, "          Power into divertor zone is unrealistic;"
+                self.outfile,
+                "          Power into divertor zone is unrealistic;",
             )
             po.ocmmnt(self.outfile, "          divertor calculations will be nonsense#")
             po.ocmmnt(
-                self.outfile, "  Set constraint 17 (Radiation fraction upper limit)."
+                self.outfile,
+                "  Set constraint 17 (Radiation fraction upper limit).",
             )
             po.oblnkl(self.outfile)
 
@@ -4865,7 +4964,7 @@ class Physics:
             po.oblnkl(self.outfile)
 
         tauelaw = f2py_compatible_to_string(
-            physics_variables.tauscl[physics_variables.isc - 1]
+            physics_variables.tauscl[physics_variables.isc - 1],
         )
 
         po.ocmmnt(
@@ -4881,7 +4980,10 @@ class Physics:
         )
 
         po.ovarrf(
-            self.outfile, "Confinement H factor", "(hfact)", physics_variables.hfact
+            self.outfile,
+            "Confinement H factor",
+            "(hfact)",
+            physics_variables.hfact,
         )
         po.ovarrf(
             self.outfile,
@@ -5093,7 +5195,10 @@ class Physics:
                 "OP ",
             )
             po.ovarrf(
-                self.outfile, "Ejima coefficient", "(gamma)", physics_variables.gamma
+                self.outfile,
+                "Ejima coefficient",
+                "(gamma)",
+                physics_variables.gamma,
             )
             po.ovarre(
                 self.outfile,
@@ -5227,11 +5332,13 @@ class Physics:
 
             if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
                 po.ocmmnt(
-                    self.outfile, "  (User-specified bootstrap current fraction used)"
+                    self.outfile,
+                    "  (User-specified bootstrap current fraction used)",
                 )
             elif physics_variables.i_bootstrap_current == 1:
                 po.ocmmnt(
-                    self.outfile, "  (ITER 1989 bootstrap current fraction model used)"
+                    self.outfile,
+                    "  (ITER 1989 bootstrap current fraction model used)",
                 )
             elif physics_variables.i_bootstrap_current == 2:
                 po.ocmmnt(
@@ -5240,7 +5347,8 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 3:
                 po.ocmmnt(
-                    self.outfile, "  (Wilson bootstrap current fraction model used)"
+                    self.outfile,
+                    "  (Wilson bootstrap current fraction model used)",
                 )
             elif physics_variables.i_bootstrap_current == 4:
                 po.ocmmnt(
@@ -5285,7 +5393,8 @@ class Physics:
 
             if physics_variables.i_diamagnetic_current == 0:
                 po.ocmmnt(
-                    self.outfile, "  (Diamagnetic current fraction not calculated)"
+                    self.outfile,
+                    "  (Diamagnetic current fraction not calculated)",
                 )
                 # Error to show if diamagnetic current is above 1% but not used
                 if current_drive_variables.diacf_scene > 0.01e0:
@@ -5293,16 +5402,19 @@ class Physics:
 
             elif physics_variables.i_diamagnetic_current == 1:
                 po.ocmmnt(
-                    self.outfile, "  (Hender diamagnetic current fraction scaling used)"
+                    self.outfile,
+                    "  (Hender diamagnetic current fraction scaling used)",
                 )
             elif physics_variables.i_diamagnetic_current == 2:
                 po.ocmmnt(
-                    self.outfile, "  (SCENE diamagnetic current fraction scaling used)"
+                    self.outfile,
+                    "  (SCENE diamagnetic current fraction scaling used)",
                 )
 
             if physics_variables.i_pfirsch_schluter_current == 0:
                 po.ocmmnt(
-                    self.outfile, "  Pfirsch-Schluter current fraction not calculated"
+                    self.outfile,
+                    "  Pfirsch-Schluter current fraction not calculated",
                 )
             elif physics_variables.i_pfirsch_schluter_current == 1:
                 po.ocmmnt(
@@ -5616,41 +5728,37 @@ class Physics:
         # Square root of current profile index term
         saj = np.sqrt(aj)
 
-        a = np.array(
-            [
-                1.41 * (1.0 - 0.28 * saj) * (1.0 + 0.12 / z),
-                0.36 * (1.0 - 0.59 * saj) * (1.0 + 0.8 / z),
-                -0.27 * (1.0 - 0.47 * saj) * (1.0 + 3.0 / z),
-                0.0053 * (1.0 + 5.0 / z),
-                -0.93 * (1.0 - 0.34 * saj) * (1.0 + 0.15 / z),
-                -0.26 * (1.0 - 0.57 * saj) * (1.0 - 0.27 * z),
-                0.064 * (1.0 - 0.6 * aj + 0.15 * aj * aj) * (1.0 + 7.6 / z),
-                -0.0011 * (1.0 + 9.0 / z),
-                -0.33 * (1.0 - aj + 0.33 * aj * aj),
-                -0.26 * (1.0 - 0.87 / saj - 0.16 * aj),
-                -0.14 * (1.0 - 1.14 / saj - 0.45 * saj),
-                -0.0069,
-            ]
-        )
+        a = np.array([
+            1.41 * (1.0 - 0.28 * saj) * (1.0 + 0.12 / z),
+            0.36 * (1.0 - 0.59 * saj) * (1.0 + 0.8 / z),
+            -0.27 * (1.0 - 0.47 * saj) * (1.0 + 3.0 / z),
+            0.0053 * (1.0 + 5.0 / z),
+            -0.93 * (1.0 - 0.34 * saj) * (1.0 + 0.15 / z),
+            -0.26 * (1.0 - 0.57 * saj) * (1.0 - 0.27 * z),
+            0.064 * (1.0 - 0.6 * aj + 0.15 * aj * aj) * (1.0 + 7.6 / z),
+            -0.0011 * (1.0 + 9.0 / z),
+            -0.33 * (1.0 - aj + 0.33 * aj * aj),
+            -0.26 * (1.0 - 0.87 / saj - 0.16 * aj),
+            -0.14 * (1.0 - 1.14 / saj - 0.45 * saj),
+            -0.0069,
+        ])
 
         seps1 = np.sqrt(eps1)
 
-        b = np.array(
-            [
-                1.0,
-                alfpnw,
-                alftnw,
-                alfpnw * alftnw,
-                seps1,
-                alfpnw * seps1,
-                alftnw * seps1,
-                alfpnw * alftnw * seps1,
-                eps1,
-                alfpnw * eps1,
-                alftnw * eps1,
-                alfpnw * alftnw * eps1,
-            ]
-        )
+        b = np.array([
+            1.0,
+            alfpnw,
+            alftnw,
+            alfpnw * alftnw,
+            seps1,
+            alfpnw * seps1,
+            alftnw * seps1,
+            alfpnw * alftnw * seps1,
+            eps1,
+            alfpnw * eps1,
+            alftnw * eps1,
+            alfpnw * alftnw * eps1,
+        ])
 
         # Empirical bootstrap current fraction
         return seps1 * betpth * (a * b).sum()
@@ -5792,8 +5900,7 @@ class Physics:
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
         inverse_q = 1 / (
-            physics_variables.q0
-            + (physics_variables.q - physics_variables.q0) * roa**2
+            physics_variables.q0 + (physics_variables.q - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
         amain = np.full_like(inverse_q, physics_variables.afuel)
@@ -6580,11 +6687,7 @@ class Physics:
                 * np.sqrt(kappa95)
                 * denfac
                 / powerht**0.4e0
-                * (
-                    zeff**2
-                    * pcur**4
-                    / (rmajor * rminor * qstar**3 * kappa95**1.5e0)
-                )
+                * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0))
                 ** 0.08e0
             )
 
@@ -7039,9 +7142,7 @@ class Physics:
             #  Table 4.  (Issue #311)
             # Note that aspect ratio and M (afuel) do not appear, and B (bt) only
             # appears in the "saturation factor" h.
-            h = dnla19**0.448e0 / (
-                1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0)
-            )
+            h = dnla19**0.448e0 / (1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0))
             tauee = (
                 hfact
                 * 0.0367e0
@@ -7354,7 +7455,7 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
             0.057**2
             + (0.035 * np.log(dnla20)) ** 2
             + (0.032 * np.log(bt)) ** 2
-            + (0.019 * np.log(sarea)) ** 2
+            + (0.019 * np.log(sarea)) ** 2,
         )
         * martin
     )
@@ -7363,36 +7464,20 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
 
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
-    snipes_2000 = (
-        1.42 * dnla20**0.58 * bt**0.82 * rmajor * rminor**0.81 * (2.0 / aion)
-    )
+    snipes_2000 = 1.42 * dnla20**0.58 * bt**0.82 * rmajor * rminor**0.81 * (2.0 / aion)
     snipes_2000_ub = (
-        1.547
-        * dnla20**0.615
-        * bt**0.851
-        * rmajor**1.089
-        * rminor**0.876
-        * (2.0 / aion)
+        1.547 * dnla20**0.615 * bt**0.851 * rmajor**1.089 * rminor**0.876 * (2.0 / aion)
     )
     snipes_2000_lb = (
-        1.293
-        * dnla20**0.545
-        * bt**0.789
-        * rmajor**0.911
-        * rminor**0.744
-        * (2.0 / aion)
+        1.293 * dnla20**0.545 * bt**0.789 * rmajor**0.911 * rminor**0.744 * (2.0 / aion)
     )
 
     # Snipes et al (2000) scaling (closed divertor) with mass correction
     # Nominal, upper and lower
 
     snipes_2000_cd = 0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / aion)
-    snipes_2000_cd_ub = (
-        0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / aion)
-    )
-    snipes_2000_cd_lb = (
-        0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / aion)
-    )
+    snipes_2000_cd_ub = 0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / aion)
+    snipes_2000_cd_lb = 0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / aion)
 
     # Hubbard et al. 2012 L-I threshold scaling
     hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65

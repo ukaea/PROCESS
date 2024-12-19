@@ -1,9 +1,10 @@
 import logging
+
 import numpy as np
-
-from process.fortran import error_handling as eh, rebco_variables
-
 from scipy import optimize
+
+from process.fortran import error_handling as eh
+from process.fortran import rebco_variables
 
 logger = logging.getLogger(__name__)
 
@@ -34,16 +35,15 @@ def jcrit_rebco(temperature, b):
     if temperature < 65:
         if (b < 0.0) or (b > 15.0):
             validity = False
-    else:
-        if (b < 0.0) or (b > 11.5):
-            validity = False
+    elif (b < 0.0) or (b > 11.5):
+        validity = False
 
     if not validity:
         logger.warning(
             f"""jcrit_rebco: input out of range
             temperature: {temperature}
             Field: {b}
-            """
+            """,
         )
 
     if temperature < tc0:
@@ -135,7 +135,17 @@ def itersc(temperature, bmax, strain, bc20max, tc0max):
     cuiter = 0.5  # ITER strand copper fraction
 
     jscaling, bcrit, tcrit = Bottura_scaling(
-        csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
+        csc,
+        p,
+        q,
+        ca1,
+        ca2,
+        eps0a,
+        temperature,
+        bmax,
+        strain,
+        bc20max,
+        tc0max,
     )
 
     #  Critical current density in superconductor (A/m2)
@@ -458,13 +468,9 @@ def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
     # giving a negative but real value of jcrit.
 
     if bcrit > bmax:
-        jcrit = (
-            (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
-        )
+        jcrit = (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
     else:
-        jcrit = (
-            (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (bmax / bcrit - 1) ** q
-        )
+        jcrit = (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (bmax / bcrit - 1) ** q
 
     # print("thelium = ", thelium, "   bcrit = ", bcrit, "   bmax = ", bmax, "   1 - bmax / bcrit = ", 1 - bmax / bcrit)
 
@@ -514,7 +520,17 @@ def wstsc(temperature, bmax, strain, bc20max, tc0max):
     eps0a = 0.00312
 
     jscaling, bcrit, tcrit = Bottura_scaling(
-        csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
+        csc,
+        p,
+        q,
+        ca1,
+        ca2,
+        eps0a,
+        temperature,
+        bmax,
+        strain,
+        bc20max,
+        tc0max,
     )
 
     # scale from mm2 to m2
@@ -524,7 +540,17 @@ def wstsc(temperature, bmax, strain, bc20max, tc0max):
 
 
 def Bottura_scaling(
-    csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
+    csc,
+    p,
+    q,
+    ca1,
+    ca2,
+    eps0a,
+    temperature,
+    bmax,
+    strain,
+    bc20max,
+    tc0max,
 ):
     """
     This implements the scaling from
@@ -539,9 +565,7 @@ def Bottura_scaling(
 
     # Strain function
     # 0.83 < s < 1.0, for -0.005 < strain < 0.005
-    strfun = np.sqrt(epssh**2 + eps0a**2) - np.sqrt(
-        (strain - epssh) ** 2 + eps0a**2
-    )
+    strfun = np.sqrt(epssh**2 + eps0a**2) - np.sqrt((strain - epssh) ** 2 + eps0a**2)
     strfun = strfun * ca1 - ca2 * strain
     strfun = 1.0 + (1 / (1.0 - ca1 * eps0a)) * strfun
 

@@ -3,9 +3,10 @@
 import os
 from pathlib import Path
 from shutil import copy, copytree
-import pytest
-import pandas
+
 import numpy as np
+import pandas
+import pytest
 from testbook import testbook
 
 
@@ -72,12 +73,12 @@ def test_csv(examples_temp_data):
     with testbook(csv_notebook_location, execute=True, timeout=600):
         # Check csv file is created
         assert os.path.exists(
-            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
+            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv",
         )
 
         # Read in the csv file created by test and check it contains positive floats
         readcsv = pandas.read_csv(
-            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
+            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv",
         )
         values = readcsv["Value"]
         value_array = np.array(values)

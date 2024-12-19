@@ -2,9 +2,12 @@
 
 Define fixtures that will be shared across unit test modules.
 """
-import pytest
-from process import fortran
+
 from pathlib import Path
+
+import pytest
+
+from process import fortran
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -20,7 +23,7 @@ def reinit_fix():
     fortran.init_module.init_all_module_vars()
 
 
-@pytest.fixture()
+@pytest.fixture
 def input_file():
     """Input file for testing.
 

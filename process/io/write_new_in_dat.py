@@ -1,14 +1,15 @@
 """
 
-  Modifies the PROCESS input file IN.DAT so all the iteration variables are
-  given their values from the output file MFILE.DAT.
+Modifies the PROCESS input file IN.DAT so all the iteration variables are
+given their values from the output file MFILE.DAT.
 
-  James Morris 30/04/2014 based on code by Michael Kovari 9/8/13 and
-  J C Rivas, 16/7/2013
+James Morris 30/04/2014 based on code by Michael Kovari 9/8/13 and
+J C Rivas, 16/7/2013
 """
 
 import argparse
 import re
+
 import process.io.mfile as mf
 from process.io.in_dat import InDat
 
@@ -47,17 +48,16 @@ def feasible_point(filename, position):
                 if mfile_data.data[value].get_scan(checkPoint) == 1:
                     finished = True
                     scanPoint = checkPoint
-                else:
-                    if position == "last":
-                        if checkPoint == 1:
-                            finished = True
-                        else:
-                            checkPoint = checkPoint - 1
-                    elif position == "first":
-                        if checkPoint == numScans:
-                            finished = True
-                        else:
-                            checkPoint = checkPoint + 1
+                elif position == "last":
+                    if checkPoint == 1:
+                        finished = True
+                    else:
+                        checkPoint = checkPoint - 1
+                elif position == "first":
+                    if checkPoint == numScans:
+                        finished = True
+                    else:
+                        checkPoint = checkPoint + 1
     return scanPoint
 
 
@@ -98,12 +98,11 @@ def replace_iteration_variables(iteration_vars, in_data):
     """
 
     for variable_name, variable_value in iteration_vars.items():
-
         if (match := re.search(r"([a-zA-Z0-9_]+)\(([0-9]+)\)", variable_name)) is None:
             in_data.add_parameter(variable_name.lower(), variable_value)
         else:
             in_data.change_array(
-                match.group(1), int(match.group(2)) - 1, variable_value
+                match.group(1), int(match.group(2)) - 1, variable_value,
             )
 
     return in_data
@@ -113,7 +112,7 @@ def main(args=None):
     parser = argparse.ArgumentParser(
         description="Creates a new IN.DAT using "
         "iteration variable values "
-        "from MFILE.DAT."
+        "from MFILE.DAT.",
     )
 
     parser.add_argument(
@@ -137,7 +136,7 @@ def main(args=None):
         metavar="o",
         type=str,
         default="new_IN.DAT",
-        help="File to write as new IN.DAT " '(default="new_IN.DAT")',
+        help='File to write as new IN.DAT (default="new_IN.DAT")',
     )
 
     parser.add_argument(
@@ -148,7 +147,7 @@ def main(args=None):
     )
 
     parser.add_argument(
-        "-ffp", "--ffp", help="use first feasible point in a scan", action="store_true"
+        "-ffp", "--ffp", help="use first feasible point in a scan", action="store_true",
     )
 
     args = parser.parse_args(args)

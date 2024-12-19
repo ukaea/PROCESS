@@ -1,31 +1,32 @@
-import pytest
-from typing import NamedTuple, Any
-import numpy
+from typing import Any, NamedTuple
 
+import numpy
+import pytest
+
+from process.availability import Availability
+from process.blanket_library import BlanketLibrary
+from process.buildings import Buildings
+from process.costs import Costs
+from process.current_drive import CurrentDrive
 from process.fortran import (
+    build_variables,
+    cost_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    impurity_radiation_module,
     physics_variables,
     stellarator_configuration,
     stellarator_module,
-    build_variables,
-    fwbs_variables,
-    heat_transport_variables,
     structure_variables,
     tfcoil_variables,
-    impurity_radiation_module,
-    cost_variables,
 )
-from process.power import Power
-from process.stellarator import Stellarator, Neoclassics
-from process.vacuum import Vacuum
-from process.availability import Availability
-from process.buildings import Buildings
-from process.costs import Costs
-from process.plasma_profiles import PlasmaProfile
-from process.hcpb import CCFE_HCPB
-from process.blanket_library import BlanketLibrary
 from process.fw import Fw
-from process.current_drive import CurrentDrive
+from process.hcpb import CCFE_HCPB
 from process.physics import Physics
+from process.plasma_profiles import PlasmaProfile
+from process.power import Power
+from process.stellarator import Neoclassics, Stellarator
+from process.vacuum import Vacuum
 
 
 @pytest.fixture
@@ -519,7 +520,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     monkeypatch.setattr(build_variables, "ohcth", stbildparam.ohcth)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", stbildparam.r_tf_outboard_mid
+        build_variables,
+        "r_tf_outboard_mid",
+        stbildparam.r_tf_outboard_mid,
     )
 
     monkeypatch.setattr(build_variables, "rbld", stbildparam.rbld)
@@ -545,13 +548,17 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     monkeypatch.setattr(build_variables, "tfthko", stbildparam.tfthko)
 
     monkeypatch.setattr(
-        build_variables, "available_radial_space", stbildparam.available_radial_space
+        build_variables,
+        "available_radial_space",
+        stbildparam.available_radial_space,
     )
 
     monkeypatch.setattr(build_variables, "f_avspace", stbildparam.f_avspace)
 
     monkeypatch.setattr(
-        build_variables, "required_radial_space", stbildparam.required_radial_space
+        build_variables,
+        "required_radial_space",
+        stbildparam.required_radial_space,
     )
 
     monkeypatch.setattr(fwbs_variables, "afw", stbildparam.afw)
@@ -614,7 +621,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     assert build_variables.hmax == pytest.approx(stbildparam.expected_hmax)
 
     assert build_variables.r_tf_outboard_mid == pytest.approx(
-        stbildparam.expected_r_tf_outboard_mid
+        stbildparam.expected_r_tf_outboard_mid,
     )
 
     assert build_variables.rbld == pytest.approx(stbildparam.expected_rbld)
@@ -626,11 +633,11 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     assert build_variables.rspo == pytest.approx(stbildparam.expected_rspo)
 
     assert build_variables.available_radial_space == pytest.approx(
-        stbildparam.expected_available_radial_space
+        stbildparam.expected_available_radial_space,
     )
 
     assert build_variables.required_radial_space == pytest.approx(
-        stbildparam.expected_required_radial_space
+        stbildparam.expected_required_radial_space,
     )
 
 
@@ -799,7 +806,9 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
 def test_u_max_protect_v(stellarator):
     assert stellarator.u_max_protect_v(
-        tfes=2651198129.2530489, tdump=10, aio=122620.32643505408
+        tfes=2651198129.2530489,
+        tdump=10,
+        aio=122620.32643505408,
     ) == pytest.approx(4324.2392290600483)
 
 
@@ -2741,7 +2750,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "ne0", stcalceffchiparam.ne0)
 
     monkeypatch.setattr(
-        physics_variables, "f_alpha_plasma", stcalceffchiparam.f_alpha_plasma
+        physics_variables,
+        "f_alpha_plasma",
+        stcalceffchiparam.f_alpha_plasma,
     )
 
     monkeypatch.setattr(
@@ -2757,7 +2768,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "alphat", stcalceffchiparam.alphat)
 
     monkeypatch.setattr(
-        physics_variables, "plasma_volume", stcalceffchiparam.plasma_volume
+        physics_variables,
+        "plasma_volume",
+        stcalceffchiparam.plasma_volume,
     )
 
     monkeypatch.setattr(physics_variables, "sarea", stcalceffchiparam.sarea)
@@ -2765,7 +2778,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "rminor", stcalceffchiparam.rminor)
 
     monkeypatch.setattr(
-        impurity_radiation_module, "coreradius", stcalceffchiparam.coreradius
+        impurity_radiation_module,
+        "coreradius",
+        stcalceffchiparam.coreradius,
     )
 
     monkeypatch.setattr(
@@ -2842,7 +2857,9 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     ),
 )
 def test_sctfcoil_nuclear_heating_iter90(
-    sctfcoilnuclearheatingiter90param, monkeypatch, stellarator
+    sctfcoilnuclearheatingiter90param,
+    monkeypatch,
+    stellarator,
 ):
     """
     Automatically generated Regression Unit Test for sctfcoil_nuclear_heating_iter90.
@@ -2856,49 +2873,79 @@ def test_sctfcoil_nuclear_heating_iter90(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        build_variables, "blnkith", sctfcoilnuclearheatingiter90param.blnkith
+        build_variables,
+        "blnkith",
+        sctfcoilnuclearheatingiter90param.blnkith,
     )
     monkeypatch.setattr(
-        build_variables, "blnkoth", sctfcoilnuclearheatingiter90param.blnkoth
+        build_variables,
+        "blnkoth",
+        sctfcoilnuclearheatingiter90param.blnkoth,
     )
     monkeypatch.setattr(
-        build_variables, "fwith", sctfcoilnuclearheatingiter90param.fwith
+        build_variables,
+        "fwith",
+        sctfcoilnuclearheatingiter90param.fwith,
     )
     monkeypatch.setattr(
-        build_variables, "fwoth", sctfcoilnuclearheatingiter90param.fwoth
+        build_variables,
+        "fwoth",
+        sctfcoilnuclearheatingiter90param.fwoth,
     )
     monkeypatch.setattr(
-        build_variables, "shldith", sctfcoilnuclearheatingiter90param.shldith
+        build_variables,
+        "shldith",
+        sctfcoilnuclearheatingiter90param.shldith,
     )
     monkeypatch.setattr(
-        build_variables, "shldoth", sctfcoilnuclearheatingiter90param.shldoth
+        build_variables,
+        "shldoth",
+        sctfcoilnuclearheatingiter90param.shldoth,
     )
     monkeypatch.setattr(
-        cost_variables, "cfactr", sctfcoilnuclearheatingiter90param.cfactr
+        cost_variables,
+        "cfactr",
+        sctfcoilnuclearheatingiter90param.cfactr,
     )
     monkeypatch.setattr(
-        cost_variables, "tlife", sctfcoilnuclearheatingiter90param.tlife
+        cost_variables,
+        "tlife",
+        sctfcoilnuclearheatingiter90param.tlife,
     )
     monkeypatch.setattr(
-        physics_variables, "wallmw", sctfcoilnuclearheatingiter90param.wallmw
+        physics_variables,
+        "wallmw",
+        sctfcoilnuclearheatingiter90param.wallmw,
     )
     monkeypatch.setattr(
-        tfcoil_variables, "casthi", sctfcoilnuclearheatingiter90param.casthi
+        tfcoil_variables,
+        "casthi",
+        sctfcoilnuclearheatingiter90param.casthi,
     )
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sup", sctfcoilnuclearheatingiter90param.i_tf_sup
+        tfcoil_variables,
+        "i_tf_sup",
+        sctfcoilnuclearheatingiter90param.i_tf_sup,
     )
     monkeypatch.setattr(
-        tfcoil_variables, "tfsai", sctfcoilnuclearheatingiter90param.tfsai
+        tfcoil_variables,
+        "tfsai",
+        sctfcoilnuclearheatingiter90param.tfsai,
     )
     monkeypatch.setattr(
-        tfcoil_variables, "tfsao", sctfcoilnuclearheatingiter90param.tfsao
+        tfcoil_variables,
+        "tfsao",
+        sctfcoilnuclearheatingiter90param.tfsao,
     )
     monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_wp", sctfcoilnuclearheatingiter90param.dr_tf_wp
+        tfcoil_variables,
+        "dr_tf_wp",
+        sctfcoilnuclearheatingiter90param.dr_tf_wp,
     )
     monkeypatch.setattr(
-        tfcoil_variables, "tinstf", sctfcoilnuclearheatingiter90param.tinstf
+        tfcoil_variables,
+        "tinstf",
+        sctfcoilnuclearheatingiter90param.tinstf,
     )
 
     (
@@ -2915,7 +2962,7 @@ def test_sctfcoil_nuclear_heating_iter90(
     ) = stellarator.sctfcoil_nuclear_heating_iter90()
 
     assert coilhtmx == pytest.approx(
-        sctfcoilnuclearheatingiter90param.expected_coilhtmx
+        sctfcoilnuclearheatingiter90param.expected_coilhtmx,
     )
     assert dpacop == pytest.approx(sctfcoilnuclearheatingiter90param.expected_dpacop)
     assert htheci == pytest.approx(sctfcoilnuclearheatingiter90param.expected_htheci)

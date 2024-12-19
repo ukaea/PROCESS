@@ -22,16 +22,17 @@ Performed checks:
 - If the file is a folder, the contained MFILE is used as an input.
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
-import os
 import argparse
+import os
 from argparse import RawTextHelpFormatter
 from pathlib import Path
-from process.io.variable_metadata import var_dicts as meta
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 # PROCESS libraries
 import process.io.mfile as mf
+from process.io.variable_metadata import var_dicts as meta
 
 
 def parse_args(args):
@@ -192,7 +193,7 @@ def main(args=None):
     for ii in range(len(input_files)):
         if os.path.isdir(input_files[ii]):
             input_files[ii] = input_files[ii].replace("/", "")
-            input_files[ii] = input_files[ii] + str("/MFILE.DAT")
+            input_files[ii] = input_files[ii] + "/MFILE.DAT"
 
         # Check for the existence of the MFILE
         if not os.path.isfile(input_files[ii]):
@@ -223,9 +224,9 @@ def main(args=None):
     nsweep_dict[14] = "fiooic"
     nsweep_dict[15] = "fjprot"
     nsweep_dict[16] = "rmajor"
-    nsweep_dict[
-        17
-    ] = "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
+    nsweep_dict[17] = (
+        "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
+    )
     nsweep_dict[18] = "gammax"
     nsweep_dict[19] = "boundl(16)"
     nsweep_dict[20] = "cnstv.t_burn_min"
@@ -296,9 +297,9 @@ def main(args=None):
     nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
     scan_var_name = nsweep_dict[nsweep_ref]
     # Get the eventual second scan variable
-    nsweep_2_ref = int(0)
+    nsweep_2_ref = 0
     is_2D_scan = False
-    scan_2_var_name = str()
+    scan_2_var_name = ""
     if "nsweep_2" in m_file.data.keys():
         is_2D_scan = True
         nsweep_2_ref = int(m_file.data["nsweep_2"].get_scan(-1))
@@ -383,7 +384,7 @@ def main(args=None):
                 else:
                     failed_value = m_file.data[scan_var_name].get_scan(ii + 1)
                     print(
-                        f"Warning : Non-convergent scan point : {scan_var_name} = {failed_value}"
+                        f"Warning : Non-convergent scan point : {scan_var_name} = {failed_value}",
                     )
                     print("Warning : This point will not be shown.")
 
@@ -395,7 +396,7 @@ def main(args=None):
 
             for ii in range(n_scan):
                 scan_var_array[input_file][ii] = m_file.data[scan_var_name].get_scan(
-                    conv_i[ii]
+                    conv_i[ii],
                 )
             # output list declaration
             output_arrays[input_file] = dict()
@@ -421,14 +422,14 @@ def main(args=None):
                     # Check if the output variable exists in the MFILE
                     if output_name2 not in m_file.data.keys():
                         print(
-                            f"Warning : `{output_name2}` does not exist in PROCESS dicts"
+                            f"Warning : `{output_name2}` does not exist in PROCESS dicts",
                         )
                         print(f"Warning : `{output_name2}` will not be output")
                         continue
 
                     for ii in range(n_scan):
                         ouput_array2[ii] = m_file.data[output_name2].get_scan(
-                            conv_i[ii]
+                            conv_i[ii],
                         )
                     output_arrays2[input_file][output_name2] = ouput_array2
             # Terminal output
@@ -446,10 +447,8 @@ def main(args=None):
                 print()
                 if output_names2 != []:
                     print(
-                        (
-                            "Y2-Axis\n "
-                            + f" {output_name2} : {output_arrays2[input_file][output_name2]}\n"
-                        )
+                        "Y2-Axis\n "
+                        + f" {output_name2} : {output_arrays2[input_file][output_name2]}\n",
                     )
         # Plot section
         # -----------
@@ -497,27 +496,26 @@ def main(args=None):
                         label=labl,
                     )
                     plt.tight_layout()
+                elif stack_plots:
+                    axs[output_names.index(output_name)].plot(
+                        scan_var_array[input_file],
+                        output_arrays[input_file][output_name],
+                        "--o",
+                        color="blue" if output_names2 != [] else None,
+                        label=labl,
+                    )
+                    plt.tight_layout()
                 else:
-                    if stack_plots:
-                        axs[output_names.index(output_name)].plot(
-                            scan_var_array[input_file],
-                            output_arrays[input_file][output_name],
-                            "--o",
-                            color="blue" if output_names2 != [] else None,
-                            label=labl,
-                        )
-                        plt.tight_layout()
-                    else:
-                        plt.plot(
-                            scan_var_array[input_file],
-                            output_arrays[input_file][output_name],
-                            "--o",
-                            color="blue" if output_names2 != [] else None,
-                            label=labl,
-                        )
-                        plt.xticks(size=axis_tick_size)
-                        plt.yticks(size=axis_tick_size)
-                        plt.tight_layout()
+                    plt.plot(
+                        scan_var_array[input_file],
+                        output_arrays[input_file][output_name],
+                        "--o",
+                        color="blue" if output_names2 != [] else None,
+                        label=labl,
+                    )
+                    plt.xticks(size=axis_tick_size)
+                    plt.yticks(size=axis_tick_size)
+                    plt.tight_layout()
                 if output_names2 != []:
                     ax2.plot(
                         scan_var_array[input_file],
@@ -593,15 +591,18 @@ def main(args=None):
                 ymin, ymax = axs[output_names.index(output_name)].get_ylim()
                 if ymin < 0 and ymax > 0:
                     axs[output_names.index(output_name)].set_ylim(
-                        ymin * 1.1, ymax * 1.1
+                        ymin * 1.1,
+                        ymax * 1.1,
                     )
                 elif ymin >= 0:
                     axs[output_names.index(output_name)].set_ylim(
-                        ymin * 0.9, ymax * 1.1
+                        ymin * 0.9,
+                        ymax * 1.1,
                     )
                 else:
                     axs[output_names.index(output_name)].set_ylim(
-                        ymin * 1.1, ymax * 0.9
+                        ymin * 1.1,
+                        ymax * 0.9,
                     )
             else:
                 plt.grid(True)
@@ -638,7 +639,7 @@ def main(args=None):
                     + f"_vs_{output_name2}"
                     if output_names2 != []
                     else f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
-                    + f".{save_format}"
+                    + f".{save_format}",
                 )
             elif stack_plots and output_names[-1] == output_name:
                 plt.savefig(
@@ -691,14 +692,14 @@ def main(args=None):
                 ifail = m_file.data["ifail"].get_scan(ii_jj)
                 if ifail == 1:
                     conv_ij[ii].append(
-                        ii_jj
+                        ii_jj,
                     )  # Only appends scan number if scan converged
                     contour_conv_ij.append(ii_jj)
                 else:
                     failed_value_1 = m_file.data[scan_var_name].get_scan(ii_jj)
                     failed_value_2 = m_file.data[scan_2_var_name].get_scan(ii_jj)
                     print(
-                        f"Warning : Non-convergent scan point : ({scan_var_name},{scan_2_var_name}) = ({failed_value_1},{failed_value_2})"
+                        f"Warning : Non-convergent scan point : ({scan_var_name},{scan_2_var_name}) = ({failed_value_1},{failed_value_2})",
                     )
                     print("Warning : This point will not be shown.")
 
@@ -721,7 +722,7 @@ def main(args=None):
                     x_contour.append(m_file.data[scan_2_var_name].get_scan(i + 1))
                 for i in range(1, n_scan_1 * n_scan_2, n_scan_2):
                     y_contour.append(
-                        m_file.data[scan_var_name].get_scan(i + 1)
+                        m_file.data[scan_var_name].get_scan(i + 1),
                     )  # is the separte lists in the list
                 for i in contour_conv_ij:
                     output_contour_z[((i - 1) // n_scan_2)][
@@ -771,7 +772,7 @@ def main(args=None):
                 )
                 plt.tight_layout()
                 plt.savefig(
-                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}",
                 )
                 plt.grid(True)
                 plt.show()
@@ -779,9 +780,7 @@ def main(args=None):
 
             else:
                 # Converged indexes, for normal 2D line plot
-                for (
-                    conv_j
-                ) in (
+                for conv_j in (
                     conv_ij
                 ):  # conv_j is an array element containing the converged scan numbers
                     # Scanned variables
@@ -790,10 +789,10 @@ def main(args=None):
                     output_array = np.zeros(len(conv_j))
                     for jj in range(len(conv_j)):
                         scan_1_var_array[jj] = m_file.data[scan_var_name].get_scan(
-                            conv_j[jj]
+                            conv_j[jj],
                         )
                         scan_2_var_array[jj] = m_file.data[scan_2_var_name].get_scan(
-                            conv_j[jj]
+                            conv_j[jj],
                         )
                         output_array[jj] = m_file.data[output_name].get_scan(conv_j[jj])
 
@@ -825,7 +824,7 @@ def main(args=None):
                 plt.yticks(size=axis_tick_size)
                 plt.tight_layout()
                 plt.savefig(
-                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}",
                 )
 
                 # Display plot (used in Jupyter notebooks)

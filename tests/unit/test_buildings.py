@@ -1,15 +1,19 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
+
 from process.buildings import Buildings
-from process.fortran import current_drive_variables
-from process.fortran import fwbs_variables
-from process.fortran import buildings_variables
-from process.fortran import physics_variables
-from process.fortran import cost_variables
-from process.fortran import pfcoil_variables
-from process.fortran import tfcoil_variables
-from process.fortran import build_variables
-from process.fortran import divertor_variables
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    fwbs_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
 
 
 @pytest.fixture
@@ -451,46 +455,72 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "volnucb", bldgssizesparam.volnucb)
     monkeypatch.setattr(buildings_variables, "bioshld_thk", bldgssizesparam.bioshld_thk)
     monkeypatch.setattr(
-        buildings_variables, "reactor_wall_thk", bldgssizesparam.reactor_wall_thk
+        buildings_variables,
+        "reactor_wall_thk",
+        bldgssizesparam.reactor_wall_thk,
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_roof_thk", bldgssizesparam.reactor_roof_thk
+        buildings_variables,
+        "reactor_roof_thk",
+        bldgssizesparam.reactor_roof_thk,
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_fndtn_thk", bldgssizesparam.reactor_fndtn_thk
+        buildings_variables,
+        "reactor_fndtn_thk",
+        bldgssizesparam.reactor_fndtn_thk,
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_clrnc", bldgssizesparam.reactor_clrnc
+        buildings_variables,
+        "reactor_clrnc",
+        bldgssizesparam.reactor_clrnc,
     )
     monkeypatch.setattr(
-        buildings_variables, "transp_clrnc", bldgssizesparam.transp_clrnc
+        buildings_variables,
+        "transp_clrnc",
+        bldgssizesparam.transp_clrnc,
     )
     monkeypatch.setattr(
-        buildings_variables, "cryostat_clrnc", bldgssizesparam.cryostat_clrnc
+        buildings_variables,
+        "cryostat_clrnc",
+        bldgssizesparam.cryostat_clrnc,
     )
     monkeypatch.setattr(
-        buildings_variables, "ground_clrnc", bldgssizesparam.ground_clrnc
+        buildings_variables,
+        "ground_clrnc",
+        bldgssizesparam.ground_clrnc,
     )
     monkeypatch.setattr(
-        buildings_variables, "crane_clrnc_h", bldgssizesparam.crane_clrnc_h
+        buildings_variables,
+        "crane_clrnc_h",
+        bldgssizesparam.crane_clrnc_h,
     )
     monkeypatch.setattr(buildings_variables, "crane_arm_h", bldgssizesparam.crane_arm_h)
     monkeypatch.setattr(
-        buildings_variables, "reactor_hall_l", bldgssizesparam.reactor_hall_l
+        buildings_variables,
+        "reactor_hall_l",
+        bldgssizesparam.reactor_hall_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_hall_w", bldgssizesparam.reactor_hall_w
+        buildings_variables,
+        "reactor_hall_w",
+        bldgssizesparam.reactor_hall_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_hall_h", bldgssizesparam.reactor_hall_h
+        buildings_variables,
+        "reactor_hall_h",
+        bldgssizesparam.reactor_hall_h,
     )
     monkeypatch.setattr(buildings_variables, "nbi_sys_l", bldgssizesparam.nbi_sys_l)
     monkeypatch.setattr(buildings_variables, "nbi_sys_w", bldgssizesparam.nbi_sys_w)
     monkeypatch.setattr(
-        buildings_variables, "fc_building_l", bldgssizesparam.fc_building_l
+        buildings_variables,
+        "fc_building_l",
+        bldgssizesparam.fc_building_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "fc_building_w", bldgssizesparam.fc_building_w
+        buildings_variables,
+        "fc_building_w",
+        bldgssizesparam.fc_building_w,
     )
     monkeypatch.setattr(buildings_variables, "warm_shop_l", bldgssizesparam.warm_shop_l)
     monkeypatch.setattr(buildings_variables, "warm_shop_w", bldgssizesparam.warm_shop_w)
@@ -502,49 +532,79 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "robotics_w", bldgssizesparam.robotics_w)
     monkeypatch.setattr(buildings_variables, "robotics_h", bldgssizesparam.robotics_h)
     monkeypatch.setattr(
-        buildings_variables, "maint_cont_l", bldgssizesparam.maint_cont_l
+        buildings_variables,
+        "maint_cont_l",
+        bldgssizesparam.maint_cont_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "maint_cont_w", bldgssizesparam.maint_cont_w
+        buildings_variables,
+        "maint_cont_w",
+        bldgssizesparam.maint_cont_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "maint_cont_h", bldgssizesparam.maint_cont_h
+        buildings_variables,
+        "maint_cont_h",
+        bldgssizesparam.maint_cont_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "turbine_hall_l", bldgssizesparam.turbine_hall_l
+        buildings_variables,
+        "turbine_hall_l",
+        bldgssizesparam.turbine_hall_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "turbine_hall_w", bldgssizesparam.turbine_hall_w
+        buildings_variables,
+        "turbine_hall_w",
+        bldgssizesparam.turbine_hall_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "turbine_hall_h", bldgssizesparam.turbine_hall_h
+        buildings_variables,
+        "turbine_hall_h",
+        bldgssizesparam.turbine_hall_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "gas_buildings_l", bldgssizesparam.gas_buildings_l
+        buildings_variables,
+        "gas_buildings_l",
+        bldgssizesparam.gas_buildings_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "gas_buildings_w", bldgssizesparam.gas_buildings_w
+        buildings_variables,
+        "gas_buildings_w",
+        bldgssizesparam.gas_buildings_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "gas_buildings_h", bldgssizesparam.gas_buildings_h
+        buildings_variables,
+        "gas_buildings_h",
+        bldgssizesparam.gas_buildings_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "water_buildings_l", bldgssizesparam.water_buildings_l
+        buildings_variables,
+        "water_buildings_l",
+        bldgssizesparam.water_buildings_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "water_buildings_w", bldgssizesparam.water_buildings_w
+        buildings_variables,
+        "water_buildings_w",
+        bldgssizesparam.water_buildings_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "water_buildings_h", bldgssizesparam.water_buildings_h
+        buildings_variables,
+        "water_buildings_h",
+        bldgssizesparam.water_buildings_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "sec_buildings_l", bldgssizesparam.sec_buildings_l
+        buildings_variables,
+        "sec_buildings_l",
+        bldgssizesparam.sec_buildings_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "sec_buildings_w", bldgssizesparam.sec_buildings_w
+        buildings_variables,
+        "sec_buildings_w",
+        bldgssizesparam.sec_buildings_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "sec_buildings_h", bldgssizesparam.sec_buildings_h
+        buildings_variables,
+        "sec_buildings_h",
+        bldgssizesparam.sec_buildings_h,
     )
     monkeypatch.setattr(
         buildings_variables,
@@ -552,88 +612,144 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         bldgssizesparam.staff_buildings_area,
     )
     monkeypatch.setattr(
-        buildings_variables, "staff_buildings_h", bldgssizesparam.staff_buildings_h
+        buildings_variables,
+        "staff_buildings_h",
+        bldgssizesparam.staff_buildings_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "hcd_building_l", bldgssizesparam.hcd_building_l
+        buildings_variables,
+        "hcd_building_l",
+        bldgssizesparam.hcd_building_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "hcd_building_w", bldgssizesparam.hcd_building_w
+        buildings_variables,
+        "hcd_building_w",
+        bldgssizesparam.hcd_building_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "hcd_building_h", bldgssizesparam.hcd_building_h
+        buildings_variables,
+        "hcd_building_h",
+        bldgssizesparam.hcd_building_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_pulse_l", bldgssizesparam.magnet_pulse_l
+        buildings_variables,
+        "magnet_pulse_l",
+        bldgssizesparam.magnet_pulse_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_pulse_w", bldgssizesparam.magnet_pulse_w
+        buildings_variables,
+        "magnet_pulse_w",
+        bldgssizesparam.magnet_pulse_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_pulse_h", bldgssizesparam.magnet_pulse_h
+        buildings_variables,
+        "magnet_pulse_h",
+        bldgssizesparam.magnet_pulse_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_trains_l", bldgssizesparam.magnet_trains_l
+        buildings_variables,
+        "magnet_trains_l",
+        bldgssizesparam.magnet_trains_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_trains_w", bldgssizesparam.magnet_trains_w
+        buildings_variables,
+        "magnet_trains_w",
+        bldgssizesparam.magnet_trains_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_trains_h", bldgssizesparam.magnet_trains_h
+        buildings_variables,
+        "magnet_trains_h",
+        bldgssizesparam.magnet_trains_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "control_buildings_l", bldgssizesparam.control_buildings_l
+        buildings_variables,
+        "control_buildings_l",
+        bldgssizesparam.control_buildings_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "control_buildings_w", bldgssizesparam.control_buildings_w
+        buildings_variables,
+        "control_buildings_w",
+        bldgssizesparam.control_buildings_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "control_buildings_h", bldgssizesparam.control_buildings_h
+        buildings_variables,
+        "control_buildings_h",
+        bldgssizesparam.control_buildings_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_smelter_l", bldgssizesparam.ilw_smelter_l
+        buildings_variables,
+        "ilw_smelter_l",
+        bldgssizesparam.ilw_smelter_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_smelter_w", bldgssizesparam.ilw_smelter_w
+        buildings_variables,
+        "ilw_smelter_w",
+        bldgssizesparam.ilw_smelter_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_smelter_h", bldgssizesparam.ilw_smelter_h
+        buildings_variables,
+        "ilw_smelter_h",
+        bldgssizesparam.ilw_smelter_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_storage_l", bldgssizesparam.ilw_storage_l
+        buildings_variables,
+        "ilw_storage_l",
+        bldgssizesparam.ilw_storage_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_storage_w", bldgssizesparam.ilw_storage_w
+        buildings_variables,
+        "ilw_storage_w",
+        bldgssizesparam.ilw_storage_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_storage_h", bldgssizesparam.ilw_storage_h
+        buildings_variables,
+        "ilw_storage_h",
+        bldgssizesparam.ilw_storage_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "llw_storage_l", bldgssizesparam.llw_storage_l
+        buildings_variables,
+        "llw_storage_l",
+        bldgssizesparam.llw_storage_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "llw_storage_w", bldgssizesparam.llw_storage_w
+        buildings_variables,
+        "llw_storage_w",
+        bldgssizesparam.llw_storage_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "llw_storage_h", bldgssizesparam.llw_storage_h
+        buildings_variables,
+        "llw_storage_h",
+        bldgssizesparam.llw_storage_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "hw_storage_l", bldgssizesparam.hw_storage_l
+        buildings_variables,
+        "hw_storage_l",
+        bldgssizesparam.hw_storage_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "hw_storage_w", bldgssizesparam.hw_storage_w
+        buildings_variables,
+        "hw_storage_w",
+        bldgssizesparam.hw_storage_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "hw_storage_h", bldgssizesparam.hw_storage_h
+        buildings_variables,
+        "hw_storage_h",
+        bldgssizesparam.hw_storage_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "tw_storage_l", bldgssizesparam.tw_storage_l
+        buildings_variables,
+        "tw_storage_l",
+        bldgssizesparam.tw_storage_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "tw_storage_w", bldgssizesparam.tw_storage_w
+        buildings_variables,
+        "tw_storage_w",
+        bldgssizesparam.tw_storage_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "tw_storage_h", bldgssizesparam.tw_storage_h
+        buildings_variables,
+        "tw_storage_h",
+        bldgssizesparam.tw_storage_h,
     )
     monkeypatch.setattr(buildings_variables, "auxcool_l", bldgssizesparam.auxcool_l)
     monkeypatch.setattr(buildings_variables, "auxcool_w", bldgssizesparam.auxcool_w)
@@ -663,7 +779,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "aux_build_w", bldgssizesparam.aux_build_w)
     monkeypatch.setattr(buildings_variables, "aux_build_h", bldgssizesparam.aux_build_h)
     monkeypatch.setattr(
-        buildings_variables, "qnty_sfty_fac", bldgssizesparam.qnty_sfty_fac
+        buildings_variables,
+        "qnty_sfty_fac",
+        bldgssizesparam.qnty_sfty_fac,
     )
     monkeypatch.setattr(buildings_variables, "hotcell_h", bldgssizesparam.hotcell_h)
     monkeypatch.setattr(buildings_variables, "hot_sepdist", bldgssizesparam.hot_sepdist)
@@ -702,13 +820,13 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     )
 
     assert buildings_variables.reactor_hall_l == pytest.approx(
-        bldgssizesparam.expected_reactor_hall_l
+        bldgssizesparam.expected_reactor_hall_l,
     )
     assert buildings_variables.reactor_hall_w == pytest.approx(
-        bldgssizesparam.expected_reactor_hall_w
+        bldgssizesparam.expected_reactor_hall_w,
     )
     assert buildings_variables.reactor_hall_h == pytest.approx(
-        bldgssizesparam.expected_reactor_hall_h
+        bldgssizesparam.expected_reactor_hall_h,
     )
 
 

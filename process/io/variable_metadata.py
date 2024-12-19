@@ -15,13 +15,13 @@ var_dicts = {
         units="m",
     ),
     "rmajor": VariableMetadata(
-        latex=r"$R_\mathrm{major}$ [$m$]", description="Major radius", units="m"
+        latex=r"$R_\mathrm{major}$ [$m$]", description="Major radius", units="m",
     ),
     "crypmw": VariableMetadata(
-        latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
+        latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW",
     ),
     "bt": VariableMetadata(
-        latex=r"$B_\mathrm{T}$ [$T$]", description="Toroidal magnetic field", units="T"
+        latex=r"$B_\mathrm{T}$ [$T$]", description="Toroidal magnetic field", units="T",
     ),
     "tfcth": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}$ [$m$]",
@@ -29,10 +29,10 @@ var_dicts = {
         units="m",
     ),
     "fusion_power": VariableMetadata(
-        latex=r"$P_\mathrm{fus}$ [$MW$]", description="Fusion power", units="MW"
+        latex=r"$P_\mathrm{fus}$ [$MW$]", description="Fusion power", units="MW",
     ),
     "pinjemw": VariableMetadata(
-        latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
+        latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW",
     ),
     "pnetelmw": VariableMetadata(
         latex=r"$P_\mathrm{Net\ elec}$ [$MW$]",
@@ -96,10 +96,10 @@ var_dicts = {
     ),
     "aspect": VariableMetadata(latex=r"$A$", description="Aspect ratio", units=""),
     "rminor": VariableMetadata(
-        latex=r"$a_\mathrm{min}$ [$m$]", description="Minor radius", units="m"
+        latex=r"$a_\mathrm{min}$ [$m$]", description="Minor radius", units="m",
     ),
     "capcost": VariableMetadata(
-        latex=r"$C_\mathrm{cap}$ [$M\$ $]", description="Capital cost", units="M$"
+        latex=r"$C_\mathrm{cap}$ [$M\$ $]", description="Capital cost", units="M$",
     ),
     "r_tf_outboard_mid": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}^\mathrm{out\ mid}$ [$m$]",
@@ -142,7 +142,7 @@ var_dicts = {
         units="A",
     ),
     "pinjmw": VariableMetadata(
-        latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
+        latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW",
     ),
     "hldivlim": VariableMetadata(
         latex=r"$q_\mathrm{div}^\mathrm{max}$ [$MW.m^{-2}$]",
@@ -150,19 +150,19 @@ var_dicts = {
         units="MW.m^{-2}",
     ),
     "hfact": VariableMetadata(
-        latex=r"$f_\mathrm{H}$", description="H-factor", units=""
+        latex=r"$f_\mathrm{H}$", description="H-factor", units="",
     ),
     "kappa": VariableMetadata(
-        latex=r"$\kappa_\mathrm{sep}$", description="Elongation", units=""
+        latex=r"$\kappa_\mathrm{sep}$", description="Elongation", units="",
     ),
     "triang": VariableMetadata(
-        latex=r"$\delta_\mathrm{sep}$", description="Triangularity", units=""
+        latex=r"$\delta_\mathrm{sep}$", description="Triangularity", units="",
     ),
     "f_tf_steel": VariableMetadata(
-        latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units=""
+        latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units="",
     ),
     "plasma_current_MA": VariableMetadata(
-        latex=r"$I_{\mathrm{p}}$[$MA$]", description="Plasma current", units="MA"
+        latex=r"$I_{\mathrm{p}}$[$MA$]", description="Plasma current", units="MA",
     ),
     "n_cycle": VariableMetadata(
         latex=r"$N_{\mathrm{CS},\mathrm{cycle}}$",
@@ -180,7 +180,7 @@ var_dicts = {
         units="m",
     ),
     "bore": VariableMetadata(
-        latex=r"$\Delta R_{\mathrm{bore}}$[$m$]", description="Bore radius", units="m"
+        latex=r"$\Delta R_{\mathrm{bore}}$[$m$]", description="Bore radius", units="m",
     ),
     "dnla": VariableMetadata(
         latex=r"$\bar{n}_{\mathrm{e}}$[$m^{-3}$]",
@@ -188,7 +188,7 @@ var_dicts = {
         units="m^{-3}",
     ),
     "dnla_gw": VariableMetadata(
-        latex=r"$f_{\mathrm{GW}}$", description="Greenwald fraction", units=""
+        latex=r"$f_{\mathrm{GW}}$", description="Greenwald fraction", units="",
     ),
     "normalised_toroidal_beta": VariableMetadata(
         latex=r"$\beta_{N,\mathrm{tor}}$",
@@ -206,7 +206,7 @@ var_dicts = {
         units="A m^{-2}",
     ),
     "coreradius": VariableMetadata(
-        latex=r"$r_{core} [M]$", description="Core radius", units="M"
+        latex=r"$r_{core} [M]$", description="Core radius", units="M",
     ),
     "fcuohsu": VariableMetadata(
         latex=r"$f_{\mathrm{Cu}}^{\mathrm{CS}}$",
@@ -224,26 +224,26 @@ var_dicts = {
         units="m",
     ),
     "pheat": VariableMetadata(
-        latex=r"$ P_{\mathrm{heat}}$ [$MW$]", description="Heat power", units="MW"
+        latex=r"$ P_{\mathrm{heat}}$ [$MW$]", description="Heat power", units="MW",
     ),
     "effcd": VariableMetadata(
-        latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
+        latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W",
     ),
     "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
     "aux_current_fraction": VariableMetadata(
-        latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
+        latex=r"$f_{\mathrm{CD}}$", description="CD factor", units="",
     ),
     "inductive_current_fraction": VariableMetadata(
-        latex=r"$f_{\mathrm{CD,ind}}$", description="Inductive CD factor", units=""
+        latex=r"$f_{\mathrm{CD,ind}}$", description="Inductive CD factor", units="",
     ),
     "bootstrap_current_fraction": VariableMetadata(
-        latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units=""
+        latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units="",
     ),
     "pdivt": VariableMetadata(
-        latex=r"$P_{\mathrm{sep}}$ [$MW$]", description="Power to divertor", units="MW"
+        latex=r"$P_{\mathrm{sep}}$ [$MW$]", description="Power to divertor", units="MW",
     ),
     "pradmw": VariableMetadata(
-        latex=r"$P_{\mathrm{rad}}$ [$MW$]", description="Radiation power", units="MW"
+        latex=r"$P_{\mathrm{rad}}$ [$MW$]", description="Radiation power", units="MW",
     ),
     "pdivtbt_over_qar": VariableMetadata(
         latex=r"$\frac{P_{\mathrm{sep}}B_T}{q_{95}AR_{\mathrm{maj}}}$ [$MWTm^{-1}$]",
@@ -256,7 +256,7 @@ var_dicts = {
         units="",
     ),
     "bktlife": VariableMetadata(
-        latex=r"$T_{\mathrm{blk}}$", description="Blanket lifetime", units=""
+        latex=r"$T_{\mathrm{blk}}$", description="Blanket lifetime", units="",
     ),
     "bktcycles": VariableMetadata(
         latex=r"$N_{\mathrm{blk},\mathrm{cycle}}$",
@@ -264,10 +264,10 @@ var_dicts = {
         units="",
     ),
     "zeff": VariableMetadata(
-        latex=r"$Z_{\mathrm{eff}}$", description="Effective charge", units=""
+        latex=r"$Z_{\mathrm{eff}}$", description="Effective charge", units="",
     ),
     "t_burn": VariableMetadata(
-        latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s"
+        latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s",
     ),
     "vburn": VariableMetadata(
         latex=r"$V_{\mathrm{loop}}$ [$V$]",
@@ -280,7 +280,7 @@ var_dicts = {
         units="",
     ),
     "rli": VariableMetadata(
-        latex=r"$l_i$", description="Normalized internal inductance", units=""
+        latex=r"$l_i$", description="Normalized internal inductance", units="",
     ),
     "n_cycle_min": VariableMetadata(
         latex=r"$MinCycles_{\mathrm{Stress.min}}^{\mathrm{CS}}$",
@@ -348,7 +348,7 @@ var_dicts = {
         units="",
     ),
     "pitch": VariableMetadata(
-        latex=r"FW pitch [m]", description="Pitch of the first wall", units="m"
+        latex=r"FW pitch [m]", description="Pitch of the first wall", units="m",
     ),
     "coe": VariableMetadata(
         latex=r"$\mathrm{LCOE}$ [$m\$/kWh$]",
@@ -356,10 +356,10 @@ var_dicts = {
         units="m$/kWh",
     ),
     "beta": VariableMetadata(
-        latex=r"$\beta$", description="Total plasma beta", units=""
+        latex=r"$\beta$", description="Total plasma beta", units="",
     ),
     "fimp(13)": VariableMetadata(
-        latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
+        latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units="",
     ),
     "pdivmax_over_rmajor": VariableMetadata(
         latex=r"$P_{\mathrm{div}}/R_\mathrm{maj}$ [MW/m]",

@@ -8,20 +8,20 @@ If the MFILE is the result of a parameter scan, only the last point is plotted
 currently.
 """
 
-from process.io.mfile import MFile
-from process.fortran import numerics
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from pathlib import Path
-import pandas as pd
-
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import logging
-import seaborn as sns
-from dataclasses import dataclass, asdict
-from typing import Optional, Sequence, List, Dict, Tuple, Union
+from collections.abc import Sequence
+from dataclasses import asdict, dataclass
+from pathlib import Path
 
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+
+from process.fortran import numerics
+from process.io.mfile import MFile
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 # Variables of interest in mfiles and subsequent dataframes
 # Be specific about exact names, patterns and regex
@@ -53,10 +53,10 @@ class RunMetadata:
 def plot_mfile_solutions(
     runs_metadata: Sequence[RunMetadata],
     plot_title: str,
-    normalising_tag: Optional[str] = None,
+    normalising_tag: str | None = None,
     rmse: bool = False,
-    normalisation_type: Optional[str] = "init",
-) -> Tuple[mpl.figure.Figure, pd.DataFrame]:
+    normalisation_type: str | None = "init",
+) -> tuple[mpl.figure.Figure, pd.DataFrame]:
     """Plot multiple solutions, optionally normalised by a given solution.
 
     :param runs_metadata: list of RunMetadata objects
@@ -106,7 +106,7 @@ def plot_mfile_solutions(
         if normalising_tag is None:
             raise ValueError(
                 "RMSE plot requires normalising_tag to be specified: which "
-                "solution are the errors relative to?"
+                "solution are the errors relative to?",
             )
 
         # Calcualte RMS errors relative to normalising tag solution
@@ -133,7 +133,7 @@ def plot_mfile_solutions(
     return fig, filtered_results_df
 
 
-def _extract_mfile_data(mfile_path: Path) -> Dict:
+def _extract_mfile_data(mfile_path: Path) -> dict:
     """Extract data from mfile and return as dict.
 
     Also include the names of the optimisation parameters.
@@ -172,7 +172,7 @@ def _create_df_from_run_metadata(runs_metadata: Sequence[RunMetadata]) -> pd.Dat
             mfile_data = _extract_mfile_data(run_metadata.mfile_path)
         else:
             raise FileNotFoundError(
-                f"The MFILE {run_metadata.mfile_path} doesn't exist"
+                f"The MFILE {run_metadata.mfile_path} doesn't exist",
             )
         # Merge each run's metadata and results into one dict
         results.append({**asdict(run_metadata), **mfile_data})
@@ -181,8 +181,9 @@ def _create_df_from_run_metadata(runs_metadata: Sequence[RunMetadata]) -> pd.Dat
 
 
 def _separate_norm_solution(
-    results_df: pd.DataFrame, normalising_tag: str
-) -> Tuple[pd.DataFrame]:
+    results_df: pd.DataFrame,
+    normalising_tag: str,
+) -> tuple[pd.DataFrame]:
     """Separate solutions df into normalising row and rows to be normalised.
 
     :param results_df: multiple solutions dataframe
@@ -241,15 +242,18 @@ def _normalise_diffs(
     :rtype: pandas.DataFrame
     """
     normalising_soln, non_normalising_solns = _separate_norm_solution(
-        results_df, normalising_tag
+        results_df,
+        normalising_tag,
     )
     # Solution to normalise with
     normalising_soln_opt_params = _filter_opt_params(
-        normalising_soln, opt_param_value_pattern=opt_param_value_pattern
+        normalising_soln,
+        opt_param_value_pattern=opt_param_value_pattern,
     )
     # Solutions that need normalised diffs calculating
     non_normalising_solns_opt_params = _filter_opt_params(
-        non_normalising_solns, opt_param_value_pattern=opt_param_value_pattern
+        non_normalising_solns,
+        opt_param_value_pattern=opt_param_value_pattern,
     )
 
     # Calculate the normalised differences between multiple solutions
@@ -258,7 +262,7 @@ def _normalise_diffs(
     if (normalising_soln_opt_params_np == 0).any():
         zero_indexes = np.nonzero(normalising_soln_opt_params_np == 0)[0]
         raise ValueError(
-            f"Can't normalise with 0-valued optimisation parameter at index {str(zero_indexes)}."
+            f"Can't normalise with 0-valued optimisation parameter at index {zero_indexes!s}.",
         )
 
     normalised_solns_opt_params = (
@@ -273,7 +277,8 @@ def _normalise_diffs(
         filter_in=False,
     )
     normalised_solns = pd.concat(
-        [non_normalising_solns_metadata, normalised_solns_opt_params], axis=1
+        [non_normalising_solns_metadata, normalised_solns_opt_params],
+        axis=1,
     )
 
     return normalised_solns
@@ -282,7 +287,7 @@ def _normalise_diffs(
 def _filter_vars_of_interest(
     results_df: pd.DataFrame,
     opt_param_value_pattern: str,
-    extra_var_names: Optional[List[str]] = None,
+    extra_var_names: list[str] | None = None,
 ) -> pd.DataFrame:
     """Filter variables of interest from full results for all solutions.
 
@@ -305,7 +310,7 @@ def _filter_vars_of_interest(
         regex=(
             f"{TAG_REGEX}|{opt_param_value_pattern}|{NORM_OPT_PARAM_NAME_REGEX}|"
             f"{NORM_OBJF_PATTERN}|{'|'.join(extra_var_names)}".rstrip("|")
-        )
+        ),
     )
 
     return filtered_results
@@ -316,7 +321,7 @@ def _plot_solutions(
     normalisation_type: str,
     opt_param_value_pattern: str,
     plot_title: str,
-    normalising_tag: Union[str, None],
+    normalising_tag: str | None,
     rmse_df: pd.DataFrame,
 ) -> mpl.figure.Figure:
     """Plot multiple solutions, optionally normalised by a given solution.
@@ -338,7 +343,7 @@ def _plot_solutions(
     """
     # Separate optimisation parameters and objective dfs
     opt_params_df = diffs_df.filter(
-        regex=f"{opt_param_value_pattern}|{NORM_OPT_PARAM_NAME_REGEX}|{TAG}"
+        regex=f"{opt_param_value_pattern}|{NORM_OPT_PARAM_NAME_REGEX}|{TAG}",
     )
     norm_objf_df = diffs_df.filter(regex=f"{NORM_OBJF_PATTERN}|{TAG}")
 
@@ -358,12 +363,10 @@ def _plot_solutions(
     else:
         numerics.init_numerics()
         objf_list = list(
-            set(
-                [
-                    f2py_compatible_to_string(numerics.lablmm[int(abs(minmax)) - 1])
-                    for minmax in diffs_df["minmax"]
-                ]
-            )
+            set([
+                f2py_compatible_to_string(numerics.lablmm[int(abs(minmax)) - 1])
+                for minmax in diffs_df["minmax"]
+            ]),
         )
 
     if len(objf_list) != 1:
@@ -373,7 +376,7 @@ def _plot_solutions(
 
     # Now separate optimisation parameter values from their names
     opt_params_values_df = opt_params_df.filter(
-        regex=f"{opt_param_value_pattern}|{TAG}"
+        regex=f"{opt_param_value_pattern}|{TAG}",
     )
     opt_params_names_df = opt_params_df.filter(regex=NORM_OPT_PARAM_NAME_REGEX)
 
@@ -390,7 +393,8 @@ def _plot_solutions(
     opt_params_names_with_tag = opt_params_names.copy()
     opt_params_names_with_tag.insert(0, TAG)
     opt_params_values_with_names_df = opt_params_values_df.set_axis(
-        opt_params_names_with_tag, axis=1
+        opt_params_names_with_tag,
+        axis=1,
     )
 
     # Define subfig and subplot layout
@@ -460,7 +464,7 @@ def _plot_solutions(
     # Plot optimisation parameters
     # Melt df (wide to long-form) for seaborn plotting with jitter
     opt_params_values_with_names_df_melt = opt_params_values_with_names_df.melt(
-        id_vars=TAG
+        id_vars=TAG,
     )
 
     # If normalisation_type is None (no normalisation of original opt param
@@ -483,7 +487,9 @@ def _plot_solutions(
             axs_opt_params[i + 1].set_ylabel("")
             axs_opt_params[i + 1].get_legend().remove()
             axs_opt_params[i + 1].ticklabel_format(
-                axis="x", style="scientific", scilimits=(-1, 1)
+                axis="x",
+                style="scientific",
+                scilimits=(-1, 1),
             )
         # Set legend for all subplots: plot in own subplot
         axs_opt_params[0].axis("off")
@@ -577,21 +583,23 @@ def _rms_errors(
     normalising_soln, _ = _separate_norm_solution(results_df, normalising_tag)
     # Reference solution to calculate RMS errors against
     ref_soln_opt_params = _filter_opt_params(
-        normalising_soln, opt_param_value_pattern=opt_param_value_pattern
+        normalising_soln,
+        opt_param_value_pattern=opt_param_value_pattern,
     )
     # Solutions that need RMS errors calculating
     # Include reference solution here, so that its RMS error is calculated (as 0)
     # This is so that the colours in the RMSE plot match those in the main
     # optimisation parameter plot's legend
     all_solns_opt_params = _filter_opt_params(
-        results_df, opt_param_value_pattern=opt_param_value_pattern
+        results_df,
+        opt_param_value_pattern=opt_param_value_pattern,
     )
 
     ref_soln_opt_params_np = ref_soln_opt_params.to_numpy()
     solns_opt_params_to_rms_np = all_solns_opt_params.to_numpy()
 
     rmses = np.sqrt(
-        np.mean((solns_opt_params_to_rms_np - ref_soln_opt_params_np) ** 2, axis=1)
+        np.mean((solns_opt_params_to_rms_np - ref_soln_opt_params_np) ** 2, axis=1),
     )
 
     # Create df of tags and rmses

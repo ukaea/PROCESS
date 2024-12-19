@@ -1,27 +1,29 @@
 #!/usr/bin/env python
 """
 
-    Python tool for comparing MFILE and outputting differences.
-    The tool does not work for MFiles that are not the result of
-    a full PROCESS run (ie if an error or exception occured).
+Python tool for comparing MFILE and outputting differences.
+The tool does not work for MFiles that are not the result of
+a full PROCESS run (ie if an error or exception occured).
 
-    James Morris
-    14/04/15
+James Morris
+14/04/15
 
-    CCFE
+CCFE
 
-    Notes:
-        + 24/11/2021: Global dictionary variables moved within the functions
-                    to avoid cyclic dependencies. This is because the dicts
-                    generation script imports, and inspects, process.
+Notes:
+    + 24/11/2021: Global dictionary variables moved within the functions
+                to avoid cyclic dependencies. This is because the dicts
+                generation script imports, and inspects, process.
 
 """
 
-import sys
-import numpy
 import argparse
-import process.io.mfile as mf
+import sys
+
+import numpy
 from numpy import isfinite
+
+import process.io.mfile as mf
 from process.io.python_fortran_dicts import get_dicts
 
 # Dictionary for parameter descriptions
@@ -267,7 +269,7 @@ GENERIC_LIST = [
 ]
 
 
-class BColors(object):
+class BColors:
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
     OKGREEN = "\033[92m"
@@ -291,7 +293,7 @@ def main(arg):
         if mfile.data["error_status"].get_scan(-1) == 3:
             raise RuntimeError(
                 f"{item} is an MFile from a PROCESS run that did not converge"
-                " and instead results from an error during the run"
+                " and instead results from an error during the run",
             )
 
         mfile_list.append(mfile)
@@ -471,25 +473,27 @@ def main(arg):
                 sys.exit(0)
             else:
                 sys.exit(
-                    "Differences in baseline output by more than {0}%".format(arg.acc)
+                    f"Differences in baseline output by more than {arg.acc}%",
                 )
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description="Produce a comparison "
         "between two PROCESS "
         "MFILEs. User Can specify "
         "level of differences to show. "
         "For info contact "
-        "james.morris2@ccfe.ac.uk"
+        "james.morris2@ccfe.ac.uk",
     )
 
     parser.add_argument("-f", metavar="f", type=str, nargs="+", help="Files to compare")
 
     parser.add_argument(
-        "-s", "--save", help="Save output to file called comp.txt", action="store_true"
+        "-s",
+        "--save",
+        help="Save output to file called comp.txt",
+        action="store_true",
     )
 
     parser.add_argument("--acc", type=float, default=5.0)

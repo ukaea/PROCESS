@@ -6,19 +6,17 @@ This will indicate any differences in the MFile contents caused
 by changes made off of main.
 """
 
-from pathlib import Path
-from dataclasses import dataclass
-from typing import List
-import shutil
 import logging
 import re
+import shutil
+from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
-from process.main import main
-from process.io.mfile import MFile
-
 from regression_test_assets import RegressionTestAssetCollector
 
+from process.io.mfile import MFile
+from process.main import main
 
 logger = logging.getLogger(__name__)
 
@@ -59,12 +57,15 @@ class RegressionTestScenario:
     def run(self, solver: str):
         """Runs the scenario input file using PROCESS"""
         logger.info(
-            f"Running regression test {self.scenario_name} using input file {self.input_file}"
+            f"Running regression test {self.scenario_name} using input file {self.input_file}",
         )
         main(["--input", str(self.input_file), "--solver", solver])
 
     def compare(
-        self, reference_mfile_location: Path, tolerance: float, opt_params_only: bool
+        self,
+        reference_mfile_location: Path,
+        tolerance: float,
+        opt_params_only: bool,
     ):
         """Runs assertions about the MFile with respect to a reference MFile
 
@@ -84,7 +85,7 @@ class RegressionTestScenario:
             "Ensure the Scenario has been run!"
         )
 
-        with open(mfile_location, "r") as f:
+        with open(mfile_location) as f:
             assert len(f.readlines()) > 0, (
                 "An MFile has been created, but it is empty, "
                 "indicating PROCESS did not run the input file successfully!"
@@ -95,9 +96,9 @@ class RegressionTestScenario:
 
         assert (ifail := mfile.data["ifail"].get_scan(-1)) == 1 or mfile.data[
             "ioptimz"
-        ].get_scan(
-            -1
-        ) == -2, f"ifail of {ifail} indicates PROCESS did not solve successfully"
+        ].get_scan(-1) == -2, (
+            f"ifail of {ifail} indicates PROCESS did not solve successfully"
+        )
 
         mfile_keys = set(mfile.data.keys())
         reference_mfile_keys = set(reference_mfile.data.keys())
@@ -119,20 +120,25 @@ class RegressionTestScenario:
             logger.warning(key_mfile_not_ref_msg)
 
         differences = self.mfile_value_changes(
-            reference_mfile, mfile, tolerance, opt_params_only
+            reference_mfile,
+            mfile,
+            tolerance,
+            opt_params_only,
         )
         if differences:
             differences = sorted(
-                differences, key=lambda i: abs(i.percentage_change), reverse=True
+                differences,
+                key=lambda i: abs(i.percentage_change),
+                reverse=True,
             )
 
             logger.warning(
-                f"{'Variable':20}\t{'Ref':>10}\t{'New':>10}\t{'% Change':>10}"
+                f"{'Variable':20}\t{'Ref':>10}\t{'New':>10}\t{'% Change':>10}",
             )
             logger.warning("-" * 60)
             for diff in differences:
                 logger.warning(
-                    f"{diff.name:20}\t{diff.ref:10.3g}\t{diff.new:10.3g}\t{diff.percentage_change:10.2f}"
+                    f"{diff.name:20}\t{diff.ref:10.3g}\t{diff.new:10.3g}\t{diff.percentage_change:10.2f}",
                 )
 
             assert len(differences) == 0, (
@@ -145,8 +151,11 @@ class RegressionTestScenario:
 
     @staticmethod
     def mfile_value_changes(
-        ref: MFile, new: MFile, tolerance: float, opt_params_only: bool
-    ) -> List[MFileVariableDifference]:
+        ref: MFile,
+        new: MFile,
+        tolerance: float,
+        opt_params_only: bool,
+    ) -> list[MFileVariableDifference]:
         """Calculates the differences between two MFiles.
 
         :param ref: the reference MFile
@@ -215,7 +224,7 @@ class RegressionTestScenario:
                         ref_value,
                         new_value,
                         percentage_change,
-                    )
+                    ),
                 )
 
         return diffs
@@ -233,7 +242,7 @@ def tracked_regression_test_assets():
 
 
 @pytest.mark.parametrize(
-    ["input_file"],
+    "input_file",
     [[f] for f in INPUT_FILES_FOLDER.glob("*.IN.DAT")],
     ids=lambda v: v.stem.replace(".IN", ""),
 )
@@ -286,14 +295,15 @@ def test_input_file(
     scenario = RegressionTestScenario(new_input_file)
 
     reference_mfile = tracked_regression_test_assets.get_reference_mfile(
-        scenario.scenario_name, tmp_path
+        scenario.scenario_name,
+        tmp_path,
     )
 
     # reference MFile cannot be found?
     # should the file be allowed to run just to test it converges (with a warning about no comparison)?
     if reference_mfile is None:
         pytest.skip(
-            reason=f"A reference input file cannot be found for {scenario.scenario_name}"
+            reason=f"A reference input file cannot be found for {scenario.scenario_name}",
         )
 
     scenario.run(solver_name)

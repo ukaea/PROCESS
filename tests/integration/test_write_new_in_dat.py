@@ -1,9 +1,10 @@
 """Integration tests for write_new_in_dat.py."""
 
-from process.io import write_new_in_dat
-from process.io.mfile import MFile
-from process.io.in_dat import InDat
 from pytest import approx
+
+from process.io import write_new_in_dat
+from process.io.in_dat import InDat
+from process.io.mfile import MFile
 
 
 def test_write_new_in_dat(temp_data, mfile_name):
@@ -24,7 +25,7 @@ def test_write_new_in_dat(temp_data, mfile_name):
 
     # Write new IN.DAT then inspect value in new input file
     write_new_in_dat.main(
-        args=["-f", str(mfile_path), "-i", str(in_dat_path), "-o", str(new_in_dat_path)]
+        args=["-f", str(mfile_path), "-i", str(in_dat_path), "-o", str(new_in_dat_path)],
     )
     in_dat = InDat(str(new_in_dat_path))
     te_obs = in_dat.data["te"].get_value

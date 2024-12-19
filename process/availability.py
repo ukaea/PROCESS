@@ -1,18 +1,18 @@
-import math
 import logging
+import math
 
 from process import fortran as ft
-from process.fortran import cost_variables as cv
-from process.fortran import physics_variables as pv
-from process.fortran import ife_variables as ifev
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import divertor_variables as dv
-from process.fortran import tfcoil_variables as tfv
 from process.fortran import constraint_variables as ctv
-from process.fortran import times_variables as tv
-from process.fortran import process_output as po
-from process.fortran import vacuum_variables as vacv
+from process.fortran import cost_variables as cv
+from process.fortran import divertor_variables as dv
+from process.fortran import fwbs_variables as fwbsv
+from process.fortran import ife_variables as ifev
 from process.fortran import maths_library
+from process.fortran import physics_variables as pv
+from process.fortran import process_output as po
+from process.fortran import tfcoil_variables as tfv
+from process.fortran import times_variables as tv
+from process.fortran import vacuum_variables as vacv
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +55,7 @@ class Availability:
         if cv.iavail == 3:
             if pv.itart != 1:
                 raise ValueError(
-                    f"{cv.iavail=} is for a Spherical Tokamak. Please set itart=1 to use this model."
+                    f"{cv.iavail=} is for a Spherical Tokamak. Please set itart=1 to use this model.",
                 )
             self.avail_st(output)  # ST model (2023)
         elif cv.iavail == 2:
@@ -103,18 +103,18 @@ class Availability:
                     fwbsv.bktlife = min(cv.abktflnc / pv.wallmw, cv.tlife)
                 else:
                     fwbsv.bktlife = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
+            elif cv.ibkt_life == 0:
+                fwbsv.bktlife = min(fwbsv.fwlife, cv.abktflnc / pv.wallmw, cv.tlife)
             else:
-                if cv.ibkt_life == 0:
-                    fwbsv.bktlife = min(fwbsv.fwlife, cv.abktflnc / pv.wallmw, cv.tlife)
-                else:
-                    fwbsv.bktlife = min(
-                        fwbsv.fwlife, cv.life_dpa / dpa_fpy, cv.tlife
-                    )  # DEMO
+                fwbsv.bktlife = min(
+                    fwbsv.fwlife,
+                    cv.life_dpa / dpa_fpy,
+                    cv.tlife,
+                )  # DEMO
 
             # TODO Issue #834
             # Add a test for hldiv=0
-            if dv.hldiv < 1.0e-10:
-                dv.hldiv = 1.0e-10
+            dv.hldiv = max(dv.hldiv, 1.0e-10)
 
             # Divertor lifetime (years)
             cv.divlife = self.divertor_lifetime()
@@ -353,7 +353,8 @@ class Availability:
 
         # Total availability
         cv.cfactr = max(
-            1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
+            1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned),
+            0.0e0,
         )
 
         # Modify lifetimes to take account of the availability
@@ -385,7 +386,11 @@ class Availability:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
+                self.outfile,
+                "Divertor lifetime (FPY)",
+                "(divlife)",
+                cv.divlife,
+                "OP ",
             )
             if pv.itart == 1:
                 po.ovarre(
@@ -622,7 +627,10 @@ class Availability:
             po.ocmmnt(self.outfile, "Magnets:")
             po.oblnkl(self.outfile)
             po.ovarre(
-                self.outfile, "Minimum temperature margin (K)", "(tmargmin)", tmargmin
+                self.outfile,
+                "Minimum temperature margin (K)",
+                "(tmargmin)",
+                tmargmin,
             )
             po.ovarre(
                 self.outfile,
@@ -673,7 +681,7 @@ class Availability:
             logger.error(
                 """div_nu <= div_nref
             The cycle when the divertor fails with 100% probability <= & Reference value for cycle life of divertor
-            """
+            """,
             )
             po.ocmmnt(
                 self.outfile,
@@ -728,7 +736,10 @@ class Availability:
                 cv.div_nu,
             )
             po.ovarre(
-                self.outfile, "Number of cycles between planned replacements", "(n)", n
+                self.outfile,
+                "Number of cycles between planned replacements",
+                "(n)",
+                n,
             )
             po.ovarre(
                 self.outfile,
@@ -768,7 +779,7 @@ class Availability:
             logger.error(
                 """fwbs_nu <= fwbs_nref
             The cycle when the blanket fails with 100% probability <= &Reference value for cycle life of blanket
-            """
+            """,
             )
             po.ocmmnt(
                 self.outfile,
@@ -818,7 +829,10 @@ class Availability:
                 cv.fwbs_nu,
             )
             po.ovarre(
-                self.outfile, "Number of cycles between planned replacements", "(n)", n
+                self.outfile,
+                "Number of cycles between planned replacements",
+                "(n)",
+                n,
             )
             po.ovarre(
                 self.outfile,
@@ -853,7 +867,7 @@ class Availability:
 
         # Number of balance of plant failures in plant operational lifetime
         bop_num_failures = math.ceil(
-            bop_fail_rate * DAYS_IN_YEAR * 24.0e0 * cv.t_operation
+            bop_fail_rate * DAYS_IN_YEAR * 24.0e0 * cv.t_operation,
         )
 
         # Balance of plant mean time to repair (years)
@@ -868,7 +882,10 @@ class Availability:
             po.ocmmnt(self.outfile, "Balance of plant:")
             po.oblnkl(self.outfile)
             po.ovarre(
-                self.outfile, "Failure rate (1/h)", "(bop_fail_rate)", bop_fail_rate
+                self.outfile,
+                "Failure rate (1/h)",
+                "(bop_fail_rate)",
+                bop_fail_rate,
             )
             po.ovarin(
                 self.outfile,
@@ -927,7 +944,7 @@ class Availability:
         # Number of shutdowns
         n_shutdown: int = round(
             (cv.tlife - cv.t_operation)
-            / ((21.0e0 * cv.num_rh_systems ** (-0.9e0) + 2.0e0) / 12.0e0)
+            / ((21.0e0 * cv.num_rh_systems ** (-0.9e0) + 2.0e0) / 12.0e0),
         )
 
         # Operational time between shutdowns
@@ -1059,7 +1076,11 @@ class Availability:
         # Time for a maintenance cycle (years)
         # Shortest component lifetime + time to replace
         shortest_lifetime = min(
-            fwbsv.bktlife, cv.divlife, cv.cplife, cv.cdrlife, cv.tlife
+            fwbsv.bktlife,
+            cv.divlife,
+            cv.cplife,
+            cv.cdrlife,
+            cv.tlife,
         )
         maint_cycle = shortest_lifetime + cv.tmain
 
@@ -1116,7 +1137,8 @@ class Availability:
 
         # Total availability
         cv.cfactr = max(
-            1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
+            1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned),
+            0.0e0,
         )
 
         # Modify lifetimes to take account of the availability
@@ -1160,7 +1182,11 @@ class Availability:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
+                self.outfile,
+                "Divertor lifetime (FPY)",
+                "(divlife)",
+                cv.divlife,
+                "OP ",
             )
             if tfv.i_tf_sup == 1:
                 po.ovarre(
@@ -1265,7 +1291,11 @@ class Availability:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife, "OP"
+                self.outfile,
+                "Total plant lifetime (years)",
+                "(tlife)",
+                cv.tlife,
+                "OP",
             )
 
     @staticmethod

@@ -1,9 +1,9 @@
 """Run the tracked files and move into tracking directory."""
 
 import argparse
-from pathlib import Path
 import shutil
 import subprocess
+from pathlib import Path
 
 from tracking_data import ProcessTracker
 
@@ -22,10 +22,10 @@ def run_and_move_tracked_files(arguments):
         except subprocess.CalledProcessError:
             continue
         created_mfile = file_path.with_name(
-            file_path.name.replace(".IN.DAT", ".MFILE.DAT")
+            file_path.name.replace(".IN.DAT", ".MFILE.DAT"),
         )
         moved_mfile = created_mfile.with_name(
-            created_mfile.name.replace(".MFILE.DAT", "_MFILE.DAT")
+            created_mfile.name.replace(".MFILE.DAT", "_MFILE.DAT"),
         )
         created_mfile.rename(tracking_dir / moved_mfile.name)
 
@@ -46,7 +46,7 @@ def tracking(arguments):
 
         copied_mfile = shutil.copy(mfile_path, Path(arguments.db) / mfile_path.name)
         moved_mfile_name = copied_mfile.with_name(
-            copied_mfile.name.replace("_MFILE.DAT", f"_MFILE_{arguments.hash}.DAT")
+            copied_mfile.name.replace("_MFILE.DAT", f"_MFILE_{arguments.hash}.DAT"),
         )
         copied_mfile.rename(moved_mfile_name)
 

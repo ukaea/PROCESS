@@ -1,9 +1,10 @@
-import numpy as np
 import logging
-import scipy as sp
 from abc import ABC, abstractmethod
 
-from process.fortran import physics_variables, error_handling
+import numpy as np
+import scipy as sp
+
+from process.fortran import error_handling, physics_variables
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -69,7 +70,6 @@ class Profile(ABC):
         """Use a profile function to act on self.profile_x to calculate and set the
         values of self.profile_y.
         """
-        pass
 
     def integrate_profile_y(self) -> None:
         """
@@ -86,7 +86,9 @@ class Profile(ABC):
         None
         """
         self.profile_integ = sp.integrate.simpson(
-            self.profile_y, x=self.profile_x, dx=self.profile_dx
+            self.profile_y,
+            x=self.profile_x,
+            dx=self.profile_dx,
         )
 
 
@@ -156,7 +158,7 @@ class NProfile(Profile):
 
         if n0 < nped:
             logger.info(
-                f"NPROFILE: density pedestal is higher than core density. {nped = }, {n0 = }"
+                f"NPROFILE: density pedestal is higher than core density. {nped = }, {n0 = }",
             )
         rho_index = rho <= rhopedn
         self.profile_y[rho_index] = (
@@ -169,9 +171,12 @@ class NProfile(Profile):
 
     @staticmethod
     def ncore(
-        rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
+        rhopedn: float,
+        nped: float,
+        nsep: float,
+        nav: float,
+        alphan: float,
     ) -> float:
-
         """
         This routine calculates the core density of a pedestalised profile.
         The solution comes from integrating and summing the two separate density profiles for the core
@@ -289,7 +294,7 @@ class TProfile(Profile):
 
         if t0 < teped:
             logger.info(
-                f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }"
+                f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }",
             )
         rho_index = rho <= rhopedt
         self.profile_y[rho_index] = (

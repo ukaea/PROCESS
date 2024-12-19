@@ -1,10 +1,15 @@
 import pytest
+
+from process.blanket_library import BlanketLibrary
 from process.fortran import (
-    physics_variables as pv,
-    fwbs_variables as fwbs,
     build_variables as bv,
 )
-from process.blanket_library import BlanketLibrary
+from process.fortran import (
+    fwbs_variables as fwbs,
+)
+from process.fortran import (
+    physics_variables as pv,
+)
 from process.fw import Fw
 
 
@@ -40,22 +45,28 @@ def test_elbow_coeff(blanket_library_fixture):
     """
     # input = r_elbow, ang_elbow, lambda, dh
     assert blanket_library_fixture.elbow_coeff(1, 0, 1, 1) == pytest.approx(
-        0.0, rel=1e-3
+        0.0,
+        rel=1e-3,
     )
     assert blanket_library_fixture.elbow_coeff(1, 90, 1, 1) == pytest.approx(
-        1.785, rel=1e-3
+        1.785,
+        rel=1e-3,
     )
     assert blanket_library_fixture.elbow_coeff(1, 180, 1, 1) == pytest.approx(
-        3.3, rel=1e-3
+        3.3,
+        rel=1e-3,
     )
     assert blanket_library_fixture.elbow_coeff(1, 90, 1, 0.1) == pytest.approx(
-        15.816, rel=1e-3
+        15.816,
+        rel=1e-3,
     )
     assert blanket_library_fixture.elbow_coeff(0.1, 90, 1, 1) == pytest.approx(
-        66.57, rel=1e-3
+        66.57,
+        rel=1e-3,
     )
     assert blanket_library_fixture.elbow_coeff(1, 90, 0.1, 1) == pytest.approx(
-        0.3675, rel=1e-3
+        0.3675,
+        rel=1e-3,
     )
 
 
@@ -70,7 +81,8 @@ def test_flow_velocity(monkeypatch, blanket_library_fixture):
 
     # input = i_channel_shape, mass_flow_rate, flow_density
     assert blanket_library_fixture.flow_velocity(1, 1, 1) == pytest.approx(
-        0.318, rel=1e-3
+        0.318,
+        rel=1e-3,
     )
     assert blanket_library_fixture.flow_velocity(2, 1, 1) == 1.0
     assert blanket_library_fixture.flow_velocity(1, 0, 1) == 0.0
@@ -185,7 +197,14 @@ def test_pressure_drop(monkeypatch, blanket_library_fixture):
 
     # input = ip, ofile, i_ps, num_90, num_180, l_pipe, den, vsc, vv, label
     assert blanket_library_fixture.pressure_drop(
-        2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, "label"
+        2,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        "label",
     ) == pytest.approx(1.438, rel=1e-3)
 
 

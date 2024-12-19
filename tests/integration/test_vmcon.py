@@ -5,13 +5,15 @@ behaviour with different initial guesses for the solution vector x
 Expected answers for tests 1 to 3 are given in
 VMCON documentation ANL-80-64
 """
-from process.evaluators import Evaluators
-from process.fortran import init_module
-from process.fortran import error_handling
-import pytest
-import numpy as np
+
 import logging
 from abc import ABC, abstractmethod
+
+import numpy as np
+import pytest
+
+from process.evaluators import Evaluators
+from process.fortran import error_handling, init_module
 from process.solver import get_solver
 
 # Debug-level terminal output logging
@@ -91,17 +93,13 @@ class CustomFunctionEvaluator(ABC, Evaluators):
         initialised.
         """
 
-        pass
-
     @abstractmethod
     def fcnvmc1(self):
         """Function evaluator."""
-        pass
 
     @abstractmethod
     def fcnvmc2(self):
         """Gradient function evaluator."""
-        pass
 
 
 class Evaluator1(CustomFunctionEvaluator):
@@ -137,9 +135,10 @@ class Evaluator1(CustomFunctionEvaluator):
         :rtype: tuple(float, np.ndarray)
         """
         objf = (x[0] - 2.0) ** 2 + (x[1] - 1.0) ** 2
-        conf = np.array(
-            [x[0] - 2.0 * x[1] + 1.0, -0.25 * x[0] ** 2 - x[1] * x[1] + 1.0]
-        )
+        conf = np.array([
+            x[0] - 2.0 * x[1] + 1.0,
+            -0.25 * x[0] ** 2 - x[1] * x[1] + 1.0,
+        ])
 
         return objf, conf
 
@@ -199,9 +198,10 @@ class Evaluator2(CustomFunctionEvaluator):
         :rtype: tuple(float, np.ndarray)
         """
         objf = (x[0] - 2.0) ** 2 + (x[1] - 1.0) ** 2
-        conf = np.array(
-            [x[0] - 2.0 * x[1] + 1.0, -0.25 * x[0] ** 2 - x[1] * x[1] + 1.0]
-        )
+        conf = np.array([
+            x[0] - 2.0 * x[1] + 1.0,
+            -0.25 * x[0] ** 2 - x[1] * x[1] + 1.0,
+        ])
 
         return objf, conf
 
@@ -574,9 +574,9 @@ def get_case5():
     case.solver_args.n = 1
     case.solver_args.m = neqns + nineqns
     case.solver_args.meq = neqns
-    case.solver_args.x = np.array(
-        [5.0]
-    )  # Try different values, e.g. 5.0, 2.0, 1.0, 0.0...
+    case.solver_args.x = np.array([
+        5.0,
+    ])  # Try different values, e.g. 5.0, 2.0, 1.0, 0.0...
 
     # Expected values
     case.exp.x = np.array([3.0])
@@ -669,7 +669,7 @@ def log_failure(case):
 
     logger.debug(
         f"Final objective function value: calculated vs expected: "
-        f"{case.vmcon.objf}, {case.exp.objf}"
+        f"{case.vmcon.objf}, {case.exp.objf}",
     )
 
     logger.debug("Constraints evaluated at x: calculated vs expected':")

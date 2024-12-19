@@ -1,7 +1,6 @@
-from process.fortran import numerics
-from process.solver import get_solver
-from process.fortran import define_iteration_variables
 from process.evaluators import Evaluators
+from process.fortran import define_iteration_variables, numerics
+from process.solver import get_solver
 
 
 class Optimiser:
@@ -80,7 +79,7 @@ class Optimiser:
         if ifail == 5 and numerics.nviter < 2:
             print(
                 "VMCON error code = 5.  Rerunning VMCON with a new initial "
-                "estimate of the second derivative matrix."
+                "estimate of the second derivative matrix.",
             )
             self.solver.set_b(2.0)
             ifail = self.solver.solve()

@@ -1,5 +1,7 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
+
 from process.cs_fatigue import CsFatigue
 
 
@@ -16,7 +18,6 @@ def cs_fatigue_python():
 
 
 class NcycleParam(NamedTuple):
-
     max_hoop_stress: Any = None
 
     residual_stress: Any = None
@@ -88,11 +89,18 @@ def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
             0.0026699999999999996,
             1.5707963267948966,
             31.96412802853516,
-        )
+        ),
     ],
 )
 def test_embedded_stress_intensity_factor(
-    hoop_stress, t, w, a, c, phi, expected_k, cs_fatigue_python
+    hoop_stress,
+    t,
+    w,
+    a,
+    c,
+    phi,
+    expected_k,
+    cs_fatigue_python,
 ):
     """Tests `embedded_stress_intensity_factor` function.
 
@@ -128,11 +136,18 @@ def test_embedded_stress_intensity_factor(
             0.0026699999999999996,
             1.5707963267948966,
             35.744426954844926,
-        )
+        ),
     ],
 )
 def test_surface_stress_intensity_factor(
-    hoop_stress, t, w, a, c, phi, expected_k, cs_fatigue_python
+    hoop_stress,
+    t,
+    w,
+    a,
+    c,
+    phi,
+    expected_k,
+    cs_fatigue_python,
 ):
     """Tests `surface_stress_intensity_factor` function.
 

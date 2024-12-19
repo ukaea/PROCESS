@@ -12,8 +12,10 @@ History
 
 # Imported libraries
 import argparse
-import process.io.mfile as mf
+
 import matplotlib.pyplot as plt
+
+import process.io.mfile as mf
 
 
 def orig_cost_model(m_file, args):
@@ -192,7 +194,7 @@ def main(args=None):
     # Setup command line arguments
     parser = argparse.ArgumentParser(
         description="Displays the cost breakdown as a pie chart.  "
-        "For more information contact Stuart.Muldrew@ukaea.uk"
+        "For more information contact Stuart.Muldrew@ukaea.uk",
     )
 
     parser.add_argument(

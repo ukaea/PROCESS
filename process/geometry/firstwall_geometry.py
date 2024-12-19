@@ -1,10 +1,11 @@
 """
 Calculate radial and vertical coordinates for the geometry of the first wall
 """
-from typing import Tuple
+
 import numpy as np
-from process.geometry.utils import dh_vertices, dhgap_vertices
+
 from process.geometry.geometry_parameterisations import ArbitraryGeometry
+from process.geometry.utils import dh_vertices, dhgap_vertices
 
 
 def first_wall_geometry_single_null(
@@ -56,12 +57,18 @@ def first_wall_geometry_single_null(
     # Upper first wall: outer surface
     kapx = cumulative_upper["fwtth"] / rminx_outer
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
-        radx_outer, rminx_outer, triang, kapx
+        radx_outer,
+        rminx_outer,
+        triang,
+        kapx,
     )
 
     # Upper first wall: inner surface
     rs_upper_inboard, zs_upper_inboard = dh_vertices(
-        radx_inner, rminx_inner, triang, kapx
+        radx_inner,
+        rminx_inner,
+        triang,
+        kapx,
     )
 
     # Lower first wall
@@ -82,22 +89,18 @@ def first_wall_geometry_single_null(
         top_point=top_point,
     )
 
-    rs = np.concatenate(
-        [
-            rs_upper_outboard,
-            rs_lower_inboard,
-            rs_upper_inboard[::-1],
-            rs_lower_outboard[::-1],
-        ]
-    )
-    zs = np.concatenate(
-        [
-            zs_upper_outboard,
-            zs_lower_inboard,
-            zs_upper_inboard[::-1],
-            zs_lower_outboard[::-1],
-        ]
-    )
+    rs = np.concatenate([
+        rs_upper_outboard,
+        rs_lower_inboard,
+        rs_upper_inboard[::-1],
+        rs_lower_outboard[::-1],
+    ])
+    zs = np.concatenate([
+        zs_upper_outboard,
+        zs_lower_inboard,
+        zs_upper_inboard[::-1],
+        zs_lower_outboard[::-1],
+    ])
 
     return ArbitraryGeometry(rs=rs, zs=zs)
 
@@ -110,7 +113,7 @@ def first_wall_geometry_lower(
     fwoth: float,
     tfwvt: float,
     top_point: float,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of first wall below the midplane
 
     :param triang: plasma triangularity

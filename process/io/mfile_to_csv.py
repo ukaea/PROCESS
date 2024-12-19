@@ -22,12 +22,11 @@ Output file:
 # standard python modules
 import argparse
 import csv
-from pathlib import Path, PurePath
 import json
+from pathlib import Path, PurePath
 
 # PROCESS-specific modules
 from process.io.mfile import MFile
-
 
 # == define functions ==
 
@@ -41,7 +40,7 @@ def parse_args(args):
     :rtype: Namespace
     """
     parser = argparse.ArgumentParser(
-        description="Read from a PROCESS MFILE and write values into a csv."
+        description="Read from a PROCESS MFILE and write values into a csv.",
     )
     parser.add_argument(
         "-f",
@@ -71,7 +70,7 @@ def get_vars(vfile="mfile_to_csv_vars.json"):
     """
     print("Fetching list of variables from", vfile)
 
-    with open(vfile, "r") as varfile:
+    with open(vfile) as varfile:
         data = varfile.read()
         obj = json.loads(data)
         vars = obj["vars"]
@@ -97,7 +96,7 @@ def read_mfile(mfilename="MFILE.DAT", vars=[]):
     for var_name in vars:
         if var_name not in m_file.data.keys():
             print(
-                "Variable '{}' not in MFILE. Skipping and moving on...".format(var_name)
+                f"Variable '{var_name}' not in MFILE. Skipping and moving on...",
             )
         else:
             # In case of a file containing multiple scans, (scan = -1) uses the last scan value

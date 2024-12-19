@@ -1,12 +1,14 @@
 """Test the plot_solutions tool."""
 
+from collections.abc import Sequence
+
 import pytest
+
 from process.io.plot_solutions import RunMetadata, plot_mfile_solutions
-from typing import List, Sequence
 
 
 @pytest.fixture
-def run_metadata(temp_data) -> List[RunMetadata]:
+def run_metadata(temp_data) -> list[RunMetadata]:
     """Return runs metadata.
 
     :param temp_data: temporary dir containing data files
@@ -31,7 +33,8 @@ def test_plot_mfile_solutions(run_metadata: Sequence[RunMetadata]):
     """
 
     _, results_df = plot_mfile_solutions(
-        runs_metadata=run_metadata, plot_title="3 large tokamak solutions"
+        runs_metadata=run_metadata,
+        plot_title="3 large tokamak solutions",
     )
 
     # Check shape of solution df as evidence of plotting without error

@@ -1,8 +1,6 @@
 import numpy
 
-from process.fortran import constants
-from process.fortran import heat_transport_variables
-from process.fortran import water_usage_variables
+from process.fortran import constants, heat_transport_variables, water_usage_variables
 from process.fortran import process_output as po
 
 SECDAY = 86400e0
@@ -30,7 +28,8 @@ class WaterUse:
 
         if output:
             po.oheadr(
-                self.outfile, "Water usage during plant operation (secondary cooling)"
+                self.outfile,
+                "Water usage during plant operation (secondary cooling)",
             )
             po.ocmmnt(
                 self.outfile,
@@ -115,7 +114,6 @@ class WaterUse:
         evapsum = 0.0e0
 
         for icool in range(1, 4):
-
             if icool == 1:
                 # small pond as a cooling body
                 # heat loading, MW/acre, based on estimations from US power plants
@@ -211,13 +209,13 @@ class WaterUse:
                 0.611e0
                 * numpy.exp(
                     (17.27e0 * water_usage_variables.watertempheated)
-                    / (237.3e0 + water_usage_variables.watertempheated)
+                    / (237.3e0 + water_usage_variables.watertempheated),
                 )
             ) - (
                 0.611e0
                 * numpy.exp(
                     (17.27e0 * water_usage_variables.watertemp)
-                    / (237.3e0 + water_usage_variables.watertemp)
+                    / (237.3e0 + water_usage_variables.watertemp),
                 )
             )
 

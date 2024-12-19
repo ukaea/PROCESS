@@ -1,17 +1,17 @@
 import logging
 import math
+
 import numpy as np
 
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-
-from process.fortran import constants
-from process.fortran import physics_variables as pv
-from process.fortran import vacuum_variables as vacv
 from process.fortran import build_variables as buv
+from process.fortran import constants
+from process.fortran import error_handling as eh
+from process.fortran import physics_variables as pv
+from process.fortran import process_output as po
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
-from process.fortran import process_output as po
-from process.fortran import error_handling as eh
+from process.fortran import vacuum_variables as vacv
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +121,6 @@ class Vacuum:
 
         #  Output section
         if output:
-
             po.oheadr(self.outfile, "Vacuum System")
             po.ovarst(
                 self.outfile,
@@ -141,7 +140,8 @@ class Vacuum:
                 "OP ",
             )
             po.ocmmnt(
-                self.outfile, "Number of high vacuum pumps, each with the throughput"
+                self.outfile,
+                "Number of high vacuum pumps, each with the throughput",
             )
             po.ocmmnt(
                 self.outfile,
@@ -156,7 +156,10 @@ class Vacuum:
             )
 
             po.ovarre(
-                self.outfile, "Dwell time", "(t_between_pulse)", tv.t_between_pulse
+                self.outfile,
+                "Dwell time",
+                "(t_between_pulse)",
+                tv.t_between_pulse,
             )
             po.ovarre(
                 self.outfile,
@@ -385,7 +388,6 @@ class Vacuum:
         d = np.full(4, 1e-6)
 
         for i in range(4):
-
             sss = nduct / (
                 1.0e0 / sp[i] / pumpn + 1.0e0 / cmax * xmult[i] / xmult[imax]
             )
@@ -461,7 +463,7 @@ class Vacuum:
                 #  ritf = outer radius of inboard leg of TF coil (m)
 
                 a1max = (r0 + aw - ritf - thcsh / math.tan(theta)) ** 2 * math.tan(
-                    theta
+                    theta,
                 )
                 d1max = math.sqrt(4.0e0 * a1max / math.pi)  # Equivalent diameter
                 if a1 < a1max:
@@ -492,7 +494,7 @@ class Vacuum:
             ceff1 = ceff[imax] * nduct
             snet.append(
                 1.0e0
-                / (1.0e0 / (ceff1 * xmult[imax] / xmult[i]) + 1.0e0 / sp[i] / pumpn)
+                / (1.0e0 / (ceff1 * xmult[imax] / xmult[i]) + 1.0e0 / sp[i] / pumpn),
             )
 
         #  If cryopumps are used then an additional pump is required
@@ -515,7 +517,6 @@ class Vacuum:
         dimax = d[imax]
 
         if output:
-
             #  Output section
 
             po.oheadr(self.outfile, "Vacuum System")
@@ -523,16 +524,30 @@ class Vacuum:
             po.ocmmnt(self.outfile, "Pumpdown to Base Pressure :")
             po.oblnkl(self.outfile)
             po.ovarre(
-                self.outfile, "First wall outgassing rate (Pa m/s)", "(rat)", vacv.rat
+                self.outfile,
+                "First wall outgassing rate (Pa m/s)",
+                "(rat)",
+                vacv.rat,
             )
             po.ovarre(
-                self.outfile, "Total outgassing load (Pa m3/s)", "(ogas)", ogas, "OP "
+                self.outfile,
+                "Total outgassing load (Pa m3/s)",
+                "(ogas)",
+                ogas,
+                "OP ",
             )
             po.ovarre(
-                self.outfile, "Base pressure required (Pa)", "(pbase)", vacv.pbase
+                self.outfile,
+                "Base pressure required (Pa)",
+                "(pbase)",
+                vacv.pbase,
             )
             po.ovarre(
-                self.outfile, "Required N2 pump speed (m3/s)", "(s(1))", s[0], "OP "
+                self.outfile,
+                "Required N2 pump speed (m3/s)",
+                "(s(1))",
+                s[0],
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -544,13 +559,24 @@ class Vacuum:
 
             po.osubhd(self.outfile, "Pumpdown between Burns :")
             po.ovarre(
-                self.outfile, "Plasma chamber volume (m3)", "(volume)", volume, "OP "
+                self.outfile,
+                "Plasma chamber volume (m3)",
+                "(volume)",
+                volume,
+                "OP ",
             )
             po.ovarre(
-                self.outfile, "Chamber pressure after burn (Pa)", "(pend)", pend, "OP "
+                self.outfile,
+                "Chamber pressure after burn (Pa)",
+                "(pend)",
+                pend,
+                "OP ",
             )
             po.ovarre(
-                self.outfile, "Chamber pressure before burn (Pa)", "(pstart)", pstart
+                self.outfile,
+                "Chamber pressure before burn (Pa)",
+                "(pstart)",
+                pstart,
             )
             po.ovarin(
                 self.outfile,
@@ -577,7 +603,11 @@ class Vacuum:
                 tpump,
             )
             po.ovarre(
-                self.outfile, "Required D-T pump speed (m3/s)", "(s(2))", s[1], "OP "
+                self.outfile,
+                "Required D-T pump speed (m3/s)",
+                "(s(2))",
+                s[1],
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -602,7 +632,11 @@ class Vacuum:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Required helium pump speed (m3/s)", "(s(3))", s[2], "OP "
+                self.outfile,
+                "Required helium pump speed (m3/s)",
+                "(s(3))",
+                s[2],
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -615,7 +649,11 @@ class Vacuum:
             po.osubhd(self.outfile, "D-T Removal at Fuelling Rate :")
             po.ovarre(self.outfile, "D-T fuelling rate (kg/s)", "(frate)", frate, "OP ")
             po.ovarre(
-                self.outfile, "Required D-T pump speed (m3/s)", "(s(4))", s[3], "OP "
+                self.outfile,
+                "Required D-T pump speed (m3/s)",
+                "(s(4))",
+                s[3],
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -648,7 +686,8 @@ class Vacuum:
                 po.ocmmnt(self.outfile, "requirements for helium ash removal.")
             else:
                 po.ocmmnt(
-                    self.outfile, "requirements for D-T removal at fuelling rate."
+                    self.outfile,
+                    "requirements for D-T removal at fuelling rate.",
                 )
 
             po.oblnkl(self.outfile)
@@ -664,7 +703,11 @@ class Vacuum:
             po.ovarre(self.outfile, "Diameter of ducts (m)", "(dout)", dout, "OP ")
 
             po.ovarre(
-                self.outfile, "Duct length, divertor to elbow (m)", "(l2)", l2, "OP "
+                self.outfile,
+                "Duct length, divertor to elbow (m)",
+                "(l2)",
+                l2,
+                "OP ",
             )
             po.ovarre(self.outfile, "Duct length, elbow to pumps (m)", "(l3)", l3)
             po.ovarre(self.outfile, "Number of pumps", "(pumpn)", pumpn, "OP ")

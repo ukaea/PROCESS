@@ -1,10 +1,10 @@
 """
 
-    Script to tidy up vardes.md for the GitLab Page
+Script to tidy up vardes.md for the GitLab Page
 
-    J. Morris
-    10/08/19
-    UKAEA
+J. Morris
+10/08/19
+UKAEA
 
 """
 
@@ -20,7 +20,7 @@ for line in lines:
     if "PROCESS Variable Descriptor File : dated" in line:
         date = line.split("dated")[-1].replace(" ", "")
         new_date = date[:4] + "." + date[4:6] + "." + date[6:]
-        new_line = "# PROCESS Variable Descriptions {0}\n".format(new_date)
+        new_line = f"# PROCESS Variable Descriptions {new_date}\n"
     elif counter == 3:
         new_line = "## Introduction"
     elif "###" in line:

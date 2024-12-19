@@ -6,18 +6,19 @@ parameters of an Inertial Fusion Energy power plant.
 """
 
 import numpy as np
+
 from process.fortran import (
-    ife_variables,
-    constants,
-    process_output,
     build_variables,
-    physics_variables,
-    structure_variables,
-    fwbs_variables,
+    buildings_variables,
+    constants,
     cost_variables,
     error_handling,
+    fwbs_variables,
     heat_transport_variables,
-    buildings_variables,
+    ife_variables,
+    physics_variables,
+    process_output,
+    structure_variables,
     vacuum_variables,
 )
 
@@ -147,7 +148,8 @@ class IFE:
 
         process_output.oheadr(self.outfile, "Radial build")
         process_output.write(
-            self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 2 + "Height (m)"
+            self.outfile,
+            "\t" * 20 + "Thickness (m)" + "\t" * 2 + "Height (m)",
         )
         for title, name, thickness, radius in radial_build_data:
             process_output.obuild(self.outfile, title, thickness, radius)
@@ -178,7 +180,8 @@ class IFE:
         if ife_variables.ifetyp == 4:
             process_output.oheadr(self.outfile, "Vertical build - Midplane")
             process_output.write(
-                self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Radius (m)"
+                self.outfile,
+                "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Radius (m)",
             )
 
             for title, name, thickness, radius in vertical_build_data[:11]:
@@ -211,14 +214,16 @@ class IFE:
 
             process_output.oheadr(self.outfile, "Vertical build - Edge")
             process_output.write(
-                self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Height (m)"
+                self.outfile,
+                "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Height (m)",
             )
             for title, name, thickness, radius in vertical_build_data:
                 process_output.obuild(self.outfile, title, thickness, radius)
         else:
             process_output.oheadr(self.outfile, "Vertical build")
             process_output.write(
-                self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Height (m)"
+                self.outfile,
+                "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Height (m)",
             )
             for title, name, thickness, radius in vertical_build_data:
                 process_output.obuild(self.outfile, title, thickness, radius)
@@ -226,7 +231,10 @@ class IFE:
                 if name is None:
                     continue
                 process_output.ovarre(
-                    self.outfile, f"{title} (m)", f"({name})", thickness
+                    self.outfile,
+                    f"{title} (m)",
+                    f"({name})",
+                    thickness,
                 )
 
         process_output.write(
@@ -584,28 +592,34 @@ class IFE:
 
         # Material volumes
         for i in range(ife_variables.maxmat):
-
             ife_variables.chmatv[i] = max(
-                0.0, ife_variables.chvol * ife_variables.chmatf[i]
+                0.0,
+                ife_variables.chvol * ife_variables.chmatf[i],
             )
             for j in range(3):
                 ife_variables.fwmatv[j, i] = max(
-                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                    0.0,
+                    ife_variables.fwvol[j] * ife_variables.fwmatf[j, i],
                 )
                 ife_variables.v1matv[j, i] = max(
-                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                    0.0,
+                    ife_variables.v1vol[j] * ife_variables.v1matf[j, i],
                 )
                 ife_variables.blmatv[j, i] = max(
-                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                    0.0,
+                    ife_variables.blvol[j] * ife_variables.blmatf[j, i],
                 )
                 ife_variables.v2matv[j, i] = max(
-                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                    0.0,
+                    ife_variables.v2vol[j] * ife_variables.v2matf[j, i],
                 )
                 ife_variables.shmatv[j, i] = max(
-                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                    0.0,
+                    ife_variables.shvol[j] * ife_variables.shmatf[j, i],
                 )
                 ife_variables.v3matv[j, i] = max(
-                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                    0.0,
+                    ife_variables.v3vol[j] * ife_variables.v3matf[j, i],
                 )
 
         # First wall area
@@ -817,26 +831,33 @@ class IFE:
         # Material volumes
         for i in range(ife_variables.maxmat + 1):
             ife_variables.chmatv[i] = max(
-                0.0, ife_variables.chvol * ife_variables.chmatf[i]
+                0.0,
+                ife_variables.chvol * ife_variables.chmatf[i],
             )
             for j in range(3):
                 ife_variables.fwmatv[j, i] = max(
-                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                    0.0,
+                    ife_variables.fwvol[j] * ife_variables.fwmatf[j, i],
                 )
                 ife_variables.v1matv[j, i] = max(
-                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                    0.0,
+                    ife_variables.v1vol[j] * ife_variables.v1matf[j, i],
                 )
                 ife_variables.blmatv[j, i] = max(
-                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                    0.0,
+                    ife_variables.blvol[j] * ife_variables.blmatf[j, i],
                 )
                 ife_variables.v2matv[j, i] = max(
-                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                    0.0,
+                    ife_variables.v2vol[j] * ife_variables.v2matf[j, i],
                 )
                 ife_variables.shmatv[j, i] = max(
-                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                    0.0,
+                    ife_variables.shvol[j] * ife_variables.shmatf[j, i],
                 )
                 ife_variables.v3matv[j, i] = max(
-                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                    0.0,
+                    ife_variables.v3vol[j] * ife_variables.v3matf[j, i],
                 )
 
         # First wall area
@@ -853,7 +874,7 @@ class IFE:
             * ife_variables.r1
             * np.sqrt(
                 ife_variables.r1 * ife_variables.r1
-                + (ife_variables.zl3 - ife_variables.zl1) ** 2
+                + (ife_variables.zl3 - ife_variables.zl1) ** 2,
             )
         )
 
@@ -889,12 +910,12 @@ class IFE:
         vel = np.sqrt(
             2.0
             * constants.acceleration_gravity
-            * (ife_variables.chdzu + ife_variables.bldzu)
+            * (ife_variables.chdzu + ife_variables.bldzu),
         )
 
         # Lithium Fraction
         ife_variables.blmatf[0, 8] = 0.91 * np.sqrt(
-            ife_variables.bldzu / (ife_variables.chdzu + ife_variables.bldzu)
+            ife_variables.bldzu / (ife_variables.chdzu + ife_variables.bldzu),
         )
         ife_variables.blmatf[0, 0] = 1.0 - ife_variables.blmatf[0, 8]
 
@@ -903,8 +924,7 @@ class IFE:
 
         # Area
         acurt = np.pi * (
-            (ife_variables.chrad + ife_variables.bldr) ** 2.0
-            - ife_variables.chrad**2.0
+            (ife_variables.chrad + ife_variables.bldr) ** 2.0 - ife_variables.chrad**2.0
         )
 
         # Mass Flow
@@ -1174,22 +1194,28 @@ class IFE:
             ife_variables.chmatv[i] = max(0.0, chvol * ife_variables.chmatf[i])
             for j in range(3):
                 ife_variables.fwmatv[j, i] = max(
-                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                    0.0,
+                    ife_variables.fwvol[j] * ife_variables.fwmatf[j, i],
                 )
                 ife_variables.v1matv[j, i] = max(
-                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                    0.0,
+                    ife_variables.v1vol[j] * ife_variables.v1matf[j, i],
                 )
                 ife_variables.blmatv[j, i] = max(
-                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                    0.0,
+                    ife_variables.blvol[j] * ife_variables.blmatf[j, i],
                 )
                 ife_variables.v2matv[j, i] = max(
-                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                    0.0,
+                    ife_variables.v2vol[j] * ife_variables.v2matf[j, i],
                 )
                 ife_variables.shmatv[j, i] = max(
-                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                    0.0,
+                    ife_variables.shvol[j] * ife_variables.shmatf[j, i],
                 )
                 ife_variables.v3matv[j, i] = max(
-                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                    0.0,
+                    ife_variables.v3vol[j] * ife_variables.v3matf[j, i],
                 )
 
         # First wall area
@@ -1402,22 +1428,28 @@ class IFE:
             ife_variables.chmatv[i] = max(0.0, chvol * ife_variables.chmatf[i])
             for j in range(3):
                 ife_variables.fwmatv[j, i] = max(
-                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                    0.0,
+                    ife_variables.fwvol[j] * ife_variables.fwmatf[j, i],
                 )
                 ife_variables.v1matv[j, i] = max(
-                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                    0.0,
+                    ife_variables.v1vol[j] * ife_variables.v1matf[j, i],
                 )
                 ife_variables.blmatv[j, i] = max(
-                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                    0.0,
+                    ife_variables.blvol[j] * ife_variables.blmatf[j, i],
                 )
                 ife_variables.v2matv[j, i] = max(
-                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                    0.0,
+                    ife_variables.v2vol[j] * ife_variables.v2matf[j, i],
                 )
                 ife_variables.shmatv[j, i] = max(
-                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                    0.0,
+                    ife_variables.shvol[j] * ife_variables.shmatf[j, i],
                 )
                 ife_variables.v3matv[j, i] = max(
-                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                    0.0,
+                    ife_variables.v3vol[j] * ife_variables.v3matf[j, i],
                 )
 
         # First wall area
@@ -1443,18 +1475,20 @@ class IFE:
                 # Target gain and driver efficiency dependencies on
                 # driver energy are input
                 ife_variables.gain, ife_variables.etadrv = self.driver(
-                    ife_variables.edrive, ife_variables.gainve, ife_variables.etave
+                    ife_variables.edrive,
+                    ife_variables.gainve,
+                    ife_variables.etave,
                 )
             case 0:  # Target gain and driver efficiency are input
                 ife_variables.gain = ife_variables.tgain
                 ife_variables.etadrv = ife_variables.drveff
             case 1:  # Laser driver based on SOMBRERO design
                 ife_variables.gain, ife_variables.etadrv = self.lasdrv(
-                    ife_variables.edrive
+                    ife_variables.edrive,
                 )
             case 2:  # Heavy-ion beam driver based on OSIRIS design
                 ife_variables.gain, ife_variables.etadrv = self.iondrv(
-                    ife_variables.edrive
+                    ife_variables.edrive,
                 )
             case 3:
                 ife_variables.etadrv = ife_variables.drveff
@@ -1481,7 +1515,6 @@ class IFE:
         # Wall load (assume total fusion power applies)
 
         if ife_variables.ifetyp == 1:
-
             # OSIRIS-type build: First wall subtends a solid angle of 2 pi * SANG
 
             phi = 0.5 * np.pi + np.arctan(ife_variables.zl1 / ife_variables.r1)
@@ -1491,7 +1524,6 @@ class IFE:
             )
 
         elif ife_variables.ifetyp == 4:
-
             # 2019 build only has first wall at the top which has a tube at
             # its centre.  This calculates solid angle and removes tube.
 
@@ -1524,10 +1556,16 @@ class IFE:
         process_output.oblnkl(self.outfile)
 
         process_output.ovarre(
-            self.outfile, "Driver energy (J)", "(edrive)", ife_variables.edrive
+            self.outfile,
+            "Driver energy (J)",
+            "(edrive)",
+            ife_variables.edrive,
         )
         process_output.ovarre(
-            self.outfile, "Driver efficiency", "(etadrv)", ife_variables.etadrv
+            self.outfile,
+            "Driver efficiency",
+            "(etadrv)",
+            ife_variables.etadrv,
         )
         process_output.ovarre(
             self.outfile,
@@ -1624,17 +1662,14 @@ class IFE:
         # Would be better to prevent extrapolation
 
         if ie <= 1:
-
             gain = gve[1] - 1.0e-6 * (edrive - 2.0e6) * (gve[0] - gve[1])
             etadrv = eve[1] - 1.0e-6 * (edrive - 2.0e6) * (eve[0] - eve[1])
 
         elif ie >= 9:
-
             gain = gve[8] + 1.0e-6 * (edrive - 9.0e6) * (gve[9] - gve[8])
             etadrv = eve[8] + 1.0e-6 * (edrive - 9.0e6) * (eve[9] - eve[8])
 
         else:
-
             gain = gve[ie - 1] + de * (gve[ie] - gve[ie - 1])
             etadrv = eve[ie - 1] + de * (eve[ie] - eve[ie - 1])
 
@@ -1682,17 +1717,14 @@ class IFE:
         # Would be better to prevent extrapolation
 
         if ie <= 1:
-
             gain = gve[1] - 1.0e-6 * (edrive - 2.0e6) * (gve[0] - gve[1])
             etadrv = eve[1] - 1.0e-6 * (edrive - 2.0e6) * (eve[0] - eve[1])
 
         elif ie >= 9:
-
             gain = gve[8] + 1.0e-6 * (edrive - 9.0e6) * (gve[9] - gve[8])
             etadrv = eve[8] + 1.0e-6 * (edrive - 9.0e6) * (eve[9] - eve[8])
 
         else:
-
             gain = gve[ie - 1] + de * (gve[ie] - gve[ie - 1])
             etadrv = eve[ie - 1] + de * (eve[ie] - eve[ie - 1])
 
@@ -1885,7 +1917,10 @@ class IFE:
             ife_variables.mflibe,
         )
         process_output.ovarre(
-            self.outfile, "Shield mass (kg)", "(whtshld)", fwbs_variables.whtshld
+            self.outfile,
+            "Shield mass (kg)",
+            "(whtshld)",
+            fwbs_variables.whtshld,
         )
 
     def ifepw1(self):
@@ -1941,7 +1976,7 @@ class IFE:
         # Number of primary heat exchangers
 
         heat_transport_variables.nphx = np.ceil(
-            heat_transport_variables.pthermmw / 1000.0
+            heat_transport_variables.pthermmw / 1000.0,
         )
 
         # Secondary heat (some of it... rest calculated in IFEPW2)
@@ -1993,7 +2028,6 @@ class IFE:
 
         # Calculate powers relevant to a power-producing plant
         if cost_variables.ireactor == 1:
-
             # Gross electric power
             heat_transport_variables.pgrossmw = (
                 heat_transport_variables.pthermmw * heat_transport_variables.etath
@@ -2036,7 +2070,10 @@ class IFE:
             )
             if ife_variables.ifetyp == 4:
                 process_output.ovarre(
-                    self.outfile, "Tritium Breeding Ratio", "(tbr)", fwbs_variables.tbr
+                    self.outfile,
+                    "Tritium Breeding Ratio",
+                    "(tbr)",
+                    fwbs_variables.tbr,
                 )
                 process_output.ovarre(
                     self.outfile,
@@ -2197,7 +2234,10 @@ class IFE:
         process_output.oheadr(self.outfile, "AC Power")
 
         process_output.ovarre(
-            self.outfile, "Facility base load (MW)", "(basemw)", basemw
+            self.outfile,
+            "Facility base load (MW)",
+            "(basemw)",
+            basemw,
         )
         process_output.ovarre(
             self.outfile,
@@ -2206,7 +2246,10 @@ class IFE:
             buildings_variables.efloor,
         )
         process_output.ovarre(
-            self.outfile, "Power/floor area (MW/m2)", "(pmwpm2)", pmwpm2
+            self.outfile,
+            "Power/floor area (MW/m2)",
+            "(pmwpm2)",
+            pmwpm2,
         )
         process_output.ovarre(
             self.outfile,
@@ -2221,7 +2264,10 @@ class IFE:
             ife_variables.tdspmw,
         )
         process_output.ovarre(
-            self.outfile, "Target factory (MW)", "(tfacmw)", ife_variables.tfacmw
+            self.outfile,
+            "Target factory (MW)",
+            "(tfacmw)",
+            ife_variables.tfacmw,
         )
         process_output.ovarre(
             self.outfile,
@@ -2417,7 +2463,10 @@ class IFE:
 
         process_output.oheadr(self.outfile, "Plant Buildings System")
         process_output.ovarre(
-            self.outfile, "Internal volume of reactor building (m3)", "(vrci)", vrci
+            self.outfile,
+            "Internal volume of reactor building (m3)",
+            "(vrci)",
+            vrci,
         )
         process_output.ovarre(
             self.outfile,
@@ -2432,10 +2481,16 @@ class IFE:
             buildings_variables.efloor,
         )
         process_output.ovarre(
-            self.outfile, "Reactor building volume (m3)", "(rbv)", rbv
+            self.outfile,
+            "Reactor building volume (m3)",
+            "(rbv)",
+            rbv,
         )
         process_output.ovarre(
-            self.outfile, "Reactor maintenance building volume (m3)", "(rmbv)", rmbv
+            self.outfile,
+            "Reactor maintenance building volume (m3)",
+            "(rmbv)",
+            rmbv,
         )
         process_output.ovarre(self.outfile, "Warmshop volume (m3)", "(wsv)", wsv)
         process_output.ovarre(
@@ -2445,7 +2500,10 @@ class IFE:
             buildings_variables.triv,
         )
         process_output.ovarre(
-            self.outfile, "Electrical building volume (m3)", "(elev)", elev
+            self.outfile,
+            "Electrical building volume (m3)",
+            "(elev)",
+            elev,
         )
         process_output.ovarre(
             self.outfile,
@@ -2454,7 +2512,10 @@ class IFE:
             buildings_variables.conv,
         )
         process_output.ovarre(
-            self.outfile, "Cryogenics building volume (m3)", "(cryv)", cryv
+            self.outfile,
+            "Cryogenics building volume (m3)",
+            "(cryv)",
+            cryv,
         )
         process_output.ovarre(
             self.outfile,
@@ -2463,7 +2524,10 @@ class IFE:
             buildings_variables.admv,
         )
         process_output.ovarre(
-            self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov
+            self.outfile,
+            "Shops volume (m3)",
+            "(shov)",
+            buildings_variables.shov,
         )
         process_output.ovarre(
             self.outfile,

@@ -1,32 +1,34 @@
 """Unit tests for physics.f90."""
 
 from typing import Any, NamedTuple
-from process.fortran import (
-    constants,
-    physics_variables,
-    physics_module,
-    current_drive_variables,
-    impurity_radiation_module,
-)
+
 import numpy
 import pytest
+
+from process.current_drive import CurrentDrive
+from process.fortran import (
+    constants,
+    current_drive_variables,
+    impurity_radiation_module,
+    physics_module,
+    physics_variables,
+)
+from process.impurity_radiation import initialise_imprad
 from process.physics import (
     Physics,
-    calculate_poloidal_field,
-    diamagnetic_fraction_scene,
-    diamagnetic_fraction_hender,
-    ps_fraction_scene,
-    calculate_plasma_current_peng,
-    culblm,
-    calculate_current_coefficient_hastie,
-    vscalc,
-    rether,
     beta_poloidal,
+    calculate_current_coefficient_hastie,
+    calculate_plasma_current_peng,
+    calculate_poloidal_field,
+    culblm,
+    diamagnetic_fraction_hender,
+    diamagnetic_fraction_scene,
+    ps_fraction_scene,
     res_diff_time,
+    rether,
+    vscalc,
 )
 from process.plasma_profiles import PlasmaProfile
-from process.current_drive import CurrentDrive
-from process.impurity_radiation import initialise_imprad
 
 
 @pytest.fixture
@@ -135,7 +137,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     )
 
     assert bootstrap_current_fraction == pytest.approx(
-        bootstrapfractioniter89param.expected_bootipf
+        bootstrapfractioniter89param.expected_bootipf,
     )
 
 
@@ -406,11 +408,15 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     """
 
     monkeypatch.setattr(
-        physics_variables, "dnitot", bootstrapfractionsauterparam.dnitot
+        physics_variables,
+        "dnitot",
+        bootstrapfractionsauterparam.dnitot,
     )
 
     monkeypatch.setattr(
-        physics_variables, "rminor", bootstrapfractionsauterparam.rminor
+        physics_variables,
+        "rminor",
+        bootstrapfractionsauterparam.rminor,
     )
 
     monkeypatch.setattr(physics_variables, "tesep", bootstrapfractionsauterparam.tesep)
@@ -418,7 +424,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(physics_variables, "ti", bootstrapfractionsauterparam.ti)
 
     monkeypatch.setattr(
-        physics_variables, "triang", bootstrapfractionsauterparam.triang
+        physics_variables,
+        "triang",
+        bootstrapfractionsauterparam.triang,
     )
 
     monkeypatch.setattr(physics_variables, "q0", bootstrapfractionsauterparam.q0)
@@ -428,19 +436,25 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(physics_variables, "zeff", bootstrapfractionsauterparam.zeff)
 
     monkeypatch.setattr(
-        physics_variables, "rhopedn", bootstrapfractionsauterparam.rhopedn
+        physics_variables,
+        "rhopedn",
+        bootstrapfractionsauterparam.rhopedn,
     )
 
     monkeypatch.setattr(physics_variables, "bt", bootstrapfractionsauterparam.bt)
 
     monkeypatch.setattr(
-        physics_variables, "plasma_current", bootstrapfractionsauterparam.plasma_current
+        physics_variables,
+        "plasma_current",
+        bootstrapfractionsauterparam.plasma_current,
     )
 
     monkeypatch.setattr(physics_variables, "xarea", bootstrapfractionsauterparam.xarea)
 
     monkeypatch.setattr(
-        physics_variables, "f_helium3", bootstrapfractionsauterparam.f_helium3
+        physics_variables,
+        "f_helium3",
+        bootstrapfractionsauterparam.f_helium3,
     )
 
     monkeypatch.setattr(physics_variables, "teped", bootstrapfractionsauterparam.teped)
@@ -450,7 +464,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(physics_variables, "te", bootstrapfractionsauterparam.te)
 
     monkeypatch.setattr(
-        physics_variables, "rmajor", bootstrapfractionsauterparam.rmajor
+        physics_variables,
+        "rmajor",
+        bootstrapfractionsauterparam.rmajor,
     )
 
     monkeypatch.setattr(physics_variables, "q", bootstrapfractionsauterparam.q)
@@ -466,15 +482,21 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(physics_variables, "ne0", bootstrapfractionsauterparam.ne0)
 
     monkeypatch.setattr(
-        physics_variables, "alphan", bootstrapfractionsauterparam.alphan
+        physics_variables,
+        "alphan",
+        bootstrapfractionsauterparam.alphan,
     )
 
     monkeypatch.setattr(
-        physics_variables, "rhopedt", bootstrapfractionsauterparam.rhopedt
+        physics_variables,
+        "rhopedt",
+        bootstrapfractionsauterparam.rhopedt,
     )
 
     monkeypatch.setattr(
-        physics_variables, "alphat", bootstrapfractionsauterparam.alphat
+        physics_variables,
+        "alphat",
+        bootstrapfractionsauterparam.alphat,
     )
     physics.plasma_profile.run()
     bfs = physics.bootstrap_fraction_sauter(physics.plasma_profile)
@@ -1012,7 +1034,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     )
 
     assert physics_variables.normalised_total_beta == pytest.approx(
-        plasmacurrentparam.expected_normalised_total_beta
+        plasmacurrentparam.expected_normalised_total_beta,
     )
 
     assert bp == pytest.approx(plasmacurrentparam.expected_bp)
@@ -1115,7 +1137,14 @@ def test_culblm():
 
 def test_conhas():
     assert calculate_current_coefficient_hastie(
-        5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0
+        5,
+        5,
+        12,
+        0.5,
+        0.33,
+        1.85,
+        2e3,
+        constants.rmu0,
     ) == pytest.approx(2.518876726889116)
 
 
@@ -1383,7 +1412,8 @@ class PlasmaCompositionParam(NamedTuple):
             ),
             impurity_arr_z=numpy.array(
                 numpy.array(
-                    (1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74), order="F"
+                    (1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74),
+                    order="F",
                 ),
                 order="F",
             ).transpose(),
@@ -1503,7 +1533,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     initialise_imprad()
 
     monkeypatch.setattr(
-        current_drive_variables, "f_tritium_beam", plasmacompositionparam.f_tritium_beam
+        current_drive_variables,
+        "f_tritium_beam",
+        plasmacompositionparam.f_tritium_beam,
     )
 
     monkeypatch.setattr(
@@ -1529,13 +1561,17 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "ignite", plasmacompositionparam.ignite)
 
     monkeypatch.setattr(
-        physics_variables, "f_alpha_electron", plasmacompositionparam.f_alpha_electron
+        physics_variables,
+        "f_alpha_electron",
+        plasmacompositionparam.f_alpha_electron,
     )
 
     monkeypatch.setattr(physics_variables, "afuel", plasmacompositionparam.afuel)
 
     monkeypatch.setattr(
-        physics_variables, "f_tritium", plasmacompositionparam.f_tritium
+        physics_variables,
+        "f_tritium",
+        plasmacompositionparam.f_tritium,
     )
 
     monkeypatch.setattr(physics_variables, "deni", plasmacompositionparam.deni)
@@ -1553,7 +1589,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "rnone", plasmacompositionparam.rnone)
 
     monkeypatch.setattr(
-        physics_variables, "f_alpha_ion", plasmacompositionparam.f_alpha_ion
+        physics_variables,
+        "f_alpha_ion",
+        plasmacompositionparam.f_alpha_ion,
     )
 
     monkeypatch.setattr(physics_variables, "ralpne", plasmacompositionparam.ralpne)
@@ -1589,7 +1627,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_deuterium", plasmacompositionparam.f_deuterium
+        physics_variables,
+        "f_deuterium",
+        plasmacompositionparam.f_deuterium,
     )
 
     monkeypatch.setattr(physics_variables, "alphan", plasmacompositionparam.alphan)
@@ -1597,7 +1637,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "dnbeam", plasmacompositionparam.dnbeam)
 
     monkeypatch.setattr(
-        physics_variables, "f_helium3", plasmacompositionparam.f_helium3
+        physics_variables,
+        "f_helium3",
+        plasmacompositionparam.f_helium3,
     )
 
     monkeypatch.setattr(physics_variables, "dnalp", plasmacompositionparam.dnalp)
@@ -1625,7 +1667,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_module, "nu_star", plasmacompositionparam.nu_star)
 
     monkeypatch.setattr(
-        physics_module, "beta_mcdonald", plasmacompositionparam.beta_mcdonald
+        physics_module,
+        "beta_mcdonald",
+        plasmacompositionparam.beta_mcdonald,
     )
 
     monkeypatch.setattr(physics_module, "itart_r", plasmacompositionparam.itart_r)
@@ -1635,15 +1679,15 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     physics.plasma_composition()
 
     assert impurity_radiation_module.impurity_arr_frac == pytest.approx(
-        plasmacompositionparam.expected_impurity_arr_frac
+        plasmacompositionparam.expected_impurity_arr_frac,
     )
 
     assert physics_variables.f_alpha_electron == pytest.approx(
-        plasmacompositionparam.expected_f_alpha_electron
+        plasmacompositionparam.expected_f_alpha_electron,
     )
 
     assert physics_variables.afuel == pytest.approx(
-        plasmacompositionparam.expected_afuel
+        plasmacompositionparam.expected_afuel,
     )
 
     assert physics_variables.deni == pytest.approx(plasmacompositionparam.expected_deni)
@@ -1651,19 +1695,19 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     assert physics_variables.aion == pytest.approx(plasmacompositionparam.expected_aion)
 
     assert physics_variables.dnitot == pytest.approx(
-        plasmacompositionparam.expected_dnitot
+        plasmacompositionparam.expected_dnitot,
     )
 
     assert physics_variables.zeffai == pytest.approx(
-        plasmacompositionparam.expected_zeffai
+        plasmacompositionparam.expected_zeffai,
     )
 
     assert physics_variables.f_alpha_ion == pytest.approx(
-        plasmacompositionparam.expected_f_alpha_ion
+        plasmacompositionparam.expected_f_alpha_ion,
     )
 
     assert physics_variables.dlamee == pytest.approx(
-        plasmacompositionparam.expected_dlamee
+        plasmacompositionparam.expected_dlamee,
     )
 
     assert physics_variables.zeff == pytest.approx(plasmacompositionparam.expected_zeff)
@@ -1671,23 +1715,23 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     assert physics_variables.dnz == pytest.approx(plasmacompositionparam.expected_dnz)
 
     assert physics_variables.abeam == pytest.approx(
-        plasmacompositionparam.expected_abeam
+        plasmacompositionparam.expected_abeam,
     )
 
     assert physics_variables.dlamie == pytest.approx(
-        plasmacompositionparam.expected_dlamie
+        plasmacompositionparam.expected_dlamie,
     )
 
     assert physics_variables.dnalp == pytest.approx(
-        plasmacompositionparam.expected_dnalp
+        plasmacompositionparam.expected_dnalp,
     )
 
     assert physics_variables.dnprot == pytest.approx(
-        plasmacompositionparam.expected_dnprot
+        plasmacompositionparam.expected_dnprot,
     )
 
     assert physics_module.first_call == pytest.approx(
-        plasmacompositionparam.expected_first_call
+        plasmacompositionparam.expected_first_call,
     )
 
 
@@ -1942,7 +1986,13 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
 def test_rether():
     assert rether(
-        1.0, 1.45, 7.5e19, 17.81065204, 12.0, 13.0, 0.43258985
+        1.0,
+        1.45,
+        7.5e19,
+        17.81065204,
+        12.0,
+        13.0,
+        0.43258985,
     ) == pytest.approx(0.028360489673597476)
 
 
@@ -2013,7 +2063,9 @@ def test_pohm(pohmparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "aspect", pohmparam.aspect)
 
     monkeypatch.setattr(
-        physics_variables, "plasma_res_factor", pohmparam.plasma_res_factor
+        physics_variables,
+        "plasma_res_factor",
+        pohmparam.plasma_res_factor,
     )
 
     pohmpv, pohmmw, rpfac, rplas = physics.pohm(

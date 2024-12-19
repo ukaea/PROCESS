@@ -1,7 +1,8 @@
-import pytest
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-import process.superconductors as superconductors
+import pytest
+
+from process import superconductors
 
 
 class IterscParam(NamedTuple):
@@ -149,7 +150,7 @@ def test_jcrit_rebco():
 
 def test_current_sharing_rebco():
     assert superconductors.current_sharing_rebco(11.0, 2e7) == pytest.approx(
-        71.28702697627514
+        71.28702697627514,
     )
 
 

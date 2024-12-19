@@ -1,14 +1,14 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
 
-
-from process.fortran import (
-    current_drive_variables,
-    cost_variables,
-    physics_variables,
-    heat_transport_variables,
-)
 from process.current_drive import CurrentDrive
+from process.fortran import (
+    cost_variables,
+    current_drive_variables,
+    heat_transport_variables,
+    physics_variables,
+)
 from process.plasma_profiles import PlasmaProfile
 
 
@@ -409,11 +409,15 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     monkeypatch.setattr(current_drive_variables, "plhybd", cudrivparam.plhybd)
 
     monkeypatch.setattr(
-        current_drive_variables, "beam_current", cudrivparam.beam_current
+        current_drive_variables,
+        "beam_current",
+        cudrivparam.beam_current,
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "porbitlossmw", cudrivparam.porbitlossmw
+        current_drive_variables,
+        "porbitlossmw",
+        cudrivparam.porbitlossmw,
     )
 
     monkeypatch.setattr(current_drive_variables, "iefrf", cudrivparam.iefrf)
@@ -503,7 +507,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "ps_current_fraction", cudrivparam.ps_current_fraction
+        current_drive_variables,
+        "ps_current_fraction",
+        cudrivparam.ps_current_fraction,
     )
 
     monkeypatch.setattr(
@@ -561,7 +567,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     monkeypatch.setattr(physics_variables, "ipedestal", cudrivparam.ipedestal)
 
     monkeypatch.setattr(
-        physics_variables, "aux_current_fraction", cudrivparam.aux_current_fraction
+        physics_variables,
+        "aux_current_fraction",
+        cudrivparam.aux_current_fraction,
     )
 
     monkeypatch.setattr(physics_variables, "ignite", cudrivparam.ignite)
@@ -595,11 +603,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     assert current_drive_variables.effcd == pytest.approx(cudrivparam.expected_effcd)
 
     assert current_drive_variables.echwpow == pytest.approx(
-        cudrivparam.expected_echwpow
+        cudrivparam.expected_echwpow,
     )
 
     assert current_drive_variables.pinjemw == pytest.approx(
-        cudrivparam.expected_pinjemw
+        cudrivparam.expected_pinjemw,
     )
 
     assert current_drive_variables.bigq == pytest.approx(cudrivparam.expected_bigq)
@@ -607,5 +615,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
 def test_sigbeam(current_drive):
     assert current_drive.sigbeam(
-        1e3, 13.07, 8.0e-1, 0.1, 1e-4, 1e-4, 1e-4
+        1e3,
+        13.07,
+        8.0e-1,
+        0.1,
+        1e-4,
+        1e-4,
+        1e-4,
     ) == pytest.approx(2.013589662302492e-11)

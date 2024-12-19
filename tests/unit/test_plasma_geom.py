@@ -1,7 +1,9 @@
 """Unit tests for plasma_geometry.f90."""
 
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
+
 from process.plasma_geometry import PlasmaGeom
 
 
@@ -18,7 +20,6 @@ def plasma():
 
 
 class XparamParam(NamedTuple):
-
     a: Any = None
 
     kap: Any = None
@@ -71,7 +72,9 @@ def test_xparam(xparamparam, monkeypatch, plasma):
     """
 
     xi, thetai, xo, thetao = plasma.xparam(
-        a=xparamparam.a, kap=xparamparam.kap, tri=xparamparam.tri
+        a=xparamparam.a,
+        kap=xparamparam.kap,
+        tri=xparamparam.tri,
     )
 
     assert xi == pytest.approx(xparamparam.expected_xi)
@@ -91,7 +94,7 @@ def test_xparam(xparamparam, monkeypatch, plasma):
             1.8480000000000001,
             0.5,
             25.8787324576261,
-        )
+        ),
     ],
 )
 def test_perim(a, kap, tri, expected_perim, plasma):
@@ -125,7 +128,7 @@ def test_perim(a, kap, tri, expected_perim, plasma):
             5.4205364969154601,
             1.4001019213417263,
             2694.44683912,
-        )
+        ),
     ],
 )
 def test_xvol(rmajor, rminor, xi, thetai, xo, thetao, expected_xvol, plasma):
@@ -165,7 +168,7 @@ def test_xvol(rmajor, rminor, xi, thetai, xo, thetao, expected_xvol, plasma):
             5.4205364969154601,
             1.4001019213417263,
             47.069149087374726,
-        )
+        ),
     ],
 )
 def test_xsecta(xi, thetai, xo, thetao, expected_xsecta, plasma):
@@ -199,7 +202,7 @@ def test_xsecta(xi, thetai, xo, thetao, expected_xsecta, plasma):
             1.8480000000000001,
             0.5,
             2540.3858087477,
-        )
+        ),
     ],
 )
 def test_fvol(r, a, kap, tri, expected_fvol, plasma):
@@ -233,7 +236,7 @@ def test_fvol(r, a, kap, tri, expected_fvol, plasma):
             1.8480000000000001,
             0.5,
             44.367959142766466,
-        )
+        ),
     ],
 )
 def test_xsect0(a, kap, tri, expected_xsect0, plasma):
@@ -258,7 +261,6 @@ def test_xsect0(a, kap, tri, expected_xsect0, plasma):
 
 
 class XsurfParam(NamedTuple):
-
     rmajor: Any = None
 
     rminor: Any = None
@@ -329,7 +331,6 @@ def test_xsurf(xsurfparam, monkeypatch, plasma):
 
 
 class SurfaParam(NamedTuple):
-
     a: Any = None
 
     r: Any = None
@@ -378,7 +379,10 @@ def test_surfa(surfaparam, monkeypatch, plasma):
     """
 
     sa, so = plasma.surfa(
-        a=surfaparam.a, r=surfaparam.r, k=surfaparam.k, d=surfaparam.d
+        a=surfaparam.a,
+        r=surfaparam.r,
+        k=surfaparam.k,
+        d=surfaparam.d,
     )
 
     assert sa == pytest.approx(surfaparam.expected_sa)

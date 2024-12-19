@@ -48,7 +48,9 @@ def test_water_with_pressure_temp():
 
 def test_water_enthalpy_from_entropy_pressure():
     fluid_properties = FluidProperties.of(
-        "Water", pressure=WATER_PROPERTIES.pressure, entropy=WATER_PROPERTIES.entropy
+        "Water",
+        pressure=WATER_PROPERTIES.pressure,
+        entropy=WATER_PROPERTIES.entropy,
     )
 
     # trivial
@@ -61,7 +63,9 @@ def test_water_enthalpy_from_entropy_pressure():
 
 def test_find_water_saturation_temperature():
     fluid_properties = FluidProperties.of(
-        "Water", pressure=WATER_PROPERTIES.pressure, vapor_quality=0
+        "Water",
+        pressure=WATER_PROPERTIES.pressure,
+        vapor_quality=0,
     )
 
     assert pytest.approx(fluid_properties.pressure) == WATER_PROPERTIES.pressure

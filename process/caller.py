@@ -1,13 +1,16 @@
 from __future__ import annotations
-from process import fortran as ft
-import numpy as np
+
 import logging
+import warnings
+from typing import TYPE_CHECKING
+
+import numpy as np
+from tabulate import tabulate
+
+from process import fortran as ft
 from process.final import finalise
 from process.io.mfile import MFile
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from typing import Union, Tuple, TYPE_CHECKING
-import warnings
-from tabulate import tabulate
 
 if TYPE_CHECKING:
     from process.main import Models
@@ -32,7 +35,8 @@ class Caller:
 
     @staticmethod
     def check_agreement(
-        previous: Union[float, np.ndarray], current: Union[float, np.ndarray]
+        previous: float | np.ndarray,
+        current: float | np.ndarray,
     ) -> bool:
         """Compare previous and current arrays for agreement within a tolerance.
 
@@ -46,10 +50,9 @@ class Caller:
         # Check for same shape: mfile length can change between iterations
         if isinstance(previous, float) or previous.shape == current.shape:
             return np.allclose(previous, current, rtol=1.0e-6, equal_nan=True)
-        else:
-            return False
+        return False
 
-    def call_models(self, xc: np.ndarray, m: int) -> Tuple[float, np.ndarray]:
+    def call_models(self, xc: np.ndarray, m: int) -> tuple[float, np.ndarray]:
         """Evalutate models until results are idempotent.
 
         Ensure objective function and constraints are idempotent before returning.
@@ -82,12 +85,13 @@ class Caller:
 
             # Check for idempotence
             if self.check_agreement(objf_prev, objf) and self.check_agreement(
-                conf_prev, conf
+                conf_prev,
+                conf,
             ):
                 # Idempotent: no longer changing, so return
                 logger.debug(
                     "Model evaluations idempotent, returning objective "
-                    "function and constraints"
+                    "function and constraints",
                 )
                 return objf, conf
 
@@ -99,7 +103,7 @@ class Caller:
         raise RuntimeError(
             "After 10 model evaluations at the current optimisation parameter "
             "vector, values for the objective function and constraints haven't "
-            "converged (don't produce idempotent values)."
+            "converged (don't produce idempotent values).",
         )
 
     def call_models_and_write_output(self, xc: np.ndarray, ifail: int) -> None:
@@ -147,7 +151,7 @@ class Caller:
                 if previous_mfile_data is None:
                     # First run: need another run to compare with
                     logger.debug(
-                        "New mfile created: evaluating models again to check idempotence"
+                        "New mfile created: evaluating models again to check idempotence",
                     )
                     previous_mfile_data = mfile_data.copy()
                     continue
@@ -159,12 +163,11 @@ class Caller:
                     current_value = mfile_data.get(var, np.nan)
                     if self.check_agreement(previous_value, current_value):
                         continue
-                    else:
-                        # Value has changed between previous and current mfiles
-                        nonconverged_vars[var] = [
-                            previous_value,
-                            current_value,
-                        ]
+                    # Value has changed between previous and current mfiles
+                    nonconverged_vars[var] = [
+                        previous_value,
+                        current_value,
+                    ]
 
                 if len(nonconverged_vars) == 0:
                     # Previous and current mfiles agree (idempotent)
@@ -192,7 +195,7 @@ class Caller:
             )
 
             warnings.warn(
-                f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m"
+                f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m",
             )
 
             # Close idempotence files, write final output file and mfile

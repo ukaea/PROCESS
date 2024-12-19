@@ -1,22 +1,27 @@
-from process.fortran import constants, cost_variables
-from process.fortran import process_output as po
-from process.fortran import ife_variables, fwbs_variables
-from process.fortran import tfcoil_variables
-from process.fortran import physics_variables
-from process.fortran import buildings_variables
-from process.fortran import build_variables
-from process.fortran import structure_variables
-from process.fortran import divertor_variables
-from process.fortran import pfcoil_variables
-from process.fortran import current_drive_variables
-from process.fortran import vacuum_variables
-from process.fortran import heat_transport_variables
-from process.fortran import pf_power_variables
-from process.fortran import pulse_variables
-from process.fortran import times_variables
-from process.fortran import error_handling
-from process.variables import AnnotatedVariable
 import numpy
+
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constants,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    error_handling,
+    fwbs_variables,
+    heat_transport_variables,
+    ife_variables,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    structure_variables,
+    tfcoil_variables,
+    times_variables,
+    vacuum_variables,
+)
+from process.fortran import process_output as po
+from process.variables import AnnotatedVariable
 
 
 class Costs:
@@ -25,25 +30,46 @@ class Costs:
 
         # Various cost account values (M$)
         self.c228 = AnnotatedVariable(
-            float, 0.0, docstring="c228 account cost", units="M$"
+            float,
+            0.0,
+            docstring="c228 account cost",
+            units="M$",
         )
         self.c229 = AnnotatedVariable(
-            float, 0.0, docstring="c229 account cost", units="M$"
+            float,
+            0.0,
+            docstring="c229 account cost",
+            units="M$",
         )
         self.c23 = AnnotatedVariable(
-            float, 0.0, docstring="c23 account cost", units="M$"
+            float,
+            0.0,
+            docstring="c23 account cost",
+            units="M$",
         )
         self.c25 = AnnotatedVariable(
-            float, 0.0, docstring="c25 account cost", units="M$"
+            float,
+            0.0,
+            docstring="c25 account cost",
+            units="M$",
         )
         self.c26 = AnnotatedVariable(
-            float, 0.0, docstring="c26 account cost", units="M$"
+            float,
+            0.0,
+            docstring="c26 account cost",
+            units="M$",
         )
         self.cindrt = AnnotatedVariable(
-            float, 0.0, docstring="cindrt account cost", units="M$"
+            float,
+            0.0,
+            docstring="cindrt account cost",
+            units="M$",
         )
         self.ccont = AnnotatedVariable(
-            float, 0.0, docstring="ccont account cost", units="M$"
+            float,
+            0.0,
+            docstring="ccont account cost",
+            units="M$",
         )
 
         for names in (
@@ -149,7 +175,10 @@ class Costs:
                 )
 
         po.ovarrf(
-            self.outfile, "Cost of electricity (m$/kWh)", "(coe)", cost_variables.coe
+            self.outfile,
+            "Cost of electricity (m$/kWh)",
+            "(coe)",
+            cost_variables.coe,
         )
 
         po.osubhd(self.outfile, "Power Generation Costs :")
@@ -231,7 +260,10 @@ class Costs:
             cost_variables.fkind,
         )
         po.ovarin(
-            self.outfile, "Level of Safety Assurance", "(lsa)", cost_variables.lsa
+            self.outfile,
+            "Level of Safety Assurance",
+            "(lsa)",
+            cost_variables.lsa,
         )
         po.oblnkl(self.outfile)
         po.oshead(self.outfile, "Structures and Site Facilities")
@@ -807,7 +839,10 @@ class Costs:
 
         po.oshead(self.outfile, "Plant Direct Cost")
         po.ocosts(
-            self.outfile, "(cdirt)", "Plant direct cost (M$)", cost_variables.cdirt
+            self.outfile,
+            "(cdirt)",
+            "Plant direct cost (M$)",
+            cost_variables.cdirt,
         )
 
         po.oshead(self.outfile, "Reactor Core Cost")
@@ -1443,7 +1478,6 @@ class Costs:
             #  Superconductor ($/m)
 
             if cost_variables.supercond_cost_model == 0:
-
                 costtfsc = (
                     cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
                     * tfcoil_variables.whtconsc
@@ -1549,7 +1583,7 @@ class Costs:
         #  Total length of PF coil windings (m)
 
         pfwndl = 0.0e0
-        for i in range(0, pfcoil_variables.nohc):
+        for i in range(pfcoil_variables.nohc):
             pfwndl = (
                 pfwndl
                 + constants.twopi * pfcoil_variables.rpf[i] * pfcoil_variables.turns[i]
@@ -1575,7 +1609,7 @@ class Costs:
 
         self.c22221 = 0.0e0
 
-        for i in range(0, npf):
+        for i in range(npf):
             #  Superconductor ($/m)
             if cost_variables.supercond_cost_model == 0:
                 if pfcoil_variables.ipfres == 0:
@@ -1590,15 +1624,14 @@ class Costs:
                     )
                 else:
                     costpfsc = 0.0e0
+            elif pfcoil_variables.ipfres == 0:
+                costpfsc = (
+                    cost_variables.sc_mat_cost_0[pfcoil_variables.isumatpf - 1]
+                    * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatpf - 1]
+                    / pfcoil_variables.j_crit_str_pf
+                )
             else:
-                if pfcoil_variables.ipfres == 0:
-                    costpfsc = (
-                        cost_variables.sc_mat_cost_0[pfcoil_variables.isumatpf - 1]
-                        * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatpf - 1]
-                        / pfcoil_variables.j_crit_str_pf
-                    )
-                else:
-                    costpfsc = 0.0
+                costpfsc = 0.0
 
             #  Copper ($/m)
             if pfcoil_variables.ipfres == 0:
@@ -1656,15 +1689,14 @@ class Costs:
                     )
                 else:
                     costpfsc = 0.0e0
+            elif pfcoil_variables.ipfres == 0:
+                costpfsc = (
+                    cost_variables.sc_mat_cost_0[pfcoil_variables.isumatoh - 1]
+                    * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatoh - 1]
+                    / pfcoil_variables.j_crit_str_cs
+                )
             else:
-                if pfcoil_variables.ipfres == 0:
-                    costpfsc = (
-                        cost_variables.sc_mat_cost_0[pfcoil_variables.isumatoh - 1]
-                        * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatoh - 1]
-                        / pfcoil_variables.j_crit_str_cs
-                    )
-                else:
-                    costpfsc = 0.0e0
+                costpfsc = 0.0e0
 
             #  Copper ($/m)
 
@@ -2614,8 +2646,7 @@ class Costs:
         # SJP Issue #836
         # Check for the condition when kwhpy=0
 
-        if kwhpy < 1.0e-10:
-            kwhpy = 1.0e-10
+        kwhpy = max(kwhpy, 1.0e-10)
 
         #  Cost of electricity due to plant capital cost
 
@@ -2749,7 +2780,7 @@ class Costs:
         #  Annual cost of operation and maintenance
 
         annoam = cost_variables.ucoam[cost_variables.lsa - 1] * numpy.sqrt(
-            heat_transport_variables.pnetelmw / 1200.0e0
+            heat_transport_variables.pnetelmw / 1200.0e0,
         )
 
         #  Additional cost due to pulsed reactor thermal storage
@@ -2818,7 +2849,7 @@ class Costs:
         #  Annual cost of waste disposal
 
         annwst = cost_variables.ucwst[cost_variables.lsa - 1] * numpy.sqrt(
-            heat_transport_variables.pnetelmw / 1200.0e0
+            heat_transport_variables.pnetelmw / 1200.0e0,
         )
 
         #  Cost of electricity due to waste disposal

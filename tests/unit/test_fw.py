@@ -1,8 +1,9 @@
-import pytest
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-from process.fw import Fw
+import pytest
+
 from process.fortran import fwbs_variables
+from process.fw import Fw
 
 
 @pytest.fixture
@@ -119,7 +120,9 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        fwbs_variables, "fw_th_conductivity", fwtempparam.fw_th_conductivity
+        fwbs_variables,
+        "fw_th_conductivity",
+        fwtempparam.fw_th_conductivity,
     )
 
     # monkeypatch doesnt work for strings
@@ -135,7 +138,9 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     monkeypatch.setattr(fwbs_variables, "pitch", fwtempparam.pitch)
 
     monkeypatch.setattr(
-        fwbs_variables, "fw_channel_length", fwtempparam.fw_channel_length
+        fwbs_variables,
+        "fw_channel_length",
+        fwtempparam.fw_channel_length,
     )
 
     monkeypatch.setattr(fwbs_variables, "tpeak", fwtempparam.tpeak)

@@ -10,18 +10,19 @@ Compatible with PROCESS version 368
             generation script imports, and inspects, process.
 """
 
+import logging
 from os.path import join as pjoin
+from pathlib import Path
 from sys import stderr
+from time import sleep
+
+from numpy.random import uniform
+
+from process.fortran import numerics
 from process.io.in_dat import InDat
 from process.io.mfile import MFile
-from process.fortran import numerics
-from numpy.random import uniform
-from time import sleep
 from process.io.python_fortran_dicts import get_dicts
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from pathlib import Path
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ def get_variable_range(itervars, factor, wdir="."):
             value = get_from_indat_or_default(in_dat, varname)
 
             if value is None:
-                print("Error: Iteration variable {} has None value!".format(varname))
+                print(f"Error: Iteration variable {varname} has None value!")
                 exit()
 
             # to allow the factor to have some influence
@@ -132,10 +133,8 @@ def get_variable_range(itervars, factor, wdir="."):
 
         if lbs[-1] > ubs[-1]:
             print(
-                "Error: Iteration variable {0} has BOUNDL={1} >\
- BOUNDU={2}\n Update process_dicts or input file!".format(
-                    varname, lbs[-1], ubs[-1]
-                ),
+                f"Error: Iteration variable {varname} has BOUNDL={lbs[-1]} >\
+ BOUNDU={ubs[-1]}\n Update process_dicts or input file!",
                 file=stderr,
             )
 
@@ -192,7 +191,9 @@ def check_in_dat():
             )
             dicts["DICT_IXC_BOUNDS"][itervarname]["lb"] = lowerinputbound
             set_variable_in_indat(
-                in_dat, "boundl(" + str(itervarno) + ")", lowerinputbound
+                in_dat,
+                "boundl(" + str(itervarno) + ")",
+                lowerinputbound,
             )
             sleep(1)
 
@@ -202,16 +203,16 @@ def check_in_dat():
             print(
                 "Warning: boundu for",
                 itervarname,
-                "lies out of allowed input range!\n Reset boundu({}) \
-to".format(
-                    itervarno
-                ),
+                f"lies out of allowed input range!\n Reset boundu({itervarno}) \
+to",
                 upperinputbound,
                 file=stderr,
             )
             dicts["DICT_IXC_BOUNDS"][itervarname]["ub"] = upperinputbound
             set_variable_in_indat(
-                in_dat, "boundu(" + str(itervarno) + ")", upperinputbound
+                in_dat,
+                "boundu(" + str(itervarno) + ")",
+                upperinputbound,
             )
             sleep(1)
 
@@ -229,7 +230,7 @@ def check_logfile(logfile="process.log"):
     XXX should be deprecated!! and replaced by check_input_error!
     """
 
-    with open(logfile, "r") as outlogfile:
+    with open(logfile) as outlogfile:
         errormessage = "Please check the output file for further information."
         for line in outlogfile:
             if errormessage in line:
@@ -282,7 +283,7 @@ def process_stopped(wdir="."):
     try:
         m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
     except FileNotFoundError as err:
-        print("No MFILE has been found! FYI:\n {0}".format(err), file=stderr)
+        print(f"No MFILE has been found! FYI:\n {err}", file=stderr)
         print("Code continues to run!", file=stderr)
         return True
 
@@ -326,7 +327,7 @@ def mfile_exists():
     """checks whether MFILE.DAT exists"""
 
     try:
-        m_file = open("MFILE.DAT", "r")
+        m_file = open("MFILE.DAT")
         m_file.close()
         return True
 
@@ -351,18 +352,16 @@ def no_unfeasible_mfile(wdir="."):
     if not m_file.data["isweep"].exists:
         if m_file.data["ifail"].get_scan(-1) == dicts["IFAIL_SUCCESS"]:
             return 0
-        else:
-            return 1
+        return 1
 
-    else:
-        ifail = m_file.data["ifail"].get_scans()
-        try:
-            return len(ifail) - ifail.count(dicts["IFAIL_SUCCESS"])
-        except TypeError:
-            # This seems to occur, if ifail is not in MFILE!
-            # This probably means in the mfile library a KeyError
-            # should be raised not only a message to stdout!
-            return 100000
+    ifail = m_file.data["ifail"].get_scans()
+    try:
+        return len(ifail) - ifail.count(dicts["IFAIL_SUCCESS"])
+    except TypeError:
+        # This seems to occur, if ifail is not in MFILE!
+        # This probably means in the mfile library a KeyError
+        # should be raised not only a message to stdout!
+        return 100000
 
 
 ################################
@@ -381,7 +380,7 @@ def vary_iteration_variables(itervars, lbs, ubs):
 
     new_values = []
 
-    for varname, lbnd, ubnd in zip(itervars, lbs, ubs):
+    for varname, lbnd, ubnd in zip(itervars, lbs, ubs, strict=False):
         new_value = uniform(lbnd, ubnd)
         new_values += [new_value]
         in_dat.add_parameter(varname, new_value)
@@ -420,11 +419,11 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
 
     table_sol = []
     for var_no in range(nvars):
-        table_sol.append(m_file.data["itvar{:03}".format(var_no + 1)].get_scan(-1))
+        table_sol.append(m_file.data[f"itvar{var_no + 1:03}"].get_scan(-1))
 
     table_res = []
     for con_no in range(neqns):
-        table_res.append(m_file.data["normres{:03}".format(con_no + 1)].get_scan(-1))
+        table_res.append(m_file.data[f"normres{con_no + 1:03}"].get_scan(-1))
 
     if ifail != dicts["IFAIL_SUCCESS"]:
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns
@@ -441,11 +440,10 @@ def get_from_indat_or_default(in_dat, varname):
     dicts = get_dicts()
     if varname in in_dat.data.keys():
         return in_dat.data[varname].get_value
-    else:
-        # Load dicts from dicts JSON file
-        dicts = get_dicts()
+    # Load dicts from dicts JSON file
+    dicts = get_dicts()
 
-        return dicts["DICT_DEFAULT"][varname]
+    return dicts["DICT_DEFAULT"][varname]
 
 
 def set_variable_in_indat(in_dat, varname, value):

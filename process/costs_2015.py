@@ -1,19 +1,22 @@
 import logging
-import numpy
-from process.fortran import constants
-from process.fortran import cost_variables
-from process.fortran import heat_transport_variables
-from process.fortran import process_output as po
-from process.fortran import global_variables
-from process.fortran import fwbs_variables
-from process.fortran import build_variables
-from process.fortran import current_drive_variables
-from process.fortran import pfcoil_variables
-from process.fortran import tfcoil_variables
-from process.fortran import pf_power_variables
-from process.fortran import physics_variables
-from process.variables import AnnotatedVariable
 
+import numpy
+
+from process.fortran import (
+    build_variables,
+    constants,
+    cost_variables,
+    current_drive_variables,
+    fwbs_variables,
+    global_variables,
+    heat_transport_variables,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
+from process.fortran import process_output as po
+from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
 
@@ -26,10 +29,16 @@ class Costs2015:
         self.ofile = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.total_costs = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.mean_electric_output = AnnotatedVariable(
-            float, 0.0, docstring="", units=""
+            float,
+            0.0,
+            docstring="",
+            units="",
         )
         self.annual_electric_output = AnnotatedVariable(
-            float, 0.0, docstring="", units=""
+            float,
+            0.0,
+            docstring="",
+            units="",
         )
         self.maintenance = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.ofile = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -39,7 +48,12 @@ class Costs2015:
         s_label = numpy.ndarray(100, dtype=object)
         s_label[:] = "not used"
         self.s_label = AnnotatedVariable(
-            numpy.ndarray, 100, dtype=object, buffer=s_label, docstring="", units=""
+            numpy.ndarray,
+            100,
+            dtype=object,
+            buffer=s_label,
+            docstring="",
+            units="",
         )
         s_kref = numpy.zeros(100, dtype=numpy.float64)
         self.s_kref = AnnotatedVariable(
@@ -53,7 +67,12 @@ class Costs2015:
 
         s_k = numpy.zeros(100, dtype=numpy.float64)
         self.s_k = AnnotatedVariable(
-            numpy.ndarray, 100, dtype=numpy.float64, buffer=s_k, docstring="", units=""
+            numpy.ndarray,
+            100,
+            dtype=numpy.float64,
+            buffer=s_k,
+            docstring="",
+            units="",
         )
         s_cref = numpy.zeros(100, dtype=numpy.float64)
         self.s_cref = AnnotatedVariable(
@@ -176,7 +195,6 @@ class Costs2015:
             self.output()
 
             for i in range(100):
-                # noqa: E741
                 nan_diags = [
                     self.s_label[i],
                     self.s_kref[i],
@@ -203,8 +221,8 @@ class Costs2015:
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
 
-        for i in range(21, 27):  # noqa: E741
-            self.s_cost_factor[i] = cost_variables.cost_factor_fwbs  # noqa: E741
+        for i in range(21, 27):
+            self.s_cost_factor[i] = cost_variables.cost_factor_fwbs
 
         # Enrichment
         # Costs based on the number of separative work units (SWU) required
@@ -386,12 +404,12 @@ class Costs2015:
         )
 
         po.oshead(self.outfile, "Buildings (M$)")
-        for i in range(9):  # noqa: E741
+        for i in range(9):
             self.ocost(
                 self.outfile,
-                self.s_label[i],  # noqa: E741
-                i + 1,  # noqa: E741
-                self.s_cost[i] / 1.0e6,  # noqa: E741
+                self.s_label[i],
+                i + 1,
+                self.s_cost[i] / 1.0e6,
             )
 
         po.oshead(self.outfile, "Land (M$)")
@@ -491,7 +509,11 @@ class Costs2015:
             "OP ",
         )
         po.ovarrf(
-            self.outfile, "Capacity factor", "(cpfact)", cost_variables.cpfact, "OP "
+            self.outfile,
+            "Capacity factor",
+            "(cpfact)",
+            cost_variables.cpfact,
+            "OP ",
         )
         po.ovarrf(
             self.outfile,
@@ -530,7 +552,7 @@ class Costs2015:
         The exponent =1
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
-        for i in range(0, 9):
+        for i in range(9):
             self.s_cost_factor[i] = cost_variables.cost_factor_buildings
 
         # Power plant admin buildings cost ($)
@@ -616,7 +638,7 @@ class Costs2015:
         # Total cost of buildings ($)
         self.s_label[8] = "Total cost of buildings"
         self.s_cost[8] = 0.0e0
-        for j in range(0, 8):
+        for j in range(8):
             self.s_cost[8] = self.s_cost[8] + self.s_cost[j]
 
     def calc_land_costs(self):

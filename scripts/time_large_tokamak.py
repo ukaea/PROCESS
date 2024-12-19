@@ -14,7 +14,9 @@ def large_tokamak_runtime():
 
     start = time.time()
 
-    subprocess.run(f"process -i {str(large_tokamak_path.resolve())}", shell=True)
+    subprocess.run(
+        f"process -i {large_tokamak_path.resolve()!s}", shell=True, check=False
+    )
 
     return time.time() - start
 

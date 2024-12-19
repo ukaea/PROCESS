@@ -1,22 +1,22 @@
 """Unit tests for ife."""
 
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-import pytest
 import numpy
+import pytest
 
-from process.ife import IFE
 from process.availability import Availability
 from process.costs import Costs
 from process.fortran import (
     build_variables,
-    ife_variables,
+    buildings_variables,
     cost_variables,
     fwbs_variables,
-    physics_variables,
     heat_transport_variables,
-    buildings_variables,
+    ife_variables,
+    physics_variables,
 )
+from process.ife import IFE
 
 
 @pytest.fixture
@@ -285,7 +285,8 @@ class SombldParam(NamedTuple):
                 order="F",
             ).transpose(),
             chmatv=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             chvol=0,
             fwvol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
@@ -297,7 +298,8 @@ class SombldParam(NamedTuple):
             shvol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
             v3vol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
             chmatf=numpy.array(
-                numpy.array((1, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((1, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             fwmatf=numpy.array(
                 (
@@ -689,7 +691,8 @@ class DriverParam(NamedTuple):
             ).transpose(),
             gainve=numpy.array(
                 numpy.array(
-                    (60, 95, 115, 125, 133, 141, 152, 160, 165, 170), order="F"
+                    (60, 95, 115, 125, 133, 141, 152, 160, 165, 170),
+                    order="F",
                 ),
                 order="F",
             ).transpose(),
@@ -709,7 +712,9 @@ def test_driver(driverparam, ife):
     """
 
     gain, etadrv = ife.driver(
-        edrive=driverparam.edrive, etave=driverparam.etave, gainve=driverparam.gainve
+        edrive=driverparam.edrive,
+        etave=driverparam.etave,
+        gainve=driverparam.gainve,
     )
 
     assert etadrv == pytest.approx(driverparam.expected_etadrv)
@@ -964,7 +969,8 @@ class HylbldParam(NamedTuple):
                 order="F",
             ).transpose(),
             chmatv=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             expected_fwarea=281.91872215483801,
             expected_r1=3.5,
@@ -1275,7 +1281,8 @@ class IfefbsParam(NamedTuple):
             bktlife=0,
             fwlife=0,
             chmatm=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             chmatv=numpy.array(
                 numpy.array((261.69466804402975, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
@@ -1809,7 +1816,8 @@ class GenbldParam(NamedTuple):
                 order="F",
             ).transpose(),
             chmatv=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             expected_fwarea=226.5088303238241,
             expected_r1=3.5,
@@ -2120,10 +2128,10 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
 
     assert fwbs_variables.pnucblkt == pytest.approx(ifepw1param.expected_pnucblkt)
     assert heat_transport_variables.priheat == pytest.approx(
-        ifepw1param.expected_priheat
+        ifepw1param.expected_priheat,
     )
     assert heat_transport_variables.pthermmw == pytest.approx(
-        ifepw1param.expected_pthermmw
+        ifepw1param.expected_pthermmw,
     )
     assert heat_transport_variables.pfwdiv == pytest.approx(ifepw1param.expected_pfwdiv)
     assert heat_transport_variables.nphx == pytest.approx(ifepw1param.expected_nphx)
@@ -2359,7 +2367,8 @@ class Bld2019Param(NamedTuple):
                 order="F",
             ).transpose(),
             chmatv=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             expected_fwarea=36.573165036030936,
             expected_tbr=1.3991938274222466,
@@ -2913,17 +2922,17 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     ife.ifepw2()
 
     assert heat_transport_variables.fachtmw == pytest.approx(
-        ifepw2param.expected_fachtmw
+        ifepw2param.expected_fachtmw,
     )
     assert heat_transport_variables.psechtmw == pytest.approx(
-        ifepw2param.expected_psechtmw
+        ifepw2param.expected_psechtmw,
     )
     assert heat_transport_variables.pgrossmw == pytest.approx(
-        ifepw2param.expected_pgrossmw
+        ifepw2param.expected_pgrossmw,
     )
     assert heat_transport_variables.precircmw == pytest.approx(
-        ifepw2param.expected_precircmw
+        ifepw2param.expected_precircmw,
     )
     assert heat_transport_variables.pnetelmw == pytest.approx(
-        ifepw2param.expected_pnetelmw
+        ifepw2param.expected_pnetelmw,
     )

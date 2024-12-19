@@ -1,14 +1,18 @@
 import numpy as np
 
+from process.coolprop_interface import FluidProperties
 from process.fortran import (
     constants,
-    fwbs_variables,
-    error_handling as eh,
-    process_output as po,
     error_handling,
+    fwbs_variables,
+)
+from process.fortran import (
+    error_handling as eh,
+)
+from process.fortran import (
+    process_output as po,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from process.coolprop_interface import FluidProperties
 
 
 class Fw:
@@ -182,7 +186,7 @@ class Fw:
         # Calculate maximum distance travelled by surface heat load (m)
         # fw_wall | Minimum distance travelled by surface heat load (m)
         diagonal = np.sqrt(
-            (fwbs_variables.pitch / 2 - afw) ** 2 + (afw + fwbs_variables.fw_wall) ** 2
+            (fwbs_variables.pitch / 2 - afw) ** 2 + (afw + fwbs_variables.fw_wall) ** 2,
         )
 
         # Mean distance travelled by surface heat (m)
@@ -205,7 +209,8 @@ class Fw:
 
         if output:
             po.oheadr(
-                self.outfile, "Heat transfer parameters at the coolant outlet: " + label
+                self.outfile,
+                "Heat transfer parameters at the coolant outlet: " + label,
             )
             po.ovarre(self.outfile, "Radius of coolant channel (m)", "(afw)", afw)
             po.ovarre(
@@ -262,7 +267,11 @@ class Fw:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Coolant velocity (m/s)", "(velocity)", velocity, "OP "
+                self.outfile,
+                "Coolant velocity (m/s)",
+                "(velocity)",
+                velocity,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -271,7 +280,11 @@ class Fw:
                 fwbs_variables.fwoutlet,
             )
             po.ovarre(
-                self.outfile, "Heat transfer coefficient", "(hcoeff)", hcoeff, "OP "
+                self.outfile,
+                "Heat transfer coefficient",
+                "(hcoeff)",
+                hcoeff,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,

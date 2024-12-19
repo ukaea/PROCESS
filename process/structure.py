@@ -1,16 +1,17 @@
+import logging
 import math
 
-from process.fortran import structure_variables as stv
+import numpy as np
+
+from process.fortran import build_variables as bv
+from process.fortran import constants
+from process.fortran import divertor_variables as divv
+from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
-from process.fortran import build_variables as bv
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import divertor_variables as divv
 from process.fortran import process_output as po
-from process.fortran import constants
-import numpy as np
-import logging
+from process.fortran import structure_variables as stv
+from process.fortran import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
 
@@ -235,7 +236,11 @@ class Structure:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Torus leg support mass (kg)", "(gsm1)", gsm1, "OP "
+                self.outfile,
+                "Torus leg support mass (kg)",
+                "(gsm1)",
+                gsm1,
+                "OP ",
             )
             po.ovarre(self.outfile, "Ring beam mass (kg)", "(gsm2)", gsm2, "OP ")
             po.ovarre(self.outfile, "Ring legs mass (kg)", "(gsm3)", gsm3, "OP ")

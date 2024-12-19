@@ -1,16 +1,19 @@
 import numpy as np
 
-from process.plasma_profiles import PlasmaProfile
-
 from process.fortran import (
-    heat_transport_variables,
-    current_drive_variables,
-    physics_variables,
-    cost_variables,
     constants,
-    process_output as po,
+    cost_variables,
+    current_drive_variables,
+    heat_transport_variables,
+    physics_variables,
+)
+from process.fortran import (
     error_handling as eh,
 )
+from process.fortran import (
+    process_output as po,
+)
+from process.plasma_profiles import PlasmaProfile
 
 
 class CurrentDrive:
@@ -53,8 +56,9 @@ class CurrentDrive:
 
         # check for unphysically large heating in
         # secondary injected power source
-        if current_drive_variables.pheatfix > current_drive_variables.pinjfixmw:
-            current_drive_variables.pheatfix = current_drive_variables.pinjfixmw
+        current_drive_variables.pheatfix = min(
+            current_drive_variables.pheatfix, current_drive_variables.pinjfixmw
+        )
 
         # current_drive_variables.irfcd |  switch for current drive calculation
         # = 0   |  turned off
@@ -186,7 +190,7 @@ class CurrentDrive:
                     * np.sqrt(
                         physics_variables.dene
                         * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
+                        / (constants.electron_mass * constants.epsilon0),
                     )
                 )
 
@@ -212,11 +216,9 @@ class CurrentDrive:
                     1
                     / (2 * np.pi)
                     * np.sqrt(
-                        (
-                            (physics_variables.dene / 1.0e19)
-                            * constants.electron_charge**2
-                            / (constants.electron_mass * constants.epsilon0)
-                        )
+                        (physics_variables.dene / 1.0e19)
+                        * constants.electron_charge**2
+                        / (constants.electron_mass * constants.epsilon0),
                     )
                 )
 
@@ -241,10 +243,7 @@ class CurrentDrive:
                 # X-mode case
                 elif current_drive_variables.wave_mode == 1:
                     f_cutoff = 0.5 * (
-                        fc
-                        + np.sqrt(
-                            current_drive_variables.harnum * fc**2 + 4 * fp**2
-                        )
+                        fc + np.sqrt(current_drive_variables.harnum * fc**2 + 4 * fp**2)
                     )
 
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
@@ -253,13 +252,13 @@ class CurrentDrive:
                     1
                     + np.tanh(
                         (2 / (a))
-                        * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a)
+                        * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a),
                     )
                 )
                 effcdfix = effrfssfix * cutoff_factor
             elif current_drive_variables.iefrffix != 0:
                 raise RuntimeError(
-                    f"Current drive switch is invalid: {current_drive_variables.iefrffix = }"
+                    f"Current drive switch is invalid: {current_drive_variables.iefrffix = }",
                 )
 
             if current_drive_variables.iefrffix in [1, 2, 4, 6]:
@@ -318,7 +317,8 @@ class CurrentDrive:
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
                 current_drive_variables.forbitloss = min(
-                    0.999, current_drive_variables.forbitloss
+                    0.999,
+                    current_drive_variables.forbitloss,
                 )  # Should never be needed
 
                 pnbitotfix = current_drive_variables.pinjfixmw / (
@@ -481,7 +481,7 @@ class CurrentDrive:
                     * np.sqrt(
                         physics_variables.dene
                         * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
+                        / (constants.electron_mass * constants.epsilon0),
                     )
                 )
 
@@ -510,11 +510,9 @@ class CurrentDrive:
                     1
                     / (2 * np.pi)
                     * np.sqrt(
-                        (
-                            (physics_variables.dene / 1.0e19)
-                            * constants.electron_charge**2
-                            / (constants.electron_mass * constants.epsilon0)
-                        )
+                        (physics_variables.dene / 1.0e19)
+                        * constants.electron_charge**2
+                        / (constants.electron_mass * constants.epsilon0),
                     )
                 )
 
@@ -539,10 +537,7 @@ class CurrentDrive:
                 # X-mode case
                 elif current_drive_variables.wave_mode == 1:
                     f_cutoff = 0.5 * (
-                        fc
-                        + np.sqrt(
-                            current_drive_variables.harnum * fc**2 + 4 * fp**2
-                        )
+                        fc + np.sqrt(current_drive_variables.harnum * fc**2 + 4 * fp**2)
                     )
 
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
@@ -551,13 +546,13 @@ class CurrentDrive:
                     1
                     + np.tanh(
                         (2 / (a))
-                        * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a)
+                        * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a),
                     )
                 )
                 current_drive_variables.effcd = effrfss * cutoff_factor
             else:
                 raise RuntimeError(
-                    f"Current drive switch is invalid: {current_drive_variables.iefrf = }"
+                    f"Current drive switch is invalid: {current_drive_variables.iefrf = }",
                 )
 
             # Compute current drive wall plug and injected powers (MW) and efficiencies
@@ -634,7 +629,8 @@ class CurrentDrive:
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
                 current_drive_variables.forbitloss = min(
-                    0.999, current_drive_variables.forbitloss
+                    0.999,
+                    current_drive_variables.forbitloss,
                 )  # Should never be needed
 
                 current_drive_variables.pnbitot = power1 / (
@@ -702,7 +698,7 @@ class CurrentDrive:
                 abs(
                     current_drive_variables.pinjmw
                     + current_drive_variables.porbitlossmw
-                    + physics_variables.pohmmw
+                    + physics_variables.pohmmw,
                 )
                 < 1.0e-6
             ):
@@ -734,7 +730,8 @@ class CurrentDrive:
             po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
         elif current_drive_variables.iefrf == 10:
             po.ocmmnt(
-                self.outfile, "Electron Cyclotron Current Drive (user input gamma_CD)"
+                self.outfile,
+                "Electron Cyclotron Current Drive (user input gamma_CD)",
             )
         elif current_drive_variables.iefrf == 12:
             po.ocmmnt(self.outfile, "EBW current drive")
@@ -761,7 +758,8 @@ class CurrentDrive:
             po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
         elif current_drive_variables.iefrffix == 10:
             po.ocmmnt(
-                self.outfile, "Electron Cyclotron Current Drive (user input gamma_CD)"
+                self.outfile,
+                "Electron Cyclotron Current Drive (user input gamma_CD)",
             )
         elif current_drive_variables.iefrffix == 12:
             po.ocmmnt(self.outfile, "EBW current drive")
@@ -975,7 +973,7 @@ class CurrentDrive:
                 current_drive_variables.plasma_current_internal_fraction
                 + physics_variables.aux_current_fraction
                 + physics_variables.inductive_current_fraction
-                - 1.0e0
+                - 1.0e0,
             )
             > 1.0e-8
         ):
@@ -992,7 +990,7 @@ class CurrentDrive:
         if (
             abs(
                 current_drive_variables.bootstrap_current_fraction
-                - current_drive_variables.bootstrap_current_fraction_max
+                - current_drive_variables.bootstrap_current_fraction_max,
             )
             < 1.0e-8
         ):
@@ -1065,7 +1063,11 @@ class CurrentDrive:
                 current_drive_variables.iefrf == 8
             ):
                 po.ovarre(
-                    self.outfile, "Beam efficiency (A/W)", "(effnbss)", effnbss, "OP "
+                    self.outfile,
+                    "Beam efficiency (A/W)",
+                    "(effnbss)",
+                    effnbss,
+                    "OP ",
                 )
 
             if (current_drive_variables.iefrffix == 5) or (
@@ -1080,7 +1082,11 @@ class CurrentDrive:
                 )
 
             po.ovarre(
-                self.outfile, "Beam gamma (10^20 A/W-m2)", "(gamnb)", gamnb, "OP "
+                self.outfile,
+                "Beam gamma (10^20 A/W-m2)",
+                "(gamnb)",
+                gamnb,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -1312,7 +1318,7 @@ class CurrentDrive:
 
         # Calculate beam path length to centre
         dpath = physics_variables.rmajor * np.sqrt(
-            (1.0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
+            (1.0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2,
         )
 
         # Calculate beam stopping cross-section
@@ -1581,7 +1587,7 @@ class CurrentDrive:
         #  Calculate beam path length to centre
 
         dpath = physics_variables.rmajor * np.sqrt(
-            (1.0e0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
+            (1.0e0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2,
         )
 
         #  Calculate beam stopping cross-section
@@ -2058,8 +2064,7 @@ class CurrentDrive:
             )
             palpha = palpha + pterm
             palphap = palphap - n * pterm / (1.0e0 - arg2)
-        else:
-            eh.report_error(19)
+        eh.report_error(19)
 
     def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
         """Calculates the stopping cross-section for a hydrogen
@@ -2076,52 +2081,48 @@ class CurrentDrive:
         for a hydrogen beam in a fusion plasma.
         Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
         """
-        a = np.array(
+        a = np.array([
             [
-                [
-                    [4.4, -2.49e-2],
-                    [7.46e-2, 2.27e-3],
-                    [3.16e-3, -2.78e-5],
-                ],
-                [
-                    [2.3e-1, -1.15e-2],
-                    [-2.55e-3, -6.2e-4],
-                    [1.32e-3, 3.38e-5],
-                ],
-            ]
-        )
+                [4.4, -2.49e-2],
+                [7.46e-2, 2.27e-3],
+                [3.16e-3, -2.78e-5],
+            ],
+            [
+                [2.3e-1, -1.15e-2],
+                [-2.55e-3, -6.2e-4],
+                [1.32e-3, 3.38e-5],
+            ],
+        ])
 
-        b = np.array(
+        b = np.array([
+            [
+                [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
+                [
+                    [-0.25, -0.119, -0.108, -0.0558],
+                    [-0.0381, -0.015, -0.0138, -3.72e-3],
+                ],
+            ],
             [
                 [
-                    [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
-                    [
-                        [-0.25, -0.119, -0.108, -0.0558],
-                        [-0.0381, -0.015, -0.0138, -3.72e-3],
-                    ],
+                    [0.849, 0.518, 0.477, 0.322],
+                    [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
                 ],
                 [
-                    [
-                        [0.849, 0.518, 0.477, 0.322],
-                        [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
-                    ],
-                    [
-                        [0.0677, 0.0292, 0.0259, 0.0124],
-                        [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
-                    ],
+                    [0.0677, 0.0292, 0.0259, 0.0124],
+                    [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
+                ],
+            ],
+            [
+                [
+                    [-0.0588, -0.0336, -0.0305, -0.0187],
+                    [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
                 ],
                 [
-                    [
-                        [-0.0588, -0.0336, -0.0305, -0.0187],
-                        [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
-                    ],
-                    [
-                        [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
-                        [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
-                    ],
+                    [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
+                    [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
                 ],
-            ]
-        )
+            ],
+        ])
 
         z = np.array([2.0, 6.0, 8.0, 26.0])
         nn = np.array([rnhe, rnc, rno, rnfe])

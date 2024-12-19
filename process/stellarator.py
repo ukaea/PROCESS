@@ -1,39 +1,44 @@
 import logging
 from copy import copy
-import numpy as np
 from pathlib import Path
 
+import numpy as np
+
+import process.physics_functions as physics_funcs
+from process import superconductors
+from process.coolprop_interface import FluidProperties
 from process.fortran import (
-    constants,
-    stellarator_module as st,
-    process_output as po,
-    physics_variables,
-    physics_module,
-    current_drive_variables,
-    tfcoil_variables,
-    stellarator_configuration,
-    stellarator_variables,
-    numerics,
     build_variables,
-    fwbs_variables,
-    heat_transport_variables,
-    structure_variables,
-    divertor_variables,
-    cost_variables,
-    error_handling,
+    constants,
     constraint_variables,
-    rebco_variables,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    error_handling,
+    fwbs_variables,
+    global_variables,
+    heat_transport_variables,
+    impurity_radiation_module,
     maths_library,
     neoclassics_module,
-    impurity_radiation_module,
+    numerics,
+    physics_module,
+    physics_variables,
+    rebco_variables,
     sctfcoil_module,
-    global_variables,
+    stellarator_configuration,
+    stellarator_variables,
+    structure_variables,
+    tfcoil_variables,
 )
-import process.superconductors as superconductors
-import process.physics_functions as physics_funcs
-from process.stellarator_config import load_stellarator_config
-from process.coolprop_interface import FluidProperties
+from process.fortran import (
+    process_output as po,
+)
+from process.fortran import (
+    stellarator_module as st,
+)
 from process.physics import rether
+from process.stellarator_config import load_stellarator_config
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
@@ -195,9 +200,9 @@ class Stellarator:
 
         po.write(
             self.outfile,
-            f"{' '*5}scaling law{' '*30}confinement time (s){' '*55}H-factor for",
+            f"{' ' * 5}scaling law{' ' * 30}confinement time (s){' ' * 55}H-factor for",
         )
-        po.write(self.outfile, f"{' '*34}for H = 2{' '*54}power balance")
+        po.write(self.outfile, f"{' ' * 34}for H = 2{' ' * 54}power balance")
 
         #  Label stellarator scaling laws (update if more are added)
 
@@ -261,7 +266,7 @@ class Stellarator:
         load_stellarator_config(
             stellarator_variables.istell,
             Path(
-                f"{f2py_compatible_to_string(global_variables.output_prefix)}stella_conf.json"
+                f"{f2py_compatible_to_string(global_variables.output_prefix)}stella_conf.json",
             ),
         )
 
@@ -357,7 +362,8 @@ class Stellarator:
         # Calculates the ECRH parameters
 
         ne0_max_ECRH, bt_ecrh = self.stdlim_ecrh(
-            stellarator_variables.max_gyrotron_frequency, physics_variables.bt
+            stellarator_variables.max_gyrotron_frequency,
+            physics_variables.bt,
         )
 
         ne0_max_ECRH = min(physics_variables.ne0, ne0_max_ECRH)
@@ -558,7 +564,10 @@ class Stellarator:
                 build_variables.required_radial_space,
             )
             po.ovarre(
-                self.outfile, "f value: ", "(f_avspace)", build_variables.f_avspace
+                self.outfile,
+                "f value: ",
+                "(f_avspace)",
+                build_variables.f_avspace,
             )
 
             #     po.write(self.outfile,10)
@@ -573,7 +582,10 @@ class Stellarator:
             radius = radius + drbild
             po.obuild(self.outfile, "Machine bore", drbild, radius, "(bore)")
             po.ovarre(
-                self.outfile, "Machine build_variables.bore (m)", "(bore)", drbild
+                self.outfile,
+                "Machine build_variables.bore (m)",
+                "(bore)",
+                drbild,
             )
 
             radius = radius + build_variables.tfcth
@@ -585,7 +597,10 @@ class Stellarator:
                 "(tfcth)",
             )
             po.ovarre(
-                self.outfile, "Coil inboard leg (m)", "(deltf)", build_variables.tfcth
+                self.outfile,
+                "Coil inboard leg (m)",
+                "(deltf)",
+                build_variables.tfcth,
             )
 
             radius = radius + build_variables.gapds
@@ -896,7 +911,7 @@ class Stellarator:
         w_r = 4.0e0 * np.sqrt(
             stellarator_variables.bmn
             * R
-            / (stellarator_variables.shear * stellarator_variables.n_res)
+            / (stellarator_variables.shear * stellarator_variables.n_res),
         )
 
         #  Perpendicular (to plate) distance from X-point to divertor plate (m)
@@ -1039,7 +1054,10 @@ class Stellarator:
             po.ovarre(self.outfile, "Divertor plate width (m)", "(L_w)", l_w)
             po.ovarre(self.outfile, "Flux channel broadening factor", "(F_x)", f_x)
             po.ovarre(
-                self.outfile, "Power decay width (cm)", "(100*l_q)", 100.0e0 * l_q
+                self.outfile,
+                "Power decay width (cm)",
+                "(100*l_q)",
+                100.0e0 * l_q,
             )
             po.ovarre(self.outfile, "Island width (m)", "(w_r)", w_r)
             po.ovarre(
@@ -1095,7 +1113,10 @@ class Stellarator:
 
         # Tritium breeding ratio
         fwbs_variables.tbr = self.hcpb.tbr_shimwell(
-            fwbs_variables.volblkt, fwbs_variables.li6enrich, 1, output=False
+            fwbs_variables.volblkt,
+            fwbs_variables.li6enrich,
+            1,
+            output=False,
         )
 
         # Use older model to calculate neutron fluence since it
@@ -1141,7 +1162,8 @@ class Stellarator:
         of the plasma.
         """
         fwbs_variables.fwlife = min(
-            cost_variables.abktflnc / physics_variables.wallmw, cost_variables.tlife
+            cost_variables.abktflnc / physics_variables.wallmw,
+            cost_variables.tlife,
         )
 
         #  First wall inboard, outboard areas (assume 50% of total each)
@@ -1979,7 +2001,10 @@ class Stellarator:
             ):
                 po.osubhd(self.outfile, "Coil nuclear parameters :")
                 po.ovarre(
-                    self.outfile, "Peak magnet heating (MW/m3)", "(coilhtmx)", coilhtmx
+                    self.outfile,
+                    "Peak magnet heating (MW/m3)",
+                    "(coilhtmx)",
+                    coilhtmx,
                 )
                 po.ovarre(
                     self.outfile,
@@ -1994,13 +2019,22 @@ class Stellarator:
                     ptfowp,
                 )
                 po.ovarre(
-                    self.outfile, "Peak coil case heating (MW/m3)", "(htheci)", htheci
+                    self.outfile,
+                    "Peak coil case heating (MW/m3)",
+                    "(htheci)",
+                    htheci,
                 )
                 po.ovarre(
-                    self.outfile, "Inboard coil case heating (MW)", "(pheci)", pheci
+                    self.outfile,
+                    "Inboard coil case heating (MW)",
+                    "(pheci)",
+                    pheci,
                 )
                 po.ovarre(
-                    self.outfile, "Outboard coil case heating (MW)", "(pheco)", pheco
+                    self.outfile,
+                    "Outboard coil case heating (MW)",
+                    "(pheco)",
+                    pheco,
                 )
                 po.ovarre(self.outfile, "Insulator dose (rad)", "(raddose)", raddose)
                 po.ovarre(
@@ -2076,11 +2110,13 @@ class Stellarator:
                 )
                 if fwbs_variables.hcdportsize == 1:
                     po.ocmmnt(
-                        self.outfile, "     (small heating/current drive ports assumed)"
+                        self.outfile,
+                        "     (small heating/current drive ports assumed)",
                     )
                 else:
                     po.ocmmnt(
-                        self.outfile, "     (large heating/current drive ports assumed)"
+                        self.outfile,
+                        "     (large heating/current drive ports assumed)",
                     )
 
                 if fwbs_variables.breedmat == 1:
@@ -2095,7 +2131,8 @@ class Stellarator:
                     )
                 elif fwbs_variables.breedmat == 3:
                     po.ocmmnt(
-                        self.outfile, "Breeder material: Lithium zirconate (Li2ZrO3)"
+                        self.outfile,
+                        "Breeder material: Lithium zirconate (Li2ZrO3)",
                     )
                 else:  # shouldn't get here...
                     po.ocmmnt(self.outfile, "Unknown breeder material...")
@@ -2107,7 +2144,10 @@ class Stellarator:
                     fwbs_variables.li6enrich,
                 )
                 po.ovarre(
-                    self.outfile, "Tritium breeding ratio", "(tbr)", fwbs_variables.tbr
+                    self.outfile,
+                    "Tritium breeding ratio",
+                    "(tbr)",
+                    fwbs_variables.tbr,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2214,10 +2254,16 @@ class Stellarator:
 
             po.osubhd(self.outfile, "Other volumes, masses and areas :")
             po.ovarre(
-                self.outfile, "First wall area (m2)", "(fwarea)", build_variables.fwarea
+                self.outfile,
+                "First wall area (m2)",
+                "(fwarea)",
+                build_variables.fwarea,
             )
             po.ovarre(
-                self.outfile, "First wall mass (kg)", "(fwmass)", fwbs_variables.fwmass
+                self.outfile,
+                "First wall mass (kg)",
+                "(fwmass)",
+                fwbs_variables.fwmass,
             )
             po.ovarre(
                 self.outfile,
@@ -2232,7 +2278,10 @@ class Stellarator:
                 fwbs_variables.rdewex,
             )
             po.ovarre(
-                self.outfile, "External cryostat minor radius (m)", "(adewex)", adewex
+                self.outfile,
+                "External cryostat minor radius (m)",
+                "(adewex)",
+                adewex,
             )
             po.ovarre(
                 self.outfile,
@@ -2318,24 +2367,19 @@ class Stellarator:
             ptfnuc = 0.0
 
         else:
-
             # TF coil nuclear heating coefficients in region i (first element),
             # assuming shield material j (second element where present)
 
             fact = np.array([8.0, 8.0, 6.0, 4.0, 4.0])
-            coef = np.array(
-                [
-                    [10.3, 11.6, 7.08e5, 2.19e18, 3.33e-7],
-                    [8.32, 10.6, 7.16e5, 2.39e18, 3.84e-7],
-                ]
-            ).T
+            coef = np.array([
+                [10.3, 11.6, 7.08e5, 2.19e18, 3.33e-7],
+                [8.32, 10.6, 7.16e5, 2.39e18, 3.84e-7],
+            ]).T
 
-            decay = np.array(
-                [
-                    [10.05, 17.61, 13.82, 13.24, 14.31, 13.26, 13.25],
-                    [10.02, 3.33, 15.45, 14.47, 15.87, 15.25, 17.25],
-                ]
-            ).T
+            decay = np.array([
+                [10.05, 17.61, 13.82, 13.24, 14.31, 13.26, 13.25],
+                [10.02, 3.33, 15.45, 14.47, 15.87, 15.25, 17.25],
+            ]).T
 
             # N.B. The vacuum vessel appears to be ignored
 
@@ -2485,7 +2529,7 @@ class Stellarator:
         )  # t_cable = t_w
         if t_cable < 0:
             print(
-                "t_cable is negative. Check t_turn, tfcoil_variables.thwcndut and thicndut."
+                "t_cable is negative. Check t_turn, tfcoil_variables.thwcndut and thicndut.",
             )
         # [m^2] Cross-sectional area of cable space per turn
         tfcoil_variables.acstf = (
@@ -2573,7 +2617,11 @@ class Stellarator:
 
         # Find the intersection between LHS and RHS (or: how much awp do I need to get to the desired coil current)
         wp_width_r_min = self.intersect(
-            wp_width_r, lhs, wp_width_r, rhs, wp_width_r_min
+            wp_width_r,
+            lhs,
+            wp_width_r,
+            rhs,
+            wp_width_r_min,
         )
 
         # Maximum field at superconductor surface (T)
@@ -2609,8 +2657,8 @@ class Stellarator:
         tfcoil_variables.jwptf = (
             coilcurrent * 1.0e6 / awptf
         )  # [A/m^2] winding pack current density
-        tfcoil_variables.n_tf_turn = awptf / (
-            tfcoil_variables.t_turn_tf**2
+        tfcoil_variables.n_tf_turn = (
+            awptf / (tfcoil_variables.t_turn_tf**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
         tfcoil_variables.cpttf = (
             coilcurrent * 1.0e6 / tfcoil_variables.n_tf_turn
@@ -3010,7 +3058,6 @@ class Stellarator:
             * tfcoil_variables.bmaxtf
             / stellarator_configuration.stella_config_wp_bmax
         )
-        #
         max_lateral_force_density = (
             stellarator_configuration.stella_config_max_lateral_force_density
             * st.f_i
@@ -3142,7 +3189,7 @@ class Stellarator:
         return (acs / aturn) * np.sqrt(
             1
             / (0.5 * tau_quench + t_detect)
-            * (fcu**2 * fcond**2 * q_cu + fcu * fcond * (1 - fcond) * q_he)
+            * (fcu**2 * fcond**2 * q_cu + fcu * fcond * (1 - fcond) * q_he),
         )
 
     def jcrit_frommaterial(
@@ -3201,7 +3248,10 @@ class Stellarator:
             #  because jwp was never set in fortran (so 0)
 
             j_crit_cable, tmarg = superconductors.bi2212(
-                bmax, jstrand, thelium, fhts
+                bmax,
+                jstrand,
+                thelium,
+                fhts,
             )  # bi2212 outputs j_crit_cable
             j_crit_sc = j_crit_cable / (1 - fcu)
             tcrit = thelium + tmarg
@@ -3232,7 +3282,11 @@ class Stellarator:
             bc20m = bcritsc
             tc0m = tcritsc
             j_crit_sc, bcrit, tcrit = superconductors.itersc(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium,
+                bmax,
+                strain,
+                bc20m,
+                tc0m,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
@@ -3264,7 +3318,11 @@ class Stellarator:
             bc20m = b_crit_upper_nbti
             tc0m = t_crit_nbti
             j_crit_sc, bcrit, tcrit = superconductors.gl_nbti(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium,
+                bmax,
+                strain,
+                bc20m,
+                tc0m,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
@@ -3272,7 +3330,11 @@ class Stellarator:
             bc20m = 429
             tc0m = 185
             j_crit_sc, bcrit, tcrit = superconductors.gl_rebco(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium,
+                bmax,
+                strain,
+                bc20m,
+                tc0m,
             )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -3402,7 +3464,12 @@ class Stellarator:
         return x
 
     def stopt_output(
-        self, max_gyrotron_frequency, bt, bt_ecrh, ne0_max_ECRH, te0_ecrh_achievable
+        self,
+        max_gyrotron_frequency,
+        bt,
+        bt_ecrh,
+        ne0_max_ECRH,
+        te0_ecrh_achievable,
     ):
         po.oheadr(self.outfile, "ECRH Ignition at lower values. Information:")
 
@@ -3442,7 +3509,8 @@ class Stellarator:
         )
 
         powerht_local, pscalingmw_local = self.power_at_ignition_point(
-            max_gyrotron_frequency, te0_ecrh_achievable
+            max_gyrotron_frequency,
+            te0_ecrh_achievable,
         )
         po.ovarre(
             self.outfile,
@@ -3478,13 +3546,15 @@ class Stellarator:
         # Volume averaged physics_variables.te from te0_achievable
         physics_variables.te = te0_available / (1.0e0 + physics_variables.alphat)
         ne0_max, bt_ecrh_max = self.stdlim_ecrh(
-            gyro_frequency_max, physics_variables.bt
+            gyro_frequency_max,
+            physics_variables.bt,
         )
         # Now go to point where ECRH is still available
         # In density..
         dene_old = copy(physics_variables.dene)
         physics_variables.dene = min(
-            dene_old, ne0_max / (1.0e0 + physics_variables.alphan)
+            dene_old,
+            ne0_max / (1.0e0 + physics_variables.alphan),
         )
 
         # And B-field..
@@ -3493,11 +3563,12 @@ class Stellarator:
 
         self.stphys(False)
         self.stphys(
-            False
+            False,
         )  # The second call seems to be necessary for all values to "converge" (and is sufficient)
 
         powerht_out = max(
-            copy(physics_variables.powerht), 0.00001e0
+            copy(physics_variables.powerht),
+            0.00001e0,
         )  # the radiation module sometimes returns negative heating power
         pscalingmw_out = copy(physics_variables.pscalingmw)
 
@@ -3592,7 +3663,10 @@ class Stellarator:
         po.osubhd(self.outfile, "General Coil Parameters :")
 
         po.ovarre(
-            self.outfile, "Number of modular coils", "(n_tf)", tfcoil_variables.n_tf
+            self.outfile,
+            "Number of modular coils",
+            "(n_tf)",
+            tfcoil_variables.n_tf,
         )
         po.ovarre(self.outfile, "Av. coil major radius", "(coil_r)", r_coil_major)
         po.ovarre(self.outfile, "Av. coil minor radius", "(coil_a)", r_coil_minor)
@@ -3640,7 +3714,10 @@ class Stellarator:
             tfcoil_variables.tftort,
         )
         po.ovarre(
-            self.outfile, "Minimum coil distance (m)", "(toroidalgap)", toroidalgap
+            self.outfile,
+            "Minimum coil distance (m)",
+            "(toroidalgap)",
+            toroidalgap,
         )
         po.ovarre(
             self.outfile,
@@ -3703,10 +3780,16 @@ class Stellarator:
             tfcoil_variables.estotftgj,
         )
         po.ovarre(
-            self.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance
+            self.outfile,
+            "Inductance of TF Coils (H)",
+            "(inductance)",
+            inductance,
         )
         po.ovarre(
-            self.outfile, "Total mass of coils (kg)", "(whttf)", tfcoil_variables.whttf
+            self.outfile,
+            "Total mass of coils (kg)",
+            "(whttf)",
+            tfcoil_variables.whttf,
         )
 
         po.osubhd(self.outfile, "Coil Geometry :")
@@ -3850,7 +3933,10 @@ class Stellarator:
             t_turn_tf,
         )
         po.ovarre(
-            self.outfile, "Current per turn (A)", "(cpttf)", tfcoil_variables.cpttf
+            self.outfile,
+            "Current per turn (A)",
+            "(cpttf)",
+            tfcoil_variables.cpttf,
         )
         po.ovarre(self.outfile, "jop/jcrit", "(fiooic)", fiooic)
         po.ovarre(
@@ -4051,7 +4137,7 @@ class Stellarator:
             dlimit_ecrh = ne0_max
         else:
             logger.warning(
-                "It was used physics_variables.ipedestal = 1 in a stellarator routine. PROCESS will pretend it got parabolic profiles (physics_variables.ipedestal = 0)."
+                "It was used physics_variables.ipedestal = 1 in a stellarator routine. PROCESS will pretend it got parabolic profiles (physics_variables.ipedestal = 0).",
             )
             dlimit_ecrh = ne0_max
 
@@ -4077,7 +4163,7 @@ class Stellarator:
 
         #  Total field
         physics_variables.btot = np.sqrt(
-            physics_variables.bt**2 + physics_variables.bp**2
+            physics_variables.bt**2 + physics_variables.bp**2,
         )
 
         if (
@@ -4113,7 +4199,7 @@ class Stellarator:
             * constants.proton_mass
             * physics_variables.aion
             * physics_module.total_plasma_internal_energy
-            / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla)
+            / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla),
         ) / (
             constants.electron_charge
             * physics_variables.bt
@@ -4258,24 +4344,23 @@ class Stellarator:
                 * physics_variables.neutron_power_total
                 / physics_variables.sarea
             )
+        elif heat_transport_variables.ipowerflow == 0:
+            physics_variables.wallmw = (
+                (1.0e0 - fwbs_variables.fhole)
+                * physics_variables.neutron_power_total
+                / build_variables.fwarea
+            )
         else:
-            if heat_transport_variables.ipowerflow == 0:
-                physics_variables.wallmw = (
-                    (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.neutron_power_total
-                    / build_variables.fwarea
+            physics_variables.wallmw = (
+                (
+                    1.0e0
+                    - fwbs_variables.fhole
+                    - fwbs_variables.fhcd
+                    - fwbs_variables.fdiv
                 )
-            else:
-                physics_variables.wallmw = (
-                    (
-                        1.0e0
-                        - fwbs_variables.fhole
-                        - fwbs_variables.fhcd
-                        - fwbs_variables.fdiv
-                    )
-                    * physics_variables.neutron_power_total
-                    / build_variables.fwarea
-                )
+                * physics_variables.neutron_power_total
+                / build_variables.fwarea
+            )
 
         #  Calculate ion/electron equilibration power
 
@@ -4321,7 +4406,8 @@ class Stellarator:
             - physics_variables.pradpv * physics_variables.plasma_volume
         )
         powht = max(
-            0.00001e0, powht
+            0.00001e0,
+            powht,
         )  # To avoid negative heating power. This line is VERY important
 
         if physics_variables.ignite == 0:
@@ -4363,24 +4449,23 @@ class Stellarator:
                 * physics_variables.pradmw
                 / physics_variables.sarea
             )
+        elif heat_transport_variables.ipowerflow == 0:
+            physics_variables.photon_wall = (
+                (1.0e0 - fwbs_variables.fhole)
+                * physics_variables.pradmw
+                / build_variables.fwarea
+            )
         else:
-            if heat_transport_variables.ipowerflow == 0:
-                physics_variables.photon_wall = (
-                    (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.pradmw
-                    / build_variables.fwarea
+            physics_variables.photon_wall = (
+                (
+                    1.0e0
+                    - fwbs_variables.fhole
+                    - fwbs_variables.fhcd
+                    - fwbs_variables.fdiv
                 )
-            else:
-                physics_variables.photon_wall = (
-                    (
-                        1.0e0
-                        - fwbs_variables.fhole
-                        - fwbs_variables.fhcd
-                        - fwbs_variables.fdiv
-                    )
-                    * physics_variables.pradmw
-                    / build_variables.fwarea
-                )
+                * physics_variables.pradmw
+                / build_variables.fwarea
+            )
 
         constraint_variables.peakradwallload = (
             physics_variables.photon_wall * constraint_variables.peakfactrad
@@ -4614,10 +4699,16 @@ class Stellarator:
         )
 
         po.ovarre(
-            self.outfile, "r/a of maximum ne gradient (m)", "(rho_ne_max)", rho_ne_max
+            self.outfile,
+            "r/a of maximum ne gradient (m)",
+            "(rho_ne_max)",
+            rho_ne_max,
         )
         po.ovarre(
-            self.outfile, "r/a of maximum te gradient (m)", "(rho_te_max)", rho_te_max
+            self.outfile,
+            "r/a of maximum te gradient (m)",
+            "(rho_te_max)",
+            rho_te_max,
         )
         po.ovarre(
             self.outfile,
@@ -4646,13 +4737,22 @@ class Stellarator:
             nu_star_e,
         )
         po.ovarre(
-            self.outfile, "Normalized collisionality (D)", "(nu_star_D)", nu_star_D
+            self.outfile,
+            "Normalized collisionality (D)",
+            "(nu_star_D)",
+            nu_star_D,
         )
         po.ovarre(
-            self.outfile, "Normalized collisionality (T)", "(nu_star_T)", nu_star_T
+            self.outfile,
+            "Normalized collisionality (T)",
+            "(nu_star_T)",
+            nu_star_T,
         )
         po.ovarre(
-            self.outfile, "Normalized collisionality (He)", "(nu_star_He)", nu_star_He
+            self.outfile,
+            "Normalized collisionality (He)",
+            "(nu_star_He)",
+            nu_star_He,
         )
 
         po.ovarre(
@@ -4698,12 +4798,12 @@ class Stellarator:
 
         q_neo = sum(neoclassics_module.q_flux * 1e-6)
         gamma_neo = sum(
-            neoclassics_module.gamma_flux * neoclassics_module.temperatures * 1e-6
+            neoclassics_module.gamma_flux * neoclassics_module.temperatures * 1e-6,
         )
 
         total_q_neo = sum(
             neoclassics_module.q_flux * 1e-6
-            + neoclassics_module.gamma_flux * neoclassics_module.temperatures * 1e-6
+            + neoclassics_module.gamma_flux * neoclassics_module.temperatures * 1e-6,
         )
 
         total_q_neo_e = (
@@ -4925,7 +5025,7 @@ class Stellarator:
             abs(
                 current_drive_variables.pinjmw
                 + current_drive_variables.porbitlossmw
-                + physics_variables.pohmmw
+                + physics_variables.pohmmw,
             )
             < 1e-6
         ):
@@ -4982,7 +5082,10 @@ class Stellarator:
                     current_drive_variables.beam_current,
                 )
                 po.ovarre(
-                    self.outfile, "Fraction of beam energy to ions", "(fpion)", fpion
+                    self.outfile,
+                    "Fraction of beam energy to ions",
+                    "(fpion)",
+                    fpion,
                 )
                 po.ovarre(
                     self.outfile,
@@ -5043,87 +5146,83 @@ class Neoclassics:
             neoclassics_module.dr_densities,
             neoclassics_module.dr_temperatures,
         ) = self.init_profile_values_from_PROCESS(r_effin)
-        neoclassics_module.roots = np.array(
-            [
-                4.740718054080526184e-2,
-                2.499239167531593919e-1,
-                6.148334543927683749e-1,
-                1.143195825666101451,
-                1.836454554622572344,
-                2.696521874557216147,
-                3.725814507779509288,
-                4.927293765849881879,
-                6.304515590965073635,
-                7.861693293370260349,
-                9.603775985479263255,
-                1.153654659795613924e1,
-                1.366674469306423489e1,
-                1.600222118898106771e1,
-                1.855213484014315029e1,
-                2.132720432178312819e1,
-                2.434003576453269346e1,
-                2.760555479678096091e1,
-                3.114158670111123683e1,
-                3.496965200824907072e1,
-                3.911608494906788991e1,
-                4.361365290848483056e1,
-                4.850398616380419980e1,
-                5.384138540650750571e1,
-                5.969912185923549686e1,
-                6.618061779443848991e1,
-                7.344123859555988076e1,
-                8.173681050672767867e1,
-                9.155646652253683726e1,
-                1.041575244310588886e2,
-            ]
-        )
-        neoclassics_module.weights = np.array(
-            [
-                1.160440860204388913e-1,
-                2.208511247506771413e-1,
-                2.413998275878537214e-1,
-                1.946367684464170855e-1,
-                1.237284159668764899e-1,
-                6.367878036898660943e-2,
-                2.686047527337972682e-2,
-                9.338070881603925677e-3,
-                2.680696891336819664e-3,
-                6.351291219408556439e-4,
-                1.239074599068830081e-4,
-                1.982878843895233056e-5,
-                2.589350929131392509e-6,
-                2.740942840536013206e-7,
-                2.332831165025738197e-8,
-                1.580745574778327984e-9,
-                8.427479123056716393e-11,
-                3.485161234907855443e-12,
-                1.099018059753451500e-13,
-                2.588312664959080167e-15,
-                4.437838059840028968e-17,
-                5.365918308212045344e-19,
-                4.393946892291604451e-21,
-                2.311409794388543236e-23,
-                7.274588498292248063e-26,
-                1.239149701448267877e-28,
-                9.832375083105887477e-32,
-                2.842323553402700938e-35,
-                1.878608031749515392e-39,
-                8.745980440465011553e-45,
-            ]
-        )
+        neoclassics_module.roots = np.array([
+            4.740718054080526184e-2,
+            2.499239167531593919e-1,
+            6.148334543927683749e-1,
+            1.143195825666101451,
+            1.836454554622572344,
+            2.696521874557216147,
+            3.725814507779509288,
+            4.927293765849881879,
+            6.304515590965073635,
+            7.861693293370260349,
+            9.603775985479263255,
+            1.153654659795613924e1,
+            1.366674469306423489e1,
+            1.600222118898106771e1,
+            1.855213484014315029e1,
+            2.132720432178312819e1,
+            2.434003576453269346e1,
+            2.760555479678096091e1,
+            3.114158670111123683e1,
+            3.496965200824907072e1,
+            3.911608494906788991e1,
+            4.361365290848483056e1,
+            4.850398616380419980e1,
+            5.384138540650750571e1,
+            5.969912185923549686e1,
+            6.618061779443848991e1,
+            7.344123859555988076e1,
+            8.173681050672767867e1,
+            9.155646652253683726e1,
+            1.041575244310588886e2,
+        ])
+        neoclassics_module.weights = np.array([
+            1.160440860204388913e-1,
+            2.208511247506771413e-1,
+            2.413998275878537214e-1,
+            1.946367684464170855e-1,
+            1.237284159668764899e-1,
+            6.367878036898660943e-2,
+            2.686047527337972682e-2,
+            9.338070881603925677e-3,
+            2.680696891336819664e-3,
+            6.351291219408556439e-4,
+            1.239074599068830081e-4,
+            1.982878843895233056e-5,
+            2.589350929131392509e-6,
+            2.740942840536013206e-7,
+            2.332831165025738197e-8,
+            1.580745574778327984e-9,
+            8.427479123056716393e-11,
+            3.485161234907855443e-12,
+            1.099018059753451500e-13,
+            2.588312664959080167e-15,
+            4.437838059840028968e-17,
+            5.365918308212045344e-19,
+            4.393946892291604451e-21,
+            2.311409794388543236e-23,
+            7.274588498292248063e-26,
+            1.239149701448267877e-28,
+            9.832375083105887477e-32,
+            2.842323553402700938e-35,
+            1.878608031749515392e-39,
+            8.745980440465011553e-45,
+        ])
 
         neoclassics_module.kt = self.neoclassics_calc_KT()
         neoclassics_module.nu = self.neoclassics_calc_nu()
         neoclassics_module.nu_star = self.neoclassics_calc_nu_star()
         neoclassics_module.nu_star_averaged = self.neoclassics_calc_nu_star_fromT(
-            iotain
+            iotain,
         )
         neoclassics_module.vd = self.neoclassics_calc_vd()
 
         neoclassics_module.d11_plateau = self.neoclassics_calc_D11_plateau()
 
         neoclassics_module.d11_mono = self.neoclassics_calc_d11_mono(
-            eps_effin
+            eps_effin,
         )  # for using epseff
 
         neoclassics_module.d111 = self.calc_integrated_radial_transport_coeffs(index=1)
@@ -5261,14 +5360,12 @@ class Neoclassics:
 
     def neoclassics_calc_nu(self):
         """Calculates the collision frequency"""
-        mass = np.array(
-            [
-                constants.electron_mass,
-                constants.proton_mass * 2.0,
-                constants.proton_mass * 3.0,
-                constants.proton_mass * 4.0,
-            ]
-        )
+        mass = np.array([
+            constants.electron_mass,
+            constants.proton_mass * 2.0,
+            constants.proton_mass * 3.0,
+            constants.proton_mass * 4.0,
+        ])
         z = np.array([-1.0, 1.0, 1.0, 2.0]) * constants.electron_charge
 
         # transform the temperature back in eV
@@ -5313,7 +5410,8 @@ class Neoclassics:
                     phixmgx = (1.0 - 0.5 / xk) * erfn + expxk / np.sqrt(np.pi * xk)
                     v = np.sqrt(2.0 * x * neoclassics_module.temperatures[j] / mass[j])
                     neoclassics_calc_nu[j, i] = neoclassics_calc_nu[
-                        j, i
+                        j,
+                        i,
                     ] + neoclassics_module.densities[k] * (
                         z[j] * z[k]
                     ) ** 2 * lnlambda * phixmgx / (
@@ -5327,27 +5425,25 @@ class Neoclassics:
         k = np.repeat(neoclassics_module.roots[:, np.newaxis], 4, axis=1)
         kk = (k * neoclassics_module.temperatures).T
 
-        mass = np.array(
-            [
-                constants.electron_mass,
-                constants.proton_mass * 2.0,
-                constants.proton_mass * 3.0,
-                constants.proton_mass * 4.0,
-            ]
-        )
+        mass = np.array([
+            constants.electron_mass,
+            constants.proton_mass * 2.0,
+            constants.proton_mass * 3.0,
+            constants.proton_mass * 4.0,
+        ])
 
         v = np.empty((4, self.no_roots))
         v[0, :] = constants.speed_light * np.sqrt(
-            1.0 - (kk[0, :] / (mass[0] * constants.speed_light**2) + 1) ** (-1)
+            1.0 - (kk[0, :] / (mass[0] * constants.speed_light**2) + 1) ** (-1),
         )
         v[1, :] = constants.speed_light * np.sqrt(
-            1.0 - (kk[1, :] / (mass[1] * constants.speed_light**2) + 1) ** (-1)
+            1.0 - (kk[1, :] / (mass[1] * constants.speed_light**2) + 1) ** (-1),
         )
         v[2, :] = constants.speed_light * np.sqrt(
-            1.0 - (kk[2, :] / (mass[2] * constants.speed_light**2) + 1) ** (-1)
+            1.0 - (kk[2, :] / (mass[2] * constants.speed_light**2) + 1) ** (-1),
         )
         v[3, :] = constants.speed_light * np.sqrt(
-            1.0 - (kk[3, :] / (mass[3] * constants.speed_light**2) + 1) ** (-1)
+            1.0 - (kk[3, :] / (mass[3] * constants.speed_light**2) + 1) ** (-1),
         )
 
         return (
@@ -5359,33 +5455,27 @@ class Neoclassics:
     def neoclassics_calc_nu_star_fromT(self, iota):
         """Calculates the collision frequency"""
         temp = (
-            np.array(
-                [
-                    physics_variables.te,
-                    physics_variables.ti,
-                    physics_variables.ti,
-                    physics_variables.ti,
-                ]
-            )
+            np.array([
+                physics_variables.te,
+                physics_variables.ti,
+                physics_variables.ti,
+                physics_variables.ti,
+            ])
             * KEV
         )
-        density = np.array(
-            [
-                physics_variables.dene,
-                physics_variables.deni * physics_variables.f_deuterium,
-                physics_variables.deni * (1 - physics_variables.f_deuterium),
-                physics_variables.dnalp,
-            ]
-        )
+        density = np.array([
+            physics_variables.dene,
+            physics_variables.deni * physics_variables.f_deuterium,
+            physics_variables.deni * (1 - physics_variables.f_deuterium),
+            physics_variables.dnalp,
+        ])
 
-        mass = np.array(
-            [
-                constants.electron_mass,
-                constants.proton_mass * 2.0,
-                constants.proton_mass * 3.0,
-                constants.proton_mass * 4.0,
-            ]
-        )
+        mass = np.array([
+            constants.electron_mass,
+            constants.proton_mass * 2.0,
+            constants.proton_mass * 3.0,
+            constants.proton_mass * 4.0,
+        ])
         z = np.array([-1.0, 1.0, 1.0, 2.0]) * constants.electron_charge
 
         # transform the temperature back in eV
@@ -5484,35 +5574,33 @@ class Neoclassics:
 
     def neoclassics_calc_D11_plateau(self):
         """Calculates the plateau transport coefficients (D11_star sometimes)"""
-        mass = np.array(
-            [
-                constants.electron_mass,
-                constants.proton_mass * 2.0,
-                constants.proton_mass * 3.0,
-                constants.proton_mass * 4.0,
-            ]
-        )
+        mass = np.array([
+            constants.electron_mass,
+            constants.proton_mass * 2.0,
+            constants.proton_mass * 3.0,
+            constants.proton_mass * 4.0,
+        ])
 
         v = np.empty((4, self.no_roots))
         v[0, :] = constants.speed_light * np.sqrt(
             1.0
             - (neoclassics_module.kt[0, :] / (mass[0] * constants.speed_light**2) + 1)
-            ** (-1)
+            ** (-1),
         )
         v[1, :] = constants.speed_light * np.sqrt(
             1.0
             - (neoclassics_module.kt[1, :] / (mass[1] * constants.speed_light**2) + 1)
-            ** (-1)
+            ** (-1),
         )
         v[2, :] = constants.speed_light * np.sqrt(
             1.0
             - (neoclassics_module.kt[2, :] / (mass[2] * constants.speed_light**2) + 1)
-            ** (-1)
+            ** (-1),
         )
         v[3, :] = constants.speed_light * np.sqrt(
             1.0
             - (neoclassics_module.kt[3, :] / (mass[3] * constants.speed_light**2) + 1)
-            ** (-1)
+            ** (-1),
         )
 
         return (
@@ -5551,7 +5639,11 @@ class Neoclassics:
         )
 
     def neoclassics_calc_Gamma_flux(
-        self, densities, temperatures, dr_densities, dr_temperatures
+        self,
+        densities,
+        temperatures,
+        dr_densities,
+        dr_temperatures,
     ):
         """Calculates the Energy flux by neoclassical particle transport"""
 

@@ -1,7 +1,7 @@
 """
 Calculate radial and vertical coordinates for the geometry of the tf coils
 """
-from typing import List, Tuple
+
 from process.geometry.geometry_parameterisations import RectangleGeometry
 from process.geometry.utils import ellips_fill_vertices
 
@@ -18,7 +18,7 @@ def tfcoil_geometry_rectangular_shape(
     tfcth: float,
     *,
     offset_in: float = 0.0,
-) -> List[RectangleGeometry]:
+) -> list[RectangleGeometry]:
     """Calculates rectangular geometries for tf coils in a picture frame/rectangular shape parametrization
 
     :param x1: radial location of arc point 1
@@ -54,7 +54,7 @@ def tfcoil_geometry_rectangular_shape(
             anchor_z=y5 - tfcth,
             width=tfcth,
             height=(y1 - y5 + 2.0 * tfcth),
-        )
+        ),
     )
     # rectangle representing the outboard part of the tf coil
     return_rects.append(
@@ -63,19 +63,25 @@ def tfcoil_geometry_rectangular_shape(
             anchor_z=y4 - tfcth,
             width=tfcth,
             height=(y2 - y4 + 2.0 * tfcth),
-        )
+        ),
     )
     # rectangle representing the lower horizontal part of the tf coil
     return_rects.append(
         RectangleGeometry(
-            anchor_x=x5, anchor_z=y5 - tfcth + offset_in, width=x4 - x5, height=tfcth
-        )
+            anchor_x=x5,
+            anchor_z=y5 - tfcth + offset_in,
+            width=x4 - x5,
+            height=tfcth,
+        ),
     )
     # rectangle representing the upper horizontal part of the tf coil
     return_rects.append(
         RectangleGeometry(
-            anchor_x=x1, anchor_z=y1 - offset_in, width=(x2 - x1), height=tfcth
-        )
+            anchor_x=x1,
+            anchor_z=y1 - offset_in,
+            width=(x2 - x1),
+            height=tfcth,
+        ),
     )
 
     return return_rects
@@ -96,7 +102,7 @@ def tfcoil_geometry_d_shape(
     rtangle2: float,
     *,
     offset_in: float = 0.0,
-) -> Tuple[List[RectangleGeometry], List[List[Tuple[float, float]]]]:
+) -> tuple[list[RectangleGeometry], list[list[tuple[float, float]]]]:
     """Calculates radial and vertical distances for the geometry of the tf coils in a D-shape parametrization
 
     :param x1: radial location of arc point 1
@@ -201,8 +207,11 @@ def tfcoil_geometry_d_shape(
     # Vertical leg
     return_rects.append(
         RectangleGeometry(
-            anchor_x=x5 - tfcth, anchor_z=y5, width=tfcth + offset_in, height=(y1 - y5)
-        )
+            anchor_x=x5 - tfcth,
+            anchor_z=y5,
+            width=tfcth + offset_in,
+            height=(y1 - y5),
+        ),
     )
     return_verts = [verts1, verts2, verts3, verts4]
 

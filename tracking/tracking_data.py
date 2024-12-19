@@ -31,27 +31,27 @@ If the variable is not a fortran module variable, ensure to override its parent 
 e.g. FOO.bar says `bar`'s parent module is `FOO`.
 """
 
-import datetime
-import logging
-import pathlib
-import json
-import itertools
-import pandas as pd
-import inspect
 import argparse
+import datetime
+import inspect
+import itertools
+import json
+import logging
 import math
-from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, HoverTool, DatetimeTickFormatter
-from bokeh.layouts import gridplot
-from bokeh.models.widgets import Panel, Tabs
-from bokeh.palettes import Category10
-from bokeh.resources import CDN
-from bokeh.embed import file_html
+import pathlib
 
 import git
+import pandas as pd
+from bokeh.embed import file_html
+from bokeh.layouts import gridplot
+from bokeh.models import ColumnDataSource, DatetimeTickFormatter, HoverTool
+from bokeh.models.widgets import Panel, Tabs
+from bokeh.palettes import Category10
+from bokeh.plotting import figure
+from bokeh.resources import CDN
 
-from process.io import mfile as mf
 from process import fortran
+from process.io import mfile as mf
 
 logging.basicConfig(level=logging.INFO, filename="tracker.log")
 logger = logging.getLogger("PROCESS Tracker")
@@ -239,7 +239,7 @@ class ProcessTracker:
                     _, var = var.split(".")
                 except Exception:
                     logger.warning(
-                        f"{var} is a dotted variable and must be in the form OVERRIDINGNAME.VARIABLE"
+                        f"{var} is a dotted variable and must be in the form OVERRIDINGNAME.VARIABLE",
                     )
 
             # value of the variable extracted from the mfile
@@ -251,7 +251,7 @@ class ProcessTracker:
 
             if mfile_var_value.get_number_of_scans() > 1:
                 logger.info(
-                    f"Only scan 1 will be tracked, but {var} has {mfile_var_value.get_number_of_scans()} scans."
+                    f"Only scan 1 will be tracked, but {var} has {mfile_var_value.get_number_of_scans()} scans.",
                 )
 
             self.tracking_file.tracking[var] = mfile_var_value.get_scan(1)
@@ -266,7 +266,7 @@ class ProcessTracker:
 
 colour_map = {}
 colours = itertools.cycle(
-    Category10[10]
+    Category10[10],
 )  # hardcode at 10 meaning a maximum of 10 different line colours
 
 
@@ -355,7 +355,7 @@ class TrackedData:
         date_time = datetime.datetime.strptime(data_time_str, "%d/%m/%Y - %H:%M")
 
         tracking_data = json_file_data.get(
-            "tracking", []
+            "tracking", [],
         )  # the JSON data of one run of PROCESS in python datastructures
         for variable, value in tracking_data.items():
             # create a new TrackedVariable when we see a variable we do not know
@@ -363,7 +363,7 @@ class TrackedData:
                 self.tracked_variables[variable] = TrackedVariable(variable)
 
             self.tracked_variables.get(variable).add_datapoint(
-                title, value, message, hash_, date_time
+                title, value, message, hash_, date_time,
             )
 
     def _track(self):
@@ -371,10 +371,10 @@ class TrackedData:
         # open all files in the `database` folder
 
         for i in self.database.glob("*.json"):
-            with open(i, "r") as f:
+            with open(i) as f:
                 file_data = json.load(f)  # parsed contents of the JSON tracking file
                 self._add_variables(
-                    file_data
+                    file_data,
                 )  # add all the data in this JSON file to our internal store
 
 
@@ -409,14 +409,14 @@ def plot_tracking_data(database):
 
         # overrides trumps fortran scrapping
         parent = overrides.get(
-            variable
+            variable,
         ) or PythonFortranInterfaceVariables.parent_module(
-            variable
+            variable,
         )  # module name (or given name if overridden)
 
         if not parent:
             logger.warning(
-                f"Variable {variable} is not a module variable of any Fortran module, please provide the python class which this variable can be found under as CLASS.VARIABLE noting that VARIABLE must be a variable present in the output file and does not necessarily need to correspond to an actual class variable, VARIABLE, of CLASS"
+                f"Variable {variable} is not a module variable of any Fortran module, please provide the python class which this variable can be found under as CLASS.VARIABLE noting that VARIABLE must be a variable present in the output file and does not necessarily need to correspond to an actual class variable, VARIABLE, of CLASS",
             )
             continue
 
@@ -424,11 +424,11 @@ def plot_tracking_data(database):
             figures[parent] = []
 
         titles = list(
-            df["title"].to_numpy()
+            df["title"].to_numpy(),
         )  # all scenarios this variable is tracked in
 
         figur = figure(
-            title=variable, x_axis_type="datetime", plot_width=600, plot_height=600
+            title=variable, x_axis_type="datetime", plot_width=600, plot_height=600,
         )
         figur.xaxis.formatter = DatetimeTickFormatter(
             hours=["%d %B %Y"],
@@ -444,12 +444,12 @@ def plot_tracking_data(database):
                 df["title"] == t
             ]  # the variable history for each (applicable) run title
             subsource = ColumnDataSource(
-                run_title_dataframe
+                run_title_dataframe,
             )  # convert dataframe into Bokeh compatible
             colour = get_line_colour(t)
 
             figur.scatter(
-                x="date", y="value", source=subsource, legend_label=t, color=colour
+                x="date", y="value", source=subsource, legend_label=t, color=colour,
             )
 
             figur.line(

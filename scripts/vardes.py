@@ -1,11 +1,12 @@
-from pathlib import Path
-from typing import Any, List
-from enum import Enum
-import pickle
 import dataclasses
+import pickle
 from copy import copy
-import numpy as np
+from enum import Enum
+from pathlib import Path
+from typing import Any
+
 import jinja2
+import numpy as np
 
 from process import fortran
 
@@ -35,8 +36,8 @@ def get_variables_and_modules(ford_project: Path):
     with open(ford_project, "rb") as ford_pickle:
         ford_project = pickle.load(ford_pickle)
 
-    variables: List[FortranVariable] = []
-    modules: List[str] = []
+    variables: list[FortranVariable] = []
+    modules: list[str] = []
 
     for mod in ford_project.modules:
         for var in mod.variables:
@@ -55,13 +56,13 @@ def get_variables_and_modules(ford_project: Path):
                     var.vartype,
                     var.initial,
                     permission == "private",
-                )
+                ),
             )
 
     return variables, modules
 
 
-def get_input_output_variables(variables: List[FortranVariable]):
+def get_input_output_variables(variables: list[FortranVariable]):
     fortran_initial_values = {}
     for var in variables:
         if var.typ == VariableTypes.PARAMETER:
@@ -76,7 +77,7 @@ def get_input_output_variables(variables: List[FortranVariable]):
 
         try:
             fortran_initial_values[f"{var.module}.{var.name}"] = copy(
-                getattr(getattr(fortran, var.module), var.name)
+                getattr(getattr(fortran, var.module), var.name),
             )
         except AttributeError:
             continue
@@ -109,7 +110,7 @@ def get_input_output_variables(variables: List[FortranVariable]):
 
 if __name__ == "__main__":
     variables, modules = get_variables_and_modules(
-        Path(__file__).resolve().parent.parent / "build/ford_project.pickle"
+        Path(__file__).resolve().parent.parent / "build/ford_project.pickle",
     )
 
     variables = get_input_output_variables(variables)

@@ -1,4 +1,5 @@
 """Integration tests for plot_scans.py."""
+
 from process.io import plot_scans
 
 
@@ -13,7 +14,7 @@ def test_plot_scans(temp_data, scan_mfile_name):
     mfile = temp_data / scan_mfile_name
 
     plot_scans.main(
-        args=["-f", str(mfile), "-yv", "pnetelmw", "--outputdir", str(temp_data)]
+        args=["-f", str(mfile), "-yv", "pnetelmw", "--outputdir", str(temp_data)],
     )
 
     assert len(list(temp_data.glob("*.pdf")))
@@ -38,7 +39,7 @@ def test_plot_scans_stack(temp_data, scan_mfile_name):
             "-stc",
             "--outputdir",
             str(temp_data),
-        ]
+        ],
     )
 
     assert len(list(temp_data.glob("*.pdf")))
@@ -63,7 +64,7 @@ def test_plot_scans_2D_contour(temp_data, scan_2D_mfile_name):
             "-2DC",
             "--outputdir",
             str(temp_data),
-        ]
+        ],
     )
 
     assert len(list(temp_data.glob("*.pdf")))

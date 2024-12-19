@@ -1,6 +1,5 @@
-from typing import Optional
-from pathlib import Path
 import json
+from pathlib import Path
 
 from process.fortran import stellarator_configuration
 
@@ -209,7 +208,7 @@ W7X50 = dict(
 )
 
 
-def load_stellarator_config(istell: int, config_file: Optional[Path]):
+def load_stellarator_config(istell: int, config_file: Path | None):
     """Load the appropriate Stellarator machine configuration
     given the `istell` switch:
 

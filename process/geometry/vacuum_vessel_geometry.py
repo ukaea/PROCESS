@@ -1,10 +1,11 @@
 """
 Calculate radial and vertical coordinates for the geometry of the vacuum vessel
 """
-from typing import Tuple
+
 import numpy as np
-from process.geometry.utils import dh_vertices
+
 from process.geometry.geometry_parameterisations import ArbitraryGeometry
+from process.geometry.utils import dh_vertices
 
 
 def vacuum_vessel_geometry_single_null(
@@ -44,14 +45,20 @@ def vacuum_vessel_geometry_single_null(
     # Upper vacuum vessel
     kapx = cumulative_upper["d_vv_top"] / rminx_outer
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
-        radx_outer, rminx_outer, triang, kapx
+        radx_outer,
+        rminx_outer,
+        triang,
+        kapx,
     )
 
     kapx = (
         float(cumulative_upper["d_vv_top"]) - float(upper["d_vv_top"])
     ) / rminx_inner
     rs_upper_inboard, zs_upper_inboard = dh_vertices(
-        radx_inner, rminx_inner, triang, kapx
+        radx_inner,
+        rminx_inner,
+        triang,
+        kapx,
     )
 
     # Lower vacuum vessel
@@ -70,22 +77,18 @@ def vacuum_vessel_geometry_single_null(
         triang=triang,
     )
 
-    rs = np.concatenate(
-        [
-            rs_lower_inboard,
-            rs_lower_outboard[::-1],
-            rs_upper_outboard,
-            rs_upper_inboard[::-1],
-        ]
-    )
-    zs = np.concatenate(
-        [
-            zs_lower_inboard,
-            zs_lower_outboard[::-1],
-            zs_upper_outboard,
-            zs_upper_inboard[::-1],
-        ]
-    )
+    rs = np.concatenate([
+        rs_lower_inboard,
+        rs_lower_outboard[::-1],
+        rs_upper_outboard,
+        rs_upper_inboard[::-1],
+    ])
+    zs = np.concatenate([
+        zs_lower_inboard,
+        zs_lower_outboard[::-1],
+        zs_upper_outboard,
+        zs_upper_inboard[::-1],
+    ])
     return ArbitraryGeometry(
         rs=rs,
         zs=zs,
@@ -100,7 +103,7 @@ def vacuum_vessel_geometry_lower(
     rminx_outer: float,
     radx_inner: float,
     rminx_inner: float,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of vacuum vessel below the midplane
 
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
@@ -122,14 +125,20 @@ def vacuum_vessel_geometry_lower(
     """
     kapx = cumulative_lower["d_vv_bot"] / rminx_outer
     rs_lower_outboard, zs_lower_outboard = dh_vertices(
-        radx_outer, rminx_outer, triang, kapx
+        radx_outer,
+        rminx_outer,
+        triang,
+        kapx,
     )
 
     kapx = (
         float(cumulative_lower["d_vv_bot"]) + float(lower["d_vv_bot"])
     ) / rminx_inner
     rs_lower_inboard, zs_lower_inboard = dh_vertices(
-        radx_inner, rminx_inner, triang, kapx
+        radx_inner,
+        rminx_inner,
+        triang,
+        kapx,
     )
 
     return rs_lower_outboard, zs_lower_outboard, rs_lower_inboard, zs_lower_inboard

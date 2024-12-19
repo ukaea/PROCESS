@@ -1,11 +1,16 @@
 """Integration tests for uncertainties/evaluate.py."""
-from process.uncertainties import evaluate_uncertainties
-from shutil import move
+
 import json
-from process.uncertainties import morris_plotting
-from process.uncertainties import sobol_plotting
-from process.uncertainties import hdf_to_scatter_plot
+from shutil import move
+
 import pytest
+
+from process.uncertainties import (
+    evaluate_uncertainties,
+    hdf_to_scatter_plot,
+    morris_plotting,
+    sobol_plotting,
+)
 
 # Uncertainties tests currently take too long for a 1h CI job
 pytest.skip(
@@ -32,10 +37,10 @@ def test_evaluate_uncertainties_monte_carlo(temp_data):
     with open(new_config_path) as config_file:
         config_obj = json.load(config_file)
         config_obj["config"]["IN.DAT_path"] = str(
-            temp_data / config_obj["config"]["IN.DAT_path"]
+            temp_data / config_obj["config"]["IN.DAT_path"],
         )
         config_obj["config"]["working_directory"] = str(
-            temp_data / config_obj["config"]["working_directory"]
+            temp_data / config_obj["config"]["working_directory"],
         )
 
     with open(new_config_path, "w") as config_file:
@@ -44,7 +49,7 @@ def test_evaluate_uncertainties_monte_carlo(temp_data):
     # Run with custom config file path (custom input file path in config file)
     config_path_str = str(new_config_path)
     evaluate_uncertainties.main(
-        args=["--configfile", config_path_str, "--method", "monte_carlo"]
+        args=["--configfile", config_path_str, "--method", "monte_carlo"],
     )
 
     # assert uncertainties_data.h5 file has been created
@@ -70,10 +75,10 @@ def test_evaluate_uncertainties_monte_carlo_non_optimised(temp_data):
     with open(new_config_path) as config_file:
         config_obj = json.load(config_file)
         config_obj["config"]["IN.DAT_path"] = str(
-            temp_data / config_obj["config"]["IN.DAT_path"]
+            temp_data / config_obj["config"]["IN.DAT_path"],
         )
         config_obj["config"]["working_directory"] = str(
-            temp_data / config_obj["config"]["working_directory"]
+            temp_data / config_obj["config"]["working_directory"],
         )
 
     with open(new_config_path, "w") as config_file:
@@ -82,7 +87,7 @@ def test_evaluate_uncertainties_monte_carlo_non_optimised(temp_data):
     # Run with custom config file path (custom input file path in config file)
     config_path_str = str(new_config_path)
     evaluate_uncertainties.main(
-        args=["--configfile", config_path_str, "--method", "monte_carlo"]
+        args=["--configfile", config_path_str, "--method", "monte_carlo"],
     )
 
     # assert uncertainties_data.h5 file has been created
@@ -107,10 +112,10 @@ def test_evaluate_uncertainties_morris_method(temp_data):
     with open(new_config_path) as config_file:
         config_obj = json.load(config_file)
         config_obj["config"]["IN.DAT_path"] = str(
-            temp_data / config_obj["config"]["IN.DAT_path"]
+            temp_data / config_obj["config"]["IN.DAT_path"],
         )
         config_obj["config"]["working_directory"] = str(
-            temp_data / config_obj["config"]["working_directory"]
+            temp_data / config_obj["config"]["working_directory"],
         )
 
     with open(new_config_path, "w") as config_file:
@@ -119,7 +124,7 @@ def test_evaluate_uncertainties_morris_method(temp_data):
     # Run with custom config file path (custom input file path in config file)
     config_path_str = str(new_config_path)
     evaluate_uncertainties.main(
-        args=["--configfile", config_path_str, "--method", "morris_method"]
+        args=["--configfile", config_path_str, "--method", "morris_method"],
     )
 
     # assert morris_method.txt file has been created
@@ -144,10 +149,10 @@ def test_evaluate_uncertainties_sobol_method(temp_data):
     with open(new_config_path) as config_file:
         config_obj = json.load(config_file)
         config_obj["config"]["IN.DAT_path"] = str(
-            temp_data / config_obj["config"]["IN.DAT_path"]
+            temp_data / config_obj["config"]["IN.DAT_path"],
         )
         config_obj["config"]["working_directory"] = str(
-            temp_data / config_obj["config"]["working_directory"]
+            temp_data / config_obj["config"]["working_directory"],
         )
 
     with open(new_config_path, "w") as config_file:
@@ -156,7 +161,7 @@ def test_evaluate_uncertainties_sobol_method(temp_data):
     # Run with custom config file path (custom input file path in config file)
     config_path_str = str(new_config_path)
     evaluate_uncertainties.main(
-        args=["--configfile", config_path_str, "--method", "sobol_method"]
+        args=["--configfile", config_path_str, "--method", "sobol_method"],
     )
 
     # assert sobol.txt file has been created

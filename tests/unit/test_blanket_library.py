@@ -1,18 +1,19 @@
-import pytest
+from typing import Any, NamedTuple
+
 import numpy
-from typing import NamedTuple, Any
+import pytest
 
 from process.blanket_library import BlanketLibrary
-from process.fw import Fw
 from process.fortran import (
-    fwbs_variables,
-    build_variables,
-    physics_variables,
-    divertor_variables,
     blanket_library,
-    pfcoil_variables,
+    build_variables,
     buildings_variables,
+    divertor_variables,
+    fwbs_variables,
+    pfcoil_variables,
+    physics_variables,
 )
+from process.fw import Fw
 
 
 @pytest.fixture
@@ -141,7 +142,9 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
     ),
 )
 def test_primary_coolant_properties(
-    primarycoolantpropertiesparam, monkeypatch, blanket_library_fixture
+    primarycoolantpropertiesparam,
+    monkeypatch,
+    blanket_library_fixture,
 ):
     """
     Automatically generated Regression Unit Test for primary_coolant_properties.
@@ -162,19 +165,27 @@ def test_primary_coolant_properties(
     # )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwinlet", primarycoolantpropertiesparam.fwinlet
+        fwbs_variables,
+        "fwinlet",
+        primarycoolantpropertiesparam.fwinlet,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwoutlet", primarycoolantpropertiesparam.fwoutlet
+        fwbs_variables,
+        "fwoutlet",
+        primarycoolantpropertiesparam.fwoutlet,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwpressure", primarycoolantpropertiesparam.fwpressure
+        fwbs_variables,
+        "fwpressure",
+        primarycoolantpropertiesparam.fwpressure,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "rhof_fw", primarycoolantpropertiesparam.rhof_fw
+        fwbs_variables,
+        "rhof_fw",
+        primarycoolantpropertiesparam.rhof_fw,
     )
 
     monkeypatch.setattr(fwbs_variables, "cp_fw", primarycoolantpropertiesparam.cp_fw)
@@ -184,27 +195,39 @@ def test_primary_coolant_properties(
     monkeypatch.setattr(fwbs_variables, "coolwh", primarycoolantpropertiesparam.coolwh)
 
     monkeypatch.setattr(
-        fwbs_variables, "inlet_temp", primarycoolantpropertiesparam.inlet_temp
+        fwbs_variables,
+        "inlet_temp",
+        primarycoolantpropertiesparam.inlet_temp,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "outlet_temp", primarycoolantpropertiesparam.outlet_temp
+        fwbs_variables,
+        "outlet_temp",
+        primarycoolantpropertiesparam.outlet_temp,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "blpressure", primarycoolantpropertiesparam.blpressure
+        fwbs_variables,
+        "blpressure",
+        primarycoolantpropertiesparam.blpressure,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "rhof_bl", primarycoolantpropertiesparam.rhof_bl
+        fwbs_variables,
+        "rhof_bl",
+        primarycoolantpropertiesparam.rhof_bl,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "icooldual", primarycoolantpropertiesparam.icooldual
+        fwbs_variables,
+        "icooldual",
+        primarycoolantpropertiesparam.icooldual,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "visc_bl", primarycoolantpropertiesparam.visc_bl
+        fwbs_variables,
+        "visc_bl",
+        primarycoolantpropertiesparam.visc_bl,
     )
 
     monkeypatch.setattr(fwbs_variables, "cp_bl", primarycoolantpropertiesparam.cp_bl)
@@ -212,7 +235,9 @@ def test_primary_coolant_properties(
     monkeypatch.setattr(fwbs_variables, "cv_bl", primarycoolantpropertiesparam.cv_bl)
 
     monkeypatch.setattr(
-        fwbs_variables, "visc_fw", primarycoolantpropertiesparam.visc_fw
+        fwbs_variables,
+        "visc_fw",
+        primarycoolantpropertiesparam.visc_fw,
     )
 
     monkeypatch.setattr(fwbs_variables, "ipump", primarycoolantpropertiesparam.ipump)
@@ -220,35 +245,43 @@ def test_primary_coolant_properties(
     blanket_library_fixture.primary_coolant_properties(output=False)
 
     assert fwbs_variables.rhof_fw == pytest.approx(
-        primarycoolantpropertiesparam.expected_rhof_fw, rel=1e-4
+        primarycoolantpropertiesparam.expected_rhof_fw,
+        rel=1e-4,
     )
 
     assert fwbs_variables.cp_fw == pytest.approx(
-        primarycoolantpropertiesparam.expected_cp_fw, rel=1e-4
+        primarycoolantpropertiesparam.expected_cp_fw,
+        rel=1e-4,
     )
 
     assert fwbs_variables.cv_fw == pytest.approx(
-        primarycoolantpropertiesparam.expected_cv_fw, rel=1e-4
+        primarycoolantpropertiesparam.expected_cv_fw,
+        rel=1e-4,
     )
 
     assert fwbs_variables.rhof_bl == pytest.approx(
-        primarycoolantpropertiesparam.expected_rhof_bl, rel=1e-4
+        primarycoolantpropertiesparam.expected_rhof_bl,
+        rel=1e-4,
     )
 
     assert fwbs_variables.visc_bl == pytest.approx(
-        primarycoolantpropertiesparam.expected_visc_bl, rel=1e-4
+        primarycoolantpropertiesparam.expected_visc_bl,
+        rel=1e-4,
     )
 
     assert fwbs_variables.cp_bl == pytest.approx(
-        primarycoolantpropertiesparam.expected_cp_bl, rel=1e-4
+        primarycoolantpropertiesparam.expected_cp_bl,
+        rel=1e-4,
     )
 
     assert fwbs_variables.cv_bl == pytest.approx(
-        primarycoolantpropertiesparam.expected_cv_bl, rel=1e-4
+        primarycoolantpropertiesparam.expected_cv_bl,
+        rel=1e-4,
     )
 
     assert fwbs_variables.visc_fw == pytest.approx(
-        primarycoolantpropertiesparam.expected_visc_fw, rel=1e-4
+        primarycoolantpropertiesparam.expected_visc_fw,
+        rel=1e-4,
     )
 
 
@@ -277,7 +310,8 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
 
 
 def test_deltap_tot_outboard_blanket_breeder_liquid(
-    monkeypatch, blanket_library_fixture
+    monkeypatch,
+    blanket_library_fixture,
 ):
     monkeypatch.setattr(fwbs_variables, "afw", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
@@ -398,7 +432,9 @@ class ComponentHalfHeightParam(NamedTuple):
     ),
 )
 def test_component_half_height(
-    componenthalfheightparam, monkeypatch, blanket_library_fixture
+    componenthalfheightparam,
+    monkeypatch,
+    blanket_library_fixture,
 ):
     """
     Automatically generated Regression Unit Test for component_half_height.
@@ -436,7 +472,7 @@ def test_component_half_height(
     monkeypatch.setattr(divertor_variables, "divfix", componenthalfheightparam.divfix)
 
     half_height = blanket_library_fixture.component_half_height(
-        componenthalfheightparam.icomponent
+        componenthalfheightparam.icomponent,
     )
 
     assert half_height == pytest.approx(componenthalfheightparam.expected_half_height)
@@ -711,19 +747,19 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     blanket_library_fixture.dshaped_component(dshapedcomponentparam.icomponent)
 
     assert build_variables.blareaib == pytest.approx(
-        dshapedcomponentparam.expected_blareaib
+        dshapedcomponentparam.expected_blareaib,
     )
     assert build_variables.blareaob == pytest.approx(
-        dshapedcomponentparam.expected_blareaob
+        dshapedcomponentparam.expected_blareaob,
     )
     assert build_variables.blarea == pytest.approx(
-        dshapedcomponentparam.expected_blarea
+        dshapedcomponentparam.expected_blarea,
     )
     assert fwbs_variables.volblkto == pytest.approx(
-        dshapedcomponentparam.expected_volblkto
+        dshapedcomponentparam.expected_volblkto,
     )
     assert fwbs_variables.volblkt == pytest.approx(
-        dshapedcomponentparam.expected_volblkt
+        dshapedcomponentparam.expected_volblkt,
     )
 
 
@@ -942,7 +978,9 @@ class EllipticalComponentParam(NamedTuple):
     ),
 )
 def test_elliptical_component(
-    ellipticalcomponentparam, monkeypatch, blanket_library_fixture
+    ellipticalcomponentparam,
+    monkeypatch,
+    blanket_library_fixture,
 ):
     """
     Automatically generated Regression Unit Test for elliptical_component.
@@ -992,49 +1030,49 @@ def test_elliptical_component(
     blanket_library_fixture.elliptical_component(ellipticalcomponentparam.icomponent)
 
     assert build_variables.blareaib == pytest.approx(
-        ellipticalcomponentparam.expected_blareaib
+        ellipticalcomponentparam.expected_blareaib,
     )
     assert build_variables.blareaob == pytest.approx(
-        ellipticalcomponentparam.expected_blareaob
+        ellipticalcomponentparam.expected_blareaob,
     )
     assert build_variables.blarea == pytest.approx(
-        ellipticalcomponentparam.expected_blarea
+        ellipticalcomponentparam.expected_blarea,
     )
     assert build_variables.shareaib == pytest.approx(
-        ellipticalcomponentparam.expected_shareaib
+        ellipticalcomponentparam.expected_shareaib,
     )
     assert build_variables.shareaob == pytest.approx(
-        ellipticalcomponentparam.expected_shareaob
+        ellipticalcomponentparam.expected_shareaob,
     )
     assert build_variables.sharea == pytest.approx(
-        ellipticalcomponentparam.expected_sharea
+        ellipticalcomponentparam.expected_sharea,
     )
     assert fwbs_variables.volblkti == pytest.approx(
-        ellipticalcomponentparam.expected_volblkti
+        ellipticalcomponentparam.expected_volblkti,
     )
     assert fwbs_variables.volblkto == pytest.approx(
-        ellipticalcomponentparam.expected_volblkto
+        ellipticalcomponentparam.expected_volblkto,
     )
     assert fwbs_variables.volblkt == pytest.approx(
-        ellipticalcomponentparam.expected_volblkt
+        ellipticalcomponentparam.expected_volblkt,
     )
     assert fwbs_variables.volshld == pytest.approx(
-        ellipticalcomponentparam.expected_volshld
+        ellipticalcomponentparam.expected_volshld,
     )
     assert fwbs_variables.vdewin == pytest.approx(
-        ellipticalcomponentparam.expected_vdewin
+        ellipticalcomponentparam.expected_vdewin,
     )
     assert blanket_library.volshldi == pytest.approx(
-        ellipticalcomponentparam.expected_volshldi
+        ellipticalcomponentparam.expected_volshldi,
     )
     assert blanket_library.volshldo == pytest.approx(
-        ellipticalcomponentparam.expected_volshldo
+        ellipticalcomponentparam.expected_volshldo,
     )
     assert blanket_library.volvvi == pytest.approx(
-        ellipticalcomponentparam.expected_volvvi
+        ellipticalcomponentparam.expected_volvvi,
     )
     assert blanket_library.volvvo == pytest.approx(
-        ellipticalcomponentparam.expected_volvvo
+        ellipticalcomponentparam.expected_volvvo,
     )
 
 
@@ -1105,7 +1143,9 @@ class ApplyCoverageFactorsParam(NamedTuple):
     ),
 )
 def test_apply_coverage_factors(
-    applycoveragefactorsparam, monkeypatch, blanket_library_fixture
+    applycoveragefactorsparam,
+    monkeypatch,
+    blanket_library_fixture,
 ):
     """
     Automatically generated Regression Unit Test for apply_coverage_factors.
@@ -1141,31 +1181,31 @@ def test_apply_coverage_factors(
     blanket_library_fixture.apply_coverage_factors()
 
     assert build_variables.blareaob == pytest.approx(
-        applycoveragefactorsparam.expected_blareaob
+        applycoveragefactorsparam.expected_blareaob,
     )
     assert build_variables.blarea == pytest.approx(
-        applycoveragefactorsparam.expected_blarea
+        applycoveragefactorsparam.expected_blarea,
     )
     assert build_variables.shareaob == pytest.approx(
-        applycoveragefactorsparam.expected_shareaob
+        applycoveragefactorsparam.expected_shareaob,
     )
     assert build_variables.sharea == pytest.approx(
-        applycoveragefactorsparam.expected_sharea
+        applycoveragefactorsparam.expected_sharea,
     )
     assert fwbs_variables.volblkto == pytest.approx(
-        applycoveragefactorsparam.expected_volblkto
+        applycoveragefactorsparam.expected_volblkto,
     )
     assert fwbs_variables.volblkt == pytest.approx(
-        applycoveragefactorsparam.expected_volblkt
+        applycoveragefactorsparam.expected_volblkt,
     )
     assert fwbs_variables.volshld == pytest.approx(
-        applycoveragefactorsparam.expected_volshld
+        applycoveragefactorsparam.expected_volshld,
     )
     assert fwbs_variables.vdewin == pytest.approx(
-        applycoveragefactorsparam.expected_vdewin
+        applycoveragefactorsparam.expected_vdewin,
     )
     assert blanket_library.volshldo == pytest.approx(
-        applycoveragefactorsparam.expected_volshldo
+        applycoveragefactorsparam.expected_volshldo,
     )
 
 
@@ -1284,7 +1324,9 @@ class ExternalCryoGeometryParam(NamedTuple):
     ),
 )
 def test_external_cryo_geometry(
-    externalcryogeometryparam, monkeypatch, blanket_library_fixture
+    externalcryogeometryparam,
+    monkeypatch,
+    blanket_library_fixture,
 ):
     """
     Automatically generated Regression Unit Test for external_cryo_geometry.
@@ -1303,7 +1345,9 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(build_variables, "ddwex", externalcryogeometryparam.ddwex)
     monkeypatch.setattr(fwbs_variables, "rdewex", externalcryogeometryparam.rdewex)
     monkeypatch.setattr(
-        fwbs_variables, "rpf2dewar", externalcryogeometryparam.rpf2dewar
+        fwbs_variables,
+        "rpf2dewar",
+        externalcryogeometryparam.rpf2dewar,
     )
     monkeypatch.setattr(fwbs_variables, "zdewex", externalcryogeometryparam.zdewex)
     monkeypatch.setattr(fwbs_variables, "vdewex", externalcryogeometryparam.vdewex)
@@ -1319,25 +1363,25 @@ def test_external_cryo_geometry(
     blanket_library_fixture.external_cryo_geometry()
 
     assert fwbs_variables.rdewex == pytest.approx(
-        externalcryogeometryparam.expected_rdewex
+        externalcryogeometryparam.expected_rdewex,
     )
     assert fwbs_variables.zdewex == pytest.approx(
-        externalcryogeometryparam.expected_zdewex
+        externalcryogeometryparam.expected_zdewex,
     )
     assert fwbs_variables.vdewex == pytest.approx(
-        externalcryogeometryparam.expected_vdewex
+        externalcryogeometryparam.expected_vdewex,
     )
     assert fwbs_variables.vvmass == pytest.approx(
-        externalcryogeometryparam.expected_vvmass
+        externalcryogeometryparam.expected_vvmass,
     )
     assert fwbs_variables.dewmkg == pytest.approx(
-        externalcryogeometryparam.expected_dewmkg
+        externalcryogeometryparam.expected_dewmkg,
     )
     assert buildings_variables.clh1 == pytest.approx(
-        externalcryogeometryparam.expected_clh1
+        externalcryogeometryparam.expected_clh1,
     )
     assert blanket_library.hcryopf == pytest.approx(
-        externalcryogeometryparam.expected_hcryopf
+        externalcryogeometryparam.expected_hcryopf,
     )
 
 
@@ -1421,11 +1465,15 @@ def test_blanket_mod_pol_height(
     monkeypatch.setattr(build_variables, "scraplo", blanketmodpolheightparam.scraplo)
     monkeypatch.setattr(fwbs_variables, "fwbsshape", blanketmodpolheightparam.fwbsshape)
     monkeypatch.setattr(
-        fwbs_variables, "nblktmodpi", blanketmodpolheightparam.nblktmodpi
+        fwbs_variables,
+        "nblktmodpi",
+        blanketmodpolheightparam.nblktmodpi,
     )
     monkeypatch.setattr(fwbs_variables, "fdiv", blanketmodpolheightparam.fdiv)
     monkeypatch.setattr(
-        fwbs_variables, "nblktmodpo", blanketmodpolheightparam.nblktmodpo
+        fwbs_variables,
+        "nblktmodpo",
+        blanketmodpolheightparam.nblktmodpo,
     )
     monkeypatch.setattr(physics_variables, "itart", blanketmodpolheightparam.itart)
     monkeypatch.setattr(physics_variables, "rminor", blanketmodpolheightparam.rminor)
@@ -1439,10 +1487,10 @@ def test_blanket_mod_pol_height(
     blanket_library_fixture.blanket_mod_pol_height()
 
     assert blanket_library.bllengi == pytest.approx(
-        blanketmodpolheightparam.expected_bllengi
+        blanketmodpolheightparam.expected_bllengi,
     )
     assert blanket_library.bllengo == pytest.approx(
-        blanketmodpolheightparam.expected_bllengo
+        blanketmodpolheightparam.expected_bllengo,
     )
 
 
@@ -1492,10 +1540,12 @@ class LiquidBreederPropertiesParam(NamedTuple):
             electrical_conductivity_liq=0,
             i_bb_liq=0,
             hartmann_liq=numpy.array(
-                numpy.array((0, 0), order="F"), order="F"
+                numpy.array((0, 0), order="F"),
+                order="F",
             ).transpose(),
             b_mag_blkt=numpy.array(
-                numpy.array((5, 5), order="F"), order="F"
+                numpy.array((5, 5), order="F"),
+                order="F",
             ).transpose(),
             iblnkith=1,
             icooldual=0,
@@ -1533,10 +1583,12 @@ class LiquidBreederPropertiesParam(NamedTuple):
             electrical_conductivity_liq=0,
             i_bb_liq=1,
             hartmann_liq=numpy.array(
-                numpy.array((0, 0), order="F"), order="F"
+                numpy.array((0, 0), order="F"),
+                order="F",
             ).transpose(),
             b_mag_blkt=numpy.array(
-                numpy.array((5, 5), order="F"), order="F"
+                numpy.array((5, 5), order="F"),
+                order="F",
             ).transpose(),
             iblnkith=1,
             icooldual=0,
@@ -1563,7 +1615,9 @@ class LiquidBreederPropertiesParam(NamedTuple):
     ),
 )
 def test_liquid_breeder_properties(
-    liquidbreederpropertiesparam, monkeypatch, blanket_library_fixture
+    liquidbreederpropertiesparam,
+    monkeypatch,
+    blanket_library_fixture,
 ):
     """
     Automatically generated Regression Unit Test for liquid_breeder_properties.
@@ -1577,16 +1631,24 @@ def test_liquid_breeder_properties(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        fwbs_variables, "inlet_temp_liq", liquidbreederpropertiesparam.inlet_temp_liq
+        fwbs_variables,
+        "inlet_temp_liq",
+        liquidbreederpropertiesparam.inlet_temp_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "outlet_temp_liq", liquidbreederpropertiesparam.outlet_temp_liq
+        fwbs_variables,
+        "outlet_temp_liq",
+        liquidbreederpropertiesparam.outlet_temp_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "a_bz_liq", liquidbreederpropertiesparam.a_bz_liq
+        fwbs_variables,
+        "a_bz_liq",
+        liquidbreederpropertiesparam.a_bz_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "b_bz_liq", liquidbreederpropertiesparam.b_bz_liq
+        fwbs_variables,
+        "b_bz_liq",
+        liquidbreederpropertiesparam.b_bz_liq,
     )
     monkeypatch.setattr(fwbs_variables, "den_liq", liquidbreederpropertiesparam.den_liq)
     monkeypatch.setattr(
@@ -1610,56 +1672,74 @@ def test_liquid_breeder_properties(
         liquidbreederpropertiesparam.electrical_conductivity_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "i_bb_liq", liquidbreederpropertiesparam.i_bb_liq
+        fwbs_variables,
+        "i_bb_liq",
+        liquidbreederpropertiesparam.i_bb_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "hartmann_liq", liquidbreederpropertiesparam.hartmann_liq
+        fwbs_variables,
+        "hartmann_liq",
+        liquidbreederpropertiesparam.hartmann_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "b_mag_blkt", liquidbreederpropertiesparam.b_mag_blkt
+        fwbs_variables,
+        "b_mag_blkt",
+        liquidbreederpropertiesparam.b_mag_blkt,
     )
     monkeypatch.setattr(
-        fwbs_variables, "iblnkith", liquidbreederpropertiesparam.iblnkith
+        fwbs_variables,
+        "iblnkith",
+        liquidbreederpropertiesparam.iblnkith,
     )
     monkeypatch.setattr(
-        fwbs_variables, "icooldual", liquidbreederpropertiesparam.icooldual
+        fwbs_variables,
+        "icooldual",
+        liquidbreederpropertiesparam.icooldual,
     )
     monkeypatch.setattr(physics_variables, "bt", liquidbreederpropertiesparam.bt)
     monkeypatch.setattr(
-        physics_variables, "aspect", liquidbreederpropertiesparam.aspect
+        physics_variables,
+        "aspect",
+        liquidbreederpropertiesparam.aspect,
     )
     monkeypatch.setattr(
-        physics_variables, "rmajor", liquidbreederpropertiesparam.rmajor
+        physics_variables,
+        "rmajor",
+        liquidbreederpropertiesparam.rmajor,
     )
     monkeypatch.setattr(
-        build_variables, "blnkith", liquidbreederpropertiesparam.blnkith
+        build_variables,
+        "blnkith",
+        liquidbreederpropertiesparam.blnkith,
     )
     monkeypatch.setattr(
-        build_variables, "blnkoth", liquidbreederpropertiesparam.blnkoth
+        build_variables,
+        "blnkoth",
+        liquidbreederpropertiesparam.blnkoth,
     )
 
     blanket_library_fixture.liquid_breeder_properties()
 
     assert fwbs_variables.den_liq == pytest.approx(
-        liquidbreederpropertiesparam.expected_den_liq
+        liquidbreederpropertiesparam.expected_den_liq,
     )
     assert fwbs_variables.specific_heat_liq == pytest.approx(
-        liquidbreederpropertiesparam.expected_specific_heat_liq
+        liquidbreederpropertiesparam.expected_specific_heat_liq,
     )
     assert fwbs_variables.thermal_conductivity_liq == pytest.approx(
-        liquidbreederpropertiesparam.expected_thermal_conductivity_liq
+        liquidbreederpropertiesparam.expected_thermal_conductivity_liq,
     )
     assert fwbs_variables.dynamic_viscosity_liq == pytest.approx(
-        liquidbreederpropertiesparam.expected_dynamic_viscosity_liq
+        liquidbreederpropertiesparam.expected_dynamic_viscosity_liq,
     )
     assert fwbs_variables.electrical_conductivity_liq == pytest.approx(
-        liquidbreederpropertiesparam.expected_electrical_conductivity_liq
+        liquidbreederpropertiesparam.expected_electrical_conductivity_liq,
     )
     assert fwbs_variables.hartmann_liq == pytest.approx(
-        liquidbreederpropertiesparam.expected_hartmann_liq
+        liquidbreederpropertiesparam.expected_hartmann_liq,
     )
     assert fwbs_variables.b_mag_blkt == pytest.approx(
-        liquidbreederpropertiesparam.expected_b_mag_blkt
+        liquidbreederpropertiesparam.expected_b_mag_blkt,
     )
 
 
@@ -1732,7 +1812,7 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
     )
 
     assert pressure_drop_out == pytest.approx(
-        pressuredropparam.expected_pressure_drop_out
+        pressuredropparam.expected_pressure_drop_out,
     )
 
 
@@ -1840,7 +1920,9 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
     ),
 )
 def test_liquid_breeder_pressure_drop_mhd(
-    liquidbreederpressuredropmhdparam, monkeypatch, blanket_library_fixture
+    liquidbreederpressuredropmhdparam,
+    monkeypatch,
+    blanket_library_fixture,
 ):
     """
     Automatically generated Regression Unit Test for liquid_breeder_pressure_drop_mhd.
@@ -1855,13 +1937,19 @@ def test_liquid_breeder_pressure_drop_mhd(
     """
     monkeypatch.setattr(fwbs_variables, "ifci", liquidbreederpressuredropmhdparam.ifci)
     monkeypatch.setattr(
-        fwbs_variables, "a_bz_liq", liquidbreederpressuredropmhdparam.a_bz_liq
+        fwbs_variables,
+        "a_bz_liq",
+        liquidbreederpressuredropmhdparam.a_bz_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "b_bz_liq", liquidbreederpressuredropmhdparam.b_bz_liq
+        fwbs_variables,
+        "b_bz_liq",
+        liquidbreederpressuredropmhdparam.b_bz_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "b_mag_blkt", liquidbreederpressuredropmhdparam.b_mag_blkt
+        fwbs_variables,
+        "b_mag_blkt",
+        liquidbreederpressuredropmhdparam.b_mag_blkt,
     )
     monkeypatch.setattr(
         fwbs_variables,
@@ -1886,5 +1974,5 @@ def test_liquid_breeder_pressure_drop_mhd(
     )
 
     assert liquid_breeder_pressure_drop_mhd_out == pytest.approx(
-        liquidbreederpressuredropmhdparam.expected_liquid_breeder_pressure_drop_mhd_out
+        liquidbreederpressuredropmhdparam.expected_liquid_breeder_pressure_drop_mhd_out,
     )

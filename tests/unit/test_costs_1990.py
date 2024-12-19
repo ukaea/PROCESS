@@ -1,30 +1,34 @@
 """Unit tests for costs.f90."""
 
-from process.fortran import cost_variables
+from typing import Any, NamedTuple
+
+import numpy
+import pytest
+from pytest import approx
+
+from process import fortran
+from process.costs import Costs
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    ife_variables,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    structure_variables,
+    tfcoil_variables,
+    times_variables,
+    vacuum_variables,
+)
+from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fv
 from process.fortran import heat_transport_variables as htv
-from process.fortran import buildings_variables
-from process.fortran import build_variables
-from process.fortran import ife_variables
-from process.fortran import fwbs_variables
-from process.fortran import structure_variables
-from process.fortran import divertor_variables
-from process.fortran import tfcoil_variables
-from process.fortran import physics_variables
-from process.fortran import pfcoil_variables
-from process.fortran import current_drive_variables
-from process.fortran import vacuum_variables
-from process.fortran import heat_transport_variables
-from process.fortran import pf_power_variables
-from process.fortran import pulse_variables
-from process.fortran import times_variables
-from process.fortran import error_handling as eh
-from process import fortran
-import pytest
-import numpy
-from pytest import approx
-from process.costs import Costs
-from typing import NamedTuple, Any
 
 
 @pytest.fixture
@@ -667,7 +671,9 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(cost_variables, "ireactor", param["ireactor"])
     monkeypatch.setattr(
-        fortran.physics_variables, "fusion_power", param["fusion_power"]
+        fortran.physics_variables,
+        "fusion_power",
+        param["fusion_power"],
     )
     monkeypatch.setattr(htv, "pinjwp", param["pinjwp"])
     monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
@@ -1982,7 +1988,9 @@ def test_acc2221(acc2221param, monkeypatch, costs):
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", acc2221param.i_tf_sup)
 
     monkeypatch.setattr(
-        cost_variables, "supercond_cost_model", acc2221param.supercond_cost_model
+        cost_variables,
+        "supercond_cost_model",
+        acc2221param.supercond_cost_model,
     )
 
     monkeypatch.setattr(tfcoil_variables, "j_crit_str_tf", acc2221param.j_crit_str_tf)
@@ -2725,7 +2733,9 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     monkeypatch.setattr(pfcoil_variables, "rjconpf", acc2222param.rjconpf)
 
     monkeypatch.setattr(
-        cost_variables, "supercond_cost_model", acc2222param.supercond_cost_model
+        cost_variables,
+        "supercond_cost_model",
+        acc2222param.supercond_cost_model,
     )
 
     monkeypatch.setattr(pfcoil_variables, "j_crit_str_cs", acc2222param.j_crit_str_cs)
@@ -4663,7 +4673,8 @@ class Acc23Param(NamedTuple):
     (
         Acc23Param(
             ucturb=numpy.array(
-                numpy.array((230000000, 245000000), order="F"), order="F"
+                numpy.array((230000000, 245000000), order="F"),
+                order="F",
             ).transpose(),
             ireactor=1,
             coolwh=1,
@@ -4673,7 +4684,8 @@ class Acc23Param(NamedTuple):
         ),
         Acc23Param(
             ucturb=numpy.array(
-                numpy.array((230000000, 245000000), order="F"), order="F"
+                numpy.array((230000000, 245000000), order="F"),
+                order="F",
             ).transpose(),
             ireactor=1,
             coolwh=1,

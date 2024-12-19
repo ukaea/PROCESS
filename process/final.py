@@ -2,14 +2,16 @@
 
 from tabulate import tabulate
 
+from process import output as op
 from process.fortran import (
-    process_output as po,
     constants,
+    constraints,
     function_evaluator,
     numerics,
-    constraints,
 )
-from process import output as op
+from process.fortran import (
+    process_output as po,
+)
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -52,13 +54,17 @@ def output_once_through():
     # Evaluate objective function
     norm_objf = function_evaluator.funfom()
     po.ovarre(
-        constants.mfile, "Normalised objective function", "(norm_objf)", norm_objf
+        constants.mfile,
+        "Normalised objective function",
+        "(norm_objf)",
+        norm_objf,
     )
 
     # Print the residuals of the constraint equations
 
     residual_error, value, residual, symbols, units = constraints.constraint_eqns(
-        numerics.neqns + numerics.nineqns, -1
+        numerics.neqns + numerics.nineqns,
+        -1,
     )
 
     labels = [
@@ -66,8 +72,12 @@ def output_once_through():
         for i in numerics.lablcc[numerics.icc[: numerics.neqns + numerics.nineqns]]
     ]
     units = [f2py_compatible_to_string(i) for i in units]
-    physical_constraint = [f"{c} {u}" for c, u in zip(value.tolist(), units)]
-    physical_residual = [f"{c} {u}" for c, u in zip(residual.tolist(), units)]
+    physical_constraint = [
+        f"{c} {u}" for c, u in zip(value.tolist(), units, strict=False)
+    ]
+    physical_residual = [
+        f"{c} {u}" for c, u in zip(residual.tolist(), units, strict=False)
+    ]
 
     table_data = {
         "Constraint Name": labels,

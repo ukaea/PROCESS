@@ -9,15 +9,16 @@ MFILE.DAT
 
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
 import argparse
 from argparse import RawTextHelpFormatter
 from pathlib import Path
-from process.io.variable_metadata import var_dicts as meta
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 # PROCESS libraries
 import process.io.mfile as mf
+from process.io.variable_metadata import var_dicts as meta
 
 
 def parse_args(args):
@@ -119,9 +120,9 @@ def get_radial_build(m_file):
 
     for ii in range(isweep):
         if m_file.data["ifail"].get_scan(ii + 1) == 1:
-            radial_build.append(
-                [m_file.data[rl].get_scan(ii + 1) for rl in radial_labels]
-            )
+            radial_build.append([
+                m_file.data[rl].get_scan(ii + 1) for rl in radial_labels
+            ])
 
     radial_build = np.array(radial_build)
 
@@ -343,7 +344,7 @@ def main(args=None):
     else:
         end_scan = len(radial_build)
     plt.figure(figsize=(8, 6))
-    for kk in range((len(radial_build[:end_scan, 0]))):
+    for kk in range(len(radial_build[:end_scan, 0])):
         if kk == 0:
             lower = np.zeros(len(radial_build[kk, :]))
         else:

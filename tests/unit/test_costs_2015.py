@@ -1,19 +1,22 @@
 """Unit tests for costs_2015.f90."""
 
-import pytest
-import numpy
-from typing import NamedTuple, Any
-from process.costs_2015 import Costs2015
+from typing import Any, NamedTuple
 
-from process.fortran import pfcoil_variables
-from process.fortran import heat_transport_variables
-from process.fortran import cost_variables
-from process.fortran import current_drive_variables
-from process.fortran import tfcoil_variables
-from process.fortran import fwbs_variables
-from process.fortran import build_variables
-from process.fortran import physics_variables
-from process.fortran import pf_power_variables
+import numpy
+import pytest
+
+from process.costs_2015 import Costs2015
+from process.fortran import (
+    build_variables,
+    cost_variables,
+    current_drive_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
 
 
 @pytest.fixture
@@ -2292,15 +2295,21 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     monkeypatch.setattr(pfcoil_variables, "pfrmax", calcbuildingcostsparam.pfrmax)
 
     monkeypatch.setattr(
-        heat_transport_variables, "pthermmw", calcbuildingcostsparam.pthermmw
+        heat_transport_variables,
+        "pthermmw",
+        calcbuildingcostsparam.pthermmw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "psechtmw", calcbuildingcostsparam.psechtmw
+        heat_transport_variables,
+        "psechtmw",
+        calcbuildingcostsparam.psechtmw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "helpow", calcbuildingcostsparam.helpow
+        heat_transport_variables,
+        "helpow",
+        calcbuildingcostsparam.helpow,
     )
 
     monkeypatch.setattr(tfcoil_variables, "ritfc", calcbuildingcostsparam.ritfc)
@@ -2340,7 +2349,9 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     monkeypatch.setattr(costs2015, "s_cost", calcbuildingcostsparam.s_cost)
 
     monkeypatch.setattr(
-        costs2015, "s_cost_factor", calcbuildingcostsparam.s_cost_factor
+        costs2015,
+        "s_cost_factor",
+        calcbuildingcostsparam.s_cost_factor,
     )
 
     costs2015.calc_building_costs()
@@ -2354,7 +2365,7 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     assert costs2015.s_cost == pytest.approx(calcbuildingcostsparam.expected_s_cost)
 
     assert costs2015.s_cost_factor == pytest.approx(
-        calcbuildingcostsparam.expected_s_cost_factor
+        calcbuildingcostsparam.expected_s_cost_factor,
     )
 
 
@@ -4587,11 +4598,15 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     """
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_inner_bore", calclandcostsparam.dr_tf_inner_bore
+        build_variables,
+        "dr_tf_inner_bore",
+        calclandcostsparam.dr_tf_inner_bore,
     )
 
     monkeypatch.setattr(
-        build_variables, "dh_tf_inner_bore", calclandcostsparam.dh_tf_inner_bore
+        build_variables,
+        "dh_tf_inner_bore",
+        calclandcostsparam.dh_tf_inner_bore,
     )
 
     monkeypatch.setattr(build_variables, "tfcth", calclandcostsparam.tfcth)
@@ -4599,7 +4614,9 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     monkeypatch.setattr(fwbs_variables, "rdewex", calclandcostsparam.rdewex)
 
     monkeypatch.setattr(
-        cost_variables, "cost_factor_land", calclandcostsparam.cost_factor_land
+        cost_variables,
+        "cost_factor_land",
+        calclandcostsparam.cost_factor_land,
     )
 
     monkeypatch.setattr(cost_variables, "costexp", calclandcostsparam.costexp)
@@ -4625,7 +4642,7 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     assert costs2015.s_cost == pytest.approx(calclandcostsparam.expected_s_cost)
 
     assert costs2015.s_cost_factor == pytest.approx(
-        calclandcostsparam.expected_s_cost_factor
+        calclandcostsparam.expected_s_cost_factor,
     )
 
 
@@ -6900,7 +6917,7 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
     assert costs2015.s_cost == pytest.approx(calctfcoilcostsparam.expected_s_cost)
 
     assert costs2015.s_cost_factor == pytest.approx(
-        calctfcoilcostsparam.expected_s_cost_factor
+        calctfcoilcostsparam.expected_s_cost_factor,
     )
 
 
@@ -9112,7 +9129,9 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
     ),
 )
 def test_calc_remote_handling_costs(
-    calcremotehandlingcostsparam, monkeypatch, costs2015
+    calcremotehandlingcostsparam,
+    monkeypatch,
+    costs2015,
 ):
     """
     Automatically generated Regression Unit Test for calc_remote_handling_costs.
@@ -9133,13 +9152,17 @@ def test_calc_remote_handling_costs(
     )
 
     monkeypatch.setattr(
-        cost_variables, "cost_factor_rh", calcremotehandlingcostsparam.cost_factor_rh
+        cost_variables,
+        "cost_factor_rh",
+        calcremotehandlingcostsparam.cost_factor_rh,
     )
 
     monkeypatch.setattr(cost_variables, "costexp", calcremotehandlingcostsparam.costexp)
 
     monkeypatch.setattr(
-        cost_variables, "num_rh_systems", calcremotehandlingcostsparam.num_rh_systems
+        cost_variables,
+        "num_rh_systems",
+        calcremotehandlingcostsparam.num_rh_systems,
     )
 
     monkeypatch.setattr(costs2015, "s_kref", calcremotehandlingcostsparam.s_kref)
@@ -9151,27 +9174,29 @@ def test_calc_remote_handling_costs(
     monkeypatch.setattr(costs2015, "s_cost", calcremotehandlingcostsparam.s_cost)
 
     monkeypatch.setattr(
-        costs2015, "s_cost_factor", calcremotehandlingcostsparam.s_cost_factor
+        costs2015,
+        "s_cost_factor",
+        calcremotehandlingcostsparam.s_cost_factor,
     )
 
     costs2015.calc_remote_handling_costs()
 
     assert costs2015.s_kref == pytest.approx(
-        calcremotehandlingcostsparam.expected_s_kref
+        calcremotehandlingcostsparam.expected_s_kref,
     )
 
     assert costs2015.s_k == pytest.approx(calcremotehandlingcostsparam.expected_s_k)
 
     assert costs2015.s_cref == pytest.approx(
-        calcremotehandlingcostsparam.expected_s_cref
+        calcremotehandlingcostsparam.expected_s_cref,
     )
 
     assert costs2015.s_cost == pytest.approx(
-        calcremotehandlingcostsparam.expected_s_cost
+        calcremotehandlingcostsparam.expected_s_cost,
     )
 
     assert costs2015.s_cost_factor == pytest.approx(
-        calcremotehandlingcostsparam.expected_s_cost_factor
+        calcremotehandlingcostsparam.expected_s_cost_factor,
     )
 
 
@@ -11404,11 +11429,15 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     monkeypatch.setattr(build_variables, "d_vv_out", calcnplantandvvcostsparam.d_vv_out)
 
     monkeypatch.setattr(
-        heat_transport_variables, "helpow", calcnplantandvvcostsparam.helpow
+        heat_transport_variables,
+        "helpow",
+        calcnplantandvvcostsparam.helpow,
     )
 
     monkeypatch.setattr(
-        cost_variables, "cost_factor_vv", calcnplantandvvcostsparam.cost_factor_vv
+        cost_variables,
+        "cost_factor_vv",
+        calcnplantandvvcostsparam.cost_factor_vv,
     )
 
     monkeypatch.setattr(cost_variables, "costexp", calcnplantandvvcostsparam.costexp)
@@ -11422,7 +11451,9 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     monkeypatch.setattr(costs2015, "s_cost", calcnplantandvvcostsparam.s_cost)
 
     monkeypatch.setattr(
-        costs2015, "s_cost_factor", calcnplantandvvcostsparam.s_cost_factor
+        costs2015,
+        "s_cost_factor",
+        calcnplantandvvcostsparam.s_cost_factor,
     )
 
     costs2015.calc_n_plant_and_vv_costs()
@@ -11436,7 +11467,7 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     assert costs2015.s_cost == pytest.approx(calcnplantandvvcostsparam.expected_s_cost)
 
     assert costs2015.s_cost_factor == pytest.approx(
-        calcnplantandvvcostsparam.expected_s_cost_factor
+        calcnplantandvvcostsparam.expected_s_cost_factor,
     )
 
 
@@ -13644,7 +13675,9 @@ class CalcEnergyConversionSystemParam(NamedTuple):
     ),
 )
 def test_calc_energy_conversion_system(
-    calcenergyconversionsystemparam, monkeypatch, costs2015
+    calcenergyconversionsystemparam,
+    monkeypatch,
+    costs2015,
 ):
     """
     Automatically generated Regression Unit Test for calc_energy_conversion_system.
@@ -13659,7 +13692,9 @@ def test_calc_energy_conversion_system(
     """
 
     monkeypatch.setattr(
-        heat_transport_variables, "pgrossmw", calcenergyconversionsystemparam.pgrossmw
+        heat_transport_variables,
+        "pgrossmw",
+        calcenergyconversionsystemparam.pgrossmw,
     )
 
     monkeypatch.setattr(
@@ -13669,7 +13704,9 @@ def test_calc_energy_conversion_system(
     )
 
     monkeypatch.setattr(
-        cost_variables, "costexp", calcenergyconversionsystemparam.costexp
+        cost_variables,
+        "costexp",
+        calcenergyconversionsystemparam.costexp,
     )
 
     monkeypatch.setattr(costs2015, "s_kref", calcenergyconversionsystemparam.s_kref)
@@ -13689,21 +13726,21 @@ def test_calc_energy_conversion_system(
     costs2015.calc_energy_conversion_system()
 
     assert costs2015.s_kref == pytest.approx(
-        calcenergyconversionsystemparam.expected_s_kref
+        calcenergyconversionsystemparam.expected_s_kref,
     )
 
     assert costs2015.s_k == pytest.approx(calcenergyconversionsystemparam.expected_s_k)
 
     assert costs2015.s_cref == pytest.approx(
-        calcenergyconversionsystemparam.expected_s_cref
+        calcenergyconversionsystemparam.expected_s_cref,
     )
 
     assert costs2015.s_cost == pytest.approx(
-        calcenergyconversionsystemparam.expected_s_cost
+        calcenergyconversionsystemparam.expected_s_cost,
     )
 
     assert costs2015.s_cost_factor == pytest.approx(
-        calcenergyconversionsystemparam.expected_s_cost_factor
+        calcenergyconversionsystemparam.expected_s_cost_factor,
     )
 
 
@@ -15955,7 +15992,9 @@ class CalcRemainingSubsystemsParam(NamedTuple):
     ),
 )
 def test_calc_remaining_subsystems(
-    calcremainingsubsystemsparam, monkeypatch, costs2015
+    calcremainingsubsystemsparam,
+    monkeypatch,
+    costs2015,
 ):
     """
     Automatically generated Regression Unit Test for calc_remaining_subsystems.
@@ -15970,37 +16009,53 @@ def test_calc_remaining_subsystems(
     """
 
     monkeypatch.setattr(
-        current_drive_variables, "pinjmw", calcremainingsubsystemsparam.pinjmw
+        current_drive_variables,
+        "pinjmw",
+        calcremainingsubsystemsparam.pinjmw,
     )
 
     monkeypatch.setattr(physics_variables, "pdivt", calcremainingsubsystemsparam.pdivt)
 
     monkeypatch.setattr(
-        physics_variables, "fusion_power", calcremainingsubsystemsparam.fusion_power
+        physics_variables,
+        "fusion_power",
+        calcremainingsubsystemsparam.fusion_power,
     )
 
     monkeypatch.setattr(
-        physics_variables, "res_time", calcremainingsubsystemsparam.res_time
+        physics_variables,
+        "res_time",
+        calcremainingsubsystemsparam.res_time,
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "itr_sum", calcremainingsubsystemsparam.itr_sum
+        pfcoil_variables,
+        "itr_sum",
+        calcremainingsubsystemsparam.itr_sum,
     )
 
     monkeypatch.setattr(
-        pf_power_variables, "ensxpfm", calcremainingsubsystemsparam.ensxpfm
+        pf_power_variables,
+        "ensxpfm",
+        calcremainingsubsystemsparam.ensxpfm,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "pthermmw", calcremainingsubsystemsparam.pthermmw
+        heat_transport_variables,
+        "pthermmw",
+        calcremainingsubsystemsparam.pthermmw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "psechtmw", calcremainingsubsystemsparam.psechtmw
+        heat_transport_variables,
+        "psechtmw",
+        calcremainingsubsystemsparam.psechtmw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "helpow", calcremainingsubsystemsparam.helpow
+        heat_transport_variables,
+        "helpow",
+        calcremainingsubsystemsparam.helpow,
     )
 
     monkeypatch.setattr(fwbs_variables, "vvmass", calcremainingsubsystemsparam.vvmass)
@@ -16026,27 +16081,29 @@ def test_calc_remaining_subsystems(
     monkeypatch.setattr(costs2015, "s_cost", calcremainingsubsystemsparam.s_cost)
 
     monkeypatch.setattr(
-        costs2015, "s_cost_factor", calcremainingsubsystemsparam.s_cost_factor
+        costs2015,
+        "s_cost_factor",
+        calcremainingsubsystemsparam.s_cost_factor,
     )
 
     costs2015.calc_remaining_subsystems()
 
     assert costs2015.s_kref == pytest.approx(
-        calcremainingsubsystemsparam.expected_s_kref
+        calcremainingsubsystemsparam.expected_s_kref,
     )
 
     assert costs2015.s_k == pytest.approx(calcremainingsubsystemsparam.expected_s_k)
 
     assert costs2015.s_cref == pytest.approx(
-        calcremainingsubsystemsparam.expected_s_cref
+        calcremainingsubsystemsparam.expected_s_cref,
     )
 
     assert costs2015.s_cost == pytest.approx(
-        calcremainingsubsystemsparam.expected_s_cost
+        calcremainingsubsystemsparam.expected_s_cost,
     )
 
     assert costs2015.s_cost_factor == pytest.approx(
-        calcremainingsubsystemsparam.expected_s_cost_factor
+        calcremainingsubsystemsparam.expected_s_cost_factor,
     )
 
 

@@ -1,23 +1,27 @@
 import numpy as np
 
-from process.fortran import (
-    constants,
-    ccfe_hcpb_module,
-    build_variables,
-    fwbs_variables,
-    physics_variables,
-    process_output as po,
-    tfcoil_variables,
-    heat_transport_variables,
-    cost_variables,
-    divertor_variables,
-    buildings_variables,
-    error_handling as eh,
-    current_drive_variables,
-    primary_pumping_variables,
-    constraint_variables,
-)
 from process.coolprop_interface import FluidProperties
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    ccfe_hcpb_module,
+    constants,
+    constraint_variables,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    physics_variables,
+    primary_pumping_variables,
+    tfcoil_variables,
+)
+from process.fortran import (
+    error_handling as eh,
+)
+from process.fortran import (
+    process_output as po,
+)
 
 
 class CCFE_HCPB:
@@ -89,7 +93,8 @@ class CCFE_HCPB:
                 fwbs_variables.pnuc_cp_sh,
                 fwbs_variables.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
-                physics_variables.neutron_power_total, build_variables.shldith
+                physics_variables.neutron_power_total,
+                build_variables.shldith,
             )
 
         else:  # No CP
@@ -299,10 +304,8 @@ class CCFE_HCPB:
             fwbs_variables.fw_armour_vol * fwbs_variables.denw
         )
 
-        if fwbs_variables.breeder_f < 1.0e-10:
-            fwbs_variables.breeder_f = 1.0e-10
-        if fwbs_variables.breeder_f > 1.0:
-            fwbs_variables.breeder_f = 1.0
+        fwbs_variables.breeder_f = max(fwbs_variables.breeder_f, 1.0e-10)
+        fwbs_variables.breeder_f = min(fwbs_variables.breeder_f, 1.0)
 
         # fbltibe12 = fblli2sio4 * (1 - breeder_f)/breeder_f
         # New combined variable breeder_multiplier
@@ -399,8 +402,7 @@ class CCFE_HCPB:
         )
         # Picking the largest value for VV thickness
         d_vv_all = build_variables.d_vv_in
-        if build_variables.d_vv_out > d_vv_all:
-            d_vv_all = build_variables.d_vv_out
+        d_vv_all = max(build_variables.d_vv_out, d_vv_all)
 
         if d_vv_all > 1.0e-6:
             ccfe_hcpb_module.vv_density = fwbs_variables.vvmass / fwbs_variables.vdewin
@@ -525,7 +527,7 @@ class CCFE_HCPB:
         if fwbs_variables.pnucfw < 0:
             raise RuntimeError(
                 f"""Error in nuclear_heating_fw. {fwbs_variables.pnucfw = },
-                {physics_variables.fusion_power = }, {fwbs_variables.fwmass = }"""
+                {physics_variables.fusion_power = }, {fwbs_variables.fwmass = }""",
             )
 
     def nuclear_heating_blanket(self):
@@ -647,7 +649,9 @@ class CCFE_HCPB:
         # coolant outlet temperature as 20 deg C below the boiling point
         if fwbs_variables.coolwh == 2:
             outlet_saturated_fluid_properties = FluidProperties.of(
-                "Water", pressure=fwbs_variables.blpressure * 1.0e6, vapor_quality=0
+                "Water",
+                pressure=fwbs_variables.blpressure * 1.0e6,
+                vapor_quality=0,
             )
             fwbs_variables.outlet_temp = (
                 outlet_saturated_fluid_properties.temperature - 20.0
@@ -851,24 +855,22 @@ class CCFE_HCPB:
         for _ in range(n_integral):
             # Little tricks to avoild NaNs due to rounding
             int_calc_3 = 1.0 - rho_maj**2 * np.sin(phy_cp_calc) ** 2
-            if int_calc_3 < 0.0:
-                int_calc_3 = 0.0
+            int_calc_3 = max(int_calc_3, 0.0)
 
             int_calc_1 = 1.0 / np.sqrt(
                 h_cp_top**2
-                + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
+                + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2,
             )
 
             phy_cp_calc = phy_cp_calc + d_phy_cp
 
             # Little tricks to avoild NaNs due to rounding
             int_calc_3 = 1.0 - rho_maj**2 * np.sin(phy_cp_calc) ** 2
-            if int_calc_3 < 0.0:
-                int_calc_3 = 0.0
+            int_calc_3 = max(int_calc_3, 0.0)
 
             int_calc_2 = 1.0 / np.sqrt(
                 h_cp_top**2
-                + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
+                + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2,
             )
 
             cp_sol_angle = cp_sol_angle + d_phy_cp * 0.5 * (int_calc_1 + int_calc_2)
@@ -999,30 +1001,30 @@ class CCFE_HCPB:
             # ***
             # Nuclear power deposited in the CP winding pack by gammas [MW]
             pnuc_cp_wp_gam = 16.3 * np.exp(
-                -14.63 * sh_width_eff
+                -14.63 * sh_width_eff,
             ) + 143.08 * sh_width_eff * (sh_width / physics_variables.rmajor) * np.exp(
-                -21.747 * sh_width_eff
+                -21.747 * sh_width_eff,
             )
 
             # Nuclear power deposited in the CP winding pack by neutrons [MW]
             pnuc_cp_wp_n = 1.403 * np.exp(
-                -16.535 * sh_width_eff
+                -16.535 * sh_width_eff,
             ) + 3.812 * sh_width_eff * (sh_width / physics_variables.rmajor) * np.exp(
-                -23.631 * sh_width_eff
+                -23.631 * sh_width_eff,
             )
 
             # Nuclear power deposited in the CP steel case by gammas [MW]
             pnuc_cp_case_gam = 1.802 * np.exp(
-                -13.993 * sh_width_eff
+                -13.993 * sh_width_eff,
             ) + 38.592 * sh_width * (sh_width_eff / physics_variables.rmajor) * np.exp(
-                -27.051 * sh_width_eff
+                -27.051 * sh_width_eff,
             )
 
             # Nuclear power deposited in the CP steel case by neutrons [MW]
             pnuc_cp_case_n = 0.158 * np.exp(
-                -55.046 * sh_width_eff
+                -55.046 * sh_width_eff,
             ) + 2.0742 * sh_width_eff * (sh_width / physics_variables.rmajor) * np.exp(
-                -24.401 * sh_width_eff
+                -24.401 * sh_width_eff,
             )
 
             # Nuclear power density deposited in the tungsten carbyde shield by photons [MW]
@@ -1128,7 +1130,10 @@ class CCFE_HCPB:
 
         if output:
             po.ovarrf(
-                self.outfile, "Lithium-6 enrichment (%)", "(li6enrich)", li6enrich
+                self.outfile,
+                "Lithium-6 enrichment (%)",
+                "(li6enrich)",
+                li6enrich,
             )
             po.ovarrf(
                 self.outfile,
@@ -1224,7 +1229,10 @@ class CCFE_HCPB:
         )
         po.ovarrf(self.outfile, "Coolant fraction", "(vfcblkt)", fwbs_variables.vfcblkt)
         po.ovarrf(
-            self.outfile, "Purge gas fraction", "(vfpblkt)", fwbs_variables.vfpblkt
+            self.outfile,
+            "Purge gas fraction",
+            "(vfpblkt)",
+            fwbs_variables.vfpblkt,
         )
 
         po.osubhd(self.outfile, "Component Volumes :")
@@ -1317,7 +1325,11 @@ class CCFE_HCPB:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Shield Mass (kg)", "(whtshld)", fwbs_variables.whtshld, "OP "
+            self.outfile,
+            "Shield Mass (kg)",
+            "(whtshld)",
+            fwbs_variables.whtshld,
+            "OP ",
         )
         po.ovarre(
             self.outfile,

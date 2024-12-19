@@ -1,13 +1,16 @@
 """
 Module to hold plotting functions, used in plot_proc.py, which are common to multiple reactor components
 """
-from typing import List, Tuple
+
 import numpy as np
 
 
 def dh_vertices(
-    r0: float, a: float, triang: float, kap: float
-) -> Tuple[np.ndarray, np.ndarray]:
+    r0: float,
+    a: float,
+    triang: float,
+    kap: float,
+) -> tuple[np.ndarray, np.ndarray]:
     """Returns the radial and vertical coordinates which, when plotted, plots half a thin D-section, centred on z = 0
 
     :param r0: major radius of centre
@@ -35,7 +38,7 @@ def dhgap_vertices(
     toppt: float,
     topthk: float,
     triang: float,
-) -> Tuple[
+) -> tuple[
     np.ndarray,
     np.ndarray,
     np.ndarray,
@@ -94,7 +97,7 @@ def ellips_fill_vertices(
     y0: float = 0,
     ang1: float = 0,
     ang2: float = np.pi / 2,
-) -> List[Tuple[float, float]]:
+) -> list[tuple[float, float]]:
     """Returns the vertices of a shape which, when filled, fills the space between two concentric ellipse sectors
 
     :param a1: horizontal radius to be filled, defaults to 0
@@ -124,8 +127,8 @@ def ellips_fill_vertices(
     r2 = ((np.cos(angs) / a2) ** 2 + (np.sin(angs) / b2) ** 2) ** (-0.5)
     xs2 = r2 * np.cos(angs) + x0
     ys2 = r2 * np.sin(angs) + y0
-    verts = list(zip(xs1, ys1))
-    verts.extend(list(zip(xs2, ys2)))
+    verts = list(zip(xs1, ys1, strict=False))
+    verts.extend(list(zip(xs2, ys2, strict=False)))
     endpoint = verts[-1:]
     verts.extend(endpoint)
 

@@ -1,28 +1,28 @@
-import json
-import numpy
-import logging
 import copy
+import json
+import logging
+
 import numba
-
-from process.fortran import rebco_variables
-from process.fortran import global_variables
-from process.fortran import tfcoil_variables
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import constants
-from process.fortran import sctfcoil_module
-from process.fortran import process_output as po
-from process.fortran import error_handling
-from process.fortran import fwbs_variables
-from process.fortran import pfcoil_variables
-from process.fortran import numerics
-from process.fortran import divertor_variables
-
-import process.superconductors as superconductors
-
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
+import numpy
 from scipy import optimize
 
+from process import superconductors
+from process.fortran import (
+    build_variables,
+    constants,
+    divertor_variables,
+    error_handling,
+    fwbs_variables,
+    global_variables,
+    numerics,
+    pfcoil_variables,
+    physics_variables,
+    rebco_variables,
+    sctfcoil_module,
+    tfcoil_variables,
+)
+from process.fortran import process_output as po
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,10 @@ class Sctfcoil:
         )
 
         if tfcoil_variables.i_tf_sc_mat == 6:
-            (tfcoil_variables.jwdgcrt, tfcoil_variables.tmargtf,) = self.supercon_croco(
+            (
+                tfcoil_variables.jwdgcrt,
+                tfcoil_variables.tmargtf,
+            ) = self.supercon_croco(
                 aturn,
                 tfcoil_variables.bmaxtfrp,
                 tfcoil_variables.cpttf,
@@ -208,13 +211,14 @@ class Sctfcoil:
                 logger.warning(
                     f"""Negative TFC temperature margin
                 temp_margin: {tfcoil_variables.temp_margin}
-                bmax: {bmax}"""
+                bmax: {bmax}""",
                 )
 
             po.oheadr(self.outfile, "Superconducting TF Coils")
             po.ovarin(self.outfile, "Superconductor switch", "(isumat)", 6)
             po.ocmmnt(
-                self.outfile, "Superconductor used: REBCO HTS tape in CroCo strand"
+                self.outfile,
+                "Superconductor used: REBCO HTS tape in CroCo strand",
             )
 
             po.ovarre(
@@ -329,7 +333,7 @@ class Sctfcoil:
                         + rebco_variables.copper_area
                         + rebco_variables.hastelloy_area
                         + rebco_variables.solder_area
-                    )
+                    ),
                 )
                 > 1e-6
             ):
@@ -635,8 +639,7 @@ class Sctfcoil:
         # Guard against negative conductor fraction fcond
         # Kludge to allow solver to continue and hopefully be constrained away
         # from this point
-        if fhetot > 0.99:
-            fhetot = 0.99
+        fhetot = min(fhetot, 0.99)
 
         #  Conductor fraction (including central helium channel)
         fcond = 1.0e0 - fhetot
@@ -743,14 +746,18 @@ class Sctfcoil:
 
         elif isumat == 6:  # "REBCO" 2nd generation HTS superconductor in CrCo strand
             raise ValueError(
-                "sctfcoil.supercon has been called but tfcoil_variables.i_tf_sc_mat=6"
+                "sctfcoil.supercon has been called but tfcoil_variables.i_tf_sc_mat=6",
             )
 
         elif isumat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = tfcoil_variables.b_crit_upper_nbti
             tc0m = tfcoil_variables.t_crit_nbti
             j_crit_sc, _, _ = superconductors.gl_nbti(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium,
+                bmax,
+                strain,
+                bc20m,
+                tc0m,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
@@ -771,7 +778,11 @@ class Sctfcoil:
                 strain = numpy.sign(strain) * 0.7e-2
 
             j_crit_sc, _, _ = superconductors.gl_rebco(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium,
+                bmax,
+                strain,
+                bc20m,
+                tc0m,
             )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -798,7 +809,11 @@ class Sctfcoil:
             #  and based on Hazelton experimental data and Zhai conceptual model;
             #  see subroutine for full references
             j_crit_sc, _, _ = superconductors.hijc_rebco(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium,
+                bmax,
+                strain,
+                bc20m,
+                tc0m,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
@@ -834,7 +849,7 @@ class Sctfcoil:
             This is likely because t_cable_radial or t_cable_toroidal has gone negative:
             t_cable_radial: {sctfcoil_module.t_cable_radial}
             t_cable_toroidal: {sctfcoil_module.t_cable_toroidal}
-            """
+            """,
             )
 
         # REBCO measurements from 2 T to 14 T, extrapolating outside this
@@ -852,7 +867,6 @@ class Sctfcoil:
             or (isumat == 8)
             or (isumat == 9)
         ):  # Find temperature at which current density margin = 0
-
             if isumat == 3:
                 arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
             else:
@@ -882,7 +896,15 @@ class Sctfcoil:
         #  to presence of fcu argument, which is not used for this model above)
 
         tfcoil_variables.jwdgpro, vd = self.protect(
-            iop, tfes, acs, aturn, tdump, fcond, fcu, thelium, tmax
+            iop,
+            tfes,
+            acs,
+            aturn,
+            tdump,
+            fcond,
+            fcu,
+            thelium,
+            tmax,
         )
 
         if output:  # Output --------------------------
@@ -893,7 +915,7 @@ class Sctfcoil:
                 bmax: {bmax}
                 jcrit0: {jcrit0}
                 jsc: {jsc}
-                """
+                """,
                 )
 
             po.oheadr(self.outfile, "Superconducting TF Coils")
@@ -963,7 +985,8 @@ class Sctfcoil:
             if isumat == 7:
                 po.ocmmnt(self.outfile, "Superconductor used: Nb-Ti")
                 po.ocmmnt(
-                    self.outfile, " (Durham Ginzburg-Landau critical surface model)"
+                    self.outfile,
+                    " (Durham Ginzburg-Landau critical surface model)",
                 )
                 po.ovarre(
                     self.outfile,
@@ -980,7 +1003,8 @@ class Sctfcoil:
             if isumat == 8:
                 po.ocmmnt(self.outfile, "Superconductor used: REBCO")
                 po.ocmmnt(
-                    self.outfile, " (Durham Ginzburg-Landau critical surface model)"
+                    self.outfile,
+                    " (Durham Ginzburg-Landau critical surface model)",
                 )
                 po.ovarre(
                     self.outfile,
@@ -1177,7 +1201,9 @@ class Sctfcoil:
         # ---
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
             tfcoil_variables.tfind = self.tfcind(
-                build_variables.tfcth, tfcoil_variables.xarc, tfcoil_variables.yarc
+                build_variables.tfcth,
+                tfcoil_variables.xarc,
+                tfcoil_variables.yarc,
             )
         else:
             tfcoil_variables.tfind = (
@@ -1185,7 +1211,8 @@ class Sctfcoil:
                 * RMU0
                 / constants.pi
                 * numpy.log(
-                    build_variables.r_tf_outboard_mid / build_variables.r_tf_inboard_mid
+                    build_variables.r_tf_outboard_mid
+                    / build_variables.r_tf_inboard_mid,
                 )
             )
 
@@ -1493,8 +1520,7 @@ class Sctfcoil:
         if tfcoil_variables.i_tf_case_geom == 0:
             # Circular front case
             tfcoil_variables.tfareain = numpy.pi * (
-                build_variables.r_tf_inboard_out**2
-                - build_variables.r_tf_inboard_in**2
+                build_variables.r_tf_inboard_out**2 - build_variables.r_tf_inboard_in**2
             )
         else:
             # Straight front case
@@ -1655,10 +1681,10 @@ class Sctfcoil:
             )
             for ii in range(4):
                 tfcoil_variables.tfa[ii] = abs(
-                    tfcoil_variables.xarc[ii + 1] - tfcoil_variables.xarc[ii]
+                    tfcoil_variables.xarc[ii + 1] - tfcoil_variables.xarc[ii],
                 )
                 tfcoil_variables.tfb[ii] = abs(
-                    tfcoil_variables.yarc[ii + 1] - tfcoil_variables.yarc[ii]
+                    tfcoil_variables.yarc[ii + 1] - tfcoil_variables.yarc[ii],
                 )
                 # Radii and length of midline of coil segments
                 aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.tfcth
@@ -1694,10 +1720,10 @@ class Sctfcoil:
 
             for ii in range(1, 3):
                 tfcoil_variables.tfa[ii] = abs(
-                    tfcoil_variables.xarc[ii + 1] - tfcoil_variables.xarc[ii]
+                    tfcoil_variables.xarc[ii + 1] - tfcoil_variables.xarc[ii],
                 )
                 tfcoil_variables.tfb[ii] = abs(
-                    tfcoil_variables.yarc[ii + 1] - tfcoil_variables.yarc[ii]
+                    tfcoil_variables.yarc[ii + 1] - tfcoil_variables.yarc[ii],
                 )
 
                 # Radii and length of midline of coil segments
@@ -1974,9 +2000,9 @@ class Sctfcoil:
         """
         yy_ins = numpy.zeros((101,))  # Exact conductor area (to be integrated)
         yy_cond = numpy.zeros((101,))  # Turn insulation area (to be integrated)
-        yy_gr_ins = numpy.zeros(
-            (101,)
-        )  # Outter ground insulation area (to be integrated)
+        yy_gr_ins = numpy.zeros((
+            101,
+        ))  # Outter ground insulation area (to be integrated)
         yy_casout = numpy.zeros((101,))  # Outter case area (to be integrated)
 
         rtop = r_cp_top - cas_out_th - gr_ins_th
@@ -2641,8 +2667,7 @@ class Sctfcoil:
                 * tfcoil_variables.fcutfsu
                 - tfcoil_variables.tfleng * tfcoil_variables.awphec
             ) * constants.dcopper
-            if tfcoil_variables.whtconcu <= 0.0e0:
-                tfcoil_variables.whtconcu = 0.0e0
+            tfcoil_variables.whtconcu = max(0.0e0, tfcoil_variables.whtconcu)
 
             # Steel conduit (sheath) mass [kg]
             tfcoil_variables.whtconsh = (
@@ -3115,10 +3140,7 @@ class Sctfcoil:
         # -------------------
         # Central helium channel down the conductor core [m2]
         tfcoil_variables.awphec = (
-            0.25e0
-            * tfcoil_variables.n_tf_turn
-            * numpy.pi
-            * tfcoil_variables.dhecoil**2
+            0.25e0 * tfcoil_variables.n_tf_turn * numpy.pi * tfcoil_variables.dhecoil**2
         )
 
         # Total conductor cross-sectional area, taking account of void area
@@ -3441,7 +3463,7 @@ class Sctfcoil:
             error_handling.report_error(100)
 
         tfcoil_variables.t_turn_tf = numpy.sqrt(
-            sctfcoil_module.t_turn_radial * sctfcoil_module.t_turn_toroidal
+            sctfcoil_module.t_turn_radial * sctfcoil_module.t_turn_toroidal,
         )
 
         # Number of TF turns
@@ -3458,7 +3480,7 @@ class Sctfcoil:
             sctfcoil_module.t_turn_toroidal - 2.0e0 * thicndut
         )
         tfcoil_variables.t_conductor = numpy.sqrt(
-            sctfcoil_module.t_conductor_radial * sctfcoil_module.t_conductor_toroidal
+            sctfcoil_module.t_conductor_radial * sctfcoil_module.t_conductor_toroidal,
         )
 
         # Dimension of square cable space inside conduit [m]
@@ -3469,7 +3491,7 @@ class Sctfcoil:
             sctfcoil_module.t_conductor_toroidal - 2.0e0 * thwcndut
         )
         sctfcoil_module.t_cable = numpy.sqrt(
-            sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal
+            sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal,
         )
 
         # Cross-sectional area of cable space per turn
@@ -3778,7 +3800,11 @@ class Sctfcoil:
                 # [EDIT: eyoung_cond is for the TF coil, not the CS coil]
 
                 # Get transverse properties
-                (eyoung_trans[0], a_working, poisson_trans[0],) = eyoung_parallel(
+                (
+                    eyoung_trans[0],
+                    a_working,
+                    poisson_trans[0],
+                ) = eyoung_parallel(
                     eyoung_steel,
                     oh_steel_frac,
                     poisson_steel,
@@ -3811,7 +3837,10 @@ class Sctfcoil:
                     poisson_axial[0],
                     eyoung_cs_stiffest_leg,
                 ) = eyoung_t_nested_squares(
-                    3, eyoung_member_array, l_member_array, poisson_member_array
+                    3,
+                    eyoung_member_array,
+                    l_member_array,
+                    poisson_member_array,
                 )
 
             # resistive CS (copper)
@@ -3944,7 +3973,11 @@ class Sctfcoil:
             )
 
             # Lateral casing correction (series-composition)
-            (eyoung_wp_trans_eff, a_working, poisson_wp_trans_eff,) = eyoung_series(
+            (
+                eyoung_wp_trans_eff,
+                a_working,
+                poisson_wp_trans_eff,
+            ) = eyoung_series(
                 eyoung_wp_trans,
                 numpy.double(t_wp_toroidal_av),
                 poisson_wp_trans,
@@ -3979,7 +4012,11 @@ class Sctfcoil:
             poisson_member_array[4] = poisson_steel
             l_member_array[4] = awpc - acond - a_tf_ins - aswp
             # Compute the composite / smeared properties:
-            (eyoung_wp_axial, a_working, poisson_wp_axial,) = eyoung_parallel_array(
+            (
+                eyoung_wp_axial,
+                a_working,
+                poisson_wp_axial,
+            ) = eyoung_parallel_array(
                 5,
                 eyoung_member_array,
                 l_member_array,
@@ -3988,7 +4025,11 @@ class Sctfcoil:
 
             # Average WP Young's modulus in the vertical direction, now including the lateral case
             # Parallel-composite the steel and insulation, now including the lateral case (sidewalls)
-            (eyoung_wp_axial_eff, a_working, poisson_wp_axial_eff,) = eyoung_parallel(
+            (
+                eyoung_wp_axial_eff,
+                a_working,
+                poisson_wp_axial_eff,
+            ) = eyoung_parallel(
                 eyoung_steel,
                 a_wp_steel_eff - aswp,
                 poisson_steel,
@@ -4020,7 +4061,11 @@ class Sctfcoil:
 
             # Effective conductor region young modulus in the vertical direction [Pa]
             # Parallel-composite conductor and insulator
-            (eyoung_wp_axial, a_working, poisson_wp_axial,) = eyoung_parallel(
+            (
+                eyoung_wp_axial,
+                a_working,
+                poisson_wp_axial,
+            ) = eyoung_parallel(
                 eyoung_cond,
                 (a_wp_eff - a_tf_ins) * (1.0e0 - fcoolcp),
                 poisson_cond,
@@ -4029,7 +4074,11 @@ class Sctfcoil:
                 poisson_ins,
             )
             # Parallel-composite cooling pipes into that
-            (eyoung_wp_axial, a_working, poisson_wp_axial,) = eyoung_parallel(
+            (
+                eyoung_wp_axial,
+                a_working,
+                poisson_wp_axial,
+            ) = eyoung_parallel(
                 0e0,
                 (a_wp_eff - a_tf_ins) * fcoolcp,
                 poisson_cond,
@@ -4125,7 +4174,12 @@ class Sctfcoil:
         if i_tf_stress_model == 1:
             # Plane stress calculation (SC) [Pa]
 
-            (sig_tf_r, sig_tf_t, deflect, radial_array,) = plane_stress(
+            (
+                sig_tf_r,
+                sig_tf_t,
+                deflect,
+                radial_array,
+            ) = plane_stress(
                 nu=poisson_trans,
                 rad=radtf,
                 ey=eyoung_trans,
@@ -4287,7 +4341,8 @@ class Sctfcoil:
         # -----------------------------
         # Array equation
         sig_tf_tresca = numpy.maximum(
-            numpy.absolute(sig_tf_r - sig_tf_z), numpy.absolute(sig_tf_z - sig_tf_t)
+            numpy.absolute(sig_tf_r - sig_tf_z),
+            numpy.absolute(sig_tf_z - sig_tf_t),
         )
 
         # Array equation
@@ -4298,7 +4353,7 @@ class Sctfcoil:
                 (sig_tf_r - sig_tf_t) ** 2
                 + (sig_tf_r - sig_tf_z) ** 2
                 + (sig_tf_z - sig_tf_t) ** 2
-            )
+            ),
         )
 
         # Array equation
@@ -4310,7 +4365,8 @@ class Sctfcoil:
             # GRADED MODIF : add another do loop to allow the graded properties
             #                to be taken into account
             for ii in range(
-                (n_tf_bucking * n_radial_array), n_tf_layer * n_radial_array
+                (n_tf_bucking * n_radial_array),
+                n_tf_layer * n_radial_array,
             ):
                 # Addaped Von-mises stress calculation to WP strucure [Pa]
 
@@ -4341,10 +4397,9 @@ class Sctfcoil:
                         ii_max = jj
 
                 # Conventional Tresca
-                else:
-                    if sig_max < sig_tf_tresca[jj]:
-                        sig_max = sig_tf_tresca[jj]
-                        ii_max = jj
+                elif sig_max < sig_tf_tresca[jj]:
+                    sig_max = sig_tf_tresca[jj]
+                    ii_max = jj
 
             # OUT.DAT output
 
@@ -4429,7 +4484,8 @@ class Sctfcoil:
 
         if tfcoil_variables.i_tf_sup == 0:
             po.ocmmnt(
-                self.outfile, "  -> Resitive coil : Water cooled copper (GLIDCOP AL-15)"
+                self.outfile,
+                "  -> Resitive coil : Water cooled copper (GLIDCOP AL-15)",
             )
         elif tfcoil_variables.i_tf_sup == 1:
             po.ocmmnt(self.outfile, "  -> Superconducting coil (SC)")
@@ -4488,7 +4544,8 @@ class Sctfcoil:
         )
         if physics_variables.itart == 1:
             po.ocmmnt(
-                self.outfile, "  -> TF coil made of a Centerpost (CP) and outer legs"
+                self.outfile,
+                "  -> TF coil made of a Centerpost (CP) and outer legs",
             )
             po.ocmmnt(self.outfile, "     interfaced with demountable joints")
         else:
@@ -4523,13 +4580,17 @@ class Sctfcoil:
 
         elif tfcoil_variables.i_tf_bucking in (2, 3) and build_variables.tf_in_cs == 0:
             po.ocmmnt(
-                self.outfile, "  -> TF in contact with CS (bucked and weged design)"
+                self.outfile,
+                "  -> TF in contact with CS (bucked and weged design)",
             )
 
         # TF coil geometry
         po.osubhd(self.outfile, "TF coil Geometry :")
         po.ovarin(
-            self.outfile, "Number of TF coils", "(n_tf)", int(tfcoil_variables.n_tf)
+            self.outfile,
+            "Number of TF coils",
+            "(n_tf)",
+            int(tfcoil_variables.n_tf),
         )
         po.ovarre(
             self.outfile,
@@ -4648,7 +4709,8 @@ class Sctfcoil:
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Picture frame coil, inner surface approximated by")
             po.ocmmnt(
-                self.outfile, "by a straight segment between the following points:"
+                self.outfile,
+                "by a straight segment between the following points:",
             )
             po.oblnkl(self.outfile)
 
@@ -4661,13 +4723,13 @@ class Sctfcoil:
             po.ovarre(
                 constants.mfile,
                 f"TF coil arc point {ii} R (m)",
-                f"(xarc({ii+1}))",
+                f"(xarc({ii + 1}))",
                 tfcoil_variables.xarc[ii],
             )
             po.ovarre(
                 constants.mfile,
                 f"TF coil arc point {ii} Z (m)",
-                f"(yarc({ii+1}))",
+                f"(yarc({ii + 1}))",
                 tfcoil_variables.yarc[ii],
             )
 
@@ -5061,13 +5123,13 @@ class Sctfcoil:
 
                 po.ovarre(
                     self.outfile,
-                    "Conductor axial Young" "s modulus",
+                    "Conductor axial Youngs modulus",
                     "(eyoung_cond_axial)",
                     tfcoil_variables.eyoung_cond_axial,
                 )
                 po.ovarre(
                     self.outfile,
-                    "Conductor transverse Young" "s modulus",
+                    "Conductor transverse Youngs modulus",
                     "(eyoung_cond_trans)",
                     tfcoil_variables.eyoung_cond_trans,
                 )
@@ -5337,7 +5399,8 @@ class Sctfcoil:
                 )
             elif tfcoil_variables.i_tf_sup == 2:
                 po.ocmmnt(
-                    self.outfile, "Resistive Material : Pure Aluminium (99.999+ %)"
+                    self.outfile,
+                    "Resistive Material : Pure Aluminium (99.999+ %)",
                 )
 
             if physics_variables.itart == 1:
@@ -5855,10 +5918,12 @@ class Sctfcoil:
 
         if tfcoil_variables.i_tf_bucking >= 3:
             po.ocmmnt(
-                self.outfile, "No stress limit imposed on the TF-CS interface layer"
+                self.outfile,
+                "No stress limit imposed on the TF-CS interface layer",
             )
             po.ocmmnt(
-                self.outfile, "  -> Too much unknow on it material choice/properties"
+                self.outfile,
+                "  -> Too much unknow on it material choice/properties",
             )
 
         # OUT.DAT data on maximum shear stress values for the Tresca criterion
@@ -5880,7 +5945,8 @@ class Sctfcoil:
         elif tfcoil_variables.i_tf_bucking == 1:
             if tfcoil_variables.i_tf_sup == 1:
                 po.write(
-                    self.outfile, "  Layers \t\t\t\t Steel case \t\t WP \t\t Outer case"
+                    self.outfile,
+                    "  Layers \t\t\t\t Steel case \t\t WP \t\t Outer case",
                 )
             else:
                 po.write(
@@ -5966,7 +6032,7 @@ class Sctfcoil:
         )
         po.ovarre(
             self.outfile,
-            "WP transverse Poisson" "s ratio",
+            "WP transverse Poissons ratio",
             "(poisson_wp_trans)",
             poisson_wp_trans,
             "OP ",
@@ -5983,40 +6049,40 @@ class Sctfcoil:
         for ii in range(n_tf_bucking + 2):
             po.ovarre(
                 constants.mfile,
-                f"Radial    stress at maximum shear of layer {ii+1} (Pa)",
-                f"(sig_tf_r_max({ii+1}))",
+                f"Radial    stress at maximum shear of layer {ii + 1} (Pa)",
+                f"(sig_tf_r_max({ii + 1}))",
                 sig_tf_r_max[ii],
             )
             po.ovarre(
                 constants.mfile,
-                f"toroidal  stress at maximum shear of layer {ii+1} (Pa)",
-                f"(sig_tf_t_max({ii+1}))",
+                f"toroidal  stress at maximum shear of layer {ii + 1} (Pa)",
+                f"(sig_tf_t_max({ii + 1}))",
                 sig_tf_t_max[ii],
             )
             po.ovarre(
                 constants.mfile,
-                f"Vertical  stress at maximum shear of layer {ii+1} (Pa)",
-                f"(sig_tf_z_max({ii+1}))",
+                f"Vertical  stress at maximum shear of layer {ii + 1} (Pa)",
+                f"(sig_tf_z_max({ii + 1}))",
                 sig_tf_z_max[ii],
             )
             po.ovarre(
                 constants.mfile,
-                f"Von-Mises stress at maximum shear of layer {ii+1} (Pa)",
-                f"(sig_tf_vmises_max({ii+1}))",
+                f"Von-Mises stress at maximum shear of layer {ii + 1} (Pa)",
+                f"(sig_tf_vmises_max({ii + 1}))",
                 sig_tf_vmises_max[ii],
             )
             if tfcoil_variables.i_tf_tresca == 1 and tfcoil_variables.i_tf_sup == 1:
                 po.ovarre(
                     constants.mfile,
-                    f"Maximum shear stress for CEA Tresca yield criterion {ii+1} (Pa)",
-                    f"(sig_tf_tresca_max({ii+1}))",
+                    f"Maximum shear stress for CEA Tresca yield criterion {ii + 1} (Pa)",
+                    f"(sig_tf_tresca_max({ii + 1}))",
                     sig_tf_tresca_max[ii],
                 )
             else:
                 po.ovarre(
                     constants.mfile,
-                    f"Maximum shear stress for the Tresca yield criterion {ii+1} (Pa)",
-                    f"(sig_tf_tresca_max({ii+1}))",
+                    f"Maximum shear stress for the Tresca yield criterion {ii + 1} (Pa)",
+                    f"(sig_tf_tresca_max({ii + 1}))",
                     sig_tf_tresca_max[ii],
                 )
 
@@ -6332,7 +6398,12 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
 
 @numba.njit(cache=True)
 def eyoung_parallel(
-    eyoung_j_1, a_1, poisson_j_perp_1, eyoung_j_2, a_2, poisson_j_perp_2
+    eyoung_j_1,
+    a_1,
+    poisson_j_perp_1,
+    eyoung_j_2,
+    a_2,
+    poisson_j_perp_2,
 ):
     """
     Author : C. Swanson, PPPL
@@ -6401,7 +6472,7 @@ def sigvm(sx: float, sy: float, sz: float, txy: float, txz: float, tyz: float) -
             + (sx - sz) ** 2
             + (sz - sy) ** 2
             + 6 * (txy**2 + txz**2 + tyz**2)
-        )
+        ),
     )
 
 
@@ -6599,8 +6670,7 @@ def extended_plane_strain(
     # will need a switch here.
     nonslip_layer = i_tf_bucking
 
-    if nonslip_layer < 1:
-        nonslip_layer = 1
+    nonslip_layer = max(nonslip_layer, 1)
 
     # Stiffness tensor factors
     # Section 3 in the writeup
@@ -6731,11 +6801,11 @@ def extended_plane_strain(
         * (
             rad[nonslip_layer : nlayers + 1] ** 2
             - rad[nonslip_layer - 1 : nlayers] ** 2
-        )
+        ),
     )
     ey_bar_z_area_slip = numpy.pi * sum(
         ey_bar_z[: nonslip_layer - 1]
-        * (rad[1:nonslip_layer] ** 2 - rad[: nonslip_layer - 1] ** 2)
+        * (rad[1:nonslip_layer] ** 2 - rad[: nonslip_layer - 1] ** 2),
     )
 
     # Axial stiffness inner product, for layers which carry axial force
@@ -6825,7 +6895,7 @@ def extended_plane_strain(
         ]
 
     M_bc[1, :] = numpy.ascontiguousarray(M_bc[1, :]) @ numpy.ascontiguousarray(
-        M_tot[:, :, 0]
+        M_tot[:, :, 0],
     )
     # Axial force boundary condition
     M_bc[2, :] = v_force_row[0, :]
@@ -6927,12 +6997,10 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     area = numpy.zeros((nlayers,))
     # Layer area
 
-    aa = numpy.zeros(
-        (
-            2 * nlayers,
-            2 * nlayers,
-        )
-    )
+    aa = numpy.zeros((
+        2 * nlayers,
+        2 * nlayers,
+    ))
     # Matrix encoding the integration constant cc coeficients
 
     bb = numpy.zeros((2 * nlayers,))

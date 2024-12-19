@@ -1,14 +1,15 @@
-import numpy as np
 import copy
+
+import numpy as np
 
 from process import fortran as ft
 from process.build import Build
-from process.fortran import tfcoil_variables as tfv
 from process.fortran import build_variables as bv
 from process.fortran import constants
-from process.fortran import fwbs_variables as fwbsv
 from process.fortran import error_handling as eh
+from process.fortran import fwbs_variables as fwbsv
 from process.fortran import process_output as po
+from process.fortran import tfcoil_variables as tfv
 from process.sctfcoil import Sctfcoil
 
 
@@ -85,7 +86,6 @@ class TFcoil:
         # Water coollant
         # --------------
         if tfv.i_tf_sup == 0:
-
             # Water coolant physical properties
             coolant_density = constants.denh2o
             coolant_cp = constants.cph2o
@@ -105,7 +105,6 @@ class TFcoil:
         # Helium coolant
         # --------------
         elif tfv.i_tf_sup == 2:
-
             # Inlet coolant density [kg/m3]
             coolant_density = self.he_density(tfv.tcoolin)
 
@@ -117,7 +116,6 @@ class TFcoil:
 
             tcool_calc = copy.copy(tfv.tcoolin)  # K
             for i in range(n_tcool_it):
-
                 # Thermal capacity Cp
                 coolant_cp = self.he_cp(tcool_calc)
 
@@ -227,7 +225,7 @@ class TFcoil:
                 -2.0e0
                 * np.log10(
                     roughrat / 3.7e0
-                    - 5.02e0 / reyn * np.log10(roughrat / 3.7e0 + 14.5e0 / reyn)
+                    - 5.02e0 / reyn * np.log10(roughrat / 3.7e0 + 14.5e0 / reyn),
                 )
             )
             ** 2
@@ -270,14 +268,23 @@ class TFcoil:
         if self.iprint == 1:
             po.oheadr(self.outfile, "Centrepost Coolant Parameters")
             po.ovarre(
-                self.outfile, "Centrepost coolant fraction", "(fcoolcp)", tfv.fcoolcp
+                self.outfile,
+                "Centrepost coolant fraction",
+                "(fcoolcp)",
+                tfv.fcoolcp,
             )
             po.ovarre(
-                self.outfile, "Average coolant channel diameter (m)", "(dcool)", dcool
+                self.outfile,
+                "Average coolant channel diameter (m)",
+                "(dcool)",
+                dcool,
             )
             po.ovarre(self.outfile, "Coolant channel length (m)", "(lcool)", lcool)
             po.ovarre(
-                self.outfile, "Inlet coolant flow speed (m/s)", "(vcool)", tfv.vcool
+                self.outfile,
+                "Inlet coolant flow speed (m/s)",
+                "(vcool)",
+                tfv.vcool,
             )
             po.ovarre(
                 self.outfile,
@@ -310,7 +317,10 @@ class TFcoil:
                 tfv.prescp / 1.0e6,
             )
             po.ovarre(
-                self.outfile, "Nuclear heating (MW)", "(pnuc_cp_tf)", fwbsv.pnuc_cp_tf
+                self.outfile,
+                "Nuclear heating (MW)",
+                "(pnuc_cp_tf)",
+                fwbsv.pnuc_cp_tf,
             )
             po.ovarre(self.outfile, "Total heating (MW)", "(ptot/1.0e6)", ptot / 1.0e6)
 
@@ -341,14 +351,20 @@ class TFcoil:
                 tfv.tcpav2,
             )
             po.ovarre(
-                self.outfile, "Peak centrepost temperature (K)", "(tcpmax)", tfv.tcpmax
+                self.outfile,
+                "Peak centrepost temperature (K)",
+                "(tcpmax)",
+                tfv.tcpmax,
             )
 
             po.osubhd(self.outfile, "Pump Power :")
             po.ovarre(self.outfile, "Coolant pressure drop (Pa)", "(dpres)", dpres)
             if tfv.i_tf_sup == 0:  # Saturation pressure calculated with Water data ...
                 po.ovarre(
-                    self.outfile, "Coolant inlet pressure (Pa)", "(presin)", presin
+                    self.outfile,
+                    "Coolant inlet pressure (Pa)",
+                    "(presin)",
+                    presin,
                 )
 
             po.ovarre(self.outfile, "Pump power (W)", "(ppump)", tfv.ppump)
@@ -459,7 +475,7 @@ class TFcoil:
                 - 4.83007225e-1 * temp
                 + 3.47720002e-2 * temp**2
                 - 1.17501538e-3 * temp**3
-                + 1.54218249e-5 * temp**4
+                + 1.54218249e-5 * temp**4,
             )
 
         # Linear interpolation between the fits to avoid discontinuity

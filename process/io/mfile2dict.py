@@ -11,13 +11,11 @@
 #   @date   :   last modified 2021-02-22                                      #
 #                                                                             #
 ###############################################################################
-from typing import Dict, List, Any
-from collections import OrderedDict
-from collections import abc
-import re
 import logging
 import os
-
+import re
+from collections import OrderedDict, abc
+from typing import Any
 
 MFILE_END = "# Copy of PROCESS Input Follows #"
 VETO_LIST = [" # PROCESS found a feasible solution #"]
@@ -90,7 +88,7 @@ class MFILEParser(abc.MutableMapping):
                 return self._mfile_data[group][param_name]["value"]
         raise KeyError(f"No variable '{param_name}' found.")
 
-    def _line_string_search(self, lines: List[str], search_str: str) -> List[int]:
+    def _line_string_search(self, lines: list[str], search_str: str) -> list[int]:
         """Search for substring in file lines.
 
         Parameters
@@ -134,7 +132,7 @@ class MFILEParser(abc.MutableMapping):
         except ValueError:
             return value_str
 
-    def _get_values(self, lines: List[str]) -> Dict[str, Any]:
+    def _get_values(self, lines: list[str]) -> dict[str, Any]:
         """Extracts value, description and variable name from MFILE lines.
 
         Parameters
@@ -199,7 +197,7 @@ class MFILEParser(abc.MutableMapping):
                 if not isinstance(_vars_dict[_var_key], list):
                     _vars_dict[_var_key]["value"] = [_vars_dict[_var_key]["value"]]
                 _vars_dict[_var_key]["value"].append(
-                    self._find_var_val_from_str(_value)
+                    self._find_var_val_from_str(_value),
                 )
             else:
                 _vars_dict[_var_key] = {
@@ -209,7 +207,7 @@ class MFILEParser(abc.MutableMapping):
 
         return _vars_dict
 
-    def parse(self, mfile_addr: str) -> Dict:
+    def parse(self, mfile_addr: str) -> dict:
         """Parse an MFILE and extract output values.
 
         Parameters
@@ -229,7 +227,7 @@ class MFILEParser(abc.MutableMapping):
         """
         if not os.path.exists(mfile_addr):
             raise FileNotFoundError(
-                "Could not open MFILE '{}', " "file does not exist.".format(mfile_addr)
+                f"Could not open MFILE '{mfile_addr}', file does not exist.",
             )
 
         self._logger.info("Parsing MFILE: %s", mfile_addr)
@@ -262,7 +260,7 @@ class MFILEParser(abc.MutableMapping):
             _key = _lines[_header_indexes[i]].replace("#", "").strip()
 
             _new_vals = self._get_values(
-                _lines[_header_indexes[i] + 1 : _header_indexes[i + 1]]
+                _lines[_header_indexes[i] + 1 : _header_indexes[i + 1]],
             )
 
             # The iscan variable is always present at start of sweep
@@ -277,7 +275,7 @@ class MFILEParser(abc.MutableMapping):
                 if not isinstance(_iscan_var, list):
                     self._mfile_data[_first_key]["iscan"]["value"] = [_iscan_var]
                 self._mfile_data[_first_key]["iscan"]["value"].append(
-                    _new_vals["iscan"]["value"]
+                    _new_vals["iscan"]["value"],
                 )
                 del _new_vals["iscan"]
 
@@ -291,9 +289,9 @@ class MFILEParser(abc.MutableMapping):
                 for param, var_dict in self._mfile_data[_key].items():
                     if param not in _new_vals:
                         self._logger.warning(
-                            "Expected parameter '{}' in sweep, "
+                            f"Expected parameter '{param}' in sweep, "
                             "but could not find entry"
-                            " for this iteration".format(param)
+                            " for this iteration",
                         )
                         continue
                     _value = _new_vals[param]["value"]
@@ -302,14 +300,13 @@ class MFILEParser(abc.MutableMapping):
                             self._mfile_data[_key][param]["value"],
                             _value,
                         ]
+                    # Need to check if the find variables function
+                    # returned a single value for the parameter or multiple
+                    # and handle the cases
+                    elif not isinstance(_new_vals[param]["value"], list):
+                        self._mfile_data[_key][param]["value"].append(_value)
                     else:
-                        # Need to check if the find variables function
-                        # returned a single value for the parameter or multiple
-                        # and handle the cases
-                        if not isinstance(_new_vals[param]["value"], list):
-                            self._mfile_data[_key][param]["value"].append(_value)
-                        else:
-                            self._mfile_data[_key][param]["value"] += _value
+                        self._mfile_data[_key][param]["value"] += _value
 
         self._logger.info("Creating output dictionaries")
         # Remove any cases where there are no parameters under a given header
@@ -339,13 +336,11 @@ class MFILEParser(abc.MutableMapping):
             _second_key_fp = list(self._mfile_data[_second_key])[8]
             _iscan_arr = self._mfile_data[_first_key]["iscan"]["value"]
             _test_param = self._mfile_data[_second_key][_second_key_fp]["value"]
-            if not len(_test_param) == _iscan_arr[-1]:
+            if len(_test_param) != _iscan_arr[-1]:
                 print(_test_param)
                 raise AssertionError(
                     "Failed to retrieve all parameter sweep values, "
-                    "expected {} values for '{}:{}' and got {}".format(
-                        _iscan_arr[-1], _second_key, _second_key_fp, len(_test_param)
-                    )
+                    f"expected {_iscan_arr[-1]} values for '{_second_key}:{_second_key_fp}' and got {len(_test_param)}",
                 )
         except KeyError:
             pass
@@ -376,7 +371,7 @@ class MFILEParser(abc.MutableMapping):
 
                 print(
                     "WARNING: Python module 'tomlkit' not found, "
-                    "file comments will not be written to created TOML file"
+                    "file comments will not be written to created TOML file",
                 )
                 toml.dump(self._mfile_data, open(output_filename, "w"))
                 exit(0)
@@ -401,7 +396,7 @@ class MFILEParser(abc.MutableMapping):
             for group_name, data in self._mfile_data.items():
                 for var_name, var_data in data.items():
                     _doc[group_name][var_name].comment(
-                        self._mfile_data[group_name][var_name]["description"]
+                        self._mfile_data[group_name][var_name]["description"],
                     )
 
             with open(output_filename, "w") as f:

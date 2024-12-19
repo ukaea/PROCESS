@@ -1,16 +1,19 @@
-import pytest
-import numpy
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-from process.fortran import sctfcoil_module
-from process.fortran import tfcoil_variables
-from process.fortran import global_variables
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import fwbs_variables
-from process.fortran import divertor_variables
-from process.sctfcoil import Sctfcoil
+import numpy
+import pytest
+
 from process import sctfcoil as sctf
+from process.fortran import (
+    build_variables,
+    divertor_variables,
+    fwbs_variables,
+    global_variables,
+    physics_variables,
+    sctfcoil_module,
+    tfcoil_variables,
+)
+from process.sctfcoil import Sctfcoil
 
 
 @pytest.fixture
@@ -329,11 +332,15 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "bmaxtfrp", superconparam.bmaxtfrp)
 
     monkeypatch.setattr(
-        tfcoil_variables, "str_tf_con_res", superconparam.str_tf_con_res
+        tfcoil_variables,
+        "str_tf_con_res",
+        superconparam.str_tf_con_res,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "b_crit_upper_nbti", superconparam.b_crit_upper_nbti
+        tfcoil_variables,
+        "b_crit_upper_nbti",
+        superconparam.b_crit_upper_nbti,
     )
 
     monkeypatch.setattr(tfcoil_variables, "i_str_wp", superconparam.i_str_wp)
@@ -370,7 +377,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     )
 
     assert tfcoil_variables.temp_margin == pytest.approx(
-        superconparam.expected_temp_margin
+        superconparam.expected_temp_margin,
     )
 
     assert tfcoil_variables.jwdgpro == pytest.approx(superconparam.expected_jwdgpro)
@@ -506,7 +513,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfcurrentparam.i_tf_sup)
 
     monkeypatch.setattr(
-        tfcoil_variables, "casths_fraction", tfcurrentparam.casths_fraction
+        tfcoil_variables,
+        "casths_fraction",
+        tfcurrentparam.casths_fraction,
     )
 
     monkeypatch.setattr(tfcoil_variables, "tinstf", tfcurrentparam.tinstf)
@@ -526,11 +535,15 @@ def test_tf_current(tfcurrentparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "casths", tfcurrentparam.casths)
 
     monkeypatch.setattr(
-        tfcoil_variables, "casthi_is_fraction", tfcurrentparam.casthi_is_fraction
+        tfcoil_variables,
+        "casthi_is_fraction",
+        tfcurrentparam.casthi_is_fraction,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "casthi_fraction", tfcurrentparam.casthi_fraction
+        tfcoil_variables,
+        "casthi_fraction",
+        tfcurrentparam.casthi_fraction,
     )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf", tfcurrentparam.n_tf)
@@ -544,11 +557,15 @@ def test_tf_current(tfcurrentparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "tfareain", tfcurrentparam.tfareain)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfcurrentparam.r_tf_inboard_out
+        build_variables,
+        "r_tf_inboard_out",
+        tfcurrentparam.r_tf_inboard_out,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfcurrentparam.r_tf_inboard_in
+        build_variables,
+        "r_tf_inboard_in",
+        tfcurrentparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(build_variables, "tfcth", tfcurrentparam.tfcth)
@@ -572,7 +589,7 @@ def test_tf_current(tfcurrentparam, monkeypatch, sctfcoil):
     assert tfcoil_variables.oacdcp == pytest.approx(tfcurrentparam.expected_oacdcp)
 
     assert sctfcoil_module.tfc_current == pytest.approx(
-        tfcurrentparam.expected_tfc_current
+        tfcurrentparam.expected_tfc_current,
     )
 
 
@@ -716,17 +733,23 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, sctfcoil):
     """
 
     monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", tfglobalgeometryparam.r_tf_outboard_mid
+        build_variables,
+        "r_tf_outboard_mid",
+        tfglobalgeometryparam.r_tf_outboard_mid,
     )
 
     monkeypatch.setattr(build_variables, "r_cp_top", tfglobalgeometryparam.r_cp_top)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfglobalgeometryparam.r_tf_inboard_in
+        build_variables,
+        "r_tf_inboard_in",
+        tfglobalgeometryparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfglobalgeometryparam.r_tf_inboard_out
+        build_variables,
+        "r_tf_inboard_out",
+        tfglobalgeometryparam.r_tf_inboard_out,
     )
 
     monkeypatch.setattr(build_variables, "tfthko", tfglobalgeometryparam.tfthko)
@@ -746,7 +769,9 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "dztop", tfglobalgeometryparam.dztop)
 
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_case_geom", tfglobalgeometryparam.i_tf_case_geom
+        tfcoil_variables,
+        "i_tf_case_geom",
+        tfglobalgeometryparam.i_tf_case_geom,
     )
 
     monkeypatch.setattr(physics_variables, "itart", tfglobalgeometryparam.itart)
@@ -758,47 +783,53 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "h_cp_top", tfglobalgeometryparam.h_cp_top)
 
     monkeypatch.setattr(
-        sctfcoil_module, "r_tf_outboard_in", tfglobalgeometryparam.r_tf_outboard_in
+        sctfcoil_module,
+        "r_tf_outboard_in",
+        tfglobalgeometryparam.r_tf_outboard_in,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "r_tf_outboard_out", tfglobalgeometryparam.r_tf_outboard_out
+        sctfcoil_module,
+        "r_tf_outboard_out",
+        tfglobalgeometryparam.r_tf_outboard_out,
     )
 
     monkeypatch.setattr(sctfcoil_module, "theta_coil", tfglobalgeometryparam.theta_coil)
 
     monkeypatch.setattr(
-        sctfcoil_module, "tan_theta_coil", tfglobalgeometryparam.tan_theta_coil
+        sctfcoil_module,
+        "tan_theta_coil",
+        tfglobalgeometryparam.tan_theta_coil,
     )
 
     sctfcoil.tf_global_geometry()
 
     assert tfcoil_variables.tfareain == pytest.approx(
-        tfglobalgeometryparam.expected_tfareain
+        tfglobalgeometryparam.expected_tfareain,
     )
 
     assert tfcoil_variables.tftort == pytest.approx(
-        tfglobalgeometryparam.expected_tftort
+        tfglobalgeometryparam.expected_tftort,
     )
 
     assert tfcoil_variables.arealeg == pytest.approx(
-        tfglobalgeometryparam.expected_arealeg
+        tfglobalgeometryparam.expected_arealeg,
     )
 
     assert sctfcoil_module.r_tf_outboard_in == pytest.approx(
-        tfglobalgeometryparam.expected_r_tf_outboard_in
+        tfglobalgeometryparam.expected_r_tf_outboard_in,
     )
 
     assert sctfcoil_module.r_tf_outboard_out == pytest.approx(
-        tfglobalgeometryparam.expected_r_tf_outboard_out
+        tfglobalgeometryparam.expected_r_tf_outboard_out,
     )
 
     assert sctfcoil_module.theta_coil == pytest.approx(
-        tfglobalgeometryparam.expected_theta_coil
+        tfglobalgeometryparam.expected_theta_coil,
     )
 
     assert sctfcoil_module.tan_theta_coil == pytest.approx(
-        tfglobalgeometryparam.expected_tan_theta_coil
+        tfglobalgeometryparam.expected_tan_theta_coil,
     )
 
 
@@ -1043,11 +1074,15 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(build_variables, "tfthko", restfinternalgeomparam.tfthko)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", restfinternalgeomparam.r_tf_inboard_in
+        build_variables,
+        "r_tf_inboard_in",
+        restfinternalgeomparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", restfinternalgeomparam.r_tf_inboard_out
+        build_variables,
+        "r_tf_inboard_out",
+        restfinternalgeomparam.r_tf_inboard_out,
     )
 
     monkeypatch.setattr(build_variables, "r_cp_top", restfinternalgeomparam.r_cp_top)
@@ -1057,39 +1092,39 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
     sctfcoil.res_tf_internal_geom()
 
     assert tfcoil_variables.n_tf_turn == pytest.approx(
-        restfinternalgeomparam.expected_n_tf_turn
+        restfinternalgeomparam.expected_n_tf_turn,
     )
 
     assert tfcoil_variables.cpttf == pytest.approx(
-        restfinternalgeomparam.expected_cpttf
+        restfinternalgeomparam.expected_cpttf,
     )
 
     assert tfcoil_variables.cdtfleg == pytest.approx(
-        restfinternalgeomparam.expected_cdtfleg
+        restfinternalgeomparam.expected_cdtfleg,
     )
 
     assert tfcoil_variables.aiwp == pytest.approx(restfinternalgeomparam.expected_aiwp)
 
     assert tfcoil_variables.acasetf == pytest.approx(
-        restfinternalgeomparam.expected_acasetf
+        restfinternalgeomparam.expected_acasetf,
     )
 
     assert tfcoil_variables.n_tf_turn == pytest.approx(
-        restfinternalgeomparam.expected_n_tf_turn
+        restfinternalgeomparam.expected_n_tf_turn,
     )
 
     assert tfcoil_variables.cpttf == pytest.approx(
-        restfinternalgeomparam.expected_cpttf
+        restfinternalgeomparam.expected_cpttf,
     )
 
     assert tfcoil_variables.cdtfleg == pytest.approx(
-        restfinternalgeomparam.expected_cdtfleg
+        restfinternalgeomparam.expected_cdtfleg,
     )
 
     assert tfcoil_variables.aiwp == pytest.approx(restfinternalgeomparam.expected_aiwp)
 
     assert tfcoil_variables.acasetf == pytest.approx(
-        restfinternalgeomparam.expected_acasetf
+        restfinternalgeomparam.expected_acasetf,
     )
 
 
@@ -1218,7 +1253,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "thicndut", tfresheatingparam.thicndut)
 
     monkeypatch.setattr(
-        tfcoil_variables, "th_joint_contact", tfresheatingparam.th_joint_contact
+        tfcoil_variables,
+        "th_joint_contact",
+        tfresheatingparam.th_joint_contact,
     )
 
     monkeypatch.setattr(tfcoil_variables, "rhotfleg", tfresheatingparam.rhotfleg)
@@ -1242,7 +1279,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "ritfc", tfresheatingparam.ritfc)
 
     monkeypatch.setattr(
-        tfcoil_variables, "rho_tf_joints", tfresheatingparam.rho_tf_joints
+        tfcoil_variables,
+        "rho_tf_joints",
+        tfresheatingparam.rho_tf_joints,
     )
 
     monkeypatch.setattr(tfcoil_variables, "presleg", tfresheatingparam.presleg)
@@ -1252,7 +1291,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "pres_joints", tfresheatingparam.pres_joints)
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_joints_contact", tfresheatingparam.n_tf_joints_contact
+        tfcoil_variables,
+        "n_tf_joints_contact",
+        tfresheatingparam.n_tf_joints_contact,
     )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_joints", tfresheatingparam.n_tf_joints)
@@ -1286,11 +1327,15 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(build_variables, "hmax", tfresheatingparam.hmax)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfresheatingparam.r_tf_inboard_in
+        build_variables,
+        "r_tf_inboard_in",
+        tfresheatingparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfresheatingparam.r_tf_inboard_out
+        build_variables,
+        "r_tf_inboard_out",
+        tfresheatingparam.r_tf_inboard_out,
     )
 
     monkeypatch.setattr(physics_variables, "itart", tfresheatingparam.itart)
@@ -1298,7 +1343,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "h_cp_top", tfresheatingparam.h_cp_top)
 
     monkeypatch.setattr(
-        sctfcoil_module, "is_leg_cp_temp_same", tfresheatingparam.is_leg_cp_temp_same
+        sctfcoil_module,
+        "is_leg_cp_temp_same",
+        tfresheatingparam.is_leg_cp_temp_same,
     )
 
     sctfcoil.tf_res_heating()
@@ -1306,15 +1353,15 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
     assert tfcoil_variables.rhocp == pytest.approx(tfresheatingparam.expected_rhocp)
 
     assert tfcoil_variables.rhotfleg == pytest.approx(
-        tfresheatingparam.expected_rhotfleg
+        tfresheatingparam.expected_rhotfleg,
     )
 
     assert tfcoil_variables.vol_cond_cp == pytest.approx(
-        tfresheatingparam.expected_vol_cond_cp
+        tfresheatingparam.expected_vol_cond_cp,
     )
 
     assert tfcoil_variables.tflegres == pytest.approx(
-        tfresheatingparam.expected_tflegres
+        tfresheatingparam.expected_tflegres,
     )
 
     assert tfcoil_variables.presleg == pytest.approx(tfresheatingparam.expected_presleg)
@@ -1322,15 +1369,15 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
     assert tfcoil_variables.prescp == pytest.approx(tfresheatingparam.expected_prescp)
 
     assert tfcoil_variables.pres_joints == pytest.approx(
-        tfresheatingparam.expected_pres_joints
+        tfresheatingparam.expected_pres_joints,
     )
 
     assert tfcoil_variables.a_cp_cool == pytest.approx(
-        tfresheatingparam.expected_a_cp_cool
+        tfresheatingparam.expected_a_cp_cool,
     )
 
     assert sctfcoil_module.is_leg_cp_temp_same == pytest.approx(
-        tfresheatingparam.expected_is_leg_cp_temp_same
+        tfresheatingparam.expected_is_leg_cp_temp_same,
     )
 
 
@@ -1646,15 +1693,21 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(physics_variables, "itart", tffieldandforceparam.itart)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", tffieldandforceparam.r_tf_outboard_mid
+        build_variables,
+        "r_tf_outboard_mid",
+        tffieldandforceparam.r_tf_outboard_mid,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_vv_inboard_out", tffieldandforceparam.r_vv_inboard_out
+        build_variables,
+        "r_vv_inboard_out",
+        tffieldandforceparam.r_vv_inboard_out,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_mid", tffieldandforceparam.r_tf_inboard_mid
+        build_variables,
+        "r_tf_inboard_mid",
+        tffieldandforceparam.r_tf_inboard_mid,
     )
 
     monkeypatch.setattr(build_variables, "r_cp_top", tffieldandforceparam.r_cp_top)
@@ -1672,11 +1725,15 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tffieldandforceparam.i_tf_sup)
 
     monkeypatch.setattr(
-        tfcoil_variables, "f_vforce_inboard", tffieldandforceparam.f_vforce_inboard
+        tfcoil_variables,
+        "f_vforce_inboard",
+        tffieldandforceparam.f_vforce_inboard,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "vforce_outboard", tffieldandforceparam.vforce_outboard
+        tfcoil_variables,
+        "vforce_outboard",
+        tffieldandforceparam.vforce_outboard,
     )
 
     monkeypatch.setattr(tfcoil_variables, "tinstf", tffieldandforceparam.tinstf)
@@ -1688,13 +1745,17 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "tfinsgap", tffieldandforceparam.tfinsgap)
 
     monkeypatch.setattr(
-        tfcoil_variables, "i_cp_joints", tffieldandforceparam.i_cp_joints
+        tfcoil_variables,
+        "i_cp_joints",
+        tffieldandforceparam.i_cp_joints,
     )
 
     monkeypatch.setattr(tfcoil_variables, "casthi", tffieldandforceparam.casthi)
 
     monkeypatch.setattr(
-        sctfcoil_module, "r_tf_outboard_in", tffieldandforceparam.r_tf_outboard_in
+        sctfcoil_module,
+        "r_tf_outboard_in",
+        tffieldandforceparam.r_tf_outboard_in,
     )
 
     monkeypatch.setattr(sctfcoil_module, "r_wp_inner", tffieldandforceparam.r_wp_inner)
@@ -1702,29 +1763,31 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "r_wp_outer", tffieldandforceparam.r_wp_outer)
 
     monkeypatch.setattr(
-        sctfcoil_module, "vforce_inboard_tot", tffieldandforceparam.vforce_inboard_tot
+        sctfcoil_module,
+        "vforce_inboard_tot",
+        tffieldandforceparam.vforce_inboard_tot,
     )
 
     sctfcoil.tf_field_and_force()
 
     assert tfcoil_variables.vforce == pytest.approx(
-        tffieldandforceparam.expected_vforce
+        tffieldandforceparam.expected_vforce,
     )
 
     assert tfcoil_variables.cforce == pytest.approx(
-        tffieldandforceparam.expected_cforce
+        tffieldandforceparam.expected_cforce,
     )
 
     assert tfcoil_variables.f_vforce_inboard == pytest.approx(
-        tffieldandforceparam.expected_f_vforce_inboard
+        tffieldandforceparam.expected_f_vforce_inboard,
     )
 
     assert tfcoil_variables.vforce_outboard == pytest.approx(
-        tffieldandforceparam.expected_vforce_outboard
+        tffieldandforceparam.expected_vforce_outboard,
     )
 
     assert sctfcoil_module.vforce_inboard_tot == pytest.approx(
-        tffieldandforceparam.expected_vforce_inboard_tot
+        tffieldandforceparam.expected_vforce_inboard_tot,
     )
 
 
@@ -1813,7 +1876,9 @@ def test_tfcind(tfcindparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "tfind", tfcindparam.tfind)
 
     tfind = sctfcoil.tfcind(
-        tfthk=tfcindparam.tfthk, xarc=tfcindparam.xarc, yarc=tfcindparam.yarc
+        tfthk=tfcindparam.tfthk,
+        xarc=tfcindparam.xarc,
+        yarc=tfcindparam.yarc,
     )
 
     assert tfind == pytest.approx(tfcindparam.expected_tfind)
@@ -1979,7 +2044,8 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             vftf=0.30000000000000004,
             dcond=numpy.array(
                 numpy.array(
-                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500), order="F"
+                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
+                    order="F",
                 ),
                 order="F",
             ).transpose(),
@@ -2051,7 +2117,8 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             vftf=0.30000000000000004,
             dcond=numpy.array(
                 numpy.array(
-                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500), order="F"
+                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
+                    order="F",
                 ),
                 order="F",
             ).transpose(),
@@ -2118,21 +2185,29 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
     monkeypatch.setattr(build_variables, "hr1", tfcoilareaandmassesparam.hr1)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", tfcoilareaandmassesparam.r_tf_outboard_mid
+        build_variables,
+        "r_tf_outboard_mid",
+        tfcoilareaandmassesparam.r_tf_outboard_mid,
     )
 
     monkeypatch.setattr(build_variables, "tfcth", tfcoilareaandmassesparam.tfcth)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid
+        build_variables,
+        "r_tf_inboard_mid",
+        tfcoilareaandmassesparam.r_tf_inboard_mid,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfcoilareaandmassesparam.r_tf_inboard_in
+        build_variables,
+        "r_tf_inboard_in",
+        tfcoilareaandmassesparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
+        build_variables,
+        "r_tf_inboard_out",
+        tfcoilareaandmassesparam.r_tf_inboard_out,
     )
 
     monkeypatch.setattr(build_variables, "hmax", tfcoilareaandmassesparam.hmax)
@@ -2148,7 +2223,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
     monkeypatch.setattr(tfcoil_variables, "tficrn", tfcoilareaandmassesparam.tficrn)
 
     monkeypatch.setattr(
-        tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
+        tfcoil_variables,
+        "tfcryoarea",
+        tfcoilareaandmassesparam.tfcryoarea,
     )
 
     monkeypatch.setattr(tfcoil_variables, "whtgw", tfcoilareaandmassesparam.whtgw)
@@ -2164,7 +2241,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
     monkeypatch.setattr(tfcoil_variables, "whtconin", tfcoilareaandmassesparam.whtconin)
 
     monkeypatch.setattr(
-        tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
+        tfcoil_variables,
+        "tfcryoarea",
+        tfcoilareaandmassesparam.tfcryoarea,
     )
 
     monkeypatch.setattr(tfcoil_variables, "vftf", tfcoilareaandmassesparam.vftf)
@@ -2180,7 +2259,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
     monkeypatch.setattr(tfcoil_variables, "acndttf", tfcoilareaandmassesparam.acndttf)
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_turn", tfcoilareaandmassesparam.n_tf_turn
+        tfcoil_variables,
+        "n_tf_turn",
+        tfcoilareaandmassesparam.n_tf_turn,
     )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf", tfcoilareaandmassesparam.n_tf)
@@ -2204,13 +2285,17 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
     monkeypatch.setattr(tfcoil_variables, "whtconal", tfcoilareaandmassesparam.whtconal)
 
     monkeypatch.setattr(
-        tfcoil_variables, "vol_cond_cp", tfcoilareaandmassesparam.vol_cond_cp
+        tfcoil_variables,
+        "vol_cond_cp",
+        tfcoilareaandmassesparam.vol_cond_cp,
     )
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfcoilareaandmassesparam.i_tf_sup)
 
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sc_mat", tfcoilareaandmassesparam.i_tf_sc_mat
+        tfcoil_variables,
+        "i_tf_sc_mat",
+        tfcoilareaandmassesparam.i_tf_sc_mat,
     )
 
     monkeypatch.setattr(tfcoil_variables, "arealeg", tfcoilareaandmassesparam.arealeg)
@@ -2228,81 +2313,97 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
     monkeypatch.setattr(sctfcoil_module, "awptf", tfcoilareaandmassesparam.awptf)
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_ins_cp", tfcoilareaandmassesparam.vol_ins_cp
+        sctfcoil_module,
+        "vol_ins_cp",
+        tfcoilareaandmassesparam.vol_ins_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_gr_ins_cp", tfcoilareaandmassesparam.vol_gr_ins_cp
+        sctfcoil_module,
+        "vol_gr_ins_cp",
+        tfcoilareaandmassesparam.vol_gr_ins_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_case_cp", tfcoilareaandmassesparam.vol_case_cp
+        sctfcoil_module,
+        "vol_case_cp",
+        tfcoilareaandmassesparam.vol_case_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "a_leg_ins", tfcoilareaandmassesparam.a_leg_ins
+        sctfcoil_module,
+        "a_leg_ins",
+        tfcoilareaandmassesparam.a_leg_ins,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "a_leg_gr_ins", tfcoilareaandmassesparam.a_leg_gr_ins
+        sctfcoil_module,
+        "a_leg_gr_ins",
+        tfcoilareaandmassesparam.a_leg_gr_ins,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "a_leg_cond", tfcoilareaandmassesparam.a_leg_cond
+        sctfcoil_module,
+        "a_leg_cond",
+        tfcoilareaandmassesparam.a_leg_cond,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "theta_coil", tfcoilareaandmassesparam.theta_coil
+        sctfcoil_module,
+        "theta_coil",
+        tfcoilareaandmassesparam.theta_coil,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil
+        sctfcoil_module,
+        "tan_theta_coil",
+        tfcoilareaandmassesparam.tan_theta_coil,
     )
 
     sctfcoil.tf_coil_area_and_masses()
 
     assert tfcoil_variables.whtconsh == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtconsh
+        tfcoilareaandmassesparam.expected_whtconsh,
     )
 
     assert tfcoil_variables.whtcas == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtcas
+        tfcoilareaandmassesparam.expected_whtcas,
     )
 
     assert tfcoil_variables.tficrn == pytest.approx(
-        tfcoilareaandmassesparam.expected_tficrn
+        tfcoilareaandmassesparam.expected_tficrn,
     )
 
     assert tfcoil_variables.tfcryoarea == pytest.approx(
-        tfcoilareaandmassesparam.expected_tfcryoarea
+        tfcoilareaandmassesparam.expected_tfcryoarea,
     )
 
     assert tfcoil_variables.whtgw == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtgw
+        tfcoilareaandmassesparam.expected_whtgw,
     )
 
     assert tfcoil_variables.tfocrn == pytest.approx(
-        tfcoilareaandmassesparam.expected_tfocrn
+        tfcoilareaandmassesparam.expected_tfocrn,
     )
 
     assert tfcoil_variables.whtconsc == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtconsc
+        tfcoilareaandmassesparam.expected_whtconsc,
     )
 
     assert tfcoil_variables.whtconcu == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtconcu
+        tfcoilareaandmassesparam.expected_whtconcu,
     )
 
     assert tfcoil_variables.whtcon == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtcon
+        tfcoilareaandmassesparam.expected_whtcon,
     )
 
     assert tfcoil_variables.whtconin == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtconin
+        tfcoilareaandmassesparam.expected_whtconin,
     )
 
     assert tfcoil_variables.cplen == pytest.approx(
-        tfcoilareaandmassesparam.expected_cplen
+        tfcoilareaandmassesparam.expected_cplen,
     )
 
 
@@ -2397,15 +2498,15 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     )
 
     assert sctfcoil_module.tf_fit_t == pytest.approx(
-        peaktfwithrippleparam.expected_tf_fit_t
+        peaktfwithrippleparam.expected_tf_fit_t,
     )
 
     assert sctfcoil_module.tf_fit_z == pytest.approx(
-        peaktfwithrippleparam.expected_tf_fit_z
+        peaktfwithrippleparam.expected_tf_fit_z,
     )
 
     assert sctfcoil_module.tf_fit_y == pytest.approx(
-        peaktfwithrippleparam.expected_tf_fit_y
+        peaktfwithrippleparam.expected_tf_fit_y,
     )
 
     assert bmaxtfrp == pytest.approx(peaktfwithrippleparam.expected_bmaxtfrp)
@@ -2564,11 +2665,15 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(build_variables, "tfcth", tfwpgeomparam.tfcth)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfwpgeomparam.r_tf_inboard_in
+        build_variables,
+        "r_tf_inboard_in",
+        tfwpgeomparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfwpgeomparam.r_tf_inboard_out
+        build_variables,
+        "r_tf_inboard_out",
+        tfwpgeomparam.r_tf_inboard_out,
     )
 
     monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tfwpgeomparam.dr_tf_wp)
@@ -2600,7 +2705,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "t_wp_toroidal", tfwpgeomparam.t_wp_toroidal)
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_wp_toroidal_av", tfwpgeomparam.t_wp_toroidal_av
+        sctfcoil_module,
+        "t_wp_toroidal_av",
+        tfwpgeomparam.t_wp_toroidal_av,
     )
 
     monkeypatch.setattr(sctfcoil_module, "a_ground_ins", tfwpgeomparam.a_ground_ins)
@@ -2618,27 +2725,27 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
     assert sctfcoil_module.awptf == pytest.approx(tfwpgeomparam.expected_awptf)
 
     assert sctfcoil_module.r_wp_inner == pytest.approx(
-        tfwpgeomparam.expected_r_wp_inner
+        tfwpgeomparam.expected_r_wp_inner,
     )
 
     assert sctfcoil_module.r_wp_outer == pytest.approx(
-        tfwpgeomparam.expected_r_wp_outer
+        tfwpgeomparam.expected_r_wp_outer,
     )
 
     assert sctfcoil_module.r_wp_centre == pytest.approx(
-        tfwpgeomparam.expected_r_wp_centre
+        tfwpgeomparam.expected_r_wp_centre,
     )
 
     assert sctfcoil_module.t_wp_toroidal == pytest.approx(
-        tfwpgeomparam.expected_t_wp_toroidal
+        tfwpgeomparam.expected_t_wp_toroidal,
     )
 
     assert sctfcoil_module.t_wp_toroidal_av == pytest.approx(
-        tfwpgeomparam.expected_t_wp_toroidal_av
+        tfwpgeomparam.expected_t_wp_toroidal_av,
     )
 
     assert sctfcoil_module.a_ground_ins == pytest.approx(
-        tfwpgeomparam.expected_a_ground_ins
+        tfwpgeomparam.expected_a_ground_ins,
     )
 
 
@@ -2783,11 +2890,15 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tfcasegeomparam.dr_tf_wp)
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfcasegeomparam.r_tf_inboard_in
+        build_variables,
+        "r_tf_inboard_in",
+        tfcasegeomparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfcasegeomparam.r_tf_inboard_out
+        build_variables,
+        "r_tf_inboard_out",
+        tfcasegeomparam.r_tf_inboard_out,
     )
 
     monkeypatch.setattr(sctfcoil_module, "awpc", tfcasegeomparam.awpc)
@@ -2805,7 +2916,9 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "theta_coil", tfcasegeomparam.theta_coil)
 
     monkeypatch.setattr(
-        sctfcoil_module, "tan_theta_coil", tfcasegeomparam.tan_theta_coil
+        sctfcoil_module,
+        "tan_theta_coil",
+        tfcasegeomparam.tan_theta_coil,
     )
 
     sctfcoil.tf_case_geom(
@@ -2818,15 +2931,15 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
     assert tfcoil_variables.acasetfo == pytest.approx(tfcasegeomparam.expected_acasetfo)
 
     assert sctfcoil_module.t_lat_case_av == pytest.approx(
-        tfcasegeomparam.expected_t_lat_case_av
+        tfcasegeomparam.expected_t_lat_case_av,
     )
 
     assert sctfcoil_module.a_case_front == pytest.approx(
-        tfcasegeomparam.expected_a_case_front
+        tfcasegeomparam.expected_a_case_front,
     )
 
     assert sctfcoil_module.a_case_nose == pytest.approx(
-        tfcasegeomparam.expected_a_case_nose
+        tfcasegeomparam.expected_a_case_nose,
     )
 
 
@@ -2989,21 +3102,29 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "tfinsgap", tfintegerturngeomparam.tfinsgap)
 
     monkeypatch.setattr(
-        tfcoil_variables, "t_conductor", tfintegerturngeomparam.t_conductor
+        tfcoil_variables,
+        "t_conductor",
+        tfintegerturngeomparam.t_conductor,
     )
 
     monkeypatch.setattr(tfcoil_variables, "t_turn_tf", tfintegerturngeomparam.t_turn_tf)
 
     monkeypatch.setattr(
-        sctfcoil_module, "tfc_current", tfintegerturngeomparam.tfc_current
+        sctfcoil_module,
+        "tfc_current",
+        tfintegerturngeomparam.tfc_current,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_wp_toroidal", tfintegerturngeomparam.t_wp_toroidal
+        sctfcoil_module,
+        "t_wp_toroidal",
+        tfintegerturngeomparam.t_wp_toroidal,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_conductor_radial", tfintegerturngeomparam.t_conductor_radial
+        sctfcoil_module,
+        "t_conductor_radial",
+        tfintegerturngeomparam.t_conductor_radial,
     )
 
     monkeypatch.setattr(
@@ -3013,19 +3134,27 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_cable_radial", tfintegerturngeomparam.t_cable_radial
+        sctfcoil_module,
+        "t_cable_radial",
+        tfintegerturngeomparam.t_cable_radial,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_cable_toroidal", tfintegerturngeomparam.t_cable_toroidal
+        sctfcoil_module,
+        "t_cable_toroidal",
+        tfintegerturngeomparam.t_cable_toroidal,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_radial", tfintegerturngeomparam.t_turn_radial
+        sctfcoil_module,
+        "t_turn_radial",
+        tfintegerturngeomparam.t_turn_radial,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_toroidal", tfintegerturngeomparam.t_turn_toroidal
+        sctfcoil_module,
+        "t_turn_toroidal",
+        tfintegerturngeomparam.t_turn_toroidal,
     )
 
     monkeypatch.setattr(sctfcoil_module, "t_cable", tfintegerturngeomparam.t_cable)
@@ -3044,39 +3173,39 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     )
 
     assert tfcoil_variables.t_conductor == pytest.approx(
-        tfintegerturngeomparam.expected_t_conductor
+        tfintegerturngeomparam.expected_t_conductor,
     )
 
     assert tfcoil_variables.t_turn_tf == pytest.approx(
-        tfintegerturngeomparam.expected_t_turn_tf
+        tfintegerturngeomparam.expected_t_turn_tf,
     )
 
     assert sctfcoil_module.t_conductor_radial == pytest.approx(
-        tfintegerturngeomparam.expected_t_conductor_radial
+        tfintegerturngeomparam.expected_t_conductor_radial,
     )
 
     assert sctfcoil_module.t_conductor_toroidal == pytest.approx(
-        tfintegerturngeomparam.expected_t_conductor_toroidal
+        tfintegerturngeomparam.expected_t_conductor_toroidal,
     )
 
     assert sctfcoil_module.t_cable_radial == pytest.approx(
-        tfintegerturngeomparam.expected_t_cable_radial
+        tfintegerturngeomparam.expected_t_cable_radial,
     )
 
     assert sctfcoil_module.t_cable_toroidal == pytest.approx(
-        tfintegerturngeomparam.expected_t_cable_toroidal
+        tfintegerturngeomparam.expected_t_cable_toroidal,
     )
 
     assert sctfcoil_module.t_turn_radial == pytest.approx(
-        tfintegerturngeomparam.expected_t_turn_radial
+        tfintegerturngeomparam.expected_t_turn_radial,
     )
 
     assert sctfcoil_module.t_turn_toroidal == pytest.approx(
-        tfintegerturngeomparam.expected_t_turn_toroidal
+        tfintegerturngeomparam.expected_t_turn_toroidal,
     )
 
     assert sctfcoil_module.t_cable == pytest.approx(
-        tfintegerturngeomparam.expected_t_cable
+        tfintegerturngeomparam.expected_t_cable,
     )
 
     assert acstf == pytest.approx(tfintegerturngeomparam.expected_acstf)
@@ -3084,7 +3213,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     assert acndttf == pytest.approx(tfintegerturngeomparam.expected_acndttf)
 
     assert insulation_area == pytest.approx(
-        tfintegerturngeomparam.expected_insulation_area
+        tfintegerturngeomparam.expected_insulation_area,
     )
 
     assert cpttf == pytest.approx(tfintegerturngeomparam.expected_cpttf)
@@ -3265,15 +3394,21 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
     """
 
     monkeypatch.setattr(
-        tfcoil_variables, "layer_ins", tfaveragedturngeomparam.layer_ins
+        tfcoil_variables,
+        "layer_ins",
+        tfaveragedturngeomparam.layer_ins,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "t_conductor", tfaveragedturngeomparam.t_conductor
+        tfcoil_variables,
+        "t_conductor",
+        tfaveragedturngeomparam.t_conductor,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "t_turn_tf", tfaveragedturngeomparam.t_turn_tf
+        tfcoil_variables,
+        "t_turn_tf",
+        tfaveragedturngeomparam.t_turn_tf,
     )
 
     monkeypatch.setattr(
@@ -3285,7 +3420,9 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "cpttf", tfaveragedturngeomparam.cpttf)
 
     monkeypatch.setattr(
-        tfcoil_variables, "t_cable_tf", tfaveragedturngeomparam.t_cable_tf
+        tfcoil_variables,
+        "t_cable_tf",
+        tfaveragedturngeomparam.t_cable_tf,
     )
 
     monkeypatch.setattr(
@@ -3297,11 +3434,15 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "awptf", tfaveragedturngeomparam.awptf)
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_radial", tfaveragedturngeomparam.t_turn_radial
+        sctfcoil_module,
+        "t_turn_radial",
+        tfaveragedturngeomparam.t_turn_radial,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_toroidal", tfaveragedturngeomparam.t_turn_toroidal
+        sctfcoil_module,
+        "t_turn_toroidal",
+        tfaveragedturngeomparam.t_turn_toroidal,
     )
 
     monkeypatch.setattr(sctfcoil_module, "t_cable", tfaveragedturngeomparam.t_cable)
@@ -3314,23 +3455,23 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
     )
 
     assert tfcoil_variables.t_conductor == pytest.approx(
-        tfaveragedturngeomparam.expected_t_conductor
+        tfaveragedturngeomparam.expected_t_conductor,
     )
 
     assert tfcoil_variables.t_turn_tf == pytest.approx(
-        tfaveragedturngeomparam.expected_t_turn_tf
+        tfaveragedturngeomparam.expected_t_turn_tf,
     )
 
     assert sctfcoil_module.t_turn_radial == pytest.approx(
-        tfaveragedturngeomparam.expected_t_turn_radial
+        tfaveragedturngeomparam.expected_t_turn_radial,
     )
 
     assert sctfcoil_module.t_turn_toroidal == pytest.approx(
-        tfaveragedturngeomparam.expected_t_turn_toroidal
+        tfaveragedturngeomparam.expected_t_turn_toroidal,
     )
 
     assert sctfcoil_module.t_cable == pytest.approx(
-        tfaveragedturngeomparam.expected_t_cable
+        tfaveragedturngeomparam.expected_t_cable,
     )
 
     assert acstf == pytest.approx(tfaveragedturngeomparam.expected_acstf)
@@ -3338,7 +3479,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
     assert acndttf == pytest.approx(tfaveragedturngeomparam.expected_acndttf)
 
     assert insulation_area == pytest.approx(
-        tfaveragedturngeomparam.expected_insulation_area
+        tfaveragedturngeomparam.expected_insulation_area,
     )
 
     assert n_tf_turn == pytest.approx(tfaveragedturngeomparam.expected_n_tf_turn)
@@ -3652,7 +3793,8 @@ class StressclParam(NamedTuple):
             coheof=20726000,
             cohbop=0,
             ncls=numpy.array(
-                numpy.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             cptdin=numpy.array(
                 numpy.array(
@@ -3775,7 +3917,8 @@ class StressclParam(NamedTuple):
             coheof=20726000,
             cohbop=19311657.760000002,
             ncls=numpy.array(
-                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"),
+                order="F",
             ).transpose(),
             cptdin=numpy.array(
                 numpy.array(
@@ -4014,12 +4157,14 @@ class PlaneStressParam(NamedTuple):
             ).transpose(),
             ey=numpy.array(
                 numpy.array(
-                    (205000000000, 43126670035.025253, 205000000000), order="F"
+                    (205000000000, 43126670035.025253, 205000000000),
+                    order="F",
                 ),
                 order="F",
             ).transpose(),
             j=numpy.array(
-                numpy.array((0, 18097185.781970859, 0), order="F"), order="F"
+                numpy.array((0, 18097185.781970859, 0), order="F"),
+                order="F",
             ).transpose(),
             expected_sigr=[
                 0.0,
@@ -5254,12 +5399,14 @@ class PlaneStressParam(NamedTuple):
             ).transpose(),
             ey=numpy.array(
                 numpy.array(
-                    (205000000000, 43126670035.025253, 205000000000), order="F"
+                    (205000000000, 43126670035.025253, 205000000000),
+                    order="F",
                 ),
                 order="F",
             ).transpose(),
             j=numpy.array(
-                numpy.array((0, 18097185.781970859, 0), order="F"), order="F"
+                numpy.array((0, 18097185.781970859, 0), order="F"),
+                order="F",
             ).transpose(),
             expected_sigr=[
                 0.0,
@@ -6475,14 +6622,12 @@ class PlaneStressParam(NamedTuple):
             n_radial_array=100,
             nlayers=3,
             nu=numpy.array([0.3, 0.34006912702297704, 0.3]),
-            rad=numpy.array(
-                [
-                    3.6732023601326333,
-                    3.7688101124061717,
-                    3.7649909451102674,
-                    3.8249909451102675,
-                ]
-            ),
+            rad=numpy.array([
+                3.6732023601326333,
+                3.7688101124061717,
+                3.7649909451102674,
+                3.8249909451102675,
+            ]),
             ey=numpy.array([2.05000000e11, 21085960915.80571, 2.05000000e11]),
             j=numpy.array([0.00000000e00, -2245759961.294637, 0.00000000e00]),
             expected_sigr=[
@@ -7778,14 +7923,16 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 order="F",
             ).transpose(),
             ey_t=numpy.array(
-                numpy.array((117000000000, 205000000000), order="F"), order="F"
+                numpy.array((117000000000, 205000000000), order="F"),
+                order="F",
             ).transpose(),
             ey_z=numpy.array(
                 numpy.array((97843910970.178864, 205000000000.00003), order="F"),
                 order="F",
             ).transpose(),
             d_curr=numpy.array(
-                numpy.array((375174117.44492483, 0), order="F"), order="F"
+                numpy.array((375174117.44492483, 0), order="F"),
+                order="F",
             ).transpose(),
             rad=numpy.array(
                 numpy.array((0, 0.14708850000000001, 0.15483000000000002), order="F"),
@@ -9466,7 +9613,8 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 order="F",
             ).transpose(),
             d_curr=numpy.array(
-                numpy.array((0, 0, 0, 18343613.563061949, 0), order="F"), order="F"
+                numpy.array((0, 0, 0, 18343613.563061949, 0), order="F"),
+                order="F",
             ).transpose(),
             rad=numpy.array(
                 numpy.array(
@@ -13540,35 +13688,46 @@ def test_extended_plane_strain(extendedplanestrainparam, monkeypatch, sctfcoil):
     # assert sigr == pytest.approx(extendedplanestrainparam.expected_sigr, rel=0.01)
 
     numpy.testing.assert_array_almost_equal(
-        sigr, numpy.array(extendedplanestrainparam.expected_sigr), decimal=3
+        sigr,
+        numpy.array(extendedplanestrainparam.expected_sigr),
+        decimal=3,
     )
 
     numpy.testing.assert_array_almost_equal(
-        sigt, numpy.array(extendedplanestrainparam.expected_sigt), decimal=3
+        sigt,
+        numpy.array(extendedplanestrainparam.expected_sigt),
+        decimal=3,
     )
 
     numpy.testing.assert_array_almost_equal(
-        sigz, numpy.array(extendedplanestrainparam.expected_sigz), decimal=3
+        sigz,
+        numpy.array(extendedplanestrainparam.expected_sigz),
+        decimal=3,
     )
 
     numpy.testing.assert_array_almost_equal(
-        str_r, numpy.array(extendedplanestrainparam.expected_str_r)
+        str_r,
+        numpy.array(extendedplanestrainparam.expected_str_r),
     )
 
     numpy.testing.assert_array_almost_equal(
-        str_t, numpy.array(extendedplanestrainparam.expected_str_t)
+        str_t,
+        numpy.array(extendedplanestrainparam.expected_str_t),
     )
 
     numpy.testing.assert_array_almost_equal(
-        str_z, numpy.array(extendedplanestrainparam.expected_str_z)
+        str_z,
+        numpy.array(extendedplanestrainparam.expected_str_z),
     )
 
     numpy.testing.assert_array_almost_equal(
-        r_deflect, numpy.array(extendedplanestrainparam.expected_r_deflect)
+        r_deflect,
+        numpy.array(extendedplanestrainparam.expected_r_deflect),
     )
 
     numpy.testing.assert_array_almost_equal(
-        rradius, numpy.array(extendedplanestrainparam.expected_rradius)
+        rradius,
+        numpy.array(extendedplanestrainparam.expected_rradius),
     )
 
 
@@ -13646,7 +13805,7 @@ def test_eyoung_parallel(eyoungparallelparam, monkeypatch, sctfcoil):
     assert a_3 == pytest.approx(eyoungparallelparam.expected_a_3)
 
     assert poisson_j_perp_3 == pytest.approx(
-        eyoungparallelparam.expected_poisson_j_perp_3
+        eyoungparallelparam.expected_poisson_j_perp_3,
     )
 
 
@@ -13710,7 +13869,8 @@ class EyoungParallelArrayParam(NamedTuple):
         EyoungTNestedSquaresParam(
             n=4,
             eyoung_j_in=numpy.array(
-                numpy.array((0, 0, 205000000000, 20000000000, 0), order="F"), order="F"
+                numpy.array((0, 0, 205000000000, 20000000000, 0), order="F"),
+                order="F",
             ).transpose(),
             l_in=numpy.array(
                 numpy.array(
@@ -13746,7 +13906,8 @@ class EyoungParallelArrayParam(NamedTuple):
         EyoungTNestedSquaresParam(
             n=4,
             eyoung_j_in=numpy.array(
-                numpy.array((0, 0, 205000000000, 20000000000, 0), order="F"), order="F"
+                numpy.array((0, 0, 205000000000, 20000000000, 0), order="F"),
+                order="F",
             ).transpose(),
             l_in=numpy.array(
                 numpy.array(
@@ -13817,7 +13978,7 @@ def test_eyoung_t_nested_squares(eyoungtnestedsquaresparam, monkeypatch, sctfcoi
     # )
 
     assert eyoung_stiffest == pytest.approx(
-        eyoungtnestedsquaresparam.expected_eyoung_stiffest
+        eyoungtnestedsquaresparam.expected_eyoung_stiffest,
     )
 
 
@@ -13875,7 +14036,7 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch, sctfcoil):
     assert l_3 == pytest.approx(eyoungseriesparam.expected_l_3)
 
     assert poisson_j_perp_3 == pytest.approx(
-        eyoungseriesparam.expected_poisson_j_perp_3
+        eyoungseriesparam.expected_poisson_j_perp_3,
     )
 
 
@@ -13981,7 +14142,7 @@ def test_eyoung_parallel_array(eyoungparallelarrayparam, monkeypatch, sctfcoil):
     assert a_out == pytest.approx(eyoungparallelarrayparam.expected_a_out)
 
     assert poisson_j_perp_out == pytest.approx(
-        eyoungparallelarrayparam.expected_poisson_j_perp_out
+        eyoungparallelarrayparam.expected_poisson_j_perp_out,
     )
 
 
@@ -14029,7 +14190,7 @@ def test_vv_stress_on_quench():
                 I_op=83200,
                 # VV properties
                 d_vv=0.12,  # for 6.6 restistance -> lambda2 = 2.1
-            )
+            ),
         )
         == 56835032.21809308
     )
@@ -14065,14 +14226,18 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(build_variables, "vgap_xpoint_divertor", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "shldtth", 0.3)  # Baseline 2018
     monkeypatch.setattr(
-        divertor_variables, "divfix", 2.05
+        divertor_variables,
+        "divfix",
+        2.05,
     )  # chosen to achieve H_vv in Table 2
 
     monkeypatch.setattr(build_variables, "tftsgap", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "thshield_ob", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "tfthko", 1.4)  # Baseline 2018
     monkeypatch.setattr(
-        build_variables, "gapsto", 1.7
+        build_variables,
+        "gapsto",
+        1.7,
     )  # chosen to achieve Ro_vv in Table 2
 
     monkeypatch.setattr(build_variables, "d_vv_out", 0.06)  # Section 3
@@ -14081,7 +14246,9 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
 
     monkeypatch.setattr(tfcoil_variables, "tfleng", 51.1)  # Table 2
     monkeypatch.setattr(
-        tfcoil_variables, "tfa", [3.41, 7.77, 7.77, 3.41]
+        tfcoil_variables,
+        "tfa",
+        [3.41, 7.77, 7.77, 3.41],
     )  # chosen to achieve Rm_coil in Table 2
     monkeypatch.setattr(tfcoil_variables, "n_tf", 18)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", 192)  # Section 3
@@ -14089,7 +14256,9 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(sctfcoil_module, "tfc_current", 83200 * 192)  # Section 3
 
     monkeypatch.setattr(
-        build_variables, "r_vv_inboard_out", 4.45 + (build_variables.d_vv_in / 2)
+        build_variables,
+        "r_vv_inboard_out",
+        4.45 + (build_variables.d_vv_in / 2),
     )  # Table 2
 
     sctfcoil.vv_stress_on_quench()

@@ -9,9 +9,12 @@ Input file:
 MFILE.DAT
 
 """
-import matplotlib
+
 import argparse
-from pylab import show, savefig
+
+import matplotlib
+from pylab import savefig, show
+
 from process.io.sankey_funcs import plot_sankey
 
 matplotlib.use("Agg")
@@ -23,13 +26,16 @@ def main(args=None):
 
     PARSER = argparse.ArgumentParser(
         description="Program to plot\
-     the power flow in PROCESS using a Sankey diagram."
+     the power flow in PROCESS using a Sankey diagram.",
     )
 
     PARSER.add_argument("-e", "--end", default="pdf", help="file format, default = pdf")
 
     PARSER.add_argument(
-        "-m", "--mfile", default="MFILE.DAT", help="mfile name, default = MFILE.DAT"
+        "-m",
+        "--mfile",
+        default="MFILE.DAT",
+        help="mfile name, default = MFILE.DAT",
     )
 
     ARGS = PARSER.parse_args(args)

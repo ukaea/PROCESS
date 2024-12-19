@@ -1,9 +1,8 @@
-from process.fortran import error_handling
-from process.fortran import scan_module
-from process.fortran import numerics
-from process.optimiser import Optimiser
 import numpy as np
+
 from process.caller import write_output_files
+from process.fortran import error_handling, numerics, scan_module
+from process.optimiser import Optimiser
 
 
 class Scan:
@@ -52,7 +51,7 @@ class Scan:
         """Run the optimiser."""
         # If no optimisation is required, leave the method
         if numerics.ioptimz < 0:
-            return
+            return None
 
         ifail = self.optimiser.run()
         scan_module.post_optimise(ifail)
@@ -66,7 +65,9 @@ class Scan:
         # an intent(inout) argument. They are modified, but not returned.
         # Initialise intent(out) array outvar
         outvar = np.zeros(
-            (scan_module.noutvars, scan_module.ipnscns), dtype=np.float64, order="F"
+            (scan_module.noutvars, scan_module.ipnscns),
+            dtype=np.float64,
+            order="F",
         )
 
         # initialise dict which will contain ifail values for each scan point
@@ -91,11 +92,13 @@ class Scan:
         # outvar now contains results
         scan_module.scan_1d_write_plot(iscan, outvar)
         print(
-            " ****************************************** Scan Convergence Summary ****************************************** \n"
+            " ****************************************** Scan Convergence Summary ****************************************** \n",
         )
         sweep_values = scan_module.sweep[: scan_module.isweep]
         nsweep_var_name, _ = scan_module.scan_select(
-            scan_module.nsweep, scan_module.sweep, scan_module.isweep
+            scan_module.nsweep,
+            scan_module.sweep,
+            scan_module.isweep,
         )
         converged_count = 0
         nsweep_var_name = nsweep_var_name.decode("utf-8")
@@ -104,21 +107,21 @@ class Scan:
         offsets = []
         for sweep_val in sweep_values:
             offsets.append(
-                max_sweep_value_length - len(str(sweep_val).replace(".", ""))
+                max_sweep_value_length - len(str(sweep_val).replace(".", "")),
             )
         for iscan in range(1, scan_module.isweep + 1):
             if scan_1d_ifail_dict[iscan] == 1:
                 converged_count += 1
                 print(
-                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan-1]} "
+                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan - 1]} "
                     + " " * offsets[iscan - 1]
-                    + "\u001b[32mCONVERGED \u001b[0m"
+                    + "\u001b[32mCONVERGED \u001b[0m",
                 )
             else:
                 print(
-                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan-1]} "
+                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan - 1]} "
                     + " " * offsets[iscan - 1]
-                    + "\u001b[31mUNCONVERGED \u001b[0m"
+                    + "\u001b[31mUNCONVERGED \u001b[0m",
                 )
         converged_percentage = converged_count / scan_module.isweep * 100
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
@@ -127,7 +130,9 @@ class Scan:
         """Run a 2-D scan."""
         # Initialise intent(out) arrays
         outvar = np.zeros(
-            (scan_module.noutvars, scan_module.ipnscns), dtype=np.float64, order="F"
+            (scan_module.noutvars, scan_module.ipnscns),
+            dtype=np.float64,
+            order="F",
         )
         sweep_1_vals = np.ndarray(scan_module.ipnscns, dtype=np.float64, order="F")
         sweep_2_vals = np.ndarray(scan_module.ipnscns, dtype=np.float64, order="F")
@@ -137,12 +142,16 @@ class Scan:
 
         # initialise array which will contain ifail values for each scan point
         scan_2d_ifail_list = np.zeros(
-            (scan_module.noutvars, scan_module.ipnscns), dtype=np.float64, order="F"
+            (scan_module.noutvars, scan_module.ipnscns),
+            dtype=np.float64,
+            order="F",
         )
         for iscan_1 in range(1, scan_module.isweep + 1):
             for iscan_2 in range(1, scan_module.isweep_2 + 1):
                 iscan_R = scan_module.scan_2d_write_point_header(
-                    iscan, iscan_1, iscan_2
+                    iscan,
+                    iscan_1,
+                    iscan_2,
                 )
                 ifail = self.doopt()
 
@@ -163,15 +172,19 @@ class Scan:
 
         scan_module.scan_2d_write_plot(iscan, outvar, sweep_1_vals, sweep_2_vals)
         print(
-            " ****************************************** Scan Convergence Summary ****************************************** \n"
+            " ****************************************** Scan Convergence Summary ****************************************** \n",
         )
         sweep_1_values = scan_module.sweep[: scan_module.isweep]
         sweep_2_values = scan_module.sweep_2[: scan_module.isweep_2]
         nsweep_var_name, _ = scan_module.scan_select(
-            scan_module.nsweep, scan_module.sweep, scan_module.isweep
+            scan_module.nsweep,
+            scan_module.sweep,
+            scan_module.isweep,
         )
         nsweep_2_var_name, _ = scan_module.scan_select(
-            scan_module.nsweep_2, scan_module.sweep_2, scan_module.isweep_2
+            scan_module.nsweep_2,
+            scan_module.sweep_2,
+            scan_module.isweep_2,
         )
         converged_count = 0
         scan_point = 1
@@ -181,7 +194,9 @@ class Scan:
         max_sweep1_value_length = len(str(np.max(sweep_1_values)).replace(".", ""))
         max_sweep2_value_length = len(str(np.max(sweep_2_values)).replace(".", ""))
         offsets = np.zeros(
-            (scan_module.isweep, scan_module.isweep_2), dtype=int, order="F"
+            (scan_module.isweep, scan_module.isweep_2),
+            dtype=int,
+            order="F",
         )
         for count1, sweep1 in enumerate(sweep_1_values):
             for count2, sweep2 in enumerate(sweep_2_values):
@@ -197,16 +212,16 @@ class Scan:
                 if scan_2d_ifail_list[iscan_1][iscan_2] == 1:
                     converged_count += 1
                     print(
-                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1-1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2-1]}) "
+                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2 - 1]}) "
                         + " " * offsets[iscan_1 - 1][iscan_2 - 1]
-                        + "\u001b[32mCONVERGED \u001b[0m"
+                        + "\u001b[32mCONVERGED \u001b[0m",
                     )
                     scan_point += 1
                 else:
                     print(
-                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1-1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2-1]}) "
+                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2 - 1]}) "
                         + " " * offsets[iscan_1 - 1][iscan_2 - 1]
-                        + "\u001b[31mUNCONVERGED \u001b[0m"
+                        + "\u001b[31mUNCONVERGED \u001b[0m",
                     )
                     scan_point += 1
         converged_percentage = (

@@ -2,13 +2,13 @@
 a remote data repository
 """
 
-import subprocess
-import requests
 import dataclasses
-import re
 import logging
-from typing import Optional
+import re
+import subprocess
 from pathlib import Path
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,10 @@ class RegressionTestAssetCollector:
         self._tracked_mfiles = self._get_tracked_mfiles()
 
     def get_reference_mfile(
-        self, scenario_name: str, directory: Path, target_hash: Optional[str] = None
+        self,
+        scenario_name: str,
+        directory: Path,
+        target_hash: str | None = None,
     ):
         """Finds the most recent reference MFile for `<scenario_name>.IN.DAT`
         and downloads it to the `directory` with the name `ref.<scenario_name>.MFILE.DAT`.
@@ -89,7 +92,7 @@ class RegressionTestAssetCollector:
         """
         repository_files = requests.get(
             f"https://api.github.com/repos/"
-            f"{self.remote_repository_owner}/{self.remote_repository_repo}/git/trees/master"
+            f"{self.remote_repository_owner}/{self.remote_repository_repo}/git/trees/master",
         ).json()["tree"]
 
         # create a list of tracked MFiles from the list of all files

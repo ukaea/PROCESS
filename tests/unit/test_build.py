@@ -1,17 +1,15 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
+
 from process.build import Build
-
-
-from process.fortran import build_variables
-
-from process.fortran import divertor_variables
-
-from process.fortran import physics_variables
-
-from process.fortran import tfcoil_variables
-
-from process.fortran import current_drive_variables
+from process.fortran import (
+    build_variables,
+    current_drive_variables,
+    divertor_variables,
+    physics_variables,
+    tfcoil_variables,
+)
 
 
 @pytest.fixture
@@ -25,7 +23,6 @@ def build():
 
 
 class DivgeomParam(NamedTuple):
-
     rspo: Any = None
 
     plleno: Any = None
@@ -62,7 +59,6 @@ class DivgeomParam(NamedTuple):
 
 
 class RippleAmplitudeParam(NamedTuple):
-
     rminor: Any = None
 
     rmajor: Any = None
@@ -274,13 +270,17 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
     monkeypatch.setattr(tfcoil_variables, "thkcas", rippleamplitudeparam.thkcas)
 
     monkeypatch.setattr(
-        tfcoil_variables, "casths_fraction", rippleamplitudeparam.casths_fraction
+        tfcoil_variables,
+        "casths_fraction",
+        rippleamplitudeparam.casths_fraction,
     )
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", rippleamplitudeparam.i_tf_sup)
 
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_wp_geom", rippleamplitudeparam.i_tf_wp_geom
+        tfcoil_variables,
+        "i_tf_wp_geom",
+        rippleamplitudeparam.i_tf_wp_geom,
     )
 
     monkeypatch.setattr(tfcoil_variables, "tfinsgap", rippleamplitudeparam.tfinsgap)
@@ -292,7 +292,9 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", rippleamplitudeparam.r_tf_inboard_in
+        build_variables,
+        "r_tf_inboard_in",
+        rippleamplitudeparam.r_tf_inboard_in,
     )
 
     ripple, r_tf_outboard_midmin, flag = build.ripple_amplitude(
@@ -303,14 +305,13 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
     assert ripple == pytest.approx(rippleamplitudeparam.expected_ripple)
 
     assert r_tf_outboard_midmin == pytest.approx(
-        rippleamplitudeparam.expected_r_tf_outboard_midmin
+        rippleamplitudeparam.expected_r_tf_outboard_midmin,
     )
 
     assert flag == pytest.approx(rippleamplitudeparam.expected_flag)
 
 
 class PortszParam(NamedTuple):
-
     r_tf_outboard_mid: Any = None
 
     tfthko: Any = None
@@ -386,7 +387,9 @@ def test_portsz(portszparam, monkeypatch, build):
     """
 
     monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", portszparam.r_tf_outboard_mid
+        build_variables,
+        "r_tf_outboard_mid",
+        portszparam.r_tf_outboard_mid,
     )
 
     monkeypatch.setattr(build_variables, "tfthko", portszparam.tfthko)
@@ -410,9 +413,9 @@ def test_portsz(portszparam, monkeypatch, build):
     build.portsz()
 
     assert current_drive_variables.rtanbeam == pytest.approx(
-        portszparam.expected_rtanbeam
+        portszparam.expected_rtanbeam,
     )
 
     assert current_drive_variables.rtanmax == pytest.approx(
-        portszparam.expected_rtanmax
+        portszparam.expected_rtanmax,
     )

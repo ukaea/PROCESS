@@ -1,10 +1,11 @@
 """
 Calculate radial and vertical coordinates for the geometry of the shield
 """
-from typing import Tuple
+
 import numpy as np
-from process.geometry.utils import dh_vertices
+
 from process.geometry.geometry_parameterisations import ArbitraryGeometry
+from process.geometry.utils import dh_vertices
 
 
 def shield_geometry_single_null(
@@ -39,13 +40,19 @@ def shield_geometry_single_null(
     # Side furthest from plasma
     kapx = cumulative_upper["shldtth"] / rminx_far
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
-        radx_far, rminx_far, triang, kapx
+        radx_far,
+        rminx_far,
+        triang,
+        kapx,
     )
 
     # Side nearest to plasma
     kapx = (cumulative_upper["vvblgap"]) / rminx_near
     rs_upper_inboard, zs_upper_inboard = dh_vertices(
-        radx_near, rminx_near, triang, kapx
+        radx_near,
+        rminx_near,
+        triang,
+        kapx,
     )
 
     # Lower shield
@@ -63,22 +70,18 @@ def shield_geometry_single_null(
         triang=triang,
     )
 
-    rs = np.concatenate(
-        [
-            rs_lower_inboard,
-            rs_lower_outboard[::-1],
-            rs_upper_outboard,
-            rs_upper_inboard[::-1],
-        ]
-    )
-    zs = np.concatenate(
-        [
-            zs_lower_inboard,
-            zs_lower_outboard[::-1],
-            zs_upper_outboard,
-            zs_upper_inboard[::-1],
-        ]
-    )
+    rs = np.concatenate([
+        rs_lower_inboard,
+        rs_lower_outboard[::-1],
+        rs_upper_outboard,
+        rs_upper_inboard[::-1],
+    ])
+    zs = np.concatenate([
+        zs_lower_inboard,
+        zs_lower_outboard[::-1],
+        zs_upper_outboard,
+        zs_upper_inboard[::-1],
+    ])
     return ArbitraryGeometry(
         rs=rs,
         zs=zs,
@@ -92,7 +95,7 @@ def shield_geometry_lower(
     radx_near: float,
     rminx_near: float,
     triang: float,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of shield below the midplane
 
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
@@ -113,13 +116,19 @@ def shield_geometry_lower(
     # Side furthest from plasma
     kapx = cumulative_lower["shldlth"] / rminx_far
     rs_lower_outboard, zs_lower_outboard = dh_vertices(
-        radx_far, rminx_far, triang, kapx
+        radx_far,
+        rminx_far,
+        triang,
+        kapx,
     )
 
     # Side nearest to plasma
     kapx = (cumulative_lower["divfix"]) / rminx_near
     rs_lower_inboard, zs_lower_inboard = dh_vertices(
-        radx_near, rminx_near, triang, kapx
+        radx_near,
+        rminx_near,
+        triang,
+        kapx,
     )
 
     return rs_lower_outboard, zs_lower_outboard, rs_lower_inboard, zs_lower_inboard

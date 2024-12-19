@@ -1,22 +1,23 @@
-import pytest
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-from process.hcpb import CCFE_HCPB
+import pytest
+
 from process.blanket_library import BlanketLibrary
-from process.fw import Fw
 from process.fortran import (
-    fwbs_variables,
     build_variables,
-    global_variables,
-    tfcoil_variables,
-    physics_variables,
     ccfe_hcpb_module,
-    primary_pumping_variables,
-    current_drive_variables,
-    heat_transport_variables,
     constraint_variables,
+    current_drive_variables,
     divertor_variables,
+    fwbs_variables,
+    global_variables,
+    heat_transport_variables,
+    physics_variables,
+    primary_pumping_variables,
+    tfcoil_variables,
 )
+from process.fw import Fw
+from process.hcpb import CCFE_HCPB
 
 
 @pytest.fixture
@@ -250,7 +251,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     monkeypatch.setattr(build_variables, "d_vv_in", nuclearheatingmagnetsparam.d_vv_in)
 
     monkeypatch.setattr(
-        build_variables, "d_vv_out", nuclearheatingmagnetsparam.d_vv_out
+        build_variables,
+        "d_vv_out",
+        nuclearheatingmagnetsparam.d_vv_out,
     )
 
     monkeypatch.setattr(build_variables, "fwoth", nuclearheatingmagnetsparam.fwoth)
@@ -296,7 +299,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     monkeypatch.setattr(fwbs_variables, "vffwo", nuclearheatingmagnetsparam.vffwo)
 
     monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingmagnetsparam.fusion_power
+        physics_variables,
+        "fusion_power",
+        nuclearheatingmagnetsparam.fusion_power,
     )
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingmagnetsparam.itart)
@@ -304,7 +309,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     monkeypatch.setattr(tfcoil_variables, "whttf", nuclearheatingmagnetsparam.whttf)
 
     monkeypatch.setattr(
-        tfcoil_variables, "whttflgs", nuclearheatingmagnetsparam.whttflgs
+        tfcoil_variables,
+        "whttflgs",
+        nuclearheatingmagnetsparam.whttflgs,
     )
 
     monkeypatch.setattr(global_variables, "verbose", nuclearheatingmagnetsparam.verbose)
@@ -314,81 +321,97 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     monkeypatch.setattr(ccfe_hcpb_module, "ofile", nuclearheatingmagnetsparam.ofile)
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "armour_density", nuclearheatingmagnetsparam.armour_density
+        ccfe_hcpb_module,
+        "armour_density",
+        nuclearheatingmagnetsparam.armour_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "fw_density", nuclearheatingmagnetsparam.fw_density
+        ccfe_hcpb_module,
+        "fw_density",
+        nuclearheatingmagnetsparam.fw_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "blanket_density", nuclearheatingmagnetsparam.blanket_density
+        ccfe_hcpb_module,
+        "blanket_density",
+        nuclearheatingmagnetsparam.blanket_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "shield_density", nuclearheatingmagnetsparam.shield_density
+        ccfe_hcpb_module,
+        "shield_density",
+        nuclearheatingmagnetsparam.shield_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "vv_density", nuclearheatingmagnetsparam.vv_density
+        ccfe_hcpb_module,
+        "vv_density",
+        nuclearheatingmagnetsparam.vv_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "x_blanket", nuclearheatingmagnetsparam.x_blanket
+        ccfe_hcpb_module,
+        "x_blanket",
+        nuclearheatingmagnetsparam.x_blanket,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "x_shield", nuclearheatingmagnetsparam.x_shield
+        ccfe_hcpb_module,
+        "x_shield",
+        nuclearheatingmagnetsparam.x_shield,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "tfc_nuc_heating", nuclearheatingmagnetsparam.tfc_nuc_heating
+        ccfe_hcpb_module,
+        "tfc_nuc_heating",
+        nuclearheatingmagnetsparam.tfc_nuc_heating,
     )
 
     ccfe_hcpb.nuclear_heating_magnets(False)
 
     assert fwbs_variables.ptfnuc == pytest.approx(
-        nuclearheatingmagnetsparam.expected_ptfnuc
+        nuclearheatingmagnetsparam.expected_ptfnuc,
     )
 
     assert fwbs_variables.vffwi == pytest.approx(
-        nuclearheatingmagnetsparam.expected_vffwi
+        nuclearheatingmagnetsparam.expected_vffwi,
     )
 
     assert fwbs_variables.vffwo == pytest.approx(
-        nuclearheatingmagnetsparam.expected_vffwo
+        nuclearheatingmagnetsparam.expected_vffwo,
     )
 
     assert ccfe_hcpb_module.armour_density == pytest.approx(
-        nuclearheatingmagnetsparam.expected_armour_density
+        nuclearheatingmagnetsparam.expected_armour_density,
     )
 
     assert ccfe_hcpb_module.fw_density == pytest.approx(
-        nuclearheatingmagnetsparam.expected_fw_density
+        nuclearheatingmagnetsparam.expected_fw_density,
     )
 
     assert ccfe_hcpb_module.blanket_density == pytest.approx(
-        nuclearheatingmagnetsparam.expected_blanket_density
+        nuclearheatingmagnetsparam.expected_blanket_density,
     )
 
     assert ccfe_hcpb_module.shield_density == pytest.approx(
-        nuclearheatingmagnetsparam.expected_shield_density
+        nuclearheatingmagnetsparam.expected_shield_density,
     )
 
     assert ccfe_hcpb_module.vv_density == pytest.approx(
-        nuclearheatingmagnetsparam.expected_vv_density
+        nuclearheatingmagnetsparam.expected_vv_density,
     )
 
     assert ccfe_hcpb_module.x_blanket == pytest.approx(
-        nuclearheatingmagnetsparam.expected_x_blanket
+        nuclearheatingmagnetsparam.expected_x_blanket,
     )
 
     assert ccfe_hcpb_module.x_shield == pytest.approx(
-        nuclearheatingmagnetsparam.expected_x_shield
+        nuclearheatingmagnetsparam.expected_x_shield,
     )
 
     assert ccfe_hcpb_module.tfc_nuc_heating == pytest.approx(
-        nuclearheatingmagnetsparam.expected_tfc_nuc_heating
+        nuclearheatingmagnetsparam.expected_tfc_nuc_heating,
     )
 
 
@@ -445,7 +468,9 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "fwmass", nuclearheatingfwparam.fwmass)
 
     monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingfwparam.fusion_power
+        physics_variables,
+        "fusion_power",
+        nuclearheatingfwparam.fusion_power,
     )
 
     monkeypatch.setattr(
@@ -459,7 +484,7 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.pnucfw == pytest.approx(nuclearheatingfwparam.expected_pnucfw)
 
     assert ccfe_hcpb_module.fw_armour_u_nuc_heating == pytest.approx(
-        nuclearheatingfwparam.expected_fw_armour_u_nuc_heating
+        nuclearheatingfwparam.expected_fw_armour_u_nuc_heating,
     )
 
 
@@ -516,21 +541,25 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
     monkeypatch.setattr(fwbs_variables, "pnucblkt", nuclearheatingblanketparam.pnucblkt)
 
     monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingblanketparam.fusion_power
+        physics_variables,
+        "fusion_power",
+        nuclearheatingblanketparam.fusion_power,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_blanket", nuclearheatingblanketparam.exp_blanket
+        ccfe_hcpb_module,
+        "exp_blanket",
+        nuclearheatingblanketparam.exp_blanket,
     )
 
     ccfe_hcpb.nuclear_heating_blanket()
 
     assert fwbs_variables.pnucblkt == pytest.approx(
-        nuclearheatingblanketparam.expected_pnucblkt
+        nuclearheatingblanketparam.expected_pnucblkt,
     )
 
     assert ccfe_hcpb_module.exp_blanket == pytest.approx(
-        nuclearheatingblanketparam.expected_exp_blanket
+        nuclearheatingblanketparam.expected_exp_blanket,
     )
 
 
@@ -627,17 +656,23 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
     monkeypatch.setattr(fwbs_variables, "pnucshld", nuclearheatingshieldparam.pnucshld)
 
     monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingshieldparam.fusion_power
+        physics_variables,
+        "fusion_power",
+        nuclearheatingshieldparam.fusion_power,
     )
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingshieldparam.itart)
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "shield_density", nuclearheatingshieldparam.shield_density
+        ccfe_hcpb_module,
+        "shield_density",
+        nuclearheatingshieldparam.shield_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "x_blanket", nuclearheatingshieldparam.x_blanket
+        ccfe_hcpb_module,
+        "x_blanket",
+        nuclearheatingshieldparam.x_blanket,
     )
 
     monkeypatch.setattr(
@@ -647,29 +682,33 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_shield1", nuclearheatingshieldparam.exp_shield1
+        ccfe_hcpb_module,
+        "exp_shield1",
+        nuclearheatingshieldparam.exp_shield1,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_shield2", nuclearheatingshieldparam.exp_shield2
+        ccfe_hcpb_module,
+        "exp_shield2",
+        nuclearheatingshieldparam.exp_shield2,
     )
 
     ccfe_hcpb.nuclear_heating_shield()
 
     assert fwbs_variables.pnucshld == pytest.approx(
-        nuclearheatingshieldparam.expected_pnucshld
+        nuclearheatingshieldparam.expected_pnucshld,
     )
 
     assert ccfe_hcpb_module.shld_u_nuc_heating == pytest.approx(
-        nuclearheatingshieldparam.expected_shld_u_nuc_heating
+        nuclearheatingshieldparam.expected_shld_u_nuc_heating,
     )
 
     assert ccfe_hcpb_module.exp_shield1 == pytest.approx(
-        nuclearheatingshieldparam.expected_exp_shield1
+        nuclearheatingshieldparam.expected_exp_shield1,
     )
 
     assert ccfe_hcpb_module.exp_shield2 == pytest.approx(
-        nuclearheatingshieldparam.expected_exp_shield2
+        nuclearheatingshieldparam.expected_exp_shield2,
     )
 
 
@@ -734,7 +773,9 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
     monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
 
     monkeypatch.setattr(
-        physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power
+        physics_variables,
+        "fusion_power",
+        nuclearheatingdivertorparam.fusion_power,
     )
 
     monkeypatch.setattr(ccfe_hcpb_module, "ip", nuclearheatingdivertorparam.ip)
@@ -742,7 +783,7 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
     ccfe_hcpb.nuclear_heating_divertor()
 
     assert fwbs_variables.pnucdiv == pytest.approx(
-        nuclearheatingdivertorparam.expected_pnucdiv
+        nuclearheatingdivertorparam.expected_pnucdiv,
     )
 
 
@@ -963,7 +1004,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(build_variables, "fwarea", powerflowcalcparam.fwarea)
 
     monkeypatch.setattr(
-        current_drive_variables, "porbitlossmw", powerflowcalcparam.porbitlossmw
+        current_drive_variables,
+        "porbitlossmw",
+        powerflowcalcparam.porbitlossmw,
     )
 
     monkeypatch.setattr(fwbs_variables, "fdiv", powerflowcalcparam.fdiv)
@@ -983,7 +1026,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "blpressure", powerflowcalcparam.blpressure)
 
     monkeypatch.setattr(
-        fwbs_variables, "primary_pumping", powerflowcalcparam.primary_pumping
+        fwbs_variables,
+        "primary_pumping",
+        powerflowcalcparam.primary_pumping,
     )
 
     monkeypatch.setattr(fwbs_variables, "pnucfw", powerflowcalcparam.pnucfw)
@@ -1003,33 +1048,47 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "psurffwo", powerflowcalcparam.psurffwo)
 
     monkeypatch.setattr(
-        heat_transport_variables, "htpmw_fw", powerflowcalcparam.htpmw_fw
+        heat_transport_variables,
+        "htpmw_fw",
+        powerflowcalcparam.htpmw_fw,
     )
 
     monkeypatch.setattr(heat_transport_variables, "fpumpfw", powerflowcalcparam.fpumpfw)
 
     monkeypatch.setattr(
-        heat_transport_variables, "htpmw_blkt", powerflowcalcparam.htpmw_blkt
+        heat_transport_variables,
+        "htpmw_blkt",
+        powerflowcalcparam.htpmw_blkt,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "fpumpblkt", powerflowcalcparam.fpumpblkt
+        heat_transport_variables,
+        "fpumpblkt",
+        powerflowcalcparam.fpumpblkt,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "htpmw_shld", powerflowcalcparam.htpmw_shld
+        heat_transport_variables,
+        "htpmw_shld",
+        powerflowcalcparam.htpmw_shld,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "fpumpshld", powerflowcalcparam.fpumpshld
+        heat_transport_variables,
+        "fpumpshld",
+        powerflowcalcparam.fpumpshld,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "htpmw_div", powerflowcalcparam.htpmw_div
+        heat_transport_variables,
+        "htpmw_div",
+        powerflowcalcparam.htpmw_div,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "fpumpdiv", powerflowcalcparam.fpumpdiv
+        heat_transport_variables,
+        "fpumpdiv",
+        powerflowcalcparam.fpumpdiv,
     )
 
     monkeypatch.setattr(physics_variables, "idivrt", powerflowcalcparam.idivrt)
@@ -1045,19 +1104,27 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(primary_pumping_variables, "dp_he", powerflowcalcparam.dp_he)
 
     monkeypatch.setattr(
-        primary_pumping_variables, "gamma_he", powerflowcalcparam.gamma_he
+        primary_pumping_variables,
+        "gamma_he",
+        powerflowcalcparam.gamma_he,
     )
 
     monkeypatch.setattr(
-        primary_pumping_variables, "t_in_bb", powerflowcalcparam.t_in_bb
+        primary_pumping_variables,
+        "t_in_bb",
+        powerflowcalcparam.t_in_bb,
     )
 
     monkeypatch.setattr(
-        primary_pumping_variables, "t_out_bb", powerflowcalcparam.t_out_bb
+        primary_pumping_variables,
+        "t_out_bb",
+        powerflowcalcparam.t_out_bb,
     )
 
     monkeypatch.setattr(
-        primary_pumping_variables, "htpmw_fw_blkt", powerflowcalcparam.htpmw_fw_blkt
+        primary_pumping_variables,
+        "htpmw_fw_blkt",
+        powerflowcalcparam.htpmw_fw_blkt,
     )
 
     monkeypatch.setattr(ccfe_hcpb_module, "ip", powerflowcalcparam.ip)
@@ -1071,23 +1138,23 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.pradfw == pytest.approx(powerflowcalcparam.expected_pradfw)
 
     assert fwbs_variables.psurffwi == pytest.approx(
-        powerflowcalcparam.expected_psurffwi
+        powerflowcalcparam.expected_psurffwi,
     )
 
     assert fwbs_variables.psurffwo == pytest.approx(
-        powerflowcalcparam.expected_psurffwo
+        powerflowcalcparam.expected_psurffwo,
     )
 
     assert heat_transport_variables.htpmw_shld == pytest.approx(
-        powerflowcalcparam.expected_htpmw_shld
+        powerflowcalcparam.expected_htpmw_shld,
     )
 
     assert heat_transport_variables.htpmw_div == pytest.approx(
-        powerflowcalcparam.expected_htpmw_div
+        powerflowcalcparam.expected_htpmw_div,
     )
 
     assert primary_pumping_variables.htpmw_fw_blkt == pytest.approx(
-        powerflowcalcparam.expected_htpmw_fw_blkt
+        powerflowcalcparam.expected_htpmw_fw_blkt,
     )
 
 
@@ -1174,7 +1241,9 @@ class StTfCentrepostFastNeutFluxParam(NamedTuple):
     ),
 )
 def test_st_tf_centrepost_fast_neut_flux(
-    sttfcentrepostfastneutfluxparam, monkeypatch, ccfe_hcpb
+    sttfcentrepostfastneutfluxparam,
+    monkeypatch,
+    ccfe_hcpb,
 ):
     """
     Automatically generated Regression Unit Test for st_tf_centrepost_fast_neut_flux.
@@ -1189,7 +1258,9 @@ def test_st_tf_centrepost_fast_neut_flux(
     """
 
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sup", sttfcentrepostfastneutfluxparam.i_tf_sup
+        tfcoil_variables,
+        "i_tf_sup",
+        sttfcentrepostfastneutfluxparam.i_tf_sup,
     )
 
     neut_flux_cp = ccfe_hcpb.st_tf_centrepost_fast_neut_flux(
@@ -1199,7 +1270,7 @@ def test_st_tf_centrepost_fast_neut_flux(
     )
 
     assert neut_flux_cp == pytest.approx(
-        sttfcentrepostfastneutfluxparam.expected_neut_flux_cp
+        sttfcentrepostfastneutfluxparam.expected_neut_flux_cp,
     )
 
 
@@ -1243,7 +1314,9 @@ class StCentrepostNuclearHeatingParam(NamedTuple):
     ),
 )
 def test_st_centrepost_nuclear_heating(
-    stcentrepostnuclearheatingparam, monkeypatch, ccfe_hcpb
+    stcentrepostnuclearheatingparam,
+    monkeypatch,
+    ccfe_hcpb,
 ):
     """
     Automatically generated Regression Unit Test for st_centrepost_nuclear_heating.
@@ -1258,11 +1331,15 @@ def test_st_centrepost_nuclear_heating(
     """
 
     monkeypatch.setattr(
-        physics_variables, "rmajor", stcentrepostnuclearheatingparam.rmajor
+        physics_variables,
+        "rmajor",
+        stcentrepostnuclearheatingparam.rmajor,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sup", stcentrepostnuclearheatingparam.i_tf_sup
+        tfcoil_variables,
+        "i_tf_sup",
+        stcentrepostnuclearheatingparam.i_tf_sup,
     )
 
     pnuc_cp_tf, pnuc_cp_sh, pnuc_cp = ccfe_hcpb.st_centrepost_nuclear_heating(
@@ -1271,11 +1348,11 @@ def test_st_centrepost_nuclear_heating(
     )
 
     assert pnuc_cp_tf == pytest.approx(
-        stcentrepostnuclearheatingparam.expected_pnuc_cp_tf
+        stcentrepostnuclearheatingparam.expected_pnuc_cp_tf,
     )
 
     assert pnuc_cp_sh == pytest.approx(
-        stcentrepostnuclearheatingparam.expected_pnuc_cp_sh
+        stcentrepostnuclearheatingparam.expected_pnuc_cp_sh,
     )
 
     assert pnuc_cp == pytest.approx(stcentrepostnuclearheatingparam.expected_pnuc_cp)
@@ -1343,7 +1420,9 @@ def test_tbr_shimwell(tbrshimwellparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(constraint_variables, "tbrmin", tbrshimwellparam.tbrmin)
 
     monkeypatch.setattr(
-        fwbs_variables, "fw_armour_thickness", tbrshimwellparam.fw_armour_thickness
+        fwbs_variables,
+        "fw_armour_thickness",
+        tbrshimwellparam.fw_armour_thickness,
     )
 
     monkeypatch.setattr(ccfe_hcpb_module, "ip", tbrshimwellparam.ip)
@@ -1587,11 +1666,15 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "fwclfr", componentmassesparam.fwclfr)
     monkeypatch.setattr(fwbs_variables, "breeder_f", componentmassesparam.breeder_f)
     monkeypatch.setattr(
-        fwbs_variables, "breeder_multiplier", componentmassesparam.breeder_multiplier
+        fwbs_variables,
+        "breeder_multiplier",
+        componentmassesparam.breeder_multiplier,
     )
     monkeypatch.setattr(fwbs_variables, "whtbltibe12", componentmassesparam.whtbltibe12)
     monkeypatch.setattr(
-        fwbs_variables, "whtblli4sio4", componentmassesparam.whtblli4sio4
+        fwbs_variables,
+        "whtblli4sio4",
+        componentmassesparam.whtblli4sio4,
     )
     monkeypatch.setattr(fwbs_variables, "wtblli2o", componentmassesparam.wtblli2o)
     monkeypatch.setattr(fwbs_variables, "vfcblkt", componentmassesparam.vfcblkt)
@@ -1600,16 +1683,24 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "wpenshld", componentmassesparam.wpenshld)
     monkeypatch.setattr(fwbs_variables, "fwmass", componentmassesparam.fwmass)
     monkeypatch.setattr(
-        fwbs_variables, "fw_armour_vol", componentmassesparam.fw_armour_vol
+        fwbs_variables,
+        "fw_armour_vol",
+        componentmassesparam.fw_armour_vol,
     )
     monkeypatch.setattr(
-        fwbs_variables, "fw_armour_thickness", componentmassesparam.fw_armour_thickness
+        fwbs_variables,
+        "fw_armour_thickness",
+        componentmassesparam.fw_armour_thickness,
     )
     monkeypatch.setattr(
-        fwbs_variables, "fw_armour_mass", componentmassesparam.fw_armour_mass
+        fwbs_variables,
+        "fw_armour_mass",
+        componentmassesparam.fw_armour_mass,
     )
     monkeypatch.setattr(
-        fwbs_variables, "armour_fw_bl_mass", componentmassesparam.armour_fw_bl_mass
+        fwbs_variables,
+        "armour_fw_bl_mass",
+        componentmassesparam.armour_fw_bl_mass,
     )
     monkeypatch.setattr(fwbs_variables, "volblkti", componentmassesparam.volblkti)
     monkeypatch.setattr(fwbs_variables, "volblkto", componentmassesparam.volblkto)
@@ -1635,55 +1726,55 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     ccfe_hcpb.component_masses()
 
     assert divertor_variables.divsur == pytest.approx(
-        componentmassesparam.expected_divsur
+        componentmassesparam.expected_divsur,
     )
     assert divertor_variables.divmas == pytest.approx(
-        componentmassesparam.expected_divmas
+        componentmassesparam.expected_divmas,
     )
     assert fwbs_variables.whtblbe == pytest.approx(
-        componentmassesparam.expected_whtblbe
+        componentmassesparam.expected_whtblbe,
     )
     assert fwbs_variables.whtblss == pytest.approx(
-        componentmassesparam.expected_whtblss
+        componentmassesparam.expected_whtblss,
     )
     assert fwbs_variables.whtblkt == pytest.approx(
-        componentmassesparam.expected_whtblkt
+        componentmassesparam.expected_whtblkt,
     )
     assert fwbs_variables.coolmass == pytest.approx(
-        componentmassesparam.expected_coolmass
+        componentmassesparam.expected_coolmass,
     )
     assert fwbs_variables.fwclfr == pytest.approx(componentmassesparam.expected_fwclfr)
     assert fwbs_variables.whtbltibe12 == pytest.approx(
-        componentmassesparam.expected_whtbltibe12
+        componentmassesparam.expected_whtbltibe12,
     )
     assert fwbs_variables.whtblli4sio4 == pytest.approx(
-        componentmassesparam.expected_whtblli4sio4
+        componentmassesparam.expected_whtblli4sio4,
     )
     assert fwbs_variables.wtblli2o == pytest.approx(
-        componentmassesparam.expected_wtblli2o
+        componentmassesparam.expected_wtblli2o,
     )
     assert fwbs_variables.whtshld == pytest.approx(
-        componentmassesparam.expected_whtshld
+        componentmassesparam.expected_whtshld,
     )
     assert fwbs_variables.wpenshld == pytest.approx(
-        componentmassesparam.expected_wpenshld
+        componentmassesparam.expected_wpenshld,
     )
     assert fwbs_variables.fwmass == pytest.approx(componentmassesparam.expected_fwmass)
     assert fwbs_variables.fw_armour_vol == pytest.approx(
-        componentmassesparam.expected_fw_armour_vol
+        componentmassesparam.expected_fw_armour_vol,
     )
     assert fwbs_variables.fw_armour_mass == pytest.approx(
-        componentmassesparam.expected_fw_armour_mass
+        componentmassesparam.expected_fw_armour_mass,
     )
     assert fwbs_variables.armour_fw_bl_mass == pytest.approx(
-        componentmassesparam.expected_armour_fw_bl_mass
+        componentmassesparam.expected_armour_fw_bl_mass,
     )
     assert fwbs_variables.fblss_ccfe == pytest.approx(
-        componentmassesparam.expected_fblss_ccfe
+        componentmassesparam.expected_fblss_ccfe,
     )
     assert fwbs_variables.fblli2sio4 == pytest.approx(
-        componentmassesparam.expected_fblli2sio4
+        componentmassesparam.expected_fblli2sio4,
     )
     assert fwbs_variables.fbltibe12 == pytest.approx(
-        componentmassesparam.expected_fbltibe12
+        componentmassesparam.expected_fbltibe12,
     )

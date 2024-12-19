@@ -1,17 +1,18 @@
 """Unit tests for availability.f90."""
 
-from process import fortran
-from process.availability import Availability
-from process.fortran import cost_variables as cv
-from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
-from process.fortran import constraint_variables as ctv
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import times_variables as tv
-from process.fortran import ife_variables as ifev
-from process.fortran import divertor_variables as dv
 import pytest
 from pytest import approx
+
+from process import fortran
+from process.availability import Availability
+from process.fortran import constraint_variables as ctv
+from process.fortran import cost_variables as cv
+from process.fortran import divertor_variables as dv
+from process.fortran import fwbs_variables as fwbsv
+from process.fortran import ife_variables as ifev
+from process.fortran import physics_variables as pv
+from process.fortran import tfcoil_variables as tfv
+from process.fortran import times_variables as tv
 
 
 @pytest.fixture
@@ -274,7 +275,10 @@ def calc_u_unplanned_magnets_params():
     params = [
         calc_u_unplanned_magnets_param(),
         calc_u_unplanned_magnets_param(
-            temp_margin=2.0, tmargmin_tf=1.6, tmargmin_cs=1.6, conf_mag=0.8
+            temp_margin=2.0,
+            tmargmin_tf=1.6,
+            tmargmin_cs=1.6,
+            conf_mag=0.8,
         ),
         calc_u_unplanned_magnets_param(
             temp_margin=1.8,
@@ -363,7 +367,8 @@ def calc_u_unplanned_divertor_params():
 
 
 @pytest.fixture(
-    params=calc_u_unplanned_divertor_params(), ids=["below_nref", "above_nu", "between"]
+    params=calc_u_unplanned_divertor_params(),
+    ids=["below_nref", "above_nu", "between"],
 )
 def calc_u_unplanned_divertor_fix(request, monkeypatch):
     """Fixture for the calc_u_unplanned_divertor() variables.
@@ -438,7 +443,8 @@ def calc_u_unplanned_fwbs_params():
 
 
 @pytest.fixture(
-    params=calc_u_unplanned_fwbs_params(), ids=["below_nref", "above_nu", "between"]
+    params=calc_u_unplanned_fwbs_params(),
+    ids=["below_nref", "above_nu", "between"],
 )
 def calc_u_unplanned_fwbs_fix(request, monkeypatch):
     """Fixture for the calc_u_unplanned_fwbs() variables.
@@ -486,6 +492,7 @@ def test_avail_2(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
+
     # Mock return values for for functions called in avail_2
     def mock_calc_u_planned(*args, **kwargs):
         return 0.01
@@ -511,18 +518,26 @@ def test_avail_2(monkeypatch, availability):
     # Mock module functions
     monkeypatch.setattr(availability, "calc_u_planned", mock_calc_u_planned)
     monkeypatch.setattr(
-        availability, "calc_u_unplanned_magnets", mock_calc_u_unplanned_magnets
+        availability,
+        "calc_u_unplanned_magnets",
+        mock_calc_u_unplanned_magnets,
     )
     monkeypatch.setattr(
-        availability, "calc_u_unplanned_divertor", mock_calc_u_unplanned_divertor
+        availability,
+        "calc_u_unplanned_divertor",
+        mock_calc_u_unplanned_divertor,
     )
     monkeypatch.setattr(
-        availability, "calc_u_unplanned_fwbs", mock_calc_u_unplanned_fwbs
+        availability,
+        "calc_u_unplanned_fwbs",
+        mock_calc_u_unplanned_fwbs,
     )
     monkeypatch.setattr(availability, "calc_u_unplanned_bop", mock_calc_u_unplanned_bop)
     monkeypatch.setattr(availability, "calc_u_unplanned_hcd", mock_calc_u_unplanned_hcd)
     monkeypatch.setattr(
-        availability, "calc_u_unplanned_vacuum", mock_calc_u_unplanned_vacuum
+        availability,
+        "calc_u_unplanned_vacuum",
+        mock_calc_u_unplanned_vacuum,
     )
 
     # Mock module variables

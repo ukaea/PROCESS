@@ -13,29 +13,31 @@ Compatible with PROCESS version 382
             generation script imports, and inspects, process.
 """
 
+import logging
 import os
 import subprocess
 import sys
+from pathlib import Path
 from sys import stderr
 from time import sleep
-from numpy.random import seed, uniform, normal
+
 from numpy import argsort, argwhere, logical_or
-from pathlib import Path
-from process.io.process_funcs import (
-    get_from_indat_or_default,
-    set_variable_in_indat,
-    check_in_dat,
-)
+from numpy.random import normal, seed, uniform
+
+from process.io.configuration import Config
 from process.io.in_dat import InDat
 from process.io.mfile import MFile
-from process.io.configuration import Config
+from process.io.process_funcs import (
+    check_in_dat,
+    get_from_indat_or_default,
+    set_variable_in_indat,
+)
 from process.io.python_fortran_dicts import get_dicts
-import logging
 
 logger = logging.getLogger(__name__)
 
 
-class ProcessConfig(object):
+class ProcessConfig:
     """
     Configuration parameters for PROCESS runs
 
@@ -72,18 +74,18 @@ class ProcessConfig(object):
         """echos the attributes of the class"""
 
         if self.wdir != ".":
-            print("Working directory:   {}".format(self.wdir))
-        print("Original IN.DAT:     {}".format(self.or_in_dat))
-        print("PROCESS binary:      {}".format(self.process))
-        print("Number of iterations {}".format(self.niter))
+            print(f"Working directory:   {self.wdir}")
+        print(f"Original IN.DAT:     {self.or_in_dat}")
+        print(f"PROCESS binary:      {self.process}")
+        print(f"Number of iterations {self.niter}")
 
         if self.u_seed is not None:
-            print("random seed          {}".format(self.u_seed))
-        print("variable range factor {}".format(self.factor))
+            print(f"random seed          {self.u_seed}")
+        print(f"variable range factor {self.factor}")
         if self.filename is not None:
-            print("Config file          {}".format(self.filename))
+            print(f"Config file          {self.filename}")
         if self.comment != "":
-            print("Comment  {}".format(self.comment))
+            print(f"Comment  {self.comment}")
 
     def prepare_wdir(self):
         """prepares the working directory"""
@@ -104,7 +106,7 @@ class ProcessConfig(object):
         subprocess.call(
             [
                 "rm -f OUT.DAT MFILE.DAT README.txt\
-        SolverTest.out process.log *.pdf  uncertainties.nc time.info"
+        SolverTest.out process.log *.pdf  uncertainties.nc time.info",
             ],
             shell=True,
         )
@@ -139,8 +141,6 @@ class ProcessConfig(object):
     def modify_in_dat(self):
         """modifies the original IN.DAT file"""
 
-        pass
-
     def setup(self):
         """sets up the program for running"""
 
@@ -163,7 +163,7 @@ class ProcessConfig(object):
             return False
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -189,7 +189,7 @@ class ProcessConfig(object):
             return None
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -209,8 +209,7 @@ class ProcessConfig(object):
                         configfile.close()
                         if auxvar == "":
                             return None
-                        else:
-                            return auxvar
+                        return auxvar
 
         configfile.close()
         return None
@@ -359,7 +358,7 @@ class TestProcessConfig(ProcessConfig):
     def echo(self):
         """echos the values of the current class"""
 
-        print("")
+        print()
         super().echo()
 
         if self.ioptimz != "None":
@@ -370,7 +369,7 @@ class TestProcessConfig(ProcessConfig):
             print("epsfcn               %s" % self.epsfcn)
         if self.minmax != "None":
             print("minmax               %s" % self.minmax)
-        print("")
+        print()
         sleep(1)
 
     def modify_in_dat(self):
@@ -481,7 +480,7 @@ class RunProcessConfig(ProcessConfig):
             return []
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -511,7 +510,7 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -534,7 +533,7 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -548,7 +547,7 @@ class RunProcessConfig(ProcessConfig):
                 if "=" in lcase:
                     varname = lcase[: lcase.find("=")]
                     auxvar = condense[condense.find("=") + 1 :]
-                    if varname[:4] == "var_" and not auxvar == "":
+                    if varname[:4] == "var_" and auxvar != "":
                         self.dictvar[varname[4:]] = auxvar
 
         configfile.close()
@@ -556,14 +555,14 @@ class RunProcessConfig(ProcessConfig):
     def echo(self):
         """echos the values of the current class"""
 
-        print("")
+        print()
         super().echo()
 
         print("no. allowed UNFEASIBLE points %i" % self.no_allowed_unfeasible)
         if self.create_itervar_diff:
             print(
                 "Set to create a summary file of the iteration variable\
- values!"
+ values!",
             )
 
         if self.add_ixc != []:
@@ -579,7 +578,7 @@ class RunProcessConfig(ProcessConfig):
         if self.del_var != []:
             print("del_var", self.del_var)
 
-        print("")
+        print()
         sleep(1)
 
     def modify_in_dat(self):
@@ -697,10 +696,10 @@ class UncertaintiesConfig(ProcessConfig, Config):
         self.filename = configfilename
 
         self.wdir = os.path.abspath(
-            self.get("config", "working_directory", default=self.wdir)
+            self.get("config", "working_directory", default=self.wdir),
         )
         self.or_in_dat = os.path.abspath(
-            self.get("config", "IN.DAT_path", default=self.or_in_dat)
+            self.get("config", "IN.DAT_path", default=self.or_in_dat),
         )
         self.niter = self.get("config", "no_iter", default=self.niter)
         self.u_seed = self.get("config", "pseudorandom_seed", default=self.u_seed)
@@ -712,35 +711,39 @@ class UncertaintiesConfig(ProcessConfig, Config):
         self.no_samples = self.get("no_samples", default=self.no_samples)
         self.uncertainties = self.get("uncertainties", default=self.uncertainties)
         self.morris_uncertainties = self.get(
-            "morris_uncertainties", default=self.morris_uncertainties
+            "morris_uncertainties",
+            default=self.morris_uncertainties,
         )
         self.sobol_uncertainties = self.get(
-            "sobol_uncertainties", default=self.sobol_uncertainties
+            "sobol_uncertainties",
+            default=self.sobol_uncertainties,
         )
         self.output_vars = self.get("output_vars", default=self.output_vars)
         self.output_mean = self.get("output_mean", default=self.output_mean)
         self.figure_of_merit = self.get("figure_of_merit", default=self.figure_of_merit)
         self.latin_hypercube_level = self.get(
-            "latin_hypercube_level", default=self.latin_hypercube_level
+            "latin_hypercube_level",
+            default=self.latin_hypercube_level,
         )
         self.vary_iteration_variables = self.get(
-            "vary_iteration_variables", default=self.vary_iteration_variables
+            "vary_iteration_variables",
+            default=self.vary_iteration_variables,
         )
         # setup the output_vars
         for u_dict in self.uncertainties:
-            if not u_dict["varname"] in self.output_vars:
+            if u_dict["varname"] not in self.output_vars:
                 self.output_vars += [u_dict["varname"]]
 
         # add normalised constraints/iteration variables to output
         in_dat = InDat(self.or_in_dat)
         nvar = in_dat.number_of_itvars
         for i in range(1, nvar + 1):
-            nitvar = "nitvar{:03}".format(i)
+            nitvar = f"nitvar{i:03}"
             if nitvar not in self.output_vars:
                 self.output_vars += [nitvar]
         neqns = in_dat.number_of_constraints
         for i in range(1, neqns + 1):
-            normres = "normres{:03}".format(i)
+            normres = f"normres{i:03}"
             if normres not in self.output_vars:
                 self.output_vars += [normres]
 
@@ -755,7 +758,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             elif "fimp(" in varname:
                 # has different format in MFILE!!
                 fimpno = int(varname.split("(")[1].split(")")[0])
-                self.output_vars[i] = "fimp({:02}".format(fimpno)
+                self.output_vars[i] = f"fimp({fimpno:02}"
             elif "zref" in varname:
                 del_list += [varname]
                 add_zref = True
@@ -774,7 +777,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
     def echo(self):
         """echos the values of the current class"""
 
-        print("")
+        print()
         super().echo()
 
         print("No scans            %i" % self.no_scans)
@@ -789,7 +792,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                 print(" -------")
         if self.output_vars != []:
             print("output vars        ", self.output_vars)
-        print("")
+        print()
         sleep(1)
 
     def modify_in_dat(self):
@@ -844,7 +847,8 @@ class UncertaintiesConfig(ProcessConfig, Config):
                 set_variable_in_indat(in_dat, "nsweep", nsweep)
                 set_variable_in_indat(in_dat, "isweep", self.no_scans)
                 value = get_from_indat_or_default(
-                    in_dat, dicts["DICT_NSWEEP2VARNAME"][nsweep]
+                    in_dat,
+                    dicts["DICT_NSWEEP2VARNAME"][nsweep],
                 )
                 set_variable_in_indat(in_dat, "sweep", [value] * self.no_scans)
 
@@ -867,7 +871,8 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
         if self.uncertainties == {}:
             print(
-                "Error: No uncertain parameter specified in config file!", file=stderr
+                "Error: No uncertain parameter specified in config file!",
+                file=stderr,
             )
             exit()
 
@@ -1045,7 +1050,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                         logical_or(
                             values < dicts["DICT_INPUT_BOUNDS"][varname]["lb"],
                             values > dicts["DICT_INPUT_BOUNDS"][varname]["ub"],
-                        )
+                        ),
                     )
                     while len(args) > 0:
                         values[args] = normal(mean, std, args.shape)
@@ -1053,7 +1058,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                             logical_or(
                                 values < dicts["DICT_INPUT_BOUNDS"][varname]["lb"],
                                 values > dicts["DICT_INPUT_BOUNDS"][varname]["ub"],
-                            )
+                            ),
                         )
                 else:  # cutoff at 0 - typically negative values are meaningless
                     args = argwhere(values < 0.0)
@@ -1079,7 +1084,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                         logical_or(
                             values < dicts["DICT_INPUT_BOUNDS"][varname]["lb"],
                             values > mean,
-                        )
+                        ),
                     )
                     while len(args) > 0:
                         values[args] = normal(mean, std, args.shape)
@@ -1087,7 +1092,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                             logical_or(
                                 values < dicts["DICT_INPUT_BOUNDS"][varname]["lb"],
                                 values > mean,
-                            )
+                            ),
                         )
                 else:
                     args = argwhere(logical_or(values < 0.0, values > mean))
@@ -1103,7 +1108,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                         logical_or(
                             values < mean,
                             values > dicts["DICT_INPUT_BOUNDS"][varname]["ub"],
-                        )
+                        ),
                     )
                     while len(args) > 0:
                         values[args] = normal(mean, std, args.shape)
@@ -1111,7 +1116,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                             logical_or(
                                 values < mean,
                                 values > dicts["DICT_INPUT_BOUNDS"][varname]["ub"],
-                            )
+                            ),
                         )
                 else:
                     args = argwhere(values < mean)
@@ -1158,7 +1163,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
             # normalised iteration varialbes
             for i in range(1, nvar + 1):
-                label = m_file.data["nitvar{:03}".format(i)].var_description
+                label = m_file.data[f"nitvar{i:03}"].var_description
                 header += " n_{0:8s}".format(label.replace("_(range_normalised)", ""))
 
             # error status, id and ifail
@@ -1169,14 +1174,14 @@ class UncertaintiesConfig(ProcessConfig, Config):
             err_summary = open(self.wdir + "/UQ_error_summary.txt", "a+")
 
         # Uncertain input variables
-        output = "{:12d}".format(sample_index)
+        output = f"{sample_index:12d}"
         for u_dict in self.uncertainties:
             output += " {0:10f}".format(u_dict["samples"][sample_index])
 
         # normalised iteration variables
         for i in range(1, nvar + 1):
             output += " {0:10f}".format(
-                m_file.data["nitvar{:03}".format(i)].get_scan(-1)
+                m_file.data[f"nitvar{i:03}"].get_scan(-1),
             )
 
         # error status and id

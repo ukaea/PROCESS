@@ -1,12 +1,13 @@
 """Unit tests for physics_functions.f90."""
 
-
 from typing import Any, NamedTuple
-from process.fortran import physics_variables as pv
-from process import physics_functions
+
 import numpy as np
 import pytest
 from pytest import approx
+
+from process import physics_functions
+from process.fortran import physics_variables as pv
 
 
 class SetFusionPowersParam(NamedTuple):
@@ -188,28 +189,28 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     )
 
     assert alpha_power_density_total == pytest.approx(
-        setfusionpowersparam.expected_alpha_power_density
+        setfusionpowersparam.expected_alpha_power_density,
     )
     assert neutron_power_density_total == pytest.approx(
-        setfusionpowersparam.expected_neutron_power_density
+        setfusionpowersparam.expected_neutron_power_density,
     )
     assert alpha_power_total == pytest.approx(
-        setfusionpowersparam.expected_alpha_power_total
+        setfusionpowersparam.expected_alpha_power_total,
     )
     assert neutron_power_total == pytest.approx(
-        setfusionpowersparam.expected_neutron_power_total
+        setfusionpowersparam.expected_neutron_power_total,
     )
     assert non_alpha_charged_power == pytest.approx(
-        setfusionpowersparam.expected_non_alpha_charged_power
+        setfusionpowersparam.expected_non_alpha_charged_power,
     )
     assert alpha_power_electron_density == pytest.approx(
-        setfusionpowersparam.expected_alpha_power_electron_density
+        setfusionpowersparam.expected_alpha_power_electron_density,
     )
     assert alpha_power_ions_density == pytest.approx(
-        setfusionpowersparam.expected_alpha_power_ion_density
+        setfusionpowersparam.expected_alpha_power_ion_density,
     )
     assert charged_particle_power == pytest.approx(
-        setfusionpowersparam.expected_charged_particle_power
+        setfusionpowersparam.expected_charged_particle_power,
     )
     assert fusion_power == pytest.approx(setfusionpowersparam.expected_fusion_power)
 
@@ -236,7 +237,8 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
     :type expected_bosch_hale: float
     """
     bosch_hale = physics_functions.bosch_hale_reactivity(
-        np.array([t]), physics_functions.BoschHaleConstants(**reaction)
+        np.array([t]),
+        physics_functions.BoschHaleConstants(**reaction),
     )
 
     assert bosch_hale == approx(expected_bosch_hale, abs=1e-23)
@@ -302,7 +304,12 @@ def test__fast_ion_pressure_integral():
 
 def test_alpha_power_beam():
     alpha_power_beam = physics_functions.alpha_power_beam(
-        316000000000, 3.3e19, 7.5e-22, 1888.0, 13.5, 2.8e-22
+        316000000000,
+        3.3e19,
+        7.5e-22,
+        1888.0,
+        13.5,
+        2.8e-22,
     )
 
     assert alpha_power_beam == pytest.approx(1.047572705194316e-05)
@@ -310,7 +317,9 @@ def test_alpha_power_beam():
 
 def test_beam_reaction_rate():
     beam_reaction_rate = physics_functions.beam_reaction_rate(
-        3.01550071597, 5140000.0, 1000.0
+        3.01550071597,
+        5140000.0,
+        1000.0,
     )
 
     assert beam_reaction_rate == pytest.approx(7.465047902975452e-18)

@@ -5,24 +5,28 @@ author: G Graham, CCFE, Culham Science Centre
 
 import numpy as np
 
+from process.coolprop_interface import FluidProperties
 from process.fortran import (
-    constants,
-    fwbs_variables,
-    process_output as po,
     blanket_library,
     build_variables,
-    physics_variables,
-    primary_pumping_variables,
-    error_handling as eh,
-    heat_transport_variables,
+    buildings_variables,
+    constants,
     divertor_variables,
+    error_handling,
+    fwbs_variables,
+    heat_transport_variables,
     maths_library,
     pfcoil_variables,
-    buildings_variables,
-    error_handling,
+    physics_variables,
+    primary_pumping_variables,
+)
+from process.fortran import (
+    error_handling as eh,
+)
+from process.fortran import (
+    process_output as po,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from process.coolprop_interface import FluidProperties
 
 # Acronyms for this module:
 # BB          Breeding Blanket
@@ -63,7 +67,6 @@ class BlanketLibrary:
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.fwbsshape == 1:
-
             for icomponent in range(3):
                 self.dshaped_component(icomponent)
 
@@ -473,7 +476,7 @@ class BlanketLibrary:
             or np.isnan(fwbs_variables.rhof_fw)
         ):
             raise RuntimeError(
-                f"Error in primary_coolant_properties. {fwbs_variables.rhof_fw = }"
+                f"Error in primary_coolant_properties. {fwbs_variables.rhof_fw = }",
             )
         if (
             fwbs_variables.rhof_bl > 1e9
@@ -481,12 +484,13 @@ class BlanketLibrary:
             or np.isnan(fwbs_variables.rhof_bl)
         ):
             raise RuntimeError(
-                f"Error in primary_coolant_properties. {fwbs_variables.rhof_bl = }"
+                f"Error in primary_coolant_properties. {fwbs_variables.rhof_bl = }",
             )
 
         if output:
             po.oheadr(
-                self.outfile, "First wall and blanket : (Primary) Coolant Properties"
+                self.outfile,
+                "First wall and blanket : (Primary) Coolant Properties",
             )
             po.ocmmnt(
                 self.outfile,
@@ -709,12 +713,7 @@ class BlanketLibrary:
         no180fw = 0
 
         # N.B. This is for BZ only, does not include MF/BSS.
-        if fwbs_variables.icooldual == 2:
-            no90bz = 4
-            no180bz = 1
-            no90bz_liq = 2
-            no180bz_liq = 1
-        elif fwbs_variables.icooldual == 1:
+        if fwbs_variables.icooldual == 2 or fwbs_variables.icooldual == 1:
             no90bz = 4
             no180bz = 1
             no90bz_liq = 2
@@ -1070,14 +1069,11 @@ class BlanketLibrary:
                     deltap_blo_liq,
                     deltap_bli_liq,
                 ]
-            else:
-                return [deltap_fwi, deltap_fwo, deltap_blo, deltap_blo_liq]
+            return [deltap_fwi, deltap_fwo, deltap_blo, deltap_blo_liq]
 
-        else:
-            if fwbs_variables.iblnkith == 1:
-                return [deltap_fwi, deltap_fwo, deltap_blo, deltap_bli]
-            else:
-                return [deltap_fwi, deltap_fwo, deltap_blo]
+        if fwbs_variables.iblnkith == 1:
+            return [deltap_fwi, deltap_fwo, deltap_blo, deltap_bli]
+        return [deltap_fwi, deltap_fwo, deltap_blo]
 
     def blanket_mod_pol_height(self):
         """Calculations for blanket module poloidal height
@@ -1087,7 +1083,6 @@ class BlanketLibrary:
         if (
             physics_variables.itart == 1 or fwbs_variables.fwbsshape == 1
         ):  # D-shaped machine
-
             # Segment vertical inboard surface (m)
             blanket_library.bllengi = (
                 2.0 * blanket_library.hblnkt
@@ -1127,7 +1122,6 @@ class BlanketLibrary:
 
         # shape defined by two half-ellipses
         else:
-
             # Major radius where half-ellipses 'meet' (m)
             r1 = (
                 physics_variables.rmajor
@@ -1222,7 +1216,6 @@ class BlanketLibrary:
 
         # If the liquid metal is PbLi...
         if fwbs_variables.i_bb_liq == 0:
-
             # PbLi from [Mar2019]
             # Constant pressure ~ 17 atmospheres ~ 1.7D6 Pa
             # Li content is ~ 17%
@@ -1267,7 +1260,6 @@ class BlanketLibrary:
 
         # If the liquid metal is Li...
         elif fwbs_variables.i_bb_liq == 1:
-
             # Temporary - should be updated with information from Li reviews conducted at CCFE once completed
             # Li Properties from [Mal1995] at 300 Celcius
             # den_liq = 505                            kg/m3
@@ -1292,7 +1284,7 @@ class BlanketLibrary:
             )
             # thermal_conductivity_liq also in paper
             fwbs_variables.dynamic_viscosity_liq = np.exp(
-                -4.16e0 - (0.64 * np.log(mid_temp_liq)) + (262.1 / mid_temp_liq)
+                -4.16e0 - (0.64 * np.log(mid_temp_liq)) + (262.1 / mid_temp_liq),
             )
             fwbs_variables.electrical_conductivity_liq = (
                 (0.9249e9 * mid_temp_liq) + 2.3167e6 - (0.7131e3 * mid_temp_liq)
@@ -1366,10 +1358,12 @@ class BlanketLibrary:
                 po.ocmmnt(self.outfile, "Density: Max T = 880 K, Min T = 508 K")
                 po.ocmmnt(self.outfile, "Specific heat: Max T = 880 K, Min T = 508 K")
                 po.ocmmnt(
-                    self.outfile, "Thermal conductivity: Max T = 880 K, Min T = 508 K"
+                    self.outfile,
+                    "Thermal conductivity: Max T = 880 K, Min T = 508 K",
                 )
                 po.ocmmnt(
-                    self.outfile, "Dynamic viscosity : Max T = 880 K, Min T = 508 K"
+                    self.outfile,
+                    "Dynamic viscosity : Max T = 880 K, Min T = 508 K",
                 )
                 po.ocmmnt(
                     self.outfile,
@@ -1391,13 +1385,18 @@ class BlanketLibrary:
 
         if fwbs_variables.i_bb_liq == 0:
             po.ocmmnt(
-                self.outfile, "Blanket breeder type (i_bb_liq=0), PbLi (~ 17% Li)"
+                self.outfile,
+                "Blanket breeder type (i_bb_liq=0), PbLi (~ 17% Li)",
             )
         if fwbs_variables.i_bb_liq == 1:
             po.ocmmnt(self.outfile, "Blanket breeder type (i_bb_liq=1), Li")
 
         po.ovarrf(
-            self.outfile, "Density (kg m-3)", "(den_liq)", fwbs_variables.den_liq, "OP "
+            self.outfile,
+            "Density (kg m-3)",
+            "(den_liq)",
+            fwbs_variables.den_liq,
+            "OP ",
         )
         po.ovarrf(
             self.outfile,
@@ -1619,7 +1618,12 @@ class BlanketLibrary:
         # First wall flow is just along the first wall, with no allowance for radial
         # pipes, manifolds etc. The outputs are mid quantities of inlet and outlet.
         # This subroutine recalculates cp and rhof.
-        (blanket_library.tpeakfwi, _, _, blanket_library.mffwpi,) = self.fw.fw_temp(
+        (
+            blanket_library.tpeakfwi,
+            _,
+            _,
+            blanket_library.mffwpi,
+        ) = self.fw.fw_temp(
             output,
             fwbs_variables.afw,
             build_variables.fwith,
@@ -1779,7 +1783,7 @@ class BlanketLibrary:
         # load in pressures if primary pumping == 2
         if fwbs_variables.primary_pumping == 2:
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
-                output=output
+                output=output,
             )
             deltap_fwi = deltap[0]
             deltap_fwo = deltap[1]
@@ -1791,9 +1795,8 @@ class BlanketLibrary:
                     deltap_bli_liq = deltap[5]
                 else:
                     deltap_blo_liq = deltap[3]
-            else:
-                if fwbs_variables.iblnkith == 1:
-                    deltap_bli = deltap[3]
+            elif fwbs_variables.iblnkith == 1:
+                deltap_bli = deltap[3]
 
         # Pumping Power
         # If FW and BB have the same coolant...
@@ -1819,7 +1822,7 @@ class BlanketLibrary:
                 pdrop=deltap_fw_blkt,
                 mf=blanket_library.mftotal,
                 primary_coolant_switch=f2py_compatible_to_string(
-                    fwbs_variables.fwcoolant
+                    fwbs_variables.fwcoolant,
                 ),
                 coolant_density=fwbs_variables.rhof_fw,
                 label="First Wall and Blanket",
@@ -1855,7 +1858,7 @@ class BlanketLibrary:
                 pdrop=deltap_fw.item(),
                 mf=blanket_library.mffw,
                 primary_coolant_switch=f2py_compatible_to_string(
-                    fwbs_variables.fwcoolant
+                    fwbs_variables.fwcoolant,
                 ),
                 coolant_density=fwbs_variables.rhof_fw,
                 label="First Wall",
@@ -1920,7 +1923,8 @@ class BlanketLibrary:
 
         if output:
             po.oheadr(
-                self.outfile, "Summary of first wall and blanket thermohydraulics"
+                self.outfile,
+                "Summary of first wall and blanket thermohydraulics",
             )
 
             # FW
@@ -1930,7 +1934,7 @@ class BlanketLibrary:
                 self.outfile,
                 "First wall coolant type",
                 "(fwcoolant)",
-                f'"{fwbs_variables. fwcoolant}"',
+                f'"{fwbs_variables.fwcoolant}"',
             )
             po.ovarre(
                 self.outfile,
@@ -2048,7 +2052,8 @@ class BlanketLibrary:
                 )
                 if fwbs_variables.icooldual == 2:
                     po.ocmmnt(
-                        self.outfile, "Dual-coolant BB, i.e. self-cooled breeder."
+                        self.outfile,
+                        "Dual-coolant BB, i.e. self-cooled breeder.",
                     )
                     po.ovarrf(
                         self.outfile,
@@ -2202,7 +2207,11 @@ class BlanketLibrary:
 
             po.ocmmnt(self.outfile, "Friction drops plus MHD drops if applicaple")
             po.ovarre(
-                self.outfile, "Total pressure drop (Pa)", "(deltap)", deltap_tot, "OP "
+                self.outfile,
+                "Total pressure drop (Pa)",
+                "(deltap)",
+                deltap_tot,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -2277,7 +2286,6 @@ class BlanketLibrary:
 
         # If have thin conducting walls...
         if fwbs_variables.ifci != 1:
-
             # Caculate resistances of fluid and walls
             r_i = half_wth_b / (conduct_liq * half_wth_a)
             r_w = half_wth_b / (
@@ -2290,7 +2298,6 @@ class BlanketLibrary:
 
         # If have perfcetly insulating FCIs...
         else:
-
             # Calculate pressure drop for (perfectly) insulating FCI [Mal1995]
             mhd_pressure_drop = (
                 vel * b_mag * l_channel * np.sqrt(conduct_liq * vsc / half_wth_a)
@@ -2307,7 +2314,8 @@ class BlanketLibrary:
 
             if fwbs_variables.ifci == 0:
                 po.ocmmnt(
-                    self.outfile, "Flow channels have thin conducting walls (ifci==0)"
+                    self.outfile,
+                    "Flow channels have thin conducting walls (ifci==0)",
                 )
                 po.ovarre(
                     self.outfile,
@@ -2489,7 +2497,11 @@ class BlanketLibrary:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "90 degree elbow coefficient", "(kelbwn)", kelbwn, "OP "
+                self.outfile,
+                "90 degree elbow coefficient",
+                "(kelbwn)",
+                kelbwn,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -2546,7 +2558,7 @@ class BlanketLibrary:
             a = 0.7 + (0.35 * np.sin((ang_elbow / 90.0) * (np.pi / 180.0)))
         else:
             raise ValueError(
-                "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
+                "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range.",
             )
 
         r_ratio = r_elbow / dh
@@ -2672,7 +2684,11 @@ class BlanketLibrary:
             po.osubhd(self.outfile, "Pumping power for " + label)
 
             po.ovarre(
-                self.outfile, "Pumping power (MW)", "(pumppower)", pumppower, "OP "
+                self.outfile,
+                "Pumping power (MW)",
+                "(pumppower)",
+                pumppower,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,

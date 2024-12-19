@@ -1,10 +1,11 @@
 """
 Calculate radial and vertical coordinates for the geometry of the blanket
 """
-from typing import Tuple
+
 import numpy as np
-from process.geometry.utils import dh_vertices, dhgap_vertices
+
 from process.geometry.geometry_parameterisations import ArbitraryGeometry
+from process.geometry.utils import dh_vertices, dhgap_vertices
 
 
 def blanket_geometry_single_null(
@@ -53,13 +54,19 @@ def blanket_geometry_single_null(
     # Upper blanket outer surface
     kapx = cumulative_upper["blnktth"] / rminx_outer
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
-        radx_outer, rminx_outer, triang, kapx
+        radx_outer,
+        rminx_outer,
+        triang,
+        kapx,
     )
 
     # Upper blanket inner surface
     kapx = cumulative_upper["fwtth"] / rminx_inner
     rs_upper_inboard, zs_upper_inboard = dh_vertices(
-        radx_inner, rminx_inner, triang, kapx
+        radx_inner,
+        rminx_inner,
+        triang,
+        kapx,
     )
 
     # Lower blanket
@@ -80,22 +87,18 @@ def blanket_geometry_single_null(
         divgap=divgap,
     )
 
-    rs = np.concatenate(
-        [
-            rs_upper_outboard,
-            rs_lower_inboard,
-            rs_upper_inboard[::-1],
-            rs_lower_outboard[::-1],
-        ]
-    )
-    zs = np.concatenate(
-        [
-            zs_upper_outboard,
-            zs_lower_inboard,
-            zs_upper_inboard[::-1],
-            zs_lower_outboard[::-1],
-        ]
-    )
+    rs = np.concatenate([
+        rs_upper_outboard,
+        rs_lower_inboard,
+        rs_upper_inboard[::-1],
+        rs_lower_outboard[::-1],
+    ])
+    zs = np.concatenate([
+        zs_upper_outboard,
+        zs_lower_inboard,
+        zs_upper_inboard[::-1],
+        zs_lower_outboard[::-1],
+    ])
 
     return ArbitraryGeometry(rs=rs, zs=zs)
 
@@ -108,7 +111,7 @@ def blanket_geometry_lower(
     blnkith: float,
     blnkoth: float,
     divgap: float,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of blanket below the midplane
 
     :param triang: plasma triangularity
@@ -130,7 +133,13 @@ def blanket_geometry_lower(
     """
     # Lower blanket
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
-        c_shldith, c_blnkoth, blnkith, blnkoth, divgap, -blnktth, triang
+        c_shldith,
+        c_blnkoth,
+        blnkith,
+        blnkoth,
+        divgap,
+        -blnktth,
+        triang,
     )
     # outboard radial and vertical coordinates
     rs_lower_outboard = np.concatenate([rs1, rs2[::-1]])

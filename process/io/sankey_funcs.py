@@ -7,10 +7,11 @@ Author: Hanni Lux (Hanni.Lux@ukaea.uk)
 Updated 13/09/2019: Adam Brown (adam.brown@ukaea.uk)
 """
 
-import numpy as np
-from numpy import sqrt
-from matplotlib.sankey import Sankey
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.sankey import Sankey
+from numpy import sqrt
+
 from process.io.mfile import MFile
 
 
@@ -27,44 +28,44 @@ def plot_full_sankey(
     pohmmw = m_file.data["pohmmw"].get_scan(-1)  # Ohmic heating power (MW)
     totalplasma = fusion_power + pinjmw + pohmmw  # Total Power in plasma (MW)
     neutron_power_total = m_file.data["neutron_power_total"].get_scan(
-        -1
+        -1,
     )  # Neutron fusion power (MW)
     non_alpha_charged_power = m_file.data["non_alpha_charged_power"].get_scan(
-        -1
+        -1,
     )  # Non-alpha charged particle power (MW)
     pcharohmmw = (
         non_alpha_charged_power + pohmmw
     )  # The ohmic and charged particle power (MW)
     alpha_power_total = m_file.data["alpha_power_total"].get_scan(
-        -1
+        -1,
     )  # Alpha power (MW)
     palpinjmw = alpha_power_total + pinjmw  # Alpha particle and HC&D power (MW)
 
     # Used in [NEUTRONICS]
     emultmw = m_file.data["emultmw"].get_scan(
-        -1
+        -1,
     )  # Energy multiplication in blanket (MW)
     pnucblkt = m_file.data["pnucblkt"].get_scan(
-        -1
+        -1,
     )  # Total Nuclear heating in the blanket (MW)
     pnucemblkt = pnucblkt - emultmw  # External nuclear heating in blanket (MW)
     pnucdiv = m_file.data["pnucdiv"].get_scan(
-        -1
+        -1,
     )  # Nuclear heating in the divertor (MW)
     pnucfw = m_file.data["pnucfw"].get_scan(
-        -1
+        -1,
     )  # Nuclear heating in the first wall (MW)
     pnucshld = m_file.data["pnucshld"].get_scan(
-        -1
+        -1,
     )  # Nuclear heating in the shield (MW)
     ptfnuc = m_file.data["ptfnuc"].get_scan(-1)  # Nuclear heating in the TF coil (MW)
 
     # Used in [CHARGEP]
     pdivt = m_file.data["pdivt"].get_scan(
-        -1
+        -1,
     )  # Charged particle power deposited on divertor (MW)
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
-        -1
+        -1,
     )  # Fraction of alpha power deposited in plasma
     palpfwmw = alpha_power_total * (
         1 - f_alpha_plasma
@@ -73,25 +74,25 @@ def plot_full_sankey(
 
     # Used in [RADIATION]
     praddiv = pradmw * m_file.data["fdiv"].get_scan(
-        -1
+        -1,
     )  # Radiation deposited on the divertor (MW)
     pradhcd = pradmw * m_file.data["fhcd"].get_scan(
-        -1
+        -1,
     )  # Radiation deposited on HCD (MW)
     pradfw = pradmw - praddiv - pradhcd  # Radiation deposited in the FW (MW)
 
     # Used in [DIVERTOR]
     htpmw_div = m_file.data["htpmw_div"].get_scan(-1)  # Divertor coolant pumping power
     pthermdiv = m_file.data["pthermdiv"].get_scan(
-        -1
+        -1,
     )  # Total power extracted from divertor (MW)
 
     # Used in [FIRST_WALL]
     pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
-        -1
+        -1,
     )  # Power extracted blanket & FW (MW)
     htpmw_fw_blkt = m_file.data["htpmw_fw_blkt"].get_scan(
-        -1
+        -1,
     )  # Pump Power in FW and blanket (MW)
     htpmwblkt = htpmw_fw_blkt / 2  # Pump power in blanket (MW)
     htpmwfw = htpmw_fw_blkt / 2  # Pump power in FW (MW)
@@ -110,7 +111,11 @@ def plot_full_sankey(
         fig = plt.figure()
         ax = fig.add_subplot(1, 1, 1, xticks=[], yticks=[], frameon=False)
         sankey = Sankey(
-            ax=ax, unit="MW", margin=0.5, format="%1.0f", scale=1.0 / (totalplasma)
+            ax=ax,
+            unit="MW",
+            margin=0.5,
+            format="%1.0f",
+            scale=1.0 / (totalplasma),
         )
 
         # --------------------------------------- PLASMA - 0 --------------------------------------
@@ -485,7 +490,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)
     fdiv = m_file.data["fdiv"].get_scan(-1)  # Area fraction taken up by divertor
     fdiv_2 = m_file.data["2*fdiv"].get_scan(
-        -1
+        -1,
     )  # Area fraction taken up by double null divertor
     if (
         fdiv_2 > 0
@@ -493,40 +498,40 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         fdiv = fdiv_2
     praddiv = pradmw * fdiv  # Radiation deposited on the divertor (MW)
     fhcd = m_file.data["fhcd"].get_scan(
-        -1
+        -1,
     )  # Area fraction covered by HCD and diagnostics
     pradhcd = pradmw * fhcd  # Radiation deposited on HCD and diagnostics (MW)
     pradfw = pradmw - praddiv - pradhcd  # Radiation deposited in the blanket (MW)
     pdivt = m_file.data["pdivt"].get_scan(
-        -1
+        -1,
     )  # power to conducted to the divertor region (MW)
     pnucdiv = m_file.data["pnucdiv"].get_scan(
-        -1
+        -1,
     )  # nuclear heating in the divertor (MW)
     pnucfw = m_file.data["pnucfw"].get_scan(
-        -1
+        -1,
     )  # nuclear heating in the first wall (MW)
     pnucblkt = m_file.data["pnucblkt"].get_scan(
-        -1
+        -1,
     )  # nuclear heating in the blanket (MW)
     pnucshld = m_file.data["pnucshld"].get_scan(
-        -1
+        -1,
     )  # nuclear heating in the shield (MW)
     pnuc_cp_sh = m_file.data["pnuc_cp_sh"].get_scan(
-        -1
+        -1,
     )  # nuclear heating in the CP shield (MW)
     emultmw = m_file.data["emultmw"].get_scan(-1)  # Blanket energy multiplication (MW)
     alpha_power_total = m_file.data["alpha_power_total"].get_scan(
-        -1
+        -1,
     )  # Alpha power (MW)
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
-        -1
+        -1,
     )  # Fraction of alpha power deposited in plasma
     palpfwmw = alpha_power_total * (
         1 - f_alpha_plasma
     )  # Alpha power hitting 1st wall (MW)
     itart = m_file.data["itart"].get_scan(
-        -1
+        -1,
     )  # switch for spherical tokamak (ST) models
 
     # Power deposited on divertor (MW)
@@ -543,10 +548,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
 
     # Used in [BLANKETSETC]
     pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
-        -1
+        -1,
     )  # Heat for electricity (MW)
     htpmw_fw_blkt = m_file.data["htpmw_fw_blkt"].get_scan(
-        -1
+        -1,
     )  # 1st wall & blanket pumping (MW)
     pthermmw_p = pthermfw_blkt - htpmw_fw_blkt  # Heat - pumping power (MW)
 
@@ -561,14 +566,14 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     crypmw = m_file.data["crypmw"].get_scan(-1)  # cryogenic plant power (MW)
     fachtmw = m_file.data["fachtmw"].get_scan(-1)  # facility heat removal (MW)
     tfacpd = m_file.data["tfacpd"].get_scan(
-        -1
+        -1,
     )  # total steady state TF coil AC power demand (MW)
     trithtmw = m_file.data["trithtmw"].get_scan(
-        -1
+        -1,
     )  # power required for tritium processing (MW)
     vachtmw = m_file.data["vachtmw"].get_scan(-1)  # vacuum pump power (MW)
     pfwpmw = m_file.data["pfwpmw"].get_scan(
-        -1
+        -1,
     )  # Total mean wall plug power for PFC & CS (MW)
     ppumpmw = (
         m_file.data["ppump"].get_scan(-1) / 1e6
@@ -578,7 +583,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pcoresystems = crypmw + fachtmw + tfacpd + trithtmw + vachtmw + pfwpmw + ppumpmw
     pinjwp = m_file.data["pinjwp"].get_scan(-1)  # injector wall plug power (MW)
     htpmw = m_file.data["htpmw"].get_scan(
-        -1
+        -1,
     )  # heat transport system electrical pump power (MW)
 
     # Initialising x and y variables for adjusting 'Plasma Heating' branch tip location
@@ -592,7 +597,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         fig = plt.figure()
         ax = fig.add_subplot(1, 1, 1, xticks=[], yticks=[], frameon=False)
         sankey = Sankey(
-            ax=ax, unit="MW", margin=0.0, format="%1.0f", scale=1.0 / (totalplasma)
+            ax=ax,
+            unit="MW",
+            margin=0.0,
+            format="%1.0f",
+            scale=1.0 / (totalplasma),
         )
 
         # --------------------------------------- PLASMA - 0 --------------------------------------
@@ -748,9 +757,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             t.set_position(pos)
             if t == diagrams[0].texts[0]:  # Fusion Power
                 t.set_horizontalalignment("left")
-                t.set_position(
-                    (pos[0] - 0.35, pos[1] + 0.5 * (fusion_power / totalplasma) + 0.2)
-                )
+                t.set_position((
+                    pos[0] - 0.35,
+                    pos[1] + 0.5 * (fusion_power / totalplasma) + 0.2,
+                ))
             if t == diagrams[0].texts[2]:  # Plasma
                 t.set_horizontalalignment("right")
                 t.set_position((pos[0] - 0.25, pos[1]))
@@ -764,9 +774,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 t.set_position((pos[0] - 0.25, pos[1]))
             if t == diagrams[3].texts[1]:  # Gross Electric
                 t.set_horizontalalignment("right")
-                t.set_position(
-                    (pos[0] - 0.5 * (pgrossmw / totalplasma) - 0.1, pos[1] + 0.1)
-                )
+                t.set_position((
+                    pos[0] - 0.5 * (pgrossmw / totalplasma) - 0.1,
+                    pos[1] + 0.1,
+                ))
             if t == diagrams[3].texts[2]:  # Losses
                 t.set_horizontalalignment("right")
                 t.set_position((pos[0] - 0.2, pos[1]))
@@ -780,9 +791,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                     t.set_position((pos[0] + 0.2, pos[1]))
             if t == diagrams[4].texts[2]:  # Recirc. Power
                 if pnetelmw >= 1:
-                    t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (precircmw / totalplasma) + 0.2)
-                    )
+                    t.set_position((
+                        pos[0] + 0.15,
+                        pos[1] + 0.5 * (precircmw / totalplasma) + 0.2,
+                    ))
                 elif pnetelmw < 1:
                     t.set_horizontalalignment("left")
                     t.set_position((pos[0] + 0.2, pos[1]))
@@ -790,24 +802,25 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 t.set_position((pos[0], pos[1] - 0.2))
             if t == diagrams[5].texts[2]:  # Heating System
                 if pnetelmw >= 1:
-                    t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2)
-                    )
+                    t.set_position((
+                        pos[0] + 0.15,
+                        pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2,
+                    ))
                 if pnetelmw < 1:
-                    t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2)
-                    )
+                    t.set_position((
+                        pos[0] + 0.15,
+                        pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2,
+                    ))
             if t == diagrams[6].texts[1]:  # Plasma Heating
                 t.set_horizontalalignment("left")
-                t.set_position(
-                    (pos[0] + 0.5 * (pinjmw / totalplasma) + 0.1, pos[1] - 0.05)
-                )
+                t.set_position((
+                    pos[0] + 0.5 * (pinjmw / totalplasma) + 0.1,
+                    pos[1] - 0.05,
+                ))
             if t == diagrams[6].texts[2]:  # Losses
                 t.set_horizontalalignment("left")
-                t.set_position(
-                    (
-                        pos[0] + 0.15,
-                        pos[1] - 0.5 * ((pinjwp - pinjmw) / totalplasma) - 0.2,
-                    )
-                )
+                t.set_position((
+                    pos[0] + 0.15,
+                    pos[1] - 0.5 * ((pinjwp - pinjmw) / totalplasma) - 0.2,
+                ))
             y += 1

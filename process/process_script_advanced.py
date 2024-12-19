@@ -4,12 +4,14 @@
 This compiles, runs and displays output from PROCESS. The aim is to provide a
 common entry point to the code in Python, and to automate a standard workflow.
 """
+
 # TODO This requires converting to run the Python-wrapped version of Process
-import subprocess
 import argparse
-from shutil import copy
-from pathlib import Path
+import subprocess
 from difflib import unified_diff
+from pathlib import Path
+from shutil import copy
+
 from utilities.process_io_lib import input_validator
 
 # Set required paths outside the Python package directory
@@ -19,7 +21,7 @@ PROCESS_EXE_PATH = ROOT_DIR.joinpath("bin/process.exe")
 # The Process executable (for running Process)
 
 
-class Process(object):
+class Process:
     """A Process workflow based on command line arguments."""
 
     def __init__(self):
@@ -50,7 +52,7 @@ class Process(object):
     def parse_args(self):
         """Parse the command line arguments."""
         parser = argparse.ArgumentParser(
-            description="Script to automate " "running PROCESS"
+            description="Script to automate running PROCESS",
         )
 
         # Optional arguments
@@ -67,7 +69,10 @@ class Process(object):
             help="Reference input file to record changes against",
         )
         parser.add_argument(
-            "--build", "-b", action="store_true", help="Rebuilds Process if present"
+            "--build",
+            "-b",
+            action="store_true",
+            help="Rebuilds Process if present",
         )
         parser.add_argument(
             "--util",
@@ -82,8 +87,8 @@ class Process(object):
     def build_process(self):
         """Build Process"""
         # cmake must be run from the project root dir
-        subprocess.run(["cmake", "-H.", "-Bbuild"], cwd=ROOT_DIR)
-        subprocess.run(["cmake", "--build", "build"], cwd=ROOT_DIR)
+        subprocess.run(["cmake", "-H.", "-Bbuild"], cwd=ROOT_DIR, check=False)
+        subprocess.run(["cmake", "--build", "build"], cwd=ROOT_DIR, check=False)
 
     def set_input(self):
         """Try to find or validate the input file path, then store it.
@@ -109,7 +114,7 @@ class Process(object):
             if len(input_files) == 0:
                 # No input file found
                 raise FileNotFoundError("Input file not found in this dir.")
-            elif len(input_files) == 1:
+            if len(input_files) == 1:
                 # Only one input file in this dir; use it
                 self.input = input_files[0]
             else:
@@ -117,7 +122,7 @@ class Process(object):
                 raise Exception(
                     "More than one IN.DAT found in this dir. "
                     'Specifiy which one to use with the "-i" option, or '
-                    "remove the other ones."
+                    "remove the other ones.",
                 )
 
         # self.input is now defined
@@ -140,7 +145,7 @@ class Process(object):
                 self.ref_input = path
             else:
                 raise FileNotFoundError(
-                    "Reference input file not found; " "check the path."
+                    "Reference input file not found; check the path.",
                 )
 
             # Input file exists
@@ -154,7 +159,7 @@ class Process(object):
             else:
                 # File isn't an IN.DAT or a REF_IN.DAT
                 raise ValueError(
-                    "Reference input file should end in IN.DAT or " "REF_IN.DAT"
+                    "Reference input file should end in IN.DAT or REF_IN.DAT",
                 )
         else:
             # Ref input not specified: try to find one in the input file's dir
@@ -170,7 +175,7 @@ class Process(object):
                 raise Exception(
                     "More than one REF_IN.DAT found in this dir. "
                     'Specifiy which one to use with the "-r" option, or '
-                    "remove the other ones."
+                    "remove the other ones.",
                 )
 
         # Now either have raised an exception or have a ref input file set,
@@ -204,7 +209,10 @@ class Process(object):
         before_file.close()
         after_file.close()
         diff = unified_diff(
-            before, after, fromfile=self.ref_input.name, tofile=self.input.name
+            before,
+            after,
+            fromfile=self.ref_input.name,
+            tofile=self.input.name,
         )
 
         # Write diff to output file
@@ -215,7 +223,11 @@ class Process(object):
     def create_dicts(self):
         """Create Python dictionaries"""
         # cmake must be run from the project root directory
-        subprocess.run(["cmake", "--build", "build", "--target", "dicts"], cwd=ROOT_DIR)
+        subprocess.run(
+            ["cmake", "--build", "build", "--target", "dicts"],
+            cwd=ROOT_DIR,
+            check=False,
+        )
 
     def validate_input(self):
         """Validate the input file using the input_validator module."""
@@ -223,13 +235,13 @@ class Process(object):
 
     def run_process(self):
         """Run Process using the input file path."""
-        subprocess.run([PROCESS_EXE_PATH, self.input])
+        subprocess.run([PROCESS_EXE_PATH, self.input], check=False)
 
     def run_utils(self):
         """Run a utility if specified on the command line."""
         # TODO allow multiple utils to run
         # TODO allow options to be passed to utils
-        subprocess.run(["python", "./utilities/" + self.args.util + ".py"])
+        subprocess.run(["python", "./utilities/" + self.args.util + ".py"], check=False)
 
 
 def main():

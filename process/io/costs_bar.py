@@ -14,14 +14,15 @@ History
 
 # Imported libraries
 import argparse
-import process.io.mfile as mf
+import sys
+
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
-from typing import List
+
+import process.io.mfile as mf
 
 
-def comp_orig(args, mfile_list: List[str], inflate: float) -> None:
+def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
     """
 
     Plot bar chart for the orginal 1990 cost model.
@@ -78,7 +79,7 @@ def comp_orig(args, mfile_list: List[str], inflate: float) -> None:
         # Explain why moneyint is missing
         if "moneyint" not in item.data.keys():
             print(
-                "Interest during construction (moneyint) is only calculated for ireactor = 1"
+                "Interest during construction (moneyint) is only calculated for ireactor = 1",
             )
 
         # Inflate costs using value parsed if specified
@@ -133,7 +134,7 @@ def comp_orig(args, mfile_list: List[str], inflate: float) -> None:
         plt.show()
 
 
-def comp_new(args, mfile_list: List[str], inflate: float):
+def comp_new(args, mfile_list: list[str], inflate: float):
     """
 
     Plot bar chart for the new 2014 cost model.
@@ -164,18 +165,18 @@ def comp_new(args, mfile_list: List[str], inflate: float):
         cost[2] = item.data["s21"].get_scan(-1)  # TF Coils
         cost[3] = item.data["s27"].get_scan(-1)  # First wall and blanket
         cost[4] = item.data["s31"].get_scan(
-            -1
+            -1,
         )  # Active maintenance and remote handling
         cost[5] = item.data["s34"].get_scan(
-            -1
+            -1,
         )  # Vacuum vessel and liquid nitrogen plant
         cost[6] = item.data["s35"].get_scan(
-            -1
+            -1,
         )  # System for converting heat to electricity
         cost[7] = item.data["s36"].get_scan(-1)  # CS and PF coils
         cost[8] = item.data["s51"].get_scan(-1)  # Cryoplant and distribution
         cost[9] = item.data["s52"].get_scan(
-            -1
+            -1,
         )  # Electrical power supply and distribution
         cost[10] = item.data["s59"].get_scan(-1)  # Additional project expenditure
         cost[11] = item.data["s61"].get_scan(-1)  # Remaining subsystems
@@ -226,17 +227,24 @@ def main(args=None):
     parser = argparse.ArgumentParser(
         description="Displays the cost breakdown as a bar chart.  "
         "Multiple MFILEs can be given and will be plotted on the same chart.  "
-        "For more information contact Stuart.Muldrew@ukaea.uk"
+        "For more information contact Stuart.Muldrew@ukaea.uk",
     )
 
     parser.add_argument(
-        "-f", metavar="f", type=str, nargs="+", help="specify the MFILE(s) to plot"
+        "-f",
+        metavar="f",
+        type=str,
+        nargs="+",
+        help="specify the MFILE(s) to plot",
     )
 
     parser.add_argument("-s", "--save", help="save figure", action="store_true")
 
     parser.add_argument(
-        "-inf", type=float, help="Inflation Factor (multiplies costs)", default=1.0
+        "-inf",
+        type=float,
+        help="Inflation Factor (multiplies costs)",
+        default=1.0,
     )
 
     args = parser.parse_args(args)

@@ -1,21 +1,22 @@
 """An adapter for different solvers."""
 
-import logging
-from process.fortran import numerics, global_variables
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-import numpy as np
-from process.evaluators import Evaluators
-from abc import ABC, abstractmethod
-from typing import Optional, Union
 import importlib
+import logging
+from abc import ABC, abstractmethod
+
+import numpy as np
 from pyvmcon import (
     AbstractProblem,
-    Result,
-    solve,
-    QSPSolverException,
-    VMCONConvergenceException,
     LineSearchConvergenceException,
+    QSPSolverException,
+    Result,
+    VMCONConvergenceException,
+    solve,
 )
+
+from process.evaluators import Evaluators
+from process.fortran import global_variables, numerics
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,7 @@ class _Solver(ABC):
         # Exit code for the solver
         self.ifail = 0
         self.tolerance = numerics.epsvmc
-        self.b: Union[float, None] = None
+        self.b: float | None = None
 
     def set_evaluators(self, evaluators: Evaluators) -> None:
         """Set objective and constraint functions and their gradient evaluators.
@@ -54,8 +55,8 @@ class _Solver(ABC):
         self,
         bndl: np.ndarray,
         bndu: np.ndarray,
-        ilower: Optional[np.ndarray] = None,
-        iupper: Optional[np.ndarray] = None,
+        ilower: np.ndarray | None = None,
+        iupper: np.ndarray | None = None,
     ) -> None:
         """Set the bounds on the optimisation parameters.
 
@@ -118,7 +119,6 @@ class _Solver(ABC):
         :return: solver error code
         :rtype: int
         """
-        pass
 
 
 class VmconProblem(AbstractProblem):
@@ -173,7 +173,7 @@ class Vmcon(_Solver):
             numerics.nviter = i + 1
             global_variables.convergence_parameter = convergence_param
             print(
-                f"{i+1} | Convergence Parameter: {convergence_param:.3E}",
+                f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
                 end="\r",
                 flush=True,
             )
@@ -206,8 +206,7 @@ class Vmcon(_Solver):
             # Check all ineqs positive, i.e. satisfied
             if np.all(result.ie >= 0.0):
                 return True
-            else:
-                return False
+            return False
 
         try:
             x, _, _, res = solve(
@@ -293,7 +292,7 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
             solver = load_external_solver(solver_name)
         except Exception as e:
             raise ValueError(
-                f'Solver name is not an inbuilt PROCESS solver or recognised package "{solver_name}"'
+                f'Solver name is not an inbuilt PROCESS solver or recognised package "{solver_name}"',
             ) from e
 
     return solver
@@ -310,7 +309,7 @@ def load_external_solver(package: str):
 
     if solver is None:
         raise AttributeError(
-            f"Module {module.__name__} does not have a '__process_solver__' attribute."
+            f"Module {module.__name__} does not have a '__process_solver__' attribute.",
         )
 
     return solver()

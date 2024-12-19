@@ -1,20 +1,22 @@
 """Tests for the Process solver."""
 
 import time
+
 from numpy import histogram
+
+from process import fortran
 from process.io.mfile import MFile
-from process.io.python_fortran_dicts import get_dicts
 from process.io.process_config import TestProcessConfig
 from process.io.process_funcs import (
     get_neqns_itervars,
-    update_ixc_bounds,
-    get_variable_range,
-    vary_iteration_variables,
-    process_stopped,
     get_solution_from_mfile,
+    get_variable_range,
+    process_stopped,
     process_warnings,
+    update_ixc_bounds,
+    vary_iteration_variables,
 )
-from process import fortran
+from process.io.python_fortran_dicts import get_dicts
 
 # Required to prevent pytest collecting this as a test
 TestProcessConfig.__test__ = False
@@ -155,7 +157,8 @@ def test_solver(temp_data):
     #########
     print("\n Error codes:")
     ERRHIST, ERRBINS = histogram(
-        TABLE_ERR, bins=[-1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
+        TABLE_ERR,
+        bins=[-1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5],
     )
 
     for i in range(len(ERRHIST)):
@@ -167,7 +170,7 @@ def test_solver(temp_data):
                 CONFIG.niter,
                 ERRHIST[i] * 100.0 / CONFIG.niter,
             )
-            + "%"
+            + "%",
         )
 
     if WARNING_CNT > 0:

@@ -1,13 +1,15 @@
-from process.fortran import physics_variables
-from process.fortran import times_variables
-from process.fortran import pfcoil_variables
-from process.fortran import constraint_variables
-from process.fortran import constants
-from process.fortran import pulse_variables
-from process.fortran import numerics
-from process.fortran import pf_power_variables
+from process.fortran import (
+    constants,
+    constraint_variables,
+    error_handling,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    times_variables,
+)
 from process.fortran import process_output as po
-from process.fortran import error_handling
 
 
 class Pulse:
@@ -86,7 +88,8 @@ class Pulse:
         #  Self inductance of Central Solenoid (H)
 
         loh = pfcoil_variables.sxlg[
-            pfcoil_variables.nohc - 1, pfcoil_variables.nohc - 1
+            pfcoil_variables.nohc - 1,
+            pfcoil_variables.nohc - 1,
         ]
 
         #  Maximum rate of change of plasma current (A/s)
@@ -170,7 +173,6 @@ class Pulse:
         #  Output section
 
         if output:
-
             po.osubhd(self.outfile, "Volt-second considerations:")
 
             po.ovarre(
