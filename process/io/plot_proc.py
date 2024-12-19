@@ -26,6 +26,8 @@ import matplotlib.backends.backend_pdf as bpdf
 from matplotlib.path import Path
 import matplotlib.patches as patches
 import numpy as np
+from scipy.special import beta
+
 
 import process.io.mfile as mf
 
@@ -681,34 +683,186 @@ def arc_fill(axis, r1, r2, color="pink"):
     axis.add_patch(patch)
 
 
+def plot_radial_build(axis, m_file):
+    
+    radial_labels = [
+        "Machine Bore",
+        "Central Solenoid",
+        "CS precompression",
+        "CS Coil gap",
+        "TF Coil Inboard Leg",
+        "TF Coil gap",
+        "Inboard Thermal Shield",
+        "Gap",
+        "Inboard VV",
+        "Inboard Shield",
+        "Gap",
+        "Inboard Blanket",
+        "Inboard First Wall",
+        "Inboard SOL",
+        "Plasma",
+        "Outboard SOL",
+        "Outboard First Wall",
+        "Outboard Blanket",
+        "Gap",
+        "Outboard VV",
+        "Outboard Shield",
+        "Gap",
+        "Outboard Thermal Shield",
+        "Gap",
+        "TF Coil Outboard Leg",
+    ]
+    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+        radial_labels[1] = "TF Coil Inboard Leg"
+        radial_labels[2] = "CS Coil gap"
+        radial_labels[3] = "Central Solenoid"
+        radial_labels[4] = "CS precompression"
+        radial_labels[5] = "TF Coil gap"
+    radial_color = [
+        "lightgrey",
+        "green",
+        "yellow",
+        "white",
+        "blue",
+        "white",
+        "lime",
+        "white",
+        "dimgrey",
+        "violet",
+        "white",
+        "goldenrod",
+        "steelblue",
+        "orange",
+        "red",
+        "orange",
+        "steelblue",
+        "goldenrod",
+        "white",
+        "dimgrey",
+        "violet",
+        "white",
+        "lime",
+        "white",
+        "blue",
+    ]
+    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+        radial_color[1] = "blue"
+        radial_color[2] = "white"
+        radial_color[3] = "green"
+        radial_color[4] = "yellow"
+        radial_color[5] = "white"
+    
+    radial_labels = [
+        "bore",
+        "ohcth",
+        "precomp",
+        "gapoh",
+        "tfcth",
+        "tftsgap",
+        "thshield_ib",
+        "gapds",
+        "d_vv_in",
+        "shldith",
+        "vvblgap",
+        "blnkith",
+        "fwith",
+        "scrapli",
+        "rminor",
+        "scraplo",
+        "fwoth",
+        "blnkoth",
+        "vvblgap",
+        "d_vv_out",
+        "shldoth",
+        "gapsto",
+        "thshield_ob",
+        "tftsgap",
+        "tfthko",
+    ]
+    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+        radial_labels[1] = "tfcth"
+        radial_labels[2] = "gapoh"
+        radial_labels[3] = "ohcth"
+        radial_labels[4] = "precomp"
+        radial_labels[5] = "tftsgap"
+
+    radial_build = []
+
+    radial_build.append(
+    [m_file.data[rl].get_scan(-1) for rl in radial_labels]
+    )
+
+    radial_build = np.array(radial_build)
+    print(radial_build)
+
+    # Plot settings
+    # -------------
+    # Plot cosmetic settings
+    axis_tick_size = 12
+    legend_size = 8
+    axis_font_size = 16
+    #end_scan = len(radial_build[0])
+
+    end_scan = len(radial_build[0])
+    for kk in range((len(radial_build[:end_scan, 0]))):
+        if kk == 0:
+            lower = np.zeros(len(radial_build[kk, :]))
+        else:
+            lower = lower + radial_build[kk - 1, :]
+        axis.barh(
+            0,
+            radial_build[kk],
+            left=lower,
+            height=0.8,
+            color=radial_color[kk],
+            edgecolor="black",
+            linewidth=0.05,
+        )
+        lower += radial_build[kk]
+        print(radial_build[kk])
+
+
+    # plt.legend(
+    #     bbox_to_anchor=(0.5, -0.15),
+    #     loc="upper center",
+    #     fontsize=legend_size,
+    #     ncol=4,
+    # )
+    # plt.xlabel("Radius [m]")
+    # plt.tight_layout()
+
 def plot_nprofile(prof, demo_ranges):
     """Function to plot density profile
     Arguments:
       prof --> axis object to add plot to
     """
 
-    prof.set_xlabel("r/a")
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$n_{e}\cdot 10^{19}$ $[\mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
     if ipedestal == 1:
-        rhocore1 = np.linspace(0, 0.95 * rhopedn)
-        rhocore2 = np.linspace(0.95 * rhopedn, rhopedn)
-        rhocore = np.append(rhocore1, rhocore2)
-        ncore = neped + (ne0 - neped) * (1 - rhocore**2 / rhopedn**2) ** alphan
+        rhocore = np.linspace(0, rhopedn)
+        necore = neped + (ne0 - neped) * (1 - rhocore**2 / rhopedn**2) ** alphan
+        nicore = necore * (deni / dene)
 
         rhosep = np.linspace(rhopedn, 1)
-        nsep = nesep + (neped - nesep) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
+        neesep = nesep + (neped - nesep) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
+        nisep = neesep * (deni / dene)
 
         rho = np.append(rhocore, rhosep)
-        ne = np.append(ncore, nsep)
+        ne = np.append(necore, neesep)
+        ni = np.append(nicore, nisep)
     else:
         rho1 = np.linspace(0, 0.95)
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
     ne = ne / 1e19
-    prof.plot(rho, ne)
+    ni = ni/1e19
+    prof.plot(rho, ni, label='$n_{i}$', color='red')
+    prof.plot(rho, ne, label='$n_{e}$', color='blue')
+    prof.legend()
 
     # Ranges
     # ---
@@ -744,21 +898,40 @@ def plot_nprofile(prof, demo_ranges):
 
         # Add text box with density profile parameters
         textstr_density = '\n'.join((
+            r'$n_{\text{e,0}}$: ' + f'{ne0:.3e} m$^{{-3}}$' + r'$\quad \quad \alpha_{\text{n}}$: ' + f'{alphan:.3f}\n',
             r'$n_{\text{e,ped}}$: ' + f'{neped:.3e} m$^{{-3}}$',
+            r'$f_{\text{GW e,ped}}$: ' + f'{fgwped_out:.3f}',
+            r'$\rho_{\text{ped,n}}$: ' + f'{rhopedn:.3f}\n',
             r'$n_{\text{e,sep}}$: ' + f'{nesep:.3e} m$^{{-3}}$',
-            r'$\rho_{\text{ped,n}}$: ' + f'{rhopedn:.3f}',
-            r'$\alpha_{\text{n}}$: ' + f'{alphan:.3f}',
-            r'$n_{\text{e,0}}$: ' + f'{ne0:.3e} m$^{{-3}}$',
-            r'$f_{\text{GW e,sep}}$: ' + f'{neped:.3f}',
-            r'$f_{\text{GW e,ped}}$: ' + f'{nesep:.3f}'
+            r'$f_{\text{GW e,sep}}$: ' + f'{fgwsep_out:.3f}',
+            
+
         ))
 
         props_density = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        prof.text(0.05, -0.25, textstr_density, transform=prof.transAxes, fontsize=12,
+        prof.text(0.0, -0.175, textstr_density, transform=prof.transAxes, fontsize=8,
                     verticalalignment='top', bbox=props_density)
 
     # ---
 
+def plot_jprofile(prof):
+    """Function to plot density profile
+    Arguments:
+      prof --> axis object to add plot to
+    """
+
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
+    prof.set_ylabel(r"Current density $[kA/m^2]$")
+    prof.set_title("$J$ profile")
+
+    rho = np.linspace(0, 1)
+    alphaj = 2.0
+    y = (plasma_current_MA*1E6)*2/(beta(0.5, alphaj+1)*xarea)
+
+    y2 = (y * (1 - rho**2) ** alphaj)/1E3
+
+    prof.plot(rho, y2, label='$n_{i}$', color='red')
+    prof.legend()
 
 def plot_tprofile(prof, demo_ranges):
     """Function to plot temperature profile
@@ -766,7 +939,7 @@ def plot_tprofile(prof, demo_ranges):
       prof --> axis object to add plot to
     """
 
-    prof.set_xlabel("r/a")
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel("$T_{e}$ [keV]")
     prof.set_title("Temperature profile")
 
@@ -784,8 +957,9 @@ def plot_tprofile(prof, demo_ranges):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         te = te0 * (1 - rho**2) ** alphat
-    prof.plot(rho, te, color='blue')
-    prof.plot(rho, te[:]*1.0369, color='red')
+    prof.plot(rho, te, color='blue', label='$T_{e}$')
+    prof.plot(rho, te[:]*1.0369, color='red', label='$T_{i}$')
+    prof.legend()
 
     # Ranges
     # ---
@@ -816,15 +990,16 @@ def plot_tprofile(prof, demo_ranges):
         
     # Add text box with temperature profile parameters
     textstr_temperature = '\n'.join((
+            r'$T_{\text{e,0}}$: '+ f'{te0:.3e} m$^{{-3}}$' + r'$\quad \alpha_{\text{T}}$: '+ f'{alphat:.3f}\n',
             r'$T_{\text{e,ped}}$: '+ f'{teped:.3e} m$^{{-3}}$',
-            r'$T_{\text{e,sep}}$: '+ f'{tesep:.3e} m$^{{-3}}$',
-            r'$\rho_{\text{ped,T}}$: '+ f'{rhopedt:.3f}',
-            r'$\alpha_{\text{T}}$: '+ f'{alphat:.3f}',
-            r'$T_{\text{e,0}}$: '+ f'{te0:.3e} m$^{{-3}}$'
+            r'$\rho_{\text{ped,T}}$: '+ f'{rhopedt:.3f}\n',
+            r'$T_{\text{e,sep}}$: '+ f'{tesep:.3e} m$^{{-3}}$\n',
+           
+            
         ))
 
     props_temperature = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    prof.text(0.05, -0.25, textstr_temperature, transform=prof.transAxes, fontsize=12,
+    prof.text(0.0, -0.175, textstr_temperature, transform=prof.transAxes, fontsize=8,
                 verticalalignment='top', bbox=props_temperature)    
     # ---
 
@@ -836,9 +1011,8 @@ def plot_qprofile(prof, demo_ranges):
       prof --> axis object to add plot to
     """
 
-    prof.set_xlabel("r/a")
-    prof.set_ylabel("q(r)")
-    prof.set_title("q profile")
+    prof.set_ylabel("$q$")
+    prof.set_title("$q$ profile")
 
     rho = np.linspace(0, 1)
     q_r_nevin = q0 + (q95 - q0) * (rho + rho * rho + rho**3) / (3.0)
@@ -857,8 +1031,23 @@ def plot_qprofile(prof, demo_ranges):
 
     # Adapatative ranges
     else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
+        prof.set_ylim([0, q95*1.2])
+    
+    prof.text(1.05, 1.0, '*Profile is not calculated,\n only $q_0$ and $q_{95}$ are known.', fontsize=8, ha='center',transform=plt.gcf().transFigure)
     # ---
+    
+    textstr_temperature = '\n'.join((
+            r'$T_{\text{e,0}}$: '+ f'{te0:.3e} m$^{{-3}}$\n'
+            r'$T_{\text{e,ped}}$: '+ f'{teped:.3e} m$^{{-3}}$',
+            r'$\rho_{\text{ped,T}}$: '+ f'{rhopedt:.3f}\n',
+            r'$T_{\text{e,sep}}$: '+ f'{tesep:.3e} m$^{{-3}}$\n',
+            r'$\alpha_{\text{T}}$: '+ f'{alphat:.3f}',
+            
+        ))
+
+    props_temperature = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    prof.text(-1.0, 1.0, textstr_temperature, transform=prof.transAxes, fontsize=8,
+                verticalalignment='top', bbox=props_temperature)     
 
 
 def read_imprad_data(skiprows, data_path):
@@ -3229,6 +3418,7 @@ def main_plot(
     fig3,
     fig4,
     fig5,
+    fig6,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3261,17 +3451,20 @@ def main_plot(
         )
         print("          -> No impurity plot done\033[0m")
 
-    # Plot poloidal cross-section
-    #plot_1 = fig2.add_subplot(221, aspect="equal")
-    #poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
+    #Plot poloidal cross-section
+    plot_1 = fig6.add_subplot(221, aspect="equal")
+    poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
+    
+    plot_15 = fig6.add_subplot(223, aspect="equal")
+    plot_radial_build(plot_15, m_file_data)
 
-    # Plot toroidal cross-section
-    #plot_2 = fig2.add_subplot(222, aspect="equal")
-    #toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
+    #Plot toroidal cross-section
+    plot_2 = fig6.add_subplot(122, aspect="equal")
+    toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
 
-    # Plot color key
-    #plot_3 = fig2.add_subplot(241)
-    #color_key(plot_3, m_file_data, scan, colour_scheme)
+    #Plot color key
+    plot_3 = fig6.add_subplot(241)
+    color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(231)  # , aspect= 0.05)
@@ -3281,10 +3474,23 @@ def main_plot(
     # Plot temperature profiles
     plot_5 = fig2.add_subplot(232)  # , aspect= 1/35)
     plot_tprofile(plot_5, demo_ranges)
+    
+    plot_8 = fig2.add_subplot(233)  # , aspect=2)
+    plot_radprofile(plot_8, m_file_data, scan, imp, demo_ranges)
 
-    # plot_qprofile(plot_6)
-    plot_6 = fig2.add_subplot(233)  # , aspect=2)
-    plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
+    plot_7 = fig2.add_subplot(4,3,10, sharex=plot_8)  # , aspect=2)
+    plot_jprofile(plot_7)
+    plot_7.tick_params(axis="x", which="both", bottom=True, top=False, labelbottom=False)
+    plot_7.minorticks_on()
+
+    plot_6 = fig2.add_subplot(4,3,12, sharex=plot_7)  # , aspect=2)
+    plot_qprofile(plot_6, demo_ranges)
+    plot_6.tick_params(axis="x", which="both", bottom=True, top=False, labelbottom=False)
+    plot_6.minorticks_on()
+    
+    
+    
+    
 
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
@@ -3460,9 +3666,14 @@ def main(args=None):
     global alphan
     global alphat
     global ne0
+    global deni
+    global dene
+    global ni0
     global te0
-    global fgwped
-    global fgwsep
+    global ti
+    global te
+    global fgwped_out
+    global fgwsep_out
     global tratio
 
     ipedestal = m_file.data["ipedestal"].get_scan(scan)
@@ -3476,9 +3687,14 @@ def main(args=None):
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["ne0"].get_scan(scan)
+    deni = m_file.data["deni"].get_scan(scan)
+    dene = m_file.data["dene"].get_scan(scan)
+    ni0 = m_file.data["ni0"].get_scan(scan)
     te0 = m_file.data["te0"].get_scan(scan)
-    fgwped = m_file.data["fgwped_out"].get_scan(scan)
-    fgwsep = m_file.data["fgwsep_out"].get_scan(scan)
+    ti = m_file.data["ti"].get_scan(scan)
+    te = m_file.data["te"].get_scan(scan)
+    fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
+    fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)
     tratio = m_file.data["tratio"].get_scan(scan)
 
     # Plasma
@@ -3486,11 +3702,15 @@ def main(args=None):
     global alphaj
     global q0
     global q95
+    global plasma_current_MA
+    global xarea
 
     triang = m_file.data["triang95"].get_scan(scan)
     alphaj = m_file.data["alphaj"].get_scan(scan)
     q0 = m_file.data["q0"].get_scan(scan)
     q95 = m_file.data["q95"].get_scan(scan)
+    plasma_current_MA = m_file.data["plasma_current_ma"].get_scan(scan)
+    xarea = m_file.data["xarea"].get_scan(scan)
 
     # Radial position  -- 0
     # Electron density -- 1
@@ -3595,6 +3815,7 @@ def main(args=None):
     page3 = plt.figure(figsize=(12, 9), dpi=80)
     page4 = plt.figure(figsize=(12, 9), dpi=80)
     page5 = plt.figure(figsize=(12, 9), dpi=80)
+    page6 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3603,6 +3824,7 @@ def main(args=None):
         page3,
         page4,
         page5,
+        page6,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3616,6 +3838,7 @@ def main(args=None):
         pdf.savefig(page3)
         pdf.savefig(page4)
         pdf.savefig(page5)
+        pdf.savefig(page6)
 
     # show fig if option used
     if args.show:
@@ -3626,6 +3849,7 @@ def main(args=None):
     plt.close(page3)
     plt.close(page4)
     plt.close(page5)
+    plt.close(page6)
 
 
 if __name__ == "__main__":
