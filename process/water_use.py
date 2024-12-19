@@ -22,8 +22,8 @@ class WaterUse:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-        rejected_heat = heat_transport_variables.pthermmw * (
-            1 - heat_transport_variables.etath
+        rejected_heat = heat_transport_variables.p_thermal_primary_mw * (
+            1 - heat_transport_variables.eta_thermal_electric
         )
 
         wastethermeng = rejected_heat * SECDAY

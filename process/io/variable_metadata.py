@@ -17,7 +17,7 @@ var_dicts = {
     "rmajor": VariableMetadata(
         latex=r"$R_\mathrm{major}$ [$m$]", description="Major radius", units="m"
     ),
-    "crypmw": VariableMetadata(
+    "p_cryo_plant_mw": VariableMetadata(
         latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
     ),
     "bt": VariableMetadata(
@@ -34,7 +34,7 @@ var_dicts = {
     "pinjemw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
-    "pnetelmw": VariableMetadata(
+    "p_net_electrical_mw": VariableMetadata(
         latex=r"$P_\mathrm{Net\ elec}$ [$MW$]",
         description="Net electrical power",
         units="MW",
@@ -106,12 +106,12 @@ var_dicts = {
         description="Mid-plane outboard TF coil leg radius at the middle of the coil",
         units="m",
     ),
-    "pgrossmw": VariableMetadata(
+    "p_gross_electrical": VariableMetadata(
         latex=r"$P_\mathrm{gross}^\mathrm{elec}$ [$MW$]",
         description="Gross electrical power",
         units="MW",
     ),
-    "htpmw": VariableMetadata(
+    "p_pump_cool_elec_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{Primary\ coolant}^\mathrm{elec}$ [$MW$]",
         description="Primary coolant power",
         units="MW",
@@ -366,7 +366,7 @@ var_dicts = {
         description="Divertor power per major radius",
         units="MW/m",
     ),
-    "etath": VariableMetadata(
+    "eta_thermal_electric": VariableMetadata(
         latex=r"Thermal to Electric efficiency",
         description="Thermal to electric efficiency",
         units="",

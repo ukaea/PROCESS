@@ -253,6 +253,6 @@ rbrt        = 3.2      *Reactor building roof thickness (m)
 rbwt        = 3.2      *Reactor building wall thickness (m)
 
 *---------------Heat Transport Variables-----------*
-etath       = 0.45    *Thermal-to-electric conversion efficiency
+eta_thermal_electric       = 0.45    *Thermal-to-electric conversion efficiency
 fauxbop     = 0.0     *Fraction of gross electric power to balance-of-plant
 htpmw_ife   = 10.0    *IFE heat transport system electrical pump power (MW)

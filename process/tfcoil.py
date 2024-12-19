@@ -241,7 +241,7 @@ class TFcoil:
 
         # Pressure drop calculation
         dpres = fricfac * (lcool / dcool) * coolant_density * 0.5e0 * tfv.vcool**2
-        tfv.ppump = dpres * acool * tfv.vcool / tfv.etapump
+        tfv.p_cp_pump_cool = dpres * acool * tfv.vcool / tfv.etapump
 
         # Critical pressure in saturation pressure calculations (Pa)
         pcrt = 2.24e7
@@ -351,7 +351,7 @@ class TFcoil:
                     self.outfile, "Coolant inlet pressure (Pa)", "(presin)", presin
                 )
 
-            po.ovarre(self.outfile, "Pump power (W)", "(ppump)", tfv.ppump)
+            po.ovarre(self.outfile, "Pump power (W)", "(p_cp_pump_cool)", tfv.p_cp_pump_cool)
 
     @staticmethod
     def he_density(temp: float) -> float:

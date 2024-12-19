@@ -111,25 +111,25 @@ module fwbs_variables
   real(dp) :: li6enrich
   !! lithium-6 enrichment of breeding material (%)
 
-  real(dp) :: pnucblkt
+  real(dp) :: p_blanket_nuclear_heat_mw
   !! nuclear heating in the blanket [MW]
 
   real(dp) :: pnuc_cp
   !! Total nuclear heating in the ST centrepost [MW]
 
-  real(dp) :: pnuc_cp_sh
+  real(dp) :: p_cp_shield_nuclear_heat_mw
   !! Neutronic shield nuclear heating in the ST centrepost [MW]
 
   real(dp) :: pnuc_cp_tf
   !! TF neutronic nuclear heating in the ST centrepost [MW]
 
-  real(dp) :: pnucdiv
+  real(dp) :: p_div_nuclear_heat_mw
   !! nuclear heating in the divertor [MW]
 
-  real(dp) :: pnucfw
+  real(dp) :: p_fw_nuclear_heat_mw
   !! nuclear heating in the first wall [MW]
 
-  real(dp) :: pnuchcd
+  real(dp) :: p_hcd_nuclear_heat_mw
   !! nuclear heating in the HCD apparatus and diagnostics [MW]
 
   real(dp) :: pnucloss
@@ -138,7 +138,7 @@ module fwbs_variables
   real(dp) :: pnucvvplus
   !! nuclear heating to vacuum vessel and beyond [MW]
 
-  real(dp) :: pnucshld
+  real(dp) :: p_shield_nuclear_heat_mw
   !! nuclear heating in the shield [MW]
 
   real(dp) :: whtblkt
@@ -185,7 +185,7 @@ module fwbs_variables
   !! Inboard/outboard FW coolant void fraction
 
   real(dp) :: psurffwi, psurffwo
-  !! Surface heat flux on first wall [MW] (sum = pradfw)
+  !! Surface heat flux on first wall [MW] (sum = p_fw_radiation_mw)
 
   real(dp) :: volfw
   !! First wall volume [m3]
@@ -272,7 +272,7 @@ module fwbs_variables
   !! Switch for pumping power for primary coolant (mechanical power only and peak first wall
   !! temperature is only calculated if `primary_pumping=2`):
   !!
-  !! - =0 User sets pump power directly (htpmw_blkt, htpmw_fw, htpmw_div, htpmw_shld)
+  !! - =0 User sets pump power directly (p_blanket_pumping_mw, p_fw_pumping_mw, p_div_pump_cool_mw, p_shield_pump_cool_mw)
   !! - =1 User sets pump power as a fraction of thermal power (fpumpblkt, fpumpfw, fpumpdiv, fpumpshld)
   !! - =2 Mechanical pumping power is calculated
   !! - =3 Mechanical pumping power is calculated using specified pressure drop
@@ -288,14 +288,14 @@ module fwbs_variables
   !!
   !! - =0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)
   !! - =1 Set efficiency for chosen blanket, from detailed models (divertor heat used)
-  !! - =2 user input thermal-electric efficiency (etath)
+  !! - =2 user input thermal-electric efficiency (eta_thermal_electric)
   !! - =3 steam Rankine cycle
   !! - =4 supercritical CO2 cycle
 
   integer :: secondary_cycle_liq
   !! Switch for power conversion cycle for the liquid breeder component of the blanket:
   !!
-  !! - =2 user input thermal-electric efficiency (etath)
+  !! - =2 user input thermal-electric efficiency (eta_thermal_electric)
   !! - =4 supercritical CO2 cycle
 
   integer :: coolwh
@@ -398,20 +398,20 @@ module fwbs_variables
   real(dp) :: fwclfr
   !! first wall coolant fraction (calculated if `lpulse=1` or `ipowerflow=1`)
 
-  real(dp) :: praddiv
+  real(dp) :: p_div_radiation_mw
   !! Radiation power incident on the divertor (MW)
 
-  real(dp) :: pradfw
+  real(dp) :: p_fw_radiation_mw
   !! Radiation power incident on the first wall (MW)
 
-  real(dp) :: pradhcd
+  real(dp) :: p_hcd_radiation_mw
   !! Radiation power incident on the heating and current drive system (MW)
 
   real(dp) :: pradloss
   !! Radiation power lost through holes (eventually hits shield) (MW)
   !! Only used for stellarator
 
-  real(dp) :: ptfnuc
+  real(dp) :: p_tf_nuclear_heat_mw
   !! nuclear heating in the TF coil (MW)
 
   real(dp) :: ptfnucpm3
@@ -525,7 +525,7 @@ module fwbs_variables
   real(dp) :: etaiso
   !! isentropic efficiency of FW and blanket coolant pumps
 
-  real(dp) :: etahtp
+  real(dp) :: eta_pump_coolant_electrical
   !! electrical efficiency of primary coolant pumps
 
   !! -----------------------------------------------------
@@ -545,7 +545,7 @@ module fwbs_variables
   !!  - =0   PbLi
   !!  - =1   Li
 
-  integer :: icooldual
+  integer :: i_blkt_dual_coolant
   !! Switch to specify whether breeding blanket is single-cooled or dual-coolant.
   !!  - =0    Single coolant used for FW and Blanket (H2O or He). Solid Breeder.
   !!  - =1    Single coolant used for FW and Blanket (H2O or He). Liquid metal breeder
@@ -565,7 +565,7 @@ module fwbs_variables
   !!  - =1    SMS
 
   integer :: n_liq_recirc
-  !! Number of liquid metal breeder recirculations per day, for use with icooldual=1
+  !! Number of liquid metal breeder recirculations per day, for use with i_blkt_dual_coolant=1
 
   real(dp) :: r_f_liq_ib, r_f_liq_ob
   !! Radial fraction of BZ liquid channels
@@ -690,13 +690,13 @@ module fwbs_variables
     inuclear = 0
     qnuc = 0.0D0
     li6enrich = 30.0D0
-    pnucblkt = 0.0D0
-    pnucdiv = 0.0D0
-    pnucfw = 0.0D0
-    pnuchcd = 0.0D0
+    p_blanket_nuclear_heat_mw = 0.0D0
+    p_div_nuclear_heat_mw = 0.0D0
+    p_fw_nuclear_heat_mw = 0.0D0
+    p_hcd_nuclear_heat_mw = 0.0D0
     pnucloss = 0.0D0
     pnucvvplus = 0.0D0
-    pnucshld = 0.0D0
+    p_shield_nuclear_heat_mw = 0.0D0
     whtblkt = 0.0D0
     whtblss = 0.0D0
     armour_fw_bl_mass = 0.0D0
@@ -766,11 +766,11 @@ module fwbs_variables
     fvolsi = 1.0D0
     fvolso = 0.64D0
     fwclfr = 0.15D0
-    praddiv = 0.0D0
-    pradfw = 0.0D0
-    pradhcd = 0.0D0
+    p_div_radiation_mw = 0.0D0
+    p_fw_radiation_mw = 0.0D0
+    p_hcd_radiation_mw = 0.0D0
     pradloss = 0.0D0
-    ptfnuc = 0.0D0
+    p_tf_nuclear_heat_mw = 0.0D0
     ptfnucpm3 = 0.0D0
     rdewex = 0.0D0
     zdewex = 0.0D0
@@ -802,14 +802,14 @@ module fwbs_variables
     declshld = 0.075D0
     blkttype = 3
     etaiso = 0.85D0
-    etahtp = 0.95D0
+    eta_pump_coolant_electrical = 0.95D0
     pnuc_cp = 0.0D0
-    pnuc_cp_sh = 0.0D0
+    p_cp_shield_nuclear_heat_mw = 0.0D0
     pnuc_cp_tf = 0.0D0
     neut_flux_cp = 0.0D0
     ipump = 0
     i_bb_liq = 0
-    icooldual = 0
+    i_blkt_dual_coolant = 0
     ifci = 0
     ims = 0
     n_liq_recirc = 10

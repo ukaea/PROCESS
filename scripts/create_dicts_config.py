@@ -8,7 +8,7 @@ PARAMETER_DEFAULTS = [
     "rminor",
     "bt",
     "fusion_power",
-    "pnetelmw",
+    "p_net_electrical_mw",
     "te",
     "pdivt",
     "sig_tf_case",
