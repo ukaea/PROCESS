@@ -191,6 +191,8 @@ The value of `beta_poloidal_max` can be set to the desired maximum poloidal beta
 
 This constraint can be activated by stating `icc = 84` in the input file.
 
+The value of `beta_max` can be set to the desired minimum total beta. The scaling value `fbeta_min` can be varied also.
+
 [^1]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 
 [^2]: D.J. Ward, 'PROCESS Fast Alpha Pressure', Work File Note F/PL/PJK/PROCESS/CODE/050
