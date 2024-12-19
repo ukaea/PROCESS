@@ -312,7 +312,7 @@ contains
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
-      tauratio, idensl, bt, iscrp, ipnlaws, beta_max, beta_limit_lower, &
+      tauratio, idensl, bt, iscrp, ipnlaws, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
@@ -533,8 +533,8 @@ contains
        case ('beta_max')
           call parse_real_variable('beta_max', beta_max, 0.0D0, 1.0D0, &
               'Plasma beta upper limit')
-       case ('beta_limit_lower')
-          call parse_real_variable('beta_limit_lower', beta_limit_lower, 0.0D0, 1.0D0, &
+       case ('beta_min')
+          call parse_real_variable('beta_min', beta_min, 0.0D0, 1.0D0, &
                 'Plasma beta lower limit')
        case ('betbm0')
           call parse_real_variable('betbm0', betbm0, 0.0D0, 10.0D0, &

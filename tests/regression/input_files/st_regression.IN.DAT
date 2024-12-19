@@ -352,9 +352,9 @@ beta_norm_max = 5.0
 *icc = 84
 * DESCRIPTION:   Constraint equation for lower limit of beta
 * JUSTIFICATION: Turned off, do not require a beta lower limit
-* VARIABLES:     beta_limit_lower (Lower limit for beta). beta,betaft calculated in-situ
+* VARIABLES:     beta_min (Lower limit for beta). beta,betaft calculated in-situ
 
-*beta_limit_lower = 
+*beta_min = 
 * DESCRIPTION:   Plasma beta lower limit
 * JUSTIFICATION: Turned off, not in use, Used with icc=84 to enforce beta limit
 

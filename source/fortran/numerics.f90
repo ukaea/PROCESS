@@ -538,7 +538,7 @@ contains
       'ne0 > neped                      ', &
       'toroidalgap >  tftort            ', &
       'available_space > required_space ', &
-      'beta > beta_limit_lower          ', &
+      'beta > beta_min          ', &
       'CP lifetime                      ', &
       'TFC turn dimension               ', &
       'Cryogenic plant power            ', &

@@ -145,7 +145,7 @@ OBS_VARS = {
     "dnbeta": "beta_norm_max",
     "ifalphap": "i_beta_fast_alpha",
     "betalim": "beta_max",
-    "betalim_lower": "beta_limit_lower",
+    "betalim_lower": "beta_min",
 }
 
 OBS_VARS_HELP = {
