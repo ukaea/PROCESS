@@ -56,7 +56,7 @@ module physics_variables
   real(dp) :: beta_fast_alpha
   !! fast alpha beta component
 
-  real(dp) :: beta_limit_upper
+  real(dp) :: beta_max
   !! Max allowable beta
 
   real(dp) :: beta_limit_lower
@@ -947,7 +947,7 @@ module physics_variables
     beamfus0 = 1.0D0
     beta = 0.042D0
     beta_fast_alpha = 0.0D0
-    beta_limit_upper = 0.0D0
+    beta_max = 0.0D0
     beta_limit_lower = 0.0D0
     beta_beam = 0.0D0
     beta_poloidal = 0.0D0

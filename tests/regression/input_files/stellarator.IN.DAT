@@ -108,7 +108,7 @@ fptfnuc = 1 *f-value neutron heating
 
 *----------------Physics Variables-----------------*
 
-beta_limit_upper = 0.06 * upper beta limit
+beta_max = 0.06 * upper beta limit
 beta_limit_lower = 0.01 * lower beta limit
 bigqmin = 1 * Minimal BigQ
 

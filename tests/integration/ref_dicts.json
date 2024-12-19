@@ -297,7 +297,7 @@
         "beta_mcdonald": 0.0,
         "beta_fast_alpha": 0.0,
         "betai": 1.0,
-        "beta_limit_upper": 0.0,
+        "beta_max": 0.0,
         "beta_limit_lower": 0.0,
         "beta_beam": 0.0,
         "betao": 1.0,
@@ -8871,7 +8871,7 @@
         "beta_mcdonald": "",
         "beta_fast_alpha": "fast alpha beta component",
         "betai": "poloidal plane angle between divertor plate and leg, inboard (rad)",
-        "beta_limit_upper": "allowable beta",
+        "beta_max": "allowable beta",
         "beta_limit_lower": "allowable lower beta",
         "beta_beam": "neutral beam beta component",
         "betao": "poloidal plane angle between divertor plate and leg, outboard (rad)",
@@ -11681,7 +11681,7 @@
             "lb": 0.0,
             "ub": 1.5707
         },
-        "beta_limit_upper": {
+        "beta_max": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -19076,7 +19076,7 @@
             "beamfus0",
             "beta",
             "beta_fast_alpha",
-            "beta_limit_upper",
+            "beta_max",
             "beta_limit_lower",
             "beta_beam",
             "beta_poloidal",
@@ -20036,7 +20036,7 @@
         "beamwd": "real_variable",
         "beta": "real_variable",
         "betai": "real_variable",
-        "beta_limit_upper": "real_variable",
+        "beta_max": "real_variable",
         "beta_limit_lower": "real_variable",
         "betao": "real_variable",
         "betbm0": "real_variable",

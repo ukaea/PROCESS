@@ -2355,8 +2355,8 @@ class Physics:
                 (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
             )
 
-        # calculate_beta_limit() returns the beta_limit_upper for beta
-        physics_variables.beta_limit_upper = calculate_beta_limit(
+        # calculate_beta_limit() returns the beta_max for beta
+        physics_variables.beta_max = calculate_beta_limit(
             physics_variables.bt,
             physics_variables.beta_norm_limit_upper,
             physics_variables.plasma_current,
@@ -3594,24 +3594,24 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Limit on total beta",
-                "(beta_limit_upper)",
-                physics_variables.beta_limit_upper,
+                "(beta_max)",
+                physics_variables.beta_max,
                 "OP ",
             )
         elif physics_variables.i_beta_component == 1:
             po.ovarrf(
                 self.outfile,
                 "Limit on thermal beta",
-                "(beta_limit_upper)",
-                physics_variables.beta_limit_upper,
+                "(beta_max)",
+                physics_variables.beta_max,
                 "OP ",
             )
         else:
             po.ovarrf(
                 self.outfile,
                 "Limit on thermal + NB beta",
-                "(beta_limit_upper)",
-                physics_variables.beta_limit_upper,
+                "(beta_max)",
+                physics_variables.beta_max,
                 "OP ",
             )
 
