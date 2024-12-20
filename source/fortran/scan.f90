@@ -869,7 +869,6 @@ contains
   !!
   use constraints
   use error_handling
-  use function_evaluator
   use numerics
   use process_output
   use utilities, only:upper_case
