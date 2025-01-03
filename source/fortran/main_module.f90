@@ -94,7 +94,6 @@ subroutine run_summary
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout, mfile, iotty, mfile
-  use maths_library, only: integer2string, integer3string
   use global_variables, only: maxcal, fileprefix, icase, runtitle
   use numerics, only: nvar, neqns, ioptimz, nineqns, epsvmc, minmax, icc, &
     lablcc, lablmm
@@ -671,32 +670,6 @@ end subroutine verror
 
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
-
-subroutine runtests
-   ! These tests should gradually be moved to pytest
-  use constants, only: nout
-  use maths_library, only: binomial
-  use process_output, only: ocmmnt, ovarre
-!   use pfcoil_module, only: brookscoil
-!   use reinke_module, only: test_reinke
-  implicit none
-  real(dp) :: fshift, xf, enpa,ftherm,fpp,cdeff, ampperwatt
-  logical :: Temperature_capped
-  call ovarre(nout,'Binomial coefficients C(5,0): 1', '(binomial(5,0))', binomial(5,0))
-  call ovarre(nout,'Binomial coefficients C(5,1): 5', '(binomial(5,1))', binomial(5,1))
-  call ovarre(nout,'Binomial coefficients C(5,2): 10', '(binomial(5,2))', binomial(5,2))
-  call ovarre(nout,'Binomial coefficients C(5,3): 10', '(binomial(5,3))', binomial(5,3))
-  call ovarre(nout,'Binomial coefficients C(5,4): 5', '(binomial(5,4))', binomial(5,4))
-  call ovarre(nout,'Binomial coefficients C(5,5): 1', '(binomial(5,5))', binomial(5,5))
-
-   !   call brookscoil(nout) Moved to pytest
-  ! Disabled for ease of #1542 - Tim
-!   call test_reinke()
-end subroutine runtests
-
-
 subroutine get_DDMonYYTimeZone(dt_time)
   !! Routine to get date, time and timezone
   !! author: M Kumar, CCFE, Culham Science Centre
@@ -740,5 +713,19 @@ subroutine get_DDMonYYTimeZone(dt_time)
     dt_time = trim(dt_time)
 
   END subroutine get_DDMonYYTimeZone
+
+  pure function integer2string(value)
+      ! Convert an integer value to a 2-digit string with leading zero if required.
+      integer, intent(in) :: value
+      character(len=2) integer2string
+      write (integer2string,'(I2.2)') value
+  end function integer2string
+
+  pure function integer3string(value)
+      ! Convert an integer value to a 3-digit string with leading zero if required.
+      integer, intent(in) :: value
+      character(len=3) integer3string
+      write (integer3string,'(I3.3)') value
+  end function integer3string
 
 end module main_module
