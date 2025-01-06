@@ -24,8 +24,12 @@ def plot_full_sankey(
     # Used in [PLASMA]
     fusion_power = m_file.data["fusion_power"].get_scan(-1)  # Fusion power (MW)
     pinjmw = m_file.data["pinjmw"].get_scan(-1)  # Total auxiliary injected power (MW)
-    p_plasma_ohmic_mw = m_file.data["p_plasma_ohmic_mw"].get_scan(-1)  # Ohmic heating power (MW)
-    totalplasma = fusion_power + pinjmw + p_plasma_ohmic_mw  # Total Power in plasma (MW)
+    p_plasma_ohmic_mw = m_file.data["p_plasma_ohmic_mw"].get_scan(
+        -1
+    )  # Ohmic heating power (MW)
+    totalplasma = (
+        fusion_power + pinjmw + p_plasma_ohmic_mw
+    )  # Total Power in plasma (MW)
     neutron_power_total = m_file.data["neutron_power_total"].get_scan(
         -1
     )  # Neutron fusion power (MW)
@@ -478,8 +482,12 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     # Used in [PLASMA]
     fusion_power = m_file.data["fusion_power"].get_scan(-1)  # Fusion Power (MW)
     pinjmw = m_file.data["pinjmw"].get_scan(-1)  # Total auxiliary injected Power (MW)
-    p_plasma_ohmic_mw = m_file.data["p_plasma_ohmic_mw"].get_scan(-1)  # Ohmic heating Power (MW)
-    totalplasma = fusion_power + pinjmw + p_plasma_ohmic_mw  # Total Power in plasma (MW)
+    p_plasma_ohmic_mw = m_file.data["p_plasma_ohmic_mw"].get_scan(
+        -1
+    )  # Ohmic heating Power (MW)
+    totalplasma = (
+        fusion_power + pinjmw + p_plasma_ohmic_mw
+    )  # Total Power in plasma (MW)
 
     # Used in [DEPOSITION]
     pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)

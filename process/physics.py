@@ -2074,7 +2074,7 @@ class Physics:
 
         # Calculate ohmic power
         (
-            physics_variables.pohmpv,
+            physics_variables.pden_plasma_ohmic_mw,
             physics_variables.p_plasma_ohmic_mw,
             physics_variables.rpfac,
             physics_variables.rplas,
@@ -2921,7 +2921,7 @@ class Physics:
 
         Returns:
             Tuple[float, float, float, float]: Tuple containing:
-                - pohmpv (float): Ohmic heating power per unit volume (MW/m^3).
+                - pden_plasma_ohmic_mw (float): Ohmic heating power per unit volume (MW/m^3).
                 - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
                 - rpfac (float): Neo-classical resistivity enhancement factor.
                 - rplas (float): Plasma resistance (ohm).
@@ -2958,8 +2958,8 @@ class Physics:
             error_handling.report_error(83)
 
         # Ohmic heating power per unit volume
-        # Corrected from: pohmpv = (inductive_current_fraction*plasma_current)**2 * ...
-        pohmpv = (
+        # Corrected from: pden_plasma_ohmic_mw = (inductive_current_fraction*plasma_current)**2 * ...
+        pden_plasma_ohmic_mw = (
             inductive_current_fraction
             * plasma_current**2
             * rplas
@@ -2968,9 +2968,9 @@ class Physics:
         )
 
         # Total ohmic heating power
-        p_plasma_ohmic_mw = pohmpv * plasma_volume
+        p_plasma_ohmic_mw = pden_plasma_ohmic_mw * plasma_volume
 
-        return pohmpv, p_plasma_ohmic_mw, rpfac, rplas
+        return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, rpfac, rplas
 
     @staticmethod
     def calculate_plasma_current(
@@ -6352,7 +6352,7 @@ class Physics:
             - physics_variables.f_alpha_plasma
             * physics_variables.alpha_power_density_total
             - physics_variables.charged_power_density
-            - physics_variables.pohmpv
+            - physics_variables.pden_plasma_ohmic_mw
         )
 
         # Take into account whether injected power is included in tau_e

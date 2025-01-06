@@ -1967,7 +1967,7 @@ class PohmParam(NamedTuple):
 
     zeff: Any = None
 
-    expected_pohmpv: Any = None
+    expected_pden_plasma_ohmic_mw: Any = None
 
     expected_p_plasma_ohmic_mw: Any = None
 
@@ -1990,7 +1990,7 @@ class PohmParam(NamedTuple):
             ten=12.626131115905864,
             plasma_volume=1888.1711539956691,
             zeff=2.0909945616489103,
-            expected_pohmpv=0.0004062519138005805,
+            expected_pden_plasma_ohmic_mw=0.0004062519138005805,
             expected_p_plasma_ohmic_mw=0.7670731448937912,
             expected_rpfac=2.5,
             expected_rplas=3.7767895536275952e-09,
@@ -2016,7 +2016,12 @@ def test_pohm(pohmparam, monkeypatch, physics):
         physics_variables, "plasma_res_factor", pohmparam.plasma_res_factor
     )
 
-    pohmpv, p_plasma_ohmic_mw, rpfac, rplas = physics.plasma_ohmic_heating(
+    (
+        pden_plasma_ohmic_mw,
+        p_plasma_ohmic_mw,
+        rpfac,
+        rplas,
+    ) = physics.plasma_ohmic_heating(
         inductive_current_fraction=pohmparam.inductive_current_fraction,
         kappa95=pohmparam.kappa95,
         plasma_current=pohmparam.plasma_current,
@@ -2027,7 +2032,9 @@ def test_pohm(pohmparam, monkeypatch, physics):
         zeff=pohmparam.zeff,
     )
 
-    assert pohmpv == pytest.approx(pohmparam.expected_pohmpv)
+    assert pden_plasma_ohmic_mw == pytest.approx(
+        pohmparam.expected_pden_plasma_ohmic_mw
+    )
 
     assert p_plasma_ohmic_mw == pytest.approx(pohmparam.expected_p_plasma_ohmic_mw)
 
@@ -2945,7 +2952,9 @@ def test_pcond(pcondparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "kappaa_ipb", pcondparam.kappaa_ipb)
 
-    monkeypatch.setattr(physics_variables, "p_plasma_ohmic_mw", pcondparam.p_plasma_ohmic_mw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", pcondparam.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "f_alpha_plasma", pcondparam.f_alpha_plasma)
 

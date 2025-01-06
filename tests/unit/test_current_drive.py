@@ -566,7 +566,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "ignite", cudrivparam.ignite)
 
-    monkeypatch.setattr(physics_variables, "p_plasma_ohmic_mw", cudrivparam.p_plasma_ohmic_mw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", cudrivparam.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "fusion_power", cudrivparam.fusion_power)
 

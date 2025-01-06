@@ -665,7 +665,7 @@ module physics_variables
   real(dp) :: p_plasma_ohmic_mw
   !! ohmic heating power (MW)
 
-  real(dp) :: pohmpv
+  real(dp) :: pden_plasma_ohmic_mw
   !! ohmic heating power per volume (MW/m3)
 
   real(dp) :: powerht
@@ -1053,7 +1053,7 @@ module physics_variables
     neutron_power_density_total = 0.0D0
     neutron_power_density_plasma = 0.0D0
     p_plasma_ohmic_mw = 0.0D0
-    pohmpv = 0.0D0
+    pden_plasma_ohmic_mw = 0.0D0
     powerht = 0.0D0
     fusion_power = 0.0D0
     pperim = 0.0D0

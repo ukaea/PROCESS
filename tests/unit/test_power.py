@@ -1824,7 +1824,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "rpf", pfpwrparam.rpf)
 
-    monkeypatch.setattr(physics_variables, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "rmajor", pfpwrparam.rmajor)
 
@@ -2564,7 +2566,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "idivrt", power2param.idivrt)
 
-    monkeypatch.setattr(physics_variables, "p_plasma_ohmic_mw", power2param.p_plasma_ohmic_mw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", power2param.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "iradloss", power2param.iradloss)
 
