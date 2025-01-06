@@ -804,9 +804,9 @@ module physics_variables
   !! n_oxygen / n_e
 
   real(dp) :: rpfac
-  !! neo-classical correction factor to rplas
+  !! neo-classical correction factor to res_plasma
 
-  real(dp) :: rplas
+  real(dp) :: res_plasma
   !! plasma resistance (ohm)
 
   real(dp) :: res_time
@@ -1092,7 +1092,7 @@ module physics_variables
     rnfene = 0.0D0
     rnone = 0.0D0
     rpfac = 0.0D0
-    rplas = 0.0D0
+    res_plasma = 0.0D0
     res_time = 0.0D0
     sarea = 0.0D0
     sareao = 0.0D0

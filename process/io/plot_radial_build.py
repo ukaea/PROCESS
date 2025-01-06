@@ -227,7 +227,7 @@ def main(args=None):
         "",
         "fvs",  # actaully lower bound fvs
         "vburn",
-        "rplas",
+        "res_plasma",
     ]
 
     # "plasma_res_factor"

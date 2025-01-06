@@ -1708,7 +1708,7 @@ class VscalcParam(NamedTuple):
 
     rmajor: Any = None
 
-    rplas: Any = None
+    res_plasma: Any = None
 
     t_burn: Any = None
 
@@ -1739,7 +1739,7 @@ class VscalcParam(NamedTuple):
             plasma_current=18398455.678867526,
             rli=1.2064840230894305,
             rmajor=8,
-            rplas=3.7767895536275952e-09,
+            res_plasma=3.7767895536275952e-09,
             t_burn=1000,
             t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
@@ -1758,7 +1758,7 @@ class VscalcParam(NamedTuple):
             plasma_current=18398455.678867526,
             rli=1.2064840230894305,
             rmajor=8,
-            rplas=3.7767895536275952e-09,
+            res_plasma=3.7767895536275952e-09,
             t_burn=0,
             t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
@@ -1789,7 +1789,7 @@ def test_vscalc(vscalcparam):
         plasma_current=vscalcparam.plasma_current,
         rli=vscalcparam.rli,
         rmajor=vscalcparam.rmajor,
-        rplas=vscalcparam.rplas,
+        res_plasma=vscalcparam.res_plasma,
         t_burn=vscalcparam.t_burn,
         t_fusion_ramp=vscalcparam.t_fusion_ramp,
         rmu0=constants.rmu0,
@@ -1973,7 +1973,7 @@ class PohmParam(NamedTuple):
 
     expected_rpfac: Any = None
 
-    expected_rplas: Any = None
+    expected_res_plasma: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1993,7 +1993,7 @@ class PohmParam(NamedTuple):
             expected_pden_plasma_ohmic_mw=0.0004062519138005805,
             expected_p_plasma_ohmic_mw=0.7670731448937912,
             expected_rpfac=2.5,
-            expected_rplas=3.7767895536275952e-09,
+            expected_res_plasma=3.7767895536275952e-09,
         ),
     ),
 )
@@ -2020,7 +2020,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         pden_plasma_ohmic_mw,
         p_plasma_ohmic_mw,
         rpfac,
-        rplas,
+        res_plasma,
     ) = physics.plasma_ohmic_heating(
         inductive_current_fraction=pohmparam.inductive_current_fraction,
         kappa95=pohmparam.kappa95,
@@ -2040,7 +2040,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
 
     assert rpfac == pytest.approx(pohmparam.expected_rpfac)
 
-    assert rplas == pytest.approx(pohmparam.expected_rplas)
+    assert res_plasma == pytest.approx(pohmparam.expected_res_plasma)
 
 
 class CalculateDensityLimitParam(NamedTuple):
