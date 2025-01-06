@@ -4099,7 +4099,7 @@ class Stellarator:
             )
             / physics_variables.btot**2
         )
-        physics_module.total_plasma_internal_energy = (
+        physics_module.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
             * physics_variables.btot
@@ -4112,7 +4112,7 @@ class Stellarator:
             2.0e0
             * constants.proton_mass
             * physics_variables.aion
-            * physics_module.total_plasma_internal_energy
+            * physics_module.e_plasma_beta
             / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla)
         ) / (
             constants.electron_charge

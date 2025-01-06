@@ -2487,7 +2487,7 @@ class Physics:
         physics_variables.pradsolmw = (
             physics_variables.rad_fraction_sol * physics_variables.pdivt
         )
-        physics_module.total_plasma_internal_energy = (
+        physics_module.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
             * physics_variables.btot
@@ -2497,7 +2497,7 @@ class Physics:
         )
 
         physics_module.total_energy_conf_time = (
-            physics_module.total_plasma_internal_energy
+            physics_module.e_plasma_beta
             / physics_module.total_loss_power
         )
 
@@ -3280,7 +3280,7 @@ class Physics:
             * physics_variables.dnla**3
             * physics_variables.kappa
             / (
-                physics_module.total_plasma_internal_energy**2
+                physics_module.e_plasma_beta**2
                 * physics_variables.plasma_current
             )
         )
@@ -3289,7 +3289,7 @@ class Physics:
             2.0e0
             * constants.proton_mass
             * physics_variables.aion
-            * physics_module.total_plasma_internal_energy
+            * physics_module.e_plasma_beta
             / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla)
         ) / (
             constants.electron_charge
@@ -3302,7 +3302,7 @@ class Physics:
             4.0e0
             / 3.0e0
             * constants.rmu0
-            * physics_module.total_plasma_internal_energy
+            * physics_module.e_plasma_beta
             / (physics_variables.plasma_volume * physics_variables.bt**2)
         )
 
@@ -3829,8 +3829,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total plasma internal energy (J)",
-            "(total_plasma_internal_energy)",
-            physics_module.total_plasma_internal_energy,
+            "(e_plasma_beta)",
+            physics_module.e_plasma_beta,
             "OP ",
         )
 
