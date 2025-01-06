@@ -1999,7 +1999,7 @@ class PohmParam(NamedTuple):
 )
 def test_pohm(pohmparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for pohm.
+    Automatically generated Regression Unit Test for plasma_ohmic_heating.
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
@@ -2016,7 +2016,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         physics_variables, "plasma_res_factor", pohmparam.plasma_res_factor
     )
 
-    pohmpv, pohmmw, rpfac, rplas = physics.pohm(
+    pohmpv, pohmmw, rpfac, rplas = physics.plasma_ohmic_heating(
         inductive_current_fraction=pohmparam.inductive_current_fraction,
         kappa95=pohmparam.kappa95,
         plasma_current=pohmparam.plasma_current,

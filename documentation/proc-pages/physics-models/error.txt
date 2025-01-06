@@ -1365,7 +1365,7 @@ Effects}\label{neo-classical-correction-effects}
 
 Switch \texttt{ires} controls whether neo-classical (trapped particle)
 effects are included in the calculation of the plasma resistance and
-ohmic heating power in routine \texttt{pohm}, which is called by routine
+ohmic heating power in routine \texttt{plasma_ohmic_heating}, which is called by routine
 \texttt{physics}. If \texttt{ires\ =\ 1}, these effects are included.
 Note that the scaling used is only valid for aspect ratios between 2.5
 and 4, and it is possible for the plasma resistance to be wrongly

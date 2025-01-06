@@ -2078,7 +2078,7 @@ class Physics:
             physics_variables.pohmmw,
             physics_variables.rpfac,
             physics_variables.rplas,
-        ) = self.pohm(
+        ) = self.plasma_ohmic_heating(
             physics_variables.inductive_current_fraction,
             physics_variables.kappa95,
             physics_variables.plasma_current,
@@ -2896,7 +2896,7 @@ class Physics:
         return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
 
     @staticmethod
-    def pohm(
+    def plasma_ohmic_heating(
         inductive_current_fraction,
         kappa95,
         plasma_current,
