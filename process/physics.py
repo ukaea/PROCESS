@@ -1571,6 +1571,10 @@ class Physics:
             physics_variables.bt**2 + physics_variables.bp**2
         )
 
+        # *************************** #
+        #       BETA COMPONENTS       #
+        # *************************** #
+
         physics_variables.beta_toroidal = (
             physics_variables.beta
             * physics_variables.btot**2
@@ -1624,6 +1628,16 @@ class Physics:
         physics_variables.e_plasma_beta_thermal = (
             1.5e0
             * physics_variables.beta_thermal
+            * physics_variables.btot
+            * physics_variables.btot
+            / (2.0e0 * constants.rmu0)
+            * physics_variables.plasma_volume
+        )
+
+        # Plasma thermal energy derived from the total beta
+        physics_module.e_plasma_beta = (
+            1.5e0
+            * physics_variables.beta
             * physics_variables.btot
             * physics_variables.btot
             / (2.0e0 * constants.rmu0)
@@ -2488,19 +2502,8 @@ class Physics:
             physics_variables.rad_fraction_sol * physics_variables.pdivt
         )
 
-        # Plasma thermal energy derived from the total beta
-        physics_module.e_plasma_beta = (
-            1.5e0
-            * physics_variables.beta
-            * physics_variables.btot
-            * physics_variables.btot
-            / (2.0e0 * constants.rmu0)
-            * physics_variables.plasma_volume
-        )
-
         physics_module.total_energy_conf_time = (
-            physics_module.e_plasma_beta
-            / physics_module.total_loss_power
+            physics_module.e_plasma_beta / physics_module.total_loss_power
         )
 
         if any(numerics.icc == 78):
@@ -3281,10 +3284,7 @@ class Physics:
             * np.sqrt(physics_variables.eps)
             * physics_variables.dnla**3
             * physics_variables.kappa
-            / (
-                physics_module.e_plasma_beta**2
-                * physics_variables.plasma_current
-            )
+            / (physics_module.e_plasma_beta**2 * physics_variables.plasma_current)
         )
 
         physics_module.rho_star = np.sqrt(
