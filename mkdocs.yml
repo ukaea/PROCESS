@@ -61,7 +61,9 @@ nav:
                   - Bootstrap Current: physics-models/plasma_current/bootstrap_current.md
                   - Diamagnetic Current: physics-models/plasma_current/diamagnetic_current.md
                   - Pfirsch-Schlüter Current: physics-models/plasma_current/pfirsch_schlüter_current_drive.md
-                  - Inductive Current: physics-models/plasma_current/inductive_plasma_current.md
+                  - Inductive Current: 
+                      - Inductive Current: physics-models/plasma_current/inductive_plasma_current.md
+                      - Plasma Resistive Heating: physics-models/plasma_current/plasma_resistive_heating.md
               - Confinement time: physics-models/plasma_confinement.md
               - Plasma Core Power Balance: physics-models/plasma_power_balance.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md
