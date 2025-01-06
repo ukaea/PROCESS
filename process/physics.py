@@ -2897,21 +2897,45 @@ class Physics:
 
     @staticmethod
     def plasma_ohmic_heating(
-        inductive_current_fraction,
-        kappa95,
-        plasma_current,
-        rmajor,
-        rminor,
-        ten,
-        plasma_volume,
-        zeff,
-    ):
-        # Density weighted electron temperature in 10 keV units
+        inductive_current_fraction: float,
+        kappa95: float,
+        plasma_current: float,
+        rmajor: float,
+        rminor: float,
+        ten: float,
+        plasma_volume: float,
+        zeff: float,
+    ) -> Tuple[float, float, float, float]:
+        """
+        Calculate the ohmic heating power and related parameters.
 
+        Args:
+            inductive_current_fraction (float): Fraction of plasma current driven inductively.
+            kappa95 (float): Plasma elongation at 95% surface.
+            plasma_current (float): Plasma current (A).
+            rmajor (float): Major radius (m).
+            rminor (float): Minor radius (m).
+            ten (float): Density weighted average electron temperature (keV).
+            plasma_volume (float): Plasma volume (m^3).
+            zeff (float): Plasma effective charge.
+
+        Returns:
+            Tuple[float, float, float, float]: Tuple containing:
+                - pohmpv (float): Ohmic heating power per unit volume (MW/m^3).
+                - pohmmw (float): Total ohmic heating power (MW).
+                - rpfac (float): Neo-classical resistivity enhancement factor.
+                - rplas (float): Plasma resistance (ohm).
+
+        Notes:
+
+        References:
+            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+
+        """
+        # Density weighted electron temperature in 10 keV units
         t10 = ten / 10.0
 
         # Plasma resistance, from loop voltage calculation in IPDG89
-
         rplas = (
             physics_variables.plasma_res_factor
             * 2.15e-9
@@ -2923,13 +2947,11 @@ class Physics:
         # Neo-classical resistivity enhancement factor
         # Taken from  N. A. Uckan et al, Fusion Technology 13 (1988) p.411.
         # The expression is valid for aspect ratios in the range 2.5--4.
-
         rpfac = 4.3 - 0.6 * rmajor / rminor
         rplas = rplas * rpfac
 
         # Check to see if plasma resistance is negative
         # (possible if aspect ratio is too high)
-
         if rplas <= 0.0:
             error_handling.fdiags[0] = rplas
             error_handling.fdiags[1] = physics_variables.aspect
@@ -2937,7 +2959,6 @@ class Physics:
 
         # Ohmic heating power per unit volume
         # Corrected from: pohmpv = (inductive_current_fraction*plasma_current)**2 * ...
-
         pohmpv = (
             inductive_current_fraction
             * plasma_current**2
@@ -2947,7 +2968,6 @@ class Physics:
         )
 
         # Total ohmic heating power
-
         pohmmw = pohmpv * plasma_volume
 
         return pohmpv, pohmmw, rpfac, rplas
