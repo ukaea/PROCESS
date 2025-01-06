@@ -1620,6 +1620,16 @@ class Physics:
             physics_variables.beta_fast_alpha + physics_variables.beta_beam
         ) / physics_variables.beta_thermal
 
+        # Plasma thermal energy derived from the thermal beta
+        physics_variables.e_plasma_beta_thermal = (
+            1.5e0
+            * physics_variables.beta_thermal
+            * physics_variables.btot
+            * physics_variables.btot
+            / (2.0e0 * constants.rmu0)
+            * physics_variables.plasma_volume
+        )
+
         # Set PF coil ramp times
         if pulse_variables.lpulse != 1:
             if times_variables.tohsin == 0.0e0:
@@ -3810,14 +3820,9 @@ class Physics:
 
         po.ovarre(
             self.outfile,
-            "Plasma thermal energy (J)",
-            " ",
-            1.5e0
-            * physics_variables.beta_thermal
-            * physics_variables.btot
-            * physics_variables.btot
-            / (2.0e0 * constants.rmu0)
-            * physics_variables.plasma_volume,
+            "Plasma thermal energy derived from thermal beta (J)",
+            "(e_plasma_beta_thermal) ",
+            physics_variables.e_plasma_beta_thermal,
             "OP ",
         )
 

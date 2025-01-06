@@ -95,6 +95,9 @@ module physics_variables
   real(dp) :: beta_norm_poloidal
   !! normaised poloidal beta
 
+  real(dp) :: e_plasma_beta_thermal
+  !! Plasma thermal energy derived from thermal beta
+
   real(dp) :: betbm0
   !! leading coefficient for NB beta fraction
 
@@ -960,6 +963,7 @@ module physics_variables
     beta_norm_total = 0.0D0
     beta_norm_thermal = 0.0D0
     beta_norm_poloidal = 0.0D0
+    e_plasma_beta_thermal = 0.0D0
     beta_norm_toroidal = 0.0D0
     betbm0 = 1.5D0
     bp = 0.0D0
