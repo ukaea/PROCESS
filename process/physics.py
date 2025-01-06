@@ -2487,6 +2487,8 @@ class Physics:
         physics_variables.pradsolmw = (
             physics_variables.rad_fraction_sol * physics_variables.pdivt
         )
+
+        # Plasma thermal energy derived from the total beta
         physics_module.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
@@ -3817,21 +3819,21 @@ class Physics:
                 physics_variables.beta_norm_poloidal,
                 "OP ",
             )
-
+        po.osubhd(self.outfile, "Plasma energies derived from beta :")
         po.ovarre(
             self.outfile,
             "Plasma thermal energy derived from thermal beta (J)",
             "(e_plasma_beta_thermal) ",
             physics_variables.e_plasma_beta_thermal,
-            "OP ",
+            "OP",
         )
 
         po.ovarre(
             self.outfile,
-            "Total plasma internal energy (J)",
+            "Plasma thermal energy derived from the total beta (J)",
             "(e_plasma_beta)",
             physics_module.e_plasma_beta,
-            "OP ",
+            "OP",
         )
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
