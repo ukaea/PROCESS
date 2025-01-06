@@ -702,7 +702,7 @@ class CurrentDrive:
                 abs(
                     current_drive_variables.pinjmw
                     + current_drive_variables.porbitlossmw
-                    + physics_variables.pohmmw
+                    + physics_variables.p_plasma_ohmic_mw
                 )
                 < 1.0e-6
             ):
@@ -711,7 +711,7 @@ class CurrentDrive:
                 current_drive_variables.bigq = physics_variables.fusion_power / (
                     current_drive_variables.pinjmw
                     + current_drive_variables.porbitlossmw
-                    + physics_variables.pohmmw
+                    + physics_variables.p_plasma_ohmic_mw
                 )
 
         if not output:

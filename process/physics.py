@@ -2075,7 +2075,7 @@ class Physics:
         # Calculate ohmic power
         (
             physics_variables.pohmpv,
-            physics_variables.pohmmw,
+            physics_variables.p_plasma_ohmic_mw,
             physics_variables.rpfac,
             physics_variables.rplas,
         ) = self.plasma_ohmic_heating(
@@ -2120,7 +2120,7 @@ class Physics:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + pinj
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pradmw
         )
 
@@ -2403,7 +2403,7 @@ class Physics:
         physics_module.total_loss_power = 1e6 * (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.pinjmw
         )
         physics_module.rad_fraction_lcfs = (
@@ -2922,7 +2922,7 @@ class Physics:
         Returns:
             Tuple[float, float, float, float]: Tuple containing:
                 - pohmpv (float): Ohmic heating power per unit volume (MW/m^3).
-                - pohmmw (float): Total ohmic heating power (MW).
+                - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
                 - rpfac (float): Neo-classical resistivity enhancement factor.
                 - rplas (float): Plasma resistance (ohm).
 
@@ -2968,9 +2968,9 @@ class Physics:
         )
 
         # Total ohmic heating power
-        pohmmw = pohmpv * plasma_volume
+        p_plasma_ohmic_mw = pohmpv * plasma_volume
 
-        return pohmpv, pohmmw, rpfac, rplas
+        return pohmpv, p_plasma_ohmic_mw, rpfac, rplas
 
     @staticmethod
     def calculate_plasma_current(
@@ -4333,7 +4333,7 @@ class Physics:
         tot_power_plasma = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.pinjmw
         )
         po.ovarre(
@@ -4554,8 +4554,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Ohmic heating power (MW)",
-            "(pohmmw)",
-            physics_variables.pohmmw,
+            "(p_plasma_ohmic_mw)",
+            physics_variables.p_plasma_ohmic_mw,
             "OP ",
         )
         po.ovarrf(
@@ -6477,7 +6477,7 @@ class Physics:
         powerht = (
             physics_variables.f_alpha_plasma * alpha_power_total
             + non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
         )
 
         # If the device is not ignited, add the injected auxiliary power

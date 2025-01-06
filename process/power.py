@@ -296,8 +296,8 @@ class Power:
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)
         #  This is additional to that required for moving stored energy around
-        # pfwpmw = physics_variables.pohmmw / pfcoil_variables.etapsu
-        wall_plug_ohmicmw = physics_variables.pohmmw * (
+        # pfwpmw = physics_variables.p_plasma_ohmic_mw / pfcoil_variables.etapsu
+        wall_plug_ohmicmw = physics_variables.p_plasma_ohmic_mw * (
             1.0e0 / pfcoil_variables.etapsu - 1.0e0
         )
         # Total mean wall plug power dissipated in PFC and CS power supplies.  Issue #713
@@ -1652,14 +1652,14 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Ohmic heating (MW)",
-            "(pohmmw.)",
-            physics_variables.pohmmw,
+            "(p_plasma_ohmic_mw.)",
+            physics_variables.p_plasma_ohmic_mw,
             "OP ",
         )
         # if (physics_variables.ignite == 1) :
-        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+pohmmw, 'OP ')
+        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+p_plasma_ohmic_mw, 'OP ')
         #    po.oblnkl(self.outfile)
-        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+physics_variables.pohmmw)) > 5.0e0) :
+        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+physics_variables.p_plasma_ohmic_mw)) > 5.0e0) :
         #        write(*,*) 'WARNING: Power balance across separatrix is in error by more than 5 MW.'
         #    po.ocmmnt(self.outfile,'WARNING: Power balance across separatrix is in error by more than 5 MW.')
         #
@@ -1677,7 +1677,7 @@ class Power:
             "",
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             + pinj,
             "OP ",
         )
@@ -1689,7 +1689,7 @@ class Power:
                     physics_variables.f_alpha_plasma
                     * physics_variables.alpha_power_total
                     + physics_variables.non_alpha_charged_power
-                    + physics_variables.pohmmw
+                    + physics_variables.p_plasma_ohmic_mw
                     + pinj
                 )
             )
@@ -1725,8 +1725,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Ohmic power (MW)",
-            "(pohmmw.)",
-            physics_variables.pohmmw,
+            "(p_plasma_ohmic_mw.)",
+            physics_variables.p_plasma_ohmic_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1741,7 +1741,7 @@ class Power:
             + fwbs_variables.emultmw
             + pinj
             + self.htpmw_mech
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
         )
         po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
         po.oblnkl(self.outfile)

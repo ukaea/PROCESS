@@ -221,7 +221,7 @@ class PfpwrParam(NamedTuple):
 
     rpf: Any = None
 
-    pohmmw: Any = None
+    p_plasma_ohmic_mw: Any = None
 
     rmajor: Any = None
 
@@ -858,7 +858,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            pohmmw=0.61391840981850698,
+            p_plasma_ohmic_mw=0.61391840981850698,
             rmajor=8.8901000000000003,
             active_constraints=(
                 True,
@@ -1600,7 +1600,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            pohmmw=0.61391840981850698,
+            p_plasma_ohmic_mw=0.61391840981850698,
             rmajor=8.8901000000000003,
             active_constraints=(
                 True,
@@ -1824,7 +1824,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "rpf", pfpwrparam.rpf)
 
-    monkeypatch.setattr(physics_variables, "pohmmw", pfpwrparam.pohmmw)
+    monkeypatch.setattr(physics_variables, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw)
 
     monkeypatch.setattr(physics_variables, "rmajor", pfpwrparam.rmajor)
 
@@ -2135,7 +2135,7 @@ class Power2Param(NamedTuple):
 
     idivrt: Any = None
 
-    pohmmw: Any = None
+    p_plasma_ohmic_mw: Any = None
 
     iradloss: Any = None
 
@@ -2276,7 +2276,7 @@ class Power2Param(NamedTuple):
             pdivt=143.03180561618876,
             palpfwmw=19.833077403424262,
             idivrt=1,
-            pohmmw=0.61391840981850698,
+            p_plasma_ohmic_mw=0.61391840981850698,
             iradloss=1,
             fusion_power=1985.785106643267,
             non_alpha_charged_power=1.6064693283140403,
@@ -2378,7 +2378,7 @@ class Power2Param(NamedTuple):
             pdivt=142.91368967092416,
             palpfwmw=19.826887164528632,
             idivrt=1,
-            pohmmw=0.61391840981850698,
+            p_plasma_ohmic_mw=0.61391840981850698,
             iradloss=1,
             fusion_power=1985.1653095257811,
             non_alpha_charged_power=1.6059679220663614,
@@ -2564,7 +2564,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "idivrt", power2param.idivrt)
 
-    monkeypatch.setattr(physics_variables, "pohmmw", power2param.pohmmw)
+    monkeypatch.setattr(physics_variables, "p_plasma_ohmic_mw", power2param.p_plasma_ohmic_mw)
 
     monkeypatch.setattr(physics_variables, "iradloss", power2param.iradloss)
 
