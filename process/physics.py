@@ -2937,7 +2937,7 @@ class Physics:
         # Density weighted electron temperature in 10 keV units
         t10 = ten / 10.0
 
-        # Plasma resistance, from loop voltage calculation in IPDG89
+        # Plasma resistance, from loop voltage calculation in ITER Physics Design Guidelines: 1989
         res_plasma = (
             physics_variables.plasma_res_factor
             * 2.15e-9
@@ -2947,8 +2947,8 @@ class Physics:
         )
 
         # Neo-classical resistivity enhancement factor
-        # Taken from  N. A. Uckan et al, Fusion Technology 13 (1988) p.411.
-        # The expression is valid for aspect ratios in the range 2.5--4.
+        # Taken from ITER Physics Design Guidelines: 1989
+        # The expression is valid for aspect ratios in the range 2.5 to 4.0
         rpfac = 4.3 - 0.6 * rmajor / rminor
         res_plasma = res_plasma * rpfac
 
