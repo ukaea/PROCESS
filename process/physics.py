@@ -3635,7 +3635,7 @@ class Physics:
         if physics_variables.i_beta_component == 0:
             po.ovarrf(
                 self.outfile,
-                "Limit on total beta",
+                "Upper limit on total beta",
                 "(beta_max)",
                 physics_variables.beta_max,
                 "OP ",
@@ -3643,7 +3643,7 @@ class Physics:
         elif physics_variables.i_beta_component == 1:
             po.ovarrf(
                 self.outfile,
-                "Limit on thermal beta",
+                "Upper limit on thermal beta",
                 "(beta_max)",
                 physics_variables.beta_max,
                 "OP ",
@@ -3651,13 +3651,44 @@ class Physics:
         else:
             po.ovarrf(
                 self.outfile,
-                "Limit on thermal + NB beta",
+                "Upper limit on thermal + NB beta",
                 "(beta_max)",
                 physics_variables.beta_max,
                 "OP ",
             )
 
         po.ovarre(self.outfile, "Total plasma beta", "(beta)", physics_variables.beta)
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on total beta",
+                "(beta_min)",
+                physics_variables.beta_min,
+                "IP",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal beta",
+                "(beta_min)",
+                physics_variables.beta_min,
+                "IP",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal + NB beta",
+                "(beta_min)",
+                physics_variables.beta_min,
+                "IP",
+            )
+        po.ovarre(
+            self.outfile,
+            "Upper limit on poloidal beta",
+            "(beta_poloidal_max)",
+            constraint_variables.beta_poloidal_max,
+            "IP",
+        )
         po.ovarre(
             self.outfile,
             "Total poloidal beta",

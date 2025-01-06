@@ -393,7 +393,7 @@ The value of `beta_poloidal_max` can be set to the desired maximum poloidal beta
 
 This constraint can be activated by stating `icc = 84` in the input file.
 
-The value of `beta_max` can be set to the desired minimum total beta. The scaling value `fbeta_min` can be varied also.
+The value of `beta_min` can be set to the desired minimum total beta. The scaling value `fbeta_min` can be varied also.
 
 [^0]: F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,” Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597–1609, Oct. 1988, doi: https://doi.org/10.1088/0741-3335/30/11/019.
 
