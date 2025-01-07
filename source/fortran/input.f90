@@ -293,7 +293,7 @@ contains
       fburn, fwdzu, etave, v3dr, uctarg, shdzl, ucflib, v3dzl, v1dzu, v2dzl, &
       chdzl, chrad, cdriv1, tgain, somtdr, v2matf, rrmax, bldr, frrmax, &
       blmatf, ife
-    use impurity_radiation_module, only: coreradius, nimp, &
+    use impurity_radiation_module, only: coreradius, n_impurities, &
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
@@ -594,7 +594,7 @@ contains
           call parse_real_variable('f_helium3', f_helium3, 0.0D0, 1.0D0, &
                'Helium-3 fuel fraction')
        case ('fimp')
-          call parse_real_array('fimp', fimp, isub1, nimp, &
+          call parse_real_array('fimp', fimp, isub1, n_impurities, &
                'Impurity density fraction', icode)
        case ('fkzohm')
           call parse_real_variable('fkzohm', fkzohm, 0.5D0, 2.0D0, &
@@ -3222,7 +3222,7 @@ contains
                'Switch for Reinke Criterion mode (0=H, 1=I)')
 
        case ('impvardiv')
-          call parse_int_variable('impvardiv', impvardiv, 3, nimp, &
+          call parse_int_variable('impvardiv', impvardiv, 3, n_impurities, &
                'Index of impurity to be iterated for Reike criterion')
 
 

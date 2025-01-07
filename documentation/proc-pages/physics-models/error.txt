@@ -470,8 +470,8 @@ density and temperature profiles\footnote{H. Lux, R. Kemp, D.J. Ward, M.
   \textbar{} Des. \textbf{101}, 42-51 (2015)}
 
 The impurity number density fractions relative to the electron density
-are set using input array \texttt{fimp(1,...,nimp)}, where
-\texttt{nimp\ =\ 14} is the number of impurity species in the radiation
+are set using input array \texttt{fimp(1,...,n_impurities)}, where
+\texttt{n_impurities\ =\ 14} is the number of impurity species in the radiation
 model. The available impurities are as follows:
 
 \begin{longtable}[]{@{}cl@{}}

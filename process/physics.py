@@ -2694,7 +2694,7 @@ class Physics:
 
         # Sum of Zi.ni for all impurity ions (those with charge > helium)
         znimp = 0.0
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 znimp += impurity_radiation.zav_of_te(
                     imp, np.array([physics_variables.te])
@@ -2740,7 +2740,7 @@ class Physics:
 
         # Total impurity density
         physics_variables.dnz = 0.0
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.dnz += (
                     impurity_radiation_module.impurity_arr_frac[imp]
@@ -2777,7 +2777,7 @@ class Physics:
         # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
         # but ne = sum(ni.Zi) through quasineutrality
         physics_variables.zeff = 0.0
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             physics_variables.zeff += (
                 impurity_radiation_module.impurity_arr_frac[imp]
                 * impurity_radiation.zav_of_te(
@@ -2840,7 +2840,7 @@ class Physics:
             + physics_variables.dnprot
             + physics_variables.abeam * physics_variables.dnbeam
         )
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.aion += (
                     physics_variables.dene
@@ -2862,7 +2862,7 @@ class Physics:
             / 2.0
             + current_drive_variables.f_tritium_beam * physics_variables.dnbeam / 3.0
         ) / physics_variables.dene
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.zeffai += (
                     impurity_radiation_module.impurity_arr_frac[imp]
@@ -4005,7 +4005,7 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
 
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             # MDK Update fimp, as this will make the ITV output work correctly.
             impurity_radiation_module.fimp[imp] = (
                 impurity_radiation_module.impurity_arr_frac[imp]
