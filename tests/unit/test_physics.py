@@ -1175,7 +1175,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     rnfene: Any = None
 
-    abeam: Any = None
+    m_beam_amu: Any = None
 
     dlamie: Any = None
 
@@ -1243,7 +1243,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_dnz: Any = None
 
-    expected_abeam: Any = None
+    expected_m_beam_amu: Any = None
 
     expected_dlamie: Any = None
 
@@ -1313,7 +1313,7 @@ class PlasmaCompositionParam(NamedTuple):
             pcoef=0,
             alpha_rate_density_total=0,
             rnfene=0,
-            abeam=0,
+            m_beam_amu=0,
             dlamie=0,
             te=12,
             proton_rate_density=0,
@@ -1353,16 +1353,16 @@ class PlasmaCompositionParam(NamedTuple):
                 5.0000000000000021e-06,
             ],
             expected_f_alpha_electron=0.6845930883190634,
-            expected_m_fuel_amu=2.5,
+            expected_m_fuel_amu=2.5145269632339478,
             expected_deni=5.8589175702454272e19,
-            expected_aion=2.7265017998473029,
+            expected_aion=2.7395439636787726,
             expected_dnitot=6.6125550702454276e19,
             expected_zeffai=0.43248858851447464,
             expected_f_alpha_ion=0.3154069116809366,
             expected_dlamee=17.510652035055571,
             expected_zeff=2.0909945616489103,
             expected_dnz=28875000000000004,
-            expected_abeam=2.0000010000000001,
+            expected_m_beam_amu=2.01355414,
             expected_dlamie=17.810652035055568,
             expected_dnalp=7.5e18,
             expected_dnprot=7500000000000000,
@@ -1418,7 +1418,7 @@ class PlasmaCompositionParam(NamedTuple):
             m_fuel_amu=2.5,
             f_tritium=0.5,
             deni=5.8589175702454272e19,
-            aion=2.7265017998473029,
+            aion=2.7395439636787726,
             dnitot=6.6125550702454276e19,
             protium=0,
             zeffai=0.43248858851447464,
@@ -1433,7 +1433,7 @@ class PlasmaCompositionParam(NamedTuple):
             pcoef=1.0521775929921553,
             alpha_rate_density_total=1.973996644759543e17,
             rnfene=0,
-            abeam=2.0000010000000001,
+            m_beam_amu=2.01355414,
             dlamie=17.810652035055568,
             te=12,
             proton_rate_density=540072280299564.38,
@@ -1473,16 +1473,16 @@ class PlasmaCompositionParam(NamedTuple):
                 5.0000000000000021e-06,
             ),
             expected_f_alpha_electron=0.73096121787894142,
-            expected_m_fuel_amu=2.5,
+            expected_m_fuel_amu=2.5145269632339478,
             expected_deni=5.8576156204039725e19,
-            expected_aion=2.7262064639685937,
+            expected_aion=2.739245767577763,
             expected_dnitot=6.6125550702454276e19,
             expected_zeffai=0.43258985127992111,
             expected_f_alpha_ion=0.26903878212105858,
             expected_dlamee=17.510652035055571,
             expected_zeff=2.0909945616489103,
             expected_dnz=28875000000000004,
-            expected_abeam=2.0000010000000001,
+            expected_m_beam_amu=2.01355414,
             expected_dlamie=17.810652035055568,
             expected_dnalp=7.5e18,
             expected_dnprot=20519498414548412,
@@ -1581,7 +1581,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "rnfene", plasmacompositionparam.rnfene)
 
-    monkeypatch.setattr(physics_variables, "abeam", plasmacompositionparam.abeam)
+    monkeypatch.setattr(physics_variables, "m_beam_amu", plasmacompositionparam.m_beam_amu)
 
     monkeypatch.setattr(physics_variables, "dlamie", plasmacompositionparam.dlamie)
 
@@ -1675,8 +1675,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     assert physics_variables.dnz == pytest.approx(plasmacompositionparam.expected_dnz)
 
-    assert physics_variables.abeam == pytest.approx(
-        plasmacompositionparam.expected_abeam
+    assert physics_variables.m_beam_amu == pytest.approx(
+        plasmacompositionparam.expected_m_beam_amu
     )
 
     assert physics_variables.dlamie == pytest.approx(
