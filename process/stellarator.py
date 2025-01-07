@@ -221,7 +221,7 @@ class Stellarator:
                 physics_variables.taueff,
                 physics_variables.powerht,
             ) = self.physics.pcond(
-                physics_variables.afuel,
+                physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
@@ -894,7 +894,7 @@ class Stellarator:
 
         #  Sound speed of particles (m/s)
 
-        c_s = np.sqrt(e / (physics_variables.afuel * constants.umass))
+        c_s = np.sqrt(e / (physics_variables.m_fuel_amu * constants.umass))
 
         #  Island size (m)
 
@@ -4408,7 +4408,7 @@ class Stellarator:
             physics_variables.taueff,
             physics_variables.powerht,
         ) = self.physics.pcond(
-            physics_variables.afuel,
+            physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
@@ -4748,14 +4748,14 @@ class Stellarator:
             * impurity_radiation_module.coreradius
         )
         dmdt_neo_fuel = (
-            dndt_neo_fuel * physics_variables.afuel * constants.proton_mass * 1.0e6
+            dndt_neo_fuel * physics_variables.m_fuel_amu * constants.proton_mass * 1.0e6
         )  # mg
         dmdt_neo_fuel_from_e = (
             4
             * dndt_neo_e
             * physics_variables.a_plasma_surface
             * impurity_radiation_module.coreradius
-            * physics_variables.afuel
+            * physics_variables.m_fuel_amu
             * constants.proton_mass
             * 1.0e6
         )  # kg
