@@ -4088,7 +4088,7 @@ class Stellarator:
         #  Set physics_variables.beta as a consequence:
         #  This replaces constraint equation 1 as it is just an equality.
         physics_variables.beta = (
-            physics_variables.betaft
+            physics_variables.beta_fast_alpha
             + physics_variables.beta_beam
             + 2.0e3
             * constants.rmu0
@@ -4099,7 +4099,7 @@ class Stellarator:
             )
             / physics_variables.btot**2
         )
-        physics_module.total_plasma_internal_energy = (
+        physics_module.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
             * physics_variables.btot
@@ -4112,7 +4112,7 @@ class Stellarator:
             2.0e0
             * constants.proton_mass
             * physics_variables.aion
-            * physics_module.total_plasma_internal_energy
+            * physics_module.e_plasma_beta
             / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla)
         ) / (
             constants.electron_charge
@@ -4133,7 +4133,7 @@ class Stellarator:
 
         #  Poloidal physics_variables.beta
 
-        # betap = physics_variables.beta * ( physics_variables.btot/physics_variables.bp )**2 # Dont need this I think.
+        # beta_poloidal = physics_variables.beta * ( physics_variables.btot/physics_variables.bp )**2 # Dont need this I think.
 
         #  Perform auxiliary power calculations
 
@@ -4237,7 +4237,7 @@ class Stellarator:
             physics_variables.alpha_power_density_plasma,
         )
 
-        physics_variables.betaft = physics_funcs.fast_alpha_beta(
+        physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
@@ -4247,7 +4247,7 @@ class Stellarator:
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
             physics_variables.alpha_power_density_plasma,
-            physics_variables.ifalphap,
+            physics_variables.i_beta_fast_alpha,
         )
 
         #  Neutron wall load
@@ -4473,7 +4473,7 @@ class Stellarator:
         )
 
         # Calculate physics_variables.beta limit. Does nothing atm so commented out
-        # call stblim(physics_variables.betalim)
+        # call stblim(physics_variables.beta_max)
 
         # Calculate the neoclassical sanity check with PROCESS parameters
         (

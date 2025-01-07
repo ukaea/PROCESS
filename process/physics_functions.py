@@ -933,7 +933,7 @@ def fast_alpha_beta(
     tin: float,
     alpha_power_density_total: float,
     alpha_power_density_plasma: float,
-    ifalphap: int,
+    i_beta_fast_alpha: int,
 ) -> float:
     """
     Calculate the fast alpha beta component.
@@ -950,27 +950,39 @@ def fast_alpha_beta(
         tin (float): Density-weighted ion temperature (keV).
         alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
         alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
-        ifalphap (int): Switch for fast alpha pressure method.
+        i_beta_fast_alpha (int): Switch for fast alpha pressure method.
 
     Returns:
         float: Fast alpha beta component.
+
+    Notes:
+        - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, <T> = 5-20 keV
+
+
+    References:
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+          https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+
+        - Uckan, N. A., Tolliver, J. S., Houlberg, W. A., and Attenberger, S. E.
+          Influence of fast alpha diffusion and thermal alpha buildup on tokamak reactor performance.
+          United States: N. p., 1987. Web.https://www.osti.gov/servlets/purl/5611706
+
     """
-    # Determine average fast alpha density
 
     # Determine average fast alpha density
     if physics_variables.f_deuterium < 1.0:
 
-        betath = (
-            2.0e3
+        beta_thermal = (
+            2.0
             * constants.rmu0
-            * constants.electron_charge
+            * constants.kiloelectron_volt
             * (dene * ten + dnitot * tin)
             / (bt**2 + bp**2)
         )
 
         # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
         # IPDG89 fast alpha scaling
-        if ifalphap == 0:
+        if i_beta_fast_alpha == 0:
             fact = min(0.3, 0.29 * (deni / dene) ** 2 * ((ten + tin) / 20.0 - 0.37))
 
         # Modified scaling, D J Ward
@@ -984,12 +996,12 @@ def fast_alpha_beta(
 
         fact = max(fact, 0.0)
         fact2 = alpha_power_density_total / alpha_power_density_plasma
-        betaft = betath * fact * fact2
+        beta_fast_alpha = beta_thermal * fact * fact2
 
     else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0
-        betaft = 0.0
+        beta_fast_alpha = 0.0
 
-    return betaft
+    return beta_fast_alpha
 
 
 def beam_fusion(
