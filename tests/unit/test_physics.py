@@ -317,7 +317,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     q0: Any = None
 
-    afuel: Any = None
+    m_fuel_amu: Any = None
 
     zeff: Any = None
 
@@ -370,7 +370,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             ti=12.570861186498382,
             triang=0.5,
             q0=1,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             zeff=2.5211399464385624,
             rhopedn=0.9400000000000001,
             bt=5.326133750416047,
@@ -425,7 +425,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
     monkeypatch.setattr(physics_variables, "q0", bootstrapfractionsauterparam.q0)
 
-    monkeypatch.setattr(physics_variables, "afuel", bootstrapfractionsauterparam.afuel)
+    monkeypatch.setattr(
+        physics_variables, "m_fuel_amu", bootstrapfractionsauterparam.m_fuel_amu
+    )
 
     monkeypatch.setattr(physics_variables, "zeff", bootstrapfractionsauterparam.zeff)
 
@@ -1137,7 +1139,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_alpha_electron: Any = None
 
-    afuel: Any = None
+    m_fuel_amu: Any = None
 
     f_tritium: Any = None
 
@@ -1223,7 +1225,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_f_alpha_electron: Any = None
 
-    expected_afuel: Any = None
+    expected_m_fuel_amu: Any = None
 
     expected_deni: Any = None
 
@@ -1293,7 +1295,7 @@ class PlasmaCompositionParam(NamedTuple):
             alphat=1.45,
             ignite=0,
             f_alpha_electron=0,
-            afuel=0,
+            m_fuel_amu=0,
             f_tritium=0.5,
             deni=0,
             aion=0,
@@ -1351,7 +1353,7 @@ class PlasmaCompositionParam(NamedTuple):
                 5.0000000000000021e-06,
             ],
             expected_f_alpha_electron=0.6845930883190634,
-            expected_afuel=2.5,
+            expected_m_fuel_amu=2.5,
             expected_deni=5.8589175702454272e19,
             expected_aion=2.7265017998473029,
             expected_dnitot=6.6125550702454276e19,
@@ -1413,7 +1415,7 @@ class PlasmaCompositionParam(NamedTuple):
             alphat=1.45,
             ignite=0,
             f_alpha_electron=0.6845930883190634,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             f_tritium=0.5,
             deni=5.8589175702454272e19,
             aion=2.7265017998473029,
@@ -1471,7 +1473,7 @@ class PlasmaCompositionParam(NamedTuple):
                 5.0000000000000021e-06,
             ),
             expected_f_alpha_electron=0.73096121787894142,
-            expected_afuel=2.5,
+            expected_m_fuel_amu=2.5,
             expected_deni=5.8576156204039725e19,
             expected_aion=2.7262064639685937,
             expected_dnitot=6.6125550702454276e19,
@@ -1533,7 +1535,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         physics_variables, "f_alpha_electron", plasmacompositionparam.f_alpha_electron
     )
 
-    monkeypatch.setattr(physics_variables, "afuel", plasmacompositionparam.afuel)
+    monkeypatch.setattr(
+        physics_variables, "m_fuel_amu", plasmacompositionparam.m_fuel_amu
+    )
 
     monkeypatch.setattr(
         physics_variables, "f_tritium", plasmacompositionparam.f_tritium
@@ -1643,8 +1647,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_f_alpha_electron
     )
 
-    assert physics_variables.afuel == pytest.approx(
-        plasmacompositionparam.expected_afuel
+    assert physics_variables.m_fuel_amu == pytest.approx(
+        plasmacompositionparam.expected_m_fuel_amu
     )
 
     assert physics_variables.deni == pytest.approx(plasmacompositionparam.expected_deni)
@@ -2156,7 +2160,7 @@ class PcondParam(NamedTuple):
 
     ignite: Any = None
 
-    afuel: Any = None
+    m_fuel_amu: Any = None
 
     alpha_power_total: Any = None
 
@@ -2236,7 +2240,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=32,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2280,7 +2284,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=33,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2324,7 +2328,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=34,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2368,7 +2372,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=35,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2412,7 +2416,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=36,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2456,7 +2460,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=37,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2500,7 +2504,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=38,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2544,7 +2548,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=39,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2588,7 +2592,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=40,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2632,7 +2636,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=41,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2676,7 +2680,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=42,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2720,7 +2724,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=43,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2764,7 +2768,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=44,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2808,7 +2812,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=45,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2852,7 +2856,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=46,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2896,7 +2900,7 @@ class PcondParam(NamedTuple):
             iinvqd=1,
             isc=47,
             ignite=0,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
@@ -2963,7 +2967,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
         iinvqd=pcondparam.iinvqd,
         isc=pcondparam.isc,
         ignite=pcondparam.ignite,
-        afuel=pcondparam.afuel,
+        m_fuel_amu=pcondparam.m_fuel_amu,
         alpha_power_total=pcondparam.alpha_power_total,
         aspect=pcondparam.aspect,
         bt=pcondparam.bt,

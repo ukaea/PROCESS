@@ -78,7 +78,7 @@ class Divertor:
 
         delne = dv.prn1 * pv.dene * 1.0e-20  # scrapeoff density by main plasma
         pwr = pv.pdivt  # power flow to divertor (MW)
-        aionso = pv.afuel  # scrape-off layer ion mass
+        aionso = pv.m_fuel_amu  # scrape-off layer ion mass
 
         # Divertor Zeff: either scaled or use input value
         zeffso = (1.0e0 + 0.8e0 * (pv.zeff - 1.0e0)) if dv.divdum == 0 else dv.zeffdiv

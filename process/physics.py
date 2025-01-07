@@ -2242,7 +2242,7 @@ class Physics:
             physics_variables.tauei,
             physics_variables.powerht,
         ) = self.pcond(
-            physics_variables.afuel,
+            physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
@@ -2823,7 +2823,7 @@ class Physics:
         physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
         # Average atomic masses
-        physics_variables.afuel = (
+        physics_variables.m_fuel_amu = (
             2.0 * physics_variables.f_deuterium
             + 3.0 * physics_variables.f_tritium
             + 3.0 * physics_variables.f_helium3
@@ -2835,7 +2835,7 @@ class Physics:
 
         # Density weighted mass
         physics_variables.aion = (
-            physics_variables.afuel * physics_variables.deni
+            physics_variables.m_fuel_amu * physics_variables.deni
             + 4.0 * physics_variables.dnalp
             + physics_variables.dnprot
             + physics_variables.abeam * physics_variables.dnbeam
@@ -5623,7 +5623,7 @@ class Physics:
                 taueffz,
                 powerhtz,
             ) = self.pcond(
-                physics_variables.afuel,
+                physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
@@ -5963,7 +5963,7 @@ class Physics:
             physics_variables.q0 + (physics_variables.q - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, physics_variables.afuel)
+        amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
 
         # Create new array of average main ion charge
         zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_helium3)
@@ -6415,7 +6415,7 @@ class Physics:
             taueffz,
             powerhtz,
         ) = self.pcond(
-            physics_variables.afuel,
+            physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
@@ -6473,7 +6473,7 @@ class Physics:
 
     @staticmethod
     def pcond(
-        afuel,
+        m_fuel_amu,
         alpha_power_total,
         aspect,
         bt,
@@ -6505,7 +6505,7 @@ class Physics:
         """Routine to calculate the confinement times and
         the transport power loss terms.
         author: P J Knight, CCFE, Culham Science Centre
-        afuel     : input real :  average mass of fuel (amu)
+        m_fuel_amu     : input real :  average mass of fuel (amu)
         alpha_power_total    : input real :  alpha particle power (MW)
         aspect    : input real :  aspect ratio
         bt        : input real :  toroidal field on axis (T)
@@ -6636,7 +6636,7 @@ class Physics:
                 * kappa95**0.125e0
                 * qstar
                 * dnla20
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / np.sqrt(ten / 10.0e0)
             )
 
@@ -6648,7 +6648,7 @@ class Physics:
                 * rminor
                 * bt
                 * np.sqrt(kappa95)
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
             )
 
         elif isc == 5:  # Kaye-Goldston scaling (L-mode)
@@ -6659,7 +6659,7 @@ class Physics:
                 * pcur**1.24e0
                 * n20**0.26e0
                 * rmajor**1.65e0
-                * np.sqrt(afuel / 1.5e0)
+                * np.sqrt(m_fuel_amu / 1.5e0)
                 / (bt**0.09e0 * rminor**0.49e0 * powerht**0.58e0)
             )
 
@@ -6676,7 +6676,7 @@ class Physics:
                 * np.sqrt(kappa)
                 * dnla20**0.1e0
                 * bt**0.2e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / np.sqrt(powerht)
             )
 
@@ -6687,7 +6687,7 @@ class Physics:
                 * rmajor**0.3e0
                 * rminor**0.8e0
                 * kappa**0.6e0
-                * afuel**0.5e0
+                * m_fuel_amu**0.5e0
             )
             term2 = (
                 0.064e0
@@ -6697,7 +6697,7 @@ class Physics:
                 * kappa**0.5e0
                 * dnla20**0.6e0
                 * bt**0.35e0
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
                 / powerht
             )
             tauee = hfact * (term1 + term2)
@@ -6707,7 +6707,7 @@ class Physics:
             tauee = (
                 hfact
                 * 1.65e0
-                * np.sqrt(afuel / 2.0e0)
+                * np.sqrt(m_fuel_amu / 2.0e0)
                 * (
                     1.2e-2 * pcur * rll**1.5e0 / np.sqrt(zeff)
                     + 0.146e0
@@ -6728,7 +6728,7 @@ class Physics:
                 * rmajor**1.75e0
                 * rminor ** (-0.37e0)
                 * np.sqrt(kappa95)
-                * np.sqrt(afuel / 1.5e0)
+                * np.sqrt(m_fuel_amu / 1.5e0)
                 / np.sqrt(powerht)
             )
 
@@ -6764,14 +6764,14 @@ class Physics:
                 ** 0.6e0
             )
             tauee = hfact * (
-                0.085e0 * kappa95 * rminor**2 * np.sqrt(afuel)
+                0.085e0 * kappa95 * rminor**2 * np.sqrt(m_fuel_amu)
                 + 0.069e0
                 * n20**0.6e0
                 * pcur
                 * bt**0.2e0
                 * rminor**0.4e0
                 * rmajor**1.6e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 * gjaeri
                 * kappa95**0.2e0
                 / powerht
@@ -6787,7 +6787,7 @@ class Physics:
                 * kappa95**0.25e0
                 * pcur**0.85e0
                 * n20**0.1e0
-                * afuel**0.5e0
+                * m_fuel_amu**0.5e0
                 / powerht**0.5e0
             )
 
@@ -6801,7 +6801,7 @@ class Physics:
                 * kappa**0.35e0
                 * dnla20**0.09e0
                 * bt**0.15e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / np.sqrt(powerht)
             )
 
@@ -6815,7 +6815,7 @@ class Physics:
                 * np.sqrt(kappa)
                 * dnla20**0.1e0
                 * bt**0.2e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / np.sqrt(powerht)
             )
             term1 = (
@@ -6824,7 +6824,7 @@ class Physics:
                 * rmajor**0.3e0
                 * rminor**0.8e0
                 * kappa**0.6e0
-                * afuel**0.5e0
+                * m_fuel_amu**0.5e0
             )
             term2 = (
                 0.064e0
@@ -6834,7 +6834,7 @@ class Physics:
                 * kappa**0.5e0
                 * dnla20**0.6e0
                 * bt**0.35e0
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
                 / powerht
             )
             tauit2 = hfact * (term1 + term2)
@@ -6863,7 +6863,7 @@ class Physics:
                 * kappa95**0.73e0
                 * dnla20**0.41e0
                 * bt**0.29e0
-                / (powerht**0.79e0 * afuel**0.02e0)
+                / (powerht**0.79e0 * m_fuel_amu**0.02e0)
             )
 
         elif isc == 17:  # Lackner-Gottardi scaling (L-mode)
@@ -6891,7 +6891,7 @@ class Physics:
                 * kappa95**0.28e0
                 * dnla20**0.14e0
                 * bt**0.04e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / powerht**0.59e0
             )
 
@@ -6899,7 +6899,7 @@ class Physics:
             tauee = (
                 hfact
                 * 0.1e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 * pcur**0.884e0
                 * rmajor**1.24e0
                 * rminor ** (-0.23e0)
@@ -6916,7 +6916,7 @@ class Physics:
                 * 0.082e0
                 * pcur**1.02e0
                 * bt**0.15e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 * rmajor**1.60e0
                 / (powerht**0.47e0 * kappa**0.19e0)
             )
@@ -6972,7 +6972,7 @@ class Physics:
                 * pcur**1.06e0
                 * bt**0.32e0
                 * powerht ** (-0.67e0)
-                * afuel**0.41e0
+                * m_fuel_amu**0.41e0
                 * rmajor**1.79e0
                 * dnla20**0.17e0
                 * aspect**0.11e0
@@ -6993,7 +6993,7 @@ class Physics:
                 * rmajor**1.92e0
                 * aspect ** (-0.08e0)
                 * kappa**0.63e0
-                * afuel**0.42e0
+                * m_fuel_amu**0.42e0
             )
 
         elif isc == 27:  # ELMy: ITERH-97P(y)
@@ -7007,7 +7007,7 @@ class Physics:
                 * rmajor**2.03e0
                 * aspect ** (-0.19e0)
                 * kappa**0.92e0
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
             )
 
         elif isc == 28:  # ITER-96P (= ITER-97L) L-mode scaling
@@ -7023,7 +7023,7 @@ class Physics:
                 * rmajor**1.83e0
                 * aspect**0.06e0
                 * dnla19**0.40e0
-                * afuel**0.20e0
+                * m_fuel_amu**0.20e0
                 * powerht ** (-0.73e0)
             )
 
@@ -7034,7 +7034,7 @@ class Physics:
                 * pcur**0.9e0
                 * bt**0.17e0
                 * dnla19**0.45e0
-                * afuel**0.05e0
+                * m_fuel_amu**0.05e0
                 * rmajor**1.316e0
                 * rminor**0.79e0
                 * kappa**0.56e0
@@ -7051,7 +7051,7 @@ class Physics:
                 * rmajor**2.01e0
                 * aspect ** (-0.18e0)
                 * dnla19**0.47e0
-                * afuel**0.25e0
+                * m_fuel_amu**0.25e0
                 * powerht ** (-0.73e0)
             )
 
@@ -7066,7 +7066,7 @@ class Physics:
                 * rmajor**2
                 * kappaa**0.75e0
                 * aspect ** (-0.66e0)
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
             )
 
         elif isc == 32:  # IPB98(y), ELMy H-mode scaling
@@ -7082,7 +7082,7 @@ class Physics:
                 * rmajor**1.93e0
                 * kappa**0.67e0
                 * aspect ** (-0.23e0)
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
             )
 
         elif isc == 33:  # IPB98(y,1), ELMy H-mode scaling
@@ -7098,7 +7098,7 @@ class Physics:
                 * rmajor**2.05e0
                 * physics_variables.kappaa_ipb**0.72e0
                 * aspect ** (-0.57e0)
-                * afuel**0.13e0
+                * m_fuel_amu**0.13e0
             )
 
         elif isc == 34:  # IPB98(y,2), ELMy H-mode scaling
@@ -7114,7 +7114,7 @@ class Physics:
                 * rmajor**1.97e0
                 * physics_variables.kappaa_ipb**0.78e0
                 * aspect ** (-0.58e0)
-                * afuel**0.19e0
+                * m_fuel_amu**0.19e0
             )
 
         elif isc == 35:  # IPB98(y,3), ELMy H-mode scaling
@@ -7130,7 +7130,7 @@ class Physics:
                 * rmajor**2.15e0
                 * physics_variables.kappaa_ipb**0.78e0
                 * aspect ** (-0.64e0)
-                * afuel**0.20e0
+                * m_fuel_amu**0.20e0
             )
 
         elif isc == 36:  # IPB98(y,4), ELMy H-mode scaling
@@ -7146,7 +7146,7 @@ class Physics:
                 * rmajor**2.08e0
                 * physics_variables.kappaa_ipb**0.76e0
                 * aspect ** (-0.69e0)
-                * afuel**0.17e0
+                * m_fuel_amu**0.17e0
             )
 
         elif isc == 37:  # ISS95 stellarator scaling
@@ -7192,7 +7192,7 @@ class Physics:
                 * rmajor**2.11e0
                 * kappa95**0.75e0
                 * aspect ** (-0.3e0)
-                * afuel**0.14e0
+                * m_fuel_amu**0.14e0
             )
 
         elif isc == 40:  # "Non-power law" (NPL) Murari energy confinement scaling
@@ -7200,7 +7200,7 @@ class Physics:
             #  A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks
             #  A. Murari et al 2015 Nucl. Fusion 55 073009, doi:10.1088/0029-5515/55/7/073009
             #  Table 4.  (Issue #311)
-            # Note that aspect ratio and M (afuel) do not appear, and B (bt) only
+            # Note that aspect ratio and M (m_fuel_amu) do not appear, and B (bt) only
             # appears in the "saturation factor" h.
             h = dnla19**0.448e0 / (1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0))
             tauee = (
@@ -7215,7 +7215,7 @@ class Physics:
 
         elif isc == 41:  # Beta independent dimensionless confinement scaling
             # C.C. Petty 2008 Phys. Plasmas 15, 080501, equation 36
-            # Note that there is no dependence on the average fuel mass 'afuel'
+            # Note that there is no dependence on the average fuel mass 'm_fuel_amu'
             tauee = (
                 hfact
                 * 0.052e0
@@ -7245,7 +7245,7 @@ class Physics:
                 * rmajor**1.2345e0
                 * physics_variables.kappaa_ipb**0.37e0
                 * aspect**2.48205e0
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
                 * qratio**0.77e0
                 * aspect ** (-0.9e0 * np.log(aspect))
                 * nratio ** (-0.22e0 * np.log(nratio))
@@ -7295,7 +7295,7 @@ class Physics:
                 * rmajor**1.97e0
                 * physics_variables.kappaa_ipb**0.78e0
                 * aspect ** (-0.58e0)
-                * afuel**0.19e0
+                * m_fuel_amu**0.19e0
             )
 
         elif isc == 47:  # NSTX-Petty08 Hybrid
@@ -7327,7 +7327,7 @@ class Physics:
                     * rmajor**1.97e0
                     * physics_variables.kappaa_ipb**0.78e0
                     * aspect ** (-0.58e0)
-                    * afuel**0.19e0
+                    * m_fuel_amu**0.19e0
                 )
 
             else:
@@ -7350,7 +7350,7 @@ class Physics:
                     * rmajor**1.97e0
                     * physics_variables.kappaa_ipb**0.78e0
                     * aspect ** (-0.58e0)
-                    * afuel**0.19e0
+                    * m_fuel_amu**0.19e0
                 )
 
                 tauee = hfact * (
