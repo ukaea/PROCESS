@@ -17,7 +17,7 @@ module physics_variables
   integer, parameter :: ipnlaws = 50
   !! number of energy confinement time scaling laws
 
-  real(dp) :: abeam
+  real(dp) :: m_beam_amu
   !! beam ion mass (amu)
 
   real(dp) :: m_fuel_amu
@@ -947,7 +947,7 @@ module physics_variables
     !! Initialise module variables
     implicit none
 
-    abeam = 0.0D0
+    m_beam_amu = 0.0D0
     m_fuel_amu = 0.0D0
     aion = 0.0D0
     alphaj = 1.0D0

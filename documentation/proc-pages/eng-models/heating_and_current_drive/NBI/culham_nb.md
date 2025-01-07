@@ -66,7 +66,7 @@ plus correction terms outlined in Culham Report AEA FUS 172.
 
 | Input       | Description                          |
 | :---------- | :----------------------------------- |
-| $\mathtt{abeam}$      | beam ion mass (amu)   |
+| $\mathtt{m_beam_amu}$      | beam ion mass (amu)   |
 | $\mathtt{alphan}$, $\alpha_n$       | density profile factor   |
 | $\mathtt{alphat}$, $\alpha_T$       | temperature profile factor  |
 |  $\mathtt{aspect}$, $A$      |   aspect ratio                            |
@@ -108,7 +108,7 @@ Critical energy ($\text{MeV}$) (power to electrons = power to ions) (IPDG89)
 N.B. ten is in keV
 
 $$
-\mathtt{ecrit} = 0.01 \times \mathtt{abeam} \times \mathtt{ten}
+\mathtt{ecrit} = 0.01 \times \mathtt{m_beam_amu} \times \mathtt{ten}
 $$
 
 Beam energy in MeV
@@ -128,7 +128,7 @@ $$
 $$
 
 $$
-\mathtt{yj} = \frac{0.8 \times Z_{\text{eff}}}{\mathtt{abeam}}
+\mathtt{yj} = \frac{0.8 \times Z_{\text{eff}}}{\mathtt{m_beam_amu}}
 $$
 
 Fitting function J0(x,y)
