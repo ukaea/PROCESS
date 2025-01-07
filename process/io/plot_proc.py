@@ -377,7 +377,7 @@ def color_key(axis, mfile_data, scan, colour_scheme):
     axis.set_autoscalex_on(False)
 
     axis.text(
-        -5,
+        -12,
         12,
         "*The CS comp is not shown in the poloidal cross-section",
         ha="left",
@@ -385,21 +385,21 @@ def color_key(axis, mfile_data, scan, colour_scheme):
         size="medium",
     )
 
-    axis.text(-5, 10, "CS coil", ha="left", va="top", size="medium")
+    axis.text(-12, 11, "CS coil", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
             [0.7, 9.7], 1, 0.4, lw=0, facecolor=SOLENOID_COLOUR[colour_scheme - 1]
         )
     )
 
-    axis.text(-5, 9, "CS comp", ha="left", va="top", size="medium")
+    axis.text(-12, 10, "CS comp", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
             [0.7, 8.7], 1, 0.4, lw=0, facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1]
         )
     )
 
-    axis.text(-5, 8, "TF coil", ha="left", va="top", size="medium")
+    axis.text(-12, 9, "TF coil", ha="left", va="top", size="medium")
     axis.add_patch(
         patches.Rectangle(
             [0.7, 7.7], 1, 0.4, lw=0, facecolor=TFC_COLOUR[colour_scheme - 1]
@@ -683,154 +683,6 @@ def arc_fill(axis, r1, r2, color="pink"):
     axis.add_patch(patch)
 
 
-def plot_radial_build(axis, m_file):
-    
-    radial_labels = [
-        "Machine Bore",
-        "Central Solenoid",
-        "CS precompression",
-        "CS Coil gap",
-        "TF Coil Inboard Leg",
-        "TF Coil gap",
-        "Inboard Thermal Shield",
-        "Gap",
-        "Inboard VV",
-        "Inboard Shield",
-        "Gap",
-        "Inboard Blanket",
-        "Inboard First Wall",
-        "Inboard SOL",
-        "Plasma",
-        "Outboard SOL",
-        "Outboard First Wall",
-        "Outboard Blanket",
-        "Gap",
-        "Outboard VV",
-        "Outboard Shield",
-        "Gap",
-        "Outboard Thermal Shield",
-        "Gap",
-        "TF Coil Outboard Leg",
-    ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
-        radial_labels[1] = "TF Coil Inboard Leg"
-        radial_labels[2] = "CS Coil gap"
-        radial_labels[3] = "Central Solenoid"
-        radial_labels[4] = "CS precompression"
-        radial_labels[5] = "TF Coil gap"
-    radial_color = [
-        "lightgrey",
-        "green",
-        "yellow",
-        "white",
-        "blue",
-        "white",
-        "lime",
-        "white",
-        "dimgrey",
-        "violet",
-        "white",
-        "goldenrod",
-        "steelblue",
-        "orange",
-        "red",
-        "orange",
-        "steelblue",
-        "goldenrod",
-        "white",
-        "dimgrey",
-        "violet",
-        "white",
-        "lime",
-        "white",
-        "blue",
-    ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
-        radial_color[1] = "blue"
-        radial_color[2] = "white"
-        radial_color[3] = "green"
-        radial_color[4] = "yellow"
-        radial_color[5] = "white"
-    
-    radial_labels = [
-        "bore",
-        "ohcth",
-        "precomp",
-        "gapoh",
-        "tfcth",
-        "tftsgap",
-        "thshield_ib",
-        "gapds",
-        "d_vv_in",
-        "shldith",
-        "vvblgap",
-        "blnkith",
-        "fwith",
-        "scrapli",
-        "rminor",
-        "scraplo",
-        "fwoth",
-        "blnkoth",
-        "vvblgap",
-        "d_vv_out",
-        "shldoth",
-        "gapsto",
-        "thshield_ob",
-        "tftsgap",
-        "tfthko",
-    ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
-        radial_labels[1] = "tfcth"
-        radial_labels[2] = "gapoh"
-        radial_labels[3] = "ohcth"
-        radial_labels[4] = "precomp"
-        radial_labels[5] = "tftsgap"
-
-    radial_build = []
-
-    radial_build.append(
-    [m_file.data[rl].get_scan(-1) for rl in radial_labels]
-    )
-
-    radial_build = np.array(radial_build)
-    print(radial_build)
-
-    # Plot settings
-    # -------------
-    # Plot cosmetic settings
-    axis_tick_size = 12
-    legend_size = 8
-    axis_font_size = 16
-    #end_scan = len(radial_build[0])
-
-    end_scan = len(radial_build[0])
-    for kk in range((len(radial_build[:end_scan, 0]))):
-        if kk == 0:
-            lower = np.zeros(len(radial_build[kk, :]))
-        else:
-            lower = lower + radial_build[kk - 1, :]
-        axis.barh(
-            0,
-            radial_build[kk],
-            left=lower,
-            height=0.8,
-            color=radial_color[kk],
-            edgecolor="black",
-            linewidth=0.05,
-        )
-        lower += radial_build[kk]
-        print(radial_build[kk])
-
-
-    # plt.legend(
-    #     bbox_to_anchor=(0.5, -0.15),
-    #     loc="upper center",
-    #     fontsize=legend_size,
-    #     ncol=4,
-    # )
-    # plt.xlabel("Radius [m]")
-    # plt.tight_layout()
-
 def plot_nprofile(prof, demo_ranges):
     """Function to plot density profile
     Arguments:
@@ -859,9 +711,9 @@ def plot_nprofile(prof, demo_ranges):
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
     ne = ne / 1e19
-    ni = ni/1e19
-    prof.plot(rho, ni, label='$n_{i}$', color='red')
-    prof.plot(rho, ne, label='$n_{e}$', color='blue')
+    ni = ni / 1e19
+    prof.plot(rho, ni, label="$n_{i}$", color="red")
+    prof.plot(rho, ne, label="$n_{e}$", color="blue")
     prof.legend()
 
     # Ranges
@@ -897,22 +749,33 @@ def plot_nprofile(prof, demo_ranges):
         prof.minorticks_on()
 
         # Add text box with density profile parameters
-        textstr_density = '\n'.join((
-            r'$n_{\text{e,0}}$: ' + f'{ne0:.3e} m$^{{-3}}$' + r'$\quad \quad \alpha_{\text{n}}$: ' + f'{alphan:.3f}\n',
-            r'$n_{\text{e,ped}}$: ' + f'{neped:.3e} m$^{{-3}}$',
-            r'$f_{\text{GW e,ped}}$: ' + f'{fgwped_out:.3f}',
-            r'$\rho_{\text{ped,n}}$: ' + f'{rhopedn:.3f}\n',
-            r'$n_{\text{e,sep}}$: ' + f'{nesep:.3e} m$^{{-3}}$',
-            r'$f_{\text{GW e,sep}}$: ' + f'{fgwsep_out:.3f}',
-            
+        textstr_density = "\n".join(
+            (
+                r"$n_{\text{e,0}}$: "
+                + f"{ne0:.3e} m$^{{-3}}$"
+                + r"$\quad \quad \alpha_{\text{n}}$: "
+                + f"{alphan:.3f}\n",
+                r"$n_{\text{e,ped}}$: " + f"{neped:.3e} m$^{{-3}}$",
+                r"$f_{\text{GW e,ped}}$: " + f"{fgwped_out:.3f}",
+                r"$\rho_{\text{ped,n}}$: " + f"{rhopedn:.3f}\n",
+                r"$n_{\text{e,sep}}$: " + f"{nesep:.3e} m$^{{-3}}$",
+                r"$f_{\text{GW e,sep}}$: " + f"{fgwsep_out:.3f}",
+            )
+        )
 
-        ))
-
-        props_density = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        prof.text(0.0, -0.175, textstr_density, transform=prof.transAxes, fontsize=8,
-                    verticalalignment='top', bbox=props_density)
+        props_density = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+        prof.text(
+            0.0,
+            -0.175,
+            textstr_density,
+            transform=prof.transAxes,
+            fontsize=8,
+            verticalalignment="top",
+            bbox=props_density,
+        )
 
     # ---
+
 
 def plot_jprofile(prof):
     """Function to plot density profile
@@ -926,12 +789,40 @@ def plot_jprofile(prof):
 
     rho = np.linspace(0, 1)
     alphaj = 2.0
-    y = (plasma_current_MA*1E6)*2/(beta(0.5, alphaj+1)*xarea)
+    y = (plasma_current_MA * 1e6) * 2 / (beta(0.5, alphaj + 1) * xarea)
 
-    y2 = (y * (1 - rho**2) ** alphaj)/1E3
+    y2 = (y * (1 - rho**2) ** alphaj) / 1e3
 
-    prof.plot(rho, y2, label='$n_{i}$', color='red')
+    prof.plot(rho, y2, label="$n_{i}$", color="red")
     prof.legend()
+
+    textstr_j = "\n".join(
+        (
+            r"$j_0$: " + f"{y2[0]:.3f} kA m$^{{-2}}$\n",
+            r"$\alpha_J$: " + f"{alphaj:.3f}",
+        )
+    )
+
+    props_j = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+    prof.text(
+        1.1,
+        0.75,
+        textstr_j,
+        transform=prof.transAxes,
+        fontsize=8,
+        verticalalignment="top",
+        bbox=props_j,
+    )
+
+    prof.text(
+        0.1,
+        0.04,
+        "*Current profile is assumed to be parabolic",
+        fontsize=10,
+        ha="left",
+        transform=plt.gcf().transFigure,
+    )
+
 
 def plot_tprofile(prof, demo_ranges):
     """Function to plot temperature profile
@@ -957,8 +848,8 @@ def plot_tprofile(prof, demo_ranges):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         te = te0 * (1 - rho**2) ** alphat
-    prof.plot(rho, te, color='blue', label='$T_{e}$')
-    prof.plot(rho, te[:]*1.0369, color='red', label='$T_{i}$')
+    prof.plot(rho, te, color="blue", label="$T_{e}$")
+    prof.plot(rho, te[:] * 1.0369, color="red", label="$T_{i}$")
     prof.legend()
 
     # Ranges
@@ -987,20 +878,30 @@ def plot_tprofile(prof, demo_ranges):
             alpha=0.4,
         )
         prof.minorticks_on()
-        
-    # Add text box with temperature profile parameters
-    textstr_temperature = '\n'.join((
-            r'$T_{\text{e,0}}$: '+ f'{te0:.3e} m$^{{-3}}$' + r'$\quad \alpha_{\text{T}}$: '+ f'{alphat:.3f}\n',
-            r'$T_{\text{e,ped}}$: '+ f'{teped:.3e} m$^{{-3}}$',
-            r'$\rho_{\text{ped,T}}$: '+ f'{rhopedt:.3f}\n',
-            r'$T_{\text{e,sep}}$: '+ f'{tesep:.3e} m$^{{-3}}$\n',
-           
-            
-        ))
 
-    props_temperature = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    prof.text(0.0, -0.175, textstr_temperature, transform=prof.transAxes, fontsize=8,
-                verticalalignment='top', bbox=props_temperature)    
+    # Add text box with temperature profile parameters
+    textstr_temperature = "\n".join(
+        (
+            r"$T_{\text{e,0}}$: "
+            + f"{te0:.3f} keV"
+            + r"$\quad \alpha_{\text{T}}$: "
+            + f"{alphat:.3f}\n",
+            r"$T_{\text{e,ped}}$: " + f"{teped:.3f} keV",
+            r"$\rho_{\text{ped,T}}$: " + f"{rhopedt:.3f}\n",
+            r"$T_{\text{e,sep}}$: " + f"{tesep:.3f} keV\n",
+        )
+    )
+
+    props_temperature = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+    prof.text(
+        0.0,
+        -0.175,
+        textstr_temperature,
+        transform=prof.transAxes,
+        fontsize=8,
+        verticalalignment="top",
+        bbox=props_temperature,
+    )
     # ---
 
 
@@ -1031,23 +932,35 @@ def plot_qprofile(prof, demo_ranges):
 
     # Adapatative ranges
     else:
-        prof.set_ylim([0, q95*1.2])
-    
-    prof.text(1.05, 1.0, '*Profile is not calculated,\n only $q_0$ and $q_{95}$ are known.', fontsize=8, ha='center',transform=plt.gcf().transFigure)
-    # ---
-    
-    textstr_temperature = '\n'.join((
-            r'$T_{\text{e,0}}$: '+ f'{te0:.3e} m$^{{-3}}$\n'
-            r'$T_{\text{e,ped}}$: '+ f'{teped:.3e} m$^{{-3}}$',
-            r'$\rho_{\text{ped,T}}$: '+ f'{rhopedt:.3f}\n',
-            r'$T_{\text{e,sep}}$: '+ f'{tesep:.3e} m$^{{-3}}$\n',
-            r'$\alpha_{\text{T}}$: '+ f'{alphat:.3f}',
-            
-        ))
+        prof.set_ylim([0, q95 * 1.2])
 
-    props_temperature = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    prof.text(-1.0, 1.0, textstr_temperature, transform=prof.transAxes, fontsize=8,
-                verticalalignment='top', bbox=props_temperature)     
+    prof.text(
+        0.6,
+        0.04,
+        "*Profile is not calculated, only $q_0$ and $q_{95}$ are known.",
+        fontsize=10,
+        ha="left",
+        transform=plt.gcf().transFigure,
+    )
+    # ---
+
+    textstr_q = "\n".join(
+        (
+            r"$q_0$: " + f"{q0:.3f}\n",
+            r"$q_{95}$: " + f"{q95:.3f}",
+        )
+    )
+
+    props_q = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+    prof.text(
+        -0.4,
+        0.75,
+        textstr_q,
+        transform=prof.transAxes,
+        fontsize=8,
+        verticalalignment="top",
+        bbox=props_q,
+    )
 
 
 def read_imprad_data(skiprows, data_path):
@@ -3451,19 +3364,16 @@ def main_plot(
         )
         print("          -> No impurity plot done\033[0m")
 
-    #Plot poloidal cross-section
-    plot_1 = fig6.add_subplot(221, aspect="equal")
+    # Plot poloidal cross-section
+    plot_1 = fig3.add_subplot(121, aspect="equal")
     poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
-    
-    plot_15 = fig6.add_subplot(223, aspect="equal")
-    plot_radial_build(plot_15, m_file_data)
 
-    #Plot toroidal cross-section
-    plot_2 = fig6.add_subplot(122, aspect="equal")
+    # Plot toroidal cross-section
+    plot_2 = fig3.add_subplot(122, aspect="equal")
     toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
 
-    #Plot color key
-    plot_3 = fig6.add_subplot(241)
+    # Plot color key
+    plot_3 = fig3.add_subplot(244)
     color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
@@ -3474,23 +3384,23 @@ def main_plot(
     # Plot temperature profiles
     plot_5 = fig2.add_subplot(232)  # , aspect= 1/35)
     plot_tprofile(plot_5, demo_ranges)
-    
+
     plot_8 = fig2.add_subplot(233)  # , aspect=2)
     plot_radprofile(plot_8, m_file_data, scan, imp, demo_ranges)
 
-    plot_7 = fig2.add_subplot(4,3,10, sharex=plot_8)  # , aspect=2)
+    plot_7 = fig2.add_subplot(4, 3, 10, sharex=plot_8)  # , aspect=2)
     plot_jprofile(plot_7)
-    plot_7.tick_params(axis="x", which="both", bottom=True, top=False, labelbottom=False)
+    plot_7.tick_params(
+        axis="x", which="both", bottom=True, top=False, labelbottom=False
+    )
     plot_7.minorticks_on()
 
-    plot_6 = fig2.add_subplot(4,3,12, sharex=plot_7)  # , aspect=2)
+    plot_6 = fig2.add_subplot(4, 3, 12, sharex=plot_7)  # , aspect=2)
     plot_qprofile(plot_6, demo_ranges)
-    plot_6.tick_params(axis="x", which="both", bottom=True, top=False, labelbottom=False)
+    plot_6.tick_params(
+        axis="x", which="both", bottom=True, top=False, labelbottom=False
+    )
     plot_6.minorticks_on()
-    
-    
-    
-    
 
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
@@ -3523,20 +3433,20 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_7 = fig3.add_subplot(321)
+        plot_7 = fig4.add_subplot(321, aspect="equal")
         plot_tf_wp(plot_7, m_file_data, scan)
 
         # TF coil turn structure
-        plot_8 = fig3.add_subplot(322, aspect="equal")
+        plot_8 = fig4.add_subplot(322, aspect="equal")
         plot_tf_turn(plot_8, m_file_data, scan)
 
-    plot_9 = fig4.add_subplot(221)
+    plot_9 = fig5.add_subplot(221)
     plot_bootstrap_comparison(plot_9, m_file_data, scan)
 
-    plot_10 = fig4.add_subplot(224)
+    plot_10 = fig5.add_subplot(224)
     plot_h_threshold_comparison(plot_10, m_file_data, scan)
 
-    plot_11 = fig5.add_subplot(221)
+    plot_11 = fig6.add_subplot(221)
     plot_density_limit_comparison(plot_11, m_file_data, scan)
 
 
