@@ -2822,21 +2822,24 @@ class Physics:
         )
         physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
-        # Average atomic masses
+        # Average atomic masses of injected fuel species
         physics_variables.m_fuel_amu = (
-            2.0 * physics_variables.f_deuterium
-            + 3.0 * physics_variables.f_tritium
-            + 3.0 * physics_variables.f_helium3
+            (constants.m_deuteron_amu * physics_variables.f_deuterium)
+            + (constants.m_triton_amu * physics_variables.f_tritium)
+            + (constants.m_helion_amu * physics_variables.f_helium3)
         )
+
+        # Average atomic masses of injected fuel species in the neutral beams
+        # Only deuterium and tritium in the beams
         physics_variables.abeam = (
-            2.0 * (1.0 - current_drive_variables.f_tritium_beam)
-            + 3.0 * current_drive_variables.f_tritium_beam
+            (constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam))
+            + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
         )
 
         # Density weighted mass
         physics_variables.aion = (
             physics_variables.m_fuel_amu * physics_variables.deni
-            + 4.0 * physics_variables.dnalp
+            + (constants.m_alpha_amu * physics_variables.dnalp)
             + physics_variables.dnprot
             + physics_variables.abeam * physics_variables.dnbeam
         )
