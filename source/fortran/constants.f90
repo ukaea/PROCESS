@@ -77,10 +77,20 @@ module constants
   !            https://physics.nist.gov/cgi-bin/cuu/Value?md|search_for=DEUTERON+MASS
   real(dp), parameter :: deuteron_mass = 3.3435837768D-27
 
+  ! Deuteron mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mdu
+  real(dp), parameter :: m_deuteron_amu = 2.013553212544
+
   ! Triton mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mt|search_for=TRITON+MASS
   real(dp), parameter :: triton_mass = 5.0073567512D-27
+
+  ! Triton mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?art
+  real(dp), parameter :: m_triton_amu = 3.01550071597
 
   ! Neutron mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
@@ -92,10 +102,20 @@ module constants
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mal|search_for=alpha+mass
   real(dp), parameter :: alpha_mass = 6.6446573450D-27
 
+  ! Alpha particle mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?malu
+  real(dp), parameter :: m_alpha_amu = 4.001506179129
+
   ! Helion (3He) mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mh|search_for=HELION
   real(dp), parameter :: helion_mass = 5.0064127862D-27
+
+  ! Helion (3He) mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?arh
+  real(dp), parameter :: m_helion_amu = 3.014932246932
 
   ! Speed of light in vacuum (c) [m/s]
   ! Reference: National Institute of Standards and Technology (NIST)
