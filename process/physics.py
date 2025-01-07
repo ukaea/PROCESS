@@ -2831,7 +2831,7 @@ class Physics:
 
         # Average atomic masses of injected fuel species in the neutral beams
         # Only deuterium and tritium in the beams
-        physics_variables.abeam = (
+        physics_variables.m_beam_amu = (
             (constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam))
             + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
         )
@@ -2841,7 +2841,7 @@ class Physics:
             physics_variables.m_fuel_amu * physics_variables.deni
             + (constants.m_alpha_amu * physics_variables.dnalp)
             + physics_variables.dnprot
-            + physics_variables.abeam * physics_variables.dnbeam
+            + physics_variables.m_beam_amu * physics_variables.dnbeam
         )
         for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
