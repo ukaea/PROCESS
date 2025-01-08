@@ -555,7 +555,7 @@ class FusionReactionRate:
 class RadpwrData:
     """DataClass which holds the output of the function radpwr"""
 
-    psyncpv: float
+    pden_plasma_sync_mw: float
     pcoreradpv: float
     pedgeradpv: float
     pradpv: float
@@ -574,7 +574,7 @@ def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
 
     Returns:
         RadpwrData: A dataclass containing the following radiation power densities:
-            - psyncpv (float): Synchrotron radiation power per unit volume (MW/m^3).
+            - pden_plasma_sync_mw (float): Synchrotron radiation power per unit volume (MW/m^3).
             - pcoreradpv (float): Total core radiation power per unit volume (MW/m^3).
             - pedgeradpv (float): Edge radiation power per unit volume (MW/m^3).
             - pradpv (float): Total radiation power per unit volume (MW/m^3).
@@ -588,15 +588,15 @@ def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
     pedgeradpv = imp_rad.radtot - imp_rad.radcore
 
     # Synchrotron radiation power/volume; assumed to be from core only.
-    psyncpv = psync_albajar_fidone()
+    pden_plasma_sync_mw = psync_albajar_fidone()
 
     # Total core radiation power/volume.
-    pcoreradpv = imp_rad.radcore + psyncpv
+    pcoreradpv = imp_rad.radcore + pden_plasma_sync_mw
 
     # Total radiation power/volume.
-    pradpv = imp_rad.radtot + psyncpv
+    pradpv = imp_rad.radtot + pden_plasma_sync_mw
 
-    return RadpwrData(psyncpv, pcoreradpv, pedgeradpv, pradpv)
+    return RadpwrData(pden_plasma_sync_mw, pcoreradpv, pedgeradpv, pradpv)
 
 
 def psync_albajar_fidone():
@@ -609,7 +609,7 @@ def psync_albajar_fidone():
         P J Knight, CCFE, Culham Science Centre
         R Kemp, CCFE, Culham Science Centre
 
-    :return: psyncpv synchrotron radiation power/volume (MW/m3)
+    :return: pden_plasma_sync_mw synchrotron radiation power/volume (MW/m3)
     :rtype: float
     """
     tbet = 2.0e0
@@ -626,6 +626,7 @@ def psync_albajar_fidone():
     kfun = 0.0
     dum = 0.0
     psync = 0.0
+    pden_plasma_sync_mw = 0.0
 
     kap = physics_variables.vol_plasma / (
         2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
@@ -674,7 +675,7 @@ def psync_albajar_fidone():
         * kfun
     )
 
-    # psyncpv should be per unit volume; Albajar gives it as total
+    # pden_plasma_sync_mw should be per unit volume; Albajar gives it as total
 
     return psync / physics_variables.vol_plasma
 

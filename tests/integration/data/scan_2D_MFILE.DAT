@@ -428,7 +428,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8038E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.2134E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4406E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.3016E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.3016E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -1591,7 +1591,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8317E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.2817E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4610E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.2401E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.2401E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -2754,7 +2754,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8521E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.3698E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4907E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.1799E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.1799E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -3917,7 +3917,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8517E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.3791E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4829E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.2108E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.2108E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -5080,7 +5080,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8567E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.3428E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4695E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.2740E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.2740E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -6243,7 +6243,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8468E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.2726E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4496E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.3375E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.3375E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -7406,7 +7406,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8530E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.2912E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4457E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.3724E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.3724E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -8569,7 +8569,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8574E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.3416E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4639E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.3060E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.3060E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -9732,7 +9732,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8458E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.3472E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4703E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.2401E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.2401E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -10895,7 +10895,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8659E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.4023E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4743E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.2737E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.2737E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -12058,7 +12058,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8842E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.4277E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4773E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.3421E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.3421E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -13221,7 +13221,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8830E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.3854E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4622E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.4105E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.4105E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -14384,7 +14384,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8998E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.4318E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4642E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.4480E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.4480E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -15547,7 +15547,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.9165E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.5116E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4871E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.3795E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.3795E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
@@ -16710,7 +16710,7 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.9340E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.5941E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.5107E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (psyncpv*vol)_________________      1.3131E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.3131E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    

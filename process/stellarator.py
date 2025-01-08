@@ -4301,7 +4301,7 @@ class Stellarator:
 
         #  Calculate radiation power
         radpwr_data = physics_funcs.calculate_radiation_powers(self.plasma_profile)
-        physics_variables.psyncpv = radpwr_data.psyncpv
+        physics_variables.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
         physics_variables.pcoreradpv = radpwr_data.pcoreradpv
         physics_variables.pedgeradpv = radpwr_data.pedgeradpv
         physics_variables.pradpv = radpwr_data.pradpv

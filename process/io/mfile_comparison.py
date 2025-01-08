@@ -136,7 +136,7 @@ BASELINE_LIST = [
     "ralpne",
     "wallmw",
     "p_plasma_inner_rad_mw",
-    "psyncpv*vol_plasma",
+    "pden_plasma_sync_mw*vol_plasma",
     "p_plasma_rad_mw",
     "pnucblkt",
     "pnucshld",
