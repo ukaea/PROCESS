@@ -1,4 +1,5 @@
 from warnings import warn
+
 import process.fortran as fortran
 from process.exceptions import ProcessValidationError
 
@@ -335,9 +336,9 @@ def check_process():
 
     # Impurity fractions
     for imp in range(fortran.impurity_radiation_module.nimp):
-        fortran.impurity_radiation_module.impurity_arr_frac[
-            imp
-        ] = fortran.impurity_radiation_module.fimp[imp]
+        fortran.impurity_radiation_module.impurity_arr_frac[imp] = (
+            fortran.impurity_radiation_module.fimp[imp]
+        )
 
     # Stop the run if oacdcp is used as an optimisation variable
     # As the current density is now calculated from bt without constraint 10
@@ -350,7 +351,6 @@ def check_process():
     # Plasma profile consistency checks
     if fortran.ife_variables.ife != 1:
         if fortran.physics_variables.ipedestal == 1:
-
             # Temperature checks
             if fortran.physics_variables.teped < fortran.physics_variables.tesep:
                 raise ProcessValidationError(
@@ -401,7 +401,6 @@ def check_process():
                 fortran.physics_variables.fgwped < 0
                 or not (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any()
             ):
-
                 # Issue #589 Pedestal density is set manually using neped but it is less than nesep.
                 if fortran.physics_variables.neped < fortran.physics_variables.nesep:
                     raise ProcessValidationError(
@@ -468,7 +467,6 @@ def check_process():
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 78
     ).any():
-
         # If Reinke criterion is used tesep is calculated and cannot be an
         # iteration variable
         if (fortran.numerics.ixc[: fortran.numerics.nvar] == 119).any():
@@ -503,7 +501,6 @@ def check_process():
 
     #  Tight aspect ratio options (ST)
     if fortran.physics_variables.itart == 1:
-
         fortran.global_variables.icase = "Tight aspect ratio tokamak model"
 
         # Disabled Forcing that no inboard breeding blanket is used
@@ -564,7 +561,6 @@ def check_process():
         # Aluminium magnets initalisation / checks
         # Initialize the CP conductor temperature to cryogenic temperature for cryo-al magnets (20 K)
         elif fortran.tfcoil_variables.i_tf_sup == 2:
-
             # Call a lvl 3 error if the inlet coolant temperature is too large
             # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
             if fortran.tfcoil_variables.tcoolin > 40.0:
@@ -642,7 +638,6 @@ def check_process():
 
     # Conventionnal aspect ratios specific
     else:
-
         if (
             fortran.physics_variables.i_plasma_current == 2
             or fortran.physics_variables.i_plasma_current == 9
@@ -799,7 +794,6 @@ def check_process():
 
     # Setting the default cryo-plants efficiencies
     if abs(fortran.tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
-
         # The ITER cyoplant efficiency is used for SC
         if fortran.tfcoil_variables.i_tf_sup == 1:
             fortran.tfcoil_variables.eff_tf_cryo = 0.13
@@ -830,7 +824,6 @@ def check_process():
     # Setting up insulation layer young modulae default values [Pa]
 
     if fortran.tfcoil_variables.eyoung_ins <= 1.0e8:
-
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
         if fortran.tfcoil_variables.i_tf_sup == 0:
@@ -887,7 +880,6 @@ def check_process():
     # To contains the insulation, cooling and the support structure
     # Rem : Only verified if the WP thickness is used
     if (fortran.numerics.ixc[: fortran.numerics.nvar] == 140).any():
-
         # Minimal WP thickness
         if fortran.tfcoil_variables.i_tf_sup == 1:
             dr_tf_wp_min = 2.0 * (

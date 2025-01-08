@@ -1,10 +1,10 @@
 """
 
-    Script to tidy up vardes.md for the GitLab Page
+Script to tidy up vardes.md for the GitLab Page
 
-    J. Morris
-    10/08/19
-    UKAEA
+J. Morris
+10/08/19
+UKAEA
 
 """
 

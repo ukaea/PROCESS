@@ -13,7 +13,6 @@ fortran (python module)
 │  ├─ module variable (python class attribute)
 """
 
-
 import inspect
 from pathlib import Path
 from typing import Any, List, NamedTuple, Set, Union

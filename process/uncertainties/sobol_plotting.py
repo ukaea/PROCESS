@@ -17,9 +17,10 @@ sobol_output.pdf     -  bar chart of sobol indices
 """
 
 import argparse
-import numpy as np
-import matplotlib.pyplot as plt
+
 import matplotlib.backends.backend_pdf as bpdf
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def parse_args(args):

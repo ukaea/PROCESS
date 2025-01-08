@@ -14,43 +14,42 @@ Revised by Michael Kovari, 7/1/2016
 
 """
 
-import os
 import argparse
+import os
 from argparse import RawTextHelpFormatter
-import matplotlib
-import matplotlib.pyplot as plt
 from importlib import resources
-from matplotlib.patches import Rectangle
-from matplotlib.patches import Circle
+
+import matplotlib
 import matplotlib.backends.backend_pdf as bpdf
-from matplotlib.path import Path
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.patches import Circle, Rectangle
+from matplotlib.path import Path
 
 import process.io.mfile as mf
-
-from process.geometry.shield_geometry import (
-    shield_geometry_single_null,
-    shield_geometry_double_null,
-)
-from process.geometry.plasma_geometry import plasma_geometry
-from process.geometry.vacuum_vessel_geometry import (
-    vacuum_vessel_geometry_single_null,
-    vacuum_vessel_geometry_double_null,
-)
 from process.geometry.blanket_geometry import (
-    blanket_geometry_single_null,
     blanket_geometry_double_null,
+    blanket_geometry_single_null,
 )
 from process.geometry.cryostat_geometry import cryostat_geometry
-from process.geometry.tfcoil_geometry import (
-    tfcoil_geometry_rectangular_shape,
-    tfcoil_geometry_d_shape,
+from process.geometry.firstwall_geometry import (
+    first_wall_geometry_double_null,
+    first_wall_geometry_single_null,
 )
 from process.geometry.pfcoil_geometry import pfcoil_geometry
-from process.geometry.firstwall_geometry import (
-    first_wall_geometry_single_null,
-    first_wall_geometry_double_null,
+from process.geometry.plasma_geometry import plasma_geometry
+from process.geometry.shield_geometry import (
+    shield_geometry_double_null,
+    shield_geometry_single_null,
+)
+from process.geometry.tfcoil_geometry import (
+    tfcoil_geometry_d_shape,
+    tfcoil_geometry_rectangular_shape,
+)
+from process.geometry.vacuum_vessel_geometry import (
+    vacuum_vessel_geometry_double_null,
+    vacuum_vessel_geometry_single_null,
 )
 from process.impurity_radiation import read_impurity_file
 from process.io.python_fortran_dicts import get_dicts
@@ -901,24 +900,22 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     imp_data = read_imprad_data(2, impp)
 
     # find impurity densities
-    imp_frac = np.array(
-        [
-            mfile_data.data["fimp(01)"].get_scan(scan),
-            mfile_data.data["fimp(02)"].get_scan(scan),
-            mfile_data.data["fimp(03)"].get_scan(scan),
-            mfile_data.data["fimp(04)"].get_scan(scan),
-            mfile_data.data["fimp(05)"].get_scan(scan),
-            mfile_data.data["fimp(06)"].get_scan(scan),
-            mfile_data.data["fimp(07)"].get_scan(scan),
-            mfile_data.data["fimp(08)"].get_scan(scan),
-            mfile_data.data["fimp(09)"].get_scan(scan),
-            mfile_data.data["fimp(10)"].get_scan(scan),
-            mfile_data.data["fimp(11)"].get_scan(scan),
-            mfile_data.data["fimp(12)"].get_scan(scan),
-            mfile_data.data["fimp(13)"].get_scan(scan),
-            mfile_data.data["fimp(14)"].get_scan(scan),
-        ]
-    )
+    imp_frac = np.array([
+        mfile_data.data["fimp(01)"].get_scan(scan),
+        mfile_data.data["fimp(02)"].get_scan(scan),
+        mfile_data.data["fimp(03)"].get_scan(scan),
+        mfile_data.data["fimp(04)"].get_scan(scan),
+        mfile_data.data["fimp(05)"].get_scan(scan),
+        mfile_data.data["fimp(06)"].get_scan(scan),
+        mfile_data.data["fimp(07)"].get_scan(scan),
+        mfile_data.data["fimp(08)"].get_scan(scan),
+        mfile_data.data["fimp(09)"].get_scan(scan),
+        mfile_data.data["fimp(10)"].get_scan(scan),
+        mfile_data.data["fimp(11)"].get_scan(scan),
+        mfile_data.data["fimp(12)"].get_scan(scan),
+        mfile_data.data["fimp(13)"].get_scan(scan),
+        mfile_data.data["fimp(14)"].get_scan(scan),
+    ])
 
     if ipedestal == 0:
         # Intialise the radius
@@ -946,9 +943,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = (
-                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
-                )
+                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -1668,7 +1663,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     dr_tf_wp,
                     wp_toridal_dxbig,
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 ),
             )
             # Plots the WP inside the insulation
@@ -1723,7 +1718,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp / 2) + (tinstf),
                     wp_toridal_dxsmall + (tinstf),
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 ),
             )
 
@@ -1777,7 +1772,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y)),
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 )
             )
 
@@ -2393,12 +2388,10 @@ def plot_magnetics_info(axis, mfile_data, scan):
     pf_info = []
     for i in range(1, number_of_coils):
         if i % 2 != 0:
-            pf_info.append(
-                (
-                    mfile_data.data["ric[{:01}]".format(i)].get_scan(scan),
-                    "PF {}".format(i),
-                )
-            )
+            pf_info.append((
+                mfile_data.data["ric[{:01}]".format(i)].get_scan(scan),
+                "PF {}".format(i),
+            ))
 
     if len(pf_info) > 2:
         pf_info_3_a = pf_info[2][0]

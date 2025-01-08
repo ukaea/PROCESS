@@ -1,8 +1,9 @@
-import pytest
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-from process.fw import Fw
+import pytest
+
 from process.fortran import fwbs_variables
+from process.fw import Fw
 
 
 @pytest.fixture

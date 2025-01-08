@@ -1,39 +1,44 @@
 import logging
 from copy import copy
-import numpy as np
 from pathlib import Path
 
+import numpy as np
+
+import process.physics_functions as physics_funcs
+import process.superconductors as superconductors
+from process.coolprop_interface import FluidProperties
 from process.fortran import (
-    constants,
-    stellarator_module as st,
-    process_output as po,
-    physics_variables,
-    physics_module,
-    current_drive_variables,
-    tfcoil_variables,
-    stellarator_configuration,
-    stellarator_variables,
-    numerics,
     build_variables,
-    fwbs_variables,
-    heat_transport_variables,
-    structure_variables,
-    divertor_variables,
-    cost_variables,
-    error_handling,
+    constants,
     constraint_variables,
-    rebco_variables,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    error_handling,
+    fwbs_variables,
+    global_variables,
+    heat_transport_variables,
+    impurity_radiation_module,
     maths_library,
     neoclassics_module,
-    impurity_radiation_module,
+    numerics,
+    physics_module,
+    physics_variables,
+    rebco_variables,
     sctfcoil_module,
-    global_variables,
+    stellarator_configuration,
+    stellarator_variables,
+    structure_variables,
+    tfcoil_variables,
 )
-import process.superconductors as superconductors
-import process.physics_functions as physics_funcs
-from process.stellarator_config import load_stellarator_config
-from process.coolprop_interface import FluidProperties
+from process.fortran import (
+    process_output as po,
+)
+from process.fortran import (
+    stellarator_module as st,
+)
 from process.physics import rether
+from process.stellarator_config import load_stellarator_config
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
@@ -195,9 +200,9 @@ class Stellarator:
 
         po.write(
             self.outfile,
-            f"{' '*5}scaling law{' '*30}confinement time (s){' '*55}H-factor for",
+            f"{' ' * 5}scaling law{' ' * 30}confinement time (s){' ' * 55}H-factor for",
         )
-        po.write(self.outfile, f"{' '*34}for H = 2{' '*54}power balance")
+        po.write(self.outfile, f"{' ' * 34}for H = 2{' ' * 54}power balance")
 
         #  Label stellarator scaling laws (update if more are added)
 
@@ -2318,24 +2323,19 @@ class Stellarator:
             ptfnuc = 0.0
 
         else:
-
             # TF coil nuclear heating coefficients in region i (first element),
             # assuming shield material j (second element where present)
 
             fact = np.array([8.0, 8.0, 6.0, 4.0, 4.0])
-            coef = np.array(
-                [
-                    [10.3, 11.6, 7.08e5, 2.19e18, 3.33e-7],
-                    [8.32, 10.6, 7.16e5, 2.39e18, 3.84e-7],
-                ]
-            ).T
+            coef = np.array([
+                [10.3, 11.6, 7.08e5, 2.19e18, 3.33e-7],
+                [8.32, 10.6, 7.16e5, 2.39e18, 3.84e-7],
+            ]).T
 
-            decay = np.array(
-                [
-                    [10.05, 17.61, 13.82, 13.24, 14.31, 13.26, 13.25],
-                    [10.02, 3.33, 15.45, 14.47, 15.87, 15.25, 17.25],
-                ]
-            ).T
+            decay = np.array([
+                [10.05, 17.61, 13.82, 13.24, 14.31, 13.26, 13.25],
+                [10.02, 3.33, 15.45, 14.47, 15.87, 15.25, 17.25],
+            ]).T
 
             # N.B. The vacuum vessel appears to be ignored
 
@@ -2609,8 +2609,8 @@ class Stellarator:
         tfcoil_variables.jwptf = (
             coilcurrent * 1.0e6 / awptf
         )  # [A/m^2] winding pack current density
-        tfcoil_variables.n_tf_turn = awptf / (
-            tfcoil_variables.t_turn_tf**2
+        tfcoil_variables.n_tf_turn = (
+            awptf / (tfcoil_variables.t_turn_tf**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
         tfcoil_variables.cpttf = (
             coilcurrent * 1.0e6 / tfcoil_variables.n_tf_turn
@@ -5043,74 +5043,70 @@ class Neoclassics:
             neoclassics_module.dr_densities,
             neoclassics_module.dr_temperatures,
         ) = self.init_profile_values_from_PROCESS(r_effin)
-        neoclassics_module.roots = np.array(
-            [
-                4.740718054080526184e-2,
-                2.499239167531593919e-1,
-                6.148334543927683749e-1,
-                1.143195825666101451,
-                1.836454554622572344,
-                2.696521874557216147,
-                3.725814507779509288,
-                4.927293765849881879,
-                6.304515590965073635,
-                7.861693293370260349,
-                9.603775985479263255,
-                1.153654659795613924e1,
-                1.366674469306423489e1,
-                1.600222118898106771e1,
-                1.855213484014315029e1,
-                2.132720432178312819e1,
-                2.434003576453269346e1,
-                2.760555479678096091e1,
-                3.114158670111123683e1,
-                3.496965200824907072e1,
-                3.911608494906788991e1,
-                4.361365290848483056e1,
-                4.850398616380419980e1,
-                5.384138540650750571e1,
-                5.969912185923549686e1,
-                6.618061779443848991e1,
-                7.344123859555988076e1,
-                8.173681050672767867e1,
-                9.155646652253683726e1,
-                1.041575244310588886e2,
-            ]
-        )
-        neoclassics_module.weights = np.array(
-            [
-                1.160440860204388913e-1,
-                2.208511247506771413e-1,
-                2.413998275878537214e-1,
-                1.946367684464170855e-1,
-                1.237284159668764899e-1,
-                6.367878036898660943e-2,
-                2.686047527337972682e-2,
-                9.338070881603925677e-3,
-                2.680696891336819664e-3,
-                6.351291219408556439e-4,
-                1.239074599068830081e-4,
-                1.982878843895233056e-5,
-                2.589350929131392509e-6,
-                2.740942840536013206e-7,
-                2.332831165025738197e-8,
-                1.580745574778327984e-9,
-                8.427479123056716393e-11,
-                3.485161234907855443e-12,
-                1.099018059753451500e-13,
-                2.588312664959080167e-15,
-                4.437838059840028968e-17,
-                5.365918308212045344e-19,
-                4.393946892291604451e-21,
-                2.311409794388543236e-23,
-                7.274588498292248063e-26,
-                1.239149701448267877e-28,
-                9.832375083105887477e-32,
-                2.842323553402700938e-35,
-                1.878608031749515392e-39,
-                8.745980440465011553e-45,
-            ]
-        )
+        neoclassics_module.roots = np.array([
+            4.740718054080526184e-2,
+            2.499239167531593919e-1,
+            6.148334543927683749e-1,
+            1.143195825666101451,
+            1.836454554622572344,
+            2.696521874557216147,
+            3.725814507779509288,
+            4.927293765849881879,
+            6.304515590965073635,
+            7.861693293370260349,
+            9.603775985479263255,
+            1.153654659795613924e1,
+            1.366674469306423489e1,
+            1.600222118898106771e1,
+            1.855213484014315029e1,
+            2.132720432178312819e1,
+            2.434003576453269346e1,
+            2.760555479678096091e1,
+            3.114158670111123683e1,
+            3.496965200824907072e1,
+            3.911608494906788991e1,
+            4.361365290848483056e1,
+            4.850398616380419980e1,
+            5.384138540650750571e1,
+            5.969912185923549686e1,
+            6.618061779443848991e1,
+            7.344123859555988076e1,
+            8.173681050672767867e1,
+            9.155646652253683726e1,
+            1.041575244310588886e2,
+        ])
+        neoclassics_module.weights = np.array([
+            1.160440860204388913e-1,
+            2.208511247506771413e-1,
+            2.413998275878537214e-1,
+            1.946367684464170855e-1,
+            1.237284159668764899e-1,
+            6.367878036898660943e-2,
+            2.686047527337972682e-2,
+            9.338070881603925677e-3,
+            2.680696891336819664e-3,
+            6.351291219408556439e-4,
+            1.239074599068830081e-4,
+            1.982878843895233056e-5,
+            2.589350929131392509e-6,
+            2.740942840536013206e-7,
+            2.332831165025738197e-8,
+            1.580745574778327984e-9,
+            8.427479123056716393e-11,
+            3.485161234907855443e-12,
+            1.099018059753451500e-13,
+            2.588312664959080167e-15,
+            4.437838059840028968e-17,
+            5.365918308212045344e-19,
+            4.393946892291604451e-21,
+            2.311409794388543236e-23,
+            7.274588498292248063e-26,
+            1.239149701448267877e-28,
+            9.832375083105887477e-32,
+            2.842323553402700938e-35,
+            1.878608031749515392e-39,
+            8.745980440465011553e-45,
+        ])
 
         neoclassics_module.kt = self.neoclassics_calc_KT()
         neoclassics_module.nu = self.neoclassics_calc_nu()
@@ -5261,14 +5257,12 @@ class Neoclassics:
 
     def neoclassics_calc_nu(self):
         """Calculates the collision frequency"""
-        mass = np.array(
-            [
-                constants.electron_mass,
-                constants.proton_mass * 2.0,
-                constants.proton_mass * 3.0,
-                constants.proton_mass * 4.0,
-            ]
-        )
+        mass = np.array([
+            constants.electron_mass,
+            constants.proton_mass * 2.0,
+            constants.proton_mass * 3.0,
+            constants.proton_mass * 4.0,
+        ])
         z = np.array([-1.0, 1.0, 1.0, 2.0]) * constants.electron_charge
 
         # transform the temperature back in eV
@@ -5327,14 +5321,12 @@ class Neoclassics:
         k = np.repeat(neoclassics_module.roots[:, np.newaxis], 4, axis=1)
         kk = (k * neoclassics_module.temperatures).T
 
-        mass = np.array(
-            [
-                constants.electron_mass,
-                constants.proton_mass * 2.0,
-                constants.proton_mass * 3.0,
-                constants.proton_mass * 4.0,
-            ]
-        )
+        mass = np.array([
+            constants.electron_mass,
+            constants.proton_mass * 2.0,
+            constants.proton_mass * 3.0,
+            constants.proton_mass * 4.0,
+        ])
 
         v = np.empty((4, self.no_roots))
         v[0, :] = constants.speed_light * np.sqrt(
@@ -5359,33 +5351,27 @@ class Neoclassics:
     def neoclassics_calc_nu_star_fromT(self, iota):
         """Calculates the collision frequency"""
         temp = (
-            np.array(
-                [
-                    physics_variables.te,
-                    physics_variables.ti,
-                    physics_variables.ti,
-                    physics_variables.ti,
-                ]
-            )
+            np.array([
+                physics_variables.te,
+                physics_variables.ti,
+                physics_variables.ti,
+                physics_variables.ti,
+            ])
             * KEV
         )
-        density = np.array(
-            [
-                physics_variables.dene,
-                physics_variables.deni * physics_variables.f_deuterium,
-                physics_variables.deni * (1 - physics_variables.f_deuterium),
-                physics_variables.dnalp,
-            ]
-        )
+        density = np.array([
+            physics_variables.dene,
+            physics_variables.deni * physics_variables.f_deuterium,
+            physics_variables.deni * (1 - physics_variables.f_deuterium),
+            physics_variables.dnalp,
+        ])
 
-        mass = np.array(
-            [
-                constants.electron_mass,
-                constants.proton_mass * 2.0,
-                constants.proton_mass * 3.0,
-                constants.proton_mass * 4.0,
-            ]
-        )
+        mass = np.array([
+            constants.electron_mass,
+            constants.proton_mass * 2.0,
+            constants.proton_mass * 3.0,
+            constants.proton_mass * 4.0,
+        ])
         z = np.array([-1.0, 1.0, 1.0, 2.0]) * constants.electron_charge
 
         # transform the temperature back in eV
@@ -5484,14 +5470,12 @@ class Neoclassics:
 
     def neoclassics_calc_D11_plateau(self):
         """Calculates the plateau transport coefficients (D11_star sometimes)"""
-        mass = np.array(
-            [
-                constants.electron_mass,
-                constants.proton_mass * 2.0,
-                constants.proton_mass * 3.0,
-                constants.proton_mass * 4.0,
-            ]
-        )
+        mass = np.array([
+            constants.electron_mass,
+            constants.proton_mass * 2.0,
+            constants.proton_mass * 3.0,
+            constants.proton_mass * 4.0,
+        ])
 
         v = np.empty((4, self.no_roots))
         v[0, :] = constants.speed_light * np.sqrt(

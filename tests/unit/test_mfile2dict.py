@@ -1,10 +1,11 @@
-import pytest
-import os
-import tempfile
 import json
-import yaml
+import os
 import pickle
+import tempfile
 from pathlib import Path
+
+import pytest
+import yaml
 
 from process.io import mfile2dict
 

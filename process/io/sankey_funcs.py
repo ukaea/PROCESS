@@ -7,10 +7,11 @@ Author: Hanni Lux (Hanni.Lux@ukaea.uk)
 Updated 13/09/2019: Adam Brown (adam.brown@ukaea.uk)
 """
 
-import numpy as np
-from numpy import sqrt
-from matplotlib.sankey import Sankey
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.sankey import Sankey
+from numpy import sqrt
+
 from process.io.mfile import MFile
 
 
@@ -756,9 +757,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             t.set_position(pos)
             if t == diagrams[0].texts[0]:  # Fusion Power
                 t.set_horizontalalignment("left")
-                t.set_position(
-                    (pos[0] - 0.35, pos[1] + 0.5 * (fusion_power / totalplasma) + 0.2)
-                )
+                t.set_position((
+                    pos[0] - 0.35,
+                    pos[1] + 0.5 * (fusion_power / totalplasma) + 0.2,
+                ))
             if t == diagrams[0].texts[2]:  # Plasma
                 t.set_horizontalalignment("right")
                 t.set_position((pos[0] - 0.25, pos[1]))
@@ -772,9 +774,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 t.set_position((pos[0] - 0.25, pos[1]))
             if t == diagrams[3].texts[1]:  # Gross Electric
                 t.set_horizontalalignment("right")
-                t.set_position(
-                    (pos[0] - 0.5 * (pgrossmw / totalplasma) - 0.1, pos[1] + 0.1)
-                )
+                t.set_position((
+                    pos[0] - 0.5 * (pgrossmw / totalplasma) - 0.1,
+                    pos[1] + 0.1,
+                ))
             if t == diagrams[3].texts[2]:  # Losses
                 t.set_horizontalalignment("right")
                 t.set_position((pos[0] - 0.2, pos[1]))
@@ -788,9 +791,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                     t.set_position((pos[0] + 0.2, pos[1]))
             if t == diagrams[4].texts[2]:  # Recirc. Power
                 if pnetelmw >= 1:
-                    t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (precircmw / totalplasma) + 0.2)
-                    )
+                    t.set_position((
+                        pos[0] + 0.15,
+                        pos[1] + 0.5 * (precircmw / totalplasma) + 0.2,
+                    ))
                 elif pnetelmw < 1:
                     t.set_horizontalalignment("left")
                     t.set_position((pos[0] + 0.2, pos[1]))
@@ -798,24 +802,25 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 t.set_position((pos[0], pos[1] - 0.2))
             if t == diagrams[5].texts[2]:  # Heating System
                 if pnetelmw >= 1:
-                    t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2)
-                    )
+                    t.set_position((
+                        pos[0] + 0.15,
+                        pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2,
+                    ))
                 if pnetelmw < 1:
-                    t.set_position(
-                        (pos[0] + 0.15, pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2)
-                    )
+                    t.set_position((
+                        pos[0] + 0.15,
+                        pos[1] + 0.5 * (pinjwp / totalplasma) + 0.2,
+                    ))
             if t == diagrams[6].texts[1]:  # Plasma Heating
                 t.set_horizontalalignment("left")
-                t.set_position(
-                    (pos[0] + 0.5 * (pinjmw / totalplasma) + 0.1, pos[1] - 0.05)
-                )
+                t.set_position((
+                    pos[0] + 0.5 * (pinjmw / totalplasma) + 0.1,
+                    pos[1] - 0.05,
+                ))
             if t == diagrams[6].texts[2]:  # Losses
                 t.set_horizontalalignment("left")
-                t.set_position(
-                    (
-                        pos[0] + 0.15,
-                        pos[1] - 0.5 * ((pinjwp - pinjmw) / totalplasma) - 0.2,
-                    )
-                )
+                t.set_position((
+                    pos[0] + 0.15,
+                    pos[1] - 0.5 * ((pinjwp - pinjmw) / totalplasma) - 0.2,
+                ))
             y += 1

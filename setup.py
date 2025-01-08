@@ -1,7 +1,8 @@
-from setuptools import setup, find_packages
-import site
 import os
 import platform
+import site
+
+from setuptools import find_packages, setup
 
 MODULE_NAME = "process"
 _install_loc = os.path.join(site.getsitepackages()[0], MODULE_NAME)

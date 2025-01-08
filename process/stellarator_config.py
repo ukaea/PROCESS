@@ -1,6 +1,6 @@
-from typing import Optional
-from pathlib import Path
 import json
+from pathlib import Path
+from typing import Optional
 
 from process.fortran import stellarator_configuration
 

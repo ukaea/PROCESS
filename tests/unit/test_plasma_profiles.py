@@ -1,9 +1,11 @@
-from typing import NamedTuple, Any
-import pytest
+from typing import Any, NamedTuple
+
 import numpy as np
+import pytest
+
 from process.fortran import divertor_variables, physics_variables
 from process.plasma_profiles import PlasmaProfile
-from process.profiles import TProfile, NProfile
+from process.profiles import NProfile, TProfile
 
 
 class ProfileParam(NamedTuple):

@@ -1,34 +1,36 @@
 import math
 from typing import Tuple
+
+import numba as nb
 import numpy as np
 import scipy
-import numba as nb
-from scipy.optimize import root_scalar
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-
 import scipy.integrate as integrate
+from scipy.optimize import root_scalar
 
-import process.physics_functions as physics_funcs
 import process.impurity_radiation as impurity_radiation
+import process.physics_functions as physics_funcs
 from process.fortran import (
-    constraint_variables,
-    reinke_variables,
-    reinke_module,
-    impurity_radiation_module,
+    build_variables,
     constants,
-    physics_variables,
-    physics_module,
-    pulse_variables,
-    times_variables,
+    constraint_variables,
     current_drive_variables,
+    divertor_variables,
     error_handling,
     fwbs_variables,
-    build_variables,
-    divertor_variables,
+    impurity_radiation_module,
     numerics,
+    physics_module,
+    physics_variables,
+    pulse_variables,
+    reinke_module,
+    reinke_variables,
     stellarator_variables,
+    times_variables,
+)
+from process.fortran import (
     process_output as po,
 )
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
 @nb.jit(nopython=True, cache=True)
@@ -109,9 +111,7 @@ def vscalc(
     aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
         2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
     )
-    beps = (
-        0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-    )
+    beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
     rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
 
     rlp = rlpext + rlpint
@@ -422,12 +422,7 @@ def calculate_current_coefficient_todd(
     base_scaling = (
         (1.0 + 2.0 * eps**2)
         * ((1.0 + kappa95**2) / 0.5)
-        * (
-            1.24
-            - 0.54 * kappa95
-            + 0.3 * (kappa95**2 + triang95**2)
-            + 0.125 * triang95
-        )
+        * (1.24 - 0.54 * kappa95 + 0.3 * (kappa95**2 + triang95**2) + 0.125 * triang95)
     )
     if model == 1:
         return base_scaling
@@ -497,9 +492,9 @@ def calculate_current_coefficient_hastie(
     eprime = er * lamp1 / (1.0 + lamda / 3.0)
 
     # Delta primed in AEA FUS 172
-    deltap = (0.5 * kap1 * eps * 0.5 * li) + (
-        beta0 / (0.5 * kap1 * eps)
-    ) * lamp1**2 / (1.0 + nu)
+    deltap = (0.5 * kap1 * eps * 0.5 * li) + (beta0 / (0.5 * kap1 * eps)) * lamp1**2 / (
+        1.0 + nu
+    )
 
     # Delta/R0 in AEA FUS 172
     deltar = beta0 / 6.0 * (1.0 + 5.0 * lamda / 6.0 + 0.25 * lamda**2) + (
@@ -631,11 +626,7 @@ def _nevins_integral(
 
     # Compute average electron beta
     betae = (
-        dene
-        * te
-        * 1.0e3
-        * constants.electron_charge
-        / (bt**2 / (2.0 * constants.rmu0))
+        dene * te * 1.0e3 * constants.electron_charge / (bt**2 / (2.0 * constants.rmu0))
     )
 
     nabla = rminor * np.sqrt(y) / rmajor
@@ -1042,15 +1033,13 @@ def _calculate_l31_32_coefficient(
 
     # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
     f32ee_teff = f_trapped / (
-        (
-            1.0
-            + 0.26 * (1.0 - f_trapped) * np.sqrt(electron_collisionality)
-            + (
-                0.18
-                * (1.0 - 0.37 * f_trapped)
-                * electron_collisionality
-                / np.sqrt(charge_profile)
-            )
+        1.0
+        + 0.26 * (1.0 - f_trapped) * np.sqrt(electron_collisionality)
+        + (
+            0.18
+            * (1.0 - 0.37 * f_trapped)
+            * electron_collisionality
+            / np.sqrt(charge_profile)
         )
     )
 
@@ -1074,11 +1063,7 @@ def _calculate_l31_32_coefficient(
             * (f32ee_teff - f32ee_teff**4)
         )
         + (
-            (
-                f32ee_teff**2
-                - f32ee_teff**4
-                - 1.2 * (f32ee_teff**3 - f32ee_teff**4)
-            )
+            (f32ee_teff**2 - f32ee_teff**4 - 1.2 * (f32ee_teff**3 - f32ee_teff**4))
             / (1.0 + 0.22 * charge_profile)
         )
         + (1.2 / (1.0 + 0.5 * charge_profile) * f32ee_teff**4)
@@ -1095,11 +1080,7 @@ def _calculate_l31_32_coefficient(
         + (
             4.95
             / (1.0 + 2.48 * charge_profile)
-            * (
-                f32ei_teff**2
-                - f32ei_teff**4
-                - 0.55 * (f32ei_teff**3 - f32ei_teff**4)
-            )
+            * (f32ei_teff**2 - f32ei_teff**4 - 0.55 * (f32ei_teff**3 - f32ei_teff**4))
         )
         - (1.2 / (1.0 + 0.5 * charge_profile) * f32ei_teff**4)
     )
@@ -1227,11 +1208,9 @@ def _calculate_l34_alpha_31_coefficient(
 
     # $\alpha(\nu_{i*})$, Eq.17b
     alpha = (
-        (
-            (alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality))
-            / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
-            + (0.315 * ion_collisionality**2 * f_trapped**6)
-        )
+        (alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality))
+        / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
+        + (0.315 * ion_collisionality**2 * f_trapped**6)
     ) / (1.0 + (0.15 * ion_collisionality**2 * f_trapped**6))
 
     # Corrections suggested by Fable, 15/05/2015
@@ -1470,8 +1449,7 @@ def _trapped_particle_fraction_sauter(
         # Similar to, but not quite identical to above
 
         return 1.0 - (
-            ((1.0 - eps) ** 2)
-            / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2))
+            ((1.0 - eps) ** 2) / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2))
         )
 
     elif fit == 2:
@@ -1576,9 +1554,7 @@ class Physics:
         # *************************** #
 
         physics_variables.beta_toroidal = (
-            physics_variables.beta
-            * physics_variables.btot**2
-            / physics_variables.bt**2
+            physics_variables.beta * physics_variables.btot**2 / physics_variables.bt**2
         )
 
         # Calculate physics_variables.beta poloidal [-]
@@ -2418,10 +2394,14 @@ class Physics:
             else:
                 # Single null configuration - including SoL radaition
                 physics_variables.photon_wall = (
-                    1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv
-                ) * physics_variables.pradmw / build_variables.fwarea + (
-                    1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv
-                ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / build_variables.fwarea
+                    (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                    * physics_variables.pradmw
+                    / build_variables.fwarea
+                    + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                    * physics_variables.rad_fraction_sol
+                    * physics_variables.pdivt
+                    / build_variables.fwarea
+                )
 
         constraint_variables.peakradwallload = (
             physics_variables.photon_wall * constraint_variables.peakfactrad
@@ -2609,18 +2589,14 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[0] = (
-            1.54e20 * p_perp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45
-        ) / prn1
+        dlimit[0] = (1.54e20 * p_perp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45) / prn1
 
         # Borrass density limit model for ITER (I)
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
-        dlimit[1] = (
-            1.8e20 * p_perp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22
-        ) / prn1
+        dlimit[1] = (1.8e20 * p_perp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22) / prn1
 
         # Borrass density limit model for ITER (II)
         # This applies to the density at the plasma edge, so must be scaled
@@ -2628,9 +2604,7 @@ class Physics:
         # This formula is (almost) identical to that in the original routine
         # denlim (now deleted).
 
-        dlimit[2] = (
-            0.5e20 * p_perp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09
-        ) / prn1
+        dlimit[2] = (0.5e20 * p_perp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09) / prn1
 
         # JET edge radiation density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -4001,9 +3975,9 @@ class Physics:
 
         for imp in range(impurity_radiation_module.nimp):
             # MDK Update fimp, as this will make the ITV output work correctly.
-            impurity_radiation_module.fimp[
-                imp
-            ] = impurity_radiation_module.impurity_arr_frac[imp]
+            impurity_radiation_module.fimp[imp] = (
+                impurity_radiation_module.impurity_arr_frac[imp]
+            )
             str1 = (
                 f2py_compatible_to_string(
                     impurity_radiation_module.impurity_arr_label[imp]
@@ -5782,41 +5756,37 @@ class Physics:
         # Square root of current profile index term
         saj = np.sqrt(aj)
 
-        a = np.array(
-            [
-                1.41 * (1.0 - 0.28 * saj) * (1.0 + 0.12 / z),
-                0.36 * (1.0 - 0.59 * saj) * (1.0 + 0.8 / z),
-                -0.27 * (1.0 - 0.47 * saj) * (1.0 + 3.0 / z),
-                0.0053 * (1.0 + 5.0 / z),
-                -0.93 * (1.0 - 0.34 * saj) * (1.0 + 0.15 / z),
-                -0.26 * (1.0 - 0.57 * saj) * (1.0 - 0.27 * z),
-                0.064 * (1.0 - 0.6 * aj + 0.15 * aj * aj) * (1.0 + 7.6 / z),
-                -0.0011 * (1.0 + 9.0 / z),
-                -0.33 * (1.0 - aj + 0.33 * aj * aj),
-                -0.26 * (1.0 - 0.87 / saj - 0.16 * aj),
-                -0.14 * (1.0 - 1.14 / saj - 0.45 * saj),
-                -0.0069,
-            ]
-        )
+        a = np.array([
+            1.41 * (1.0 - 0.28 * saj) * (1.0 + 0.12 / z),
+            0.36 * (1.0 - 0.59 * saj) * (1.0 + 0.8 / z),
+            -0.27 * (1.0 - 0.47 * saj) * (1.0 + 3.0 / z),
+            0.0053 * (1.0 + 5.0 / z),
+            -0.93 * (1.0 - 0.34 * saj) * (1.0 + 0.15 / z),
+            -0.26 * (1.0 - 0.57 * saj) * (1.0 - 0.27 * z),
+            0.064 * (1.0 - 0.6 * aj + 0.15 * aj * aj) * (1.0 + 7.6 / z),
+            -0.0011 * (1.0 + 9.0 / z),
+            -0.33 * (1.0 - aj + 0.33 * aj * aj),
+            -0.26 * (1.0 - 0.87 / saj - 0.16 * aj),
+            -0.14 * (1.0 - 1.14 / saj - 0.45 * saj),
+            -0.0069,
+        ])
 
         seps1 = np.sqrt(eps1)
 
-        b = np.array(
-            [
-                1.0,
-                alfpnw,
-                alftnw,
-                alfpnw * alftnw,
-                seps1,
-                alfpnw * seps1,
-                alftnw * seps1,
-                alfpnw * alftnw * seps1,
-                eps1,
-                alfpnw * eps1,
-                alftnw * eps1,
-                alfpnw * alftnw * eps1,
-            ]
-        )
+        b = np.array([
+            1.0,
+            alfpnw,
+            alftnw,
+            alfpnw * alftnw,
+            seps1,
+            alfpnw * seps1,
+            alftnw * seps1,
+            alfpnw * alftnw * seps1,
+            eps1,
+            alfpnw * eps1,
+            alftnw * eps1,
+            alfpnw * alftnw * eps1,
+        ])
 
         # Empirical bootstrap current fraction
         return seps1 * betpth * (a * b).sum()
@@ -5958,8 +5928,7 @@ class Physics:
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
         inverse_q = 1 / (
-            physics_variables.q0
-            + (physics_variables.q - physics_variables.q0) * roa**2
+            physics_variables.q0 + (physics_variables.q - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
         amain = np.full_like(inverse_q, physics_variables.afuel)
@@ -6746,11 +6715,7 @@ class Physics:
                 * np.sqrt(kappa95)
                 * denfac
                 / powerht**0.4e0
-                * (
-                    zeff**2
-                    * pcur**4
-                    / (rmajor * rminor * qstar**3 * kappa95**1.5e0)
-                )
+                * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0))
                 ** 0.08e0
             )
 
@@ -7205,9 +7170,7 @@ class Physics:
             #  Table 4.  (Issue #311)
             # Note that aspect ratio and M (afuel) do not appear, and B (bt) only
             # appears in the "saturation factor" h.
-            h = dnla19**0.448e0 / (
-                1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0)
-            )
+            h = dnla19**0.448e0 / (1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0))
             tauee = (
                 hfact
                 * 0.0367e0
@@ -7529,36 +7492,20 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
 
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
-    snipes_2000 = (
-        1.42 * dnla20**0.58 * bt**0.82 * rmajor * rminor**0.81 * (2.0 / aion)
-    )
+    snipes_2000 = 1.42 * dnla20**0.58 * bt**0.82 * rmajor * rminor**0.81 * (2.0 / aion)
     snipes_2000_ub = (
-        1.547
-        * dnla20**0.615
-        * bt**0.851
-        * rmajor**1.089
-        * rminor**0.876
-        * (2.0 / aion)
+        1.547 * dnla20**0.615 * bt**0.851 * rmajor**1.089 * rminor**0.876 * (2.0 / aion)
     )
     snipes_2000_lb = (
-        1.293
-        * dnla20**0.545
-        * bt**0.789
-        * rmajor**0.911
-        * rminor**0.744
-        * (2.0 / aion)
+        1.293 * dnla20**0.545 * bt**0.789 * rmajor**0.911 * rminor**0.744 * (2.0 / aion)
     )
 
     # Snipes et al (2000) scaling (closed divertor) with mass correction
     # Nominal, upper and lower
 
     snipes_2000_cd = 0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / aion)
-    snipes_2000_cd_ub = (
-        0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / aion)
-    )
-    snipes_2000_cd_lb = (
-        0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / aion)
-    )
+    snipes_2000_cd_ub = 0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / aion)
+    snipes_2000_cd_lb = 0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / aion)
 
     # Hubbard et al. 2012 L-I threshold scaling
     hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65

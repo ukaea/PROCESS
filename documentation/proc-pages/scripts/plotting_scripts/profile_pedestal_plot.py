@@ -3,7 +3,6 @@ from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, CustomJS, Slider
 from bokeh.plotting import figure, output_file, save
 
-
 T0 = Slider(start=0.1, end=10, value=10.0, step=0.1, title="Plasma centre value | T0")
 alpha = Slider(
     start=0.01, end=10, value=2.0, step=0.01, title="Profile Index  | alphan"

@@ -1,17 +1,16 @@
 """Unit tests for the main.py module."""
 
-from process import main
-from process.main import Process
-from process.main import SingleRun
-from process.main import VaryRun
-from process import fortran
+import argparse
+import shutil
+from pathlib import Path
+
+import pytest
+
+from process import fortran, main
+from process.main import Process, SingleRun, VaryRun
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
 )
-import pytest
-from pathlib import Path
-import argparse
-import shutil
 
 
 def test_main(monkeypatch):

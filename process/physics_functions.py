@@ -1,11 +1,12 @@
 import logging
+from dataclasses import dataclass
+
 import numpy as np
 from scipy import integrate
-from dataclasses import dataclass
-from process.fortran import physics_variables, physics_module, constants
-from process.plasma_profiles import PlasmaProfile
-import process.impurity_radiation as impurity
 
+import process.impurity_radiation as impurity
+from process.fortran import constants, physics_module, physics_variables
+from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -722,10 +723,7 @@ def fusion_rate_integral(
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
     # just the volume averged ion density.
     fusion_integral = (
-        2.0
-        * plasma_profile.teprofile.profile_x
-        * sigv
-        * density_profile_normalised**2
+        2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
     )
 
     return fusion_integral
@@ -971,7 +969,6 @@ def fast_alpha_beta(
 
     # Determine average fast alpha density
     if physics_variables.f_deuterium < 1.0:
-
         beta_thermal = (
             2.0
             * constants.rmu0
@@ -1508,9 +1505,7 @@ def _hot_beam_fusion_reaction_rate_integrand(
     beam_velcoity = critical_velocity * velocity_ratio
 
     # Calculate the beam kinetic energy per amu and normalise to keV
-    xvcs = (
-        beam_velcoity**2 * constants.atomic_mass_unit / (constants.kiloelectron_volt)
-    )
+    xvcs = beam_velcoity**2 * constants.atomic_mass_unit / (constants.kiloelectron_volt)
 
     # Calculate the fusion reaction cross-section from beam kinetic energy
     cross_section = _beam_fusion_cross_section(xvcs)

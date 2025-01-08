@@ -1,14 +1,14 @@
 import numpy as np
 
 from process.fortran import (
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    heat_transport_variables,
+    pf_power_variables,
     physics_variables,
     tfcoil_variables,
-    pf_power_variables,
-    current_drive_variables,
-    cost_variables,
-    divertor_variables,
     times_variables,
-    heat_transport_variables,
 )
 
 

@@ -3,8 +3,10 @@
 Define fixtures that will be shared across unit test modules.
 """
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from process.init import init_all_module_vars
 
 
