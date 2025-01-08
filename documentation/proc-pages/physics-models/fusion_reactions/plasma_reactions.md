@@ -56,7 +56,7 @@ profiles
 
 The fractional composition of the 'fuel' ions ($\text{D}$, $\text{T}$ and $^3\text{He}$) is
 controlled using the three variables `f_deuterium`, `f_tritium` and `f_helium3`, respectively.
-More information about setting seeded impurities and simulating first wall sputtering can be found in the [impurities and radiation section](../plasma_radiation_impurities.md)
+More information about setting seeded impurities and simulating first wall sputtering can be found in the [composition and impurities section](../plasma_composition.md)
 
 !!! note "Reactions not calculated"
 
