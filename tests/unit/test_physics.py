@@ -1191,7 +1191,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_helium3: Any = None
 
-    dnalp: Any = None
+    nd_alphas: Any = None
 
     dene: Any = None
 
@@ -1247,7 +1247,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_dlamie: Any = None
 
-    expected_dnalp: Any = None
+    expected_nd_alphas: Any = None
 
     expected_dnprot: Any = None
 
@@ -1321,7 +1321,7 @@ class PlasmaCompositionParam(NamedTuple):
             alphan=1,
             dnbeam=0,
             f_helium3=0,
-            dnalp=0,
+            nd_alphas=0,
             dene=7.5e19,
             dnprot=0,
             iscz=0,
@@ -1364,7 +1364,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_dnz=28875000000000004,
             expected_m_beam_amu=2.01355414,
             expected_dlamie=17.810652035055568,
-            expected_dnalp=7.5e18,
+            expected_nd_alphas=7.5e18,
             expected_dnprot=7500000000000000,
             expected_first_call=0,
         ),
@@ -1441,7 +1441,7 @@ class PlasmaCompositionParam(NamedTuple):
             alphan=1,
             dnbeam=0,
             f_helium3=0,
-            dnalp=7.5e18,
+            nd_alphas=7.5e18,
             dene=7.5e19,
             dnprot=7500000000000000,
             iscz=0,
@@ -1484,7 +1484,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_dnz=28875000000000004,
             expected_m_beam_amu=2.01355414,
             expected_dlamie=17.810652035055568,
-            expected_dnalp=7.5e18,
+            expected_nd_alphas=7.5e18,
             expected_dnprot=20519498414548412,
             expected_first_call=0,
         ),
@@ -1581,7 +1581,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "rnfene", plasmacompositionparam.rnfene)
 
-    monkeypatch.setattr(physics_variables, "m_beam_amu", plasmacompositionparam.m_beam_amu)
+    monkeypatch.setattr(
+        physics_variables, "m_beam_amu", plasmacompositionparam.m_beam_amu
+    )
 
     monkeypatch.setattr(physics_variables, "dlamie", plasmacompositionparam.dlamie)
 
@@ -1605,7 +1607,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         physics_variables, "f_helium3", plasmacompositionparam.f_helium3
     )
 
-    monkeypatch.setattr(physics_variables, "dnalp", plasmacompositionparam.dnalp)
+    monkeypatch.setattr(
+        physics_variables, "nd_alphas", plasmacompositionparam.nd_alphas
+    )
 
     monkeypatch.setattr(physics_variables, "dene", plasmacompositionparam.dene)
 
@@ -1683,8 +1687,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_dlamie
     )
 
-    assert physics_variables.dnalp == pytest.approx(
-        plasmacompositionparam.expected_dnalp
+    assert physics_variables.nd_alphas == pytest.approx(
+        plasmacompositionparam.expected_nd_alphas
     )
 
     assert physics_variables.dnprot == pytest.approx(
@@ -1824,7 +1828,7 @@ class PhyauxParam(NamedTuple):
 
     deni: Any = None
 
-    dnalp: Any = None
+    nd_alphas: Any = None
 
     fusion_rate_density_total: Any = None
 
@@ -1862,7 +1866,7 @@ class PhyauxParam(NamedTuple):
             aspect=3,
             dene=7.5e19,
             deni=5.8589175702454272e19,
-            dnalp=7.5e18,
+            nd_alphas=7.5e18,
             fusion_rate_density_total=1.9852091609123786e17,
             alpha_rate_density_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
@@ -1883,7 +1887,7 @@ class PhyauxParam(NamedTuple):
             aspect=3,
             dene=7.5e19,
             deni=5.8576156204039725e19,
-            dnalp=7.5e18,
+            nd_alphas=7.5e18,
             fusion_rate_density_total=1.9843269653375773e17,
             alpha_rate_density_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
@@ -1921,7 +1925,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         aspect=phyauxparam.aspect,
         dene=phyauxparam.dene,
         deni=phyauxparam.deni,
-        dnalp=phyauxparam.dnalp,
+        nd_alphas=phyauxparam.nd_alphas,
         fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
         alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
         plasma_current=phyauxparam.plasma_current,

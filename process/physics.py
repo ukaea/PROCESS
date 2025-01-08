@@ -2322,7 +2322,7 @@ class Physics:
             physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
             sbar,
-            physics_variables.dnalp,
+            physics_variables.nd_alphas,
             physics_variables.taueff,
             physics_variables.vol_plasma,
         )
@@ -2665,7 +2665,7 @@ class Physics:
         and is used in conjunction with the new impurity radiation model
         """
         # Alpha ash portion
-        physics_variables.dnalp = physics_variables.dene * physics_variables.ralpne
+        physics_variables.nd_alphas = physics_variables.dene * physics_variables.ralpne
 
         # Protons
         # This calculation will be wrong on the first call as the particle
@@ -2675,12 +2675,12 @@ class Physics:
         if physics_variables.alpha_rate_density_total < 1.0e-6:  # not calculated yet...
             physics_variables.dnprot = max(
                 physics_variables.protium * physics_variables.dene,
-                physics_variables.dnalp * (physics_variables.f_helium3 + 1.0e-3),
+                physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             physics_variables.dnprot = max(
                 physics_variables.protium * physics_variables.dene,
-                physics_variables.dnalp
+                physics_variables.nd_alphas
                 * physics_variables.proton_rate_density
                 / physics_variables.alpha_rate_density_total,
             )
@@ -2707,7 +2707,7 @@ class Physics:
         # znfuel is the sum of Zi.ni for the three fuel ions
         znfuel = (
             physics_variables.dene
-            - 2.0 * physics_variables.dnalp
+            - 2.0 * physics_variables.nd_alphas
             - physics_variables.dnprot
             - physics_variables.dnbeam
             - znimp
@@ -2750,7 +2750,7 @@ class Physics:
         # Total ion density
         physics_variables.dnitot = (
             physics_variables.deni
-            + physics_variables.dnalp
+            + physics_variables.nd_alphas
             + physics_variables.dnprot
             + physics_variables.dnbeam
             + physics_variables.dnz
@@ -2832,14 +2832,13 @@ class Physics:
         # Average atomic masses of injected fuel species in the neutral beams
         # Only deuterium and tritium in the beams
         physics_variables.m_beam_amu = (
-            (constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam))
-            + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
-        )
+            constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam)
+        ) + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
 
         # Density weighted mass
         physics_variables.aion = (
             physics_variables.m_fuel_amu * physics_variables.deni
-            + (constants.m_alpha_amu * physics_variables.dnalp)
+            + (constants.m_alpha_amu * physics_variables.nd_alphas)
             + physics_variables.dnprot
             + physics_variables.m_beam_amu * physics_variables.dnbeam
         )
@@ -2858,7 +2857,7 @@ class Physics:
             physics_variables.f_deuterium * physics_variables.deni / 2.0
             + physics_variables.f_tritium * physics_variables.deni / 3.0
             + 4.0 * physics_variables.f_helium3 * physics_variables.deni / 3.0
-            + physics_variables.dnalp
+            + physics_variables.nd_alphas
             + physics_variables.dnprot
             + (1.0 - current_drive_variables.f_tritium_beam)
             * physics_variables.dnbeam
@@ -2885,7 +2884,7 @@ class Physics:
         alpha_rate_density_total,
         plasma_current,
         sbar,
-        dnalp,
+        nd_alphas,
         taueff,
         vol_plasma,
     ):
@@ -2894,7 +2893,7 @@ class Physics:
         aspect : input real :  plasma aspect ratio
         dene   : input real :  electron density (/m3)
         deni   : input real :  fuel ion density (/m3)
-        dnalp  : input real :  alpha ash density (/m3)
+        nd_alphas  : input real :  alpha ash density (/m3)
         fusion_rate_density_total : input real :  fusion reaction rate from plasma and beams (/m3/s)
         alpha_rate_density_total  : input real :  alpha particle production rate (/m3/s)
         plasma_current: input real :  plasma current (A)
@@ -2924,7 +2923,7 @@ class Physics:
         # Number of alphas / alpha production rate
 
         if alpha_rate_density_total != 0.0:
-            taup = dnalp / alpha_rate_density_total
+            taup = nd_alphas / alpha_rate_density_total
         else:  # only likely if DD is only active fusion reaction
             taup = 0.0
 
@@ -2941,7 +2940,7 @@ class Physics:
         # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
         # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
         if physics_variables.burnup_in <= 1.0e-9:
-            burnup = dnalp / (dnalp + 0.5 * deni) / physics_variables.tauratio
+            burnup = nd_alphas / (nd_alphas + 0.5 * deni) / physics_variables.tauratio
         else:
             burnup = physics_variables.burnup_in
         # Fuel burnup rate (reactions/second) (previously Amps)
@@ -3954,8 +3953,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Helium ion density (thermalised ions only) (/m3)",
-            "(dnalp)",
-            physics_variables.dnalp,
+            "(nd_alphas)",
+            physics_variables.nd_alphas,
             "OP ",
         )
         po.ovarre(

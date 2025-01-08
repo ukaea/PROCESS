@@ -25,7 +25,7 @@ class InitNeoclassicsParam(NamedTuple):
     ti0: Any = None
     ni0: Any = None
     f_deuterium: Any = None
-    dnalp: Any = None
+    nd_alphas: Any = None
     rminor: Any = None
     rmajor: Any = None
     bt: Any = None
@@ -74,7 +74,7 @@ class InitNeoclassicsParam(NamedTuple):
             ti0=12.579710000000002,
             ni0=2.3930858160000005e20,
             f_deuterium=0.5,
-            dnalp=2.9820384000000004e19,
+            nd_alphas=2.9820384000000004e19,
             rminor=1.7993820274145451,
             rmajor=22.16,
             bt=5.2400000000000002,
@@ -982,7 +982,7 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     monkeypatch.setattr(
         physics_variables, "f_deuterium", initneoclassicsparam.f_deuterium
     )
-    monkeypatch.setattr(physics_variables, "dnalp", initneoclassicsparam.dnalp)
+    monkeypatch.setattr(physics_variables, "nd_alphas", initneoclassicsparam.nd_alphas)
     monkeypatch.setattr(physics_variables, "rminor", initneoclassicsparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", initneoclassicsparam.rmajor)
     monkeypatch.setattr(physics_variables, "bt", initneoclassicsparam.bt)
