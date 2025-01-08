@@ -423,7 +423,7 @@
     {
       "no": 83,
       "level": 2,
-      "message": "POHM: Negative plasma resistance rplas"
+      "message": "POHM: Negative plasma resistance res_plasma"
     },
     {
       "no": 84,

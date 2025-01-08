@@ -689,10 +689,10 @@ module physics_variables
   real(dp) :: neutron_power_density_plasma
   !! neutron fusion power per volume just from plasma (MW/m3)
 
-  real(dp) :: pohmmw
+  real(dp) :: p_plasma_ohmic_mw
   !! ohmic heating power (MW)
 
-  real(dp) :: pohmpv
+  real(dp) :: pden_plasma_ohmic_mw
   !! ohmic heating power per volume (MW/m3)
 
   real(dp) :: powerht
@@ -831,9 +831,9 @@ module physics_variables
   !! n_oxygen / n_e
 
   real(dp) :: rpfac
-  !! neo-classical correction factor to rplas
+  !! neo-classical correction factor to res_plasma
 
-  real(dp) :: rplas
+  real(dp) :: res_plasma
   !! plasma resistance (ohm)
 
   real(dp) :: res_time
@@ -1088,8 +1088,8 @@ module physics_variables
     neutron_power_total = 0.0D0
     neutron_power_density_total = 0.0D0
     neutron_power_density_plasma = 0.0D0
-    pohmmw = 0.0D0
-    pohmpv = 0.0D0
+    p_plasma_ohmic_mw = 0.0D0
+    pden_plasma_ohmic_mw = 0.0D0
     powerht = 0.0D0
     fusion_power = 0.0D0
     pperim = 0.0D0
@@ -1128,7 +1128,7 @@ module physics_variables
     rnfene = 0.0D0
     rnone = 0.0D0
     rpfac = 0.0D0
-    rplas = 0.0D0
+    res_plasma = 0.0D0
     res_time = 0.0D0
     sarea = 0.0D0
     sareao = 0.0D0

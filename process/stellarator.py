@@ -4317,7 +4317,7 @@ class Stellarator:
         powht = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pradpv * physics_variables.plasma_volume
         )
         powht = max(
@@ -4389,7 +4389,7 @@ class Stellarator:
         physics_variables.rad_fraction_total = physics_variables.pradmw / (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.pinjmw
         )
 
@@ -4925,7 +4925,7 @@ class Stellarator:
             abs(
                 current_drive_variables.pinjmw
                 + current_drive_variables.porbitlossmw
-                + physics_variables.pohmmw
+                + physics_variables.p_plasma_ohmic_mw
             )
             < 1e-6
         ):
@@ -4934,7 +4934,7 @@ class Stellarator:
             current_drive_variables.bigq = physics_variables.fusion_power / (
                 current_drive_variables.pinjmw
                 + current_drive_variables.porbitlossmw
-                + physics_variables.pohmmw
+                + physics_variables.p_plasma_ohmic_mw
             )
 
         if output:

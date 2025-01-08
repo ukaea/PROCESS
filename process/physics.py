@@ -64,7 +64,7 @@ def vscalc(
     gamma,
     kappa,
     rmajor,
-    rplas,
+    res_plasma,
     plasma_current,
     t_fusion_ramp,
     t_burn,
@@ -81,7 +81,7 @@ def vscalc(
     plasma_current: input real :  plasma current (A)
     rli    : input real :  plasma normalised inductivity
     rmajor : input real :  plasma major radius (m)
-    rplas  : input real :  plasma resistance (ohm)
+    res_plasma  : input real :  plasma resistance (ohm)
     t_fusion_ramp  : input real :  heating time (s)
     t_burn  : input real :  burn time (s)
     phiint : output real : internal plasma volt-seconds (Wb)
@@ -125,7 +125,7 @@ def vscalc(
     # Include enhancement factor in flattop V-s requirement
     # to account for MHD sawtooth effects.
 
-    vburn = plasma_current * rplas * inductive_current_fraction * csawth
+    vburn = plasma_current * res_plasma * inductive_current_fraction * csawth
 
     # N.B. t_burn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
@@ -2153,11 +2153,11 @@ class Physics:
 
         # Calculate ohmic power
         (
-            physics_variables.pohmpv,
-            physics_variables.pohmmw,
+            physics_variables.pden_plasma_ohmic_mw,
+            physics_variables.p_plasma_ohmic_mw,
             physics_variables.rpfac,
-            physics_variables.rplas,
-        ) = self.pohm(
+            physics_variables.res_plasma,
+        ) = self.plasma_ohmic_heating(
             physics_variables.inductive_current_fraction,
             physics_variables.kappa95,
             physics_variables.plasma_current,
@@ -2199,7 +2199,7 @@ class Physics:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + pinj
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pradmw
         )
 
@@ -2221,7 +2221,9 @@ class Physics:
 
         # Resistive diffusion time = current penetration time ~ mu0.a^2/resistivity
         physics_variables.res_time = res_diff_time(
-            physics_variables.rmajor, physics_variables.rplas, physics_variables.kappa95
+            physics_variables.rmajor,
+            physics_variables.res_plasma,
+            physics_variables.kappa95,
         )
 
         # Power transported to the first wall by escaped alpha particles
@@ -2313,7 +2315,7 @@ class Physics:
             physics_variables.gamma,
             physics_variables.kappa,
             physics_variables.rmajor,
-            physics_variables.rplas,
+            physics_variables.res_plasma,
             physics_variables.plasma_current,
             times_variables.t_fusion_ramp,
             times_variables.t_burn,
@@ -2487,7 +2489,7 @@ class Physics:
         physics_module.total_loss_power = 1e6 * (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.pinjmw
         )
         physics_module.rad_fraction_lcfs = (
@@ -2971,23 +2973,47 @@ class Physics:
         return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
 
     @staticmethod
-    def pohm(
-        inductive_current_fraction,
-        kappa95,
-        plasma_current,
-        rmajor,
-        rminor,
-        ten,
-        plasma_volume,
-        zeff,
-    ):
-        # Density weighted electron temperature in 10 keV units
+    def plasma_ohmic_heating(
+        inductive_current_fraction: float,
+        kappa95: float,
+        plasma_current: float,
+        rmajor: float,
+        rminor: float,
+        ten: float,
+        plasma_volume: float,
+        zeff: float,
+    ) -> Tuple[float, float, float, float]:
+        """
+        Calculate the ohmic heating power and related parameters.
 
+        Args:
+            inductive_current_fraction (float): Fraction of plasma current driven inductively.
+            kappa95 (float): Plasma elongation at 95% surface.
+            plasma_current (float): Plasma current (A).
+            rmajor (float): Major radius (m).
+            rminor (float): Minor radius (m).
+            ten (float): Density weighted average electron temperature (keV).
+            plasma_volume (float): Plasma volume (m^3).
+            zeff (float): Plasma effective charge.
+
+        Returns:
+            Tuple[float, float, float, float]: Tuple containing:
+                - pden_plasma_ohmic_mw (float): Ohmic heating power per unit volume (MW/m^3).
+                - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
+                - rpfac (float): Neo-classical resistivity enhancement factor.
+                - res_plasma (float): Plasma resistance (ohm).
+
+        Notes:
+
+        References:
+            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+
+        """
+        # Density weighted electron temperature in 10 keV units
         t10 = ten / 10.0
 
-        # Plasma resistance, from loop voltage calculation in IPDG89
-
-        rplas = (
+        # Plasma resistance, from loop voltage calculation in ITER Physics Design Guidelines: 1989
+        res_plasma = (
             physics_variables.plasma_res_factor
             * 2.15e-9
             * zeff
@@ -2996,36 +3022,32 @@ class Physics:
         )
 
         # Neo-classical resistivity enhancement factor
-        # Taken from  N. A. Uckan et al, Fusion Technology 13 (1988) p.411.
-        # The expression is valid for aspect ratios in the range 2.5--4.
-
+        # Taken from ITER Physics Design Guidelines: 1989
+        # The expression is valid for aspect ratios in the range 2.5 to 4.0
         rpfac = 4.3 - 0.6 * rmajor / rminor
-        rplas = rplas * rpfac
+        res_plasma = res_plasma * rpfac
 
         # Check to see if plasma resistance is negative
         # (possible if aspect ratio is too high)
-
-        if rplas <= 0.0:
-            error_handling.fdiags[0] = rplas
+        if res_plasma <= 0.0:
+            error_handling.fdiags[0] = res_plasma
             error_handling.fdiags[1] = physics_variables.aspect
             error_handling.report_error(83)
 
         # Ohmic heating power per unit volume
-        # Corrected from: pohmpv = (inductive_current_fraction*plasma_current)**2 * ...
-
-        pohmpv = (
+        # Corrected from: pden_plasma_ohmic_mw = (inductive_current_fraction*plasma_current)**2 * ...
+        pden_plasma_ohmic_mw = (
             inductive_current_fraction
             * plasma_current**2
-            * rplas
+            * res_plasma
             * 1.0e-6
             / plasma_volume
         )
 
         # Total ohmic heating power
+        p_plasma_ohmic_mw = pden_plasma_ohmic_mw * plasma_volume
 
-        pohmmw = pohmpv * plasma_volume
-
-        return pohmpv, pohmmw, rpfac, rplas
+        return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, rpfac, res_plasma
 
     @staticmethod
     def calculate_plasma_current(
@@ -4411,7 +4433,7 @@ class Physics:
         tot_power_plasma = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.pinjmw
         )
         po.ovarre(
@@ -4632,8 +4654,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Ohmic heating power (MW)",
-            "(pohmmw)",
-            physics_variables.pohmmw,
+            "(p_plasma_ohmic_mw)",
+            physics_variables.p_plasma_ohmic_mw,
             "OP ",
         )
         po.ovarrf(
@@ -5481,15 +5503,15 @@ class Physics:
                 "Loop voltage during burn (V)",
                 "(vburn)",
                 physics_variables.plasma_current
-                * physics_variables.rplas
+                * physics_variables.res_plasma
                 * physics_variables.inductive_current_fraction,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Plasma resistance (ohm)",
-                "(rplas)",
-                physics_variables.rplas,
+                "(res_plasma)",
+                physics_variables.res_plasma,
                 "OP ",
             )
 
@@ -6430,7 +6452,7 @@ class Physics:
             - physics_variables.f_alpha_plasma
             * physics_variables.alpha_power_density_total
             - physics_variables.charged_power_density
-            - physics_variables.pohmpv
+            - physics_variables.pden_plasma_ohmic_mw
         )
 
         # Take into account whether injected power is included in tau_e
@@ -6555,7 +6577,7 @@ class Physics:
         powerht = (
             physics_variables.f_alpha_plasma * alpha_power_total
             + non_alpha_charged_power
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
         )
 
         # If the device is not ignited, add the injected auxiliary power
@@ -7429,17 +7451,17 @@ def calculate_poloidal_beta(btot, bp, beta):
     return beta * (btot / bp) ** 2
 
 
-def res_diff_time(rmajor, rplas, kappa95):
+def res_diff_time(rmajor, res_plasma, kappa95):
     """Calculates resistive diffusion time
 
     Author: James Morris (UKAEA)
 
     :param rmajor: plasma major radius (m)
-    :param rplas: plasma resistivity (Ohms)
+    :param res_plasma: plasma resistivity (Ohms)
     :param kappa95: plasma elongation at 95% flux surface
     """
 
-    return 2 * constants.rmu0 * rmajor / (rplas * kappa95)
+    return 2 * constants.rmu0 * rmajor / (res_plasma * kappa95)
 
 
 def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_current):

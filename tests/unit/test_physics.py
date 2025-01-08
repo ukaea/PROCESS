@@ -1710,7 +1710,7 @@ class VscalcParam(NamedTuple):
 
     rmajor: Any = None
 
-    rplas: Any = None
+    res_plasma: Any = None
 
     t_burn: Any = None
 
@@ -1741,7 +1741,7 @@ class VscalcParam(NamedTuple):
             plasma_current=18398455.678867526,
             rli=1.2064840230894305,
             rmajor=8,
-            rplas=3.7767895536275952e-09,
+            res_plasma=3.7767895536275952e-09,
             t_burn=1000,
             t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
@@ -1760,7 +1760,7 @@ class VscalcParam(NamedTuple):
             plasma_current=18398455.678867526,
             rli=1.2064840230894305,
             rmajor=8,
-            rplas=3.7767895536275952e-09,
+            res_plasma=3.7767895536275952e-09,
             t_burn=0,
             t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
@@ -1791,7 +1791,7 @@ def test_vscalc(vscalcparam):
         plasma_current=vscalcparam.plasma_current,
         rli=vscalcparam.rli,
         rmajor=vscalcparam.rmajor,
-        rplas=vscalcparam.rplas,
+        res_plasma=vscalcparam.res_plasma,
         t_burn=vscalcparam.t_burn,
         t_fusion_ramp=vscalcparam.t_fusion_ramp,
         rmu0=constants.rmu0,
@@ -1969,13 +1969,13 @@ class PohmParam(NamedTuple):
 
     zeff: Any = None
 
-    expected_pohmpv: Any = None
+    expected_pden_plasma_ohmic_mw: Any = None
 
-    expected_pohmmw: Any = None
+    expected_p_plasma_ohmic_mw: Any = None
 
     expected_rpfac: Any = None
 
-    expected_rplas: Any = None
+    expected_res_plasma: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1992,16 +1992,16 @@ class PohmParam(NamedTuple):
             ten=12.626131115905864,
             plasma_volume=1888.1711539956691,
             zeff=2.0909945616489103,
-            expected_pohmpv=0.0004062519138005805,
-            expected_pohmmw=0.7670731448937912,
+            expected_pden_plasma_ohmic_mw=0.0004062519138005805,
+            expected_p_plasma_ohmic_mw=0.7670731448937912,
             expected_rpfac=2.5,
-            expected_rplas=3.7767895536275952e-09,
+            expected_res_plasma=3.7767895536275952e-09,
         ),
     ),
 )
 def test_pohm(pohmparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for pohm.
+    Automatically generated Regression Unit Test for plasma_ohmic_heating.
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
@@ -2018,7 +2018,12 @@ def test_pohm(pohmparam, monkeypatch, physics):
         physics_variables, "plasma_res_factor", pohmparam.plasma_res_factor
     )
 
-    pohmpv, pohmmw, rpfac, rplas = physics.pohm(
+    (
+        pden_plasma_ohmic_mw,
+        p_plasma_ohmic_mw,
+        rpfac,
+        res_plasma,
+    ) = physics.plasma_ohmic_heating(
         inductive_current_fraction=pohmparam.inductive_current_fraction,
         kappa95=pohmparam.kappa95,
         plasma_current=pohmparam.plasma_current,
@@ -2029,13 +2034,15 @@ def test_pohm(pohmparam, monkeypatch, physics):
         zeff=pohmparam.zeff,
     )
 
-    assert pohmpv == pytest.approx(pohmparam.expected_pohmpv)
+    assert pden_plasma_ohmic_mw == pytest.approx(
+        pohmparam.expected_pden_plasma_ohmic_mw
+    )
 
-    assert pohmmw == pytest.approx(pohmparam.expected_pohmmw)
+    assert p_plasma_ohmic_mw == pytest.approx(pohmparam.expected_p_plasma_ohmic_mw)
 
     assert rpfac == pytest.approx(pohmparam.expected_rpfac)
 
-    assert rplas == pytest.approx(pohmparam.expected_rplas)
+    assert res_plasma == pytest.approx(pohmparam.expected_res_plasma)
 
 
 class CalculateDensityLimitParam(NamedTuple):
@@ -2140,7 +2147,7 @@ class PcondParam(NamedTuple):
 
     kappaa_ipb: Any = None
 
-    pohmmw: Any = None
+    p_plasma_ohmic_mw: Any = None
 
     f_alpha_plasma: Any = None
 
@@ -2225,7 +2232,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=32,
@@ -2269,7 +2276,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=33,
@@ -2313,7 +2320,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=34,
@@ -2357,7 +2364,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=35,
@@ -2401,7 +2408,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=36,
@@ -2445,7 +2452,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=37,
@@ -2489,7 +2496,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=38,
@@ -2533,7 +2540,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=39,
@@ -2577,7 +2584,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=40,
@@ -2621,7 +2628,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=41,
@@ -2665,7 +2672,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=42,
@@ -2709,7 +2716,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=43,
@@ -2753,7 +2760,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=44,
@@ -2797,7 +2804,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=45,
@@ -2841,7 +2848,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=46,
@@ -2885,7 +2892,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=47,
@@ -2947,7 +2954,9 @@ def test_pcond(pcondparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "kappaa_ipb", pcondparam.kappaa_ipb)
 
-    monkeypatch.setattr(physics_variables, "pohmmw", pcondparam.pohmmw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", pcondparam.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "f_alpha_plasma", pcondparam.f_alpha_plasma)
 
