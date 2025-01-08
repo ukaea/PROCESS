@@ -161,7 +161,9 @@ class DCLL:
                 physics_variables.neutron_power_total * 2 * fwbs_variables.fdiv
             )
             # Radiation power incident on divertor (MW)
-            fwbs_variables.praddiv = physics_variables.pradmw * 2 * fwbs_variables.fdiv
+            fwbs_variables.praddiv = (
+                physics_variables.p_plasma_rad_mw * 2 * fwbs_variables.fdiv
+            )
         else:
             # Single null configuration
             # Nuclear heating in the divertor (MW), neutron power times fdiv
@@ -169,20 +171,24 @@ class DCLL:
                 physics_variables.neutron_power_total * fwbs_variables.fdiv
             )
             # Radiation power incident on divertor (MW)
-            fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
+            fwbs_variables.praddiv = (
+                physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+            )
 
         # HCD Apperatus
 
         # No nuclear heating of the H & CD
         fwbs_variables.pnuchcd = 0
         # Radiation power incident on HCD apparatus (MW)
-        fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
+        fwbs_variables.pradhcd = physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
 
         # FW
 
         # Radiation power incident on first wall (MW)
         fwbs_variables.pradfw = (
-            physics_variables.pradmw - fwbs_variables.praddiv - fwbs_variables.pradhcd
+            physics_variables.p_plasma_rad_mw
+            - fwbs_variables.praddiv
+            - fwbs_variables.pradhcd
         )
 
         # Surface heat flux on first wall (MW)

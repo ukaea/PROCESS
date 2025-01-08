@@ -429,7 +429,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      9.1277E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3317E+02 OP 
- Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (pradmw)______________________      2.2444E+02 OP 
+ Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2444E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7763E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (photon_wall)_________________      1.7591E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 

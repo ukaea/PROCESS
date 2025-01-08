@@ -137,7 +137,7 @@ class ProcessTracker:
         "kappa95",
         "neped",
         "dene",
-        "pradmw",
+        "p_plasma_rad_mw",
         "ne0",
         "aux_current_fraction",
         "nd_impurities",

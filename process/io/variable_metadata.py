@@ -242,7 +242,7 @@ var_dicts = {
     "pdivt": VariableMetadata(
         latex=r"$P_{\mathrm{sep}}$ [$MW$]", description="Power to divertor", units="MW"
     ),
-    "pradmw": VariableMetadata(
+    "p_plasma_rad_mw": VariableMetadata(
         latex=r"$P_{\mathrm{rad}}$ [$MW$]", description="Radiation power", units="MW"
     ),
     "pdivtbt_over_qar": VariableMetadata(

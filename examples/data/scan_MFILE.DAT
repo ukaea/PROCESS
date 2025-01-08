@@ -288,7 +288,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
@@ -1283,7 +1283,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
@@ -2278,7 +2278,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
@@ -3273,7 +3273,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
@@ -4268,7 +4268,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
@@ -5263,7 +5263,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
@@ -6258,7 +6258,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
@@ -7253,7 +7253,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
@@ -8248,7 +8248,7 @@
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
- Total_radiation_power_(MW)______________________________________________ (pradmw)______________________      2.6097E+02 OP 
+ Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
  Core_radiation_fraction_=_total_radiation_in_core_/_total_power_deposite (rad_fraction_core)___________      6.0001E-01 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
