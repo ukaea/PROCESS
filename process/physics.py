@@ -2673,12 +2673,12 @@ class Physics:
         # Issue #557 Allow protium impurity to be specified: 'protium'
         # This will override the calculated value which is a minimum.
         if physics_variables.alpha_rate_density_total < 1.0e-6:  # not calculated yet...
-            physics_variables.dnprot = max(
+            physics_variables.nd_protons = max(
                 physics_variables.protium * physics_variables.dene,
                 physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
             )  # rough estimate
         else:
-            physics_variables.dnprot = max(
+            physics_variables.nd_protons = max(
                 physics_variables.protium * physics_variables.dene,
                 physics_variables.nd_alphas
                 * physics_variables.proton_rate_density
@@ -2708,7 +2708,7 @@ class Physics:
         znfuel = (
             physics_variables.dene
             - 2.0 * physics_variables.nd_alphas
-            - physics_variables.dnprot
+            - physics_variables.nd_protons
             - physics_variables.dnbeam
             - znimp
         )
@@ -2723,7 +2723,7 @@ class Physics:
         impurity_radiation_module.impurity_arr_frac[
             impurity_radiation.element2index("H_")
         ] = (
-            physics_variables.dnprot
+            physics_variables.nd_protons
             + (physics_variables.f_deuterium + physics_variables.f_tritium)
             * physics_variables.deni
             + physics_variables.dnbeam
@@ -2751,7 +2751,7 @@ class Physics:
         physics_variables.dnitot = (
             physics_variables.deni
             + physics_variables.nd_alphas
-            + physics_variables.dnprot
+            + physics_variables.nd_protons
             + physics_variables.dnbeam
             + physics_variables.dnz
         )
@@ -2839,7 +2839,7 @@ class Physics:
         physics_variables.aion = (
             physics_variables.m_fuel_amu * physics_variables.deni
             + (constants.m_alpha_amu * physics_variables.nd_alphas)
-            + physics_variables.dnprot
+            + physics_variables.nd_protons
             + physics_variables.m_beam_amu * physics_variables.dnbeam
         )
         for imp in range(impurity_radiation_module.n_impurities):
@@ -2858,7 +2858,7 @@ class Physics:
             + physics_variables.f_tritium * physics_variables.deni / 3.0
             + 4.0 * physics_variables.f_helium3 * physics_variables.deni / 3.0
             + physics_variables.nd_alphas
-            + physics_variables.dnprot
+            + physics_variables.nd_protons
             + (1.0 - current_drive_variables.f_tritium_beam)
             * physics_variables.dnbeam
             / 2.0
@@ -3960,8 +3960,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Proton density (/m3)",
-            "(dnprot)",
-            physics_variables.dnprot,
+            "(nd_protons)",
+            physics_variables.nd_protons,
             "OP ",
         )
         if physics_variables.protium > 1.0e-10:
