@@ -4394,7 +4394,7 @@ class Stellarator:
                     / build_variables.fwarea
                 )
 
-        constraint_variables.peakradwallload = (
+        constraint_variables.p_fw_rad_max_mw = (
             physics_variables.p_fw_rad_mw * constraint_variables.peakfactrad
         )
 
