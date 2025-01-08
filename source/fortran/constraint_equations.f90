@@ -2649,9 +2649,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0d0 - fpsepbqar * psepbqarmax / ((pdivt*bt)/(q95*aspect*rmajor))
+      tmp_cc = 1.0d0 - fpsepbqar * psepbqarmax / ((pdivt*bt)/(3.3*aspect*rmajor))
       tmp_con = psepbqarmax
-      tmp_err = (pdivt*bt)/(q95*aspect*rmajor) - psepbqarmax
+      tmp_err = (pdivt*bt)/(3.3*aspect*rmajor) - psepbqarmax
       tmp_symbol = '<'
       tmp_units = 'MWT/m'
 
