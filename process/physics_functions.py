@@ -551,16 +551,36 @@ class FusionReactionRate:
         physics_variables.f_dd_branching_trit = self.f_dd_branching_trit
 
 
-def radpwr(plasma_profile):
-    """This routine finds the radiation powers in MW/m3 by calling
-    relevant routines.
+@dataclass
+class RadpwrData:
+    """DataClass which holds the output of the function radpwr"""
+
+    psyncpv: float
+    pcoreradpv: float
+    pedgeradpv: float
+    pradpv: float
+
+
+def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
+    """
+    Calculate the radiation powers in MW/m^3 by calling relevant routines.
+
+    This function computes the radiation power densities for the plasma, including
+    impurity radiation and synchrotron radiation. It returns a dataclass containing
+    the calculated radiation power densities.
+
+    Parameters:
+        plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
+
+    Returns:
+        RadpwrData: A dataclass containing the following radiation power densities:
+            - psyncpv (float): Synchrotron radiation power per unit volume (MW/m^3).
+            - pcoreradpv (float): Total core radiation power per unit volume (MW/m^3).
+            - pedgeradpv (float): Edge radiation power per unit volume (MW/m^3).
+            - pradpv (float): Total radiation power per unit volume (MW/m^3).
+
     Author:
         P J Knight, CCFE, Culham Science Centre
-
-    :param plasma_profile:
-    :type plasma_profile: PlasmaProfile
-    :return: RadpwrData - dataclass returning radiation power
-    :rtype: DataClass
     """
     imp_rad = impurity.ImpurityRadiation(plasma_profile)
     imp_rad.calculate_imprad()
@@ -568,14 +588,11 @@ def radpwr(plasma_profile):
     pedgeradpv = imp_rad.radtot - imp_rad.radcore
 
     # Synchrotron radiation power/volume; assumed to be from core only.
-    # Synchrotron radiation power/volume; assumed to be from core only.
     psyncpv = psync_albajar_fidone()
 
     # Total core radiation power/volume.
-    # Total core radiation power/volume.
     pcoreradpv = imp_rad.radcore + psyncpv
 
-    # Total radiation power/volume.
     # Total radiation power/volume.
     pradpv = imp_rad.radtot + psyncpv
 
@@ -794,16 +811,6 @@ def bosch_hale_reactivity(
 
     # Return np.ndarray of sigmav for each point in the ion temperature profile
     return sigmav
-
-
-@dataclass
-class RadpwrData:
-    """DataClass which holds the output of the function radpwr"""
-
-    psyncpv: float
-    pcoreradpv: float
-    pedgeradpv: float
-    pradpv: float
 
 
 def set_fusion_powers(

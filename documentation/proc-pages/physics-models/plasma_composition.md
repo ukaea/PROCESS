@@ -1,5 +1,11 @@
 # Plasma composition and impurities.
 
+Within `PROCESS` we always assume the plasma is quasi-neutral eg:
+
+$$
+n_{\text{e}} = \underbrace{n_{\text{i}}}_{\text{Fuel Ions}} + \underbrace{2n_{\text{e}}f_{\alpha}}_{\text{Alpha particles}} + \underbrace{n_{\text{e}}f_{\text{beam}}}_{\text{Neutral beams}} + \underbrace{\sum_j Z_j n_{\text{e}} f_j}_{\text{Impurities}}
+$$
+
 ## Plasma Composition Calculation | `plasma_composition()`
 
 This function sets the fractional makeups and determines the relative density and charges of different plasma species.
