@@ -2381,7 +2381,7 @@ class Physics:
         # Nominal mean photon wall load on entire first wall area including divertor and beam holes
         # Note that 'fwarea' excludes these, so they have been added back in.
         if physics_variables.iwalld == 1:
-            physics_variables.photon_wall = (
+            physics_variables.p_fw_rad_mw = (
                 physics_variables.ffwal
                 * physics_variables.p_plasma_rad_mw
                 / physics_variables.a_plasma_surface
@@ -2389,7 +2389,7 @@ class Physics:
         else:
             if physics_variables.idivrt == 2:
                 # Double Null configuration in - including SoL radiation
-                physics_variables.photon_wall = (
+                physics_variables.p_fw_rad_mw = (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
                 ) * physics_variables.p_plasma_rad_mw / build_variables.fwarea + (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
@@ -2398,7 +2398,7 @@ class Physics:
                 )
             else:
                 # Single null configuration - including SoL radaition
-                physics_variables.photon_wall = (
+                physics_variables.p_fw_rad_mw = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.p_plasma_rad_mw
                     / build_variables.fwarea
@@ -2409,7 +2409,7 @@ class Physics:
                 )
 
         constraint_variables.peakradwallload = (
-            physics_variables.photon_wall * constraint_variables.peakfactrad
+            physics_variables.p_fw_rad_mw * constraint_variables.peakfactrad
         )
 
         # Calculate the target imbalances
@@ -4546,8 +4546,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Nominal mean radiation load on inside surface of reactor (MW/m2)",
-            "(photon_wall)",
-            physics_variables.photon_wall,
+            "(p_fw_rad_mw)",
+            physics_variables.p_fw_rad_mw,
             "OP ",
         )
         po.ovarre(
