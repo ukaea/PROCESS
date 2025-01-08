@@ -293,7 +293,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
@@ -1288,7 +1288,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
@@ -2283,7 +2283,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
@@ -3278,7 +3278,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
@@ -4273,7 +4273,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
@@ -5268,7 +5268,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
@@ -6263,7 +6263,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
@@ -7258,7 +7258,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
@@ -8253,7 +8253,7 @@
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.6053E-01 OP 
- Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
+ Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 

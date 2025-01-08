@@ -236,7 +236,7 @@ contains
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
-      ft_current_ramp_up, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
+      ft_current_ramp_up, tcycmn, auxmin, zeffmax, f_fw_rad_max, fdtmp, fpoloidalpower, &
       fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta_poloidal_eps, fjohc, &
       fflutf, bmxlim, t_burn_min, fbeta_min, fecrh_ignition, fstr_wp, fncycle
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
@@ -1003,8 +1003,8 @@ contains
        case ('pdivtlim')
           call parse_real_variable('pdivtlim', pdivtlim, 0.1D0, 1.0D3, &
                'Minimum pdivt (MW) (con. 80, itvar. 153)')
-       case ('peakfactrad')
-          call parse_real_variable('peakfactrad', peakfactrad, 0.1D0, 10D0, &
+       case ('f_fw_rad_max')
+          call parse_real_variable('f_fw_rad_max', f_fw_rad_max, 0.1D0, 10D0, &
                'peaking factor for radiation wall load')
        case ('pnetelin')
           call parse_real_variable('pnetelin', pnetelin, 1.0D0, 1.0D4, &

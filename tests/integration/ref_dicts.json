@@ -3500,7 +3500,7 @@
         "pdrive": 23000000.0,
         "dt_power_total": 0.0,
         "dt_power_plasma": 0.0,
-        "peakfactrad": 3.33,
+        "f_fw_rad_max": 3.33,
         "peaking_factor": 1.0,
         "peakmva": 0.0,
         "peakpoloidalpower": 0.0,
@@ -10262,7 +10262,7 @@
         "pdrive": "IFE driver power reaching target (W) (`iteration variable 85`)",
         "dt_power_total": "deuterium-tritium fusion power, from plasma and beams (MW)",
         "dt_power_plasma": "deuterium-tritium fusion power, just from plasma (MW)",
-        "peakfactrad": "peaking factor for radiation wall load (`constraint equation 67`)",
+        "f_fw_rad_max": "peaking factor for radiation wall load (`constraint equation 67`)",
         "peaking_factor": "peaking factor for first wall heat loads. (Applied separately to inboard and outboard loads.\n Applies to both neutron and surface loads. Only used to calculate peak temperature - not\n the coolant flow rate.)",
         "peakmva": "peak MVA requirement",
         "peakpoloidalpower": "Peak absolute rate of change of stored energy in poloidal field (MW)",
@@ -13879,7 +13879,7 @@
             "lb": 1000000.0,
             "ub": 200000000.0
         },
-        "peakfactrad": {
+        "f_fw_rad_max": {
             "lb": 0.1,
             "ub": 10
         },
@@ -17456,7 +17456,7 @@
             "nbshinefmax",
             "nflutfmax",
             "pdivtlim",
-            "peakfactrad",
+            "f_fw_rad_max",
             "p_fw_rad_max_mw",
             "pnetelin",
             "powfmax",
@@ -20611,7 +20611,7 @@
         "pbase": "real_variable",
         "pdivtlim": "real_variable",
         "pdrive": "real_variable",
-        "peakfactrad": "real_variable",
+        "f_fw_rad_max": "real_variable",
         "peaking_factor": "real_variable",
         "pfbldgm3": "real_variable",
         "pfclres": "real_variable",
