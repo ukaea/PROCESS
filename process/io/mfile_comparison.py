@@ -129,7 +129,7 @@ BASELINE_LIST = [
     "teped",
     "neped",
     "zeff",
-    "dnz",
+    "nd_impurities",
     "taueff",
     "hfact",
     "tauelaw",

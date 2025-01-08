@@ -1167,7 +1167,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     zeff: Any = None
 
-    dnz: Any = None
+    nd_impurities: Any = None
 
     pcoef: Any = None
 
@@ -1241,7 +1241,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_zeff: Any = None
 
-    expected_dnz: Any = None
+    expected_nd_impurities: Any = None
 
     expected_m_beam_amu: Any = None
 
@@ -1309,7 +1309,7 @@ class PlasmaCompositionParam(NamedTuple):
             dlamee=0,
             rnbeam=0,
             zeff=0,
-            dnz=0,
+            nd_impurities=0,
             pcoef=0,
             alpha_rate_density_total=0,
             rnfene=0,
@@ -1361,7 +1361,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_f_alpha_ion=0.3154069116809366,
             expected_dlamee=17.510652035055571,
             expected_zeff=2.0909945616489103,
-            expected_dnz=28875000000000004,
+            expected_nd_impurities=28875000000000004,
             expected_m_beam_amu=2.01355414,
             expected_dlamie=17.810652035055568,
             expected_nd_alphas=7.5e18,
@@ -1429,7 +1429,7 @@ class PlasmaCompositionParam(NamedTuple):
             dlamee=17.510652035055571,
             rnbeam=0,
             zeff=2.0909945616489103,
-            dnz=28875000000000004,
+            nd_impurities=28875000000000004,
             pcoef=1.0521775929921553,
             alpha_rate_density_total=1.973996644759543e17,
             rnfene=0,
@@ -1481,7 +1481,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_f_alpha_ion=0.26903878212105858,
             expected_dlamee=17.510652035055571,
             expected_zeff=2.0909945616489103,
-            expected_dnz=28875000000000004,
+            expected_nd_impurities=28875000000000004,
             expected_m_beam_amu=2.01355414,
             expected_dlamie=17.810652035055568,
             expected_nd_alphas=7.5e18,
@@ -1575,7 +1575,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "zeff", plasmacompositionparam.zeff)
 
-    monkeypatch.setattr(physics_variables, "dnz", plasmacompositionparam.dnz)
+    monkeypatch.setattr(
+        physics_variables, "nd_impurities", plasmacompositionparam.nd_impurities
+    )
 
     monkeypatch.setattr(physics_variables, "pcoef", plasmacompositionparam.pcoef)
 
@@ -1687,7 +1689,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     assert physics_variables.zeff == pytest.approx(plasmacompositionparam.expected_zeff)
 
-    assert physics_variables.dnz == pytest.approx(plasmacompositionparam.expected_dnz)
+    assert physics_variables.nd_impurities == pytest.approx(
+        plasmacompositionparam.expected_nd_impurities
+    )
 
     assert physics_variables.m_beam_amu == pytest.approx(
         plasmacompositionparam.expected_m_beam_amu

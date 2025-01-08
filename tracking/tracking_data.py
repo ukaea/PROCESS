@@ -140,7 +140,7 @@ class ProcessTracker:
         "pradmw",
         "ne0",
         "aux_current_fraction",
-        "dnz",
+        "nd_impurities",
         "taueff",
         "te0",
         "pdivt",

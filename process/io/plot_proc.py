@@ -2392,7 +2392,9 @@ def plot_physics_info(axis, mfile_data, scan):
         "dlimit(7)"
     ].get_scan(scan)
 
-    dnz = mfile_data.data["dnz"].get_scan(scan) / mfile_data.data["dene"].get_scan(scan)
+    nd_impurities = mfile_data.data["nd_impurities"].get_scan(scan) / mfile_data.data[
+        "dene"
+    ].get_scan(scan)
 
     tepeak = mfile_data.data["te0"].get_scan(scan) / mfile_data.data["te"].get_scan(
         scan
@@ -2425,7 +2427,7 @@ def plot_physics_info(axis, mfile_data, scan):
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("zeff", r"$Z_{\mathrm{eff}}$", ""),
-        (dnz, r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$", ""),
+        (nd_impurities, r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("taueff", r"$\tau_e$", "s"),
         ("hfact", "H-factor", ""),
         (pthresh, "H-mode threshold", "MW"),

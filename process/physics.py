@@ -2741,10 +2741,10 @@ class Physics:
         )
 
         # Total impurity density
-        physics_variables.dnz = 0.0
+        physics_variables.nd_impurities = 0.0
         for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                physics_variables.dnz += (
+                physics_variables.nd_impurities += (
                     impurity_radiation_module.impurity_arr_frac[imp]
                     * physics_variables.dene
                 )
@@ -2755,7 +2755,7 @@ class Physics:
             + physics_variables.nd_alphas
             + physics_variables.nd_protons
             + physics_variables.nd_beam_ions
-            + physics_variables.dnz
+            + physics_variables.nd_impurities
         )
 
         # Set some (obsolescent) impurity fraction variables
@@ -3952,8 +3952,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total impurity density with Z > 2 (no He) (/m3)",
-            "(dnz)",
-            physics_variables.dnz,
+            "(nd_impurities)",
+            physics_variables.nd_impurities,
             "OP ",
         )
         po.ovarre(
