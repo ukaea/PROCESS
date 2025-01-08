@@ -116,7 +116,7 @@ class ProcessTracker:
         "pnucblkt",
         "triang",
         "triang95",
-        "pinnerzoneradmw",
+        "p_plasma_inner_rad_mw",
         "tesep",
         "ralpne",
         "wallmw",

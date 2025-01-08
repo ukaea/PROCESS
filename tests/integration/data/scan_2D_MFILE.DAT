@@ -432,7 +432,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.7889E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.7889E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3132E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.1921E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7628E-01 OP 
@@ -1595,7 +1595,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.8240E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.8240E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3308E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2132E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7759E-01 OP 
@@ -2758,7 +2758,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.8985E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.8985E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3558E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2457E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.8297E-01 OP 
@@ -3921,7 +3921,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.8956E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.8956E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3524E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2419E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.8205E-01 OP 
@@ -5084,7 +5084,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.8995E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.8995E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3412E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2311E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7851E-01 OP 
@@ -6247,7 +6247,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.8676E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.8676E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3238E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2106E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7466E-01 OP 
@@ -7410,7 +7410,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.8858E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.8858E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3234E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2120E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7410E-01 OP 
@@ -8573,7 +8573,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.9000E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.9000E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3386E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2286E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7776E-01 OP 
@@ -9736,7 +9736,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.8564E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.8564E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3434E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2290E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7959E-01 OP 
@@ -10899,7 +10899,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      8.9158E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.9158E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3503E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2419E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7992E-01 OP 
@@ -12062,7 +12062,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      9.0058E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      9.0058E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3537E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2543E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.8036E-01 OP 
@@ -13225,7 +13225,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      9.0074E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      9.0074E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3411E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2418E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7734E-01 OP 
@@ -14388,7 +14388,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      9.0607E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      9.0607E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3461E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2522E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.7752E-01 OP 
@@ -15551,7 +15551,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      9.1011E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      9.1011E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3661E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2762E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.8120E-01 OP 
@@ -16714,7 +16714,7 @@
  Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
- Radiation_power_from_inner_zone_(MW)____________________________________ (pinnerzoneradmw)_____________      9.1467E+01 OP 
+ Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      9.1467E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3867E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.3014E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.8500E-01 OP 

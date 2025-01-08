@@ -2125,7 +2125,7 @@ class Physics:
         physics_variables.pedgeradpv = radpwrdata.pedgeradpv
         physics_variables.pradpv = radpwrdata.pradpv
 
-        physics_variables.pinnerzoneradmw = (
+        physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pcoreradpv * physics_variables.vol_plasma
         )
         physics_variables.pouterzoneradmw = (
@@ -4508,8 +4508,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Radiation power from inner zone (MW)",
-            "(pinnerzoneradmw)",
-            physics_variables.pinnerzoneradmw,
+            "(p_plasma_inner_rad_mw)",
+            physics_variables.p_plasma_inner_rad_mw,
             "OP ",
         )
         po.ovarre(
@@ -5150,7 +5150,7 @@ class Physics:
                 self.outfile,
                 "Radiation power subtracted from plasma power balance (MW)",
                 "",
-                physics_variables.pinnerzoneradmw,
+                physics_variables.p_plasma_inner_rad_mw,
                 "OP ",
             )
             po.ocmmnt(self.outfile, "  (Radiation correction is core radiation power)")
@@ -5173,7 +5173,7 @@ class Physics:
                     / (
                         physics_variables.powerht
                         + physics_variables.psyncpv
-                        + physics_variables.pinnerzoneradmw
+                        + physics_variables.p_plasma_inner_rad_mw
                     )
                 )
                 ** 0.31,
