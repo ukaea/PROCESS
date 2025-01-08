@@ -4370,20 +4370,20 @@ class Stellarator:
 
         # Nominal mean photon wall load
         if physics_variables.iwalld == 1:
-            physics_variables.p_fw_rad_mw = (
+            physics_variables.pflux_fw_rad_mw = (
                 physics_variables.ffwal
                 * physics_variables.p_plasma_rad_mw
                 / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
-                physics_variables.p_fw_rad_mw = (
+                physics_variables.pflux_fw_rad_mw = (
                     (1.0e0 - fwbs_variables.fhole)
                     * physics_variables.p_plasma_rad_mw
                     / build_variables.fwarea
                 )
             else:
-                physics_variables.p_fw_rad_mw = (
+                physics_variables.pflux_fw_rad_mw = (
                     (
                         1.0e0
                         - fwbs_variables.fhole
@@ -4394,8 +4394,8 @@ class Stellarator:
                     / build_variables.fwarea
                 )
 
-        constraint_variables.p_fw_rad_max_mw = (
-            physics_variables.p_fw_rad_mw * constraint_variables.f_fw_rad_max
+        constraint_variables.pflux_fw_rad_max_mw = (
+            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
         )
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (

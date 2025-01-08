@@ -226,7 +226,7 @@ GENERIC_LIST = [
     "pinjmw",
     "pnetelmw",
     "wallmw",
-    "p_fw_rad_mw",
+    "pflux_fw_rad_mw",
     "ralpne",
     "p_plasma_inner_rad_mw",
     "p_plasma_rad_mw",
