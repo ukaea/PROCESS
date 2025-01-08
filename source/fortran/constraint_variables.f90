@@ -241,7 +241,7 @@ module constraint_variables
   real(dp) :: peakfactrad
   !! peaking factor for radiation wall load (`constraint equation 67`)
 
-  real(dp) :: peakradwallload
+  real(dp) :: p_fw_rad_max_mw
   !! Peak radiation wall load (MW/m^2) (`constraint equation 67`)
 
   real(dp) :: pnetelin
@@ -378,7 +378,7 @@ module constraint_variables
     nflutfmax = 1.0D23
     pdivtlim = 150.0D0
     peakfactrad = 3.33D0
-    peakradwallload = 0.0D0
+    p_fw_rad_max_mw = 0.0D0
     pnetelin = 1.0D3
     powfmax = 1.5D3
     psepbqarmax = 9.5D0

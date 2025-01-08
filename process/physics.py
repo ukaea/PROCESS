@@ -2408,7 +2408,7 @@ class Physics:
                     / build_variables.fwarea
                 )
 
-        constraint_variables.peakradwallload = (
+        constraint_variables.p_fw_rad_max_mw = (
             physics_variables.p_fw_rad_mw * constraint_variables.peakfactrad
         )
 
@@ -4567,8 +4567,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Peak radiation wall load (MW/m^2)",
-            "(peakradwallload)",
-            constraint_variables.peakradwallload,
+            "(p_fw_rad_max_mw)",
+            constraint_variables.p_fw_rad_max_mw,
             "OP ",
         )
         po.ovarre(

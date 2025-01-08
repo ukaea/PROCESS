@@ -439,7 +439,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7180E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.7210E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.7210E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.5972E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0020E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2234E+01 OP 
@@ -1602,7 +1602,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7346E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.7761E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.7761E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6119E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0112E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2371E+01 OP 
@@ -2765,7 +2765,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7600E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8609E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8609E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6196E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0160E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2128E+01 OP 
@@ -3928,7 +3928,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7571E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8512E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8512E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6224E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0178E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2196E+01 OP 
@@ -5091,7 +5091,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7487E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8230E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8230E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6250E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0194E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2511E+01 OP 
@@ -6254,7 +6254,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7326E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.7694E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.7694E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6199E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0162E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2724E+01 OP 
@@ -7417,7 +7417,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7337E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.7731E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.7731E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6231E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0182E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2820E+01 OP 
@@ -8580,7 +8580,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7467E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8165E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8165E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6254E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0197E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2575E+01 OP 
@@ -9743,7 +9743,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7470E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8174E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8174E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6193E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0158E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2337E+01 OP 
@@ -10906,7 +10906,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7571E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8512E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8512E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6298E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0224E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2479E+01 OP 
@@ -12069,7 +12069,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7668E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8834E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8834E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6394E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0285E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2599E+01 OP 
@@ -13232,7 +13232,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7570E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8509E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8509E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6388E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0281E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2824E+01 OP 
@@ -14395,7 +14395,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7652E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8780E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8780E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6476E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0336E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2952E+01 OP 
@@ -15558,7 +15558,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7840E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.9407E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.9407E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6563E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0390E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2804E+01 OP 
@@ -16721,7 +16721,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.8037E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      6.0063E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      6.0063E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.6654E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      1.0448E+00 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.2652E+01 OP 

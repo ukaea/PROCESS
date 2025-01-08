@@ -438,7 +438,7 @@
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (p_fw_rad_mw)_________________      1.7570E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (peakfactrad)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
- Peak_radiation_wall_load_(MW/m^2)_______________________________________ (peakradwallload)_____________      5.8507E-01 OP 
+ Peak_radiation_wall_load_(MW/m^2)_______________________________________ (p_fw_rad_max_mw)_____________      5.8507E-01 OP 
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.5907E+01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.9792E-01 OP 
  Radiation_power_from_SoL_(MW)___________________________________________ (pradsolmw)___________________      1.2414E+02 OP 
