@@ -1,17 +1,15 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
+
 from process.build import Build
-
-
-from process.fortran import build_variables
-
-from process.fortran import divertor_variables
-
-from process.fortran import physics_variables
-
-from process.fortran import tfcoil_variables
-
-from process.fortran import current_drive_variables
+from process.fortran import (
+    build_variables,
+    current_drive_variables,
+    divertor_variables,
+    physics_variables,
+    tfcoil_variables,
+)
 
 
 @pytest.fixture
@@ -25,7 +23,6 @@ def build():
 
 
 class DivgeomParam(NamedTuple):
-
     rspo: Any = None
 
     plleno: Any = None
@@ -62,7 +59,6 @@ class DivgeomParam(NamedTuple):
 
 
 class RippleAmplitudeParam(NamedTuple):
-
     rminor: Any = None
 
     rmajor: Any = None
@@ -310,7 +306,6 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
 
 
 class PortszParam(NamedTuple):
-
     r_tf_outboard_mid: Any = None
 
     tfthko: Any = None

@@ -13,9 +13,10 @@ Notes:
                 generation script imports, and inspects, process.
 """
 
-from re import sub
 import subprocess
+from re import sub
 from sys import stderr
+
 from process.io.python_fortran_dicts import get_dicts
 
 # ioptimz values
@@ -800,8 +801,9 @@ def variable_constraint_type_check(item_number, var_type):
         # If not an integer warn of rounding and return rounded integer
         else:
             print(
-                "Value {0} for {1} not an integer. Value rounded to {2}. "
-                "Check!".format(item_number, var_type, int(item_number))
+                "Value {0} for {1} not an integer. Value rounded to {2}. Check!".format(
+                    item_number, var_type, int(item_number)
+                )
             )
             return int(item_number)
 
@@ -863,8 +865,9 @@ def variable_bound_check(bound_number, bound_type):
         else:
             bound_number = int(bound_number)
             print(
-                "Bound number {0} not an integer. "
-                "Value rounded to {1}".format(bound_number, int(bound_number))
+                "Bound number {0} not an integer. Value rounded to {1}".format(
+                    bound_number, int(bound_number)
+                )
             )
             return bound_number, bound_type
 

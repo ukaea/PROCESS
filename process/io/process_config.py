@@ -13,24 +13,26 @@ Compatible with PROCESS version 382
             generation script imports, and inspects, process.
 """
 
+import logging
 import os
 import subprocess
 import sys
+from pathlib import Path
 from sys import stderr
 from time import sleep
-from numpy.random import seed, uniform, normal
+
 from numpy import argsort, argwhere, logical_or
-from pathlib import Path
-from process.io.process_funcs import (
-    get_from_indat_or_default,
-    set_variable_in_indat,
-    check_in_dat,
-)
+from numpy.random import normal, seed, uniform
+
+from process.io.configuration import Config
 from process.io.in_dat import InDat
 from process.io.mfile import MFile
-from process.io.configuration import Config
+from process.io.process_funcs import (
+    check_in_dat,
+    get_from_indat_or_default,
+    set_variable_in_indat,
+)
 from process.io.python_fortran_dicts import get_dicts
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -728,7 +730,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
         )
         # setup the output_vars
         for u_dict in self.uncertainties:
-            if not u_dict["varname"] in self.output_vars:
+            if u_dict["varname"] not in self.output_vars:
                 self.output_vars += [u_dict["varname"]]
 
         # add normalised constraints/iteration variables to output

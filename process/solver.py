@@ -1,21 +1,23 @@
 """An adapter for different solvers."""
 
+import importlib
 import logging
-from process.fortran import numerics, global_variables
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-import numpy as np
-from process.evaluators import Evaluators
 from abc import ABC, abstractmethod
 from typing import Optional, Union
-import importlib
+
+import numpy as np
 from pyvmcon import (
     AbstractProblem,
-    Result,
-    solve,
-    QSPSolverException,
-    VMCONConvergenceException,
     LineSearchConvergenceException,
+    QSPSolverException,
+    Result,
+    VMCONConvergenceException,
+    solve,
 )
+
+from process.evaluators import Evaluators
+from process.fortran import global_variables, numerics
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -173,7 +175,7 @@ class Vmcon(_Solver):
             numerics.nviter = i + 1
             global_variables.convergence_parameter = convergence_param
             print(
-                f"{i+1} | Convergence Parameter: {convergence_param:.3E}",
+                f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
                 end="\r",
                 flush=True,
             )

@@ -2,8 +2,9 @@
 This can then be used to normalise other runtime calculations to mitigate bias introduced
 by hardware, system load, etc. The average runtime [s] will be printed to stdout."""
 
-import numpy as np
 import time
+
+import numpy as np
 
 
 def numpy_baseline_runtime():

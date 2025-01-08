@@ -1,14 +1,14 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
 
-
-from process.fortran import (
-    current_drive_variables,
-    cost_variables,
-    physics_variables,
-    heat_transport_variables,
-)
 from process.current_drive import CurrentDrive
+from process.fortran import (
+    cost_variables,
+    current_drive_variables,
+    heat_transport_variables,
+    physics_variables,
+)
 from process.plasma_profiles import PlasmaProfile
 
 

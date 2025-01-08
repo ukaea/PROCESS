@@ -1,32 +1,34 @@
 """Unit tests for physics.f90."""
 
 from typing import Any, NamedTuple
-from process.fortran import (
-    constants,
-    physics_variables,
-    physics_module,
-    current_drive_variables,
-    impurity_radiation_module,
-)
+
 import numpy
 import pytest
+
+from process.current_drive import CurrentDrive
+from process.fortran import (
+    constants,
+    current_drive_variables,
+    impurity_radiation_module,
+    physics_module,
+    physics_variables,
+)
+from process.impurity_radiation import initialise_imprad
 from process.physics import (
     Physics,
-    calculate_poloidal_field,
-    diamagnetic_fraction_scene,
-    diamagnetic_fraction_hender,
-    ps_fraction_scene,
-    calculate_plasma_current_peng,
     calculate_beta_limit,
     calculate_current_coefficient_hastie,
-    vscalc,
-    rether,
+    calculate_plasma_current_peng,
     calculate_poloidal_beta,
+    calculate_poloidal_field,
+    diamagnetic_fraction_hender,
+    diamagnetic_fraction_scene,
+    ps_fraction_scene,
     res_diff_time,
+    rether,
+    vscalc,
 )
 from process.plasma_profiles import PlasmaProfile
-from process.current_drive import CurrentDrive
-from process.impurity_radiation import initialise_imprad
 
 
 @pytest.fixture

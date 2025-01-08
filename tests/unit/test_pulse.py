@@ -1,22 +1,17 @@
-import pytest
+from typing import Any, NamedTuple
+
 import numpy
-from typing import NamedTuple, Any
+import pytest
 
-
-from process.fortran import numerics
-
-from process.fortran import physics_variables
-
-from process.fortran import pulse_variables
-
-from process.fortran import pf_power_variables
-
-from process.fortran import times_variables
-
-from process.fortran import constraint_variables
-
-from process.fortran import pfcoil_variables
-
+from process.fortran import (
+    constraint_variables,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    times_variables,
+)
 from process.pulse import Pulse
 
 
@@ -31,7 +26,6 @@ def pulse():
 
 
 class TohswgParam(NamedTuple):
-
     t_current_ramp_up_min: Any = None
 
     vpfskv: Any = None
@@ -70,7 +64,6 @@ class TohswgParam(NamedTuple):
 
 
 class BurnParam(NamedTuple):
-
     res_plasma: Any = None
 
     vsres: Any = None

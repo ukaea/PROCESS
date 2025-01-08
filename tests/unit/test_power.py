@@ -1,22 +1,24 @@
-from typing import NamedTuple, Any
-import pytest
+from typing import Any, NamedTuple
+
 import numpy
+import pytest
 
-
-from process.fortran import fwbs_variables
-from process.fortran import heat_transport_variables
-from process.fortran import pfcoil_variables
-from process.fortran import numerics
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import pf_power_variables
-from process.fortran import times_variables
-from process.fortran import buildings_variables
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constraint_variables,
+    cost_variables,
+    current_drive_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+    times_variables,
+)
 from process.fortran import primary_pumping_variables as ppv
-from process.fortran import constraint_variables
-from process.fortran import cost_variables
-from process.fortran import current_drive_variables
-from process.fortran import tfcoil_variables
 from process.power import Power
 
 
@@ -31,7 +33,6 @@ def power():
 
 
 class CryoParam(NamedTuple):
-
     qnuc: Any = None
 
     inuclear: Any = None
@@ -166,7 +167,6 @@ def test_cryo(cryoparam, monkeypatch, power):
 
 
 class PfpwrParam(NamedTuple):
-
     iohcl: Any = None
 
     peakmva: Any = None
@@ -1870,7 +1870,6 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
 
 class AcpowParam(NamedTuple):
-
     efloor: Any = None
 
     baseel: Any = None
@@ -2008,7 +2007,6 @@ def test_acpow(acpowparam, monkeypatch, power):
 
 
 class Power2Param(NamedTuple):
-
     pnetelin: Any = None
 
     ipnet: Any = None
@@ -2654,7 +2652,6 @@ def test_power2(power2param, monkeypatch, power):
 
 
 class Power3Param(NamedTuple):
-
     etacd: Any = None
 
     htpmw: Any = None

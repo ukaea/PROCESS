@@ -1,14 +1,15 @@
+import dataclasses
+import pickle
+from copy import copy
+from enum import Enum
 from pathlib import Path
 from typing import Any, List
-from enum import Enum
-import pickle
-import dataclasses
-from copy import copy
-import numpy as np
-import jinja2
 
-from process.init import init_all_module_vars
+import jinja2
+import numpy as np
+
 from process import fortran
+from process.init import init_all_module_vars
 
 
 class VariableTypes(str, Enum):

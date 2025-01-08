@@ -1,5 +1,6 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
 
 import process.superconductors as superconductors
 

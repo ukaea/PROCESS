@@ -6,19 +6,18 @@ This will indicate any differences in the MFile contents caused
 by changes made off of main.
 """
 
-from pathlib import Path
-from dataclasses import dataclass
-from typing import List
-import shutil
 import logging
 import re
+import shutil
+from dataclasses import dataclass
+from pathlib import Path
+from typing import List
 
 import pytest
-from process.main import main
-from process.io.mfile import MFile
-
 from regression_test_assets import RegressionTestAssetCollector
 
+from process.io.mfile import MFile
+from process.main import main
 
 logger = logging.getLogger(__name__)
 
@@ -95,9 +94,9 @@ class RegressionTestScenario:
 
         assert (ifail := mfile.data["ifail"].get_scan(-1)) == 1 or mfile.data[
             "ioptimz"
-        ].get_scan(
-            -1
-        ) == -2, f"ifail of {ifail} indicates PROCESS did not solve successfully"
+        ].get_scan(-1) == -2, (
+            f"ifail of {ifail} indicates PROCESS did not solve successfully"
+        )
 
         mfile_keys = set(mfile.data.keys())
         reference_mfile_keys = set(reference_mfile.data.keys())

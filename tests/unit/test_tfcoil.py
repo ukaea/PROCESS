@@ -1,15 +1,15 @@
 """Unit and Integration tests for tfcoil.f90."""
 
 from typing import NamedTuple
-from process.sctfcoil import Sctfcoil
+
 import pytest
 
-from process.tfcoil import TFcoil
-
-from process.fortran import tfcoil_variables as tfv
+from process.build import Build
 from process.fortran import build_variables as bv
 from process.fortran import fwbs_variables as fwbsv
-from process.build import Build
+from process.fortran import tfcoil_variables as tfv
+from process.sctfcoil import Sctfcoil
+from process.tfcoil import TFcoil
 
 
 @pytest.fixture

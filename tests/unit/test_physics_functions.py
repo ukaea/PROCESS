@@ -1,12 +1,13 @@
 """Unit tests for physics_functions.f90."""
 
-
 from typing import Any, NamedTuple
-from process.fortran import physics_variables as pv
-from process import physics_functions
+
 import numpy as np
 import pytest
 from pytest import approx
+
+from process import physics_functions
+from process.fortran import physics_variables as pv
 
 
 class SetFusionPowersParam(NamedTuple):

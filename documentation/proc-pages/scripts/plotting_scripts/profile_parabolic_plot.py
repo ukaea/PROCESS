@@ -3,7 +3,6 @@ from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, CustomJS, Slider
 from bokeh.plotting import figure, output_file, save
 
-
 x = np.linspace(0, 1, 500)
 y = 5.0 * (1 - x**2) ** 2.0
 

@@ -1,14 +1,17 @@
 from __future__ import annotations
-from process import fortran as ft
-import numpy as np
+
 import logging
-from process.final import finalise
-from process.objectives import objective_function
-from process.io.mfile import MFile
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from typing import Union, Tuple, TYPE_CHECKING
 import warnings
+from typing import TYPE_CHECKING, Tuple, Union
+
+import numpy as np
 from tabulate import tabulate
+
+from process import fortran as ft
+from process.final import finalise
+from process.io.mfile import MFile
+from process.objectives import objective_function
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 if TYPE_CHECKING:
     from process.main import Models

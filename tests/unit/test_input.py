@@ -1,7 +1,8 @@
 import pytest
+
+import process.init as init
 from process import fortran
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
-import process.init as init
 
 
 def _create_input_file(directory, content: str):

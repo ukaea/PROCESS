@@ -1,6 +1,7 @@
-import pytest
+from typing import Any, NamedTuple
+
 import numpy
-from typing import NamedTuple, Any
+import pytest
 
 from process.fortran import neoclassics_module, physics_variables
 from process.stellarator import Neoclassics

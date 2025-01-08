@@ -1,18 +1,19 @@
 """Unit tests for availability.f90."""
 
-from process import fortran
-from process.availability import Availability
-from process.fortran import cost_variables as cv
-from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
-from process.fortran import constraint_variables as ctv
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import times_variables as tv
-from process.fortran import ife_variables as ifev
-from process.fortran import divertor_variables as dv
-from process.init import init_all_module_vars
 import pytest
 from pytest import approx
+
+from process import fortran
+from process.availability import Availability
+from process.fortran import constraint_variables as ctv
+from process.fortran import cost_variables as cv
+from process.fortran import divertor_variables as dv
+from process.fortran import fwbs_variables as fwbsv
+from process.fortran import ife_variables as ifev
+from process.fortran import physics_variables as pv
+from process.fortran import tfcoil_variables as tfv
+from process.fortran import times_variables as tv
+from process.init import init_all_module_vars
 
 
 @pytest.fixture
