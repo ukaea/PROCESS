@@ -174,7 +174,7 @@ module physics_variables
   real(dp) :: dntau
   !! plasma average "n-tau" (seconds/m3)
 
-  real(dp) :: dnz
+  real(dp) :: nd_impurities
   !! high Z ion density (/m3)
 
   real(dp) :: gradient_length_ne
@@ -999,7 +999,7 @@ module physics_variables
     dnla = 0.0D0
     nd_protons = 0.0D0
     dntau = 0.0D0
-    dnz = 0.0D0
+    nd_impurities = 0.0D0
     beta_poloidal_eps_max = 1.38D0
     eps = 0.34399724802D0
     aux_current_fraction = 0.0D0
