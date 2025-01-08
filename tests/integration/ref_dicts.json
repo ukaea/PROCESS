@@ -3625,7 +3625,7 @@
         "primary_pumping": 2.0,
         "prn1": 0.285,
         "profcalc": null,
-        "protium": 0.0,
+        "f_nd_protium_electrons": 0.0,
         "proton_rate_density": 0.0,
         "pscalingmw": 0.0,
         "pscf_scene": 0.0,
@@ -10380,7 +10380,7 @@
         "primary_pumping": "Switch for pumping power for primary coolant (mechanical power only and peak first wall\n temperature is only calculated if `primary_pumping=2`):\n<ul>\n<li>=0 User sets pump power directly (htpmw_blkt, htpmw_fw, htpmw_div, htpmw_shld)</li>\n<li>=1 User sets pump power as a fraction of thermal power (fpumpblkt, fpumpfw, fpumpdiv, fpumpshld)</li>\n<li>=2 Mechanical pumping power is calculated</li>\n<li>=3 Mechanical pumping power is calculated using specified pressure drop</li>\n</ul>",
         "prn1": "n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/dene if `ipedestal>=1`)",
         "profcalc": "",
-        "protium": "Seeded protium density / electron density.",
+        "f_nd_protium_electrons": "Seeded f_nd_protium_electrons density / electron density.",
         "proton_rate_density": "proton production rate (particles/m3/sec)",
         "pscalingmw": "Total transport power from scaling law (MW)",
         "pscf_scene": "Pfirsch-Schl\u00fcter current fraction, SCENE fit",
@@ -13983,7 +13983,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "protium": {
+        "f_nd_protium_electrons": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -19236,7 +19236,7 @@
             "rad_fraction_sol",
             "rad_fraction_total",
             "ralpne",
-            "protium",
+            "f_nd_protium_electrons",
             "rli",
             "rlp",
             "rmajor",
@@ -20637,7 +20637,7 @@
         "prdiv": "real_variable",
         "primary_pumping": "int_variable",
         "prn1": "real_variable",
-        "protium": "real_variable",
+        "f_nd_protium_electrons": "real_variable",
         "psepbqarmax": "real_variable",
         "pseprmax": "real_variable",
         "ptargf": "real_variable",

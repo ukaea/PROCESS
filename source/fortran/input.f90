@@ -309,7 +309,7 @@ contains
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
-      itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
+      itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, f_nd_protium_electrons, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, plasma_square, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, i_density_limit, bt, i_plasma_wall_gap, ipnlaws, beta_max, beta_min, &
@@ -717,8 +717,8 @@ contains
        case ('ralpne')
           call parse_real_variable('ralpne', ralpne, 1.0D-12, 1.0D0, &
                'Thermal alpha density / electron density')
-       case ('protium')
-          call parse_real_variable('protium', protium, 0.0D0, 1.0D0, &
+       case ('f_nd_protium_electrons')
+          call parse_real_variable('f_nd_protium_electrons', f_nd_protium_electrons, 0.0D0, 1.0D0, &
                'Protium density / electron density')
 
        case ('rhopedn')

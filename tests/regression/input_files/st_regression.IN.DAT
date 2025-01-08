@@ -622,9 +622,9 @@ boundu(28) = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*protium =  
-* DESCRIPTION:   Seeded protium density / electron density (default = 0.0)
-* JUSTIFICATION: Not used, no protium seeding.
+*f_nd_protium_electrons =  
+* DESCRIPTION:   Seeded f_nd_protium_electrons density / electron density (default = 0.0)
+* JUSTIFICATION: Not used, no f_nd_protium_electrons seeding.
 
 *f_deuterium = 
 * DESCRIPTION:   Deuterium fuel fraction
