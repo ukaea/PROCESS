@@ -4469,7 +4469,7 @@ class Stellarator:
             physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
             sbar,
-            physics_variables.dnalp,
+            physics_variables.nd_alphas,
             physics_variables.taueff,
             physics_variables.vol_plasma,
         )
@@ -5155,7 +5155,7 @@ class Neoclassics:
             * (1 - rho**2) ** physics_variables.alphan
         )
         densa = (
-            physics_variables.dnalp
+            physics_variables.nd_alphas
             * (1 + physics_variables.alphan)
             * (1 - rho**2) ** physics_variables.alphan
         )
@@ -5236,7 +5236,7 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * physics_variables.dnalp
+            * physics_variables.nd_alphas
             * (1 + physics_variables.alphan)
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
@@ -5365,7 +5365,7 @@ class Neoclassics:
             physics_variables.dene,
             physics_variables.deni * physics_variables.f_deuterium,
             physics_variables.deni * (1 - physics_variables.f_deuterium),
-            physics_variables.dnalp,
+            physics_variables.nd_alphas,
         ])
 
         mass = np.array([

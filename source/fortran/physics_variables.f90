@@ -147,7 +147,7 @@ module physics_variables
   real(dp), dimension(8) :: dlimit
   !! density limit (/m3) as calculated using various models
 
-  real(dp) :: dnalp
+  real(dp) :: nd_alphas
   !! thermal alpha density (/m3)
 
   real(dp) :: dnbeam
@@ -990,7 +990,7 @@ module physics_variables
     dlamee = 0.0D0
     dlamie = 0.0D0
     dlimit = 0.0D0
-    dnalp = 0.0D0
+    nd_alphas = 0.0D0
     dnbeam = 0.0D0
     beam_density_out = 0.0D0
     beta_norm_max = 3.5D0
