@@ -126,7 +126,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pv, "vsind", 3.497e2)
     monkeypatch.setattr(pv, "aspect", 3.1)
     monkeypatch.setattr(pv, "itart", 0)
-    monkeypatch.setattr(pv, "betap", 6.313e-1)
+    monkeypatch.setattr(pv, "beta_poloidal", 6.313e-1)
     monkeypatch.setattr(tfv, "tftmp", 4.750)
     monkeypatch.setattr(tfv, "dcond", np.full(9, 9.0e3))
     monkeypatch.setattr(tfv, "i_tf_sup", 1)
@@ -2430,13 +2430,13 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
         pfv,
         "curpfb",
         np.array([
-            0.067422231232391661,
-            -2.9167273287450968,
-            -8.1098913365453491,
-            -8.1098913365453491,
-            -5.5984385047179153,
-            -5.5984385047179153,
-            -186.98751599968148,
+            14.742063826112622,
+            20.032681634901664,
+            0.58040662653667285,
+            0.58040662653667285,
+            0.42974674788703021,
+            0.42974674788703021,
+            174.22748790786324,
             0,
             0,
             0,
@@ -2486,13 +2486,13 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
         pfv,
         "curpfs",
         np.array([
-            14.742063826112622,
-            20.032681634901664,
-            0.58040662653667285,
-            0.58040662653667285,
-            0.42974674788703021,
-            0.42974674788703021,
-            174.22748790786324,
+            0.067422231232391661,
+            -2.9167273287450968,
+            -8.1098913365453491,
+            -8.1098913365453491,
+            -5.5984385047179153,
+            -5.5984385047179153,
+            -186.98751599968148,
             0,
             0,
             0,
