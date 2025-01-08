@@ -712,8 +712,8 @@ contains
       !! during plasma start-up, and is excluded from all steady-state
       !! power balance calculations.
       !! beam_density_out : input real :  hot beam ion density from calculation (/m3)
-      !! dnbeam : input real : hot beam ion density, variable (/m3)
-      use physics_variables, only: ignite, beam_density_out, dnbeam
+      !! nd_beam_ions : input real : hot beam ion density, variable (/m3)
+      use physics_variables, only: ignite, beam_density_out, nd_beam_ions
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -723,9 +723,9 @@ contains
 
 	   ! Do not assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - beam_density_out/dnbeam
-         tmp_con    = dnbeam * (1.0D0 - tmp_cc)
-         tmp_err    = dnbeam * tmp_cc
+         tmp_cc     = 1.0D0 - beam_density_out/nd_beam_ions
+         tmp_con    = nd_beam_ions * (1.0D0 - tmp_cc)
+         tmp_err    = nd_beam_ions * tmp_cc
          tmp_symbol = '='
          tmp_units  = '/m3'
       else

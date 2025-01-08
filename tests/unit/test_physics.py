@@ -1187,7 +1187,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     alphan: Any = None
 
-    dnbeam: Any = None
+    nd_beam_ions: Any = None
 
     f_helium3: Any = None
 
@@ -1319,7 +1319,7 @@ class PlasmaCompositionParam(NamedTuple):
             proton_rate_density=0,
             f_deuterium=0.5,
             alphan=1,
-            dnbeam=0,
+            nd_beam_ions=0,
             f_helium3=0,
             nd_alphas=0,
             dene=7.5e19,
@@ -1439,7 +1439,7 @@ class PlasmaCompositionParam(NamedTuple):
             proton_rate_density=540072280299564.38,
             f_deuterium=0.5,
             alphan=1,
-            dnbeam=0,
+            nd_beam_ions=0,
             f_helium3=0,
             nd_alphas=7.5e18,
             dene=7.5e19,
@@ -1605,7 +1605,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "alphan", plasmacompositionparam.alphan)
 
-    monkeypatch.setattr(physics_variables, "dnbeam", plasmacompositionparam.dnbeam)
+    monkeypatch.setattr(
+        physics_variables, "nd_beam_ions", plasmacompositionparam.nd_beam_ions
+    )
 
     monkeypatch.setattr(
         physics_variables, "f_helium3", plasmacompositionparam.f_helium3
