@@ -10,7 +10,7 @@ $$
 
 
 $$
-U \  [\text{V}] \approx 2.15 \times 10^{-3} Z_{\text{eff}}\langle \gamma_{\text{NC}} \rangle \frac{I_{\text{ind}}R_0}{\kappa a^2} \frac{1}{T_{10}^{1.5}}
+\Omega_{\text{plasma}} \approx 2.15 \times 10^{-3} Z_{\text{eff}}\langle \gamma_{\text{NC}} \rangle \frac{R_0}{\kappa a^2} \frac{1}{T_{10}^{1.5}}
 $$
 
 The neoclassical (avergae) resisitivity enhancement factor $\left(\langle \gamma_{\text{NC}} \rangle \right)$ is given by an empirical fit:
