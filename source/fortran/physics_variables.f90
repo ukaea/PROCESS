@@ -168,7 +168,7 @@ module physics_variables
   real(dp) :: dnla
   !! line averaged electron density (/m3)
 
-  real(dp) :: dnprot
+  real(dp) :: nd_protons
   !! proton ash density (/m3)
 
   real(dp) :: dntau
@@ -997,7 +997,7 @@ module physics_variables
     dnelimt = 0.0D0
     dnitot = 0.0D0
     dnla = 0.0D0
-    dnprot = 0.0D0
+    nd_protons = 0.0D0
     dntau = 0.0D0
     dnz = 0.0D0
     beta_poloidal_eps_max = 1.38D0

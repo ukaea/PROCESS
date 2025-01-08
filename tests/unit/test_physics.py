@@ -1195,7 +1195,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     dene: Any = None
 
-    dnprot: Any = None
+    nd_protons: Any = None
 
     iscz: Any = None
 
@@ -1249,7 +1249,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_nd_alphas: Any = None
 
-    expected_dnprot: Any = None
+    expected_nd_protons: Any = None
 
     expected_first_call: Any = None
 
@@ -1323,7 +1323,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_helium3=0,
             nd_alphas=0,
             dene=7.5e19,
-            dnprot=0,
+            nd_protons=0,
             iscz=0,
             err242=0,
             err243=0,
@@ -1365,7 +1365,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_m_beam_amu=2.01355414,
             expected_dlamie=17.810652035055568,
             expected_nd_alphas=7.5e18,
-            expected_dnprot=7500000000000000,
+            expected_nd_protons=7500000000000000,
             expected_first_call=0,
         ),
         PlasmaCompositionParam(
@@ -1443,7 +1443,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_helium3=0,
             nd_alphas=7.5e18,
             dene=7.5e19,
-            dnprot=7500000000000000,
+            nd_protons=7500000000000000,
             iscz=0,
             err242=0,
             err243=0,
@@ -1485,7 +1485,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_m_beam_amu=2.01355414,
             expected_dlamie=17.810652035055568,
             expected_nd_alphas=7.5e18,
-            expected_dnprot=20519498414548412,
+            expected_nd_protons=20519498414548412,
             expected_first_call=0,
         ),
     ),
@@ -1613,7 +1613,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "dene", plasmacompositionparam.dene)
 
-    monkeypatch.setattr(physics_variables, "dnprot", plasmacompositionparam.dnprot)
+    monkeypatch.setattr(
+        physics_variables, "nd_protons", plasmacompositionparam.nd_protons
+    )
 
     monkeypatch.setattr(physics_module, "iscz", plasmacompositionparam.iscz)
 
@@ -1691,8 +1693,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_nd_alphas
     )
 
-    assert physics_variables.dnprot == pytest.approx(
-        plasmacompositionparam.expected_dnprot
+    assert physics_variables.nd_protons == pytest.approx(
+        plasmacompositionparam.expected_nd_protons
     )
 
     assert physics_module.first_call == pytest.approx(
