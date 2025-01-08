@@ -1145,7 +1145,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     deni: Any = None
 
-    aion: Any = None
+    m_ions_total_amu: Any = None
 
     nd_ions_total: Any = None
 
@@ -1229,7 +1229,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_deni: Any = None
 
-    expected_aion: Any = None
+    expected_m_ions_total_amu: Any = None
 
     expected_nd_ions_total: Any = None
 
@@ -1298,7 +1298,7 @@ class PlasmaCompositionParam(NamedTuple):
             m_fuel_amu=0,
             f_tritium=0.5,
             deni=0,
-            aion=0,
+            m_ions_total_amu=0,
             nd_ions_total=0,
             f_nd_protium_electrons=0,
             zeffai=0,
@@ -1355,7 +1355,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_f_alpha_electron=0.6845930883190634,
             expected_m_fuel_amu=2.5145269632339478,
             expected_deni=5.8589175702454272e19,
-            expected_aion=2.7395439636787726,
+            expected_m_ions_total_amu=2.7395439636787726,
             expected_nd_ions_total=6.6125550702454276e19,
             expected_zeffai=0.43248858851447464,
             expected_f_alpha_ion=0.3154069116809366,
@@ -1418,7 +1418,7 @@ class PlasmaCompositionParam(NamedTuple):
             m_fuel_amu=2.5,
             f_tritium=0.5,
             deni=5.8589175702454272e19,
-            aion=2.7395439636787726,
+            m_ions_total_amu=2.7395439636787726,
             nd_ions_total=6.6125550702454276e19,
             f_nd_protium_electrons=0,
             zeffai=0.43248858851447464,
@@ -1475,7 +1475,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_f_alpha_electron=0.73096121787894142,
             expected_m_fuel_amu=2.5145269632339478,
             expected_deni=5.8576156204039725e19,
-            expected_aion=2.739245767577763,
+            expected_m_ions_total_amu=2.739245767577763,
             expected_nd_ions_total=6.6125550702454276e19,
             expected_zeffai=0.43258985127992111,
             expected_f_alpha_ion=0.26903878212105858,
@@ -1545,7 +1545,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "deni", plasmacompositionparam.deni)
 
-    monkeypatch.setattr(physics_variables, "aion", plasmacompositionparam.aion)
+    monkeypatch.setattr(
+        physics_variables, "m_ions_total_amu", plasmacompositionparam.m_ions_total_amu
+    )
 
     monkeypatch.setattr(
         physics_variables, "nd_ions_total", plasmacompositionparam.nd_ions_total
@@ -1669,7 +1671,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     assert physics_variables.deni == pytest.approx(plasmacompositionparam.expected_deni)
 
-    assert physics_variables.aion == pytest.approx(plasmacompositionparam.expected_aion)
+    assert physics_variables.m_ions_total_amu == pytest.approx(
+        plasmacompositionparam.expected_m_ions_total_amu
+    )
 
     assert physics_variables.nd_ions_total == pytest.approx(
         plasmacompositionparam.expected_nd_ions_total

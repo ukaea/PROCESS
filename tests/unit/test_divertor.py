@@ -27,7 +27,7 @@ class TestDivertor:
         :type divertor: tests.unit.test_divertor.divertor (functional fixture)
         """
         adas = 0.052617908173833536
-        aion = 2.5
+        m_ions_total_amu = 2.5
         anginc = 0.262
         c1div = 0.45
         c2div = -7
@@ -80,7 +80,7 @@ class TestDivertor:
             tsep,
         ) = divertor.divert(
             adas,
-            aion,
+            m_ions_total_amu,
             anginc,
             delne,
             c1div,
@@ -219,7 +219,7 @@ class TestDivertor:
         :param divertor: fixture containing an initialised `Divertor` object
         :type divertor: tests.unit.test_divertor.divertor (functional fixture)
         """
-        aion = 2.5
+        m_ions_total_amu = 2.5
         coefl = 1.3854518853592164
         delne = 0.34294618459618942
         fififi = 0.0040000000000000001
@@ -235,7 +235,7 @@ class TestDivertor:
         expected_ftdiv = 140.7905577701393
 
         ftdiv = divertor.ftdiv(
-            aion,
+            m_ions_total_amu,
             coefl,
             delne,
             fififi,
@@ -259,7 +259,7 @@ class TestDivertor:
         :param divertor: fixture containing an initialised `Divertor` object
         :type divertor: tests.unit.test_divertor.divertor (functional fixture)
         """
-        aion = 2.5
+        m_ions_total_amu = 2.5
         coefl = 1.3854518853592164
         delne = 0.34294618459618942
         fififi = 0.0040000000000000001
@@ -275,7 +275,7 @@ class TestDivertor:
         expected_ftpts = -7.962899353691732
 
         ftpts = divertor.ftpts(
-            aion,
+            m_ions_total_amu,
             coefl,
             delne,
             fififi,

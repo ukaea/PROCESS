@@ -23,7 +23,7 @@ module physics_variables
   real(dp) :: m_fuel_amu
   !! average mass of fuel portion of ions (amu)
 
-  real(dp) :: aion
+  real(dp) :: m_ions_total_amu
   !! average mass of all ions (amu)
 
   real(dp) :: alphaj
@@ -949,7 +949,7 @@ module physics_variables
 
     m_beam_amu = 0.0D0
     m_fuel_amu = 0.0D0
-    aion = 0.0D0
+    m_ions_total_amu = 0.0D0
     alphaj = 1.0D0
     alphan = 0.25D0
     alphap = 0.0D0
