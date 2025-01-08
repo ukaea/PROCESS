@@ -2848,7 +2848,7 @@ feffcd = 1.0
 *icc = 7
 * DESCRIPTION:   Equation for hot ion beam density (NBI)
 * JUSTIFICATION: Turned off, not using NBI
-* VARIABLES:     ignite,dnbeam Rest calculated in-situ
+* VARIABLES:     ignite,nd_beam_ions Rest calculated in-situ
 
 *ixc = 7
 *rnbeam = 
