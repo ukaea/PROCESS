@@ -25,7 +25,7 @@ class SetFusionPowersParam(NamedTuple):
 
     deni: Any = None
 
-    dnitot: Any = None
+    nd_ions_total: Any = None
 
     f_alpha_electron: Any = None
 

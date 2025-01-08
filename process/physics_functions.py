@@ -921,7 +921,7 @@ def fast_alpha_beta(
     bt: float,
     dene: float,
     deni: float,
-    dnitot: float,
+    nd_ions_total: float,
     ten: float,
     tin: float,
     alpha_power_density_total: float,
@@ -938,7 +938,7 @@ def fast_alpha_beta(
         bt (float): Toroidal field on axis (T).
         dene (float): Electron density (m^-3).
         deni (float): Fuel ion density (m^-3).
-        dnitot (float): Total ion density (m^-3).
+        nd_ions_total (float): Total ion density (m^-3).
         ten (float): Density-weighted electron temperature (keV).
         tin (float): Density-weighted ion temperature (keV).
         alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
@@ -968,7 +968,7 @@ def fast_alpha_beta(
             2.0
             * constants.rmu0
             * constants.kiloelectron_volt
-            * (dene * ten + dnitot * tin)
+            * (dene * ten + nd_ions_total * tin)
             / (bt**2 + bp**2)
         )
 

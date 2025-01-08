@@ -342,12 +342,12 @@ contains
    subroutine constraint_err_001()
     !! Error in: Relationship between beta, temperature (keV) and density (consistency equation)
     !! author: P B Lloyd, CCFE, Culham Science Centre
-    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, nd_ions_total, tin, btot, beta
     write(*,*) 'beta_fast_alpha = ', beta_fast_alpha
     write(*,*) 'beta_beam = ', beta_beam
     write(*,*) 'dene = ', dene
     write(*,*) 'ten = ', ten
-    write(*,*) 'dnitot = ', dnitot
+    write(*,*) 'nd_ions_total = ', nd_ions_total
     write(*,*) 'tin = ', tin
     write(*,*) 'btot = ',btot
     write(*,*) 'beta = ', beta
@@ -408,7 +408,7 @@ contains
     !! - \( T_i \) -- density weighted average ion temperature [keV]
     !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
-    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, nd_ions_total, tin, btot, beta
     use constants, only: electron_charge,rmu0
 
     implicit none
@@ -423,7 +423,7 @@ contains
     !! constraint derived type
 
       tmp_cc = 1.0D0 - (beta_fast_alpha + beta_beam + &
-        2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
+        2.0D3*rmu0*electron_charge * (dene*ten + nd_ions_total*tin)/btot**2 )/beta
       tmp_con = beta * (1.0D0 - tmp_cc)
       tmp_err = beta * tmp_cc
       tmp_symbol = '='

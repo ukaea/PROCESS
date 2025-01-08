@@ -154,7 +154,7 @@ class ProcessTracker:
         "n_tf",
         "bmaxtf",
         "vstot",
-        "dnitot",
+        "nd_ions_total",
         "t_burn",
         "divlife",
         "CostModel2.step20",

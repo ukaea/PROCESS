@@ -162,7 +162,7 @@ module physics_variables
   real(dp) :: dnelimt
   !! density limit (/m3)
 
-  real(dp) :: dnitot
+  real(dp) :: nd_ions_total
   !! total ion density (/m3)
 
   real(dp) :: dnla
@@ -995,7 +995,7 @@ module physics_variables
     beam_density_out = 0.0D0
     beta_norm_max = 3.5D0
     dnelimt = 0.0D0
-    dnitot = 0.0D0
+    nd_ions_total = 0.0D0
     dnla = 0.0D0
     nd_protons = 0.0D0
     dntau = 0.0D0

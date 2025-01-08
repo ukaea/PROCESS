@@ -305,7 +305,7 @@ def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
 
 
 class BootstrapFractionSauterParam(NamedTuple):
-    dnitot: Any = None
+    nd_ions_total: Any = None
 
     rminor: Any = None
 
@@ -364,7 +364,7 @@ class BootstrapFractionSauterParam(NamedTuple):
     "bootstrapfractionsauterparam",
     (
         BootstrapFractionSauterParam(
-            dnitot=7.1297522422781575e19,
+            nd_ions_total=7.1297522422781575e19,
             rminor=2.6666666666666665,
             tesep=0.10000000000000001,
             ti=12.570861186498382,
@@ -408,7 +408,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     """
 
     monkeypatch.setattr(
-        physics_variables, "dnitot", bootstrapfractionsauterparam.dnitot
+        physics_variables, "nd_ions_total", bootstrapfractionsauterparam.nd_ions_total
     )
 
     monkeypatch.setattr(
@@ -1147,7 +1147,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     aion: Any = None
 
-    dnitot: Any = None
+    nd_ions_total: Any = None
 
     f_nd_protium_electrons: Any = None
 
@@ -1231,7 +1231,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_aion: Any = None
 
-    expected_dnitot: Any = None
+    expected_nd_ions_total: Any = None
 
     expected_zeffai: Any = None
 
@@ -1299,7 +1299,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_tritium=0.5,
             deni=0,
             aion=0,
-            dnitot=0,
+            nd_ions_total=0,
             f_nd_protium_electrons=0,
             zeffai=0,
             rncne=0,
@@ -1356,7 +1356,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_m_fuel_amu=2.5145269632339478,
             expected_deni=5.8589175702454272e19,
             expected_aion=2.7395439636787726,
-            expected_dnitot=6.6125550702454276e19,
+            expected_nd_ions_total=6.6125550702454276e19,
             expected_zeffai=0.43248858851447464,
             expected_f_alpha_ion=0.3154069116809366,
             expected_dlamee=17.510652035055571,
@@ -1419,7 +1419,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_tritium=0.5,
             deni=5.8589175702454272e19,
             aion=2.7395439636787726,
-            dnitot=6.6125550702454276e19,
+            nd_ions_total=6.6125550702454276e19,
             f_nd_protium_electrons=0,
             zeffai=0.43248858851447464,
             rncne=0,
@@ -1476,7 +1476,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_m_fuel_amu=2.5145269632339478,
             expected_deni=5.8576156204039725e19,
             expected_aion=2.739245767577763,
-            expected_dnitot=6.6125550702454276e19,
+            expected_nd_ions_total=6.6125550702454276e19,
             expected_zeffai=0.43258985127992111,
             expected_f_alpha_ion=0.26903878212105858,
             expected_dlamee=17.510652035055571,
@@ -1547,7 +1547,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "aion", plasmacompositionparam.aion)
 
-    monkeypatch.setattr(physics_variables, "dnitot", plasmacompositionparam.dnitot)
+    monkeypatch.setattr(
+        physics_variables, "nd_ions_total", plasmacompositionparam.nd_ions_total
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -1667,8 +1669,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     assert physics_variables.aion == pytest.approx(plasmacompositionparam.expected_aion)
 
-    assert physics_variables.dnitot == pytest.approx(
-        plasmacompositionparam.expected_dnitot
+    assert physics_variables.nd_ions_total == pytest.approx(
+        plasmacompositionparam.expected_nd_ions_total
     )
 
     assert physics_variables.zeffai == pytest.approx(
@@ -2182,7 +2184,7 @@ class PcondParam(NamedTuple):
 
     dene: Any = None
 
-    dnitot: Any = None
+    nd_ions_total: Any = None
 
     dnla: Any = None
 
@@ -2257,7 +2259,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=6.1946504123280199,
@@ -2301,7 +2303,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.96163409847948844,
@@ -2345,7 +2347,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1960655150953154,
@@ -2389,7 +2391,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.78453691772934719,
@@ -2433,7 +2435,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1619079679077555,
@@ -2477,7 +2479,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.7340642483550435,
@@ -2521,7 +2523,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1117392853827024,
@@ -2565,7 +2567,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.84477227311274361,
@@ -2609,7 +2611,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.6096667103064701,
@@ -2653,7 +2655,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.67053301699102119,
@@ -2697,7 +2699,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=2.1212580310552207,
@@ -2741,7 +2743,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=50.095480115636271,
@@ -2785,7 +2787,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=87.869318916638761,
@@ -2829,7 +2831,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=28.562137619592285,
@@ -2873,7 +2875,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.50082256309019457,
@@ -2917,7 +2919,7 @@ class PcondParam(NamedTuple):
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
-            dnitot=7.1529510234203251e19,
+            nd_ions_total=7.1529510234203251e19,
             dnla=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.77961193402355955,
@@ -2984,7 +2986,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
         aspect=pcondparam.aspect,
         bt=pcondparam.bt,
         dene=pcondparam.dene,
-        dnitot=pcondparam.dnitot,
+        nd_ions_total=pcondparam.nd_ions_total,
         dnla=pcondparam.dnla,
         eps=pcondparam.eps,
         hfact=pcondparam.hfact,
