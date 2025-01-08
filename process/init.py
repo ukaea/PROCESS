@@ -335,7 +335,7 @@ def check_process():
         )
 
     # Impurity fractions
-    for imp in range(fortran.impurity_radiation_module.nimp):
+    for imp in range(fortran.impurity_radiation_module.n_impurities):
         fortran.impurity_radiation_module.impurity_arr_frac[imp] = (
             fortran.impurity_radiation_module.fimp[imp]
         )

@@ -2407,6 +2407,14 @@ class Physics:
                     * physics_variables.pdivt
                     / build_variables.fwarea
                 )
+                    (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                    * physics_variables.p_plasma_rad_mw
+                    / build_variables.fwarea
+                    + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                    * physics_variables.rad_fraction_sol
+                    * physics_variables.pdivt
+                    / build_variables.fwarea
+                )
 
         constraint_variables.pflux_fw_rad_max_mw = (
             physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
@@ -7561,11 +7569,7 @@ def pthresh(
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
     martin = (
-        0.0488
-        * dnla20**0.717
-        * bt**0.803
-        * a_plasma_surface**0.941
-        * (2.0 / m_ions_total_amu)
+        0.0488 * dnla20**0.717 * bt**0.803 * a_plasma_surface**0.941 * (2.0 / m_ions_total_amu)
     )
     martin_error = (
         np.sqrt(
@@ -7600,16 +7604,12 @@ def pthresh(
     snipes_2000_cd = (
         0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / m_ions_total_amu)
     )
-    snipes_2000_cd_ub = 0.867
-        * dnla20**0.561
-        * bt**0.588
-        * rmajor**1.587
-        * (2.0 / m_ions_total_amu)
-    snipes_2000_cd_lb = 0.733
-        * dnla20**0.439
-        * bt**0.472
-        * rmajor**1.433
-        * (2.0 / m_ions_total_amu)
+    snipes_2000_cd_ub = (
+        0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / m_ions_total_amu)
+    )
+    snipes_2000_cd_lb = (
+        0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / m_ions_total_amu)
+    )
 
     # Hubbard et al. 2012 L-I threshold scaling
     hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65

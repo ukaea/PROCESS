@@ -8,7 +8,7 @@ import numpy as np
 from scipy import integrate
 from process.fortran import constants
 
-from process.fortran import error_handling, impurity_radiation_module
+from process.fortran import constants, error_handling, impurity_radiation_module
 
 logger = logging.getLogger(__name__)
 
