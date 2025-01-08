@@ -2073,7 +2073,7 @@ class Physics:
             physics_variables.bt,
             physics_variables.dene,
             physics_variables.deni,
-            physics_variables.dnitot,
+            physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
@@ -2246,7 +2246,7 @@ class Physics:
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
-            physics_variables.dnitot,
+            physics_variables.nd_ions_total,
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.eps,
@@ -2750,7 +2750,7 @@ class Physics:
                 )
 
         # Total ion density
-        physics_variables.dnitot = (
+        physics_variables.nd_ions_total = (
             physics_variables.deni
             + physics_variables.nd_alphas
             + physics_variables.nd_protons
@@ -2852,7 +2852,9 @@ class Physics:
                     * impurity_radiation_module.impurity_arr_amass[imp]
                 )
 
-        physics_variables.aion = physics_variables.aion / physics_variables.dnitot
+        physics_variables.aion = (
+            physics_variables.aion / physics_variables.nd_ions_total
+        )
 
         # Mass weighted plasma effective charge
         physics_variables.zeffai = (
@@ -3940,8 +3942,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Ion density (/m3)",
-            "(dnitot)",
-            physics_variables.dnitot,
+            "(nd_ions_total)",
+            physics_variables.nd_ions_total,
             "OP ",
         )
         po.ovarre(
@@ -5633,7 +5635,7 @@ class Physics:
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
-                physics_variables.dnitot,
+                physics_variables.nd_ions_total,
                 physics_variables.dene,
                 physics_variables.dnla,
                 physics_variables.eps,
@@ -5953,7 +5955,7 @@ class Physics:
 
         # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
-        ni = (physics_variables.dnitot / physics_variables.dene) * ne
+        ni = (physics_variables.nd_ions_total / physics_variables.dene) * ne
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
@@ -6425,7 +6427,7 @@ class Physics:
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
-            physics_variables.dnitot,
+            physics_variables.nd_ions_total,
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.eps,
@@ -6483,7 +6485,7 @@ class Physics:
         alpha_power_total,
         aspect,
         bt,
-        dnitot,
+        nd_ions_total,
         dene,
         dnla,
         eps,
@@ -6516,7 +6518,7 @@ class Physics:
         aspect    : input real :  aspect ratio
         bt        : input real :  toroidal field on axis (T)
         dene      : input real :  volume averaged electron density (/m3)
-        dnitot    : input real :  total ion density (/m3)
+        nd_ions_total    : input real :  total ion density (/m3)
         dnla      : input real :  line-averaged electron density (/m3)
         eps       : input real :  inverse aspect ratio
         hfact     : input real :  H factor on energy confinement scalings
@@ -7425,10 +7427,10 @@ class Physics:
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
         # (here, tin and ten are in keV, and ptrepv and ptripv are in MW/m3)
 
-        ptripv = 2.403e-22 * dnitot * tin / tauei
+        ptripv = 2.403e-22 * nd_ions_total * tin / tauei
         ptrepv = 2.403e-22 * dene * ten / tauee
 
-        ratio = dnitot / dene * tin / ten
+        ratio = nd_ions_total / dene * tin / ten
 
         # Global energy confinement time
 

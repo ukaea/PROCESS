@@ -225,7 +225,7 @@ class Stellarator:
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
-                physics_variables.dnitot,
+                physics_variables.nd_ions_total,
                 physics_variables.dene,
                 physics_variables.dnla,
                 physics_variables.eps,
@@ -4097,7 +4097,7 @@ class Stellarator:
             * constants.electron_charge
             * (
                 physics_variables.dene * physics_variables.ten
-                + physics_variables.dnitot * physics_variables.tin
+                + physics_variables.nd_ions_total * physics_variables.tin
             )
             / physics_variables.btot**2
         )
@@ -4244,7 +4244,7 @@ class Stellarator:
             physics_variables.bt,
             physics_variables.dene,
             physics_variables.deni,
-            physics_variables.dnitot,
+            physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
@@ -4412,7 +4412,7 @@ class Stellarator:
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
-            physics_variables.dnitot,
+            physics_variables.nd_ions_total,
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.eps,

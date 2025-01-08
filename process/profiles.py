@@ -231,7 +231,9 @@ class NProfile(Profile):
                 physics_variables.alphan,
             )
         physics_variables.ni0 = (
-            physics_variables.dnitot / physics_variables.dene * physics_variables.ne0
+            physics_variables.nd_ions_total
+            / physics_variables.dene
+            * physics_variables.ne0
         )
 
 

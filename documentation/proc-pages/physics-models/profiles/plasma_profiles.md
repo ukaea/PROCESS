@@ -390,7 +390,7 @@ $$\begin{aligned}
 
 $$\begin{aligned}
 \mathtt{ne0} = n_{\text{e}} \times (\alpha_n+1) \\
-\mathtt{ni0} = \mathtt{dnitot} \times (\alpha_n+1)
+\mathtt{ni0} = \mathtt{nd_ions_total} \times (\alpha_n+1)
 \end{aligned}$$
 
 -----
