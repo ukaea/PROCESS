@@ -2606,8 +2606,8 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fradwall : input real : f-value for upper limit on radiation wall load
       !! maxradwallload : input real : Maximum permitted radiation wall load (MW/m^2)
-      !! p_fw_rad_max_mw : input real : Peak radiation wall load (MW/m^2)
-      use constraint_variables, only: fradwall, maxradwallload, p_fw_rad_max_mw
+      !! pflux_fw_rad_max_mw : input real : Peak radiation wall load (MW/m^2)
+      use constraint_variables, only: fradwall, maxradwallload, pflux_fw_rad_max_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2615,7 +2615,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0d0 - fradwall * maxradwallload / p_fw_rad_max_mw
+      tmp_cc = 1.0d0 - fradwall * maxradwallload / pflux_fw_rad_max_mw
       tmp_con = maxradwallload
       tmp_err =  maxradwallload * tmp_cc
       tmp_symbol = '<'

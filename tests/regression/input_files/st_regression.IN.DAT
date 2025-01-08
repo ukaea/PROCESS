@@ -2667,7 +2667,7 @@ f_fw_rad_max = 1.0
 icc = 67
 * DESCRIPTION:   Upper limit on radiation wall load
 * JUSTIFICATION: To avoid melting the first wall
-* VARIABLES:     p_fw_rad_max_mw calculated in-situ 
+* VARIABLES:     pflux_fw_rad_max_mw calculated in-situ 
 
 maxradwallload = 1.2
 * DESCRIPTION:   Peak radiation wall load (MW/m^2) 

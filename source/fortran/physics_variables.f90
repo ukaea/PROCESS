@@ -680,7 +680,7 @@ module physics_variables
   real(dp) :: phiint
   !! internal plasma V-s
 
-  real(dp) :: p_fw_rad_mw
+  real(dp) :: pflux_fw_rad_mw
   !! Nominal mean radiation load on inside surface of reactor (MW/m2)
 
   real(dp) :: piepv
@@ -1093,7 +1093,7 @@ module physics_variables
     pedgeradpv = 0.0D0
     charged_particle_power = 0.0D0
     phiint = 0.0D0
-    p_fw_rad_mw = 0.0D0
+    pflux_fw_rad_mw = 0.0D0
     piepv = 0.0D0
     plasma_current = 0.0D0
     neutron_power_plasma = 0.0D0
