@@ -1149,7 +1149,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     dnitot: Any = None
 
-    protium: Any = None
+    f_nd_protium_electrons: Any = None
 
     zeffai: Any = None
 
@@ -1300,7 +1300,7 @@ class PlasmaCompositionParam(NamedTuple):
             deni=0,
             aion=0,
             dnitot=0,
-            protium=0,
+            f_nd_protium_electrons=0,
             zeffai=0,
             rncne=0,
             rnone=0,
@@ -1420,7 +1420,7 @@ class PlasmaCompositionParam(NamedTuple):
             deni=5.8589175702454272e19,
             aion=2.7395439636787726,
             dnitot=6.6125550702454276e19,
-            protium=0,
+            f_nd_protium_electrons=0,
             zeffai=0.43248858851447464,
             rncne=0,
             rnone=0,
@@ -1549,7 +1549,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "dnitot", plasmacompositionparam.dnitot)
 
-    monkeypatch.setattr(physics_variables, "protium", plasmacompositionparam.protium)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_nd_protium_electrons",
+        plasmacompositionparam.f_nd_protium_electrons,
+    )
 
     monkeypatch.setattr(physics_variables, "zeffai", plasmacompositionparam.zeffai)
 

@@ -2670,16 +2670,16 @@ class Physics:
         # Protons
         # This calculation will be wrong on the first call as the particle
         # production rates are evaluated later in the calling sequence
-        # Issue #557 Allow protium impurity to be specified: 'protium'
+        # Issue #557 Allow f_nd_protium_electrons impurity to be specified: 'f_nd_protium_electrons'
         # This will override the calculated value which is a minimum.
         if physics_variables.alpha_rate_density_total < 1.0e-6:  # not calculated yet...
             physics_variables.nd_protons = max(
-                physics_variables.protium * physics_variables.dene,
+                physics_variables.f_nd_protium_electrons * physics_variables.dene,
                 physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             physics_variables.nd_protons = max(
-                physics_variables.protium * physics_variables.dene,
+                physics_variables.f_nd_protium_electrons * physics_variables.dene,
                 physics_variables.nd_alphas
                 * physics_variables.proton_rate_density
                 / physics_variables.alpha_rate_density_total,
@@ -3964,12 +3964,12 @@ class Physics:
             physics_variables.nd_protons,
             "OP ",
         )
-        if physics_variables.protium > 1.0e-10:
+        if physics_variables.f_nd_protium_electrons > 1.0e-10:
             po.ovarre(
                 self.outfile,
-                "Seeded protium density / electron density",
-                "(protium)",
-                physics_variables.protium,
+                "Seeded f_nd_protium_electrons density / electron density",
+                "(f_nd_protium_electrons)",
+                physics_variables.f_nd_protium_electrons,
             )
 
         po.ovarre(

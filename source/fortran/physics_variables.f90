@@ -812,8 +812,8 @@ module physics_variables
   real(dp) :: ralpne
   !! thermal alpha density/electron density (`iteration variable 109`)
 
-  real(dp) :: protium
-  !! Seeded protium density / electron density.
+  real(dp) :: f_nd_protium_electrons
+  !! Seeded f_nd_protium_electrons density / electron density.
 
   real(dp) :: rli
   !! plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
@@ -1129,7 +1129,7 @@ module physics_variables
     rad_fraction_sol = 0.8D0
     rad_fraction_total = 0.0D0
     ralpne = 0.10D0
-    protium = 0.0D0
+    f_nd_protium_electrons = 0.0D0
     rli = 0.9D0
     rlp = 0.0D0
     rmajor = 8.14D0
