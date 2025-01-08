@@ -2119,7 +2119,7 @@ class Physics:
 
         # Calculate radiation power
 
-        radpwrdata = physics_funcs.radpwr(self.plasma_profile)
+        radpwrdata = physics_funcs.calculate_radiation_powers(self.plasma_profile)
         physics_variables.psyncpv = radpwrdata.psyncpv
         physics_variables.pcoreradpv = radpwrdata.pcoreradpv
         physics_variables.pedgeradpv = radpwrdata.pedgeradpv
