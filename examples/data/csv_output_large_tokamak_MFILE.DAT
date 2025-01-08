@@ -431,7 +431,7 @@
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.9376E+01 OP 
- Radiation_power_from_outer_zone_(MW)____________________________________ (pouterzoneradmw)_____________      1.3480E+02 OP 
+ Radiation_power_from_outer_zone_(MW)____________________________________ (p_plasma_outer_rad_mw)_____________      1.3480E+02 OP 
  SOL_radiation_power_as_imposed_by_f_rad_(MW)____________________________ (psolradmw)___________________      0.0000E+00 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2417E+02 OP 
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.9094E-01 OP 

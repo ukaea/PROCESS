@@ -671,7 +671,7 @@ module physics_variables
   real(dp) :: dt_power_plasma
   !!  Deuterium-tritium fusion power, just from plasma [MW]
 
-  real(dp) :: pouterzoneradmw
+  real(dp) :: p_plasma_outer_rad_mw
   !! radiation power from outer zone (MW)
 
   real(dp) :: pedgeradpv
@@ -1089,7 +1089,7 @@ module physics_variables
     pdivmax = 0.0D0
     dt_power_total = 0.0D0
     dt_power_plasma = 0.0D0
-    pouterzoneradmw = 0.0D0
+    p_plasma_outer_rad_mw = 0.0D0
     pedgeradpv = 0.0D0
     charged_particle_power = 0.0D0
     phiint = 0.0D0
