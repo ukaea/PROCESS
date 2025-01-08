@@ -343,23 +343,23 @@
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5961E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9805E+00    
  Total_plasma_beta_______________________________________________________ (beta)________________________      3.3648E-02 ITV
- Total_poloidal_beta_____________________________________________________ (betap)_______________________      1.2857E+00 OP 
+ Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2857E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.4553E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.2236E-03 OP 
  Beam_ion_beta___________________________________________________________ (betanb)______________________      0.0000E+00 OP 
- (Fast_alpha_+_beam_physics_variables.beta)/(thermal_physics_variables.be (gammaft)_____________________      1.4354E-01 OP 
+ (Fast_alpha_+_beam_physics_variables.beta)/(thermal_physics_variables.be (f_beta_alpha_beam_thermal)_____________________      1.4354E-01 OP 
  Thermal_beta____________________________________________________________ ______________________________      2.9425E-02 OP 
  Thermal_poloidal_beta___________________________________________________ ______________________________      1.1243E+00 OP 
  Thermal_toroidal_physics_variables.beta_(=_beta-exp)____________________ ______________________________      3.0215E-02 OP 
- 2nd_stability_physics_variables.beta_:_beta_p_/_(R/a)___________________ (eps*betap)___________________      4.2857E-01    
- 2nd_stability_physics_variables.beta_upper_limit________________________ (epbetmax)____________________      1.3800E+00    
- Beta_g_coefficient______________________________________________________ (dnbeta)______________________      4.9099E+00    
+ 2nd_stability_physics_variables.beta_:_beta_p_/_(R/a)___________________ (eps*beta_poloidal)___________________      4.2857E-01    
+ 2nd_stability_physics_variables.beta_upper_limit________________________ (beta_poloidal_eps_max)____________________      1.3800E+00    
+ Beta_g_coefficient______________________________________________________ (beta_norm_max)______________________      4.9099E+00    
  Normalised_thermal_beta_________________________________________________ ______________________________      2.4977E+00    
  Normalised_total_beta___________________________________________________ ______________________________      2.8562E+00    
  Normalised_toroidal_beta________________________________________________ (normalised_toroidal_beta)____      2.9330E+00    
  Limit_on_thermal_beta___________________________________________________ (betalim)_____________________      5.7842E-02    
  Plasma_thermal_energy_(J)_______________________________________________ ______________________________      9.5431E+08 OP 
- Total_plasma_internal_energy_(J)________________________________________ (total_plasma_internal_energy)      1.0913E+09 OP 
+ Total_plasma_internal_energy_(J)________________________________________ (e_plasma_beta)      1.0913E+09 OP 
  Electron_temperature_(keV)______________________________________________ (te)__________________________      1.2489E+01 ITV
  Electron_temperature_on_axis_(keV)______________________________________ (te0)_________________________      2.5758E+01    
  Ion_temperature_(keV)___________________________________________________ (ti)__________________________      1.2489E+01    
@@ -1277,8 +1277,8 @@ pnetelin = 400.0
 * Beta upper limit *
 *------------------*
 icc = 24
-ixc = 36 * fbetatry
-fbetatry = 0.5
+ixc = 36 * fbeta_max
+fbeta_max = 0.5
 
 * Max TF field *
 *--------------*
@@ -1552,7 +1552,7 @@ alphan = 1.00
 alphat = 1.45 
 
 * (troyon-like) coefficient for beta scaling
-dnbeta = 3.0
+beta_norm_max = 3.0
 
 * Zohm elongation scaling adjustment factor (ishape=2; 3)
 fkzohm = 1.02
@@ -1564,7 +1564,7 @@ gamma = 0.3
 i_bootstrap_current = 4
 
 * Switch for beta limit scaling
-iculbl = 1
+i_beta_component = 1
 
 * Switch for plasma current scaling
 i_plasma_current    = 4
@@ -1573,7 +1573,7 @@ i_plasma_current    = 4
 i_density_limit = 7
 
 * Switch for fast alpha pressure calculation
-ifalphap = 1
+i_beta_fast_alpha = 1
 
 * Switch for inverse quadrature in l-mode scaling laws 5 and 9
 iinvqd = 1

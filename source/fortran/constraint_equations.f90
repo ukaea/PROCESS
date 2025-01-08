@@ -342,8 +342,8 @@ contains
    subroutine constraint_err_001()
     !! Error in: Relationship between beta, temperature (keV) and density (consistency equation)
     !! author: P B Lloyd, CCFE, Culham Science Centre
-    use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
-    write(*,*) 'betaft = ', betaft
+    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
+    write(*,*) 'beta_fast_alpha = ', beta_fast_alpha
     write(*,*) 'beta_beam = ', beta_beam
     write(*,*) 'dene = ', dene
     write(*,*) 'ten = ', ten
@@ -408,7 +408,7 @@ contains
     !! - \( T_i \) -- density weighted average ion temperature [keV]
     !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
-    use physics_variables, only: betaft, beta_beam, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
     use constants, only: electron_charge,rmu0
 
     implicit none
@@ -422,7 +422,7 @@ contains
 
     !! constraint derived type
 
-      tmp_cc = 1.0D0 - (betaft + beta_beam + &
+      tmp_cc = 1.0D0 - (beta_fast_alpha + beta_beam + &
         2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
       tmp_con = beta * (1.0D0 - tmp_cc)
       tmp_err = beta * tmp_cc
@@ -670,15 +670,15 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for epsilon beta-poloidal upper limit
       !! #=# physics
-      !! #=#=# fbeta, epbetmax
+      !! #=#=# fbeta_poloidal_eps, beta_poloidal_eps_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbeta : input real : f-value for epsilon beta-poloidal
-      !! epbetmax : input real : maximum (eps*beta_poloidal)
+      !! fbeta_poloidal_eps : input real : f-value for epsilon beta-poloidal
+      !! beta_poloidal_eps_max : input real : maximum (eps*beta_poloidal)
       !! eps : input real : inverse aspect ratio
-      !! betap : input real : poloidal beta
-      use physics_variables, only: epbetmax, eps, betap
-      use constraint_variables, only: fbeta, fbeta
+      !! beta_poloidal : input real : poloidal beta
+      use physics_variables, only: beta_poloidal_eps_max, eps, beta_poloidal
+      use constraint_variables, only: fbeta_poloidal_eps
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -686,9 +686,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fbeta * epbetmax/(eps*betap)
-      tmp_con = epbetmax * (1.0D0 - tmp_cc)
-      tmp_err = (eps*betap) * tmp_cc
+      tmp_cc =  1.0D0 - fbeta_poloidal_eps * beta_poloidal_eps_max/(eps*beta_poloidal)
+      tmp_con = beta_poloidal_eps_max * (1.0D0 - tmp_cc)
+      tmp_err = (eps*beta_poloidal) * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 
@@ -1256,10 +1256,10 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for beta upper limit
       !! #=# physics
-      !! #=#=# fbetatry, betalim
+      !! #=#=# fbeta_max, beta_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! iculbl : input integer : switch for beta limit scaling (constraint equation  24):<UL>
+      !! i_beta_component : input integer : switch for beta limit scaling (constraint equation  24):<UL>
       !! <LI> = 0 apply limit to total beta;
       !! <LI> = 1 apply limit to thermal beta;
       !! <LI> = 2 apply limit to thermal + neutral beam beta
@@ -1267,16 +1267,16 @@ contains
       !! istell : input integer : switch for stellarator option (set via <CODE>device.dat</CODE>):<UL>
       !! <LI> = 0 use tokamak model;
       !! <LI> = 1 use stellarator model</UL>
-      !! fbetatry : input real : f-value for beta limit
-      !! betalim : input real : allowable beta
+      !! fbeta_max : input real : f-value for beta limit
+      !! beta_max : input real : allowable beta
       !! beta : input real : total plasma beta (calculated if ipedestal =3)
-      !! betaft : input real : fast alpha beta component
+      !! beta_fast_alpha : input real : fast alpha beta component
       !! beta_beam : input real : neutral beam beta component
       !! bt : input real : toroidal field
       !! btot : input real : total field
-      use physics_variables, only: iculbl, betalim, beta, beta_beam, betaft, bt, btot
+      use physics_variables, only: i_beta_component, beta_max, beta, beta_beam, beta_fast_alpha, bt, btot
       use stellarator_variables, only: istell
-      use constraint_variables, only: fbetatry
+      use constraint_variables, only: fbeta_max
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1285,31 +1285,31 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! Include all beta components: relevant for both tokamaks and stellarators
-      if ((iculbl == 0).or.(istell /= 0)) then
-         tmp_cc =  1.0D0 - fbetatry * betalim/beta
-         tmp_con = betalim
-         tmp_err = betalim - beta / fbetatry
+      if ((i_beta_component == 0).or.(istell /= 0)) then
+         tmp_cc =  1.0D0 - fbeta_max * beta_max/beta
+         tmp_con = beta_max
+         tmp_err = beta_max - beta / fbeta_max
          tmp_symbol = '<'
          tmp_units = ''
       ! Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
-      else if (iculbl == 1) then
-         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-betaft-beta_beam)
-         tmp_con = betalim
-         tmp_err = betalim - (beta-betaft-beta_beam) / fbetatry
+      else if (i_beta_component == 1) then
+         tmp_cc = 1.0D0 - fbeta_max * beta_max/(beta-beta_fast_alpha-beta_beam)
+         tmp_con = beta_max
+         tmp_err = beta_max - (beta-beta_fast_alpha-beta_beam) / fbeta_max
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
-      else if (iculbl == 2) then
-         tmp_cc = 1.0D0 - fbetatry * betalim/(beta-betaft)
-         tmp_con = betalim * (1.0D0 - tmp_cc)
-         tmp_err = (beta-betaft) * tmp_cc
+      else if (i_beta_component == 2) then
+         tmp_cc = 1.0D0 - fbeta_max * beta_max/(beta-beta_fast_alpha)
+         tmp_con = beta_max * (1.0D0 - tmp_cc)
+         tmp_err = (beta-beta_fast_alpha) * tmp_cc
          tmp_symbol = '<'
          tmp_units = ''
       ! Beta limit applies to toroidal beta
-      else if (iculbl == 3) then
-         tmp_cc =  1.0D0 - fbetatry * betalim/(beta*(btot/bt)**2)
-         tmp_con = betalim
-         tmp_err = betalim - (beta*(btot/bt)**2) / fbetatry
+      else if (i_beta_component == 3) then
+         tmp_cc =  1.0D0 - fbeta_max * beta_max/(beta*(btot/bt)**2)
+         tmp_con = beta_max
+         tmp_err = beta_max - (beta*(btot/bt)**2) / fbeta_max
          tmp_symbol = '<'
          tmp_units = ''
       end if
@@ -2079,14 +2079,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for poloidal beta upper limit
       !! #=# physics
-      !! #=#=# fbetap, betpmx
+      !! #=#=# fbeta_poloidal, beta_poloidal_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbetap : input real : rf-value for poloidal beta
-      !! betpmx : input real :  maximum poloidal beta
-      !! betap : input real :  poloidal beta
-      use constraint_variables, only: fbetap, betpmx
-      use physics_variables, only: betap
+      !! fbeta_poloidal : input real : rf-value for poloidal beta
+      !! beta_poloidal_max : input real :  maximum poloidal beta
+      !! beta_poloidal : input real :  poloidal beta
+      use constraint_variables, only: fbeta_poloidal, beta_poloidal_max
+      use physics_variables, only: beta_poloidal
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2094,9 +2094,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fbetap * betpmx/betap
-      tmp_con = betpmx * (1.0D0 - tmp_cc)
-      tmp_err = betap * tmp_cc
+      tmp_cc =  1.0D0 - fbeta_poloidal * beta_poloidal_max/beta_poloidal
+      tmp_con = beta_poloidal_max * (1.0D0 - tmp_cc)
+      tmp_err = beta_poloidal * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 
@@ -3130,17 +3130,16 @@ contains
       !! author: J Lion, IPP Greifswald
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !!  (beta-betaft) > betalim_lower
+      !!  (beta-beta_fast_alpha) > beta_min
       !! #=# physics
-      !! #=#=# betaft, beta, fbetatry_lower
+      !! #=#=# beta_fast_alpha, beta, fbeta_min
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbetatry_lower : input real : f-value for constraint beta-betaft > betalim_lower
-      !! betalim_lower : input real :  Lower limit for beta
+      !! fbeta_min : input real : f-value for constraint beta-beta_fast_alpha > beta_min
+      !! beta_min : input real :  Lower limit for beta
       !! beta : input real :  plasma beta
-      !! betaft : input real : Alpha particle beta
 
-      use physics_variables, only: betalim_lower, beta, betaft
-      use constraint_variables, only: fbetatry_lower
+      use physics_variables, only: beta_min, beta
+      use constraint_variables, only: fbeta_min
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3149,9 +3148,9 @@ contains
       character(len=10), intent(out) :: tmp_units
 
 
-      tmp_cc = 1.0D0 - fbetatry_lower * (beta-betaft)/betalim_lower
-      tmp_con = betalim_lower * (1.0D0 - tmp_cc)
-      tmp_err = (beta-betaft) * tmp_cc
+      tmp_cc = 1.0D0 - fbeta_min * (beta)/beta_min
+      tmp_con = beta_min * (1.0D0 - tmp_cc)
+      tmp_err = (beta) * tmp_cc
       tmp_symbol = '>'
       tmp_units = ''
 

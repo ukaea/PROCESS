@@ -209,7 +209,7 @@ class PfpwrParam(NamedTuple):
 
     cptdin: Any = None
 
-    curpfb: Any = None
+    curpfs: Any = None
 
     sxlg: Any = None
 
@@ -497,7 +497,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfb=numpy.array(
+            curpfs=numpy.array(
                 numpy.array(
                     (
                         0.067422231232391661,
@@ -1239,7 +1239,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfb=numpy.array(
+            curpfs=numpy.array(
                 numpy.array(
                     (
                         0.019288882290113718,
@@ -1812,7 +1812,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "cptdin", pfpwrparam.cptdin)
 
-    monkeypatch.setattr(pfcoil_variables, "curpfb", pfpwrparam.curpfb)
+    monkeypatch.setattr(pfcoil_variables, "curpfs", pfpwrparam.curpfs)
 
     monkeypatch.setattr(pfcoil_variables, "sxlg", pfpwrparam.sxlg)
 

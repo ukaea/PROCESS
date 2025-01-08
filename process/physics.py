@@ -138,29 +138,46 @@ def vscalc(
 
 
 @nb.jit(nopython=True, cache=True)
-def culblm(bt, dnbeta, plasma_current, rminor):
-    """Beta scaling limit
-    author: P J Knight, CCFE, Culham Science Centre
-    bt      : input real :  toroidal B-field on plasma axis (T)
-    dnbeta  : input real :  Troyon-like g coefficient
-    plasma_current : input real :  plasma current (A)
-    rminor  : input real :  plasma minor axis (m)
-    betalim : output real : beta limit as defined below
-    This subroutine calculates the beta limit, using
-    the algorithm documented in AEA FUS 172.
+def calculate_beta_limit(
+    bt: float, beta_norm_max: float, plasma_current: float, rminor: float
+) -> float:
+    """
+    Calculate the beta scaling limit.
+
+    :param bt: Toroidal B-field on plasma axis [T].
+    :type bt: float
+    :param beta_norm_max: Troyon-like g coefficient.
+    :type beta_norm_max: float
+    :param plasma_current: Plasma current [A].
+    :type plasma_current: float
+    :param rminor: Plasma minor axis [m].
+    :type rminor: float
+    :return: Beta limit as defined below.
+    :rtype: float
+
+    This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
     The limit applies to beta defined with respect to the total B-field.
-    Switch iculbl determines which components of beta to include.
+    Switch i_beta_component determines which components of beta to include.
 
-    If iculbl = 0, then the limit is applied to the total beta
-    If iculbl = 1, then the limit is applied to the thermal beta only
-    If iculbl = 2, then the limit is applied to the thermal + neutral beam beta components
-    If iculbl = 3, then the limit is applied to the toroidal beta
+    Notes:
+        - If i_beta_component = 0, then the limit is applied to the total beta.
+        - If i_beta_component = 1, then the limit is applied to the thermal beta only.
+        - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
+        - If i_beta_component = 3, then the limit is applied to the toroidal beta.
 
-    The default value for the g coefficient is dnbeta = 3.5
-    AEA FUS 172: Physics Assessment for the European Reactor Study
+        - The default value for the g coefficient is beta_norm_max = 3.5.
+
+    References:
+        - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
+          Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597–1609, Oct. 1988,
+          doi: https://doi.org/10.1088/0741-3335/30/11/019.
+
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
     """
 
-    return 0.01 * dnbeta * (plasma_current / 1.0e6) / (rminor * bt)
+    # Multiplied by 0.01 to convert from % to fraction
+    return 0.01 * beta_norm_max * (plasma_current / 1.0e6) / (rminor * bt)
 
 
 # -----------------------------------------------------
@@ -577,7 +594,7 @@ def _nevins_integral(
     alphan: float,
     q0: float,
     q95: float,
-    betat: float,
+    beta_toroidal: float,
 ) -> float:
     """
     Integrand function for Nevins et al bootstrap current scaling.
@@ -594,7 +611,7 @@ def _nevins_integral(
     - alphan: float, density profile index
     - q0: float, normalized safety factor at the magnetic axis
     - q95: float, normalized safety factor at 95% of the plasma radius
-    - betat: float, Toroidal plasma beta
+    - beta_toroidal: float, Toroidal plasma beta
 
     Returns:
     - float, the integrand value
@@ -639,7 +656,7 @@ def _nevins_integral(
     # q-profile
     q = q0 + (q95 - q0) * ((y + y**2 + y**3) / (3.0))
 
-    pratio = (betat - betae) / betae
+    pratio = (beta_toroidal - betae) / betae
 
     return (q / q95) * (al1 * (a1 + (pratio * (a1 + alphai * a2))) + al2 * a2)
 
@@ -1554,9 +1571,77 @@ class Physics:
             physics_variables.bt**2 + physics_variables.bp**2
         )
 
+        # *************************** #
+        #       BETA COMPONENTS       #
+        # *************************** #
+
+        physics_variables.beta_toroidal = (
+            physics_variables.beta
+            * physics_variables.btot**2
+            / physics_variables.bt**2
+        )
+
         # Calculate physics_variables.beta poloidal [-]
-        physics_variables.betap = beta_poloidal(
+        physics_variables.beta_poloidal = calculate_poloidal_beta(
             physics_variables.btot, physics_variables.bp, physics_variables.beta
+        )
+
+        physics_variables.beta_thermal = (
+            physics_variables.beta
+            - physics_variables.beta_fast_alpha
+            - physics_variables.beta_beam
+        )
+
+        physics_variables.beta_poloidal_eps = (
+            physics_variables.beta_poloidal * physics_variables.eps
+        )
+
+        physics_variables.beta_thermal_poloidal = (
+            physics_variables.beta_thermal
+            * (physics_variables.btot / physics_variables.bp) ** 2
+        )
+        physics_variables.beta_thermal_toroidal = (
+            physics_variables.beta_thermal
+            * (physics_variables.btot / physics_variables.bt) ** 2
+        )
+        physics_variables.beta_norm_thermal = (
+            1.0e8
+            * physics_variables.beta_thermal
+            * physics_variables.rminor
+            * physics_variables.bt
+            / physics_variables.plasma_current,
+        )
+        physics_variables.beta_norm_toroidal = (
+            physics_variables.beta_norm_total
+            * (physics_variables.btot / physics_variables.bt) ** 2
+        )
+        physics_variables.beta_norm_poloidal = (
+            physics_variables.beta_norm_total
+            * (physics_variables.btot / physics_variables.bp) ** 2
+        )
+
+        physics_variables.f_beta_alpha_beam_thermal = (
+            physics_variables.beta_fast_alpha + physics_variables.beta_beam
+        ) / physics_variables.beta_thermal
+
+        # Plasma thermal energy derived from the thermal beta
+        physics_variables.e_plasma_beta_thermal = (
+            1.5e0
+            * physics_variables.beta_thermal
+            * physics_variables.btot
+            * physics_variables.btot
+            / (2.0e0 * constants.rmu0)
+            * physics_variables.plasma_volume
+        )
+
+        # Plasma thermal energy derived from the total beta
+        physics_module.e_plasma_beta = (
+            1.5e0
+            * physics_variables.beta
+            * physics_variables.btot
+            * physics_variables.btot
+            / (2.0e0 * constants.rmu0)
+            * physics_variables.plasma_volume
         )
 
         # Set PF coil ramp times
@@ -1671,19 +1756,13 @@ class Physics:
                 physics_variables.plasma_volume,
             )
         )
-        # Calculate the toroidal beta for the Nevins scaling
-        betat = (
-            physics_variables.beta
-            * physics_variables.btot**2
-            / physics_variables.bt**2
-        )
 
         current_drive_variables.bscf_nevins = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_nevins(
                 physics_variables.alphan,
                 physics_variables.alphat,
-                betat,
+                physics_variables.beta_toroidal,
                 physics_variables.bt,
                 physics_variables.dene,
                 physics_variables.plasma_current,
@@ -1699,7 +1778,7 @@ class Physics:
         # Wilson scaling uses thermal poloidal beta, not total
         betpth = (
             physics_variables.beta
-            - physics_variables.betaft
+            - physics_variables.beta_fast_alpha
             - physics_variables.beta_beam
         ) * (physics_variables.btot / physics_variables.bp) ** 2
         current_drive_variables.bscf_wilson = (
@@ -1724,7 +1803,7 @@ class Physics:
         current_drive_variables.bscf_sakai = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_sakai(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
                 alphan=physics_variables.alphan,
@@ -1737,7 +1816,7 @@ class Physics:
         current_drive_variables.bscf_aries = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 rli=physics_variables.rli,
                 core_density=physics_variables.ne0,
                 average_density=physics_variables.dene,
@@ -1748,7 +1827,7 @@ class Physics:
         current_drive_variables.bscf_andrade = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 core_pressure=physics_variables.p0,
                 average_pressure=physics_variables.vol_avg_pressure,
                 inverse_aspect=physics_variables.eps,
@@ -1757,7 +1836,7 @@ class Physics:
         current_drive_variables.bscf_hoang = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_hoang(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 pressure_index=physics_variables.alphap,
                 current_index=physics_variables.alphaj,
                 inverse_aspect=physics_variables.eps,
@@ -1766,7 +1845,7 @@ class Physics:
         current_drive_variables.bscf_wong = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wong(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 density_index=physics_variables.alphan,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -1776,7 +1855,7 @@ class Physics:
         current_drive_variables.bscf_gi_I = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_I(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -1789,7 +1868,7 @@ class Physics:
         current_drive_variables.bscf_gi_II = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_II(
-                betap=physics_variables.betap,
+                beta_poloidal=physics_variables.beta_poloidal,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -2005,7 +2084,7 @@ class Physics:
             physics_variables.alpha_power_density_plasma,
         )
 
-        physics_variables.betaft = physics_funcs.fast_alpha_beta(
+        physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
@@ -2015,7 +2094,7 @@ class Physics:
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
             physics_variables.alpha_power_density_plasma,
-            physics_variables.ifalphap,
+            physics_variables.i_beta_fast_alpha,
         )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
@@ -2277,37 +2356,42 @@ class Physics:
         # Calculate physics_variables.beta limit
 
         if physics_variables.iprofile == 1:
-            # Relation between physics_variables.beta limit and plasma internal inductance
-            # Hartmann and Zohm
-            physics_variables.dnbeta = 4.0e0 * physics_variables.rli
+            # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+            # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+
+            physics_variables.beta_norm_max = 4.0e0 * physics_variables.rli
 
         if physics_variables.iprofile == 2:
             # Original scaling law
-            physics_variables.dnbeta = 2.7e0 * (
+            physics_variables.beta_norm_max = 2.7e0 * (
                 1.0e0 + 5.0e0 * physics_variables.eps**3.5e0
             )
 
         if physics_variables.iprofile == 3 or physics_variables.iprofile == 5:
-            # physics_variables.dnbeta found from physics_variables.aspect ratio scaling on p32 of Menard:
-            # Menard, et al. "Fusion Nuclear Science Facilities
-            # and Pilot Plants Based on the Spherical Tokamak."
-            # Nucl. Fusion, 2016, 44.
-            physics_variables.dnbeta = 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
+            # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            # Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            # doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+
+            physics_variables.beta_norm_max = (
+                3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
+            )
 
         if physics_variables.iprofile == 6:
             # Method used for STEP plasma scoping
-            # Tholerus et al. (2024), arXiv:2403.09460
-            Fp = (physics_variables.ne0 * physics_variables.te0) / (
-                physics_variables.dene * physics_variables.te
-            )
-            physics_variables.dnbeta = 3.7e0 + (
+            # E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
+            # Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+
+            # Pressure peaking factor (Fp) is defined as the ratio of the peak pressure to the average pressure
+            Fp = physics_variables.p0 / physics_variables.vol_avg_pressure
+
+            physics_variables.beta_norm_max = 3.7e0 + (
                 (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
             )
 
-        # culblm returns the betalim for beta
-        physics_variables.betalim = culblm(
+        # calculate_beta_limit() returns the beta_max for beta
+        physics_variables.beta_max = calculate_beta_limit(
             physics_variables.bt,
-            physics_variables.dnbeta,
+            physics_variables.beta_norm_max,
             physics_variables.plasma_current,
             physics_variables.rminor,
         )
@@ -2419,18 +2503,9 @@ class Physics:
         physics_variables.pradsolmw = (
             physics_variables.rad_fraction_sol * physics_variables.pdivt
         )
-        physics_module.total_plasma_internal_energy = (
-            1.5e0
-            * physics_variables.beta
-            * physics_variables.btot
-            * physics_variables.btot
-            / (2.0e0 * constants.rmu0)
-            * physics_variables.plasma_volume
-        )
 
         physics_module.total_energy_conf_time = (
-            physics_module.total_plasma_internal_energy
-            / physics_module.total_loss_power
+            physics_module.e_plasma_beta / physics_module.total_loss_power
         )
 
         if any(numerics.icc == 78):
@@ -3013,12 +3088,12 @@ class Physics:
                 8 = Sauter scaling (allowing negative triangularity)
                 9 = FIESTA ST scaling
             iprofile (int): Switch for current profile consistency.
-                0: Use input values for alphaj, rli, dnbeta.
+                0: Use input values for alphaj, rli, beta_norm_max.
                 1: Make these consistent with input q, q_0 values.
-                2: Use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling).
-                3: Use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling).
-                4: Use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling).
-                5: Use input value for alphaj. Set rli and dnbeta from Menard scaling.
+                2: Use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (original scaling).
+                3: Use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (Menard scaling).
+                4: Use input values for alphaj, beta_norm_max. Set rli from elongation (Menard scaling).
+                5: Use input value for alphaj. Set rli and beta_norm_max from Menard scaling.
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
             p0 (float): Central plasma pressure (Pa).
@@ -3131,7 +3206,8 @@ class Physics:
             * (1.0 + kappa**2 * (1.0 + 2.0 * triang**2 - 1.2 * triang**3))
         )
 
-        physics_variables.normalised_total_beta = (
+        # Normalised beta from Troyon beta limit
+        physics_variables.beta_norm_total = (
             1.0e8 * physics_variables.beta * rminor * bt / plasma_current
         )
 
@@ -3230,17 +3306,14 @@ class Physics:
             * np.sqrt(physics_variables.eps)
             * physics_variables.dnla**3
             * physics_variables.kappa
-            / (
-                physics_module.total_plasma_internal_energy**2
-                * physics_variables.plasma_current
-            )
+            / (physics_module.e_plasma_beta**2 * physics_variables.plasma_current)
         )
 
         physics_module.rho_star = np.sqrt(
             2.0e0
             * constants.proton_mass
             * physics_variables.aion
-            * physics_module.total_plasma_internal_energy
+            * physics_module.e_plasma_beta
             / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla)
         ) / (
             constants.electron_charge
@@ -3253,7 +3326,7 @@ class Physics:
             4.0e0
             / 3.0e0
             * constants.rmu0
-            * physics_module.total_plasma_internal_energy
+            * physics_module.e_plasma_beta
             / (physics_variables.plasma_volume * physics_variables.bt**2)
         )
 
@@ -3473,12 +3546,12 @@ class Physics:
                 if physics_variables.iprofile == 1:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,dnbeta is enforced",
+                        "Consistency between q0,q,alphaj,rli,beta_norm_max is enforced",
                     )
                 else:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,dnbeta is not enforced",
+                        "Consistency between q0,q,alphaj,rli,beta_norm_max is not enforced",
                     )
 
                 po.oblnkl(self.outfile)
@@ -3593,171 +3666,196 @@ class Physics:
             )
 
         po.osubhd(self.outfile, "Beta Information :")
-
-        betath = (
-            physics_variables.beta
-            - physics_variables.betaft
-            - physics_variables.beta_beam
-        )
-        gammaft = (physics_variables.betaft + physics_variables.beta_beam) / betath
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on total beta",
+                "(beta_max)",
+                physics_variables.beta_max,
+                "OP ",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on thermal beta",
+                "(beta_max)",
+                physics_variables.beta_max,
+                "OP ",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on thermal + NB beta",
+                "(beta_max)",
+                physics_variables.beta_max,
+                "OP ",
+            )
 
         po.ovarre(self.outfile, "Total plasma beta", "(beta)", physics_variables.beta)
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on total beta",
+                "(beta_min)",
+                physics_variables.beta_min,
+                "IP",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal beta",
+                "(beta_min)",
+                physics_variables.beta_min,
+                "IP",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal + NB beta",
+                "(beta_min)",
+                physics_variables.beta_min,
+                "IP",
+            )
+        po.ovarre(
+            self.outfile,
+            "Upper limit on poloidal beta",
+            "(beta_poloidal_max)",
+            constraint_variables.beta_poloidal_max,
+            "IP",
+        )
         po.ovarre(
             self.outfile,
             "Total poloidal beta",
-            "(betap)",
-            physics_variables.betap,
+            "(beta_poloidal)",
+            physics_variables.beta_poloidal,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total toroidal beta",
-            " ",
-            physics_variables.beta
-            * (physics_variables.btot / physics_variables.bt) ** 2,
+            "(beta_toroidal)",
+            physics_variables.beta_toroidal,
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Fast alpha beta", "(betaft)", physics_variables.betaft, "OP "
+            self.outfile,
+            "Fast alpha beta",
+            "(beta_fast_alpha)",
+            physics_variables.beta_fast_alpha,
+            "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Beam ion beta",
+            "Neutral Beam ion beta",
             "(beta_beam)",
             physics_variables.beta_beam,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "(Fast alpha + beam physics_variables.beta)/(thermal physics_variables.beta)",
-            "(gammaft)",
-            gammaft,
+            "Ratio of fast alpha and beam beta to thermal beta",
+            "(f_beta_alpha_beam_thermal)",
+            physics_variables.f_beta_alpha_beam_thermal,
             "OP ",
         )
 
-        po.ovarre(self.outfile, "Thermal beta", " ", betath, "OP ")
+        po.ovarre(
+            self.outfile,
+            "Thermal beta",
+            "(beta_thermal)",
+            physics_variables.beta_thermal,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Thermal poloidal beta",
-            " ",
-            betath * (physics_variables.btot / physics_variables.bp) ** 2,
+            "(beta_thermal_poloidal)",
+            physics_variables.beta_thermal_poloidal,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Thermal toroidal physics_variables.beta (= beta-exp)",
-            " ",
-            betath * (physics_variables.btot / physics_variables.bt) ** 2,
+            "Thermal toroidal beta",
+            "(beta_thermal_toroidal)",
+            physics_variables.beta_thermal_toroidal,
             "OP ",
         )
 
         po.ovarrf(
             self.outfile,
-            "2nd stability physics_variables.beta : beta_p / (R/a)",
-            "(eps*betap)",
-            physics_variables.eps * physics_variables.betap,
+            "Poloidal beta and inverse aspect ratio",
+            "(beta_poloidal_eps)",
+            physics_variables.beta_poloidal_eps,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "2nd stability physics_variables.beta upper limit",
-            "(epbetmax)",
-            physics_variables.epbetmax,
+            "Poloidal beta and inverse aspect ratio upper limit",
+            "(beta_poloidal_eps_max)",
+            physics_variables.beta_poloidal_eps_max,
         )
-
+        po.osubhd(self.outfile, "Normalised Beta Information :")
         if stellarator_variables.istell == 0:
             if physics_variables.iprofile == 1:
                 po.ovarrf(
                     self.outfile,
                     "Beta g coefficient",
-                    "(dnbeta)",
-                    physics_variables.dnbeta,
+                    "(beta_norm_max)",
+                    physics_variables.beta_norm_max,
                     "OP ",
                 )
             else:
                 po.ovarrf(
                     self.outfile,
                     "Beta g coefficient",
-                    "(dnbeta)",
-                    physics_variables.dnbeta,
+                    "(beta_norm_max)",
+                    physics_variables.beta_norm_max,
                 )
-
-            po.ovarrf(
-                self.outfile,
-                "Normalised thermal beta",
-                " ",
-                1.0e8
-                * betath
-                * physics_variables.rminor
-                * physics_variables.bt
-                / physics_variables.plasma_current,
-                "OP ",
-            )
-
             po.ovarrf(
                 self.outfile,
                 "Normalised total beta",
-                " ",
-                physics_variables.normalised_total_beta,
+                "(beta_norm_total)",
+                physics_variables.beta_norm_total,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Normalised thermal beta",
+                "(beta_norm_thermal) ",
+                physics_variables.beta_norm_thermal,
                 "OP ",
             )
 
-            normalised_toroidal_beta = (
-                physics_variables.normalised_total_beta
-                * (physics_variables.btot / physics_variables.bt) ** 2
-            )
             po.ovarrf(
                 self.outfile,
                 "Normalised toroidal beta",
-                "(normalised_toroidal_beta)",
-                normalised_toroidal_beta,
+                "(beta_norm_toroidal) ",
+                physics_variables.beta_norm_toroidal,
                 "OP ",
             )
 
-        if physics_variables.iculbl == 0:
             po.ovarrf(
                 self.outfile,
-                "Limit on total beta",
-                "(betalim)",
-                physics_variables.betalim,
+                "Normalised poloidal beta",
+                "(beta_norm_poloidal) ",
+                physics_variables.beta_norm_poloidal,
                 "OP ",
             )
-        elif physics_variables.iculbl == 1:
-            po.ovarrf(
-                self.outfile,
-                "Limit on thermal beta",
-                "(betalim)",
-                physics_variables.betalim,
-                "OP ",
-            )
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Limit on thermal + NB beta",
-                "(betalim)",
-                physics_variables.betalim,
-                "OP ",
-            )
-
+        po.osubhd(self.outfile, "Plasma energies derived from beta :")
         po.ovarre(
             self.outfile,
-            "Plasma thermal energy (J)",
-            " ",
-            1.5e0
-            * betath
-            * physics_variables.btot
-            * physics_variables.btot
-            / (2.0e0 * constants.rmu0)
-            * physics_variables.plasma_volume,
-            "OP ",
+            "Plasma thermal energy derived from thermal beta (J)",
+            "(e_plasma_beta_thermal) ",
+            physics_variables.e_plasma_beta_thermal,
+            "OP",
         )
 
         po.ovarre(
             self.outfile,
-            "Total plasma internal energy (J)",
-            "(total_plasma_internal_energy)",
-            physics_module.total_plasma_internal_energy,
-            "OP ",
+            "Plasma thermal energy derived from the total beta (J)",
+            "(e_plasma_beta)",
+            physics_module.e_plasma_beta,
+            "OP",
         )
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
@@ -5727,7 +5825,7 @@ class Physics:
     def bootstrap_fraction_nevins(
         alphan: float,
         alphat: float,
-        betat: float,
+        beta_toroidal: float,
         bt: float,
         dene: float,
         plasma_current: float,
@@ -5744,7 +5842,7 @@ class Physics:
         Args:
             alphan (float): Density profile index.
             alphat (float): Temperature profile index.
-            betat (float): Toroidal plasma beta.
+            beta_toroidal (float): Toroidal plasma beta.
             bt (float): Toroidal field on axis (T).
             dene (float): Electron density (/m3).
             plasma_current (float): Plasma current (A).
@@ -5798,7 +5896,7 @@ class Physics:
                 alphan,
                 q0,
                 q95,
-                betat,
+                beta_toroidal,
             ),
             0,  # Lower bound
             1.0,  # Upper bound
@@ -5967,7 +6065,7 @@ class Physics:
 
     @staticmethod
     def bootstrap_fraction_sakai(
-        betap: float,
+        beta_poloidal: float,
         q95: float,
         q0: float,
         alphan: float,
@@ -5979,7 +6077,7 @@ class Physics:
         Calculate the bootstrap fraction using the Sakai formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         q95 (float): Safety factor at 95% of the plasma radius.
         q0 (float): Safety factor at the magnetic axis.
         alphan (float): Density profile index
@@ -6008,7 +6106,7 @@ class Physics:
         # So the diamganetic current should not be calculated with this. i_diamagnetic_current = 0
         return (
             10 ** (0.951 * eps - 0.948)
-            * betap ** (1.226 * eps + 1.584)
+            * beta_poloidal ** (1.226 * eps + 1.584)
             * rli ** (-0.184 * eps - 0.282)
             * (q95 / q0) ** (-0.042 * eps - 0.02)
             * alphan ** (0.13 * eps + 0.05)
@@ -6017,7 +6115,7 @@ class Physics:
 
     @staticmethod
     def bootstrap_fraction_aries(
-        betap: float,
+        beta_poloidal: float,
         rli: float,
         core_density: float,
         average_density: float,
@@ -6027,7 +6125,7 @@ class Physics:
         Calculate the bootstrap fraction using the ARIES formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         rli (float): Plasma normalized internal inductance.
         core_density (float): Core plasma density.
         average_density (float): Average plasma density.
@@ -6051,11 +6149,11 @@ class Physics:
 
         c_bs = a_1 + b_1 * (core_density / average_density)
 
-        return c_bs * np.sqrt(inverse_aspect) * betap
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
 
     @staticmethod
     def bootstrap_fraction_andrade(
-        betap: float,
+        beta_poloidal: float,
         core_pressure: float,
         average_pressure: float,
         inverse_aspect: float,
@@ -6064,7 +6162,7 @@ class Physics:
         Calculate the bootstrap fraction using the Andrade et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         core_pressure (float): Core plasma pressure.
         average_pressure (float): Average plasma pressure.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6091,11 +6189,11 @@ class Physics:
         # Error +- 0.0007
         c_bs = 0.2340
 
-        return c_bs * np.sqrt(inverse_aspect) * betap * c_p**0.8
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal * c_p**0.8
 
     @staticmethod
     def bootstrap_fraction_hoang(
-        betap: float,
+        beta_poloidal: float,
         pressure_index: float,
         current_index: float,
         inverse_aspect: float,
@@ -6104,7 +6202,7 @@ class Physics:
         Calculate the bootstrap fraction using the Hoang et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         pressure_index (float): Pressure profile index.
         current_index (float): Current profile index.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6137,11 +6235,11 @@ class Physics:
 
         c_bs = np.sqrt((pressure_index + 1) / (current_index + 1))
 
-        return 0.4 * np.sqrt(inverse_aspect) * betap**0.9 * c_bs
+        return 0.4 * np.sqrt(inverse_aspect) * beta_poloidal**0.9 * c_bs
 
     @staticmethod
     def bootstrap_fraction_wong(
-        betap: float,
+        beta_poloidal: float,
         density_index: float,
         temperature_index: float,
         inverse_aspect: float,
@@ -6151,7 +6249,7 @@ class Physics:
         Calculate the bootstrap fraction using the Wong et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         density_index (float): Density profile index.
         temperature_index (float): Temperature profile index.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6180,11 +6278,11 @@ class Physics:
 
         c_bs = 0.773 + 0.019 * elongation
 
-        return c_bs * f_peak**0.25 * betap * np.sqrt(inverse_aspect)
+        return c_bs * f_peak**0.25 * beta_poloidal * np.sqrt(inverse_aspect)
 
     @staticmethod
     def bootstrap_fraction_gi_I(
-        betap: float,
+        beta_poloidal: float,
         pressure_index: float,
         temperature_index: float,
         inverse_aspect: float,
@@ -6196,7 +6294,7 @@ class Physics:
         Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         pressure_index (float): Pressure profile index.
         temperature_index (float): Temperature profile index.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6234,11 +6332,11 @@ class Physics:
             * (q95 / q0) ** -0.133
         )
 
-        return c_bs * np.sqrt(inverse_aspect) * betap
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
 
     @staticmethod
     def bootstrap_fraction_gi_II(
-        betap: float,
+        beta_poloidal: float,
         pressure_index: float,
         temperature_index: float,
         inverse_aspect: float,
@@ -6248,7 +6346,7 @@ class Physics:
         Calculate the bootstrap fraction using the second scaling from the Gi et al formula.
 
         Parameters:
-        betap (float): Plasma poloidal beta.
+        beta_poloidal (float): Plasma poloidal beta.
         pressure_index (float): Pressure profile index.
         temperature_index (float): Temperature profile index.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6283,7 +6381,7 @@ class Physics:
             * effective_charge**0.178
         )
 
-        return c_bs * np.sqrt(inverse_aspect) * betap
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
 
     def fhfac(self, is_):
         """Function to find H-factor for power balance
@@ -7338,7 +7436,7 @@ class Physics:
         return kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht
 
 
-def beta_poloidal(btot, bp, beta):
+def calculate_poloidal_beta(btot, bp, beta):
     """Calculates total poloidal beta
 
     Author: James Morris (UKAEA)

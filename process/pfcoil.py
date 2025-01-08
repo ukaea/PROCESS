@@ -314,7 +314,7 @@ class PFCoil:
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
-                        + pv.betap
+                        + pv.beta_poloidal
                         + (pv.rli / 2.0e0)
                         - 1.5e0
                     )
@@ -398,7 +398,7 @@ class PFCoil:
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
-                        + pv.betap
+                        + pv.beta_poloidal
                         + (pv.rli / 2.0e0)
                         - 1.5e0
                     )
@@ -510,7 +510,7 @@ class PFCoil:
                     pf.ccls[nng] = 1.0e6 * pfv.ccls_ma[nng]
 
                 # Beginning of pulse: t = tv.t_precharge
-                pfv.curpfs[ncl] = 1.0e-6 * pf.ccl0[nng]
+                pfv.curpfb[ncl] = 1.0e-6 * pf.ccl0[nng]
 
                 # Beginning of flat-top: t = tv.t_precharge+tv.t_current_ramp_up
                 pfv.curpff[ncl] = 1.0e-6 * (
@@ -518,7 +518,7 @@ class PFCoil:
                 )
 
                 # End of flat-top: t = tv.t_precharge+tv.t_current_ramp_up+tv.t_fusion_ramp+tv.t_burn
-                pfv.curpfb[ncl] = 1.0e-6 * (
+                pfv.curpfs[ncl] = 1.0e-6 * (
                     pf.ccls[nng] - (pf.ccl0[nng] * (1.0e0 / pfv.fcohbop))
                 )
 
@@ -526,9 +526,9 @@ class PFCoil:
 
         # Current in Central Solenoid as a function of time
         # N.B. If the Central Solenoid is not present then ioheof is zero.
-        pfv.curpfs[ncl] = -1.0e-6 * ioheof * pfv.fcohbop
+        pfv.curpfb[ncl] = -1.0e-6 * ioheof * pfv.fcohbop
         pfv.curpff[ncl] = 1.0e-6 * ioheof * pfv.fcohbof
-        pfv.curpfb[ncl] = 1.0e-6 * ioheof
+        pfv.curpfs[ncl] = 1.0e-6 * ioheof
 
         # Set up coil current waveforms, normalised to the peak current in
         # each coil
@@ -1268,11 +1268,11 @@ class PFCoil:
             kk = 0
         else:
             # Check different times for maximum current
-            if abs(pfv.curpfs[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
+            if abs(pfv.curpfb[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
                 it = 2
             elif abs(pfv.curpff[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
                 it = 4
-            elif abs(pfv.curpfb[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
+            elif abs(pfv.curpfs[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
                 it = 5
             else:
                 eh.idiags[0] = it
@@ -2700,10 +2700,10 @@ class PFCoil:
         for ic in range(pfv.nohc):
             # Find where the peak current occurs
             # Beginning of pulse, t = t_precharge
-            if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfb[ic])) and (
-                abs(pfv.curpfs[ic]) >= abs(pfv.curpff[ic])
+            if (abs(pfv.curpfb[ic]) >= abs(pfv.curpfs[ic])) and (
+                abs(pfv.curpfb[ic]) >= abs(pfv.curpff[ic])
             ):
-                pfv.ric[ic] = pfv.curpfs[ic]
+                pfv.ric[ic] = pfv.curpfb[ic]
 
             # Beginning of flat-top, t = t_precharge + t_current_ramp_up
             if (abs(pfv.curpff[ic]) >= abs(pfv.curpfb[ic])) and (
@@ -2712,17 +2712,17 @@ class PFCoil:
                 pfv.ric[ic] = pfv.curpff[ic]
 
             # End of flat-top, t = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn
-            if (abs(pfv.curpfb[ic]) >= abs(pfv.curpfs[ic])) and (
-                abs(pfv.curpfb[ic]) >= abs(pfv.curpff[ic])
+            if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfs[ic])) and (
+                abs(pfv.curpfs[ic]) >= abs(pfv.curpff[ic])
             ):
-                pfv.ric[ic] = pfv.curpfb[ic]
+                pfv.ric[ic] = pfv.curpfs[ic]
 
             # Set normalized current waveforms
             pfv.waves[ic, 0] = 0.0e0
-            pfv.waves[ic, 1] = pfv.curpfs[ic] / pfv.ric[ic]
+            pfv.waves[ic, 1] = pfv.curpfb[ic] / pfv.ric[ic]
             pfv.waves[ic, 2] = pfv.curpff[ic] / pfv.ric[ic]
             pfv.waves[ic, 3] = pfv.curpff[ic] / pfv.ric[ic]
-            pfv.waves[ic, 4] = pfv.curpfb[ic] / pfv.ric[ic]
+            pfv.waves[ic, 4] = pfv.curpfs[ic] / pfv.ric[ic]
             pfv.waves[ic, 5] = 0.0e0
 
     def superconpf(
