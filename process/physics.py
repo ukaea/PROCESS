@@ -2161,7 +2161,7 @@ class Physics:
             physics_variables.rminor,
             physics_variables.kappa,
             physics_variables.a_plasma_surface,
-            physics_variables.aion,
+            physics_variables.m_ions_total_amu,
             physics_variables.aspect,
             physics_variables.plasma_current,
         )
@@ -2655,15 +2655,36 @@ class Physics:
         return dlimit, dlimit[i_density_limit - 1]
 
     @staticmethod
-    def plasma_composition():
-        """Calculates various plasma component fractional makeups
-        author: P J Knight, CCFE, Culham Science Centre
-
-        This subroutine determines the various plasma component
-        fractional makeups. It is the replacement for the original
-        It is the replacement for the original routine <CODE>betcom</CODE>,
-        and is used in conjunction with the new impurity radiation model
+    def plasma_composition() -> None:
         """
+        Calculates various plasma component fractional makeups.
+
+        Author: P J Knight, CCFE, Culham Science Centre
+
+        This subroutine determines the various plasma component fractional makeups.
+        It is the replacement for the original routine betcom(), and is used in conjunction
+        with the new impurity radiation model.
+
+        This function performs the following calculations:
+        - Determines the alpha ash portion.
+        - Calculates the proton density.
+        - Calculates the beam hot ion component.
+        - Sums the ion densities for all impurity ions with charge greater than helium.
+        - Ensures charge neutrality by adjusting the fuel portion.
+        - Calculates the total ion density.
+        - Sets impurity fractions for radiation calculations.
+        - Calculates the effective charge.
+        - Defines the Coulomb logarithm for ion-electron and electron-electron collisions.
+        - Calculates the fraction of alpha energy to ions and electrons.
+        - Calculates the average atomic masses of injected fuel species and neutral beams.
+        - Calculates the density weighted mass and mass weighted plasma effective charge.
+
+        Notes:
+
+
+        References:
+        """
+
         # Alpha ash portion
         physics_variables.nd_alphas = physics_variables.dene * physics_variables.ralpne
 
@@ -2838,7 +2859,7 @@ class Physics:
         ) + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
 
         # Density weighted mass
-        physics_variables.aion = (
+        physics_variables.m_ions_total_amu = (
             physics_variables.m_fuel_amu * physics_variables.deni
             + (constants.m_alpha_amu * physics_variables.nd_alphas)
             + physics_variables.nd_protons
@@ -2846,14 +2867,14 @@ class Physics:
         )
         for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                physics_variables.aion += (
+                physics_variables.m_ions_total_amu += (
                     physics_variables.dene
                     * impurity_radiation_module.impurity_arr_frac[imp]
                     * impurity_radiation_module.impurity_arr_amass[imp]
                 )
 
-        physics_variables.aion = (
-            physics_variables.aion / physics_variables.nd_ions_total
+        physics_variables.m_ions_total_amu = (
+            physics_variables.m_ions_total_amu / physics_variables.nd_ions_total
         )
 
         # Mass weighted plasma effective charge
@@ -3297,7 +3318,7 @@ class Physics:
         physics_module.rho_star = np.sqrt(
             2.0e0
             * constants.proton_mass
-            * physics_variables.aion
+            * physics_variables.m_ions_total_amu
             * physics_module.e_plasma_beta
             / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
         ) / (
@@ -4036,8 +4057,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Average mass of all ions (amu)",
-            "(aion)",
-            physics_variables.aion,
+            "(m_ions_total_amu)",
+            physics_variables.m_ions_total_amu,
             "OP ",
         )
         # MDK Say which impurity is varied, if iteration variable fimpvar (102) is turned on
@@ -7395,7 +7416,7 @@ class Physics:
             # (with V (m3) the plasma volume inside the LCFS),
             # inverse aspect ratio epsilon = a/Rgeo
             # effective atomic mass Meff of the plasma - NOT defined, but I have taken it equal to
-            # aion = average mass of all ions (amu).
+            # m_ions_total_amu = average mass of all ions (amu).
             # energy confinement time is given by τE,th = Wth/Pl,th, where Wth is the thermal stored energy.
             # The latter is derived from the total stored energy Wtot by subtracting the energy
             # content associated to fast particles originating from plasma heating.
@@ -7411,7 +7432,7 @@ class Physics:
                 * (1 + physics_variables.triang) ** 0.36
                 * physics_variables.kappaa_ipb**0.8
                 * eps**0.35
-                * physics_variables.aion**0.2
+                * physics_variables.m_ions_total_amu**0.2
             )
 
         else:
@@ -7468,16 +7489,27 @@ def res_diff_time(rmajor, res_plasma, kappa95):
 
 
 def pthresh(
+    
     dene,
+   
     dnla,
+   
     bt,
+   
     rmajor,
+   
     rminor,
+   
     kappa,
+   
     a_plasma_surface,
-    aion,
+   
+    m_ions_total_amu,
+   
     aspect,
+   
     plasma_current,
+,
 ):
     """L-mode to H-mode power threshold calculation
 
@@ -7499,7 +7531,7 @@ def pthresh(
     :param rminor: plasma minor radius (m)
     :param kappa: plasma elongation
     :param a_plasma_surface: plasma surface area (m2)
-    :param aion: average mass of all ions (amu)
+    :param m_ions_total_amu: average mass of all ions (amu)
     :param aspect: aspect ratio
     :param plasma_current: plasma current (A)
 
@@ -7528,7 +7560,13 @@ def pthresh(
 
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
-    martin = 0.0488 * dnla20**0.717 * bt**0.803 * a_plasma_surface**0.941 * (2.0 / aion)
+    martin = (
+        0.0488
+        * dnla20**0.717
+        * bt**0.803
+        * a_plasma_surface**0.941
+        * (2.0 / m_ions_total_amu)
+    )
     martin_error = (
         np.sqrt(
             0.057**2
@@ -7543,20 +7581,35 @@ def pthresh(
 
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
-    snipes_2000 = 1.42 * dnla20**0.58 * bt**0.82 * rmajor * rminor**0.81 * (2.0 / aion)
+    snipes_2000 = 1.42
+        * dnla20**0.58
+        * bt**0.82
+        * rmajor
+        * rminor**0.81
+        * (2.0 / m_ions_total_amu)
     snipes_2000_ub = (
-        1.547 * dnla20**0.615 * bt**0.851 * rmajor**1.089 * rminor**0.876 * (2.0 / aion)
+        1.547 * dnla20**0.615 * bt**0.851 * rmajor**1.089 * rminor**0.876 * (2.0 / m_ions_total_amu)
     )
     snipes_2000_lb = (
-        1.293 * dnla20**0.545 * bt**0.789 * rmajor**0.911 * rminor**0.744 * (2.0 / aion)
+        1.293 * dnla20**0.545 * bt**0.789 * rmajor**0.911 * rminor**0.744 * (2.0 / m_ions_total_amu)
     )
 
     # Snipes et al (2000) scaling (closed divertor) with mass correction
     # Nominal, upper and lower
 
-    snipes_2000_cd = 0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / aion)
-    snipes_2000_cd_ub = 0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / aion)
-    snipes_2000_cd_lb = 0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / aion)
+    snipes_2000_cd = (
+        0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / m_ions_total_amu)
+    )
+    snipes_2000_cd_ub = 0.867
+        * dnla20**0.561
+        * bt**0.588
+        * rmajor**1.587
+        * (2.0 / m_ions_total_amu)
+    snipes_2000_cd_lb = 0.733
+        * dnla20**0.439
+        * bt**0.472
+        * rmajor**1.433
+        * (2.0 / m_ions_total_amu)
 
     # Hubbard et al. 2012 L-I threshold scaling
     hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65

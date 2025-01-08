@@ -4113,7 +4113,7 @@ class Stellarator:
         physics_module.rho_star = np.sqrt(
             2.0e0
             * constants.proton_mass
-            * physics_variables.aion
+            * physics_variables.m_ions_total_amu
             * physics_module.e_plasma_beta
             / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
         ) / (

@@ -189,7 +189,7 @@ class Divertor:
     def divert(
         self,
         adas,
-        aion,
+        m_ions_total_amu,
         anginc,
         delne,
         c1div,
@@ -225,8 +225,8 @@ class Divertor:
         :param adas: divertor flux area / main plasma area (long separatrix)
         :type adas: float
 
-        :param aion: ion mass (assumes fuel only) (AMU)
-        :type aion: float
+        :param m_ions_total_amu: ion mass (assumes fuel only) (AMU)
+        :type m_ions_total_amu: float
 
 
         :param anginc: pol. angle of incidence of field line on plate (rad)
@@ -341,7 +341,7 @@ class Divertor:
             delty = tdiv * epsilon
 
             f1 = self.ftpts(
-                aion,
+                m_ions_total_amu,
                 coefl,
                 delne,
                 fififi,
@@ -355,7 +355,7 @@ class Divertor:
                 tdiv,
             )
             f2 = self.ftdiv(
-                aion,
+                m_ions_total_amu,
                 coefl,
                 delne,
                 fififi,
@@ -371,7 +371,7 @@ class Divertor:
 
             f1dx = (
                 self.ftpts(
-                    aion,
+                    m_ions_total_amu,
                     coefl,
                     delne,
                     fififi,
@@ -388,7 +388,7 @@ class Divertor:
             ) / deltx
             f1dy = (
                 self.ftpts(
-                    aion,
+                    m_ions_total_amu,
                     coefl,
                     delne,
                     fififi,
@@ -405,7 +405,7 @@ class Divertor:
             ) / delty
             f2dx = (
                 self.ftdiv(
-                    aion,
+                    m_ions_total_amu,
                     coefl,
                     delne,
                     fififi,
@@ -422,7 +422,7 @@ class Divertor:
             ) / deltx
             f2dy = (
                 self.ftdiv(
-                    aion,
+                    m_ions_total_amu,
                     coefl,
                     delne,
                     fififi,
@@ -553,7 +553,7 @@ class Divertor:
 
     def ftdiv(
         self,
-        aion: float,
+        m_ions_total_amu: float,
         coefl: float,
         delne: float,
         fififi: float,
@@ -573,8 +573,8 @@ class Divertor:
         This function calculates an estimate for the divertor temperature (eV).
         Report ITER-IL-PH-13-9-e12
 
-        :param aion: ion mass (assumes fuel only) (AMU)
-        :type aion: float
+        :param m_ions_total_amu: ion mass (assumes fuel only) (AMU)
+        :type m_ions_total_amu: float
 
         :param coefl: little 'l' in Harrison model
         :type coefl: float
@@ -624,7 +624,7 @@ class Divertor:
         eier = self.erprcy(yys, dendiv)
         ff = (
             20.16e0
-            * aion
+            * m_ions_total_amu
             * (
                 (qdiv) ** 10
                 * (c27 * xpara) ** 4
@@ -641,7 +641,7 @@ class Divertor:
 
     def ftpts(
         self,
-        aion: float,
+        m_ions_total_amu: float,
         coefl: float,
         delne: float,
         fififi: float,
@@ -661,8 +661,8 @@ class Divertor:
         This function updates the divertor model temperature ratio solution.
         Report ITER-IL-PH-13-9-e12
 
-        :param aion: ion mass (assumes fuel only) (AMU)
-        :type aion: float
+        :param m_ions_total_amu: ion mass (assumes fuel only) (AMU)
+        :type m_ions_total_amu: float
 
         :param coefl: little 'l' in Harrison model
         :type coefl: float
@@ -712,7 +712,7 @@ class Divertor:
         ff = (
             xxs**3.5e0
             + 9.66e0
-            * (xxs / aion) ** 0.9e0
+            * (xxs / m_ions_total_amu) ** 0.9e0
             * (xperp / (qdiv) ** 2) ** 0.8e0
             * coefl
             / (2.0e0 * xpara / 7.0e0)
