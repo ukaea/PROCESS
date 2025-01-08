@@ -2628,7 +2628,7 @@ outlet_temp_liq = 873.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ First Wall Loads ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-peakfactrad = 1.0
+f_fw_rad_max = 1.0
 * DESCRIPTION:   Radiation wall load peacking factor
 * JUSTIFICATION: We consider an average wall load value as a limit
 

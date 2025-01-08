@@ -2409,7 +2409,7 @@ class Physics:
                 )
 
         constraint_variables.p_fw_rad_max_mw = (
-            physics_variables.p_fw_rad_mw * constraint_variables.peakfactrad
+            physics_variables.p_fw_rad_mw * constraint_variables.f_fw_rad_max
         )
 
         # Calculate the target imbalances
@@ -4553,8 +4553,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Peaking factor for radiation wall load",
-            "(peakfactrad)",
-            constraint_variables.peakfactrad,
+            "(f_fw_rad_max)",
+            constraint_variables.f_fw_rad_max,
             "IP ",
         )
         po.ovarre(

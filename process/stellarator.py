@@ -4395,7 +4395,7 @@ class Stellarator:
                 )
 
         constraint_variables.p_fw_rad_max_mw = (
-            physics_variables.p_fw_rad_mw * constraint_variables.peakfactrad
+            physics_variables.p_fw_rad_mw * constraint_variables.f_fw_rad_max
         )
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (
