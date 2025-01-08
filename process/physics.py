@@ -2128,7 +2128,7 @@ class Physics:
         physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pcoreradpv * physics_variables.vol_plasma
         )
-        physics_variables.pouterzoneradmw = (
+        physics_variables.p_plasma_outer_rad_mw = (
             physics_variables.pedgeradpv * physics_variables.vol_plasma
         )
         physics_variables.p_plasma_rad_mw = (
@@ -4515,8 +4515,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Radiation power from outer zone (MW)",
-            "(pouterzoneradmw)",
-            physics_variables.pouterzoneradmw,
+            "(p_plasma_outer_rad_mw)",
+            physics_variables.p_plasma_outer_rad_mw,
             "OP ",
         )
 

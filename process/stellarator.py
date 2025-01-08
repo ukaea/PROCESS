@@ -4312,7 +4312,7 @@ class Stellarator:
         physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pcoreradpv * physics_variables.vol_plasma
         )  # Should probably be vol_core
-        physics_variables.pouterzoneradmw = (
+        physics_variables.p_plasma_outer_rad_mw = (
             physics_variables.pedgeradpv * physics_variables.vol_plasma
         )
 
