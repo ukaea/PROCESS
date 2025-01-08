@@ -641,7 +641,7 @@ module physics_variables
   real(dp) :: pcoef
   !! profile factor (= n-weighted T / average T)
 
-  real(dp) :: pinnerzoneradmw
+  real(dp) :: p_plasma_inner_rad_mw
   !! radiation power from inner zone (MW)
 
   real(dp) :: pcoreradpv
@@ -1079,7 +1079,7 @@ module physics_variables
     non_alpha_charged_power = 0.0D0
     charged_power_density = 0.0D0
     pcoef = 0.0D0
-    pinnerzoneradmw = 0.0D0
+    p_plasma_inner_rad_mw = 0.0D0
     pcoreradpv = 0.0D0
     dd_power = 0.0D0
     dhe3_power = 0.0D0

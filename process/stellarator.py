@@ -4309,7 +4309,7 @@ class Stellarator:
         physics_variables.pcoreradpv = max(physics_variables.pcoreradpv, 0.0e0)
         physics_variables.pedgeradpv = max(physics_variables.pedgeradpv, 0.0e0)
 
-        physics_variables.pinnerzoneradmw = (
+        physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pcoreradpv * physics_variables.vol_plasma
         )  # Should probably be vol_core
         physics_variables.pouterzoneradmw = (

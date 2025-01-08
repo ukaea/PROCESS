@@ -2632,7 +2632,7 @@ def plot_power_info(axis, mfile_data, scan):
         coredescription,
         ped_height,
         ped_pos,
-        ("pinnerzoneradmw", "Inner zone radiation", "MW"),
+        ("p_plasma_inner_rad_mw", "Inner zone radiation", "MW"),
         ("p_plasma_rad_mw", "Total radiation in LCFS", "MW"),
         ("pnucblkt", "Nuclear heating in blanket", "MW"),
         ("pnucshld", "Nuclear heating in shield", "MW"),

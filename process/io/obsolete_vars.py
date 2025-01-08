@@ -70,7 +70,7 @@ OBS_VARS = {
     "strain_wp": "str_wp",
     "fstrain_wp": "fstr_wp",
     "rad_fraction": "rad_fraction_total",
-    "pcoreradmw": "pinnerzoneradmw",
+    "pcoreradmw": "p_plasma_inner_rad_mw",
     "pedgeradmw": "pouterzoneradmw",
     "rad_fraction_core": "rad_fraction_LCFS",
     "thshield": ["thshield_ib", "thshield_ob", "thshield_vb"],
