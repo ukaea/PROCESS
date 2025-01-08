@@ -2131,7 +2131,7 @@ class Physics:
         physics_variables.pouterzoneradmw = (
             physics_variables.pedgeradpv * physics_variables.vol_plasma
         )
-        physics_variables.pradmw = (
+        physics_variables.p_plasma_rad_mw = (
             physics_variables.pradpv * physics_variables.vol_plasma
         )
 
@@ -2181,7 +2181,7 @@ class Physics:
             + physics_variables.non_alpha_charged_power
             + pinj
             + physics_variables.p_plasma_ohmic_mw
-            - physics_variables.pradmw
+            - physics_variables.p_plasma_rad_mw
         )
 
         # The following line is unphysical, but prevents -ve sqrt argument
@@ -2383,7 +2383,7 @@ class Physics:
         if physics_variables.iwalld == 1:
             physics_variables.photon_wall = (
                 physics_variables.ffwal
-                * physics_variables.pradmw
+                * physics_variables.p_plasma_rad_mw
                 / physics_variables.a_plasma_surface
             )
         else:
@@ -2391,7 +2391,7 @@ class Physics:
                 # Double Null configuration in - including SoL radiation
                 physics_variables.photon_wall = (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
-                ) * physics_variables.pradmw / build_variables.fwarea + (
+                ) * physics_variables.p_plasma_rad_mw / build_variables.fwarea + (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
                 ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / (
                     build_variables.fwarea
@@ -2400,7 +2400,7 @@ class Physics:
                 # Single null configuration - including SoL radaition
                 physics_variables.photon_wall = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
-                    * physics_variables.pradmw
+                    * physics_variables.p_plasma_rad_mw
                     / build_variables.fwarea
                     + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.rad_fraction_sol
@@ -2478,7 +2478,7 @@ class Physics:
             + current_drive_variables.pinjmw
         )
         physics_module.rad_fraction_lcfs = (
-            1.0e6 * physics_variables.pradmw / physics_module.total_loss_power
+            1.0e6 * physics_variables.p_plasma_rad_mw / physics_module.total_loss_power
         )
         physics_variables.rad_fraction_total = (
             physics_module.rad_fraction_lcfs
@@ -4532,8 +4532,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total radiation power from inside LCFS (MW)",
-            "(pradmw)",
-            physics_variables.pradmw,
+            "(p_plasma_rad_mw)",
+            physics_variables.p_plasma_rad_mw,
             "OP ",
         )
         po.ovarre(
@@ -5141,7 +5141,7 @@ class Physics:
                 self.outfile,
                 "Radiation power subtracted from plasma power balance (MW)",
                 "",
-                physics_variables.pradmw,
+                physics_variables.p_plasma_rad_mw,
                 "OP ",
             )
             po.ocmmnt(self.outfile, "  (Radiation correction is total radiation power)")

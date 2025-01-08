@@ -1569,11 +1569,11 @@ class Power:
             po.ovarrf(
                 self.outfile,
                 "Total net radiation power (MW)",
-                "(pradmw)",
-                physics_variables.pradmw,
+                "(p_plasma_rad_mw)",
+                physics_variables.p_plasma_rad_mw,
                 "OP ",
             )
-            total = physics_variables.pscalingmw + physics_variables.pradmw
+            total = physics_variables.pscalingmw + physics_variables.p_plasma_rad_mw
             po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
         elif physics_variables.iradloss == 1:
             po.ocmmnt(
