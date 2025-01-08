@@ -2120,7 +2120,7 @@ class Physics:
         # Calculate radiation power
 
         radpwrdata = physics_funcs.calculate_radiation_powers(self.plasma_profile)
-        physics_variables.psyncpv = radpwrdata.psyncpv
+        physics_variables.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
         physics_variables.pcoreradpv = radpwrdata.pcoreradpv
         physics_variables.pedgeradpv = radpwrdata.pedgeradpv
         physics_variables.pradpv = radpwrdata.pradpv
@@ -4483,8 +4483,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Synchrotron radiation power (MW)",
-            "(psyncpv*vol_plasma)",
-            physics_variables.psyncpv * physics_variables.vol_plasma,
+            "(pden_plasma_sync_mw*vol_plasma)",
+            physics_variables.pden_plasma_sync_mw * physics_variables.vol_plasma,
             "OP ",
         )
         po.ovarrf(
@@ -5172,7 +5172,7 @@ class Physics:
                     physics_variables.powerht
                     / (
                         physics_variables.powerht
-                        + physics_variables.psyncpv
+                        + physics_variables.pden_plasma_sync_mw
                         + physics_variables.p_plasma_inner_rad_mw
                     )
                 )
