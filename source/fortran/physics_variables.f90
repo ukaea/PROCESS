@@ -253,6 +253,12 @@ module physics_variables
   !! - =3 for Wilson et al numerical scaling
   !! - =4 for Sauter et al scaling
   !! - =5 for Sakai et al scaling
+  !! - =6 for ARIES scaling
+  !! - =7 for Andrade et al scaling
+  !! - =8 for Hoang et al scaling
+  !! - =9 for Wong et al scaling
+  !! - =10 for Gi-I et al scaling
+  !! - =11 for Gi-II et al scaling
 
   integer :: iculbl
   !! switch for beta limit scaling (`constraint equation 24`)
@@ -552,6 +558,9 @@ module physics_variables
 
   real(dp) :: p0
   !! central total plasma pressure (Pa)
+
+  real(dp) :: vol_avg_pressure
+  !! Volume averaged plasma pressure (Pa)
 
   real(dp) :: f_dd_branching_trit
   !! branching ratio for DD -> T
