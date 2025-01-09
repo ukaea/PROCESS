@@ -110,7 +110,7 @@ def parse_args(args):
 
 # Colours are PROCESS defualt, BLUEMIRA
 SOLENOID_COLOUR = ["pink", "#1764ab"]
-CSCOMPRESSION_COLOUR = ["red", "#33CCCC"]
+CSCOMPRESSION_COLOUR = ["maroon", "#33CCCC"]
 TFC_COLOUR = ["cyan", "#084a91"]
 THERMAL_SHIELD_COLOUR = ["gray", "#e3eef9"]
 VESSEL_COLOUR = ["green", "#b7d4ea"]
@@ -2074,6 +2074,19 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         bore=bore,
         ohcth=ohcth,
         ohdz=ohdz,
+    )
+
+    # Plot CS compression structure
+    r_precomp_outer, r_precomp_inner = cumulative_radial_build2(
+        "precomp", mfile_data, scan
+    )
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(r_precomp_inner, central_coil.anchor_z),
+            width=r_precomp_outer - r_precomp_inner,
+            height=central_coil.height,
+            facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1],
+        )
     )
 
     for i in range(len(coils_r)):
