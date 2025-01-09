@@ -374,99 +374,41 @@ def color_key(axis, mfile_data, scan, colour_scheme):
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
-    axis.text(
-        -12,
-        12,
-        "*The CS comp is not shown in the poloidal cross-section",
-        ha="left",
-        va="top",
-        size="medium",
-    )
+    labels = [
+        ("CS coil", SOLENOID_COLOUR[colour_scheme - 1]),
+        ("CS comp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
+        ("TF coil", TFC_COLOUR[colour_scheme - 1]),
+        ("Thermal shield", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
+        ("VV & shield", VESSEL_COLOUR[colour_scheme - 1]),
+        ("Blanket", BLANKET_COLOUR[colour_scheme - 1]),
+        ("First wall", FIRSTWALL_COLOUR[colour_scheme - 1]),
+        ("Plasma", PLASMA_COLOUR[colour_scheme - 1]),
+        ("PF coils", "none"),
+    ]
 
-    axis.text(-12, 11, "CS coil", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 9.7], 1, 0.4, lw=0, facecolor=SOLENOID_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-12, 10, "CS comp", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 8.7], 1, 0.4, lw=0, facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-12, 9, "TF coil", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 7.7], 1, 0.4, lw=0, facecolor=TFC_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 7, "Thermal shield", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 6.7],
-            1,
-            0.4,
-            lw=0,
-            facecolor=THERMAL_SHIELD_COLOUR[colour_scheme - 1],
-        )
-    )
-
-    axis.text(-5, 6, "VV & shield", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 5.7], 1, 0.4, lw=0, facecolor=VESSEL_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 5, "Blanket", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 4.7], 1, 0.4, lw=0, facecolor=BLANKET_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 4, "First wall", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 3.7], 1, 0.4, lw=0, facecolor=FIRSTWALL_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 3, "Plasma", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 2.7], 1, 0.4, lw=0, facecolor=PLASMA_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 2, "PF coils", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle([0.7, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black")
-    )
     if (mfile_data.data["iefrf"].get_scan(scan) in [5, 8]) or (
         mfile_data.data["iefrffix"].get_scan(scan) in [5, 8]
     ):
-        axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
-        axis.add_patch(
-            patches.Rectangle(
-                [0.7, 0.7], 1, 0.4, lw=0, facecolor=NBSHIELD_COLOUR[colour_scheme - 1]
-            )
-        )
-        axis.text(-5, 0.1, "Cryostat", ha="left", va="top", size="medium")
-        axis.add_patch(
-            patches.Rectangle(
-                [0.7, -0.3], 1, 0.4, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
-            )
-        )
+        labels.append(("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]))
+        labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
     else:
-        axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
+        labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
+
+    for i, (text, color) in enumerate(labels):
+        row = i // 4
+        col = i % 4
+        y_pos = 9 - row * 1.5
+        x_pos = col * 2.5
+
+        axis.text(x_pos, y_pos, text, ha="left", va="top", size="small")
         axis.add_patch(
             patches.Rectangle(
-                [0.7, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+                [x_pos + 1.5, y_pos - 0.35],
+                0.5,
+                0.4,
+                lw=0 if color != "none" else 1,
+                facecolor=color if color != "none" else "none",
+                edgecolor="black" if color == "none" else "none",
             )
         )
 
@@ -3276,14 +3218,18 @@ def main_plot(
 
     # Plot poloidal cross-section
     plot_1 = fig3.add_subplot(121, aspect="equal")
+    plot_1.set_position([0.0, 0.1, 0.5, 0.8])
     poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
     plot_2 = fig3.add_subplot(122, aspect="equal")
+    plot_2.set_position([0.4, 0.1, 0.6, 0.6])
     toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
+    # fig3.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
 
     # Plot color key
-    plot_3 = fig3.add_subplot(244)
+    plot_3 = fig3.add_subplot(222)
+    plot_3.set_position([0.45, 0.5, 0.5, 0.5])
     color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
