@@ -183,7 +183,7 @@ class PlasmaProfile:
             return rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted, perr
 
         # Initial guesses for rhopedt, teped, alphat, and tbeta
-        initial_guess = [0.96, 0.5, 0.5, 1.5]
+
         # Fit the profile and get the fitted parameters
         rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted, teperr = (
             fit_temperature_profile(
@@ -219,7 +219,8 @@ class PlasmaProfile:
         self.neprofile.normalise_profile_x()
         self.neprofile.calculate_profile_dx()
         self.neprofile.set_physics_variables()
-        # Initial guess for the parameters (nped, nsep, nav, alphan)
+
+        # Retrieve separartrix and core values
         nsep = self.neprofile.profile_y[-1]
         n0 = self.neprofile.profile_y[0]
 
@@ -243,7 +244,6 @@ class PlasmaProfile:
             return nped_fitted, alphan_fitted, perr
 
         # Initial guesses for nped, and alphan
-        initial_guess = [0.75e20, 0.24]
         # Fit the profile and get the fitted parameters
         nped_fitted, alphan_fitted, perr = fit_density_profile(
             rho_data=self.neprofile.profile_x,
