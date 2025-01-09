@@ -132,9 +132,7 @@ class Scan:
         )
         for iscan_1 in range(1, scan_module.isweep + 1):
             for iscan_2 in range(1, scan_module.isweep_2 + 1):
-                iscan_r = scan_module.scan_2d_write_point_header(
-                    iscan, iscan_1, iscan_2
-                )
+                iscan_r = self.scan_2d_write_point_header(iscan, iscan_1, iscan_2)
                 ifail = self.doopt()
 
                 write_output_files(models=self.models, ifail=ifail)
@@ -229,6 +227,42 @@ class Scan:
             f"{f2py_compatible_to_string(global_variables.xlabel)} , {f2py_compatible_to_string(global_variables.vlabel)}"
             f" = {scan_module.sweep[iscan - 1]}"
         )
+
+    def scan_2d_write_point_header(self, iscan, iscan_1, iscan_2):
+        iscan_r = scan_module.isweep_2 - iscan_2 + 1 if iscan_1 % 2 == 0 else iscan_2
+
+        # Makes iscan available globally (read-only)
+        global_variables.iscan_global = iscan
+
+        global_variables.vlabel, global_variables.xlabel = scan_module.scan_select(
+            scan_module.nsweep, scan_module.sweep, iscan_1
+        )
+        global_variables.vlabel_2, global_variables.xlabel_2 = scan_module.scan_select(
+            scan_module.nsweep_2, scan_module.sweep_2, iscan_r
+        )
+
+        process_output.oblnkl(constants.nout)
+        process_output.ostars(constants.nout, 110)
+
+        process_output.write(
+            constants.nout,
+            f"***** 2D Scan point {iscan} of {scan_module.isweep * scan_module.isweep_2} : "
+            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan - 1]} and"
+            f" {f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_module.sweep_2[iscan_r]} "
+            "*****",
+        )
+        process_output.ostars(constants.nout, 110)
+        process_output.oblnkl(constants.mfile)
+        process_output.ovarin(constants.mfile, "Scan point number", "(iscan)", iscan)
+
+        print(
+            f"Starting scan point {iscan}:  {f2py_compatible_to_string(global_variables.xlabel)}, "
+            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan - 1]}"
+            f" and {f2py_compatible_to_string(global_variables.xlabel_2)}, "
+            f"{f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_module.sweep_2[iscan_r]} "
+        )
+
+        return iscan_r
 
     def scan_1d_write_plot(self):
         if scan_module.first_call_1d:
