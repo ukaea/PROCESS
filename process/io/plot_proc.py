@@ -2093,11 +2093,11 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         axis.plot(r_points[i], z_points[i], color="black")
         axis.text(
             coils_r[i],
-            coils_z[i] - 0.1,
+            coils_z[i] - 0.05,
             coil_text[i],
             ha="center",
             va="center",
-            fontsize=4.85 * abs((coils_dr[i] * coils_dz[i])),
+            fontsize=8.5 * abs((coils_dr[i] * coils_dz[i])),
         )
     axis.add_patch(
         patches.Rectangle(
@@ -3236,7 +3236,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     plot_2 = fig3.add_subplot(122, aspect="equal")
-    plot_2.set_position([0.4, 0.1, 0.6, 0.6])
+    plot_2.set_position([0.425, 0.1, 0.6, 0.6])
     toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
     # fig3.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
 
