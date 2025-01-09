@@ -280,52 +280,6 @@ contains
     call ovarin(mfile,'Scanning second variable number','(nsweep_2)',nsweep_2)
   end subroutine scan_2d_init
 
-  subroutine scan_2d_write_point_header(iscan, iscan_1, iscan_2, iscan_R)
-    use process_output, only: oblnkl, ostars, ovarin
-    use global_variables, only: vlabel, vlabel_2, xlabel, xlabel_2, iscan_global
-    use constants, only: nout, mfile
-    implicit none
-
-    integer, intent(in) :: iscan
-    integer, intent(in) :: iscan_1
-    integer, intent(in) :: iscan_2
-    integer, intent(out) :: iscan_R
-
-    integer :: ifail
-
-    if (mod(iscan_1,2)==0) then
-        iscan_R = isweep_2 - iscan_2 + 1
-    else
-        iscan_R = iscan_2
-    end if
-    ! Makes iscan available globally (read-only)
-    iscan_global = iscan
-
-    call scan_select(nsweep, sweep, iscan_1, vlabel, xlabel)
-    call scan_select(nsweep_2, sweep_2, iscan_R, vlabel_2, xlabel_2)
-
-    ! Write banner to output file
-    call oblnkl(nout)
-    call ostars(nout,width)
-    write(nout,10) iscan, isweep*isweep_2, trim(vlabel), &
-        sweep(iscan_1), trim(vlabel_2), sweep_2(iscan_R)
-! 10    format(a, i2, a, i2, 5a, 1pe10.3, a)
-10  format(' ***** 2D scan point ', i3, ' of ', i3, ' : ', a, ' = ', &
-            1pe10.3, ' and ', a, ' = ', 1pe10.3, ' *****')
-    call ostars(nout,width)
-
-    ! Write additional information to mfile
-    call oblnkl(mfile)
-    call ovarin(mfile,'Scan point number','(iscan)',iscan)
-
-    ! Call the optimization routine VMCON at this scan point
-    write(*,20) iscan, trim(xlabel), trim(vlabel), sweep(iscan_1), &
-        trim(xlabel_2), trim(vlabel_2), sweep_2(iscan_R)
-    ! 20     format(a,i2,a,4a,1pe10.3)
-20  format('Starting scan point ', i3, ': ', a, ', ', a, ' = ', &
-            1pe10.3, ' and ', a, ', ', a, ' = ', 1pe10.3)
-  end subroutine scan_2d_write_point_header
-
   subroutine scan_2d_store_output(ifail, iscan_1, iscan_R, iscan, noutvars_, ipnscns_, outvar, &
     sweep_1_vals, sweep_2_vals)
     implicit none
