@@ -53,23 +53,50 @@ module physics_variables
   real(dp) :: beta
   !! total plasma beta (`iteration variable 5`) (calculated if stellarator)
 
-  real(dp) :: betaft
+  real(dp) :: beta_fast_alpha
   !! fast alpha beta component
 
-  real(dp) :: betalim
-  !! allowable beta
+  real(dp) :: beta_max
+  !! Max allowable beta
 
-  real(dp) :: betalim_lower
+  real(dp) :: beta_min
   !! allowable lower beta
 
   real(dp) :: beta_beam
   !! neutral beam beta component
 
-  real(dp) :: betap
+  real(dp) :: beta_poloidal
   !! poloidal beta
 
-  real(dp) :: normalised_total_beta
+  real(dp) :: beta_poloidal_eps
+  !! Poloidal beta and inverse aspcet ratio product
+
+  real(dp) :: beta_toroidal
+  !! toroidal beta
+
+  real(dp) :: beta_thermal
+  !! thermal beta
+
+  real(dp) :: beta_thermal_poloidal
+  !! poloidal thermal beta
+
+  real(dp) :: beta_thermal_toroidal
+  !! poloidal thermal beta
+
+  real(dp) :: beta_norm_total
   !! normaised total beta
+
+  real(dp) :: beta_norm_thermal
+  !! normaised thermal beta
+
+  real(dp) :: beta_norm_toroidal
+  !! normaised toroidal beta
+
+  real(dp) :: beta_norm_poloidal
+  !! normaised poloidal beta
+
+  real(dp) :: e_plasma_beta_thermal
+  !! Plasma thermal energy derived from thermal beta
 
   real(dp) :: betbm0
   !! leading coefficient for NB beta fraction
@@ -129,7 +156,7 @@ module physics_variables
   real(dp) :: beam_density_out
   !! hot beam ion density from calculation (/m3)
 
-  real(dp) :: dnbeta
+  real(dp) :: beta_norm_max
   !! Troyon-like coefficient for beta scaling
 
   real(dp) :: dnelimt
@@ -156,7 +183,7 @@ module physics_variables
   real(dp) :: gradient_length_te
   !! Max. normalized gradient length in el. temperature (ipedestal==0 only)
 
-  real(dp) :: epbetmax
+  real(dp) :: beta_poloidal_eps_max
   !! maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346
   !! "Operation at the tokamak equilibrium poloidal beta-limit in TFTR", 1992 Nucl. Fusion 32 1468
 
@@ -233,7 +260,7 @@ module physics_variables
   real(dp) :: gamma
   !! Ejima coefficient for resistive startup V-s formula
 
-  real(dp) :: gammaft
+  real(dp) :: f_beta_alpha_beam_thermal
   !! ratio of (fast alpha + neutral beam beta) to thermal beta
 
   real(dp), dimension(ipnlaws) :: hfac
@@ -260,7 +287,7 @@ module physics_variables
   !! - =10 for Gi-I et al scaling
   !! - =11 for Gi-II et al scaling
 
-  integer :: iculbl
+  integer :: i_beta_component
   !! switch for beta limit scaling (`constraint equation 24`)
   !!
   !! - =0 apply limit to total beta
@@ -303,7 +330,7 @@ module physics_variables
   integer :: idivrt
   !! number of divertors (calculated from `i_single_null`)
 
-  integer :: ifalphap
+  integer :: i_beta_fast_alpha
   !! switch for fast alpha pressure calculation
   !!
   !! - =0 ITER physics rules (Uckan) fit
@@ -375,13 +402,13 @@ module physics_variables
   integer :: iprofile
   !! switch for current profile consistency:
   !!
-  !! - =0 use input values for alphaj, rli, dnbeta
+  !! - =0 use input values for alphaj, rli, beta_norm_max
   !! - =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
-  !! - =2 use input values for alphaj, rli. Scale dnbeta with aspect ratio (original scaling)
-  !! - =3 use input values for alphaj, rli. Scale dnbeta with aspect ratio (Menard scaling)
-  !! - =4 use input values for alphaj, dnbeta. Set rli from elongation (Menard scaling)
-  !! - =5 use input value for alphaj.  Set rli and dnbeta from Menard scaling
-  !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and dnbeta from Tholerus
+  !! - =2 use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (original scaling)
+  !! - =3 use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (Menard scaling)
+  !! - =4 use input values for alphaj, beta_norm_max. Set rli from elongation (Menard scaling)
+  !! - =5 use input value for alphaj.  Set rli and beta_norm_max from Menard scaling
+  !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and beta_norm_max from Tholerus
 
   integer :: iradloss
   !! switch for radiation loss term usage in power balance (see User Guide):
@@ -662,10 +689,10 @@ module physics_variables
   real(dp) :: neutron_power_density_plasma
   !! neutron fusion power per volume just from plasma (MW/m3)
 
-  real(dp) :: pohmmw
+  real(dp) :: p_plasma_ohmic_mw
   !! ohmic heating power (MW)
 
-  real(dp) :: pohmpv
+  real(dp) :: pden_plasma_ohmic_mw
   !! ohmic heating power per volume (MW/m3)
 
   real(dp) :: powerht
@@ -804,9 +831,9 @@ module physics_variables
   !! n_oxygen / n_e
 
   real(dp) :: rpfac
-  !! neo-classical correction factor to rplas
+  !! neo-classical correction factor to res_plasma
 
-  real(dp) :: rplas
+  real(dp) :: res_plasma
   !! plasma resistance (ohm)
 
   real(dp) :: res_time
@@ -923,12 +950,21 @@ module physics_variables
     aspect = 2.907D0
     beamfus0 = 1.0D0
     beta = 0.042D0
-    betaft = 0.0D0
-    betalim = 0.0D0
-    betalim_lower = 0.0D0
+    beta_fast_alpha = 0.0D0
+    beta_max = 0.0D0
+    beta_min = 0.0D0
     beta_beam = 0.0D0
-    betap = 0.0D0
-    normalised_total_beta = 0.0D0
+    beta_poloidal = 0.0D0
+    beta_poloidal_eps = 0.0D0
+    beta_toroidal = 0.0D0
+    beta_thermal = 0.0D0
+    beta_thermal_poloidal = 0.0D0
+    beta_thermal_poloidal = 0.0D0
+    beta_norm_total = 0.0D0
+    beta_norm_thermal = 0.0D0
+    beta_norm_poloidal = 0.0D0
+    e_plasma_beta_thermal = 0.0D0
+    beta_norm_toroidal = 0.0D0
     betbm0 = 1.5D0
     bp = 0.0D0
     bt = 5.68D0
@@ -948,14 +984,14 @@ module physics_variables
     dnalp = 0.0D0
     dnbeam = 0.0D0
     beam_density_out = 0.0D0
-    dnbeta = 3.5D0
+    beta_norm_max = 3.5D0
     dnelimt = 0.0D0
     dnitot = 0.0D0
     dnla = 0.0D0
     dnprot = 0.0D0
     dntau = 0.0D0
     dnz = 0.0D0
-    epbetmax = 1.38D0
+    beta_poloidal_eps_max = 1.38D0
     eps = 0.34399724802D0
     aux_current_fraction = 0.0D0
     inductive_current_fraction = 0.0D0
@@ -978,17 +1014,17 @@ module physics_variables
     fusion_rate_density_plasma = 0.0D0
     fvsbrnni = 1.0D0
     gamma = 0.4D0
-    gammaft = 0.0D0
+    f_beta_alpha_beam_thermal = 0.0D0
     hfac = 0.0D0
     hfact = 1.0D0
     taumax = 10.0D0
     i_bootstrap_current = 3
-    iculbl = 0
+    i_beta_component = 0
     i_plasma_current = 4
     i_diamagnetic_current = 0
     i_density_limit = 8
     idivrt = 2
-    ifalphap = 1
+    i_beta_fast_alpha = 1
     ignite = 0
     iinvqd = 1
     ipedestal = 1
@@ -1052,8 +1088,8 @@ module physics_variables
     neutron_power_total = 0.0D0
     neutron_power_density_total = 0.0D0
     neutron_power_density_plasma = 0.0D0
-    pohmmw = 0.0D0
-    pohmpv = 0.0D0
+    p_plasma_ohmic_mw = 0.0D0
+    pden_plasma_ohmic_mw = 0.0D0
     powerht = 0.0D0
     fusion_power = 0.0D0
     pperim = 0.0D0
@@ -1092,7 +1128,7 @@ module physics_variables
     rnfene = 0.0D0
     rnone = 0.0D0
     rpfac = 0.0D0
-    rplas = 0.0D0
+    res_plasma = 0.0D0
     res_time = 0.0D0
     sarea = 0.0D0
     sareao = 0.0D0

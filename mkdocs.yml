@@ -52,8 +52,9 @@ nav:
                   - Overview: physics-models/fusion_reactions/plasma_reactions.md
                   - Beam reactions: physics-models/fusion_reactions/beam_reactions.md
                   - Bosch-Hale Methods: physics-models/fusion_reactions/plasma_bosch_hale.md
-              - Beta Limit: physics-models/plasma_beta.md
-              - Fast Alpha: physics-models/plasma_alpha.md
+              - Beta Limit:
+                  - Overview: physics-models/plasma_beta/plasma_beta.md
+                  - Fast Alpha: physics-models/plasma_beta/plasma_alpha_beta_contribution.md
               - Density Limit: physics-models/plasma_density.md
               - Composition, Impurities & Radiation: physics-models/plasma_radiation_impurities.md
               - Plasma Current:
@@ -61,7 +62,9 @@ nav:
                   - Bootstrap Current: physics-models/plasma_current/bootstrap_current.md
                   - Diamagnetic Current: physics-models/plasma_current/diamagnetic_current.md
                   - Pfirsch-Schlüter Current: physics-models/plasma_current/pfirsch_schlüter_current_drive.md
-                  - Inductive Current: physics-models/plasma_current/inductive_plasma_current.md
+                  - Inductive Current:
+                      - Inductive Current: physics-models/plasma_current/inductive_plasma_current.md
+                      - Plasma Resistive Heating: physics-models/plasma_current/plasma_resistive_heating.md
               - Confinement time: physics-models/plasma_confinement.md
               - Plasma Core Power Balance: physics-models/plasma_power_balance.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md

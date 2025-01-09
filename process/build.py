@@ -1,19 +1,23 @@
-from process.fortran import tfcoil_variables
-from process.fortran import divertor_variables
-from process.fortran import current_drive_variables
-from process.fortran import physics_variables
-from process.fortran import maths_library
-from process.fortran import constants
-from process.fortran import pfcoil_variables
-from process.fortran import build_variables
-from process.fortran import numerics
-from process.fortran import fwbs_variables
-from process.fortran import error_handling
-from process.fortran import process_output as po
-from process.fortran import buildings_variables
-from process.variables import AnnotatedVariable
-import numpy as np
 import logging
+
+import numpy as np
+
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constants,
+    current_drive_variables,
+    divertor_variables,
+    error_handling,
+    fwbs_variables,
+    maths_library,
+    numerics,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
+from process.fortran import process_output as po
+from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +85,6 @@ class Build:
         g = np.sqrt(e * e + f * f - 2.0e0 * e * f * np.cos(phi))  # cosine rule
 
         if g > c:
-
             h = np.sqrt(g * g - c * c)
 
             alpha = np.arctan(h / c)
@@ -92,7 +95,6 @@ class Build:
             current_drive_variables.rtanmax = f * np.cos(eps) - 0.5e0 * c
 
         else:  # coil separation is too narrow for beam...
-
             error_handling.fdiags[0] = g
             error_handling.fdiags[1] = c
             error_handling.report_error(63)
@@ -1441,7 +1443,6 @@ class Build:
         """
         n = float(tfcoil_variables.n_tf)
         if tfcoil_variables.i_tf_sup == 1:
-
             # Minimal inboard WP radius [m]
             r_wp_min = build_variables.r_tf_inboard_in + tfcoil_variables.thkcas
 
@@ -1498,7 +1499,6 @@ class Build:
                 physics_variables.rmajor + physics_variables.rminor
             ) / ((0.01e0 * ripmax) ** (1.0e0 / n))
         else:
-
             # Winding pack to iter-coil at plasma centre toroidal lenth ratio
             x = t_wp_max * n / physics_variables.rmajor
 
@@ -1633,7 +1633,6 @@ class Build:
         # Issue #514 Radial dimensions of inboard leg
         # Calculate build_variables.tfcth if tfcoil_variables.dr_tf_wp is an iteration variable (140)
         if any(numerics.ixc[0 : numerics.nvar] == 140):
-
             # SC TF coil thickness defined using its maximum (diagonal)
             if tfcoil_variables.i_tf_sup == 1:
                 build_variables.tfcth = (
@@ -1666,7 +1665,6 @@ class Build:
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
         if not any(numerics.ixc[0 : numerics.nvar] == 140):
-
             # SC magnets
             if tfcoil_variables.i_tf_sup == 1:
                 tfcoil_variables.dr_tf_wp = (
@@ -1687,7 +1685,6 @@ class Build:
 
         # Radius of the centrepost at the top of the machine
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
-
             # build_variables.r_cp_top is set using the plasma shape
             if build_variables.i_r_cp_top == 0:
                 build_variables.r_cp_top = (
@@ -1721,7 +1718,6 @@ class Build:
 
             # User defined build_variables.r_cp_top
             elif build_variables.i_r_cp_top == 1:
-
                 # Notify user that build_variables.r_cp_top has been set to 1.01*build_variables.r_tf_inboard_out (lvl 2 error)
                 if build_variables.r_cp_top < 1.01e0 * build_variables.r_tf_inboard_out:
                     error_handling.fdiags[0] = build_variables.r_cp_top
@@ -1760,7 +1756,6 @@ class Build:
             )
             + tfcoil_variables.drtop
         ):
-
             error_handling.fdiags[0] = build_variables.r_cp_top
             error_handling.report_error(256)
         if build_variables.tf_in_cs == 1:
@@ -1906,7 +1901,6 @@ class Build:
         if (physics_variables.itart == 1) or (
             fwbs_variables.fwbsshape == 1
         ):  # D-shaped
-
             #  Major radius to outer edge of inboard section
             r1 = (
                 physics_variables.rmajor
@@ -1934,7 +1928,6 @@ class Build:
             ) = maths_library.dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
-
             #  Major radius to centre of inboard and outboard ellipses
             #  (coincident in radius with top of plasma)
 
@@ -2000,7 +1993,6 @@ class Build:
         #
 
         if output:
-
             #  Print out device build
 
             po.oheadr(self.outfile, "Radial Build")
@@ -2076,16 +2068,14 @@ class Build:
                     - build_variables.gapoh
                 )
 
-                radial_build_data.append(
-                    [
-                        "Machine bore wedge support cylinder",
-                        "bore",
-                        build_variables.bore
-                        - build_variables.tfcth
-                        - build_variables.gapoh,
-                        radius,
-                    ]
-                )
+                radial_build_data.append([
+                    "Machine bore wedge support cylinder",
+                    "bore",
+                    build_variables.bore
+                    - build_variables.tfcth
+                    - build_variables.gapoh,
+                    radius,
+                ])
             elif build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking < 2:
                 radius = (
                     radius
@@ -2093,201 +2083,238 @@ class Build:
                     - build_variables.tfcth
                     - build_variables.gapoh
                 )
-                radial_build_data.append(
-                    [
-                        "Machine bore hole",
-                        "bore",
-                        build_variables.bore
-                        - build_variables.tfcth
-                        - build_variables.gapoh,
-                        radius,
-                    ]
-                )
+                radial_build_data.append([
+                    "Machine bore hole",
+                    "bore",
+                    build_variables.bore
+                    - build_variables.tfcth
+                    - build_variables.gapoh,
+                    radius,
+                ])
             else:
                 radius = radius + build_variables.bore
-                radial_build_data.append(
-                    ["Machine bore", "bore", build_variables.bore, radius]
-                )
+                radial_build_data.append([
+                    "Machine bore",
+                    "bore",
+                    build_variables.bore,
+                    radius,
+                ])
             if build_variables.tf_in_cs == 1:
                 radius += build_variables.tfcth
-                radial_build_data.append(
-                    [
-                        "TF coil inboard leg (in bore)",
-                        "tfcth",
-                        build_variables.tfcth,
-                        radius,
-                    ]
-                )
+                radial_build_data.append([
+                    "TF coil inboard leg (in bore)",
+                    "tfcth",
+                    build_variables.tfcth,
+                    radius,
+                ])
 
                 radius += build_variables.gapoh
-                radial_build_data.append(
-                    [
-                        "CS precompresion to TF coil radial gap",
-                        "gapoh",
-                        build_variables.gapoh,
-                        radius,
-                    ]
-                )
+                radial_build_data.append([
+                    "CS precompresion to TF coil radial gap",
+                    "gapoh",
+                    build_variables.gapoh,
+                    radius,
+                ])
 
             radius = radius + build_variables.ohcth
-            radial_build_data.append(
-                ["Central solenoid", "ohcth", build_variables.ohcth, radius]
-            )
+            radial_build_data.append([
+                "Central solenoid",
+                "ohcth",
+                build_variables.ohcth,
+                radius,
+            ])
 
             radius = radius + build_variables.precomp
-            radial_build_data.append(
-                ["CS precompression", "precomp", build_variables.precomp, radius]
-            )
+            radial_build_data.append([
+                "CS precompression",
+                "precomp",
+                build_variables.precomp,
+                radius,
+            ])
             if build_variables.tf_in_cs == 0:
                 radius = radius + build_variables.gapoh
-                radial_build_data.append(
-                    [
-                        "CS precompresion to TF coil radial gap",
-                        "gapoh",
-                        build_variables.gapoh,
-                        radius,
-                    ]
-                )
+                radial_build_data.append([
+                    "CS precompresion to TF coil radial gap",
+                    "gapoh",
+                    build_variables.gapoh,
+                    radius,
+                ])
 
                 radius = radius + build_variables.tfcth
-                radial_build_data.append(
-                    [
-                        "TF coil inboard leg",
-                        "tfcth",
-                        build_variables.tfcth,
-                        radius,
-                    ]
-                )
+                radial_build_data.append([
+                    "TF coil inboard leg",
+                    "tfcth",
+                    build_variables.tfcth,
+                    radius,
+                ])
 
             radius = radius + build_variables.tftsgap
-            radial_build_data.append(
-                [
-                    "TF coil inboard leg insulation gap",
-                    "tftsgap",
-                    build_variables.tftsgap,
-                    radius,
-                ]
-            )
+            radial_build_data.append([
+                "TF coil inboard leg insulation gap",
+                "tftsgap",
+                build_variables.tftsgap,
+                radius,
+            ])
 
             radius = radius + build_variables.thshield_ib
-            radial_build_data.append(
-                [
-                    "Thermal shield, inboard",
-                    "thshield_ib",
-                    build_variables.thshield_ib,
-                    radius,
-                ]
-            )
+            radial_build_data.append([
+                "Thermal shield, inboard",
+                "thshield_ib",
+                build_variables.thshield_ib,
+                radius,
+            ])
 
             radius = radius + build_variables.gapds
-            radial_build_data.append(
-                [
-                    "Thermal shield to vessel radial gap",
-                    "gapds",
-                    build_variables.gapds,
-                    radius,
-                ]
-            )
+            radial_build_data.append([
+                "Thermal shield to vessel radial gap",
+                "gapds",
+                build_variables.gapds,
+                radius,
+            ])
 
             radius += build_variables.d_vv_in
-            radial_build_data.append(
-                [
-                    "Inboard vacuum vessel",
-                    "d_vv_in",
-                    build_variables.d_vv_in,
-                    radius,
-                ]
-            )
+            radial_build_data.append([
+                "Inboard vacuum vessel",
+                "d_vv_in",
+                build_variables.d_vv_in,
+                radius,
+            ])
 
             radius += build_variables.shldith
-            radial_build_data.append(
-                ["Inner radiation shield", "shldith", build_variables.shldith, radius]
-            )
+            radial_build_data.append([
+                "Inner radiation shield",
+                "shldith",
+                build_variables.shldith,
+                radius,
+            ])
 
             radius = radius + build_variables.vvblgap
-            radial_build_data.append(
-                ["Gap", "vvblgap", build_variables.vvblgap, radius]
-            )
+            radial_build_data.append([
+                "Gap",
+                "vvblgap",
+                build_variables.vvblgap,
+                radius,
+            ])
 
             radius = radius + build_variables.blnkith
-            radial_build_data.append(
-                ["Inboard blanket", "blnkith", build_variables.blnkith, radius]
-            )
+            radial_build_data.append([
+                "Inboard blanket",
+                "blnkith",
+                build_variables.blnkith,
+                radius,
+            ])
 
             radius = radius + build_variables.fwith
-            radial_build_data.append(
-                ["Inboard first wall", "fwith", build_variables.fwith, radius]
-            )
+            radial_build_data.append([
+                "Inboard first wall",
+                "fwith",
+                build_variables.fwith,
+                radius,
+            ])
 
             radius = radius + build_variables.scrapli
-            radial_build_data.append(
-                ["Inboard scrape-off", "scrapli", build_variables.scrapli, radius]
-            )
+            radial_build_data.append([
+                "Inboard scrape-off",
+                "scrapli",
+                build_variables.scrapli,
+                radius,
+            ])
 
             radius = radius + physics_variables.rminor
-            radial_build_data.append(
-                ["Plasma geometric centre", "rminor", physics_variables.rminor, radius]
-            )
+            radial_build_data.append([
+                "Plasma geometric centre",
+                "rminor",
+                physics_variables.rminor,
+                radius,
+            ])
 
             radius = radius + physics_variables.rminor
-            radial_build_data.append(
-                ["Plasma outboard edge", "rminor", physics_variables.rminor, radius]
-            )
+            radial_build_data.append([
+                "Plasma outboard edge",
+                "rminor",
+                physics_variables.rminor,
+                radius,
+            ])
 
             radius = radius + build_variables.scraplo
-            radial_build_data.append(
-                ["Outboard scrape-off", "scraplo", build_variables.scraplo, radius]
-            )
+            radial_build_data.append([
+                "Outboard scrape-off",
+                "scraplo",
+                build_variables.scraplo,
+                radius,
+            ])
 
             radius = radius + build_variables.fwoth
-            radial_build_data.append(
-                ["Outboard first wall", "fwoth", build_variables.fwoth, radius]
-            )
+            radial_build_data.append([
+                "Outboard first wall",
+                "fwoth",
+                build_variables.fwoth,
+                radius,
+            ])
 
             radius = radius + build_variables.blnkoth
-            radial_build_data.append(
-                ["Outboard blanket", "blnkoth", build_variables.blnkoth, radius]
-            )
+            radial_build_data.append([
+                "Outboard blanket",
+                "blnkoth",
+                build_variables.blnkoth,
+                radius,
+            ])
 
             radius = radius + build_variables.vvblgap
-            radial_build_data.append(
-                ["Gap", "vvblgap", build_variables.vvblgap, radius]
-            )
+            radial_build_data.append([
+                "Gap",
+                "vvblgap",
+                build_variables.vvblgap,
+                radius,
+            ])
 
             radius += build_variables.shldoth
-            radial_build_data.append(
-                ["Outer radiation shield", "shldoth", build_variables.shldoth, radius]
-            )
+            radial_build_data.append([
+                "Outer radiation shield",
+                "shldoth",
+                build_variables.shldoth,
+                radius,
+            ])
 
             radius += build_variables.d_vv_out
-            radial_build_data.append(
-                ["Outboard vacuum vessel", "d_vv_out", build_variables.d_vv_out, radius]
-            )
+            radial_build_data.append([
+                "Outboard vacuum vessel",
+                "d_vv_out",
+                build_variables.d_vv_out,
+                radius,
+            ])
 
             radius = radius + build_variables.gapsto
-            radial_build_data.append(
-                ["Vessel to TF gap", "gapsto", build_variables.gapsto, radius]
-            )
+            radial_build_data.append([
+                "Vessel to TF gap",
+                "gapsto",
+                build_variables.gapsto,
+                radius,
+            ])
 
             radius = radius + build_variables.thshield_ob
-            radial_build_data.append(
-                [
-                    "Ouboard thermal shield",
-                    "thshield_ob",
-                    build_variables.thshield_ob,
-                    radius,
-                ]
-            )
+            radial_build_data.append([
+                "Ouboard thermal shield",
+                "thshield_ob",
+                build_variables.thshield_ob,
+                radius,
+            ])
 
             radius = radius + build_variables.tftsgap
-            radial_build_data.append(
-                ["Gap", "tftsgap", build_variables.tftsgap, radius]
-            )
+            radial_build_data.append([
+                "Gap",
+                "tftsgap",
+                build_variables.tftsgap,
+                radius,
+            ])
 
             radius = radius + build_variables.tfthko
-            radial_build_data.append(
-                ["TF coil outboard leg", "tfthko", build_variables.tfthko, radius]
-            )
+            radial_build_data.append([
+                "TF coil outboard leg",
+                "tfthko",
+                build_variables.tfthko,
+                radius,
+            ])
 
             for description, variable, thickness, radius in radial_build_data:
                 po.obuild(

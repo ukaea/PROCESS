@@ -1,7 +1,9 @@
 """
 Module to hold plotting functions, used in plot_proc.py, which are common to multiple reactor components
 """
+
 from typing import List, Tuple
+
 import numpy as np
 
 

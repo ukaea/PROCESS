@@ -1,16 +1,19 @@
 import numpy as np
 
-from process.plasma_profiles import PlasmaProfile
-
 from process.fortran import (
-    heat_transport_variables,
-    current_drive_variables,
-    physics_variables,
-    cost_variables,
     constants,
-    process_output as po,
+    cost_variables,
+    current_drive_variables,
+    heat_transport_variables,
+    physics_variables,
+)
+from process.fortran import (
     error_handling as eh,
 )
+from process.fortran import (
+    process_output as po,
+)
+from process.plasma_profiles import PlasmaProfile
 
 
 class CurrentDrive:
@@ -241,10 +244,7 @@ class CurrentDrive:
                 # X-mode case
                 elif current_drive_variables.wave_mode == 1:
                     f_cutoff = 0.5 * (
-                        fc
-                        + np.sqrt(
-                            current_drive_variables.harnum * fc**2 + 4 * fp**2
-                        )
+                        fc + np.sqrt(current_drive_variables.harnum * fc**2 + 4 * fp**2)
                     )
 
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
@@ -539,10 +539,7 @@ class CurrentDrive:
                 # X-mode case
                 elif current_drive_variables.wave_mode == 1:
                     f_cutoff = 0.5 * (
-                        fc
-                        + np.sqrt(
-                            current_drive_variables.harnum * fc**2 + 4 * fp**2
-                        )
+                        fc + np.sqrt(current_drive_variables.harnum * fc**2 + 4 * fp**2)
                     )
 
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
@@ -702,7 +699,7 @@ class CurrentDrive:
                 abs(
                     current_drive_variables.pinjmw
                     + current_drive_variables.porbitlossmw
-                    + physics_variables.pohmmw
+                    + physics_variables.p_plasma_ohmic_mw
                 )
                 < 1.0e-6
             ):
@@ -711,7 +708,7 @@ class CurrentDrive:
                 current_drive_variables.bigq = physics_variables.fusion_power / (
                     current_drive_variables.pinjmw
                     + current_drive_variables.porbitlossmw
-                    + physics_variables.pohmmw
+                    + physics_variables.p_plasma_ohmic_mw
                 )
 
         if not output:
@@ -2076,52 +2073,48 @@ class CurrentDrive:
         for a hydrogen beam in a fusion plasma.
         Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
         """
-        a = np.array(
+        a = np.array([
             [
-                [
-                    [4.4, -2.49e-2],
-                    [7.46e-2, 2.27e-3],
-                    [3.16e-3, -2.78e-5],
-                ],
-                [
-                    [2.3e-1, -1.15e-2],
-                    [-2.55e-3, -6.2e-4],
-                    [1.32e-3, 3.38e-5],
-                ],
-            ]
-        )
+                [4.4, -2.49e-2],
+                [7.46e-2, 2.27e-3],
+                [3.16e-3, -2.78e-5],
+            ],
+            [
+                [2.3e-1, -1.15e-2],
+                [-2.55e-3, -6.2e-4],
+                [1.32e-3, 3.38e-5],
+            ],
+        ])
 
-        b = np.array(
+        b = np.array([
+            [
+                [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
+                [
+                    [-0.25, -0.119, -0.108, -0.0558],
+                    [-0.0381, -0.015, -0.0138, -3.72e-3],
+                ],
+            ],
             [
                 [
-                    [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
-                    [
-                        [-0.25, -0.119, -0.108, -0.0558],
-                        [-0.0381, -0.015, -0.0138, -3.72e-3],
-                    ],
+                    [0.849, 0.518, 0.477, 0.322],
+                    [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
                 ],
                 [
-                    [
-                        [0.849, 0.518, 0.477, 0.322],
-                        [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
-                    ],
-                    [
-                        [0.0677, 0.0292, 0.0259, 0.0124],
-                        [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
-                    ],
+                    [0.0677, 0.0292, 0.0259, 0.0124],
+                    [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
+                ],
+            ],
+            [
+                [
+                    [-0.0588, -0.0336, -0.0305, -0.0187],
+                    [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
                 ],
                 [
-                    [
-                        [-0.0588, -0.0336, -0.0305, -0.0187],
-                        [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
-                    ],
-                    [
-                        [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
-                        [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
-                    ],
+                    [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
+                    [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
                 ],
-            ]
-        )
+            ],
+        ])
 
         z = np.array([2.0, 6.0, 8.0, 26.0])
         nn = np.array([rnhe, rnc, rno, rnfe])

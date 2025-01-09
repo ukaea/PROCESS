@@ -1,17 +1,19 @@
 """Unit tests for availability.f90."""
 
-from process import fortran
-from process.availability import Availability
-from process.fortran import cost_variables as cv
-from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
-from process.fortran import constraint_variables as ctv
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import times_variables as tv
-from process.fortran import ife_variables as ifev
-from process.fortran import divertor_variables as dv
 import pytest
 from pytest import approx
+
+from process import fortran
+from process.availability import Availability
+from process.fortran import constraint_variables as ctv
+from process.fortran import cost_variables as cv
+from process.fortran import divertor_variables as dv
+from process.fortran import fwbs_variables as fwbsv
+from process.fortran import ife_variables as ifev
+from process.fortran import physics_variables as pv
+from process.fortran import tfcoil_variables as tfv
+from process.fortran import times_variables as tv
+from process.init import init_all_module_vars
 
 
 @pytest.fixture
@@ -81,7 +83,7 @@ def test_avail_1(monkeypatch, availability):
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
     # Initialise fortran variables to keep test isolated from others
-    fortran.init_module.init_all_module_vars()
+    init_all_module_vars()
 
     # Mock module vars
     monkeypatch.setattr(cv, "iavail", 1)
@@ -104,7 +106,7 @@ def test_avail_1(monkeypatch, availability):
     assert pytest.approx(cfactr_exp) == cfactr_obs
 
     # Initialise fortran variables again to reset for other tests
-    fortran.init_module.init_all_module_vars()
+    init_all_module_vars()
 
 
 def test_calc_u_unplanned_hcd(availability):
@@ -486,6 +488,7 @@ def test_avail_2(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
+
     # Mock return values for for functions called in avail_2
     def mock_calc_u_planned(*args, **kwargs):
         return 0.01
@@ -567,8 +570,7 @@ def test_avail_st(monkeypatch, availability):
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
     # Initialise fortran variables to keep test isolated from others
-    fortran.init_module.init_all_module_vars()
-
+    init_all_module_vars()
     monkeypatch.setattr(cv, "tmain", 1.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
@@ -587,9 +589,6 @@ def test_avail_st(monkeypatch, availability):
     assert pytest.approx(cv.t_operation) == 15.0
     assert pytest.approx(cv.cfactr) == 0.27008858
     assert pytest.approx(cv.cpfact, abs=1.0e-8) == 0.00015005
-
-    # Initialise fortran variables again to reset for other tests
-    fortran.init_module.init_all_module_vars()
 
 
 @pytest.mark.parametrize("i_tf_sup, exp", ((1, 6.337618), (0, 4)))

@@ -1,27 +1,27 @@
+import logging
+import math
+
+import numba
+import numpy as np
+from scipy import optimize
+
+import process.superconductors as superconductors
+from process import fortran as ft
+from process.fortran import build_variables as bv
+from process.fortran import constants, numerics
+from process.fortran import constraint_variables as ctv
+from process.fortran import cs_fatigue_variables as csfv
+from process.fortran import error_handling as eh
+from process.fortran import fwbs_variables as fwbsv
+from process.fortran import maths_library as ml
 from process.fortran import pfcoil_module as pf
 from process.fortran import pfcoil_variables as pfv
-from process.fortran import times_variables as tv
-from process.fortran import error_handling as eh
-from process.fortran import build_variables as bv
 from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import constants
-from process.fortran import cs_fatigue_variables as csfv
-from process.fortran import maths_library as ml
 from process.fortran import process_output as op
-from process.fortran import numerics
 from process.fortran import rebco_variables as rcv
-from process.fortran import constraint_variables as ctv
-
+from process.fortran import tfcoil_variables as tfv
+from process.fortran import times_variables as tv
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from process import fortran as ft
-import process.superconductors as superconductors
-import math
-import numpy as np
-import numba
-import logging
-from scipy import optimize
 
 logger = logging.getLogger(__name__)
 
@@ -314,7 +314,7 @@ class PFCoil:
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
-                        + pv.betap
+                        + pv.beta_poloidal
                         + (pv.rli / 2.0e0)
                         - 1.5e0
                     )
@@ -398,7 +398,7 @@ class PFCoil:
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
-                        + pv.betap
+                        + pv.beta_poloidal
                         + (pv.rli / 2.0e0)
                         - 1.5e0
                     )
@@ -510,7 +510,7 @@ class PFCoil:
                     pf.ccls[nng] = 1.0e6 * pfv.ccls_ma[nng]
 
                 # Beginning of pulse: t = tv.t_precharge
-                pfv.curpfs[ncl] = 1.0e-6 * pf.ccl0[nng]
+                pfv.curpfb[ncl] = 1.0e-6 * pf.ccl0[nng]
 
                 # Beginning of flat-top: t = tv.t_precharge+tv.t_current_ramp_up
                 pfv.curpff[ncl] = 1.0e-6 * (
@@ -518,7 +518,7 @@ class PFCoil:
                 )
 
                 # End of flat-top: t = tv.t_precharge+tv.t_current_ramp_up+tv.t_fusion_ramp+tv.t_burn
-                pfv.curpfb[ncl] = 1.0e-6 * (
+                pfv.curpfs[ncl] = 1.0e-6 * (
                     pf.ccls[nng] - (pf.ccl0[nng] * (1.0e0 / pfv.fcohbop))
                 )
 
@@ -526,9 +526,9 @@ class PFCoil:
 
         # Current in Central Solenoid as a function of time
         # N.B. If the Central Solenoid is not present then ioheof is zero.
-        pfv.curpfs[ncl] = -1.0e-6 * ioheof * pfv.fcohbop
+        pfv.curpfb[ncl] = -1.0e-6 * ioheof * pfv.fcohbop
         pfv.curpff[ncl] = 1.0e-6 * ioheof * pfv.fcohbof
-        pfv.curpfb[ncl] = 1.0e-6 * ioheof
+        pfv.curpfs[ncl] = 1.0e-6 * ioheof
 
         # Set up coil current waveforms, normalised to the peak current in
         # each coil
@@ -1191,7 +1191,7 @@ class PFCoil:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
-            (jcritwp, pfv.jcableoh_eof, pfv.jscoh_eof, tmarg1,) = self.superconpf(
+            (jcritwp, pfv.jcableoh_eof, pfv.jscoh_eof, tmarg1) = self.superconpf(
                 pfv.bmaxoh,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1214,7 +1214,7 @@ class PFCoil:
 
             # Allowable coil overall current density at BOP
 
-            (jcritwp, pfv.jcableoh_bop, pfv.jscoh_bop, tmarg2,) = self.superconpf(
+            (jcritwp, pfv.jcableoh_bop, pfv.jscoh_bop, tmarg2) = self.superconpf(
                 pfv.bmaxoh0,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1268,11 +1268,11 @@ class PFCoil:
             kk = 0
         else:
             # Check different times for maximum current
-            if abs(pfv.curpfs[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
+            if abs(pfv.curpfb[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
                 it = 2
             elif abs(pfv.curpff[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
                 it = 4
-            elif abs(pfv.curpfb[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
+            elif abs(pfv.curpfs[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
                 it = 5
             else:
                 eh.idiags[0] = it
@@ -1605,10 +1605,7 @@ class PFCoil:
         # term 3
         ek2b2_1, ek2b2_2 = ml.ellipke(k2b2)
         axial_term_3 = (
-            2.0e0
-            * hl
-            * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2))
-            * (ek2b2_1 - ek2b2_2)
+            2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2)) * (ek2b2_1 - ek2b2_2)
         )
 
         # calculate axial force [N]
@@ -1839,18 +1836,18 @@ class PFCoil:
             for ig in range(pf.nef):
                 op.write(
                     self.outfile,
-                    f"{ig}\t{pfv.sxlg[:pfv.ncirt,ig]}",
+                    f"{ig}\t{pfv.sxlg[: pfv.ncirt, ig]}",
                 )
 
             if bv.iohcl != 0:
                 op.write(
                     self.outfile,
-                    f"CS\t\t\t{pfv.sxlg[:pfv.ncirt,pfv.ncirt-2]}",
+                    f"CS\t\t\t{pfv.sxlg[: pfv.ncirt, pfv.ncirt - 2]}",
                 )
 
             op.write(
                 self.outfile,
-                f"Plasma\t{pfv.sxlg[:pfv.ncirt,pfv.ncirt-1]}",
+                f"Plasma\t{pfv.sxlg[: pfv.ncirt, pfv.ncirt - 1]}",
             )
 
     def outpf(self):
@@ -2343,7 +2340,7 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k]-pfv.ra[k]:.2e}\t{abs(pfv.zh[k]-pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k] - pfv.ra[k]:.2e}\t{abs(pfv.zh[k] - pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
@@ -2395,7 +2392,7 @@ class PFCoil:
         if bv.iohcl != 0:
             op.write(
                 self.outfile,
-                f"CS\t\t\t\t{pfv.rpf[pfv.nohc-1]:.2e}\t{pfv.zpf[pfv.nohc-1]:.2e}\t{pfv.rb[pfv.nohc-1]-pfv.ra[pfv.nohc-1]:.2e}\t{abs(pfv.zh[pfv.nohc-1]-pfv.zl[pfv.nohc-1]):.2e}\t{pfv.turns[pfv.nohc-1]:.2e}\t{pfv.pfcaseth[pfv.nohc-1]:.2e}",
+                f"CS\t\t\t\t{pfv.rpf[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1]:.2e}\t{abs(pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
             )
             op.ovarre(
                 self.mfile,
@@ -2443,7 +2440,7 @@ class PFCoil:
         # Plasma
         op.write(
             self.outfile,
-            f"Plasma\t\t\t{pv.rmajor:.2e}\t0.0e0\t\t{2.0e0*pv.rminor:.2e}\t{2.0e0*pv.rminor*pv.kappa:.2e}\t1.0e0",
+            f"Plasma\t\t\t{pv.rmajor:.2e}\t0.0e0\t\t{2.0e0 * pv.rminor:.2e}\t{2.0e0 * pv.rminor * pv.kappa:.2e}\t1.0e0",
         )
 
         op.osubhd(self.outfile, "PF Coil Information at Peak Current:")
@@ -2464,7 +2461,7 @@ class PFCoil:
             if pfv.ipfres == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k]/pfv.rjpfalw[k]:.2e}\t{pfv.wtc[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}",
+                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.rjpfalw[k]:.2e}\t{pfv.wtc[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}",
                 )
             else:
                 op.write(
@@ -2478,12 +2475,12 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.nohc-1]:.2e}\t{pfv.rjpfalw[pfv.nohc-1]:.2e}\t{max(abs(pfv.cohbop),abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop),abs(pfv.coheof))/pfv.rjpfalw[pfv.nohc-1]:.2e}\t{pfv.wtc[pfv.nohc-1]:.2e}\t{pfv.wts[pfv.nohc-1]:.2e}\t{pfv.bpf[pfv.nohc-1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t{pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)) / pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{pfv.wtc[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.nohc-1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.wtc[pfv.nohc-1]:.2e}\t{pfv.wts[pfv.nohc-1]:.2e}\t{pfv.bpf[pfv.nohc-1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.wtc[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
                 )
 
         # Miscellaneous totals
@@ -2551,12 +2548,12 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"\t{k}\t\t\t{pf.vsdum[k,0]:.3f}\t\t\t{pf.vsdum[k,1]:.3f}\t\t{pf.vsdum[k,2]:.3f}",
+                f"\t{k}\t\t\t{pf.vsdum[k, 0]:.3f}\t\t\t{pf.vsdum[k, 1]:.3f}\t\t{pf.vsdum[k, 2]:.3f}",
             )
 
         op.write(
             self.outfile,
-            f"\tCS coil\t\t\t{pf.vsdum[pfv.nohc-1,0]:.3f}\t\t\t{pf.vsdum[pfv.nohc-1,1]:.3f}\t\t{pf.vsdum[pfv.nohc-1,2]:.3f}",
+            f"\tCS coil\t\t\t{pf.vsdum[pfv.nohc - 1, 0]:.3f}\t\t\t{pf.vsdum[pfv.nohc - 1, 1]:.3f}\t\t{pf.vsdum[pfv.nohc - 1, 2]:.3f}",
         )
 
         op.oshead(self.outfile, "Waveforms")
@@ -2580,12 +2577,12 @@ class PFCoil:
         for k in range(pfv.ncirt - 1):
             line = f"\t{k}\t\t"
             for jj in range(6):
-                line += f"\t{pfv.cpt[k,jj]*pfv.turns[k]:.3e}"
+                line += f"\t{pfv.cpt[k, jj] * pfv.turns[k]:.3e}"
             op.write(self.outfile, line)
 
         line = "Plasma (A)\t\t"
         for jj in range(6):
-            line += f"\t{pfv.cpt[pfv.ncirt-1,jj]:.3e}"
+            line += f"\t{pfv.cpt[pfv.ncirt - 1, jj]:.3e}"
 
         op.write(self.outfile, line)
 
@@ -2595,12 +2592,12 @@ class PFCoil:
             op.write(
                 self.outfile,
                 (
-                    f"{k}\t\t\t{pfv.cpt[k,0]*pfv.turns[k]:.3e}\t"
-                    f"{pfv.cpt[k,1]*pfv.turns[k]:.3e}\t"
-                    f"{-pfv.cpt[k,1]*pfv.turns[k]*(pfv.fcohbof/pfv.fcohbop):.3e}\t"
-                    f"{-pfv.cpt[k,1]*pfv.turns[k]*(pfv.fcohbof/pfv.fcohbop):.3e}\t"
-                    f"{-pfv.cpt[k,1]*pfv.turns[k]*(1.0e0/pfv.fcohbop):.3e}\t"
-                    f"{pfv.cpt[k,5]*pfv.turns[k]:.3e}"
+                    f"{k}\t\t\t{pfv.cpt[k, 0] * pfv.turns[k]:.3e}\t"
+                    f"{pfv.cpt[k, 1] * pfv.turns[k]:.3e}\t"
+                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (1.0e0 / pfv.fcohbop):.3e}\t"
+                    f"{pfv.cpt[k, 5] * pfv.turns[k]:.3e}"
                 ),
             )
 
@@ -2611,9 +2608,9 @@ class PFCoil:
                 self.outfile,
                 (
                     f"{k}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
-                    f"{(pfv.cpt[k,2]+pfv.cpt[k,1]*pfv.fcohbof/pfv.fcohbop)*pfv.turns[k]:.3e}\t"
-                    f"{(pfv.cpt[k,3]+pfv.cpt[k,1]*pfv.fcohbof/pfv.fcohbop)*pfv.turns[k]:.3e}\t"
-                    f"{(pfv.cpt[k,4]+pfv.cpt[k,1]*1.0e0/pfv.fcohbop)*pfv.turns[k]:.3e}\t"
+                    f"{(pfv.cpt[k, 2] + pfv.cpt[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
+                    f"{(pfv.cpt[k, 3] + pfv.cpt[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
+                    f"{(pfv.cpt[k, 4] + pfv.cpt[k, 1] * 1.0e0 / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
                     "0.0e0"
                 ),
             )
@@ -2700,10 +2697,10 @@ class PFCoil:
         for ic in range(pfv.nohc):
             # Find where the peak current occurs
             # Beginning of pulse, t = t_precharge
-            if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfb[ic])) and (
-                abs(pfv.curpfs[ic]) >= abs(pfv.curpff[ic])
+            if (abs(pfv.curpfb[ic]) >= abs(pfv.curpfs[ic])) and (
+                abs(pfv.curpfb[ic]) >= abs(pfv.curpff[ic])
             ):
-                pfv.ric[ic] = pfv.curpfs[ic]
+                pfv.ric[ic] = pfv.curpfb[ic]
 
             # Beginning of flat-top, t = t_precharge + t_current_ramp_up
             if (abs(pfv.curpff[ic]) >= abs(pfv.curpfb[ic])) and (
@@ -2712,17 +2709,17 @@ class PFCoil:
                 pfv.ric[ic] = pfv.curpff[ic]
 
             # End of flat-top, t = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn
-            if (abs(pfv.curpfb[ic]) >= abs(pfv.curpfs[ic])) and (
-                abs(pfv.curpfb[ic]) >= abs(pfv.curpff[ic])
+            if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfs[ic])) and (
+                abs(pfv.curpfs[ic]) >= abs(pfv.curpff[ic])
             ):
-                pfv.ric[ic] = pfv.curpfb[ic]
+                pfv.ric[ic] = pfv.curpfs[ic]
 
             # Set normalized current waveforms
             pfv.waves[ic, 0] = 0.0e0
-            pfv.waves[ic, 1] = pfv.curpfs[ic] / pfv.ric[ic]
+            pfv.waves[ic, 1] = pfv.curpfb[ic] / pfv.ric[ic]
             pfv.waves[ic, 2] = pfv.curpff[ic] / pfv.ric[ic]
             pfv.waves[ic, 3] = pfv.curpff[ic] / pfv.ric[ic]
-            pfv.waves[ic, 4] = pfv.curpfb[ic] / pfv.ric[ic]
+            pfv.waves[ic, 4] = pfv.curpfs[ic] / pfv.ric[ic]
             pfv.waves[ic, 5] = 0.0e0
 
     def superconpf(
@@ -2926,7 +2923,6 @@ class PFCoil:
             or (isumat == 8)
             or (isumat == 9)
         ):  # Find temperature at which current density margin = 0
-
             if isumat == 3:
                 arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
             else:

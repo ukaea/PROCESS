@@ -1,34 +1,34 @@
 """
 
-  PROCESS MFILE.DAT IO library
+PROCESS MFILE.DAT IO library
 
-  process.io.mfile.
+process.io.mfile.
 
-  James Morris
-  CCFE
+James Morris
+CCFE
 
-  Notes:
-    + 12/03/2014: Initial version
-    + 12/03/2014: Added MFILE variable class
-    + 12/03/2014: Added MFILE class for containing all info from file.
-    + 12/03/2014: Added ability to read MFILE.DAT into class
-    + 12/03/2014: Added ability write MFILE.DAT from class
-    + 12/05/2014: Fixed mfile issue with strings in MFILE.DAT with no scans
-    + 16/05/2014: Cleaned up MFileVariable
-    + 19/05/2014: Cleaned up MFile and put some functions outside class.
-    + 12/06/2014: Fixed error handling for "variable not in MFILE" errors
-    + 16/06/2014: Fixed library path error; fix in get_scans
-    + 24/11/2021: Global dictionary variables moved within the functions
-                  to avoid cyclic dependencies. This is because the dicts
-                  generation script imports, and inspects, process.
+Notes:
+  + 12/03/2014: Initial version
+  + 12/03/2014: Added MFILE variable class
+  + 12/03/2014: Added MFILE class for containing all info from file.
+  + 12/03/2014: Added ability to read MFILE.DAT into class
+  + 12/03/2014: Added ability write MFILE.DAT from class
+  + 12/05/2014: Fixed mfile issue with strings in MFILE.DAT with no scans
+  + 16/05/2014: Cleaned up MFileVariable
+  + 19/05/2014: Cleaned up MFile and put some functions outside class.
+  + 12/06/2014: Fixed error handling for "variable not in MFILE" errors
+  + 16/06/2014: Fixed library path error; fix in get_scans
+  + 24/11/2021: Global dictionary variables moved within the functions
+                to avoid cyclic dependencies. This is because the dicts
+                generation script imports, and inspects, process.
 
-  Compatible with PROCESS version 286
+Compatible with PROCESS version 286
 
 """
 
-from collections import OrderedDict
-import logging
 import json
+import logging
+from collections import OrderedDict
 from typing import List, Union
 
 logger = logging.getLogger(__name__)
@@ -152,8 +152,7 @@ class MFileErrorClass(object):
             # Missing error_status key means Process exited prematurely, usually
             # due to a "STOP 1"
             raise KeyError(
-                "error_status not found in MFILE. Process probably "
-                "exited prematurely"
+                "error_status not found in MFILE. Process probably exited prematurely"
             )
         else:
             return 0
@@ -283,7 +282,6 @@ class MFile(object):
                 self.mfile_modules[self.current_module] = list()
 
         else:
-
             var_des = line[0]
             extracted_var_name = sort_brackets(line[1])
 
@@ -361,7 +359,7 @@ class MFile(object):
                     else:
                         entry = data
                     sub_dict[item] = entry
-                dict_to_write[f"scan-{i+1}"] = sub_dict
+                dict_to_write[f"scan-{i + 1}"] = sub_dict
         else:
             for item in keys_to_write:
                 # Initialize dat_key properly based on the number of scans

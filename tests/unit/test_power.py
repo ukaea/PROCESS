@@ -1,22 +1,24 @@
-from typing import NamedTuple, Any
-import pytest
+from typing import Any, NamedTuple
+
 import numpy
+import pytest
 
-
-from process.fortran import fwbs_variables
-from process.fortran import heat_transport_variables
-from process.fortran import pfcoil_variables
-from process.fortran import numerics
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import pf_power_variables
-from process.fortran import times_variables
-from process.fortran import buildings_variables
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constraint_variables,
+    cost_variables,
+    current_drive_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+    times_variables,
+)
 from process.fortran import primary_pumping_variables as ppv
-from process.fortran import constraint_variables
-from process.fortran import cost_variables
-from process.fortran import current_drive_variables
-from process.fortran import tfcoil_variables
 from process.power import Power
 
 
@@ -31,7 +33,6 @@ def power():
 
 
 class CryoParam(NamedTuple):
-
     qnuc: Any = None
 
     inuclear: Any = None
@@ -166,7 +167,6 @@ def test_cryo(cryoparam, monkeypatch, power):
 
 
 class PfpwrParam(NamedTuple):
-
     iohcl: Any = None
 
     peakmva: Any = None
@@ -209,7 +209,7 @@ class PfpwrParam(NamedTuple):
 
     cptdin: Any = None
 
-    curpfb: Any = None
+    curpfs: Any = None
 
     sxlg: Any = None
 
@@ -221,7 +221,7 @@ class PfpwrParam(NamedTuple):
 
     rpf: Any = None
 
-    pohmmw: Any = None
+    p_plasma_ohmic_mw: Any = None
 
     rmajor: Any = None
 
@@ -497,7 +497,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfb=numpy.array(
+            curpfs=numpy.array(
                 numpy.array(
                     (
                         0.067422231232391661,
@@ -858,7 +858,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            pohmmw=0.61391840981850698,
+            p_plasma_ohmic_mw=0.61391840981850698,
             rmajor=8.8901000000000003,
             active_constraints=(
                 True,
@@ -1239,7 +1239,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfb=numpy.array(
+            curpfs=numpy.array(
                 numpy.array(
                     (
                         0.019288882290113718,
@@ -1600,7 +1600,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            pohmmw=0.61391840981850698,
+            p_plasma_ohmic_mw=0.61391840981850698,
             rmajor=8.8901000000000003,
             active_constraints=(
                 True,
@@ -1812,7 +1812,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "cptdin", pfpwrparam.cptdin)
 
-    monkeypatch.setattr(pfcoil_variables, "curpfb", pfpwrparam.curpfb)
+    monkeypatch.setattr(pfcoil_variables, "curpfs", pfpwrparam.curpfs)
 
     monkeypatch.setattr(pfcoil_variables, "sxlg", pfpwrparam.sxlg)
 
@@ -1824,7 +1824,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "rpf", pfpwrparam.rpf)
 
-    monkeypatch.setattr(physics_variables, "pohmmw", pfpwrparam.pohmmw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "rmajor", pfpwrparam.rmajor)
 
@@ -1868,7 +1870,6 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
 
 class AcpowParam(NamedTuple):
-
     efloor: Any = None
 
     baseel: Any = None
@@ -2006,7 +2007,6 @@ def test_acpow(acpowparam, monkeypatch, power):
 
 
 class Power2Param(NamedTuple):
-
     pnetelin: Any = None
 
     ipnet: Any = None
@@ -2135,7 +2135,7 @@ class Power2Param(NamedTuple):
 
     idivrt: Any = None
 
-    pohmmw: Any = None
+    p_plasma_ohmic_mw: Any = None
 
     iradloss: Any = None
 
@@ -2276,7 +2276,7 @@ class Power2Param(NamedTuple):
             pdivt=143.03180561618876,
             palpfwmw=19.833077403424262,
             idivrt=1,
-            pohmmw=0.61391840981850698,
+            p_plasma_ohmic_mw=0.61391840981850698,
             iradloss=1,
             fusion_power=1985.785106643267,
             non_alpha_charged_power=1.6064693283140403,
@@ -2378,7 +2378,7 @@ class Power2Param(NamedTuple):
             pdivt=142.91368967092416,
             palpfwmw=19.826887164528632,
             idivrt=1,
-            pohmmw=0.61391840981850698,
+            p_plasma_ohmic_mw=0.61391840981850698,
             iradloss=1,
             fusion_power=1985.1653095257811,
             non_alpha_charged_power=1.6059679220663614,
@@ -2564,7 +2564,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "idivrt", power2param.idivrt)
 
-    monkeypatch.setattr(physics_variables, "pohmmw", power2param.pohmmw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", power2param.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "iradloss", power2param.iradloss)
 
@@ -2650,7 +2652,6 @@ def test_power2(power2param, monkeypatch, power):
 
 
 class Power3Param(NamedTuple):
-
     etacd: Any = None
 
     htpmw: Any = None

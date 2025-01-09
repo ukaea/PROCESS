@@ -22,16 +22,17 @@ Performed checks:
 - If the file is a folder, the contained MFILE is used as an input.
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
-import os
 import argparse
+import os
 from argparse import RawTextHelpFormatter
 from pathlib import Path
-from process.io.variable_metadata import var_dicts as meta
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 # PROCESS libraries
 import process.io.mfile as mf
+from process.io.variable_metadata import var_dicts as meta
 
 
 def parse_args(args):
@@ -217,15 +218,15 @@ def main(args=None):
     nsweep_dict[8] = "fqval"
     nsweep_dict[9] = "te"
     nsweep_dict[10] = "boundu(15)"
-    nsweep_dict[11] = "dnbeta"
+    nsweep_dict[11] = "beta_norm_max"
     nsweep_dict[12] = "bootstrap_current_fraction_max"
     nsweep_dict[13] = "boundu(10)"
     nsweep_dict[14] = "fiooic"
     nsweep_dict[15] = "fjprot"
     nsweep_dict[16] = "rmajor"
-    nsweep_dict[
-        17
-    ] = "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
+    nsweep_dict[17] = (
+        "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
+    )
     nsweep_dict[18] = "gammax"
     nsweep_dict[19] = "boundl(16)"
     nsweep_dict[20] = "cnstv.t_burn_min"
@@ -779,9 +780,7 @@ def main(args=None):
 
             else:
                 # Converged indexes, for normal 2D line plot
-                for (
-                    conv_j
-                ) in (
+                for conv_j in (
                     conv_ij
                 ):  # conv_j is an array element containing the converged scan numbers
                     # Scanned variables

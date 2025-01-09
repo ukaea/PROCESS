@@ -54,7 +54,7 @@ contains
     use build_variables, only: gapoh, iohcl, ohcth, tfootfi
     use current_drive_variables, only: irfcd
     use pfcoil_variables, only: ohhghf
-    use physics_variables, only: aspect, dnbeta, kappa, kappa95, q, rmajor, &
+    use physics_variables, only: aspect, beta_norm_max, kappa, kappa95, q, rmajor, &
       triang, hfac, tauscl
     use numerics, only: boundl, boundu
     use stellarator_variables, only: istell
@@ -98,7 +98,7 @@ contains
 
     !  Physics quantities
 
-    dnbeta = 0.0D0
+    beta_norm_max = 0.0D0
     kappa95 = 1.0D0
     triang = 0.0D0
     q = 1.03D0

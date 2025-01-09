@@ -41,60 +41,58 @@ Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
-from typing import Protocol
-from process import fortran
-from process.buildings import Buildings
-from process.costs import Costs
-from process.io import plot_proc
-from process.io import mfile
-from process.plasma_geometry import PlasmaGeom
-from process.pulse import Pulse
-from process.scan import Scan
-from process.stellarator import Stellarator, Neoclassics
-from process.structure import Structure
-from process.build import Build
-from process.utilities.f2py_string_patch import string_to_f2py_compatible
 import argparse
-from process.pfcoil import PFCoil
-from process.tfcoil import TFcoil
-from process.divertor import Divertor
-from process.availability import Availability
-from process.ife import IFE
-from process.costs_2015 import Costs2015
-from process.power import Power
-from process.cs_fatigue import CsFatigue
-from process.physics import Physics
-from process.io import obsolete_vars as ov
-from process.plasma_profiles import PlasmaProfile
-from process.hcpb import CCFE_HCPB
-from process.dcll import DCLL
-from process.blanket_library import BlanketLibrary
-from process.fw import Fw
-from process.current_drive import CurrentDrive
-from process.impurity_radiation import initialise_imprad
-from process.caller import write_output_files
+import logging
+import os
+from pathlib import Path
+from typing import Protocol
 
 import process
-
-from pathlib import Path
-import os
-import logging
+import process.init as init
+from process import fortran
+from process.availability import Availability
+from process.blanket_library import BlanketLibrary
+from process.build import Build
+from process.buildings import Buildings
+from process.caller import write_output_files
+from process.costs import Costs
+from process.costs_2015 import Costs2015
+from process.cs_fatigue import CsFatigue
+from process.current_drive import CurrentDrive
+from process.dcll import DCLL
+from process.divertor import Divertor
+from process.fw import Fw
+from process.hcpb import CCFE_HCPB
+from process.ife import IFE
+from process.impurity_radiation import initialise_imprad
+from process.io import mfile, plot_proc
+from process.io import obsolete_vars as ov
 
 # For VaryRun
 from process.io.process_config import RunProcessConfig
 from process.io.process_funcs import (
+    check_input_error,
     get_neqns_itervars,
     get_variable_range,
-    check_input_error,
-    process_stopped,
     no_unfeasible_mfile,
-    vary_iteration_variables,
+    process_stopped,
     process_warnings,
+    vary_iteration_variables,
 )
+from process.pfcoil import PFCoil
+from process.physics import Physics
+from process.plasma_geometry import PlasmaGeom
+from process.plasma_profiles import PlasmaProfile
+from process.power import Power
+from process.pulse import Pulse
+from process.scan import Scan
+from process.sctfcoil import Sctfcoil
+from process.stellarator import Neoclassics, Stellarator
+from process.structure import Structure
+from process.tfcoil import TFcoil
+from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
-from process.sctfcoil import Sctfcoil
-
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -298,8 +296,8 @@ class VaryRun:
         config = RunProcessConfig(self.config_file)
         config.setup()
 
-        fortran.init_module.init_all_module_vars()
-        fortran.init_module.init()
+        init.init_all_module_vars()
+        init.init_process()
 
         neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
@@ -350,8 +348,9 @@ class VaryRun:
                     break
                 else:
                     print(
-                        "WARNING: {} non-feasible point(s) in sweep! "
-                        "Rerunning!".format(no_unfeasible)
+                        "WARNING: {} non-feasible point(s) in sweep! Rerunning!".format(
+                            no_unfeasible
+                        )
                     )
             else:
                 print("PROCESS has stopped without finishing!")
@@ -399,7 +398,7 @@ class SingleRun:
         This "resets" all module variables to their initialised values, so each
         new run doesn't have any side-effects from previous runs.
         """
-        fortran.init_module.init_all_module_vars()
+        init.init_all_module_vars()
 
     def set_filenames(self):
         """Validate the input filename and create other filenames from it."""
@@ -424,9 +423,9 @@ class SingleRun:
         else:
             print("-- Info -- run `process --help` for usage")
             raise FileNotFoundError(
-                "Input file not found on this path. There " "is no input file named",
+                "Input file not found on this path. There is no input file named",
                 self.input_file,
-                "in the analysis " "folder",
+                "in the analysis folder",
             )
 
         # Set the input file in the Fortran
@@ -455,7 +454,7 @@ class SingleRun:
         """Run the init module to call all initialisation routines."""
         initialise_imprad()
         # Reads in input file
-        fortran.init_module.init()
+        init.init_process()
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
@@ -480,7 +479,7 @@ class SingleRun:
             # Original call:
             # self.ifail = fortran.main_module.eqslv()
             raise NotImplementedError(
-                "HYBRD non-optimisation solver is not " "implemented"
+                "HYBRD non-optimisation solver is not implemented"
             )
 
     def run_scan(self, solver):

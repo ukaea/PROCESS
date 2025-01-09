@@ -1,8 +1,11 @@
 """
 Calculate radial and vertical coordinates for the geometry of the pf coils and central coil
 """
+
 from typing import List, Tuple
+
 import numpy as np
+
 from process.geometry.geometry_parameterisations import RectangleGeometry
 
 

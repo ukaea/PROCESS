@@ -16,10 +16,12 @@ morris_output.pdf     -  scatter plot of mean and variance of
                         morris method output
 
 """
+
 import argparse
-import numpy as np
-import matplotlib.pyplot as plt
+
 import matplotlib.backends.backend_pdf as bpdf
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def parse_args(args):

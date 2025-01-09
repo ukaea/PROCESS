@@ -1,32 +1,34 @@
 """Unit tests for physics.f90."""
 
 from typing import Any, NamedTuple
-from process.fortran import (
-    constants,
-    physics_variables,
-    physics_module,
-    current_drive_variables,
-    impurity_radiation_module,
-)
+
 import numpy
 import pytest
+
+from process.current_drive import CurrentDrive
+from process.fortran import (
+    constants,
+    current_drive_variables,
+    impurity_radiation_module,
+    physics_module,
+    physics_variables,
+)
+from process.impurity_radiation import initialise_imprad
 from process.physics import (
     Physics,
-    calculate_poloidal_field,
-    diamagnetic_fraction_scene,
-    diamagnetic_fraction_hender,
-    ps_fraction_scene,
-    calculate_plasma_current_peng,
-    culblm,
+    calculate_beta_limit,
     calculate_current_coefficient_hastie,
-    vscalc,
-    rether,
-    beta_poloidal,
+    calculate_plasma_current_peng,
+    calculate_poloidal_beta,
+    calculate_poloidal_field,
+    diamagnetic_fraction_hender,
+    diamagnetic_fraction_scene,
+    ps_fraction_scene,
     res_diff_time,
+    rether,
+    vscalc,
 )
 from process.plasma_profiles import PlasmaProfile
-from process.current_drive import CurrentDrive
-from process.impurity_radiation import initialise_imprad
 
 
 @pytest.fixture
@@ -39,10 +41,10 @@ def physics():
     return Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile()))
 
 
-def test_beta_poloidal():
-    """Test beta_poloidal()"""
-    betap = beta_poloidal(5.347, 0.852, 0.0307)
-    assert betap == pytest.approx(1.209, abs=0.001)
+def test_calculate_poloidal_beta():
+    """Test calculate_poloidal_beta()"""
+    beta_poloidal = calculate_poloidal_beta(5.347, 0.852, 0.0307)
+    assert beta_poloidal == pytest.approx(1.209, abs=0.001)
 
 
 def test_res_diff_time():
@@ -146,7 +148,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
 
     alphan: Any = None
 
-    betat: Any = None
+    beta_toroidal: Any = None
 
     bt: Any = None
 
@@ -178,7 +180,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
             te0=24.402321098330372,
             ne0=8.515060981068918e19,
             alphan=1.0,
-            betat=0.03,
+            beta_toroidal=0.03,
             bt=5.7,
             dene=18398455.678867526,
             plasma_current=18398455.678867526,
@@ -213,7 +215,7 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
     fibs = physics.bootstrap_fraction_nevins(
         alphan=bootstrapfractionnevinsparam.alphan,
         alphat=bootstrapfractionnevinsparam.alphat,
-        betat=bootstrapfractionnevinsparam.betat,
+        beta_toroidal=bootstrapfractionnevinsparam.beta_toroidal,
         bt=bootstrapfractionnevinsparam.bt,
         dene=bootstrapfractionnevinsparam.dene,
         plasma_current=bootstrapfractionnevinsparam.plasma_current,
@@ -483,7 +485,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
 
 class BootstrapFractionSakaiParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     q95: Any = None
 
@@ -504,7 +506,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
     "bootstrapfractionsakaiparam",
     (
         BootstrapFractionSakaiParam(
-            betap=1.3184383457774960,
+            beta_poloidal=1.3184383457774960,
             q95=3.5151046634673557,
             q0=1.0,
             alphan=1.0,
@@ -514,7 +516,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             expected_bfs=0.3501274900057279,
         ),
         BootstrapFractionSakaiParam(
-            betap=1.1701245502231756,
+            beta_poloidal=1.1701245502231756,
             q95=5.1746754543339177,
             q0=2.0,
             alphan=0.9,
@@ -539,7 +541,9 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "betap", bootstrapfractionsakaiparam.betap)
+    monkeypatch.setattr(
+        physics_variables, "beta_poloidal", bootstrapfractionsakaiparam.beta_poloidal
+    )
 
     monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsakaiparam.q95)
 
@@ -554,7 +558,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     monkeypatch.setattr(physics_variables, "rli", bootstrapfractionsakaiparam.rli)
 
     bfs = physics.bootstrap_fraction_sakai(
-        betap=bootstrapfractionsakaiparam.betap,
+        beta_poloidal=bootstrapfractionsakaiparam.beta_poloidal,
         q95=bootstrapfractionsakaiparam.q95,
         q0=bootstrapfractionsakaiparam.q0,
         alphan=bootstrapfractionsakaiparam.alphan,
@@ -567,7 +571,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
 
 
 class BootstrapFractionAriesParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     rli: Any = None
 
@@ -584,7 +588,7 @@ class BootstrapFractionAriesParam(NamedTuple):
     "bootstrapfractionariesparam",
     (
         BootstrapFractionAriesParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             rli=1.4279108047138775,
             core_density=1.0695994460047332e20,
             average_density=8.1317358967210131e19,
@@ -604,7 +608,7 @@ def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_aries(
-        betap=bootstrapfractionariesparam.betap,
+        beta_poloidal=bootstrapfractionariesparam.beta_poloidal,
         rli=bootstrapfractionariesparam.rli,
         core_density=bootstrapfractionariesparam.core_density,
         average_density=bootstrapfractionariesparam.average_density,
@@ -615,7 +619,7 @@ def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
 
 
 class BootstrapFractionAndradeParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     core_pressure: Any = None
 
@@ -630,7 +634,7 @@ class BootstrapFractionAndradeParam(NamedTuple):
     "bootstrapfractionandradeparam",
     (
         BootstrapFractionAndradeParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             core_pressure=8.3049163275475602e05,
             average_pressure=2.4072221239268288e05,
             inverse_aspect=1 / 3,
@@ -649,7 +653,7 @@ def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_andrade(
-        betap=bootstrapfractionandradeparam.betap,
+        beta_poloidal=bootstrapfractionandradeparam.beta_poloidal,
         core_pressure=bootstrapfractionandradeparam.core_pressure,
         average_pressure=bootstrapfractionandradeparam.average_pressure,
         inverse_aspect=bootstrapfractionandradeparam.inverse_aspect,
@@ -659,7 +663,7 @@ def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
 
 
 class BootstrapFractionHoangParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     pressure_index: Any = None
 
@@ -674,7 +678,7 @@ class BootstrapFractionHoangParam(NamedTuple):
     "bootstrapfractionhoangparam",
     (
         BootstrapFractionHoangParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
             current_index=2.8314361644755763e00,
             inverse_aspect=1 / 3,
@@ -693,7 +697,7 @@ def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_hoang(
-        betap=bootstrapfractionhoangparam.betap,
+        beta_poloidal=bootstrapfractionhoangparam.beta_poloidal,
         pressure_index=bootstrapfractionhoangparam.pressure_index,
         current_index=bootstrapfractionhoangparam.current_index,
         inverse_aspect=bootstrapfractionhoangparam.inverse_aspect,
@@ -703,7 +707,7 @@ def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
 
 
 class BootstrapFractionWongParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     density_index: Any = None
 
@@ -720,7 +724,7 @@ class BootstrapFractionWongParam(NamedTuple):
     "bootstrapfractionwongparam",
     (
         BootstrapFractionWongParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             density_index=1.0000000000000000e00,
             temperature_index=1.4500000000000000e00,
             inverse_aspect=1 / 3,
@@ -740,7 +744,7 @@ def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_wong(
-        betap=bootstrapfractionwongparam.betap,
+        beta_poloidal=bootstrapfractionwongparam.beta_poloidal,
         density_index=bootstrapfractionwongparam.density_index,
         temperature_index=bootstrapfractionwongparam.temperature_index,
         inverse_aspect=bootstrapfractionwongparam.inverse_aspect,
@@ -751,7 +755,7 @@ def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
 
 
 class BootstrapFractionGiIParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     pressure_index: Any = None
 
@@ -772,7 +776,7 @@ class BootstrapFractionGiIParam(NamedTuple):
     "bootstrapfractiongiiparam",
     (
         BootstrapFractionGiIParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
             temperature_index=1.4500000000000000e00,
             inverse_aspect=1 / 3,
@@ -794,7 +798,7 @@ def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_gi_I(
-        betap=bootstrapfractiongiiparam.betap,
+        beta_poloidal=bootstrapfractiongiiparam.beta_poloidal,
         pressure_index=bootstrapfractiongiiparam.pressure_index,
         temperature_index=bootstrapfractiongiiparam.temperature_index,
         inverse_aspect=bootstrapfractiongiiparam.inverse_aspect,
@@ -807,7 +811,7 @@ def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
 
 
 class BootstrapFractionGiIIParam(NamedTuple):
-    betap: Any = None
+    beta_poloidal: Any = None
 
     pressure_index: Any = None
 
@@ -824,7 +828,7 @@ class BootstrapFractionGiIIParam(NamedTuple):
     "bootstrapfractiongiiiparam",
     (
         BootstrapFractionGiIIParam(
-            betap=1.2708883332338736,
+            beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
             temperature_index=1.4500000000000000e00,
             inverse_aspect=1 / 3,
@@ -844,7 +848,7 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
     """
 
     bfs = physics.bootstrap_fraction_gi_II(
-        betap=bootstrapfractiongiiiparam.betap,
+        beta_poloidal=bootstrapfractiongiiiparam.beta_poloidal,
         pressure_index=bootstrapfractiongiiiparam.pressure_index,
         temperature_index=bootstrapfractiongiiiparam.temperature_index,
         inverse_aspect=bootstrapfractiongiiiparam.inverse_aspect,
@@ -855,7 +859,7 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
 
 
 class PlasmaCurrentParam(NamedTuple):
-    normalised_total_beta: Any = None
+    beta_norm_total: Any = None
 
     beta: Any = None
 
@@ -912,7 +916,7 @@ class PlasmaCurrentParam(NamedTuple):
     "plasmacurrentparam",
     (
         PlasmaCurrentParam(
-            normalised_total_beta=0,
+            beta_norm_total=0,
             beta=0.030000000000000006,
             i_plasma_current=4,
             iprofile=1,
@@ -940,7 +944,7 @@ class PlasmaCurrentParam(NamedTuple):
             expected_plasma_current=18398455.678867526,
         ),
         PlasmaCurrentParam(
-            normalised_total_beta=2.4784688886891844,
+            beta_norm_total=2.4784688886891844,
             beta=0.030000000000000006,
             i_plasma_current=4,
             iprofile=1,
@@ -984,8 +988,8 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(
         physics_variables,
-        "normalised_total_beta",
-        plasmacurrentparam.normalised_total_beta,
+        "beta_norm_total",
+        plasmacurrentparam.beta_norm_total,
     )
 
     monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
@@ -1011,7 +1015,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         triang95=plasmacurrentparam.triang95,
     )
 
-    assert physics_variables.normalised_total_beta == pytest.approx(
+    assert physics_variables.beta_norm_total == pytest.approx(
         plasmacurrentparam.expected_normalised_total_beta
     )
 
@@ -1109,8 +1113,8 @@ def test_calculate_poloidal_field(arguments, expected):
     assert calculate_poloidal_field(**arguments) == pytest.approx(expected)
 
 
-def test_culblm():
-    assert culblm(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
+def test_calculate_beta_limit():
+    assert calculate_beta_limit(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
 
 
 def test_conhas():
@@ -1708,7 +1712,7 @@ class VscalcParam(NamedTuple):
 
     rmajor: Any = None
 
-    rplas: Any = None
+    res_plasma: Any = None
 
     t_burn: Any = None
 
@@ -1739,7 +1743,7 @@ class VscalcParam(NamedTuple):
             plasma_current=18398455.678867526,
             rli=1.2064840230894305,
             rmajor=8,
-            rplas=3.7767895536275952e-09,
+            res_plasma=3.7767895536275952e-09,
             t_burn=1000,
             t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
@@ -1758,7 +1762,7 @@ class VscalcParam(NamedTuple):
             plasma_current=18398455.678867526,
             rli=1.2064840230894305,
             rmajor=8,
-            rplas=3.7767895536275952e-09,
+            res_plasma=3.7767895536275952e-09,
             t_burn=0,
             t_fusion_ramp=10,
             expected_phiint=111.57651734747576,
@@ -1789,7 +1793,7 @@ def test_vscalc(vscalcparam):
         plasma_current=vscalcparam.plasma_current,
         rli=vscalcparam.rli,
         rmajor=vscalcparam.rmajor,
-        rplas=vscalcparam.rplas,
+        res_plasma=vscalcparam.res_plasma,
         t_burn=vscalcparam.t_burn,
         t_fusion_ramp=vscalcparam.t_fusion_ramp,
         rmu0=constants.rmu0,
@@ -1967,13 +1971,13 @@ class PohmParam(NamedTuple):
 
     zeff: Any = None
 
-    expected_pohmpv: Any = None
+    expected_pden_plasma_ohmic_mw: Any = None
 
-    expected_pohmmw: Any = None
+    expected_p_plasma_ohmic_mw: Any = None
 
     expected_rpfac: Any = None
 
-    expected_rplas: Any = None
+    expected_res_plasma: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1990,16 +1994,16 @@ class PohmParam(NamedTuple):
             ten=12.626131115905864,
             plasma_volume=1888.1711539956691,
             zeff=2.0909945616489103,
-            expected_pohmpv=0.0004062519138005805,
-            expected_pohmmw=0.7670731448937912,
+            expected_pden_plasma_ohmic_mw=0.0004062519138005805,
+            expected_p_plasma_ohmic_mw=0.7670731448937912,
             expected_rpfac=2.5,
-            expected_rplas=3.7767895536275952e-09,
+            expected_res_plasma=3.7767895536275952e-09,
         ),
     ),
 )
 def test_pohm(pohmparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for pohm.
+    Automatically generated Regression Unit Test for plasma_ohmic_heating.
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
@@ -2016,7 +2020,12 @@ def test_pohm(pohmparam, monkeypatch, physics):
         physics_variables, "plasma_res_factor", pohmparam.plasma_res_factor
     )
 
-    pohmpv, pohmmw, rpfac, rplas = physics.pohm(
+    (
+        pden_plasma_ohmic_mw,
+        p_plasma_ohmic_mw,
+        rpfac,
+        res_plasma,
+    ) = physics.plasma_ohmic_heating(
         inductive_current_fraction=pohmparam.inductive_current_fraction,
         kappa95=pohmparam.kappa95,
         plasma_current=pohmparam.plasma_current,
@@ -2027,13 +2036,15 @@ def test_pohm(pohmparam, monkeypatch, physics):
         zeff=pohmparam.zeff,
     )
 
-    assert pohmpv == pytest.approx(pohmparam.expected_pohmpv)
+    assert pden_plasma_ohmic_mw == pytest.approx(
+        pohmparam.expected_pden_plasma_ohmic_mw
+    )
 
-    assert pohmmw == pytest.approx(pohmparam.expected_pohmmw)
+    assert p_plasma_ohmic_mw == pytest.approx(pohmparam.expected_p_plasma_ohmic_mw)
 
     assert rpfac == pytest.approx(pohmparam.expected_rpfac)
 
-    assert rplas == pytest.approx(pohmparam.expected_rplas)
+    assert res_plasma == pytest.approx(pohmparam.expected_res_plasma)
 
 
 class CalculateDensityLimitParam(NamedTuple):
@@ -2138,7 +2149,7 @@ class PcondParam(NamedTuple):
 
     kappaa_ipb: Any = None
 
-    pohmmw: Any = None
+    p_plasma_ohmic_mw: Any = None
 
     f_alpha_plasma: Any = None
 
@@ -2223,7 +2234,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=32,
@@ -2267,7 +2278,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=33,
@@ -2311,7 +2322,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=34,
@@ -2355,7 +2366,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=35,
@@ -2399,7 +2410,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=36,
@@ -2443,7 +2454,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=37,
@@ -2487,7 +2498,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=38,
@@ -2531,7 +2542,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=39,
@@ -2575,7 +2586,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=40,
@@ -2619,7 +2630,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=41,
@@ -2663,7 +2674,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=42,
@@ -2707,7 +2718,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=43,
@@ -2751,7 +2762,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=44,
@@ -2795,7 +2806,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=45,
@@ -2839,7 +2850,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=46,
@@ -2883,7 +2894,7 @@ class PcondParam(NamedTuple):
             tauee_in=0,
             pradpv=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
-            pohmmw=0.63634001890069991,
+            p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
             iinvqd=1,
             isc=47,
@@ -2945,7 +2956,9 @@ def test_pcond(pcondparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "kappaa_ipb", pcondparam.kappaa_ipb)
 
-    monkeypatch.setattr(physics_variables, "pohmmw", pcondparam.pohmmw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", pcondparam.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "f_alpha_plasma", pcondparam.f_alpha_plasma)
 

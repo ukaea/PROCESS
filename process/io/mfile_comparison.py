@@ -1,27 +1,29 @@
 #!/usr/bin/env python
 """
 
-    Python tool for comparing MFILE and outputting differences.
-    The tool does not work for MFiles that are not the result of
-    a full PROCESS run (ie if an error or exception occured).
+Python tool for comparing MFILE and outputting differences.
+The tool does not work for MFiles that are not the result of
+a full PROCESS run (ie if an error or exception occured).
 
-    James Morris
-    14/04/15
+James Morris
+14/04/15
 
-    CCFE
+CCFE
 
-    Notes:
-        + 24/11/2021: Global dictionary variables moved within the functions
-                    to avoid cyclic dependencies. This is because the dicts
-                    generation script imports, and inspects, process.
+Notes:
+    + 24/11/2021: Global dictionary variables moved within the functions
+                to avoid cyclic dependencies. This is because the dicts
+                generation script imports, and inspects, process.
 
 """
 
-import sys
-import numpy
 import argparse
-import process.io.mfile as mf
+import sys
+
+import numpy
 from numpy import isfinite
+
+import process.io.mfile as mf
 from process.io.python_fortran_dicts import get_dicts
 
 # Dictionary for parameter descriptions
@@ -60,7 +62,7 @@ DEFAULT_COMPARE_PARAMS = [
     "plasma_current_MA",
     "bt",
     "q95",
-    "betap",
+    "beta_poloidal",
     "te",
     "dene",
     "hfact",
@@ -115,7 +117,7 @@ BASELINE_LIST = [
     "q95",
     "beta",
     "normalised_thermal_beta",
-    "normalised_total_beta",
+    "beta_norm_total",
     "thermal_beta",
     "thermal_poloidal_beta",
     "te",
@@ -476,7 +478,6 @@ def main(arg):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description="Produce a comparison "
         "between two PROCESS "
