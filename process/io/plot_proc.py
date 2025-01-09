@@ -28,7 +28,6 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 from scipy.special import beta
 
-
 import process.io.mfile as mf
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
@@ -748,19 +747,17 @@ def plot_nprofile(prof, demo_ranges):
         prof.minorticks_on()
 
         # Add text box with density profile parameters
-        textstr_density = "\n".join(
-            (
-                r"$n_{\text{e,0}}$: "
-                + f"{ne0:.3e} m$^{{-3}}$"
-                + r"$\quad \quad \alpha_{\text{n}}$: "
-                + f"{alphan:.3f}\n",
-                r"$n_{\text{e,ped}}$: " + f"{neped:.3e} m$^{{-3}}$",
-                r"$f_{\text{GW e,ped}}$: " + f"{fgwped_out:.3f}",
-                r"$\rho_{\text{ped,n}}$: " + f"{rhopedn:.3f}\n",
-                r"$n_{\text{e,sep}}$: " + f"{nesep:.3e} m$^{{-3}}$",
-                r"$f_{\text{GW e,sep}}$: " + f"{fgwsep_out:.3f}",
-            )
-        )
+        textstr_density = "\n".join((
+            r"$n_{\text{e,0}}$: "
+            + f"{ne0:.3e} m$^{{-3}}$"
+            + r"$\quad \quad \alpha_{\text{n}}$: "
+            + f"{alphan:.3f}\n",
+            r"$n_{\text{e,ped}}$: " + f"{neped:.3e} m$^{{-3}}$",
+            r"$f_{\text{GW e,ped}}$: " + f"{fgwped_out:.3f}",
+            r"$\rho_{\text{ped,n}}$: " + f"{rhopedn:.3f}\n",
+            r"$n_{\text{e,sep}}$: " + f"{nesep:.3e} m$^{{-3}}$",
+            r"$f_{\text{GW e,sep}}$: " + f"{fgwsep_out:.3f}",
+        ))
 
         props_density = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
         prof.text(
@@ -795,12 +792,10 @@ def plot_jprofile(prof):
     prof.plot(rho, y2, label="$n_{i}$", color="red")
     prof.legend()
 
-    textstr_j = "\n".join(
-        (
-            r"$j_0$: " + f"{y2[0]:.3f} kA m$^{{-2}}$\n",
-            r"$\alpha_J$: " + f"{alphaj:.3f}",
-        )
-    )
+    textstr_j = "\n".join((
+        r"$j_0$: " + f"{y2[0]:.3f} kA m$^{{-2}}$\n",
+        r"$\alpha_J$: " + f"{alphaj:.3f}",
+    ))
 
     props_j = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
     prof.text(
@@ -879,17 +874,15 @@ def plot_tprofile(prof, demo_ranges):
         prof.minorticks_on()
 
     # Add text box with temperature profile parameters
-    textstr_temperature = "\n".join(
-        (
-            r"$T_{\text{e,0}}$: "
-            + f"{te0:.3f} keV"
-            + r"$\quad \alpha_{\text{T}}$: "
-            + f"{alphat:.3f}\n",
-            r"$T_{\text{e,ped}}$: " + f"{teped:.3f} keV",
-            r"$\rho_{\text{ped,T}}$: " + f"{rhopedt:.3f}\n",
-            r"$T_{\text{e,sep}}$: " + f"{tesep:.3f} keV\n",
-        )
-    )
+    textstr_temperature = "\n".join((
+        r"$T_{\text{e,0}}$: "
+        + f"{te0:.3f} keV"
+        + r"$\quad \alpha_{\text{T}}$: "
+        + f"{alphat:.3f}\n",
+        r"$T_{\text{e,ped}}$: " + f"{teped:.3f} keV",
+        r"$\rho_{\text{ped,T}}$: " + f"{rhopedt:.3f}\n",
+        r"$T_{\text{e,sep}}$: " + f"{tesep:.3f} keV\n",
+    ))
 
     props_temperature = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
     prof.text(
@@ -943,12 +936,10 @@ def plot_qprofile(prof, demo_ranges):
     )
     # ---
 
-    textstr_q = "\n".join(
-        (
-            r"$q_0$: " + f"{q0:.3f}\n",
-            r"$q_{95}$: " + f"{q95:.3f}",
-        )
-    )
+    textstr_q = "\n".join((
+        r"$q_0$: " + f"{q0:.3f}\n",
+        r"$q_{95}$: " + f"{q95:.3f}",
+    ))
 
     props_q = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
     prof.text(
@@ -2458,9 +2449,9 @@ def plot_physics_info(axis, mfile_data, scan):
         ("plasma_current_ma", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
-        ("normalised_thermal_beta", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
-        ("normalised_toroidal_beta", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
-        ("thermal_poloidal_beta", r"$\beta_P$, thermal", ""),
+        ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
+        ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
+        ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
         ("te", r"$< T_e >$", "keV"),
         ("dene", r"$< n_e >$", "m$^{-3}$"),
