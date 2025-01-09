@@ -3559,7 +3559,13 @@ class Physics:
                         "(alphaj)",
                         physics_variables.alphaj,
                     )
-
+                po.ovarrf(
+                    self.outfile,
+                    "On-axis plasma current density (A/m2)",
+                    "(j_plasma_0)",
+                    physics_variables.j_plasma_0,
+                    "OP ",
+                )
                 po.ovarrf(
                     self.outfile,
                     "Plasma internal inductance, li",

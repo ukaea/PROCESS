@@ -271,6 +271,17 @@ class PlasmaProfile:
             physics_variables.alphap + 1
         )
 
+        # Central plasma current density (A/m^2)
+        # Assumes a parabolic profile for the current density
+        physics_variables.j_plasma_0 = (
+            (physics_variables.plasma_current)
+            * 2
+            / (
+                sp.special.beta(0.5, physics_variables.alphaj + 1)
+                * physics_variables.xarea
+            )
+        )
+
     @staticmethod
     def calculate_parabolic_profile_factors() -> None:
         """

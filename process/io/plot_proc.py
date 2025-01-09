@@ -26,7 +26,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
-from scipy.special import beta
 
 import process.io.mfile as mf
 from process.geometry.blanket_geometry import (
@@ -726,13 +725,9 @@ def plot_jprofile(prof):
     prof.set_title("$J$ profile")
 
     rho = np.linspace(0, 1)
-    alphaj = 2.0
-    y = (plasma_current_MA * 1e6) * 2 / (beta(0.5, alphaj + 1) * xarea)
-
-    y2 = (y * (1 - rho**2) ** alphaj) / 1e3
+    y2 = (j_plasma_0 * (1 - rho**2) ** alphaj) / 1e3
 
     prof.plot(rho, y2, label="$n_{i}$", color="red")
-    prof.legend()
 
     textstr_j = "\n".join((
         r"$j_0$: " + f"{y2[0]:.3f} kA m$^{{-2}}$\n",
@@ -3376,6 +3371,7 @@ def main(args=None):
     global rdewex
     global zdewex
     global ddwex
+    global j_plasma_0
 
     bore = m_file.data["bore"].get_scan(scan)
     ohcth = m_file.data["ohcth"].get_scan(scan)
@@ -3397,6 +3393,7 @@ def main(args=None):
     rdewex = m_file.data["rdewex"].get_scan(scan)
     zdewex = m_file.data["zdewex"].get_scan(scan)
     ddwex = m_file.data["ddwex"].get_scan(scan)
+    j_plasma_0 = m_file.data["j_plasma_0"].get_scan(scan)
 
     # Magnets related
     global n_tf
