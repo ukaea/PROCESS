@@ -52,12 +52,18 @@ class PlasmaProfile:
         if custom_profile:
             neprofile = custom_profile.get("neprofile", {})
             teprofile = custom_profile.get("teprofile", {})
+            niprofile = custom_profile.get("niprofile", {})
+            tiprofile = custom_profile.get("tiprofile", {})
             # Extract values, raise error if keys are not found
             try:
                 neprofile_x = neprofile["profile_x"]  # Raises KeyError if not found
                 neprofile_y = neprofile["profile_y"]
                 teprofile_x = teprofile["profile_x"]
                 teprofile_y = teprofile["profile_y"]
+                niprofile_x = niprofile["profile_x"]  # Raises KeyError if not found
+                niprofile_y = niprofile["profile_y"]
+                tiprofile_x = tiprofile["profile_x"]
+                tiprofile_y = tiprofile["profile_y"]
             except KeyError as e:
                 raise KeyError(f"Missing required key in profile data: {e}")
             # Set correct profile size
@@ -133,71 +139,136 @@ class PlasmaProfile:
             self.pedestal_parameterisation()
             self.calculate_profile_factors()
 
-    # Parameters:
-    # - rhopedn (float): The normalised minor radius pedestal position.
-    # - nped (float): The pedestal density (/m3).
-    # - nsep (float): The separatrix density (/m3).
-    # - nav (float): The avg electron density (/m3).
-    # - alphan (float): The density peaking parameter.
-
     def calculate_custom_profiles(self) -> None:
-        """Calculate the properties of custom input temperature
-        and density profiles.
         """
+        Calculate the properties of custom input temperature and density profiles.
+
+        This method normalizes the profile x-values, calculates the profile dx-values,
+        and sets the physics variables for the density and temperature profiles.
+        It also fits the custom profiles to the provided data and stores the original
+        and fitted profiles in JSON format.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
+        # First fit the temp profile. The fit is better, get a better estimate of pedestal
+        # position.
+        self.teprofile.normalise_profile_x()
+        self.teprofile.calculate_profile_dx()
+        # Known values of t0 and tesep
+        t0 = self.teprofile.profile_y[0]
+        tesep = self.teprofile.profile_y[-1]
+        # Initial guesses for rhopedt, teped, alphat, and tbeta
+        initial_guess = [0.5, 2.8, 0.5, 1.5]
+
+        def fit_temperature_profile(
+            rho_data, temperature_data, t0, tesep, initial_guess
+        ):
+            # Fit the curve to the data
+            popt, pcov = sp.optimize.curve_fit(
+                lambda rho, rhopedt, teped, alphat, tbeta: self.teprofile.calculate_profile_y(
+                    rho, rhopedt, t0, teped, tesep, alphat, tbeta
+                ),
+                rho_data,
+                temperature_data,
+                p0=initial_guess,
+            )
+            perr = np.sqrt(np.diag(pcov))
+            # Extract the fitted parameters
+            rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted = popt
+
+            return (
+                rhopedt_fitted,
+                teped_fitted,
+                alphat_fitted,
+                tbeta_fitted,
+                perr,
+            )
+
+        # Initial guesses for rhopedt, teped, alphat, and tbeta
+        initial_guess = [0.96, 0.5, 0.5, 1.5]
+        # Fit the profile and get the fitted parameters
+        (
+            rhopedt_fitted,
+            teped_fitted,
+            alphat_fitted,
+            tbeta_fitted,
+            teperr,
+        ) = fit_temperature_profile(
+            self.teprofile.profile_x,
+            self.teprofile.profile_y,
+            t0,
+            tesep,
+            initial_guess,
+        )
+        # Create the fitted profile using the fitted parameters
+        fitted_profile = self.teprofile.calculate_profile_y(
+            self.teprofile.profile_x,
+            rhopedt_fitted,
+            t0,
+            teped_fitted,
+            tesep,
+            alphat_fitted,
+            tbeta_fitted,
+        )
+        # Store the original and fitted profiles in JSON format
+        profiles = {
+            "original_profile": self.teprofile.profile_y.tolist(),
+            "fitted_profile": fitted_profile.tolist(),
+        }
+
+        with open("temperature_profiles.json", "w") as f:
+            json.dump(profiles, f)
+
+        self.teprofile.set_physics_variables()
+        self.teprofile.integrate_profile_y()
+
         self.neprofile.normalise_profile_x()
         self.neprofile.calculate_profile_dx()
         self.neprofile.set_physics_variables()
         # Initial guess for the parameters (nped, nsep, nav, alphan)
         nsep = self.neprofile.profile_y[-1]
         n0 = self.neprofile.profile_y[0]
-        # Initial guesses for rhopedn, nped, and alphan
-        initial_guess = [0.927, 1.2e20, 0.24]
+        # Initial guesses for nped, and alphan
+        initial_guess = [0.75e20, 0.24]
+        self.neprofile.integrate_profile_y()
 
-        def calculate_profile_y(rho, rhopedn, n0, nped, nsep, alphan):
-            profile_y = np.zeros_like(rho)
-
-            rho_index = rho <= rhopedn
-            profile_y[rho_index] = (
-                nped + (n0 - nped) * (1 - (rho[rho_index] / rhopedn) ** 2) ** alphan
-            )
-            profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
-                1 - rhopedn
-            )
-
-            return profile_y
-
-        def fit_density_profile(rho_data, density_data, n0, nsep, initial_guess):
+        # Fit the density profile.
+        def fit_density_profile(
+            rho_data, density_data, n0, nsep, rhopedn, initial_guess
+        ):
             # Fit the curve to the data
             popt, pcov = sp.optimize.curve_fit(
-                lambda rho, rhopedn, nped, alphan: calculate_profile_y(
-                    rho, 0.92, n0, nped, nsep, alphan
+                lambda rho, nped, alphan, rhopedn=rhopedn: self.neprofile.calculate_profile_y(
+                    rho, rhopedn, n0, nped, nsep, alphan
                 ),
                 rho_data,
                 density_data,
                 p0=initial_guess,
             )
+            # Calculate the standard deviation errors
             perr = np.sqrt(np.diag(pcov))
-            print("perr", perr)
-
             # Extract the fitted parameters
-            rhopedn_fitted, nped_fitted, alphan_fitted = popt
+            nped_fitted, alphan_fitted = popt
 
-            return rhopedn_fitted, nped_fitted, alphan_fitted
+            return nped_fitted, alphan_fitted, perr
 
         # Fit the profile and get the fitted parameters
-        rhopedn_fitted, nped_fitted, alphan_fitted = fit_density_profile(
-            self.neprofile.profile_x, self.neprofile.profile_y, n0, nsep, initial_guess
+        nped_fitted, alphan_fitted, perr = fit_density_profile(
+            rho_data=self.neprofile.profile_x,
+            density_data=self.neprofile.profile_y,
+            n0=n0,
+            nsep=nsep,
+            rhopedn=rhopedt_fitted,
+            initial_guess=initial_guess,
         )
-        print(f"Fitted value for rhopedn: {rhopedn_fitted}")
-        print(f"Fitted value for nped: {nped_fitted}")
-        print(f"Fitted value for alphan: {alphan_fitted}")
-
-        profile_x = np.arange(501)
-        profile_x = profile_x / max(profile_x)
         # Create the fitted profile using the fitted parameters
-        fitted_profile = calculate_profile_y(
-            profile_x,
-            rhopedn_fitted,
+        fitted_profile = self.neprofile.calculate_profile_y(
+            self.neprofile.profile_x,
+            rhopedt_fitted,
             n0,
             nped_fitted,
             nsep,
@@ -212,97 +283,6 @@ class PlasmaProfile:
 
         with open("profiles.json", "w") as f:
             json.dump(profiles, f)
-        self.neprofile.integrate_profile_y()
-
-        self.teprofile.normalise_profile_x()
-        self.teprofile.calculate_profile_dx()
-        # Known values of t0 and tesep
-        t0 = self.teprofile.profile_y[0]
-        tesep = self.teprofile.profile_y[-1]
-
-        # Initial guesses for rhopedt, teped, alphat, and tbeta
-        initial_guess = [0.5, 2.8, 0.5, 1.5]
-
-        def calculate_profile_y(rho, rhopedt, t0, teped, tesep, alphat, tbeta):
-            profile_y = np.zeros_like(rho)
-
-            rho_index = rho <= rhopedt
-            profile_y[rho_index] = (
-                teped
-                + (t0 - teped) * (1 - (rho[rho_index] / rhopedt) ** tbeta) ** alphat
-            )
-            profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
-                1 - rhopedt
-            )
-
-            return profile_y
-
-        def fit_temperature_profile(
-            rho_data, temperature_data, t0, tesep, initial_guess
-        ):
-            # Fit the curve to the data
-            popt, pcov = sp.optimize.curve_fit(
-                lambda rho, rhopedt, teped, alphat, tbeta: calculate_profile_y(
-                    rho, rhopedt, t0, teped, tesep, alphat, tbeta
-                ),
-                rho_data,
-                temperature_data,
-                p0=initial_guess,
-            )
-            perr = np.sqrt(np.diag(pcov))
-            print("perrtemp", perr)
-            # Extract the fitted parameters
-            rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted = popt
-
-            # Create the fitted profile using the fitted parameters
-            fitted_profile = calculate_profile_y(
-                profile_x,
-                rhopedt_fitted,
-                t0,
-                teped_fitted,
-                tesep,
-                alphat_fitted,
-                tbeta_fitted,
-            )
-
-            return (
-                rhopedt_fitted,
-                teped_fitted,
-                alphat_fitted,
-                tbeta_fitted,
-                fitted_profile,
-            )
-
-        # Initial guesses for rhopedt, teped, alphat, and tbeta
-        initial_guess = [0.96, 0.5, 0.5, 1.5]
-        print(t0)
-        # Fit the profile and get the fitted parameters
-        rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted, fitted_profile = (
-            fit_temperature_profile(
-                self.teprofile.profile_x,
-                self.teprofile.profile_y,
-                t0,
-                tesep,
-                initial_guess,
-            )
-        )
-        # Store the original and fitted profiles in JSON format
-        profiles = {
-            "original_profile": self.teprofile.profile_y.tolist(),
-            "fitted_profile": fitted_profile.tolist(),
-        }
-
-        with open("temperature_profiles.json", "w") as f:
-            json.dump(profiles, f)
-
-        print("Profiles have been stored in temperature_profiles.json")
-
-        print(f"Fitted rhopedt: {rhopedt_fitted}")
-        print(f"Fitted teped: {teped_fitted}")
-        print(f"Fitted alphat: {alphat_fitted}")
-        print(f"Fitted tbeta: {tbeta_fitted}")
-        self.teprofile.set_physics_variables()
-        self.teprofile.integrate_profile_y()
 
     def calculate_parabolic_profiles(self) -> None:
         """Reset the pedestal values and calculate the profiles."""
