@@ -4,20 +4,7 @@ import logging
 
 import numba
 import numpy as np
-
-from process.fortran import rebco_variables
-from process.fortran import global_variables
-from process.fortran import tfcoil_variables
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import constants
-from process.fortran import sctfcoil_module
-from process.fortran import process_output as po
-from process.fortran import error_handling
-from process.fortran import fwbs_variables
-from process.fortran import pfcoil_variables
-from process.fortran import numerics
-from process.fortran import divertor_variables
+from scipy import optimize
 
 import process.superconductors as superconductors
 from process import process_output as po
@@ -2379,7 +2366,7 @@ class Sctfcoil:
             n_tf_turn=tfcoil_variables.n_tf_turn,
             # Area of the radial plate taken to be the area of steel in the WP
             # TODO: value clipped due to #1883
-            s_rp=numpy.clip(sctfcoil_module.a_tf_steel, 0, None),
+            s_rp=np.clip(sctfcoil_module.a_tf_steel, 0, None),
             s_cc=sctfcoil_module.a_case_front
             + sctfcoil_module.a_case_nose
             + 2.0 * sctfcoil_module.t_lat_case_av,
@@ -7273,7 +7260,7 @@ def lambda_term(tau, omega):
 
 
 @staticmethod
-def _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv):
+def _theta_factor_integral(ro_vv, ri_vv, rm_vv, h_vv, theta1_vv):
     """Theta Factor Integral
     Author: Alexander Pearce, UKAEA
 
@@ -7288,36 +7275,33 @@ def _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv):
     full form of the integral is given in appendix A.
     """
     theta2 = np.pi / 2.0 + theta1_vv
-    a = (Ro_vv - Ri_vv) / 2.0
-    Rbar = (Ro_vv + Ri_vv) / 2.0
-    A = Rbar / a
-    delta = (Rbar - Rm_vv) / a
-    kappa = H_vv / a
+    a = (ro_vv - ri_vv) / 2.0
+    rbar = (ro_vv + ri_vv) / 2.0
+    delta = (rbar - rm_vv) / a
+    kappa = h_vv / a
     iota = (1.0 + delta) / kappa
 
     denom = np.cos(theta1_vv) + np.sin(theta1_vv) - 1.0
 
-    R1 = H_vv * ((np.cos(theta1_vv) + iota * (np.sin(theta1_vv) - 1.0)) / denom)
-    R2 = H_vv * ((np.cos(theta1_vv) - 1.0 + iota * np.sin(theta1_vv)) / denom)
-    R3 = H_vv * (1 - delta) / kappa
+    r1 = h_vv * ((np.cos(theta1_vv) + iota * (np.sin(theta1_vv) - 1.0)) / denom)
+    r2 = h_vv * ((np.cos(theta1_vv) - 1.0 + iota * np.sin(theta1_vv)) / denom)
+    r3 = h_vv * (1 - delta) / kappa
 
-    Rc1 = (H_vv / kappa) * (A + 1.0) - R1
-    Rc2 = Rc1 + (R1 - R2) * np.cos(theta1_vv)
-    Rc3 = Rc2
-    Zc2 = (R1 - R2) * np.sin(theta1_vv)
-    Zc3 = Zc2 + R2 - R3
+    rc1 = (h_vv / kappa) * ((rbar / a) + 1.0) - r1
+    rc2 = rc1 + (r1 - r2) * np.cos(theta1_vv)
+    rc3 = rc2
+    zc2 = (r1 - r2) * np.sin(theta1_vv)
+    zc3 = zc2 + r2 - r3
 
-    tau = np.array(
-        [
-            [np.cos(theta1_vv), np.cos(theta1_vv + theta2), -1.0],
-            [1.0, np.cos(theta1_vv), np.cos(theta1_vv + theta2)],
-        ]
-    )
+    tau = np.array([
+        [np.cos(theta1_vv), np.cos(theta1_vv + theta2), -1.0],
+        [1.0, np.cos(theta1_vv), np.cos(theta1_vv + theta2)],
+    ])
 
-    omega = np.array([Rc1 / R1, Rc2 / R2, Rc3 / R3])
+    omega = np.array([rc1 / r1, rc2 / r2, rc3 / r3])
 
     # Assume up down symmetry and let Zc6 = - Zc3
-    chi1 = (Zc3 + np.abs(-Zc3)) / Ri_vv
+    chi1 = (zc3 + np.abs(-zc3)) / ri_vv
     chi2 = 0.0
 
     for k in range(len(omega)):
@@ -7413,8 +7397,8 @@ def vv_stress_on_quench(
     theta1_vv_rad = np.pi * (theta1_vv / 180.0)
 
     # Poloidal loop resistance (PLR) in ohms
-    theta_vv = _theta_factor_integral(Ro_vv, Ri_vv, Rm_vv, H_vv, theta1_vv_rad)
-    plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (S_cc + S_rp))) * 1e-6
+    theta_vv = _theta_factor_integral(ro_vv, ri_vv, rm_vv, H_vv, theta1_vv_rad)
+    plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (s_cc + s_rp))) * 1e-6
     plr_vv = ((0.84 / d_vv) * theta_vv) * 1e-6
 
     # relevant self-inductances in henry (H)
