@@ -283,6 +283,9 @@ class PlasmaProfile:
 
         with open("profiles.json", "w") as f:
             json.dump(profiles, f)
+        physics_variables.alphan = alphan_fitted
+        physics_variables.alphat = alphat_fitted
+        physics_variables.tbeta = tbeta_fitted
 
     def calculate_parabolic_profiles(self) -> None:
         """Reset the pedestal values and calculate the profiles."""
