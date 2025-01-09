@@ -1867,7 +1867,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         axis.set_title("Top-down view of inboard TF coil at midplane")
         axis.set_xlabel("Radial distance [m]")
         axis.set_ylabel("Toroidal distance [m]")
-        axis.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
+        axis.legend(bbox_to_anchor=(1.05, 1.0), loc="upper left")
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
@@ -2017,7 +2017,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     axis.set_title("WP Turn Structure")
     axis.set_xlabel("X [mm]")
     axis.set_ylabel("Y [mm]")
-    axis.legend(loc="upper right", bbox_to_anchor=(1.0, -0.25))
+    axis.legend(loc="upper right", bbox_to_anchor=(2.0, 1.0))
 
 
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
@@ -3302,11 +3302,13 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_7 = fig4.add_subplot(321, aspect="equal")
+        plot_7 = fig4.add_subplot(211, aspect="equal")
+        plot_7.set_position([0.05, 0.5, 0.8, 0.4])
         plot_tf_wp(plot_7, m_file_data, scan)
 
         # TF coil turn structure
-        plot_8 = fig4.add_subplot(322, aspect="equal")
+        plot_8 = fig4.add_subplot(325, aspect="equal")
+        plot_8.set_position([0.1, 0.1, 0.3, 0.3])
         plot_tf_turn(plot_8, m_file_data, scan)
 
     plot_9 = fig5.add_subplot(221)
