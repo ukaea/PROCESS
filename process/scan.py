@@ -131,12 +131,6 @@ class Scan:
     def scan_2d(self):
         """Run a 2-D scan."""
         # Initialise intent(out) arrays
-        outvar = np.zeros(
-            (scan_module.noutvars, scan_module.ipnscns), dtype=np.float64, order="F"
-        )
-        sweep_1_vals = np.ndarray(scan_module.ipnscns, dtype=np.float64, order="F")
-        sweep_2_vals = np.ndarray(scan_module.ipnscns, dtype=np.float64, order="F")
-
         scan_module.scan_2d_init()
         iscan = 1
 
@@ -146,19 +140,11 @@ class Scan:
         )
         for iscan_1 in range(1, scan_module.isweep + 1):
             for iscan_2 in range(1, scan_module.isweep_2 + 1):
-                iscan_r = self.scan_2d_write_point_header(iscan, iscan_1, iscan_2)
+                self.scan_2d_write_point_header(iscan, iscan_1, iscan_2)
                 ifail = self.doopt()
 
                 write_output_files(models=self.models, ifail=ifail)
 
-                outvar, sweep_1_vals, sweep_2_vals = scan_module.scan_2d_store_output(
-                    ifail,
-                    iscan_1,
-                    iscan_r,
-                    iscan,
-                    scan_module.noutvars,
-                    scan_module.ipnscns,
-                )
                 error_handling.show_errors()
                 error_handling.init_error_handling()
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail

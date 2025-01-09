@@ -147,6 +147,7 @@ contains
     first_call_2d = .true.
   end subroutine init_scan_module
 
+<<<<<<< HEAD
   subroutine scan_1d_store_output(iscan, ifail, noutvars_, ipnscns_, outvar)
     use constraint_variables, only: taulimit
     use cost_variables, only: cdirt, coe, coeoam, coefuelt, c222, ireactor, &
@@ -262,6 +263,8 @@ contains
     outvar(83,iscan) = teped
   end subroutine scan_1d_store_output
 
+=======
+>>>>>>> 0712f841... Remove redundant scan code
   subroutine scan_2d_init
     !! Routine to call 2-D scan
     !! author: J Morris, UKAEA, Culham Science Centre
@@ -280,6 +283,7 @@ contains
     call ovarin(mfile,'Scanning second variable number','(nsweep_2)',nsweep_2)
   end subroutine scan_2d_init
 
+<<<<<<< HEAD
   subroutine scan_2d_store_output(ifail, iscan_1, iscan_R, iscan, noutvars_, ipnscns_, outvar, &
     sweep_1_vals, sweep_2_vals)
     implicit none
@@ -401,6 +405,8 @@ contains
 
   end subroutine scan_2d_write_plot
 
+=======
+>>>>>>> 0712f841... Remove redundant scan code
   subroutine post_optimise(ifail)
   !! Called after calling the optimising equation solver from Python.
   !! author: P J Knight, CCFE, Culham Science Centre
