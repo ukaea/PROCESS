@@ -318,7 +318,7 @@ contains
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
 
     use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he, &
-      dp_fw_blkt, dp_fw, dp_blkt, dp_liq
+      dp_fw_blkt, dp_fw, dp_blkt, dp_liq, pump_factor
 
     use scan_module, only: isweep_2, nsweep, isweep, scan_dim, nsweep_2, &
       sweep_2, sweep, ipnscns, ipnscnv
@@ -2347,7 +2347,9 @@ contains
        case ('p_he')
           call parse_real_variable('p_he', p_he, 0.0D0, 100.0D6, &
               'Pressure in FW and blanket coolant at pump exit')
-
+       case ('pump_factor')
+            call parse_real_variable('pump_factor', pump_factor, 0.0D0, 10.0D0, &
+               'Pumping power for FW and Blanket multiplier factor')
        case ('gamma_he')
           call parse_real_variable('gamma_he', gamma_he, 1.0D0, 2.0D0, &
               'Ratio of specific heats for helium or for another Gas')
