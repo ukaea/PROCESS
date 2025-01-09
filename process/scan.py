@@ -132,7 +132,7 @@ class Scan:
     def scan_2d(self):
         """Run a 2-D scan."""
         # Initialise intent(out) arrays
-        scan_module.scan_2d_init()
+        self.scan_2d_init()
         iscan = 1
 
         # initialise array which will contain ifail values for each scan point
@@ -200,6 +200,44 @@ class Scan:
             converged_count / (scan_module.isweep * scan_module.isweep_2) * 100
         )
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
+
+    def scan_2d_init(self):
+        process_output.ovarin(
+            constants.mfile,
+            "Number of first variable scan points",
+            "(isweep)",
+            scan_module.isweep,
+        )
+        process_output.ovarin(
+            constants.mfile,
+            "Number of second variable scan points",
+            "(isweep_2)",
+            scan_module.isweep_2,
+        )
+        process_output.ovarin(
+            constants.mfile,
+            "Scanning first variable number",
+            "(nsweep)",
+            scan_module.nsweep,
+        )
+        process_output.ovarin(
+            constants.mfile,
+            "Scanning second variable number",
+            "(nsweep_2)",
+            scan_module.nsweep_2,
+        )
+        process_output.ovarin(
+            constants.mfile,
+            "Scanning second variable number",
+            "(nsweep_2)",
+            scan_module.nsweep_2,
+        )
+        process_output.ovarin(
+            constants.mfile,
+            "Scanning second variable number",
+            "(nsweep_2)",
+            scan_module.nsweep_2,
+        )
 
     def scan_1d_write_point_header(self, iscan: int):
         global_variables.iscan_global = iscan

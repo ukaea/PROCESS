@@ -147,24 +147,6 @@ contains
     first_call_2d = .true.
   end subroutine init_scan_module
 
-  subroutine scan_2d_init
-    !! Routine to call 2-D scan
-    !! author: J Morris, UKAEA, Culham Science Centre
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    use constants, only: mfile
-    use process_output, only: ovarin
-    implicit none
-
-    !  Set up labels for plotting output
-    !  Use underscores instead of spaces
-    call ovarin(mfile,'Number of first variable scan points','(isweep)',isweep)
-    call ovarin(mfile,'Number of second variable scan points','(isweep_2)',isweep_2)
-    call ovarin(mfile,'Scanning first variable number','(nsweep)',nsweep)
-    call ovarin(mfile,'Scanning second variable number','(nsweep_2)',nsweep_2)
-    call ovarin(mfile,'Scanning second variable number','(nsweep_2)',nsweep_2)
-    call ovarin(mfile,'Scanning second variable number','(nsweep_2)',nsweep_2)
-  end subroutine scan_2d_init
-
   subroutine post_optimise(ifail)
   !! Called after calling the optimising equation solver from Python.
   !! author: P J Knight, CCFE, Culham Science Centre
