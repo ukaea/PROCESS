@@ -164,8 +164,6 @@ class Scan:
         )
         converged_count = 0
         scan_point = 1
-        nsweep_var_name = nsweep_var_name.decode("utf-8")
-        nsweep_2_var_name = nsweep_2_var_name.decode("utf-8")
         # offsets for aligning the converged/unconverged column
         max_sweep1_value_length = len(str(np.max(sweep_1_values)).replace(".", ""))
         max_sweep2_value_length = len(str(np.max(sweep_2_values)).replace(".", ""))
