@@ -142,6 +142,8 @@ class PlasmaProfile:
     def calculate_custom_profiles(self) -> None:
         """
         Calculate the properties of custom input temperature and density profiles.
+        We may want to use a profile from a higher fidelity code, but to use it in
+        PROCESS, we must find the profile indices for certain calculations.
 
         This method normalizes the profile x-values, calculates the profile dx-values,
         and sets the physics variables for the density and temperature profiles.
@@ -161,8 +163,6 @@ class PlasmaProfile:
         # Known values of t0 and tesep
         t0 = self.teprofile.profile_y[0]
         tesep = self.teprofile.profile_y[-1]
-        # Initial guesses for rhopedt, teped, alphat, and tbeta
-        initial_guess = [0.5, 2.8, 0.5, 1.5]
 
         def fit_temperature_profile(
             rho_data, temperature_data, t0, tesep, initial_guess
@@ -180,29 +180,19 @@ class PlasmaProfile:
             # Extract the fitted parameters
             rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted = popt
 
-            return (
-                rhopedt_fitted,
-                teped_fitted,
-                alphat_fitted,
-                tbeta_fitted,
-                perr,
-            )
+            return rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted, perr
 
         # Initial guesses for rhopedt, teped, alphat, and tbeta
         initial_guess = [0.96, 0.5, 0.5, 1.5]
         # Fit the profile and get the fitted parameters
-        (
-            rhopedt_fitted,
-            teped_fitted,
-            alphat_fitted,
-            tbeta_fitted,
-            teperr,
-        ) = fit_temperature_profile(
-            self.teprofile.profile_x,
-            self.teprofile.profile_y,
-            t0,
-            tesep,
-            initial_guess,
+        rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted, teperr = (
+            fit_temperature_profile(
+                self.teprofile.profile_x,
+                self.teprofile.profile_y,
+                t0,
+                tesep,
+                initial_guess,
+            )
         )
         # Create the fitted profile using the fitted parameters
         fitted_profile = self.teprofile.calculate_profile_y(
@@ -215,13 +205,13 @@ class PlasmaProfile:
             tbeta_fitted,
         )
         # Store the original and fitted profiles in JSON format
-        profiles = {
+        temp_profiles = {
             "original_profile": self.teprofile.profile_y.tolist(),
             "fitted_profile": fitted_profile.tolist(),
         }
 
         with open("temperature_profiles.json", "w") as f:
-            json.dump(profiles, f)
+            json.dump(temp_profiles, f)
 
         self.teprofile.set_physics_variables()
         self.teprofile.integrate_profile_y()
@@ -232,11 +222,7 @@ class PlasmaProfile:
         # Initial guess for the parameters (nped, nsep, nav, alphan)
         nsep = self.neprofile.profile_y[-1]
         n0 = self.neprofile.profile_y[0]
-        # Initial guesses for nped, and alphan
-        initial_guess = [0.75e20, 0.24]
-        self.neprofile.integrate_profile_y()
 
-        # Fit the density profile.
         def fit_density_profile(
             rho_data, density_data, n0, nsep, rhopedn, initial_guess
         ):
@@ -256,6 +242,8 @@ class PlasmaProfile:
 
             return nped_fitted, alphan_fitted, perr
 
+        # Initial guesses for nped, and alphan
+        initial_guess = [0.75e20, 0.24]
         # Fit the profile and get the fitted parameters
         nped_fitted, alphan_fitted, perr = fit_density_profile(
             rho_data=self.neprofile.profile_x,
@@ -276,13 +264,14 @@ class PlasmaProfile:
         )
 
         # Store the original and fitted profiles in JSON format
-        profiles = {
+        density_profiles = {
             "original_profile": self.neprofile.profile_y.tolist(),
             "fitted_profile": fitted_profile.tolist(),
         }
 
-        with open("profiles.json", "w") as f:
-            json.dump(profiles, f)
+        with open("density_profiles.json", "w") as f:
+            json.dump(density_profiles, f)
+
         physics_variables.alphan = alphan_fitted
         physics_variables.alphat = alphat_fitted
         physics_variables.tbeta = tbeta_fitted
