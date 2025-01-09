@@ -691,9 +691,12 @@ def plot_nprofile(prof, demo_ranges):
         textstr_density = "\n".join((
             r"$n_{\text{e,0}}$: "
             + f"{ne0:.3e} m$^{{-3}}$"
-            + r"$\quad \quad \alpha_{\text{n}}$: "
+            + r"$\hspace{4} \alpha_{\text{n}}$: "
             + f"{alphan:.3f}\n",
-            r"$n_{\text{e,ped}}$: " + f"{neped:.3e} m$^{{-3}}$",
+            r"$n_{\text{e,ped}}$: "
+            + f"{neped:.3e} m$^{{-3}}$"
+            + r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
+            + f"{deni / dene:.3f}",
             r"$f_{\text{GW e,ped}}$: " + f"{fgwped_out:.3f}",
             r"$\rho_{\text{ped,n}}$: " + f"{rhopedn:.3f}\n",
             r"$n_{\text{e,sep}}$: " + f"{nesep:.3e} m$^{{-3}}$",
@@ -703,10 +706,10 @@ def plot_nprofile(prof, demo_ranges):
         props_density = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
         prof.text(
             0.0,
-            -0.175,
+            -0.16,
             textstr_density,
             transform=prof.transAxes,
-            fontsize=8,
+            fontsize=9,
             verticalalignment="top",
             bbox=props_density,
         )
@@ -723,6 +726,8 @@ def plot_jprofile(prof):
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"Current density $[kA/m^2]$")
     prof.set_title("$J$ profile")
+    prof.minorticks_on()
+    prof.set_xlim([0, 1.0])
 
     rho = np.linspace(0, 1)
     y2 = (j_plasma_0 * (1 - rho**2) ** alphaj) / 1e3
@@ -740,13 +745,13 @@ def plot_jprofile(prof):
         0.75,
         textstr_j,
         transform=prof.transAxes,
-        fontsize=8,
+        fontsize=9,
         verticalalignment="top",
         bbox=props_j,
     )
 
     prof.text(
-        0.1,
+        0.05,
         0.04,
         "*Current profile is assumed to be parabolic",
         fontsize=10,
@@ -780,7 +785,7 @@ def plot_tprofile(prof, demo_ranges):
         rho = np.append(rho1, rho2)
         te = te0 * (1 - rho**2) ** alphat
     prof.plot(rho, te, color="blue", label="$T_{e}$")
-    prof.plot(rho, te[:] * 1.0369, color="red", label="$T_{i}$")
+    prof.plot(rho, te[:] * tratio, color="red", label="$T_{i}$")
     prof.legend()
 
     # Ranges
@@ -814,9 +819,12 @@ def plot_tprofile(prof, demo_ranges):
     textstr_temperature = "\n".join((
         r"$T_{\text{e,0}}$: "
         + f"{te0:.3f} keV"
-        + r"$\quad \alpha_{\text{T}}$: "
+        + r"$\hspace{4} \alpha_{\text{T}}$: "
         + f"{alphat:.3f}\n",
-        r"$T_{\text{e,ped}}$: " + f"{teped:.3f} keV",
+        r"$T_{\text{e,ped}}$: "
+        + f"{teped:.3f} keV"
+        + r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
+        + f"{tratio:.3f}",
         r"$\rho_{\text{ped,T}}$: " + f"{rhopedt:.3f}\n",
         r"$T_{\text{e,sep}}$: " + f"{tesep:.3f} keV\n",
     ))
@@ -824,10 +832,10 @@ def plot_tprofile(prof, demo_ranges):
     props_temperature = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
     prof.text(
         0.0,
-        -0.175,
+        -0.16,
         textstr_temperature,
         transform=prof.transAxes,
-        fontsize=8,
+        fontsize=9,
         verticalalignment="top",
         bbox=props_temperature,
     )
@@ -840,9 +848,10 @@ def plot_qprofile(prof, demo_ranges):
     Arguments:
       prof --> axis object to add plot to
     """
-
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel("$q$")
     prof.set_title("$q$ profile")
+    prof.minorticks_on()
 
     rho = np.linspace(0, 1)
     q_r_nevin = q0 + (q95 - q0) * (rho + rho * rho + rho**3) / (3.0)
@@ -884,7 +893,7 @@ def plot_qprofile(prof, demo_ranges):
         0.75,
         textstr_q,
         transform=prof.transAxes,
-        fontsize=8,
+        fontsize=9,
         verticalalignment="top",
         bbox=props_q,
     )
@@ -950,7 +959,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
       impp --> impurity path
     """
 
-    prof.set_xlabel("r/a")
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
     prof.set_title("Radiation profile")
 
@@ -1045,7 +1054,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         for l in range(imp_data.shape[0]):  # noqa: E741
             prad[k] = prad[k] + pimpden[l][k] * 2.0e-6
 
-    prof.plot(rho, prad, label="Total")
+    prof.plot(rho, prad, label="Total", linestyle="dotted")
     prof.plot(rho, pimpden[0] * 2.0e-6, label="H")
     prof.plot(rho, pimpden[1] * 2.0e-6, label="He")
     if imp_frac[2] > 1.0e-30:
@@ -1072,19 +1081,21 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         prof.plot(rho, pimpden[12] * 2.0e-6, label="Xe")
     if imp_frac[13] > 1.0e-30:
         prof.plot(rho, pimpden[13] * 2.0e-6, label="W")
-    prof.legend()
+    prof.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
     prof.minorticks_on()
 
     # Ranges
     # ---
-    prof.set_xlim([0, 1])
+    prof.set_xlim([0, 1.0])
+    prof.set_yscale("log")
+    prof.yaxis.grid(True, which="both", alpha=0.2)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        prof.set_ylim([0, 0.5])
+        prof.set_ylim([1e-6, 0.5])
 
     # Adapatative ranges
     else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
+        prof.set_ylim([1e-6, prof.get_ylim()[1]])
     # ---
 
 
@@ -2403,13 +2414,13 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
-        ("te", r"$< T_e >$", "keV"),
-        ("dene", r"$< n_e >$", "m$^{-3}$"),
-        (nong, r"$< n_{\mathrm{e,line}} >/n_G$", ""),
-        (tepeak, r"$T_{e0}/ < T_e >$", ""),
-        (nepeak, r"$n_{e0}/ < n_{\mathrm{e, vol}} >$", ""),
+        ("te", r"$\langle T_e \rangle$", "keV"),
+        ("dene", r"$\langle n_e \rangle$", "m$^{-3}$"),
+        (nong, r"$\langle n_{\mathrm{e,line}} \rangle/n_G$", ""),
+        (tepeak, r"$T_{e0}/ \langle T_e \rangle$", ""),
+        (nepeak, r"$n_{e0}/ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("zeff", r"$Z_{\mathrm{eff}}$", ""),
-        (dnz, r"$n_Z/ < n_{\mathrm{e, vol}} >$", ""),
+        (dnz, r"$n_Z/ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("taueff", r"$\tau_e$", "s"),
         ("hfact", "H-factor", ""),
         (pthresh, "H-mode threshold", "MW"),
@@ -2748,7 +2759,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2775,7 +2786,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2804,7 +2815,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2833,7 +2844,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2862,7 +2873,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -3242,29 +3253,28 @@ def main_plot(
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(231)  # , aspect= 0.05)
-    fig2.subplots_adjust(wspace=0.3)
+    plot_4.set_position([0.075, 0.55, 0.25, 0.4])
     plot_nprofile(plot_4, demo_ranges)
 
     # Plot temperature profiles
-    plot_5 = fig2.add_subplot(232)  # , aspect= 1/35)
+    plot_5 = fig2.add_subplot(232)
+    plot_5.set_position([0.375, 0.55, 0.25, 0.4])
     plot_tprofile(plot_5, demo_ranges)
 
-    plot_8 = fig2.add_subplot(233)  # , aspect=2)
+    # Plot impurity profiles
+    plot_8 = fig2.add_subplot(233)
+    plot_8.set_position([0.7, 0.45, 0.25, 0.5])
     plot_radprofile(plot_8, m_file_data, scan, imp, demo_ranges)
 
-    plot_7 = fig2.add_subplot(4, 3, 10, sharex=plot_8)  # , aspect=2)
+    # Plot current density profile
+    plot_7 = fig2.add_subplot(4, 3, 10)
+    plot_7.set_position([0.075, 0.125, 0.25, 0.15])
     plot_jprofile(plot_7)
-    plot_7.tick_params(
-        axis="x", which="both", bottom=True, top=False, labelbottom=False
-    )
-    plot_7.minorticks_on()
 
-    plot_6 = fig2.add_subplot(4, 3, 12, sharex=plot_7)  # , aspect=2)
+    # Plot q profile
+    plot_6 = fig2.add_subplot(4, 3, 12)
+    plot_6.set_position([0.7, 0.125, 0.25, 0.15])
     plot_qprofile(plot_6, demo_ranges)
-    plot_6.tick_params(
-        axis="x", which="both", bottom=True, top=False, labelbottom=False
-    )
-    plot_6.minorticks_on()
 
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
@@ -3446,7 +3456,6 @@ def main(args=None):
     global ne0
     global deni
     global dene
-    global ni0
     global te0
     global ti
     global te
@@ -3467,7 +3476,6 @@ def main(args=None):
     ne0 = m_file.data["ne0"].get_scan(scan)
     deni = m_file.data["deni"].get_scan(scan)
     dene = m_file.data["dene"].get_scan(scan)
-    ni0 = m_file.data["ni0"].get_scan(scan)
     te0 = m_file.data["te0"].get_scan(scan)
     ti = m_file.data["ti"].get_scan(scan)
     te = m_file.data["te"].get_scan(scan)

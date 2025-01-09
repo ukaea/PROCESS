@@ -3844,6 +3844,13 @@ class Physics:
         )
         po.ovarrf(
             self.outfile,
+            "Ratio of ion to electron volume-averaged temperature",
+            "(tratio)",
+            physics_variables.tratio,
+            "IP ",
+        )
+        po.ovarrf(
+            self.outfile,
             "Electron temperature on axis (keV)",
             "(te0)",
             physics_variables.te0,
