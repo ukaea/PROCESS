@@ -236,9 +236,10 @@ contains
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
-      ft_current_ramp_up, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
+      ft_current_ramp_up, ftohs, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
       fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta_poloidal_eps, fjohc, &
-      fflutf, bmxlim, t_burn_min, fbeta_min, fecrh_ignition, fstr_wp, fncycle
+      fflutf, bmxlim, t_burn_min, fbeta_min, fecrh_ignition, fstr_wp, fncycle, i_use_fixed_q_factor, &
+      fixed_q_factor
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
       cost_factor_vv, cfind, uccry, fcap0cp, uccase, uuves, cconshtf, conf_mag, &
       ucbllipb, ucfuel, uumag, ucpfbs, ireactor, uucd, div_umain_time, div_nu, &
@@ -843,6 +844,9 @@ contains
        case ('i_hldiv')
           call parse_int_variable('i_hldiv', i_hldiv, 0, 2, &
                'Switch for user input hldiv')
+       case ('i_use_fixed_q_factor')
+          call parse_int_variable('i_use_fixed_q_factor', i_use_fixed_q_factor, 0, 1, &
+               'Switch that allows for fixing q95 only in this constraint')
        case ('fflutf')
           call parse_real_variable('fflutf', fflutf, 0.001D0, 10.0D0, &
                'F-value for neutron fluence on TF coil')
@@ -852,6 +856,9 @@ contains
        case ('fiooic')
           call parse_real_variable('fiooic', fiooic, 0.001D0, 10.0D0, &
                'F-value for SCTF iop/icrit')
+       case ('fixed_q_factor')
+            call parse_real_variable('fixed_q_factor', fixed_q_factor, 0.001D0, 10.0D0, &
+               'fixed safet factor q at 95% flux surface')
        case ('fjprot')
           call parse_real_variable('fjprot', fjprot, 0.001D0, 10.0D0, &
                'F-value for SCTF winding pack J')

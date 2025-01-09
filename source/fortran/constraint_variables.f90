@@ -86,6 +86,10 @@ module constraint_variables
   !! constraint equation icc = 46
   !! iteration variable ixc = 72
 
+  real(dp) :: fixed_q_factor
+  !! fixed safet factor q at 95% flux surface
+  !! (`constraint equation 68`)
+
   real(dp) :: fjohc
   !! f-value for central solenoid current at end-of-flattop
   !! (`constraint equation 26`, `iteration variable 38`)
@@ -221,6 +225,10 @@ module constraint_variables
   real(dp) :: gammax
   !! maximum current drive gamma (`constraint equation 37`)
 
+  integer :: i_use_fixed_q_factor
+  !! Switch that allows for fixing q95 only in this constraint equation 68.
+  !! (`constraint equation 68`)
+
   real(dp) :: maxradwallload
   !!  Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 
@@ -332,6 +340,7 @@ module constraint_variables
     fhldiv = 1.0D0
     fiooic = 0.5D0
     fipir = 1.0D0
+    fixed_q_factor = 3.0D0
     fjohc = 1.0D0
     fjohc0 = 1.0D0
     fjprot = 1.0D0
@@ -372,6 +381,7 @@ module constraint_variables
     fwalld = 1.0D0
     fzeffmax = 1.0D0
     gammax = 2.0D0
+    i_use_fixed_q_factor = 0
     maxradwallload = 1.0D0
     mvalim = 40.0D0
     nbshinefmax = 1.0D-3
