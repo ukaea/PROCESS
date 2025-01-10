@@ -629,7 +629,7 @@ def plot_nprofile(prof, demo_ranges):
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"$n_{e}\cdot 10^{19}$ $[\mathrm{m}^{-3}]$")
+    prof.set_ylabel(r"$n_{e} $ $[10^{19} \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
     if ipedestal == 1:
@@ -961,7 +961,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
-    prof.set_title("Radiation profile")
+    prof.set_title("Line & Bremsstrahlung radiation profile")
 
     # read in the impurity data
     imp_data = read_imprad_data(2, impp)
@@ -2416,11 +2416,11 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_poloidal", r"$\beta_P$, total", ""),
         ("te", r"$\langle T_e \rangle$", "keV"),
         ("dene", r"$\langle n_e \rangle$", "m$^{-3}$"),
-        (nong, r"$\langle n_{\mathrm{e,line}} \rangle/n_G$", ""),
-        (tepeak, r"$T_{e0}/ \langle T_e \rangle$", ""),
-        (nepeak, r"$n_{e0}/ \langle n_{\mathrm{e, vol}} \rangle$", ""),
+        (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
+        (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
+        (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("zeff", r"$Z_{\mathrm{eff}}$", ""),
-        (dnz, r"$n_Z/ \langle n_{\mathrm{e, vol}} \rangle$", ""),
+        (dnz, r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("taueff", r"$\tau_e$", "s"),
         ("hfact", "H-factor", ""),
         (pthresh, "H-mode threshold", "MW"),
