@@ -623,7 +623,6 @@ def psync_albajar_fidone() -> float:
     # rpow is the (1-Rsyn) power dependence based on plasma shape
     # (see Fidone)
 
-    kap = 0.0
     de2o = 0.0
     pao = 0.0
     gfun = 0.0
@@ -631,10 +630,6 @@ def psync_albajar_fidone() -> float:
     dum = 0.0
     psync = 0.0
     pden_plasma_sync_mw = 0.0
-
-    kap = physics_variables.vol_plasma / (
-        2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
-    )
 
     de2o = 1.0e-20 * physics_variables.ne0
     pao = 6.04e3 * (physics_variables.rminor * de2o) / physics_variables.bt
@@ -665,7 +660,7 @@ def psync_albajar_fidone() -> float:
         * (1.0 - physics_variables.ssync) ** 0.62
         * physics_variables.rmajor
         * physics_variables.rminor**1.38
-        * kap**0.79
+        * physics_variables.kappa**0.79
         * physics_variables.bt**2.62
         * de2o**0.38
         * physics_variables.te0
