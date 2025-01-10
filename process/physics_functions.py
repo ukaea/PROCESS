@@ -601,31 +601,27 @@ def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
 
 def psync_albajar_fidone() -> float:
     """
-        Calculate the synchrotron radiation power in MW/m^3 using the method of Albajar and Fidone.
+        Calculate the synchrotron radiation power in MW/m^3.
 
         This function computes the synchrotron radiation power density for the plasma based on
         the plasma shape, major and minor radii, electron density, and temperature profiles.
 
-        References:
-            - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
-              Nuclear Fusion, vol. 41, no. 6, pp. 665–678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
-    ‌
-            - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
-              Nuclear Fusion, vol. 41, no. 12, pp. 1755–1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
-    ‌
-        Authors:
-            - P J Knight, CCFE, Culham Science Centre
-            - R Kemp, CCFE, Culham Science Centre
-
         Returns:
             float: Synchrotron radiation power per unit volume (MW/m^3).
+
+        Notes:
+
+        References:
+            - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
+                Nuclear Fusion, vol. 41, no. 6, pp. 665–678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
+    ‌
+            - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
+                Nuclear Fusion, vol. 41, no. 12, pp. 1755–1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+    ‌
     """
-    tbet = 2.0e0
 
     # rpow is the (1-Rsyn) power dependence based on plasma shape
     # (see Fidone)
-
-    rpow = 0.62e0
 
     kap = 0.0
     de2o = 0.0
@@ -640,9 +636,6 @@ def psync_albajar_fidone() -> float:
         2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
     )
 
-    # No account is taken of pedestal profiles here, other than use of
-    # the correct physics_variables.ne0 and physics_variables.te0...
-
     de2o = 1.0e-20 * physics_variables.ne0
     pao = 6.04e3 * (physics_variables.rminor * de2o) / physics_variables.bt
     gfun = 0.93e0 * (
@@ -652,32 +645,31 @@ def psync_albajar_fidone() -> float:
     kfun = (physics_variables.alphan + 3.87e0 * physics_variables.alphat + 1.46e0) ** (
         -0.79e0
     )
-    kfun = kfun * (1.98e0 + physics_variables.alphat) ** 1.36e0 * tbet**2.14e0
-    kfun = kfun * (tbet**1.53e0 + 1.87e0 * physics_variables.alphat - 0.16e0) ** (
-        -1.33e0
+    kfun = (
+        kfun
+        * (1.98e0 + physics_variables.alphat) ** 1.36e0
+        * physics_variables.tbeta**2.14e0
     )
+    kfun = kfun * (
+        physics_variables.tbeta**1.53e0 + 1.87e0 * physics_variables.alphat - 0.16e0
+    ) ** (-1.33e0)
     dum = (
-        1.0e0
-        + 0.12e0
-        * (physics_variables.te0 / (pao**0.41e0))
-        * (1.0e0 - physics_variables.ssync) ** 0.41e0
-    )
-
-    # Very high T modification, from Fidone
-
-    dum = dum ** (-1.51e0)
+        1.0
+        + 0.12
+        * (physics_variables.te0 / pao**0.41)
+        * (1.0 - physics_variables.ssync) ** 0.41
+    ) ** -1.51
 
     psync = (
         3.84e-8
-        * (1.0e0 - physics_variables.ssync) ** rpow
+        * (1.0 - physics_variables.ssync) ** 0.62
         * physics_variables.rmajor
-        * physics_variables.rminor**1.38e0
-    )
-    psync = psync * kap**0.79e0 * physics_variables.bt**2.62e0 * de2o**0.38e0
-    psync = (
-        psync
+        * physics_variables.rminor**1.38
+        * kap**0.79
+        * physics_variables.bt**2.62
+        * de2o**0.38
         * physics_variables.te0
-        * (16.0e0 + physics_variables.te0) ** 2.61e0
+        * (16.0 + physics_variables.te0) ** 2.61
         * dum
         * gfun
         * kfun
