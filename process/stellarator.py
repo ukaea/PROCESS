@@ -4304,7 +4304,7 @@ class Stellarator:
         physics_variables.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
         physics_variables.pcoreradpv = radpwr_data.pcoreradpv
         physics_variables.pedgeradpv = radpwr_data.pedgeradpv
-        physics_variables.pradpv = radpwr_data.pradpv
+        physics_variables.pden_plasma_rad_mw = radpwr_data.pden_plasma_rad_mw
 
         physics_variables.pcoreradpv = max(physics_variables.pcoreradpv, 0.0e0)
         physics_variables.pedgeradpv = max(physics_variables.pedgeradpv, 0.0e0)
@@ -4317,7 +4317,7 @@ class Stellarator:
         )
 
         physics_variables.p_plasma_rad_mw = (
-            physics_variables.pradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
 
         #  Heating power to plasma (= Psol in divertor model)
@@ -4328,7 +4328,7 @@ class Stellarator:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            - physics_variables.pradpv * physics_variables.vol_plasma
+            - physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
         powht = max(
             0.00001e0, powht
@@ -4355,7 +4355,7 @@ class Stellarator:
         physics_variables.p_plasma_rad_mw = (
             physics_variables.p_plasma_rad_mw + physics_variables.psolradmw
         )
-        # pradpv = physics_variables.p_plasma_rad_mw / physics_variables.vol_plasma # this line OVERWRITES the original definition of pradpv, probably shouldn't be defined like that as the core does not lose SOL power.
+        # pden_plasma_rad_mw = physics_variables.p_plasma_rad_mw / physics_variables.vol_plasma # this line OVERWRITES the original definition of pden_plasma_rad_mw, probably shouldn't be defined like that as the core does not lose SOL power.
 
         #  The following line is unphysical, but prevents -ve sqrt argument
         #  Should be obsolete if constraint eqn 17 is turned on (but beware -

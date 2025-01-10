@@ -719,7 +719,7 @@ module physics_variables
   real(dp) :: p_plasma_rad_mw
   !! total radiation power from inside LCFS (MW)
 
-  real(dp) :: pradpv
+  real(dp) :: pden_plasma_rad_mw
   !! total radiation power per volume (MW/m3)
 
   real(dp) :: pradsolmw
@@ -1106,7 +1106,7 @@ module physics_variables
     fusion_power = 0.0D0
     len_plasma_poloidal = 0.0D0
     p_plasma_rad_mw = 0.0D0
-    pradpv = 0.0D0
+    pden_plasma_rad_mw = 0.0D0
     pradsolmw = 0.0D0
     proton_rate_density = 0.0D0
     psolradmw = 0.0D0
