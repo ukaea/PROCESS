@@ -2123,7 +2123,7 @@ class Physics:
         physics_variables.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
         physics_variables.pcoreradpv = radpwrdata.pcoreradpv
         physics_variables.pedgeradpv = radpwrdata.pedgeradpv
-        physics_variables.pradpv = radpwrdata.pradpv
+        physics_variables.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
 
         physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pcoreradpv * physics_variables.vol_plasma
@@ -2132,7 +2132,7 @@ class Physics:
             physics_variables.pedgeradpv * physics_variables.vol_plasma
         )
         physics_variables.p_plasma_rad_mw = (
-            physics_variables.pradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
 
         # Calculate ohmic power
@@ -5197,7 +5197,8 @@ class Physics:
                     physics_variables.powerht
                     / (
                         physics_variables.powerht
-                        + physics_variables.pradpv * physics_variables.vol_plasma
+                        + physics_variables.pden_plasma_rad_mw
+                        * physics_variables.vol_plasma
                     )
                 )
                 ** 0.31,
@@ -6502,7 +6503,7 @@ class Physics:
         # Include the radiation power if requested
 
         if physics_variables.iradloss == 0:
-            fhz += physics_variables.pradpv
+            fhz += physics_variables.pden_plasma_rad_mw
         elif physics_variables.iradloss == 1:
             fhz += physics_variables.pcoreradpv
 
@@ -6624,7 +6625,7 @@ class Physics:
 
         # Include the radiation as a loss term if requested
         if physics_variables.iradloss == 0:
-            powerht = powerht - physics_variables.pradpv * vol_plasma
+            powerht = powerht - physics_variables.pden_plasma_rad_mw * vol_plasma
         elif physics_variables.iradloss == 1:
             powerht = (
                 powerht - pcoreradpv * vol_plasma

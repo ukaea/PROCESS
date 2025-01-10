@@ -450,7 +450,7 @@ contains
     !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
     !! ptrepv : input real : electron transport power per volume (MW/m3)
     !! ptripv : input real :  ion transport power per volume (MW/m3)
-    !! pradpv : input real : total radiation power per volume (MW/m3)
+    !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
     !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
     !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
     !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
@@ -459,7 +459,7 @@ contains
     !! pinjmw : input real : total auxiliary injected power (MW)
     !! vol_plasma : input real : plasma volume (m3)
 
-    use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pradpv, &
+    use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pden_plasma_rad_mw, &
                                   pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: pinjmw
@@ -479,7 +479,7 @@ contains
     pscaling = ptrepv + ptripv
     ! Total power lost is scaling power plus radiation:
     if (iradloss == 0) then
-        pnumerator = pscaling + pradpv
+        pnumerator = pscaling + pden_plasma_rad_mw
     else if (iradloss == 1) then
         pnumerator = pscaling + pcoreradpv
     else
@@ -569,7 +569,7 @@ contains
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
       !! ptrepv : input real : electron transport power per volume (MW/m3)
-      !! pradpv : input real : total radiation power per volume (MW/m3)
+      !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
       !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! alpha_power_electron_density : input real : alpha power per volume to electrons (MW/m3)
@@ -577,7 +577,7 @@ contains
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
       use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
-                                 alpha_power_electron_density, piepv, vol_plasma, pradpv
+                                 alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
       use current_drive_variables, only: pinjemw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -592,7 +592,7 @@ contains
       pscaling = ptrepv
 	   ! Total power lost is scaling power plus radiation:
       if (iradloss == 0) then
-         pnumerator = pscaling + pradpv
+         pnumerator = pscaling + pden_plasma_rad_mw
       else if (iradloss == 1) then
          pnumerator = pscaling + pcoreradpv
       else
@@ -1034,8 +1034,8 @@ contains
       !! charged_power_density :  input real : non-alpha charged particle fusion power per volume (MW/m3)
       !! pden_plasma_ohmic_mw : input real : ohmic heating power per volume (MW/m3)
       !! fradpwr : input real : f-value for core radiation power limit
-      !! pradpv : input real : total radiation power per volume (MW/m3)
-      use physics_variables, only: f_alpha_plasma, vol_plasma, alpha_power_density_total, charged_power_density, pden_plasma_ohmic_mw, pradpv
+      !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
+      use physics_variables, only: f_alpha_plasma, vol_plasma, alpha_power_density_total, charged_power_density, pden_plasma_ohmic_mw, pden_plasma_rad_mw
       use current_drive_variables, only: pinjmw
       use constraint_variables, only: fradpwr
       implicit none
@@ -1049,9 +1049,9 @@ contains
       !! Maximum possible power/vol_plasma that can be radiated (local)
 
       pradmaxpv = pinjmw/vol_plasma + alpha_power_density_total*f_alpha_plasma + charged_power_density + pden_plasma_ohmic_mw
-      tmp_cc =  1.0D0 - fradpwr * pradmaxpv / pradpv
+      tmp_cc =  1.0D0 - fradpwr * pradmaxpv / pden_plasma_rad_mw
       tmp_con = pradmaxpv * (1.0D0 - tmp_cc)
-      tmp_err = pradpv * tmp_cc
+      tmp_err = pden_plasma_rad_mw * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW/m3'
 
