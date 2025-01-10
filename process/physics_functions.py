@@ -599,18 +599,26 @@ def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
     return RadpwrData(pden_plasma_sync_mw, pcoreradpv, pedgeradpv, pden_plasma_rad_mw)
 
 
-def psync_albajar_fidone():
-    """This routine finds the synchrotron radiation power in MW/m3,
-    using the method of Albajar and Fidone.
-    References:
-        Albajar, Nuclear Fusion 41 (2001) 665
-        Fidone, Giruzzi, Granata, Nuclear Fusion 41 (2001) 1755
-    Authors:
-        P J Knight, CCFE, Culham Science Centre
-        R Kemp, CCFE, Culham Science Centre
+def psync_albajar_fidone() -> float:
+    """
+        Calculate the synchrotron radiation power in MW/m^3 using the method of Albajar and Fidone.
 
-    :return: pden_plasma_sync_mw synchrotron radiation power/volume (MW/m3)
-    :rtype: float
+        This function computes the synchrotron radiation power density for the plasma based on
+        the plasma shape, major and minor radii, electron density, and temperature profiles.
+
+        References:
+            - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
+              Nuclear Fusion, vol. 41, no. 6, pp. 665–678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
+    ‌
+            - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
+              Nuclear Fusion, vol. 41, no. 12, pp. 1755–1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+    ‌
+        Authors:
+            - P J Knight, CCFE, Culham Science Centre
+            - R Kemp, CCFE, Culham Science Centre
+
+        Returns:
+            float: Synchrotron radiation power per unit volume (MW/m^3).
     """
     tbet = 2.0e0
 
