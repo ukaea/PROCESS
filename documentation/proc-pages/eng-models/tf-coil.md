@@ -19,7 +19,7 @@ Two major types of toroidal field (TF) coils can be considered in PROCESS: Resis
 This section presents the <em>PROCESS</em> TF coil models and how to use them. The associated  module computes first the coil current from the plasma major radius and toroidal magnetic field. The inboard leg mid-plane cross-section geometry is then set up to the conductor level. The vertical geometry is defined and the TF components masses are deduced. The inboard mid-plane stress distributions, the coil inductance and the toroidal field ripple are then estimated. Finally, the resistive heating (if resistive coil) and the ratio between the critical current density and the conductor current density (superconducting coil) is estimated. 
 
 ## TF coil currents
-The total current flowing in the TF coil set \( I_\mathrm{TF}^\mathrm{tot} \) (`ritfc`) is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre \( B_\mathrm{T} \) (`bt`) and the plasma geometric major radius $ R_0 $ (`rmajor`):
+The total current flowing in the TF coil set \( I_\mathrm{TF}^\mathrm{tot} \) (`c_tf_total`) is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre \( B_\mathrm{T} \) (`bt`) and the plasma geometric major radius $ R_0 $ (`rmajor`):
 </p>
 
 $$
