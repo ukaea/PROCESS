@@ -48,7 +48,7 @@ module tfcoil_variables
   ! real(dp) :: alstrtf
   !! Allowable Tresca stress in TF coil structural material (Pa)
 
-  real(dp) :: arealeg
+  real(dp) :: a_tf_leg_outboard
   !! outboard TF leg area (m2)
 
   real(dp) :: aswp
@@ -848,7 +848,7 @@ module tfcoil_variables
     aiwp = 0.0D0
     sig_tf_case_max = 6.0D8
     sig_tf_wp_max = 6.0D8
-    arealeg = 0.0D0
+    a_tf_leg_outboard = 0.0D0
     aswp = 0.0D0
     avwp = 0.0D0
     awphec = 0.0D0

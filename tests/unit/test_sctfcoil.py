@@ -600,7 +600,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    arealeg: Any = None
+    a_tf_leg_outboard: Any = None
 
     i_tf_sup: Any = None
 
@@ -628,7 +628,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     expected_tftort: Any = None
 
-    expected_arealeg: Any = None
+    expected_a_tf_leg_outboard: Any = None
 
     expected_r_tf_outboard_in: Any = None
 
@@ -652,7 +652,7 @@ class TfGlobalGeometryParam(NamedTuple):
             c_tf_total=0,
             tftort=1,
             n_tf_coils=16,
-            arealeg=0,
+            a_tf_leg_outboard=0,
             i_tf_sup=1,
             dztop=0,
             i_tf_case_geom=0,
@@ -666,7 +666,7 @@ class TfGlobalGeometryParam(NamedTuple):
             tan_theta_coil=0,
             expected_tfareain=27.308689677971632,
             expected_tftort=1.6395161177915356,
-            expected_arealeg=1.9805354702921749,
+            expected_a_tf_leg_outboard=1.9805354702921749,
             expected_r_tf_outboard_in=15.915405859443332,
             expected_r_tf_outboard_out=17.123405859443331,
             expected_theta_coil=0.19634954084936207,
@@ -682,7 +682,7 @@ class TfGlobalGeometryParam(NamedTuple):
             c_tf_total=241812532.66279837,
             tftort=1.7488698442633552,
             n_tf_coils=16,
-            arealeg=2.6728635794409041,
+            a_tf_leg_outboard=2.6728635794409041,
             i_tf_sup=1,
             dztop=0,
             i_tf_case_geom=0,
@@ -696,7 +696,7 @@ class TfGlobalGeometryParam(NamedTuple):
             tan_theta_coil=0.19891236737965801,
             expected_tfareain=35.703669036223495,
             expected_tftort=1.7488698442633552,
-            expected_arealeg=2.6728635794409041,
+            expected_a_tf_leg_outboard=2.6728635794409041,
             expected_r_tf_outboard_in=16.299182480677967,
             expected_r_tf_outboard_out=17.827520102947819,
             expected_theta_coil=0.19634954084936207,
@@ -750,7 +750,9 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, sctfcoil):
         tfcoil_variables, "n_tf_coils", tfglobalgeometryparam.n_tf_coils
     )
 
-    monkeypatch.setattr(tfcoil_variables, "arealeg", tfglobalgeometryparam.arealeg)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_leg_outboard", tfglobalgeometryparam.a_tf_leg_outboard
+    )
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfglobalgeometryparam.i_tf_sup)
 
@@ -792,8 +794,8 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, sctfcoil):
         tfglobalgeometryparam.expected_tftort
     )
 
-    assert tfcoil_variables.arealeg == pytest.approx(
-        tfglobalgeometryparam.expected_arealeg
+    assert tfcoil_variables.a_tf_leg_outboard == pytest.approx(
+        tfglobalgeometryparam.expected_a_tf_leg_outboard
     )
 
     assert sctfcoil_module.r_tf_outboard_in == pytest.approx(
@@ -908,7 +910,7 @@ class TfResHeatingParam(NamedTuple):
     len_tf_coil: Any = None
     res_tf_leg: Any = None
     temp_cp_average: Any = None
-    arealeg: Any = None
+    a_tf_leg_outboard: Any = None
     c_tf_total: Any = None
     rho_tf_joints: Any = None
     p_tf_leg_resistive: Any = None
@@ -1126,7 +1128,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             len_tf_coil=15.582502857142856,
             res_tf_leg=0,
             temp_cp_average=347.13,
-            arealeg=0.070242733939617885,
+            a_tf_leg_outboard=0.070242733939617885,
             c_tf_total=25500000,
             rho_tf_joints=2.5000000000000002e-10,
             p_tf_leg_resistive=0,
@@ -1176,7 +1178,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             len_tf_coil=15.654502857142857,
             res_tf_leg=5.647653956699231e-06,
             temp_cp_average=347.13,
-            arealeg=0.068800107640501845,
+            a_tf_leg_outboard=0.068800107640501845,
             c_tf_total=25500000,
             rho_tf_joints=2.5000000000000002e-10,
             p_tf_leg_resistive=332643748.67243439,
@@ -1260,7 +1262,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
         tfcoil_variables, "temp_cp_average", tfresheatingparam.temp_cp_average
     )
 
-    monkeypatch.setattr(tfcoil_variables, "arealeg", tfresheatingparam.arealeg)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_leg_outboard", tfresheatingparam.a_tf_leg_outboard
+    )
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfresheatingparam.c_tf_total)
 
@@ -1935,7 +1939,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     i_tf_sc_mat: Any = None
 
-    arealeg: Any = None
+    a_tf_leg_outboard: Any = None
 
     thkcas: Any = None
 
@@ -2036,7 +2040,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             vol_cond_cp=0,
             i_tf_sup=1,
             i_tf_sc_mat=5,
-            arealeg=1.9805354702921749,
+            a_tf_leg_outboard=1.9805354702921749,
             thkcas=0.52465000000000006,
             voltfleg=0,
             cplen=0,
@@ -2108,7 +2112,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             vol_cond_cp=0,
             i_tf_sup=1,
             i_tf_sc_mat=5,
-            arealeg=1.9805354702921749,
+            a_tf_leg_outboard=1.9805354702921749,
             thkcas=0.52465000000000006,
             voltfleg=0,
             cplen=20.562180043124066,
@@ -2254,7 +2258,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
         tfcoil_variables, "i_tf_sc_mat", tfcoilareaandmassesparam.i_tf_sc_mat
     )
 
-    monkeypatch.setattr(tfcoil_variables, "arealeg", tfcoilareaandmassesparam.arealeg)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_leg_outboard",
+        tfcoilareaandmassesparam.a_tf_leg_outboard,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "thkcas", tfcoilareaandmassesparam.thkcas)
 
@@ -2688,7 +2696,7 @@ class TfCaseGeomParam(NamedTuple):
 
     acasetfo: Any = None
 
-    arealeg: Any = None
+    a_tf_leg_outboard: Any = None
 
     tfareain: Any = None
 
@@ -2741,7 +2749,7 @@ class TfCaseGeomParam(NamedTuple):
         TfCaseGeomParam(
             acasetf=0,
             acasetfo=0,
-            arealeg=1.9805354702921749,
+            a_tf_leg_outboard=1.9805354702921749,
             tfareain=27.308689677971632,
             n_tf_coils=16,
             casths=0.05000000000000001,
@@ -2768,7 +2776,7 @@ class TfCaseGeomParam(NamedTuple):
         TfCaseGeomParam(
             acasetf=1.0015169239205168,
             acasetfo=1.2752592893394648,
-            arealeg=1.9805354702921749,
+            a_tf_leg_outboard=1.9805354702921749,
             tfareain=27.308689677971632,
             n_tf_coils=16,
             casths=0.05000000000000001,
@@ -2811,7 +2819,9 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "acasetfo", tfcasegeomparam.acasetfo)
 
-    monkeypatch.setattr(tfcoil_variables, "arealeg", tfcasegeomparam.arealeg)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_leg_outboard", tfcasegeomparam.a_tf_leg_outboard
+    )
 
     monkeypatch.setattr(tfcoil_variables, "tfareain", tfcasegeomparam.tfareain)
 

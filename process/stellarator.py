@@ -1048,7 +1048,7 @@ class Stellarator:
             0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.tfareain
             + 0.75
             * tfcoil_variables.len_tf_coil
-            * tfcoil_variables.arealeg
+            * tfcoil_variables.a_tf_leg_outboard
             * tfcoil_variables.n_tf_coils
         )
 
@@ -2708,7 +2708,7 @@ class Stellarator:
             + tfcoil_variables.casthi
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of outboard leg in radial direction (same as inboard)
-        tfcoil_variables.arealeg = (
+        tfcoil_variables.a_tf_leg_outboard = (
             build_variables.dr_tf_inboard * tfcoil_variables.tftort
         )  # [m^2] overall coil cross-sectional area (assuming inboard and
         #       outboard leg are the same)
@@ -2750,7 +2750,7 @@ class Stellarator:
 
         #  Variables for ALL coils.
         tfcoil_variables.tfareain = (
-            tfcoil_variables.n_tf_coils * tfcoil_variables.arealeg
+            tfcoil_variables.n_tf_coils * tfcoil_variables.a_tf_leg_outboard
         )  # [m^2] Total area of all coil legs (midplane)
         tfcoil_variables.c_tf_total = (
             tfcoil_variables.n_tf_coils * coilcurrent * 1.0e6

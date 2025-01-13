@@ -1550,8 +1550,10 @@ class Sctfcoil:
             )
 
         # Area of rectangular cross-section TF outboard leg [m2]
-        tfcoil_variables.arealeg = (
+        tfcoil_variables.a_tf_leg_outboard = (
+            (
             tfcoil_variables.tftort * build_variables.dr_tf_outboard
+        )
         )
         # ---
 
@@ -1874,7 +1876,7 @@ class Sctfcoil:
         # Rem : For physics_variables.itart = 1, these quantitire corresponds to the outer leg only
         # ---
         # Leg ground insulation area per coil [m2]
-        sctfcoil_module.a_leg_gr_ins = tfcoil_variables.arealeg - (
+        sctfcoil_module.a_leg_gr_ins = tfcoil_variables.a_tf_leg_outboard - (
             tfcoil_variables.tftort - 2.0e0 * tfcoil_variables.tinstf
         ) * (build_variables.dr_tf_outboard - 2.0e0 * tfcoil_variables.tinstf)
 
@@ -1888,7 +1890,7 @@ class Sctfcoil:
 
         # Exact TF outboard leg conductor area per coil [m2]
         sctfcoil_module.a_leg_cond = (1.0e0 - tfcoil_variables.f_a_tf_cool_outboard) * (
-            tfcoil_variables.arealeg
+            tfcoil_variables.a_tf_leg_outboard
             - sctfcoil_module.a_leg_gr_ins
             - sctfcoil_module.a_leg_ins
         )
@@ -2722,7 +2724,7 @@ class Sctfcoil:
             if physics_variables.itart == 1:
                 # Total volume of one outerleg [m3]
                 tfcoil_variables.voltfleg = (
-                    tfcoil_variables.len_tf_coil * tfcoil_variables.arealeg
+                    tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_leg_outboard
                 )
 
                 # Outboard leg TF conductor volume [m3]
@@ -3382,7 +3384,9 @@ class Sctfcoil:
         ) - sctfcoil_module.awpc
 
         # Outboard leg cross-sectional area of surrounding case [m2]
-        tfcoil_variables.acasetfo = tfcoil_variables.arealeg - sctfcoil_module.awpc
+        tfcoil_variables.acasetfo = (
+            tfcoil_variables.a_tf_leg_outboard - sctfcoil_module.awpc
+        )
 
         # Front casing area [m2]
         if i_tf_case_geom == 0:
