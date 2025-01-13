@@ -1451,7 +1451,7 @@ class Costs:
                 costtfsc = (
                     cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
                     * tfcoil_variables.whtconsc
-                    / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
+                    / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_turn)
                 )
             else:
                 costtfsc = (
@@ -1465,7 +1465,7 @@ class Costs:
             costtfcu = (
                 cost_variables.uccu
                 * tfcoil_variables.whtconcu
-                / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
+                / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_turn)
             )
 
             #  Total cost/metre of superconductor and copper wire
@@ -1482,7 +1482,7 @@ class Costs:
                 1.0e-6
                 * ctfconpm
                 * tfcoil_variables.n_tf_coils
-                * tfcoil_variables.tfleng
+                * tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
             )
             self.c22211 = (
@@ -1495,7 +1495,7 @@ class Costs:
                 1.0e-6
                 * cost_variables.ucwindtf
                 * tfcoil_variables.n_tf_coils
-                * tfcoil_variables.tfleng
+                * tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
             )
             self.c22212 = (

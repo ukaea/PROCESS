@@ -905,7 +905,7 @@ class TfResHeatingParam(NamedTuple):
     n_tf_turn: Any = None
     thkcas: Any = None
     tftort: Any = None
-    tfleng: Any = None
+    len_tf_coil: Any = None
     res_tf_leg: Any = None
     tcpav: Any = None
     arealeg: Any = None
@@ -1123,7 +1123,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             n_tf_turn=1,
             thkcas=0,
             tftort=0.45367650933034859,
-            tfleng=15.582502857142856,
+            len_tf_coil=15.582502857142856,
             res_tf_leg=0,
             tcpav=347.13,
             arealeg=0.070242733939617885,
@@ -1173,7 +1173,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             n_tf_turn=1,
             thkcas=0,
             tftort=0.44435902370665786,
-            tfleng=15.654502857142857,
+            len_tf_coil=15.654502857142857,
             res_tf_leg=5.647653956699231e-06,
             tcpav=347.13,
             arealeg=0.068800107640501845,
@@ -1248,7 +1248,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tftort", tfresheatingparam.tftort)
 
-    monkeypatch.setattr(tfcoil_variables, "tfleng", tfresheatingparam.tfleng)
+    monkeypatch.setattr(tfcoil_variables, "len_tf_coil", tfresheatingparam.len_tf_coil)
 
     monkeypatch.setattr(tfcoil_variables, "res_tf_leg", tfresheatingparam.res_tf_leg)
 
@@ -1893,7 +1893,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     dcondins: Any = None
 
-    tfleng: Any = None
+    len_tf_coil: Any = None
 
     dcase: Any = None
 
@@ -2011,7 +2011,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
                 order="F",
             ).transpose(),
             dcondins=1800,
-            tfleng=50.483843027201402,
+            len_tf_coil=50.483843027201402,
             dcase=8000,
             acndttf=0.0014685061538103825,
             n_tf_turn=200,
@@ -2083,7 +2083,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
                 order="F",
             ).transpose(),
             dcondins=1800,
-            tfleng=50.514015976170839,
+            len_tf_coil=50.514015976170839,
             dcase=8000,
             acndttf=0.0014685061538103825,
             n_tf_turn=200,
@@ -2202,7 +2202,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
 
     monkeypatch.setattr(tfcoil_variables, "dcondins", tfcoilareaandmassesparam.dcondins)
 
-    monkeypatch.setattr(tfcoil_variables, "tfleng", tfcoilareaandmassesparam.tfleng)
+    monkeypatch.setattr(
+        tfcoil_variables, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
+    )
 
     monkeypatch.setattr(tfcoil_variables, "dcase", tfcoilareaandmassesparam.dcase)
 
@@ -14106,7 +14108,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(build_variables, "dr_vv_inboard", 0.06)  # Section 3
     monkeypatch.setattr(build_variables, "d_vv_top", 0.06)  # Section 3
 
-    monkeypatch.setattr(tfcoil_variables, "tfleng", 51.1)  # Table 2
+    monkeypatch.setattr(tfcoil_variables, "len_tf_coil", 51.1)  # Table 2
     monkeypatch.setattr(
         tfcoil_variables, "tfa", [3.41, 7.77, 7.77, 3.41]
     )  # chosen to achieve Rm_coil in Table 2

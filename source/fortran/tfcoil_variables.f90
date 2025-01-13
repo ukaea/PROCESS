@@ -576,7 +576,7 @@ module tfcoil_variables
   real(dp) :: pres_joints
   !! Calculated TF joints resistive power losses [W]
 
-  real(dp) :: tfleng
+  real(dp) :: len_tf_coil
   !! TF coil circumference (m)
 
   real(dp) :: eff_tf_cryo
@@ -977,7 +977,7 @@ module tfcoil_variables
     n_tf_joints = 4
     th_joint_contact = 0.03D0
     pres_joints = 0.0D0
-    tfleng = 0.0D0
+    len_tf_coil = 0.0D0
     eff_tf_cryo = -1.0D0
     n_tf_coils = 16.0D0
     tfocrn = 0.0D0

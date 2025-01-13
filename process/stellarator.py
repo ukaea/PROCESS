@@ -1045,9 +1045,9 @@ class Stellarator:
         # Rough estimate of TF coil volume used, assuming 25% of the total
         # TF coil perimeter is inboard, 75% outboard
         tf_volume = (
-            0.25 * tfcoil_variables.tfleng * tfcoil_variables.tfareain
+            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.tfareain
             + 0.75
-            * tfcoil_variables.tfleng
+            * tfcoil_variables.len_tf_coil
             * tfcoil_variables.arealeg
             * tfcoil_variables.n_tf_coils
         )
@@ -2728,7 +2728,7 @@ class Stellarator:
             tfcoil_variables.n_tf_coils
             * tfcoil_variables.tftort
             * 0.5e0
-            * tfcoil_variables.tfleng
+            * tfcoil_variables.len_tf_coil
         )
         # [m^2] Total surface area of coil side facing plasma: outboard region
         tfcoil_variables.tfsao = (
@@ -2801,7 +2801,7 @@ class Stellarator:
 
         tfborev = 2.0e0 * build_variables.hmax  # [m] estimated vertical coil dr_bore
 
-        tfcoil_variables.tfleng = (
+        tfcoil_variables.len_tf_coil = (
             stellarator_configuration.stella_config_coillength
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
             / tfcoil_variables.n_tf_coils
@@ -2830,47 +2830,51 @@ class Stellarator:
         #
         # [kg] Mass of case
         #  (no need for correction factors as is the case for tokamaks)
-        # This is only correct if the winding pack is 'thin' (tfleng>>sqrt(tfcoil_variables.acasetf)).
+        # This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.acasetf)).
         tfcoil_variables.whtcas = (
-            tfcoil_variables.tfleng * tfcoil_variables.acasetf * tfcoil_variables.dcase
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.acasetf
+            * tfcoil_variables.dcase
         )
         # Mass of ground-wall insulation [kg]
         # (assumed to be same density/material as conduit insulation)
         tfcoil_variables.whtgw = (
-            tfcoil_variables.tfleng * (awpc - awptf) * tfcoil_variables.dcondins
+            tfcoil_variables.len_tf_coil * (awpc - awptf) * tfcoil_variables.dcondins
         )
         # [kg] mass of Superconductor
         tfcoil_variables.whtconsc = (
-            tfcoil_variables.tfleng
+            tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
             * tfcoil_variables.acstf
             * (1.0e0 - tfcoil_variables.vftf)
             * (1.0e0 - tfcoil_variables.fcutfsu)
-            - tfcoil_variables.tfleng * tfcoil_variables.awphec
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
         ) * tfcoil_variables.dcond[
             tfcoil_variables.i_tf_sc_mat - 1
         ]  # awphec is 0 for a stellarator. but keep this term for now.
         # [kg] mass of Copper in conductor
         tfcoil_variables.whtconcu = (
-            tfcoil_variables.tfleng
+            tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
             * tfcoil_variables.acstf
             * (1.0e0 - tfcoil_variables.vftf)
             * tfcoil_variables.fcutfsu
-            - tfcoil_variables.tfleng * tfcoil_variables.awphec
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
         ) * constants.dcopper
         # [kg] mass of Steel conduit (sheath)
         tfcoil_variables.whtconsh = (
-            tfcoil_variables.tfleng
+            tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
             * tfcoil_variables.acndttf
             * fwbs_variables.denstl
         )
-        # if (i_tf_sc_mat==6)   tfcoil_variables.whtconsh = fcondsteel * awptf *tfcoil_variables.tfleng* fwbs_variables.denstl
+        # if (i_tf_sc_mat==6)   tfcoil_variables.whtconsh = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
         # Conduit insulation mass [kg]
         # (tfcoil_variables.aiwp already contains tfcoil_variables.n_tf_turn)
         tfcoil_variables.whtconin = (
-            tfcoil_variables.tfleng * tfcoil_variables.aiwp * tfcoil_variables.dcondins
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.aiwp
+            * tfcoil_variables.dcondins
         )
         # [kg] Total conductor mass
         tfcoil_variables.whtcon = (
@@ -3027,7 +3031,7 @@ class Stellarator:
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
-            / tfcoil_variables.tfleng
+            / tfcoil_variables.len_tf_coil
         )
         centering_force_min_mn = (
             stellarator_configuration.stella_config_centering_force_min_mn
@@ -3037,7 +3041,7 @@ class Stellarator:
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
-            / tfcoil_variables.tfleng
+            / tfcoil_variables.len_tf_coil
         )
         centering_force_avg_mn = (
             stellarator_configuration.stella_config_centering_force_avg_mn
@@ -3047,7 +3051,7 @@ class Stellarator:
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
-            / tfcoil_variables.tfleng
+            / tfcoil_variables.len_tf_coil
         )
         #
         ####################################
@@ -3650,8 +3654,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Mean coil circumference (m)",
-            "(tfleng)",
-            tfcoil_variables.tfleng,
+            "(len_tf_coil)",
+            tfcoil_variables.len_tf_coil,
         )
         po.ovarre(
             self.outfile,

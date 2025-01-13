@@ -1756,7 +1756,7 @@ class Acc2221Param(NamedTuple):
 
     n_tf_turn: Any = None
 
-    tfleng: Any = None
+    len_tf_coil: Any = None
 
     i_tf_sc_mat: Any = None
 
@@ -1811,7 +1811,7 @@ class Acc2221Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_tf=300.0,
             n_tf_turn=200,
-            tfleng=50.483843027201402,
+            len_tf_coil=50.483843027201402,
             i_tf_sc_mat=5,
             c22=0,
             c2221=0,
@@ -1852,7 +1852,7 @@ class Acc2221Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_tf=300.0,
             n_tf_turn=200,
-            tfleng=50.514015976170839,
+            len_tf_coil=50.514015976170839,
             i_tf_sc_mat=5,
             c22=3474.7391916096453,
             c2221=1122.5144544988982,
@@ -1893,7 +1893,7 @@ class Acc2221Param(NamedTuple):
             supercond_cost_model=1,
             j_crit_str_tf=300.0,
             n_tf_turn=200,
-            tfleng=50.514015976170839,
+            len_tf_coil=50.514015976170839,
             i_tf_sc_mat=5,
             c22=3474.7391916096453,
             c2221=1122.5144544988982,
@@ -1972,7 +1972,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", acc2221param.n_tf_turn)
 
-    monkeypatch.setattr(tfcoil_variables, "tfleng", acc2221param.tfleng)
+    monkeypatch.setattr(tfcoil_variables, "len_tf_coil", acc2221param.len_tf_coil)
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sc_mat", acc2221param.i_tf_sc_mat)
 

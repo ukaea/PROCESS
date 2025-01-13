@@ -674,7 +674,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7479E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7838E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7838E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -1837,7 +1837,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.5817E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7798E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7798E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -3000,7 +3000,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4468E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7766E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7766E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -4163,7 +4163,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4602E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7769E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7769E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -5326,7 +5326,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.5817E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7798E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7798E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -6489,7 +6489,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7538E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7840E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7840E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -7652,7 +7652,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7704E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7844E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7844E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -8815,7 +8815,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.6229E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7808E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7808E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -9978,7 +9978,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4832E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7775E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7775E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -11141,7 +11141,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4911E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7777E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7777E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -12304,7 +12304,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.6318E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7810E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7810E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -13467,7 +13467,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7762E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7845E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7845E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -14630,7 +14630,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7862E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7847E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7847E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -15793,7 +15793,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.6375E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7812E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7812E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -16956,7 +16956,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4888E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7776E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7776E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    

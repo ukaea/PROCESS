@@ -1659,8 +1659,8 @@ class Sctfcoil:
             # Horizontal and vertical radii of inside edge of TF coil
             # Arcs are numbered clockwise:
             # 1=upper inboard, 2=upper outboard, 3=lower ouboard, 4=lower inboard
-            # 'tfleng' is the length of the coil midline.
-            tfcoil_variables.tfleng = (
+            # 'len_tf_coil' is the length of the coil midline.
+            tfcoil_variables.len_tf_coil = (
                 tfcoil_variables.yarc[0] - tfcoil_variables.yarc[4]
             )
             for ii in range(4):
@@ -1673,10 +1673,10 @@ class Sctfcoil:
                 # Radii and length of midline of coil segments
                 aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.dr_tf_inboard
                 bb = tfcoil_variables.tfb[ii] + 0.5e0 * build_variables.dr_tf_inboard
-                tfcoil_variables.tfleng = (
-                    tfcoil_variables.tfleng + 0.25e0 * self.circumference(aa, bb)
+                tfcoil_variables.len_tf_coil = (
+                    tfcoil_variables.len_tf_coil + 0.25e0 * self.circumference(aa, bb)
                 )
-                # note: final tfcoil_variables.tfleng includes inboard leg length; eq(22)
+                # note: final tfcoil_variables.len_tf_coil includes inboard leg length; eq(22)
 
         # Centrepost with D-shaped
         # ---
@@ -1702,7 +1702,7 @@ class Sctfcoil:
             tfcoil_variables.yarc[4] = -build_variables.hmax
 
             # TF middle circumference
-            tfcoil_variables.tfleng = 2 * (
+            tfcoil_variables.len_tf_coil = 2 * (
                 tfcoil_variables.xarc[1] - tfcoil_variables.xarc[0]
             )
 
@@ -1717,10 +1717,10 @@ class Sctfcoil:
                 # Radii and length of midline of coil segments
                 aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.dr_tf_outboard
                 bb = tfcoil_variables.tfb[ii] + 0.5e0 * build_variables.dr_tf_outboard
-                tfcoil_variables.tfleng = (
-                    tfcoil_variables.tfleng + 0.25e0 * self.circumference(aa, bb)
+                tfcoil_variables.len_tf_coil = (
+                    tfcoil_variables.len_tf_coil + 0.25e0 * self.circumference(aa, bb)
                 )
-                # IMPORTANT : THE CENTREPOST LENGTH IS NOT INCLUDED IN TFLENG FOR TART; eq(24)
+                # IMPORTANT : THE CENTREPOST LENGTH IS NOT INCLUDED IN len_tf_coil FOR TART; eq(24)
         # ---
 
         # Picture frame coil
@@ -1748,16 +1748,16 @@ class Sctfcoil:
             tfcoil_variables.yarc[4] = -build_variables.hmax
 
             # TF middle circumference
-            # IMPORTANT : THE CENTREPOST LENGTH IS NOT INCLUDED IN TFLENG FOR TART
+            # IMPORTANT : THE CENTREPOST LENGTH IS NOT INCLUDED IN len_tf_coil FOR TART
             if physics_variables.itart == 0:
-                tfcoil_variables.tfleng = 2.0e0 * (
+                tfcoil_variables.len_tf_coil = 2.0e0 * (
                     2.0e0 * build_variables.hmax
                     + build_variables.dr_tf_inboard
                     + build_variables.r_tf_outboard_mid
                     - build_variables.r_tf_inboard_mid
                 )  # eq(25)
             elif physics_variables.itart == 1:
-                tfcoil_variables.tfleng = (
+                tfcoil_variables.len_tf_coil = (
                     build_variables.hmax
                     + build_variables.hpfu
                     + 2.0e0
@@ -1895,7 +1895,7 @@ class Sctfcoil:
             # TF outboard leg's resistance calculation (per leg) [ohm]
             tfcoil_variables.res_tf_leg = (
                 tfcoil_variables.rhotfleg
-                * tfcoil_variables.tfleng
+                * tfcoil_variables.len_tf_coil
                 / sctfcoil_module.a_leg_cond
             )
 
@@ -1943,7 +1943,7 @@ class Sctfcoil:
             tfcoil_variables.p_cp_resistive = (
                 tfcoil_variables.rhocp
                 * tfcoil_variables.c_tf_total**2
-                * tfcoil_variables.tfleng
+                * tfcoil_variables.len_tf_coil
                 / (sctfcoil_module.a_leg_cond * tfcoil_variables.n_tf_coils)
             )
 
@@ -2332,7 +2332,7 @@ class Sctfcoil:
             ri_coil=ri_coil,
             ro_coil=ro_coil,
             rm_coil=rm_coil,
-            ccl_length_coil=tfcoil_variables.tfleng,
+            ccl_length_coil=tfcoil_variables.len_tf_coil,
             theta1_coil=tfcoil_variables.theta1_coil,
             # VV shape
             H_vv=H_vv,
@@ -2587,7 +2587,7 @@ class Sctfcoil:
         # = 2 * centroid coil length * 2 pi R, where R is average of i/b and o/b centres
         tfcoil_variables.tfcryoarea = (
             2.0e0
-            * tfcoil_variables.tfleng
+            * tfcoil_variables.len_tf_coil
             * constants.twopi
             * 0.5e0
             * (build_variables.r_tf_inboard_mid + build_variables.r_tf_outboard_mid)
@@ -2602,7 +2602,7 @@ class Sctfcoil:
             # Mass of ground-wall insulation [kg]
             # (assumed to be same density/material as turn insulation)
             tfcoil_variables.whtgw = (
-                tfcoil_variables.tfleng
+                tfcoil_variables.len_tf_coil
                 * (sctfcoil_module.awpc - sctfcoil_module.awptf)
                 * tfcoil_variables.dcondins
             )
@@ -2616,13 +2616,13 @@ class Sctfcoil:
             # The 2.2 factor is used as a scaling factor to fit
             # to the ITER-FDR value of 450 tonnes; see CCFE note T&M/PKNIGHT/PROCESS/026
             if physics_variables.itart == 1:
-                # tfcoil_variables.tfleng does not include inboard leg ('centrepost') length in TART
+                # tfcoil_variables.len_tf_coil does not include inboard leg ('centrepost') length in TART
                 tfcoil_variables.whtcas = (
                     2.2e0
                     * tfcoil_variables.dcase
                     * (
                         tfcoil_variables.cplen * tfcoil_variables.acasetf
-                        + tfcoil_variables.tfleng * tfcoil_variables.acasetfo
+                        + tfcoil_variables.len_tf_coil * tfcoil_variables.acasetfo
                     )
                 )
             else:
@@ -2631,7 +2631,7 @@ class Sctfcoil:
                     * tfcoil_variables.dcase
                     * (
                         tfcoil_variables.cplen * tfcoil_variables.acasetf
-                        + (tfcoil_variables.tfleng - tfcoil_variables.cplen)
+                        + (tfcoil_variables.len_tf_coil - tfcoil_variables.cplen)
                         * tfcoil_variables.acasetfo
                     )
                 )
@@ -2643,29 +2643,29 @@ class Sctfcoil:
             # Superconductor mass [kg]
             # Includes space allowance for central helium channel, area tfcoil_variables.awphec
             tfcoil_variables.whtconsc = (
-                tfcoil_variables.tfleng
+                tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
                 * tfcoil_variables.acstf
                 * (1.0e0 - tfcoil_variables.vftf)
                 * (1.0e0 - tfcoil_variables.fcutfsu)
-                - tfcoil_variables.tfleng * tfcoil_variables.awphec
+                - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
             ) * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
 
             # Copper mass [kg]
             tfcoil_variables.whtconcu = (
-                tfcoil_variables.tfleng
+                tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
                 * tfcoil_variables.acstf
                 * (1.0e0 - tfcoil_variables.vftf)
                 * tfcoil_variables.fcutfsu
-                - tfcoil_variables.tfleng * tfcoil_variables.awphec
+                - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
             ) * constants.dcopper
             if tfcoil_variables.whtconcu <= 0.0e0:
                 tfcoil_variables.whtconcu = 0.0e0
 
             # Steel conduit (sheath) mass [kg]
             tfcoil_variables.whtconsh = (
-                tfcoil_variables.tfleng
+                tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
                 * tfcoil_variables.acndttf
                 * fwbs_variables.denstl
@@ -2674,7 +2674,7 @@ class Sctfcoil:
             # Conduit insulation mass [kg]
             # (tfcoil_variables.aiwp already contains tfcoil_variables.n_tf_turn)
             tfcoil_variables.whtconin = (
-                tfcoil_variables.tfleng
+                tfcoil_variables.len_tf_coil
                 * tfcoil_variables.aiwp
                 * tfcoil_variables.dcondins
             )
@@ -2696,14 +2696,14 @@ class Sctfcoil:
             ) * tfcoil_variables.n_tf_coils
 
             # If spherical tokamak, distribute between centrepost and outboard legs
-            # (in this case, total TF coil length = inboard `cplen` + outboard `tfleng`)
+            # (in this case, total TF coil length = inboard `cplen` + outboard `len_tf_coil`)
             if physics_variables.itart == 1:
-                tfleng_sph = tfcoil_variables.cplen + tfcoil_variables.tfleng
+                tfleng_sph = tfcoil_variables.cplen + tfcoil_variables.len_tf_coil
                 tfcoil_variables.whtcp = tfcoil_variables.whttf * (
                     tfcoil_variables.cplen / tfleng_sph
                 )
                 tfcoil_variables.whttflgs = tfcoil_variables.whttf * (
-                    tfcoil_variables.tfleng / tfleng_sph
+                    tfcoil_variables.len_tf_coil / tfleng_sph
                 )
 
         # Resitivive magnets weights
@@ -2717,11 +2717,11 @@ class Sctfcoil:
             if physics_variables.itart == 1:
                 # Total volume of one outerleg [m3]
                 tfcoil_variables.voltfleg = (
-                    tfcoil_variables.tfleng * tfcoil_variables.arealeg
+                    tfcoil_variables.len_tf_coil * tfcoil_variables.arealeg
                 )
 
                 # Outboard leg TF conductor volume [m3]
-                vol_cond_leg = tfcoil_variables.tfleng * sctfcoil_module.a_leg_cond
+                vol_cond_leg = tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_cond
 
                 # Total TF conductor volume [m3]
                 vol_cond = (
@@ -2730,7 +2730,7 @@ class Sctfcoil:
                 )
 
                 # Outboard leg TF turn insulation layer volume (per leg) [m3]
-                vol_ins_leg = tfcoil_variables.tfleng * sctfcoil_module.a_leg_ins
+                vol_ins_leg = tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_ins
 
                 # Total turn insulation layer volume [m3]
                 vol_ins = (
@@ -2739,7 +2739,9 @@ class Sctfcoil:
                 )
 
                 # Ouboard leg TF ground insulation layer volume (per leg) [m3]
-                vol_gr_ins_leg = tfcoil_variables.tfleng * sctfcoil_module.a_leg_gr_ins
+                vol_gr_ins_leg = (
+                    tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_gr_ins
+                )
 
                 # Total ground insulation layer volume [m3]
                 vol_gr_ins = (
@@ -2756,28 +2758,28 @@ class Sctfcoil:
             else:
                 # Total TF outer leg conductor volume [m3]
                 vol_cond = (
-                    tfcoil_variables.tfleng
+                    tfcoil_variables.len_tf_coil
                     * sctfcoil_module.a_leg_cond
                     * tfcoil_variables.n_tf_coils
                 )
 
                 # Total turn insulation layer volume [m3]
                 vol_ins = (
-                    tfcoil_variables.tfleng
+                    tfcoil_variables.len_tf_coil
                     * sctfcoil_module.a_leg_ins
                     * tfcoil_variables.n_tf_coils
                 )
 
                 # Total ground insulation volume [m3]
                 vol_gr_ins = (
-                    tfcoil_variables.tfleng
+                    tfcoil_variables.len_tf_coil
                     * sctfcoil_module.a_leg_gr_ins
                     * tfcoil_variables.n_tf_coils
                 )
 
                 # Total case volume [m3]
                 vol_case = (
-                    tfcoil_variables.tfleng
+                    tfcoil_variables.len_tf_coil
                     * tfcoil_variables.acasetf
                     * tfcoil_variables.n_tf_coils
                 )
@@ -4625,8 +4627,8 @@ class Sctfcoil:
             po.ovarre(
                 self.outfile,
                 "Mean coil circumference (inboard leg not included) (m)",
-                "(tfleng)",
-                tfcoil_variables.tfleng,
+                "(len_tf_coil)",
+                tfcoil_variables.len_tf_coil,
                 "OP ",
             )
             po.ovarre(
@@ -4640,8 +4642,8 @@ class Sctfcoil:
             po.ovarre(
                 self.outfile,
                 "Mean coil circumference (including inboard leg length) (m)",
-                "(tfleng)",
-                tfcoil_variables.tfleng,
+                "(len_tf_coil)",
+                tfcoil_variables.len_tf_coil,
                 "OP ",
             )
 
