@@ -35,6 +35,29 @@ Initialize the FusionReactionRate class with the given plasma profile.
 The synchrotron radiation power[^1] [^2] is assumed to originate from the 
 plasma core. 
 
+$$
+\begin{aligned}
+P_{s y n, r}(\mathrm{MW})= & 3.84 \times 10^{-8}(1-r)^{1 / 2} R a^{1.38} \kappa^{0.79} \\
+& \times B_t^{2.62} n_{e_0(20)}^{0.38} T_{e_0}\left(16+T_{e_0}\right)^{2.61} \\
+& \times\left(1+0.12 \frac{T_{e_0}}{p_{a_0}^{0.41}}\right)^{-1.51} \\
+& \times K\left(\alpha_n, \alpha_T, \beta_T\right) G(A)
+\end{aligned}
+$$
+
+$$
+K(\alpha_n, \alpha_T, \beta_T) = \left(\alpha_n +3.87\alpha_T +1.46\right)^{-0.79} \\
+\times \left(1.98+\alpha_T\right)^{1.36}\beta_T^{2.14} \\
+\times \left(\beta_T^{1.53}+1.87\alpha_T-0.16\right)^{-1.33}
+$$
+
+$$
+G\left(A\right) = 0.93\left[1+0.85 e^{-0.82A}\right]
+$$
+
+$$
+p_{a_0} = 6.04 \times 10^3 \frac{a n_{e_0(20)}}{B_T}
+$$
+
 
 
 --------------------
@@ -44,7 +67,7 @@ radius defining the 'core' region. Only the impurity and synchrotron radiation
 from this affects the confinement scaling. Figure 1 below shows the
 radiation power contributions.
 
-The wall reflection factor `ssync` may be set by the user.
+The wall reflection factor `f_sync_reflect` may be set by the user.
 
 
 ![Schematic diagram of radiation power contributions](../images/radiation.png "Schematic diagram of radiation power contributions")

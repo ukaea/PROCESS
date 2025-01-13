@@ -3515,10 +3515,10 @@ def main(args=None):
     # Ion dens(10^19 m^-3) -- 15
     # Poloidal flux (Wb) -- 16
     # rad profile
-    global ssync
+    global f_sync_reflect
     global bt
     global vol_plasma
-    ssync = m_file.data["ssync"].get_scan(scan)
+    f_sync_reflect = m_file.data["f_sync_reflect"].get_scan(scan)
     bt = m_file.data["bt"].get_scan(scan)
     vol_plasma = m_file.data["vol_plasma"].get_scan(scan)
 

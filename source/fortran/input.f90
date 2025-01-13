@@ -306,7 +306,7 @@ contains
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
       fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
-      ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
+      ftar, plasma_res_factor, f_sync_reflect, rnbeam, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, f_nd_protium_electrons, &
@@ -739,8 +739,8 @@ contains
        case ('i_single_null')
           call parse_int_variable('i_single_null', i_single_null, 0, 1, &
                'Switch for single/double null plasma')
-       case ('ssync')
-          call parse_real_variable('ssync', ssync, 0.0D0, 1.0D0, &
+       case ('f_sync_reflect')
+          call parse_real_variable('f_sync_reflect', f_sync_reflect, 0.0D0, 1.0D0, &
                'Synchrotron wall reflectivity factor')
        case ('tbeta')
           call parse_real_variable('tbeta', tbeta, 0.0D0, 4.0D0, &

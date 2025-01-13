@@ -5356,7 +5356,7 @@
         "sqsumsq_tol": null,
         "srcktpm": 0.0,
         "ssq0": 0.0,
-        "ssync": 0.6,
+        "f_sync_reflect": 0.6,
         "stack_thickness": 0.0,
         "staff_buildings_area": 480000.0,
         "staff_buildings_h": 5.0,
@@ -10665,7 +10665,7 @@
         "sqsumsq_tol": "",
         "srcktpm": "sum of resistive PF coil power (kW)",
         "ssq0": "",
-        "ssync": "synchrotron wall reflectivity factor",
+        "f_sync_reflect": "synchrotron wall reflectivity factor",
         "stack_thickness": "",
         "staff_buildings_area": "footprint of staff buildings (m2)",
         "staff_buildings_h": "staff buildings height (m)",
@@ -14327,7 +14327,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "ssync": {
+        "f_sync_reflect": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -19252,7 +19252,7 @@
             "a_plasma_surface",
             "a_plasma_surface_outboard",
             "i_single_null",
-            "ssync",
+            "f_sync_reflect",
             "tauee",
             "tauee_in",
             "taueff",
@@ -20725,7 +20725,7 @@
         "sigvvall": "real_variable",
         "sombdr": "real_variable",
         "somtdr": "real_variable",
-        "ssync": "real_variable",
+        "f_sync_reflect": "real_variable",
         "staff_buildings_area": "real_variable",
         "staff_buildings_h": "real_variable",
         "startupratio": "real_variable",

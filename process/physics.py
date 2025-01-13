@@ -4498,8 +4498,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Synchrotron wall reflectivity factor",
-            "(ssync)",
-            physics_variables.ssync,
+            "(f_sync_reflect)",
+            physics_variables.f_sync_reflect,
         )
         po.ovarre(
             self.outfile,
