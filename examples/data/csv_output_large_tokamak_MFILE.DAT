@@ -427,7 +427,7 @@
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.4356E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4715E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.2665E+01 OP 
- Synchrotron_wall_reflectivity_factor____________________________________ (ssync)_______________________      6.0000E-01    
+ Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.9376E+01 OP 
@@ -1625,7 +1625,7 @@ q0 = 1.0
 i_single_null = 1
 
 * Synchrotron wall reflectivity factor
-ssync = 0.6
+f_sync_reflect = 0.6
 
 * plasma resistivity pre-factor
 plasma_res_factor = 0.7

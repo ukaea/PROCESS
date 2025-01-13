@@ -863,7 +863,7 @@ module physics_variables
   !! - =0 for double null
   !! - =1 for single null (diverted side down)
 
-  real(dp) :: ssync
+  real(dp) :: f_sync_reflect
   !! synchrotron wall reflectivity factor
 
   real(dp) :: tauee
@@ -1145,7 +1145,7 @@ module physics_variables
     a_plasma_surface = 0.0D0
     a_plasma_surface_outboard = 0.0D0
     i_single_null = 1
-    ssync = 0.6D0
+    f_sync_reflect = 0.6D0
     tauee = 0.0D0
     tauee_in = 0.0D0
     taueff = 0.0D0

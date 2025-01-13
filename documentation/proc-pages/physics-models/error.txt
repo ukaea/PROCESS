@@ -509,7 +509,7 @@ The impurity fraction of one of the elements listed in array
 The synchrotron radiation power\footnote{Albajar, Nuclear Fusion
   \textbf{41} (2001) 665} \footnote{Fidone, Giruzzi and Granata, Nuclear
   Fusion \textbf{41} (2001) 1755} is assumed to originate from the
-plasma core. The wall reflection factor \texttt{ssync} may be set by the
+plasma core. The wall reflection factor \texttt{f_sync_reflect} may be set by the
 user.
 
 By changing the input parameter \texttt{coreradius}, the user may set

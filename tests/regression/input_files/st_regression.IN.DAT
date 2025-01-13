@@ -595,7 +595,7 @@ coreradiationfraction = 0.7
 * DESCRIPTION:   SoL radiation fraction (default = 0.8)
 * JUSTIFICATION: Not set, using default
 
-ssync = 0.6 
+f_sync_reflect = 0.6 
 * DESCRIPTION:   Plasma synchrotron radiation wall reflectivity factor
 * JUSTIFICATION: 
 

@@ -623,41 +623,27 @@ def psync_albajar_fidone() -> float:
     # rpow is the (1-Rsyn) power dependence based on plasma shape
     # (see Fidone)
 
-    de2o = 0.0
-    pao = 0.0
-    gfun = 0.0
-    kfun = 0.0
-    dum = 0.0
-    psync = 0.0
-    pden_plasma_sync_mw = 0.0
-
     de2o = 1.0e-20 * physics_variables.ne0
     pao = 6.04e3 * (physics_variables.rminor * de2o) / physics_variables.bt
-    gfun = 0.93e0 * (
-        1.0e0
-        + 0.85e0 * np.exp(-0.82e0 * physics_variables.rmajor / physics_variables.rminor)
-    )
-    kfun = (physics_variables.alphan + 3.87e0 * physics_variables.alphat + 1.46e0) ** (
-        -0.79e0
-    )
+    gfun = 0.93e0 * (1.0e0 + 0.85e0 * np.exp(-0.82e0 * physics_variables.aspect))
     kfun = (
-        kfun
-        * (1.98e0 + physics_variables.alphat) ** 1.36e0
-        * physics_variables.tbeta**2.14e0
+        (physics_variables.alphan + 3.87 * physics_variables.alphat + 1.46) ** -0.79
+        * (1.98 + physics_variables.alphat) ** 1.36
+        * physics_variables.tbeta**2.14
+        * (physics_variables.tbeta**1.53 + 1.87 * physics_variables.alphat - 0.16)
+        ** -1.33
     )
-    kfun = kfun * (
-        physics_variables.tbeta**1.53e0 + 1.87e0 * physics_variables.alphat - 0.16e0
-    ) ** (-1.33e0)
+
     dum = (
         1.0
         + 0.12
         * (physics_variables.te0 / pao**0.41)
-        * (1.0 - physics_variables.ssync) ** 0.41
+        * (1.0 - physics_variables.f_sync_reflect) ** 0.41
     ) ** -1.51
 
     psync = (
         3.84e-8
-        * (1.0 - physics_variables.ssync) ** 0.62
+        * (1.0 - physics_variables.f_sync_reflect) ** 0.62
         * physics_variables.rmajor
         * physics_variables.rminor**1.38
         * physics_variables.kappa**0.79

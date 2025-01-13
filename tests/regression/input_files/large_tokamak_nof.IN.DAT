@@ -411,7 +411,7 @@ q0 = 1.0
 i_single_null = 1
 
 * Synchrotron wall reflectivity factor
-ssync = 0.6
+f_sync_reflect = 0.6
 
 * plasma resistivity pre-factor
 plasma_res_factor = 0.7
