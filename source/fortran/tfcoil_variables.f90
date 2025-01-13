@@ -794,7 +794,7 @@ module tfcoil_variables
   real(dp) :: dtiocool
   !! inlet / outlet TF coil coolant temperature rise (K)
 
-  real(dp) :: tcpav
+  real(dp) :: temp_cp_average
   !! Average temperature of centrepost called CP (K). Only used for resistive coils
   !! to compute the resisitive heating. Must be an iteration variable for
   !! ST (`itart=1`) (`iteration variable 20`)
@@ -804,7 +804,7 @@ module tfcoil_variables
 
   real(dp) :: tlegav
   !! Average temperature of the TF outboard legs [K]. If `tlegav=-1.0`, the ouboard
-  !! legs and CP temperatures are the same. Fixed for now, should use a contraints eq like tcpav
+  !! legs and CP temperatures are the same. Fixed for now, should use a contraints eq like temp_cp_average
 
   real(dp) :: tcpmax
   !! peak centrepost temperature (K)
@@ -1042,7 +1042,7 @@ module tfcoil_variables
     rcool = 0.005D0
     tcoolin = 313.15D0   ! 40 C
     dtiocool = 0.0D0
-    tcpav = 373.15D0     ! 100 C
+    temp_cp_average = 373.15D0     ! 100 C
     tcpav2 = 0.0D0
     tlegav = -1.0D0
     tcpmax = 0.0D0
