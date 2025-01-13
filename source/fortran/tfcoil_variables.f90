@@ -763,7 +763,7 @@ module tfcoil_variables
   real(dp) :: fcoolcp
   !! coolant fraction of TF coil inboard legs (`iteration variable 23`)
 
-  real(dp) :: fcoolleg
+  real(dp) :: f_a_tf_cool_outboard
   !! coolant fraction of TF coil outboard legs
 
   real(dp) :: a_cp_cool
@@ -1032,7 +1032,7 @@ module tfcoil_variables
     dztop = 0.0D0
     etapump = 0.8D0
     fcoolcp = 0.3D0
-    fcoolleg = 0.2D0
+    f_a_tf_cool_outboard = 0.2D0
     a_cp_cool = 0.0D0
     ncool = 0.0D0
     ppump = 0.0D0
