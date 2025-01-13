@@ -4,6 +4,8 @@ import math
 import numba
 import numpy as np
 from scipy import optimize
+from scipy.linalg import svd
+from scipy.special import ellipe, ellipk
 
 import process.superconductors as superconductors
 from process import fortran as ft
@@ -13,7 +15,6 @@ from process.fortran import constraint_variables as ctv
 from process.fortran import cs_fatigue_variables as csfv
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
-from process.fortran import maths_library as ml
 from process.fortran import pfcoil_module as pf
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
@@ -894,7 +895,7 @@ class PFCoil:
         )
 
         # Solve matrix equation
-        ccls, umat, vmat, sigma, work2 = self.solv(pfv.ngrpmx, ngrp, nrws, gmat, bvec)
+        ccls = self.solv(pfv.ngrpmx, ngrp, nrws, gmat, bvec)
 
         # Calculate the norm of the residual vectors
         brssq, brnrm, bzssq, bznrm, ssq = rsid(
@@ -967,13 +968,10 @@ class PFCoil:
         :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray,
         numpy.ndarray, numpy.ndarray]
         """
-        truth = True
-        eps = 1.0e-10
         ccls = np.zeros(ngrpmx)
+        work2 = np.zeros(ngrpmx)
 
-        sigma, umat, vmat, ierr, work2 = ml.svd(
-            nrws, np.asfortranarray(gmat), truth, truth
-        )
+        umat, sigma, vmat = svd(gmat)
 
         for i in range(ngrp):
             work2[i] = 0.0e0
@@ -982,15 +980,14 @@ class PFCoil:
 
         # Compute currents
         for i in range(ngrp):
-            ccls[i] = 0.0e0
             zvec = 0.0e0
             for j in range(ngrp):
-                if sigma[j] > eps:
+                if sigma[j] > 1.0e-10:
                     zvec = work2[j] / sigma[j]
 
-                ccls[i] = ccls[i] + vmat[i, j] * zvec
+                ccls[i] = ccls[i] + vmat[j, i] * zvec
 
-        return ccls, umat, vmat, sigma, work2
+        return ccls
 
     def ohcalc(self):
         """Routine to perform calculations for the Central Solenoid.
@@ -1191,7 +1188,7 @@ class PFCoil:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
-            (jcritwp, pfv.jcableoh_eof, pfv.jscoh_eof, tmarg1) = self.superconpf(
+            jcritwp, pfv.jcableoh_eof, pfv.jscoh_eof, tmarg1 = self.superconpf(
                 pfv.bmaxoh,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1214,7 +1211,7 @@ class PFCoil:
 
             # Allowable coil overall current density at BOP
 
-            (jcritwp, pfv.jcableoh_bop, pfv.jscoh_bop, tmarg2) = self.superconpf(
+            jcritwp, pfv.jcableoh_bop, pfv.jscoh_bop, tmarg2 = self.superconpf(
                 pfv.bmaxoh0,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1597,13 +1594,15 @@ class PFCoil:
         axial_term_1 = -(constants.rmu0 / 2.0e0) * (ni / (2.0e0 * hl)) ** 2
 
         # term 2
-        ekb2_1, ekb2_2 = ml.ellipke(kb2)
+        ekb2_1 = ellipk(kb2)
+        ekb2_2 = ellipe(kb2)
         axial_term_2 = (
             2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + hl**2)) * (ekb2_1 - ekb2_2)
         )
 
         # term 3
-        ek2b2_1, ek2b2_2 = ml.ellipke(k2b2)
+        ek2b2_1 = ellipk(k2b2)
+        ek2b2_2 = ellipe(k2b2)
         axial_term_3 = (
             2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2)) * (ek2b2_1 - ek2b2_2)
         )
