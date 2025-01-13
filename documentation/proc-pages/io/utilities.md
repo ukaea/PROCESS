@@ -65,11 +65,11 @@ A `.csv` file will be saved to the directory of the input file.
 
 
 
-## PROCESS 4-Page PDF Summary
+## PROCESS 5-Page PDF Summary
 
 > `process/io/plot_proc.py`
 
-A utility to produce a four-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles and TF coil layout and turn structure.
+A utility to produce a five-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles and TF coil layout and turn structure.
 
 ### Usage
 
@@ -109,7 +109,7 @@ Produces a three-page PDF file in the same directory as the input MFILE. The PDF
 `Plasma Composition` - Number densities of several ion species relative to the electron density.
 
 `Coil Currents etc` - Peak coil currents of the PF coils in $\text{MA}$, flux swing of the central solenoid 
-used for startup and total available in $\text{Wb}$. Total burn time `tburn` in hrs.
+used for startup and total available in $\text{Wb}$. Total burn time `t_burn` in hrs.
 
 `Cost of electricity` - This is the cost of electricity in $ $/ \text{MWh}$. Check the respective cost model 
 for the reference year of the inflation used.

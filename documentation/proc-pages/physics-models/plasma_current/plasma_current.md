@@ -556,7 +556,7 @@ $$
 
 A limited degree of self-consistency between the plasma current profile and other parameters can be 
 enforced by setting switch `iprofile = 1`. This sets the current 
-profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`rli`) and beta limit $g$-factor (`dnbeta`) using the 
+profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`rli`) and beta limit $g$-factor (`beta_norm_max`) using the 
 safety factor on axis `q0` and the cylindrical safety factor $q_*$ (`qstar`):   
 
 $$\begin{aligned}
@@ -669,11 +669,11 @@ $$
 
 This constraint can be activated by stating `icc = 41` in the input file.
 
-The value of `tohsm` can be set to the required minimum plasma current ramp up time at the start of a pulse. The scaling value `ftohs` can be varied also
+The value of `tohsm` can be set to the required minimum plasma current ramp up time at the start of a pulse. The scaling value `ft_current_ramp_up` can be varied also
 
-The calculated plasma current ramp up time `tohs` is dictated by the [pulsed plant operation configuration](../pulsed-plant.md).
+The calculated plasma current ramp up time `t_current_ramp_up` is dictated by the [pulsed plant operation configuration](../pulsed-plant.md).
 
-This constraint will ensure that the value of `tohs` is always greater than or equal to `tohsm`
+This constraint will ensure that the value of `t_current_ramp_up` is always greater than or equal to `tohsm`
 
 --------------------
 

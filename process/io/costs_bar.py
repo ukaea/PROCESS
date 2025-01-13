@@ -14,11 +14,13 @@ History
 
 # Imported libraries
 import argparse
-import process.io.mfile as mf
-import matplotlib.pyplot as plt
-import numpy as np
 import sys
 from typing import List
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+import process.io.mfile as mf
 
 
 def comp_orig(args, mfile_list: List[str], inflate: float) -> None:

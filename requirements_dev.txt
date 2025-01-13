@@ -9,6 +9,6 @@ mkdocs-material>=4.6.3
 mkdocs-git-revision-date-localized-plugin >= 1.2
 mkdocs-glightbox >= 0.3.4
 pymdown-extensions>=6.3
-bokeh==2.4.0
+bokeh>=3.4.0,<4
 mkdocstrings==0.18.0
 Jinja2>=3.0

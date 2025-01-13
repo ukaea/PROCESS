@@ -10,18 +10,19 @@ Compatible with PROCESS version 368
             generation script imports, and inspects, process.
 """
 
+import logging
 from os.path import join as pjoin
+from pathlib import Path
 from sys import stderr
+from time import sleep
+
+from numpy.random import uniform
+
+from process.fortran import numerics
 from process.io.in_dat import InDat
 from process.io.mfile import MFile
-from process.fortran import numerics
-from numpy.random import uniform
-from time import sleep
 from process.io.python_fortran_dicts import get_dicts
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from pathlib import Path
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -133,9 +134,7 @@ def get_variable_range(itervars, factor, wdir="."):
         if lbs[-1] > ubs[-1]:
             print(
                 "Error: Iteration variable {0} has BOUNDL={1} >\
- BOUNDU={2}\n Update process_dicts or input file!".format(
-                    varname, lbs[-1], ubs[-1]
-                ),
+ BOUNDU={2}\n Update process_dicts or input file!".format(varname, lbs[-1], ubs[-1]),
                 file=stderr,
             )
 
@@ -203,9 +202,7 @@ def check_in_dat():
                 "Warning: boundu for",
                 itervarname,
                 "lies out of allowed input range!\n Reset boundu({}) \
-to".format(
-                    itervarno
-                ),
+to".format(itervarno),
                 upperinputbound,
                 file=stderr,
             )

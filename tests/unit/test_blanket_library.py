@@ -1,18 +1,19 @@
-import pytest
+from typing import Any, NamedTuple
+
 import numpy
-from typing import NamedTuple, Any
+import pytest
 
 from process.blanket_library import BlanketLibrary
-from process.fw import Fw
 from process.fortran import (
-    fwbs_variables,
-    build_variables,
-    physics_variables,
-    divertor_variables,
     blanket_library,
-    pfcoil_variables,
+    build_variables,
     buildings_variables,
+    divertor_variables,
+    fwbs_variables,
+    pfcoil_variables,
+    physics_variables,
 )
+from process.fw import Fw
 
 
 @pytest.fixture

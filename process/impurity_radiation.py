@@ -1,15 +1,14 @@
-import numpy
 import dataclasses
+import logging
 import re
 from importlib import resources
-from typing import Optional, List
 from pathlib import Path
+from typing import List, Optional
+
+import numpy
 from scipy import integrate
-from process.fortran import impurity_radiation_module
-from process.fortran import error_handling
 
-
-import logging
+from process.fortran import error_handling, impurity_radiation_module
 
 logger = logging.getLogger(__name__)
 

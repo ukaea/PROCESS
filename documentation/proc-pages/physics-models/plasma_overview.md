@@ -22,7 +22,7 @@ More detail is given in [^1], but this webpage is more up to date.
 
 Neo-classical trapped particle effects are 
 included in the calculation of the plasma resistance and ohmic heating power in 
-subroutine `pohm`, which is called by routine `physics`.  The scaling used is only valid for aspect 
+subroutine `plasma_ohmic_heating()`, which is called by routine `physics`.  The scaling used is only valid for aspect 
 ratios between 2.5 and 4, and it is possible for the plasma resistance to be 
 incorrect or even negative if the aspect ratio is outside this range.  An error is reported if the 
 calculated plasma resistance is negative.

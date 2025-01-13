@@ -1,19 +1,22 @@
 """Unit tests for costs_2015.f90."""
 
-import pytest
-import numpy
-from typing import NamedTuple, Any
-from process.costs_2015 import Costs2015
+from typing import Any, NamedTuple
 
-from process.fortran import pfcoil_variables
-from process.fortran import heat_transport_variables
-from process.fortran import cost_variables
-from process.fortran import current_drive_variables
-from process.fortran import tfcoil_variables
-from process.fortran import fwbs_variables
-from process.fortran import build_variables
-from process.fortran import physics_variables
-from process.fortran import pf_power_variables
+import numpy
+import pytest
+
+from process.costs_2015 import Costs2015
+from process.fortran import (
+    build_variables,
+    cost_variables,
+    current_drive_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
 
 
 @pytest.fixture

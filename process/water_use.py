@@ -1,8 +1,6 @@
 import numpy
 
-from process.fortran import constants
-from process.fortran import heat_transport_variables
-from process.fortran import water_usage_variables
+from process.fortran import constants, heat_transport_variables, water_usage_variables
 from process.fortran import process_output as po
 
 SECDAY = 86400e0
@@ -115,7 +113,6 @@ class WaterUse:
         evapsum = 0.0e0
 
         for icool in range(1, 4):
-
             if icool == 1:
                 # small pond as a cooling body
                 # heat loading, MW/acre, based on estimations from US power plants

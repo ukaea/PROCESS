@@ -1,23 +1,27 @@
 import numpy as np
 
-from process.fortran import (
-    constants,
-    ccfe_hcpb_module,
-    build_variables,
-    fwbs_variables,
-    physics_variables,
-    process_output as po,
-    tfcoil_variables,
-    heat_transport_variables,
-    cost_variables,
-    divertor_variables,
-    buildings_variables,
-    error_handling as eh,
-    current_drive_variables,
-    primary_pumping_variables,
-    constraint_variables,
-)
 from process.coolprop_interface import FluidProperties
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    ccfe_hcpb_module,
+    constants,
+    constraint_variables,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    physics_variables,
+    primary_pumping_variables,
+    tfcoil_variables,
+)
+from process.fortran import (
+    error_handling as eh,
+)
+from process.fortran import (
+    process_output as po,
+)
 
 
 class CCFE_HCPB:
@@ -855,8 +859,7 @@ class CCFE_HCPB:
                 int_calc_3 = 0.0
 
             int_calc_1 = 1.0 / np.sqrt(
-                h_cp_top**2
-                + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
+                h_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
             phy_cp_calc = phy_cp_calc + d_phy_cp
@@ -867,8 +870,7 @@ class CCFE_HCPB:
                 int_calc_3 = 0.0
 
             int_calc_2 = 1.0 / np.sqrt(
-                h_cp_top**2
-                + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
+                h_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
             cp_sol_angle = cp_sol_angle + d_phy_cp * 0.5 * (int_calc_1 + int_calc_2)

@@ -1,6 +1,7 @@
-import numpy as np
 import re
 import warnings
+
+import numpy as np
 
 
 def string_to_f2py_compatible(

@@ -14,43 +14,42 @@ Revised by Michael Kovari, 7/1/2016
 
 """
 
-import os
 import argparse
+import os
 from argparse import RawTextHelpFormatter
-import matplotlib
-import matplotlib.pyplot as plt
 from importlib import resources
-from matplotlib.patches import Rectangle
-from matplotlib.patches import Circle
+
+import matplotlib
 import matplotlib.backends.backend_pdf as bpdf
-from matplotlib.path import Path
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.patches import Circle, Rectangle
+from matplotlib.path import Path
 
 import process.io.mfile as mf
-
-from process.geometry.shield_geometry import (
-    shield_geometry_single_null,
-    shield_geometry_double_null,
-)
-from process.geometry.plasma_geometry import plasma_geometry
-from process.geometry.vacuum_vessel_geometry import (
-    vacuum_vessel_geometry_single_null,
-    vacuum_vessel_geometry_double_null,
-)
 from process.geometry.blanket_geometry import (
-    blanket_geometry_single_null,
     blanket_geometry_double_null,
+    blanket_geometry_single_null,
 )
 from process.geometry.cryostat_geometry import cryostat_geometry
-from process.geometry.tfcoil_geometry import (
-    tfcoil_geometry_rectangular_shape,
-    tfcoil_geometry_d_shape,
+from process.geometry.firstwall_geometry import (
+    first_wall_geometry_double_null,
+    first_wall_geometry_single_null,
 )
 from process.geometry.pfcoil_geometry import pfcoil_geometry
-from process.geometry.firstwall_geometry import (
-    first_wall_geometry_single_null,
-    first_wall_geometry_double_null,
+from process.geometry.plasma_geometry import plasma_geometry
+from process.geometry.shield_geometry import (
+    shield_geometry_double_null,
+    shield_geometry_single_null,
+)
+from process.geometry.tfcoil_geometry import (
+    tfcoil_geometry_d_shape,
+    tfcoil_geometry_rectangular_shape,
+)
+from process.geometry.vacuum_vessel_geometry import (
+    vacuum_vessel_geometry_double_null,
+    vacuum_vessel_geometry_single_null,
 )
 from process.impurity_radiation import read_impurity_file
 from process.io.python_fortran_dicts import get_dicts
@@ -462,13 +461,13 @@ def color_key(axis, mfile_data, scan, colour_scheme):
                 [0.7, -0.3], 1, 0.4, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
             )
         )
-
-    axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+    else:
+        axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
+        axis.add_patch(
+            patches.Rectangle(
+                [0.7, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+            )
         )
-    )
 
 
 def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
@@ -883,44 +882,6 @@ def read_imprad_data(skiprows, data_path):
     return impdata
 
 
-def synchrotron_rad():
-    """Function for Synchrotron radiation power calculation from Albajar, Nuclear Fusion 41 (2001) 665
-      Fidone, Giruzzi, Granata, Nuclear Fusion 41 (2001) 1755
-
-    Arguments:
-    """
-    # tbet is betaT in Albajar, not to be confused with plasma beta
-
-    tbet = 2.0
-    # rpow is the(1-Rsyn) power dependence based on plasma shape
-    # (see Fidone)
-    rpow = 0.62
-    kap = plasma_volume / (2.0 * 3.1415**2 * rmajor * rminor**2)
-
-    # No account is taken of pedestal profiles here, other than use of
-    # the correct ne0 and te0...
-    de2o = 1.0e-20 * ne0
-    pao = 6.04e3 * (rminor * de2o) / bt
-    gfun = 0.93 * (1.0 + 0.85 * np.exp(-0.82 * rmajor / rminor))
-    kfun = (alphan + 3.87e0 * alphat + 1.46) ** (-0.79)
-    kfun = kfun * (1.98 + alphat) ** 1.36 * tbet**2.14
-    kfun = kfun * (tbet**1.53 + 1.87 * alphat - 0.16) ** (-1.33)
-    dum = 1.0 + 0.12 * (te0 / (pao**0.41)) * (1.0 - ssync) ** 0.41
-    # Very high T modification, from Fidone
-    dum = dum ** (-1.51)
-
-    psync = 3.84e-8 * (1.0e0 - ssync) ** rpow * rmajor * rminor**1.38
-    psync = psync * kap**0.79 * bt**2.62 * de2o**0.38
-    psync = psync * te0 * (16.0 + te0) ** 2.61 * dum * gfun * kfun
-
-    # psyncpv should be per unit volume
-    # Albajar gives it as total
-    psyncpv = psync / plasma_volume
-    print("psyncpv = ", psyncpv * plasma_volume)  # matches the out.dat file
-
-    return psyncpv
-
-
 def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     """Function to plot radiation profile, formula taken from ???.
 
@@ -939,24 +900,22 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     imp_data = read_imprad_data(2, impp)
 
     # find impurity densities
-    imp_frac = np.array(
-        [
-            mfile_data.data["fimp(01)"].get_scan(scan),
-            mfile_data.data["fimp(02)"].get_scan(scan),
-            mfile_data.data["fimp(03)"].get_scan(scan),
-            mfile_data.data["fimp(04)"].get_scan(scan),
-            mfile_data.data["fimp(05)"].get_scan(scan),
-            mfile_data.data["fimp(06)"].get_scan(scan),
-            mfile_data.data["fimp(07)"].get_scan(scan),
-            mfile_data.data["fimp(08)"].get_scan(scan),
-            mfile_data.data["fimp(09)"].get_scan(scan),
-            mfile_data.data["fimp(10)"].get_scan(scan),
-            mfile_data.data["fimp(11)"].get_scan(scan),
-            mfile_data.data["fimp(12)"].get_scan(scan),
-            mfile_data.data["fimp(13)"].get_scan(scan),
-            mfile_data.data["fimp(14)"].get_scan(scan),
-        ]
-    )
+    imp_frac = np.array([
+        mfile_data.data["fimp(01)"].get_scan(scan),
+        mfile_data.data["fimp(02)"].get_scan(scan),
+        mfile_data.data["fimp(03)"].get_scan(scan),
+        mfile_data.data["fimp(04)"].get_scan(scan),
+        mfile_data.data["fimp(05)"].get_scan(scan),
+        mfile_data.data["fimp(06)"].get_scan(scan),
+        mfile_data.data["fimp(07)"].get_scan(scan),
+        mfile_data.data["fimp(08)"].get_scan(scan),
+        mfile_data.data["fimp(09)"].get_scan(scan),
+        mfile_data.data["fimp(10)"].get_scan(scan),
+        mfile_data.data["fimp(11)"].get_scan(scan),
+        mfile_data.data["fimp(12)"].get_scan(scan),
+        mfile_data.data["fimp(13)"].get_scan(scan),
+        mfile_data.data["fimp(14)"].get_scan(scan),
+    ])
 
     if ipedestal == 0:
         # Intialise the radius
@@ -984,9 +943,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = (
-                    neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
-                )
+                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
             else:
                 ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
@@ -1001,21 +958,10 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
                     1 - min(0.9999, rhopedt)
                 )
 
-        # ncore = neped + (ne0-neped) * (1-rhocore**2/rhopedn**2)**alphan
-        # nsep = nesep + (neped-nesep) * (1-rhosep)/(1-min(0.9999, rhopedn))
-        # ne = np.append(ncore, nsep)
-
-        # The temperatue profile
-        # tcore = teped + (te0-teped) * (1-(rhocore/rhopedt)**tbeta)**alphat
-        # tsep = tesep + (teped-tesep)* (1-rhosep)/(1-min(0.9999,rhopedt))
-        # te = np.append(tcore,tsep)
-
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
     lz = np.zeros([imp_data.shape[0], te.shape[0]])
     prad = np.zeros(te.shape[0])
-
-    # psyncpv = synchrotron_rad()
 
     # Intailise the impurity radiation profile
     for k in range(te.shape[0]):
@@ -1040,18 +986,6 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
         for l in range(imp_data.shape[0]):  # noqa: E741
             prad[k] = prad[k] + pimpden[l][k] * 2.0e-6
-
-    # benchmark prad again outfile so mod prad
-    # pbremint = (rho[1:] * pbrem[1:]) @ drho
-    # pradint = prad[1:] @ drho * 2.0e-5
-    # pbremint = pbrem[1:] @ drho * 2.0e-5
-
-    # print('prad = ',prad)
-    # print('pbrem = ',pbrem)
-    # print(1.0e32*lz[12])
-    # print('pradpv = ',pradint)
-    # print('pbremmw = ',pbremint*plasma_volume)
-    # print('pradmw = ', pradint*plasma_volume, 'MW') # pimp = pline + pbrem
 
     prof.plot(rho, prad, label="Total")
     prof.plot(rho, pimpden[0] * 2.0e-6, label="H")
@@ -1438,19 +1372,6 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
         )
 
 
-def angle_check(angle1, angle2):
-    """Function to perform TF coil angle check"""
-    if angle1 > 1:
-        angle1 = 1
-    if angle1 < -1:
-        angle1 = -1
-    if angle2 > 1:
-        angle2 = 1
-    if angle2 < -1:
-        angle2 = -1
-    return angle1, angle2
-
-
 def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     """Function to plot TF coils
 
@@ -1742,7 +1663,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     dr_tf_wp,
                     wp_toridal_dxbig,
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 ),
             )
             # Plots the WP inside the insulation
@@ -1797,7 +1718,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp / 2) + (tinstf),
                     wp_toridal_dxsmall + (tinstf),
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 ),
             )
 
@@ -1851,7 +1772,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y)),
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf*1000} mm thickness \n",
+                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 )
             )
 
@@ -2410,7 +2331,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("normalised_thermal_beta", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
         ("normalised_toroidal_beta", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("thermal_poloidal_beta", r"$\beta_P$, thermal", ""),
-        ("betap", r"$\beta_P$, total", ""),
+        ("beta_poloidal", r"$\beta_P$, total", ""),
         ("te", r"$< T_e >$", "keV"),
         ("dene", r"$< n_e >$", "m$^{-3}$"),
         (nong, r"$< n_{\mathrm{e,line}} >/n_G$", ""),
@@ -2467,12 +2388,10 @@ def plot_magnetics_info(axis, mfile_data, scan):
     pf_info = []
     for i in range(1, number_of_coils):
         if i % 2 != 0:
-            pf_info.append(
-                (
-                    mfile_data.data["ric[{:01}]".format(i)].get_scan(scan),
-                    "PF {}".format(i),
-                )
-            )
+            pf_info.append((
+                mfile_data.data["ric[{:01}]".format(i)].get_scan(scan),
+                "PF {}".format(i),
+            ))
 
     if len(pf_info) > 2:
         pf_info_3_a = pf_info[2][0]
@@ -2481,7 +2400,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
         pf_info_3_a = ""
         pf_info_3_b = ""
 
-    tburn = mfile_data.data["tburn"].get_scan(scan) / 3600.0
+    t_burn = mfile_data.data["t_burn"].get_scan(scan) / 3600.0
 
     if "i_tf_bucking" in mfile_data.data.keys():
         i_tf_bucking = int(mfile_data.data["i_tf_bucking"].get_scan(scan))
@@ -2520,7 +2439,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
             ("vstot", "Available flux swing", "Wb"),
-            (tburn, "Burn time", "hrs"),
+            (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             ("#TF coil type is {}".format(tftype), "", ""),
             ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
@@ -2545,7 +2464,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
             ("vstot", "Available flux swing", "Wb"),
-            (tburn, "Burn time", "hrs"),
+            (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             ("#TF coil type is {}".format(tftype), "", ""),
             ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
@@ -2791,7 +2710,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data.keys():
+        if mfile_data.data["iefrffix"].get_scan(scan) != 0:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3110,11 +3029,97 @@ def plot_h_threshold_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_density_limit_comparison(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+) -> None:
+    """
+    Function to plot a scatter box plot of different density limit comparisons.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+    old_asdex = mfile_data.data["dlimit(1)"].get_scan(scan)
+    borrass_iter_i = mfile_data.data["dlimit(2)"].get_scan(scan)
+    borrass_iter_ii = mfile_data.data["dlimit(3)"].get_scan(scan)
+    jet_edge_radiation = mfile_data.data["dlimit(4)"].get_scan(scan)
+    jet_simplified = mfile_data.data["dlimit(5)"].get_scan(scan)
+    hugill_murakami = mfile_data.data["dlimit(6)"].get_scan(scan)
+    greenwald = mfile_data.data["dlimit(7)"].get_scan(scan)
+    asdex_new = mfile_data.data["dlimit(8)"].get_scan(scan)
+
+    # Data for the box plot
+    data = {
+        "Old ASDEX": old_asdex,
+        "Borrass ITER I": borrass_iter_i,
+        "Borrass ITER II": borrass_iter_ii,
+        "JET Edge Radiation": jet_edge_radiation,
+        "JET Simplified": jet_simplified,
+        "Hugill-Murakami": hugill_murakami,
+        "Greenwald": greenwald,
+        "ASDEX New": asdex_new,
+    }
+
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_density_limit = np.mean(data_values)
+    std_density_limit = np.std(data_values)
+    median_density_limit = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        1.02,
+        0.2,
+        rf"Average: {avg_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.15,
+        rf"Standard Dev: {std_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.1,
+        rf"Median: {median_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_yscale("log")
+    axis.set_title("Density Limit Comparison")
+    axis.set_ylabel(r"Density Limit [$10^{20}$ m$^{-3}$]")
+    axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-20:.1f}"))
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_facecolor("#f0f0f0")
+
+
 def main_plot(
     fig1,
     fig2,
     fig3,
     fig4,
+    fig5,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3216,6 +3221,9 @@ def main_plot(
 
     plot_10 = fig4.add_subplot(224)
     plot_h_threshold_comparison(plot_10, m_file_data, scan)
+
+    plot_11 = fig5.add_subplot(221)
+    plot_density_limit_comparison(plot_11, m_file_data, scan)
 
 
 def main(args=None):
@@ -3472,6 +3480,7 @@ def main(args=None):
     page2 = plt.figure(figsize=(12, 9), dpi=80)
     page3 = plt.figure(figsize=(12, 9), dpi=80)
     page4 = plt.figure(figsize=(12, 9), dpi=80)
+    page5 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3479,6 +3488,7 @@ def main(args=None):
         page2,
         page3,
         page4,
+        page5,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3491,6 +3501,7 @@ def main(args=None):
         pdf.savefig(page2)
         pdf.savefig(page3)
         pdf.savefig(page4)
+        pdf.savefig(page5)
 
     # show fig if option used
     if args.show:
@@ -3500,6 +3511,7 @@ def main(args=None):
     plt.close(page2)
     plt.close(page3)
     plt.close(page4)
+    plt.close(page5)
 
 
 if __name__ == "__main__":

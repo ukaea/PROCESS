@@ -1,9 +1,10 @@
-import numpy as np
 import logging
-import scipy as sp
 from abc import ABC, abstractmethod
 
-from process.fortran import physics_variables, error_handling
+import numpy as np
+import scipy as sp
+
+from process.fortran import error_handling, physics_variables
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -171,7 +172,6 @@ class NProfile(Profile):
     def ncore(
         rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
     ) -> float:
-
         """
         This routine calculates the core density of a pedestalised profile.
         The solution comes from integrating and summing the two separate density profiles for the core

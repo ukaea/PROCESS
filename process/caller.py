@@ -1,13 +1,17 @@
 from __future__ import annotations
-from process import fortran as ft
-import numpy as np
+
 import logging
+import warnings
+from typing import TYPE_CHECKING, Tuple, Union
+
+import numpy as np
+from tabulate import tabulate
+
+from process import fortran as ft
 from process.final import finalise
 from process.io.mfile import MFile
+from process.objectives import objective_function
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from typing import Union, Tuple, TYPE_CHECKING
-import warnings
-from tabulate import tabulate
 
 if TYPE_CHECKING:
     from process.main import Models
@@ -70,7 +74,7 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc)
             # Evaluate objective function and constraints
-            objf = ft.function_evaluator.funfom()
+            objf = objective_function(ft.numerics.minmax)
             conf, _, _, _, _ = ft.constraints.constraint_eqns(m, -1)
 
             if objf_prev is None and conf_prev is None:

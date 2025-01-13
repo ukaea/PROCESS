@@ -1,10 +1,10 @@
 """Unit tests for divertor.f90 subroutines/functions"""
 
-from process.divertor import Divertor
 import pytest
 
-from process.fortran import tfcoil_variables as tfv
+from process.divertor import Divertor
 from process.fortran import divertor_variables as dv
+from process.fortran import tfcoil_variables as tfv
 
 
 @pytest.fixture

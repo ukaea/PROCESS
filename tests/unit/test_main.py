@@ -1,17 +1,16 @@
 """Unit tests for the main.py module."""
 
-from process import main
-from process.main import Process
-from process.main import SingleRun
-from process.main import VaryRun
-from process import fortran
+import argparse
+import shutil
+from pathlib import Path
+
+import pytest
+
+from process import fortran, main
+from process.main import Process, SingleRun, VaryRun
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
 )
-import pytest
-from pathlib import Path
-import argparse
-import shutil
 
 
 def test_main(monkeypatch):
@@ -102,6 +101,8 @@ def test_run_mode(process_obj, monkeypatch):
     monkeypatch.setattr(process_obj, "args", argparse.Namespace(), raising=False)
     monkeypatch.setattr(process_obj.args, "varyiterparams", True, raising=False)
     monkeypatch.setattr(process_obj.args, "version", False, raising=False)
+    monkeypatch.setattr(process_obj.args, "update_obsolete", False, raising=False)
+
     monkeypatch.setattr(
         process_obj.args, "varyiterparamsconfig", "file.conf", raising=False
     )

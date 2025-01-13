@@ -1,8 +1,10 @@
 """Test the plot_solutions tool."""
 
-import pytest
-from process.io.plot_solutions import RunMetadata, plot_mfile_solutions
 from typing import List, Sequence
+
+import pytest
+
+from process.io.plot_solutions import RunMetadata, plot_mfile_solutions
 
 
 @pytest.fixture

@@ -2,13 +2,14 @@
 a remote data repository
 """
 
-import subprocess
-import requests
 import dataclasses
-import re
 import logging
-from typing import Optional
+import re
+import subprocess
 from pathlib import Path
+from typing import Optional
+
+import requests
 
 logger = logging.getLogger(__name__)
 

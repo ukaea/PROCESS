@@ -41,60 +41,58 @@ Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
-from typing import Protocol
-from process import fortran
-from process.buildings import Buildings
-from process.costs import Costs
-from process.io import plot_proc
-from process.io import mfile
-from process.plasma_geometry import PlasmaGeom
-from process.pulse import Pulse
-from process.scan import Scan
-from process.stellarator import Stellarator, Neoclassics
-from process.structure import Structure
-from process.build import Build
-from process.utilities.f2py_string_patch import string_to_f2py_compatible
 import argparse
-from process.pfcoil import PFCoil
-from process.tfcoil import TFcoil
-from process.divertor import Divertor
-from process.availability import Availability
-from process.ife import IFE
-from process.costs_2015 import Costs2015
-from process.power import Power
-from process.cs_fatigue import CsFatigue
-from process.physics import Physics
-from process.io import obsolete_vars as ov
-from process.plasma_profiles import PlasmaProfile
-from process.hcpb import CCFE_HCPB
-from process.dcll import DCLL
-from process.blanket_library import BlanketLibrary
-from process.fw import Fw
-from process.current_drive import CurrentDrive
-from process.impurity_radiation import initialise_imprad
-from process.caller import write_output_files
+import logging
+import os
+from pathlib import Path
+from typing import Protocol
 
 import process
-
-from pathlib import Path
-import os
-import logging
+import process.init as init
+from process import fortran
+from process.availability import Availability
+from process.blanket_library import BlanketLibrary
+from process.build import Build
+from process.buildings import Buildings
+from process.caller import write_output_files
+from process.costs import Costs
+from process.costs_2015 import Costs2015
+from process.cs_fatigue import CsFatigue
+from process.current_drive import CurrentDrive
+from process.dcll import DCLL
+from process.divertor import Divertor
+from process.fw import Fw
+from process.hcpb import CCFE_HCPB
+from process.ife import IFE
+from process.impurity_radiation import initialise_imprad
+from process.io import mfile, plot_proc
+from process.io import obsolete_vars as ov
 
 # For VaryRun
 from process.io.process_config import RunProcessConfig
 from process.io.process_funcs import (
+    check_input_error,
     get_neqns_itervars,
     get_variable_range,
-    check_input_error,
-    process_stopped,
     no_unfeasible_mfile,
-    vary_iteration_variables,
+    process_stopped,
     process_warnings,
+    vary_iteration_variables,
 )
+from process.pfcoil import PFCoil
+from process.physics import Physics
+from process.plasma_geometry import PlasmaGeom
+from process.plasma_profiles import PlasmaProfile
+from process.power import Power
+from process.pulse import Pulse
+from process.scan import Scan
+from process.sctfcoil import Sctfcoil
+from process.stellarator import Neoclassics, Stellarator
+from process.structure import Structure
+from process.tfcoil import TFcoil
+from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
-from process.sctfcoil import Sctfcoil
-
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -197,6 +195,11 @@ class Process:
             action="store_true",
             help="Print the version of PROCESS to the terminal",
         )
+        parser.add_argument(
+            "--update-obsolete",
+            action="store_true",
+            help="Automatically update obsolete variables in the IN.DAT file",
+        )
 
         # If args is not None, then parse the supplied arguments. This is likely
         # to come from the test suite when testing command-line arguments; the
@@ -215,7 +218,11 @@ class Process:
         if self.args.varyiterparams:
             self.run = VaryRun(self.args.varyiterparamsconfig, self.args.solver)
         else:
-            self.run = SingleRun(self.args.input, self.args.solver)
+            self.run = SingleRun(
+                self.args.input,
+                self.args.solver,
+                update_obsolete=self.args.update_obsolete,
+            )
         self.run.run()
 
     def post_process(self):
@@ -289,8 +296,8 @@ class VaryRun:
         config = RunProcessConfig(self.config_file)
         config.setup()
 
-        fortran.init_module.init_all_module_vars()
-        fortran.init_module.init()
+        init.init_all_module_vars()
+        init.init_process()
 
         neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
@@ -341,8 +348,9 @@ class VaryRun:
                     break
                 else:
                     print(
-                        "WARNING: {} non-feasible point(s) in sweep! "
-                        "Rerunning!".format(no_unfeasible)
+                        "WARNING: {} non-feasible point(s) in sweep! Rerunning!".format(
+                            no_unfeasible
+                        )
                     )
             else:
                 print("PROCESS has stopped without finishing!")
@@ -355,9 +363,8 @@ class VaryRun:
 class SingleRun:
     """Perform a single run of PROCESS."""
 
-    def __init__(self, input_file, solver="vmcon"):
+    def __init__(self, input_file, solver="vmcon", *, update_obsolete=False):
         """Read input file and initialise variables.
-
         :param input_file: input file named <optional_name>IN.DAT
         :type input_file: str
         :param solver: which solver to use, as specified in solver.py
@@ -365,7 +372,7 @@ class SingleRun:
         """
         self.input_file = input_file
 
-        self.validate_input()
+        self.validate_input(update_obsolete)
         self.init_module_vars()
         self.set_filenames()
         self.initialise()
@@ -391,7 +398,7 @@ class SingleRun:
         This "resets" all module variables to their initialised values, so each
         new run doesn't have any side-effects from previous runs.
         """
-        fortran.init_module.init_all_module_vars()
+        init.init_all_module_vars()
 
     def set_filenames(self):
         """Validate the input filename and create other filenames from it."""
@@ -416,9 +423,9 @@ class SingleRun:
         else:
             print("-- Info -- run `process --help` for usage")
             raise FileNotFoundError(
-                "Input file not found on this path. There " "is no input file named",
+                "Input file not found on this path. There is no input file named",
                 self.input_file,
-                "in the analysis " "folder",
+                "in the analysis folder",
             )
 
         # Set the input file in the Fortran
@@ -447,7 +454,7 @@ class SingleRun:
         """Run the init module to call all initialisation routines."""
         initialise_imprad()
         # Reads in input file
-        fortran.init_module.init()
+        init.init_process()
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
@@ -472,7 +479,7 @@ class SingleRun:
             # Original call:
             # self.ifail = fortran.main_module.eqslv()
             raise NotImplementedError(
-                "HYBRD non-optimisation solver is not " "implemented"
+                "HYBRD non-optimisation solver is not implemented"
             )
 
     def run_scan(self, solver):
@@ -524,49 +531,103 @@ class SingleRun:
             mfile_file.write("***********************************************")
             mfile_file.writelines(input_lines)
 
-    def validate_input(self):
-        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
-        within obsolete_variables.py.
-        Then will print out what the used obsolete variables are (if any) before continuing the proces run.
+    def validate_input(self, replace_obsolete=False):
+        """
+        Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
+        within obsolete_variables.py. If obsolete variables are found, and if `replace_obsolete`
+        is set to True, they are either removed or replaced by their updated names as specified
+        in the OBS_VARS dictionary.
+
+        Parameters:
+            replace_obsolete (bool): If True, modifies the IN.DAT file to replace or comment out
+                                    obsolete variables. If False, only reports obsolete variables.
         """
 
         obsolete_variables = ov.OBS_VARS
         obsolete_vars_help_message = ov.OBS_VARS_HELP
 
         filename = self.input_file
-
         variables_in_in_dat = []
+        modified_lines = []
+        changes_made = []  # To store details of the changes
+
         with open(filename, "r") as file:
             for line in file:
-                if line[0] == "*" or "=" not in line:
+                # Skip comment lines or lines without an assignment
+                if line.startswith("*") or "=" not in line:
+                    modified_lines.append(line)
                     continue
 
+                # Extract the variable name before the separator
+                variable_name = line.split("=", 1)[0].strip()
+                variables_in_in_dat.append(variable_name)
+
+                # Check if the variable is obsolete and needs replacing
+                if variable_name in obsolete_variables:
+                    replacement = obsolete_variables.get(variable_name)
+
+                    if replace_obsolete:
+                        # Prepare replacement or removal
+                        if replacement is None:
+                            # If no replacement is defined, comment out the line
+                            modified_lines.append(f"* Obsolete: {line}")
+                            changes_made.append(
+                                f"Commented out obsolete variable: {variable_name}"
+                            )
+                        else:
+                            if isinstance(replacement, list):
+                                # Raise an error if replacement is a list
+                                replacement_str = ", ".join(replacement)
+                                raise ValueError(
+                                    f"The variable '{variable_name}' is obsolete and should be replaced by the following variables: {replacement_str}. "
+                                    "Please set their values accordingly."
+                                )
+                            else:
+                                # Replace obsolete variable with updated variable
+                                modified_line = line.replace(
+                                    variable_name, replacement, 1
+                                )
+                                modified_lines.append(
+                                    f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
+                                )
+                                changes_made.append(
+                                    f"Replaced '{variable_name}' with '{replacement}'"
+                                )
+                    else:
+                        # If replacement is False, add the line as-is
+                        modified_lines.append(line)
                 else:
-                    sep = " "
-                    variables = line.strip().split(sep, 1)[0]
-                    variables_in_in_dat.append(variables)
+                    modified_lines.append(line)
 
-        obs_vars_in_in_dat = []
-        replace_hints = {}
-        for var in variables_in_in_dat:
-            if var in obsolete_variables:
-                obs_vars_in_in_dat.append(var)
-                replace_hints[var] = obsolete_variables.get(var)
-
-        if len(obs_vars_in_in_dat) > 0:
-            message = (
-                "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary. The obsolete variables in your IN.DAT file are: "
-                f"{obs_vars_in_in_dat}. "
-                "Either remove these or replace them with their updated variable names. "
-            )
-            for obs_var in obs_vars_in_in_dat:
-                if replace_hints[obs_var] is None:
-                    message += f"\n\n {obs_var} is an obsolete variable and needs to be removed. "
-                else:
-                    message += f"\n \n {obs_var} is an obsolete variable and needs to be replaced by {str(replace_hints[obs_var])}. "
-                message += f"{obsolete_vars_help_message.get(obs_var, '')}"
-
-            raise ValueError(message)
+        obs_vars_in_in_dat = [
+            var for var in variables_in_in_dat if var in obsolete_variables
+        ]
+        if obs_vars_in_in_dat:
+            if replace_obsolete:
+                # If replace_obsolete is True, write the modified content to the file
+                with open(filename, "w") as file:
+                    file.writelines(modified_lines)
+                print(
+                    "The IN.DAT file has been updated to replace or comment out obsolete variables."
+                )
+                print("Summary of changes made:")
+                for change in changes_made:
+                    print(f" - {change}")
+            else:
+                # Only print the report if replace_obsolete is False
+                message = (
+                    "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary. "
+                    f"The obsolete variables in your IN.DAT file are: {obs_vars_in_in_dat}. "
+                    "Either remove these or replace them with their updated variable names. "
+                )
+                for obs_var in obs_vars_in_in_dat:
+                    replacement = obsolete_variables.get(obs_var)
+                    if replacement is None:
+                        message += f"\n\n{obs_var} is an obsolete variable and needs to be removed."
+                    else:
+                        message += f"\n\n{obs_var} is an obsolete variable and needs to be replaced by {replacement}."
+                    message += f" {obsolete_vars_help_message.get(obs_var, '')}"
+                raise ValueError(message)
 
         else:
             print("The IN.DAT file does not contain any obsolete variables.")

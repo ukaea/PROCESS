@@ -1,9 +1,12 @@
 """Unit tests for the impurity_radiation.f90.py module."""
-import pytest
-import numpy as np
+
 from typing import NamedTuple
-from process.fortran import impurity_radiation_module
+
+import numpy as np
+import pytest
+
 import process.impurity_radiation as impurity_radiation
+from process.fortran import impurity_radiation_module
 
 
 @pytest.fixture(autouse=True)
@@ -36,48 +39,42 @@ def test_pimpden():
     """
     pimden_parameters = PimpdenParam(
         imp_element_index=0,
-        ne=np.array(
-            [
-                9.42593370e19,
-                9.37237672e19,
-                9.21170577e19,
-                8.94392086e19,
-                8.56902197e19,
-                8.08700913e19,
-                7.49788231e19,
-                6.80164153e19,
-                5.99828678e19,
-                3.28986749e19,
-            ]
-        ),
-        te=np.array(
-            [
-                27.73451868,
-                27.25167194,
-                25.82164396,
-                23.50149071,
-                20.39190536,
-                16.64794796,
-                12.50116941,
-                8.31182764,
-                4.74643357,
-                0.1,
-            ]
-        ),
-        expected_pimpden=np.array(
-            [
-                25483.040634309407,
-                24983.364799017138,
-                23519.36229676814,
-                21187.36013272842,
-                18173.71029818293,
-                14685.542994819023,
-                11005.497709894435,
-                7448.7783515380615,
-                4440.090318064716,
-                294.54192663787137,
-            ]
-        ),
+        ne=np.array([
+            9.42593370e19,
+            9.37237672e19,
+            9.21170577e19,
+            8.94392086e19,
+            8.56902197e19,
+            8.08700913e19,
+            7.49788231e19,
+            6.80164153e19,
+            5.99828678e19,
+            3.28986749e19,
+        ]),
+        te=np.array([
+            27.73451868,
+            27.25167194,
+            25.82164396,
+            23.50149071,
+            20.39190536,
+            16.64794796,
+            12.50116941,
+            8.31182764,
+            4.74643357,
+            0.1,
+        ]),
+        expected_pimpden=np.array([
+            25483.040634309407,
+            24983.364799017138,
+            23519.36229676814,
+            21187.36013272842,
+            18173.71029818293,
+            14685.542994819023,
+            11005.497709894435,
+            7448.7783515380615,
+            4440.090318064716,
+            294.54192663787137,
+        ]),
     )
 
     pimpden = impurity_radiation.pimpden(
@@ -110,20 +107,18 @@ def test_fradcore():
         rho=np.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]),
         coreradius=0.75000000000000011,
         coreradiationfraction=0.60000000000000009,
-        expected_fradcore=np.array(
-            [
-                0.6,
-                0.6,
-                0.6,
-                0.6,
-                0.6,
-                0.6,
-                0.6,
-                0.6,
-                0.0,
-                0.0,
-            ]
-        ),
+        expected_fradcore=np.array([
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.0,
+            0.0,
+        ]),
     )
     fradcore = impurity_radiation.fradcore(
         fradcoreparam.rho, fradcoreparam.coreradius, fradcoreparam.coreradiationfraction
@@ -151,34 +146,30 @@ def test_zav_of_te():
     """
     zavofteparam = ZavofteParam(
         imp_element_index=0,
-        te=np.array(
-            [
-                27.73451868,
-                27.25167194,
-                25.82164396,
-                23.50149071,
-                20.39190536,
-                16.64794796,
-                12.50116941,
-                8.31182764,
-                4.74643357,
-                0.1,
-            ]
-        ),
-        expected_zav_of_te=np.array(
-            [
-                1.00000000000001,
-                1.00000000000001,
-                1.00000000000001,
-                1.00000000000001,
-                1.00000000000001,
-                1.00000000000001,
-                1.00000000000001,
-                1.00000000000001,
-                1.00000000000001,
-                1.00000000000001,
-            ]
-        ),
+        te=np.array([
+            27.73451868,
+            27.25167194,
+            25.82164396,
+            23.50149071,
+            20.39190536,
+            16.64794796,
+            12.50116941,
+            8.31182764,
+            4.74643357,
+            0.1,
+        ]),
+        expected_zav_of_te=np.array([
+            1.00000000000001,
+            1.00000000000001,
+            1.00000000000001,
+            1.00000000000001,
+            1.00000000000001,
+            1.00000000000001,
+            1.00000000000001,
+            1.00000000000001,
+            1.00000000000001,
+            1.00000000000001,
+        ]),
     )
     zav_of_te = impurity_radiation.zav_of_te(
         zavofteparam.imp_element_index, zavofteparam.te

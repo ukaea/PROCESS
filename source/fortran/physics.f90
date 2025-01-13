@@ -19,7 +19,7 @@ module physics_module
   integer :: iscz
   integer :: err242, err243
   real(dp) :: rad_fraction_LCFS
-  real(dp) :: total_plasma_internal_energy  ! [J]
+  real(dp) :: e_plasma_beta  ! [J]
   real(dp) :: total_loss_power        ! [W]
   real(dp) :: total_energy_conf_time  ! [s]
   real(dp) :: ptarmw, lambdaio, drsep
@@ -44,7 +44,7 @@ module physics_module
     err242 = 0
     err243 = 0
     rad_fraction_LCFS = 0.0D0
-    total_plasma_internal_energy = 0.0D0
+    e_plasma_beta = 0.0D0
     total_loss_power = 0.0D0
     total_energy_conf_time = 0.0D0
     ptarmw = 0.0D0

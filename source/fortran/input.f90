@@ -229,16 +229,16 @@ contains
       warm_shop_h, water_buildings_l, water_buildings_w, water_buildings_h, &
       workshop_l, workshop_w, workshop_h
     use constraint_variables, only: flhthresh, fpeakb, fpsep, fdivcol, ftcycl, &
-      betpmx, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
+      beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
-      fstrcond, fptemp, ftmargoh, fvs, fbetatry, vvhealw, fpnetel, ftburn, &
+      fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
-      ftohs, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
-      fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbetap, fbeta, fjohc, &
-      fflutf, bmxlim, tbrnmn, fbetatry_lower, fecrh_ignition, fstr_wp, fncycle
+      ft_current_ramp_up, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
+      fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta_poloidal_eps, fjohc, &
+      fflutf, bmxlim, t_burn_min, fbeta_min, fecrh_ignition, fstr_wp, fncycle
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
       cost_factor_vv, cfind, uccry, fcap0cp, uccase, uuves, cconshtf, conf_mag, &
       ucbllipb, ucfuel, uumag, ucpfbs, ireactor, uucd, div_umain_time, div_nu, &
@@ -304,15 +304,15 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, cvol, f_deuterium, ffwal, iculbl, itartpf, ilhthresh, &
-      fpdivlim, epbetmax, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
-      ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, dnbeta, &
+      rhopedt, cvol, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
+      fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
+      ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
-      ifalphap, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
+      i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
-      tauratio, idensl, bt, iscrp, ipnlaws, betalim, betalim_lower, &
+      tauratio, i_density_limit, bt, iscrp, ipnlaws, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
@@ -346,8 +346,8 @@ contains
       str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv, &
       len_tf_bus
 
-    use times_variables, only: tohs, pulsetimings, tqnch, t_fusion_ramp, tramp, tburn, &
-      tdwell, tohsin
+    use times_variables, only: t_current_ramp_up, pulsetimings, t_ramp_down, t_fusion_ramp, t_precharge, t_burn, &
+      t_between_pulse, tohsin
     use vacuum_variables, only: dwell_pump, pbase, tn, pumpspeedfactor, &
       initialpressure, outgasfactor, prdiv, pumpspeedmax, rat, outgasindex, &
       pumpareafraction, ntype, vacuum_model, pumptp
@@ -531,11 +531,11 @@ contains
        case ('beta')
           call parse_real_variable('beta', beta, 0.0D0, 1.0D0, &
                'Plasma beta')
-       case ('betalim')
-          call parse_real_variable('betalim', betalim, 0.0D0, 1.0D0, &
+       case ('beta_max')
+          call parse_real_variable('beta_max', beta_max, 0.0D0, 1.0D0, &
               'Plasma beta upper limit')
-       case ('betalim_lower')
-          call parse_real_variable('betalim_lower', betalim_lower, 0.0D0, 1.0D0, &
+       case ('beta_min')
+          call parse_real_variable('beta_min', beta_min, 0.0D0, 1.0D0, &
                 'Plasma beta lower limit')
        case ('betbm0')
           call parse_real_variable('betbm0', betbm0, 0.0D0, 10.0D0, &
@@ -567,11 +567,11 @@ contains
        case ('dene')
           call parse_real_variable('dene', dene, 1.0D18, 1.0D22, &
                'Electron density (/m3)')
-       case ('dnbeta')
-          call parse_real_variable('dnbeta', dnbeta, 0.0D0, 20.0D0, &
+       case ('beta_norm_max')
+          call parse_real_variable('beta_norm_max', beta_norm_max, 0.0D0, 20.0D0, &
                'beta coefficient')
-       case ('epbetmax')
-          call parse_real_variable('epbetmax', epbetmax, 0.01D0, 10.0D0, &
+       case ('beta_poloidal_eps_max')
+          call parse_real_variable('beta_poloidal_eps_max', beta_poloidal_eps_max, 0.01D0, 10.0D0, &
                'Max epsilon*beta value')
        case ('f_alpha_plasma')
           call parse_real_variable('f_alpha_plasma', f_alpha_plasma, 0.0D0, 1.0D0, &
@@ -624,20 +624,20 @@ contains
        case ('i_bootstrap_current')
           call parse_int_variable('i_bootstrap_current', i_bootstrap_current, 1, 11, &
                'Switch for bootstrap scaling')
-       case ('iculbl')
-          call parse_int_variable('iculbl', iculbl, 0, 3, &
+       case ('i_beta_component')
+          call parse_int_variable('i_beta_component', i_beta_component, 0, 3, &
                'Switch for beta limit scaling')
        case ('i_plasma_current')
           call parse_int_variable('i_plasma_current', i_plasma_current, 1, 9, &
                'Switch for plasma current scaling')
-       case ('idensl')
-          call parse_int_variable('idensl', idensl, 1, 7, &
+       case ('i_density_limit')
+          call parse_int_variable('i_density_limit', i_density_limit, 1, 7, &
                'Switch for enforced density limit')
        case ('i_diamagnetic_current')
           call parse_int_variable('i_diamagnetic_current', i_diamagnetic_current, 0, 2, &
                 'Switch for diamagnetic scaling')
-       case ('ifalphap')
-          call parse_int_variable('ifalphap', ifalphap, 0, 1, &
+       case ('i_beta_fast_alpha')
+          call parse_int_variable('i_beta_fast_alpha', i_beta_fast_alpha, 0, 1, &
                'Switch for fast alpha pressure fit')
        case ('ignite')
           call parse_int_variable('ignite', ignite, 0, 1, &
@@ -778,8 +778,8 @@ contains
        case ('auxmin')
           call parse_real_variable('auxmin', auxmin, 0.01D0, 100.0D0, &
                'Minimum auxiliary power (MW)')
-       case ('betpmx')
-          call parse_real_variable('betpmx', betpmx, 0.01D0, 2.0D0, &
+       case ('beta_poloidal_max')
+          call parse_real_variable('beta_poloidal_max', beta_poloidal_max, 0.01D0, 2.0D0, &
                'Maximum poloidal beta')
        case ('bigqmin')
           call parse_real_variable('bigqmin', bigqmin, 0.01D0, 100.0D0, &
@@ -790,17 +790,17 @@ contains
        case ('fauxmn')
           call parse_real_variable('fauxmn', fauxmn, 0.001D0, 10.0D0, &
                'F-value for minimum auxiliary power')
-       case ('fbeta')
-          call parse_real_variable('fbeta', fbeta, 0.001D0, 10.0D0, &
-               'F-value for eps.betap beta limit')
-       case ('fbetap')
-          call parse_real_variable('fbetap', fbetap, 0.001D0, 10.0D0, &
+       case ('fbeta_poloidal_eps')
+          call parse_real_variable('fbeta_poloidal_eps', fbeta_poloidal_eps, 0.001D0, 10.0D0, &
+               'F-value for eps.beta_poloidal beta limit')
+       case ('fbeta_poloidal')
+          call parse_real_variable('fbeta_poloidal', fbeta_poloidal, 0.001D0, 10.0D0, &
                'F-value for poloidal beta limit')
-       case ('fbetatry')
-          call parse_real_variable('fbetatry', fbetatry, 0.001D0, 10.0D0, &
+       case ('fbeta_max')
+          call parse_real_variable('fbeta_max', fbeta_max, 0.001D0, 10.0D0, &
                'F-value for beta limit')
-       case ('fbetatry_lower')
-          call parse_real_variable('fbetatry_lower', fbetatry_lower, 0.001D0, 10.0D0, &
+       case ('fbeta_min')
+          call parse_real_variable('fbeta_min', fbeta_min, 0.001D0, 10.0D0, &
                'F-value for (lower) beta limit')
        case ('fecrh_ignition')
           call parse_real_variable('fecrh_ignition', fecrh_ignition, 0.001D0, 10.0D0, &
@@ -925,8 +925,8 @@ contains
        case ('ftbr')
           call parse_real_variable('ftbr', ftbr, 0.001D0, 10.0D0, &
                'F-value for tritium breeding ratio limit')
-       case ('ftburn')
-          call parse_real_variable('ftburn', ftburn, 0.001D0, 10.0D0, &
+       case ('ft_burn')
+          call parse_real_variable('ft_burn', ft_burn, 0.001D0, 10.0D0, &
                'F-value for burn time limit')
        case ('ftcycl')
           call parse_real_variable('ftcycl', ftcycl, 0.001D0, 10.0D0, &
@@ -938,8 +938,8 @@ contains
           call parse_real_variable('ftmargoh', ftmargoh, 0.001D0, 10.0D0, &
                'F-value for TF coil temp. margin')
 
-       case ('ftohs')
-          call parse_real_variable('ftohs', ftohs, 0.001D0, 10.0D0, &
+       case ('ft_current_ramp_up')
+          call parse_real_variable('ft_current_ramp_up', ft_current_ramp_up, 0.001D0, 10.0D0, &
                'F-value for plasma current ramp-up time')
        case ('ftpeak')
           call parse_real_variable('ftpeak', ftpeak, 0.001D0, 10.0D0, &
@@ -1019,8 +1019,8 @@ contains
        case ('tbrmin')
           call parse_real_variable('tbrmin', tbrmin, 0.001D0, 2.0D0, &
                'Minimum tritium breeding ratio')
-       case ('tbrnmn')
-          call parse_real_variable('tbrnmn', tbrnmn, 1.0D-3, 1.0D6, &
+       case ('t_burn_min')
+          call parse_real_variable('t_burn_min', t_burn_min, 1.0D-3, 1.0D6, &
                'Minimum burn time (s)')
        case ('tcycmn')
           call parse_real_variable('tcycmn', tcycmn, 1.0D-3, 2.0D6, &
@@ -1113,26 +1113,26 @@ contains
 
           !  Time settings
 
-       case ('tburn')
-          call parse_real_variable('tburn', tburn, 0.0D0, 1.0D8, &
+       case ('t_burn')
+          call parse_real_variable('t_burn', t_burn, 0.0D0, 1.0D8, &
                'Burn time (s)')
-       case ('tdwell')
-          call parse_real_variable('tdwell', tdwell, 0.0D0, 1.0D8, &
+       case ('t_between_pulse')
+          call parse_real_variable('t_between_pulse', t_between_pulse, 0.0D0, 1.0D8, &
                'Time between burns (s)')
        case ('t_fusion_ramp')
           call parse_real_variable('t_fusion_ramp', t_fusion_ramp, 0.0D0, 1.0D4, &
                'Heating time after current ramp (s)')
-       case ('tohs')
-          call parse_real_variable('tohs', tohs, 0.0D0, 1.0D4, &
+       case ('t_current_ramp_up')
+          call parse_real_variable('t_current_ramp_up', t_current_ramp_up, 0.0D0, 1.0D4, &
                'Plasma current ramp-up time for current init (s)')
        case ('tohsin')
           call parse_real_variable('tohsin', tohsin, 0.0D0, 1.0D4, &
-               'Switch for TOHS calculation')
-       case ('tqnch')
-          call parse_real_variable('tqnch', tqnch, 0.0D0, 1.0D4, &
+               'Switch for t_current_ramp_up calculation')
+       case ('t_ramp_down')
+          call parse_real_variable('t_ramp_down', t_ramp_down, 0.0D0, 1.0D4, &
                'PF coil shutdown time (s)')
-       case ('tramp')
-          call parse_real_variable('tramp', tramp, 0.0D0, 1.0D4, &
+       case ('t_precharge')
+          call parse_real_variable('t_precharge', t_precharge, 0.0D0, 1.0D4, &
                'Initial charge time for PF coils (s)')
        case ('pulsetimings')
           call parse_real_variable('pulsetimings', pulsetimings, 0.0D0, 1.0D0, &

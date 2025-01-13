@@ -6,12 +6,11 @@ This extension to the existing `create_dicts.py` provides a means to allow data 
 still be included in the 'dictionaries'.
 """
 
+import importlib.util
 import inspect
 import pathlib
-import importlib.util
 import sys
 from typing import Any, List, NamedTuple
-
 
 # the directory which this script resides (scripts/)
 CURRENT_DIR = pathlib.Path(__file__).resolve().parent

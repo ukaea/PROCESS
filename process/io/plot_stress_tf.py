@@ -10,20 +10,19 @@ Input file:
 SIG_TF.json
 """
 
-import json
-import matplotlib
-import os
 import argparse
+import json
+import os
 from argparse import RawTextHelpFormatter
-import matplotlib.pyplot as plt
 from pathlib import Path
 
+import matplotlib
+import matplotlib.pyplot as plt
 
 matplotlib.use("Agg")
 
 
 def main(args=None):
-
     # PARSING USER PARAMETERS
     # please execute 'python plot_stress_tf.py -h' for input information
     # Option definition

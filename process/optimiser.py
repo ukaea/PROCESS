@@ -1,7 +1,6 @@
-from process.fortran import numerics
-from process.solver import get_solver
-from process.fortran import define_iteration_variables
 from process.evaluators import Evaluators
+from process.fortran import define_iteration_variables, numerics
+from process.solver import get_solver
 
 
 class Optimiser:

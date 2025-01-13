@@ -1,31 +1,32 @@
-import pytest
-from typing import NamedTuple, Any
-import numpy
+from typing import Any, NamedTuple
 
+import numpy
+import pytest
+
+from process.availability import Availability
+from process.blanket_library import BlanketLibrary
+from process.buildings import Buildings
+from process.costs import Costs
+from process.current_drive import CurrentDrive
 from process.fortran import (
+    build_variables,
+    cost_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    impurity_radiation_module,
     physics_variables,
     stellarator_configuration,
     stellarator_module,
-    build_variables,
-    fwbs_variables,
-    heat_transport_variables,
     structure_variables,
     tfcoil_variables,
-    impurity_radiation_module,
-    cost_variables,
 )
-from process.power import Power
-from process.stellarator import Stellarator, Neoclassics
-from process.vacuum import Vacuum
-from process.availability import Availability
-from process.buildings import Buildings
-from process.costs import Costs
-from process.plasma_profiles import PlasmaProfile
-from process.hcpb import CCFE_HCPB
-from process.blanket_library import BlanketLibrary
 from process.fw import Fw
-from process.current_drive import CurrentDrive
+from process.hcpb import CCFE_HCPB
 from process.physics import Physics
+from process.plasma_profiles import PlasmaProfile
+from process.power import Power
+from process.stellarator import Neoclassics, Stellarator
+from process.vacuum import Vacuum
 
 
 @pytest.fixture

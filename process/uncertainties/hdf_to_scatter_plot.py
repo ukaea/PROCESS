@@ -8,6 +8,7 @@ CCFE
 """
 
 import argparse
+
 import pandas as pd
 from pylab import figure, savefig
 
@@ -21,7 +22,7 @@ def parse_args(args):
     :rtype: Namespace
     """
     parser = argparse.ArgumentParser(
-        description="Program to read and  " "plot PROCESS hdf5 output."
+        description="Program to read and  plot PROCESS hdf5 output."
     )
 
     parser.add_argument(
