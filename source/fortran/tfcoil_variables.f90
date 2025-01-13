@@ -802,8 +802,8 @@ module tfcoil_variables
   real(dp) :: tcpav2
   !! Computed centrepost average temperature (K) (for consistency)
 
-  real(dp) :: tlegav
-  !! Average temperature of the TF outboard legs [K]. If `tlegav=-1.0`, the ouboard
+  real(dp) :: temp_tf_legs_outboard
+  !! Average temperature of the TF outboard legs [K]. If `temp_tf_legs_outboard=-1.0`, the ouboard
   !! legs and CP temperatures are the same. Fixed for now, should use a contraints eq like temp_cp_average
 
   real(dp) :: tcpmax
@@ -1044,7 +1044,7 @@ module tfcoil_variables
     dtiocool = 0.0D0
     temp_cp_average = 373.15D0     ! 100 C
     tcpav2 = 0.0D0
-    tlegav = -1.0D0
+    temp_tf_legs_outboard = -1.0D0
     tcpmax = 0.0D0
     vcool = 20.0D0
     vol_cond_cp = 0.0D0

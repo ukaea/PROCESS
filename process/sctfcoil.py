@@ -1815,29 +1815,34 @@ class Sctfcoil:
         if physics_variables.itart == 1:
             # Tricky trick to make the leg / CP tempearture the same
             if (
-                abs(tfcoil_variables.tlegav + 1.0e0)
-                < np.finfo(float(tfcoil_variables.tlegav)).eps
+                abs(tfcoil_variables.temp_tf_legs_outboard + 1.0e0)
+                < np.finfo(float(tfcoil_variables.temp_tf_legs_outboard)).eps
             ):
                 sctfcoil_module.is_leg_cp_temp_same = 1
-                tfcoil_variables.tlegav = tfcoil_variables.temp_cp_average
+                tfcoil_variables.temp_tf_legs_outboard = (
+                    tfcoil_variables.temp_cp_average
+                )
 
             # Leg resistivity (different leg temperature as separate cooling channels)
             if tfcoil_variables.i_tf_sup == 0:
                 tfcoil_variables.rho_tf_leg = (
                     tfcoil_variables.frholeg
-                    * (1.72e0 + 0.0039e0 * (tfcoil_variables.tlegav - 273.15e0))
+                    * (
+                        1.72e0
+                        + 0.0039e0 * (tfcoil_variables.temp_tf_legs_outboard - 273.15e0)
+                    )
                     * 1.0e-8
                 )
             elif tfcoil_variables.i_tf_sup == 2:
                 tfcoil_variables.rho_tf_leg = tfcoil_variables.frholeg * (
-                    2.00016e-14 * tfcoil_variables.tlegav**3
-                    - 6.75384e-13 * tfcoil_variables.tlegav**2
-                    + 8.89159e-12 * tfcoil_variables.tlegav
+                    2.00016e-14 * tfcoil_variables.temp_tf_legs_outboard**3
+                    - 6.75384e-13 * tfcoil_variables.temp_tf_legs_outboard**2
+                    + 8.89159e-12 * tfcoil_variables.temp_tf_legs_outboard
                 )
 
             # Tricky trick to make the leg / CP tempearture the same
             if sctfcoil_module.is_leg_cp_temp_same == 1:
-                tfcoil_variables.tlegav = -1.0e0
+                tfcoil_variables.temp_tf_legs_outboard = -1.0e0
 
             # Centrepost resisitivity and conductor/insulation volume
 
@@ -5404,8 +5409,8 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "Average leg temperature (K)",
-                    "(tlegav)",
-                    tfcoil_variables.tlegav,
+                    "(temp_tf_legs_outboard)",
+                    tfcoil_variables.temp_tf_legs_outboard,
                 )
 
             else:

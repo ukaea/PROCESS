@@ -1198,12 +1198,12 @@
     {
       "no": 238,
       "level": 3,
-      "message": "CHECK: TF legs conductor temperature (tlegav) should be < 40 K for the cryo-al resistivity to be defined."
+      "message": "CHECK: TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined."
     },
     {
       "no": 239,
       "level": 3,
-      "message": "CHECK: TF legs conductor temperature (tlegav) cannot be < 0 C (273.15 K) for water cooled magents."
+      "message": "CHECK: TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents."
     },
     {
       "no": 240,

@@ -897,7 +897,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
 class TfResHeatingParam(NamedTuple):
     rhocp: Any = None
-    tlegav: Any = None
+    temp_tf_legs_outboard: Any = None
     thicndut: Any = None
     th_joint_contact: Any = None
     rho_tf_leg: Any = None
@@ -1115,7 +1115,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
     (
         TfResHeatingParam(
             rhocp=0,
-            tlegav=-1,
+            temp_tf_legs_outboard=-1,
             thicndut=0.00080000000000000004,
             th_joint_contact=0.029999999999999999,
             rho_tf_leg=0,
@@ -1165,7 +1165,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
         ),
         TfResHeatingParam(
             rhocp=2.008522e-08,
-            tlegav=-1,
+            temp_tf_legs_outboard=-1,
             thicndut=0.00080000000000000004,
             th_joint_contact=0.029999999999999999,
             rho_tf_leg=2.008522e-08,
@@ -1230,7 +1230,11 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "rhocp", tfresheatingparam.rhocp)
 
-    monkeypatch.setattr(tfcoil_variables, "tlegav", tfresheatingparam.tlegav)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "temp_tf_legs_outboard",
+        tfresheatingparam.temp_tf_legs_outboard,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "thicndut", tfresheatingparam.thicndut)
 
