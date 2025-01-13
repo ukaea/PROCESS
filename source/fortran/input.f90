@@ -330,7 +330,7 @@ contains
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
       thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
-      i_tf_tresca, dhecoil, tmaxpro, n_tf_coils, tcpav, fcutfsu, j_tf_bus, &
+      i_tf_tresca, dhecoil, tmaxpro, n_tf_coils, temp_cp_average, fcutfsu, j_tf_bus, &
       casthi_fraction, tmargmin_cs, vdalw, dcase, t_turn_tf,&
       cpttf_max, tdmptf, casths, i_tf_turns_integer, quench_model, &
       tcritsc, layer_ins, tinstf, n_layer, tcoolin, ripmax, frhocp, &
@@ -1720,8 +1720,8 @@ contains
        case ('tcoolin')
           call parse_real_variable('tcoolin', tcoolin, 4.0D0, 373.15D0, &
                'Centrepost coolant inlet temperature (K)')
-       case ('tcpav')
-          call parse_real_variable('tcpav', tcpav, 4.0D0, 573.15D0, &
+       case ('temp_cp_average')
+          call parse_real_variable('temp_cp_average', temp_cp_average, 4.0D0, 573.15D0, &
                'Average centrepost coolant temperature (K)')
        case ('tcritsc')
           call parse_real_variable('tcritsc', tcritsc, 1.0D0, 300.0D0, &

@@ -1208,12 +1208,12 @@
     {
       "no": 240,
       "level": 3,
-      "message": "CHECK: Too large CP conductor temperature (tcpav). Upper limit for cryo-al < 50 K"
+      "message": "CHECK: Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
     },
     {
       "no": 241,
       "level": 3,
-      "message": "CHECK: Too low CP conductor temperature (tcpav). Lower limit for copper > 273.15 K"
+      "message": "CHECK: Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
     },
     {
       "no": 242,

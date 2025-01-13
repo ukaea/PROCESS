@@ -1799,16 +1799,16 @@ class Sctfcoil:
         if tfcoil_variables.i_tf_sup == 0:
             tfcoil_variables.rhocp = (
                 tfcoil_variables.frhocp
-                * (1.72e0 + 0.0039e0 * (tfcoil_variables.tcpav - 273.15e0))
+                * (1.72e0 + 0.0039e0 * (tfcoil_variables.temp_cp_average - 273.15e0))
                 * 1.0e-8
             )
 
         # Aluminium
         if tfcoil_variables.i_tf_sup == 2:
             tfcoil_variables.rhocp = tfcoil_variables.frhocp * (
-                2.00016e-14 * tfcoil_variables.tcpav**3
-                - 6.75384e-13 * tfcoil_variables.tcpav**2
-                + 8.89159e-12 * tfcoil_variables.tcpav
+                2.00016e-14 * tfcoil_variables.temp_cp_average**3
+                - 6.75384e-13 * tfcoil_variables.temp_cp_average**2
+                + 8.89159e-12 * tfcoil_variables.temp_cp_average
             )
 
         # Calculations dedicated for configurations with CP
@@ -1819,7 +1819,7 @@ class Sctfcoil:
                 < np.finfo(float(tfcoil_variables.tlegav)).eps
             ):
                 sctfcoil_module.is_leg_cp_temp_same = 1
-                tfcoil_variables.tlegav = tfcoil_variables.tcpav
+                tfcoil_variables.tlegav = tfcoil_variables.temp_cp_average
 
             # Leg resistivity (different leg temperature as separate cooling channels)
             if tfcoil_variables.i_tf_sup == 0:
@@ -5398,8 +5398,8 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "Average CP temperature (K)",
-                    "(tcpav)",
-                    tfcoil_variables.tcpav,
+                    "(temp_cp_average)",
+                    tfcoil_variables.temp_cp_average,
                 )
                 po.ovarre(
                     self.outfile,
@@ -5424,8 +5424,8 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "Average coil temperature (K)",
-                    "(tcpav)",
-                    tfcoil_variables.tcpav,
+                    "(temp_cp_average)",
+                    tfcoil_variables.temp_cp_average,
                 )
 
         # Ripple calculations

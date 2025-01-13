@@ -907,7 +907,7 @@ class TfResHeatingParam(NamedTuple):
     tftort: Any = None
     len_tf_coil: Any = None
     res_tf_leg: Any = None
-    tcpav: Any = None
+    temp_cp_average: Any = None
     arealeg: Any = None
     c_tf_total: Any = None
     rho_tf_joints: Any = None
@@ -1125,7 +1125,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             tftort=0.45367650933034859,
             len_tf_coil=15.582502857142856,
             res_tf_leg=0,
-            tcpav=347.13,
+            temp_cp_average=347.13,
             arealeg=0.070242733939617885,
             c_tf_total=25500000,
             rho_tf_joints=2.5000000000000002e-10,
@@ -1175,7 +1175,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             tftort=0.44435902370665786,
             len_tf_coil=15.654502857142857,
             res_tf_leg=5.647653956699231e-06,
-            tcpav=347.13,
+            temp_cp_average=347.13,
             arealeg=0.068800107640501845,
             c_tf_total=25500000,
             rho_tf_joints=2.5000000000000002e-10,
@@ -1252,7 +1252,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "res_tf_leg", tfresheatingparam.res_tf_leg)
 
-    monkeypatch.setattr(tfcoil_variables, "tcpav", tfresheatingparam.tcpav)
+    monkeypatch.setattr(
+        tfcoil_variables, "temp_cp_average", tfresheatingparam.temp_cp_average
+    )
 
     monkeypatch.setattr(tfcoil_variables, "arealeg", tfresheatingparam.arealeg)
 

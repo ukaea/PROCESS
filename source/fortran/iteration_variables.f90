@@ -485,25 +485,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_20
-    !! <LI> (20) tcpav
+    !! <LI> (20) temp_cp_average
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(20) = 'tcpav         '
+    lablxc(20) = 'temp_cp_average         '
     boundl(20) = 40.00D0
     boundu(20) = 3.000D2
   end subroutine init_itv_20
 
   real(kind(1.d0)) function itv_20()
-    use tfcoil_variables, only: tcpav
+    use tfcoil_variables, only: temp_cp_average
     implicit none
-    itv_20 = tcpav
+    itv_20 = temp_cp_average
   end function itv_20
 
   subroutine set_itv_20(ratio)
-    use tfcoil_variables, only: tcpav
+    use tfcoil_variables, only: temp_cp_average
     implicit none
     real(kind(1.d0)) :: ratio
-    tcpav = ratio
+    temp_cp_average = ratio
   end subroutine set_itv_20
 
   !---------------------------------

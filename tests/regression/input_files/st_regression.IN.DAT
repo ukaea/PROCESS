@@ -1584,7 +1584,7 @@ tftmp = 20.0
 * VARIABLES:     itart.  tcpav2 calculated in-situ
 
 *ixc = 20
-*tcpav = 20.42
+*temp_cp_average = 20.42
 *boundl(20) = 20.0
 *boundu(20) = 25.0
 * DESCRIPTION:   Average temperature of centrepost

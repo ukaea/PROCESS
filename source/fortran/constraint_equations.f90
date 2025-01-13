@@ -1882,12 +1882,12 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! tcpav : input real : average temp of TF coil inboard leg conductor (C)e
+      !! temp_cp_average : input real : average temp of TF coil inboard leg conductor (C)e
       !! tcpav2 : input real : centrepost average temperature (C) (for consistency)
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
-      use tfcoil_variables, only: tcpav, tcpav2
+      use tfcoil_variables, only: temp_cp_average, tcpav2
       use physics_variables, only: itart
       use tfcoil_variables, only:  i_tf_sup
 
@@ -1903,11 +1903,11 @@ contains
 
       ! For some reasons these lines are needed to make VMCON CONVERGE ....
       if ( i_tf_sup == 0 ) then ! Copper case
-         tcpav = tcpav - 273.15D0
+         temp_cp_average = temp_cp_average - 273.15D0
          tcpav2 = tcpav2 - 273.15D0
       end if
 
-      tmp_cc =   1.0D0 - tcpav/tcpav2
+      tmp_cc =   1.0D0 - temp_cp_average/tcpav2
       tmp_con = tcpav2 * (1.0D0 - tmp_cc)
       tmp_err = tcpav2 * tmp_cc
       tmp_symbol = '='
@@ -1915,7 +1915,7 @@ contains
 
       ! For some reasons these lines are needed to make VMCON CONVERGE ....
       if ( i_tf_sup == 0 ) then ! Copper case
-         tcpav = tcpav + 273.15D0
+         temp_cp_average = temp_cp_average + 273.15D0
          tcpav2 = tcpav2 + 273.15D0
       end if
 
