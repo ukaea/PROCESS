@@ -2501,7 +2501,7 @@ class Power:
             #  Total maximum impedance MDK actually just fixed resistance
             res_tf_system_total = (
                 tfcoil_variables.n_tf_coils * tfcoil_variables.res_tf_leg
-                + (tfcoil_variables.p_cp_resistive / tfcoil_variables.ritfc**2)
+                + (tfcoil_variables.p_cp_resistive / tfcoil_variables.c_tf_total**2)
                 + tfbusres
             )
 

@@ -2021,14 +2021,14 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! eps : input real :  inverse aspect ratio
       !! fipir : input real : f-value for Ip/Irod upper limit
-      !! ritfc : input real : total (summed) current in TF coils (A)
+      !! c_tf_total : input real : total (summed) current in TF coils (A)
       !! plasma_current : input real :  plasma current (A)
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
       use physics_variables, only: eps, plasma_current, itart
       use constraint_variables, only: fipir
-      use tfcoil_variables, only: ritfc
+      use tfcoil_variables, only: c_tf_total
       implicit none
       ! cratmx : local real : maximum ratio of plasma current to centrepost current
       real(dp) :: cratmx
@@ -2041,9 +2041,9 @@ contains
       ! if the machine isn't a ST then report error
       if (itart == 0) call report_error(10)
       cratmx = 1.0D0 + 4.91D0*(eps-0.62D0)
-      tmp_cc =  1.0D0 - fipir * cratmx * ritfc/plasma_current
+      tmp_cc =  1.0D0 - fipir * cratmx * c_tf_total/plasma_current
       tmp_con = cratmx * (1.0D0 - tmp_cc)
-      tmp_err = plasma_current/ritfc * tmp_cc
+      tmp_err = plasma_current/c_tf_total * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 

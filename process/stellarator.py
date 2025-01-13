@@ -2752,11 +2752,11 @@ class Stellarator:
         tfcoil_variables.tfareain = (
             tfcoil_variables.n_tf_coils * tfcoil_variables.arealeg
         )  # [m^2] Total area of all coil legs (midplane)
-        tfcoil_variables.ritfc = (
+        tfcoil_variables.c_tf_total = (
             tfcoil_variables.n_tf_coils * coilcurrent * 1.0e6
         )  # [A] Total current in ALL coils
         tfcoil_variables.oacdcp = (
-            tfcoil_variables.ritfc / tfcoil_variables.tfareain
+            tfcoil_variables.c_tf_total / tfcoil_variables.tfareain
         )  # [A / m^2] overall current density
         tfcoil_variables.rbmax = (
             r_coil_major - r_coil_minor + awp_rad
@@ -2780,7 +2780,7 @@ class Stellarator:
                 ** 2
                 * st.f_n**2
             )
-            * (tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils) ** 2
+            * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
             * 1.0e-9
         )  # [GJ] Total magnetic energy
 
@@ -2920,7 +2920,7 @@ class Stellarator:
             / (1e0 * 5.2e0 * 0.014e0)
             * (
                 physics_variables.bt
-                * tfcoil_variables.ritfc
+                * tfcoil_variables.c_tf_total
                 * physics_variables.rminor**2
                 / (
                     (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
@@ -3656,14 +3656,14 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Total current (MA)",
-            "(ritfc)",
-            1.0e-6 * tfcoil_variables.ritfc,
+            "(c_tf_total)",
+            1.0e-6 * tfcoil_variables.c_tf_total,
         )
         po.ovarre(
             self.outfile,
             "Current per coil(MA)",
-            "(ritfc/n_tf_coils)",
-            1.0e-6 * tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils,
+            "(c_tf_total/n_tf_coils)",
+            1.0e-6 * tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils,
         )
         po.ovarre(
             self.outfile,
@@ -3849,17 +3849,21 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Current density in conductor area (A/m2)",
-            "(ritfc/acond)",
+            "(c_tf_total/acond)",
             1.0e-6
-            * tfcoil_variables.ritfc
+            * tfcoil_variables.c_tf_total
             / tfcoil_variables.n_tf_coils
             / tfcoil_variables.acond,
         )
         po.ovarre(
             self.outfile,
             "Current density in SC area (A/m2)",
-            "(ritfc/acond/f_scu)",
-            1.0e-6 * tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils / ap / f_scu,
+            "(c_tf_total/acond/f_scu)",
+            1.0e-6
+            * tfcoil_variables.c_tf_total
+            / tfcoil_variables.n_tf_coils
+            / ap
+            / f_scu,
         )
         po.ovarre(self.outfile, "Superconductor faction of WP (1)", "(f_scu)", f_scu)
 

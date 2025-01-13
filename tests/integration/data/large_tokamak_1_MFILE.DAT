@@ -731,8 +731,8 @@
  Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      7.1402E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.1424E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.2178E+01 OP 
- Total_current_in_all_TF_coils_(MA)______________________________________ (ritfc/1.D6)__________________      2.1176E+02 OP 
- TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (ritfc)_______________________      2.1176E+08    
+ Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.1176E+02 OP 
+ TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.1176E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2636E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.5602E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1617E+07    

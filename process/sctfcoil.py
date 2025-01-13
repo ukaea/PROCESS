@@ -41,7 +41,7 @@ class Sctfcoil:
         """
         tfes = sctfcoil_module.estotft / tfcoil_variables.n_tf_coils
         # Cross-sectional area per turn
-        aturn = tfcoil_variables.ritfc / (
+        aturn = tfcoil_variables.c_tf_total / (
             tfcoil_variables.jwptf
             * tfcoil_variables.n_tf_coils
             * tfcoil_variables.n_tf_turn
@@ -1194,7 +1194,7 @@ class Sctfcoil:
 
         # Total TF coil stored magnetic energy [J]
         sctfcoil_module.estotft = (
-            0.5e0 * tfcoil_variables.tfind * tfcoil_variables.ritfc**2
+            0.5e0 * tfcoil_variables.tfind * tfcoil_variables.c_tf_total**2
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
@@ -1318,7 +1318,7 @@ class Sctfcoil:
                 tfcoil_variables.poisson_al,
                 tfcoil_variables.fcoolcp,
                 tfcoil_variables.n_tf_graded_layers,
-                tfcoil_variables.ritfc,
+                tfcoil_variables.c_tf_total,
                 tfcoil_variables.casthi,
                 tfcoil_variables.i_tf_stress_model,
                 sctfcoil_module.vforce_inboard_tot,
@@ -1599,17 +1599,19 @@ class Sctfcoil:
 
         # Total current in TF coils [A]
         # rem SK : ritcf is no longer an input
-        tfcoil_variables.ritfc = (
+        tfcoil_variables.c_tf_total = (
             tfcoil_variables.bmaxtf * tfcoil_variables.rbmax * 5.0e6
         )
 
         # Current per TF coil [A]
         sctfcoil_module.tfc_current = (
-            tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils
+            tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils
         )
 
         # Global inboard leg average current in TF coils [A/m2]
-        tfcoil_variables.oacdcp = tfcoil_variables.ritfc / tfcoil_variables.tfareain
+        tfcoil_variables.oacdcp = (
+            tfcoil_variables.c_tf_total / tfcoil_variables.tfareain
+        )
 
     def coilshap(self):
         """Calculates the TF coil shape
@@ -1857,7 +1859,7 @@ class Sctfcoil:
                 tfcoil_variables.tinstf,
                 tfcoil_variables.thicndut,
                 tfcoil_variables.n_tf_turn,
-                tfcoil_variables.ritfc,
+                tfcoil_variables.c_tf_total,
                 tfcoil_variables.rhocp,
                 tfcoil_variables.fcoolcp,
                 tfcoil_variables.n_tf_coils,
@@ -1900,7 +1902,7 @@ class Sctfcoil:
             # TF outer leg resistive power (TOTAL) [W]
             tfcoil_variables.p_tf_leg_resistive = (
                 tfcoil_variables.res_tf_leg
-                * (tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils) ** 2
+                * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
             )
             # ---
 
@@ -1925,7 +1927,7 @@ class Sctfcoil:
                 tfcoil_variables.pres_joints = (
                     tfcoil_variables.n_tf_joints
                     * tfcoil_variables.rho_tf_joints
-                    * tfcoil_variables.ritfc**2
+                    * tfcoil_variables.c_tf_total**2
                     / a_joints
                 )
             else:
@@ -1940,7 +1942,7 @@ class Sctfcoil:
             # TF resistive powers
             tfcoil_variables.p_cp_resistive = (
                 tfcoil_variables.rhocp
-                * tfcoil_variables.ritfc**2
+                * tfcoil_variables.c_tf_total**2
                 * tfcoil_variables.tfleng
                 / (sctfcoil_module.a_leg_cond * tfcoil_variables.n_tf_coils)
             )
@@ -2385,7 +2387,7 @@ class Sctfcoil:
         tfcoil_variables.cforce = (
             0.5e0
             * tfcoil_variables.bmaxtf
-            * tfcoil_variables.ritfc
+            * tfcoil_variables.c_tf_total
             / tfcoil_variables.n_tf_coils
         )
 
@@ -2413,7 +2415,11 @@ class Sctfcoil:
         # May the force be with you
         vforce_tot = (
             0.5e0
-            * (physics_variables.bt * physics_variables.rmajor * tfcoil_variables.ritfc)
+            * (
+                physics_variables.bt
+                * physics_variables.rmajor
+                * tfcoil_variables.c_tf_total
+            )
             / (tfcoil_variables.n_tf_coils * dr_wp**2)
             * (
                 r_out_wp**2 * np.log(r_out_wp / r_in_wp)
@@ -2438,7 +2444,7 @@ class Sctfcoil:
                 * (
                     physics_variables.bt
                     * physics_variables.rmajor
-                    * tfcoil_variables.ritfc
+                    * tfcoil_variables.c_tf_total
                 )
                 / (tfcoil_variables.n_tf_coils * dr_wp**2)
                 * (
@@ -3048,12 +3054,12 @@ class Sctfcoil:
         ) - sctfcoil_module.awpc
 
         # Current per turn
-        tfcoil_variables.cpttf = tfcoil_variables.ritfc / (
+        tfcoil_variables.cpttf = tfcoil_variables.c_tf_total / (
             tfcoil_variables.n_tf_turn * tfcoil_variables.n_tf_coils
         )
 
         # Exact current density on TF oubard legs
-        tfcoil_variables.cdtfleg = tfcoil_variables.ritfc / (
+        tfcoil_variables.cdtfleg = tfcoil_variables.c_tf_total / (
             (1.0e0 - tfcoil_variables.fcoolcp)
             * (
                 tfcoil_variables.tftort
@@ -3535,7 +3541,7 @@ class Sctfcoil:
         """
         tfcoil_variables.jwptf = max(
             1.0e0,
-            tfcoil_variables.ritfc
+            tfcoil_variables.c_tf_total
             / (tfcoil_variables.n_tf_coils * sctfcoil_module.awptf),
         )
 
@@ -3601,7 +3607,7 @@ class Sctfcoil:
         poisson_al,
         fcoolcp,
         n_tf_graded_layers,
-        ritfc,
+        c_tf_total,
         casthi,
         i_tf_stress_model,
         vforce_inboard_tot,
@@ -4070,7 +4076,7 @@ class Sctfcoil:
 
         for ii in range(np.intc(n_tf_graded_layers)):
             # Homogeneous current in (super)conductor
-            jeff[n_tf_bucking + ii] = ritfc / (
+            jeff[n_tf_bucking + ii] = c_tf_total / (
                 np.pi * (r_wp_outer_eff**2 - r_wp_inner_eff**2)
             )
 
@@ -5258,15 +5264,15 @@ class Sctfcoil:
         po.ovarre(
             self.outfile,
             "Total current in all TF coils (MA)",
-            "(ritfc/1.D6)",
-            1.0e-6 * tfcoil_variables.ritfc,
+            "(c_tf_total/1.D6)",
+            1.0e-6 * tfcoil_variables.c_tf_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "TF coil current (summed over all coils) (A)",
-            "(ritfc)",
-            tfcoil_variables.ritfc,
+            "(c_tf_total)",
+            tfcoil_variables.c_tf_total,
         )
         if tfcoil_variables.i_tf_sup == 1:
             po.ovarre(

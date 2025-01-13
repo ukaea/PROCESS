@@ -2574,7 +2574,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
             ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
-            ("ritfc", "TF coil currents sum", "A"),
+            ("c_tf_total", "TF coil currents sum", "A"),
             ("", "", ""),
             ("#TF coil forces/stresses", "", ""),
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
