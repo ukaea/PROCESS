@@ -1903,7 +1903,7 @@ class Sctfcoil:
             tfcoil_variables.p_tf_leg_resistive = (
                 tfcoil_variables.res_tf_leg
                 * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
-            )
+            ) * tfcoil_variables.n_tf_coils
             # ---
 
             # Sliding joints resistive heating
@@ -5377,7 +5377,7 @@ class Sctfcoil:
                 )
                 po.ovarre(
                     self.outfile,
-                    "Leg resitive power loss, (per leg) (W)",
+                    "Total legs resitive power loss, (W)",
                     "(p_tf_leg_resistive)",
                     tfcoil_variables.p_tf_leg_resistive,
                 )

@@ -2556,7 +2556,6 @@ def plot_magnetics_info(axis, mfile_data, scan):
         ]
 
     else:
-        n_tf_coils = mfile_data.data["n_tf_coils"].get_scan(scan)
         p_cp_resistive = 1.0e-6 * mfile_data.data["p_cp_resistive"].get_scan(scan)
         p_tf_leg_resistive = 1.0e-6 * mfile_data.data["p_tf_leg_resistive"].get_scan(
             scan
@@ -2583,7 +2582,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
             (p_cp_resistive, "CP Resisitive heating", "MW"),
             (
-                p_tf_leg_resistive * n_tf_coils,
+                p_tf_leg_resistive,
                 "legs Resisitive heating (all legs)",
                 "MW",
             ),
