@@ -298,8 +298,8 @@ class TFcoil:
             po.ovarre(
                 self.outfile,
                 "Average conductor resistivity (ohm.m)",
-                "(rhocp)",
-                tfv.rhocp,
+                "(rho_cp)",
+                tfv.rho_cp,
             )
             po.ovarre(
                 self.outfile,

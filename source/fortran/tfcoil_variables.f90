@@ -535,7 +535,7 @@ module tfcoil_variables
   real(dp) :: tflegmw
   !! TF coil outboard leg resistive power (MW)
 
-  real(dp) :: rhocp
+  real(dp) :: rho_cp
   !! TF coil inboard leg resistivity [Ohm-m]. If `itart=0`, this variable is the
   !! average resistivity over the whole magnet
 
@@ -967,7 +967,7 @@ module tfcoil_variables
     tfind = 0.0D0
     tfinsgap = 0.010D0
     tflegmw = 0.0D0
-    rhocp = 0.0D0
+    rho_cp = 0.0D0
     rho_tf_leg = 0.0D0
     rho_tf_bus = 1.86D-8
     frhocp = 1.0D0
