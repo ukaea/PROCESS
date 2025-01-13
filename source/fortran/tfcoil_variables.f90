@@ -543,7 +543,7 @@ module tfcoil_variables
   !! Resistivity of a TF coil leg (Ohm-m)
 
   real(dp) :: rho_tf_bus
-  !! Resistivity of a TF coil bus (Ohm-m). Default values is for that of GLIDCOP Copper at 293K
+  !! Resistivity of a TF coil bus (Ohm-m). Default values is for that of GLIDCOP AL-15 (C15715) at 293K
 
   real(dp) :: frhocp
   !! Centrepost resistivity enhancement factor. For `itart=0`, this factor
