@@ -120,7 +120,7 @@ class NProfile(Profile):
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
-        self.calculate_profile_y(
+        self.profile_y = self.calculate_profile_y(
             self.profile_x,
             physics_variables.rhopedn,
             physics_variables.ne0,
@@ -130,15 +130,15 @@ class NProfile(Profile):
         )
         self.integrate_profile_y()
 
+    @staticmethod
     def calculate_profile_y(
-        self,
         rho: np.array,
         rhopedn: float,
         n0: float,
         nped: float,
         nsep: float,
         alphan: float,
-    ) -> None:
+    ) -> np.array:
         """
         This routine calculates the density at each normalised minor radius position
         rho for a HELIOS-type density pedestal profile (nprofile).
@@ -157,11 +157,11 @@ class NProfile(Profile):
             - alphan (float): Density peaking parameter.
 
         Returns:
-            None
+            np.array: Calculated density profile.
         """
 
         if physics_variables.ipedestal == 0:
-            self.profile_y = n0 * (1 - rho**2) ** alphan
+            profile_y = n0 * (1 - rho**2) ** alphan
 
         # Input checks
 
@@ -170,13 +170,16 @@ class NProfile(Profile):
                 f"NPROFILE: density pedestal is higher than core density. {nped = }, {n0 = }"
             )
         rho_index = rho <= rhopedn
-        self.profile_y[rho_index] = (
+        profile_y = np.zeros_like(rho)
+        profile_y[rho_index] = (
             nped + (n0 - nped) * (1 - (rho[rho_index] / rhopedn) ** 2) ** alphan
         )
         # Invert the rho_index
-        self.profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
+        profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
             1 - rhopedn
         )
+
+        return profile_y
 
     @staticmethod
     def ncore(
@@ -254,7 +257,7 @@ class TProfile(Profile):
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
-        self.calculate_profile_y(
+        self.profile_y = self.calculate_profile_y(
             self.profile_x,
             physics_variables.rhopedt,
             physics_variables.te0,
@@ -265,8 +268,8 @@ class TProfile(Profile):
         )
         self.integrate_profile_y()
 
+    @staticmethod
     def calculate_profile_y(
-        self,
         rho: np.array,
         rhopedt: float,
         t0: float,
@@ -274,7 +277,7 @@ class TProfile(Profile):
         tesep: float,
         alphat: float,
         tbeta: float,
-    ) -> None:
+    ) -> np.array:
         """
         Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (tprofile).
         If ipedestal = 0 the original parabolic profile form is used instead.
@@ -295,19 +298,26 @@ class TProfile(Profile):
             tbeta (float): Second temperature exponent.
         """
         if physics_variables.ipedestal == 0:
-            self.profile_y = t0 * (1 - rho**2) ** alphat
+            profile_y = t0 * (1 - rho**2) ** alphat
 
         if t0 < teped:
             logger.info(
                 f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }"
             )
         rho_index = rho <= rhopedt
-        self.profile_y[rho_index] = (
+        profile_y = np.zeros_like(rho)
+        # print(f"rho_index: {rho_index}")
+        # print(
+        #     f"teped: {teped}, t0: {t0}, rhopedt: {rhopedt}, tbeta: {tbeta}, alphat: {alphat}"
+        # )
+        profile_y[rho_index] = (
             teped + (t0 - teped) * (1 - (rho[rho_index] / rhopedt) ** tbeta) ** alphat
         )
-        self.profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
+        profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
             1 - rhopedt
         )
+
+        return profile_y
 
     @staticmethod
     def tcore(

@@ -81,6 +81,8 @@ class PlasmaProfile:
         # Initialize the density and temperature profiles
         self.neprofile = profiles.NProfile(self.profile_size, neprofile_x, neprofile_y)
         self.teprofile = profiles.TProfile(self.profile_size, teprofile_x, teprofile_y)
+        self.niprofile = profiles.NProfile(self.profile_size, niprofile_x, niprofile_y)
+        self.tiprofile = profiles.TProfile(self.profile_size, tiprofile_x, tiprofile_y)
 
     def run(self) -> None:
         """
@@ -135,7 +137,6 @@ class PlasmaProfile:
                 self.neprofile.run()
             else:
                 self.calculate_custom_profiles()
-
             self.pedestal_parameterisation()
             self.calculate_profile_factors()
 
@@ -160,9 +161,16 @@ class PlasmaProfile:
         # position.
         self.teprofile.normalise_profile_x()
         self.teprofile.calculate_profile_dx()
+        self.tiprofile.normalise_profile_x()
+        self.tiprofile.calculate_profile_dx()
         # Known values of t0 and tesep
         t0 = self.teprofile.profile_y[0]
         tesep = self.teprofile.profile_y[-1]
+        ti0 = self.tiprofile.profile_y[0]
+
+        physics_variables.te0 = t0
+        physics_variables.tesep = tesep
+        physics_variables.ti0 = ti0
 
         def fit_temperature_profile(
             rho_data, temperature_data, t0, tesep, initial_guess
@@ -183,7 +191,7 @@ class PlasmaProfile:
             return rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted, perr
 
         # Initial guesses for rhopedt, teped, alphat, and tbeta
-
+        initial_guess = [0.96, 0.5, 0.5, 1.5]
         # Fit the profile and get the fitted parameters
         rhopedt_fitted, teped_fitted, alphat_fitted, tbeta_fitted, teperr = (
             fit_temperature_profile(
@@ -212,17 +220,24 @@ class PlasmaProfile:
 
         with open("temperature_profiles.json", "w") as f:
             json.dump(temp_profiles, f)
-
-        self.teprofile.set_physics_variables()
-        self.teprofile.integrate_profile_y()
+        physics_variables.alphat = alphat_fitted
+        physics_variables.tbeta = tbeta_fitted
+        # self.teprofile.set_physics_variables()
 
         self.neprofile.normalise_profile_x()
         self.neprofile.calculate_profile_dx()
-        self.neprofile.set_physics_variables()
+
+        self.niprofile.normalise_profile_x()
+        self.niprofile.calculate_profile_dx()
 
         # Retrieve separartrix and core values
         nsep = self.neprofile.profile_y[-1]
         n0 = self.neprofile.profile_y[0]
+        ni0 = self.niprofile.profile_y[0]
+
+        physics_variables.ne0 = n0
+        physics_variables.nesep = nsep
+        physics_variables.ni0 = ni0
 
         def fit_density_profile(
             rho_data, density_data, n0, nsep, rhopedn, initial_guess
@@ -244,6 +259,7 @@ class PlasmaProfile:
             return nped_fitted, alphan_fitted, perr
 
         # Initial guesses for nped, and alphan
+        initial_guess = [0.75e20, 0.24]
         # Fit the profile and get the fitted parameters
         nped_fitted, alphan_fitted, perr = fit_density_profile(
             rho_data=self.neprofile.profile_x,
@@ -263,6 +279,11 @@ class PlasmaProfile:
             alphan_fitted,
         )
 
+        physics_variables.alphan = alphan_fitted
+
+        self.neprofile.set_physics_variables()
+        self.neprofile.integrate_profile_y()
+        # I need to calculate te (volume averaqged temperature) and ne (volume averaged density)
         # Store the original and fitted profiles in JSON format
         density_profiles = {
             "original_profile": self.neprofile.profile_y.tolist(),
@@ -272,9 +293,86 @@ class PlasmaProfile:
         with open("density_profiles.json", "w") as f:
             json.dump(density_profiles, f)
 
-        physics_variables.alphan = alphan_fitted
-        physics_variables.alphat = alphat_fitted
-        physics_variables.tbeta = tbeta_fitted
+        def volume_averaged_quantity(rho, quantity, cross_sectional_area, total_volume):
+            # Calculate the differential volume element dV
+            dV = cross_sectional_area * 2 * np.pi * rho
+
+            # Integrate the quantity over the volume using the trapezoidal rule
+            integral_quantity = np.trapz(quantity * dV, rho)
+
+            # Calculate the volume-averaged quantity
+            volume_averaged_quantity = integral_quantity / total_volume
+
+            return volume_averaged_quantity
+
+        def volume_averaged_profile(profile, rho, rminor, plasma_volume):
+            r = rho * rminor  # Scale normalized rho to actual radial positions
+            integrand = profile * 4 * np.pi * r**2
+            volume_element = (
+                4
+                * np.pi
+                * r**2
+                * physics_variables.kappa
+                * (1 + physics_variables.triang * np.cos(np.pi * rho))
+            )
+            integrand = profile * volume_element
+            total_value = sp.integrate.simpson(integrand, x=r)
+            volume_average = total_value / plasma_volume
+            # print("pvplasmavol", physics_variables.plasma_volume)
+            # print("calcplasmavol", plasma_volume)
+            # # Debugging prints
+            # print(f"rho: {rho}")
+            # print(f"r: {r}")
+            # print(f"integrand: {integrand}")
+            # print(f"total_value: {total_value}")
+            # print(f"plasma_volume: {plasma_volume}")
+            # print(f"volume_average: {volume_average}")
+
+            return total_value, volume_average
+
+        total_density, volavg_density = volume_averaged_profile(
+            self.neprofile.profile_y,
+            self.neprofile.profile_x,
+            physics_variables.rminor,
+            physics_variables.plasma_volume,
+        )
+        # volavg_density = volume_averaged_quantity(
+        #     self.neprofile.profile_x,
+        #     self.neprofile.profile_y,
+        #     physics_variables.xarea,
+        #     physics_variables.plasma_volume,
+        # )
+
+        total_idensity, volavg_idensity = volume_averaged_profile(
+            self.niprofile.profile_y,
+            self.niprofile.profile_x,
+            physics_variables.rminor,
+            physics_variables.plasma_volume,
+        )
+
+        total_temp, volavg_temperature = volume_averaged_profile(
+            self.teprofile.profile_y,
+            self.teprofile.profile_x,
+            physics_variables.rminor,
+            physics_variables.plasma_volume,
+        )
+
+        total_itemp, volavg_itemperature = volume_averaged_profile(
+            self.tiprofile.profile_y,
+            self.tiprofile.profile_x,
+            physics_variables.rminor,
+            physics_variables.plasma_volume,
+        )
+        physics_variables.te = volavg_temperature
+        physics_variables.dene = volavg_density
+        physics_variables.ti = volavg_itemperature
+        physics_variables.dnitot = volavg_idensity
+        physics_variables.tratio = volavg_itemperature / volavg_temperature
+
+        print(f"Volume-averaged electron temperature (te): {volavg_temperature}//{t0}")
+        print(f"Volume-averaged electron density (dene): {volavg_density}//{n0}")
+        print(f"Volume-averaged ion temperature (ti): {volavg_itemperature}")
+        print(f"Volume-averaged ion density (dnitot): {volavg_idensity}")
 
     def calculate_parabolic_profiles(self) -> None:
         """Reset the pedestal values and calculate the profiles."""
