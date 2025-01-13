@@ -1823,13 +1823,13 @@ class Sctfcoil:
 
             # Leg resistivity (different leg temperature as separate cooling channels)
             if tfcoil_variables.i_tf_sup == 0:
-                tfcoil_variables.rhotfleg = (
+                tfcoil_variables.rho_tf_leg = (
                     tfcoil_variables.frholeg
                     * (1.72e0 + 0.0039e0 * (tfcoil_variables.tlegav - 273.15e0))
                     * 1.0e-8
                 )
             elif tfcoil_variables.i_tf_sup == 2:
-                tfcoil_variables.rhotfleg = tfcoil_variables.frholeg * (
+                tfcoil_variables.rho_tf_leg = tfcoil_variables.frholeg * (
                     2.00016e-14 * tfcoil_variables.tlegav**3
                     - 6.75384e-13 * tfcoil_variables.tlegav**2
                     + 8.89159e-12 * tfcoil_variables.tlegav
@@ -1894,7 +1894,7 @@ class Sctfcoil:
             # ---
             # TF outboard leg's resistance calculation (per leg) [ohm]
             tfcoil_variables.res_tf_leg = (
-                tfcoil_variables.rhotfleg
+                tfcoil_variables.rho_tf_leg
                 * tfcoil_variables.len_tf_coil
                 / sctfcoil_module.a_leg_cond
             )
@@ -5368,8 +5368,8 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "Leg resistivity (ohm.m)",
-                    "(rhotfleg)",
-                    tfcoil_variables.rhotfleg,
+                    "(rho_tf_leg)",
+                    tfcoil_variables.rho_tf_leg,
                 )
                 po.ovarre(
                     self.outfile,

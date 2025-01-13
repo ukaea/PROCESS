@@ -326,7 +326,7 @@ contains
       f_w, bmn, shear, m_res, f_rad, flpitch, istell, max_gyrotron_frequency, &
       te0_ecrh_achievable
     use tfcoil_variables, only: fcoolcp, tfinsgap, vftf, &
-      fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
+      fhts, dr_tf_wp, rcool, rho_tf_leg, thkcas, &
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
       thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &

@@ -539,7 +539,7 @@ module tfcoil_variables
   !! TF coil inboard leg resistivity [Ohm-m]. If `itart=0`, this variable is the
   !! average resistivity over the whole magnet
 
-  real(dp) :: rhotfleg
+  real(dp) :: rho_tf_leg
   !! Resistivity of a TF coil leg (Ohm-m)
 
   real(dp) :: rho_tf_bus
@@ -968,7 +968,7 @@ module tfcoil_variables
     tfinsgap = 0.010D0
     tflegmw = 0.0D0
     rhocp = 0.0D0
-    rhotfleg = 0.0D0
+    rho_tf_leg = 0.0D0
     rho_tf_bus = 1.86D-8
     frhocp = 1.0D0
     frholeg = 1.0D0
