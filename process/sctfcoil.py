@@ -1783,7 +1783,7 @@ class Sctfcoil:
         Rem SK : Sliding joints might have a region of high resistivity
         """
         if tfcoil_variables.i_tf_sup == 0:
-            tfcoil_variables.rhocp = (
+            tfcoil_variables.rho_cp = (
                 tfcoil_variables.frhocp
                 * (1.72e0 + 0.0039e0 * (tfcoil_variables.temp_cp_average - 273.15e0))
                 * 1.0e-8
@@ -1791,7 +1791,7 @@ class Sctfcoil:
 
         # Aluminium
         if tfcoil_variables.i_tf_sup == 2:
-            tfcoil_variables.rhocp = tfcoil_variables.frhocp * (
+            tfcoil_variables.rho_cp = tfcoil_variables.frhocp * (
                 2.00016e-14 * tfcoil_variables.temp_cp_average**3
                 - 6.75384e-13 * tfcoil_variables.temp_cp_average**2
                 + 8.89159e-12 * tfcoil_variables.temp_cp_average
@@ -1851,7 +1851,7 @@ class Sctfcoil:
                 tfcoil_variables.thicndut,
                 tfcoil_variables.n_tf_turn,
                 tfcoil_variables.c_tf_total,
-                tfcoil_variables.rhocp,
+                tfcoil_variables.rho_cp,
                 tfcoil_variables.fcoolcp,
                 tfcoil_variables.n_tf_coils,
             )
@@ -1932,7 +1932,7 @@ class Sctfcoil:
         else:
             # TF resistive powers
             tfcoil_variables.p_cp_resistive = (
-                tfcoil_variables.rhocp
+                tfcoil_variables.rho_cp
                 * tfcoil_variables.c_tf_total**2
                 * tfcoil_variables.len_tf_coil
                 / (sctfcoil_module.a_leg_cond * tfcoil_variables.n_tf_coils)
@@ -5353,8 +5353,8 @@ class Sctfcoil:
                 po.ovarre(
                     self.outfile,
                     "CP resistivity (ohm.m)",
-                    "(rhocp)",
-                    tfcoil_variables.rhocp,
+                    "(rho_cp)",
+                    tfcoil_variables.rho_cp,
                 )
                 po.ovarre(
                     self.outfile,
@@ -5404,7 +5404,7 @@ class Sctfcoil:
                     self.outfile,
                     "TF resistivity (ohm.m)",
                     "(p_cp_resistive)",
-                    tfcoil_variables.rhocp,
+                    tfcoil_variables.rho_cp,
                 )
                 po.ovarre(
                     self.outfile,
