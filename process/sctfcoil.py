@@ -1822,7 +1822,7 @@ class Sctfcoil:
             # Leg resistivity (different leg temperature as separate cooling channels)
             if tfcoil_variables.i_tf_sup == 0:
                 tfcoil_variables.rhotfleg = (
-                    (tfcoil_variables.frholeg / 0.92e0)
+                    tfcoil_variables.frholeg
                     * (1.72e0 + 0.0039e0 * (tfcoil_variables.tlegav - 273.15e0))
                     * 1.0e-8
                 )
@@ -1900,7 +1900,7 @@ class Sctfcoil:
             # TF outer leg resistive power (TOTAL) [W]
             tfcoil_variables.p_tf_leg_resistive = (
                 tfcoil_variables.res_tf_leg
-                * (tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils)**2
+                * (tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils) ** 2
             )
             # ---
 

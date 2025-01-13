@@ -1148,10 +1148,10 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             h_cp_top=2.6714285714285717,
             is_leg_cp_temp_same=0,
             expected_rhocp=2.1831760869565221e-08,
-            expected_rhotfleg=2.1831760869565221e-08,
+            expected_rhotfleg=2.008522e-08,
             expected_vol_cond_cp=12.020160732580297,
-            expected_res_tf_leg=6.1387543007600344e-06,
-            expected_p_tf_leg_resistive=27720312.38936953,
+            expected_res_tf_leg=5.647653956699231e-06,
+            expected_p_tf_leg_resistive=25502687.398219965,
             expected_p_cp_resistive=470083798.99090022,
             expected_pres_joints=1944336.7995005273,
             expected_a_cp_cool=0.00068328705812121333,
@@ -1162,13 +1162,13 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             tlegav=-1,
             thicndut=0.00080000000000000004,
             th_joint_contact=0.029999999999999999,
-            rhotfleg=2.1831760869565221e-08,
+            rhotfleg=2.008522e-08,
             vol_cond_cp=12.020160732580297,
             n_tf_turn=1,
             thkcas=0,
             tftort=0.44435902370665786,
             tfleng=15.654502857142857,
-            res_tf_leg=6.1387543007600344e-06,
+            res_tf_leg=5.647653956699231e-06,
             tcpav=347.13,
             arealeg=0.068800107640501845,
             ritfc=25500000,
@@ -1198,10 +1198,10 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             h_cp_top=2.6714285714285717,
             is_leg_cp_temp_same=1,
             expected_rhocp=2.1831760869565221e-08,
-            expected_rhotfleg=2.1831760869565221e-08,
+            expected_rhotfleg=2.008522e-08,
             expected_vol_cond_cp=11.545770024935592,
-            expected_res_tf_leg=6.2969005770928158e-06,
-            expected_p_tf_leg_resistive=28434441.66843475,
+            expected_res_tf_leg=5.79314853092539e-06,
+            expected_p_tf_leg_resistive=26159686.334959965,
             expected_p_cp_resistive=475710489.56122422,
             expected_pres_joints=1944336.7995005273,
             expected_a_cp_cool=0.00068328705812121333,
@@ -1256,9 +1256,13 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
         tfcoil_variables, "rho_tf_joints", tfresheatingparam.rho_tf_joints
     )
 
-    monkeypatch.setattr(tfcoil_variables, "p_tf_leg_resistive", tfresheatingparam.p_tf_leg_resistive)
+    monkeypatch.setattr(
+        tfcoil_variables, "p_tf_leg_resistive", tfresheatingparam.p_tf_leg_resistive
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", tfresheatingparam.p_cp_resistive)
+    monkeypatch.setattr(
+        tfcoil_variables, "p_cp_resistive", tfresheatingparam.p_cp_resistive
+    )
 
     monkeypatch.setattr(tfcoil_variables, "pres_joints", tfresheatingparam.pres_joints)
 
@@ -1332,9 +1336,13 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
         tfresheatingparam.expected_res_tf_leg
     )
 
-    assert tfcoil_variables.p_tf_leg_resistive == pytest.approx(tfresheatingparam.expected_p_tf_leg_resistive)
+    assert tfcoil_variables.p_tf_leg_resistive == pytest.approx(
+        tfresheatingparam.expected_p_tf_leg_resistive
+    )
 
-    assert tfcoil_variables.p_cp_resistive == pytest.approx(tfresheatingparam.expected_p_cp_resistive)
+    assert tfcoil_variables.p_cp_resistive == pytest.approx(
+        tfresheatingparam.expected_p_cp_resistive
+    )
 
     assert tfcoil_variables.pres_joints == pytest.approx(
         tfresheatingparam.expected_pres_joints
