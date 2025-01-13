@@ -713,7 +713,7 @@ class Costs2015:
         # ITER coil insertion and welding cost (2014 $)
         self.s_cref[13] = 258.0e6
         # Scale with total TF coil length (m)
-        self.s_k[13] = tfcoil_variables.n_tf_coils * tfcoil_variables.tfleng
+        self.s_k[13] = tfcoil_variables.n_tf_coils * tfcoil_variables.len_tf_coil
         self.s_kref[13] = 18.0e0 * 34.1e0
         self.s_cost[13] = (
             self.s_cost_factor[13]
@@ -728,7 +728,7 @@ class Costs2015:
         # Scale with the total turn length (m)
         self.s_k[15] = (
             tfcoil_variables.n_tf_coils
-            * tfcoil_variables.tfleng
+            * tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
         )
         self.s_kref[15] = 82249.0e0
@@ -777,7 +777,7 @@ class Costs2015:
         # Scale with total turn length.
         self.s_k[19] = (
             tfcoil_variables.n_tf_coils
-            * tfcoil_variables.tfleng
+            * tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
         )
         self.s_kref[19] = 82249.0e0
