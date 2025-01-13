@@ -40,7 +40,7 @@ class CalcBuildingCostsParam(NamedTuple):
 
     helpow: Any = None
 
-    ritfc: Any = None
+    c_tf_total: Any = None
 
     n_tf_coils: Any = None
 
@@ -86,7 +86,7 @@ class CalcBuildingCostsParam(NamedTuple):
             pthermmw=2112.8165753998965,
             psechtmw=311.54038043019023,
             helpow=142703.41458500578,
-            ritfc=234156150,
+            c_tf_total=234156150,
             n_tf_coils=18,
             estotftgj=130.10721529398921,
             r_cryostat_inboard=18.314040399601147,
@@ -1186,7 +1186,7 @@ class CalcBuildingCostsParam(NamedTuple):
             pthermmw=2111.8102173541502,
             psechtmw=640.27066522894324,
             helpow=823308.59959198488,
-            ritfc=234156150,
+            c_tf_total=234156150,
             n_tf_coils=18,
             estotftgj=129.99240835373195,
             r_cryostat_inboard=18.31462428923539,
@@ -2306,7 +2306,9 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
         heat_transport_variables, "helpow", calcbuildingcostsparam.helpow
     )
 
-    monkeypatch.setattr(tfcoil_variables, "ritfc", calcbuildingcostsparam.ritfc)
+    monkeypatch.setattr(
+        tfcoil_variables, "c_tf_total", calcbuildingcostsparam.c_tf_total
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "n_tf_coils", calcbuildingcostsparam.n_tf_coils

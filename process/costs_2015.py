@@ -588,7 +588,9 @@ class Costs2015:
         self.s_label[5] = "Magnet power supplies and related buildings"
         self.s_cref[5] = 110000.0e0 * cost_variables.light_build_cost_per_vol
         # Scale with TF current per coil (MA)
-        self.s_k[5] = (tfcoil_variables.ritfc / tfcoil_variables.n_tf_coils) / 1.0e6
+        self.s_k[5] = (
+            tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils
+        ) / 1.0e6
         self.s_kref[5] = 9.1e0
         self.s_cost[5] = (
             self.s_cost_factor[5] * self.s_cref[5] * (self.s_k[5] / self.s_kref[5])

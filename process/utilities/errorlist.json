@@ -493,7 +493,7 @@
     {
       "no": 97,
       "level": 2,
-      "message": "SCTFCOIL: Negative TF coil current; ritfc forced to be positive..."
+      "message": "SCTFCOIL: Negative TF coil current; c_tf_total forced to be positive..."
     },
     {
       "no": 98,

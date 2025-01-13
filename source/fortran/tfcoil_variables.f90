@@ -396,7 +396,7 @@ module tfcoil_variables
   real(dp) :: ripple
   !! peak/average toroidal field ripple at plasma edge (%)
 
-  real(dp) :: ritfc
+  real(dp) :: c_tf_total
   !! total (summed) current in TF coils (A)
 
   integer, parameter :: n_radial_array = 50
@@ -934,7 +934,7 @@ module tfcoil_variables
     ftoroidalgap = 1.0D0
     ripmax = 1.0D0
     ripple = 0.0D0
-    ritfc = 0.0D0
+    c_tf_total = 0.0D0
     radial_array = 0.0D0
     sig_tf_r = 0.0D0
     sig_tf_t = 0.0D0
