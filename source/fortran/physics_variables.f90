@@ -587,6 +587,9 @@ module physics_variables
   real(dp) :: p0
   !! central total plasma pressure (Pa)
 
+  real(dp) :: j_plasma_0
+  !! Central plasma current density (A/m2)
+
   real(dp) :: vol_avg_pressure
   !! Volume averaged plasma pressure (Pa)
 
@@ -1055,6 +1058,7 @@ module physics_variables
     ni0 = 0.0D0
     m_s_limit = 0.3D0
     p0 = 0.0D0
+    j_plasma_0 = 0.0D0
     f_dd_branching_trit = 0.0D0
     alpha_power_density_plasma = 0.0D0
     alpha_power_density_total = 0.0D0

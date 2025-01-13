@@ -3559,7 +3559,13 @@ class Physics:
                         "(alphaj)",
                         physics_variables.alphaj,
                     )
-
+                po.ovarrf(
+                    self.outfile,
+                    "On-axis plasma current density (A/m2)",
+                    "(j_plasma_0)",
+                    physics_variables.j_plasma_0,
+                    "OP ",
+                )
                 po.ovarrf(
                     self.outfile,
                     "Plasma internal inductance, li",
@@ -3835,6 +3841,13 @@ class Physics:
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
             self.outfile, "Electron temperature (keV)", "(te)", physics_variables.te
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ratio of ion to electron volume-averaged temperature",
+            "(tratio)",
+            physics_variables.tratio,
+            "IP ",
         )
         po.ovarrf(
             self.outfile,
