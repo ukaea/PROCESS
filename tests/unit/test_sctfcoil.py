@@ -923,7 +923,7 @@ class TfResHeatingParam(NamedTuple):
     fcoolcp: Any = None
     casthi: Any = None
     a_cp_cool: Any = None
-    fcoolleg: Any = None
+    f_a_tf_cool_outboard: Any = None
     i_cp_joints: Any = None
     tinstf: Any = None
     dr_tf_outboard: Any = None
@@ -1141,7 +1141,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             fcoolcp=0.12725,
             casthi=0.0077415000000000019,
             a_cp_cool=0,
-            fcoolleg=0.20000000000000001,
+            f_a_tf_cool_outboard=0.20000000000000001,
             i_cp_joints=1,
             tinstf=0,
             dr_tf_outboard=0.15483000000000002,
@@ -1191,7 +1191,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             fcoolcp=0.12725,
             casthi=0.0077415000000000019,
             a_cp_cool=0.00068328705812121333,
-            fcoolleg=0.20000000000000001,
+            f_a_tf_cool_outboard=0.20000000000000001,
             i_cp_joints=1,
             tinstf=0,
             dr_tf_outboard=0.15483000000000002,
@@ -1292,7 +1292,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "a_cp_cool", tfresheatingparam.a_cp_cool)
 
-    monkeypatch.setattr(tfcoil_variables, "fcoolleg", tfresheatingparam.fcoolleg)
+    monkeypatch.setattr(
+        tfcoil_variables, "f_a_tf_cool_outboard", tfresheatingparam.f_a_tf_cool_outboard
+    )
 
     monkeypatch.setattr(tfcoil_variables, "i_cp_joints", tfresheatingparam.i_cp_joints)
 

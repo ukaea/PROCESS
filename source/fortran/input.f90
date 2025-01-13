@@ -336,7 +336,7 @@ contains
       tcritsc, layer_ins, tinstf, n_layer, tcoolin, ripmax, frhocp, &
       cpttf, tmargmin, casths_fraction, eff_tf_cryo, eyoung_ins, &
       eyoung_steel, eyoung_res_tf_buck, eyoung_cond_axial, f_vforce_inboard, &
-      fcoolleg, frholeg, ftoroidalgap, i_tf_sc_mat, i_tf_shape, i_tf_bucking, &
+      f_a_tf_cool_outboard, frholeg, ftoroidalgap, i_tf_sc_mat, i_tf_shape, i_tf_bucking, &
       n_tf_graded_layers, n_tf_joints, n_tf_joints_contact, poisson_al, &
       poisson_copper, poisson_steel, rho_tf_joints, rho_tf_bus, th_joint_contact,&
       i_tf_stress_model, eyoung_al, i_tf_wp_geom, i_tf_case_geom, &
@@ -1581,8 +1581,8 @@ contains
        case ('fcoolcp')
           call parse_real_variable('fcoolcp', fcoolcp, 0.0D0, 1.0D0, &
                'Coolant fraction of TF centrepost (itart=1) or the whole magnet (itart=0)')
-       case ('fcoolleg')
-          call parse_real_variable('fcoolleg', fcoolleg, 0.0D0, 1.0D0, &
+       case ('f_a_tf_cool_outboard')
+          call parse_real_variable('f_a_tf_cool_outboard', f_a_tf_cool_outboard, 0.0D0, 1.0D0, &
                'Coolant fraction of TF outboard leg (itart=1 only)')
        case ('fcutfsu')
           call parse_real_variable('fcutfsu', fcutfsu, 0.0D0, 1.0D0, &

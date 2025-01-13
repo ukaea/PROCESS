@@ -1898,7 +1898,7 @@
         "fcohbop": 0.9,
         "fcontng": 0.195,
         "fcoolcp": 0.3,
-        "fcoolleg": 0.2,
+        "f_a_tf_cool_outboard": 0.2,
         "fcpttf": 1.0,
         "fcqt": 1.0,
         "fcr0": 0.0966,
@@ -9515,7 +9515,7 @@
         "fcohbop": "ratio of central solenoid overall current density at beginning of pulse / end of flat-top\n (`iteration variable 41`)",
         "fcontng": "project contingency factor",
         "fcoolcp": "coolant fraction of TF coil inboard legs (`iteration variable 23`)",
-        "fcoolleg": "coolant fraction of TF coil outboard legs",
+        "f_a_tf_cool_outboard": "coolant fraction of TF coil outboard legs",
         "fcpttf": "f-value for TF coil current per turn upper limit\n (`constraint equation 77`, `iteration variable 146`)",
         "fcqt": "TF coil quench temparature remains below tmax_croco\n (`constraint equation 74`, `iteration variable 141`)",
         "fcr0": "fixed charge rate during construction",
@@ -12583,7 +12583,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "fcoolleg": {
+        "f_a_tf_cool_outboard": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -19704,7 +19704,7 @@
             "dztop",
             "etapump",
             "fcoolcp",
-            "fcoolleg",
+            "f_a_tf_cool_outboard",
             "a_cp_cool",
             "ncool",
             "ppump",
@@ -20261,7 +20261,7 @@
         "fcohbop": "real_variable",
         "fcontng": "real_variable",
         "fcoolcp": "real_variable",
-        "fcoolleg": "real_variable",
+        "f_a_tf_cool_outboard": "real_variable",
         "fcqt": "real_variable",
         "fcr0": "real_variable",
         "fcspc": "real_variable",

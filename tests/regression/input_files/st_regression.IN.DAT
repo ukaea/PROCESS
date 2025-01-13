@@ -1484,7 +1484,7 @@ tftmp = 20.0
 * DESCRIPTION:   Max Centrepost Coolant Flow Speed (m/s)
 * JUSTIFICATION: 
 
-*fcoolleg = 
+*f_a_tf_cool_outboard = 
 * DESCRIPTION:   Coolant fraction of TF outboard leg (itart=1 only) (default = 0.2)
 * JUSTIFICATION: Not set, using default
 

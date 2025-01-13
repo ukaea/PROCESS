@@ -1882,7 +1882,7 @@ class Sctfcoil:
         )  # toroidal direction + radial direction
 
         # Exact TF outboard leg conductor area per coil [m2]
-        sctfcoil_module.a_leg_cond = (1.0e0 - tfcoil_variables.fcoolleg) * (
+        sctfcoil_module.a_leg_cond = (1.0e0 - tfcoil_variables.f_a_tf_cool_outboard) * (
             tfcoil_variables.arealeg
             - sctfcoil_module.a_leg_gr_ins
             - sctfcoil_module.a_leg_ins
