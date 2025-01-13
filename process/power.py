@@ -2480,7 +2480,6 @@ class Power:
         None
         """
         if tfcoil_variables.i_tf_sup != 1:
-
             # Cross-sectional area of bus
             # tfcoil_variables.cpttf  - current per TFC turn (A)
             # tfcoil_variables.j_tf_bus   - bus current density (A/m2)
@@ -2490,7 +2489,9 @@ class Power:
             # Bus resistivity (tfcoil_variables.rho_tf_bus)
             # Issue #1253: there was a fudge here to set the bus bar resistivity equal
             # to the TF conductor resistivity. I have removed this.
-            tfbusres = tfcoil_variables.rho_tf_bus * tfcoil_variables.len_tf_bus / a_tf_bus
+            tfbusres = (
+                tfcoil_variables.rho_tf_bus * tfcoil_variables.len_tf_bus / a_tf_bus
+            )
 
             #  Bus mass (kg)
             tfcoil_variables.m_tf_bus = (
@@ -2507,7 +2508,10 @@ class Power:
             #  No reactive portion of the voltage is included here - assume long ramp times
             #  MDK This is steady state voltage, not "peak" voltage
             tfcoil_variables.vtfkv = (
-                1.0e-3 * res_tf_system_total * tfcoil_variables.cpttf / tfcoil_variables.n_tf_coils
+                1.0e-3
+                * res_tf_system_total
+                * tfcoil_variables.cpttf
+                / tfcoil_variables.n_tf_coils
             )
 
             # Resistive powers (MW):
@@ -2555,7 +2559,10 @@ class Power:
         po.oheadr(self.outfile, "Resistive TF Coil Power Conversion")
         po.ovarre(self.outfile, "Bus resistance (ohm)", "(tfbusres)", tfbusres, "OP ")
         po.ovarre(
-            self.outfile, "Bus current density (A/m2)", "(j_tf_bus)", tfcoil_variables.j_tf_bus
+            self.outfile,
+            "Bus current density (A/m2)",
+            "(j_tf_bus)",
+            tfcoil_variables.j_tf_bus,
         )
         po.ovarre(
             self.outfile,
