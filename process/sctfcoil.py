@@ -1796,7 +1796,7 @@ class Sctfcoil:
         """
         if tfcoil_variables.i_tf_sup == 0:
             tfcoil_variables.rhocp = (
-                (tfcoil_variables.frhocp / 0.92e0)
+                tfcoil_variables.frhocp
                 * (1.72e0 + 0.0039e0 * (tfcoil_variables.tcpav - 273.15e0))
                 * 1.0e-8
             )
