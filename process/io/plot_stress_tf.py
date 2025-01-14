@@ -36,7 +36,11 @@ def main(args=None):
         "--plot_selec",
         nargs="?",
         default="all",
-        help="Plot selection string :\n - If it containts 'sig'      -> Stress radial dependency \n - If it containts 'strain'   -> Strain \n - If it containts 'disp'     -> Displacement \n - If it containts 'all'      -> all the mentioned plots (default value)",
+        help=(
+            "Plot selection string :\n - If it containts 'sig'      -> Stress radial dependency \n#"
+            "  - If it containts 'strain'   -> Strain \n - If it containts 'disp'     -> Displacement \n"
+            " - If it containts 'all'      -> all the mentioned plots (default value)"
+        ),
     )
     parser.add_argument(
         "-sf",
@@ -357,45 +361,56 @@ def main(args=None):
             print(f"Layer {ii + 1}")
             print("------------------------------")
             print(
-                f"steel radial   stress in the inner/middle/out point: {radial_stress[ii][ii_ins]}/{radial_stress[ii][ii_mids]}/{radial_stress[ii][ii_outs]} MPa"
+                "steel radial   stress in the inner/middle/out point:"
+                f" {radial_stress[ii][ii_ins]}/{radial_stress[ii][ii_mids]}/{radial_stress[ii][ii_outs]} MPa"
             )
             print(
-                f"steel toroidal stress in the inner/middle/out point: {toroidal_stress[ii][ii_ins]}/{toroidal_stress[ii][ii_mids]}/{toroidal_stress[ii][ii_outs]} MPa"
+                "steel toroidal stress in the inner/middle/out point:"
+                f" {toroidal_stress[ii][ii_ins]}/{toroidal_stress[ii][ii_mids]}/{toroidal_stress[ii][ii_outs]} MPa"
             )
             print(
-                f"steel vertical stress in the inner/middle/out point: {vertical_stress[ii][ii_ins]}/{vertical_stress[ii][ii_mids]}/{vertical_stress[ii][ii_outs]} MPa"
+                "steel vertical stress in the inner/middle/out point:"
+                f" {vertical_stress[ii][ii_ins]}/{vertical_stress[ii][ii_mids]}/{vertical_stress[ii][ii_outs]} MPa"
             )
             print(
-                f"steel TRESCA   stress in the inner/middle/out point: {tresca_stress[ii][ii_ins]}/{tresca_stress[ii][ii_mids]}/{tresca_stress[ii][ii_outs]} MPa"
+                "steel TRESCA   stress in the inner/middle/out point:"
+                f" {tresca_stress[ii][ii_ins]}/{tresca_stress[ii][ii_mids]}/{tresca_stress[ii][ii_outs]} MPa"
             )
             print("")
             print(
-                f"smeared radial   stress in the inner/middle/out point : {radial_smeared_stress[ii][ii_ins]}/{radial_smeared_stress[ii][ii_mids]}/{radial_smeared_stress[ii][ii_outs]} MPa"
+                "smeared radial   stress in the inner/middle/out point :"
+                f" {radial_smeared_stress[ii][ii_ins]}/{radial_smeared_stress[ii][ii_mids]}/{radial_smeared_stress[ii][ii_outs]} MPa"
             )
             print(
-                f"smeared toroidal stress in the inner/middle/out point : {toroidal_smeared_stress[ii][ii_ins]}/{toroidal_smeared_stress[ii][ii_mids]}/{toroidal_smeared_stress[ii][ii_outs]} MPa"
+                "smeared toroidal stress in the inner/middle/out point :"
+                f" {toroidal_smeared_stress[ii][ii_ins]}/{toroidal_smeared_stress[ii][ii_mids]}/{toroidal_smeared_stress[ii][ii_outs]} MPa"
             )
             print(
-                f"smeared vertical stress in the inner/middle/out point : {vertical_smeared_stress[ii][ii_ins]}/{vertical_smeared_stress[ii][ii_mids]}/{vertical_smeared_stress[ii][ii_outs]} MPa"
+                "smeared vertical stress in the inner/middle/out point :"
+                f" {vertical_smeared_stress[ii][ii_ins]}/{vertical_smeared_stress[ii][ii_mids]}/{vertical_smeared_stress[ii][ii_outs]} MPa"
             )
             print(
-                f"smeared TRESCA   stress in the inner/middle/out point : {tresca_smeared_stress[ii][ii_ins]}/{tresca_smeared_stress[ii][ii_mids]}/{tresca_smeared_stress[ii][ii_outs]} MPa"
+                "smeared TRESCA   stress in the inner/middle/out point :"
+                f" {tresca_smeared_stress[ii][ii_ins]}/{tresca_smeared_stress[ii][ii_mids]}/{tresca_smeared_stress[ii][ii_outs]} MPa"
             )
             print("")
 
             if len(sig_file_data) > 16:
                 print(
-                    f"radial   strain in the inner/middle/out point : {radial_strain[ii][ii_ins]}/{radial_strain[ii][ii_mids]}/{radial_strain[ii][ii_outs]}"
+                    "radial   strain in the inner/middle/out point :"
+                    f" {radial_strain[ii][ii_ins]}/{radial_strain[ii][ii_mids]}/{radial_strain[ii][ii_outs]}"
                 )
                 print(
-                    f"toroidal strain in the inner/middle/out point : {toroidal_strain[ii][ii_ins]}/{toroidal_strain[ii][ii_mids]}/{toroidal_strain[ii][ii_outs]}"
+                    "toroidal strain in the inner/middle/out point :"
+                    f" {toroidal_strain[ii][ii_ins]}/{toroidal_strain[ii][ii_mids]}/{toroidal_strain[ii][ii_outs]}"
                 )
                 print(f"vertical strain : {vertical_strain[ii][0]}")
                 print("")
 
         if not len(wp_vertical_stress) == 0:
             print(
-                f"smeared WP vertical stress in the inner/middle/out point : {wp_vertical_stress[0]}/{wp_vertical_stress[ii_mids]}/{wp_vertical_stress[ii_outs]} MPa"
+                "smeared WP vertical stress in the inner/middle/out point :"
+                f" {wp_vertical_stress[0]}/{wp_vertical_stress[ii_mids]}/{wp_vertical_stress[ii_outs]} MPa"
             )
         print("")
 
