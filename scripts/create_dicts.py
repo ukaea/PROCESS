@@ -329,7 +329,7 @@ class DefaultValues(ProjectDictionary):
             value = value.replace("d", "E")
             value = float(value)
             return value
-        except Exception:
+        except ValueError:
             # Failed conversion; don't change anything
             return original_value
 

@@ -485,7 +485,9 @@ def test(f):
     try:
         # print(m.data["rmajor"].get_scans())
         return True
-    except Exception:
+    except (FileNotFoundError, IOError, KeyError) as e:
+        # Handle specific exceptions
+        print(f"Error: {e}")
         return False
     return True
 
