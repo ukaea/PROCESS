@@ -87,41 +87,41 @@ def main(args=None):
     n_radial_array_layer = int()
 
     # Physical quantities : full vectors
-    radius = list()
-    radial_smeared_stress = list()
-    toroidal_smeared_stress = list()
-    vertical_smeared_stress = list()
-    tresca_smeared_stress = list()
-    radial_stress = list()
-    toroidal_stress = list()
-    vertical_stress = list()
-    vm_stress = list()
-    tresca_stress = list()
-    cea_tresca_stress = list()
-    radial_strain = list()
-    toroidal_strain = list()
-    vertical_strain = list()
-    radial_displacement = list()
+    radius = []
+    radial_smeared_stress = []
+    toroidal_smeared_stress = []
+    vertical_smeared_stress = []
+    tresca_smeared_stress = []
+    radial_stress = []
+    toroidal_stress = []
+    vertical_stress = []
+    vm_stress = []
+    tresca_stress = []
+    cea_tresca_stress = []
+    radial_strain = []
+    toroidal_strain = []
+    vertical_strain = []
+    radial_displacement = []
 
     # Physical quantity : WP stress
-    wp_vertical_stress = list()
+    wp_vertical_stress = []
 
     # Physical quantity : values at layer border
-    bound_radius = list()
-    bound_radial_smeared_stress = list()
-    bound_toroidal_smeared_stress = list()
-    bound_vertical_smeared_stress = list()
-    bound_tresca_smeared_stress = list()
-    bound_radial_stress = list()
-    bound_toroidal_stress = list()
-    bound_vertical_stress = list()
-    bound_vm_stress = list()
-    bound_tresca_stress = list()
-    bound_cea_tresca_stress = list()
-    bound_radial_strain = list()
-    bound_toroidal_strain = list()
-    bound_vertical_strain = list()
-    bound_radial_displacement = list()
+    bound_radius = []
+    bound_radial_smeared_stress = []
+    bound_toroidal_smeared_stress = []
+    bound_vertical_smeared_stress = []
+    bound_tresca_smeared_stress = []
+    bound_radial_stress = []
+    bound_toroidal_stress = []
+    bound_vertical_stress = []
+    bound_vm_stress = []
+    bound_tresca_stress = []
+    bound_cea_tresca_stress = []
+    bound_radial_strain = []
+    bound_toroidal_strain = []
+    bound_vertical_strain = []
+    bound_radial_displacement = []
 
     with open(args.input_file, "r") as f:
         sig_file_data = json.load(f)
@@ -132,17 +132,17 @@ def main(args=None):
     n_layers = int(n_points / n_radial_array_layer)
     for ii in range(n_layers):
         # Full vector
-        radius.append(list())
-        radial_stress.append(list())
-        toroidal_stress.append(list())
-        vertical_stress.append(list())
-        radial_smeared_stress.append(list())
-        toroidal_smeared_stress.append(list())
-        vertical_smeared_stress.append(list())
-        vm_stress.append(list())
-        tresca_stress.append(list())
-        cea_tresca_stress.append(list())
-        radial_displacement.append(list())
+        radius.append([])
+        radial_stress.append([])
+        toroidal_stress.append([])
+        vertical_stress.append([])
+        radial_smeared_stress.append([])
+        toroidal_smeared_stress.append([])
+        vertical_smeared_stress.append([])
+        vm_stress.append([])
+        tresca_stress.append([])
+        cea_tresca_stress.append([])
+        radial_displacement.append([])
 
         for jj in range(n_radial_array_layer):
             radius[ii].append(
@@ -278,7 +278,7 @@ def main(args=None):
 
     # TRESCA smeared stress [MPa]
     for ii in range(n_layers):
-        tresca_smeared_stress.append(list())
+        tresca_smeared_stress.append([])
 
         bound_tresca_smeared_stress.append(
             max(abs(radial_smeared_stress[ii][0]), abs(toroidal_smeared_stress[ii][0]))
@@ -303,9 +303,9 @@ def main(args=None):
     # Strains
     if len(sig_file_data) > 16:
         for ii in range(n_layers):
-            radial_strain.append(list())
-            toroidal_strain.append(list())
-            vertical_strain.append(list())
+            radial_strain.append([])
+            toroidal_strain.append([])
+            vertical_strain.append([])
 
             bound_radial_strain.append(
                 sig_file_data["Radial strain"][ii * n_radial_array_layer]

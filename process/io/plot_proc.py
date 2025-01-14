@@ -703,7 +703,7 @@ def plot_nprofile(prof, demo_ranges):
             r"$f_{\text{GW e,sep}}$: " + f"{fgwsep_out:.3f}",
         ))
 
-        props_density = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+        props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
         prof.text(
             0.0,
             -0.16,
@@ -739,7 +739,7 @@ def plot_jprofile(prof):
         r"$\alpha_J$: " + f"{alphaj:.3f}",
     ))
 
-    props_j = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+    props_j = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
         1.1,
         0.75,
@@ -829,7 +829,7 @@ def plot_tprofile(prof, demo_ranges):
         r"$T_{\text{e,sep}}$: " + f"{tesep:.3f} keV\n",
     ))
 
-    props_temperature = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+    props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
         0.0,
         -0.16,
@@ -887,7 +887,7 @@ def plot_qprofile(prof, demo_ranges):
         r"$q_{95}$: " + f"{q95:.3f}",
     ))
 
-    props_q = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+    props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
         -0.4,
         0.75,

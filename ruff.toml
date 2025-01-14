@@ -20,6 +20,7 @@ extend-select = [
     "FLY",
     "F",
     "W",
+    "C4",
 ]
 
 ignore = ["COM812", "FBT", "G004"]

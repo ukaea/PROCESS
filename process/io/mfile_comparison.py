@@ -287,7 +287,7 @@ def main(arg):
 
     print_counter = 0
     n = 2
-    mfile_list = list()
+    mfile_list = []
     for item in arg.f:
         mfile = mf.MFile(filename=item)
         if mfile.data["error_status"].get_scan(-1) == 3:
@@ -298,10 +298,10 @@ def main(arg):
 
         mfile_list.append(mfile)
 
-    var_list = list()
-    missing_vars = list()
-    diff_list = list()
-    within_list = list()
+    var_list = []
+    missing_vars = []
+    diff_list = []
+    within_list = []
 
     key_list = mfile_list[0].data.keys()
     for var in key_list:
@@ -353,7 +353,7 @@ def main(arg):
             for m in range(len(mfile_list)):
                 values[m] = mfile_list[m].data[v].get_scan(-1)
 
-        norm_vals = list()
+        norm_vals = []
         if values[0] != 0 and isfinite(values[0]):
             norm_vals = values / values[0]
         # else:

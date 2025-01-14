@@ -67,9 +67,9 @@ class Config(object):
         if isinstance(objekt, list):
             return [self._lowercase(item) for item in objekt]
         elif isinstance(objekt, dict):
-            return dict(
-                (key.lower(), self._lowercase(value)) for key, value in objekt.items()
-            )
+            return {
+                key.lower(): self._lowercase(value) for key, value in objekt.items()
+            }
         else:
             return objekt
 

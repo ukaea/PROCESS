@@ -357,12 +357,10 @@ def _plot_solutions(
         objf_list = norm_objf_df[NORM_OBJF_NAME].unique()
     else:
         numerics.init_numerics()
-        objf_list = list(
-            set([
-                f2py_compatible_to_string(numerics.lablmm[int(abs(minmax)) - 1])
-                for minmax in diffs_df["minmax"]
-            ])
-        )
+        objf_list = {
+            f2py_compatible_to_string(numerics.lablmm[int(abs(minmax)) - 1])
+            for minmax in diffs_df["minmax"]
+        }
 
     if len(objf_list) != 1:
         raise ValueError("Can't plot different objective functions on the same plot")

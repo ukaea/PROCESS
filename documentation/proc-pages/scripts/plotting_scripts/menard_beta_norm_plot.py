@@ -4,7 +4,7 @@ from bokeh.plotting import figure, output_file, save
 
 x = np.linspace(1.0, 5, 500)
 y = 3.12 + 3.5 * (1 / x) ** 1.7
-source = ColumnDataSource(data=dict(x=x, y=y))
+source = ColumnDataSource(data={"x": x, "y": y})
 
 plot = figure(
     x_range=(1, 5),

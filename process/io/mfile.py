@@ -203,7 +203,7 @@ class DefaultOrderedDict(OrderedDict):
 
     def __reduce__(self):
         if self.default_factory is None:
-            args = tuple()
+            args = ()
         else:
             args = (self.default_factory,)
         return type(self), args, None, None, self.items()
@@ -234,10 +234,10 @@ class MFile(object):
         # self.data = MFileDataDictionary()
         # self.data = OrderedDict()
         self.data = DefaultOrderedDict()
-        self.mfile_lines = list()
-        self.mfile_modules = dict()
-        self.des_name = list()
-        self.mfile_modules["Misc"] = list()
+        self.mfile_lines = []
+        self.mfile_modules = {}
+        self.des_name = []
+        self.mfile_modules["Misc"] = []
         self.current_module = "Misc"
         if filename is not None:
             logger.info("Opening file '{}'".format(self.filename))
@@ -279,7 +279,7 @@ class MFile(object):
             ]
             if any(exclusion not in combined for exclusion in EXCLUSIONS):
                 self.current_module = combined
-                self.mfile_modules[self.current_module] = list()
+                self.mfile_modules[self.current_module] = []
 
         else:
             var_des = line[0]
@@ -342,7 +342,7 @@ class MFile(object):
 
         filename = f"{self.filename}.json"
 
-        dict_to_write = dict()
+        dict_to_write = {}
 
         if scan == 0:
             for i in range(self.data["rmajor"].get_number_of_scans()):
