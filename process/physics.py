@@ -2886,18 +2886,36 @@ class Physics:
         )
 
         # Mass weighted plasma effective charge
+        # Sum of (Zi^2*n_i) / m_i
         physics_variables.zeffai = (
-            physics_variables.f_deuterium * physics_variables.deni / 2.0
-            + physics_variables.f_tritium * physics_variables.deni / 3.0
-            + 4.0 * physics_variables.f_helium3 * physics_variables.deni / 3.0
-            + physics_variables.nd_alphas
-            + physics_variables.nd_protons
-            + (1.0 - current_drive_variables.f_tritium_beam)
-            * physics_variables.nd_beam_ions
-            / 2.0
-            + current_drive_variables.f_tritium_beam
-            * physics_variables.nd_beam_ions
-            / 3.0
+            (
+                physics_variables.f_deuterium
+                * physics_variables.deni
+                / constants.m_deuteron_amu
+            )
+            + (
+                physics_variables.f_tritium
+                * physics_variables.deni
+                / constants.m_triton_amu
+            )
+            + (
+                4.0
+                * physics_variables.f_helium3
+                * physics_variables.deni
+                / constants.m_helion_amu
+            )
+            + (4.0 * physics_variables.nd_alphas / constants.m_alpha_amu)
+            + (physics_variables.nd_protons / constants.m_proton_amu)
+            + (
+                (1.0 - current_drive_variables.f_tritium_beam)
+                * physics_variables.nd_beam_ions
+                / constants.m_deuteron_amu
+            )
+            + (
+                current_drive_variables.f_tritium_beam
+                * physics_variables.nd_beam_ions
+                / constants.m_triton_amu
+            )
         ) / physics_variables.dene
         for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
