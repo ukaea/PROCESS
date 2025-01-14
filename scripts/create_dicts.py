@@ -370,7 +370,7 @@ class DefaultValues(ProjectDictionary):
                 r"(\w+)"  # capture "name" of "subroutine init_name"
                 r"(.*?end\ssubroutine)",  # capture all subroutine contents
                 lines,
-                re.S,  # Dot matches newline characters (allows multiline matches)
+                re.DOTALL,  # Dot matches newline characters (allows multiline matches)
             )
 
             if init_match:
@@ -399,7 +399,7 @@ class DefaultValues(ProjectDictionary):
             r"(?:\s*!))|"  # or a comment
             r"(?:\s*if\s))",  # or an if statement
             init_contents,
-            re.S,  # Allow multiline matches
+            re.DOTALL,  # Allow multiline matches
         )
 
         # Now process captured value
@@ -551,7 +551,7 @@ def to_type(string):
         return string.strip()
 
 
-def grep(file, regexp, flags=re.U):
+def grep(file, regexp, flags=re.UNICODE):
     """Implements an in-python grep. Returns the lines that match
     as a list.
     Args:
@@ -567,7 +567,7 @@ def grep(file, regexp, flags=re.U):
 
     try:
         with open(file, encoding="utf-8") as file_open:
-            for line in file_open.readlines():
+            for line in file_open:
                 if re.search(regexp, line, flags):
                     lines.append(line)
             file_open.close()

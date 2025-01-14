@@ -358,7 +358,7 @@ class TestProcessConfig(ProcessConfig):
     def echo(self):
         """echos the values of the current class"""
 
-        print("")
+        print()
         super().echo()
 
         if self.ioptimz != "None":
@@ -369,7 +369,7 @@ class TestProcessConfig(ProcessConfig):
             print(f"epsfcn               {self.epsfcn}")
         if self.minmax != "None":
             print(f"minmax               {self.minmax}")
-        print("")
+        print()
         sleep(1)
 
     def modify_in_dat(self):
@@ -555,7 +555,7 @@ class RunProcessConfig(ProcessConfig):
     def echo(self):
         """echos the values of the current class"""
 
-        print("")
+        print()
         super().echo()
 
         print(f"no. allowed UNFEASIBLE points {self.no_allowed_unfeasible:d}")
@@ -578,7 +578,7 @@ class RunProcessConfig(ProcessConfig):
         if self.del_var != []:
             print("del_var", self.del_var)
 
-        print("")
+        print()
         sleep(1)
 
     def modify_in_dat(self):
@@ -773,7 +773,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
     def echo(self):
         """echos the values of the current class"""
 
-        print("")
+        print()
         super().echo()
 
         print(f"No scans            {self.no_scans:d}")
@@ -788,7 +788,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                 print(" -------")
         if self.output_vars != []:
             print("output vars        ", self.output_vars)
-        print("")
+        print()
         sleep(1)
 
     def modify_in_dat(self):
