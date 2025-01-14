@@ -287,15 +287,15 @@ def write_iteration_variables(data, out_file):
     variables = get_iteration_variables(data)
 
     for number, info in variables.items():
-        variable_line = "ixc = {0} * {1}\n".format(number, info["comment"])
+        variable_line = "ixc = {} * {}\n".format(number, info["comment"])
         out_file.write(variable_line)
 
         if "lower_bound" in info:
-            lower_bound_line = "boundl({0}) = {1}\n".format(number, info["lower_bound"])
+            lower_bound_line = "boundl({}) = {}\n".format(number, info["lower_bound"])
             out_file.write(lower_bound_line)
 
         if "upper_bound" in info:
-            upper_bound_line = "boundu({0}) = {1}\n".format(number, info["upper_bound"])
+            upper_bound_line = "boundu({}) = {}\n".format(number, info["upper_bound"])
             out_file.write(upper_bound_line)
 
 
@@ -446,7 +446,7 @@ def write_parameters(data, out_file):
                     and "value" in info
                     and (type(info.get("comment")) is str)
                 ):
-                    parameter_line = "{0} = {1} * {2}\n".format(
+                    parameter_line = "{} = {} * {}\n".format(
                         parameter.ljust(8), info["value"], info["comment"]
                     )
                 else:

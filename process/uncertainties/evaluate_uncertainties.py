@@ -120,10 +120,8 @@ def run_monte_carlo(args):
                 if no_unfeasible <= config.no_allowed_unfeasible:
                     if no_unfeasible > 0:
                         print(
-                            "WARNING: %i non feasible point(s) in sweep,"
-                            % no_unfeasible,
-                            "but finished anyway! Allowed  %i. "
-                            % config.no_allowed_unfeasible,
+                            f"WARNING: {no_unfeasible:d} non feasible point(s) in sweep,",
+                            f"but finished anyway! Allowed  {config.no_allowed_unfeasible:d}. ",
                         )
 
                     # add run to index list
@@ -143,9 +141,7 @@ def run_monte_carlo(args):
 
                 else:
                     print(
-                        "WARNING: %i non feasible point(s) in sweep!\
-                    Rerunning!"
-                        % no_unfeasible
+                        f"WARNING: {no_unfeasible:d} non feasible point(s) in sweep! Rerunning!"
                     )
             else:
                 print("PROCESS has stopped without finishing!")
@@ -175,8 +171,7 @@ def write_Morris_Method_Output(X, S):
         # print the sensistivity indices
         for i in range(X["num_vars"]):
             f.write(
-                "%s %f %f %f %f\n"
-                % (
+                "{} {:f} {:f} {:f} {:f}\n".format(
                     X["names"][i],
                     S["mu"][i],
                     S["mu_star"][i],
@@ -200,8 +195,7 @@ def write_Sobol_Output(X, S):
         # print first order Sobol indices
         for i in range(X["num_vars"]):
             f.write(
-                "%s %f %f %f %f\n"
-                % (
+                "{} {:f} {:f} {:f} {:f}\n".format(
                     X["names"][i],
                     S["S1"][i],
                     S["S1_conf"][i],

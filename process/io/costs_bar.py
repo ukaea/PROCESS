@@ -117,8 +117,8 @@ def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
 
     # Adjust axis label depending on if inflation factor is used
     if args.inf:
-        ax.set_ylabel("%.2f x (1990 M$)" % inflate)
-        ax2.set_ylabel("%.2f x (1990 M$)" % inflate)
+        ax.set_ylabel(f"{inflate:.2f} x (1990 M$)")
+        ax2.set_ylabel(f"{inflate:.2f} x (1990 M$)")
     else:
         ax.set_ylabel("1990 M$")
         ax2.set_ylabel("1990 M$")
@@ -209,7 +209,7 @@ def comp_new(args, mfile_list: list[str], inflate: float):
 
     # Adjust axis label depending on if inflation factor is used
     if args.inf:
-        ax.set_ylabel("%.2f x (2014 M$)" % inflate)
+        ax.set_ylabel(f"{inflate:.2f} x (2014 M$)")
     else:
         ax.set_ylabel("2014 M$")
 

@@ -165,7 +165,7 @@ class ProcessConfig:
         try:
             configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return False
 
@@ -191,7 +191,7 @@ class ProcessConfig:
         try:
             configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return None
 
@@ -247,8 +247,7 @@ class ProcessConfig:
             indatfile.close()
         except FileNotFoundError:
             print(
-                "Error: %s does not exist! Create file or modify config file!"
-                % self.or_in_dat,
+                f"Error: {self.or_in_dat} does not exist! Create file or modify config file!",
                 file=stderr,
             )
             raise
@@ -273,7 +272,7 @@ class ProcessConfig:
             self.factor = float(buf)
 
         if not self.get_comment():
-            print("No comment in config file %s" % self.filename)
+            print(f"No comment in config file {self.filename}")
 
     def run_process(self, input_path, solver="vmcon"):
         """Perform a single run of PROCESS, catching any errors.
@@ -363,13 +362,13 @@ class TestProcessConfig(ProcessConfig):
         super().echo()
 
         if self.ioptimz != "None":
-            print("ioptimz              %s" % self.ioptimz)
+            print(f"ioptimz              {self.ioptimz}")
         if self.epsvmc != "None":
-            print("epsvmc               %s" % self.epsvmc)
+            print(f"epsvmc               {self.epsvmc}")
         if self.epsfcn != "None":
-            print("epsfcn               %s" % self.epsfcn)
+            print(f"epsfcn               {self.epsfcn}")
         if self.minmax != "None":
-            print("minmax               %s" % self.minmax)
+            print(f"minmax               {self.minmax}")
         print("")
         sleep(1)
 
@@ -483,7 +482,7 @@ class RunProcessConfig(ProcessConfig):
         try:
             configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return []
 
@@ -513,7 +512,7 @@ class RunProcessConfig(ProcessConfig):
         try:
             configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return
 
@@ -536,7 +535,7 @@ class RunProcessConfig(ProcessConfig):
         try:
             configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return
 
@@ -559,7 +558,7 @@ class RunProcessConfig(ProcessConfig):
         print("")
         super().echo()
 
-        print("no. allowed UNFEASIBLE points %i" % self.no_allowed_unfeasible)
+        print(f"no. allowed UNFEASIBLE points {self.no_allowed_unfeasible:d}")
         if self.create_itervar_diff:
             print(
                 "Set to create a summary file of the iteration variable\
@@ -575,7 +574,7 @@ class RunProcessConfig(ProcessConfig):
         if self.del_icc != []:
             print("del_icc", self.del_icc)
         for key, value in self.dictvar.items():
-            print("set %s  to %s" % (key, value))
+            print(f"set {key}  to {value}")
         if self.del_var != []:
             print("del_var", self.del_var)
 
@@ -777,8 +776,8 @@ class UncertaintiesConfig(ProcessConfig, Config):
         print("")
         super().echo()
 
-        print("No scans            %i" % self.no_scans)
-        print("No samples          %i" % self.no_samples)
+        print(f"No scans            {self.no_scans:d}")
+        print(f"No samples          {self.no_samples:d}")
         if self.uncertainties != []:
             print("uncertainties:")
             for item in self.uncertainties:
@@ -1159,7 +1158,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             # normalised iteration varialbes
             for i in range(1, nvar + 1):
                 label = m_file.data[f"nitvar{i:03}"].var_description
-                header += " n_{0:8s}".format(label.replace("_(range_normalised)", ""))
+                header += " n_{:8s}".format(label.replace("_(range_normalised)", ""))
 
             # error status, id and ifail
             header += " error_status error_id ifail\n"
@@ -1171,14 +1170,14 @@ class UncertaintiesConfig(ProcessConfig, Config):
         # Uncertain input variables
         output = f"{sample_index:12d}"
         for u_dict in self.uncertainties:
-            output += " {0:10f}".format(u_dict["samples"][sample_index])
+            output += " {:10f}".format(u_dict["samples"][sample_index])
 
         # normalised iteration variables
         for i in range(1, nvar + 1):
-            output += " {0:10f}".format(m_file.data[f"nitvar{i:03}"].get_scan(-1))
+            output += " {:10f}".format(m_file.data[f"nitvar{i:03}"].get_scan(-1))
 
         # error status and id
-        output += " {0:13d} {1:8d}".format(
+        output += " {:13d} {:8d}".format(
             int(m_file.data["error_status"].get_scan(-1)),
             int(m_file.data["error_id"].get_scan(-1)),
         )

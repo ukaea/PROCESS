@@ -133,8 +133,8 @@ def get_variable_range(itervars, factor, wdir="."):
 
         if lbs[-1] > ubs[-1]:
             print(
-                f"Error: Iteration variable {varname} has BOUNDL={lbs[-1]} >\
- BOUNDU={ubs[-1]}\n Update process_dicts or input file!",
+                f"Error: Iteration variable {varname} has BOUNDL={lbs[-1]} >"
+                f"BOUNDU={ubs[-1]}\n Update process_dicts or input file!",
                 file=stderr,
             )
 
@@ -201,8 +201,7 @@ def check_in_dat():
             print(
                 "Warning: boundu for",
                 itervarname,
-                f"lies out of allowed input range!\n Reset boundu({itervarno}) \
-to",
+                f"lies out of allowed input range!\n Reset boundu({itervarno}) to",
                 upperinputbound,
                 file=stderr,
             )
@@ -231,8 +230,7 @@ def check_logfile(logfile="process.log"):
         for line in outlogfile:
             if errormessage in line:
                 print(
-                    "An Error has occured. Please check the output \
-                       file for more information.",
+                    "An Error has occured. Please check the output file for more information.",
                     file=stderr,
                 )
                 exit()
@@ -257,8 +255,7 @@ def check_input_error(wdir="."):
 
         if error_id == 130:
             print(
-                "Error in input file. Please check OUT.DAT \
-    for more information.",
+                "Error in input file. Please check OUT.DAT for more information.",
                 file=stderr,
             )
             exit()
@@ -279,7 +276,7 @@ def process_stopped(wdir="."):
     try:
         m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
     except FileNotFoundError as err:
-        print(f"No MFILE has been found! FYI:\n {err}", file=stderr)
+        print(f"No MFILE has been found! FYI:qn {err}", file=stderr)
         print("Code continues to run!", file=stderr)
         return True
 

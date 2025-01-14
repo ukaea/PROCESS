@@ -800,7 +800,7 @@ def dict_input_bounds():
     if len(failedlines) != 0:
         warn_string = "dict_input_bounds failed to parse:\n"
         for line in failedlines:
-            warn_string += "%s\n" % line.strip()
+            warn_string += f"{line.strip()}\n"
         logging.warning(warn_string)
 
     return di

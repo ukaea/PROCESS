@@ -40,8 +40,7 @@ class MFILEParser(abc.MutableMapping):
 
     def __iter__(self):
         for group in self._mfile_data:
-            for param in self._mfile_data[group]:
-                yield param
+            yield from self._mfile_data[group]
 
     def __len__(self):
         return sum([len(self._mfile_data[g]) for g in self._mfile_data])
