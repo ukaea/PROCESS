@@ -1286,10 +1286,10 @@ def beamcalc(
 
     # Fast Ion Pressure
     # This is the same form as the ideal gas law pressure, P=1/3 * nmv^2
-    deuterium_pressure = pressure_coeff_deuterium * _fast_ion_pressure_integral(
+    deuterium_pressure = pressure_coeff_deuterium * fast_ion_pressure_integral(
         beam_energy, critical_energy_deuterium
     )
-    tritium_pressure = pressure_coeff_tritium * _fast_ion_pressure_integral(
+    tritium_pressure = pressure_coeff_tritium * fast_ion_pressure_integral(
         beam_energy, critical_energy_tritium
     )
 
@@ -1326,7 +1326,7 @@ def beamcalc(
     )
 
 
-def _fast_ion_pressure_integral(beam_energy: float, critical_energy: float) -> float:
+def fast_ion_pressure_integral(beam_energy: float, critical_energy: float) -> float:
     """
     Calculate the fraction of initial beam energy given to the ions.
 

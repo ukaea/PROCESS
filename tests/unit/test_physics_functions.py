@@ -295,8 +295,8 @@ def test_beamcalc():
     assert beam_deposited_energy == pytest.approx(445.05787301616635)
 
 
-def test__fast_ion_pressure_integral():
-    pressure_integral = physics_functions._fast_ion_pressure_integral(1000.0, 276.7)
+def test_fast_ion_pressure_integral():
+    pressure_integral = physics_functions.fast_ion_pressure_integral(1000.0, 276.7)
 
     assert pressure_integral == pytest.approx(1.1061397270783706)
 
