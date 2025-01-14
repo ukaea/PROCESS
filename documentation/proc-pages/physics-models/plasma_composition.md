@@ -3,8 +3,12 @@
 Within `PROCESS` we always assume the plasma is quasi-neutral eg:
 
 $$
-n_{\text{e}} = \underbrace{n_{\text{i}}}_{\text{Fuel Ions}} + \underbrace{2n_{\text{e}}f_{\alpha}}_{\text{Alpha particles}} + \underbrace{n_{\text{e}}f_{\text{beam}}}_{\text{Neutral beams}} + \underbrace{\sum_j Z_j n_{\text{e}} f_j}_{\text{Impurities}}
+n_{\text{e}} = \underbrace{Z_{\text{fuel}}n_{\text{i}}}_{\text{Fuel Ions}} + \underbrace{2n_{\text{e}}f_{\alpha}}_{\text{Alpha particles}} + \underbrace{n_{\text{e}}f_{\text{beam}}}_{\text{Neutral beams}} + \underbrace{\sum_j Z_j n_{\text{e}} f_j}_{\text{Impurities}}
 $$
+
+* Only deuterium and tritium can be put into the beams so charge is always 1
+
+--------------------
 
 ## Plasma Composition Calculation | `plasma_composition()`
 
@@ -15,8 +19,13 @@ All of the plasma composites are normally given as a fraction of the volume aver
 1. **Alpha Ash Portion Calculation**
 
     - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`dene`) and the alpha particle to electron ratio (`ralpne`).
+        - `ralpne` can be set as an iteration variable (`ixc = 109`) or set directly.
 
-    `ralpne` can be set as an iteration variable (ixc = 109) or set directly.
+    $$
+    n_{\alpha} = \mathtt{ralpne}\times n_{\text{e}}
+    $$
+
+
 
 2. **Protons Calculation**
     - The calculation of proton density (`nd_protons`) depends on whether the alpha rate density has been calculated. This should only happen in the first function call as the rates are calculated later on in the code.
@@ -38,235 +47,142 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Otherwise, use the calculated proton rate density.
 
 3. **Beam Hot Ion Component**
-    ```python
-    if physics_variables.ignite == 0:
-        physics_variables.nd_beam_ions = (
-            physics_variables.dene * physics_variables.rnbeam
-        )
-    else:
-        physics_variables.nd_beam_ions = 0.0
-    ```
-    - Calculate the number density of beam ions (`nd_beam_ions`). If the plasma is ignited, set it to zero.
 
-4. **Sum of Zi.ni for All Impurity Ions**
-    ```python
-    znimp = 0.0
-    for imp in range(impurity_radiation_module.n_impurities):
-        if impurity_radiation_module.impurity_arr_z[imp] > 2:
-            znimp += impurity_radiation.zav_of_te(
-                imp, np.array([physics_variables.te])
-            ).squeeze() * (
-                impurity_radiation_module.impurity_arr_frac[imp]
-                * physics_variables.dene
-            )
-    ```
-    - Sum the product of charge number (`Zi`) and number density (`ni`) for all impurity ions with charge greater than helium.
+    - Calculate the number density of beam ions (`nd_beam_ions`), using the electron density (`dene`) and the beam ion to electron ratio (`rnbeam`). If the plasma is ignited, set it to zero.
+        - `rnbeam` can be set as an iteration variable (`ixc = 7`) or set directly.
+
+    $$
+    \mathtt{nd\_beam\_ions} | n_{\text{beam}} = \mathtt{rnbeam} \times n_{\text{e}}
+    $$
+
+4. **Sum of charge number density for all impurity ions**
+
+    - Sum the product of charge number (`Zi`) and number density for all impurity ions with charge greater than helium. 
+
+    $$
+    \mathtt{znimp} = \sum_j Z_j n_{\text{e}} f_j
+    $$
 
 5. **Fuel Portion - Conserve Charge Neutrality**
-    ```python
-    znfuel = (
-        physics_variables.dene
-        - 2.0 * physics_variables.nd_alphas
-        - physics_variables.nd_protons
-        - physics_variables.nd_beam_ions
-        - znimp
-    )
-    ```
     - Calculate the fuel portion (`znfuel`) by conserving charge neutrality.
 
+    $$
+   \mathtt{znfuel} | \underbrace{Z_{\text{fuel}}n_{\text{i}}}_{\text{Fuel Ions}} =  n_{\text{e}} - \underbrace{2n_{\text{e}}f_{\alpha}}_{\text{Alpha particles}} - \underbrace{n_{\text{e}}f_{\text{beam}}}_{\text{Neutral beams}} - \underbrace{\sum_j Z_j n_{\text{e}} f_j}_{\text{Impurities}}
+    $$
+
 6. **Fuel Ion Density Calculation**
-    ```python
-    physics_variables.deni = znfuel / (1.0 + physics_variables.f_helium3)
-    ```
+
+    $$
+    \mathtt{deni} | n_{\text{i}} = \frac{\mathtt{znfuel}}{1+f_{\text{3He}}}
+    $$
+
     - Calculate the fuel ion density (`deni`).
 
 7. **Set Hydrogen and Helium Impurity Fractions**
-    ```python
-    impurity_radiation_module.impurity_arr_frac[
-        impurity_radiation.element2index("H_")
-    ] = (
-        physics_variables.nd_protons
-        + (physics_variables.f_deuterium + physics_variables.f_tritium)
-        * physics_variables.deni
-        + physics_variables.nd_beam_ions
-    ) / physics_variables.dene
 
-    impurity_radiation_module.impurity_arr_frac[
-        impurity_radiation.element2index("He")
-    ] = (
-        physics_variables.f_helium3
-        * physics_variables.deni
-        / physics_variables.dene
-        + physics_variables.ralpne
-    )
-    ```
-    - Set the impurity fractions for hydrogen and helium.
+    - Set the impurity fractions for hydrogen and helium species.
+
+    $$
+    \frac{n_{\text{H}}}{n_{\text{e}}} = n_{\text{protons}} + \left(f_{\text{deuterium}}+f_{\text{tritium}}\right)n_{\text{i}}+ n_{\text{beam}}
+    $$
+
+    $$
+    \frac{n_{\text{He}}}{n_{\text{e}}} = f_{\text{3He}}n_{\text{i}}+\mathtt{ralpne}
+    $$
 
 8. **Total Impurity Density Calculation**
-    ```python
-    physics_variables.nd_impurities = 0.0
-    for imp in range(impurity_radiation_module.n_impurities):
-        if impurity_radiation_module.impurity_arr_z[imp] > 2:
-            physics_variables.nd_impurities += (
-                impurity_radiation_module.impurity_arr_frac[imp]
-                * physics_variables.dene
-            )
-    ```
+
     - Calculate the total impurity density (`nd_impurities`).
 
+    $$
+    \mathtt{nd\_impurities} | n_{\text{impurities}} = \sum_j n_{\text{e}} f_j
+    $$
+
 9. **Total Ion Density Calculation**
-    ```python
-    physics_variables.nd_ions_total = (
-        physics_variables.deni
-        + physics_variables.nd_alphas
-        + physics_variables.nd_protons
-        + physics_variables.nd_beam_ions
-        + physics_variables.nd_impurities
-    )
-    ```
+
     - Calculate the total ion density (`nd_ions_total`).
 
-10. **Set Obsolescent Impurity Fraction Variables**
-    ```python
-    physics_variables.rncne = impurity_radiation_module.impurity_arr_frac[
-        impurity_radiation.element2index("C_")
-    ]
-    physics_variables.rnone = impurity_radiation_module.impurity_arr_frac[
-        impurity_radiation.element2index("O_")
-    ]
-    physics_variables.rnfene = (
-        impurity_radiation_module.impurity_arr_frac[
-            impurity_radiation.element2index("Fe")
-        ]
-        + impurity_radiation_module.impurity_arr_frac[
-            impurity_radiation.element2index("Ar")
-        ]
-    )
-    ```
-    - Set some obsolescent impurity fraction variables for other routines.
+    $$
+    \mathtt{nd\_ions\_total} | n_{\text{i,total}} = n_{\text{i}} + n_{\alpha}+n_{\text{protons}}+ n_{\text{beam}}+n_{\text{impurities}}
+    $$
+
+10. **Set Impurity Fraction Variables**
+
+    - Set global impurity fraction variables for other routines.
+
+    $$
+    \mathtt{rncne} = \frac{n_{\text{C}}}{n_{\text{e}}}, \quad \mathtt{rnone} = \frac{n_{\text{O}}}{n_{\text{e}}} \quad \mathtt{rnfene} = \frac{n_{\text{Fe}}+ n_{\text{Ar}}}{n_{\text{e}}}
+    $$
+
+    The variable above are set as global physics variables to be used in the [`sigbeam()`](../eng-models/heating_and_current_drive/NBI/nbi_overview.md#beam-stopping-cross-section--sigbeam) routine, which calculates the beam stopping cross-section.
 
 11. **Effective Charge Calculation**
-    ```python
-    physics_variables.zeff = 0.0
-    for imp in range(impurity_radiation_module.n_impurities):
-        physics_variables.zeff += (
-            impurity_radiation_module.impurity_arr_frac[imp]
-            * impurity_radiation.zav_of_te(
-                imp, np.array([physics_variables.te])
-            ).squeeze()
-            ** 2
-        )
-    ```
-    - Calculate the effective charge (`zeff`).
 
-12. **Define Coulomb Logarithm**
-    ```python
-    physics_variables.dlamee = (
-        31.0
-        - (np.log(physics_variables.dene) / 2.0)
-        + np.log(physics_variables.te * 1000.0)
-    )
-    physics_variables.dlamie = (
-        31.3
-        - (np.log(physics_variables.dene) / 2.0)
-        + np.log(physics_variables.te * 1000.0)
-    )
-    ```
-    - Define the Coulomb logarithm for ion-electron and electron-electron collisions.
+    - Calculate the effective charge (`zeff`), which is given by:
 
-13. **Fraction of Alpha Energy to Ions and Electrons**
-    ```python
-    if physics_module.first_call == 1:
-        pc = (
-            (1.0 + physics_variables.alphan)
-            * (1.0 + physics_variables.alphat)
-            / (1.0 + physics_variables.alphan + physics_variables.alphat)
-        )
-        physics_module.first_call = 0
-    else:
-        pc = physics_variables.pcoef
+    $$
+    Z_{\text{eff}} = \frac{\sum_j Z^2_j n_{\text{i}}}{\sum_j Z_j n_{\text{i}}}
+    $$
 
-    physics_variables.f_alpha_electron = 0.88155 * np.exp(
-        -physics_variables.te * pc / 67.4036
-    )
-    physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
-    ```
+    As we assume the plasma is quai-neutral then:
+
+    $$
+    \sum_j Z_j n_{\text{i}} = n_{\text{e}}
+    $$
+
+    Thus we can write:
+
+    $$
+    \mathtt{zeff} | Z_{\text{eff}} = \frac{\sum_j Z^2_j n_{\text{e}} f_j}{n_{\text{e}}}
+    $$
+
+    More info can be found [here](https://wiki.fusion.ciemat.es/wiki/Effective_charge_state).
+
+
+12. **Fraction of Alpha Energy to Ions and Electrons**
+
     - Calculate the fraction of alpha energy going to electrons and ions.
 
-14. **Average Atomic Masses of Injected Fuel Species**
-    ```python
-    physics_variables.m_fuel_amu = (
-        (constants.m_deuteron_amu * physics_variables.f_deuterium)
-        + (constants.m_triton_amu * physics_variables.f_tritium)
-        + (constants.m_helion_amu * physics_variables.f_helium3)
-    )
-    ```
+    $$
+    \mathtt{f\_alpha\_electron} = 0.88155\exp{\left[-\langle T_{\text{e}} \rangle \frac{(1+\alpha_n)(1+\alpha_T)}{67.4036(1+\alpha_T+\alpha_n)}\right]}
+    $$
+
+    $$
+    \mathtt{f\_alpha\_ion} = (1.0 - \mathtt{f\_alpha\_electron})
+    $$
+
+13. **Average Atomic Masses of Injected Fuel Species**
+
     - Calculate the average atomic masses of injected fuel species.
 
-15. **Average Atomic Masses of Injected Fuel Species in Neutral Beams**
-    ```python
-    physics_variables.m_beam_amu = (
-        constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam)
-    ) + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
-    ```
+    $$
+    \mathtt{m\_fuel\_amu} | m_{\text{fuel,amu}} = \left(m_{\text{D}}f_{\text{D}}\right) + \left(m_{\text{T}}f_{\text{T}}\right) + \left(m_{\text{3He}}f_{\text{3He}}\right)
+    $$
+
+14. **Average Atomic Masses of Injected Fuel Species in Neutral Beams**
+
     - Calculate the average atomic masses of injected fuel species in the neutral beams.
 
-16. **Density Weighted Mass Calculation**
-    ```python
-    physics_variables.m_ions_total_amu = (
-        physics_variables.m_fuel_amu * physics_variables.deni
-        + (constants.m_alpha_amu * physics_variables.nd_alphas)
-        + physics_variables.nd_protons
-        + physics_variables.m_beam_amu * physics_variables.nd_beam_ions
-    )
-    for imp in range(impurity_radiation_module.n_impurities):
-        if impurity_radiation_module.impurity_arr_z[imp] > 2:
-            physics_variables.m_ions_total_amu += (
-                physics_variables.dene
-                * impurity_radiation_module.impurity_arr_frac[imp]
-                * impurity_radiation_module.impurity_arr_amass[imp]
-            )
+    $$
+    \mathtt{m\_beam\_amu} | m_{\text{beam,amu}} = \left(m_{\text{D}}(1-f_{\text{T,beam}}\right)) + \left(m_{\text{T}}f_{\text{T,beam}}\right)
+    $$
 
-    physics_variables.m_ions_total_amu = (
-        physics_variables.m_ions_total_amu / physics_variables.nd_ions_total
-    )
-    ```
+15. **Density Weighted Mass Calculation**
+
     - Calculate the density-weighted mass of ions.
 
-17. **Mass Weighted Plasma Effective Charge**
-    ```python
-    physics_variables.zeffai = (
-        physics_variables.f_deuterium * physics_variables.deni / 2.0
-        + physics_variables.f_tritium * physics_variables.deni / 3.0
-        + 4.0 * physics_variables.f_helium3 * physics_variables.deni / 3.0
-        + physics_variables.nd_alphas
-        + physics_variables.nd_protons
-        + (1.0 - current_drive_variables.f_tritium_beam)
-        * physics_variables.nd_beam_ions
-        / 2.0
-        + current_drive_variables.f_tritium_beam
-        * physics_variables.nd_beam_ions
-        / 3.0
-    ) / physics_variables.dene
-    for imp in range(impurity_radiation_module.n_impurities):
-        if impurity_radiation_module.impurity_arr_z[imp] > 2:
-            physics_variables.zeffai += (
-                impurity_radiation_module.impurity_arr_frac[imp]
-                * impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.te])
-                ).squeeze()
-                ** 2
-                / impurity_radiation_module.impurity_arr_amass[imp]
-            )
-    ```
-    - Calculate the mass-weighted plasma effective charge (`zeffai`).
+    $$
+    \mathtt{m\_ions\_total\_amu} = \\
+    \left[\frac{\left(m_{\text{fuel}}n_{\text{i}}\right) + \left(m_{\alpha}n_{\alpha}\right) + \left(m_{\text{p}}n_{p}\right) + \left(m_{\text{beam}}n_{\text{beam}}\right) + \sum_j m_{j} n_{\text{e}} f_j}{n_{\text{i,total}}}\right]
+    $$
 
+16. **Mass Weighted Plasma Effective Charge**
 
+    - Calculate the mass-weighted plasma effective charge (`zeffai`). Similar to the calculation of the effective charge except each element is divided by its mass
 
-
-
-
-
+    $$
+    \mathtt{zeffai} | Z_{\text{eff,m}} = \frac{\sum_j \frac{Z^2_j n_{\text{e}} f_j}{m_{\text{j}}}}{n_{\text{e}}}
+    $$
 
 ---------------
 
@@ -303,5 +219,22 @@ be input by the user or selected as an iteration variable.
 The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 
 isotopes and helium) may be used as an iteration variable.
 The impurity fraction to be varied can be set simply with `fimp(i) = <value>`, where `i` is the corresponding number value for the desired impurity in the table above.
+
+
+------------------
+
+## Key Constraints
+
+
+### Reinke criterion, divertor impurity fraction lower limit
+
+This constraint can be activated by stating `icc = 78` in the input file.
+
+<!-- The limiting value of $\epsilon\beta_p$ is be set using input parameter `beta_poloidal_eps_max`. -->
+
+The scaling value `freinke` can be varied also.
+
+
+
 
 [^1]: H. Lux, R. Kemp, D.J. Ward, M. Sertoli, Impurity radiation in DEMO systems modelling, Fusion Engineering and Design, Volume 101, 2015, Pages 42-51, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2015.10.002.

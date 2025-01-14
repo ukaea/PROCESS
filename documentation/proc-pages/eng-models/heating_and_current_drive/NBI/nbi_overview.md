@@ -60,6 +60,9 @@ with $E, n_e, T$ expressed in units of keV/u, $\text{cm}^3$ and keV, respectivel
 !!! info "Info" 
     For the full table of values for $A_{ijk}$ & $B_{ijk}^{(z)}$\  please see the accompanying paper[^1] or `current_drive.py`
 
+!!! warning "Model applicability with different impurities"
+    Be cautious that the model only incorporates the presence of carbon, oxygen and iron impurities. Using other impurities will mean that the cross-section is not calculated appropriately.
+
 For a plasma having an arbitrary mix of $N$ different types of impurities with densities $n$, and charges $Z_q (q = 1, ..., N)$, the beam stopping cross-section can be represented as the weighted sum of the stopping cross- sections for $N$ reference single-impurity plasmas. In each of these reference plasmas, the electron density and the proton density (including that of deuterium and tritium ions) are the same as in a true plasma. The impurity density, however, is increased in order to satisfy quasi-neutrality. The weighting function is the electron density $n_qZ_q$ associated with the amu impurity (in the true plasma), divided by the sum of these densities. The result is: 
 
 $$
