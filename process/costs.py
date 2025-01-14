@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from process.fortran import (
     build_variables,
@@ -2752,7 +2752,7 @@ class Costs:
 
         #  Annual cost of operation and maintenance
 
-        annoam = cost_variables.ucoam[cost_variables.lsa - 1] * numpy.sqrt(
+        annoam = cost_variables.ucoam[cost_variables.lsa - 1] * np.sqrt(
             heat_transport_variables.pnetelmw / 1200.0e0
         )
 
@@ -2821,7 +2821,7 @@ class Costs:
 
         #  Annual cost of waste disposal
 
-        annwst = cost_variables.ucwst[cost_variables.lsa - 1] * numpy.sqrt(
+        annwst = cost_variables.ucwst[cost_variables.lsa - 1] * np.sqrt(
             heat_transport_variables.pnetelmw / 1200.0e0
         )
 

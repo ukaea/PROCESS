@@ -4,6 +4,7 @@ target-version = "py310"
 [lint]
 extend-select = [
     "I",
+    "ICN",
     "INT",
     "YTT",
     "ASYNC",

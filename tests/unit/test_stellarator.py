@@ -1,6 +1,6 @@
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process.availability import Availability
@@ -847,8 +847,8 @@ class IntersectParam(NamedTuple):
     "intersectparam",
     (
         IntersectParam(
-            x1=numpy.array(
-                numpy.array(
+            x1=np.array(
+                np.array(
                     (
                         0.11792792792792792,
                         0.14103943139119018,
@@ -1257,8 +1257,8 @@ class IntersectParam(NamedTuple):
                 821.99217667293931,
                 822.67213770261992,
             ),
-            x2=numpy.array(
-                numpy.array(
+            x2=np.array(
+                np.array(
                     (
                         0.11792792792792792,
                         0.14103943139119018,
@@ -1465,8 +1465,8 @@ class IntersectParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            y2=numpy.array(
-                numpy.array(
+            y2=np.array(
+                np.array(
                     (
                         7158.8937047628706,
                         5004.9316715329842,
@@ -1677,8 +1677,8 @@ class IntersectParam(NamedTuple):
             expected_x=0.624584480717571,
         ),
         IntersectParam(
-            x1=numpy.array(
-                numpy.array(
+            x1=np.array(
+                np.array(
                     (
                         0.11792792792792792,
                         0.14103943139119018,
@@ -2087,8 +2087,8 @@ class IntersectParam(NamedTuple):
                 821.99217667293931,
                 822.67213770261992,
             ),
-            x2=numpy.array(
-                numpy.array(
+            x2=np.array(
+                np.array(
                     (
                         0.11792792792792792,
                         0.14103943139119018,
@@ -2295,8 +2295,8 @@ class IntersectParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            y2=numpy.array(
-                numpy.array(
+            y2=np.array(
+                np.array(
                     (
                         7158.8937047628706,
                         5004.9316715329842,

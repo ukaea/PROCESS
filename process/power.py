@@ -1,7 +1,7 @@
 import logging
 import math
 
-import numpy
+import numpy as np
 
 from process.fortran import (
     build_variables,
@@ -69,20 +69,20 @@ class Power:
         <I>dI/dt</I> at the time periods.
         None
         """
-        powpfii = numpy.zeros((pfcoil_variables.ngc2,))
-        cktr = numpy.zeros((pfcoil_variables.ngc2,))
-        pfcr = numpy.zeros((pfcoil_variables.ngc2,))
-        albusa = numpy.zeros((pfcoil_variables.ngc2,))
-        pfbusr = numpy.zeros((pfcoil_variables.ngc2,))
-        pfcr = numpy.zeros((pfcoil_variables.ngc2,))
-        cktr = numpy.zeros((pfcoil_variables.ngc2,))
-        rcktvm = numpy.zeros((pfcoil_variables.ngc2,))
-        rcktpm = numpy.zeros((pfcoil_variables.ngc2,))
-        vpfi = numpy.zeros((pfcoil_variables.ngc2,))
-        psmva = numpy.zeros((pfcoil_variables.ngc2,))
-        poloidalenergy = numpy.zeros((6,))
-        inductxcurrent = numpy.zeros((6,))
-        pfdissipation = numpy.zeros((5,))
+        powpfii = np.zeros((pfcoil_variables.ngc2,))
+        cktr = np.zeros((pfcoil_variables.ngc2,))
+        pfcr = np.zeros((pfcoil_variables.ngc2,))
+        albusa = np.zeros((pfcoil_variables.ngc2,))
+        pfbusr = np.zeros((pfcoil_variables.ngc2,))
+        pfcr = np.zeros((pfcoil_variables.ngc2,))
+        cktr = np.zeros((pfcoil_variables.ngc2,))
+        rcktvm = np.zeros((pfcoil_variables.ngc2,))
+        rcktpm = np.zeros((pfcoil_variables.ngc2,))
+        vpfi = np.zeros((pfcoil_variables.ngc2,))
+        psmva = np.zeros((pfcoil_variables.ngc2,))
+        poloidalenergy = np.zeros((6,))
+        inductxcurrent = np.zeros((6,))
+        pfdissipation = np.zeros((5,))
 
         #  Bus length
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
@@ -117,7 +117,7 @@ class Power:
             pfcr[ig] = (
                 pfcoil_variables.pfclres
                 * 2.0e0
-                * numpy.pi
+                * np.pi
                 * pfcoil_variables.rpf[ic]
                 * abs(
                     pfcoil_variables.rjconpf[ic]
@@ -2040,16 +2040,16 @@ class Power:
         and outputs them to the output file
         None
         """
-        p_cooling = numpy.zeros((6,))
-        p_cryo = numpy.zeros((6,))
-        p_vac = numpy.zeros((6,))
-        p_tritium = numpy.zeros((6,))
-        p_fac = numpy.zeros((6,))
-        p_tf = numpy.zeros((6,))
-        p_hcd = numpy.zeros((6,))
-        p_pf = numpy.zeros((6,))
-        p_int_tot = numpy.zeros((6,))
-        p_gross = numpy.zeros((6,))
+        p_cooling = np.zeros((6,))
+        p_cryo = np.zeros((6,))
+        p_vac = np.zeros((6,))
+        p_tritium = np.zeros((6,))
+        p_fac = np.zeros((6,))
+        p_tf = np.zeros((6,))
+        p_hcd = np.zeros((6,))
+        p_pf = np.zeros((6,))
+        p_int_tot = np.zeros((6,))
+        p_gross = np.zeros((6,))
 
         t_cs = times_variables.t_precharge
 
@@ -2397,7 +2397,7 @@ class Power:
                     error_handling.report_error(166)
 
                 etath = (
-                    0.1802e0 * numpy.log(heat_transport_variables.tturb)
+                    0.1802e0 * np.log(heat_transport_variables.tturb)
                     - 0.7823
                     - self.delta_eta
                 )
@@ -2414,7 +2414,7 @@ class Power:
                     error_handling.report_error(166)
 
                 etath = (
-                    0.1802e0 * numpy.log(heat_transport_variables.tturb)
+                    0.1802e0 * np.log(heat_transport_variables.tturb)
                     - 0.7823
                     - self.delta_eta
                 )
@@ -2440,7 +2440,7 @@ class Power:
                 error_handling.fdiags[0] = heat_transport_variables.tturb
                 error_handling.report_error(166)
 
-            etath = 0.4347e0 * numpy.log(heat_transport_variables.tturb) - 2.5043e0
+            etath = 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
 
         else:
             logger.log(
@@ -2469,7 +2469,7 @@ class Power:
                 error_handling.fdiags[0] = heat_transport_variables.tturb
                 error_handling.report_error(166)
 
-            etath_liq = 0.4347e0 * numpy.log(heat_transport_variables.tturb) - 2.5043e0
+            etath_liq = 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
             return etath_liq
 
     def tfpwr(self, output: bool):
@@ -2715,9 +2715,9 @@ class Power:
 
         #  Total TF system bus length, m
         tfbusl = (
-            8.0e0 * numpy.pi * rmajor
+            8.0e0 * np.pi * rmajor
             + (1.0e0 + ntfbkr) * (12.0e0 * rmajor + 80.0e0)
-            + 0.2e0 * itfka * numpy.sqrt(ntfc * rptfc * 1000.0e0)
+            + 0.2e0 * itfka * np.sqrt(ntfc * rptfc * 1000.0e0)
         )
 
         #  Aluminium bus weight, tonnes
