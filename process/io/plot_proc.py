@@ -3045,7 +3045,7 @@ def plot_h_threshold_comparison(
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
-    x_values = np.random.normal(loc=1, scale=0.01, size=len(data.values()))
+    x_values = np.random.Generator.normal(loc=1, scale=0.01, size=len(data.values()))
     for index, (key, value) in enumerate(data.items()):
         if "ITER 1996" in key:
             color = "blue"

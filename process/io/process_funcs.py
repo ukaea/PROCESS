@@ -16,7 +16,7 @@ from pathlib import Path
 from sys import stderr
 from time import sleep
 
-from numpy.random import uniform
+from numpy.random import Generator
 
 from process.fortran import numerics
 from process.io.in_dat import InDat
@@ -376,7 +376,7 @@ def vary_iteration_variables(itervars, lbs, ubs):
     new_values = []
 
     for varname, lbnd, ubnd in zip(itervars, lbs, ubs):
-        new_value = uniform(lbnd, ubnd)
+        new_value = Generator.uniform(lbnd, ubnd)
         new_values += [new_value]
         in_dat.add_parameter(varname, new_value)
 
