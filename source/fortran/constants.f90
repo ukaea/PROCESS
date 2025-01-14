@@ -72,6 +72,11 @@ module constants
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mp|search_for=PROTON+MASS
   real(dp), parameter :: proton_mass = 1.67262192595D-27
 
+  ! Proton mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mpu
+  real(dp), parameter :: m_proton_amu = 1.0072764665789
+
   ! Protium atomic mass [amu]
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=1

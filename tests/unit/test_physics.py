@@ -1177,8 +1177,6 @@ class PlasmaCompositionParam(NamedTuple):
 
     m_beam_amu: Any = None
 
-    dlamie: Any = None
-
     te: Any = None
 
     proton_rate_density: Any = None
@@ -1244,8 +1242,6 @@ class PlasmaCompositionParam(NamedTuple):
     expected_nd_impurities: Any = None
 
     expected_m_beam_amu: Any = None
-
-    expected_dlamie: Any = None
 
     expected_nd_alphas: Any = None
 
@@ -1314,7 +1310,6 @@ class PlasmaCompositionParam(NamedTuple):
             alpha_rate_density_total=0,
             rnfene=0,
             m_beam_amu=0,
-            dlamie=0,
             te=12,
             proton_rate_density=0,
             f_deuterium=0.5,
@@ -1363,7 +1358,6 @@ class PlasmaCompositionParam(NamedTuple):
             expected_zeff=2.0909945616489103,
             expected_nd_impurities=28875000000000004,
             expected_m_beam_amu=2.01355414,
-            expected_dlamie=17.810652035055568,
             expected_nd_alphas=7.5e18,
             expected_nd_protons=7500000000000000,
             expected_first_call=0,
@@ -1434,7 +1428,6 @@ class PlasmaCompositionParam(NamedTuple):
             alpha_rate_density_total=1.973996644759543e17,
             rnfene=0,
             m_beam_amu=2.01355414,
-            dlamie=17.810652035055568,
             te=12,
             proton_rate_density=540072280299564.38,
             f_deuterium=0.5,
@@ -1483,7 +1476,6 @@ class PlasmaCompositionParam(NamedTuple):
             expected_zeff=2.0909945616489103,
             expected_nd_impurities=28875000000000004,
             expected_m_beam_amu=2.01355414,
-            expected_dlamie=17.810652035055568,
             expected_nd_alphas=7.5e18,
             expected_nd_protons=20519498414548412,
             expected_first_call=0,
@@ -1595,8 +1587,6 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         physics_variables, "m_beam_amu", plasmacompositionparam.m_beam_amu
     )
 
-    monkeypatch.setattr(physics_variables, "dlamie", plasmacompositionparam.dlamie)
-
     monkeypatch.setattr(physics_variables, "te", plasmacompositionparam.te)
 
     monkeypatch.setattr(
@@ -1687,10 +1677,6 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_f_alpha_ion
     )
 
-    assert physics_variables.dlamee == pytest.approx(
-        plasmacompositionparam.expected_dlamee
-    )
-
     assert physics_variables.zeff == pytest.approx(plasmacompositionparam.expected_zeff)
 
     assert physics_variables.nd_impurities == pytest.approx(
@@ -1699,10 +1685,6 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     assert physics_variables.m_beam_amu == pytest.approx(
         plasmacompositionparam.expected_m_beam_amu
-    )
-
-    assert physics_variables.dlamie == pytest.approx(
-        plasmacompositionparam.expected_dlamie
     )
 
     assert physics_variables.nd_alphas == pytest.approx(
