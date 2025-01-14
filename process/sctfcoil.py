@@ -1461,13 +1461,13 @@ class Sctfcoil:
         #  Current density limited by temperature rise during quench
 
         tav = 1.0e0 + (tmax - tba) / 20.0e0
-        no = int(tav)
-        np = no + 1
-        np = min(np, 11)
+        n_o = int(tav)
+        n_p = n_o + 1
+        n_p = min(n_p, 11)
 
-        ai1 = 1.0e16 * (p1[no - 1] + (p1[np - 1] - p1[no - 1]) * (tav - no))
-        ai2 = 1.0e16 * (p2[no - 1] + (p2[np - 1] - p2[no - 1]) * (tav - no))
-        ai3 = 1.0e16 * (p3[no - 1] + (p3[np - 1] - p3[no - 1]) * (tav - no))
+        ai1 = 1.0e16 * (p1[n_o - 1] + (p1[n_p - 1] - p1[n_o - 1]) * (tav - n_o))
+        ai2 = 1.0e16 * (p2[n_o - 1] + (p2[n_p - 1] - p2[n_o - 1]) * (tav - n_o))
+        ai3 = 1.0e16 * (p3[n_o - 1] + (p3[n_p - 1] - p3[n_o - 1]) * (tav - n_o))
 
         aa = vd * aio / tfes
         bb = (1.0e0 - fcond) * fcond * fcu * ai1
