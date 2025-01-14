@@ -6,8 +6,7 @@ module fwbs_variables
   !!
   !!### References
   !!
-  !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+  !! -
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
@@ -18,6 +17,9 @@ module fwbs_variables
 
   real(dp) :: bktlife
   !! Full power blanket lifetime (years)
+
+  real(dp) :: bktlife_cal
+  !! Calendar year blanket lifetime (years)
 
   real(dp) :: coolmass
   !! mass of water coolant (in shield, blanket, first wall, divertor) [kg]
@@ -664,6 +666,7 @@ module fwbs_variables
     implicit none
 
     bktlife = 0.0D0
+    bktlife_cal = 0.0D0
     coolmass = 0.0D0
     vvmass = 0.0D0
     denstl = 7800.0D0

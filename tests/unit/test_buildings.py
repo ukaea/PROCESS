@@ -1,15 +1,19 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
+
 from process.buildings import Buildings
-from process.fortran import current_drive_variables
-from process.fortran import fwbs_variables
-from process.fortran import buildings_variables
-from process.fortran import physics_variables
-from process.fortran import cost_variables
-from process.fortran import pfcoil_variables
-from process.fortran import tfcoil_variables
-from process.fortran import build_variables
-from process.fortran import divertor_variables
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    fwbs_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
 
 
 @pytest.fixture

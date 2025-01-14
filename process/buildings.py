@@ -1,18 +1,21 @@
+import logging
+
 import numpy
 
-from process.fortran import current_drive_variables
-from process.fortran import fwbs_variables
-from process.fortran import buildings_variables
-from process.fortran import physics_variables
-from process.fortran import cost_variables
-from process.fortran import pfcoil_variables
-from process.fortran import tfcoil_variables
-from process.fortran import build_variables
-from process.fortran import divertor_variables
-from process.fortran import heat_transport_variables
-from process.fortran import constants
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constants,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
 from process.fortran import process_output as po
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +77,7 @@ class Buildings:
                 tfcoil_variables.n_tf,
                 build_variables.rsldo,
                 build_variables.rsldi,
-                2.0e0 * (build_variables.hmax - build_variables.vgap2)
+                2.0e0 * (build_variables.hmax - build_variables.vgap_vv_thermalshield)
                 - build_variables.d_vv_top
                 - build_variables.d_vv_bot,
                 fwbs_variables.whtshld,
@@ -532,7 +535,7 @@ class Buildings:
                     build_variables.tfcth
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
-                    + build_variables.vgap2
+                    + build_variables.vgap_vv_thermalshield
                 )
             )
             hcomp_rad_thk = (
@@ -576,7 +579,7 @@ class Buildings:
                     build_variables.tfcth
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
-                    + build_variables.vgap2
+                    + build_variables.vgap_vv_thermalshield
                 )
             )
             hcomp_rad_thk = (

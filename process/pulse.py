@@ -1,13 +1,15 @@
-from process.fortran import physics_variables
-from process.fortran import times_variables
-from process.fortran import pfcoil_variables
-from process.fortran import constraint_variables
-from process.fortran import constants
-from process.fortran import pulse_variables
-from process.fortran import numerics
-from process.fortran import pf_power_variables
+from process.fortran import (
+    constants,
+    constraint_variables,
+    error_handling,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    times_variables,
+)
 from process.fortran import process_output as po
-from process.fortran import error_handling
 
 
 class Pulse:
@@ -21,7 +23,6 @@ class Pulse:
 
         This calls the routines relevant to a pulsed reactor scenario.
         Work File Notes F/MPE/MOD/CAG/PROCESS/PULSE
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -41,7 +42,6 @@ class Pulse:
         for a pulsed reactor.
         Work File Note F/MPE/MOD/CAG/PROCESS/PULSE/0013
         Work File Note F/PL/PJK/PROCESS/CODE/050
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -73,7 +73,9 @@ class Pulse:
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
         albusa = abs(pfcoil_variables.cptdin[pfcoil_variables.nohc - 1]) / 100.0e0
 
-        rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
+        # rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
+        #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
+        rho = pfcoil_variables.rhopfbus * pfbusl / (albusa / 10000)
 
         #  Central Solenoid power source emf (volts)
 
@@ -92,12 +94,12 @@ class Pulse:
         #  Maximum rate of change of plasma current (A/s)
         #  - now a function of the plasma current itself (previously just 0.5e6)
 
-        ipdot = 0.0455e0 * physics_variables.plascur
+        ipdot = 0.0455e0 * physics_variables.plasma_current
 
         #  Minimum plasma current ramp-up time (s)
         #  - corrected (bus resistance is not a function of pfcoil_variables.turns)
 
-        constraint_variables.tohsmn = (
+        constraint_variables.t_current_ramp_up_min = (
             loh
             * (ioht2 - ioht1)
             / (
@@ -115,8 +117,8 @@ class Pulse:
                 po.ovarre(
                     self.outfile,
                     "Minimum plasma current ramp-up time (s)",
-                    "(tohsmn)",
-                    constraint_variables.tohsmn,
+                    "(t_current_ramp_up_min)",
+                    constraint_variables.t_current_ramp_up_min,
                 )
 
     def burn(self, output: bool):
@@ -127,7 +129,6 @@ class Pulse:
 
         This routine calculates the burn time for a pulsed reactor.
         Work File Note F/MPE/MOD/CAG/PROCESS/PULSE/0012
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -150,9 +151,9 @@ class Pulse:
         #  Loop voltage during flat-top (including MHD sawtooth enhancement)
 
         vburn = (
-            physics_variables.plascur
-            * physics_variables.rplas
-            * physics_variables.facoh
+            physics_variables.plasma_current
+            * physics_variables.res_plasma
+            * physics_variables.inductive_current_fraction
             * physics_variables.csawth
         )
 
@@ -166,12 +167,11 @@ class Pulse:
             error_handling.fdiags[3] = times_variables.t_fusion_ramp
             error_handling.report_error(93)
 
-        times_variables.tburn = max(0.0e0, tb)
+        times_variables.t_burn = max(0.0e0, tb)
 
         #  Output section
 
         if output:
-
             po.osubhd(self.outfile, "Volt-second considerations:")
 
             po.ovarre(

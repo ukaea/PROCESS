@@ -123,7 +123,7 @@ Stellarators try to achieve zero plasma current in order to allow safe divertor 
 ### Beta limit
 
 The stellarator version calculates the plasma beta based on the input parameter and it is thus not necessary to Differently to the tokamak version, 
-The beta limit is assumed to be 5%, based on 3-D MHD calculations[^7]. To apply the beta limit, constraint equation no. 24 should be turned on with iteration variable no. 36 (`fbetatry`).
+The beta limit is assumed to be 5%, based on 3-D MHD calculations[^7]. To apply the beta limit, constraint equation no. 24 should be turned on with iteration variable no. 36 (`fbeta_max`).
 
 ### Density limit
 

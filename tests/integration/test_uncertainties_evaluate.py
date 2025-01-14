@@ -1,11 +1,16 @@
 """Integration tests for uncertainties/evaluate.py."""
-from process.uncertainties import evaluate_uncertainties
-from shutil import move
+
 import json
-from process.uncertainties import morris_plotting
-from process.uncertainties import sobol_plotting
-from process.uncertainties import hdf_to_scatter_plot
+from shutil import move
+
 import pytest
+
+from process.uncertainties import (
+    evaluate_uncertainties,
+    hdf_to_scatter_plot,
+    morris_plotting,
+    sobol_plotting,
+)
 
 # Uncertainties tests currently take too long for a 1h CI job
 pytest.skip(

@@ -6,8 +6,7 @@ module heat_transport_variables
     !!
     !!### References
     !!
-    !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+    !! -
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif

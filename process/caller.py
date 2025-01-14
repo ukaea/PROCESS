@@ -1,10 +1,28 @@
+from __future__ import annotations
+
+import logging
+import warnings
+from typing import TYPE_CHECKING, Tuple, Union
+
+import numpy as np
+from tabulate import tabulate
+
 from process import fortran as ft
+from process.final import finalise
+from process.io.mfile import MFile
+from process.objectives import objective_function
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
+
+if TYPE_CHECKING:
+    from process.main import Models
+
+logger = logging.getLogger(__name__)
 
 
 class Caller:
     """Calls physics and engineering models."""
 
-    def __init__(self, models, x):
+    def __init__(self, models: Models) -> None:
         """Initialise all physics and engineering models.
 
         To ensure that, at the start of a run, all physics/engineering
@@ -12,14 +30,191 @@ class Caller:
         called with the initial optimisation paramters, x.
 
         :param models: physics and engineering model objects
-        :type models: process.main.Models
-        :param x: optimisation parameters
-        :type x: np.ndarray
+        :type models: Models
         """
         self.models = models
-        self.call_models(x)
 
-    def call_models(self, xc):
+    @staticmethod
+    def check_agreement(
+        previous: Union[float, np.ndarray], current: Union[float, np.ndarray]
+    ) -> bool:
+        """Compare previous and current arrays for agreement within a tolerance.
+
+        :param previous: value(s) from previous models evaluation
+        :type previous: float | np.ndarray
+        :param current: value(s) from current models evaluation
+        :type current: float | np.ndarray
+        :return: whether values agree or not
+        :rtype: bool
+        """
+        # Check for same shape: mfile length can change between iterations
+        if isinstance(previous, float) or previous.shape == current.shape:
+            return np.allclose(previous, current, rtol=1.0e-6, equal_nan=True)
+        else:
+            return False
+
+    def call_models(self, xc: np.ndarray, m: int) -> Tuple[float, np.ndarray]:
+        """Evalutate models until results are idempotent.
+
+        Ensure objective function and constraints are idempotent before returning.
+
+        :param xc: optimisation parameters
+        :type xc: np.ndarray
+        :param m: number of constraints
+        :type m: int
+        :raises RuntimeError: if values are non-idempotent after successive
+        evaluations
+        :return: objective function and constraints
+        :rtype: Tuple[float, np.ndarray]
+        """
+        objf_prev = None
+        conf_prev = None
+
+        # Evaluate models up to 10 times; any more implies non-converging values
+        for _ in range(10):
+            self._call_models_once(xc)
+            # Evaluate objective function and constraints
+            objf = objective_function(ft.numerics.minmax)
+            conf, _, _, _, _ = ft.constraints.constraint_eqns(m, -1)
+
+            if objf_prev is None and conf_prev is None:
+                # First run: run again to check idempotence
+                logger.debug("New optimisation parameter vector being evaluated")
+                objf_prev = objf
+                conf_prev = conf
+                continue
+
+            # Check for idempotence
+            if self.check_agreement(objf_prev, objf) and self.check_agreement(
+                conf_prev, conf
+            ):
+                # Idempotent: no longer changing, so return
+                logger.debug(
+                    "Model evaluations idempotent, returning objective "
+                    "function and constraints"
+                )
+                return objf, conf
+
+            # Not idempotent: still changing, so evaluate models again
+            logger.debug("Model evaluations not idempotent: evaluating again")
+            objf_prev = objf
+            conf_prev = conf
+
+        raise RuntimeError(
+            "After 10 model evaluations at the current optimisation parameter "
+            "vector, values for the objective function and constraints haven't "
+            "converged (don't produce idempotent values)."
+        )
+
+    def call_models_and_write_output(self, xc: np.ndarray, ifail: int) -> None:
+        """Evaluate models until results are idempotent, then write output files.
+
+        Ensure all outputs in mfile are idempotent before returning, by
+        evaluating models multiple times. Typically used at the end of an
+        optimisation, or in a non-optimising evaluation. Writes OUT.DAT and
+        MFILE.DAT with final results.
+
+        :param xc: optimisation parameter
+        :type xc: np.ndarray
+        :param ifail: return code of solver
+        :type ifail: int
+        :raises RuntimeError: if values are non-idempotent after successive
+        evaluations
+        """
+        # TODO The only way to ensure idempotence in all outputs is by comparing
+        # mfiles at this stage
+        previous_mfile_data = None
+
+        try:
+            # Evaluate models up to 10 times; any more implies non-converging values
+            for _ in range(10):
+                # Divert OUT.DAT and MFILE.DAT output to scratch files for
+                # idempotence checking
+                ft.init_module.open_idempotence_files()
+                self._call_models_once(xc)
+                # Write mfile
+                finalise(self.models, ifail)
+
+                # Extract data from intermediate idempotence-checking mfile
+                mfile_path = (
+                    f2py_compatible_to_string(ft.global_variables.output_prefix)
+                    + "IDEM_MFILE.DAT"
+                )
+                mfile = MFile(mfile_path)
+                # Create mfile dict of float values: only compare floats
+                mfile_data = {
+                    var: val
+                    for var in mfile.data.keys()
+                    if isinstance(val := mfile.data[var].get_scan(-1), float)
+                }
+
+                if previous_mfile_data is None:
+                    # First run: need another run to compare with
+                    logger.debug(
+                        "New mfile created: evaluating models again to check idempotence"
+                    )
+                    previous_mfile_data = mfile_data.copy()
+                    continue
+
+                # Compare previous and current mfiles for agreement
+                nonconverged_vars = {}
+                for var in previous_mfile_data.keys():
+                    previous_value = previous_mfile_data[var]
+                    current_value = mfile_data.get(var, np.nan)
+                    if self.check_agreement(previous_value, current_value):
+                        continue
+                    else:
+                        # Value has changed between previous and current mfiles
+                        nonconverged_vars[var] = [
+                            previous_value,
+                            current_value,
+                        ]
+
+                if len(nonconverged_vars) == 0:
+                    # Previous and current mfiles agree (idempotent)
+                    logger.debug("Mfiles idempotent, returning")
+                    # Divert OUT.DAT and MFILE.DAT output back to original files
+                    # now idempotence checking complete
+                    ft.init_module.close_idempotence_files()
+                    # Write final output file and mfile
+                    finalise(self.models, ifail)
+                    return
+
+                # Mfiles not yet idempotent: need to re-evaluate models
+                logger.debug("Mfiles not idempotent, evaluating models again")
+                previous_mfile_data = mfile_data.copy()
+
+            # Values haven't all stabilised after 10 evaluations
+            # Which variables are still changing?
+            non_idempotent_warning = (
+                "Model evaluations at the current optimisation parameter vector "
+                "don't produce idempotent values in the final output."
+            )
+            non_idempotent_table = tabulate(
+                [[k, v[0], v[1]] for k, v in nonconverged_vars.items()],
+                headers=["Variable", "Previous value", "Current value"],
+            )
+
+            warnings.warn(
+                f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m"
+            )
+
+            # Close idempotence files, write final output file and mfile
+            ft.init_module.close_idempotence_files()
+            finalise(
+                self.models,
+                ifail,
+                non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
+            )
+            return
+
+        except Exception:
+            # If exception in model evaluations delete intermediate idempotence
+            # files to clean up
+            ft.init_module.close_idempotence_files()
+            raise
+
+    def _call_models_once(self, xc: np.ndarray) -> None:
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
@@ -57,15 +252,12 @@ class Caller:
         # Radial build
         if ft.build_variables.tf_in_cs == 1:
             self.models.build.tf_in_cs_bore_calc()
-        self.models.build.radialb(output=False)
+        self.models.build.calculate_radial_build(output=False)
 
         # Vertical build
-        self.models.build.vbuild(output=False)
+        self.models.build.calculate_vertical_build(output=False)
 
         self.models.physics.physics()
-
-        # startup model (not used)
-        # call startup(ft.constants.nout,0)  !  commented-out for speed reasons
 
         # Toroidal field coil model
 
@@ -158,3 +350,21 @@ class Caller:
         self.models.costs.run()
 
         # FISPACT and LOCA model (not used)- removed
+
+
+def write_output_files(models: Models, ifail: int) -> None:
+    """Evaluate models and write output files (OUT.DAT and MFILE.DAT).
+
+    :param models: physics and engineering models
+    :type models: Models
+    :param ifail: solver return code
+    :type ifail: int
+    """
+    n = ft.numerics.nvar
+    x = ft.numerics.xcm[:n]
+    # Call models, ensuring output mfiles are fully idempotent
+    caller = Caller(models)
+    caller.call_models_and_write_output(
+        xc=x,
+        ifail=ifail,
+    )

@@ -1,7 +1,6 @@
-from process.fortran import numerics
-from process.solver import get_solver
-from process.fortran import define_iteration_variables
 from process.evaluators import Evaluators
+from process.fortran import define_iteration_variables, numerics
+from process.solver import get_solver
 
 
 class Optimiser:
@@ -12,7 +11,6 @@ class Optimiser:
         developed by Argonne National Laboratory.
         On exit, the (normalised) value of the variable being maximised
         or minimised (i.e. the figure of merit) is returned in argument f.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code.
 
         This represents the old optimiz subroutine in the numerics module.
 
@@ -49,8 +47,8 @@ class Optimiser:
         # Configure solver for problem
         self.solver = get_solver(self.solver_name)
         self.solver.set_evaluators(evaluators)
-        self.solver.set_opt_params(x)
         self.solver.set_bounds(bndl, bndu)
+        self.solver.set_opt_params(x)
         self.solver.set_constraints(m, meq)
         ifail = self.solver.solve()
 

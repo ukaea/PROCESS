@@ -1,21 +1,22 @@
 """
 
-    File for reading IN.DATs
-    Version 2 (mainly for use with IN.DAT created from UI)
+File for reading IN.DATs
+Version 2 (mainly for use with IN.DAT created from UI)
 
-    James Morris
-    CCFE
-    11/12/14
+James Morris
+CCFE
+11/12/14
 
-    Notes:
-        + 24/11/2021: Global dictionary variables moved within the functions
-                    to avoid cyclic dependencies. This is because the dicts
-                    generation script imports, and inspects, process.
+Notes:
+    + 24/11/2021: Global dictionary variables moved within the functions
+                to avoid cyclic dependencies. This is because the dicts
+                generation script imports, and inspects, process.
 """
 
-from re import sub
 import subprocess
+from re import sub
 from sys import stderr
+
 from process.io.python_fortran_dicts import get_dicts
 
 # ioptimz values
@@ -42,7 +43,7 @@ def remove_empty_lines(lines):
     :param lines: list of lines (type=list)
     :return: list of lines with empty lines removed (type=list)
     """
-    return [line for line in lines if line != "\n"]
+    return [line for line in lines if line.strip(" ") != "\n"]
 
 
 def is_title(line):
@@ -800,8 +801,9 @@ def variable_constraint_type_check(item_number, var_type):
         # If not an integer warn of rounding and return rounded integer
         else:
             print(
-                "Value {0} for {1} not an integer. Value rounded to {2}. "
-                "Check!".format(item_number, var_type, int(item_number))
+                "Value {0} for {1} not an integer. Value rounded to {2}. Check!".format(
+                    item_number, var_type, int(item_number)
+                )
             )
             return int(item_number)
 
@@ -863,8 +865,9 @@ def variable_bound_check(bound_number, bound_type):
         else:
             bound_number = int(bound_number)
             print(
-                "Bound number {0} not an integer. "
-                "Value rounded to {1}".format(bound_number, int(bound_number))
+                "Bound number {0} not an integer. Value rounded to {1}".format(
+                    bound_number, int(bound_number)
+                )
             )
             return bound_number, bound_type
 
@@ -1598,35 +1601,5 @@ class StructuredInputData:
 
 
 if __name__ == "__main__":
-    # i = InDat(filename="../../modified_demo1_a31_rip06_2014_12_15.IN.DAT")
     i = InDat(filename="IN.DAT")
-    # print(i.data["ixc"].value)
-    # print(i.number_of_constraints)
-    # print(i.number_of_itvars)
-    # print(i.data["fimp"].value)
-    # print(i.data["ipfloc"].value)
-    # i.change_fimp(3, 0.5)
-    # print(i.data["zref"].value)
-    # i.change_zref(3, 0.5)
-    # i.remove_constraint_equation(2.5)
-    # i.add_constraint_equation("3.0")
-    # i.add_constraint_equation("2")
-    # i.add_iteration_variable(103)
-    # i.add_iteration_variable("2")
-    # i.add_iteration_variable(7.5)
-    # i.add_iteration_variable("5.5")
-    # i.remove_iteration_variable(2)
-    # i.remove_iteration_variable("3")
-    # i.remove_iteration_variable(4.5)
-    # i.remove_iteration_variable("6.5")
-    # # Add bound will change the bound value if it already exists
-    # i.add_bound(103, "upper", 5.0)
-    # i.remove_bound(2, "upper")
-    # # Add parameter will change the parameter value if it already exists
-    # i.add_parameter("blnktthdsd", 0.5)
-    # i.add_parameter("iavail", 1)
-    # i.remove_parameter("blnkithsddd")
-    # i.remove_parameter("blnkith")
-    # i.add_parameter("sweep", [3.0, 3.0])
-    # print(i.data["bounds"].get_value)
     i.write_in_dat()

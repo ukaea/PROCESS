@@ -28,6 +28,9 @@ $$
 
 This approximation is sufficiently accurate at the plasma centre.
 
+!!! tip "Recommended maximum critical current ratio"
+    For engineering feasibility, the TF coil operating current / critical current ratio shouldn't be set above 0.7, i.e. `fiooic` shouldn't be above 0.7.
+
 ## TF coil inboard mid-plane geometry
 This section describes TF coil inboard leg geometry of the cross-section defined by z=0 (mid-plane).  Resistive and superconducting coils are described separately.
 
@@ -255,7 +258,8 @@ turns. The number of turns can be parametrized in three different ways :
 - <p style='text-align: justify;'> 
     **Copper fraction (`fcutfsu`):** user input setting the copper fraction.
     This fraction is applied after the void and helium cooling channels areas
-    has been removed from the conductor area.
+    has been removed from the conductor area. Does not include any copper from
+    REBCO tape if used.
   </p>
 
 
@@ -1164,7 +1168,7 @@ Switch `i_tf_sc_mat` specifies which superconducting material is to be used:
 - `i_tf_sc_mat == 8` -- Durham Ginzburg-Landau critical surface model for REBCO
 - `i_tf_sc_mat == 9` -- Hazelton experimental data combined with Zhai conceptual model for REBCO
 
-The fraction of copper present in the superconducting filaments is given by `fcutfsu` (iteration variable number 59).
+The fraction of copper present in the superconducting filaments is given by `fcutfsu` (iteration variable number 59). For cases where REBCO tape is used this copper fraction does not include the copper within the tape.
 
 For `i_tf_sc_mat = 2`, a technology adjustment factor `fhts` may be used to modify 
 the critical current density fit for the Bi-2212 superconductor, to describe the 
@@ -1366,9 +1370,9 @@ In a TF coil fast discharge a large poloidal current is induced in the vessel.  
 
 [^1]: "PROCESS": A systems code for fusion power plants - Part 2: Engineering M. Kovari, F. Fox, C. Harrington, R. Kembleton, P. Knight, H. Lux, J. Morris Fusion Engineering and Design 104 (2016) 9-20 
 [^2]: Derivation_of_multilayer_generalized_plain_strain.docx in 
-<a href="https://git.ccfe.ac.uk/process/process/-/issues/991">PROCESS issue 991</a>
-[^3]:  <a href = "https://git.ccfe.ac.uk/process/process/-/issues/1048"> issue 1048 </a>
-[^4]: <a href = "https://git.ccfe.ac.uk/process/process/-/issues/1031"> issue 1031 </a>
+<a href="https://github.com/ukaea/PROCESS/issues/992"> PROCESS issue 992</a>
+[^3]:  <a href = "https://github.com/ukaea/PROCESS/issues/1049"> PROCESS issue 1049 </a>
+[^4]: <a href = "https://github.com/ukaea/PROCESS/issues/1032"> PROCESS issue 1032 </a>
 [^5]: $J_c(B,T,\epsilon)$ Parameterizations for the ITER Nb$_3$Sn Production',
 ITER Document 2MMF7J (2008), \texttt{https://user.iter.org/?uid=2MMF7J\&action=get\_document}
 

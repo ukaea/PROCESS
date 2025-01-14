@@ -1,15 +1,14 @@
+import logging
+import math
+
+import numpy as np
+
 from process.caller import Caller
-from process.fortran import global_variables as gv
-from process.fortran import constraints
 from process.fortran import cost_variables as cv
+from process.fortran import global_variables as gv
 from process.fortran import numerics
 from process.fortran import physics_variables as pv
-from process.fortran import stellarator_variables as sv
 from process.fortran import times_variables as tv
-from process.fortran import function_evaluator
-import numpy as np
-import math
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ class Evaluators:
         :param x: optimisation parameters
         :type x: np.ndarray
         """
-        self.caller = Caller(models, x)
+        self.caller = Caller(models)
 
     def fcnvmc1(self, n, m, xv, ifail):
         """Function evaluator for VMCON.
@@ -37,7 +36,6 @@ class Evaluators:
         n-dimensional point of interest xv.
         Note that the equality constraints must precede the inequality
         constraints in conf.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         :param n: number of variables
         :type n: int
         :param m: number of constraints
@@ -54,29 +52,7 @@ class Evaluators:
         conf = np.zeros(m, dtype=np.float64, order="F")
 
         # Evaluate machine parameters at xv
-        self.caller.call_models(xv)
-
-        # Convergence loop to ensure burn time consistency
-        if sv.istell == 0:
-            for _ in range(10):
-                if abs((tv.tburn - tv.tburn0) / max(tv.tburn, 0.01)) <= 0.001:
-                    break
-
-                self.caller.call_models(xv)
-                if gv.verbose == 1:
-                    print("Internal tburn consistency check: ", tv.tburn, tv.tburn0)
-            else:
-                print(
-                    "Burn time values are not consistent in iteration: ",
-                    numerics.nviter,
-                )
-                print("tburn, tburn0: ", tv.tburn, tv.tburn0)
-
-        # Evaluate figure of merit (objective function)
-        objf = function_evaluator.funfom()
-
-        # Evaluate constraint equations
-        conf, _, _, _, _ = constraints.constraint_eqns(m, -1)
+        objf, conf = self.caller.call_models(xv, m)
 
         # Verbose diagnostics
         if gv.verbose == 1:
@@ -92,9 +68,9 @@ class Evaluators:
             logger.debug(f"{pv.te = }")
             logger.debug(f"{cv.coe = }")
             logger.debug(f"{pv.rmajor = }")
-            logger.debug(f"{pv.powfmw = }")
+            logger.debug(f"{pv.fusion_power = }")
             logger.debug(f"{pv.bt = }")
-            logger.debug(f"{tv.tburn = }")
+            logger.debug(f"{tv.t_burn = }")
             logger.debug(f"{sqsumconfsq = }")
             logger.debug(f"{xv = }")
 
@@ -110,7 +86,6 @@ class Evaluators:
         constraints in conf. The constraint gradients or normals are returned as the
         columns of cnorm.
 
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         :param n: number of variables
         :type n: int
         :param m: number of constraints
@@ -143,14 +118,10 @@ class Evaluators:
                     xbac[i] = xv[j] * (1.0 - numerics.epsfcn)
 
             # Evaluate at (x+dx)
-            self.caller.call_models(xfor)
-            ffor = function_evaluator.funfom()
-            cfor, _, _, _, _ = constraints.constraint_eqns(m, -1)
+            ffor, cfor = self.caller.call_models(xfor, m)
 
             # Evaluate at (x-dx)
-            self.caller.call_models(xbac)
-            fbac = function_evaluator.funfom()
-            cbac, _, _, _, _ = constraints.constraint_eqns(m, -1)
+            fbac, cbac = self.caller.call_models(xbac, m)
 
             # Calculate finite difference gradients
             fgrd[i] = (ffor - fbac) / (xfor[i] - xbac[i])
@@ -164,6 +135,6 @@ class Evaluators:
         # variable in the solution vector is inconsistent with its value
         # shown elsewhere in the output file, which is a factor (1-epsfcn)
         # smaller (i.e. its xbac value above).
-        self.caller.call_models(xv)
+        self.caller.call_models(xv, m)
 
         return fgrd, cnorm

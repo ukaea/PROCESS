@@ -63,9 +63,9 @@ powfmax = 3000
 * Burn time lower limit *
 *-----------------------*
 icc = 13 
-ixc = 21 * ftburn
+ixc = 21 * ft_burn
 * minimum burn time [s]
-tbrnmn = 7200.0
+t_burn_min = 7200.0
 
 * L-H threshold scaling *
 *-----------------------*
@@ -90,8 +90,8 @@ pnetelin = 400.0
 * Beta upper limit *
 *------------------*
 icc = 24
-ixc = 36 * fbetatry
-fbetatry = 0.5
+ixc = 36 * fbeta_max
+fbeta_max = 0.5
 
 * Max TF field *
 *--------------*
@@ -363,7 +363,7 @@ alphan = 1.00
 alphat = 1.45 
 
 * (troyon-like) coefficient for beta scaling
-dnbeta = 3.0
+beta_norm_max = 3.0
 
 * Zohm elongation scaling adjustment factor (ishape=2; 3)
 fkzohm = 1.02
@@ -372,19 +372,19 @@ fkzohm = 1.02
 gamma = 0.3
 
 * Switch for bootstrap current scaling
-ibss = 4
+i_bootstrap_current = 4
 
 * Switch for beta limit scaling
-iculbl = 1
+i_beta_component = 1
 
 * Switch for plasma current scaling
-icurr    = 4
+i_plasma_current    = 4
 
 * Switch for density limit to enforce
-idensl = 7
+i_density_limit = 7
 
 * Switch for fast alpha pressure calculation
-ifalphap = 1
+i_beta_fast_alpha = 1
 
 * Switch for inverse quadrature in l-mode scaling laws 5 and 9
 iinvqd = 1
@@ -441,19 +441,19 @@ plasma_res_factor = 0.7
 lpulse = 1
 
 * dwell time [s]
-tdwell = 1800.0
+t_between_pulse = 1800.0
 
 * Switch for pulse timing calculations
 pulsetimings = 0
 
 * CS ramp up time [s]
-tramp = 500.0
+t_precharge = 500.0
 
 * Current drive *
 *---------------*
 
 * Maximum fraction of plasma current from bootstrap
-bscfmax = 0.95
+bootstrap_current_fraction_max = 0.95
 
 * Switch for current drive efficiency model
 iefrf = 10

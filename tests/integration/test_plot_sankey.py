@@ -1,4 +1,5 @@
 """Integration tests for plot_sankey.py."""
+
 from process.io import plot_sankey
 
 

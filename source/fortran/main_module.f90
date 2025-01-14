@@ -34,8 +34,7 @@ subroutine inform(progid)
   !! This subroutine uses system calls to identify the user, date,
   !! machine etc. for the present run, and stores the information
   !! in a character string array.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout
@@ -48,7 +47,7 @@ subroutine inform(progid)
   character(len=10) :: progname
   character(len=98) :: executable
   character(len=*), parameter :: progver = &  !  Beware: keep exactly same format...
-       '3.0.2   Release Date :: 2024-01-25'
+       '3.1.0   Release Date :: 2024-03-21'
   character(len = 50) :: dt_time
   character(len=72), dimension(10) :: id
 
@@ -321,8 +320,7 @@ end subroutine run_summary
 !   !! author: P J Knight, CCFE, Culham Science Centre
 !   !! ifail   : output integer : error flag
 !   !! This routine calls the non-optimising equation solver.
-!   !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-!   !
+!   !! !   !
 !   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !   use constants, only: nout, mfile, iotty
 !   use constraints, only: constraint_eqns
@@ -333,7 +331,7 @@ end subroutine run_summary
 !     icc, lablcc, eqsolv
 !   use process_output, only: ovarin, oblnkl, ocmmnt, oheadr, osubhd, &
 !     ovarre, int_to_string3
-!   use physics_variables, only: bt, aspect, rmajor, powfmw, wallmw
+!   use physics_variables, only: bt, aspect, rmajor, fusion_power, wallmw
 !   use define_iteration_variables, only: loadxc
 !   implicit none
 
@@ -473,8 +471,7 @@ subroutine herror(ifail)
   !! by default the output file and screen, respectively.
   !! <P>If <CODE>IFAIL=1</CODE> then a feasible solution has been
   !! found and therefore no error message is required.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout, iotty
@@ -563,8 +560,7 @@ subroutine verror(ifail)
   !! by default the output file and screen, respectively.
   !! <P>If <CODE>IFAIL=1</CODE> then a feasible solution has been
   !! found and therefore no error message is required.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout, iotty
@@ -681,7 +677,7 @@ end subroutine verror
 subroutine runtests
    ! These tests should gradually be moved to pytest
   use constants, only: nout
-  use maths_library, only: nearly_equal, binomial, test_secant_solve
+  use maths_library, only: binomial
   use process_output, only: ocmmnt, ovarre
 !   use pfcoil_module, only: brookscoil
 !   use reinke_module, only: test_reinke
@@ -696,7 +692,6 @@ subroutine runtests
   call ovarre(nout,'Binomial coefficients C(5,5): 1', '(binomial(5,5))', binomial(5,5))
 
    !   call brookscoil(nout) Moved to pytest
-  call test_secant_solve()
   ! Disabled for ease of #1542 - Tim
 !   call test_reinke()
 end subroutine runtests

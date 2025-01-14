@@ -22,12 +22,11 @@ Output file:
 # standard python modules
 import argparse
 import csv
-from pathlib import Path, PurePath
 import json
+from pathlib import Path, PurePath
 
 # PROCESS-specific modules
 from process.io.mfile import MFile
-
 
 # == define functions ==
 

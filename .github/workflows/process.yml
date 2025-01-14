@@ -11,45 +11,13 @@ permissions:
   id-token: write
 
 jobs:
-  docker:
+  make:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Check for changed files affecting the container
-        uses: dorny/paths-filter@v2
-        id: changes
+      - uses: actions/setup-python@v4
         with:
-          filters: |
-            build_container:
-              - 'docker/ci/Dockerfile'
-              - 'requirements.txt'
-              - 'requirements_dev.txt'
-      - name: Login to GitHub Container Registry
-        if: steps.changes.outputs.build_container == 'true' && github.ref == 'refs/heads/main'
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: timothy-nunn
-          password: ${{ secrets.PROCESS_CI_PAT }}
-      - name: Build the PROCESS Docker image
-        if: steps.changes.outputs.build_container == 'true' && github.ref == 'refs/heads/main'
-        run: |
-          cp requirements.txt docker/ci/
-          cp requirements_dev.txt docker/ci/
-          cd docker/ci
-          docker build . -t ghcr.io/ukaea/process-ci:latest
-          docker push ghcr.io/ukaea/process-ci:latest
-
-  make-py38:
-    runs-on: ubuntu-latest
-    needs: docker
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
+          python-version: '3.10'
       - name: Build PROCESS
         run: |
           git config --global --add safe.directory '*'
@@ -62,29 +30,20 @@ jobs:
           path: |
             process/**/*.so
             process/io/python_fortran_dicts.json
-      - name: Archive coverage data
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-artifacts
-          path: |
-            build/CMakeFiles/process.dir/source/fortran/*.gcno
-            lcov_results
       - name: Archive ford artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ford-artifact
           path: build/ford_project.pickle
 
-  unit-py38:
+  unit-test:
     runs-on: ubuntu-latest
-    needs: make-py38
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    needs: make
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
@@ -92,89 +51,92 @@ jobs:
           path: process/
       - name: Install PROCESS
         # Editable install to match default install
-        run: pip install -e .
+        run: |
+          pip install -e '.[test, examples]'
+          pip install -r requirements_dev.txt
       - name: Run unit tests
-        run: pytest --cov=process tests/unit -v
+        run: |
+          pytest --cov=process tests/unit -v \
+                 --cov-report xml
       - name: Archive unit test coverage data
         uses: actions/upload-artifact@v3
         with:
           name: unit-coverage-artifacts
           path: .coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          fail_ci_if_error: ${{ github.ref_name == 'main' }}
 
-  integration-py38:
+  integration-test:
     runs-on: ubuntu-latest
-    needs: make-py38
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    needs: make
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: process-build-artifacts
           path: process/
       - name: Install PROCESS
-        run: pip install -e .
+        # Editable install to match default install
+        run: |
+          pip install -e '.[test, examples]'
+          pip install -r requirements_dev.txt
+      - name: Install poppler
+        run: |
+          sudo apt update
+          sudo apt install poppler-utils
       - name: Run integration tests
         run: pytest tests/integration -n auto -v
-  
 
-  regression-py38:
+
+  regression-test:
     runs-on: ubuntu-latest
-    needs: make-py38
+    needs: [make, tracking]
+    # depend on make and tracking job, check make job was successful
+    # but dont skip if tracking was skipped
+    if: always() && needs.make.result == 'success'
     continue-on-error: true
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      matrix:
+        tolerance: [0, 5]
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: process-build-artifacts
           path: process/
       - name: Install PROCESS
-        run: pip install -e .
+        # Editable install to match default install
+        run: |
+          pip install -e '.[test, examples]'
+          pip install -r requirements_dev.txt
+      - name: Allow git commands to be run
+        run: git config --global --add safe.directory '*'
       - name: Run regression tests
-        run: pytest tests/regression -v --reg-tolerance=0
+        run: pytest tests/regression -sv --reg-tolerance=${{ matrix.tolerance }}
 
-  regression-5-percent-py38:
+  run-tracking-inputs:
     runs-on: ubuntu-latest
-    needs: make-py38
-    continue-on-error: true
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: process-build-artifacts
-          path: process/
-      - name: Install PROCESS
-        run: pip install -e .
-      - name: Run regression tests
-        run: pytest tests/regression
-
-  large-tokamak-py38:
-    runs-on: ubuntu-latest
-    needs: make-py38
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    needs: make
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
@@ -182,54 +144,42 @@ jobs:
           path: process/
       - name: Install PROCESS
         run: pip install -e .
-      - name: Run large tokamak
-        run: |
-          process -i tests/regression/scenarios/large-tokamak/IN.DAT
-          mv tests/regression/scenarios/large-tokamak/MFILE.DAT tracking/large_tokamak_MFILE.DAT
-      - name: Archive large-tokamak MFILE
+      - name: Install dev dependencies
+        run: pip install -r requirements_dev.txt
+      - name: Run regression input files
+        run: python tracking/run_tracking_inputs.py run tests/regression/input_files
+      - name: Archive tracked MFILEs
         uses: actions/upload-artifact@v3
         with:
-          name: large-tokamak-mfile
-          path: tracking/large_tokamak_MFILE.DAT
+          name: tracked-mfiles
+          path: tracking/*_MFILE.DAT
 
-  flake8:
+  pre-commit-quality-check:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
-      - name: Run Flake8 linter
-        run: python -m flake8 --tee .
-
-  black:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run Black
-        run: python -m black --check .
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dev dependencies
+        run: pip install -r requirements_dev.txt
+      - name: Run pre-commit
+        run: pre-commit run --all-files
 
   tracking:
     concurrency:
       group: tracking-jobs
       cancel-in-progress: false
     runs-on: ubuntu-latest
-    needs: large-tokamak-py38
+    needs: run-tracking-inputs
     if: github.ref == 'refs/heads/main'
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
@@ -237,6 +187,8 @@ jobs:
           path: process/
       - name: Install PROCESS
         run: pip install -e .
+      - name: Install dev dependencies
+        run: pip install -r requirements_dev.txt
       - name: Setup SSH identity
         uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -246,13 +198,14 @@ jobs:
       - name: Download large tokamak MFILE
         uses: actions/download-artifact@v3
         with:
-          name: large-tokamak-mfile
+          name: tracked-mfiles
           path: tracking/
       - name: Create new tracking entries
+        shell: bash
         run: |
+          MSG=$(printf "%q " $COMMIT_MESSAGE)
           git config --global --add safe.directory '*'
-          python tracking/tracking_data.py track process-tracking-data --mfile tracking/large_tokamak_MFILE.DAT --hash ${{ github.sha }} --commit '${{ github.event.head_commit.message }}'
-          cp tracking/large_tokamak_MFILE.DAT process-tracking-data/large_tokamak_MFILE_$(git rev-parse HEAD).DAT
+          python tracking/run_tracking_inputs.py track process-tracking-data "${MSG}" ${{ github.sha }}
       - name: Create the tracking dashboard
         run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
@@ -278,15 +231,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: tracking
     if: github.ref == 'refs/heads/main'
-    container:
-      image: ghcr.io/ukaea/process-ci:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
@@ -294,6 +245,10 @@ jobs:
           path: process/
       - name: Install PROCESS
         run: pip install -e .
+      - name: Install dev dependencies
+        run: pip install -r requirements_dev.txt
+      - name: Install ford
+        run: pip install git+https://github.com/jonmaddock/ford
       - run: ford documentation/ford/index.md
       - name: Download ford project
         uses: actions/download-artifact@v3

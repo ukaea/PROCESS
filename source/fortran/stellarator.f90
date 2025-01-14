@@ -7,8 +7,7 @@ module stellarator_module
   !! parameters of the first wall, blanket and shield components
   !! of a fusion power plant.
 
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifndef dp
    use, intrinsic :: iso_fortran_env, only: dp=>real64
@@ -49,20 +48,19 @@ contains
     !! This routine initialises the variables relevant to stellarators.
     !! Many of these may override the values set in routine
     !! <A HREF="initial.html">initial</A>.
-    !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-    !
+    !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use build_variables, only: gapoh, iohcl, ohcth, tfootfi
     use current_drive_variables, only: irfcd
     use pfcoil_variables, only: ohhghf
-    use physics_variables, only: aspect, dnbeta, kappa, kappa95, q, rmajor, &
+    use physics_variables, only: aspect, beta_norm_max, kappa, kappa95, q, rmajor, &
       triang, hfac, tauscl
     use numerics, only: boundl, boundu
     use stellarator_variables, only: istell
     use tfcoil_variables, only: n_tf
-    use times_variables, only: tburn, tcycle, tdown, tdwell, t_fusion_ramp, tohs, &
-      tpulse, tqnch, tramp
+    use times_variables, only: t_burn, t_cycle, tdown, t_between_pulse, t_fusion_ramp, t_current_ramp_up, &
+      t_pulse_repetition, t_ramp_down, t_precharge
 		use global_variables, only: icase
 		use constants, only: pi, rmu0, nout
     implicit none
@@ -100,7 +98,7 @@ contains
 
     !  Physics quantities
 
-    dnbeta = 0.0D0
+    beta_norm_max = 0.0D0
     kappa95 = 1.0D0
     triang = 0.0D0
     q = 1.03D0
@@ -111,13 +109,13 @@ contains
 
     !  Times for different phases
 
-    tramp = 0.0D0
-    tohs = 0.0D0
-    tburn = 3.15576D7  !  one year
-    tqnch = 0.0D0
-    tpulse = tohs + t_fusion_ramp + tburn + tqnch
-    tdown  = tramp + tohs + tqnch + tdwell
-    tcycle = tramp + tohs + t_fusion_ramp + tburn + tqnch + tdwell
+    t_precharge = 0.0D0
+    t_current_ramp_up = 0.0D0
+    t_burn = 3.15576D7  !  one year
+    t_ramp_down = 0.0D0
+    t_pulse_repetition = t_current_ramp_up + t_fusion_ramp + t_burn + t_ramp_down
+    tdown  = t_precharge + t_current_ramp_up + t_ramp_down + t_between_pulse
+    t_cycle = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn + t_ramp_down + t_between_pulse
 
   end subroutine stinit
 end module stellarator_module

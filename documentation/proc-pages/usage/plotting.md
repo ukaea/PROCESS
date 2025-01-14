@@ -15,13 +15,33 @@ or through Process's main CLI (working, but still in development):
 process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 ``` 
 <figure markdown>
-![plot_proc_1](../../images/plot_proc_1.PNG){ width="100%"}
+![plot_proc_1](../images/plot_proc_1.PNG){ width="100%"}
 <figcaption>Figure 1: plot_proc front summary page </figcaption>
 </figure>
 
 <figure markdown>
-![plot_proc_2](../../images/plot_proc_2.PNG){ width="100%"}
-<figcaption>Figure 2: plot_proc plasma profiles and cross-sections page </figcaption>
+![plot_proc_2](../images/plot_proc_2.PNG){ width="100%"}
+<figcaption>Figure 2: plot_proc plasma profiles page </figcaption>
+</figure>
+
+<figure markdown>
+![plot_proc_3](../images/plot_proc_3.PNG){ width="100%"}
+<figcaption>Figure 3: plot_proc machine cross-section page </figcaption>
+</figure>
+
+<figure markdown>
+![plot_proc_4](../images/plot_proc_4.PNG){ width="100%"}
+<figcaption>Figure 4: plot_proc TF coil and turn structure page </figcaption>
+</figure>
+
+<figure markdown>
+![plot_proc_5](../images/plot_proc_5.PNG){ width="100%"}
+<figcaption>Figure 5: plot_proc bootstrap current model and L-H threshold comparison page </figcaption>
+</figure>
+
+<figure markdown>
+![plot_proc_6](../images/plot_proc_6.PNG){ width="100%"}
+<figcaption>Figure 6: plot_proc density limit comparison page </figcaption>
 </figure>
 
 <h3>Scan files</h3>
@@ -33,13 +53,13 @@ Scans can be done in one or two dimensions.
 python process/io/plot_scans.py -f path/to/MFILE.DAT
 ```
 <figure markdown>
-![2D_contour_plot](../../images/2D_contour_plot_example.png){figures-side, width="100%"}  
-<figcaption>Figure 3: 2D scan contour plot </figcaption>
+![2D_contour_plot](../images/2D_contour_plot_example.png){figures-side, width="100%"}  
+<figcaption>Figure 7: 2D scan contour plot </figcaption>
 </figure>
 
 <figure markdown>
-![2D_stack_plot](../../images/stack_scan_plot_example.png){figures-side, width="100%"}  
-<figcaption>Figure 3: 1D scan plot </figcaption>
+![2D_stack_plot](../images/stack_scan_plot_example.png){figures-side, width="100%"}  
+<figcaption>Figure 8: 1D scan plot </figcaption>
 </figure>
 
 
@@ -52,7 +72,7 @@ python process/io/plot_scans.py -f path/to/MFILE.DAT
 python process/io/plot_radial_build.py -f path/to/MFILE.DAT
 ```
 <figure markdown>
-![radial_build_plot](../../images/radial_build_plot.png){ width="100%"}
-<figcaption>Figure 5: Simple radial build plot </figcaption>
+![radial_build_plot](../images/radial_build_plot.png){ width="100%"}
+<figcaption>Figure 9: Simple radial build plot </figcaption>
 </figure>
 

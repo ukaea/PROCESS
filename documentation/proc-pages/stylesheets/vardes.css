@@ -19,6 +19,11 @@ td {
     padding: 10px;
     border: 1px solid;
 }
+hr {
+    border: 0;
+    height: 0.1px; /* Adjust the height to change the thickness */
+    background: rgba(128, 128, 128, 0.25); /* Adjust the color and transparency as needed */
+}
 
 html {
     font-size: 1.3rem;

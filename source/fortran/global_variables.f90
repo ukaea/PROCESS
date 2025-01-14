@@ -4,10 +4,6 @@ module global_variables
   !! This module contains miscellaneous global variables not well-suited to any
   !! of the other 'variables' modules.
   !!
-  !!### References
-  !!
-  !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif

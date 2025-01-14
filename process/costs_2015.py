@@ -1,19 +1,22 @@
 import logging
-import numpy
-from process.fortran import constants
-from process.fortran import cost_variables
-from process.fortran import heat_transport_variables
-from process.fortran import process_output as po
-from process.fortran import global_variables
-from process.fortran import fwbs_variables
-from process.fortran import build_variables
-from process.fortran import current_drive_variables
-from process.fortran import pfcoil_variables
-from process.fortran import tfcoil_variables
-from process.fortran import pf_power_variables
-from process.fortran import physics_variables
-from process.variables import AnnotatedVariable
 
+import numpy
+
+from process.fortran import (
+    build_variables,
+    constants,
+    cost_variables,
+    current_drive_variables,
+    fwbs_variables,
+    global_variables,
+    heat_transport_variables,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    tfcoil_variables,
+)
+from process.fortran import process_output as po
+from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
 
@@ -1016,7 +1019,7 @@ class Costs2015:
         #  Cost of ITER pellet injector and pellet injection system
         self.s_cref[46] = 25.0e6
         #  Scale with fusion power (MW)
-        self.s_k[46] = physics_variables.powfmw
+        self.s_k[46] = physics_variables.fusion_power
         self.s_kref[46] = 500.0e0
         self.s_cost[46] = (
             self.s_cost_factor[46]
@@ -1028,7 +1031,7 @@ class Costs2015:
         # #  Cost of ITER gas injection system, GDC, Gi valve boxes
         self.s_cref[47] = 32.0e6
         #  Scale with fusion power (MW)
-        self.s_k[47] = physics_variables.powfmw
+        self.s_k[47] = physics_variables.fusion_power
         self.s_kref[47] = 500.0e0
         self.s_cost[47] = (
             self.s_cost_factor[47]
@@ -1040,7 +1043,7 @@ class Costs2015:
         #  Cost of ITER vacuum pumping
         self.s_cref[48] = 201.0e6
         #  Scale with fusion power (MW)
-        self.s_k[48] = physics_variables.powfmw
+        self.s_k[48] = physics_variables.fusion_power
         self.s_kref[48] = 500.0e0
         self.s_cost[48] = (
             self.s_cost_factor[48]
@@ -1052,7 +1055,7 @@ class Costs2015:
         #  Cost of ITER tritium plant
         self.s_cref[49] = 226.0e6
         #  Scale with fusion power (MW)
-        self.s_k[49] = physics_variables.powfmw
+        self.s_k[49] = physics_variables.fusion_power
         self.s_kref[49] = 500.0e0
         self.s_cost[49] = (
             self.s_cost_factor[49]
@@ -1108,7 +1111,7 @@ class Costs2015:
         #  Cost of ITER radiological protection
         self.s_cref[54] = 19.0e6
         #  Scale with fusion power (MW)
-        self.s_k[54] = physics_variables.powfmw
+        self.s_k[54] = physics_variables.fusion_power
         self.s_kref[54] = 500.0e0
         self.s_cost[54] = (
             self.s_cost_factor[54]

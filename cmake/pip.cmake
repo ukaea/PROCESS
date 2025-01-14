@@ -7,12 +7,13 @@
 
 MACRO(PIP_INSTALL)
     SET(PIP_NAME "pip_installs")
-    if ( RELEASE )
+
+    if(RELEASE)
         SET(RELEASE TRUE)
     else()
         SET(RELEASE FALSE)
     endif()
-    
+
     EXECUTE_PROCESS(
         COMMAND bash -c "${Python3_EXECUTABLE} -c \"import ford\""
         OUTPUT_VARIABLE FORD_CHECK
@@ -48,24 +49,11 @@ MACRO(PIP_INSTALL)
         DEPENDS ${PIP_COMPLETE_FILE}
     )
 
-    # Manually install numpy as including it in requirements doesnt install it
-    # It is a pre-requisite to f90wrap install
-    if (${RELEASE})
-        ADD_CUSTOM_COMMAND(
-            OUTPUT ${PIP_COMPLETE_FILE}
-            COMMAND ${Python3_EXECUTABLE} -m pip install numpy
-            COMMAND ${Python3_EXECUTABLE} -m pip install -r ${MODULE_REQUIREMENTS_FILE}
-            COMMAND touch ${PIP_COMPLETE_FILE}
-        )
-    else()
-        ADD_CUSTOM_COMMAND(
-            OUTPUT ${PIP_COMPLETE_FILE}
-            COMMAND ${Python3_EXECUTABLE} -m pip install numpy
-            COMMAND ${Python3_EXECUTABLE} -m pip install -r ${MODULE_REQUIREMENTS_FILE}
-            COMMAND ${Python3_EXECUTABLE} -m pip install -r ${DEVELOP_REQUIREMENTS_FILE}
-            COMMAND touch ${PIP_COMPLETE_FILE}
-        )
-    endif()
+    ADD_CUSTOM_COMMAND(
+        OUTPUT ${PIP_COMPLETE_FILE}
+        COMMAND ${Python3_EXECUTABLE} -m pip install -r ${MODULE_REQUIREMENTS_FILE}
+        COMMAND touch ${PIP_COMPLETE_FILE}
+    )
 
     ADD_DEPENDENCIES(${PIP_NAME} ford_git)
 ENDMACRO()

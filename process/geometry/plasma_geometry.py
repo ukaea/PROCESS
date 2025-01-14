@@ -1,8 +1,10 @@
 """
 Calculate plasma elongation and radial and vertical coordinates for the geometry of the plasma
 """
-from dataclasses import dataclass
+
 import math
+from dataclasses import dataclass
+
 import numpy as np
 
 

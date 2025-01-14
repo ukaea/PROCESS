@@ -1,8 +1,8 @@
 import logging
+
 import numpy
-from process.fortran import constants
-from process.fortran import build_variables
-from process.fortran import physics_variables
+
+from process.fortran import build_variables, constants, physics_variables
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,6 @@ class PlasmaGeom:
         J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
         unpublished internal Oak Ridge document
         F/MI/PJK/LOGBOOK14, pp.41-43
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         H. Zohm et al, On the Physics Guidelines for a Tokamak DEMO,
         FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
         """
@@ -40,7 +39,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 0
         ):  # Use input kappa, physics_variables.triang values
-
             #  Rough estimate of 95% values
             #  ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
             #  (close to previous estimate of (physics_variables.kappa - 0.04) / 1.1
@@ -52,7 +50,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 1
         ):  # ST scaling with physics_variables.aspect ratio [STAR Code]
-
             physics_variables.qlim = 3.0e0 * (
                 1.0e0 + 2.6e0 * physics_variables.eps**2.8e0
             )
@@ -75,7 +72,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 2
         ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang
-
             physics_variables.kappa = physics_variables.fkzohm * min(
                 2.0e0, 1.5e0 + 0.5e0 / (physics_variables.aspect - 1.0e0)
             )
@@ -87,7 +83,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 3
         ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang95
-
             physics_variables.kappa = physics_variables.fkzohm * min(
                 2.0e0, 1.5e0 + 0.5e0 / (physics_variables.aspect - 1.0e0)
             )
@@ -100,7 +95,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 4
         ):  # Use input kappa95, physics_variables.triang95 values
-
             # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
             physics_variables.kappa = 1.12e0 * physics_variables.kappa95
             physics_variables.triang = 1.5e0 * physics_variables.triang95
@@ -108,7 +102,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 5
         ):  # Use input kappa95, physics_variables.triang95 values
-
             # Fit to MAST data (Issue #1086)
             physics_variables.kappa = 0.91300e0 * physics_variables.kappa95 + 0.38654e0
             physics_variables.triang = (
@@ -118,7 +111,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 6
         ):  # Use input kappa, physics_variables.triang values
-
             # Fit to MAST data (Issue #1086)
             physics_variables.kappa95 = (
                 physics_variables.kappa - 0.38654e0
@@ -130,7 +122,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 7
         ):  # Use input kappa95, physics_variables.triang95 values
-
             # Fit to FIESTA (Issue #1086)
             physics_variables.kappa = 0.90698e0 * physics_variables.kappa95 + 0.39467e0
             physics_variables.triang = (
@@ -140,7 +131,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 8
         ):  # Use input kappa, physics_variables.triang values
-
             # Fit to FIESTA (Issue #1086)
             physics_variables.kappa95 = (
                 physics_variables.kappa - 0.39467e0
@@ -152,7 +142,6 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 9
         ):  # Use input triang, physics_variables.rli values
-
             # physics_variables.kappa found from physics_variables.aspect ratio and plasma internal inductance li(3)
             physics_variables.kappa = (1.09e0 + 0.26e0 / physics_variables.rli) * (
                 1.5e0 / physics_variables.aspect
@@ -162,7 +151,6 @@ class PlasmaGeom:
             physics_variables.triang95 = physics_variables.triang / 1.50e0
 
         if physics_variables.ishape == 10:
-
             # physics_variables.kappa95 found from physics_variables.aspect ratio and stabilty margin
             # Based on fit to CREATE data. ref Issue #1399
             # valid for EU-DEMO like machine - physics_variables.aspect ratio 2.6 - 3.6
@@ -197,7 +185,6 @@ class PlasmaGeom:
             physics_variables.triang95 = physics_variables.triang / 1.50e0
 
         if physics_variables.ishape == 11:
-
             # See Issue #1439
             # physics_variables.triang is an input
             # physics_variables.kappa found from physics_variables.aspect ratio scaling on p32 of Menard:
@@ -222,24 +209,8 @@ class PlasmaGeom:
             physics_variables.kappa,
             physics_variables.triang,
         )
-
-        #  Poloidal perimeter
-        physics_variables.pperim = 2.0e0 * (xo * thetao + xi * thetai)
-        physics_variables.sf = physics_variables.pperim / (
-            2.0e0 * numpy.pi * physics_variables.rminor
-        )
-
-        #  Volume
-        physics_variables.vol = physics_variables.cvol * self.xvol(
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            xi,
-            thetai,
-            xo,
-            thetao,
-        )
-
-        #  Surface area
+        #  Surface area - inboard and outboard.  These are not given by Sauter but
+        #  the outboard area is required by DCLL and divertor
         xsi, xso = self.xsurf(
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -249,10 +220,44 @@ class PlasmaGeom:
             thetao,
         )
         physics_variables.sareao = xso
-        physics_variables.sarea = xsi + xso
 
-        #  Cross-sectional area
-        physics_variables.xarea = self.xsecta(xi, thetai, xo, thetao)
+        # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma current.
+        if physics_variables.i_plasma_current == 8:
+            (
+                physics_variables.pperim,
+                physics_variables.sf,
+                physics_variables.sarea,
+                physics_variables.xarea,
+                physics_variables.plasma_volume,
+            ) = self.Sauter_geometry(
+                physics_variables.rminor,
+                physics_variables.rmajor,
+                physics_variables.kappa,
+                physics_variables.triang,
+            )
+
+        else:
+            #  Poloidal perimeter
+            physics_variables.pperim = 2.0e0 * (xo * thetao + xi * thetai)
+            physics_variables.sf = physics_variables.pperim / (
+                2.0e0 * numpy.pi * physics_variables.rminor
+            )
+
+            #  Volume
+            physics_variables.plasma_volume = physics_variables.cvol * self.xvol(
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                xi,
+                thetai,
+                xo,
+                thetao,
+            )
+
+            #  Cross-sectional area
+            physics_variables.xarea = self.xsecta(xi, thetai, xo, thetao)
+
+            #  Surface area - sum of inboard and outboard.
+            physics_variables.sarea = xsi + xso
 
     def xparam(self, a, kap, tri):
         """
@@ -271,7 +276,6 @@ class PlasmaGeom:
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.42
         F/PL/PJK/PROCESS/CODE/047
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         t = 1.0e0 - tri
         denomi = (kap**2 - t**2) / (2.0e0 * t)
@@ -335,7 +339,6 @@ class PlasmaGeom:
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.43
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         fourpi = 4.0e0 * numpy.pi
 
@@ -358,7 +361,6 @@ class PlasmaGeom:
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
         F/PL/PJK/PROCESS/CODE/047
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         #  Inboard arc
@@ -391,7 +393,6 @@ class PlasmaGeom:
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.43
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -440,12 +441,11 @@ class PlasmaGeom:
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.41
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
-        xsecta = xo**2 * (
-            thetao - numpy.cos(thetao) * numpy.sin(thetao)
-        ) + xi**2 * (thetai - numpy.cos(thetai) * numpy.sin(thetai))
+        xsecta = xo**2 * (thetao - numpy.cos(thetao) * numpy.sin(thetao)) + xi**2 * (
+            thetai - numpy.cos(thetai) * numpy.sin(thetai)
+        )
 
         return xsecta
 
@@ -462,7 +462,6 @@ class PlasmaGeom:
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.41
         F/PL/PJK/PROCESS/CODE/047
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         zn = kap * a
@@ -510,7 +509,6 @@ class PlasmaGeom:
         by Peng.
         F/MI/PJK/LOGBOOK14, p.41
         F/PL/PJK/PROCESS/CODE/047
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri
@@ -534,3 +532,40 @@ class PlasmaGeom:
         xsect0 = xlo**2 * (thetao - cto * sto) + xli**2 * (thetai - cti * sti)
 
         return xsect0
+
+    def sauter_geometry(self, a, r0, kap, tri):
+        """
+        Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Design 112 (2016) 633–645
+        'Geometric formulas for system codes including the effect of negative triangularity'
+        Author: Michael Kovari, issue #392
+        a      : input real :  plasma minor radius (m)
+        r0     : input real :  plasma major radius (m)
+        kap    : input real :  plasma separatrix elongation
+        tri    : input real :  plasma separatrix triangularity
+        """
+        w07 = 1
+        eps = a / r0
+
+        # Poloidal perimeter (named Lp in Sauter)
+        pperim = (
+            2.0e0
+            * numpy.pi
+            * a
+            * (1 + 0.55 * (kap - 1))
+            * (1 + 0.08 * tri**2)
+            * (1 + 0.2 * (w07 - 1))
+        )
+
+        # A geometric factor
+        sf = pperim / (2.0e0 * numpy.pi * a)
+
+        # Surface area (named Ap in Sauter)
+        sarea = 2.0e0 * numpy.pi * r0 * (1 - 0.32 * tri * eps) * pperim
+
+        # Cross-section area (named S_phi in Sauter)
+        xarea = numpy.pi * a**2 * kap * (1 + 0.52 * (w07 - 1))
+
+        # Volume
+        plasma_volume = 2.0e0 * numpy.pi * r0 * (1 - 0.25 * tri * eps) * xarea
+
+        return pperim, sf, sarea, xarea, plasma_volume

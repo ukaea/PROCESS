@@ -1,7 +1,7 @@
 """Simple submodule to provide access to some git attributes about the current repository"""
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 
 def git_commit_message(directory=None) -> str:

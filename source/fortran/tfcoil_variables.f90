@@ -5,7 +5,6 @@ module tfcoil_variables
   !!
   !!### References
   !!
-  !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
   !! - ITER Magnets design description document DDD11-2 v2 2 (2009)
 
 #ifndef dp
@@ -309,6 +308,14 @@ module tfcoil_variables
   real(dp) :: jbus
   !! bussing current density (A/m2)
 
+  real(dp) :: j_crit_str_tf
+  !! j_crit_str : superconductor strand critical current density under operating
+  !! conditions (A/m2). Necessary for the cost calculation in $/kAm
+
+  real(dp), dimension(9) :: j_crit_str_0
+  !! j_crit_str_pf_0 : superconductor strand critical current density at 6 T and 4.2 K (A/m2)
+  !! Necessary for the cost calculation in $/kAm
+
   real(dp) :: jwdgcrt
   !! critical current density for winding pack (A/m2)
 
@@ -503,12 +510,6 @@ module tfcoil_variables
 
   real(dp) :: tfckw
   !! available DC power for charging the TF coils (kW)
-
-  !#TODO: issue #781
-  ! integer :: tfc_model
-  ! !! tfc_model /1/ : switch for TF coil magnet stress model:<UL>
-  ! !!                 <LI> = 0 simple model (solid copper coil)
-  ! !!                 <LI> = 1 CCFE two-layer stress model; superconductor</UL>
 
   real(dp) :: tfcmw
   !! Peak power per TF power supply (MW)
@@ -903,6 +904,13 @@ module tfcoil_variables
     n_tf_stress_layers = 0
     n_tf_wp_layers = 5
     jbus = 1.25D6
+    j_crit_str_tf = 0.0D0
+    j_crit_str_0 = &
+      (/596905475.80390120D0,1925501534.8512938D0,&
+      724544682.96063495D0,549858624.45072436D0, &
+      669284509.85818779D0,0.0D0,&
+      898964415.36996782D0,1158752995.2559297D0, &
+      865652122.9071957D0/)
     jwdgcrt = 0.0D0
     jwdgpro = 0.0D0
     jwptf = 0.0D0
@@ -961,7 +969,7 @@ module tfcoil_variables
     tflegmw = 0.0D0
     rhocp = 0.0D0
     rhotfleg = 0.0D0
-    rhotfbus = -1.0D0 ! 2.5D-8
+    rhotfbus = 2.62D-8    !-1.0D0 ! 2.5D-8
     frhocp = 1.0D0
     frholeg = 1.0D0
     rho_tf_joints = 2.5D-10

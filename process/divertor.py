@@ -1,12 +1,12 @@
 import math
 
-from process.fortran import constants
 from process.fortran import build_variables as bv
+from process.fortran import constants
 from process.fortran import divertor_variables as dv
-from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
-from process.fortran import process_output as po
 from process.fortran import error_handling as eh
+from process.fortran import physics_variables as pv
+from process.fortran import process_output as po
+from process.fortran import tfcoil_variables as tfv
 
 
 class Divertor:
@@ -15,7 +15,6 @@ class Divertor:
 
     This module contains routines relevant for calculating the
     divertor parameters for a fusion power plant.
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     """
 
     def __init__(self) -> None:
@@ -29,7 +28,6 @@ class Divertor:
         This subroutine calls the divertor routine. This routine scales
         dimensions, powers and field levels which are used as input to
         the Harrison divertor model.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -41,7 +39,7 @@ class Divertor:
                 pv.rminor,
                 pv.triang,
                 bv.scrapli,
-                bv.vgap,
+                bv.vgap_xpoint_divertor,
                 pv.pdivt,
                 output=output,
             )
@@ -225,7 +223,6 @@ class Divertor:
         This subroutine performs the iteration described in M. Harrison's
         and Kukushkin's analytic ITER divertor model.
         Report ITER-IL-PH-13-9-e12
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param adas: divertor flux area / main plasma area (long separatrix)
         :type adas: float
@@ -543,7 +540,6 @@ class Divertor:
         ionized, per neutral recycle event, from the Harrison / Kukushkin
         ITER model.
         Report ITER-IL-PH-13-9-e12
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param tdiv: electron temperature at the plate (eV)
         :type tdiv: float
@@ -578,7 +574,6 @@ class Divertor:
 
         This function calculates an estimate for the divertor temperature (eV).
         Report ITER-IL-PH-13-9-e12
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param aion: ion mass (assumes fuel only) (AMU)
         :type aion: float
@@ -667,7 +662,6 @@ class Divertor:
 
         This function updates the divertor model temperature ratio solution.
         Report ITER-IL-PH-13-9-e12
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param aion: ion mass (assumes fuel only) (AMU)
         :type aion: float
@@ -739,7 +733,6 @@ class Divertor:
         This function provides the plasma sheath energy transfer coefficient
         from the Harrison / Kukushkin ITER model.
         Report ITER-IL-PH-13-9-e12
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param gcoef: coefficient
         :type gcoef: float
@@ -759,7 +752,7 @@ class Divertor:
         rminor: float,
         triang: float,
         scrapli: float,
-        vgap: float,
+        vgap_xpoint_divertor: float,
         pdivt: float,
         output: bool,
     ) -> float:
@@ -771,7 +764,6 @@ class Divertor:
         divertor chamber by the action of a gaseous target. Each divertor is
         assumed to be approximately triangular in the R,Z plane.
         AEA FUS 64: Figure 2
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param rmajor: plasma major radius (m)
         :type rmajor: float
@@ -785,8 +777,8 @@ class Divertor:
         :param scrapli: inboard scrape-off width (m)
         :type scrapli: float
 
-        :param vgap: top scrape-off width (m)
-        :type vgap: float
+        :param vgap_xpoint_divertor: top scrape-off width (m)
+        :type vgap_xpoint_divertor: float
 
         :param pdivt: power to the divertor (MW)
         :type pdivt: float
@@ -808,15 +800,15 @@ class Divertor:
 
         #  Angle of diagonal divertor plate from horizontal
 
-        if vgap <= 0.0e0:
-            eh.fdiags[0] = vgap
+        if vgap_xpoint_divertor <= 0.0e0:
+            eh.fdiags[0] = vgap_xpoint_divertor
             eh.report_error(22)
 
-        theta = math.atan(vgap / (r2 - r1))
+        theta = math.atan(vgap_xpoint_divertor / (r2 - r1))
 
         #  Vertical plate area
 
-        a1 = 2.0e0 * constants.pi * r1 * vgap
+        a1 = 2.0e0 * constants.pi * r1 * vgap_xpoint_divertor
 
         #  Horizontal plate area
 
@@ -919,17 +911,11 @@ class Divertor:
         Bt_omp = -bt * rmajor / r_omp
 
         # Eich scaling for lambda_q
-        lambda_eich = (
-            1.35 * pdivt**-0.02 * rmajor**0.04 * bp**-0.92 * aspect**0.42
-        )
+        lambda_eich = 1.35 * pdivt**-0.02 * rmajor**0.04 * bp**-0.92 * aspect**0.42
 
         # Spreading factor
         spread_fact = (
-            0.12
-            * (nesep / 1e19) ** -0.02
-            * pdivt**-0.21
-            * rmajor**0.71
-            * bp**-0.82
+            0.12 * (nesep / 1e19) ** -0.02 * pdivt**-0.21 * rmajor**0.71 * bp**-0.82
         )
 
         # SOL width
@@ -942,9 +928,7 @@ class Divertor:
         alpha_div = flux_exp * alpha_mid
 
         # Tilt of the separatrix relative to the target in the poloidal plane
-        theta_div = math.asin(
-            (1 + 1 / alpha_div**2) * math.sin(math.radians(beta_div))
-        )
+        theta_div = math.asin((1 + 1 / alpha_div**2) * math.sin(math.radians(beta_div)))
 
         # Wetted area
         area_wetted = (

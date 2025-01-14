@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class ConfigurationParser(object):
-
     """Abstract parser class. Must be subclassed to be used.
 
     The parser should always put read-in data in the data property.
@@ -39,11 +38,10 @@ class ConfigurationParser(object):
         """Check that value corresponds to a specific data format."""
         logger.info("type of value: {}".format(type(value)))
         if not isinstance(value, dict) and value is not None:
-            raise ValueError("Configuration data must be specified as a " "dictionary")
+            raise ValueError("Configuration data must be specified as a dictionary")
 
 
 class JsonConfigParser(ConfigurationParser):
-
     """JSON configuration parser."""
 
     def __init__(self, filename):
@@ -53,12 +51,11 @@ class JsonConfigParser(ConfigurationParser):
                 config_file_data = json.load(fh)
                 self.data = config_file_data
         except FileNotFoundError:
-            logger.error("Cannot find configuration file " "{}".format(filename))
+            logger.error("Cannot find configuration file {}".format(filename))
             pass
 
 
 class Config(object):
-
     """Generic configuration for PROCESS tools. Read-only."""
 
     def __init__(self, config_file, parser=JsonConfigParser):
@@ -94,7 +91,7 @@ class Config(object):
         if isinstance(config, dict) and len(keys) > 1:
             return self._search_config_for(value, *keys[1:])
         elif not isinstance(value, dict) and len(keys) > 1:
-            raise KeyError("{} cannot be found in " "{}".format(search_key, value))
+            raise KeyError("{} cannot be found in {}".format(search_key, value))
         else:
             return self._lowercase(value)
 
@@ -117,8 +114,9 @@ class Config(object):
                 return default
             else:
                 logger.exception(
-                    "Cannot find value or default for {} in "
-                    "configuration".format(config_keys)
+                    "Cannot find value or default for {} in configuration".format(
+                        config_keys
+                    )
                 )
         except (IndexError, TypeError):
             raise

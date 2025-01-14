@@ -1,16 +1,19 @@
-import pytest
-import numpy
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-from process.fortran import sctfcoil_module
-from process.fortran import tfcoil_variables
-from process.fortran import global_variables
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import fwbs_variables
-from process.fortran import divertor_variables
-from process.sctfcoil import Sctfcoil
+import numpy
+import pytest
+
 from process import sctfcoil as sctf
+from process.fortran import (
+    build_variables,
+    divertor_variables,
+    fwbs_variables,
+    global_variables,
+    physics_variables,
+    sctfcoil_module,
+    tfcoil_variables,
+)
+from process.sctfcoil import Sctfcoil
 
 
 @pytest.fixture
@@ -210,11 +213,11 @@ class SuperconParam(NamedTuple):
             tmax=150,
             bcritsc=24,
             tcritsc=16,
-            expected_temp_margin=2.3431632224075836,
+            expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
             expected_jwdgcrt=41107234.360397324,
             expected_vd=9988.2637896807955,
-            expected_tmarg=2.3431632224075836,
+            expected_tmarg=2.34312129,
         ),
         SuperconParam(
             tmargmin_tf=1.5,
@@ -250,11 +253,11 @@ class SuperconParam(NamedTuple):
             tmax=150,
             bcritsc=24,
             tcritsc=16,
-            expected_temp_margin=2.3431632224075836,
+            expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
             expected_jwdgcrt=41107234.360397324,
             expected_vd=10001.287165953383,
-            expected_tmarg=2.3431632224075836,
+            expected_tmarg=2.34312129,
         ),
         SuperconParam(
             tmargmin_tf=1.5,
@@ -290,11 +293,11 @@ class SuperconParam(NamedTuple):
             tmax=150,
             bcritsc=24,
             tcritsc=16,
-            expected_temp_margin=2.3431632224075836,
+            expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
             expected_jwdgcrt=41107234.360397324,
             expected_vd=10001.287165953383,
-            expected_tmarg=2.3431632224075836,
+            expected_tmarg=2.34312129,
         ),
     ),
 )
@@ -1846,8 +1849,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     tfcryoarea: Any = None
 
-    tfsao: Any = None
-
     whtgw: Any = None
 
     tfocrn: Any = None
@@ -1860,7 +1861,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     whtconin: Any = None
 
-    tfsai: Any = None
+    tfcryoarea: Any = None
 
     vftf: Any = None
 
@@ -1940,8 +1941,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     expected_tfcryoarea: Any = None
 
-    expected_tfsao: Any = None
-
     expected_whtgw: Any = None
 
     expected_tfocrn: Any = None
@@ -1974,14 +1973,12 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             whtcas=0,
             tficrn=0,
             tfcryoarea=0,
-            tfsao=0,
             whtgw=0,
             tfocrn=0,
             whtconsc=0,
             whtconcu=0,
             whtcon=0,
             whtconin=0,
-            tfsai=0,
             vftf=0.30000000000000004,
             dcond=numpy.array(
                 numpy.array(
@@ -2026,7 +2023,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_whtcas=1034021.9996272125,
             expected_tficrn=0.8197580588957678,
             expected_tfcryoarea=6381.2092203414386,
-            expected_tfsao=1324.3051892984724,
             expected_whtgw=5909.3507916745702,
             expected_tfocrn=0.59553192892551199,
             expected_whtconsc=5802.5700395134345,
@@ -2049,14 +2045,12 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             whtcas=1034021.9996272125,
             tficrn=0.8197580588957678,
             tfcryoarea=6381.2092203414386,
-            tfsao=1324.3051892984724,
             whtgw=5909.3507916745702,
             tfocrn=0.59553192892551199,
             whtconsc=5802.5700395134345,
             whtconcu=58744.465423173802,
             whtcon=0,
             whtconin=0,
-            tfsai=0,
             vftf=0.30000000000000004,
             dcond=numpy.array(
                 numpy.array(
@@ -2101,7 +2095,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_whtcas=1034699.2182961091,
             expected_tficrn=0.8197580588957678,
             expected_tfcryoarea=6385.0231118485681,
-            expected_tfsao=1325.0966938769795,
             expected_whtgw=5912.8826650262808,
             expected_tfocrn=0.59553192892551199,
             expected_whtconsc=5806.038092640837,
@@ -2161,8 +2154,6 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
         tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfsao", tfcoilareaandmassesparam.tfsao)
-
     monkeypatch.setattr(tfcoil_variables, "whtgw", tfcoilareaandmassesparam.whtgw)
 
     monkeypatch.setattr(tfcoil_variables, "tfocrn", tfcoilareaandmassesparam.tfocrn)
@@ -2175,7 +2166,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
 
     monkeypatch.setattr(tfcoil_variables, "whtconin", tfcoilareaandmassesparam.whtconin)
 
-    monkeypatch.setattr(tfcoil_variables, "tfsai", tfcoilareaandmassesparam.tfsai)
+    monkeypatch.setattr(
+        tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
+    )
 
     monkeypatch.setattr(tfcoil_variables, "vftf", tfcoilareaandmassesparam.vftf)
 
@@ -2285,10 +2278,6 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
 
     assert tfcoil_variables.tfcryoarea == pytest.approx(
         tfcoilareaandmassesparam.expected_tfcryoarea
-    )
-
-    assert tfcoil_variables.tfsao == pytest.approx(
-        tfcoilareaandmassesparam.expected_tfsao
     )
 
     assert tfcoil_variables.whtgw == pytest.approx(
@@ -3210,6 +3199,58 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_acndttf=0.0013087416857142699,
             expected_insulation_area=0.00015594390212434958,
             expected_n_tf_turn=246.63461538461544,
+        ),
+        TfAveragedTurnGeomParam(
+            layer_ins=0,
+            t_conductor=5.712e-02,
+            t_turn_tf=0.05872,
+            t_turn_tf_is_input=True,
+            cpttf=0,
+            t_cable_tf=0,
+            t_cable_tf_is_input=False,
+            awptf=0.60510952642236249,
+            t_turn_radial=0.05872,
+            t_turn_toroidal=0.05872,
+            t_cable=0.04109,
+            i_tf_sc_mat=1,
+            jwptf=2.301e07,
+            thwcndut=8.015e-03,
+            thicndut=8.0e-4,
+            expected_t_conductor=5.712e-02,
+            expected_t_turn_tf=0.05872,
+            expected_t_turn_radial=0.05872,
+            expected_t_turn_toroidal=0.05872,
+            expected_t_cable=0.04109,
+            expected_acstf=0.001657369442,
+            expected_acndttf=0.001605324958,
+            expected_insulation_area=0.000185344,
+            expected_n_tf_turn=175.49384787,
+        ),
+        TfAveragedTurnGeomParam(
+            layer_ins=0,
+            t_conductor=0.058296,
+            t_turn_tf=0,
+            t_turn_tf_is_input=False,
+            cpttf=0,
+            t_cable_tf=0.042,
+            t_cable_tf_is_input=True,
+            awptf=0.60510952642236249,
+            t_turn_radial=0.05872,
+            t_turn_toroidal=0.05872,
+            t_cable=0.04109,
+            i_tf_sc_mat=1,
+            jwptf=2.673e07,
+            thwcndut=8.148e-03,
+            thicndut=8.0e-4,
+            expected_t_conductor=0.058296,
+            expected_t_turn_tf=0.059896,
+            expected_t_turn_radial=0.059896,
+            expected_t_turn_toroidal=0.059896,
+            expected_t_cable=0.042,
+            expected_acstf=0.001731943361,
+            expected_acndttf=0.001666480255,
+            expected_insulation_area=0.00018910719999999962,
+            expected_n_tf_turn=168.6701961481806,
         ),
     ),
 )
@@ -6437,14 +6478,12 @@ class PlaneStressParam(NamedTuple):
             n_radial_array=100,
             nlayers=3,
             nu=numpy.array([0.3, 0.34006912702297704, 0.3]),
-            rad=numpy.array(
-                [
-                    3.6732023601326333,
-                    3.7688101124061717,
-                    3.7649909451102674,
-                    3.8249909451102675,
-                ]
-            ),
+            rad=numpy.array([
+                3.6732023601326333,
+                3.7688101124061717,
+                3.7649909451102674,
+                3.8249909451102675,
+            ]),
             ey=numpy.array([2.05000000e11, 21085960915.80571, 2.05000000e11]),
             j=numpy.array([0.00000000e00, -2245759961.294637, 0.00000000e00]),
             expected_sigr=[
@@ -14024,7 +14063,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(sctfcoil_module, "a_case_front", 0.47)
     monkeypatch.setattr(sctfcoil_module, "a_case_nose", 0.47)
 
-    monkeypatch.setattr(build_variables, "vgap", 0.05)  # Baseline 2018
+    monkeypatch.setattr(build_variables, "vgap_xpoint_divertor", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "shldtth", 0.3)  # Baseline 2018
     monkeypatch.setattr(
         divertor_variables, "divfix", 2.05

@@ -1,0 +1,31 @@
+extend-exclude = ["env", ".env"]
+target-version = "py310"
+
+[lint]
+extend-select = [
+    "I",
+    "INT",
+    "YTT",
+    "ASYNC",
+    "COM",
+    "T10",
+    "FA",
+    "LOG",
+    "PYI",
+    "Q",
+    "RSE",
+    "SLOT",
+    "TID",
+    "PGH",
+    "FLY",
+    "F",
+    "W",
+]
+
+ignore = ["COM812", "FBT", "G004"]
+
+[lint.per-file-ignores]
+"tests/*" = ["ARG"]
+
+[format]
+preview = true

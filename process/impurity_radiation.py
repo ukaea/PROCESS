@@ -1,20 +1,14 @@
-import numpy
 import dataclasses
-import re
-import sys
-from typing import Optional, List
-from pathlib import Path
-from scipy import integrate
-from process.fortran import impurity_radiation_module
-from process.fortran import error_handling
-
-if sys.version_info >= (3, 9):
-    from importlib import resources
-else:
-    import importlib_resources as resources
-
-
 import logging
+import re
+from importlib import resources
+from pathlib import Path
+from typing import List, Optional
+
+import numpy
+from scipy import integrate
+
+from process.fortran import error_handling, impurity_radiation_module
 
 logger = logging.getLogger(__name__)
 
@@ -326,29 +320,6 @@ def z2index(zimp):
     error_handling.report_error(33)
 
 
-def pbremden(imp_element_index, nprofile, tprofile):
-    """Calculates the Bremsstrahlung power per volume for a given set of profiles.
-
-    :param imp_element_index: Impurity profile index
-    :type imp_element_index: int
-    :param nprofile: density profile
-    :type nprofile: numpy.array
-    :param tprofile: temperature profile
-    :type tprofile: numpy.array
-    :return: pbremden - Bremsstrahlung power array
-    :rtype: numpy.array
-    """
-    pbremden = (
-        impurity_radiation_module.impurity_arr_frac[imp_element_index]
-        * nprofile
-        * nprofile
-        * numpy.square(zav_of_te(imp_element_index, tprofile))
-        * 5.355e-37
-        * numpy.sqrt(tprofile)
-    )
-    return pbremden
-
-
 def fradcore(rho, coreradius, coreradiationfraction):
     """Finds the fraction of radiation from the core that is subtracted in impurity radiation model.
 
@@ -490,12 +461,25 @@ def pimpden(imp_element_index, nprofile, tprofile):
     return pimpden
 
 
+def element2index(element: str):
+    """Returns the index of the `element` in the impurity array with
+    a given name
+    """
+    try:
+        return (
+            impurity_radiation_module.impurity_arr_label.astype(str)
+            .tolist()
+            .index(element)
+        )
+    except ValueError as e:
+        raise ValueError(f"Element {element} is not found in impurity_arr_label") from e
+
+
 class ImpurityRadiation:
     """This class calculates the impurity radiation losses for given temperature and density profiles.
-    The considers the Bremsstrahlung (radb), line radiation (radl), total impurity radiation
-    from the core (radcore) and total impurity radiation (radtot) [MW/(m^3)].
-    The class is used to sum the impurity radiation loss from each impurity element to find the
-    total impurity radiation loss."""
+    The considers the  total impurity radiation from the core (radcore) and total impurity radiation
+    (radtot) [MW/(m^3)]. The class is used to sum the impurity radiation loss from each impurity
+    element to find the total impurity radiation loss."""
 
     def __init__(self, plasma_profile):
         """
@@ -509,18 +493,12 @@ class ImpurityRadiation:
             0
         ]
 
-        self.pline_profile = numpy.zeros(self.plasma_profile.profile_size)
-        self.pbrem_profile = numpy.zeros(self.plasma_profile.profile_size)
         self.pimp_profile = numpy.zeros(self.plasma_profile.profile_size)
         self.radtot_profile = numpy.zeros(self.plasma_profile.profile_size)
         self.radcore_profile = numpy.zeros(self.plasma_profile.profile_size)
-        self.radb_profile = numpy.zeros(self.plasma_profile.profile_size)
-        self.radl_profile = numpy.zeros(self.plasma_profile.profile_size)
 
         self.radtot = 0.0
         self.radcore = 0.0
-        self.radb = 0.0
-        self.radl = 0.0
 
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""
@@ -545,33 +523,12 @@ class ImpurityRadiation:
         :type imp_element_index: Int
         """
 
-        pbrem = pbremden(
-            imp_element_index,
-            self.plasma_profile.neprofile.profile_y,
-            self.plasma_profile.teprofile.profile_y,
-        )
-        self.pbrem_profile = numpy.add(self.pbrem_profile, pbrem)
-
         pimp = pimpden(
             imp_element_index,
             self.plasma_profile.neprofile.profile_y,
             self.plasma_profile.teprofile.profile_y,
         )
 
-        pline = numpy.zeros(self.plasma_profile.profile_size)
-
-        # Using a 'mask' to apply logic to the array values in lieu of loops
-        pimp_greater_pbrem_mask = pimp >= pbrem
-        pline[pimp_greater_pbrem_mask] = (
-            pimp[pimp_greater_pbrem_mask] - pbrem[pimp_greater_pbrem_mask]
-        )
-        self.pline_profile = numpy.add(self.pline_profile, pline)
-
-        # There is a model inconsistency where pimp < pbrem, which should never be true.
-        # This fix is okay at high T but should be remedied.
-        pimp[numpy.invert(pimp_greater_pbrem_mask)] = pbrem[
-            numpy.invert(pimp_greater_pbrem_mask)
-        ]
         self.pimp_profile = numpy.add(self.pimp_profile, pimp)
 
     def calculate_radiation_loss_profiles(self):
@@ -590,23 +547,12 @@ class ImpurityRadiation:
             )
         )
 
-        radb = self.pbrem_profile * self.rho
-        radl = self.pline_profile * self.rho
-
         self.radtot_profile = numpy.add(self.radtot_profile, radtot)
         self.radcore_profile = numpy.add(self.radcore_profile, radcore)
-        self.radb_profile = numpy.add(self.radb_profile, radb)
-        self.radl_profile = numpy.add(self.radl_profile, radl)
 
     def integrate_radiation_loss_profiles(self):
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss."""
-        self.radb = 2.0e-6 * integrate.simpson(
-            self.radb_profile, x=self.rho, dx=self.rhodx
-        )
-        self.radl = 2.0e-6 * integrate.simpson(
-            self.radl_profile, x=self.rho, dx=self.rhodx
-        )
         self.radtot = 2.0e-6 * integrate.simpson(
             self.radtot_profile, x=self.rho, dx=self.rhodx
         )

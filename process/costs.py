@@ -1,22 +1,27 @@
-from process.fortran import constants, cost_variables
-from process.fortran import process_output as po
-from process.fortran import ife_variables, fwbs_variables
-from process.fortran import tfcoil_variables
-from process.fortran import physics_variables
-from process.fortran import buildings_variables
-from process.fortran import build_variables
-from process.fortran import structure_variables
-from process.fortran import divertor_variables
-from process.fortran import pfcoil_variables
-from process.fortran import current_drive_variables
-from process.fortran import vacuum_variables
-from process.fortran import heat_transport_variables
-from process.fortran import pf_power_variables
-from process.fortran import pulse_variables
-from process.fortran import times_variables
-from process.fortran import error_handling
-from process.variables import AnnotatedVariable
 import numpy
+
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constants,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    error_handling,
+    fwbs_variables,
+    heat_transport_variables,
+    ife_variables,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    structure_variables,
+    tfcoil_variables,
+    times_variables,
+    vacuum_variables,
+)
+from process.fortran import process_output as po
+from process.variables import AnnotatedVariable
 
 
 class Costs:
@@ -77,8 +82,11 @@ class Costs:
         unless otherwise stated. Account 22 costs include a multiplier
         to account for Nth-of-a-kind cost reductions.
         <P>The code is arranged in the order of the standard accounts.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
+        # Convert FPY component lifetimes to calendar years
+        # for replacment components
+        self.convert_fpy_to_calendar()
+
         self.acc21()
 
         #  Account 22 : Fusion power island
@@ -126,23 +134,23 @@ class Costs:
         po.ovarrf(
             self.outfile,
             "First wall / blanket life (years)",
-            "(fwbllife)",
-            fwbs_variables.bktlife,
+            "(bktlife_cal)",
+            fwbs_variables.bktlife_cal,
         )
 
         if ife_variables.ife != 1:
             po.ovarrf(
                 self.outfile,
                 "Divertor life (years)",
-                "(divlife.)",
-                cost_variables.divlife,
+                "(divlife_cal)",
+                cost_variables.divlife_cal,
             )
             if physics_variables.itart == 1:
                 po.ovarrf(
                     self.outfile,
                     "Centrepost life (years)",
-                    "(cplife.)",
-                    cost_variables.cplife,
+                    "(cplife_cal)",
+                    cost_variables.cplife_cal,
                 )
 
         po.ovarrf(
@@ -854,7 +862,6 @@ class Costs:
         None
         This routine evaluates the Account 22 (fusion power island
         - the tokamak itself plus auxiliary power systems, etc.) costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.acc221()
 
@@ -917,7 +924,6 @@ class Costs:
         treated as fuel costs, rather than as capital costs.
         <P>If ifueltyp = 2, the initial first wall, blanket and divertor costs are
         treated as capital costs, and replacemnts are included as fuel costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.acc2211()
 
@@ -950,7 +956,6 @@ class Costs:
         None
         This routine evaluates the Account 222 (magnet) costs,
         including the costs of associated cryostats.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if ife_variables.ife == 1:
             cost_variables.c222 = 0.0e0
@@ -977,7 +982,6 @@ class Costs:
         author: P J Knight, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 225 (power conditioning) costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if ife_variables.ife == 1:
             self.c225 = 0.0e0
@@ -1012,7 +1016,6 @@ class Costs:
         <P>The general form of the cost algorithm is cost=ucxx*volume**expxx.
         Allowances are used for site improvements and for miscellaneous
         buildings and land costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.6800e0, 0.8400e0, 0.9200e0, 1.0000e0]
         exprb = 1.0e0
@@ -1126,7 +1129,6 @@ class Costs:
         rather than as a capital cost.
         If ifueltyp = 2, inital first wall is included as a capital cost,
         and the replacement first wall cost is treated as a fuel costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
@@ -1147,27 +1149,27 @@ class Costs:
                 * (
                     cost_variables.ucblss
                     * (
-                        ife_variables.fwmatm(1, 1)
-                        + ife_variables.fwmatm(2, 1)
-                        + ife_variables.fwmatm(3, 1)
+                        ife_variables.fwmatm[0, 0]
+                        + ife_variables.fwmatm[1, 0]
+                        + ife_variables.fwmatm[2, 0]
                     )
                     + ife_variables.uccarb
                     * (
-                        ife_variables.fwmatm(1, 2)
-                        + ife_variables.fwmatm(2, 2)
-                        + ife_variables.fwmatm(3, 2)
+                        ife_variables.fwmatm[0, 1]
+                        + ife_variables.fwmatm[1, 1]
+                        + ife_variables.fwmatm[2, 1]
                     )
                     + cost_variables.ucblli2o
                     * (
-                        ife_variables.fwmatm(1, 4)
-                        + ife_variables.fwmatm(2, 4)
-                        + ife_variables.fwmatm(3, 4)
+                        ife_variables.fwmatm[0, 3]
+                        + ife_variables.fwmatm[1, 3]
+                        + ife_variables.fwmatm[2, 3]
                     )
                     + ife_variables.ucconc
                     * (
-                        ife_variables.fwmatm(1, 5)
-                        + ife_variables.fwmatm(2, 5)
-                        + ife_variables.fwmatm(3, 5)
+                        ife_variables.fwmatm[0, 4]
+                        + ife_variables.fwmatm[1, 4]
+                        + ife_variables.fwmatm[2, 4]
                     )
                 )
             )
@@ -1192,7 +1194,6 @@ class Costs:
         rather than as a capital cost.
         If ifueltyp = 2, the initial blanket is included as a capital cost
         and the replacement blanket costs are treated as a fuel cost.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
@@ -1236,18 +1237,18 @@ class Costs:
                 1.0e-6
                 * ife_variables.uccarb
                 * (
-                    ife_variables.blmatm(1, 2)
-                    + ife_variables.blmatm(2, 2)
-                    + ife_variables.blmatm(3, 2)
+                    ife_variables.blmatm[0, 1]
+                    + ife_variables.blmatm[1, 1]
+                    + ife_variables.blmatm[2, 1]
                 )
             )
             self.c22126 = (
                 1.0e-6
                 * ife_variables.ucconc
                 * (
-                    ife_variables.blmatm(1, 5)
-                    + ife_variables.blmatm(2, 5)
-                    + ife_variables.blmatm(3, 5)
+                    ife_variables.blmatm[0, 4]
+                    + ife_variables.blmatm[1, 4]
+                    + ife_variables.blmatm[2, 4]
                 )
             )
             self.c22127 = 1.0e-6 * ife_variables.ucflib * ife_variables.mflibe
@@ -1285,7 +1286,6 @@ class Costs:
         author: P J Knight, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 221.3 (shield) costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
@@ -1303,27 +1303,27 @@ class Costs:
                 * (
                     cost_variables.ucshld
                     * (
-                        ife_variables.shmatm(1, 1)
-                        + ife_variables.shmatm(2, 1)
-                        + ife_variables.shmatm(3, 1)
+                        ife_variables.shmatm[0, 0]
+                        + ife_variables.shmatm[1, 0]
+                        + ife_variables.shmatm[2, 0]
                     )
                     + ife_variables.uccarb
                     * (
-                        ife_variables.shmatm(1, 2)
-                        + ife_variables.shmatm(2, 2)
-                        + ife_variables.shmatm(3, 2)
+                        ife_variables.shmatm[0, 1]
+                        + ife_variables.shmatm[1, 1]
+                        + ife_variables.shmatm[2, 1]
                     )
                     + cost_variables.ucblli2o
                     * (
-                        ife_variables.shmatm(1, 4)
-                        + ife_variables.shmatm(2, 4)
-                        + ife_variables.shmatm(3, 4)
+                        ife_variables.shmatm[0, 3]
+                        + ife_variables.shmatm[1, 3]
+                        + ife_variables.shmatm[2, 3]
                     )
                     + ife_variables.ucconc
                     * (
-                        ife_variables.shmatm(1, 5)
-                        + ife_variables.shmatm(2, 5)
-                        + ife_variables.shmatm(3, 5)
+                        ife_variables.shmatm[0, 4]
+                        + ife_variables.shmatm[1, 4]
+                        + ife_variables.shmatm[2, 4]
                     )
                 )
             )
@@ -1352,7 +1352,6 @@ class Costs:
         None
         This routine evaluates the Account 221.4 (reactor structure) costs.
         The structural items are costed as standard steel elements.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.6700e0, 0.8350e0, 0.9175e0, 1.0000e0]
 
@@ -1378,7 +1377,6 @@ class Costs:
         rather than as a capital cost.
         <P>If ifueltyp = 2, the initial divertor is included as a capital cost
         and the replacement divertor costs ae treated as a fuel cost,
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if ife_variables.ife != 1:
             self.c2215 = 1.0e-6 * divertor_variables.divsur * cost_variables.ucdiv
@@ -1409,7 +1407,6 @@ class Costs:
         cost, rather than as a capital cost.
         If ifueltyp = 2, the  initial centrepost is included as a capital cost
         and the replacement TART centrepost costs are treated as a fuel
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
@@ -1450,11 +1447,18 @@ class Costs:
 
             #  Superconductor ($/m)
 
-            costtfsc = (
-                cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
-                * tfcoil_variables.whtconsc
-                / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
-            )
+            if cost_variables.supercond_cost_model == 0:
+                costtfsc = (
+                    cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
+                    * tfcoil_variables.whtconsc
+                    / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
+                )
+            else:
+                costtfsc = (
+                    cost_variables.sc_mat_cost_0[tfcoil_variables.i_tf_sc_mat - 1]
+                    * tfcoil_variables.j_crit_str_0[tfcoil_variables.i_tf_sc_mat - 1]
+                    / tfcoil_variables.j_crit_str_tf
+                )
 
             #  Copper ($/m)
 
@@ -1543,7 +1547,6 @@ class Costs:
         are used instead.
         Maximum values for current, current density and field
         are used.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
@@ -1578,18 +1581,28 @@ class Costs:
 
         for i in range(0, npf):
             #  Superconductor ($/m)
-            if pfcoil_variables.ipfres == 0:
-                costpfsc = (
-                    cost_variables.ucsc[pfcoil_variables.isumatpf - 1]
-                    * (1.0e0 - pfcoil_variables.fcupfsu)
-                    * (1.0e0 - pfcoil_variables.vf[i])
-                    * abs(pfcoil_variables.ric[i] / pfcoil_variables.turns[i])
-                    * 1.0e6
-                    / pfcoil_variables.rjconpf[i]
-                    * tfcoil_variables.dcond[pfcoil_variables.isumatpf - 1]
-                )
+            if cost_variables.supercond_cost_model == 0:
+                if pfcoil_variables.ipfres == 0:
+                    costpfsc = (
+                        cost_variables.ucsc[pfcoil_variables.isumatpf - 1]
+                        * (1.0e0 - pfcoil_variables.fcupfsu)
+                        * (1.0e0 - pfcoil_variables.vf[i])
+                        * abs(pfcoil_variables.ric[i] / pfcoil_variables.turns[i])
+                        * 1.0e6
+                        / pfcoil_variables.rjconpf[i]
+                        * tfcoil_variables.dcond[pfcoil_variables.isumatpf - 1]
+                    )
+                else:
+                    costpfsc = 0.0e0
             else:
-                costpfsc = 0.0e0
+                if pfcoil_variables.ipfres == 0:
+                    costpfsc = (
+                        cost_variables.sc_mat_cost_0[pfcoil_variables.isumatpf - 1]
+                        * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatpf - 1]
+                        / pfcoil_variables.j_crit_str_pf
+                    )
+                else:
+                    costpfsc = 0.0
 
             #  Copper ($/m)
             if pfcoil_variables.ipfres == 0:
@@ -1634,18 +1647,28 @@ class Costs:
 
         if build_variables.iohcl == 1:
             #  Superconductor ($/m)
-            #  Issue #328  Use CS conductor cross-sectional area (m2)
-            if pfcoil_variables.ipfres == 0:
-                costpfsc = (
-                    cost_variables.ucsc[pfcoil_variables.isumatoh - 1]
-                    * pfcoil_variables.awpoh
-                    * (1 - pfcoil_variables.vfohc)
-                    * (1 - pfcoil_variables.fcuohsu)
-                    / pfcoil_variables.turns[pfcoil_variables.nohc - 1]
-                    * tfcoil_variables.dcond[pfcoil_variables.isumatoh - 1]
-                )
+            if cost_variables.supercond_cost_model == 0:
+                #  Issue #328  Use CS conductor cross-sectional area (m2)
+                if pfcoil_variables.ipfres == 0:
+                    costpfsc = (
+                        cost_variables.ucsc[pfcoil_variables.isumatoh - 1]
+                        * pfcoil_variables.awpoh
+                        * (1 - pfcoil_variables.vfohc)
+                        * (1 - pfcoil_variables.fcuohsu)
+                        / pfcoil_variables.turns[pfcoil_variables.nohc - 1]
+                        * tfcoil_variables.dcond[pfcoil_variables.isumatoh - 1]
+                    )
+                else:
+                    costpfsc = 0.0e0
             else:
-                costpfsc = 0.0e0
+                if pfcoil_variables.ipfres == 0:
+                    costpfsc = (
+                        cost_variables.sc_mat_cost_0[pfcoil_variables.isumatoh - 1]
+                        * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatoh - 1]
+                        / pfcoil_variables.j_crit_str_cs
+                    )
+                else:
+                    costpfsc = 0.0e0
 
             #  Copper ($/m)
 
@@ -1713,7 +1736,6 @@ class Costs:
         author: P J Knight, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 222.3 (vacuum vessel) costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
@@ -1734,7 +1756,6 @@ class Costs:
         current drive system is considered as capital cost, and the
         fraction (fcdfuel) is considered a recurring fuel cost due
         to the system's short life.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         exprf = 1.0e0
@@ -1841,7 +1862,6 @@ class Costs:
         None
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if vacuum_variables.ntype == 1:
             self.c2241 = 1.0e-6 * vacuum_variables.vpumpn * cost_variables.uccpmp
@@ -1907,7 +1927,6 @@ class Costs:
         Costs are developed based on the major equipment specification
         of the tfcpwr module.  A multiplier is used to account for bulk
         materials and installation.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         expel = 0.7e0
@@ -1972,7 +1991,6 @@ class Costs:
         conditioning) costs.
         Costs are taken from the equipment specification of the
         <A HREF="pfpwr.html">pfpwr</A> routine from the plant power module.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c22521 = 1.0e-6 * cost_variables.ucpfps * heat_transport_variables.peakmva
         self.c22521 = cost_variables.fkind * self.c22521
@@ -2048,7 +2066,6 @@ class Costs:
         This routine evaluates the Account 226 (heat transport system) costs.
         Costs are estimated from major equipment and heat transport
         system loops developed in the heatpwr module of the code.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c226 = self.c2261 + self.c2262 + self.c2263
 
@@ -2058,7 +2075,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 2261 -
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.4000e0, 0.7000e0, 0.8500e0, 1.0000e0]
         exphts = 0.7e0
@@ -2101,7 +2117,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 2262 - Auxiliary component cooling
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = 0.4000e0, 0.7000e0, 0.8500e0, 1.0000e0
         exphts = 0.7e0
@@ -2136,7 +2151,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 2263 - Cryogenic system
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = 0.4000e0, 0.7000e0, 0.8500e0, 1.0000e0
         expcry = 0.67e0
@@ -2159,7 +2173,6 @@ class Costs:
         None
         This routine evaluates the Account 227 (fuel handling) costs.
         Costs are scaled from TETRA reactor code runs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c227 = self.c2271 + self.c2272 + self.c2273 + self.c2274
 
@@ -2169,7 +2182,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 2271 - Fuelling system
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c2271 = 1.0e-6 * cost_variables.ucf1
 
@@ -2182,11 +2194,10 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 2272 - Fuel processing
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if ife_variables.ife != 1:
             #  Previous calculation, using qfuel in Amps:
-            #  1.3 should have been physics_variables.afuel*umass/echarge*1000*s/day = 2.2
+            #  1.3 should have been physics_variables.afuel*umass/electron_charge*1000*s/day = 2.2
             # wtgpd = burnup * qfuel * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
@@ -2205,7 +2216,7 @@ class Costs:
                 * 3.0e0
                 * 1.67e-27
                 * 1.0e3
-                / (1.602e-19 * 17.6e6 * ife_variables.fburn)
+                / (constants.electron_volt * 17.6e6 * ife_variables.fburn)
             )
             physics_variables.wtgpd = targtm * ife_variables.reprat * 86400.0e0
 
@@ -2224,12 +2235,11 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 2273 - Atmospheric recovery systems
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cfrht = 1.0e5
 
         #  No detritiation needed if purely D-He3 reaction
-        if physics_variables.ftrit > 1.0e-3:
+        if physics_variables.f_tritium > 1.0e-3:
             self.c2273 = (
                 1.0e-6
                 * cost_variables.ucdtc
@@ -2249,7 +2259,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 2274 - Nuclear building ventilation
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c2274 = (
             1.0e-6
@@ -2269,7 +2278,6 @@ class Costs:
         This routine evaluates the Account 228 (instrumentation and
         control) costs.
         Costs are based on TFCX and INTOR.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c228 = 1.0e-6 * cost_variables.uciac
         self.c228 = cost_variables.fkind * self.c228
@@ -2281,7 +2289,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 229 (maintenance equipment) costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c229 = 1.0e-6 * cost_variables.ucme
         self.c229 = cost_variables.fkind * self.c229
@@ -2293,7 +2300,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 23 (turbine plant equipment) costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         exptpe = 0.83e0
@@ -2311,7 +2317,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 24 (electric plant equipment) costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c24 = self.c241 + self.c242 + self.c243 + self.c244 + self.c245
 
@@ -2321,7 +2326,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 241 - switchyard
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = 0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0
 
@@ -2334,7 +2338,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 242 - Transformers
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = 0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0
         expepe = 0.9e0
@@ -2354,7 +2357,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 243 - Low voltage
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = 0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0
 
@@ -2375,7 +2377,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 244 - Diesel generators
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0]
 
@@ -2390,7 +2391,6 @@ class Costs:
         author: J Morris, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 245 - Aux facility power
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = 0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0
 
@@ -2405,7 +2405,6 @@ class Costs:
         None
         This routine evaluates the Account 25 (miscellaneous plant
         equipment) costs, such as waste treatment.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = 0.7700e0, 0.8850e0, 0.9425e0, 1.0000e0
 
@@ -2421,14 +2420,13 @@ class Costs:
         Costs are scaled with the total plant heat rejection based on
         commercial systems.
         J. Delene, private communication, ORNL, June 1990
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         cmlsa = [0.8000e0, 0.9000e0, 0.9500e0, 1.0000e0]
 
         # Calculate rejected heat for non-reactor (==0) and reactor (==1)
         if cost_variables.ireactor == 0:
             pwrrej = (
-                physics_variables.powfmw
+                physics_variables.fusion_power
                 + heat_transport_variables.pinjwp
                 + tfcoil_variables.tfcmw
             )
@@ -2461,7 +2459,6 @@ class Costs:
         specification and unforeseen events during the plant construction.
         <P>The factors used are estimated from commercial plant experience.
         J. Delene, private communication, ORNL, June 1990
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.cindrt = (
             cost_variables.cfind[cost_variables.lsa - 1]
@@ -2479,7 +2476,6 @@ class Costs:
         author: P J Knight, CCFE, Culham Science Centre
         None
         This routine evaluates the Account 225.3 (energy storage) costs.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         self.c2253 = 0.0e0
 
@@ -2584,7 +2580,6 @@ class Costs:
         <P>Annual costs are in megadollars/year, electricity costs are in
         millidollars/kWh, while other costs are in megadollars.
         All values are based on 1990 dollars.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
         if ife_variables.ife == 1:
             kwhpy = (
@@ -2599,8 +2594,8 @@ class Costs:
                 * heat_transport_variables.pnetelmw
                 * (24.0e0 * constants.n_day_year)
                 * cost_variables.cfactr
-                * times_variables.tburn
-                / times_variables.tcycle
+                * times_variables.t_burn
+                / times_variables.t_cycle
             )
 
         #  Costs due to reactor plant
@@ -2633,13 +2628,9 @@ class Costs:
         #  Costs due to first wall and blanket renewal
         #  ===========================================
 
-        #  Operational life
-
-        fwbllife = fwbs_variables.bktlife
-
         #  Compound interest factor
 
-        feffwbl = (1.0e0 + cost_variables.discount_rate) ** fwbllife
+        feffwbl = (1.0e0 + cost_variables.discount_rate) ** fwbs_variables.bktlife_cal
 
         #  Capital recovery factor
 
@@ -2655,7 +2646,7 @@ class Costs:
         )
 
         if cost_variables.ifueltyp == 2:
-            annfwbl = annfwbl * (1.0e0 - fwbllife / cost_variables.tlife)
+            annfwbl = annfwbl * (1.0e0 - fwbs_variables.bktlife / cost_variables.tlife)
 
         #  Cost of electricity due to first wall/blanket replacements
 
@@ -2670,7 +2661,9 @@ class Costs:
         else:
             #  Compound interest factor
 
-            fefdiv = (1.0e0 + cost_variables.discount_rate) ** cost_variables.divlife
+            fefdiv = (
+                1.0e0 + cost_variables.discount_rate
+            ) ** cost_variables.divlife_cal
 
             #  Capital recovery factor
 
@@ -2700,7 +2693,7 @@ class Costs:
         if (physics_variables.itart == 1) and (ife_variables.ife != 1):
             #  Compound interest factor
 
-            fefcp = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cplife
+            fefcp = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cplife_cal
 
             #  Capital recovery factor
 
@@ -2730,7 +2723,7 @@ class Costs:
 
         #  Compound interest factor
 
-        fefcdr = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cdrlife
+        fefcdr = (1.0e0 + cost_variables.discount_rate) ** cost_variables.cdrlife_cal
 
         #  Capital recovery factor
 
@@ -2803,7 +2796,7 @@ class Costs:
             annfuel = (
                 cost_variables.ucfuel * heat_transport_variables.pnetelmw / 1200.0e0
                 + 1.0e-6
-                * physics_variables.fhe3
+                * physics_variables.f_helium3
                 * physics_variables.wtgpd
                 * 1.0e-3
                 * cost_variables.uche3
@@ -2883,3 +2876,33 @@ class Costs:
             + cost_variables.coeoam
             + coedecom
         )
+
+    @staticmethod
+    def convert_fpy_to_calendar() -> None:
+        """
+        Routine to convert component lifetimes in FPY to calendar years.
+        Required for replacement component costs.
+        Author: J Foster, CCFE, Culham Campus
+        """
+        # FW/Blanket and HCD
+        if fwbs_variables.bktlife < cost_variables.tlife:
+            fwbs_variables.bktlife_cal = fwbs_variables.bktlife * cost_variables.cfactr
+            # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
+            cost_variables.cdrlife_cal = fwbs_variables.bktlife_cal
+        else:
+            fwbs_variables.bktlife_cal = fwbs_variables.bktlife
+
+        # Divertor
+        if cost_variables.divlife < cost_variables.tlife:
+            cost_variables.divlife_cal = cost_variables.divlife * cost_variables.cfactr
+        else:
+            cost_variables.divlife_cal = cost_variables.divlife
+
+        # Centrepost
+        if physics_variables.itart == 1:
+            if cost_variables.cplife < cost_variables.tlife:
+                cost_variables.cplife_cal = (
+                    cost_variables.cplife * cost_variables.cfactr
+                )
+            else:
+                cost_variables.cplife_cal = cost_variables.cplife

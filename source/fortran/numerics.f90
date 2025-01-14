@@ -167,7 +167,7 @@ module numerics
   !!  <LI> (64) Zeff less than or equal to zeffmax (itv 112)
   !!  <LI> (65) Dump time set by VV loads (itv 56, 113)
   !!  <LI> (66) Limit on rate of change of energy in poloidal field
-  !!            (Use iteration variable 65(tohs), 115)
+  !!            (Use iteration variable 65(t_current_ramp_up), 115)
   !!  <LI> (67) Simple Radiation Wall load limit (itv 116, 4,6)
   !!  <LI> (68) Psep * Bt / qAR upper limit (itv 117)
   !!  <LI> (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)
@@ -186,7 +186,7 @@ module numerics
   !!  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)
   !!  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)
   !!  <LI> (83) Radial build consistency for stellarators (itv 172 f_avspace)
-  !!  <LI> (84) Lower limit for beta (itv 173 fbetatry_lower)
+  !!  <LI> (84) Lower limit for beta (itv 173 fbeta_min)
   !!  <LI> (85) Constraint for CP lifetime
   !!  <LI> (86) Constraint for TF coil turn dimension
   !!  <LI> (87) Constraint for cryogenic power
@@ -200,7 +200,7 @@ module numerics
   !!               array defining which iteration variables to activate
   !!               (see lablxc for descriptions)
 
-  character*14, dimension(ipnvars) :: lablxc
+  character*30, dimension(ipnvars) :: lablxc
   !! lablxc(ipnvars) : labels describing iteration variables<UL>
   !!  <LI> ( 1) aspect
   !!  <LI> ( 2) bt
@@ -209,7 +209,7 @@ module numerics
   !! <LI> ( 5) beta
   !! <LI> ( 6) dene
   !! <LI> ( 7) rnbeam
-  !! <LI> ( 8) fbeta (f-value for equation 6)
+  !! <LI> ( 8) fbeta_poloidal_eps (f-value for equation 6)
   !! <LI> ( 9) fdene (f-value for equation 5)
   !! <LI> (10) hfact
   !! <LI> (11) pheat
@@ -218,11 +218,11 @@ module numerics
   !! <LI> (14) fwalld (f-value for equation 8)
   !! <LI> (15) fvs (f-value for equation 12)
   !! <LI> (16) ohcth
-  !! <LI> (17) tdwell
+  !! <LI> (17) t_between_pulse
   !! <LI> (18) q
-  !! <LI> (19) enbeam
+  !! <LI> (19) beam_energy
   !! <LI> (20) tcpav
-  !! <LI> (21) ftburn (f-value for equation 13)
+  !! <LI> (21) ft_burn (f-value for equation 13)
   !! <LI> (22) NOT USED
   !! <LI> (23) fcoolcp
   !! <LI> (24) NOT USED
@@ -237,7 +237,7 @@ module numerics
   !! <LI> (33) fportsz (f-value for equation 20)
   !! <LI> (34) fdivcol (f-value for equation 22)
   !! <LI> (35) fpeakb (f-value for equation 25)
-  !! <LI> (36) fbetatry (f-value for equation 24)
+  !! <LI> (36) fbeta_max (f-value for equation 24)
   !! <LI> (37) coheof
   !! <LI> (38) fjohc (f-value for equation 26)
   !! <LI> (39) fjohc0 (f-value for equation 27)
@@ -266,8 +266,8 @@ module numerics
   !! <LI> (62) fdtmp (f-value for equation 38)
   !! <LI> (63) ftpeak (f-value for equation 39)
   !! <LI> (64) fauxmn (f-value for equation 40)
-  !! <LI> (65) tohs
-  !! <LI> (66) ftohs (f-value for equation 41)
+  !! <LI> (65) t_current_ramp_up
+  !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
   !! <LI> (67) ftcycl (f-value for equation 42)
   !! <LI> (68) fptemp (f-value for equation 44)
   !! <LI> (69) rcool
@@ -280,7 +280,7 @@ module numerics
   !! <LI> (76) NOT USED
   !! <LI> (77) NOT USED
   !! <LI> (78) NOT USED
-  !! <LI> (79) fbetap (f-value for equation 48)
+  !! <LI> (79) fbeta_poloidal (f-value for equation 48)
   !! <LI> (80) NOT USED
   !! <LI> (81) edrive
   !! <LI> (82) drveff
@@ -362,7 +362,7 @@ module numerics
   !! <LI> (158) croco_thick : Thickness of CroCo copper tube (m)
   !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)
   !! <LI> (160) f_avspace (f-value for equation 83)
-  !! <LI> (161) fbetatry_lower (f-value for equation 84)
+  !! <LI> (161) fbeta_min (f-value for equation 84)
   !! <LI> (162) r_cp_top : Top outer radius of the centropost (ST only) (m)
   !! <LI> (163) f_t_turn_tf : f-value for TF coils WP trurn squared dimension constraint
   !! <LI> (164) f_crypmw : f-value for cryogenic plant power
@@ -372,8 +372,8 @@ module numerics
   !! <LI> (168) fecrh_ignition: f-value for equation 91
   !! <LI> (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
   !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
-  !! <LI> (171) EMPTY : Description
-  !! <LI> (172) EMPTY : Description
+  !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
+  !! <LI> (172) casths : TF side case thickness [m]
   !! <LI> (173) EMPTY : Description
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description
@@ -383,6 +383,8 @@ module numerics
 
   real(dp) :: sqsumsq
   !!  sqsumsq : sqrt of the sum of the square of the constraint residuals
+  character(len=40) :: objf_name
+  !! Description of the objective function
   real(dp) :: norm_objf
   !! Normalised objective function (figure of merit)
   real(dp) :: epsfcn
@@ -421,25 +423,25 @@ contains
     ioptimz = 1
     minmax = 7
     lablmm = (/ &
-      'major radius.         ', &
-      'not used.             ', &
-      'neutron wall load.    ', &
-      'P_tf + P_pf.          ', &
-      'fusion gain.          ', &
-      'cost of electricity.  ', &
-      'capital cost.         ', &
-      'aspect ratio.         ', &
-      'divertor heat load.   ', &
-      'toroidal field.       ', &
-      'total injected power. ', &
-      'H plant capital cost. ', &
-      'H production rate.    ', &
-      'pulse length.         ', &
-      'plant availability.   ', &
-      'min R0, max tau_burn. ', &
-      'net electrical output.', &
-      'Null figure of merit. ', &
-      'max Q, max t_burn.    '  &
+      'major radius          ', &
+      'not used              ', &
+      'neutron wall load     ', &
+      'P_tf + P_pf           ', &
+      'fusion gain           ', &
+      'cost of electricity   ', &
+      'capital cost          ', &
+      'aspect ratio          ', &
+      'divertor heat load    ', &
+      'toroidal field        ', &
+      'total injected power  ', &
+      'H plant capital cost  ', &
+      'H production rate     ', &
+      'pulse length          ', &
+      'plant availability    ', &
+      'min R0, max tau_burn  ', &
+      'net electrical output ', &
+      'Null figure of merit  ', &
+      'max Q, max t_burn     '  &
       /)
 
     ncalls = 0
@@ -536,7 +538,7 @@ contains
       'ne0 > neped                      ', &
       'toroidalgap >  tftort            ', &
       'available_space > required_space ', &
-      'beta > betalim_lower             ', &
+      'beta > beta_min                  ', &
       'CP lifetime                      ', &
       'TFC turn dimension               ', &
       'Cryogenic plant power            ', &
@@ -558,6 +560,7 @@ contains
     lablxc = ''
     ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
     sqsumsq = 0.0D0
+    objf_name = ""
     norm_objf = 0.0D0
     epsfcn = 1.0D-3
     epsvmc = 1.0D-6

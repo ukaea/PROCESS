@@ -5,8 +5,7 @@ module pfcoil_variables
   !!
   !!### References
   !!
-  !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+  !! -
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
@@ -162,6 +161,14 @@ module pfcoil_variables
   !! - =8 Durham Ginzburg-Landau critical surface model for REBCO
   !! - =9 Hazelton experimental data + Zhai conceptual model for REBCO
 
+  real(dp) :: j_crit_str_cs
+  !! superconductor strand critical current density under operating
+  !! conditions in central solenoid (A/m2). Necessary for the cost calculation in $/kA m
+
+  real(dp) :: j_crit_str_pf
+  !! superconductor strand critical current density under operating
+  !! conditions in PF coils (A/m2). Necessary for the cost calculation in $/kA m
+
   integer :: i_pf_current
   !! Switch for controlling the current of the PF coils:
   !!
@@ -185,11 +192,11 @@ module pfcoil_variables
   real(dp) :: jscoh_eof
   !! central solenoid superconductor critical current density (A/m2) at end-of-flattop
 
-  real(dp) :: jstrandoh_bop
-  !! central solenoid strand critical current density (A/m2) at beginning-of-pulse
+  real(dp) :: jcableoh_bop
+  !! central solenoid cable critical current density (A/m2) at beginning-of-pulse
 
-  real(dp) :: jstrandoh_eof
-  !! central solenoid strand critical current density (A/m2) at end-of-flattop
+  real(dp) :: jcableoh_eof
+  !! central solenoid cable critical current density (A/m2) at end-of-flattop
 
   integer :: ncirt
   !! number of PF circuits (including central solenoid and plasma)
@@ -222,6 +229,10 @@ module pfcoil_variables
 
   real(dp) :: pfclres
   !! PF coil resistivity (if ipfres=1) (Ohm-m)
+
+  real(dp) :: rhopfbus
+  !! Resistivity of CS and PF coil bus bars (irrespective of
+  !! whether the coils themselves are superconducting or resistive) (Ohm-m)
 
   real(dp) :: pfmmax
   !! mass of heaviest PF coil (tonnes)
@@ -419,7 +430,10 @@ module pfcoil_variables
     cohbop = 0.0D0
     coheof = 1.85D7
     cpt = 0.0D0
-    cptdin = 4.0D4
+    cptdin = (/4.0D4, 4.0D4, 4.0D4, &
+    4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
+    4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
+    4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4/)
     curpfb = 0.0D0
     curpff = 0.0D0
     curpfs = 0.0D0
@@ -434,12 +448,14 @@ module pfcoil_variables
     itr_sum = 0.0D0
     isumatoh = 1
     isumatpf = 1
+    j_crit_str_cs = 0.0D0
+    j_crit_str_pf = 0.0D0
     i_pf_current = 1
     i_sup_pf_shape = 0
     jscoh_bop = 0.0D0
     jscoh_eof = 0.0D0
-    jstrandoh_bop = 0.0D0
-    jstrandoh_eof = 0.0D0
+    jcableoh_bop = 0.0D0
+    jcableoh_eof = 0.0D0
     ncirt = 0
     ncls = (/1,1,2,0,0,0,0,0,0,0,0,0/)
     nfxfh = 7
@@ -450,6 +466,7 @@ module pfcoil_variables
     pf_current_safety_factor = 1.0D0
     pfcaseth = 0.0D0
     pfclres = 2.5D-8
+    rhopfbus = 3.93D-8
     pfmmax = 0.0D0
     pfrmax = 0.0D0
     pfwpmw = 0.0D0
@@ -458,7 +475,10 @@ module pfcoil_variables
     ra = 0.0D0
     rb = 0.0D0
     ric = 0.0D0
-    rjconpf = 3.0D7
+    rjconpf = (/3.0D7, 3.0D7, 3.0D7, &
+      3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
+      3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
+      3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7/)
     rjohc = 0.0D0
     rjohc0 = 0.0D0
     rjpfalw = 0.0D0

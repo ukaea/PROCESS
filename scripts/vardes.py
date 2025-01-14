@@ -1,13 +1,15 @@
+import dataclasses
+import pickle
+from copy import copy
+from enum import Enum
 from pathlib import Path
 from typing import Any, List
-from enum import Enum
-import pickle
-import dataclasses
-from copy import copy
-import numpy as np
+
 import jinja2
+import numpy as np
 
 from process import fortran
+from process.init import init_all_module_vars
 
 
 class VariableTypes(str, Enum):
@@ -47,9 +49,11 @@ def get_variables_and_modules(ford_project: Path):
                     var.name.lower(),
                     mod.name.lower(),
                     var.doc,
-                    VariableTypes.PARAMETER
-                    if var.parameter
-                    else VariableTypes.VARIABLE,
+                    (
+                        VariableTypes.PARAMETER
+                        if var.parameter
+                        else VariableTypes.VARIABLE
+                    ),
                     var.vartype,
                     var.initial,
                     permission == "private",
@@ -79,7 +83,7 @@ def get_input_output_variables(variables: List[FortranVariable]):
         except AttributeError:
             continue
 
-    fortran.init_module.init_all_module_vars()
+    init_all_module_vars()
 
     for var in variables:
         current_values_entry = f"{var.module}.{var.name}"
@@ -122,6 +126,7 @@ if __name__ == "__main__":
     vardes_template = env.get_template("vardes.jinja2")
 
     with open(
-        Path(__file__).resolve().parent / "../documentation/proc-pages/vardes.md", "w"
+        Path(__file__).resolve().parent / "../documentation/proc-pages/io/vardes.md",
+        "w",
     ) as f:
         f.write(vardes_template.render(mods=mods))

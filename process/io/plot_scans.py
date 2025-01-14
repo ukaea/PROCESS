@@ -18,21 +18,21 @@ as x axis and the selected output as y axis
 Performed checks:
 - Non converged points are not plotted
 - Only outputs existing in the MFILE.DAT are plotted
-- A LaTeX label dicts is integrated, there is a check if the requested
-variable is set. Otherwise the sad and gloomy PROCESS name is used
 - No plot is made if the MFILE does not exists
 - If the file is a folder, the contained MFILE is used as an input.
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
-import os
 import argparse
+import os
 from argparse import RawTextHelpFormatter
 from pathlib import Path
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 # PROCESS libraries
 import process.io.mfile as mf
+from process.io.variable_metadata import var_dicts as meta
 
 
 def parse_args(args):
@@ -197,115 +197,8 @@ def main(args=None):
 
         # Check for the existence of the MFILE
         if not os.path.isfile(input_files[ii]):
-            print(
-                "ERROR : The {} MFILE does not exist, skipping it".format(
-                    input_files[ii]
-                )
-            )
+            print(f"ERROR : The {input_files[ii]} MFILE does not exist, skipping it")
             input_files.remove(input_files[ii])
-
-    # LaTeX labels
-    # ------------
-    # ToDo : WOULD BE GREAT TO HAVE IT STORED IN THE PROCESS !
-    labels = dict()
-    labels["shldith"] = r"$\Delta R_\mathrm{sh}$ [$m$]"
-    labels["rmajor"] = r"$R_\mathrm{maj}$ [$m$]"
-    labels["crypmw"] = r"$P_\mathrm{cryo}$ [$MW$]"
-    labels["bt"] = r"$B_\mathrm{T}$ [$T$]"
-    labels["tfcth"] = r"$\Delta R_\mathrm{TF}$ [$m$]"
-    labels["powfmw"] = r"$P_\mathrm{fus}$ [$MW$]"
-    labels["pinjemw"] = r"$P_\mathrm{inj}$ [$MW$]"
-    labels["pnetelmw"] = r"$P_\mathrm{Net\ elec}$ [$MW$]"
-    labels["taueff"] = r"$\tau_\mathrm{E}$ [s]"
-    labels["ralpne"] = r"$f_\mathrm{\alpha}$"
-    labels["te"] = r"$\left< T_\mathrm{e} \right> \ [keV]$"
-    labels["taulimit"] = r"$max : \frac{\tau_\mathrm{\alpha}}{\tau_\mathrm{E}}$"
-    labels["scrapli"] = r"$\Delta R_\mathrm{FW-sep}$ [$m$]"
-    labels["scraplo"] = r"$\Delta R_\mathrm{FW-sep}^\mathrm{out}$ [$m$]"
-    labels["vforce"] = r"$F_\mathrm{z}^\mathrm{in}$ [$N$]"
-    labels["thkcas"] = r"$\Delta R_\mathrm{TF}^\mathrm{buck}$ [$m$]"
-    labels["bmaxtf"] = r"$B_\mathrm{TF}^\mathrm{max}$ [$T$]"
-    labels["ritfc"] = r"$I_\mathrm{TF}^\mathrm{tot}$ [$A$]"
-    labels["dr_tf_wp"] = r"$\Delta R_\mathrm{TF}^\mathrm{WP}$ [$m$]"
-    labels["aspect"] = r"$A$"
-    labels["rminor"] = r"$a_\mathrm{min}$ [$m$]"
-    labels["capcost"] = r"$C_\mathrm{cap}$ [$M\$ $]"
-    labels["r_tf_outboard_mid"] = r"$\Delta R_\mathrm{TF}^\mathrm{out\ mid}$ [$m$]"
-    labels["pgrossmw"] = r"$P_\mathrm{gross}^\mathrm{elec}$ [$MW$]"
-    labels["htpmw"] = r"$P_\mathrm{Primary\ coolant}^\mathrm{elec}$ [$MW$]"
-    labels["ppfmw"] = r"$P_\mathrm{PF}^\mathrm{elec}$ [$MW$]"
-    labels["hmax"] = r"$z_\mathrm{TF}^\mathrm{pl\ side}$ [$m$]"
-    labels["thicndut"] = r"\Delta l_\mathrm{steel\ jacket}^\mathrm{turn}"
-    labels["cpttf"] = r"$I_\mathrm{TF}^\mathrm{turn}$ [$A$]"
-    labels["boundl(2)"] = r"$B_\mathrm{T}^\mathrm{min}$ [$A$]"
-    labels["pinjmw"] = r"$P_\mathrm{inj}$ [$MW$]"
-    labels["hldivlim"] = r"$q_\mathrm{div}^\mathrm{max}$ [$MW.m^{-2}$]"
-    labels["hfact"] = r"$f_\mathrm{H}$"
-    labels["kappa"] = r"$\kappa_\mathrm{sep}$"
-    labels["triang"] = r"$\delta_\mathrm{sep}$"
-    labels["f_tf_steel"] = r"f_\mathrm{steel}^\mathrm{TF}"
-    labels["plascur/1d6"] = r"$I_{\mathrm{p}}$[$MA$]"
-    labels["n_cycle"] = r"$N_{\mathrm{CS},\mathrm{cycle}}$"
-    labels["alstroh"] = r"$\sigma_{\mathrm{oh}}^{\mathrm{max}}$[$Pa$]"
-    labels["ohcth"] = r"$\Delta R_{\mathrm{CS}}$[$m$]"
-    labels["bore"] = r"$\Delta R_{\mathrm{bore}}$[$m$]"
-    labels["dnla"] = r"$\bar{n}_{\mathrm{e}}$[$m^{-3}$]"
-    labels["dnla_gw"] = r"$f_{\mathrm{GW}}$"
-    labels["normalised_toroidal_beta"] = r"$\beta_{N,\mathrm{tor}}$"
-    labels["copperaoh_m2"] = r"$\frac{I_{\mathrm{CS}}}{CuA} [$A m$^{-2}$$]$"
-    labels["copperaoh_m2_max"] = r"$max\frac{I_{\mathrm{CS}}}{CuA} [$A m$^{-2}$$]$"
-    labels["coreradius"] = r"$r_{core} [M]$"
-    labels[
-        "fcuohsu"
-    ] = r"$f_{\mathrm{Cu}}^{\mathrm{CS}}$"  # copper fraction of strand in central solenoid
-    labels["coheof"] = r"$J [A M^{-2}]$"
-    labels["ohhghf"] = r"$Thickness_{\mathrm{CS}}[m]$"
-    labels["pheat"] = r"$ P_{\mathrm{heat}}$ [$MW$]"
-    labels["effcd"] = r"$\eta_{\mathrm{CD}}$[$A/W$]"
-    labels["bigq"] = r"$Q$"
-    labels["faccd"] = r"$f_{\mathrm{CD}}$"
-    labels["facoh"] = r"$f_{\mathrm{CD,ind}}$"
-    labels["bootipf"] = r"$f_{\mathrm{BS}}$"
-    labels["pdivt"] = r"$P_{\mathrm{sep}}$ [$MW$]"
-    labels["pradmw"] = r"$P_{\mathrm{rad}}$ [$MW$]"
-    labels[
-        "pdivtbt/qar"
-    ] = r"$\frac{P_{\mathrm{sep}}B_T}{q_{95}AR_{\mathrm{maj}}}$ [$MWTm^{-1}$]"
-    labels["iooic"] = r"$I_{\mathrm{TF}}/I_{\mathrm{TF},\mathrm{crit}}$"
-    labels["bktlife"] = r"$T_{\mathrm{blk}}$"
-    labels["bktcycles"] = r"$N_{\mathrm{blk},\mathrm{cycle}}$"
-    labels["zeff"] = r"$Z_{\mathrm{eff}}$"
-    labels["tburn"] = r"$t_{\mathrm{burn}}$[$s$]"
-    labels["vburn"] = r"$V_{\mathrm{loop}}$ [$V$]"
-    labels["sig_tf_wp_max"] = r"$\sigma_{TP,wp}^{max}$"
-    labels["rli"] = r"$l_i$"
-    labels["n_cycle_min"] = r"$MinCycles_{\mathrm{Stress.min}}^{\mathrm{CS}}$"
-    labels["n_cycle"] = r"$Cycles_{\mathrm{Stress}}^{\mathrm{CS}}$"
-    labels["a_oh_turn"] = r"$Turn_{\mathrm{area}}^{\mathrm{CS}}[$m$^{2}]$"
-    labels["tbrnmn"] = r"$t_{\mathrm{burn.min}}$[$s$]"
-    labels["pfv.oh_steel_frac"] = r"$f_{\mathrm{Steel}}^{\mathrm{CS}}$"
-    labels["csfv.t_structural_radial"] = r"$Turn_{\mathrm{radial}}^{\mathrm{CS}}[$m$]$"
-    labels["csfv.t_crack_vertical"] = r"$Crack_{\mathrm{vertical}}^{\mathrm{CS}}[$m$]$"
-    labels["inlet_temp_liq"] = r"Breeder/coolant inlet T [K]"
-    labels["outlet_temp_liq"] = r"Breeder/coolant outlet T [K]"
-    labels["blpressure_liq"] = r"Breeder/coolant pressure [Pa]"
-    labels["n_liq_recirc"] = r"Breeder/coolant recirculations"
-    labels["bz_channel_conduct_liq"] = r"channel wall conductivity [A V-1 m-1]"
-    labels["pnuc_fw_ratio_dcll"] = r"FW nuclear power fraction"
-    labels["f_nuc_pow_bz_struct"] = r"BZ structure fraction"
-    labels["pitch"] = r"FW pitch [m]"
-    labels["coe"] = r"$\mathrm{LCOE}$ [$m\$/kWh$]"
-    labels["beta"] = r"$\beta$"
-    labels["fimp(13)"] = r"$Xe_{\mathrm{f}}$"
-    labels["pdivmax/rmajor"] = r"$P_{\mathrm{div}}/R_\mathrm{maj}$ [MW/m]"
-    labels["etath"] = r"Thermal to Electric efficiency"
-    labels["fkind"] = r"N$^\mathrm{th}$ of a kind factor"
-    labels["startupratio"] = r"Gyrotron Redundancy"
-    labels["etaech"] = r"ECH wall plug to injector efficiency"
-    labels["tauee"] = r"$\tau_E$"
-    labels["dene"] = r"$n_e$"
-
-    # ------------
 
     # nsweep varible dict
     # -------------------
@@ -325,18 +218,18 @@ def main(args=None):
     nsweep_dict[8] = "fqval"
     nsweep_dict[9] = "te"
     nsweep_dict[10] = "boundu(15)"
-    nsweep_dict[11] = "dnbeta"
-    nsweep_dict[12] = "bscfmax"
+    nsweep_dict[11] = "beta_norm_max"
+    nsweep_dict[12] = "bootstrap_current_fraction_max"
     nsweep_dict[13] = "boundu(10)"
     nsweep_dict[14] = "fiooic"
     nsweep_dict[15] = "fjprot"
     nsweep_dict[16] = "rmajor"
-    nsweep_dict[
-        17
-    ] = "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
+    nsweep_dict[17] = (
+        "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
+    )
     nsweep_dict[18] = "gammax"
     nsweep_dict[19] = "boundl(16)"
-    nsweep_dict[20] = "cnstv.tbrnmn"
+    nsweep_dict[20] = "cnstv.t_burn_min"
     nsweep_dict[21] = ""
     nsweep_dict[22] = "cfactr"
     nsweep_dict[23] = "boundu(72)"
@@ -395,6 +288,8 @@ def main(args=None):
     nsweep_dict[77] = "startupratio"
     nsweep_dict[78] = "fkind"
     nsweep_dict[79] = "etaech"
+    nsweep_dict[80] = "fcoolcp"
+    nsweep_dict[81] = "n_tf_turn"
     # -------------------
 
     # Getting the scanned variable name
@@ -414,40 +309,24 @@ def main(args=None):
     # ------
     # Check if the nsweep dict has been updated
     if nsweep_ref > len(nsweep_dict) + 1:
-        print("ERROR : nsweep = {} not supported by the utility".format(nsweep_ref))
+        print(f"ERROR : nsweep = {nsweep_ref} not supported by the utility")
         print("ERROR : Please update the 'nsweep_dict' dict")
         exit()
 
     # Check if the scan variable is present in the
     if scan_var_name not in m_file.data.keys():
-        print("ERROR : `{}` does not exist in PROCESS dicts".format(scan_var_name))
+        print(f"ERROR : `{scan_var_name}` does not exist in PROCESS dicts")
         print("ERROR : The scan variable is probably an upper/lower boundary")
         print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
         exit()
 
-    # Check if the (first) scan variable LaTeX label is set
-    if scan_var_name not in labels:
-        print(
-            "WARNING: The {} variable LaTeX label is not defined".format(scan_var_name)
-        )
-        print("WARNING: Please update the 'label' dict")
-        labels[scan_var_name] = scan_var_name
-
     if is_2D_scan:
         # Check if the second scan variable is present in the
         if scan_2_var_name not in m_file.data.keys():
-            print(
-                "ERROR : `{}` does not exist in PROCESS dicts".format(scan_2_var_name)
-            )
+            print(f"ERROR : `{scan_2_var_name}` does not exist in PROCESS dicts")
             print("ERROR : The scan variable is probably an upper/lower boundary")
             print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
             exit()
-
-        # Check if the second scan variable LaTeX label is set
-        if scan_2_var_name not in labels:
-            print("The {} variable LaTeX label is not defined".format(scan_2_var_name))
-            print("Please update the 'label' dict")
-            labels[scan_var_name] = scan_var_name
 
     # Only one imput must be used for a 2D scan
     if is_2D_scan and len(input_files) > 1:
@@ -461,7 +340,7 @@ def main(args=None):
     # Plot cosmetic settings
     axis_tick_size = 16
     legend_size = 12
-    axis_font_size = 18
+    axis_font_size = args.axis_font_size
     # -------------
 
     # Case of a set of 1D scans
@@ -505,9 +384,7 @@ def main(args=None):
                 else:
                     failed_value = m_file.data[scan_var_name].get_scan(ii + 1)
                     print(
-                        "Warning : Non-convergent scan point : {} = {}".format(
-                            scan_var_name, failed_value
-                        )
+                        f"Warning : Non-convergent scan point : {scan_var_name} = {failed_value}"
                     )
                     print("Warning : This point will not be shown.")
 
@@ -530,23 +407,9 @@ def main(args=None):
 
                 # Check if the output variable exists in the MFILE
                 if output_name not in m_file.data.keys():
-                    print(
-                        "Warning : `{}` does not exist in PROCESS dicts".format(
-                            output_name
-                        )
-                    )
-                    print("Warning : `{}` will not be output".format(output_name))
+                    print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
+                    print(f"Warning : `{output_name}` will not be output")
                     continue
-
-                # Check if the output LaTeX variable label exist
-                if output_name not in labels:
-                    print(
-                        "Warning : The {} variable LaTeX label is not defined".format(
-                            output_name
-                        )
-                    )
-                    print("Warning : Please update the 'label' dict")
-                    labels[output_name] = output_name
 
                 for ii in range(n_scan):
                     ouput_array[ii] = m_file.data[output_name].get_scan(conv_i[ii])
@@ -559,22 +422,10 @@ def main(args=None):
                     # Check if the output variable exists in the MFILE
                     if output_name2 not in m_file.data.keys():
                         print(
-                            "Warning : `{}` does not exist in PROCESS dicts".format(
-                                output_name2
-                            )
+                            f"Warning : `{output_name2}` does not exist in PROCESS dicts"
                         )
-                        print("Warning : `{}` will not be output".format(output_name2))
+                        print(f"Warning : `{output_name2}` will not be output")
                         continue
-
-                    # Check if the output LaTeX variable label exist
-                    if output_name2 not in labels:
-                        print(
-                            "Warning : The {} variable LaTeX label is not defined".format(
-                                output_name2
-                            )
-                        )
-                        print("Warning : Please update the 'label' dict")
-                        labels[output_name2] = output_name2
 
                     for ii in range(n_scan):
                         ouput_array2[ii] = m_file.data[output_name2].get_scan(
@@ -611,6 +462,10 @@ def main(args=None):
                 sharex=True,
             )
             fig.subplots_adjust(hspace=0.0)
+        else:
+            fig, ax = plt.subplots()
+            if output_names2 != []:
+                ax2 = ax.twinx()
         for output_name in output_names:
             # reset counter for label_name
             kk = 0
@@ -635,14 +490,14 @@ def main(args=None):
 
                 # Plot the graph
                 if output_names2 != [] and not stack_plots:
-                    fig, ax = plt.subplots()
                     ax.plot(
                         scan_var_array[input_file],
                         output_arrays[input_file][output_name],
                         "--o",
-                        color="blue",
+                        color="blue" if len(input_files) == 1 else None,
                         label=labl,
                     )
+                    plt.tight_layout()
                 else:
                     if stack_plots:
                         axs[output_names.index(output_name)].plot(
@@ -652,6 +507,7 @@ def main(args=None):
                             color="blue" if output_names2 != [] else None,
                             label=labl,
                         )
+                        plt.tight_layout()
                     else:
                         plt.plot(
                             scan_var_array[input_file],
@@ -662,35 +518,67 @@ def main(args=None):
                         )
                         plt.xticks(size=axis_tick_size)
                         plt.yticks(size=axis_tick_size)
+                        plt.tight_layout()
                 if output_names2 != []:
-                    ax2 = ax.twinx()
                     ax2.plot(
                         scan_var_array[input_file],
                         output_arrays2[input_file][output_name2],
                         "--o",
-                        color="red",
+                        color="red" if len(input_files) == 1 else None,
                         label=labl,
                     )
                     ax2.set_ylabel(
-                        labels[output_name2],
+                        (
+                            meta[output_name2].latex
+                            if output_name2 in meta
+                            else f"{output_name2}"
+                        ),
                         fontsize=axis_font_size,
-                        color="red",
+                        color="red" if len(input_files) == 1 else "black",
                     )
+                    plt.tight_layout()
             if output_names2 != []:
                 ax2.yaxis.grid(True)
                 ax.xaxis.grid(True)
                 ax.set_ylabel(
-                    labels[output_name], fontsize=axis_font_size, color="blue"
+                    (
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
+                    fontsize=axis_font_size,
+                    color="blue" if len(input_files) == 1 else "black",
                 )
-                ax.set_xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                ax.set_xlabel(
+                    (
+                        meta[scan_var_name].latex
+                        if scan_var_name in meta
+                        else f"{scan_var_name}"
+                    ),
+                    fontsize=axis_font_size,
+                )
+                if len(input_files) != 1:
+                    plt.legend(loc="best", fontsize=legend_size)
+                plt.tight_layout()
             elif stack_plots:
                 axs[output_names.index(output_name)].minorticks_on()
                 axs[output_names.index(output_name)].grid(True)
                 axs[output_names.index(output_name)].set_ylabel(
-                    labels[output_name],
+                    (
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
                 )
 
-                plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                plt.xlabel(
+                    (
+                        meta[scan_var_name].latex
+                        if scan_var_name in meta
+                        else f"{scan_var_name}"
+                    ),
+                    fontsize=axis_font_size,
+                )
                 if len(input_files) > 1:
                     plt.legend(
                         loc="lower center",
@@ -703,21 +591,40 @@ def main(args=None):
                         columnspacing=0.8,
                     )
                 plt.tight_layout()
-                axs[output_names.index(output_name)].set_ylim(
-                    axs[output_names.index(output_name)].get_ylim()[0]
-                    * 0.9,  # Adds some spacing around the plots
-                    axs[output_names.index(output_name)].get_ylim()[1] * 1.1,
-                )
+                ymin, ymax = axs[output_names.index(output_name)].get_ylim()
+                if ymin < 0 and ymax > 0:
+                    axs[output_names.index(output_name)].set_ylim(
+                        ymin * 1.1, ymax * 1.1
+                    )
+                elif ymin >= 0:
+                    axs[output_names.index(output_name)].set_ylim(
+                        ymin * 0.9, ymax * 1.1
+                    )
+                else:
+                    axs[output_names.index(output_name)].set_ylim(
+                        ymin * 1.1, ymax * 0.9
+                    )
             else:
                 plt.grid(True)
                 plt.ylabel(
-                    labels[output_name],
+                    (
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
                     fontsize=axis_font_size,
                     color="red" if output_names2 != [] else "black",
                 )
-                plt.xlabel(labels[scan_var_name], fontsize=axis_font_size)
+                plt.xlabel(
+                    (
+                        meta[scan_var_name].latex
+                        if scan_var_name in meta
+                        else f"{scan_var_name}"
+                    ),
+                    fontsize=axis_font_size,
+                )
                 plt.title(
-                    f"{labels[output_name]} vs {labels[scan_var_name]}",
+                    f"{meta[output_name].latex if output_name in meta else {output_name}} vs {meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}}",
                     fontsize=axis_font_size,
                 )
                 plt.tight_layout()
@@ -726,39 +633,36 @@ def main(args=None):
                     plt.tight_layout()
 
             # Output file naming
-            if output_name == "plascur/1d6":
+            if output_name == "plasma_current_MA":
                 plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_plascur"
+                    f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
                     + f"_vs_{output_name2}"
                     if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_plascur"
+                    else f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
                     + f".{save_format}"
-                )
-            elif output_name == "pdivtbt/qar":
-                plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_pdivtbtqar"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else "" + f".{save_format}"
                 )
             elif stack_plots and output_names[-1] == output_name:
                 plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_"
-                    + "_vs_".join(output_names)
-                    + f".{save_format}",
+                    (
+                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f"_vs_{output_name2}"
+                        if output_names2 != []
+                        else f"{args.outputdir}/scan_{scan_var_name}_vs_"
+                        + "_vs_".join(output_names)
+                        + f".{save_format}"
+                    ),
                     dpi=300,
                 )
 
             else:
                 plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                    + f".{save_format}",
+                    (
+                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f"_vs_{output_name2}"
+                        if output_names2 != []
+                        else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
+                        + f".{save_format}"
+                    ),
                     dpi=300,
                 )
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
@@ -807,14 +711,6 @@ def main(args=None):
                 print(f"Warning : `{output_name}` will not be output")
                 continue
 
-            # Check if the output LaTeX variable label exist
-            if output_name not in labels:
-                print(
-                    f"Warning : The {output_name} variable LaTeX label is not defined"
-                )
-                print("Warning : Please update the 'label' dict")
-                labels[output_name] = output_name
-
             # Declaring the outputs
             output_arrays = list()
 
@@ -830,9 +726,11 @@ def main(args=None):
                     )  # is the separte lists in the list
                 for i in contour_conv_ij:
                     output_contour_z[((i - 1) // n_scan_2)][
-                        ((i - 1) % n_scan_2)
-                        if ((i - 1) // n_scan_2) % 2 == 0
-                        else (-((i - 1) % n_scan_2) - 1)
+                        (
+                            ((i - 1) % n_scan_2)
+                            if ((i - 1) // n_scan_2) % 2 == 0
+                            else (-((i - 1) % n_scan_2) - 1)
+                        )
                     ] = m_file.data[output_name].get_scan(i)
 
                 flat_output_z = output_contour_z.flatten()
@@ -848,9 +746,30 @@ def main(args=None):
                     ),
                 )
 
-                plt.colorbar().set_label(label=labels[output_name], size=axis_font_size)
-                plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
-                plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
+                plt.colorbar().set_label(
+                    label=(
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
+                    size=axis_font_size,
+                )
+                plt.ylabel(
+                    (
+                        meta[scan_var_name].latex
+                        if scan_var_name in meta
+                        else f"{scan_var_name}"
+                    ),
+                    fontsize=axis_font_size,
+                )
+                plt.xlabel(
+                    (
+                        meta[scan_2_var_name].latex
+                        if scan_2_var_name in meta
+                        else f"{scan_2_var_name}"
+                    ),
+                    fontsize=axis_font_size,
+                )
                 plt.tight_layout()
                 plt.savefig(
                     f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
@@ -861,9 +780,7 @@ def main(args=None):
 
             else:
                 # Converged indexes, for normal 2D line plot
-                for (
-                    conv_j
-                ) in (
+                for conv_j in (
                     conv_ij
                 ):  # conv_j is an array element containing the converged scan numbers
                     # Scanned variables
@@ -880,14 +797,28 @@ def main(args=None):
                         output_array[jj] = m_file.data[output_name].get_scan(conv_j[jj])
 
                     # Label formating
-                    labl = f"{labels[scan_var_name]} = {scan_1_var_array[0]}"
+                    labl = f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}} = {scan_1_var_array[0]}"
 
                     # Plot the graph
                     plt.plot(scan_2_var_array, output_array, "--o", label=labl)
 
                 plt.grid(True)
-                plt.ylabel(labels[output_name], fontsize=axis_font_size)
-                plt.xlabel(labels[scan_2_var_name], fontsize=axis_font_size)
+                plt.ylabel(
+                    (
+                        meta[output_name].latex
+                        if output_name in meta
+                        else f"{output_name}"
+                    ),
+                    fontsize=axis_font_size,
+                )
+                plt.xlabel(
+                    (
+                        meta[scan_2_var_name].latex
+                        if scan_2_var_name in meta
+                        else f"{scan_2_var_name}"
+                    ),
+                    fontsize=axis_font_size,
+                )
                 plt.legend(loc="best", fontsize=legend_size)
                 plt.xticks(size=axis_tick_size)
                 plt.yticks(size=axis_tick_size)

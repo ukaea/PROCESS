@@ -90,7 +90,7 @@ First ensure that `gprof2dot` is installed by issuing the command `pip install g
 Execute the following commands from the PROCESS root directory:
 
 ```bash
-> python3.8 -m cProfile -o large-tok.pstats process/main.py -i tests/regression/scenarios/large-tokamak/IN.DAT
+> python3 -m cProfile -o large-tok.pstats process/main.py -i tests/regression/scenarios/large-tokamak/IN.DAT
 
 > gprof2dot -f pstats large-tok.pstats | dot -Tpng -o large_tokamak_profile.png
 ```

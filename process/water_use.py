@@ -1,8 +1,6 @@
 import numpy
 
-from process.fortran import constants
-from process.fortran import heat_transport_variables
-from process.fortran import water_usage_variables
+from process.fortran import constants, heat_transport_variables, water_usage_variables
 from process.fortran import process_output as po
 
 SECDAY = 86400e0
@@ -18,7 +16,6 @@ class WaterUse:
         author: R Chapman, UKAEA
 
         This routine calls the different water usage routines.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
@@ -116,7 +113,6 @@ class WaterUse:
         evapsum = 0.0e0
 
         for icool in range(1, 4):
-
             if icool == 1:
                 # small pond as a cooling body
                 # heat loading, MW/acre, based on estimations from US power plants

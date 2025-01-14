@@ -9,14 +9,16 @@ MFILE.DAT
 
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
 import argparse
 from argparse import RawTextHelpFormatter
 from pathlib import Path
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 # PROCESS libraries
 import process.io.mfile as mf
+from process.io.variable_metadata import var_dicts as meta
 
 
 def parse_args(args):
@@ -118,9 +120,9 @@ def get_radial_build(m_file):
 
     for ii in range(isweep):
         if m_file.data["ifail"].get_scan(ii + 1) == 1:
-            radial_build.append(
-                [m_file.data[rl].get_scan(ii + 1) for rl in radial_labels]
-            )
+            radial_build.append([
+                m_file.data[rl].get_scan(ii + 1) for rl in radial_labels
+            ])
 
     radial_build = np.array(radial_build)
 
@@ -138,93 +140,6 @@ def main(args=None):
 
     input_file = str(args.input)
     save_format = str(args.save_format)
-
-    # LaTeX labels
-    # ------------
-    # ToDo : WOULD BE GREAT TO HAVE IT STORED IN THE PROCESS !
-    labels = dict()
-    labels["shldith"] = r"$\Delta R_\mathrm{sh}$ [$m$]"
-    labels["rmajor"] = r"$R_\mathrm{maj}$ [$m$]"
-    labels["crypmw"] = r"$P_\mathrm{cryo}$ [$MW$]"
-    labels["bt"] = r"$B_\mathrm{T}$ [$T$]"
-    labels["tfcth"] = r"$\Delta R_\mathrm{TF}$ [$m$]"
-    labels["powfmw"] = r"$P_\mathrm{fus}$ [$MW$]"
-    labels["pinjemw"] = r"$P_\mathrm{inj}$ [$MW$]"
-    labels["pnetelmw"] = r"$P_\mathrm{Net\ elec}$ [$MW$]"
-    labels["taueff"] = r"$\tau_\mathrm{E}$ [s]"
-    labels["ralpne"] = r"$f_\mathrm{\alpha}$"
-    labels["te"] = r"$\left< T_\mathrm{e} \right>$"
-    labels["taulimit"] = r"$max : \frac{\tau_\mathrm{\alpha}}{\tau_\mathrm{E}}$"
-    labels["scrapli"] = r"$\Delta R_\mathrm{FW-sep}$ [$m$]"
-    labels["scraplo"] = r"$\Delta R_\mathrm{FW-sep}^\mathrm{out}$ [$m$]"
-    labels["vforce"] = r"$F_\mathrm{z}^\mathrm{in}$ [$N$]"
-    labels["thkcas"] = r"$\Delta R_\mathrm{TF}^\mathrm{buck}$ [$m$]"
-    labels["bmaxtf"] = r"$B_\mathrm{TF}^\mathrm{max}$ [$T$]"
-    labels["ritfc"] = r"$I_\mathrm{TF}^\mathrm{tot}$ [$A$]"
-    labels["dr_tf_wp"] = r"$\Delta R_\mathrm{TF}^\mathrm{WP}$ [$m$]"
-    labels["aspect"] = r"$A$"
-    labels["rminor"] = r"$a_\mathrm{min}$ [$m$]"
-    labels["capcost"] = r"$C_\mathrm{cap}$ [$M\$ $]"
-    labels["r_tf_outboard_mid"] = r"$\Delta R_\mathrm{TF}^\mathrm{out\ mid}$ [$m$]"
-    labels["pgrossmw"] = r"$P_\mathrm{gross}^\mathrm{elec}$ [$MW$]"
-    labels["htpmw"] = r"$P_\mathrm{Primary\ coolant}^\mathrm{elec}$ [$MW$]"
-    labels["ppfmw"] = r"$P_\mathrm{PF}^\mathrm{elec}$ [$MW$]"
-    labels["hmax"] = r"$z_\mathrm{TF}^\mathrm{pl\ side}$ [$m$]"
-    labels["thicndut"] = r"\Delta l_\mathrm{steel\ jacket}^\mathrm{turn}"
-    labels["cpttf"] = r"$I_\mathrm{TF}^\mathrm{turn}$ [$A$]"
-    labels["boundl(2)"] = r"$B_\mathrm{T}^\mathrm{min}$ [$A$]"
-    labels["pinjmw"] = r"$P_\mathrm{inj}$ [$MW$]"
-    labels["hldivlim"] = r"$q_\mathrm{div}^\mathrm{max}$ [$MW.m^{-2}$]"
-    labels["hfact"] = r"$f_\mathrm{H}$"
-    labels["kappa"] = r"$\kappa_\mathrm{sep}$"
-    labels["triang"] = r"$\delta_\mathrm{sep}$"
-    labels["f_tf_steel"] = r"f_\mathrm{steel}^\mathrm{TF}"
-    labels["plascur/1d6"] = r"$I_{\mathrm{p}}$[$MA$]"
-    labels["n_cycle"] = r"$N_{\mathrm{CS},\mathrm{cycle}}$"
-    labels["alstroh"] = r"$\sigma_{\mathrm{oh}}^{\mathrm{max}}$[$Pa$]"
-    labels["ohcth"] = r"$\Delta R_{\mathrm{CS}}$[$m$]"
-    labels["bore"] = r"$\Delta R_{\mathrm{bore}}$[$m$]"
-    labels["dnla"] = r"$\bar{n}_{\mathrm{e}}$[$m^{-3}$]"
-    labels["dnla_gw"] = r"$f_{\mathrm{GW}}$"
-    labels["normalised_toroidal_beta"] = r"$\beta_{N,\mathrm{tor}}$"
-    labels["copperaoh_m2"] = r"$\frac{I_{\mathrm{CS}}}{CuA} [$A m$^{-2}$$]$"
-    labels["copperaoh_m2_max"] = r"$max\frac{I_{\mathrm{CS}}}{CuA} [$A m$^{-2}$$]$"
-    labels["coreradius"] = r"$r_{core} [M]$"
-    labels[
-        "fcuohsu"
-    ] = r"$f_{\mathrm{Cu}}^{\mathrm{CS}}$"  # copper fraction of strand in central solenoid
-    labels["coheof"] = r"$J [A M^{-2}]$"
-    labels["ohhghf"] = r"$Thickness_{\mathrm{CS}}[m]$"
-    labels["pheat"] = r"$ P_{\mathrm{heat}}$ [$MW$]"
-    labels["effcd"] = r"$\eta_{\mathrm{CD}}$[$A/W$]"
-    labels["bigq"] = r"$Q$"
-    labels["faccd"] = r"$f_{\mathrm{CD}}$"
-    labels["facoh"] = r"$f_{\mathrm{CD,ind}}$"
-    labels["bootipf"] = r"$f_{\mathrm{BS}}$"
-    labels["itvar039"] = r"$f_{\mathrm{LH}}$"
-    labels["itvar011"] = r"$f_{\mathrm{V.s}}$"
-    labels["pdivt"] = r"$P_{\mathrm{sep}}$ [$MW$]"
-    labels["pradmw"] = r"$P_{\mathrm{rad}}$ [$MW$]"
-    labels[
-        "pdivtbt/qar"
-    ] = r"$\frac{P_{\mathrm{sep}}B_T}{q_{95}AR_{\mathrm{maj}}}$ [$MWTm^{-1}$]"
-    labels["iooic"] = r"$I_{\mathrm{TF}}/I_{\mathrm{TF},\mathrm{crit}}$"
-    labels["bktlife"] = r"$T_{\mathrm{blk}}$"
-    labels["bktcycles"] = r"$N_{\mathrm{blk},\mathrm{cycle}}$"
-    labels["zeff"] = r"$Z_{\mathrm{eff}}$"
-    labels["tburn"] = r"$t_{\mathrm{burn}}$[$s$]"
-    labels["vburn"] = r"$V_{\mathrm{loop}}$ [$V$]"
-    labels["rli"] = r"$l_i$"
-    labels["csfv.n_cycle_min"] = r"$N_{\mathrm{min}}^{\mathrm{CS}}$"
-    labels["csfv.n_cycle"] = r"$N_{\mathrm{cycle}}^{\mathrm{CS}}$"
-    labels["a_oh_turn"] = r"$Turn_{\mathrm{area}}^{\mathrm{CS}}[$m$^{2}]$"
-    labels["tbrnmn"] = r"$t_{\mathrm{burn.min}}$[$s$]"
-    labels["pfv.oh_steel_frac"] = r"$f_{\mathrm{Steel}}^{\mathrm{CS}}$"
-    labels["csfv.t_structural_radial"] = r"$Turn_{\mathrm{radial}}^{\mathrm{CS}}[$m$]$"
-    labels["csfv.t_crack_vertical"] = r"$Crack_{\mathrm{vertical}}^{\mathrm{CS}}[$m$]$"
-    labels["sig_hoop"] = r"$\sigma_{\mathrm{oh},{\mathrm{hoop}}}$[$Pa$]"
-    labels["rplas"] = r"$R_{\mathrm{plas}}$[$\Omega$]"
-    # ------------
 
     # nsweep varible dict
     # -------------------
@@ -245,8 +160,8 @@ def main(args=None):
         "fqval",
         "te",
         "boundu(15)",
-        "dnbeta",
-        "bscfmax",
+        "beta_norm_max",
+        "bootstrap_current_fraction_max",
         "boundu(10)",
         "fiooic",
         "fjprot",
@@ -254,7 +169,7 @@ def main(args=None):
         "bmaxtf",  # bmxlim the maximum T field upper limit is the scan variable
         "gammax",
         "boundl(16)",
-        "cnstv.tbrnmn",
+        "cnstv.t_burn_min",
         "",
         "cfactr",
         "boundu(72)",
@@ -313,7 +228,7 @@ def main(args=None):
         "",
         "fvs",  # actaully lower bound fvs
         "vburn",
-        "rplas",
+        "res_plasma",
     ]
 
     # "plasma_res_factor"
@@ -439,7 +354,8 @@ def main(args=None):
             radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=f"{radial_labels[kk]}" + f"\n {radial_build[kk][0]} m" * args.numbers,
+            label=f"{radial_labels[kk]}"
+            + f"\n {radial_build[kk][0]:.3f} m" * args.numbers,
             color=radial_color[kk],
             edgecolor="black",
             linewidth=0.05,
@@ -447,7 +363,10 @@ def main(args=None):
 
     if scan_var_name != "Null":
         plt.yticks(ind, scan_points, fontsize=axis_tick_size)
-        plt.ylabel(labels[scan_var_name], fontsize=axis_font_size)
+        plt.ylabel(
+            meta[scan_var_name].latex if scan_var_name in meta else f"{scan_var_name}",
+            fontsize=axis_font_size,
+        )
     else:
         plt.yticks([])
 

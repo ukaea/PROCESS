@@ -1,24 +1,28 @@
 import logging
 import math
+
 import numpy
-from process.fortran import constants
+
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constants,
+    constraint_variables,
+    cost_variables,
+    current_drive_variables,
+    error_handling,
+    fwbs_variables,
+    heat_transport_variables,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    primary_pumping_variables,
+    structure_variables,
+    tfcoil_variables,
+    times_variables,
+)
 from process.fortran import process_output as po
-from process.fortran import physics_variables
-from process.fortran import pfcoil_variables
-from process.fortran import build_variables
-from process.fortran import pf_power_variables
-from process.fortran import times_variables
-from process.fortran import heat_transport_variables
-from process.fortran import numerics
-from process.fortran import buildings_variables
-from process.fortran import fwbs_variables
-from process.fortran import primary_pumping_variables
-from process.fortran import current_drive_variables
-from process.fortran import tfcoil_variables
-from process.fortran import structure_variables
-from process.fortran import cost_variables
-from process.fortran import constraint_variables
-from process.fortran import error_handling
 from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
@@ -103,9 +107,10 @@ class Power:
             albusa[ig] = abs(pfcoil_variables.cptdin[ic]) / 100.0e0
 
             #  Resistance of bussing for circuit (ohm)
-            #  Include 50% enhancement for welds, joints etc, (G. Gorker, ORNL)
             #  pfbusl : bus length for each PF circuit (m)
-            pfbusr[ig] = 1.5e0 * 2.62e-4 * pfbusl / albusa[ig]
+            #  pfbusr[ig] = 1.5e0 * 2.62e-4 * pfbusl / albusa[ig]
+            #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
+            pfbusr[ig] = pfcoil_variables.rhopfbus * pfbusl / (albusa[ig] / 10000)
 
             #  Total PF coil resistance (during burn)
             #  pfcoil_variables.ric : maximum current in coil (A)
@@ -129,7 +134,7 @@ class Power:
             cktr[ig] = pfcr[ig] + pfbusr[ig]  # total resistance of circuit (ohms)
             cptburn = (
                 pfcoil_variables.cptdin[ic]
-                * pfcoil_variables.curpfb[ic]
+                * pfcoil_variables.curpfs[ic]
                 / pfcoil_variables.ric[ic]
             )
             rcktvm[ig] = abs(cptburn) * cktr[ig]  # peak resistive voltage (V)
@@ -140,7 +145,7 @@ class Power:
             pf_power_variables.srcktpm = pf_power_variables.srcktpm + 1.0e3 * rcktpm[ig]
 
         #  Inductive MVA requirements, and stored energy
-        delktim = times_variables.tohs
+        delktim = times_variables.t_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
         #  pfcoil_variables.cpt(i,j) : current per turn of coil i at (end) time period j (A)
@@ -164,7 +169,6 @@ class Power:
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0
                 for ipf in range(0, pfcoil_variables.ncirt):
-
                     #  Voltage in circuit jpf due to change in current from circuit ipf
                     vpfij = (
                         pfcoil_variables.sxlg[jpf, ipf]
@@ -280,7 +284,6 @@ class Power:
         pf_power_variables.spsmva = 0.0e0
 
         for jpf in range(0, pfcoil_variables.ncirt - 1):
-
             #  Power supply MVA for each PF circuit
             psmva[jpf] = 1.0e-6 * abs(vpfi[jpf] * pfcoil_variables.cptdin[jpf])
 
@@ -295,8 +298,8 @@ class Power:
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)
         #  This is additional to that required for moving stored energy around
-        # pfwpmw = physics_variables.pohmmw / pfcoil_variables.etapsu
-        wall_plug_ohmicmw = physics_variables.pohmmw * (
+        # pfwpmw = physics_variables.p_plasma_ohmic_mw / pfcoil_variables.etapsu
+        wall_plug_ohmicmw = physics_variables.p_plasma_ohmic_mw * (
             1.0e0 / pfcoil_variables.etapsu - 1.0e0
         )
         # Total mean wall plug power dissipated in PFC and CS power supplies.  Issue #713
@@ -383,7 +386,7 @@ class Power:
 
         if any(poloidalenergy < 0.0e0):
             po.oheadr(self.outfile, "ERROR Negative stored energy in poloidal field")
-            logger.error(f'{"ERROR Negative stored energy in poloidal field"}')
+            logger.error(f"{'ERROR Negative stored energy in poloidal field'}")
 
         po.ocmmnt(self.outfile, "Energy stored in poloidal magnetic field :")
         po.oblnkl(self.outfile)
@@ -449,8 +452,6 @@ class Power:
             + heat_transport_variables.htpmw
             + heat_transport_variables.trithtmw
             + pheatingmw
-            + basemw
-            + buildings_variables.efloor * pkwpm2 / 1000.0e0
         )
 
         #  Add contribution from motor-generator flywheels if these are part of
@@ -610,7 +611,6 @@ class Power:
         # Calculate total deposited power (MW), n.b. energy multiplication in pnucblkt already
 
         if fwbs_variables.primary_pumping == 2:
-
             # Liquid metal breeder/coolant
             if fwbs_variables.icooldual == 2:
                 self.pthermblkt_liq = (
@@ -654,7 +654,6 @@ class Power:
                 )
 
         elif fwbs_variables.primary_pumping == 3:
-
             # First wall and blanket coolant combined
             self.pthermfw_blkt = (
                 fwbs_variables.pnucfw
@@ -667,7 +666,6 @@ class Power:
             )
 
         else:
-
             #  Total power deposited in first wall coolant (MW)
             self.pthermfw = (
                 fwbs_variables.pnucfw
@@ -736,7 +734,7 @@ class Power:
             self.iprimdiv = 1
 
         if abs(heat_transport_variables.pthermmw) < 1.0e-4:
-            logger.error(f'{"ERROR Primary thermal power is zero or negative"}')
+            logger.error(f"{'ERROR Primary thermal power is zero or negative'}")
 
         # #284 Fraction of total high-grade thermal power to divertor
         self.pdivfraction = self.pthermdiv / heat_transport_variables.pthermmw
@@ -784,15 +782,14 @@ class Power:
 
         # Superconductors TF/PF cryogenic cooling
         if tfcoil_variables.i_tf_sup == 1 or pfcoil_variables.ipfres == 0:
-
             # heat_transport_variables.helpow calculation
             heat_transport_variables.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,
-                tfcoil_variables.tfsai,
+                tfcoil_variables.tfcryoarea,
                 structure_variables.coldmass,
                 fwbs_variables.ptfnuc,
                 pf_power_variables.ensxpfm,
-                times_variables.tpulse,
+                times_variables.t_pulse_repetition,
                 tfcoil_variables.cpttf,
                 tfcoil_variables.n_tf,
             )
@@ -896,7 +893,6 @@ class Power:
 
         #  Calculate powers relevant to a power-producing plant
         if cost_variables.ireactor == 1:
-
             #  Gross electric power
             # pgrossmw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
             if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
@@ -1358,7 +1354,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.pnucshld*heat_transport_variables.iprimshld} {fwbs_variables.pnucshld*(1-heat_transport_variables.iprimshld)} {fwbs_variables.pnucshld}"
+                f"{fwbs_variables.pnucshld * heat_transport_variables.iprimshld} {fwbs_variables.pnucshld * (1 - heat_transport_variables.iprimshld)} {fwbs_variables.pnucshld}"
             ),
         )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
@@ -1366,7 +1362,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.htpmw_shld*heat_transport_variables.iprimshld} {heat_transport_variables.htpmw_shld*(1-heat_transport_variables.iprimshld)} {heat_transport_variables.htpmw_shld}"
+                f"{heat_transport_variables.htpmw_shld * heat_transport_variables.iprimshld} {heat_transport_variables.htpmw_shld * (1 - heat_transport_variables.iprimshld)} {heat_transport_variables.htpmw_shld}"
             ),
         )
 
@@ -1388,25 +1384,25 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.pnucdiv*self.iprimdiv} {fwbs_variables.pnucdiv*(1-self.iprimdiv)} {fwbs_variables.pnucdiv}"
+                f"{fwbs_variables.pnucdiv * self.iprimdiv} {fwbs_variables.pnucdiv * (1 - self.iprimdiv)} {fwbs_variables.pnucdiv}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{physics_variables.pdivt*self.iprimdiv} {physics_variables.pdivt*(1-self.iprimdiv)} {physics_variables.pdivt}"
+                f"{physics_variables.pdivt * self.iprimdiv} {physics_variables.pdivt * (1 - self.iprimdiv)} {physics_variables.pdivt}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.praddiv*self.iprimdiv} {fwbs_variables.praddiv*(1-self.iprimdiv)} {fwbs_variables.praddiv}"
+                f"{fwbs_variables.praddiv * self.iprimdiv} {fwbs_variables.praddiv * (1 - self.iprimdiv)} {fwbs_variables.praddiv}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.htpmw_div*self.iprimdiv} {heat_transport_variables.htpmw_div*(1-self.iprimdiv)} {heat_transport_variables.htpmw_div}"
+                f"{heat_transport_variables.htpmw_div * self.iprimdiv} {heat_transport_variables.htpmw_div * (1 - self.iprimdiv)} {heat_transport_variables.htpmw_div}"
             ),
         )
 
@@ -1458,7 +1454,7 @@ class Power:
 
         po.oblnkl(self.outfile)
         #     write(self.outfile,'(t10,a)') repeat('-',88)
-        po.write(self.outfile, (f"{primsum} {secsum} {primsum+secsum}"))
+        po.write(self.outfile, (f"{primsum} {secsum} {primsum + secsum}"))
         # 10    format(t32,'neutrons',t50,f8.2,t70,f8.2,t90,f8.2)
         # 20    format(t14,'charged particle transport',t50,f8.2,t70,f8.2,t90,f8.2)
         # 30    format(t31,'radiation',t50,f8.2,t70,f8.2,t90,f8.2)
@@ -1612,7 +1608,7 @@ class Power:
         elif physics_variables.iradloss == 2:
             po.ocmmnt(
                 self.outfile,
-                "Total power loss is scaling power only (physics_variables.iradloss = 1).",
+                "Total power loss is scaling power only (physics_variables.iradloss = 2).",
             )
             po.ocmmnt(self.outfile, "This is not recommended for power plant models.")
             po.ovarrf(
@@ -1628,7 +1624,7 @@ class Power:
             sum = physics_variables.pscalingmw
         else:
             logger.error(
-                f'{"The value of physics_variables.iradloss appears to be invalid."}'
+                f"{'The value of physics_variables.iradloss appears to be invalid.'}"
             )
             po.ocmmnt(
                 self.outfile,
@@ -1639,28 +1635,28 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Alpha power deposited in plasma (MW)",
-            "(falpha*palpmw)",
-            physics_variables.falpha * physics_variables.palpmw,
+            "(f_alpha_plasma*alpha_power_total)",
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Power from charged products of DD and/or D-He3 fusion (MW)",
-            "(pchargemw.)",
-            physics_variables.pchargemw,
+            "(non_alpha_charged_power.)",
+            physics_variables.non_alpha_charged_power,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Ohmic heating (MW)",
-            "(pohmmw.)",
-            physics_variables.pohmmw,
+            "(p_plasma_ohmic_mw.)",
+            physics_variables.p_plasma_ohmic_mw,
             "OP ",
         )
         # if (physics_variables.ignite == 1) :
-        #    po.ovarrf(self.outfile,'Total (MW)','',falpha*physics_variables.palpmw+physics_variables.pchargemw+pohmmw, 'OP ')
+        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+p_plasma_ohmic_mw, 'OP ')
         #    po.oblnkl(self.outfile)
-        #    if (abs(sum - (physics_variables.falpha*physics_variables.palpmw+physics_variables.pchargemw+physics_variables.pohmmw)) > 5.0e0) :
+        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+physics_variables.p_plasma_ohmic_mw)) > 5.0e0) :
         #        write(*,*) 'WARNING: Power balance across separatrix is in error by more than 5 MW.'
         #    po.ocmmnt(self.outfile,'WARNING: Power balance across separatrix is in error by more than 5 MW.')
         #
@@ -1676,9 +1672,9 @@ class Power:
             self.outfile,
             "Total (MW)",
             "",
-            physics_variables.falpha * physics_variables.palpmw
-            + physics_variables.pchargemw
-            + physics_variables.pohmmw
+            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
+            + physics_variables.non_alpha_charged_power
+            + physics_variables.p_plasma_ohmic_mw
             + pinj,
             "OP ",
         )
@@ -1687,16 +1683,17 @@ class Power:
             abs(
                 sum
                 - (
-                    physics_variables.falpha * physics_variables.palpmw
-                    + physics_variables.pchargemw
-                    + physics_variables.pohmmw
+                    physics_variables.f_alpha_plasma
+                    * physics_variables.alpha_power_total
+                    + physics_variables.non_alpha_charged_power
+                    + physics_variables.p_plasma_ohmic_mw
                     + pinj
                 )
             )
             > 5.0e0
         ):
             logger.warning(
-                f'{"WARNING: Power balance across separatrix is in error by more than 5 MW."}'
+                f"{'WARNING: Power balance across separatrix is in error by more than 5 MW.'}"
             )
             po.ocmmnt(
                 self.outfile,
@@ -1710,8 +1707,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(powfmw)",
-            physics_variables.powfmw,
+            "(fusion_power)",
+            physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(
@@ -1725,8 +1722,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Ohmic power (MW)",
-            "(pohmmw.)",
-            physics_variables.pohmmw,
+            "(p_plasma_ohmic_mw.)",
+            physics_variables.p_plasma_ohmic_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1737,11 +1734,11 @@ class Power:
             "OP ",
         )
         sum = (
-            physics_variables.powfmw
+            physics_variables.fusion_power
             + fwbs_variables.emultmw
             + pinj
             + self.htpmw_mech
-            + physics_variables.pohmmw
+            + physics_variables.p_plasma_ohmic_mw
         )
         po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
         po.oblnkl(self.outfile)
@@ -1807,7 +1804,7 @@ class Power:
             > 5.0e0
         ):
             logger.warning(
-                f'{"WARNING: Power balance for reactor is in error by more than 5 MW."}'
+                f"{'WARNING: Power balance for reactor is in error by more than 5 MW.'}"
             )
             po.ocmmnt(
                 self.outfile,
@@ -1925,7 +1922,7 @@ class Power:
         po.oblnkl(self.outfile)
         if abs(sum - heat_transport_variables.pgrossmw) > 5.0e0:
             logger.warning(
-                f'{"WARNING: Electrical Power balance is in error by more than 5 MW."}'
+                f"{'WARNING: Electrical Power balance is in error by more than 5 MW.'}"
             )
             po.ocmmnt(
                 self.outfile,
@@ -1937,8 +1934,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(powfmw)",
-            physics_variables.powfmw,
+            "(fusion_power)",
+            physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(
@@ -1948,7 +1945,7 @@ class Power:
             fwbs_variables.emultmw,
             "OP ",
         )
-        sum = physics_variables.powfmw + fwbs_variables.emultmw
+        sum = physics_variables.fusion_power + fwbs_variables.emultmw
         po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
         po.oblnkl(self.outfile)
         po.ovarrf(
@@ -1994,7 +1991,7 @@ class Power:
             > 5.0e0
         ):
             logger.warning(
-                f'{"WARNING: Power balance for power plant is in error by more than 5 MW."}'
+                f"{'WARNING: Power balance for power plant is in error by more than 5 MW.'}"
             )
             po.ocmmnt(
                 self.outfile,
@@ -2005,17 +2002,19 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(pnetelmw/(powfmw+emultmw)",
+            "(pnetelmw/(fusion_power+emultmw)",
             100.0e0
             * heat_transport_variables.pnetelmw
-            / (physics_variables.powfmw + fwbs_variables.emultmw),
+            / (physics_variables.fusion_power + fwbs_variables.emultmw),
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Net electric power / total fusion power (%)",
-            "(pnetelmw/powfmw)",
-            100.0e0 * heat_transport_variables.pnetelmw / physics_variables.powfmw,
+            "(pnetelmw/fusion_power)",
+            100.0e0
+            * heat_transport_variables.pnetelmw
+            / physics_variables.fusion_power,
             "OP ",
         )
         po.ovarrf(
@@ -2052,22 +2051,22 @@ class Power:
         p_int_tot = numpy.zeros((6,))
         p_gross = numpy.zeros((6,))
 
-        t_cs = times_variables.tramp
+        t_cs = times_variables.t_precharge
 
         # Plasma current ramp up time (s)
-        t_ip_up = times_variables.tohs
+        t_ip_up = times_variables.t_current_ramp_up
 
         # Plasma heating phase (s)
         t_heat = times_variables.t_fusion_ramp
 
         # Flat-top phase (s)
-        t_flat_top = times_variables.tburn
+        t_flat_top = times_variables.t_burn
 
         # Plasma current ramp down time (s)
-        t_ip_down = times_variables.tqnch
+        t_ip_down = times_variables.t_ramp_down
 
         # Extra time between pulses (s)
-        t_extra = times_variables.tdwell
+        t_extra = times_variables.t_between_pulse
 
         # Continuous power usage
 
@@ -2141,7 +2140,10 @@ class Power:
 
         po.write(self.outfile, "Pulse timings [s]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2152,7 +2154,10 @@ class Power:
 
         po.write(self.outfile, "Continous power usage [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "System tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "System t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2201,7 +2206,10 @@ class Power:
 
         po.write(self.outfile, "Intermittent power usage [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, "System tramp tohs t_fusion_ramp tburn tqnch tdwell")
+        po.write(
+            self.outfile,
+            "System t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
+        )
         po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
         po.write(
             self.outfile,
@@ -2227,7 +2235,10 @@ class Power:
 
         po.write(self.outfile, "Power production [MWe]:")
         po.oblnkl(self.outfile)
-        po.write(self.outfile, " tramp tohs t_fusion_ramp tburn tqnch tdwell avg")
+        po.write(
+            self.outfile,
+            " t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse avg",
+        )
         po.write(self.outfile, " ----- ---- ----- ----- ----- ------ ---")
         po.write(
             self.outfile,
@@ -2250,19 +2261,29 @@ class Power:
     # 30    format(t20,a20,t40,a8,t50,a8,t60,a8,t70,a8,t80,a8,t90,a8,t100,a8)
     # 40    format(t20,a20,t40,f8.2,t50,f8.2,t60,f8.2,t70,f8.2,t80,f8.2,t90,f8.2,t100,f8.2,t110,f8.2)
 
-    def cryo(self, i_tf_sup, tfsai, coldmass, ptfnuc, ensxpfm, tpulse, cpttf, n_tf):
+    def cryo(
+        self,
+        i_tf_sup,
+        tfcryoarea,
+        coldmass,
+        ptfnuc,
+        ensxpfm,
+        t_pulse_repetition,
+        cpttf,
+        n_tf,
+    ):
         """
         Calculates cryogenic loads
         author: P J Knight, CCFE, Culham Science Centre
         itfsup : input integer : Switch denoting whether TF coils are
         superconducting
-        tfsai : input real : Inboard TF coil surface area (m2)
+        tfcryoarea : input real : Surface area of toroidal shells covering TF coils (m2)
         coldmass : input real : Mass of cold (cryogenic) components (kg),
         including TF coils, PF coils, cryostat, and
         intercoil structure
         ptfnuc : input real : Nuclear heating in TF coils (MW)
         ensxpfm : input real : Maximum PF coil stored energy (MJ)
-        tpulse : input real : Pulse length of cycle (s)
+        t_pulse_repetition : input real : Pulse length of cycle (s)
         cpttf : input real : Current per turn in TF coils (A)
         tfno : input real : Number of TF coils
         helpow : output real : Helium heat removal at cryo temperatures (W)
@@ -2271,7 +2292,7 @@ class Power:
         """
         self.qss = 4.3e-4 * coldmass
         if i_tf_sup == 1:
-            self.qss = self.qss + 2.0e0 * tfsai
+            self.qss = self.qss + 2.0e0 * tfcryoarea
 
         #  Nuclear heating of TF coils (W) (zero if resistive)
         if fwbs_variables.inuclear == 0 and i_tf_sup == 1:
@@ -2279,7 +2300,7 @@ class Power:
         # Issue #511: if fwbs_variables.inuclear = 1 : fwbs_variables.qnuc is input.
 
         #  AC losses
-        self.qac = 1.0e3 * ensxpfm / tpulse
+        self.qac = 1.0e3 * ensxpfm / t_pulse_repetition
 
         #  Current leads
         if i_tf_sup == 1:
@@ -2314,7 +2335,6 @@ class Power:
          New Power Module Harrington  Cycle correlations  Cycle correlations.xls
         """
         if fwbs_variables.secondary_cycle == 0:
-
             #  CCFE HCPB Model (with or without TBR)
             if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
                 #  HCPB, efficiency taken from M. Kovari 2016
@@ -2331,11 +2351,10 @@ class Power:
                 # Feedheat & reheat cycle assumed
                 etath = 0.411e0
             else:
-                logger.log(f'{"iblanket does not have a value in range 1-3."}')
+                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
 
             #  Etath from reference. Div power to primary
         elif fwbs_variables.secondary_cycle == 1:
-
             #  CCFE HCPB Model (with or without TBR)
             if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
                 #  HCPB, efficiency taken from M. Kovari 2016
@@ -2348,7 +2367,7 @@ class Power:
             elif fwbs_variables.iblanket == 2:
                 etath = 0.411e0 - self.delta_eta
             else:
-                logger.log(f'{"iblanket does not have a value in range 1-3."}')
+                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
 
             #  User input used, etath not changed
         elif fwbs_variables.secondary_cycle == 2:
@@ -2357,7 +2376,6 @@ class Power:
 
             #  Steam Rankine cycle to be used
         elif fwbs_variables.secondary_cycle == 3:
-
             #  CCFE HCPB Model (with or without TBR)
             if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
                 #  If coolant is helium, the steam cycle is assumed to be superheated
@@ -2401,7 +2419,7 @@ class Power:
                     - self.delta_eta
                 )
             else:
-                logger.log(f'{"iblanket does not have a value in range 1-3."}')
+                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
 
             #  Supercritical CO2 cycle to be used
         elif fwbs_variables.secondary_cycle == 4:
@@ -2426,7 +2444,7 @@ class Power:
 
         else:
             logger.log(
-                f'{"secondary_cycle does not appear to have a value within its range (0-4)"}'
+                f"{'secondary_cycle does not appear to have a value within its range (0-4)'}"
             )
         return etath
 
@@ -2474,14 +2492,9 @@ class Power:
             abus = tfcoil_variables.cpttf / tfcoil_variables.jbus
 
             # Bus resistance [ohm]
-            # Bus resistivity (tfcoil_variables.rhotfbus) default value : -1.0e0
-            # If this value is chosen, the bus resistivity is the same as the leg one
-            if (
-                abs(tfcoil_variables.rhotfbus + 1.0e0)
-                < numpy.finfo(float(tfcoil_variables.rhotfbus)).eps
-            ):
-                tfcoil_variables.rhotfbus = tfcoil_variables.rhotfleg
-
+            # Bus resistivity (tfcoil_variables.rhotfbus)
+            # Issue #1253: there was a fudge here to set the bus bar resistivity equal
+            # to the TF conductor resistivity. I have removed this.
             tfbusres = tfcoil_variables.rhotfbus * tfcoil_variables.tfbusl / abus
 
             #  Bus mass (kg)
@@ -2518,7 +2531,7 @@ class Power:
             #  Set reactive power to 0, since ramp up can be long
             #  The TF coil can be ramped up as slowly as you like
             #  (although this will affect the time to recover from a magnet quench).
-            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(tohs + tramp)
+            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_precharge)
             #                                 estotf(=estotftgj/tfcoil_variables.n_tf) has been removed (#199 #847)
             tfreacmw = 0.0e0
 
@@ -2537,7 +2550,6 @@ class Power:
             )
 
         else:  # Superconducting TF coil option
-
             self.tfpwcall(output)
             return
 
@@ -2712,7 +2724,8 @@ class Power:
         albuswt = 2.7e0 * albusa * tfbusl / 1.0e4
 
         #  Total resistance of TF bus, ohms
-        rtfbus = 2.62e-4 * tfbusl / albusa
+        # rtfbus = 2.62e-4 * tfbusl / albusa
+        rtfbus = tfcoil_variables.rhotfbus * tfbusl / (albusa / 10000)
 
         #  Total voltage drop across TF bus, volts
         vtfbus = 1000.0e0 * itfka * rtfbus
@@ -2806,7 +2819,6 @@ class Power:
 
         #  Output section
         if output:
-
             po.oheadr(self.outfile, "Superconducting TF Coil Power Conversion")
             po.ovarre(self.outfile, "TF coil current (kA)", "(itfka)", itfka, "OP ")
             po.ovarre(self.outfile, "Number of TF coils", "(ntfc)", ntfc)

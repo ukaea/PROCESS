@@ -1,21 +1,23 @@
 """An adapter for different solvers."""
 
+import importlib
 import logging
-from process.fortran import numerics, global_variables
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-import numpy as np
-from process.evaluators import Evaluators
 from abc import ABC, abstractmethod
 from typing import Optional, Union
-import importlib
+
+import numpy as np
 from pyvmcon import (
     AbstractProblem,
-    Result,
-    solve,
-    QSPSolverException,
-    VMCONConvergenceException,
     LineSearchConvergenceException,
+    QSPSolverException,
+    Result,
+    VMCONConvergenceException,
+    solve,
 )
+
+from process.evaluators import Evaluators
+from process.fortran import global_variables, numerics
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -160,7 +162,6 @@ class Vmcon(_Solver):
     def solve(self) -> int:
         """Optimise using new VMCON.
 
-        :raises NotImplementedError: not currently implemented
         :return: solver error code
         :rtype: int
         """
@@ -174,10 +175,41 @@ class Vmcon(_Solver):
             numerics.nviter = i + 1
             global_variables.convergence_parameter = convergence_param
             print(
-                f"{i+1} | Convergence Parameter: {convergence_param:.3E}",
+                f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
                 end="\r",
                 flush=True,
             )
+
+        def _ineq_cons_satisfied(
+            result: Result,
+            _x: np.ndarray,
+            _delta: np.ndarray,
+            _lambda_eq: np.ndarray,
+            _lambda_in: np.ndarray,
+        ) -> bool:
+            """Check that inequality constraints are satisfied.
+
+            This additional convergence criterion ensures that solutions have
+            satisfied inequality constraints.
+
+            :param result: evaluation of current optimisation parameter vector
+            :type result: Result
+            :param _x: current optimisation parameter vector
+            :type _x: np.ndarray
+            :param _delta: search direction for line search
+            :type _delta: np.ndarray
+            :param _lambda_eq: equality Lagrange multipliers
+            :type _lambda_eq: np.ndarray
+            :param _lambda_in: inequality Lagrange multipliers
+            :type _lambda_in: np.ndarray
+            :return: True if inequality constraints satisfied
+            :rtype: bool
+            """
+            # Check all ineqs positive, i.e. satisfied
+            if np.all(result.ie >= 0.0):
+                return True
+            else:
+                return False
 
         try:
             x, _, _, res = solve(
@@ -190,6 +222,7 @@ class Vmcon(_Solver):
                 qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
                 initial_B=B,
                 callback=_solver_callback,
+                additional_convergence=_ineq_cons_satisfied,
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
@@ -227,6 +260,22 @@ class Vmcon(_Solver):
         return self.info
 
 
+class VmconBounded(Vmcon):
+    """A solver that uses VMCON but checks x is in bounds before running"""
+
+    def set_opt_params(self, x_0: np.ndarray) -> None:
+        lower_violated = np.less(x_0, self.bndl)
+        upper_violated = np.greater(x_0, self.bndu)
+
+        for index, entry in enumerate(lower_violated):
+            if entry:
+                x_0[index] = self.bndl[index]
+        for index, entry in enumerate(upper_violated):
+            if entry:
+                x_0[index] = self.bndu[index]
+        self.x_0 = x_0
+
+
 def get_solver(solver_name: str = "vmcon") -> _Solver:
     """Return a solver instance.
 
@@ -239,6 +288,8 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
 
     if solver_name == "vmcon":
         solver = Vmcon()
+    elif solver_name == "vmcon_bounded":
+        solver = VmconBounded()
     else:
         try:
             solver = load_external_solver(solver_name)

@@ -1,16 +1,16 @@
 """Unit tests for the main.py module."""
-from process import main
-from process.main import Process
-from process.main import SingleRun
-from process.main import VaryRun
-from process import fortran
+
+import argparse
+import shutil
+from pathlib import Path
+
+import pytest
+
+from process import fortran, main
+from process.main import Process, SingleRun, VaryRun
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
 )
-import pytest
-from pathlib import Path
-import argparse
-import shutil
 
 
 def test_main(monkeypatch):
@@ -100,6 +100,9 @@ def test_run_mode(process_obj, monkeypatch):
     # Mock the args attributes for --varyiterparams and --varyiterparamsconfig
     monkeypatch.setattr(process_obj, "args", argparse.Namespace(), raising=False)
     monkeypatch.setattr(process_obj.args, "varyiterparams", True, raising=False)
+    monkeypatch.setattr(process_obj.args, "version", False, raising=False)
+    monkeypatch.setattr(process_obj.args, "update_obsolete", False, raising=False)
+
     monkeypatch.setattr(
         process_obj.args, "varyiterparamsconfig", "file.conf", raising=False
     )
@@ -262,17 +265,6 @@ def test_set_mfile(single_run, monkeypatch):
     monkeypatch.setattr(single_run, "filename_prefix", prefix, raising=False)
     single_run.set_mfile()
     assert single_run.mfile_path == expected
-
-
-def test_show_errors(single_run, monkeypatch):
-    """Check that the show errors subroutine is called.
-
-    :param single_run: single_run fixture
-    :type single_run: SingleRun
-    :param monkeypatch: monkeypatch fixture
-    :type monkeypatch: object
-    """
-    single_run.show_errors()
 
 
 def test_finish(single_run, monkeypatch):

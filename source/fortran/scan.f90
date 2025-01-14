@@ -7,8 +7,7 @@ module scan_module
   !! None
   !! This module contains routines to perform a parameter scan
   !! over a range of values of a particular scanning variable.
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-  !
+  !!   !
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #ifndef dp
@@ -21,7 +20,7 @@ module scan_module
   integer, parameter :: ipnscns = 1000
   !! Maximum number of scan points
 
-  integer, parameter :: ipnscnv = 79
+  integer, parameter :: ipnscnv = 81
   !! Number of available scan variables
 
   integer, parameter :: noutvars = 84
@@ -48,8 +47,8 @@ module scan_module
   !!         <LI> 8  fqval
   !!         <LI> 9  te
   !!         <LI> 10 boundu(15: fvs)
-  !!         <LI> 11 dnbeta
-  !!         <LI> 12 bscfmax (use negative values only)
+  !!         <LI> 11 beta_norm_max
+  !!         <LI> 12 bootstrap_current_fraction_max
   !!         <LI> 13 boundu(10: hfact)
   !!         <LI> 14 fiooic
   !!         <LI> 15 fjprot
@@ -57,7 +56,7 @@ module scan_module
   !!         <LI> 17 bmxlim
   !!         <LI> 18 gammax
   !!         <LI> 19 boundl(16: ohcth)
-  !!         <LI> 20 tbrnmn
+  !!         <LI> 20 t_burn_min
   !!         <LI> 21 not used
   !!         <LI> 22 cfactr (N.B. requires iavail=0)
   !!         <LI> 23 boundu(72: fipir)
@@ -174,16 +173,16 @@ contains
     call ovarin(mfile,'Scan point number','(iscan)',iscan)
 
     ! Call the optimization routine VMCON at this scan point
-    write(*,20)'Starting scan point ',iscan, ': ', trim(xlabel),', &
+    write(*,20)'Starting scan point ',iscan,' of ',isweep,': ', trim(xlabel),', &
         ',trim(vlabel),' = ',sweep(iscan)
-20     format(a,i2,a,4a,1pe10.3)
+20     format(a,i2,a,i2,a,4a,1pe10.3)
   end subroutine scan_1d_write_point_header
 
   subroutine scan_1d_store_output(iscan, ifail, noutvars_, ipnscns_, outvar)
     use constraint_variables, only: taulimit
     use cost_variables, only: cdirt, coe, coeoam, coefuelt, c222, ireactor, &
       capcost, coecap, c221
-    use current_drive_variables, only: pheat, pinjmw, bootipf, enbeam, bigq
+    use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, beam_energy, bigq
     use divertor_variables, only: hldiv
     use error_handling, only: errors_on
     use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
@@ -196,9 +195,9 @@ contains
       tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
-    use physics_variables, only: q, aspect, pradmw, dene, powfmw, btot, tesep, &
-      pdivt, ralpne, ten, betap, hfac, teped, palpnb, qlim, rmajor, wallmw, &
-      beta, betalim, bt, plascur
+    use physics_variables, only: q, aspect, pradmw, dene, fusion_power, btot, tesep, &
+      pdivt, ralpne, ten, beta_poloidal, hfac, teped, alpha_power_beams, qlim, rmajor, wallmw, &
+      beta, beta_max, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
     implicit none
@@ -224,28 +223,28 @@ contains
     outvar( 9,iscan) = cdirt / 1.0D3
     outvar(10,iscan) = rmajor
     outvar(11,iscan) = aspect
-    outvar(12,iscan) = 1.0D-6 * plascur
+    outvar(12,iscan) = 1.0D-6 * plasma_current
     outvar(13,iscan) = bt
     outvar(14,iscan) = btot
     outvar(15,iscan) = q
     outvar(16,iscan) = qlim
     outvar(17,iscan) = beta
-    outvar(18,iscan) = betalim
-    outvar(19,iscan) = betap / aspect
+    outvar(18,iscan) = beta_max
+    outvar(19,iscan) = beta_poloidal / aspect
     outvar(20,iscan) = ten/10.0D0
     outvar(21,iscan) = dene/1.0D20
     outvar(22,iscan) = hfac(6)
     outvar(23,iscan) = hfac(7)
-    outvar(24,iscan) = powfmw
-    outvar(25,iscan) = palpnb * 5.0D0
+    outvar(24,iscan) = fusion_power
+    outvar(25,iscan) = alpha_power_beams * 5.0D0
     outvar(26,iscan) = wallmw
     outvar(27,iscan) = pinjmw
     outvar(28,iscan) = pinjwp
     outvar(29,iscan) = pheat
     outvar(30,iscan) = pinjmw - pheat
     outvar(31,iscan) = bigq
-    outvar(32,iscan) = bootipf
-    outvar(33,iscan) = enbeam/1.0D3
+    outvar(32,iscan) = bootstrap_current_fraction
+    outvar(33,iscan) = beam_energy/1.0D3
     outvar(34,iscan) = hldiv
     outvar(35,iscan) = tfcmw
     outvar(36,iscan) = whttf
@@ -596,19 +595,19 @@ contains
 
 	use build_variables, only: blnkoth, shldith, scrapli, scraplo, ohcth
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
-        gammax, tbrnmn, tbrmin, fjprot, pnetelin, powfmax
+        gammax, t_burn_min, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
-	use current_drive_variables, only: bscfmax, etaech
+	use current_drive_variables, only: bootstrap_current_fraction_max, etaech
 	use divertor_variables, only: hldivlim
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
         n_liq_recirc, bz_channel_conduct_liq, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, pitch
 	use impurity_radiation_module, only: fimp, coreradius, impurity_arr_frac
-    use physics_variables, only: kappa, dnbeta, te, aspect, ftar, bt, &
+    use physics_variables, only: kappa, beta_norm_max, te, aspect, ftar, bt, &
         rad_fraction_sol, triang, rmajor, beamfus0, hfact
     use numerics, only: epsvmc, boundu, boundl
     use tfcoil_variables, only: tmargmin_tf, sig_tf_case_max, n_pancake, oacdcp, &
-      n_layer, b_crit_upper_nbti, sig_tf_wp_max
+      n_layer, b_crit_upper_nbti, sig_tf_wp_max, fcoolcp, n_tf_turn
     use heat_transport_variables, only: crypmw_max, etath
     use rebco_variables, only: copperaoh_m2_max
     use pfcoil_variables, only: coheof, ohhghf, oh_steel_frac
@@ -656,11 +655,11 @@ contains
             boundu(15) = swp(iscn)
             vlab = 'boundu(15)' ; xlab = 'Volt-second_upper_bound'
         case (11)
-            dnbeta = swp(iscn)
-            vlab = 'dnbeta' ; xlab = 'Beta_coefficient'
+            beta_norm_max = swp(iscn)
+            vlab = 'beta_norm_max' ; xlab = 'Beta_coefficient'
         case (12)
-            bscfmax = swp(iscn)
-            vlab = 'bscfmax' ; xlab = 'Bootstrap_fraction'
+            bootstrap_current_fraction_max = swp(iscn)
+            vlab = 'bootstrap_current_fraction_max' ; xlab = 'Bootstrap_fraction'
         case (13)
             boundu(10) = swp(iscn)
             vlab = 'boundu(10)' ; xlab = 'H_factor_upper_bound'
@@ -683,8 +682,8 @@ contains
             boundl(16) = swp(iscn)
             vlab = 'boundl(16)' ; xlab = 'CS_thickness_lower_bound'
         case (20)
-            tbrnmn = swp(iscn)
-            vlab = 'tbrnmn' ; xlab = 'Minimum_burn_time_(s)'
+            t_burn_min = swp(iscn)
+            vlab = 't_burn_min' ; xlab = 'Minimum_burn_time_(s)'
         case (21)
             ! sigpfalw = swp(iscn)
             vlab = 'obsolete' ; xlab = 'obsolete'
@@ -850,6 +849,12 @@ contains
         case (79)
             etaech = swp(iscn)
               vlab = 'etaech' ; xlab = 'ECH wall plug to injector efficiency'
+        case (80)
+            fcoolcp = swp(iscn)
+                vlab = 'fcoolcp' ; xlab = 'Coolant fraction of TF'
+        case (81)
+            n_tf_turn = swp(iscn)
+                vlab = 'n_tf_turn' ; xlab = 'Number of turns in TF'
         case default
             idiags(1) = nwp ; call report_error(96)
 
@@ -861,11 +866,9 @@ contains
   !! Called after calling the optimising equation solver from Python.
   !! author: P J Knight, CCFE, Culham Science Centre
   !! ifail   : input integer : error flag
-  !! AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+  !!
   use constraints
   use error_handling
-  use function_evaluator
   use numerics
   use process_output
   use utilities, only:upper_case
@@ -886,7 +889,6 @@ contains
   real(dp), dimension(ipeqns) :: con1, con2, err
   character(len=1), dimension(ipeqns) :: sym
   character(len=10), dimension(ipeqns) :: lab
-  character(len=30) :: strfom
   character(len=60) :: string1, string2
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -955,9 +957,12 @@ contains
 !      call ovarin(nout,'VMCON error flag','(ifail)',ifail)
 !   end if
 
+  objf_name = '"'//trim(lablmm(abs(minmax)))//'"'
+  ! Quotes required for string parsing in MFILE
+  call ovarst(nout,'Objective function name','(objf_name)',objf_name)
+  call ovarre(nout,'Normalised objective function','(norm_objf)',norm_objf, 'OP ')
   call ovarre(nout,'Square root of the sum of squares of the constraint residuals','(sqsumsq)',sqsumsq, 'OP ')
   call ovarre(nout,'VMCON convergence parameter','(convergence_parameter)',convergence_parameter, 'OP ')
-  call ovarre(nout,'Normalised objective function','(norm_objf)',norm_objf, 'OP ')
   call ovarin(nout,'Number of VMCON iterations','(nviter)',nviter, 'OP ')
   call oblnkl(nout)
 
@@ -973,9 +978,8 @@ contains
      string2 = ' to maximise the figure of merit: '
   end if
 
-  strfom = lablmm(abs(minmax))
-  call upper_case(strfom)
-  write(nout,10) trim(string1) // trim(string2),  trim(strfom)
+  call upper_case(objf_name)
+  write(nout,10) trim(string1) // trim(string2),  trim(objf_name)
 10 format(a90, t92, a22)
 
   call oblnkl(nout)

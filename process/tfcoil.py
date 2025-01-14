@@ -1,14 +1,15 @@
-import numpy as np
 import copy
+
+import numpy as np
 
 from process import fortran as ft
 from process.build import Build
-from process.fortran import tfcoil_variables as tfv
 from process.fortran import build_variables as bv
 from process.fortran import constants
-from process.fortran import fwbs_variables as fwbsv
 from process.fortran import error_handling as eh
+from process.fortran import fwbs_variables as fwbsv
 from process.fortran import process_output as po
+from process.fortran import tfcoil_variables as tfv
 from process.sctfcoil import Sctfcoil
 
 
@@ -40,7 +41,6 @@ class TFcoil:
         This subroutine calculates various parameters for the TF coil set.
         If the TF coils are superconducting the calculations are performed
         in routine <A HREF="sctfcoil.html">sctfcoil</A> instead.
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         # TF coil calculations
@@ -58,7 +58,6 @@ class TFcoil:
         This subroutine evaluates the parameters of the centrepost for a
         tight aspect ratio tokamak. The centrepost is assumed to be tapered,
         i.e. narrowest on the midplane (z=0).
-        AEA FUS 251: A User's Guide to the PROCESS Systems Code
         """
 
         # Temperature margin used in calculations (K)
@@ -87,7 +86,6 @@ class TFcoil:
         # Water coollant
         # --------------
         if tfv.i_tf_sup == 0:
-
             # Water coolant physical properties
             coolant_density = constants.denh2o
             coolant_cp = constants.cph2o
@@ -107,7 +105,6 @@ class TFcoil:
         # Helium coolant
         # --------------
         elif tfv.i_tf_sup == 2:
-
             # Inlet coolant density [kg/m3]
             coolant_density = self.he_density(tfv.tcoolin)
 
@@ -119,7 +116,6 @@ class TFcoil:
 
             tcool_calc = copy.copy(tfv.tcoolin)  # K
             for i in range(n_tcool_it):
-
                 # Thermal capacity Cp
                 coolant_cp = self.he_cp(tcool_calc)
 
@@ -279,7 +275,7 @@ class TFcoil:
             )
             po.ovarre(self.outfile, "Coolant channel length (m)", "(lcool)", lcool)
             po.ovarre(
-                self.outfile, "Inlet coolant flow speed (m/s)", "(tfv.vcool)", tfv.vcool
+                self.outfile, "Inlet coolant flow speed (m/s)", "(vcool)", tfv.vcool
             )
             po.ovarre(
                 self.outfile,

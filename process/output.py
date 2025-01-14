@@ -6,7 +6,6 @@ def write(models, outfile):
 
     Write the program results to a file, in a tidy format.
 
-    AEA FUS 251: A User's Guide to the PROCESS Systems Code
     :param models: physics and engineering model objects
     :type models: process.main.Models
     :param outfile: Fortran output unit identifier
@@ -57,10 +56,10 @@ def write(models, outfile):
 
     # Machine Build Model
     # Radial build
-    models.build.radialb(output=True)
+    models.build.calculate_radial_build(output=True)
 
     # Vertical build
-    models.build.vbuild(output=True)
+    models.build.calculate_vertical_build(output=True)
 
     # Toroidal field coil model
     models.tfcoil.output()

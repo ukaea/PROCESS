@@ -1,37 +1,37 @@
 """
 
-  PROCESS MFILE.DAT IO library
+PROCESS MFILE.DAT IO library
 
-  process.io.mfile.
+process.io.mfile.
 
-  James Morris
-  CCFE
+James Morris
+CCFE
 
-  Notes:
-    + 12/03/2014: Initial version
-    + 12/03/2014: Added MFILE variable class
-    + 12/03/2014: Added MFILE class for containing all info from file.
-    + 12/03/2014: Added ability to read MFILE.DAT into class
-    + 12/03/2014: Added ability write MFILE.DAT from class
-    + 12/05/2014: Fixed mfile issue with strings in MFILE.DAT with no scans
-    + 16/05/2014: Cleaned up MFileVariable
-    + 19/05/2014: Cleaned up MFile and put some functions outside class.
-    + 12/06/2014: Fixed error handling for "variable not in MFILE" errors
-    + 16/06/2014: Fixed library path error; fix in get_scans
-    + 24/11/2021: Global dictionary variables moved within the functions
-                  to avoid cyclic dependencies. This is because the dicts
-                  generation script imports, and inspects, process.
+Notes:
+  + 12/03/2014: Initial version
+  + 12/03/2014: Added MFILE variable class
+  + 12/03/2014: Added MFILE class for containing all info from file.
+  + 12/03/2014: Added ability to read MFILE.DAT into class
+  + 12/03/2014: Added ability write MFILE.DAT from class
+  + 12/05/2014: Fixed mfile issue with strings in MFILE.DAT with no scans
+  + 16/05/2014: Cleaned up MFileVariable
+  + 19/05/2014: Cleaned up MFile and put some functions outside class.
+  + 12/06/2014: Fixed error handling for "variable not in MFILE" errors
+  + 16/06/2014: Fixed library path error; fix in get_scans
+  + 24/11/2021: Global dictionary variables moved within the functions
+                to avoid cyclic dependencies. This is because the dicts
+                generation script imports, and inspects, process.
 
-  Compatible with PROCESS version 286
+Compatible with PROCESS version 286
 
 """
 
-from collections import OrderedDict
-import logging
-from sys import stderr
 import json
+import logging
+from collections import OrderedDict
+from typing import List, Union
 
-LOG = logging.getLogger("mfile")
+logger = logging.getLogger(__name__)
 
 
 class MFileVariable(dict):
@@ -60,7 +60,7 @@ class MFileVariable(dict):
         self.var_flag = var_flag
         self.latest_scan = 0
         super().__init__(*args, **kwargs)
-        LOG.debug(
+        logger.debug(
             "Initialising variable '{}': {}".format(self.var_name, self.var_description)
         )
 
@@ -85,7 +85,7 @@ class MFileVariable(dict):
         self["scan{:02}".format(scan_number)] = scan_value
         if scan_number > self.latest_scan:
             self.latest_scan = scan_number
-        LOG.debug(
+        logger.debug(
             "Scan {} for variable '{}' == {}".format(
                 scan_number, self.var_name, scan_value
             )
@@ -146,14 +146,13 @@ class MFileErrorClass(object):
         self.get_number_of_scans = self.get_error
 
     def get_error(self, *args, **kwargs):
-        LOG.error("Key '{}' not in MFILE. KeyError! Check MFILE".format(self.item))
+        logger.error("Key '{}' not in MFILE. KeyError! Check MFILE".format(self.item))
 
         if self.item == "error_status":
             # Missing error_status key means Process exited prematurely, usually
             # due to a "STOP 1"
             raise KeyError(
-                "error_status not found in MFILE. Process probably "
-                "exited prematurely"
+                "error_status not found in MFILE. Process probably exited prematurely"
             )
         else:
             return 0
@@ -230,7 +229,7 @@ class DefaultOrderedDict(OrderedDict):
 class MFile(object):
     def __init__(self, filename="MFILE.DAT"):
         """Class object to store the MFile Objects"""
-        LOG.info("Creating MFile class for file '{}'".format(filename))
+        logger.info("Creating MFile class for file '{}'".format(filename))
         self.filename = filename
         # self.data = MFileDataDictionary()
         # self.data = OrderedDict()
@@ -241,9 +240,9 @@ class MFile(object):
         self.mfile_modules["Misc"] = list()
         self.current_module = "Misc"
         if filename is not None:
-            LOG.info("Opening file '{}'".format(self.filename))
+            logger.info("Opening file '{}'".format(self.filename))
             self.open_mfile()
-            LOG.info("Parsing file '{}'".format(self.filename))
+            logger.info("Parsing file '{}'".format(self.filename))
             self.parse_mfile()
 
     def open_mfile(self):
@@ -283,7 +282,6 @@ class MFile(object):
                 self.mfile_modules[self.current_module] = list()
 
         else:
-
             var_des = line[0]
             extracted_var_name = sort_brackets(line[1])
 
@@ -296,7 +294,8 @@ class MFile(object):
             if "runtitle" in var_name:
                 var_value = " ".join(line[2:])
             else:
-                var_value = sort_value(line[2])
+                # Pass all value "words"
+                var_value = sort_value(line[2:])
             var_unit = get_unit(var_des)
             if len(line) >= 4:
                 var_flag = line[3]
@@ -335,15 +334,16 @@ class MFile(object):
             self.data[var_key] = var
             self.data[var_key].set_scan(1, value)
 
-    def write_to_json(self, keys_to_write={}, scan=-1, verbose=False):
+    def write_to_json(self, keys_to_write=None, scan=-1, verbose=False):
         """Write MFILE object to JSON file"""
 
-        if keys_to_write == {}:
+        if keys_to_write is None:
             keys_to_write = self.data.keys()
 
         filename = f"{self.filename}.json"
 
         dict_to_write = dict()
+
         if scan == 0:
             for i in range(self.data["rmajor"].get_number_of_scans()):
                 sub_dict = {}
@@ -359,9 +359,16 @@ class MFile(object):
                     else:
                         entry = data
                     sub_dict[item] = entry
-                dict_to_write[f"scan-{i+1}"] = sub_dict
+                dict_to_write[f"scan-{i + 1}"] = sub_dict
         else:
             for item in keys_to_write:
+                # Initialize dat_key properly based on the number of scans
+                if self.data[item].get_number_of_scans() == 1:
+                    dat_key = -1
+                else:
+                    dat_key = (
+                        scan if scan > 0 else 1
+                    )  # Default to scan 1 if not specified
                 data = self.data[item].get_scan(dat_key)
                 des = self.data[item].var_description.replace("_", " ")
                 if verbose:
@@ -374,18 +381,27 @@ class MFile(object):
             json.dump(dict_to_write, fp, indent=4)
 
 
-def sort_value(val):
-    """Function to sort out value line in MFILE."""
-    if '"' in val:
-        return str(val.strip('"'))
+def sort_value(value_words: List[str]) -> Union[str, float]:
+    """Parse value section of a line in MFILE.
+
+    value_words is a list of strings, which is then parsed.
+    :param value_words: value of var in MFILE as list of strings
+    :type value_words: List[str]
+    :return: string or float representation of value list
+    :rtype: Union[str, float]
+    """
+    if '"' in value_words[0]:
+        # First "word" begins with ": return words as single str
+        return " ".join(value_words).strip().strip('"').strip()
     else:
         try:
-            return float(val)
-        except ValueError as err:
-            print("Please fix this!", file=stderr)
-            print(err, file=stderr)
-            print(val)
-            exit()
+            # Attempt float conversion of first word
+            return float(value_words[0])
+        except ValueError:
+            # Log the exception with details
+            logger.exception(f"Can't parse value in MFILE: {value_words}")
+            # Return the original string as a fallback
+            return " ".join(value_words).strip()
 
 
 def sort_brackets(var):

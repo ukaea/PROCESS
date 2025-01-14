@@ -43,7 +43,7 @@ conda create --name my_process
 conda activate my_process
 ```
 
-It is worth checking that a compatible version of python has been installed (Python3.8 or 3.10). You can check this by entering `which python` into the terminal. You can install a compatible version of python with the command `conda install python=3.10`.
+It is worth checking that a compatible version of python has been installed (Python3.10 or 3.11). You can check this by entering `which python` into the terminal. You can install a compatible version of python with the command `conda install python=3.10`.
 
 Next, install gfortran.
 

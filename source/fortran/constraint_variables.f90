@@ -6,8 +6,7 @@ module constraint_variables
   !!
   !!### References
   !!
-  !! - AEA FUS 251: A User's Guide to the PROCESS Systems Code
-
+  !! -
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
@@ -19,7 +18,7 @@ module constraint_variables
   real(dp) :: auxmin
   !! minimum auxiliary power (MW) (`constraint equation 40`)
 
-  real(dp) :: betpmx
+  real(dp) :: beta_poloidal_max
   !! maximum poloidal beta (`constraint equation 48`)
 
   real(dp) :: bigqmin
@@ -31,16 +30,16 @@ module constraint_variables
   real(dp) :: fauxmn
   !! f-value for minimum auxiliary power (`constraint equation 40`, `iteration variable 64`)
 
-  real(dp) :: fbeta
+  real(dp) :: fbeta_poloidal_eps
   !! f-value for epsilon beta-poloidal (`constraint equation 6`, `iteration variable 8`)
 
-  real(dp) :: fbetap
+  real(dp) :: fbeta_poloidal
   !! f-value for poloidal beta (`constraint equation 48`, `iteration variable 79`)
 
-  real(dp) :: fbetatry
+  real(dp) :: fbeta_max
   !! f-value for beta limit (`constraint equation 24`, `iteration variable 36`)
 
-  real(dp) :: fbetatry_lower
+  real(dp) :: fbeta_min
   !! f-value for (lower) beta limit (`constraint equation 84`, `iteration variable 173`)
 
   real(dp) :: fcpttf
@@ -183,7 +182,7 @@ module constraint_variables
   real(dp) :: ftbr
   !! f-value for minimum tritium breeding ratio (`constraint equation 52`, `iteration variable 89`)
 
-  real(dp) :: ftburn
+  real(dp) :: ft_burn
   !! f-value for minimum burn time (`constraint equation 13`, `iteration variable 21`)
 
   real(dp) :: ftcycl
@@ -196,7 +195,7 @@ module constraint_variables
   real(dp) :: ftmargtf
   !! f-value for TF coil temperature margin (`constraint equation 36`, `iteration variable 54`)
 
-  real(dp) :: ftohs
+  real(dp) :: ft_current_ramp_up
   !! f-value for plasma current ramp-up time (`constraint equation 41`, `iteration variable 66`)
 
   real(dp) :: ftpeak
@@ -264,13 +263,13 @@ module constraint_variables
   real(dp) :: tbrmin
   !! minimum tritium breeding ratio (`constraint equation 52`)
 
-  real(dp) :: tbrnmn
+  real(dp) :: t_burn_min
   !! minimum burn time (s) (KE - no longer itv., see issue #706)
 
   real(dp) :: tcycmn
   !! minimum cycle time (s) (`constraint equation 42`)
 
-  real(dp) :: tohsmn
+  real(dp) :: t_current_ramp_up_min
   !! minimum plasma current ramp-up time (s) (`constraint equation 41`)
 
   real(dp) :: vvhealw
@@ -314,14 +313,14 @@ module constraint_variables
     implicit none
 
     auxmin = 0.1D0
-    betpmx = 0.19D0
+    beta_poloidal_max = 0.19D0
     bigqmin = 10.0D0
     bmxlim = 12.0D0
     fauxmn = 1.0D0
-    fbeta = 1.0D0
-    fbetap = 1.0D0
-    fbetatry = 1.0D0
-    fbetatry_lower = 1.0D0
+    fbeta_poloidal_eps = 1.0D0
+    fbeta_poloidal = 1.0D0
+    fbeta_max = 1.0D0
+    fbeta_min = 1.0D0
     fcpttf = 1.0D0
     fcwr = 1.0D0
     fdene = 1.0D0
@@ -361,11 +360,11 @@ module constraint_variables
     fstr_wp = 1.0D0
     fmaxvvstress = 1.0D0
     ftbr = 1.0D0
-    ftburn = 1.0D0
+    ft_burn = 1.0D0
     ftcycl = 1.0D0
     ftmargoh = 1.0D0
     ftmargtf = 1.0D0
-    ftohs = 1.0D0
+    ft_current_ramp_up = 1.0D0
     ftpeak = 1.0D0
     fvdump = 1.0D0
     fvs = 1.0D0
@@ -386,9 +385,9 @@ module constraint_variables
     pseprmax = 25.0D0
     ptfnucmax = 1.0D-3
     tbrmin = 1.1D0
-    tbrnmn = 1.0D0
+    t_burn_min = 1.0D0
     tcycmn = 0.0D0
-    tohsmn = 1.0D0
+    t_current_ramp_up_min = 1.0D0
     vvhealw = 1.0D0
     walalw = 1.0D0
     taulimit = 5.0D0
