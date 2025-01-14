@@ -2868,10 +2868,10 @@ class Physics:
 
         # Density weighted mass
         physics_variables.m_ions_total_amu = (
-            physics_variables.m_fuel_amu * physics_variables.deni
+            (physics_variables.m_fuel_amu * physics_variables.deni)
             + (constants.m_alpha_amu * physics_variables.nd_alphas)
-            + physics_variables.nd_protons
-            + physics_variables.m_beam_amu * physics_variables.nd_beam_ions
+            + (physics_variables.nd_protons * constants.m_proton_amu)
+            + (physics_variables.m_beam_amu * physics_variables.nd_beam_ions)
         )
         for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
