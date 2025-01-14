@@ -1553,7 +1553,7 @@ class Costs:
         #  Total length of PF coil windings (m)
 
         pfwndl = 0.0e0
-        for i in range(0, pfcoil_variables.nohc):
+        for i in range(pfcoil_variables.nohc):
             pfwndl = (
                 pfwndl
                 + constants.twopi * pfcoil_variables.rpf[i] * pfcoil_variables.turns[i]
@@ -1579,7 +1579,7 @@ class Costs:
 
         self.c22221 = 0.0e0
 
-        for i in range(0, npf):
+        for i in range(npf):
             #  Superconductor ($/m)
             if cost_variables.supercond_cost_model == 0:
                 if pfcoil_variables.ipfres == 0:

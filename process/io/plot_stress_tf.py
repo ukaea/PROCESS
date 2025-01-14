@@ -455,7 +455,7 @@ def main(args=None):
     # PLOT 1 : Stress summary
     # ------------------------
     if plot_sig:
-        for ii in range(0, n_layers):
+        for ii in range(n_layers):
             plt.plot(
                 radius[ii],
                 radial_stress[ii],

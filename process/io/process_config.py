@@ -141,8 +141,6 @@ class ProcessConfig(object):
     def modify_in_dat(self):
         """modifies the original IN.DAT file"""
 
-        pass
-
     def setup(self):
         """sets up the program for running"""
 

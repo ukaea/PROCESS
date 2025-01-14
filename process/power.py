@@ -99,7 +99,7 @@ class Power:
         pf_power_variables.srcktpm = 0.0e0
         pfbuspwr = 0.0e0
 
-        for ig in range(0, ngrpt):
+        for ig in range(ngrpt):
             ic = ic + pfcoil_variables.ncls[ig]
 
             #  Section area of aluminium bussing for circuit (cm**2)
@@ -156,19 +156,19 @@ class Power:
         #  pfcoil_variables.ncirt : total number of PF coils (including Central Solenoid and plasma)
         #          plasma is #ncirt, and Central Solenoid is #(pfcoil_variables.ncirt-1)
         #  pfcoil_variables.sxlg(i,j) : mutual inductance between coil i and j
-        for i in range(0, pfcoil_variables.ncirt):
+        for i in range(pfcoil_variables.ncirt):
             powpfii[i] = 0.0e0
             vpfi[i] = 0.0e0
 
         jpf = -1
         poloidalenergy[:] = 0.0e0
-        for jjpf in range(0, ngrpt):  # Loop over all groups of PF coils.
+        for jjpf in range(ngrpt):  # Loop over all groups of PF coils.
             for jjpf2 in range(
-                0, pfcoil_variables.ncls[jjpf]
+                pfcoil_variables.ncls[jjpf]
             ):  # Loop over all coils in each group
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0
-                for ipf in range(0, pfcoil_variables.ncirt):
+                for ipf in range(pfcoil_variables.ncirt):
                     #  Voltage in circuit jpf due to change in current from circuit ipf
                     vpfij = (
                         pfcoil_variables.sxlg[jpf, ipf]
@@ -185,7 +185,7 @@ class Power:
                     )
 
                     # Term used for calculating stored energy at each time
-                    for time in range(0, 6):
+                    for time in range(6):
                         inductxcurrent[time] = (
                             inductxcurrent[time]
                             + pfcoil_variables.sxlg[jpf, ipf]
@@ -196,7 +196,7 @@ class Power:
 
                 #  Stored magnetic energy of the poloidal field at each time
                 # 'time' is the time INDEX.  'tim' is the time.
-                for time in range(0, 6):
+                for time in range(6):
                     poloidalenergy[time] = (
                         poloidalenergy[time]
                         + 0.5e0 * inductxcurrent[time] * pfcoil_variables.cpt[jpf, time]
@@ -232,7 +232,7 @@ class Power:
                 )
                 powpfi = powpfi + powpfii[jpf]
 
-        for time in range(0, 5):
+        for time in range(5):
             # Stored magnetic energy of the poloidal field at each time
             # 'time' is the time INDEX.  'tim' is the time.
             # Mean rate of change of stored energy between time and time+1
@@ -283,7 +283,7 @@ class Power:
         pf_power_variables.acptmax = 0.0e0
         pf_power_variables.spsmva = 0.0e0
 
-        for jpf in range(0, pfcoil_variables.ncirt - 1):
+        for jpf in range(pfcoil_variables.ncirt - 1):
             #  Power supply MVA for each PF circuit
             psmva[jpf] = 1.0e-6 * abs(vpfi[jpf] * pfcoil_variables.cptdin[jpf])
 

@@ -3,25 +3,26 @@ target-version = "py310"
 
 [lint]
 extend-select = [
+    "ASYNC",
+    "COM",
+    "DTZ",
+    "F",
+    "FA",
+    "FLY",
     "I",
     "ICN",
     "INT",
-    "YTT",
-    "ASYNC",
-    "COM",
-    "T10",
-    "FA",
     "LOG",
+    "PGH",
+    "PIE",
     "PYI",
     "Q",
     "RSE",
     "SLOT",
+    "T10",
     "TID",
-    "PGH",
-    "FLY",
-    "F",
     "W",
-    "DTZ",
+    "YTT",
 ]
 
 ignore = ["COM812", "FBT", "G004"]

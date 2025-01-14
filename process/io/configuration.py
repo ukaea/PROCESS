@@ -52,7 +52,6 @@ class JsonConfigParser(ConfigurationParser):
                 self.data = config_file_data
         except FileNotFoundError:
             logger.error("Cannot find configuration file {}".format(filename))
-            pass
 
 
 class Config(object):
