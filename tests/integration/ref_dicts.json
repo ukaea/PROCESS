@@ -10423,7 +10423,7 @@
         "pwplh": "lower hybrid wall plug power (MW)",
         "pwpm2": "base AC power requirement per unit floor area (W/m2)",
         "pwpnb": "neutral beam wall plug power (MW)",
-        "q": "safety factor 'near' plasma edge (`iteration variable 18`) equal to q95\n (unless `i_plasma_current=2` (ST current scaling), in which case q = mean edge safety factor qbar)",
+        "q": "safety factor 'near' plasma edge (`iteration variable 18`) equal to q95\n (unless `i_plasma_current=2` (ST current scaling), in which case q95 = mean edge safety factor qbar)",
         "q0": "safety factor on axis",
         "q2": "",
         "q95": "safety factor at 95% surface",
