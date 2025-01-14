@@ -1503,6 +1503,19 @@ class Physics:
         # Issue #261 Remove old radiation model (imprad_model=0)
         self.plasma_composition()
 
+        # Define coulomb logarithm
+        # (collisions: ion-electron, electron-electron)
+        physics_variables.dlamee = (
+            31.0
+            - (np.log(physics_variables.dene) / 2.0)
+            + np.log(physics_variables.te * 1000.0)
+        )
+        physics_variables.dlamie = (
+            31.3
+            - (np.log(physics_variables.dene) / 2.0)
+            + np.log(physics_variables.te * 1000.0)
+        )
+
         # Calculate plasma current
         (
             physics_variables.alphaj,
@@ -2816,19 +2829,6 @@ class Physics:
                 ).squeeze()
                 ** 2
             )
-
-        # Define coulomb logarithm
-        # (collisions: ion-electron, electron-electron)
-        physics_variables.dlamee = (
-            31.0
-            - (np.log(physics_variables.dene) / 2.0)
-            + np.log(physics_variables.te * 1000.0)
-        )
-        physics_variables.dlamie = (
-            31.3
-            - (np.log(physics_variables.dene) / 2.0)
-            + np.log(physics_variables.te * 1000.0)
-        )
 
         # Fraction of alpha energy to ions and electrons
         # From Max Fenstermacher
