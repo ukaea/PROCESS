@@ -34,7 +34,7 @@ output_dict = {}
 
 
 # Classes for the various dictionary types
-class Dictionary(object):
+class Dictionary:
     # Base Dictionary class for all dicts
     def __init__(self, name):
         self.name = name  # Dict name
@@ -566,7 +566,7 @@ def grep(file, regexp, flags=re.U):
     lines = []
 
     try:
-        with open(file, "r", encoding="utf-8") as file_open:
+        with open(file, encoding="utf-8") as file_open:
             for line in file_open.readlines():
                 if re.search(regexp, line, flags):
                     lines.append(line)
@@ -590,7 +590,7 @@ def slice_file(file, re1, re2):
          lines --> List of lines from file between re1 and re2 inclusive
     """
 
-    filetext = open(file, "r", encoding="utf-8").readlines()
+    filetext = open(file, encoding="utf-8").readlines()
     start = None
     for i in range(len(filetext)):
         # look for first match

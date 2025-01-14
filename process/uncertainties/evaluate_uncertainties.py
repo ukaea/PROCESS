@@ -127,7 +127,7 @@ def run_monte_carlo(args):
                         )
 
                     # add run to index list
-                    indexDataSet.append("run{}".format(RUN_ID))
+                    indexDataSet.append(f"run{RUN_ID}")
 
                     # collect the process solution
                     mfilepath = Path(config.wdir) / "MFILE.DAT"
@@ -287,7 +287,7 @@ def run_morris_method(args):
         outputDataSet = []
 
         # add run to index list
-        indexDataSet.append("run{}".format(run_id))
+        indexDataSet.append(f"run{run_id}")
 
         # We need to find a way to catch failed runs
         process_status = m_file.data["ifail"].get_scan(-1)
@@ -370,7 +370,7 @@ def run_sobol_method(args):
         outputDataSet = []
 
         # add run to index list
-        indexDataSet.append("run{}".format(run_id))
+        indexDataSet.append(f"run{run_id}")
 
         # We need to find a way to catch failed runs
         process_status = m_file.data["ifail"].get_scan(-1)

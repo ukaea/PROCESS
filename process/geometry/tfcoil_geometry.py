@@ -2,8 +2,6 @@
 Calculate radial and vertical coordinates for the geometry of the tf coils
 """
 
-from typing import List, Tuple
-
 from process.geometry.geometry_parameterisations import RectangleGeometry
 from process.geometry.utils import ellips_fill_vertices
 
@@ -20,7 +18,7 @@ def tfcoil_geometry_rectangular_shape(
     tfcth: float,
     *,
     offset_in: float = 0.0,
-) -> List[RectangleGeometry]:
+) -> list[RectangleGeometry]:
     """Calculates rectangular geometries for tf coils in a picture frame/rectangular shape parametrization
 
     :param x1: radial location of arc point 1
@@ -98,7 +96,7 @@ def tfcoil_geometry_d_shape(
     rtangle2: float,
     *,
     offset_in: float = 0.0,
-) -> Tuple[List[RectangleGeometry], List[List[Tuple[float, float]]]]:
+) -> tuple[list[RectangleGeometry], list[list[tuple[float, float]]]]:
     """Calculates radial and vertical distances for the geometry of the tf coils in a D-shape parametrization
 
     :param x1: radial location of arc point 1

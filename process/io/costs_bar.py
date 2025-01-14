@@ -15,7 +15,6 @@ History
 # Imported libraries
 import argparse
 import sys
-from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,7 +22,7 @@ import numpy as np
 import process.io.mfile as mf
 
 
-def comp_orig(args, mfile_list: List[str], inflate: float) -> None:
+def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
     """
 
     Plot bar chart for the orginal 1990 cost model.
@@ -135,7 +134,7 @@ def comp_orig(args, mfile_list: List[str], inflate: float) -> None:
         plt.show()
 
 
-def comp_new(args, mfile_list: List[str], inflate: float):
+def comp_new(args, mfile_list: list[str], inflate: float):
     """
 
     Plot bar chart for the new 2014 cost model.

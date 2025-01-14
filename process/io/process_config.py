@@ -37,7 +37,7 @@ from process.io.python_fortran_dicts import get_dicts
 logger = logging.getLogger(__name__)
 
 
-class ProcessConfig(object):
+class ProcessConfig:
     """
     Configuration parameters for PROCESS runs
 
@@ -74,18 +74,18 @@ class ProcessConfig(object):
         """echos the attributes of the class"""
 
         if self.wdir != ".":
-            print("Working directory:   {}".format(self.wdir))
-        print("Original IN.DAT:     {}".format(self.or_in_dat))
-        print("PROCESS binary:      {}".format(self.process))
-        print("Number of iterations {}".format(self.niter))
+            print(f"Working directory:   {self.wdir}")
+        print(f"Original IN.DAT:     {self.or_in_dat}")
+        print(f"PROCESS binary:      {self.process}")
+        print(f"Number of iterations {self.niter}")
 
         if self.u_seed is not None:
-            print("random seed          {}".format(self.u_seed))
-        print("variable range factor {}".format(self.factor))
+            print(f"random seed          {self.u_seed}")
+        print(f"variable range factor {self.factor}")
         if self.filename is not None:
-            print("Config file          {}".format(self.filename))
+            print(f"Config file          {self.filename}")
         if self.comment != "":
-            print("Comment  {}".format(self.comment))
+            print(f"Comment  {self.comment}")
 
     def prepare_wdir(self):
         """prepares the working directory"""
@@ -163,7 +163,7 @@ class ProcessConfig(object):
             return False
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -189,7 +189,7 @@ class ProcessConfig(object):
             return None
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -481,7 +481,7 @@ class RunProcessConfig(ProcessConfig):
             return []
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -511,7 +511,7 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -534,7 +534,7 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
             print("Error: No config file named %s" % self.filename, file=stderr)
             self.configfileexists = False
@@ -735,12 +735,12 @@ class UncertaintiesConfig(ProcessConfig, Config):
         in_dat = InDat(self.or_in_dat)
         nvar = in_dat.number_of_itvars
         for i in range(1, nvar + 1):
-            nitvar = "nitvar{:03}".format(i)
+            nitvar = f"nitvar{i:03}"
             if nitvar not in self.output_vars:
                 self.output_vars += [nitvar]
         neqns = in_dat.number_of_constraints
         for i in range(1, neqns + 1):
-            normres = "normres{:03}".format(i)
+            normres = f"normres{i:03}"
             if normres not in self.output_vars:
                 self.output_vars += [normres]
 
@@ -755,7 +755,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             elif "fimp(" in varname:
                 # has different format in MFILE!!
                 fimpno = int(varname.split("(")[1].split(")")[0])
-                self.output_vars[i] = "fimp({:02}".format(fimpno)
+                self.output_vars[i] = f"fimp({fimpno:02}"
             elif "zref" in varname:
                 del_list += [varname]
                 add_zref = True
@@ -1158,7 +1158,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
             # normalised iteration varialbes
             for i in range(1, nvar + 1):
-                label = m_file.data["nitvar{:03}".format(i)].var_description
+                label = m_file.data[f"nitvar{i:03}"].var_description
                 header += " n_{0:8s}".format(label.replace("_(range_normalised)", ""))
 
             # error status, id and ifail
@@ -1169,15 +1169,13 @@ class UncertaintiesConfig(ProcessConfig, Config):
             err_summary = open(self.wdir + "/UQ_error_summary.txt", "a+")
 
         # Uncertain input variables
-        output = "{:12d}".format(sample_index)
+        output = f"{sample_index:12d}"
         for u_dict in self.uncertainties:
             output += " {0:10f}".format(u_dict["samples"][sample_index])
 
         # normalised iteration variables
         for i in range(1, nvar + 1):
-            output += " {0:10f}".format(
-                m_file.data["nitvar{:03}".format(i)].get_scan(-1)
-            )
+            output += " {0:10f}".format(m_file.data[f"nitvar{i:03}"].get_scan(-1))
 
         # error status and id
         output += " {0:13d} {1:8d}".format(

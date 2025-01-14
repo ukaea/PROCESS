@@ -15,7 +15,7 @@ import logging
 import os
 import re
 from collections import OrderedDict, abc
-from typing import Any, Dict, List
+from typing import Any
 
 MFILE_END = "# Copy of PROCESS Input Follows #"
 VETO_LIST = [" # PROCESS found a feasible solution #"]
@@ -88,7 +88,7 @@ class MFILEParser(abc.MutableMapping):
                 return self._mfile_data[group][param_name]["value"]
         raise KeyError(f"No variable '{param_name}' found.")
 
-    def _line_string_search(self, lines: List[str], search_str: str) -> List[int]:
+    def _line_string_search(self, lines: list[str], search_str: str) -> list[int]:
         """Search for substring in file lines.
 
         Parameters
@@ -132,7 +132,7 @@ class MFILEParser(abc.MutableMapping):
         except ValueError:
             return value_str
 
-    def _get_values(self, lines: List[str]) -> Dict[str, Any]:
+    def _get_values(self, lines: list[str]) -> dict[str, Any]:
         """Extracts value, description and variable name from MFILE lines.
 
         Parameters
@@ -207,7 +207,7 @@ class MFILEParser(abc.MutableMapping):
 
         return _vars_dict
 
-    def parse(self, mfile_addr: str) -> Dict:
+    def parse(self, mfile_addr: str) -> dict:
         """Parse an MFILE and extract output values.
 
         Parameters
@@ -227,7 +227,7 @@ class MFILEParser(abc.MutableMapping):
         """
         if not os.path.exists(mfile_addr):
             raise FileNotFoundError(
-                "Could not open MFILE '{}', file does not exist.".format(mfile_addr)
+                f"Could not open MFILE '{mfile_addr}', file does not exist."
             )
 
         self._logger.info("Parsing MFILE: %s", mfile_addr)
@@ -289,9 +289,9 @@ class MFILEParser(abc.MutableMapping):
                 for param, var_dict in self._mfile_data[_key].items():
                     if param not in _new_vals:
                         self._logger.warning(
-                            "Expected parameter '{}' in sweep, "
+                            f"Expected parameter '{param}' in sweep, "
                             "but could not find entry"
-                            " for this iteration".format(param)
+                            " for this iteration"
                         )
                         continue
                     _value = _new_vals[param]["value"]
@@ -341,9 +341,7 @@ class MFILEParser(abc.MutableMapping):
                 print(_test_param)
                 raise AssertionError(
                     "Failed to retrieve all parameter sweep values, "
-                    "expected {} values for '{}:{}' and got {}".format(
-                        _iscan_arr[-1], _second_key, _second_key_fp, len(_test_param)
-                    )
+                    f"expected {_iscan_arr[-1]} values for '{_second_key}:{_second_key_fp}' and got {len(_test_param)}"
                 )
         except KeyError:
             pass

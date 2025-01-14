@@ -7,7 +7,6 @@ import logging
 import re
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 import requests
 
@@ -30,7 +29,7 @@ class RegressionTestAssetCollector:
         self._tracked_mfiles = self._get_tracked_mfiles()
 
     def get_reference_mfile(
-        self, scenario_name: str, directory: Path, target_hash: Optional[str] = None
+        self, scenario_name: str, directory: Path, target_hash: str | None = None
     ):
         """Finds the most recent reference MFile for `<scenario_name>.IN.DAT`
         and downloads it to the `directory` with the name `ref.<scenario_name>.MFILE.DAT`.

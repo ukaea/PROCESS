@@ -3,7 +3,6 @@ import logging
 import re
 from importlib import resources
 from pathlib import Path
-from typing import List, Optional
 
 import numpy as np
 from scipy import integrate
@@ -196,14 +195,14 @@ class ImpurityDataHeader:
     """
 
     content: str
-    data: Optional[List[float]] = None
+    data: list[float] | None = None
 
 
 def read_impurity_file(impurity_file: Path):
     with open(impurity_file) as f:
         data = f.readlines()
 
-    file_contents: List[ImpurityDataHeader] = []
+    file_contents: list[ImpurityDataHeader] = []
 
     for line in data:
         # do not parse comments
