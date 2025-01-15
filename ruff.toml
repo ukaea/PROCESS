@@ -24,12 +24,10 @@ extend-select = [
     "RSE",
     "SLOT",
     "T10",
+    "SIM",
     "TID",
     "UP",
     "W",
-    "YTT",
-    "PD",
-    "SIM",
 ]
 
 ignore = ["COM812", "FBT", "G004", "PD901"]
