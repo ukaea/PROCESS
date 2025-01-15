@@ -365,6 +365,7 @@ def _plot_solutions(
     if len(objf_list) != 1:
         raise ValueError("Can't plot different objective functions on the same plot")
 
+    objf_list = list(objf_list)  # Convert set to list
     objf_name = str(objf_list[0])
 
     # Now separate optimisation parameter values from their names
