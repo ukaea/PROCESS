@@ -2156,7 +2156,7 @@
         "fwoizp": 0.0,
         "fwomzp": 0.0,
         "fwoth": 0.0,
-        "fwoutlet": 823.0,
+        "temp_fw_out": 823.0,
         "fwpressure": 15500000.0,
         "fwtemp": 0.0,
         "fwvol": [
@@ -9700,7 +9700,7 @@
         "fwoizp": "outboard first wall integrated zone power / neutron",
         "fwomzp": "outboard first wall mean zone power density/neutron",
         "fwoth": "outboard first wall thickness, initial estimate as calculated (m)",
-        "fwoutlet": "outlet temperature of first wall coolant (K)",
+        "temp_fw_out": "outlet temperature of first wall coolant (K)",
         "fwpressure": "first wall coolant pressure (Pa) (`secondary_cycle>1`)",
         "fwtemp": "outboard first wall temperature after a LOCA (K)",
         "fwvol": "IFE first wall volume (m3)",
@@ -13065,7 +13065,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "fwoutlet": {
+        "temp_fw_out": {
             "lb": 300.0,
             "ub": 1500.0
         },
@@ -18104,7 +18104,7 @@
             "afw",
             "pitch",
             "temp_fw_in",
-            "fwoutlet",
+            "temp_fw_out",
             "fwpressure",
             "tpeak",
             "roughness",
@@ -20393,7 +20393,7 @@
         "fwith": "real_variable",
         "fwmatf": "real_array",
         "fwoth": "real_variable",
-        "fwoutlet": "real_variable",
+        "temp_fw_out": "real_variable",
         "fwpressure": "real_variable",
         "fzactual": "real_variable",
         "fzeffmax": "real_variable",

@@ -31,7 +31,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     temp_fw_in: Any = None
 
-    fwoutlet: Any = None
+    temp_fw_out: Any = None
 
     fwpressure: Any = None
 
@@ -86,7 +86,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
         PrimaryCoolantPropertiesParam(
             fwcoolant="helium",
             temp_fw_in=573,
-            fwoutlet=773,
+            temp_fw_out=773,
             fwpressure=8000000,
             rhof_fw=0,
             cp_fw=0,
@@ -114,7 +114,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
         PrimaryCoolantPropertiesParam(
             fwcoolant="helium",
             temp_fw_in=573,
-            fwoutlet=773,
+            temp_fw_out=773,
             fwpressure=8000000,
             rhof_fw=5.6389735407435868,
             cp_fw=5188.5588430173211,
@@ -167,7 +167,7 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwoutlet", primarycoolantpropertiesparam.fwoutlet
+        fwbs_variables, "temp_fw_out", primarycoolantpropertiesparam.temp_fw_out
     )
 
     monkeypatch.setattr(
