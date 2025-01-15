@@ -18,35 +18,39 @@ HELIAS5B = {
     "coilspermodule": 10,
     "a1": 0.688,
     "a2": 0.025,
-    "plasma_volume": 1422.63,
+    "plasma_volume": 1422.63,  # This value is for Helias 5
     "dmin": 0.84,
     "max_portsize_width": 2.12,
-    "plasma_surface": 1960.0,
-    "maximal_coil_height": 12.7,
-    "coilsurface": 4817.7,
-    "coillength": 1680.0,
-    "I0": 13.06,
-    "inductance": 1655.76e-6,
-    "WP_ratio": 1.2,
-    "max_force_density": 120.0,
-    "max_force_density_MNm": 98.0,
-    "max_lateral_force_density": 92.4,
-    "max_radial_force_density": 113.5,
+    "plasma_surface": 1960.0,  # Plasma Surface
+    "maximal_coil_height": 12.7,  # [m] Full height max point to min point
+    "coilsurface": 4817.7,  # Coil surface, dimensionfull. At reference point
+    "coillength": 1680.0,  # Central filament length of machine with outer radius 1m.
+    "I0": 13.06,  # Coil Current needed to produce 1T on axis in [MA] at outer radius 1m
+    "inductance": 1655.76e-6,  # inductance in muH
+    "WP_ratio": 1.2,  # The fit values in stellarator config class should be calculated using this value.
+    "max_force_density": 120.0,  # [MN/m^3]
+    "max_force_density_MNm": 98.0,  # [MN/m]
+    "max_lateral_force_density": 92.4,  # [MN/m^3]
+    "max_radial_force_density": 113.5,  # [MN/m^3]
     "centering_force_max_MN": 189.5,
     "centering_force_min_MN": -55.7,
     "centering_force_avg_MN": 93.0,
     "min_plasma_coil_distance": 1.9,
-    "derivative_min_LCFS_coils_dist": -1.0,
-    "min_bend_radius": 1.0,
+    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "min_bend_radius": 1.0,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
 }
 
+
 HELIAS4 = {
     "name": "Helias 4",
+    # Reference point where all the other variables are determined from
+    # Plasma outer radius
     "rmajor_ref": 17.6,
     "rminor_ref": 2.0,
     "aspect_ref": 8.8,
+    # Coil radii
     "coil_rmajor": 18.39,
     "coil_rminor": 4.94,
     "bt_ref": 5.6,
@@ -60,31 +64,34 @@ HELIAS4 = {
     "dmin": 1.08,
     "max_portsize_width": 3.24,
     "plasma_surface": 1900.0,
-    "maximal_coil_height": 13.34,
-    "coilsurface": 4100.0,
-    "coillength": 1435.07,
-    "I0": 13.146,
-    "inductance": 1290.4e-6,
+    "maximal_coil_height": 13.34,  # [m] Full height max point to min point
+    "coilsurface": 4100.0,  # Coil surface, dimensionfull. At reference point
+    "coillength": 1435.07,  # Central filament length of machine with outer radius 1m.
+    "I0": 13.146,  # Coil Current needed to produce b0 on axis in [MA] at reference point
+    "inductance": 1290.4e-6,  # inductance/R*A^2 in muH
     "WP_ratio": 1.3,
-    "max_force_density": 120.0,
-    "max_force_density_MNm": 98.0,
-    "max_lateral_force_density": 87.9,
-    "max_radial_force_density": 109.9,
+    "max_force_density": 120.0,  # [MN/m^3]
+    "max_force_density_MNm": 98.0,  # [MN/m]
+    "max_lateral_force_density": 87.9,  # [MN/m^3]
+    "max_radial_force_density": 109.9,  # [MN/m^3]
     "centering_force_max_MN": 226.0,
     "centering_force_min_MN": -35.3,
     "centering_force_avg_MN": 125.8,
     "min_plasma_coil_distance": 1.7,
-    "derivative_min_LCFS_coils_dist": -1.0,
-    "min_bend_radius": 0.86,
+    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "min_bend_radius": 0.86,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
 }
 
 HELIAS3 = {
     "name": "Helias 3",
+    # Reference point where all the other variables are determined from
+    # Plasma outer radius
     "rmajor_ref": 13.86,
     "rminor_ref": 2.18,
     "aspect_ref": 6.36,
+    # Coil radii
     "coil_rmajor": 14.53,
     "coil_rminor": 6.12,
     "bt_ref": 5.6,
@@ -92,37 +99,41 @@ HELIAS3 = {
     "WP_area": 0.8 * 0.6,
     "symmetry": 3,
     "coilspermodule": 10,
+    # Bmax fit parameters
     "a1": 0.56,
     "a2": 0.030,
     "plasma_volume": 1300.8,
     "dmin": 1.145,
-    "max_portsize_width": 3.24,
+    "max_portsize_width": 3.24,  # ??? guess. not ready yet
     "plasma_surface": 1600.00,
-    "maximal_coil_height": 17.74,
-    "coilsurface": 4240.0,
-    "coillength": 1287.3,
-    "I0": 14.23,
-    "inductance": 1250.7e-6,
+    "maximal_coil_height": 17.74,  # [m] Full height max point to min point
+    "coilsurface": 4240.0,  # Coil surface, dimensionfull. At reference point
+    "coillength": 1287.3,  # Central filament length of machine with outer radius 1m.
+    "I0": 14.23,  # Coil Current needed to produce 1T on axis in [MA] at outer radius 1m
+    "inductance": 1250.7e-6,  # inductance in muH
     "WP_ratio": 1.3,
-    "max_force_density": 120.0,
+    "max_force_density": 120.0,  # [MN/m]
     "max_force_density_MNm": 98.0,
-    "max_lateral_force_density": 96.6,
-    "max_radial_force_density": 130.5,
+    "max_lateral_force_density": 96.6,  # [MN/m^3]
+    "max_radial_force_density": 130.5,  # [MN/m^3]
     "centering_force_max_MN": 428.1,
     "centering_force_min_MN": -70.3,
     "centering_force_avg_MN": 240.9,
     "min_plasma_coil_distance": 1.78,
-    "derivative_min_LCFS_coils_dist": -1.0,
-    "min_bend_radius": 1.145,
+    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "min_bend_radius": 1.145,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
 }
 
 W7X30 = {
     "name": "W7X-30",
+    # Reference point where all the other variables are determined from
+    # Plasma outer radius
     "rmajor_ref": 5.50,
     "rminor_ref": 0.49,
     "aspect_ref": 11.2,
+    # Coil radii
     "coil_rmajor": 5.62,
     "coil_rminor": 1.36,
     "bt_ref": 3.0,
@@ -136,31 +147,34 @@ W7X30 = {
     "dmin": 0.21,
     "max_portsize_width": 0.5,
     "plasma_surface": 128.3,
-    "maximal_coil_height": 3.6,
-    "coilsurface": 370.0,
-    "coillength": 303.4,
-    "I0": 2.9,
-    "inductance": 252.7e-6,
+    "maximal_coil_height": 3.6,  # [m] Full height max point to min point
+    "coilsurface": 370.0,  # Coil surface, dimensionfull. At reference point
+    "coillength": 303.4,  # Central filament length of machine with outer radius 1m.
+    "I0": 2.9,  # Coil Current needed to produce b0 on axis in [MA] at reference point
+    "inductance": 252.7e-6,  # inductance/R*A^2 in muH
     "WP_ratio": 1.2,
-    "max_force_density": 350.0,
-    "max_force_density_MNm": 98.0,
-    "max_lateral_force_density": 271.1,
-    "max_radial_force_density": 305.2,
+    "max_force_density": 350.0,  # [MN/m^3]
+    "max_force_density_MNm": 98.0,  # [MN/m]
+    "max_lateral_force_density": 271.1,  # [MN/m^3]
+    "max_radial_force_density": 305.2,  # [MN/m^3]
     "centering_force_max_MN": 7.95,
     "centering_force_min_MN": -2.15,
     "centering_force_avg_MN": 3.46,
     "min_plasma_coil_distance": 0.45,
-    "derivative_min_LCFS_coils_dist": -1.0,
-    "min_bend_radius": 0.186,
+    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "min_bend_radius": 0.186,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
 }
 
 W7X50 = {
     "name": "W7X-50",
+    # Reference point where all the other variables are determined from
+    # Plasma outer radius
     "rmajor_ref": 5.5,
     "rminor_ref": 0.49,
     "aspect_ref": 11.2,
+    # Coil radii
     "coil_rmajor": 5.62,
     "coil_rminor": 1.18,
     "bt_ref": 3.0,
@@ -174,22 +188,22 @@ W7X50 = {
     "dmin": 0.28,
     "max_portsize_width": 0.3,
     "plasma_surface": 128.3,
-    "maximal_coil_height": 3.1,
-    "coilsurface": 299.85,
-    "coillength": 420.67,
-    "I0": 1.745,
-    "inductance": 412.4e-6,
+    "maximal_coil_height": 3.1,  # [m] Full height max point to min point
+    "coilsurface": 299.85,  # Coil surface, dimensionfull. At reference point
+    "coillength": 420.67,  # Central filament length of machine with outer radius 1m.
+    "I0": 1.745,  # Coil Current needed to produce b0 on axis in [MA] at reference point
+    "inductance": 412.4e-6,  # inductance/R*A^2 in muH
     "WP_ratio": 1.2,
-    "max_force_density": 250.0,
-    "max_force_density_MNm": 98.0,
-    "max_lateral_force_density": 116.4,
-    "max_radial_force_density": 148.0,
+    "max_force_density": 250.0,  # [MN/m^3]
+    "max_force_density_MNm": 98.0,  # [MN/m]
+    "max_lateral_force_density": 116.4,  # [MN/m^3]
+    "max_radial_force_density": 148.0,  # [MN/m^3]
     "centering_force_max_MN": 2.99,
     "centering_force_min_MN": -1.29,
     "centering_force_avg_MN": 1.61,
     "min_plasma_coil_distance": 0.39,
-    "derivative_min_LCFS_coils_dist": -1.0,
-    "min_bend_radius": 0.39,
+    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "min_bend_radius": 0.39,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
 }
