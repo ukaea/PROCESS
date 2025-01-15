@@ -357,10 +357,10 @@ contains
     !! Error in: Equation for net electric power lower limit
     !! author: P B Lloyd, CCFE, Culham Science Centre
     use constraint_variables, only: fpnetel, pnetelin
-    use heat_transport_variables, only: pnetelmw
+    use heat_transport_variables, only: p_net_electrical_mw
     implicit none
     write(*,*) 'fpnetel = ', fpnetel
-    write(*,*) 'pnetelmw = ', pnetelmw
+    write(*,*) 'p_net_electrical_mw = ', p_net_electrical_mw
     write(*,*) 'pnetelin = ', pnetelin
    end subroutine
 
@@ -445,7 +445,7 @@ contains
     !! <LI> = 1 total power lost is scaling power plus core radiation only
     !! <LI> = 2 total power lost is scaling power only, with no additional
     !! allowance for radiation. This is not recommended for power plant models.</UL>
-    !! ignite : input integer : switch for ignition assumption:<UL>
+    !! i_ignited : input integer : switch for ignition assumption:<UL>
     !! <LI> = 0 do not assume plasma ignition;
     !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
     !! ptrepv : input real : electron transport power per volume (MW/m3)
@@ -459,7 +459,7 @@ contains
     !! pinjmw : input real : total auxiliary injected power (MW)
     !! plasma_volume : input real : plasma volume (m3)
 
-    use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pradpv, &
+    use physics_variables, only: iradloss, i_ignited, ptrepv, ptripv, pradpv, &
                                   pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, plasma_volume
     use current_drive_variables, only: pinjmw
@@ -487,7 +487,7 @@ contains
     end if
 
     ! if plasma not ignited include injected power
-    if (ignite == 0) then
+    if (i_ignited == 0) then
       pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume
     else
       ! if plasma ignited
@@ -512,7 +512,7 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ignite : input integer : switch for ignition assumption:<UL>
+      !! i_ignited : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
       !! ptripv : input real :  ion transport power per volume (MW/m3)
@@ -521,7 +521,7 @@ contains
       !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
       !! pinjimw : input real : auxiliary injected power to ions (MW)
       !! plasma_volume : input real : plasma volume (m3)
-      use physics_variables, only: ignite, ptripv, piepv, f_alpha_plasma, alpha_power_ions_density, plasma_volume
+      use physics_variables, only: i_ignited, ptripv, piepv, f_alpha_plasma, alpha_power_ions_density, plasma_volume
       use current_drive_variables, only: pinjimw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -531,7 +531,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
 	   ! No assume plasma ignition:
-      if (ignite == 0) then
+      if (i_ignited == 0) then
          tmp_cc     = 1.0D0 - (ptripv + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume)
          tmp_con    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume) * (1.0D0 - tmp_cc)
          tmp_err    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume) * tmp_cc
@@ -565,7 +565,7 @@ contains
       !! <LI> = 1 total power lost is scaling power plus core radiation only
       !! <LI> = 2 total power lost is scaling power only, with no additional
       !! allowance for radiation. This is not recommended for power plant models.</UL>
-      !! ignite : input integer : switch for ignition assumption:<UL>
+      !! i_ignited : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
       !! ptrepv : input real : electron transport power per volume (MW/m3)
@@ -576,7 +576,7 @@ contains
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
       !! plasma_volume : input real : plasma volume (m3)
-      use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
+      use physics_variables, only: iradloss, i_ignited, ptrepv, pcoreradpv, f_alpha_plasma, &
                                  alpha_power_electron_density, piepv, plasma_volume, pradpv
       use current_drive_variables, only: pinjemw
       implicit none
@@ -600,7 +600,7 @@ contains
       end if
 
       ! if plasma not ignited include injected power
-      if (ignite == 0) then
+      if (i_ignited == 0) then
          pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + pinjemw/plasma_volume
       else
       ! if plasma ignited
@@ -704,16 +704,16 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ignite : input integer : switch for ignition assumption:<UL>
+      !! i_ignited : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! Obviously, ignite must be zero if current drive is required.
-      !! If ignite=1, any auxiliary power is assumed to be used only
+      !! Obviously, i_ignited must be zero if current drive is required.
+      !! If i_ignited=1, any auxiliary power is assumed to be used only
       !! during plasma start-up, and is excluded from all steady-state
       !! power balance calculations.
       !! beam_density_out : input real :  hot beam ion density from calculation (/m3)
       !! dnbeam : input real : hot beam ion density, variable (/m3)
-      use physics_variables, only: ignite, beam_density_out, dnbeam
+      use physics_variables, only: i_ignited, beam_density_out, dnbeam
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -722,7 +722,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
 	   ! Do not assume plasma ignition:
-      if (ignite == 0) then
+      if (i_ignited == 0) then
          tmp_cc     = 1.0D0 - beam_density_out/dnbeam
          tmp_con    = dnbeam * (1.0D0 - tmp_cc)
          tmp_err    = dnbeam * tmp_cc
@@ -998,10 +998,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpnetel : input real : f-value for net electric power
-      !! pnetelmw : input real : net electric power (MW)
+      !! p_net_electrical_mw : input real : net electric power (MW)
       !! pnetelin : input real : required net electric power (MW)
       use constraint_variables, only: fpnetel, pnetelin
-      use heat_transport_variables, only: pnetelmw
+      use heat_transport_variables, only: p_net_electrical_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1009,9 +1009,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fpnetel * pnetelmw / pnetelin
+      tmp_cc =  1.0D0 - fpnetel * p_net_electrical_mw / pnetelin
       tmp_con = pnetelin
-      tmp_err = pnetelmw - pnetelin / fpnetel
+      tmp_err = p_net_electrical_mw - pnetelin / fpnetel
       tmp_symbol = '>'
       tmp_units = 'MW'
 
@@ -1419,16 +1419,16 @@ contains
       !! fqval : input real : pf-value for Q
       !! bigq : input real : Fusion gain; P_fusion / (P_injection + P_ohmic)
       !! bigqmin : input real : minimum fusion gain Q
-      !! ignite : input integer : switch for ignition assumption:<UL>
+      !! i_ignited : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! Obviously, ignite must be zero if current drive is required.
-      !! If ignite=1, any auxiliary power is assumed to be used only
+      !! Obviously, i_ignited must be zero if current drive is required.
+      !! If i_ignited=1, any auxiliary power is assumed to be used only
       !! during plasma start-up, and is excluded from all steady-state
       !! power balance calculations.
       use constraint_variables, only: fqval, bigqmin
       use current_drive_variables, only: bigq
-      use physics_variables, only: ignite
+      use physics_variables, only: i_ignited
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1437,7 +1437,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! if plasma is not ignited ...
-      if (ignite == 0) then
+      if (i_ignited == 0) then
          tmp_cc =  1.0D0 - fqval * bigq/bigqmin
          tmp_con = bigqmin * (1.0D0 - tmp_cc)
          tmp_err = bigqmin * tmp_cc
@@ -3246,11 +3246,11 @@ contains
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
       !! Equation for TF coil cryogenic power upper limit
-      !! crypmw : input real : cryogenic plant power (MW)
-      !! f_crypmw : input real : f-value for maximum cryogenic plant power
-      !! crypmw_max : input real : Maximum cryogenic plant power (MW)
+      !! p_cryo_plant_mw : input real : cryogenic plant power (MW)
+      !! fcryo_plant_power : input real : f-value for maximum cryogenic plant power
+      !! p_cryo_plant_max_mw : input real : Maximum cryogenic plant power (MW)
 
-      use heat_transport_variables, only: crypmw, crypmw_max, f_crypmw
+      use heat_transport_variables, only: p_cryo_plant_mw, p_cryo_plant_max_mw, fcryo_plant_power
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3258,9 +3258,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - f_crypmw * crypmw_max/crypmw
-      tmp_con = crypmw_max * (1.0D0 - tmp_cc)
-      tmp_err = crypmw * tmp_cc
+      tmp_cc =  1.0D0 - fcryo_plant_power * p_cryo_plant_max_mw/p_cryo_plant_mw
+      tmp_con = p_cryo_plant_max_mw * (1.0D0 - tmp_cc)
+      tmp_err = p_cryo_plant_mw * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW'
    end subroutine constraint_eqn_087
@@ -3355,7 +3355,7 @@ contains
 
    subroutine constraint_eqn_091(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for checking if the design point is ECRH ignitable
-      !! at lower values for n and B. Or if the design point is ECRH heatable (if ignite==0)
+      !! at lower values for n and B. Or if the design point is ECRH heatable (if i_ignited==0)
       !! stellarators only (but in principle usable also for tokamaks).
       !! author: J Lion, IPP Greifswald
       !! args : output structure : residual error; constraint value;
@@ -3368,7 +3368,7 @@ contains
       !! te0_ecrh_achievable : input real : Max. achievable electron temperature at ignition point
       use constraint_variables, only: fecrh_ignition
       use stellarator_variables, only: max_gyrotron_frequency, te0_ecrh_achievable, powerscaling_constraint, powerht_constraint
-      use physics_variables, only: ignite
+      use physics_variables, only: i_ignited
       use current_drive_variables, only: pheat
       implicit none
       real(dp), intent(out) :: tmp_cc
@@ -3378,7 +3378,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! Achievable ECRH te needs to be larger than needed te for igntion
-      if(ignite==0) then
+      if(i_ignited==0) then
          tmp_cc = 1.0D0 - fecrh_ignition* (powerht_constraint+pheat)/powerscaling_constraint
       else
          tmp_cc = 1.0D0 - fecrh_ignition* powerht_constraint/powerscaling_constraint

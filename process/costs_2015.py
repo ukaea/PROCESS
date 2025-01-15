@@ -140,7 +140,7 @@ class Costs2015:
 
         # Electrical output (given availability) for a whole year
         self.mean_electric_output = (
-            heat_transport_variables.pnetelmw * cost_variables.cpfact
+            heat_transport_variables.p_net_electrical_mw * cost_variables.cpfact
         )
         self.annual_electric_output = self.mean_electric_output * 24.0e0 * 365.25e0
 
@@ -489,8 +489,8 @@ class Costs2015:
         po.ovarrf(
             self.outfile,
             "Net electric output (MW)",
-            "(pnetelmw)",
-            heat_transport_variables.pnetelmw,
+            "(p_net_electrical_mw)",
+            heat_transport_variables.p_net_electrical_mw,
             "OP ",
         )
         po.ovarrf(
@@ -609,7 +609,8 @@ class Costs2015:
         self.s_cref[7] = 51000.0e0 * cost_variables.light_build_cost_per_vol
         # Scale with total thermal power removed from the core (MW)
         self.s_k[7] = (
-            heat_transport_variables.pthermmw + heat_transport_variables.psechtmw
+            heat_transport_variables.p_thermal_primary_mw
+            + heat_transport_variables.p_thermal_secondary_mw
         )
         self.s_kref[7] = 880.0e0
         self.s_cost[7] = (
@@ -884,7 +885,7 @@ class Costs2015:
         #  Cost of reference energy conversion system (Rolls Royce)
         self.s_cref[34] = 511.0e6
         #  Scale with gross electric power (MWe)
-        self.s_k[34] = heat_transport_variables.pgrossmw
+        self.s_k[34] = heat_transport_variables.p_gross_electrical
         self.s_kref[34] = 692.0e0
         self.s_cost[34] = (
             self.s_cost_factor[34]
@@ -963,7 +964,8 @@ class Costs2015:
         self.s_cref[42] = 40.0e6
         #  Scale with total thermal power removed from fusion core (MW)
         self.s_k[42] = (
-            heat_transport_variables.pthermmw + heat_transport_variables.psechtmw
+            heat_transport_variables.p_thermal_primary_mw
+            + heat_transport_variables.p_thermal_secondary_mw
         )
         self.s_kref[42] = 550.0e0
         self.s_cost[42] = (
@@ -991,7 +993,8 @@ class Costs2015:
         self.s_cref[44] = 724.0e6
         #  Scale with total thermal power removed from fusion core (MW)
         self.s_k[44] = (
-            heat_transport_variables.pthermmw + heat_transport_variables.psechtmw
+            heat_transport_variables.p_thermal_primary_mw
+            + heat_transport_variables.p_thermal_secondary_mw
         )
         self.s_kref[44] = 550.0e0
         self.s_cost[44] = (

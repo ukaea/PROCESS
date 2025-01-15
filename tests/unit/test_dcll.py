@@ -29,31 +29,31 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     fwarea: Any = None
 
-    porbitlossmw: Any = None
+    p_nb_orbit_loss_mw: Any = None
 
     fdiv: Any = None
 
-    praddiv: Any = None
+    p_div_radiation_mw: Any = None
 
-    pnucdiv: Any = None
+    p_div_nuclear_heat_mw: Any = None
 
     fhcd: Any = None
 
-    pradhcd: Any = None
+    p_hcd_radiation_mw: Any = None
 
-    pnuchcd: Any = None
+    p_hcd_nuclear_heat_mw: Any = None
 
-    pnucshld: Any = None
+    p_shield_nuclear_heat_mw: Any = None
 
-    pradfw: Any = None
+    p_fw_radiation_mw: Any = None
 
-    pnucfw: Any = None
+    p_fw_nuclear_heat_mw: Any = None
 
     psurffwi: Any = None
 
     psurffwo: Any = None
 
-    pnucblkt: Any = None
+    p_blanket_nuclear_heat_mw: Any = None
 
     pnuc_fw_ratio_dcll: Any = None
 
@@ -63,7 +63,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     emultmw: Any = None
 
-    ptfnuc: Any = None
+    p_tf_nuclear_heat_mw: Any = None
 
     idivrt: Any = None
 
@@ -71,17 +71,17 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     pradmw: Any = None
 
-    palpfwmw: Any = None
+    p_fw_alpha_mw: Any = None
 
-    expected_praddiv: Any = None
+    expected_p_div_radiation_mw: Any = None
 
-    expected_pnucdiv: Any = None
+    expected_p_div_nuclear_heat_mw: Any = None
 
-    expected_pradfw: Any = None
+    expected_p_fw_radiation_mw: Any = None
 
-    expected_pnucfw: Any = None
+    expected_p_fw_nuclear_heat_mw: Any = None
 
-    expected_pnucblkt: Any = None
+    expected_p_blanket_nuclear_heat_mw: Any = None
 
     expected_emultmw: Any = None
 
@@ -92,65 +92,65 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
         DcllNeutronicsAndPowerParam(
             fwareaob=988.92586580655245,
             fwarea=1601.1595634509963,
-            porbitlossmw=0,
+            p_nb_orbit_loss_mw=0,
             fdiv=0.115,
-            praddiv=0,
-            pnucdiv=0,
+            p_div_radiation_mw=0,
+            p_div_nuclear_heat_mw=0,
             fhcd=0,
-            pradhcd=0,
-            pnuchcd=0,
-            pnucshld=0,
-            pradfw=0,
-            pnucfw=0,
+            p_hcd_radiation_mw=0,
+            p_hcd_nuclear_heat_mw=0,
+            p_shield_nuclear_heat_mw=0,
+            p_fw_radiation_mw=0,
+            p_fw_nuclear_heat_mw=0,
             psurffwi=0,
             psurffwo=0,
-            pnucblkt=0,
+            p_blanket_nuclear_heat_mw=0,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
             emult=1.2689999999999999,
             emultmw=0,
-            ptfnuc=0,
+            p_tf_nuclear_heat_mw=0,
             idivrt=1,
             neutron_power_total=1587.7386535917431,
             pradmw=287.44866938104849,
-            palpfwmw=19.835845058655043,
-            expected_praddiv=33.056596978820579,
-            expected_pnucdiv=182.58994516305046,
-            expected_pradfw=254.39207240222791,
-            expected_pnucfw=196.72081918001697,
-            expected_pnucblkt=1533.4949914565693,
+            p_fw_alpha_mw=19.835845058655043,
+            expected_p_div_radiation_mw=33.056596978820579,
+            expected_p_div_nuclear_heat_mw=182.58994516305046,
+            expected_p_fw_radiation_mw=254.39207240222791,
+            expected_p_fw_nuclear_heat_mw=196.72081918001697,
+            expected_p_blanket_nuclear_heat_mw=1533.4949914565693,
             expected_emultmw=325.06710220789364,
         ),
         DcllNeutronicsAndPowerParam(
             fwareaob=1168.1172772224481,
             fwarea=1891.2865102700493,
-            porbitlossmw=0,
+            p_nb_orbit_loss_mw=0,
             fdiv=0.115,
-            praddiv=33.056596978820579,
-            pnucdiv=182.58994516305046,
+            p_div_radiation_mw=33.056596978820579,
+            p_div_nuclear_heat_mw=182.58994516305046,
             fhcd=0,
-            pradhcd=0,
-            pnuchcd=0,
-            pnucshld=0,
-            pradfw=254.39207240222791,
-            pnucfw=196.72081918001697,
+            p_hcd_radiation_mw=0,
+            p_hcd_nuclear_heat_mw=0,
+            p_shield_nuclear_heat_mw=0,
+            p_fw_radiation_mw=254.39207240222791,
+            p_fw_nuclear_heat_mw=196.72081918001697,
             psurffwi=97.271629070225231,
             psurffwo=176.95628839065773,
-            pnucblkt=1533.4949914565693,
+            p_blanket_nuclear_heat_mw=1533.4949914565693,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
             emult=1.2689999999999999,
             emultmw=325.06710220789364,
-            ptfnuc=0,
+            p_tf_nuclear_heat_mw=0,
             idivrt=1,
             neutron_power_total=1587.2430556964196,
             pradmw=287.44866938104849,
-            palpfwmw=19.829653483586444,
-            expected_praddiv=33.056596978820579,
-            expected_pnucdiv=182.53295140508826,
-            expected_pradfw=254.39207240222791,
-            expected_pnucfw=196.65941460078642,
-            expected_pnucblkt=1533.0163252173013,
+            p_fw_alpha_mw=19.829653483586444,
+            expected_p_div_radiation_mw=33.056596978820579,
+            expected_p_div_nuclear_heat_mw=182.53295140508826,
+            expected_p_fw_radiation_mw=254.39207240222791,
+            expected_p_fw_nuclear_heat_mw=196.65941460078642,
+            expected_p_blanket_nuclear_heat_mw=1533.0163252173013,
             expected_emultmw=324.96563552675644,
         ),
     ),
@@ -176,29 +176,55 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
     monkeypatch.setattr(
         current_drive_variables,
-        "porbitlossmw",
-        dcllneutronicsandpowerparam.porbitlossmw,
+        "p_nb_orbit_loss_mw",
+        dcllneutronicsandpowerparam.p_nb_orbit_loss_mw,
     )
 
     monkeypatch.setattr(fwbs_variables, "fdiv", dcllneutronicsandpowerparam.fdiv)
 
-    monkeypatch.setattr(fwbs_variables, "praddiv", dcllneutronicsandpowerparam.praddiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_div_radiation_mw",
+        dcllneutronicsandpowerparam.p_div_radiation_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "pnucdiv", dcllneutronicsandpowerparam.pnucdiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_div_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_div_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "fhcd", dcllneutronicsandpowerparam.fhcd)
 
-    monkeypatch.setattr(fwbs_variables, "pradhcd", dcllneutronicsandpowerparam.pradhcd)
-
-    monkeypatch.setattr(fwbs_variables, "pnuchcd", dcllneutronicsandpowerparam.pnuchcd)
-
     monkeypatch.setattr(
-        fwbs_variables, "pnucshld", dcllneutronicsandpowerparam.pnucshld
+        fwbs_variables,
+        "p_hcd_radiation_mw",
+        dcllneutronicsandpowerparam.p_hcd_radiation_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "pradfw", dcllneutronicsandpowerparam.pradfw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_hcd_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_hcd_nuclear_heat_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "pnucfw", dcllneutronicsandpowerparam.pnucfw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_shield_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_shield_nuclear_heat_mw,
+    )
+
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_radiation_mw",
+        dcllneutronicsandpowerparam.p_fw_radiation_mw,
+    )
+
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_fw_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "psurffwi", dcllneutronicsandpowerparam.psurffwi
@@ -209,7 +235,9 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "pnucblkt", dcllneutronicsandpowerparam.pnucblkt
+        fwbs_variables,
+        "p_blanket_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_blanket_nuclear_heat_mw,
     )
 
     monkeypatch.setattr(
@@ -228,7 +256,11 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
     monkeypatch.setattr(fwbs_variables, "emultmw", dcllneutronicsandpowerparam.emultmw)
 
-    monkeypatch.setattr(fwbs_variables, "ptfnuc", dcllneutronicsandpowerparam.ptfnuc)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_tf_nuclear_heat_mw",
+        dcllneutronicsandpowerparam.p_tf_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(physics_variables, "idivrt", dcllneutronicsandpowerparam.idivrt)
 
@@ -241,29 +273,29 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     monkeypatch.setattr(physics_variables, "pradmw", dcllneutronicsandpowerparam.pradmw)
 
     monkeypatch.setattr(
-        physics_variables, "palpfwmw", dcllneutronicsandpowerparam.palpfwmw
+        physics_variables, "p_fw_alpha_mw", dcllneutronicsandpowerparam.p_fw_alpha_mw
     )
 
     dcll.dcll_neutronics_and_power(False)
 
-    assert fwbs_variables.praddiv == pytest.approx(
-        dcllneutronicsandpowerparam.expected_praddiv
+    assert fwbs_variables.p_div_radiation_mw == pytest.approx(
+        dcllneutronicsandpowerparam.expected_p_div_radiation_mw
     )
 
-    assert fwbs_variables.pnucdiv == pytest.approx(
-        dcllneutronicsandpowerparam.expected_pnucdiv
+    assert fwbs_variables.p_div_nuclear_heat_mw == pytest.approx(
+        dcllneutronicsandpowerparam.expected_p_div_nuclear_heat_mw
     )
 
-    assert fwbs_variables.pradfw == pytest.approx(
-        dcllneutronicsandpowerparam.expected_pradfw
+    assert fwbs_variables.p_fw_radiation_mw == pytest.approx(
+        dcllneutronicsandpowerparam.expected_p_fw_radiation_mw
     )
 
-    assert fwbs_variables.pnucfw == pytest.approx(
-        dcllneutronicsandpowerparam.expected_pnucfw
+    assert fwbs_variables.p_fw_nuclear_heat_mw == pytest.approx(
+        dcllneutronicsandpowerparam.expected_p_fw_nuclear_heat_mw
     )
 
-    assert fwbs_variables.pnucblkt == pytest.approx(
-        dcllneutronicsandpowerparam.expected_pnucblkt
+    assert fwbs_variables.p_blanket_nuclear_heat_mw == pytest.approx(
+        dcllneutronicsandpowerparam.expected_p_blanket_nuclear_heat_mw
     )
 
     assert fwbs_variables.emultmw == pytest.approx(
@@ -342,7 +374,7 @@ class DcllMassesParam(NamedTuple):
 
     vfblkt: Any = None
 
-    icooldual: Any = None
+    i_blkt_dual_coolant: Any = None
 
     rhof_fw: Any = None
 
@@ -548,7 +580,7 @@ class DcllMassesParam(NamedTuple):
             w_f_liq_ib=0.5,
             w_f_liq_ob=0.5,
             vfblkt=0.25,
-            icooldual=2,
+            i_blkt_dual_coolant=2,
             rhof_fw=5.6389735407435868,
             rhof_bl=5.6389735407435868,
             nblktmodti=32,
@@ -668,7 +700,7 @@ class DcllMassesParam(NamedTuple):
             w_f_liq_ib=0.79000002145767212,
             w_f_liq_ob=0.79000002145767212,
             vfblkt=0.082598954955828252,
-            icooldual=2,
+            i_blkt_dual_coolant=2,
             rhof_fw=5.6389735407435868,
             rhof_bl=5.6389735407435868,
             nblktmodti=32,
@@ -845,7 +877,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(fwbs_variables, "vfblkt", dcllmassesparam.vfblkt)
 
-    monkeypatch.setattr(fwbs_variables, "icooldual", dcllmassesparam.icooldual)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_dual_coolant", dcllmassesparam.i_blkt_dual_coolant
+    )
 
     monkeypatch.setattr(fwbs_variables, "rhof_fw", dcllmassesparam.rhof_fw)
 

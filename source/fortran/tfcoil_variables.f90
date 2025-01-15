@@ -520,7 +520,7 @@ module tfcoil_variables
   real(dp) :: tfjtsmw
   !! TF joints resistive power losses (MW)
 
-  real(dp) :: tfcryoarea
+  real(dp) :: a_tf_cryo
   !! surface area of toroidal shells covering TF coils (m2)
 
   real(dp) :: tficrn
@@ -650,7 +650,7 @@ module tfcoil_variables
   real(dp) :: croco_quench_temperature
   !! CroCo strand: Actual temp reached during a quench (K)
 
-  real(dp) :: tmpcry
+  real(dp) :: temp_tf_coil_cryo
   !! coil temperature for cryogenic plant power calculation (K)
 
   real(dp) :: n_tf_turn
@@ -772,7 +772,7 @@ module tfcoil_variables
   real(dp) :: ncool
   !! number of centrepost coolant tubes
 
-  real(dp) :: ppump
+  real(dp) :: p_cp_pump_cool
   !! centrepost coolant pump power (W)
 
   real(dp) :: prescp
@@ -962,7 +962,7 @@ module tfcoil_variables
     tfcmw = 0.0D0
     tfcpmw = 0.0D0
     tfjtsmw = 0.0D0
-    tfcryoarea = 0.0D0
+    a_tf_cryo = 0.0D0
     tficrn = 0.0D0
     tfind = 0.0D0
     tfinsgap = 0.010D0
@@ -999,7 +999,7 @@ module tfcoil_variables
     tmaxpro = 150.0D0
     tmax_croco = 200.0D0
     croco_quench_temperature = 0D0
-    tmpcry = 4.5D0
+    temp_tf_coil_cryo = 4.5D0
     n_tf_turn = 0.0D0
     vdalw = 20.0D0
     vforce = 0.0D0
@@ -1035,7 +1035,7 @@ module tfcoil_variables
     fcoolleg = 0.2D0
     a_cp_cool = 0.0D0
     ncool = 0.0D0
-    ppump = 0.0D0
+    p_cp_pump_cool = 0.0D0
     prescp = 0.0D0
     presleg = 0.0D0
     ptempalw = 473.15D0   ! 200 C

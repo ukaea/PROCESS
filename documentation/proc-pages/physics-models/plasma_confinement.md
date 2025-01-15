@@ -140,11 +140,11 @@ and therefore the machine remains in L-mode.
 
 ## Ignition
 
-Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining 
-without the need for any injected auxiliary power during the burn. If `ignite` = 1, the calculated 
+Switch `i_ignited` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining 
+without the need for any injected auxiliary power during the burn. If `i_ignited` = 1, the calculated 
 injected power does not contribute to the plasma power balance, although the cost of the auxiliary 
 power system is taken into account (the system is then assumed to be required to provide heating 
-and/or current drive during the plasma start-up phase only). If `ignite` = 0, the plasma is not 
+and/or current drive during the plasma start-up phase only). If `i_ignited` = 0, the plasma is not 
 ignited, and the auxiliary power is taken into account in the plasma power balance during the burn 
 phase. An ignited plasma will be difficult to control and is unlikely to be practical. This 
 option is not recommended.

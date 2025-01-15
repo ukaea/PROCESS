@@ -86,9 +86,9 @@ Summary of key variables and switches:
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
 |  primary coolant switch  |       `fwcoolant`       | `coolwh`                 | ---                                  |
 | secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
-|      inlet temp (K)      |        `fwinlet`        | `inlet_temp`             | `inlet_temp_liq`                     |
-|     outlet temp (K)      |       `fwoutlet`        | `outlet_temp`            | `outlet_temp_liq`                    |
-|      pressure (Pa)       |      `fwpressure`       | `blpressure`             | `blpressure_liq`                     |
+|      inlet temp (K)      |        `temp_fw_in`        | `temp_blkt_in`             | `inlet_temp_liq`                     |
+|     outlet temp (K)      |       `temp_fw_out`        | `temp_blkt_out`            | `outlet_temp_liq`                    |
+|      pressure (Pa)       |      `pres_fw`       | `pres_blkt`             | `blpressure_liq`                     |
 
 The default thermo-hydraulic model assumes that a solid breeder is in use, with both the first wall and the breeding blanket using helium as a coolant.
 This can be changed using the switches detailed in the following subsection. 
@@ -147,7 +147,7 @@ The temperature difference between the channel inner wall (film temperature) and
 
 ### Model Switches
 
-There are three blanket model options, chosen by the user to match their selected blanket design using the switch 'icooldual' (default=0):
+There are three blanket model options, chosen by the user to match their selected blanket design using the switch 'i_blkt_dual_coolant' (default=0):
     0.   Solid breeder - nuclear heating in the blanket is exctrated by the primary coolant.
     1.   Liquid metal breeder, single-coolant 
         - nuclear heating in the blanket is exctrated by the primary coolant.

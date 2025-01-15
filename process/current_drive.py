@@ -36,7 +36,7 @@ class CurrentDrive:
         current_drive_variables.plhybd = 0.0e0
         current_drive_variables.beam_current = 0.0e0
         beam_current_fix = 0.0e0
-        current_drive_variables.porbitlossmw = 0.0e0
+        current_drive_variables.p_nb_orbit_loss_mw = 0.0e0
         porbitlossmwfix = 0.0e0
 
         pinjmw1 = 0.0
@@ -642,24 +642,24 @@ class CurrentDrive:
                 )
 
                 # Shinethrough power (atoms that are not ionised) [MW]:
-                current_drive_variables.nbshinemw = (
+                current_drive_variables.p_nb_shine_through_mw = (
                     current_drive_variables.pnbitot * current_drive_variables.nbshinef
                 )
 
                 # First orbit loss
-                current_drive_variables.porbitlossmw = (
+                current_drive_variables.p_nb_orbit_loss_mw = (
                     current_drive_variables.forbitloss
                     * (
                         current_drive_variables.pnbitot
-                        - current_drive_variables.nbshinemw
+                        - current_drive_variables.p_nb_shine_through_mw
                     )
                 )
 
                 # Power deposited
                 pinjmw1 = (
                     current_drive_variables.pnbitot
-                    - current_drive_variables.nbshinemw
-                    - current_drive_variables.porbitlossmw
+                    - current_drive_variables.p_nb_shine_through_mw
+                    - current_drive_variables.p_nb_orbit_loss_mw
                 )
                 pinjimw1 = pinjmw1 * current_drive_variables.fpion
                 pinjemw1 = pinjmw1 * (1.0e0 - current_drive_variables.fpion)
@@ -686,19 +686,19 @@ class CurrentDrive:
             pinjmwfix = pinjemwfix + pinjimwfix
             current_drive_variables.pinjemw = pinjemw1 + pinjemwfix
             current_drive_variables.pinjimw = pinjimw1 + pinjimwfix
-            heat_transport_variables.pinjwp = (
+            heat_transport_variables.p_hcd_electrical_mw = (
                 pinjwp1 + heat_transport_variables.pinjwpfix
             )
 
             # Reset injected power to zero for ignited plasma (fudge)
-            if physics_variables.ignite == 1:
-                heat_transport_variables.pinjwp = 0.0e0
+            if physics_variables.i_ignited == 1:
+                heat_transport_variables.p_hcd_electrical_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
             if (
                 abs(
                     current_drive_variables.pinjmw
-                    + current_drive_variables.porbitlossmw
+                    + current_drive_variables.p_nb_orbit_loss_mw
                     + physics_variables.p_plasma_ohmic_mw
                 )
                 < 1.0e-6
@@ -707,7 +707,7 @@ class CurrentDrive:
             else:
                 current_drive_variables.bigq = physics_variables.fusion_power / (
                     current_drive_variables.pinjmw
-                    + current_drive_variables.porbitlossmw
+                    + current_drive_variables.p_nb_orbit_loss_mw
                     + physics_variables.p_plasma_ohmic_mw
                 )
 
@@ -775,7 +775,7 @@ class CurrentDrive:
             current_drive_variables.iefrffix,
         )
 
-        if physics_variables.ignite == 1:
+        if physics_variables.i_ignited == 1:
             po.ocmmnt(
                 self.outfile,
                 "Ignited plasma; injected power only used for start-up phase",
@@ -1022,7 +1022,7 @@ class CurrentDrive:
                 "OP ",
             )
 
-        # MDK rearranged and added current_drive_variables.nbshinemw
+        # MDK rearranged and added current_drive_variables.p_nb_shine_through_mw
         # if (abs(current_drive_variables.pnbeam) > 1.0e-8) :
         if (
             (current_drive_variables.iefrf == 5)
@@ -1116,15 +1116,15 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Beam first orbit loss power (MW)",
-                    "(porbitlossmw)",
-                    current_drive_variables.porbitlossmw,
+                    "(p_nb_orbit_loss_mw)",
+                    current_drive_variables.p_nb_orbit_loss_mw,
                     "OP ",
                 )
                 po.ovarrf(
                     self.outfile,
                     "Beam shine-through power [MW]",
-                    "(nbshinemw)",
-                    current_drive_variables.nbshinemw,
+                    "(p_nb_shine_through_mw)",
+                    current_drive_variables.p_nb_shine_through_mw,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1143,9 +1143,9 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Total (MW)",
-                    "(current_drive_variables.porbitlossmw+current_drive_variables.nbshinemw+current_drive_variables.pinjmw)",
-                    current_drive_variables.porbitlossmw
-                    + current_drive_variables.nbshinemw
+                    "(current_drive_variables.p_nb_orbit_loss_mw+current_drive_variables.p_nb_shine_through_mw+current_drive_variables.pinjmw)",
+                    current_drive_variables.p_nb_orbit_loss_mw
+                    + current_drive_variables.p_nb_shine_through_mw
                     + pinjmw1,
                 )
                 po.oblnkl(self.outfile)

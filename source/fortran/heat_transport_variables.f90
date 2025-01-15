@@ -15,18 +15,18 @@ module heat_transport_variables
 
     public
 
-    real(dp) :: baseel
+    real(dp) :: p_baseload_electrical
     !! base plant electric load (W)
 
-    real(dp) :: crypmw
+    real(dp) :: p_cryo_plant_mw
     !! cryogenic plant power (MW)
 
-    real(dp) :: crypmw_max
+    real(dp) :: p_cryo_plant_max_mw
     !! Maximum cryogenic plant power (MW)
     !! Constraint equation icc = 87
     !! Scan variable nwseep = 56
 
-    real(dp) :: f_crypmw
+    real(dp) :: fcryo_plant_power
     !! f-value for maximum cryogenic plant power
     !! Iteration variable ixc = 164
     !! Constraint equation icc = 87
@@ -34,7 +34,7 @@ module heat_transport_variables
     real(dp) :: etatf
     !! AC to resistive power conversion for TF coils
 
-    real(dp) :: etath
+    real(dp) :: eta_thermal_electric
     !! thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated.
 
     real(dp) :: etath_liq
@@ -42,14 +42,14 @@ module heat_transport_variables
     real(dp) :: fachtmw
     !! facility heat removal (MW)
 
-    real(dp) :: fcsht
-    !! total baseline power required at all times (MW)
+    real(dp) :: p_baseload_electrical_total_mw
+    !! total baseline power required at all times including floor space power (MW)
 
     real(dp) :: fgrosbop
     !! scaled fraction of gross power to balance-of-plant
 
     real(dp) :: fmgdmw
-    !! power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)
+    !! power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_power_source=2`)
 
     real(dp) :: fpumpblkt
     !! fraction of total blanket thermal power required to drive the blanket
@@ -71,33 +71,33 @@ module heat_transport_variables
     !! Minimum total electrical power for primary coolant pumps (MW) (NOT RECOMMENDED)
 
     real(dp) :: helpow
-    !! Heat removal at cryogenic temperature tmpcry (W)
+    !! Heat removal at cryogenic temperature temp_tf_coil_cryo (W)
 
     real(dp) :: helpow_cryal
     !! Heat removal at cryogenic temperature tcoolin (W)
 
-    real(dp) :: htpmw
+    real(dp) :: p_pump_cool_elec_total_mw
     !! heat transport system electrical pump power (MW)
 
-    real(dp) :: htpmw_blkt
+    real(dp) :: p_blanket_pumping_mw
     !! blanket primary coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_blkt_liq
+    real(dp) :: p_blkt_pump_cool_secondary_mw
     !! blanket secondary coolant mechanical pumping power (MW)
 
     real(dp) :: htpmw_blkt_tot
     !! blanket primary + secondary coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_div
+    real(dp) :: p_div_pump_cool_mw
     !! divertor coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_fw
+    real(dp) :: p_fw_pumping_mw
     !! first wall coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_shld
+    real(dp) :: p_shield_pump_cool_mw
     !! shield and vacuum vessel coolant mechanical pumping power (MW)
 
-    real(dp) :: htpsecmw
+    real(dp) :: p_pump_cool_loss_total_mw
     !! Waste power lost from primary coolant pumps (MW)
 
     integer :: ipowerflow
@@ -106,7 +106,7 @@ module heat_transport_variables
     !! - =0 pre-2014 version
     !! - =1 comprehensive 2014 model
 
-    integer :: iprimshld
+    integer :: i_shield_power_generation
     !! Switch for shield thermal power destiny:
     !!
     !! - =0 does not contribute to energy generation cycle
@@ -115,7 +115,7 @@ module heat_transport_variables
     integer :: nphx
     !! number of primary heat exchangers
 
-    real(dp) :: pacpmw
+    real(dp) :: p_pulsed_power_total_mw
     !! total pulsed power system load (MW)
 
     real(dp) :: peakmva
@@ -124,52 +124,52 @@ module heat_transport_variables
     real(dp) :: pfwdiv
     !! heat removal from first wall/divertor (MW)
 
-    real(dp) :: pgrossmw
+    real(dp) :: p_gross_electrical
     !! gross electric power (MW)
 
-    real(dp) :: pinjht
+    real(dp) :: p_hcd_electrical_loss_mw
     !! power dissipated in heating and current drive system (MW)
 
     real(dp) :: pinjmax
     !! maximum injector power during pulse (heating and ramp-up/down phase) (MW)
 
-    real(dp) :: pinjwp
+    real(dp) :: p_hcd_electrical_mw
     !! injector wall plug power (MW)
 
     real(dp) :: pinjwpfix
     !! secondary injector wall plug power (MW)
 
-    real(dp) :: pnetelmw
+    real(dp) :: p_net_electrical_mw
     !! net electric power (MW)
 
-    real(dp) :: precircmw
+    real(dp) :: p_recirc_electrical_mw
     !! recirculating electric power (MW)
 
     real(dp) :: priheat
     !! total thermal power removed from fusion core (MW)
 
-    real(dp) :: psecdiv
+    real(dp) :: p_div_thermal_secondary_mw
     !! Low-grade heat lost in divertor (MW)
 
-    real(dp) :: psechcd
+    real(dp) :: p_hcd_thermal_secondary_mw
     !! Low-grade heat lost into HCD apparatus (MW)
 
-    real(dp) :: psechtmw
+    real(dp) :: p_thermal_secondary_mw
     !! Low-grade heat (MW)
 
     real(dp) :: pseclossmw
     !! Low-grade heat (VV + lost)(MW)
 
-    real(dp) :: psecshld
+    real(dp) :: p_shield_thermal_secondary_mw
     !! Low-grade heat deposited in shield (MW)
 
-    real(dp) :: pthermmw
+    real(dp) :: p_thermal_primary_mw
     !! High-grade heat useful for electric production (MW)
 
     real(dp) :: pwpm2
     !! base AC power requirement per unit floor area (W/m2)
 
-    real(dp) :: tfacpd
+    real(dp) :: p_tf_electrical_mw
     !! total steady state TF coil AC power demand (MW)
 
     real(dp) :: tlvpmw
@@ -178,10 +178,10 @@ module heat_transport_variables
     real(dp) :: trithtmw
     !! power required for tritium processing (MW)
 
-    real(dp) :: tturb
+    real(dp) :: temp_turbine_in
     !! coolant temperature at turbine inlet (K) (`secondary_cycle = 3,4`)
 
-    real(dp) :: vachtmw
+    real(dp) :: p_vacuum_pumps_mw
     !! vacuum pump power (MW)
 
     contains
@@ -190,15 +190,15 @@ module heat_transport_variables
       !! Initialise module variables
       implicit none
 
-      baseel = 5.0D6
-      crypmw = 0.0D0
-      crypmw_max = 50.0D0
-      f_crypmw = 1.0D0
+      p_baseload_electrical = 5.0D6
+      p_cryo_plant_mw = 0.0D0
+      p_cryo_plant_max_mw = 50.0D0
+      fcryo_plant_power = 1.0D0
       etatf = 0.9D0
-      etath = 0.35D0
+      eta_thermal_electric = 0.35D0
       etath_liq = 0.35D0
       fachtmw = 0.0D0
-      fcsht = 0.0D0
+      p_baseload_electrical_total_mw = 0.0D0
       fgrosbop = 0.0D0
       fmgdmw = 0.0D0
       fpumpblkt = 0.005D0
@@ -208,39 +208,39 @@ module heat_transport_variables
       htpmw_min = 0.0D0
       helpow = 0.0D0
       helpow_cryal = 0.0D0
-      htpmw = 0.0D0
-      htpmw_blkt = 0.0D0
-      htpmw_blkt_liq = 0.0D0
+      p_pump_cool_elec_total_mw = 0.0D0
+      p_blanket_pumping_mw = 0.0D0
+      p_blkt_pump_cool_secondary_mw = 0.0D0
       htpmw_blkt_tot = 0.0D0
-      htpmw_div = 0.0D0
-      htpmw_fw = 0.0D0
-      htpmw_shld = 0.0D0
-      htpsecmw = 0.0D0
+      p_div_pump_cool_mw = 0.0D0
+      p_fw_pumping_mw= 0.0D0
+      p_shield_pump_cool_mw = 0.0D0
+      p_pump_cool_loss_total_mw = 0.0D0
       ipowerflow = 1
-      iprimshld = 1
+      i_shield_power_generation = 1
       nphx = 0
-      pacpmw = 0.0D0
+      p_pulsed_power_total_mw = 0.0D0
       peakmva = 0.0D0
       pfwdiv = 0.0D0
-      pgrossmw = 0.0D0
-      pinjht = 0.0D0
+      p_gross_electrical = 0.0D0
+      p_hcd_electrical_loss_mw = 0.0D0
       pinjmax = 120.0D0
-      pinjwp = 0.0D0
+      p_hcd_electrical_mw = 0.0D0
       pinjwpfix = 0.0D0
-      pnetelmw = 0.0D0
-      precircmw = 0.0D0
+      p_net_electrical_mw = 0.0D0
+      p_recirc_electrical_mw = 0.0D0
       priheat = 0.0D0
-      psecdiv = 0.0D0
-      psechcd = 0.0D0
-      psechtmw = 0.0D0
+      p_div_thermal_secondary_mw = 0.0D0
+      p_hcd_thermal_secondary_mw = 0.0D0
+      p_thermal_secondary_mw = 0.0D0
       pseclossmw = 0.0D0
-      psecshld = 0.0D0
-      pthermmw = 0.0D0
+      p_shield_thermal_secondary_mw = 0.0D0
+      p_thermal_primary_mw = 0.0D0
       pwpm2 = 150.0D0
-      tfacpd = 0.0D0
+      p_tf_electrical_mw = 0.0D0
       tlvpmw = 0.0D0
       trithtmw = 15.0D0
-      tturb = 0.0D0
-      vachtmw = 0.5D0
+      temp_turbine_in = 0.0D0
+      p_vacuum_pumps_mw = 0.5D0
     end subroutine init_heat_transport_variables
   end module heat_transport_variables

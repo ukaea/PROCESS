@@ -70,7 +70,7 @@ module buildings_variables
     real(dp) :: cryvol
     !! volume of cryoplant building (m3)
 
-    real(dp) :: efloor
+    real(dp) :: a_floor_total
     !! effective total floor space (m2)
 
     real(dp) :: elecdist_l, elecdist_w, elecdist_h
@@ -346,7 +346,7 @@ module buildings_variables
       cryostore_h = 20.0D0
       cryostat_clrnc = 2.5D0
       cryvol = 0.0D0
-      efloor = 0.0D0
+      a_floor_total = 0.0D0
       elecdist_l = 380.0D0
       elecdist_w = 350.0D0
       elecdist_h = 5.0D0

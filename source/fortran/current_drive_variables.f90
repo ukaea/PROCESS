@@ -123,7 +123,7 @@ module current_drive_variables
   real(dp) :: pscf_scene
   !! Pfirsch-Schlüter current fraction, SCENE fit
 
-  real(dp) :: nbshinemw
+  real(dp) :: p_nb_shine_through_mw
   !! neutral beam shine-through power
 
   real(dp) :: feffcd
@@ -223,7 +223,7 @@ module current_drive_variables
   real(dp) :: pnbeam
   !! neutral beam injection power (MW)
 
-  real(dp) :: porbitlossmw
+  real(dp) :: p_nb_orbit_loss_mw
   !! neutral beam power lost after ionisation but before thermalisation (orbit loss power) (MW)
 
   real(dp) :: ps_current_fraction
@@ -287,7 +287,7 @@ module current_drive_variables
     fpion = 0.5D0
     pnbitot = 0.0D0
     pscf_scene = 0.0D0
-    nbshinemw = 0.0D0
+    p_nb_shine_through_mw = 0.0D0
     feffcd = 1.0D0
     forbitloss = 0.0D0
     frbeam = 1.05D0
@@ -310,7 +310,7 @@ module current_drive_variables
     plasma_current_internal_fraction = 0.0D0
     plhybd = 0.0D0
     pnbeam = 0.0D0
-    porbitlossmw = 0.0D0
+    p_nb_orbit_loss_mw = 0.0D0
     ps_current_fraction = 0.0D0
     pwplh = 0.0D0
     pwpnb = 0.0D0

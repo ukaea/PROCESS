@@ -13,7 +13,7 @@
     {
       "no": 1,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 7 if ignite=1"
+      "message": "CONSTRAINTS: Do not use constraint 7 if i_ignited=1"
     },
     {
       "no": 2,
@@ -28,7 +28,7 @@
     {
       "no": 4,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 28 if ignite=1"
+      "message": "CONSTRAINTS: Do not use constraint 28 if i_ignited=1"
     },
     {
       "no": 5,
@@ -838,7 +838,7 @@
     {
       "no": 166,
       "level": 2,
-      "message": "PLANT_THERMAL_EFFICIENCY: Turbine temperature tturb out of range of validity"
+      "message": "PLANT_THERMAL_EFFICIENCY: Turbine temperature temp_turbine_in out of range of validity"
     },
     {
       "no": 167,
@@ -1373,7 +1373,7 @@
     {
       "no": 273,
       "level": 3,
-      "message": "[tfcoil]: tmpcry should be lower than tftmp"
+      "message": "[tfcoil]: temp_tf_coil_cryo should be lower than tftmp"
     },
     {
       "no": 274,

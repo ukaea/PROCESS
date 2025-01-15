@@ -173,7 +173,7 @@ Stellarators require no curren drive, although provision for auxiliary heating d
 
 `isthtr = 3` : neutral beam injection
 
-The value of variable `pheat` determines the actual amount of auxiliary heating power (in Watts) to be applied to the plasma. This variable may be used as an iteration variable (no. 11). Switch `ignite` may be used if necessary.
+The value of variable `pheat` determines the actual amount of auxiliary heating power (in Watts) to be applied to the plasma. This variable may be used as an iteration variable (no. 11). Switch `i_ignited` may be used if necessary.
 
 ### Divertor
 
@@ -224,7 +224,7 @@ i_tf_sc_mat = 8 * Switch for superconductor material in tf coils;
 sig_tf_wp_max = 4.e8 * Maximal allowable Stress level on Ground insulation for a simple stellarator coil stress module (Pa)
 fcutfsu = 0.7 *Copper fraction of cable conductor (TF coils), Schauer: 900 SCU strands, 522 Copper strands. Value for 0.4 Helium
 tftmp = 4.75 *Peak helium coolant temperature in TF coils and PF coils (K)
-tmpcry = 4.75 * Temperature in TF coils, required for plant efficiency (K)
+temp_tf_coil_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
 vftf = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
 fiooic = 0.78 *Fraction TF coil critical current to operation current (should be iteration variable!)
 vdalw = 12.64 * Max voltage across tf coil during quench (kV)
@@ -257,7 +257,7 @@ The KIT HCPB model is documented elsewhere, for the simple module the following 
 ```
 blkttype = 0,1,2 (only relevant for mass calculations)
 emult = 1.18 *Energy multiplication in blanket and shield
-etahtp = 1. *Electrical efficiency of primary coolant pumps
+eta_pump_coolant_electrical = 1. *Electrical efficiency of primary coolant pumps
 fblbe = 0.47 *Beryllium fraction of blanket by volume (only relevant for mass calculations)
 fblli2o = 0.07 *Lithium oxide fraction of blanket by volume (only relevant for mass calculations)
 fbllipb = 0. *Lithium lead fraction of blanket by volume (only relevant for mass calculations)
@@ -266,9 +266,9 @@ fblvd = 0. *Vanadium fraction of blanket by volume (only relevant for mass calcu
 fhole = 0. *Area fraction taken up by other holes (in addition to fdiv and fhcd when ipowerflow=1)
 fwclfr = 0.1 *First wall coolant fraction (only relevant for mass calculations)
 primary_pumping = 1 *Switch for pumping power (0: User sets pump power directly)
-htpmw_blkt = 120. *Blanket coolant mechanical pumping power (MW)
-htpmw_fw = 56. *First wall coolant mechanical pumping power (MW)
-htpmw_div = 24. *Divertor coolant mechanical pumping power (MW)
+p_blanket_pumping_mw = 120. *Blanket coolant mechanical pumping power (MW)
+p_fw_pumping_mw= 56. *First wall coolant mechanical pumping power (MW)
+p_div_pump_cool_mw = 24. *Divertor coolant mechanical pumping power (MW)
 secondary_cycle = 2 *Switch for power conversion cycle (2: user input thermal-electric efficiency)
 vfblkt = 0.1 *Coolant void fraction in blanket (blktmodel=0) (only relevant for mass calculations)
 vfshld = 0.6 *Coolant void fraction in shield

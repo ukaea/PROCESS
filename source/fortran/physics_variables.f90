@@ -336,9 +336,9 @@ module physics_variables
   !! - =0 ITER physics rules (Uckan) fit
   !! - =1 Modified fit (D. Ward) - better at high temperature
 
-  integer :: ignite
-  !! switch for ignition assumption. Obviously, ignite must be zero if current drive
-  !! is required. If ignite is 1, any auxiliary power is assumed to be used only during
+  integer :: i_ignited
+  !! switch for ignition assumption. Obviously, i_ignited must be zero if current drive
+  !! is required. If i_ignited is 1, any auxiliary power is assumed to be used only during
   !! plasma start-up, and is excluded from all steady-state power balance calculations.
   !!
   !! - =0 do not assume plasma ignition
@@ -605,7 +605,7 @@ module physics_variables
   real(dp) :: alpha_power_electron_density
   !! Alpha power per volume to electrons [MW/m3]
 
-  real(dp) :: palpfwmw
+  real(dp) :: p_fw_alpha_mw
   !! alpha power escaping plasma and reaching first wall (MW)
 
   real(dp) :: alpha_power_ions_density
@@ -1028,7 +1028,7 @@ module physics_variables
     i_density_limit = 8
     idivrt = 2
     i_beta_fast_alpha = 1
-    ignite = 0
+    i_ignited = 0
     iinvqd = 1
     ipedestal = 1
     i_pfirsch_schluter_current = 0
@@ -1063,7 +1063,7 @@ module physics_variables
     alpha_power_density_plasma = 0.0D0
     alpha_power_density_total = 0.0D0
     alpha_power_electron_density = 0.0D0
-    palpfwmw = 0.0D0
+    p_fw_alpha_mw = 0.0D0
     alpha_power_ions_density = 0.0D0
     alpha_power_total = 0.0D0
     alpha_power_plasma = 0.0D0
