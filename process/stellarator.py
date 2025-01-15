@@ -1836,7 +1836,7 @@ class Stellarator:
 
         #  External cryostat volume
 
-        fwbs_variables.vdewex = (
+        fwbs_variables.vol_cryostat = (
             4.0e0
             * (np.pi**2)
             * physics_variables.rmajor
@@ -1873,7 +1873,7 @@ class Stellarator:
         #  Sum of internal vacuum vessel and external cryostat masses
 
         fwbs_variables.dewmkg = (
-            fwbs_variables.vdewin + fwbs_variables.vdewex
+            fwbs_variables.vdewin + fwbs_variables.vol_cryostat
         ) * fwbs_variables.denstl
 
         if output:
@@ -2242,8 +2242,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "External cryostat shell volume (m3)",
-                "(vdewex)",
-                fwbs_variables.vdewex,
+                "(vol_cryostat)",
+                fwbs_variables.vol_cryostat,
             )
             po.ovarre(
                 self.outfile,
