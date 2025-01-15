@@ -6,7 +6,7 @@ from process.geometry.geometry_parameterisations import RectangleGeometry
 
 
 def cryostat_geometry(
-    r_cryostat_inboard: float, ddwex: float, zdewex: float
+    r_cryostat_inboard: float, ddwex: float, dz_cryostat_half_inside: float
 ) -> list[RectangleGeometry]:
     """Calculates rectangular geometries of the cryostat
 
@@ -14,8 +14,8 @@ def cryostat_geometry(
     :type r_cryostat_inboard: float
     :param ddwex: external cryostat thickness
     :type ddwex: float
-    :param zdewex: cryostat internal half-height
-    :type zdewex: float
+    :param dz_cryostat_half_inside: cryostat internal half-height
+    :type dz_cryostat_half_inside: float
     :return: list of RectangleGeometry - dataclass returning rectangular geometry parameters
     :rtype: List[RectangleGeometry]
     """
@@ -23,21 +23,33 @@ def cryostat_geometry(
 
     # rectangle representing vertical part of cryostat above the midplane
     rect1 = RectangleGeometry(
-        anchor_x=r_cryostat_inboard, anchor_z=0, width=ddwex, height=(zdewex + ddwex)
+        anchor_x=r_cryostat_inboard,
+        anchor_z=0,
+        width=ddwex,
+        height=(dz_cryostat_half_inside + ddwex),
     )
 
     # rectangle representing vertical part of cryostat below the midplane
     rect2 = RectangleGeometry(
-        anchor_x=r_cryostat_inboard, anchor_z=0, width=ddwex, height=-(zdewex + ddwex)
+        anchor_x=r_cryostat_inboard,
+        anchor_z=0,
+        width=ddwex,
+        height=-(dz_cryostat_half_inside + ddwex),
     )
 
     # rectangle representing horizontal part of cryostat above the midplane
     rect3 = RectangleGeometry(
-        anchor_x=0, anchor_z=zdewex, width=r_cryostat_inboard, height=ddwex
+        anchor_x=0,
+        anchor_z=dz_cryostat_half_inside,
+        width=r_cryostat_inboard,
+        height=ddwex,
     )
 
     # rectangle representing horizontal part of cryostat below the midplane
     rect4 = RectangleGeometry(
-        anchor_x=0, anchor_z=-zdewex, width=r_cryostat_inboard, height=-ddwex
+        anchor_x=0,
+        anchor_z=-dz_cryostat_half_inside,
+        width=r_cryostat_inboard,
+        height=-ddwex,
     )
     return [rect1, rect2, rect3, rect4]

@@ -360,7 +360,9 @@ def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
 
     rects = cryostat_geometry(
-        r_cryostat_inboard=r_cryostat_inboard, ddwex=ddwex, zdewex=zdewex
+        r_cryostat_inboard=r_cryostat_inboard,
+        ddwex=ddwex,
+        dz_cryostat_half_inside=dz_cryostat_half_inside,
     )
 
     for rec in rects:
@@ -3385,7 +3387,7 @@ def main(args=None):
     global gapsto
     global tfthko
     global r_cryostat_inboard
-    global zdewex
+    global dz_cryostat_half_inside
     global ddwex
     global j_plasma_0
 
@@ -3407,7 +3409,7 @@ def main(args=None):
     gapsto = m_file.data["gapsto"].get_scan(scan)
     tfthko = m_file.data["tfthko"].get_scan(scan)
     r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)
-    zdewex = m_file.data["zdewex"].get_scan(scan)
+    dz_cryostat_half_inside = m_file.data["dz_cryostat_half_inside"].get_scan(scan)
     ddwex = m_file.data["ddwex"].get_scan(scan)
     j_plasma_0 = m_file.data["j_plasma_0"].get_scan(scan)
 
