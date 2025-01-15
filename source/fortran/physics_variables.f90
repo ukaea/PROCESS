@@ -962,7 +962,7 @@ module physics_variables
     beta_toroidal = 0.0D0
     beta_thermal = 0.0D0
     beta_thermal_poloidal = 0.0D0
-    beta_thermal_poloidal = 0.0D0
+    beta_thermal_toroidal = 0.0D0
     beta_norm_total = 0.0D0
     beta_norm_thermal = 0.0D0
     beta_norm_poloidal = 0.0D0
