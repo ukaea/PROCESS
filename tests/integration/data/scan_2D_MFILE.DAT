@@ -602,7 +602,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -1765,7 +1765,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -2928,7 +2928,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -4091,7 +4091,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -5254,7 +5254,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -6417,7 +6417,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -7580,7 +7580,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -8743,7 +8743,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -9906,7 +9906,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -11069,7 +11069,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -12232,7 +12232,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -13395,7 +13395,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -14558,7 +14558,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -15721,7 +15721,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -16884,7 +16884,7 @@
  Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
- External_cryostat_thickness_(m)_________________________________________ (ddwex)_______________________      1.5000E-01    
+ External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
@@ -17803,7 +17803,7 @@ scraplo = 0.25
 blnkoth = 1.0
 
 * Cryostat thickness [m]
-ddwex = 0.15 
+dr_cryostat = 0.15 
 
 * Outboard shield thickness [m]
 shldoth = 0.800

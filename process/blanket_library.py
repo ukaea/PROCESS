@@ -397,7 +397,7 @@ class BlanketLibrary:
             * 2.0
             * fwbs_variables.dz_cryostat_half_inside
             + (2.0 * np.pi * fwbs_variables.r_cryostat_inboard**2)
-        ) * build_variables.ddwex
+        ) * build_variables.dr_cryostat
 
         # Vacuum vessel mass (kg)
         fwbs_variables.vvmass = fwbs_variables.vdewin * fwbs_variables.denstl

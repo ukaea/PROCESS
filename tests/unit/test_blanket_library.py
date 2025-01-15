@@ -1174,7 +1174,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     clhsf: Any = None
     hmax: Any = None
     tfcth: Any = None
-    ddwex: Any = None
+    dr_cryostat: Any = None
     r_cryostat_inboard: Any = None
     dr_pf_cryostat: Any = None
     dz_cryostat_half_inside: Any = None
@@ -1203,7 +1203,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             clhsf=4.2679999999999998,
             hmax=8.8182171641274945,
             tfcth=0.92672586247397692,
-            ddwex=0.15000000000000002,
+            dr_cryostat=0.15000000000000002,
             r_cryostat_inboard=0,
             dr_pf_cryostat=0.5,
             dz_cryostat_half_inside=0,
@@ -1301,7 +1301,9 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(build_variables, "clhsf", externalcryogeometryparam.clhsf)
     monkeypatch.setattr(build_variables, "hmax", externalcryogeometryparam.hmax)
     monkeypatch.setattr(build_variables, "tfcth", externalcryogeometryparam.tfcth)
-    monkeypatch.setattr(build_variables, "ddwex", externalcryogeometryparam.ddwex)
+    monkeypatch.setattr(
+        build_variables, "dr_cryostat", externalcryogeometryparam.dr_cryostat
+    )
     monkeypatch.setattr(
         fwbs_variables,
         "r_cryostat_inboard",
