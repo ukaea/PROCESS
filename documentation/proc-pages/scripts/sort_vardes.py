@@ -13,10 +13,9 @@ import sys
 with open(sys.argv[1]) as vardes:
     lines = vardes.readlines()
 
-new_lines = []
-counter = 0
+new_lines = list()
 
-for line in lines:
+for counter, line in enumerate(lines):
     if "PROCESS Variable Descriptor File : dated" in line:
         date = line.split("dated")[-1].replace(" ", "")
         new_date = date[:4] + "." + date[4:6] + "." + date[6:]
@@ -29,9 +28,8 @@ for line in lines:
         new_line = line
 
     new_lines.append(new_line)
-    counter += 1
 
-new_vardes = open(sys.argv[1], "w")
-for item in new_lines:
-    new_vardes.write(item)
-new_vardes.close()
+with open(sys.argv[1], "w") as new_vardes:
+    for item in new_lines:
+        new_vardes.write(item)
+    new_vardes.close()

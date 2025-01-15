@@ -1438,22 +1438,19 @@ class InDat:
         """Function to write data to output file called 'output_filename'"""
 
         # create and open output file
-        output = open(output_filename, "w")
+        with open(output_filename, "w") as output:
 
-        # Write Header
-        write_title("", output)
+            # Write Header
+            write_title("", output)
 
-        # Write Constraint Equations
-        write_constraint_equations(self.data, output)
+            # Write Constraint Equations
+            write_constraint_equations(self.data, output)
 
-        # Write Iteration Variables
-        write_iteration_variables(self.data, output)
+            # Write Iteration Variables
+            write_iteration_variables(self.data, output)
 
-        # Write parameters
-        write_parameters(self.data, output)
-
-        # close file
-        output.close()
+            # Write parameters
+            write_parameters(self.data, output)
 
     @property
     def number_of_constraints(self):

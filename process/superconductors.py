@@ -166,14 +166,12 @@ def jcrit_nbti(temperature, bmax, c0, bc20max, tc0max):
     """
 
     bratio = bmax / bc20max
-
-    if bratio < 1:
-        #  Critical temperature (K) at field
-        tcrit = tc0max * (1.0 - bratio) ** 0.59
-    else:
-        # Allow bmax > bc20max
-        # Fudge to give real (negative) value if bratio > 1
-        tcrit = tc0max * (1.0 - bratio)
+    # Critical temperature (K) at field
+    # Allow bmax > bc20max
+    # Fudge to give real (negative) value if bratio > 1
+    tcrit = (
+        (tc0max * (1.0 - bratio) ** 0.59) if bratio < 1 else (tc0max * (1.0 - bratio))
+    )
 
     # If temperature > tcrit then the critical surface has been exceeded and tbar is negative
     tbar = 1.0 - temperature / tcrit

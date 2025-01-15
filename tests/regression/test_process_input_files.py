@@ -185,14 +185,11 @@ class RegressionTestScenario:
                 continue
 
             # Define relative tolerance
-            if tolerance == 0:
-                # Use pytest's default relative tolerance (1e-6)
-                # 0 tolerance causes floating-point discrepancies
-                # between local and CI runs
-                rel_tolerance = None
-            else:
-                # tolerance is a percentage, rel arg takes a fraction
-                rel_tolerance = tolerance / 100
+            # Use pytest's default relative tolerance (1e-6)
+            # 0 tolerance causes floating-point discrepancies
+            # between local and CI runs or tolerance
+            # is a percentage, rel arg takes a fraction
+            rel_tolerance = None if (tolerance == 0) else (tolerance / 100)
 
             try:
                 # Use pytest.approx for relative and absolute comparisons:
