@@ -287,15 +287,15 @@ def write_iteration_variables(data, out_file):
     variables = get_iteration_variables(data)
 
     for number, info in variables.items():
-        variable_line = "ixc = {} * {}\n".format(number, info["comment"])
+        variable_line = f"ixc = {number} * {info['comment']}\n"
         out_file.write(variable_line)
 
         if "lower_bound" in info:
-            lower_bound_line = "boundl({}) = {}\n".format(number, info["lower_bound"])
+            lower_bound_line = f"boundl({number}) = {info['lower_bound']}\n"
             out_file.write(lower_bound_line)
 
         if "upper_bound" in info:
-            upper_bound_line = "boundu({}) = {}\n".format(number, info["upper_bound"])
+            upper_bound_line = f"boundu({number}) = {info['upper_bound']}\n"
             out_file.write(upper_bound_line)
 
 
@@ -446,8 +446,8 @@ def write_parameters(data, out_file):
                     and "value" in info
                     and (type(info.get("comment")) is str)
                 ):
-                    parameter_line = "{} = {} * {}\n".format(
-                        parameter.ljust(8), info["value"], info["comment"]
+                    parameter_line = (
+                        f"{parameter.ljust(8)} = {info['value']} * {info['comment']}\n"
                     )
                 else:
                     parameter_line = f"{parameter.ljust(8)} = {info}\n"
@@ -470,9 +470,7 @@ def add_iteration_variable(data, variable_number):
         data["ixc"].value.sort()
 
     else:
-        print(
-            f"Variable number {variable_number} already in iteration variable list"
-        )
+        print(f"Variable number {variable_number} already in iteration variable list")
 
 
 def remove_iteration_variable(data, variable_number):
@@ -488,9 +486,7 @@ def remove_iteration_variable(data, variable_number):
         data["ixc"].value.remove(variable_number)
         data["ixc"].value.sort()
     else:
-        print(
-            f"Variable number {variable_number} not in iteration variable list"
-        )
+        print(f"Variable number {variable_number} not in iteration variable list")
 
 
 def add_constraint_equation(data, equation_number):
@@ -507,9 +503,7 @@ def add_constraint_equation(data, equation_number):
         data["icc"].value.sort()
 
     else:
-        print(
-            f"Equation number {equation_number} already in constraint equations list"
-        )
+        print(f"Equation number {equation_number} already in constraint equations list")
 
 
 def remove_constraint_equation(data, equation_number):
@@ -527,9 +521,7 @@ def remove_constraint_equation(data, equation_number):
         data["icc"].value.sort()
 
     else:
-        print(
-            f"Equation number {equation_number} not in constraint equations list"
-        )
+        print(f"Equation number {equation_number} not in constraint equations list")
 
 
 def add_parameter(data, parameter_name, parameter_value):

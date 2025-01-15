@@ -171,13 +171,7 @@ def write_Morris_Method_Output(X, S):
         # print the sensistivity indices
         for i in range(X["num_vars"]):
             f.write(
-                "{} {:f} {:f} {:f} {:f}\n".format(
-                    X["names"][i],
-                    S["mu"][i],
-                    S["mu_star"][i],
-                    S["sigma"][i],
-                    S["mu_star_conf"][i],
-                )
+                f"{X['names'][i]} {S['mu'][i]:f} {S['mu_star'][i]:f} {S['sigma'][i]:f} {S['mu_star_conf'][i]:f}\n"
             )
 
 
@@ -195,13 +189,7 @@ def write_Sobol_Output(X, S):
         # print first order Sobol indices
         for i in range(X["num_vars"]):
             f.write(
-                "{} {:f} {:f} {:f} {:f}\n".format(
-                    X["names"][i],
-                    S["S1"][i],
-                    S["S1_conf"][i],
-                    S["ST"][i],
-                    S["ST_conf"][i],
-                )
+                f"{X['names'][i]} {S['S1'][i]:f} {S['S1_conf'][i]:f} {S['ST'][i]:f} {S['ST_conf'][i]:f}\n"
             )
 
 

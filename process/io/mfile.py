@@ -63,7 +63,7 @@ class MFileVariable(dict):
 
     def __getattr__(self, name):
         result = self.get(name)
-        # print("Trying to get({}) on {}, {}".format(name, self, id(self)))
+        # print(f"Trying to get({name}) on {self}, {id(self)}"
         if result:
             return result
         else:

@@ -130,9 +130,9 @@ class ProcessConfig:
 
             m_file = MFile(filename=directory + "/MFILE.DAT")
 
-            error_status = "Error status: {}  Error ID: {}\n".format(
-                m_file.data["error_status"].get_scan(-1),
-                m_file.data["error_id"].get_scan(-1),
+            error_status = (
+                f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
+                f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
             )
 
             readme.write(error_status)
@@ -1153,12 +1153,12 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
             # Uncertain input variables
             for u_dict in self.uncertainties:
-                header += " {:10s}".format(u_dict["varname"])
+                header += " {u_dict['varname']:10s}"
 
             # normalised iteration varialbes
             for i in range(1, nvar + 1):
                 label = m_file.data[f"nitvar{i:03}"].var_description
-                header += " n_{:8s}".format(label.replace("_(range_normalised)", ""))
+                header += f" n_{label.replace('_(range_normalised)', ''):8s}"
 
             # error status, id and ifail
             header += " error_status error_id ifail\n"
@@ -1170,20 +1170,20 @@ class UncertaintiesConfig(ProcessConfig, Config):
         # Uncertain input variables
         output = f"{sample_index:12d}"
         for u_dict in self.uncertainties:
-            output += " {:10f}".format(u_dict["samples"][sample_index])
+            output += f" {u_dict['samples'][sample_index]:10f}"
 
         # normalised iteration variables
         for i in range(1, nvar + 1):
-            output += " {:10f}".format(m_file.data[f"nitvar{i:03}"].get_scan(-1))
+            output += f" {m_file.data[f'nitvar{i:03}'].get_scan(-1):10f}"
 
         # error status and id
-        output += " {:13d} {:8d}".format(
-            int(m_file.data["error_status"].get_scan(-1)),
-            int(m_file.data["error_id"].get_scan(-1)),
+        output += (
+            f" {int(m_file.data['error_status'].get_scan(-1)):13d} "
+            f"{int(m_file.data['error_id'].get_scan(-1)):8d}"
         )
         # ifail
         if m_file.data["error_status"].get_scan(-1) < 3:
-            output += " {:5d}\n".format(int(m_file.data["ifail"].get_scan(-1)))
+            output += f" {int(m_file.data['ifail'].get_scan(-1)):5d}\n"
         else:
             output += "   -1\n"
 
