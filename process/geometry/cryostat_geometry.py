@@ -2,14 +2,12 @@
 Calculate cryostat geometries
 """
 
-from typing import List
-
 from process.geometry.geometry_parameterisations import RectangleGeometry
 
 
 def cryostat_geometry(
     rdewex: float, ddwex: float, zdewex: float
-) -> List[RectangleGeometry]:
+) -> list[RectangleGeometry]:
     """Calculates rectangular geometries of the cryostat
 
     :param rdewex: cryostat internal radius

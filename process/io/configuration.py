@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ConfigurationParser(object):
+class ConfigurationParser:
     """Abstract parser class. Must be subclassed to be used.
 
     The parser should always put read-in data in the data property.
@@ -36,7 +36,7 @@ class ConfigurationParser(object):
 
     def data_validate(self, value):
         """Check that value corresponds to a specific data format."""
-        logger.info("type of value: {}".format(type(value)))
+        logger.info(f"type of value: {type(value)}")
         if not isinstance(value, dict) and value is not None:
             raise ValueError("Configuration data must be specified as a dictionary")
 
@@ -51,10 +51,10 @@ class JsonConfigParser(ConfigurationParser):
                 config_file_data = json.load(fh)
                 self.data = config_file_data
         except FileNotFoundError:
-            logger.error("Cannot find configuration file {}".format(filename))
+            logger.error(f"Cannot find configuration file {filename}")
 
 
-class Config(object):
+class Config:
     """Generic configuration for PROCESS tools. Read-only."""
 
     def __init__(self, config_file, parser=JsonConfigParser):
@@ -90,7 +90,7 @@ class Config(object):
         if isinstance(config, dict) and len(keys) > 1:
             return self._search_config_for(value, *keys[1:])
         elif not isinstance(value, dict) and len(keys) > 1:
-            raise KeyError("{} cannot be found in {}".format(search_key, value))
+            raise KeyError(f"{search_key} cannot be found in {value}")
         else:
             return self._lowercase(value)
 
@@ -109,13 +109,11 @@ class Config(object):
             return self._search_config_for(self.config_data, *config_keys)
         except KeyError:
             if default:
-                logger.info("Using default for {}".format(config_keys))
+                logger.info(f"Using default for {config_keys}")
                 return default
             else:
                 logger.exception(
-                    "Cannot find value or default for {} in configuration".format(
-                        config_keys
-                    )
+                    f"Cannot find value or default for {config_keys} in configuration"
                 )
         except (IndexError, TypeError):
             raise

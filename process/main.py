@@ -337,7 +337,7 @@ class VaryRun:
                     if no_unfeasible > 0:
                         print(
                             "WARNING: Non feasible point(s) in sweep, "
-                            "But finished anyway! {} ".format(no_unfeasible)
+                            f"But finished anyway! {no_unfeasible} "
                         )
                     if process_warnings():
                         print(
@@ -348,9 +348,7 @@ class VaryRun:
                     break
                 else:
                     print(
-                        "WARNING: {} non-feasible point(s) in sweep! Rerunning!".format(
-                            no_unfeasible
-                        )
+                        f"WARNING: {no_unfeasible} non-feasible point(s) in sweep! Rerunning!"
                     )
             else:
                 print("PROCESS has stopped without finishing!")
@@ -519,7 +517,7 @@ class SingleRun:
     def append_input(self):
         """Append the input file to the output file and mfile."""
         # Read IN.DAT input file
-        with open(self.input_path, "r", encoding="utf-8") as input_file:
+        with open(self.input_path, encoding="utf-8") as input_file:
             input_lines = input_file.readlines()
 
         # Append the input file to the output file
@@ -551,7 +549,7 @@ class SingleRun:
         modified_lines = []
         changes_made = []  # To store details of the changes
 
-        with open(filename, "r") as file:
+        with open(filename) as file:
             for line in file:
                 # Skip comment lines or lines without an assignment
                 if line.startswith("*") or "=" not in line:

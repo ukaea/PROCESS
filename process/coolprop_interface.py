@@ -1,5 +1,4 @@
 import dataclasses
-from typing import Optional
 
 from CoolProp.CoolProp import PropsSI
 
@@ -30,10 +29,10 @@ class FluidProperties:
         cls,
         fluid_name: str,
         *,
-        temperature: Optional[float] = None,
-        pressure: Optional[float] = None,
-        entropy: Optional[float] = None,
-        vapor_quality: Optional[float] = None,
+        temperature: float | None = None,
+        pressure: float | None = None,
+        entropy: float | None = None,
+        vapor_quality: float | None = None,
     ):
         """Calculates the fluid properties of a fluid given its temperature and pressure.
 

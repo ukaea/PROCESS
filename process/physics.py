@@ -1,5 +1,4 @@
 import math
-from typing import Tuple
 
 import numba as nb
 import numpy as np
@@ -188,7 +187,7 @@ def calculate_beta_limit(
 @nb.jit(nopython=True, cache=True)
 def _plascar_bpol(
     aspect: float, eps: float, kappa: float, delta: float
-) -> Tuple[float, float, float, float]:
+) -> tuple[float, float, float, float]:
     """
     Calculate the poloidal field coefficients for determining the plasma current
     and poloidal field.
@@ -2535,7 +2534,7 @@ class Physics:
         rminor: float,
         sarea: float,
         zeff: float,
-    ) -> Tuple[np.ndarray, float]:
+    ) -> tuple[np.ndarray, float]:
         """
         Calculate the density limit using various models.
 
@@ -2956,7 +2955,7 @@ class Physics:
         ten: float,
         plasma_volume: float,
         zeff: float,
-    ) -> Tuple[float, float, float, float]:
+    ) -> tuple[float, float, float, float]:
         """
         Calculate the ohmic heating power and related parameters.
 
@@ -3043,7 +3042,7 @@ class Physics:
         sf: float,
         triang: float,
         triang95: float,
-    ) -> Tuple[float, float, float, float, float]:
+    ) -> tuple[float, float, float, float, float]:
         """Calculate the plasma current.
 
         Args:

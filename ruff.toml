@@ -21,6 +21,7 @@ extend-select = [
     "SLOT",
     "T10",
     "TID",
+    "UP",
     "W",
     "YTT",
 ]

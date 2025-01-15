@@ -9,9 +9,9 @@ currently.
 """
 
 import logging
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -53,10 +53,10 @@ class RunMetadata:
 def plot_mfile_solutions(
     runs_metadata: Sequence[RunMetadata],
     plot_title: str,
-    normalising_tag: Optional[str] = None,
+    normalising_tag: str | None = None,
     rmse: bool = False,
-    normalisation_type: Optional[str] = "init",
-) -> Tuple[mpl.figure.Figure, pd.DataFrame]:
+    normalisation_type: str | None = "init",
+) -> tuple[mpl.figure.Figure, pd.DataFrame]:
     """Plot multiple solutions, optionally normalised by a given solution.
 
     :param runs_metadata: list of RunMetadata objects
@@ -133,7 +133,7 @@ def plot_mfile_solutions(
     return fig, filtered_results_df
 
 
-def _extract_mfile_data(mfile_path: Path) -> Dict:
+def _extract_mfile_data(mfile_path: Path) -> dict:
     """Extract data from mfile and return as dict.
 
     Also include the names of the optimisation parameters.
@@ -182,7 +182,7 @@ def _create_df_from_run_metadata(runs_metadata: Sequence[RunMetadata]) -> pd.Dat
 
 def _separate_norm_solution(
     results_df: pd.DataFrame, normalising_tag: str
-) -> Tuple[pd.DataFrame]:
+) -> tuple[pd.DataFrame]:
     """Separate solutions df into normalising row and rows to be normalised.
 
     :param results_df: multiple solutions dataframe
@@ -282,7 +282,7 @@ def _normalise_diffs(
 def _filter_vars_of_interest(
     results_df: pd.DataFrame,
     opt_param_value_pattern: str,
-    extra_var_names: Optional[List[str]] = None,
+    extra_var_names: list[str] | None = None,
 ) -> pd.DataFrame:
     """Filter variables of interest from full results for all solutions.
 
@@ -316,7 +316,7 @@ def _plot_solutions(
     normalisation_type: str,
     opt_param_value_pattern: str,
     plot_title: str,
-    normalising_tag: Union[str, None],
+    normalising_tag: str | None,
     rmse_df: pd.DataFrame,
 ) -> mpl.figure.Figure:
     """Plot multiple solutions, optionally normalised by a given solution.

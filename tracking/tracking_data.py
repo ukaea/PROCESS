@@ -378,7 +378,7 @@ class TrackedData:
         # open all files in the `database` folder
 
         for i in self.database.glob("*.json"):
-            with open(i, "r") as f:
+            with open(i) as f:
                 file_data = json.load(f)  # parsed contents of the JSON tracking file
                 self._add_variables(
                     file_data

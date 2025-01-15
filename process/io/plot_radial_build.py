@@ -344,7 +344,7 @@ def main(args=None):
     else:
         end_scan = len(radial_build)
     plt.figure(figsize=(8, 6))
-    for kk in range((len(radial_build[:end_scan, 0]))):
+    for kk in range(len(radial_build[:end_scan, 0])):
         if kk == 0:
             lower = np.zeros(len(radial_build[kk, :]))
         else:

@@ -110,7 +110,7 @@ def test_single_run_with_mfilejson(temp_data):
 
     # Check if the file contains valid JSON.
     try:
-        with open(expected_json, "r") as f:
+        with open(expected_json) as f:
             json_data = json.load(f)
     except json.JSONDecodeError:
         assert False, "The JSON file is not valid JSON"

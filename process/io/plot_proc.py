@@ -2066,10 +2066,10 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         noc = number_of_coils
 
     for coil in range(noc):
-        coils_r.append(mfile_data.data["rpf[{:01}]".format(coil)].get_scan(scan))
-        coils_z.append(mfile_data.data["zpf[{:01}]".format(coil)].get_scan(scan))
-        coils_dr.append(mfile_data.data["pfdr({:01})".format(coil)].get_scan(scan))
-        coils_dz.append(mfile_data.data["pfdz({:01})".format(coil)].get_scan(scan))
+        coils_r.append(mfile_data.data[f"rpf[{coil:01}]"].get_scan(scan))
+        coils_z.append(mfile_data.data[f"zpf[{coil:01}]"].get_scan(scan))
+        coils_dr.append(mfile_data.data[f"pfdr({coil:01})"].get_scan(scan))
+        coils_dz.append(mfile_data.data[f"pfdz({coil:01})"].get_scan(scan))
         coil_text.append(str(coil + 1))
 
     r_points, z_points, central_coil = pfcoil_geometry(
@@ -2103,7 +2103,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
             coil_text[i],
             ha="center",
             va="center",
-            fontsize=8.5 * abs((coils_dr[i] * coils_dz[i])),
+            fontsize=8.5 * abs(coils_dr[i] * coils_dz[i]),
         )
     axis.add_patch(
         patches.Rectangle(
@@ -2138,9 +2138,7 @@ def plot_info(axis, data, mfile_data, scan):
             if data[i][0] == "":
                 axis.text(eqpos, -i, "\n", ha="left", va="center")
             elif data[i][0][0] == "#":
-                axis.text(
-                    -0.05, -i, "{}\n".format(data[i][0][1:]), ha="left", va="center"
-                )
+                axis.text(-0.05, -i, f"{data[i][0][1:]}\n", ha="left", va="center")
             elif data[i][0][0] == "!":
                 value = data[i][0][1:]
                 axis.text(
@@ -2156,9 +2154,7 @@ def plot_info(axis, data, mfile_data, scan):
                     if isinstance(dat, str):
                         value = dat
                     else:
-                        value = "{:.4g}".format(
-                            mfile_data.data[data[i][0]].get_scan(scan)
-                        )
+                        value = f"{mfile_data.data[data[i][0]].get_scan(scan):.4g}"
                     if "alpha" in data[i][0]:
                         value = str(float(value) + 1.0)
                     axis.text(
@@ -2184,7 +2180,7 @@ def plot_info(axis, data, mfile_data, scan):
             if isinstance(dat, str):
                 value = dat
             else:
-                value = "{:.4g}".format(data[i][0])
+                value = f"{data[i][0]:.4g}"
             axis.text(
                 eqpos,
                 -i,
@@ -2447,7 +2443,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
     if "i_tf_sup" in mfile_data.data.keys():
         i_tf_sup = int(mfile_data.data["i_tf_sup"].get_scan(scan))
     else:
-        i_tf_sup = int(1)
+        i_tf_sup = 1
 
     xmin = 0
     xmax = 1
@@ -2471,8 +2467,8 @@ def plot_magnetics_info(axis, mfile_data, scan):
     for i in range(1, number_of_coils):
         if i % 2 != 0:
             pf_info.append((
-                mfile_data.data["ric[{:01}]".format(i)].get_scan(scan),
-                "PF {}".format(i),
+                mfile_data.data[f"ric[{i:01}]"].get_scan(scan),
+                f"PF {i}",
             ))
 
     if len(pf_info) > 2:
@@ -2487,14 +2483,14 @@ def plot_magnetics_info(axis, mfile_data, scan):
     if "i_tf_bucking" in mfile_data.data.keys():
         i_tf_bucking = int(mfile_data.data["i_tf_bucking"].get_scan(scan))
     else:
-        i_tf_bucking = int(1)
+        i_tf_bucking = 1
 
     # Get superconductor material (i_tf_sc_mat)
     # If i_tf_sc_mat not present, assume resistive
     if "i_tf_sc_mat" in mfile_data.data.keys():
         i_tf_sc_mat = int(mfile_data.data["i_tf_sc_mat"].get_scan(scan))
     else:
-        i_tf_sc_mat = int(0)
+        i_tf_sc_mat = 0
 
     if i_tf_sc_mat > 0:
         tftype = dicts["DICT_TF_TYPE"][
@@ -2507,11 +2503,11 @@ def plot_magnetics_info(axis, mfile_data, scan):
         "vsind"
     ].get_scan(scan)
 
-    sig_case = 1.0e-6 * mfile_data.data[
-        "sig_tf_tresca_max({})".format(i_tf_bucking)
-    ].get_scan(scan)
+    sig_case = 1.0e-6 * mfile_data.data[f"sig_tf_tresca_max({i_tf_bucking})"].get_scan(
+        scan
+    )
     sig_cond = 1.0e-6 * mfile_data.data[
-        "sig_tf_tresca_max({})".format(i_tf_bucking + 1)
+        f"sig_tf_tresca_max({i_tf_bucking + 1})"
     ].get_scan(scan)
 
     if i_tf_sup == 1:
@@ -2523,7 +2519,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("vstot", "Available flux swing", "Wb"),
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
-            ("#TF coil type is {}".format(tftype), "", ""),
+            (f"#TF coil type is {tftype}", "", ""),
             ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
             ("iooic", r"I/I$_{\mathrm{crit}}$", ""),
             ("tmargtf", "TF Temperature margin", "K"),
@@ -2548,7 +2544,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("vstot", "Available flux swing", "Wb"),
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
-            ("#TF coil type is {}".format(tftype), "", ""),
+            (f"#TF coil type is {tftype}", "", ""),
             ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
             ("ritfc", "TF coil currents sum", "A"),
             ("", "", ""),
@@ -3351,13 +3347,13 @@ def main(args=None):
     if "i_tf_sup" in m_file.data.keys():
         i_tf_sup = int(m_file.data["i_tf_sup"].get_scan(scan))
     else:
-        i_tf_sup = int(1)
+        i_tf_sup = 1
 
     # Check WP configuration
     if "i_tf_wp_geom" in m_file.data.keys():
         i_tf_wp_geom = int(m_file.data["i_tf_wp_geom"].get_scan(scan))
     else:
-        i_tf_wp_geom = int(0)
+        i_tf_wp_geom = 0
 
     global bore
     global ohcth

@@ -2,8 +2,6 @@
 Calculate radial and vertical coordinates for the geometry of the blanket
 """
 
-from typing import Tuple
-
 import numpy as np
 
 from process.geometry.geometry_parameterisations import ArbitraryGeometry
@@ -107,7 +105,7 @@ def blanket_geometry_lower(
     blnkith: float,
     blnkoth: float,
     divgap: float,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of blanket below the midplane
 
     :param triang: plasma triangularity

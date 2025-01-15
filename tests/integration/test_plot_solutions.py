@@ -1,6 +1,6 @@
 """Test the plot_solutions tool."""
 
-from typing import List, Sequence
+from collections.abc import Sequence
 
 import pytest
 
@@ -8,7 +8,7 @@ from process.io.plot_solutions import RunMetadata, plot_mfile_solutions
 
 
 @pytest.fixture
-def run_metadata(temp_data) -> List[RunMetadata]:
+def run_metadata(temp_data) -> list[RunMetadata]:
     """Return runs metadata.
 
     :param temp_data: temporary dir containing data files
