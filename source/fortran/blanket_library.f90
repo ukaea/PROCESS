@@ -42,7 +42,7 @@ module blanket_library
     real(dp) :: volvvi, volvvo
     !! Volume of inboard and outboard Vacuum Vessel (m3)
 
-    real(dp) :: hcryopf
+    real(dp) :: dz_pf_cryostat
     !! Clearance between uppermost PF coil and cryostat lid (m)
 
     real(dp) :: vfblkti, vfblkto
@@ -129,7 +129,7 @@ contains
 
         hblnkt = 0.0D0
         hshld = 0.0D0
-        hcryopf = 0.0D0
+        dz_pf_cryostat = 0.0D0
         hvv = 0.0D0
         volshldi = 0.0D0
         volshldo = 0.0D0
