@@ -548,7 +548,7 @@ class Costs2015:
         self.s_k[1] = (
             (np.pi * fwbs_variables.r_cryostat_inboard**2)
             * 2.0e0
-            * fwbs_variables.dz_cryostat_half_inside
+            * fwbs_variables.z_cryostat_half_inside
         )
         self.s_kref[1] = 18712.0e0
         self.s_cost[1] = (
@@ -981,7 +981,7 @@ class Costs2015:
         self.s_k[43] = (
             (np.pi * fwbs_variables.r_cryostat_inboard**2.0e0)
             * 2.0e0
-            * fwbs_variables.dz_cryostat_half_inside
+            * fwbs_variables.z_cryostat_half_inside
         )
         self.s_kref[43] = 18700.0e0
         self.s_cost[43] = (
@@ -1013,7 +1013,7 @@ class Costs2015:
             * np.pi
             * fwbs_variables.r_cryostat_inboard
             * 2.0e0
-            * fwbs_variables.dz_cryostat_half_inside
+            * fwbs_variables.z_cryostat_half_inside
             + 2 * (np.pi * fwbs_variables.r_cryostat_inboard**2)
         )
         self.s_kref[45] = 3902.0e0
@@ -1214,7 +1214,7 @@ class Costs2015:
             np.pi
             * fwbs_variables.r_cryostat_inboard**2
             * 2.0e0
-            * fwbs_variables.dz_cryostat_half_inside
+            * fwbs_variables.z_cryostat_half_inside
         )
         self.s_kref[59] = 18700.0e0
         self.s_cost[59] = (

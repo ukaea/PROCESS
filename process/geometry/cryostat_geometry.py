@@ -8,7 +8,7 @@ from process.geometry.geometry_parameterisations import RectangleGeometry
 
 
 def cryostat_geometry(
-    r_cryostat_inboard: float, dr_cryostat: float, dz_cryostat_half_inside: float
+    r_cryostat_inboard: float, dr_cryostat: float, z_cryostat_half_inside: float
 ) -> List[RectangleGeometry]:
     """Calculates rectangular geometries of the cryostat
 
@@ -16,8 +16,8 @@ def cryostat_geometry(
     :type r_cryostat_inboard: float
     :param dr_cryostat: external cryostat thickness
     :type dr_cryostat: float
-    :param dz_cryostat_half_inside: cryostat internal half-height
-    :type dz_cryostat_half_inside: float
+    :param z_cryostat_half_inside: cryostat internal half-height
+    :type z_cryostat_half_inside: float
     :return: list of RectangleGeometry - dataclass returning rectangular geometry parameters
     :rtype: List[RectangleGeometry]
     """
@@ -28,7 +28,7 @@ def cryostat_geometry(
         anchor_x=r_cryostat_inboard,
         anchor_z=0,
         width=dr_cryostat,
-        height=(dz_cryostat_half_inside + dr_cryostat),
+        height=(z_cryostat_half_inside + dr_cryostat),
     )
 
     # rectangle representing vertical part of cryostat below the midplane
@@ -36,13 +36,13 @@ def cryostat_geometry(
         anchor_x=r_cryostat_inboard,
         anchor_z=0,
         width=dr_cryostat,
-        height=-(dz_cryostat_half_inside + dr_cryostat),
+        height=-(z_cryostat_half_inside + dr_cryostat),
     )
 
     # rectangle representing horizontal part of cryostat above the midplane
     rect3 = RectangleGeometry(
         anchor_x=0,
-        anchor_z=dz_cryostat_half_inside,
+        anchor_z=z_cryostat_half_inside,
         width=r_cryostat_inboard,
         height=dr_cryostat,
     )
@@ -50,7 +50,7 @@ def cryostat_geometry(
     # rectangle representing horizontal part of cryostat below the midplane
     rect4 = RectangleGeometry(
         anchor_x=0,
-        anchor_z=-dz_cryostat_half_inside,
+        anchor_z=-z_cryostat_half_inside,
         width=r_cryostat_inboard,
         height=-dr_cryostat,
     )

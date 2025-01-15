@@ -382,12 +382,12 @@ class BlanketLibrary:
 
         # Half-height of cryostat (m)
         # ISSUE #508 Remove RFP option
-        fwbs_variables.dz_cryostat_half_inside = (
+        fwbs_variables.z_cryostat_half_inside = (
             np.max(pfcoil_variables.zh) + blanket_library.dz_pf_cryostat
         )
 
         # Vertical clearance between TF coil and cryostat (m)
-        buildings_variables.clh1 = fwbs_variables.dz_cryostat_half_inside - (
+        buildings_variables.clh1 = fwbs_variables.z_cryostat_half_inside - (
             build_variables.hmax + build_variables.tfcth
         )
 
@@ -395,7 +395,7 @@ class BlanketLibrary:
         fwbs_variables.vol_cryostat = (
             (2.0 * np.pi * fwbs_variables.r_cryostat_inboard)
             * 2.0
-            * fwbs_variables.dz_cryostat_half_inside
+            * fwbs_variables.z_cryostat_half_inside
             + (2.0 * np.pi * fwbs_variables.r_cryostat_inboard**2)
         ) * build_variables.dr_cryostat
 
