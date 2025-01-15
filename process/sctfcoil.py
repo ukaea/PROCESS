@@ -1792,20 +1792,34 @@ class Sctfcoil:
             * (1.0e0 + (3.0e0 * hh) / (10.0e0 + np.sqrt(4.0e0 - 3.0e0 * hh)))
         )
 
-    def tf_res_heating(self):
+    def tf_res_heating(self) -> None:
         """
-        Resitive magnet resitive heating calculations
-        Rem SK : Clamped joined superconductors might have resistive power losses on the joints
-        Rem SK : Sliding joints might have a region of high resistivity
+        Calculate resistive heating for resistive magnets.
+
+        This method calculates the resistive heating for resistive magnets.
+        It considers the following scenarios:
+        - Clamped joints in superconductors might have resistive power losses on the joints.
+        - Sliding joints might have a region of high resistivity.
+
+        Notes:
+        - The resisitivty is set to be thet for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
+        - The coeffcieicnt of resistivity is set to be that of pure copper
+
+        References:
+            - https://www.spotweldingconsultants.com/GlidCop_AL_15.pdf
+
+            - https://cirris.com/temperature-coefficient-of-copper/
         """
+
+        # Resistivity of the Glidcop copper centerpost
         if tfcoil_variables.i_tf_sup == 0:
             tfcoil_variables.rho_cp = (
                 tfcoil_variables.frhocp
-                * (1.72e0 + 0.0039e0 * (tfcoil_variables.temp_cp_average - 273.15e0))
+                * (1.86e0 + 0.00393e0 * (tfcoil_variables.temp_cp_average - 293.15e0))
                 * 1.0e-8
             )
 
-        # Aluminium
+        # Resistivity of the aluminium centerpost
         if tfcoil_variables.i_tf_sup == 2:
             tfcoil_variables.rho_cp = tfcoil_variables.frhocp * (
                 2.00016e-14 * tfcoil_variables.temp_cp_average**3
@@ -1830,8 +1844,9 @@ class Sctfcoil:
                 tfcoil_variables.rho_tf_leg = (
                     tfcoil_variables.frholeg
                     * (
-                        1.72e0
-                        + 0.0039e0 * (tfcoil_variables.temp_tf_legs_outboard - 273.15e0)
+                        1.86e0
+                        + 0.00393e0
+                        * (tfcoil_variables.temp_tf_legs_outboard - 293.15e0)
                     )
                     * 1.0e-8
                 )
