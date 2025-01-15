@@ -428,7 +428,7 @@ module fwbs_variables
   !! Radial distance between outer edge of furthest away PF coil (or stellarator
   !! modular coil) and cryostat [m]
 
-  real(dp) :: vdewex
+  real(dp) :: vol_cryostat
   !! cryostat volume [m^3]
 
   real(dp) :: vdewin
@@ -775,7 +775,7 @@ module fwbs_variables
     r_cryostat_inboard = 0.0D0
     dz_cryostat_half_inside = 0.0D0
     dr_pf_cryostat = 0.5D0
-    vdewex = 0.0D0
+    vol_cryostat = 0.0D0
     vdewin = 0.0D0
     vfshld = 0.25D0
     volblkt = 0.0D0

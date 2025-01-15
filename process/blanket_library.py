@@ -392,7 +392,7 @@ class BlanketLibrary:
         )
 
         # cryostat volume (m3)
-        fwbs_variables.vdewex = (
+        fwbs_variables.vol_cryostat = (
             (2.0 * np.pi * fwbs_variables.r_cryostat_inboard)
             * 2.0
             * fwbs_variables.dz_cryostat_half_inside
@@ -404,7 +404,7 @@ class BlanketLibrary:
 
         # Sum of internal vacuum vessel and cryostat masses (kg)
         fwbs_variables.dewmkg = (
-            fwbs_variables.vdewin + fwbs_variables.vdewex
+            fwbs_variables.vdewin + fwbs_variables.vol_cryostat
         ) * fwbs_variables.denstl
 
     def primary_coolant_properties(self, output: bool):
