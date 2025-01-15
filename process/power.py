@@ -509,7 +509,7 @@ class Power:
         )
         # po.ovarre(self.outfile,'Heat removed from cryogenic coils (MWth)','(helpow/1.0e6)',helpow/1.0e6)
         # po.ovarre(self.outfile,'MGF (motor-generator flywheel) units (MW)', '(fmgdmw)',fmgdmw)
-        # po.ovarin(self.outfile,'Primary coolant pumps (MW)', '(coolwh)',coolwh)
+        # po.ovarin(self.outfile,'Primary coolant pumps (MW)', '(i_blkt_coolant)',i_blkt_coolant)
         po.ovarre(
             self.outfile,
             "Primary coolant pumps (MW)",

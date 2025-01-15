@@ -298,7 +298,7 @@ module fwbs_variables
   !! - =2 user input thermal-electric efficiency (eta_thermal_electric)
   !! - =4 supercritical CO2 cycle
 
-  integer :: coolwh
+  integer :: i_blkt_coolant
   !! Switch for blanket coolant (set via blkttype):
   !!
   !! - =1 helium
@@ -361,8 +361,8 @@ module fwbs_variables
   real(dp) :: temp_blkt_out
   !! Outlet temperature of blanket coolant [K] (`secondary_cycle>1`)
   !!
-  !! - input if `coolwh=1` (helium)
-  !! - calculated if `coolwh=2` (water)
+  !! - input if `i_blkt_coolant=1` (helium)
+  !! - calculated if `i_blkt_coolant=2` (water)
 
   integer :: nblktmodpo
   !! number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)
@@ -735,7 +735,7 @@ module fwbs_variables
     i_shield_mat = 0
     secondary_cycle = 0
     secondary_cycle_liq = 4
-    coolwh = 1
+    i_blkt_coolant = 1
     afwi = 0.008D0
     afwo = 0.008D0
     fwcoolant = 'helium'

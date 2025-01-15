@@ -84,7 +84,7 @@ Summary of key variables and switches:
 |     maximum temp (K)     |       `tfwmatmax`       | ---                      | ---                                  |
 |        FCI switch        |           ---           | ---                      | `ifci`                               |
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
-|  primary coolant switch  |       `fwcoolant`       | `coolwh`                 | ---                                  |
+|  primary coolant switch  |       `fwcoolant`       | `i_blkt_coolant`                 | ---                                  |
 | secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
 |      inlet temp (K)      |        `temp_fw_in`        | `temp_blkt_in`             | `inlet_temp_liq`                     |
 |     outlet temp (K)      |       `temp_fw_out`        | `temp_blkt_out`            | `outlet_temp_liq`                    |
@@ -159,8 +159,8 @@ There are three blanket model options, chosen by the user to match their selecte
 The default assuption for all blanket models is that the first wall and breeding blanket have the same coolant (flow = FW inlet -> FW outlet -> BB inlet-> BB outlet). 
 It is possible to choose a different coolant for the FW and breeding blanket, in which case the mechanical pumping powers for the FW and BB are calculated seperately. 
 The model has three mechanical pumping power options, chosen by the user to match their selected blanket design using the switch 'ipump' (default=0): 
-    0.   Same coolant for FW and BB ('fwcoolant`=`coolwh`)
-    1.   Different coolant for FW and BB ('fwcoolant`/=`coolwh`) 
+    0.   Same coolant for FW and BB ('fwcoolant`=`i_blkt_coolant`)
+    1.   Different coolant for FW and BB ('fwcoolant`/=`i_blkt_coolant`) 
 
 !!! Note "Note" 
     For the dual-coolant blanket the 'ipump' switch is relavent for the blanket structure coolant and not the liquid metal breeder/coolant choice.  

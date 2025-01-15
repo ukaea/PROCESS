@@ -484,7 +484,7 @@ module cost_variables
   !! cost of heat rejection system ($)
 
   real(dp), dimension(2) :: uchts
-  !! cost of heat transport system equipment per loop ($/W); dependent on coolant type (coolwh)
+  !! cost of heat transport system equipment per loop ($/W); dependent on coolant type (i_blkt_coolant)
 
   real(dp) :: uciac
   !! cost of instrumentation, control & diagnostics ($)
@@ -595,7 +595,7 @@ module cost_variables
   !! cost of tritium building ($/m3)
 
   real(dp), dimension(2) :: ucturb
-  !! cost of turbine plant equipment ($) (dependent on coolant type coolwh)
+  !! cost of turbine plant equipment ($) (dependent on coolant type i_blkt_coolant)
 
   real(dp), parameter :: ucvalv = 3.9D5
   !! vacuum system valve cost ($)

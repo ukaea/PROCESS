@@ -280,7 +280,7 @@ contains
       fhole, fwbsshape, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
-      coolwh, emult
+      i_blkt_coolant, emult
     use heat_transport_variables, only: p_fw_pumping_mw, p_baseload_electrical, fmgdmw, p_div_pump_cool_mw, &
       pwpm2, eta_thermal_electric, p_vacuum_pumps_mw, i_shield_power_generation, fpumpdiv, pinjmax, p_blanket_pumping_mw, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, p_shield_pump_cool_mw, fpumpshld, trithtmw, &
@@ -2036,8 +2036,8 @@ contains
       case ('ims')
          call parse_int_variable('ims', ims, 0, 1, &
                ' Switch for Multi or Single Modle Segment (MMS or SMS)')
-      case ('coolwh')
-         call parse_int_variable('coolwh', coolwh, 1, 2, &
+      case ('i_blkt_coolant')
+         call parse_int_variable('i_blkt_coolant', i_blkt_coolant, 1, 2, &
                ' Blanket coolant type (1=He, 2=H20)')
 
       case ('secondary_cycle')

@@ -1399,7 +1399,7 @@ class Stellarator:
                 #  If we have chosen pressurised water as the coolant, set the
                 #  coolant outlet temperature as 20 deg C below the boiling point
 
-                if fwbs_variables.coolwh == 2:
+                if fwbs_variables.i_blkt_coolant == 2:
                     if fwbs_variables.irefprop:
                         fwbs_variables.temp_blkt_out = (
                             FluidProperties.of(
@@ -1764,7 +1764,7 @@ class Stellarator:
         #  When fwbs_variables.blktmodel > 0, although the blanket is by definition helium-cooled
         #  in this case, the shield etc. are assumed to be water-cooled, and since
         #  water is heavier the calculation for fwbs_variables.coolmass is better done with
-        #  coolwh=2 if fwbs_variables.blktmodel > 0; thus we can ignore the helium coolant mass
+        #  i_blkt_coolant=2 if fwbs_variables.blktmodel > 0; thus we can ignore the helium coolant mass
         #  in the blanket.
 
         if fwbs_variables.blktmodel == 0:
@@ -1834,7 +1834,7 @@ class Stellarator:
         #  structures is used (see comment above)
 
         if (fwbs_variables.blktmodel > 0) or (
-            fwbs_variables.coolwh == 2
+            fwbs_variables.i_blkt_coolant == 2
         ):  # pressurised water coolant
             fwbs_variables.coolmass = coolvol * 806.719e0
         else:  # gaseous helium coolant
