@@ -376,13 +376,15 @@ class BlanketLibrary:
 
         # Clearance between uppermost PF coil and cryostat lid (m).
         # Scaling from ITER by M. Kovari
-        blanket_library.hcryopf = (
+        blanket_library.dz_pf_cryostat = (
             build_variables.clhsf * (2.0 * fwbs_variables.r_cryostat_inboard) / 28.440
         )
 
         # Half-height of cryostat (m)
         # ISSUE #508 Remove RFP option
-        fwbs_variables.zdewex = np.max(pfcoil_variables.zh) + blanket_library.hcryopf
+        fwbs_variables.zdewex = (
+            np.max(pfcoil_variables.zh) + blanket_library.dz_pf_cryostat
+        )
 
         # Vertical clearance between TF coil and cryostat (m)
         buildings_variables.clh1 = fwbs_variables.zdewex - (
