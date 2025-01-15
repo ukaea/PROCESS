@@ -178,7 +178,7 @@ module heat_transport_variables
     real(dp) :: trithtmw
     !! power required for tritium processing (MW)
 
-    real(dp) :: tturb
+    real(dp) :: temp_turbine_in
     !! coolant temperature at turbine inlet (K) (`secondary_cycle = 3,4`)
 
     real(dp) :: p_vacuum_pumps_mw
@@ -240,7 +240,7 @@ module heat_transport_variables
       p_tf_electrical_mw = 0.0D0
       tlvpmw = 0.0D0
       trithtmw = 15.0D0
-      tturb = 0.0D0
+      temp_turbine_in = 0.0D0
       p_vacuum_pumps_mw = 0.5D0
     end subroutine init_heat_transport_variables
   end module heat_transport_variables

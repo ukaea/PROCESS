@@ -1379,8 +1379,8 @@ class Power:
                 po.ovarrf(
                     self.outfile,
                     "Coolant temperature at turbine inlet (K)",
-                    "(tturb)",
-                    heat_transport_variables.tturb,
+                    "(temp_turbine_in)",
+                    heat_transport_variables.temp_turbine_in,
                 )
 
             po.ovarrf(
@@ -2530,17 +2530,19 @@ class Power:
                 #  https://www.sciencedirect.com/science/article/pii/S0920379616300072
 
                 #  Superheated steam Rankine cycle correlation (C. Harrington)
-                #  Range of validity: 657 K < heat_transport_variables.tturb < 915 K
-                heat_transport_variables.tturb = fwbs_variables.outlet_temp - 20.0e0
-                if (heat_transport_variables.tturb < 657.0e0) or (
-                    heat_transport_variables.tturb > 915.0e0
+                #  Range of validity: 657 K < heat_transport_variables.temp_turbine_in < 915 K
+                heat_transport_variables.temp_turbine_in = (
+                    fwbs_variables.outlet_temp - 20.0e0
+                )
+                if (heat_transport_variables.temp_turbine_in < 657.0e0) or (
+                    heat_transport_variables.temp_turbine_in > 915.0e0
                 ):
                     error_handling.idiags[0] = 2
-                    error_handling.fdiags[0] = heat_transport_variables.tturb
+                    error_handling.fdiags[0] = heat_transport_variables.temp_turbine_in
                     error_handling.report_error(166)
 
                 eta_thermal_electric = (
-                    0.1802e0 * numpy.log(heat_transport_variables.tturb)
+                    0.1802e0 * numpy.log(heat_transport_variables.temp_turbine_in)
                     - 0.7823
                     - self.delta_eta
                 )
@@ -2548,16 +2550,18 @@ class Power:
                 #  KIT HCPB Model
             elif fwbs_variables.iblanket == 2:
                 #  Same as fwbs_variables.iblanket = 1
-                heat_transport_variables.tturb = fwbs_variables.outlet_temp - 20.0e0
-                if (heat_transport_variables.tturb < 657.0e0) or (
-                    heat_transport_variables.tturb > 915.0e0
+                heat_transport_variables.temp_turbine_in = (
+                    fwbs_variables.outlet_temp - 20.0e0
+                )
+                if (heat_transport_variables.temp_turbine_in < 657.0e0) or (
+                    heat_transport_variables.temp_turbine_in > 915.0e0
                 ):
                     error_handling.idiags[0] = 2
-                    error_handling.fdiags[0] = heat_transport_variables.tturb
+                    error_handling.fdiags[0] = heat_transport_variables.temp_turbine_in
                     error_handling.report_error(166)
 
                 eta_thermal_electric = (
-                    0.1802e0 * numpy.log(heat_transport_variables.tturb)
+                    0.1802e0 * numpy.log(heat_transport_variables.temp_turbine_in)
                     - 0.7823
                     - self.delta_eta
                 )
@@ -2574,17 +2578,20 @@ class Power:
             #  very low and the correlation will reflect this.
 
             #  Supercritical CO2 cycle correlation (C. Harrington)
-            #  Range of validity: 408 K < heat_transport_variables.tturb < 1023 K
-            heat_transport_variables.tturb = fwbs_variables.outlet_temp - 20.0e0
-            if (heat_transport_variables.tturb < 408.0e0) or (
-                heat_transport_variables.tturb > 1023.0e0
+            #  Range of validity: 408 K < heat_transport_variables.temp_turbine_in < 1023 K
+            heat_transport_variables.temp_turbine_in = (
+                fwbs_variables.outlet_temp - 20.0e0
+            )
+            if (heat_transport_variables.temp_turbine_in < 408.0e0) or (
+                heat_transport_variables.temp_turbine_in > 1023.0e0
             ):
                 error_handling.idiags[0] = 3
-                error_handling.fdiags[0] = heat_transport_variables.tturb
+                error_handling.fdiags[0] = heat_transport_variables.temp_turbine_in
                 error_handling.report_error(166)
 
             eta_thermal_electric = (
-                0.4347e0 * numpy.log(heat_transport_variables.tturb) - 2.5043e0
+                0.4347e0 * numpy.log(heat_transport_variables.temp_turbine_in)
+                - 2.5043e0
             )
 
         else:
@@ -2605,16 +2612,21 @@ class Power:
         if fwbs_variables.secondary_cycle_liq == 4:
             #  Supercritical CO2 cycle to be used
             #  Supercritical CO2 cycle correlation (C. Harrington)
-            #  Range of validity: 408 K < heat_transport_variables.tturb < 1023 K
-            heat_transport_variables.tturb = fwbs_variables.outlet_temp_liq - 20.0e0
-            if (heat_transport_variables.tturb < 408.0e0) or (
-                heat_transport_variables.tturb > 1023.0e0
+            #  Range of validity: 408 K < heat_transport_variables.temp_turbine_in < 1023 K
+            heat_transport_variables.temp_turbine_in = (
+                fwbs_variables.outlet_temp_liq - 20.0e0
+            )
+            if (heat_transport_variables.temp_turbine_in < 408.0e0) or (
+                heat_transport_variables.temp_turbine_in > 1023.0e0
             ):
                 error_handling.idiags[0] = 3
-                error_handling.fdiags[0] = heat_transport_variables.tturb
+                error_handling.fdiags[0] = heat_transport_variables.temp_turbine_in
                 error_handling.report_error(166)
 
-            etath_liq = 0.4347e0 * numpy.log(heat_transport_variables.tturb) - 2.5043e0
+            etath_liq = (
+                0.4347e0 * numpy.log(heat_transport_variables.temp_turbine_in)
+                - 2.5043e0
+            )
             return etath_liq
 
     def tfpwr(self, output: bool):

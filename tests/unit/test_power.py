@@ -2099,7 +2099,7 @@ class Power2Param(NamedTuple):
 
     fpumpshld: Any = None
 
-    tturb: Any = None
+    temp_turbine_in: Any = None
 
     p_net_electrical_mw: Any = None
 
@@ -2277,7 +2277,7 @@ class Power2Param(NamedTuple):
             p_blanket_pumping_mw=0,
             p_shield_thermal_secondary_mw=0,
             fpumpshld=0.0050000000000000001,
-            tturb=0,
+            temp_turbine_in=0,
             p_net_electrical_mw=0,
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
@@ -2379,7 +2379,7 @@ class Power2Param(NamedTuple):
             p_blanket_pumping_mw=0,
             p_shield_thermal_secondary_mw=0,
             fpumpshld=0.0050000000000000001,
-            tturb=0,
+            temp_turbine_in=0,
             p_net_electrical_mw=493.01760776192009,
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
@@ -2558,7 +2558,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fpumpshld", power2param.fpumpshld)
 
-    monkeypatch.setattr(heat_transport_variables, "tturb", power2param.tturb)
+    monkeypatch.setattr(
+        heat_transport_variables, "temp_turbine_in", power2param.temp_turbine_in
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "p_net_electrical_mw", power2param.p_net_electrical_mw

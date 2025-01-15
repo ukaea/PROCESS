@@ -838,7 +838,7 @@
     {
       "no": 166,
       "level": 2,
-      "message": "PLANT_THERMAL_EFFICIENCY: Turbine temperature tturb out of range of validity"
+      "message": "PLANT_THERMAL_EFFICIENCY: Turbine temperature temp_turbine_in out of range of validity"
     },
     {
       "no": 167,
