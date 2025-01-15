@@ -328,7 +328,7 @@ module fwbs_variables
   real(dp) :: pitch
   !! pitch of first wall cooling channels [m]
 
-  real(dp) :: fwinlet
+  real(dp) :: temp_fw_in
   !! inlet temperature of first wall coolant [K]
 
   real(dp) :: fwoutlet
@@ -745,7 +745,7 @@ module fwbs_variables
     fw_wall = 0.003D0
     afw = 0.006D0
     pitch = 0.02D0
-    fwinlet = 573.0D0
+    temp_fw_in = 573.0D0
     fwoutlet = 823.0D0
     fwpressure = 15.5D6
     tpeak = 873.0D0
