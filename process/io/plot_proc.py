@@ -2251,46 +2251,46 @@ def plot_header(axis, mfile_data, scan):
     data = [("", "", ""), ("", "", "")]
     count = 0
 
-    data = data + [(H, "D + T", "")]
+    data = [*data, (H, "D + T", "")]
     count += 1
 
-    data = data + [(He, "He", "")]
+    data = [*data, (He, "He", "")]
     count += 1
     if Be > 1e-10:
-        data = data + [(Be, "Be", "")]
+        data = [*data, (Be, "Be", "")]
         count += +1
     if C > 1e-10:
-        data = data + [(C, "C", "")]
+        data = [*data, (C, "C", "")]
         count += 1
     if N > 1e-10:
-        data = data + [(N, "N", "")]
+        data = [*data, (N, "N", "")]
         count += 1
     if O > 1e-10:
-        data = data + [(O, "O", "")]
+        data = [*data, (O, "O", "")]
         count += 1
     if Ne > 1e-10:
-        data = data + [(Ne, "Ne", "")]
+        data = [*data, (Ne, "Ne", "")]
         count += 1
     if Si > 1e-10:
-        data = data + [(Si, "Si", "")]
+        data = [*data, (Si, "Si", "")]
         count += 1
     if Ar > 1e-10:
-        data = data + [(Ar, "Ar", "")]
+        data = [*data, (Ar, "Ar", "")]
         count += 1
     if Fe > 1e-10:
-        data = data + [(Fe, "Fe", "")]
+        data = [*data, (Fe, "Fe", "")]
         count += 1
     if Ni > 1e-10:
-        data = data + [(Ni, "Ni", "")]
+        data = [*data, (Ni, "Ni", "")]
         count += 1
     if Kr > 1e-10:
-        data = data + [(Kr, "Kr", "")]
+        data = [*data, (Kr, "Kr", "")]
         count += 1
     if Xe > 1e-10:
-        data = data + [(Xe, "Xe", "")]
+        data = [*data, (Xe, "Xe", "")]
         count += 1
     if W > 1e-10:
-        data = data + [(W, "W", "")]
+        data = [*data, (W, "W", "")]
         count += 1
 
     if count > 11:

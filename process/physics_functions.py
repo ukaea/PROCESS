@@ -122,7 +122,7 @@ class FusionReactionRate:
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
     """
@@ -177,7 +177,7 @@ class FusionReactionRate:
 
         References:
             - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-              Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+              Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
               doi: https://doi.org/10.1088/0029-5515/32/4/i07.
         ‌
         """
@@ -694,7 +694,7 @@ def fusion_rate_integral(
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
 
@@ -748,7 +748,7 @@ def bosch_hale_reactivity(
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
     theta1 = (
@@ -1055,14 +1055,14 @@ def beam_fusion(
 
              References:
                 - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-                  Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+                  Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
                   doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
-                - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,
+                - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015-1103,
                   Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
 
                 - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-                  vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+                  vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
     ‌
     """
 
@@ -1182,16 +1182,16 @@ def beamcalc(
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-          vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+          vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
         - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
           International Series of Monographs on Physics, Volume 149.
 
-        - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,
+        - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015-1103,
           Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
 
     """
@@ -1254,7 +1254,7 @@ def beamcalc(
 
     # Source term representing the number of ions born per unit time per unit volume.
     # D.Baiquan et.al.  “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-    # vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+    # vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
     source_deuterium = beam_current_deuterium / (
         constants.electron_charge * plasma_volume
@@ -1343,7 +1343,7 @@ def fast_ion_pressure_integral(beam_energy: float, critical_energy: float) -> fl
 
     References:
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-          vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+          vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
         - W.A Houlberg, “Thermalization of an Energetic Heavy Ion in a Multi-species Plasma,” University of Wisconsin Fusion Technology Institute,
           Report UWFDM-103 1974, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm103.pdf
@@ -1394,7 +1394,7 @@ def alpha_power_beam(
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
     # Calculate the reactivity ratio

@@ -710,7 +710,7 @@ def main(args=None):
                     y_contour,
                     output_contour_z,
                     levels=np.linspace(
-                        list(filter(lambda i: i > 0.0, flat_output_z))[0],
+                        next(filter(lambda i: i > 0.0, flat_output_z)),
                         flat_output_z.max(),
                         50,
                     ),

@@ -64,7 +64,7 @@ class WaterUse:
             )
             / 100.0e0
         )
-        # Diehl et al. USGS Report 2013–5188, http://dx.doi.org/10.3133/sir20135188
+        # Diehl et al. USGS Report 2013-5188, http://dx.doi.org/10.3133/sir20135188
 
         water_usage_variables.volheat = (
             water_usage_variables.waterdens * water_usage_variables.latentheat
@@ -83,7 +83,7 @@ class WaterUse:
         # find water withdrawn from external source
         water_usage_variables.waterusetower = 1.4e0 * water_usage_variables.evapvol
         # Estimated as a ratio to evaporated water (averaged across obervered dataset)
-        #  as per Diehl et al. USGS Report 2014–5184, http://dx.doi.org/10.3133/sir20145184
+        #  as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
 
         # end break
 
@@ -99,7 +99,7 @@ class WaterUse:
 
     def cooling_water_body(self, wastetherm: float, output: bool):
         """Water evaporated in cooling through water bodies
-        Based on spreadsheet from Diehl et al. USGS Report 2013–5188, which includes
+        Based on spreadsheet from Diehl et al. USGS Report 2013-5188, which includes
         cooling coefficients found through fits across a dataset containing a wide range of
         temperatures, windspeeds, and heat loading:
         http://pubs.usgs.gov/sir/2013/5188/appendix/sir2013-5188_appendix4_fews_version_3.104.xlsx
@@ -232,7 +232,7 @@ class WaterUse:
             # find evaporation ratio: ratio of the heat used to evaporate water
             #   to the total heat discharged through the tower
             water_usage_variables.evapratio = deltaE / heatloadmet
-            # Diehl et al. USGS Report 2013–5188, http://dx.doi.org/10.3133/sir20135188
+            # Diehl et al. USGS Report 2013-5188, http://dx.doi.org/10.3133/sir20135188
 
             water_usage_variables.volheat = (
                 water_usage_variables.waterdens * water_usage_variables.latentheat
@@ -258,7 +258,7 @@ class WaterUse:
 
         # water volume withdrawn from external source depends on recirculation or 'once-through' system choice
         #   Estimated as a ratio to evaporated water (averaged across obervered dataset)
-        #   as per Diehl et al. USGS Report 2014–5184, http://dx.doi.org/10.3133/sir20145184
+        #   as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
 
         # recirculating water system:
         water_usage_variables.wateruserecirc = 1.0e0 * evapsum

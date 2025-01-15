@@ -331,7 +331,7 @@ class MFILEParser(abc.MutableMapping):
 
         # Only run iscan check if iscan exists
         try:
-            _first_key = list(self._mfile_data.keys())[0]
+            _first_key = next(iter(self._mfile_data.keys()))
             _second_key = list(self._mfile_data.keys())[1]
             _second_key_fp = list(self._mfile_data[_second_key])[8]
             _iscan_arr = self._mfile_data[_first_key]["iscan"]["value"]

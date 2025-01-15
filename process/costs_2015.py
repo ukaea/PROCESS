@@ -179,7 +179,6 @@ class Costs2015:
             self.output()
 
             for i in range(100):
-                # noqa: E741
                 nan_diags = [
                     self.s_label[i],
                     self.s_kref[i],
@@ -206,8 +205,8 @@ class Costs2015:
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
 
-        for i in range(21, 27):  # noqa: E741
-            self.s_cost_factor[i] = cost_variables.cost_factor_fwbs  # noqa: E741
+        for i in range(21, 27):
+            self.s_cost_factor[i] = cost_variables.cost_factor_fwbs
 
         # Enrichment
         # Costs based on the number of separative work units (SWU) required
@@ -358,7 +357,7 @@ class Costs2015:
 
         self.s_label[25] = "Blanket and shield materials and manufacturing"
         # The cost of making the blanket was estimated for PPCS A.
-        # This cost includes only manufacturing – not R&D, transport, or assembly in the reactor.
+        # This cost includes only manufacturing - not R&D, transport, or assembly in the reactor.
         # It includes the first wall, blanket and shield, but excludes the breeder and multiplier materials.
         self.s_cref[25] = 317.0e6
         #  Scale with steel mass in blanket + shield mass
@@ -389,12 +388,12 @@ class Costs2015:
         )
 
         po.oshead(self.outfile, "Buildings (M$)")
-        for i in range(9):  # noqa: E741
+        for i in range(9):
             self.ocost(
                 self.outfile,
-                self.s_label[i],  # noqa: E741
-                i + 1,  # noqa: E741
-                self.s_cost[i] / 1.0e6,  # noqa: E741
+                self.s_label[i],
+                i + 1,
+                self.s_cost[i] / 1.0e6,
             )
 
         po.oshead(self.outfile, "Land (M$)")

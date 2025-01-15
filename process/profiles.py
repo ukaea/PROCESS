@@ -179,7 +179,7 @@ class NProfile(Profile):
         the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
         This function for the average density can then be re-arranged to calculate the central plasma density n_0 / ncore.
         References:
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
         Authors:
             Kemp, CCFE, Culham Science Centre
             H Lux, CCFE, Culham Science Centre
@@ -268,7 +268,7 @@ class TProfile(Profile):
         Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (tprofile).
         If ipedestal = 0 the original parabolic profile form is used instead.
         References:
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
         Authors:
             R Kemp, CCFE, Culham Science Centre
             H Lux, CCFE, Culham Science Centre
@@ -315,7 +315,7 @@ class TProfile(Profile):
         the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
         This function for the average temperature can then be re-arranged to calculate the central plasma temeprature T_0 / tcore.
         References:
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308–349. https://doi.org/10.13182/FST11-A11650
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
         Authors:
             Kemp, CCFE, Culham Science Centre
             H Lux, CCFE, Culham Science Centre
