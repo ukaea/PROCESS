@@ -1,9 +1,9 @@
 """Run the tracked files and move into tracking directory."""
 
 import argparse
-from pathlib import Path
 import shutil
 import subprocess
+from pathlib import Path
 
 from tracking_data import ProcessTracker
 

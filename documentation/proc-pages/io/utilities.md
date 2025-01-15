@@ -65,11 +65,11 @@ A `.csv` file will be saved to the directory of the input file.
 
 
 
-## PROCESS 4-Page PDF Summary
+## PROCESS 6-Page PDF Summary
 
 > `process/io/plot_proc.py`
 
-A utility to produce a four-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles and TF coil layout and turn structure.
+A utility to produce a five-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles and TF coil layout and turn structure.
 
 ### Usage
 

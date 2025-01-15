@@ -1,7 +1,7 @@
 # Radial and Vertical Build
 
 Simplified scale diagrams of the vertical and horizontal cross-sections of the machine can be
-output in the `2-page summary` using the utility `plot_proc.py` (currently stored in `process/process/io`).  
+output in the `6-page summary` using the utility `plot_proc.py` (currently stored in `process/process/io`).  
 
 The coordinate system is $(R,Z)$ system, where $R$ is the radial distance from the vertical
 centreline (axis) of the torus, and $Z$ is the vertical distance from the equatorial midplane.

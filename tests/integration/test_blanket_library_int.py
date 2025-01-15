@@ -1,10 +1,15 @@
 import pytest
+
+from process.blanket_library import BlanketLibrary
 from process.fortran import (
-    physics_variables as pv,
-    fwbs_variables as fwbs,
     build_variables as bv,
 )
-from process.blanket_library import BlanketLibrary
+from process.fortran import (
+    fwbs_variables as fwbs,
+)
+from process.fortran import (
+    physics_variables as pv,
+)
 from process.fw import Fw
 
 

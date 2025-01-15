@@ -1,22 +1,22 @@
 """Unit tests for ife."""
 
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-import pytest
 import numpy
+import pytest
 
-from process.ife import IFE
 from process.availability import Availability
 from process.costs import Costs
 from process.fortran import (
     build_variables,
-    ife_variables,
+    buildings_variables,
     cost_variables,
     fwbs_variables,
-    physics_variables,
     heat_transport_variables,
-    buildings_variables,
+    ife_variables,
+    physics_variables,
 )
+from process.ife import IFE
 
 
 @pytest.fixture

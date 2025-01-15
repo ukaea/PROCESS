@@ -1,4 +1,5 @@
 """Integration tests for plot_scans.py."""
+
 from process.io import plot_scans
 
 

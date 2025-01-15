@@ -1,13 +1,15 @@
-from process.fortran import physics_variables
-from process.fortran import times_variables
-from process.fortran import pfcoil_variables
-from process.fortran import constraint_variables
-from process.fortran import constants
-from process.fortran import pulse_variables
-from process.fortran import numerics
-from process.fortran import pf_power_variables
+from process.fortran import (
+    constants,
+    constraint_variables,
+    error_handling,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    times_variables,
+)
 from process.fortran import process_output as po
-from process.fortran import error_handling
 
 
 class Pulse:
@@ -150,7 +152,7 @@ class Pulse:
 
         vburn = (
             physics_variables.plasma_current
-            * physics_variables.rplas
+            * physics_variables.res_plasma
             * physics_variables.inductive_current_fraction
             * physics_variables.csawth
         )
@@ -170,7 +172,6 @@ class Pulse:
         #  Output section
 
         if output:
-
             po.osubhd(self.outfile, "Volt-second considerations:")
 
             po.ovarre(

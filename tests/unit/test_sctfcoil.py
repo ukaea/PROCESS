@@ -1,16 +1,19 @@
-import pytest
-import numpy
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-from process.fortran import sctfcoil_module
-from process.fortran import tfcoil_variables
-from process.fortran import global_variables
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import fwbs_variables
-from process.fortran import divertor_variables
-from process.sctfcoil import Sctfcoil
+import numpy
+import pytest
+
 from process import sctfcoil as sctf
+from process.fortran import (
+    build_variables,
+    divertor_variables,
+    fwbs_variables,
+    global_variables,
+    physics_variables,
+    sctfcoil_module,
+    tfcoil_variables,
+)
+from process.sctfcoil import Sctfcoil
 
 
 @pytest.fixture
@@ -6475,14 +6478,12 @@ class PlaneStressParam(NamedTuple):
             n_radial_array=100,
             nlayers=3,
             nu=numpy.array([0.3, 0.34006912702297704, 0.3]),
-            rad=numpy.array(
-                [
-                    3.6732023601326333,
-                    3.7688101124061717,
-                    3.7649909451102674,
-                    3.8249909451102675,
-                ]
-            ),
+            rad=numpy.array([
+                3.6732023601326333,
+                3.7688101124061717,
+                3.7649909451102674,
+                3.8249909451102675,
+            ]),
             ey=numpy.array([2.05000000e11, 21085960915.80571, 2.05000000e11]),
             j=numpy.array([0.00000000e00, -2245759961.294637, 0.00000000e00]),
             expected_sigr=[

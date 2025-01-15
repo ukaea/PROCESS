@@ -1,22 +1,23 @@
-import pytest
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-from process.hcpb import CCFE_HCPB
+import pytest
+
 from process.blanket_library import BlanketLibrary
-from process.fw import Fw
 from process.fortran import (
-    fwbs_variables,
     build_variables,
-    global_variables,
-    tfcoil_variables,
-    physics_variables,
     ccfe_hcpb_module,
-    primary_pumping_variables,
-    current_drive_variables,
-    heat_transport_variables,
     constraint_variables,
+    current_drive_variables,
     divertor_variables,
+    fwbs_variables,
+    global_variables,
+    heat_transport_variables,
+    physics_variables,
+    primary_pumping_variables,
+    tfcoil_variables,
 )
+from process.fw import Fw
+from process.hcpb import CCFE_HCPB
 
 
 @pytest.fixture

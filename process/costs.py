@@ -1,22 +1,27 @@
-from process.fortran import constants, cost_variables
-from process.fortran import process_output as po
-from process.fortran import ife_variables, fwbs_variables
-from process.fortran import tfcoil_variables
-from process.fortran import physics_variables
-from process.fortran import buildings_variables
-from process.fortran import build_variables
-from process.fortran import structure_variables
-from process.fortran import divertor_variables
-from process.fortran import pfcoil_variables
-from process.fortran import current_drive_variables
-from process.fortran import vacuum_variables
-from process.fortran import heat_transport_variables
-from process.fortran import pf_power_variables
-from process.fortran import pulse_variables
-from process.fortran import times_variables
-from process.fortran import error_handling
-from process.variables import AnnotatedVariable
 import numpy
+
+from process.fortran import (
+    build_variables,
+    buildings_variables,
+    constants,
+    cost_variables,
+    current_drive_variables,
+    divertor_variables,
+    error_handling,
+    fwbs_variables,
+    heat_transport_variables,
+    ife_variables,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    structure_variables,
+    tfcoil_variables,
+    times_variables,
+    vacuum_variables,
+)
+from process.fortran import process_output as po
+from process.variables import AnnotatedVariable
 
 
 class Costs:
@@ -1443,7 +1448,6 @@ class Costs:
             #  Superconductor ($/m)
 
             if cost_variables.supercond_cost_model == 0:
-
                 costtfsc = (
                     cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
                     * tfcoil_variables.whtconsc

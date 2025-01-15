@@ -1,22 +1,17 @@
-import pytest
+from typing import Any, NamedTuple
+
 import numpy
-from typing import NamedTuple, Any
+import pytest
 
-
-from process.fortran import numerics
-
-from process.fortran import physics_variables
-
-from process.fortran import pulse_variables
-
-from process.fortran import pf_power_variables
-
-from process.fortran import times_variables
-
-from process.fortran import constraint_variables
-
-from process.fortran import pfcoil_variables
-
+from process.fortran import (
+    constraint_variables,
+    numerics,
+    pf_power_variables,
+    pfcoil_variables,
+    physics_variables,
+    pulse_variables,
+    times_variables,
+)
 from process.pulse import Pulse
 
 
@@ -31,7 +26,6 @@ def pulse():
 
 
 class TohswgParam(NamedTuple):
-
     t_current_ramp_up_min: Any = None
 
     vpfskv: Any = None
@@ -70,8 +64,7 @@ class TohswgParam(NamedTuple):
 
 
 class BurnParam(NamedTuple):
-
-    rplas: Any = None
+    res_plasma: Any = None
 
     vsres: Any = None
 
@@ -1275,7 +1268,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
     "burnparam",
     (
         BurnParam(
-            rplas=3.2347283861249307e-09,
+            res_plasma=3.2347283861249307e-09,
             vsres=59.392760827339345,
             vsind=284.23601098215397,
             vsbn=0,
@@ -1291,7 +1284,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             expected_tburn=0,
         ),
         BurnParam(
-            rplas=3.2347283861249307e-09,
+            res_plasma=3.2347283861249307e-09,
             vsres=59.392760827339345,
             vsind=284.23601098215397,
             vstot=-718.9849676846776,
@@ -1321,7 +1314,7 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "rplas", burnparam.rplas)
+    monkeypatch.setattr(physics_variables, "res_plasma", burnparam.res_plasma)
 
     monkeypatch.setattr(physics_variables, "vsres", burnparam.vsres)
 

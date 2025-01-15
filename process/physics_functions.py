@@ -1,11 +1,12 @@
 import logging
+from dataclasses import dataclass
+
 import numpy as np
 from scipy import integrate
-from dataclasses import dataclass
-from process.fortran import physics_variables, physics_module, constants
-from process.plasma_profiles import PlasmaProfile
-import process.impurity_radiation as impurity
 
+import process.impurity_radiation as impurity
+from process.fortran import constants, physics_module, physics_variables
+from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -722,10 +723,7 @@ def fusion_rate_integral(
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
     # just the volume averged ion density.
     fusion_integral = (
-        2.0
-        * plasma_profile.teprofile.profile_x
-        * sigv
-        * density_profile_normalised**2
+        2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
     )
 
     return fusion_integral
@@ -933,7 +931,7 @@ def fast_alpha_beta(
     tin: float,
     alpha_power_density_total: float,
     alpha_power_density_plasma: float,
-    ifalphap: int,
+    i_beta_fast_alpha: int,
 ) -> float:
     """
     Calculate the fast alpha beta component.
@@ -950,27 +948,38 @@ def fast_alpha_beta(
         tin (float): Density-weighted ion temperature (keV).
         alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
         alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
-        ifalphap (int): Switch for fast alpha pressure method.
+        i_beta_fast_alpha (int): Switch for fast alpha pressure method.
 
     Returns:
         float: Fast alpha beta component.
+
+    Notes:
+        - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, <T> = 5-20 keV
+
+
+    References:
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+          https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+
+        - Uckan, N. A., Tolliver, J. S., Houlberg, W. A., and Attenberger, S. E.
+          Influence of fast alpha diffusion and thermal alpha buildup on tokamak reactor performance.
+          United States: N. p., 1987. Web.https://www.osti.gov/servlets/purl/5611706
+
     """
-    # Determine average fast alpha density
 
     # Determine average fast alpha density
     if physics_variables.f_deuterium < 1.0:
-
-        betath = (
-            2.0e3
+        beta_thermal = (
+            2.0
             * constants.rmu0
-            * constants.electron_charge
+            * constants.kiloelectron_volt
             * (dene * ten + dnitot * tin)
             / (bt**2 + bp**2)
         )
 
         # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
         # IPDG89 fast alpha scaling
-        if ifalphap == 0:
+        if i_beta_fast_alpha == 0:
             fact = min(0.3, 0.29 * (deni / dene) ** 2 * ((ten + tin) / 20.0 - 0.37))
 
         # Modified scaling, D J Ward
@@ -984,12 +993,12 @@ def fast_alpha_beta(
 
         fact = max(fact, 0.0)
         fact2 = alpha_power_density_total / alpha_power_density_plasma
-        betaft = betath * fact * fact2
+        beta_fast_alpha = beta_thermal * fact * fact2
 
     else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0
-        betaft = 0.0
+        beta_fast_alpha = 0.0
 
-    return betaft
+    return beta_fast_alpha
 
 
 def beam_fusion(
@@ -1496,9 +1505,7 @@ def _hot_beam_fusion_reaction_rate_integrand(
     beam_velcoity = critical_velocity * velocity_ratio
 
     # Calculate the beam kinetic energy per amu and normalise to keV
-    xvcs = (
-        beam_velcoity**2 * constants.atomic_mass_unit / (constants.kiloelectron_volt)
-    )
+    xvcs = beam_velcoity**2 * constants.atomic_mass_unit / (constants.kiloelectron_volt)
 
     # Calculate the fusion reaction cross-section from beam kinetic energy
     cross_section = _beam_fusion_cross_section(xvcs)

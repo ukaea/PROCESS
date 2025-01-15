@@ -3,9 +3,10 @@
 import os
 from pathlib import Path
 from shutil import copy, copytree
-import pytest
-import pandas
+
 import numpy as np
+import pandas
+import pytest
 from testbook import testbook
 
 

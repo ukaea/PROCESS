@@ -388,9 +388,9 @@ where \(B_0\) is the axial vacuum toroidal field, and \(\beta\) is
 defined with respect to the total equilibrium \(\mathbf{B}\)-field
 \footnote{T. C. Hender et al., `Physics Assessment for the European
   Reactor Study', AEA Fusion Report AEA FUS 172 (1992)}. The beta
-coefficient \(g\) is set using input parameter \texttt{dnbeta}. To apply
+coefficient \(g\) is set using input parameter \texttt{beta_norm_max}. To apply
 the beta limit, constraint equation no. 24 should be turned on with
-iteration variable no. 36 (\texttt{fbetatry}). The limit can be applied
+iteration variable no. 36 (\texttt{fbeta_max}). The limit can be applied
 to either the total plasma beta, in which case switch \texttt{iculbl}
 should be set to 0, to only the thermal component of the plasma beta, in
 which case \texttt{iculbl} should be set to 1, or to the thermal plus
@@ -401,7 +401,7 @@ neutral beam components, in which case \texttt{iculbl} should be set to
 coefficient}{Aspect ratio scaling of beta g coefficient}}\label{aspect-ratio-scaling-of-beta-g-coefficient}
 
 Switch \texttt{gtscale} determines whether the beta \(g\) coefficient
-\texttt{dnbeta} should scale with aspect ratio
+\texttt{beta_norm_max} should scale with aspect ratio
 (\(\mathtt{gtscale \not= 0}\)), or be fixed at the input value
 (\texttt{gtscale\ =\ 0\}}). Note that \texttt{gtscale} is over-ridden if
 \texttt{iprofile} = 1.
@@ -411,14 +411,14 @@ Switch \texttt{gtscale} determines whether the beta \(g\) coefficient
 
 To apply a limit to the value of \(\epsilon.\beta_p\), where
 \(\epsilon = a/R\) is the inverse aspect ratio, constraint equation no.
-6 should be turned on with iteration variable no. 8 (\texttt{fbeta}).
+6 should be turned on with iteration variable no. 8 (\texttt{fbeta_poloidal_eps}).
 The limiting value of \(\epsilon.\beta_p\) should be set using input
-parameter \texttt{epbetmax}.
+parameter \texttt{beta_poloidal_eps_max}.
 
 \subsection{Fast Alpha Pressure
 Contribution}\label{fast-alpha-pressure-contribution}
 
-Switch \texttt{ifalphap} may be used to select the model used to
+Switch \texttt{i_beta_fast_alpha} may be used to select the model used to
 calculate the pressure contribution from the fast alpha particles, there
 are two options 1\footnote{N.A. Uckan and ITER Physics Group, `ITER
   Physics Design Guidelines: 1989', ITER Documentation Series, No. 10,
@@ -428,10 +428,10 @@ are two options 1\footnote{N.A. Uckan and ITER Physics Group, `ITER
 \[\begin{aligned}
 \frac{\beta_{\alpha}}{\beta_{th}} & = 0.29 \, \left( \langle T_{10} \rangle -
   0.37 \right) \, \left( \frac{n_{DT}}{n_e} \right)^2
-\hspace{20mm} \mbox{ifalphap = 0} \\
+\hspace{20mm} \mbox{i_beta_fast_alpha = 0} \\
 \frac{\beta_{\alpha}}{\beta_{th}} & = 0.26 \, \left( \langle T_{10} \rangle -
   0.65 \right)^{0.5} \, \left( \frac{n_{DT}}{n_e} \right)^2
-\hspace{16mm} \mbox{ifalphap = 1 (default)}
+\hspace{16mm} \mbox{i_beta_fast_alpha = 1 (default)}
 \end{aligned}\]
 
 The latter model is a better estimate at higher temperatures.
@@ -568,7 +568,7 @@ profile peaking factor \texttt{alphaj} is consistent with the input
 values for the safety factor on axis and at the plasma edge (\texttt{q0}
 and \texttt{q}, respectively), the plasma internal inductance \(l_i\) is
 consistent with this \texttt{alphaj}, and the beta \(g\) coefficient
-\texttt{dnbeta} scales with \(l_i\).
+\texttt{beta_norm_max} scales with \(l_i\).
 
 It is recommended that current scaling law \texttt{icurr\ =\ 4} is used
 if \texttt{iprofile\ =\ 1}. Switch \texttt{gtscale} is over-ridden if
@@ -994,18 +994,18 @@ is derived directly from the energy confinement scaling law.
 \texttt{iradloss\ =\ 0} -- Total power lost is scaling power plus
 radiation
 
-\texttt{pscaling\ +\ pradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pohmpv\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ +\ pradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/plasma_volume}
 
 \texttt{iradloss\ =\ 1} -- Total power lost is scaling power plus core
 radiation only
 
-\texttt{pscaling\ +\ pcoreradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pohmpv\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ +\ pcoreradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/plasma_volume}
 
 \texttt{iradloss\ =\ 2} -- Total power lost is scaling power only, with
 no additional allowance for radiation. This is not recommended for power
 plant models.
 
-\texttt{pscaling\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pohmpv\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/plasma_volume}
 
 \subsection{Plasma Core Power Balance}\label{plasma-core-power-balance}
 
@@ -1365,7 +1365,7 @@ Effects}\label{neo-classical-correction-effects}
 
 Switch \texttt{ires} controls whether neo-classical (trapped particle)
 effects are included in the calculation of the plasma resistance and
-ohmic heating power in routine \texttt{pohm}, which is called by routine
+ohmic heating power in routine \texttt{plasma_ohmic_heating}, which is called by routine
 \texttt{physics}. If \texttt{ires\ =\ 1}, these effects are included.
 Note that the scaling used is only valid for aspect ratios between 2.5
 and 4, and it is possible for the plasma resistance to be wrongly

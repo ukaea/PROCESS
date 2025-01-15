@@ -239,7 +239,7 @@ icc = 5
 * JUSTIFICATION: Used to enforce Greenwald limit
 * VARIABLES:     dnelimt & dnla calculated in-situ
 
-idensl = 7
+i_density_limit = 7
 * DESCRIPTION:   Switch for Density Limit to Enforce (icc=5) (7: Greenwald Limit)
 * JUSTIFICATION: Enforce Greenwald limit
 
@@ -292,9 +292,9 @@ tratio = 1.0
 *icc = 6
 * DESCRIPTION:   Equation for epsilon beta-poloidal upper limit
 * JUSTIFICATION: Turned off, not in use 
-* VARIABLES:     eps,fbeta Rest calculated in-situ
+* VARIABLES:     eps,fbeta_poloidal_eps Rest calculated in-situ
 
-*epbetmax
+*beta_poloidal_eps_max
 * DESCRIPTION:   Max epsilon*beta value
 * JUSTIFICATION: Turned off, not in use. icc=6.
 
@@ -305,7 +305,7 @@ icc = 24
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     beta calculated in-situ
 
-*betalim
+*beta_max
 * DESCRIPTION:   Plasma beta upper limit
 * JUSTIFICATION: Turned off, not in use. icc=24. Allow to be calculated in-situ
 
@@ -314,10 +314,10 @@ beta = 0.2
 boundl(5) = 0.01
 boundu(5) = 1.0
 * DESCRIPTION:   Total Plasma Beta, 
-* JUSTIFICATION: Beta is limited by dnbeta
+* JUSTIFICATION: Beta is limited by beta_norm_max
 
 ixc = 36
-fbetatry = 0.75
+fbeta_max = 0.75
 boundl(36) = 0.01
 boundu(36) = 1.0
 * DESCRIPTION:   f-value for Beta Limit
@@ -325,7 +325,7 @@ boundu(36) = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-iculbl = 3
+i_beta_component = 3
 * DESCRIPTION:   Switch for Beta Limit Scaling (icc=24) (3: Apply Limit to Toroidal)
 * JUSTIFICATION: Total beta is used to agree with literature limit
 * REFERENCE:     Ono & Kaita (2015), Physics of Plasmas, 22, 040501
@@ -334,7 +334,7 @@ iculbl = 3
 * = 2 apply limit to thermal + neutral beam beta
 * = 3 apply limit to toroidal beta
 
-dnbeta = 5.0 
+beta_norm_max = 5.0 
 * DESCRIPTION:   (Troyon-like) coefficient for beta scaling
 * JUSTIFICATION: 
 * REFERENCE:     Ono & Kaita (2015), Physics of Plasmas, 22, 040501
@@ -342,9 +342,9 @@ dnbeta = 5.0
 
 *gtscale = 
 * DESCRIPTION:   Flag to scale beta coefficient with aspect, iprofile=0 only
-* = 0 do not scale dnbeta with eps
-* = 1 scale dnbeta with aspect, original scaling
-* = 2 scale dnbeta with aspect, Menard scaling
+* = 0 do not scale beta_norm_max with eps
+* = 1 scale beta_norm_max with aspect, original scaling
+* = 2 scale beta_norm_max with aspect, Menard scaling
 * JUSTIFICATION: Working at fixed normalized beta, default = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -352,9 +352,9 @@ dnbeta = 5.0
 *icc = 84
 * DESCRIPTION:   Constraint equation for lower limit of beta
 * JUSTIFICATION: Turned off, do not require a beta lower limit
-* VARIABLES:     betalim_lower (Lower limit for beta). beta,betaft calculated in-situ
+* VARIABLES:     beta_min (Lower limit for beta). beta,betaft calculated in-situ
 
-*betalim_lower = 
+*beta_min = 
 * DESCRIPTION:   Plasma beta lower limit
 * JUSTIFICATION: Turned off, not in use, Used with icc=84 to enforce beta limit
 
@@ -363,15 +363,15 @@ dnbeta = 5.0
 *icc = 48
 * DESCRIPTION:   Constraint equation for poloidal beta upper limit
 * JUSTIFICATION: Turned off, do not care about poloidal beta
-* VARIABLES:     betpmx, fbetap. betap calculated in-situ
+* VARIABLES:     beta_poloidal_max, fbeta_poloidal. beta_poloidal calculated in-situ
 
-*betpmx = 
+*beta_poloidal_max = 
 * DESCRIPTION:   Maximum poloidal beta (`constraint equation 48`) (default = 0.19)
 * JUSTIFICATION: Not set, not using icc = 48
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*ifalphap = 
+*i_beta_fast_alpha = 
 * DESCRIPTION:   Switch for fast alpha pressure calculation
 * JUSTIFICATION: Not worried about alpha pressure, default =1, (modified fit)
 
@@ -2975,8 +2975,8 @@ i_pfirsch_schluter_current = 1
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 iprofile = 0
-* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli dnbeta)
-* =0 use input values for alphaj, rli, dnbeta (but see gtscale option)
+* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli beta_norm_max)
+* =0 use input values for alphaj, rli, beta_norm_max (but see gtscale option)
 * =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
 * JUSTIFICATION: These consistency equations don't hold for STs
 * REFERENCE:     

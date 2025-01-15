@@ -1,18 +1,18 @@
-import math
 import logging
+import math
 
 from process import fortran as ft
-from process.fortran import cost_variables as cv
-from process.fortran import physics_variables as pv
-from process.fortran import ife_variables as ifev
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import divertor_variables as dv
-from process.fortran import tfcoil_variables as tfv
 from process.fortran import constraint_variables as ctv
-from process.fortran import times_variables as tv
-from process.fortran import process_output as po
-from process.fortran import vacuum_variables as vacv
+from process.fortran import cost_variables as cv
+from process.fortran import divertor_variables as dv
+from process.fortran import fwbs_variables as fwbsv
+from process.fortran import ife_variables as ifev
 from process.fortran import maths_library
+from process.fortran import physics_variables as pv
+from process.fortran import process_output as po
+from process.fortran import tfcoil_variables as tfv
+from process.fortran import times_variables as tv
+from process.fortran import vacuum_variables as vacv
 
 logger = logging.getLogger(__name__)
 

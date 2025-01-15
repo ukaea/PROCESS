@@ -9,15 +9,16 @@ MFILE.DAT
 
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
 import argparse
 from argparse import RawTextHelpFormatter
 from pathlib import Path
-from process.io.variable_metadata import var_dicts as meta
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 # PROCESS libraries
 import process.io.mfile as mf
+from process.io.variable_metadata import var_dicts as meta
 
 
 def parse_args(args):
@@ -119,9 +120,9 @@ def get_radial_build(m_file):
 
     for ii in range(isweep):
         if m_file.data["ifail"].get_scan(ii + 1) == 1:
-            radial_build.append(
-                [m_file.data[rl].get_scan(ii + 1) for rl in radial_labels]
-            )
+            radial_build.append([
+                m_file.data[rl].get_scan(ii + 1) for rl in radial_labels
+            ])
 
     radial_build = np.array(radial_build)
 
@@ -159,7 +160,7 @@ def main(args=None):
         "fqval",
         "te",
         "boundu(15)",
-        "dnbeta",
+        "beta_norm_max",
         "bootstrap_current_fraction_max",
         "boundu(10)",
         "fiooic",
@@ -227,7 +228,7 @@ def main(args=None):
         "",
         "fvs",  # actaully lower bound fvs
         "vburn",
-        "rplas",
+        "res_plasma",
     ]
 
     # "plasma_res_factor"

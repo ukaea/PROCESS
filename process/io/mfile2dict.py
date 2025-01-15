@@ -11,13 +11,11 @@
 #   @date   :   last modified 2021-02-22                                      #
 #                                                                             #
 ###############################################################################
-from typing import Dict, List, Any
-from collections import OrderedDict
-from collections import abc
-import re
 import logging
 import os
-
+import re
+from collections import OrderedDict, abc
+from typing import Any, Dict, List
 
 MFILE_END = "# Copy of PROCESS Input Follows #"
 VETO_LIST = [" # PROCESS found a feasible solution #"]
@@ -229,7 +227,7 @@ class MFILEParser(abc.MutableMapping):
         """
         if not os.path.exists(mfile_addr):
             raise FileNotFoundError(
-                "Could not open MFILE '{}', " "file does not exist.".format(mfile_addr)
+                "Could not open MFILE '{}', file does not exist.".format(mfile_addr)
             )
 
         self._logger.info("Parsing MFILE: %s", mfile_addr)

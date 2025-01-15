@@ -186,7 +186,7 @@ module numerics
   !!  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)
   !!  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)
   !!  <LI> (83) Radial build consistency for stellarators (itv 172 f_avspace)
-  !!  <LI> (84) Lower limit for beta (itv 173 fbetatry_lower)
+  !!  <LI> (84) Lower limit for beta (itv 173 fbeta_min)
   !!  <LI> (85) Constraint for CP lifetime
   !!  <LI> (86) Constraint for TF coil turn dimension
   !!  <LI> (87) Constraint for cryogenic power
@@ -209,7 +209,7 @@ module numerics
   !! <LI> ( 5) beta
   !! <LI> ( 6) dene
   !! <LI> ( 7) rnbeam
-  !! <LI> ( 8) fbeta (f-value for equation 6)
+  !! <LI> ( 8) fbeta_poloidal_eps (f-value for equation 6)
   !! <LI> ( 9) fdene (f-value for equation 5)
   !! <LI> (10) hfact
   !! <LI> (11) pheat
@@ -237,7 +237,7 @@ module numerics
   !! <LI> (33) fportsz (f-value for equation 20)
   !! <LI> (34) fdivcol (f-value for equation 22)
   !! <LI> (35) fpeakb (f-value for equation 25)
-  !! <LI> (36) fbetatry (f-value for equation 24)
+  !! <LI> (36) fbeta_max (f-value for equation 24)
   !! <LI> (37) coheof
   !! <LI> (38) fjohc (f-value for equation 26)
   !! <LI> (39) fjohc0 (f-value for equation 27)
@@ -280,7 +280,7 @@ module numerics
   !! <LI> (76) NOT USED
   !! <LI> (77) NOT USED
   !! <LI> (78) NOT USED
-  !! <LI> (79) fbetap (f-value for equation 48)
+  !! <LI> (79) fbeta_poloidal (f-value for equation 48)
   !! <LI> (80) NOT USED
   !! <LI> (81) edrive
   !! <LI> (82) drveff
@@ -362,7 +362,7 @@ module numerics
   !! <LI> (158) croco_thick : Thickness of CroCo copper tube (m)
   !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)
   !! <LI> (160) f_avspace (f-value for equation 83)
-  !! <LI> (161) fbetatry_lower (f-value for equation 84)
+  !! <LI> (161) fbeta_min (f-value for equation 84)
   !! <LI> (162) r_cp_top : Top outer radius of the centropost (ST only) (m)
   !! <LI> (163) f_t_turn_tf : f-value for TF coils WP trurn squared dimension constraint
   !! <LI> (164) fcryo_plant_power : f-value for cryogenic plant power
@@ -538,7 +538,7 @@ contains
       'ne0 > neped                      ', &
       'toroidalgap >  tftort            ', &
       'available_space > required_space ', &
-      'beta > betalim_lower             ', &
+      'beta > beta_min                  ', &
       'CP lifetime                      ', &
       'TFC turn dimension               ', &
       'Cryogenic plant power            ', &

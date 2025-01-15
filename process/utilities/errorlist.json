@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 287,
+  "n_errortypes": 288,
   "errors": [
     {
       "no": 1,
@@ -403,12 +403,12 @@
     {
       "no": 79,
       "level": 3,
-      "message": "CULDLM: Illegal value for idensl"
+      "message": "calculate_density_limit: Illegal value for i_density_limit"
     },
     {
       "no": 80,
       "level": 2,
-      "message": "CULDLM: qcyl < 4/3; dlimit(4) set to zero; model 5 will be enforced instead"
+      "message": "calculate_density_limit: qcyl < 4/3; dlimit(4) set to zero; model 5 will be enforced instead"
     },
     {
       "no": 81,
@@ -423,7 +423,7 @@
     {
       "no": 83,
       "level": 2,
-      "message": "POHM: Negative plasma resistance rplas"
+      "message": "POHM: Negative plasma resistance res_plasma"
     },
     {
       "no": 84,
@@ -1444,6 +1444,11 @@
       "no": 287,
       "level": 2,
       "message": "[pfcoil][cntrpost]: fjohc0 shouldn't be above 0.7 for engineering reliability."
+    },
+    {
+      "no": 288,
+      "level": 3,
+      "message": "PFCOIL: ipfloc(i) should not be 1 if iohcl=0"
     }
   ]
 }

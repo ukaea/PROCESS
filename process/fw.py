@@ -1,14 +1,18 @@
 import numpy as np
 
+from process.coolprop_interface import FluidProperties
 from process.fortran import (
     constants,
-    fwbs_variables,
-    error_handling as eh,
-    process_output as po,
     error_handling,
+    fwbs_variables,
+)
+from process.fortran import (
+    error_handling as eh,
+)
+from process.fortran import (
+    process_output as po,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from process.coolprop_interface import FluidProperties
 
 
 class Fw:

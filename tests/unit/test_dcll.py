@@ -1,16 +1,17 @@
-import pytest
-from typing import NamedTuple, Any
+from typing import Any, NamedTuple
 
-from process.dcll import DCLL
+import pytest
+
 from process.blanket_library import BlanketLibrary
-from process.fw import Fw
+from process.dcll import DCLL
 from process.fortran import (
+    build_variables,
     current_drive_variables,
+    dcll_module,
     fwbs_variables,
     physics_variables,
-    build_variables,
-    dcll_module,
 )
+from process.fw import Fw
 
 
 @pytest.fixture

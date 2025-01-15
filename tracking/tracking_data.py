@@ -31,27 +31,32 @@ If the variable is not a fortran module variable, ensure to override its parent 
 e.g. FOO.bar says `bar`'s parent module is `FOO`.
 """
 
-import datetime
-import logging
-import pathlib
-import json
-import itertools
-import pandas as pd
-import inspect
 import argparse
+import datetime
+import inspect
+import itertools
+import json
+import logging
 import math
-from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, HoverTool, DatetimeTickFormatter
-from bokeh.layouts import gridplot
-from bokeh.models.widgets import Panel, Tabs
-from bokeh.palettes import Category10
-from bokeh.resources import CDN
-from bokeh.embed import file_html
+import pathlib
 
 import git
+import pandas as pd
+from bokeh.embed import file_html
+from bokeh.layouts import gridplot
+from bokeh.models import (
+    ColumnDataSource,
+    DatetimeTickFormatter,
+    HoverTool,
+    TabPanel,
+    Tabs,
+)
+from bokeh.palettes import Category10
+from bokeh.plotting import figure
+from bokeh.resources import CDN
 
-from process.io import mfile as mf
 from process import fortran
+from process.io import mfile as mf
 
 logging.basicConfig(level=logging.INFO, filename="tracker.log")
 logger = logging.getLogger("PROCESS Tracker")
@@ -427,14 +432,12 @@ def plot_tracking_data(database):
             df["title"].to_numpy()
         )  # all scenarios this variable is tracked in
 
-        figur = figure(
-            title=variable, x_axis_type="datetime", plot_width=600, plot_height=600
-        )
+        figur = figure(title=variable, x_axis_type="datetime", width=600, height=600)
         figur.xaxis.formatter = DatetimeTickFormatter(
-            hours=["%d %B %Y"],
-            days=["%d %B %Y"],
-            months=["%d %B %Y"],
-            years=["%d %B %Y"],
+            hours="%d %B %Y",
+            days="%d %B %Y",
+            months="%d %B %Y",
+            years="%d %B %Y",
         )
         figur.xaxis.major_label_orientation = math.pi / 4
 
@@ -503,7 +506,7 @@ def plot_tracking_data(database):
         else:
             gplot = gridplot([figs[i : i + 2] for i in range(0, len(figs) - 1, 2)])
 
-        panels.append(Panel(child=gplot, title=parent_module_name))
+        panels.append(TabPanel(child=gplot, title=parent_module_name))
 
     tabs = Tabs(tabs=panels)
 

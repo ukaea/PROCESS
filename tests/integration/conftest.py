@@ -2,10 +2,12 @@
 
 Define fixtures that will be shared across integration test modules.
 """
-import pytest
+
+import os
 from pathlib import Path
 from shutil import copy
-import os
+
+import pytest
 
 
 @pytest.fixture

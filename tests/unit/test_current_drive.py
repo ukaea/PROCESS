@@ -1,14 +1,14 @@
+from typing import Any, NamedTuple
+
 import pytest
-from typing import NamedTuple, Any
 
-
-from process.fortran import (
-    current_drive_variables,
-    cost_variables,
-    physics_variables,
-    heat_transport_variables,
-)
 from process.current_drive import CurrentDrive
+from process.fortran import (
+    cost_variables,
+    current_drive_variables,
+    heat_transport_variables,
+    physics_variables,
+)
 from process.plasma_profiles import PlasmaProfile
 
 
@@ -167,7 +167,7 @@ class CudrivParam(NamedTuple):
 
     i_ignited: Any = None
 
-    pohmmw: Any = None
+    p_plasma_ohmic_mw: Any = None
 
     fusion_power: Any = None
 
@@ -276,7 +276,7 @@ class CudrivParam(NamedTuple):
             ipedestal=1,
             aux_current_fraction=0.12364081253383186,
             i_ignited=0,
-            pohmmw=0,
+            p_plasma_ohmic_mw=0,
             fusion_power=0,
             inductive_current_fraction=0.59999999999999998,
             fvsbrnni=0.40000000000000002,
@@ -366,7 +366,7 @@ class CudrivParam(NamedTuple):
             ipedestal=1,
             aux_current_fraction=0.12364081253383186,
             i_ignited=0,
-            pohmmw=0.76707314489379119,
+            p_plasma_ohmic_mw=0.76707314489379119,
             fusion_power=1051.6562748933977,
             inductive_current_fraction=0.59999999999999998,
             fvsbrnni=0.40000000000000002,
@@ -572,7 +572,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(physics_variables, "i_ignited", cudrivparam.i_ignited)
 
-    monkeypatch.setattr(physics_variables, "pohmmw", cudrivparam.pohmmw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_ohmic_mw", cudrivparam.p_plasma_ohmic_mw
+    )
 
     monkeypatch.setattr(physics_variables, "fusion_power", cudrivparam.fusion_power)
 

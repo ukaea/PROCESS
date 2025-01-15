@@ -1,17 +1,17 @@
 import logging
 import math
+
 import numpy as np
 
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
-
-from process.fortran import constants
-from process.fortran import physics_variables as pv
-from process.fortran import vacuum_variables as vacv
 from process.fortran import build_variables as buv
+from process.fortran import constants
+from process.fortran import error_handling as eh
+from process.fortran import physics_variables as pv
+from process.fortran import process_output as po
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
-from process.fortran import process_output as po
-from process.fortran import error_handling as eh
+from process.fortran import vacuum_variables as vacv
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +121,6 @@ class Vacuum:
 
         #  Output section
         if output:
-
             po.oheadr(self.outfile, "Vacuum System")
             po.ovarst(
                 self.outfile,
@@ -385,7 +384,6 @@ class Vacuum:
         d = np.full(4, 1e-6)
 
         for i in range(4):
-
             sss = nduct / (
                 1.0e0 / sp[i] / pumpn + 1.0e0 / cmax * xmult[i] / xmult[imax]
             )
@@ -515,7 +513,6 @@ class Vacuum:
         dimax = d[imax]
 
         if output:
-
             #  Output section
 
             po.oheadr(self.outfile, "Vacuum System")

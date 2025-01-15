@@ -6,18 +6,19 @@ parameters of an Inertial Fusion Energy power plant.
 """
 
 import numpy as np
+
 from process.fortran import (
-    ife_variables,
-    constants,
-    process_output,
     build_variables,
-    physics_variables,
-    structure_variables,
-    fwbs_variables,
+    buildings_variables,
+    constants,
     cost_variables,
     error_handling,
+    fwbs_variables,
     heat_transport_variables,
-    buildings_variables,
+    ife_variables,
+    physics_variables,
+    process_output,
+    structure_variables,
     vacuum_variables,
 )
 
@@ -584,7 +585,6 @@ class IFE:
 
         # Material volumes
         for i in range(ife_variables.maxmat):
-
             ife_variables.chmatv[i] = max(
                 0.0, ife_variables.chvol * ife_variables.chmatf[i]
             )
@@ -903,8 +903,7 @@ class IFE:
 
         # Area
         acurt = np.pi * (
-            (ife_variables.chrad + ife_variables.bldr) ** 2.0
-            - ife_variables.chrad**2.0
+            (ife_variables.chrad + ife_variables.bldr) ** 2.0 - ife_variables.chrad**2.0
         )
 
         # Mass Flow
@@ -1481,7 +1480,6 @@ class IFE:
         # Wall load (assume total fusion power applies)
 
         if ife_variables.ifetyp == 1:
-
             # OSIRIS-type build: First wall subtends a solid angle of 2 pi * SANG
 
             phi = 0.5 * np.pi + np.arctan(ife_variables.zl1 / ife_variables.r1)
@@ -1491,7 +1489,6 @@ class IFE:
             )
 
         elif ife_variables.ifetyp == 4:
-
             # 2019 build only has first wall at the top which has a tube at
             # its centre.  This calculates solid angle and removes tube.
 
@@ -1624,17 +1621,14 @@ class IFE:
         # Would be better to prevent extrapolation
 
         if ie <= 1:
-
             gain = gve[1] - 1.0e-6 * (edrive - 2.0e6) * (gve[0] - gve[1])
             etadrv = eve[1] - 1.0e-6 * (edrive - 2.0e6) * (eve[0] - eve[1])
 
         elif ie >= 9:
-
             gain = gve[8] + 1.0e-6 * (edrive - 9.0e6) * (gve[9] - gve[8])
             etadrv = eve[8] + 1.0e-6 * (edrive - 9.0e6) * (eve[9] - eve[8])
 
         else:
-
             gain = gve[ie - 1] + de * (gve[ie] - gve[ie - 1])
             etadrv = eve[ie - 1] + de * (eve[ie] - eve[ie - 1])
 
@@ -1682,17 +1676,14 @@ class IFE:
         # Would be better to prevent extrapolation
 
         if ie <= 1:
-
             gain = gve[1] - 1.0e-6 * (edrive - 2.0e6) * (gve[0] - gve[1])
             etadrv = eve[1] - 1.0e-6 * (edrive - 2.0e6) * (eve[0] - eve[1])
 
         elif ie >= 9:
-
             gain = gve[8] + 1.0e-6 * (edrive - 9.0e6) * (gve[9] - gve[8])
             etadrv = eve[8] + 1.0e-6 * (edrive - 9.0e6) * (eve[9] - eve[8])
 
         else:
-
             gain = gve[ie - 1] + de * (gve[ie] - gve[ie - 1])
             etadrv = eve[ie - 1] + de * (eve[ie] - eve[ie - 1])
 
@@ -2006,7 +1997,6 @@ class IFE:
 
         # Calculate powers relevant to a power-producing plant
         if cost_variables.ireactor == 1:
-
             # Gross electric power
             heat_transport_variables.p_gross_electrical = (
                 heat_transport_variables.p_thermal_primary_mw

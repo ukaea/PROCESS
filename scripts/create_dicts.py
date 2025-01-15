@@ -15,18 +15,17 @@ the dicts from the saved JSON file and use them.
 This ultimately provides Process Python with the ability to access variable
 information in the Process Fortran source code.
 """
-import re
-import logging
+
 import argparse
 import json
+import logging
 import pickle
-
-import numpy
-import create_dicts_config
+import re
 from pathlib import Path
 
+import create_dicts_config
+import numpy
 from python_dicts import get_python_variables
-
 
 output_dict = {}
 # Dict of nested dicts e.g. output_dict['DICT_DESCRIPTIONS'] =
@@ -707,7 +706,7 @@ def dict_var_type():
         DICT_VAR_TYPE['beta'] = 'real_variable'
     """
     di = {}
-    regexp = r"call parse_(real|int)_(array|variable)\("
+    regexp = r"call parse_(real|int|string)_(array|variable)\("
     lines = grep(SOURCEDIR + "/input.f90", regexp)
     for line in lines:
         args = line.split("(")[1]
@@ -866,7 +865,6 @@ def dict_ixc_full():
             ixc_full[itv_num] = dict()
 
     for line in lines:
-
         if "lablxc" in line and "=" in line:
             if "lablxc(i)" not in line and "lablxc(ixc(i))" not in line:
                 labl_num = line.split("(")[1].split(")")[0]
@@ -913,9 +911,7 @@ def dict_ixc_default():
         if name in default:
             ixc_default[name] = default[name]
         else:
-            logging.warning(
-                "print_dict_ixc could not find %s" " in DICT_DEFAULT\n", name
-            )
+            logging.warning("print_dict_ixc could not find %s in DICT_DEFAULT\n", name)
 
     return ixc_default
 
@@ -950,34 +946,32 @@ def create_dicts(project):
     # Make dict objects
     # Some dicts depend on other dicts already existing in output_dicts, so
     # be careful if changing the order!
-    dict_objects.extend(
-        [
-            VariableDescriptions(project, python_variables),
-            DefaultValues(project, python_variables),
-            Modules(project, python_variables),
-            HardcodedDictionary("DICT_TF_TYPE", create_dicts_config.DICT_TF_TYPE),
-            HardcodedDictionary("DICT_FIMP", create_dicts_config.DICT_FIMP),
-            HardcodedDictionary(
-                "DICT_OPTIMISATION_VARS", create_dicts_config.DICT_OPTIMISATION_VARS
-            ),
-            HardcodedDictionary("IFAIL_SUCCESS", create_dicts_config.IFAIL_SUCCESS),
-            HardcodedDictionary(
-                "PARAMETER_DEFAULTS", create_dicts_config.PARAMETER_DEFAULTS
-            ),
-            HardcodedDictionary("NON_F_VALUES", create_dicts_config.NON_F_VALUES),
-            SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
-            SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
-            SourceDictionary("DICT_VAR_TYPE", dict_var_type),
-            SourceDictionary("DICT_ICC_FULL", dict_icc_full),
-            SourceDictionary("DICT_IXC2NSWEEP", dict_ixc2nsweep),
-            SourceDictionary("DICT_NSWEEP2IXC", dict_nsweep2ixc),
-            SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
-            SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),
-            SourceDictionary("DICT_IXC_DEFAULT", dict_ixc_default),
-            SourceDictionary("DICT_IXC_SIMPLE", dict_ixc_simple),
-            SourceDictionary("DICT_IXC_SIMPLE_REV", dict_ixc_simple_rev),
-        ]
-    )
+    dict_objects.extend([
+        VariableDescriptions(project, python_variables),
+        DefaultValues(project, python_variables),
+        Modules(project, python_variables),
+        HardcodedDictionary("DICT_TF_TYPE", create_dicts_config.DICT_TF_TYPE),
+        HardcodedDictionary("DICT_FIMP", create_dicts_config.DICT_FIMP),
+        HardcodedDictionary(
+            "DICT_OPTIMISATION_VARS", create_dicts_config.DICT_OPTIMISATION_VARS
+        ),
+        HardcodedDictionary("IFAIL_SUCCESS", create_dicts_config.IFAIL_SUCCESS),
+        HardcodedDictionary(
+            "PARAMETER_DEFAULTS", create_dicts_config.PARAMETER_DEFAULTS
+        ),
+        HardcodedDictionary("NON_F_VALUES", create_dicts_config.NON_F_VALUES),
+        SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
+        SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
+        SourceDictionary("DICT_VAR_TYPE", dict_var_type),
+        SourceDictionary("DICT_ICC_FULL", dict_icc_full),
+        SourceDictionary("DICT_IXC2NSWEEP", dict_ixc2nsweep),
+        SourceDictionary("DICT_NSWEEP2IXC", dict_nsweep2ixc),
+        SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
+        SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),
+        SourceDictionary("DICT_IXC_DEFAULT", dict_ixc_default),
+        SourceDictionary("DICT_IXC_SIMPLE", dict_ixc_simple),
+        SourceDictionary("DICT_IXC_SIMPLE_REV", dict_ixc_simple_rev),
+    ])
 
     # Make individual dicts within dict objects, process, then add to output_dict
     for dict_object in dict_objects:
@@ -995,9 +989,7 @@ if __name__ == "__main__":
     # create_dicts.py. This module would benefit from more class structuring
 
     # Called from make; parse arguments from make
-    parser = argparse.ArgumentParser(
-        description="Create Fortran-Python " "dictionaries"
-    )
+    parser = argparse.ArgumentParser(description="Create Fortran-Python dictionaries")
     parser.add_argument("fortran_source", help="Fortran source dir")
     parser.add_argument("ford_project", help="The pickled Ford project filename")
     parser.add_argument("dicts_filename", help="The output dicts filename")

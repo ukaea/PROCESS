@@ -24,23 +24,23 @@ sobol.txt             - contains the dictionary of the Sobol
 """
 
 import argparse
+from pathlib import Path
 
-from SALib.analyze import sobol
+import numpy as np
+import pandas as pd
 from SALib.analyze import morris as morris_method
+from SALib.analyze import sobol
 from SALib.sample import morris, saltelli
 
-from pathlib import Path
-import pandas as pd
-import numpy as np
 import process.io.mfile as mf
 from process.io.in_dat import InDat
 from process.io.process_config import UncertaintiesConfig
 from process.io.process_funcs import (
+    check_input_error,
     get_neqns_itervars,
     get_variable_range,
-    check_input_error,
-    process_stopped,
     no_unfeasible_mfile,
+    process_stopped,
     set_variable_in_indat,
     vary_iteration_variables,
 )
@@ -55,8 +55,7 @@ def parse_args(args):
     :rtype: Namespace
     """
     parser = argparse.ArgumentParser(
-        description="Program to evaluate "
-        "uncertainties in a given PROCESS design point."
+        description="Program to evaluate uncertainties in a given PROCESS design point."
     )
 
     parser.add_argument(

@@ -4,10 +4,12 @@ Defines fixtures that will be shared across all test modules.
 """
 
 import os
-import pytest
-from system_check import system_compatible
 import warnings
+
+import pytest
 from _pytest.fixtures import SubRequest
+from system_check import system_compatible
+
 from process.fortran import error_handling as eh
 
 
