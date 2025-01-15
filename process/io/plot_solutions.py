@@ -146,7 +146,7 @@ def _extract_mfile_data(mfile_path: Path) -> dict:
     mfile = MFile(str(mfile_path))
     mfile_data = {}
 
-    for var in mfile.data.keys():
+    for var in mfile.data:
         if var.startswith("itvar"):
             # Iteration variable: get name too
             mfile_data[f"{var}_name"] = mfile.data[var].var_description

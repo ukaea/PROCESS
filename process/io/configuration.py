@@ -75,10 +75,7 @@ class Config:
     def _search_config_for(self, config, *keys):
         """Recursively search config (a dict) for keys."""
         try:
-            if isinstance(keys[0], str):
-                search_key = keys[0].lower()
-            else:
-                search_key = keys[0]
+            search_key = keys[0].lower() if isinstance(keys[0], str) else keys[0]
             value = config[search_key]
         except IndexError:
             raise

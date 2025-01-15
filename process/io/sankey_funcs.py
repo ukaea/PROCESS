@@ -140,10 +140,9 @@ def plot_full_sankey(
         )
 
         # Check to see if the fusion components balance
-        if _ == 0:
-            if sqrt(sum(PLASMA) ** 2) > 0.1:
-                print("FUSION power balance =", sum(PLASMA), "\n")
-                exit()
+        if _ == 0 and sqrt(sum(PLASMA) ** 2) > 0.1:
+            print("FUSION power balance =", sum(PLASMA), "\n")
+            exit()
 
         if _ == 1:
             print(sankey.finish()[0])
@@ -176,10 +175,9 @@ def plot_full_sankey(
         )
 
         # Checking to see if the neutronics components balance
-        if _ == 0:
-            if sqrt(sum(NEUTRONS) ** 2) > 0.1:
-                print("NEUTRONS power balance =", sum(NEUTRONS), "\n")
-                exit()
+        if _ == 0 and sqrt(sum(NEUTRONS) ** 2) > 0.1:
+            print("NEUTRONS power balance =", sum(NEUTRONS), "\n")
+            exit()
 
         # Check to see if connections balance
         if _ == 0:
@@ -206,10 +204,9 @@ def plot_full_sankey(
             labels=[None, None, None, None, None],
         )
 
-        if _ == 0:
-            if sqrt(sum(CHARGEDP) ** 2) > 0.1:
-                print("CHARGEDP power balance =", sum(CHARGEDP))
-                exit()
+        if _ == 0 and sqrt(sum(CHARGEDP) ** 2) > 0.1:
+            print("CHARGEDP power balance =", sum(CHARGEDP))
+            exit()
 
         # Check to see if connections balance
         if _ == 0:
@@ -245,10 +242,9 @@ def plot_full_sankey(
             labels=[None, None, None, None],
         )
 
-        if _ == 0:
-            if sqrt(sum(RADIATION) ** 2) > 0.1:
-                print("RADIATION power balance =", sum(RADIATION))
-                exit()
+        if _ == 0 and sqrt(sum(RADIATION) ** 2) > 0.1:
+            print("RADIATION power balance =", sum(RADIATION))
+            exit()
 
         if _ == 0:
             check = sankey.finish()
@@ -274,10 +270,9 @@ def plot_full_sankey(
             labels=[None, None, None, None, None],
         )
 
-        if _ == 0:
-            if sqrt(sum(DIVERTOR) ** 2) > 0.1:
-                print("DIVERTOR power balance =", sum(DIVERTOR))
-                exit()
+        if _ == 0 and sqrt(sum(DIVERTOR) ** 2) > 0.1:
+            print("DIVERTOR power balance =", sum(DIVERTOR))
+            exit()
 
         if _ == 0:
             check = sankey.finish()
@@ -306,10 +301,9 @@ def plot_full_sankey(
             labels=[None, None, None, None, None],
         )
 
-        if _ == 0:
-            if sqrt(sum(FIRST_WALL) ** 2) > 0.1:
-                print("FIRST_WALL power balance =", sum(FIRST_WALL))
-                exit()
+        if _ == 0 and sqrt(sum(FIRST_WALL) ** 2) > 0.1:
+            print("FIRST_WALL power balance =", sum(FIRST_WALL))
+            exit()
 
         """# -------------------------------------- BLANKET - 6 --------------------------------------
 
@@ -751,8 +745,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     # -ve to left and down; +ve to right and up
     # pos[0] = x-axis; pos[1] = y-axis
     for d in diagrams:
-        y = 0
-        for t in d.texts:
+        for y, t in enumerate(d.texts):
             pos = tuple(np.ndarray.tolist(d.tips[y]))
             t.set_position(pos)
             if t == diagrams[0].texts[0]:  # Fusion Power
@@ -785,10 +778,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 if t == diagrams[4].texts[1]:  # Net electric
                     t.set_horizontalalignment("center")
                     t.set_position((pos[0], pos[1] - 0.2))
-            elif pnetelmw < 1:
-                if t == diagrams[4].texts[0]:  # Net electric
-                    t.set_horizontalalignment("left")
-                    t.set_position((pos[0] + 0.2, pos[1]))
+            elif pnetelmw < 1 and t == diagrams[4].texts[0]:  # Net electric
+                t.set_horizontalalignment("left")
+                t.set_position((pos[0] + 0.2, pos[1]))
             if t == diagrams[4].texts[2]:  # Recirc. Power
                 if pnetelmw >= 1:
                     t.set_position((
@@ -823,4 +815,3 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                     pos[0] + 0.15,
                     pos[1] - 0.5 * ((pinjwp - pinjmw) / totalplasma) - 0.2,
                 ))
-            y += 1

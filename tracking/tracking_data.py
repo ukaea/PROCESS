@@ -366,7 +366,7 @@ class TrackedData:
         )  # the JSON data of one run of PROCESS in python datastructures
         for variable, value in tracking_data.items():
             # create a new TrackedVariable when we see a variable we do not know
-            if variable not in self.tracked_variables.keys():
+            if variable not in self.tracked_variables:
                 self.tracked_variables[variable] = TrackedVariable(variable)
 
             self.tracked_variables.get(variable).add_datapoint(

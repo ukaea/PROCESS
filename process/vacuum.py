@@ -298,12 +298,8 @@ class Vacuum:
 
         #  Speed of high-vacuum pumps (m^3/s)
 
-        if vacv.ntype == 0:
-            sp = [1.95, 1.8, 1.8, 1.8]
-            # nitrogen, DT, helium, DT again
-        else:
-            sp = [9.0, 25.0, 5.0, 25.0]
-            # nitrogen, DT, helium, DT again
+        # nitrogen, DT, helium, DT again
+        sp = [1.95, 1.8, 1.8, 1.8] if vacv.ntype == 0 else [9.0, 25.0, 5.0, 25.0]
 
         #  Calculate required pumping speeds
 
@@ -629,10 +625,7 @@ class Vacuum:
                 po.ocmmnt(self.outfile, "Conductance is inadequate.")
                 po.oblnkl(self.outfile)
 
-            if vacv.ntype == 1:
-                ipump = "cryo "
-            else:
-                ipump = "turbo"
+            ipump = "cryo " if vacv.ntype == 1 else "turbo"
 
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "The vacuum pumping system size is governed by the")

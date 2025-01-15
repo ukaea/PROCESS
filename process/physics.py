@@ -2165,10 +2165,7 @@ class Physics:
         # Power transported to the divertor by charged particles,
         # i.e. excludes neutrons and radiation, and also NBI orbit loss power,
         # which is assumed to be absorbed by the first wall
-        if physics_variables.ignite == 0:
-            pinj = current_drive_variables.pinjmw
-        else:
-            pinj = 0.0e0
+        pinj = current_drive_variables.pinjmw if physics_variables.ignite == 0 else 0.0
 
         physics_variables.pdivt = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total

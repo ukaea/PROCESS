@@ -1482,7 +1482,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
         (0.0, TFC_COLOUR[colour_scheme - 1]),
     ):
         # Check for TF coil shape
-        if "i_tf_shape" in mfile_data.data.keys():
+        if "i_tf_shape" in mfile_data.data:
             i_tf_shape = int(mfile_data.data["i_tf_shape"].get_scan(scan))
         else:
             i_tf_shape = 1
@@ -2048,22 +2048,16 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
 
     # Number of coils, both PF and CS
     number_of_coils = 0
-    for item in mfile_data.data.keys():
+    for item in mfile_data.data:
         if "rpf[" in item:
             number_of_coils += 1
 
     # Check for Central Solenoid
-    if "iohcl" in mfile_data.data.keys():
-        iohcl = mfile_data.data["iohcl"].get_scan(scan)
-    else:
-        iohcl = 1
+    iohcl = mfile_data.data["iohcl"].get_scan(scan) if "iohcl" in mfile_data.data else 1
 
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
-    if iohcl == 1:
-        noc = number_of_coils - 1
-    else:
-        noc = number_of_coils
+    noc = number_of_coils - 1 if iohcl == 1 else number_of_coils
 
     for coil in range(noc):
         coils_r.append(mfile_data.data[f"rpf[{coil:01}]"].get_scan(scan))
@@ -2177,10 +2171,7 @@ def plot_info(axis, data, mfile_data, scan):
                     )
         else:
             dat = data[i][0]
-            if isinstance(dat, str):
-                value = dat
-            else:
-                value = f"{data[i][0]:.4g}"
+            value = dat if isinstance(dat, str) else "{:.4g}".format(data[i][0])
             axis.text(
                 eqpos,
                 -i,
@@ -2395,7 +2386,7 @@ def plot_physics_info(axis, mfile_data, scan):
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
-    if "plhthresh" in mfile_data.data.keys():
+    if "plhthresh" in mfile_data.data:
         pthresh = mfile_data.data["plhthresh"].get_scan(scan)
     else:
         pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
@@ -2440,7 +2431,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
     dicts = get_dicts()
 
     # Check for Copper magnets
-    if "i_tf_sup" in mfile_data.data.keys():
+    if "i_tf_sup" in mfile_data.data:
         i_tf_sup = int(mfile_data.data["i_tf_sup"].get_scan(scan))
     else:
         i_tf_sup = 1
@@ -2459,7 +2450,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
 
     # Number of coils (1 is OH coil)
     number_of_coils = 0
-    for item in mfile_data.data.keys():
+    for item in mfile_data.data:
         if "rpf[" in item:
             number_of_coils += 1
 
@@ -2480,14 +2471,14 @@ def plot_magnetics_info(axis, mfile_data, scan):
 
     t_burn = mfile_data.data["t_burn"].get_scan(scan) / 3600.0
 
-    if "i_tf_bucking" in mfile_data.data.keys():
+    if "i_tf_bucking" in mfile_data.data:
         i_tf_bucking = int(mfile_data.data["i_tf_bucking"].get_scan(scan))
     else:
         i_tf_bucking = 1
 
     # Get superconductor material (i_tf_sc_mat)
     # If i_tf_sc_mat not present, assume resistive
-    if "i_tf_sc_mat" in mfile_data.data.keys():
+    if "i_tf_sc_mat" in mfile_data.data:
         i_tf_sc_mat = int(mfile_data.data["i_tf_sc_mat"].get_scan(scan))
     else:
         i_tf_sc_mat = 0
@@ -2686,7 +2677,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
         iccd = True
         axis.text(-0.05, 1, "Ion Cyclotron Current Drive:", ha="left", va="center")
 
-    if "iefrffix" in mfile_data.data.keys():
+    if "iefrffix" in mfile_data.data:
         secondary_heating = ""
         iefrffix = mfile_data.data["iefrffix"].get_scan(scan)
 
@@ -2731,7 +2722,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
-    if "plhthresh" in mfile_data.data.keys():
+    if "plhthresh" in mfile_data.data:
         pthresh = mfile_data.data["plhthresh"].get_scan(scan)
     else:
         pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
@@ -2817,7 +2808,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data.keys():
+        if "iefrffix" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -2846,7 +2837,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data.keys():
+        if "iefrffix" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -2875,7 +2866,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data.keys():
+        if "iefrffix" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3329,29 +3320,20 @@ def main(args=None):
     args = parse_args(args)
     colour_scheme = int(args.colour)
     # read MFILE
-    if args.f != "":
-        m_file = mf.MFile(args.f)
-    else:
-        m_file = mf.MFile("MFILE.DAT")
+    m_file = mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT")
 
-    if args.n:
-        scan = args.n
-    else:
-        scan = -1
+    scan = args.n if args.n else -1
 
-    if args.DEMO_ranges:
-        demo_ranges = True
-    else:
-        demo_ranges = False
+    demo_ranges = bool(args.DEMO_ranges)
 
     # Check for Copper magnets
-    if "i_tf_sup" in m_file.data.keys():
+    if "i_tf_sup" in m_file.data:
         i_tf_sup = int(m_file.data["i_tf_sup"].get_scan(scan))
     else:
         i_tf_sup = 1
 
     # Check WP configuration
-    if "i_tf_wp_geom" in m_file.data.keys():
+    if "i_tf_wp_geom" in m_file.data:
         i_tf_wp_geom = int(m_file.data["i_tf_wp_geom"].get_scan(scan))
     else:
         i_tf_wp_geom = 0

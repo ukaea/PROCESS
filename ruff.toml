@@ -29,6 +29,7 @@ extend-select = [
     "W",
     "YTT",
     "PD",
+    "SIM",
 ]
 
 ignore = ["COM812", "FBT", "G004", "PD901"]
