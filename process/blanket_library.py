@@ -371,7 +371,7 @@ class BlanketLibrary:
         # ISSUE #508 Remove RFP option
         # rb(i) = outer radius of PF coil i (tokamaks)
         fwbs_variables.r_cryostat_inboard = (
-            np.max(pfcoil_variables.rb) + fwbs_variables.rpf2dewar
+            np.max(pfcoil_variables.rb) + fwbs_variables.dr_pf_cryostat
         )
 
         # Clearance between uppermost PF coil and cryostat lid (m).

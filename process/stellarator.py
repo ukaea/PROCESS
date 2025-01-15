@@ -1840,7 +1840,7 @@ class Stellarator:
         fwbs_variables.r_cryostat_inboard = (
             build_variables.r_tf_outboard_mid
             + 0.5e0 * build_variables.tfthko
-            + fwbs_variables.rpf2dewar
+            + fwbs_variables.dr_pf_cryostat
         )
         adewex = fwbs_variables.r_cryostat_inboard - physics_variables.rmajor
 

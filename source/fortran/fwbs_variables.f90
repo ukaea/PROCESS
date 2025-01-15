@@ -424,8 +424,8 @@ module fwbs_variables
   real(dp) :: zdewex
   !! cryostat height [m]
 
-  real(dp) :: rpf2dewar
-  !! radial distance between outer edge of largest (`ipfloc=3`) PF coil (or stellarator
+  real(dp) :: dr_pf_cryostat
+  !! Radial distance between outer edge of furthest away PF coil (or stellarator
   !! modular coil) and cryostat [m]
 
   real(dp) :: vdewex
@@ -774,7 +774,7 @@ module fwbs_variables
     ptfnucpm3 = 0.0D0
     r_cryostat_inboard = 0.0D0
     zdewex = 0.0D0
-    rpf2dewar = 0.5D0
+    dr_pf_cryostat = 0.5D0
     vdewex = 0.0D0
     vdewin = 0.0D0
     vfshld = 0.25D0

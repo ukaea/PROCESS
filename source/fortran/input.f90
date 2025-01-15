@@ -275,7 +275,7 @@ contains
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
-      npdiv, peaking_factor, primary_pumping, rpf2dewar, secondary_cycle, secondary_cycle_liq, &
+      npdiv, peaking_factor, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
@@ -1372,8 +1372,8 @@ contains
        case ('rinboard')
           call parse_real_variable('rinboard', rinboard, 0.1D0, 10.0D0, &
                'Plasma inboard radius (m)')
-       case ('rpf2dewar')
-          call parse_real_variable('rpf2dewar', rpf2dewar, 0.1D0, 5.0D0, &
+       case ('dr_pf_cryostat')
+          call parse_real_variable('dr_pf_cryostat', dr_pf_cryostat, 0.1D0, 5.0D0, &
                'Outer PF coil to cryostat distance (m)')
        case ('i_r_cp_top')
           call parse_int_variable('i_r_cp_top', i_r_cp_top, 0, 2, &
