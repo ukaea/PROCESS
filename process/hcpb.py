@@ -1485,8 +1485,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "First wall coolant pressure (Pa)",
-            "(fwpressure)",
-            fwbs_variables.fwpressure,
+            "(pres_fw)",
+            fwbs_variables.pres_fw,
         )
         po.ovarre(
             self.outfile,

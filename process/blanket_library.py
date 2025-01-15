@@ -432,7 +432,7 @@ class BlanketLibrary:
             fw_bb_fluid_properties = FluidProperties.of(
                 f2py_compatible_to_string(fwbs_variables.fwcoolant),
                 temperature=mid_temp,
-                pressure=fwbs_variables.fwpressure.item(),
+                pressure=fwbs_variables.pres_fw.item(),
             )
             fwbs_variables.rhof_fw = fw_bb_fluid_properties.density
             fwbs_variables.cp_fw = fw_bb_fluid_properties.specific_heat_const_p
@@ -451,7 +451,7 @@ class BlanketLibrary:
             fw_fluid_properties = FluidProperties.of(
                 f2py_compatible_to_string(fwbs_variables.fwcoolant),
                 temperature=mid_temp_fw,
-                pressure=fwbs_variables.fwpressure,
+                pressure=fwbs_variables.pres_fw,
             )
             fwbs_variables.rhof_fw = fw_fluid_properties.density
             fwbs_variables.cp_fw = fw_fluid_properties.specific_heat_const_p
@@ -1507,7 +1507,7 @@ class BlanketLibrary:
             secondary coolant switch    ---                     ---                 i_bb_liq
             inlet temp (K)              temp_fw_in                 inlet_temp          inlet_temp_liq
             outlet temp (K)             temp_fw_out                outlet_temp         outlet_temp_liq
-            pressure (Pa)               fwpressure              blpressure          blpressure_liq
+            pressure (Pa)               pres_fw              blpressure          blpressure_liq
         """
         ######################################################
         # Pre calculations needed for thermo-hydraulic model #
@@ -1822,7 +1822,7 @@ class BlanketLibrary:
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_fw_in.item(),
                 temp_out=fwbs_variables.outlet_temp.item(),
-                pressure=fwbs_variables.fwpressure.item(),
+                pressure=fwbs_variables.pres_fw.item(),
                 pdrop=deltap_fw_blkt,
                 mf=blanket_library.mftotal,
                 primary_coolant_switch=f2py_compatible_to_string(
@@ -1858,7 +1858,7 @@ class BlanketLibrary:
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_fw_in.item(),
                 temp_out=fwbs_variables.temp_fw_out.item(),
-                pressure=fwbs_variables.fwpressure.item(),
+                pressure=fwbs_variables.pres_fw.item(),
                 pdrop=deltap_fw.item(),
                 mf=blanket_library.mffw,
                 primary_coolant_switch=f2py_compatible_to_string(
@@ -1973,8 +1973,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "First wall coolant pressure (Pa)",
-                "(fwpressure)",
-                fwbs_variables.fwpressure,
+                "(pres_fw)",
+                fwbs_variables.pres_fw,
             )
             if fwbs_variables.ipump == 1:
                 po.ovarre(
