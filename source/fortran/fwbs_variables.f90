@@ -364,9 +364,6 @@ module fwbs_variables
   !! - input if `coolwh=1` (helium)
   !! - calculated if `coolwh=2` (water)
 
-  real(dp) :: coolp
-  !! blanket coolant pressure [Pa] (stellarator only)
-
   integer :: nblktmodpo
   !! number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)
 
@@ -755,7 +752,6 @@ module fwbs_variables
     pres_blkt = 15.50D6
     temp_blkt_in = 573.0D0
     temp_blkt_out = 823.0D0
-    coolp = 15.5D6
     nblktmodpo = 8
     nblktmodpi = 7
     nblktmodto = 48

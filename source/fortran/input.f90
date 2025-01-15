@@ -277,7 +277,7 @@ contains
       declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
       npdiv, peaking_factor, primary_pumping, rpf2dewar, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, iblnkith, vfpblkt, temp_fw_in, wallpf, fblbe, &
-      fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
+      fhole, fwbsshape, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
@@ -1971,9 +1971,6 @@ contains
        case ('f_nuc_pow_bz_struct')
           call parse_real_variable('f_nuc_pow_bz_struct', f_nuc_pow_bz_struct, 0.0D0, 1.0D0, &
                'Fraction of BZ power cooled by primary coolant for dual-coolant balnket')
-       case ('coolp')
-          call parse_real_variable('coolp', coolp, 1.0D5, 1.0D8, &
-               'blanket coolant pressure (Pa) stellarator ONLY')
 
        case ('dtstor')
           call parse_real_variable('dtstor', dtstor, 50.0D0, 500.0D0, &
