@@ -358,7 +358,7 @@ module fwbs_variables
   real(dp) :: temp_blkt_in
   !! inlet temperature of blanket coolant  [K] (`secondary_cycle>1`)
 
-  real(dp) :: outlet_temp
+  real(dp) :: temp_blkt_out
   !! Outlet temperature of blanket coolant [K] (`secondary_cycle>1`)
   !!
   !! - input if `coolwh=1` (helium)
@@ -754,7 +754,7 @@ module fwbs_variables
     peaking_factor = 1.0D0
     blpressure = 15.50D6
     temp_blkt_in = 573.0D0
-    outlet_temp = 823.0D0
+    temp_blkt_out = 823.0D0
     coolp = 15.5D6
     nblktmodpo = 8
     nblktmodpi = 7

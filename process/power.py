@@ -2473,7 +2473,7 @@ class Power:
         taken from cycle modelling studies.
         <P>If secondary_cycle > 1, the outlet temperature from the first wall
         and breeder zone is used to calculate an efficiency, using a simple relationship
-        between eta_thermal_electric and outlet_temp again obtained from previous studies.
+        between eta_thermal_electric and temp_blkt_out again obtained from previous studies.
         C. Harrington, K:Power Plant Physics and Technology  PROCESS  blanket_model
          New Power Module Harrington  Cycle correlations  Cycle correlations.xls
         """
@@ -2532,7 +2532,7 @@ class Power:
                 #  Superheated steam Rankine cycle correlation (C. Harrington)
                 #  Range of validity: 657 K < heat_transport_variables.temp_turbine_in < 915 K
                 heat_transport_variables.temp_turbine_in = (
-                    fwbs_variables.outlet_temp - 20.0e0
+                    fwbs_variables.temp_blkt_out - 20.0e0
                 )
                 if (heat_transport_variables.temp_turbine_in < 657.0e0) or (
                     heat_transport_variables.temp_turbine_in > 915.0e0
@@ -2551,7 +2551,7 @@ class Power:
             elif fwbs_variables.iblanket == 2:
                 #  Same as fwbs_variables.iblanket = 1
                 heat_transport_variables.temp_turbine_in = (
-                    fwbs_variables.outlet_temp - 20.0e0
+                    fwbs_variables.temp_blkt_out - 20.0e0
                 )
                 if (heat_transport_variables.temp_turbine_in < 657.0e0) or (
                     heat_transport_variables.temp_turbine_in > 915.0e0
@@ -2580,7 +2580,7 @@ class Power:
             #  Supercritical CO2 cycle correlation (C. Harrington)
             #  Range of validity: 408 K < heat_transport_variables.temp_turbine_in < 1023 K
             heat_transport_variables.temp_turbine_in = (
-                fwbs_variables.outlet_temp - 20.0e0
+                fwbs_variables.temp_blkt_out - 20.0e0
             )
             if (heat_transport_variables.temp_turbine_in < 408.0e0) or (
                 heat_transport_variables.temp_turbine_in > 1023.0e0

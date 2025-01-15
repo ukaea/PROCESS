@@ -3461,7 +3461,7 @@
         "outfile": 0.0,
         "outgasfactor": 0.0235,
         "outgasindex": 1.0,
-        "outlet_temp": 823.0,
+        "temp_blkt_out": 823.0,
         "output_costs": 1.0,
         "output_huge": 1e+66,
         "output_prefix": "",
@@ -10224,7 +10224,7 @@
         "outfile": "",
         "outgasfactor": "outgassing prefactor kw: outgassing rate at 1 s per unit area (Pa m s-1)",
         "outgasindex": "outgassing decay index",
-        "outlet_temp": "Outlet temperature of blanket coolant (K) (`secondary_cycle>1`)\n<ul>\n<li>input if `coolwh=1` (helium)</li>\n<li>calculated if `coolwh=2` (water)</li>\n</ul>",
+        "temp_blkt_out": "Outlet temperature of blanket coolant (K) (`secondary_cycle>1`)\n<ul>\n<li>input if `coolwh=1` (helium)</li>\n<li>calculated if `coolwh=2` (water)</li>\n</ul>",
         "output_costs": "Switch for costs output:\n<ul>\n<li>=0 do not write cost-related outputs to file</li>\n<li>=1 write cost-related outputs to file</li>\n</ul>",
         "output_huge": "",
         "output_prefix": "output file prefix",
@@ -13857,7 +13857,7 @@
             "lb": 1e-06,
             "ub": 1000.0
         },
-        "outlet_temp": {
+        "temp_blkt_out": {
             "lb": 450.0,
             "ub": 900.0
         },
@@ -18112,7 +18112,7 @@
             "peaking_factor",
             "blpressure",
             "temp_blkt_in",
-            "outlet_temp",
+            "temp_blkt_out",
             "coolp",
             "nblktmodpo",
             "nblktmodpi",
@@ -20608,7 +20608,7 @@
         "omegan": "real_variable",
         "outgasfactor": "real_variable",
         "outgasindex": "real_variable",
-        "outlet_temp": "real_variable",
+        "temp_blkt_out": "real_variable",
         "output_costs": "int_variable",
         "p_he": "real_variable",
         "pbase": "real_variable",

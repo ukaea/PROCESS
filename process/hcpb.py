@@ -665,7 +665,7 @@ class CCFE_HCPB:
             outlet_saturated_fluid_properties = FluidProperties.of(
                 "Water", pressure=fwbs_variables.blpressure * 1.0e6, vapor_quality=0
             )
-            fwbs_variables.outlet_temp = (
+            fwbs_variables.temp_blkt_out = (
                 outlet_saturated_fluid_properties.temperature - 20.0
             )  # in K
 
