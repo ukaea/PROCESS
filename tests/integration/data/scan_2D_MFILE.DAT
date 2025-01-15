@@ -17705,7 +17705,7 @@ ohcth = 0.5
 * q
 ixc = 18
 boundl(18) = 3.0
-q = 3.5
+q95 = 3.5
 
 * Machine bore [m]
 ixc = 29
