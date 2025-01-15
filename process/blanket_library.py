@@ -370,12 +370,14 @@ class BlanketLibrary:
         # cryostat radius (m)
         # ISSUE #508 Remove RFP option
         # rb(i) = outer radius of PF coil i (tokamaks)
-        fwbs_variables.rdewex = np.max(pfcoil_variables.rb) + fwbs_variables.rpf2dewar
+        fwbs_variables.r_cryostat_inboard = (
+            np.max(pfcoil_variables.rb) + fwbs_variables.rpf2dewar
+        )
 
         # Clearance between uppermost PF coil and cryostat lid (m).
         # Scaling from ITER by M. Kovari
         blanket_library.hcryopf = (
-            build_variables.clhsf * (2.0 * fwbs_variables.rdewex) / 28.440
+            build_variables.clhsf * (2.0 * fwbs_variables.r_cryostat_inboard) / 28.440
         )
 
         # Half-height of cryostat (m)
@@ -389,8 +391,10 @@ class BlanketLibrary:
 
         # cryostat volume (m3)
         fwbs_variables.vdewex = (
-            (2.0 * np.pi * fwbs_variables.rdewex) * 2.0 * fwbs_variables.zdewex
-            + (2.0 * np.pi * fwbs_variables.rdewex**2)
+            (2.0 * np.pi * fwbs_variables.r_cryostat_inboard)
+            * 2.0
+            * fwbs_variables.zdewex
+            + (2.0 * np.pi * fwbs_variables.r_cryostat_inboard**2)
         ) * build_variables.ddwex
 
         # Vacuum vessel mass (kg)

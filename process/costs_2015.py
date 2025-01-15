@@ -544,7 +544,11 @@ class Costs2015:
         self.s_label[1] = "Tokamak Complex (excluding hot cell)"
         self.s_cref[1] = 1100000.0e0 * cost_variables.tok_build_cost_per_vol
         # ITER cryostat volume (m^3)
-        self.s_k[1] = (np.pi * fwbs_variables.rdewex**2) * 2.0e0 * fwbs_variables.zdewex
+        self.s_k[1] = (
+            (np.pi * fwbs_variables.r_cryostat_inboard**2)
+            * 2.0e0
+            * fwbs_variables.zdewex
+        )
         self.s_kref[1] = 18712.0e0
         self.s_cost[1] = (
             self.s_cost_factor[1] * self.s_cref[1] * (self.s_k[1] / self.s_kref[1])
@@ -640,7 +644,7 @@ class Costs2015:
         ITER_buffer_land_area = ITER_total_land_area - ITER_key_buildings_land_area
 
         # Scale with area of cryostat (m)
-        self.s_k[9] = np.pi * fwbs_variables.rdewex**2
+        self.s_k[9] = np.pi * fwbs_variables.r_cryostat_inboard**2
         self.s_kref[9] = 638.0e0
         # Cost of land per hectare (2014 $ / ha)
         self.s_cref[9] = 318000.0e0
@@ -660,7 +664,7 @@ class Costs2015:
         # Cost of clearing ITER land
         self.s_cref[10] = 214.0e6
         # Scale with area of cryostat (m)
-        self.s_k[10] = np.pi * fwbs_variables.rdewex**2
+        self.s_k[10] = np.pi * fwbs_variables.r_cryostat_inboard**2
         self.s_kref[10] = 638.0e0
         self.s_cost[10] = (
             self.s_cost_factor[10]
@@ -974,7 +978,9 @@ class Costs2015:
         self.s_cref[43] = 351.0e6
         #  Scale with cryostat external volume (m3)
         self.s_k[43] = (
-            (np.pi * fwbs_variables.rdewex**2.0e0) * 2.0e0 * fwbs_variables.zdewex
+            (np.pi * fwbs_variables.r_cryostat_inboard**2.0e0)
+            * 2.0e0
+            * fwbs_variables.zdewex
         )
         self.s_kref[43] = 18700.0e0
         self.s_cost[43] = (
@@ -1002,8 +1008,12 @@ class Costs2015:
         self.s_cref[45] = 126.0e6
         #  Scale with cryostat surface area (m2)
         self.s_k[45] = (
-            2.0e0 * np.pi * fwbs_variables.rdewex * 2.0e0 * fwbs_variables.zdewex
-            + 2 * (np.pi * fwbs_variables.rdewex**2)
+            2.0e0
+            * np.pi
+            * fwbs_variables.r_cryostat_inboard
+            * 2.0e0
+            * fwbs_variables.zdewex
+            + 2 * (np.pi * fwbs_variables.r_cryostat_inboard**2)
         )
         self.s_kref[45] = 3902.0e0
         self.s_cost[45] = (
@@ -1119,7 +1129,7 @@ class Costs2015:
         self.s_label[55] = "Access control and security systems"
         #  Cost of ITER access control and security systems
         #  Scale with area of cryostat (m2)
-        self.s_k[55] = np.pi * fwbs_variables.rdewex**2
+        self.s_k[55] = np.pi * fwbs_variables.r_cryostat_inboard**2
         self.s_kref[55] = 640.0e0
         self.s_cref[55] = 42.0e6
         self.s_cost[55] = (
@@ -1199,7 +1209,9 @@ class Costs2015:
         self.s_label[59] = "Logistics"
         self.s_cref[59] = 129.0e6
         #  Scale with cryostat external volume (m)
-        self.s_k[59] = np.pi * fwbs_variables.rdewex**2 * 2.0e0 * fwbs_variables.zdewex
+        self.s_k[59] = (
+            np.pi * fwbs_variables.r_cryostat_inboard**2 * 2.0e0 * fwbs_variables.zdewex
+        )
         self.s_kref[59] = 18700.0e0
         self.s_cost[59] = (
             self.s_cost_factor[59]

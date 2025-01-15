@@ -359,7 +359,9 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
 def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
 
-    rects = cryostat_geometry(rdewex=rdewex, ddwex=ddwex, zdewex=zdewex)
+    rects = cryostat_geometry(
+        r_cryostat_inboard=r_cryostat_inboard, ddwex=ddwex, zdewex=zdewex
+    )
 
     for rec in rects:
         axis.add_patch(
@@ -484,7 +486,12 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("thshield_ob", mfile_data, scan)
     arc_fill(axis, r1, r2, color=THERMAL_SHIELD_COLOUR[colour_scheme - 1])
 
-    arc_fill(axis, rdewex, rdewex + ddwex, color=CRYOSTAT_COLOUR[colour_scheme - 1])
+    arc_fill(
+        axis,
+        r_cryostat_inboard,
+        r_cryostat_inboard + ddwex,
+        color=CRYOSTAT_COLOUR[colour_scheme - 1],
+    )
 
     # Segment the TF coil inboard
     # Calculate centrelines
@@ -3377,7 +3384,7 @@ def main(args=None):
     global ddwi
     global gapsto
     global tfthko
-    global rdewex
+    global r_cryostat_inboard
     global zdewex
     global ddwex
     global j_plasma_0
@@ -3399,7 +3406,7 @@ def main(args=None):
     shldoth = m_file.data["shldoth"].get_scan(scan)
     gapsto = m_file.data["gapsto"].get_scan(scan)
     tfthko = m_file.data["tfthko"].get_scan(scan)
-    rdewex = m_file.data["rdewex"].get_scan(scan)
+    r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)
     zdewex = m_file.data["zdewex"].get_scan(scan)
     ddwex = m_file.data["ddwex"].get_scan(scan)
     j_plasma_0 = m_file.data["j_plasma_0"].get_scan(scan)

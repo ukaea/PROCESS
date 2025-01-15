@@ -1837,12 +1837,12 @@ class Stellarator:
 
         #  External cryostat outboard major radius (m)
 
-        fwbs_variables.rdewex = (
+        fwbs_variables.r_cryostat_inboard = (
             build_variables.r_tf_outboard_mid
             + 0.5e0 * build_variables.tfthko
             + fwbs_variables.rpf2dewar
         )
-        adewex = fwbs_variables.rdewex - physics_variables.rmajor
+        adewex = fwbs_variables.r_cryostat_inboard - physics_variables.rmajor
 
         #  External cryostat volume
 
@@ -2238,13 +2238,13 @@ class Stellarator:
                 self.outfile,
                 "External cryostat inner radius (m)",
                 "",
-                fwbs_variables.rdewex - 2.0e0 * adewex,
+                fwbs_variables.r_cryostat_inboard - 2.0e0 * adewex,
             )
             po.ovarre(
                 self.outfile,
                 "External cryostat outer radius (m)",
-                "(rdewex)",
-                fwbs_variables.rdewex,
+                "(r_cryostat_inboard)",
+                fwbs_variables.r_cryostat_inboard,
             )
             po.ovarre(
                 self.outfile, "External cryostat minor radius (m)", "(adewex)", adewex

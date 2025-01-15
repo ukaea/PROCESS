@@ -6,12 +6,12 @@ from process.geometry.geometry_parameterisations import RectangleGeometry
 
 
 def cryostat_geometry(
-    rdewex: float, ddwex: float, zdewex: float
+    r_cryostat_inboard: float, ddwex: float, zdewex: float
 ) -> list[RectangleGeometry]:
     """Calculates rectangular geometries of the cryostat
 
-    :param rdewex: cryostat internal radius
-    :type rdewex: float
+    :param r_cryostat_inboard: cryostat internal radius
+    :type r_cryostat_inboard: float
     :param ddwex: external cryostat thickness
     :type ddwex: float
     :param zdewex: cryostat internal half-height
@@ -23,17 +23,21 @@ def cryostat_geometry(
 
     # rectangle representing vertical part of cryostat above the midplane
     rect1 = RectangleGeometry(
-        anchor_x=rdewex, anchor_z=0, width=ddwex, height=(zdewex + ddwex)
+        anchor_x=r_cryostat_inboard, anchor_z=0, width=ddwex, height=(zdewex + ddwex)
     )
 
     # rectangle representing vertical part of cryostat below the midplane
     rect2 = RectangleGeometry(
-        anchor_x=rdewex, anchor_z=0, width=ddwex, height=-(zdewex + ddwex)
+        anchor_x=r_cryostat_inboard, anchor_z=0, width=ddwex, height=-(zdewex + ddwex)
     )
 
     # rectangle representing horizontal part of cryostat above the midplane
-    rect3 = RectangleGeometry(anchor_x=0, anchor_z=zdewex, width=rdewex, height=ddwex)
+    rect3 = RectangleGeometry(
+        anchor_x=0, anchor_z=zdewex, width=r_cryostat_inboard, height=ddwex
+    )
 
     # rectangle representing horizontal part of cryostat below the midplane
-    rect4 = RectangleGeometry(anchor_x=0, anchor_z=-zdewex, width=rdewex, height=-ddwex)
+    rect4 = RectangleGeometry(
+        anchor_x=0, anchor_z=-zdewex, width=r_cryostat_inboard, height=-ddwex
+    )
     return [rect1, rect2, rect3, rect4]

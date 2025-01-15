@@ -1543,8 +1543,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Cryostat internal radius (m)",
-            "(rdewex)",
-            fwbs_variables.rdewex,
+            "(r_cryostat_inboard)",
+            fwbs_variables.r_cryostat_inboard,
             "OP ",
         )
         po.ovarre(

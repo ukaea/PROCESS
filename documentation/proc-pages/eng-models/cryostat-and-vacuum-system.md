@@ -3,7 +3,7 @@ The _vacuum vessel_ provides a toroidal evacuated chamber containing the plasma,
 
 The top flange of the cryostat will be a large structure taking a considerable load from atmospheric pressure.  PROCESS does not calculate the required thickness, but the vertical distance *h* between the uppermost PF coil and the top flange of the cryostat is set using `clhsf` (default value 4.268 m); a scaling based on ITER is used:
 $$
-h = \mathtt{clhsf} \left( \frac{2 \times \mathtt{rdewex}}{28.440}\right)
+h = \mathtt{clhsf} \left( \frac{2 \times \mathtt{r_cryostat_inboard}}{28.440}\right)
 $$
 
 # Cryogenics
