@@ -19,7 +19,7 @@ import os
 from argparse import RawTextHelpFormatter
 from importlib import resources
 
-import matplotlib
+import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
@@ -55,8 +55,8 @@ from process.impurity_radiation import read_impurity_file
 from process.io.python_fortran_dicts import get_dicts
 
 if os.name == "posix" and "DISPLAY" not in os.environ:
-    matplotlib.use("Agg")
-matplotlib.rcParams["figure.max_open_warning"] = 40
+    mpl.use("Agg")
+mpl.rcParams["figure.max_open_warning"] = 40
 
 
 def parse_args(args):

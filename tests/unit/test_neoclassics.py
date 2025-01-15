@@ -1,6 +1,6 @@
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process.fortran import neoclassics_module, physics_variables
@@ -82,20 +82,20 @@ class InitNeoclassicsParam(NamedTuple):
             ti=5.7180500000000007,
             dene=2.07086e20,
             deni=1.47415411616e20,
-            densities=numpy.array(
-                numpy.array((0, 0, 0, 0), order="F"), order="F"
+            densities=np.array(
+                np.array((0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            temperatures=numpy.array(
-                numpy.array((0, 0, 0, 0), order="F"), order="F"
+            temperatures=np.array(
+                np.array((0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            dr_densities=numpy.array(
-                numpy.array((0, 0, 0, 0), order="F"), order="F"
+            dr_densities=np.array(
+                np.array((0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            dr_temperatures=numpy.array(
-                numpy.array((0, 0, 0, 0), order="F"), order="F"
+            dr_temperatures=np.array(
+                np.array((0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            roots=numpy.array(
-                numpy.array(
+            roots=np.array(
+                np.array(
                     (
                         0,
                         0,
@@ -132,8 +132,8 @@ class InitNeoclassicsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            weights=numpy.array(
-                numpy.array(
+            weights=np.array(
+                np.array(
                     (
                         0,
                         0,
@@ -170,7 +170,7 @@ class InitNeoclassicsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            nu=numpy.array(
+            nu=np.array(
                 (
                     (0, 0, 0, 0),
                     (0, 0, 0, 0),
@@ -205,7 +205,7 @@ class InitNeoclassicsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            nu_star=numpy.array(
+            nu_star=np.array(
                 (
                     (0, 0, 0, 0),
                     (0, 0, 0, 0),
@@ -240,10 +240,10 @@ class InitNeoclassicsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            nu_star_averaged=numpy.array(
-                numpy.array((0, 0, 0, 0), order="F"), order="F"
+            nu_star_averaged=np.array(
+                np.array((0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            vd=numpy.array(
+            vd=np.array(
                 (
                     (0, 0, 0, 0),
                     (0, 0, 0, 0),
@@ -279,9 +279,7 @@ class InitNeoclassicsParam(NamedTuple):
                 order="F",
             ).transpose(),
             iota=1,
-            q_flux=numpy.array(
-                numpy.array((0, 0, 0, 0), order="F"), order="F"
-            ).transpose(),
+            q_flux=np.array(np.array((0, 0, 0, 0), order="F"), order="F").transpose(),
             eps_eff=1.0000000000000001e-05,
             r_eff=0,
             r_effin=0.59999999999999998,
@@ -311,8 +309,8 @@ class InitNeoclassicsParam(NamedTuple):
                 -1.4749786982533515e-15,
                 -1.4749786982533515e-15,
             ),
-            expected_roots=numpy.array(
-                numpy.array(
+            expected_roots=np.array(
+                np.array(
                     (
                         0.047407180540805262,
                         0.24992391675315939,
@@ -381,7 +379,7 @@ class InitNeoclassicsParam(NamedTuple):
                 1.8786080317495154e-39,
                 8.7459804404650116e-45,
             ),
-            expected_nu=numpy.array(
+            expected_nu=np.array(
                 (
                     (
                         3695464.938733798,
@@ -566,7 +564,7 @@ class InitNeoclassicsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_nu_star=numpy.array(
+            expected_nu_star=np.array(
                 (
                     (
                         10.191074937923535,
@@ -751,8 +749,8 @@ class InitNeoclassicsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_nu_star_averaged=numpy.array(
-                numpy.array(
+            expected_nu_star_averaged=np.array(
+                np.array(
                     (
                         0.030792808467814459,
                         0.01661476041777428,
@@ -763,7 +761,7 @@ class InitNeoclassicsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_vd=numpy.array(
+            expected_vd=np.array(
                 (
                     (
                         3.1645071193768142,
@@ -948,8 +946,8 @@ class InitNeoclassicsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_q_flux=numpy.array(
-                numpy.array(
+            expected_q_flux=np.array(
+                np.array(
                     (
                         13499.211058929142,
                         472549.72072198224,

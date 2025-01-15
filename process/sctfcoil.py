@@ -3,7 +3,7 @@ import json
 import logging
 
 import numba
-import numpy
+import numpy as np
 from scipy import optimize
 
 import process.superconductors as superconductors
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 RMU0 = constants.rmu0
-EPS = numpy.finfo(1.0).eps
+EPS = np.finfo(1.0).eps
 
 
 class Sctfcoil:
@@ -129,7 +129,7 @@ class Sctfcoil:
             - tfcoil_variables.thwcndut * (2.0e0 / 3.0e0)
         )
         sctfcoil_module.conductor_acs = (
-            9.0e0 / 4.0e0 * numpy.pi * rebco_variables.croco_od**2
+            9.0e0 / 4.0e0 * np.pi * rebco_variables.croco_od**2
         )
         tfcoil_variables.acstf = sctfcoil_module.conductor_acs
         sctfcoil_module.conductor_area = (
@@ -626,7 +626,7 @@ class Sctfcoil:
         # Helium channel
         fhetot = (
             fhe
-            + (numpy.pi / 4.0e0)
+            + (np.pi / 4.0e0)
             * tfcoil_variables.dhecoil
             * tfcoil_variables.dhecoil
             / acs
@@ -655,7 +655,7 @@ class Sctfcoil:
             if abs(strain) > 0.5e-2:
                 error_handling.fdiags[0] = strain
                 error_handling.report_error(261)
-                strain = numpy.sign(strain) * 0.5e-2
+                strain = np.sign(strain) * 0.5e-2
 
             #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
@@ -708,7 +708,7 @@ class Sctfcoil:
             if abs(strain) > 0.5e-2:
                 error_handling.fdiags[0] = strain
                 error_handling.report_error(261)
-                strain = numpy.sign(strain) * 0.5e-2
+                strain = np.sign(strain) * 0.5e-2
 
             j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -727,7 +727,7 @@ class Sctfcoil:
             if abs(strain) > 0.5e-2:
                 error_handling.fdiags[0] = strain
                 error_handling.report_error(261)
-                strain = numpy.sign(strain) * 0.5e-2
+                strain = np.sign(strain) * 0.5e-2
 
             #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
@@ -768,7 +768,7 @@ class Sctfcoil:
             if abs(strain) > 0.7e-2:
                 error_handling.fdiags[0] = strain
                 error_handling.report_error(261)
-                strain = numpy.sign(strain) * 0.7e-2
+                strain = np.sign(strain) * 0.7e-2
 
             j_crit_sc, _, _ = superconductors.gl_rebco(
                 thelium, bmax, strain, bc20m, tc0m
@@ -792,7 +792,7 @@ class Sctfcoil:
             if abs(strain) > 0.7e-2:
                 error_handling.fdiags[0] = strain
                 error_handling.report_error(261)
-                strain = numpy.sign(strain) * 0.7e-2
+                strain = np.sign(strain) * 0.7e-2
 
             # 'high current density' as per parameterisation described in Wolf,
             #  and based on Hazelton experimental data and Zhai conceptual model;
@@ -1183,7 +1183,7 @@ class Sctfcoil:
                 (build_variables.hmax + build_variables.tfthko)
                 * RMU0
                 / constants.pi
-                * numpy.log(
+                * np.log(
                     build_variables.r_tf_outboard_mid / build_variables.r_tf_inboard_mid
                 )
             )
@@ -1461,19 +1461,19 @@ class Sctfcoil:
         #  Current density limited by temperature rise during quench
 
         tav = 1.0e0 + (tmax - tba) / 20.0e0
-        no = int(tav)
-        np = no + 1
-        np = min(np, 11)
+        n_o = int(tav)
+        n_p = n_o + 1
+        n_p = min(n_p, 11)
 
-        ai1 = 1.0e16 * (p1[no - 1] + (p1[np - 1] - p1[no - 1]) * (tav - no))
-        ai2 = 1.0e16 * (p2[no - 1] + (p2[np - 1] - p2[no - 1]) * (tav - no))
-        ai3 = 1.0e16 * (p3[no - 1] + (p3[np - 1] - p3[no - 1]) * (tav - no))
+        ai1 = 1.0e16 * (p1[n_o - 1] + (p1[n_p - 1] - p1[n_o - 1]) * (tav - n_o))
+        ai2 = 1.0e16 * (p2[n_o - 1] + (p2[n_p - 1] - p2[n_o - 1]) * (tav - n_o))
+        ai3 = 1.0e16 * (p3[n_o - 1] + (p3[n_p - 1] - p3[n_o - 1]) * (tav - n_o))
 
         aa = vd * aio / tfes
         bb = (1.0e0 - fcond) * fcond * fcu * ai1
         cc = (fcu * fcond) ** 2 * ai2
         dd = (1.0e0 - fcu) * fcu * fcond**2 * ai3
-        ajcp = numpy.sqrt(aa * (bb + cc + dd))
+        ajcp = np.sqrt(aa * (bb + cc + dd))
         ajwpro = ajcp * (acs / aturn)
 
         return ajwpro, vd
@@ -1485,23 +1485,23 @@ class Sctfcoil:
         - Winding Pack NOT included
         """
 
-        sctfcoil_module.theta_coil = numpy.pi / tfcoil_variables.n_tf
-        sctfcoil_module.tan_theta_coil = numpy.tan(sctfcoil_module.theta_coil)
+        sctfcoil_module.theta_coil = np.pi / tfcoil_variables.n_tf
+        sctfcoil_module.tan_theta_coil = np.tan(sctfcoil_module.theta_coil)
 
         # TF coil inboard legs mid-plane cross-section area (WP + casing ) [m2]
         if tfcoil_variables.i_tf_case_geom == 0:
             # Circular front case
-            tfcoil_variables.tfareain = numpy.pi * (
+            tfcoil_variables.tfareain = np.pi * (
                 build_variables.r_tf_inboard_out**2 - build_variables.r_tf_inboard_in**2
             )
         else:
             # Straight front case
             tfcoil_variables.tfareain = (
                 tfcoil_variables.n_tf
-                * numpy.sin(sctfcoil_module.theta_coil)
-                * numpy.cos(sctfcoil_module.theta_coil)
+                * np.sin(sctfcoil_module.theta_coil)
+                * np.cos(sctfcoil_module.theta_coil)
                 * build_variables.r_tf_inboard_out**2
-                - numpy.pi * build_variables.r_tf_inboard_in**2
+                - np.pi * build_variables.r_tf_inboard_in**2
             )
 
         # Vertical distance from the midplane to the top of the tapered section [m]
@@ -1528,7 +1528,7 @@ class Sctfcoil:
         # Sliding joints geometry
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
             tfcoil_variables.tftort = (
-                2.0e0 * build_variables.r_cp_top * numpy.sin(sctfcoil_module.theta_coil)
+                2.0e0 * build_variables.r_cp_top * np.sin(sctfcoil_module.theta_coil)
             )
 
         # Default thickness, initially written for DEMO SC magnets
@@ -1536,13 +1536,13 @@ class Sctfcoil:
             tfcoil_variables.tftort = (
                 2.0e0
                 * build_variables.r_tf_inboard_out
-                * numpy.sin(sctfcoil_module.theta_coil)
+                * np.sin(sctfcoil_module.theta_coil)
             )
         else:
             tfcoil_variables.tftort = (
                 2.0e0
                 * build_variables.r_tf_inboard_out
-                * numpy.sin(sctfcoil_module.theta_coil)
+                * np.sin(sctfcoil_module.theta_coil)
             )
 
         # Area of rectangular cross-section TF outboard leg [m2]
@@ -1563,7 +1563,7 @@ class Sctfcoil:
             tfcoil_variables.casths = (
                 tfcoil_variables.casths_fraction
                 * (build_variables.r_tf_inboard_in + tfcoil_variables.thkcas)
-                * numpy.tan(numpy.pi / tfcoil_variables.n_tf)
+                * np.tan(np.pi / tfcoil_variables.n_tf)
             )
 
         # Radial position of peak toroidal field [m]
@@ -1571,7 +1571,7 @@ class Sctfcoil:
             # SC : conservative assumption as the radius is calculated with the
             # WP radial distances defined at the TF middle (cos)
             tfcoil_variables.rbmax = (
-                build_variables.r_tf_inboard_out * numpy.cos(sctfcoil_module.theta_coil)
+                build_variables.r_tf_inboard_out * np.cos(sctfcoil_module.theta_coil)
                 - tfcoil_variables.casthi
                 - tfcoil_variables.tinstf
                 - tfcoil_variables.tfinsgap
@@ -1765,9 +1765,9 @@ class Sctfcoil:
         """
         hh = (aaa - bbb) ** 2 / (aaa + bbb) ** 2
         return (
-            numpy.pi
+            np.pi
             * (aaa + bbb)
-            * (1.0e0 + (3.0e0 * hh) / (10.0e0 + numpy.sqrt(4.0e0 - 3.0e0 * hh)))
+            * (1.0e0 + (3.0e0 * hh) / (10.0e0 + np.sqrt(4.0e0 - 3.0e0 * hh)))
         )
 
     def tf_res_heating(self):
@@ -1796,7 +1796,7 @@ class Sctfcoil:
             # Tricky trick to make the leg / CP tempearture the same
             if (
                 abs(tfcoil_variables.tlegav + 1.0e0)
-                < numpy.finfo(float(tfcoil_variables.tlegav)).eps
+                < np.finfo(float(tfcoil_variables.tlegav)).eps
             ):
                 sctfcoil_module.is_leg_cp_temp_same = 1
                 tfcoil_variables.tlegav = tfcoil_variables.tcpav
@@ -1893,8 +1893,8 @@ class Sctfcoil:
                 # Number of contact area per joint (all legs)
                 n_contact_tot = (
                     tfcoil_variables.n_tf_joints_contact
-                    * numpy.round(tfcoil_variables.n_tf_turn)
-                    * numpy.round(tfcoil_variables.n_tf)
+                    * np.round(tfcoil_variables.n_tf_turn)
+                    * np.round(tfcoil_variables.n_tf)
                 )
 
                 # Area of joint contact (all legs)
@@ -1970,12 +1970,10 @@ class Sctfcoil:
         30/11/20 SK added the ground outer ground insulation volume
         F/MI/PJK/LOGBOOK12, pp.33,34
         """
-        yy_ins = numpy.zeros((101,))  # Exact conductor area (to be integrated)
-        yy_cond = numpy.zeros((101,))  # Turn insulation area (to be integrated)
-        yy_gr_ins = numpy.zeros((
-            101,
-        ))  # Outter ground insulation area (to be integrated)
-        yy_casout = numpy.zeros((101,))  # Outter case area (to be integrated)
+        yy_ins = np.zeros((101,))  # Exact conductor area (to be integrated)
+        yy_cond = np.zeros((101,))  # Turn insulation area (to be integrated)
+        yy_gr_ins = np.zeros((101,))  # Outter ground insulation area (to be integrated)
+        yy_casout = np.zeros((101,))  # Outter case area (to be integrated)
 
         rtop = r_cp_top - cas_out_th - gr_ins_th
 
@@ -2026,37 +2024,37 @@ class Sctfcoil:
         n_turns_tot = n_tf * n_tf_turn
 
         # Area of the innner TF central hole [m2]
-        a_tfin_hole = numpy.pi * r_tfin_inleg**2
+        a_tfin_hole = np.pi * r_tfin_inleg**2
 
         # Mid-plane outer casing cross-section area [m2]
-        a_casout = numpy.pi * (
+        a_casout = np.pi * (
             (rmid + gr_ins_th + cas_out_th) ** 2 - (rmid + gr_ins_th) ** 2
         )
 
         # Mid-plane outter ground insulation thickness [m2]
         a_cp_gr_ins = (
-            numpy.pi * ((rmid + gr_ins_th) ** 2 - rmid**2)
+            np.pi * ((rmid + gr_ins_th) ** 2 - rmid**2)
             + 2.0e0 * gr_ins_th * (rmid - r_tfin_inleg) * n_tf
         )
 
         # Mid-plane turn layer cross-section area [m2]
         a_cp_ins = (
-            numpy.pi
+            np.pi
             * ((r_tfin_inleg + ins_th) ** 2 - r_tfin_inleg**2)  # Inner layer volume
-            + numpy.pi * (rmid**2 - (rmid - ins_th) ** 2)  # Outter layer volume
+            + np.pi * (rmid**2 - (rmid - ins_th) ** 2)  # Outter layer volume
             + 2.0e0 * n_turns_tot * ins_th * (rmid - r_tfin_inleg - 2.0e0 * ins_th)
         )  # inter turn separtion
 
         # Cooling pipes cross-section per coil [m2]
         a_cp_cool = fcool * (
-            (numpy.pi * rmid**2 - a_tfin_hole - a_cp_ins) / n_tf
+            (np.pi * rmid**2 - a_tfin_hole - a_cp_ins) / n_tf
             - 2.0e0 * gr_ins_th * (rmid - r_tfin_inleg)
         )  # Wedge ground insulation
         # ---------------------------
 
         #  Trivial solutions
         # ------------------
-        if numpy.abs(fcool) < EPS:
+        if np.abs(fcool) < EPS:
             vol_cond_cp = 0.0e0
             respow = 0.0e0
             vol_case_cp = 0.0e0
@@ -2072,10 +2070,10 @@ class Sctfcoil:
                 vol_gr_ins_cp,
             )
 
-        if numpy.abs(rmid - rtop) < EPS:
+        if np.abs(rmid - rtop) < EPS:
             # Exact conductor cross-section
             a_cond_midplane = (
-                numpy.pi * rmid**2 - a_tfin_hole - n_tf * a_cp_cool - a_cp_ins
+                np.pi * rmid**2 - a_tfin_hole - n_tf * a_cp_cool - a_cp_ins
             )
 
             # Volumes and resisitive losses calculations
@@ -2107,7 +2105,7 @@ class Sctfcoil:
         x = (r1 - rmid) ** 2 + z1**2
         y = ztop**2 / ((rtop - rmid) ** 2 + ztop**2)
 
-        rc = rmid + numpy.sqrt(x / (1.0e0 - y))
+        rc = rmid + np.sqrt(x / (1.0e0 - y))
         # -------------------------------------------------------------
 
         #  Find volume of tapered section of centrepost, and the resistive
@@ -2118,9 +2116,9 @@ class Sctfcoil:
 
         for ii in range(101):
             z = ii * dz
-            z = numpy.fmin(numpy.array(z), ztop)
+            z = np.fmin(np.array(z), ztop)
 
-            r = rc - numpy.sqrt((rc - rmid) ** 2 - z * z)
+            r = rc - np.sqrt((rc - rmid) ** 2 - z * z)
 
             # if r <= 0.0e0:
             #     error_handling.fdiags[0] = r
@@ -2132,8 +2130,8 @@ class Sctfcoil:
 
             # Insulation cross-sectional area at z
             yy_ins[ii] = (
-                numpy.pi * ((r_tfin_inleg + ins_th) ** 2 - r_tfin_inleg**2)
-                + numpy.pi * (r**2 - (r - ins_th) ** 2)  # Inner layer volume
+                np.pi * ((r_tfin_inleg + ins_th) ** 2 - r_tfin_inleg**2)
+                + np.pi * (r**2 - (r - ins_th) ** 2)  # Inner layer volume
                 + 2.0e0  # Outter layer volume
                 * ins_th
                 * (r - r_tfin_inleg - 2.0e0 * ins_th)
@@ -2142,7 +2140,7 @@ class Sctfcoil:
 
             #  Conductor cross-sectional area at z
             yy_cond[ii] = (
-                numpy.pi * r**2
+                np.pi * r**2
                 - a_tfin_hole
                 - n_tf * a_cp_cool
                 - yy_ins[ii]
@@ -2150,12 +2148,12 @@ class Sctfcoil:
             )  # Wedge ground insulation
 
             #  Outer ground insulation area at z
-            yy_gr_ins[ii] = numpy.pi * (
+            yy_gr_ins[ii] = np.pi * (
                 (r + gr_ins_th) ** 2 - r**2
             ) + 2.0e0 * n_tf * gr_ins_th * (r - r_tfin_inleg)
 
             #  Outer casing Cross-sectional area at z
-            yy_casout[ii] = numpy.pi * (
+            yy_casout[ii] = np.pi * (
                 (r + gr_ins_th + cas_out_th) ** 2 - (r + gr_ins_th) ** 2
             )
 
@@ -2180,8 +2178,8 @@ class Sctfcoil:
 
         # Turn insulation layer cross section at CP top  [m2]
         a_cp_ins = (
-            numpy.pi * ((r_tfin_inleg + ins_th) ** 2 - r_tfin_inleg**2)
-            + numpy.pi * (rtop**2 - (rtop - ins_th) ** 2)  # Inner layer volume
+            np.pi * ((r_tfin_inleg + ins_th) ** 2 - r_tfin_inleg**2)
+            + np.pi * (rtop**2 - (rtop - ins_th) ** 2)  # Inner layer volume
             + 2.0e0  # Outter layer volume
             * ins_th
             * (rtop - r_tfin_inleg - 2.0e0 * ins_th)
@@ -2190,12 +2188,12 @@ class Sctfcoil:
 
         # Ground insulation layer cross-section at CP top [m2]
         a_cp_gr_ins = (
-            numpy.pi * ((rtop + gr_ins_th) ** 2 - rtop**2)
+            np.pi * ((rtop + gr_ins_th) ** 2 - rtop**2)
             + 2.0e0 * gr_ins_th * (rtop - r_tfin_inleg) * n_tf
         )
 
         # Outer casing cross-section area at CP top [m2]
-        a_casout = numpy.pi * (
+        a_casout = np.pi * (
             (rmid + gr_ins_th + cas_out_th) ** 2 - (rmid + gr_ins_th) ** 2
         )
 
@@ -2203,7 +2201,7 @@ class Sctfcoil:
         vol_cond_cp = 2.0e0 * sum1 + 2.0e0 * (  # Tapered section
             hmaxi - ztop
         ) * (  # Straight section vertical height
-            numpy.pi * rtop**2
+            np.pi * rtop**2
             - a_tfin_hole
             - a_cp_ins
             - n_tf * a_cp_cool
@@ -2220,7 +2218,7 @@ class Sctfcoil:
         vol_gr_ins_cp = 2.0e0 * (
             sum5
             + (hmaxi - ztop) * a_cp_gr_ins
-            + hmaxi * numpy.pi * (r_tfin_inleg**2 - (r_tfin_inleg - gr_ins_th) ** 2)
+            + hmaxi * np.pi * (r_tfin_inleg**2 - (r_tfin_inleg - gr_ins_th) ** 2)
         )
 
         # CP casing volume [m3]
@@ -2228,7 +2226,7 @@ class Sctfcoil:
             sum4
             + (hmaxi - ztop) * a_casout
             + hmaxi
-            * numpy.pi
+            * np.pi
             * (
                 (r_tfin_inleg - gr_ins_th) ** 2
                 - (r_tfin_inleg - gr_ins_th - cas_in_th) ** 2
@@ -2242,7 +2240,7 @@ class Sctfcoil:
             * (
                 (hmaxi - ztop)
                 / (
-                    numpy.pi * rtop**2
+                    np.pi * rtop**2
                     - a_tfin_hole
                     - a_cp_ins
                     - n_tf * a_cp_cool
@@ -2328,7 +2326,7 @@ class Sctfcoil:
             n_tf_turn=tfcoil_variables.n_tf_turn,
             # Area of the radial plate taken to be the area of steel in the WP
             # TODO: value clipped due to #1883
-            S_rp=numpy.clip(sctfcoil_module.a_tf_steel, 0, None),
+            S_rp=np.clip(sctfcoil_module.a_tf_steel, 0, None),
             # TODO: Does this calculation of Scc exclude the area of the case down the side?
             S_cc=sctfcoil_module.a_case_front + sctfcoil_module.a_case_nose,
             taud=tfcoil_variables.tdmptf,
@@ -2392,7 +2390,7 @@ class Sctfcoil:
 
         # If the TF coil has no bore it would induce division by 0.
         # In this situation, the bore radius is set to a very small value : 1.0e-9 m
-        if abs(r_in_wp) < numpy.finfo(float(r_in_wp)).eps:
+        if abs(r_in_wp) < np.finfo(float(r_in_wp)).eps:
             r_in_wp = 1.0e-9
 
         # May the force be with you
@@ -2401,15 +2399,15 @@ class Sctfcoil:
             * (physics_variables.bt * physics_variables.rmajor * tfcoil_variables.ritfc)
             / (tfcoil_variables.n_tf * dr_wp**2)
             * (
-                r_out_wp**2 * numpy.log(r_out_wp / r_in_wp)
-                + r_in_outwp**2 * numpy.log((r_in_outwp + dr_wp) / r_in_outwp)
-                + dr_wp**2 * numpy.log((r_in_outwp + dr_wp) / r_in_wp)
+                r_out_wp**2 * np.log(r_out_wp / r_in_wp)
+                + r_in_outwp**2 * np.log((r_in_outwp + dr_wp) / r_in_outwp)
+                + dr_wp**2 * np.log((r_in_outwp + dr_wp) / r_in_wp)
                 - dr_wp * (r_out_wp + r_in_outwp)
                 + 2.0e0
                 * dr_wp
                 * (
-                    r_out_wp * numpy.log(r_in_wp / r_out_wp)
-                    + r_in_outwp * numpy.log((r_in_outwp + dr_wp) / r_in_outwp)
+                    r_out_wp * np.log(r_in_wp / r_out_wp)
+                    + r_in_outwp * np.log((r_in_outwp + dr_wp) / r_in_outwp)
                 )
             )
         )
@@ -2427,11 +2425,11 @@ class Sctfcoil:
                 )
                 / (tfcoil_variables.n_tf * dr_wp**2)
                 * (
-                    2.0e0 * r_out_wp**2 * numpy.log(r_out_wp / r_in_wp)
-                    + 2.0e0 * dr_wp**2 * numpy.log(build_variables.r_cp_top / r_in_wp)
+                    2.0e0 * r_out_wp**2 * np.log(r_out_wp / r_in_wp)
+                    + 2.0e0 * dr_wp**2 * np.log(build_variables.r_cp_top / r_in_wp)
                     + 3.0e0 * dr_wp**2
                     - 2.0e0 * dr_wp * r_out_wp
-                    + 4.0e0 * dr_wp * r_out_wp * numpy.log(r_in_wp / r_out_wp)
+                    + 4.0e0 * dr_wp * r_out_wp * np.log(r_in_wp / r_out_wp)
                 )
             )
 
@@ -2498,15 +2496,15 @@ class Sctfcoil:
 
         for _ in range(NINTERVALS):
             # Field in the bore for unit current
-            b = RMU0 / (2.0e0 * numpy.pi * r)
+            b = RMU0 / (2.0e0 * np.pi * r)
             # Find out if there is a bore
             if x0 - r < ai:
-                h_bore = y0 + bi * numpy.sqrt(1 - ((r - x0) / ai) ** 2)
-                h_thick = bo * numpy.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
+                h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
+                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
             else:
                 h_bore = 0.0e0
                 # Include the contribution from the straight section
-                h_thick = bo * numpy.sqrt(1 - ((r - x0) / ao) ** 2) + yarc[0]
+                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) + yarc[0]
 
             # Assume B in TF coil = 1/2  B in bore
             # Multiply by 2 for upper and lower halves of coil
@@ -2524,14 +2522,14 @@ class Sctfcoil:
 
         for _ in range(NINTERVALS):
             # Field in the bore for unit current
-            b = RMU0 / (2.0e0 * numpy.pi * r)
+            b = RMU0 / (2.0e0 * np.pi * r)
             # Find out if there is a bore
             if r - x0 < ai:
-                h_bore = y0 + bi * numpy.sqrt(1 - ((r - x0) / ai) ** 2)
-                h_thick = bo * numpy.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
+                h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
+                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
             else:
                 h_bore = 0.0e0
-                h_thick = bo * numpy.sqrt(1 - ((r - x0) / ao) ** 2)
+                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2)
 
             # Assume B in TF coil = 1/2  B in bore
             # Multiply by 2 for upper and lower halves of coil
@@ -2553,7 +2551,7 @@ class Sctfcoil:
 
         # Surface areas (for cryo system) [m2]
         wbtf = (
-            build_variables.r_tf_inboard_out * numpy.sin(sctfcoil_module.theta_coil)
+            build_variables.r_tf_inboard_out * np.sin(sctfcoil_module.theta_coil)
             - build_variables.r_tf_inboard_in * sctfcoil_module.tan_theta_coil
         )
         tfcoil_variables.tfocrn = (
@@ -2867,12 +2865,12 @@ class Sctfcoil:
         :rtype: Tuple[float, int]
 
         """
-        a = numpy.zeros((4,))
+        a = np.zeros((4,))
         flag = 0
 
         #  Set fitting coefficients for different numbers of TF coils
 
-        int_n_tf = numpy.round(n_tf)
+        int_n_tf = np.round(n_tf)
 
         if int_n_tf == 16:
             a[0] = 0.28101e0
@@ -2897,7 +2895,7 @@ class Sctfcoil:
         #  Maximum winding pack width before adjacent packs touch
         #  (ignoring the external case and ground wall thicknesses)
 
-        wmax = (2.0e0 * tfin + dr_tf_wp) * numpy.tan(numpy.pi / n_tf)
+        wmax = (2.0e0 * tfin + dr_tf_wp) * np.tan(np.pi / n_tf)
 
         #  Dimensionless winding pack width
 
@@ -2917,7 +2915,7 @@ class Sctfcoil:
 
         sctfcoil_module.tf_fit_y = (
             a[0]
-            + a[1] * numpy.exp(-sctfcoil_module.tf_fit_t)
+            + a[1] * np.exp(-sctfcoil_module.tf_fit_t)
             + a[2] * sctfcoil_module.tf_fit_z
             + a[3] * sctfcoil_module.tf_fit_z * sctfcoil_module.tf_fit_t
         )
@@ -2952,21 +2950,21 @@ class Sctfcoil:
         # Set by user (no turn structure by default, i.e. tfcoil_variables.n_tf_turn = 1 )
         if (
             abs(tfcoil_variables.n_tf_turn)
-            < numpy.finfo(float(tfcoil_variables.n_tf_turn)).eps
+            < np.finfo(float(tfcoil_variables.n_tf_turn)).eps
         ):
             tfcoil_variables.n_tf_turn = 1.0e0
 
         # Total mid-plane cross-sectional area of winding pack, [m2]
         # including the surrounding ground-wall insulation layer
         sctfcoil_module.awpc = (
-            numpy.pi
+            np.pi
             * (sctfcoil_module.r_wp_outer**2 - sctfcoil_module.r_wp_inner**2)
             / tfcoil_variables.n_tf
         )
 
         # Area of the front case, the plasma-facing case of the inner TF coil [m2]
         sctfcoil_module.a_case_front = (
-            numpy.pi
+            np.pi
             * (
                 (sctfcoil_module.r_wp_outer + tfcoil_variables.casthi) ** 2
                 - sctfcoil_module.r_wp_outer**2
@@ -2975,7 +2973,7 @@ class Sctfcoil:
         )
 
         # WP mid-plane cross-section excluding ground insulation per coil [m2]
-        sctfcoil_module.awptf = numpy.pi * (
+        sctfcoil_module.awptf = np.pi * (
             (sctfcoil_module.r_wp_outer - tfcoil_variables.tinstf) ** 2
             - (sctfcoil_module.r_wp_inner + tfcoil_variables.tinstf) ** 2
         ) / tfcoil_variables.n_tf - 2.0e0 * tfcoil_variables.tinstf * (
@@ -2986,7 +2984,7 @@ class Sctfcoil:
         sctfcoil_module.a_ground_ins = sctfcoil_module.awpc - sctfcoil_module.awptf
 
         # Exact mid-plane cross-section area of the conductor per TF coil [m2]
-        a_tf_cond = numpy.pi * (
+        a_tf_cond = np.pi * (
             (
                 sctfcoil_module.r_wp_outer
                 - tfcoil_variables.tinstf
@@ -3113,7 +3111,7 @@ class Sctfcoil:
         # -------------------
         # Central helium channel down the conductor core [m2]
         tfcoil_variables.awphec = (
-            0.25e0 * tfcoil_variables.n_tf_turn * numpy.pi * tfcoil_variables.dhecoil**2
+            0.25e0 * tfcoil_variables.n_tf_turn * np.pi * tfcoil_variables.dhecoil**2
         )
 
         # Total conductor cross-sectional area, taking account of void area
@@ -3435,12 +3433,12 @@ class Sctfcoil:
             error_handling.fdiags[2] = thwcndut
             error_handling.report_error(100)
 
-        tfcoil_variables.t_turn_tf = numpy.sqrt(
+        tfcoil_variables.t_turn_tf = np.sqrt(
             sctfcoil_module.t_turn_radial * sctfcoil_module.t_turn_toroidal
         )
 
         # Number of TF turns
-        n_tf_turn = numpy.double(n_layer * n_pancake)
+        n_tf_turn = np.double(n_layer * n_pancake)
 
         # Current per turn [A/turn]
         cpttf = sctfcoil_module.tfc_current / n_tf_turn
@@ -3452,7 +3450,7 @@ class Sctfcoil:
         sctfcoil_module.t_conductor_toroidal = (
             sctfcoil_module.t_turn_toroidal - 2.0e0 * thicndut
         )
-        tfcoil_variables.t_conductor = numpy.sqrt(
+        tfcoil_variables.t_conductor = np.sqrt(
             sctfcoil_module.t_conductor_radial * sctfcoil_module.t_conductor_toroidal
         )
 
@@ -3463,14 +3461,14 @@ class Sctfcoil:
         sctfcoil_module.t_cable_toroidal = (
             sctfcoil_module.t_conductor_toroidal - 2.0e0 * thwcndut
         )
-        sctfcoil_module.t_cable = numpy.sqrt(
+        sctfcoil_module.t_cable = np.sqrt(
             sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal
         )
 
         # Cross-sectional area of cable space per turn
         # taking account of rounded inside corners [m2]
         acstf = (sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal) - (
-            4.0e0 - numpy.pi
+            4.0e0 - np.pi
         ) * sctfcoil_module.rbcndut**2
 
         if acstf <= 0.0e0:
@@ -3600,85 +3598,85 @@ class Sctfcoil:
         TF coil set.
         PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
         """
-        jeff = numpy.zeros((n_tf_layer,))
+        jeff = np.zeros((n_tf_layer,))
         # Effective current density [A/m2]
 
-        radtf = numpy.zeros((n_tf_layer + 1,))
+        radtf = np.zeros((n_tf_layer + 1,))
         # Radii used to define the layers used in the stress models [m]
         # Layers are labelled from inboard to outbard
 
-        eyoung_trans = numpy.zeros((n_tf_layer,))
+        eyoung_trans = np.zeros((n_tf_layer,))
         # Young's moduli (one per layer) of the TF coil in the
         # transverse (radial/toroidal) direction. Used in the stress
         # models [Pa]
 
-        poisson_trans = numpy.zeros(
+        poisson_trans = np.zeros(
             (n_tf_layer,),
         )
         # Poisson's ratios (one per layer) of the TF coil between the
         # two transverse directions (radial and toroidal). Used in the
         # stress models.
 
-        eyoung_member_array = numpy.zeros((n_tf_wp_layers,))
+        eyoung_member_array = np.zeros((n_tf_wp_layers,))
         # Array to store the Young's moduli of the members to composite into smeared
         # properties [Pa]
 
-        poisson_member_array = numpy.zeros((n_tf_wp_layers,))
+        poisson_member_array = np.zeros((n_tf_wp_layers,))
         # Array to store the Poisson's ratios of the members to composite into smeared
         # properti
 
-        l_member_array = numpy.zeros((n_tf_wp_layers,))
+        l_member_array = np.zeros((n_tf_wp_layers,))
         # Array to store the linear dimension (thickness) of the members to composite into smeared
         # properties [m]
 
-        eyoung_axial = numpy.zeros((n_tf_layer,))
+        eyoung_axial = np.zeros((n_tf_layer,))
         # Young's moduli (one per layer) of the TF coil in the vertical
         # direction used in the stress models [Pa]
 
-        poisson_axial = numpy.zeros((n_tf_layer,))
+        poisson_axial = np.zeros((n_tf_layer,))
         # Poisson's ratios (one per layer) of the TF coil between the
         # vertical and transverse directions (in that order). Used in the
         # stress models. d(transverse strain)/d(vertical strain) with
         # only vertical stress.
 
-        sig_tf_wp_av_z = numpy.zeros(((n_tf_layer - i_tf_bucking) * n_radial_array,))
+        sig_tf_wp_av_z = np.zeros(((n_tf_layer - i_tf_bucking) * n_radial_array,))
         # TF Inboard leg WP smeared vertical stress r distribution at mid-plane [Pa]
 
-        sig_tf_r_max = numpy.zeros((n_tf_layer,))
+        sig_tf_r_max = np.zeros((n_tf_layer,))
         # Radial stress of the point of maximum shear stress of each layer [Pa]
 
-        sig_tf_t_max = numpy.zeros((n_tf_layer,))
+        sig_tf_t_max = np.zeros((n_tf_layer,))
         # Toroidal stress of the point of maximum shear stress of each layer [Pa]
 
-        sig_tf_z_max = numpy.zeros((n_tf_layer,))
+        sig_tf_z_max = np.zeros((n_tf_layer,))
         # Vertical stress of the point of maximum shear stress of each layer [Pa]
         # Rem : Currently constant but will be r dependent in the future
 
-        sig_tf_vmises_max = numpy.zeros((n_tf_layer,))
+        sig_tf_vmises_max = np.zeros((n_tf_layer,))
         # Von-Mises stress of the point of maximum shear stress of each layer [Pa]
 
-        sig_tf_tresca_max = numpy.zeros((n_tf_layer,))
+        sig_tf_tresca_max = np.zeros((n_tf_layer,))
         # Maximum shear stress, for the Tresca yield criterion of each layer [Pa]
         # If the CEA correction is addopted, the CEA corrected value is used
 
-        sig_tf_z = numpy.zeros((n_tf_layer * n_radial_array,))
+        sig_tf_z = np.zeros((n_tf_layer * n_radial_array,))
         # TF Inboard leg vertical tensile stress at mid-plane [Pa]
 
-        sig_tf_smeared_r = numpy.zeros((n_tf_layer * n_radial_array,))
+        sig_tf_smeared_r = np.zeros((n_tf_layer * n_radial_array,))
         # TF Inboard leg radial smeared stress r distribution at mid-plane [Pa]
 
-        sig_tf_smeared_t = numpy.zeros((n_tf_layer * n_radial_array,))
+        sig_tf_smeared_t = np.zeros((n_tf_layer * n_radial_array,))
         # TF Inboard leg tangential smeared stress r distribution at mid-plane [Pa]
 
-        sig_tf_smeared_z = numpy.zeros((n_tf_layer * n_radial_array,))
+        sig_tf_smeared_z = np.zeros((n_tf_layer * n_radial_array,))
         # TF Inboard leg vertical smeared stress r distribution at mid-plane [Pa]
 
         fac_sig_z_wp_av = 0.0
         # WP averaged vertical stress unsmearing factor
 
-        str_tf_r = numpy.zeros((n_radial_array * n_tf_layer,))
-        str_tf_t = numpy.zeros((n_radial_array * n_tf_layer,))
-        str_tf_z = numpy.zeros((n_radial_array * n_tf_layer,))
+        str_tf_r = np.zeros((n_radial_array * n_tf_layer,))
+        str_tf_t = np.zeros((n_radial_array * n_tf_layer,))
+        str_tf_z = np.zeros((n_radial_array * n_tf_layer,))
 
         sig_tf_case = None
         sig_tf_cs_bucked = None
@@ -3686,7 +3684,7 @@ class Sctfcoil:
         casestr = None
         insstrain = None
 
-        if abs(r_tf_inboard_in) < numpy.finfo(float(r_tf_inboard_in)).eps:
+        if abs(r_tf_inboard_in) < np.finfo(float(r_tf_inboard_in)).eps:
             # New extended plane strain model can handle it
             if i_tf_stress_model != 2:
                 raise ValueError("r_tf_inboard_in is ~= 0", 245)
@@ -3729,7 +3727,7 @@ class Sctfcoil:
 
                 # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
                 # Absolute value
-                curr_oh_max = 1.0e-6 * numpy.maximum(coheof, cohbop) * a_oh
+                curr_oh_max = 1.0e-6 * np.maximum(coheof, cohbop) * a_oh
 
                 #  Number of turns
                 n_oh_turns = 1.0e6 * curr_oh_max / cptdin[sum(ncls)]
@@ -3746,13 +3744,13 @@ class Sctfcoil:
                 # Radius of turn space = r_in_cst
                 # Radius of curved outer corrner r_out_cst = 3mm from literature
                 # ld_ratio_cst = 70 / 22 from literature
-                p1 = ((l_cond_cst - d_cond_cst) / numpy.pi) ** 2
+                p1 = ((l_cond_cst - d_cond_cst) / np.pi) ** 2
                 p2 = (
                     (l_cond_cst * d_cond_cst)
-                    - (4 - numpy.pi) * (r_out_cst**2)
+                    - (4 - np.pi) * (r_out_cst**2)
                     - (a_oh_turn * oh_steel_frac)
-                ) / numpy.pi
-                r_in_cst = -((l_cond_cst - d_cond_cst) / numpy.pi) + numpy.sqrt(p1 + p2)
+                ) / np.pi
+                r_in_cst = -((l_cond_cst - d_cond_cst) / np.pi) + np.sqrt(p1 + p2)
                 t_cond_oh = (
                     d_cond_cst / 2
                 ) - r_in_cst  # thickness of steel conduit in cs turn
@@ -3870,8 +3868,8 @@ class Sctfcoil:
         if i_tf_sup == 1:
             # Inner/outer radii of the layer representing the WP in stress calculations [m]
             # These radii are chosen to preserve the true WP area; see Issue #1048
-            r_wp_inner_eff = r_wp_inner * numpy.sqrt(tan_theta_coil / theta_coil)
-            r_wp_outer_eff = r_wp_outer * numpy.sqrt(tan_theta_coil / theta_coil)
+            r_wp_inner_eff = r_wp_inner * np.sqrt(tan_theta_coil / theta_coil)
+            r_wp_outer_eff = r_wp_outer * np.sqrt(tan_theta_coil / theta_coil)
 
             # Area of the cylinder representing the WP in stress calculations [m2]
             a_wp_eff = (r_wp_outer_eff**2 - r_wp_inner_eff**2) * theta_coil
@@ -3909,12 +3907,12 @@ class Sctfcoil:
                 l_member_array[1],
                 poisson_member_array[1],
             ) = eyoung_series(
-                numpy.double(eyoung_cond_trans),
+                np.double(eyoung_cond_trans),
                 (t_cable_eyng - dhecoil) * (1.0e0 - fcutfsu),
-                numpy.double(poisson_cond_trans),
-                numpy.double(eyoung_copper),
+                np.double(poisson_cond_trans),
+                np.double(eyoung_copper),
                 (t_cable_eyng - dhecoil) * fcutfsu,
-                numpy.double(poisson_copper),
+                np.double(poisson_copper),
             )
             # Steel conduit
             eyoung_member_array[2] = eyoung_steel
@@ -3941,14 +3939,14 @@ class Sctfcoil:
             # Lateral casing correction (series-composition)
             (eyoung_wp_trans_eff, a_working, poisson_wp_trans_eff) = eyoung_series(
                 eyoung_wp_trans,
-                numpy.double(t_wp_toroidal_av),
+                np.double(t_wp_toroidal_av),
                 poisson_wp_trans,
-                numpy.double(eyoung_steel),
+                np.double(eyoung_steel),
                 2.0e0 * t_lat_case_av,
-                numpy.double(poisson_steel),
+                np.double(poisson_steel),
             )
 
-            poisson_wp_trans_eff = numpy.double(poisson_wp_trans_eff)
+            poisson_wp_trans_eff = np.double(poisson_wp_trans_eff)
 
             # Average WP Young's modulus in the vertical direction
             # Split up into "members", concentric squares in cross section
@@ -4006,9 +4004,9 @@ class Sctfcoil:
             # Rem : effect of cooling pipes and insulation not taken into account
             #       for now as it needs a radially dependent Young modulus
             eyoung_wp_trans_eff = eyoung_cond
-            eyoung_wp_trans = numpy.double(eyoung_cond)
-            poisson_wp_trans_eff = numpy.double(poisson_cond)
-            poisson_wp_trans = numpy.double(poisson_cond)
+            eyoung_wp_trans = np.double(eyoung_cond)
+            poisson_wp_trans_eff = np.double(poisson_cond)
+            poisson_wp_trans = np.double(poisson_cond)
 
             # WP area using the stress model circular geometry (per coil) [m2]
             a_wp_eff = (r_wp_outer**2 - r_wp_inner**2) * theta_coil
@@ -4038,8 +4036,8 @@ class Sctfcoil:
             poisson_wp_axial_eff = poisson_wp_axial
 
             # Effect conductor layer inner/outer radius
-            r_wp_inner_eff = numpy.double(r_wp_inner)
-            r_wp_outer_eff = numpy.double(r_wp_outer)
+            r_wp_inner_eff = np.double(r_wp_inner)
+            r_wp_outer_eff = np.double(r_wp_outer)
 
         # Thickness of the layer representing the WP in stress calcualtions [m]
         dr_tf_wp_eff = r_wp_outer_eff - r_wp_outer_eff
@@ -4047,10 +4045,10 @@ class Sctfcoil:
         # Thickness of WP with homogeneous stress property [m]
         dr_wp_layer = dr_tf_wp_eff / n_tf_graded_layers
 
-        for ii in range(numpy.intc(n_tf_graded_layers)):
+        for ii in range(np.intc(n_tf_graded_layers)):
             # Homogeneous current in (super)conductor
             jeff[n_tf_bucking + ii] = ritfc / (
-                numpy.pi * (r_wp_outer_eff**2 - r_wp_inner_eff**2)
+                np.pi * (r_wp_outer_eff**2 - r_wp_inner_eff**2)
             )
 
             # Same thickness for all WP layers in stress calculation
@@ -4101,7 +4099,7 @@ class Sctfcoil:
         # Current action : trigger and error and add a little hole
         #                  to allow stress calculations
         # Rem SK : Can be easily ameneded playing around the boundary conditions
-        if abs(radtf[0]) < numpy.finfo(float(radtf[0])).eps:
+        if abs(radtf[0]) < np.finfo(float(radtf[0])).eps:
             # New extended plane strain model can handle it
             if i_tf_stress_model != 2:
                 # error_handling.report_error(245)
@@ -4281,13 +4279,13 @@ class Sctfcoil:
         # Tresca / Von Mises yield criteria calculations
         # -----------------------------
         # Array equation
-        sig_tf_tresca = numpy.maximum(
-            numpy.absolute(sig_tf_r - sig_tf_z), numpy.absolute(sig_tf_z - sig_tf_t)
+        sig_tf_tresca = np.maximum(
+            np.absolute(sig_tf_r - sig_tf_z), np.absolute(sig_tf_z - sig_tf_t)
         )
 
         # Array equation
 
-        sig_tf_vmises = numpy.sqrt(
+        sig_tf_vmises = np.sqrt(
             0.5e0
             * (
                 (sig_tf_r - sig_tf_t) ** 2
@@ -4504,7 +4502,7 @@ class Sctfcoil:
                 po.ocmmnt(self.outfile, "  -> Steel casing")
             elif (
                 abs(tfcoil_variables.eyoung_res_tf_buck - 205.0e9)
-                < numpy.finfo(float(tfcoil_variables.eyoung_res_tf_buck)).eps
+                < np.finfo(float(tfcoil_variables.eyoung_res_tf_buck)).eps
             ):
                 po.ocmmnt(self.outfile, "  -> Steel bucking cylinder")
             else:
@@ -5595,7 +5593,7 @@ class Sctfcoil:
                 "(casthi)",
             )
 
-            radius = radius / numpy.cos(numpy.pi / tfcoil_variables.n_tf)
+            radius = radius / np.cos(np.pi / tfcoil_variables.n_tf)
             po.obuild(
                 self.outfile,
                 "Plasma side case max radius",
@@ -5667,7 +5665,7 @@ class Sctfcoil:
         # Radial build consistency check
         if (
             abs(radius - build_variables.r_tf_inboard_in - build_variables.tfcth)
-            < 10.0e0 * numpy.finfo(float(radius)).eps
+            < 10.0e0 * np.finfo(float(radius)).eps
         ):
             po.ocmmnt(self.outfile, "TF coil dimensions are consistent")
         else:
@@ -5768,7 +5766,7 @@ class Sctfcoil:
             )
 
             # Consistency check
-            if abs(radius - build_variables.r_cp_top) < numpy.finfo(float(radius)).eps:
+            if abs(radius - build_variables.r_cp_top) < np.finfo(float(radius)).eps:
                 po.ocmmnt(self.outfile, "Top TF coil dimensions are consistent")
             else:
                 po.ocmmnt(self.outfile, "ERROR: TF coil dimensions are NOT consistent:")
@@ -6048,7 +6046,7 @@ class Sctfcoil:
             }
 
         sig_file_data = {
-            k: list(v) if isinstance(v, numpy.ndarray) else v
+            k: list(v) if isinstance(v, np.ndarray) else v
             for k, v in sig_file_data.items()
         }
 
@@ -6129,7 +6127,7 @@ class Sctfcoil:
             a_turn = tfcoil_variables.cpttf / jwptf
 
             # Dimension of square cross-section of each turn including inter-turn insulation [m]
-            tfcoil_variables.t_turn_tf = numpy.sqrt(a_turn)
+            tfcoil_variables.t_turn_tf = np.sqrt(a_turn)
 
         # Square turn assumption
         sctfcoil_module.t_turn_radial = tfcoil_variables.t_turn_tf
@@ -6139,7 +6137,7 @@ class Sctfcoil:
         # k:\power plant physics and technology\process\hts\hts coil module for process.docx
         tfcoil_variables.t_conductor = (
             -tfcoil_variables.layer_ins
-            + numpy.sqrt(tfcoil_variables.layer_ins**2 + 4.0e00 * a_turn)
+            + np.sqrt(tfcoil_variables.layer_ins**2 + 4.0e00 * a_turn)
         ) / 2 - 2.0e0 * thicndut
 
         # Total number of turns per TF coil (not required to be an integer)
@@ -6164,7 +6162,7 @@ class Sctfcoil:
 
             # Cross-sectional area of cable space per turn
             # taking account of rounded inside corners [m2]
-            acstf = sctfcoil_module.t_cable**2 - (4.0e0 - numpy.pi) * rbcndut**2
+            acstf = sctfcoil_module.t_cable**2 - (4.0e0 - np.pi) * rbcndut**2
 
             if acstf <= 0.0e0:
                 if tfcoil_variables.t_conductor < 0.0e0:
@@ -6209,9 +6207,9 @@ def eyoung_t_nested_squares(n, eyoung_j_in, l_in, poisson_j_perp_in):
     series, and each leg is under stress in parallel with every
     other leg.
     """
-    eyoung_j_working = numpy.zeros((n,))
-    l_working = numpy.zeros((n,))
-    poisson_j_perp_working = numpy.zeros((n,))
+    eyoung_j_working = np.zeros((n,))
+    l_working = np.zeros((n,))
+    poisson_j_perp_working = np.zeros((n,))
 
     # First member
     eyoung_j_working[0] = eyoung_j_in[0]
@@ -6319,8 +6317,8 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
         eyoung_j_3 = (l_1 + l_2) / (l_1 / eyoung_j_1 + l_2 / eyoung_j_2)
         l_3 = l_1 + l_2
 
-    eyoung_j_3 = numpy.array(eyoung_j_3)
-    poisson_j_perp_3 = numpy.array(poisson_j_perp_3)
+    eyoung_j_3 = np.array(eyoung_j_3)
+    poisson_j_perp_3 = np.array(poisson_j_perp_3)
 
     return eyoung_j_3, l_3, poisson_j_perp_3
 
@@ -6389,7 +6387,7 @@ def sigvm(sx: float, sy: float, sz: float, txy: float, txz: float, tyz: float) -
     :returns: Von Mises combination of stresses (Pa) in a TF coil.
     """
 
-    return numpy.sqrt(
+    return np.sqrt(
         0.5
         * (
             (sx - sy) ** 2
@@ -6441,62 +6439,62 @@ def extended_plane_strain(
     and so when stacked form a matrix to invert.
     """
     # outputs
-    sigr = numpy.zeros((n_radial_array * nlayers,))
+    sigr = np.zeros((n_radial_array * nlayers,))
     # Stress distribution in the radial direction (r) [Pa]
 
-    sigt = numpy.zeros((n_radial_array * nlayers,))
+    sigt = np.zeros((n_radial_array * nlayers,))
     # Stress distribution in the toroidal direction (t) [Pa]
 
-    sigz = numpy.zeros((n_radial_array * nlayers,))
+    sigz = np.zeros((n_radial_array * nlayers,))
     # Stress distribution in the vertical direction (z)
 
-    str_r = numpy.zeros((n_radial_array * nlayers,))
+    str_r = np.zeros((n_radial_array * nlayers,))
     # Strain distribution in the radial direction (r)
 
-    str_t = numpy.zeros((n_radial_array * nlayers,))
+    str_t = np.zeros((n_radial_array * nlayers,))
     # Strain distribution in the toroidal direction (t)
 
-    str_z = numpy.zeros((n_radial_array * nlayers,))
+    str_z = np.zeros((n_radial_array * nlayers,))
     # Uniform strain in the vertical direction (z)
 
-    r_deflect = numpy.zeros((n_radial_array * nlayers,))
+    r_deflect = np.zeros((n_radial_array * nlayers,))
     # Radial displacement radial distribution [m]
 
-    rradius = numpy.zeros((n_radial_array * nlayers,))
+    rradius = np.zeros((n_radial_array * nlayers,))
     # Radius array [m]
 
     # local arrays
     # Stiffness form of compliance tensor
-    nu_tz = numpy.zeros((nlayers,))
+    nu_tz = np.zeros((nlayers,))
     # Transverse-axial Poisson's ratio
     # (ratio of axial strain to transverse strain upon transverse stress)
-    ey_bar_z = numpy.zeros((nlayers,))
+    ey_bar_z = np.zeros((nlayers,))
     # Axial effective Young's modulus (zero cross-strains, not stresses) [Pa]
-    ey_bar_t = numpy.zeros((nlayers,))
+    ey_bar_t = np.zeros((nlayers,))
     # Transverse effective Young's modulus [Pa]
-    nu_bar_t = numpy.zeros((nlayers,))
+    nu_bar_t = np.zeros((nlayers,))
     # Transverse effective Poisson's ratio
-    nu_bar_tz = numpy.zeros((nlayers,))
+    nu_bar_tz = np.zeros((nlayers,))
     # Transverse-axial effective Poisson's ratio
-    nu_bar_zt = numpy.zeros((nlayers,))
+    nu_bar_zt = np.zeros((nlayers,))
     # Axial-transverse effective Poisson's ratio
 
     # Lorentz force parameters
-    currents = numpy.zeros((nlayers,))
+    currents = np.zeros((nlayers,))
     # Currents in each layer [A]
-    currents_enclosed = numpy.zeros((nlayers,))
+    currents_enclosed = np.zeros((nlayers,))
     # Currents enclosed by inner radius of each layer [A]
-    f_lin_fac = numpy.zeros((nlayers,))
+    f_lin_fac = np.zeros((nlayers,))
     # Factor that multiplies r linearly in the force density
-    f_rec_fac = numpy.zeros((nlayers,))
+    f_rec_fac = np.zeros((nlayers,))
     # Factor that multiplies r reciprocally in the force density
-    f_int_A = numpy.zeros((nlayers,))
+    f_int_A = np.zeros((nlayers,))
     # Force density integral that adds to Lame parameter A
-    f_int_B = numpy.zeros((nlayers,))
+    f_int_B = np.zeros((nlayers,))
     # Force density integral that adds to Lame parameter B
 
     # Layer transfer matrices
-    M_int = numpy.zeros(
+    M_int = np.zeros(
         (
             5,
             5,
@@ -6505,7 +6503,7 @@ def extended_plane_strain(
     )
     # Matrix that transforms the Lame parmeter vector from the
     # outer radius to the inner radius of each layer
-    M_ext = numpy.zeros(
+    M_ext = np.zeros(
         (
             5,
             5,
@@ -6515,7 +6513,7 @@ def extended_plane_strain(
     # Matrix that transforms the Lame parmeter vector from the
     # inner radius of one layer to the outer radius of the
     # next inner.
-    M_tot = numpy.zeros(
+    M_tot = np.zeros(
         (
             5,
             5,
@@ -6527,7 +6525,7 @@ def extended_plane_strain(
     # each.
 
     # Axial force inner product
-    v_force_row = numpy.zeros(
+    v_force_row = np.zeros(
         (
             1,
             5,
@@ -6535,7 +6533,7 @@ def extended_plane_strain(
     )
     # Row vector (matrix multiplication is inner product) to
     # obtain the axial force from the force-carrying layers
-    v_force_row_slip = numpy.zeros(
+    v_force_row_slip = np.zeros(
         (
             1,
             5,
@@ -6543,7 +6541,7 @@ def extended_plane_strain(
     )
     # Row vector (matrix multiplication is inner product) to
     # obtain the axial force inner slip layers (no net force)
-    rad_row_helper = numpy.zeros(
+    rad_row_helper = np.zeros(
         (
             1,
             5,
@@ -6552,7 +6550,7 @@ def extended_plane_strain(
     # A helper variable to store [radius, 1, 0, 0, 0] in row
 
     # Boundary condition matrix
-    M_bc = numpy.zeros(
+    M_bc = np.zeros(
         (
             4,
             5,
@@ -6561,22 +6559,22 @@ def extended_plane_strain(
     # Boundary condition matrix. Multiply this with the
     # outermost solution vector, (A,B,eps_z,1.0,eps_z_slip),
     # to obtain a zero vector.
-    M_toinv = numpy.zeros(
+    M_toinv = np.zeros(
         (
             4,
             4,
         ),
     )
     # Matrix to invert to get the solution
-    RHS_vec = numpy.zeros((4,))
+    RHS_vec = np.zeros((4,))
     # Right-hand-side vector to divide M_toinv
-    A_vec_solution = numpy.zeros((5,))
+    A_vec_solution = np.zeros((5,))
     # Solution vector, Lame parameters at outer radius, strain
     # of force-carrying layers, and strain of slip layers
     # (A,B,eps_z,1,eps_z_slip)
 
     # Constructing the solution everywhere
-    A_vec_layer = numpy.zeros((5,))
+    A_vec_layer = np.zeros((5,))
     # Lame parameters and strains vector at outer radius
     # of each layer
 
@@ -6620,7 +6618,7 @@ def extended_plane_strain(
     # Section 13 in the writeup
     # ***
     # Currents in each layer [A]
-    currents[:] = numpy.pi * d_curr * (rad[1 : nlayers + 1] ** 2 - rad[:nlayers] ** 2)
+    currents[:] = np.pi * d_curr * (rad[1 : nlayers + 1] ** 2 - rad[:nlayers] ** 2)
     # Currents enclosed by inner radius of each layer [A]
     currents_enclosed[0] = 0.0e0
 
@@ -6632,12 +6630,12 @@ def extended_plane_strain(
     f_rec_fac[:] = (
         RMU0
         / 2.0e0
-        * (d_curr * currents_enclosed / numpy.pi - d_curr**2 * rad[:nlayers] ** 2)
+        * (d_curr * currents_enclosed / np.pi - d_curr**2 * rad[:nlayers] ** 2)
     )
     # Force density integral that adds to Lame parameter A
     f_int_A[:] = 0.5e0 * f_lin_fac * (
         rad[1 : nlayers + 1] ** 2 - rad[:nlayers] ** 2
-    ) + f_rec_fac * numpy.log(rad[1 : nlayers + 1] / rad[:nlayers])
+    ) + f_rec_fac * np.log(rad[1 : nlayers + 1] / rad[:nlayers])
     if f_rec_fac[0] == 0e0:
         f_int_A[0] = 0.5e0 * f_lin_fac[0] * (rad[1] ** 2 - rad[0] ** 2)
 
@@ -6710,9 +6708,9 @@ def extended_plane_strain(
     M_tot[:, :, nlayers - 1] = M_int[:, :, nlayers - 1]
 
     for kk in range(nlayers - 2, -1, -1):
-        M_tot[:, :, kk] = numpy.ascontiguousarray(M_int[:, :, kk]) @ (
-            numpy.ascontiguousarray(M_ext[:, :, kk + 1])
-            @ numpy.ascontiguousarray(M_tot[:, :, kk + 1])
+        M_tot[:, :, kk] = np.ascontiguousarray(M_int[:, :, kk]) @ (
+            np.ascontiguousarray(M_ext[:, :, kk + 1])
+            @ np.ascontiguousarray(M_tot[:, :, kk + 1])
         )
 
     # Axial force inner product. Dot-product this with the
@@ -6721,14 +6719,14 @@ def extended_plane_strain(
     # Section 8 in the writeup
     # ***
     # Axial stiffness products
-    ey_bar_z_area = numpy.pi * sum(
+    ey_bar_z_area = np.pi * sum(
         ey_bar_z[nonslip_layer - 1 : nlayers]
         * (
             rad[nonslip_layer : nlayers + 1] ** 2
             - rad[nonslip_layer - 1 : nlayers] ** 2
         )
     )
-    ey_bar_z_area_slip = numpy.pi * sum(
+    ey_bar_z_area_slip = np.pi * sum(
         ey_bar_z[: nonslip_layer - 1]
         * (rad[1:nonslip_layer] ** 2 - rad[: nonslip_layer - 1] ** 2)
     )
@@ -6736,19 +6734,19 @@ def extended_plane_strain(
     # Axial stiffness inner product, for layers which carry axial force
     rad_row_helper[0, :] = [rad[nlayers] ** 2, 1e0, 0e0, 0e0, 0e0]
     v_force_row[:, :] = (
-        2e0 * numpy.pi * ey_bar_z[nlayers - 1] * nu_bar_tz[nlayers - 1] * rad_row_helper
+        2e0 * np.pi * ey_bar_z[nlayers - 1] * nu_bar_tz[nlayers - 1] * rad_row_helper
     )
     rad_row_helper[0, :] = [rad[nonslip_layer - 1] ** 2, 1e0, 0e0, 0e0, 0e0]
-    v_force_row[:, :] = v_force_row - 2e0 * numpy.pi * ey_bar_z[
+    v_force_row[:, :] = v_force_row - 2e0 * np.pi * ey_bar_z[
         nonslip_layer - 1
     ] * nu_bar_tz[nonslip_layer - 1] * (
-        rad_row_helper @ numpy.ascontiguousarray(M_tot[:, :, nonslip_layer - 1])
+        rad_row_helper @ np.ascontiguousarray(M_tot[:, :, nonslip_layer - 1])
     )
     for kk in range(nonslip_layer, nlayers):
         rad_row_helper[0, :] = [rad[kk] ** 2, 1e0, 0e0, 0e0, 0e0]
-        v_force_row[:, :] = v_force_row + 2e0 * numpy.pi * (
+        v_force_row[:, :] = v_force_row + 2e0 * np.pi * (
             ey_bar_z[kk - 1] * nu_bar_tz[kk - 1] - ey_bar_z[kk] * nu_bar_tz[kk]
-        ) * (rad_row_helper @ numpy.ascontiguousarray(M_tot[:, :, kk]))
+        ) * (rad_row_helper @ np.ascontiguousarray(M_tot[:, :, kk]))
 
     # Include the effect of axial stiffness
     v_force_row[0, 2] += ey_bar_z_area
@@ -6758,26 +6756,26 @@ def extended_plane_strain(
         rad_row_helper[0, :] = [rad[nonslip_layer - 1] ** 2, 1e0, 0e0, 0e0, 0e0]
         v_force_row_slip[:, :] = (
             2e0
-            * numpy.pi
+            * np.pi
             * ey_bar_z[nonslip_layer - 2]
             * nu_bar_tz[nonslip_layer - 2]
-            * (rad_row_helper @ numpy.ascontiguousarray(M_tot[:, :, nonslip_layer - 1]))
+            * (rad_row_helper @ np.ascontiguousarray(M_tot[:, :, nonslip_layer - 1]))
         )
         rad_row_helper[0, :] = [rad[0] ** 2, 1e0, 0e0, 0e0, 0e0]
         v_force_row_slip[:, :] -= (
             2e0
-            * numpy.pi
+            * np.pi
             * ey_bar_z[0]
             * nu_bar_tz[0]
-            * (rad_row_helper @ numpy.ascontiguousarray(M_tot[:, :, 0]))
+            * (rad_row_helper @ np.ascontiguousarray(M_tot[:, :, 0]))
         )
         for kk in range(1, nonslip_layer - 1):
             rad_row_helper[0, :] = [rad[kk] ** 2, 1e0, 0e0, 0e0, 0e0]
             v_force_row_slip[:, :] += (
                 2e0
-                * numpy.pi
+                * np.pi
                 * (ey_bar_z[kk - 1] * nu_bar_tz[kk - 1] - ey_bar_z[kk] * nu_bar_tz[kk])
-                * (rad_row_helper @ numpy.ascontiguousarray(M_tot[:, :, kk]))
+                * (rad_row_helper @ np.ascontiguousarray(M_tot[:, :, kk]))
             )
         # Include the effect of axial stiffness
         v_force_row_slip[0, 4] += ey_bar_z_area_slip
@@ -6819,9 +6817,7 @@ def extended_plane_strain(
             0e0,
         ]
 
-    M_bc[1, :] = numpy.ascontiguousarray(M_bc[1, :]) @ numpy.ascontiguousarray(
-        M_tot[:, :, 0]
-    )
+    M_bc[1, :] = np.ascontiguousarray(M_bc[1, :]) @ np.ascontiguousarray(M_tot[:, :, 0])
     # Axial force boundary condition
     M_bc[2, :] = v_force_row[0, :]
     M_bc[2, 3] = M_bc[2, 3] - v_force
@@ -6840,7 +6836,7 @@ def extended_plane_strain(
     M_toinv[:, 3] = M_bc[:, 4]
     RHS_vec[:] = -M_bc[:, 3]
 
-    A_vec_solution[:4] = numpy.linalg.solve(M_toinv, RHS_vec)
+    A_vec_solution[:4] = np.linalg.solve(M_toinv, RHS_vec)
 
     A_vec_solution[4] = A_vec_solution[3]
     A_vec_solution[3] = 1
@@ -6861,7 +6857,7 @@ def extended_plane_strain(
 
             f_int_A_plot = 0.5e0 * f_lin_fac[ii] * (
                 rad[ii + 1] ** 2 - rradius[jj] ** 2
-            ) + f_rec_fac[ii] * numpy.log(rad[ii + 1] / (rradius[jj]))
+            ) + f_rec_fac[ii] * np.log(rad[ii + 1] / (rradius[jj]))
             f_int_B_plot = 0.25e0 * f_lin_fac[ii] * (
                 rad[ii + 1] ** 4 - rradius[jj] ** 4
             ) + 0.5e0 * f_rec_fac[ii] * (rad[ii + 1] ** 2 - rradius[jj] ** 2)
@@ -6894,8 +6890,8 @@ def extended_plane_strain(
                 str_z[jj] + (nu_bar_tz[ii] * (str_r[jj] + str_t[jj]))
             )
 
-        A_vec_layer = numpy.ascontiguousarray(M_tot[:, :, ii]) @ A_vec_solution
-        A_vec_layer = numpy.ascontiguousarray(M_ext[:, :, ii]) @ A_vec_layer
+        A_vec_layer = np.ascontiguousarray(M_tot[:, :, ii]) @ A_vec_solution
+        A_vec_layer = np.ascontiguousarray(M_ext[:, :, ii]) @ A_vec_layer
     # ------
 
     return rradius, sigr, sigt, sigz, str_r, str_t, str_z, r_deflect
@@ -6915,37 +6911,37 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     layer is the winding pack itself.
     PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
     """
-    alpha = numpy.zeros((nlayers,))
-    beta = numpy.zeros((nlayers,))
+    alpha = np.zeros((nlayers,))
+    beta = np.zeros((nlayers,))
     # Lorentz body force parametres
 
-    area = numpy.zeros((nlayers,))
+    area = np.zeros((nlayers,))
     # Layer area
 
-    aa = numpy.zeros((
+    aa = np.zeros((
         2 * nlayers,
         2 * nlayers,
     ))
     # Matrix encoding the integration constant cc coeficients
 
-    bb = numpy.zeros((2 * nlayers,))
+    bb = np.zeros((2 * nlayers,))
     # Vector encoding the alpha/beta (lorentz forces) contribution
 
-    cc = numpy.zeros((2 * nlayers,))
-    c1 = numpy.zeros((nlayers,))
-    c2 = numpy.zeros((nlayers,))
+    cc = np.zeros((2 * nlayers,))
+    c1 = np.zeros((nlayers,))
+    c2 = np.zeros((nlayers,))
     # Integration constants vector (solution)
 
-    rradius = numpy.zeros((nlayers * n_radial_array,))
+    rradius = np.zeros((nlayers * n_radial_array,))
     # Radius array [m]
 
-    sigr = numpy.zeros((nlayers * n_radial_array,))
+    sigr = np.zeros((nlayers * n_radial_array,))
     # Radial stress radial distribution [Pa]
 
-    sigt = numpy.zeros((nlayers * n_radial_array,))
+    sigt = np.zeros((nlayers * n_radial_array,))
     # Toroidal stress radial distribution [Pa]
 
-    r_deflect = numpy.zeros((nlayers * n_radial_array,))
+    r_deflect = np.zeros((nlayers * n_radial_array,))
     # Radial deflection (displacement) radial distribution [m]
 
     kk = ey / (1 - nu**2)
@@ -6959,12 +6955,12 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
             0.5e0
             * RMU0
             * j[ii]
-            * (inner_layer_curr - numpy.pi * j[ii] * rad[ii] ** 2)
-            / (numpy.pi * kk[ii])
+            * (inner_layer_curr - np.pi * j[ii] * rad[ii] ** 2)
+            / (np.pi * kk[ii])
         )
 
         # Layer area
-        area[ii] = numpy.pi * (rad[ii + 1] ** 2 - rad[ii] ** 2)
+        area[ii] = np.pi * (rad[ii + 1] ** 2 - rad[ii] ** 2)
 
         # Total current carried by the inners layers
         inner_layer_curr = inner_layer_curr + area[ii] * j[ii]
@@ -7005,7 +7001,7 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     # Null radial stress at R(1)
     bb[0] = -kk[0] * (
         0.125e0 * alpha[0] * (3.0e0 + nu[0]) * rad[0] ** 2
-        + 0.5e0 * beta[0] * (1.0e0 + (1.0e0 + nu[0]) * numpy.log(rad[0]))
+        + 0.5e0 * beta[0] * (1.0e0 + (1.0e0 + nu[0]) * np.log(rad[0]))
     )
 
     # Inter-layer boundary conditions
@@ -7014,20 +7010,20 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
             # Continuous radial normal stress at R[ii+1]
             bb[2 * ii + 1] = -kk[ii] * (
                 0.125e0 * alpha[ii] * (3.0e0 + nu[ii]) * rad[ii + 1] ** 2
-                + 0.5e0 * beta[ii] * (1.0e0 + (1.0e0 + nu[ii]) * numpy.log(rad[ii + 1]))
+                + 0.5e0 * beta[ii] * (1.0e0 + (1.0e0 + nu[ii]) * np.log(rad[ii + 1]))
             ) + kk[ii + 1] * (
                 0.125e0 * alpha[ii + 1] * (3.0e0 + nu[ii + 1]) * rad[ii + 1] ** 2
                 + 0.5e0
                 * beta[ii + 1]
-                * (1.0e0 + (1.0e0 + nu[ii + 1]) * numpy.log(rad[ii + 1]))
+                * (1.0e0 + (1.0e0 + nu[ii + 1]) * np.log(rad[ii + 1]))
             )
 
             # Continuous displacement at R(ii+1)
             bb[2 * ii + 2] = (
                 -0.125e0 * alpha[ii] * rad[ii + 1] ** 3
-                - 0.5e0 * beta[ii] * rad[ii + 1] * numpy.log(rad[ii + 1])
+                - 0.5e0 * beta[ii] * rad[ii + 1] * np.log(rad[ii + 1])
                 + 0.125e0 * alpha[ii + 1] * rad[ii + 1] ** 3
-                + 0.5e0 * beta[ii + 1] * rad[ii + 1] * numpy.log(rad[ii + 1])
+                + 0.5e0 * beta[ii + 1] * rad[ii + 1] * np.log(rad[ii + 1])
             )
 
     # Null radial stress at R(nlayers+1)
@@ -7035,14 +7031,14 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
         0.125e0 * alpha[nlayers - 1] * (3.0e0 + nu[nlayers - 1]) * rad[nlayers] ** 2
         + 0.5e0
         * beta[nlayers - 1]
-        * (1.0e0 + (1.0e0 + nu[nlayers - 1]) * numpy.log(rad[nlayers]))
+        * (1.0e0 + (1.0e0 + nu[nlayers - 1]) * np.log(rad[nlayers]))
     )
     # ***
 
     #  Find solution vector cc
     # ***
-    aa = numpy.asfortranarray(aa)
-    cc = numpy.linalg.solve(aa, bb)
+    aa = np.asfortranarray(aa)
+    cc = np.linalg.solve(aa, bb)
 
     #  Multiply c by (-1) (John Last, internal CCFE memorandum, 21/05/2013)
     for ii in range(nlayers):
@@ -7065,7 +7061,7 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
                 (1.0e0 + nu[ii]) * c1[ii]
                 - ((1.0e0 - nu[ii]) * c2[ii]) / rad_c**2
                 + 0.125e0 * (3.0e0 + nu[ii]) * alpha[ii] * rad_c**2
-                + 0.5e0 * beta[ii] * (1.0e0 + (1.0e0 + nu[ii]) * numpy.log(rad_c))
+                + 0.5e0 * beta[ii] * (1.0e0 + (1.0e0 + nu[ii]) * np.log(rad_c))
             )
 
             # Radial stress radial distribution [Pa]
@@ -7073,7 +7069,7 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
                 (1.0e0 + nu[ii]) * c1[ii]
                 + (1.0e0 - nu[ii]) * c2[ii] / rad_c**2
                 + 0.125e0 * (1.0e0 + 3.0e0 * nu[ii]) * alpha[ii] * rad_c**2
-                + 0.5e0 * beta[ii] * (nu[ii] + (1.0e0 + nu[ii]) * numpy.log(rad_c))
+                + 0.5e0 * beta[ii] * (nu[ii] + (1.0e0 + nu[ii]) * np.log(rad_c))
             )
 
             #  Deflection [m]
@@ -7081,7 +7077,7 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
                 c1[ii] * rad_c
                 + c2[ii] / rad_c
                 + 0.125e0 * alpha[ii] * rad_c**3
-                + 0.5e0 * beta[ii] * rad_c * numpy.log(rad_c)
+                + 0.5e0 * beta[ii] * rad_c * np.log(rad_c)
             )
 
     return sigr, sigt, r_deflect, rradius
@@ -7262,12 +7258,12 @@ def vv_stress_on_quench(
 
     # relevant self-inductances in henry (H)
     coil_structure_self_inductance = (
-        (constants.rmu0 / numpy.pi)
+        (constants.rmu0 / np.pi)
         * H_coil
         * _inductance_factor(H_coil, Ri_coil, Ro_coil, Rm_coil, theta1_coil)
     )
     vv_self_inductance = (
-        (constants.rmu0 / numpy.pi)
+        (constants.rmu0 / np.pi)
         * H_vv
         * _inductance_factor(H_vv, Ri_vv, Ro_vv, Rm_vv, theta1_vv)
     )
@@ -7278,16 +7274,16 @@ def vv_stress_on_quench(
     lambda2 = (plr_vv) / vv_self_inductance
 
     # approximate time at which the maximum force (and stress) will occur on the VV
-    tmaxforce = numpy.log((lambda0 + lambda1) / (2 * lambda0)) / (lambda1 - lambda0)
+    tmaxforce = np.log((lambda0 + lambda1) / (2 * lambda0)) / (lambda1 - lambda0)
 
-    I0 = I_op * numpy.exp(-lambda0 * tmaxforce)
+    I0 = I_op * np.exp(-lambda0 * tmaxforce)
     I1 = (
         lambda0
         * n_tf
         * n_tf_turn
         * I_op
         * (
-            (numpy.exp(-lambda1 * tmaxforce) - numpy.exp(-lambda0 * tmaxforce))
+            (np.exp(-lambda1 * tmaxforce) - np.exp(-lambda0 * tmaxforce))
             / (lambda0 - lambda1)
         )
     )
@@ -7295,11 +7291,11 @@ def vv_stress_on_quench(
 
     A_vv = (Ro_vv + Ri_vv) / (Ro_vv - Ri_vv)
     B_vvi = (constants.rmu0 * (n_tf * n_tf_turn * I0 + I1 + (I2 / 2))) / (
-        2 * numpy.pi * Ri_vv
+        2 * np.pi * Ri_vv
     )
-    J_vvi = I2 / (2 * numpy.pi * d_vv * Ri_vv)
+    J_vvi = I2 / (2 * np.pi * d_vv * Ri_vv)
 
-    zeta = 1 + ((A_vv - 1) * numpy.log((A_vv + 1) / (A_vv - 1)) / (2 * A_vv))
+    zeta = 1 + ((A_vv - 1) * np.log((A_vv + 1) / (A_vv - 1)) / (2 * A_vv))
 
     tresca_stress_vv = zeta * B_vvi * J_vvi * Ri_vv
 

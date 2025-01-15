@@ -24,7 +24,7 @@ import re
 from pathlib import Path
 
 import create_dicts_config
-import numpy
+import numpy as np
 from python_dicts import get_python_variables
 
 output_dict = {}
@@ -316,7 +316,7 @@ class DefaultValues(ProjectDictionary):
                     value = self.convert_value_to_float(value)
 
                 working_dict[key] = value
-            elif value is not None and isinstance(value, numpy.ndarray):
+            elif value is not None and isinstance(value, np.ndarray):
                 working_dict[key] = value.tolist()
 
     def convert_value_to_float(self, value):

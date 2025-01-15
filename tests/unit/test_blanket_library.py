@@ -1,6 +1,6 @@
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process.blanket_library import BlanketLibrary
@@ -1212,8 +1212,8 @@ class ExternalCryoGeometryParam(NamedTuple):
             vdewin=1016.2876250857248,
             denstl=7800,
             dewmkg=0,
-            rb=numpy.array(
-                numpy.array(
+            rb=np.array(
+                np.array(
                     (
                         6.1290994712971543,
                         6.2110624909068086,
@@ -1242,8 +1242,8 @@ class ExternalCryoGeometryParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            zh=numpy.array(
-                numpy.array(
+            zh=np.array(
+                np.array(
                     (
                         9.9154920004377978,
                         -11.249338850841614,
@@ -1492,12 +1492,8 @@ class LiquidBreederPropertiesParam(NamedTuple):
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
             i_bb_liq=0,
-            hartmann_liq=numpy.array(
-                numpy.array((0, 0), order="F"), order="F"
-            ).transpose(),
-            b_mag_blkt=numpy.array(
-                numpy.array((5, 5), order="F"), order="F"
-            ).transpose(),
+            hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
+            b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
             iblnkith=1,
             icooldual=0,
             bt=5.7000000000000002,
@@ -1512,12 +1508,12 @@ class LiquidBreederPropertiesParam(NamedTuple):
             expected_thermal_conductivity_liq=9.238260167312621,
             expected_dynamic_viscosity_liq=0.0017477589255667965,
             expected_electrical_conductivity_liq=861800.80431007256,
-            expected_hartmann_liq=numpy.array(
-                numpy.array((20319.245984309102, 9067.8426109080938), order="F"),
+            expected_hartmann_liq=np.array(
+                np.array((20319.245984309102, 9067.8426109080938), order="F"),
                 order="F",
             ).transpose(),
-            expected_b_mag_blkt=numpy.array(
-                numpy.array((9.1505016722408019, 4.0835820895522392), order="F"),
+            expected_b_mag_blkt=np.array(
+                np.array((9.1505016722408019, 4.0835820895522392), order="F"),
                 order="F",
             ).transpose(),
         ),
@@ -1533,12 +1529,8 @@ class LiquidBreederPropertiesParam(NamedTuple):
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
             i_bb_liq=1,
-            hartmann_liq=numpy.array(
-                numpy.array((0, 0), order="F"), order="F"
-            ).transpose(),
-            b_mag_blkt=numpy.array(
-                numpy.array((5, 5), order="F"), order="F"
-            ).transpose(),
+            hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
+            b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
             iblnkith=1,
             icooldual=0,
             bt=5.7000000000000002,
@@ -1552,12 +1544,12 @@ class LiquidBreederPropertiesParam(NamedTuple):
             expected_specific_heat_liq=34.640761200690406,
             expected_dynamic_viscosity_liq=0.00037298826343426359,
             expected_electrical_conductivity_liq=596562356750.5,
-            expected_hartmann_liq=numpy.array(
-                numpy.array((36595294.326740541, 16331332.841336451), order="F"),
+            expected_hartmann_liq=np.array(
+                np.array((36595294.326740541, 16331332.841336451), order="F"),
                 order="F",
             ).transpose(),
-            expected_b_mag_blkt=numpy.array(
-                numpy.array((9.1505016722408019, 4.0835820895522392), order="F"),
+            expected_b_mag_blkt=np.array(
+                np.array((9.1505016722408019, 4.0835820895522392), order="F"),
                 order="F",
             ).transpose(),
         ),
@@ -1762,8 +1754,8 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             ifci=0,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
-            b_mag_blkt=numpy.array(
-                numpy.array((8.3930173480023953, 3.8678755427951117), order="F"),
+            b_mag_blkt=np.array(
+                np.array((8.3930173480023953, 3.8678755427951117), order="F"),
                 order="F",
             ).transpose(),
             bz_channel_conduct_liq=833000,
@@ -1782,8 +1774,8 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             ifci=1,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
-            b_mag_blkt=numpy.array(
-                numpy.array((8.3930173480023953, 3.8678755427951117), order="F"),
+            b_mag_blkt=np.array(
+                np.array((8.3930173480023953, 3.8678755427951117), order="F"),
                 order="F",
             ).transpose(),
             bz_channel_conduct_liq=833000,
@@ -1802,8 +1794,8 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             ifci=2,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
-            b_mag_blkt=numpy.array(
-                numpy.array((8.3930173480023953, 3.8678755427951117), order="F"),
+            b_mag_blkt=np.array(
+                np.array((8.3930173480023953, 3.8678755427951117), order="F"),
                 order="F",
             ).transpose(),
             bz_channel_conduct_liq=833000,
@@ -1822,8 +1814,8 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             ifci=2,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
-            b_mag_blkt=numpy.array(
-                numpy.array((8.3930173480023953, 3.8678755427951117), order="F"),
+            b_mag_blkt=np.array(
+                np.array((8.3930173480023953, 3.8678755427951117), order="F"),
                 order="F",
             ).transpose(),
             bz_channel_conduct_liq=833000,
