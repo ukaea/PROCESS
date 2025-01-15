@@ -2620,7 +2620,11 @@ def test_power2(power2param, monkeypatch, power):
         heat_transport_variables, "p_gross_electrical", power2param.p_gross_electrical
     )
 
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_secondary_mw", power2param.p_thermal_secondary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_secondary_mw",
+        power2param.p_thermal_secondary_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "trithtmw", power2param.trithtmw)
 

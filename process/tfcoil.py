@@ -349,7 +349,9 @@ class TFcoil:
                     self.outfile, "Coolant inlet pressure (Pa)", "(presin)", presin
                 )
 
-            po.ovarre(self.outfile, "Pump power (W)", "(p_cp_pump_cool)", tfv.p_cp_pump_cool)
+            po.ovarre(
+                self.outfile, "Pump power (W)", "(p_cp_pump_cool)", tfv.p_cp_pump_cool
+            )
 
     @staticmethod
     def he_density(temp: float) -> float:

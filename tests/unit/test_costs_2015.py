@@ -2301,7 +2301,9 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_thermal_secondary_mw", calcbuildingcostsparam.p_thermal_secondary_mw
+        heat_transport_variables,
+        "p_thermal_secondary_mw",
+        calcbuildingcostsparam.p_thermal_secondary_mw,
     )
 
     monkeypatch.setattr(
@@ -16005,7 +16007,9 @@ def test_calc_remaining_subsystems(
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_thermal_secondary_mw", calcremainingsubsystemsparam.p_thermal_secondary_mw
+        heat_transport_variables,
+        "p_thermal_secondary_mw",
+        calcremainingsubsystemsparam.p_thermal_secondary_mw,
     )
 
     monkeypatch.setattr(

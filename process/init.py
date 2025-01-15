@@ -1074,8 +1074,8 @@ def check_process():
         )
 
     # Cold end of the cryocooler should be colder than the TF
-    if fortran.tfcoil_variables.tmpcry > fortran.tfcoil_variables.tftmp:
-        raise ProcessValidationError("tmpcry should be lower than tftmp")
+    if fortran.tfcoil_variables.temp_tf_coil_cryo > fortran.tfcoil_variables.tftmp:
+        raise ProcessValidationError("temp_tf_coil_cryo should be lower than tftmp")
 
     # Cannot use TF coil strain limit if i_str_wp is off:
     if (

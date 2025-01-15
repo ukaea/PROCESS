@@ -2946,7 +2946,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         "p_baseload_electrical_total_mw",
         ifepw2param.p_baseload_electrical_total_mw,
     )
-    monkeypatch.setattr(heat_transport_variables, "p_thermal_secondary_mw", ifepw2param.p_thermal_secondary_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_thermal_secondary_mw",
+        ifepw2param.p_thermal_secondary_mw,
+    )
     monkeypatch.setattr(
         heat_transport_variables,
         "p_hcd_electrical_loss_mw",
