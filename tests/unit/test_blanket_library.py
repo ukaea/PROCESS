@@ -43,7 +43,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     coolwh: Any = None
 
-    inlet_temp: Any = None
+    temp_blkt_in: Any = None
 
     outlet_temp: Any = None
 
@@ -92,7 +92,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             cp_fw=0,
             cv_fw=0,
             coolwh=1,
-            inlet_temp=573,
+            temp_blkt_in=573,
             outlet_temp=773,
             blpressure=8000000,
             rhof_bl=0,
@@ -120,7 +120,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             cp_fw=5188.5588430173211,
             cv_fw=3123.5687263525392,
             coolwh=1,
-            inlet_temp=573,
+            temp_blkt_in=573,
             outlet_temp=773,
             blpressure=8000000,
             rhof_bl=5.6389735407435868,
@@ -185,7 +185,7 @@ def test_primary_coolant_properties(
     monkeypatch.setattr(fwbs_variables, "coolwh", primarycoolantpropertiesparam.coolwh)
 
     monkeypatch.setattr(
-        fwbs_variables, "inlet_temp", primarycoolantpropertiesparam.inlet_temp
+        fwbs_variables, "temp_blkt_in", primarycoolantpropertiesparam.temp_blkt_in
     )
 
     monkeypatch.setattr(

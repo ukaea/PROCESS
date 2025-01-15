@@ -2608,7 +2608,7 @@
         "infile": 0.0,
         "info": null,
         "initialpressure": 1.0,
-        "inlet_temp": 573.0,
+        "temp_blkt_in": 573.0,
         "inp0": null,
         "insstrain": 0.0,
         "insulation_area": 0.0,
@@ -9867,7 +9867,7 @@
         "infile": "",
         "info": "",
         "initialpressure": "initial neutral pressure at the beginning of the dwell phase (Pa)",
-        "inlet_temp": "inlet temperature of blanket coolant  (K) (`secondary_cycle>1`)",
+        "temp_blkt_in": "inlet temperature of blanket coolant  (K) (`secondary_cycle>1`)",
         "insstrain": "Radial strain in insulator",
         "insulation_area": "single turn insulation area (m2)",
         "int_def": "",
@@ -13429,7 +13429,7 @@
             "lb": 1e-06,
             "ub": 10000.0
         },
-        "inlet_temp": {
+        "temp_blkt_in": {
             "lb": 200.0,
             "ub": 600.0
         },
@@ -18111,7 +18111,7 @@
             "fw_channel_length",
             "peaking_factor",
             "blpressure",
-            "inlet_temp",
+            "temp_blkt_in",
             "outlet_temp",
             "coolp",
             "nblktmodpo",
@@ -20487,7 +20487,7 @@
         "impurity_enrichment": "real_array",
         "impvardiv": "int_variable",
         "initialpressure": "real_variable",
-        "inlet_temp": "real_variable",
+        "temp_blkt_in": "real_variable",
         "inuclear": "int_variable",
         "iohcl": "int_variable",
         "ioptimz": "int_variable",

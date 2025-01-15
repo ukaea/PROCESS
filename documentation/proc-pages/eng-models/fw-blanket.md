@@ -86,7 +86,7 @@ Summary of key variables and switches:
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
 |  primary coolant switch  |       `fwcoolant`       | `coolwh`                 | ---                                  |
 | secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
-|      inlet temp (K)      |        `temp_fw_in`        | `inlet_temp`             | `inlet_temp_liq`                     |
+|      inlet temp (K)      |        `temp_fw_in`        | `temp_blkt_in`             | `inlet_temp_liq`                     |
 |     outlet temp (K)      |       `temp_fw_out`        | `outlet_temp`            | `outlet_temp_liq`                    |
 |      pressure (Pa)       |      `pres_fw`       | `blpressure`             | `blpressure_liq`                     |
 

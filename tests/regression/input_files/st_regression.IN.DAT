@@ -2417,7 +2417,7 @@ iblnkith = 0
 * DESCRIPTION:   Number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)(default = 32)
 * JUSTIFICATION: Not set as not used
 
-*inlet_temp = 
+*temp_blkt_in = 
 * DESCRIPTION:   Inlet temperature of blanket coolant  [K] (`secondary_cycle>1`)
 * JUSTIFICATION: Not set as not used
 
