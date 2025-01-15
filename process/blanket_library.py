@@ -363,25 +363,31 @@ class BlanketLibrary:
         # changes in the same location.
         fwbs_variables.vdewin = fwbs_variables.fvoldw * fwbs_variables.vdewin
 
-    def external_cryo_geometry(self):
-        """Calculate cryostat geometry
-        author: J. Morris, CCFE, Culham Science Centre
+    @staticmethod
+    def external_cryo_geometry() -> None:
+        """Calculate cryostat geometry.
+
+        This method calculates the geometry of the cryostat, including the inboard radius,
+        the vertical clearance between the uppermost PF coil and the cryostat lid, the half-height
+        of the cryostat, the vertical clearance between the TF coil and the cryostat, the cryostat volume,
+        the vacuum vessel mass, and the sum of internal vacuum vessel and cryostat masses.
+
         """
-        # cryostat radius (m)
-        # ISSUE #508 Remove RFP option
-        # rb(i) = outer radius of PF coil i (tokamaks)
+
+        # Cryostat radius [m]
+        # Take radius of furthest PF coil and add clearance
         fwbs_variables.r_cryostat_inboard = (
             np.max(pfcoil_variables.rb) + fwbs_variables.dr_pf_cryostat
         )
 
-        # Clearance between uppermost PF coil and cryostat lid (m).
+        # Clearance between uppermost PF coil and cryostat lid [m].
         # Scaling from ITER by M. Kovari
         blanket_library.dz_pf_cryostat = (
             build_variables.clhsf * (2.0 * fwbs_variables.r_cryostat_inboard) / 28.440
         )
 
-        # Half-height of cryostat (m)
-        # ISSUE #508 Remove RFP option
+        # Half-height of cryostat [m]
+        # Take height of furthest PF coil and add clearance
         fwbs_variables.z_cryostat_half_inside = (
             np.max(pfcoil_variables.zh) + blanket_library.dz_pf_cryostat
         )
@@ -391,7 +397,7 @@ class BlanketLibrary:
             build_variables.hmax + build_variables.tfcth
         )
 
-        # cryostat volume (m3)
+        # Cryostat volume [m^3]
         fwbs_variables.vol_cryostat = (
             (2.0 * np.pi * fwbs_variables.r_cryostat_inboard)
             * 2.0
