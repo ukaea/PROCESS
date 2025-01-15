@@ -196,7 +196,7 @@ contains
       shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
       thshield_ib, thshield_ob, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, tfcth, &
-      iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, ddwex, &
+      iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
@@ -1315,8 +1315,8 @@ contains
        case ('clhsf')
           call parse_real_variable('clhsf', clhsf, 2.0D0, 10.0D0, &
                'Cryostat lid height scaling factor (m)')
-       case ('ddwex')
-          call parse_real_variable('ddwex', ddwex, 0.0D0, 10.0D0, &
+       case ('dr_cryostat')
+          call parse_real_variable('dr_cryostat', dr_cryostat, 0.0D0, 10.0D0, &
                'cryostat wall thickness (m)')
        case ('d_vv_in')
           call parse_real_variable('d_vv_in', d_vv_in, 0.0D0, 10.0D0, &

@@ -361,7 +361,7 @@ def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
 
     rects = cryostat_geometry(
         r_cryostat_inboard=r_cryostat_inboard,
-        ddwex=ddwex,
+        dr_cryostat=dr_cryostat,
         dz_cryostat_half_inside=dz_cryostat_half_inside,
     )
 
@@ -491,7 +491,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     arc_fill(
         axis,
         r_cryostat_inboard,
-        r_cryostat_inboard + ddwex,
+        r_cryostat_inboard + dr_cryostat,
         color=CRYOSTAT_COLOUR[colour_scheme - 1],
     )
 
@@ -3388,7 +3388,7 @@ def main(args=None):
     global tfthko
     global r_cryostat_inboard
     global dz_cryostat_half_inside
-    global ddwex
+    global dr_cryostat
     global j_plasma_0
 
     bore = m_file.data["bore"].get_scan(scan)
@@ -3410,7 +3410,7 @@ def main(args=None):
     tfthko = m_file.data["tfthko"].get_scan(scan)
     r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)
     dz_cryostat_half_inside = m_file.data["dz_cryostat_half_inside"].get_scan(scan)
-    ddwex = m_file.data["ddwex"].get_scan(scan)
+    dr_cryostat = m_file.data["dr_cryostat"].get_scan(scan)
     j_plasma_0 = m_file.data["j_plasma_0"].get_scan(scan)
 
     # Magnets related

@@ -1851,7 +1851,7 @@ class Stellarator:
             * (np.pi**2)
             * physics_variables.rmajor
             * adewex
-            * build_variables.ddwex
+            * build_variables.dr_cryostat
         )
 
         #  Internal vacuum vessel volume

@@ -2357,8 +2357,8 @@ class Build:
             po.ovarre(
                 self.mfile,
                 "External cryostat thickness (excludes structure) (m)",
-                "(ddwex)",
-                build_variables.ddwex,
+                "(dr_cryostat)",
+                build_variables.dr_cryostat,
             )
 
             if (current_drive_variables.iefrf in [5, 8]) or (

@@ -1609,7 +1609,7 @@
         ],
         "dcondins": 1800.0,
         "dcopper": 8900.0,
-        "ddwex": 0.07,
+        "dr_cryostat": 0.07,
         "declblkt": 0.075,
         "declfw": 0.075,
         "declshld": 0.075,
@@ -9264,7 +9264,7 @@
         "dcond": "density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf (kg/m3)",
         "dcondins": "density of conduit + ground-wall insulation (kg/m3)",
         "dcopper": "density of copper (kg/m3)",
-        "ddwex": "cryostat thickness (m)",
+        "dr_cryostat": "cryostat thickness (m)",
         "declblkt": "neutron power deposition decay length of blanket structural material (m) (stellarators only)",
         "declfw": "neutron power deposition decay length of first wall structural material (m) (stellarators only)",
         "declshld": "neutron power deposition decay length of shield structural material (m) (stellarators only)",
@@ -12167,7 +12167,7 @@
             "lb": 8000.0,
             "ub": 10000.0
         },
-        "ddwex": {
+        "dr_cryostat": {
             "lb": 0.0,
             "ub": 10.0
         },
@@ -17022,7 +17022,7 @@
             "blnktth",
             "bore",
             "clhsf",
-            "ddwex",
+            "dr_cryostat",
             "d_vv_in",
             "d_vv_out",
             "d_vv_top",
@@ -20164,7 +20164,7 @@
         "dcond": "real_array",
         "dcondins": "real_variable",
         "dcopper": "real_variable",
-        "ddwex": "real_variable",
+        "dr_cryostat": "real_variable",
         "declblkt": "real_variable",
         "declfw": "real_variable",
         "declshld": "real_variable",
