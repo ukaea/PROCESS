@@ -48,7 +48,7 @@ class CalcBuildingCostsParam(NamedTuple):
 
     r_cryostat_inboard: Any = None
 
-    dz_cryostat_half_inside: Any = None
+    z_cryostat_half_inside: Any = None
 
     cost_factor_buildings: Any = None
 
@@ -90,7 +90,7 @@ class CalcBuildingCostsParam(NamedTuple):
             n_tf=18,
             estotftgj=130.10721529398921,
             r_cryostat_inboard=18.314040399601147,
-            dz_cryostat_half_inside=15.118436894660423,
+            z_cryostat_half_inside=15.118436894660423,
             cost_factor_buildings=1,
             light_build_cost_per_vol=270,
             tok_build_cost_per_vol=1283,
@@ -1190,7 +1190,7 @@ class CalcBuildingCostsParam(NamedTuple):
             n_tf=18,
             estotftgj=129.99240835373195,
             r_cryostat_inboard=18.31462428923539,
-            dz_cryostat_half_inside=15.165858901796364,
+            z_cryostat_half_inside=15.165858901796364,
             cost_factor_buildings=1,
             light_build_cost_per_vol=270,
             tok_build_cost_per_vol=1283,
@@ -2318,8 +2318,8 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
 
     monkeypatch.setattr(
         fwbs_variables,
-        "dz_cryostat_half_inside",
-        calcbuildingcostsparam.dz_cryostat_half_inside,
+        "z_cryostat_half_inside",
+        calcbuildingcostsparam.z_cryostat_half_inside,
     )
 
     monkeypatch.setattr(
@@ -13741,7 +13741,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
 
     r_cryostat_inboard: Any = None
 
-    dz_cryostat_half_inside: Any = None
+    z_cryostat_half_inside: Any = None
 
     cost_factor_misc: Any = None
 
@@ -13783,7 +13783,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             helpow=142703.41458500578,
             vvmass=8957118.946216708,
             r_cryostat_inboard=18.314040399601147,
-            dz_cryostat_half_inside=15.118436894660423,
+            z_cryostat_half_inside=15.118436894660423,
             cost_factor_misc=1,
             costexp=0.80000000000000004,
             s_kref=np.array(
@@ -14879,7 +14879,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             helpow=823308.59959198488,
             vvmass=8948002.9350915737,
             r_cryostat_inboard=18.31462428923539,
-            dz_cryostat_half_inside=15.165858901796364,
+            z_cryostat_half_inside=15.165858901796364,
             cost_factor_misc=1,
             costexp=0.80000000000000004,
             s_kref=np.array(
@@ -16024,8 +16024,8 @@ def test_calc_remaining_subsystems(
 
     monkeypatch.setattr(
         fwbs_variables,
-        "dz_cryostat_half_inside",
-        calcremainingsubsystemsparam.dz_cryostat_half_inside,
+        "z_cryostat_half_inside",
+        calcremainingsubsystemsparam.z_cryostat_half_inside,
     )
 
     monkeypatch.setattr(

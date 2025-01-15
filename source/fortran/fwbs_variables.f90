@@ -421,7 +421,7 @@ module fwbs_variables
   real(dp) :: r_cryostat_inboard
   !! cryostat radius [m]
 
-  real(dp) :: dz_cryostat_half_inside
+  real(dp) :: z_cryostat_half_inside
   !! cryostat height [m]
 
   real(dp) :: dr_pf_cryostat
@@ -773,7 +773,7 @@ module fwbs_variables
     ptfnuc = 0.0D0
     ptfnucpm3 = 0.0D0
     r_cryostat_inboard = 0.0D0
-    dz_cryostat_half_inside = 0.0D0
+    z_cryostat_half_inside = 0.0D0
     dr_pf_cryostat = 0.5D0
     vol_cryostat = 0.0D0
     vdewin = 0.0D0

@@ -1550,8 +1550,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Cryostat internal half-height (m)",
-            "(dz_cryostat_half_inside)",
-            fwbs_variables.dz_cryostat_half_inside,
+            "(z_cryostat_half_inside)",
+            fwbs_variables.z_cryostat_half_inside,
             "OP ",
         )
         po.ovarre(
