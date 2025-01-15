@@ -459,11 +459,13 @@ class BlanketLibrary:
             fwbs_variables.visc_fw = fw_fluid_properties.viscosity
 
             # BB
-            mid_temp_bl = (fwbs_variables.temp_blkt_in + fwbs_variables.temp_blkt_out) * 0.5
+            mid_temp_bl = (
+                fwbs_variables.temp_blkt_in + fwbs_variables.temp_blkt_out
+            ) * 0.5
             bb_fluid_properties = FluidProperties.of(
                 "Helium" if fwbs_variables.coolwh == 1 else "Water",
                 temperature=mid_temp_bl,
-                pressure=fwbs_variables.blpressure,
+                pressure=fwbs_variables.pres_blkt,
             )
             fwbs_variables.rhof_bl = bb_fluid_properties.density
             fwbs_variables.cp_bl = bb_fluid_properties.specific_heat_const_p
@@ -1507,7 +1509,7 @@ class BlanketLibrary:
             secondary coolant switch    ---                     ---                 i_bb_liq
             inlet temp (K)              temp_fw_in                 temp_blkt_in          inlet_temp_liq
             outlet temp (K)             temp_fw_out                temp_blkt_out         outlet_temp_liq
-            pressure (Pa)               pres_fw              blpressure          blpressure_liq
+            pressure (Pa)               pres_fw              pres_blkt          blpressure_liq
         """
         ######################################################
         # Pre calculations needed for thermo-hydraulic model #
@@ -1874,7 +1876,7 @@ class BlanketLibrary:
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_blkt_in.item(),
                 temp_out=fwbs_variables.temp_blkt_out.item(),
-                pressure=fwbs_variables.blpressure.item(),
+                pressure=fwbs_variables.pres_blkt.item(),
                 pdrop=deltap_blkt.item(),
                 mf=blanket_library.mfblkt,
                 primary_coolant_switch=(
@@ -2022,8 +2024,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Blanket (primary) coolant pressure (Pa)",
-                "(blpressure)",
-                fwbs_variables.blpressure,
+                "(pres_blkt)",
+                fwbs_variables.pres_blkt,
             )
             if fwbs_variables.ipump == 1:
                 po.ovarre(

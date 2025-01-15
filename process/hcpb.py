@@ -663,7 +663,7 @@ class CCFE_HCPB:
         # coolant outlet temperature as 20 deg C below the boiling point
         if fwbs_variables.coolwh == 2:
             outlet_saturated_fluid_properties = FluidProperties.of(
-                "Water", pressure=fwbs_variables.blpressure * 1.0e6, vapor_quality=0
+                "Water", pressure=fwbs_variables.pres_blkt * 1.0e6, vapor_quality=0
             )
             fwbs_variables.temp_blkt_out = (
                 outlet_saturated_fluid_properties.temperature - 20.0
@@ -1491,8 +1491,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Blanket coolant pressure (Pa)",
-            "(blpressure)",
-            fwbs_variables.blpressure,
+            "(pres_blkt)",
+            fwbs_variables.pres_blkt,
         )
 
         if fwbs_variables.primary_pumping != 3:

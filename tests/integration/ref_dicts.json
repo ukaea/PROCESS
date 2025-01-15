@@ -399,7 +399,7 @@
         ],
         "bloizp": 0.0,
         "blomzp": 0.0,
-        "blpressure": 15500000.0,
+        "pres_blkt": 15500000.0,
         "blvol": [
             0.0,
             0.0,
@@ -8921,7 +8921,7 @@
         "blohkw": "outboard blanket total heat output (kW)",
         "bloizp": "outboard blanket integrated zone power / neutron",
         "blomzp": "outboard blanket mean zone power density / neutron",
-        "blpressure": "blanket coolant pressure (Pa) (`secondary_cycle>1`)",
+        "pres_blkt": "blanket coolant pressure (Pa) (`secondary_cycle>1`)",
         "blvol": "IFE blanket volume (m3)",
         "blwidti": "Inboard/outboard blanket mid-plan toroidal circumference for segment (m)",
         "blwidto": "Inboard/outboard blanket mid-plan toroidal circumference for segment (m)",
@@ -11765,7 +11765,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "blpressure": {
+        "pres_blkt": {
             "lb": 100000.0,
             "ub": 100000000.0
         },
@@ -18110,7 +18110,7 @@
             "roughness",
             "fw_channel_length",
             "peaking_factor",
-            "blpressure",
+            "pres_blkt",
             "temp_blkt_in",
             "temp_blkt_out",
             "coolp",
@@ -20058,7 +20058,7 @@
         "blmatf": "real_array",
         "blnkith": "real_variable",
         "blnkoth": "real_variable",
-        "blpressure": "real_variable",
+        "pres_blkt": "real_variable",
         "bmaxcs_lim": "real_variable",
         "bmn": "real_variable",
         "bmxlim": "real_variable",

@@ -415,8 +415,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Blanket coolant pressure (Pa)",
-                "(blpressure)",
-                fwbs_variables.blpressure,
+                "(pres_blkt)",
+                fwbs_variables.pres_blkt,
             )
             if fwbs_variables.i_blkt_dual_coolant > 0:
                 po.ovarre(

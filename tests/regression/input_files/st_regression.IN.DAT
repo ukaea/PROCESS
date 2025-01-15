@@ -2427,7 +2427,7 @@ iblnkith = 0
 * calculated if `coolwh=2` (water)
 * JUSTIFICATION: Not set as not used
 
-*blpressure = 
+*pres_blkt = 
 * DESCRIPTION:   Blanket coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set
 

@@ -352,7 +352,7 @@ module fwbs_variables
   !! Applies to both neutron and surface loads. Only used to calculate peak temperature - not
   !! the coolant flow rate.)
 
-  real(dp) :: blpressure
+  real(dp) :: pres_blkt
   !! blanket coolant pressure [Pa] (`secondary_cycle>1`)
 
   real(dp) :: temp_blkt_in
@@ -752,7 +752,7 @@ module fwbs_variables
     roughness = 1.0D-6
     fw_channel_length = 4.0D0
     peaking_factor = 1.0D0
-    blpressure = 15.50D6
+    pres_blkt = 15.50D6
     temp_blkt_in = 573.0D0
     temp_blkt_out = 823.0D0
     coolp = 15.5D6
