@@ -137,7 +137,7 @@ class BldgsSizesParam(NamedTuple):
     tlife: Any
     cplife: Any
     divlife: Any
-    rdewex: Any
+    r_cryostat_inboard: Any
     bktlife: Any
     hmax: Any
     tfcth: Any
@@ -280,7 +280,7 @@ class BldgsSizesParam(NamedTuple):
             tlife=40,
             cplife=0,
             divlife=0,
-            rdewex=19.48258241468535,
+            r_cryostat_inboard=19.48258241468535,
             bktlife=0,
             hmax=9.0730900215620327,
             tfcth=1.208,
@@ -419,7 +419,7 @@ class BldgsSizesParam(NamedTuple):
             tlife=40,
             cplife=0,
             divlife=6.1337250397740126,
-            rdewex=19.482980877139834,
+            r_cryostat_inboard=19.482980877139834,
             bktlife=19.216116010620578,
             hmax=9.0730900215620327,
             tfcth=1.208,
@@ -678,7 +678,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(cost_variables, "tlife", bldgssizesparam.tlife)
     monkeypatch.setattr(cost_variables, "cplife", bldgssizesparam.cplife)
     monkeypatch.setattr(cost_variables, "divlife", bldgssizesparam.divlife)
-    monkeypatch.setattr(fwbs_variables, "rdewex", bldgssizesparam.rdewex)
+    monkeypatch.setattr(
+        fwbs_variables, "r_cryostat_inboard", bldgssizesparam.r_cryostat_inboard
+    )
     monkeypatch.setattr(fwbs_variables, "bktlife", bldgssizesparam.bktlife)
     monkeypatch.setattr(build_variables, "hmax", bldgssizesparam.hmax)
     monkeypatch.setattr(build_variables, "tfcth", bldgssizesparam.tfcth)

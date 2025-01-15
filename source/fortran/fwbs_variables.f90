@@ -418,7 +418,7 @@ module fwbs_variables
   !! nuclear heating in the TF coil (MW/m3) (`blktmodel>0`)
   !#TODO: check usage of old blktmodel. Update to iblanket
 
-  real(dp) :: rdewex
+  real(dp) :: r_cryostat_inboard
   !! cryostat radius [m]
 
   real(dp) :: zdewex
@@ -772,7 +772,7 @@ module fwbs_variables
     pradloss = 0.0D0
     ptfnuc = 0.0D0
     ptfnucpm3 = 0.0D0
-    rdewex = 0.0D0
+    r_cryostat_inboard = 0.0D0
     zdewex = 0.0D0
     rpf2dewar = 0.5D0
     vdewex = 0.0D0

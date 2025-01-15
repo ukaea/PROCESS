@@ -46,7 +46,7 @@ class CalcBuildingCostsParam(NamedTuple):
 
     estotftgj: Any = None
 
-    rdewex: Any = None
+    r_cryostat_inboard: Any = None
 
     zdewex: Any = None
 
@@ -89,7 +89,7 @@ class CalcBuildingCostsParam(NamedTuple):
             ritfc=234156150,
             n_tf=18,
             estotftgj=130.10721529398921,
-            rdewex=18.314040399601147,
+            r_cryostat_inboard=18.314040399601147,
             zdewex=15.118436894660423,
             cost_factor_buildings=1,
             light_build_cost_per_vol=270,
@@ -1189,7 +1189,7 @@ class CalcBuildingCostsParam(NamedTuple):
             ritfc=234156150,
             n_tf=18,
             estotftgj=129.99240835373195,
-            rdewex=18.31462428923539,
+            r_cryostat_inboard=18.31462428923539,
             zdewex=15.165858901796364,
             cost_factor_buildings=1,
             light_build_cost_per_vol=270,
@@ -2312,7 +2312,9 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
 
     monkeypatch.setattr(tfcoil_variables, "estotftgj", calcbuildingcostsparam.estotftgj)
 
-    monkeypatch.setattr(fwbs_variables, "rdewex", calcbuildingcostsparam.rdewex)
+    monkeypatch.setattr(
+        fwbs_variables, "r_cryostat_inboard", calcbuildingcostsparam.r_cryostat_inboard
+    )
 
     monkeypatch.setattr(fwbs_variables, "zdewex", calcbuildingcostsparam.zdewex)
 
@@ -2368,7 +2370,7 @@ class CalcLandCostsParam(NamedTuple):
 
     tfcth: Any = None
 
-    rdewex: Any = None
+    r_cryostat_inboard: Any = None
 
     cost_factor_land: Any = None
 
@@ -2402,7 +2404,7 @@ class CalcLandCostsParam(NamedTuple):
             dr_tf_inner_bore=11.753025251709767,
             dh_tf_inner_bore=14.474776497695849,
             tfcth=0.91858999999999991,
-            rdewex=18.314040399601147,
+            r_cryostat_inboard=18.314040399601147,
             cost_factor_land=1,
             costexp=0.80000000000000004,
             s_kref=np.array(
@@ -3490,7 +3492,7 @@ class CalcLandCostsParam(NamedTuple):
             dr_tf_inner_bore=11.753830505540675,
             dh_tf_inner_bore=14.450776497695848,
             tfcth=0.91858999999999991,
-            rdewex=18.31462428923539,
+            r_cryostat_inboard=18.31462428923539,
             cost_factor_land=1,
             costexp=0.80000000000000004,
             s_kref=np.array(
@@ -4599,7 +4601,9 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
 
     monkeypatch.setattr(build_variables, "tfcth", calclandcostsparam.tfcth)
 
-    monkeypatch.setattr(fwbs_variables, "rdewex", calclandcostsparam.rdewex)
+    monkeypatch.setattr(
+        fwbs_variables, "r_cryostat_inboard", calclandcostsparam.r_cryostat_inboard
+    )
 
     monkeypatch.setattr(
         cost_variables, "cost_factor_land", calclandcostsparam.cost_factor_land
@@ -13731,7 +13735,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
 
     vvmass: Any = None
 
-    rdewex: Any = None
+    r_cryostat_inboard: Any = None
 
     zdewex: Any = None
 
@@ -13774,7 +13778,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             psechtmw=311.54038043019023,
             helpow=142703.41458500578,
             vvmass=8957118.946216708,
-            rdewex=18.314040399601147,
+            r_cryostat_inboard=18.314040399601147,
             zdewex=15.118436894660423,
             cost_factor_misc=1,
             costexp=0.80000000000000004,
@@ -14870,7 +14874,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             psechtmw=640.27066522894324,
             helpow=823308.59959198488,
             vvmass=8948002.9350915737,
-            rdewex=18.31462428923539,
+            r_cryostat_inboard=18.31462428923539,
             zdewex=15.165858901796364,
             cost_factor_misc=1,
             costexp=0.80000000000000004,
@@ -16008,7 +16012,11 @@ def test_calc_remaining_subsystems(
 
     monkeypatch.setattr(fwbs_variables, "vvmass", calcremainingsubsystemsparam.vvmass)
 
-    monkeypatch.setattr(fwbs_variables, "rdewex", calcremainingsubsystemsparam.rdewex)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "r_cryostat_inboard",
+        calcremainingsubsystemsparam.r_cryostat_inboard,
+    )
 
     monkeypatch.setattr(fwbs_variables, "zdewex", calcremainingsubsystemsparam.zdewex)
 
