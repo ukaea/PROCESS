@@ -2065,7 +2065,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     else:
         noc = number_of_coils
 
-    for coil in range(0, noc):
+    for coil in range(noc):
         coils_r.append(mfile_data.data["rpf[{:01}]".format(coil)].get_scan(scan))
         coils_z.append(mfile_data.data["zpf[{:01}]".format(coil)].get_scan(scan))
         coils_dr.append(mfile_data.data["pfdr({:01})".format(coil)].get_scan(scan))

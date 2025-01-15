@@ -533,7 +533,7 @@ class Costs2015:
         The exponent =1
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
-        for i in range(0, 9):
+        for i in range(9):
             self.s_cost_factor[i] = cost_variables.cost_factor_buildings
 
         # Power plant admin buildings cost ($)
@@ -617,7 +617,7 @@ class Costs2015:
         # Total cost of buildings ($)
         self.s_label[8] = "Total cost of buildings"
         self.s_cost[8] = 0.0e0
-        for j in range(0, 8):
+        for j in range(8):
             self.s_cost[8] = self.s_cost[8] + self.s_cost[j]
 
     def calc_land_costs(self):

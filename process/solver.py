@@ -120,7 +120,6 @@ class _Solver(ABC):
         :return: solver error code
         :rtype: int
         """
-        pass
 
 
 class VmconProblem(AbstractProblem):

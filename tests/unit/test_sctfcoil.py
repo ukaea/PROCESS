@@ -1861,8 +1861,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     whtconin: Any = None
 
-    tfcryoarea: Any = None
-
     vftf: Any = None
 
     dcond: Any = None

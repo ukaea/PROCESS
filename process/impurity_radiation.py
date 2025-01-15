@@ -309,7 +309,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 
 
 def z2index(zimp):
-    for i in range(0, len(impurity_radiation_module.impurity_arr_label)):
+    for i in range(len(impurity_radiation_module.impurity_arr_label)):
         if zimp == impurity_radiation_module.impurity_arr_z[i]:
             z2index = i
             return z2index
