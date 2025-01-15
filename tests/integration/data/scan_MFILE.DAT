@@ -817,7 +817,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 
@@ -1812,7 +1812,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 
@@ -2807,7 +2807,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 
@@ -3802,7 +3802,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 
@@ -4797,7 +4797,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 
@@ -5792,7 +5792,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 
@@ -6787,7 +6787,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 
@@ -7782,7 +7782,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 
@@ -8777,7 +8777,7 @@
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (fwarea)______________________      2.0043E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      2.0115E+01 OP 
- Cryostat_internal_half-height_(m)_______________________________________ (zdewex)______________________      1.6623E+01 OP 
+ Cryostat_internal_half-height_(m)_______________________________________ (dz_cryostat_half_inside)______________________      1.6623E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (clh1)________________________      5.9786E+00 OP 
  Divertor_area_(m2)______________________________________________________ (divsur)______________________      1.8951E+02 OP 
  Divertor_mass_(kg)______________________________________________________ (divmas)______________________      4.6430E+04 OP 

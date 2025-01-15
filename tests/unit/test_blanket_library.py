@@ -1177,7 +1177,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     ddwex: Any = None
     r_cryostat_inboard: Any = None
     dr_pf_cryostat: Any = None
-    zdewex: Any = None
+    dz_cryostat_half_inside: Any = None
     vdewex: Any = None
     vvmass: Any = None
     vdewin: Any = None
@@ -1188,7 +1188,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     clh1: Any = None
     dz_pf_cryostat: Any = None
     expected_r_cryostat_inboard: Any = None
-    expected_zdewex: Any = None
+    expected_dz_cryostat_half_inside: Any = None
     expected_vdewex: Any = None
     expected_vvmass: Any = None
     expected_dewmkg: Any = None
@@ -1206,7 +1206,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             ddwex=0.15000000000000002,
             r_cryostat_inboard=0,
             dr_pf_cryostat=0.5,
-            zdewex=0,
+            dz_cryostat_half_inside=0,
             vdewex=0,
             vvmass=0,
             vdewin=1016.2876250857248,
@@ -1275,7 +1275,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             clh1=2.5,
             dz_pf_cryostat=0,
             expected_r_cryostat_inboard=17.805470903073743,
-            expected_zdewex=15.259637557000296,
+            expected_dz_cryostat_half_inside=15.259637557000296,
             expected_vdewex=810.95017445543203,
             expected_vvmass=7927043.4756686538,
             expected_dewmkg=14252454.836421024,
@@ -1310,7 +1310,11 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(
         fwbs_variables, "dr_pf_cryostat", externalcryogeometryparam.dr_pf_cryostat
     )
-    monkeypatch.setattr(fwbs_variables, "zdewex", externalcryogeometryparam.zdewex)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "dz_cryostat_half_inside",
+        externalcryogeometryparam.dz_cryostat_half_inside,
+    )
     monkeypatch.setattr(fwbs_variables, "vdewex", externalcryogeometryparam.vdewex)
     monkeypatch.setattr(fwbs_variables, "vvmass", externalcryogeometryparam.vvmass)
     monkeypatch.setattr(fwbs_variables, "vdewin", externalcryogeometryparam.vdewin)
@@ -1328,8 +1332,8 @@ def test_external_cryo_geometry(
     assert fwbs_variables.r_cryostat_inboard == pytest.approx(
         externalcryogeometryparam.expected_r_cryostat_inboard
     )
-    assert fwbs_variables.zdewex == pytest.approx(
-        externalcryogeometryparam.expected_zdewex
+    assert fwbs_variables.dz_cryostat_half_inside == pytest.approx(
+        externalcryogeometryparam.expected_dz_cryostat_half_inside
     )
     assert fwbs_variables.vdewex == pytest.approx(
         externalcryogeometryparam.expected_vdewex
