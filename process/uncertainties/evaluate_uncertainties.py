@@ -120,14 +120,12 @@ def run_monte_carlo(args):
                 if no_unfeasible <= config.no_allowed_unfeasible:
                     if no_unfeasible > 0:
                         print(
-                            "WARNING: %i non feasible point(s) in sweep,"
-                            % no_unfeasible,
-                            "but finished anyway! Allowed  %i. "
-                            % config.no_allowed_unfeasible,
+                            f"WARNING: {no_unfeasible:d} non feasible point(s) in sweep,",
+                            f"but finished anyway! Allowed  {config.no_allowed_unfeasible:d}. ",
                         )
 
                     # add run to index list
-                    indexDataSet.append("run{}".format(RUN_ID))
+                    indexDataSet.append(f"run{RUN_ID}")
 
                     # collect the process solution
                     mfilepath = Path(config.wdir) / "MFILE.DAT"
@@ -143,9 +141,7 @@ def run_monte_carlo(args):
 
                 else:
                     print(
-                        "WARNING: %i non feasible point(s) in sweep!\
-                    Rerunning!"
-                        % no_unfeasible
+                        f"WARNING: {no_unfeasible:d} non feasible point(s) in sweep! Rerunning!"
                     )
             else:
                 print("PROCESS has stopped without finishing!")
@@ -175,14 +171,7 @@ def write_Morris_Method_Output(X, S):
         # print the sensistivity indices
         for i in range(X["num_vars"]):
             f.write(
-                "%s %f %f %f %f\n"
-                % (
-                    X["names"][i],
-                    S["mu"][i],
-                    S["mu_star"][i],
-                    S["sigma"][i],
-                    S["mu_star_conf"][i],
-                )
+                f"{X['names'][i]} {S['mu'][i]:f} {S['mu_star'][i]:f} {S['sigma'][i]:f} {S['mu_star_conf'][i]:f}\n"
             )
 
 
@@ -200,14 +189,7 @@ def write_Sobol_Output(X, S):
         # print first order Sobol indices
         for i in range(X["num_vars"]):
             f.write(
-                "%s %f %f %f %f\n"
-                % (
-                    X["names"][i],
-                    S["S1"][i],
-                    S["S1_conf"][i],
-                    S["ST"][i],
-                    S["ST_conf"][i],
-                )
+                f"{X['names'][i]} {S['S1'][i]:f} {S['S1_conf'][i]:f} {S['ST'][i]:f} {S['ST_conf'][i]:f}\n"
             )
 
 
@@ -287,7 +269,7 @@ def run_morris_method(args):
         outputDataSet = []
 
         # add run to index list
-        indexDataSet.append("run{}".format(run_id))
+        indexDataSet.append(f"run{run_id}")
 
         # We need to find a way to catch failed runs
         process_status = m_file.data["ifail"].get_scan(-1)
@@ -370,7 +352,7 @@ def run_sobol_method(args):
         outputDataSet = []
 
         # add run to index list
-        indexDataSet.append("run{}".format(run_id))
+        indexDataSet.append(f"run{run_id}")
 
         # We need to find a way to catch failed runs
         process_status = m_file.data["ifail"].get_scan(-1)

@@ -193,7 +193,7 @@ def main(args=None):
     for ii in range(len(input_files)):
         if os.path.isdir(input_files[ii]):
             input_files[ii] = input_files[ii].replace("/", "")
-            input_files[ii] = input_files[ii] + str("/MFILE.DAT")
+            input_files[ii] = input_files[ii] + "/MFILE.DAT"
 
         # Check for the existence of the MFILE
         if not os.path.isfile(input_files[ii]):
@@ -297,9 +297,9 @@ def main(args=None):
     nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
     scan_var_name = nsweep_dict[nsweep_ref]
     # Get the eventual second scan variable
-    nsweep_2_ref = int(0)
+    nsweep_2_ref = 0
     is_2D_scan = False
-    scan_2_var_name = str()
+    scan_2_var_name = ""
     if "nsweep_2" in m_file.data.keys():
         is_2D_scan = True
         nsweep_2_ref = int(m_file.data["nsweep_2"].get_scan(-1))
@@ -447,10 +447,8 @@ def main(args=None):
                 print()
                 if output_names2 != []:
                     print(
-                        (
-                            "Y2-Axis\n "
-                            + f" {output_name2} : {output_arrays2[input_file][output_name2]}\n"
-                        )
+                        "Y2-Axis\n "
+                        + f" {output_name2} : {output_arrays2[input_file][output_name2]}\n"
                     )
         # Plot section
         # -----------

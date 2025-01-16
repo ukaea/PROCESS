@@ -10,7 +10,7 @@ import importlib.util
 import inspect
 import pathlib
 import sys
-from typing import Any, List, NamedTuple
+from typing import Any, NamedTuple
 
 # the directory which this script resides (scripts/)
 CURRENT_DIR = pathlib.Path(__file__).resolve().parent
@@ -93,7 +93,7 @@ def get_non_dunder_class_members(_object: object) -> dict:
     return non_dunder_members
 
 
-def get_annotated_variables(parent_name: str, _object) -> List[AnnotatedVariableData]:
+def get_annotated_variables(parent_name: str, _object) -> list[AnnotatedVariableData]:
     """Given a physics and engineering module, this function extracts and returns all of the
     annotated variables as a named tuple with important information contained.
 
@@ -128,7 +128,7 @@ def get_annotated_variables(parent_name: str, _object) -> List[AnnotatedVariable
     return annotated_variables
 
 
-def get_python_variables() -> List[AnnotatedVariableData]:
+def get_python_variables() -> list[AnnotatedVariableData]:
     """Drives the discovery of AnnotatedVariables, returning them back to be
     parsed into the dicts by `create_dicts.py`.
     """

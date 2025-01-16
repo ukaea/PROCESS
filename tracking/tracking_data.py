@@ -357,7 +357,9 @@ class TrackedData:
 
         # common format for the timestamp of the run
         data_time_str = f"{date_str.strip()} - {time_str.strip()}"
-        date_time = datetime.datetime.strptime(data_time_str, "%d/%m/%Y - %H:%M")
+        date_time = datetime.datetime.strptime(
+            data_time_str, "%d/%m/%Y - %H:%M"
+        ).replace(tzinfo=datetime.timezone.utc)
 
         tracking_data = json_file_data.get(
             "tracking", []
@@ -376,7 +378,7 @@ class TrackedData:
         # open all files in the `database` folder
 
         for i in self.database.glob("*.json"):
-            with open(i, "r") as f:
+            with open(i) as f:
                 file_data = json.load(f)  # parsed contents of the JSON tracking file
                 self._add_variables(
                     file_data

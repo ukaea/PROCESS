@@ -220,7 +220,7 @@ def write_constraint_equations(data, out_file):
     constraints = get_constraint_equations(data)
 
     for number, comment in constraints.items():
-        constraint_line = "icc = {0} * {1}\n".format(number, comment)
+        constraint_line = f"icc = {number} * {comment}\n"
         out_file.write(constraint_line)
 
 
@@ -287,15 +287,15 @@ def write_iteration_variables(data, out_file):
     variables = get_iteration_variables(data)
 
     for number, info in variables.items():
-        variable_line = "ixc = {0} * {1}\n".format(number, info["comment"])
+        variable_line = f"ixc = {number} * {info['comment']}\n"
         out_file.write(variable_line)
 
         if "lower_bound" in info:
-            lower_bound_line = "boundl({0}) = {1}\n".format(number, info["lower_bound"])
+            lower_bound_line = f"boundl({number}) = {info['lower_bound']}\n"
             out_file.write(lower_bound_line)
 
         if "upper_bound" in info:
-            upper_bound_line = "boundu({0}) = {1}\n".format(number, info["upper_bound"])
+            upper_bound_line = f"boundu({number}) = {info['upper_bound']}\n"
             out_file.write(upper_bound_line)
 
 
@@ -348,7 +348,7 @@ def get_parameters(data, use_string_values=True):
             if item not in exclusions and item in data.keys():
                 if item == "fimp":
                     for k in range(len(data["fimp"].get_value)):
-                        name = "fimp({0})".format(str(k + 1).zfill(1))
+                        name = f"fimp({str(k + 1).zfill(1)})"
                         value = data["fimp"].get_value[k]
                         parameters[module][name] = value
 
@@ -363,13 +363,13 @@ def get_parameters(data, use_string_values=True):
 
                 elif item == "zref":
                     for j in range(len(data["zref"].get_value)):
-                        name = "zref({0})".format(str(j + 1).zfill(1))
+                        name = f"zref({str(j + 1).zfill(1)})"
                         value = data["zref"].get_value[j]
                         parameters[module][name] = value
 
                 elif item == "impurity_enrichment":
                     for m in range(len(data["impurity_enrichment"].get_value)):
-                        name = "impurity_enrichment({0})".format(str(m + 1).zfill(1))
+                        name = f"impurity_enrichment({str(m + 1).zfill(1)})"
                         value = data["impurity_enrichment"].get_value[m]
                         parameters[module][name] = value
 
@@ -430,13 +430,13 @@ def write_parameters(data, out_file):
     for module in parameters:
         # Write module heading: format to be more readable again
         formatted_module = module.replace("_", " ").title()
-        write_title("{0}".format(formatted_module), out_file)
+        write_title(f"{formatted_module}", out_file)
 
         # Write out parameters for this module
         for parameter, info in parameters[module].items():
             if any(var_name in parameter for var_name in filter_list):
                 # No justification formatting if parameter is in filter list
-                parameter_line = "{0} = {1}\n".format(parameter, info)
+                parameter_line = f"{parameter} = {info}\n"
             else:
                 # All other parameters
                 # Left justification set to 8 to allow easier reading
@@ -446,11 +446,11 @@ def write_parameters(data, out_file):
                     and "value" in info
                     and (type(info.get("comment")) is str)
                 ):
-                    parameter_line = "{0} = {1} * {2}\n".format(
-                        parameter.ljust(8), info["value"], info["comment"]
+                    parameter_line = (
+                        f"{parameter.ljust(8)} = {info['value']} * {info['comment']}\n"
                     )
                 else:
-                    parameter_line = "{0} = {1}\n".format(parameter.ljust(8), info)
+                    parameter_line = f"{parameter.ljust(8)} = {info}\n"
 
             # Finally write the line
             out_file.write(parameter_line)
@@ -470,11 +470,7 @@ def add_iteration_variable(data, variable_number):
         data["ixc"].value.sort()
 
     else:
-        print(
-            "Variable number {0} already in iteration variable list".format(
-                variable_number
-            )
-        )
+        print(f"Variable number {variable_number} already in iteration variable list")
 
 
 def remove_iteration_variable(data, variable_number):
@@ -490,9 +486,7 @@ def remove_iteration_variable(data, variable_number):
         data["ixc"].value.remove(variable_number)
         data["ixc"].value.sort()
     else:
-        print(
-            "Variable number {0} not in iteration variable list".format(variable_number)
-        )
+        print(f"Variable number {variable_number} not in iteration variable list")
 
 
 def add_constraint_equation(data, equation_number):
@@ -509,11 +503,7 @@ def add_constraint_equation(data, equation_number):
         data["icc"].value.sort()
 
     else:
-        print(
-            "Equation number {0} already in constraint equations list".format(
-                equation_number
-            )
-        )
+        print(f"Equation number {equation_number} already in constraint equations list")
 
 
 def remove_constraint_equation(data, equation_number):
@@ -531,11 +521,7 @@ def remove_constraint_equation(data, equation_number):
         data["icc"].value.sort()
 
     else:
-        print(
-            "Equation number {0} not in constraint equations list".format(
-                equation_number
-            )
-        )
+        print(f"Equation number {equation_number} not in constraint equations list")
 
 
 def add_parameter(data, parameter_name, parameter_value):
@@ -560,7 +546,7 @@ def add_parameter(data, parameter_name, parameter_value):
             except KeyError:
                 # The dictionary doesn't recognise the variable name
                 print(
-                    "Warning: Description for {0}".format(parameter_name),
+                    f"Warning: Description for {parameter_name}",
                     "specified in IN.DAT not in dictionary.",
                     file=stderr,
                 )
@@ -598,7 +584,7 @@ def remove_parameter(data, parameter_name):
     # Inform the user that the parameter requested for deletion isn;t in the
     # data dictionary
     else:
-        print("Parameter {0} not in IN.DAT".format(parameter_name))
+        print(f"Parameter {parameter_name} not in IN.DAT")
 
 
 def change_array(data, name, array_id, array_val):
@@ -648,7 +634,7 @@ def add_bound(data, bound, bound_type, bound_value):
 
     # Bound not recognised.
     else:
-        print("Bound {0} not recognised. Check type == string".format(bound))
+        print(f"Bound {bound} not recognised. Check type == string")
 
 
 def remove_bound(data, bound, bound_type):
@@ -779,16 +765,14 @@ def variable_constraint_type_check(item_number, var_type):
             # rounded float number with warning
             else:
                 print(
-                    "Value {0} for {1} not an integer. Value rounded to {2}."
-                    " Check!".format(item_number, var_type, int(item_number))
+                    f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}."
+                    " Check!"
                 )
                 return int(item_number)
 
         except ValueError:
             print(
-                "Value {0} for {1} not valid. Check value!".format(
-                    item_number, var_type
-                ),
+                f"Value {item_number} for {var_type} not valid. Check value!",
                 file=stderr,
             )
 
@@ -801,9 +785,7 @@ def variable_constraint_type_check(item_number, var_type):
         # If not an integer warn of rounding and return rounded integer
         else:
             print(
-                "Value {0} for {1} not an integer. Value rounded to {2}. Check!".format(
-                    item_number, var_type, int(item_number)
-                )
+                f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}. Check!"
             )
             return int(item_number)
 
@@ -814,9 +796,7 @@ def variable_constraint_type_check(item_number, var_type):
     # Value not recognised
     else:
         print(
-            "Value {0} for {1} not a recognised format. Check value!".format(
-                item_number, var_type
-            )
+            f"Value {item_number} for {var_type} not a recognised format. Check value!"
         )
 
 
@@ -834,10 +814,8 @@ def variable_bound_check(bound_number, bound_type):
     # check if bound is one of the allowed values if not warn user
     if bound_type not in ["l", "u", "upper", "lower"]:
         print(
-            "Bound type '{0}' not recognised. Must be one of "
-            "['u', 'l', 'U', 'L', 'lower', 'upper', 'LOWER', 'UPPER']".format(
-                bound_type
-            )
+            f"Bound type '{bound_type}' not recognised. Must be one of "
+            "['u', 'l', 'U', 'L', 'lower', 'upper', 'LOWER', 'UPPER']"
         )
 
     # if bound is given as full word shorten for consistency for dictionary
@@ -865,14 +843,12 @@ def variable_bound_check(bound_number, bound_type):
         else:
             bound_number = int(bound_number)
             print(
-                "Bound number {0} not an integer. Value rounded to {1}".format(
-                    bound_number, int(bound_number)
-                )
+                f"Bound number {bound_number} not an integer. Value rounded to {int(bound_number)}"
             )
             return bound_number, bound_type
 
 
-class INVariable(object):
+class INVariable:
     def __init__(self, name, value, v_type, parameter_group, comment):
         """Class to stores the information of a single variable from the
         IN.DAT file
@@ -900,7 +876,7 @@ class INVariable(object):
             return self.value
 
 
-class InDat(object):
+class InDat:
     """
     Class 'InDat' for handling IN.DAT data. It handles
 
@@ -963,7 +939,7 @@ class InDat(object):
                 except KeyError:
                     print(
                         "Warning: Line below is causing a problem. Check "
-                        "that line in IN.DAT is valid. Line skipped!\n{0}".format(line),
+                        f"that line in IN.DAT is valid. Line skipped!\n{line}",
                         file=stderr,
                     )
 
@@ -1150,7 +1126,7 @@ class InDat(object):
                     self.data["icc"].value.append(int(item))
                 else:
                     # Duplicate constraint equation number
-                    self.add_duplicate_variable("icc = {0}".format(item))
+                    self.add_duplicate_variable(f"icc = {item}")
             # Don't sort the constraints! Preserves what's eq, what's ineq;
             # first neqns are eqs, rest are ineqs
             # self.data["icc"].value.sort()
@@ -1197,7 +1173,7 @@ class InDat(object):
                     self.data["ixc"].value.append(int(item))
                 else:
                     # Duplicate iteration variable
-                    self.add_duplicate_variable("ixc = {0}".format(item))
+                    self.add_duplicate_variable(f"ixc = {item}")
             self.data["ixc"].value.sort()
 
     def process_bound(self, line):
@@ -1239,7 +1215,7 @@ class InDat(object):
             self.data["bounds"].value[bound] = dict()
         elif self.data["bounds"].value[bound].get(bound_type):
             # Duplicate bound
-            self.add_duplicate_variable("bound{0}({1})".format(bound_type, bound))
+            self.add_duplicate_variable(f"bound{bound_type}({bound})")
 
         # Populate self.data dictionary with bound information
         self.data["bounds"].value[bound][bound_type] = bound_value
@@ -1328,7 +1304,7 @@ class InDat(object):
             # change must be a duplicate initialisation
             fortran_index = index + 1
             # Index begins at 1!
-            self.add_duplicate_variable("{0}({1})".format(name, fortran_index))
+            self.add_duplicate_variable(f"{name}({fortran_index})")
 
         # Now we are sure that the Python list index exists, set its value
         self.data[name].value[index] = eval(fortran_python_scientific(value))

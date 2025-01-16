@@ -2,7 +2,7 @@
 
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 from pytest import approx
 
@@ -1038,7 +1038,7 @@ class Acc2211Param(NamedTuple):
             ucblli2o=600,
             ifueltyp=1,
             lsa=2,
-            fwmatm=numpy.array(
+            fwmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1067,7 +1067,7 @@ class Acc2211Param(NamedTuple):
             ucblli2o=600,
             ifueltyp=1,
             lsa=2,
-            fwmatm=numpy.array(
+            fwmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1238,7 +1238,7 @@ class Acc2212Param(NamedTuple):
             whtblss=1058196.5489677608,
             wtbllipb=0,
             ucflib=84,
-            blmatm=numpy.array(
+            blmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1292,7 +1292,7 @@ class Acc2212Param(NamedTuple):
             whtblss=1060153.955039866,
             wtbllipb=0,
             ucflib=84,
-            blmatm=numpy.array(
+            blmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1470,7 +1470,7 @@ class Acc2213Param(NamedTuple):
             lsa=2,
             wpenshld=2294873.8131476026,
             whtshld=2294873.8131476026,
-            shmatm=numpy.array(
+            shmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1503,7 +1503,7 @@ class Acc2213Param(NamedTuple):
             lsa=2,
             wpenshld=2297808.3935174868,
             whtshld=2297808.3935174868,
-            shmatm=numpy.array(
+            shmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1809,8 +1809,8 @@ class Acc2221Param(NamedTuple):
             uccu=75,
             fkind=1,
             cconshtf=75,
-            ucsc=numpy.array(
-                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+            ucsc=np.array(
+                np.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
                 order="F",
             ).transpose(),
             ifueltyp=1,
@@ -1850,8 +1850,8 @@ class Acc2221Param(NamedTuple):
             uccu=75,
             fkind=1,
             cconshtf=75,
-            ucsc=numpy.array(
-                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+            ucsc=np.array(
+                np.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
                 order="F",
             ).transpose(),
             ifueltyp=1,
@@ -1891,8 +1891,8 @@ class Acc2221Param(NamedTuple):
             uccu=75,
             fkind=1,
             cconshtf=75,
-            ucsc=numpy.array(
-                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+            ucsc=np.array(
+                np.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
                 order="F",
             ).transpose(),
             ifueltyp=1,
@@ -2110,15 +2110,15 @@ class Acc2222Param(NamedTuple):
             cconshpf=70,
             ucfnc=35,
             cconfix=80,
-            ucsc=numpy.array(
-                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+            ucsc=np.array(
+                np.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
                 order="F",
             ).transpose(),
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=numpy.array(
-                numpy.array(
+            rjconpf=np.array(
+                np.array(
                     (
                         11000000,
                         11000000,
@@ -2153,8 +2153,8 @@ class Acc2222Param(NamedTuple):
             ipfres=0,
             vfohc=0.29999999999999999,
             nohc=7,
-            turns=numpy.array(
-                numpy.array(
+            turns=np.array(
+                np.array(
                     (
                         349.33800535811901,
                         474.70809561378354,
@@ -2185,8 +2185,8 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             isumatpf=3,
             whtpfs=2695737.563343476,
-            ric=numpy.array(
-                numpy.array(
+            ric=np.array(
+                np.array(
                     (
                         14.742063826112622,
                         20.032681634901664,
@@ -2215,8 +2215,8 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=numpy.array(
-                numpy.array(
+            rpf=np.array(
+                np.array(
                     (
                         6.2732560483870969,
                         6.2732560483870969,
@@ -2248,8 +2248,8 @@ class Acc2222Param(NamedTuple):
             isumatoh=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=numpy.array(
-                numpy.array(
+            vf=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.29999999999999999,
@@ -2280,8 +2280,8 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             awpoh=3.8004675824985918,
             fncmass=310716.52923547616,
-            dcond=numpy.array(
-                numpy.array(
+            dcond=np.array(
+                np.array(
                     (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
                     order="F",
                 ),
@@ -2306,15 +2306,15 @@ class Acc2222Param(NamedTuple):
             cconshpf=70,
             ucfnc=35,
             cconfix=80,
-            ucsc=numpy.array(
-                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+            ucsc=np.array(
+                np.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
                 order="F",
             ).transpose(),
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=numpy.array(
-                numpy.array(
+            rjconpf=np.array(
+                np.array(
                     (
                         11000000,
                         11000000,
@@ -2349,8 +2349,8 @@ class Acc2222Param(NamedTuple):
             ipfres=0,
             vfohc=0.29999999999999999,
             nohc=7,
-            turns=numpy.array(
-                numpy.array(
+            turns=np.array(
+                np.array(
                     (
                         440.26292595093469,
                         525.4843415877815,
@@ -2381,8 +2381,8 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             isumatpf=3,
             whtpfs=2510424.9065680322,
-            ric=numpy.array(
-                numpy.array(
+            ric=np.array(
+                np.array(
                     (
                         18.579095475129446,
                         22.175439215004378,
@@ -2411,8 +2411,8 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=numpy.array(
-                numpy.array(
+            rpf=np.array(
+                np.array(
                     (
                         6.2732560483870969,
                         6.2732560483870969,
@@ -2444,8 +2444,8 @@ class Acc2222Param(NamedTuple):
             isumatoh=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=numpy.array(
-                numpy.array(
+            vf=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.29999999999999999,
@@ -2476,8 +2476,8 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             awpoh=3.8004675824985918,
             fncmass=310716.52923547616,
-            dcond=numpy.array(
-                numpy.array(
+            dcond=np.array(
+                np.array(
                     (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
                     order="F",
                 ),
@@ -2502,15 +2502,15 @@ class Acc2222Param(NamedTuple):
             cconshpf=70,
             ucfnc=35,
             cconfix=80,
-            ucsc=numpy.array(
-                numpy.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
+            ucsc=np.array(
+                np.array((600, 600, 300, 600, 600, 600, 300, 1200, 1200), order="F"),
                 order="F",
             ).transpose(),
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=numpy.array(
-                numpy.array(
+            rjconpf=np.array(
+                np.array(
                     (
                         11000000,
                         11000000,
@@ -2545,8 +2545,8 @@ class Acc2222Param(NamedTuple):
             ipfres=0,
             vfohc=0.29999999999999999,
             nohc=7,
-            turns=numpy.array(
-                numpy.array(
+            turns=np.array(
+                np.array(
                     (
                         440.26292595093469,
                         525.4843415877815,
@@ -2577,8 +2577,8 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             isumatpf=3,
             whtpfs=2510424.9065680322,
-            ric=numpy.array(
-                numpy.array(
+            ric=np.array(
+                np.array(
                     (
                         18.579095475129446,
                         22.175439215004378,
@@ -2607,8 +2607,8 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=numpy.array(
-                numpy.array(
+            rpf=np.array(
+                np.array(
                     (
                         6.2732560483870969,
                         6.2732560483870969,
@@ -2640,8 +2640,8 @@ class Acc2222Param(NamedTuple):
             isumatoh=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=numpy.array(
-                numpy.array(
+            vf=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.29999999999999999,
@@ -2672,8 +2672,8 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             awpoh=3.8004675824985918,
             fncmass=310716.52923547616,
-            dcond=numpy.array(
-                numpy.array(
+            dcond=np.array(
+                np.array(
                     (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
                     order="F",
                 ),
@@ -3842,8 +3842,8 @@ class Acc2261Param(NamedTuple):
     "acc2261param",
     (
         Acc2261Param(
-            uchts=numpy.array(
-                numpy.array((15.300000000000001, 19.100000000000001), order="F"),
+            uchts=np.array(
+                np.array((15.300000000000001, 19.100000000000001), order="F"),
                 order="F",
             ).transpose(),
             lsa=2,
@@ -3864,8 +3864,8 @@ class Acc2261Param(NamedTuple):
             expected_cpp=28.655661819943806,
         ),
         Acc2261Param(
-            uchts=numpy.array(
-                numpy.array((15.300000000000001, 19.100000000000001), order="F"),
+            uchts=np.array(
+                np.array((15.300000000000001, 19.100000000000001), order="F"),
                 order="F",
             ).transpose(),
             lsa=2,
@@ -4666,8 +4666,8 @@ class Acc23Param(NamedTuple):
     "acc23param",
     (
         Acc23Param(
-            ucturb=numpy.array(
-                numpy.array((230000000, 245000000), order="F"), order="F"
+            ucturb=np.array(
+                np.array((230000000, 245000000), order="F"), order="F"
             ).transpose(),
             ireactor=1,
             coolwh=1,
@@ -4676,8 +4676,8 @@ class Acc23Param(NamedTuple):
             expected_c23=194.83812507173698,
         ),
         Acc23Param(
-            ucturb=numpy.array(
-                numpy.array((230000000, 245000000), order="F"), order="F"
+            ucturb=np.array(
+                np.array((230000000, 245000000), order="F"), order="F"
             ).transpose(),
             ireactor=1,
             coolwh=1,
@@ -5229,8 +5229,8 @@ class Acc9Param(NamedTuple):
             lsa=2,
             cowner=0.14999999999999999,
             cdirt=4532.1724050055554,
-            cfind=numpy.array(
-                numpy.array(
+            cfind=np.array(
+                np.array(
                     (
                         0.24399999999999999,
                         0.24399999999999999,
@@ -5251,8 +5251,8 @@ class Acc9Param(NamedTuple):
             lsa=2,
             cowner=0.14999999999999999,
             cdirt=4641.9862239386794,
-            cfind=numpy.array(
-                numpy.array(
+            cfind=np.array(
+                np.array(
                     (
                         0.24399999999999999,
                         0.24399999999999999,
@@ -5546,15 +5546,15 @@ class CoelcParam(NamedTuple):
             cdcost=140.341808845157,
             fcap0=1.1499999999999999,
             fcap0cp=1.0600000000000001,
-            ucwst=numpy.array(
-                numpy.array(
+            ucwst=np.array(
+                np.array(
                     (0, 3.9399999999999999, 5.9100000000000001, 7.8799999999999999),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            ucoam=numpy.array(
-                numpy.array(
+            ucoam=np.array(
+                np.array(
                     (
                         68.799999999999997,
                         68.799999999999997,
@@ -5569,8 +5569,8 @@ class CoelcParam(NamedTuple):
             blkcst=868.59838754004318,
             dintrt=0,
             concost=6674.484979127632,
-            cfind=numpy.array(
-                numpy.array(
+            cfind=np.array(
+                np.array(
                     (
                         0.24399999999999999,
                         0.24399999999999999,
@@ -5630,15 +5630,15 @@ class CoelcParam(NamedTuple):
             cdcost=140.341808845157,
             fcap0=1.1499999999999999,
             fcap0cp=1.0600000000000001,
-            ucwst=numpy.array(
-                numpy.array(
+            ucwst=np.array(
+                np.array(
                     (0, 3.9399999999999999, 5.9100000000000001, 7.8799999999999999),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            ucoam=numpy.array(
-                numpy.array(
+            ucoam=np.array(
+                np.array(
                     (
                         68.799999999999997,
                         68.799999999999997,
@@ -5653,8 +5653,8 @@ class CoelcParam(NamedTuple):
             blkcst=870.20508315783786,
             dintrt=0,
             concost=6836.2066921322539,
-            cfind=numpy.array(
-                numpy.array(
+            cfind=np.array(
+                np.array(
                     (
                         0.24399999999999999,
                         0.24399999999999999,

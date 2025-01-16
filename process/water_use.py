@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from process.fortran import constants, heat_transport_variables, water_usage_variables
 from process.fortran import process_output as po
@@ -206,13 +206,13 @@ class WaterUse:
             # difference in saturation vapour pressure (Clausius-Clapeyron approximation)
             satvapdelta = (
                 0.611e0
-                * numpy.exp(
+                * np.exp(
                     (17.27e0 * water_usage_variables.watertempheated)
                     / (237.3e0 + water_usage_variables.watertempheated)
                 )
             ) - (
                 0.611e0
-                * numpy.exp(
+                * np.exp(
                     (17.27e0 * water_usage_variables.watertemp)
                     / (237.3e0 + water_usage_variables.watertemp)
                 )

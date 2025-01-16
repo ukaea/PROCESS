@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from numba import njit
 
 from process.fortran import constants
@@ -54,7 +54,7 @@ class CsFatigue:
 
         # factor 2 taken as saftey factors in the crack sizes
         # Default CS steel undergoes fast fracture when SIF > 200 MPa, under a saftey factor 1.5 we use 133MPa
-        pi_2_arr = numpy.array([numpy.pi / 2.0e0, 0])
+        pi_2_arr = np.array([np.pi / 2.0e0, 0])
         while (
             (a <= t_structural_vertical / csfv.sf_vertical_crack)
             and (c <= t_structural_radial / csfv.sf_radial_crack)
@@ -101,9 +101,9 @@ class CsFatigue:
         # reuse of calc
         a_c = a / c
         a_t = a / t
-        cos_phi = numpy.cos(phi)
+        cos_phi = np.cos(phi)
         cos_phi_2 = cos_phi**2.0e0
-        sin_phi_2 = numpy.sin(phi) ** 2.0e0
+        sin_phi_2 = np.sin(phi) ** 2.0e0
 
         if a <= c:
             Q = 1.0e0 + 1.464e0 * a_c**1.65e0
@@ -112,7 +112,7 @@ class CsFatigue:
         else:  # elif a > c:
             c_a = c / a
             Q = 1.0e0 + 1.464e0 * c_a**1.65e0
-            m1 = numpy.sqrt(c_a)
+            m1 = np.sqrt(c_a)
             f_phi = (c_a**2.0e0 * sin_phi_2 + cos_phi_2) ** 0.25e0
 
         # compute the unitless geometric correction
@@ -129,17 +129,17 @@ class CsFatigue:
                     1.0e0
                     - (
                         a_t**4.0e0
-                        * numpy.sqrt(2.6e0 - (2.0e0 * a_t))
+                        * np.sqrt(2.6e0 - (2.0e0 * a_t))
                         / (1.0e0 + 4.0e0 * a_c)
                     )
                     * abs(cos_phi)
                 )
                 * f_phi
-                * numpy.sqrt(  # f_w
-                    1.0e0 / numpy.cos(numpy.sqrt(a_t) * numpy.pi * c / (2.0e0 * w))
+                * np.sqrt(  # f_w
+                    1.0e0 / np.cos(np.sqrt(a_t) * np.pi * c / (2.0e0 * w))
                 )
             )
-            * numpy.sqrt(numpy.pi * a / Q)
+            * np.sqrt(np.pi * a / Q)
         )
 
     @staticmethod
@@ -163,8 +163,8 @@ class CsFatigue:
         # reuse of calc
         a_t = a / t
         a_t_2 = a_t**2.0e0
-        sin_phi = numpy.sin(phi)
-        cos_phi_2 = numpy.cos(phi) ** 2.0e0
+        sin_phi = np.sin(phi)
+        cos_phi_2 = np.cos(phi) ** 2.0e0
 
         if a <= c:
             # reuse of calc
@@ -189,7 +189,7 @@ class CsFatigue:
             c_a_4 = c_a**4.0e0
 
             Q = 1.0e0 + 1.464e0 * c_a**1.65e0
-            m1 = numpy.sqrt(c_a) * (1.0e0 + 0.04e0 * c_a)
+            m1 = np.sqrt(c_a) * (1.0e0 + 0.04e0 * c_a)
 
             m2 = 0.2e0 * c_a_4
             m3 = -0.11e0 * c_a_4
@@ -219,9 +219,9 @@ class CsFatigue:
                 (m1 + m2 * a_t_2 + m3 * a_t**4.0e0)
                 * g
                 * f_phi
-                * numpy.sqrt(  # f_w
-                    1.0e0 / numpy.cos(numpy.sqrt(a_t) * numpy.pi * c / (2.0e0 * w))
+                * np.sqrt(  # f_w
+                    1.0e0 / np.cos(np.sqrt(a_t) * np.pi * c / (2.0e0 * w))
                 )
             )
-            * numpy.sqrt(numpy.pi * a / Q)
+            * np.sqrt(np.pi * a / Q)
         )

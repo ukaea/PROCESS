@@ -37,7 +37,7 @@ from process.io.python_fortran_dicts import get_dicts
 logger = logging.getLogger(__name__)
 
 
-class ProcessConfig(object):
+class ProcessConfig:
     """
     Configuration parameters for PROCESS runs
 
@@ -74,18 +74,18 @@ class ProcessConfig(object):
         """echos the attributes of the class"""
 
         if self.wdir != ".":
-            print("Working directory:   {}".format(self.wdir))
-        print("Original IN.DAT:     {}".format(self.or_in_dat))
-        print("PROCESS binary:      {}".format(self.process))
-        print("Number of iterations {}".format(self.niter))
+            print(f"Working directory:   {self.wdir}")
+        print(f"Original IN.DAT:     {self.or_in_dat}")
+        print(f"PROCESS binary:      {self.process}")
+        print(f"Number of iterations {self.niter}")
 
         if self.u_seed is not None:
-            print("random seed          {}".format(self.u_seed))
-        print("variable range factor {}".format(self.factor))
+            print(f"random seed          {self.u_seed}")
+        print(f"variable range factor {self.factor}")
         if self.filename is not None:
-            print("Config file          {}".format(self.filename))
+            print(f"Config file          {self.filename}")
         if self.comment != "":
-            print("Comment  {}".format(self.comment))
+            print(f"Comment  {self.comment}")
 
     def prepare_wdir(self):
         """prepares the working directory"""
@@ -130,9 +130,9 @@ class ProcessConfig(object):
 
             m_file = MFile(filename=directory + "/MFILE.DAT")
 
-            error_status = "Error status: {}  Error ID: {}\n".format(
-                m_file.data["error_status"].get_scan(-1),
-                m_file.data["error_id"].get_scan(-1),
+            error_status = (
+                f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
+                f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
             )
 
             readme.write(error_status)
@@ -140,8 +140,6 @@ class ProcessConfig(object):
 
     def modify_in_dat(self):
         """modifies the original IN.DAT file"""
-
-        pass
 
     def setup(self):
         """sets up the program for running"""
@@ -165,9 +163,9 @@ class ProcessConfig(object):
             return False
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return False
 
@@ -191,9 +189,9 @@ class ProcessConfig(object):
             return None
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return None
 
@@ -249,8 +247,7 @@ class ProcessConfig(object):
             indatfile.close()
         except FileNotFoundError:
             print(
-                "Error: %s does not exist! Create file or modify config file!"
-                % self.or_in_dat,
+                f"Error: {self.or_in_dat} does not exist! Create file or modify config file!",
                 file=stderr,
             )
             raise
@@ -275,7 +272,7 @@ class ProcessConfig(object):
             self.factor = float(buf)
 
         if not self.get_comment():
-            print("No comment in config file %s" % self.filename)
+            print(f"No comment in config file {self.filename}")
 
     def run_process(self, input_path, solver="vmcon"):
         """Perform a single run of PROCESS, catching any errors.
@@ -365,13 +362,13 @@ class TestProcessConfig(ProcessConfig):
         super().echo()
 
         if self.ioptimz != "None":
-            print("ioptimz              %s" % self.ioptimz)
+            print(f"ioptimz              {self.ioptimz}")
         if self.epsvmc != "None":
-            print("epsvmc               %s" % self.epsvmc)
+            print(f"epsvmc               {self.epsvmc}")
         if self.epsfcn != "None":
-            print("epsfcn               %s" % self.epsfcn)
+            print(f"epsfcn               {self.epsfcn}")
         if self.minmax != "None":
-            print("minmax               %s" % self.minmax)
+            print(f"minmax               {self.minmax}")
         print("")
         sleep(1)
 
@@ -483,9 +480,9 @@ class RunProcessConfig(ProcessConfig):
             return []
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return []
 
@@ -513,9 +510,9 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return
 
@@ -536,9 +533,9 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            configfile = open(self.filename, "r")
+            configfile = open(self.filename)
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return
 
@@ -561,7 +558,7 @@ class RunProcessConfig(ProcessConfig):
         print("")
         super().echo()
 
-        print("no. allowed UNFEASIBLE points %i" % self.no_allowed_unfeasible)
+        print(f"no. allowed UNFEASIBLE points {self.no_allowed_unfeasible:d}")
         if self.create_itervar_diff:
             print(
                 "Set to create a summary file of the iteration variable\
@@ -577,7 +574,7 @@ class RunProcessConfig(ProcessConfig):
         if self.del_icc != []:
             print("del_icc", self.del_icc)
         for key, value in self.dictvar.items():
-            print("set %s  to %s" % (key, value))
+            print(f"set {key}  to {value}")
         if self.del_var != []:
             print("del_var", self.del_var)
 
@@ -737,12 +734,12 @@ class UncertaintiesConfig(ProcessConfig, Config):
         in_dat = InDat(self.or_in_dat)
         nvar = in_dat.number_of_itvars
         for i in range(1, nvar + 1):
-            nitvar = "nitvar{:03}".format(i)
+            nitvar = f"nitvar{i:03}"
             if nitvar not in self.output_vars:
                 self.output_vars += [nitvar]
         neqns = in_dat.number_of_constraints
         for i in range(1, neqns + 1):
-            normres = "normres{:03}".format(i)
+            normres = f"normres{i:03}"
             if normres not in self.output_vars:
                 self.output_vars += [normres]
 
@@ -757,7 +754,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             elif "fimp(" in varname:
                 # has different format in MFILE!!
                 fimpno = int(varname.split("(")[1].split(")")[0])
-                self.output_vars[i] = "fimp({:02}".format(fimpno)
+                self.output_vars[i] = f"fimp({fimpno:02}"
             elif "zref" in varname:
                 del_list += [varname]
                 add_zref = True
@@ -779,8 +776,8 @@ class UncertaintiesConfig(ProcessConfig, Config):
         print("")
         super().echo()
 
-        print("No scans            %i" % self.no_scans)
-        print("No samples          %i" % self.no_samples)
+        print(f"No scans            {self.no_scans:d}")
+        print(f"No samples          {self.no_samples:d}")
         if self.uncertainties != []:
             print("uncertainties:")
             for item in self.uncertainties:
@@ -1156,12 +1153,12 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
             # Uncertain input variables
             for u_dict in self.uncertainties:
-                header += " {:10s}".format(u_dict["varname"])
+                header += " {u_dict['varname']:10s}"
 
             # normalised iteration varialbes
             for i in range(1, nvar + 1):
-                label = m_file.data["nitvar{:03}".format(i)].var_description
-                header += " n_{0:8s}".format(label.replace("_(range_normalised)", ""))
+                label = m_file.data[f"nitvar{i:03}"].var_description
+                header += f" n_{label.replace('_(range_normalised)', ''):8s}"
 
             # error status, id and ifail
             header += " error_status error_id ifail\n"
@@ -1171,24 +1168,22 @@ class UncertaintiesConfig(ProcessConfig, Config):
             err_summary = open(self.wdir + "/UQ_error_summary.txt", "a+")
 
         # Uncertain input variables
-        output = "{:12d}".format(sample_index)
+        output = f"{sample_index:12d}"
         for u_dict in self.uncertainties:
-            output += " {0:10f}".format(u_dict["samples"][sample_index])
+            output += f" {u_dict['samples'][sample_index]:10f}"
 
         # normalised iteration variables
         for i in range(1, nvar + 1):
-            output += " {0:10f}".format(
-                m_file.data["nitvar{:03}".format(i)].get_scan(-1)
-            )
+            output += f" {m_file.data[f'nitvar{i:03}'].get_scan(-1):10f}"
 
         # error status and id
-        output += " {0:13d} {1:8d}".format(
-            int(m_file.data["error_status"].get_scan(-1)),
-            int(m_file.data["error_id"].get_scan(-1)),
+        output += (
+            f" {int(m_file.data['error_status'].get_scan(-1)):13d} "
+            f"{int(m_file.data['error_id'].get_scan(-1)):8d}"
         )
         # ifail
         if m_file.data["error_status"].get_scan(-1) < 3:
-            output += " {:5d}\n".format(int(m_file.data["ifail"].get_scan(-1)))
+            output += f" {int(m_file.data['ifail'].get_scan(-1)):5d}\n"
         else:
             output += "   -1\n"
 

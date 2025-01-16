@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from process.fortran import (
     build_variables,
@@ -1553,7 +1553,7 @@ class Costs:
         #  Total length of PF coil windings (m)
 
         pfwndl = 0.0e0
-        for i in range(0, pfcoil_variables.nohc):
+        for i in range(pfcoil_variables.nohc):
             pfwndl = (
                 pfwndl
                 + constants.twopi * pfcoil_variables.rpf[i] * pfcoil_variables.turns[i]
@@ -1579,7 +1579,7 @@ class Costs:
 
         self.c22221 = 0.0e0
 
-        for i in range(0, npf):
+        for i in range(npf):
             #  Superconductor ($/m)
             if cost_variables.supercond_cost_model == 0:
                 if pfcoil_variables.ipfres == 0:
@@ -2752,7 +2752,7 @@ class Costs:
 
         #  Annual cost of operation and maintenance
 
-        annoam = cost_variables.ucoam[cost_variables.lsa - 1] * numpy.sqrt(
+        annoam = cost_variables.ucoam[cost_variables.lsa - 1] * np.sqrt(
             heat_transport_variables.pnetelmw / 1200.0e0
         )
 
@@ -2821,7 +2821,7 @@ class Costs:
 
         #  Annual cost of waste disposal
 
-        annwst = cost_variables.ucwst[cost_variables.lsa - 1] * numpy.sqrt(
+        annwst = cost_variables.ucwst[cost_variables.lsa - 1] * np.sqrt(
             heat_transport_variables.pnetelmw / 1200.0e0
         )
 

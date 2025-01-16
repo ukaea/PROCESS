@@ -2,8 +2,6 @@
 Calculate radial and vertical coordinates for the geometry of the first wall
 """
 
-from typing import Tuple
-
 import numpy as np
 
 from process.geometry.geometry_parameterisations import ArbitraryGeometry
@@ -109,7 +107,7 @@ def first_wall_geometry_lower(
     fwoth: float,
     tfwvt: float,
     top_point: float,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of first wall below the midplane
 
     :param triang: plasma triangularity

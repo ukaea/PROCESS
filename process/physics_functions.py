@@ -1451,11 +1451,9 @@ def beam_reaction_rate(
     # Find the speed of the beam particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
     beam_velocity = np.sqrt(
-        (
-            (beam_energy_keV * constants.kiloelectron_volt)
-            * 2.0
-            / (relative_mass_ion * constants.atomic_mass_unit)
-        )
+        (beam_energy_keV * constants.kiloelectron_volt)
+        * 2.0
+        / (relative_mass_ion * constants.atomic_mass_unit)
     )
 
     relative_velocity = beam_velocity / critical_velocity

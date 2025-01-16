@@ -20,7 +20,7 @@ Notes:
 import argparse
 import sys
 
-import numpy
+import numpy as np
 from numpy import isfinite
 
 import process.io.mfile as mf
@@ -269,7 +269,7 @@ GENERIC_LIST = [
 ]
 
 
-class BColors(object):
+class BColors:
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
     OKGREEN = "\033[92m"
@@ -333,7 +333,7 @@ def main(arg):
         if "normres" in v:
             continue
 
-        values = numpy.zeros(n)  # replaced scipy with numpy
+        values = np.zeros(n)  # replaced scipy with numpy
 
         if v not in get_dicts()["DICT_VAR_TYPE"].keys():
             try:
@@ -472,9 +472,7 @@ def main(arg):
             if print_counter == 0:
                 sys.exit(0)
             else:
-                sys.exit(
-                    "Differences in baseline output by more than {0}%".format(arg.acc)
-                )
+                sys.exit(f"Differences in baseline output by more than {arg.acc}%")
 
 
 if __name__ == "__main__":

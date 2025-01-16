@@ -1,6 +1,6 @@
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process import sctfcoil as sctf
@@ -1749,7 +1749,7 @@ class TfcindParam(NamedTuple):
     "tfcindparam",
     (
         TfcindParam(
-            yarc=numpy.array(
+            yarc=np.array(
                 (
                     4.5228880258064512,
                     7.5381467096774184,
@@ -1759,7 +1759,7 @@ class TfcindParam(NamedTuple):
                 ),
                 order="F",
             ),
-            xarc=numpy.array(
+            xarc=np.array(
                 (
                     4.20194118510911,
                     8.316545161290323,
@@ -1774,7 +1774,7 @@ class TfcindParam(NamedTuple):
             expected_tfind=5.4453892599192845e-06,
         ),
         TfcindParam(
-            yarc=numpy.array(
+            yarc=np.array(
                 (
                     4.5336880258064509,
                     7.5561467096774191,
@@ -1784,7 +1784,7 @@ class TfcindParam(NamedTuple):
                 ),
                 order="F",
             ),
-            xarc=numpy.array(
+            xarc=np.array(
                 (
                     4.20194118510911,
                     8.316545161290323,
@@ -1860,8 +1860,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
     whtcon: Any = None
 
     whtconin: Any = None
-
-    tfcryoarea: Any = None
 
     vftf: Any = None
 
@@ -1980,8 +1978,8 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             whtcon=0,
             whtconin=0,
             vftf=0.30000000000000004,
-            dcond=numpy.array(
-                numpy.array(
+            dcond=np.array(
+                np.array(
                     (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500), order="F"
                 ),
                 order="F",
@@ -2052,8 +2050,8 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             whtcon=0,
             whtconin=0,
             vftf=0.30000000000000004,
-            dcond=numpy.array(
-                numpy.array(
+            dcond=np.array(
+                np.array(
                     (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500), order="F"
                 ),
                 order="F",
@@ -3628,8 +3626,8 @@ class StressclParam(NamedTuple):
             eyoung_steel=205000000000,
             eyoung_res_tf_buck=150000000000,
             eyoung_ins=20000000000,
-            eyoung_al=numpy.array(69000000000.0),
-            eyoung_copper=numpy.array(117000000000.0),
+            eyoung_al=np.array(69000000000.0),
+            eyoung_copper=np.array(117000000000.0),
             aiwp=0.087880174466980876,
             aswp=0.29370123076207649,
             cpttf=74026.751437500003,
@@ -3654,11 +3652,11 @@ class StressclParam(NamedTuple):
             ohhghf=0.90000000000000002,
             coheof=20726000,
             cohbop=0,
-            ncls=numpy.array(
-                numpy.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            ncls=np.array(
+                np.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            cptdin=numpy.array(
-                numpy.array(
+            cptdin=np.array(
+                np.array(
                     (
                         42200,
                         42200,
@@ -3751,8 +3749,8 @@ class StressclParam(NamedTuple):
             eyoung_steel=205000000000,
             eyoung_res_tf_buck=150000000000,
             eyoung_ins=20000000000,
-            eyoung_al=numpy.array(69000000000.0),
-            eyoung_copper=numpy.array(117000000000.0),
+            eyoung_al=np.array(69000000000.0),
+            eyoung_copper=np.array(117000000000.0),
             aiwp=0.087880174466980876,
             aswp=0.29370123076207649,
             cpttf=74026.751437500003,
@@ -3777,11 +3775,11 @@ class StressclParam(NamedTuple):
             ohhghf=0.90000000000000002,
             coheof=20726000,
             cohbop=19311657.760000002,
-            ncls=numpy.array(
-                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            ncls=np.array(
+                np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            cptdin=numpy.array(
-                numpy.array(
+            cptdin=np.array(
+                np.array(
                     (
                         42200,
                         42200,
@@ -3996,15 +3994,15 @@ class PlaneStressParam(NamedTuple):
         PlaneStressParam(
             n_radial_array=100,
             nlayers=3,
-            nu=numpy.array(
-                numpy.array(
+            nu=np.array(
+                np.array(
                     (0.29999999999999999, 0.30904421667064924, 0.29999999999999999),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            rad=numpy.array(
-                numpy.array(
+            rad=np.array(
+                np.array(
                     (
                         2.9939411851091102,
                         3.5414797139565706,
@@ -4015,14 +4013,12 @@ class PlaneStressParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ey=numpy.array(
-                numpy.array(
-                    (205000000000, 43126670035.025253, 205000000000), order="F"
-                ),
+            ey=np.array(
+                np.array((205000000000, 43126670035.025253, 205000000000), order="F"),
                 order="F",
             ).transpose(),
-            j=numpy.array(
-                numpy.array((0, 18097185.781970859, 0), order="F"), order="F"
+            j=np.array(
+                np.array((0, 18097185.781970859, 0), order="F"), order="F"
             ).transpose(),
             expected_sigr=[
                 0.0,
@@ -5236,15 +5232,15 @@ class PlaneStressParam(NamedTuple):
         PlaneStressParam(
             n_radial_array=100,
             nlayers=3,
-            nu=numpy.array(
-                numpy.array(
+            nu=np.array(
+                np.array(
                     (0.29999999999999999, 0.30904421667064924, 0.29999999999999999),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            rad=numpy.array(
-                numpy.array(
+            rad=np.array(
+                np.array(
                     (
                         2.9939411851091102,
                         3.5414797139565706,
@@ -5255,14 +5251,12 @@ class PlaneStressParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ey=numpy.array(
-                numpy.array(
-                    (205000000000, 43126670035.025253, 205000000000), order="F"
-                ),
+            ey=np.array(
+                np.array((205000000000, 43126670035.025253, 205000000000), order="F"),
                 order="F",
             ).transpose(),
-            j=numpy.array(
-                numpy.array((0, 18097185.781970859, 0), order="F"), order="F"
+            j=np.array(
+                np.array((0, 18097185.781970859, 0), order="F"), order="F"
             ).transpose(),
             expected_sigr=[
                 0.0,
@@ -6477,15 +6471,15 @@ class PlaneStressParam(NamedTuple):
             linesolv=None,
             n_radial_array=100,
             nlayers=3,
-            nu=numpy.array([0.3, 0.34006912702297704, 0.3]),
-            rad=numpy.array([
+            nu=np.array([0.3, 0.34006912702297704, 0.3]),
+            rad=np.array([
                 3.6732023601326333,
                 3.7688101124061717,
                 3.7649909451102674,
                 3.8249909451102675,
             ]),
-            ey=numpy.array([2.05000000e11, 21085960915.80571, 2.05000000e11]),
-            j=numpy.array([0.00000000e00, -2245759961.294637, 0.00000000e00]),
+            ey=np.array([2.05000000e11, 21085960915.80571, 2.05000000e11]),
+            j=np.array([0.00000000e00, -2245759961.294637, 0.00000000e00]),
             expected_sigr=[
                 9.769733861957293e-08,
                 -299296.0160031287,
@@ -7770,31 +7764,31 @@ class ExtendedPlaneStrainParam(NamedTuple):
             n_radial_array=100,
             nlayers=2,
             i_tf_bucking=0,
-            nu_t=numpy.array(
-                numpy.array((0.34999999999999998, 0.29999999999999999), order="F"),
+            nu_t=np.array(
+                np.array((0.34999999999999998, 0.29999999999999999), order="F"),
                 order="F",
             ).transpose(),
-            nu_zt=numpy.array(
-                numpy.array((0.34948024015688117, 0.29999999999999999), order="F"),
+            nu_zt=np.array(
+                np.array((0.34948024015688117, 0.29999999999999999), order="F"),
                 order="F",
             ).transpose(),
-            ey_t=numpy.array(
-                numpy.array((117000000000, 205000000000), order="F"), order="F"
+            ey_t=np.array(
+                np.array((117000000000, 205000000000), order="F"), order="F"
             ).transpose(),
-            ey_z=numpy.array(
-                numpy.array((97843910970.178864, 205000000000.00003), order="F"),
+            ey_z=np.array(
+                np.array((97843910970.178864, 205000000000.00003), order="F"),
                 order="F",
             ).transpose(),
-            d_curr=numpy.array(
-                numpy.array((375174117.44492483, 0), order="F"), order="F"
+            d_curr=np.array(
+                np.array((375174117.44492483, 0), order="F"), order="F"
             ).transpose(),
-            rad=numpy.array(
-                numpy.array((0, 0.14708850000000001, 0.15483000000000002), order="F"),
+            rad=np.array(
+                np.array((0, 0.14708850000000001, 0.15483000000000002), order="F"),
                 order="F",
             ).transpose(),
             v_force=147221629.66130698,
             expected_sigr=[
-                numpy.nan,
+                np.nan,
                 -829140939.1329328,
                 -828878786.3701528,
                 -828441865.0984682,
@@ -7996,7 +7990,7 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 -4.787169592359073e-07,
             ],
             expected_sigt=[
-                numpy.nan,
+                np.nan,
                 -829161394.3774397,
                 -828960607.3461856,
                 -828625962.2944794,
@@ -8198,7 +8192,7 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 -504006972.21407604,
             ],
             expected_sigz=[
-                numpy.nan,
+                np.nan,
                 1457137239.0435781,
                 1457299027.3539753,
                 1457568674.5379708,
@@ -8400,7 +8394,7 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 4115998891.068471,
             ],
             expected_str_r=[
-                numpy.nan,
+                np.nan,
                 -0.009810900388423915,
                 -0.009809838289219257,
                 -0.009808068123873725,
@@ -8602,7 +8596,7 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 -0.005285841832469847,
             ],
             expected_str_t=[
-                numpy.nan,
+                np.nan,
                 -0.009811136410475919,
                 -0.00981078237740425,
                 -0.009810192322289238,
@@ -9006,7 +9000,7 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 0.020815614549915578,
             ],
             expected_r_deflect=[
-                numpy.nan,
+                np.nan,
                 -1.457682159507361e-05,
                 -2.9152591186238894e-05,
                 -4.3726256769607287e-05,
@@ -9414,8 +9408,8 @@ class ExtendedPlaneStrainParam(NamedTuple):
             n_radial_array=100,
             nlayers=5,
             i_tf_bucking=3,
-            nu_t=numpy.array(
-                numpy.array(
+            nu_t=np.array(
+                np.array(
                     (
                         0.30000000502169133,
                         0.34000000000000002,
@@ -9427,8 +9421,8 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            nu_zt=numpy.array(
-                numpy.array(
+            nu_zt=np.array(
+                np.array(
                     (
                         0.31163570564277626,
                         0.34000000000000002,
@@ -9440,8 +9434,8 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ey_t=numpy.array(
-                numpy.array(
+            ey_t=np.array(
+                np.array(
                     (
                         118643750000,
                         2500000000,
@@ -9453,8 +9447,8 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ey_z=numpy.array(
-                numpy.array(
+            ey_z=np.array(
+                np.array(
                     (
                         48005309351.198608,
                         2500000000,
@@ -9466,11 +9460,11 @@ class ExtendedPlaneStrainParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            d_curr=numpy.array(
-                numpy.array((0, 0, 0, 18343613.563061949, 0), order="F"), order="F"
+            d_curr=np.array(
+                np.array((0, 0, 0, 18343613.563061949, 0), order="F"), order="F"
             ).transpose(),
-            rad=numpy.array(
-                numpy.array(
+            rad=np.array(
+                np.array(
                     (
                         2.3322000000000003,
                         2.8846200000000004,
@@ -13540,36 +13534,36 @@ def test_extended_plane_strain(extendedplanestrainparam, monkeypatch, sctfcoil):
 
     # assert sigr == pytest.approx(extendedplanestrainparam.expected_sigr, rel=0.01)
 
-    numpy.testing.assert_array_almost_equal(
-        sigr, numpy.array(extendedplanestrainparam.expected_sigr), decimal=3
+    np.testing.assert_array_almost_equal(
+        sigr, np.array(extendedplanestrainparam.expected_sigr), decimal=3
     )
 
-    numpy.testing.assert_array_almost_equal(
-        sigt, numpy.array(extendedplanestrainparam.expected_sigt), decimal=3
+    np.testing.assert_array_almost_equal(
+        sigt, np.array(extendedplanestrainparam.expected_sigt), decimal=3
     )
 
-    numpy.testing.assert_array_almost_equal(
-        sigz, numpy.array(extendedplanestrainparam.expected_sigz), decimal=3
+    np.testing.assert_array_almost_equal(
+        sigz, np.array(extendedplanestrainparam.expected_sigz), decimal=3
     )
 
-    numpy.testing.assert_array_almost_equal(
-        str_r, numpy.array(extendedplanestrainparam.expected_str_r)
+    np.testing.assert_array_almost_equal(
+        str_r, np.array(extendedplanestrainparam.expected_str_r)
     )
 
-    numpy.testing.assert_array_almost_equal(
-        str_t, numpy.array(extendedplanestrainparam.expected_str_t)
+    np.testing.assert_array_almost_equal(
+        str_t, np.array(extendedplanestrainparam.expected_str_t)
     )
 
-    numpy.testing.assert_array_almost_equal(
-        str_z, numpy.array(extendedplanestrainparam.expected_str_z)
+    np.testing.assert_array_almost_equal(
+        str_z, np.array(extendedplanestrainparam.expected_str_z)
     )
 
-    numpy.testing.assert_array_almost_equal(
-        r_deflect, numpy.array(extendedplanestrainparam.expected_r_deflect)
+    np.testing.assert_array_almost_equal(
+        r_deflect, np.array(extendedplanestrainparam.expected_r_deflect)
     )
 
-    numpy.testing.assert_array_almost_equal(
-        rradius, numpy.array(extendedplanestrainparam.expected_rradius)
+    np.testing.assert_array_almost_equal(
+        rradius, np.array(extendedplanestrainparam.expected_rradius)
     )
 
 
@@ -13710,11 +13704,11 @@ class EyoungParallelArrayParam(NamedTuple):
     (
         EyoungTNestedSquaresParam(
             n=4,
-            eyoung_j_in=numpy.array(
-                numpy.array((0, 0, 205000000000, 20000000000, 0), order="F"), order="F"
+            eyoung_j_in=np.array(
+                np.array((0, 0, 205000000000, 20000000000, 0), order="F"), order="F"
             ).transpose(),
-            l_in=numpy.array(
-                numpy.array(
+            l_in=np.array(
+                np.array(
                     (
                         0.010000000000000002,
                         0.020661087836601012,
@@ -13726,8 +13720,8 @@ class EyoungParallelArrayParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            poisson_j_perp_in=numpy.array(
-                numpy.array(
+            poisson_j_perp_in=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.30000001192092896,
@@ -13746,11 +13740,11 @@ class EyoungParallelArrayParam(NamedTuple):
         ),
         EyoungTNestedSquaresParam(
             n=4,
-            eyoung_j_in=numpy.array(
-                numpy.array((0, 0, 205000000000, 20000000000, 0), order="F"), order="F"
+            eyoung_j_in=np.array(
+                np.array((0, 0, 205000000000, 20000000000, 0), order="F"), order="F"
             ).transpose(),
-            l_in=numpy.array(
-                numpy.array(
+            l_in=np.array(
+                np.array(
                     (
                         0.010000000000000002,
                         0.020661087836601012,
@@ -13762,8 +13756,8 @@ class EyoungParallelArrayParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            poisson_j_perp_in=numpy.array(
-                numpy.array(
+            poisson_j_perp_in=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.30000001192092896,
@@ -13885,12 +13879,12 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch, sctfcoil):
     (
         EyoungParallelArrayParam(
             n=5,
-            eyoung_j_in=numpy.array(
-                numpy.array((205000000000, 20000000000, 117000000000, 0, 0), order="F"),
+            eyoung_j_in=np.array(
+                np.array((205000000000, 20000000000, 117000000000, 0, 0), order="F"),
                 order="F",
             ).transpose(),
-            a_in=numpy.array(
-                numpy.array(
+            a_in=np.array(
+                np.array(
                     (
                         0.29370123076207649,
                         0.11646247019991701,
@@ -13902,8 +13896,8 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch, sctfcoil):
                 ),
                 order="F",
             ).transpose(),
-            poisson_j_perp_in=numpy.array(
-                numpy.array(
+            poisson_j_perp_in=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.34000000000000002,
@@ -13921,12 +13915,12 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch, sctfcoil):
         ),
         EyoungParallelArrayParam(
             n=5,
-            eyoung_j_in=numpy.array(
-                numpy.array((205000000000, 20000000000, 117000000000, 0, 0), order="F"),
+            eyoung_j_in=np.array(
+                np.array((205000000000, 20000000000, 117000000000, 0, 0), order="F"),
                 order="F",
             ).transpose(),
-            a_in=numpy.array(
-                numpy.array(
+            a_in=np.array(
+                np.array(
                     (
                         0.29370123076207649,
                         0.11646247019991701,
@@ -13938,8 +13932,8 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch, sctfcoil):
                 ),
                 order="F",
             ).transpose(),
-            poisson_j_perp_in=numpy.array(
-                numpy.array(
+            poisson_j_perp_in=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.34000000000000002,

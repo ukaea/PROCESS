@@ -1,6 +1,6 @@
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process.fortran import (
@@ -272,8 +272,8 @@ class PfpwrParam(NamedTuple):
             maxpoloidalpower=1000,
             peakpoloidalpower=0,
             spfbusl=0,
-            poloidalpower=numpy.array(
-                numpy.array((0, 0, 0, 0, 0), order="F"), order="F"
+            poloidalpower=np.array(
+                np.array((0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             spsmva=0,
             vpfskv=0,
@@ -281,7 +281,7 @@ class PfpwrParam(NamedTuple):
             acptmax=0,
             srcktpm=0,
             ngrp=4,
-            cpt=numpy.array(
+            cpt=np.array(
                 (
                     (
                         0,
@@ -433,11 +433,11 @@ class PfpwrParam(NamedTuple):
             pfwpmw=0,
             pfclres=0,
             ncirt=8,
-            ncls=numpy.array(
-                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            ncls=np.array(
+                np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            ric=numpy.array(
-                numpy.array(
+            ric=np.array(
+                np.array(
                     (
                         14.742063826112622,
                         20.032681634901664,
@@ -467,8 +467,8 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             etapsu=0.90000000000000002,
-            cptdin=numpy.array(
-                numpy.array(
+            cptdin=np.array(
+                np.array(
                     (
                         42200,
                         42200,
@@ -497,8 +497,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfs=numpy.array(
-                numpy.array(
+            curpfs=np.array(
+                np.array(
                     (
                         0.067422231232391661,
                         -2.9167273287450968,
@@ -527,7 +527,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            sxlg=numpy.array(
+            sxlg=np.array(
                 (
                     (
                         2.4933245328128875,
@@ -738,8 +738,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=numpy.array(
-                numpy.array(
+            turns=np.array(
+                np.array(
                     (
                         349.33800535811901,
                         474.70809561378354,
@@ -768,8 +768,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            vf=numpy.array(
-                numpy.array(
+            vf=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.29999999999999999,
@@ -798,8 +798,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rjconpf=numpy.array(
-                numpy.array(
+            rjconpf=np.array(
+                np.array(
                     (
                         11000000,
                         11000000,
@@ -828,8 +828,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=numpy.array(
-                numpy.array(
+            rpf=np.array(
+                np.array(
                     (
                         6.2732560483870969,
                         6.2732560483870969,
@@ -954,8 +954,8 @@ class PfpwrParam(NamedTuple):
                 False,
             ),
             ioptimz=1,
-            tim=numpy.array(
-                numpy.array(
+            tim=np.array(
+                np.array(
                     (
                         0,
                         500,
@@ -990,8 +990,8 @@ class PfpwrParam(NamedTuple):
             expected_pfckts=12,
             expected_peakpoloidalpower=211.21199231967319,
             expected_spfbusl=2533.4495999999999,
-            expected_poloidalpower=numpy.array(
-                numpy.array(
+            expected_poloidalpower=np.array(
+                np.array(
                     (59332953.082890816, 43806300.444207191, 0, 0, -211211992.31967318),
                     order="F",
                 ),
@@ -1010,8 +1010,8 @@ class PfpwrParam(NamedTuple):
             maxpoloidalpower=1000,
             peakpoloidalpower=211.21199231967319,
             spfbusl=2533.4495999999999,
-            poloidalpower=numpy.array(
-                numpy.array(
+            poloidalpower=np.array(
+                np.array(
                     (59332953.082890816, 43806300.444207191, 0, 0, -211211992.31967318),
                     order="F",
                 ),
@@ -1023,7 +1023,7 @@ class PfpwrParam(NamedTuple):
             acptmax=24.816666666666666,
             srcktpm=1071.1112934857531,
             ngrp=4,
-            cpt=numpy.array(
+            cpt=np.array(
                 (
                     (
                         0,
@@ -1175,11 +1175,11 @@ class PfpwrParam(NamedTuple):
             pfwpmw=0.89998039031509891,
             pfclres=0,
             ncirt=8,
-            ncls=numpy.array(
-                numpy.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            ncls=np.array(
+                np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            ric=numpy.array(
-                numpy.array(
+            ric=np.array(
+                np.array(
                     (
                         18.579095475129442,
                         22.175439215004367,
@@ -1209,8 +1209,8 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             etapsu=0.90000000000000002,
-            cptdin=numpy.array(
-                numpy.array(
+            cptdin=np.array(
+                np.array(
                     (
                         42200,
                         42200,
@@ -1239,8 +1239,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfs=numpy.array(
-                numpy.array(
+            curpfs=np.array(
+                np.array(
                     (
                         0.019288882290113718,
                         -2.9523197960789949,
@@ -1269,7 +1269,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            sxlg=numpy.array(
+            sxlg=np.array(
                 (
                     (
                         3.7834082671748859,
@@ -1480,8 +1480,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=numpy.array(
-                numpy.array(
+            turns=np.array(
+                np.array(
                     (
                         440.26292595093463,
                         525.48434158778116,
@@ -1510,8 +1510,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            vf=numpy.array(
-                numpy.array(
+            vf=np.array(
+                np.array(
                     (
                         0.29999999999999999,
                         0.29999999999999999,
@@ -1540,8 +1540,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rjconpf=numpy.array(
-                numpy.array(
+            rjconpf=np.array(
+                np.array(
                     (
                         11000000,
                         11000000,
@@ -1570,8 +1570,8 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=numpy.array(
-                numpy.array(
+            rpf=np.array(
+                np.array(
                     (
                         6.2732560483870969,
                         6.2732560483870969,
@@ -1696,8 +1696,8 @@ class PfpwrParam(NamedTuple):
                 False,
             ),
             ioptimz=1,
-            tim=numpy.array(
-                numpy.array(
+            tim=np.array(
+                np.array(
                     (
                         0,
                         500,
@@ -1732,8 +1732,8 @@ class PfpwrParam(NamedTuple):
             expected_pfckts=12,
             expected_peakpoloidalpower=9900,
             expected_spfbusl=2533.4495999999999,
-            expected_poloidalpower=numpy.array(
-                numpy.array(
+            expected_poloidalpower=np.array(
+                np.array(
                     (
                         59043243.553314812,
                         -69656470.894853994,
@@ -2705,8 +2705,8 @@ class Power3Param(NamedTuple):
             pinjwp=129.94611930107126,
             fachtmw=61.882833632875375,
             pgrossmw=982.58317918134742,
-            poloidalpower=numpy.array(
-                numpy.array(
+            poloidalpower=np.array(
+                np.array(
                     (59332953.082890816, 43806300.444207191, 0, 0, -211211992.31967318),
                     order="F",
                 ),
@@ -2732,8 +2732,8 @@ class Power3Param(NamedTuple):
             pinjwp=129.94611930107126,
             fachtmw=62.237143915360818,
             pgrossmw=982.28339460484608,
-            poloidalpower=numpy.array(
-                numpy.array(
+            poloidalpower=np.array(
+                np.array(
                     (
                         59043243.553314812,
                         -69656470.894853994,

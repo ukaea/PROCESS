@@ -3,9 +3,8 @@ import logging
 import re
 from importlib import resources
 from pathlib import Path
-from typing import List, Optional
 
-import numpy
+import numpy as np
 from scipy import integrate
 
 from process.fortran import error_handling, impurity_radiation_module
@@ -196,14 +195,14 @@ class ImpurityDataHeader:
     """
 
     content: str
-    data: Optional[List[float]] = None
+    data: list[float] | None = None
 
 
 def read_impurity_file(impurity_file: Path):
     with open(impurity_file) as f:
         data = f.readlines()
 
-    file_contents: List[ImpurityDataHeader] = []
+    file_contents: list[ImpurityDataHeader] = []
 
     for line in data:
         # do not parse comments
@@ -281,10 +280,10 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 
     for header in lz_data:
         if "Te[eV]" in header.content:
-            Te = numpy.asarray(header.data, dtype=float)
+            Te = np.asarray(header.data, dtype=float)
 
         if "infinite confinement" in header.content:
-            lz = numpy.asarray(header.data, dtype=float)
+            lz = np.asarray(header.data, dtype=float)
 
     if Te is None:
         raise RuntimeError(f"Cannot locate Te data in {lz_file}")
@@ -296,7 +295,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
     zav = None
     for header in z_data:
         if "infinite confinement" in header.content:
-            zav = numpy.asarray(header.data, dtype=float)
+            zav = np.asarray(header.data, dtype=float)
 
     if zav is None:
         raise RuntimeError(
@@ -309,7 +308,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 
 
 def z2index(zimp):
-    for i in range(0, len(impurity_radiation_module.impurity_arr_label)):
+    for i in range(len(impurity_radiation_module.impurity_arr_label)):
         if zimp == impurity_radiation_module.impurity_arr_z[i]:
             z2index = i
             return z2index
@@ -332,7 +331,7 @@ def fradcore(rho, coreradius, coreradiationfraction):
     :return: fradcore - array filled with the coreradiationfraction
     :rtype: numpy.array
     """
-    fradcore = numpy.zeros(len(rho))
+    fradcore = np.zeros(len(rho))
     rho_mask = rho < coreradius
     fradcore[rho_mask] = coreradiationfraction
 
@@ -351,22 +350,22 @@ def zav_of_te(imp_element_index, tprofile):
     """
     # less_than_imp_temp_mask = tprofile values less than impurity temperature. greater_than_imp_temp_mask = tprofile values higher than impurity temperature.
     bins = impurity_radiation_module.impurity_arr_temp_kev[imp_element_index]
-    indices = numpy.digitize(tprofile, bins)
+    indices = np.digitize(tprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
     yi = impurity_radiation_module.impurity_arr_zav[imp_element_index, indices - 1]
-    xi = numpy.log(
+    xi = np.log(
         impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices - 1]
     )
     c = (
         impurity_radiation_module.impurity_arr_zav[imp_element_index, indices] - yi
     ) / (
-        numpy.log(
+        np.log(
             impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices]
         )
         - xi
     )
-    zav_of_te = yi + c * (numpy.log(tprofile) - xi)
+    zav_of_te = yi + c * (np.log(tprofile) - xi)
     less_than_imp_temp_mask = (
         tprofile
         <= impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, 0]
@@ -403,28 +402,28 @@ def pimpden(imp_element_index, nprofile, tprofile):
     """
     # less_than_imp_temp_mask = tprofile values less than impurity temperature. greater_than_imp_temp_mask = tprofile values higher than impurity temperature.
     bins = impurity_radiation_module.impurity_arr_temp_kev[imp_element_index]
-    indices = numpy.digitize(tprofile, bins)
+    indices = np.digitize(tprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
 
-    yi = numpy.log(
+    yi = np.log(
         impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices - 1]
     )
-    xi = numpy.log(
+    xi = np.log(
         impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices - 1]
     )
     c = (
-        numpy.log(
+        np.log(
             impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices]
         )
         - yi
     ) / (
-        numpy.log(
+        np.log(
             impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices]
         )
         - xi
     )
-    pimpden = numpy.exp(yi + c * (numpy.log(tprofile) - xi))
+    pimpden = np.exp(yi + c * (np.log(tprofile) - xi))
 
     pimpden = (
         impurity_radiation_module.impurity_arr_frac[imp_element_index]
@@ -489,13 +488,11 @@ class ImpurityRadiation:
         self.plasma_profile = plasma_profile
         self.rho = plasma_profile.neprofile.profile_x
         self.rhodx = plasma_profile.neprofile.profile_dx
-        self.imp = numpy.nonzero(impurity_radiation_module.impurity_arr_frac > 1.0e-30)[
-            0
-        ]
+        self.imp = np.nonzero(impurity_radiation_module.impurity_arr_frac > 1.0e-30)[0]
 
-        self.pimp_profile = numpy.zeros(self.plasma_profile.profile_size)
-        self.radtot_profile = numpy.zeros(self.plasma_profile.profile_size)
-        self.radcore_profile = numpy.zeros(self.plasma_profile.profile_size)
+        self.pimp_profile = np.zeros(self.plasma_profile.profile_size)
+        self.radtot_profile = np.zeros(self.plasma_profile.profile_size)
+        self.radcore_profile = np.zeros(self.plasma_profile.profile_size)
 
         self.radtot = 0.0
         self.radcore = 0.0
@@ -529,7 +526,7 @@ class ImpurityRadiation:
             self.plasma_profile.teprofile.profile_y,
         )
 
-        self.pimp_profile = numpy.add(self.pimp_profile, pimp)
+        self.pimp_profile = np.add(self.pimp_profile, pimp)
 
     def calculate_radiation_loss_profiles(self):
         """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity radiation
@@ -547,8 +544,8 @@ class ImpurityRadiation:
             )
         )
 
-        self.radtot_profile = numpy.add(self.radtot_profile, radtot)
-        self.radcore_profile = numpy.add(self.radcore_profile, radcore)
+        self.radtot_profile = np.add(self.radtot_profile, radtot)
+        self.radcore_profile = np.add(self.radcore_profile, radcore)
 
     def integrate_radiation_loss_profiles(self):
         """Integrate the radiation loss profiles using the Simpson rule.

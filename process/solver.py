@@ -3,7 +3,6 @@
 import importlib
 import logging
 from abc import ABC, abstractmethod
-from typing import Optional, Union
 
 import numpy as np
 from pyvmcon import (
@@ -34,7 +33,7 @@ class _Solver(ABC):
         # Exit code for the solver
         self.ifail = 0
         self.tolerance = numerics.epsvmc
-        self.b: Union[float, None] = None
+        self.b: float | None = None
 
     def set_evaluators(self, evaluators: Evaluators) -> None:
         """Set objective and constraint functions and their gradient evaluators.
@@ -56,8 +55,8 @@ class _Solver(ABC):
         self,
         bndl: np.ndarray,
         bndu: np.ndarray,
-        ilower: Optional[np.ndarray] = None,
-        iupper: Optional[np.ndarray] = None,
+        ilower: np.ndarray | None = None,
+        iupper: np.ndarray | None = None,
     ) -> None:
         """Set the bounds on the optimisation parameters.
 
@@ -120,7 +119,6 @@ class _Solver(ABC):
         :return: solver error code
         :rtype: int
         """
-        pass
 
 
 class VmconProblem(AbstractProblem):

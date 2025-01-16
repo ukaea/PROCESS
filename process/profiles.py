@@ -70,7 +70,6 @@ class Profile(ABC):
         """Use a profile function to act on self.profile_x to calculate and set the
         values of self.profile_y.
         """
-        pass
 
     def integrate_profile_y(self) -> None:
         """

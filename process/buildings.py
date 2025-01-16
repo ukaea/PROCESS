@@ -1,6 +1,6 @@
 import logging
 
-import numpy
+import numpy as np
 
 from process.fortran import (
     build_variables,
@@ -182,7 +182,7 @@ class Buildings:
         drbi = (
             buildings_variables.trcl
             + layl
-            + hy * numpy.sin(numpy.arccos(ang))
+            + hy * np.sin(np.arccos(ang))
             + buildings_variables.wrbi
         )
 
@@ -219,7 +219,7 @@ class Buildings:
             buildings_variables.rbvfac * 2.0e0 * buildings_variables.wrbi * drbi * hrbi
         )
         try:
-            assert vrci < numpy.inf
+            assert vrci < np.inf
         except AssertionError:
             logger.exception("vrci is inf. Kludging to 1e10.")
             vrci = 1e10
@@ -545,7 +545,7 @@ class Buildings:
             )
             hcomp_tor_thk = (
                 2
-                * numpy.pi
+                * np.pi
                 * (
                     physics_variables.rmajor
                     - (
@@ -589,7 +589,7 @@ class Buildings:
             )
             hcomp_tor_thk = (
                 2
-                * numpy.pi
+                * np.pi
                 * (
                     physics_variables.rmajor
                     + physics_variables.rminor
