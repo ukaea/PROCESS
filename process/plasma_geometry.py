@@ -199,7 +199,7 @@ class PlasmaGeom:
             physics_variables.triang95 = physics_variables.triang / 1.50e0
 
         #  Scrape-off layer thicknesses
-        if physics_variables.iscrp == 0:
+        if physics_variables.i_plasma_wall_gap == 0:
             build_variables.scraplo = 0.1e0 * physics_variables.rminor
             build_variables.scrapli = 0.1e0 * physics_variables.rminor
 

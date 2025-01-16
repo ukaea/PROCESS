@@ -312,7 +312,7 @@ contains
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
-      tauratio, i_density_limit, bt, iscrp, ipnlaws, beta_max, beta_min, &
+      tauratio, i_density_limit, bt, i_plasma_wall_gap, ipnlaws, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
@@ -663,9 +663,9 @@ contains
        case ('isc')
           call parse_int_variable('isc', isc, 1, ipnlaws, &
                'Switch for confinement scaling law')
-       case ('iscrp')
-          call parse_int_variable('iscrp', iscrp, 0, 1, &
-               'Switch for scrapeoff width')
+       case ('i_plasma_wall_gap')
+          call parse_int_variable('i_plasma_wall_gap', i_plasma_wall_gap, 0, 1, &
+               'Switch for midplane gap between plasma and wall')
        case ('ishape')
           call parse_int_variable('ishape', ishape, 0, 11, &
                'Switch for plasma shape vs. aspect')

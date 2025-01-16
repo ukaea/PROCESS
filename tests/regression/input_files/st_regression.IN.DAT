@@ -2079,7 +2079,7 @@ blnkith = 0.0
 * DESCRIPTION:   Inboard blanket breeding unit thickness (m) (blktmodel>0)
 * JUSTIFICATION: Design choice, no inboard blanket
 
-*iscrp = 
+*i_plasma_wall_gap = 
 * DESCRIPTION:   Switch for scrapeoff width (default = 1)
 * =0 use 10% of rminor
 * =1 use input (scrapli and scraplo)

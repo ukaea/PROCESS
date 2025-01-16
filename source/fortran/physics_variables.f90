@@ -523,11 +523,11 @@ module physics_variables
   !! <LI> (48)  NSTX gyro-Bohm (Buxton) (H-mode; Spherical tokamak)
   !! <LI> (49)  Use input tauee_in </UL>
 
-  integer :: iscrp
-  !! switch for plasma-first wall clearances:
+  integer :: i_plasma_wall_gap
+  !! Switch for plasma-first wall clearances at the mid-plane:
   !!
-  !! - =0 use 10% of rminor
-  !! - =1 use input (scrapli and scraplo)
+  !! - =0 use 10% of plasma minor radius
+  !! - =1 use input (`scrapli` and `scraplo`)
 
   integer :: ishape
   !! switch for plasma cross-sectional shape calculation:
@@ -1045,7 +1045,7 @@ module physics_variables
     iprofile = 1
     iradloss = 1
     isc = 34
-    iscrp = 1
+    i_plasma_wall_gap = 1
     ishape = 0
     itart = 0
     itartpf = 0

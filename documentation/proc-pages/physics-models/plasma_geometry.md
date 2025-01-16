@@ -197,10 +197,10 @@ known as the scrape-off layer, and contains no structural material. Plasma
 entering this region is not confined and is removed by the divertor. PROCESS
 treats the scrape-off layer merely as a gap.
 
-The plasma and first wall clearance can be calculated or input by setting the `iscrp` switch.
+The plasma and first wall clearance can be calculated or input by setting the `i_plasma_wall_gap` switch.
 
-- `iscrp` == 0, then the inboard and outboard plasma wall gaps are set to be 10% of the plasma minor radius ($a$).
-- `iscrp` == 1, then the inboard and outboard plasma wall gaps are set by defining `scrapli` and `scraplo` respectively.
+- `i_plasma_wall_gap` == 0, then the inboard and outboard plasma wall gaps are set to be 10% of the plasma minor radius ($a$).
+- `i_plasma_wall_gap` == 1, then the inboard and outboard plasma wall gaps are set by defining `scrapli` and `scraplo` respectively.
 
 ### Geometrical properties | `xparam()`
 
