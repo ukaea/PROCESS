@@ -22,7 +22,7 @@ from sys import stderr
 from time import sleep
 
 from numpy import argsort, argwhere, logical_or
-from numpy.random import normal, seed, uniform
+from numpy.random import default_rng
 
 from process.io.configuration import Config
 from process.io.in_dat import InDat
@@ -154,7 +154,7 @@ class ProcessConfig:
 
         check_in_dat()
 
-        seed(self.u_seed)
+        self.generator = default_rng(seed=self.u_seed)
 
     def get_comment(self):
         """gets the comment line from the configuration file"""
@@ -1037,7 +1037,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             if u_dict["errortype"].lower() == "gaussian":
                 mean = u_dict["mean"]
                 std = u_dict["std"]
-                values = normal(mean, std, self.no_samples)
+                values = self.generator.normal(mean, std, self.no_samples)
                 # assures values are inside input bounds!
                 if varname in dicts["DICT_INPUT_BOUNDS"]:
                     args = argwhere(
@@ -1047,7 +1047,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                         )
                     )
                     while len(args) > 0:
-                        values[args] = normal(mean, std, args.shape)
+                        values[args] = self.generator.normal(mean, std, args.shape)
                         args = argwhere(
                             logical_or(
                                 values < dicts["DICT_INPUT_BOUNDS"][varname]["lb"],
@@ -1057,22 +1057,22 @@ class UncertaintiesConfig(ProcessConfig, Config):
                 else:  # cutoff at 0 - typically negative values are meaningless
                     args = argwhere(values < 0.0)
                     while len(args) > 0:
-                        values[args] = normal(mean, std, args.shape)
+                        values[args] = self.generator.normal(mean, std, args.shape)
                         args = argwhere(values < 0)
 
             elif u_dict["errortype"].lower() == "uniform":
                 lbound = u_dict["lowerbound"]
                 ubound = u_dict["upperbound"]
-                values = uniform(lbound, ubound, self.no_samples)
+                values = self.generator.uniform(lbound, ubound, self.no_samples)
             elif u_dict["errortype"].lower() == "relative":
                 err = u_dict["percentage"] / 100.0
                 lbound = u_dict["mean"] * (1.0 - err)
                 ubound = u_dict["mean"] * (1.0 + err)
-                values = uniform(lbound, ubound, self.no_samples)
+                values = self.generator.uniform(lbound, ubound, self.no_samples)
             elif u_dict["errortype"].lower() == "lowerhalfgaussian":
                 mean = u_dict["mean"]
                 std = u_dict["std"]
-                values = normal(mean, std, self.no_samples)
+                values = self.generator.normal(mean, std, self.no_samples)
                 if varname in dicts["DICT_INPUT_BOUNDS"]:
                     args = argwhere(
                         logical_or(
@@ -1081,7 +1081,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                         )
                     )
                     while len(args) > 0:
-                        values[args] = normal(mean, std, args.shape)
+                        values[args] = self.generator.normal(mean, std, args.shape)
                         args = argwhere(
                             logical_or(
                                 values < dicts["DICT_INPUT_BOUNDS"][varname]["lb"],
@@ -1091,12 +1091,12 @@ class UncertaintiesConfig(ProcessConfig, Config):
                 else:
                     args = argwhere(logical_or(values < 0.0, values > mean))
                     while len(args) > 0:
-                        values[args] = normal(mean, std, args.shape)
+                        values[args] = self.generator.normal(mean, std, args.shape)
                         args = argwhere(logical_or(values < 0.0, values > mean))
             elif u_dict["errortype"].lower() == "upperhalfgaussian":
                 mean = u_dict["mean"]
                 std = u_dict["std"]
-                values = normal(mean, std, self.no_samples)
+                values = self.generator.normal(mean, std, self.no_samples)
                 if varname in dicts["DICT_INPUT_BOUNDS"]:
                     args = argwhere(
                         logical_or(
@@ -1105,7 +1105,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                         )
                     )
                     while len(args) > 0:
-                        values[args] = normal(mean, std, args.shape)
+                        values[args] = self.generator.normal(mean, std, args.shape)
                         args = argwhere(
                             logical_or(
                                 values < mean,
@@ -1115,7 +1115,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                 else:
                     args = argwhere(values < mean)
                     while len(args) > 0:
-                        values[args] = normal(mean, std, args.shape)
+                        values[args] = self.generator.normal(mean, std, args.shape)
                         args = argwhere(values < mean)
 
             u_dict["samples"] = values
