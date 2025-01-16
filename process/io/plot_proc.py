@@ -2978,7 +2978,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
 
 
 def plot_h_threshold_comparison(
-    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int, u_seed=None
 ) -> None:
     """
     Function to plot a scatter box plot of L-H threshold power comparisons.
@@ -3045,7 +3045,8 @@ def plot_h_threshold_comparison(
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
-    x_values = np.random.Generator.normal(loc=1, scale=0.01, size=len(data.values()))
+    generator = np.random.default_rng(seed=u_seed)
+    x_values = generator.normal(loc=1, scale=0.01, size=len(data.values()))
     for index, (key, value) in enumerate(data.items()):
         if "ITER 1996" in key:
             color = "blue"

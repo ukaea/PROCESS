@@ -22,7 +22,7 @@ from sys import stderr
 from time import sleep
 
 from numpy import argsort, argwhere, logical_or
-from numpy.random import Generator
+from numpy.random import default_rng
 
 from process.io.configuration import Config
 from process.io.in_dat import InDat
@@ -154,7 +154,7 @@ class ProcessConfig:
 
         check_in_dat()
 
-        self.generator = Generator.default_rng(seed=self.u_seed)
+        self.generator = default_rng(seed=self.u_seed)
 
     def get_comment(self):
         """gets the comment line from the configuration file"""
