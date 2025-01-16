@@ -533,39 +533,61 @@ class PlasmaGeom:
 
         return xsect0
 
-    def sauter_geometry(self, a, r0, kap, tri):
+    def sauter_geometry(
+        self, a: float, r0: float, kappa: float, triang: float
+    ) -> tuple[float, float, float, float, float]:
         """
-        Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Design 112 (2016) 633–645
-        'Geometric formulas for system codes including the effect of negative triangularity'
-        Author: Michael Kovari, issue #392
-        a      : input real :  plasma minor radius (m)
-        r0     : input real :  plasma major radius (m)
-        kap    : input real :  plasma separatrix elongation
-        tri    : input real :  plasma separatrix triangularity
+        Calculate the plasma geometry parameters using the Sauter geometry model.
+
+                Parameters:
+                a (float): Plasma minor radius (m)
+                r0 (float): Plasma major radius (m)
+                kappa (float): Plasma separatrix elongation
+                triang (float): Plasma separatrix triangularity
+
+                Returns:
+                tuple: A tuple containing:
+                    - pperim (float): Poloidal perimeter
+                    - sf (float): Geometric factor
+                    - sarea (float): Surface area
+                    - xarea (float): Cross-section area
+                    - plasma_volume (float): Plasma volume
+
+                Notes:
+
+                Refrences:
+                    - O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,”
+                      Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016,
+                      doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
+
         """
+
+        # Calculate w07 parameter from paper
         w07 = 1
+
+        # Inverse aspect ratio
         eps = a / r0
 
         # Poloidal perimeter (named Lp in Sauter)
-        pperim = (
+        len_plasma_poloidal = (
             2.0e0
             * np.pi
             * a
-            * (1 + 0.55 * (kap - 1))
-            * (1 + 0.08 * tri**2)
+            * (1 + 0.55 * (kappa - 1))
+            * (1 + 0.08 * triang**2)
             * (1 + 0.2 * (w07 - 1))
         )
 
         # A geometric factor
-        sf = pperim / (2.0e0 * np.pi * a)
+        sf = len_plasma_poloidal / (2.0e0 * np.pi * a)
 
         # Surface area (named Ap in Sauter)
-        sarea = 2.0e0 * np.pi * r0 * (1 - 0.32 * tri * eps) * pperim
+        sarea = 2.0e0 * np.pi * r0 * (1 - 0.32 * triang * eps) * len_plasma_poloidal
 
         # Cross-section area (named S_phi in Sauter)
-        xarea = np.pi * a**2 * kap * (1 + 0.52 * (w07 - 1))
+        xarea = np.pi * a**2 * kappa * (1 + 0.52 * (w07 - 1))
 
         # Volume
-        plasma_volume = 2.0e0 * np.pi * r0 * (1 - 0.25 * tri * eps) * xarea
+        plasma_volume = 2.0e0 * np.pi * r0 * (1 - 0.25 * triang * eps) * xarea
 
-        return pperim, sf, sarea, xarea, plasma_volume
+        return len_plasma_poloidal, sf, sarea, xarea, plasma_volume
