@@ -198,10 +198,10 @@ class ProcessConfig:
                         auxvar = line[line.find("=") + 1 :]
                         auxvar = auxvar.replace(" ", "")
                         auxvar = auxvar.rstrip()
-                    if varname == attributename.upper() and auxvar == "":
-                        return None
-                    else:
-                        return auxvar
+                        if varname == attributename.upper() and auxvar == "":
+                            return None
+                        else:
+                            return auxvar
         except FileNotFoundError:
             print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
