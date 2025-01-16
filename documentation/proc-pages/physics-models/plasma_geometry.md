@@ -11,7 +11,7 @@ elongation of the last closed flux surface (LCFS) $\kappa$ (`kappa`) and the tri
 $\delta$ (`triang`), which can be scaled automatically with the aspect ratio if 
 required using certain switch conditions of `ishape`:
 
-## Plasma Geometry Parameters | `geomty()`
+## Plasma Geometry Parameters | `plasma_geometry()`
 
 This subroutine calculates the plasma geometry parameters based on the given input values.
 The plasma geometry parameters include the shaping terms, plasma aspect ratio, elongation, and triangularity.

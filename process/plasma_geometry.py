@@ -11,7 +11,7 @@ class PlasmaGeom:
     def __init__(self):
         self.outfile = constants.nout
 
-    def geomty(self):
+    def plasma_geometry(self):
         """
         Plasma geometry parameters
         author: P J Knight, CCFE, Culham Science Centre
