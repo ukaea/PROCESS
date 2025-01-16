@@ -229,7 +229,7 @@ class PlasmaGeom:
                 physics_variables.sarea,
                 physics_variables.xarea,
                 physics_variables.plasma_volume,
-            ) = self.Sauter_geometry(
+            ) = self.sauter_geometry(
                 physics_variables.rminor,
                 physics_variables.rmajor,
                 physics_variables.kappa,
