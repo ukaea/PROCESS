@@ -13,7 +13,7 @@ import sys
 with open(sys.argv[1]) as vardes:
     lines = vardes.readlines()
 
-new_lines = list()
+new_lines = []
 counter = 0
 
 for line in lines:

@@ -619,7 +619,7 @@ class RunProcessConfig(ProcessConfig):
         """modifies the array of iteration variables in IN.DAT"""
 
         # check that there is no variable in both lists
-        if set(self.add_ixc).intersection(self.del_ixc) != set([]):
+        if set(self.add_ixc).intersection(self.del_ixc) != set():
             print(
                 "Error: You are trying to add and delete \
                    the same variable from ixc!",
@@ -641,7 +641,7 @@ class RunProcessConfig(ProcessConfig):
         """modifies the array of constraint equations in IN.DAT"""
 
         # check that there is no variable in both lists
-        if set(self.add_icc).intersection(self.del_icc) != set([]):
+        if set(self.add_icc).intersection(self.del_icc) != set():
             print(
                 "Error: You are trying to add and delete the same \
                   variable from icc!",

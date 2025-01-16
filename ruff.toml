@@ -5,6 +5,7 @@ target-version = "py310"
 extend-select = [
     "ASYNC",
     "COM",
+    "C4",
     "DTZ",
     "F",
     "FA",

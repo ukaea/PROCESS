@@ -207,7 +207,7 @@ def main(args=None):
     # This needs to be kept in sync automatically; this will break frequently
     # otherwise
     # Rem : Some variables are not in the MFILE, making the defintion rather tricky...
-    nsweep_dict = dict()
+    nsweep_dict = {}
     nsweep_dict[1] = "aspect"
     nsweep_dict[2] = "hldivlim"
     nsweep_dict[3] = "pnetelmw"
@@ -347,9 +347,9 @@ def main(args=None):
     # ----------------------------------------------------------------------------------------------
     if not is_2D_scan:
         # Loop over the MFILEs
-        output_arrays = dict()
-        output_arrays2 = dict()
-        scan_var_array = dict()
+        output_arrays = {}
+        output_arrays2 = {}
+        scan_var_array = {}
         for input_file in input_files:
             # Opening the MFILE.DAT
             m_file = mf.MFile(filename=input_file)
@@ -376,7 +376,7 @@ def main(args=None):
             n_scan = int(m_file.data["isweep"].get_scan(-1))
 
             # Converged indexes
-            conv_i = list()
+            conv_i = []
             for ii in range(n_scan):
                 ifail = m_file.data["ifail"].get_scan(ii + 1)
                 if ifail == 1:
@@ -399,8 +399,8 @@ def main(args=None):
                     conv_i[ii]
                 )
             # output list declaration
-            output_arrays[input_file] = dict()
-            output_arrays2[input_file] = dict()
+            output_arrays[input_file] = {}
+            output_arrays2[input_file] = {}
             # First variable scan
             for output_name in output_names:
                 ouput_array = np.zeros(n_scan)
@@ -679,12 +679,10 @@ def main(args=None):
         n_scan_2 = int(m_file.data["isweep_2"].get_scan(-1))
         # Selecting the converged runs only
         contour_conv_ij = []  # List of non-converged scan point numbers
-        conv_ij = (
-            list()
-        )  # 2D array of converged scan point numbers (sweep = rows, sweep_2 = columns)
+        conv_ij = []  # 2D array of converged scan point numbers (sweep = rows, sweep_2 = columns)
         ii_jj = 0
         for ii in range(n_scan_1):
-            conv_ij.append(list())
+            conv_ij.append([])
             for jj in range(n_scan_2):
                 ii_jj += 1  # Represents the scan point number in the MFILE
                 ifail = m_file.data["ifail"].get_scan(ii_jj)
@@ -710,7 +708,7 @@ def main(args=None):
                 continue
 
             # Declaring the outputs
-            output_arrays = list()
+            output_arrays = []
 
             if two_dimensional_contour:
                 output_contour_z = np.zeros((n_scan_1, n_scan_2))

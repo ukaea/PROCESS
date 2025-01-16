@@ -257,19 +257,19 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs_variables, "afw", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
 
-    data = dict(
-        icoolpump=1,
-        flow_velocity=15.9,
-        flleng=4,
-        no90=2,
-        no180=0,
-        coolant_density=5.6,
-        coolant_dynamic_viscosity=3.5e-5,
-        coolant_electrical_conductivity=0.0,
-        pol_channel_length=1.89,
-        nopolchan=0,
-        label="Inboard first wall",
-    )
+    data = {
+        "icoolpump": 1,
+        "flow_velocity": 15.9,
+        "flleng": 4,
+        "no90": 2,
+        "no180": 0,
+        "coolant_density": 5.6,
+        "coolant_dynamic_viscosity": 3.5e-5,
+        "coolant_electrical_conductivity": 0.0,
+        "pol_channel_length": 1.89,
+        "nopolchan": 0,
+        "label": "Inboard first wall",
+    }
 
     assert (
         pytest.approx(blanket_library_fixture.deltap_tot(False, **data))
@@ -288,19 +288,19 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(
     monkeypatch.setattr(fwbs_variables, "bz_channel_conduct_liq", 833000)
     monkeypatch.setattr(fwbs_variables, "th_wall_secondary", 0.0125)
 
-    data = dict(
-        icoolpump=2,
-        flow_velocity=0.06,
-        flleng=4.7,
-        no90=2,
-        no180=1,
-        coolant_density=9753.2,
-        coolant_dynamic_viscosity=0.0017,
-        coolant_electrical_conductivity=861800.8,
-        pol_channel_length=1.89,
-        nopolchan=0,
-        label="Outboard blanket breeder liquid",
-    )
+    data = {
+        "icoolpump": 2,
+        "flow_velocity": 0.06,
+        "flleng": 4.7,
+        "no90": 2,
+        "no180": 1,
+        "coolant_density": 9753.2,
+        "coolant_dynamic_viscosity": 0.0017,
+        "coolant_electrical_conductivity": 861800.8,
+        "pol_channel_length": 1.89,
+        "nopolchan": 0,
+        "label": "Outboard blanket breeder liquid",
+    }
 
     assert (
         pytest.approx(blanket_library_fixture.deltap_tot(False, **data))

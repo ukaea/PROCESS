@@ -7,7 +7,7 @@ x = np.linspace(1.0, 3.0, 500)
 y1 = 5.0 * 1.3 * (1.0 - (1.0 / x) ** 0.6)
 y2 = 5.0 * (1.0 + 2.6 * (1.0 / x) ** 2.8)  # Initial data for the second line
 
-source = ColumnDataSource(data=dict(x=x, y1=y1, y2=y2))
+source = ColumnDataSource(data={"x": x, "y1": y1, "y2": y2})
 
 plot = figure(
     x_range=(1.0, 3.0),
@@ -42,7 +42,7 @@ q95 = Slider(start=1.0, end=10, value=5, step=0.1, title=r"95% safety factor, q9
 qbar_0 = Slider(start=1.0, end=10, value=5, step=0.1, title="STAR value")
 
 callback = CustomJS(
-    args=dict(source=source, q95=q95, qbar=qbar_0),
+    args={"source": source, "q95": q95, "qbar": qbar_0},
     code="""
     const A = q95.value;
     const B = qbar.value;

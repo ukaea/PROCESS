@@ -730,7 +730,7 @@ def dict_icc_full():
         DICT_IXC_FULL['5'] = {'name' : 'beta'}
     """
 
-    di = dict()
+    di = {}
 
     # get slice of file from ":: lablcc" to a blank line
     lcctext = slice_file(SOURCEDIR + "/numerics.f90", r"::\slablcc", r"^$")
@@ -857,12 +857,12 @@ def dict_ixc_full():
     with open(SOURCEDIR + "/iteration_variables.f90") as myFile:
         lines = myFile.readlines()
 
-    ixc_full = dict()
+    ixc_full = {}
 
     for lline in lines:
         if "subroutine init_itv_" in lline and "end" not in lline:
             itv_num = lline.split("_")[-1].strip("\n").replace(" ", "")
-            ixc_full[itv_num] = dict()
+            ixc_full[itv_num] = {}
 
     for line in lines:
         if "lablxc" in line and "=" in line:
