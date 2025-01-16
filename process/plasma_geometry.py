@@ -11,17 +11,22 @@ class PlasmaGeom:
     def __init__(self):
         self.outfile = constants.nout
 
-    def plasma_geometry(self):
+    def plasma_geometry(self) -> None:
         """
         Plasma geometry parameters
         author: P J Knight, CCFE, Culham Science Centre
+
+        This method calculates the plasma geometry parameters based on various shaping terms and input values.
+        It updates the `physics_variables` with calculated values for kappa, triangularity, surface area, volume, etc.
+
+        References:
+        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+          unpublished internal Oak Ridge document
+        - H. Zohm et al, On the Physics Guidelines for a Tokamak DEMO,
+          FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
+
+        Returns:
         None
-        This subroutine calculates the plasma geometry parameters.
-        J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-        unpublished internal Oak Ridge document
-        F/MI/PJK/LOGBOOK14, pp.41-43
-        H. Zohm et al, On the Physics Guidelines for a Tokamak DEMO,
-        FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
         """
 
         xsi = 0.0e0
@@ -31,10 +36,13 @@ class PlasmaGeom:
         xi = 0.0e0
         xo = 0.0e0
 
+        # Define plasma minor radius from major radius and aspect ratio
         physics_variables.rminor = physics_variables.rmajor / physics_variables.aspect
+
+        # Define the inverse aspect ratio
         physics_variables.eps = 1.0e0 / physics_variables.aspect
 
-        # Calculate shaping terms, rather than use input values
+        # ======================================================================
 
         if (
             physics_variables.ishape == 0
@@ -46,6 +54,8 @@ class PlasmaGeom:
 
             physics_variables.kappa95 = physics_variables.kappa / 1.12e0
             physics_variables.triang95 = physics_variables.triang / 1.50e0
+
+        # ======================================================================
 
         if (
             physics_variables.ishape == 1
@@ -69,6 +79,8 @@ class PlasmaGeom:
                 physics_variables.triang - 0.048306e0
             ) / 1.3799e0
 
+        # ======================================================================
+
         if (
             physics_variables.ishape == 2
         ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang
@@ -79,6 +91,8 @@ class PlasmaGeom:
             # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
             physics_variables.kappa95 = physics_variables.kappa / 1.12e0
             physics_variables.triang95 = physics_variables.triang / 1.50e0
+
+        # ======================================================================
 
         if (
             physics_variables.ishape == 3
@@ -92,12 +106,16 @@ class PlasmaGeom:
 
             physics_variables.kappa95 = physics_variables.kappa / 1.12e0
 
+        # ======================================================================
+
         if (
             physics_variables.ishape == 4
         ):  # Use input kappa95, physics_variables.triang95 values
             # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
             physics_variables.kappa = 1.12e0 * physics_variables.kappa95
             physics_variables.triang = 1.5e0 * physics_variables.triang95
+
+        # ======================================================================
 
         if (
             physics_variables.ishape == 5
@@ -107,6 +125,8 @@ class PlasmaGeom:
             physics_variables.triang = (
                 0.77394e0 * physics_variables.triang95 + 0.18515e0
             )
+
+        # ======================================================================
 
         if (
             physics_variables.ishape == 6
@@ -119,6 +139,8 @@ class PlasmaGeom:
                 physics_variables.triang - 0.18515e0
             ) / 0.77394e0
 
+        # ======================================================================
+
         if (
             physics_variables.ishape == 7
         ):  # Use input kappa95, physics_variables.triang95 values
@@ -127,6 +149,8 @@ class PlasmaGeom:
             physics_variables.triang = (
                 1.3799e0 * physics_variables.triang95 + 0.048306e0
             )
+
+        # ======================================================================
 
         if (
             physics_variables.ishape == 8
@@ -139,6 +163,8 @@ class PlasmaGeom:
                 physics_variables.triang - 0.048306e0
             ) / 1.3799e0
 
+        # ======================================================================
+
         if (
             physics_variables.ishape == 9
         ):  # Use input triang, physics_variables.rli values
@@ -149,6 +175,8 @@ class PlasmaGeom:
 
             physics_variables.kappa95 = physics_variables.kappa / 1.12e0
             physics_variables.triang95 = physics_variables.triang / 1.50e0
+
+        # ======================================================================
 
         if physics_variables.ishape == 10:
             # physics_variables.kappa95 found from physics_variables.aspect ratio and stabilty margin
@@ -184,6 +212,8 @@ class PlasmaGeom:
             physics_variables.kappa = 1.12e0 * physics_variables.kappa95
             physics_variables.triang95 = physics_variables.triang / 1.50e0
 
+        # ======================================================================
+
         if physics_variables.ishape == 11:
             # See Issue #1439
             # physics_variables.triang is an input
@@ -198,10 +228,14 @@ class PlasmaGeom:
             physics_variables.kappa95 = physics_variables.kappa / 1.12e0
             physics_variables.triang95 = physics_variables.triang / 1.50e0
 
+        # ======================================================================
+
         #  Scrape-off layer thicknesses
         if physics_variables.i_plasma_wall_gap == 0:
             build_variables.scraplo = 0.1e0 * physics_variables.rminor
             build_variables.scrapli = 0.1e0 * physics_variables.rminor
+
+        # ======================================================================
 
         # Find parameters of arcs describing plasma surfaces
         xi, thetai, xo, thetao = self.xparam(
@@ -209,6 +243,9 @@ class PlasmaGeom:
             physics_variables.kappa,
             physics_variables.triang,
         )
+
+        # ======================================================================
+
         #  Surface area - inboard and outboard.  These are not given by Sauter but
         #  the outboard area is required by DCLL and divertor
         xsi, xso = self.xsurf(
@@ -220,6 +257,8 @@ class PlasmaGeom:
             thetao,
         )
         physics_variables.sareao = xso
+
+        # ======================================================================
 
         # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma current.
         if physics_variables.i_plasma_current == 8:
@@ -259,23 +298,35 @@ class PlasmaGeom:
             #  Surface area - sum of inboard and outboard.
             physics_variables.sarea = xsi + xso
 
-    def xparam(self, a, kap, tri):
+        # ======================================================================
+
+    @staticmethod
+    def xparam(a: float, kap: float, tri: float) -> tuple[float, float, float, float]:
         """
         Routine to find parameters used for calculating geometrical
-        properties for double-null plasmas
-        author: P J Knight, CCFE, Culham Science Centre
-        a      : input real :  plasma minor radius (m)
-        kap    : input real :  plasma separatrix elongation
-        tri    : input real :  plasma separatrix triangularity
-        xi     : output real : radius of arc describing inboard surface (m)
-        thetai : output real : half-angle of arc describing inboard surface
-        xo     : output real : radius of arc describing outboard surface (m)
-        thetao : output real : half-angle of arc describing outboard surface
+        properties for double-null plasmas.
+
+        Author: P J Knight, CCFE, Culham Science Centre
+
+        Parameters:
+        a (float): Plasma minor radius (m)
+        kap (float): Plasma separatrix elongation
+        tri (float): Plasma separatrix triangularity
+
+        Returns:
+        tuple: A tuple containing:
+            - xi (float): Radius of arc describing inboard surface (m)
+            - thetai (float): Half-angle of arc describing inboard surface
+            - xo (float): Radius of arc describing outboard surface (m)
+            - thetao (float): Half-angle of arc describing outboard surface
+
         This function finds plasma geometrical parameters, using the
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
-        F/MI/PJK/LOGBOOK14, p.42
-        F/PL/PJK/PROCESS/CODE/047
+
+        References:
+        - F/MI/PJK/LOGBOOK14, p.42
+        - F/PL/PJK/PROCESS/CODE/047
         """
         t = 1.0e0 - tri
         denomi = (kap**2 - t**2) / (2.0e0 * t)
@@ -291,54 +342,33 @@ class PlasmaGeom:
 
         return xi, thetai, xo, thetao
 
-    def surfa(self, a, r, k, d):
+    @staticmethod
+    def xsurf(
+        rmajor: float, rminor: float, xi: float, thetai: float, xo: float, thetao: float
+    ) -> tuple[float, float]:
         """
         Plasma surface area calculation
         author: P J Knight, CCFE, Culham Science Centre
-        a      : input real :  plasma minor radius (m)
-        r      : input real :  plasma major radius (m)
-        k      : input real :  plasma separatrix elongation
-        d      : input real :  plasma separatrix triangularity
-        sa     : output real : plasma total surface area (m2)
-        so     : output real : plasma outboard surface area (m2)
+
+        Parameters:
+        rmajor (float): Plasma major radius (m)
+        rminor (float): Plasma minor radius (m)
+        xi (float): Radius of arc describing inboard surface (m)
+        thetai (float): Half-angle of arc describing inboard surface
+        xo (float): Radius of arc describing outboard surface (m)
+        thetao (float): Half-angle of arc describing outboard surface
+
+        Returns:
+        tuple: A tuple containing:
+            - xsi (float): Inboard surface area (m^2)
+            - xso (float): Outboard surface area (m^2)
+
         This function finds the plasma surface area, using the
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
-        It was the original method in PROCESS.
-        J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-        unpublished internal Oak Ridge document
-        """
-        radco = a * (1.0e0 + (k**2 + d**2 - 1.0e0) / (2.0e0 * (1.0e0 + d)))
-        b = k * a
-        thto = np.arcsin(b / radco)
-        so = 4.0e0 * np.pi * radco * ((r + a - radco) * thto + b)
 
-        #  Inboard side
-
-        radci = a * (1.0e0 + (k**2 + d**2 - 1.0e0) / (2.0e0 * (1.0e0 - d)))
-        thti = np.arcsin(b / radci)
-        si = 4.0e0 * np.pi * radci * ((r - a + radci) * thti - b)
-
-        sa = so + si
-
-        return sa, so
-
-    def xsurf(self, rmajor, rminor, xi, thetai, xo, thetao):
-        """
-        Plasma surface area calculation
-        author: P J Knight, CCFE, Culham Science Centre
-        rmajor : input real :  plasma major radius (m)
-        rminor : input real :  plasma minor radius (m)
-        xi     : input real :  radius of arc describing inboard surface (m)
-        thetai : input real :  half-angle of arc describing inboard surface
-        xo     : input real :  radius of arc describing outboard surface (m)
-        thetao : input real :  half-angle of arc describing outboard surface
-        xsi    : output real : inboard surface area (m2)
-        xso    : output real : outboard surface area (m2)
-        This function finds the plasma surface area, using the
-        revolution of two intersecting arcs around the device centreline.
-        This calculation is appropriate for plasmas with a separatrix.
-        F/MI/PJK/LOGBOOK14, p.43
+        References:
+        - F/MI/PJK/LOGBOOK14, p.43
         """
         fourpi = 4.0e0 * np.pi
 
@@ -350,51 +380,30 @@ class PlasmaGeom:
 
         return xsi, xso
 
-    def perim(self, a, kap, tri):
-        """
-        Plasma poloidal perimeter calculation
-        author: P J Knight, CCFE, Culham Science Centre
-        a      : input real :  plasma minor radius (m)
-        kap    : input real :  plasma separatrix elongation
-        tri    : input real :  plasma separatrix triangularity
-        This function finds the plasma poloidal perimeter, using the
-        revolution of two intersecting arcs around the device centreline.
-        This calculation is appropriate for plasmas with a separatrix.
-        F/PL/PJK/PROCESS/CODE/047
-        """
-
-        #  Inboard arc
-
-        denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri
-        thetai = np.arctan(kap / denomi)
-        xli = a * (denomi + 1.0e0 - tri)
-
-        #  Outboard arc
-
-        denomo = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 + tri)) - tri
-        thetao = np.arctan(kap / denomo)
-        xlo = a * (denomo + 1.0e0 + tri)
-
-        perim = 2.0e0 * (xlo * thetao + xli * thetai)
-
-        return perim
-
-    def xvol(self, rmajor, rminor, xi, thetai, xo, thetao):
+    @staticmethod
+    def xvol(rmajor, rminor, xi, thetai, xo, thetao):
         """
         Plasma volume calculation
         author: P J Knight, CCFE, Culham Science Centre
-        rmajor : input real :  plasma major radius (m)
-        rminor : input real :  plasma minor radius (m)
-        xi     : input real :  radius of arc describing inboard surface (m)
-        thetai : input real :  half-angle of arc describing inboard surface
-        xo     : input real :  radius of arc describing outboard surface (m)
-        thetao : input real :  half-angle of arc describing outboard surface
+
+        Parameters:
+        rmajor (float): Plasma major radius (m)
+        rminor (float): Plasma minor radius (m)
+        xi (float): Radius of arc describing inboard surface (m)
+        thetai (float): Half-angle of arc describing inboard surface
+        xo (float): Radius of arc describing outboard surface (m)
+        thetao (float): Half-angle of arc describing outboard surface
+
+        Returns:
+        float: Plasma volume (m^3)
+
         This function finds the plasma volume, using the
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
-        F/MI/PJK/LOGBOOK14, p.43
+
+        References:
+        - F/MI/PJK/LOGBOOK14, p.43
         """
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         third = 1.0e0 / 3.0e0
 
@@ -429,18 +438,27 @@ class PlasmaGeom:
 
         return xvol
 
-    def xsecta(self, xi, thetai, xo, thetao):
+    @staticmethod
+    def xsecta(xi: float, thetai: float, xo: float, thetao: float) -> float:
         """
         Plasma cross-sectional area calculation
         author: P J Knight, CCFE, Culham Science Centre
-        xi     : input real :  radius of arc describing inboard surface (m)
-        thetai : input real :  half-angle of arc describing inboard surface
-        xo     : input real :  radius of arc describing outboard surface (m)
-        thetao : input real :  half-angle of arc describing outboard surface
+
+        Parameters:
+        xi (float): Radius of arc describing inboard surface (m)
+        thetai (float): Half-angle of arc describing inboard surface
+        xo (float): Radius of arc describing outboard surface (m)
+        thetao (float): Half-angle of arc describing outboard surface
+
+        Returns:
+        float: Plasma cross-sectional area (m^2)
+
         This function finds the plasma cross-sectional area, using the
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
-        F/MI/PJK/LOGBOOK14, p.41
+
+        References:
+        - F/MI/PJK/LOGBOOK14, p.41
         """
 
         xsecta = xo**2 * (thetao - np.cos(thetao) * np.sin(thetao)) + xi**2 * (
@@ -449,92 +467,9 @@ class PlasmaGeom:
 
         return xsecta
 
-    def fvol(self, r, a, kap, tri):
-        """
-        Plasma volume calculation
-        author: P J Knight, CCFE, Culham Science Centre
-        r      : input real :  plasma major radius (m)
-        a      : input real :  plasma minor radius (m)
-        kap    : input real :  plasma separatrix elongation
-        tri    : input real :  plasma separatrix triangularity
-        This function finds the plasma volume, using the
-        revolution of two intersecting arcs around the device centreline.
-        This calculation is appropriate for plasmas with a separatrix.
-        F/MI/PJK/LOGBOOK14, p.41
-        F/PL/PJK/PROCESS/CODE/047
-        """
-
-        zn = kap * a
-
-        c1 = ((r + a) ** 2 - (r - tri * a) ** 2 - zn**2) / (2.0e0 * (1.0e0 + tri) * a)
-        rc1 = r + a - c1
-        vout = (
-            -0.66666666e0 * np.pi * zn**3
-            + 2.0e0 * np.pi * zn * (c1**2 + rc1**2)
-            + 2.0e0
-            * np.pi
-            * c1
-            * (zn * np.sqrt(rc1**2 - zn**2) + rc1**2 * np.arcsin(zn / rc1))
-        )
-
-        c2 = (-((r - a) ** 2) + (r - tri * a) ** 2 + zn**2) / (
-            2.0e0 * (1.0e0 - tri) * a
-        )
-        rc2 = c2 - r + a
-        vin = (
-            -0.66666e0 * np.pi * zn**3
-            + 2.0e0 * np.pi * zn * (rc2**2 + c2**2)
-            - 2.0e0
-            * np.pi
-            * c2
-            * (zn * np.sqrt(rc2**2 - zn**2) + rc2**2 * np.arcsin(zn / rc2))
-        )
-
-        fvol = vout - vin
-
-        return fvol
-
-    def xsect0(self, a, kap, tri):
-        """
-        Plasma cross-sectional area calculation
-        author: P J Knight, CCFE, Culham Science Centre
-        a      : input real :  plasma minor radius (m)
-        kap    : input real :  plasma separatrix elongation
-        tri    : input real :  plasma separatrix triangularity
-        This function finds the plasma cross-sectional area, using the
-        revolution of two intersecting arcs around the device centreline.
-        This calculation is appropriate for plasmas with a separatrix.
-        The method for finding the arc radii and angles are copied from
-        routine <A HREF="perim.html">PERIM</A>, and are thought to be
-        by Peng.
-        F/MI/PJK/LOGBOOK14, p.41
-        F/PL/PJK/PROCESS/CODE/047
-        """
-
-        denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri
-        thetai = np.arctan(kap / denomi)
-        xli = a * (denomi + 1.0e0 - tri)
-
-        cti = np.cos(thetai)
-        sti = np.sin(thetai)
-
-        #  Find radius and half-angle of outboard arc
-
-        denomo = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 + tri)) - tri
-        thetao = np.arctan(kap / denomo)
-        xlo = a * (denomo + 1.0e0 + tri)
-
-        cto = np.cos(thetao)
-        sto = np.sin(thetao)
-
-        #  Find cross-sectional area
-
-        xsect0 = xlo**2 * (thetao - cto * sto) + xli**2 * (thetai - cti * sti)
-
-        return xsect0
-
+    @staticmethod
     def sauter_geometry(
-        self, a: float, r0: float, kappa: float, triang: float
+        a: float, r0: float, kappa: float, triang: float
     ) -> tuple[float, float, float, float, float]:
         """
         Calculate the plasma geometry parameters using the Sauter geometry model.
@@ -591,3 +526,155 @@ class PlasmaGeom:
         plasma_volume = 2.0e0 * np.pi * r0 * (1 - 0.25 * triang * eps) * xarea
 
         return len_plasma_poloidal, sf, sarea, xarea, plasma_volume
+
+
+# --------------------------------
+# Obsolete legacy calculations
+# --------------------------------
+
+
+def surfa(a, r, k, d):
+    """
+    Plasma surface area calculation
+    author: P J Knight, CCFE, Culham Science Centre
+    a      : input real :  plasma minor radius (m)
+    r      : input real :  plasma major radius (m)
+    k      : input real :  plasma separatrix elongation
+    d      : input real :  plasma separatrix triangularity
+    sa     : output real : plasma total surface area (m2)
+    so     : output real : plasma outboard surface area (m2)
+    This function finds the plasma surface area, using the
+    revolution of two intersecting arcs around the device centreline.
+    This calculation is appropriate for plasmas with a separatrix.
+    It was the original method in PROCESS.
+    J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+    unpublished internal Oak Ridge document
+    """
+    radco = a * (1.0e0 + (k**2 + d**2 - 1.0e0) / (2.0e0 * (1.0e0 + d)))
+    b = k * a
+    thto = np.arcsin(b / radco)
+    so = 4.0e0 * np.pi * radco * ((r + a - radco) * thto + b)
+
+    #  Inboard side
+
+    radci = a * (1.0e0 + (k**2 + d**2 - 1.0e0) / (2.0e0 * (1.0e0 - d)))
+    thti = np.arcsin(b / radci)
+    si = 4.0e0 * np.pi * radci * ((r - a + radci) * thti - b)
+
+    sa = so + si
+
+    return sa, so
+
+
+def perim(a, kap, tri):
+    """
+    Plasma poloidal perimeter calculation
+    author: P J Knight, CCFE, Culham Science Centre
+    a      : input real :  plasma minor radius (m)
+    kap    : input real :  plasma separatrix elongation
+    tri    : input real :  plasma separatrix triangularity
+    This function finds the plasma poloidal perimeter, using the
+    revolution of two intersecting arcs around the device centreline.
+    This calculation is appropriate for plasmas with a separatrix.
+    F/PL/PJK/PROCESS/CODE/047
+    """
+
+    #  Inboard arc
+
+    denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri
+    thetai = np.arctan(kap / denomi)
+    xli = a * (denomi + 1.0e0 - tri)
+
+    #  Outboard arc
+
+    denomo = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 + tri)) - tri
+    thetao = np.arctan(kap / denomo)
+    xlo = a * (denomo + 1.0e0 + tri)
+
+    perim = 2.0e0 * (xlo * thetao + xli * thetai)
+
+    return perim
+
+
+def fvol(r, a, kap, tri):
+    """
+    Plasma volume calculation
+    author: P J Knight, CCFE, Culham Science Centre
+    r      : input real :  plasma major radius (m)
+    a      : input real :  plasma minor radius (m)
+    kap    : input real :  plasma separatrix elongation
+    tri    : input real :  plasma separatrix triangularity
+    This function finds the plasma volume, using the
+    revolution of two intersecting arcs around the device centreline.
+    This calculation is appropriate for plasmas with a separatrix.
+    F/MI/PJK/LOGBOOK14, p.41
+    F/PL/PJK/PROCESS/CODE/047
+    """
+
+    zn = kap * a
+
+    c1 = ((r + a) ** 2 - (r - tri * a) ** 2 - zn**2) / (2.0e0 * (1.0e0 + tri) * a)
+    rc1 = r + a - c1
+    vout = (
+        -0.66666666e0 * np.pi * zn**3
+        + 2.0e0 * np.pi * zn * (c1**2 + rc1**2)
+        + 2.0e0
+        * np.pi
+        * c1
+        * (zn * np.sqrt(rc1**2 - zn**2) + rc1**2 * np.arcsin(zn / rc1))
+    )
+
+    c2 = (-((r - a) ** 2) + (r - tri * a) ** 2 + zn**2) / (2.0e0 * (1.0e0 - tri) * a)
+    rc2 = c2 - r + a
+    vin = (
+        -0.66666e0 * np.pi * zn**3
+        + 2.0e0 * np.pi * zn * (rc2**2 + c2**2)
+        - 2.0e0
+        * np.pi
+        * c2
+        * (zn * np.sqrt(rc2**2 - zn**2) + rc2**2 * np.arcsin(zn / rc2))
+    )
+
+    fvol = vout - vin
+
+    return fvol
+
+
+def xsect0(a, kap, tri):
+    """
+    Plasma cross-sectional area calculation
+    author: P J Knight, CCFE, Culham Science Centre
+    a      : input real :  plasma minor radius (m)
+    kap    : input real :  plasma separatrix elongation
+    tri    : input real :  plasma separatrix triangularity
+    This function finds the plasma cross-sectional area, using the
+    revolution of two intersecting arcs around the device centreline.
+    This calculation is appropriate for plasmas with a separatrix.
+    The method for finding the arc radii and angles are copied from
+    routine <A HREF="perim.html">PERIM</A>, and are thought to be
+    by Peng.
+    F/MI/PJK/LOGBOOK14, p.41
+    F/PL/PJK/PROCESS/CODE/047
+    """
+
+    denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri
+    thetai = np.arctan(kap / denomi)
+    xli = a * (denomi + 1.0e0 - tri)
+
+    cti = np.cos(thetai)
+    sti = np.sin(thetai)
+
+    #  Find radius and half-angle of outboard arc
+
+    denomo = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 + tri)) - tri
+    thetao = np.arctan(kap / denomo)
+    xlo = a * (denomo + 1.0e0 + tri)
+
+    cto = np.cos(thetao)
+    sto = np.sin(thetao)
+
+    #  Find cross-sectional area
+
+    xsect0 = xlo**2 * (thetao - cto * sto) + xli**2 * (thetai - cti * sti)
+
+    return xsect0
