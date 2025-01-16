@@ -324,10 +324,10 @@ class TrackedVariable:
         data -> value
         message -> annotation
         """
-        df = pd.DataFrame(self._data)
-        df.columns = ("title", "date", "value", "commit", "commit_id")
+        dataframe = pd.DataFrame(self._data)
+        dataframe.columns = ("title", "date", "value", "commit", "commit_id")
 
-        return df
+        return dataframe
 
 
 class TrackedData:
@@ -407,12 +407,12 @@ def plot_tracking_data(database):
             continue
 
     for variable, history in loaded_tracking_database_data.tracked_variables.items():
-        df = (
+        dataframe = (
             history.as_dataframe()
         )  # all the data for one tracked variable as a dataframe
 
         # order by date to avoid polygons all over the plot
-        df.sort_values("date", ascending=True, inplace=True)
+        dataframe = dataframe.sort_values("date", ascending=True)
 
         # overrides trumps fortran scrapping
         parent = overrides.get(
@@ -431,7 +431,7 @@ def plot_tracking_data(database):
             figures[parent] = []
 
         titles = list(
-            df["title"].to_numpy()
+            dataframe["title"].to_numpy()
         )  # all scenarios this variable is tracked in
 
         figur = figure(title=variable, x_axis_type="datetime", width=600, height=600)
@@ -445,8 +445,8 @@ def plot_tracking_data(database):
 
         # each title (different scenario) has a different line colour
         for t in set(titles):
-            run_title_dataframe = df[
-                df["title"] == t
+            run_title_dataframe = dataframe[
+                dataframe["title"] == t
             ]  # the variable history for each (applicable) run title
             subsource = ColumnDataSource(
                 run_title_dataframe
