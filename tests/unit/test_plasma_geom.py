@@ -119,7 +119,7 @@ def test_perim(a, kap, tri, expected_perim):
 
 
 @pytest.mark.parametrize(
-    "rmajor, rminor, xi, thetai, xo, thetao, expected_xvol",
+    "rmajor, rminor, xi, thetai, xo, thetao, expected_plasma_volume",
     [
         (
             9.2995201822511735,
@@ -132,8 +132,10 @@ def test_perim(a, kap, tri, expected_perim):
         )
     ],
 )
-def test_xvol(rmajor, rminor, xi, thetai, xo, thetao, expected_xvol, plasma):
-    """Tests `xvol` function.
+def test_plasma_volume(
+    rmajor, rminor, xi, thetai, xo, thetao, expected_plasma_volume, plasma
+):
+    """Tests `plasma_volume()` function.
     :param rmajor: test asset passed to the routine representing the plasma major radius (m).
     :type rmajor: float
 
@@ -152,12 +154,12 @@ def test_xvol(rmajor, rminor, xi, thetai, xo, thetao, expected_xvol, plasma):
     :param thetao: test asset passed to the routine representing the half-angle of arc describing outboard surface.
     :type thetao: float
 
-    :param expected_xvol: expected result of the function.
-    :type expected_xvol: float
+    :param expected_plasma_volume: expected result of the function.
+    :type expected_plasma_volume: float
     """
-    xvol = plasma.xvol(rmajor, rminor, xi, thetai, xo, thetao)
+    plasma_volume = plasma.plasma_volume(rmajor, rminor, xi, thetai, xo, thetao)
 
-    assert pytest.approx(xvol) == expected_xvol
+    assert pytest.approx(plasma_volume) == expected_plasma_volume
 
 
 @pytest.mark.parametrize(

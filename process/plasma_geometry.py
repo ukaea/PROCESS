@@ -283,13 +283,16 @@ class PlasmaGeom:
             )
 
             #  Volume
-            physics_variables.vol_plasma = physics_variables.f_vol_plasma * self.xvol(
-                physics_variables.rmajor,
-                physics_variables.rminor,
-                xi,
-                thetai,
-                xo,
-                thetao,
+            physics_variables.vol_plasma = (
+                physics_variables.f_vol_plasma
+                * self.plasma_volume(
+                    physics_variables.rmajor,
+                    physics_variables.rminor,
+                    xi,
+                    thetai,
+                    xo,
+                    thetao,
+                )
             )
 
             #  Cross-sectional area
@@ -383,7 +386,7 @@ class PlasmaGeom:
         return xsi, xso
 
     @staticmethod
-    def xvol(rmajor, rminor, xi, thetai, xo, thetao):
+    def plasma_volume(rmajor, rminor, xi, thetai, xo, thetao):
         """
         Plasma volume calculation
         author: P J Knight, CCFE, Culham Science Centre
