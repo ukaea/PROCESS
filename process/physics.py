@@ -2266,7 +2266,7 @@ class Physics:
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.iinvqd,
-            physics_variables.isc,
+            physics_variables.i_confinement_time,
             physics_variables.ignite,
             physics_variables.kappa,
             physics_variables.kappa95,
@@ -5152,7 +5152,7 @@ class Physics:
             po.oblnkl(self.outfile)
 
         tauelaw = f2py_compatible_to_string(
-            physics_variables.tauscl[physics_variables.isc - 1]
+            physics_variables.tauscl[physics_variables.i_confinement_time - 1]
         )
 
         po.ocmmnt(
@@ -6599,7 +6599,7 @@ class Physics:
         eps,
         hfact,
         iinvqd,
-        isc,
+        i_confinement_time,
         ignite,
         kappa,
         kappa95,
@@ -6631,7 +6631,7 @@ class Physics:
         eps       : input real :  inverse aspect ratio
         hfact     : input real :  H factor on energy confinement scalings
         iinvqd    : input integer :  switch for inverse quadrature
-        isc       : input integer :  switch for energy confinement scaling to use
+        i_confinement_time       : input integer :  switch for energy confinement scaling to use
         ignite    : input integer :  switch for ignited calculation
         kappa     : input real :  plasma elongation
         kappa95   : input real :  plasma elongation at 95% surface
@@ -6737,22 +6737,22 @@ class Physics:
         # Electron energy confinement times
 
         # Nec-Alcator(NA) OH scaling
-        if isc == 1:
+        if i_confinement_time == 1:
             # tauee = taueena
             tauee = hfact * confinement.neo_alcator_confinement_time(
                 n20, rminor, rmajor, qstar
             )
 
-        elif isc == 2:  # Mirnov scaling (H-mode)
+        elif i_confinement_time == 2:  # Mirnov scaling (H-mode)
             tauee = hfact * 0.2e0 * rminor * np.sqrt(kappa95) * pcur
 
         # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
-        elif isc == 3:
+        elif i_confinement_time == 3:
             tauee = hfact * confinement.merezhkin_muhkovatov_confinement_time(
                 rmajor, rminor, kappa95, qstar, dnla20, afuel, ten
             )
 
-        elif isc == 4:  # Shimomura scaling (H-mode)
+        elif i_confinement_time == 4:  # Shimomura scaling (H-mode)
             tauee = (
                 hfact
                 * 0.045e0
@@ -6763,7 +6763,7 @@ class Physics:
                 * np.sqrt(m_fuel_amu)
             )
 
-        elif isc == 5:  # Kaye-Goldston scaling (L-mode)
+        elif i_confinement_time == 5:  # Kaye-Goldston scaling (L-mode)
             tauee = (
                 hfact
                 * 0.055e0
@@ -6778,7 +6778,7 @@ class Physics:
             if iinvqd != 0:
                 tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
 
-        elif isc == 6:  # ITER Power scaling - ITER 89-P (L-mode)
+        elif i_confinement_time == 6:  # ITER Power scaling - ITER 89-P (L-mode)
             tauee = (
                 hfact
                 * 0.048e0
@@ -6792,7 +6792,7 @@ class Physics:
                 / np.sqrt(powerht)
             )
 
-        elif isc == 7:  # ITER Offset linear scaling - ITER 89-O (L-mode)
+        elif i_confinement_time == 7:  # ITER Offset linear scaling - ITER 89-O (L-mode)
             term1 = (
                 0.04e0
                 * pcur**0.5e0
@@ -6814,7 +6814,7 @@ class Physics:
             )
             tauee = hfact * (term1 + term2)
 
-        elif isc == 8:  # Rebut-Lallia offset linear scaling (L-mode)
+        elif i_confinement_time == 8:  # Rebut-Lallia offset linear scaling (L-mode)
             rll = (rminor**2 * rmajor * kappa95) ** 0.333e0
             tauee = (
                 hfact
@@ -6832,7 +6832,7 @@ class Physics:
                 )
             )
 
-        elif isc == 9:  # Goldston scaling (L-mode)
+        elif i_confinement_time == 9:  # Goldston scaling (L-mode)
             tauee = (
                 hfact
                 * 0.037e0
@@ -6847,7 +6847,7 @@ class Physics:
             if iinvqd != 0:
                 tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
 
-        elif isc == 10:  # T10 scaling
+        elif i_confinement_time == 10:  # T10 scaling
             denfac = dnla20 * rmajor * qstar / (1.3e0 * bt)
             denfac = min(1.0e0, denfac)
             tauee = (
@@ -6863,7 +6863,7 @@ class Physics:
                 ** 0.08e0
             )
 
-        elif isc == 11:  # JAERI scaling
+        elif i_confinement_time == 11:  # JAERI scaling
             gjaeri = (
                 zeff**0.4e0
                 * ((15.0e0 - zeff) / 20.0e0) ** 0.6e0
@@ -6889,7 +6889,7 @@ class Physics:
                 / powerht
             )
 
-        elif isc == 12:  # Kaye-Big scaling
+        elif i_confinement_time == 12:  # Kaye-Big scaling
             tauee = (
                 hfact
                 * 0.105e0
@@ -6903,7 +6903,7 @@ class Physics:
                 / powerht**0.5e0
             )
 
-        elif isc == 13:  # ITER H-mode scaling - ITER H90-P
+        elif i_confinement_time == 13:  # ITER H-mode scaling - ITER H90-P
             tauee = (
                 hfact
                 * 0.064e0
@@ -6917,7 +6917,9 @@ class Physics:
                 / np.sqrt(powerht)
             )
 
-        elif isc == 14:  # Minimum of ITER 89-P (isc=6) and ITER 89-O (isc=7)
+        elif (
+            i_confinement_time == 14
+        ):  # Minimum of ITER 89-P (i_confinement_time=6) and ITER 89-O (i_confinement_time=7)
             tauit1 = (
                 hfact
                 * 0.048e0
@@ -6952,7 +6954,7 @@ class Physics:
             tauit2 = hfact * (term1 + term2)
             tauee = min(tauit1, tauit2)
 
-        elif isc == 15:  # Riedel scaling (L-mode)
+        elif i_confinement_time == 15:  # Riedel scaling (L-mode)
             tauee = (
                 hfact
                 * 0.044e0
@@ -6965,7 +6967,7 @@ class Physics:
                 / powerht**0.537e0
             )
 
-        elif isc == 16:  # Christiansen et al scaling (L-mode)
+        elif i_confinement_time == 16:  # Christiansen et al scaling (L-mode)
             tauee = (
                 hfact
                 * 0.24e0
@@ -6978,7 +6980,7 @@ class Physics:
                 / (powerht**0.79e0 * m_fuel_amu**0.02e0)
             )
 
-        elif isc == 17:  # Lackner-Gottardi scaling (L-mode)
+        elif i_confinement_time == 17:  # Lackner-Gottardi scaling (L-mode)
             qhat = (1.0e0 + kappa95**2) * rminor**2 * bt / (0.4e0 * pcur * rmajor)
             tauee = (
                 hfact
@@ -6993,7 +6995,7 @@ class Physics:
                 / powerht**0.6e0
             )
 
-        elif isc == 18:  # Neo-Kaye scaling (L-mode)
+        elif i_confinement_time == 18:  # Neo-Kaye scaling (L-mode)
             tauee = (
                 hfact
                 * 0.063e0
@@ -7007,7 +7009,7 @@ class Physics:
                 / powerht**0.59e0
             )
 
-        elif isc == 19:  # Riedel scaling (H-mode)
+        elif i_confinement_time == 19:  # Riedel scaling (H-mode)
             tauee = (
                 hfact
                 * 0.1e0
@@ -7021,7 +7023,7 @@ class Physics:
                 / powerht**0.486e0
             )
 
-        elif isc == 20:  # Amended version of ITER H90-P law
+        elif i_confinement_time == 20:  # Amended version of ITER H90-P law
             # Nuclear Fusion 32 (1992) 318
             tauee = (
                 hfact
@@ -7033,7 +7035,7 @@ class Physics:
                 / (powerht**0.47e0 * kappa**0.19e0)
             )
 
-        elif isc == 21:  # Large Helical Device scaling (stellarators)
+        elif i_confinement_time == 21:  # Large Helical Device scaling (stellarators)
             # S.Sudo, Y.Takeiri, H.Zushi et al., Nuclear Fusion 30 (1990) 11
             tauee = (
                 hfact
@@ -7045,7 +7047,7 @@ class Physics:
                 * powerht ** (-0.58e0)
             )
 
-        elif isc == 22:  # Gyro-reduced Bohm scaling
+        elif i_confinement_time == 22:  # Gyro-reduced Bohm scaling
             # R.J.Goldston, H.Biglari, G.W.Hammett et al., Bull.Am.Phys.Society,
             # volume 34, 1964 (1989)
             tauee = (
@@ -7058,7 +7060,7 @@ class Physics:
                 * rmajor**0.6e0
             )
 
-        elif isc == 23:  # Lackner-Gottardi stellarator scaling
+        elif i_confinement_time == 23:  # Lackner-Gottardi stellarator scaling
             # K.Lackner and N.A.O.Gottardi, Nuclear Fusion, 30, p.767 (1990)
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
             tauee = (
@@ -7073,7 +7075,7 @@ class Physics:
             )
 
         elif (
-            isc == 24
+            i_confinement_time == 24
         ):  # ITER-93H scaling (ELM-free; multiply by 0.85 for ELMy version)
             # S.Kaye and the ITER Joint Central Team and Home Teams, in Plasma
             # Physics and Controlled Nuclear Fusion Research (Proc. 15th
@@ -7094,7 +7096,7 @@ class Physics:
         # Next two are ITER-97 H-mode scalings
         # J. G. Cordey et al., EPS Berchtesgaden, 1997
 
-        elif isc == 26:  # ELM-free: ITERH-97P
+        elif i_confinement_time == 26:  # ELM-free: ITERH-97P
             tauee = (
                 hfact
                 * 0.031e0
@@ -7108,7 +7110,7 @@ class Physics:
                 * m_fuel_amu**0.42e0
             )
 
-        elif isc == 27:  # ELMy: ITERH-97P(y)
+        elif i_confinement_time == 27:  # ELMy: ITERH-97P(y)
             tauee = (
                 hfact
                 * 0.029e0
@@ -7122,7 +7124,7 @@ class Physics:
                 * m_fuel_amu**0.2e0
             )
 
-        elif isc == 28:  # ITER-96P (= ITER-97L) L-mode scaling
+        elif i_confinement_time == 28:  # ITER-96P (= ITER-97L) L-mode scaling
             # S.M.Kaye and the ITER Confinement Database Working Group,
             # Nuclear Fusion 37 (1997) 1303
             # N.B. tau_th formula used
@@ -7139,7 +7141,7 @@ class Physics:
                 * powerht ** (-0.73e0)
             )
 
-        elif isc == 29:  # Valovic modified ELMy-H mode scaling
+        elif i_confinement_time == 29:  # Valovic modified ELMy-H mode scaling
             tauee = (
                 hfact
                 * 0.067e0
@@ -7153,7 +7155,7 @@ class Physics:
                 * powerht ** (-0.68e0)
             )
 
-        elif isc == 30:  # Kaye PPPL Workshop April 1998 L-mode scaling
+        elif i_confinement_time == 30:  # Kaye PPPL Workshop April 1998 L-mode scaling
             tauee = (
                 hfact
                 * 0.021e0
@@ -7167,7 +7169,7 @@ class Physics:
                 * powerht ** (-0.73e0)
             )
 
-        elif isc == 31:  # ITERH-PB98P(y), ELMy H-mode scaling
+        elif i_confinement_time == 31:  # ITERH-PB98P(y), ELMy H-mode scaling
             tauee = (
                 hfact
                 * 0.0615e0
@@ -7181,7 +7183,7 @@ class Physics:
                 * m_fuel_amu**0.2e0
             )
 
-        elif isc == 32:  # IPB98(y), ELMy H-mode scaling
+        elif i_confinement_time == 32:  # IPB98(y), ELMy H-mode scaling
             # Data selection : full ITERH.DB3
             # Nuclear Fusion 39 (1999) 2175, Table 5
             tauee = (
@@ -7197,7 +7199,7 @@ class Physics:
                 * m_fuel_amu**0.2e0
             )
 
-        elif isc == 33:  # IPB98(y,1), ELMy H-mode scaling
+        elif i_confinement_time == 33:  # IPB98(y,1), ELMy H-mode scaling
             # Data selection : full ITERH.DB3
             # Nuclear Fusion 39 (1999) 2175, Table 5
             tauee = (
@@ -7213,7 +7215,7 @@ class Physics:
                 * m_fuel_amu**0.13e0
             )
 
-        elif isc == 34:  # IPB98(y,2), ELMy H-mode scaling
+        elif i_confinement_time == 34:  # IPB98(y,2), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only
             # Nuclear Fusion 39 (1999) 2175, Table 5
             tauee = (
@@ -7229,7 +7231,7 @@ class Physics:
                 * m_fuel_amu**0.19e0
             )
 
-        elif isc == 35:  # IPB98(y,3), ELMy H-mode scaling
+        elif i_confinement_time == 35:  # IPB98(y,3), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only, no C-Mod
             # Nuclear Fusion 39 (1999) 2175, Table 5
             tauee = (
@@ -7245,7 +7247,7 @@ class Physics:
                 * m_fuel_amu**0.20e0
             )
 
-        elif isc == 36:  # IPB98(y,4), ELMy H-mode scaling
+        elif i_confinement_time == 36:  # IPB98(y,4), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only, ITER like devices
             # Nuclear Fusion 39 (1999) 2175, Table 5
             tauee = (
@@ -7261,7 +7263,7 @@ class Physics:
                 * m_fuel_amu**0.17e0
             )
 
-        elif isc == 37:  # ISS95 stellarator scaling
+        elif i_confinement_time == 37:  # ISS95 stellarator scaling
             # U. Stroth et al., Nuclear Fusion, 36, p.1063 (1996)
             # Assumes kappa = 1.0, triang = 0.0
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
@@ -7276,7 +7278,7 @@ class Physics:
                 * iotabar**0.4e0
             )
 
-        elif isc == 38:  # ISS04 stellarator scaling
+        elif i_confinement_time == 38:  # ISS04 stellarator scaling
             # H. Yamada et al., Nuclear Fusion, 45, p.1684 (2005)
             # Assumes kappa = 1.0, triang = 0.0
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
@@ -7291,7 +7293,7 @@ class Physics:
                 * iotabar**0.41e0
             )
 
-        elif isc == 39:  # DS03 beta-independent H-mode scaling
+        elif i_confinement_time == 39:  # DS03 beta-independent H-mode scaling
             # T. C. Luce, C. C. Petty and J. G. Cordey,
             # Plasma Phys. Control. Fusion 50 (2008) 043001, eqn.4.13, p.67
             tauee = (
@@ -7307,7 +7309,9 @@ class Physics:
                 * m_fuel_amu**0.14e0
             )
 
-        elif isc == 40:  # "Non-power law" (NPL) Murari energy confinement scaling
+        elif (
+            i_confinement_time == 40
+        ):  # "Non-power law" (NPL) Murari energy confinement scaling
             #  Based on the ITPA database of H-mode discharges
             #  A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks
             #  A. Murari et al 2015 Nucl. Fusion 55 073009, doi:10.1088/0029-5515/55/7/073009
@@ -7325,7 +7329,9 @@ class Physics:
                 * h
             )
 
-        elif isc == 41:  # Beta independent dimensionless confinement scaling
+        elif (
+            i_confinement_time == 41
+        ):  # Beta independent dimensionless confinement scaling
             # C.C. Petty 2008 Phys. Plasmas 15, 080501, equation 36
             # Note that there is no dependence on the average fuel mass 'm_fuel_amu'
             tauee = (
@@ -7340,7 +7346,7 @@ class Physics:
                 * aspect ** (-0.84e0)
             )
 
-        elif isc == 42:  # High density relevant confinement scaling
+        elif i_confinement_time == 42:  # High density relevant confinement scaling
             # P.T. Lang et al. 2012, IAEA conference proceeding EX/P4-01
             # q should be q95: incorrect if i_plasma_current = 2 (ST current scaling)
             qratio = q / qstar
@@ -7363,7 +7369,9 @@ class Physics:
                 * nratio ** (-0.22e0 * np.log(nratio))
             )
 
-        elif isc == 43:  # Hubbard et al. 2017 I-mode confinement time scaling - nominal
+        elif (
+            i_confinement_time == 43
+        ):  # Hubbard et al. 2017 I-mode confinement time scaling - nominal
             tauee = (
                 hfact
                 * 0.014e0
@@ -7373,7 +7381,9 @@ class Physics:
                 * powerht ** (-0.29e0)
             )
 
-        elif isc == 44:  # Hubbard et al. 2017 I-mode confinement time scaling - lower
+        elif (
+            i_confinement_time == 44
+        ):  # Hubbard et al. 2017 I-mode confinement time scaling - lower
             tauee = (
                 hfact
                 * 0.014e0
@@ -7383,7 +7393,9 @@ class Physics:
                 * powerht ** (-0.33e0)
             )
 
-        elif isc == 45:  # Hubbard et al. 2017 I-mode confinement time scaling - upper
+        elif (
+            i_confinement_time == 45
+        ):  # Hubbard et al. 2017 I-mode confinement time scaling - upper
             tauee = (
                 hfact
                 * 0.014e0
@@ -7393,7 +7405,7 @@ class Physics:
                 * powerht ** (-0.25e0)
             )
 
-        elif isc == 46:  # NSTX, ELMy H-mode scaling
+        elif i_confinement_time == 46:  # NSTX, ELMy H-mode scaling
             # NSTX scaling with IPB98(y,2) for other variables
             # Menard 2019, Phil. Trans. R. Soc. A 377:20170440
             # Kaye et al. 2006, Nucl. Fusion 46 848
@@ -7410,7 +7422,7 @@ class Physics:
                 * m_fuel_amu**0.19e0
             )
 
-        elif isc == 47:  # NSTX-Petty08 Hybrid
+        elif i_confinement_time == 47:  # NSTX-Petty08 Hybrid
             # Linear interpolation between NSTX and Petty08 in eps
             # Menard 2019, Phil. Trans. R. Soc. A 377:20170440
             if (1.0e0 / aspect) <= 0.4e0:
@@ -7470,7 +7482,7 @@ class Physics:
                     + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * taupetty
                 )
 
-        elif isc == 48:  # NSTX gyro-Bohm (Buxton)
+        elif i_confinement_time == 48:  # NSTX gyro-Bohm (Buxton)
             # P F Buxton et al. 2019 Plasma Phys. Control. Fusion 61 035006
             tauee = (
                 hfact
@@ -7482,10 +7494,10 @@ class Physics:
                 * dnla20 ** (-0.05e0)
             )
 
-        elif isc == 49:  # tauee is an input
+        elif i_confinement_time == 49:  # tauee is an input
             tauee = hfact * physics_variables.tauee_in
 
-        elif isc == 50:  # ITPA20 Issue #3164
+        elif i_confinement_time == 50:  # ITPA20 Issue #3164
             # The updated ITPA global H-mode confinement database: description and analysis
             # G. Verdoolaege et al 2021 Nucl. Fusion 61 076006 DOI 10.1088/1741-4326/abdb91
 
@@ -7519,7 +7531,7 @@ class Physics:
             )
 
         else:
-            error_handling.idiags[0] = isc
+            error_handling.idiags[0] = i_confinement_time
             error_handling.report_error(81)
 
         # Ion energy confinement time

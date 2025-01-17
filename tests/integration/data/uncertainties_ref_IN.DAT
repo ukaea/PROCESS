@@ -276,7 +276,7 @@ tbeta    = 2.0 * Temperature profile index beta  (ipedestal=1)
 teped    = 5.5 * Electron temperature of pedestal (kev) (ipedestal=1)
 tesep    = 0.1 * Electron temperature at separatrix (kev) (ipedestal=1)
 iprofile = 1 * Switch for current profile consistency;
-isc      = 34 * Switch for energy confinement time scaling law
+i_confinement_time      = 34 * Switch for energy confinement time scaling law
 i_plasma_geometry   = 0 * Switch for plasma cross-sectional shape calculation: use input kappa & triang
 *kappa = 1.7808
 kappa = 1.848

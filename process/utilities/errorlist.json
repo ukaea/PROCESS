@@ -413,7 +413,7 @@
     {
       "no": 81,
       "level": 3,
-      "message": "PCOND: Illegal value for isc"
+      "message": "PCOND: Illegal value for i_confinement_time"
     },
     {
       "no": 82,
@@ -1108,7 +1108,7 @@
     {
       "no": 220,
       "level": 1,
-      "message": "CHECK: tauee_in is for use with isc=48 only"
+      "message": "CHECK: tauee_in is for use with i_confinement_time=48 only"
     },
     {
       "no": 221,

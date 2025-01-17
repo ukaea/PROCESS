@@ -30,8 +30,8 @@ calculated plasma resistance is negative.
 ### Inverse Quadrature in $\tau_E$ Scaling Laws
 
 Switch `iinvqd` determines whether the energy confinement time scaling
-laws due to Kaye-Goldston (`isc = 5`) and Goldston (`isc = 9`) should include 
-an inverse quadrature scaling with the Neo-Alcator result (`isc = 1`). A value 
+laws due to Kaye-Goldston (`i_confinement_time = 5`) and Goldston (`i_confinement_time = 9`) should include 
+an inverse quadrature scaling with the Neo-Alcator result (`i_confinement_time = 1`). A value 
 `iinvqd = 1`includes this scaling.
 
 [^1]: M. Kovari, R. Kemp, H. Lux, P. Knight, J. Morris, D.J. Ward, '“PROCESS”: A systems code for fusion power plants—Part 1: Physics' Fusion Engineering and Design 89 (2014) 3054–3069

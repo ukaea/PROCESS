@@ -305,7 +305,7 @@ contains
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
-      fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
+      fpdivlim, beta_poloidal_eps_max, i_confinement_time, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, f_sync_reflect, f_nd_beam_electron, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
@@ -660,8 +660,8 @@ contains
        case ('iradloss')
           call parse_int_variable('iradloss', iradloss, 0, 2, &
                'Switch for radiation loss term inclusion in power balance')
-       case ('isc')
-          call parse_int_variable('isc', isc, 1, ipnlaws, &
+       case ('i_confinement_time')
+          call parse_int_variable('i_confinement_time', i_confinement_time, 1, ipnlaws, &
                'Switch for confinement scaling law')
        case ('i_plasma_wall_gap')
           call parse_int_variable('i_plasma_wall_gap', i_plasma_wall_gap, 0, 1, &
@@ -750,7 +750,7 @@ contains
                'Electron temperature (keV)')
        case ('tauee_in')
            call parse_real_variable('tauee_in', tauee_in, 0.0D0, 100.0D0, &
-                    'Input electron energy confinement time (sec) (isc=48 only)')
+                    'Input electron energy confinement time (sec) (i_confinement_time=48 only)')
        case ('taulimit')
           call parse_real_variable('taulimit', taulimit, 1.0D0, 100.0D0, &
                'Lower limit on taup/taueff the ratio of alpha particle to energy confinement times')

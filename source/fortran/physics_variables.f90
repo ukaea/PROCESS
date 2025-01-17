@@ -418,7 +418,7 @@ module physics_variables
   !! - =2 total power lost is scaling power only, with no additional
   !!   allowance for radiation. This is not recommended for power plant models.
 
-  integer :: isc
+  integer :: i_confinement_time
   !! switch for energy confinement time scaling law (see description in `tauscl`)
 
   character*24, parameter, dimension(ipnlaws) :: tauscl = (/ &
@@ -870,7 +870,7 @@ module physics_variables
   !! electron energy confinement time (sec)
 
   real(dp) :: tauee_in
-  !! Input electron energy confinement time (sec) (`isc=48 only`)
+  !! Input electron energy confinement time (sec) (`i_confinement_time=48 only`)
 
   real(dp) :: taueff
   !! global thermal energy confinement time (sec)
@@ -1050,7 +1050,7 @@ module physics_variables
     tesep = 0.1D0
     iprofile = 1
     iradloss = 1
-    isc = 34
+    i_confinement_time = 34
     i_plasma_wall_gap = 1
     i_plasma_geometry = 0
     i_plasma_shape = 0
