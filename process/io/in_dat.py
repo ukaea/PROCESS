@@ -397,7 +397,7 @@ def get_parameters(data, use_string_values=True):
                         try:
                             float(split_line[0])
                             if len(split_line) > 1:
-                                line_value = ", ".join([entry for entry in split_line])
+                                line_value = ", ".join(list(split_line))
                         except Exception:
                             pass
 
@@ -625,7 +625,7 @@ def add_bound(data, bound, bound_type, bound_value):
     # if the bound is not in the bounds dictionary initialise an empty
     # dictionary and assign new bound
     if bound not in data["bounds"].value.keys():
-        data["bounds"].value[bound] = dict()
+        data["bounds"].value[bound] = {}
         data["bounds"].value[bound][bound_type] = str(bound_value)
 
     # If bound already exists change value
@@ -898,8 +898,8 @@ class InDat:
         self.start_line = start_line
 
         # Initialise parameters
-        self.in_dat_lines = list()
-        self.data = dict()
+        self.in_dat_lines = []
+        self.data = {}
         self.unrecognised_vars = []
         self.duplicates = []  # Duplicate variables
 
@@ -964,7 +964,7 @@ class InDat:
         # doesn't exist
         if "bounds" not in self.data.keys():
             self.data["bounds"] = INVariable(
-                "bounds", dict(), "Bound", "Bound", "Bounds"
+                "bounds", {}, "Bound", "Bound", "Bounds"
             )
 
         # Constraint equations
@@ -1212,7 +1212,7 @@ class InDat:
         # If bound not in the bound dictionary then add entry for bound with an
         # empty dictionary
         if bound not in self.data["bounds"].value.keys():
-            self.data["bounds"].value[bound] = dict()
+            self.data["bounds"].value[bound] = {}
         elif self.data["bounds"].value[bound].get(bound_type):
             # Duplicate bound
             self.add_duplicate_variable(f"bound{bound_type}({bound})")

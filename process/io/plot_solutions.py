@@ -381,7 +381,7 @@ def _plot_solutions(
     # Normalising row may have been filtered out; reset index to ensure
     # opt param names in row 0
     opt_params_names_df_reset = opt_params_names_df.reset_index(drop=True)
-    opt_params_names = opt_params_names_df_reset.loc[0].values.tolist()
+    opt_params_names = opt_params_names_df_reset.loc[0].to_numpy().tolist()
 
     # Need to include tag column as first column header
     opt_params_names_with_tag = opt_params_names.copy()

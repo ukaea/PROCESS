@@ -26,9 +26,10 @@ extend-select = [
     "UP",
     "W",
     "YTT",
+    "PD",
 ]
 
-ignore = ["COM812", "FBT", "G004"]
+ignore = ["COM812", "FBT", "G004", "PD901"]
 
 [lint.per-file-ignores]
 "tests/*" = ["ARG"]
