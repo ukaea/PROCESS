@@ -422,7 +422,7 @@ $$
 \mathtt{xvol} = \mathtt{vout}-\mathtt{vin}
 $$
 
-### Plasma cross-sectional area | `xsecta()`
+### Plasma cross-sectional area | `plasma_cross_section()`
 
 This function finds the plasma cross-sectional area, using the
 revolution of two intersecting arcs around the device centreline.

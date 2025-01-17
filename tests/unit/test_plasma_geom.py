@@ -163,7 +163,7 @@ def test_plasma_volume(
 
 
 @pytest.mark.parametrize(
-    "xi, thetai, xo ,thetao, expected_xsecta",
+    "xi, thetai, xo ,thetao, expected_plasma_cross_section",
     [
         (
             10.261919050584332,
@@ -174,8 +174,10 @@ def test_plasma_volume(
         )
     ],
 )
-def test_xsecta(xi, thetai, xo, thetao, expected_xsecta, plasma):
-    """Tests `xsecta` function.
+def test_plasma_cross_section(
+    xi, thetai, xo, thetao, expected_plasma_cross_section, plasma
+):
+    """Tests `plasma_cross_section()` function.
     :param xi: test asset passed to the routine representing the radius of arc describing inboard surface (m).
     :type xi: float
 
@@ -188,12 +190,12 @@ def test_xsecta(xi, thetai, xo, thetao, expected_xsecta, plasma):
     :param thetao: test asset passed to the routine representing the half-angle of arc describing outboard surface.
     :type thetao: float
 
-    :param expected_xsecta: expected result of the function.
-    :type expected_xsecta: float
+    :param expected_plasma_cross_section: expected result of the function.
+    :type expected_plasma_cross_section: float
     """
-    xsecta = plasma.xsecta(xi, thetai, xo, thetao)
+    plasma_cross_section = plasma.plasma_cross_section(xi, thetai, xo, thetao)
 
-    assert pytest.approx(xsecta) == expected_xsecta
+    assert pytest.approx(plasma_cross_section) == expected_plasma_cross_section
 
 
 @pytest.mark.parametrize(

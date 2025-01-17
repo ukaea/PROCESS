@@ -296,7 +296,9 @@ class PlasmaGeom:
             )
 
             #  Cross-sectional area
-            physics_variables.a_plasma_poloidal = self.xsecta(xi, thetai, xo, thetao)
+            physics_variables.a_plasma_poloidal = self.plasma_cross_section(
+                xi, thetai, xo, thetao
+            )
 
             #  Surface area - sum of inboard and outboard.
             physics_variables.a_plasma_surface = xsi + xso
@@ -444,7 +446,9 @@ class PlasmaGeom:
         return xvol
 
     @staticmethod
-    def xsecta(xi: float, thetai: float, xo: float, thetao: float) -> float:
+    def plasma_cross_section(
+        xi: float, thetai: float, xo: float, thetao: float
+    ) -> float:
         """
         Plasma cross-sectional area calculation
         author: P J Knight, CCFE, Culham Science Centre
@@ -466,11 +470,11 @@ class PlasmaGeom:
         - F/MI/PJK/LOGBOOK14, p.41
         """
 
-        xsecta = xo**2 * (thetao - np.cos(thetao) * np.sin(thetao)) + xi**2 * (
-            thetai - np.cos(thetai) * np.sin(thetai)
-        )
+        plasma_cross_section = xo**2 * (
+            thetao - np.cos(thetao) * np.sin(thetao)
+        ) + xi**2 * (thetai - np.cos(thetai) * np.sin(thetai))
 
-        return xsecta
+        return plasma_cross_section
 
     @staticmethod
     def sauter_geometry(
