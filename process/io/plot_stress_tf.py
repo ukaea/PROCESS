@@ -352,8 +352,8 @@ def main(args=None):
         ii_mids = int(0.5 * float(n_radial_array_layer))
         ii_outs = n_radial_array_layer - 1
 
-        print("")
-        print("")
+        print()
+        print()
         print("Layer stress details")
         print("____________________")
 
@@ -376,7 +376,7 @@ def main(args=None):
                 "steel TRESCA   stress in the inner/middle/out point:"
                 f" {tresca_stress[ii][ii_ins]}/{tresca_stress[ii][ii_mids]}/{tresca_stress[ii][ii_outs]} MPa"
             )
-            print("")
+            print()
             print(
                 "smeared radial   stress in the inner/middle/out point :"
                 f" {radial_smeared_stress[ii][ii_ins]}/{radial_smeared_stress[ii][ii_mids]}/{radial_smeared_stress[ii][ii_outs]} MPa"
@@ -393,7 +393,7 @@ def main(args=None):
                 "smeared TRESCA   stress in the inner/middle/out point :"
                 f" {tresca_smeared_stress[ii][ii_ins]}/{tresca_smeared_stress[ii][ii_mids]}/{tresca_smeared_stress[ii][ii_outs]} MPa"
             )
-            print("")
+            print()
 
             if len(sig_file_data) > 16:
                 print(
@@ -405,14 +405,14 @@ def main(args=None):
                     f" {toroidal_strain[ii][ii_ins]}/{toroidal_strain[ii][ii_mids]}/{toroidal_strain[ii][ii_outs]}"
                 )
                 print(f"vertical strain : {vertical_strain[ii][0]}")
-                print("")
+                print()
 
         if not len(wp_vertical_stress) == 0:
             print(
                 "smeared WP vertical stress in the inner/middle/out point :"
                 f" {wp_vertical_stress[0]}/{wp_vertical_stress[ii_mids]}/{wp_vertical_stress[ii_outs]} MPa"
             )
-        print("")
+        print()
 
     outdir = Path.cwd()
     if not os.path.isdir(outdir):
