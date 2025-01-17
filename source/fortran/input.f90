@@ -661,7 +661,7 @@ contains
           call parse_int_variable('iradloss', iradloss, 0, 2, &
                'Switch for radiation loss term inclusion in power balance')
        case ('i_confinement_time')
-          call parse_int_variable('i_confinement_time', i_confinement_time, 1, ipnlaws, &
+          call parse_int_variable('i_confinement_time', i_confinement_time, 0, ipnlaws, &
                'Switch for confinement scaling law')
        case ('iscrp')
           call parse_int_variable('iscrp', iscrp, 0, 1, &
