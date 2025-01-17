@@ -16,13 +16,11 @@ def run_metadata(temp_data) -> list[RunMetadata]:
     :return: list of solutions and their tags
     :rtype: List[RunMetadata]
     """
-    run_metadata = [
+    return [
         RunMetadata(temp_data / "large_tokamak_1_MFILE.DAT", "large tokamak 1"),
         RunMetadata(temp_data / "large_tokamak_2_MFILE.DAT", "large tokamak 2"),
         RunMetadata(temp_data / "large_tokamak_3_MFILE.DAT", "large tokamak 3"),
     ]
-
-    return run_metadata
 
 
 def test_plot_mfile_solutions(run_metadata: Sequence[RunMetadata]):

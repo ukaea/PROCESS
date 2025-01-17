@@ -30,8 +30,7 @@ def mfile_path(temp_data, mfile_name):
     :return: Path to that scenario's MFile
     :rtype: Path
     """
-    mfile_path = temp_data / mfile_name
-    return mfile_path
+    return temp_data / mfile_name
 
 
 @pytest.fixture

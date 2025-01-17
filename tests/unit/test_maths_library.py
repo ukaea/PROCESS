@@ -15,8 +15,7 @@ def binomial_param(**kwargs):
     defaults = {"n": 1, "k": 1, "expected": 1.0}
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def binomial_params():
@@ -29,13 +28,11 @@ def binomial_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [
+    return [
         binomial_param(),
         binomial_param(n=3, expected=3.0),
         binomial_param(n=3, k=3, expected=1.0),
     ]
-
-    return params
 
 
 @pytest.fixture(params=binomial_params(), ids=["11", "31", "33"])
