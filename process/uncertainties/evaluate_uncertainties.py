@@ -394,10 +394,10 @@ def main(args=None):
     # create list of variables used in MFILE
     # columnDataSet = column_data_list(args)
 
-    dataframe = pd.DataFrame(
+    df = pd.DataFrame(  # noqa: PD901
         data=MFileDataSet, columns=columnDataSet, index=indexDataSet
     )
-    dataframe.to_hdf("uncertainties_data.h5", key="df", mode="w")
+    df.to_hdf("uncertainties_data.h5", key="df", mode="w")
     print("UQ finished!")
 
 
