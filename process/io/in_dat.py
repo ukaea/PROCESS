@@ -13,7 +13,6 @@ Notes:
                 generation script imports, and inspects, process.
 """
 
-import subprocess
 from re import sub
 from sys import stderr
 
@@ -396,10 +395,11 @@ def get_parameters(data, use_string_values=True):
                             split_line = line_value.split(" ")
                         try:
                             float(split_line[0])
+                        except ValueError:
+                            pass
+                        else:
                             if len(split_line) > 1:
                                 line_value = ", ".join(list(split_line))
-                        except Exception:
-                            pass
 
                     else:
                         # Store the parameter value preserving its type
@@ -1472,20 +1472,6 @@ class InDat:
         Return number of itvars
         """
         return len(self.data["ixc"].value)
-
-
-def test(f):
-    """Test function
-
-    :param f: file name to test
-    """
-    try:
-        i = InDat(filename=f)
-        i.write_in_dat(output_filename="test_out_IN.DAT")
-        subprocess.call(["rm", "test_out_IN.DAT"])
-        return True
-    except Exception:
-        return False
 
 
 class StructuredInputData:

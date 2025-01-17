@@ -229,7 +229,7 @@ class ProcessTracker:
             try:
                 # value of var in the mfile
                 variable_data = self.mfile.data[var]
-            except Exception:
+            except KeyError:
                 logger.info(f"{var} is not present in the MFile and will be skipped.")
                 continue
 
@@ -242,7 +242,7 @@ class ProcessTracker:
                 # see tracking_variables docstring
                 try:
                     _, var = var.split(".")
-                except Exception:
+                except (AttributeError, ValueError):
                     logger.warning(
                         f"{var} is a dotted variable and must be in the form OVERRIDINGNAME.VARIABLE"
                     )
@@ -402,9 +402,10 @@ def plot_tracking_data(database):
     for i in ProcessTracker.tracking_variables:
         try:
             overriden_name, variable = i.split(".")
-            overrides[variable] = overriden_name
-        except Exception:
+        except (AttributeError, ValueError):
             continue
+        else:
+            overrides[variable] = overriden_name
 
     for variable, history in loaded_tracking_database_data.tracked_variables.items():
         df = (
