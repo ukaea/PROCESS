@@ -1,5 +1,5 @@
 ---
-exclude: ^.*\.DAT$|.*\.dat$|.*\.tex$|.*\.PPF$|.*\.FLD$|.*\.ps$|ref_dicts.json$|.*.md$
+exclude: ^.*\.DAT$|.*\.dat$|.*\.tex$|.*\.PPF$|.*\.FLD$|.*\.ps$|ref_dicts.json$|.*\.md$
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.2.0
