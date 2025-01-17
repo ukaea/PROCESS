@@ -4,6 +4,7 @@ target-version = "py310"
 [lint]
 extend-select = [
     "ASYNC",
+    "BLE",
     "COM",
     "C4",
     "DTZ",

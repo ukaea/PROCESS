@@ -475,24 +475,3 @@ def is_number(val):
         pass
 
     return False
-
-
-def test(f):
-    """Testing
-
-    :param f: file to test"""
-
-    try:
-        # print(m.data["rmajor"].get_scans())
-        return True
-    except Exception:
-        return False
-    return True
-
-
-# if __name__ == "__main__":
-# filename = sys.argv[1]
-# m = MFile(filename)
-# print(m.data["rmajor"].get_number_of_scans())
-# print(m.data["rmajor"].get_scans())
-# print(m.data["rmajor"].get_scan(2))
