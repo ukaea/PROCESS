@@ -200,7 +200,7 @@ class ProcessConfig:
                         auxvar = auxvar.rstrip()
                         if varname == attributename.upper() and auxvar == "":
                             return None
-                        else:
+                        if varname == attributename.upper() and auxvar != "":
                             return auxvar
         except FileNotFoundError:
             print(f"Error: No config file named {self.filename}", file=stderr)
