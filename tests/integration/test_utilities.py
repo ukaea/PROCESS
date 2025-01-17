@@ -5,6 +5,7 @@ on each of the regression test scenarios.
 """
 
 import logging
+from pathlib import Path
 
 import pytest
 
@@ -45,7 +46,7 @@ def input_file_path(temp_data):
     return temp_data / "large_tokamak_IN.DAT"
 
 
-def test_in_dat_lib(input_file_path):
+def test_in_dat_lib(input_file_path, tmp_path):
     """Test the PROCESS in_dat library.
 
     :param input_file_path: Path to a scenario's input file
@@ -54,8 +55,8 @@ def test_in_dat_lib(input_file_path):
     logger.info("Testing in_dat")
 
     # Test MFile for this scenario
-    try:
-        assert indat.test(str(input_file_path)) is True
-    except AssertionError:
-        logger.error(f"in_dat test for {input_file_path.name} has failed")
-        raise
+    outfile = Path(tmp_path, "test_out_IN.DAT")
+    i = indat.InDat(filename=str(input_file_path))
+    i.write_in_dat(output_filename=outfile.as_posix())
+
+    assert outfile.is_file()
