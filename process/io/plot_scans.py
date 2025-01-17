@@ -654,7 +654,7 @@ def main(args=None):
         ii_jj = 0
         for ii in range(n_scan_1):
             conv_ij.append([])
-            for jj in range(n_scan_2):
+            for _jj in range(n_scan_2):
                 ii_jj += 1  # Represents the scan point number in the MFILE
                 ifail = m_file.data["ifail"].get_scan(ii_jj)
                 if ifail == 1:

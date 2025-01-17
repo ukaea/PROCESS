@@ -627,8 +627,10 @@ class SingleRun:
         and that any relevant switches are set correctly.
         """
         # try and get costs model
-        self.models.costs
-
+        try:
+            _tmp = self.models.costs
+        except ValueError as err:
+            raise ValueError("User-created model not injected correctly") from err
 
 class CostsProtocol(Protocol):
     """Protocol layout for costs models"""

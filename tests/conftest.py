@@ -117,6 +117,7 @@ def precondition(request):
         using a Docker/Singularity container.
         """,
         UserWarning,
+        stacklevel=2
     )
 
 
