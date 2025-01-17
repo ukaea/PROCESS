@@ -6,6 +6,7 @@ import scipy
 import scipy.integrate as integrate
 from scipy.optimize import root_scalar
 
+import process.confinement_time as confinement
 import process.impurity_radiation as impurity_radiation
 import process.physics_functions as physics_funcs
 from process.fortran import (
@@ -6737,7 +6738,9 @@ class Physics:
 
         if isc == 1:  # Neo-Alcator scaling (ohmic)
             # tauee = taueena
-            tauee = hfact * taueena
+            tauee = hfact * confinement.neo_alcator_confinement_time(
+                n20, rminor, rmajor, qstar
+            )
 
         elif isc == 2:  # Mirnov scaling (H-mode)
             tauee = hfact * 0.2e0 * rminor * np.sqrt(kappa95) * pcur
