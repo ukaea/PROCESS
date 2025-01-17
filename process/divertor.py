@@ -44,7 +44,7 @@ class Divertor:
                 output=output,
             )
             return
-        elif dv.i_hldiv == 2:
+        if dv.i_hldiv == 2:
             self.divwade(
                 pv.rmajor,
                 pv.rminor,

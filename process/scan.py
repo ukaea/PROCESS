@@ -51,7 +51,7 @@ class Scan:
         """Run the optimiser."""
         # If no optimisation is required, leave the method
         if numerics.ioptimz < 0:
-            return
+            return None
 
         ifail = self.optimiser.run()
         scan_module.post_optimise(ifail)

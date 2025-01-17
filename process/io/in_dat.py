@@ -122,28 +122,27 @@ def find_line_type(line):
         return "Title"
 
     # If the line is a commented line
-    elif is_comment(line):
+    if is_comment(line):
         return "Comment"
 
     # Else if the line contains a constraint equation
-    elif is_constraint_equation(name):
+    if is_constraint_equation(name):
         return "Constraint Equation"
 
     # Else if the line contains an iteration variable
-    elif is_iteration_variable(name):
+    if is_iteration_variable(name):
         return "Iteration Variable"
 
     # Else if the line contains a bound statement
-    elif is_bound(name):
+    if is_bound(name):
         return "Bound"
 
     # Else all other arrays
-    elif is_array(name):
+    if is_array(name):
         return "Array"
 
     # Else the line contains an regular parameter
-    else:
-        return "Parameter"
+    return "Parameter"
 
 
 def find_parameter_group(name):
@@ -159,7 +158,7 @@ def find_parameter_group(name):
     for key in dicts["DICT_MODULE"]:
         if name in dicts["DICT_MODULE"][key]:
             return key
-
+    return None  # Explicit return
 
 def write_title(title, out_file):
     """Function to write title line to file with fixed width
@@ -663,9 +662,7 @@ def remove_bound(data, bound, bound_type):
 def fortran_float_to_py(f: str) -> str:
     if not isinstance(f, str):
         return f
-    p = sub(r"([0-9]+\.[0-9]+)(?:D|d)([0-9]+)", r"\1e\2", f)
-
-    return p
+    return sub(r"([0-9]+\.[0-9]+)(?:D|d)([0-9]+)", r"\1e\2", f)
 
 
 def parameter_type(name, value):
@@ -695,12 +692,15 @@ def parameter_type(name, value):
             # Convert list to floats, but not if the value is None
 
         # Integer array parameter
-        elif "int_array" in param_type:
+        if "int_array" in param_type:
             return [item if item is None else int(item) for item in value]
             # Convert list to ints, but not if the value is None
 
+        # otherwise, return value
+        return value
+
     # Check if parameter is a string
-    elif isinstance(value, str):
+    if isinstance(value, str):
         # If a real variable just convert to float
         if "real_variable" in param_type:
             # Prepare so float conversion succeeds
@@ -709,7 +709,7 @@ def parameter_type(name, value):
             return float(value)
 
         # If a real array split and make a float list
-        elif "real_array" in param_type:
+        if "real_array" in param_type:
             # Prepare so float conversion succeeds
             value = value.lower()
             value = value.replace("d", "e")
@@ -719,23 +719,21 @@ def parameter_type(name, value):
             return [float(item) for item in value]
 
         # If an integer variable convert to integer
-        elif "int_variable" in param_type:
+        if "int_variable" in param_type:
             return int(value)
 
         # If an integer array split and make an integer list
-        elif "int_array" in param_type:
+        if "int_array" in param_type:
             value = value.split(",")
             if value[-1] == "":
                 value = value[:-1]
             return [int(item) for item in value]
 
         # If type unknown return original value
-        else:
-            return value
+        return value
 
     # If type is other return original value
-    else:
-        return value
+    return value
 
 
 def variable_constraint_type_check(item_number, var_type):
@@ -759,16 +757,15 @@ def variable_constraint_type_check(item_number, var_type):
                 return item_number
 
             # number must be float if exception not raised
-            elif item_number.is_integer():
+            if item_number.is_integer():
                 return int(item_number)
 
             # rounded float number with warning
-            else:
-                print(
-                    f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}."
-                    " Check!"
-                )
-                return int(item_number)
+            print(
+                f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}."
+                " Check!"
+            )
+            return int(item_number)
 
         except ValueError:
             print(
@@ -783,11 +780,10 @@ def variable_constraint_type_check(item_number, var_type):
             return int(item_number)
 
         # If not an integer warn of rounding and return rounded integer
-        else:
-            print(
-                f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}. Check!"
-            )
-            return int(item_number)
+        print(
+            f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}. Check!"
+        )
+        return int(item_number)
 
     # If already an integer return unchanged
     elif isinstance(item_number, int):
@@ -795,7 +791,7 @@ def variable_constraint_type_check(item_number, var_type):
 
     # Value not recognised
     else:
-        print(
+        raise ValueError(
             f"Value {item_number} for {var_type} not a recognised format. Check value!"
         )
 
@@ -832,21 +828,21 @@ def variable_bound_check(bound_number, bound_type):
         return bound_number, bound_type
 
     # If an int convert to string
-    elif isinstance(bound_number, int):
+    if isinstance(bound_number, int):
         return str(bound_number), bound_type
 
     # If a float convert to str but warn of rounding when changing from float
     # to int
-    elif isinstance(bound_number, float):
+    if isinstance(bound_number, float):
         if bound_number.is_integer():
             return int(bound_number), bound_type
-        else:
-            bound_number = int(bound_number)
-            print(
-                f"Bound number {bound_number} not an integer. Value rounded to {int(bound_number)}"
-            )
-            return bound_number, bound_type
+        bound_number = int(bound_number)
+        print(
+            f"Bound number {bound_number} not an integer. Value rounded to {int(bound_number)}"
+        )
+        return bound_number, bound_type
 
+    raise TypeError(f"Unsupported type for bound_number: {type(bound_number)}")
 
 class INVariable:
     def __init__(self, name, value, v_type, parameter_group, comment):
@@ -872,8 +868,7 @@ class INVariable:
         """Return value in correct format"""
         if self.v_type != "Bound":
             return parameter_type(self.name, self.value)
-        else:
-            return self.value
+        return self.value
 
 
 class InDat:

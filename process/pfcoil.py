@@ -1560,9 +1560,7 @@ class PFCoil:
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
-        s_hoop = s_hoop_nom / pfv.oh_steel_frac
-
-        return s_hoop
+        return s_hoop_nom / pfv.oh_steel_frac
 
     def axial_stress(self):
         """Calculation of axial stress of central solenoid.
@@ -2668,13 +2666,12 @@ class PFCoil:
         :return selfinductance: the self inductance in Henries
         :rtype: float
         """
-        selfinductance = (
+        return (
             (1.0e-6 / 0.0254e0)
             * a**2
             * N**2
             / (9.0e0 * a + 10.0e0 * b + 8.4e0 * c + 3.2e0 * c * b / a)
         )
-        return selfinductance
 
     def waveform(self):
         """Sets up the PF coil waveforms.

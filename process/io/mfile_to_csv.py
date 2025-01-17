@@ -73,9 +73,8 @@ def get_vars(vfile="mfile_to_csv_vars.json"):
     with open(vfile) as varfile:
         data = varfile.read()
         obj = json.loads(data)
-        vars = obj["vars"]
 
-    return vars
+    return obj["vars"]
 
 
 def read_mfile(mfilename="MFILE.DAT", vars=[]):
@@ -119,9 +118,7 @@ def get_savenamepath(mfilename="MFILE.DAT"):
     dirname = Path.cwd() if mfilename == "MFILE.DAT" else PurePath(mfilename).parent
 
     csv_filename = PurePath(mfilename).stem
-    csv_outfile = PurePath(dirname, csv_filename + ".csv")
-
-    return csv_outfile
+    return PurePath(dirname, csv_filename + ".csv")
 
 
 def write_to_csv(csv_outfile, output_data=[]):

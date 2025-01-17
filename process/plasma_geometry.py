@@ -375,9 +375,7 @@ class PlasmaGeom:
         thetao = np.arctan(kap / denomo)
         xlo = a * (denomo + 1.0e0 + tri)
 
-        perim = 2.0e0 * (xlo * thetao + xli * thetai)
-
-        return perim
+        return 2.0e0 * (xlo * thetao + xli * thetai)
 
     def xvol(self, rmajor, rminor, xi, thetai, xo, thetao):
         """
@@ -424,10 +422,7 @@ class PlasmaGeom:
             )
         )
 
-        xvol = vout - vin
-        xvol = xvol
-
-        return xvol
+        return vout - vin
 
     def xsecta(self, xi, thetai, xo, thetao):
         """
@@ -443,11 +438,9 @@ class PlasmaGeom:
         F/MI/PJK/LOGBOOK14, p.41
         """
 
-        xsecta = xo**2 * (thetao - np.cos(thetao) * np.sin(thetao)) + xi**2 * (
+        return xo**2 * (thetao - np.cos(thetao) * np.sin(thetao)) + xi**2 * (
             thetai - np.cos(thetai) * np.sin(thetai)
         )
-
-        return xsecta
 
     def fvol(self, r, a, kap, tri):
         """
@@ -490,9 +483,7 @@ class PlasmaGeom:
             * (zn * np.sqrt(rc2**2 - zn**2) + rc2**2 * np.arcsin(zn / rc2))
         )
 
-        fvol = vout - vin
-
-        return fvol
+        return vout - vin
 
     def xsect0(self, a, kap, tri):
         """
@@ -529,9 +520,7 @@ class PlasmaGeom:
 
         #  Find cross-sectional area
 
-        xsect0 = xlo**2 * (thetao - cto * sto) + xli**2 * (thetai - cti * sti)
-
-        return xsect0
+        return xlo**2 * (thetao - cto * sto) + xli**2 * (thetai - cti * sti)
 
     def sauter_geometry(self, a, r0, kap, tri):
         """

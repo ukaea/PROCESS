@@ -36,5 +36,4 @@ def cryostat_geometry(
 
     # rectangle representing horizontal part of cryostat below the midplane
     rect4 = RectangleGeometry(anchor_x=0, anchor_z=-zdewex, width=rdewex, height=-ddwex)
-    return_rects = [rect1, rect2, rect3, rect4]
-    return return_rects
+    return [rect1, rect2, rect3, rect4]

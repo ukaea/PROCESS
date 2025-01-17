@@ -1068,14 +1068,11 @@ class BlanketLibrary:
                     deltap_blo_liq,
                     deltap_bli_liq,
                 ]
-            else:
-                return [deltap_fwi, deltap_fwo, deltap_blo, deltap_blo_liq]
+            return [deltap_fwi, deltap_fwo, deltap_blo, deltap_blo_liq]
 
-        else:
-            if fwbs_variables.iblnkith == 1:
-                return [deltap_fwi, deltap_fwo, deltap_blo, deltap_bli]
-            else:
-                return [deltap_fwi, deltap_fwo, deltap_blo]
+        if fwbs_variables.iblnkith == 1:
+            return [deltap_fwi, deltap_fwo, deltap_blo, deltap_bli]
+        return [deltap_fwi, deltap_fwo, deltap_blo]
 
     def blanket_mod_pol_height(self):
         """Calculations for blanket module poloidal height
@@ -1460,6 +1457,8 @@ class BlanketLibrary:
             return mass_flow_rate / (
                 flow_density * fwbs_variables.a_bz_liq * fwbs_variables.b_bz_liq
             )
+
+        raise ValueError(f"i_channel_shape ={i_channel_shape} is an invalid option.")
 
     def thermo_hydraulic_model(self, output: bool):
         """
@@ -2509,6 +2508,8 @@ class BlanketLibrary:
                 * fwbs_variables.b_bz_liq
                 / (fwbs_variables.a_bz_liq + fwbs_variables.b_bz_liq)
             )
+
+        raise ValueError(f"i_channel_shape ={i_channel_shape} is an invalid option.")
 
     def elbow_coeff(self, r_elbow, ang_elbow, lamda, dh):
         """Function calculates elbow bends coefficients for pressure drop

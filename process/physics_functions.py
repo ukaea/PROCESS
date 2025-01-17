@@ -609,7 +609,7 @@ def psync_albajar_fidone():
     kfun = 0.0
     dum = 0.0
     psync = 0.0
-    psyncpv = 0.0
+    # psyncpv = 0.0
 
     kap = physics_variables.plasma_volume / (
         2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
@@ -660,9 +660,7 @@ def psync_albajar_fidone():
 
     # psyncpv should be per unit volume; Albajar gives it as total
 
-    psyncpv = psync / physics_variables.plasma_volume
-
-    return psyncpv
+    return psync / physics_variables.plasma_volume
 
 
 @dataclass
@@ -722,11 +720,9 @@ def fusion_rate_integral(
 
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
     # just the volume averged ion density.
-    fusion_integral = (
+    return (
         2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
     )
-
-    return fusion_integral
 
 
 def bosch_hale_reactivity(
@@ -1548,9 +1544,8 @@ def _beam_fusion_cross_section(vrelsq: float) -> float:
     # Set limits on cross-section at low and high beam energies
     if beam_energy < 10.0:
         return 1.0e-27
-    elif beam_energy > 1.0e4:
+    if beam_energy > 1.0e4:
         return 8.0e-26
-    else:
-        t1 = a2 / (1.0 + (a3 * beam_energy - a4) ** 2) + a5
-        t2 = beam_energy * (np.exp(a1 / np.sqrt(beam_energy)) - 1.0)
-        return 1.0e-24 * t1 / t2
+    t1 = a2 / (1.0 + (a3 * beam_energy - a4) ** 2) + a5
+    t2 = beam_energy * (np.exp(a1 / np.sqrt(beam_energy)) - 1.0)
+    return 1.0e-24 * t1 / t2
