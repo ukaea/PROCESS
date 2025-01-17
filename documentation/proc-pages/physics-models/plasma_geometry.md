@@ -365,10 +365,23 @@ $$
 
 
 
-### Poloidal perimeter
+### Poloidal perimeter | `plasma_poloidal_perimeter()`
 The poloidal plasma perimtere length `len_plasma_poloidal` is calculated as follows:
+
+| Input Variable | Description                          |
+|----------|--------------------------------------|
+| `xi`       | Radius of arc describing inboard surface [$\text{m}$] |
+| `thetai`   | Half-angle of arc describing inboard surface |
+| `xo`       | Radius of arc describing outboard surface [$\text{m}$] |
+| `thetao`   | Half-angle of arc describing outboard surface |
+
+
+| Output Variable | Description                          |
+|----------|--------------------------------------|
+| `len_plasma_poloidal`       | Plasma poloidal perimeter [$\text{m}$] |
+
 $$
-\mathtt{len_plasma_poloidal} = 2.0 \times (\mathtt{xo} \times \mathtt{thetao} + \mathtt{xi} \times \mathtt{thetai})
+\mathtt{len\_plasma\_poloidal} = 2.0 \times (\mathtt{xo} \times \mathtt{thetao} + \mathtt{xi} \times \mathtt{thetai})
 $$
 
 

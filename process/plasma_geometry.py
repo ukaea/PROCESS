@@ -276,7 +276,9 @@ class PlasmaGeom:
 
         else:
             #  Poloidal perimeter
-            physics_variables.len_plasma_poloidal = 2.0e0 * (xo * thetao + xi * thetai)
+            physics_variables.len_plasma_poloidal = self.plasma_poloidal_perimeter(
+                xi, thetai, xo, thetao
+            )
 
             #  Volume
             physics_variables.vol_plasma = (
@@ -303,7 +305,7 @@ class PlasmaGeom:
 
     @staticmethod
     def plasma_angles_arcs(
-        a: float, kap: float, tri: float
+        a: float, kappa: float, triang: float
     ) -> tuple[float, float, float, float]:
         """
         Routine to find parameters used for calculating geometrical
@@ -313,7 +315,7 @@ class PlasmaGeom:
 
         Parameters:
         a (float): Plasma minor radius (m)
-        kap (float): Plasma separatrix elongation
+        kappa (float): Plasma separatrix elongation
         tri (float): Plasma separatrix triangularity
 
         Returns:
@@ -331,19 +333,37 @@ class PlasmaGeom:
         - F/MI/PJK/LOGBOOK14, p.42
         - F/PL/PJK/PROCESS/CODE/047
         """
-        t = 1.0e0 - tri
-        denomi = (kap**2 - t**2) / (2.0e0 * t)
-        thetai = np.arctan(kap / denomi)
-        xi = a * (denomi + 1.0e0 - tri)
+        t = 1.0e0 - triang
+        denomi = (kappa**2 - t**2) / (2.0e0 * t)
+        thetai = np.arctan(kappa / denomi)
+        xi = a * (denomi + 1.0e0 - triang)
 
         #  Find radius and half-angle of outboard arc
 
-        n = 1.0e0 + tri
-        denomo = (kap**2 - n**2) / (2.0e0 * n)
-        thetao = np.arctan(kap / denomo)
-        xo = a * (denomo + 1.0e0 + tri)
+        n = 1.0e0 + triang
+        denomo = (kappa**2 - n**2) / (2.0e0 * n)
+        thetao = np.arctan(kappa / denomo)
+        xo = a * (denomo + 1.0e0 + triang)
 
         return xi, thetai, xo, thetao
+
+    @staticmethod
+    def plasma_poloidal_perimeter(
+        xi: float, thetai: float, xo: float, thetao: float
+    ) -> float:
+        """
+        Calculate the poloidal perimeter of the plasma.
+
+        Parameters:
+        xi (float): Radius of arc describing inboard surface (m)
+        thetai (float): Half-angle of arc describing inboard surface
+        xo (float): Radius of arc describing outboard surface (m)
+        thetao (float): Half-angle of arc describing outboard surface
+
+        Returns:
+        float: Poloidal perimeter (m)
+        """
+        return 2.0e0 * (xo * thetao + xi * thetai)
 
     @staticmethod
     def xsurf(
