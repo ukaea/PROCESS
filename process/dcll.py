@@ -708,7 +708,10 @@ class DCLL:
                 )
                 + fwbs_variables.fw_armour_mass
                 * (
-                    (physics_variables.a_plasma_surface - physics_variables.sareao)
+                    (
+                        physics_variables.a_plasma_surface
+                        - physics_variables.a_plasma_surface_outboard
+                    )
                     * fwbs_variables.fw_armour_thickness
                     / fwbs_variables.fw_armour_vol
                 )
@@ -720,7 +723,7 @@ class DCLL:
             * (build_variables.fwareaob * build_variables.fwoth / fwbs_variables.volfw)
             + fwbs_variables.fw_armour_mass
             * (
-                physics_variables.sareao
+                physics_variables.a_plasma_surface_outboard
                 * fwbs_variables.fw_armour_thickness
                 / fwbs_variables.fw_armour_vol
             )

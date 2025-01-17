@@ -59,7 +59,7 @@ class StgeomParam(NamedTuple):
 
     a_plasma_surface: Any = None
 
-    sareao: Any = None
+    a_plasma_surface_outboard: Any = None
 
     vol_plasma: Any = None
 
@@ -77,7 +77,7 @@ class StgeomParam(NamedTuple):
 
     expected_a_plasma_surface: Any = None
 
-    expected_sareao: Any = None
+    expected_a_plasma_surface_outboard: Any = None
 
     expected_vol: Any = None
 
@@ -92,7 +92,7 @@ class StgeomParam(NamedTuple):
             rmajor=22,
             rminor=1.7842660178426601,
             a_plasma_surface=0,
-            sareao=0,
+            a_plasma_surface_outboard=0,
             vol_plasma=0,
             a_plasma_poloidal=0,
             bt=5.5,
@@ -101,7 +101,7 @@ class StgeomParam(NamedTuple):
             f_r=0.99099099099099097,
             f_a=0.99125889880147788,
             expected_a_plasma_surface=1925.3641313657533,
-            expected_sareao=962.68206568287667,
+            expected_a_plasma_surface_outboard=962.68206568287667,
             expected_vol=1385.2745877380669,
             expected_a_plasma_poloidal=10.001590778710231,
         ),
@@ -110,7 +110,7 @@ class StgeomParam(NamedTuple):
             rmajor=22,
             rminor=1.7842660178426601,
             a_plasma_surface=1925.3641313657533,
-            sareao=962.68206568287667,
+            a_plasma_surface_outboard=962.68206568287667,
             vol_plasma=1385.2745877380669,
             a_plasma_poloidal=10.001590778710231,
             bt=5.5,
@@ -119,7 +119,7 @@ class StgeomParam(NamedTuple):
             f_r=0.99099099099099097,
             f_a=0.99125889880147788,
             expected_a_plasma_surface=1925.3641313657533,
-            expected_sareao=962.68206568287667,
+            expected_a_plasma_surface_outboard=962.68206568287667,
             expected_vol=1385.2745877380669,
             expected_a_plasma_poloidal=10.001590778710231,
         ),
@@ -148,7 +148,11 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
         physics_variables, "a_plasma_surface", stgeomparam.a_plasma_surface
     )
 
-    monkeypatch.setattr(physics_variables, "sareao", stgeomparam.sareao)
+    monkeypatch.setattr(
+        physics_variables,
+        "a_plasma_surface_outboard",
+        stgeomparam.a_plasma_surface_outboard,
+    )
 
     monkeypatch.setattr(physics_variables, "vol_plasma", stgeomparam.vol_plasma)
 
@@ -180,7 +184,9 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
         stgeomparam.expected_sarea
     )
 
-    assert physics_variables.sareao == pytest.approx(stgeomparam.expected_sareao)
+    assert physics_variables.a_plasma_surface_outboard == pytest.approx(
+        stgeomparam.expected_a_plasma_surface_outboard
+    )
 
     assert physics_variables.vol_plasma == pytest.approx(stgeomparam.expected_vol)
 

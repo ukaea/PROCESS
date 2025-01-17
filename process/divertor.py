@@ -107,7 +107,7 @@ class Divertor:
 
         #  Main plasma separatrix area to divertor (and power fraction)
         # +PJK Is the 2 related to 2 divertors (i.e. double-null assumed)?
-        frgd = (pv.sareao) / (2.0e0 * pv.a_plasma_surface)
+        frgd = (pv.a_plasma_surface_outboard) / (2.0e0 * pv.a_plasma_surface)
         # -PJK
         #  Power flow to divertor
 

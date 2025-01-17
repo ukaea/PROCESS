@@ -851,7 +851,7 @@ module physics_variables
   real(dp) :: a_plasma_surface
   !! plasma surface area
 
-  real(dp) :: sareao
+  real(dp) :: a_plasma_surface_outboard
   !! outboard plasma surface area
 
   integer :: i_single_null
@@ -1139,7 +1139,7 @@ module physics_variables
     res_plasma = 0.0D0
     res_time = 0.0D0
     a_plasma_surface = 0.0D0
-    sareao = 0.0D0
+    a_plasma_surface_outboard = 0.0D0
     i_single_null = 1
     ssync = 0.6D0
     tauee = 0.0D0

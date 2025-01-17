@@ -338,10 +338,10 @@ class Stellarator:
             np.pi * physics_variables.rminor * physics_variables.rminor
         )  # average, could be calculated for every toroidal angle if desired
 
-        #  physics_variables.sareao is retained only for obsolescent fispact calculation...
+        #  physics_variables.a_plasma_surface_outboard is retained only for obsolescent fispact calculation...
 
         #  Cross-sectional area, averaged over toroidal angle
-        physics_variables.sareao = (
+        physics_variables.a_plasma_surface_outboard = (
             0.5e0 * physics_variables.a_plasma_surface
         )  # Used only in the divertor model; approximate as for tokamaks
 

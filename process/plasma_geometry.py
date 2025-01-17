@@ -256,7 +256,7 @@ class PlasmaGeom:
             xo,
             thetao,
         )
-        physics_variables.sareao = xso
+        physics_variables.a_plasma_surface_outboard = xso
 
         # ======================================================================
 
