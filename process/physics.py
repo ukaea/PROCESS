@@ -6736,7 +6736,8 @@ class Physics:
 
         # Electron energy confinement times
 
-        if isc == 1:  # Neo-Alcator scaling (ohmic)
+        # Nec-Alcator(NA) OH scaling
+        if isc == 1:
             # tauee = taueena
             tauee = hfact * confinement.neo_alcator_confinement_time(
                 n20, rminor, rmajor, qstar
@@ -6745,17 +6746,10 @@ class Physics:
         elif isc == 2:  # Mirnov scaling (H-mode)
             tauee = hfact * 0.2e0 * rminor * np.sqrt(kappa95) * pcur
 
-        elif isc == 3:  # Merezhkin-Muhkovatov scaling (L-mode)
-            tauee = (
-                hfact
-                * 3.5e-3
-                * rmajor**2.75e0
-                * rminor**0.25e0
-                * kappa95**0.125e0
-                * qstar
-                * dnla20
-                * np.sqrt(m_fuel_amu)
-                / np.sqrt(ten / 10.0e0)
+        # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
+        elif isc == 3:
+            tauee = hfact * confinement.merezhkin_muhkovatov_confinement_time(
+                rmajor, rminor, kappa95, qstar, dnla20, afuel, ten
             )
 
         elif isc == 4:  # Shimomura scaling (H-mode)
