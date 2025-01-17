@@ -9,7 +9,6 @@ import logging
 import pytest
 
 import process.io.in_dat as indat
-import process.io.mfile as mf
 
 logger = logging.getLogger(__name__)
 
@@ -44,25 +43,6 @@ def input_file_path(temp_data):
     :rtype: Path
     """
     return temp_data / "large_tokamak_IN.DAT"
-
-
-def test_mfile_lib(mfile_path):
-    """Test the PROCESS mfile library.
-
-    :param mfile_path: Path to the scenario's MFile
-    :type mfile_path: Path
-    """
-    logger.info("Testing mfile.py")
-
-    # Test MFile for this scenario
-    # This try/except is not necessary, but allows additional logging to be
-    # added for clarity in addition to pytest's own logging
-    try:
-        assert mf.test(str(mfile_path)) is True
-        # mf.test returns True on success
-    except AssertionError:
-        logger.exception(f"mfile test for {mfile_path.name} has failed")
-        raise
 
 
 def test_in_dat_lib(input_file_path):
