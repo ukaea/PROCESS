@@ -632,6 +632,7 @@ class SingleRun:
         except ValueError as err:
             raise ValueError("User-created model not injected correctly") from err
 
+
 class CostsProtocol(Protocol):
     """Protocol layout for costs models"""
 

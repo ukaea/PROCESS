@@ -364,7 +364,8 @@ def check_process():
             warn(
                 f"Temperature pedestal is at plasma edge, but teped "
                 f"({fortran.physics_variables.teped}) differs from tesep "
-                f"({fortran.physics_variables.tesep})"
+                f"({fortran.physics_variables.tesep})",
+                stacklevel=2,
             )
 
         # Core temperature should always be calculated (later) as being
@@ -376,7 +377,8 @@ def check_process():
             warn(
                 f"Volume-averaged temperature ({fortran.physics_variables.te}) has been "
                 f"forced to exceed input pedestal height ({fortran.physics_variables.teped}). "
-                "Changing to te = teped*1.001"
+                "Changing to te = teped*1.001",
+                stacklevel=2,
             )
             fortran.physics_variables.te = fortran.physics_variables.teped * 1.001
 
@@ -386,7 +388,8 @@ def check_process():
             and fortran.numerics.boundl[3] < fortran.physics_variables.teped * 1.001
         ):
             warn(
-                "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped"
+                "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped",
+                stacklevel=2,
             )
             fortran.numerics.boundl[3] = fortran.physics_variables.teped * 1.001
             fortran.numerics.boundu[3] = max(
@@ -418,8 +421,8 @@ def check_process():
                     "Density pedestal is at plasma edge "
                     f"({fortran.physics_variables.rhopedn = }), but neped "
                     f"({fortran.physics_variables.neped}) differs from "
-                    f"nesep ({fortran.physics_variables.nesep})"
-                    stacklevel=2
+                    f"nesep ({fortran.physics_variables.nesep})",
+                    stacklevel=2,
                 )
 
         # Issue #862 : Variable ne0/neped ratio without constraint eq 81 (ne0>neped)
@@ -434,11 +437,14 @@ def check_process():
             ).any()
         ):
             if (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any():
-                warn("neped set with fgwped without constraint eq 81 (neped<ne0)")
+                warn(
+                    "neped set with fgwped without constraint eq 81 (neped<ne0)",
+                    stacklevel=2,
+                )
             if (fortran.numerics.ixc[: fortran.numerics.nvar] == 6).any():
                 warn(
                     "dene used as iteration variable without constraint 81 (neped<ne0)",
-                    stacklevel=2
+                    stacklevel=2,
                 )
 
     # Cannot use Psep/R and PsepB/qAR limits at the same time
@@ -485,7 +491,7 @@ def check_process():
         ):
             warn(
                 "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model",
-                stacklevel=2
+                stacklevel=2,
             )
 
     if fortran.physics_variables.i_single_null == 0:
@@ -513,7 +519,7 @@ def check_process():
         ):
             warn(
                 "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used",
-                stacklevel=2
+                stacklevel=2,
             )
 
         # If using Peng and Strickler (1986) model (itartpf == 0)
@@ -555,7 +561,7 @@ def check_process():
         elif fortran.tfcoil_variables.i_tf_sup == 1:
             warn(
                 "Joints res not cal. for SC (itart = 1) TF (fortran.tfcoil_variables.i_tf_sup = 1)",
-                stacklevel=2
+                stacklevel=2,
             )
 
         # Aluminium magnets initalisation / checks
@@ -1025,13 +1031,13 @@ def check_process():
             warn(
                 "tmargmin_tf and tmargmin should not both be specified in IN.DAT "
                 "tmargmin_tf has been ignored",
-                stacklevel=2
+                stacklevel=2,
             )
         if fortran.tfcoil_variables.tmargmin_cs > 0.0001:
             warn(
                 "tmargmin_cs and tmargmin should not both be specified in IN.DAT "
                 "tmargmin_cs has been ignored",
-                stacklevel=2
+                stacklevel=2,
             )
 
         fortran.tfcoil_variables.tmargmin_tf = fortran.tfcoil_variables.tmargmin

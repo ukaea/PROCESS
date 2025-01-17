@@ -2,7 +2,12 @@
 
 
 def AnnotatedVariable(
-    tp: type, *args, docstring: str = "", units: str = "", __kwargs: dict = None, **kwargs
+    tp: type,
+    *args,
+    docstring: str = "",
+    units: str = "",
+    __kwargs: dict | None = None,
+    **kwargs,
 ):
     """Provides a wrapper around the instantiation of a variable to allow variables to be type hinted. This should be done on physics and engineering class variables to allow for their inclusion in 'the Dictionaries'.
 
@@ -25,7 +30,7 @@ def AnnotatedVariable(
     :param **kwargs: keyword arguments provided to the constructor of the type
     """
     if __kwargs is None:
-       __kwargs = {}
+        __kwargs = {}
 
     if not isinstance(tp, type):
         raise TypeError(f'Argument type_ must be of type "type" not {type(tp)}')
