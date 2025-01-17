@@ -61,13 +61,13 @@ class StgeomParam(NamedTuple):
 
     sareao: Any = None
 
-    plasma_volume: Any = None
+    vol_plasma: Any = None
 
     a_plasma_poloidal: Any = None
 
     bt: Any = None
 
-    stella_config_plasma_volume: Any = None
+    stella_config_vol_plasma: Any = None
 
     stella_config_plasma_surface: Any = None
 
@@ -93,10 +93,10 @@ class StgeomParam(NamedTuple):
             rminor=1.7842660178426601,
             a_plasma_surface=0,
             sareao=0,
-            plasma_volume=0,
+            vol_plasma=0,
             a_plasma_poloidal=0,
             bt=5.5,
-            stella_config_plasma_volume=1422.6300000000001,
+            stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
             f_r=0.99099099099099097,
             f_a=0.99125889880147788,
@@ -111,10 +111,10 @@ class StgeomParam(NamedTuple):
             rminor=1.7842660178426601,
             a_plasma_surface=1925.3641313657533,
             sareao=962.68206568287667,
-            plasma_volume=1385.2745877380669,
+            vol_plasma=1385.2745877380669,
             a_plasma_poloidal=10.001590778710231,
             bt=5.5,
-            stella_config_plasma_volume=1422.6300000000001,
+            stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
             f_r=0.99099099099099097,
             f_a=0.99125889880147788,
@@ -150,7 +150,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "sareao", stgeomparam.sareao)
 
-    monkeypatch.setattr(physics_variables, "plasma_volume", stgeomparam.plasma_volume)
+    monkeypatch.setattr(physics_variables, "vol_plasma", stgeomparam.vol_plasma)
 
     monkeypatch.setattr(
         physics_variables, "a_plasma_poloidal", stgeomparam.a_plasma_poloidal
@@ -160,8 +160,8 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(
         stellarator_configuration,
-        "stella_config_plasma_volume",
-        stgeomparam.stella_config_plasma_volume,
+        "stella_config_vol_plasma",
+        stgeomparam.stella_config_vol_plasma,
     )
 
     monkeypatch.setattr(
@@ -182,7 +182,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     assert physics_variables.sareao == pytest.approx(stgeomparam.expected_sareao)
 
-    assert physics_variables.plasma_volume == pytest.approx(stgeomparam.expected_vol)
+    assert physics_variables.vol_plasma == pytest.approx(stgeomparam.expected_vol)
 
     assert physics_variables.a_plasma_poloidal == pytest.approx(
         stgeomparam.expected_a_plasma_poloidal
@@ -2680,7 +2680,7 @@ class StCalcEffChiParam(NamedTuple):
 
     alphat: Any = None
 
-    plasma_volume: Any = None
+    vol_plasma: Any = None
 
     a_plasma_surface: Any = None
 
@@ -2706,7 +2706,7 @@ class StCalcEffChiParam(NamedTuple):
             pcoreradpv=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
-            plasma_volume=1385.8142655379029,
+            vol_plasma=1385.8142655379029,
             a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
             coreradius=0.60000000000000009,
@@ -2723,7 +2723,7 @@ class StCalcEffChiParam(NamedTuple):
             pcoreradpv=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
-            plasma_volume=1385.8142655379029,
+            vol_plasma=1385.8142655379029,
             a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
             coreradius=0.60000000000000009,
@@ -2767,9 +2767,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "alphat", stcalceffchiparam.alphat)
 
-    monkeypatch.setattr(
-        physics_variables, "plasma_volume", stcalceffchiparam.plasma_volume
-    )
+    monkeypatch.setattr(physics_variables, "vol_plasma", stcalceffchiparam.vol_plasma)
 
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", stcalceffchiparam.a_plasma_surface

@@ -39,7 +39,7 @@ class SetFusionPowersParam(NamedTuple):
 
     tin: Any = None
 
-    plasma_volume: Any = None
+    vol_plasma: Any = None
 
     alpha_power_density_plasma: Any = None
 
@@ -76,7 +76,7 @@ class SetFusionPowersParam(NamedTuple):
             f_alpha_ion=0.32,
             alpha_power_beams=0,
             charged_power_density=0.00066,
-            plasma_volume=2426.25,
+            vol_plasma=2426.25,
             alpha_power_density_plasma=0.163,
             neutron_power_density_plasma=0.654,
             expected_alpha_power_density=0.163,
@@ -96,7 +96,7 @@ class SetFusionPowersParam(NamedTuple):
             f_alpha_ion=0.32,
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
-            plasma_volume=2426.25,
+            vol_plasma=2426.25,
             alpha_power_density_plasma=0.163,
             neutron_power_density_plasma=0.654,
             expected_alpha_power_density=0.20442195,
@@ -116,7 +116,7 @@ class SetFusionPowersParam(NamedTuple):
             f_alpha_ion=0.32,
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
-            plasma_volume=2426.25,
+            vol_plasma=2426.25,
             alpha_power_density_plasma=0.163,
             neutron_power_density_plasma=0.654,
             expected_alpha_power_density=0.20442195,
@@ -136,7 +136,7 @@ class SetFusionPowersParam(NamedTuple):
             f_alpha_ion=0.32,
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
-            plasma_volume=2426.25,
+            vol_plasma=2426.25,
             alpha_power_density_plasma=0.163,
             neutron_power_density_plasma=0.654,
             expected_alpha_power_density=0.20442195,
@@ -184,7 +184,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         alpha_power_beams=setfusionpowersparam.alpha_power_beams,
         charged_power_density=setfusionpowersparam.charged_power_density,
         neutron_power_density_plasma=setfusionpowersparam.neutron_power_density_plasma,
-        plasma_volume=setfusionpowersparam.plasma_volume,
+        vol_plasma=setfusionpowersparam.vol_plasma,
         alpha_power_density_plasma=setfusionpowersparam.alpha_power_density_plasma,
     )
 

@@ -17,7 +17,7 @@ HELIAS5B = {
     "coilspermodule": 10,
     "a1": 0.688,
     "a2": 0.025,
-    "plasma_volume": 1422.63,  # This value is for Helias 5
+    "vol_plasma": 1422.63,  # This value is for Helias 5
     "dmin": 0.84,
     "max_portsize_width": 2.12,
     "plasma_surface": 1960.0,  # Plasma Surface
@@ -59,7 +59,7 @@ HELIAS4 = {
     "coilspermodule": 10,
     "a1": 0.676,
     "a2": 0.029,
-    "plasma_volume": 1380.0,
+    "vol_plasma": 1380.0,
     "dmin": 1.08,
     "max_portsize_width": 3.24,
     "plasma_surface": 1900.0,
@@ -101,7 +101,7 @@ HELIAS3 = {
     # Bmax fit parameters
     "a1": 0.56,
     "a2": 0.030,
-    "plasma_volume": 1300.8,
+    "vol_plasma": 1300.8,
     "dmin": 1.145,
     "max_portsize_width": 3.24,  # ??? guess. not ready yet
     "plasma_surface": 1600.00,
@@ -142,7 +142,7 @@ W7X30 = {
     "coilspermodule": 6,
     "a1": 0.98,
     "a2": 0.041,
-    "plasma_volume": 26.4,
+    "vol_plasma": 26.4,
     "dmin": 0.21,
     "max_portsize_width": 0.5,
     "plasma_surface": 128.3,
@@ -183,7 +183,7 @@ W7X50 = {
     "coilspermodule": 10,
     "a1": 0.66,
     "a2": 0.025,
-    "plasma_volume": 26.4,
+    "vol_plasma": 26.4,
     "dmin": 0.28,
     "max_portsize_width": 0.3,
     "plasma_surface": 128.3,

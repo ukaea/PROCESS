@@ -267,7 +267,7 @@ class PlasmaGeom:
                 physics_variables.sf,
                 physics_variables.a_plasma_surface,
                 physics_variables.a_plasma_poloidal,
-                physics_variables.plasma_volume,
+                physics_variables.vol_plasma,
             ) = self.sauter_geometry(
                 physics_variables.rminor,
                 physics_variables.rmajor,
@@ -283,7 +283,7 @@ class PlasmaGeom:
             )
 
             #  Volume
-            physics_variables.plasma_volume = physics_variables.cvol * self.xvol(
+            physics_variables.vol_plasma = physics_variables.cvol * self.xvol(
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 xi,
@@ -486,7 +486,7 @@ class PlasmaGeom:
                     - sf (float): Geometric factor
                     - a_plasma_surface (float): Surface area
                     - a_plasma_poloidal (float): Cross-section area
-                    - plasma_volume (float): Plasma volume
+                    - vol_plasma (float): Plasma volume
 
                 Notes:
 
@@ -525,16 +525,14 @@ class PlasmaGeom:
         a_plasma_poloidal = np.pi * a**2 * kappa * (1 + 0.52 * (w07 - 1))
 
         # Volume
-        plasma_volume = (
-            2.0e0 * np.pi * r0 * (1 - 0.25 * triang * eps) * a_plasma_poloidal
-        )
+        vol_plasma = 2.0e0 * np.pi * r0 * (1 - 0.25 * triang * eps) * a_plasma_poloidal
 
         return (
             len_plasma_poloidal,
             sf,
             a_plasma_surface,
             a_plasma_poloidal,
-            plasma_volume,
+            vol_plasma,
         )
 
 

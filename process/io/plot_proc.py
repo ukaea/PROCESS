@@ -2348,7 +2348,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("triang95", r"$\delta_{95}$", ""),
         ("a_plasma_surface", "Plasma surface area", "m$^2$"),
         ("a_plasma_poloidal", "Plasma cross-sectional area", "m$^2$"),
-        ("plasma_volume", "Plasma volume", "m$^3$"),
+        ("vol_plasma", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
         ("inboard_build", "Inboard build thickness", "m"),
@@ -3515,10 +3515,10 @@ def main(args=None):
     # rad profile
     global ssync
     global bt
-    global plasma_volume
+    global vol_plasma
     ssync = m_file.data["ssync"].get_scan(scan)
     bt = m_file.data["bt"].get_scan(scan)
-    plasma_volume = m_file.data["plasma_volume"].get_scan(scan)
+    vol_plasma = m_file.data["vol_plasma"].get_scan(scan)
 
     # Build the dictionaries of radial and vertical build values and cumulative values
     global vertical_upper
