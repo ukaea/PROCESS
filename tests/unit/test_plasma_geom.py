@@ -4,6 +4,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
+import process.plasma_geometry as pg
 from process.plasma_geometry import PlasmaGeom
 
 
@@ -95,7 +96,7 @@ def test_xparam(xparamparam, monkeypatch, plasma):
         )
     ],
 )
-def test_perim(a, kap, tri, expected_perim, plasma):
+def test_perim(a, kap, tri, expected_perim):
     """Tests `perim` function.
 
     :param a: test asset passed to the routine representing the plasma minor radius, in meters.
@@ -110,7 +111,7 @@ def test_perim(a, kap, tri, expected_perim, plasma):
     :param expected_perim: expected result of the function.
     :type expected_perim: float
     """
-    perim = plasma.perim(a, kap, tri)
+    perim = pg.perim(a, kap, tri)
 
     assert pytest.approx(perim) == expected_perim
 
@@ -203,7 +204,7 @@ def test_xsecta(xi, thetai, xo, thetao, expected_xsecta, plasma):
         )
     ],
 )
-def test_fvol(r, a, kap, tri, expected_fvol, plasma):
+def test_fvol(r, a, kap, tri, expected_fvol):
     """Tests `fvol` function.
     :param r: test asset passed to the routine representing the plasma major radius, in meters.
     :type r: float
@@ -221,7 +222,7 @@ def test_fvol(r, a, kap, tri, expected_fvol, plasma):
     :type expected_fvol: float
 
     """
-    fvol = plasma.fvol(r, a, kap, tri)
+    fvol = pg.fvol(r, a, kap, tri)
 
     assert pytest.approx(fvol) == expected_fvol
 
@@ -237,7 +238,7 @@ def test_fvol(r, a, kap, tri, expected_fvol, plasma):
         )
     ],
 )
-def test_xsect0(a, kap, tri, expected_xsect0, plasma):
+def test_xsect0(a, kap, tri, expected_xsect0):
     """Tests `xsect0` function.
 
     :param a: test asset passed to the routine representing the plasma minor radius, in meters.
@@ -253,7 +254,7 @@ def test_xsect0(a, kap, tri, expected_xsect0, plasma):
     :type expected_xsect0: float
 
     """
-    xsect0 = plasma.xsect0(a, kap, tri)
+    xsect0 = pg.xsect0(a, kap, tri)
 
     assert pytest.approx(xsect0) == expected_xsect0
 
@@ -363,7 +364,7 @@ class SurfaParam(NamedTuple):
         ),
     ),
 )
-def test_surfa(surfaparam, monkeypatch, plasma):
+def test_surfa(surfaparam, monkeypatch):
     """
     Automatically generated Regression Unit Test for surfa.
 
@@ -376,9 +377,7 @@ def test_surfa(surfaparam, monkeypatch, plasma):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    sa, so = plasma.surfa(
-        a=surfaparam.a, r=surfaparam.r, k=surfaparam.k, d=surfaparam.d
-    )
+    sa, so = pg.surfa(a=surfaparam.a, r=surfaparam.r, k=surfaparam.k, d=surfaparam.d)
 
     assert sa == pytest.approx(surfaparam.expected_sa)
 
