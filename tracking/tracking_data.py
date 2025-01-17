@@ -324,7 +324,7 @@ class TrackedVariable:
         data -> value
         message -> annotation
         """
-        df = pd.DataFrame(self._data)  # noqa: PD901
+        df = pd.DataFrame(self._data)
         df.columns = ("title", "date", "value", "commit", "commit_id")
 
         return df
@@ -407,12 +407,12 @@ def plot_tracking_data(database):
             continue
 
     for variable, history in loaded_tracking_database_data.tracked_variables.items():
-        df = (  # noqa: PD901
+        df = (
             history.as_dataframe()
         )  # all the data for one tracked variable as a dataframe
 
         # order by date to avoid polygons all over the plot
-        df = df.sort_values("date", ascending=True)  # noqa: PD901
+        df = df.sort_values("date", ascending=True)
 
         # overrides trumps fortran scrapping
         parent = overrides.get(
