@@ -216,7 +216,7 @@ triang = 0.5
 * DESCRIPTION:   Margin to vertical stability (ishape = 10)
 * JUSTIFICATION: Not used, not using ishape=10
 
-*cvol = 1.0
+*f_vol_plasma = 1.0
 * DESCRIPTION:   Plasma volume multiplier
 * JUSTIFICATION: Not scaling plasma volume
 

@@ -304,7 +304,7 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, cvol, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
+      rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
       fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
@@ -557,8 +557,8 @@ contains
             case ('csawth')
           call parse_real_variable('csawth', csawth, 0.0D0, 10.0D0, &
                'Coefficient for sawteeth effects')
-       case ('cvol')
-          call parse_real_variable('cvol', cvol, 0.01D0, 10.0D0, &
+       case ('f_vol_plasma')
+          call parse_real_variable('f_vol_plasma', f_vol_plasma, 0.01D0, 10.0D0, &
                'Plasma volume multiplier')
        case ('cwrmax')
           call parse_real_variable('cwrmax', cwrmax, 1.0D0, 3.0D0, &

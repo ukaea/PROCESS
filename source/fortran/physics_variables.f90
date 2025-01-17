@@ -125,8 +125,8 @@ module physics_variables
   real(dp) :: csawth
   !! coeff. for sawteeth effects on burn V-s requirement
 
-  real(dp) :: cvol
-  !! multiplying factor times plasma volume (normally=1)
+  real(dp) :: f_vol_plasma
+  !! multiplying factor for the plasma volume (normally=1)
 
   real(dp) :: cwrmax
   !! maximum ratio of conducting wall distance to plasma minor radius for
@@ -977,7 +977,7 @@ module physics_variables
     bvert = 0.0D0
     c_beta = 0.5D0
     csawth = 1.0D0
-    cvol = 1.0D0
+    f_vol_plasma = 1.0D0
     cwrmax = 1.35D0
     dene = 9.8D19
     deni = 0.0D0

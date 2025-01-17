@@ -1580,7 +1580,7 @@
         "curpff": 0.0,
         "curpfs": 0.0,
         "curr1_": "e_*vte1_",
-        "cvol": 1.0,
+        "f_vol_plasma": 1.0,
         "cwrmax": 1.35,
         "czero": "(0.0_wp_, 0.0_wp_)",
         "d_vv_bot": 0.07,
@@ -9246,7 +9246,7 @@
         "curpff": "PF coil current array, at flat top (MA)\n Indexed by coil number, not group number",
         "curpfs": "PF coil current array, at end of pulse (MA)\n Indexed by coil number, not group number",
         "curr1_": "",
-        "cvol": "multiplying factor times plasma volume (normally=1)",
+        "f_vol_plasma": "multiplying factor times plasma volume (normally=1)",
         "cwrmax": "maximum ratio of conducting wall distance to plasma minor radius for\n vertical stability (`constraint equation 23`)",
         "czero": "",
         "d_vv_bot": "vacuum vessel underside thickness (TF coil / shield) (m)",
@@ -12117,7 +12117,7 @@
             "lb": 100.0,
             "ub": 1000.0
         },
-        "cvol": {
+        "f_vol_plasma": {
             "lb": 0.01,
             "ub": 10.0
         },
@@ -19088,7 +19088,7 @@
             "burnup",
             "bvert",
             "csawth",
-            "cvol",
+            "f_vol_plasma",
             "cwrmax",
             "dene",
             "deni",
@@ -20153,7 +20153,7 @@
         "csawth": "real_variable",
         "csi": "real_variable",
         "cturbb": "real_variable",
-        "cvol": "real_variable",
+        "f_vol_plasma": "real_variable",
         "cwrmax": "real_variable",
         "d_vv_bot": "real_variable",
         "d_vv_in": "real_variable",

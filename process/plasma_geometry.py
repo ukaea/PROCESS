@@ -283,7 +283,7 @@ class PlasmaGeom:
             )
 
             #  Volume
-            physics_variables.vol_plasma = physics_variables.cvol * self.xvol(
+            physics_variables.vol_plasma = physics_variables.f_vol_plasma * self.xvol(
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 xi,

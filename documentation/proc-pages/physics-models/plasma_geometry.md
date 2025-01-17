@@ -386,7 +386,7 @@ $$
 ### Plasma Volume | `xvol()`
 
 The plasma volume is calculated using the `xvol` method with the inputted $R_0$ & $a$ along with the outputs of `plasma_angles_arcs()`.
-The `cvol` iteration variable can be used to scale this output
+The `f_vol_plasma` iteration variable can be used to scale this output
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
