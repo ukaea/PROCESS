@@ -668,7 +668,7 @@ class DCLL:
         fwbs_variables.fwmass = dcll_module.fwmass_stl + dcll_module.fwmass_cool
         # First wall armour volume (m^3)
         fwbs_variables.fw_armour_vol = (
-            physics_variables.sarea * fwbs_variables.fw_armour_thickness
+            physics_variables.a_plasma_surface * fwbs_variables.fw_armour_thickness
         )
         # First wall armour mass (kg)
         fwbs_variables.fw_armour_mass = (
@@ -708,7 +708,7 @@ class DCLL:
                 )
                 + fwbs_variables.fw_armour_mass
                 * (
-                    (physics_variables.sarea - physics_variables.sareao)
+                    (physics_variables.a_plasma_surface - physics_variables.sareao)
                     * fwbs_variables.fw_armour_thickness
                     / fwbs_variables.fw_armour_vol
                 )

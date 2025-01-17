@@ -4901,7 +4901,7 @@
             "'not used'"
         ],
         "s_tresca_oh": 0.0,
-        "sarea": 0.0,
+        "a_plasma_surface": 0.0,
         "sareao": 0.0,
         "scafc": [
             0.0,
@@ -10595,7 +10595,7 @@
         "s_kref": "",
         "s_label": "",
         "s_tresca_oh": "Maximum shear stress (Tresca criterion) coils/central solenoid [MPa]",
-        "sarea": "plasma surface area",
+        "a_plasma_surface": "plasma surface area",
         "sareao": "outboard plasma surface area",
         "scafc": "",
         "scale": "",
@@ -19251,7 +19251,7 @@
             "rpfac",
             "res_plasma",
             "res_time",
-            "sarea",
+            "a_plasma_surface",
             "sareao",
             "sf",
             "i_single_null",

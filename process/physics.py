@@ -2078,7 +2078,7 @@ class Physics:
             physics_variables.wallmw = (
                 physics_variables.ffwal
                 * physics_variables.neutron_power_total
-                / physics_variables.sarea
+                / physics_variables.a_plasma_surface
             )
         else:
             if physics_variables.idivrt == 2:
@@ -2151,7 +2151,7 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.kappa,
-            physics_variables.sarea,
+            physics_variables.a_plasma_surface,
             physics_variables.aion,
             physics_variables.aspect,
             physics_variables.plasma_current,
@@ -2221,7 +2221,7 @@ class Physics:
             physics_variables.q95,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.sarea,
+            physics_variables.a_plasma_surface,
             physics_variables.zeff,
         )
 
@@ -2378,7 +2378,7 @@ class Physics:
             physics_variables.photon_wall = (
                 physics_variables.ffwal
                 * physics_variables.pradmw
-                / physics_variables.sarea
+                / physics_variables.a_plasma_surface
             )
         else:
             if physics_variables.idivrt == 2:
@@ -2532,7 +2532,7 @@ class Physics:
         q95: float,
         rmajor: float,
         rminor: float,
-        sarea: float,
+        a_plasma_surface: float,
         zeff: float,
     ) -> tuple[np.ndarray, float]:
         """
@@ -2549,7 +2549,7 @@ class Physics:
             q95 (float): Safety factor at 95% surface.
             rmajor (float): Plasma major radius (m).
             rminor (float): Plasma minor radius (m).
-            sarea (float): Plasma surface area (m^2).
+            a_plasma_surface (float): Plasma surface area (m^2).
             zeff (float): Plasma effective charge.
 
         Returns:
@@ -2582,7 +2582,7 @@ class Physics:
         # Power per unit area crossing the plasma edge
         # (excludes radiation and neutrons)
 
-        p_perp = pdivt / sarea
+        p_perp = pdivt / a_plasma_surface
 
         # Old ASDEX density limit formula
         # This applies to the density at the plasma edge, so must be scaled
@@ -3501,8 +3501,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Plasma surface area (m2)",
-                "(sarea)",
-                physics_variables.sarea,
+                "(a_plasma_surface)",
+                physics_variables.a_plasma_surface,
                 "OP ",
             )
             po.ovarre(
@@ -7439,7 +7439,18 @@ def res_diff_time(rmajor, res_plasma, kappa95):
     return 2 * constants.rmu0 * rmajor / (res_plasma * kappa95)
 
 
-def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_current):
+def pthresh(
+    dene,
+    dnla,
+    bt,
+    rmajor,
+    rminor,
+    kappa,
+    a_plasma_surface,
+    aion,
+    aspect,
+    plasma_current,
+):
     """L-mode to H-mode power threshold calculation
 
     Author: P J Knight, CCFE, Culham Science Centre
@@ -7459,7 +7470,7 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
     :param rmajor: plasma major radius (m)
     :param rminor: plasma minor radius (m)
     :param kappa: plasma elongation
-    :param sarea: plasma surface area (m2)
+    :param a_plasma_surface: plasma surface area (m2)
     :param aion: average mass of all ions (amu)
     :param aspect: aspect ratio
     :param plasma_current: plasma current (A)
@@ -7489,13 +7500,13 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
 
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
-    martin = 0.0488 * dnla20**0.717 * bt**0.803 * sarea**0.941 * (2.0 / aion)
+    martin = 0.0488 * dnla20**0.717 * bt**0.803 * a_plasma_surface**0.941 * (2.0 / aion)
     martin_error = (
         np.sqrt(
             0.057**2
             + (0.035 * np.log(dnla20)) ** 2
             + (0.032 * np.log(bt)) ** 2
-            + (0.019 * np.log(sarea)) ** 2
+            + (0.019 * np.log(a_plasma_surface)) ** 2
         )
         * martin
     )
@@ -7525,7 +7536,7 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
     hubbard_2012_ub = 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
 
     # Hubbard et al. 2017 L-I threshold scaling
-    hubbard_2017 = 0.162 * dnla20 * sarea * (bt) ** 0.26
+    hubbard_2017 = 0.162 * dnla20 * a_plasma_surface * (bt) ** 0.26
 
     pthrmw = [
         iterdd,

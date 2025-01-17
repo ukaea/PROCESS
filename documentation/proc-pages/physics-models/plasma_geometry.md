@@ -328,7 +328,7 @@ Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Des
 | Output Variable | Description                          |
 |----------|--------------------------------------|
 | `len_plasma_poloidal`       | Plasma Poloidal perimeter length [$\text{m}$] |
-| `sarea`       | Plasma surface area [$\text{m}^2$] |
+| `a_plasma_surface`       | Plasma surface area [$\text{m}^2$] |
 | `xarea`       | Plasma cross-sectional area [$\text{m}^2$] |
 | `plasma_volume`       | Plasma volume [$\text{m}^3$] |
 
@@ -355,7 +355,7 @@ $$
 Surface area (named Ap in Sauter)
 
 $$
-\mathtt{sarea} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{len_plasma_poloidal}
+\mathtt{a_plasma_surface} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{len_plasma_poloidal}
 $$
 
 Cross-section area (named S_phi in Sauter)

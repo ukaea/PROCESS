@@ -56,7 +56,7 @@ class Vacuum:
                 pv.rmajor,
                 pv.rminor,
                 0.5e0 * (buv.scrapli + buv.scraplo),
-                pv.sarea,
+                pv.a_plasma_surface,
                 pv.plasma_volume,
                 buv.shldoth,
                 buv.shldith,
@@ -103,11 +103,11 @@ class Vacuum:
             vacv.pumpspeedmax
             * vacv.pumpareafraction
             * vacv.pumpspeedfactor
-            * pv.sarea
+            * pv.a_plasma_surface
             / tfv.n_tf
         )
 
-        wallarea = (pv.sarea / 1084.0e0) * 2000.0e0
+        wallarea = (pv.a_plasma_surface / 1084.0e0) * 2000.0e0
         # Required pumping speed for pump-down
         pumpdownspeed = (
             vacv.outgasfactor * wallarea / vacv.pbase

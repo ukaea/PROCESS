@@ -145,7 +145,7 @@ class ProcessTracker:
         "pdivt",
         "nesep",
         "plasma_volume",
-        "sarea",
+        "a_plasma_surface",
         "pnetelmw",
         "etath",
         "pgrossmw",

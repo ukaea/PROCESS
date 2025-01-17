@@ -292,7 +292,7 @@ class DcllMassesParam(NamedTuple):
 
     blbmoth: Any = None
 
-    sarea: Any = None
+    a_plasma_surface: Any = None
 
     sareao: Any = None
 
@@ -523,7 +523,7 @@ class DcllMassesParam(NamedTuple):
             blnkoth=0.98199999999999998,
             blbuoth=0.46500000000000002,
             blbmoth=0.27000000000000002,
-            sarea=1403.2719775669307,
+            a_plasma_surface=1403.2719775669307,
             sareao=949.22962703393853,
             iblnkith=1,
             volblkt=1397.9003011502937,
@@ -643,7 +643,7 @@ class DcllMassesParam(NamedTuple):
             blnkoth=0.98199999999999998,
             blbuoth=0.46500000000000002,
             blbmoth=0.49699999999999994,
-            sarea=1403.2719775669307,
+            a_plasma_surface=1403.2719775669307,
             sareao=949.22962703393853,
             iblnkith=1,
             volblkt=1400.4860764869636,
@@ -787,7 +787,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(build_variables, "blbmoth", dcllmassesparam.blbmoth)
 
-    monkeypatch.setattr(physics_variables, "sarea", dcllmassesparam.sarea)
+    monkeypatch.setattr(
+        physics_variables, "a_plasma_surface", dcllmassesparam.a_plasma_surface
+    )
 
     monkeypatch.setattr(physics_variables, "sareao", dcllmassesparam.sareao)
 

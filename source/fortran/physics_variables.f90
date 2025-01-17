@@ -842,7 +842,7 @@ module physics_variables
   real(dp) :: res_time
   !! plasma current resistive diffusion time (s)
 
-  real(dp) :: sarea
+  real(dp) :: a_plasma_surface
   !! plasma surface area
 
   real(dp) :: sareao
@@ -1134,7 +1134,7 @@ module physics_variables
     rpfac = 0.0D0
     res_plasma = 0.0D0
     res_time = 0.0D0
-    sarea = 0.0D0
+    a_plasma_surface = 0.0D0
     sareao = 0.0D0
     sf = 0.0D0
     i_single_null = 1

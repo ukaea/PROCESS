@@ -2066,7 +2066,7 @@ class CalculateDensityLimitParam(NamedTuple):
 
     rminor: Any = None
 
-    sarea: Any = None
+    a_plasma_surface: Any = None
 
     zeff: Any = None
 
@@ -2089,7 +2089,7 @@ class CalculateDensityLimitParam(NamedTuple):
             qcyl=3.8769445264202052,
             rmajor=8,
             rminor=2.6666666666666665,
-            sarea=1173.8427771245592,
+            a_plasma_surface=1173.8427771245592,
             zeff=2.5668755115791471,
             expected_dnelimt=7.4765470107450917e19,
             expected_dlimit=(
@@ -2129,7 +2129,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
         qcyl=calculatedensitylimitparam.qcyl,
         rmajor=calculatedensitylimitparam.rmajor,
         rminor=calculatedensitylimitparam.rminor,
-        sarea=calculatedensitylimitparam.sarea,
+        a_plasma_surface=calculatedensitylimitparam.a_plasma_surface,
         zeff=calculatedensitylimitparam.zeff,
     )
 

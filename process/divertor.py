@@ -103,16 +103,16 @@ class Divertor:
 
         rsrd = (rnull + pv.rmajor + pv.rminor) / (rnull + bv.rspo)
         diva = constants.pi * (rnull + bv.rspo) * plsep
-        adas = diva / pv.sarea
+        adas = diva / pv.a_plasma_surface
 
         #  Main plasma separatrix area to divertor (and power fraction)
         # +PJK Is the 2 related to 2 divertors (i.e. double-null assumed)?
-        frgd = (pv.sareao) / (2.0e0 * pv.sarea)
+        frgd = (pv.sareao) / (2.0e0 * pv.a_plasma_surface)
         # -PJK
         #  Power flow to divertor
 
         pdiv = pwr * dv.ksic / 2.0e0
-        qdiv = pdiv / (pv.sarea * frgd)
+        qdiv = pdiv / (pv.a_plasma_surface * frgd)
 
         #  Connection length scalings
         #  (2.5 factor comes from normalization to ITER 1990)

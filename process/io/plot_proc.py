@@ -2346,7 +2346,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("aspect", "A", ""),
         ("kappa95", r"$\kappa_{95}$", ""),
         ("triang95", r"$\delta_{95}$", ""),
-        ("sarea", "Plasma surface area", "m$^2$"),
+        ("a_plasma_surface", "Plasma surface area", "m$^2$"),
         ("xarea", "Plasma cross-sectional area", "m$^2$"),
         ("plasma_volume", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),

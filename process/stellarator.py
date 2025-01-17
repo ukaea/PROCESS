@@ -329,7 +329,7 @@ class Stellarator:
         )
 
         # Plasma surface scaled from effective parameter:
-        physics_variables.sarea = (
+        physics_variables.a_plasma_surface = (
             st.f_r * st.f_a * stellarator_configuration.stella_config_plasma_surface
         )
 
@@ -342,7 +342,7 @@ class Stellarator:
 
         #  Cross-sectional area, averaged over toroidal angle
         physics_variables.sareao = (
-            0.5e0 * physics_variables.sarea
+            0.5e0 * physics_variables.a_plasma_surface
         )  # Used only in the divertor model; approximate as for tokamaks
 
     def stopt(self, output: bool):
@@ -533,7 +533,7 @@ class Stellarator:
             build_variables.scrapli + build_variables.scraplo
         )
         build_variables.fwarea = (
-            physics_variables.sarea * awall / physics_variables.rminor
+            physics_variables.a_plasma_surface * awall / physics_variables.rminor
         )
 
         if heat_transport_variables.ipowerflow == 0:
@@ -1165,14 +1165,14 @@ class Stellarator:
         )
         if heat_transport_variables.ipowerflow == 0:
             build_variables.blarea = (
-                physics_variables.sarea
+                physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
                 * (1.0e0 - fwbs_variables.fhole)
             )
         else:
             build_variables.blarea = (
-                physics_variables.sarea
+                physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
                 * (
@@ -1194,7 +1194,9 @@ class Stellarator:
         #  Uses fvolsi, fwbs_variables.fvolso as area coverage factors
 
         r1 = r1 + 0.5e0 * (build_variables.blnkith + build_variables.blnkoth)
-        build_variables.sharea = physics_variables.sarea * r1 / physics_variables.rminor
+        build_variables.sharea = (
+            physics_variables.a_plasma_surface * r1 / physics_variables.rminor
+        )
         build_variables.shareaib = (
             0.5e0 * build_variables.sharea * fwbs_variables.fvolsi
         )
@@ -1860,7 +1862,7 @@ class Stellarator:
         fwbs_variables.vdewin = (
             (build_variables.d_vv_in + build_variables.d_vv_out)
             / 2.0e0
-            * physics_variables.sarea
+            * physics_variables.a_plasma_surface
             * r1
             / physics_variables.rminor
             * fwbs_variables.fvoldw
@@ -4256,7 +4258,7 @@ class Stellarator:
             physics_variables.wallmw = (
                 physics_variables.ffwal
                 * physics_variables.neutron_power_total
-                / physics_variables.sarea
+                / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
@@ -4361,7 +4363,7 @@ class Stellarator:
             physics_variables.photon_wall = (
                 physics_variables.ffwal
                 * physics_variables.pradmw
-                / physics_variables.sarea
+                / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
@@ -4683,7 +4685,7 @@ class Stellarator:
                 - physics_variables.pcoreradpv
             )
             * physics_variables.plasma_volume
-            / physics_variables.sarea
+            / physics_variables.a_plasma_surface
             * impurity_radiation_module.coreradius
         )
         q_PROCESS_r1 = (
@@ -4693,7 +4695,7 @@ class Stellarator:
                 - physics_variables.pcoreradpv
             )
             * physics_variables.plasma_volume
-            / physics_variables.sarea
+            / physics_variables.a_plasma_surface
         )
 
         q_neo = sum(neoclassics_module.q_flux * 1e-6)
@@ -4742,7 +4744,7 @@ class Stellarator:
 
         dndt_neo_fuel = (
             (dndt_neo_D + dndt_neo_T)
-            * physics_variables.sarea
+            * physics_variables.a_plasma_surface
             * impurity_radiation_module.coreradius
         )
         dmdt_neo_fuel = (
@@ -4751,7 +4753,7 @@ class Stellarator:
         dmdt_neo_fuel_from_e = (
             4
             * dndt_neo_e
-            * physics_variables.sarea
+            * physics_variables.a_plasma_surface
             * impurity_radiation_module.coreradius
             * physics_variables.afuel
             * constants.proton_mass
@@ -4815,7 +4817,7 @@ class Stellarator:
             ** 2
         )
         surfacescaling = (
-            physics_variables.sarea
+            physics_variables.a_plasma_surface
             * st.f_r
             * (
                 impurity_radiation_module.coreradius
