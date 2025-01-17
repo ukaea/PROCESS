@@ -963,9 +963,7 @@ class InDat:
         # Create bound variable class using INVariable class if the bounds entry
         # doesn't exist
         if "bounds" not in self.data.keys():
-            self.data["bounds"] = INVariable(
-                "bounds", {}, "Bound", "Bound", "Bounds"
-            )
+            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bound", "Bounds")
 
         # Constraint equations
         if line_type == "Constraint Equation":
