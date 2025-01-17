@@ -570,7 +570,7 @@ module physics_variables
   !! plasma elongation at 95% surface (calculated if `ishape = 0-3, 6, or 8-10`)
 
   real(dp) :: kappaa
-  !! plasma elongation calculated as xarea/(pi.a^2)
+  !! plasma elongation calculated as a_plasma_poloidal/(pi.a^2)
 
   real(dp) :: kappaa_IPB
   !! Volume measure of plasma elongation
@@ -926,8 +926,8 @@ module physics_variables
   real(dp) :: wtgpd
   !! mass of fuel used per day (g)
 
-  real(dp) :: xarea
-  !! plasma cross-sectional area (m2)
+  real(dp) :: a_plasma_poloidal
+  !! plasma poloidal cross-sectional area [m^2]
 
   real(dp) :: zeff
   !! plasma effective charge
@@ -1161,7 +1161,7 @@ module physics_variables
     vsstt = 0.0D0
     wallmw = 0.0D0
     wtgpd = 0.0D0
-    xarea = 0.0D0
+    a_plasma_poloidal = 0.0D0
     zeff = 0.0D0
     zeffai = 0.0D0
   end subroutine init_physics_variables

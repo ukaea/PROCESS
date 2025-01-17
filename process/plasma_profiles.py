@@ -278,7 +278,7 @@ class PlasmaProfile:
             * 2
             / (
                 sp.special.beta(0.5, physics_variables.alphaj + 1)
-                * physics_variables.xarea
+                * physics_variables.a_plasma_poloidal
             )
         )
 

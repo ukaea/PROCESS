@@ -2347,7 +2347,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("kappa95", r"$\kappa_{95}$", ""),
         ("triang95", r"$\delta_{95}$", ""),
         ("a_plasma_surface", "Plasma surface area", "m$^2$"),
-        ("xarea", "Plasma cross-sectional area", "m$^2$"),
+        ("a_plasma_poloidal", "Plasma cross-sectional area", "m$^2$"),
         ("plasma_volume", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
@@ -3486,14 +3486,14 @@ def main(args=None):
     global q0
     global q95
     global plasma_current_MA
-    global xarea
+    global a_plasma_poloidal
 
     triang = m_file.data["triang95"].get_scan(scan)
     alphaj = m_file.data["alphaj"].get_scan(scan)
     q0 = m_file.data["q0"].get_scan(scan)
     q95 = m_file.data["q95"].get_scan(scan)
     plasma_current_MA = m_file.data["plasma_current_ma"].get_scan(scan)
-    xarea = m_file.data["xarea"].get_scan(scan)
+    a_plasma_poloidal = m_file.data["a_plasma_poloidal"].get_scan(scan)
 
     # Radial position  -- 0
     # Electron density -- 1

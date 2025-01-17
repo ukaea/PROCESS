@@ -63,7 +63,7 @@ class StgeomParam(NamedTuple):
 
     plasma_volume: Any = None
 
-    xarea: Any = None
+    a_plasma_poloidal: Any = None
 
     bt: Any = None
 
@@ -81,7 +81,7 @@ class StgeomParam(NamedTuple):
 
     expected_vol: Any = None
 
-    expected_xarea: Any = None
+    expected_a_plasma_poloidal: Any = None
 
 
 @pytest.mark.parametrize(
@@ -94,7 +94,7 @@ class StgeomParam(NamedTuple):
             a_plasma_surface=0,
             sareao=0,
             plasma_volume=0,
-            xarea=0,
+            a_plasma_poloidal=0,
             bt=5.5,
             stella_config_plasma_volume=1422.6300000000001,
             stella_config_plasma_surface=1960,
@@ -103,7 +103,7 @@ class StgeomParam(NamedTuple):
             expected_a_plasma_surface=1925.3641313657533,
             expected_sareao=962.68206568287667,
             expected_vol=1385.2745877380669,
-            expected_xarea=10.001590778710231,
+            expected_a_plasma_poloidal=10.001590778710231,
         ),
         StgeomParam(
             aspect=12.33,
@@ -112,7 +112,7 @@ class StgeomParam(NamedTuple):
             a_plasma_surface=1925.3641313657533,
             sareao=962.68206568287667,
             plasma_volume=1385.2745877380669,
-            xarea=10.001590778710231,
+            a_plasma_poloidal=10.001590778710231,
             bt=5.5,
             stella_config_plasma_volume=1422.6300000000001,
             stella_config_plasma_surface=1960,
@@ -121,7 +121,7 @@ class StgeomParam(NamedTuple):
             expected_a_plasma_surface=1925.3641313657533,
             expected_sareao=962.68206568287667,
             expected_vol=1385.2745877380669,
-            expected_xarea=10.001590778710231,
+            expected_a_plasma_poloidal=10.001590778710231,
         ),
     ),
 )
@@ -152,7 +152,9 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "plasma_volume", stgeomparam.plasma_volume)
 
-    monkeypatch.setattr(physics_variables, "xarea", stgeomparam.xarea)
+    monkeypatch.setattr(
+        physics_variables, "a_plasma_poloidal", stgeomparam.a_plasma_poloidal
+    )
 
     monkeypatch.setattr(physics_variables, "bt", stgeomparam.bt)
 
@@ -182,7 +184,9 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     assert physics_variables.plasma_volume == pytest.approx(stgeomparam.expected_vol)
 
-    assert physics_variables.xarea == pytest.approx(stgeomparam.expected_xarea)
+    assert physics_variables.a_plasma_poloidal == pytest.approx(
+        stgeomparam.expected_a_plasma_poloidal
+    )
 
 
 class StbildParam(NamedTuple):

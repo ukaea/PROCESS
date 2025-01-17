@@ -330,7 +330,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -1493,7 +1493,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -2656,7 +2656,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -3819,7 +3819,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -4982,7 +4982,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -6145,7 +6145,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -7308,7 +7308,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -8471,7 +8471,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -9634,7 +9634,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -10797,7 +10797,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -11960,7 +11960,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -13123,7 +13123,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -14286,7 +14286,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -15449,7 +15449,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
@@ -16612,7 +16612,7 @@
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
  Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
  Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    

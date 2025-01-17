@@ -327,7 +327,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     plasma_current: Any = None
 
-    xarea: Any = None
+    a_plasma_poloidal: Any = None
 
     f_helium3: Any = None
 
@@ -375,7 +375,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             rhopedn=0.9400000000000001,
             bt=5.326133750416047,
             plasma_current=16528278.760008096,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             f_helium3=0,
             teped=5.5,
             dene=8.016748468651018e19,
@@ -439,7 +439,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "plasma_current", bootstrapfractionsauterparam.plasma_current
     )
 
-    monkeypatch.setattr(physics_variables, "xarea", bootstrapfractionsauterparam.xarea)
+    monkeypatch.setattr(
+        physics_variables,
+        "a_plasma_poloidal",
+        bootstrapfractionsauterparam.a_plasma_poloidal,
+    )
 
     monkeypatch.setattr(
         physics_variables, "f_helium3", bootstrapfractionsauterparam.f_helium3
@@ -2203,7 +2207,7 @@ class PcondParam(NamedTuple):
 
     plasma_volume: Any = None
 
-    xarea: Any = None
+    a_plasma_poloidal: Any = None
 
     zeff: Any = None
 
@@ -2260,7 +2264,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2304,7 +2308,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2348,7 +2352,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2392,7 +2396,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2436,7 +2440,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2480,7 +2484,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2524,7 +2528,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2568,7 +2572,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2612,7 +2616,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2656,7 +2660,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2700,7 +2704,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2744,7 +2748,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2788,7 +2792,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2832,7 +2836,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2876,7 +2880,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2920,7 +2924,7 @@ class PcondParam(NamedTuple):
             ten=13.745148298980761,
             tin=13.745148298980761,
             plasma_volume=1888.1711539956691,
-            xarea=38.39822223637151,
+            a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
             expected_kappaa_ipb=1.68145080681586,
             expected_kappaa=1.7187938085542791,
@@ -2987,7 +2991,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
         ten=pcondparam.ten,
         tin=pcondparam.tin,
         plasma_volume=pcondparam.plasma_volume,
-        xarea=pcondparam.xarea,
+        a_plasma_poloidal=pcondparam.a_plasma_poloidal,
         zeff=pcondparam.zeff,
     )
 

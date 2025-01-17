@@ -266,7 +266,7 @@ class PlasmaGeom:
                 physics_variables.len_plasma_poloidal,
                 physics_variables.sf,
                 physics_variables.a_plasma_surface,
-                physics_variables.xarea,
+                physics_variables.a_plasma_poloidal,
                 physics_variables.plasma_volume,
             ) = self.sauter_geometry(
                 physics_variables.rminor,
@@ -293,7 +293,7 @@ class PlasmaGeom:
             )
 
             #  Cross-sectional area
-            physics_variables.xarea = self.xsecta(xi, thetai, xo, thetao)
+            physics_variables.a_plasma_poloidal = self.xsecta(xi, thetai, xo, thetao)
 
             #  Surface area - sum of inboard and outboard.
             physics_variables.a_plasma_surface = xsi + xso
@@ -485,7 +485,7 @@ class PlasmaGeom:
                     - len_plasma_poloidal (float): Poloidal perimeter
                     - sf (float): Geometric factor
                     - a_plasma_surface (float): Surface area
-                    - xarea (float): Cross-section area
+                    - a_plasma_poloidal (float): Cross-section area
                     - plasma_volume (float): Plasma volume
 
                 Notes:
@@ -522,12 +522,20 @@ class PlasmaGeom:
         )
 
         # Cross-section area (named S_phi in Sauter)
-        xarea = np.pi * a**2 * kappa * (1 + 0.52 * (w07 - 1))
+        a_plasma_poloidal = np.pi * a**2 * kappa * (1 + 0.52 * (w07 - 1))
 
         # Volume
-        plasma_volume = 2.0e0 * np.pi * r0 * (1 - 0.25 * triang * eps) * xarea
+        plasma_volume = (
+            2.0e0 * np.pi * r0 * (1 - 0.25 * triang * eps) * a_plasma_poloidal
+        )
 
-        return len_plasma_poloidal, sf, a_plasma_surface, xarea, plasma_volume
+        return (
+            len_plasma_poloidal,
+            sf,
+            a_plasma_surface,
+            a_plasma_poloidal,
+            plasma_volume,
+        )
 
 
 # --------------------------------

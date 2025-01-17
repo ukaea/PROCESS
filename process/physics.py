@@ -2262,7 +2262,7 @@ class Physics:
             physics_variables.q95,
             physics_variables.qstar,
             physics_variables.plasma_volume,
-            physics_variables.xarea,
+            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
@@ -3494,8 +3494,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Plasma cross-sectional area (m2)",
-                "(xarea)",
-                physics_variables.xarea,
+                "(a_plasma_poloidal)",
+                physics_variables.a_plasma_poloidal,
                 "OP ",
             )
             po.ovarre(
@@ -5629,7 +5629,7 @@ class Physics:
                 physics_variables.q,
                 physics_variables.qstar,
                 physics_variables.plasma_volume,
-                physics_variables.xarea,
+                physics_variables.a_plasma_poloidal,
                 physics_variables.zeff,
             )
 
@@ -5920,7 +5920,7 @@ class Physics:
         roa = plasma_profile.neprofile.profile_x
 
         # Local circularised minor radius
-        rho = np.sqrt(physics_variables.xarea / np.pi) * roa
+        rho = np.sqrt(physics_variables.a_plasma_poloidal / np.pi) * roa
 
         # Square root of local aspect ratio
         sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
@@ -6421,7 +6421,7 @@ class Physics:
             physics_variables.q,
             physics_variables.qstar,
             physics_variables.plasma_volume,
-            physics_variables.xarea,
+            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
@@ -6479,7 +6479,7 @@ class Physics:
         q,
         qstar,
         plasma_volume,
-        xarea,
+        a_plasma_poloidal,
         zeff,
     ):
         """Routine to calculate the confinement times and
@@ -6513,7 +6513,7 @@ class Physics:
         ten       : input real :  density weighted average electron temp. (keV)
         tin       : input real :  density weighted average ion temperature (keV)
         plasma_volume       : input real :  plasma volume (m3)
-        xarea     : input real :  plasma cross-sectional area (m2)
+        a_plasma_poloidal     : input real :  plasma cross-sectional area (m2)
         zeff      : input real :  plasma effective charge
         ptrepv    : output real : electron transport power (MW/m3)
         ptripv    : output real : ion transport power (MW/m3)
@@ -6588,7 +6588,7 @@ class Physics:
         pcur = plasma_current / 1.0e6
 
         # Separatrix kappa defined with X-section for general use
-        kappaa = xarea / (np.pi * rminor * rminor)
+        kappaa = a_plasma_poloidal / (np.pi * rminor * rminor)
 
         # Separatrix kappa defined with plasma volume for IPB scalings
         physics_variables.kappaa_ipb = plasma_volume / (

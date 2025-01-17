@@ -247,7 +247,7 @@ class Stellarator:
                 physics_variables.q,
                 physics_variables.qstar,
                 physics_variables.plasma_volume,
-                physics_variables.xarea,
+                physics_variables.a_plasma_poloidal,
                 physics_variables.zeff,
             )
 
@@ -334,7 +334,7 @@ class Stellarator:
         )
 
         # Plasma cross section area. Approximated
-        physics_variables.xarea = (
+        physics_variables.a_plasma_poloidal = (
             np.pi * physics_variables.rminor * physics_variables.rminor
         )  # average, could be calculated for every toroidal angle if desired
 
@@ -4434,7 +4434,7 @@ class Stellarator:
             stellarator_variables.iotabar,
             physics_variables.qstar,
             physics_variables.plasma_volume,
-            physics_variables.xarea,
+            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
