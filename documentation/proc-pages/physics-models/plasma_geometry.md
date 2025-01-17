@@ -327,7 +327,7 @@ Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Des
 
 | Output Variable | Description                          |
 |----------|--------------------------------------|
-| `pperim`       | Plasma Poloidal perimeter length [$\text{m}$] |
+| `len_plasma_poloidal`       | Plasma Poloidal perimeter length [$\text{m}$] |
 | `sarea`       | Plasma surface area [$\text{m}^2$] |
 | `xarea`       | Plasma cross-sectional area [$\text{m}^2$] |
 | `plasma_volume`       | Plasma volume [$\text{m}^3$] |
@@ -343,19 +343,19 @@ $$
 Poloidal perimeter (named Lp in Sauter)
 
 $$
-\mathtt{pperim} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\mathtt{w07} - 1))
+\mathtt{len_plasma_poloidal} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\mathtt{w07} - 1))
 $$
 
 A geometric factor
 
 $$
-\mathtt{sf} = \frac{\mathtt{pperim}}{2.0\pi a}
+\mathtt{sf} = \frac{\mathtt{len_plasma_poloidal}}{2.0\pi a}
 $$
 
 Surface area (named Ap in Sauter)
 
 $$
-\mathtt{sarea} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{pperim}
+\mathtt{sarea} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{len_plasma_poloidal}
 $$
 
 Cross-section area (named S_phi in Sauter)
@@ -372,14 +372,14 @@ $$
 
 
 ### Poloidal perimeter
-The poloidal plasma perimtere length `pperim` is calculated as follows:
+The poloidal plasma perimtere length `len_plasma_poloidal` is calculated as follows:
 $$
-\mathtt{pperim} = 2.0 \times (\mathtt{xo} \times \mathtt{thetao} + \mathtt{xi} \times \mathtt{thetai})
+\mathtt{len_plasma_poloidal} = 2.0 \times (\mathtt{xo} \times \mathtt{thetao} + \mathtt{xi} \times \mathtt{thetai})
 $$
 
 The shaping factor for `i_plasma_current = 1` is also calculated here:
 $$
-\mathtt{sf} = \frac{\mathtt{pperim}}{
+\mathtt{sf} = \frac{\mathtt{len_plasma_poloidal}}{
     2.0\pi  a}
 $$
 

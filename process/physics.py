@@ -1510,7 +1510,7 @@ class Physics:
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.p0,
-            physics_variables.pperim,
+            physics_variables.len_plasma_poloidal,
             physics_variables.q0,
             physics_variables.q,
             physics_variables.rli,
@@ -3033,7 +3033,7 @@ class Physics:
         kappa: float,
         kappa95: float,
         p0: float,
-        pperim: float,
+        len_plasma_poloidal: float,
         q0: float,
         q95: float,
         rli: float,
@@ -3070,7 +3070,7 @@ class Physics:
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
             p0 (float): Central plasma pressure (Pa).
-            pperim (float): Plasma perimeter length (m).
+            len_plasma_poloidal (float): Plasma perimeter length (m).
             q0 (float): Plasma safety factor on axis.
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
             rli (float): Plasma normalised internal inductance.
@@ -3194,7 +3194,7 @@ class Physics:
             bt,
             kappa,
             triang,
-            pperim,
+            len_plasma_poloidal,
             constants.rmu0,
         )
 
@@ -3486,8 +3486,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Plasma poloidal perimeter (m)",
-                "(pperim)",
-                physics_variables.pperim,
+                "(len_plasma_poloidal)",
+                physics_variables.len_plasma_poloidal,
                 "OP ",
             )
 

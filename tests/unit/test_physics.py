@@ -883,7 +883,7 @@ class PlasmaCurrentParam(NamedTuple):
 
     p0: Any = None
 
-    pperim: Any = None
+    len_plasma_poloidal: Any = None
 
     q0: Any = None
 
@@ -928,7 +928,7 @@ class PlasmaCurrentParam(NamedTuple):
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
             p0=0,
-            pperim=24.081367139525412,
+            len_plasma_poloidal=24.081367139525412,
             q0=1,
             q95=3.5,
             rmajor=8,
@@ -956,7 +956,7 @@ class PlasmaCurrentParam(NamedTuple):
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
             p0=626431.90482713911,
-            pperim=24.081367139525412,
+            len_plasma_poloidal=24.081367139525412,
             q0=1,
             q95=3.5,
             rmajor=8,
@@ -1005,7 +1005,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         kappa=plasmacurrentparam.kappa,
         kappa95=plasmacurrentparam.kappa95,
         p0=plasmacurrentparam.p0,
-        pperim=plasmacurrentparam.pperim,
+        len_plasma_poloidal=plasmacurrentparam.len_plasma_poloidal,
         q0=plasmacurrentparam.q0,
         q95=plasmacurrentparam.q95,
         rmajor=plasmacurrentparam.rmajor,

@@ -263,7 +263,7 @@ class PlasmaGeom:
         # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma current.
         if physics_variables.i_plasma_current == 8:
             (
-                physics_variables.pperim,
+                physics_variables.len_plasma_poloidal,
                 physics_variables.sf,
                 physics_variables.sarea,
                 physics_variables.xarea,
@@ -277,8 +277,8 @@ class PlasmaGeom:
 
         else:
             #  Poloidal perimeter
-            physics_variables.pperim = 2.0e0 * (xo * thetao + xi * thetai)
-            physics_variables.sf = physics_variables.pperim / (
+            physics_variables.len_plasma_poloidal = 2.0e0 * (xo * thetao + xi * thetai)
+            physics_variables.sf = physics_variables.len_plasma_poloidal / (
                 2.0e0 * np.pi * physics_variables.rminor
             )
 
@@ -482,7 +482,7 @@ class PlasmaGeom:
 
                 Returns:
                 tuple: A tuple containing:
-                    - pperim (float): Poloidal perimeter
+                    - len_plasma_poloidal (float): Poloidal perimeter
                     - sf (float): Geometric factor
                     - sarea (float): Surface area
                     - xarea (float): Cross-section area

@@ -704,7 +704,7 @@ module physics_variables
   real(dp) :: fusion_power
   !! fusion power (MW)
 
-  real(dp) :: pperim
+  real(dp) :: len_plasma_poloidal
   !! plasma poloidal perimeter (m)
 
   real(dp) :: pradmw
@@ -1096,7 +1096,7 @@ module physics_variables
     pden_plasma_ohmic_mw = 0.0D0
     powerht = 0.0D0
     fusion_power = 0.0D0
-    pperim = 0.0D0
+    len_plasma_poloidal = 0.0D0
     pradmw = 0.0D0
     pradpv = 0.0D0
     pradsolmw = 0.0D0

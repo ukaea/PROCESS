@@ -539,10 +539,10 @@ $$
 For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the poloidal field is simply returned as:
 
 $$
-B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\mathtt{pperim}}
+B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\mathtt{len_plasma_poloidal}}
 $$
 
-Where `pperim` is the plasma poloidal perimeter calculated [here](../plasma_geometry.md#poloidal-perimeter).
+Where `len_plasma_poloidal` is the plasma poloidal perimeter calculated [here](../plasma_geometry.md#poloidal-perimeter).
 
 In the case of using the Peng double null scaling ([`i_plasma_current = 2`](plasma_current.md#star-peng-double-null-divertor-scaling-st)), the values $F_1$ and $F_2$ are calculated from [_plasc_bpol](plasma_current.md#_plasc_bpol) and used to calculated the poloidal field from the toroidal field as per:
 
