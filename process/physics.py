@@ -6736,6 +6736,10 @@ class Physics:
 
         # Electron energy confinement times
 
+        # User defined confinement time
+        if i_confinement_time == 0:  # tauee is an input
+            tauee = hfact * physics_variables.tauee_in
+
         # Nec-Alcator(NA) OH scaling
         if i_confinement_time == 1:
             # tauee = taueena
@@ -7494,10 +7498,7 @@ class Physics:
                 * dnla20 ** (-0.05e0)
             )
 
-        elif i_confinement_time == 49:  # tauee is an input
-            tauee = hfact * physics_variables.tauee_in
-
-        elif i_confinement_time == 50:  # ITPA20 Issue #3164
+        elif i_confinement_time == 49:  # ITPA20 Issue #3164
             # The updated ITPA global H-mode confinement database: description and analysis
             # G. Verdoolaege et al 2021 Nucl. Fusion 61 076006 DOI 10.1088/1741-4326/abdb91
 

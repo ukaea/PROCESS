@@ -14,7 +14,7 @@ module physics_variables
 
   public
 
-  integer, parameter :: ipnlaws = 50
+  integer, parameter :: ipnlaws = 49
   !! number of energy confinement time scaling laws
 
   real(dp) :: m_beam_amu
@@ -422,6 +422,7 @@ module physics_variables
   !! switch for energy confinement time scaling law (see description in `tauscl`)
 
   character*24, parameter, dimension(ipnlaws) :: tauscl = (/ &
+    'Input tauee_in          ', &
     'Neo-Alcator      (ohmic)', &
     'Mirnov               (H)', &
     'Merezkhin-Muhkovatov (L)', &
