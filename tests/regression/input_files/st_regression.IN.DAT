@@ -179,7 +179,7 @@ aspect = 1.8
 ishape = 0
 * DESCRIPTION:   Switch for plasma shape vs. aspect (default = 0)
 * =0 use input kappa, triang to calculate 95% values
-* =1 scale qlim, kappa, triang with aspect ratio (ST)
+* =1 scale q95_min, kappa, triang with aspect ratio (ST)
 * =2 set kappa to the natural elongation value (Zohm ITER scaling), triang input
 * =3 set kappa to the natural elongation value (Zohm ITER scaling), triang95 input
 * =4 use input kappa95, triang95 to calculate separatrix values
@@ -392,7 +392,7 @@ q0 = 2.0
 * icc = 45
 * DESCRIPTION:   Constraint equation for edge safety factor lower limit (TART) (ishape = 1)
 * JUSTIFICATION: Not used, dont care about q at edge lower limit
-* VARIABLES:     itart, qlim (lower limit for edge safety factor). q calculated in-situ
+* VARIABLES:     itart, q95_min (lower limit for edge safety factor). q calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ H-mode & Confinement ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾

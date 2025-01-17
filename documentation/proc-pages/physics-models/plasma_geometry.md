@@ -44,7 +44,7 @@ The function uses various scaling laws and formulas to calculate these parameter
   \delta = 0.53 \, \left(1 + 0.77 \, \epsilon^3\right)
   $$
 
-  The lower limit for the edge safety factor `qlim` is also set here
+  The lower limit for the edge safety factor `q95_min` is also set here
   $$
   q_{\text{lim}} = 3 \, \left(1 + 2.6 \, \epsilon^{2.8}\right)
   $$

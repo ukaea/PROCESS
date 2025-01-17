@@ -3631,8 +3631,8 @@ class Physics:
                 po.ovarrf(
                     self.outfile,
                     "Lower limit for edge safety factor q",
-                    "(qlim)",
-                    physics_variables.qlim,
+                    "(q95_min)",
+                    physics_variables.q95_min,
                     "OP ",
                 )
 

@@ -196,7 +196,7 @@ contains
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, pradmw, dene, fusion_power, btot, tesep, &
-      pdivt, ralpne, ten, beta_poloidal, hfac, teped, alpha_power_beams, qlim, rmajor, wallmw, &
+      pdivt, ralpne, ten, beta_poloidal, hfac, teped, alpha_power_beams, q95_min, rmajor, wallmw, &
       beta, beta_max, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
@@ -227,7 +227,7 @@ contains
     outvar(13,iscan) = bt
     outvar(14,iscan) = btot
     outvar(15,iscan) = q
-    outvar(16,iscan) = qlim
+    outvar(16,iscan) = q95_min
     outvar(17,iscan) = beta
     outvar(18,iscan) = beta_max
     outvar(19,iscan) = beta_poloidal / aspect
@@ -326,7 +326,7 @@ contains
         plabel(13) = 'B_Toroidal_Axis_(T)______'
         plabel(14) = 'B_total_on_axis_(T)______'
         plabel(15) = 'Safety_Factor____________'
-        plabel(16) = 'qlim_(zero_if_ishape=0)__'
+        plabel(16) = 'q95_min_(zero_if_ishape=0)__'
         plabel(17) = 'Beta_____________________'
         plabel(18) = 'Beta_Limit_______________'
         plabel(19) = 'Epsilon_Beta_Poloidal____'
@@ -514,7 +514,7 @@ contains
     plabel(13) = 'B_Toroidal_Axis_(T)______'
     plabel(14) = 'B_total_on_axis_(T)______'
     plabel(15) = 'Safety_Factor____________'
-    plabel(16) = 'qlim_(zero_if_ishape=0)__'
+    plabel(16) = 'q95_min_(zero_if_ishape=0)__'
     plabel(17) = 'Beta_____________________'
     plabel(18) = 'Beta_Limit_______________'
     plabel(19) = 'Epsilon_Beta_Poloidal____'

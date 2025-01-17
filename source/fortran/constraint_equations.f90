@@ -1980,18 +1980,18 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for edge safety factor lower limit (TART)
       !! #=# tfcoil
-      !! #=#=# fq, qlim
+      !! #=#=# fq, q95_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fq : input real : f-value for edge safety factor
       !! q : safety factor 'near' plasma edge: equal to q95
       !! (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
-      !! qlim : input real :  lower limit for edge safety factor
+      !! q95_min : input real :  lower limit for edge safety factor
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
       use constraint_variables, only: fq
-      use physics_variables, only: q, qlim, itart
+      use physics_variables, only: q, q95_min, itart
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2001,9 +2001,9 @@ contains
 
       ! if the machine isn't a ST then report error
       if (itart == 0) call report_error(9)
-      tmp_cc =   1.0D0 - fq * q/qlim
-      tmp_con = qlim * (1.0D0 - tmp_cc)
-      tmp_err = qlim * tmp_cc
+      tmp_cc =   1.0D0 - fq * q/q95_min
+      tmp_con = q95_min * (1.0D0 - tmp_cc)
+      tmp_err = q95_min * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 

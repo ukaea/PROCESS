@@ -533,7 +533,7 @@ module physics_variables
   !! switch for plasma cross-sectional shape calculation:
   !!
   !! - =0 use input kappa, triang to calculate 95% values
-  !! - =1 scale qlim, kappa, triang with aspect ratio (ST)
+  !! - =1 scale q95_min, kappa, triang with aspect ratio (ST)
   !! - =2 set kappa to the natural elongation value (Zohm ITER scaling), triang input
   !! - =3 set kappa to the natural elongation value (Zohm ITER scaling), triang95 input
   !! - =4 use input kappa95, triang95 to calculate separatrix values
@@ -788,7 +788,7 @@ module physics_variables
   real(dp) :: tauratio
   !! tauratio /1.0/ : ratio of He and pellet particle confinement times
 
-  real(dp) :: qlim
+  real(dp) :: q95_min
   !! lower limit for edge safety factor
 
   real(dp) :: qstar
@@ -1116,7 +1116,7 @@ module physics_variables
     q95 = 0.0D0
     qfuel = 0.0D0
     tauratio = 1.0D0
-    qlim = 0.0D0
+    q95_min = 0.0D0
     qstar = 0.0D0
     rad_fraction_sol = 0.8D0
     rad_fraction_total = 0.0D0

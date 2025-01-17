@@ -60,7 +60,7 @@ class PlasmaGeom:
         if (
             physics_variables.ishape == 1
         ):  # ST scaling with physics_variables.aspect ratio [STAR Code]
-            physics_variables.qlim = 3.0e0 * (
+            physics_variables.q95_min = 3.0e0 * (
                 1.0e0 + 2.6e0 * physics_variables.eps**2.8e0
             )
 
