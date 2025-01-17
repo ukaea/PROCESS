@@ -9,7 +9,7 @@ calculated from these values. The inverse aspect ratio is given by, $\epsilon$ (
 The shape of the plasma cross-section is given by the
 elongation of the last closed flux surface (LCFS) $\kappa$ (`kappa`) and the triangularity of the LCFS 
 $\delta$ (`triang`), which can be scaled automatically with the aspect ratio if 
-required using certain switch conditions of `ishape`:
+required using certain switch conditions of `i_plasma_geometry`:
 
 ## Plasma Geometry Parameters | `plasma_geometry()`
 
@@ -21,7 +21,7 @@ The function uses various scaling laws and formulas to calculate these parameter
 
 ----
 
-- `ishape = 0` -- `kappa` and `triang` **must** be input.  The elongation and triangularity of the 95% 
+- `i_plasma_geometry = 0` -- `kappa` and `triang` **must** be input.  The elongation and triangularity of the 95% 
     flux surface are calculated as follows, based on the 1989 ITER guidelines [^1]:
   $$
    \kappa_{95} = \kappa / 1.12
@@ -32,7 +32,7 @@ The function uses various scaling laws and formulas to calculate these parameter
 
 ----
 
-- `ishape = 1` -- `kappa` and `triang` **must not** be input.  They are calculated by the following equations, 
+- `i_plasma_geometry = 1` -- `kappa` and `triang` **must not** be input.  They are calculated by the following equations, 
   which estimate the largest elongation and triangularity achievable for 
   low aspect ratio machines based on the STAR code[^2]:
 
@@ -50,7 +50,7 @@ The function uses various scaling laws and formulas to calculate these parameter
   $$
 
   The values for the plasma shaping parameters at the 95% flux surface are calculated using a fit 
-  to a family of equilibria calculated using the FIESTA code, equivalent to that used in `ishape = 8`.
+  to a family of equilibria calculated using the FIESTA code, equivalent to that used in `i_plasma_geometry = 8`.
 
   $$
    \kappa_{95} = \frac{(\kappa - 0.39467)}{0.90698}
@@ -62,7 +62,7 @@ The function uses various scaling laws and formulas to calculate these parameter
 
 ----
 
-- `ishape = 2` -- The Zohm ITER scaling [^3] is used to calculate the elongation, where input variable `fkzohm` $= F_{kz}$ may be used to adjust the scaling, while the input 
+- `i_plasma_geometry = 2` -- The Zohm ITER scaling [^3] is used to calculate the elongation, where input variable `fkzohm` $= F_{kz}$ may be used to adjust the scaling, while the input 
   value of the triangularity is used unchanged
 
   $$
@@ -79,15 +79,15 @@ The function uses various scaling laws and formulas to calculate these parameter
   $$
 
 ---------------------------------------------------------------------
-- `ishape = 3` -- The Zohm ITER scaling[^3] is used to calculate the elongation (as for `ishape = 2` 
+- `i_plasma_geometry = 3` -- The Zohm ITER scaling[^3] is used to calculate the elongation (as for `i_plasma_geometry = 2` 
   above), but the triangularity at the 95% flux surface is input via variable `triang95`, and the 
   LCFS triangularity `triang` is calculated from it, rather than the other way round.
 ---------------------------------------------------------------------  
-- `ishape = 4` -- The 95% flux surface values `kappa95` and `triang95` are both used as inputs, 
+- `i_plasma_geometry = 4` -- The 95% flux surface values `kappa95` and `triang95` are both used as inputs, 
   and the LCFS values are calculated from them by inverting the equations given above 
-  for `ishape = 0`.
+  for `i_plasma_geometry = 0`.
 ---------------------------------------------------------------------
-- `ishape = 5` -- The 95% flux surface values `kappa95` and `triang95` are both used as inputs and 
+- `i_plasma_geometry = 5` -- The 95% flux surface values `kappa95` and `triang95` are both used as inputs and 
   the LCFS values are calculated from a fit to MAST data:
 
   $$
@@ -98,10 +98,10 @@ The function uses various scaling laws and formulas to calculate these parameter
   \delta = 0.77394 \, \delta_{95} + 0.18515 
   $$
 ---------------------------------------------------------------------
-- `ishape = 6` -- The input values for `kappa` and `triang` are used directly and the 95% flux 
-  surface values are calculated using the MAST scaling from `ishape = 5`.
+- `i_plasma_geometry = 6` -- The input values for `kappa` and `triang` are used directly and the 95% flux 
+  surface values are calculated using the MAST scaling from `i_plasma_geometry = 5`.
 ---------------------------------------------------------------------
-- `ishape = 7` -- The 95% flux surface values `kappa95` and `triang95` are both used as inputs and 
+- `i_plasma_geometry = 7` -- The 95% flux surface values `kappa95` and `triang95` are both used as inputs and 
   the LCFS values are calculated from a fit to FIESTA runs:
 
   $$
@@ -112,10 +112,10 @@ The function uses various scaling laws and formulas to calculate these parameter
   \delta = 1.3799 \, \delta_{95} + 0.048306 
   $$
 ---------------------------------------------------------------------
-- `ishape = 8` -- The input values for `kappa` and `triang` are used directly and the 95% flux 
-  surface values are calculated using the FIESTA fit from `ishape = 7`.
+- `i_plasma_geometry = 8` -- The input values for `kappa` and `triang` are used directly and the 95% flux 
+  surface values are calculated using the FIESTA fit from `i_plasma_geometry = 7`.
 ---------------------------------------------------------------------
-- `ishape = 9` -- The input values for `triang` and `rli` are used, `kappa` and the 95% flux 
+- `i_plasma_geometry = 9` -- The input values for `triang` and `rli` are used, `kappa` and the 95% flux 
   surface values are calculated.
 
   $$
@@ -133,7 +133,7 @@ The function uses various scaling laws and formulas to calculate these parameter
    \delta_{95} = \delta / 1.5
   $$
 ---------------------------------------------------------------------
-- `ishape = 10` -- The input values for  `triang` are used directly to calculate 95% flux surface values. `kappa` is calculated to a fit from CREATE data for  a EU-DEMO type machine with aspect ratios of ($2.6\le A \le 3.6$). Coefficient values are rounded to 2 decimal places
+- `i_plasma_geometry = 10` -- The input values for  `triang` are used directly to calculate 95% flux surface values. `kappa` is calculated to a fit from CREATE data for  a EU-DEMO type machine with aspect ratios of ($2.6\le A \le 3.6$). Coefficient values are rounded to 2 decimal places
 
   $$
   \kappa_{95} = \frac{(18.84 -(0.87 \times A)) - \sqrt{4.84A^2 -28.77 A+52.52+14.74 \times  m_{\text{s,limit}}}}{2a}
@@ -158,7 +158,7 @@ $$
 $$
 
 ---------------------------------------------------------------------
-- `ishape = 11` -- The elongation is calculated directly dependant on the aspect ratio for spherical tokamak aspect ratios.[^4]
+- `i_plasma_geometry = 11` -- The elongation is calculated directly dependant on the aspect ratio for spherical tokamak aspect ratios.[^4]
 
     $$
     \kappa = 0.95 \left(1.9+\frac{1.9}{A^{1.4}}\right)

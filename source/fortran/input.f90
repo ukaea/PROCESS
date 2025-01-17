@@ -307,7 +307,7 @@ contains
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
       fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
-      fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
+      fgwsep, rhopedn, tratio, q0, i_plasma_geometry, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
@@ -666,8 +666,8 @@ contains
        case ('i_plasma_wall_gap')
           call parse_int_variable('i_plasma_wall_gap', i_plasma_wall_gap, 0, 1, &
                'Switch for midplane gap between plasma and wall')
-       case ('ishape')
-          call parse_int_variable('ishape', ishape, 0, 11, &
+       case ('i_plasma_geometry')
+          call parse_int_variable('i_plasma_geometry', i_plasma_geometry, 0, 11, &
                'Switch for plasma shape vs. aspect')
        case ('itart')
           call parse_int_variable('itart', itart, 0, 1, &

@@ -233,7 +233,7 @@ module physics_variables
   !! physics figure of merit (= plasma_current*aspect**sbar, where `sbar=1`)
 
   real(dp) :: fkzohm
-  !! Zohm elongation scaling adjustment factor (`ishape=2, 3`)
+  !! Zohm elongation scaling adjustment factor (`i_plasma_geometry=2, 3`)
 
   real(dp) :: fplhsep
   !! F-value for Psep >= Plh + Paux (`constraint equation 73`)
@@ -529,7 +529,7 @@ module physics_variables
   !! - =0 use 10% of plasma minor radius
   !! - =1 use input (`scrapli` and `scraplo`)
 
-  integer :: ishape
+  integer :: i_plasma_geometry
   !! switch for plasma cross-sectional shape calculation:
   !!
   !! - =0 use input kappa, triang to calculate 95% values
@@ -564,10 +564,10 @@ module physics_variables
   !! - =2 use first wall area directly
 
   real(dp) :: kappa
-  !! plasma separatrix elongation (calculated if `ishape = 1-5, 7 or 9-10`)
+  !! plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5, 7 or 9-10`)
 
   real(dp) :: kappa95
-  !! plasma elongation at 95% surface (calculated if `ishape = 0-3, 6, or 8-10`)
+  !! plasma elongation at 95% surface (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)
 
   real(dp) :: kappaa
   !! plasma elongation calculated as a_plasma_poloidal/(pi.a^2)
@@ -897,10 +897,10 @@ module physics_variables
   !! ion temperature / electron temperature(used to calculate ti if `tratio > 0.0`
 
   real(dp) :: triang
-  !! plasma separatrix triangularity (calculated if `ishape = 1, 3-5 or 7`)
+  !! plasma separatrix triangularity (calculated if `i_plasma_geometry = 1, 3-5 or 7`)
 
   real(dp) :: triang95
-  !! plasma triangularity at 95% surface (calculated if `ishape = 0-2, 6, 8 or 9`)
+  !! plasma triangularity at 95% surface (calculated if `i_plasma_geometry = 0-2, 6, 8 or 9`)
 
   real(dp) :: vol_plasma
   !! plasma volume (m3)
@@ -1046,7 +1046,7 @@ module physics_variables
     iradloss = 1
     isc = 34
     i_plasma_wall_gap = 1
-    ishape = 0
+    i_plasma_geometry = 0
     itart = 0
     itartpf = 0
     iwalld = 1

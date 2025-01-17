@@ -119,15 +119,15 @@ values. The shape of the plasma cross-section is given by its last
 closed flux surface (LCFS) elongation \(\kappa\) (\texttt{kappa}) and
 triangularity \(\delta\) (\texttt{triang}), which can be scaled
 automatically with the aspect ratio if required using switch
-\texttt{ishape}:
+\texttt{i_plasma_geometry}:
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{ishape\ =\ 0} -- the input values for \texttt{kappa} and
+  \texttt{i_plasma_geometry\ =\ 0} -- the input values for \texttt{kappa} and
   \texttt{triang} are used directly.
 \item
-  \texttt{ishape\ =\ 1} -- the following scaling is used, which is
+  \texttt{i_plasma_geometry\ =\ 1} -- the following scaling is used, which is
   suitable for low aspect ratio machines (\(\epsilon = 1/A\)) \footnote{J.D.
     Galambos, `STAR Code : Spherical Tokamak Analysis and Reactor Code',
     Unpublished internal Oak Ridge document.}:
@@ -141,7 +141,7 @@ automatically with the aspect ratio if required using switch
 \begin{itemize}
 \tightlist
 \item
-  \texttt{ishape\ =\ 2} -- the Zohm ITER scaling \footnote{H. Zohm et
+  \texttt{i_plasma_geometry\ =\ 2} -- the Zohm ITER scaling \footnote{H. Zohm et
     al, `On the Physics Guidelines for a Tokamak DEMO', FTP/3-3, Proc.
     IAEA Fusion Energy Conference, October 2012, San Diego} is used to
   calculate the elongation: \[
@@ -151,7 +151,7 @@ automatically with the aspect ratio if required using switch
   unchanged.
 \end{itemize}
 
-If \texttt{ishape\ =\ 0,\ 1,\ 2}, the values for the plasma shaping
+If \texttt{i_plasma_geometry\ =\ 0,\ 1,\ 2}, the values for the plasma shaping
 parameters at the 95\% flux surface are calculated as follows:
 
 \[\begin{aligned}
@@ -162,13 +162,13 @@ parameters at the 95\% flux surface are calculated as follows:
 \begin{itemize}
 \tightlist
 \item
-  If \texttt{ishape\ =\ 3}, the Zohm ITER scaling is used to calculate
-  the elongation (as for \texttt{ishape\ =\ 2} above), but the
+  If \texttt{i_plasma_geometry\ =\ 3}, the Zohm ITER scaling is used to calculate
+  the elongation (as for \texttt{i_plasma_geometry\ =\ 2} above), but the
   triangularity at the 95\% flux surface is input via variable
   \texttt{triang95}, and the LCFS triangularity \texttt{triang} is
   calculated from it, rather than the other way round.
 \item
-  Finally, if \texttt{ishape\ =\ 4}, the 95\% flux surface values
+  Finally, if \texttt{i_plasma_geometry\ =\ 4}, the 95\% flux surface values
   \texttt{kappa95} and \texttt{triang95} are both used as inputs, and
   the LCFS values are calculated from them by inverting the equations
   above.

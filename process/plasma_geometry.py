@@ -45,7 +45,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 0
+            physics_variables.i_plasma_geometry == 0
         ):  # Use input kappa, physics_variables.triang values
             #  Rough estimate of 95% values
             #  ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
@@ -58,7 +58,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 1
+            physics_variables.i_plasma_geometry == 1
         ):  # ST scaling with physics_variables.aspect ratio [STAR Code]
             physics_variables.q95_min = 3.0e0 * (
                 1.0e0 + 2.6e0 * physics_variables.eps**2.8e0
@@ -82,7 +82,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 2
+            physics_variables.i_plasma_geometry == 2
         ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang
             physics_variables.kappa = physics_variables.fkzohm * min(
                 2.0e0, 1.5e0 + 0.5e0 / (physics_variables.aspect - 1.0e0)
@@ -95,7 +95,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 3
+            physics_variables.i_plasma_geometry == 3
         ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang95
             physics_variables.kappa = physics_variables.fkzohm * min(
                 2.0e0, 1.5e0 + 0.5e0 / (physics_variables.aspect - 1.0e0)
@@ -109,7 +109,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 4
+            physics_variables.i_plasma_geometry == 4
         ):  # Use input kappa95, physics_variables.triang95 values
             # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
             physics_variables.kappa = 1.12e0 * physics_variables.kappa95
@@ -118,7 +118,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 5
+            physics_variables.i_plasma_geometry == 5
         ):  # Use input kappa95, physics_variables.triang95 values
             # Fit to MAST data (Issue #1086)
             physics_variables.kappa = 0.91300e0 * physics_variables.kappa95 + 0.38654e0
@@ -129,7 +129,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 6
+            physics_variables.i_plasma_geometry == 6
         ):  # Use input kappa, physics_variables.triang values
             # Fit to MAST data (Issue #1086)
             physics_variables.kappa95 = (
@@ -142,7 +142,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 7
+            physics_variables.i_plasma_geometry == 7
         ):  # Use input kappa95, physics_variables.triang95 values
             # Fit to FIESTA (Issue #1086)
             physics_variables.kappa = 0.90698e0 * physics_variables.kappa95 + 0.39467e0
@@ -153,7 +153,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 8
+            physics_variables.i_plasma_geometry == 8
         ):  # Use input kappa, physics_variables.triang values
             # Fit to FIESTA (Issue #1086)
             physics_variables.kappa95 = (
@@ -166,7 +166,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.ishape == 9
+            physics_variables.i_plasma_geometry == 9
         ):  # Use input triang, physics_variables.rli values
             # physics_variables.kappa found from physics_variables.aspect ratio and plasma internal inductance li(3)
             physics_variables.kappa = (1.09e0 + 0.26e0 / physics_variables.rli) * (
@@ -178,7 +178,7 @@ class PlasmaGeom:
 
         # ======================================================================
 
-        if physics_variables.ishape == 10:
+        if physics_variables.i_plasma_geometry == 10:
             # physics_variables.kappa95 found from physics_variables.aspect ratio and stabilty margin
             # Based on fit to CREATE data. ref Issue #1399
             # valid for EU-DEMO like machine - physics_variables.aspect ratio 2.6 - 3.6
@@ -214,7 +214,7 @@ class PlasmaGeom:
 
         # ======================================================================
 
-        if physics_variables.ishape == 11:
+        if physics_variables.i_plasma_geometry == 11:
             # See Issue #1439
             # physics_variables.triang is an input
             # physics_variables.kappa found from physics_variables.aspect ratio scaling on p32 of Menard:

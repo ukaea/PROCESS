@@ -1539,7 +1539,7 @@ aspect = 3.0
 hfact = 1.1
 
 * Switch for plasma cross-sectional shape calc - use input kappa & triang
-ishape = 0 
+i_plasma_geometry = 0 
 
 * Plasma elongation [-]
 kappa = 1.85
@@ -1556,7 +1556,7 @@ alphat = 1.45
 * (troyon-like) coefficient for beta scaling
 beta_norm_max = 3.0
 
-* Zohm elongation scaling adjustment factor (ishape=2; 3)
+* Zohm elongation scaling adjustment factor (i_plasma_geometry=2; 3)
 fkzohm = 1.02
 
 * Ejima coefficient for resistive startup V-s formula

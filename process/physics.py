@@ -3350,7 +3350,7 @@ class Physics:
         po.ovarrf(self.outfile, "Aspect ratio", "(aspect)", physics_variables.aspect)
 
         if stellarator_variables.istell == 0:
-            if physics_variables.ishape in [0, 6, 8]:
+            if physics_variables.i_plasma_geometry in [0, 6, 8]:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (input value used)",
@@ -3358,7 +3358,7 @@ class Physics:
                     physics_variables.kappa,
                     "IP ",
                 )
-            elif physics_variables.ishape == 1:
+            elif physics_variables.i_plasma_geometry == 1:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (TART scaling)",
@@ -3366,7 +3366,7 @@ class Physics:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.ishape in [2, 3]:
+            elif physics_variables.i_plasma_geometry in [2, 3]:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (Zohm scaling)",
@@ -3380,7 +3380,7 @@ class Physics:
                     "(fkzohm)",
                     physics_variables.fkzohm,
                 )
-            elif physics_variables.ishape in [4, 5, 7]:
+            elif physics_variables.i_plasma_geometry in [4, 5, 7]:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from kappa95)",
@@ -3388,7 +3388,7 @@ class Physics:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.ishape == 9:
+            elif physics_variables.i_plasma_geometry == 9:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from aspect ratio and li(3))",
@@ -3396,7 +3396,7 @@ class Physics:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.ishape == 10:
+            elif physics_variables.i_plasma_geometry == 10:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from aspect ratio and stability margin)",
@@ -3404,7 +3404,7 @@ class Physics:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.ishape == 11:
+            elif physics_variables.i_plasma_geometry == 11:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from aspect ratio via Menard 2016)",
@@ -3413,10 +3413,10 @@ class Physics:
                     "OP ",
                 )
             else:
-                error_handling.idiags[0] = physics_variables.ishape
+                error_handling.idiags[0] = physics_variables.i_plasma_geometry
                 po.report_error(86)
 
-            if physics_variables.ishape in [4, 5, 7]:
+            if physics_variables.i_plasma_geometry in [4, 5, 7]:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, 95% surface (input value used)",
@@ -3441,7 +3441,7 @@ class Physics:
                 "OP ",
             )
 
-            if physics_variables.ishape in [0, 2, 6, 8, 9, 10, 11]:
+            if physics_variables.i_plasma_geometry in [0, 2, 6, 8, 9, 10, 11]:
                 po.ovarrf(
                     self.outfile,
                     "Triangularity, X-point (input value used)",
@@ -3449,7 +3449,7 @@ class Physics:
                     physics_variables.triang,
                     "IP ",
                 )
-            elif physics_variables.ishape == 1:
+            elif physics_variables.i_plasma_geometry == 1:
                 po.ovarrf(
                     self.outfile,
                     "Triangularity, X-point (TART scaling)",
@@ -3466,7 +3466,7 @@ class Physics:
                     "OP ",
                 )
 
-            if physics_variables.ishape in [3, 4, 5, 7]:
+            if physics_variables.i_plasma_geometry in [3, 4, 5, 7]:
                 po.ovarrf(
                     self.outfile,
                     "Triangularity, 95% surface (input value used)",
@@ -3627,7 +3627,7 @@ class Physics:
                 "OP ",
             )
 
-            if physics_variables.ishape == 1:
+            if physics_variables.i_plasma_geometry == 1:
                 po.ovarrf(
                     self.outfile,
                     "Lower limit for edge safety factor q",

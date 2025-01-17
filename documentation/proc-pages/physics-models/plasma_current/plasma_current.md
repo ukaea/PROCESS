@@ -481,7 +481,7 @@ higher elongations causes an underestimate by up to 20%.
 
 Given the parameter dependencies a new plasma current relation based on fits to FIESTA
 equilibria was created. It showed no bias with any parameter fitted and that the fit is accurate to 10%.
-The linear relation between these and the 95% values expressed in does not hold at high values of elongation and triangularity as per the [`ishape = 0`](../plasma_geometry.md#plasma-geometry-parameters--plasma_geometry) relation.
+The linear relation between these and the 95% values expressed in does not hold at high values of elongation and triangularity as per the [`i_plasma_geometry = 0`](../plasma_geometry.md#plasma-geometry-parameters--plasma_geometry) relation.
 
 
 $$
