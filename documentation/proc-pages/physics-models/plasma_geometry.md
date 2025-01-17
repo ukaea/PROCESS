@@ -202,7 +202,7 @@ The plasma and first wall clearance can be calculated or input by setting the `i
 - `i_plasma_wall_gap` == 0, then the inboard and outboard plasma wall gaps are set to be 10% of the plasma minor radius ($a$).
 - `i_plasma_wall_gap` == 1, then the inboard and outboard plasma wall gaps are set by defining `scrapli` and `scraplo` respectively.
 
-### Geometrical properties | `xparam()`
+### Geometrical properties | `plasma_angles_arcs()`
 
 This method calculates the radius and half angle of the arc describing the inboard and outboard plasma surfaces. This calculation is appropriate for plasmas with a separatrix. It requires the plasma minor radius ($a$,     `rminor`), elongation ($\kappa$, `kappa`) and triangularity ($\delta$, `triang`).
 
@@ -274,7 +274,7 @@ $$
 This function finds the plasma surface area, using the
 revolution of two intersecting arcs around the device centreline.
 This calculation is appropriate for plasmas with a separatrix.
-It uses the geometrical properties derived in `xparam()`
+It uses the geometrical properties derived in `plasma_angles_arcs()`
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
@@ -385,7 +385,7 @@ $$
 
 ### Plasma Volume | `xvol()`
 
-The plasma volume is calculated using the `xvol` method with the inputted $R_0$ & $a$ along with the outputs of `xparam`.
+The plasma volume is calculated using the `xvol` method with the inputted $R_0$ & $a$ along with the outputs of `plasma_angles_arcs()`.
 The `cvol` iteration variable can be used to scale this output
 
 | Input Variable | Description                          |

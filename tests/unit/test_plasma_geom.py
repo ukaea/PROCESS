@@ -20,7 +20,7 @@ def plasma():
     return plasma
 
 
-class XparamParam(NamedTuple):
+class PlasmaAnglesArcsParam(NamedTuple):
     a: Any = None
 
     kap: Any = None
@@ -37,9 +37,9 @@ class XparamParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "xparamparam",
+    "plasmaanglesarcsparam",
     (
-        XparamParam(
+        PlasmaAnglesArcsParam(
             a=2.8677741935483869,
             kap=1.8480000000000001,
             tri=0.5,
@@ -48,7 +48,7 @@ class XparamParam(NamedTuple):
             expected_xo=5.4154130183225808,
             expected_thetao=1.3636548755403939,
         ),
-        XparamParam(
+        PlasmaAnglesArcsParam(
             a=2.8677741935483869,
             kap=1.8480000000000001,
             tri=0.5,
@@ -59,30 +59,32 @@ class XparamParam(NamedTuple):
         ),
     ),
 )
-def test_xparam(xparamparam, monkeypatch, plasma):
+def test_plasma_angles_arcs(plasmaanglesarcsparam, monkeypatch, plasma):
     """
-    Automatically generated Regression Unit Test for xparam.
+    Automatically generated Regression Unit Test for plasma_angles_arcs().
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
-    :param xparamparam: the data used to mock and assert in this test.
-    :type xparamparam: xparamparam
+    :param plasmaanglesarcsparam: the data used to mock and assert in this test.
+    :type plasmaanglesarcsparam: plasmaanglesarcsparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    xi, thetai, xo, thetao = plasma.xparam(
-        a=xparamparam.a, kap=xparamparam.kap, tri=xparamparam.tri
+    xi, thetai, xo, thetao = plasma.plasma_angles_arcs(
+        a=plasmaanglesarcsparam.a,
+        kap=plasmaanglesarcsparam.kap,
+        tri=plasmaanglesarcsparam.tri,
     )
 
-    assert xi == pytest.approx(xparamparam.expected_xi)
+    assert xi == pytest.approx(plasmaanglesarcsparam.expected_xi)
 
-    assert thetai == pytest.approx(xparamparam.expected_thetai)
+    assert thetai == pytest.approx(plasmaanglesarcsparam.expected_thetai)
 
-    assert xo == pytest.approx(xparamparam.expected_xo)
+    assert xo == pytest.approx(plasmaanglesarcsparam.expected_xo)
 
-    assert thetao == pytest.approx(xparamparam.expected_thetao)
+    assert thetao == pytest.approx(plasmaanglesarcsparam.expected_thetao)
 
 
 @pytest.mark.parametrize(

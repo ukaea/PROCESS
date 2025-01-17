@@ -238,7 +238,7 @@ class PlasmaGeom:
         # ======================================================================
 
         # Find parameters of arcs describing plasma surfaces
-        xi, thetai, xo, thetao = self.xparam(
+        xi, thetai, xo, thetao = self.plasma_angles_arcs(
             physics_variables.rminor,
             physics_variables.kappa,
             physics_variables.triang,
@@ -301,7 +301,9 @@ class PlasmaGeom:
         # ======================================================================
 
     @staticmethod
-    def xparam(a: float, kap: float, tri: float) -> tuple[float, float, float, float]:
+    def plasma_angles_arcs(
+        a: float, kap: float, tri: float
+    ) -> tuple[float, float, float, float]:
         """
         Routine to find parameters used for calculating geometrical
         properties for double-null plasmas.
