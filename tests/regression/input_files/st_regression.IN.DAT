@@ -401,7 +401,7 @@ q0 = 2.0
 * DESCRIPTION:   Switch for ignited plasma assumption
 * JUSTIFICATION: Non ignited plasma, default = Not ignited
 
-*isc = 
+*i_confinement_time = 
 * DESCRIPTION:   Switch for confinement scaling law (default=34, IPB98(y,2))
 * JUSTIFICATION: Not set, assuming default value
 
@@ -433,8 +433,8 @@ boundu(21) = 10.0
 * JUSTIFICATION: Not setting a limit on confinement time. 
 
 *tauee_in = 
-* DESCRIPTION:   Input electron energy confinement time (sec) (isc=49 only)'
-* JUSTIFICATION: Not set, not ussing isc = 49.
+* DESCRIPTION:   Input electron energy confinement time (sec) (i_confinement_time=49 only)'
+* JUSTIFICATION: Not set, not ussing i_confinement_time = 49.
 
 *iinvqd = 
 * DESCRIPTION:   Switch for inverse quadrature in L-mode scaling laws 5 and 9

@@ -402,7 +402,7 @@ tesep = 0.1
 iprofile = 1
 
 * Switch for energy confinement time scaling law
-isc = 34
+i_confinement_time = 34
 
 * Safety factor on axis
 q0 = 1.0

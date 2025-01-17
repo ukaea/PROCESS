@@ -596,7 +596,7 @@ energy confinement times \(\tau_E\) are equal.
 
 Many energy confinement time scaling laws are present within PROCESS,
 for tokamaks, RFPs or stellarators. These are calculated in routine
-\texttt{pcond}. The value of \texttt{isc} determines which of the
+\texttt{pcond}. The value of \texttt{i_confinement_time} determines which of the
 scalings is used in the plasma energy balance calculation. The table
 below summarises the available scaling laws. The most commonly used is
 the so-called IPB98(y,2) scaling.
@@ -604,7 +604,7 @@ the so-called IPB98(y,2) scaling.
 \begin{longtable}[]{@{}cll@{}}
 \toprule
 \begin{minipage}[b]{0.05\columnwidth}\centering\strut
-\texttt{isc}\strut
+\texttt{i_confinement_time}\strut
 \end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedright\strut
 scaling law\strut
 \end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedright\strut
@@ -1376,9 +1376,9 @@ too high.
 Laws}{Inverse Quadrature in \textbackslash{}tau\_E Scaling Laws}}\label{inverse-quadrature-in-tau_e-scaling-laws}
 
 Switch \texttt{iinvqd} determines whether the energy confinement time
-scaling laws due to Kaye-Goldston (\texttt{isc\ =\ 5}) and Goldston
-(\texttt{isc\ =\ 9}) should include an inverse quadrature scaling with
-the Neo-Alcator result (\texttt{isc\ =\ 1}). A value
+scaling laws due to Kaye-Goldston (\texttt{i_confinement_time\ =\ 5}) and Goldston
+(\texttt{i_confinement_time\ =\ 9}) should include an inverse quadrature scaling with
+the Neo-Alcator result (\texttt{i_confinement_time\ =\ 1}). A value
 \texttt{iinvqd\ =\ 1}includes this scaling.
 
 \subsubsection{Plasma / First Wall Gap}\label{plasma-first-wall-gap}

@@ -4,11 +4,11 @@ The energy confinement time $\tau_E$ is calculated using one of a choice of empi
 
 Many energy confinement time scaling laws are available within PROCESS, for
 tokamaks, RFPs and stellarators. These are calculated in routine `pcond`. The 
-value of `isc` determines which of the scalings is used in the plasma energy 
+value of `i_confinement_time` determines which of the scalings is used in the plasma energy 
 balance calculation. The table below summarises the available scaling laws. The 
 most commonly used is the so-called IPB98(y,2) scaling.       
 
-| `isc` | scaling law | reference |
+| `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
 | 2 | Mirnov (H-mode) | [^1] |
