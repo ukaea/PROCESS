@@ -854,9 +854,6 @@ module physics_variables
   real(dp) :: sareao
   !! outboard plasma surface area
 
-  real(dp) :: sf
-  !! shape factor = plasma poloidal perimeter / (2.pi.rminor)
-
   integer :: i_single_null
   !! switch for single null / double null plasma:
   !!
@@ -1143,7 +1140,6 @@ module physics_variables
     res_time = 0.0D0
     a_plasma_surface = 0.0D0
     sareao = 0.0D0
-    sf = 0.0D0
     i_single_null = 1
     ssync = 0.6D0
     tauee = 0.0D0

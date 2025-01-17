@@ -295,18 +295,26 @@ def calculate_poloidal_field(
         return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
-def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
+def calculate_current_coefficient_peng(
+    eps: float, len_plasma_poloidal: float, rminor: float
+) -> float:
     """
     Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
 
     Parameters:
     - eps: float, plasma inverse aspect ratio
-    - sf: float, shaping factor calculated in the poloidal perimeter function
+    - len_plasma_poloidal: float, plasma poloidal perimeter length [m]
+    - rminor: float, plasma minor radius [m]
 
     References:
     - None
     """
-    return (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
+
+    return (
+        (1.22 - 0.68 * eps)
+        / ((1.0 - eps * eps) ** 2)
+        * (len_plasma_poloidal / (2.0 * np.pi * rminor)) ** 2
+    )
 
 
 def calculate_plasma_current_peng(
@@ -1516,7 +1524,6 @@ class Physics:
             physics_variables.rli,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.sf,
             physics_variables.triang,
             physics_variables.triang95,
         )
@@ -3039,7 +3046,6 @@ class Physics:
         rli: float,
         rmajor: float,
         rminor: float,
-        sf: float,
         triang: float,
         triang95: float,
     ) -> tuple[float, float, float, float, float]:
@@ -3076,7 +3082,6 @@ class Physics:
             rli (float): Plasma normalised internal inductance.
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
-            sf (float): Shape factor for i_plasma_current=1 (=A/pi in documentation).
             triang (float): Plasma triangularity.
             triang95 (float): Plasma triangularity at 95% surface.
 
@@ -3115,7 +3120,7 @@ class Physics:
 
         # Peng analytical fit
         if i_plasma_current == 1:
-            fq = calculate_current_coefficient_peng(eps, sf)
+            fq = calculate_current_coefficient_peng(eps, len_plasma_poloidal, rminor)
 
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:

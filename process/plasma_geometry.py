@@ -264,7 +264,6 @@ class PlasmaGeom:
         if physics_variables.i_plasma_current == 8:
             (
                 physics_variables.len_plasma_poloidal,
-                physics_variables.sf,
                 physics_variables.a_plasma_surface,
                 physics_variables.a_plasma_poloidal,
                 physics_variables.vol_plasma,
@@ -278,9 +277,6 @@ class PlasmaGeom:
         else:
             #  Poloidal perimeter
             physics_variables.len_plasma_poloidal = 2.0e0 * (xo * thetao + xi * thetai)
-            physics_variables.sf = physics_variables.len_plasma_poloidal / (
-                2.0e0 * np.pi * physics_variables.rminor
-            )
 
             #  Volume
             physics_variables.vol_plasma = (
@@ -483,26 +479,25 @@ class PlasmaGeom:
         """
         Calculate the plasma geometry parameters using the Sauter geometry model.
 
-                Parameters:
-                a (float): Plasma minor radius (m)
-                r0 (float): Plasma major radius (m)
-                kappa (float): Plasma separatrix elongation
-                triang (float): Plasma separatrix triangularity
+        Parameters:
+        a (float): Plasma minor radius (m)
+        r0 (float): Plasma major radius (m)
+        kappa (float): Plasma separatrix elongation
+        triang (float): Plasma separatrix triangularity
 
-                Returns:
-                tuple: A tuple containing:
-                    - len_plasma_poloidal (float): Poloidal perimeter
-                    - sf (float): Geometric factor
-                    - a_plasma_surface (float): Surface area
-                    - a_plasma_poloidal (float): Cross-section area
-                    - vol_plasma (float): Plasma volume
+        Returns:
+        tuple: A tuple containing:
+            - len_plasma_poloidal (float): Poloidal perimeter
+            - a_plasma_surface (float): Surface area
+            - a_plasma_poloidal (float): Cross-section area
+            - vol_plasma (float): Plasma volume
 
-                Notes:
+        Notes:
 
-                Refrences:
-                    - O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,”
-                      Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016,
-                      doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
+        Refrences:
+            - O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,”
+              Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016,
+              doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
 
         """
 
@@ -522,9 +517,6 @@ class PlasmaGeom:
             * (1 + 0.2 * (w07 - 1))
         )
 
-        # A geometric factor
-        sf = len_plasma_poloidal / (2.0e0 * np.pi * a)
-
         # Surface area (named Ap in Sauter)
         a_plasma_surface = (
             2.0e0 * np.pi * r0 * (1 - 0.32 * triang * eps) * len_plasma_poloidal
@@ -538,7 +530,6 @@ class PlasmaGeom:
 
         return (
             len_plasma_poloidal,
-            sf,
             a_plasma_surface,
             a_plasma_poloidal,
             vol_plasma,

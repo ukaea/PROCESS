@@ -897,8 +897,6 @@ class PlasmaCurrentParam(NamedTuple):
 
     rminor: Any = None
 
-    sf: Any = None
-
     triang: Any = None
 
     triang95: Any = None
@@ -937,7 +935,6 @@ class PlasmaCurrentParam(NamedTuple):
             q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
-            sf=1.4372507312498271,
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
@@ -965,7 +962,6 @@ class PlasmaCurrentParam(NamedTuple):
             q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
-            sf=1.4372507312498271,
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
@@ -1014,7 +1010,6 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         q95=plasmacurrentparam.q95,
         rmajor=plasmacurrentparam.rmajor,
         rminor=plasmacurrentparam.rminor,
-        sf=plasmacurrentparam.sf,
         triang=plasmacurrentparam.triang,
         triang95=plasmacurrentparam.triang95,
     )

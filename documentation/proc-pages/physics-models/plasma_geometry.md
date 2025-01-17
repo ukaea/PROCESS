@@ -346,12 +346,6 @@ $$
 \mathtt{len_plasma_poloidal} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\mathtt{w07} - 1))
 $$
 
-A geometric factor
-
-$$
-\mathtt{sf} = \frac{\mathtt{len_plasma_poloidal}}{2.0\pi a}
-$$
-
 Surface area (named Ap in Sauter)
 
 $$
@@ -377,11 +371,6 @@ $$
 \mathtt{len_plasma_poloidal} = 2.0 \times (\mathtt{xo} \times \mathtt{thetao} + \mathtt{xi} \times \mathtt{thetai})
 $$
 
-The shaping factor for `i_plasma_current = 1` is also calculated here:
-$$
-\mathtt{sf} = \frac{\mathtt{len_plasma_poloidal}}{
-    2.0\pi  a}
-$$
 
 ### Plasma Volume | `plasma_volume()`
 

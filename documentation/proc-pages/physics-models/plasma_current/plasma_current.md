@@ -116,9 +116,9 @@ Switch value: `i_plasma_current = 1`
 
 The formula for calculating `fq` is:
 
-$$f_q = \left(\frac{{1.22 - 0.68  \epsilon}}{{(1.0 - \epsilon^2)^2}}\right)  \mathtt{{sf}}^2$$
+$$f_q = \left(\frac{{1.22 - 0.68  \epsilon}}{{(1.0 - \epsilon^2)^2}}\right)  \left(\frac{L_{\text{poloidal}}}{2\pi a}\right)^2$$
 
-Where $\epsilon$ is the inverse [aspect ratio](../plasma_geometry.md) ($\mathtt{eps}$) and $\mathtt{sf}$ is the shaping factor calculated in the [poloidal perimeter](../plasma_geometry.md#poloidal-perimeter) function in `plasma_geometry.py`
+Where $\epsilon$ is the inverse [aspect ratio](../plasma_geometry.md) ($\mathtt{eps}$) and $L_{\text{poloidal}}$ is the poloidal perimeter of the plasma.
 
 -----------
 
