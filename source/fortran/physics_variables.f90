@@ -530,7 +530,7 @@ module physics_variables
   !! - =1 use input (`scrapli` and `scraplo`)
 
   integer :: i_plasma_geometry
-  !! switch for plasma cross-sectional shape calculation:
+  !! switch for plasma elongation and triangularity calculations:
   !!
   !! - =0 use input kappa, triang to calculate 95% values
   !! - =1 scale q95_min, kappa, triang with aspect ratio (ST)
@@ -544,6 +544,12 @@ module physics_variables
   !! - =9 set kappa to the natural elongation value, triang input
   !! - =10 set kappa to maximum stable value at a given aspect ratio (2.6<A<3.6)), triang input (#1399)
   !! - =11 set kappa Menard 2016 aspect-ratio-dependent scaling, triang input (#1439)
+
+  integer :: i_plasma_shape
+  !! switch for plasma boundary shape:
+  !!
+  !! - =0 use original PROCESS 2-arcs model
+  !! - =1 use the Sauter model
 
   integer :: itart
   !! switch for spherical tokamak (ST) models:
@@ -1047,6 +1053,7 @@ module physics_variables
     isc = 34
     i_plasma_wall_gap = 1
     i_plasma_geometry = 0
+    i_plasma_shape = 0
     itart = 0
     itartpf = 0
     iwalld = 1
