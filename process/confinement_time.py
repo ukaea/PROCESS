@@ -159,3 +159,50 @@ def kaye_goldston_confinement_time(
         * np.sqrt(afuel / 1.5e0)
         / (bt**0.09e0 * rminor**0.49e0 * powerht**0.58e0)
     )
+
+
+def iter_89P_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa: float,
+    dnla20: float,
+    bt: float,
+    afuel: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the ITER Power scaling - ITER 89-P (L-mode) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa (float): Plasma elongation
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    afuel (float): Fuel atomic mass number
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: ITER 89-P confinement time [s]
+
+    Notes:
+
+    References:
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+        - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
+          ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+    """
+    return (
+        0.048e0
+        * pcur**0.85e0
+        * rmajor**1.2e0
+        * rminor**0.3e0
+        * np.sqrt(kappa)
+        * dnla20**0.1e0
+        * bt**0.2e0
+        * np.sqrt(afuel)
+        / np.sqrt(powerht)
+    )

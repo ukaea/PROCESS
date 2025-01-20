@@ -71,6 +71,16 @@ $$
 
 ----------------
 
+### 6: ITER 89-P L-mode scaling
+
+Is selected with `i_confinement_time = 6`
+
+$$
+\tau_{\text{E}} = 0.048 I^{0.85}R^{1.2}a^{0.3}\kappa^{0.5}\overline{n}_{20}^{0.1}B_{\text{T}}^{0.2}M_{\text{i}}^{0.5} P^{-0.5}
+$$
+
+----------------
+
 
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
