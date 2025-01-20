@@ -583,3 +583,46 @@ def riedel_l_confinement_time(
         * bt**0.152e0
         / powerht**0.537e0
     )
+
+
+def christiansen_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa95: float,
+    dnla20: float,
+    bt: float,
+    powerht: float,
+    afuel: float,
+) -> float:
+    """
+    Calculate the Christiansen et al scaling (L-mode) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    powerht (float): Net Heating power [MW]
+    afuel (float): Fuel atomic mass number
+
+    Returns:
+    float: Christiansen confinement time [s]
+
+    Notes:
+
+    References:
+        - Christiansen et al scaling (L-mode)
+    """
+    return (
+        0.24e0
+        * pcur**0.79e0
+        * rmajor**0.56e0
+        * rminor**1.46e0
+        * kappa95**0.73e0
+        * dnla20**0.41e0
+        * bt**0.29e0
+        / (powerht**0.79e0 * afuel**0.02e0)
+    )

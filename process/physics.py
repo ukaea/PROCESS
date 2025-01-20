@@ -6914,18 +6914,22 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 16:  # Christiansen et al scaling (L-mode)
-            tauee = (
-                hfact
-                * 0.24e0
-                * pcur**0.79e0
-                * rmajor**0.56e0
-                * rminor**1.46e0
-                * kappa95**0.73e0
-                * dnla20**0.41e0
-                * bt**0.29e0
-                / (powerht**0.79e0 * m_fuel_amu**0.02e0)
+        # Christiansen et al scaling (L-mode)
+        elif i_confinement_time == 16:
+            tauee = hfact * confinement.christiansen_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
+                afuel,
             )
+
+        # ========================================================================
+
+        # ========================================================================
 
         elif i_confinement_time == 17:  # Lackner-Gottardi scaling (L-mode)
             qhat = (1.0e0 + kappa95**2) * rminor**2 * bt / (0.4e0 * pcur * rmajor)
