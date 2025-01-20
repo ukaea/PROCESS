@@ -6757,15 +6757,10 @@ class Physics:
                 rmajor, rminor, kappa95, qstar, dnla20, afuel, ten
             )
 
-        elif i_confinement_time == 4:  # Shimomura scaling (H-mode)
-            tauee = (
-                hfact
-                * 0.045e0
-                * rmajor
-                * rminor
-                * bt
-                * np.sqrt(kappa95)
-                * np.sqrt(m_fuel_amu)
+        # Shimomura (S) optimized H-mode scaling
+        elif i_confinement_time == 4:
+            tauee = hfact * confinement.shimomura_confinement_time(
+                rmajor, rminor, bt, kappa95, afuel
             )
 
         elif i_confinement_time == 5:  # Kaye-Goldston scaling (L-mode)
