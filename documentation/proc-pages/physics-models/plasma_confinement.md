@@ -256,6 +256,16 @@ $$
 
 -------------------------
 
+### 20: Amended ITER H90-P H-mode scaling 
+
+Is selected with `i_confinement_time = 20`
+
+$$
+\tau_{\text{E}} =  0.082 M_{\text{i}}^{0.5} I^{1.02} R^{1.6}  \kappa_{95}^{-0.19}  B_{\text{T}}^{0.15} P^{-0.47}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

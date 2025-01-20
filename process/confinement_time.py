@@ -755,3 +755,43 @@ def riedel_h_confinement_time(
         * dnla20**0.105e0
         / powerht**0.486e0
     )
+
+
+def iter_h90_p_amended_confinement_time(
+    pcur: float,
+    bt: float,
+    afuel: float,
+    rmajor: float,
+    powerht: float,
+    kappa: float,
+) -> float:
+    """
+        Calculate the amended ITER H90-P confinement time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        afuel (float): Fuel atomic mass number
+        rmajor (float): Plasma major radius [m]
+        powerht (float): Net Heating power [MW]
+        kappa (float): Plasma elongation
+
+        Returns:
+        float: Amended ITER H90-P confinement time [s]
+
+        Notes:
+
+        References:
+            - J. P. Christiansen et al., “Global energy confinement H-mode database for ITER,”
+            Nuclear Fusion, vol. 32, no. 2, pp. 291–338, Feb. 1992,
+            doi: https://doi.org/10.1088/0029-5515/32/2/i11.
+    ‌
+    """
+    return (
+        0.082e0
+        * pcur**1.02e0
+        * bt**0.15e0
+        * np.sqrt(afuel)
+        * rmajor**1.60e0
+        / (powerht**0.47e0 * kappa**0.19e0)
+    )
