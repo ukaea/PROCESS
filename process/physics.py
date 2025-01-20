@@ -6828,21 +6828,13 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 10:  # T10 scaling
-            denfac = dnla20 * rmajor * qstar / (1.3e0 * bt)
-            denfac = min(1.0e0, denfac)
-            tauee = (
-                hfact
-                * 0.095e0
-                * rmajor
-                * rminor
-                * bt
-                * np.sqrt(kappa95)
-                * denfac
-                / powerht**0.4e0
-                * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0))
-                ** 0.08e0
+        # T-10 scaling (L-mode)
+        elif i_confinement_time == 10:
+            tauee = hfact * confinement.t10_confinement_time(
+                dnla20, rmajor, qstar, bt, rminor, kappa95, powerht, zeff, pcur
             )
+
+        # ========================================================================
 
         elif i_confinement_time == 11:  # JAERI scaling
             gjaeri = (

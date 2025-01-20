@@ -120,6 +120,20 @@ $$
 
 ----------------
 
+### 10: T-10 L-mode scaling
+
+Is selected with `i_confinement_time = 10`
+
+
+$$
+\tau_{\text{E}} =  0.095 a R B_{\text{T}} \kappa_{95}^{0.5} \frac{\overline{n}_{20}}{\overline{n}_{20*}}P^{-0.4} \left[\frac{Z_{\text{eff}}^2 I^4}{aRq_{\text{cyl}}^3\kappa_{95}^{1.5}}  \right]^{0.08}
+$$
+
+where $\overline{n}_{20*} = 1.3\left(\frac{B_{\text{T}}}{Rq_{\text{cyl}}}\right)$ and $\frac{\overline{n}_{20}}{\overline{n}_{20*}} \le 1$
+
+
+----------------
+
 
 
 | `i_confinement_time` | scaling law | reference |
