@@ -307,3 +307,43 @@ def rebut_lallia_confinement_time(
         / powerht
     )
     return 1.65e0 * np.sqrt(afuel / 2.0e0) * (term1 + term2)
+
+
+def goldston_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa95: float,
+    afuel: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Goldston scaling (L-mode) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    afuel (float): Fuel atomic mass number
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Goldston confinement time [s]
+
+    Notes:
+
+    References:
+        - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
+        ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+
+    """
+    return (
+        0.037e0
+        * pcur
+        * rmajor**1.75e0
+        * rminor ** (-0.37e0)
+        * np.sqrt(kappa95)
+        * np.sqrt(afuel / 1.5e0)
+        / np.sqrt(powerht)
+    )

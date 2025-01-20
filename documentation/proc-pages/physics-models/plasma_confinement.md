@@ -110,6 +110,17 @@ where $\ell = \left(a^2R\kappa\right)^{\frac{1}{3}}$
 ----------------
 
 
+### 9: Goldston L-mode scaling
+
+Is selected with `i_confinement_time = 9`
+
+$$
+\tau_{\text{E}} = 0.037 I P^{-0.5} R^{1.75}a^{-0.37}\kappa_{95}^{0.5} \left(\frac{M_i}{1.5}\right)^{0.5}
+$$
+
+----------------
+
+
 
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
