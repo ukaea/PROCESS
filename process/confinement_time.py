@@ -453,3 +453,47 @@ def jaeri_confinement_time(
         * kappa95**0.2e0
         / powerht
     )
+
+
+def iter_h90_p_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa: float,
+    dnla20: float,
+    bt: float,
+    afuel: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the ITER H-mode scaling - ITER H90-P confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa (float): Plasma elongation
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    afuel (float): Fuel atomic mass number
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: ITER H90-P confinement time [s]
+
+    Notes:
+
+    References:
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+    """
+    return (
+        0.064e0
+        * pcur**0.87e0
+        * rmajor**1.82e0
+        * rminor ** (-0.12e0)
+        * kappa**0.35e0
+        * dnla20**0.09e0
+        * bt**0.15e0
+        * np.sqrt(afuel)
+        / np.sqrt(powerht)
+    )

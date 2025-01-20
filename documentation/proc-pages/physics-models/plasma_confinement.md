@@ -148,6 +148,15 @@ where $G\left(q_{\text{cyl}},Z_{\text{eff}}\right) = Z_{\text{eff}}^{0.4}\left[\
 ----------------
 
 
+### 13: ITER H90-P H-mode scaling
+
+Is selected with `i_confinement_time = 13`
+
+$$
+\tau_{\text{E}} =  0.064 I^{0.87 R^{1.82}} a^{-0.12} \kappa_{95}^{0.35} \overline{n}_{20}^{0.09} B_{\text{T}}^{0.15} M_{\text{i}}^{0.5} P^{-0.5}
+$$
+
+-------------------------
 
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
