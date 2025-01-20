@@ -6992,18 +6992,17 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 21:  # Large Helical Device scaling (stellarators)
-            # S.Sudo, Y.Takeiri, H.Zushi et al., Nuclear Fusion 30 (1990) 11
-            tauee = (
-                hfact
-                * 0.17e0
-                * rmajor**0.75e0
-                * rminor**2
-                * dnla20**0.69e0
-                * bt**0.84e0
-                * powerht ** (-0.58e0)
+        # Sudo et al. scaling (stellarators/heliotron)
+        elif i_confinement_time == 21:
+            tauee = hfact * confinement.sudo_et_al_confinement_time(
+                rmajor,
+                rminor,
+                dnla20,
+                bt,
+                powerht,
             )
 
+        # ==========================================================================
         elif i_confinement_time == 22:  # Gyro-reduced Bohm scaling
             # R.J.Goldston, H.Biglari, G.W.Hammett et al., Bull.Am.Phys.Society,
             # volume 34, 1964 (1989)

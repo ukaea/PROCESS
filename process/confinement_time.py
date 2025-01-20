@@ -795,3 +795,41 @@ def iter_h90_p_amended_confinement_time(
         * rmajor**1.60e0
         / (powerht**0.47e0 * kappa**0.19e0)
     )
+
+
+def sudo_et_al_confinement_time(
+    rmajor: float,
+    rminor: float,
+    dnla20: float,
+    bt: float,
+    powerht: float,
+) -> float:
+    """
+        Calculate the Sudo et al. scaling confinement time
+
+        Parameters:
+        rmajor (float): Plasma major radius [m]
+        rminor (float): Plasma minor radius [m]
+        dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+        bt (float): Toroidal magnetic field [T]
+        powerht (float): Net Heating power [MW]
+
+        Returns:
+        float: Sudo et al. confinement time [s]
+
+        Notes:
+
+        References:
+            - S. Sudo et al., “Scalings of energy confinement and density limit in stellarator/heliotron devices,”
+            Nuclear Fusion, vol. 30, no. 1, pp. 11–21, Jan. 1990,
+            doi: https://doi.org/10.1088/0029-5515/30/1/002.
+    ‌"""
+
+    return (
+        0.17e0
+        * rmajor**0.75e0
+        * rminor**2
+        * dnla20**0.69e0
+        * bt**0.84e0
+        * powerht ** (-0.58e0)
+    )
