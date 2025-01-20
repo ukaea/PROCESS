@@ -711,3 +711,47 @@ def neo_kaye_confinement_time(
         * bt**0.04e0
         / powerht**0.59e0
     )
+
+
+def riedel_h_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa95: float,
+    dnla20: float,
+    bt: float,
+    afuel: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Riedel scaling (H-mode) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    afuel (float): Fuel atomic mass number
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Riedel H-mode confinement time [s]
+
+    Notes:
+
+    References:
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+    """
+    return (
+        0.1e0
+        * np.sqrt(afuel)
+        * pcur**0.884e0
+        * rmajor**1.24e0
+        * rminor ** (-0.23e0)
+        * kappa95**0.317e0
+        * bt**0.207e0
+        * dnla20**0.105e0
+        / powerht**0.486e0
+    )
