@@ -224,6 +224,18 @@ $$
 
 -------------------------
 
+### 17: Lackner-Gottardi L-mode scaling
+
+Is selected with `i_confinement_time = 17`
+
+$$
+\tau_{\text{E}} =  0.12 I^{0.8} R^{1.8} a^{0.4} \left(\frac{\kappa_{95}}{\left(1+\kappa_{95}\right)^{0.8}}\right) \overline{n}_{20}^{0.6} \hat{q}^{0.4} P^{-0.6}
+$$
+
+where $\hat{q} = \frac{(1+\kappa_{95}a^2B_{\text{T}})}{0.4 I R}$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

@@ -614,7 +614,7 @@ def christiansen_confinement_time(
     Notes:
 
     References:
-        - Christiansen et al scaling (L-mode)
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     return (
         0.24e0
@@ -625,4 +625,48 @@ def christiansen_confinement_time(
         * dnla20**0.41e0
         * bt**0.29e0
         / (powerht**0.79e0 * afuel**0.02e0)
+    )
+
+
+def lackner_gottardi_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa95: float,
+    dnla20: float,
+    bt: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Lackner-Gottardi scaling (L-mode) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Lackner-Gottardi confinement time [s]
+
+    Notes:
+
+    References:
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+    """
+    qhat = (1.0e0 + kappa95**2) * rminor**2 * bt / (0.4e0 * pcur * rmajor)
+    return (
+        0.12e0
+        * pcur**0.8e0
+        * rmajor**1.8e0
+        * rminor**0.4e0
+        * kappa95
+        * (1.0e0 + kappa95) ** (-0.8e0)
+        * dnla20**0.6e0
+        * qhat**0.4e0
+        / powerht**0.6e0
     )
