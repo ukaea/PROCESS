@@ -6977,17 +6977,20 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 20:  # Amended version of ITER H90-P law
-            # Nuclear Fusion 32 (1992) 318
-            tauee = (
-                hfact
-                * 0.082e0
-                * pcur**1.02e0
-                * bt**0.15e0
-                * np.sqrt(m_fuel_amu)
-                * rmajor**1.60e0
-                / (powerht**0.47e0 * kappa**0.19e0)
+        # Amended version of ITER H90-P law
+        elif i_confinement_time == 20:
+            tauee = hfact * confinement.iter_h90_p_amended_confinement_time(
+                pcur,
+                bt,
+                afuel,
+                rmajor,
+                powerht,
+                kappa,
             )
+
+        # ==========================================================================
+
+        # ==========================================================================
 
         elif i_confinement_time == 21:  # Large Helical Device scaling (stellarators)
             # S.Sudo, Y.Takeiri, H.Zushi et al., Nuclear Fusion 30 (1990) 11
