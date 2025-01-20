@@ -260,3 +260,50 @@ def iter_89_0_confinement_time(
         / powerht
     )
     return term1 + term2
+
+
+def rebut_lallia_confinement_time(
+    rminor: float,
+    rmajor: float,
+    kappa: float,
+    afuel: float,
+    pcur: float,
+    zeff: float,
+    dnla20: float,
+    bt: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Rebut-Lallia offset linear scaling (L-mode) confinement time
+
+    Parameters:
+    rminor (float): Plasma minor radius [m]
+    rmajor (float): Plasma major radius [m]
+    kappa (float): Plasma elongation at 95% flux surface
+    afuel (float): Fuel atomic mass number
+    pcur (float): Plasma current [MA]
+    zeff (float): Effective charge
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Rebut-Lallia confinement time [s]
+
+    Notes:
+
+    References:
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+    """
+    rll = (rminor**2 * rmajor * kappa) ** (1.0e0 / 3.0e0)
+    term1 = 1.2e-2 * pcur * rll**1.5e0 / np.sqrt(zeff)
+    term2 = (
+        0.146e0
+        * dnla20**0.75e0
+        * np.sqrt(pcur)
+        * np.sqrt(bt)
+        * rll**2.75e0
+        * zeff**0.25e0
+        / powerht
+    )
+    return 1.65e0 * np.sqrt(afuel / 2.0e0) * (term1 + term2)
