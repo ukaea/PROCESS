@@ -14,7 +14,7 @@ module physics_variables
 
   public
 
-  integer, parameter :: ipnlaws = 49
+  integer, parameter :: ipnlaws = 50
   !! number of energy confinement time scaling laws
 
   real(dp) :: m_beam_amu
@@ -471,7 +471,6 @@ module physics_variables
     'NSTX (Spherical)     (H)', &
     'NSTX-Petty08 Hybrid  (H)', &
     'NSTX gyro-Bohm Buxton(H)', &
-    'Input tauee_in          ', &
     'ITPA20               (H)' /)
   !! tauscl(ipnlaws) : labels describing energy confinement scaling laws:<UL>
   !! <LI> ( 1)  Neo-Alcator (ohmic)
