@@ -6747,8 +6747,9 @@ class Physics:
                 n20, rminor, rmajor, qstar
             )
 
+        # "Mirnov"-like scaling (H-mode)
         elif i_confinement_time == 2:  # Mirnov scaling (H-mode)
-            tauee = hfact * 0.2e0 * rminor * np.sqrt(kappa95) * pcur
+            tauee = hfact * confinement.mirnov_confinement_time(rminor, kappa95, pcur)
 
         # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
         elif i_confinement_time == 3:
