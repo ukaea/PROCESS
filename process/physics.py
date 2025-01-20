@@ -6836,45 +6836,22 @@ class Physics:
 
         # ========================================================================
 
+        # JAERI / Odajima-Shimomura scaling
         elif i_confinement_time == 11:  # JAERI scaling
-            gjaeri = (
-                zeff**0.4e0
-                * ((15.0e0 - zeff) / 20.0e0) ** 0.6e0
-                * (
-                    3.0e0
-                    * qstar
-                    * (qstar + 5.0e0)
-                    / ((qstar + 2.0e0) * (qstar + 7.0e0))
-                )
-                ** 0.6e0
-            )
-            tauee = hfact * (
-                0.085e0 * kappa95 * rminor**2 * np.sqrt(m_fuel_amu)
-                + 0.069e0
-                * n20**0.6e0
-                * pcur
-                * bt**0.2e0
-                * rminor**0.4e0
-                * rmajor**1.6e0
-                * np.sqrt(m_fuel_amu)
-                * gjaeri
-                * kappa95**0.2e0
-                / powerht
+            tauee = hfact * confinement.jaeri_confinement_time(
+                kappa95,
+                rminor,
+                afuel,
+                n20,
+                pcur,
+                bt,
+                rmajor,
+                qstar,
+                zeff,
+                powerht,
             )
 
-        elif i_confinement_time == 12:  # Kaye-Big scaling
-            tauee = (
-                hfact
-                * 0.105e0
-                * np.sqrt(rmajor)
-                * rminor**0.8e0
-                * bt**0.3e0
-                * kappa95**0.25e0
-                * pcur**0.85e0
-                * n20**0.1e0
-                * m_fuel_amu**0.5e0
-                / powerht**0.5e0
-            )
+        # ========================================================================
 
         elif i_confinement_time == 13:  # ITER H-mode scaling - ITER H90-P
             tauee = (
