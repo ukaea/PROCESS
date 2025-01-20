@@ -6786,19 +6786,13 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 6:  # ITER Power scaling - ITER 89-P (L-mode)
-            tauee = (
-                hfact
-                * 0.048e0
-                * pcur**0.85e0
-                * rmajor**1.2e0
-                * rminor**0.3e0
-                * np.sqrt(kappa)
-                * dnla20**0.1e0
-                * bt**0.2e0
-                * np.sqrt(m_fuel_amu)
-                / np.sqrt(powerht)
+        # ITER Power scaling - ITER 89-P (L-mode)
+        elif i_confinement_time == 6:
+            tauee = hfact * confinement.iter_89P_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
+
+        # ========================================================================
 
         elif i_confinement_time == 7:  # ITER Offset linear scaling - ITER 89-O (L-mode)
             term1 = (
