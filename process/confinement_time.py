@@ -869,3 +869,44 @@ def gyro_reduced_bohm_confinement_time(
         * rminor**2.4e0
         * rmajor**0.6e0
     )
+
+
+def lackner_gottardi_stellarator_confinement_time(
+    rmajor: float,
+    rminor: float,
+    dnla20: float,
+    bt: float,
+    powerht: float,
+    q: float,
+) -> float:
+    """
+        Calculate the Lackner-Gottardi stellarator scaling confinement time
+
+        Parameters:
+        rmajor (float): Plasma major radius [m]
+        rminor (float): Plasma minor radius [m]
+        dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+        bt (float): Toroidal magnetic field [T]
+        powerht (float): Net Heating power [MW]
+        q (float): Edge safety factor
+
+        Returns:
+        float: Lackner-Gottardi stellarator confinement time [s]
+
+        Notes:
+
+        References:
+            - K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to plateau scaling,”
+            Nuclear Fusion, vol. 30, no. 4, pp. 767–770, Apr. 1990,
+            doi: https://doi.org/10.1088/0029-5515/30/4/018.
+    ‌
+    """
+    return (
+        0.17e0
+        * rmajor
+        * rminor**2
+        * dnla20**0.6e0
+        * bt**0.8e0
+        * powerht ** (-0.6e0)
+        * q**0.4e0
+    )

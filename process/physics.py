@@ -7015,19 +7015,19 @@ class Physics:
             )
 
         # ==========================================================================
-        elif i_confinement_time == 23:  # Lackner-Gottardi stellarator scaling
-            # K.Lackner and N.A.O.Gottardi, Nuclear Fusion, 30, p.767 (1990)
-            iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            tauee = (
-                hfact
-                * 0.17e0
-                * rmajor
-                * rminor**2
-                * dnla20**0.6e0
-                * bt**0.8e0
-                * powerht ** (-0.6e0)
-                * iotabar**0.4e0
+
+        # Lackner-Gottardi stellarator scaling
+        elif i_confinement_time == 23:
+            tauee = hfact * confinement.lackner_gottardi_stellarator_confinement_time(
+                rmajor,
+                rminor,
+                dnla20,
+                bt,
+                powerht,
+                q,
             )
+
+        # ==========================================================================
 
         elif (
             i_confinement_time == 24

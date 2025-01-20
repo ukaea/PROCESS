@@ -286,6 +286,16 @@ $$
 
 -------------------------
 
+### 23: Lackner-Gottardi Stellerator scaling
+
+Is selected with `i_confinement_time = 23`
+
+$$
+\tau_{\text{E}} =  0.17 P^{-0.6} \overline{n}_{20}^{0.6} B_{\text{T}}^{0.8} a^{2.0} R q_{95}^{0.4}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
