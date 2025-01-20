@@ -204,6 +204,16 @@ Will return the value of [ITER 89-P](#6-iter-89-p-l-mode-scaling) or [ITER 89-O]
 
 -------------------------
 
+### 15: Riedel L-mode scaling
+
+Is selected with `i_confinement_time = 15`
+
+$$
+\tau_{\text{E}} =  0.044 I^{0.93} R^{1.37} a^{-0.049} \kappa_{95}^{0.588} \overline{n}_{20}^{0.078} B_{\text{T}}^{0.152} P^{-0.537}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

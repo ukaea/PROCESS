@@ -542,3 +542,44 @@ def iter_h90_p_confinement_time(
         * np.sqrt(afuel)
         / np.sqrt(powerht)
     )
+
+
+def riedel_l_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa95: float,
+    dnla20: float,
+    bt: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Riedel scaling (L-mode) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Riedel confinement time [s]
+
+    Notes:
+
+    References:
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+    """
+    return (
+        0.044e0
+        * pcur**0.93e0
+        * rmajor**1.37e0
+        * rminor ** (-0.049e0)
+        * kappa95**0.588e0
+        * dnla20**0.078e0
+        * bt**0.152e0
+        / powerht**0.537e0
+    )
