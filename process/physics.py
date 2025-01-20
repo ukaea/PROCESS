@@ -6885,42 +6885,20 @@ class Physics:
 
         # ========================================================================
 
-        elif (
-            i_confinement_time == 14
-        ):  # Minimum of ITER 89-P (i_confinement_time=6) and ITER 89-O (i_confinement_time=7)
-            tauit1 = (
+        # Minimum of ITER 89-P and ITER 89-O
+        elif i_confinement_time == 14:
+            tauee = min(
                 hfact
-                * 0.048e0
-                * pcur**0.85e0
-                * rmajor**1.2e0
-                * rminor**0.3e0
-                * np.sqrt(kappa)
-                * dnla20**0.1e0
-                * bt**0.2e0
-                * np.sqrt(m_fuel_amu)
-                / np.sqrt(powerht)
+                * confinement.iter_89P_confinement_time(
+                    pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                ),
+                hfact
+                * confinement.iter_89_0_confinement_time(
+                    pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                ),
             )
-            term1 = (
-                0.04e0
-                * pcur**0.5e0
-                * rmajor**0.3e0
-                * rminor**0.8e0
-                * kappa**0.6e0
-                * m_fuel_amu**0.5e0
-            )
-            term2 = (
-                0.064e0
-                * pcur**0.8e0
-                * rmajor**1.6e0
-                * rminor**0.6e0
-                * kappa**0.5e0
-                * dnla20**0.6e0
-                * bt**0.35e0
-                * m_fuel_amu**0.2e0
-                / powerht
-            )
-            tauit2 = hfact * (term1 + term2)
-            tauee = min(tauit1, tauit2)
+
+        # ========================================================================
 
         elif i_confinement_time == 15:  # Riedel scaling (L-mode)
             tauee = (
