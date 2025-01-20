@@ -6836,7 +6836,7 @@ class Physics:
 
         # ========================================================================
 
-        # JAERI / Odajima-Shimomura scaling
+        # JAERI / Odajima-Shimomura L-mode scaling
         elif i_confinement_time == 11:  # JAERI scaling
             tauee = hfact * confinement.jaeri_confinement_time(
                 kappa95,
@@ -6853,19 +6853,22 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 13:  # ITER H-mode scaling - ITER H90-P
-            tauee = (
-                hfact
-                * 0.064e0
-                * pcur**0.87e0
-                * rmajor**1.82e0
-                * rminor ** (-0.12e0)
-                * kappa**0.35e0
-                * dnla20**0.09e0
-                * bt**0.15e0
-                * np.sqrt(m_fuel_amu)
-                / np.sqrt(powerht)
+        # ITER H90-P H-mode scaling
+        elif i_confinement_time == 13:
+            tauee = hfact * confinement.iter_h90_p_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                bt,
+                afuel,
+                powerht,
             )
+
+        # ========================================================================
+
+        # ========================================================================
 
         elif (
             i_confinement_time == 14
