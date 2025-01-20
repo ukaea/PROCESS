@@ -186,7 +186,6 @@ $$
 
 -------------------------
 
-
 ### 13: ITER H90-P H-mode scaling
 
 Is selected with `i_confinement_time = 13`
@@ -194,6 +193,14 @@ Is selected with `i_confinement_time = 13`
 $$
 \tau_{\text{E}} =  0.064 I^{0.87} R^{1.82} a^{-0.12} \kappa_{95}^{0.35} \overline{n}_{20}^{0.09} B_{\text{T}}^{0.15} M_{\text{i}}^{0.5} P^{-0.5}
 $$
+
+-------------------------
+
+### 14: Minimum of ITER 89-P and ITER 89-O
+
+Is selected with `i_confinement_time = 14`
+
+Will return the value of [ITER 89-P](#6-iter-89-p-l-mode-scaling) or [ITER 89-O](#7-iter-89-0-l-mode-scaling), whichever is smaller.
 
 -------------------------
 
