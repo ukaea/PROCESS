@@ -206,3 +206,57 @@ def iter_89P_confinement_time(
         * np.sqrt(afuel)
         / np.sqrt(powerht)
     )
+
+
+def iter_89_0_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa: float,
+    dnla20: float,
+    bt: float,
+    afuel: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the ITER Offset linear scaling - ITER 89-O (L-mode) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa (float): Plasma elongation
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    afuel (float): Fuel atomic mass number
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: ITER 89-O confinement time [s]
+
+    Notes:
+
+    References:
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+    """
+    term1 = (
+        0.04e0
+        * pcur**0.5e0
+        * rmajor**0.3e0
+        * rminor**0.8e0
+        * kappa**0.6e0
+        * afuel**0.5e0
+    )
+    term2 = (
+        0.064e0
+        * pcur**0.8e0
+        * rmajor**1.6e0
+        * rminor**0.6e0
+        * kappa**0.5e0
+        * dnla20**0.6e0
+        * bt**0.35e0
+        * afuel**0.2e0
+        / powerht
+    )
+    return term1 + term2
