@@ -276,6 +276,16 @@ $$
 
 -------------------------
 
+### 22: Gyro reduced Bohm scaling
+
+Is selected with `i_confinement_time = 22`
+
+$$
+\tau_{\text{E}} =  0.25 P^{-0.6} \overline{n}_{20}^{0.6} B_{\text{T}}^{0.8} a^{2.4} R^{0.6}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

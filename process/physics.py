@@ -7003,19 +7003,18 @@ class Physics:
             )
 
         # ==========================================================================
-        elif i_confinement_time == 22:  # Gyro-reduced Bohm scaling
-            # R.J.Goldston, H.Biglari, G.W.Hammett et al., Bull.Am.Phys.Society,
-            # volume 34, 1964 (1989)
-            tauee = (
-                hfact
-                * 0.25e0
-                * bt**0.8e0
-                * dnla20**0.6e0
-                * powerht ** (-0.6e0)
-                * rminor**2.4e0
-                * rmajor**0.6e0
+
+        # Gyro-reduced Bohm scaling
+        elif i_confinement_time == 22:
+            tauee = hfact * confinement.gyro_reduced_bohm_confinement_time(
+                bt,
+                dnla20,
+                powerht,
+                rminor,
+                rmajor,
             )
 
+        # ==========================================================================
         elif i_confinement_time == 23:  # Lackner-Gottardi stellarator scaling
             # K.Lackner and N.A.O.Gottardi, Nuclear Fusion, 30, p.767 (1990)
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
