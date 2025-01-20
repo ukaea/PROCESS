@@ -113,3 +113,49 @@ def shimomura_confinement_time(
          ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
     """
     return 0.045e0 * rmajor * rminor * bt * np.sqrt(kappa95) * np.sqrt(afuel)
+
+
+def kaye_goldston_confinement_time(
+    kappa95: float,
+    pcur: float,
+    n20: float,
+    rmajor: float,
+    afuel: float,
+    bt: float,
+    rminor: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Kaye-Goldston (KG) L-mode scaling confinement time
+
+    Parameters:
+    hfact (float): H-factor
+    kappa95 (float): Plasma elongation at 95% flux surface
+    pcur (float): Plasma current [MA]
+    n20 (float): Line averaged electron density in units of 10**20 m**-3
+    rmajor (float): Plasma major radius [m]
+    afuel (float): Fuel atomic mass number
+    bt (float): Toroidal magnetic field [T]
+    rminor (float): Plasma minor radius [m]
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Kaye-Goldston confinement time [s]
+
+    Notes:
+        - An isotope correction factor (M_i/1.5)^0.5 is added to the original scaling to reflect the fact
+          that the empirical fits to the data were from experiments with H and D mixture, M_i = 1.5
+
+    References:
+        - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
+         ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+    """
+    return (
+        0.055e0
+        * kappa95**0.28e0
+        * pcur**1.24e0
+        * n20**0.26e0
+        * rmajor**1.65e0
+        * np.sqrt(afuel / 1.5e0)
+        / (bt**0.09e0 * rminor**0.49e0 * powerht**0.58e0)
+    )
