@@ -79,7 +79,7 @@ icc = 2
 *icc = 4
 * DESCRIPTION:   Global power balance for electrons
 * JUSTIFICATION: Not recommended for use 
-* VARIABLES:     iradloss,ignite,pinjemw, Rest calculated in-situ
+* VARIABLES:     i_rad_loss,ignite,pinjemw, Rest calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Performance ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -599,7 +599,7 @@ f_sync_reflect = 0.6
 * DESCRIPTION:   Plasma synchrotron radiation wall reflectivity factor
 * JUSTIFICATION: 
 
-*iradloss = 
+*i_rad_loss = 
 * DESCRIPTION:   Switch for radiation loss term inclusion in power balance (default = 1)
 * =0 total power lost is scaling power plus radiation
 * =1 total power lost is scaling power plus core radiation only

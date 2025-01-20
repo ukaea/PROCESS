@@ -410,7 +410,7 @@ module physics_variables
   !! - =5 use input value for alphaj.  Set rli and beta_norm_max from Menard scaling
   !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and beta_norm_max from Tholerus
 
-  integer :: iradloss
+  integer :: i_rad_loss
   !! switch for radiation loss term usage in power balance (see User Guide):
   !!
   !! - =0 total power lost is scaling power plus radiation
@@ -1049,7 +1049,7 @@ module physics_variables
     teped = 1.0D0
     tesep = 0.1D0
     iprofile = 1
-    iradloss = 1
+    i_rad_loss = 1
     i_confinement_time = 34
     i_plasma_wall_gap = 1
     i_plasma_geometry = 0

@@ -440,7 +440,7 @@ contains
     !! \begin{equation} c_i =
     !! \end{equation}
     !!
-    !! iradloss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
+    !! i_rad_loss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
     !! <LI> = 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
     !! <LI> = 1 total power lost is scaling power plus core radiation only
     !! <LI> = 2 total power lost is scaling power only, with no additional
@@ -459,7 +459,7 @@ contains
     !! pinjmw : input real : total auxiliary injected power (MW)
     !! vol_plasma : input real : plasma volume (m3)
 
-    use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pden_plasma_rad_mw, &
+    use physics_variables, only: i_rad_loss, ignite, ptrepv, ptripv, pden_plasma_rad_mw, &
                                   pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: pinjmw
@@ -478,9 +478,9 @@ contains
     real(dp) :: pnumerator, pdenom
     pscaling = ptrepv + ptripv
     ! Total power lost is scaling power plus radiation:
-    if (iradloss == 0) then
+    if (i_rad_loss == 0) then
         pnumerator = pscaling + pden_plasma_rad_mw
-    else if (iradloss == 1) then
+    else if (i_rad_loss == 1) then
         pnumerator = pscaling + pcoreradpv
     else
         pnumerator = pscaling
@@ -560,7 +560,7 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! iradloss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
+      !! i_rad_loss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
       !! <LI> = 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
       !! <LI> = 1 total power lost is scaling power plus core radiation only
       !! <LI> = 2 total power lost is scaling power only, with no additional
@@ -576,7 +576,7 @@ contains
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
+      use physics_variables, only: i_rad_loss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
                                  alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
       use current_drive_variables, only: pinjemw
       implicit none
@@ -591,9 +591,9 @@ contains
       real(dp) :: pnumerator, pdenom
       pscaling = ptrepv
 	   ! Total power lost is scaling power plus radiation:
-      if (iradloss == 0) then
+      if (i_rad_loss == 0) then
          pnumerator = pscaling + pden_plasma_rad_mw
-      else if (iradloss == 1) then
+      else if (i_rad_loss == 1) then
          pnumerator = pscaling + pcoreradpv
       else
          pnumerator = pscaling

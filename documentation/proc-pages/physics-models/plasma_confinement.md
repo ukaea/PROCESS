@@ -6,7 +6,36 @@ Many energy confinement time scaling laws are available within PROCESS, for
 tokamaks, RFPs and stellarators. These are calculated in routine `pcond`. The 
 value of `i_confinement_time` determines which of the scalings is used in the plasma energy 
 balance calculation. The table below summarises the available scaling laws. The 
-most commonly used is the so-called IPB98(y,2) scaling.       
+most commonly used is the so-called IPB98(y,2) scaling.
+
+## Effect of radiation on energy confinement
+
+Published confinement scalings are all based on low radiation pulses. A power
+plant will certainly be a high radiation machine --- both in the core, due to
+bremsstrahlung and synchrotron radiation, and in the edge due to impurity
+seeding. The scaling data do not predict this radiation --- that needs to be
+done by the radiation model. However, if the transport is very "stiff", as
+predicted by some models, then the additional radiation causes an almost equal
+drop in power transported by ions and electrons, leaving the confinement
+nearly unchanged.
+
+To allow for these uncertainties, three options are available, using the switch
+`i_rad_loss`. In each case, the particle transport loss power `pscaling` is
+derived directly from the energy confinement scaling law.
+
+`i_rad_loss = 0` -- Total power lost is scaling power plus radiation:
+
+`pscaling + pradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+
+
+`i_rad_loss = 1` -- Total power lost is scaling power plus radiation from a region defined as the "core":
+  
+`pscaling + pcoreradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+
+`i_rad_loss = 2` -- Total power lost is scaling power only, with no additional 
+allowance for radiation. This is not recommended for power plant models.
+
+`pscaling = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
 
 ## Available confinement time scalings
 

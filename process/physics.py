@@ -5219,10 +5219,10 @@ class Physics:
         po.ovarin(
             self.outfile,
             "Switch for radiation loss term usage in power balance",
-            "(iradloss)",
-            physics_variables.iradloss,
+            "(i_rad_loss)",
+            physics_variables.i_rad_loss,
         )
-        if physics_variables.iradloss == 0:
+        if physics_variables.i_rad_loss == 0:
             po.ovarre(
                 self.outfile,
                 "Radiation power subtracted from plasma power balance (MW)",
@@ -5231,7 +5231,7 @@ class Physics:
                 "OP ",
             )
             po.ocmmnt(self.outfile, "  (Radiation correction is total radiation power)")
-        elif physics_variables.iradloss == 1:
+        elif physics_variables.i_rad_loss == 1:
             po.ovarre(
                 self.outfile,
                 "Radiation power subtracted from plasma power balance (MW)",
@@ -5248,7 +5248,7 @@ class Physics:
                 0.0e0,
             )
             po.ocmmnt(self.outfile, "  (No radiation correction applied)")
-        if physics_variables.iradloss == 1:
+        if physics_variables.i_rad_loss == 1:
             po.ovarrf(
                 self.outfile,
                 "H* non-radiation corrected",
@@ -5265,7 +5265,7 @@ class Physics:
                 ** 0.31,
                 "OP",
             )
-        elif physics_variables.iradloss == 0:
+        elif physics_variables.i_rad_loss == 0:
             po.ovarrf(
                 self.outfile,
                 "H* non-radiation corrected",
@@ -5282,7 +5282,7 @@ class Physics:
                 ** 0.31,
                 "OP",
             )
-        elif physics_variables.iradloss == 2:
+        elif physics_variables.i_rad_loss == 2:
             po.ovarrf(
                 self.outfile,
                 "H* non-radiation corrected",
@@ -6580,9 +6580,9 @@ class Physics:
 
         # Include the radiation power if requested
 
-        if physics_variables.iradloss == 0:
+        if physics_variables.i_rad_loss == 0:
             fhz += physics_variables.pden_plasma_rad_mw
-        elif physics_variables.iradloss == 1:
+        elif physics_variables.i_rad_loss == 1:
             fhz += physics_variables.pcoreradpv
 
         return fhz
@@ -6702,9 +6702,9 @@ class Physics:
             powerht = powerht + pinjmw
 
         # Include the radiation as a loss term if requested
-        if physics_variables.iradloss == 0:
+        if physics_variables.i_rad_loss == 0:
             powerht = powerht - physics_variables.pden_plasma_rad_mw * vol_plasma
-        elif physics_variables.iradloss == 1:
+        elif physics_variables.i_rad_loss == 1:
             powerht = (
                 powerht - pcoreradpv * vol_plasma
             )  # shouldn't this be vol_core instead of vol_plasma?

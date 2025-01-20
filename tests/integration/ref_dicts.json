@@ -2660,7 +2660,7 @@
         "iptr": 0.0,
         "ipvlam": "ipeqns+2*ipnvars+1",
         "ipvp1": "ipnvars+1",
-        "iradloss": 1.0,
+        "i_rad_loss": 1.0,
         "ireactor": 1.0,
         "irefprop": 1.0,
         "irfcd": 1.0,
@@ -9900,7 +9900,7 @@
         "iptr": "",
         "ipvlam": "",
         "ipvp1": "",
-        "iradloss": "switch for radiation loss term usage in power balance (see User Guide):\n<ul>\n<li>=0 total power lost is scaling power plus radiation (needed for `ipedestal=2,3`)</li>\n<li>=1 total power lost is scaling power plus core radiation only</li>\n<li>=2 total power lost is scaling power only, with no additional\n   allowance for radiation. This is not recommended for power plant models.</li>\n</ul>",
+        "i_rad_loss": "switch for radiation loss term usage in power balance (see User Guide):\n<ul>\n<li>=0 total power lost is scaling power plus radiation (needed for `ipedestal=2,3`)</li>\n<li>=1 total power lost is scaling power plus core radiation only</li>\n<li>=2 total power lost is scaling power only, with no additional\n   allowance for radiation. This is not recommended for power plant models.</li>\n</ul>",
         "ireactor": "Switch for net electric power and cost of electricity calculations:\n<ul>\n<li>=0 do not calculate MW(electric) or c-o-e</li>\n<li>=1 calculate MW(electric) and c-o-e</li>\n</ul>",
         "irefprop": "Switch to use REFPROP routines (stellarator only)",
         "irfcd": "Switch for current drive calculation:\n<ul>\n<li>=0 turned off</li>\n<li>=1 turned on</li>\n</ul>",
@@ -13479,7 +13479,7 @@
             "lb": 0,
             "ub": 1
         },
-        "iradloss": {
+        "i_rad_loss": {
             "lb": 0,
             "ub": 2
         },
@@ -19158,7 +19158,7 @@
             "teped",
             "tesep",
             "iprofile",
-            "iradloss",
+            "i_rad_loss",
             "i_confinement_time",
             "tauscl",
             "i_plasma_wall_gap",
@@ -20498,7 +20498,7 @@
         "iprimshld": "int_variable",
         "iprofile": "int_variable",
         "i_pfirsch_schluter_current": "int_variable",
-        "iradloss": "int_variable",
+        "i_rad_loss": "int_variable",
         "ireactor": "int_variable",
         "irefprop": "int_variable",
         "irfcd": "int_variable",

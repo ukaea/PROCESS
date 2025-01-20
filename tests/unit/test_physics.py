@@ -2158,7 +2158,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
 
 
 class PcondParam(NamedTuple):
-    iradloss: Any = None
+    i_rad_loss: Any = None
 
     tauee_in: Any = None
 
@@ -2247,7 +2247,7 @@ class PcondParam(NamedTuple):
     "pcondparam",
     (
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2291,7 +2291,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2335,7 +2335,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2379,7 +2379,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2423,7 +2423,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2467,7 +2467,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2511,7 +2511,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2555,7 +2555,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2599,7 +2599,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2643,7 +2643,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2687,7 +2687,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2731,7 +2731,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2775,7 +2775,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2819,7 +2819,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2863,7 +2863,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2907,7 +2907,7 @@ class PcondParam(NamedTuple):
             expected_powerht=290.18368660937881,
         ),
         PcondParam(
-            iradloss=1,
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
             kappaa_ipb=1.68145080681586,
@@ -2965,7 +2965,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "iradloss", pcondparam.iradloss)
+    monkeypatch.setattr(physics_variables, "i_rad_loss", pcondparam.i_rad_loss)
 
     monkeypatch.setattr(physics_variables, "tauee_in", pcondparam.tauee_in)
 
