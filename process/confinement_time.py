@@ -88,3 +88,28 @@ def merezhkin_muhkovatov_confinement_time(
         * np.sqrt(afuel)
         / np.sqrt(ten / 10.0e0)
     )
+
+
+def shimomura_confinement_time(
+    rmajor: float, rminor: float, bt: float, kappa95: float, afuel: float
+) -> float:
+    """
+    Calculate the  Shimomura (S) optimized H-mode scaling confinement time
+
+    Parameters:
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    bt (float): Toroidal magnetic field [T]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    afuel (float): Fuel atomic mass number
+
+    Returns:
+    float: Shimomura confinement time [s]
+
+    Notes:
+
+    References:
+        - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
+         ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+    """
+    return 0.045e0 * rmajor * rminor * bt * np.sqrt(kappa95) * np.sqrt(afuel)
