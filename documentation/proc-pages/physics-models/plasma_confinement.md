@@ -214,6 +214,16 @@ $$
 
 -------------------------
 
+### 16: Christiansen L-mode scaling
+
+Is selected with `i_confinement_time = 16`
+
+$$
+\tau_{\text{E}} =  0.24 I^{0.79} R^{0.56} a^{1.46} \kappa_{95}^{0.73} \overline{n}_{20}^{0.41} B_{\text{T}}^{0.29} P^{-0.79} M_{\text{i}}^{-0.02}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
