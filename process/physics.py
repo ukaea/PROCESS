@@ -6794,27 +6794,12 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 7:  # ITER Offset linear scaling - ITER 89-O (L-mode)
-            term1 = (
-                0.04e0
-                * pcur**0.5e0
-                * rmajor**0.3e0
-                * rminor**0.8e0
-                * kappa**0.6e0
-                * m_fuel_amu**0.5e0
+        # ITER Offset linear scaling - ITER 89-O (L-mode)
+        elif i_confinement_time == 7:
+            tauee = hfact * confinement.iter_89_0_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
-            term2 = (
-                0.064e0
-                * pcur**0.8e0
-                * rmajor**1.6e0
-                * rminor**0.6e0
-                * kappa**0.5e0
-                * dnla20**0.6e0
-                * bt**0.35e0
-                * m_fuel_amu**0.2e0
-                / powerht
-            )
-            tauee = hfact * (term1 + term2)
+        # ========================================================================
 
         elif i_confinement_time == 8:  # Rebut-Lallia offset linear scaling (L-mode)
             rll = (rminor**2 * rmajor * kappa95) ** 0.333e0
