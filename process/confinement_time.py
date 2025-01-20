@@ -833,3 +833,39 @@ def sudo_et_al_confinement_time(
         * bt**0.84e0
         * powerht ** (-0.58e0)
     )
+
+
+def gyro_reduced_bohm_confinement_time(
+    bt: float,
+    dnla20: float,
+    powerht: float,
+    rminor: float,
+    rmajor: float,
+) -> float:
+    """
+    Calculate the Gyro-reduced Bohm scaling confinement time
+
+    Parameters:
+    bt (float): Toroidal magnetic field [T]
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    powerht (float): Net Heating power [MW]
+    rminor (float): Plasma minor radius [m]
+    rmajor (float): Plasma major radius [m]
+
+    Returns:
+    float: Gyro-reduced Bohm confinement time [s]
+
+    Notes:
+
+    References:
+        - Goldston, R. J., H. Biglari, and G. W. Hammett. "E× B/B 2 vs. µ B/B as the Cause of Transport in Tokamaks."
+          Bull. Am. Phys. Soc 34 (1989): 1964.
+    """
+    return (
+        0.25e0
+        * bt**0.8e0
+        * dnla20**0.6e0
+        * powerht ** (-0.6e0)
+        * rminor**2.4e0
+        * rmajor**0.6e0
+    )
