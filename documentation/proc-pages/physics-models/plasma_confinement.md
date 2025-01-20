@@ -131,6 +131,19 @@ $$
 
 where $\overline{n}_{20*} = 1.3\left(\frac{B_{\text{T}}}{Rq_{\text{cyl}}}\right)$ and $\frac{\overline{n}_{20}}{\overline{n}_{20*}} \le 1$
 
+----------------
+
+### 11: JAERI / Odajima-Shimomura L-mode scaling
+
+Is selected with `i_confinement_time = 11`
+
+
+$$
+\tau_{\text{E}} =  \left[\frac{0.085\kappa_{95}a^2+0.069In_{20}^{0.6}B_{\text{T}}^{0.2}R^{1.6} a^{0.4} \kappa_{95}^{0.2} G\left(q_{\text{cyl}},Z_{\text{eff}}\right)}{P}\right]M_{\text{i}}^{0.5}
+$$
+
+where $G\left(q_{\text{cyl}},Z_{\text{eff}}\right) = Z_{\text{eff}}^{0.4}\left[\frac{\left(15 - Z_{\text{eff}}\right)}{20}\right]^{0.6}\left[3q_{\text{cyl}}\frac{q_{\text{cyl}}+5}{(q_{\text{cyl}}+2)(q_{\text{cyl}}+7)}\right]^{0.6}$
+
 
 ----------------
 

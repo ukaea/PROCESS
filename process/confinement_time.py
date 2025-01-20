@@ -396,3 +396,60 @@ def t10_confinement_time(
         * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0)) ** 0.08e0
     )
     return tauee
+
+
+def jaeri_confinement_time(
+    kappa95: float,
+    rminor: float,
+    afuel: float,
+    n20: float,
+    pcur: float,
+    bt: float,
+    rmajor: float,
+    qstar: float,
+    zeff: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the JAERI / Odajima-Shimomura L-mode scaling confinement time
+
+    Parameters:
+    kappa95 (float): Plasma elongation at 95% flux surface
+    rminor (float): Plasma minor radius [m]
+    afuel (float): Fuel atomic mass number
+    n20 (float): Line averaged electron density in units of 10**20 m**-3
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    rmajor (float): Plasma major radius [m]
+    qstar (float): Equivalent cylindrical edge safety factor
+    zeff (float): Effective charge
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: JAERI confinement time [s]
+
+    Notes:
+
+    References:
+        - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
+          ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+    """
+    gjaeri = (
+        zeff**0.4e0
+        * ((15.0e0 - zeff) / 20.0e0) ** 0.6e0
+        * (3.0e0 * qstar * (qstar + 5.0e0) / ((qstar + 2.0e0) * (qstar + 7.0e0)))
+        ** 0.6e0
+    )
+    return (
+        0.085e0 * kappa95 * rminor**2 * np.sqrt(afuel)
+        + 0.069e0
+        * n20**0.6e0
+        * pcur
+        * bt**0.2e0
+        * rminor**0.4e0
+        * rmajor**1.6e0
+        * np.sqrt(afuel)
+        * gjaeri
+        * kappa95**0.2e0
+        / powerht
+    )
