@@ -347,3 +347,52 @@ def goldston_confinement_time(
         * np.sqrt(afuel / 1.5e0)
         / np.sqrt(powerht)
     )
+
+
+def t10_confinement_time(
+    dnla20: float,
+    rmajor: float,
+    qstar: float,
+    bt: float,
+    rminor: float,
+    kappa95: float,
+    powerht: float,
+    zeff: float,
+    pcur: float,
+) -> float:
+    """
+    Calculate the T-10 scaling confinement time
+
+    Parameters:
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    rmajor (float): Plasma major radius [m]
+    qstar (float): Equivalent cylindrical edge safety factor
+    bt (float): Toroidal magnetic field [T]
+    rminor (float): Plasma minor radius [m]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    powerht (float): Net Heating power [MW]
+    zeff (float): Effective charge
+    pcur (float): Plasma current [MA]
+
+    Returns:
+    float: T-10 confinement time [s]
+
+    Notes:
+
+    References:
+        - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
+            ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+    """
+    denfac = dnla20 * rmajor * qstar / (1.3e0 * bt)
+    denfac = min(1.0e0, denfac)
+    tauee = (
+        0.095e0
+        * rmajor
+        * rminor
+        * bt
+        * np.sqrt(kappa95)
+        * denfac
+        / powerht**0.4e0
+        * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0)) ** 0.08e0
+    )
+    return tauee
