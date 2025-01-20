@@ -6817,20 +6817,16 @@ class Physics:
 
         # ========================================================================
 
+        # Goldston scaling (L-mode)
         elif i_confinement_time == 9:  # Goldston scaling (L-mode)
-            tauee = (
-                hfact
-                * 0.037e0
-                * pcur
-                * rmajor**1.75e0
-                * rminor ** (-0.37e0)
-                * np.sqrt(kappa95)
-                * np.sqrt(m_fuel_amu / 1.5e0)
-                / np.sqrt(powerht)
+            tauee = hfact * confinement.goldston_confinement_time(
+                pcur, rmajor, rminor, kappa95, afuel, powerht
             )
 
             if iinvqd != 0:
                 tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
+
+        # ========================================================================
 
         elif i_confinement_time == 10:  # T10 scaling
             denfac = dnla20 * rmajor * qstar / (1.3e0 * bt)
