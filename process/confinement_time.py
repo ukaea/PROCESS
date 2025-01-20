@@ -26,6 +26,28 @@ def neo_alcator_confinement_time(
     return 0.07e0 * dene20 * rminor * rmajor * rmajor * qstar
 
 
+def mirnov_confinement_time(rminor: float, kappa95: float, pcur: float) -> float:
+    """
+    Calculate the Mirnov scaling (H-mode) confinement time
+
+    Parameters:
+    hfact (float): H-factor
+    rminor (float): Plasma minor radius [m]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    pcur (float): Plasma current [MA]
+
+    Returns:
+    float: Mirnov scaling confinement time [s]
+
+    Notes:
+
+    References:
+        - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
+         ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+    """
+    return 0.2e0 * rminor * np.sqrt(kappa95) * pcur
+
+
 def merezhkin_muhkovatov_confinement_time(
     rmajor: float,
     rminor: float,
