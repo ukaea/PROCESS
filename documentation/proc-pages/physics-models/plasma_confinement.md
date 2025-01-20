@@ -246,6 +246,16 @@ $$
 
 -------------------------
 
+### 19: Riedel H-mode scaling
+
+Is selected with `i_confinement_time = 19`
+
+$$
+\tau_{\text{E}} =  0.1 M_{\text{i}}^{0.5} I^{0.884} R^{1.24} a^{-0.23} \kappa_{95}^{0.317} \overline{n}_{20}^{0.105} B_{\text{T}}^{0.207} P^{-0.486}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

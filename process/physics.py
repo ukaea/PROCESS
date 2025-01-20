@@ -6958,23 +6958,24 @@ class Physics:
                 powerht,
             )
 
-        # ========================================================================
+        # ======== ================================================================
 
-        # ========================================================================
-
-        elif i_confinement_time == 19:  # Riedel scaling (H-mode)
-            tauee = (
-                hfact
-                * 0.1e0
-                * np.sqrt(m_fuel_amu)
-                * pcur**0.884e0
-                * rmajor**1.24e0
-                * rminor ** (-0.23e0)
-                * kappa95**0.317e0
-                * bt**0.207e0
-                * dnla20**0.105e0
-                / powerht**0.486e0
+        # Riedel scaling (H-mode)
+        elif i_confinement_time == 19:
+            tauee = hfact * confinement.riedel_h_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                afuel,
+                powerht,
             )
+
+        # ========================================================================
+
+        # ========================================================================
 
         elif i_confinement_time == 20:  # Amended version of ITER H90-P law
             # Nuclear Fusion 32 (1992) 318
