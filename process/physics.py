@@ -6931,20 +6931,19 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 17:  # Lackner-Gottardi scaling (L-mode)
-            qhat = (1.0e0 + kappa95**2) * rminor**2 * bt / (0.4e0 * pcur * rmajor)
-            tauee = (
-                hfact
-                * 0.12e0
-                * pcur**0.8e0
-                * rmajor**1.8e0
-                * rminor**0.4e0
-                * kappa95
-                * (1.0e0 + kappa95) ** (-0.8e0)
-                * dnla20**0.6e0
-                * qhat**0.4e0
-                / powerht**0.6e0
+        # Lackner-Gottardi scaling (L-mode)
+        elif i_confinement_time == 17:
+            tauee = hfact * confinement.lackner_gottardi_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
             )
+
+        # ========================================================================
 
         elif i_confinement_time == 18:  # Neo-Kaye scaling (L-mode)
             tauee = (
