@@ -160,6 +160,7 @@ def find_parameter_group(name):
             return key
     return None  # Explicit return
 
+
 def write_title(title, out_file):
     """Function to write title line to file with fixed width
 
@@ -843,6 +844,7 @@ def variable_bound_check(bound_number, bound_type):
         return bound_number, bound_type
 
     raise TypeError(f"Unsupported type for bound_number: {type(bound_number)}")
+
 
 class INVariable:
     def __init__(self, name, value, v_type, parameter_group, comment):
