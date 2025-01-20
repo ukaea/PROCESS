@@ -188,7 +188,7 @@ class DefaultOrderedDict(OrderedDict):
         return value
 
     def __reduce__(self):
-        args = tuple() if self.default_factory is None else (self.default_factory,)
+        args = () if self.default_factory is None else (self.default_factory,)
         return type(self), args, None, None, self.items()
 
     def copy(self):

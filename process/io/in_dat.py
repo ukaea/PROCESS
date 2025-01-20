@@ -625,7 +625,7 @@ def add_bound(data, bound, bound_type, bound_value):
     # if the bound is not in the bounds dictionary initialise an empty
     # dictionary and assign new bound
     if bound not in data["bounds"].value:
-        data["bounds"].value[bound] = dict()
+        data["bounds"].value[bound] = {}
         data["bounds"].value[bound][bound_type] = str(bound_value)
 
     # If bound already exists change value
@@ -960,9 +960,7 @@ class InDat:
         # Create bound variable class using INVariable class if the bounds entry
         # doesn't exist
         if "bounds" not in self.data:
-            self.data["bounds"] = INVariable(
-                "bounds", dict(), "Bound", "Bound", "Bounds"
-            )
+            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bound", "Bounds")
 
         # Constraint equations
         if line_type == "Constraint Equation":
@@ -1209,7 +1207,7 @@ class InDat:
         # If bound not in the bound dictionary then add entry for bound with an
         # empty dictionary
         if bound not in self.data["bounds"].value:
-            self.data["bounds"].value[bound] = dict()
+            self.data["bounds"].value[bound] = {}
         elif self.data["bounds"].value[bound].get(bound_type):
             # Duplicate bound
             self.add_duplicate_variable(f"bound{bound_type}({bound})")
@@ -1439,7 +1437,6 @@ class InDat:
 
         # create and open output file
         with open(output_filename, "w") as output:
-
             # Write Header
             write_title("", output)
 
