@@ -266,6 +266,16 @@ $$
 
 -------------------------
 
+### 21: Sudo et al. stellarators/heliotron scaling
+
+Is selected with `i_confinement_time = 21`
+
+$$
+\tau_{\text{E}} =  0.17 P^{-0.58} \overline{n}_{20}^{0.69} B^{0.84} a^{2.0} R^{0.75}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
