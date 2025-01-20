@@ -6900,18 +6900,19 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 15:  # Riedel scaling (L-mode)
-            tauee = (
-                hfact
-                * 0.044e0
-                * pcur**0.93e0
-                * rmajor**1.37e0
-                * rminor ** (-0.049e0)
-                * kappa95**0.588e0
-                * dnla20**0.078e0
-                * bt**0.152e0
-                / powerht**0.537e0
+        # Riedel scaling (L-mode)
+        elif i_confinement_time == 15:
+            tauee = hfact * confinement.riedel_l_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
             )
+
+        # ========================================================================
 
         elif i_confinement_time == 16:  # Christiansen et al scaling (L-mode)
             tauee = (
