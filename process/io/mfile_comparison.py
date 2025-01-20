@@ -465,7 +465,7 @@ def main(arg):
         if print_counter == 0:
             sys.exit(0)
         else:
-            sys.exit("Differences in baseline output by more than {0}%".format(arg.acc))
+            sys.exit(f"Differences in baseline output by more than {arg.acc}%")
 
 
 if __name__ == "__main__":

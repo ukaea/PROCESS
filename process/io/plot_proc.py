@@ -2171,7 +2171,7 @@ def plot_info(axis, data, mfile_data, scan):
                     )
         else:
             dat = data[i][0]
-            value = dat if isinstance(dat, str) else "{:.4g}".format(data[i][0])
+            value = dat if isinstance(dat, str) else f"{data[i][0]:.4g}"
             axis.text(
                 eqpos,
                 -i,

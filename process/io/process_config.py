@@ -161,7 +161,7 @@ class ProcessConfig:
             return False
 
         try:
-            with open(self.filename, "r") as configfile:
+            with open(self.filename) as configfile:
                 for line in configfile:
                     condense = line.replace(" ", "")
                     condense = condense.rstrip()
@@ -177,7 +177,7 @@ class ProcessConfig:
                 self.configfileexists = False
                 return False
         except FileNotFoundError:
-            print("Error: No config file named %s" % self.filename, file=stderr)
+            print(f"Error: No config file named {self.filename}", file=stderr)
 
         return False
 
@@ -188,7 +188,7 @@ class ProcessConfig:
             return None
 
         try:
-            with open(self.filename, "r") as configfile:
+            with open(self.filename) as configfile:
                 for line in configfile:
                     condense = line.replace(" ", "")
                     if (condense[0] != "*") and len(condense) > 1 and "=" in line:
@@ -473,7 +473,7 @@ class RunProcessConfig(ProcessConfig):
             return []
 
         try:
-            with open(self.filename, "r") as configfile:
+            with open(self.filename) as configfile:
                 attribute_list = []
 
                 for line in configfile:
@@ -502,7 +502,7 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            with open(self.filename, "r") as configfile:
+            with open(self.filename) as configfile:
                 for line in configfile:
                     condense = line.replace(" ", "")
                     condense = condense.rstrip()
@@ -526,7 +526,7 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            with open(self.filename, "r") as configfile:
+            with open(self.filename) as configfile:
                 for line in configfile:
                     condense = line.replace(" ", "")
                     condense = condense.rstrip()

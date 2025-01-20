@@ -313,7 +313,7 @@ def mfile_exists():
     """checks whether MFILE.DAT exists"""
 
     try:
-        with open("MFILE.DAT", "r") as m_file:
+        with open("MFILE.DAT") as m_file:
             m_file.close()
         return True
 

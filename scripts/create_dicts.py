@@ -590,7 +590,7 @@ def slice_file(file, re1, re2):
          lines --> List of lines from file between re1 and re2 inclusive
     """
 
-    with open(file, "r", encoding="utf-8") as file:
+    with open(file, encoding="utf-8") as file:
         filetext = file.readlines()
     start = None
     for i in range(len(filetext)):

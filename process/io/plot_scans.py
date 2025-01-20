@@ -299,7 +299,7 @@ def main(args=None):
     # Get the eventual second scan variable
     nsweep_2_ref = 0
     is_2D_scan = False
-    scan_2_var_name = str()
+    scan_2_var_name = ""
     if "nsweep_2" in m_file.data:
         is_2D_scan = True
         nsweep_2_ref = int(m_file.data["nsweep_2"].get_scan(-1))
