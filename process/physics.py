@@ -6801,23 +6801,21 @@ class Physics:
             )
         # ========================================================================
 
-        elif i_confinement_time == 8:  # Rebut-Lallia offset linear scaling (L-mode)
-            rll = (rminor**2 * rmajor * kappa95) ** 0.333e0
-            tauee = (
-                hfact
-                * 1.65e0
-                * np.sqrt(m_fuel_amu / 2.0e0)
-                * (
-                    1.2e-2 * pcur * rll**1.5e0 / np.sqrt(zeff)
-                    + 0.146e0
-                    * dnla20**0.75e0
-                    * np.sqrt(pcur)
-                    * np.sqrt(bt)
-                    * rll**2.75e0
-                    * zeff**0.25e0
-                    / powerht
-                )
+        # Rebut-Lallia offset linear scaling (L-mode)
+        elif i_confinement_time == 8:
+            tauee = hfact * confinement.rebut_lallia_confinement_time(
+                rminor,
+                rmajor,
+                kappa,
+                afuel,
+                pcur,
+                zeff,
+                dnla20,
+                bt,
+                powerht,
             )
+
+        # ========================================================================
 
         elif i_confinement_time == 9:  # Goldston scaling (L-mode)
             tauee = (

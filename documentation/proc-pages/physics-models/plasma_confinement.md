@@ -94,6 +94,21 @@ $$
 
 ----------------
 
+### 8: Rebut-Lallia L-mode scaling
+
+Is selected with `i_confinement_time = 8`
+
+$$
+\begin{aligned}
+\tau_E= & 1.65\left[1.2 \times 10^{-5} I \ell^{1.5} Z_{e f f}^{-0.5}\right. \\
+& \left.+0.146 \bar{n}_{20}^{0.75} I^{0.5} B_0^{0.5} \ell^{2.75} Z_{e f f}^{0.25} / P\right]\left(A_i / 2\right)^{0.5}
+\end{aligned}
+$$
+
+where $\ell = \left(a^2R\kappa\right)^{\frac{1}{3}}$
+
+----------------
+
 
 
 | `i_confinement_time` | scaling law | reference |
