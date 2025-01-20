@@ -670,3 +670,44 @@ def lackner_gottardi_confinement_time(
         * qhat**0.4e0
         / powerht**0.6e0
     )
+
+
+def neo_kaye_confinement_time(
+    pcur: float,
+    rmajor: float,
+    rminor: float,
+    kappa95: float,
+    dnla20: float,
+    bt: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Neo-Kaye scaling (L-mode) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    bt (float): Toroidal magnetic field [T]
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Neo-Kaye confinement time [s]
+
+    Notes:
+
+    References:
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+    """
+    return (
+        0.063e0
+        * pcur**1.12e0
+        * rmajor**1.3e0
+        * rminor ** (-0.04e0)
+        * kappa95**0.28e0
+        * dnla20**0.14e0
+        * bt**0.04e0
+        / powerht**0.59e0
+    )

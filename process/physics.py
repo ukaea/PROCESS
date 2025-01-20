@@ -6945,19 +6945,22 @@ class Physics:
 
         # ========================================================================
 
-        elif i_confinement_time == 18:  # Neo-Kaye scaling (L-mode)
-            tauee = (
-                hfact
-                * 0.063e0
-                * pcur**1.12e0
-                * rmajor**1.3e0
-                * rminor ** (-0.04e0)
-                * kappa95**0.28e0
-                * dnla20**0.14e0
-                * bt**0.04e0
-                * np.sqrt(m_fuel_amu)
-                / powerht**0.59e0
+        # Neo-Kaye scaling (L-mode)
+        elif i_confinement_time == 18:
+            tauee = hfact * confinement.neo_kaye_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                afuel,
+                powerht,
             )
+
+        # ========================================================================
+
+        # ========================================================================
 
         elif i_confinement_time == 19:  # Riedel scaling (H-mode)
             tauee = (

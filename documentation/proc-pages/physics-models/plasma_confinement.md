@@ -236,6 +236,16 @@ where $\hat{q} = \frac{(1+\kappa_{95}a^2B_{\text{T}})}{0.4 I R}$
 
 -------------------------
 
+### 18: Neo-Kaye L-mode scaling
+
+Is selected with `i_confinement_time = 18`
+
+$$
+\tau_{\text{E}} =  0.063 I^{1.12} R^{1.3} a^{-0.04} \kappa_{95}^{0.28} \overline{n}_{20}^{0.14} B_{\text{T}}^{0.04} P^{-0.59}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
