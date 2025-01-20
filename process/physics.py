@@ -6853,6 +6853,21 @@ class Physics:
 
         # ========================================================================
 
+        # Kaye "big"  L-mode scaling (based only on big tokamak data)
+        elif i_confinement_time == 12:
+            tauee = hfact * confinement.kaye_big_confinement_time(
+                rmajor,
+                rminor,
+                bt,
+                kappa95,
+                pcur,
+                n20,
+                afuel,
+                powerht,
+            )
+
+        # ========================================================================
+
         # ITER H90-P H-mode scaling
         elif i_confinement_time == 13:
             tauee = hfact * confinement.iter_h90_p_confinement_time(

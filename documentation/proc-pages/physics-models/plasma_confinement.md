@@ -147,13 +147,23 @@ where $G\left(q_{\text{cyl}},Z_{\text{eff}}\right) = Z_{\text{eff}}^{0.4}\left[\
 
 ----------------
 
+### 12: Kaye "big" L-mode scaling
+
+Is selected with `i_confinement_time = 12`
+
+$$
+\tau_{\text{E}} =  0.1051 I^{0.85} P^{-0.5} R^{0.5} a^{0.3} \kappa^{0.25} n_{20}^{0.1}B_{\text{T}}^{0.3}M_{\text{i}}^{0.5}
+$$
+
+-------------------------
+
 
 ### 13: ITER H90-P H-mode scaling
 
 Is selected with `i_confinement_time = 13`
 
 $$
-\tau_{\text{E}} =  0.064 I^{0.87 R^{1.82}} a^{-0.12} \kappa_{95}^{0.35} \overline{n}_{20}^{0.09} B_{\text{T}}^{0.15} M_{\text{i}}^{0.5} P^{-0.5}
+\tau_{\text{E}} =  0.064 I^{0.87} R^{1.82} a^{-0.12} \kappa_{95}^{0.35} \overline{n}_{20}^{0.09} B_{\text{T}}^{0.15} M_{\text{i}}^{0.5} P^{-0.5}
 $$
 
 -------------------------

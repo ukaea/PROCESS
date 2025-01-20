@@ -455,6 +455,51 @@ def jaeri_confinement_time(
     )
 
 
+def kaye_big_confinement_time(
+    rmajor: float,
+    rminor: float,
+    bt: float,
+    kappa95: float,
+    pcur: float,
+    n20: float,
+    afuel: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Kaye-Big scaling confinement time
+
+    Parameters:
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    bt (float): Toroidal magnetic field [T]
+    kappa95 (float): Plasma elongation at 95% flux surface
+    pcur (float): Plasma current [MA]
+    n20 (float): Line averaged electron density in units of 10**20 m**-3
+    afuel (float): Fuel atomic mass number
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Kaye-Big confinement time [s]
+
+    Notes:
+
+    References:
+        - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
+            ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+    """
+    return (
+        0.105e0
+        * np.sqrt(rmajor)
+        * rminor**0.8e0
+        * bt**0.3e0
+        * kappa95**0.25e0
+        * pcur**0.85e0
+        * n20**0.1e0
+        * np.sqrt(afuel)
+        / np.sqrt(powerht)
+    )
+
+
 def iter_h90_p_confinement_time(
     pcur: float,
     rmajor: float,
