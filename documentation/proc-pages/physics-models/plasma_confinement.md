@@ -8,6 +8,70 @@ value of `i_confinement_time` determines which of the scalings is used in the pl
 balance calculation. The table below summarises the available scaling laws. The 
 most commonly used is the so-called IPB98(y,2) scaling.       
 
+## Available confinement time scalings
+
+### 0: User input confinement time
+
+Is selected with `i_confinement_time = 0`
+
+$$
+\tau_{\text{E}} = \mathtt{tauee\_in}
+$$
+
+------------
+
+### 1: Nec-Alcator (NA) OH scaling
+
+Is selected with `i_confinement_time = 1`
+
+$$
+\tau_{\text{E}} = 0.07 n_{20}aRq_{\text{cyl}}
+$$
+
+------------
+
+### 2: Mirnov scaling (H-mode)
+
+Is selected with `i_confinement_time = 2`
+
+$$
+\tau_{\text{E}} = 0.2 a \sqrt{\kappa_{95}}I
+$$
+
+------------
+
+### 3: Merezhkin-Mukhovatov  OH/L-mode scaling
+
+Is selected with `i_confinement_time = 3`
+
+$$
+\tau_{\text{E}} = 0.0035 \overline{n}_{20}a^{0.25}R^{2.75}q_{\text{cyl}}\kappa_{95}^{0.125}M_i^{0.5}T_{10}^{0.5}
+$$
+
+
+---------------
+
+### 4: Shimomura optimized H-mode scaling
+
+Is selected with `i_confinement_time = 4`
+
+$$
+\tau_{\text{E}} = 0.045 Ra B_{\text{T}}\sqrt{\kappa_{95}}\sqrt{M_{\text{i}}}
+$$
+
+----------------
+
+### 5: Kaye-Goldston L-mode scaling
+
+Is selected with `i_confinement_time = 5`
+
+$$
+\tau_{\text{E}} = 0.055 I^{1.24}P^{-0.58}R^{1.65}a^{-0.49}\kappa_{95}^{0.28}n_{20}^{0.26}B_{\text{T}}^{-0.09}\left(\frac{M_{\text{i}}}{1.5}\right)^{0.5}
+$$
+
+----------------
+
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

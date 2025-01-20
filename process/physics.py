@@ -6736,9 +6736,13 @@ class Physics:
 
         # Electron energy confinement times
 
+        # ========================================================================
+
         # User defined confinement time
         if i_confinement_time == 0:  # tauee is an input
             tauee = hfact * physics_variables.tauee_in
+
+        # ========================================================================
 
         # Nec-Alcator(NA) OH scaling
         if i_confinement_time == 1:
@@ -6747,9 +6751,13 @@ class Physics:
                 n20, rminor, rmajor, qstar
             )
 
+        # ========================================================================
+
         # "Mirnov"-like scaling (H-mode)
         elif i_confinement_time == 2:  # Mirnov scaling (H-mode)
             tauee = hfact * confinement.mirnov_confinement_time(rminor, kappa95, pcur)
+
+        # ========================================================================
 
         # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
         elif i_confinement_time == 3:
@@ -6757,26 +6765,26 @@ class Physics:
                 rmajor, rminor, kappa95, qstar, dnla20, afuel, ten
             )
 
+        # ========================================================================
+
         # Shimomura (S) optimized H-mode scaling
         elif i_confinement_time == 4:
             tauee = hfact * confinement.shimomura_confinement_time(
                 rmajor, rminor, bt, kappa95, afuel
             )
 
-        elif i_confinement_time == 5:  # Kaye-Goldston scaling (L-mode)
-            tauee = (
-                hfact
-                * 0.055e0
-                * kappa95**0.28e0
-                * pcur**1.24e0
-                * n20**0.26e0
-                * rmajor**1.65e0
-                * np.sqrt(m_fuel_amu / 1.5e0)
-                / (bt**0.09e0 * rminor**0.49e0 * powerht**0.58e0)
+        # ========================================================================
+
+        # Kaye-Goldston scaling (L-mode)
+        elif i_confinement_time == 5:
+            tauee = hfact * confinement.kaye_goldston_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
 
             if iinvqd != 0:
                 tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
+
+        # ========================================================================
 
         elif i_confinement_time == 6:  # ITER Power scaling - ITER 89-P (L-mode)
             tauee = (
