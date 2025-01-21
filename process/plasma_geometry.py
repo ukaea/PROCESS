@@ -275,6 +275,7 @@ class PlasmaGeom:
                 physics_variables.rmajor,
                 physics_variables.kappa,
                 physics_variables.triang,
+                physics_variables.plasma_square,
             )
 
         else:
@@ -497,7 +498,7 @@ class PlasmaGeom:
 
     @staticmethod
     def sauter_geometry(
-        a: float, r0: float, kappa: float, triang: float
+        a: float, r0: float, kappa: float, triang: float, square: float
     ) -> tuple[float, float, float, float, float]:
         """
         Calculate the plasma geometry parameters using the Sauter geometry model.
@@ -507,6 +508,7 @@ class PlasmaGeom:
         r0 (float): Plasma major radius (m)
         kappa (float): Plasma separatrix elongation
         triang (float): Plasma separatrix triangularity
+        square (float): Plasma squareness
 
         Returns:
         tuple: A tuple containing:
@@ -524,8 +526,8 @@ class PlasmaGeom:
 
         """
 
-        # Calculate w07 parameter from paper
-        w07 = 1
+        # Calculate w07 parameter from paper from squareness assuming top-down symmetry
+        w07 = square + 1
 
         # Inverse aspect ratio
         eps = a / r0

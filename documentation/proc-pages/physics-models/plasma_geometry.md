@@ -499,6 +499,7 @@ Plasma geometry based on equations'Geometric formulas for system codes including
 | `rmajor`, $R$        | Plasma major radius [$\text{m}$]              |
 | `kappa`, $\kappa$      | Plasma separatrix elongation         |
 | `triang`, $\delta$      | Plasma separatrix triangularity      |
+| `plasma_square`, $\xi$      | Plasma squareness    |
 
 
 | Output Variable | Description                          |
@@ -509,7 +510,7 @@ Plasma geometry based on equations'Geometric formulas for system codes including
 | `vol_plasma`       | Plasma volume [$\text{m}^3$] |
 
 $$
-\mathtt{w07} = 1
+\mathtt{w07} = \mathtt{plasma\_square} + 1
 $$
 
 $$
