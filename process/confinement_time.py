@@ -1008,5 +1008,53 @@ def iter_h97p_elmy_confinement_time(
     )
 
 
+def iter_96p_confinement_time(
+    pcur: float,
+    bt: float,
+    kappa95: float,
+    rmajor: float,
+    aspect: float,
+    dnla19: float,
+    afuel: float,
+    powerht: float,
+) -> float:
+    """
+        Calculate the ITER-96P (= ITER-97L) L-mode scaling confinement time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        kappa95 (float): Plasma elongation at 95% flux surface
+        rmajor (float): Plasma major radius [m]
+        aspect (float): Aspect ratio
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        afuel (float): Fuel atomic mass number
+        powerht (float): Net Heating power [MW]
+
+        Returns:
+        float: ITER-96P confinement time [s]
+
+        Notes:
+            - The thermal energy confinement time is given below
+
+        References:
+            - S. B. Kaye et al., “ITER L mode confinement database,”
+            Nuclear Fusion, vol. 37, no. 9, pp. 1303–1328, Sep. 1997,
+            doi: https://doi.org/10.1088/0029-5515/37/9/i10.
+    ‌
+    """
+    return (
+        0.023e0
+        * pcur**0.96e0
+        * bt**0.03e0
+        * kappa95**0.64e0
+        * rmajor**1.83e0
+        * aspect**0.06e0
+        * dnla19**0.40e0
+        * afuel**0.20e0
+        * powerht ** (-0.73e0)
+    )
+
+
 if __name__ == "__main__":
     pass

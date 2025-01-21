@@ -316,6 +316,16 @@ $$
 
 -------------------------
 
+### 28: ITER-96P (ITER-97L) L-mode scaling
+
+Is selected with `i_confinement_time = 28`
+
+$$
+\tau_{\text{E}} =  0.023 M_{\text{i}}^{0.2} I^{0.96} R^{1.83} \epsilon^{-0.06} \kappa_{95}^{0.64} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.03} P^{-0.73}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
