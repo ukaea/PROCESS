@@ -6938,22 +6938,20 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 28:  # ITER-96P (= ITER-97L) L-mode scaling
-            # S.M.Kaye and the ITER Confinement Database Working Group,
-            # Nuclear Fusion 37 (1997) 1303
-            # N.B. tau_th formula used
-            tauee = (
-                hfact
-                * 0.023e0
-                * pcur**0.96e0
-                * bt**0.03e0
-                * kappa95**0.64e0
-                * rmajor**1.83e0
-                * aspect**0.06e0
-                * dnla19**0.40e0
-                * afuel**0.20e0
-                * powerht ** (-0.73e0)
+        # ITER-96P (= ITER-97L) L-mode scaling
+        elif i_confinement_time == 28:
+            tauee = hfact * confinement.iter_96p_confinement_time(
+                pcur,
+                bt,
+                kappa95,
+                rmajor,
+                aspect,
+                dnla19,
+                afuel,
+                powerht,
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 29:  # Valovic modified ELMy-H mode scaling
             tauee = (
@@ -6969,6 +6967,8 @@ class Physics:
                 * powerht ** (-0.68e0)
             )
 
+        # ==========================================================================
+
         elif i_confinement_time == 30:  # Kaye PPPL Workshop April 1998 L-mode scaling
             tauee = (
                 hfact
@@ -6983,6 +6983,8 @@ class Physics:
                 * powerht ** (-0.73e0)
             )
 
+        # ==========================================================================
+
         elif i_confinement_time == 31:  # ITERH-PB98P(y), ELMy H-mode scaling
             tauee = (
                 hfact
@@ -6996,6 +6998,8 @@ class Physics:
                 * aspect ** (-0.66e0)
                 * afuel**0.2e0
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 32:  # IPB98(y), ELMy H-mode scaling
             # Data selection : full ITERH.DB3
@@ -7013,6 +7017,8 @@ class Physics:
                 * afuel**0.2e0
             )
 
+        # ==========================================================================
+
         elif i_confinement_time == 33:  # IPB98(y,1), ELMy H-mode scaling
             # Data selection : full ITERH.DB3
             # Nuclear Fusion 39 (1999) 2175, Table 5
@@ -7028,6 +7034,8 @@ class Physics:
                 * aspect ** (-0.57e0)
                 * afuel**0.13e0
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 34:  # IPB98(y,2), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only
@@ -7045,6 +7053,8 @@ class Physics:
                 * afuel**0.19e0
             )
 
+        # ==========================================================================
+
         elif i_confinement_time == 35:  # IPB98(y,3), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only, no C-Mod
             # Nuclear Fusion 39 (1999) 2175, Table 5
@@ -7060,6 +7070,8 @@ class Physics:
                 * aspect ** (-0.64e0)
                 * afuel**0.20e0
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 36:  # IPB98(y,4), ELMy H-mode scaling
             # Data selection : ITERH.DB3, NBI only, ITER like devices
@@ -7077,6 +7089,8 @@ class Physics:
                 * afuel**0.17e0
             )
 
+        # ==========================================================================
+
         elif i_confinement_time == 37:  # ISS95 stellarator scaling
             # U. Stroth et al., Nuclear Fusion, 36, p.1063 (1996)
             # Assumes kappa = 1.0, triang = 0.0
@@ -7091,6 +7105,8 @@ class Physics:
                 * powerht ** (-0.59e0)
                 * iotabar**0.4e0
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 38:  # ISS04 stellarator scaling
             # H. Yamada et al., Nuclear Fusion, 45, p.1684 (2005)
@@ -7107,6 +7123,8 @@ class Physics:
                 * iotabar**0.41e0
             )
 
+        # ==========================================================================
+
         elif i_confinement_time == 39:  # DS03 beta-independent H-mode scaling
             # T. C. Luce, C. C. Petty and J. G. Cordey,
             # Plasma Phys. Control. Fusion 50 (2008) 043001, eqn.4.13, p.67
@@ -7122,6 +7140,8 @@ class Physics:
                 * aspect ** (-0.3e0)
                 * afuel**0.14e0
             )
+
+        # ==========================================================================
 
         elif (
             i_confinement_time == 40
@@ -7143,6 +7163,8 @@ class Physics:
                 * h
             )
 
+        # ==========================================================================
+
         elif (
             i_confinement_time == 41
         ):  # Beta independent dimensionless confinement scaling
@@ -7159,6 +7181,8 @@ class Physics:
                 * kappaa**0.88e0
                 * aspect ** (-0.84e0)
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 42:  # High density relevant confinement scaling
             # P.T. Lang et al. 2012, IAEA conference proceeding EX/P4-01
@@ -7183,6 +7207,8 @@ class Physics:
                 * nratio ** (-0.22e0 * np.log(nratio))
             )
 
+        # ==========================================================================
+
         elif (
             i_confinement_time == 43
         ):  # Hubbard et al. 2017 I-mode confinement time scaling - nominal
@@ -7194,6 +7220,8 @@ class Physics:
                 * dnla20**0.02e0
                 * powerht ** (-0.29e0)
             )
+
+        # ==========================================================================
 
         elif (
             i_confinement_time == 44
@@ -7207,6 +7235,8 @@ class Physics:
                 * powerht ** (-0.33e0)
             )
 
+        # ==========================================================================
+
         elif (
             i_confinement_time == 45
         ):  # Hubbard et al. 2017 I-mode confinement time scaling - upper
@@ -7218,6 +7248,8 @@ class Physics:
                 * dnla20**0.07
                 * powerht ** (-0.25e0)
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 46:  # NSTX, ELMy H-mode scaling
             # NSTX scaling with IPB98(y,2) for other variables
@@ -7235,6 +7267,8 @@ class Physics:
                 * aspect ** (-0.58e0)
                 * afuel**0.19e0
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 47:  # NSTX-Petty08 Hybrid
             # Linear interpolation between NSTX and Petty08 in eps
@@ -7296,6 +7330,8 @@ class Physics:
                     + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * taupetty
                 )
 
+        # ==========================================================================
+
         elif i_confinement_time == 48:  # NSTX gyro-Bohm (Buxton)
             # P F Buxton et al. 2019 Plasma Phys. Control. Fusion 61 035006
             tauee = (
@@ -7307,6 +7343,8 @@ class Physics:
                 * rmajor**2.14e0
                 * dnla20 ** (-0.05e0)
             )
+
+        # ==========================================================================
 
         elif i_confinement_time == 49:  # ITPA20 Issue #3164
             # The updated ITPA global H-mode confinement database: description and analysis
