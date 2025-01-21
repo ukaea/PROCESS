@@ -23,8 +23,8 @@ class PlasmaGeometry:
 def plasma_geometry(
     rmajor: float,
     rminor: float,
-    triang_95: float,
-    kappa_95: float,
+    triang: float,
+    kappa: float,
     i_single_null: int,
     i_plasma_shape: int,
     square: float,
@@ -38,9 +38,11 @@ def plasma_geometry(
 
     :param rmajor: Plasma major radius.
     :param rminor: Plasma minor radius.
-    :param triang_95: Plasma triangularity at 95% surface.
-    :param kappa_95: Plasma elongation at 95% surface.
-    :param i_single_null: Switch for single null (True) or double null (False) plasma configuration.
+    :param triang: Plasma triangularity at separatrix.
+    :param kappa: Plasma elongation at separatrix.
+    :param i_single_null: Switch for single null (1) or double null (0) plasma configuration.
+    :param i_plasma_shape: Switch for plasma shape (0 for double arc, 1 for Sauter).
+    :param square: Square term for Sauter plasma shape.
     :return: A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
 
     The returned PlasmaGeometry dataclass contains:
@@ -48,22 +50,20 @@ def plasma_geometry(
     - zs: List of vertical coordinates for the inner and outer plasma boundaries.
     - kappa: Calculated plasma elongation.
     """
-    delta = 1.5 * triang_95
-    kappa = (1.1 * kappa_95) + 0.04
 
     # Original PROCESS double arc plasma shape
     if i_plasma_shape == 0:
-        x1 = (2.0 * rmajor * (1.0 + delta) - rminor * (delta**2 + kappa**2 - 1.0)) / (
-            2.0 * (1.0 + delta)
+        x1 = (2.0 * rmajor * (1.0 + triang) - rminor * (triang**2 + kappa**2 - 1.0)) / (
+            2.0 * (1.0 + triang)
         )
-        x2 = (2.0 * rmajor * (delta - 1.0) - rminor * (delta**2 + kappa**2 - 1.0)) / (
-            2.0 * (delta - 1.0)
+        x2 = (2.0 * rmajor * (triang - 1.0) - rminor * (triang**2 + kappa**2 - 1.0)) / (
+            2.0 * (triang - 1.0)
         )
         r1 = 0.5 * math.sqrt(
-            (rminor**2 * ((delta + 1.0) ** 2 + kappa**2) ** 2) / ((delta + 1.0) ** 2)
+            (rminor**2 * ((triang + 1.0) ** 2 + kappa**2) ** 2) / ((triang + 1.0) ** 2)
         )
         r2 = 0.5 * math.sqrt(
-            (rminor**2 * ((delta - 1.0) ** 2 + kappa**2) ** 2) / ((delta - 1.0) ** 2)
+            (rminor**2 * ((triang - 1.0) ** 2 + kappa**2) ** 2) / ((triang - 1.0) ** 2)
         )
         theta1 = np.arcsin((kappa * rminor) / r1)
         theta2 = np.arcsin((kappa * rminor) / r2)
@@ -97,7 +97,7 @@ def plasma_geometry(
         x = np.linspace(-np.pi, np.pi, 256)
 
         # Sauter
-        R = rmajor + rminor * np.cos(x + delta * np.sin(x) - square * np.sin(2 * x))
+        R = rmajor + rminor * np.cos(x + triang * np.sin(x) - square * np.sin(2 * x))
         Z = kappa * rminor * np.sin(x + square * np.sin(2 * x))
 
         return PlasmaGeometry(rs=R, zs=Z, kappa=kappa)
