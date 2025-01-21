@@ -7048,23 +7048,24 @@ class Physics:
                 * kappa**0.66e0
             )
 
-        # Next two are ITER-97 H-mode scalings
-        # J. G. Cordey et al., EPS Berchtesgaden, 1997
+        # ==========================================================================
 
-        elif i_confinement_time == 26:  # ELM-free: ITERH-97P
-            tauee = (
-                hfact
-                * 0.031e0
-                * pcur**0.95e0
-                * bt**0.25e0
-                * powerht ** (-0.67e0)
-                * dnla19**0.35e0
-                * rmajor**1.92e0
-                * aspect ** (-0.08e0)
-                * kappa**0.63e0
-                * m_fuel_amu**0.42e0
+        # ELM-free: ITERH-97P
+        elif i_confinement_time == 26:
+            tauee = hfact * confinement.iter_h97p_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                dnla19,
+                rmajor,
+                aspect,
+                kappa,
+                afuel,
             )
 
+        # ==========================================================================
+        # Next two are ITER-97 H-mode scalings
+        # J. G. Cordey et al., EPS Berchtesgaden, 1997
         elif i_confinement_time == 27:  # ELMy: ITERH-97P(y)
             tauee = (
                 hfact
