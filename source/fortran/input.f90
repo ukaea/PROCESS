@@ -311,7 +311,7 @@ contains
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
-      iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
+      iradloss, te, alphan, rmajor, plasma_square, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, i_density_limit, bt, i_plasma_wall_gap, ipnlaws, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
@@ -681,7 +681,10 @@ contains
        case ('iwalld')
           call parse_int_variable('iwalld', iwalld, 1, 2, &
                'Switch for wall load calculation')
-       case ('kappa')
+       case ('plasma_square')
+          call parse_real_variable('plasma_square', plasma_square, -5.0D0, 5.0D0, &
+                  'Plasma squareness')
+            case ('kappa')
           call parse_real_variable('kappa', kappa, 0.99D0, 5.0D0, &
                'Plasma separatrix elongation')
        case ('kappa95')

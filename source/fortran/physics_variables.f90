@@ -569,6 +569,9 @@ module physics_variables
   !! - =1 use scaled plasma surface area
   !! - =2 use first wall area directly
 
+  real(dp) :: plasma_square
+  !! plasma squareness used by Sauter plasma shape
+
   real(dp) :: kappa
   !! plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5, 7 or 9-10`)
 
@@ -1054,6 +1057,7 @@ module physics_variables
     itart = 0
     itartpf = 0
     iwalld = 1
+    plasma_square = 0.0D0
     kappa = 1.792D0
     kappa95 = 1.6D0
     kappaa = 0.0D0

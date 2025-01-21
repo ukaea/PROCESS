@@ -1,9 +1,10 @@
-import numpy as np
-from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, CustomJS, Slider, Label
-from bokeh.plotting import figure
-from bokeh.io import save, output_file
 import math
+
+import numpy as np
+from bokeh.io import output_file, save
+from bokeh.layouts import column, row
+from bokeh.models import ColumnDataSource, CustomJS, Slider
+from bokeh.plotting import figure
 
 square = Slider(start=-1.0, end=1.0, value=0.0, step=0.01, title="Squareness")
 r0 = Slider(start=0.1, end=10, value=5.0, step=0.1, title="Major radius")
@@ -15,24 +16,30 @@ output_file("plass_shape_plot.html")
 x = np.linspace(-np.pi, np.pi, 256)
 
 # Sauter
-R = r0.value + a.value * np.cos(x + delta.value * np.sin(x) - square.value * np.sin(2 * x))
+R = r0.value + a.value * np.cos(
+    x + delta.value * np.sin(x) - square.value * np.sin(2 * x)
+)
 Z = kappa.value * a.value * np.sin(x + square.value * np.sin(2 * x))
 
 # Mirror the Sauter plot
 R_mirror = -R
 
 # PROCESS
-x1 = (2.0 * r0.value * (1.0 + delta.value) - a.value * (delta.value**2 + kappa.value**2 - 1.0)) / (
-    2.0 * (1.0 + delta.value)
-)
-x2 = (2.0 * r0.value * (delta.value - 1.0) - a.value * (delta.value**2 + kappa.value**2 - 1.0)) / (
-    2.0 * (delta.value - 1.0)
-)
+x1 = (
+    2.0 * r0.value * (1.0 + delta.value)
+    - a.value * (delta.value**2 + kappa.value**2 - 1.0)
+) / (2.0 * (1.0 + delta.value))
+x2 = (
+    2.0 * r0.value * (delta.value - 1.0)
+    - a.value * (delta.value**2 + kappa.value**2 - 1.0)
+) / (2.0 * (delta.value - 1.0))
 r1 = 0.5 * math.sqrt(
-    (a.value**2 * ((delta.value + 1.0) ** 2 + kappa.value**2) ** 2) / ((delta.value + 1.0) ** 2)
+    (a.value**2 * ((delta.value + 1.0) ** 2 + kappa.value**2) ** 2)
+    / ((delta.value + 1.0) ** 2)
 )
 r2 = 0.5 * math.sqrt(
-    (a.value**2 * ((delta.value - 1.0) ** 2 + kappa.value**2) ** 2) / ((delta.value - 1.0) ** 2)
+    (a.value**2 * ((delta.value - 1.0) ** 2 + kappa.value**2) ** 2)
+    / ((delta.value - 1.0) ** 2)
 )
 theta1 = np.arcsin((kappa.value * a.value) / r1)
 theta2 = np.arcsin((kappa.value * a.value) / r2)
@@ -52,23 +59,61 @@ ys2 = r2 * np.sin(angs2)
 xs1_mirror = -xs1
 xs2_mirror = -xs2
 
-source = ColumnDataSource(data=dict(x=R, y=Z, x_mirror=R_mirror, y_mirror=Z, x1=xs1, y1=ys1, x2=xs2, y2=ys2, x1_mirror=xs1_mirror, y1_mirror=ys1, x2_mirror=xs2_mirror, y2_mirror=ys2, linspace=x))
+source = ColumnDataSource(
+    data={
+        "x": R,
+        "y": Z,
+        "x_mirror": R_mirror,
+        "y_mirror": Z,
+        "x1": xs1,
+        "y1": ys1,
+        "x2": xs2,
+        "y2": ys2,
+        "x1_mirror": xs1_mirror,
+        "y1_mirror": ys1,
+        "x2_mirror": xs2_mirror,
+        "y2_mirror": ys2,
+        "linspace": x,
+    }
+)
 
-plot = figure(x_range=(-10, 10), y_range=(-10, 10), width=800, height=800, title="Plasma Shape")
+plot = figure(
+    x_range=(-10, 10), y_range=(-10, 10), width=800, height=800, title="Plasma Shape"
+)
 plot.xaxis.axis_label = r"Radius"
 plot.yaxis.axis_label = r"Height"
 
-plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6, legend_label="Sauter")
-plot.line('x_mirror', 'y_mirror', source=source, line_width=3, line_alpha=0.6)
-plot.line('x1', 'y1', source=source, line_width=3, line_alpha=0.6, color="red", legend_label="PROCESS")
-plot.line('x1_mirror', 'y1_mirror', source=source, line_width=3, line_alpha=0.6, color="red")
-plot.line('x2', 'y2', source=source, line_width=3, line_alpha=0.6, color="red")
-plot.line('x2_mirror', 'y2_mirror', source=source, line_width=3, line_alpha=0.6, color="red")
+plot.line("x", "y", source=source, line_width=3, line_alpha=0.6, legend_label="Sauter")
+plot.line("x_mirror", "y_mirror", source=source, line_width=3, line_alpha=0.6)
+plot.line(
+    "x1",
+    "y1",
+    source=source,
+    line_width=3,
+    line_alpha=0.6,
+    color="red",
+    legend_label="PROCESS",
+)
+plot.line(
+    "x1_mirror", "y1_mirror", source=source, line_width=3, line_alpha=0.6, color="red"
+)
+plot.line("x2", "y2", source=source, line_width=3, line_alpha=0.6, color="red")
+plot.line(
+    "x2_mirror", "y2_mirror", source=source, line_width=3, line_alpha=0.6, color="red"
+)
 
 plot.legend.location = "top_left"
 
-callback = CustomJS(args=dict(source=source, r0=r0, a=a, delta=delta, kappa=kappa, square=square),
-                    code="""
+callback = CustomJS(
+    args={
+        "source": source,
+        "r0": r0,
+        "a": a,
+        "delta": delta,
+        "kappa": kappa,
+        "square": square,
+    },
+    code="""
     const A = r0.value;
     const B = a.value;
     const D = delta.value;
@@ -112,13 +157,14 @@ callback = CustomJS(args=dict(source=source, r0=r0, a=a, delta=delta, kappa=kapp
         ys2_mirror[i] = ys2[i];
     }
     source.change.emit();
-""")
+""",
+)
 
-r0.js_on_change('value', callback)
-a.js_on_change('value', callback)
-delta.js_on_change('value', callback)
-kappa.js_on_change('value', callback)
-square.js_on_change('value', callback)
+r0.js_on_change("value", callback)
+a.js_on_change("value", callback)
+delta.js_on_change("value", callback)
+kappa.js_on_change("value", callback)
+square.js_on_change("value", callback)
 
 # Save the plot as HTML
 save(row(plot, column(r0, a, delta, kappa, square)), filename="./plasma_plot.html")

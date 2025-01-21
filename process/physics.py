@@ -3342,6 +3342,10 @@ class Physics:
                 )
 
         po.osubhd(self.outfile, "Plasma Geometry :")
+        if physics_variables.i_plasma_shape == 0:
+            po.osubhd(self.outfile, "Classic PROCESS plasma shape model is used :")
+        elif physics_variables.i_plasma_shape == 1:
+            po.osubhd(self.outfile, "Sauter plasma shape model is used :")
         po.ovarrf(
             self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor
         )
@@ -3353,7 +3357,14 @@ class Physics:
             "OP ",
         )
         po.ovarrf(self.outfile, "Aspect ratio", "(aspect)", physics_variables.aspect)
-
+        if physics_variables.i_plasma_shape == 1:
+            po.ovarrf(
+                self.outfile,
+                "Plasma squareness",
+                "(plasma_square)",
+                physics_variables.plasma_square,
+                "IP",
+            )
         if stellarator_variables.istell == 0:
             if physics_variables.i_plasma_geometry in [0, 6, 8]:
                 po.ovarrf(
