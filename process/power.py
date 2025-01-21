@@ -1013,7 +1013,7 @@ class Power:
                     "OP ",
                 )
         else:
-            efficiency = tfcoil_variables.eff_tf_cryo*100.0
+            efficiency = tfcoil_variables.eff_tf_cryo * 100.0
             po.ovarre(
                 self.outfile,
                 f"Efficiency (figure of merit) of cryogenic plant is {efficiency}% of ideal Carnot value (user input):",
