@@ -21,59 +21,83 @@ class PlasmaGeometry:
 
 
 def plasma_geometry(
-    r_0: float, a: float, triang_95: float, kappa_95: float, i_single_null: bool
+    rmajor: float,
+    rminor: float,
+    triang_95: float,
+    kappa_95: float,
+    i_single_null: int,
+    i_plasma_shape: int,
+    square: float,
 ) -> PlasmaGeometry:
-    """Calculates radial and vertical distances and plasma elongation for the geometry of the plasma
+    """
+    Calculates radial and vertical distances and plasma elongation for the geometry of the plasma.
 
-    :param r_0: plasma major radius
-    :type r_0: float
-    :param a: plasma minor radius
-    :type a: float
-    :param triang_95: plasma triangularity at 95% surface
-    :type triang_95: float
-    :param kappa_95: plasma elongation at 95% surface
-    :type kappa_95: float
-    :param i_single_null: switch for single null / double null plasma
-    :type i_single_null: bool
-    :return: dataclass returning plasma elongation and radial and vertical coordinates of the plasma
-    :rtype: PlasmaGeometry
+    This function computes the radial and vertical coordinates of the plasma boundary, as well as the plasma elongation,
+    based on the given major radius, minor radius, triangularity, and elongation at 95% of the plasma surface. It also
+    considers whether the plasma configuration is single null or double null.
+
+    :param rmajor: Plasma major radius.
+    :param rminor: Plasma minor radius.
+    :param triang_95: Plasma triangularity at 95% surface.
+    :param kappa_95: Plasma elongation at 95% surface.
+    :param i_single_null: Switch for single null (True) or double null (False) plasma configuration.
+    :return: A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
+
+    The returned PlasmaGeometry dataclass contains:
+    - rs: List of radial coordinates for the inner and outer plasma boundaries.
+    - zs: List of vertical coordinates for the inner and outer plasma boundaries.
+    - kappa: Calculated plasma elongation.
     """
     delta = 1.5 * triang_95
     kappa = (1.1 * kappa_95) + 0.04
 
-    x1 = (2.0 * r_0 * (1.0 + delta) - a * (delta**2 + kappa**2 - 1.0)) / (
-        2.0 * (1.0 + delta)
-    )
-    x2 = (2.0 * r_0 * (delta - 1.0) - a * (delta**2 + kappa**2 - 1.0)) / (
-        2.0 * (delta - 1.0)
-    )
-    r1 = 0.5 * math.sqrt(
-        (a**2 * ((delta + 1.0) ** 2 + kappa**2) ** 2) / ((delta + 1.0) ** 2)
-    )
-    r2 = 0.5 * math.sqrt(
-        (a**2 * ((delta - 1.0) ** 2 + kappa**2) ** 2) / ((delta - 1.0) ** 2)
-    )
-    theta1 = np.arcsin((kappa * a) / r1)
-    theta2 = np.arcsin((kappa * a) / r2)
-    inang = 1.0 / r1
-    outang = 1.5 / r2
-    if i_single_null == 0:
-        angs1 = np.linspace(
-            -(inang + theta1) + np.pi, (inang + theta1) + np.pi, 256, endpoint=True
+    # Original PROCESS double arc plasma shape
+    if i_plasma_shape == 0:
+        x1 = (2.0 * rmajor * (1.0 + delta) - rminor * (delta**2 + kappa**2 - 1.0)) / (
+            2.0 * (1.0 + delta)
         )
-        angs2 = np.linspace(-(outang + theta2), (outang + theta2), 256, endpoint=True)
-    else:
-        angs1 = np.linspace(
-            -theta1 + np.pi, (inang + theta1) + np.pi, 256, endpoint=True
+        x2 = (2.0 * rmajor * (delta - 1.0) - rminor * (delta**2 + kappa**2 - 1.0)) / (
+            2.0 * (delta - 1.0)
         )
-        angs2 = np.linspace(-(outang + theta2), theta2, 256, endpoint=True)
+        r1 = 0.5 * math.sqrt(
+            (rminor**2 * ((delta + 1.0) ** 2 + kappa**2) ** 2) / ((delta + 1.0) ** 2)
+        )
+        r2 = 0.5 * math.sqrt(
+            (rminor**2 * ((delta - 1.0) ** 2 + kappa**2) ** 2) / ((delta - 1.0) ** 2)
+        )
+        theta1 = np.arcsin((kappa * rminor) / r1)
+        theta2 = np.arcsin((kappa * rminor) / r2)
+        inang = 1.0 / r1
+        outang = 1.5 / r2
+        if i_single_null == 0:
+            angs1 = np.linspace(
+                -(inang + theta1) + np.pi, (inang + theta1) + np.pi, 256, endpoint=True
+            )
+            angs2 = np.linspace(
+                -(outang + theta2), (outang + theta2), 256, endpoint=True
+            )
+        else:
+            angs1 = np.linspace(
+                -theta1 + np.pi, (inang + theta1) + np.pi, 256, endpoint=True
+            )
+            angs2 = np.linspace(-(outang + theta2), theta2, 256, endpoint=True)
 
-    xs1 = -(r1 * np.cos(angs1) - x1)
-    ys1 = r1 * np.sin(angs1)
-    xs2 = -(r2 * np.cos(angs2) - x2)
-    ys2 = r2 * np.sin(angs2)
+        xs1 = -(r1 * np.cos(angs1) - x1)
+        ys1 = r1 * np.sin(angs1)
+        xs2 = -(r2 * np.cos(angs2) - x2)
+        ys2 = r2 * np.sin(angs2)
 
-    rs = [xs1, xs2]
-    zs = [ys1, ys2]
+        rs = [xs1, xs2]
+        zs = [ys1, ys2]
 
-    return PlasmaGeometry(rs=rs, zs=zs, kappa=kappa)
+        return PlasmaGeometry(rs=rs, zs=zs, kappa=kappa)
+
+    # Sauter plasma shape
+    if i_plasma_shape == 1:
+        x = np.linspace(-np.pi, np.pi, 256)
+
+        # Sauter
+        R = rmajor + rminor * np.cos(x + delta * np.sin(x) - square * np.sin(2 * x))
+        Z = kappa * rminor * np.sin(x + square * np.sin(2 * x))
+
+        return PlasmaGeometry(rs=R, zs=Z, kappa=kappa)

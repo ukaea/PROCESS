@@ -189,32 +189,40 @@ def plot_plasma(axis, mfile_data, scan, colour_scheme):
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
     kappa_95 = mfile_data.data["kappa95"].get_scan(scan)
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
+    i_plasma_shape = mfile_data.data["i_plasma_shape"].get_scan(scan)
+    plasma_square = mfile_data.data["plasma_square"].get_scan(scan)
 
     pg = plasma_geometry(
-        r_0=r_0,
-        a=a,
+        rmajor=r_0,
+        rminor=a,
         triang_95=triang_95,
         kappa_95=kappa_95,
         i_single_null=i_single_null,
+        i_plasma_shape=i_plasma_shape,
+        square=plasma_square,
     )
+    if i_plasma_shape == 0:
+        axis.plot(pg.rs[0], pg.zs[0], color="black")
+        axis.plot(pg.rs[1], pg.zs[1], color="black")
 
-    axis.plot(pg.rs[0], pg.zs[0], color="black")
-    axis.plot(pg.rs[1], pg.zs[1], color="black")
+        # Colour in right side of plasma
+        axis.fill_between(
+            x=pg.rs[0],
+            y1=pg.zs[0],
+            where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
+            color=PLASMA_COLOUR[colour_scheme - 1],
+        )
+        # Colour in left side of plasma
+        axis.fill_between(
+            x=pg.rs[1],
+            y1=pg.zs[1],
+            where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
+            color=PLASMA_COLOUR[colour_scheme - 1],
+        )
 
-    # Colour in right side of plasma
-    axis.fill_between(
-        x=pg.rs[0],
-        y1=pg.zs[0],
-        where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
-        color=PLASMA_COLOUR[colour_scheme - 1],
-    )
-    # Colour in left side of plasma
-    axis.fill_between(
-        x=pg.rs[1],
-        y1=pg.zs[1],
-        where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
-        color=PLASMA_COLOUR[colour_scheme - 1],
-    )
+    elif i_plasma_shape == 1:
+        axis.plot(pg.rs, pg.zs, color="black")
+        axis.fill(pg.rs, pg.zs, color=PLASMA_COLOUR[colour_scheme - 1])
 
 
 def plot_centre_cross(axis, mfile_data, scan):

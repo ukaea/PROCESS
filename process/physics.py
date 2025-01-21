@@ -3326,7 +3326,7 @@ class Physics:
         if stellarator_variables.istell == 0:
             if physics_variables.itart == 0:
                 physics_module.itart_r = physics_variables.itart
-                po.ovarrf(
+                po.ovarin(
                     self.outfile,
                     "Tokamak aspect ratio = Conventional, itart = 0",
                     "(itart)",
@@ -3334,7 +3334,7 @@ class Physics:
                 )
             elif physics_variables.itart == 1:
                 physics_module.itart_r = physics_variables.itart
-                po.ovarrf(
+                po.ovarin(
                     self.outfile,
                     "Tokamak aspect ratio = Spherical, itart = 1",
                     "(itart)",
@@ -3342,6 +3342,12 @@ class Physics:
                 )
 
         po.osubhd(self.outfile, "Plasma Geometry :")
+        po.ovarin(
+            self.outfile,
+            "Plasma shaping model",
+            "(i_plasma_shape)",
+            physics_variables.i_plasma_shape,
+        )
         if physics_variables.i_plasma_shape == 0:
             po.osubhd(self.outfile, "Classic PROCESS plasma shape model is used :")
         elif physics_variables.i_plasma_shape == 1:
@@ -3357,14 +3363,13 @@ class Physics:
             "OP ",
         )
         po.ovarrf(self.outfile, "Aspect ratio", "(aspect)", physics_variables.aspect)
-        if physics_variables.i_plasma_shape == 1:
-            po.ovarrf(
-                self.outfile,
-                "Plasma squareness",
-                "(plasma_square)",
-                physics_variables.plasma_square,
-                "IP",
-            )
+        po.ovarrf(
+            self.outfile,
+            "Plasma squareness",
+            "(plasma_square)",
+            physics_variables.plasma_square,
+            "IP",
+        )
         if stellarator_variables.istell == 0:
             if physics_variables.i_plasma_geometry in [0, 6, 8]:
                 po.ovarrf(
