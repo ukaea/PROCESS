@@ -296,6 +296,16 @@ $$
 
 -------------------------
 
+### 26: ELM-free: ITERH-97P scaling
+
+Is selected with `i_confinement_time = 26`
+
+$$
+\tau_{\text{E}} =  0.029 M_{\text{i}}^{0.2} I^{0.9} R^{2.03} \epsilon^{-0.19} \kappa_{95}^{0.92} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.20} P^{-0.66}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

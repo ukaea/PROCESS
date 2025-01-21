@@ -910,3 +910,50 @@ def lackner_gottardi_stellarator_confinement_time(
         * powerht ** (-0.6e0)
         * q**0.4e0
     )
+
+
+def iter_h97p_confinement_time(
+    pcur: float,
+    bt: float,
+    powerht: float,
+    dnla19: float,
+    rmajor: float,
+    aspect: float,
+    kappa: float,
+    afuel: float,
+) -> float:
+    """
+        Calculate the ELM-free ITER H-mode scaling - ITER H97-P confinement time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        powerht (float): Net Heating power [MW]
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        rmajor (float): Plasma major radius [m]
+        aspect (float): Aspect ratio
+        kappa (float): Plasma elongation
+        afuel (float): Fuel atomic mass number
+
+        Returns:
+        float: ITER H97-P confinement time [s]
+
+        Notes:
+
+        References:
+            - I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,”
+            Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115–B127, Dec. 1997,
+            doi: https://doi.org/10.1088/0741-3335/39/12b/009.
+    ‌
+    """
+    return (
+        0.031e0
+        * pcur**0.95e0
+        * bt**0.25e0
+        * powerht ** (-0.67e0)
+        * dnla19**0.35e0
+        * rmajor**1.92e0
+        * aspect ** (-0.08e0)
+        * kappa**0.63e0
+        * afuel**0.42e0
+    )
