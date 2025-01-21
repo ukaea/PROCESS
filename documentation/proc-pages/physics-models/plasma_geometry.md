@@ -351,7 +351,7 @@ $$
 
 ------------------
 
-### Surface Area | `xsurf()`
+### Surface Area | `plasma_surface_area()`
 This function finds the plasma surface area, using the
 revolution of two intersecting arcs around the device centreline.
 This calculation is appropriate for plasmas with a separatrix.
@@ -394,60 +394,6 @@ $$
 
 ------------------
 
-
-### Sauter geoemtry | `sauter_geometry()`
-
-Plasma geometry based on equations'Geometric formulas for system codes including the effect of negative triangularity'[^7]
-
-| Input Variable | Description                          |
-|----------|--------------------------------------|
-| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
-| `rmajor`, $R$        | Plasma major radius [$\text{m}$]              |
-| `kappa`, $\kappa$      | Plasma separatrix elongation         |
-| `triang`, $\delta$      | Plasma separatrix triangularity      |
-
-
-| Output Variable | Description                          |
-|----------|--------------------------------------|
-| `len_plasma_poloidal`       | Plasma Poloidal perimeter length [$\text{m}$] |
-| `a_plasma_surface`       | Plasma surface area [$\text{m}^2$] |
-| `a_plasma_poloidal`       | Plasma cross-sectional area [$\text{m}^2$] |
-| `vol_plasma`       | Plasma volume [$\text{m}^3$] |
-
-$$
-\mathtt{w07} = 1
-$$
-
-$$
-\epsilon = \frac{a}{R}
-$$
-
-Poloidal perimeter (named Lp in Sauter)
-
-$$
-\mathtt{len\_plasma\_poloidal} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\mathtt{w07} - 1))
-$$
-
-Surface area (named Ap in Sauter)
-
-$$
-\mathtt{a\_plasma\_surface} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{len\_plasma\_poloidal}
-$$ 
-
-Cross-section area (named S_phi in Sauter)
-
-$$
-\mathtt{a\_plasma\_poloidal} = \pi a^2 \kappa (1 + 0.52 (\mathtt{w07} - 1))
-$$
-
-Volume
-
-$$
-\mathtt{vol\_plasma} = 2.0\pi R (1 - 0.25 \delta \epsilon) \mathtt{a\_plasma\_poloidal}
-$$
-
-
-------------------
 
 ### Poloidal perimeter | `plasma_poloidal_perimeter()`
 The poloidal plasma perimtere length `len_plasma_poloidal` is calculated as follows:
@@ -540,6 +486,60 @@ $$
         ) \\
         + \mathtt{xi}^2 \times (\mathtt{thetai} - \cos{(\mathtt{thetai})} \times \sin{(\mathtt{thetai}))}
 $$
+
+------------------
+
+### Sauter geoemtry | `sauter_geometry()`
+
+Plasma geometry based on equations'Geometric formulas for system codes including the effect of negative triangularity'[^7]
+
+| Input Variable | Description                          |
+|----------|--------------------------------------|
+| `rminor`, $a$        | Plasma minor radius [$\text{m}$]              |
+| `rmajor`, $R$        | Plasma major radius [$\text{m}$]              |
+| `kappa`, $\kappa$      | Plasma separatrix elongation         |
+| `triang`, $\delta$      | Plasma separatrix triangularity      |
+
+
+| Output Variable | Description                          |
+|----------|--------------------------------------|
+| `len_plasma_poloidal`       | Plasma Poloidal perimeter length [$\text{m}$] |
+| `a_plasma_surface`       | Plasma surface area [$\text{m}^2$] |
+| `a_plasma_poloidal`       | Plasma cross-sectional area [$\text{m}^2$] |
+| `vol_plasma`       | Plasma volume [$\text{m}^3$] |
+
+$$
+\mathtt{w07} = 1
+$$
+
+$$
+\epsilon = \frac{a}{R}
+$$
+
+Poloidal perimeter (named Lp in Sauter)
+
+$$
+\mathtt{len\_plasma\_poloidal} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\mathtt{w07} - 1))
+$$
+
+Surface area (named Ap in Sauter)
+
+$$
+\mathtt{a\_plasma\_surface} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{len\_plasma\_poloidal}
+$$ 
+
+Cross-section area (named S_phi in Sauter)
+
+$$
+\mathtt{a\_plasma\_poloidal} = \pi a^2 \kappa (1 + 0.52 (\mathtt{w07} - 1))
+$$
+
+Volume
+
+$$
+\mathtt{vol\_plasma} = 2.0\pi R (1 - 0.25 \delta \epsilon) \mathtt{a\_plasma\_poloidal}
+$$
+
 
 ------------------
 

@@ -248,7 +248,7 @@ class PlasmaGeom:
 
         #  Surface area - inboard and outboard.  These are not given by Sauter but
         #  the outboard area is required by DCLL and divertor
-        xsi, xso = self.xsurf(
+        xsi, xso = self.plasma_surface_area(
             physics_variables.rmajor,
             physics_variables.rminor,
             xi,
@@ -369,7 +369,7 @@ class PlasmaGeom:
         return 2.0e0 * (xo * thetao + xi * thetai)
 
     @staticmethod
-    def xsurf(
+    def plasma_surface_area(
         rmajor: float, rminor: float, xi: float, thetai: float, xo: float, thetao: float
     ) -> tuple[float, float]:
         """

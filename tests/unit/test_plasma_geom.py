@@ -265,7 +265,7 @@ def test_xsect0(a, kap, tri, expected_xsect0):
     assert pytest.approx(xsect0) == expected_xsect0
 
 
-class XsurfParam(NamedTuple):
+class SurfaceAreaParam(NamedTuple):
     rmajor: Any = None
 
     rminor: Any = None
@@ -284,9 +284,9 @@ class XsurfParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "xsurfparam",
+    "surfaceareaparam",
     (
-        XsurfParam(
+        SurfaceAreaParam(
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
             xi=10.510690667870968,
@@ -296,7 +296,7 @@ class XsurfParam(NamedTuple):
             expected_xsi=454.0423505329922,
             expected_xso=949.22962703393853,
         ),
-        XsurfParam(
+        SurfaceAreaParam(
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
             xi=10.510690667870968,
@@ -308,31 +308,31 @@ class XsurfParam(NamedTuple):
         ),
     ),
 )
-def test_xsurf(xsurfparam, monkeypatch, plasma):
+def test_plasma_surface_area(surfaceareaparam, monkeypatch, plasma):
     """
-    Automatically generated Regression Unit Test for xsurf.
+    Automatically generated Regression Unit Test for plasma_surface_area().
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
-    :param xsurfparam: the data used to mock and assert in this test.
-    :type xsurfparam: xsurfparam
+    :param surfaceareaparam: the data used to mock and assert in this test.
+    :type surfaceareaparam: surfaceareaparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    xsi, xso = plasma.xsurf(
-        rmajor=xsurfparam.rmajor,
-        rminor=xsurfparam.rminor,
-        xi=xsurfparam.xi,
-        thetai=xsurfparam.thetai,
-        xo=xsurfparam.xo,
-        thetao=xsurfparam.thetao,
+    xsi, xso = plasma.plasma_surface_area(
+        rmajor=surfaceareaparam.rmajor,
+        rminor=surfaceareaparam.rminor,
+        xi=surfaceareaparam.xi,
+        thetai=surfaceareaparam.thetai,
+        xo=surfaceareaparam.xo,
+        thetao=surfaceareaparam.thetao,
     )
 
-    assert xsi == pytest.approx(xsurfparam.expected_xsi)
+    assert xsi == pytest.approx(surfaceareaparam.expected_xsi)
 
-    assert xso == pytest.approx(xsurfparam.expected_xso)
+    assert xso == pytest.approx(surfaceareaparam.expected_xso)
 
 
 class SurfaParam(NamedTuple):
