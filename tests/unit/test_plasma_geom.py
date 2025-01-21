@@ -74,8 +74,8 @@ def test_plasma_angles_arcs(plasmaanglesarcsparam, monkeypatch, plasma):
 
     xi, thetai, xo, thetao = plasma.plasma_angles_arcs(
         a=plasmaanglesarcsparam.a,
-        kap=plasmaanglesarcsparam.kap,
-        tri=plasmaanglesarcsparam.tri,
+        kappa=plasmaanglesarcsparam.kap,
+        triang=plasmaanglesarcsparam.tri,
     )
 
     assert xi == pytest.approx(plasmaanglesarcsparam.expected_xi)

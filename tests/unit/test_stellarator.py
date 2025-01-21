@@ -181,7 +181,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
     stellarator.stgeom()
 
     assert physics_variables.a_plasma_surface == pytest.approx(
-        stgeomparam.expected_sarea
+        stgeomparam.expected_a_plasma_surface
     )
 
     assert physics_variables.a_plasma_surface_outboard == pytest.approx(
