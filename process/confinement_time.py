@@ -957,3 +957,56 @@ def iter_h97p_confinement_time(
         * kappa**0.63e0
         * afuel**0.42e0
     )
+
+
+def iter_h97p_elmy_confinement_time(
+    pcur: float,
+    bt: float,
+    powerht: float,
+    dnla19: float,
+    rmajor: float,
+    aspect: float,
+    kappa: float,
+    afuel: float,
+) -> float:
+    """
+    Calculate the ELMy ITER H-mode scaling - ITER H97-P(y) confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    powerht (float): Net Heating power [MW]
+    dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+    rmajor (float): Plasma major radius [m]
+    aspect (float): Aspect ratio
+    kappa (float): Plasma elongation
+    afuel (float): Fuel atomic mass number
+
+    Returns:
+    float: ITER H97-P(y) confinement time [s]
+
+    Notes:
+
+    References:
+        - I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,”
+          Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115–B127, Dec. 1997,
+          doi: https://doi.org/10.1088/0741-3335/39/12b/009.
+
+        - International Atomic Energy Agency, Vienna (Austria), ‘Technical basis for the ITER final design report, cost review and safety analysis (FDR)’,
+          no. no.16. Dec. 1998.
+    """
+    return (
+        0.029e0
+        * pcur**0.90e0
+        * bt**0.20e0
+        * powerht ** (-0.66e0)
+        * dnla19**0.40e0
+        * rmajor**2.03e0
+        * aspect ** (-0.19e0)
+        * kappa**0.92e0
+        * afuel**0.2e0
+    )
+
+
+if __name__ == "__main__":
+    pass

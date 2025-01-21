@@ -301,6 +301,16 @@ $$
 Is selected with `i_confinement_time = 26`
 
 $$
+\tau_{\text{E}} =  0.031 M_{\text{i}}^{0.42} I^{0.95} R^{1.92} \epsilon^{0.08} \kappa_{95}^{0.63} \overline{n}_{19}^{0.35} B_{\text{T}}^{0.25} P^{-0.67}
+$$
+
+-------------------------
+
+### 27: ELMy ITER H-H97-P(y) scaling
+
+Is selected with `i_confinement_time = 27`
+
+$$
 \tau_{\text{E}} =  0.029 M_{\text{i}}^{0.2} I^{0.9} R^{2.03} \epsilon^{-0.19} \kappa_{95}^{0.92} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.20} P^{-0.66}
 $$
 
