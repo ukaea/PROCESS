@@ -1219,18 +1219,18 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for conducting shell radius / rminor upper limit
       !! #=# physics
-      !! #=#=# fcwr, f_r_conducting_wall
+      !! #=#=#fr_conducting_wall, f_r_conducting_wall
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! rminor : input real : plasma minor radius (m)
       !! scraplo : input real : gap between plasma and first wall, outboard side (m)
       !! fwoth : input real : outboard first wall thickness, initial estimate (m)
       !! blnkoth : input real : outboard blanket thickness (m)
-      !! fcwr : input real : f-value for conducting wall radius / rminor limit
+      !!fr_conducting_wall : input real : f-value for conducting wall radius / rminor limit
       !! f_r_conducting_wall : input real : maximum ratio of conducting wall distance to plasma minor radius for vertical stability
       use physics_variables, only: rminor, f_r_conducting_wall
       use build_variables, only: scraplo, fwoth, blnkoth
-      use constraint_variables, only: fcwr
+      use constraint_variables, only:fr_conducting_wall
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1241,7 +1241,7 @@ contains
       real(dp) :: rcw
 
       rcw = rminor + scraplo + fwoth + blnkoth
-      tmp_cc =  1.0D0 - fcwr * f_r_conducting_wall*rminor / rcw
+      tmp_cc =  1.0D0 -fr_conducting_wall * f_r_conducting_wall*rminor / rcw
       tmp_con = f_r_conducting_wall*rminor * (1.0D0 - tmp_cc)
       tmp_err = rcw * tmp_cc
       tmp_symbol = '<'

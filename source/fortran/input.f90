@@ -232,7 +232,7 @@ contains
       beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
-      fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
+      fauxmn, fiooic,fr_conducting_wall, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
@@ -811,7 +811,7 @@ contains
           call parse_real_variable('fecrh_ignition', fecrh_ignition, 0.001D0, 10.0D0, &
                'F-value for ecrh ignition constraint')
        case ('fcwr')
-          call parse_real_variable('fcwr', fcwr, 0.001D0, 10.0D0, &
+          call parse_real_variable('fcwr',fr_conducting_wall, 0.001D0, 10.0D0, &
                'F-value for conducting wall radius')
        case ('fdene')
           call parse_real_variable('fdene', fdene, 0.001D0, 10.0D0, &

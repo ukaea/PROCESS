@@ -46,7 +46,7 @@ module constraint_variables
   !! f-value for TF coil current per turn upper limit
   !! (`constraint equation 77`, `iteration variable 146`)
 
-  real(dp) :: fcwr
+  real(dp) ::fr_conducting_wall
   !! f-value for conducting wall radius / rminor limit
   !! (`constraint equation 23`, `iteration variable 104`)
 
@@ -322,7 +322,7 @@ module constraint_variables
     fbeta_max = 1.0D0
     fbeta_min = 1.0D0
     fcpttf = 1.0D0
-    fcwr = 1.0D0
+   fr_conducting_wall = 1.0D0
     fdene = 1.0D0
     fdivcol = 1.0D0
     fdtmp = 1.0D0

@@ -305,7 +305,7 @@ module numerics
   !! <LI> (101) NOT USED
   !! <LI> (102) fimpvar # OBSOLETE
   !! <LI> (103) flhthresh (f-value for equation 15)
-  !! <LI> (104) fcwr (f-value for equation 23)
+  !! <LI> (104)fr_conducting_wall (f-value for equation 23)
   !! <LI> (105) fnbshinef (f-value for equation 59)
   !! <LI> (106) ftmargoh (f-value for equation 60)
   !! <LI> (107) favail (f-value for equation 61)
