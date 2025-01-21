@@ -89,6 +89,12 @@ This subroutine calculates the plasma geometry parameters based on the given inp
 The plasma geometry parameters include the shaping terms, plasma aspect ratio, elongation, and triangularity.
 The function uses various scaling laws and formulas to calculate these parameters based on the specified shape type.
 
+If the classic PROCESS plasma shape is used (`i_plasma_shape = 0`) the plasma surface area, cross-sectional area and volume are calculated using
+formulations that approximate the LCFS as a revolution of two arcs which
+intersect the plasma X-points and the plasma midplane outer and inner
+radii. (This is a reasonable assumption for double-null diverted plasmas, but
+will be inaccurate for single-null plasmas, `i_single_null = 1`)
+
 ### Elongation & Triangularity 
 
 ----
@@ -247,23 +253,6 @@ $$
 
 ---------------------------------------------------------------------
 
-An explicit constraint relating to the plasma's vertical stability may be turned on if
-required. In principle, the inner surface of the outboard shield could be used
-as the location of a conducting shell to mitigate the vertical
-displacement growth rate of plasmas with significant elongation [^5]. The 
-maximum permissible distance $r_{\text{shell, max}}$ of this shell from the geometric 
-centre of the plasma may be set using input parameter `cwrmax`, such that 
-$r_{\text{shell, max}} =$ `cwrmax*rminor`. Constraint equation 
-no. 23 should be turned on with iteration variable no.\ 104 (`fcwr`) to enforce 
-this
-
-The plasma surface area, cross-sectional area and volume are calculated using
-formulations that approximate the LCFS as a revolution of two arcs which
-intersect the plasma X-points and the plasma midplane outer and inner
-radii. (This is a reasonable assumption for double-null diverted plasmas, but
-will be inaccurate for single-null plasmas, `snull = 1`)
-
-------------------
 
 ### Plasma-Wall Gap
 
@@ -544,6 +533,24 @@ $$
 
 ------------------
 
+## Key Constraints
+
+### Conducting shell radius
+
+This constraint can be activated by stating `icc = 23` in the input file.
+
+In principle, the inner surface of the outboard shield could be used
+as the location of a conducting shell to mitigate the vertical
+displacement growth rate of plasmas with significant elongation [^8]. 
+
+The maximum permissible distance $r_{\text{shell, max}}$ of this shell from the geometric 
+centre of the plasma may be set using input parameter `f_r_conducting_wall`, such that 
+$r_{\text{shell, max}} =$ `f_r_conducting_wall*rminor`.
+
+The scaling value `fcwr` can be varied also.
+
+---------------------
+
 ## Legacy claculations
 
 ### STAR Code plasma surface area | `surfa()` 
@@ -605,6 +612,8 @@ $$
 \mathtt{sa} = \mathtt{so} + \mathtt{si}
 $$
 
+-------------------------
+
 ### Plasma poloidal perimeter calculation | `perim()`
 
 This function finds the plasma poloidal perimeter, using the
@@ -653,6 +662,7 @@ $$
 \mathtt{perim} = 2.0 \times (\mathtt{xlo} \times \mathtt{thetao} + \mathtt{xli} \times \mathtt{thetai})
 $$
 
+-------------------------
 
 ### Plasma volume calculation | `fvol()`
 
@@ -705,6 +715,8 @@ $$
 $$
 \mathtt{fvol} = \mathtt{vout} - \mathtt{vin}
 $$
+
+-------------------------
 
 ### Plasma cross sectional area calculation | `xsecto()`
 
@@ -774,9 +786,7 @@ Unpublished internal Oak Ridge document.
 [^3]: H. Zohm et al, *'On the Physics Guidelines for a Tokamak DEMO'*,
 FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
 [^4]: Menard, J.E. & Brown, T. & El-Guebaly, L. & Boyer, M. & Canik, J. & Colling, Bethany & Raman, Roger & Wang, Z. & Zhai, Yunbo & Buxton, Peter & Covele, B. & D’Angelo, C. & Davis, Andrew & Gerhardt, S. & Gryaznevich, M. & Harb, Moataz & Hender, T.C. & Kaye, S. & Kingham, David & Woolley, R.. (2016). *Fusion nuclear science facilities and pilot plants based on the spherical tokamak.* Nuclear Fusion. 56. 106023. 10.1088/0029-5515/56/10/106023. 
-[^5]: H.S. Bosch and G.M. Hale, *Improved Formulas for Fusion Cross-sections* 
-and Thermal Reactivities', Nuclear Fusion 32 (1992) 611
 [^6]: J D Galambos, *STAR Code : Spherical Tokamak Analysis and Reactor Code*,
 unpublished internal Oak Ridge document
 [^7]: O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,” Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016, doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
-‌
+[^8]: Y. Sakamoto, 'Recent progress in vertical stability analysis in JA', Task meeting EU-JA #16, Fusion for Energy, Garching, 24--25 June 2014

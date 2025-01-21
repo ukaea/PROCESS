@@ -128,7 +128,7 @@ module physics_variables
   real(dp) :: f_vol_plasma
   !! multiplying factor for the plasma volume (normally=1)
 
-  real(dp) :: cwrmax
+  real(dp) :: f_r_conducting_wall
   !! maximum ratio of conducting wall distance to plasma minor radius for
   !! vertical stability (`constraint equation 23`)
 
@@ -984,7 +984,7 @@ module physics_variables
     c_beta = 0.5D0
     csawth = 1.0D0
     f_vol_plasma = 1.0D0
-    cwrmax = 1.35D0
+    f_r_conducting_wall = 1.35D0
     dene = 9.8D19
     deni = 0.0D0
     dlamee = 0.0D0

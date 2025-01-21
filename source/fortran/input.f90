@@ -305,7 +305,7 @@ contains
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
-      fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
+      fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
@@ -560,8 +560,8 @@ contains
        case ('f_vol_plasma')
           call parse_real_variable('f_vol_plasma', f_vol_plasma, 0.01D0, 10.0D0, &
                'Plasma volume multiplier')
-       case ('cwrmax')
-          call parse_real_variable('cwrmax', cwrmax, 1.0D0, 3.0D0, &
+       case ('f_r_conducting_wall')
+          call parse_real_variable('f_r_conducting_wall', f_r_conducting_wall, 1.0D0, 3.0D0, &
                'Max conducting shell to rminor radius')
        case ('dene')
           call parse_real_variable('dene', dene, 1.0D18, 1.0D22, &

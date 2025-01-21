@@ -182,10 +182,10 @@ significant elongation \footnote{Y. Sakamoto, `Recent progress in
   vertical stability analysis in JA', Task meeting EU-JA \#16, Fusion
   for Energy, Garching, 24--25 June 2014}. The maximum distance
 \(r_{\text{shell, max}}\) of this shell from the centre of the plasma
-may be set using input parameter \texttt{cwrmax}, such that
-\(r_{\text{shell, max}} =\) \texttt{cwrmax*rminor}. Constraint equation
+may be set using input parameter \texttt{f_r_conducting_wall}, such that
+\(r_{\text{shell, max}} =\) \texttt{f_r_conducting_wall*rminor}. Constraint equation
 no. 23 should be turned on with iteration variable no.~104
-(\texttt{fcwr}) to enforce this. (A scaling of \texttt{cwrmax} with
+(\texttt{fcwr}) to enforce this. (A scaling of \texttt{f_r_conducting_wall} with
 elongation should be available shortly.)
 
 The plasma surface area, cross-sectional area and volume are calculated

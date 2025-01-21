@@ -225,9 +225,9 @@ triang = 0.5
 *icc = 23
 * DESCRIPTION:   Constraint equation for conducting shell radius / rminor upper limit (FW) 
 * JUSTIFICATION: Turned off, dont care about shell radius ratio limit for vertical stability
-* VARIABLES:     cwrmax calculated in-situ
+* VARIABLES:     f_r_conducting_wall calculated in-situ
 
-*cwrmax = 
+*f_r_conducting_wall = 
 * DESCRIPTION:   Max conducting shell to rminor radius
 * JUSTIFICATION: Not using icc = 23
 
