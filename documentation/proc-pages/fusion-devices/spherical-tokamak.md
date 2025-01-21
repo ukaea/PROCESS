@@ -10,7 +10,7 @@
         title="Schematic diagram of the Power Core radial build" 
         width="650" height="100" />
         <br><br>
-        <figcaption><i>Figure 1: Schematic diagram of the fusion power core of a typical tokamak power plant modelled by `PROCESS`, showing the relative positions of the components. A double null plasma is assumed (`snull=0`) - compare Figure 2, and the first wall, blanket, shield and vacuum vessel are D-shaped in cross-section (chosen by setting switch `fwbsshape=1`) - compare Figure 3. Also shown are the code variables used to define the thicknesses of the components. The arrowed labels adjacent to the axes are the total 'builds' to that point. The precise locations and sizes of the PF coils are calculated within the code.
+        <figcaption><i>Figure 1: Schematic diagram of the fusion power core of a typical tokamak power plant modelled by `PROCESS`, showing the relative positions of the components. A double null plasma is assumed (`i_single_null=0`) - compare Figure 2, and the first wall, blanket, shield and vacuum vessel are D-shaped in cross-section (chosen by setting switch `fwbsshape=1`) - compare Figure 3. Also shown are the code variables used to define the thicknesses of the components. The arrowed labels adjacent to the axes are the total 'builds' to that point. The precise locations and sizes of the PF coils are calculated within the code.
         </i></figcaption>
         <br>
         </center>
@@ -55,7 +55,7 @@ Switch `itart` provides overall control of the ST switches within the code, and 
     title="Schematic diagram of the Power Core radial build" 
     width="650" height="100" />
     <br><br>
-    <figcaption><i>Figure 2: Schematic diagram of the fusion power core of a typical tokamak power plant modelled by `PROCESS`, showing the relative positions of the components. A single null plasma is assumed ('snull=1') - compare Figure 3. The radial build is the same as for a double null configuration; shown along the vertical axis are the code variables used to define the vertical thicknesses of the components. The arrow labels adjacent to the axis are the total 'builds' (distance from the midplane, Z=0) to that point. The precise locations and sizes of the PF coils are calculated within the code.
+    <figcaption><i>Figure 2: Schematic diagram of the fusion power core of a typical tokamak power plant modelled by `PROCESS`, showing the relative positions of the components. A single null plasma is assumed ('i_single_null=1') - compare Figure 3. The radial build is the same as for a double null configuration; shown along the vertical axis are the code variables used to define the vertical thicknesses of the components. The arrow labels adjacent to the axis are the total 'builds' (distance from the midplane, Z=0) to that point. The precise locations and sizes of the PF coils are calculated within the code.
     </i></figcaption>
     <br>
     </center>

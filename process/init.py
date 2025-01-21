@@ -676,7 +676,7 @@ def check_process():
             )
         if fortran.physics_variables.i_single_null == 1 and j < 2:
             raise ProcessValidationError(
-                "If snull=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
+                "If i_single_null=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
             )
 
         # Constraint 10 is dedicated to ST designs with demountable joints

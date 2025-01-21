@@ -25,7 +25,7 @@ values for `rpf1`, `rpf2`, `zref(j)` and `routr` should be adjusted by the user 
 coils accurately.
 
 The three possible values of `ipfloc(j)` correspond to the following PF coil positions: (Redo taking 
-into account snull and other recent changes e.g. rclsnorm)
+into account `i_single_null` and other recent changes e.g. rclsnorm)
 
 `ipfloc(j)` = 1: PF coils are placed above the central solenoid (one group only);
 *R* = `rohc` + `rpf1`<br>
