@@ -6,7 +6,7 @@ from bokeh.plotting import figure, output_file, save
 x = np.linspace(0, 1, 500)
 y = 5.0 * (1 - x**2) ** 2.0
 
-source = ColumnDataSource(data=dict(x=x, y=y))
+source = ColumnDataSource(data={"x": x, "y": y})
 
 plot = figure(
     x_range=(0, 1),
@@ -25,7 +25,7 @@ alpha = Slider(start=0.01, end=10, value=2, step=0.01, title="Profile Index  | a
 
 
 callback = CustomJS(
-    args=dict(source=source, n0=n0, alpha=alpha),
+    args={"source": source, "n0": n0, "alpha": alpha},
     code="""
     const A = n0.value
     const B = alpha.value

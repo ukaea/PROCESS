@@ -3,26 +3,36 @@ target-version = "py310"
 
 [lint]
 extend-select = [
-    "I",
-    "INT",
-    "YTT",
     "ASYNC",
+    "BLE",
     "COM",
-    "T10",
+    "C4",
+    "DTZ",
+    "F",
     "FA",
+    "FLY",
+    "FURB",
+    "I",
+    "ICN",
+    "INT",
     "LOG",
+    "NPY",
+    "PGH",
+    "PIE",
     "PYI",
     "Q",
     "RSE",
     "SLOT",
+    "T10",
     "TID",
-    "PGH",
-    "FLY",
-    "F",
+    "UP",
     "W",
+    "YTT",
+    "PD",
+    "G",
 ]
 
-ignore = ["COM812", "FBT", "G004"]
+ignore = ["COM812", "FBT", "G004", "PD901"]
 
 [lint.per-file-ignores]
 "tests/*" = ["ARG"]

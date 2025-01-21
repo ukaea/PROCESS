@@ -2,8 +2,6 @@
 Calculate radial and vertical coordinates for the geometry of the vacuum vessel
 """
 
-from typing import Tuple
-
 import numpy as np
 
 from process.geometry.geometry_parameterisations import ArbitraryGeometry
@@ -99,7 +97,7 @@ def vacuum_vessel_geometry_lower(
     rminx_outer: float,
     radx_inner: float,
     rminx_inner: float,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of vacuum vessel below the midplane
 
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane

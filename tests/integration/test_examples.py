@@ -5,7 +5,7 @@ from pathlib import Path
 from shutil import copy, copytree
 
 import numpy as np
-import pandas
+import pandas as pd
 import pytest
 from testbook import testbook
 
@@ -77,7 +77,7 @@ def test_csv(examples_temp_data):
         )
 
         # Read in the csv file created by test and check it contains positive floats
-        readcsv = pandas.read_csv(
+        readcsv = pd.read_csv(
             examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
         )
         values = readcsv["Value"]

@@ -11,7 +11,6 @@ import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
 
 import pytest
 from regression_test_assets import RegressionTestAssetCollector
@@ -83,7 +82,7 @@ class RegressionTestScenario:
             "Ensure the Scenario has been run!"
         )
 
-        with open(mfile_location, "r") as f:
+        with open(mfile_location) as f:
             assert len(f.readlines()) > 0, (
                 "An MFile has been created, but it is empty, "
                 "indicating PROCESS did not run the input file successfully!"
@@ -145,7 +144,7 @@ class RegressionTestScenario:
     @staticmethod
     def mfile_value_changes(
         ref: MFile, new: MFile, tolerance: float, opt_params_only: bool
-    ) -> List[MFileVariableDifference]:
+    ) -> list[MFileVariableDifference]:
         """Calculates the differences between two MFiles.
 
         :param ref: the reference MFile

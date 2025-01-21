@@ -19,7 +19,7 @@ If `ipedestal == 0` then no pedestal is present and the function describing the 
 $$\begin{aligned}
 \mbox{Density : } n(\rho) & = n_0 \left( 1 - \rho^2 \right)^{\alpha_n} \\
 \mbox{Temperature : } T(\rho) & = T_0 \left( 1 - \rho^2 \right)^{\alpha_T} \\
-\mbox{Current : } J(r) & = J_0 \left( 1 - \rho^2 \right)^{\alpha_J}
+\mbox{Current : } J(\rho) & = J_0 \left( 1 - \rho^2 \right)^{\alpha_J}
 \end{aligned}$$
 
 where $\rho = r/a$, and $a$ is the plasma minor radius. This gives
@@ -33,12 +33,12 @@ be described as 1/2-D.  The relevant profile index variables are
 
 | Profile parameter                | Density   | Temperature | Current  |
 |----------------------------------|-----------|-------------|----------------|
-| Plasma centre value              | `ne0`, $n_0$         | `te0`, $T_0$        |  N/A, $J_0$        |
+| Plasma centre value              | `ne0`, $n_0$         | `te0`, $T_0$        |  `j_plasma_0`, $J_0$        |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ | `alphat`, $\alpha_T$    |  `alphaj`, $\alpha_J$    |
 
 ???+ note "Plasma current profile"
 
-    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its values. The profile peaking factor `alphaj` is calculated in the plasma current calculation relating to `iprofile` found [here](../plasma_current.md). Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class. 
+    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its shape or values apart from the core value. The profile peaking factor `alphaj` is calculated in the plasma current calculation relating to `iprofile` found [here](../plasma_current.md).The on-axis current density is analytically calculated in [`calculate_profile_factors()`](#calculate_profile_factors) Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class.
 
 
 The graph below is for a standard parabolic profile. You can vary the core value (`n0`) and the profile index (`alphan`) to see how the function behaves
@@ -424,6 +424,26 @@ $$
 
     $p_0$ is NOT equal to $\langle p \rangle \times (1 + \alpha_p)$, but $p(\rho) = n(\rho)T(\rho)$ and $\langle p \rangle = \langle n \rangle$ $T_n$, where $T_n$ is the
     density-weighted temperature.
+
+The on-axis plasma current density ($J_0$) is then calculated by assuming a parabolic profile and using the calculated plasma current ($I_{\text{plasma}}$) and the plasmas poloidal cross-sectional area ($A_{\text{pol}}$).
+
+$$
+J(\rho) = J_0 \left( 1 - \rho^2 \right)^{\alpha_J}
+$$
+
+$$
+I_{\text{plasma}} = \left[\int_0^1 J_0 \left( 1 - \rho^2 \right)^{\alpha_J} d\rho \right] \times A_{\text{pol}}
+$$
+
+$$
+I_{\text{plasma}} = \left[\frac{J_0\operatorname{B}\left(\frac{1}{2},{\alpha}_{J} + 1\right)}{2} \right] \times A_{\text{pol}}
+$$
+
+$$
+\therefore \quad J_0 = \frac{2I_{\text{plasma}}}{A_{\text{pol}} \operatorname{B}\left(\frac{1}{2},{\alpha}_{J} + 1\right)}
+$$
+
+Where $\operatorname{B}$ is the [Beta function](https://en.wikipedia.org/wiki/Beta_function).
 
 ------
 

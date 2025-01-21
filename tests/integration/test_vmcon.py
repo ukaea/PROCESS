@@ -94,17 +94,13 @@ class CustomFunctionEvaluator(ABC, Evaluators):
         initialised.
         """
 
-        pass
-
     @abstractmethod
     def fcnvmc1(self):
         """Function evaluator."""
-        pass
 
     @abstractmethod
     def fcnvmc2(self):
         """Gradient function evaluator."""
-        pass
 
 
 class Evaluator1(CustomFunctionEvaluator):

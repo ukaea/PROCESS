@@ -7,7 +7,7 @@ x = np.linspace(0, 10, 500)
 y1 = 0.29 * (x) ** 2 * (0.75 - 0.37)
 y2 = 0.26 * (0.75 - 0.65) ** 0.5 * (x) ** 2  # Initial data for the second line
 
-source = ColumnDataSource(data=dict(x=x, y1=y1, y2=y2))
+source = ColumnDataSource(data={"x": x, "y1": y1, "y2": y2})
 
 plot = figure(
     x_range=(0, 5),
@@ -44,7 +44,7 @@ te = Slider(
 )
 
 callback = CustomJS(
-    args=dict(source=source, te=te),
+    args={"source": source, "te": te},
     code="""
     const A = te.value
 

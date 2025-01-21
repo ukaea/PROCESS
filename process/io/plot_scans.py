@@ -193,7 +193,7 @@ def main(args=None):
     for ii in range(len(input_files)):
         if os.path.isdir(input_files[ii]):
             input_files[ii] = input_files[ii].replace("/", "")
-            input_files[ii] = input_files[ii] + str("/MFILE.DAT")
+            input_files[ii] = input_files[ii] + "/MFILE.DAT"
 
         # Check for the existence of the MFILE
         if not os.path.isfile(input_files[ii]):
@@ -207,7 +207,7 @@ def main(args=None):
     # This needs to be kept in sync automatically; this will break frequently
     # otherwise
     # Rem : Some variables are not in the MFILE, making the defintion rather tricky...
-    nsweep_dict = dict()
+    nsweep_dict = {}
     nsweep_dict[1] = "aspect"
     nsweep_dict[2] = "hldivlim"
     nsweep_dict[3] = "pnetelmw"
@@ -297,9 +297,9 @@ def main(args=None):
     nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
     scan_var_name = nsweep_dict[nsweep_ref]
     # Get the eventual second scan variable
-    nsweep_2_ref = int(0)
+    nsweep_2_ref = 0
     is_2D_scan = False
-    scan_2_var_name = str()
+    scan_2_var_name = ""
     if "nsweep_2" in m_file.data.keys():
         is_2D_scan = True
         nsweep_2_ref = int(m_file.data["nsweep_2"].get_scan(-1))
@@ -347,9 +347,9 @@ def main(args=None):
     # ----------------------------------------------------------------------------------------------
     if not is_2D_scan:
         # Loop over the MFILEs
-        output_arrays = dict()
-        output_arrays2 = dict()
-        scan_var_array = dict()
+        output_arrays = {}
+        output_arrays2 = {}
+        scan_var_array = {}
         for input_file in input_files:
             # Opening the MFILE.DAT
             m_file = mf.MFile(filename=input_file)
@@ -376,7 +376,7 @@ def main(args=None):
             n_scan = int(m_file.data["isweep"].get_scan(-1))
 
             # Converged indexes
-            conv_i = list()
+            conv_i = []
             for ii in range(n_scan):
                 ifail = m_file.data["ifail"].get_scan(ii + 1)
                 if ifail == 1:
@@ -399,8 +399,8 @@ def main(args=None):
                     conv_i[ii]
                 )
             # output list declaration
-            output_arrays[input_file] = dict()
-            output_arrays2[input_file] = dict()
+            output_arrays[input_file] = {}
+            output_arrays2[input_file] = {}
             # First variable scan
             for output_name in output_names:
                 ouput_array = np.zeros(n_scan)
@@ -447,10 +447,8 @@ def main(args=None):
                 print()
                 if output_names2 != []:
                     print(
-                        (
-                            "Y2-Axis\n "
-                            + f" {output_name2} : {output_arrays2[input_file][output_name2]}\n"
-                        )
+                        "Y2-Axis\n "
+                        + f" {output_name2} : {output_arrays2[input_file][output_name2]}\n"
                     )
         # Plot section
         # -----------
@@ -681,12 +679,10 @@ def main(args=None):
         n_scan_2 = int(m_file.data["isweep_2"].get_scan(-1))
         # Selecting the converged runs only
         contour_conv_ij = []  # List of non-converged scan point numbers
-        conv_ij = (
-            list()
-        )  # 2D array of converged scan point numbers (sweep = rows, sweep_2 = columns)
+        conv_ij = []  # 2D array of converged scan point numbers (sweep = rows, sweep_2 = columns)
         ii_jj = 0
         for ii in range(n_scan_1):
-            conv_ij.append(list())
+            conv_ij.append([])
             for jj in range(n_scan_2):
                 ii_jj += 1  # Represents the scan point number in the MFILE
                 ifail = m_file.data["ifail"].get_scan(ii_jj)
@@ -712,7 +708,7 @@ def main(args=None):
                 continue
 
             # Declaring the outputs
-            output_arrays = list()
+            output_arrays = []
 
             if two_dimensional_contour:
                 output_contour_z = np.zeros((n_scan_1, n_scan_2))

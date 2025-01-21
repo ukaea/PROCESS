@@ -1,6 +1,6 @@
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process.fortran import (
@@ -103,7 +103,7 @@ class BurnParam(NamedTuple):
             ipfres=0,
             nohc=7,
             powohres=0,
-            sxlg=numpy.array(
+            sxlg=np.array(
                 (
                     (
                         2.4933245328128733,
@@ -314,7 +314,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cpt=numpy.array(
+            cpt=np.array(
                 (
                     (
                         0,
@@ -463,8 +463,8 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ric=numpy.array(
-                numpy.array(
+            ric=np.array(
+                np.array(
                     (
                         14.742063826112572,
                         20.032681634901596,
@@ -493,8 +493,8 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=numpy.array(
-                numpy.array(
+            turns=np.array(
+                np.array(
                     (
                         349.33800535811781,
                         474.70809561378195,
@@ -523,8 +523,8 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cptdin=numpy.array(
-                numpy.array(
+            cptdin=np.array(
+                np.array(
                     (
                         42200,
                         42200,
@@ -660,7 +660,7 @@ class BurnParam(NamedTuple):
             ipfres=0,
             nohc=7,
             powohres=0,
-            sxlg=numpy.array(
+            sxlg=np.array(
                 (
                     (
                         3.7857701742128254,
@@ -871,7 +871,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cpt=numpy.array(
+            cpt=np.array(
                 (
                     (
                         0,
@@ -1020,8 +1020,8 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ric=numpy.array(
-                numpy.array(
+            ric=np.array(
+                np.array(
                     (
                         18.585545191033798,
                         22.184171359174297,
@@ -1050,8 +1050,8 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=numpy.array(
-                numpy.array(
+            turns=np.array(
+                np.array(
                     (
                         440.41576282070616,
                         525.69126443540983,
@@ -1080,8 +1080,8 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cptdin=numpy.array(
-                numpy.array(
+            cptdin=np.array(
+                np.array(
                     (
                         42200,
                         42200,

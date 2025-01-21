@@ -24,7 +24,7 @@ import re
 from pathlib import Path
 
 import create_dicts_config
-import numpy
+import numpy as np
 from python_dicts import get_python_variables
 
 output_dict = {}
@@ -34,7 +34,7 @@ output_dict = {}
 
 
 # Classes for the various dictionary types
-class Dictionary(object):
+class Dictionary:
     # Base Dictionary class for all dicts
     def __init__(self, name):
         self.name = name  # Dict name
@@ -316,7 +316,7 @@ class DefaultValues(ProjectDictionary):
                     value = self.convert_value_to_float(value)
 
                 working_dict[key] = value
-            elif value is not None and isinstance(value, numpy.ndarray):
+            elif value is not None and isinstance(value, np.ndarray):
                 working_dict[key] = value.tolist()
 
     def convert_value_to_float(self, value):
@@ -329,7 +329,7 @@ class DefaultValues(ProjectDictionary):
             value = value.replace("d", "E")
             value = float(value)
             return value
-        except Exception:
+        except ValueError:
             # Failed conversion; don't change anything
             return original_value
 
@@ -370,7 +370,7 @@ class DefaultValues(ProjectDictionary):
                 r"(\w+)"  # capture "name" of "subroutine init_name"
                 r"(.*?end\ssubroutine)",  # capture all subroutine contents
                 lines,
-                re.S,  # Dot matches newline characters (allows multiline matches)
+                re.DOTALL,  # Dot matches newline characters (allows multiline matches)
             )
 
             if init_match:
@@ -399,7 +399,7 @@ class DefaultValues(ProjectDictionary):
             r"(?:\s*!))|"  # or a comment
             r"(?:\s*if\s))",  # or an if statement
             init_contents,
-            re.S,  # Allow multiline matches
+            re.DOTALL,  # Allow multiline matches
         )
 
         # Now process captured value
@@ -551,7 +551,7 @@ def to_type(string):
         return string.strip()
 
 
-def grep(file, regexp, flags=re.U):
+def grep(file, regexp, flags=re.UNICODE):
     """Implements an in-python grep. Returns the lines that match
     as a list.
     Args:
@@ -566,8 +566,8 @@ def grep(file, regexp, flags=re.U):
     lines = []
 
     try:
-        with open(file, "r", encoding="utf-8") as file_open:
-            for line in file_open.readlines():
+        with open(file, encoding="utf-8") as file_open:
+            for line in file_open:
                 if re.search(regexp, line, flags):
                     lines.append(line)
             file_open.close()
@@ -590,7 +590,7 @@ def slice_file(file, re1, re2):
          lines --> List of lines from file between re1 and re2 inclusive
     """
 
-    filetext = open(file, "r", encoding="utf-8").readlines()
+    filetext = open(file, encoding="utf-8").readlines()
     start = None
     for i in range(len(filetext)):
         # look for first match
@@ -730,7 +730,7 @@ def dict_icc_full():
         DICT_IXC_FULL['5'] = {'name' : 'beta'}
     """
 
-    di = dict()
+    di = {}
 
     # get slice of file from ":: lablcc" to a blank line
     lcctext = slice_file(SOURCEDIR + "/numerics.f90", r"::\slablcc", r"^$")
@@ -800,7 +800,7 @@ def dict_input_bounds():
     if len(failedlines) != 0:
         warn_string = "dict_input_bounds failed to parse:\n"
         for line in failedlines:
-            warn_string += "%s\n" % line.strip()
+            warn_string += f"{line.strip()}\n"
         logging.warning(warn_string)
 
     return di
@@ -857,12 +857,12 @@ def dict_ixc_full():
     with open(SOURCEDIR + "/iteration_variables.f90") as myFile:
         lines = myFile.readlines()
 
-    ixc_full = dict()
+    ixc_full = {}
 
     for lline in lines:
         if "subroutine init_itv_" in lline and "end" not in lline:
             itv_num = lline.split("_")[-1].strip("\n").replace(" ", "")
-            ixc_full[itv_num] = dict()
+            ixc_full[itv_num] = {}
 
     for line in lines:
         if "lablxc" in line and "=" in line:

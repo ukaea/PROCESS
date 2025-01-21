@@ -20,7 +20,7 @@ Notes:
 import argparse
 import sys
 
-import numpy
+import numpy as np
 from numpy import isfinite
 
 import process.io.mfile as mf
@@ -269,7 +269,7 @@ GENERIC_LIST = [
 ]
 
 
-class BColors(object):
+class BColors:
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
     OKGREEN = "\033[92m"
@@ -287,7 +287,7 @@ def main(arg):
 
     print_counter = 0
     n = 2
-    mfile_list = list()
+    mfile_list = []
     for item in arg.f:
         mfile = mf.MFile(filename=item)
         if mfile.data["error_status"].get_scan(-1) == 3:
@@ -298,10 +298,10 @@ def main(arg):
 
         mfile_list.append(mfile)
 
-    var_list = list()
-    missing_vars = list()
-    diff_list = list()
-    within_list = list()
+    var_list = []
+    missing_vars = []
+    diff_list = []
+    within_list = []
 
     key_list = mfile_list[0].data.keys()
     for var in key_list:
@@ -333,7 +333,7 @@ def main(arg):
         if "normres" in v:
             continue
 
-        values = numpy.zeros(n)  # replaced scipy with numpy
+        values = np.zeros(n)  # replaced scipy with numpy
 
         if v not in get_dicts()["DICT_VAR_TYPE"].keys():
             try:
@@ -353,7 +353,7 @@ def main(arg):
             for m in range(len(mfile_list)):
                 values[m] = mfile_list[m].data[v].get_scan(-1)
 
-        norm_vals = list()
+        norm_vals = []
         if values[0] != 0 and isfinite(values[0]):
             norm_vals = values / values[0]
         # else:
@@ -472,9 +472,7 @@ def main(arg):
             if print_counter == 0:
                 sys.exit(0)
             else:
-                sys.exit(
-                    "Differences in baseline output by more than {0}%".format(arg.acc)
-                )
+                sys.exit(f"Differences in baseline output by more than {arg.acc}%")
 
 
 if __name__ == "__main__":

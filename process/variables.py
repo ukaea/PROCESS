@@ -1,10 +1,8 @@
 """Provides wrappers around variables to the whole of PROCESS that hydrate the code with various functionalities"""
 
-from typing import Type
-
 
 def AnnotatedVariable(
-    tp: Type, *args, docstring: str = "", units: str = "", __kwargs: dict = {}, **kwargs
+    tp: type, *args, docstring: str = "", units: str = "", __kwargs: dict = {}, **kwargs
 ):
     """Provides a wrapper around the instantiation of a variable to allow variables to be type hinted. This should be done on physics and engineering class variables to allow for their inclusion in 'the Dictionaries'.
 

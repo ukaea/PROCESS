@@ -229,7 +229,7 @@ class ProcessTracker:
             try:
                 # value of var in the mfile
                 variable_data = self.mfile.data[var]
-            except Exception:
+            except KeyError:
                 logger.info(f"{var} is not present in the MFile and will be skipped.")
                 continue
 
@@ -242,7 +242,7 @@ class ProcessTracker:
                 # see tracking_variables docstring
                 try:
                     _, var = var.split(".")
-                except Exception:
+                except (AttributeError, ValueError):
                     logger.warning(
                         f"{var} is a dotted variable and must be in the form OVERRIDINGNAME.VARIABLE"
                     )
@@ -357,7 +357,9 @@ class TrackedData:
 
         # common format for the timestamp of the run
         data_time_str = f"{date_str.strip()} - {time_str.strip()}"
-        date_time = datetime.datetime.strptime(data_time_str, "%d/%m/%Y - %H:%M")
+        date_time = datetime.datetime.strptime(
+            data_time_str, "%d/%m/%Y - %H:%M"
+        ).replace(tzinfo=datetime.timezone.utc)
 
         tracking_data = json_file_data.get(
             "tracking", []
@@ -376,7 +378,7 @@ class TrackedData:
         # open all files in the `database` folder
 
         for i in self.database.glob("*.json"):
-            with open(i, "r") as f:
+            with open(i) as f:
                 file_data = json.load(f)  # parsed contents of the JSON tracking file
                 self._add_variables(
                     file_data
@@ -400,9 +402,10 @@ def plot_tracking_data(database):
     for i in ProcessTracker.tracking_variables:
         try:
             overriden_name, variable = i.split(".")
-            overrides[variable] = overriden_name
-        except Exception:
+        except (AttributeError, ValueError):
             continue
+        else:
+            overrides[variable] = overriden_name
 
     for variable, history in loaded_tracking_database_data.tracked_variables.items():
         df = (
@@ -410,7 +413,7 @@ def plot_tracking_data(database):
         )  # all the data for one tracked variable as a dataframe
 
         # order by date to avoid polygons all over the plot
-        df.sort_values("date", ascending=True, inplace=True)
+        df = df.sort_values("date", ascending=True)
 
         # overrides trumps fortran scrapping
         parent = overrides.get(

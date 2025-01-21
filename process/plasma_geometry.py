@@ -1,6 +1,6 @@
 import logging
 
-import numpy
+import numpy as np
 
 from process.fortran import build_variables, constants, physics_variables
 
@@ -165,7 +165,7 @@ class PlasmaGeom:
             physics_variables.kappa95 = (
                 -d
                 - c * physics_variables.aspect
-                - numpy.sqrt(
+                - np.sqrt(
                     (c**2.0e0 - 4.0e0 * a * b) * physics_variables.aspect**2.0e0
                     + (2.0e0 * d * c - 4.0e0 * a * e) * physics_variables.aspect
                     + d**2.0e0
@@ -240,7 +240,7 @@ class PlasmaGeom:
             #  Poloidal perimeter
             physics_variables.pperim = 2.0e0 * (xo * thetao + xi * thetai)
             physics_variables.sf = physics_variables.pperim / (
-                2.0e0 * numpy.pi * physics_variables.rminor
+                2.0e0 * np.pi * physics_variables.rminor
             )
 
             #  Volume
@@ -279,14 +279,14 @@ class PlasmaGeom:
         """
         t = 1.0e0 - tri
         denomi = (kap**2 - t**2) / (2.0e0 * t)
-        thetai = numpy.arctan(kap / denomi)
+        thetai = np.arctan(kap / denomi)
         xi = a * (denomi + 1.0e0 - tri)
 
         #  Find radius and half-angle of outboard arc
 
         n = 1.0e0 + tri
         denomo = (kap**2 - n**2) / (2.0e0 * n)
-        thetao = numpy.arctan(kap / denomo)
+        thetao = np.arctan(kap / denomo)
         xo = a * (denomo + 1.0e0 + tri)
 
         return xi, thetai, xo, thetao
@@ -310,14 +310,14 @@ class PlasmaGeom:
         """
         radco = a * (1.0e0 + (k**2 + d**2 - 1.0e0) / (2.0e0 * (1.0e0 + d)))
         b = k * a
-        thto = numpy.arcsin(b / radco)
-        so = 4.0e0 * numpy.pi * radco * ((r + a - radco) * thto + b)
+        thto = np.arcsin(b / radco)
+        so = 4.0e0 * np.pi * radco * ((r + a - radco) * thto + b)
 
         #  Inboard side
 
         radci = a * (1.0e0 + (k**2 + d**2 - 1.0e0) / (2.0e0 * (1.0e0 - d)))
-        thti = numpy.arcsin(b / radci)
-        si = 4.0e0 * numpy.pi * radci * ((r - a + radci) * thti - b)
+        thti = np.arcsin(b / radci)
+        si = 4.0e0 * np.pi * radci * ((r - a + radci) * thti - b)
 
         sa = so + si
 
@@ -340,13 +340,13 @@ class PlasmaGeom:
         This calculation is appropriate for plasmas with a separatrix.
         F/MI/PJK/LOGBOOK14, p.43
         """
-        fourpi = 4.0e0 * numpy.pi
+        fourpi = 4.0e0 * np.pi
 
         rc = rmajor - rminor + xi
-        xsi = fourpi * xi * (rc * thetai - xi * numpy.sin(thetai))
+        xsi = fourpi * xi * (rc * thetai - xi * np.sin(thetai))
 
         rc = rmajor + rminor - xo
-        xso = fourpi * xo * (rc * thetao + xo * numpy.sin(thetao))
+        xso = fourpi * xo * (rc * thetao + xo * np.sin(thetao))
 
         return xsi, xso
 
@@ -366,13 +366,13 @@ class PlasmaGeom:
         #  Inboard arc
 
         denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri
-        thetai = numpy.arctan(kap / denomi)
+        thetai = np.arctan(kap / denomi)
         xli = a * (denomi + 1.0e0 - tri)
 
         #  Outboard arc
 
         denomo = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 + tri)) - tri
-        thetao = numpy.arctan(kap / denomo)
+        thetao = np.arctan(kap / denomo)
         xlo = a * (denomo + 1.0e0 + tri)
 
         perim = 2.0e0 * (xlo * thetao + xli * thetai)
@@ -403,11 +403,11 @@ class PlasmaGeom:
             constants.twopi
             * xi
             * (
-                rc**2 * numpy.sin(thetai)
+                rc**2 * np.sin(thetai)
                 - rc * xi * thetai
-                - 0.5e0 * rc * xi * numpy.sin(2.0e0 * thetai)
-                + xi * xi * numpy.sin(thetai)
-                - third * xi * xi * (numpy.sin(thetai)) ** 3
+                - 0.5e0 * rc * xi * np.sin(2.0e0 * thetai)
+                + xi * xi * np.sin(thetai)
+                - third * xi * xi * (np.sin(thetai)) ** 3
             )
         )
 
@@ -416,11 +416,11 @@ class PlasmaGeom:
             constants.twopi
             * xo
             * (
-                rc**2 * numpy.sin(thetao)
+                rc**2 * np.sin(thetao)
                 + rc * xo * thetao
-                + 0.5e0 * rc * xo * numpy.sin(2.0e0 * thetao)
-                + xo * xo * numpy.sin(thetao)
-                - third * xo * xo * (numpy.sin(thetao)) ** 3
+                + 0.5e0 * rc * xo * np.sin(2.0e0 * thetao)
+                + xo * xo * np.sin(thetao)
+                - third * xo * xo * (np.sin(thetao)) ** 3
             )
         )
 
@@ -443,8 +443,8 @@ class PlasmaGeom:
         F/MI/PJK/LOGBOOK14, p.41
         """
 
-        xsecta = xo**2 * (thetao - numpy.cos(thetao) * numpy.sin(thetao)) + xi**2 * (
-            thetai - numpy.cos(thetai) * numpy.sin(thetai)
+        xsecta = xo**2 * (thetao - np.cos(thetao) * np.sin(thetao)) + xi**2 * (
+            thetai - np.cos(thetai) * np.sin(thetai)
         )
 
         return xsecta
@@ -469,12 +469,12 @@ class PlasmaGeom:
         c1 = ((r + a) ** 2 - (r - tri * a) ** 2 - zn**2) / (2.0e0 * (1.0e0 + tri) * a)
         rc1 = r + a - c1
         vout = (
-            -0.66666666e0 * numpy.pi * zn**3
-            + 2.0e0 * numpy.pi * zn * (c1**2 + rc1**2)
+            -0.66666666e0 * np.pi * zn**3
+            + 2.0e0 * np.pi * zn * (c1**2 + rc1**2)
             + 2.0e0
-            * numpy.pi
+            * np.pi
             * c1
-            * (zn * numpy.sqrt(rc1**2 - zn**2) + rc1**2 * numpy.arcsin(zn / rc1))
+            * (zn * np.sqrt(rc1**2 - zn**2) + rc1**2 * np.arcsin(zn / rc1))
         )
 
         c2 = (-((r - a) ** 2) + (r - tri * a) ** 2 + zn**2) / (
@@ -482,12 +482,12 @@ class PlasmaGeom:
         )
         rc2 = c2 - r + a
         vin = (
-            -0.66666e0 * numpy.pi * zn**3
-            + 2.0e0 * numpy.pi * zn * (rc2**2 + c2**2)
+            -0.66666e0 * np.pi * zn**3
+            + 2.0e0 * np.pi * zn * (rc2**2 + c2**2)
             - 2.0e0
-            * numpy.pi
+            * np.pi
             * c2
-            * (zn * numpy.sqrt(rc2**2 - zn**2) + rc2**2 * numpy.arcsin(zn / rc2))
+            * (zn * np.sqrt(rc2**2 - zn**2) + rc2**2 * np.arcsin(zn / rc2))
         )
 
         fvol = vout - vin
@@ -512,20 +512,20 @@ class PlasmaGeom:
         """
 
         denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri
-        thetai = numpy.arctan(kap / denomi)
+        thetai = np.arctan(kap / denomi)
         xli = a * (denomi + 1.0e0 - tri)
 
-        cti = numpy.cos(thetai)
-        sti = numpy.sin(thetai)
+        cti = np.cos(thetai)
+        sti = np.sin(thetai)
 
         #  Find radius and half-angle of outboard arc
 
         denomo = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 + tri)) - tri
-        thetao = numpy.arctan(kap / denomo)
+        thetao = np.arctan(kap / denomo)
         xlo = a * (denomo + 1.0e0 + tri)
 
-        cto = numpy.cos(thetao)
-        sto = numpy.sin(thetao)
+        cto = np.cos(thetao)
+        sto = np.sin(thetao)
 
         #  Find cross-sectional area
 
@@ -549,7 +549,7 @@ class PlasmaGeom:
         # Poloidal perimeter (named Lp in Sauter)
         pperim = (
             2.0e0
-            * numpy.pi
+            * np.pi
             * a
             * (1 + 0.55 * (kap - 1))
             * (1 + 0.08 * tri**2)
@@ -557,15 +557,15 @@ class PlasmaGeom:
         )
 
         # A geometric factor
-        sf = pperim / (2.0e0 * numpy.pi * a)
+        sf = pperim / (2.0e0 * np.pi * a)
 
         # Surface area (named Ap in Sauter)
-        sarea = 2.0e0 * numpy.pi * r0 * (1 - 0.32 * tri * eps) * pperim
+        sarea = 2.0e0 * np.pi * r0 * (1 - 0.32 * tri * eps) * pperim
 
         # Cross-section area (named S_phi in Sauter)
-        xarea = numpy.pi * a**2 * kap * (1 + 0.52 * (w07 - 1))
+        xarea = np.pi * a**2 * kap * (1 + 0.52 * (w07 - 1))
 
         # Volume
-        plasma_volume = 2.0e0 * numpy.pi * r0 * (1 - 0.25 * tri * eps) * xarea
+        plasma_volume = 2.0e0 * np.pi * r0 * (1 - 0.25 * tri * eps) * xarea
 
         return pperim, sf, sarea, xarea, plasma_volume

@@ -7,7 +7,7 @@ x = np.linspace(0, 1, 500)
 y1 = 5.0 * (1 - x**2) ** 2.0
 y2 = 5.0 / (1 + 2.0 * x**2) ** 2  # Initial data for the second line
 
-source = ColumnDataSource(data=dict(x=x, y1=y1, y2=y2))
+source = ColumnDataSource(data={"x": x, "y1": y1, "y2": y2})
 
 plot = figure(
     x_range=(0, 1),
@@ -42,7 +42,7 @@ n0 = Slider(start=0.1, end=10, value=5, step=0.1, title="Plasma centre value | j
 alpha = Slider(start=0.01, end=10, value=2, step=0.01, title="Profile Index  | alphaj")
 
 callback = CustomJS(
-    args=dict(source=source, n0=n0, alpha=alpha),
+    args={"source": source, "n0": n0, "alpha": alpha},
     code="""
     const A = n0.value
     const B = alpha.value

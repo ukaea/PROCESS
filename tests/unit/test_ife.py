@@ -2,7 +2,7 @@
 
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process.availability import Availability
@@ -200,7 +200,7 @@ class SombldParam(NamedTuple):
             zu6=0,
             v3dzu=13.640000000000001,
             zu7=0,
-            fwmatv=numpy.array(
+            fwmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -214,7 +214,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v1matv=numpy.array(
+            v1matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -228,7 +228,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            blmatv=numpy.array(
+            blmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -242,7 +242,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v2matv=numpy.array(
+            v2matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -256,7 +256,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            shmatv=numpy.array(
+            shmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -270,7 +270,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v3matv=numpy.array(
+            v3matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -284,22 +284,22 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            chmatv=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            chmatv=np.array(
+                np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             chvol=0,
-            fwvol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
-            v1vol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
-            blvol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
-            v2vol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
+            fwvol=np.array(np.array((0, 0, 0), order="F"), order="F").transpose(),
+            v1vol=np.array(np.array((0, 0, 0), order="F"), order="F").transpose(),
+            blvol=np.array(np.array((0, 0, 0), order="F"), order="F").transpose(),
+            v2vol=np.array(np.array((0, 0, 0), order="F"), order="F").transpose(),
             somtdr=2.7000000000000002,
             sombdr=2.7000000000000002,
-            shvol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
-            v3vol=numpy.array(numpy.array((0, 0, 0), order="F"), order="F").transpose(),
-            chmatf=numpy.array(
-                numpy.array((1, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            shvol=np.array(np.array((0, 0, 0), order="F"), order="F").transpose(),
+            v3vol=np.array(np.array((0, 0, 0), order="F"), order="F").transpose(),
+            chmatf=np.array(
+                np.array((1, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            fwmatf=numpy.array(
+            fwmatf=np.array(
                 (
                     (0.050000000000000003, 0, 1),
                     (0, 0, 0),
@@ -313,7 +313,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            blmatf=numpy.array(
+            blmatf=np.array(
                 (
                     (0.050000000000000003, 0, 0),
                     (0, 0, 0),
@@ -327,7 +327,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v1matf=numpy.array(
+            v1matf=np.array(
                 (
                     (0.050000000000000003, 0, 1),
                     (0, 0, 0),
@@ -341,7 +341,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v2matf=numpy.array(
+            v2matf=np.array(
                 (
                     (0.95000000000000007, 0.95000000000000007, 0.95000000000000007),
                     (0, 0, 0),
@@ -355,7 +355,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            shmatf=numpy.array(
+            shmatf=np.array(
                 (
                     (0, 0.30000000000000004, 0.30000000000000004),
                     (1, 0.70000000000000007, 0.70000000000000007),
@@ -369,7 +369,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v3matf=numpy.array(
+            v3matf=np.array(
                 (
                     (1, 1, 1),
                     (0, 0, 0),
@@ -405,7 +405,7 @@ class SombldParam(NamedTuple):
             expected_zu5=5.1600000000000001,
             expected_zu6=5.3600000000000003,
             expected_zu7=19,
-            expected_fwmatv=numpy.array(
+            expected_fwmatv=np.array(
                 (
                     (0, 0, 1.4221859043107128),
                     (-0, 0, 0),
@@ -419,7 +419,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v1matv=numpy.array(
+            expected_v1matv=np.array(
                 (
                     (0, 0, 23.355974233572464),
                     (-0, 0, 0),
@@ -433,7 +433,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_blmatv=numpy.array(
+            expected_blmatv=np.array(
                 (
                     (0, 0, 0),
                     (-0, 0, 0),
@@ -447,7 +447,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v2matv=numpy.array(
+            expected_v2matv=np.array(
                 (
                     (0, 479.3074876785567, 543.51842785324482),
                     (-0, 0, 0),
@@ -461,7 +461,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_shmatv=numpy.array(
+            expected_shmatv=np.array(
                 (
                     (0, 7.4813887452587426, 13.092430304202773),
                     (90.156169335658547, 17.456573738937063, 30.549004043139806),
@@ -475,7 +475,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v3matv=numpy.array(
+            expected_v3matv=np.array(
                 (
                     (4508.4603472585413, 1810.4684303372624, 0),
                     (0, 0, 0),
@@ -489,48 +489,48 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_chmatv=numpy.array(
-                numpy.array((82.10028801381327, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+            expected_chmatv=np.array(
+                np.array((82.10028801381327, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
                 order="F",
             ).transpose(),
             expected_chvol=82.10028801381327,
-            expected_fwvol=numpy.array(
-                numpy.array(
+            expected_fwvol=np.array(
+                np.array(
                     (-0.24380329788183547, 2.150083890068593, 1.4221859043107128),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            expected_v1vol=numpy.array(
-                numpy.array(
+            expected_v1vol=np.array(
+                np.array(
                     (-0.022352431730291104, 0.19879697242619909, 23.355974233572464),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            expected_blvol=numpy.array(
-                numpy.array(
+            expected_blvol=np.array(
+                np.array(
                     (-2.6505617218337005, 66.679796181631033, 93.868477240185996),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            expected_v2vol=numpy.array(
-                numpy.array(
+            expected_v2vol=np.array(
+                np.array(
                     (-14.324343031454905, 504.53419755637543, 572.12466089815234),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            expected_shvol=numpy.array(
-                numpy.array(
+            expected_shvol=np.array(
+                np.array(
                     (90.156169335658547, 24.937962484195804, 43.641434347342575),
                     order="F",
                 ),
                 order="F",
             ).transpose(),
-            expected_v3vol=numpy.array(
-                numpy.array((4508.4603472585413, 1810.4684303372624, 0), order="F"),
+            expected_v3vol=np.array(
+                np.array((4508.4603472585413, 1810.4684303372624, 0), order="F"),
                 order="F",
             ).transpose(),
         ),
@@ -669,8 +669,8 @@ class DriverParam(NamedTuple):
     (
         DriverParam(
             edrive=5000000,
-            etave=numpy.array(
-                numpy.array(
+            etave=np.array(
+                np.array(
                     (
                         0.082000000000000003,
                         0.079000000000000001,
@@ -687,10 +687,8 @@ class DriverParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            gainve=numpy.array(
-                numpy.array(
-                    (60, 95, 115, 125, 133, 141, 152, 160, 165, 170), order="F"
-                ),
+            gainve=np.array(
+                np.array((60, 95, 115, 125, 133, 141, 152, 160, 165, 170), order="F"),
                 order="F",
             ).transpose(),
             expected_etadrv=0.069000000000000006,
@@ -879,7 +877,7 @@ class HylbldParam(NamedTuple):
             zu6=0,
             v3dzu=13.640000000000001,
             zu7=0,
-            fwmatv=numpy.array(
+            fwmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -893,7 +891,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v1matv=numpy.array(
+            v1matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -907,7 +905,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            blmatv=numpy.array(
+            blmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -921,7 +919,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v2matv=numpy.array(
+            v2matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -935,7 +933,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            shmatv=numpy.array(
+            shmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -949,7 +947,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v3matv=numpy.array(
+            v3matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -963,8 +961,8 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            chmatv=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            chmatv=np.array(
+                np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             expected_fwarea=281.91872215483801,
             expected_r1=3.5,
@@ -988,7 +986,7 @@ class HylbldParam(NamedTuple):
             expected_zu5=5.1600000000000001,
             expected_zu6=5.3600000000000003,
             expected_zu7=19,
-            expected_fwmatv=numpy.array(
+            expected_fwmatv=np.array(
                 (
                     (0.56409988047409898, 0, 0.97521319152734531),
                     (0, 0, 0),
@@ -1002,7 +1000,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v1matv=numpy.array(
+            expected_v1matv=np.array(
                 (
                     (0.048085668759788917, 0, 22.449297503777057),
                     (0, 0, 0),
@@ -1016,7 +1014,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_blmatv=numpy.array(
+            expected_blmatv=np.array(
                 (
                     (5.7020209040947698, 0, 0),
                     (0, 0, 0),
@@ -1030,7 +1028,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v2matv=numpy.array(
+            expected_v2matv=np.array(
                 (
                     (667.47857440822247, 99.143612466306891, 0),
                     (0, 0, 0),
@@ -1044,7 +1042,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_shmatv=numpy.array(
+            expected_shmatv=np.array(
                 (
                     (0, 7.9639373768501356, 13.936890409487711),
                     (85.732806879404109, 18.582520545983648, 32.519410955471322),
@@ -1058,7 +1056,7 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v3matv=numpy.array(
+            expected_v3matv=np.array(
                 (
                     (2033.7963980993259, 4285.1323794964783, 0),
                     (0, 0, 0),
@@ -1072,8 +1070,8 @@ class HylbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_chmatv=numpy.array(
-                numpy.array((323.26988405438965, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+            expected_chmatv=np.array(
+                np.array((323.26988405438965, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
                 order="F",
             ).transpose(),
         ),
@@ -1274,14 +1272,14 @@ class IfefbsParam(NamedTuple):
             whtblli=0,
             bktlife=0,
             fwlife=0,
-            chmatm=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            chmatm=np.array(
+                np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            chmatv=numpy.array(
-                numpy.array((261.69466804402975, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+            chmatv=np.array(
+                np.array((261.69466804402975, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
                 order="F",
             ).transpose(),
-            fwmatm=numpy.array(
+            fwmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1295,7 +1293,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            fwmatv=numpy.array(
+            fwmatv=np.array(
                 (
                     (0.41446560639912183, 0, 0),
                     (0, 0, 0),
@@ -1309,7 +1307,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v1matm=numpy.array(
+            v1matm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1323,7 +1321,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v1matv=numpy.array(
+            v1matv=np.array(
                 (
                     (0.038306479877786521, 0, 69.676755145437298),
                     (0, 0, 0),
@@ -1337,7 +1335,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            blmatm=numpy.array(
+            blmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1351,7 +1349,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            blmatv=numpy.array(
+            blmatv=np.array(
                 (
                     (5.7053341062470615, 0, 0),
                     (0, 0, 0),
@@ -1365,7 +1363,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v2matm=numpy.array(
+            v2matm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1379,7 +1377,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v2matv=numpy.array(
+            v2matv=np.array(
                 (
                     (667.47857440822247, 100.68702352994043, 0),
                     (0, 0, 0),
@@ -1393,7 +1391,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            shmatm=numpy.array(
+            shmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1407,7 +1405,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            shmatv=numpy.array(
+            shmatv=np.array(
                 (
                     (0, 7.9639373768501356, 13.936890409487711),
                     (85.732806879404109, 18.582520545983648, 32.519410955471322),
@@ -1421,7 +1419,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v3matm=numpy.array(
+            v3matm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1435,7 +1433,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v3matv=numpy.array(
+            v3matv=np.array(
                 (
                     (2033.7963980993259, 4285.1323794964783, 0),
                     (0, 0, 0),
@@ -1458,7 +1456,7 @@ class IfefbsParam(NamedTuple):
             expected_whtshld=1067310.9593707009,
             expected_bktlife=3.000406304846492,
             expected_fwlife=3.000406304846492,
-            expected_fwmatm=numpy.array(
+            expected_fwmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1472,7 +1470,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v1matm=numpy.array(
+            expected_v1matm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1486,7 +1484,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_blmatm=numpy.array(
+            expected_blmatm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1500,7 +1498,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v2matm=numpy.array(
+            expected_v2matm=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1514,7 +1512,7 @@ class IfefbsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_shmatm=numpy.array(
+            expected_shmatm=np.array(
                 (
                     (0, 0, 0),
                     (668715.89365935209, 144943.66025867246, 253651.40545267632),
@@ -1724,7 +1722,7 @@ class GenbldParam(NamedTuple):
             zu6=0,
             v3dzu=13.640000000000001,
             zu7=0,
-            fwmatv=numpy.array(
+            fwmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1738,7 +1736,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v1matv=numpy.array(
+            v1matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1752,7 +1750,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            blmatv=numpy.array(
+            blmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1766,7 +1764,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v2matv=numpy.array(
+            v2matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1780,7 +1778,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            shmatv=numpy.array(
+            shmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1794,7 +1792,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v3matv=numpy.array(
+            v3matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -1808,8 +1806,8 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            chmatv=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            chmatv=np.array(
+                np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             expected_fwarea=226.5088303238241,
             expected_r1=3.5,
@@ -1833,7 +1831,7 @@ class GenbldParam(NamedTuple):
             expected_zu5=5.1600000000000001,
             expected_zu6=5.3600000000000003,
             expected_zu7=19,
-            expected_fwmatv=numpy.array(
+            expected_fwmatv=np.array(
                 (
                     (0.41446560639912183, 0, 0),
                     (0, 0, 0),
@@ -1847,7 +1845,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v1matv=numpy.array(
+            expected_v1matv=np.array(
                 (
                     (0.038306479877786521, 0, 69.676755145437298),
                     (0, 0, 0),
@@ -1861,7 +1859,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_blmatv=numpy.array(
+            expected_blmatv=np.array(
                 (
                     (5.7053341062470615, 0, 0),
                     (0, 0, 0),
@@ -1875,7 +1873,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v2matv=numpy.array(
+            expected_v2matv=np.array(
                 (
                     (667.47857440822247, 100.68702352994043, 0),
                     (0, 0, 0),
@@ -1889,7 +1887,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_shmatv=numpy.array(
+            expected_shmatv=np.array(
                 (
                     (0, 7.9639373768501356, 13.936890409487711),
                     (85.732806879404109, 18.582520545983648, 32.519410955471322),
@@ -1903,7 +1901,7 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v3matv=numpy.array(
+            expected_v3matv=np.array(
                 (
                     (2033.7963980993259, 4285.1323794964783, 0),
                     (0, 0, 0),
@@ -1917,8 +1915,8 @@ class GenbldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_chmatv=numpy.array(
-                numpy.array((261.69466804402975, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+            expected_chmatv=np.array(
+                np.array((261.69466804402975, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
                 order="F",
             ).transpose(),
         ),
@@ -2274,7 +2272,7 @@ class Bld2019Param(NamedTuple):
             zu6=0,
             v3dzu=13.640000000000001,
             zu7=0,
-            fwmatv=numpy.array(
+            fwmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -2288,7 +2286,7 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v1matv=numpy.array(
+            v1matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -2302,7 +2300,7 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            blmatv=numpy.array(
+            blmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -2316,7 +2314,7 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v2matv=numpy.array(
+            v2matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -2330,7 +2328,7 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            shmatv=numpy.array(
+            shmatv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -2344,7 +2342,7 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            v3matv=numpy.array(
+            v3matv=np.array(
                 (
                     (0, 0, 0),
                     (0, 0, 0),
@@ -2358,8 +2356,8 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            chmatv=numpy.array(
-                numpy.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
+            chmatv=np.array(
+                np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             expected_fwarea=36.573165036030936,
             expected_tbr=1.3991938274222466,
@@ -2387,7 +2385,7 @@ class Bld2019Param(NamedTuple):
             expected_zu6=4.4500000000000002,
             expected_v3dzu=18.590999999999998,
             expected_zu7=23.040999999999997,
-            expected_blmatv=numpy.array(
+            expected_blmatv=np.array(
                 (
                     (441.34881464363849, 0, 0),
                     (0, 0, 0),
@@ -2401,7 +2399,7 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v2matv=numpy.array(
+            expected_v2matv=np.array(
                 (
                     (679.98943158108136, 0, 0),
                     (0, 0, 0),
@@ -2415,7 +2413,7 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_shmatv=numpy.array(
+            expected_shmatv=np.array(
                 (
                     (0, 15.671455671643603, 26.392035212208182),
                     (88.916845314871551, 36.566729900501734, 61.581415495152427),
@@ -2429,7 +2427,7 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_v3matv=numpy.array(
+            expected_v3matv=np.array(
                 (
                     (2010.8678651168022, 9063.0665415267194, 0),
                     (0, 0, 0),
@@ -2443,8 +2441,8 @@ class Bld2019Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_chmatv=numpy.array(
-                numpy.array((261.69466804402975, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
+            expected_chmatv=np.array(
+                np.array((261.69466804402975, 0, 0, 0, 0, 0, 0, 0, 0), order="F"),
                 order="F",
             ).transpose(),
         ),

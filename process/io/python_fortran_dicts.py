@@ -26,7 +26,7 @@ def get_dicts():
 
     # Return loaded dicts
     try:
-        with open(dicts_filename, "r") as dicts_file:
+        with open(dicts_filename) as dicts_file:
             return json.load(dicts_file)
     except FileNotFoundError as error:
         logger.exception("Can't find the dicts JSON file")

@@ -22,8 +22,7 @@ y = (
 )
 x2 = np.linspace(Trho.value, 1, 50000)
 y2 = Tsep.value + (Tped.value - Tsep.value) * ((1 - x2) / (1 - Trho.value))
-
-source = ColumnDataSource(data=dict(x=x, y=y, x2=x2, y2=y2))
+source = ColumnDataSource(data={"x": x, "y": y, "x2": x2, "y2": y2})
 
 plot = figure(
     x_range=(0, 1),
@@ -39,9 +38,15 @@ plot.line("x", "y", source=source, line_width=3, line_alpha=0.6)
 plot.line("x2", "y2", source=source, line_width=3, line_alpha=0.6)
 
 callback = CustomJS(
-    args=dict(
-        source=source, T0=T0, alpha=alpha, Trho=Trho, Tped=Tped, Tsep=Tsep, Tbeta=Tbeta
-    ),
+    args={
+        "source": source,
+        "T0": T0,
+        "alpha": alpha,
+        "Trho": Trho,
+        "Tped": Tped,
+        "Tsep": Tsep,
+        "Tbeta": Tbeta,
+    },
     code="""
    const A = T0.value
     const B = alpha.value

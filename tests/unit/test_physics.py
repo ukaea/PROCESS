@@ -2,7 +2,7 @@
 
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process.current_drive import CurrentDrive
@@ -1385,14 +1385,12 @@ class PlasmaCompositionParam(NamedTuple):
                 0.00038000000000000008,
                 5.0000000000000021e-06,
             ),
-            impurity_arr_z=numpy.array(
-                numpy.array(
-                    (1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74), order="F"
-                ),
+            impurity_arr_z=np.array(
+                np.array((1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74), order="F"),
                 order="F",
             ).transpose(),
-            impurity_arr_amass=numpy.array(
-                numpy.array(
+            impurity_arr_amass=np.array(
+                np.array(
                     (
                         1.01,
                         4.0030000000000001,

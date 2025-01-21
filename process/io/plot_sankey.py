@@ -12,12 +12,12 @@ MFILE.DAT
 
 import argparse
 
-import matplotlib
+import matplotlib as mpl
 from pylab import savefig, show
 
 from process.io.sankey_funcs import plot_sankey
 
-matplotlib.use("Agg")
+mpl.use("Agg")
 
 
 def main(args=None):

@@ -2,8 +2,6 @@
 Calculate radial and vertical coordinates for the geometry of the shield
 """
 
-from typing import Tuple
-
 import numpy as np
 
 from process.geometry.geometry_parameterisations import ArbitraryGeometry
@@ -91,7 +89,7 @@ def shield_geometry_lower(
     radx_near: float,
     rminx_near: float,
     triang: float,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of shield below the midplane
 
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane

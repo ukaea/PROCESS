@@ -2,22 +2,20 @@
 Calculate radial and vertical coordinates for the geometry of the pf coils and central coil
 """
 
-from typing import List, Tuple
-
 import numpy as np
 
 from process.geometry.geometry_parameterisations import RectangleGeometry
 
 
 def pfcoil_geometry(
-    coils_r: List[float],
-    coils_z: List[float],
-    coils_dr: List[float],
-    coils_dz: List[float],
+    coils_r: list[float],
+    coils_z: list[float],
+    coils_dr: list[float],
+    coils_dz: list[float],
     bore: float,
     ohcth: float,
     ohdz: float,
-) -> Tuple[np.ndarray, np.ndarray, RectangleGeometry]:
+) -> tuple[np.ndarray, np.ndarray, RectangleGeometry]:
     """Calculates radial and vertical distances for the geometry of the pf coils and central coil
 
     :param coils_r: list of pf coil radii

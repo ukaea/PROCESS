@@ -35,7 +35,7 @@ ax.annotate(
     "Pulse Start",
     xy=(1, 0),
     xytext=(1, -0.75),
-    arrowprops=dict(facecolor="black", arrowstyle="->"),
+    arrowprops={"facecolor": "black", "arrowstyle": "->"},
     fontsize=10,
     ha="center",
 )
@@ -43,7 +43,7 @@ ax.annotate(
     "Start of Flat-Top",
     xy=(2, 0),
     xytext=(2, 0.75),
-    arrowprops=dict(facecolor="black", arrowstyle="->"),
+    arrowprops={"facecolor": "black", "arrowstyle": "->"},
     fontsize=10,
     ha="center",
 )
@@ -51,7 +51,7 @@ ax.annotate(
     "End of Flat-Top",
     xy=(5, 0),
     xytext=(5, -0.75),
-    arrowprops=dict(facecolor="black", arrowstyle="->"),
+    arrowprops={"facecolor": "black", "arrowstyle": "->"},
     fontsize=10,
     ha="center",
 )

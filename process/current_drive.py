@@ -215,11 +215,9 @@ class CurrentDrive:
                     1
                     / (2 * np.pi)
                     * np.sqrt(
-                        (
-                            (physics_variables.dene / 1.0e19)
-                            * constants.electron_charge**2
-                            / (constants.electron_mass * constants.epsilon0)
-                        )
+                        (physics_variables.dene / 1.0e19)
+                        * constants.electron_charge**2
+                        / (constants.electron_mass * constants.epsilon0)
                     )
                 )
 
@@ -510,11 +508,9 @@ class CurrentDrive:
                     1
                     / (2 * np.pi)
                     * np.sqrt(
-                        (
-                            (physics_variables.dene / 1.0e19)
-                            * constants.electron_charge**2
-                            / (constants.electron_mass * constants.epsilon0)
-                        )
+                        (physics_variables.dene / 1.0e19)
+                        * constants.electron_charge**2
+                        / (constants.electron_mass * constants.epsilon0)
                     )
                 )
 

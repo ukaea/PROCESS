@@ -70,7 +70,7 @@ def get_vars(vfile="mfile_to_csv_vars.json"):
     """
     print("Fetching list of variables from", vfile)
 
-    with open(vfile, "r") as varfile:
+    with open(vfile) as varfile:
         data = varfile.read()
         obj = json.loads(data)
         vars = obj["vars"]
@@ -95,9 +95,7 @@ def read_mfile(mfilename="MFILE.DAT", vars=[]):
     # for each variable named in the input varfile, get the description and data value
     for var_name in vars:
         if var_name not in m_file.data.keys():
-            print(
-                "Variable '{}' not in MFILE. Skipping and moving on...".format(var_name)
-            )
+            print(f"Variable '{var_name}' not in MFILE. Skipping and moving on...")
         else:
             # In case of a file containing multiple scans, (scan = -1) uses the last scan value
             var_val = m_file.data[var_name].get_scan(-1)

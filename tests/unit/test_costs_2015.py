@@ -2,7 +2,7 @@
 
 from typing import Any, NamedTuple
 
-import numpy
+import numpy as np
 import pytest
 
 from process.costs_2015 import Costs2015
@@ -94,8 +94,8 @@ class CalcBuildingCostsParam(NamedTuple):
             cost_factor_buildings=1,
             light_build_cost_per_vol=270,
             tok_build_cost_per_vol=1283,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         0,
@@ -199,12 +199,12 @@ class CalcBuildingCostsParam(NamedTuple):
                         0,
                     ),
                     order="F",
-                    dtype=numpy.float64,
+                    dtype=np.float64,
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         0,
@@ -308,12 +308,12 @@ class CalcBuildingCostsParam(NamedTuple):
                         0,
                     ),
                     order="F",
-                    dtype=numpy.float64,
+                    dtype=np.float64,
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         0,
                         0,
@@ -417,12 +417,12 @@ class CalcBuildingCostsParam(NamedTuple):
                         0,
                     ),
                     order="F",
-                    dtype=numpy.float64,
+                    dtype=np.float64,
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         0,
                         0,
@@ -526,12 +526,12 @@ class CalcBuildingCostsParam(NamedTuple):
                         0,
                     ),
                     order="F",
-                    dtype=numpy.float64,
+                    dtype=np.float64,
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         0,
                         0,
@@ -635,12 +635,12 @@ class CalcBuildingCostsParam(NamedTuple):
                         0,
                     ),
                     order="F",
-                    dtype=numpy.float64,
+                    dtype=np.float64,
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -747,8 +747,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -855,8 +855,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -963,8 +963,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -1071,8 +1071,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -1194,8 +1194,8 @@ class CalcBuildingCostsParam(NamedTuple):
             cost_factor_buildings=1,
             light_build_cost_per_vol=270,
             tok_build_cost_per_vol=1283,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -1302,8 +1302,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -1410,8 +1410,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -1518,8 +1518,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -1626,8 +1626,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -1734,8 +1734,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -1842,8 +1842,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -1950,8 +1950,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -2058,8 +2058,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -2166,8 +2166,8 @@ class CalcBuildingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -2409,8 +2409,8 @@ class CalcLandCostsParam(NamedTuple):
             rdewex=18.314040399601147,
             cost_factor_land=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -2517,8 +2517,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -2625,8 +2625,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -2733,8 +2733,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -2841,8 +2841,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -2949,8 +2949,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -3057,8 +3057,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -3165,8 +3165,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -3273,8 +3273,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -3381,8 +3381,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -3497,8 +3497,8 @@ class CalcLandCostsParam(NamedTuple):
             rdewex=18.31462428923539,
             cost_factor_land=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -3605,8 +3605,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -3713,8 +3713,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -3821,8 +3821,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -3929,8 +3929,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -4037,8 +4037,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -4145,8 +4145,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -4253,8 +4253,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -4361,8 +4361,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -4469,8 +4469,8 @@ class CalcLandCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -4683,8 +4683,8 @@ class CalcTfCoilCostsParam(NamedTuple):
             whtconsc=10284.64237165747,
             cost_factor_tf_coils=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -4791,8 +4791,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -4899,8 +4899,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -5007,8 +5007,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -5115,8 +5115,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -5223,8 +5223,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -5331,8 +5331,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -5439,8 +5439,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -5547,8 +5547,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -5655,8 +5655,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -5772,8 +5772,8 @@ class CalcTfCoilCostsParam(NamedTuple):
             whtconsc=7945.1211509981658,
             cost_factor_tf_coils=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -5880,8 +5880,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -5988,8 +5988,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -6096,8 +6096,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -6204,8 +6204,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -6312,8 +6312,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -6420,8 +6420,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -6528,8 +6528,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -6636,8 +6636,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -6744,8 +6744,8 @@ class CalcTfCoilCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -6951,8 +6951,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
             cost_factor_rh=1,
             costexp=0.80000000000000004,
             num_rh_systems=4,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -7059,8 +7059,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -7167,8 +7167,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -7275,8 +7275,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -7383,8 +7383,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -7491,8 +7491,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -7599,8 +7599,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -7707,8 +7707,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -7815,8 +7815,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -7923,8 +7923,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -8037,8 +8037,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
             cost_factor_rh=1,
             costexp=0.80000000000000004,
             num_rh_systems=4,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -8145,8 +8145,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -8253,8 +8253,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -8361,8 +8361,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -8469,8 +8469,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -8577,8 +8577,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -8685,8 +8685,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -8793,8 +8793,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -8901,8 +8901,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -9009,8 +9009,8 @@ class CalcRemoteHandlingCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -9225,8 +9225,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
             helpow=142703.41458500578,
             cost_factor_vv=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -9333,8 +9333,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -9441,8 +9441,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -9549,8 +9549,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -9657,8 +9657,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -9765,8 +9765,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -9873,8 +9873,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -9981,8 +9981,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -10089,8 +10089,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -10197,8 +10197,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -10312,8 +10312,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
             helpow=823308.59959198488,
             cost_factor_vv=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -10420,8 +10420,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -10528,8 +10528,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -10636,8 +10636,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -10744,8 +10744,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -10852,8 +10852,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -10960,8 +10960,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -11068,8 +11068,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -11176,8 +11176,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -11284,8 +11284,8 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -11484,8 +11484,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
             pgrossmw=893.59786239725906,
             cost_factor_bop=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -11592,8 +11592,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -11700,8 +11700,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -11808,8 +11808,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -11916,8 +11916,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -12024,8 +12024,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -12132,8 +12132,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -12240,8 +12240,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -12348,8 +12348,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -12456,8 +12456,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -12569,8 +12569,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
             pgrossmw=792.46889728924157,
             cost_factor_bop=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -12677,8 +12677,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -12785,8 +12785,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -12893,8 +12893,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -13001,8 +13001,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -13109,8 +13109,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -13217,8 +13217,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -13325,8 +13325,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -13433,8 +13433,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -13541,8 +13541,8 @@ class CalcEnergyConversionSystemParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -13784,8 +13784,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             zdewex=15.118436894660423,
             cost_factor_misc=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -13892,8 +13892,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -14000,8 +14000,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -14108,8 +14108,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -14216,8 +14216,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -14324,8 +14324,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -14432,8 +14432,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31860.684029365962,
@@ -14540,8 +14540,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -14648,8 +14648,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2403002531.5649948,
@@ -14756,8 +14756,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -14880,8 +14880,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             zdewex=15.165858901796364,
             cost_factor_misc=1,
             costexp=0.80000000000000004,
-            s_kref=numpy.array(
-                numpy.array(
+            s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -14988,8 +14988,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_k=numpy.array(
-                numpy.array(
+            s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -15096,8 +15096,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cref=numpy.array(
-                numpy.array(
+            s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -15204,8 +15204,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost=numpy.array(
-                numpy.array(
+            s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -15312,8 +15312,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            s_cost_factor=numpy.array(
-                numpy.array(
+            s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,
@@ -15420,8 +15420,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_kref=numpy.array(
-                numpy.array(
+            expected_s_kref=np.array(
+                np.array(
                     (
                         0,
                         18712,
@@ -15528,8 +15528,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_k=numpy.array(
-                numpy.array(
+            expected_s_k=np.array(
+                np.array(
                     (
                         0,
                         31962.659424309255,
@@ -15636,8 +15636,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cref=numpy.array(
-                numpy.array(
+            expected_s_cref=np.array(
+                np.array(
                     (
                         34830000,
                         1411300000,
@@ -15744,8 +15744,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost=numpy.array(
-                numpy.array(
+            expected_s_cost=np.array(
+                np.array(
                     (
                         34830000,
                         2410693739.0726619,
@@ -15852,8 +15852,8 @@ class CalcRemainingSubsystemsParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_s_cost_factor=numpy.array(
-                numpy.array(
+            expected_s_cost_factor=np.array(
+                np.array(
                     (
                         1,
                         1,

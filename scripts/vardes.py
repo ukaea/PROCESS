@@ -3,7 +3,7 @@ import pickle
 from copy import copy
 from enum import Enum
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 import jinja2
 import numpy as np
@@ -37,8 +37,8 @@ def get_variables_and_modules(ford_project: Path):
     with open(ford_project, "rb") as ford_pickle:
         ford_project = pickle.load(ford_pickle)
 
-    variables: List[FortranVariable] = []
-    modules: List[str] = []
+    variables: list[FortranVariable] = []
+    modules: list[str] = []
 
     for mod in ford_project.modules:
         for var in mod.variables:
@@ -63,7 +63,7 @@ def get_variables_and_modules(ford_project: Path):
     return variables, modules
 
 
-def get_input_output_variables(variables: List[FortranVariable]):
+def get_input_output_variables(variables: list[FortranVariable]):
     fortran_initial_values = {}
     for var in variables:
         if var.typ == VariableTypes.PARAMETER:

@@ -1,5 +1,4 @@
 import math
-from typing import Tuple
 
 import numba as nb
 import numpy as np
@@ -188,7 +187,7 @@ def calculate_beta_limit(
 @nb.jit(nopython=True, cache=True)
 def _plascar_bpol(
     aspect: float, eps: float, kappa: float, delta: float
-) -> Tuple[float, float, float, float]:
+) -> tuple[float, float, float, float]:
     """
     Calculate the poloidal field coefficients for determining the plasma current
     and poloidal field.
@@ -2535,7 +2534,7 @@ class Physics:
         rminor: float,
         sarea: float,
         zeff: float,
-    ) -> Tuple[np.ndarray, float]:
+    ) -> tuple[np.ndarray, float]:
         """
         Calculate the density limit using various models.
 
@@ -2956,7 +2955,7 @@ class Physics:
         ten: float,
         plasma_volume: float,
         zeff: float,
-    ) -> Tuple[float, float, float, float]:
+    ) -> tuple[float, float, float, float]:
         """
         Calculate the ohmic heating power and related parameters.
 
@@ -3043,7 +3042,7 @@ class Physics:
         sf: float,
         triang: float,
         triang95: float,
-    ) -> Tuple[float, float, float, float, float]:
+    ) -> tuple[float, float, float, float, float]:
         """Calculate the plasma current.
 
         Args:
@@ -3559,7 +3558,13 @@ class Physics:
                         "(alphaj)",
                         physics_variables.alphaj,
                     )
-
+                po.ovarrf(
+                    self.outfile,
+                    "On-axis plasma current density (A/m2)",
+                    "(j_plasma_0)",
+                    physics_variables.j_plasma_0,
+                    "OP ",
+                )
                 po.ovarrf(
                     self.outfile,
                     "Plasma internal inductance, li",
@@ -3835,6 +3840,13 @@ class Physics:
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
             self.outfile, "Electron temperature (keV)", "(te)", physics_variables.te
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ratio of ion to electron volume-averaged temperature",
+            "(tratio)",
+            physics_variables.tratio,
+            "IP ",
         )
         po.ovarrf(
             self.outfile,

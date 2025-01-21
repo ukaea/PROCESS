@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import warnings
-from typing import TYPE_CHECKING, Tuple, Union
+from typing import TYPE_CHECKING
 
 import numpy as np
 from tabulate import tabulate
@@ -36,7 +36,7 @@ class Caller:
 
     @staticmethod
     def check_agreement(
-        previous: Union[float, np.ndarray], current: Union[float, np.ndarray]
+        previous: float | np.ndarray, current: float | np.ndarray
     ) -> bool:
         """Compare previous and current arrays for agreement within a tolerance.
 
@@ -53,7 +53,7 @@ class Caller:
         else:
             return False
 
-    def call_models(self, xc: np.ndarray, m: int) -> Tuple[float, np.ndarray]:
+    def call_models(self, xc: np.ndarray, m: int) -> tuple[float, np.ndarray]:
         """Evalutate models until results are idempotent.
 
         Ensure objective function and constraints are idempotent before returning.

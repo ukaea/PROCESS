@@ -9,6 +9,7 @@ numpy>=1.23,<2
 
 # Markdown versions for ford compatibility
 Markdown>=3.2.2,<3.4
+pymdown-extensions<=10.4
 
 # f2py requires to read some Fortran code
 charset-normalizer>=3.3

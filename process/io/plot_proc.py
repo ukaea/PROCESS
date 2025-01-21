@@ -19,7 +19,7 @@ import os
 from argparse import RawTextHelpFormatter
 from importlib import resources
 
-import matplotlib
+import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
@@ -55,8 +55,8 @@ from process.impurity_radiation import read_impurity_file
 from process.io.python_fortran_dicts import get_dicts
 
 if os.name == "posix" and "DISPLAY" not in os.environ:
-    matplotlib.use("Agg")
-matplotlib.rcParams["figure.max_open_warning"] = 40
+    mpl.use("Agg")
+mpl.rcParams["figure.max_open_warning"] = 40
 
 
 def parse_args(args):
@@ -109,7 +109,7 @@ def parse_args(args):
 
 # Colours are PROCESS defualt, BLUEMIRA
 SOLENOID_COLOUR = ["pink", "#1764ab"]
-CSCOMPRESSION_COLOUR = ["red", "#33CCCC"]
+CSCOMPRESSION_COLOUR = ["maroon", "#33CCCC"]
 TFC_COLOUR = ["cyan", "#084a91"]
 THERMAL_SHIELD_COLOUR = ["gray", "#e3eef9"]
 VESSEL_COLOUR = ["green", "#b7d4ea"]
@@ -373,99 +373,41 @@ def color_key(axis, mfile_data, scan, colour_scheme):
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
-    axis.text(
-        -5,
-        12,
-        "*The CS comp is not shown in the poloidal cross-section",
-        ha="left",
-        va="top",
-        size="medium",
-    )
+    labels = [
+        ("CS coil", SOLENOID_COLOUR[colour_scheme - 1]),
+        ("CS comp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
+        ("TF coil", TFC_COLOUR[colour_scheme - 1]),
+        ("Thermal shield", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
+        ("VV & shield", VESSEL_COLOUR[colour_scheme - 1]),
+        ("Blanket", BLANKET_COLOUR[colour_scheme - 1]),
+        ("First wall", FIRSTWALL_COLOUR[colour_scheme - 1]),
+        ("Plasma", PLASMA_COLOUR[colour_scheme - 1]),
+        ("PF coils", "none"),
+    ]
 
-    axis.text(-5, 10, "CS coil", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 9.7], 1, 0.4, lw=0, facecolor=SOLENOID_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 9, "CS comp", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 8.7], 1, 0.4, lw=0, facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 8, "TF coil", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 7.7], 1, 0.4, lw=0, facecolor=TFC_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 7, "Thermal shield", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 6.7],
-            1,
-            0.4,
-            lw=0,
-            facecolor=THERMAL_SHIELD_COLOUR[colour_scheme - 1],
-        )
-    )
-
-    axis.text(-5, 6, "VV & shield", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 5.7], 1, 0.4, lw=0, facecolor=VESSEL_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 5, "Blanket", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 4.7], 1, 0.4, lw=0, facecolor=BLANKET_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 4, "First wall", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 3.7], 1, 0.4, lw=0, facecolor=FIRSTWALL_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 3, "Plasma", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle(
-            [0.7, 2.7], 1, 0.4, lw=0, facecolor=PLASMA_COLOUR[colour_scheme - 1]
-        )
-    )
-
-    axis.text(-5, 2, "PF coils", ha="left", va="top", size="medium")
-    axis.add_patch(
-        patches.Rectangle([0.7, 1.7], 1, 0.4, lw=1, facecolor="none", edgecolor="black")
-    )
     if (mfile_data.data["iefrf"].get_scan(scan) in [5, 8]) or (
         mfile_data.data["iefrffix"].get_scan(scan) in [5, 8]
     ):
-        axis.text(-5, 1, "NB duct shield", ha="left", va="top", size="medium")
-        axis.add_patch(
-            patches.Rectangle(
-                [0.7, 0.7], 1, 0.4, lw=0, facecolor=NBSHIELD_COLOUR[colour_scheme - 1]
-            )
-        )
-        axis.text(-5, 0.1, "Cryostat", ha="left", va="top", size="medium")
-        axis.add_patch(
-            patches.Rectangle(
-                [0.7, -0.3], 1, 0.4, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
-            )
-        )
+        labels.append(("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]))
+        labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
     else:
-        axis.text(-5, 1, "Cryostat", ha="left", va="top", size="medium")
+        labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
+
+    for i, (text, color) in enumerate(labels):
+        row = i // 4
+        col = i % 4
+        y_pos = 9 - row * 1.5
+        x_pos = col * 2.5
+
+        axis.text(x_pos, y_pos, text, ha="left", va="top", size="small")
         axis.add_patch(
             patches.Rectangle(
-                [0.7, 0.7], 1, 0.1, lw=0, facecolor=CRYOSTAT_COLOUR[colour_scheme - 1]
+                [x_pos + 1.5, y_pos - 0.35],
+                0.5,
+                0.4,
+                lw=0 if color != "none" else 1,
+                facecolor=color if color != "none" else "none",
+                edgecolor="black" if color == "none" else "none",
             )
         )
 
@@ -686,28 +628,32 @@ def plot_nprofile(prof, demo_ranges):
       prof --> axis object to add plot to
     """
 
-    prof.set_xlabel("r/a")
-    prof.set_ylabel(r"$n_{e}\cdot 10^{19}$ $[\mathrm{m}^{-3}]$")
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
+    prof.set_ylabel(r"$n_{e} $ $[10^{19} \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
     if ipedestal == 1:
-        rhocore1 = np.linspace(0, 0.95 * rhopedn)
-        rhocore2 = np.linspace(0.95 * rhopedn, rhopedn)
-        rhocore = np.append(rhocore1, rhocore2)
-        ncore = neped + (ne0 - neped) * (1 - rhocore**2 / rhopedn**2) ** alphan
+        rhocore = np.linspace(0, rhopedn)
+        necore = neped + (ne0 - neped) * (1 - rhocore**2 / rhopedn**2) ** alphan
+        nicore = necore * (deni / dene)
 
         rhosep = np.linspace(rhopedn, 1)
-        nsep = nesep + (neped - nesep) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
+        neesep = nesep + (neped - nesep) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
+        nisep = neesep * (deni / dene)
 
         rho = np.append(rhocore, rhosep)
-        ne = np.append(ncore, nsep)
+        ne = np.append(necore, neesep)
+        ni = np.append(nicore, nisep)
     else:
         rho1 = np.linspace(0, 0.95)
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
     ne = ne / 1e19
-    prof.plot(rho, ne)
+    ni = ni / 1e19
+    prof.plot(rho, ni, label="$n_{i}$", color="red")
+    prof.plot(rho, ne, label="$n_{e}$", color="blue")
+    prof.legend()
 
     # Ranges
     # ---
@@ -740,7 +686,78 @@ def plot_nprofile(prof, demo_ranges):
             alpha=0.4,
         )
         prof.minorticks_on()
+
+        # Add text box with density profile parameters
+        textstr_density = "\n".join((
+            r"$n_{\text{e,0}}$: "
+            + f"{ne0:.3e} m$^{{-3}}$"
+            + r"$\hspace{4} \alpha_{\text{n}}$: "
+            + f"{alphan:.3f}\n",
+            r"$n_{\text{e,ped}}$: "
+            + f"{neped:.3e} m$^{{-3}}$"
+            + r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
+            + f"{deni / dene:.3f}",
+            r"$f_{\text{GW e,ped}}$: " + f"{fgwped_out:.3f}",
+            r"$\rho_{\text{ped,n}}$: " + f"{rhopedn:.3f}\n",
+            r"$n_{\text{e,sep}}$: " + f"{nesep:.3e} m$^{{-3}}$",
+            r"$f_{\text{GW e,sep}}$: " + f"{fgwsep_out:.3f}",
+        ))
+
+        props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
+        prof.text(
+            0.0,
+            -0.16,
+            textstr_density,
+            transform=prof.transAxes,
+            fontsize=9,
+            verticalalignment="top",
+            bbox=props_density,
+        )
+
     # ---
+
+
+def plot_jprofile(prof):
+    """Function to plot density profile
+    Arguments:
+      prof --> axis object to add plot to
+    """
+
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
+    prof.set_ylabel(r"Current density $[kA/m^2]$")
+    prof.set_title("$J$ profile")
+    prof.minorticks_on()
+    prof.set_xlim([0, 1.0])
+
+    rho = np.linspace(0, 1)
+    y2 = (j_plasma_0 * (1 - rho**2) ** alphaj) / 1e3
+
+    prof.plot(rho, y2, label="$n_{i}$", color="red")
+
+    textstr_j = "\n".join((
+        r"$j_0$: " + f"{y2[0]:.3f} kA m$^{{-2}}$\n",
+        r"$\alpha_J$: " + f"{alphaj:.3f}",
+    ))
+
+    props_j = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
+    prof.text(
+        1.1,
+        0.75,
+        textstr_j,
+        transform=prof.transAxes,
+        fontsize=9,
+        verticalalignment="top",
+        bbox=props_j,
+    )
+
+    prof.text(
+        0.05,
+        0.04,
+        "*Current profile is assumed to be parabolic",
+        fontsize=10,
+        ha="left",
+        transform=plt.gcf().transFigure,
+    )
 
 
 def plot_tprofile(prof, demo_ranges):
@@ -749,14 +766,12 @@ def plot_tprofile(prof, demo_ranges):
       prof --> axis object to add plot to
     """
 
-    prof.set_xlabel("r/a")
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel("$T_{e}$ [keV]")
     prof.set_title("Temperature profile")
 
     if ipedestal == 1:
-        rhocore1 = np.linspace(0, 0.9 * rhopedt)
-        rhocore2 = np.linspace(0.9 * rhopedt, rhopedt)
-        rhocore = np.append(rhocore1, rhocore2)
+        rhocore = np.linspace(0.0, rhopedt)
         tcore = teped + (te0 - teped) * (1 - (rhocore / rhopedt) ** tbeta) ** alphat
 
         rhosep = np.linspace(rhopedt, 1)
@@ -769,7 +784,9 @@ def plot_tprofile(prof, demo_ranges):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         te = te0 * (1 - rho**2) ** alphat
-    prof.plot(rho, te)
+    prof.plot(rho, te, color="blue", label="$T_{e}$")
+    prof.plot(rho, te[:] * tratio, color="red", label="$T_{i}$")
+    prof.legend()
 
     # Ranges
     # ---
@@ -797,6 +814,31 @@ def plot_tprofile(prof, demo_ranges):
             alpha=0.4,
         )
         prof.minorticks_on()
+
+    # Add text box with temperature profile parameters
+    textstr_temperature = "\n".join((
+        r"$T_{\text{e,0}}$: "
+        + f"{te0:.3f} keV"
+        + r"$\hspace{4} \alpha_{\text{T}}$: "
+        + f"{alphat:.3f}\n",
+        r"$T_{\text{e,ped}}$: "
+        + f"{teped:.3f} keV"
+        + r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
+        + f"{tratio:.3f}",
+        r"$\rho_{\text{ped,T}}$: " + f"{rhopedt:.3f}\n",
+        r"$T_{\text{e,sep}}$: " + f"{tesep:.3f} keV\n",
+    ))
+
+    props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
+    prof.text(
+        0.0,
+        -0.16,
+        textstr_temperature,
+        transform=prof.transAxes,
+        fontsize=9,
+        verticalalignment="top",
+        bbox=props_temperature,
+    )
     # ---
 
 
@@ -806,10 +848,10 @@ def plot_qprofile(prof, demo_ranges):
     Arguments:
       prof --> axis object to add plot to
     """
-
-    prof.set_xlabel("r/a")
-    prof.set_ylabel("q(r)")
-    prof.set_title("q profile")
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
+    prof.set_ylabel("$q$")
+    prof.set_title("$q$ profile")
+    prof.minorticks_on()
 
     rho = np.linspace(0, 1)
     q_r_nevin = q0 + (q95 - q0) * (rho + rho * rho + rho**3) / (3.0)
@@ -828,8 +870,33 @@ def plot_qprofile(prof, demo_ranges):
 
     # Adapatative ranges
     else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
+        prof.set_ylim([0, q95 * 1.2])
+
+    prof.text(
+        0.6,
+        0.04,
+        "*Profile is not calculated, only $q_0$ and $q_{95}$ are known.",
+        fontsize=10,
+        ha="left",
+        transform=plt.gcf().transFigure,
+    )
     # ---
+
+    textstr_q = "\n".join((
+        r"$q_0$: " + f"{q0:.3f}\n",
+        r"$q_{95}$: " + f"{q95:.3f}",
+    ))
+
+    props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
+    prof.text(
+        -0.4,
+        0.75,
+        textstr_q,
+        transform=prof.transAxes,
+        fontsize=9,
+        verticalalignment="top",
+        bbox=props_q,
+    )
 
 
 def read_imprad_data(skiprows, data_path):
@@ -892,9 +959,9 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
       impp --> impurity path
     """
 
-    prof.set_xlabel("r/a")
+    prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
-    prof.set_title("Radiation profile")
+    prof.set_title("Line & Bremsstrahlung radiation profile")
 
     # read in the impurity data
     imp_data = read_imprad_data(2, impp)
@@ -987,7 +1054,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         for l in range(imp_data.shape[0]):  # noqa: E741
             prad[k] = prad[k] + pimpden[l][k] * 2.0e-6
 
-    prof.plot(rho, prad, label="Total")
+    prof.plot(rho, prad, label="Total", linestyle="dotted")
     prof.plot(rho, pimpden[0] * 2.0e-6, label="H")
     prof.plot(rho, pimpden[1] * 2.0e-6, label="He")
     if imp_frac[2] > 1.0e-30:
@@ -1014,19 +1081,21 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         prof.plot(rho, pimpden[12] * 2.0e-6, label="Xe")
     if imp_frac[13] > 1.0e-30:
         prof.plot(rho, pimpden[13] * 2.0e-6, label="W")
-    prof.legend()
+    prof.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
     prof.minorticks_on()
 
     # Ranges
     # ---
-    prof.set_xlim([0, 1])
+    prof.set_xlim([0, 1.0])
+    prof.set_yscale("log")
+    prof.yaxis.grid(True, which="both", alpha=0.2)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        prof.set_ylim([0, 0.5])
+        prof.set_ylim([1e-6, 0.5])
 
     # Adapatative ranges
     else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
+        prof.set_ylim([1e-6, prof.get_ylim()[1]])
     # ---
 
 
@@ -1804,7 +1873,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         axis.set_title("Top-down view of inboard TF coil at midplane")
         axis.set_xlabel("Radial distance [m]")
         axis.set_ylabel("Toroidal distance [m]")
-        axis.legend(bbox_to_anchor=(0.0, -0.25), loc="upper left")
+        axis.legend(bbox_to_anchor=(1.05, 1.0), loc="upper left")
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
@@ -1954,7 +2023,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     axis.set_title("WP Turn Structure")
     axis.set_xlabel("X [mm]")
     axis.set_ylabel("Y [mm]")
-    axis.legend(loc="upper right", bbox_to_anchor=(1.0, -0.25))
+    axis.legend(loc="upper right", bbox_to_anchor=(2.0, 1.0))
 
 
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
@@ -1996,11 +2065,11 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     else:
         noc = number_of_coils
 
-    for coil in range(0, noc):
-        coils_r.append(mfile_data.data["rpf[{:01}]".format(coil)].get_scan(scan))
-        coils_z.append(mfile_data.data["zpf[{:01}]".format(coil)].get_scan(scan))
-        coils_dr.append(mfile_data.data["pfdr({:01})".format(coil)].get_scan(scan))
-        coils_dz.append(mfile_data.data["pfdz({:01})".format(coil)].get_scan(scan))
+    for coil in range(noc):
+        coils_r.append(mfile_data.data[f"rpf[{coil:01}]"].get_scan(scan))
+        coils_z.append(mfile_data.data[f"zpf[{coil:01}]"].get_scan(scan))
+        coils_dr.append(mfile_data.data[f"pfdr({coil:01})"].get_scan(scan))
+        coils_dz.append(mfile_data.data[f"pfdz({coil:01})"].get_scan(scan))
         coil_text.append(str(coil + 1))
 
     r_points, z_points, central_coil = pfcoil_geometry(
@@ -2013,15 +2082,28 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         ohdz=ohdz,
     )
 
+    # Plot CS compression structure
+    r_precomp_outer, r_precomp_inner = cumulative_radial_build2(
+        "precomp", mfile_data, scan
+    )
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(r_precomp_inner, central_coil.anchor_z),
+            width=r_precomp_outer - r_precomp_inner,
+            height=central_coil.height,
+            facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1],
+        )
+    )
+
     for i in range(len(coils_r)):
         axis.plot(r_points[i], z_points[i], color="black")
         axis.text(
             coils_r[i],
-            coils_z[i] - 0.1,
+            coils_z[i] - 0.05,
             coil_text[i],
             ha="center",
             va="center",
-            fontsize=4.85 * abs((coils_dr[i] * coils_dz[i])),
+            fontsize=8.5 * abs(coils_dr[i] * coils_dz[i]),
         )
     axis.add_patch(
         patches.Rectangle(
@@ -2056,9 +2138,7 @@ def plot_info(axis, data, mfile_data, scan):
             if data[i][0] == "":
                 axis.text(eqpos, -i, "\n", ha="left", va="center")
             elif data[i][0][0] == "#":
-                axis.text(
-                    -0.05, -i, "{}\n".format(data[i][0][1:]), ha="left", va="center"
-                )
+                axis.text(-0.05, -i, f"{data[i][0][1:]}\n", ha="left", va="center")
             elif data[i][0][0] == "!":
                 value = data[i][0][1:]
                 axis.text(
@@ -2074,9 +2154,7 @@ def plot_info(axis, data, mfile_data, scan):
                     if isinstance(dat, str):
                         value = dat
                     else:
-                        value = "{:.4g}".format(
-                            mfile_data.data[data[i][0]].get_scan(scan)
-                        )
+                        value = f"{mfile_data.data[data[i][0]].get_scan(scan):.4g}"
                     if "alpha" in data[i][0]:
                         value = str(float(value) + 1.0)
                     axis.text(
@@ -2102,7 +2180,7 @@ def plot_info(axis, data, mfile_data, scan):
             if isinstance(dat, str):
                 value = dat
             else:
-                value = "{:.4g}".format(data[i][0])
+                value = f"{data[i][0]:.4g}"
             axis.text(
                 eqpos,
                 -i,
@@ -2328,17 +2406,17 @@ def plot_physics_info(axis, mfile_data, scan):
         ("plasma_current_ma", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
-        ("normalised_thermal_beta", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
-        ("normalised_toroidal_beta", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
-        ("thermal_poloidal_beta", r"$\beta_P$, thermal", ""),
+        ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
+        ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
+        ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
-        ("te", r"$< T_e >$", "keV"),
-        ("dene", r"$< n_e >$", "m$^{-3}$"),
-        (nong, r"$< n_{\mathrm{e,line}} >/n_G$", ""),
-        (tepeak, r"$T_{e0}/ < T_e >$", ""),
-        (nepeak, r"$n_{e0}/ < n_{\mathrm{e, vol}} >$", ""),
+        ("te", r"$\langle T_e \rangle$", "keV"),
+        ("dene", r"$\langle n_e \rangle$", "m$^{-3}$"),
+        (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
+        (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
+        (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("zeff", r"$Z_{\mathrm{eff}}$", ""),
-        (dnz, r"$n_Z/ < n_{\mathrm{e, vol}} >$", ""),
+        (dnz, r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("taueff", r"$\tau_e$", "s"),
         ("hfact", "H-factor", ""),
         (pthresh, "H-mode threshold", "MW"),
@@ -2365,7 +2443,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
     if "i_tf_sup" in mfile_data.data.keys():
         i_tf_sup = int(mfile_data.data["i_tf_sup"].get_scan(scan))
     else:
-        i_tf_sup = int(1)
+        i_tf_sup = 1
 
     xmin = 0
     xmax = 1
@@ -2389,8 +2467,8 @@ def plot_magnetics_info(axis, mfile_data, scan):
     for i in range(1, number_of_coils):
         if i % 2 != 0:
             pf_info.append((
-                mfile_data.data["ric[{:01}]".format(i)].get_scan(scan),
-                "PF {}".format(i),
+                mfile_data.data[f"ric[{i:01}]"].get_scan(scan),
+                f"PF {i}",
             ))
 
     if len(pf_info) > 2:
@@ -2405,14 +2483,14 @@ def plot_magnetics_info(axis, mfile_data, scan):
     if "i_tf_bucking" in mfile_data.data.keys():
         i_tf_bucking = int(mfile_data.data["i_tf_bucking"].get_scan(scan))
     else:
-        i_tf_bucking = int(1)
+        i_tf_bucking = 1
 
     # Get superconductor material (i_tf_sc_mat)
     # If i_tf_sc_mat not present, assume resistive
     if "i_tf_sc_mat" in mfile_data.data.keys():
         i_tf_sc_mat = int(mfile_data.data["i_tf_sc_mat"].get_scan(scan))
     else:
-        i_tf_sc_mat = int(0)
+        i_tf_sc_mat = 0
 
     if i_tf_sc_mat > 0:
         tftype = dicts["DICT_TF_TYPE"][
@@ -2425,11 +2503,11 @@ def plot_magnetics_info(axis, mfile_data, scan):
         "vsind"
     ].get_scan(scan)
 
-    sig_case = 1.0e-6 * mfile_data.data[
-        "sig_tf_tresca_max({})".format(i_tf_bucking)
-    ].get_scan(scan)
+    sig_case = 1.0e-6 * mfile_data.data[f"sig_tf_tresca_max({i_tf_bucking})"].get_scan(
+        scan
+    )
     sig_cond = 1.0e-6 * mfile_data.data[
-        "sig_tf_tresca_max({})".format(i_tf_bucking + 1)
+        f"sig_tf_tresca_max({i_tf_bucking + 1})"
     ].get_scan(scan)
 
     if i_tf_sup == 1:
@@ -2441,7 +2519,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("vstot", "Available flux swing", "Wb"),
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
-            ("#TF coil type is {}".format(tftype), "", ""),
+            (f"#TF coil type is {tftype}", "", ""),
             ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
             ("iooic", r"I/I$_{\mathrm{crit}}$", ""),
             ("tmargtf", "TF Temperature margin", "K"),
@@ -2467,7 +2545,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("vstot", "Available flux swing", "Wb"),
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
-            ("#TF coil type is {}".format(tftype), "", ""),
+            (f"#TF coil type is {tftype}", "", ""),
             ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
             ("c_tf_total", "TF coil currents sum", "A"),
             ("", "", ""),
@@ -2682,7 +2760,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2709,7 +2787,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2738,7 +2816,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2767,7 +2845,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2796,7 +2874,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{<n> R_{0}}$",
+                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
                 r"$\times 10^{-20}$ MW m$^{2}$",
             ),
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
@@ -2905,7 +2983,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
 
 
 def plot_h_threshold_comparison(
-    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int, u_seed=None
 ) -> None:
     """
     Function to plot a scatter box plot of L-H threshold power comparisons.
@@ -2972,7 +3050,8 @@ def plot_h_threshold_comparison(
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
-    x_values = np.random.normal(loc=1, scale=0.01, size=len(data.values()))
+    generator = np.random.default_rng(seed=u_seed)
+    x_values = generator.normal(loc=1, scale=0.01, size=len(data.values()))
     for index, (key, value) in enumerate(data.items()):
         if "ITER 1996" in key:
             color = "blue"
@@ -3125,6 +3204,7 @@ def main_plot(
     fig3,
     fig4,
     fig5,
+    fig6,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3158,30 +3238,45 @@ def main_plot(
         print("          -> No impurity plot done\033[0m")
 
     # Plot poloidal cross-section
-    plot_1 = fig2.add_subplot(221, aspect="equal")
+    plot_1 = fig3.add_subplot(121, aspect="equal")
+    plot_1.set_position([0.0, 0.1, 0.5, 0.8])
     poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
-    plot_2 = fig2.add_subplot(222, aspect="equal")
+    plot_2 = fig3.add_subplot(122, aspect="equal")
+    plot_2.set_position([0.425, 0.1, 0.6, 0.6])
     toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
+    # fig3.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
 
     # Plot color key
-    plot_3 = fig2.add_subplot(241)
+    plot_3 = fig3.add_subplot(222)
+    plot_3.set_position([0.45, 0.5, 0.5, 0.5])
     color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
-    plot_4 = fig2.add_subplot(234)  # , aspect= 0.05)
-    fig2.subplots_adjust(wspace=0.3)
+    plot_4 = fig2.add_subplot(231)  # , aspect= 0.05)
+    plot_4.set_position([0.075, 0.55, 0.25, 0.4])
     plot_nprofile(plot_4, demo_ranges)
 
     # Plot temperature profiles
-    plot_5 = fig2.add_subplot(235)  # , aspect= 1/35)
+    plot_5 = fig2.add_subplot(232)
+    plot_5.set_position([0.375, 0.55, 0.25, 0.4])
     plot_tprofile(plot_5, demo_ranges)
 
-    # plot_qprofile(plot_6)
-    plot_6 = fig2.add_subplot(236)  # , aspect=2)
-    if os.path.isdir(imp):
-        plot_radprofile(plot_6, m_file_data, scan, imp, demo_ranges)
+    # Plot impurity profiles
+    plot_8 = fig2.add_subplot(233)
+    plot_8.set_position([0.7, 0.45, 0.25, 0.5])
+    plot_radprofile(plot_8, m_file_data, scan, imp, demo_ranges)
+
+    # Plot current density profile
+    plot_7 = fig2.add_subplot(4, 3, 10)
+    plot_7.set_position([0.075, 0.125, 0.25, 0.15])
+    plot_jprofile(plot_7)
+
+    # Plot q profile
+    plot_6 = fig2.add_subplot(4, 3, 12)
+    plot_6.set_position([0.7, 0.125, 0.25, 0.15])
+    plot_qprofile(plot_6, demo_ranges)
 
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
@@ -3214,20 +3309,22 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_7 = fig3.add_subplot(321)
+        plot_7 = fig4.add_subplot(211, aspect="equal")
+        plot_7.set_position([0.05, 0.5, 0.8, 0.4])
         plot_tf_wp(plot_7, m_file_data, scan)
 
         # TF coil turn structure
-        plot_8 = fig3.add_subplot(322, aspect="equal")
+        plot_8 = fig4.add_subplot(325, aspect="equal")
+        plot_8.set_position([0.1, 0.1, 0.3, 0.3])
         plot_tf_turn(plot_8, m_file_data, scan)
 
-    plot_9 = fig4.add_subplot(221)
+    plot_9 = fig5.add_subplot(221)
     plot_bootstrap_comparison(plot_9, m_file_data, scan)
 
-    plot_10 = fig4.add_subplot(224)
+    plot_10 = fig5.add_subplot(224)
     plot_h_threshold_comparison(plot_10, m_file_data, scan)
 
-    plot_11 = fig5.add_subplot(221)
+    plot_11 = fig6.add_subplot(221)
     plot_density_limit_comparison(plot_11, m_file_data, scan)
 
 
@@ -3256,13 +3353,13 @@ def main(args=None):
     if "i_tf_sup" in m_file.data.keys():
         i_tf_sup = int(m_file.data["i_tf_sup"].get_scan(scan))
     else:
-        i_tf_sup = int(1)
+        i_tf_sup = 1
 
     # Check WP configuration
     if "i_tf_wp_geom" in m_file.data.keys():
         i_tf_wp_geom = int(m_file.data["i_tf_wp_geom"].get_scan(scan))
     else:
-        i_tf_wp_geom = int(0)
+        i_tf_wp_geom = 0
 
     global bore
     global ohcth
@@ -3286,6 +3383,7 @@ def main(args=None):
     global rdewex
     global zdewex
     global ddwex
+    global j_plasma_0
 
     bore = m_file.data["bore"].get_scan(scan)
     ohcth = m_file.data["ohcth"].get_scan(scan)
@@ -3307,6 +3405,7 @@ def main(args=None):
     rdewex = m_file.data["rdewex"].get_scan(scan)
     zdewex = m_file.data["zdewex"].get_scan(scan)
     ddwex = m_file.data["ddwex"].get_scan(scan)
+    j_plasma_0 = m_file.data["j_plasma_0"].get_scan(scan)
 
     # Magnets related
     global n_tf_coils
@@ -3357,7 +3456,14 @@ def main(args=None):
     global alphan
     global alphat
     global ne0
+    global deni
+    global dene
     global te0
+    global ti
+    global te
+    global fgwped_out
+    global fgwsep_out
+    global tratio
 
     ipedestal = m_file.data["ipedestal"].get_scan(scan)
     neped = m_file.data["neped"].get_scan(scan)
@@ -3370,18 +3476,29 @@ def main(args=None):
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["ne0"].get_scan(scan)
+    deni = m_file.data["deni"].get_scan(scan)
+    dene = m_file.data["dene"].get_scan(scan)
     te0 = m_file.data["te0"].get_scan(scan)
+    ti = m_file.data["ti"].get_scan(scan)
+    te = m_file.data["te"].get_scan(scan)
+    fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
+    fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)
+    tratio = m_file.data["tratio"].get_scan(scan)
 
     # Plasma
     global triang
     global alphaj
     global q0
     global q95
+    global plasma_current_MA
+    global xarea
 
     triang = m_file.data["triang95"].get_scan(scan)
     alphaj = m_file.data["alphaj"].get_scan(scan)
     q0 = m_file.data["q0"].get_scan(scan)
     q95 = m_file.data["q95"].get_scan(scan)
+    plasma_current_MA = m_file.data["plasma_current_ma"].get_scan(scan)
+    xarea = m_file.data["xarea"].get_scan(scan)
 
     # Radial position  -- 0
     # Electron density -- 1
@@ -3486,6 +3603,7 @@ def main(args=None):
     page3 = plt.figure(figsize=(12, 9), dpi=80)
     page4 = plt.figure(figsize=(12, 9), dpi=80)
     page5 = plt.figure(figsize=(12, 9), dpi=80)
+    page6 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3494,6 +3612,7 @@ def main(args=None):
         page3,
         page4,
         page5,
+        page6,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3507,6 +3626,7 @@ def main(args=None):
         pdf.savefig(page3)
         pdf.savefig(page4)
         pdf.savefig(page5)
+        pdf.savefig(page6)
 
     # show fig if option used
     if args.show:
@@ -3517,6 +3637,7 @@ def main(args=None):
     plt.close(page3)
     plt.close(page4)
     plt.close(page5)
+    plt.close(page6)
 
 
 if __name__ == "__main__":

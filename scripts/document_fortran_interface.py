@@ -15,7 +15,7 @@ fortran (python module)
 
 import inspect
 from pathlib import Path
-from typing import Any, List, NamedTuple, Set, Union
+from typing import Any, NamedTuple
 
 from process import fortran
 
@@ -72,10 +72,10 @@ class FortranModule(NamedTuple):
 
     name: str
     docstring: str
-    members: List[FortranModuleMember]
+    members: list[FortranModuleMember]
 
 
-def get_modules(ftrn) -> List[FortranModule]:
+def get_modules(ftrn) -> list[FortranModule]:
     """Returns a list of modules in the wrapped Python-Fortran interface
 
     :param ftrn: top-level wrapped fortran interface (the name of the module output from f2py) e.g. f2py wrapping PROCESS uses `-m fortran` so this top-level interface is process.fortran
@@ -99,7 +99,7 @@ def get_modules(ftrn) -> List[FortranModule]:
 
 def get_members(
     fortran_module,
-) -> List[Union[FortranModuleMember, FortranModuleVariable]]:
+) -> list[FortranModuleMember | FortranModuleVariable]:
     """Returns a list of members (subroutine, function, module variables) of the module
 
     :param fortran_module: the Fortran module to get the members of
@@ -147,9 +147,9 @@ def create_module_signature(mod: FortranModule) -> str:
     # f2py gives modules unhelpful docstrings, so a more accurate and concise docstring is
     # created for use in documentation
 
-    functions: List[str] = []  # subroutines/functions
-    variables: List[str] = []  # module variables
-    imports: Set[str] = set()  # import non-builtin types
+    functions: list[str] = []  # subroutines/functions
+    variables: list[str] = []  # module variables
+    imports: set[str] = set()  # import non-builtin types
     # set to avoid import duplication (at a class level)
     # duplication could still occur between classes, although
     # neither matter

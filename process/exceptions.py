@@ -22,8 +22,6 @@ class ProcessValidationError(ProcessException):
 
     E.g. initial values, constraint/variable combinations, switch combinations"""
 
-    pass
-
 
 class ProcessValueError(ProcessException, ValueError):
     pass
