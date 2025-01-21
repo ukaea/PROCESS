@@ -7064,21 +7064,27 @@ class Physics:
             )
 
         # ==========================================================================
-        # Next two are ITER-97 H-mode scalings
-        # J. G. Cordey et al., EPS Berchtesgaden, 1997
-        elif i_confinement_time == 27:  # ELMy: ITERH-97P(y)
-            tauee = (
-                hfact
-                * 0.029e0
-                * pcur**0.90e0
-                * bt**0.20e0
-                * powerht ** (-0.66e0)
-                * dnla19**0.40e0
-                * rmajor**2.03e0
-                * aspect ** (-0.19e0)
-                * kappa**0.92e0
-                * m_fuel_amu**0.2e0
+        # Scaling removed
+        elif i_confinement_time == 25:
+            raise ValueError("Scaling removed")
+        # ==========================================================================
+
+        # ELMy: ITERH-97P(y)
+        elif i_confinement_time == 27:
+            tauee = hfact * confinement.iter_h97p_elmy_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                dnla19,
+                rmajor,
+                aspect,
+                kappa,
+                afuel,
             )
+
+        # ==========================================================================
+
+        # ==========================================================================
 
         elif i_confinement_time == 28:  # ITER-96P (= ITER-97L) L-mode scaling
             # S.M.Kaye and the ITER Confinement Database Working Group,
