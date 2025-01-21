@@ -989,23 +989,40 @@ class Power:
             "(tcoolin)",
             tfcoil_variables.tcoolin,
         )
-        # TODO: Both of these efficiencies are printed when it should be either 13% (ITER) or 40% (Strawbrige) - subset of TODO on line 1118
-        po.ovarre(
-            self.outfile,
-            "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
-            "",
-            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tmpcry)
-            / (293.0e0 - tfcoil_variables.tmpcry),
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Efficiency (figure of merit) of cryogenic aluminium plant is 40% of ideal Carnot value:",
-            "",
-            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
-            / (293.0e0 - tfcoil_variables.tcoolin),
-            "OP ",
-        )
+
+        # Cryo-plants efficiencies
+        if abs(tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
+            # The ITER cyoplant efficiency is used for SC
+            if tfcoil_variables.i_tf_sup == 1:
+                po.ovarre(
+                    self.outfile,
+                    "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
+                    "",
+                    (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tmpcry)
+                    / (293.0e0 - tfcoil_variables.tmpcry),
+                    "OP ",
+                )
+            # Strawbrige plot extrapolation is used for Cryo-Al
+            elif tfcoil_variables.i_tf_sup == 2:
+                po.ovarre(
+                    self.outfile,
+                    "Efficiency (figure of merit) of cryogenic aluminium plant is 40% of ideal Carnot value:",
+                    "",
+                    (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
+                    / (293.0e0 - tfcoil_variables.tcoolin),
+                    "OP ",
+                )
+        else:
+            efficiency = tfcoil_variables.eff_tf_cryo*100.0
+            po.ovarre(
+                self.outfile,
+                f"Efficiency (figure of merit) of cryogenic plant is {efficiency}% of ideal Carnot value (user input):",
+                "",
+                (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
+                / (293.0e0 - tfcoil_variables.tcoolin),
+                "OP ",
+            )
+
         po.ovarre(
             self.outfile,
             "Electric power for cryogenic plant (MW)",
