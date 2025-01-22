@@ -6731,8 +6731,15 @@ class Physics:
         kappaa = a_plasma_poloidal / (np.pi * rminor * rminor)
 
         # Separatrix kappa defined with plasma volume for IPB scalings
-        physics_variables.kappa_ipb = vol_plasma / (
-            2.0e0 * np.pi**2 * rminor * rminor * rmajor
+        # Updated version of kappa used by the IPB98 scalings correction in:
+
+        # None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy,
+        # “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
+        # vol. 48, no. 9, pp. 099801–099801, Aug. 2008,
+        # doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+
+        physics_variables.kappa_ipb = vol_(plasma / (2.0 * np.pi * rmajor)) / (
+            np.pi * rminor**2
         )
 
         # Calculate Neo-Alcator confinement time (used in several scalings)
