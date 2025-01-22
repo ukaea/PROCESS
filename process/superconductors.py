@@ -388,7 +388,7 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
     return jcrit, bcrit, tcrit
 
 
-def hijc_rebco(thelium, bmax, strain, bc20max, t_c0):
+def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     """Implementation of High Current Density REBCO tape
     author: R Chapman, UKAEA
     thelium : input real : SC temperature (K)

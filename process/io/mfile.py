@@ -131,7 +131,7 @@ class MFileErrorClass:
         self.set_scan = self.get_error
         self.get_number_of_scans = self.get_error
 
-    def get_error(self, *args, **kwargs):
+    def get_error(self):
         logger.error(f"Key '{self.item}' not in MFILE. KeyError! Check MFILE")
 
         if self.item == "error_status":

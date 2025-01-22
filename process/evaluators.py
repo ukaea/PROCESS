@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class Evaluators:
     """Calls models to evaluate function and gradient functions."""
 
-    def __init__(self, models, x):
+    def __init__(self, models, _x):
         """Instantiate Caller with model objects.
 
         :param models: physics and engineering model objects
@@ -26,7 +26,7 @@ class Evaluators:
         """
         self.caller = Caller(models)
 
-    def fcnvmc1(self, n, m, xv, ifail):
+    def fcnvmc1(self, _n, m, xv, ifail):
         """Function evaluator for VMCON.
 
         This routine is the function evaluator for the VMCON

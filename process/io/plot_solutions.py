@@ -517,7 +517,7 @@ def _plot_solutions(
         hue=TAG,
         jitter=True,
         ax=ax_obj_func,
-        formatter=lambda label: objf_name,
+        formatter=lambda _label: objf_name,
     )
 
     ax_obj_func.get_legend().remove()
@@ -541,7 +541,7 @@ def _plot_solutions(
             hue=TAG,
             jitter=True,
             ax=ax_rmse,
-            formatter=lambda label: f"Relative to\n{normalising_tag}",
+            formatter=lambda _label: f"Relative to\n{normalising_tag}",
         )
         ax_rmse.set_xlabel("RMS error")
         ax_rmse.set_ylabel("")

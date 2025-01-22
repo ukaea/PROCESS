@@ -1921,7 +1921,7 @@ class CurrentDrive:
 
         return abd * (5.0 / rmajor) * (0.1 * ten / dene20) * rjfunc / 0.2 * ffac
 
-    def cfnbi(self, afast, efast, te, ne, nd, nt, zeffai, xlmbda):
+    def cfnbi(self, afast, efast, te, ne, _nd, _nt, zeffai, xlmbda):
         """Routine to calculate the fraction of the fast particle energy
         coupled to the ions
         author: P J Knight, CCFE, Culham Science Centre

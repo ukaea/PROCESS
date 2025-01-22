@@ -378,7 +378,7 @@ class DefaultValues(ProjectDictionary):
                 # Now process the contents of the individual init subroutine
                 self.parse_init_subroutine(module_init_name, module_init_contents)
 
-    def parse_init_subroutine(self, init_name, init_contents):
+    def parse_init_subroutine(self, _init_name, init_contents):
         """Extract the initial values of the init subroutine variables.
 
         :param init_name: the module name
