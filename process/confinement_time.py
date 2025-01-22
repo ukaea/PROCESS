@@ -1056,5 +1056,52 @@ def iter_96p_confinement_time(
     )
 
 
+def iter_ipb98y_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    powerht: float,
+    rmajor: float,
+    kappa: float,
+    aspect: float,
+    afuel: float,
+) -> float:
+    """
+        Calculate the IPB98(y) ELMy H-mode scaling confinement time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        powerht (float): Net Heating power [MW]
+        rmajor (float): Plasma major radius [m]
+        kappa (float): Plasma separatrix elongation
+        aspect (float): Aspect ratio
+        afuel (float): Fuel atomic mass number
+
+        Returns:
+        float: IPB98(y) ELMy H-mode confinement time [s]
+
+        Notes:
+            - Unlike the other IPB98 scaling laws, the IPB98(y) scaling law uses the true separatrix elongation.
+
+        References:
+            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
+            Nuclear Fusion, vol. 39, no. 12, pp. 2175–2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
+    ‌
+    """
+    return (
+        0.0365e0
+        * pcur**0.97e0
+        * bt**0.08e0
+        * dnla19**0.41e0
+        * powerht ** (-0.63e0)
+        * rmajor**1.93e0
+        * kappa**0.67e0
+        * aspect ** (-0.23e0)
+        * afuel**0.2e0
+    )
+
+
 if __name__ == "__main__":
     pass

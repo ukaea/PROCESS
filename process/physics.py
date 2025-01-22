@@ -6690,6 +6690,8 @@ class Physics:
         str2 = 2.0e0 * (kappa**2) / (1.0e0 + (kappa**2))
         tauei = 0.375e0 * rminor**2 / chii * str2
 
+        # ========================================================================
+
         # Calculate heating power (MW)
         powerht = (
             physics_variables.f_alpha_plasma * alpha_power_total
@@ -6712,6 +6714,8 @@ class Physics:
 
         # Ensure heating power is positive (shouldn't be necessary)
         powerht = max(powerht, 1.0e-3)
+
+        # ========================================================================
 
         # Line averaged electron density in scaled units
         dnla20 = dnla * 1.0e-20
@@ -7151,20 +7155,17 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 32:  # IPB98(y), ELMy H-mode scaling
-            # Data selection : full ITERH.DB3
-            # Nuclear Fusion 39 (1999) 2175, Table 5
-            tauee = (
-                hfact
-                * 0.0365e0
-                * pcur**0.97e0
-                * bt**0.08e0
-                * dnla19**0.41e0
-                * powerht ** (-0.63e0)
-                * rmajor**1.93e0
-                * kappa**0.67e0
-                * aspect ** (-0.23e0)
-                * m_fuel_amu**0.2e0
+        # IPB98(y), ELMy H-mode scaling
+        elif i_confinement_time == 32:
+            tauee = hfact * confinement.iter_ipb98y_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                kappa,
+                aspect,
+                afuel,
             )
 
         # ==========================================================================
