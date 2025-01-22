@@ -440,6 +440,16 @@ $$
 
 -------------------------
 
+### 44: Hubbard I-mode lower scaling
+
+Is selected with `i_confinement_time = 44`
+
+$$
+\tau_{\text{E}} =  0.014 I^{0.6} B_{\text{T}}^{0.7} \overline{n}_{20}^{-0.03} P^{-0.33}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
