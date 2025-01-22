@@ -110,12 +110,7 @@ class MFileVariable(dict):
           [List of all scans for variable]
 
         """
-        return [
-            v
-            for k, v in sorted(
-                filter(lambda x: True if "scan" in x[0] else False, self.items())
-            )
-        ]
+        return [v for k, v in sorted(filter(lambda x: "scan" in x[0], self.items()))]
 
     def get_number_of_scans(self):
         """Function to return the number of scans in the variable class"""
@@ -193,10 +188,7 @@ class DefaultOrderedDict(OrderedDict):
         return value
 
     def __reduce__(self):
-        if self.default_factory is None:
-            args = ()
-        else:
-            args = (self.default_factory,)
+        args = () if self.default_factory is None else (self.default_factory,)
         return type(self), args, None, None, self.items()
 
     def copy(self):
@@ -287,30 +279,21 @@ class MFile:
                 # Pass all value "words"
                 var_value = sort_value(line[2:])
             var_unit = get_unit(var_des)
-            if len(line) >= 4:
-                var_flag = line[3]
-            else:
-                var_flag = None
+            var_flag = line[3] if len(line) >= 4 else None
 
             self.mfile_modules[self.current_module].append(var_name)
             self.add_to_mfile_variable(var_des, var_name, var_value, var_unit, var_flag)
 
     def add_to_mfile_variable(self, des, name, value, unit, flag, scan=None):
         """Function to add value to MFile class for that name/description"""
-        if name == "":
-            var_key = des.lower().replace("_", " ")
-        else:
-            var_key = name.lower()
+        var_key = des.lower().replace("_", " ") if name == "" else name.lower()
 
-        if var_key in self.data.keys():
+        if var_key in self.data:
             scan_num = scan if scan else (self.data[var_key].get_number_of_scans() + 1)
 
             # Check for duplicate entries per scan point if there are scans and no scans
             a = len(self.data[var_key].get_scans())
-            if "iscan" in self.data.keys():
-                b = len(self.data["iscan"].get_scans())
-            else:
-                b = 1
+            b = len(self.data["iscan"].get_scans()) if "iscan" in self.data else 1
 
             if var_key != "iscan":
                 if a < b:
@@ -344,10 +327,7 @@ class MFile:
                         dat_key = i + 1
                     data = self.data[item].get_scan(dat_key)
                     des = self.data[item].var_description.replace("_", " ")
-                    if verbose:
-                        entry = {"value": data, "description": des}
-                    else:
-                        entry = data
+                    entry = {"value": data, "description": des} if verbose else data
                     sub_dict[item] = entry
                 dict_to_write[f"scan-{i + 1}"] = sub_dict
         else:
@@ -361,10 +341,7 @@ class MFile:
                     )  # Default to scan 1 if not specified
                 data = self.data[item].get_scan(dat_key)
                 des = self.data[item].var_description.replace("_", " ")
-                if verbose:
-                    entry = {"value": data, "description": des}
-                else:
-                    entry = data
+                entry = {"value": data, "description": des} if verbose else data
                 dict_to_write[item] = entry
 
         with open(filename, "w") as fp:
@@ -427,7 +404,7 @@ def search_keys(dictionary, variable):
 
     """
     matches = []
-    for key in dictionary.keys():
+    for key in dictionary:
         if variable.lower() in key.lower():
             matches.append(key)
     return matches
@@ -447,9 +424,7 @@ def search_des(dictionary, description):
       matches --> List of matches to the searched for description
 
     """
-    descriptions = [
-        dictionary[key].var_descript.lower() for key in dictionary.data.keys()
-    ]
+    descriptions = [dictionary[key].var_descript.lower() for key in dictionary.data]
     matches = []
     for item in descriptions:
         if description.lower() in item.lower():

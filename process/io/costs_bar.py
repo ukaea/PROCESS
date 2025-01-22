@@ -77,7 +77,7 @@ def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
         cost[17] = item.data["moneyint"].get_scan(-1)  # Interest during Construction
 
         # Explain why moneyint is missing
-        if "moneyint" not in item.data.keys():
+        if "moneyint" not in item.data:
             print(
                 "Interest during construction (moneyint) is only calculated for ireactor = 1"
             )
@@ -251,18 +251,18 @@ def main(args=None):
         mfile_list.append(mf.MFile(filename=item))
 
     # Check which cost model is being used
-    if "c21" in mfile_list[0].data.keys():
+    if "c21" in mfile_list[0].data:
         # Check all MFILEs use original cost model
         for item in mfile_list:
-            if "c21" not in item.data.keys():
+            if "c21" not in item.data:
                 sys.exit("ERROR: Inconsistent cost models used between MFILEs!")
 
         comp_orig(args=args, mfile_list=mfile_list, inflate=inflate)
 
-    elif "s01" in mfile_list[0].data.keys():
+    elif "s01" in mfile_list[0].data:
         # Check all MFILEs use new cost model
         for item in mfile_list:
-            if "s01" not in item.data.keys():
+            if "s01" not in item.data:
                 sys.exit("ERROR: Inconsistent cost models used between MFILEs!")
 
         comp_new(args=args, mfile_list=mfile_list, inflate=inflate)

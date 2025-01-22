@@ -115,19 +115,13 @@ class ProcessConfig:
         """creates README.txt containing comment"""
 
         if self.comment != "":
-            readme = open(directory + "/README.txt", "w")
-            readme.write(self.comment)
-            readme.close()
+            with open(directory + "/README.txt", "w") as readme:
+                readme.write(self.comment)
 
     def error_status2readme(self, directory="."):
         """appends PROCESS outcome to README.txt"""
 
         if os.path.isfile("MFILE.DAT"):
-            if self.comment != "":
-                readme = open(directory + "/README.txt", "a")
-            else:
-                readme = open(directory + "/README.txt", "w")
-
             m_file = MFile(filename=directory + "/MFILE.DAT")
 
             error_status = (
@@ -135,8 +129,12 @@ class ProcessConfig:
                 f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
             )
 
-            readme.write(error_status)
-            readme.close()
+            if self.comment != "":
+                with open(directory + "/README.txt", "a") as readme:
+                    readme.write(error_status)
+            else:
+                with open(directory + "/README.txt", "w") as readme:
+                    readme.write(error_status)
 
     def modify_in_dat(self):
         """modifies the original IN.DAT file"""
@@ -163,23 +161,24 @@ class ProcessConfig:
             return False
 
         try:
-            configfile = open(self.filename)
+            with open(self.filename) as configfile:
+                for line in configfile:
+                    condense = line.replace(" ", "")
+                    condense = condense.rstrip()
+                    lcase = condense.lower()
+                    if (
+                        len(condense) > 0
+                        and (condense[0] != "*")
+                        and lcase[:7] == "comment"
+                    ):
+                        self.comment = line[line.find("=") + 1 :]
+                        return True
+
+                self.configfileexists = False
+                return False
         except FileNotFoundError:
             print(f"Error: No config file named {self.filename}", file=stderr)
-            self.configfileexists = False
-            return False
 
-        for line in configfile:
-            condense = line.replace(" ", "")
-            condense = condense.rstrip()
-            lcase = condense.lower()
-            if len(condense) > 0 and (condense[0] != "*"):
-                if lcase[:7] == "comment":
-                    self.comment = line[line.find("=") + 1 :]
-                    configfile.close()
-                    return True
-
-        configfile.close()
         return False
 
     def get_attribute(self, attributename):
@@ -189,30 +188,25 @@ class ProcessConfig:
             return None
 
         try:
-            configfile = open(self.filename)
+            with open(self.filename) as configfile:
+                for line in configfile:
+                    condense = line.replace(" ", "")
+                    if (condense[0] != "*") and len(condense) > 1 and "=" in line:
+                        varname = line[: line.find("=")]
+                        varname = varname.replace(" ", "")
+                        varname = varname.upper()
+                        auxvar = line[line.find("=") + 1 :]
+                        auxvar = auxvar.replace(" ", "")
+                        auxvar = auxvar.rstrip()
+                        if varname == attributename.upper() and auxvar == "":
+                            return None
+                        if varname == attributename.upper() and auxvar != "":
+                            return auxvar
         except FileNotFoundError:
             print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return None
 
-        for line in configfile:
-            condense = line.replace(" ", "")
-            if (condense[0] != "*") and len(condense) > 1:
-                if "=" in line:
-                    varname = line[: line.find("=")]
-                    varname = varname.replace(" ", "")
-                    varname = varname.upper()
-                    auxvar = line[line.find("=") + 1 :]
-                    auxvar = auxvar.replace(" ", "")
-                    auxvar = auxvar.rstrip()
-                    if varname == attributename.upper():
-                        configfile.close()
-                        if auxvar == "":
-                            return None
-                        else:
-                            return auxvar
-
-        configfile.close()
         return None
 
     def set_attributes(self):
@@ -243,8 +237,8 @@ class ProcessConfig:
                 self.or_in_dat = buf
 
         try:
-            indatfile = open(self.or_in_dat)
-            indatfile.close()
+            with open(self.or_in_dat) as indatfile:
+                indatfile.close()
         except FileNotFoundError:
             print(
                 f"Error: {self.or_in_dat} does not exist! Create file or modify config file!",
@@ -283,28 +277,27 @@ class ProcessConfig:
         to "vmcon"
         :type solver: str, optional
         """
-        logfile = open("process.log", "w")
-        print("PROCESS run started ...", end="")
+        with open("process.log", "w") as logfile:
+            print("PROCESS run started ...", end="")
 
-        try:
-            # Run process on an IN.DAT file
-            subprocess.check_call(
-                ["process", "-i", str(input_path), "--solver", solver],
-                stdout=logfile,
-                stderr=logfile,
-            )
-        except subprocess.CalledProcessError as err:
-            # Process has exited with a non-zero exit code. This is likely to
-            # be due to hitting a "stop 1" in the Fortran. Catch this exception
-            # to allow execution to continue without exiting
-            print(
-                "Error: There was a problem with the PROCESS execution!",
-                err,
-                file=sys.stderr,
-            )
-            print("Refer to the logfile for more information!", file=sys.stderr)
+            try:
+                # Run process on an IN.DAT file
+                subprocess.check_call(
+                    ["process", "-i", str(input_path), "--solver", solver],
+                    stdout=logfile,
+                    stderr=logfile,
+                )
+            except subprocess.CalledProcessError as err:
+                # Process has exited with a non-zero exit code. This is likely to
+                # be due to hitting a "stop 1" in the Fortran. Catch this exception
+                # to allow execution to continue without exiting
+                print(
+                    "Error: There was a problem with the PROCESS execution!",
+                    err,
+                    file=sys.stderr,
+                )
+                print("Refer to the logfile for more information!", file=sys.stderr)
 
-        logfile.close()
         print("finished.")
 
 
@@ -480,27 +473,26 @@ class RunProcessConfig(ProcessConfig):
             return []
 
         try:
-            configfile = open(self.filename)
+            with open(self.filename) as configfile:
+                attribute_list = []
+
+                for line in configfile:
+                    condense = line.replace(" ", "")
+                    condense = condense.rstrip()
+                    lcase = condense.lower()
+                    if (
+                        (len(condense) > 0)
+                        and (condense[0] != "*")
+                        and (attributename == lcase[: len(attributename)])
+                    ):
+                        buf = condense[condense.find("=") + 1 :].split(",")
+                        if buf[-1] == "":  # if last value has ended on comma
+                            buf = buf[:-1]
+                        attribute_list += buf
         except FileNotFoundError:
             print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return []
-
-        attribute_list = []
-
-        for line in configfile:
-            condense = line.replace(" ", "")
-            condense = condense.rstrip()
-            lcase = condense.lower()
-            if len(condense) > 0 and (condense[0] != "*"):
-                if attributename == lcase[: len(attributename)]:
-                    buf = condense[condense.find("=") + 1 :].split(",")
-                    if buf[-1] == "":  # if last value has ended on comma
-                        buf = buf[:-1]
-                    attribute_list += buf
-
-        configfile.close()
-
         return attribute_list
 
     def set_del_var(self):
@@ -510,21 +502,22 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            configfile = open(self.filename)
+            with open(self.filename) as configfile:
+                for line in configfile:
+                    condense = line.replace(" ", "")
+                    condense = condense.rstrip()
+                    lcase = condense.lower()
+                    if (
+                        (len(condense) > 0)
+                        and (condense[0] != "*")
+                        and (lcase[:8] == "del_var_")
+                        and (len(condense) > 8)
+                    ):
+                        self.del_var += [condense[8:]]
         except FileNotFoundError:
             print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return
-
-        for line in configfile:
-            condense = line.replace(" ", "")
-            condense = condense.rstrip()
-            lcase = condense.lower()
-            if len(condense) > 0 and (condense[0] != "*"):
-                if lcase[:8] == "del_var_" and len(condense) > 8:
-                    self.del_var += [condense[8:]]
-
-        configfile.close()
 
     def set_dictvar(self):
         """sets the dictvar attribute from config file"""
@@ -533,24 +526,20 @@ class RunProcessConfig(ProcessConfig):
             return
 
         try:
-            configfile = open(self.filename)
+            with open(self.filename) as configfile:
+                for line in configfile:
+                    condense = line.replace(" ", "")
+                    condense = condense.rstrip()
+                    lcase = condense.lower()
+                    if len(condense) > 0 and (condense[0] != "*") and "=" in lcase:
+                        varname = lcase[: lcase.find("=")]
+                        auxvar = condense[condense.find("=") + 1 :]
+                        if varname[:4] == "var_" and auxvar != "":
+                            self.dictvar[varname[4:]] = auxvar
         except FileNotFoundError:
             print(f"Error: No config file named {self.filename}", file=stderr)
             self.configfileexists = False
             return
-
-        for line in configfile:
-            condense = line.replace(" ", "")
-            condense = condense.rstrip()
-            lcase = condense.lower()
-            if len(condense) > 0 and (condense[0] != "*"):
-                if "=" in lcase:
-                    varname = lcase[: lcase.find("=")]
-                    auxvar = condense[condense.find("=") + 1 :]
-                    if varname[:4] == "var_" and not auxvar == "":
-                        self.dictvar[varname[4:]] = auxvar
-
-        configfile.close()
 
     def echo(self):
         """echos the values of the current class"""
@@ -598,7 +587,7 @@ class RunProcessConfig(ProcessConfig):
         in_dat = InDat()
 
         # add and modify variables
-        for key in self.dictvar.keys():
+        for key in self.dictvar:
             set_variable_in_indat(in_dat, key, self.dictvar[key])
 
         # delete variables
@@ -782,7 +771,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             print("uncertainties:")
             for item in self.uncertainties:
                 print("     ", item["varname"])
-                for key in item.keys():
+                for key in item:
                     if key not in ["varname"]:
                         print("     ", key, item[key])
                 print(" -------")
@@ -808,7 +797,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             ixc = get_from_indat_or_default(in_dat, "ixc")
             sweep = get_from_indat_or_default(in_dat, "sweep")
             if (
-                (str(nsweep) in dicts["DICT_NSWEEP2IXC"].keys())
+                (str(nsweep) in dicts["DICT_NSWEEP2IXC"])
                 and (dicts["DICT_NSWEEP2IXC"][str(nsweep)] in ixc)
                 and (not all(sweep[0] == item for item in sweep))
             ):
@@ -829,7 +818,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
         else:
             # create a scan!
             nsweep = "3"
-            if nsweep in dicts["DICT_NSWEEP2IXC"].keys():
+            if nsweep in dicts["DICT_NSWEEP2IXC"]:
                 # TODO: if this ever happens, program this testing whether
                 # a certain variable is used as iteration variable, if not
                 # choose another
@@ -1162,10 +1151,8 @@ class UncertaintiesConfig(ProcessConfig, Config):
 
             # error status, id and ifail
             header += " error_status error_id ifail\n"
-            err_summary = open(self.wdir + "/UQ_error_summary.txt", "w")
-            err_summary.write(header)
-        else:
-            err_summary = open(self.wdir + "/UQ_error_summary.txt", "a+")
+            with open(self.wdir + "/UQ_error_summary.txt", "w") as err_summary:
+                err_summary.write(header)
 
         # Uncertain input variables
         output = f"{sample_index:12d}"
@@ -1187,5 +1174,5 @@ class UncertaintiesConfig(ProcessConfig, Config):
         else:
             output += "   -1\n"
 
-        err_summary.write(output)
-        err_summary.close()
+        with open(self.wdir + "/UQ_error_summary.txt", "a+") as err_summary:
+            err_summary.write(output)

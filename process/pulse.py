@@ -111,15 +111,14 @@ class Pulse:
 
         #  Output section
 
-        if output == 1:
-            if numerics.active_constraints[40]:
-                po.osubhd(self.outfile, "Central solenoid considerations:")
-                po.ovarre(
-                    self.outfile,
-                    "Minimum plasma current ramp-up time (s)",
-                    "(t_current_ramp_up_min)",
-                    constraint_variables.t_current_ramp_up_min,
-                )
+        if output == 1 and numerics.active_constraints[40]:
+            po.osubhd(self.outfile, "Central solenoid considerations:")
+            po.ovarre(
+                self.outfile,
+                "Minimum plasma current ramp-up time (s)",
+                "(t_current_ramp_up_min)",
+                constraint_variables.t_current_ramp_up_min,
+            )
 
     def burn(self, output: bool):
         """Routine to calculate the burn time for a pulsed reactor

@@ -287,12 +287,8 @@ def process_stopped(wdir="."):
     except KeyError:
         return True
 
-    if error_status >= 3:
-        # Fatal error
-        return True
-
-    # Process did not prematurely exit
-    return False
+    # Process did prematurely exit
+    return error_status >= 3
 
 
 ########################################
@@ -307,10 +303,7 @@ def process_warnings(wdir="."):
     m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
     error_status = m_file.data["error_status"].get_scan(-1)
 
-    if error_status >= 2:
-        return True
-
-    return False
+    return error_status >= 2
 
 
 ############################################
@@ -320,8 +313,8 @@ def mfile_exists():
     """checks whether MFILE.DAT exists"""
 
     try:
-        m_file = open("MFILE.DAT")
-        m_file.close()
+        with open("MFILE.DAT") as m_file:
+            m_file.close()
         return True
 
     except FileNotFoundError:
@@ -434,7 +427,7 @@ def get_from_indat_or_default(in_dat, varname):
     """quick function to get variable value from IN.DAT
     or PROCESS default value"""
     dicts = get_dicts()
-    if varname in in_dat.data.keys():
+    if varname in in_dat.data:
         return in_dat.data[varname].get_value
     else:
         # Load dicts from dicts JSON file

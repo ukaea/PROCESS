@@ -156,7 +156,7 @@ def find_parameter_group(name):
     dicts = get_dicts()
 
     # Search DICT_MODULES for parameter
-    for key in dicts["DICT_MODULE"].keys():
+    for key in dicts["DICT_MODULE"]:
         if name in dicts["DICT_MODULE"][key]:
             return key
 
@@ -255,13 +255,13 @@ def get_iteration_variables(data):
         # Set bounds if there are any
         if str(variable_number) in data["bounds"].value:
             # Lower bound
-            if "l" in data["bounds"].value[str(variable_number)].keys():
+            if "l" in data["bounds"].value[str(variable_number)]:
                 variable["lower_bound"] = (
                     data["bounds"].value[str(variable_number)]["l"].replace("e", "d")
                 )
 
             # Upper bound
-            if "u" in data["bounds"].value[str(variable_number)].keys():
+            if "u" in data["bounds"].value[str(variable_number)]:
                 variable["upper_bound"] = (
                     data["bounds"].value[str(variable_number)]["u"].replace("e", "d")
                 )
@@ -344,7 +344,7 @@ def get_parameters(data, use_string_values=True):
         for item in module_variables:
             # Store a variable in parameters dict if it's in the IN.DAT file
             # (and not in the exclusion list). Store parameter name and value
-            if item not in exclusions and item in data.keys():
+            if item not in exclusions and item in data:
                 if item == "fimp":
                     for k in range(len(data["fimp"].get_value)):
                         name = f"fimp({str(k + 1).zfill(1)})"
@@ -536,7 +536,7 @@ def add_parameter(data, parameter_name, parameter_value):
     dicts = get_dicts()
 
     # Check that the parameter is not already in the dictionary
-    if parameter_name not in data.keys():
+    if parameter_name not in data:
         parameter_group = find_parameter_group(parameter_name)
         if "fimp" in parameter_name:
             comment = dicts["DICT_DESCRIPTIONS"]["fimp"]
@@ -578,7 +578,7 @@ def remove_parameter(data, parameter_name):
     """
 
     # Check that the parameter exists in the data dictionary
-    if parameter_name in data.keys():
+    if parameter_name in data:
         del data[parameter_name]
 
     # Inform the user that the parameter requested for deletion isn;t in the
@@ -624,12 +624,12 @@ def add_bound(data, bound, bound_type, bound_value):
 
     # if the bound is not in the bounds dictionary initialise an empty
     # dictionary and assign new bound
-    if bound not in data["bounds"].value.keys():
+    if bound not in data["bounds"].value:
         data["bounds"].value[bound] = {}
         data["bounds"].value[bound][bound_type] = str(bound_value)
 
     # If bound already exists change value
-    elif bound in data["bounds"].value.keys():
+    elif bound in data["bounds"].value:
         data["bounds"].value[bound][bound_type] = str(bound_value)
 
     # Bound not recognised.
@@ -652,7 +652,7 @@ def remove_bound(data, bound, bound_type):
     bounds = data["bounds"].value
 
     # If the bound exists (and is of the correct type) in the bounds dictionary
-    if bound in bounds.keys() and bound_type in bounds[bound].keys():
+    if bound in bounds and bound_type in bounds[bound]:
         del bounds[bound][bound_type]
 
         # if the bound number is now an empty dictionary delete it also
@@ -922,10 +922,7 @@ class InDat:
 
         for line in self.in_dat_lines:
             # Put everything in lower case
-            if "vmec" not in line.split("=")[0].lower():
-                l_line = line.lower()
-            else:
-                l_line = line
+            l_line = line.lower() if "vmec" not in line.split("=")[0].lower() else line
 
             # find the type of the line:
             # [constraint equation, iteration variable, bound, parameter]
@@ -962,7 +959,7 @@ class InDat:
 
         # Create bound variable class using INVariable class if the bounds entry
         # doesn't exist
-        if "bounds" not in self.data.keys():
+        if "bounds" not in self.data:
             self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bound", "Bounds")
 
         # Constraint equations
@@ -996,7 +993,7 @@ class InDat:
                 # what it is, and allows further list operations
                 empty_array = []
 
-            if array_name not in self.data.keys():
+            if array_name not in self.data:
                 parameter_group = find_parameter_group(array_name)
 
                 # Get parameter comment/description from dictionary
@@ -1108,7 +1105,7 @@ class InDat:
         # Populate data dictionary with constraint equations
         # If constraint equation list not already in data dictionary initialise
         # INVariable class
-        if "icc" not in self.data.keys():
+        if "icc" not in self.data:
             self.data["icc"] = INVariable(
                 "icc",
                 value,
@@ -1155,7 +1152,7 @@ class InDat:
         # Populate data dictionary with iteration variables
         # If iteration variables list not already in data dictionary initialise
         # INVariable class
-        if "ixc" not in self.data.keys():
+        if "ixc" not in self.data:
             self.data["ixc"] = INVariable(
                 "ixc",
                 value,
@@ -1209,7 +1206,7 @@ class InDat:
 
         # If bound not in the bound dictionary then add entry for bound with an
         # empty dictionary
-        if bound not in self.data["bounds"].value.keys():
+        if bound not in self.data["bounds"].value:
             self.data["bounds"].value[bound] = {}
         elif self.data["bounds"].value[bound].get(bound_type):
             # Duplicate bound
@@ -1232,10 +1229,7 @@ class InDat:
         # but with a view to the dictionaries method being dropped in future
         # in light of increasing Python f2py conversion.
 
-        if "*" in line:
-            line_commentless = line.split("*")[0]
-        else:
-            line_commentless = line
+        line_commentless = line.split("*")[0] if "*" in line else line
 
         name = line_commentless.split("(")[0]
         index = int(line_commentless.split("(")[1].split(")")[0]) - 1
@@ -1442,22 +1436,18 @@ class InDat:
         """Function to write data to output file called 'output_filename'"""
 
         # create and open output file
-        output = open(output_filename, "w")
+        with open(output_filename, "w") as output:
+            # Write Header
+            write_title("", output)
 
-        # Write Header
-        write_title("", output)
+            # Write Constraint Equations
+            write_constraint_equations(self.data, output)
 
-        # Write Constraint Equations
-        write_constraint_equations(self.data, output)
+            # Write Iteration Variables
+            write_iteration_variables(self.data, output)
 
-        # Write Iteration Variables
-        write_iteration_variables(self.data, output)
-
-        # Write parameters
-        write_parameters(self.data, output)
-
-        # close file
-        output.close()
+            # Write parameters
+            write_parameters(self.data, output)
 
     @property
     def number_of_constraints(self):

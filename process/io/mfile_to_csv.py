@@ -94,7 +94,7 @@ def read_mfile(mfilename="MFILE.DAT", vars=[]):
 
     # for each variable named in the input varfile, get the description and data value
     for var_name in vars:
-        if var_name not in m_file.data.keys():
+        if var_name not in m_file.data:
             print(f"Variable '{var_name}' not in MFILE. Skipping and moving on...")
         else:
             # In case of a file containing multiple scans, (scan = -1) uses the last scan value
@@ -115,12 +115,8 @@ def get_savenamepath(mfilename="MFILE.DAT"):
     :rtype: pathlib.PurePosixPath
     """
 
-    if mfilename == "MFILE.DAT":
-        # save it locally
-        dirname = Path.cwd()
-    else:
-        # output the csv file to the directory of the input file
-        dirname = PurePath(mfilename).parent
+    # Either save it locally or output the csv file to the directory of the input file
+    dirname = Path.cwd() if mfilename == "MFILE.DAT" else PurePath(mfilename).parent
 
     csv_filename = PurePath(mfilename).stem
     csv_outfile = PurePath(dirname, csv_filename + ".csv")

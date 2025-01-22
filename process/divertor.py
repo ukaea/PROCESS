@@ -80,10 +80,8 @@ class Divertor:
         pwr = pv.pdivt  # power flow to divertor (MW)
         aionso = pv.afuel  # scrape-off layer ion mass
 
-        if dv.divdum == 0:  # Divertor Zeff: scaled
-            zeffso = 1.0e0 + 0.8e0 * (pv.zeff - 1.0e0)
-        else:  # use input value
-            zeffso = dv.zeffdiv
+        # Divertor Zeff: either scaled or use input value
+        zeffso = (1.0e0 + 0.8e0 * (pv.zeff - 1.0e0)) if dv.divdum == 0 else dv.zeffdiv
 
         #  Strike point field values
 

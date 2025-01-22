@@ -144,7 +144,7 @@ class Caller:
                 # Create mfile dict of float values: only compare floats
                 mfile_data = {
                     var: val
-                    for var in mfile.data.keys()
+                    for var in mfile.data
                     if isinstance(val := mfile.data[var].get_scan(-1), float)
                 }
 
@@ -158,7 +158,7 @@ class Caller:
 
                 # Compare previous and current mfiles for agreement
                 nonconverged_vars = {}
-                for var in previous_mfile_data.keys():
+                for var in previous_mfile_data:
                     previous_value = previous_mfile_data[var]
                     current_value = mfile_data.get(var, np.nan)
                     if self.check_agreement(previous_value, current_value):

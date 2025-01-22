@@ -1282,10 +1282,7 @@ class PFCoil:
                 # No Central Solenoid
                 kk = 0
             else:
-                if pfv.cohbop > pfv.coheof:
-                    sgn = 1.0e0
-                else:
-                    sgn = -1.0e0
+                sgn = 1.0 if pfv.cohbop > pfv.coheof else -1.0
 
                 # Current in each filament representing part of the Central Solenoid
                 for iohc in range(pf.nfxf):
@@ -1799,10 +1796,7 @@ class PFCoil:
 
         for i in range(pf.nef):
             for j in range(pf.nef - 1):
-                if j >= i:
-                    jj = j + 1 + 1
-                else:
-                    jj = j + 1
+                jj = j + 1 + 1 if j >= i else j + 1
 
                 zc[j] = pfv.zpf[jj - 1]
                 rc[j] = pfv.rpf[jj - 1]

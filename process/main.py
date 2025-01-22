@@ -306,10 +306,7 @@ class VaryRun:
         # containing the config file (used when running regression tests in
         # temp dirs)
         # TODO Not sure this is required any more
-        if config.wdir:
-            wdir = config.wdir
-        else:
-            wdir = Path(self.config_file).parent
+        wdir = config.wdir if config.wdir else Path(self.config_file).parent
 
         # Check IN.DAT exists
         if not input_path.exists():

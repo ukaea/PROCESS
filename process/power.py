@@ -1306,10 +1306,7 @@ class Power:
             "------------------------------------------------------------------",
         )
 
-        if physics_variables.ignite == 0:
-            pinj = current_drive_variables.pinjmw
-        else:
-            pinj = 0.0e0
+        pinj = current_drive_variables.pinjmw if physics_variables.ignite == 0 else 0.0
 
         primsum = 0.0e0
         secsum = 0.0e0
@@ -2336,15 +2333,11 @@ class Power:
         """
         if fwbs_variables.secondary_cycle == 0:
             #  CCFE HCPB Model (with or without TBR)
-            if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
-                #  HCPB, efficiency taken from M. Kovari 2016
-                # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
-                # https://www.sciencedirect.com/science/article/pii/S0920379616300072
-                # Feedheat & reheat cycle assumed
-                etath = 0.411e0
-
-                #  KIT HCPB model
-            elif fwbs_variables.iblanket == 2:
+            if (
+                (fwbs_variables.iblanket == 1)
+                or (fwbs_variables.iblanket == 3)
+                or fwbs_variables.iblanket == 2
+            ):
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072

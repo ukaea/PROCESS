@@ -712,12 +712,7 @@ class BlanketLibrary:
         no180fw = 0
 
         # N.B. This is for BZ only, does not include MF/BSS.
-        if fwbs_variables.icooldual == 2:
-            no90bz = 4
-            no180bz = 1
-            no90bz_liq = 2
-            no180bz_liq = 1
-        elif fwbs_variables.icooldual == 1:
+        if fwbs_variables.icooldual == 2 or fwbs_variables.icooldual == 1:
             no90bz = 4
             no180bz = 1
             no90bz_liq = 2
@@ -2422,13 +2417,10 @@ class BlanketLibrary:
         # aka 1.5 * pipe diameter, which seems to be engineering standard for
         # a steel pipe long-radius elbow (short-radius elbow = 2 * afw).
 
-        # If primary coolant...
-        if i_ps == 1:
-            elbow_radius = 3 * fwbs_variables.afw
-        # If secondary coolant...
-        else:
-            # See DCLL
-            elbow_radius = fwbs_variables.b_bz_liq
+        # If primary coolant or secondary coolant (See DCLL)
+        elbow_radius = (
+            (3 * fwbs_variables.afw) if (i_ps == 1) else fwbs_variables.b_bz_liq
+        )
 
         # 90 degree elbow pressure drop coefficient
         kelbwn = self.elbow_coeff(elbow_radius, 90.0, lamda, dh)
@@ -2600,13 +2592,8 @@ class BlanketLibrary:
         # Inlet pressure (Pa)
         coolpin = pressure + pdrop
 
-        # Adiabatic index for
-        if fwbs_variables.coolwh == 1:
-            # helium
-            gamma = 5 / 3
-        else:
-            # water
-            gamma = 4 / 3
+        # Adiabatic index for helium or water
+        gamma = (5 / 3) if fwbs_variables.coolwh == 1 else (4 / 3)
 
         # If caculating for primary coolant...
         if icoolpump == 1:

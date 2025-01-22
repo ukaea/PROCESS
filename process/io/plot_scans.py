@@ -300,7 +300,7 @@ def main(args=None):
     nsweep_2_ref = 0
     is_2D_scan = False
     scan_2_var_name = ""
-    if "nsweep_2" in m_file.data.keys():
+    if "nsweep_2" in m_file.data:
         is_2D_scan = True
         nsweep_2_ref = int(m_file.data["nsweep_2"].get_scan(-1))
         scan_2_var_name = nsweep_dict[nsweep_2_ref]
@@ -314,19 +314,18 @@ def main(args=None):
         exit()
 
     # Check if the scan variable is present in the
-    if scan_var_name not in m_file.data.keys():
+    if scan_var_name not in m_file.data:
         print(f"ERROR : `{scan_var_name}` does not exist in PROCESS dicts")
         print("ERROR : The scan variable is probably an upper/lower boundary")
         print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
         exit()
 
-    if is_2D_scan:
-        # Check if the second scan variable is present in the
-        if scan_2_var_name not in m_file.data.keys():
-            print(f"ERROR : `{scan_2_var_name}` does not exist in PROCESS dicts")
-            print("ERROR : The scan variable is probably an upper/lower boundary")
-            print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
-            exit()
+    # Check if the second scan variable is present in the
+    if is_2D_scan and (scan_2_var_name not in m_file.data):
+        print(f"ERROR : `{scan_2_var_name}` does not exist in PROCESS dicts")
+        print("ERROR : The scan variable is probably an upper/lower boundary")
+        print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
+        exit()
 
     # Only one imput must be used for a 2D scan
     if is_2D_scan and len(input_files) > 1:
@@ -364,7 +363,7 @@ def main(args=None):
                 exit()
 
             # No D scans
-            if "nsweep_2" in m_file.data.keys():
+            if "nsweep_2" in m_file.data:
                 print("ERROR : You cannot mix 1D with 2D scans")
                 print("ERROR : Exiting")
                 exit()
@@ -406,7 +405,7 @@ def main(args=None):
                 ouput_array = np.zeros(n_scan)
 
                 # Check if the output variable exists in the MFILE
-                if output_name not in m_file.data.keys():
+                if output_name not in m_file.data:
                     print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
                     print(f"Warning : `{output_name}` will not be output")
                     continue
@@ -420,7 +419,7 @@ def main(args=None):
                     ouput_array2 = np.zeros(n_scan)
 
                     # Check if the output variable exists in the MFILE
-                    if output_name2 not in m_file.data.keys():
+                    if output_name2 not in m_file.data:
                         print(
                             f"Warning : `{output_name2}` does not exist in PROCESS dicts"
                         )
@@ -440,7 +439,7 @@ def main(args=None):
                 print("Y-axis:")
                 for output_name in output_names:
                     # Check if the output variable exists in the MFILE
-                    if output_name not in m_file.data.keys():
+                    if output_name not in m_file.data:
                         continue
 
                     print(f"{output_name} : {output_arrays[input_file][output_name]}")
@@ -469,7 +468,7 @@ def main(args=None):
             kk = 0
 
             # Check if the output variable exists in the MFILE
-            if output_name not in m_file.data.keys():
+            if output_name not in m_file.data:
                 continue
 
             # Loop over inputs
@@ -702,7 +701,7 @@ def main(args=None):
         # Looping over requested outputs
         for output_name in output_names:
             # Check if the output variable exists in the MFILE
-            if output_name not in m_file.data.keys():
+            if output_name not in m_file.data:
                 print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
                 print(f"Warning : `{output_name}` will not be output")
                 continue

@@ -46,7 +46,7 @@ def orig_cost_model(m_file, args):
     ccont = m_file.data["ccont"].get_scan(-1)  # Total Contingency
 
     # Interest during construction is linked to ireactor = 1
-    if "moneyint" in m_file.data.keys():
+    if "moneyint" in m_file.data:
         moneyint = m_file.data["moneyint"].get_scan(-1)  # Interest during Construction
         labels2 = [
             "Plant Direct Cost",
@@ -212,9 +212,9 @@ def main(args=None):
     m_file = mf.MFile(args.f)
 
     # Check which cost model is being used
-    if "c21" in m_file.data.keys():
+    if "c21" in m_file.data:
         orig_cost_model(m_file, args)
-    elif "s01" in m_file.data.keys():
+    elif "s01" in m_file.data:
         new_cost_model(m_file, args)
     else:
         print("ERROR: Cannot identify cost data, check MFILE!")
