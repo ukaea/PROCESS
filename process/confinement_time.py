@@ -1549,5 +1549,35 @@ def hubbard_nominal_confinement_time(
     return 0.014e0 * pcur**0.68e0 * bt**0.77e0 * dnla20**0.02e0 * powerht ** (-0.29e0)
 
 
+def hubbard_lower_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla20: float,
+    powerht: float,
+) -> float:
+    """
+        Calculate the Hubbard 2017 I-mode confinement time scaling - lower
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+        powerht (float): Net Heating power [MW]
+
+        Returns:
+        float: Hubbard confinement time [s]
+
+        Notes:
+
+        References:
+            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
+            Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
+    ‌
+    """
+    return (
+        0.014e0 * pcur**0.60e0 * bt**0.70e0 * dnla20 ** (-0.03e0) * powerht ** (-0.33e0)
+    )
+
+
 if __name__ == "__main__":
     pass

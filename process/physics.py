@@ -7343,16 +7343,13 @@ class Physics:
 
         # ==========================================================================
 
-        elif (
-            i_confinement_time == 44
-        ):  # Hubbard et al. 2017 I-mode confinement time scaling - lower
-            tauee = (
-                hfact
-                * 0.014e0
-                * (plasma_current / 1.0e6) ** 0.60e0
-                * bt**0.70e0
-                * dnla20 ** (-0.03e0)
-                * powerht ** (-0.33e0)
+        # Hubbard 2017 I-mode confinement time scaling - lower
+        elif i_confinement_time == 44:
+            tauee = hfact * confinement.hubbard_lower_confinement_time(
+                pcur,
+                bt,
+                dnla20,
+                powerht,
             )
 
         # ==========================================================================
