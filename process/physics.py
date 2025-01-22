@@ -7265,20 +7265,17 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 39:  # DS03 beta-independent H-mode scaling
-            # T. C. Luce, C. C. Petty and J. G. Cordey,
-            # Plasma Phys. Control. Fusion 50 (2008) 043001, eqn.4.13, p.67
-            tauee = (
-                hfact
-                * 0.028e0
-                * pcur**0.83e0
-                * bt**0.07e0
-                * dnla19**0.49e0
-                * powerht ** (-0.55e0)
-                * rmajor**2.11e0
-                * kappa95**0.75e0
-                * aspect ** (-0.3e0)
-                * m_fuel_amu**0.14e0
+        # DS03 beta-independent H-mode scaling
+        elif i_confinement_time == 39:
+            tauee = hfact * confinement.ds03_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                kappa95,
+                aspect,
+                afuel,
             )
 
         # ==========================================================================

@@ -399,6 +399,16 @@ $$
 
 -------------------------
 
+### 39: DS03 beta-independent H-mode scaling
+
+Is selected with `i_confinement_time = 39`
+
+$$
+\tau_{\text{E}} =  0.028 I^{0.83} B_{\text{T}}^{0.07} \overline{n}_{19}^{0.49} P^{-0.55} R^{2.11} \kappa_{95}^{0.75} \epsilon^{0.3} M^{0.14}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

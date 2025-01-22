@@ -1384,5 +1384,52 @@ def iss04_stellarator_confinement_time(
     )
 
 
+def ds03_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    powerht: float,
+    rmajor: float,
+    kappa95: float,
+    aspect: float,
+    afuel: float,
+) -> float:
+    """
+        Calculate the DS03 beta-independent H-mode scaling confinement time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        powerht (float): Net Heating power [MW]
+        rmajor (float): Plasma major radius [m]
+        kappa95 (float): Plasma elongation at 95% flux surface
+        aspect (float): Aspect ratio
+        afuel (float): Fuel atomic mass number
+
+        Returns:
+        float: DS03 beta-independent H-mode confinement time [s]
+
+        Notes:
+
+        References:
+            - T. C. Luce, C. C. Petty, and J. G. Cordey, “Application of dimensionless parameter scaling techniques to the design and interpretation of magnetic fusion experiments,”
+             Plasma Physics and Controlled Fusion, vol. 50, no. 4, p. 043001, Mar. 2008,
+             doi: https://doi.org/10.1088/0741-3335/50/4/043001.
+    ‌
+    """
+    return (
+        0.028e0
+        * pcur**0.83e0
+        * bt**0.07e0
+        * dnla19**0.49e0
+        * powerht ** (-0.55e0)
+        * rmajor**2.11e0
+        * kappa95**0.75e0
+        * aspect ** (-0.3e0)
+        * afuel**0.14e0
+    )
+
+
 if __name__ == "__main__":
     pass
