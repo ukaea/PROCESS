@@ -5222,8 +5222,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Volume measure of elongation",
-                "(kappaa_IPB)",
-                physics_variables.kappaa_ipb,
+                "(kappa_ipb)",
+                physics_variables.kappa_ipb,
                 "OP ",
             )
 
@@ -6593,7 +6593,7 @@ class Physics:
         kappaa = xarea / (np.pi * rminor * rminor)
 
         # Separatrix kappa defined with plasma volume for IPB scalings
-        physics_variables.kappaa_ipb = plasma_volume / (
+        physics_variables.kappa_ipb = plasma_volume / (
             2.0e0 * np.pi**2 * rminor * rminor * rmajor
         )
 
@@ -7031,7 +7031,7 @@ class Physics:
                 * dnla19**0.44e0
                 * powerht ** (-0.65e0)
                 * rmajor**2.05e0
-                * physics_variables.kappaa_ipb**0.72e0
+                * physics_variables.kappa_ipb**0.72e0
                 * aspect ** (-0.57e0)
                 * afuel**0.13e0
             )
@@ -7049,7 +7049,7 @@ class Physics:
                 * dnla19**0.41e0
                 * powerht ** (-0.69e0)
                 * rmajor**1.97e0
-                * physics_variables.kappaa_ipb**0.78e0
+                * physics_variables.kappa_ipb**0.78e0
                 * aspect ** (-0.58e0)
                 * afuel**0.19e0
             )
@@ -7067,7 +7067,7 @@ class Physics:
                 * dnla19**0.40e0
                 * powerht ** (-0.69e0)
                 * rmajor**2.15e0
-                * physics_variables.kappaa_ipb**0.78e0
+                * physics_variables.kappa_ipb**0.78e0
                 * aspect ** (-0.64e0)
                 * afuel**0.20e0
             )
@@ -7085,7 +7085,7 @@ class Physics:
                 * dnla19**0.39e0
                 * powerht ** (-0.70e0)
                 * rmajor**2.08e0
-                * physics_variables.kappaa_ipb**0.76e0
+                * physics_variables.kappa_ipb**0.76e0
                 * aspect ** (-0.69e0)
                 * afuel**0.17e0
             )
@@ -7200,7 +7200,7 @@ class Physics:
                 * dnla**0.032236e0
                 * (powerht * 1.0e6) ** (-0.74e0)
                 * rmajor**1.2345e0
-                * physics_variables.kappaa_ipb**0.37e0
+                * physics_variables.kappa_ipb**0.37e0
                 * aspect**2.48205e0
                 * afuel**0.2e0
                 * qratio**0.77e0
@@ -7264,7 +7264,7 @@ class Physics:
                 * dnla19**0.44e0
                 * powerht ** (-0.73e0)
                 * rmajor**1.97e0
-                * physics_variables.kappaa_ipb**0.78e0
+                * physics_variables.kappa_ipb**0.78e0
                 * aspect ** (-0.58e0)
                 * afuel**0.19e0
             )
@@ -7298,7 +7298,7 @@ class Physics:
                     * dnla19**0.44e0
                     * powerht ** (-0.73e0)
                     * rmajor**1.97e0
-                    * physics_variables.kappaa_ipb**0.78e0
+                    * physics_variables.kappa_ipb**0.78e0
                     * aspect ** (-0.58e0)
                     * afuel**0.19e0
                 )
@@ -7321,7 +7321,7 @@ class Physics:
                     * dnla19**0.44e0
                     * powerht ** (-0.73e0)
                     * rmajor**1.97e0
-                    * physics_variables.kappaa_ipb**0.78e0
+                    * physics_variables.kappa_ipb**0.78e0
                     * aspect ** (-0.58e0)
                     * afuel**0.19e0
                 )
@@ -7375,7 +7375,7 @@ class Physics:
                 * powerht ** (-0.669)
                 * rmajor**1.71
                 * (1 + physics_variables.triang) ** 0.36
-                * physics_variables.kappaa_ipb**0.8
+                * physics_variables.kappa_ipb**0.8
                 * eps**0.35
                 * physics_variables.aion**0.2
             )
