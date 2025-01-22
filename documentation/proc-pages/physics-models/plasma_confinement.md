@@ -420,7 +420,7 @@ $$
 
 -------------------------
 
-### 41: Petty H-mode scaling
+### 41: Petty08 H-mode scaling
 
 Is selected with `i_confinement_time = 41`
 
@@ -460,7 +460,6 @@ $$
 
 -------------------------
 
--------------------------
 
 ### 46: Menard NSTX H-mode scaling
 
@@ -468,6 +467,21 @@ Is selected with `i_confinement_time = 46`
 
 $$
 \tau_{\text{E}} =  0.095 I^{0.75} B_{\text{T}}^{1.08} \overline{n}_{19}^{0.44} P^{-0.73} R^{1.97} \kappa_{\text{IPB}}^{0.78} \epsilon^{0.58} M^{0.19}
+$$
+
+-------------------------
+
+### 47: Menard NSTX-Petty08 hybrid scaling
+
+Is selected with `i_confinement_time = 47`
+
+- If $\epsilon \le 0.4 \  (A \ge 2.5)$ apply the [Petty08 scaling](#41-petty-h-mode-scaling)
+- If $\epsilon \ge 0.6 \ (A \le 1.7)$ apply the [Menard NSTX scaling](#46-menard-nstx-h-mode-scaling)
+
+Otherwise:
+
+$$
+\tau_{\text{E}} =  \frac{\epsilon - 0.4}{0.2}\tau_{\text{E,NSTX}}+ \frac{0.6-\epsilon}{0.2}\tau_{\text{E,Petty08}}
 $$
 
 -------------------------

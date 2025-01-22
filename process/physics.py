@@ -7293,9 +7293,9 @@ class Physics:
 
         # ==========================================================================
 
-        # Petty, beta independent dimensionless scaling
+        # Petty08, beta independent dimensionless scaling
         elif i_confinement_time == 41:
-            tauee = hfact * confinement.petty_confinement_time(
+            tauee = hfact * confinement.petty08_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7380,65 +7380,18 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 47:  # NSTX-Petty08 Hybrid
-            # Linear interpolation between NSTX and Petty08 in eps
-            # Menard 2019, Phil. Trans. R. Soc. A 377:20170440
-            if (1.0e0 / aspect) <= 0.4e0:
-                # Petty08, i.e. case (41)
-                tauee = (
-                    hfact
-                    * 0.052e0
-                    * pcur**0.75e0
-                    * bt**0.3e0
-                    * dnla19**0.32e0
-                    * powerht ** (-0.47e0)
-                    * rmajor**2.09e0
-                    * kappaa**0.88e0
-                    * aspect ** (-0.84e0)
-                )
-
-            elif (1.0e0 / aspect) >= 0.6e0:
-                # NSTX, i.e.case (46)
-                tauee = (
-                    hfact
-                    * 0.095e0
-                    * pcur**0.57e0
-                    * bt**1.08e0
-                    * dnla19**0.44e0
-                    * powerht ** (-0.73e0)
-                    * rmajor**1.97e0
-                    * physics_variables.kappa_ipb**0.78e0
-                    * aspect ** (-0.58e0)
-                    * m_fuel_amu**0.19e0
-                )
-
-            else:
-                taupetty = (
-                    0.052e0
-                    * pcur**0.75e0
-                    * bt**0.3e0
-                    * dnla19**0.32e0
-                    * powerht ** (-0.47e0)
-                    * rmajor**2.09e0
-                    * kappaa**0.88e0
-                    * aspect ** (-0.84e0)
-                )
-                taunstx = (
-                    0.095e0
-                    * pcur**0.57e0
-                    * bt**1.08e0
-                    * dnla19**0.44e0
-                    * powerht ** (-0.73e0)
-                    * rmajor**1.97e0
-                    * physics_variables.kappa_ipb**0.78e0
-                    * aspect ** (-0.58e0)
-                    * m_fuel_amu**0.19e0
-                )
-
-                tauee = hfact * (
-                    (((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)) * taunstx
-                    + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * taupetty
-                )
+        # Menard NSTX-Petty08 Hybrid
+        elif i_confinement_time == 47:
+            tauee = hfact * confinement.menard_nstx_petty08_hybrid_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
+            )
 
         # ==========================================================================
 
