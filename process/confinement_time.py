@@ -1206,5 +1206,54 @@ def iter_ipb98y2_confinement_time(
     )
 
 
+def iter_ipb98y3_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    powerht: float,
+    rmajor: float,
+    kappa_ipb: float,
+    aspect: float,
+    afuel: float,
+) -> float:
+    """
+    Calculate the IPB98(y,3) ELMy H-mode scaling confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+    powerht (float): Net Heating power [MW]
+    rmajor (float): Plasma major radius [m]
+    kappa_ipb (float): IPB specific plasma separatrix elongation
+    aspect (float): Aspect ratio
+    afuel (float): Fuel atomic mass number
+
+    Returns:
+    float: IPB98(y,3) ELMy H-mode confinement time [s]
+
+    Notes:
+        - See correction paper below for more information about the re-definition of the elongation used.
+
+    References:
+        - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
+        Nuclear Fusion, vol. 39, no. 12, pp. 2175–2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
+
+        - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+          Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+    """
+    return (
+        0.0564e0
+        * pcur**0.88e0
+        * bt**0.07e0
+        * dnla19**0.40e0
+        * powerht ** (-0.69e0)
+        * rmajor**2.15e0
+        * kappa_ipb**0.78e0
+        * aspect ** (-0.64e0)
+        * afuel**0.20e0
+    )
+
+
 if __name__ == "__main__":
     pass
