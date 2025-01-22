@@ -420,6 +420,16 @@ $$
 
 -------------------------
 
+### 41: Petty H-mode scaling
+
+Is selected with `i_confinement_time = 41`
+
+$$
+\tau_{\text{E}} =  0.052 I^{0.75} B_{\text{T}}^{0.3} \overline{n}_{19}^{0.32} P^{-0.47} R^{2.09} \kappa_{\text{IPB}}^{0.88} \epsilon^{0.84}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

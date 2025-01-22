@@ -1474,5 +1474,52 @@ def murari_confinement_time(
     )
 
 
+def petty_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    powerht: float,
+    rmajor: float,
+    kappa_ipb: float,
+    aspect: float,
+) -> float:
+    """
+        Calculate the beta independent dimensionless Petty confinement scaling time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        powerht (float): Net Heating power [MW]
+        rmajor (float): Plasma major radius [m]
+        kappa_ipb (float): IPB specific plasma separatrix elongation
+        aspect (float): Aspect ratio
+
+        Returns:
+        float: Petty confinement time [s]
+
+        Notes:
+            - This scaling uses the IPB defintiion of elongation, see reference for more information.
+
+        References:
+            - C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
+            Physics of Plasmas, vol. 15, no. 8, Aug. 2008, doi: https://doi.org/10.1063/1.2961043.
+
+            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+    ‌
+    """
+    return (
+        0.052e0
+        * pcur**0.75e0
+        * bt**0.3e0
+        * dnla19**0.32e0
+        * powerht ** (-0.47e0)
+        * rmajor**2.09e0
+        * kappa_ipb**0.88e0
+        * aspect ** (-0.84e0)
+    )
+
+
 if __name__ == "__main__":
     pass

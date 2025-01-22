@@ -7293,21 +7293,16 @@ class Physics:
 
         # ==========================================================================
 
-        elif (
-            i_confinement_time == 41
-        ):  # Beta independent dimensionless confinement scaling
-            # C.C. Petty 2008 Phys. Plasmas 15, 080501, equation 36
-            # Note that there is no dependence on the average fuel mass 'm_fuel_amu'
-            tauee = (
-                hfact
-                * 0.052e0
-                * pcur**0.75e0
-                * bt**0.3e0
-                * dnla19**0.32e0
-                * powerht ** (-0.47e0)
-                * rmajor**2.09e0
-                * kappaa**0.88e0
-                * aspect ** (-0.84e0)
+        # Petty, beta independent dimensionless scaling
+        elif i_confinement_time == 41:
+            tauee = hfact * confinement.petty_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
             )
 
         # ==========================================================================
