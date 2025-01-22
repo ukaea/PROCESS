@@ -367,6 +367,16 @@ $$
 
 -------------------------
 
+### 36: IPB98(y,4) ELMy H-mode scaling
+
+Is selected with `i_confinement_time = 36`
+
+$$
+\tau_{\text{E}} =  0.0587 I^{0.85} B_{\text{T}}^{0.29} \overline{n}_{19}^{0.39} P^{-0.7} R^{2.08} \kappa_{\text{IPB}}^{0.76} \epsilon^{0.69} M^{0.17}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
