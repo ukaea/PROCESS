@@ -7365,21 +7365,17 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 46:  # NSTX, ELMy H-mode scaling
-            # NSTX scaling with IPB98(y,2) for other variables
-            # Menard 2019, Phil. Trans. R. Soc. A 377:20170440
-            # Kaye et al. 2006, Nucl. Fusion 46 848
-            tauee = (
-                hfact
-                * 0.095e0
-                * pcur**0.57e0
-                * bt**1.08e0
-                * dnla19**0.44e0
-                * powerht ** (-0.73e0)
-                * rmajor**1.97e0
-                * physics_variables.kappa_ipb**0.78e0
-                * aspect ** (-0.58e0)
-                * m_fuel_amu**0.19e0
+        # Menard NSTX, ELMy H-mode scaling
+        elif i_confinement_time == 46:
+            tauee = hfact * confinement.menard_nstx_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
             )
 
         # ==========================================================================
