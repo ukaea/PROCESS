@@ -1607,5 +1607,58 @@ def hubbard_upper_confinement_time(
     return 0.014e0 * pcur**0.76e0 * bt**0.84e0 * dnla20**0.07 * powerht ** (-0.25e0)
 
 
+def menard_nstx_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    powerht: float,
+    rmajor: float,
+    kappa_ipb: float,
+    aspect: float,
+    afuel: float,
+) -> float:
+    """
+        Calculate the Menard NSTX ELMy H-mode scaling confinement time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        powerht (float): Net Heating power [MW]
+        rmajor (float): Plasma major radius [m]
+        kappa_ipb (float): IPB specific plasma separatrix elongation
+        aspect (float): Aspect ratio
+        afuel (float): Fuel atomic mass number
+
+        Returns:
+        float: Menard NSTX ELMy H-mode confinement time [s]
+
+        Notes:
+            - "The leading NSTX conﬁnement scaling coefﬁcient is chosen such that the ITER and ST energy conﬁnement times are
+              identical for a reference NSTX scenario"
+            - Assumes IPB98(y,2) exponents are applicable where the ST exponents are not yet determined, i.e.
+              the species mass, major radius, inverse aspect ratio and elongation. Hence here we use the IPB98(y,2) definition
+              of elongation.
+
+        References:
+            - J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,”
+             Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440–20170440, Feb. 2019,
+             doi: https://doi.org/10.1098/rsta.2017.0440.
+    ‌
+
+    """
+    return (
+        0.095e0
+        * pcur**0.57e0
+        * bt**1.08e0
+        * dnla19**0.44e0
+        * powerht ** (-0.73e0)
+        * rmajor**1.97e0
+        * kappa_ipb**0.78e0
+        * aspect ** (-0.58e0)
+        * afuel**0.19e0
+    )
+
+
 if __name__ == "__main__":
     pass
