@@ -573,7 +573,7 @@ module physics_variables
   !! plasma elongation calculated as xarea/(pi.a^2)
 
   real(dp) :: kappa_ipb
-  !! Volume measure of plasma elongation
+  !! Separatrix elongation calculated for IPB scalings
 
   real(dp) :: ne0
   !! central electron density (/m3)
