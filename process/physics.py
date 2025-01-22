@@ -7177,20 +7177,17 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 33:  # IPB98(y,1), ELMy H-mode scaling
-            # Data selection : full ITERH.DB3
-            # Nuclear Fusion 39 (1999) 2175, Table 5
-            tauee = (
-                hfact
-                * 0.0503e0
-                * pcur**0.91e0
-                * bt**0.15e0
-                * dnla19**0.44e0
-                * powerht ** (-0.65e0)
-                * rmajor**2.05e0
-                * physics_variables.kappa_ipb**0.72e0
-                * aspect ** (-0.57e0)
-                * m_fuel_amu**0.13e0
+        # IPB98(y,1), ELMy H-mode scaling
+        elif i_confinement_time == 33:
+            tauee = hfact * confinement.iter_ipb98y1_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
             )
 
         # ==========================================================================
