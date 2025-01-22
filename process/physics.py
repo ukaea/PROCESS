@@ -7237,19 +7237,16 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 37:  # ISS95 stellarator scaling
-            # U. Stroth et al., Nuclear Fusion, 36, p.1063 (1996)
-            # Assumes kappa = 1.0, triang = 0.0
+        # ISS95 stellarator scaling
+        elif i_confinement_time == 37:
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            tauee = (
-                hfact
-                * 0.079e0
-                * rminor**2.21e0
-                * rmajor**0.65e0
-                * dnla19**0.51e0
-                * bt**0.83e0
-                * powerht ** (-0.59e0)
-                * iotabar**0.4e0
+            tauee = hfact * confinement.iss95_stellarator_confinement_time(
+                rminor,
+                rmajor,
+                dnla19,
+                bt,
+                powerht,
+                iotabar,
             )
 
         # ==========================================================================

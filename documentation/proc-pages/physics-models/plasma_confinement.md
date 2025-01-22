@@ -377,6 +377,17 @@ $$
 
 -------------------------
 
+
+### 37: ISS95 stellarator scaling
+
+Is selected with `i_confinement_time = 37`
+
+$$
+\tau_{\text{E}} =  0.079 a^{2.21} R^{0.65} P^{-0.59} \overline{n}_{19}^{0.51} B_{\text{T}}^{0.83} \iota_{2/3}^{0.4}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
