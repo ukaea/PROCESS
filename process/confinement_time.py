@@ -1344,5 +1344,45 @@ def iss95_stellarator_confinement_time(
     )
 
 
+def iss04_stellarator_confinement_time(
+    rminor: float,
+    rmajor: float,
+    dnla19: float,
+    bt: float,
+    powerht: float,
+    iotabar: float,
+) -> float:
+    """
+        Calculate the ISS04 stellarator scaling confinement time
+
+        Parameters:
+        rminor (float): Plasma minor radius [m]
+        rmajor (float): Plasma major radius [m]
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        bt (float): Toroidal magnetic field [T]
+        powerht (float): Net Heating power [MW]
+        iotabar (float): Rotational transform
+
+        Returns:
+        float: ISS04 stellarator confinement time [s]
+
+        Notes:
+
+        References:
+            - H. Yamada et al., “Characterization of energy confinement in net-current free plasmas using the extended International Stellarator Database,”
+              vol. 45, no. 12, pp. 1684–1693, Nov. 2005, doi: https://doi.org/10.1088/0029-5515/45/12/024.
+    ‌
+    """
+    return (
+        0.134e0
+        * rminor**2.28e0
+        * rmajor**0.64e0
+        * dnla19**0.54e0
+        * bt**0.84e0
+        * powerht ** (-0.61e0)
+        * iotabar**0.41e0
+    )
+
+
 if __name__ == "__main__":
     pass

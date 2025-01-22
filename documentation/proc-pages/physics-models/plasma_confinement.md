@@ -388,6 +388,17 @@ $$
 
 -------------------------
 
+
+### 38: ISS04 stellarator scaling
+
+Is selected with `i_confinement_time = 38`
+
+$$
+\tau_{\text{E}} =  0.134 a^{2.28} R^{0.64} P^{-0.61} \overline{n}_{19}^{0.54} B_{\text{T}}^{0.84} \iota_{2/3}^{0.41}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
