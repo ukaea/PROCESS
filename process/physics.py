@@ -7280,24 +7280,15 @@ class Physics:
 
         # ==========================================================================
 
-        elif (
-            i_confinement_time == 40
-        ):  # "Non-power law" (NPL) Murari energy confinement scaling
-            #  Based on the ITPA database of H-mode discharges
-            #  A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks
-            #  A. Murari et al 2015 Nucl. Fusion 55 073009, doi:10.1088/0029-5515/55/7/073009
-            #  Table 4.  (Issue #311)
-            # Note that aspect ratio and M (m_fuel_amu) do not appear, and B (bt) only
-            # appears in the "saturation factor" h.
-            h = dnla19**0.448e0 / (1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0))
-            tauee = (
-                hfact
-                * 0.0367e0
-                * pcur**1.006e0
-                * rmajor**1.731e0
-                * kappaa**1.450e0
-                * powerht ** (-0.735e0)
-                * h
+        #  Murari "Non-power law" scaling
+        elif i_confinement_time == 40:
+            tauee = hfact * confinement.murari_confinement_time(
+                pcur,
+                rmajor,
+                physics_variables.kappa_ipb,
+                dnla19,
+                bt,
+                powerht,
             )
 
         # ==========================================================================
