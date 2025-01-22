@@ -430,6 +430,16 @@ $$
 
 -------------------------
 
+### 43: Hubbard I-mode nominal scaling
+
+Is selected with `i_confinement_time = 43`
+
+$$
+\tau_{\text{E}} =  0.014 I^{0.68} B_{\text{T}}^{0.77} \overline{n}_{20}^{0.02} P^{-0.29}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
