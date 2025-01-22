@@ -1304,5 +1304,45 @@ def iter_ipb98y4_confinement_time(
     )
 
 
+def iss95_stellarator_confinement_time(
+    rminor: float,
+    rmajor: float,
+    dnla19: float,
+    bt: float,
+    powerht: float,
+    iotabar: float,
+) -> float:
+    """
+        Calculate the ISS95 stellarator scaling confinement time
+
+        Parameters:
+        rminor (float): Plasma minor radius [m]
+        rmajor (float): Plasma major radius [m]
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        bt (float): Toroidal magnetic field [T]
+        powerht (float): Net Heating power [MW]
+        iotabar (float): Rotational transform
+
+        Returns:
+        float: ISS95 stellarator confinement time [s]
+
+        Notes:
+
+        References:
+            - U. Stroth et al., “Energy confinement scaling from the international stellarator database,”
+              vol. 36, no. 8, pp. 1063–1077, Aug. 1996, doi: https://doi.org/10.1088/0029-5515/36/8/i11.
+    ‌
+    """
+    return (
+        0.079e0
+        * rminor**2.21e0
+        * rmajor**0.65e0
+        * dnla19**0.51e0
+        * bt**0.83e0
+        * powerht ** (-0.59e0)
+        * iotabar**0.4e0
+    )
+
+
 if __name__ == "__main__":
     pass
