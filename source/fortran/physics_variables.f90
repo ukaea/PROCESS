@@ -581,7 +581,7 @@ module physics_variables
   real(dp) :: kappaa
   !! plasma elongation calculated as a_plasma_poloidal/(pi.a^2)
 
-  real(dp) :: kappaa_IPB
+  real(dp) :: kappa_ipb
   !! Volume measure of plasma elongation
 
   real(dp) :: ne0
@@ -1061,7 +1061,7 @@ module physics_variables
     kappa = 1.792D0
     kappa95 = 1.6D0
     kappaa = 0.0D0
-    kappaa_IPB = 0.d0
+    kappa_ipb = 0.d0
     ne0 = 0.0D0
     ni0 = 0.0D0
     m_s_limit = 0.3D0

@@ -357,7 +357,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -1352,7 +1352,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -2347,7 +2347,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -3342,7 +3342,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -4337,7 +4337,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -5332,7 +5332,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -6327,7 +6327,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -7322,7 +7322,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -8317,7 +8317,7 @@
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.1498E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.7778E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7276E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6812E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6812E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.9243E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.9934E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
