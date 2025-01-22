@@ -1431,5 +1431,48 @@ def ds03_confinement_time(
     )
 
 
+def murari_confinement_time(
+    pcur: float,
+    rmajor: float,
+    kappa_ipb: float,
+    dnla19: float,
+    bt: float,
+    powerht: float,
+) -> float:
+    """
+        Calculate the Murari H-mode energy confinement scaling time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        rmajor (float): Plasma major radius [m]
+        kappa_ipb (float): IPB specific plasma separatrix elongation
+        dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+        bt (float): Toroidal magnetic field [T]
+        powerht (float): Net Heating power [MW]
+
+        Returns:
+        float: Murari confinement time [s]
+
+        Notes:
+            - This scaling uses the IPB defintiion of elongation, see reference for more information.
+
+        References:
+            - A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio, “A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks,”
+             Nuclear Fusion, vol. 55, no. 7, pp. 073009–073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
+
+            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+              Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+    ‌
+    """
+    return (
+        0.0367
+        * pcur**1.006
+        * rmajor**1.731
+        * kappa_ipb**1.450
+        * powerht ** (-0.735)
+        * (dnla19**0.448 / (1.0 + np.exp(-9.403 * (dnla19 / bt) ** -1.365)))
+    )
+
+
 if __name__ == "__main__":
     pass

@@ -409,6 +409,17 @@ $$
 
 -------------------------
 
+### 40: Murari "Non-power law" H-mode scaling
+
+Is selected with `i_confinement_time = 40`
+
+$$
+\tau_{\text{E}} =  0.0367 I^{1.006} R^{1.731} \kappa_{\text{IPB}}^{1.45} P^{-0.735} \\
+\times \frac{\overline{n}_{19}^{0.49}}{1+e^\left({-9.403\left(\frac{\overline{n}_{19}^{0.49}}{B_{\text{T}}}\right)^{-1.365}}\right)}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
