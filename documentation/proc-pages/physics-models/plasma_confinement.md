@@ -450,6 +450,16 @@ $$
 
 -------------------------
 
+### 45: Hubbard I-mode upper scaling
+
+Is selected with `i_confinement_time = 45`
+
+$$
+\tau_{\text{E}} =  0.014 I^{0.76} B_{\text{T}}^{0.84} \overline{n}_{20}^{-0.07} P^{-0.25}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 
