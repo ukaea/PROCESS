@@ -1474,7 +1474,7 @@ def murari_confinement_time(
     )
 
 
-def petty_confinement_time(
+def petty08_confinement_time(
     pcur: float,
     bt: float,
     dnla19: float,
@@ -1484,7 +1484,7 @@ def petty_confinement_time(
     aspect: float,
 ) -> float:
     """
-        Calculate the beta independent dimensionless Petty confinement scaling time
+        Calculate the beta independent dimensionless Petty08 confinement time
 
         Parameters:
         pcur (float): Plasma current [MA]
@@ -1496,7 +1496,7 @@ def petty_confinement_time(
         aspect (float): Aspect ratio
 
         Returns:
-        float: Petty confinement time [s]
+        float: Petty08 confinement time [s]
 
         Notes:
             - This scaling uses the IPB defintiion of elongation, see reference for more information.
@@ -1658,6 +1658,90 @@ def menard_nstx_confinement_time(
         * aspect ** (-0.58e0)
         * afuel**0.19e0
     )
+
+
+def menard_nstx_petty08_hybrid_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    powerht: float,
+    rmajor: float,
+    kappa_ipb: float,
+    aspect: float,
+    afuel: float,
+) -> float:
+    """
+    Calculate the Menard NSTX-Petty hybrid confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+    powerht (float): Net Heating power [MW]
+    rmajor (float): Plasma major radius [m]
+    kappa_ipb (float): IPB specific plasma separatrix elongation
+    aspect (float): Aspect ratio
+    afuel (float): Fuel atomic mass number
+
+    Returns:
+    float: Menard NSTX-Petty hybrid confinement time [s]
+
+    Notes:
+        - Assuming a linear interpolation in (1/aspect) between the two scalings
+
+    References:
+        - J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,”
+         Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440–20170440, Feb. 2019,
+         doi: https://doi.org/10.1098/rsta.2017.0440.
+    ‌
+    """
+    # Equivalent to A > 2.5, use Petty scaling
+    if (1.0e0 / aspect) <= 0.4e0:
+        return petty08_confinement_time(
+            pcur,
+            bt,
+            dnla19,
+            powerht,
+            rmajor,
+            kappa_ipb,
+            aspect,
+        )
+
+    #  Equivalent to A < 1.7, use NSTX scaling
+    elif (1.0e0 / aspect) >= 0.6e0:
+        return menard_nstx_confinement_time(
+            pcur,
+            bt,
+            dnla19,
+            powerht,
+            rmajor,
+            kappa_ipb,
+            aspect,
+            afuel,
+        )
+    else:
+        return (((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)) * (
+            menard_nstx_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                kappa_ipb,
+                aspect,
+                afuel,
+            )
+        ) + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * (
+            petty08_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                kappa_ipb,
+                aspect,
+            )
+        )
 
 
 if __name__ == "__main__":
