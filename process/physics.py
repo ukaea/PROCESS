@@ -2323,6 +2323,7 @@ class Physics:
         (
             physics_variables.burnup,
             physics_variables.dntau,
+            physics_variables.nTtau,
             physics_variables.figmer,
             physics_module.fusrat,
             physics_variables.qfuel,
@@ -2332,6 +2333,7 @@ class Physics:
         ) = self.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
+            physics_variables.te,
             physics_variables.nd_fuel_ions,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,
@@ -2960,6 +2962,7 @@ class Physics:
     def phyaux(
         aspect: float,
         dene: float,
+        te: float,
         nd_fuel_ions: float,
         fusion_rate_density_total: float,
         alpha_rate_density_total: float,
@@ -2974,6 +2977,7 @@ class Physics:
         Args:
             aspect (float): Plasma aspect ratio.
             dene (float): Electron density (/m3).
+            te (float): Volume avergaed electron temperature (keV).
             deni (float): Fuel ion density (/m3).
             fusion_rate_density_total (float): Fusion reaction rate from plasma and beams (/m3/s).
             alpha_rate_density_total (float): Alpha particle production rate (/m3/s).
@@ -2987,6 +2991,7 @@ class Physics:
             tuple: A tuple containing:
                 - burnup (float): Fractional plasma burnup.
                 - dntau (float): Plasma average n-tau (s/m3).
+                - nTtau (float): Plasma triple product nT-tau (s/m3).
                 - figmer (float): Physics figure of merit.
                 - fusrat (float): Number of fusion reactions per second.
                 - qfuel (float): Fuelling rate for D-T (nucleus-pairs/sec).
@@ -2999,6 +3004,7 @@ class Physics:
         figmer = 1e-6 * plasma_current * aspect**sbar
 
         dntau = t_energy_confinement * dene
+        nTtau = dntau * te
 
         # Fusion reactions per second
         fusrat = fusion_rate_density_total * plasma_volume
@@ -3036,63 +3042,7 @@ class Physics:
         return (
             burnup,
             dntau,
-            figmer,
-            fusrat,
-            qfuel,
-            rndfuel,
-            t_alpha_confinement,
-            f_alpha_energy_confinement,
-        )
-
-        figmer = 1e-6 * plasma_current * aspect**sbar
-
-        dntau = t_energy_confinement * dene
-
-        # Fusion reactions per second
-
-        fusrat = fusion_rate_density_total * vol_plasma
-
-        # Alpha particle confinement time (s)
-        # Number of alphas / alpha production rate
-
-        if alpha_rate_density_total != 0.0:
-            t_alpha_confinement = nd_alphas / alpha_rate_density_total
-        else:  # only likely if DD is only active fusion reaction
-            t_alpha_confinement = 0.0
-
-        # Fractional burnup
-
-        # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
-        # Fusion Science and Technology, vol.64, no.1, July 2013, pp.8-12)
-
-        # The ratio of ash to fuel particle confinement times is given by
-        # tauratio
-        # Possible logic...
-        # burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
-        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and D-He3 reactions)
-        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
-        # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
-        if physics_variables.burnup_in <= 1.0e-9:
-            burnup = (
-                nd_alphas
-                / (nd_alphas + 0.5 * nd_fuel_ions)
-                / physics_variables.tauratio
-            )
-        else:
-            burnup = physics_variables.burnup_in
-        # Fuel burnup rate (reactions/second) (previously Amps)
-
-        rndfuel = fusrat
-
-        # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-
-        qfuel = rndfuel / burnup
-
-        f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
-
-        return (
-            burnup,
-            dntau,
+            nTtau,
             figmer,
             fusrat,
             qfuel,
@@ -5287,15 +5237,11 @@ class Physics:
             physics_variables.dntau,
             "OP ",
         )
-        po.ocmmnt(
-            self.outfile,
-            "Triple product = Vol-av electron density x Vol-av electron temp x Energy confinement time:",
-        )
         po.ovarre(
             self.outfile,
-            "Triple product  (keV s/m3)",
-            "(dntau*te)",
-            physics_variables.dntau * physics_variables.te,
+            "Lawson Triple product (keV s/m3)",
+            "(nTtau)",
+            physics_variables.nTtau,
             "OP ",
         )
         po.ovarre(
