@@ -487,7 +487,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.6488E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1671E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1609E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1609E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1609E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1609E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5403E+20 OP 
@@ -1650,7 +1650,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.5263E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1660E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1472E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1472E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1472E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1472E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5390E+20 OP 
@@ -2813,7 +2813,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.3914E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1665E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1421E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1421E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1421E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1421E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5425E+20 OP 
@@ -3976,7 +3976,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.3549E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1778E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1540E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1540E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1540E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1540E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5409E+20 OP 
@@ -5139,7 +5139,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.5075E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1743E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1491E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1491E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1491E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1491E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5361E+20 OP 
@@ -6302,7 +6302,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.6401E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1735E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1469E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1469E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1469E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1469E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5258E+20 OP 
@@ -7465,7 +7465,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.6041E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1842E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1547E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1547E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1547E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1547E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5216E+20 OP 
@@ -8628,7 +8628,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.4593E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1867E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1544E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1544E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1544E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1544E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5240E+20 OP 
@@ -9791,7 +9791,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.2963E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1917E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1563E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1563E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1563E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1563E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5211E+20 OP 
@@ -10954,7 +10954,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.2792E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.2000E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1622E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1622E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1622E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1622E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5225E+20 OP 
@@ -12117,7 +12117,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.4497E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1940E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1621E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1621E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1621E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1621E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5304E+20 OP 
@@ -13280,7 +13280,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.5964E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1912E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1617E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1617E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1617E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1617E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5280E+20 OP 
@@ -14443,7 +14443,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.5754E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.2000E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1687E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1687E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1687E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1687E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5289E+20 OP 
@@ -15606,7 +15606,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.4477E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.2000E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1663E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1663E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1663E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1663E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5365E+20 OP 
@@ -16769,7 +16769,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.3198E+01 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.2000E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.1640E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.1640E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.1640E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.1640E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5446E+20 OP 

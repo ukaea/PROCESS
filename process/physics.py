@@ -2230,7 +2230,7 @@ class Physics:
             physics_variables.ptrepv,
             physics_variables.ptripv,
             physics_variables.t_electron_confinement,
-            physics_variables.taueff,
+            physics_variables.t_energy_confinement,
             physics_variables.t_ion_confinement,
             physics_variables.powerht,
         ) = self.calculate_confinement_time(
@@ -2316,7 +2316,7 @@ class Physics:
             physics_variables.plasma_current,
             sbar,
             physics_variables.dnalp,
-            physics_variables.taueff,
+            physics_variables.t_energy_confinement,
             physics_variables.plasma_volume,
         )
 
@@ -2876,7 +2876,7 @@ class Physics:
         plasma_current: float,
         sbar: float,
         dnalp: float,
-        taueff: float,
+        t_energy_confinement: float,
         plasma_volume: float,
     ) -> tuple[float, float, float, float, float, float, float, float]:
         """Auxiliary physics quantities
@@ -2890,7 +2890,7 @@ class Physics:
             plasma_current (float): Plasma current (A).
             sbar (float): Exponent for aspect ratio (normally 1).
             dnalp (float): Alpha ash density (/m3).
-            taueff (float): Global energy confinement time (s).
+            t_energy_confinement (float): Global energy confinement time (s).
             plasma_volume (float): Plasma volume (m3).
 
         Returns:
@@ -2908,7 +2908,7 @@ class Physics:
         """
         figmer = 1e-6 * plasma_current * aspect**sbar
 
-        dntau = taueff * dene
+        dntau = t_energy_confinement * dene
 
         # Fusion reactions per second
         fusrat = fusion_rate_density_total * plasma_volume
@@ -2941,15 +2941,23 @@ class Physics:
         # Required fuelling rate (fuel ion pairs/second) (previously Amps)
         qfuel = rndfuel / burnup
 
-        f_alpha_energy_confinement = t_alpha_confinement / taueff
+        f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
-        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, f_alpha_energy_confinement
+        return (
+            burnup,
+            dntau,
+            figmer,
+            fusrat,
+            qfuel,
+            rndfuel,
+            t_alpha_confinement,
+            f_alpha_energy_confinement,
+        )
 
         figmer = 1e-6 * plasma_current * aspect**sbar
 
-        dntau = taueff * dene
-        
-        
+        dntau = t_energy_confinement * dene
+
         # Fusion reactions per second
 
         fusrat = fusion_rate_density_total * plasma_volume
@@ -2986,10 +2994,18 @@ class Physics:
 
         qfuel = rndfuel / burnup
 
-        f_alpha_energy_confinement = t_alpha_confinement / taueff
+        f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
-
-        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, f_alpha_energy_confinement
+        return (
+            burnup,
+            dntau,
+            figmer,
+            fusrat,
+            qfuel,
+            rndfuel,
+            t_alpha_confinement,
+            f_alpha_energy_confinement,
+        )
 
     @staticmethod
     def plasma_ohmic_heating(
@@ -5110,8 +5126,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Global thermal energy confinement time (s)",
-            "(taueff)",
-            physics_variables.taueff,
+            "(t_energy_confinement)",
+            physics_variables.t_energy_confinement,
             "OP ",
         )
         po.ovarrf(
@@ -6588,7 +6604,7 @@ class Physics:
         ptrepv    : output real : electron transport power (MW/m3)
         ptripv    : output real : ion transport power (MW/m3)
         t_electron_confinement     : output real : electron energy confinement time (s)
-        taueff    : output real : global energy confinement time (s)
+        t_energy_confinement    : output real : global energy confinement time (s)
         t_ion_confinement     : output real : ion energy confinement time (s)
         powerht   : output real : heating power (MW) assumed in calculation
         This subroutine calculates the energy confinement time
@@ -7398,7 +7414,7 @@ class Physics:
 
         # Global energy confinement time
 
-        taueff = (ratio + 1.0e0) / (
+        t_energy_confinement = (ratio + 1.0e0) / (
             ratio / t_ion_confinement + 1.0e0 / t_electron_confinement
         )
 
@@ -7408,7 +7424,7 @@ class Physics:
             ptripv,
             t_electron_confinement,
             t_ion_confinement,
-            taueff,
+            t_energy_confinement,
             powerht,
         )
 

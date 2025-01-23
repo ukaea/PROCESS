@@ -140,7 +140,7 @@ class ProcessTracker:
         "ne0",
         "aux_current_fraction",
         "dnz",
-        "taueff",
+        "t_energy_confinement",
         "te0",
         "pdivt",
         "nesep",

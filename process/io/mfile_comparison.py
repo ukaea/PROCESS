@@ -131,7 +131,7 @@ BASELINE_LIST = [
     "neped",
     "zeff",
     "dnz",
-    "taueff",
+    "t_energy_confinement",
     "hfact",
     "tauelaw",
     "ralpne",
