@@ -2251,7 +2251,7 @@ class Physics:
             physics_variables.kappaa,
             physics_variables.ptrepv,
             physics_variables.ptripv,
-            physics_variables.tauee,
+            physics_variables.t_electron_confinement,
             physics_variables.taueff,
             physics_variables.t_ion_confinement,
             physics_variables.powerht,
@@ -5212,8 +5212,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Electron energy confinement time (s)",
-            "(tauee)",
-            physics_variables.tauee,
+            "(t_electron_confinement)",
+            physics_variables.t_electron_confinement,
             "OP ",
         )
         po.ovarre(
@@ -6744,7 +6744,7 @@ class Physics:
         zeff      : input real :  plasma effective charge
         ptrepv    : output real : electron transport power (MW/m3)
         ptripv    : output real : ion transport power (MW/m3)
-        tauee     : output real : electron energy confinement time (s)
+        t_electron_confinement     : output real : electron energy confinement time (s)
         taueff    : output real : global energy confinement time (s)
         t_ion_confinement     : output real : ion energy confinement time (s)
         powerht   : output real : heating power (MW) assumed in calculation
@@ -6841,15 +6841,15 @@ class Physics:
         # ========================================================================
 
         # User defined confinement time
-        if i_confinement_time == 0:  # tauee is an input
-            tauee = hfact * physics_variables.tauee_in
+        if i_confinement_time == 0:  # t_electron_confinement is an input
+            t_electron_confinement = hfact * physics_variables.tauee_in
 
         # ========================================================================
 
         # Nec-Alcator(NA) OH scaling
         if i_confinement_time == 1:
-            # tauee = taueena
-            tauee = hfact * confinement.neo_alcator_confinement_time(
+            # t_electron_confinement = taueena
+            t_electron_confinement = hfact * confinement.neo_alcator_confinement_time(
                 n20, rminor, rmajor, qstar
             )
 
@@ -6857,21 +6857,26 @@ class Physics:
 
         # "Mirnov"-like scaling (H-mode)
         elif i_confinement_time == 2:  # Mirnov scaling (H-mode)
-            tauee = hfact * confinement.mirnov_confinement_time(rminor, kappa95, pcur)
+            t_electron_confinement = hfact * confinement.mirnov_confinement_time(
+                rminor, kappa95, pcur
+            )
 
         # ========================================================================
 
         # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
         elif i_confinement_time == 3:
-            tauee = hfact * confinement.merezhkin_muhkovatov_confinement_time(
-                rmajor, rminor, kappa95, qstar, dnla20, afuel, ten
+            t_electron_confinement = (
+                hfact
+                * confinement.merezhkin_muhkovatov_confinement_time(
+                    rmajor, rminor, kappa95, qstar, dnla20, afuel, ten
+                )
             )
 
         # ========================================================================
 
         # Shimomura (S) optimized H-mode scaling
         elif i_confinement_time == 4:
-            tauee = hfact * confinement.shimomura_confinement_time(
+            t_electron_confinement = hfact * confinement.shimomura_confinement_time(
                 rmajor, rminor, bt, kappa95, afuel
             )
 
@@ -6879,18 +6884,20 @@ class Physics:
 
         # Kaye-Goldston scaling (L-mode)
         elif i_confinement_time == 5:
-            tauee = hfact * confinement.kaye_goldston_confinement_time(
+            t_electron_confinement = hfact * confinement.kaye_goldston_confinement_time(
                 pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
 
             if iinvqd != 0:
-                tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
+                t_electron_confinement = 1.0e0 / np.sqrt(
+                    1.0e0 / taueena**2 + 1.0e0 / t_electron_confinement**2
+                )
 
         # ========================================================================
 
         # ITER Power scaling - ITER 89-P (L-mode)
         elif i_confinement_time == 6:
-            tauee = hfact * confinement.iter_89P_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_89P_confinement_time(
                 pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
 
@@ -6898,14 +6905,14 @@ class Physics:
 
         # ITER Offset linear scaling - ITER 89-O (L-mode)
         elif i_confinement_time == 7:
-            tauee = hfact * confinement.iter_89_0_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_89_0_confinement_time(
                 pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
         # ========================================================================
 
         # Rebut-Lallia offset linear scaling (L-mode)
         elif i_confinement_time == 8:
-            tauee = hfact * confinement.rebut_lallia_confinement_time(
+            t_electron_confinement = hfact * confinement.rebut_lallia_confinement_time(
                 rminor,
                 rmajor,
                 kappa,
@@ -6921,18 +6928,20 @@ class Physics:
 
         # Goldston scaling (L-mode)
         elif i_confinement_time == 9:  # Goldston scaling (L-mode)
-            tauee = hfact * confinement.goldston_confinement_time(
+            t_electron_confinement = hfact * confinement.goldston_confinement_time(
                 pcur, rmajor, rminor, kappa95, afuel, powerht
             )
 
             if iinvqd != 0:
-                tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
+                t_electron_confinement = 1.0e0 / np.sqrt(
+                    1.0e0 / taueena**2 + 1.0e0 / t_electron_confinement**2
+                )
 
         # ========================================================================
 
         # T-10 scaling (L-mode)
         elif i_confinement_time == 10:
-            tauee = hfact * confinement.t10_confinement_time(
+            t_electron_confinement = hfact * confinement.t10_confinement_time(
                 dnla20, rmajor, qstar, bt, rminor, kappa95, powerht, zeff, pcur
             )
 
@@ -6940,7 +6949,7 @@ class Physics:
 
         # JAERI / Odajima-Shimomura L-mode scaling
         elif i_confinement_time == 11:  # JAERI scaling
-            tauee = hfact * confinement.jaeri_confinement_time(
+            t_electron_confinement = hfact * confinement.jaeri_confinement_time(
                 kappa95,
                 rminor,
                 afuel,
@@ -6957,7 +6966,7 @@ class Physics:
 
         # Kaye "big"  L-mode scaling (based only on big tokamak data)
         elif i_confinement_time == 12:
-            tauee = hfact * confinement.kaye_big_confinement_time(
+            t_electron_confinement = hfact * confinement.kaye_big_confinement_time(
                 rmajor,
                 rminor,
                 bt,
@@ -6972,7 +6981,7 @@ class Physics:
 
         # ITER H90-P H-mode scaling
         elif i_confinement_time == 13:
-            tauee = hfact * confinement.iter_h90_p_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_h90_p_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -6989,7 +6998,7 @@ class Physics:
 
         # Minimum of ITER 89-P and ITER 89-O
         elif i_confinement_time == 14:
-            tauee = min(
+            t_electron_confinement = min(
                 hfact
                 * confinement.iter_89P_confinement_time(
                     pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
@@ -7004,7 +7013,7 @@ class Physics:
 
         # Riedel scaling (L-mode)
         elif i_confinement_time == 15:
-            tauee = hfact * confinement.riedel_l_confinement_time(
+            t_electron_confinement = hfact * confinement.riedel_l_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -7018,7 +7027,7 @@ class Physics:
 
         # Christiansen et al scaling (L-mode)
         elif i_confinement_time == 16:
-            tauee = hfact * confinement.christiansen_confinement_time(
+            t_electron_confinement = hfact * confinement.christiansen_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -7035,21 +7044,24 @@ class Physics:
 
         # Lackner-Gottardi scaling (L-mode)
         elif i_confinement_time == 17:
-            tauee = hfact * confinement.lackner_gottardi_confinement_time(
-                pcur,
-                rmajor,
-                rminor,
-                kappa95,
-                dnla20,
-                bt,
-                powerht,
+            t_electron_confinement = (
+                hfact
+                * confinement.lackner_gottardi_confinement_time(
+                    pcur,
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    dnla20,
+                    bt,
+                    powerht,
+                )
             )
 
         # ========================================================================
 
         # Neo-Kaye scaling (L-mode)
         elif i_confinement_time == 18:
-            tauee = hfact * confinement.neo_kaye_confinement_time(
+            t_electron_confinement = hfact * confinement.neo_kaye_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -7064,7 +7076,7 @@ class Physics:
 
         # Riedel scaling (H-mode)
         elif i_confinement_time == 19:
-            tauee = hfact * confinement.riedel_h_confinement_time(
+            t_electron_confinement = hfact * confinement.riedel_h_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -7081,13 +7093,16 @@ class Physics:
 
         # Amended version of ITER H90-P law
         elif i_confinement_time == 20:
-            tauee = hfact * confinement.iter_h90_p_amended_confinement_time(
-                pcur,
-                bt,
-                afuel,
-                rmajor,
-                powerht,
-                kappa,
+            t_electron_confinement = (
+                hfact
+                * confinement.iter_h90_p_amended_confinement_time(
+                    pcur,
+                    bt,
+                    afuel,
+                    rmajor,
+                    powerht,
+                    kappa,
+                )
             )
 
         # ==========================================================================
@@ -7096,7 +7111,7 @@ class Physics:
 
         # Sudo et al. scaling (stellarators/heliotron)
         elif i_confinement_time == 21:
-            tauee = hfact * confinement.sudo_et_al_confinement_time(
+            t_electron_confinement = hfact * confinement.sudo_et_al_confinement_time(
                 rmajor,
                 rminor,
                 dnla20,
@@ -7108,32 +7123,38 @@ class Physics:
 
         # Gyro-reduced Bohm scaling
         elif i_confinement_time == 22:
-            tauee = hfact * confinement.gyro_reduced_bohm_confinement_time(
-                bt,
-                dnla20,
-                powerht,
-                rminor,
-                rmajor,
+            t_electron_confinement = (
+                hfact
+                * confinement.gyro_reduced_bohm_confinement_time(
+                    bt,
+                    dnla20,
+                    powerht,
+                    rminor,
+                    rmajor,
+                )
             )
 
         # ==========================================================================
 
         # Lackner-Gottardi stellarator scaling
         elif i_confinement_time == 23:
-            tauee = hfact * confinement.lackner_gottardi_stellarator_confinement_time(
-                rmajor,
-                rminor,
-                dnla20,
-                bt,
-                powerht,
-                q,
+            t_electron_confinement = (
+                hfact
+                * confinement.lackner_gottardi_stellarator_confinement_time(
+                    rmajor,
+                    rminor,
+                    dnla20,
+                    bt,
+                    powerht,
+                    q,
+                )
             )
 
         # ==========================================================================
 
         # ITER_93 ELM-free H-mode scaling
         elif i_confinement_time == 24:
-            tauee = hfact * confinement.iter_93h_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_93h_confinement_time(
                 pcur,
                 bt,
                 powerht,
@@ -7152,7 +7173,7 @@ class Physics:
 
         # ELM-free: ITERH-97P
         elif i_confinement_time == 26:
-            tauee = hfact * confinement.iter_h97p_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_h97p_confinement_time(
                 pcur,
                 bt,
                 powerht,
@@ -7167,15 +7188,18 @@ class Physics:
 
         # ELMy: ITERH-97P(y)
         elif i_confinement_time == 27:
-            tauee = hfact * confinement.iter_h97p_elmy_confinement_time(
-                pcur,
-                bt,
-                powerht,
-                dnla19,
-                rmajor,
-                aspect,
-                kappa,
-                afuel,
+            t_electron_confinement = (
+                hfact
+                * confinement.iter_h97p_elmy_confinement_time(
+                    pcur,
+                    bt,
+                    powerht,
+                    dnla19,
+                    rmajor,
+                    aspect,
+                    kappa,
+                    afuel,
+                )
             )
 
         # ==========================================================================
@@ -7184,7 +7208,7 @@ class Physics:
 
         # ITER-96P (= ITER-97L) L-mode scaling
         elif i_confinement_time == 28:
-            tauee = hfact * confinement.iter_96p_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_96p_confinement_time(
                 pcur,
                 bt,
                 kappa95,
@@ -7200,7 +7224,7 @@ class Physics:
         # ==========================================================================
 
         elif i_confinement_time == 29:  # Valovic modified ELMy-H mode scaling
-            tauee = (
+            t_electron_confinement = (
                 hfact
                 * 0.067e0
                 * pcur**0.9e0
@@ -7216,7 +7240,7 @@ class Physics:
         # ==========================================================================
 
         elif i_confinement_time == 30:  # Kaye PPPL Workshop April 1998 L-mode scaling
-            tauee = (
+            t_electron_confinement = (
                 hfact
                 * 0.021e0
                 * pcur**0.81e0
@@ -7232,7 +7256,7 @@ class Physics:
         # ==========================================================================
 
         elif i_confinement_time == 31:  # ITERH-PB98P(y), ELMy H-mode scaling
-            tauee = (
+            t_electron_confinement = (
                 hfact
                 * 0.0615e0
                 * pcur**0.9e0
@@ -7249,7 +7273,7 @@ class Physics:
 
         # IPB98(y), ELMy H-mode scaling
         elif i_confinement_time == 32:
-            tauee = hfact * confinement.iter_ipb98y_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_ipb98y_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7264,7 +7288,7 @@ class Physics:
 
         # IPB98(y,1), ELMy H-mode scaling
         elif i_confinement_time == 33:
-            tauee = hfact * confinement.iter_ipb98y1_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_ipb98y1_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7279,7 +7303,7 @@ class Physics:
 
         # IPB98(y,2), ELMy H-mode scaling
         elif i_confinement_time == 34:
-            tauee = hfact * confinement.iter_ipb98y2_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_ipb98y2_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7294,7 +7318,7 @@ class Physics:
 
         # IPB98(y,3), ELMy H-mode scaling
         elif i_confinement_time == 35:
-            tauee = hfact * confinement.iter_ipb98y3_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_ipb98y3_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7309,7 +7333,7 @@ class Physics:
 
         # IPB98(y,4), ELMy H-mode scaling
         elif i_confinement_time == 36:
-            tauee = hfact * confinement.iter_ipb98y4_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_ipb98y4_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7325,13 +7349,16 @@ class Physics:
         # ISS95 stellarator scaling
         elif i_confinement_time == 37:
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            tauee = hfact * confinement.iss95_stellarator_confinement_time(
-                rminor,
-                rmajor,
-                dnla19,
-                bt,
-                powerht,
-                iotabar,
+            t_electron_confinement = (
+                hfact
+                * confinement.iss95_stellarator_confinement_time(
+                    rminor,
+                    rmajor,
+                    dnla19,
+                    bt,
+                    powerht,
+                    iotabar,
+                )
             )
 
         # ==========================================================================
@@ -7339,20 +7366,23 @@ class Physics:
         # ISS04 stellarator scaling
         elif i_confinement_time == 38:
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            tauee = hfact * confinement.iss04_stellarator_confinement_time(
-                rminor,
-                rmajor,
-                dnla19,
-                bt,
-                powerht,
-                iotabar,
+            t_electron_confinement = (
+                hfact
+                * confinement.iss04_stellarator_confinement_time(
+                    rminor,
+                    rmajor,
+                    dnla19,
+                    bt,
+                    powerht,
+                    iotabar,
+                )
             )
 
         # ==========================================================================
 
         # DS03 beta-independent H-mode scaling
         elif i_confinement_time == 39:
-            tauee = hfact * confinement.ds03_confinement_time(
+            t_electron_confinement = hfact * confinement.ds03_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7367,7 +7397,7 @@ class Physics:
 
         #  Murari "Non-power law" scaling
         elif i_confinement_time == 40:
-            tauee = hfact * confinement.murari_confinement_time(
+            t_electron_confinement = hfact * confinement.murari_confinement_time(
                 pcur,
                 rmajor,
                 physics_variables.kappa_ipb,
@@ -7380,7 +7410,7 @@ class Physics:
 
         # Petty08, beta independent dimensionless scaling
         elif i_confinement_time == 41:
-            tauee = hfact * confinement.petty08_confinement_time(
+            t_electron_confinement = hfact * confinement.petty08_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7399,7 +7429,7 @@ class Physics:
             # Greenwald density in m^-3
             n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
             nratio = dnla / n_gw
-            tauee = (
+            t_electron_confinement = (
                 hfact
                 * 6.94e-7
                 * plasma_current**1.3678e0
@@ -7419,18 +7449,21 @@ class Physics:
 
         # Hubbard 2017 I-mode confinement time scaling - nominal
         elif i_confinement_time == 43:
-            tauee = hfact * confinement.hubbard_nominal_confinement_time(
-                pcur,
-                bt,
-                dnla20,
-                powerht,
+            t_electron_confinement = (
+                hfact
+                * confinement.hubbard_nominal_confinement_time(
+                    pcur,
+                    bt,
+                    dnla20,
+                    powerht,
+                )
             )
 
         # ==========================================================================
 
         # Hubbard 2017 I-mode confinement time scaling - lower
         elif i_confinement_time == 44:
-            tauee = hfact * confinement.hubbard_lower_confinement_time(
+            t_electron_confinement = hfact * confinement.hubbard_lower_confinement_time(
                 pcur,
                 bt,
                 dnla20,
@@ -7441,7 +7474,7 @@ class Physics:
 
         # Hubbard 2017 I-mode confinement time scaling - upper
         elif i_confinement_time == 45:
-            tauee = hfact * confinement.hubbard_upper_confinement_time(
+            t_electron_confinement = hfact * confinement.hubbard_upper_confinement_time(
                 pcur,
                 bt,
                 dnla20,
@@ -7452,7 +7485,7 @@ class Physics:
 
         # Menard NSTX, ELMy H-mode scaling
         elif i_confinement_time == 46:
-            tauee = hfact * confinement.menard_nstx_confinement_time(
+            t_electron_confinement = hfact * confinement.menard_nstx_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7467,34 +7500,40 @@ class Physics:
 
         # Menard NSTX-Petty08 Hybrid
         elif i_confinement_time == 47:
-            tauee = hfact * confinement.menard_nstx_petty08_hybrid_confinement_time(
-                pcur,
-                bt,
-                dnla19,
-                powerht,
-                rmajor,
-                physics_variables.kappa_ipb,
-                aspect,
-                afuel,
+            t_electron_confinement = (
+                hfact
+                * confinement.menard_nstx_petty08_hybrid_confinement_time(
+                    pcur,
+                    bt,
+                    dnla19,
+                    powerht,
+                    rmajor,
+                    physics_variables.kappa_ipb,
+                    aspect,
+                    afuel,
+                )
             )
 
         # ==========================================================================
 
         # NSTX gyro-Bohm (Buxton)
         elif i_confinement_time == 48:
-            tauee = hfact * confinement.nstx_gyro_bohm_confinement_time(
-                pcur,
-                bt,
-                powerht,
-                rmajor,
-                dnla20,
+            t_electron_confinement = (
+                hfact
+                * confinement.nstx_gyro_bohm_confinement_time(
+                    pcur,
+                    bt,
+                    powerht,
+                    rmajor,
+                    dnla20,
+                )
             )
 
         # ==========================================================================
 
         # ITPA20 H-mode scaling
         elif i_confinement_time == 49:
-            tauee = hfact * confinement.itpa20_confinement_time(
+            t_electron_confinement = hfact * confinement.itpa20_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7521,22 +7560,32 @@ class Physics:
         # Ion energy confinement time
         # N.B. Overwrites earlier calculation above
 
-        t_ion_confinement = tauee
+        t_ion_confinement = t_electron_confinement
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
         # (here, tin and ten are in keV, and ptrepv and ptripv are in MW/m3)
 
         ptripv = 2.403e-22 * nd_ions_total * tin / t_ion_confinement
-        ptrepv = 2.403e-22 * dene * ten / tauee
+        ptrepv = 2.403e-22 * dene * ten / t_electron_confinement
 
         ratio = nd_ions_total / dene * tin / ten
 
         # Global energy confinement time
 
-        taueff = (ratio + 1.0e0) / (ratio / t_ion_confinement + 1.0e0 / tauee)
+        taueff = (ratio + 1.0e0) / (
+            ratio / t_ion_confinement + 1.0e0 / t_electron_confinement
+        )
 
-        return kappaa, ptrepv, ptripv, tauee, t_ion_confinement, taueff, powerht
+        return (
+            kappaa,
+            ptrepv,
+            ptripv,
+            t_electron_confinement,
+            t_ion_confinement,
+            taueff,
+            powerht,
+        )
 
 
 def calculate_poloidal_beta(btot, bp, beta):
