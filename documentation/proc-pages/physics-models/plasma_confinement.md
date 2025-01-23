@@ -3,7 +3,7 @@
 The energy confinement time $\tau_E$ is calculated using one of a choice of empirical scalings. ($\tau_E$ is defined below.)
 
 Many energy confinement time scaling laws are available within PROCESS, for
-tokamaks, RFPs and stellarators. These are calculated in routine `pcond`. The 
+tokamaks, RFPs and stellarators. These are calculated in routine `calculate_confinement_time()`. The 
 value of `i_confinement_time` determines which of the scalings is used in the plasma energy 
 balance calculation. The table below summarises the available scaling laws. The 
 most commonly used is the so-called IPB98(y,2) scaling.

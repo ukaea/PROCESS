@@ -220,7 +220,7 @@ class Stellarator:
                 physics_variables.tauei,
                 physics_variables.taueff,
                 physics_variables.powerht,
-            ) = self.physics.pcond(
+            ) = self.physics.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
@@ -4461,7 +4461,7 @@ class Stellarator:
             physics_variables.tauei,
             physics_variables.taueff,
             physics_variables.powerht,
-        ) = self.physics.pcond(
+        ) = self.physics.calculate_confinement_time(
             physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
             physics_variables.aspect,

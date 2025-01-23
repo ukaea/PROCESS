@@ -2157,7 +2157,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     assert dlimit == pytest.approx(calculatedensitylimitparam.expected_dlimit)
 
 
-class PcondParam(NamedTuple):
+class ConfinementTimeParam(NamedTuple):
     i_rad_loss: Any = None
 
     tauee_in: Any = None
@@ -2244,9 +2244,9 @@ class PcondParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "pcondparam",
+    "confinementtimeparam",
     (
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2290,7 +2290,7 @@ class PcondParam(NamedTuple):
             expected_taueff=21.17616899712392,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2334,7 +2334,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.2679051814806366,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2378,7 +2378,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.2731572946627923,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2422,7 +2422,7 @@ class PcondParam(NamedTuple):
             expected_taueff=2.2040075681235445,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2466,7 +2466,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.2739047552801135,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2510,7 +2510,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.2692026799851455,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2554,7 +2554,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.6611421391548529,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2598,7 +2598,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.3898077909969717,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2642,7 +2642,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.169298972363837,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2686,7 +2686,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.203198469625145,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2730,7 +2730,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.6416666339340686,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2774,7 +2774,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.2693119926464513,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2818,7 +2818,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.2694535383156871,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2862,7 +2862,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.2694029195542003,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2906,7 +2906,7 @@ class PcondParam(NamedTuple):
             expected_taueff=3.3442231132583502,
             expected_powerht=290.18368660937881,
         ),
-        PcondParam(
+        ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
@@ -2952,78 +2952,86 @@ class PcondParam(NamedTuple):
         ),
     ),
 )
-def test_pcond(pcondparam, monkeypatch, physics):
+def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for pcond.
+    Automatically generated Regression Unit Test for calculate_confinement_time().
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
-    :param pcondparam: the data used to mock and assert in this test.
-    :type pcondparam: pcondparam
+    :param confinementtimeparam: the data used to mock and assert in this test.
+    :type confinementtimeparam: confinementtimeparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "i_rad_loss", pcondparam.i_rad_loss)
+    monkeypatch.setattr(
+        physics_variables, "i_rad_loss", confinementtimeparam.i_rad_loss
+    )
 
-    monkeypatch.setattr(physics_variables, "tauee_in", pcondparam.tauee_in)
+    monkeypatch.setattr(physics_variables, "tauee_in", confinementtimeparam.tauee_in)
 
     monkeypatch.setattr(
-        physics_variables, "pden_plasma_rad_mw", pcondparam.pden_plasma_rad_mw
+        physics_variables, "pden_plasma_rad_mw", confinementtimeparam.pden_plasma_rad_mw
     )
 
-    monkeypatch.setattr(physics_variables, "kappa_ipb", pcondparam.kappa_ipb)
+    monkeypatch.setattr(physics_variables, "kappa_ipb", confinementtimeparam.kappa_ipb)
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_ohmic_mw", pcondparam.p_plasma_ohmic_mw
+        physics_variables, "p_plasma_ohmic_mw", confinementtimeparam.p_plasma_ohmic_mw
     )
 
-    monkeypatch.setattr(physics_variables, "f_alpha_plasma", pcondparam.f_alpha_plasma)
-
-    kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = physics.pcond(
-        iinvqd=pcondparam.iinvqd,
-        i_confinement_time=pcondparam.i_confinement_time,
-        ignite=pcondparam.ignite,
-        m_fuel_amu=pcondparam.m_fuel_amu,
-        alpha_power_total=pcondparam.alpha_power_total,
-        aspect=pcondparam.aspect,
-        bt=pcondparam.bt,
-        dene=pcondparam.dene,
-        nd_ions_total=pcondparam.nd_ions_total,
-        dnla=pcondparam.dnla,
-        eps=pcondparam.eps,
-        hfact=pcondparam.hfact,
-        kappa=pcondparam.kappa,
-        kappa95=pcondparam.kappa95,
-        non_alpha_charged_power=pcondparam.non_alpha_charged_power,
-        pinjmw=pcondparam.pinjmw,
-        plasma_current=pcondparam.plasma_current,
-        pcoreradpv=pcondparam.pcoreradpv,
-        q=pcondparam.q,
-        qstar=pcondparam.qstar,
-        rmajor=pcondparam.rmajor,
-        rminor=pcondparam.rminor,
-        _te=pcondparam.te,
-        ten=pcondparam.ten,
-        tin=pcondparam.tin,
-        vol_plasma=pcondparam.vol_plasma,
-        a_plasma_poloidal=pcondparam.a_plasma_poloidal,
-        zeff=pcondparam.zeff,
+    monkeypatch.setattr(
+        physics_variables, "f_alpha_plasma", confinementtimeparam.f_alpha_plasma
     )
 
-    assert physics_variables.kappa_ipb == pytest.approx(pcondparam.expected_kappaa_ipb)
+    kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = (
+        physics.calculate_confinement_time(
+            iinvqd=confinementtimeparam.iinvqd,
+            i_confinement_time=confinementtimeparam.i_confinement_time,
+            ignite=confinementtimeparam.ignite,
+            m_fuel_amu=confinementtimeparam.m_fuel_amu,
+            alpha_power_total=confinementtimeparam.alpha_power_total,
+            aspect=confinementtimeparam.aspect,
+            bt=confinementtimeparam.bt,
+            dene=confinementtimeparam.dene,
+            nd_ions_total=confinementtimeparam.nd_ions_total,
+            dnla=confinementtimeparam.dnla,
+            eps=confinementtimeparam.eps,
+            hfact=confinementtimeparam.hfact,
+            kappa=confinementtimeparam.kappa,
+            kappa95=confinementtimeparam.kappa95,
+            non_alpha_charged_power=confinementtimeparam.non_alpha_charged_power,
+            pinjmw=confinementtimeparam.pinjmw,
+            plasma_current=confinementtimeparam.plasma_current,
+            pcoreradpv=confinementtimeparam.pcoreradpv,
+            q=confinementtimeparam.q,
+            qstar=confinementtimeparam.qstar,
+            rmajor=confinementtimeparam.rmajor,
+            rminor=confinementtimeparam.rminor,
+            _te=confinementtimeparam.te,
+            ten=confinementtimeparam.ten,
+            tin=confinementtimeparam.tin,
+            vol_plasma=confinementtimeparam.vol_plasma,
+            a_plasma_poloidal=confinementtimeparam.a_plasma_poloidal,
+            zeff=confinementtimeparam.zeff,
+        )
+    )
 
-    assert kappaa == pytest.approx(pcondparam.expected_kappaa)
+    assert physics_variables.kappa_ipb == pytest.approx(
+        confinementtimeparam.expected_kappaa_ipb
+    )
 
-    assert powerht == pytest.approx(pcondparam.expected_powerht)
+    assert kappaa == pytest.approx(confinementtimeparam.expected_kappaa)
 
-    assert ptrepv == pytest.approx(pcondparam.expected_ptrepv)
+    assert powerht == pytest.approx(confinementtimeparam.expected_powerht)
 
-    assert ptripv == pytest.approx(pcondparam.expected_ptripv)
+    assert ptrepv == pytest.approx(confinementtimeparam.expected_ptrepv)
 
-    assert tauee == pytest.approx(pcondparam.expected_tauee)
+    assert ptripv == pytest.approx(confinementtimeparam.expected_ptripv)
 
-    assert taueff == pytest.approx(pcondparam.expected_taueff)
+    assert tauee == pytest.approx(confinementtimeparam.expected_tauee)
 
-    assert tauei == pytest.approx(pcondparam.expected_tauei)
+    assert taueff == pytest.approx(confinementtimeparam.expected_taueff)
+
+    assert tauei == pytest.approx(confinementtimeparam.expected_tauei)
