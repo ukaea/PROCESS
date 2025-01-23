@@ -74,7 +74,7 @@ ixc = 10 * "ISS04 Renormalization Factor" (can also be fixed)
 ixc = 50 * Coil current density, aka winding pack thickness (required!) 
 ixc = 59 * Winding Pack copper fraction
 ixc = 56 * Exponential Quench Dumping Time
-ixc = 109 * Thermal alpha particle pressure (iterated to consistency, use together with `taulimit`)
+ixc = 109 * Thermal alpha particle pressure (iterated to consistency, use together with `f_alpha_energy_confinement_min`)
 ixc = 169 * Achievable Temperature of the ECRH at the ignition point
 ```
 

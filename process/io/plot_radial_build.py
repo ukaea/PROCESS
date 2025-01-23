@@ -180,7 +180,7 @@ def main(args=None):
         "bt",
         "coreradius",
         "Obsolete",  # Removed
-        "taulimit",
+        "f_alpha_energy_confinement_min",
         "epsvmc",
         "ttarget",
         "qtargettotal",

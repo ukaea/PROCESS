@@ -54,7 +54,7 @@ var_dicts = {
         description="Average electron temperature",
         units="keV",
     ),
-    "taulimit": VariableMetadata(
+    "f_alpha_energy_confinement_min": VariableMetadata(
         latex=r"$max : \frac{\tau_\mathrm{\alpha}}{\tau_\mathrm{E}}$",
         description="Ratio of alpha heating time to energy confinement time",
         units="",

@@ -462,7 +462,7 @@ boundu(110) = 1.0
 * DESCRIPTION:   f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
 * JUSTIFICATION: Calculate He fraction consistent with tau ratio
 
-taulimit = 5.0 
+f_alpha_energy_confinement_min = 5.0 
 * DESCRIPTION:   Ratio of Alpha Particle to Energy Confinement times (icc=62)
 * JUSTIFICATION: Default based on JET
 

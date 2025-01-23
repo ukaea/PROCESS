@@ -2452,14 +2452,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
       !! #=# physics
-      !! #=#=# ftaulimit, taulimit
+      !! #=#=# ftaulimit, f_alpha_energy_confinement_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftaulimit : input real : f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
       !! t_alpha_confinement : input real : alpha particle confinement time (s)
       !! t_energy_confinement : input real : global thermal energy confinement time (sec)
-      !! taulimit : input real : Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
-      use constraint_variables, only: ftaulimit, taulimit
+      !! f_alpha_energy_confinement_min : input real : Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
+      use constraint_variables, only: ftaulimit, f_alpha_energy_confinement_min
       use physics_variables, only: t_alpha_confinement, t_energy_confinement
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2468,8 +2468,8 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - ftaulimit * (t_alpha_confinement / t_energy_confinement) / taulimit
-      tmp_con = taulimit
+      tmp_cc = 1.0D0 - ftaulimit * (t_alpha_confinement / t_energy_confinement) / f_alpha_energy_confinement_min
+      tmp_con = f_alpha_energy_confinement_min
       tmp_err = (t_alpha_confinement / t_energy_confinement) * tmp_cc
       tmp_symbol = '>'
       tmp_units = ''

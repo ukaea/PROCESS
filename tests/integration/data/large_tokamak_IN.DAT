@@ -155,7 +155,7 @@ tmargmin_cs = 1.5
 *-------------------------------------------------------------------------------*
 icc = 62 
 ixc = 110 * ftaulimit
-taulimit = 5.0
+f_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
