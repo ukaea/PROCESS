@@ -2322,7 +2322,7 @@ class Physics:
         sbar = 1.0e0
         (
             physics_variables.burnup,
-            physics_variables.dntau,
+            physics_variables.ntau,
             physics_variables.nTtau,
             physics_variables.figmer,
             physics_module.fusrat,
@@ -2990,7 +2990,7 @@ class Physics:
         Returns:
             tuple: A tuple containing:
                 - burnup (float): Fractional plasma burnup.
-                - dntau (float): Plasma average n-tau (s/m3).
+                - ntau (float): Plasma average n-tau (s/m3).
                 - nTtau (float): Plasma triple product nT-tau (s/m3).
                 - figmer (float): Physics figure of merit.
                 - fusrat (float): Number of fusion reactions per second.
@@ -3003,8 +3003,8 @@ class Physics:
         """
         figmer = 1e-6 * plasma_current * aspect**sbar
 
-        dntau = t_energy_confinement * dene
-        nTtau = dntau * te
+        ntau = t_energy_confinement * dene
+        nTtau = ntau * te
 
         # Fusion reactions per second
         fusrat = fusion_rate_density_total * plasma_volume
@@ -3041,7 +3041,7 @@ class Physics:
 
         return (
             burnup,
-            dntau,
+            ntau,
             nTtau,
             figmer,
             fusrat,
@@ -5232,9 +5232,9 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "n.tau = Volume-average electron density x Energy confinement time (s/m3)",
-            "(dntau)",
-            physics_variables.dntau,
+            "Fusion double product (s/m3)",
+            "(ntau)",
+            physics_variables.ntau,
             "OP ",
         )
         po.ovarre(

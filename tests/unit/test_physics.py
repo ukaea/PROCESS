@@ -1858,7 +1858,7 @@ class PhyauxParam(NamedTuple):
 
     expected_burnup: Any = None
 
-    expected_dntau: Any = None
+    expected_ntau: Any = None
 
     expected_nTtau: Any = None
 
@@ -1891,7 +1891,7 @@ class PhyauxParam(NamedTuple):
             t_energy_confinement=3.401323521525641,
             vol_plasma=1888.1711539956691,
             expected_burnup=0.20383432558954095,
-            expected_dntau=2.5509926411442307e20,
+            expected_ntau=2.5509926411442307e20,
             expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7484146722826997e20,
@@ -1914,7 +1914,7 @@ class PhyauxParam(NamedTuple):
             t_energy_confinement=3.402116961408892,
             vol_plasma=1888.1711539956691,
             expected_burnup=0.20387039462081086,
-            expected_dntau=2.5515877210566689e20,
+            expected_ntau=2.5515877210566689e20,
             expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7467489360461772e20,
@@ -1941,7 +1941,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
 
-    burnup, dntau, nTtau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, _ = (
+    burnup, ntau, nTtau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, _ = (
         physics.phyaux(
             aspect=phyauxparam.aspect,
             dene=phyauxparam.dene,
@@ -1959,7 +1959,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     assert burnup == pytest.approx(phyauxparam.expected_burnup)
 
-    assert dntau == pytest.approx(phyauxparam.expected_dntau)
+    assert ntau == pytest.approx(phyauxparam.expected_ntau)
 
     assert figmer == pytest.approx(phyauxparam.expected_figmer)
 

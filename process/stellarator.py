@@ -4509,7 +4509,7 @@ class Stellarator:
         sbar = 1.0e0
         (
             physics_variables.burnup,
-            physics_variables.dntau,
+            physics_variables.ntau,
             physics_variables.figmer,
             fusrat,
             physics_variables.qfuel,
