@@ -45,7 +45,7 @@ conda activate my_process
 
 It is worth checking that a compatible version of python has been installed (Python3.10 or 3.11). You can check this by entering `which python` into the terminal. You can install a compatible version of python with the command `conda install python=3.10`.
 
-Next, load a compatible version of gfortran.
+Next load a compatible version of gfortran.
 
 ```bash
 module unload gcc
