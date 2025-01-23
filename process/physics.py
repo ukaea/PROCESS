@@ -7040,25 +7040,23 @@ class Physics:
 
         # ==========================================================================
 
-        elif (
-            i_confinement_time == 24
-        ):  # ITER-93H scaling (ELM-free; multiply by 0.85 for ELMy version)
-            # S.Kaye and the ITER Joint Central Team and Home Teams, in Plasma
-            # Physics and Controlled Nuclear Fusion Research (Proc. 15th
-            # Int. Conf., Seville, 1994) IAEA-CN-60/E-P-3
-            tauee = (
-                hfact
-                * 0.053e0
-                * pcur**1.06e0
-                * bt**0.32e0
-                * powerht ** (-0.67e0)
-                * m_fuel_amu**0.41e0
-                * rmajor**1.79e0
-                * dnla20**0.17e0
-                * aspect**0.11e0
-                * kappa**0.66e0
+        # ITER_93 ELM-free H-mode scaling
+        elif i_confinement_time == 24:
+            tauee = hfact * confinement.iter_93h_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                afuel,
+                rmajor,
+                dnla20,
+                aspect,
+                kappa,
             )
 
+        # ==========================================================================
+        # Scaling removed
+        elif i_confinement_time == 25:
+            raise ValueError("Scaling removed")
         # ==========================================================================
 
         # ELM-free: ITERH-97P
@@ -7074,10 +7072,6 @@ class Physics:
                 afuel,
             )
 
-        # ==========================================================================
-        # Scaling removed
-        elif i_confinement_time == 25:
-            raise ValueError("Scaling removed")
         # ==========================================================================
 
         # ELMy: ITERH-97P(y)
