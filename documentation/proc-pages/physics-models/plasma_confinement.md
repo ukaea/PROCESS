@@ -296,6 +296,16 @@ $$
 
 -------------------------
 
+### 24: ITER 93 ELM-free H-mode scaling
+
+Is selected with `i_confinement_time = 24`
+
+$$
+\tau_{\text{E}} =  0.036  I^{1.06} B_{\text{T}}^{0.32} P^{-0.67} R^{1.79} \epsilon^{-0.11} \kappa^{0.66} \overline{n}_{20}^{0.17} M_{\text{i}}^{0.41}
+$$
+
+-------------------------
+
 ### 26: ELM-free: ITERH-97P scaling
 
 Is selected with `i_confinement_time = 26`
