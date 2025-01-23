@@ -151,7 +151,7 @@ icc = 60
 ixc = 106 * ftmargoh
 tmargmin_cs = 1.5
 
-* Lower limit on t_alpha_confinement/taueff (ratio alpha particle/energy confinement times) *
+* Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
 ixc = 110 * ftaulimit

@@ -496,7 +496,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.7889E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9961E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.3150E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.3150E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7855E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.4772E-02 OP 
@@ -1659,7 +1659,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.8240E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9751E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.2760E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2760E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7767E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.6299E-02 OP 
@@ -2822,7 +2822,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.8985E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9727E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.2781E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2781E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7693E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.7864E-02 OP 
@@ -3985,7 +3985,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.8956E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9773E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.2692E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2692E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7816E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.8030E-02 OP 
@@ -5148,7 +5148,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.8995E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9645E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.2382E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2382E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7788E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.6562E-02 OP 
@@ -6311,7 +6311,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.8676E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9471E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1873E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1873E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7790E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.5083E-02 OP 
@@ -7474,7 +7474,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.8858E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9508E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1836E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1836E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7872E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.5242E-02 OP 
@@ -8637,7 +8637,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.9000E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9498E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1813E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1813E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7862E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.6667E-02 OP 
@@ -9800,7 +9800,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.8564E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9521E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1847E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1847E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7894E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.8077E-02 OP 
@@ -10963,7 +10963,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.9158E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9576E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1905E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1905E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7946E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.8348E-02 OP 
@@ -12126,7 +12126,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.0058E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9558E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1851E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1851E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7900E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.6972E-02 OP 
@@ -13289,7 +13289,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.0074E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9518E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1733E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1733E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7896E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.5548E-02 OP 
@@ -14452,7 +14452,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.0607E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9571E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1764E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1764E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7957E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.5780E-02 OP 
@@ -15615,7 +15615,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.1011E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9628E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.1990E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1990E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7926E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.7314E-02 OP 
@@ -16778,7 +16778,7 @@
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.1467E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9687E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.2221E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2221E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7894E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.8950E-02 OP 
@@ -17636,7 +17636,7 @@ icc = 60
 ixc = 106 * ftmargoh
 tmargmin_cs = 1.5
 
-* Lower limit on t_alpha_confinement/taueff (ratio alpha particle/energy confinement times) *
+* Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
 ixc = 110 * ftaulimit
