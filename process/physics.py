@@ -2233,7 +2233,7 @@ class Physics:
             physics_variables.taueff,
             physics_variables.tauei,
             physics_variables.powerht,
-        ) = self.pcond(
+        ) = self.calculate_confinement_time(
             physics_variables.afuel,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
@@ -5600,7 +5600,7 @@ class Physics:
                 taueiz,
                 taueffz,
                 powerhtz,
-            ) = self.pcond(
+            ) = self.calculate_confinement_time(
                 physics_variables.afuel,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
@@ -6392,7 +6392,7 @@ class Physics:
             taueiz,
             taueffz,
             powerhtz,
-        ) = self.pcond(
+        ) = self.calculate_confinement_time(
             physics_variables.afuel,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
@@ -6450,7 +6450,7 @@ class Physics:
         return fhz
 
     @staticmethod
-    def pcond(
+    def calculate_confinement_time(
         afuel,
         alpha_power_total,
         aspect,
