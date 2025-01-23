@@ -231,7 +231,7 @@ contains
     use constraint_variables, only: flhthresh, fpeakb, fpsep, fdivcol, ftcycl, &
       beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
-      fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
+      fgamcd, ftbr, mvalim, f_alpha_energy_confinement_min, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic,fr_conducting_wall, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
@@ -751,8 +751,8 @@ contains
        case ('tauee_in')
            call parse_real_variable('tauee_in', tauee_in, 0.0D0, 100.0D0, &
                     'Input electron energy confinement time (sec) (i_confinement_time=48 only)')
-       case ('taulimit')
-          call parse_real_variable('taulimit', taulimit, 1.0D0, 100.0D0, &
+       case ('f_alpha_energy_confinement_min')
+          call parse_real_variable('f_alpha_energy_confinement_min', f_alpha_energy_confinement_min, 1.0D0, 100.0D0, &
                'Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times')
 
        case ('teped')

@@ -67,7 +67,7 @@ module scan_module
   !!         <LI> 28 bt
   !!         <LI> 29 coreradius
   !!         <LI> 30 fimpvar # OBSOLETE
-  !!         <LI> 31 taulimit
+  !!         <LI> 31 f_alpha_energy_confinement_min
   !!         <LI> 32 epsvmc
   !!         <LI> 33 ttarget
   !!         <LI> 34 qtargettotal
@@ -179,7 +179,7 @@ contains
   end subroutine scan_1d_write_point_header
 
   subroutine scan_1d_store_output(iscan, ifail, noutvars_, ipnscns_, outvar)
-    use constraint_variables, only: taulimit
+    use constraint_variables, only: f_alpha_energy_confinement_min
     use cost_variables, only: cdirt, coe, coeoam, coefuelt, c222, ireactor, &
       capcost, coecap, c221
     use current_drive_variables, only: pheat, pinjmw, bootstrap_current_fraction, beam_energy, bigq
@@ -274,7 +274,7 @@ contains
     outvar(55,iscan) = (wwp1+wwp2)*dr_tf_wp
     outvar(56,iscan) = acond
     outvar(57,iscan) = tfareain/n_tf
-    outvar(58,iscan) = taulimit
+    outvar(58,iscan) = f_alpha_energy_confinement_min
     outvar(66,iscan) = f_nd_alpha_electron
     outvar(69,iscan) = fimp(1)
     outvar(70,iscan) = fimp(2)
@@ -594,7 +594,7 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	use build_variables, only: dr_blkt_outboard, dr_shld_inboard, dr_fw_plasma_gap_inboard, dr_fw_plasma_gap_outboard, dr_cs
-    use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
+    use constraint_variables, only: fiooic, walalw, bmxlim, fqval, f_alpha_energy_confinement_min, &
         gammax, t_burn_min, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
 	use current_drive_variables, only: bootstrap_current_fraction_max, etaech
@@ -716,8 +716,8 @@ contains
             !fimpvar = swp(iscn)
             vlab = 'OBSOLETE' ; xlab = 'OBSOLETE'
         case (31)
-            taulimit = swp(iscn)
-            vlab = 'taulimit' ; xlab = 't_alpha_confinement/taueff_lower_limit'
+            f_alpha_energy_confinement_min = swp(iscn)
+            vlab = 'f_alpha_energy_confinement_min' ; xlab = 't_alpha_confinement/taueff_lower_limit'
         case (32)
             epsvmc = swp(iscn)
             vlab = 'epsvmc' ; xlab = 'VMCON error tolerance'

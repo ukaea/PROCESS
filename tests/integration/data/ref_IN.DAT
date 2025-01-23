@@ -23,7 +23,7 @@ icc = 65 * dumpt time by VV stresses
 icc = 60 * OH coil temp margin
 icc = 72 * OH stress limit
 icc = 25 * Max TF field
-icc = 62 * taulimit
+icc = 62 * f_alpha_energy_confinement_min
 
 *---------------Iteration Variables----------------*
 

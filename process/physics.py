@@ -5398,8 +5398,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Lower limit on f_alpha_energy_confinement",
-            "(taulimit)",
-            constraint_variables.taulimit,
+            "(f_alpha_energy_confinement_min)",
+            constraint_variables.f_alpha_energy_confinement_min,
         )
         po.ovarrf(
             self.outfile,

@@ -1933,17 +1933,19 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
 
-    burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement = physics.phyaux(
-        aspect=phyauxparam.aspect,
-        dene=phyauxparam.dene,
-        nd_fuel_ions=phyauxparam.nd_fuel_ions,
-        nd_alphas=phyauxparam.nd_alphas,
-        fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
-        alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
-        plasma_current=phyauxparam.plasma_current,
-        sbar=phyauxparam.sbar,
-        t_energy_confinement=phyauxparam.t_energy_confinement,
-        vol_plasma=phyauxparam.vol_plasma,
+    burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, _ = (
+        physics.phyaux(
+            aspect=phyauxparam.aspect,
+            dene=phyauxparam.dene,
+            nd_fuel_ions=phyauxparam.nd_fuel_ions,
+            nd_alphas=phyauxparam.nd_alphas,
+            fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
+            alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
+            plasma_current=phyauxparam.plasma_current,
+            sbar=phyauxparam.sbar,
+            t_energy_confinement=phyauxparam.t_energy_confinement,
+            vol_plasma=phyauxparam.vol_plasma,
+        )
     )
 
     assert burnup == pytest.approx(phyauxparam.expected_burnup)

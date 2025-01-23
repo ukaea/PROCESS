@@ -227,7 +227,7 @@ def main(args=None):
         28: "bt",
         29: "coreradius",
         30: "",  # OBSOLETE
-        31: "taulimit",
+        31: "f_alpha_energy_confinement_min",
         32: "epsvmc",
         33: "ttarget",
         34: "qtargettotal",
