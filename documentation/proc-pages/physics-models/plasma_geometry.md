@@ -13,7 +13,7 @@ required using certain switch conditions of `i_plasma_geometry`:
 
 The setting of the `i_plasma_shape` switch determines what type of plasma shaping formula to use. 
 
-  - `i_plasma_shape = 0`: Default PROCESS plasma shape is used wich models the plasma as 2-intersecting arcs (DEFAULT).
+  - `i_plasma_shape = 0`: Default PROCESS plasma shape is used which models the plasma as 2-intersecting arcs (DEFAULT).
   - `i_plasma_shape = 1`: The Sauter geometry is used which includes the squareness $(\xi)$ parameter.
 
 The different parameterisations of the plasma shape can be experimented with in the plot below.
@@ -478,9 +478,9 @@ $$
 
 ------------------
 
-### Sauter geoemtry | `sauter_geometry()`
+### Sauter geometry | `sauter_geometry()`
 
-Plasma geometry based on equations'Geometric formulas for system codes including the effect of negative triangularity'[^7]
+This function calculates the plasma volumes, areas, perimeter and shapes based on the Sauter formulation[^7].
 
 | Input Variable | Description                          |
 |----------|--------------------------------------|
@@ -506,30 +506,29 @@ $$
 \epsilon = \frac{a}{R}
 $$
 
-Poloidal perimeter (named Lp in Sauter)
+Poloidal perimeter (named $L_p$ in Sauter)
 
 $$
 \mathtt{len\_plasma\_poloidal} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\mathtt{w07} - 1))
 $$
 
-Surface area (named Ap in Sauter)
+Surface area (named $A_p$ in Sauter)
 
 $$
 \mathtt{a\_plasma\_surface} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{len\_plasma\_poloidal}
 $$ 
 
-Cross-section area (named S_phi in Sauter)
+Cross-section area (named $S_{\phi}$ in Sauter)
 
 $$
 \mathtt{a\_plasma\_poloidal} = \pi a^2 \kappa (1 + 0.52 (\mathtt{w07} - 1))
 $$
 
-Volume
+Volume  (named $V$ in Sauter)
 
 $$
 \mathtt{vol\_plasma} = 2.0\pi R (1 - 0.25 \delta \epsilon) \mathtt{a\_plasma\_poloidal}
 $$
-
 
 ------------------
 
@@ -537,7 +536,7 @@ $$
 
 ### Conducting shell radius
 
-This constraint can be activated by stating `icc = 23` in the input file.
+This constraint equation can be activated by stating `icc = 23` in the input file.
 
 In principle, the inner surface of the outboard shield could be used
 as the location of a conducting shell to mitigate the vertical
