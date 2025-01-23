@@ -1782,5 +1782,55 @@ def nstx_gyro_bohm_confinement_time(
     )
 
 
+def itpa20_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    powerht: float,
+    rmajor: float,
+    triang: float,
+    kappa_ipb: float,
+    eps: float,
+    aion: float,
+) -> float:
+    """
+    Calculate the ITPA20 Issue #3164 confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    dnla19 (float): Central line-averaged electron density in units of 10**19 m**-3
+    powerht (float): Thermal power lost due to transport through the LCFS [MW]
+    rmajor (float): Plasma major radius [m]
+    triang (float): Triangularity
+    kappa_ipb (float): IPB specific plasma separatrix elongation
+    eps (float): Inverse aspect ratio
+    aion (float): Average mass of all ions (amu)
+
+    Returns:
+    float: ITPA20 confinement time [s]
+
+    Notes:
+        - Mass term is the effective mass of the plasma, so we assume the total ion mass here
+        - This scaling uses the IPB defintiion of elongation, see reference for more information.
+
+    References:
+        - G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,”
+          Nuclear Fusion, vol. 61, no. 7, pp. 076006–076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
+    """
+    return (
+        0.053
+        * pcur**0.98
+        * bt**0.22
+        * dnla19**0.24
+        * powerht ** (-0.669)
+        * rmajor**1.71
+        * (1 + triang) ** 0.36
+        * kappa_ipb**0.8
+        * eps**0.35
+        * aion**0.2
+    )
+
+
 if __name__ == "__main__":
     pass

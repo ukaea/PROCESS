@@ -496,6 +496,16 @@ $$
 
 -------------------------
 
+### 49: ITPA20 H-mode scaling
+
+Is selected with `i_confinement_time = 49`
+
+$$
+\tau_{\text{E}} =  0.053 I^{0.98} B_{\text{T}}^{0.22} \overline{n}_{19}^{0.24} P^{-0.669} R^{1.71} \left(1+\delta \right)^{0.36}  \kappa_{\text{IPB}}^{0.8} \epsilon^{0.35} M^{0.2}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

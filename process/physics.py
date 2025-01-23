@@ -7407,38 +7407,27 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 49:  # ITPA20 Issue #3164
-            # The updated ITPA global H-mode confinement database: description and analysis
-            # G. Verdoolaege et al 2021 Nucl. Fusion 61 076006 DOI 10.1088/1741-4326/abdb91
-
-            # thermal energy confinement time
-            # plasma current Ip (MA),
-            # on-axis vacuum toroidal magnetic field Bt (T)
-            # "central line-averaged electron density" nebar (1019 m-3)
-            # thermal power lost due to transport through the LCFS Pl,th (MW)
-            # major radius Rgeo (m)
-            # elongation of the LCFS, defined as κa = V/(2πRgeo πa2)
-            # (with V (m3) the plasma volume inside the LCFS),
-            # inverse aspect ratio epsilon = a/Rgeo
-            # effective atomic mass Meff of the plasma - NOT defined, but I have taken it equal to
-            # m_ions_total_amu = average mass of all ions (amu).
-            # energy confinement time is given by τE,th = Wth/Pl,th, where Wth is the thermal stored energy.
-            # The latter is derived from the total stored energy Wtot by subtracting the energy
-            # content associated to fast particles originating from plasma heating.
-
-            tauee = (
-                hfact
-                * 0.053
-                * pcur**0.98
-                * bt**0.22
-                * dnla19**0.24
-                * powerht ** (-0.669)
-                * rmajor**1.71
-                * (1 + physics_variables.triang) ** 0.36
-                * physics_variables.kappa_ipb**0.8
-                * eps**0.35
-                * physics_variables.m_ions_total_amu**0.2
+        # ITPA20 H-mode scaling
+        elif i_confinement_time == 49:
+            tauee = hfact * confinement.itpa20_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.triang,
+                physics_variables.kappa_ipb,
+                eps,
+                physics_variables.aion,
             )
+
+        # ==========================================================================
+
+        # ==========================================================================
+
+        # ==========================================================================
+
+        # ==========================================================================
 
         else:
             error_handling.idiags[0] = i_confinement_time
