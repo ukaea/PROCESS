@@ -368,7 +368,7 @@ contains
         plabel(55) = 'Winding_pack_area_TFC(m2)'
         plabel(56) = 'Conductor_area_TFC_(m2)__'
         plabel(57) = 'Area_TF_inboard_leg_(m2)_'
-        plabel(58) = 'Taup/taueff_lower_limit__'
+        plabel(58) = 't_alpha_confinement/taueff_lower_limit__'
         plabel(59) = 'Plasma_temp_at_sep_[keV]_'
         plabel(60) = 'SOL_density_at_OMP_______'
         plabel(61) = 'Power_through__separatrix'
@@ -556,7 +556,7 @@ contains
     plabel(55) = 'Winding_pack_area_TFC(m2)'
     plabel(56) = 'Conductor_area_TFC_(m2)__'
     plabel(57) = 'Area_TF_inboard_leg_(m2)_'
-    plabel(58) = 'Taup/taueff_lower_limit__'
+    plabel(58) = 't_alpha_confinement/taueff_lower_limit__'
     plabel(59) = 'Plasma_temp_at_sep_[keV]_'
     plabel(60) = 'SOL_density_at_OMP_______'
     plabel(61) = 'Power_through__separatrix'
@@ -717,7 +717,7 @@ contains
             vlab = 'OBSOLETE' ; xlab = 'OBSOLETE'
         case (31)
             taulimit = swp(iscn)
-            vlab = 'taulimit' ; xlab = 'Taup/taueff_lower_limit'
+            vlab = 'taulimit' ; xlab = 't_alpha_confinement/taueff_lower_limit'
         case (32)
             epsvmc = swp(iscn)
             vlab = 'epsvmc' ; xlab = 'VMCON error tolerance'

@@ -113,7 +113,7 @@ tmargmin = 1.5
 icc = 60
 tmargmin_cs = 1.5
 
-* Lower limit on taup/taueff (ratio alpha particle/energy confinement times) *
+* Lower limit on t_alpha_confinement/taueff (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
 taulimit = 5.0

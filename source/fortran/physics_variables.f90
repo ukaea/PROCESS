@@ -829,7 +829,7 @@ module physics_variables
   real(dp) :: tauei
   !! ion energy confinement time (sec)
 
-  real(dp) :: taup
+  real(dp) :: t_alpha_confinement
   !! alpha particle confinement time (sec)
 
   real(dp) :: te
@@ -1101,7 +1101,7 @@ module physics_variables
     tauee_in = 0.0D0
     taueff = 0.0D0
     tauei = 0.0D0
-    taup = 0.0D0
+    t_alpha_confinement = 0.0D0
     te = 12.9D0
     te0 = 0.0D0
     ten = 0.0D0

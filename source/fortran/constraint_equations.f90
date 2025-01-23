@@ -227,7 +227,7 @@ contains
         case (60); call constraint_eqn_060(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
 	      ! Equation for availability limit
         case (61); call constraint_eqn_061(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-	      ! Lower limit on taup/taueff the ratio of alpha particle to energy confinement times
+	      ! Lower limit on t_alpha_confinement/taueff the ratio of alpha particle to energy confinement times
         case (62); call constraint_eqn_062(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
 	      ! Upper limit on niterpump (vacuum_model = simple)
         case (63); call constraint_eqn_063(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
@@ -2446,21 +2446,21 @@ contains
    end subroutine constraint_eqn_061
 
    subroutine constraint_eqn_062(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Lower limit on taup/taueff the ratio of alpha particle to energy confinement times
+      !! Lower limit on t_alpha_confinement/taueff the ratio of alpha particle to energy confinement times
       !! author: P B Lloyd, CCFE, Culham Science Centre
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !! Lower limit on taup/taueff the ratio of alpha particle to energy confinement times
+      !! Lower limit on t_alpha_confinement/taueff the ratio of alpha particle to energy confinement times
       !! #=# physics
       !! #=#=# ftaulimit, taulimit
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ftaulimit : input real : f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement
-      !! taup : input real : alpha particle confinement time (s)
+      !! ftaulimit : input real : f-value for lower limit on t_alpha_confinement/taueff the ratio of alpha particle to energy confinement
+      !! t_alpha_confinement : input real : alpha particle confinement time (s)
       !! taueff : input real : global thermal energy confinement time (sec)
-      !! taulimit : input real : Lower limit on taup/taueff the ratio of alpha particle to energy confinement times
+      !! taulimit : input real : Lower limit on t_alpha_confinement/taueff the ratio of alpha particle to energy confinement times
       use constraint_variables, only: ftaulimit, taulimit
-      use physics_variables, only: taup, taueff
+      use physics_variables, only: t_alpha_confinement, taueff
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2468,9 +2468,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - ftaulimit * (taup / taueff) / taulimit
+      tmp_cc = 1.0D0 - ftaulimit * (t_alpha_confinement / taueff) / taulimit
       tmp_con = taulimit
-      tmp_err = (taup / taueff) * tmp_cc
+      tmp_err = (t_alpha_confinement / taueff) * tmp_cc
       tmp_symbol = '>'
       tmp_units = ''
 

@@ -1866,7 +1866,7 @@ class PhyauxParam(NamedTuple):
 
     expected_rndfuel: Any = None
 
-    expected_taup: Any = None
+    expected_t_alpha_confinement: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1891,7 +1891,7 @@ class PhyauxParam(NamedTuple):
             expected_fusrat=3.7484146722826997e20,
             expected_qfuel=1.8389516394951276e21,
             expected_rndfuel=3.7484146722826997e20,
-            expected_taup=37.993985551650177,
+            expected_t_alpha_confinement=37.993985551650177,
         ),
         PhyauxParam(
             tauratio=1,
@@ -1912,7 +1912,7 @@ class PhyauxParam(NamedTuple):
             expected_fusrat=3.7467489360461772e20,
             expected_qfuel=1.8378092331723546e21,
             expected_rndfuel=3.7467489360461772e20,
-            expected_taup=38.010876984618747,
+            expected_t_alpha_confinement=38.010876984618747,
         ),
     ),
 )
@@ -1933,7 +1933,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
 
-    burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup = physics.phyaux(
+    burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement = physics.phyaux(
         aspect=phyauxparam.aspect,
         dene=phyauxparam.dene,
         nd_fuel_ions=phyauxparam.nd_fuel_ions,
@@ -1958,7 +1958,9 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     assert rndfuel == pytest.approx(phyauxparam.expected_rndfuel)
 
-    assert taup == pytest.approx(phyauxparam.expected_taup)
+    assert t_alpha_confinement == pytest.approx(
+        phyauxparam.expected_t_alpha_confinement
+    )
 
 
 def test_rether():

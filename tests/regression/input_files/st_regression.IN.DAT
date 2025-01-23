@@ -451,15 +451,15 @@ boundu(21) = 10.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 icc = 62
-* DESCRIPTION:   taup/taueff ratio of particle to energy confinement times
+* DESCRIPTION:   t_alpha_confinement/taueff ratio of particle to energy confinement times
 * JUSTIFICATION: Used to constrain helium fraction
-* VARIABLES:     taueff,taup calculated in-situ
+* VARIABLES:     taueff,t_alpha_confinement calculated in-situ
 
 ixc = 110
 ftaulimit = 1.0
 boundl(110) = 0.01
 boundu(110) = 1.0
-* DESCRIPTION:   f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement times
+* DESCRIPTION:   f-value for lower limit on t_alpha_confinement/taueff the ratio of alpha particle to energy confinement times
 * JUSTIFICATION: Calculate He fraction consistent with tau ratio
 
 taulimit = 5.0 

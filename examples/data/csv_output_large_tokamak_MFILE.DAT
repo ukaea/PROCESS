@@ -176,7 +176,7 @@
  J_winding_pack/J_protection_limit_normalised_residue____________________ (normres017)__________________      2.0761E-13    
  TF_coil_temp._margin_lower_limit__normalised_residue____________________ (normres018)__________________     -1.2975E-12    
  CS_temperature_margin_lower_limit_normalised_residue____________________ (normres019)__________________     -0.0000E+00    
- taup/taueff_______________________normalised_residue____________________ (normres020)__________________     -4.7055E-09    
+ t_alpha_confinement/taueff_______________________normalised_residue____________________ (normres020)__________________     -4.7055E-09    
  Dump_time_set_by_VV_stress________normalised_residue____________________ (normres021)__________________      3.0487E-13    
  CS_Tresca_yield_criterion_________normalised_residue____________________ (normres022)__________________     -4.9472E-13    
  ne0_>_neped_______________________normalised_residue____________________ (normres023)__________________      1.2901E-13    
@@ -497,8 +497,8 @@
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      2.8997E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      8.9376E+01 OP 
- Alpha_particle_confinement_time_(s)_____________________________________ (taup)________________________      2.2315E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (taup/taueff)_________________      6.8919E+00    
+ Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      2.2315E+01    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.8919E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.8266E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.7123E-02 OP 
@@ -1346,7 +1346,7 @@ icc = 60
 ixc = 106 * ftmargoh
 tmargmin_cs = 1.5
 
-* Lower limit on taup/taueff (ratio alpha particle/energy confinement times) *
+* Lower limit on t_alpha_confinement/taueff (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
 ixc = 110 * ftaulimit

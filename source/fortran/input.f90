@@ -604,7 +604,7 @@ contains
                'f-value for Eich critical separatrix density')
        case ('ftaulimit')
           call parse_real_variable('ftaulimit', ftaulimit, 0.001D0, 1.0D0, &
-               'f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement times')
+               'f-value for lower limit on t_alpha_confinement/taueff the ratio of alpha particle to energy confinement times')
        case ('f_tritium')
           call parse_real_variable('f_tritium', f_tritium, 0.0D0, 1.0D0, &
                'Tritium fuel fraction')
@@ -753,7 +753,7 @@ contains
                     'Input electron energy confinement time (sec) (i_confinement_time=48 only)')
        case ('taulimit')
           call parse_real_variable('taulimit', taulimit, 1.0D0, 100.0D0, &
-               'Lower limit on taup/taueff the ratio of alpha particle to energy confinement times')
+               'Lower limit on t_alpha_confinement/taueff the ratio of alpha particle to energy confinement times')
 
        case ('teped')
           call parse_real_variable('teped', teped, 0.0D0, 20.0D0, &
