@@ -171,8 +171,8 @@ module physics_variables
   real(dp) :: dnprot
   !! proton ash density (/m3)
 
-  real(dp) :: dntau
-  !! plasma average "n-tau" (seconds/m3)
+  real(dp) :: ntau
+  !! Fusion double product (s/m3)
 
   real(dp) :: nTtau
   !! Lawson triple product [keV s / m3]
@@ -949,7 +949,7 @@ module physics_variables
     dnitot = 0.0D0
     dnla = 0.0D0
     dnprot = 0.0D0
-    dntau = 0.0D0
+    ntau = 0.0D0
     nTtau = 0.0D0
     dnz = 0.0D0
     beta_poloidal_eps_max = 1.38D0

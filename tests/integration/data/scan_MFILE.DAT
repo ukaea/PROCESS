@@ -345,7 +345,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
@@ -1340,7 +1340,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
@@ -2335,7 +2335,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
@@ -3330,7 +3330,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
@@ -4325,7 +4325,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
@@ -5320,7 +5320,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
@@ -6315,7 +6315,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
@@ -7310,7 +7310,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
@@ -8305,7 +8305,7 @@
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.6434E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.6434E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.6434E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5918E+20 OP 
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5918E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.1834E+21 OP 
  Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      3.2994E+02 OP 
  Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
