@@ -2387,7 +2387,7 @@ contains
   !---------------------------------
 
   subroutine init_itv_110
-    !! <LI> (110) ftaulimit: Lower limit on taup/taueff the ratio of alpha
+    !! <LI> (110) ftaulimit: Lower limit on t_alpha_confinement/taueff the ratio of alpha
     use numerics, only: lablxc, boundl, boundu
     implicit none
     !!      particle to energy confinement times (f-value for equation 62)

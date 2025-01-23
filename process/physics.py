@@ -2305,7 +2305,7 @@ class Physics:
             physics_module.fusrat,
             physics_variables.qfuel,
             physics_variables.rndfuel,
-            physics_variables.taup,
+            physics_variables.t_alpha_confinement,
         ) = self.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
@@ -2896,7 +2896,7 @@ class Physics:
         fusrat : output real : number of fusion reactions per second
         qfuel  : output real : fuelling rate for D-T (nucleus-pairs/sec)
         rndfuel: output real : fuel burnup rate (reactions/s)
-        taup   : output real : (alpha) particle confinement time (s)
+        t_alpha_confinement   : output real : (alpha) particle confinement time (s)
         This subroutine calculates extra physics related items
         needed by other parts of the code
         """
@@ -2913,9 +2913,9 @@ class Physics:
         # Number of alphas / alpha production rate
 
         if alpha_rate_density_total != 0.0:
-            taup = dnalp / alpha_rate_density_total
+            t_alpha_confinement = dnalp / alpha_rate_density_total
         else:  # only likely if DD is only active fusion reaction
-            taup = 0.0
+            t_alpha_confinement = 0.0
 
         # Fractional burnup
 
@@ -2941,7 +2941,7 @@ class Physics:
 
         qfuel = rndfuel / burnup
 
-        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
+        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement
 
     @staticmethod
     def plasma_ohmic_heating(
@@ -5182,21 +5182,21 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Alpha particle confinement time (s)",
-            "(taup)",
-            physics_variables.taup,
+            "(t_alpha_confinement)",
+            physics_variables.t_alpha_confinement,
             "OP ",
         )
         # Note alpha confinement time is no longer equal to fuel particle confinement time.
         po.ovarrf(
             self.outfile,
             "Alpha particle/energy confinement time ratio",
-            "(taup/taueff)",
-            physics_variables.taup / physics_variables.taueff,
+            "(t_alpha_confinement/taueff)",
+            physics_variables.t_alpha_confinement / physics_variables.taueff,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Lower limit on taup/taueff",
+            "Lower limit on t_alpha_confinement/taueff",
             "(taulimit)",
             constraint_variables.taulimit,
         )
