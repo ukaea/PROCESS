@@ -7395,16 +7395,14 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 48:  # NSTX gyro-Bohm (Buxton)
-            # P F Buxton et al. 2019 Plasma Phys. Control. Fusion 61 035006
-            tauee = (
-                hfact
-                * 0.21e0
-                * pcur**0.54e0
-                * bt**0.91e0
-                * powerht ** (-0.38e0)
-                * rmajor**2.14e0
-                * dnla20 ** (-0.05e0)
+        # NSTX gyro-Bohm (Buxton)
+        elif i_confinement_time == 48:
+            tauee = hfact * confinement.nstx_gyro_bohm_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                rmajor,
+                dnla20,
             )
 
         # ==========================================================================
