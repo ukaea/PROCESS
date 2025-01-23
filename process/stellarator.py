@@ -217,7 +217,7 @@ class Stellarator:
                 physics_variables.ptrepv,
                 physics_variables.ptripv,
                 physics_variables.tauee,
-                physics_variables.tauei,
+                physics_variables.t_ion_confinement,
                 physics_variables.taueff,
                 physics_variables.powerht,
             ) = self.physics.calculate_confinement_time(
@@ -4402,7 +4402,7 @@ class Stellarator:
             physics_variables.ptrepv,
             physics_variables.ptripv,
             physics_variables.tauee,
-            physics_variables.tauei,
+            physics_variables.t_ion_confinement,
             physics_variables.taueff,
             physics_variables.powerht,
         ) = self.physics.calculate_confinement_time(
