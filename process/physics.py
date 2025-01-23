@@ -2253,7 +2253,7 @@ class Physics:
             physics_variables.ptripv,
             physics_variables.tauee,
             physics_variables.taueff,
-            physics_variables.tauei,
+            physics_variables.t_ion_confinement,
             physics_variables.powerht,
         ) = self.calculate_confinement_time(
             physics_variables.m_fuel_amu,
@@ -5205,8 +5205,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Ion energy confinement time (s)",
-            "(tauei)",
-            physics_variables.tauei,
+            "(t_ion_confinement)",
+            physics_variables.t_ion_confinement,
             "OP ",
         )
         po.ovarrf(
@@ -6746,7 +6746,7 @@ class Physics:
         ptripv    : output real : ion transport power (MW/m3)
         tauee     : output real : electron energy confinement time (s)
         taueff    : output real : global energy confinement time (s)
-        tauei     : output real : ion energy confinement time (s)
+        t_ion_confinement     : output real : ion energy confinement time (s)
         powerht   : output real : heating power (MW) assumed in calculation
         This subroutine calculates the energy confinement time
         using one of a large number of scaling laws, and the
@@ -6779,7 +6779,7 @@ class Physics:
             / ((np.sqrt(tin)) * (bt**2))
         )
         str2 = 2.0e0 * (kappa**2) / (1.0e0 + (kappa**2))
-        tauei = 0.375e0 * rminor**2 / chii * str2
+        t_ion_confinement = 0.375e0 * rminor**2 / chii * str2
 
         # ========================================================================
 
@@ -7521,22 +7521,22 @@ class Physics:
         # Ion energy confinement time
         # N.B. Overwrites earlier calculation above
 
-        tauei = tauee
+        t_ion_confinement = tauee
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
         # (here, tin and ten are in keV, and ptrepv and ptripv are in MW/m3)
 
-        ptripv = 2.403e-22 * nd_ions_total * tin / tauei
+        ptripv = 2.403e-22 * nd_ions_total * tin / t_ion_confinement
         ptrepv = 2.403e-22 * dene * ten / tauee
 
         ratio = nd_ions_total / dene * tin / ten
 
         # Global energy confinement time
 
-        taueff = (ratio + 1.0e0) / (ratio / tauei + 1.0e0 / tauee)
+        taueff = (ratio + 1.0e0) / (ratio / t_ion_confinement + 1.0e0 / tauee)
 
-        return kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht
+        return kappaa, ptrepv, ptripv, tauee, t_ion_confinement, taueff, powerht
 
 
 def calculate_poloidal_beta(btot, bp, beta):

@@ -826,7 +826,7 @@ module physics_variables
   real(dp) :: taueff
   !! global thermal energy confinement time (sec)
 
-  real(dp) :: tauei
+  real(dp) :: t_ion_confinement
   !! ion energy confinement time (sec)
 
   real(dp) :: t_alpha_confinement
@@ -1100,7 +1100,7 @@ module physics_variables
     tauee = 0.0D0
     tauee_in = 0.0D0
     taueff = 0.0D0
-    tauei = 0.0D0
+    t_ion_confinement = 0.0D0
     t_alpha_confinement = 0.0D0
     te = 12.9D0
     te0 = 0.0D0

@@ -2242,7 +2242,7 @@ class ConfinementTimeParam(NamedTuple):
 
     expected_taueff: Any = None
 
-    expected_tauei: Any = None
+    expected_t_ion_confinement: Any = None
 
 
 @pytest.mark.parametrize(
@@ -2288,7 +2288,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.012570664670798823,
             expected_ptripv=0.011156836223364355,
             expected_tauee=21.17616899712392,
-            expected_tauei=21.17616899712392,
+            expected_t_ion_confinement=21.17616899712392,
             expected_taueff=21.17616899712392,
             expected_powerht=290.18368660937881,
         ),
@@ -2332,7 +2332,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.081458458765440875,
             expected_ptripv=0.072296788376262536,
             expected_tauee=3.2679051814806361,
-            expected_tauei=3.2679051814806361,
+            expected_t_ion_confinement=3.2679051814806361,
             expected_taueff=3.2679051814806366,
             expected_powerht=290.18368660937881,
         ),
@@ -2376,7 +2376,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.081327750398391824,
             expected_ptripv=0.072180780839479111,
             expected_tauee=3.2731572946627923,
-            expected_tauei=3.2731572946627923,
+            expected_t_ion_confinement=3.2731572946627923,
             expected_taueff=3.2731572946627923,
             expected_powerht=290.18368660937881,
         ),
@@ -2420,7 +2420,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.12077931279593926,
             expected_ptripv=0.10719520783694242,
             expected_tauee=2.2040075681235445,
-            expected_tauei=2.2040075681235445,
+            expected_t_ion_confinement=2.2040075681235445,
             expected_taueff=2.2040075681235445,
             expected_powerht=290.18368660937881,
         ),
@@ -2464,7 +2464,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.081309182573405442,
             expected_ptripv=0.072164301346324039,
             expected_tauee=3.2739047552801135,
-            expected_tauei=3.2739047552801135,
+            expected_t_ion_confinement=3.2739047552801135,
             expected_taueff=3.2739047552801135,
             expected_powerht=290.18368660937881,
         ),
@@ -2508,7 +2508,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08142612910014517,
             expected_ptripv=0.072268094843318462,
             expected_tauee=3.269202679985145,
-            expected_tauei=3.269202679985145,
+            expected_t_ion_confinement=3.269202679985145,
             expected_taueff=3.2692026799851455,
             expected_powerht=290.18368660937881,
         ),
@@ -2552,7 +2552,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.072709146314778414,
             expected_ptripv=0.064531515128155068,
             expected_tauee=3.6611421391548524,
-            expected_tauei=3.6611421391548524,
+            expected_t_ion_confinement=3.6611421391548524,
             expected_taueff=3.6611421391548529,
             expected_powerht=290.18368660937881,
         ),
@@ -2596,7 +2596,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.078529089520063822,
             expected_ptripv=0.069696886639614319,
             expected_tauee=3.3898077909969717,
-            expected_tauei=3.3898077909969717,
+            expected_t_ion_confinement=3.3898077909969717,
             expected_taueff=3.3898077909969717,
             expected_powerht=290.18368660937881,
         ),
@@ -2640,7 +2640,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08399287091443618,
             expected_ptripv=0.07454615402313478,
             expected_tauee=3.169298972363837,
-            expected_tauei=3.169298972363837,
+            expected_t_ion_confinement=3.169298972363837,
             expected_taueff=3.169298972363837,
             expected_powerht=290.18368660937881,
         ),
@@ -2684,7 +2684,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.0831039731066564,
             expected_ptripv=0.07375723096135396,
             expected_tauee=3.203198469625145,
-            expected_tauei=3.203198469625145,
+            expected_t_ion_confinement=3.203198469625145,
             expected_taueff=3.203198469625145,
             expected_powerht=290.18368660937881,
         ),
@@ -2728,7 +2728,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.073097992274882811,
             expected_ptripv=0.064876627403966491,
             expected_tauee=3.6416666339340682,
-            expected_tauei=3.6416666339340682,
+            expected_t_ion_confinement=3.6416666339340682,
             expected_taueff=3.6416666339340686,
             expected_powerht=290.18368660937881,
         ),
@@ -2772,7 +2772,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.081423406537449478,
             expected_ptripv=0.072265678488503571,
             expected_tauee=3.2693119926464509,
-            expected_tauei=3.2693119926464509,
+            expected_t_ion_confinement=3.2693119926464509,
             expected_taueff=3.2693119926464513,
             expected_powerht=290.18368660937881,
         ),
@@ -2816,7 +2816,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.081419881443596701,
             expected_ptripv=0.072262549863580605,
             expected_tauee=3.2694535383156871,
-            expected_tauei=3.2694535383156871,
+            expected_t_ion_confinement=3.2694535383156871,
             expected_taueff=3.2694535383156871,
             expected_powerht=290.18368660937881,
         ),
@@ -2860,7 +2860,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.081421142032658531,
             expected_ptripv=0.072263668673609824,
             expected_tauee=3.2694029195542003,
-            expected_tauei=3.2694029195542003,
+            expected_t_ion_confinement=3.2694029195542003,
             expected_taueff=3.2694029195542003,
             expected_powerht=290.18368660937881,
         ),
@@ -2904,7 +2904,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.079599509500323962,
             expected_ptripv=0.070646915991500636,
             expected_tauee=3.3442231132583498,
-            expected_tauei=3.3442231132583498,
+            expected_t_ion_confinement=3.3442231132583498,
             expected_taueff=3.3442231132583502,
             expected_powerht=290.18368660937881,
         ),
@@ -2948,7 +2948,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.07147653259174333,
             expected_ptripv=0.06343753403847416,
             expected_tauee=3.7242785823911264,
-            expected_tauei=3.7242785823911264,
+            expected_t_ion_confinement=3.7242785823911264,
             expected_taueff=3.7242785823911264,
             expected_powerht=290.18368660937881,
         ),
@@ -2987,7 +2987,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         physics_variables, "f_alpha_plasma", confinementtimeparam.f_alpha_plasma
     )
 
-    kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = (
+    kappaa, ptrepv, ptripv, tauee, t_ion_confinement, taueff, powerht = (
         physics.calculate_confinement_time(
             iinvqd=confinementtimeparam.iinvqd,
             i_confinement_time=confinementtimeparam.i_confinement_time,
@@ -3036,4 +3036,6 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
 
     assert taueff == pytest.approx(confinementtimeparam.expected_taueff)
 
-    assert tauei == pytest.approx(confinementtimeparam.expected_tauei)
+    assert t_ion_confinement == pytest.approx(
+        confinementtimeparam.expected_t_ion_confinement
+    )
