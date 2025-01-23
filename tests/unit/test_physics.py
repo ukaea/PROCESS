@@ -1819,6 +1819,8 @@ class PhyauxParam(NamedTuple):
 
     dene: Any = None
 
+    te: Any = None
+
     deni: Any = None
 
     dnalp: Any = None
@@ -1839,6 +1841,8 @@ class PhyauxParam(NamedTuple):
 
     expected_dntau: Any = None
 
+    expected_nTtau: Any = None
+
     expected_figmer: Any = None
 
     expected_fusrat: Any = None
@@ -1858,6 +1862,7 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             dene=7.5e19,
+            te=12.569,
             deni=5.8589175702454272e19,
             dnalp=7.5e18,
             fusion_rate_density_total=1.9852091609123786e17,
@@ -1868,6 +1873,7 @@ class PhyauxParam(NamedTuple):
             plasma_volume=1888.1711539956691,
             expected_burnup=0.20383432558954095,
             expected_dntau=2.5509926411442307e20,
+            expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7484146722826997e20,
             expected_qfuel=1.8389516394951276e21,
@@ -1879,6 +1885,7 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             dene=7.5e19,
+            te=12.569,
             deni=5.8576156204039725e19,
             dnalp=7.5e18,
             fusion_rate_density_total=1.9843269653375773e17,
@@ -1889,6 +1896,7 @@ class PhyauxParam(NamedTuple):
             plasma_volume=1888.1711539956691,
             expected_burnup=0.20387039462081086,
             expected_dntau=2.5515877210566689e20,
+            expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7467489360461772e20,
             expected_qfuel=1.8378092331723546e21,
@@ -1914,10 +1922,11 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
 
-    burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, _ = (
+    burnup, dntau, nTtau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, _ = (
         physics.phyaux(
             aspect=phyauxparam.aspect,
             dene=phyauxparam.dene,
+            te=phyauxparam.te,
             deni=phyauxparam.deni,
             dnalp=phyauxparam.dnalp,
             fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
