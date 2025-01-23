@@ -141,7 +141,7 @@ class ProcessTracker:
         "ne0",
         "aux_current_fraction",
         "nd_impurities",
-        "taueff",
+        "t_energy_confinement",
         "te0",
         "pdivt",
         "nesep",

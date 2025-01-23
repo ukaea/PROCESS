@@ -39,7 +39,7 @@ var_dicts = {
         description="Net electrical power",
         units="MW",
     ),
-    "taueff": VariableMetadata(
+    "t_energy_confinement": VariableMetadata(
         latex=r"$\tau_\mathrm{E}$ [s]",
         description="Effective energy confinement time",
         units="s",

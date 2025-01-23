@@ -453,7 +453,7 @@ boundu(21) = 10.0
 icc = 62
 * DESCRIPTION:   f_alpha_energy_confinement ratio of particle to energy confinement times
 * JUSTIFICATION: Used to constrain helium fraction
-* VARIABLES:     taueff,t_alpha_confinement calculated in-situ
+* VARIABLES:     t_energy_confinement,t_alpha_confinement calculated in-situ
 
 ixc = 110
 ftaulimit = 1.0

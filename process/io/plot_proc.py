@@ -2442,7 +2442,7 @@ def plot_physics_info(axis, mfile_data, scan):
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("zeff", r"$Z_{\mathrm{eff}}$", ""),
         (nd_impurities, r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$", ""),
-        ("taueff", r"$\tau_e$", "s"),
+        ("t_energy_confinement", r"$\tau_e$", "s"),
         ("hfact", "H-factor", ""),
         (pthresh, "H-mode threshold", "MW"),
         ("tauelaw", "Scaling law", ""),

@@ -218,7 +218,7 @@ class Stellarator:
                 physics_variables.ptripv,
                 physics_variables.t_electron_confinement,
                 physics_variables.t_ion_confinement,
-                physics_variables.taueff,
+                physics_variables.t_energy_confinement,
                 physics_variables.powerht,
             ) = self.physics.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
@@ -4459,7 +4459,7 @@ class Stellarator:
             physics_variables.ptripv,
             physics_variables.t_electron_confinement,
             physics_variables.t_ion_confinement,
-            physics_variables.taueff,
+            physics_variables.t_energy_confinement,
             physics_variables.powerht,
         ) = self.physics.calculate_confinement_time(
             physics_variables.m_fuel_amu,
@@ -4524,7 +4524,7 @@ class Stellarator:
             physics_variables.plasma_current,
             sbar,
             physics_variables.nd_alphas,
-            physics_variables.taueff,
+            physics_variables.t_energy_confinement,
             physics_variables.vol_plasma,
         )
 

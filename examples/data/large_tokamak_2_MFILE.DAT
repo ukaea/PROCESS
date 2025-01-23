@@ -485,7 +485,7 @@
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      9.7416E+01 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.7416E+01 OP 
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1886E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.2037E+00    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.2037E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.2037E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.2037E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5843E+20 OP 

@@ -823,7 +823,7 @@ module physics_variables
   real(dp) :: tauee_in
   !! Input electron energy confinement time (sec) (`i_confinement_time=48 only`)
 
-  real(dp) :: taueff
+  real(dp) :: t_energy_confinement
   !! global thermal energy confinement time (sec)
 
   real(dp) :: t_ion_confinement
@@ -1102,7 +1102,7 @@ module physics_variables
     f_sync_reflect = 0.6D0
     t_electron_confinement = 0.0D0
     tauee_in = 0.0D0
-    taueff = 0.0D0
+    t_energy_confinement = 0.0D0
     t_ion_confinement = 0.0D0
     t_alpha_confinement = 0.0D0
     f_alpha_energy_confinement = 0.0D0

@@ -130,7 +130,7 @@ BASELINE_LIST = [
     "neped",
     "zeff",
     "nd_impurities",
-    "taueff",
+    "t_energy_confinement",
     "hfact",
     "tauelaw",
     "f_nd_alpha_electron",
