@@ -486,6 +486,16 @@ $$
 
 -------------------------
 
+### 48: Buxton NSTX Gyro-Bohm H-mode scaling
+
+Is selected with `i_confinement_time = 48`
+
+$$
+\tau_{\text{E}} =  0.21 I^{0.54} B_{\text{T}}^{0.91} \overline{n}_{20}^{-0.05} P^{-0.38} R^{2.14}
+$$
+
+-------------------------
+
 | `i_confinement_time` | scaling law | reference |
 | :-: | - | - |
 | 1 | Neo-Alcator (ohmic) | [^1] | 

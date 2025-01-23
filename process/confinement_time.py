@@ -1744,5 +1744,43 @@ def menard_nstx_petty08_hybrid_confinement_time(
         )
 
 
+def nstx_gyro_bohm_confinement_time(
+    pcur: float,
+    bt: float,
+    powerht: float,
+    rmajor: float,
+    dnla20: float,
+) -> float:
+    """
+        Calculate the NSTX gyro-Bohm confinement time
+
+        Parameters:
+        pcur (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        powerht (float): Net Heating power [MW]
+        rmajor (float): Plasma major radius [m]
+        dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+
+        Returns:
+        float: NSTX gyro-Bohm confinement time [s]
+
+        Notes:
+
+        References:
+            - P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and S. McNamara,
+            “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,”
+            vol. 61, no. 3, pp. 035006–035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
+    ‌
+    """
+    return (
+        0.21e0
+        * pcur**0.54e0
+        * bt**0.91e0
+        * powerht ** (-0.38e0)
+        * rmajor**2.14e0
+        * dnla20 ** (-0.05e0)
+    )
+
+
 if __name__ == "__main__":
     pass
