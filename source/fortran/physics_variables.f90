@@ -421,7 +421,8 @@ module physics_variables
   integer :: i_confinement_time
   !! switch for energy confinement time scaling law (see description in `tauscl`)
 
-  character*24, parameter, dimension(ipnlaws) :: tauscl = (/ &
+  !! tauscl(ipnlaws) : labels describing energy confinement scaling laws
+  character*24, parameter, dimension(ipnlaws) :: tauscl = (/  &
     'Input tauee_in          ', &
     'Neo-Alcator      (ohmic)', &
     'Mirnov               (H)', &
@@ -472,56 +473,6 @@ module physics_variables
     'NSTX-Petty08 Hybrid  (H)', &
     'NSTX gyro-Bohm Buxton(H)', &
     'ITPA20               (H)' /)
-  !! tauscl(ipnlaws) : labels describing energy confinement scaling laws:<UL>
-  !! <LI> ( 1)  Neo-Alcator (ohmic)
-  !! <LI> ( 2)  Mirnov (H-mode)
-  !! <LI> ( 3)  Merezkhin-Muhkovatov (L-mode)
-  !! <LI> ( 4)  Shimomura (H-mode)
-  !! <LI> ( 5)  Kaye-Goldston (L-mode)
-  !! <LI> ( 6)  ITER 89-P (L-mode)
-  !! <LI> ( 7)  ITER 89-O (L-mode)
-  !! <LI> ( 8)  Rebut-Lallia (L-mode)
-  !! <LI> ( 9)  Goldston (L-mode)
-  !! <LI> (10)  T10 (L-mode)
-  !! <LI> (11)  JAERI-88 (L-mode)
-  !! <LI> (12)  Kaye-Big Complex (L-mode)
-  !! <LI> (13)  ITER H90-P (H-mode)
-  !! <LI> (14)  ITER Mix (L-mode)
-  !! <LI> (15)  Riedel (L-mode)
-  !! <LI> (16)  Christiansen (L-mode)
-  !! <LI> (17)  Lackner-Gottardi (L-mode)
-  !! <LI> (18)  Neo-Kaye (L-mode)
-  !! <LI> (19)  Riedel (H-mode)
-  !! <LI> (20)  ITER H90-P amended (H-mode)
-  !! <LI> (21)  LHD (stellarator)
-  !! <LI> (22)  Gyro-reduced Bohm (stellarator)
-  !! <LI> (23)  Lackner-Gottardi (stellarator)
-  !! <LI> (24)  ITER-93H (H-mode)
-  !! <LI> (25) OBSOLETE
-  !! <LI> (26)  ITER H-97P ELM-free (H-mode)
-  !! <LI> (27)  ITER H-97P ELMy (H-mode)
-  !! <LI> (28)  ITER-96P (=ITER-97L) (L-mode)
-  !! <LI> (29)  Valovic modified ELMy (H-mode)
-  !! <LI> (30)  Kaye PPPL April 98 (L-mode)
-  !! <LI> (31)  ITERH-PB98P(y) (H-mode)
-  !! <LI> (32)  IPB98(y) (H-mode)
-  !! <LI> (33)  IPB98(y,1) (H-mode)
-  !! <LI> (34)  IPB98(y,2) (H-mode)
-  !! <LI> (35)  IPB98(y,3) (H-mode)
-  !! <LI> (36)  IPB98(y,4) (H-mode)
-  !! <LI> (37)  ISS95 (stellarator)
-  !! <LI> (38)  ISS04 (stellarator)
-  !! <LI> (39)  DS03 (H-mode)
-  !! <LI> (40)  Murari et al non-power law (H-mode)
-  !! <LI> (41)  Petty 2008 (H-mode)
-  !! <LI> (42)  Lang et al. 2012 (H-mode)
-  !! <LI> (43)  Hubbard 2017 (I-mode) - nominal
-  !! <LI> (44)  Hubbard 2017 (I-mode) - lower bound
-  !! <LI> (45)  Hubbard 2017 (I-mode) - upper bound
-  !! <LI> (46)  NSTX (H-mode; Spherical tokamak)
-  !! <LI> (47)  NSTX-Petty08 Hybrid (H-mode)
-  !! <LI> (48)  NSTX gyro-Bohm (Buxton) (H-mode; Spherical tokamak)
-  !! <LI> (49)  Use input tauee_in </UL>
 
   integer :: i_plasma_wall_gap
   !! Switch for plasma-first wall clearances at the mid-plane:

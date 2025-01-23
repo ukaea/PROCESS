@@ -5152,7 +5152,7 @@ class Physics:
             po.oblnkl(self.outfile)
 
         tauelaw = f2py_compatible_to_string(
-            physics_variables.tauscl[physics_variables.i_confinement_time - 1]
+            physics_variables.tauscl[physics_variables.i_confinement_time]
         )
 
         po.ocmmnt(
@@ -5729,7 +5729,7 @@ class Physics:
 
         # for iisc in range(32, 48):
         # Put the ITPA value first
-        for iisc in [50, 34, 37, 38, 39, 46, 47, 48]:
+        for iisc in [49, 34, 37, 38, 39, 46, 47, 48]:
             (
                 physics_variables.kappaa,
                 ptrez,
@@ -5773,7 +5773,7 @@ class Physics:
 
             po.ocmmnt(
                 self.outfile,
-                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc - 1]):<32}"
+                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc]):<32}"
                 f"{taueez:<26.3f}{physics_variables.hfac[iisc - 1]:.3f}",
             )
 
