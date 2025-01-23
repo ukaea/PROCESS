@@ -491,7 +491,7 @@
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.1277E+01 OP 
  H*_non-radiation_corrected______________________________________________ (hstar)_______________________      1.1022E+00    
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      2.2016E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (t_alpha_confinement/taueff)_________________      6.8629E+00    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.8629E+00    
  Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.8098E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.3909E-02 OP 
@@ -1342,7 +1342,7 @@ icc = 60
 ixc = 106 * ftmargoh
 tmargmin_cs = 1.5
 
-* Lower limit on t_alpha_confinement/taueff (ratio alpha particle/energy confinement times) *
+* Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
 ixc = 110 * ftaulimit

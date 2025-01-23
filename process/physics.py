@@ -2328,6 +2328,7 @@ class Physics:
             physics_variables.qfuel,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
+            physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
@@ -2957,44 +2958,88 @@ class Physics:
 
     @staticmethod
     def phyaux(
-        aspect,
-        dene,
-        nd_fuel_ions,
-        fusion_rate_density_total,
-        alpha_rate_density_total,
-        plasma_current,
-        sbar,
-        nd_alphas,
-        taueff,
-        vol_plasma,
-    ):
+        aspect: float,
+        dene: float,
+        nd_fuel_ions: float,
+        fusion_rate_density_total: float,
+        alpha_rate_density_total: float,
+        plasma_current: float,
+        sbar: float,
+        nd_alphas: float,
+        taueff: float,
+        vol_plasma: float,
+    ) -> tuple[float, float, float, float, float, float, float, float]:
         """Auxiliary physics quantities
-        author: P J Knight, CCFE, Culham Science Centre
-        aspect : input real :  plasma aspect ratio
-        dene   : input real :  electron density (/m3)
-        nd_fuel_ions   : input real :  fuel ion density (/m3)
-        nd_alphas  : input real :  alpha ash density (/m3)
-        fusion_rate_density_total : input real :  fusion reaction rate from plasma and beams (/m3/s)
-        alpha_rate_density_total  : input real :  alpha particle production rate (/m3/s)
-        plasma_current: input real :  plasma current (A)
-        sbar   : input real :  exponent for aspect ratio (normally 1)
-        taueff : input real :  global energy confinement time (s)
-        vol_plasma    : input real :  plasma volume (m3)
-        burnup : output real : fractional plasma burnup
-        dntau  : output real : plasma average n-tau (s/m3)
-        figmer : output real : physics figure of merit
-        fusrat : output real : number of fusion reactions per second
-        qfuel  : output real : fuelling rate for D-T (nucleus-pairs/sec)
-        rndfuel: output real : fuel burnup rate (reactions/s)
-        t_alpha_confinement   : output real : (alpha) particle confinement time (s)
-        This subroutine calculates extra physics related items
-        needed by other parts of the code
-        """
 
+        Args:
+            aspect (float): Plasma aspect ratio.
+            dene (float): Electron density (/m3).
+            deni (float): Fuel ion density (/m3).
+            fusion_rate_density_total (float): Fusion reaction rate from plasma and beams (/m3/s).
+            alpha_rate_density_total (float): Alpha particle production rate (/m3/s).
+            plasma_current (float): Plasma current (A).
+            sbar (float): Exponent for aspect ratio (normally 1).
+            dnalp (float): Alpha ash density (/m3).
+            taueff (float): Global energy confinement time (s).
+            vol_plasma (float): Plasma volume (m3).
+
+        Returns:
+            tuple: A tuple containing:
+                - burnup (float): Fractional plasma burnup.
+                - dntau (float): Plasma average n-tau (s/m3).
+                - figmer (float): Physics figure of merit.
+                - fusrat (float): Number of fusion reactions per second.
+                - qfuel (float): Fuelling rate for D-T (nucleus-pairs/sec).
+                - rndfuel (float): Fuel burnup rate (reactions/s).
+                - t_alpha_confinement (float): Alpha particle confinement time (s).
+                - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
+
+        This subroutine calculates extra physics related items needed by other parts of the code.
+        """
         figmer = 1e-6 * plasma_current * aspect**sbar
 
         dntau = taueff * dene
 
+        # Fusion reactions per second
+        fusrat = fusion_rate_density_total * plasma_volume
+
+        # Alpha particle confinement time (s)
+        # Number of alphas / alpha production rate
+        if alpha_rate_density_total != 0.0:
+            t_alpha_confinement = dnalp / alpha_rate_density_total
+        else:  # only likely if DD is only active fusion reaction
+            t_alpha_confinement = 0.0
+
+        # Fractional burnup
+        # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
+        # Fusion Science and Technology, vol.64, no.1, July 2013, pp.8-12)
+        # The ratio of ash to fuel particle confinement times is given by
+        # tauratio
+        # Possible logic...
+        # burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
+        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and D-He3 reactions)
+        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
+        # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
+        if physics_variables.burnup_in <= 1.0e-9:
+            burnup = dnalp / (dnalp + 0.5 * deni) / physics_variables.tauratio
+        else:
+            burnup = physics_variables.burnup_in
+
+        # Fuel burnup rate (reactions/second) (previously Amps)
+        rndfuel = fusrat
+
+        # Required fuelling rate (fuel ion pairs/second) (previously Amps)
+        qfuel = rndfuel / burnup
+
+        f_alpha_energy_confinement = t_alpha_confinement / taueff
+
+        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, f_alpha_energy_confinement
+
+        figmer = 1e-6 * plasma_current * aspect**sbar
+
+        dntau = taueff * dene
+        
+        
         # Fusion reactions per second
 
         fusrat = fusion_rate_density_total * vol_plasma
@@ -3035,7 +3080,10 @@ class Physics:
 
         qfuel = rndfuel / burnup
 
-        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement
+        f_alpha_energy_confinement = t_alpha_confinement / taueff
+
+
+        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, f_alpha_energy_confinement
 
     @staticmethod
     def plasma_ohmic_heating(
@@ -5327,13 +5375,13 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Alpha particle/energy confinement time ratio",
-            "(t_alpha_confinement/taueff)",
-            physics_variables.t_alpha_confinement / physics_variables.taueff,
+            "(f_alpha_energy_confinement)",
+            physics_variables.f_alpha_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Lower limit on t_alpha_confinement/taueff",
+            "Lower limit on f_alpha_energy_confinement",
             "(taulimit)",
             constraint_variables.taulimit,
         )

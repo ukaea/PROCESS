@@ -832,6 +832,9 @@ module physics_variables
   real(dp) :: t_alpha_confinement
   !! alpha particle confinement time (sec)
 
+  real(dp) :: f_alpha_energy_confinement
+  !! alpha particle to energy confinement time ratio
+
   real(dp) :: te
   !! volume averaged electron temperature (keV) (`iteration variable 4`)
 
@@ -1102,6 +1105,7 @@ module physics_variables
     taueff = 0.0D0
     t_ion_confinement = 0.0D0
     t_alpha_confinement = 0.0D0
+    f_alpha_energy_confinement = 0.0D0
     te = 12.9D0
     te0 = 0.0D0
     ten = 0.0D0
