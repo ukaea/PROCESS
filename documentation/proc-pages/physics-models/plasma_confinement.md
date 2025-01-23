@@ -44,7 +44,7 @@ allowance for radiation. This is not recommended for power plant models.
 Is selected with `i_confinement_time = 0`
 
 $$
-\tau_{\text{E}} = \mathtt{tauee\_in}
+\tau_{\text{E}} = \mathtt{t_electron_confinement\_in}
 $$
 
 ------------

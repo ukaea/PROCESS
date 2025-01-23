@@ -385,7 +385,7 @@ def t10_confinement_time(
     """
     denfac = dnla20 * rmajor * qstar / (1.3e0 * bt)
     denfac = min(1.0e0, denfac)
-    tauee = (
+    t_electron_confinement = (
         0.095e0
         * rmajor
         * rminor
@@ -395,7 +395,7 @@ def t10_confinement_time(
         / powerht**0.4e0
         * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0)) ** 0.08e0
     )
-    return tauee
+    return t_electron_confinement
 
 
 def jaeri_confinement_time(

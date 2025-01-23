@@ -2966,37 +2966,43 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         physics_variables, "f_alpha_plasma", confinementtimeparam.f_alpha_plasma
     )
 
-    kappaa, ptrepv, ptripv, tauee, t_ion_confinement, taueff, powerht = (
-        physics.calculate_confinement_time(
-            iinvqd=confinementtimeparam.iinvqd,
-            i_confinement_time=confinementtimeparam.i_confinement_time,
-            ignite=confinementtimeparam.ignite,
-            afuel=confinementtimeparam.afuel,
-            alpha_power_total=confinementtimeparam.alpha_power_total,
-            aspect=confinementtimeparam.aspect,
-            bt=confinementtimeparam.bt,
-            dene=confinementtimeparam.dene,
-            dnitot=confinementtimeparam.dnitot,
-            dnla=confinementtimeparam.dnla,
-            eps=confinementtimeparam.eps,
-            hfact=confinementtimeparam.hfact,
-            kappa=confinementtimeparam.kappa,
-            kappa95=confinementtimeparam.kappa95,
-            non_alpha_charged_power=confinementtimeparam.non_alpha_charged_power,
-            pinjmw=confinementtimeparam.pinjmw,
-            plasma_current=confinementtimeparam.plasma_current,
-            pcoreradpv=confinementtimeparam.pcoreradpv,
-            q=confinementtimeparam.q,
-            qstar=confinementtimeparam.qstar,
-            rmajor=confinementtimeparam.rmajor,
-            rminor=confinementtimeparam.rminor,
-            te=confinementtimeparam.te,
-            ten=confinementtimeparam.ten,
-            tin=confinementtimeparam.tin,
-            plasma_volume=confinementtimeparam.plasma_volume,
-            xarea=confinementtimeparam.xarea,
-            zeff=confinementtimeparam.zeff,
-        )
+    (
+        kappaa,
+        ptrepv,
+        ptripv,
+        t_electron_confinement,
+        t_ion_confinement,
+        taueff,
+        powerht,
+    ) = physics.calculate_confinement_time(
+        iinvqd=confinementtimeparam.iinvqd,
+        i_confinement_time=confinementtimeparam.i_confinement_time,
+        ignite=confinementtimeparam.ignite,
+        afuel=confinementtimeparam.afuel,
+        alpha_power_total=confinementtimeparam.alpha_power_total,
+        aspect=confinementtimeparam.aspect,
+        bt=confinementtimeparam.bt,
+        dene=confinementtimeparam.dene,
+        dnitot=confinementtimeparam.dnitot,
+        dnla=confinementtimeparam.dnla,
+        eps=confinementtimeparam.eps,
+        hfact=confinementtimeparam.hfact,
+        kappa=confinementtimeparam.kappa,
+        kappa95=confinementtimeparam.kappa95,
+        non_alpha_charged_power=confinementtimeparam.non_alpha_charged_power,
+        pinjmw=confinementtimeparam.pinjmw,
+        plasma_current=confinementtimeparam.plasma_current,
+        pcoreradpv=confinementtimeparam.pcoreradpv,
+        q=confinementtimeparam.q,
+        qstar=confinementtimeparam.qstar,
+        rmajor=confinementtimeparam.rmajor,
+        rminor=confinementtimeparam.rminor,
+        te=confinementtimeparam.te,
+        ten=confinementtimeparam.ten,
+        tin=confinementtimeparam.tin,
+        plasma_volume=confinementtimeparam.plasma_volume,
+        xarea=confinementtimeparam.xarea,
+        zeff=confinementtimeparam.zeff,
     )
 
     assert physics_variables.kappa_ipb == pytest.approx(
@@ -3011,7 +3017,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
 
     assert ptripv == pytest.approx(confinementtimeparam.expected_ptripv)
 
-    assert tauee == pytest.approx(confinementtimeparam.expected_tauee)
+    assert t_electron_confinement == pytest.approx(confinementtimeparam.expected_tauee)
 
     assert taueff == pytest.approx(confinementtimeparam.expected_taueff)
 
