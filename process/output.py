@@ -42,9 +42,6 @@ def write(models, _outfile):
     # Writing the output from physics.f90 into OUT.DAT + MFILE.DAT
     models.physics.outplas()
 
-    # TODO what is this? not in caller.f90
-    models.physics.igmarcal()
-
     # TODO what is this? Not in caller.f90?
     models.current_drive.cudriv(output=True)
 

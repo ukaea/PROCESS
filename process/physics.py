@@ -3749,7 +3749,9 @@ class Physics:
                 "(iotabar)",
                 stellarator_variables.iotabar,
             )
-
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
         po.osubhd(self.outfile, "Beta Information :")
         if physics_variables.i_beta_component == 0:
             po.ovarrf(
@@ -3943,6 +3945,10 @@ class Physics:
             "OP",
         )
 
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
+
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
             self.outfile,
@@ -4088,8 +4094,11 @@ class Physics:
         )
 
         po.oblnkl(self.outfile)
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
-        po.ocmmnt(self.outfile, "Impurities")
+        po.ocmmnt(self.outfile, "Impurities:")
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
 
@@ -4280,6 +4289,10 @@ class Physics:
             physics_variables.alphap,
         )
 
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
+
         if stellarator_variables.istell == 0:
             po.osubhd(self.outfile, "Density Limit using different models :")
             po.ovarre(
@@ -4353,6 +4366,10 @@ class Physics:
                     numerics.boundu[8] * physics_variables.dnelimt,
                     "OP ",
                 )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
         po.osubhd(self.outfile, "Fuel Constituents :")
         po.ovarrf(
@@ -4564,6 +4581,10 @@ class Physics:
             tot_power_plasma,
             "OP ",
         )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
         po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
         po.ovarre(
@@ -4909,6 +4930,10 @@ class Physics:
                 ),
                 "OP ",
             )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
         if stellarator_variables.istell == 0:
             po.osubhd(self.outfile, "H-mode Power Threshold Scalings :")
@@ -5323,6 +5348,68 @@ class Physics:
             self.outfile,
             "  (= stored energy including fast particles / loss power including radiation",
         )
+        po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
+        po.ocmmnt(
+            self.outfile,
+            f"{'':>5}{'scaling law':<25}{'confinement time (s)':<25}H-factor for",
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"{'':>34}{'for H = 1':<20}power balance",
+        )
+
+        # for iisc in range(32, 48):
+        # Put the ITPA value first
+        for iisc in [49, 34, 37, 38, 39, 46, 47, 48]:
+            (
+                physics_variables.kappaa,
+                ptrez,
+                ptriz,
+                taueez,
+                taueiz,
+                taueffz,
+                powerhtz,
+            ) = self.calculate_confinement_time(
+                physics_variables.afuel,
+                physics_variables.alpha_power_total,
+                physics_variables.aspect,
+                physics_variables.bt,
+                physics_variables.dnitot,
+                physics_variables.dene,
+                physics_variables.dnla,
+                physics_variables.eps,
+                1.0,
+                physics_variables.iinvqd,
+                iisc,
+                physics_variables.ignite,
+                physics_variables.kappa,
+                physics_variables.kappa95,
+                physics_variables.non_alpha_charged_power,
+                current_drive_variables.pinjmw,
+                physics_variables.plasma_current,
+                physics_variables.pcoreradpv,
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                physics_variables.te,
+                physics_variables.ten,
+                physics_variables.tin,
+                physics_variables.q,
+                physics_variables.qstar,
+                physics_variables.plasma_volume,
+                physics_variables.xarea,
+                physics_variables.zeff,
+            )
+
+            physics_variables.hfac[iisc - 1] = self.fhfac(iisc)
+
+            po.ocmmnt(
+                self.outfile,
+                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc]):<32}"
+                f"{taueez:<26.3f}{physics_variables.hfac[iisc - 1]:.3f}",
+            )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
 
         if stellarator_variables.istell == 0:
             # Issues 363 Output dimensionless plasma parameters MDK
@@ -5364,6 +5451,10 @@ class Physics:
                 physics_variables.kappa_ipb,
                 "OP ",
             )
+
+            po.oblnkl(self.outfile)
+            po.ostars(self.outfile, 110)
+            po.oblnkl(self.outfile)
 
             po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
             po.ovarre(
