@@ -265,7 +265,7 @@ boundl(60) = 65000.0
 boundu(60) = 90000.0
 cpttf = 65000.0
 
-* Helium fraction (ralpne)
+* Helium fraction (f_nd_alpha_electron)
 ixc = 109
 boundu(109) = 0.1
 

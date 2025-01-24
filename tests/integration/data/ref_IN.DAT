@@ -89,7 +89,7 @@ ixc = 54 * ftmargtf
 ixc = 106 * ftmargoh
 ixc = 122 * oh_steel_frac
 ixc = 123 * foh_stress
-ixc = 109 * ralpne
+ixc = 109 * f_nd_alpha_electron
 ixc = 110 * ftaulimit
 
 *isweep = 3
@@ -372,5 +372,5 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      ftmargoh       =  1.0000E+00
                      oh_steel_frac  =  5.7875E-01
                      foh_stress     =  1.0000E+00
-                     ralpne         =  6.8940E-02
+                     f_nd_alpha_electron         =  6.8940E-02
                      ftaulimit      =  1.0000E+00

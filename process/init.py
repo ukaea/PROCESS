@@ -330,7 +330,7 @@ def check_process():
 
     if fortran.impurity_radiation_module.fimp[1] != 0.1:
         raise ProcessValidationError(
-            "The thermal alpha/electron density ratio should be controlled using ralpne (itv 109) and not fimp(2)."
+            "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not fimp(2)."
             "fimp(2) should be removed from the input file, or set to the default value 0.1D0."
         )
 

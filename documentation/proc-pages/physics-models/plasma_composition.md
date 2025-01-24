@@ -18,11 +18,11 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 1. **Alpha Ash Portion Calculation**
 
-    - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`dene`) and the alpha particle to electron ratio (`ralpne`).
-        - `ralpne` can be set as an iteration variable (`ixc = 109`) or set directly.
+    - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`dene`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
+        - `f_nd_alpha_electron` can be set as an iteration variable (`ixc = 109`) or set directly.
 
     $$
-    n_{\alpha} = \mathtt{ralpne}\times n_{\text{e}}
+    n_{\alpha} = \mathtt{f_nd_alpha_electron}\times n_{\text{e}}
     $$
 
 
@@ -87,7 +87,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     $$
 
     $$
-    \frac{n_{\text{He}}}{n_{\text{e}}} = f_{\text{3He}}n_{\text{i}}+\mathtt{ralpne}
+    \frac{n_{\text{He}}}{n_{\text{e}}} = f_{\text{3He}}n_{\text{i}}+\mathtt{f_nd_alpha_electron}
     $$
 
 8. **Total Impurity Density Calculation**
@@ -213,7 +213,7 @@ using input array `fimp(1,...,14)`. The available species are as follows:
 As stated above, the number density fractions for hydrogen (all isotopes) and
 helium need not be set, as they are calculated by the code to ensure 
 plasma quasi-neutrality taking into account the fuel ratios
-`f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `ralpne` which may 
+`f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
 be input by the user or selected as an iteration variable.
 
 The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 

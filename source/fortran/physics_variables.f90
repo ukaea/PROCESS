@@ -809,7 +809,7 @@ module physics_variables
   real(dp) :: rad_fraction_total
   !! Radiation fraction total = SoL + LCFS radiation / total power deposited in plasma
 
-  real(dp) :: ralpne
+  real(dp) :: f_nd_alpha_electron
   !! thermal alpha density/electron density (`iteration variable 109`)
 
   real(dp) :: f_nd_protium_electrons
@@ -1128,7 +1128,7 @@ module physics_variables
     qstar = 0.0D0
     rad_fraction_sol = 0.8D0
     rad_fraction_total = 0.0D0
-    ralpne = 0.10D0
+    f_nd_alpha_electron = 0.10D0
     f_nd_protium_electrons = 0.0D0
     rli = 0.9D0
     rlp = 0.0D0

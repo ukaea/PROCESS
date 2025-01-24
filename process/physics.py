@@ -2420,14 +2420,6 @@ class Physics:
                     * physics_variables.pdivt
                     / build_variables.fwarea
                 )
-                    (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
-                    * physics_variables.p_plasma_rad_mw
-                    / build_variables.fwarea
-                    + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
-                    * physics_variables.rad_fraction_sol
-                    * physics_variables.pdivt
-                    / build_variables.fwarea
-                )
 
         constraint_variables.pflux_fw_rad_max_mw = (
             physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
@@ -2707,7 +2699,9 @@ class Physics:
         """
 
         # Alpha ash portion
-        physics_variables.nd_alphas = physics_variables.dene * physics_variables.ralpne
+        physics_variables.nd_alphas = (
+            physics_variables.dene * physics_variables.f_nd_alpha_electron
+        )
 
         # Protons
         # This calculation will be wrong on the first call as the particle
@@ -2779,7 +2773,7 @@ class Physics:
             physics_variables.f_helium3
             * physics_variables.deni
             / physics_variables.dene
-            + physics_variables.ralpne
+            + physics_variables.f_nd_alpha_electron
         )
 
         # Total impurity density
@@ -4051,8 +4045,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Helium ion density (thermalised ions only) / electron density",
-            "(ralpne)",
-            physics_variables.ralpne,
+            "(f_nd_alpha_electron)",
+            physics_variables.f_nd_alpha_electron,
         )
         po.oblnkl(self.outfile)
 
@@ -7604,17 +7598,29 @@ def pthresh(
 
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
-    snipes_2000 = 1.42
+    snipes_2000 = (
+        1.42
         * dnla20**0.58
         * bt**0.82
         * rmajor
         * rminor**0.81
         * (2.0 / m_ions_total_amu)
+    )
     snipes_2000_ub = (
-        1.547 * dnla20**0.615 * bt**0.851 * rmajor**1.089 * rminor**0.876 * (2.0 / m_ions_total_amu)
+        1.547
+        * dnla20**0.615
+        * bt**0.851
+        * rmajor**1.089
+        * rminor**0.876
+        * (2.0 / m_ions_total_amu)
     )
     snipes_2000_lb = (
-        1.293 * dnla20**0.545 * bt**0.789 * rmajor**0.911 * rminor**0.744 * (2.0 / m_ions_total_amu)
+        1.293
+        * dnla20**0.545
+        * bt**0.789
+        * rmajor**0.911
+        * rminor**0.744
+        * (2.0 / m_ions_total_amu)
     )
 
     # Snipes et al (2000) scaling (closed divertor) with mass correction

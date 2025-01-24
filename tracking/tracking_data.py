@@ -118,7 +118,7 @@ class ProcessTracker:
         "triang95",
         "p_plasma_inner_rad_mw",
         "tesep",
-        "ralpne",
+        "f_nd_alpha_electron",
         "wallmw",
         "aspect",
         "rminor",

@@ -500,7 +500,7 @@ As stated above, the number density fractions for hydrogen (all
 isotopes) and helium need not be set, as they are calculated by the code
 to ensure that plasma quasi-neutrality is maintained, and taking into
 account the fuel ratios \texttt{f_deuterium}, \texttt{f_tritium} and
-\texttt{f_helium3}, and the alpha particle fraction \texttt{ralpne} which may
+\texttt{f_helium3}, and the alpha particle fraction \texttt{f_nd_alpha_electron} which may
 be input by the user.
 
 The impurity fraction of one of the elements listed in array

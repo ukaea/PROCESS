@@ -76,7 +76,7 @@ ixc = 169 * itv_te0ecrh
 boundl(169) = 4.
 boundu(169) = 35.
 *12
-ixc = 109 * itv_ralpne
+ixc = 109 * itv_f_nd_alpha_electron
 ftaulimit = 1.
 boundl(109) = 0.0001
 boundu(109) = 0.4
@@ -90,7 +90,7 @@ ftoroidalgap = 1. * f value for toroidal gap between coils
 fbeta_max = 1.    * f value for beta limit
 ffuspow = 1.0
 f_alpha_plasma = 0.95    * fast particle fraction
-ralpne = 0.144    * thermal alpha density / electron density
+f_nd_alpha_electron = 0.144    * thermal alpha density / electron density
 fradpwr = 1      * needed to control radiation power
 epsfcn = 0.0001  * convergence important to start with 10^-4, 10^-3 is NOT sufficient to match the constraint resonably well!!
 taulimit = 6     * tau_He/tau_E
