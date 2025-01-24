@@ -15,23 +15,23 @@ $$
 
 
 The impurity number density fractions relative to the electron density are constant and are set 
-using input array `fimp(1,...,14)`. The available species are as follows:
+using input array `fimp(1,...,14)`. The available species along with their `fimp()` index and iteration variable number are as follows:
 
 
 - `fimp(1)`: Hydrogen isotopes (fraction calculated by code)
 - `fimp(2)`: Helium (fraction calculated by code)
-- `fimp(3)`: Beryllium
-- `fimp(4)`: Carbon
-- `fimp(5)`: Nitrogen
-- `fimp(6)`: Oxygen
-- `fimp(7)`: Neon
-- `fimp(8)`: Silicon
-- `fimp(9)`: Argon
-- `fimp(10)`: Iron
-- `fimp(11)`: Nickel
-- `fimp(12)`: Krypton
-- `fimp(13)`: Xenon
-- `fimp(14)`: Tungsten
+- `fimp(3)`: Beryllium, (`ixc = 125`)
+- `fimp(4)`: Carbon, (`ixc = 126`)
+- `fimp(5)`: Nitrogen, (`ixc = 127`)
+- `fimp(6)`: Oxygen, (`ixc = 128`)
+- `fimp(7)`: Neon, (`ixc = 129`)
+- `fimp(8)`: Silicon, (`ixc = 130`)
+- `fimp(9)`: Argon, (`ixc = 131`)
+- `fimp(10)`: Iron, (`ixc = 132`)
+- `fimp(11)`: Nickel, (`ixc = 133`)
+- `fimp(12)`: Krypton, (`ixc = 134`)
+- `fimp(13)`: Xenon, (`ixc = 135`)
+- `fimp(14)`: Tungsten, (`ixc = 136`)
 
 As stated above, the number density fractions for hydrogen (all isotopes) and
 helium need not be set, as they are calculated by the code to ensure 
