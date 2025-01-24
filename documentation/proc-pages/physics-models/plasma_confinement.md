@@ -1,14 +1,38 @@
 # Confinement Time Scaling Laws
 
+## Overview
+
+Confinement time scalings are empirical relationships derived from experimental data across various fusion machines. These scalings help predict how changes in tokamak parameters (like size, magnetic field strength, and plasma density) will affect the confinement time and overall performance.
+
 The energy confinement time $\tau_E$ is calculated using one of a choice of empirical scalings. ($\tau_E$ is defined below.)
 
-Many energy confinement time scaling laws are available within PROCESS, for
-tokamaks, RFPs and stellarators. These are calculated in routine `calculate_confinement_time()`. The 
-value of `i_confinement_time` determines which of the scalings is used in the plasma energy 
-balance calculation. The table below summarises the available scaling laws. The 
-most commonly used is the so-called IPB98(y,2) scaling.
+Normally most confinement scalings will be of the form:
 
-## Effect of radiation on energy confinement
+$$
+\tau_{\text{E}} =  C I_{\text{p}}^{\alpha_{I}} B_{\text{T}}^{\alpha_{B}} \overline{n}_e^{\alpha_{n}} P_{\text{L}}^{\alpha_{P}} R^{\alpha_{R}} \kappa^{\alpha_{\kappa}} \epsilon^{\alpha_{\epsilon}} M^{\alpha_{M}}
+$$
+
+Where $\tau_{\text{E}}$ is the confinement time in seconds, $C$ is a coefficient , $I_{\text{p}}$ [MA] is the plasma current, $B_{\text{T}}$ [T] is the toroidal magnetic field, $\overline{n}_e$ [$10^{19} \text{m}^{-3}$] is the electron central line averaged density, $P_{\text{L}}$ [MW] is the loss power, $R$ [m] is the major radius, $\kappa$ is the plasma elongation,
+$\epsilon$ is the inverse aspect ratio and $M$ is the average atomic mass of the plasma.
+
+Classically the loss power, $P_{\text{L}}$ is defined as:
+
+$$
+P_{\text{L}} = \frac{W}{\tau_{\text{E}}}
+$$
+
+where $W$ is the total thermal energy of the plasma. We can look at it mainly as the difference in heating and loss powers in the plasma, as such we interpret it as power transported out from the
+“core” by charged particles. This leads to the classic definition of loss power for the scaling:
+
+$$
+P_{\text{L}} = \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}}
+$$
+
+where $f_{\alpha}$ is the [fraction of alpha power that is coupled to the plasma](../physics-models/fusion_reactions/plasma_reactions.md#coupled-alpha-particle-power), $P_{\alpha}$ is the alpha power, $P_{\text{c}}$ is the charged particle power, $P_{\text{OH}}$ is the ohmic heating power, $P_{\text{HCD}}$ is the plasma heating done by the external heating & current drive systems.
+
+----------
+
+### Effect of radiation on energy confinement
 
 Published confinement scalings are all based on low radiation pulses. A power
 plant will certainly be a high radiation machine --- both in the core, due to
@@ -20,31 +44,52 @@ drop in power transported by ions and electrons, leaving the confinement
 nearly unchanged.
 
 To allow for these uncertainties, three options are available, using the switch
-`i_rad_loss`. In each case, the particle transport loss power `pscaling` is
-derived directly from the energy confinement scaling law.
+`i_rad_loss`.
 
-`i_rad_loss = 0` -- Total power lost is scaling power plus radiation:
+- For `i_rad_loss = 0` the total plasma radiation is taken from the loss power.
 
-`pscaling + pradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+$$
+P_{\text{L}} = \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad}}
+$$
 
+- For `i_rad_loss = 1` the plasma radiation only from the "core" region is taken from the loss power.
 
-`i_rad_loss = 1` -- Total power lost is scaling power plus radiation from a region defined as the "core":
-  
-`pscaling + pcoreradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+$$
+P_{\text{L}} = \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad,core}}
+$$
 
-`i_rad_loss = 2` -- Total power lost is scaling power only, with no additional 
-allowance for radiation. This is not recommended for power plant models.
+- For `i_rad_loss = 2` the plasma radiation is not taken from the loss power
 
-`pscaling = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+$$
+P_{\text{L}} = \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}}
+$$
+
+----------
+
+### Ignition
+
+Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining 
+without the need for any injected auxiliary power during the burn. If `ignite = 1`, the calculated 
+injected power does not contribute to the plasma power balance, although the cost of the auxiliary 
+power system is taken into account (the system is then assumed to be required to provide heating 
+and/or current drive during the plasma start-up phase only). If `ignite` = 0, the plasma is not 
+ignited, and the auxiliary power is taken into account in the plasma power balance during the burn 
+phase. An ignited plasma will be difficult to control and is unlikely to be practical. This 
+option is not recommended.
+
+----------
 
 ## Available confinement time scalings
+
+Many energy confinement time scaling laws are available within PROCESS, for conventional aspect ratio tokamaks, spherical tokamaks, and stellarators. These are calculated in routine `calculate_confinement_time()`. 
+The value of `i_confinement_time` determines which of the scalings is used in the plasma energy balance calculation.
 
 ### 0: User input confinement time
 
 Is selected with `i_confinement_time = 0`
 
 $$
-\tau_{\text{E}} = \mathtt{t_electron_confinement\_in}
+\tau_{\text{E}} = \mathtt{t\_electron\_confinement\_in}
 $$
 
 ------------
@@ -599,16 +644,45 @@ allowance for radiation. This is not recommended for power plant models.
 `pscaling = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
 
 
-## Ignition
 
-Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining 
-without the need for any injected auxiliary power during the burn. If `ignite` = 1, the calculated 
-injected power does not contribute to the plasma power balance, although the cost of the auxiliary 
-power system is taken into account (the system is then assumed to be required to provide heating 
-and/or current drive during the plasma start-up phase only). If `ignite` = 0, the plasma is not 
-ignited, and the auxiliary power is taken into account in the plasma power balance during the burn 
-phase. An ignited plasma will be difficult to control and is unlikely to be practical. This 
-option is not recommended.
+
+------------------
+
+## Key Constraints
+
+### Global plasma power balance
+
+This constraint can be activated by stating `icc = 2` in the input file.
+
+To allow for these uncertainties, three options are available, using the switch
+`i_rad_loss`. In each case, the particle transport loss power `pscaling` is
+derived directly from the energy confinement scaling law.
+
+`i_rad_loss = 0` -- Total power lost is scaling power plus radiation:
+
+`pscaling + pradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+
+
+`i_rad_loss = 1` -- Total power lost is scaling power plus radiation from a region defined as the "core":
+  
+`pscaling + pcoreradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+
+`i_rad_loss = 2` -- Total power lost is scaling power only, with no additional 
+allowance for radiation. This is not recommended for power plant models.
+
+`pscaling = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+
+**It is highly recommended to always have this constraint on as it is a global consistency checker**
+
+----------
+
+### Lower limit on alpha particle confinement time ratio
+
+This constraint can be activated by stating `icc = 62` in the input file.
+
+The value of `f_alpha_energy_confinement_min` can be set to the desired minimum total ratio between the alpha confinement and energy confinement times.
+
+ The scaling value `ftaulimit` can be varied also.
 
 [^1]: T. C. Hender et al., 'Physics Assessment for the European Reactor Study',
 AEA Fusion Report AEA FUS 172 (1992)
