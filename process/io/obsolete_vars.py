@@ -159,7 +159,6 @@ OBS_VARS = {
     "rnbeam": "f_nd_beam_electron",
     "ralpne": "f_nd_alpha_electron",
     "protium": "f_nd_protium_electrons",
-
 }
 
 OBS_VARS_HELP = {

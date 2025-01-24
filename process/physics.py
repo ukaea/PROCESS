@@ -2703,6 +2703,8 @@ class Physics:
             physics_variables.dene * physics_variables.f_nd_alpha_electron
         )
 
+        # ======================================================================
+
         # Protons
         # This calculation will be wrong on the first call as the particle
         # production rates are evaluated later in the calling sequence
@@ -2721,6 +2723,8 @@ class Physics:
                 / physics_variables.alpha_rate_density_total,
             )
 
+        # ======================================================================
+
         # Beam hot ion component
         # If ignited, prevent beam fusion effects
         if physics_variables.ignite == 0:
@@ -2729,6 +2733,8 @@ class Physics:
             )
         else:
             physics_variables.nd_beam_ions = 0.0
+
+        # ======================================================================
 
         # Sum of Zi.ni for all impurity ions (those with charge > helium)
         znimp = 0.0
@@ -2741,6 +2747,8 @@ class Physics:
                     * physics_variables.dene
                 )
 
+        # ======================================================================
+
         # Fuel portion - conserve charge neutrality
         # znfuel is the sum of Zi.ni for the three fuel ions
         znfuel = (
@@ -2751,10 +2759,14 @@ class Physics:
             - znimp
         )
 
+        # ======================================================================
+
         # Fuel ion density, nd_fuel_ions
         # For D-T-He3 mix, nd_fuel_ions = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
         # So nd_fuel_ions = znfuel - nHe3 = znfuel - f_helium3*nd_fuel_ions
         physics_variables.nd_fuel_ions = znfuel / (1.0 + physics_variables.f_helium3)
+
+        # ======================================================================
 
         # Set hydrogen and helium impurity fractions for
         # radiation calculations
@@ -2776,6 +2788,8 @@ class Physics:
             + physics_variables.f_nd_alpha_electron
         )
 
+        # ======================================================================
+
         # Total impurity density
         physics_variables.nd_impurities = 0.0
         for imp in range(impurity_radiation_module.n_impurities):
@@ -2784,6 +2798,8 @@ class Physics:
                     impurity_radiation_module.impurity_arr_frac[imp]
                     * physics_variables.dene
                 )
+
+        # ======================================================================
 
         # Total ion density
         physics_variables.nd_ions_total = (
@@ -2794,7 +2810,9 @@ class Physics:
             + physics_variables.nd_impurities
         )
 
-        # Set some (obsolescent) impurity fraction variables
+        # ======================================================================
+
+        # Set some impurity fraction variables
         # for the benefit of other routines
         physics_variables.rncne = impurity_radiation_module.impurity_arr_frac[
             impurity_radiation.element2index("C_")
@@ -2811,6 +2829,8 @@ class Physics:
             ]
         )
 
+        # ======================================================================
+
         # Effective charge
         # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
         # but ne = sum(ni.Zi) through quasineutrality
@@ -2823,6 +2843,8 @@ class Physics:
                 ).squeeze()
                 ** 2
             )
+
+        # ======================================================================
 
         # Fraction of alpha energy to ions and electrons
         # From Max Fenstermacher
@@ -2847,6 +2869,8 @@ class Physics:
         )
         physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
+        # ======================================================================
+
         # Average atomic masses of injected fuel species
         physics_variables.m_fuel_amu = (
             (constants.m_deuteron_amu * physics_variables.f_deuterium)
@@ -2854,13 +2878,17 @@ class Physics:
             + (constants.m_helion_amu * physics_variables.f_helium3)
         )
 
+        # ======================================================================
+
         # Average atomic masses of injected fuel species in the neutral beams
         # Only deuterium and tritium in the beams
         physics_variables.m_beam_amu = (
             constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam)
         ) + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
 
-        # Density weighted mass
+        # ======================================================================
+
+        # Average mass of all ions
         physics_variables.m_ions_total_amu = (
             (physics_variables.m_fuel_amu * physics_variables.nd_fuel_ions)
             + (constants.m_alpha_amu * physics_variables.nd_alphas)
@@ -2878,6 +2906,8 @@ class Physics:
         physics_variables.m_ions_total_amu = (
             physics_variables.m_ions_total_amu / physics_variables.nd_ions_total
         )
+
+        # ======================================================================
 
         # Mass weighted plasma effective charge
         # Sum of (Zi^2*n_i) / m_i
@@ -2921,6 +2951,8 @@ class Physics:
                     ** 2
                     / impurity_radiation_module.impurity_arr_amass[imp]
                 )
+
+        # ======================================================================
 
     @staticmethod
     def phyaux(
@@ -3912,7 +3944,10 @@ class Physics:
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
-            self.outfile, "Volume averaged electron temperature (keV)", "(te)", physics_variables.te
+            self.outfile,
+            "Volume averaged electron temperature (keV)",
+            "(te)",
+            physics_variables.te,
         )
         po.ovarrf(
             self.outfile,
@@ -3944,7 +3979,10 @@ class Physics:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Volume averaged electron number density (/m3)", "(dene)", physics_variables.dene
+            self.outfile,
+            "Volume averaged electron number density (/m3)",
+            "(dene)",
+            physics_variables.dene,
         )
         po.ovarre(
             self.outfile,
