@@ -14,7 +14,7 @@ Note: this is now relied upon by Blueprint, pending implementing a proper API.
 
 OBS_VARS = {
     "snull": "i_single_null",
-    "tfno": "n_tf",
+    "tfno": "n_tf_coils",
     "itfsup": "i_tf_sup",
     "r_tf_inleg_mid": "r_tf_inboard_mid",
     "rtot": "r_tf_outboard_mid",

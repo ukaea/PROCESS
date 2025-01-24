@@ -62,7 +62,7 @@ class Vacuum:
                 buv.shldith,
                 buv.tfcth,
                 buv.rsldi - buv.gapds - buv.d_vv_in,
-                tfv.n_tf,
+                tfv.n_tf_coils,
                 tv.t_between_pulse,
                 pv.dene,
                 pv.idivrt,
@@ -104,7 +104,7 @@ class Vacuum:
             * vacv.pumpareafraction
             * vacv.pumpspeedfactor
             * pv.sarea
-            / tfv.n_tf
+            / tfv.n_tf_coils
         )
 
         wallarea = (pv.sarea / 1084.0e0) * 2000.0e0
@@ -186,7 +186,7 @@ class Vacuum:
         thshldi,
         thtf,
         ritf,
-        n_tf,
+        n_tf_coils,
         t_between_pulse,
         nplasma,
         ndiv,
@@ -272,7 +272,7 @@ class Vacuum:
         #              (9.0 for N2, 5.0 for He and 25. for DT)
 
         pfus = pfusmw * 1.0e6  # Fusion power (W)
-        ntf = int(n_tf)
+        ntf = int(n_tf_coils)
 
         #  Feed rate (gas load) of D-T into chamber (pellets + gas puffing +
         #     NBI + ...) = load from fueller + load from NBI
