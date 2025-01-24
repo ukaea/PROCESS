@@ -3912,7 +3912,7 @@ class Physics:
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
-            self.outfile, "Electron temperature (keV)", "(te)", physics_variables.te
+            self.outfile, "Volume averaged electron temperature (keV)", "(te)", physics_variables.te
         )
         po.ovarrf(
             self.outfile,
@@ -3944,18 +3944,18 @@ class Physics:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Electron density (/m3)", "(dene)", physics_variables.dene
+            self.outfile, "Volume averaged electron number density (/m3)", "(dene)", physics_variables.dene
         )
         po.ovarre(
             self.outfile,
-            "Electron density on axis (/m3)",
+            "Electron number density on axis (/m3)",
             "(ne0)",
             physics_variables.ne0,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Line-averaged electron density (/m3)",
+            "Line-averaged electron number density (/m3)",
             "(dnla)",
             physics_variables.dnla,
             "OP ",
@@ -4014,33 +4014,40 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Helium ion density (thermalised ions only) / electron number density",
+            "(f_nd_alpha_electron)",
+            physics_variables.f_nd_alpha_electron,
+        )
+        po.ovarre(
+            self.outfile,
             "Proton number density (/m3)",
             "(nd_protons)",
             physics_variables.nd_protons,
             "OP ",
         )
-        if physics_variables.f_nd_protium_electrons > 1.0e-10:
-            po.ovarre(
-                self.outfile,
-                "Seeded f_nd_protium_electrons density / electron density",
-                "(f_nd_protium_electrons)",
-                physics_variables.f_nd_protium_electrons,
-            )
-
         po.ovarre(
             self.outfile,
-            "Hot beam density (/m3)",
-            "(nd_beam_ions)",
-            physics_variables.nd_beam_ions,
+            "Proton number density / electron number density",
+            "(f_nd_protium_electrons)",
+            physics_variables.f_nd_protium_electrons,
             "OP ",
         )
 
         po.ovarre(
             self.outfile,
-            "Helium ion density (thermalised ions only) / electron density",
-            "(f_nd_alpha_electron)",
-            physics_variables.f_nd_alpha_electron,
+            "Hot beam ion number density (/m3)",
+            "(nd_beam_ions)",
+            physics_variables.nd_beam_ions,
+            "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Hot beam ion number density / electron density",
+            "(f_nd_beam_electron)",
+            physics_variables.f_nd_beam_electron,
+            "OP ",
+        )
+
         po.oblnkl(self.outfile)
 
         po.ocmmnt(self.outfile, "Impurities")
