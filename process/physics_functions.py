@@ -10,12 +10,6 @@ from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
-# https://physics.nist.gov/cgi-bin/cuu/Value?mdu|search_for=deuteron
-ATOMIC_MASS_DEUTERIUM = 2.013553212544
-
-# https://physics.nist.gov/cgi-bin/cuu/Value?mtu|search_for=triton
-ATOMIC_MASS_TRITIUM = 3.01550071597
-
 REACTION_CONSTANTS_DT = {
     "bg": 34.3827,
     "mrc2": 1.124656e6,
@@ -1061,8 +1055,8 @@ def beam_fusion(
     beam_slow_time = (
         1.99e19
         * (
-            ATOMIC_MASS_DEUTERIUM * (1.0 - f_tritium_beam)
-            + (ATOMIC_MASS_TRITIUM * f_tritium_beam)
+            constants.m_deuteron_amu * (1.0 - f_tritium_beam)
+            + (constants.m_triton_amu * f_tritium_beam)
         )
         * (ten**1.5 / dene)
         / ion_electron_coulomb_log
@@ -1073,14 +1067,14 @@ def beam_fusion(
     # Taken from J.W Sheffield, “The physics of magnetic fusion reactors,”
     critical_energy_deuterium = (
         14.8
-        * ATOMIC_MASS_DEUTERIUM
+        * constants.m_deuteron_amu
         * ten
         * zeffai ** (2 / 3)
         * (ion_electron_coulomb_log + 4.0)
         / ion_electron_coulomb_log
     )
     critical_energy_tritium = critical_energy_deuterium * (
-        ATOMIC_MASS_TRITIUM / ATOMIC_MASS_DEUTERIUM
+        constants.m_triton_amu / constants.m_deuteron_amu
     )
 
     # Deuterium and tritium ion densities
@@ -1231,7 +1225,7 @@ def beamcalc(
         2.0
         * constants.kiloelectron_volt
         * critical_energy_deuterium
-        / (constants.atomic_mass_unit * ATOMIC_MASS_DEUTERIUM)
+        / (constants.atomic_mass_unit * constants.m_deuteron_amu)
     )
 
     # Find the speed of the tritium particle when it has the critical energy.
@@ -1240,7 +1234,7 @@ def beamcalc(
         2.0
         * constants.kiloelectron_volt
         * critical_energy_tritium
-        / (constants.atomic_mass_unit * ATOMIC_MASS_TRITIUM)
+        / (constants.atomic_mass_unit * constants.m_triton_amu)
     )
 
     # Source term representing the number of ions born per unit time per unit volume.
@@ -1252,7 +1246,7 @@ def beamcalc(
     source_tritium = beam_current_tritium / (constants.electron_charge * vol_plasma)
 
     pressure_coeff_deuterium = (
-        ATOMIC_MASS_DEUTERIUM
+        constants.m_deuteron_amu
         * constants.atomic_mass_unit
         * beam_slow_time
         * deuterium_critical_energy_speed**2
@@ -1260,7 +1254,7 @@ def beamcalc(
         / (constants.kiloelectron_volt * 3.0)
     )
     pressure_coeff_tritium = (
-        ATOMIC_MASS_TRITIUM
+        constants.m_triton_amu
         * constants.atomic_mass_unit
         * beam_slow_time
         * tritium_critical_energy_speed**2
@@ -1288,11 +1282,11 @@ def beamcalc(
     ) / hot_beam_density
 
     hot_deuterium_rate = 1e-4 * beam_reaction_rate(
-        ATOMIC_MASS_DEUTERIUM, deuterium_critical_energy_speed, beam_energy
+        constants.m_deuteron_amu, deuterium_critical_energy_speed, beam_energy
     )
 
     hot_tritium_rate = 1e-4 * beam_reaction_rate(
-        ATOMIC_MASS_TRITIUM, tritium_critical_energy_speed, beam_energy
+        constants.m_triton_amu, tritium_critical_energy_speed, beam_energy
     )
 
     deuterium_beam_alpha_power = alpha_power_beam(
@@ -1527,7 +1521,7 @@ def _beam_fusion_cross_section(vrelsq: float) -> float:
     a5 = 4.09e2
 
     # Beam kinetic energy
-    beam_energy = 0.5 * ATOMIC_MASS_DEUTERIUM * vrelsq
+    beam_energy = 0.5 * constants.m_deuteron_amu * vrelsq
 
     # Set limits on cross-section at low and high beam energies
     if beam_energy < 10.0:

@@ -4100,7 +4100,11 @@ class Physics:
         )
 
         po.ovarrf(
-            self.outfile, "Mass-weighted Effective charge", "(zeffai)", physics_variables.zeffai, "OP "
+            self.outfile,
+            "Mass-weighted Effective charge",
+            "(zeffai)",
+            physics_variables.zeffai,
+            "OP ",
         )
 
         po.ovarrf(
