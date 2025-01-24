@@ -69,7 +69,7 @@ boundu(59) = 0.94
 ixc = 60 * cpttf
 boundl(60) = 65000.0
 boundu(60) = 90000.0
-ixc = 109 * ralpne
+ixc = 109 * f_nd_alpha_electron
 boundu(109) = 0.1
 ixc = 122 * oh_steel_frac
 ixc = 135 * fimp(13)
@@ -345,7 +345,7 @@ i_plasma_geometry   = 0 * switch for plasma cross-sectional shape calculation;
 kappa    = 1.85 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)
 q        = 3.7339078193128556 * Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
 q0       = 1.0 * safety factor on axis
-ralpne   = 0.060238763988650204 * thermal alpha density/electron density (`iteration variable 109`)
+f_nd_alpha_electron   = 0.060238763988650204 * thermal alpha density/electron density (`iteration variable 109`)
 rmajor   = 8.0 * plasma major radius (m) (`iteration variable 3`)
 i_single_null = 1 * switch for single null / double null plasma;
 f_sync_reflect    = 0.6 * synchrotron wall reflectivity factor

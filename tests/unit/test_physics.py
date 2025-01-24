@@ -1159,7 +1159,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_alpha_ion: Any = None
 
-    ralpne: Any = None
+    f_nd_alpha_electron: Any = None
 
     dlamee: Any = None
 
@@ -1301,7 +1301,7 @@ class PlasmaCompositionParam(NamedTuple):
             rncne=0,
             rnone=0,
             f_alpha_ion=0,
-            ralpne=0.10000000000000001,
+            f_nd_alpha_electron=0.10000000000000001,
             dlamee=0,
             rnbeam=0,
             zeff=0,
@@ -1419,7 +1419,7 @@ class PlasmaCompositionParam(NamedTuple):
             rncne=0,
             rnone=0,
             f_alpha_ion=0.3154069116809366,
-            ralpne=0.10000000000000001,
+            f_nd_alpha_electron=0.10000000000000001,
             dlamee=17.510652035055571,
             rnbeam=0,
             zeff=2.0909945616489103,
@@ -1561,7 +1561,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         physics_variables, "f_alpha_ion", plasmacompositionparam.f_alpha_ion
     )
 
-    monkeypatch.setattr(physics_variables, "ralpne", plasmacompositionparam.ralpne)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_nd_alpha_electron",
+        plasmacompositionparam.f_nd_alpha_electron,
+    )
 
     monkeypatch.setattr(physics_variables, "dlamee", plasmacompositionparam.dlamee)
 

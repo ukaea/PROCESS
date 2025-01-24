@@ -44,7 +44,7 @@ var_dicts = {
         description="Effective energy confinement time",
         units="s",
     ),
-    "ralpne": VariableMetadata(
+    "f_nd_alpha_electron": VariableMetadata(
         latex=r"$f_\mathrm{\alpha}$",
         description="Alpha particle heating fraction",
         units="",

@@ -310,7 +310,7 @@ module numerics
   !! <LI> (106) ftmargoh (f-value for equation 60)
   !! <LI> (107) favail (f-value for equation 61)
   !! <LI> (108) breeder_f: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
-  !! <LI> (109) ralpne: thermal alpha density / electron density
+  !! <LI> (109) f_nd_alpha_electron: thermal alpha density / electron density
   !! <LI> (110) ftaulimit: Lower limit on taup/taueff the ratio of alpha
   !! <LI> (111) fniterpump: f-value for constraint that number
   !! <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)
