@@ -244,8 +244,6 @@ class PlasmaGeom:
             physics_variables.triang,
         )
 
-        # ======================================================================
-
         #  Surface area - inboard and outboard.  These are not given by Sauter but
         #  the outboard area is required by DCLL and divertor
         xsi, xso = self.plasma_surface_area(
@@ -315,25 +313,27 @@ class PlasmaGeom:
         Routine to find parameters used for calculating geometrical
         properties for double-null plasmas.
 
-        Author: P J Knight, CCFE, Culham Science Centre
+        :author: P J Knight, CCFE, Culham Science Centre
 
-        Parameters:
-        a (float): Plasma minor radius (m)
-        kappa (float): Plasma separatrix elongation
-        tri (float): Plasma separatrix triangularity
+        :param a: Plasma minor radius (m)
+        :type a: float
+        :param kappa: Plasma separatrix elongation
+        :type kappa: float
+        :param tri: Plasma separatrix triangularity
+        :type tri: float
 
-        Returns:
-        tuple: A tuple containing:
+        :returns: A tuple containing:
             - xi (float): Radius of arc describing inboard surface (m)
             - thetai (float): Half-angle of arc describing inboard surface
             - xo (float): Radius of arc describing outboard surface (m)
             - thetao (float): Half-angle of arc describing outboard surface
+        :rtype: tuple
 
         This function finds plasma geometrical parameters, using the
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
 
-        References:
+        :references:
         - F/MI/PJK/LOGBOOK14, p.42
         - F/PL/PJK/PROCESS/CODE/047
         """

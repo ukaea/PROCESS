@@ -202,6 +202,7 @@ def plot_plasma(axis, mfile_data, scan, colour_scheme):
         square=plasma_square,
     )
     if i_plasma_shape == 0:
+        # Plot the 2 plasma outline arcs.
         axis.plot(pg.rs[0], pg.zs[0], color="black")
         axis.plot(pg.rs[1], pg.zs[1], color="black")
 

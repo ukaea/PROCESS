@@ -36,19 +36,16 @@ def plasma_geometry(
     based on the given major radius, minor radius, triangularity, and elongation at 95% of the plasma surface. It also
     considers whether the plasma configuration is single null or double null.
 
-    :param rmajor: Plasma major radius.
-    :param rminor: Plasma minor radius.
-    :param triang: Plasma triangularity at separatrix.
-    :param kappa: Plasma elongation at separatrix.
-    :param i_single_null: Switch for single null (1) or double null (0) plasma configuration.
-    :param i_plasma_shape: Switch for plasma shape (0 for double arc, 1 for Sauter).
-    :param square: Square term for Sauter plasma shape.
-    :return: A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
+    :param float rmajor: Plasma major radius.
+    :param float rminor: Plasma minor radius.
+    :param float triang: Plasma triangularity at separatrix.
+    :param float kappa: Plasma elongation at separatrix.
+    :param int i_single_null: Switch for single null (1) or double null (0) plasma configuration.
+    :param int i_plasma_shape: Switch for plasma shape (0 for double arc, 1 for Sauter).
+    :param float square: Square term for Sauter plasma shape.
+    :returns: A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
+    :rtype: PlasmaGeometry
 
-    The returned PlasmaGeometry dataclass contains:
-    - rs: List of radial coordinates for the inner and outer plasma boundaries.
-    - zs: List of vertical coordinates for the inner and outer plasma boundaries.
-    - kappa: Calculated plasma elongation.
     """
 
     # Original PROCESS double arc plasma shape
@@ -93,7 +90,7 @@ def plasma_geometry(
         return PlasmaGeometry(rs=rs, zs=zs, kappa=kappa)
 
     # Sauter plasma shape
-    if i_plasma_shape == 1:
+    elif i_plasma_shape == 1:
         x = np.linspace(-np.pi, np.pi, 256)
 
         # Sauter
