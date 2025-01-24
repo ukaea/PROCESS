@@ -1327,8 +1327,10 @@ class CurrentDrive:
         fshine = max(fshine, 1e-20)
 
         # Deuterium and tritium beam densities
-        dend = physics_variables.deni * (1.0 - current_drive_variables.f_tritium_beam)
-        dent = physics_variables.deni * current_drive_variables.f_tritium_beam
+        dend = physics_variables.nd_fuel_ions * (
+            1.0 - current_drive_variables.f_tritium_beam
+        )
+        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_tritium_beam
 
         # Power split to ions / electrons
         fpion = self.cfnbi(
@@ -1600,8 +1602,10 @@ class CurrentDrive:
 
         #  Deuterium and tritium beam densities
 
-        dend = physics_variables.deni * (1.0e0 - current_drive_variables.f_tritium_beam)
-        dent = physics_variables.deni * current_drive_variables.f_tritium_beam
+        dend = physics_variables.nd_fuel_ions * (
+            1.0e0 - current_drive_variables.f_tritium_beam
+        )
+        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_tritium_beam
 
         #  Power split to ions / electrons
 

@@ -647,11 +647,11 @@ def plot_nprofile(prof, demo_ranges):
     if ipedestal == 1:
         rhocore = np.linspace(0, rhopedn)
         necore = neped + (ne0 - neped) * (1 - rhocore**2 / rhopedn**2) ** alphan
-        nicore = necore * (deni / dene)
+        nicore = necore * (nd_fuel_ions / dene)
 
         rhosep = np.linspace(rhopedn, 1)
         neesep = nesep + (neped - nesep) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
-        nisep = neesep * (deni / dene)
+        nisep = neesep * (nd_fuel_ions / dene)
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(necore, neesep)
@@ -705,7 +705,7 @@ def plot_nprofile(prof, demo_ranges):
             rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}\n",
             rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
             r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-            f"{deni / dene:.3f}",
+            f"{nd_fuel_ions / dene:.3f}",
             rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}",
             rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}\n",
             rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
@@ -3453,7 +3453,7 @@ def main(args=None):
     global alphan
     global alphat
     global ne0
-    global deni
+    global nd_fuel_ions
     global dene
     global te0
     global ti
@@ -3473,7 +3473,7 @@ def main(args=None):
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["ne0"].get_scan(scan)
-    deni = m_file.data["deni"].get_scan(scan)
+    nd_fuel_ions = m_file.data["nd_fuel_ions"].get_scan(scan)
     dene = m_file.data["dene"].get_scan(scan)
     te0 = m_file.data["te0"].get_scan(scan)
     ti = m_file.data["ti"].get_scan(scan)

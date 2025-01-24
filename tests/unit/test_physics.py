@@ -1143,7 +1143,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_tritium: Any = None
 
-    deni: Any = None
+    nd_fuel_ions: Any = None
 
     m_ions_total_amu: Any = None
 
@@ -1225,7 +1225,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     expected_m_fuel_amu: Any = None
 
-    expected_deni: Any = None
+    expected_nd_fuel_ions: Any = None
 
     expected_m_ions_total_amu: Any = None
 
@@ -1293,7 +1293,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_alpha_electron=0,
             m_fuel_amu=0,
             f_tritium=0.5,
-            deni=0,
+            nd_fuel_ions=0,
             m_ions_total_amu=0,
             nd_ions_total=0,
             f_nd_protium_electrons=0,
@@ -1349,7 +1349,7 @@ class PlasmaCompositionParam(NamedTuple):
             ],
             expected_f_alpha_electron=0.6845930883190634,
             expected_m_fuel_amu=2.5145269632339478,
-            expected_deni=5.8589175702454272e19,
+            expected_nd_fuel_ions=5.8589175702454272e19,
             expected_m_ions_total_amu=2.7395439636787726,
             expected_nd_ions_total=6.6125550702454276e19,
             expected_zeffai=0.43046641789338563,
@@ -1411,7 +1411,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_alpha_electron=0.6845930883190634,
             m_fuel_amu=2.5,
             f_tritium=0.5,
-            deni=5.8589175702454272e19,
+            nd_fuel_ions=5.8589175702454272e19,
             m_ions_total_amu=2.7395439636787726,
             nd_ions_total=6.6125550702454276e19,
             f_nd_protium_electrons=0,
@@ -1467,7 +1467,7 @@ class PlasmaCompositionParam(NamedTuple):
             ),
             expected_f_alpha_electron=0.73096121787894142,
             expected_m_fuel_amu=2.5145269632339478,
-            expected_deni=5.8576156204039725e19,
+            expected_nd_fuel_ions=5.8576156204039725e19,
             expected_m_ions_total_amu=2.739245767577763,
             expected_nd_ions_total=6.6125550702454276e19,
             expected_zeffai=0.43056686748101997,
@@ -1535,7 +1535,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         physics_variables, "f_tritium", plasmacompositionparam.f_tritium
     )
 
-    monkeypatch.setattr(physics_variables, "deni", plasmacompositionparam.deni)
+    monkeypatch.setattr(
+        physics_variables, "nd_fuel_ions", plasmacompositionparam.nd_fuel_ions
+    )
 
     monkeypatch.setattr(
         physics_variables, "m_ions_total_amu", plasmacompositionparam.m_ions_total_amu
@@ -1667,7 +1669,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_m_fuel_amu
     )
 
-    assert physics_variables.deni == pytest.approx(plasmacompositionparam.expected_deni)
+    assert physics_variables.nd_fuel_ions == pytest.approx(
+        plasmacompositionparam.expected_nd_fuel_ions
+    )
 
     assert physics_variables.m_ions_total_amu == pytest.approx(
         plasmacompositionparam.expected_m_ions_total_amu
@@ -1834,7 +1838,7 @@ class PhyauxParam(NamedTuple):
 
     dene: Any = None
 
-    deni: Any = None
+    nd_fuel_ions: Any = None
 
     nd_alphas: Any = None
 
@@ -1873,7 +1877,7 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             dene=7.5e19,
-            deni=5.8589175702454272e19,
+            nd_fuel_ions=5.8589175702454272e19,
             nd_alphas=7.5e18,
             fusion_rate_density_total=1.9852091609123786e17,
             alpha_rate_density_total=1.973996644759543e17,
@@ -1894,7 +1898,7 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             dene=7.5e19,
-            deni=5.8576156204039725e19,
+            nd_fuel_ions=5.8576156204039725e19,
             nd_alphas=7.5e18,
             fusion_rate_density_total=1.9843269653375773e17,
             alpha_rate_density_total=1.9731194318497056e17,
@@ -1932,7 +1936,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup = physics.phyaux(
         aspect=phyauxparam.aspect,
         dene=phyauxparam.dene,
-        deni=phyauxparam.deni,
+        nd_fuel_ions=phyauxparam.nd_fuel_ions,
         nd_alphas=phyauxparam.nd_alphas,
         fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
         alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
