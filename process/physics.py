@@ -4089,11 +4089,21 @@ class Physics:
             physics_variables.m_ions_total_amu,
             "OP ",
         )
-        # MDK Say which impurity is varied, if iteration variable fimpvar (102) is turned on
-        # if (any(ixc == 102)) :
-        #   call ovarst(self.outfile,'Impurity used as an iteration variable' , '', '"' // impurity_arr(impvar)%label // '"')
-        #   po.ovarre(self.outfile,'Fractional density of variable impurity (ion / electron density)','(fimpvar)',fimpvar)
-        #
+        po.ovarre(
+            self.outfile,
+            "Average mass of all fuel ions (amu)",
+            "(m_fuel_amu)",
+            physics_variables.m_fuel_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Average mass of all beam ions (amu)",
+            "(m_beam_amu)",
+            physics_variables.m_beam_amu,
+            "OP ",
+        )
+
         po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "
