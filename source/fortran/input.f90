@@ -306,7 +306,7 @@ contains
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
       fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
-      ftar, plasma_res_factor, f_sync_reflect, rnbeam, beta, neped, hfact, beta_norm_max, &
+      ftar, plasma_res_factor, f_sync_reflect, f_nd_beam_electron, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, f_nd_alpha_electron, iprofile, triang95, rad_fraction_sol, betbm0, f_nd_protium_electrons, &
@@ -733,8 +733,8 @@ contains
        case ('rmajor')
           call parse_real_variable('rmajor', rmajor, 0.1D0, 50.0D0, &
                'Plasma major radius (m)')
-       case ('rnbeam')
-          call parse_real_variable('rnbeam', rnbeam, 0.0D0, 1.0D0, &
+       case ('f_nd_beam_electron')
+          call parse_real_variable('f_nd_beam_electron', f_nd_beam_electron, 0.0D0, 1.0D0, &
                'Hot beam density / electron density')
        case ('i_single_null')
           call parse_int_variable('i_single_null', i_single_null, 0, 1, &

@@ -1163,7 +1163,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     dlamee: Any = None
 
-    rnbeam: Any = None
+    f_nd_beam_electron: Any = None
 
     zeff: Any = None
 
@@ -1303,7 +1303,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_alpha_ion=0,
             f_nd_alpha_electron=0.10000000000000001,
             dlamee=0,
-            rnbeam=0,
+            f_nd_beam_electron=0,
             zeff=0,
             nd_impurities=0,
             pcoef=0,
@@ -1421,7 +1421,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_alpha_ion=0.3154069116809366,
             f_nd_alpha_electron=0.10000000000000001,
             dlamee=17.510652035055571,
-            rnbeam=0,
+            f_nd_beam_electron=0,
             zeff=2.0909945616489103,
             nd_impurities=28875000000000004,
             pcoef=1.0521775929921553,
@@ -1569,7 +1569,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "dlamee", plasmacompositionparam.dlamee)
 
-    monkeypatch.setattr(physics_variables, "rnbeam", plasmacompositionparam.rnbeam)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_nd_beam_electron",
+        plasmacompositionparam.f_nd_beam_electron,
+    )
 
     monkeypatch.setattr(physics_variables, "zeff", plasmacompositionparam.zeff)
 

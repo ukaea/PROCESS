@@ -208,7 +208,7 @@ module numerics
   !! <LI> ( 4) te
   !! <LI> ( 5) beta
   !! <LI> ( 6) dene
-  !! <LI> ( 7) rnbeam
+  !! <LI> ( 7) f_nd_beam_electron
   !! <LI> ( 8) fbeta_poloidal_eps (f-value for equation 6)
   !! <LI> ( 9) fdene (f-value for equation 5)
   !! <LI> (10) hfact

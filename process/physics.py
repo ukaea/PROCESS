@@ -2725,7 +2725,7 @@ class Physics:
         # If ignited, prevent beam fusion effects
         if physics_variables.ignite == 0:
             physics_variables.nd_beam_ions = (
-                physics_variables.dene * physics_variables.rnbeam
+                physics_variables.dene * physics_variables.f_nd_beam_electron
             )
         else:
             physics_variables.nd_beam_ions = 0.0
