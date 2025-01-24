@@ -14,19 +14,19 @@ class PlasmaGeom:
     def plasma_geometry(self) -> None:
         """
         Plasma geometry parameters
-        author: P J Knight, CCFE, Culham Science Centre
+
+        :author: P J Knight, CCFE, Culham Science Centre
 
         This method calculates the plasma geometry parameters based on various shaping terms and input values.
         It updates the `physics_variables` with calculated values for kappa, triangularity, surface area, volume, etc.
 
-        References:
-        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-          unpublished internal Oak Ridge document
-        - H. Zohm et al, On the Physics Guidelines for a Tokamak DEMO,
-          FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
+        :references:
+            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+              unpublished internal Oak Ridge document
+            - H. Zohm et al, On the Physics Guidelines for a Tokamak DEMO,
+              FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
 
-        Returns:
-        None
+        :returns: None
         """
 
         xsi = 0.0e0
@@ -358,14 +358,17 @@ class PlasmaGeom:
         """
         Calculate the poloidal perimeter of the plasma.
 
-        Parameters:
-        xi (float): Radius of arc describing inboard surface (m)
-        thetai (float): Half-angle of arc describing inboard surface
-        xo (float): Radius of arc describing outboard surface (m)
-        thetao (float): Half-angle of arc describing outboard surface
+        :param xi: Radius of arc describing inboard surface (m)
+        :type xi: float
+        :param thetai: Half-angle of arc describing inboard surface
+        :type thetai: float
+        :param xo: Radius of arc describing outboard surface (m)
+        :type xo: float
+        :param thetao: Half-angle of arc describing outboard surface
+        :type thetao: float
 
-        Returns:
-        float: Poloidal perimeter (m)
+        :returns: Poloidal perimeter (m)
+        :rtype: float
         """
         return 2.0e0 * (xo * thetao + xi * thetai)
 
@@ -375,26 +378,31 @@ class PlasmaGeom:
     ) -> tuple[float, float]:
         """
         Plasma surface area calculation
-        author: P J Knight, CCFE, Culham Science Centre
+        :author: P J Knight, CCFE, Culham Science Centre
 
-        Parameters:
-        rmajor (float): Plasma major radius (m)
-        rminor (float): Plasma minor radius (m)
-        xi (float): Radius of arc describing inboard surface (m)
-        thetai (float): Half-angle of arc describing inboard surface
-        xo (float): Radius of arc describing outboard surface (m)
-        thetao (float): Half-angle of arc describing outboard surface
+        :param rmajor: Plasma major radius (m)
+        :type rmajor: float
+        :param rminor: Plasma minor radius (m)
+        :type rminor: float
+        :param xi: Radius of arc describing inboard surface (m)
+        :type xi: float
+        :param thetai: Half-angle of arc describing inboard surface
+        :type thetai: float
+        :param xo: Radius of arc describing outboard surface (m)
+        :type xo: float
+        :param thetao: Half-angle of arc describing outboard surface
+        :type thetao: float
 
-        Returns:
-        tuple: A tuple containing:
+        :returns: A tuple containing:
             - xsi (float): Inboard surface area (m^2)
             - xso (float): Outboard surface area (m^2)
+        :rtype: tuple
 
         This function finds the plasma surface area, using the
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
 
-        References:
+        :references:
         - F/MI/PJK/LOGBOOK14, p.43
         """
         fourpi = 4.0e0 * np.pi
@@ -411,24 +419,29 @@ class PlasmaGeom:
     def plasma_volume(rmajor, rminor, xi, thetai, xo, thetao):
         """
         Plasma volume calculation
-        author: P J Knight, CCFE, Culham Science Centre
+        :author: P J Knight, CCFE, Culham Science Centre
 
-        Parameters:
-        rmajor (float): Plasma major radius (m)
-        rminor (float): Plasma minor radius (m)
-        xi (float): Radius of arc describing inboard surface (m)
-        thetai (float): Half-angle of arc describing inboard surface
-        xo (float): Radius of arc describing outboard surface (m)
-        thetao (float): Half-angle of arc describing outboard surface
+        :param rmajor: Plasma major radius (m)
+        :type rmajor: float
+        :param rminor: Plasma minor radius (m)
+        :type rminor: float
+        :param xi: Radius of arc describing inboard surface (m)
+        :type xi: float
+        :param thetai: Half-angle of arc describing inboard surface
+        :type thetai: float
+        :param xo: Radius of arc describing outboard surface (m)
+        :type xo: float
+        :param thetao: Half-angle of arc describing outboard surface
+        :type thetao: float
 
-        Returns:
-        float: Plasma volume (m^3)
+        :returns: Plasma volume (m^3)
+        :rtype: float
 
         This function finds the plasma volume, using the
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
 
-        References:
+        :references:
         - F/MI/PJK/LOGBOOK14, p.43
         """
 
@@ -471,22 +484,25 @@ class PlasmaGeom:
     ) -> float:
         """
         Plasma cross-sectional area calculation
-        author: P J Knight, CCFE, Culham Science Centre
+        :author: P J Knight, CCFE, Culham Science Centre
 
-        Parameters:
-        xi (float): Radius of arc describing inboard surface (m)
-        thetai (float): Half-angle of arc describing inboard surface
-        xo (float): Radius of arc describing outboard surface (m)
-        thetao (float): Half-angle of arc describing outboard surface
+        :param xi: Radius of arc describing inboard surface (m)
+        :type xi: float
+        :param thetai: Half-angle of arc describing inboard surface
+        :type thetai: float
+        :param xo: Radius of arc describing outboard surface (m)
+        :type xo: float
+        :param thetao: Half-angle of arc describing outboard surface
+        :type thetao: float
 
-        Returns:
-        float: Plasma cross-sectional area (m^2)
+        :returns: Plasma cross-sectional area (m^2)
+        :rtype: float
 
         This function finds the plasma cross-sectional area, using the
         revolution of two intersecting arcs around the device centreline.
         This calculation is appropriate for plasmas with a separatrix.
 
-        References:
+        :references:
         - F/MI/PJK/LOGBOOK14, p.41
         """
 
@@ -503,27 +519,30 @@ class PlasmaGeom:
         """
         Calculate the plasma geometry parameters using the Sauter geometry model.
 
-        Parameters:
-        a (float): Plasma minor radius (m)
-        r0 (float): Plasma major radius (m)
-        kappa (float): Plasma separatrix elongation
-        triang (float): Plasma separatrix triangularity
-        square (float): Plasma squareness
+        :param a: Plasma minor radius (m)
+        :type a: float
+        :param r0: Plasma major radius (m)
+        :type r0: float
+        :param kappa: Plasma separatrix elongation
+        :type kappa: float
+        :param triang: Plasma separatrix triangularity
+        :type triang: float
+        :param square: Plasma squareness
+        :type square: float
 
-        Returns:
-        tuple: A tuple containing:
+        :returns: A tuple containing:
             - len_plasma_poloidal (float): Poloidal perimeter
             - a_plasma_surface (float): Surface area
             - a_plasma_poloidal (float): Cross-section area
             - vol_plasma (float): Plasma volume
+        :rtype: tuple
 
-        Notes:
+        :notes:
 
-        Refrences:
+        :references:
             - O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,”
               Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016,
               doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
-
         """
 
         # Calculate w07 parameter from paper from squareness assuming top-down symmetry
@@ -566,22 +585,34 @@ class PlasmaGeom:
 # --------------------------------
 
 
-def surfa(a, r, k, d):
+def surfa(a: float, r: float, k: float, d: float) -> tuple[float, float]:
     """
     Plasma surface area calculation
-    author: P J Knight, CCFE, Culham Science Centre
-    a      : input real :  plasma minor radius (m)
-    r      : input real :  plasma major radius (m)
-    k      : input real :  plasma separatrix elongation
-    d      : input real :  plasma separatrix triangularity
-    sa     : output real : plasma total surface area (m2)
-    so     : output real : plasma outboard surface area (m2)
+
+    :author: P J Knight, CCFE, Culham Science Centre
+
+    :param a: Plasma minor radius (m)
+    :type a: float
+    :param r: Plasma major radius (m)
+    :type r: float
+    :param k: Plasma separatrix elongation
+    :type k: float
+    :param d: Plasma separatrix triangularity
+    :type d: float
+
+    :returns: A tuple containing:
+        - sa (float): Plasma total surface area (m^2)
+        - so (float): Plasma outboard surface area (m^2)
+    :rtype: tuple
+
     This function finds the plasma surface area, using the
     revolution of two intersecting arcs around the device centreline.
     This calculation is appropriate for plasmas with a separatrix.
     It was the original method in PROCESS.
-    J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-    unpublished internal Oak Ridge document
+
+    :references:
+    - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+      unpublished internal Oak Ridge document
     """
     radco = a * (1.0e0 + (k**2 + d**2 - 1.0e0) / (2.0e0 * (1.0e0 + d)))
     b = k * a
@@ -599,17 +630,28 @@ def surfa(a, r, k, d):
     return sa, so
 
 
-def perim(a, kap, tri):
+def perim(a: float, kap: float, tri: float) -> float:
     """
     Plasma poloidal perimeter calculation
-    author: P J Knight, CCFE, Culham Science Centre
-    a      : input real :  plasma minor radius (m)
-    kap    : input real :  plasma separatrix elongation
-    tri    : input real :  plasma separatrix triangularity
+
+    :author: P J Knight, CCFE, Culham Science Centre
+
+    :param a: Plasma minor radius (m)
+    :type a: float
+    :param kap: Plasma separatrix elongation
+    :type kap: float
+    :param tri: Plasma separatrix triangularity
+    :type tri: float
+
+    :returns: Plasma poloidal perimeter (m)
+    :rtype: float
+
     This function finds the plasma poloidal perimeter, using the
     revolution of two intersecting arcs around the device centreline.
     This calculation is appropriate for plasmas with a separatrix.
-    F/PL/PJK/PROCESS/CODE/047
+
+    :references:
+    - F/PL/PJK/PROCESS/CODE/047
     """
 
     #  Inboard arc
@@ -629,19 +671,31 @@ def perim(a, kap, tri):
     return perim
 
 
-def fvol(r, a, kap, tri):
+def fvol(r: float, a: float, kap: float, tri: float) -> float:
     """
     Plasma volume calculation
-    author: P J Knight, CCFE, Culham Science Centre
-    r      : input real :  plasma major radius (m)
-    a      : input real :  plasma minor radius (m)
-    kap    : input real :  plasma separatrix elongation
-    tri    : input real :  plasma separatrix triangularity
+
+    :author: P J Knight, CCFE, Culham Science Centre
+
+    :param r: Plasma major radius (m)
+    :type r: float
+    :param a: Plasma minor radius (m)
+    :type a: float
+    :param kap: Plasma separatrix elongation
+    :type kap: float
+    :param tri: Plasma separatrix triangularity
+    :type tri: float
+
+    :returns: Plasma volume (m^3)
+    :rtype: float
+
     This function finds the plasma volume, using the
     revolution of two intersecting arcs around the device centreline.
     This calculation is appropriate for plasmas with a separatrix.
-    F/MI/PJK/LOGBOOK14, p.41
-    F/PL/PJK/PROCESS/CODE/047
+
+    :references:
+    - F/MI/PJK/LOGBOOK14, p.41
+    - F/PL/PJK/PROCESS/CODE/047
     """
 
     zn = kap * a
@@ -673,21 +727,29 @@ def fvol(r, a, kap, tri):
     return fvol
 
 
-def xsect0(a, kap, tri):
+def xsect0(a: float, kap: float, tri: float) -> float:
     """
     Plasma cross-sectional area calculation
-    author: P J Knight, CCFE, Culham Science Centre
-    a      : input real :  plasma minor radius (m)
-    kap    : input real :  plasma separatrix elongation
-    tri    : input real :  plasma separatrix triangularity
+
+    :author: P J Knight, CCFE, Culham Science Centre
+
+    :param a: Plasma minor radius (m)
+    :type a: float
+    :param kap: Plasma separatrix elongation
+    :type kap: float
+    :param tri: Plasma separatrix triangularity
+    :type tri: float
+
+    :returns: Plasma cross-sectional area (m^2)
+    :rtype: float
+
     This function finds the plasma cross-sectional area, using the
     revolution of two intersecting arcs around the device centreline.
     This calculation is appropriate for plasmas with a separatrix.
-    The method for finding the arc radii and angles are copied from
-    routine <A HREF="perim.html">PERIM</A>, and are thought to be
-    by Peng.
-    F/MI/PJK/LOGBOOK14, p.41
-    F/PL/PJK/PROCESS/CODE/047
+
+    :references:
+    - F/MI/PJK/LOGBOOK14, p.41
+    - F/PL/PJK/PROCESS/CODE/047
     """
 
     denomi = (tri**2 + kap**2 - 1.0e0) / (2.0e0 * (1.0e0 - tri)) + tri
