@@ -153,6 +153,13 @@ OBS_VARS = {
     "cwrmax": "f_r_conducting_wall",
     "ishape": "i_plasma_geometry",
     "iscrp": "i_plasma_wall_gap",
+    "peakfactrad": "f_fw_rad_max",
+    "nimp": "n_impurities",
+    "ssync": "f_sync_reflect",
+    "rnbeam": "f_nd_beam_electron",
+    "ralpne": "f_nd_alpha_electron",
+    "protium": "f_nd_protium_electrons",
+
 }
 
 OBS_VARS_HELP = {
