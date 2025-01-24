@@ -990,9 +990,9 @@ def check_process():
             fortran.current_drive_variables.iefrf != 5
             and fortran.current_drive_variables.iefrf != 8
         ):
-            fortran.physics_variables.rnbeam = 0.0
+            fortran.physics_variables.f_nd_beam_electron = 0.0
     else:
-        fortran.physics_variables.rnbeam = 0.0
+        fortran.physics_variables.f_nd_beam_electron = 0.0
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)

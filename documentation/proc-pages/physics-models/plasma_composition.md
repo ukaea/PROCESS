@@ -48,11 +48,11 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 3. **Beam Hot Ion Component**
 
-    - Calculate the number density of beam ions (`nd_beam_ions`), using the electron density (`dene`) and the beam ion to electron ratio (`rnbeam`). If the plasma is ignited, set it to zero.
-        - `rnbeam` can be set as an iteration variable (`ixc = 7`) or set directly.
+    - Calculate the number density of beam ions (`nd_beam_ions`), using the electron density (`dene`) and the beam ion to electron ratio (`f_nd_beam_electron`). If the plasma is ignited, set it to zero.
+        - `f_nd_beam_electron` can be set as an iteration variable (`ixc = 7`) or set directly.
 
     $$
-    \mathtt{nd\_beam\_ions} | n_{\text{beam}} = \mathtt{rnbeam} \times n_{\text{e}}
+    \mathtt{nd\_beam\_ions} | n_{\text{beam}} = \mathtt{f_nd_beam_electron} \times n_{\text{e}}
     $$
 
 4. **Sum of charge number density for all impurity ions**

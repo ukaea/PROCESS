@@ -168,25 +168,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_7
-    !! <LI> ( 7) rnbeam
+    !! <LI> ( 7) f_nd_beam_electron
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(7) = 'rnbeam        '
+    lablxc(7) = 'f_nd_beam_electron        '
     boundl(7) = 1.00D-6
     boundu(7) = 1.000D0
   end subroutine init_itv_7
 
   real(kind(1.d0)) function itv_7()
-    use physics_variables, only: rnbeam
+    use physics_variables, only: f_nd_beam_electron
     implicit none
-    itv_7 = rnbeam
+    itv_7 = f_nd_beam_electron
   end function itv_7
 
   subroutine set_itv_7(ratio)
-    use physics_variables, only: rnbeam
+    use physics_variables, only: f_nd_beam_electron
     implicit none
     real(kind(1.d0)) :: ratio
-    rnbeam = ratio
+    f_nd_beam_electron = ratio
   end subroutine set_itv_7
 
   !---------------------------------

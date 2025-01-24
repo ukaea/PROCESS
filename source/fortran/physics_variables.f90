@@ -827,7 +827,7 @@ module physics_variables
   real(dp) :: rminor
   !! plasma minor radius (m)
 
-  real(dp) :: rnbeam
+  real(dp) :: f_nd_beam_electron
   !! hot beam density / n_e (`iteration variable 7`)
 
   real(dp) :: rncne
@@ -1134,7 +1134,7 @@ module physics_variables
     rlp = 0.0D0
     rmajor = 8.14D0
     rminor = 0.0D0
-    rnbeam = 0.005D0
+    f_nd_beam_electron = 0.005D0
     rncne = 0.0D0
     rndfuel = 0.0D0
     rnfene = 0.0D0

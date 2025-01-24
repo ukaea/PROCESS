@@ -2851,7 +2851,7 @@ feffcd = 1.0
 * VARIABLES:     ignite,nd_beam_ions Rest calculated in-situ
 
 *ixc = 7
-*rnbeam = 
+*f_nd_beam_electron = 
 *boundl(7) = 
 *boundu(7) =  
 * DESCRIPTION:   Hot beam density / ne
