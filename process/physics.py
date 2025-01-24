@@ -3986,35 +3986,35 @@ class Physics:
 
         po.ovarre(
             self.outfile,
-            "Ion density (/m3)",
+            "Total Ion number density (/m3)",
             "(nd_ions_total)",
             physics_variables.nd_ions_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fuel density (/m3)",
+            "Fuel ion number density (/m3)",
             "(nd_fuel_ions)",
             physics_variables.nd_fuel_ions,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total impurity density with Z > 2 (no He) (/m3)",
+            "Total impurity number density with Z > 2 (no He) (/m3)",
             "(nd_impurities)",
             physics_variables.nd_impurities,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Helium ion density (thermalised ions only) (/m3)",
+            "Helium ion number density (thermalised ions only) (/m3)",
             "(nd_alphas)",
             physics_variables.nd_alphas,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Proton density (/m3)",
+            "Proton number density (/m3)",
             "(nd_protons)",
             physics_variables.nd_protons,
             "OP ",
@@ -4099,10 +4099,9 @@ class Physics:
             self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "
         )
 
-        # Issue #487.  No idea what zeffai is.
-        # I haven't removed it as it is used in subroutine rether,
-        #  (routine to find the equilibration power between the ions and electrons)
-        # po.ovarrf(self.outfile,'Mass weighted effective charge','(zeffai)',zeffai, 'OP ')
+        po.ovarrf(
+            self.outfile, "Mass-weighted Effective charge", "(zeffai)", physics_variables.zeffai, "OP "
+        )
 
         po.ovarrf(
             self.outfile, "Density profile factor", "(alphan)", physics_variables.alphan
@@ -4308,13 +4307,12 @@ class Physics:
             "(f_tritium)",
             physics_variables.f_tritium,
         )
-        if physics_variables.f_helium3 > 1.0e-3:
-            po.ovarrf(
-                self.outfile,
-                "3-Helium fuel fraction",
-                "(f_helium3)",
-                physics_variables.f_helium3,
-            )
+        po.ovarrf(
+            self.outfile,
+            "3-Helium fuel fraction",
+            "(f_helium3)",
+            physics_variables.f_helium3,
+        )
 
         po.osubhd(self.outfile, "Fusion Powers :")
         po.ocmmnt(
