@@ -4034,21 +4034,6 @@ class Physics:
             physics_variables.nd_beam_ions,
             "OP ",
         )
-        po.ovarre(
-            self.outfile,
-            "Density limit from scaling (/m3)",
-            "(dnelimt)",
-            physics_variables.dnelimt,
-            "OP ",
-        )
-        if (numerics.ioptimz > 0) and (numerics.active_constraints[4]):
-            po.ovarre(
-                self.outfile,
-                "Density limit (enforced) (/m3)",
-                "(boundu(9)*dnelimt)",
-                numerics.boundu[8] * physics_variables.dnelimt,
-                "OP ",
-            )
 
         po.ovarre(
             self.outfile,
@@ -4307,6 +4292,21 @@ class Physics:
                 physics_variables.dlimit[7],
                 "OP ",
             )
+            po.ovarre(
+                self.outfile,
+                "Density limit from scaling (/m3)",
+                "(dnelimt)",
+                physics_variables.dnelimt,
+                "OP ",
+            )
+            if (numerics.ioptimz > 0) and (numerics.active_constraints[4]):
+                po.ovarre(
+                    self.outfile,
+                    "Density limit (enforced) (/m3)",
+                    "(boundu(9)*dnelimt)",
+                    numerics.boundu[8] * physics_variables.dnelimt,
+                    "OP ",
+                )
 
         po.osubhd(self.outfile, "Fuel Constituents :")
         po.ovarrf(
