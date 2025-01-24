@@ -6,9 +6,45 @@ $$
 n_{\text{e}} = \underbrace{Z_{\text{fuel}}n_{\text{i}}}_{\text{Fuel Ions}} + \underbrace{2n_{\text{e}}f_{\alpha}}_{\text{Alpha particles}} + \underbrace{n_{\text{e}}f_{\text{beam}}}_{\text{Neutral beams}} + \underbrace{\sum_j Z_j n_{\text{e}} f_j}_{\text{Impurities}}
 $$
 
-* Only deuterium and tritium can be put into the beams so charge is always 1
+* Since only deuterium and tritium can be placed into the beams the charge coefficient on the $n_{\text{e}}f_{\text{beam}}$ is just 1.
 
 --------------------
+
+## Setting the impurity composition
+
+
+
+The impurity number density fractions relative to the electron density are constant and are set 
+using input array `fimp(1,...,14)`. The available species are as follows:
+
+
+- `fimp(1)`: Hydrogen isotopes (fraction calculated by code)
+- `fimp(2)`: Helium (fraction calculated by code)
+- `fimp(3)`: Beryllium
+- `fimp(4)`: Carbon
+- `fimp(5)`: Nitrogen
+- `fimp(6)`: Oxygen
+- `fimp(7)`: Neon
+- `fimp(8)`: Silicon
+- `fimp(9)`: Argon
+- `fimp(10)`: Iron
+- `fimp(11)`: Nickel
+- `fimp(12)`: Krypton
+- `fimp(13)`: Xenon
+- `fimp(14)`: Tungsten
+
+As stated above, the number density fractions for hydrogen (all isotopes) and
+helium need not be set, as they are calculated by the code to ensure 
+plasma quasi-neutrality taking into account the fuel ratios
+`f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
+be input by the user or selected as an iteration variable.
+
+The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 
+isotopes and helium) may be used as an iteration variable.
+
+**The impurity fraction to be varied can be set simply with `fimp(i) = <value>`, where `i` is the corresponding number value for the desired impurity in the table above.**
+
+----------------
 
 ## Plasma Composition Calculation | `plasma_composition()`
 
@@ -22,29 +58,28 @@ All of the plasma composites are normally given as a fraction of the volume aver
         - `f_nd_alpha_electron` can be set as an iteration variable (`ixc = 109`) or set directly.
 
     $$
-    n_{\alpha} = \mathtt{f_nd_alpha_electron}\times n_{\text{e}}
+    n_{\alpha} = \mathtt{f\_nd\_alpha\_electron}\times n_{\text{e}}
     $$
-
 
 
 2. **Protons Calculation**
     - The calculation of proton density (`nd_protons`) depends on whether the alpha rate density has been calculated. This should only happen in the first function call as the rates are calculated later on in the code.
-    ```python
-    if physics_variables.alpha_rate_density_total < 1.0e-6:
-        physics_variables.nd_protons = max(
-            physics_variables.f_nd_protium_electrons * physics_variables.dene,
-            physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
-        )
-    else:
-        physics_variables.nd_protons = max(
-            physics_variables.f_nd_protium_electrons * physics_variables.dene,
-            physics_variables.nd_alphas
-            * physics_variables.proton_rate_density
-            / physics_variables.alpha_rate_density_total,
-        )
-    ```
+
     - If the alpha rate density is not yet calculated, use a rough estimate.
+
+    $$
+    \texttt{nd_protons} | n_{\text{p}} = \\
+    \text{max}\left[\texttt{f_nd_protium_electrons} \times n_{\text{e}}, n_{\alpha}\times \left(f_{\text{3He}} + 0.001\right)\right]
+    $$
+
     - Otherwise, use the calculated proton rate density.
+
+    $$
+    \texttt{nd_protons} | n_{\text{p}} = \\
+    \text{max}\left[\texttt{f_nd_protium_electrons} \times n_{\text{e}}, n_{\alpha}\times \frac{r_{\text{p}}}{r_{\alpha,\text{total}}}\right]
+    $$
+
+    where $r_{\text{p}}$ is the rate of proton production and $r_{\alpha,\text{total}}$ is the rate of total alpha particle production, which includes beam fusion (if present).
 
 3. **Beam Hot Ion Component**
 
@@ -52,7 +87,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
         - `f_nd_beam_electron` can be set as an iteration variable (`ixc = 7`) or set directly.
 
     $$
-    \mathtt{nd\_beam\_ions} | n_{\text{beam}} = \mathtt{f_nd_beam_electron} \times n_{\text{e}}
+    \mathtt{nd\_beam\_ions} | n_{\text{beam}} = \mathtt{f\_nd\_beam\_electron} \times n_{\text{e}}
     $$
 
 4. **Sum of charge number density for all impurity ions**
@@ -73,10 +108,10 @@ All of the plasma composites are normally given as a fraction of the volume aver
 6. **Fuel Ion Density Calculation**
 
     $$
-    \mathtt{deni} | n_{\text{i}} = \frac{\mathtt{znfuel}}{1+f_{\text{3He}}}
+    \mathtt{nd_fuel_ions} | n_{\text{i}} = \frac{\mathtt{znfuel}}{1+f_{\text{3He}}}
     $$
 
-    - Calculate the fuel ion density (`deni`).
+    - Calculate the fuel ion density (`nd_fuel_ions`).
 
 7. **Set Hydrogen and Helium Impurity Fractions**
 
@@ -87,7 +122,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     $$
 
     $$
-    \frac{n_{\text{He}}}{n_{\text{e}}} = f_{\text{3He}}n_{\text{i}}+\mathtt{f_nd_alpha_electron}
+    \frac{n_{\text{He}}}{n_{\text{e}}} = f_{\text{3He}}n_{\text{i}}+\mathtt{f\_nd\_alpha\_electron}
     $$
 
 8. **Total Impurity Density Calculation**
@@ -186,42 +221,6 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 ---------------
 
-The impurity radiation model in PROCESS uses a multi-impurity model which
-integrates the radiation contributions over an arbitrary choice of density and
-temperature profiles[^1]
-
-The impurity number density fractions relative to the electron density are constant and are set 
-using input array `fimp(1,...,14)`. The available species are as follows:
-
-| `fimp` | Species |
-| :-: | - |
-| 1 | Hydrogen isotopes (fraction calculated by code) |
-| 2 | Helium (fraction calculated by code) |
-| 3 | Beryllium |
-| 4 | Carbon |
-| 5 | Nitrogen |
-| 6 | Oxygen |
-| 7 | Neon |
-| 8 | Silicon |
-| 9 | Argon |
-| 10 | Iron |
-| 11 | Nickel |
-| 12 | Krypton |
-| 13 | Xenon |
-| 14 | Tungsten |
-
-As stated above, the number density fractions for hydrogen (all isotopes) and
-helium need not be set, as they are calculated by the code to ensure 
-plasma quasi-neutrality taking into account the fuel ratios
-`f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
-be input by the user or selected as an iteration variable.
-
-The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 
-isotopes and helium) may be used as an iteration variable.
-The impurity fraction to be varied can be set simply with `fimp(i) = <value>`, where `i` is the corresponding number value for the desired impurity in the table above.
-
-
-------------------
 
 ## Key Constraints
 
@@ -230,11 +229,9 @@ The impurity fraction to be varied can be set simply with `fimp(i) = <value>`, w
 
 This constraint can be activated by stating `icc = 78` in the input file.
 
-<!-- The limiting value of $\epsilon\beta_p$ is be set using input parameter `beta_poloidal_eps_max`. -->
+The minimum impurity fraction required from the Reinke module can be set with, `fzmin`
 
 The scaling value `freinke` can be varied also.
-
-
 
 
 [^1]: H. Lux, R. Kemp, D.J. Ward, M. Sertoli, Impurity radiation in DEMO systems modelling, Fusion Engineering and Design, Volume 101, 2015, Pages 42-51, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2015.10.002.

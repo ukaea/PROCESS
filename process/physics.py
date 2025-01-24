@@ -2018,7 +2018,7 @@ class Physics:
                 physics_variables.bt,
                 current_drive_variables.beam_current,
                 physics_variables.dene,
-                physics_variables.deni,
+                physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.beam_energy,
                 physics_variables.f_deuterium,
@@ -2085,7 +2085,7 @@ class Physics:
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
-            physics_variables.deni,
+            physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
@@ -2330,7 +2330,7 @@ class Physics:
         ) = self.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
-            physics_variables.deni,
+            physics_variables.nd_fuel_ions,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
@@ -2751,10 +2751,10 @@ class Physics:
             - znimp
         )
 
-        # Fuel ion density, deni
-        # For D-T-He3 mix, deni = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
-        # So deni = znfuel - nHe3 = znfuel - f_helium3*deni
-        physics_variables.deni = znfuel / (1.0 + physics_variables.f_helium3)
+        # Fuel ion density, nd_fuel_ions
+        # For D-T-He3 mix, nd_fuel_ions = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
+        # So nd_fuel_ions = znfuel - nHe3 = znfuel - f_helium3*nd_fuel_ions
+        physics_variables.nd_fuel_ions = znfuel / (1.0 + physics_variables.f_helium3)
 
         # Set hydrogen and helium impurity fractions for
         # radiation calculations
@@ -2763,7 +2763,7 @@ class Physics:
         ] = (
             physics_variables.nd_protons
             + (physics_variables.f_deuterium + physics_variables.f_tritium)
-            * physics_variables.deni
+            * physics_variables.nd_fuel_ions
             + physics_variables.nd_beam_ions
         ) / physics_variables.dene
 
@@ -2771,7 +2771,7 @@ class Physics:
             impurity_radiation.element2index("He")
         ] = (
             physics_variables.f_helium3
-            * physics_variables.deni
+            * physics_variables.nd_fuel_ions
             / physics_variables.dene
             + physics_variables.f_nd_alpha_electron
         )
@@ -2787,7 +2787,7 @@ class Physics:
 
         # Total ion density
         physics_variables.nd_ions_total = (
-            physics_variables.deni
+            physics_variables.nd_fuel_ions
             + physics_variables.nd_alphas
             + physics_variables.nd_protons
             + physics_variables.nd_beam_ions
@@ -2862,7 +2862,7 @@ class Physics:
 
         # Density weighted mass
         physics_variables.m_ions_total_amu = (
-            (physics_variables.m_fuel_amu * physics_variables.deni)
+            (physics_variables.m_fuel_amu * physics_variables.nd_fuel_ions)
             + (constants.m_alpha_amu * physics_variables.nd_alphas)
             + (physics_variables.nd_protons * constants.m_proton_amu)
             + (physics_variables.m_beam_amu * physics_variables.nd_beam_ions)
@@ -2884,18 +2884,18 @@ class Physics:
         physics_variables.zeffai = (
             (
                 physics_variables.f_deuterium
-                * physics_variables.deni
+                * physics_variables.nd_fuel_ions
                 / constants.m_deuteron_amu
             )
             + (
                 physics_variables.f_tritium
-                * physics_variables.deni
+                * physics_variables.nd_fuel_ions
                 / constants.m_triton_amu
             )
             + (
                 4.0
                 * physics_variables.f_helium3
-                * physics_variables.deni
+                * physics_variables.nd_fuel_ions
                 / constants.m_helion_amu
             )
             + (4.0 * physics_variables.nd_alphas / constants.m_alpha_amu)
@@ -2926,7 +2926,7 @@ class Physics:
     def phyaux(
         aspect,
         dene,
-        deni,
+        nd_fuel_ions,
         fusion_rate_density_total,
         alpha_rate_density_total,
         plasma_current,
@@ -2939,7 +2939,7 @@ class Physics:
         author: P J Knight, CCFE, Culham Science Centre
         aspect : input real :  plasma aspect ratio
         dene   : input real :  electron density (/m3)
-        deni   : input real :  fuel ion density (/m3)
+        nd_fuel_ions   : input real :  fuel ion density (/m3)
         nd_alphas  : input real :  alpha ash density (/m3)
         fusion_rate_density_total : input real :  fusion reaction rate from plasma and beams (/m3/s)
         alpha_rate_density_total  : input real :  alpha particle production rate (/m3/s)
@@ -2987,7 +2987,11 @@ class Physics:
         # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
         # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
         if physics_variables.burnup_in <= 1.0e-9:
-            burnup = nd_alphas / (nd_alphas + 0.5 * deni) / physics_variables.tauratio
+            burnup = (
+                nd_alphas
+                / (nd_alphas + 0.5 * nd_fuel_ions)
+                / physics_variables.tauratio
+            )
         else:
             burnup = physics_variables.burnup_in
         # Fuel burnup rate (reactions/second) (previously Amps)
@@ -3988,7 +3992,11 @@ class Physics:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Fuel density (/m3)", "(deni)", physics_variables.deni, "OP "
+            self.outfile,
+            "Fuel density (/m3)",
+            "(nd_fuel_ions)",
+            physics_variables.nd_fuel_ions,
+            "OP ",
         )
         po.ovarre(
             self.outfile,

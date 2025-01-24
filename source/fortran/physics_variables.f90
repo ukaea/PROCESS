@@ -135,7 +135,7 @@ module physics_variables
   real(dp) :: dene
   !! electron density (/m3) (`iteration variable 6`)
 
-  real(dp) :: deni
+  real(dp) :: nd_fuel_ions
   !! fuel ion density (/m3)
 
   real(dp) :: dlamee
@@ -986,7 +986,7 @@ module physics_variables
     f_vol_plasma = 1.0D0
     f_r_conducting_wall = 1.35D0
     dene = 9.8D19
-    deni = 0.0D0
+    nd_fuel_ions = 0.0D0
     dlamee = 0.0D0
     dlamie = 0.0D0
     dlimit = 0.0D0

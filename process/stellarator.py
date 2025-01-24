@@ -4184,7 +4184,7 @@ class Stellarator:
                 physics_variables.bt,
                 current_drive_variables.beam_current,
                 physics_variables.dene,
-                physics_variables.deni,
+                physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.beam_energy,
                 physics_variables.f_deuterium,
@@ -4251,7 +4251,7 @@ class Stellarator:
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
-            physics_variables.deni,
+            physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
@@ -4474,7 +4474,7 @@ class Stellarator:
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
-            physics_variables.deni,
+            physics_variables.nd_fuel_ions,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
@@ -5373,8 +5373,8 @@ class Neoclassics:
         )
         density = np.array([
             physics_variables.dene,
-            physics_variables.deni * physics_variables.f_deuterium,
-            physics_variables.deni * (1 - physics_variables.f_deuterium),
+            physics_variables.nd_fuel_ions * physics_variables.f_deuterium,
+            physics_variables.nd_fuel_ions * (1 - physics_variables.f_deuterium),
             physics_variables.nd_alphas,
         ])
 

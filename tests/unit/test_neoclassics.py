@@ -32,7 +32,7 @@ class InitNeoclassicsParam(NamedTuple):
     te: Any = None
     ti: Any = None
     dene: Any = None
-    deni: Any = None
+    nd_fuel_ions: Any = None
     densities: Any = None
     temperatures: Any = None
     dr_densities: Any = None
@@ -81,7 +81,7 @@ class InitNeoclassicsParam(NamedTuple):
             te=6.0190000000000001,
             ti=5.7180500000000007,
             dene=2.07086e20,
-            deni=1.47415411616e20,
+            nd_fuel_ions=1.47415411616e20,
             densities=np.array(
                 np.array((0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
@@ -989,7 +989,9 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     monkeypatch.setattr(physics_variables, "te", initneoclassicsparam.te)
     monkeypatch.setattr(physics_variables, "ti", initneoclassicsparam.ti)
     monkeypatch.setattr(physics_variables, "dene", initneoclassicsparam.dene)
-    monkeypatch.setattr(physics_variables, "deni", initneoclassicsparam.deni)
+    monkeypatch.setattr(
+        physics_variables, "nd_fuel_ions", initneoclassicsparam.nd_fuel_ions
+    )
     monkeypatch.setattr(neoclassics_module, "densities", initneoclassicsparam.densities)
     monkeypatch.setattr(
         neoclassics_module, "temperatures", initneoclassicsparam.temperatures

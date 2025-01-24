@@ -103,8 +103,8 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 3. **Set the plasma tritium and ion densities**
 
     $$
-    \mathtt{deuterium\_density = deni * f\_deuterium\_plasma} \\
-    \mathtt{tritium\_density = deni * f\_tritium\_plasma}
+    \mathtt{deuterium\_density = nd_fuel_ions * f\_deuterium\_plasma} \\
+    \mathtt{tritium\_density = nd_fuel_ions * f\_tritium\_plasma}
     $$
 
 4. **Calculate the beam alpha powers, density and deposited energy**

@@ -232,8 +232,8 @@ class FusionReactionRate:
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * (physics_variables.f_deuterium * physics_variables.deni)
-            * (physics_variables.f_tritium * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_tritium * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -301,8 +301,8 @@ class FusionReactionRate:
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * (physics_variables.f_deuterium * physics_variables.deni)
-            * (physics_variables.f_helium3 * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_helium3 * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -374,8 +374,8 @@ class FusionReactionRate:
             sigmav
             * reaction_energy
             * (1.0 - self.f_dd_branching_trit)
-            * (physics_variables.f_deuterium * physics_variables.deni)
-            * (physics_variables.f_deuterium * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -447,8 +447,8 @@ class FusionReactionRate:
             sigmav
             * reaction_energy
             * self.f_dd_branching_trit
-            * (physics_variables.f_deuterium * physics_variables.deni)
-            * (physics_variables.f_deuterium * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -909,7 +909,7 @@ def fast_alpha_beta(
     bp: float,
     bt: float,
     dene: float,
-    deni: float,
+    nd_fuel_ions: float,
     nd_ions_total: float,
     ten: float,
     tin: float,
@@ -926,7 +926,7 @@ def fast_alpha_beta(
         bp (float): Poloidal field (T).
         bt (float): Toroidal field on axis (T).
         dene (float): Electron density (m^-3).
-        deni (float): Fuel ion density (m^-3).
+        nd_fuel_ions (float): Fuel ion density (m^-3).
         nd_ions_total (float): Total ion density (m^-3).
         ten (float): Density-weighted electron temperature (keV).
         tin (float): Density-weighted ion temperature (keV).
@@ -964,14 +964,16 @@ def fast_alpha_beta(
         # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
         # IPDG89 fast alpha scaling
         if i_beta_fast_alpha == 0:
-            fact = min(0.3, 0.29 * (deni / dene) ** 2 * ((ten + tin) / 20.0 - 0.37))
+            fact = min(
+                0.3, 0.29 * (nd_fuel_ions / dene) ** 2 * ((ten + tin) / 20.0 - 0.37)
+            )
 
         # Modified scaling, D J Ward
         else:
             fact = min(
                 0.30,
                 0.26
-                * (deni / dene) ** 2
+                * (nd_fuel_ions / dene) ** 2
                 * np.sqrt(max(0.0, ((ten + tin) / 20.0 - 0.65))),
             )
 
@@ -992,7 +994,7 @@ def beam_fusion(
     bt: float,
     beam_current: float,
     dene: float,
-    deni: float,
+    nd_fuel_ions: float,
     ion_electron_coulomb_log: float,
     beam_energy: float,
     f_deuterium_plasma: float,
@@ -1017,7 +1019,7 @@ def beam_fusion(
                 bt (float): Toroidal field on axis (T).
                 beam_current (float): Neutral beam current (A).
                 dene (float): Electron density (m^-3).
-                deni (float): Fuel ion density (m^-3).
+                nd_fuel_ions (float): Fuel ion density (m^-3).
                 ion_electron_coulomb_log (float): Ion-electron coulomb logarithm.
                 beam_energy (float): Neutral beam energy (keV).
                 f_deuterium_plasma (float): Deuterium fraction of main plasma.
@@ -1082,8 +1084,8 @@ def beam_fusion(
     )
 
     # Deuterium and tritium ion densities
-    deuterium_density = deni * f_deuterium_plasma
-    tritium_density = deni * f_tritium_plasma
+    deuterium_density = nd_fuel_ions * f_deuterium_plasma
+    tritium_density = nd_fuel_ions * f_tritium_plasma
 
     (
         deuterium_beam_alpha_power,
