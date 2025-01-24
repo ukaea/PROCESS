@@ -216,11 +216,11 @@ class Stellarator:
                 physics_variables.kappaa,
                 physics_variables.ptrepv,
                 physics_variables.ptripv,
-                physics_variables.tauee,
-                physics_variables.tauei,
-                physics_variables.taueff,
+                physics_variables.t_electron_confinement,
+                physics_variables.t_ion_confinement,
+                physics_variables.t_energy_confinement,
                 physics_variables.powerht,
-            ) = self.physics.pcond(
+            ) = self.physics.calculate_confinement_time(
                 physics_variables.afuel,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
@@ -231,7 +231,7 @@ class Stellarator:
                 physics_variables.eps,
                 2.0,
                 physics_variables.iinvqd,
-                physics_variables.isc,
+                physics_variables.i_confinement_time,
                 physics_variables.ignite,
                 physics_variables.kappa,
                 physics_variables.kappa95,
@@ -4401,11 +4401,11 @@ class Stellarator:
             physics_variables.kappaa,
             physics_variables.ptrepv,
             physics_variables.ptripv,
-            physics_variables.tauee,
-            physics_variables.tauei,
-            physics_variables.taueff,
+            physics_variables.t_electron_confinement,
+            physics_variables.t_ion_confinement,
+            physics_variables.t_energy_confinement,
             physics_variables.powerht,
-        ) = self.physics.pcond(
+        ) = self.physics.calculate_confinement_time(
             physics_variables.afuel,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
@@ -4416,7 +4416,7 @@ class Stellarator:
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.iinvqd,
-            physics_variables.isc,
+            physics_variables.i_confinement_time,
             physics_variables.ignite,
             physics_variables.kappa,
             physics_variables.kappa95,
@@ -4453,12 +4453,12 @@ class Stellarator:
         sbar = 1.0e0
         (
             physics_variables.burnup,
-            physics_variables.dntau,
+            physics_variables.ntau,
             physics_variables.figmer,
             fusrat,
             physics_variables.qfuel,
             physics_variables.rndfuel,
-            physics_variables.taup,
+            physics_variables.t_alpha_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
@@ -4468,7 +4468,7 @@ class Stellarator:
             physics_variables.plasma_current,
             sbar,
             physics_variables.dnalp,
-            physics_variables.taueff,
+            physics_variables.t_energy_confinement,
             physics_variables.plasma_volume,
         )
 

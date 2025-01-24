@@ -6,6 +6,7 @@ import scipy
 import scipy.integrate as integrate
 from scipy.optimize import root_scalar
 
+import process.confinement_time as confinement
 import process.impurity_radiation as impurity_radiation
 import process.physics_functions as physics_funcs
 from process.fortran import (
@@ -2228,11 +2229,11 @@ class Physics:
             physics_variables.kappaa,
             physics_variables.ptrepv,
             physics_variables.ptripv,
-            physics_variables.tauee,
-            physics_variables.taueff,
-            physics_variables.tauei,
+            physics_variables.t_electron_confinement,
+            physics_variables.t_energy_confinement,
+            physics_variables.t_ion_confinement,
             physics_variables.powerht,
-        ) = self.pcond(
+        ) = self.calculate_confinement_time(
             physics_variables.afuel,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
@@ -2243,7 +2244,7 @@ class Physics:
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.iinvqd,
-            physics_variables.isc,
+            physics_variables.i_confinement_time,
             physics_variables.ignite,
             physics_variables.kappa,
             physics_variables.kappa95,
@@ -2299,22 +2300,25 @@ class Physics:
         sbar = 1.0e0
         (
             physics_variables.burnup,
-            physics_variables.dntau,
+            physics_variables.ntau,
+            physics_variables.nTtau,
             physics_variables.figmer,
             physics_module.fusrat,
             physics_variables.qfuel,
             physics_variables.rndfuel,
-            physics_variables.taup,
+            physics_variables.t_alpha_confinement,
+            physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
+            physics_variables.te,
             physics_variables.deni,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
             sbar,
             physics_variables.dnalp,
-            physics_variables.taueff,
+            physics_variables.t_energy_confinement,
             physics_variables.plasma_volume,
         )
 
@@ -2866,61 +2870,65 @@ class Physics:
 
     @staticmethod
     def phyaux(
-        aspect,
-        dene,
-        deni,
-        fusion_rate_density_total,
-        alpha_rate_density_total,
-        plasma_current,
-        sbar,
-        dnalp,
-        taueff,
-        plasma_volume,
-    ):
+        aspect: float,
+        dene: float,
+        te: float,
+        deni: float,
+        fusion_rate_density_total: float,
+        alpha_rate_density_total: float,
+        plasma_current: float,
+        sbar: float,
+        dnalp: float,
+        t_energy_confinement: float,
+        plasma_volume: float,
+    ) -> tuple[float, float, float, float, float, float, float, float]:
         """Auxiliary physics quantities
-        author: P J Knight, CCFE, Culham Science Centre
-        aspect : input real :  plasma aspect ratio
-        dene   : input real :  electron density (/m3)
-        deni   : input real :  fuel ion density (/m3)
-        dnalp  : input real :  alpha ash density (/m3)
-        fusion_rate_density_total : input real :  fusion reaction rate from plasma and beams (/m3/s)
-        alpha_rate_density_total  : input real :  alpha particle production rate (/m3/s)
-        plasma_current: input real :  plasma current (A)
-        sbar   : input real :  exponent for aspect ratio (normally 1)
-        taueff : input real :  global energy confinement time (s)
-        plasma_volume    : input real :  plasma volume (m3)
-        burnup : output real : fractional plasma burnup
-        dntau  : output real : plasma average n-tau (s/m3)
-        figmer : output real : physics figure of merit
-        fusrat : output real : number of fusion reactions per second
-        qfuel  : output real : fuelling rate for D-T (nucleus-pairs/sec)
-        rndfuel: output real : fuel burnup rate (reactions/s)
-        taup   : output real : (alpha) particle confinement time (s)
-        This subroutine calculates extra physics related items
-        needed by other parts of the code
-        """
 
+        Args:
+            aspect (float): Plasma aspect ratio.
+            dene (float): Electron density (/m3).
+            te (float): Volume avergaed electron temperature (keV).
+            deni (float): Fuel ion density (/m3).
+            fusion_rate_density_total (float): Fusion reaction rate from plasma and beams (/m3/s).
+            alpha_rate_density_total (float): Alpha particle production rate (/m3/s).
+            plasma_current (float): Plasma current (A).
+            sbar (float): Exponent for aspect ratio (normally 1).
+            dnalp (float): Alpha ash density (/m3).
+            t_energy_confinement (float): Global energy confinement time (s).
+            plasma_volume (float): Plasma volume (m3).
+
+        Returns:
+            tuple: A tuple containing:
+                - burnup (float): Fractional plasma burnup.
+                - ntau (float): Plasma average n-tau (s/m3).
+                - nTtau (float): Plasma triple product nT-tau (s/m3).
+                - figmer (float): Physics figure of merit.
+                - fusrat (float): Number of fusion reactions per second.
+                - qfuel (float): Fuelling rate for D-T (nucleus-pairs/sec).
+                - rndfuel (float): Fuel burnup rate (reactions/s).
+                - t_alpha_confinement (float): Alpha particle confinement time (s).
+                - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
+
+        This subroutine calculates extra physics related items needed by other parts of the code.
+        """
         figmer = 1e-6 * plasma_current * aspect**sbar
 
-        dntau = taueff * dene
+        ntau = t_energy_confinement * dene
+        nTtau = ntau * te
 
         # Fusion reactions per second
-
         fusrat = fusion_rate_density_total * plasma_volume
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
-
         if alpha_rate_density_total != 0.0:
-            taup = dnalp / alpha_rate_density_total
+            t_alpha_confinement = dnalp / alpha_rate_density_total
         else:  # only likely if DD is only active fusion reaction
-            taup = 0.0
+            t_alpha_confinement = 0.0
 
         # Fractional burnup
-
         # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
         # Fusion Science and Technology, vol.64, no.1, July 2013, pp.8-12)
-
         # The ratio of ash to fuel particle confinement times is given by
         # tauratio
         # Possible logic...
@@ -2932,15 +2940,26 @@ class Physics:
             burnup = dnalp / (dnalp + 0.5 * deni) / physics_variables.tauratio
         else:
             burnup = physics_variables.burnup_in
-        # Fuel burnup rate (reactions/second) (previously Amps)
 
+        # Fuel burnup rate (reactions/second) (previously Amps)
         rndfuel = fusrat
 
         # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-
         qfuel = rndfuel / burnup
 
-        return burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup
+        f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
+
+        return (
+            burnup,
+            ntau,
+            nTtau,
+            figmer,
+            fusrat,
+            qfuel,
+            rndfuel,
+            t_alpha_confinement,
+            f_alpha_energy_confinement,
+        )
 
     @staticmethod
     def plasma_ohmic_heating(
@@ -3640,7 +3659,9 @@ class Physics:
                 "(iotabar)",
                 stellarator_variables.iotabar,
             )
-
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
         po.osubhd(self.outfile, "Beta Information :")
         if physics_variables.i_beta_component == 0:
             po.ovarrf(
@@ -3834,6 +3855,10 @@ class Physics:
             "OP",
         )
 
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
+
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
             self.outfile, "Electron temperature (keV)", "(te)", physics_variables.te
@@ -3976,9 +4001,13 @@ class Physics:
             "(ralpne)",
             physics_variables.ralpne,
         )
+
+        po.oblnkl(self.outfile)
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
 
-        po.ocmmnt(self.outfile, "Impurities")
+        po.ocmmnt(self.outfile, "Impurities:")
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
 
@@ -4156,6 +4185,10 @@ class Physics:
             physics_variables.alphap,
         )
 
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
+
         if stellarator_variables.istell == 0:
             po.osubhd(self.outfile, "Density Limit using different models :")
             po.ovarre(
@@ -4214,6 +4247,10 @@ class Physics:
                 physics_variables.dlimit[7],
                 "OP ",
             )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
         po.osubhd(self.outfile, "Fuel Constituents :")
         po.ovarrf(
@@ -4426,6 +4463,10 @@ class Physics:
             tot_power_plasma,
             "OP ",
         )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
         po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
         po.ovarre(
@@ -4772,6 +4813,10 @@ class Physics:
                 "OP ",
             )
 
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
+
         if stellarator_variables.istell == 0:
             po.osubhd(self.outfile, "H-mode Power Threshold Scalings :")
 
@@ -5014,7 +5059,7 @@ class Physics:
             po.oblnkl(self.outfile)
 
         tauelaw = f2py_compatible_to_string(
-            physics_variables.tauscl[physics_variables.isc - 1]
+            physics_variables.tauscl[physics_variables.i_confinement_time]
         )
 
         po.ocmmnt(
@@ -5035,40 +5080,36 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Global thermal energy confinement time (s)",
-            "(taueff)",
-            physics_variables.taueff,
+            "(t_energy_confinement)",
+            physics_variables.t_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Ion energy confinement time (s)",
-            "(tauei)",
-            physics_variables.tauei,
+            "(t_ion_confinement)",
+            physics_variables.t_ion_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Electron energy confinement time (s)",
-            "(tauee)",
-            physics_variables.tauee,
+            "(t_electron_confinement)",
+            physics_variables.t_electron_confinement,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "n.tau = Volume-average electron density x Energy confinement time (s/m3)",
-            "(dntau)",
-            physics_variables.dntau,
+            "Fusion double product (s/m3)",
+            "(ntau)",
+            physics_variables.ntau,
             "OP ",
-        )
-        po.ocmmnt(
-            self.outfile,
-            "Triple product = Vol-av electron density x Vol-av electron temp x Energy confinement time:",
         )
         po.ovarre(
             self.outfile,
-            "Triple product  (keV s/m3)",
-            "(dntau*te)",
-            physics_variables.dntau * physics_variables.te,
+            "Lawson Triple product (keV s/m3)",
+            "(nTtau)",
+            physics_variables.nTtau,
             "OP ",
         )
         po.ovarre(
@@ -5081,10 +5122,10 @@ class Physics:
         po.ovarin(
             self.outfile,
             "Switch for radiation loss term usage in power balance",
-            "(iradloss)",
-            physics_variables.iradloss,
+            "(i_rad_loss)",
+            physics_variables.i_rad_loss,
         )
-        if physics_variables.iradloss == 0:
+        if physics_variables.i_rad_loss == 0:
             po.ovarre(
                 self.outfile,
                 "Radiation power subtracted from plasma power balance (MW)",
@@ -5093,7 +5134,7 @@ class Physics:
                 "OP ",
             )
             po.ocmmnt(self.outfile, "  (Radiation correction is total radiation power)")
-        elif physics_variables.iradloss == 1:
+        elif physics_variables.i_rad_loss == 1:
             po.ovarre(
                 self.outfile,
                 "Radiation power subtracted from plasma power balance (MW)",
@@ -5110,7 +5151,7 @@ class Physics:
                 0.0e0,
             )
             po.ocmmnt(self.outfile, "  (No radiation correction applied)")
-        if physics_variables.iradloss == 1:
+        if physics_variables.i_rad_loss == 1:
             po.ovarrf(
                 self.outfile,
                 "H* non-radiation corrected",
@@ -5127,7 +5168,7 @@ class Physics:
                 ** 0.31,
                 "OP",
             )
-        elif physics_variables.iradloss == 0:
+        elif physics_variables.i_rad_loss == 0:
             po.ovarrf(
                 self.outfile,
                 "H* non-radiation corrected",
@@ -5143,7 +5184,7 @@ class Physics:
                 ** 0.31,
                 "OP",
             )
-        elif physics_variables.iradloss == 2:
+        elif physics_variables.i_rad_loss == 2:
             po.ovarrf(
                 self.outfile,
                 "H* non-radiation corrected",
@@ -5155,23 +5196,23 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Alpha particle confinement time (s)",
-            "(taup)",
-            physics_variables.taup,
+            "(t_alpha_confinement)",
+            physics_variables.t_alpha_confinement,
             "OP ",
         )
         # Note alpha confinement time is no longer equal to fuel particle confinement time.
         po.ovarrf(
             self.outfile,
             "Alpha particle/energy confinement time ratio",
-            "(taup/taueff)",
-            physics_variables.taup / physics_variables.taueff,
+            "(f_alpha_energy_confinement)",
+            physics_variables.f_alpha_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Lower limit on taup/taueff",
-            "(taulimit)",
-            constraint_variables.taulimit,
+            "Lower limit on f_alpha_energy_confinement",
+            "(f_alpha_energy_confinement_min)",
+            constraint_variables.f_alpha_energy_confinement_min,
         )
         po.ovarrf(
             self.outfile,
@@ -5184,6 +5225,68 @@ class Physics:
             self.outfile,
             "  (= stored energy including fast particles / loss power including radiation",
         )
+        po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
+        po.ocmmnt(
+            self.outfile,
+            f"{'':>5}{'scaling law':<25}{'confinement time (s)':<25}H-factor for",
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"{'':>34}{'for H = 1':<20}power balance",
+        )
+
+        # for iisc in range(32, 48):
+        # Put the ITPA value first
+        for iisc in [49, 34, 37, 38, 39, 46, 47, 48]:
+            (
+                physics_variables.kappaa,
+                ptrez,
+                ptriz,
+                taueez,
+                taueiz,
+                taueffz,
+                powerhtz,
+            ) = self.calculate_confinement_time(
+                physics_variables.afuel,
+                physics_variables.alpha_power_total,
+                physics_variables.aspect,
+                physics_variables.bt,
+                physics_variables.dnitot,
+                physics_variables.dene,
+                physics_variables.dnla,
+                physics_variables.eps,
+                1.0,
+                physics_variables.iinvqd,
+                iisc,
+                physics_variables.ignite,
+                physics_variables.kappa,
+                physics_variables.kappa95,
+                physics_variables.non_alpha_charged_power,
+                current_drive_variables.pinjmw,
+                physics_variables.plasma_current,
+                physics_variables.pcoreradpv,
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                physics_variables.te,
+                physics_variables.ten,
+                physics_variables.tin,
+                physics_variables.q,
+                physics_variables.qstar,
+                physics_variables.plasma_volume,
+                physics_variables.xarea,
+                physics_variables.zeff,
+            )
+
+            physics_variables.hfac[iisc - 1] = self.fhfac(iisc)
+
+            po.ocmmnt(
+                self.outfile,
+                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc]):<32}"
+                f"{taueez:<26.3f}{physics_variables.hfac[iisc - 1]:.3f}",
+            )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
 
         if stellarator_variables.istell == 0:
             # Issues 363 Output dimensionless plasma parameters MDK
@@ -5221,10 +5324,14 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Volume measure of elongation",
-                "(kappaa_IPB)",
-                physics_variables.kappaa_ipb,
+                "(kappa_ipb)",
+                physics_variables.kappa_ipb,
                 "OP ",
             )
+
+            po.oblnkl(self.outfile)
+            po.ostars(self.outfile, 110)
+            po.oblnkl(self.outfile)
 
             po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
             po.ovarre(
@@ -5568,74 +5675,6 @@ class Physics:
                 "Actual Impurity fraction",
                 "(fzactual)",
                 reinke_variables.fzactual,
-            )
-
-    def igmarcal(self):
-        """Routine to calculate ignition margin
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile   : input integer : Fortran output unit identifier
-        This routine calculates the ignition margin at the final point
-        with different scalings.
-        """
-
-        po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
-        po.ocmmnt(
-            self.outfile,
-            f"{'':>5}{'scaling law':<25}{'confinement time (s)':<25}H-factor for",
-        )
-        po.ocmmnt(
-            self.outfile,
-            f"{'':>34}{'for H = 1':<20}power balance",
-        )
-
-        # for iisc in range(32, 48):
-        # Put the ITPA value first
-        for iisc in [50, 34, 37, 38, 39, 46, 47, 48]:
-            (
-                physics_variables.kappaa,
-                ptrez,
-                ptriz,
-                taueez,
-                taueiz,
-                taueffz,
-                powerhtz,
-            ) = self.pcond(
-                physics_variables.afuel,
-                physics_variables.alpha_power_total,
-                physics_variables.aspect,
-                physics_variables.bt,
-                physics_variables.dnitot,
-                physics_variables.dene,
-                physics_variables.dnla,
-                physics_variables.eps,
-                1.0,
-                physics_variables.iinvqd,
-                iisc,
-                physics_variables.ignite,
-                physics_variables.kappa,
-                physics_variables.kappa95,
-                physics_variables.non_alpha_charged_power,
-                current_drive_variables.pinjmw,
-                physics_variables.plasma_current,
-                physics_variables.pcoreradpv,
-                physics_variables.rmajor,
-                physics_variables.rminor,
-                physics_variables.te,
-                physics_variables.ten,
-                physics_variables.tin,
-                physics_variables.q,
-                physics_variables.qstar,
-                physics_variables.plasma_volume,
-                physics_variables.xarea,
-                physics_variables.zeff,
-            )
-
-            physics_variables.hfac[iisc - 1] = self.fhfac(iisc)
-
-            po.ocmmnt(
-                self.outfile,
-                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc - 1]):<32}"
-                f"{taueez:<26.3f}{physics_variables.hfac[iisc - 1]:.3f}",
             )
 
     @staticmethod
@@ -6391,7 +6430,7 @@ class Physics:
             taueiz,
             taueffz,
             powerhtz,
-        ) = self.pcond(
+        ) = self.calculate_confinement_time(
             physics_variables.afuel,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
@@ -6441,15 +6480,15 @@ class Physics:
 
         # Include the radiation power if requested
 
-        if physics_variables.iradloss == 0:
+        if physics_variables.i_rad_loss == 0:
             fhz += physics_variables.pradpv
-        elif physics_variables.iradloss == 1:
+        elif physics_variables.i_rad_loss == 1:
             fhz += physics_variables.pcoreradpv
 
         return fhz
 
     @staticmethod
-    def pcond(
+    def calculate_confinement_time(
         afuel,
         alpha_power_total,
         aspect,
@@ -6460,7 +6499,7 @@ class Physics:
         eps,
         hfact,
         iinvqd,
-        isc,
+        i_confinement_time,
         ignite,
         kappa,
         kappa95,
@@ -6492,7 +6531,7 @@ class Physics:
         eps       : input real :  inverse aspect ratio
         hfact     : input real :  H factor on energy confinement scalings
         iinvqd    : input integer :  switch for inverse quadrature
-        isc       : input integer :  switch for energy confinement scaling to use
+        i_confinement_time       : input integer :  switch for energy confinement scaling to use
         ignite    : input integer :  switch for ignited calculation
         kappa     : input real :  plasma elongation
         kappa95   : input real :  plasma elongation at 95% surface
@@ -6514,9 +6553,9 @@ class Physics:
         zeff      : input real :  plasma effective charge
         ptrepv    : output real : electron transport power (MW/m3)
         ptripv    : output real : ion transport power (MW/m3)
-        tauee     : output real : electron energy confinement time (s)
-        taueff    : output real : global energy confinement time (s)
-        tauei     : output real : ion energy confinement time (s)
+        t_electron_confinement     : output real : electron energy confinement time (s)
+        t_energy_confinement    : output real : global energy confinement time (s)
+        t_ion_confinement     : output real : ion energy confinement time (s)
         powerht   : output real : heating power (MW) assumed in calculation
         This subroutine calculates the energy confinement time
         using one of a large number of scaling laws, and the
@@ -6549,7 +6588,9 @@ class Physics:
             / ((np.sqrt(tin)) * (bt**2))
         )
         str2 = 2.0e0 * (kappa**2) / (1.0e0 + (kappa**2))
-        tauei = 0.375e0 * rminor**2 / chii * str2
+        t_ion_confinement = 0.375e0 * rminor**2 / chii * str2
+
+        # ========================================================================
 
         # Calculate heating power (MW)
         powerht = (
@@ -6563,9 +6604,9 @@ class Physics:
             powerht = powerht + pinjmw
 
         # Include the radiation as a loss term if requested
-        if physics_variables.iradloss == 0:
+        if physics_variables.i_rad_loss == 0:
             powerht = powerht - physics_variables.pradpv * plasma_volume
-        elif physics_variables.iradloss == 1:
+        elif physics_variables.i_rad_loss == 1:
             powerht = (
                 powerht - pcoreradpv * plasma_volume
             )  # shouldn't this be vol_core instead of plasma_volume?
@@ -6573,6 +6614,8 @@ class Physics:
 
         # Ensure heating power is positive (shouldn't be necessary)
         powerht = max(powerht, 1.0e-3)
+
+        # ========================================================================
 
         # Line averaged electron density in scaled units
         dnla20 = dnla * 1.0e-20
@@ -6588,8 +6631,15 @@ class Physics:
         kappaa = xarea / (np.pi * rminor * rminor)
 
         # Separatrix kappa defined with plasma volume for IPB scalings
-        physics_variables.kappaa_ipb = plasma_volume / (
-            2.0e0 * np.pi**2 * rminor * rminor * rmajor
+        # Updated version of kappa used by the IPB98 scalings correction in:
+
+        # None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy,
+        # “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
+        # vol. 48, no. 9, pp. 099801–099801, Aug. 2008,
+        # doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+
+        physics_variables.kappa_ipb = (plasma_volume / (2.0 * np.pi * rmajor)) / (
+            np.pi * rminor**2
         )
 
         # Calculate Neo-Alcator confinement time (used in several scalings)
@@ -6597,415 +6647,381 @@ class Physics:
 
         # Electron energy confinement times
 
-        if isc == 1:  # Neo-Alcator scaling (ohmic)
-            # tauee = taueena
-            tauee = hfact * taueena
+        # ========================================================================
 
-        elif isc == 2:  # Mirnov scaling (H-mode)
-            tauee = hfact * 0.2e0 * rminor * np.sqrt(kappa95) * pcur
+        # User defined confinement time
+        if i_confinement_time == 0:  # t_electron_confinement is an input
+            t_electron_confinement = hfact * physics_variables.tauee_in
 
-        elif isc == 3:  # Merezhkin-Muhkovatov scaling (L-mode)
-            tauee = (
+        # ========================================================================
+
+        # Nec-Alcator(NA) OH scaling
+        if i_confinement_time == 1:
+            # t_electron_confinement = taueena
+            t_electron_confinement = hfact * confinement.neo_alcator_confinement_time(
+                n20, rminor, rmajor, qstar
+            )
+
+        # ========================================================================
+
+        # "Mirnov"-like scaling (H-mode)
+        elif i_confinement_time == 2:  # Mirnov scaling (H-mode)
+            t_electron_confinement = hfact * confinement.mirnov_confinement_time(
+                rminor, kappa95, pcur
+            )
+
+        # ========================================================================
+
+        # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
+        elif i_confinement_time == 3:
+            t_electron_confinement = (
                 hfact
-                * 3.5e-3
-                * rmajor**2.75e0
-                * rminor**0.25e0
-                * kappa95**0.125e0
-                * qstar
-                * dnla20
-                * np.sqrt(afuel)
-                / np.sqrt(ten / 10.0e0)
-            )
-
-        elif isc == 4:  # Shimomura scaling (H-mode)
-            tauee = (
-                hfact
-                * 0.045e0
-                * rmajor
-                * rminor
-                * bt
-                * np.sqrt(kappa95)
-                * np.sqrt(afuel)
-            )
-
-        elif isc == 5:  # Kaye-Goldston scaling (L-mode)
-            tauee = (
-                hfact
-                * 0.055e0
-                * kappa95**0.28e0
-                * pcur**1.24e0
-                * n20**0.26e0
-                * rmajor**1.65e0
-                * np.sqrt(afuel / 1.5e0)
-                / (bt**0.09e0 * rminor**0.49e0 * powerht**0.58e0)
-            )
-
-            if iinvqd != 0:
-                tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
-
-        elif isc == 6:  # ITER Power scaling - ITER 89-P (L-mode)
-            tauee = (
-                hfact
-                * 0.048e0
-                * pcur**0.85e0
-                * rmajor**1.2e0
-                * rminor**0.3e0
-                * np.sqrt(kappa)
-                * dnla20**0.1e0
-                * bt**0.2e0
-                * np.sqrt(afuel)
-                / np.sqrt(powerht)
-            )
-
-        elif isc == 7:  # ITER Offset linear scaling - ITER 89-O (L-mode)
-            term1 = (
-                0.04e0
-                * pcur**0.5e0
-                * rmajor**0.3e0
-                * rminor**0.8e0
-                * kappa**0.6e0
-                * afuel**0.5e0
-            )
-            term2 = (
-                0.064e0
-                * pcur**0.8e0
-                * rmajor**1.6e0
-                * rminor**0.6e0
-                * kappa**0.5e0
-                * dnla20**0.6e0
-                * bt**0.35e0
-                * afuel**0.2e0
-                / powerht
-            )
-            tauee = hfact * (term1 + term2)
-
-        elif isc == 8:  # Rebut-Lallia offset linear scaling (L-mode)
-            rll = (rminor**2 * rmajor * kappa95) ** 0.333e0
-            tauee = (
-                hfact
-                * 1.65e0
-                * np.sqrt(afuel / 2.0e0)
-                * (
-                    1.2e-2 * pcur * rll**1.5e0 / np.sqrt(zeff)
-                    + 0.146e0
-                    * dnla20**0.75e0
-                    * np.sqrt(pcur)
-                    * np.sqrt(bt)
-                    * rll**2.75e0
-                    * zeff**0.25e0
-                    / powerht
+                * confinement.merezhkin_muhkovatov_confinement_time(
+                    rmajor, rminor, kappa95, qstar, dnla20, afuel, ten
                 )
             )
 
-        elif isc == 9:  # Goldston scaling (L-mode)
-            tauee = (
-                hfact
-                * 0.037e0
-                * pcur
-                * rmajor**1.75e0
-                * rminor ** (-0.37e0)
-                * np.sqrt(kappa95)
-                * np.sqrt(afuel / 1.5e0)
-                / np.sqrt(powerht)
+        # ========================================================================
+
+        # Shimomura (S) optimized H-mode scaling
+        elif i_confinement_time == 4:
+            t_electron_confinement = hfact * confinement.shimomura_confinement_time(
+                rmajor, rminor, bt, kappa95, afuel
+            )
+
+        # ========================================================================
+
+        # Kaye-Goldston scaling (L-mode)
+        elif i_confinement_time == 5:
+            t_electron_confinement = hfact * confinement.kaye_goldston_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
 
             if iinvqd != 0:
-                tauee = 1.0e0 / np.sqrt(1.0e0 / taueena**2 + 1.0e0 / tauee**2)
-
-        elif isc == 10:  # T10 scaling
-            denfac = dnla20 * rmajor * qstar / (1.3e0 * bt)
-            denfac = min(1.0e0, denfac)
-            tauee = (
-                hfact
-                * 0.095e0
-                * rmajor
-                * rminor
-                * bt
-                * np.sqrt(kappa95)
-                * denfac
-                / powerht**0.4e0
-                * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0))
-                ** 0.08e0
-            )
-
-        elif isc == 11:  # JAERI scaling
-            gjaeri = (
-                zeff**0.4e0
-                * ((15.0e0 - zeff) / 20.0e0) ** 0.6e0
-                * (
-                    3.0e0
-                    * qstar
-                    * (qstar + 5.0e0)
-                    / ((qstar + 2.0e0) * (qstar + 7.0e0))
+                t_electron_confinement = 1.0e0 / np.sqrt(
+                    1.0e0 / taueena**2 + 1.0e0 / t_electron_confinement**2
                 )
-                ** 0.6e0
-            )
-            tauee = hfact * (
-                0.085e0 * kappa95 * rminor**2 * np.sqrt(afuel)
-                + 0.069e0
-                * n20**0.6e0
-                * pcur
-                * bt**0.2e0
-                * rminor**0.4e0
-                * rmajor**1.6e0
-                * np.sqrt(afuel)
-                * gjaeri
-                * kappa95**0.2e0
-                / powerht
+
+        # ========================================================================
+
+        # ITER Power scaling - ITER 89-P (L-mode)
+        elif i_confinement_time == 6:
+            t_electron_confinement = hfact * confinement.iter_89P_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
 
-        elif isc == 12:  # Kaye-Big scaling
-            tauee = (
+        # ========================================================================
+
+        # ITER Offset linear scaling - ITER 89-O (L-mode)
+        elif i_confinement_time == 7:
+            t_electron_confinement = hfact * confinement.iter_89_0_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+            )
+        # ========================================================================
+
+        # Rebut-Lallia offset linear scaling (L-mode)
+        elif i_confinement_time == 8:
+            t_electron_confinement = hfact * confinement.rebut_lallia_confinement_time(
+                rminor,
+                rmajor,
+                kappa,
+                afuel,
+                pcur,
+                zeff,
+                dnla20,
+                bt,
+                powerht,
+            )
+
+        # ========================================================================
+
+        # Goldston scaling (L-mode)
+        elif i_confinement_time == 9:  # Goldston scaling (L-mode)
+            t_electron_confinement = hfact * confinement.goldston_confinement_time(
+                pcur, rmajor, rminor, kappa95, afuel, powerht
+            )
+
+            if iinvqd != 0:
+                t_electron_confinement = 1.0e0 / np.sqrt(
+                    1.0e0 / taueena**2 + 1.0e0 / t_electron_confinement**2
+                )
+
+        # ========================================================================
+
+        # T-10 scaling (L-mode)
+        elif i_confinement_time == 10:
+            t_electron_confinement = hfact * confinement.t10_confinement_time(
+                dnla20, rmajor, qstar, bt, rminor, kappa95, powerht, zeff, pcur
+            )
+
+        # ========================================================================
+
+        # JAERI / Odajima-Shimomura L-mode scaling
+        elif i_confinement_time == 11:  # JAERI scaling
+            t_electron_confinement = hfact * confinement.jaeri_confinement_time(
+                kappa95,
+                rminor,
+                afuel,
+                n20,
+                pcur,
+                bt,
+                rmajor,
+                qstar,
+                zeff,
+                powerht,
+            )
+
+        # ========================================================================
+
+        # Kaye "big"  L-mode scaling (based only on big tokamak data)
+        elif i_confinement_time == 12:
+            t_electron_confinement = hfact * confinement.kaye_big_confinement_time(
+                rmajor,
+                rminor,
+                bt,
+                kappa95,
+                pcur,
+                n20,
+                afuel,
+                powerht,
+            )
+
+        # ========================================================================
+
+        # ITER H90-P H-mode scaling
+        elif i_confinement_time == 13:
+            t_electron_confinement = hfact * confinement.iter_h90_p_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                bt,
+                afuel,
+                powerht,
+            )
+
+        # ========================================================================
+
+        # Minimum of ITER 89-P and ITER 89-O
+        elif i_confinement_time == 14:
+            t_electron_confinement = min(
                 hfact
-                * 0.105e0
-                * np.sqrt(rmajor)
-                * rminor**0.8e0
-                * bt**0.3e0
-                * kappa95**0.25e0
-                * pcur**0.85e0
-                * n20**0.1e0
-                * afuel**0.5e0
-                / powerht**0.5e0
-            )
-
-        elif isc == 13:  # ITER H-mode scaling - ITER H90-P
-            tauee = (
+                * confinement.iter_89P_confinement_time(
+                    pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                ),
                 hfact
-                * 0.064e0
-                * pcur**0.87e0
-                * rmajor**1.82e0
-                * rminor ** (-0.12e0)
-                * kappa**0.35e0
-                * dnla20**0.09e0
-                * bt**0.15e0
-                * np.sqrt(afuel)
-                / np.sqrt(powerht)
+                * confinement.iter_89_0_confinement_time(
+                    pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                ),
             )
 
-        elif isc == 14:  # Minimum of ITER 89-P (isc=6) and ITER 89-O (isc=7)
-            tauit1 = (
+        # ========================================================================
+
+        # Riedel scaling (L-mode)
+        elif i_confinement_time == 15:
+            t_electron_confinement = hfact * confinement.riedel_l_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
+            )
+
+        # ========================================================================
+
+        # Christiansen et al scaling (L-mode)
+        elif i_confinement_time == 16:
+            t_electron_confinement = hfact * confinement.christiansen_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
+                afuel,
+            )
+
+        # ========================================================================
+
+        # Lackner-Gottardi scaling (L-mode)
+        elif i_confinement_time == 17:
+            t_electron_confinement = (
                 hfact
-                * 0.048e0
-                * pcur**0.85e0
-                * rmajor**1.2e0
-                * rminor**0.3e0
-                * np.sqrt(kappa)
-                * dnla20**0.1e0
-                * bt**0.2e0
-                * np.sqrt(afuel)
-                / np.sqrt(powerht)
+                * confinement.lackner_gottardi_confinement_time(
+                    pcur,
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    dnla20,
+                    bt,
+                    powerht,
+                )
             )
-            term1 = (
-                0.04e0
-                * pcur**0.5e0
-                * rmajor**0.3e0
-                * rminor**0.8e0
-                * kappa**0.6e0
-                * afuel**0.5e0
-            )
-            term2 = (
-                0.064e0
-                * pcur**0.8e0
-                * rmajor**1.6e0
-                * rminor**0.6e0
-                * kappa**0.5e0
-                * dnla20**0.6e0
-                * bt**0.35e0
-                * afuel**0.2e0
-                / powerht
-            )
-            tauit2 = hfact * (term1 + term2)
-            tauee = min(tauit1, tauit2)
 
-        elif isc == 15:  # Riedel scaling (L-mode)
-            tauee = (
+        # ========================================================================
+
+        # Neo-Kaye scaling (L-mode)
+        elif i_confinement_time == 18:
+            t_electron_confinement = hfact * confinement.neo_kaye_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                afuel,
+                powerht,
+            )
+
+        # ======== ================================================================
+
+        # Riedel scaling (H-mode)
+        elif i_confinement_time == 19:
+            t_electron_confinement = hfact * confinement.riedel_h_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                afuel,
+                powerht,
+            )
+
+        # ========================================================================
+
+        # Amended version of ITER H90-P law
+        elif i_confinement_time == 20:
+            t_electron_confinement = (
                 hfact
-                * 0.044e0
-                * pcur**0.93e0
-                * rmajor**1.37e0
-                * rminor ** (-0.049e0)
-                * kappa95**0.588e0
-                * dnla20**0.078e0
-                * bt**0.152e0
-                / powerht**0.537e0
+                * confinement.iter_h90_p_amended_confinement_time(
+                    pcur,
+                    bt,
+                    afuel,
+                    rmajor,
+                    powerht,
+                    kappa,
+                )
             )
 
-        elif isc == 16:  # Christiansen et al scaling (L-mode)
-            tauee = (
+        # ==========================================================================
+
+        # Sudo et al. scaling (stellarators/heliotron)
+        elif i_confinement_time == 21:
+            t_electron_confinement = hfact * confinement.sudo_et_al_confinement_time(
+                rmajor,
+                rminor,
+                dnla20,
+                bt,
+                powerht,
+            )
+
+        # ==========================================================================
+
+        # Gyro-reduced Bohm scaling
+        elif i_confinement_time == 22:
+            t_electron_confinement = (
                 hfact
-                * 0.24e0
-                * pcur**0.79e0
-                * rmajor**0.56e0
-                * rminor**1.46e0
-                * kappa95**0.73e0
-                * dnla20**0.41e0
-                * bt**0.29e0
-                / (powerht**0.79e0 * afuel**0.02e0)
+                * confinement.gyro_reduced_bohm_confinement_time(
+                    bt,
+                    dnla20,
+                    powerht,
+                    rminor,
+                    rmajor,
+                )
             )
 
-        elif isc == 17:  # Lackner-Gottardi scaling (L-mode)
-            qhat = (1.0e0 + kappa95**2) * rminor**2 * bt / (0.4e0 * pcur * rmajor)
-            tauee = (
+        # ==========================================================================
+
+        # Lackner-Gottardi stellarator scaling
+        elif i_confinement_time == 23:
+            t_electron_confinement = (
                 hfact
-                * 0.12e0
-                * pcur**0.8e0
-                * rmajor**1.8e0
-                * rminor**0.4e0
-                * kappa95
-                * (1.0e0 + kappa95) ** (-0.8e0)
-                * dnla20**0.6e0
-                * qhat**0.4e0
-                / powerht**0.6e0
+                * confinement.lackner_gottardi_stellarator_confinement_time(
+                    rmajor,
+                    rminor,
+                    dnla20,
+                    bt,
+                    powerht,
+                    q,
+                )
             )
 
-        elif isc == 18:  # Neo-Kaye scaling (L-mode)
-            tauee = (
+        # ==========================================================================
+
+        # ITER_93 ELM-free H-mode scaling
+        elif i_confinement_time == 24:
+            t_electron_confinement = hfact * confinement.iter_93h_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                afuel,
+                rmajor,
+                dnla20,
+                aspect,
+                kappa,
+            )
+
+        # ==========================================================================
+        # Scaling removed
+        elif i_confinement_time == 25:
+            raise ValueError("Scaling removed")
+        # ==========================================================================
+
+        # ELM-free: ITERH-97P
+        elif i_confinement_time == 26:
+            t_electron_confinement = hfact * confinement.iter_h97p_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                dnla19,
+                rmajor,
+                aspect,
+                kappa,
+                afuel,
+            )
+
+        # ==========================================================================
+
+        # ELMy: ITERH-97P(y)
+        elif i_confinement_time == 27:
+            t_electron_confinement = (
                 hfact
-                * 0.063e0
-                * pcur**1.12e0
-                * rmajor**1.3e0
-                * rminor ** (-0.04e0)
-                * kappa95**0.28e0
-                * dnla20**0.14e0
-                * bt**0.04e0
-                * np.sqrt(afuel)
-                / powerht**0.59e0
+                * confinement.iter_h97p_elmy_confinement_time(
+                    pcur,
+                    bt,
+                    powerht,
+                    dnla19,
+                    rmajor,
+                    aspect,
+                    kappa,
+                    afuel,
+                )
             )
 
-        elif isc == 19:  # Riedel scaling (H-mode)
-            tauee = (
-                hfact
-                * 0.1e0
-                * np.sqrt(afuel)
-                * pcur**0.884e0
-                * rmajor**1.24e0
-                * rminor ** (-0.23e0)
-                * kappa95**0.317e0
-                * bt**0.207e0
-                * dnla20**0.105e0
-                / powerht**0.486e0
+        # ==========================================================================
+
+        # ITER-96P (= ITER-97L) L-mode scaling
+        elif i_confinement_time == 28:
+            t_electron_confinement = hfact * confinement.iter_96p_confinement_time(
+                pcur,
+                bt,
+                kappa95,
+                rmajor,
+                aspect,
+                dnla19,
+                afuel,
+                powerht,
             )
 
-        elif isc == 20:  # Amended version of ITER H90-P law
-            # Nuclear Fusion 32 (1992) 318
-            tauee = (
-                hfact
-                * 0.082e0
-                * pcur**1.02e0
-                * bt**0.15e0
-                * np.sqrt(afuel)
-                * rmajor**1.60e0
-                / (powerht**0.47e0 * kappa**0.19e0)
-            )
+        # ==========================================================================
 
-        elif isc == 21:  # Large Helical Device scaling (stellarators)
-            # S.Sudo, Y.Takeiri, H.Zushi et al., Nuclear Fusion 30 (1990) 11
-            tauee = (
-                hfact
-                * 0.17e0
-                * rmajor**0.75e0
-                * rminor**2
-                * dnla20**0.69e0
-                * bt**0.84e0
-                * powerht ** (-0.58e0)
-            )
-
-        elif isc == 22:  # Gyro-reduced Bohm scaling
-            # R.J.Goldston, H.Biglari, G.W.Hammett et al., Bull.Am.Phys.Society,
-            # volume 34, 1964 (1989)
-            tauee = (
-                hfact
-                * 0.25e0
-                * bt**0.8e0
-                * dnla20**0.6e0
-                * powerht ** (-0.6e0)
-                * rminor**2.4e0
-                * rmajor**0.6e0
-            )
-
-        elif isc == 23:  # Lackner-Gottardi stellarator scaling
-            # K.Lackner and N.A.O.Gottardi, Nuclear Fusion, 30, p.767 (1990)
-            iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            tauee = (
-                hfact
-                * 0.17e0
-                * rmajor
-                * rminor**2
-                * dnla20**0.6e0
-                * bt**0.8e0
-                * powerht ** (-0.6e0)
-                * iotabar**0.4e0
-            )
-
-        elif (
-            isc == 24
-        ):  # ITER-93H scaling (ELM-free; multiply by 0.85 for ELMy version)
-            # S.Kaye and the ITER Joint Central Team and Home Teams, in Plasma
-            # Physics and Controlled Nuclear Fusion Research (Proc. 15th
-            # Int. Conf., Seville, 1994) IAEA-CN-60/E-P-3
-            tauee = (
-                hfact
-                * 0.053e0
-                * pcur**1.06e0
-                * bt**0.32e0
-                * powerht ** (-0.67e0)
-                * afuel**0.41e0
-                * rmajor**1.79e0
-                * dnla20**0.17e0
-                * aspect**0.11e0
-                * kappa**0.66e0
-            )
-
-        # Next two are ITER-97 H-mode scalings
-        # J. G. Cordey et al., EPS Berchtesgaden, 1997
-
-        elif isc == 26:  # ELM-free: ITERH-97P
-            tauee = (
-                hfact
-                * 0.031e0
-                * pcur**0.95e0
-                * bt**0.25e0
-                * powerht ** (-0.67e0)
-                * dnla19**0.35e0
-                * rmajor**1.92e0
-                * aspect ** (-0.08e0)
-                * kappa**0.63e0
-                * afuel**0.42e0
-            )
-
-        elif isc == 27:  # ELMy: ITERH-97P(y)
-            tauee = (
-                hfact
-                * 0.029e0
-                * pcur**0.90e0
-                * bt**0.20e0
-                * powerht ** (-0.66e0)
-                * dnla19**0.40e0
-                * rmajor**2.03e0
-                * aspect ** (-0.19e0)
-                * kappa**0.92e0
-                * afuel**0.2e0
-            )
-
-        elif isc == 28:  # ITER-96P (= ITER-97L) L-mode scaling
-            # S.M.Kaye and the ITER Confinement Database Working Group,
-            # Nuclear Fusion 37 (1997) 1303
-            # N.B. tau_th formula used
-            tauee = (
-                hfact
-                * 0.023e0
-                * pcur**0.96e0
-                * bt**0.03e0
-                * kappa95**0.64e0
-                * rmajor**1.83e0
-                * aspect**0.06e0
-                * dnla19**0.40e0
-                * afuel**0.20e0
-                * powerht ** (-0.73e0)
-            )
-
-        elif isc == 29:  # Valovic modified ELMy-H mode scaling
-            tauee = (
+        elif i_confinement_time == 29:  # Valovic modified ELMy-H mode scaling
+            t_electron_confinement = (
                 hfact
                 * 0.067e0
                 * pcur**0.9e0
@@ -7018,8 +7034,10 @@ class Physics:
                 * powerht ** (-0.68e0)
             )
 
-        elif isc == 30:  # Kaye PPPL Workshop April 1998 L-mode scaling
-            tauee = (
+        # ==========================================================================
+
+        elif i_confinement_time == 30:  # Kaye PPPL Workshop April 1998 L-mode scaling
+            t_electron_confinement = (
                 hfact
                 * 0.021e0
                 * pcur**0.81e0
@@ -7032,8 +7050,10 @@ class Physics:
                 * powerht ** (-0.73e0)
             )
 
-        elif isc == 31:  # ITERH-PB98P(y), ELMy H-mode scaling
-            tauee = (
+        # ==========================================================================
+
+        elif i_confinement_time == 31:  # ITERH-PB98P(y), ELMy H-mode scaling
+            t_electron_confinement = (
                 hfact
                 * 0.0615e0
                 * pcur**0.9e0
@@ -7046,173 +7066,167 @@ class Physics:
                 * afuel**0.2e0
             )
 
-        elif isc == 32:  # IPB98(y), ELMy H-mode scaling
-            # Data selection : full ITERH.DB3
-            # Nuclear Fusion 39 (1999) 2175, Table 5
-            tauee = (
-                hfact
-                * 0.0365e0
-                * pcur**0.97e0
-                * bt**0.08e0
-                * dnla19**0.41e0
-                * powerht ** (-0.63e0)
-                * rmajor**1.93e0
-                * kappa**0.67e0
-                * aspect ** (-0.23e0)
-                * afuel**0.2e0
+        # ==========================================================================
+
+        # IPB98(y), ELMy H-mode scaling
+        elif i_confinement_time == 32:
+            t_electron_confinement = hfact * confinement.iter_ipb98y_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                kappa,
+                aspect,
+                afuel,
             )
 
-        elif isc == 33:  # IPB98(y,1), ELMy H-mode scaling
-            # Data selection : full ITERH.DB3
-            # Nuclear Fusion 39 (1999) 2175, Table 5
-            tauee = (
-                hfact
-                * 0.0503e0
-                * pcur**0.91e0
-                * bt**0.15e0
-                * dnla19**0.44e0
-                * powerht ** (-0.65e0)
-                * rmajor**2.05e0
-                * physics_variables.kappaa_ipb**0.72e0
-                * aspect ** (-0.57e0)
-                * afuel**0.13e0
+        # ==========================================================================
+
+        # IPB98(y,1), ELMy H-mode scaling
+        elif i_confinement_time == 33:
+            t_electron_confinement = hfact * confinement.iter_ipb98y1_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
             )
 
-        elif isc == 34:  # IPB98(y,2), ELMy H-mode scaling
-            # Data selection : ITERH.DB3, NBI only
-            # Nuclear Fusion 39 (1999) 2175, Table 5
-            tauee = (
-                hfact
-                * 0.0562e0
-                * pcur**0.93e0
-                * bt**0.15e0
-                * dnla19**0.41e0
-                * powerht ** (-0.69e0)
-                * rmajor**1.97e0
-                * physics_variables.kappaa_ipb**0.78e0
-                * aspect ** (-0.58e0)
-                * afuel**0.19e0
+        # ==========================================================================
+
+        # IPB98(y,2), ELMy H-mode scaling
+        elif i_confinement_time == 34:
+            t_electron_confinement = hfact * confinement.iter_ipb98y2_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
             )
 
-        elif isc == 35:  # IPB98(y,3), ELMy H-mode scaling
-            # Data selection : ITERH.DB3, NBI only, no C-Mod
-            # Nuclear Fusion 39 (1999) 2175, Table 5
-            tauee = (
-                hfact
-                * 0.0564e0
-                * pcur**0.88e0
-                * bt**0.07e0
-                * dnla19**0.40e0
-                * powerht ** (-0.69e0)
-                * rmajor**2.15e0
-                * physics_variables.kappaa_ipb**0.78e0
-                * aspect ** (-0.64e0)
-                * afuel**0.20e0
+        # ==========================================================================
+
+        # IPB98(y,3), ELMy H-mode scaling
+        elif i_confinement_time == 35:
+            t_electron_confinement = hfact * confinement.iter_ipb98y3_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
             )
 
-        elif isc == 36:  # IPB98(y,4), ELMy H-mode scaling
-            # Data selection : ITERH.DB3, NBI only, ITER like devices
-            # Nuclear Fusion 39 (1999) 2175, Table 5
-            tauee = (
-                hfact
-                * 0.0587e0
-                * pcur**0.85e0
-                * bt**0.29e0
-                * dnla19**0.39e0
-                * powerht ** (-0.70e0)
-                * rmajor**2.08e0
-                * physics_variables.kappaa_ipb**0.76e0
-                * aspect ** (-0.69e0)
-                * afuel**0.17e0
+        # ==========================================================================
+
+        # IPB98(y,4), ELMy H-mode scaling
+        elif i_confinement_time == 36:
+            t_electron_confinement = hfact * confinement.iter_ipb98y4_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
             )
 
-        elif isc == 37:  # ISS95 stellarator scaling
-            # U. Stroth et al., Nuclear Fusion, 36, p.1063 (1996)
-            # Assumes kappa = 1.0, triang = 0.0
+        # ==========================================================================
+
+        # ISS95 stellarator scaling
+        elif i_confinement_time == 37:
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            tauee = (
+            t_electron_confinement = (
                 hfact
-                * 0.079e0
-                * rminor**2.21e0
-                * rmajor**0.65e0
-                * dnla19**0.51e0
-                * bt**0.83e0
-                * powerht ** (-0.59e0)
-                * iotabar**0.4e0
+                * confinement.iss95_stellarator_confinement_time(
+                    rminor,
+                    rmajor,
+                    dnla19,
+                    bt,
+                    powerht,
+                    iotabar,
+                )
             )
 
-        elif isc == 38:  # ISS04 stellarator scaling
-            # H. Yamada et al., Nuclear Fusion, 45, p.1684 (2005)
-            # Assumes kappa = 1.0, triang = 0.0
+        # ==========================================================================
+
+        # ISS04 stellarator scaling
+        elif i_confinement_time == 38:
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            tauee = (
+            t_electron_confinement = (
                 hfact
-                * 0.134e0
-                * rminor**2.28e0
-                * rmajor**0.64e0
-                * dnla19**0.54e0
-                * bt**0.84e0
-                * powerht ** (-0.61e0)
-                * iotabar**0.41e0
+                * confinement.iss04_stellarator_confinement_time(
+                    rminor,
+                    rmajor,
+                    dnla19,
+                    bt,
+                    powerht,
+                    iotabar,
+                )
             )
 
-        elif isc == 39:  # DS03 beta-independent H-mode scaling
-            # T. C. Luce, C. C. Petty and J. G. Cordey,
-            # Plasma Phys. Control. Fusion 50 (2008) 043001, eqn.4.13, p.67
-            tauee = (
-                hfact
-                * 0.028e0
-                * pcur**0.83e0
-                * bt**0.07e0
-                * dnla19**0.49e0
-                * powerht ** (-0.55e0)
-                * rmajor**2.11e0
-                * kappa95**0.75e0
-                * aspect ** (-0.3e0)
-                * afuel**0.14e0
+        # ==========================================================================
+
+        # DS03 beta-independent H-mode scaling
+        elif i_confinement_time == 39:
+            t_electron_confinement = hfact * confinement.ds03_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                kappa95,
+                aspect,
+                afuel,
             )
 
-        elif isc == 40:  # "Non-power law" (NPL) Murari energy confinement scaling
-            #  Based on the ITPA database of H-mode discharges
-            #  A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks
-            #  A. Murari et al 2015 Nucl. Fusion 55 073009, doi:10.1088/0029-5515/55/7/073009
-            #  Table 4.  (Issue #311)
-            # Note that aspect ratio and M (afuel) do not appear, and B (bt) only
-            # appears in the "saturation factor" h.
-            h = dnla19**0.448e0 / (1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0))
-            tauee = (
-                hfact
-                * 0.0367e0
-                * pcur**1.006e0
-                * rmajor**1.731e0
-                * kappaa**1.450e0
-                * powerht ** (-0.735e0)
-                * h
+        # ==========================================================================
+
+        #  Murari "Non-power law" scaling
+        elif i_confinement_time == 40:
+            t_electron_confinement = hfact * confinement.murari_confinement_time(
+                pcur,
+                rmajor,
+                physics_variables.kappa_ipb,
+                dnla19,
+                bt,
+                powerht,
             )
 
-        elif isc == 41:  # Beta independent dimensionless confinement scaling
-            # C.C. Petty 2008 Phys. Plasmas 15, 080501, equation 36
-            # Note that there is no dependence on the average fuel mass 'afuel'
-            tauee = (
-                hfact
-                * 0.052e0
-                * pcur**0.75e0
-                * bt**0.3e0
-                * dnla19**0.32e0
-                * powerht ** (-0.47e0)
-                * rmajor**2.09e0
-                * kappaa**0.88e0
-                * aspect ** (-0.84e0)
+        # ==========================================================================
+
+        # Petty08, beta independent dimensionless scaling
+        elif i_confinement_time == 41:
+            t_electron_confinement = hfact * confinement.petty08_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
             )
 
-        elif isc == 42:  # High density relevant confinement scaling
+        # ==========================================================================
+
+        elif i_confinement_time == 42:  # High density relevant confinement scaling
             # P.T. Lang et al. 2012, IAEA conference proceeding EX/P4-01
             # q should be q95: incorrect if i_plasma_current = 2 (ST current scaling)
             qratio = q / qstar
             # Greenwald density in m^-3
             nGW = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
             nratio = dnla / nGW
-            tauee = (
+            t_electron_confinement = (
                 hfact
                 * 6.94e-7
                 * plasma_current**1.3678e0
@@ -7220,7 +7234,7 @@ class Physics:
                 * dnla**0.032236e0
                 * (powerht * 1.0e6) ** (-0.74e0)
                 * rmajor**1.2345e0
-                * physics_variables.kappaa_ipb**0.37e0
+                * physics_variables.kappa_ipb**0.37e0
                 * aspect**2.48205e0
                 * afuel**0.2e0
                 * qratio**0.77e0
@@ -7228,184 +7242,141 @@ class Physics:
                 * nratio ** (-0.22e0 * np.log(nratio))
             )
 
-        elif isc == 43:  # Hubbard et al. 2017 I-mode confinement time scaling - nominal
-            tauee = (
-                hfact
-                * 0.014e0
-                * (plasma_current / 1.0e6) ** 0.68e0
-                * bt**0.77e0
-                * dnla20**0.02e0
-                * powerht ** (-0.29e0)
-            )
+        # ==========================================================================
 
-        elif isc == 44:  # Hubbard et al. 2017 I-mode confinement time scaling - lower
-            tauee = (
+        # Hubbard 2017 I-mode confinement time scaling - nominal
+        elif i_confinement_time == 43:
+            t_electron_confinement = (
                 hfact
-                * 0.014e0
-                * (plasma_current / 1.0e6) ** 0.60e0
-                * bt**0.70e0
-                * dnla20 ** (-0.03e0)
-                * powerht ** (-0.33e0)
-            )
-
-        elif isc == 45:  # Hubbard et al. 2017 I-mode confinement time scaling - upper
-            tauee = (
-                hfact
-                * 0.014e0
-                * (plasma_current / 1.0e6) ** 0.76e0
-                * bt**0.84e0
-                * dnla20**0.07
-                * powerht ** (-0.25e0)
-            )
-
-        elif isc == 46:  # NSTX, ELMy H-mode scaling
-            # NSTX scaling with IPB98(y,2) for other variables
-            # Menard 2019, Phil. Trans. R. Soc. A 377:20170440
-            # Kaye et al. 2006, Nucl. Fusion 46 848
-            tauee = (
-                hfact
-                * 0.095e0
-                * pcur**0.57e0
-                * bt**1.08e0
-                * dnla19**0.44e0
-                * powerht ** (-0.73e0)
-                * rmajor**1.97e0
-                * physics_variables.kappaa_ipb**0.78e0
-                * aspect ** (-0.58e0)
-                * afuel**0.19e0
-            )
-
-        elif isc == 47:  # NSTX-Petty08 Hybrid
-            # Linear interpolation between NSTX and Petty08 in eps
-            # Menard 2019, Phil. Trans. R. Soc. A 377:20170440
-            if (1.0e0 / aspect) <= 0.4e0:
-                # Petty08, i.e. case (41)
-                tauee = (
-                    hfact
-                    * 0.052e0
-                    * pcur**0.75e0
-                    * bt**0.3e0
-                    * dnla19**0.32e0
-                    * powerht ** (-0.47e0)
-                    * rmajor**2.09e0
-                    * kappaa**0.88e0
-                    * aspect ** (-0.84e0)
+                * confinement.hubbard_nominal_confinement_time(
+                    pcur,
+                    bt,
+                    dnla20,
+                    powerht,
                 )
-
-            elif (1.0e0 / aspect) >= 0.6e0:
-                # NSTX, i.e.case (46)
-                tauee = (
-                    hfact
-                    * 0.095e0
-                    * pcur**0.57e0
-                    * bt**1.08e0
-                    * dnla19**0.44e0
-                    * powerht ** (-0.73e0)
-                    * rmajor**1.97e0
-                    * physics_variables.kappaa_ipb**0.78e0
-                    * aspect ** (-0.58e0)
-                    * afuel**0.19e0
-                )
-
-            else:
-                taupetty = (
-                    0.052e0
-                    * pcur**0.75e0
-                    * bt**0.3e0
-                    * dnla19**0.32e0
-                    * powerht ** (-0.47e0)
-                    * rmajor**2.09e0
-                    * kappaa**0.88e0
-                    * aspect ** (-0.84e0)
-                )
-                taunstx = (
-                    0.095e0
-                    * pcur**0.57e0
-                    * bt**1.08e0
-                    * dnla19**0.44e0
-                    * powerht ** (-0.73e0)
-                    * rmajor**1.97e0
-                    * physics_variables.kappaa_ipb**0.78e0
-                    * aspect ** (-0.58e0)
-                    * afuel**0.19e0
-                )
-
-                tauee = hfact * (
-                    (((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)) * taunstx
-                    + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * taupetty
-                )
-
-        elif isc == 48:  # NSTX gyro-Bohm (Buxton)
-            # P F Buxton et al. 2019 Plasma Phys. Control. Fusion 61 035006
-            tauee = (
-                hfact
-                * 0.21e0
-                * pcur**0.54e0
-                * bt**0.91e0
-                * powerht ** (-0.38e0)
-                * rmajor**2.14e0
-                * dnla20 ** (-0.05e0)
             )
 
-        elif isc == 49:  # tauee is an input
-            tauee = hfact * physics_variables.tauee_in
+        # ==========================================================================
 
-        elif isc == 50:  # ITPA20 Issue #3164
-            # The updated ITPA global H-mode confinement database: description and analysis
-            # G. Verdoolaege et al 2021 Nucl. Fusion 61 076006 DOI 10.1088/1741-4326/abdb91
-
-            # thermal energy confinement time
-            # plasma current Ip (MA),
-            # on-axis vacuum toroidal magnetic field Bt (T)
-            # "central line-averaged electron density" nebar (1019 m−3)
-            # thermal power lost due to transport through the LCFS Pl,th (MW)
-            # major radius Rgeo (m)
-            # elongation of the LCFS, defined as κa = V/(2πRgeo πa2)
-            # (with V (m3) the plasma volume inside the LCFS),
-            # inverse aspect ratio epsilon = a/Rgeo
-            # effective atomic mass Meff of the plasma - NOT defined, but I have taken it equal to
-            # aion = average mass of all ions (amu).
-            # energy confinement time is given by τE,th = Wth/Pl,th, where Wth is the thermal stored energy.
-            # The latter is derived from the total stored energy Wtot by subtracting the energy
-            # content associated to fast particles originating from plasma heating.
-
-            tauee = (
-                hfact
-                * 0.053
-                * pcur**0.98
-                * bt**0.22
-                * dnla19**0.24
-                * powerht ** (-0.669)
-                * rmajor**1.71
-                * (1 + physics_variables.triang) ** 0.36
-                * physics_variables.kappaa_ipb**0.8
-                * eps**0.35
-                * physics_variables.aion**0.2
+        # Hubbard 2017 I-mode confinement time scaling - lower
+        elif i_confinement_time == 44:
+            t_electron_confinement = hfact * confinement.hubbard_lower_confinement_time(
+                pcur,
+                bt,
+                dnla20,
+                powerht,
             )
+
+        # ==========================================================================
+
+        # Hubbard 2017 I-mode confinement time scaling - upper
+        elif i_confinement_time == 45:
+            t_electron_confinement = hfact * confinement.hubbard_upper_confinement_time(
+                pcur,
+                bt,
+                dnla20,
+                powerht,
+            )
+
+        # ==========================================================================
+
+        # Menard NSTX, ELMy H-mode scaling
+        elif i_confinement_time == 46:
+            t_electron_confinement = hfact * confinement.menard_nstx_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
+            )
+
+        # ==========================================================================
+
+        # Menard NSTX-Petty08 Hybrid
+        elif i_confinement_time == 47:
+            t_electron_confinement = (
+                hfact
+                * confinement.menard_nstx_petty08_hybrid_confinement_time(
+                    pcur,
+                    bt,
+                    dnla19,
+                    powerht,
+                    rmajor,
+                    physics_variables.kappa_ipb,
+                    aspect,
+                    afuel,
+                )
+            )
+
+        # ==========================================================================
+
+        # NSTX gyro-Bohm (Buxton)
+        elif i_confinement_time == 48:
+            t_electron_confinement = (
+                hfact
+                * confinement.nstx_gyro_bohm_confinement_time(
+                    pcur,
+                    bt,
+                    powerht,
+                    rmajor,
+                    dnla20,
+                )
+            )
+
+        # ==========================================================================
+
+        # ITPA20 H-mode scaling
+        elif i_confinement_time == 49:
+            t_electron_confinement = hfact * confinement.itpa20_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.triang,
+                physics_variables.kappa_ipb,
+                eps,
+                physics_variables.aion,
+            )
+
+        # ==========================================================================
 
         else:
-            error_handling.idiags[0] = isc
+            error_handling.idiags[0] = i_confinement_time
             error_handling.report_error(81)
 
         # Ion energy confinement time
         # N.B. Overwrites earlier calculation above
 
-        tauei = tauee
+        t_ion_confinement = t_electron_confinement
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
         # (here, tin and ten are in keV, and ptrepv and ptripv are in MW/m3)
 
-        ptripv = 2.403e-22 * dnitot * tin / tauei
-        ptrepv = 2.403e-22 * dene * ten / tauee
+        ptripv = 2.403e-22 * dnitot * tin / t_ion_confinement
+        ptrepv = 2.403e-22 * dene * ten / t_electron_confinement
 
         ratio = dnitot / dene * tin / ten
 
         # Global energy confinement time
 
-        taueff = (ratio + 1.0e0) / (ratio / tauei + 1.0e0 / tauee)
+        t_energy_confinement = (ratio + 1.0e0) / (
+            ratio / t_ion_confinement + 1.0e0 / t_electron_confinement
+        )
 
-        return kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht
+        return (
+            kappaa,
+            ptrepv,
+            ptripv,
+            t_electron_confinement,
+            t_ion_confinement,
+            t_energy_confinement,
+            powerht,
+        )
 
 
 def calculate_poloidal_beta(btot, bp, beta):

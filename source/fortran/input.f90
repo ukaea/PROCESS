@@ -231,7 +231,7 @@ contains
     use constraint_variables, only: flhthresh, fpeakb, fpsep, fdivcol, ftcycl, &
       beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
-      fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
+      fgamcd, ftbr, mvalim, f_alpha_energy_confinement_min, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
@@ -305,13 +305,13 @@ contains
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, cvol, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
-      fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
+      fpdivlim, beta_poloidal_eps_max, i_confinement_time, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
-      iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
+      i_rad_loss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, i_density_limit, bt, iscrp, ipnlaws, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
@@ -604,7 +604,7 @@ contains
                'f-value for Eich critical separatrix density')
        case ('ftaulimit')
           call parse_real_variable('ftaulimit', ftaulimit, 0.001D0, 1.0D0, &
-               'f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement times')
+               'f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times')
        case ('f_tritium')
           call parse_real_variable('f_tritium', f_tritium, 0.0D0, 1.0D0, &
                'Tritium fuel fraction')
@@ -657,11 +657,11 @@ contains
        case ('i_pfirsch_schluter_current')
           call parse_int_variable('i_pfirsch_schluter_current', i_pfirsch_schluter_current, 0, 1, &
                'Switch for Pfirsch-Schlüter scaling')
-       case ('iradloss')
-          call parse_int_variable('iradloss', iradloss, 0, 2, &
+       case ('i_rad_loss')
+          call parse_int_variable('i_rad_loss', i_rad_loss, 0, 2, &
                'Switch for radiation loss term inclusion in power balance')
-       case ('isc')
-          call parse_int_variable('isc', isc, 1, ipnlaws, &
+       case ('i_confinement_time')
+          call parse_int_variable('i_confinement_time', i_confinement_time, 0, ipnlaws-1, &
                'Switch for confinement scaling law')
        case ('iscrp')
           call parse_int_variable('iscrp', iscrp, 0, 1, &
@@ -744,10 +744,10 @@ contains
                'Electron temperature (keV)')
        case ('tauee_in')
            call parse_real_variable('tauee_in', tauee_in, 0.0D0, 100.0D0, &
-                    'Input electron energy confinement time (sec) (isc=48 only)')
-       case ('taulimit')
-          call parse_real_variable('taulimit', taulimit, 1.0D0, 100.0D0, &
-               'Lower limit on taup/taueff the ratio of alpha particle to energy confinement times')
+                    'Input electron energy confinement time (sec) (i_confinement_time=48 only)')
+       case ('f_alpha_energy_confinement_min')
+          call parse_real_variable('f_alpha_energy_confinement_min', f_alpha_energy_confinement_min, 1.0D0, 100.0D0, &
+               'Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times')
 
        case ('teped')
           call parse_real_variable('teped', teped, 0.0D0, 20.0D0, &
