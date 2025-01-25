@@ -1185,14 +1185,14 @@ class ExternalCryoGeometryParam(NamedTuple):
     dewmkg: Any = None
     rb: Any = None
     zh: Any = None
-    clh1: Any = None
+    dz_tf_cryostat: Any = None
     dz_pf_cryostat: Any = None
     expected_r_cryostat_inboard: Any = None
     expected_z_cryostat_half_inside: Any = None
     expected_vol_cryostat: Any = None
     expected_vvmass: Any = None
     expected_dewmkg: Any = None
-    expected_clh1: Any = None
+    expected_dz_tf_cryostat: Any = None
     expected_dz_pf_cryostat: Any = None
 
 
@@ -1272,14 +1272,14 @@ class ExternalCryoGeometryParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            clh1=2.5,
+            dz_tf_cryostat=2.5,
             dz_pf_cryostat=0,
             expected_r_cryostat_inboard=17.805470903073743,
             expected_z_cryostat_half_inside=15.259637557000296,
             expected_vol_cryostat=810.95017445543203,
             expected_vvmass=7927043.4756686538,
             expected_dewmkg=14252454.836421024,
-            expected_clh1=5.514694530398824,
+            expected_dz_tf_cryostat=5.514694530398824,
             expected_dz_pf_cryostat=5.3441455565624985,
         ),
     ),
@@ -1328,7 +1328,9 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
     monkeypatch.setattr(pfcoil_variables, "rb", externalcryogeometryparam.rb)
     monkeypatch.setattr(pfcoil_variables, "zh", externalcryogeometryparam.zh)
-    monkeypatch.setattr(buildings_variables, "clh1", externalcryogeometryparam.clh1)
+    monkeypatch.setattr(
+        buildings_variables, "dz_tf_cryostat", externalcryogeometryparam.dz_tf_cryostat
+    )
     monkeypatch.setattr(
         blanket_library, "dz_pf_cryostat", externalcryogeometryparam.dz_pf_cryostat
     )
@@ -1350,8 +1352,8 @@ def test_external_cryo_geometry(
     assert fwbs_variables.dewmkg == pytest.approx(
         externalcryogeometryparam.expected_dewmkg
     )
-    assert buildings_variables.clh1 == pytest.approx(
-        externalcryogeometryparam.expected_clh1
+    assert buildings_variables.dz_tf_cryostat == pytest.approx(
+        externalcryogeometryparam.expected_dz_tf_cryostat
     )
     assert blanket_library.dz_pf_cryostat == pytest.approx(
         externalcryogeometryparam.expected_dz_pf_cryostat

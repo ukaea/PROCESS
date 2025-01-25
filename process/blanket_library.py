@@ -395,7 +395,7 @@ class BlanketLibrary:
         )
 
         # Vertical clearance between TF coil and cryostat (m)
-        buildings_variables.clh1 = fwbs_variables.z_cryostat_half_inside - (
+        buildings_variables.dz_tf_cryostat = fwbs_variables.z_cryostat_half_inside - (
             build_variables.hmax + build_variables.tfcth
         )
 

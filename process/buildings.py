@@ -201,14 +201,14 @@ class Buildings:
         crcl = 9.41e-6 * wt + 5.1e0
 
         # Building height (m)
-        # clh1 : clearance from TF coil to cryostat top, m
+        # dz_tf_cryostat : clearance from TF coil to cryostat top, m
         # clh2 : clearance beneath TF coil to foundation, including basement, m
         # stcl : clearance above crane to roof, m
         # Additional tfh allows TF coil to be lifted right out
         hrbi = (
             buildings_variables.clh2
             + 2.0e0 * tfh
-            + buildings_variables.clh1
+            + buildings_variables.dz_tf_cryostat
             + buildings_variables.trcl
             + crcl
             + buildings_variables.stcl

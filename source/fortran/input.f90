@@ -202,7 +202,7 @@ contains
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
-      esbldgm3, fndt, row, wgt2, pibv, clh1, stcl, clh2, &
+      esbldgm3, fndt, row, wgt2, pibv, dz_tf_cryostat, stcl, clh2, &
       tfcbv, hccl, rbrt, triv, shov, admv, i_bldgs_v, i_bldgs_size, &
       mbvfac, pfbldgm3, wsvfac, rbvfac, rxcl, shmf, &
       aux_build_l, aux_build_w, aux_build_h, auxcool_l, auxcool_w, auxcool_h, &
@@ -2766,8 +2766,8 @@ contains
        case ('admv')
           call parse_real_variable('admv', admv, 1.0D4, 1.0D6, &
                'Administration building volume (m3)')
-       case ('clh1')
-          call parse_real_variable('clh1', clh1, 0.0D0, 20.0D0, &
+       case ('dz_tf_cryostat')
+          call parse_real_variable('dz_tf_cryostat', dz_tf_cryostat, 0.0D0, 20.0D0, &
                'Clearance TF coil to cryostat top (m)')
        case ('clh2')
           call parse_real_variable('clh2', clh2, 0.0D0, 30.0D0, &

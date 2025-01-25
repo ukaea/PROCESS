@@ -1457,7 +1457,7 @@
         "circumference_target": 0.0,
         "cland": 19.2,
         "clgsmass": 0.0,
-        "clh1": 2.5,
+        "dz_tf_cryostat": 2.5,
         "clh2": 15.0,
         "f_z_cryostat": 4.268,
         "cm": null,
@@ -9123,7 +9123,7 @@
         "circumference_target": "",
         "cland": "cost of land (M$)",
         "clgsmass": "gravity support structure for TF coil, PF coil and intercoil support systems (kg)",
-        "clh1": "vertical clearance from TF coil to cryostat (m) (calculated for tokamaks)",
+        "dz_tf_cryostat": "vertical clearance from TF coil to cryostat (m) (calculated for tokamaks)",
         "clh2": "clearance beneath TF coil to foundation (including basement) (m)",
         "f_z_cryostat": "cryostat lid height scaling factor (tokamaks)",
         "cm": "",
@@ -11911,7 +11911,7 @@
             "lb": 10.0,
             "ub": 100.0
         },
-        "clh1": {
+        "dz_tf_cryostat": {
             "lb": 0.0,
             "ub": 20.0
         },
@@ -17103,7 +17103,7 @@
             "chemlab_l",
             "chemlab_w",
             "chemlab_h",
-            "clh1",
+            "dz_tf_cryostat",
             "clh2",
             "control_buildings_l",
             "control_buildings_w",
@@ -20098,7 +20098,7 @@
         "chmatf": "real_array",
         "chrad": "real_variable",
         "cland": "real_variable",
-        "clh1": "real_variable",
+        "dz_tf_cryostat": "real_variable",
         "clh2": "real_variable",
         "f_z_cryostat": "real_variable",
         "coheof": "real_variable",

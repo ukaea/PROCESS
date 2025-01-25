@@ -1557,8 +1557,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Vertical clearance from TF coil to cryostat (m)",
-            "(clh1)",
-            buildings_variables.clh1,
+            "(dz_tf_cryostat)",
+            buildings_variables.dz_tf_cryostat,
             "OP ",
         )
         po.ovarre(

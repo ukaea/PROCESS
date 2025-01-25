@@ -1,10 +1,47 @@
 # Cryostat
-The _vacuum vessel_ provides a toroidal evacuated chamber containing the plasma, first wall, blanket and shield.  The _cryostat_ is a cylindrical chamber enclosing the entire reactor, including the vacuum vessel and all the coils and the intercoil structure.  It provides a vacuum for thermal insulation. 
 
-The top flange of the cryostat will be a large structure taking a considerable load from atmospheric pressure.  PROCESS does not calculate the required thickness, but the vertical distance *h* between the uppermost PF coil and the top flange of the cryostat is set using `f_z_cryostat` (default value 4.268 m); a scaling based on ITER is used:
+The _vacuum vessel_ provides a toroidal evacuated chamber containing the plasma, first wall, blanket and shield.  The _cryostat_ is a cylindrical chamber enclosing the entire reactor, including the vacuum vessel and all the coils and the intercoil structure.  It provides a vacuum for thermal insulation.
+
+-------------
+
+## Cryostat geometry | `external_cryo_geometry()`
+
+### Calculate inboard radius
+
+The radius of the inboard side of the cryostat is found by taking the radius of the furthest out PF coil and adding a clearance gap:
+
 $$
-h = \mathtt{f_z_cryostat} \left( \frac{2 \times \mathtt{r_cryostat_inboard}}{28.440}\right)
+\mathtt{r\_cryostat\_inboard}, r_{\text{cryostat}} = \text{max}(r_{\text{PF}}) + \mathtt{dr\_pf\_cryostat}
 $$
+
+where $\mathtt{dr\_pf\_cryostat}$ is the radial PF coil to cryostat gap specified by the user at input.
+
+----------------
+
+### Vertical clearance
+
+The top flange of the cryostat will be a large structure taking a considerable load from atmospheric pressure.  The vertical distance $\mathrm{d}z_{\text{PF,cryostat}}$ between the uppermost PF coil and the top inside flange of the cryostat is set using a scaling based on ITER is used:
+
+$$
+\mathtt{dz\_pf\_cryostat}, \mathrm{d}z_{\text{PF,cryostat}} = \texttt{f_z_cryostat} \left( \frac{2 \times \texttt{r_cryostat_inboard}}{28.440}\right)
+$$
+
+-------------------
+
+### Half-height
+
+The internal half height of the cryostat is then calculated by taking the maximum vertical height of the PF coils and adding the calculated clearance, $\mathtt{dz\_pf\_cryostat}$.
+
+$$
+\mathrm{z\_cryostat\_half\_inside} = \text{max}(z_{\text{PF}}) + \mathtt{dz\_pf\_cryostat}
+$$
+
+-------------------
+
+### Vertical clearance of TF coil
+
+
+----------------------
 
 # Cryogenics
 The model for the cryogenic cooling power, and the electric power to provide this, is based on D.S. Slack, J.A. Kern, J.R., Miller, Cryogenic system design for a compact tokamak reactor, UCRL-98733, DE89 003176 (1989).  See related issues for comments.

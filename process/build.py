@@ -131,7 +131,7 @@ class Build:
                 # Start at the top and work down.
 
                 vbuild = (
-                    buildings_variables.clh1
+                    buildings_variables.dz_tf_cryostat
                     + build_variables.tfcth
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
@@ -149,17 +149,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Cryostat roof structure*",
-                    buildings_variables.clh1,
+                    buildings_variables.dz_tf_cryostat,
                     vbuild,
-                    "(clh1)",
+                    "(dz_tf_cryostat)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Cryostat roof structure*",
-                    "(clh1)",
-                    buildings_variables.clh1,
+                    "(dz_tf_cryostat)",
+                    buildings_variables.dz_tf_cryostat,
                 )
-                vbuild = vbuild - buildings_variables.clh1
+                vbuild = vbuild - buildings_variables.dz_tf_cryostat
 
                 # Top of TF coil
                 tf_top = vbuild
@@ -384,13 +384,13 @@ class Build:
                 # Inner vertical dimension of TF coil
                 build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.tfcth
 
-                vbuild = vbuild - buildings_variables.clh1
+                vbuild = vbuild - buildings_variables.dz_tf_cryostat
                 po.obuild(
                     self.outfile,
                     "Cryostat floor structure**",
-                    buildings_variables.clh1,
+                    buildings_variables.dz_tf_cryostat,
                     vbuild,
-                    "(clh1)",
+                    "(dz_tf_cryostat)",
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -402,7 +402,7 @@ class Build:
                 #  write(self.outfile, 20)
 
                 vbuild = (
-                    buildings_variables.clh1
+                    buildings_variables.dz_tf_cryostat
                     + build_variables.tfcth
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
@@ -422,17 +422,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Cryostat roof structure*",
-                    buildings_variables.clh1,
+                    buildings_variables.dz_tf_cryostat,
                     vbuild,
-                    "(clh1)",
+                    "(dz_tf_cryostat)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Cryostat roof structure*",
-                    "(clh1)",
-                    buildings_variables.clh1,
+                    "(dz_tf_cryostat)",
+                    buildings_variables.dz_tf_cryostat,
                 )
-                vbuild = vbuild - buildings_variables.clh1
+                vbuild = vbuild - buildings_variables.dz_tf_cryostat
 
                 # Top of TF coil
                 tf_top = vbuild
@@ -675,14 +675,14 @@ class Build:
                 # Inner vertical dimension of TF coil
                 build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.tfcth
 
-                vbuild = vbuild - buildings_variables.clh1
+                vbuild = vbuild - buildings_variables.dz_tf_cryostat
 
                 po.obuild(
                     self.outfile,
                     "Cryostat floor structure**",
-                    buildings_variables.clh1,
+                    buildings_variables.dz_tf_cryostat,
                     vbuild,
-                    "(clh1)",
+                    "(dz_tf_cryostat)",
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
