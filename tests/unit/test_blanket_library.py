@@ -1171,7 +1171,7 @@ def test_apply_coverage_factors(
 
 
 class ExternalCryoGeometryParam(NamedTuple):
-    clhsf: Any = None
+    f_z_cryostat: Any = None
     hmax: Any = None
     tfcth: Any = None
     dr_cryostat: Any = None
@@ -1200,7 +1200,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     "externalcryogeometryparam",
     (
         ExternalCryoGeometryParam(
-            clhsf=4.2679999999999998,
+            f_z_cryostat=4.2679999999999998,
             hmax=8.8182171641274945,
             tfcth=0.92672586247397692,
             dr_cryostat=0.15000000000000002,
@@ -1298,7 +1298,9 @@ def test_external_cryo_geometry(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "clhsf", externalcryogeometryparam.clhsf)
+    monkeypatch.setattr(
+        build_variables, "f_z_cryostat", externalcryogeometryparam.f_z_cryostat
+    )
     monkeypatch.setattr(build_variables, "hmax", externalcryogeometryparam.hmax)
     monkeypatch.setattr(build_variables, "tfcth", externalcryogeometryparam.tfcth)
     monkeypatch.setattr(
