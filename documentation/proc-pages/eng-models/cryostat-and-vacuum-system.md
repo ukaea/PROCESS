@@ -33,15 +33,30 @@ $$
 The internal half height of the cryostat is then calculated by taking the maximum vertical height of the PF coils and adding the calculated clearance, $\mathtt{dz\_pf\_cryostat}$.
 
 $$
-\mathrm{z\_cryostat\_half\_inside} = \text{max}(z_{\text{PF}}) + \mathtt{dz\_pf\_cryostat}
+\mathtt{z\_cryostat\_half\_inside} = \text{max}(z_{\text{PF}}) + \mathtt{dz\_pf\_cryostat}
 $$
 
 -------------------
 
 ### Vertical clearance of TF coil
 
+The vertical clearance between the top of the TF coil and the inside of the cryostat is then calculated:
+
+$$
+\mathtt{dz\_tf\_cryostat} = \mathtt{z\_cryostat\_half\_inside} - (z_{\text{TF}} + \mathrm{d}z_{\text{TF}})
+$$
+
+where $z_{\text{TF}}$ is the height of the inside of the TF leg and $\mathrm{d}z_{\text{TF}}$ is its thickness.
 
 ----------------------
+
+
+### Calculate cryostat volume
+
+
+
+
+-------------------
 
 # Cryogenics
 The model for the cryogenic cooling power, and the electric power to provide this, is based on D.S. Slack, J.A. Kern, J.R., Miller, Cryogenic system design for a compact tokamak reactor, UCRL-98733, DE89 003176 (1989).  See related issues for comments.
