@@ -383,7 +383,9 @@ class BlanketLibrary:
         # Clearance between uppermost PF coil and cryostat lid [m].
         # Scaling from ITER by M. Kovari
         blanket_library.dz_pf_cryostat = (
-            build_variables.clhsf * (2.0 * fwbs_variables.r_cryostat_inboard) / 28.440
+            build_variables.f_z_cryostat
+            * (2.0 * fwbs_variables.r_cryostat_inboard)
+            / 28.440
         )
 
         # Half-height of cryostat [m]

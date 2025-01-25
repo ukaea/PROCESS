@@ -2219,7 +2219,7 @@ i_r_cp_top = 2
 * Cryostat *
 *----------*
 
-*clhsf =  
+*f_z_cryostat =  
 * DESCRIPTION:   Cryostat lid height scaling factor (m)
 * JUSTIFICATION: Not scaling cryostat height.
 

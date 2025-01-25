@@ -1459,7 +1459,7 @@
         "clgsmass": 0.0,
         "clh1": 2.5,
         "clh2": 15.0,
-        "clhsf": 4.268,
+        "f_z_cryostat": 4.268,
         "cm": null,
         "beam_current": 0.0,
         "cnorm": null,
@@ -9125,7 +9125,7 @@
         "clgsmass": "gravity support structure for TF coil, PF coil and intercoil support systems (kg)",
         "clh1": "vertical clearance from TF coil to cryostat (m) (calculated for tokamaks)",
         "clh2": "clearance beneath TF coil to foundation (including basement) (m)",
-        "clhsf": "cryostat lid height scaling factor (tokamaks)",
+        "f_z_cryostat": "cryostat lid height scaling factor (tokamaks)",
         "cm": "",
         "beam_current": "neutral beam current (A)",
         "cnorm": "",
@@ -11919,7 +11919,7 @@
             "lb": 0.0,
             "ub": 30.0
         },
-        "clhsf": {
+        "f_z_cryostat": {
             "lb": 2.0,
             "ub": 10.0
         },
@@ -17021,7 +17021,7 @@
             "blnkoth",
             "blnktth",
             "bore",
-            "clhsf",
+            "f_z_cryostat",
             "dr_cryostat",
             "d_vv_in",
             "d_vv_out",
@@ -20100,7 +20100,7 @@
         "cland": "real_variable",
         "clh1": "real_variable",
         "clh2": "real_variable",
-        "clhsf": "real_variable",
+        "f_z_cryostat": "real_variable",
         "coheof": "real_variable",
         "conf_mag": "real_variable",
         "control_buildings_h": "real_variable",
