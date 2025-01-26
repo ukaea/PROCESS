@@ -1774,13 +1774,13 @@ class IFE:
                 ife_variables.v3matm[j, i] = ife_variables.v3matv[j, i] * den
 
         # Total masses of components (excluding coolant)
-        fwbs_variables.fwmass = 0.0
+        fwbs_variables.m_fw_total = 0.0
         fwbs_variables.whtblkt = 0.0
         fwbs_variables.whtshld = 0.0
         for i in range(5):
             for j in range(3):
-                fwbs_variables.fwmass = (
-                    fwbs_variables.fwmass + ife_variables.fwmatm[j, i]
+                fwbs_variables.m_fw_total = (
+                    fwbs_variables.m_fw_total + ife_variables.fwmatm[j, i]
                 )
                 fwbs_variables.whtblkt = (
                     fwbs_variables.whtblkt + ife_variables.blmatm[j, i]
@@ -1854,8 +1854,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "First wall mass (kg)",
-            "(fwmass)",
-            fwbs_variables.fwmass,
+            "(m_fw_total)",
+            fwbs_variables.m_fw_total,
         )
         process_output.ovarre(
             self.outfile,
