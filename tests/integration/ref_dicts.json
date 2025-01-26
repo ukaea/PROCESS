@@ -2102,7 +2102,7 @@
         ],
         "fwiizp": 0.0,
         "fwimzp": 0.0,
-        "fwinlet": 573.0,
+        "temp_fw_coolant_in": 573.0,
         "dr_fw_inboard": 0.0,
         "fwlife": 0.0,
         "fwmass": 0.0,
@@ -9682,7 +9682,7 @@
         "fwihkw": "inboard first wall total heat output (kW)",
         "fwiizp": "inboard first wall integrated zone power / neutron",
         "fwimzp": "inboard first wall mean zone power density/neutron",
-        "fwinlet": "inlet temperature of first wall coolant (K)",
+        "temp_fw_coolant_in": "inlet temperature of first wall coolant (K)",
         "dr_fw_inboard": "inboard first wall thickness, initial estimate as calculated (m)",
         "fwlife": "first wall full-power year lifetime (y)",
         "fwmass": "first wall mass (kg)",
@@ -13041,7 +13041,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "fwinlet": {
+        "temp_fw_coolant_in": {
             "lb": 300.0,
             "ub": 1500.0
         },
@@ -18086,7 +18086,7 @@
             "fw_wall",
             "afw",
             "pitch",
-            "fwinlet",
+            "temp_fw_coolant_in",
             "fwoutlet",
             "fwpressure",
             "tpeak",
@@ -20369,7 +20369,7 @@
         "fwdr": "real_variable",
         "fwdzl": "real_variable",
         "fwdzu": "real_variable",
-        "fwinlet": "real_variable",
+        "temp_fw_coolant_in": "real_variable",
         "dr_fw_inboard": "real_variable",
         "fwmatf": "real_array",
         "dr_fw_outboard": "real_variable",
