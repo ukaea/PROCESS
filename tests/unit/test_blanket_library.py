@@ -27,7 +27,7 @@ def blanket_library_fixture():
 
 
 class PrimaryCoolantPropertiesParam(NamedTuple):
-    fwcoolant: Any = None
+    i_fw_coolant_type: Any = None
 
     temp_fw_coolant_in: Any = None
 
@@ -84,7 +84,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
     "primarycoolantpropertiesparam",
     (
         PrimaryCoolantPropertiesParam(
-            fwcoolant="helium",
+            i_fw_coolant_type="helium",
             temp_fw_coolant_in=573,
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
@@ -112,7 +112,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_visc_fw=3.5036293160410249e-05,
         ),
         PrimaryCoolantPropertiesParam(
-            fwcoolant="helium",
+            i_fw_coolant_type="helium",
             temp_fw_coolant_in=573,
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
@@ -159,7 +159,7 @@ def test_primary_coolant_properties(
     # monkeypatch doesnt work for strings
     # but helium is the default
     # monkeypatch.setattr(
-    #     fwbs_variables, "fwcoolant", primarycoolantpropertiesparam.fwcoolant
+    #     fwbs_variables, "i_fw_coolant_type", primarycoolantpropertiesparam.i_fw_coolant_type
     # )
 
     monkeypatch.setattr(
