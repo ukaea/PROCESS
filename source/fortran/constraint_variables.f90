@@ -209,7 +209,7 @@ module constraint_variables
   !! (`constraint equation 12`, `iteration variable 15`)
 
   real(dp) :: fvvhe
-  !! f-value for vacuum vessel He concentration limit (`iblanket = 2`)
+  !! f-value for vacuum vessel He concentration limit (`i_blanket_type = 2`)
   !! (`constraint equation 55`, `iteration variable 96`)
 
   real(dp) :: fwalld
@@ -274,7 +274,7 @@ module constraint_variables
 
   real(dp) :: vvhealw
   !! allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
-  !! (`iblanket =2`) (`constraint equation 55`)
+  !! (`i_blanket_type =2`) (`constraint equation 55`)
 
   real(dp) :: walalw
   !! allowable neutron wall-load (MW/m2) (`constraint equation 8`)

@@ -36,7 +36,7 @@ class DCLL:
     IN.DAT info for DCLL:
 
          Select DCLL model
-             iblanket = 5 * DCLL
+             i_blanket_type = 5 * DCLL
 
          Liquid Metal Breeder Material = PbLi
              i_bb_liq = 0 * Liquid Metal Breeder Material = PbLi

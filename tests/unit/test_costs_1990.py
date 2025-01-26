@@ -1136,7 +1136,7 @@ class Acc2212Param(NamedTuple):
 
     fkind: Any = None
 
-    iblanket: Any = None
+    i_blanket_type: Any = None
 
     whtblli: Any = None
 
@@ -1208,7 +1208,7 @@ class Acc2212Param(NamedTuple):
             ifueltyp=1,
             lsa=2,
             fkind=1,
-            iblanket=1,
+            i_blanket_type=1,
             whtblli=0,
             wtblli2o=1258110.2710352642,
             whtblbreed=0,
@@ -1262,7 +1262,7 @@ class Acc2212Param(NamedTuple):
             ifueltyp=1,
             lsa=2,
             fkind=1,
-            iblanket=1,
+            i_blanket_type=1,
             whtblli=0,
             wtblli2o=1260437.468838267,
             whtblbreed=0,
@@ -1341,7 +1341,7 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2212param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "iblanket", acc2212param.iblanket)
+    monkeypatch.setattr(fwbs_variables, "i_blanket_type", acc2212param.i_blanket_type)
 
     monkeypatch.setattr(fwbs_variables, "whtblli", acc2212param.whtblli)
 

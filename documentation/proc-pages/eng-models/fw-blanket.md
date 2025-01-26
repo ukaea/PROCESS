@@ -37,7 +37,7 @@ The models used for the thermoydraulics of the first wall, the profile of
 deposition of the neutron energy, tritium breeding, and conversion of heat to 
 electricity have been revised extensively.
 
-`iblanket` -- This switch selects between different types of blanket.
+`i_blanket_type` -- This switch selects between different types of blanket.
 
 - `== 1` -- CCFE HCPB (helium-cooled pebble bed) model. The energy 
     deposition in the armour and first wall, blanket and shield are calculated 
@@ -190,8 +190,8 @@ The Hartmann number is also calculated (using the magnetic feild strength in the
 |   `inlet_temp_liq`    |   K   | 68       | idualcool=1,2 | 570     | Inlet temperatute of liquid metal breeder/coolant     |
 |   `outlet_temp_liq`   |   K   | 69       | idualcool=1,2 | 720     | Outlet temperatute of liquid metal breeder/coolant    |
 |    `n_liq_recirc`     |  ---  | 71       | idualcool=1   | 10      | Number of liquid metal breeder recirculations per day |
-| `f_nuc_pow_bz_struct` |  ---  | 73       | iblanket=5    | 0.34    | FW nuclear power as fraction of total                 |
-|  `f_nuc_pow_bz_liq`   |  ---  | 74       | iblanket=5    | 0.66    | Fraction of BZ power cooled by primary coolant        |
+| `f_nuc_pow_bz_struct` |  ---  | 73       | i_blanket_type=5    | 0.34    | FW nuclear power as fraction of total                 |
+|  `f_nuc_pow_bz_liq`   |  ---  | 74       | i_blanket_type=5    | 0.66    | Fraction of BZ power cooled by primary coolant        |
 
 #### Flow Channel Inserts for Liquid Metal Breeder
 
