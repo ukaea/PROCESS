@@ -327,7 +327,7 @@ module fwbs_variables
   real(dp) :: temp_fw_coolant_in
   !! inlet temperature of first wall coolant [K]
 
-  real(dp) :: fwoutlet
+  real(dp) :: temp_fw_coolant_out
   !! outlet temperature of first wall coolant [K]
 
   real(dp) :: fwpressure
@@ -744,7 +744,7 @@ module fwbs_variables
     afw = 0.006D0
     pitch = 0.02D0
     temp_fw_coolant_in = 573.0D0
-    fwoutlet = 823.0D0
+    temp_fw_coolant_out = 823.0D0
     fwpressure = 15.5D6
     tpeak = 873.0D0
     roughness = 1.0D-6
