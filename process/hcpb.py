@@ -237,7 +237,7 @@ class CCFE_HCPB:
             * fwbs_variables.vffwi
             + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
-            * fwbs_variables.vffwo
+            * fwbs_variables.f_a_fw_coolant_outboard
         )
 
         # Mass of He coolant = volume * density at typical coolant temperatures and pressures (kg)
@@ -250,7 +250,7 @@ class CCFE_HCPB:
             * fwbs_variables.vffwi
             + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
-            * fwbs_variables.vffwo
+            * fwbs_variables.f_a_fw_coolant_outboard
         ) / (
             build_variables.a_fw_total
             * 0.5
@@ -299,7 +299,7 @@ class CCFE_HCPB:
             * (1.0 - fwbs_variables.vffwi)
             + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
-            * (1.0 - fwbs_variables.vffwo)
+            * (1.0 - fwbs_variables.f_a_fw_coolant_outboard)
         )
 
         # First wall mass, excluding armour (kg)
@@ -398,7 +398,7 @@ class CCFE_HCPB:
         )
 
         # outboard FW coolant void fraction
-        fwbs_variables.vffwo = fwbs_variables.vffwi
+        fwbs_variables.f_a_fw_coolant_outboard = fwbs_variables.vffwi
 
         # mean FW coolant void fraction
         vffwm = fwbs_variables.vffwi

@@ -1251,7 +1251,7 @@ class Stellarator:
                     - fwbs_variables.fblbreed
                     - fwbs_variables.fblss
                 )
-                vffwo = vffwi
+                f_a_fw_coolant_outboard = vffwi
 
         else:
             fwbs_variables.pnuc_cp = 0.0e0
@@ -1396,7 +1396,7 @@ class Stellarator:
                 vffwi = (
                     fwbs_variables.afwi * fwbs_variables.afwi / (bfwi * bfwi)
                 )  # inboard FW coolant void fraction
-                vffwo = (
+                f_a_fw_coolant_outboard = (
                     fwbs_variables.afwo * fwbs_variables.afwo / (bfwo * bfwo)
                 )  # outboard FW coolant void fraction
 
@@ -1777,12 +1777,14 @@ class Stellarator:
                 * (1.0e0 - vffwi)
                 + build_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
-                * (1.0e0 - vffwo)
+                * (1.0e0 - f_a_fw_coolant_outboard)
             )
             coolvol = (
                 coolvol
                 + build_variables.a_fw_inboard * build_variables.dr_fw_inboard * vffwi
-                + build_variables.a_fw_outboard * build_variables.dr_fw_outboard * vffwo
+                + build_variables.a_fw_outboard
+                * build_variables.dr_fw_outboard
+                * f_a_fw_coolant_outboard
             )
 
             #  Average first wall coolant fraction, only used by old routines
@@ -1790,7 +1792,9 @@ class Stellarator:
 
             fwbs_variables.fwclfr = (
                 build_variables.a_fw_inboard * build_variables.dr_fw_inboard * vffwi
-                + build_variables.a_fw_outboard * build_variables.dr_fw_outboard * vffwo
+                + build_variables.a_fw_outboard
+                * build_variables.dr_fw_outboard
+                * f_a_fw_coolant_outboard
             ) / (
                 build_variables.a_fw_total
                 * 0.5e0
