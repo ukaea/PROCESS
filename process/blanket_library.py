@@ -754,7 +754,7 @@ class BlanketLibrary:
         # FW Pipe Flow and Velocity ######
 
         # Total number of first wall pipes from channel length and pitch (02/12/2015)
-        blanket_library.npfwi = build_variables.fwareaib / (
+        blanket_library.npfwi = build_variables.a_fw_inboard / (
             fwbs_variables.fw_channel_length * fwbs_variables.pitch
         )
         blanket_library.npfwo = build_variables.fwareaob / (
@@ -1538,7 +1538,9 @@ class BlanketLibrary:
         ######################################################
         # IB/OB FW (MW)
         blanket_library.pnucfwi = (
-            fwbs_variables.pnucfw * build_variables.fwareaib / build_variables.fwarea
+            fwbs_variables.pnucfw
+            * build_variables.a_fw_inboard
+            / build_variables.fwarea
         )
         blanket_library.pnucfwo = (
             fwbs_variables.pnucfw * build_variables.fwareaob / build_variables.fwarea
@@ -1646,7 +1648,7 @@ class BlanketLibrary:
             output,
             fwbs_variables.afw,
             build_variables.dr_fw_inboard,
-            build_variables.fwareaib,
+            build_variables.a_fw_inboard,
             fwbs_variables.psurffwi,
             blanket_library.pnucfwi,
             "Inboard first wall",
@@ -1661,7 +1663,7 @@ class BlanketLibrary:
         #     self.outfile,
         #     fwbs_variables.afw,
         #     build_variables.dr_fw_inboard,
-        #     build_variables.fwareaib,
+        #     build_variables.a_fw_inboard,
         #     fwbs_variables.psurffwi,
         #     blanket_library.pnucfwi,
         #     "Inboard first wall",
