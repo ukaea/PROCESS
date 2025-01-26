@@ -746,7 +746,7 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
 
 
 class PowerflowCalcParam(NamedTuple):
-    fwareaob: Any = None
+    a_fw_outboard: Any = None
 
     fwarea: Any = None
 
@@ -845,7 +845,7 @@ class PowerflowCalcParam(NamedTuple):
     "powerflowcalcparam",
     (
         PowerflowCalcParam(
-            fwareaob=988.92586580655245,
+            a_fw_outboard=988.92586580655245,
             fwarea=1601.1595634509963,
             porbitlossmw=0,
             fdiv=0.115,
@@ -894,7 +894,7 @@ class PowerflowCalcParam(NamedTuple):
             expected_htpmw_fw_blkt=202.00455086503842,
         ),
         PowerflowCalcParam(
-            fwareaob=1168.1172772224481,
+            a_fw_outboard=1168.1172772224481,
             fwarea=1891.2865102700493,
             porbitlossmw=0,
             fdiv=0.115,
@@ -957,7 +957,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "fwareaob", powerflowcalcparam.fwareaob)
+    monkeypatch.setattr(
+        build_variables, "a_fw_outboard", powerflowcalcparam.a_fw_outboard
+    )
 
     monkeypatch.setattr(build_variables, "fwarea", powerflowcalcparam.fwarea)
 
@@ -1382,7 +1384,7 @@ class ComponentMassesParam(NamedTuple):
     blbpoth: Any = None
     a_fw_inboard: Any = None
     dr_fw_inboard: Any = None
-    fwareaob: Any = None
+    a_fw_outboard: Any = None
     dr_fw_outboard: Any = None
     fwarea: Any = None
     volblkt: Any = None
@@ -1473,7 +1475,7 @@ class ComponentMassesParam(NamedTuple):
             blbpoth=0.34999999999999998,
             a_fw_inboard=505.96109565204046,
             dr_fw_inboard=0.018000000000000002,
-            fwareaob=838.00728058362097,
+            a_fw_outboard=838.00728058362097,
             dr_fw_outboard=0.018000000000000002,
             fwarea=1343.9683762356615,
             volblkt=1182.5433772195902,
@@ -1577,7 +1579,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         build_variables, "dr_fw_inboard", componentmassesparam.dr_fw_inboard
     )
-    monkeypatch.setattr(build_variables, "fwareaob", componentmassesparam.fwareaob)
+    monkeypatch.setattr(
+        build_variables, "a_fw_outboard", componentmassesparam.a_fw_outboard
+    )
     monkeypatch.setattr(
         build_variables, "dr_fw_outboard", componentmassesparam.dr_fw_outboard
     )

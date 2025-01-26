@@ -25,7 +25,7 @@ def dcll():
 
 
 class DcllNeutronicsAndPowerParam(NamedTuple):
-    fwareaob: Any = None
+    a_fw_outboard: Any = None
 
     fwarea: Any = None
 
@@ -90,7 +90,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
     "dcllneutronicsandpowerparam",
     (
         DcllNeutronicsAndPowerParam(
-            fwareaob=988.92586580655245,
+            a_fw_outboard=988.92586580655245,
             fwarea=1601.1595634509963,
             porbitlossmw=0,
             fdiv=0.115,
@@ -122,7 +122,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             expected_emultmw=325.06710220789364,
         ),
         DcllNeutronicsAndPowerParam(
-            fwareaob=1168.1172772224481,
+            a_fw_outboard=1168.1172772224481,
             fwarea=1891.2865102700493,
             porbitlossmw=0,
             fdiv=0.115,
@@ -169,7 +169,7 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     """
 
     monkeypatch.setattr(
-        build_variables, "fwareaob", dcllneutronicsandpowerparam.fwareaob
+        build_variables, "a_fw_outboard", dcllneutronicsandpowerparam.a_fw_outboard
     )
 
     monkeypatch.setattr(build_variables, "fwarea", dcllneutronicsandpowerparam.fwarea)
@@ -276,7 +276,7 @@ class DcllMassesParam(NamedTuple):
 
     dr_fw_inboard: Any = None
 
-    fwareaob: Any = None
+    a_fw_outboard: Any = None
 
     dr_fw_outboard: Any = None
 
@@ -513,7 +513,7 @@ class DcllMassesParam(NamedTuple):
         DcllMassesParam(
             a_fw_inboard=612.23369764444396,
             dr_fw_inboard=0.018000000000000002,
-            fwareaob=988.92586580655245,
+            a_fw_outboard=988.92586580655245,
             dr_fw_outboard=0.018000000000000002,
             blnkith=0.75500000000000012,
             blbuith=0.36499999999999999,
@@ -632,7 +632,7 @@ class DcllMassesParam(NamedTuple):
         DcllMassesParam(
             a_fw_inboard=723.16923304760132,
             dr_fw_inboard=0.018000000000000002,
-            fwareaob=1168.1172772224481,
+            a_fw_outboard=1168.1172772224481,
             dr_fw_outboard=0.018000000000000002,
             blnkith=0.75500000000000012,
             blbuith=0.36499999999999999,
@@ -767,7 +767,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", dcllmassesparam.dr_fw_inboard)
 
-    monkeypatch.setattr(build_variables, "fwareaob", dcllmassesparam.fwareaob)
+    monkeypatch.setattr(build_variables, "a_fw_outboard", dcllmassesparam.a_fw_outboard)
 
     monkeypatch.setattr(
         build_variables, "dr_fw_outboard", dcllmassesparam.dr_fw_outboard

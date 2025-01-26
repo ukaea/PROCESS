@@ -1151,7 +1151,7 @@ class Stellarator:
 
         #  First wall inboard, outboard areas (assume 50% of total each)
         build_variables.a_fw_inboard = 0.5e0 * build_variables.fwarea
-        build_variables.fwareaob = 0.5e0 * build_variables.fwarea
+        build_variables.a_fw_outboard = 0.5e0 * build_variables.fwarea
 
         #  Blanket volume; assume that its surface area is scaled directly from the
         #  plasma surface area.
@@ -1355,7 +1355,9 @@ class Stellarator:
                 pnucfwbsi = (
                     pnucfwbs * build_variables.a_fw_inboard / build_variables.fwarea
                 )
-                pnucfwbso = pnucfwbs * build_variables.fwareaob / build_variables.fwarea
+                pnucfwbso = (
+                    pnucfwbs * build_variables.a_fw_outboard / build_variables.fwarea
+                )
 
                 #  Radiation power incident on divertor (MW)
 
@@ -1432,7 +1434,7 @@ class Stellarator:
                 )
                 psurffwo = (
                     fwbs_variables.pradfw
-                    * build_variables.fwareaob
+                    * build_variables.a_fw_outboard
                     / build_variables.fwarea
                 )
 
@@ -1537,7 +1539,7 @@ class Stellarator:
                     pnucbso
                     - pnucbzo
                     + (fwbs_variables.pnucloss + fwbs_variables.pradloss)
-                    * build_variables.fwareaob
+                    * build_variables.a_fw_outboard
                     / build_variables.fwarea
                 )
 
@@ -1793,14 +1795,14 @@ class Stellarator:
                 build_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * (1.0e0 - vffwi)
-                + build_variables.fwareaob
+                + build_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 * (1.0e0 - vffwo)
             )
             coolvol = (
                 coolvol
                 + build_variables.a_fw_inboard * build_variables.dr_fw_inboard * vffwi
-                + build_variables.fwareaob * build_variables.dr_fw_outboard * vffwo
+                + build_variables.a_fw_outboard * build_variables.dr_fw_outboard * vffwo
             )
 
             #  Average first wall coolant fraction, only used by old routines
@@ -1808,7 +1810,7 @@ class Stellarator:
 
             fwbs_variables.fwclfr = (
                 build_variables.a_fw_inboard * build_variables.dr_fw_inboard * vffwi
-                + build_variables.fwareaob * build_variables.dr_fw_outboard * vffwo
+                + build_variables.a_fw_outboard * build_variables.dr_fw_outboard * vffwo
             ) / (
                 build_variables.fwarea
                 * 0.5e0

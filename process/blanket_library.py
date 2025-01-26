@@ -731,7 +731,7 @@ class BlanketLibrary:
         blanket_library.npfwi = build_variables.a_fw_inboard / (
             fwbs_variables.fw_channel_length * fwbs_variables.pitch
         )
-        blanket_library.npfwo = build_variables.fwareaob / (
+        blanket_library.npfwo = build_variables.a_fw_outboard / (
             fwbs_variables.fw_channel_length * fwbs_variables.pitch
         )
 
@@ -1518,7 +1518,9 @@ class BlanketLibrary:
             / build_variables.fwarea
         )
         blanket_library.pnucfwo = (
-            fwbs_variables.pnucfw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.pnucfw
+            * build_variables.a_fw_outboard
+            / build_variables.fwarea
         )
 
         # IB/OB Blanket (MW)
@@ -1647,7 +1649,7 @@ class BlanketLibrary:
             output,
             fwbs_variables.afw,
             build_variables.dr_fw_outboard,
-            build_variables.fwareaob,
+            build_variables.a_fw_outboard,
             fwbs_variables.psurffwo,
             blanket_library.pnucfwo,
             "Outboard first wall",
@@ -1657,7 +1659,7 @@ class BlanketLibrary:
         #     self.outfile,
         #     fwbs_variables.afw,
         #     build_variables.dr_fw_outboard,
-        #     build_variables.fwareaob,
+        #     build_variables.a_fw_outboard,
         #     fwbs_variables.psurffwo,
         #     blanket_library.pnucfwo,
         #     "Outboard first wall",
