@@ -272,7 +272,7 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
 
 class DcllMassesParam(NamedTuple):
-    fwareaib: Any = None
+    a_fw_inboard: Any = None
 
     dr_fw_inboard: Any = None
 
@@ -511,7 +511,7 @@ class DcllMassesParam(NamedTuple):
     "dcllmassesparam",
     (
         DcllMassesParam(
-            fwareaib=612.23369764444396,
+            a_fw_inboard=612.23369764444396,
             dr_fw_inboard=0.018000000000000002,
             fwareaob=988.92586580655245,
             dr_fw_outboard=0.018000000000000002,
@@ -630,7 +630,7 @@ class DcllMassesParam(NamedTuple):
             expected_mass_segm_ob=162542.70811995145,
         ),
         DcllMassesParam(
-            fwareaib=723.16923304760132,
+            a_fw_inboard=723.16923304760132,
             dr_fw_inboard=0.018000000000000002,
             fwareaob=1168.1172772224481,
             dr_fw_outboard=0.018000000000000002,
@@ -763,7 +763,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "fwareaib", dcllmassesparam.fwareaib)
+    monkeypatch.setattr(build_variables, "a_fw_inboard", dcllmassesparam.a_fw_inboard)
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", dcllmassesparam.dr_fw_inboard)
 

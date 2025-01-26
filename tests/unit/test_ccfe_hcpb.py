@@ -1380,7 +1380,7 @@ class ComponentMassesParam(NamedTuple):
     blbuoth: Any = None
     blbmoth: Any = None
     blbpoth: Any = None
-    fwareaib: Any = None
+    a_fw_inboard: Any = None
     dr_fw_inboard: Any = None
     fwareaob: Any = None
     dr_fw_outboard: Any = None
@@ -1471,7 +1471,7 @@ class ComponentMassesParam(NamedTuple):
             blbuoth=0.46500000000000002,
             blbmoth=0.27000000000000002,
             blbpoth=0.34999999999999998,
-            fwareaib=505.96109565204046,
+            a_fw_inboard=505.96109565204046,
             dr_fw_inboard=0.018000000000000002,
             fwareaob=838.00728058362097,
             dr_fw_outboard=0.018000000000000002,
@@ -1571,7 +1571,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(build_variables, "blbuoth", componentmassesparam.blbuoth)
     monkeypatch.setattr(build_variables, "blbmoth", componentmassesparam.blbmoth)
     monkeypatch.setattr(build_variables, "blbpoth", componentmassesparam.blbpoth)
-    monkeypatch.setattr(build_variables, "fwareaib", componentmassesparam.fwareaib)
+    monkeypatch.setattr(
+        build_variables, "a_fw_inboard", componentmassesparam.a_fw_inboard
+    )
     monkeypatch.setattr(
         build_variables, "dr_fw_inboard", componentmassesparam.dr_fw_inboard
     )

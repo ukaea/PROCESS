@@ -655,7 +655,7 @@ class DCLL:
         # FW
         # First wall volume (m^3)
         fwbs_variables.volfw = (
-            build_variables.fwareaib * build_variables.dr_fw_inboard
+            build_variables.a_fw_inboard * build_variables.dr_fw_inboard
             + build_variables.fwareaob * build_variables.dr_fw_outboard
         )
         # First wall mass, excluding armour (kg)
@@ -704,7 +704,7 @@ class DCLL:
                 * (fwbs_variables.volblkti / fwbs_variables.volblkt)
                 + fwbs_variables.fwmass
                 * (
-                    build_variables.fwareaib
+                    build_variables.a_fw_inboard
                     * build_variables.dr_fw_inboard
                     / fwbs_variables.volfw
                 )
