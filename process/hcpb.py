@@ -293,7 +293,7 @@ class CCFE_HCPB:
         fwbs_variables.wpenshld = fwbs_variables.whtshld
 
         # First wall volume (m^3)
-        fwbs_variables.volfw = (
+        fwbs_variables.vol_fw_total = (
             build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
             * (1.0 - fwbs_variables.vffwi)
@@ -303,7 +303,7 @@ class CCFE_HCPB:
         )
 
         # First wall mass, excluding armour (kg)
-        fwbs_variables.fwmass = fwbs_variables.denstl * fwbs_variables.volfw
+        fwbs_variables.fwmass = fwbs_variables.denstl * fwbs_variables.vol_fw_total
 
         # First wall armour volume (m^3)
         fwbs_variables.fw_armour_vol = (
@@ -1265,8 +1265,8 @@ class CCFE_HCPB:
         po.ovarrf(
             self.outfile,
             "First Wall Volume (m3)",
-            "(volfw)",
-            fwbs_variables.volfw,
+            "(vol_fw_total)",
+            fwbs_variables.vol_fw_total,
             "OP ",
         )
         po.ovarrf(
