@@ -36,7 +36,7 @@ module fwbs_variables
 
   real(dp) :: dewmkg
   !! total mass of vacuum vessel + cryostat [kg] (calculated if blktmodel>0)
-  !# TODO: blktmodel needs consolidating with iblanket
+  !# TODO: blktmodel needs consolidating with i_blanket_type
 
   real(dp) :: emult
   !! energy multiplication in blanket and shield
@@ -78,7 +78,7 @@ module fwbs_variables
   real(dp) :: fw_armour_vol
   !! first wall armour volume [m^3]
 
-  integer :: iblanket
+  integer :: i_blanket_type
   !! switch for blanket model:
   !!
   !! - =1 CCFE HCPB model
@@ -146,7 +146,7 @@ module fwbs_variables
   real(dp) :: armour_fw_bl_mass
   !! Total mass of armour, first wall and blanket [kg]
 
-  ! CCFE HCPB Blanket Model (with or without TBR calculation) iblanket=1,3
+  ! CCFE HCPB Blanket Model (with or without TBR calculation) i_blanket_type=1,3
   ! ----------
 
   real(dp) :: breeder_f
@@ -156,16 +156,16 @@ module fwbs_variables
   !! combined breeder/multipler fraction of blanket by volume
 
   real(dp) :: vfcblkt
-  !! He coolant fraction of blanket by volume (`iblanket= 1,3` (CCFE HCPB))
+  !! He coolant fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))
 
   real(dp) :: vfpblkt
-  !! He purge gas fraction of blanket by volume (`iblanket= 1,3` (CCFE HCPB))
+  !! He purge gas fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))
 
   real(dp) :: whtblli4sio4
-  !! mass of lithium orthosilicate in blanket [kg] (`iblanket=1,3` (CCFE HCPB))
+  !! mass of lithium orthosilicate in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))
 
   real(dp) :: whtbltibe12
-  !! mass of titanium beryllide in blanket [kg] (`iblanket=1,3` (CCFE HCPB))
+  !! mass of titanium beryllide in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))
 
   real(dp) :: neut_flux_cp
   !! Centrepost TF fast neutron flux (E > 0.1 MeV) [m^(-2).^(-1)]
@@ -189,76 +189,76 @@ module fwbs_variables
   real(dp) :: fblss_ccfe, fblli2sio4, fbltibe12
   !! Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide
 
-  !  KIT HCPB blanket model (iblanket = 2)
+  !  KIT HCPB blanket model (i_blanket_type = 2)
   ! ----------
 
   integer :: breedmat
-  !! breeder material switch (iblanket=2 (KIT HCPB)):
+  !! breeder material switch (i_blanket_type=2 (KIT HCPB)):
   !!
   !! - =1 Lithium orthosilicate
   !! - =2 Lithium methatitanate
   !! - =3 Lithium zirconate
 
   real(dp) :: densbreed
-  !! density of breeder material [kg m^-3] (`iblanket=2` (KIT HCPB))
+  !! density of breeder material [kg m^-3] (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: fblbe
-  !! beryllium fraction of blanket by volume (if `iblanket=2`, is Be fraction of breeding zone)
+  !! beryllium fraction of blanket by volume (if `i_blanket_type=2`, is Be fraction of breeding zone)
 
   real(dp) :: fblbreed
-  !! breeder fraction of blanket breeding zone by volume (`iblanket=2` (KIT HCPB))
+  !! breeder fraction of blanket breeding zone by volume (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: fblhebmi
-  !! helium fraction of inboard blanket box manifold by volume (`iblanket=2` (KIT HCPB))
+  !! helium fraction of inboard blanket box manifold by volume (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: fblhebmo
-  !! helium fraction of outboard blanket box manifold by volume (`iblanket=2` (KIT HCPB))
+  !! helium fraction of outboard blanket box manifold by volume (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: fblhebpi
-  !! helium fraction of inboard blanket back plate by volume (`iblanket=2` (KIT HCPB))
+  !! helium fraction of inboard blanket back plate by volume (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: fblhebpo
-  !! helium fraction of outboard blanket back plate by volume (`iblanket=2` (KIT HCPB))
+  !! helium fraction of outboard blanket back plate by volume (`i_blanket_type=2` (KIT HCPB))
 
   integer :: hcdportsize
-  !! switch for size of heating/current drive ports (`iblanket=2` (KIT HCPB)):
+  !! switch for size of heating/current drive ports (`i_blanket_type=2` (KIT HCPB)):
   !!
   !! - =1 'small'
   !! - =2 'large'
   !#TODO: switch name and also large and small not descriptive enough
 
   real(dp) :: nflutf
-  !! peak fast neutron fluence on TF coil superconductor [n m^-2] (`iblanket=2` (KIT HCPB))
+  !! peak fast neutron fluence on TF coil superconductor [n m^-2] (`i_blanket_type=2` (KIT HCPB))
 
   integer :: npdiv
-  !! number of divertor ports (`iblanket=2` (KIT HCPB))
+  !! number of divertor ports (`i_blanket_type=2` (KIT HCPB))
 
   integer :: nphcdin
-  !! number of inboard ports for heating/current drive (`iblanket=2` (KIT HCPB))
+  !! number of inboard ports for heating/current drive (`i_blanket_type=2` (KIT HCPB))
 
   integer :: nphcdout
-  !! number of outboard ports for heating/current drive (`iblanket=2` (KIT HCPB))
+  !! number of outboard ports for heating/current drive (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: tbr
-  !! tritium breeding ratio (`iblanket=2,3` (KIT HCPB/HCLL))
+  !! tritium breeding ratio (`i_blanket_type=2,3` (KIT HCPB/HCLL))
 
   real(dp) :: tritprate
-  !! tritium production rate [g day^-1] (`iblanket=2` (KIT HCPB))
+  !! tritium production rate [g day^-1] (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: wallpf
-  !! neutron wall load peaking factor (`iblanket=2` (KIT HCPB))
+  !! neutron wall load peaking factor (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: whtblbreed
-  !! mass of blanket - breeder part [kg] (`iblanket=2` (KIT HCPB))
+  !! mass of blanket - breeder part [kg] (`i_blanket_type=2` (KIT HCPB))
 
   real(dp) :: whtblbe
   !! mass of blanket - beryllium part [kg]
 
-  ! CCFE HCPB model with Tritium Breeding Ratio calculation (iblanket=3)
+  ! CCFE HCPB model with Tritium Breeding Ratio calculation (i_blanket_type=3)
   ! ---------------
 
   integer :: iblanket_thickness
-  !! Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, dr_fw_inboard or dr_fw_outboard when `iblanket=3`):
+  !! Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, dr_fw_inboard or dr_fw_outboard when `i_blanket_type=3`):
   !!
   !! - =1 thin    0.53 m inboard, 0.91 m outboard
   !! - =2 medium  0.64 m inboard, 1.11 m outboard
@@ -412,7 +412,7 @@ module fwbs_variables
 
   real(dp) :: ptfnucpm3
   !! nuclear heating in the TF coil (MW/m3) (`blktmodel>0`)
-  !#TODO: check usage of old blktmodel. Update to iblanket
+  !#TODO: check usage of old blktmodel. Update to i_blanket_type
 
   real(dp) :: r_cryostat_inboard
   !! cryostat radius [m]
@@ -492,11 +492,11 @@ module fwbs_variables
   !! coolant void fraction in blanket.
 
   integer :: blktmodel
-  !! switch for blanket/tritium breeding model (see iblanket):
+  !! switch for blanket/tritium breeding model (see i_blanket_type):
   !!
   !! - =0 original simple model
   !! - =1 KIT model based on a helium-cooled pebble-bed blanket (HCPB) reference design
-  !#TODO: this needs investigating and removing after any required functionality is in iblanket
+  !#TODO: this needs investigating and removing after any required functionality is in i_blanket_type
 
   real(dp) :: declblkt
   !! neutron power deposition decay length of blanket structural material [m] (stellarators only)
@@ -519,7 +519,7 @@ module fwbs_variables
   !! "PROCESS": A systems code for fusion power plants - Part 2: Engineering
   !! https://www.sciencedirect.com/science/article/pii/S0920379616300072
   !! Feedheat & reheat cycle assumed
-  !#TODO: this needs to be merged into iblanket and then removed.
+  !#TODO: this needs to be merged into i_blanket_type and then removed.
 
   real(dp) :: etaiso
   !! isentropic efficiency of FW and blanket coolant pumps
@@ -683,7 +683,7 @@ module fwbs_variables
     fw_armour_mass = 0.0D0
     fw_armour_thickness = 0.005D0
     fw_armour_vol = 0.0D0
-    iblanket = 1
+    i_blanket_type = 1
     i_blkt_inboard = 1
     inuclear = 0
     qnuc = 0.0D0

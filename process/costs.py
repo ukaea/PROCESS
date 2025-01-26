@@ -292,7 +292,7 @@ class Costs:
         po.oshead(self.outfile, "Reactor Systems")
         po.ocosts(self.outfile, "(c2211)", "First wall cost (M$)", self.c2211)
         if ife_variables.ife != 1:
-            if fwbs_variables.iblanket == 4:
+            if fwbs_variables.i_blanket_type == 4:
                 po.ocosts(
                     self.outfile,
                     "(c22121)",
@@ -1198,17 +1198,17 @@ class Costs:
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
         if ife_variables.ife != 1:
-            # iblanket=4 is used for KIT HCLL model. iblanket<4 are all
+            # i_blanket_type=4 is used for KIT HCLL model. i_blanket_type<4 are all
             # HCPB (CCFE, KIT and CCFE + Shimwell TBR calculation).
 
-            if fwbs_variables.iblanket == 4:
+            if fwbs_variables.i_blanket_type == 4:
                 #  Liquid blanket (LiPb + Li)
                 self.c22121 = 1.0e-6 * fwbs_variables.wtbllipb * cost_variables.ucbllipb
                 self.c22122 = 1.0e-6 * fwbs_variables.whtblli * cost_variables.ucblli
             else:
                 #  Solid blanket (Li2O + Be)
                 self.c22121 = 1.0e-6 * fwbs_variables.whtblbe * cost_variables.ucblbe
-                if fwbs_variables.iblanket == 2:
+                if fwbs_variables.i_blanket_type == 2:
                     # KIT model
                     self.c22122 = (
                         1.0e-6 * fwbs_variables.whtblbreed * cost_variables.ucblbreed

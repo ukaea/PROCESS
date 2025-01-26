@@ -267,7 +267,7 @@ contains
       zeffdiv, hldivlim, rlenmax, divfix, c3div, &
       hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant, &
-      pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
+      pitch, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
@@ -1281,7 +1281,7 @@ contains
           call parse_real_variable('blbuoth', blbuoth, 0.0D0, 2.0D0, &
                'Outboard blanket breeding unit thickness (m)')
        case ('dr_blkt_inboard')
-          if (iblanket == 3) then
+          if (i_blanket_type == 3) then
             !CCFE HCPB model with Tritium Breeding Ratio calculation
             write(outfile,*) '**********'
             write(outfile,*) 'ERROR. BLNKITH input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation -'
@@ -1297,7 +1297,7 @@ contains
             end if
           end if
        case ('dr_blkt_outboard')
-           if (iblanket == 3) then
+           if (i_blanket_type == 3) then
             !CCFE HCPB model with Tritium Breeding Ratio calculation
             write(outfile,*) '**********'
             write(outfile,*) 'ERROR. dr_blkt_outboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation -'
@@ -2184,19 +2184,19 @@ contains
        case ('hcdportsize')
           call parse_int_variable('hcdportsize', hcdportsize, 1, 2, &
                'H/CD port size')
-       case ('iblanket')
-          call parse_int_variable('iblanket', iblanket, 1, 5, 'Switch for blanket model')
-          if ((iblanket == 2).or.(iblanket == 4)) then
+       case ('i_blanket_type')
+          call parse_int_variable('i_blanket_type', i_blanket_type, 1, 5, 'Switch for blanket model')
+          if ((i_blanket_type == 2).or.(i_blanket_type == 4)) then
             write(outfile,*) ' '
             write(outfile,*) '**********'
-            write(outfile,*) 'iblanket = 2/4, KIT HCPB/HCLL model has been removed -'
+            write(outfile,*) 'i_blanket_type = 2/4, KIT HCPB/HCLL model has been removed -'
             write(outfile,*) 'please select a different blanket model.'
             write(outfile,*) '**********'
             write(outfile,*) ' '
             obsolete_var = .true.
           endif
 
-          if (iblanket == 3) then
+          if (i_blanket_type == 3) then
               dr_fw_inboard = 0.03D0
               dr_fw_outboard = 0.03D0
               fw_armour_thickness = 0.003D0

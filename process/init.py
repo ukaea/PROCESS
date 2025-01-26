@@ -1165,7 +1165,8 @@ def check_process():
     # CCFE HCPB Model
 
     if fortran.stellarator_variables.istell == 0 and (
-        fortran.fwbs_variables.iblanket == 1 or fortran.fwbs_variables.iblanket == 3
+        fortran.fwbs_variables.i_blanket_type == 1
+        or fortran.fwbs_variables.i_blanket_type == 3
     ):
         fsum = (
             fortran.fwbs_variables.breeder_multiplier
@@ -1175,7 +1176,7 @@ def check_process():
         if fsum >= 1.0:
             raise ProcessValidationError(
                 "Blanket material fractions do not sum to 1.0",
-                iblanket=fortran.fwbs_variables.iblanket,
+                i_blanket_type=fortran.fwbs_variables.i_blanket_type,
                 breeder_multiplier=fortran.fwbs_variables.breeder_multiplier,
                 vfcblkt=fortran.fwbs_variables.vfcblkt,
                 vfpblkt=fortran.fwbs_variables.vfpblkt,
