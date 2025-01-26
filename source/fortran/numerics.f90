@@ -155,7 +155,7 @@ module numerics
   !!  <LI> (52) Tritium breeding ratio lower limit (itv 89,90,91)
   !!  <LI> (53) Neutron fluence on TF coil upper limit (itv 92,93,94)
   !!  <LI> (54) Peak TF coil nuclear heating upper limit (itv 95,93,94)
-  !!  <LI> (55) Vacuum vessel helium concentration upper limit iblanket =2 (itv 96,93,94)
+  !!  <LI> (55) Vacuum vessel helium concentration upper limit i_blanket_type =2 (itv 96,93,94)
   !!  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3)
   !!  <LI> (57) NOT USED
   !!  <LI> (58) NOT USED

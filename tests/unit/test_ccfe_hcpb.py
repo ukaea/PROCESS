@@ -1437,7 +1437,7 @@ class ComponentMassesParam(NamedTuple):
     whtblbreed: Any = None
     densbreed: Any = None
     fblbreed: Any = None
-    iblanket: Any = None
+    i_blanket_type: Any = None
     vffwi: Any = None
     vffwo: Any = None
     volfw: Any = None
@@ -1528,7 +1528,7 @@ class ComponentMassesParam(NamedTuple):
             whtblbreed=0,
             densbreed=0,
             fblbreed=0.154,
-            iblanket=1,
+            i_blanket_type=1,
             vffwi=0,
             vffwo=0,
             volfw=0,
@@ -1652,7 +1652,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "whtblbreed", componentmassesparam.whtblbreed)
     monkeypatch.setattr(fwbs_variables, "densbreed", componentmassesparam.densbreed)
     monkeypatch.setattr(fwbs_variables, "fblbreed", componentmassesparam.fblbreed)
-    monkeypatch.setattr(fwbs_variables, "iblanket", componentmassesparam.iblanket)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blanket_type", componentmassesparam.i_blanket_type
+    )
     monkeypatch.setattr(fwbs_variables, "vffwi", componentmassesparam.vffwi)
     monkeypatch.setattr(fwbs_variables, "vffwo", componentmassesparam.vffwo)
     monkeypatch.setattr(fwbs_variables, "volfw", componentmassesparam.volfw)
