@@ -1242,7 +1242,7 @@ class Stellarator:
                 )
 
                 #  Void fraction in first wall / breeding zone,
-                #  for use in fwbs_variables.fwmass and coolvol calculation below
+                #  for use in fwbs_variables.m_fw_total and coolvol calculation below
 
                 f_a_fw_coolant_inboard = (
                     1.0e0
@@ -1751,7 +1751,7 @@ class Stellarator:
             #  First wall mass
             #  (first wall area is calculated else:where)
 
-            fwbs_variables.fwmass = (
+            fwbs_variables.m_fw_total = (
                 build_variables.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
@@ -1770,7 +1770,7 @@ class Stellarator:
             )
 
         else:
-            fwbs_variables.fwmass = fwbs_variables.denstl * (
+            fwbs_variables.m_fw_total = fwbs_variables.denstl * (
                 build_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * (1.0e0 - f_a_fw_coolant_inboard)
@@ -2220,7 +2220,10 @@ class Stellarator:
                 build_variables.a_fw_total,
             )
             po.ovarre(
-                self.outfile, "First wall mass (kg)", "(fwmass)", fwbs_variables.fwmass
+                self.outfile,
+                "First wall mass (kg)",
+                "(m_fw_total)",
+                fwbs_variables.m_fw_total,
             )
             po.ovarre(
                 self.outfile,
