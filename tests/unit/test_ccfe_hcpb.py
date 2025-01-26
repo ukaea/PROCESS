@@ -1426,7 +1426,7 @@ class ComponentMassesParam(NamedTuple):
     i_blanket_type: Any = None
     vffwi: Any = None
     vffwo: Any = None
-    volfw: Any = None
+    vol_fw_total: Any = None
     fblss_ccfe: Any = None
     fblli2sio4: Any = None
     fbltibe12: Any = None
@@ -1517,7 +1517,7 @@ class ComponentMassesParam(NamedTuple):
             i_blanket_type=1,
             vffwi=0,
             vffwo=0,
-            volfw=0,
+            vol_fw_total=0,
             fblss_ccfe=0,
             fblli2sio4=0,
             fbltibe12=0,
@@ -1639,7 +1639,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     )
     monkeypatch.setattr(fwbs_variables, "vffwi", componentmassesparam.vffwi)
     monkeypatch.setattr(fwbs_variables, "vffwo", componentmassesparam.vffwo)
-    monkeypatch.setattr(fwbs_variables, "volfw", componentmassesparam.volfw)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_fw_total", componentmassesparam.vol_fw_total
+    )
     monkeypatch.setattr(fwbs_variables, "fblss_ccfe", componentmassesparam.fblss_ccfe)
     monkeypatch.setattr(fwbs_variables, "fblli2sio4", componentmassesparam.fblli2sio4)
     monkeypatch.setattr(fwbs_variables, "fbltibe12", componentmassesparam.fbltibe12)

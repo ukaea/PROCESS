@@ -183,7 +183,7 @@ module fwbs_variables
   real(dp) :: psurffwi, psurffwo
   !! Surface heat flux on first wall [MW] (sum = pradfw)
 
-  real(dp) :: volfw
+  real(dp) :: vol_fw_total
   !! First wall volume [m3]
 
   real(dp) :: fblss_ccfe, fblli2sio4, fbltibe12
@@ -706,7 +706,7 @@ module fwbs_variables
     vffwo = 0.0D0
     psurffwi = 0.0D0
     psurffwo = 0.0D0
-    volfw = 0.0D0
+    vol_fw_total = 0.0D0
     fblss_ccfe = 0.0D0
     fblli2sio4 = 0.0D0
     fbltibe12 = 0.0D0

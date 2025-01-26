@@ -656,18 +656,20 @@ class DCLL:
 
         # FW
         # First wall volume (m^3)
-        fwbs_variables.volfw = (
+        fwbs_variables.vol_fw_total = (
             build_variables.a_fw_inboard * build_variables.dr_fw_inboard
             + build_variables.a_fw_outboard * build_variables.dr_fw_outboard
         )
         # First wall mass, excluding armour (kg)
         dcll_module.fwmass_stl = (
-            fwbs_variables.denstl * dcll_module.f_vol_stl_fw * fwbs_variables.volfw
+            fwbs_variables.denstl
+            * dcll_module.f_vol_stl_fw
+            * fwbs_variables.vol_fw_total
         )
         dcll_module.fwmass_cool = (
             fwbs_variables.rhof_fw
             * (1 - dcll_module.f_vol_stl_fw)
-            * fwbs_variables.volfw
+            * fwbs_variables.vol_fw_total
         )
         fwbs_variables.fwmass = dcll_module.fwmass_stl + dcll_module.fwmass_cool
         # First wall armour volume (m^3)
@@ -708,7 +710,7 @@ class DCLL:
                 * (
                     build_variables.a_fw_inboard
                     * build_variables.dr_fw_inboard
-                    / fwbs_variables.volfw
+                    / fwbs_variables.vol_fw_total
                 )
                 + fwbs_variables.fw_armour_mass
                 * (
@@ -724,7 +726,7 @@ class DCLL:
             * (
                 build_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
-                / fwbs_variables.volfw
+                / fwbs_variables.vol_fw_total
             )
             + fwbs_variables.fw_armour_mass
             * (
@@ -886,8 +888,8 @@ class DCLL:
         po.ovarrf(
             self.outfile,
             "First Wall Volume (m3)",
-            "(volfw)",
-            fwbs_variables.volfw,
+            "(vol_fw_total)",
+            fwbs_variables.vol_fw_total,
             "OP ",
         )
         po.ovarrf(
