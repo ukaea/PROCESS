@@ -271,7 +271,7 @@ contains
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
-      fvolsi, etahtp, nblktmodpo, fwpressure, emult, temp_fw_coolant_out, nblktmodpi, &
+      fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
@@ -1933,8 +1933,8 @@ contains
        case ('temp_fw_coolant_out')
           call parse_real_variable('temp_fw_coolant_out', temp_fw_coolant_out, 300.0d0, 1500.0D0, &
                'outlet temperature of first wall coolant (K)')
-       case ('fwpressure')
-          call parse_real_variable('fwpressure', fwpressure, 1.0d5, 1.0D8, &
+       case ('pres_fw_coolant')
+          call parse_real_variable('pres_fw_coolant', pres_fw_coolant, 1.0d5, 1.0D8, &
                'first wall coolant pressure (Pa)')
        case ('fwcoolant')
           call parse_string_variable('fwcoolant', fwcoolant, 'first wall coolant')

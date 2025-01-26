@@ -2337,7 +2337,7 @@ etaiso = 0.9
 * DESCRIPTION:   Outlet temperature of first wall coolant (K) (default = 823.0)
 * JUSTIFICATION: Not yet set.
 
-*fwpressure = 
+*pres_fw_coolant = 
 * DESCRIPTION:   First wall coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set.
 
