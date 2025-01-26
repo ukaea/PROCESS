@@ -270,7 +270,7 @@ contains
       pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
-      denw, f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
+      f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
       fvolsi, etahtp, nblktmodpo, fwpressure, emult, fwoutlet, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
@@ -2112,9 +2112,6 @@ contains
        case ('denstl')
           call parse_real_variable('denstl', denstl, 5.0D3, 1.0D4, &
                'Density of steel (kg/m3)')
-       case ('denw')
-          call parse_real_variable('denw', denw, 1.0D4, 5.0D4, &
-               'Density of tungsten (kg/m3)')
        case ('emult')
           call parse_real_variable('emult', emult, 1.0D0, 2.0D0, &
                'Energy multip. in blanket and shield')

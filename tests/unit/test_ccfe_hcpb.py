@@ -69,8 +69,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     ptfnuc: Any = None
 
-    denw: Any = None
-
     vffwi: Any = None
 
     vffwo: Any = None
@@ -151,7 +149,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             vdewin=1159.4792053672361,
             fw_armour_thickness=0.0050000000000000001,
             ptfnuc=0,
-            denw=19250,
             vffwi=0,
             vffwo=0,
             fusion_power=1986.0623241661431,
@@ -201,7 +198,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             vdewin=1161.1450715665972,
             fw_armour_thickness=0.0050000000000000001,
             ptfnuc=0.044184461825198453,
-            denw=19250,
             vffwi=0.31415926535897931,
             vffwo=0.31415926535897931,
             fusion_power=1985.4423932312809,
@@ -303,8 +299,6 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     )
 
     monkeypatch.setattr(fwbs_variables, "ptfnuc", nuclearheatingmagnetsparam.ptfnuc)
-
-    monkeypatch.setattr(fwbs_variables, "denw", nuclearheatingmagnetsparam.denw)
 
     monkeypatch.setattr(fwbs_variables, "vffwi", nuclearheatingmagnetsparam.vffwi)
 
@@ -1444,7 +1438,6 @@ class ComponentMassesParam(NamedTuple):
     densbreed: Any = None
     fblbreed: Any = None
     iblanket: Any = None
-    denw: Any = None
     vffwi: Any = None
     vffwo: Any = None
     volfw: Any = None
@@ -1536,7 +1529,6 @@ class ComponentMassesParam(NamedTuple):
             densbreed=0,
             fblbreed=0.154,
             iblanket=1,
-            denw=19250,
             vffwi=0,
             vffwo=0,
             volfw=0,
@@ -1661,7 +1653,6 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "densbreed", componentmassesparam.densbreed)
     monkeypatch.setattr(fwbs_variables, "fblbreed", componentmassesparam.fblbreed)
     monkeypatch.setattr(fwbs_variables, "iblanket", componentmassesparam.iblanket)
-    monkeypatch.setattr(fwbs_variables, "denw", componentmassesparam.denw)
     monkeypatch.setattr(fwbs_variables, "vffwi", componentmassesparam.vffwi)
     monkeypatch.setattr(fwbs_variables, "vffwo", componentmassesparam.vffwo)
     monkeypatch.setattr(fwbs_variables, "volfw", componentmassesparam.volfw)
