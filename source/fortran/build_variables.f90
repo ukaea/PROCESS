@@ -90,8 +90,8 @@ module build_variables
   real(dp) :: fwarea
   !! first wall total surface area (m2)
 
-  real(dp) :: fwareaib
-  !! inboard first wall surface area (m2)
+  real(dp) :: a_fw_inboard
+  !! Inboard first wall surface area [m^2]
 
   real(dp) :: fwareaob
   !! outboard first wall surface area (m2)
@@ -325,7 +325,7 @@ module build_variables
     fcspc = 0.6D0
     fseppc = 3.5D8
     fwarea = 0.0D0
-    fwareaib = 0.0D0
+    a_fw_inboard = 0.0D0
     fwareaob = 0.0D0
     dr_fw_inboard = 0.0D0
     dr_fw_outboard = 0.0D0
