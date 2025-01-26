@@ -1630,7 +1630,6 @@
         "densbreed": 0.0,
         "densin": 0.0,
         "denstl": 7800.0,
-        "denw": 19250.0,
         "denwc": 15630.0,
         "dewmkg": 0.0,
         "dflsa": null,
@@ -9286,7 +9285,6 @@
         "densbreed": "density of breeder material (kg/m3) (`iblanket=2` (KIT HCPB))",
         "densin": "density at plate (on separatrix) (10**20 /m3)",
         "denstl": "density of steel (kg/m3)",
-        "denw": "density of tungsten (kg/m3)",
         "denwc": "density of tungsten carbide (kg/m3)",
         "dewmkg": "total mass of vacuum vessel + cryostat (kg) (calculated if blktmodel>0)",
         "dflsa": "",
@@ -12200,10 +12198,6 @@
         "denstl": {
             "lb": 5000.0,
             "ub": 10000.0
-        },
-        "denw": {
-            "lb": 10000.0,
-            "ub": 50000.0
         },
         "dhecoil": {
             "lb": 0.0,
@@ -18032,7 +18026,6 @@
             "coolmass",
             "vvmass",
             "denstl",
-            "denw",
             "denwc",
             "dewmkg",
             "emult",
@@ -20175,7 +20168,6 @@
         "delld": "real_variable",
         "dene": "real_variable",
         "denstl": "real_variable",
-        "denw": "real_variable",
         "dhecoil": "real_variable",
         "dintrt": "real_variable",
         "discount_rate": "real_variable",
