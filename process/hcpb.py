@@ -313,7 +313,7 @@ class CCFE_HCPB:
 
         # First wall armour mass (kg)
         fwbs_variables.fw_armour_mass = (
-            fwbs_variables.fw_armour_vol * fwbs_variables.denw
+            fwbs_variables.fw_armour_vol * constants.den_tungsten
         )
 
         if fwbs_variables.breeder_f < 1.0e-10:
@@ -406,7 +406,7 @@ class CCFE_HCPB:
 
         # Calculate smeared densities of blanket sections
         # gaseous He coolant in armour, FW & blanket: He mass is neglected
-        ccfe_hcpb_module.armour_density = fwbs_variables.denw * (1.0 - vffwm)
+        ccfe_hcpb_module.armour_density = constants.den_tungsten * (1.0 - vffwm)
         ccfe_hcpb_module.fw_density = fwbs_variables.denstl * (1.0 - vffwm)
         ccfe_hcpb_module.blanket_density = (
             fwbs_variables.whtblkt / fwbs_variables.volblkt

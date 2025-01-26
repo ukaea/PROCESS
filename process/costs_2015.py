@@ -347,7 +347,7 @@ class Costs2015:
         self.s_k[24] = (
             build_variables.fwarea
             * fwbs_variables.fw_armour_thickness
-            * fwbs_variables.denw
+            * constants.den_tungsten
         )
         self.s_kref[24] = 29000.0e0
         self.s_cost[24] = (

@@ -152,6 +152,9 @@ module constants
   ! Roughly 79.889% of the energy is carried by the proton
   real(dp), parameter :: dhelium_proton_energy_fraction = (alpha_mass/(proton_mass+alpha_mass))
 
+  ! Density of Tungsten [kg/m3]
+  real(dp), parameter :: den_tungsten = 19250.0D0
+
   ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0
 
